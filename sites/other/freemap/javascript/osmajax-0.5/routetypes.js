@@ -320,7 +320,7 @@ function RouteTypes()
 		var deleteTags = new Array
 				('foot','horse','motorcar','bicycle','amenity','power',
 				'residence','place','religion','denomination','tourism',
-				'man_made','railway','leisure');
+				'man_made','railway','leisure','highway','natural');
 
 
 		// Blank any tags which should no longer be there - when we 

@@ -12,6 +12,7 @@ function Osmajax(map)
     this.drwbtn='drwbtn';
     this.drwpointbtn='drwpointbtn';
     this.chngbtn='chngbtn';
+    this.delbtn='delbtn';
     this.loginbtn='loginbtn';
     this.status='status';
     this.changeFeatureDialog=null;
@@ -80,6 +81,7 @@ function Osmajax(map)
         $(self.drwbtn).onclick = this.drw;
         $(self.drwpointbtn).onclick = this.drwpoint;
         $(self.chngbtn).onclick =this.chng;
+        $(self.delbtn).onclick =this.del;
         $(self.loginbtn).onclick = this.osmLogin;
     }
 
@@ -88,12 +90,13 @@ function Osmajax(map)
         document.getElementById(self.drwbtn).disabled='disabled';
         document.getElementById(self.drwpointbtn).disabled='disabled';
         document.getElementById(self.chngbtn).disabled='disabled';
+        document.getElementById(self.delbtn).disabled='disabled';
         document.getElementById(self.loginbtn).value='OSM Login';
         document.getElementById(self.loginbtn).onclick=self.osmLogin;
         self.loggedIn = false;
     }
 
-    this.setControlIds = function (login,nav,sel,drw,drwpoint,chng,stat)
+    this.setControlIds = function (login,nav,sel,drw,drwpoint,chng,del,stat)
     {
         this.loginbtn=login;
         this.navbtn=nav;
@@ -101,6 +104,7 @@ function Osmajax(map)
         this.drwbtn=drw;
         this.drwpointbtn=drwpoint;
         this.chngbtn=chng;
+        this.delbtn=del;
         this.status=stat;
     }
 
@@ -153,33 +157,34 @@ function Osmajax(map)
 
     this.removeLoginDlg = function()
     {
-		if(self.loginDlg)
-		{
-        	self.map.removePopup(self.loginDlg);
-        	self.loginDlg = null;
-		}
+        if(self.loginDlg)
+        {
+            self.map.removePopup(self.loginDlg);
+            self.loginDlg = null;
+        }
     }
 
-	this.errorHandler = function(xmlHTTP)
-	{
-		if(xmlHTTP.status==401)
-		{
-			alert('Incorrect OSM login details');
-		}
-		else
-		{
-			alert('Error on OSM server, code=' + xmlHTTP.status);
-		}
-	}
+    this.errorHandler = function(xmlHTTP)
+    {
+        if(xmlHTTP.status==401)
+        {
+            alert('Incorrect OSM login details');
+        }
+        else
+        {
+            alert('Error on OSM server, code=' + xmlHTTP.status);
+        }
+    }
 
     this.loginProvided = function(xmlHTTP)
     {
-		self.loggedIn = true;
-		document.getElementById(self.drwbtn).disabled=null;
-		document.getElementById(self.drwpointbtn).disabled=null;
-		document.getElementById(self.chngbtn).disabled=null;
-		document.getElementById(self.loginbtn).value='OSM Logout';
-		document.getElementById(self.loginbtn).onclick=self.osmLogout;
+        self.loggedIn = true;
+        document.getElementById(self.drwbtn).disabled=null;
+        document.getElementById(self.drwpointbtn).disabled=null;
+        document.getElementById(self.chngbtn).disabled=null;
+        document.getElementById(self.delbtn).disabled=null;
+        document.getElementById(self.loginbtn).value='OSM Logout';
+        document.getElementById(self.loginbtn).onclick=self.osmLogout;
     }
 
     this.provideLogin = function()
@@ -188,9 +193,9 @@ function Osmajax(map)
                 '?call=login&osmusername='+$('osmusername').value+
                 "&osmpassword="+
                 $('osmpassword').value;
-		self.removeLoginDlg();
+        self.removeLoginDlg();
         OpenLayers.loadURL(url,null,self,self.loginProvided,
-				self.errorHandler);
+                self.errorHandler);
     }
 
     this.osmLogin = function()
@@ -293,6 +298,23 @@ function Osmajax(map)
         }
     }
 
+    this.del = function()
+    {
+        if(self.loggedIn)
+        {
+            if(self.selectedFeature)
+            {
+                if(self.selectedFeature.osmitem instanceof OpenLayers.OSMWay)
+                    self.vectorLayer.deleteWay    (self.selectedFeature);
+                else
+                    self.vectorLayer.deleteNode    (self.selectedFeature);
+            }
+            else
+            {
+                alert('no selected feature');
+            }
+        }
+    }
 
     this.uploadChanges = function()
     {
@@ -303,18 +325,18 @@ function Osmajax(map)
                 (self.selectedFeature.osmitem instanceof OpenLayers.OSMNode) ?
                     'node' : 'way';
 
-			var URL = 
+            var URL = 
                      'http://www.free-map.org.uk/freemap/common/osmproxy2.php'
                             + '?call='+apicall+'&id=' + 
                             self.selectedFeature.osmitem.osmid;
         
-			alert('uploadChanges(): url=' + URL + 
+            alert('uploadChanges(): url=' + URL + 
                         ' XML=' + self.selectedFeature.osmitem.toXML());
 
-			self.selectedFeature.osmitem.upload
+            self.selectedFeature.osmitem.upload
                                         ( URL, null, self.refreshStyle,
                                             self.selectedFeature);
-			self.removeChangeFeatureDialog();
+            self.removeChangeFeatureDialog();
         }
         else
         {
@@ -327,18 +349,18 @@ function Osmajax(map)
         alert('Changes uploaded to server. Response=' + 
                 xmlHTTP.responseText);
 
-		if(w.osmitem instanceof OpenLayers.OSMWay)
-		{
-        	var t = w.osmitem.type;
-        	var colour = self.vectorLayer.routeTypes.getColour(t);
-        	var width = self.vectorLayer.routeTypes.getWidth(t);
-        	var style = { fillColor: colour, fillOpacity: 0.4,
+        if(w.osmitem instanceof OpenLayers.OSMWay)
+        {
+            var t = w.osmitem.type;
+            var colour = self.vectorLayer.routeTypes.getColour(t);
+            var width = self.vectorLayer.routeTypes.getWidth(t);
+            var style = { fillColor: colour, fillOpacity: 0.4,
                     strokeColor: colour, strokeOpacity: 1,
                     strokeWidth: width };
-        	w.style=style;
-        	w.originalStyle=style;
-        	self.vectorLayer.drawFeature(w,style);
-		}
+            w.style=style;
+            w.originalStyle=style;
+            self.vectorLayer.drawFeature(w,style);
+        }
     }
     
     this.setCentre = function(latlon)

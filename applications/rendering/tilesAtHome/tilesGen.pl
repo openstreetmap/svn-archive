@@ -864,7 +864,7 @@ sub RenderTile
     # svg2png returns true if all tiles extracted were empty. this might break 
     # if a higher zoom tile would contain data that is not rendered at the 
     # current zoom level. 
-    my ($success,$empty) = svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile)
+    my ($success,$empty) = svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile);
     if (!$success) {
        return (0,$empty);
     }

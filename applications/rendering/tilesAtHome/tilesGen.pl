@@ -43,6 +43,7 @@ resetFault("nodata");
 resetFault("nodataXAPI");
 resetFault("utf8");
 resetFault("inkscape");
+resetFault("renderer");
 
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';

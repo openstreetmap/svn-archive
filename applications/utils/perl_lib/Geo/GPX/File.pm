@@ -176,6 +176,10 @@ sub write_gpx_file($$) { # Write an gpx File
     } else {
 	$fh = IO::File->new(">$filename");
     }
+    if ( !$fh ) {
+	warn("Cannot Open $filename for writing:$!");
+	return;
+    }
     print $fh "<?xml version=\"1.0\"?>\n";
     print $fh "<gpx \n";
     print $fh "    version=\"1.0\"\n";

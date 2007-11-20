@@ -810,7 +810,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         if (!$success)
         {
             addFault("renderer",1);
-            return cleanUpAndDie("GenerateTileset: could not render tileset",$Mode,1,$PID):
+            return cleanUpAndDie("GenerateTileset: could not render tileset",$Mode,1,$PID);
         }
         else
         {

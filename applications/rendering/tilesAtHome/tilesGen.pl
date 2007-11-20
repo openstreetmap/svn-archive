@@ -204,6 +204,10 @@ elsif ($Mode eq "loop")
         {
             cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
         }
+        elsif (getFault("renderer") > 10)
+        {
+            cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1,$PID);
+        }
 
         if (-e "stopfile.txt")
         {
@@ -802,7 +806,15 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
         # Render it as loads of recursive tiles
         my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
-        cleanUpAndDie("GenerateTileset: could not render tileset","EXIT",1,$PID) if not $success; 
+        if (!$success)
+        {
+            addFault("renderer",1);
+            return cleanUpAndDie("GenerateTileset: could not render tileset",$Mode,1,$PID):
+        }
+        else
+        {
+            resetFault("renderer");
+        }
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {

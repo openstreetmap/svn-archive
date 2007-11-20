@@ -54,35 +54,61 @@ class MapWidget(gtk.Widget):
     self.ownpos = {'valid':False}
     for name,mod in self.modules['plugins'].items():
       mod.callbacks(self.modules)
+      
   def updatePosition(self):
+    """Try to get our position from GPS"""
     newpos = self.modules['position'].get()
+    
+    # If the latest position wasn't valid, then don't touch the old copy
+    # (especially since we might have manually set the position)
     if(not newpos['valid']):
       return
+    
+    # TODO: if we set ownpos and then get a GPS signal, we should decide
+    # here what to do
     self.ownpos = newpos
+    
+    self.handleUpdatedPosition()
+    
+  def handleUpdatedPosition(self):
+    if(not self.ownpos['valid']):
+      return
+      
+    # If we've never actually decided where to display a map yet, do so now
     if(not self.modules['projection'].isValid()):
       print "Projection not yet valid, centering on ownpos"
       self.centreOnOwnPos()
       return
-    #print "Position: %f, %f" % (self.ownpos['lat'], self.ownpos['lon'])
+    
+    # This code would let us recentre if we reach the edge of the screen - 
+    # it's not currently in use
     x,y = self.modules['projection'].ll2xy(self.ownpos['lat'], self.ownpos['lon'])
     x,y = self.modules['projection'].relXY(x,y)
     border = 0.15
-    followMode = self.modules['data'].getOption("centred")
     outsideMap = (x < border or y < border or x > (1-border) or y > (1-border))
-    if(followMode):
+    
+    # If map is locked to our position, then recentre it
+    if(self.modules['data'].getOption('centred')):
       self.centreOnOwnPos()
     else:
       self.forceRedraw()
+  
   def centreOnOwnPos(self):
+    """Try to centre the map on our position"""
     if(self.ownpos['valid']):
       self.modules['projection'].recentre(self.ownpos['lat'], self.ownpos['lon'])
       self.forceRedraw()
   
   def click(self, x, y):
+    """Handle clicking on the screen"""
+    # Give the overlay a chance to handle all clicks first
     if(self.modules['overlay'].handleClick(x,y)):
       pass
+    # If the overlay is fullscreen and it didn't respond, the click does
+    # not fall-through to the map
     elif(self.modules['overlay'].fullscreen()):
-      pass
+      return
+    # Map was clicked-on: store the lat/lon and go into the "clicked" menu
     else:
       lat, lon = self.modules['projection'].xy2ll(x,y)
       self.modules['data'].setState('clicked', (lat,lon))
@@ -90,19 +116,27 @@ class MapWidget(gtk.Widget):
     self.forceRedraw()
       
   def forceRedraw(self):
+    """Make the window trigger a draw event.  
+    TODO: consider replacing this if porting pyroute to another platform"""
     try:
       self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
     except AttributeError:
       pass
+    
   def move(self,dx,dy):
+    """Handle dragging the map"""
     if(self.modules['overlay'].fullscreen()):
+      return
+    if(self.modules['data'].getOption('centred') and self.ownpos['valid']):
       return
     self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
     self.forceRedraw()
+  
   def zoom(self,dx):
+    """Handle dragging left/right along top of the screen to zoom"""
     self.modules['projection'].nudgeZoom(-1 * dx / self.rect.width)
     self.forceRedraw()
-    #print "Scale %f" % self.modules['projection'].scale
+
   def nodeXY(self,node):
     node = self.modules['osmdata'].nodes[node]
     return(self.modules['projection'].ll2xy(node[0], node[1]))

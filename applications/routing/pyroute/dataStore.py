@@ -39,6 +39,7 @@ class DataStore:
           self.globals.ownpos = {'lat':lat,'lon':lon,'valid':True}
           print "Set ownpos to %f,%f" % (lat,lon)
           self.closeAllMenus()
+          self.globals.handleUpdatedPosition()
         elif(action == 'direct'):
           pass
         

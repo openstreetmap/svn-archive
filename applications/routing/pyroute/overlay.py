@@ -372,12 +372,12 @@ class guiOverlay:
         self.cells[2][0].button("(lon)",None,None)
 
         self.cells[0][1].button("set pos","ownpos:clicked",None)
-        self.cells[1][1].button("route to","route:clicked",None)
-        self.cells[2][1].button("direct to","direct:clicked",None)
+        self.cells[1][1].button("route to","route:clicked","route_to")
+        self.cells[2][1].button("direct to","direct:clicked","direct_to")
 
-        self.cells[0][2].button("waypoint","waypoint:clicked",None)
-        self.cells[1][2].button("extend route","extend:route:clicked",None)
-        self.cells[2][2].button("extend direct","extend:direct:clicked",None)
+        self.cells[0][2].button("waypoint", "waypoint:clicked", None)
+        self.cells[1][2].button("extend route", "extend:route:clicked", "extend_route")
+        self.cells[2][2].button("extend direct", "extend:direct:clicked", "extend_direct")
 
         self.cells[0][3].button("",None,None)
         self.cells[1][3].button("",None,None)

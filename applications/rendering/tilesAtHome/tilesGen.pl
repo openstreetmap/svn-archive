@@ -407,13 +407,13 @@ sub ProcessRequestsFromServer
 
 sub GetRequestFromServer
 {
-    my $Mode=shift();
+    my $RequestMethod=shift();
     my $LocalFilename = $Config{WorkingDirectory} . "request-" . $PID . ".txt";
     killafile($LocalFilename); ## make sure no old request file is laying around.
 
     my $Request;
 
-    if ($Mode eq "POST")
+    if ($RequestMethod eq "POST")
     {
         my $URL = $Config{RequestURL}."Request2.php"."?v=".$Config{ClientVersion}."&usr=".$Config{UploadUsername};
     
@@ -801,8 +801,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$parent_pid-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
-        my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
-
+        my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        cleanUpAndDie("GenerateTileset: could not render tileset","EXIT",1,$PID); 
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {
@@ -851,10 +851,10 @@ sub RenderTile
 {
     my ($layer, $X, $Y, $Ytile, $Zoom, $ZOrig, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
 
-    return 0 if($Zoom > $Config{"Layer.$layer.MaxZoom"});
+    return (1,1) if($Zoom > $Config{"Layer.$layer.MaxZoom"});
     
     # no need to render subtiles if empty
-    return $SkipEmpty if($SkipEmpty == 1);
+    return (1,$SkipEmpty) if($SkipEmpty == 1);
 
     # Render it to PNG
     printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$X,$Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config{"Debug"}); 
@@ -864,7 +864,11 @@ sub RenderTile
     # svg2png returns true if all tiles extracted were empty. this might break 
     # if a higher zoom tile would contain data that is not rendered at the 
     # current zoom level. 
-    if (svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{"Layer.$layer.RenderFullTileset"}) 
+    my ($success,$empty) = svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile)
+    if (!$success) {
+       return (0,$empty);
+    }
+    if ($empty and !$Config{"Layer.$layer.RenderFullTileset"}) 
     {
         $SkipEmpty=1;
     }
@@ -913,25 +917,44 @@ sub RenderTile
 
     if ($Config{Fork} && $Zoom >= $ZOrig && $Zoom < ($ZOrig + $Config{Fork})) {
         my $pid = fork();
-        if (not defined $pid) {
-            return cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$PID);
-        } elsif ($pid == 0) {
-            RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-            exit(0);
+        if (not defined $pid) 
+        {
+            cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
+        }
+        elsif ($pid == 0) 
+        {
+            # we are the child process and can't talk to our master other than through exit codes
+            ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+            if ($success)
+            {
+                exit(0);
+            }
+            else
+            {
+                exit(1);
+            }
         } else {
-            RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+            ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
             waitpid($pid,0);
+            my $ChildExitValue  = $? >> 8;
+            my $signal_num  = $? & 127;
+            my $dumped_core = $? & 128;
+            if ($ChildExitValue or !$success)
+            {
+                return (0,$SkipEmpty);
+            }
         }
         $progressPercent=100 if (! $Config{"Debug"}); # workaround for not correctly updating %age in fork, disable in debug mode
         statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     } else {
-        RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-        RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+        ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+        return (0,$empty) if (!$success);
+        ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+        return (0,$empty) if (!$success);
     }
 
-    return $SkipEmpty; ## main call wants to know wether the entire tileset was empty so we return 1 if the tile was empty
+    return (1,$SkipEmpty); ## main call wants to know wether the entire tileset was empty so we return true and 1 if the tile was empty
 }
-
 
 
 #-----------------------------------------------------------------------------
@@ -948,15 +971,6 @@ sub UpdateClient # FIXME: should be called. (triggered by server?)
 
 }
 
-
-#-----------------------------------------------------------------------------
-# Pre-process on OSM file (using frollo)
-#-----------------------------------------------------------------------------
-sub frollo ## provided as fallback, should never be actually called
-{
-    print STDERR "\nYour layers.conf is outdated, please use current version from SVN\n";
-    return 1;
-}
 
 #-----------------------------------------------------------------------------
 # Transform an OSM file (using osmarender) into SVG
@@ -1026,6 +1040,7 @@ sub xml2svg
     }
     return 1;
 }
+
 
 #-----------------------------------------------------------------------------
 # Render a SVG file
@@ -1102,7 +1117,8 @@ sub svg2png
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
         addFault("inkscape",1);
-        return cleanUpAndDie("svg2png failed",$Mode,3,$PID);
+        cleanUpAndDie("svg2png failed",$Mode,3,$PID);
+        return (0,0);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     killafile($stdOut);
@@ -1111,8 +1127,9 @@ sub svg2png
     
     killafile($TempFile);
     
-    return $ReturnValue; #return true if empty
+    return (1,$ReturnValue); #return true if empty
 }
+
 
 sub writeToFile 
 {

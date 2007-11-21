@@ -45,7 +45,7 @@ class MapWidget(gtk.Widget):
     self.modules['position'] = geoPosition()
     self.modules['data'] = DataStore(self)
     self.modules['data'].setState('mode','cycle')
-    self.modules['data'].setOption('centred',True)
+    self.modules['data'].setOption('centred',False)
     self.modules['osmdata'] = LoadOsm(osmDataFile, True)
     self.modules['projection'] = Projection()
     self.modules['projection'].recentre(51.2,-0.2, 0.1)

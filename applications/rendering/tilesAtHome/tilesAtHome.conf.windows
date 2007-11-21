@@ -50,3 +50,6 @@ BatikPath=c:\tilesAtHome\batik\batik-rasterizer.jar
 
 # If set to 1, it will enable forking to render tiles, does not work for windows, currently.
 Fork=0
+
+# Set the timeout when downloading files (on tenths of a second)
+DownloadTimeout=1800

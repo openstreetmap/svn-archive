@@ -31,6 +31,7 @@ class DataStore:
           transport = self.globals.modules['data'].getState('mode')
           self.globals.modules['route'].setStartLL(self.globals.ownpos['lat'],self.globals.ownpos['lon'], transport)
           self.globals.modules['route'].setEndLL(lat,lon,transport)
+          self.globals.modules['route'].setMode('route')          
           self.globals.modules['route'].update()
           self.globals.forceRedraw()
           self.closeAllMenus()
@@ -41,7 +42,17 @@ class DataStore:
           self.closeAllMenus()
           self.globals.handleUpdatedPosition()
         elif(action == 'direct'):
-          pass
+          transport = self.globals.modules['data'].getState('mode')
+          self.globals.modules['route'].setStartLL(self.globals.ownpos['lat'],self.globals.ownpos['lon'], transport)
+          if(params == 'clicked'):
+            lat,lon = self.getState('clicked')
+          else:
+            lat, lon = [float(ll) for ll in params.split(':',1)]
+          self.globals.modules['route'].setEndLL(lat,lon,transport)
+          self.globals.modules['route'].setMode('direct')
+          self.globals.modules['route'].update()
+          self.globals.forceRedraw()
+          self.closeAllMenus()
         
         
         

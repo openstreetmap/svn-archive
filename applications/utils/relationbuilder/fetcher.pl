@@ -17,6 +17,7 @@ my $URLBASE="http://www.informationfreeway.org/api/0.5";
 my $last_id = -1;
 my $place_name = "unknown";
 my $place_type = "unknown";
+my $place_is_in = "unknown";
 my $node_line = "";
 my @tags = ();
 
@@ -117,6 +118,10 @@ sub is_in_start_handler
         {
             $place_name = $val;
         }
+        elsif ($key eq "is_in")
+        {
+            $place_is_in = $val;
+        }
         
         push (@tags, "    <tag k='" . $key . "' v='" . $val . "'/>");
     }
@@ -135,12 +140,13 @@ sub is_in_end_handler
     {
         utf8::downgrade($place_type);
         utf8::downgrade($place_name, 1);
+        utf8::downgrade($place_is_in, 1);
 
         chomp($place_type);
 
         mkdir ("data", "0755");
         mkdir ("data/" . $place_type, "0755");
-        my $filename = "data/" . $place_type . "/place-" . $place_type . "-" . $place_name . "-" . $last_id . ".osm";
+        my $filename = "data/" . $place_type . "/place-" . $place_type . "-" . $place_is_in  . "-" . $place_name . "-" . $last_id . ".osm";
         # my $filename = "data/" . "place-" . $place_type . "-" . $place_name . "-" . $last_id . ".osm";
 
         open OUT, "> $filename" || die ("Can't open $filename to write: $!\n");
@@ -167,6 +173,7 @@ sub is_in_end_handler
 
         $place_name = "unknown";
         $place_type = "unknown";
+        $place_is_in = "unknown";
 
         @tags = ();
     }

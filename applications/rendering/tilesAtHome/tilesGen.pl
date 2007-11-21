@@ -936,7 +936,7 @@ sub RenderTile
         }
         elsif ($pid == 0) 
         {
-            # we are the child process and can't talk to our master other than through exit codes
+            # we are the child process and can't talk to our parent other than through exit codes
             ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
             if ($success)
             {
@@ -949,9 +949,7 @@ sub RenderTile
         } else {
             ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
             waitpid($pid,0);
-            my $ChildExitValue  = $? >> 8;
-            my $signal_num  = $? & 127;
-            my $dumped_core = $? & 128;
+            my $ChildExitValue = $?; # we don't want the details, only if it exited normally or not.
             if ($ChildExitValue or !$success)
             {
                 return (0,$SkipEmpty);
@@ -966,7 +964,7 @@ sub RenderTile
         return (0,$empty) if (!$success);
     }
 
-    return (1,$SkipEmpty); ## main call wants to know wether the entire tileset was empty so we return true and 1 if the tile was empty
+    return (1,$SkipEmpty); ## main call wants to know wether the entire tileset was empty so we return 1 for success and 1 if the tile was empty
 }
 
 

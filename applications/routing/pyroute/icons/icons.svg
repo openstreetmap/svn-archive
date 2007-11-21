@@ -17,7 +17,7 @@
    sodipodi:docname="icons.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:docbase="/home/owhite/OpenStreetmap/pyroute/icons"
-   sodipodi:modified="true">
+   sodipodi:modified="TRUE">
   <sodipodi:namedview
      inkscape:window-height="917"
      inkscape:window-width="1206"
@@ -33,8 +33,8 @@
      showgrid="true"
      inkscape:grid-points="false"
      inkscape:zoom="2.5597511"
-     inkscape:cx="347.43444"
-     inkscape:cy="-207.42455"
+     inkscape:cx="33.905209"
+     inkscape:cy="-240.41607"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg2"
@@ -54,6 +54,77 @@
   </metadata>
   <defs
      id="defs11">
+    <linearGradient
+       id="linearGradient7841">
+      <stop
+         style="stop-color:#4d8558;stop-opacity:0.15306123;"
+         offset="0"
+         id="stop7843" />
+      <stop
+         style="stop-color:#4d8558;stop-opacity:0.90816325;"
+         offset="1"
+         id="stop7845" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6856">
+      <stop
+         style="stop-color:#6c8f67;stop-opacity:0.45918366;"
+         offset="0"
+         id="stop6858" />
+      <stop
+         style="stop-color:#6c8f67;stop-opacity:0.98979592;"
+         offset="1"
+         id="stop6860" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Tail"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Tail"
+       style="overflow:visible">
+      <g
+         id="g24548"
+         transform="scale(-1.2)">
+        <path
+           id="path24550"
+           d="M -3.8048674,-3.9585227 L 0.54352094,0"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8;marker-start:none;marker-end:none;stroke-linecap:round" />
+        <path
+           id="path24552"
+           d="M -1.2866832,-3.9585227 L 3.0617053,0"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8;marker-start:none;marker-end:none;stroke-linecap:round" />
+        <path
+           id="path24554"
+           d="M 1.3053582,-3.9585227 L 5.6537466,0"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8;marker-start:none;marker-end:none;stroke-linecap:round" />
+        <path
+           id="path24556"
+           d="M -3.8048674,4.1775838 L 0.54352094,0.21974226"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8;marker-start:none;marker-end:none;stroke-linecap:round" />
+        <path
+           id="path24558"
+           d="M -1.2866832,4.1775838 L 3.0617053,0.21974226"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8;marker-start:none;marker-end:none;stroke-linecap:round" />
+        <path
+           id="path24560"
+           d="M 1.3053582,4.1775838 L 5.6537466,0.21974226"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8;marker-start:none;marker-end:none;stroke-linecap:round" />
+      </g>
+    </marker>
+    <marker
+       inkscape:stockid="CurveOut"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="CurveOut"
+       style="overflow:visible">
+      <path
+         id="path24471"
+         d="M -5.4129913,-5.0456926 C -2.6529913,-5.0456926 -0.41299131,-2.8056926 -0.41299131,-0.045692580 C -0.41299131,2.7143074 -2.6529913,4.9543074 -5.4129913,4.9543074"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;marker-end:none"
+         transform="scale(0.6)" />
+    </marker>
     <linearGradient
        id="linearGradient5466">
       <stop
@@ -2463,7 +2534,7 @@
        r="6.922821" />
     <radialGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient2279-682"
+       xlink:href="#linearGradient2222"
        id="radialGradient18549"
        gradientUnits="userSpaceOnUse"
        cx="1088.4491"
@@ -2493,7 +2564,7 @@
        r="6.922821" />
     <radialGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient2279-682"
+       xlink:href="#linearGradient2222"
        id="radialGradient19528"
        gradientUnits="userSpaceOnUse"
        cx="1088.4491"
@@ -2513,7 +2584,7 @@
        r="6.922821" />
     <radialGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient2279-682"
+       xlink:href="#linearGradient2222"
        id="radialGradient19545"
        gradientUnits="userSpaceOnUse"
        cx="1088.4491"
@@ -2521,7 +2592,155 @@
        fx="1088.4491"
        fy="764.37421"
        r="6.922821" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2222"
+       id="radialGradient22459"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2222"
+       id="radialGradient2914"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2279-682"
+       id="radialGradient3895"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2222"
+       id="radialGradient5875"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2279-682"
+       id="radialGradient5877"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6856"
+       id="linearGradient6862"
+       x1="41.082264"
+       y1="864.57232"
+       x2="77.345513"
+       y2="864.57232"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6856"
+       id="linearGradient6864"
+       gradientUnits="userSpaceOnUse"
+       x1="41.082264"
+       y1="864.57232"
+       x2="77.345513"
+       y2="864.57232" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6856"
+       id="linearGradient6866"
+       gradientUnits="userSpaceOnUse"
+       x1="41.082264"
+       y1="864.57232"
+       x2="77.345513"
+       y2="864.57232" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6856"
+       id="linearGradient6868"
+       gradientUnits="userSpaceOnUse"
+       x1="41.082264"
+       y1="864.57232"
+       x2="77.345513"
+       y2="864.57232" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6856"
+       id="linearGradient7847"
+       x1="40.264191"
+       y1="850.23914"
+       x2="63.115414"
+       y2="850.23914"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(134.38807,74.225967)" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2222"
+       id="radialGradient7851"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2279-682"
+       id="radialGradient7855"
+       gradientUnits="userSpaceOnUse"
+       cx="1088.4491"
+       cy="764.37421"
+       fx="1088.4491"
+       fy="764.37421"
+       r="6.922821" />
   </defs>
+  <rect
+     id="rect5863"
+     x="-112.59692"
+     y="813.216"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     id="g5879"
+     transform="matrix(-0.4117408,0.206185,-0.2053898,-0.4200748,110.28311,1196.1936)"
+     style="stroke:url(#linearGradient6862);stroke-width:2.15510082;stroke-opacity:1"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929">
+    <path
+       id="path5881"
+       d="M 59.213889,827.06867 L 59.213889,902.07596"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:url(#linearGradient6864);stroke-width:6.46530294;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path5883"
+       d="M 42.582264,855.00946 L 58.713889,827.06867"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:url(#linearGradient6866);stroke-width:6.46530294;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path5885"
+       d="M 75.845513,855.00946 L 59.713889,827.06867"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:url(#linearGradient6868);stroke-width:6.46530294;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
   <path
      style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3273d6;stroke-width:13.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
      d="M 984.86138,834.39779 C 984.63657,837.65611 982.82847,843.7014 981.73608,848.07099 C 980.58659,852.66894 982.10479,857.92536 980.95475,862.52552 C 979.11634,869.87915 980.17342,879.20069 980.17342,886.74663 C 980.17342,900.36058 979.75302,914.00383 984.08005,926.98492 C 987.45716,937.11623 985.76366,943.87658 988.37735,954.33133 C 989.99333,960.79526 986.29922,970.31605 985.25204,976.59912 C 984.62331,980.37153 981.73607,990.83815 981.73607,994.96027 C 981.73607,1002.395 990.82593,1002.1246 992.28398,1009.4148 C 992.74589,1011.7244 995.01862,1014.0345 995.01862,1016.4467"
@@ -5288,15 +5507,15 @@
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#16981e;stroke-width:4.19999981;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:none;fill-rule:evenodd;stroke:#16981e;stroke-width:4.19999981;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:4.19999981,4.19999981;stroke-opacity:1;stroke-dashoffset:0;marker-mid:none"
      d="M 233.11988,729.8425 L 268.91488,710.53206 L 300.94198,710.53206 L 310.83268,726.5456"
      id="path14543"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5309,7 +5528,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="translate(-856.27117,-35.002675)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5322,7 +5541,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="translate(-820.94718,-52.429175)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5335,12 +5554,12 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="translate(-788.92012,-53.371155)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
      sodipodi:type="arc"
-     style="fill:url(#radialGradient14559);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     style="fill:url(#radialGradient22459);fill-opacity:1.0;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
      id="path14551"
      sodipodi:cx="1088.4491"
      sodipodi:cy="764.37421"
@@ -5348,7 +5567,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="translate(-777.61645,-37.357625)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <rect
@@ -5359,7 +5578,7 @@
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -5367,7 +5586,7 @@
      style="fill:none;fill-rule:evenodd;stroke:#7aa97c;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="M 370.80933,718.04166 L 389.68233,707.86019 L 406.5687,707.86019 L 411.78359,716.30336"
      id="path14565"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5380,7 +5599,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-203.57471,314.77521)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5393,7 +5612,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-184.95005,305.58704)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5406,7 +5625,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-168.06371,305.09038)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <rect
@@ -5417,7 +5636,7 @@
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -5425,7 +5644,7 @@
      style="fill:none;fill-rule:evenodd;stroke:#16981e;stroke-width:4.19999981;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="M 235.65918,870.87186 L 312.98132,856.24572"
      id="path17499"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929"
      sodipodi:nodetypes="cc" />
@@ -5439,12 +5658,12 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="translate(-853.73187,106.02668)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
      sodipodi:type="arc"
-     style="fill:url(#radialGradient19545);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     style="fill:url(#radialGradient19545);fill-opacity:1.0;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
      id="path17507"
      sodipodi:cx="1088.4491"
      sodipodi:cy="764.37421"
@@ -5452,7 +5671,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="translate(-775.85848,91.561178)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <rect
@@ -5463,7 +5682,7 @@
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -5471,7 +5690,7 @@
      style="fill:none;fill-rule:evenodd;stroke:#7aa97c;stroke-width:2.5999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="M 373.34863,859.07102 L 392.22163,848.88955 L 409.108,848.88955 L 414.32289,857.33272"
      id="path17511"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5484,7 +5703,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-201.03541,455.80457)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5497,7 +5716,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-182.41075,446.6164)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5510,14 +5729,14 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-165.52441,446.11974)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
      style="fill:none;fill-rule:evenodd;stroke:#ebd329;stroke-width:2.9000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
      d="M 412.83035,717.15133 L 433.91199,727.59432 L 452.77451,727.59432 L 458.59969,718.93429"
      id="path18526"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5530,7 +5749,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5889549,0,0,-0.5407951,-207.96757,1140.2001)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5543,12 +5762,12 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5889549,0,0,-0.5407951,-189.10508,1140.7095)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
      sodipodi:type="arc"
-     style="fill:url(#radialGradient18549);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     style="fill:url(#radialGradient18549);fill-opacity:1.0;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
      id="path18534"
      sodipodi:cx="1088.4491"
      sodipodi:cy="764.37421"
@@ -5556,7 +5775,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5889549,0,0,-0.5407951,-182.44773,1132.0494)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5569,20 +5788,20 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-162.10382,313.53355)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
      style="fill:none;fill-rule:evenodd;stroke:#ebd329;stroke-width:2.9000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
      d="M 414.75182,857.86117 L 450.75459,871.75468"
      id="path19524"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929"
      sodipodi:nodetypes="cc" />
   <path
      sodipodi:type="arc"
-     style="fill:url(#radialGradient19528);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     style="fill:url(#radialGradient19528);fill-opacity:1.0;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
      id="path19526"
      sodipodi:cx="1088.4491"
      sodipodi:cy="764.37421"
@@ -5590,7 +5809,7 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5889549,0,0,-0.5407951,-190.6835,1284.8698)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -5603,7 +5822,238 @@
      sodipodi:ry="6.1228209"
      d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
      transform="matrix(0.5272524,0,0,0.5272524,-159.56452,454.56291)"
-     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\waypoint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     sodipodi:type="star"
+     style="opacity:1;color:#000000;fill:#25972d;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.9000001;stroke-linecap:butt;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+     id="path22461"
+     sodipodi:sides="3"
+     sodipodi:cx="157.82785"
+     sodipodi:cy="732.43475"
+     sodipodi:r1="16.036228"
+     sodipodi:r2="8.018115"
+     sodipodi:arg1="0"
+     sodipodi:arg2="1.0471976"
+     inkscape:flatsided="false"
+     inkscape:rounded="0"
+     inkscape:randomized="0"
+     d="M 173.86408,732.43475 L 161.83691,739.37864 L 149.80974,746.32253 L 149.80974,732.43475 L 149.80974,718.54697 L 161.83691,725.49086 L 173.86408,732.43475 z "
+     transform="matrix(0.587323,-0.1129067,0.1129067,0.587323,93.925025,452.30395)"
+     inkscape:transform-center-x="3.2710381"
+     inkscape:transform-center-y="-2.3364918"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect2908"
+     x="27.6511"
+     y="692.50116"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <path
+     style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#27aa05;stroke-width:2.6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+     d="M 39.456961,731.65343 C 39.456961,731.65343 45.707569,733.21608 48.832873,730.48144 C 51.958177,727.7468 56.25547,715.24558 61.334088,717.98022 C 66.412707,720.71486 71.491326,723.4495 73.835304,729.70011 C 76.179282,735.95072 71.100663,734.77873 77.351271,743.37331 C 83.601878,751.9679 92.97779,744.15464 92.97779,744.15464 C 92.97779,744.15464 108.99497,730.8721 111.33895,725.01215 C 113.68293,719.15221 117.98022,709.7763 117.98022,709.7763"
+     id="path2910"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient2914);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     id="path2912"
+     sodipodi:cx="1088.4491"
+     sodipodi:cy="764.37421"
+     sodipodi:rx="6.1228209"
+     sodipodi:ry="6.1228209"
+     d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
+     transform="translate(-969.29689,-54.597908)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/route_to.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect3885"
+     x="-116.11288"
+     y="689.37579"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     id="g5852"
+     transform="matrix(0.2737526,0.9618001,-0.9618001,0.2737526,749.92821,426.39614)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929">
+    <path
+       id="path4871"
+       d="M 59.213889,827.06867 L 59.213889,902.07596"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3aa40e;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path4873"
+       d="M 42.582264,855.00946 L 58.713889,827.06867"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3aa40e;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path4875"
+       d="M 75.845513,855.00946 L 59.713889,827.06867"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3aa40e;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient3895);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     id="path3893"
+     sodipodi:cx="1088.4491"
+     sodipodi:cy="764.37421"
+     sodipodi:rx="6.1228209"
+     sodipodi:ry="6.1228209"
+     d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
+     transform="translate(-1112.6702,-56.160565)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect5857"
+     x="31.167061"
+     y="816.34137"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <path
+     style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#7ba274;stroke-width:2.5999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 50.395525,847.28967 C 50.395525,847.28967 50.004862,842.60172 56.25547,839.86708 C 62.506077,837.13243 71.881989,835.56978 71.881989,835.56978 C 71.881989,835.56978 78.132597,837.5231 80.867238,840.6484 C 83.601878,843.7737 83.992541,849.63365 83.992541,849.63365"
+     id="path8826"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#25aa0c;stroke-width:2.5999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 87.508508,852.36829 C 93.759116,855.49359 103.91635,854.71226 103.91635,854.71226 L 111.33895,850.80563 L 120.71486,835.17912"
+     id="path8828"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <g
+     id="g5865"
+     transform="matrix(0.3859673,0.7567595,-0.7567595,0.3859673,576.8046,469.72467)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929">
+    <path
+       id="path5867"
+       d="M 59.213889,827.06867 L 59.213889,902.07596"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3aa40e;stroke-width:3.53147554;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path5869"
+       d="M 42.582264,855.00946 L 58.713889,827.06867"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3aa40e;stroke-width:3.53147554;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       id="path5871"
+       d="M 75.845513,855.00946 L 59.713889,827.06867"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#3aa40e;stroke-width:3.53147554;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient5877);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     id="path5873"
+     sodipodi:cx="1088.4491"
+     sodipodi:cy="764.37421"
+     sodipodi:rx="6.1228209"
+     sodipodi:ry="6.1228209"
+     d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
+     transform="translate(-1109.1542,67.679623)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient5875);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     id="path5861"
+     sodipodi:cx="1088.4491"
+     sodipodi:cy="764.37421"
+     sodipodi:rx="6.1228209"
+     sodipodi:ry="6.1228209"
+     d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
+     transform="translate(-965.78092,69.24228)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient7851);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     id="path7849"
+     sodipodi:cx="1088.4491"
+     sodipodi:cy="764.37421"
+     sodipodi:rx="6.1228209"
+     sodipodi:ry="6.1228209"
+     d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
+     transform="matrix(0.5533691,0,0,0.5533691,-685.13467,439.54444)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient7855);fill-opacity:1;stroke:none;stroke-width:1.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.51973685"
+     id="path7853"
+     sodipodi:cx="1088.4491"
+     sodipodi:cy="764.37421"
+     sodipodi:rx="6.1228209"
+     sodipodi:ry="6.1228209"
+     d="M 1094.5719 764.37421 A 6.1228209 6.1228209 0 1 1  1082.3263,764.37421 A 6.1228209 6.1228209 0 1 1  1094.5719 764.37421 z"
+     transform="matrix(0.5852713,0,0,0.5852713,-552.0689,403.63465)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_route.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect10768"
+     x="-156.74182"
+     y="536.62659"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/direct_to.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect10770"
+     x="591.37775"
+     y="-95.466087"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/set_pos.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <path
+     sodipodi:type="arc"
+     style="fill:#fffbfa;fill-opacity:1;stroke:#fb0000;stroke-width:4.19999981;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="path10778"
+     sodipodi:cx="1536.5925"
+     sodipodi:cy="330.36038"
+     sodipodi:rx="12.010148"
+     sodipodi:ry="12.010148"
+     d="M 1548.6027 330.36038 A 12.010148 12.010148 0 1 1  1524.5824,330.36038 A 12.010148 12.010148 0 1 1  1548.6027 330.36038 z"
+     transform="translate(-889.65459,-393.81566)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/set_pos.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
 </svg>

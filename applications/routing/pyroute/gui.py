@@ -32,7 +32,7 @@ class MapWidget(gtk.Widget):
     'expose-event' : 'override',
     'size-allocate': 'override',
     'size-request': 'override'}
-  def __init__(self, osmDataFile):
+  def __init__(self):
     gtk.Widget.__init__(self)
     self.draw_gc = None
     self.timer = gobject.timeout_add(30, update, self)
@@ -46,7 +46,7 @@ class MapWidget(gtk.Widget):
     self.modules['data'] = DataStore(self)
     self.modules['data'].setState('mode','cycle')
     self.modules['data'].setOption('centred',False)
-    self.modules['osmdata'] = LoadOsm(osmDataFile, True)
+    self.modules['osmdata'] = LoadOsm(None)
     self.modules['projection'] = Projection()
     self.modules['projection'].recentre(51.2,-0.2, 0.1)
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
@@ -276,7 +276,7 @@ class MapWidget(gtk.Widget):
 
 class GuiBase:
   """Wrapper class for a GUI interface"""
-  def __init__(self, osmDataFile):
+  def __init__(self):
     # Create the window
     win = gtk.Window()
     win.set_title('pyroute')
@@ -292,7 +292,7 @@ class GuiBase:
     win.add(event_box)
     
     # Create the map
-    self.mapWidget = MapWidget(osmDataFile)
+    self.mapWidget = MapWidget()
     event_box.add(self.mapWidget)
     
     # Finalise the window
@@ -326,4 +326,4 @@ class GuiBase:
 
 
 if __name__ == "__main__":
-  program = GuiBase(sys.argv[1])
+  program = GuiBase()

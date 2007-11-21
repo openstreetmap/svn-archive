@@ -208,7 +208,7 @@ class guiOverlay:
         
         self.cells[0][1].button("View","menu:view","viewMenu")
         self.cells[1][1].button("GPS","menu:gps","gps")
-        self.cells[2][1].button("Download",None,"download")
+        self.cells[2][1].button("Download","menu:download","download")
 
         self.cells[0][2].button()
         self.cells[1][2].button()
@@ -365,6 +365,23 @@ class guiOverlay:
         self.cells[2][2].button("Drawings",None,"sketch")
         
         self.cells[0][3].button("Events",None,"events")
+    
+    def menu_download(self):
+        self.backButton(0,0)
+        self.cells[1][0].button("",None,None)
+        self.cells[2][0].button("",None,None)
+
+        self.cells[0][1].button("",None,None)
+        self.cells[1][1].button("",None,None)
+        self.cells[2][1].button("Route data","download:osm:0.2","download")
+
+        self.cells[0][2].button("",None,None)
+        self.cells[1][2].button("",None,None)
+        self.cells[2][2].button("",None,None)
+        
+        self.cells[0][3].button("",None,None)
+        self.cells[1][3].button("",None,None)
+        self.cells[2][3].button("",None,None)
 
     def menu_click(self):
         self.backButton(0,0)

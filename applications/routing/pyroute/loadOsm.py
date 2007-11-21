@@ -30,12 +30,14 @@
 import sys
 import os
 from xml.sax import make_parser, handler
+import urllib
+from time import clock
 
 execfile("weights.py")
 
 class LoadOsm(handler.ContentHandler):
   """Parse an OSM file looking for routing information, and do routing with it"""
-  def __init__(self, filename, storeMap = 0, usecache=0):
+  def __init__(self, filename, storeMap = 0):
     """Initialise an OSM-file parser"""
     self.routing = {}
     self.routeTypes = ('cycle','car','train','foot','horse')
@@ -47,17 +49,26 @@ class LoadOsm(handler.ContentHandler):
     self.ways = []
     self.storeMap = storeMap
     
-    cachefile = filename + "_cached"
-    if(usecache and os.path.exists(cachefile)):
-      print "Loading cached copy from %s" % cachefile
-      self.load(cachefile)
-    else:
-      parser = make_parser()
-      parser.setContentHandler(self)
-      parser.parse(filename)
-      if(usecache):
-        self.save(cachefile)
-      
+    if(filename == None):
+      return
+    self.loadfile(filename)
+    
+  def loadfile(self, filename):
+    parser = make_parser()
+    parser.setContentHandler(self)
+    parser.parse(filename)
+  
+  def download(self,lat,lon,size):
+    url = "http://osm.test.le.ac.uk/api/0.5/way[%1.4f,%1.4f,%1.4f,%1.4f][*=*]" % (lon-size,lat-size,lon+size,lat+size)
+    url = "http://api.openstreetmap.org/api/0.5/map?bbox=%1.4f,%1.4f,%1.4f,%1.4f" % (lon-size,lat-size,lon+size,lat+size)
+    print "downloading %s" % url
+    start = clock()
+    filename = "data/routing.osm"
+    urllib.urlretrieve(url, filename)
+    end = clock()
+    delay = end - start 
+    print "finished downloading, took %1.1f s" % (delay)
+    self.loadfile(filename)
   def report(self):
     """Display some info about the loaded data"""
     report = "Loaded %d nodes,\n" % len(self.nodes.keys())

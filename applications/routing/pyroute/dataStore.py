@@ -53,6 +53,11 @@ class DataStore:
           self.globals.modules['route'].update()
           self.globals.forceRedraw()
           self.closeAllMenus()
+        elif(action == 'download'):
+          self.globals.modules['osmdata'].download( \
+            self.globals.ownpos['lat'],
+            self.globals.ownpos['lon'],
+            0.05)
         
         
         

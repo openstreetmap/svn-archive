@@ -119,7 +119,9 @@ sub ApplyConfigLogic
     $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});
     $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});
     $Config->{"BatikPath"} = "batik-rasterizer.jar" unless defined($Config->{"BatikPath"});
-   
+    
+    ## Set default download timeout to 3 minutes
+    $Config->{"DownloadTimeout"} = "1800" unless defined($Config->{"DownloadTimeout"});
 }
 
 #--------------------------------------------------------------------------

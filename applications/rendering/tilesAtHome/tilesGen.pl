@@ -1363,7 +1363,7 @@ sub WriteImage
     my $png_data = $Image->png;
     
     # Store it
-    open (my $fp, ">$Filename") || die;
+    open (my $fp, ">$Filename") || cleanUpAndDie("WriteImage:could not open file for writing, exiting","EXIT",3,$PID);
     binmode $fp;
     print $fp $png_data;
     close $fp;

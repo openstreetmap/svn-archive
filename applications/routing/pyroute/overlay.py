@@ -368,14 +368,30 @@ class guiOverlay:
 
     def menu_click(self):
         self.backButton(0,0)
-        self.cells[1][0].button("(lat)",None,None)
-        self.cells[2][0].button("(lon)",None,None)
+        
+        latlonRect = self.rect.copyself(0.33,0,1,0.25)
+        latRect = latlonRect.copyself(0,0,1,0.5)
+        lonRect = latlonRect.copyself(0,0.5,1,1)
+        
+        lat,lon = self.modules["data"].getState('clicked')
+        
+        NS = lat > 0 and 'N' or 'S'
+        EW = lon > 0 and 'E' or 'W'
+        
+        latRect.drawTextSomewhere('%1.4f %s' % (abs(lat), NS), 0.05, 0.05, 0.7, 0.95)
+        lonRect.drawTextSomewhere('%1.4f %s' % (abs(lon), EW), 0.3, 0.05, 0.95, 0.95)
+        #def drawTextSomewhere(self,text,px1,py1,px2,py2):
+        #innerBox = self.copyself(px1,py1,px2,py2)
+        #innerBox.drawText(text)
+    
+        #self.cells[1][0].button("(lat)",None,None)
+        #self.cells[2][0].button("(lon)",None,None)
 
-        self.cells[0][1].button("set pos","ownpos:clicked",None)
+        self.cells[0][1].button("set pos","ownpos:clicked","set_pos")
         self.cells[1][1].button("route to","route:clicked","route_to")
         self.cells[2][1].button("direct to","direct:clicked","direct_to")
 
-        self.cells[0][2].button("waypoint", "waypoint:clicked", None)
+        self.cells[0][2].button("waypoint", "waypoint:clicked", "bookmark")
         self.cells[1][2].button("extend route", "extend:route:clicked", "extend_route")
         self.cells[2][2].button("extend direct", "extend:direct:clicked", "extend_direct")
 

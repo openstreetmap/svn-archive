@@ -122,7 +122,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.5b";	// current version
+	var signature="Potlatch 0.5c";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
@@ -130,13 +130,12 @@
 	// ** should be moved into presets file
 	// ** area colours need to be value-specific (not just key-specific)
 	colours=new Array();
-	colours["motorway"		]=0x3366CC; 
-	colours["motorway_link"	]=0x3366CC;	
-	colours["trunk"			]=0x007700;	// primary A road
-	colours["trunk_link"	]=0x007700; //  |
-	colours["primary"		]=0x770000;	// non-primary A road
-	colours["primary_link"	]=0x770000; //  |
-	colours["secondary"		]=0xCC6600;	// B road
+	colours["motorway"		]=0x809BC0; colours["motorway_link"	]=0x809BC0;	// 0x3366CC
+	colours["trunk"			]=0x7FC97F;	colours["trunk_link"	]=0x7FC97F; // 0x007700
+	colours["primary"		]=0xE46D71;	colours["primary_link"	]=0xE46D71; // 0x770000
+	colours["secondary"		]=0xFDBF6F; // 0xCC6600
+	colours["tertiary"		]=0xFEFECB; // blank
+	colours["unclassified"	]=0xE8E8E8; colours["residential"	]=0xE8E8E8; // blank
 	colours["footway"		]=0xFF6644;	
 	colours["cycleway"		]=0xFF6644;	
 	colours["bridleway"		]=0xFF6644;	
@@ -145,6 +144,13 @@
 	colours["canal"			]=0x8888FF;	
 	colours["stream"		]=0x8888FF;	
 	
+	casing=new Array();
+	casing['motorway'   ]=1; casing['motorway_link']=1;
+	casing['trunk'		]=1; casing['trunk_link'   ]=1;
+	casing['primary'	]=1; casing['primary_link' ]=1;
+	casing['secondary'	]=1; casing['tertiary'     ]=1;
+	casing['residential']=1; casing['unclassified' ]=1;
+
 	areas=new Array();
 	areas['leisure' ]=0x8CD6B5;
 	areas['amenity' ]=0xADCEB5;
@@ -744,7 +750,7 @@
 			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
 		}
 
-		if (f>-1 || this.attr['highway']) {
+		if (f>-1 || casing[this.attr['highway']]) {
 			if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
 			with (_root.map.areas[this._name]) {
 				clear();
@@ -821,6 +827,7 @@
 			nw=result[1];	// new way ID
 			if (result[0]!=nw) {
 				_root.map.ways[result[0]]._name=nw;
+				if (_root.map.areas[result[0]]) { _root.map.areas[result[0]]._name=nw; }
 				if (_root.t_details.text==result[0]) { _root.t_details.text=nw; _root.t_details.setTextFormat(plainText); }
 				if (wayselected==result[0]) { wayselected=nw; }
 			}
@@ -948,7 +955,7 @@
 	OSMWay.prototype.highlight=function() {
 		_root.map.createEmptyMovieClip("highlight",5);
 		if (_root.pointselected>-2) {
-			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y,8/Math.pow(2,Math.min(_root.scale,16)-12));
+			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y,8/Math.pow(2,Math.min(_root.scale,17)-12));
 		} else {
 			var linewidth=11;
 			var linecolour=0xFFFF00; if (this.locked) { var linecolour=0x00FFFF; }

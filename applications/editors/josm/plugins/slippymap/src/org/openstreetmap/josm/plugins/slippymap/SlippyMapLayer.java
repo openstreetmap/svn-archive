@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
@@ -35,9 +36,9 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Frederik Ramm <frederik@remote.org>
  * 
  */
-public class SlippyMapLayer extends Layer implements ImageObserver
+public class SlippyMapLayer extends Layer implements ImageObserver,
+        PreferenceChangedListener
 {
-
     ArrayList<HashMap<Integer, SlippyMapTile>> tileStorage = null;
 
     Point[][]                                  pixelpos    = new Point[21][21];
@@ -142,6 +143,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver
                         });
             }
         });
+
+        Main.pref.listener.add(this);
     }
 
     private void clearTileStorage()
@@ -452,5 +455,28 @@ public class SlippyMapLayer extends Layer implements ImageObserver
         needRedraw = true;
         Main.map.repaint(done ? 0 : 100);
         return !done;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.openstreetmap.josm.data.Preferences.PreferenceChangedListener#preferenceChanged(java.lang.String,
+     *      java.lang.String)
+     */
+    public void preferenceChanged(String key, String newValue)
+    {
+        if (key.startsWith("slippymaplayer"))
+        {
+            System.err.println(this + ".preferenceChanged('" + key + "', '"
+                    + newValue + "') called");
+
+            clearTileStorage();
+        }
+    }
+
+    @Override
+    public void destroy()
+    {
+        Main.pref.listener.remove(SlippyMapLayer.this);
     }
 }

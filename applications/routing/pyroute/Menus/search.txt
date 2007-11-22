@@ -1,0 +1,17 @@
+-----
+Up
+Eat|menu:search_food
+Sleep|menu:search_accomodation
+-----
+Fuel|menu:search_fuel
+Repair|menu:search_repair
+Buy|menu:search_buy
+-----
+Help|menu:search_help
+Park|menu:search_park
+Hire|menu:search_hire
+-----
+
+
+
+-----

@@ -1,0 +1,17 @@
+-----
+Up
+People
+Wiki|menu:geonames
+-----
+Business|menu:search
+RSS|menu:feeds
+Bookmarks
+-----
+Routes
+Waypoints
+Drawings
+-----
+Events
+
+
+-----

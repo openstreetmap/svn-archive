@@ -1,0 +1,17 @@
+-----
+Up
+Bike|mode:cycle
+Walk|mode:foot
+-----
+MTB|mode:cycle
+Car|mode:car
+Hike|mode:foot
+-----
+FastBike|mode:cycle
+
+
+-----
+HGV|mode:hgv
+
+
+-----

@@ -1,0 +1,17 @@
+-----
+Up
+Hotel|search:tourism=hotel
+Hostel|search:tourism=hostel
+-----
+
+
+
+-----
+
+
+
+-----
+
+
+
+-----

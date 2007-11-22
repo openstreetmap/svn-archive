@@ -230,11 +230,14 @@ sub MagicMkdir
     my $dir = "";
     foreach my $path(@paths)
     {
-        if ($dir eq "") {
-		$dir .= $path; # how are paths with leading "/" handled now?
-	}else{
-		$dir .= "/".$path;
-	}
+        if ($dir eq "")
+        {
+            $dir .= $path; # how are paths with leading "/" handled now?
+        }
+        else
+        {
+            $dir .= "/".$path;
+        }
 
         if (!defined($madeDir{$dir}))
         {

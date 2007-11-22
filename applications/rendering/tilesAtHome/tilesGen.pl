@@ -277,7 +277,7 @@ elsif ($Mode eq "loop")
 elsif ($Mode eq "upload") 
 {
     statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
-    compressAndUpload;
+    compressAndUpload();
 }
 elsif ($Mode eq "upload_conditional") 
 {

@@ -58,7 +58,7 @@
 
   <target name="install" depends="dist">
     <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
-    <copy todir="${user.home}/Application Data/JOSM/plugins/Lakewalker">
+    <copy todir="${josm.plugins.dir}/Lakewalker">
       <fileset dir="Lakewalker">
   	<filename name = "*.py"/>
       </fileset>

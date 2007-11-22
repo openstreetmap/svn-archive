@@ -2,7 +2,6 @@
 import os
 import re
 
-
 def loadMenu(filename):
   menu = {}
   try:
@@ -96,11 +95,22 @@ def expand(text,size):
 
 if(__name__ == "__main__"):
   menus = loadMenus('.')
-  for name, menu in menus.items():
-    print "Menu for %s:" % name
-    printMenu(menu)
   
-  printStrings(menus)
-  
-  checkIcons(menus,"../icons/bitmap")
-  
+  import sys
+  try:
+    if(sys.argv[1] == 'list'):
+      for name, menu in menus.items():
+        print "Menu for %s:" % name
+        printMenu(menu)
+    elif(sys.argv[1] == 'strings'):
+      printStrings(menus)
+    elif(sys.argv[1] == 'icons'):
+      checkIcons(menus,"../icons/bitmap")
+    else:
+      print "Loaded %d menus" % len(menus)
+  except IndexError:
+    print "Usage: %s [mode]" % sys.argv[0]
+    print "  * 'list' - lists the contents of all menus"
+    print "  * 'strings' - exports names, ready for translating"
+    print "  * 'icons' - checks that all the icons exist"
+    

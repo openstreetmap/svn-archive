@@ -227,34 +227,10 @@ elsif ($Mode eq "loop")
         reExecIfRequired(); ## check for new version of tilesGen.pl and reExec if true
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
-
-        if ($Config{"Fork"})
-        {
-            # Upload is handled by another process, so that we can generate another tile at the same time.
-            # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
-            if ($upload_pid != -1)
-            {
-                waitpid($upload_pid, 0);
-                $upload_result = $? >> 8;
-            }
-            $upload_pid = fork();
-            if (not defined $upload_pid)
-            {
-                cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
-            }
-            elsif ($upload_pid == 0)
-            {
-                ## we are the child, so we run the upload
-                my $res = uploadIfEnoughTiles(); # upload if enough work done
-                exit($res);
-            }
-        }
-        else
-        {
-            ## no forking going on
-            $upload_result = uploadIfEnoughTiles(); # upload if enough work done
-        }
-
+        
+        ## no forking going on
+        $upload_result = uploadIfEnoughTiles(); # upload if enough work done
+        
         if ($upload_result)  # we got an error in the upload process
         {
               addFault("upload",1); # we only track errors that occur multple times in a row

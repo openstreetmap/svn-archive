@@ -29,6 +29,11 @@ use tahlib;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
+if (not $ARGV[0]) 
+{
+   die "please call \"tilesGen.pl upload\" instead";
+}
+
 # conf file, will contain username/password and environment info
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 
@@ -48,7 +53,7 @@ my @sorted;
 # when called from tilesGen, use these for nice display
 my $progress = 0;
 my $progressPercent = 0;
-my $progressJobs = $ARGV[0] or 1;
+my $progressJobs = $ARGV[1];
 my $currentSubTask;
  
 my $lastmsglen;
@@ -69,16 +74,17 @@ elsif (open(FAILFILE, ">", $failFile))
     close FAILFILE;
 }
 
-compress(1); ## first run
+### don't compress, this is handled from tilesGen.pl now
+# compress(1); ## first run
 
 # Upload any ZIP files which are still waiting to go
-processOldZips(1);
+processOldZips($ARGV[0]); # ARGV[0] is there or we would have exited in init (on or about line 32)
 
-# We might have created lots of single tiles if some tileset zips were larger than 10 MB, so re-check here
-compress(2); ## second (and last) run.
+### We might have created lots of single tiles if some tileset zips were larger than 10 MB, so re-check here
+#compress(2); ## second (and last) run.
 
 # Do we have new zips? (try to) upload them all!
-processOldZips(2);
+#processOldZips(2);
 
 
 ## update the failFile with current failure count from processOldZips
@@ -238,18 +244,6 @@ sub upload
     }
     
     return 1;
-}
-
-sub compress
-{
-    ## Run compress directly because it uses same messaging as tilesGen.pl and upload.pl
-    ## no need to hide output at all.
-
-    my ($runNumber) = @_;
-
-    my $UploadScript = "perl $Bin/compress.pl $runNumber $progressJobs";
-    my $retval = system($UploadScript);
-    return $retval;
 }
 
 

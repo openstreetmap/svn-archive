@@ -1,5 +1,6 @@
 import cairo
 import os
+from base import pyrouteModule
 
 class menuIcons:
     def __init__(self):
@@ -142,8 +143,9 @@ class overlayArea:
             return(1)
         return(0)
     
-class guiOverlay:
+class guiOverlay(pyrouteModule):
     def __init__(self, modules):
+        pyrouteModule.__init__(self, modules)
         self.modules = modules
         self.icons = menuIcons()
 

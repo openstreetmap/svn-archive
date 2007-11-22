@@ -1,8 +1,11 @@
-class DataStore:
-    def __init__(self, globals):
+from base import pyrouteModule
+
+class DataStore(pyrouteModule):
+    def __init__(self, globals, modules):
+        pyrouteModule.__init__(self,modules)
         self.options = {}
         self.state = {}
-        self.globals = globals
+        self.globals = globals # TODO: remove
         
     def handleEvent(self,event):
         action,params = event.split(':',1)

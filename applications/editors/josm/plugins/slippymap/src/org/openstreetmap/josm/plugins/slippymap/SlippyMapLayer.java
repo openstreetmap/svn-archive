@@ -50,6 +50,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver
     private boolean                            needRedraw;
     private JPopupMenu                         tileOptionMenu;
 
+    @SuppressWarnings("serial")
     public SlippyMapLayer()
     {
         super("Slippy Map");

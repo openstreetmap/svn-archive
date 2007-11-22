@@ -43,7 +43,7 @@ class MapWidget(gtk.Widget):
     #self.modules['plugins']['geonames'] = geonames()
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
-    self.modules['data'] = DataStore(self)
+    self.modules['data'] = DataStore(self, self.modules)
     self.modules['data'].setState('mode','cycle')
     self.modules['data'].setOption('centred',False)
     self.modules['osmdata'] = LoadOsm(None)
@@ -54,7 +54,11 @@ class MapWidget(gtk.Widget):
     self.ownpos = {'valid':False}
     for name,mod in self.modules['plugins'].items():
       mod.callbacks(self.modules)
-      
+
+    if(0): 
+      self.modules['data'].reportModuleConnectivity()
+      sys.exit()
+    
   def updatePosition(self):
     """Try to get our position from GPS"""
     newpos = self.modules['position'].get()

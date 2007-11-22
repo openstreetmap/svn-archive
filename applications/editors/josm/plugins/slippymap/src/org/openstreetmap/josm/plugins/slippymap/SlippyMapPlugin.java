@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.slippymap;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 
 /**
@@ -23,4 +24,16 @@ public class SlippyMapPlugin extends Plugin
         smlayer = new SlippyMapLayer();
         Main.main.addLayer(smlayer);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.openstreetmap.josm.plugins.Plugin#getPreferenceSetting()
+     */
+    @Override
+    public PreferenceSetting getPreferenceSetting()
+    {
+        return new SlippyMapPreferenceSetting();
+    }
+
 }

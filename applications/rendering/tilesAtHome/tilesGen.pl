@@ -38,13 +38,6 @@ my %EnvironmentInfo = CheckConfig(\%Config);
 
 my $Layers = $Config{"Layers"};
 
-resetFault("fatal");
-resetFault("nodata");
-resetFault("nodataXAPI");
-resetFault("utf8");
-resetFault("inkscape");
-resetFault("renderer");
-
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
@@ -89,6 +82,23 @@ my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
 
+# We need to keep parent PID so that child get the correct files after fork()
+my $parent_pid = $PID;
+my $upload_pid = -1;
+
+my $upload_result = 0;
+
+# Subdirectory for the current job (layer & z12 tileset),
+# as used in sub GenerateTileset() and tileFilename()
+my $JobDirectory;
+
+# keep track of time running
+my $progstart = time();
+my $dirent; 
+
+# keep track of the server time for current job
+my $JobTime;
+
 # Check the on disk image tiles havn't been corrupted
 if( -s "emptyland.png" != 67 )
 {
@@ -131,22 +141,17 @@ if( $ARGV[0] eq "loop" and -e "/dev/null" )
 # Create the working directory if necessary
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 
-# We need to keep parent PID so that child get the correct files after fork()
-my $parent_pid = $PID;
-
-# Subdirectory for the current job (layer & z12 tileset),
-# as used in sub GenerateTileset() and tileFilename()
-my $JobDirectory;
-
-# keep track of time running
-my $progstart = time();
-my $dirent; 
-
-# keep track of the server time for current job
-my $JobTime;
-
 # Handle the command-line
 my $Mode = shift();
+
+## set all fault counters to 0;
+resetFault("fatal");
+resetFault("nodata");
+resetFault("nodataXAPI");
+resetFault("utf8");
+resetFault("inkscape");
+resetFault("renderer");
+resetFault("upload");
 
 if($Mode eq "xy")
 {
@@ -193,6 +198,10 @@ elsif ($Mode eq "loop")
         {
             cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
         }
+        elsif (getFault("upload") > 5)
+        {
+            cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        }
         elsif (getFault("nodata") > 5)
         {
             cleanUpAndDie("Five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
@@ -219,13 +228,47 @@ elsif ($Mode eq "loop")
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
 
-        uploadIfEnoughTiles(); # upload if enough work done
+        if ($Config{"Fork"})
+        {
+            # Upload is handled by another process, so that we can generate another tile at the same time.
+            # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
+            if ($upload_pid != -1)
+            {
+                waitpid($upload_pid, 0);
+                $upload_result = $? >> 8;
+            }
+            $upload_pid = fork();
+            if (not defined $upload_pid)
+            {
+                cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
+            }
+            elsif ($upload_pid == 0)
+            {
+                ## we are the child, so we run the upload
+                my $res = uploadIfEnoughTiles(); # upload if enough work done
+                exit($res);
+            }
+        }
+        else
+        {
+            ## no forking going on
+            $upload_result = uploadIfEnoughTiles(); # upload if enough work done
+        }
+
+        if ($upload_result)  # we got an error in the upload process
+        {
+              addFault("upload",1); # we only track errors that occur multple times in a row
+        }
+        else
+        {
+              resetFault("upload"); #reset fault counter for uploads if once without error
+        }
 
         if ($did_something == 0) 
         {
             talkInSleep($message, 60);
-        } 
-        else 
+        }
+        else
         {
             setIdle(0,0);
         }
@@ -233,10 +276,12 @@ elsif ($Mode eq "loop")
 }
 elsif ($Mode eq "upload") 
 {
-    upload();
+    statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+    compressAndUpload;
 }
 elsif ($Mode eq "upload_conditional") 
 {
+    statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
     uploadIfEnoughTiles();
 }
 elsif ($Mode eq "version") 
@@ -313,7 +358,33 @@ sub uploadIfEnoughTiles
 
     if (($Count >= 200) or ($ZipCount >= 1))
     {
-        upload();
+        if ($Config{"Fork"})
+        {
+            # Upload is handled by another process, so that we can generate another tile at the same time.
+            # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
+            if ($upload_pid != -1)
+            {
+                waitpid($upload_pid, 0);
+                $upload_result = $? >> 8;
+            }
+            compress(1); #compress before fork so we don't get temp files mangled. Workaround for batik support.
+            $upload_pid = fork();
+            if ((not defined $upload_pid) or ($upload_pid == -1))
+            {
+                cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
+            }
+            elsif ($upload_pid == 0)
+            {
+                ## we are the child, so we run the upload
+                my $res = upload(1); # upload if enough work done
+                exit($res);
+            }
+        }
+        else
+        {
+            ## no forking going on
+            return compressAndUpload();
+        }
     }
     else
     {
@@ -321,12 +392,33 @@ sub uploadIfEnoughTiles
     }
 }
 
+sub compressAndUpload
+{
+  my $error=0;
+  $error=compress(1) + 2 * upload(1) + 4 * compress (2) + 8 * upload(2);
+  return $error;
+}
+
+sub compress
+{
+    ## Run compress directly because it uses same messaging as tilesGen.pl and upload.pl
+    ## no need to hide output at all.
+
+    my ($runNumber) = @_;
+
+    my $CompressScript = "perl $Bin/compress.pl $runNumber $progressJobs";
+    my $retval = system($CompressScript);
+    return $retval;
+}
+
 sub upload
 {
     ## Run upload directly because it uses same messaging as tilesGen.pl, 
     ## no need to hide output at all.
 
-    my $UploadScript = "perl $Bin/upload.pl $progressJobs";
+    my ($runNumber) = @_;
+
+    my $UploadScript = "perl $Bin/upload.pl $runNumber $progressJobs";
     my $retval = system($UploadScript);
     return $retval;
 }
@@ -955,8 +1047,10 @@ sub RenderTile
                 return (0,$SkipEmpty);
             }
         }
-        $progressPercent=100 if (! $Config{"Debug"}); # workaround for not correctly updating %age in fork, disable in debug mode
-        statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        if ($Zoom == $ZOrig) {
+            $progressPercent=100 if (! $Config{"Debug"}); # workaround for not correctly updating %age in fork, disable in debug mode
+            statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        }
     } else {
         ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
         return (0,$empty) if (!$success);

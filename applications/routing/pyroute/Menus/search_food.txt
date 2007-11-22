@@ -1,0 +1,17 @@
+-----
+Up
+Pub food|search:amenity=pub;food=yes
+Restaurant|search:amenity=restaurant
+-----
+Cafe|search:amenity=cafe
+Fast food|search:amenity=fast_food
+Takeaway
+-----
+
+
+
+-----
+
+
+
+-----

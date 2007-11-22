@@ -1,0 +1,17 @@
+-----
+Up
+Mark|None
+Sketch|None
+-----
+View|menu:view
+GPS|menu:gps
+Download|menu:download
+-----
+
+
+
+-----
+Centre|option:toggle:centred
+Options|menu:options
+Mode|menu:mode
+-----

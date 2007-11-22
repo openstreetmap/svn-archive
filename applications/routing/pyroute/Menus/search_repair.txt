@@ -1,0 +1,17 @@
+-----
+Up
+Bike shop|search:amenity=bike_shop
+Garage|search:amenity=garage
+-----
+
+
+
+-----
+
+
+
+-----
+
+
+
+-----

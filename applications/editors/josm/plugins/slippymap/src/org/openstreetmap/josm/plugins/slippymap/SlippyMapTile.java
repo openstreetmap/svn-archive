@@ -1,15 +1,12 @@
-package slippymap;
+package org.openstreetmap.josm.plugins.slippymap;
+
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 
 /**
  * Class that contains information about one single slippy map tile.

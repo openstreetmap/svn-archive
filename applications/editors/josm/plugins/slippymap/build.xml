@@ -30,14 +30,14 @@
     <!-- create josm-custom.jar -->
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
-        <attribute name="Plugin-Class" value="slippymap.SlippyMapPlugin" />
+        <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.slippymap.SlippyMapPlugin" />
         <attribute name="Plugin-Description" value="Displays a slippy map tile grid, and tile status info" />
       </manifest>
     </jar>
   </target>
 
   <target name="compile" depends="init">
-    <javac srcdir="slippymap" classpath="../../core/dist/josm-custom.jar" destdir="build" />
+    <javac srcdir="src" classpath="../../core/dist/josm-custom.jar" destdir="build" />
   </target>
   
   <target name="init">

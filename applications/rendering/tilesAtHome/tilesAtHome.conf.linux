@@ -69,5 +69,8 @@ BatikJVMSize=1536M
 # Fork = 3   -> 8 processes
 Fork=0
 
+# make the client upload in the background if set to 1
+ForkForUpload=1
+
 # Set the timeout when downloading files (on tenths of a second)
 DownloadTimeout=1800

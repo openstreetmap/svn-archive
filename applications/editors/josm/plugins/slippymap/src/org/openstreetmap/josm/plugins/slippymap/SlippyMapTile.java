@@ -40,9 +40,10 @@ public class SlippyMapTile
     {
         try
         {
-            tileImage = Toolkit.getDefaultToolkit().createImage(
-                    new URL("http://tah.openstreetmap.org/Tiles/tile/" + z
-                            + "/" + x + "/" + y + ".png"));
+            URL imageURL = new URL(SlippyMapPreferences.getMapUrl() + "/" + z
+                    + "/" + x + "/" + y + ".png");
+
+            tileImage = Toolkit.getDefaultToolkit().createImage(imageURL);
         }
         catch (MalformedURLException mfu)
         {

@@ -185,7 +185,13 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             for (int y = z12y0 - 1; y <= z12y1; y++)
             {
                 int key = (y << 19) + x;
+
                 SlippyMapTile tile = tileStorage.get(12).get(key);
+
+                if (tile == null)
+                    tileStorage.get(12).put(key,
+                            tile = new SlippyMapTile(x, y, 12));
+
                 if (tile.getImage() == null)
                     tile.loadImage();
             }
@@ -465,7 +471,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      */
     public void preferenceChanged(String key, String newValue)
     {
-        if (key.startsWith(Constants.PREFERENCE_PREFIX))
+        if (key.startsWith(SlippyMapPreferences.PREFERENCE_PREFIX))
         {
             System.err.println(this + ".preferenceChanged('" + key + "', '"
                     + newValue + "') called");

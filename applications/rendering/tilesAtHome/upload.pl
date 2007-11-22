@@ -75,17 +75,9 @@ elsif (open(FAILFILE, ">", $failFile))
 }
 
 ### don't compress, this is handled from tilesGen.pl now
-# compress(1); ## first run
 
 # Upload any ZIP files which are still waiting to go
 processOldZips($ARGV[0]); # ARGV[0] is there or we would have exited in init (on or about line 32)
-
-### We might have created lots of single tiles if some tileset zips were larger than 10 MB, so re-check here
-#compress(2); ## second (and last) run.
-
-# Do we have new zips? (try to) upload them all!
-#processOldZips(2);
-
 
 ## update the failFile with current failure count from processOldZips
 
@@ -138,6 +130,8 @@ sub processOldZips
                 {
                     $sleepdelay = 0.75 * $sleepdelay; # reduce sleepdelay by 25%
                     $Reason = "uploaded ".$File;
+                    $progress++;
+                    $progressPercent = $progress * 100 / $zipCount;
                 }
                 elsif ($FailureMode == 0) ## hard fail
                 {
@@ -154,8 +148,6 @@ sub processOldZips
             }
 
         }
-        $progress++;
-        $progressPercent = $progress * 100 / $zipCount;
         statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         
     }

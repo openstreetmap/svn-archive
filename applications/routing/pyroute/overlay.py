@@ -152,7 +152,8 @@ class guiOverlay(pyrouteModule):
     def fullscreen(self):
         """Asks if the menu is fullscreen -- if it is, then the
         map doesn't need to be drawn underneath"""
-        return(self.modules['data'].getState('menu'))
+        return(self.get('menu'))
+    
     def handleClick(self,x,y):
         """return 1 if click was handled"""
         for cell in self.clickable:
@@ -178,7 +179,7 @@ class guiOverlay(pyrouteModule):
                 y1 = rect.y + j * dy
                 self.cells[i][j] = overlayArea(cr,x1,y1,dx,dy,self.modules, self.icons)
                 self.clickable.append(self.cells[i][j])
-        currentMenu = self.modules['data'].getState('menu')
+        currentMenu = self.get('menu')
         if(currentMenu):
             self.drawMenu(currentMenu)
         else:
@@ -197,7 +198,7 @@ class guiOverlay(pyrouteModule):
             function = getattr(self, menuName)
         except AttributeError:
             print "Error: %s not defined" % menuName
-            self.modules['data'].setState('menu','')
+            self.set('menu',None)
             return
         function()
     def backButton(self,i,j):
@@ -392,7 +393,7 @@ class guiOverlay(pyrouteModule):
         latRect = latlonRect.copyself(0,0,1,0.5)
         lonRect = latlonRect.copyself(0,0.5,1,1)
         
-        lat,lon = self.modules["data"].getState('clicked')
+        lat,lon = self.get('clicked')
         
         NS = lat > 0 and 'N' or 'S'
         EW = lon > 0 and 'E' or 'W'

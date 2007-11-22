@@ -21,12 +21,13 @@ from overlay import *
 from dataStore import *
 from mod_geoRss import geoRss
 from mod_geonames import geonames
+from base import pyrouteModule
 
 def update(mapWidget):
   mapWidget.updatePosition();
   return(True)
 
-class MapWidget(gtk.Widget):
+class MapWidget(gtk.Widget, pyrouteModule):
   __gsignals__ = { \
     'realize': 'override',
     'expose-event' : 'override',
@@ -39,19 +40,21 @@ class MapWidget(gtk.Widget):
     self.images = {}
     
     self.modules = {'plugins':{}}
+    pyrouteModule.__init__(self, self.modules)
+    
     #self.modules['plugins']['rss'] = geoRss('Setup/feeds.txt')
     #self.modules['plugins']['geonames'] = geonames()
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
     self.modules['data'] = DataStore(self, self.modules)
-    self.modules['data'].setState('mode','cycle')
-    self.modules['data'].setOption('centred',False)
+    self.set('mode','cycle')
+    self.set('centred',False)
     self.modules['osmdata'] = LoadOsm(None)
     self.modules['projection'] = Projection()
     self.modules['projection'].recentre(51.2,-0.2, 0.1)
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.updatePosition()
-    self.ownpos = {'valid':False}
+    self.set('ownpos', {'valid':False})
     for name,mod in self.modules['plugins'].items():
       mod.callbacks(self.modules)
 
@@ -70,12 +73,13 @@ class MapWidget(gtk.Widget):
     
     # TODO: if we set ownpos and then get a GPS signal, we should decide
     # here what to do
-    self.ownpos = newpos
+    self.set('ownpos', newpos)
     
     self.handleUpdatedPosition()
     
   def handleUpdatedPosition(self):
-    if(not self.ownpos['valid']):
+    pos = self.get('ownpos')
+    if(not pos['valid']):
       return
       
     # If we've never actually decided where to display a map yet, do so now
@@ -86,21 +90,22 @@ class MapWidget(gtk.Widget):
     
     # This code would let us recentre if we reach the edge of the screen - 
     # it's not currently in use
-    x,y = self.modules['projection'].ll2xy(self.ownpos['lat'], self.ownpos['lon'])
+    x,y = self.modules['projection'].ll2xy(pos['lat'], pos['lon'])
     x,y = self.modules['projection'].relXY(x,y)
     border = 0.15
     outsideMap = (x < border or y < border or x > (1-border) or y > (1-border))
     
     # If map is locked to our position, then recentre it
-    if(self.modules['data'].getOption('centred')):
+    if(self.get('centred')):
       self.centreOnOwnPos()
     else:
       self.forceRedraw()
   
   def centreOnOwnPos(self):
     """Try to centre the map on our position"""
-    if(self.ownpos['valid']):
-      self.modules['projection'].recentre(self.ownpos['lat'], self.ownpos['lon'])
+    pos = self.get('ownpos')
+    if(pos['valid']):
+      self.modules['projection'].recentre(pos['lat'], pos['lon'])
       self.forceRedraw()
   
   def click(self, x, y):
@@ -115,8 +120,8 @@ class MapWidget(gtk.Widget):
     # Map was clicked-on: store the lat/lon and go into the "clicked" menu
     else:
       lat, lon = self.modules['projection'].xy2ll(x,y)
-      self.modules['data'].setState('clicked', (lat,lon))
-      self.modules['data'].setState('menu','click')
+      self.modules['data'].set('clicked', (lat,lon))
+      self.modules['data'].set('menu','click')
     self.forceRedraw()
       
   def forceRedraw(self):
@@ -129,9 +134,12 @@ class MapWidget(gtk.Widget):
     
   def move(self,dx,dy):
     """Handle dragging the map"""
-    if(self.modules['overlay'].fullscreen()):
+    
+    # TODO: what happens when you drag inside menus?
+    if(self.get('menu')):
       return
-    if(self.modules['data'].getOption('centred') and self.ownpos['valid']):
+    
+    if(self.get('centred') and self.get('ownpos')['valid']):
       return
     self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
     self.forceRedraw()
@@ -140,10 +148,6 @@ class MapWidget(gtk.Widget):
     """Handle dragging left/right along top of the screen to zoom"""
     self.modules['projection'].nudgeZoom(-1 * dx / self.rect.width)
     self.forceRedraw()
-
-  def nodeXY(self,node):
-    node = self.modules['osmdata'].nodes[node]
-    return(self.modules['projection'].ll2xy(node[0], node[1]))
 
   def imageName(self,x,y,z):
     return("%d_%d_%d" % (z,x,y))
@@ -184,27 +188,28 @@ class MapWidget(gtk.Widget):
   
   def draw(self, cr):
     start = clock()
+    proj = self.modules['projection']
+    
     # Map as image
     if(not self.modules['overlay'].fullscreen()):
       z = self.tileZoom()
-      view_x1,view_y1 = latlon2xy(self.modules['projection'].N,self.modules['projection'].W,z)
-      view_x2,view_y2 = latlon2xy(self.modules['projection'].S,self.modules['projection'].E,z)
+      view_x1,view_y1 = latlon2xy(proj.N, proj.W, z)
+      view_x2,view_y2 = latlon2xy(proj.S, proj.E, z)
       for x in range(int(floor(view_x1)), int(ceil(view_x2))):
         for y in range(int(floor(view_y1)), int(ceil(view_y2))):
           S,W,N,E = tileEdges(x,y,z) 
-          x1,y1 = self.modules['projection'].ll2xy(N,W)
-          x2,y2 = self.modules['projection'].ll2xy(S,E)
+          x1,y1 = proj.ll2xy(N,W)
+          x2,y2 = proj.ll2xy(S,E)
           self.loadImage(x,y,z)
           self.drawImage(cr,(x,y,z),(x1,y1,x2,y2))
 
-      
       # The route
       if(self.modules['route'].valid()):
         cr.set_source_rgba(0.5, 0.0, 0.0, 0.5)
         cr.set_line_width(12)
         count = 0
         for i in self.modules['route'].route['route']:
-          x,y = self.modules['projection'].ll2xy(i[0],i[1])
+          x,y = proj.ll2xy(i[0],i[1])
           if(count == 0):
             cr.move_to(x,y)
           else:
@@ -215,8 +220,8 @@ class MapWidget(gtk.Widget):
       for name,source in self.modules['plugins'].items():
         for group in source.groups:
           for item in group.items:
-            x,y = self.modules['projection'].ll2xy(item.lat, item.lon)
-            if(self.modules['projection'].onscreen(x,y)):
+            x,y = proj.ll2xy(item.lat, item.lon)
+            if(proj.onscreen(x,y)):
               #print " - %s at %s" % (item.title, item.point)
               
               cr.set_source_rgb(0.0, 0.4, 0.0)
@@ -228,10 +233,10 @@ class MapWidget(gtk.Widget):
               cr.move_to(x,y)
               cr.show_text(item.title)
 
-    
-      if(self.ownpos['valid']):
+      pos = self.get('ownpos')
+      if(pos['valid']):
         # Us
-        x,y = self.modules['projection'].ll2xy(self.ownpos['lat'],self.ownpos['lon'])
+        x,y = proj.ll2xy(pos['lat'], pos['lon'])
         cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.arc(x,y,14, 0,2*3.1415)
         cr.fill()

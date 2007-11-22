@@ -38,8 +38,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class SlippyMapLayer extends Layer implements ImageObserver
 {
 
-    ArrayList<HashMap<Integer, SlippyMapTile>> tileStorage = new ArrayList<HashMap<Integer, SlippyMapTile>>(
-                                                                   20);
+    ArrayList<HashMap<Integer, SlippyMapTile>> tileStorage = null;
 
     Point[][]                                  pixelpos    = new Point[21][21];
     LatLon                                     lastTopLeft;
@@ -54,8 +53,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver
     public SlippyMapLayer()
     {
         super("Slippy Map");
-        for (int i = 0; i < 18; i++)
-            tileStorage.add(new HashMap<Integer, SlippyMapTile>());
+
+        clearTileStorage();
 
         tileOptionMenu = new JPopupMenu();
         tileOptionMenu.add(new JMenuItem(new AbstractAction("Load Tile")
@@ -143,6 +142,14 @@ public class SlippyMapLayer extends Layer implements ImageObserver
                         });
             }
         });
+    }
+
+    private void clearTileStorage()
+    {
+        tileStorage = new ArrayList<HashMap<Integer, SlippyMapTile>>(20);
+
+        for (int i = 0; i < 18; i++)
+            tileStorage.add(new HashMap<Integer, SlippyMapTile>());
     }
 
     void loadAllTiles()

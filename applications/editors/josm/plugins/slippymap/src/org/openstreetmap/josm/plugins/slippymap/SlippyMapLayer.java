@@ -465,7 +465,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      */
     public void preferenceChanged(String key, String newValue)
     {
-        if (key.startsWith("slippymaplayer"))
+        if (key.startsWith(Constants.PREFERENCE_PREFIX))
         {
             System.err.println(this + ".preferenceChanged('" + key + "', '"
                     + newValue + "') called");

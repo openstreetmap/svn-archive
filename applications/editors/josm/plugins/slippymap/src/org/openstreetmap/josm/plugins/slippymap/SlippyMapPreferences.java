@@ -24,7 +24,6 @@ public class SlippyMapPreferences
             // url = "http://tile.openstreetmap.org"; // mapnik 
             // url = "http://hypercube.telascience.org/tiles/1.0.0/coastline" //
             Main.pref.put(PREFERENCE_TILE_URL, url);
-            Main.pref.save();
         }
 
         return url;

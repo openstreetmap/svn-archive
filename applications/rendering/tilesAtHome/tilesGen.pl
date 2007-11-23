@@ -622,6 +622,9 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
       $Config{APIURL},$Config{OSMVersion},$bbox);
     if ($Zoom < 12) 
     {
+        # FIXME: hardcoded: assume lowzoom layer now!
+        $Layers="lowzoom" if ($Mode eq "xy");
+        
         # We only need the bounding box for ways (they will be downloaded completly,
         # but need the extended bounding box for places (names from neighbouring tiles)
         $URLS = sprintf("%s%s/way[natural=*][bbox=%s] %s%s/way[boundary=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%s] %s%s/way[waterway=river][bbox=%s] %s%s/way[railway=*][bbox=%s] %s%s/node[place=*][bbox=%s]",

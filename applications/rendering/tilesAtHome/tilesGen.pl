@@ -1138,7 +1138,9 @@ sub svg2png
     
     my $TempFile;
     my $stdOut;
-    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".png");
+    my $TempDir = $Config{WorkingDirectory} . $PID . "/"; # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
+    mkdir($TmpDir) or die "cannot create working directory $TempDir";
+    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png");
     (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".stdout");
 
     
@@ -1210,7 +1212,7 @@ sub svg2png
     my $ReturnValue = splitImageX($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
     
     killafile($TempFile);
-    
+    rmdir ($TempDir) or die "cannot remove TempDir $TempDir";
     return (1,$ReturnValue); #return true if empty
 }
 

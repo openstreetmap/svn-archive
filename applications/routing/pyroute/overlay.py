@@ -11,6 +11,8 @@ class guiOverlay(pyrouteModule):
         self.modules = modules
         self.icons = menuIcons()
         self.menus = loadMenus('Menus')
+        for name,stuff in self.menus.items():
+          print "Loaded menu %s" % name
 
     def fullscreen(self):
         """Asks if the menu is fullscreen -- if it is, then the
@@ -56,46 +58,30 @@ class guiOverlay(pyrouteModule):
             self.cr.stroke()
                     
     def drawMenu(self, menu):
-        menuName = 'menu_%s' % menu
         try:
-            function = getattr(self, menuName)
-        except AttributeError:
-            print "Error: %s not defined" % menuName
-            self.set('menu',None)
-            return
-        function()
+          self.genericMenu(self.menus[menu])
+          return
+        except KeyError:
+	        menuName = 'menu_%s' % menu
+	        try:
+	            function = getattr(self, menuName)
+	        except AttributeError:
+	            print "Error: %s not defined" % menuName
+	            self.set('menu',None)
+	            return
+	        function()
+          
     def backButton(self,i,j):
         self.cells[i][j].button("","menu:","up")
-        
-    def menu_main(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Mark",None,"map_pin")
-        self.cells[2][0].button("Draw",None,"sketch")
-        
-        self.cells[0][1].button("View","menu:view","viewMenu")
-        self.cells[1][1].button("GPS","menu:gps","gps")
-        self.cells[2][1].button("Download","menu:download","download")
+    def genericMenu(self, menu):
+      for y in range(4):
+        for x in range(3):
+          item = menu["%d,%d"%(x,y)]
+          if item['name'] == 'Up':
+            self.backButton(x,y)
+          else:
+            self.cells[x][y].button(item['name'],item['action'],item['icon'])
 
-        self.cells[0][2].button()
-        self.cells[1][2].button()
-        self.cells[2][2].button()
-        
-        self.cells[0][3].button("Centre","option:toggle:centred","centre")
-        self.cells[1][3].button("Options","menu:options","options")
-        self.cells[2][3].button("Mode", "menu:mode","transport")
-
-    def menu_mode(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Cycle","mode:cycle","bike")
-        self.cells[2][0].button("Walk","mode:foot","hike")
-        
-        self.cells[0][1].button("MTB","mode:cycle","mtb")
-        self.cells[1][1].button("Car","mode:car","car")
-        self.cells[2][1].button("Hike","mode:foot","hike")
-
-        self.cells[0][2].button("Fast cycle","mode:cycle","fastbike")
-
-        self.cells[0][3].button("HGV","mode:hgv","hgv")
     def menu_feeds(self):
       self.menu_list("rss")
     def menu_geonames(self):
@@ -146,108 +132,6 @@ class guiOverlay(pyrouteModule):
             except IndexError:
                 pass
 
-    def menu_search_eat(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Pub food", "search:amenity=pub;food=yes", None)
-        self.cells[2][0].button("Restaurant", "search:amenity=restaurant", None)
-        
-        self.cells[0][1].button("Cafe", "search:amenity=cafe",None)
-        self.cells[1][1].button("Fast food","search:amenity=fast_food",None)
-        self.cells[2][1].button("Takeaway",None,None)
-    
-    def menu_search_sleep(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Hotel", "search:tourism=hotel",None)
-        self.cells[2][0].button("Hostel", "search:tourism=hostel",None)
-        
-    def menu_search_repair(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Bike shop","search:amenity=bike_shop",None)
-        self.cells[2][0].button("Garage","search:amenity=garage",None)
-        
-    def menu_search_buy(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Supermarket","search:amenity=supermarket",None)
-        self.cells[2][0].button("Mall",None,None)
-        
-        self.cells[0][1].button("High street",None,None)
-        self.cells[1][1].button("Dep't Store",None,None)
-        self.cells[2][1].button("Outdoor","search:shop=outdoor",None)
-        
-        self.cells[0][2].button("DIY","search:tourism=diy",None)
-        self.cells[1][2].button("",None,None)
-        self.cells[2][2].button("",None,None)
-    
-    def menu_search_help(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Police Stn", "search:amenity=police", None)
-        self.cells[2][0].button("Fire Stn", "search:amenity=fire", None)
-        
-        self.cells[0][1].button("Hospital", "search:amenity=hospital",None)
-        self.cells[1][1].button("Ranger", "search:amenity=ranger_station", None)
-        self.cells[2][1].button("Pharmacy", "search:amenity=pharmacy", None)
-        
-    def menu_search_park(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Car park", "search:amenity=parking", None)
-        self.cells[2][0].button("Free car park","search:amenity=parking;cost=free",None)
-        
-        self.cells[0][1].button("Bike park", "search:amenity=cycle_parking", None)
-        self.cells[1][1].button("Lay-by", "search:amenity=layby", None)
-        
-    def menu_search_hire(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Car hire", "search:amenity=car_hire", None)
-        self.cells[2][0].button("Bike hire", "search:amenity=bike_hire",None)
-        
-        self.cells[0][1].button("Ski hire","search:amenity=ski_hire",None)
-
-    def menu_search(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("Eat","menu:search_eat",None)
-        self.cells[2][0].button("Sleep","menu:search_sleep",None)
-
-        self.cells[0][1].button("Fuel","menu:search_fuel",None)
-        self.cells[1][1].button("Repair","menu:search_repair",None)
-        self.cells[2][1].button("Buy","menu:search_buy",None)
-
-        self.cells[0][2].button("Help","menu:search_help",None)
-        self.cells[1][2].button("Park","menu:search_park",None)
-        self.cells[2][2].button("Hire","menu:search_hire",None)
-        
-        self.cells[0][3].button("",None,None)
-
-    def menu_view(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("People",None,"people")
-        self.cells[2][0].button("Wiki","menu:geonames","wiki")
-
-        self.cells[0][1].button("Business","menu:search","business")
-        self.cells[1][1].button("RSS","menu:feeds","rss")
-        self.cells[2][1].button("Bookmarks",None,"bookmark")
-
-        self.cells[0][2].button("Routes",None,"route")
-        self.cells[1][2].button("Waypoints",None,"waypoints")
-        self.cells[2][2].button("Drawings",None,"sketch")
-        
-        self.cells[0][3].button("Events",None,"events")
-    
-    def menu_download(self):
-        self.backButton(0,0)
-        self.cells[1][0].button("",None,None)
-        self.cells[2][0].button("",None,None)
-
-        self.cells[0][1].button("",None,None)
-        self.cells[1][1].button("",None,None)
-        self.cells[2][1].button("Route data","download:osm:0.2","download")
-
-        self.cells[0][2].button("",None,None)
-        self.cells[1][2].button("",None,None)
-        self.cells[2][2].button("",None,None)
-        
-        self.cells[0][3].button("",None,None)
-        self.cells[1][3].button("",None,None)
-        self.cells[2][3].button("",None,None)
 
     def menu_click(self):
         self.backButton(0,0)

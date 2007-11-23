@@ -1139,7 +1139,7 @@ sub svg2png
     my $TempFile;
     my $stdOut;
     my $TempDir = $Config{WorkingDirectory} . $PID . "/"; # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
-    mkdir($TmpDir) or die "cannot create working directory $TempDir";
+    mkdir($TempDir) or die "cannot create working directory $TempDir";
     (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png");
     (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".stdout");
 

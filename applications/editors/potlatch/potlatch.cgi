@@ -76,9 +76,10 @@
 //	mouseListener.onMouseMove=function() { trackMouse(); };
 
 	// Initialise Yahoo
-	var ylat=baselat;	var lastylat=ylat;
-	var ylon=baselong;	var lastylon=ylon;
-	var yzoom=8;		var lastyzoom=yzoom;
+	var ylat=baselat;	var lastylat=ylat;		// monitored by ymap.swf
+	var ylon=baselong;	var lastylon=ylon;		//  |
+	var yzoom=8;		var lastyzoom=yzoom;	//  |
+	var bgxoffset=0;	var bgyoffset=0;		// manually correct Yahoo imagery
 
 	_root.createEmptyMovieClip("yahoo",7);
 	loadMovie(yahoourl,_root.yahoo);
@@ -122,7 +123,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.5c";	// current version
+	var signature="Potlatch 0.5d";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
@@ -734,8 +735,8 @@
 		else if (colours[this.attr["waterway"]]) { this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none"); }
 		else if (colours[this.attr["railway"]])  { this.line.lineStyle(linewidth,colours[this.attr["railway" ]],linealpha,false,"none"); }
 		else {
-			var c=0xCCCCCC; var z=this.attr;
-			for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x777777; } }
+			var c=0xAAAAAA; var z=this.attr;
+			for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x707070; } }
 			this.line.lineStyle(linewidth,c,linealpha,false,"none");
 		}
 		
@@ -1971,7 +1972,7 @@
 		_root.coord_b=(500-_root.map._y)/bscale; _root.edge_b=coord2lat(_root.coord_b);
 		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
 		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
-		getURL("javascript:updatelinks("+centrelong()+","+centrelat()+","+_root.scale+")");
+		getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")");
 
 		// ----	Trace
 		//		x radius (lon) is 280/Math.pow(2,_root.scale)
@@ -1988,8 +1989,8 @@
 			_root.yahoo._visible=true;
 			_root.yahoo._x=0;
 			_root.yahoo._y=0;
-			_root.ylat=centrelat();
-			_root.ylon=centrelong();
+			_root.ylat=centrelat(_root.bgyoffset);
+			_root.ylon=centrelong(_root.bgxoffset);
 			_root.yzoom=17-_root.scale;
 		} else {
 			_root.yahoo._visible=false;
@@ -2141,11 +2142,16 @@
 	}
 	
 	function moveMap(xdiff,ydiff) {
-		_root.map._x+=xdiff;
-		_root.map._y+=ydiff;
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
-		redrawMap(_root.map._x,_root.map._y);
+		if (Key.isDown(Key.SPACE)) {
+			_root.bgxoffset+=xdiff;
+			_root.bgyoffset+=ydiff;
+		} else {
+			_root.map._x+=xdiff;
+			_root.map._y+=ydiff;
+			redrawMap(_root.map._x,_root.map._y);
+		}
 	}
 
 
@@ -2280,8 +2286,8 @@
 
 	// get centre points
 
-	function centrelat()  { return  coord2lat((250-_root.map._y)/Math.pow(2,_root.scale-12)); }
-	function centrelong() { return coord2long((350-_root.map._x)/Math.pow(2,_root.scale-12)); }
+	function centrelat(o)  { return  coord2lat((250-_root.map._y-o)/Math.pow(2,_root.scale-12)); }
+	function centrelong(o) { return coord2long((350-_root.map._x-o)/Math.pow(2,_root.scale-12)); }
 
 
 

@@ -28,7 +28,9 @@ import cairo
 from threading import Thread
 
 class tileLoader(Thread):
-  def __init__(self, x,y,z,filename):
+  """Downloads images in a separate thread"""
+  def __init__(self, x,y,z,layer,filename):
+    """Download a tile image"""
     self.url = tileURL(x,y,z)
     self.finished = 0
     self.filename = filename
@@ -36,28 +38,27 @@ class tileLoader(Thread):
     self.run()
     
   def run(self):
-    print "downloading %s" % self.filename
+    sleep(5)
     urllib.urlretrieve(self.url, self.filename)
-    print "done %s" % self.filename
     self.finished = 1
-    
+
 class tileHandler(pyrouteModule):
+  """Loads and displays map tiles"""
   def __init__(self, modules):
     pyrouteModule.__init__(self, modules)
     self.images = {}
     self.threads = {}
     
-  def imageName(self,x,y,z):
-    return("%d_%d_%d" % (z,x,y))
+  def imageName(self,x,y,z,layer):
+    """Get a unique name for a tile image 
+    (suitable for use as part of filenames, dictionary keys, etc)"""
+    return("%s_%d_%d_%d" % (layer,z,x,y))
   
-  def startDownloading(self,x,y,z,filename):
-    name = self.imageName(x,y,z)
-    
-  def loadImage(self,x,y,z):
+  def loadImage(self,x,y,z, layer):
     """Check that an image is loaded, and try to load it if not"""
     
     # First: is the image already in memory?
-    name = self.imageName(x,y,z)
+    name = self.imageName(x,y,z,layer)
     if name in self.images.keys():
       return
     
@@ -69,27 +70,35 @@ class tileHandler(pyrouteModule):
     # Third, is it in the disk cache?  (including ones recently-downloaded)
     filename = "cache/%s.png" % name
     if os.path.exists(filename):
-      print "loading %s from disk" % name
       self.images[name]  = cairo.ImageSurface.create_from_png(filename)
       return
     
     # Image not found anywhere - resort to downloading it
-    print "Starting to download %s" % name
-    self.threads[name] = tileLoader(x,y,z,filename)
+    print "Downloading %s" % name
+    self.threads[name] = tileLoader(x,y,z,layer,filename)
     
     
   def drawImage(self,cr, tile, bbox):
-    name = self.imageName(tile[0],tile[1],tile[2])
+    """Draw a tile image"""
+    name = self.imageName(tile[0],tile[1],tile[2], tile[3])
+    # If it's not in memory, then stop here
     if not name in self.images.keys():
       return
+    # Move the cairo projection onto the area where we want to draw the image
     cr.save()
     cr.translate(bbox[0],bbox[1])
     cr.scale((bbox[2] - bbox[0]) / 256.0, (bbox[3] - bbox[1]) / 256.0)
+    
+    # Display the image
     cr.set_source_surface(self.images[name],0,0)
     cr.paint()
+    
+    # Return the cairo projection to what it was
     cr.restore()
     
   def zoomFromScale(self,scale):
+    """Given a 'scale' (such as it is) from the projection module,
+    decide what zoom-level of map tiles to display"""
     if(scale > 0.046):
       return(10)
     if(scale > 0.0085):
@@ -99,17 +108,35 @@ class tileHandler(pyrouteModule):
     return(17)
     
   def tileZoom(self):
+    """Decide (based on global data) what zoom-level of map tiles to display"""
     return(self.zoomFromScale(self.m['projection'].scale))
   
   def draw(self, cr):
+    """Draw all the map tiles that are in view"""
     proj = self.m['projection']
+    layer = "tah"
+    
+    # Pick a zoom level
     z = self.tileZoom()
+    
+    # Find out what tiles are in view at that zoom level
     view_x1,view_y1 = latlon2xy(proj.N, proj.W, z)
     view_x2,view_y2 = latlon2xy(proj.S, proj.E, z)
+    
+    # Loop through all tiles
     for x in range(int(floor(view_x1)), int(ceil(view_x2))):
       for y in range(int(floor(view_y1)), int(ceil(view_y2))):
+        
+        # Find the edges of the tile as lat/long
         S,W,N,E = tileEdges(x,y,z) 
+        
+        # Convert those edges to screen coordinates
         x1,y1 = proj.ll2xy(N,W)
         x2,y2 = proj.ll2xy(S,E)
-        self.loadImage(x,y,z)
-        self.drawImage(cr,(x,y,z),(x1,y1,x2,y2))
+        
+        # Check that the image is available in the memory cache
+        # and start downloading it if it's not
+        self.loadImage(x,y,z,layer)
+        
+        # Draw the image
+        self.drawImage(cr,(x,y,z,layer),(x1,y1,x2,y2))

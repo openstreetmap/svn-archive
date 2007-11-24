@@ -10,6 +10,7 @@
 #define AREA 3
 
 
+struct relations;
 
 /*struct texts{
 	
@@ -35,13 +36,18 @@ struct nodes{
 	double lat;
 	double lon;
 	struct tags * tag; /*contains attached tags */
-	struct attachedSegments *segments;
+	struct attachedWays *ways;
 };
 
 
-struct attachedSegments{
-	struct attachedSegments *nextSegment;
-	struct segments *segment;
+struct attachedNodes {
+	struct attachedNodes *nextNode;
+	struct nodes *node;
+};
+
+struct attachedRels {
+	struct attachedRels *nextRel;
+	struct relations *rel;
 };
 
 struct ways{
@@ -52,7 +58,8 @@ struct ways{
 	double min_lat;
 	double min_lon;
 	struct tags * tag;
-	struct attachedSegments *segments;
+	struct attachedNodes *nodes;
+	struct attachedRels *rels;
 	struct ways * next;
 };
 
@@ -62,15 +69,11 @@ struct attachedWays{
 	struct ways *way;
 };
 
-struct segments{
-	long ID;
-	struct nodes * from;
-	struct nodes * to;
-	struct segments * next;
-	struct attachedWays *ways;
+struct relations {
+        long ID;
+        struct relations *next;
+        struct attachedWays *ways;
 };
-
-
 
 int openOutput();
 int closeOutput();

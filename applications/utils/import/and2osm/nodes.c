@@ -82,7 +82,7 @@ struct nodes * addNode(double lat, double lon){
 	storenode->lat=lat;
 	storenode->lon=lon;
 	storenode->tag=NULL;
-	storenode->segments=NULL;
+	storenode->ways=NULL;
 	p=(struct nodes  **) rb_probe (nodes_table, storenode);
 	if (*p!=storenode)
 	{

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ways.h"
-#include "segments.h"
+#include "relations.h"
 #include "tags.h"
 #include "osm.h"
 #include "rb.h"
@@ -25,23 +25,16 @@ struct rb_table *way_table;
 
 
 
-void detachsegments(struct ways* p){
-	struct attachedSegments *temp;
-	temp=p->segments;
+void detachNodes(struct ways* p){
+	struct attachedNodes *temp;
+	temp=p->nodes;
 	while (temp!=NULL)
 	{
-		temp->segment->ways=detachway(temp->segment->ways,p);
-		if(temp->segment->ways==NULL)
-		{
-			//empty segment
-			deleteSegment(temp->segment);
-		}
-		p->segments=temp->nextSegment;
+		temp->node->ways=detachway(temp->node->ways,p);
+		p->nodes=temp->nextNode;
 		free(temp);
-		temp=p->segments;
+		temp=p->nodes;
 	}
-	
-
 }
 
 
@@ -50,35 +43,35 @@ void detachsegments(struct ways* p){
 
 
 
-struct attachedSegments * attachsegment(struct attachedSegments* p, struct segments *s, int invert){
+struct attachedNodes * attachnode(struct attachedNodes* p, struct nodes *s, int invert){
 	//printf("%p\t%p\n",p,s);
 	// For inverted ways, we add to the front rather than to the back
 	if( invert )
 	{
-		struct attachedSegments *n = (struct attachedSegments *) calloc(1,sizeof(struct attachedSegments));
+		struct attachedNodes *n = (struct attachedNodes *) calloc(1,sizeof(struct attachedNodes));
 		if (n==NULL)
 		{
 			fprintf(stderr,"out of memory\n");
 			exit(1);
 		}
-		n->nextSegment=p;
-		n->segment=s;
+		n->nextNode=p;
+		n->node=s;
 		return n;
 	}
 	if (p==NULL)
 	{
-		p = (struct attachedSegments *) calloc(1,sizeof(struct attachedSegments));
+		p = (struct attachedNodes *) calloc(1,sizeof(struct attachedNodes));
 		if (p==NULL)
 		{
 			fprintf(stderr,"out of memory\n");
 			exit(1);
 		}
-		p->nextSegment=NULL;
-		p->segment=s;
+		p->nextNode=NULL;
+		p->node=s;
 	}
 	else
 	{
-		p->nextSegment=attachsegment(p->nextSegment,s,0);
+		p->nextNode=attachnode(p->nextNode,s,0);
 	}
 	return p;
 }
@@ -86,12 +79,11 @@ struct attachedSegments * attachsegment(struct attachedSegments* p, struct segme
 
 
 
-void saveAttachedSegments(struct attachedSegments *p){
+void saveAttachedNodes(struct attachedNodes *p){
 	if (p!=NULL)
 	{
-		fprintf(fp,"		<seg id=\"%li\" />\n",p->segment->ID);
-//		printf("(%2.5f, %2.5f)-(%2.5f,%2.5f)\n",p->Segment->from->lon,p->Segment->from->lat,p->Segment->to->lon,p->Segment->to->lat);
-		saveAttachedSegments(p->nextSegment);
+		fprintf(fp,"		<nd ref=\"%li\" />\n",p->node->ID);
+		saveAttachedNodes(p->nextNode);
 	}
 }
 
@@ -103,43 +95,30 @@ void saveWay(struct ways *p){
 	if (postgres)
 	{
 		struct tags *t;
-		struct attachedSegments *s;
+		struct attachedNodes *n;
 		int part = 0;
 
-		if (p->segments == NULL)
+		if (p->nodes == NULL)
 		{
-			printf("Way %li doesn't have segments, ignoring", p->wayID);
+			printf("Way %li doesn't have nodes, ignoring", p->wayID);
 			return;
 		}
 
-		s = p->segments;
-		/* Note: Technically this conversion is wrong, it splits ways when they are non-contiguous */
-		for(;;) {  
-			long seqid = 1;
-			long wayID = p->wayID + part*10000000;
-			fprintf(fp_w, "INSERT INTO ways VALUES (%li, GeomFromText('LINESTRING(", wayID);
+		n = p->nodes;
+		long seqid = 1;
+		long wayID = p->wayID + part*10000000;
+		fprintf(fp_w, "INSERT INTO ways VALUES (%li, GeomFromText('LINESTRING(", wayID);
 
-			for (;;s = s->nextSegment)
-			{
-				fprintf(fp_w, "%1.6f %1.6f,", s->segment->from->lat, s->segment->from->lon);
-				fprintf(fp_wn, "%li\t%li\t%li\n", wayID, seqid++, s->segment->from->ID);
-				if (s->nextSegment == NULL || s->segment->to != s->nextSegment->segment->from )
-				{
-					fprintf(fp_w, "%1.6f %1.6f)', 4326));\n", s->segment->to->lat, s->segment->to->lon);
-					fprintf(fp_wn, "%li\t%li\t%li\n", wayID, seqid++, s->segment->to->ID);
-					break;
-				}
-			}
-
-			fprintf(fp_wt,"%li\t%s\t%d\n", wayID, "AND_part", part+1 );
-			for (t = p->tag; t != NULL; t = t->nextTag)
-				fprintf(fp_wt, "%li\t%s\t%s\n", wayID, t->key, t->value);
-				
-			if( s->nextSegment == NULL )
-				break;
-			s = s->nextSegment;
-			part++;
+		for (;n->nextNode;n = n->nextNode)
+		{
+			fprintf(fp_w, "%1.6f %1.6f,", n->node->lat, n->node->lon);
+			fprintf(fp_wn, "%li\t%li\t%li\n", wayID, seqid++, n->node->ID);
 		}
+		fprintf(fp_w, "%1.6f %1.6f)', 4326));\n", n->node->lat, n->node->lon);
+		fprintf(fp_wn, "%li\t%li\t%li\n", wayID, seqid++, n->node->ID);
+
+		for (t = p->tag; t != NULL; t = t->nextTag)
+			fprintf(fp_wt, "%li\t%s\t%s\n", wayID, t->key, t->value);
 	}		
 	else
 	{
@@ -149,7 +128,7 @@ void saveWay(struct ways *p){
 		else if (p->type==AREA)
 			fprintf(fp,"    <way id=\"%li\" >\n",p->wayID);
 		else fprintf(stderr,"unkown wayType in saveWay\n");
-		saveAttachedSegments(p->segments);
+		saveAttachedNodes(p->nodes);
 		saveTags(p->tag,NULL);
 		if (p->type==ROAD)
 			fprintf(fp,"	</way>\n");
@@ -170,25 +149,20 @@ void saveWays(){
 			fprintf(stderr, "\rExporting ways: %d ", count);
 		saveWay(p);
 	}
-	fprintf(stderr, "\rExported ways: %d ", count);
+	fprintf(stderr, "\rExported ways: %d \n", count);
 }
 
 
  
- void addSegment2Way(struct ways * way,struct segments * segment, int invert){
-	way->segments=attachsegment(way->segments,segment, invert);
-	segment->ways=attachway(segment->ways,way);
-	if (way->max_lon < segment->from->lon) way->max_lon=segment->from->lon;
-	if (way->max_lon < segment->to->lon) way->max_lon=segment->to->lon;
-	if (way->max_lat < segment->from->lat) way->max_lat=segment->from->lat;
-	if (way->max_lat < segment->to->lat) way->max_lat=segment->to->lat;
-	if (way->min_lon > segment->from->lon) way->min_lon=segment->from->lon;
-	if (way->min_lon > segment->to->lon) way->min_lon=segment->to->lon;
-	if (way->min_lat > segment->from->lat) way->min_lat=segment->from->lat;
-	if (way->min_lat > segment->to->lat) way->min_lat=segment->to->lat;
+void addNode2Way(struct ways * way,struct nodes * node, int invert){
+	way->nodes=attachnode(way->nodes,node, invert);
+	node->ways=attachway(node->ways,way);
+	if (way->max_lon < node->lon) way->max_lon=node->lon;
+	if (way->max_lat < node->lat) way->max_lat=node->lat;
+	if (way->min_lon > node->lon) way->min_lon=node->lon;
+	if (way->min_lat > node->lat) way->min_lat=node->lat;
 
-	
-	//printf("node from %i to %i, (%f,%f)-(%f-%f)",segment->from->ID, segment->to->ID,segment->from->lon,segment->from->lat,segment->to->lon,segment->to->lat);
+	node->used = 1;
 	return;
 }
 
@@ -206,7 +180,8 @@ struct ways *newWay(int wayType){
 	wayID = incr(wayID);
 	storeway->wayID=wayID;
 	storeway->tag=NULL;
-	storeway->segments=NULL;
+	storeway->nodes=NULL;
+	storeway->rels=NULL;
 	storeway->min_lat=999;
 	storeway->min_lon=999;
 	storeway->max_lat=-1;

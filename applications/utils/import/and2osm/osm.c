@@ -28,7 +28,7 @@
 #include <string.h>
 #include "osm.h"
 #include "ways.h"
-#include "segments.h"
+#include "relations.h"
 #include "nodes.h"
 #include "tags.h"
 
@@ -91,9 +91,9 @@ int openOutput()
 			return -1;
 		}
 		if( osmChange )
-		        fprintf(fp,"<osmChange version=\"0.3\" generator=\"2AND\">\n<create>\n");
+		        fprintf(fp,"<osmChange version=\"0.5\" generator=\"2AND\">\n<create>\n");
                 else
-        		fprintf(fp,"<osm version=\"0.4\">\n");
+        		fprintf(fp,"<osm version=\"0.5\">\n");
 	}
 	
 	return 0;
@@ -102,8 +102,8 @@ int openOutput()
 
 void save(){
 	saveNodes();
-	saveSegments();
 	saveWays();
+	saveRelations();
 }
 
 

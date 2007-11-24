@@ -86,7 +86,7 @@
 #include <math.h>
 #include "osm.h"
 #include "ways.h"
-#include "segments.h"
+#include "relations.h"
 #include "nodes.h"
 #include "tags.h"
 
@@ -231,8 +231,8 @@ int readfile(char * inputfile)
 	long		j,iPart;
         SHPObject	*psShape;
 	struct nodes *prevNode,*lastNode,*firstNode;
-	struct segments *lastSegment;
 	struct ways * way=NULL;
+	struct relations *relation = NULL;
 
 	psShape = SHPReadObject( hSHP, i );
 	if ((i%DISPLAY_FREQUENCY)==0)
@@ -308,6 +308,8 @@ int readfile(char * inputfile)
 			if (j==0)
 			{
 				firstNode=lastNode;
+				if(way)
+					addNode2Way(way,lastNode, invert);
 			}
 			else
 			{
@@ -315,35 +317,28 @@ int readfile(char * inputfile)
 					&& psShape->panPartStart[iPart] == j )
 				{
 					iPart++;
+					if( !relation )
+					{
+						relation = addRelation();
+						addWay2Relation(way, relation);
+					}
+						
+					if (psShape->nSHPType==SHPT_POLYGON) way=newWay(AREA); else way=newWay(ROAD);
+					addWay2Relation(way, relation);
 					//printf("\rdividing\n");
 					if(fileType == ROAD)
 						printf("Multipart road??? (rec=%ld)\n", i);
 				}
 				else
 				{
-					
-					//    printf(" seg\n");
-					if( !invert )
-						lastSegment=addSegment(prevNode,lastNode);
-					else
-						lastSegment=addSegment(lastNode,prevNode);
 					//  printf(" seg2way\n");
-					addSegment2Way(way,lastSegment, invert);
+					addNode2Way(way,lastNode, invert);
 				}
 			}
 /*			    printf("%i [%12.8f,%12.8f]\n",iPart,psShape->padfX[j],psShape->padfY[j]);*/
 
 		}
 		//printf("\n");
-	/*	if (psShape->nSHPType==SHPT_POLYGON)
-		{
-			if (lastNode!=firstNode)
-			{
-				lastSegment=newSegment(lastNode,firstNode);
-				addSegment2Way(way,lastSegment);
-			}
-		}
-	*/
 		if (psShape->nVertices>1)
 		{
 			if( !invert )
@@ -390,7 +385,7 @@ int main(int argc, char ** argv )
 	init_tags();
 	init_ways();
 	init_nodes();
-	init_segments();
+	init_relations();
 	while ((c = getopt (argc, argv, "b:np?C:cs")) != -1)
 		switch (c)
 		{

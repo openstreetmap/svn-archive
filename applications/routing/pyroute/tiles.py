@@ -27,18 +27,30 @@ import os
 import cairo
 from threading import Thread
 
+def downloadTile(x,y,z,layer,filename):
+    url = tileURL(x,y,z)
+    urllib.urlretrieve(url, filename)
+
 class tileLoader(Thread):
   """Downloads images in a separate thread"""
   def __init__(self, x,y,z,layer,filename):
     """Download a tile image"""
-    self.url = tileURL(x,y,z)
+    self.x = x
+    self.y = y
+    self.z = z
+    self.layer = layer
     self.finished = 0
     self.filename = filename
     Thread.__init__(self)
     
   def run(self):
-    # to emulate a normal web connection ;)
-    urllib.urlretrieve(self.url, self.filename)
+    downloadTile( \
+      self.x,
+      self.y,
+      self.z,
+      self.layer,
+      self.filename)
+      
     self.finished = 1
 
 class tileHandler(pyrouteModule):
@@ -47,7 +59,12 @@ class tileHandler(pyrouteModule):
     pyrouteModule.__init__(self, modules)
     self.images = {}
     self.threads = {}
+    self.downloadInThread = False
     
+  def __del__(self):
+    print "Shutting-down tiles"
+    for name,thread in self.threads.items():
+      pass
   def imageName(self,x,y,z,layer):
     """Get a unique name for a tile image 
     (suitable for use as part of filenames, dictionary keys, etc)"""
@@ -74,8 +91,11 @@ class tileHandler(pyrouteModule):
     
     # Image not found anywhere - resort to downloading it
     print "Downloading %s" % (name)
-    self.threads[name] = tileLoader(x,y,z,layer,filename)
-    self.threads[name].start()
+    if(self.downloadInThread):
+      self.threads[name] = tileLoader(x,y,z,layer,filename)
+      self.threads[name].start()
+    else:
+      downloadTile(x,y,z,layer,filename)
     
   def drawImage(self,cr, tile, bbox):
     """Draw a tile image"""
@@ -98,6 +118,13 @@ class tileHandler(pyrouteModule):
   def zoomFromScale(self,scale):
     """Given a 'scale' (such as it is) from the projection module,
     decide what zoom-level of map tiles to display"""
+    
+    # TODO: This isn't really logical or optimised at all, it's just
+    # a basic guess that needs to be checked at some point
+    if(scale > 5):
+      return(5)
+    if(scale > 0.55):
+      return(7)
     if(scale > 0.046):
       return(10)
     if(scale > 0.0085):

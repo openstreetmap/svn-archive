@@ -26,6 +26,7 @@ import urllib
 import os
 import cairo
 from threading import Thread
+from time import sleep
 
 class tileLoader(Thread):
   """Downloads images in a separate thread"""
@@ -35,10 +36,11 @@ class tileLoader(Thread):
     self.finished = 0
     self.filename = filename
     Thread.__init__(self)
-    self.run()
     
   def run(self):
-    sleep(5)
+    # to emulate a normal web connection ;)
+    if(0):
+      sleep(1)
     urllib.urlretrieve(self.url, self.filename)
     self.finished = 1
 
@@ -76,7 +78,7 @@ class tileHandler(pyrouteModule):
     # Image not found anywhere - resort to downloading it
     print "Downloading %s" % name
     self.threads[name] = tileLoader(x,y,z,layer,filename)
-    
+    self.threads[name].start()
     
   def drawImage(self,cr, tile, bbox):
     """Draw a tile image"""

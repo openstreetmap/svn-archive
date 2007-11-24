@@ -25,26 +25,46 @@ from tilenames import *
 import urllib
 import os
 import cairo
+from threading import Thread
 
+class tileLoader(Thread):
+  def __init__(self, x,y,z,filename):
+    self.url = tileURL(x,y,z)
+    self.filename = filename
+    Thread.__init__(self)
+    self.run()
+    
+  def run(self):
+    print "downloading %s" % self.filename
+    urllib.urlretrieve(self.url, self.filename)
+    
+    
 class tileHandler(pyrouteModule):
   def __init__(self, modules):
     pyrouteModule.__init__(self, modules)
     self.images = {}
+    self.threads = {}
     
   def imageName(self,x,y,z):
     return("%d_%d_%d" % (z,x,y))
   
+  def startDownloading(self,x,y,z,filename):
+    name = self.imageName(x,y,z)
+    if name in self.threads.keys():
+      return
+    print "Starting to download %s" % name
+    self.threads[name] = tileLoader(x,y,z,filename)
+    
   def loadImage(self,x,y,z):
     name = self.imageName(x,y,z)
     if name in self.images.keys():
       return
+    # TODO: actually check if a thread is handling this already
     filename = "cache/%s.png" % name
     if not os.path.exists(filename):
-      print "downloading %s"%name
-      url = tileURL(x,y,z)
-      urllib.urlretrieve(url, filename)
-    else:
-      print "loading %s from cache"%name
+      self.startDownloading(x,y,z,filename)
+      return
+    print "loading %s from cache"%name
     self.images[name]  = cairo.ImageSurface.create_from_png(filename)
     
   def drawImage(self,cr, tile, bbox):

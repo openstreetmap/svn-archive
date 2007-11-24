@@ -30,6 +30,7 @@ from threading import Thread
 class tileLoader(Thread):
   def __init__(self, x,y,z,filename):
     self.url = tileURL(x,y,z)
+    self.finished = 0
     self.filename = filename
     Thread.__init__(self)
     self.run()
@@ -37,7 +38,8 @@ class tileLoader(Thread):
   def run(self):
     print "downloading %s" % self.filename
     urllib.urlretrieve(self.url, self.filename)
-    
+    print "done %s" % self.filename
+    self.finished = 1
     
 class tileHandler(pyrouteModule):
   def __init__(self, modules):
@@ -50,22 +52,31 @@ class tileHandler(pyrouteModule):
   
   def startDownloading(self,x,y,z,filename):
     name = self.imageName(x,y,z)
-    if name in self.threads.keys():
-      return
-    print "Starting to download %s" % name
-    self.threads[name] = tileLoader(x,y,z,filename)
     
   def loadImage(self,x,y,z):
+    """Check that an image is loaded, and try to load it if not"""
+    
+    # First: is the image already in memory?
     name = self.imageName(x,y,z)
     if name in self.images.keys():
       return
-    # TODO: actually check if a thread is handling this already
+    
+    # Second, is it already in the process of being downloaded?
+    if name in self.threads.keys():
+      if(not self.threads[name].finished):
+        return
+    
+    # Third, is it in the disk cache?  (including ones recently-downloaded)
     filename = "cache/%s.png" % name
-    if not os.path.exists(filename):
-      self.startDownloading(x,y,z,filename)
+    if os.path.exists(filename):
+      print "loading %s from disk" % name
+      self.images[name]  = cairo.ImageSurface.create_from_png(filename)
       return
-    print "loading %s from cache"%name
-    self.images[name]  = cairo.ImageSurface.create_from_png(filename)
+    
+    # Image not found anywhere - resort to downloading it
+    print "Starting to download %s" % name
+    self.threads[name] = tileLoader(x,y,z,filename)
+    
     
   def drawImage(self,cr, tile, bbox):
     name = self.imageName(tile[0],tile[1],tile[2])

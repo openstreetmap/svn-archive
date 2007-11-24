@@ -1,4 +1,39 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+#-----------------------------------------------------------------------------
+# Pyroute main GUI
+#
+# Usage: 
+#   gui.py
+#
+# Controls:
+#   * drag left/right along top of window to zoom in/out
+#   * drag the map to move around
+#   * click on the map for a position menu
+#       * set your own position, if the GPS didn't already do that
+#       * set that location as a destination
+#       * route to that point
+#   * click on the top-left of the window for the main menu
+#       * download routing data around your position
+#       * browse geoRSS, wikipedia, and OSM points of interest
+#       * select your mode of transport for routing
+#           * car, bike, foot currently supported
+#       * toggle whether the map is centred on your GPS position
+#-----------------------------------------------------------------------------
+# Copyright 2007, Oliver White
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#-----------------------------------------------------------------------------
 import pygtk
 pygtk.require('2.0')
 import gobject
@@ -22,6 +57,7 @@ from dataStore import *
 from mod_geoRss import geoRss
 from mod_geonames import geonames
 from base import pyrouteModule
+from tiles import tileHandler
 
 def update(mapWidget):
   mapWidget.updatePosition();
@@ -37,7 +73,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
     gtk.Widget.__init__(self)
     self.draw_gc = None
     self.timer = gobject.timeout_add(30, update, self)
-    self.images = {}
     
     self.modules = {'plugins':{}}
     pyrouteModule.__init__(self, self.modules)
@@ -46,6 +81,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     #self.modules['plugins']['geonames'] = geonames()
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
+    self.modules['tiles'] = tileHandler(self.modules)
     self.modules['data'] = DataStore(self, self.modules)
     self.set('mode','cycle')
     self.set('centred',False)
@@ -149,59 +185,15 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['projection'].nudgeZoom(-1 * dx / self.rect.width)
     self.forceRedraw()
 
-  def imageName(self,x,y,z):
-    return("%d_%d_%d" % (z,x,y))
-  def loadImage(self,x,y,z):
-    name = self.imageName(x,y,z)
-    if name in self.images.keys():
-      return
-    filename = "cache/%s.png" % name
-    if not os.path.exists(filename):
-      print "downloading %s"%name
-      url = tileURL(x,y,z)
-      urllib.urlretrieve(url, filename)
-    else:
-      print "loading %s from cache"%name
-    self.images[name]  = cairo.ImageSurface.create_from_png(filename)
-    
-  def drawImage(self,cr, tile, bbox):
-    name = self.imageName(tile[0],tile[1],tile[2])
-    if not name in self.images.keys():
-      return
-    cr.save()
-    cr.translate(bbox[0],bbox[1])
-    cr.scale((bbox[2] - bbox[0]) / 256.0, (bbox[3] - bbox[1]) / 256.0)
-    cr.set_source_surface(self.images[name],0,0)
-    cr.paint()
-    cr.restore()
-  def zoomFromScale(self,scale):
-    if(scale > 0.046):
-      return(10)
-    if(scale > 0.0085):
-      return(13)
-    if(scale > 0.0026):
-      return(15)
-    return(17)
-    
-  def tileZoom(self):
-    return(self.zoomFromScale(self.modules['projection'].scale))
-  
   def draw(self, cr):
     start = clock()
     proj = self.modules['projection']
     
-    # Map as image
+    # Don't draw the map if a menu/overlay is fullscreen
     if(not self.modules['overlay'].fullscreen()):
-      z = self.tileZoom()
-      view_x1,view_y1 = latlon2xy(proj.N, proj.W, z)
-      view_x2,view_y2 = latlon2xy(proj.S, proj.E, z)
-      for x in range(int(floor(view_x1)), int(ceil(view_x2))):
-        for y in range(int(floor(view_y1)), int(ceil(view_y2))):
-          S,W,N,E = tileEdges(x,y,z) 
-          x1,y1 = proj.ll2xy(N,W)
-          x2,y2 = proj.ll2xy(S,E)
-          self.loadImage(x,y,z)
-          self.drawImage(cr,(x,y,z),(x1,y1,x2,y2))
+      
+      # Map as image
+      self.modules['tiles'].draw(cr)
 
       # The route
       if(self.modules['route'].valid()):
@@ -216,7 +208,8 @@ class MapWidget(gtk.Widget, pyrouteModule):
             cr.line_to(x,y)
           count = count + 1
         cr.stroke()
-
+      
+      # Each plugin can display on the map
       for name,source in self.modules['plugins'].items():
         for group in source.groups:
           for item in group.items:

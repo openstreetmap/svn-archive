@@ -1,4 +1,39 @@
 #!/usr/bin/python
+#-----------------------------------------------------------------------------
+# Loads touchscreen menus from textfiles on disk
+#
+# Usage: 
+#   (library code for pyroute GUI, not for direct use)
+#
+# Format:
+#   * One menu per textfile  (menuname.txt)
+#   * One line per 'column'
+#   * Line containing "-----" starts a new row 
+#      (the first line should also contain one of these)
+#   * 4 rows of 3 columns. all must be defined, even if blank
+#   * Item is "name" or "name|event"
+#     * name should be unique amongst all menus
+#     * name is currently displayed as-is (TODO: translation table)
+#     * "Up" is a special name that closes the menu
+#        * Typically the top/left item is always 'Up'
+#     * event is a message to send when the menu item is pressed
+#     * lines can be blank to represent no menu item in that position
+#-----------------------------------------------------------------------------
+# Copyright 2007, Oliver White
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#-----------------------------------------------------------------------------
 import os
 import re
 

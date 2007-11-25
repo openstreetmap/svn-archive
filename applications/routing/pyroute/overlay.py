@@ -188,7 +188,7 @@ class guiOverlay(pyrouteModule):
         self.cells[1][1].button("route to","+route:clicked","route_to")
         self.cells[2][1].button("direct to","+direct:clicked","direct_to")
 
-        self.cells[0][2].button("waypoint", "+add_waypoint:clicked", "bookmark")
+        self.cells[0][2].button("waypoint", "+add_waypoint:clicked", "bookmarks")
         self.cells[1][2].button("extend route", "+extend:route:clicked", "extend_route")
         self.cells[2][2].button("extend direct", "+extend:direct:clicked", "extend_direct")
 

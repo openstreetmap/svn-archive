@@ -1,7 +1,7 @@
 <?php
 ################################################################################
 # This file forms part of the Freemap source code.                             #
-# (c) 2004-06 Nick Whitelegg (Hogweed Software)                                #
+# (c) 2004-07 Nick Whitelegg (Hogweed Software)                                #
 # Licenced under the Lesser GNU General Public Licence; see COPYING            #
 # for details.                                                                 #
 ################################################################################
@@ -12,7 +12,11 @@ require_once('defines.php');
 $inTrkpt =  false;
 $inDoc =  false;
 $inTrk =  false;
+$inWpt = false;
+$inWptName=false;
 $trackpoints = array();
+$curWpt = null;
+$waypoints = array();
 #end globals
 
 function grabGPX($w, $s, $e, $n)
@@ -32,7 +36,7 @@ function grabGPX($w, $s, $e, $n)
 
 function parseGPX($gpx)
 {
-	global $trackpoints;
+	global $trackpoints, $waypoints;
 
 	$parser = xml_parser_create();
 	xml_set_element_handler($parser,"on_start_element_gpx",
@@ -46,14 +50,14 @@ function parseGPX($gpx)
 	}
 
 	xml_parser_free($parser);
-	return $trackpoints; 
+	return array ("trackpoints"=>$trackpoints, "waypoints"=>$waypoints);
 }
 
 #NB the PHP expat library reads in all tags as capitals - even if they're
 #lower case!!!
 function on_start_element_gpx($parser,$element,$attrs)
 {
-	global $inDoc, $inTrk, $inTrkpt, $trackpoints;
+	global $inDoc, $inTrk, $inTrkpt, $trackpoints, $inWpt, $curWpt, $inWptName;
 
 	if($element=="GPX")
 	{
@@ -77,12 +81,29 @@ function on_start_element_gpx($parser,$element,$attrs)
 			}
 			$trackpoints[] = $curPt;
 		}
+		elseif($element=="WPT")
+		{
+			$inWpt = true;
+			$curWpt =array();
+			foreach($attrs as $name => $value)
+			{
+				if($name=="LAT")
+					$curWpt["lat"] = $value; 
+				elseif($name=="LON")
+					$curWpt["lon"] = $value; 
+			}
+		}
+		elseif($element=="NAME" && $inWpt)
+		{
+			$inWptName=true;
+		}
 	}
 }
 
 function on_end_element_gpx($parser,$element)
 {
-	global $inDoc, $inTrk, $inTrkpt, $trackpoints;
+	global $inDoc, $inTrk, $inTrkpt, $trackpoints, $waypoints, $curWpt, $inWpt,
+			$inWptName;
 
 	if($element=="TRKPT")
 	{
@@ -92,12 +113,21 @@ function on_end_element_gpx($parser,$element)
 	{
 		$inTrk = false;
 	}
-
+	elseif($inWpt && $element=="WPT")
+	{
+		$inWpt = false;
+		$waypoints[] = $curWpt;
+	}
+	elseif($inWptName && $element=="NAME")
+		$inWptName = false;
 	elseif($inDoc && $element=="GPX")
 		$inDoc = false;
 }
 
 function on_characters_gpx($parser, $characters)
 {
+	global $inWptName, $curWpt;
+	if($inWptName==true)
+		$curWpt['name'] = $characters;
 }
 ?>

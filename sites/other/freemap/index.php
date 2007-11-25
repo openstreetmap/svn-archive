@@ -1,96 +1,55 @@
 <?php
-
-require_once('common/inc.php');
-require_once('common/defines.php');
-require_once('common/latlong.php');
-require_once('common/osmclient.php');
-
-session_start();
-
-//die("Freemap is temporarily off air for maintenance.");
-
-$modes = array
-	("mapnik" => array ("UI" => 
-		"css,sidebar,modebar,searchbar,milometer",
-				"projection" => "Mercator"),
-	 "npe" => array ("UI" => "css,sidebar,searchbar,milometer,modebar", 
-	 			"projection" => "OSGB")
-	 );
-
-$m = isset($_GET["mode"]) ? $_GET["mode"] : "mapnik";
-$mode = (isset($modes[$m])) ? $modes[$m] : $modes["mapnik"];
-
-$en=do_coords($mode['projection'], $_GET);
-
+require_once('../../common/latlong.php');
+$lat = isset($_GET['lat']) ? $_GET['lat']: 51.05;
+$lon = isset($_GET['lon']) ? $_GET['lon']: -0.72;
+$merc = ll_to_merc($lat,$lon);
 ?>
 <html>
 <head>
-<title>FREEMAP - OpenStreetMap maps for the countryside</title>
-<?php
-if(strpos($mode["UI"],"css")!==false)
-	echo "<link rel='stylesheet' type='text/css' href='/css/freemap2.css' />";
-?>
-<link rel='alternate' type='application/rss+xml' href='/wordpress/?feed=rss2'/>
+<title>OSMAJAX</title>
 <script type='text/javascript'>
-var easting = <?php echo $en["e"]; ?>;
-var northing = <?php echo $en["n"]; ?>;
-</script>
-
-<?php
-
-echo "<script type='text/javascript' src='/freemap/javascript/$m/init.js'>".
-"</script>\n";
-?>
-
-<script type='text/javascript' src="/freemap/javascript/lib/converter.js" > 
+var easting = <?php echo $merc['e']; ?>;
+var northing = <?php echo $merc['n']; ?>; 
 </script>
 <script src="http://www.openlayers.org/api/2.4/OpenLayers.js"></script>
-<script type='text/javascript' src="/freemap/javascript/FreemapClient.js" > 
-</script>
-<script type='text/javascript' src="/freemap/javascript/main.js" > </script>
-<script type='text/javascript' src="/freemap/javascript/lib/jscoord-1.0.js" > 
-</script>
-<script type='text/javascript' src='/freemap/javascript/BboxMarkersLayer.js'> 
-</script>
-<script type='text/javascript' src='/freemap/javascript/GeoRSS2i.js' > </script>
-<script type='text/javascript' src='/freemap/javascript/GGKMLi.js' > </script>
-<!--
-<script type='text/javascript' src="/freemap/javascript/pngfix.js" > </script>
--->
-<script type='text/javascript' src="/freemap/javascript/lib/Dialog.js" > 
-</script>
-<script type='text/javascript' src='/freemap/javascript/WalkRouteLayer.js'>
-</script>
-<script type='text/javascript' src='/freemap/javascript/DrawWalkroute.js'>
-</script>
-<script type='text/javascript' 
-src='/freemap/javascript/WalkRouteMarkersLayer.js'> </script>
-<script type='text/javascript' 
-src='/freemap/javascript/WalkRouteDownloadManager.js'> </script>
+<script type='text/javascript' src='init.js'> </script>
+<script type='text/javascript' src='Osmajax.js'> </script>
+<script type='text/javascript' src='ajax.js'> </script>
+<script type='text/javascript' src='OSM.js'> </script>
+<script type='text/javascript' src='OSMItem.js'> </script>
+<script type='text/javascript' src='GeometriedOSMItem.js'> </script>
+<script type='text/javascript' src='OSMNode.js'> </script>
+<script type='text/javascript' src='OSMWay.js'> </script>
+<script type='text/javascript' src='OSMFeature.js'> </script>
+<script type='text/javascript' src='DrawOSMFeature.js'> </script>
+<script type='text/javascript' src='routetypes.js'> </script>
+<script type='text/javascript' src='ChangeFeatureDialog.js'> </script>
+<script type='text/javascript' src='../lib/converter.js'> </script>
+<script type='text/javascript' src='../lib/jscoord-1.0.js'> </script>
+<script type='text/javascript' src='../lib/Dialog.js'> </script>
+</head>
+<style type='text/css'>
+#map { width:640px; height:480px;}
+#status { width:640px; background-color: #000080; color:white; 
+			font-size:120%}
+</style>
 </head>
 <body onload='init()'>
-<div id='main'>
-
-<div id='menubar'>
-<span><strong>Mode:</strong></span>
-<span id='mode0'>Normal </span> |
-<span id='mode1'>Annotate</span> |
-<span id='mode2'>Delete</span> |
-<span id='mode3'>Distance</span> |
-<span id='mode4'>Walk route</span> 
+<div id="status">Welcome to OSMAJAX</div>
+<div id="map"></div>
+<div id="editpanel">
+<input type='button' id='loginbtn' value='login'/>
+<input type='button' id='navbtn' value='navigate' disabled='disabled'/>
+<input type='button' id='selbtn' value='select'/>
+<input type='button' id='drwbtn' value='draw' disabled='disabled'/>
+<input type='button' id='drwpointbtn' value='draw point' disabled='disabled' />
+<input type='button' id='chngbtn' value='change' disabled='disabled' />
+<input type='button' id='delbtn' value='delete' disabled='disabled' />
 </div>
-
-<div id="map"> </div>
-
-<?php 
-write_searchbar(); 
-write_milometer(); 
-?>
-
+<div>
+<label for="search">Search (UK only):</label>
+<input id="search"/>
+<input type="button" value="Go!" onclick="placeSearch()"/>
 </div>
-</div>
-
-<?php write_sidebar(); ?>
-
 </body>
 </html>

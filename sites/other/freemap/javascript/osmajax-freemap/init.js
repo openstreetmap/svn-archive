@@ -2,9 +2,13 @@ var osmajax;
 
 function init()
 {
+	var tpURL = (trackid==null) ?
+		'http://www.free-map.org.uk/freemap/common/tp.php':
+		'http://www.free-map.org.uk/freemap/common/tp.php?trackid='+trackid;
+
     var map = new OpenLayers.Map('map',
             { maxExtent:new OpenLayers.Bounds(-700000,6000000,200000,8100000),
-            resolutions: [5,10],
+            resolutions: [2.5, 5,10],
             tileSize : new OpenLayers.Size(500,500),
             units: 'meters' }
     );
@@ -13,11 +17,10 @@ function init()
                 "http://www.free-map.org.uk/cgi-bin/render",
                 {buffer: 1} );
 
-	var tp = new OpenLayers.Layer.WMS("trackpoints",
-                "http://www.free-map.org.uk/freemap/common/tp.php",
-                {buffer: 1}, {isBaseLayer:false} );
+	var tp = new OpenLayers.Layer.WMS("trackpoints",tpURL,
+                {buffer: 1} );
 
-    map.addLayer(mapnik);
+    //map.addLayer(mapnik);
     map.addLayer(tp);
             
     map.setCenter(new OpenLayers.LonLat(easting,northing));

@@ -1,8 +1,11 @@
 <?php
 session_start();
+
+// 20/11/07 now uses Mercator, not OSGB
+
 ################################################################################
 # This file forms part of the Freemap source code.                             #
-# (c) 2004-06 Nick Whitelegg (Hogweed Software)                                #
+# (c) 2004-07 Nick Whitelegg (Hogweed Software)                                #
 # Licenced under the Lesser GNU General Public Licence; see COPYING            #
 # for details.                                                                 #
 ################################################################################
@@ -26,6 +29,7 @@ class Image
 		$map, 
 		$backcol,
 		$trackpoint_colour,
+		$waypoint_colour,
 		$bottomleft_ll,
 		$topright_ll;
 
@@ -39,10 +43,12 @@ class Image
 		$this->im = ImageCreateTrueColor($width,$height);
 		$this->backcol = ImageColorAllocate($this->im, 220, 220, 220);
 		ImageFilledRectangle($this->im,0,0,$width,$height,$this->backcol);
-		$this->trackpoint_colour = ImageColorAllocate($this->im,192,0,0);
+		ImageColorTransparent($this->im, $this->backcol);
+		$this->trackpoint_colour = ImageColorAllocate($this->im,255,255,0);
+		$this->waypoint_colour = ImageColorAllocate($this->im,80,0,80);
 
-		$this->bottomleft_ll = gr_to_wgs84_ll(array("e"=>$w, "n"=>$s));
-		$this->topright_ll = gr_to_wgs84_ll(array("e"=>$e, "n"=>$n));
+		$this->bottomleft_ll = merc_to_ll($w,$s);
+		$this->topright_ll = merc_to_ll($e, $n);
 
 
 		/*
@@ -51,35 +57,64 @@ class Image
 		*/
 	}
 
-	function draw()
-	{
-		$this->draw_trackpoints();
-		ImagePNG($this->im);	
-	}
-	
-	function draw_trackpoints()
+	function draw($trackid)
 	{
 		$conn=mysql_connect('localhost',DB_USERNAME,DB_PASSWORD);
 		mysql_select_db(DB_DBASE);
+		$this->draw_trackpoints($trackid);
+		$this->draw_waypoints($trackid);
+		mysql_close($conn);
+		ImagePNG($this->im);	
+	}
+	
+	function draw_trackpoints($trackid)
+	{
 
 			$q=
 			("select * from trackpoints where lat between ".
 				$this->bottomleft_ll['lat'] ." and ".
 				$this->topright_ll['lat']. " and lon between ".
-				$this->bottomleft_ll['long'] ." and ".
-				$this->topright_ll['long']). " and trackid=$_SESSION[trackid]";
+				$this->bottomleft_ll['lon'] ." and ".
+				$this->topright_ll['lon']);
+
+			if($trackid)
+				$q .= " and trackid=$trackid";
 
 		$result=mysql_query($q);
 		//echo "QUERY : $q";
 		while($row=mysql_fetch_array($result))
 		{
-			$gr = wgs84_ll_to_gr 
-				(array("lat"=>$row['lat'],"long"=>$row['lon']));
-			$p = $this->map->get_point ($gr);
-			ImageFilledEllipse($this->im,$p['x'],$p['y'],5,5,$this->trackpoint_colour);
+			$merc =ll_to_merc($row['lat'],$row['lon']); 
+			$p = $this->map->get_point ($merc);
+			ImageFilledEllipse
+				($this->im,$p['x'],$p['y'],5,5,$this->trackpoint_colour);
 		}
 
-		mysql_close($conn);
+	}
+
+	function draw_waypoints($trackid)
+	{
+			$q=
+			("select * from waypoints where lat between ".
+				$this->bottomleft_ll['lat'] ." and ".
+				$this->topright_ll['lat']. " and lon between ".
+				$this->bottomleft_ll['lon'] ." and ".
+				$this->topright_ll['lon']);
+
+			if($trackid)
+				$q .= " and trackid=$trackid";
+
+			$result=mysql_query($q);
+			while($row=mysql_fetch_array($result))
+			{
+				$merc =ll_to_merc($row['lat'],$row['lon']); 
+				$p = $this->map->get_point ($merc);
+				ImageFilledEllipse
+				($this->im,$p['x'],$p['y'],10,10,$this->waypoint_colour);
+
+				ImageString($this->im,3,$p['x']+8,$p['y']+8,$row['name'],
+							$this->waypoint_colour);
+			}
 	}
 }
 
@@ -87,8 +122,9 @@ class Image
 
 $defaults = array("width" => 500, 
 			"height" => 500,
-			"bbox" => "487000,125000,492000,130000" ,
-			"layers" => "none");
+			"bbox" => "-85000,6595000,-80000,6600000",
+			"layers" => "none",
+			"trackid" => null);
 
 $inp=array();
 
@@ -118,7 +154,7 @@ else
 						round($bbox[3]),
 						$inp["width"],$inp["height"], $inp["layers"]);
 
-	$image->draw();
+	$image->draw($inp['trackid']);
 }
 
 function valid_input($field,$value)

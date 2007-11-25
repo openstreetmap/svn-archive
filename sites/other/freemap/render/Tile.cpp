@@ -14,9 +14,9 @@ bool tile::chk_input_sensible()
 		return false;
 	}
 
-	if(scale!=100 && scale!=200)
+	if(scale!=100 && scale!=200 && scale!=400)
 	{
-		error= "Invalid scale! Needs to be 100 or 200 pixels/km!";
+		error= "Invalid scale! Needs to be 100, 200, 400 pixels/km!";
 		return false;
 	}
 

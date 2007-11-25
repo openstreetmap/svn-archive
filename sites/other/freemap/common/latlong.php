@@ -16,7 +16,7 @@ echo "<br/>";
 print_r ( gr_to_wgs84_ll(array ("e"=>489600,"n"=>128500)));
 
 print_r( ll_to_merc (51.05,-0.72) );
-print_r ( merc_to_ll (-80150, 6596000) );
+print_r ( merc_to_ll (-80150.033371157, 6596892,2297583) );
 
 */
 

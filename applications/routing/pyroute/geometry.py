@@ -23,19 +23,35 @@
 from math import *
 
 def bearing(a,b):
-    dlat = radians(b[0] - a[0])
-    dlon = radians(b[1] - a[1])
+  dlat = radians(b[0] - a[0])
+  dlon = radians(b[1] - a[1])
 
-    dlon = dlon * cos(radians(a[0]))
-    
-    return(degrees(atan2(dlon, dlat)))
+  dlon = dlon * cos(radians(a[0]))
+  
+  return(degrees(atan2(dlon, dlat)))
 
-def distance(a,b):
+def distance(a,b, haversine=False):
+  if(haversine):
+    return(distance_haversine(a,b))
   lat1 = radians(a[0])
   lon1 = radians(a[1])
   lat2 = radians(b[0])
   lon2 = radians(b[1])
   d = acos(sin(lat1)*sin(lat2) + cos(lat1)*cos(lat2) * cos(lon2-lon1)) * 6371;
+  return(d)
+
+ 	
+def distance_haversine(a,b):
+  dlat = radians(b[0] - a[0])
+  dlon = radians(b[1] - a[1])
+  a1 = sin(0.5 * dlat)
+  a2a = cos(radians(a[0]))
+  a2b = cos(radians(b[0]))
+  a3 = sin(0.5 * dlon)
+  
+  a = a1*a1 + a2a*a2b * a3*a3
+  c = 2 * atan2(sqrt(a), sqrt(1-a))
+  d = 6371 * c
   return(d)
 
 if(__name__ == "__main__"):
@@ -44,3 +60,4 @@ if(__name__ == "__main__"):
 
   print bearing(a,b)
   print distance(a,b)
+  print distance(a,b,True)

@@ -28,6 +28,7 @@ class waypointsModule(dataSource, handler.ContentHandler):
     self.storeFields = ('name','sym')
     self.groups.append(dataGroup("Waypoints"))
     self.filename = None
+    self.nextNumericWpt = 1
     if(filename):
       if(os.path.exists(filename)):
         self.load(filename)
@@ -64,13 +65,22 @@ class waypointsModule(dataSource, handler.ContentHandler):
     x = dataItem(waypoint['lat'], waypoint['lon'])
     x.title = waypoint['name']
     self.groups[0].items.append(x)
+    try:
+      if(int(x.title) >= self.nextNumericWpt):
+        self.nextNumericWpt = int(x.title) + 1
+    except ValueError:
+      pass
+
+  def storeNumberedWaypoint(self, waypoint):
+    waypoint['name'] = self.nextNumber()
+    self.storeWaypoint(waypoint)
 
   def save(self):
     # Default filename if none was loaded
     if(self.filename == None):
       self.filename = "data/waypoints.gpx"
     self.saveAs(self.filename)
-    
+  
   def saveAs(self,filename):
     if(filename == None):
       return
@@ -86,7 +96,10 @@ class waypointsModule(dataSource, handler.ContentHandler):
       f.write('</wpt>\n')
     f.write('</gpx>\n')
     f.close()
-    
+  
+  def nextNumber(self):
+    return(str(self.nextNumericWpt))
+  
 if __name__ == "__main__":
   wpt = waypointsModule(None,"data/waypoints.gpx")
   wpt.report()

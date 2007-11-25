@@ -401,13 +401,6 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	</rule>
 
 	<rule>
-		<condition k="railway" v="subway" />
-		<icon annotate="true" src="transport/underground.png" />
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
-	</rule>
-
-	<rule>
 		<condition k="railway" v="halt" />
 		<icon annotate="true" src="transport/railway_small.png" />
         <scale_min>1</scale_min>
@@ -914,13 +907,6 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="amenity" v="library" />
 		<icon annotate="true" src="shopping/rental/library.png" />
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
-	</rule>
-
-	<rule>
-		<condition k="amenity" v="supermarket" />
-		<icon annotate="true" src="shopping/supermarket.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

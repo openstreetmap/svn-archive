@@ -184,6 +184,17 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['projection'].nudgeZoom(-1 * dx / self.rect.width)
     self.forceRedraw()
 
+  def handleDrag(self,dx,dy,startX,startY):
+    if(self.modules['overlay'].fullscreen()):
+      if(self.modules['overlay'].handleDrag(dx,dy,startX,startY)):
+        self.forceRedraw()
+    else:
+      if(startY < 100):
+        self.zoom(dx)
+      else:
+        self.move(dx,dy)
+    
+
   def draw(self, cr):
     start = clock()
     proj = self.modules['projection']
@@ -309,11 +320,12 @@ class GuiBase:
   def moved(self, event):
     """Drag-handler"""
 
-    if(self.dragstarty < 100):
-      self.mapWidget.zoom(event.x - self.dragx)
-    else:
-      self.mapWidget.move(event.x - self.dragx, event.y - self.dragy)
-    
+    self.mapWidget.handleDrag( \
+      event.x - self.dragx, 
+      event.y - self.dragy,
+      self.dragstartx,
+      self.dragstarty)
+
     self.dragx = event.x
     self.dragy = event.y
   def released(self, event):

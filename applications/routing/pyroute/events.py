@@ -47,7 +47,7 @@ class pyrouteEvents(pyrouteModule):
   def handle_add_waypoint(self,params):
     if(params == 'clicked'):
       lat,lon = self.get('clicked')
-      self.m['poi']['waypoints'].storeWaypoint({'lat':lat,'lon':lon,'name':'blibble'})
+      self.m['poi']['waypoints'].storeNumberedWaypoint({'lat':lat,'lon':lon})
       self.m['poi']['waypoints'].save()
     else:
       print "Not handled: dropping waypoint somewhere other than last click"

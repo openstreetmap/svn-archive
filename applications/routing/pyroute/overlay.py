@@ -4,6 +4,7 @@ from base import pyrouteModule
 from pyrouteMenu import *
 from menuIcons import menuIcons
 from overlayArea import overlayArea
+from colorsys import hsv_to_rgb
 
 class guiOverlay(pyrouteModule):
     def __init__(self, modules):
@@ -11,6 +12,8 @@ class guiOverlay(pyrouteModule):
         self.modules = modules
         self.icons = menuIcons()
         self.menus = loadMenus('Menus')
+        self.dragbar = None
+        self.dragpos = 0
         for name,stuff in self.menus.items():
           print "Loaded menu %s" % name
 
@@ -18,6 +21,17 @@ class guiOverlay(pyrouteModule):
         """Asks if the menu is fullscreen -- if it is, then the
         map doesn't need to be drawn underneath"""
         return(self.get('menu'))
+    
+    def handleDrag(self,dx,dy,startX,startY):
+      if(self.dragbar):
+        if(self.dragbar.contains(startX,startY)):
+          scale = -20.0 / float(self.rect.h)
+          self.dragpos = self.dragpos + dy * scale
+          if(self.dragpos < 0):
+            self.dragpos = 0
+          #print "Dragging %1.2f (by %1.2f * %1.2f)" % (self.dragpos, dy,scale)
+          return(True)
+      return(False)
     
     def handleClick(self,x,y):
         """return 1 if click was handled"""
@@ -67,7 +81,7 @@ class guiOverlay(pyrouteModule):
           function = getattr(self, menuName)
         except AttributeError:
           print "Error: %s not defined" % menuName
-          self.set('menu',None)
+          self.set('menu','')
           return
         function()
     
@@ -92,7 +106,7 @@ class guiOverlay(pyrouteModule):
     def menu_list(self, module):
       self.backButton(0,0)
       n = 9
-      offset = 0
+      offset = int(self.dragpos)
       selectedFeed = int(self.get('selectedFeed',0))
       titlebar = self.rect.copyself(1.0/3.0,0,1,0.25)
       line1, line2 = titlebar.ysplit(0.5)
@@ -103,23 +117,36 @@ class guiOverlay(pyrouteModule):
       self.clickable.append(back)
       self.clickable.append(next)
 
+
+      self.dragbar = self.rect.copyself(0.0,0.25,0.88,1.0)
+
       try:
         group = self.modules['poi'][module].groups[selectedFeed]
       except KeyError:
         line2.drawText("\"%s\" not loaded"%module)
         return
       except IndexError:
-        line2.drawText("No such feed #%d"%selectedfeed)
+        line2.drawText("No such set #%d"%selectedFeed)
         return
       
-      line1.copyself(0.25,0,0.75,1).drawText("Feed %d of %d" % (selectedFeed + 1, len(self.modules['poi'][module].groups)))
+      line1.copyself(0.28,0,0.73,1).drawText("Set %d of %d" % (selectedFeed + 1, len(self.modules['poi'][module].groups)))
       
       line2.drawText(group.name)
       
-      listrect = self.rect.ysplitn(0, 0.25, 0.8, 1, n)
+      listrect = self.rect.ysplitn(0, 0.25, 1.0, 1, n)
       ownpos = self.get('ownpos')
       for i in range(0,n):
-        textarea, button = listrect[i].xsplit(0.8)
+        textarea, button = listrect[i].xsplit(0.88)
+        color, textarea = textarea.xsplit(0.025)
+        
+        # Pattern for the left hand side to show how far down the list
+        # we are - model it as a colour, where red is the top, and purple
+        # is bottom
+        h = float(i + offset) / float(len(group.items))
+        v = (((i + offset) % 2) == 0) and 1.0 or 0.95
+        r,g,b = hsv_to_rgb(h, 1, v)
+        color.fill(r,g,b)
+        
         if(i > 0):
           self.cr.set_line_width(0.5)
           self.cr.set_dash((2,2,2), 0);

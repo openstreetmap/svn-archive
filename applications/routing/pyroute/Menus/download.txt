@@ -5,7 +5,7 @@ Up
 -----
 
 
-DownloadRoute|download:osm:0.2
+DownloadRoute|+download:osm:0.2
 -----
 
 

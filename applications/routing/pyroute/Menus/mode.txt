@@ -1,17 +1,17 @@
 -----
 Up
-Bike|mode:cycle
-Walk|mode:foot
+Bike|+mode:cycle
+Walk|+mode:foot
 -----
-MTB|mode:cycle
-Car|mode:car
-Hike|mode:foot
+MTB|+mode:cycle
+Car|+mode:car
+Hike|+mode:foot
 -----
-FastBike|mode:cycle
+FastBike|+mode:cycle
 
 
 -----
-HGV|mode:hgv
+HGV|+mode:hgv
 
 
 -----

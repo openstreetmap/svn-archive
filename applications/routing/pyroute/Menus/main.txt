@@ -1,7 +1,7 @@
 -----
 Up
-Mark|None
-Sketch|None
+Mark|+add_waypoint:clicked
+Sketch
 -----
 View|menu:view
 GPS|menu:gps
@@ -11,7 +11,7 @@ Download|menu:download
 
 
 -----
-Centre|option:toggle:centred
+Centre|+option:toggle:centred
 Options|menu:options
 Mode|menu:mode
 -----

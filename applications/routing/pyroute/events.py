@@ -28,18 +28,29 @@ class pyrouteEvents(pyrouteModule):
       pyrouteModule.__init__(self,modules)
   
   def handle_menu(self,params):
+    """menu:(name) - displays a menu. Use blank name to hide the menu"""
     self.set('menu', params)
   
   def handle_mode(self,params):
+    """mode:(name) - sets the transport type in use (e.g. car, bike)"""
     self.set('mode', params)
   
   def handle_option(self,params):
+    """option:add|toggle:(name):(value)"""
     method, name = params.split(':',1)
     if(method == 'toggle'):
       self.set(name, not self.get(name))
     elif(method == 'add'):
       name,add = name.split(':')
       self.set(name, self.get(name,0) + float(add))
+  
+  def handle_add_waypoint(self,params):
+    if(params == 'clicked'):
+      lat,lon = self.get('clicked')
+      self.m['poi']['waypoints'].storeWaypoint({'lat':lat,'lon':lon,'name':'blibble'})
+      self.m['poi']['waypoints'].save()
+    else:
+      print "Not handled: dropping waypoint somewhere other than last click"
   
   def handle_route(self,params):
     ownpos = self.get('ownpos')
@@ -99,11 +110,12 @@ class pyrouteEvents(pyrouteModule):
       event = event[1:]
       closeMenuAfterwards = True
     
+    # format is "eventname:parameters" (where parameters may be further split)
     action,params = event.split(':',1)
     
+    # Look for an event-handler function, and call it
     print "Handling event %s" % event
     functionName = "handle_%s" % action
-    
     try:
       function = getattr(self, functionName)
     except AttributeError:
@@ -111,12 +123,7 @@ class pyrouteEvents(pyrouteModule):
       self.set('menu',None)
     else:
       function(params)
-
-    print " - done handling %s" % event
     
-    # Having handled the event, optionally return to the map
+    # Optionally return to the map
     if(closeMenuAfterwards):
-      self.closeAllMenus()
-  
-  def closeAllMenus(self):
-    self.set('menu',None)
+      self.set('menu',None)

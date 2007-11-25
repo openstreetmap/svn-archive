@@ -1,6 +1,6 @@
 -----
 Up
-Mark|+add_waypoint:clicked
+
 Sketch
 -----
 View|menu:view

@@ -26,8 +26,8 @@ int main()
 {
 	// read CGI vars
 	char *qs = getenv("QUERY_STRING");
-	/*std::string qs=
-	"bbox=-85000%2C6595000%2C-80000%2C6600000&width=500&height=500";*/
+	//std::string qs=
+	//"bbox=-81250%2C6598750%2C-80000%2C6600000&width=500&height=500";
 	
 
 

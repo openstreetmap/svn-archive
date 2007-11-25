@@ -365,6 +365,8 @@ function Osmajax(map)
     
     this.setCentre = function(latlon)
     {
+		if(this.selectedFeature)
+			this.vectorLayer.removeFeatures(this.selectedFeature);
         this.vectorLayer.destroy();
         this.vectorLayer=null;
         var cvtr=new converter("Mercator");

@@ -50,7 +50,8 @@ OpenLayers.OSMItem.prototype = {
 			var deleteTags = new Array
 				('foot','horse','motorcar','bicycle','amenity','power',
 				'residence','place','religion','denomination','tourism',
-				'man_made','railway','leisure','highway','natural');
+				'man_made','railway','leisure','highway','natural',
+				'newforest_pathtype');
 
 
 			// Blank any tags which should no longer be there - when we 
@@ -59,12 +60,13 @@ OpenLayers.OSMItem.prototype = {
 			for(tag in this.tags) {
 				for(var count=0; count<deleteTags.length; count++)
 				{
-					if(tag==deleteTags[count])
+					if(tag==deleteTags[count] && !(newTags[tag]))
 						this.tags[tag]=null;
 				}
 			}
 
 			for(tag in newTags) {
+				alert('tag=' + tag + " value=" + newTags[tag]);
 				this.tags[tag] = newTags[tag];
 			}
 		},

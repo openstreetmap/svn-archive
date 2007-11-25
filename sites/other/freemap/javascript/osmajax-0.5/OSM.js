@@ -296,7 +296,8 @@ OpenLayers.Layer.OSM.prototype =
 			{
 				for(var count=0; count<wayIntersectInfo.length; count++)
 				{
-					alert('Point ' + info.idxInWay + ' in way intersects an ' +
+					this.statusCallback
+					('Point ' + info.idxInWay + ' in way intersects an ' +
 					  'existing way: way id=' 
 					  + wayIntersectInfo[count].osmid + 
 					  ' nodeidx=' +
@@ -541,7 +542,8 @@ OpenLayers.Layer.OSM.prototype =
 		{
 			var nodeid = addData;
 			var nodeWays = xmlHTTP.responseXML.getElementsByTagName("way");
-			if(xmlHTTP.status==400) // nasty fudge, this isn't really an error
+			//if(xmlHTTP.status==400) // nasty fudge, this isn't really an error
+			if (false)
 			{
 				this.statusCallback('Deleting node ' + nodeid);
 				this.nodes[nodeid].del

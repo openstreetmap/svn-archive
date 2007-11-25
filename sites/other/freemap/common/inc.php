@@ -26,8 +26,10 @@ function write_sidebar()
 	else
 	{
 		echo "<p>Logged in as <em>$_SESSION[gatekeeper]</em><br/>".
-		 "<a href='/freemap/common/walkroute.php?action=getmine'>".
-		 "My routes</a>".
+		 "<a href='/freemap/home.php'>".
+		 "My home page</a>".
+		 "<a href='/freemap/gpxtodb.php'>".
+		 "Upload GPX</a>".
 		 " <a href='/freemap/common/logout.php?referrer=$_SERVER[PHP_SELF]'>".
 		 "Log out</a></p>\n";
 	}

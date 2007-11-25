@@ -2,7 +2,9 @@
 function ChangeFeatureDialog (selFeature,routeTypes,upCB,canCB,map)
 {
     this.currentSelectedFeature=selFeature;
-    this.tempTags = this.currentSelectedFeature.osmitem.tags;
+    this.tempTags = new Array();
+	for(key in this.currentSelectedFeature.osmitem.tags)
+		this.tempTags[key] = this.currentSelectedFeature.osmitem.tags[key];
     var t = this.currentSelectedFeature.osmitem.type;
 	this.tempType=t;
     var f = (selFeature.osmitem instanceof OpenLayers.OSMWay ) ?
@@ -37,7 +39,9 @@ function ChangeFeatureDialog (selFeature,routeTypes,upCB,canCB,map)
                     "unknown" : document.getElementById('ftype').value;
         var newTags = self.routeTypes.getTags(t);
         var tt = self.routeTypes.getUpdatedTags(self.tempTags,newTags);
-		self.tempTags=tt;
+		self.tempTags=new Array();
+		for(tag in tt)
+			self.tempTags[tag] = tt[tag];
         self.tempType=t;
         self.populateFullTags();
     }

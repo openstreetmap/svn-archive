@@ -32,8 +32,8 @@ function get_user_level($username,$usertable='users',$levelfield='level',
 function get_user_id ($username,$usertable='users',$userfield='username',
 						$idfield='id')
 {
-	$result = mysql_query("select $idfield from $usertable where ".
-							"$userfield='$username'");
+	$q=("select $idfield from $usertable where $userfield='$username'");
+	$result=mysql_query($q);
 	if(mysql_num_rows($result)==1)
 	{
 		$row=mysql_fetch_array($result);

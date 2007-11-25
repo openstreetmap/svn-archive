@@ -6,7 +6,6 @@ function add_new_marker ($lat, $lon, $type, $description, $userid)
 		("INSERT INTO freemap_markers (userid,type,description,lat,lon)".
 		 " VALUES ".
 		 "('$userid','$type','$description','$lat','$lon')");
-	echo "Doing query : $q";
 	mysql_query($q) or die(mysql_error());
 }
 
@@ -155,10 +154,10 @@ function show_user_walkroutes($walkroutes)
 			echo "<hr/>";
 		else
 			$first=false;
-		echo "<h2>$walkroute[title]</h2>";
-		echo "<p>$walkroute[description]</p>";
-		echo "<p><a href='/freemap/index.php?lat=$walkroute[startlat]&".
-			 "lon=$walkroute[startlon]>Map</a></p>";
+		echo "<h3>$walkroute[title]</h3>";
+		echo "<p>$walkroute[description]";
+		echo " <a href='/freemap/index.php?lat=$walkroute[startlat]&".
+			 "lon=$walkroute[startlon]'>Map</a></p>";
 	}
 }
 
@@ -383,4 +382,44 @@ function slope_angle($x1,$y1,$x2,$y2)
 	$a = $dx ? round(rad2deg(atan($dy/$dx))) : 90;
 	return $a; 
 }
+
+function get_track_centre_point ($trackid)
+{
+	$query = "SELECT * FROM trackpoints WHERE trackid=$trackid";
+	$result=mysql_query($query);
+	$tlat = 0.0;
+	$tlon = 0.0;
+	$rows=mysql_num_rows($result);
+	while($row=mysql_fetch_array($result))
+	{
+		$tlat += $row['lat'];
+		$tlon += $row['lon'];
+	}
+
+	return array ($tlat/$rows, $tlon/$rows); 
+}
+
+function get_user_tracks($userid)
+{
+	$tracks=array();
+	$result = mysql_query("SELECT trackid,description ".
+							"FROM tracks WHERE userid=$userid");
+	while($row=mysql_fetch_assoc($result))
+		$tracks[] = $row;
+
+	return $tracks;
+}
+
+function display_user_tracks($tracks)
+{
+	echo "<p>";
+	foreach ($tracks as $track)
+	{
+		echo "$track[description] ";
+		echo "<a href='/freemap/osmajax.php?trackid=$track[trackid]'>Edit</a>";
+		echo "<br/>";
+	}
+	echo "</p>";
+}
+
 ?>

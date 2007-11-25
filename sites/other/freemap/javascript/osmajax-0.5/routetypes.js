@@ -37,7 +37,7 @@ function RouteTypes()
 				},
 			   'tertiary road'  :
 			    { conditions: { highway : 'tertiary' },
-				  colour : 'yellow',
+				  colour : '#ffffc0',
 			       featureclass: 'line',
 				  width : 5
 				},
@@ -71,15 +71,42 @@ function RouteTypes()
 			       featureclass: 'line',
 				  width : 4
 				},
+			   'New Forest path':
+			   {  conditions : {newforest_pathtype: 'path',
+			   					foot: 'permissive',
+								horse: 'permissive'},
+				  colour: '#baf80f',
+				  featureclass: 'line',
+				  width: 3
+				 },
+			   'New Forest path (narrow/poorly-defined)':
+			   {  conditions : {newforest_pathtype: 'narrow',
+			   					foot: 'permissive',
+								horse: 'permissive'},
+				  colour: '#baf80f',
+				  featureclass: 'line',
+				  width: 2 
+				 },
+			   'New Forest track':
+			   {  conditions : {newforest_pathtype: 'track',
+			   					foot: 'permissive',
+								horse: 'permissive'},
+				  colour: '#e07000',
+				  featureclass: 'line',
+				  width: 3
+				 },
+			   'New Forest gravel track':
+			   {  conditions : {newforest_pathtype: 'gravel',
+			   					foot: 'permissive',
+								horse: 'permissive'},
+				  colour: '#e07000',
+				  featureclass: 'line',
+				  width: 4
+				 },
+
 			   'path' :
 			    { conditions : { highway : 'footway' },
 				  colour : '#008000',
-			       featureclass: 'line',
-				  width : 2
-				},
-			   'permissive bridleway' :
-			    { conditions : { highway : 'bridleway' },
-				  colour : '#804000',
 			       featureclass: 'line',
 				  width : 2
 				},
@@ -90,7 +117,8 @@ function RouteTypes()
 				  width : 2
 				},
 			   'permissive bridleway' :
-			    { conditions : { highway : 'bridleway',horse:'permissive' },
+			    { conditions : { highway : 'bridleway',horse:'permissive',
+									foot:'permissive'},
 				  colour : '#804000',
 			       featureclass: 'line',
 				  width : 2
@@ -320,7 +348,8 @@ function RouteTypes()
 		var deleteTags = new Array
 				('foot','horse','motorcar','bicycle','amenity','power',
 				'residence','place','religion','denomination','tourism',
-				'man_made','railway','leisure','highway','natural');
+				'man_made','railway','leisure','highway','natural',
+				'newforest_pathtype');
 
 
 		// Blank any tags which should no longer be there - when we 

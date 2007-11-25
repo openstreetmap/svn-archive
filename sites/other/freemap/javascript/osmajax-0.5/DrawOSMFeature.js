@@ -78,7 +78,6 @@ OpenLayers.Control.DrawOSMFeature.prototype =
 				// existing node in the geometry.
 				if(found!==false)
 				{
-					alert('point ' + count + ' near an existing node ');
 					if(geometry instanceof OpenLayers.Geometry.Polygon)
 					{
 						geometry.components[0].components[count] = 

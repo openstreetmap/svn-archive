@@ -131,7 +131,7 @@ class guiOverlay(pyrouteModule):
           item = group.items[i + offset]
           textarea.drawTextSomewhere(item.formatText(), 0.1,0.1,0.9,0.5)
           textarea.drawTextSomewhere(item.formatPos(ownpos), 0.1,0.6,0.9,0.9)
-          button.button("", "route:%1.5f:%1.5f" % (item.lat, item.lon), "goto")
+          button.button("", "+route:%1.5f:%1.5f" % (item.lat, item.lon), "goto")
           self.clickable.append(button)
         except IndexError:
           pass
@@ -157,13 +157,13 @@ class guiOverlay(pyrouteModule):
         #self.cells[1][0].button("(lat)",None,None)
         #self.cells[2][0].button("(lon)",None,None)
 
-        self.cells[0][1].button("set pos","ownpos:clicked","set_pos")
-        self.cells[1][1].button("route to","route:clicked","route_to")
-        self.cells[2][1].button("direct to","direct:clicked","direct_to")
+        self.cells[0][1].button("set pos","+ownpos:clicked","set_pos")
+        self.cells[1][1].button("route to","+route:clicked","route_to")
+        self.cells[2][1].button("direct to","+direct:clicked","direct_to")
 
-        self.cells[0][2].button("waypoint", "waypoint:clicked", "bookmark")
-        self.cells[1][2].button("extend route", "extend:route:clicked", "extend_route")
-        self.cells[2][2].button("extend direct", "extend:direct:clicked", "extend_direct")
+        self.cells[0][2].button("waypoint", "+waypoint:clicked", "bookmark")
+        self.cells[1][2].button("extend route", "+extend:route:clicked", "extend_route")
+        self.cells[2][2].button("extend direct", "+extend:direct:clicked", "extend_direct")
 
         self.cells[0][3].button("",None,None)
         self.cells[1][3].button("",None,None)

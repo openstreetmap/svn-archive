@@ -225,16 +225,11 @@ class MapWidget(gtk.Widget, pyrouteModule):
           for item in group.items:
             x,y = proj.ll2xy(item.lat, item.lon)
             if(proj.onscreen(x,y)):
-              #print " - %s at %s" % (item.title, item.point)
-              
               cr.set_source_rgb(0.0, 0.4, 0.0)
-              cr.arc(x,y,5, 0,2*3.1415)
-              cr.fill()
-              
-              #cr.select_font_face('Verdana', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
               cr.set_font_size(12)
               cr.move_to(x,y)
               cr.show_text(item.title)
+              cr.stroke()
 
       pos = self.get('ownpos')
       if(pos['valid']):

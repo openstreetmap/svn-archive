@@ -66,6 +66,9 @@ class waypointsModule(dataSource, handler.ContentHandler):
     self.groups[0].items.append(x)
 
   def save(self):
+    # Default filename if none was loaded
+    if(self.filename == None):
+      self.filename = "data/waypoints.gpx"
     self.saveAs(self.filename)
     
   def saveAs(self,filename):

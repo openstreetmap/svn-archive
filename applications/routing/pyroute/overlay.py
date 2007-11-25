@@ -86,54 +86,55 @@ class guiOverlay(pyrouteModule):
       self.menu_list("rss")
     def menu_geonames(self):
       self.menu_list("geonames")
+    def menu_waypoints(self):
+      self.menu_list("waypoints")
       
     def menu_list(self, module):
-        self.backButton(0,0)
-        n = 9
-        offset = 0
-        selectedFeed = int(self.get('selectedFeed',0))
-        titlebar = self.rect.copyself(1.0/3.0,0,1,0.25)
-        line1, line2 = titlebar.ysplit(0.5)
-        back = line1.copyself(0,0,0.25,1)
-        next = line1.copyself(0.75,0,1,1)
-        back.button("","option:add:selectedFeed:-1","back")
-        next.button("","option:add:selectedFeed:1","next")
-        self.clickable.append(back)
-        self.clickable.append(next)
+      self.backButton(0,0)
+      n = 9
+      offset = 0
+      selectedFeed = int(self.get('selectedFeed',0))
+      titlebar = self.rect.copyself(1.0/3.0,0,1,0.25)
+      line1, line2 = titlebar.ysplit(0.5)
+      back = line1.copyself(0,0,0.25,1)
+      next = line1.copyself(0.75,0,1,1)
+      back.button("","option:add:selectedFeed:-1","back")
+      next.button("","option:add:selectedFeed:1","next")
+      self.clickable.append(back)
+      self.clickable.append(next)
 
+      try:
+        group = self.modules['poi'][module].groups[selectedFeed]
+      except KeyError:
+        line2.drawText("\"%s\" not loaded"%module)
+        return
+      except IndexError:
+        line2.drawText("No such feed #%d"%selectedfeed)
+        return
+      
+      line1.copyself(0.25,0,0.75,1).drawText("Feed %d of %d" % (selectedFeed + 1, len(self.modules['poi'][module].groups)))
+      
+      line2.drawText(group.name)
+      
+      listrect = self.rect.ysplitn(0, 0.25, 0.8, 1, n)
+      ownpos = self.get('ownpos')
+      for i in range(0,n):
+        textarea, button = listrect[i].xsplit(0.8)
+        if(i > 0):
+          self.cr.set_line_width(0.5)
+          self.cr.set_dash((2,2,2), 0);
+          self.cr.set_source_rgb(0,0,0)
+          self.cr.move_to(textarea.x1,textarea.y1)
+          self.cr.line_to(textarea.x2,textarea.y1)
+          self.cr.stroke()
         try:
-            group = self.modules['plugins'][module].groups[selectedFeed]
-        except KeyError:
-            line2.drawText("\"%s\" not loaded"%module)
-            return
+          item = group.items[i + offset]
+          textarea.drawTextSomewhere(item.formatText(), 0.1,0.1,0.9,0.5)
+          textarea.drawTextSomewhere(item.formatPos(ownpos), 0.1,0.6,0.9,0.9)
+          button.button("", "route:%1.5f:%1.5f" % (item.lat, item.lon), "goto")
+          self.clickable.append(button)
         except IndexError:
-            line2.drawText("No such feed #%d"%selectedfeed)
-            return
-        
-        line1.copyself(0.25,0,0.75,1).drawText("Feed %d of %d" % (selectedFeed + 1, len(self.modules['plugins'][module].groups)))
-        
-        line2.drawText(group.name)
-        
-        listrect = self.rect.ysplitn(0, 0.25, 0.8, 1, n)
-        ownpos = self.modules['position'].get()
-        for i in range(0,n):
-            textarea, button = listrect[i].xsplit(0.8)
-            if(i > 0):
-                self.cr.set_line_width(0.5)
-                self.cr.set_dash((2,2,2), 0);
-                self.cr.set_source_rgb(0,0,0)
-                self.cr.move_to(textarea.x1,textarea.y1)
-                self.cr.line_to(textarea.x2,textarea.y1)
-                self.cr.stroke()
-            try:
-                item = group.items[i + offset]
-                textarea.drawTextSomewhere(item.formatText(), 0.1,0.1,0.9,0.5)
-                textarea.drawTextSomewhere(item.formatPos(ownpos), 0.1,0.6,0.9,0.9)
-                button.button("", "route:%1.5f:%1.5f" % (item.lat, item.lon), "goto")
-                self.clickable.append(button)
-            except IndexError:
-                pass
-
+          pass
 
     def menu_click(self):
         self.backButton(0,0)

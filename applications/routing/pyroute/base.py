@@ -39,6 +39,6 @@ class pyrouteModule:
   def set(self, name, value):
     return(self.m['data'].setData(name, value))
   def action(self, message):
-    self.m['data'].handleEvent(message)
+    self.m['events'].handleEvent(message)
   def ownPos(self):
     return(self.m['position'].get())

@@ -59,6 +59,7 @@ from mod_geonames import geonames
 from mod_waypoints import waypointsModule
 from base import pyrouteModule
 from tiles import tileHandler
+from events import pyrouteEvents
 
 def update(mapWidget):
   mapWidget.updatePosition();
@@ -69,11 +70,12 @@ class MapWidget(gtk.Widget, pyrouteModule):
     'realize': 'override',
     'expose-event' : 'override',
     'size-allocate': 'override',
-    'size-request': 'override'}
+    'size-request': 'override'
+    }
   def __init__(self):
     gtk.Widget.__init__(self)
     self.draw_gc = None
-    self.timer = gobject.timeout_add(30, update, self)
+    self.timer = gobject.timeout_add(100, update, self)
     
     self.modules = {'poi':{}}
     pyrouteModule.__init__(self, self.modules)
@@ -84,7 +86,8 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
     self.modules['tiles'] = tileHandler(self.modules)
-    self.modules['data'] = DataStore(self, self.modules)
+    self.modules['data'] = DataStore(self.modules)
+    self.modules['events'] = pyrouteEvents(self.modules)
     self.set('mode','cycle')
     self.set('centred',False)
     self.modules['osmdata'] = LoadOsm(None)
@@ -94,10 +97,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.updatePosition()
     self.set('ownpos', {'valid':False})
 
-    if(0): 
-      self.modules['data'].reportModuleConnectivity()
-      sys.exit()
-    
   def updatePosition(self):
     """Try to get our position from GPS"""
     newpos = self.modules['position'].get()
@@ -240,9 +239,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     # Overlay (menus etc)
     self.modules['overlay'].draw(cr, self.rect)
     
-    end = clock()
-    delay = end - start 
-    #print "%1.1f ms" % (delay * 100)
+    #print "Map took %1.2f ms" % (1000 * (clock() - start))
     
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)
@@ -283,7 +280,7 @@ class GuiBase:
     win = gtk.Window()
     win.set_title('pyroute')
     win.connect('delete-event', gtk.main_quit)
-    win.resize(430,600)
+    win.resize(480,640)
     win.move(50, gtk.gdk.screen_height() - 650)
     
     # Events

@@ -141,6 +141,6 @@ class overlayArea:
             return(1)
     def handleClick(self,x,y):
         if(self.event):
-            self.modules['data'].handleEvent(self.event)
-            return(1)
+          self.modules['events'].handleEvent(self.event)
+          return(1)
         return(0)

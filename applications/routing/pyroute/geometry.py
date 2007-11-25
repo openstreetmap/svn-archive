@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #-----------------------------------------------------------------------------
 from math import *
+from time import clock
 
 def bearing(a,b):
   dlat = radians(b[0] - a[0])
@@ -54,10 +55,17 @@ def distance_haversine(a,b):
   d = 6371 * c
   return(d)
 
+ 
 if(__name__ == "__main__"):
-  a = (51.477,-0.4856)
+  a = (51.478,-0.4856)
   b = (51.477,-0.4328)
 
   print bearing(a,b)
-  print distance(a,b)
-  print distance(a,b,True)
+  
+  for h in (True,False):
+    start = clock()
+    it = 5000
+    for i in range(it):
+      d = distance(a,b,h)
+    t = 1000*(clock() - start) / it
+    print "%s: %1.3fms / iteration, gives %f" % (h and "haversine" or "normal", t, d)

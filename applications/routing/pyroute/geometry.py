@@ -20,32 +20,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #-----------------------------------------------------------------------------
-import math
+from math import *
 
 def bearing(a,b):
-    dlat = math.radians(b[0] - a[0])
-    dlon = math.radians(b[1] - a[1])
+    dlat = radians(b[0] - a[0])
+    dlon = radians(b[1] - a[1])
 
-    dlon = dlon * math.cos(math.radians(a[0]))
+    dlon = dlon * cos(radians(a[0]))
     
-    return(math.degrees(math.atan2(dlon, dlat)))
+    return(degrees(atan2(dlon, dlat)))
 
 def distance(a,b):
-    dlat = math.radians(a[0] - b[0])
-    dlon = math.radians(a[1] - b[1])
-
-    dlon = dlon * math.cos(math.radians(a[0]))
-    #print "d = %f, %f" % (dlat, dlon)
-    # todo: mercator proj
-    dRad = math.sqrt(dlat * dlat + dlon * dlon)
-
-    c = 40000 # earth circumference,km
-    
-    return(dRad * c)
-    
+  lat1 = radians(a[0])
+  lon1 = radians(a[1])
+  lat2 = radians(b[0])
+  lon2 = radians(b[1])
+  d = acos(sin(lat1)*sin(lat2) + cos(lat1)*cos(lat2) * cos(lon2-lon1)) * 6371;
+  return(d)
 
 if(__name__ == "__main__"):
-    a = (51.477,-0.4856)
-    b = (51.477,-0.4328)
+  a = (51.477,-0.4856)
+  b = (51.477,-0.4328)
 
-    print bearing(a,b)
+  print bearing(a,b)
+  print distance(a,b)

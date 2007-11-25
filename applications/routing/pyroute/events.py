@@ -92,31 +92,31 @@ class pyrouteEvents(pyrouteModule):
         sizeToDownload)
 
   def handleEvent(self,event):
-      closeMenuAfterwards = False
-      
-      # Events prefixed with a + means "...and then close the menu"
-      if(event[0] == '+'):
-        event = event[1:]
-        closeMenuAfterwards = True
-        
-      action,params = event.split(':',1)
-      
-      print "Handling event %s" % event
-      functionName = "handle_%s" % action
-        
-      try:
-        function = getattr(self, functionName)
-      except AttributeError:
-        print "Error: %s not defined" % functionName
-        self.set('menu',None)
-      else:
-        function(params)
+    closeMenuAfterwards = False
+    
+    # Events prefixed with a + means "...and then close the menu"
+    if(event[0] == '+'):
+      event = event[1:]
+      closeMenuAfterwards = True
+    
+    action,params = event.split(':',1)
+    
+    print "Handling event %s" % event
+    functionName = "handle_%s" % action
+    
+    try:
+      function = getattr(self, functionName)
+    except AttributeError:
+      print "Error: %s not defined" % functionName
+      self.set('menu',None)
+    else:
+      function(params)
 
-      print " - done handling %s" % event
-      
-      # Having handled the event, optionally return to the map
-      if(closeMenuAfterwards):
-        self.closeAllMenus()
+    print " - done handling %s" % event
+    
+    # Having handled the event, optionally return to the map
+    if(closeMenuAfterwards):
+      self.closeAllMenus()
   
   def closeAllMenus(self):
     self.set('menu',None)

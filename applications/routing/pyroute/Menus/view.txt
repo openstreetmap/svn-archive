@@ -8,7 +8,7 @@ RSS|menu:feeds
 Bookmarks
 -----
 Routes
-Waypoints
+Waypoints|menu:waypoints
 Drawings
 -----
 Events

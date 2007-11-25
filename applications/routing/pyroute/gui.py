@@ -56,6 +56,7 @@ from overlay import *
 from dataStore import *
 from mod_geoRss import geoRss
 from mod_geonames import geonames
+from mod_waypoints import waypointsModule
 from base import pyrouteModule
 from tiles import tileHandler
 
@@ -74,11 +75,12 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.draw_gc = None
     self.timer = gobject.timeout_add(30, update, self)
     
-    self.modules = {'plugins':{}}
+    self.modules = {'poi':{}}
     pyrouteModule.__init__(self, self.modules)
     
-    #self.modules['plugins']['rss'] = geoRss('Setup/feeds.txt')
-    #self.modules['plugins']['geonames'] = geonames()
+    #self.modules['poi']['rss'] = geoRss('Setup/feeds.txt')
+    #self.modules['poi']['geonames'] = geonames()
+    self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
     self.modules['tiles'] = tileHandler(self.modules)
@@ -91,8 +93,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.updatePosition()
     self.set('ownpos', {'valid':False})
-    for name,mod in self.modules['plugins'].items():
-      mod.callbacks(self.modules)
 
     if(0): 
       self.modules['data'].reportModuleConnectivity()
@@ -210,7 +210,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
         cr.stroke()
       
       # Each plugin can display on the map
-      for name,source in self.modules['plugins'].items():
+      for name,source in self.modules['poi'].items():
         for group in source.groups:
           for item in group.items:
             x,y = proj.ll2xy(item.lat, item.lon)

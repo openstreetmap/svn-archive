@@ -266,12 +266,12 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 11: Type=String, Title=`ND_9', Width=199, Decimals=0
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 11 )))// name
 		{
-			sprintf(name+strlen(name),"%s",DBFReadStringAttribute( hDBF, recordnr, 11 ));
+			sprintf(name+strlen(name),(name[0]?" %s":"%s"),DBFReadStringAttribute( hDBF, recordnr, 11 ));
 		}	
 		//Field 13: Type=String, Title=`ND_11', Width=20, Decimals=0
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 13 )))// postfix name
 		{
-			sprintf(name+strlen(name),"%s",DBFReadStringAttribute( hDBF, recordnr, 13 ));
+			sprintf(name+strlen(name),(name[0]?" %s":"%s"),DBFReadStringAttribute( hDBF, recordnr, 13 ));
 		}	
 		if (strcmp(name,"")!=0) p=addtag(p,"name",name,NULL); 
 		
@@ -590,7 +590,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 					case 'l': //lay-by and long haul
 						if (*(name+1)=='b')
 						{
-							p=addtag(p,"highway","layby",NULL);
+							p=addtag(p,"highway","service",NULL);
 						}
 						break;
 					case '4': //4-wheel drive

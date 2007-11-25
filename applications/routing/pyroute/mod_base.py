@@ -27,3 +27,9 @@ class dataSource(pyrouteModule):
   def __init__(self, modules):
     pyrouteModule.__init__(self, modules)
     self.groups = []
+
+  def report(self):
+    for g in self.groups:
+      print "=== %s ===" % g.name
+      for i in g.items:
+        print "%1.3f, %1.3f = %s" % (i.lat, i.lon, i.title)

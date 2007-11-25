@@ -18,27 +18,73 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #------------------------------------------------------
-from waypoints import Waypoints
+from xml.sax import make_parser, handler
 from mod_base import dataSource, dataGroup, dataItem
 import os
 
-class waypointsModule(dataSource, Waypoints):
+class waypointsModule(dataSource, handler.ContentHandler):
   def __init__(self, modules, filename = None):
     dataSource.__init__(self, modules)
-    Waypoints.__init__(self)
+    self.storeFields = ('name','sym')
     self.groups.append(dataGroup("Waypoints"))
+    self.filename = None
     if(filename):
       if(os.path.exists(filename)):
         self.load(filename)
+        self.filename = filename
 
+  def load(self, filename):
+    self.inField = False
+    parser = make_parser()
+    parser.setContentHandler(self)
+    parser.parse(filename)
+  
+  def startElement(self, name, attrs):
+    if name == "wpt":
+      self.parsedWaypoint = { \
+        'lat': float(attrs.get('lat')),
+        'lon': float(attrs.get('lon'))}
+    if name in self.storeFields:
+      self.fieldText = ''
+      self.inField = True
+      
+  def endElement(self, name):
+    if self.inField:
+      if name in self.storeFields:
+        self.parsedWaypoint[name] = self.fieldText
+      self.inField = False
+    if(name == "wpt"):
+      self.storeWaypoint(self.parsedWaypoint)
+        
+  def characters(self, text):
+    if self.inField:
+      self.fieldText = self.fieldText + text
+    
   def storeWaypoint(self, waypoint):
-    #print "Module!!!"
-    #self.waypoints.append(waypoint)
     x = dataItem(waypoint['lat'], waypoint['lon'])
     x.title = waypoint['name']
     self.groups[0].items.append(x)
 
-
+  def save(self):
+    self.saveAs(self.filename)
+    
+  def saveAs(self,filename):
+    if(filename == None):
+      return
+    f = open(filename, "w")
+    f.write('<?xml version="1.0"?>\n')
+    f.write('<gpx version="1.0" creator="pyroute">\n')
+    for w in self.groups[0].items:
+      f.write('<wpt lat="%f" lon="%f">\n' % (w.lat, w.lon))
+      f.write('  <name>%s</name>\n' % w.title)
+      #f.write('  <cmt>%s</cmt>\n' % w.title)
+      #f.write('  <desc>%s</desc>\n' % w.title)
+      f.write('  <sym>%s</sym>\n' % 'flag')
+      f.write('</wpt>\n')
+    f.write('</gpx>\n')
+    f.close()
+    
 if __name__ == "__main__":
   wpt = waypointsModule(None,"data/waypoints.gpx")
   wpt.report()
+  wpt.saveAs("data/new.gpx")

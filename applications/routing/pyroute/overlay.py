@@ -91,7 +91,7 @@ class guiOverlay(pyrouteModule):
         self.backButton(0,0)
         n = 9
         offset = 0
-        selectedFeed = int(self.modules['data'].getOption('selectedFeed',0))
+        selectedFeed = int(self.get('selectedFeed',0))
         titlebar = self.rect.copyself(1.0/3.0,0,1,0.25)
         line1, line2 = titlebar.ysplit(0.5)
         back = line1.copyself(0,0,0.25,1)
@@ -101,14 +101,16 @@ class guiOverlay(pyrouteModule):
         self.clickable.append(back)
         self.clickable.append(next)
 
-        line1.copyself(0.25,0,0.75,1).drawText("Feed %d of %d" % (selectedFeed + 1, len(self.modules['plugins'][module].groups)))
-
         try:
             group = self.modules['plugins'][module].groups[selectedFeed]
         except KeyError:
+            line2.drawText("\"%s\" not loaded"%module)
             return
         except IndexError:
+            line2.drawText("No such feed #%d"%selectedfeed)
             return
+        
+        line1.copyself(0.25,0,0.75,1).drawText("Feed %d of %d" % (selectedFeed + 1, len(self.modules['plugins'][module].groups)))
         
         line2.drawText(group.name)
         

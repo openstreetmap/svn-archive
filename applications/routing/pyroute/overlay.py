@@ -56,21 +56,21 @@ class guiOverlay(pyrouteModule):
             self.cr.move_to(0,y)
             self.cr.line_to(rect.width,y)
             self.cr.stroke()
-                    
+    
     def drawMenu(self, menu):
+      try:
+        self.genericMenu(self.menus[menu])
+        return
+      except KeyError:
+        menuName = 'menu_%s' % menu
         try:
-          self.genericMenu(self.menus[menu])
+          function = getattr(self, menuName)
+        except AttributeError:
+          print "Error: %s not defined" % menuName
+          self.set('menu',None)
           return
-        except KeyError:
-	        menuName = 'menu_%s' % menu
-	        try:
-	            function = getattr(self, menuName)
-	        except AttributeError:
-	            print "Error: %s not defined" % menuName
-	            self.set('menu',None)
-	            return
-	        function()
-          
+        function()
+    
     def backButton(self,i,j):
         self.cells[i][j].button("","menu:","up")
     def genericMenu(self, menu):

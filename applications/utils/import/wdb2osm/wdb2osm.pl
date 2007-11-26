@@ -79,6 +79,12 @@ sub save_way()
             print OUT "  <tag k=\"left:country\" v=\"????\" />\n";
             print OUT "  <tag k=\"right:country\" v=\"????\" />\n";
         }
+        elsif ($filename =~ /-riv/)
+        {
+            print OUT "  <tag k=\"boat\" v=\"yes\" />\n";
+            print OUT "  <tag k=\"name\" v=\"???\" />\n";
+            print OUT "  <tag k=\"waterway\" v=\"river\" />\n";        	
+        }
 
         print OUT "  <!-- $min_lat ... lat ... $max_lat -->\n";
         print OUT "  <!-- $min_lon ... lon ... $max_lon -->\n";

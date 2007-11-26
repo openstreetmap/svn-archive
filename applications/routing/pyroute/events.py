@@ -43,6 +43,9 @@ class pyrouteEvents(pyrouteModule):
     elif(method == 'add'):
       name,add = name.split(':')
       self.set(name, self.get(name,0) + float(add))
+    elif(method == 'set'):
+      name,value = name.split(':')
+      self.set(name, value)
   
   def handle_add_waypoint(self,params):
     if(params == 'clicked'):

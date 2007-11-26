@@ -54,9 +54,21 @@ def tileEdges(x,y,z):
 def mercatorToLat(mercatorY):
   return(degrees(atan(sinh(mercatorY))))
 
-def tileURL(x,y,z):
-  query = "%d/%d/%d.png" % (z,x,y)
-  return("http://dev.openstreetmap.org/~ojw/Tiles/tile.php/" + query)
+def tileLayerExt(layer):
+  if(layer in ('oam')):
+    return('jpg')
+  return('png')
+
+def tileLayerBase(layer):
+  layers = { \
+    "tah": "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/",
+    "oam": "http://oam1.hypercube.telascience.org/tiles/1.0.0/openaerialmap-900913/",
+    "mapnik": "http://tile.openstreetmap.org/mapnik/"
+    }
+  return(layers[layer])
+  
+def tileURL(x,y,z,layer):
+  return "%s%d/%d/%d.%s" % (tileLayerBase(layer),z,x,y,tileLayerExt(layer))
 
 if __name__ == "__main__":
   for z in range(0,17):

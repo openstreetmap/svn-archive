@@ -17,7 +17,7 @@
    sodipodi:docname="icons.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:docbase="/home/owhite/OpenStreetmap/pyroute/icons"
-   sodipodi:modified="TRUE">
+   sodipodi:modified="true">
   <sodipodi:namedview
      inkscape:window-height="917"
      inkscape:window-width="1206"
@@ -6056,4 +6056,24 @@
      inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/set_pos.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect3798"
+     x="-113.37823"
+     y="971.43451"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/extend_direct.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <image
+     y="974.93677"
+     x="-94.418823"
+     id="image3877"
+     height="54.89238"
+     width="71.81488"
+     sodipodi:absref="/home/owhite/OpenStreetmap/pyroute/icons/source/openaerialmap.jpeg"
+     xlink:href="source/openaerialmap.jpeg" />
 </svg>

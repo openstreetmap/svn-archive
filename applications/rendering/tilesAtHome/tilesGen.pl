@@ -615,7 +615,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     #------------------------------------------------------
     # Download data
     #------------------------------------------------------
-    my $DataFile = "data-$PID.osm";
+    my $DataFile = $Config{"WorkingDirectory"}."data-$PID.osm";
     
     killafile($DataFile);
     my $URLS = sprintf("%s%s/map?bbox=%s",
@@ -643,7 +643,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     foreach my $URL (split(/ /,$URLS)) 
     {
         ++$i;
-        my $partialFile = "data-$PID-$i.osm";
+        my $partialFile = $Config{"WorkingDirectory"}."data-$PID-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data for $Layers to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -671,7 +671,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 {
                     $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
                       $Config{APIURL},$Config{OSMVersion}, ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
-                    $partialFile = "data-$PID-$i-$j.osm";
+                    $partialFile = $Config{"WorkingDirectory"}."data-$PID-$i-$j.osm";
                     push(@{$filelist}, $partialFile);
                     push(@tempfiles, $partialFile);
                     statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -761,10 +761,12 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # config option may be empty, or a comma separated list of preprocessors
         foreach my $preprocessor(split /,/, $Config{"Layer.$layer.Preprocessor"})
         {
-            my $inputFile = sprintf("data-%s.osm", 
+            my $inputFile = sprintf("%sdata-%s.osm", 
+                $Config{"WorkingDirectory"},
                 join("-", @ppchain));
             push(@ppchain, $preprocessor);
-            my $outputFile = sprintf("data-%s.osm", 
+            my $outputFile = sprintf("%sdata-%s.osm", 
+                $Config{"WorkingDirectory"},
                 join("-", @ppchain));
 
             if (-f $outputFile)
@@ -837,7 +839,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Preprocessing finished, start rendering
         #------------------------------------------------------
 
-        $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain));
+        $layerDataFile = sprintf("%sdata-%s.osm", $Config{"WorkingDirectory"}, join("-", @ppchain));
         
         # Add bounding box to osmarender
         # then set the data source
@@ -848,33 +850,34 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             # don't need zoom or layer in name of file as we'll
             # process one after the other
             my $source = $Config{"Layer.$layer.Rules.$i"};
-            copy($source, "map-features-$PID.xml")
+            my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID.xml";
+            copy($source, $TempFeatures)
                 or die "Cannot make copy of $source";
 
             # Update the rules file  with details of what to do (where to get data, what bounds to use)
-            AddBounds("map-features-$PID.xml",$W,$S,$E,$N);    
-            SetDataSource($layerDataFile, "map-features-$PID.xml");
+            AddBounds($TempFeatures,$W,$S,$E,$N);    
+            SetDataSource($layerDataFile, $TempFeatures);
 
             # Render the file
             if (xml2svg(
-                    "map-features-$PID.xml",
-                    "$Config{WorkingDirectory}output-$parent_pid-z$i.svg",
+                    $TempFeatures,
+                    $Config{WorkingDirectory}."output-$parent_pid-z$i.svg",
                     $i))
             {
                 # Delete temporary rules file
-                killafile("map-features-$PID.xml");
+                killafile($TempFeatures);
             }
             else 
             {
                 # Delete temporary rules file
-                killafile("map-features-$PID.xml");
+                killafile($TempFeatures);
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
                 return 0;
             }
         }
 
         # Find the size of the SVG file
-        my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$parent_pid-z$maxzoom.svg");
+        my ($ImgH,$ImgW,$Valid) = getSize($Config{WorkingDirectory}."output-$parent_pid-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
         my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
@@ -890,7 +893,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {
-            killafile("$Config{WorkingDirectory}output-$parent_pid-z$i.svg");
+            killafile($Config{WorkingDirectory}."output-$parent_pid-z$i.svg");
         }
 
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
@@ -1140,8 +1143,8 @@ sub svg2png
     my $stdOut;
     my $TempDir = $Config{WorkingDirectory} . $PID . "/"; # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
     mkdir($TempDir) or die "cannot create working directory $TempDir";
-    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png");
-    (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".stdout");
+    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png", OPEN => 0);
+    (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".stdout", OPEN => 0);
 
     
     my $Cmd = "";

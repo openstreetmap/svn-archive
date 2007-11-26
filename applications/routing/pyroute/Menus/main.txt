@@ -1,6 +1,6 @@
 -----
 Up
-
+Map type|menu:maptype
 Sketch
 -----
 View|menu:view

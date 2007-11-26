@@ -28,9 +28,18 @@ import cairo
 from threading import Thread
 
 def downloadTile(x,y,z,layer,filename):
-    url = tileURL(x,y,z)
+  url = tileURL(x,y,z,layer)
+  if(tileLayerExt(layer) != "png"):
+    base,ext = os.path.splitext(filename)
+    tempFilename = "%s.%s" % (base, tileLayerExt(layer))
+    urllib.urlretrieve(url, tempFilename)
+    sys = "convert %s %s" % (tempFilename, filename)
+    print "Running \"%s\"" % sys
+    os.system(sys)
+    os.unlink(tempFilename)
+  else:
     urllib.urlretrieve(url, filename)
-
+  
 class tileLoader(Thread):
   """Downloads images in a separate thread"""
   def __init__(self, x,y,z,layer,filename):
@@ -140,7 +149,7 @@ class tileHandler(pyrouteModule):
   def draw(self, cr):
     """Draw all the map tiles that are in view"""
     proj = self.m['projection']
-    layer = "tah"
+    layer = self.get("layer","tah")
     
     # Pick a zoom level
     z = self.tileZoom()

@@ -238,11 +238,23 @@ sub compress
     
     # ZIP all the tiles into a single file
     my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
-    my $Command1 = sprintf("%s -r -j %s %s > %s",
-      "zip",
-      $Filename,
-      "$Dir",
-      $stdOut);
+    my $Command1;
+    if ($Config{"7zipWin"})
+    {
+        $Command1 = sprintf("%s %s %s %s",
+          $Config{"Zip"},
+          "a -tzip",
+          $Filename,
+          "$Dir/*");
+    }
+    else
+    {
+        $Command1 = sprintf("%s -r -j %s %s > %s",
+          $Config{"Zip"},
+          $Filename,
+          "$Dir",
+          $stdOut);
+    }
     # ZIP filename is currently our process ID plus a counter
     
     ## FIXME: this is one of the things that make compress.pl not multithread safe

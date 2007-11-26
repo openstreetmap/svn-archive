@@ -11,6 +11,9 @@ Niceness=nice -n10
 Pngcrush=pngcrush
 Subversion=svn
 
+## the following parameter is mainly for windows compatibility. 
+## if you don't know what it does, keep at 0.
+7zipWin=0
 
 ## Workaround for inkscape internationalisation problems. Should be safe to keep on.
 i18n=1
@@ -22,7 +25,7 @@ i18n=1
 UseHostnameInZipName=0
 
 ## Upload settings
-# UploadChunkSize is the maximum Zip size in MiB (1024^2 byte)
+# UploadChunkSize is the maximum Zip size in MiB (1024^2 byte) for non-tileset uploads
 UploadChunkSize=9   # Megabyte, hard limit 9.5 MiB (10 MB)
 
 # UploadChunkCount is the maximum count of png files compressed in one zip

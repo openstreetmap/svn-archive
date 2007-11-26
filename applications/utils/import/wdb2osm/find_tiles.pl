@@ -27,6 +27,24 @@ sub z12tile
 }
 
 
+sub max
+{
+	my ($x, $y) = @_;
+
+	return $x if ($x > $y);
+	return $y;
+}
+
+
+sub min
+{
+	my ($x, $y) = @_;
+
+	return $x if ($x < $y);
+	return $y;
+}
+
+
 my @all_files;
 
 opendir (DIR, "WDB/keepme");
@@ -40,10 +58,20 @@ for (@files)
 
 for my $file (@all_files)
 {
-	print "$file \n";
-	
 	my (%tiles_z12);
 	my (%tiles_z8);
+	
+	my $min_coord_x_z12 =  99999;
+	my $max_coord_x_z12 = -99999;
+
+	my $min_coord_y_z12 =  99999;
+	my $max_coord_y_z12 = -99999;
+
+	my $min_coord_x_z8 =  9999;
+	my $max_coord_x_z8 = -9999;
+
+	my $min_coord_y_z8 =  9999;
+	my $max_coord_y_z8 = -9999;
 
 	open (FILE, "< $file") || die ("Can't open $file: $!\n");
 	while (<FILE>)
@@ -68,12 +96,24 @@ for my $file (@all_files)
 			my $coord_x_z12 = $gaga[0];
 			my $coord_y_z12 = $gaga[1];
 			my $key_z12 = "$coord_x_z12 $coord_y_z12";
-			%tiles_z12->{$key_z12} = $key_z12; 
+			%tiles_z12->{$key_z12} = $key_z12;
+			
+			$min_coord_x_z12 = min($min_coord_x_z12, $coord_x_z12); 
+			$min_coord_y_z12 = min($min_coord_y_z12, $coord_y_z12); 
+
+			$max_coord_x_z12 = max($max_coord_x_z12, $coord_x_z12); 
+			$max_coord_y_z12 = max($max_coord_y_z12, $coord_y_z12); 
 
 			my $coord_x_z8  = int($coord_x_z12 / 16);
 			my $coord_y_z8  = int($coord_y_z12 / 16);
 			my $key_z8 = "$coord_x_z8 $coord_y_z8"; 
 			%tiles_z8->{$key_z8} = $key_z8; 
+
+			$min_coord_x_z8 = min($min_coord_x_z8, $coord_x_z8); 
+			$min_coord_y_z8 = min($min_coord_y_z8, $coord_y_z8); 
+
+			$max_coord_x_z8 = max($max_coord_x_z8, $coord_x_z8); 
+			$max_coord_y_z8 = max($max_coord_y_z8, $coord_y_z8); 
 		}
 	}
 
@@ -98,4 +138,10 @@ for my $file (@all_files)
 		print TILES "$_\n";
 	}
 	close (TILES);
+
+	print "$file " .
+		"[ ( $min_coord_x_z12, $max_coord_x_z12 ) | ( $min_coord_y_z12, $max_coord_y_z12 ) ] " .
+		"[ ( $min_coord_x_z8, $max_coord_x_z8 ) | ( $min_coord_y_z8, $max_coord_y_z8 ) ] " .
+		"\n";
+	
 }

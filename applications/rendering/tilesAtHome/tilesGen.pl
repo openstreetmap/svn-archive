@@ -334,7 +334,7 @@ sub uploadIfEnoughTiles
 
     if (($Count >= 200) or ($ZipCount >= 1))
     {
-        if ($Config{"ForkForUpload"})
+        if ($Config{"ForkForUpload"} and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
         {
             # Upload is handled by another process, so that we can generate another tile at the same time.
             # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.

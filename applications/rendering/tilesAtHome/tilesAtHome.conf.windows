@@ -4,18 +4,21 @@
 
 ## File Locations
 WorkingDirectory=c:\temp\
-Inkscape=c:\program files\inkscape\inkscape
-XmlStarlet=c:\program files\xmlstarlet\xml
-Zip=c:\program files\zip\zip
+Inkscape=c:\program files\inkscape\inkscape.exe
+XmlStarlet=c:\program files\xmlstarlet\xml.exe
+Zip=c:\program files\zip\zip.exe
 Pngcrush=c:\program files\pngcrush\pngcrush.exe
 Niceness=
 Subversion=c:\program files\subversion\svn.exe
+
+## If you want to use 7Zip set this to 1 and set "Zip" above to your 7zip.exe
+7zipWin=0
 
 ## Workaround for inkscape internationalisation problems. Default off (0) for windows
 i18n=0
 
 ## Upload settings
-# UploadChunkSize is the maximum Zip size in MiB (1024^2 byte)
+# UploadChunkSize is the maximum Zip size in MiB (1024^2 byte) for non-tileset uploads
 UploadChunkSize=9   # Megabyte, hard limit 9.5 MiB (10 MB)
 
 # UploadChunkCount is the maximum count of png files compressed in one zip

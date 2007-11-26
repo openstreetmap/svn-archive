@@ -115,6 +115,10 @@ sub ApplyConfigLogic
         $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "\\";
     }
     
+    ## Set defaults for Zip/7Zip
+    $Config->{"7zipWin"} = 0 unless defined($Config->{"7zipWin"});
+    $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
+
     ## Set defaults for Batik options
     $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});
     $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});

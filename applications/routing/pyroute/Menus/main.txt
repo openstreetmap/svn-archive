@@ -1,7 +1,7 @@
 -----
 Up
 Map type|menu:maptype
-Sketch
+Sketch|+option:toggle:sketch
 -----
 View|menu:view
 GPS|menu:gps

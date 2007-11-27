@@ -1434,6 +1434,7 @@ sub splitImageX
         utime $JobTime, $JobTime, $Filename;
     }
     undef $SubImage;
+    undef $Image;
     # tell the rendering queue wether the tiles are empty or not
     return $allempty;
 }

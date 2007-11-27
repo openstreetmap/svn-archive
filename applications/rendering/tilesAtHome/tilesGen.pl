@@ -1119,7 +1119,7 @@ sub xml2svg
             copy($TSVG,$SVG);
             statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         }
-        killafile($TSVG);
+        killafile($TSVG) if (!$Config{"Debug"});
     }
     else
     {   # don't do bezier curve hinting

@@ -100,7 +100,7 @@ class pyrouteEvents(pyrouteModule):
       print "Need to set your own position before downloading"
     else:
       sizeToDownload = 0.1
-      self.globals.modules['osmdata'].download( \
+      self.m['osmdata'].download( \
         centre['lat'],
         centre['lon'],
         sizeToDownload)

@@ -252,11 +252,13 @@ elsif ($Mode eq "loop")
 }
 elsif ($Mode eq "upload") 
 {
+    $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
     compressAndUpload();
 }
 elsif ($Mode eq "upload_conditional") 
 {
+    $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
     uploadIfEnoughTiles();
 }

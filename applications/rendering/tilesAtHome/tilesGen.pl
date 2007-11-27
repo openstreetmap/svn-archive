@@ -839,7 +839,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Preprocessing finished, start rendering
         #------------------------------------------------------
 
-        $layerDataFile = sprintf("%sdata-%s.osm", $Config{"WorkingDirectory"}, join("-", @ppchain));
+        #$layerDataFile = sprintf("%sdata-%s.osm", $Config{"WorkingDirectory"}, join("-", @ppchain));
+        $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
         
         # Add bounding box to osmarender
         # then set the data source

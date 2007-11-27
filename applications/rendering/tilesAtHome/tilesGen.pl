@@ -850,7 +850,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             # don't need zoom or layer in name of file as we'll
             # process one after the other
             my $source = $Config{"Layer.$layer.Rules.$i"};
-            my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID.xml";
+            my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID-z$i.xml";
             copy($source, $TempFeatures)
                 or die "Cannot make copy of $source";
 
@@ -870,7 +870,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             else 
             {
                 # Delete temporary rules file
-                killafile($TempFeatures);
+                killafile($TempFeatures) if (! $Config{"Debug"});
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
                 return 0;
             }

@@ -2,7 +2,11 @@
 <!--
 ==============================================================================
 
-Osmarender 6.0 Alpha 5 orig area generation + one node way filtered out
+Osmarender 6.0 Alpha 6 
+    with - orig area generation 
+         - one node way filtered out
+         - filtered out missing multipolygon relation members from areas
+         - filtered out missing node ref from ways
 
 ==============================================================================
 
@@ -475,7 +479,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <!-- Count the number of segments connecting to the from node. If there is only one (the current segment) then draw a default line.  -->
     <xsl:variable name="firstNodeConnectionCount" select="count(key('wayByNode',$firstNode/@id))" />
-    
+
     <!-- Count the number of connectors at a layer lower than the current layer -->
     <xsl:variable name="firstNodeLowerLayerConnectionCount" select="
 			count(key('wayByNode',$firstNode/@id)/tag[@k='layer' and @v &lt; $layer]) +
@@ -862,13 +866,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="pathArea">
       <xsl:call-template name="generateAreaPath"/>
     </xsl:variable>
-    <path id="area_{@id}" d="{$pathArea}"/>
 
-    <xsl:call-template name="renderArea">
-      <xsl:with-param name="instruction" select="$instruction"/>
-      <xsl:with-param name="pathId" select="concat('area_',@id)"/>
-    </xsl:call-template>
-
+    <!-- DODI: do now draw empty ways/areas-->
+    <xsl:if test ="$pathArea!=''">
+      <path id="area_{@id}" d="{$pathArea}"/>
+      <xsl:call-template name="renderArea">
+        <xsl:with-param name="instruction" select="$instruction"/>
+        <xsl:with-param name="pathId" select="concat('area_',@id)"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
 
@@ -1312,7 +1318,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   <!-- Generate a normal way path -->
   <xsl:template name="generateWayPathNormal">
-    <xsl:for-each select="nd">
+    <xsl:for-each select="nd[key('nodeById',@ref) ]">
       <xsl:choose>
         <xsl:when test="position()=1">
           <xsl:call-template name="moveToNode">
@@ -1331,7 +1337,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   <!-- Generate a reverse way path -->
   <xsl:template name="generateWayPathReverse">
-    <xsl:for-each select="nd">
+    <xsl:for-each select="nd[key('nodeById',@ref)]">
       <xsl:sort select="position()" data-type="number" order="descending"/>
       <xsl:choose>
         <xsl:when test="position()=1">
@@ -1373,7 +1379,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:template>
 
   <xsl:template name="generatePathWayMid">
-    <xsl:for-each select="nd">
+    <xsl:for-each select="nd[key('nodeById',@ref)]">
       <xsl:choose>
         <xsl:when test="position()=1">
           <xsl:call-template name="moveToMidpointPlus">
@@ -1396,24 +1402,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:for-each>
   </xsl:template>
 
-
-
   <!-- Generate an area path for the current way or area element -->
   <xsl:template name="generateAreaPath">
     <xsl:variable name='relation' select="key('relationByWay',@id)[tag[@k='type' and @v='multipolygon']]"/>
-
     <xsl:choose>
       <xsl:when test='$relation'>
-        <xsl:message>
-          <xsl:value-of select='$relation/@id'/>
-        </xsl:message>
-        <xsl:for-each select="$relation/member[@type='way']">
-          <xsl:call-template name='generateAreaSubPath'>
-            <xsl:with-param name='way' select="key('wayById',@ref)"/>
-            <xsl:with-param name='position' select="position()"/>
-          </xsl:call-template>
-        </xsl:for-each>
-        <xsl:text>Z</xsl:text>
+
+        <!-- DODI: handling mulitpolygons: draw area only once 
+                   ways is a part of a multipolygon relation so we need process all members-->
+        <xsl:variable name='firsrelationmember' select="$relation/member[@type='way'][key('wayById', @ref)][1]/@ref"/>
+        <!-- DODI: if /me is a real first member, process all, otherwise skip it-->
+        <xsl:if test='$firsrelationmember=@id'>
+          <xsl:message>
+            <xsl:value-of select='$relation/@id'/>
+          </xsl:message>
+          <xsl:for-each select="$relation/member[@type='way'][key('wayById', @ref)]">
+            <xsl:call-template name='generateAreaSubPath'>
+              <xsl:with-param name='way' select="key('wayById',@ref)"/>
+              <xsl:with-param name='position' select="position()"/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:text>Z</xsl:text>
+        </xsl:if>
+
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name='generateAreaSubPath'>
@@ -1437,7 +1448,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       Loop: <xsl:value-of select='$way/nd[1]/@ref'/>
       Loop: <xsl:value-of select='$way/nd[last()]/@ref'/>
     </xsl:message>
-    <xsl:for-each select="$way/nd">
+    <xsl:for-each select="$way/nd[key('nodeById',@ref)]">
       <xsl:choose>
         <xsl:when test="position()=1 and $loop">
           <xsl:if test='not($position=1)'>

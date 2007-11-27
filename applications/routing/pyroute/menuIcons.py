@@ -26,6 +26,8 @@ class menuIcons:
     def __init__(self):
         self.images = {}
         self.cantLoad = []
+        self.load('blank')
+        self.load('generic')
     def load(self,name):
         filename = "icons/bitmap/%s.png" % name
         if(not os.path.exists(filename)):
@@ -37,10 +39,10 @@ class menuIcons:
     def draw(self,cr,name,x,y,w,h):
         if not name in self.images.keys():
             if(name in self.cantLoad):
-                return
-            if(not self.load(name)):
+                name = 'generic'
+            elif(not self.load(name)):
                 self.cantLoad.append(name)
-                return
+                name='generic'
         imagesize = 120.0
         cr.save()
         cr.translate(x,y)

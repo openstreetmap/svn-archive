@@ -60,9 +60,10 @@ from mod_waypoints import waypointsModule
 from base import pyrouteModule
 from tiles import tileHandler
 from events import pyrouteEvents
+from sketch import sketching
 
 def update(mapWidget):
-  mapWidget.updatePosition();
+  mapWidget.update();
   return(True)
 
 class MapWidget(gtk.Widget, pyrouteModule):
@@ -88,6 +89,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['tiles'] = tileHandler(self.modules)
     self.modules['data'] = DataStore(self.modules)
     self.modules['events'] = pyrouteEvents(self.modules)
+    self.modules['sketch'] = sketching(self.modules)
     self.set('mode','cycle')
     self.set('centred',False)
     self.modules['osmdata'] = LoadOsm(None)
@@ -97,6 +99,11 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.updatePosition()
     self.set('ownpos', {'valid':False})
 
+  def update(self):
+    self.updatePosition()
+    if(self.get("needRedraw")):
+      self.forceRedraw()
+      
   def updatePosition(self):
     """Try to get our position from GPS"""
     newpos = self.modules['position'].get()
@@ -142,7 +149,11 @@ class MapWidget(gtk.Widget, pyrouteModule):
     if(pos['valid']):
       self.modules['projection'].recentre(pos['lat'], pos['lon'])
       self.forceRedraw()
-  
+
+  def mousedown(self,x,y):
+    if(self.get('sketch',0)):
+      self.m['sketch'].startStroke(x,y)
+    
   def click(self, x, y):
     """Handle clicking on the screen"""
     # Give the overlay a chance to handle all clicks first
@@ -151,6 +162,8 @@ class MapWidget(gtk.Widget, pyrouteModule):
     # If the overlay is fullscreen and it didn't respond, the click does
     # not fall-through to the map
     elif(self.modules['overlay'].fullscreen()):
+      return
+    elif(self.get('sketch',0)):
       return
     # Map was clicked-on: store the lat/lon and go into the "clicked" menu
     else:
@@ -162,6 +175,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
   def forceRedraw(self):
     """Make the window trigger a draw event.  
     TODO: consider replacing this if porting pyroute to another platform"""
+    self.set("needRedraw", False)
     try:
       self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
     except AttributeError:
@@ -173,7 +187,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
     # TODO: what happens when you drag inside menus?
     if(self.get('menu')):
       return
-    
     if(self.get('centred') and self.get('ownpos')['valid']):
       return
     self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
@@ -184,10 +197,13 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['projection'].nudgeZoom(-1 * dx / self.rect.width)
     self.forceRedraw()
 
-  def handleDrag(self,dx,dy,startX,startY):
+  def handleDrag(self,x,y,dx,dy,startX,startY):
     if(self.modules['overlay'].fullscreen()):
       if(self.modules['overlay'].handleDrag(dx,dy,startX,startY)):
         self.forceRedraw()
+    elif(self.get('sketch',0)):
+      self.m['sketch'].moveTo(x,y)
+      return
     else:
       if(startY < 100):
         self.zoom(dx)
@@ -231,6 +247,8 @@ class MapWidget(gtk.Widget, pyrouteModule):
               cr.show_text(item.title)
               cr.stroke()
 
+      self.m['sketch'].draw(cr,proj)
+      
       pos = self.get('ownpos')
       if(pos['valid']):
         # Us
@@ -312,10 +330,14 @@ class GuiBase:
     
     self.dragx = event.x
     self.dragy = event.y
+    self.mapWidget.mousedown(event.x,event.y)
+    
   def moved(self, event):
     """Drag-handler"""
 
     self.mapWidget.handleDrag( \
+      event.x,
+      event.y,
       event.x - self.dragx, 
       event.y - self.dragy,
       self.dragstartx,

@@ -105,6 +105,7 @@ sub ApplyConfigLogic
 
     ## do the same for Zip
     $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
+    $Config->{"7zipWin"} = 0 unless defined($Config->{"7zipWin"});
 
     if (($Config->{"WorkingDirectory"} !~ /\/$/) and ("MSWin32" ne $^O))
     {
@@ -115,16 +116,12 @@ sub ApplyConfigLogic
         $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "\\";
     }
     
-    ## Set defaults for Zip/7Zip
-    $Config->{"7zipWin"} = 0 unless defined($Config->{"7zipWin"});
-    $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
-
     ## Set defaults for Batik options
     $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});
     $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});
     $Config->{"BatikPath"} = "batik-rasterizer.jar" unless defined($Config->{"BatikPath"});
     
-    ## Set default download timeout to 3 minutes
+    ## Set default download timeout to 30 minutes
     $Config->{"DownloadTimeout"} = "1800" unless defined($Config->{"DownloadTimeout"});
 }
 

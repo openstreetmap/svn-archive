@@ -747,7 +747,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Faff around
         for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
         {
-            killafile("$Config{WorkingDirectory}output-$parent_pid-z$i.svg");
+            killafile($Config{WorkingDirectory}."output-$parent_pid-z$i.svg");
         }
         
         my $Margin = " " x ($Zoom - 8);
@@ -865,7 +865,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     $i))
             {
                 # Delete temporary rules file
-                killafile($TempFeatures);
+                killafile($TempFeatures) if (! $Config{"Debug"});
             }
             else 
             {
@@ -893,7 +893,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {
-            killafile($Config{WorkingDirectory}."output-$parent_pid-z$i.svg");
+            killafile($Config{WorkingDirectory}."output-$parent_pid-z$i.svg") if (!$Config{Debug});
         }
 
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
@@ -1142,7 +1142,14 @@ sub svg2png
     my $TempFile;
     my $stdOut;
     my $TempDir = $Config{WorkingDirectory} . $PID . "/"; # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
-    mkdir($TempDir) or die "cannot create working directory $TempDir";
+    if (! -e $TempDir ) 
+    {
+        mkdir($TempDir) or cleanUpAndDie("cannot create working directory $TempDir","EXIT",3,$PID);
+    }
+    elsif (! -d $TempDir )
+    {
+        cleanUpAndDie("could not use $TempDir: is not a directory","EXIT",3,$PID);
+    }
     (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png", OPEN => 0);
     (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".stdout", OPEN => 0);
 
@@ -1210,12 +1217,12 @@ sub svg2png
         return (0,0);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
-    killafile($stdOut);
+    killafile($stdOut) if (not $Config{"Debug"});
     
     my $ReturnValue = splitImageX($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
     
-    killafile($TempFile);
-    rmdir ($TempDir) or die "cannot remove TempDir $TempDir";
+    killafile($TempFile) if (not $Config{"Debug"});
+    rmdir ($TempDir);
     return (1,$ReturnValue); #return true if empty
 }
 

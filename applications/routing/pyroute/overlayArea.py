@@ -90,7 +90,7 @@ class overlayArea:
             self.iconSet.draw(self.cr,"generic",self.x1,self.y1,self.w,self.h)
           else:
             self.iconSet.draw(self.cr,"blank",self.x1,self.y1,self.w,self.h)
-        if(icon):
+        else:
             self.iconSet.draw(self.cr,icon,self.x1,self.y1,self.w,self.h)
         if(text):
             self.drawTextSomewhere(text,0.2,0.6,0.8,0.8)

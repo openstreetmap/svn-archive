@@ -70,7 +70,11 @@ class guiOverlay(pyrouteModule):
             self.cr.move_to(0,y)
             self.cr.line_to(rect.width,y)
             self.cr.stroke()
-    
+            
+            if(self.get('sketch',0)):
+              self.sketchOverlay()
+
+      
     def drawMenu(self, menu):
       try:
         self.genericMenu(self.menus[menu])
@@ -84,6 +88,31 @@ class guiOverlay(pyrouteModule):
           self.set('menu','')
           return
         function()
+
+    def sketchOverlay(self):
+      colourMenu = self.cells[2][3]
+      r = float(self.get('sketch_r',0))
+      g = float(self.get('sketch_g',0))
+      b = float(self.get('sketch_b',0))
+      colourMenu.fill(r,g,b)
+      colourMenu.setEvent("menu:sketch_colour")
+      # TODO: all clickable places to global array/module
+          
+    def menu_sketch_colour(self):
+      self.backButton(0,0)
+      self.colourMenu(1,0, 0,1,0, 'sketch')
+      self.colourMenu(2,0, 0,0,1, 'sketch')
+      self.colourMenu(0,1, 1,1,0, 'sketch')
+      self.colourMenu(1,1, 0,1,1, 'sketch')
+      self.colourMenu(2,1, 1,0,1, 'sketch')
+      self.colourMenu(0,2, 1,0,0, 'sketch')
+      self.colourMenu(1,2, 0,0,0, 'sketch')
+      self.colourMenu(2,2, 1,1,1, 'sketch')
+      
+    def colourMenu(self,x,y,r,g,b,use):
+      self.cells[x][y].fill(r,g,b)
+      self.cells[x][y].setEvent("+set_colour:%s:%1.2f:%1.2f:%1.2f" % (use,r,g,b))
+      
     
     def backButton(self,i,j):
         self.cells[i][j].button("","menu:","up")

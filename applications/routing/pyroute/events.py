@@ -47,6 +47,13 @@ class pyrouteEvents(pyrouteModule):
       name,value = name.split(':')
       self.set(name, value)
   
+  def handle_set_colour(self,params):
+    use,r,g,b = params.split(':')
+    print "Setting %s to %s,%s,%s" % (use,r,g,b)
+    self.set('%s_r' % (use), r)
+    self.set('%s_g' % (use), g)
+    self.set('%s_b' % (use), b)
+    
   def handle_add_waypoint(self,params):
     if(params == 'clicked'):
       lat,lon = self.get('clicked')

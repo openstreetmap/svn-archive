@@ -152,6 +152,33 @@ static void osm_relation(int id, struct keyval *members, struct keyval *roles, s
     }
 }
 
+/* In-place unescape the tag string. The char * passed in will
+   be returned from the function. Unescaping can only ever make
+   the string shorter so this is safe */
+char *tag_unescape(char *str)
+{
+   char *p = str;
+   char *w = str;
+   char ch;
+
+   while ( *p ) {
+       ch = *p++;
+       if ( ch == '\\' ) {
+           ch = *p++;
+           switch ( ch ) {
+           case 's': ch = ';'; break;
+           case 'e': ch = '='; break;
+           case '\\': ch = '\\'; break;
+           default:
+               // Drop the \ and allow any other char to pass unchanged
+               break;
+           }
+       }
+       *w++ = ch;
+   }
+   *w = '\0';
+   return str;
+}
 
 void read_tags(const char *str, struct keyval *tags)
 {
@@ -162,6 +189,9 @@ void read_tags(const char *str, struct keyval *tags)
    if (!str || !*str)
     return;
    // key=value;key=value;...
+   // Note: This is a simple algorithm which makes no attempt to reconstruct odd data like:
+   // a=b=c  or
+   // key=value1;value2
    p = str;
    key_start = p;
    s = sKey;
@@ -169,6 +199,10 @@ void read_tags(const char *str, struct keyval *tags)
    while(s != sEnd) {
        switch(s) {
            case sKey:
+               if (!*p) {
+                   s = sEnd;
+                   break;
+               }
                if (*p == '=') {
                    key = strndup(key_start, p - key_start);
                    s = sValue;
@@ -187,14 +221,13 @@ void read_tags(const char *str, struct keyval *tags)
                break;
 
            case sDone:
-               //printf("%s=%s\n", key, value);
-               addItem(tags, key, value, 0);
+               addItem(tags, tag_unescape(key), tag_unescape(value), 0);
                free(key);
                free(value);
-               s = *p ? sKey : sEnd;
+               s = sKey;
                break;
 
-           case sEnd:
+           case sEnd: /* Never reached, but keeps compiler happy */
                break;
        }
    }

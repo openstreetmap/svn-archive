@@ -59,6 +59,7 @@ XPStyle on
 !define MUI_COMPONENTSPAGE_SMALLDESC
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
+!define MUI_WELCOMEFINISHPAGE_BITMAP "josm-nsis-brand.bmp"
 !define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of the JAVA OpenStreetMap editor (JOSM).\r\n\r\nBefore starting the installation, make sure any JOSM applications are not running.\r\n\r\nClick 'Next' to continue."
 ;!define MUI_FINISHPAGE_LINK "Install WinPcap to be able to capture packets from a network!"
 ;!define MUI_FINISHPAGE_LINK_LOCATION "http://www.winpcap.org"

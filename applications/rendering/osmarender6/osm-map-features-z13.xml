@@ -539,7 +539,17 @@
 				<line class="boundary boundary-administrative-state-core" />
 			</rule>	
 			<else>
-				<line class="boundary boundary-administrative-state-core" />
+			        <rule e="way" k="admin_level" v="10" layer="5">
+   					<line class="boundary boundary-administrative-parish-core" />
+  				</rule>
+			        <else>
+  	 		        	<rule e="way" k="admin_level" v="8" layer="5">
+   						<line class="boundary boundary-administrative-district-core" />
+  					</rule>
+                                	<else>
+  						<line class="boundary boundary-administrative-state-core" />
+  					</else>
+				</else>
 			</else>	
 		</rule>
 
@@ -1098,6 +1108,19 @@
 				stroke-width: 4px; 
 				stroke: #f9574b;
 				stroke-dasharray: 40, 8, 8, 8;
+			}
+
+
+			.boundary-administrative-district-core {
+				stroke-width: 4px; 
+				stroke: #f9574b;
+				stroke-dasharray: 20, 8, 8, 8;
+			}
+
+			.boundary-administrative-parish-core {
+				stroke-width: 4px; 
+				stroke: #f9574b;
+				stroke-dasharray: 8, 8, 8, 8;
 			}
 
 

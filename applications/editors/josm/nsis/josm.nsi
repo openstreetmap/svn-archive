@@ -292,20 +292,18 @@ IfFileExists preferences dont_overwrite_bookmarks
 File "bookmarks"
 dont_overwrite_bookmarks:
 
-; don't overwrite existing de_streets.xml file
-; in the meantime, JOSM provides a basic set of tagging presets - don't provide our own
-;IfFileExists de-streets.xml dont_overwrite_de_streets
-;File "de-streets.xml"
-;dont_overwrite_de_streets:
-
 ; write reasonable defaults for some preferences
-; XXX - some of this should be done in JOSM itself
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
+; XXX - some of this should be done in JOSM itself, see also JOSM core, data\Preferences.java function resetToDefault()
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "projection" "org.openstreetmap.josm.data.projection.Epsg4326"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "layerlist.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "selectionlist.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "commandstack.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
+
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
 SectionEnd
 
 

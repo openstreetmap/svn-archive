@@ -17,6 +17,9 @@ Subversion=c:\program files\subversion\svn.exe
 ## Workaround for inkscape internationalisation problems. Default off (0) for windows
 i18n=0
 
+# Set the timeout when downloading files (on tenths of a second)
+DownloadTimeout=1800
+
 ## Upload settings
 # UploadChunkSize is the maximum Zip size in MiB (1024^2 byte) for non-tileset uploads
 UploadChunkSize=9   # Megabyte, hard limit 9.5 MiB (10 MB)
@@ -61,5 +64,6 @@ Fork=0
 # make the client upload in the background if set to 1
 ForkForUpload=0
 
-# Set the timeout when downloading files (on tenths of a second)
-DownloadTimeout=1800
+# Maxdepth for xmlstarlet, reduce if you run into problems with memory,
+# increase if you get "tile too complex" errors.
+XmlStarletMaxDepth=20000

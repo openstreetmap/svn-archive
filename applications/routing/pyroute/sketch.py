@@ -31,11 +31,13 @@ class sketching(pyrouteModule):
     self.lines = []
     
   def startStroke(self,x,y):
-    self.latest = [(x,y)]
+    lat,lon = self.m['projection'].xy2ll(x,y)
+    self.latest = [(lat,lon)]
     self.lines.append(self.latest)
     
   def moveTo(self,x,y):
-    self.latest.append((x,y))
+    lat,lon = self.m['projection'].xy2ll(x,y)
+    self.latest.append((lat,lon))
     self.set("needRedraw", 1)
 
   def draw(self,cr,proj):
@@ -44,9 +46,15 @@ class sketching(pyrouteModule):
     cr.set_line_width(5)
 
     for l in self.lines:
-      p = l[0]
-      cr.move_to(p[0], p[1])
+      first = 1
       for p in l:
-	      cr.line_to(p[0],p[1])
+        x,y = proj.ll2xy(p[0], p[1])
+        if(first):
+          cr.move_to(x,y)
+          first = 0
+        else:
+  	      cr.line_to(x,y)
       cr.stroke()
       
+      
+  

@@ -121,6 +121,9 @@ sub ApplyConfigLogic
     $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});
     $Config->{"BatikPath"} = "batik-rasterizer.jar" unless defined($Config->{"BatikPath"});
     
+    ## Set defaults for Xmlstarlet options:
+    $Config->{"XmlStarletMaxDepth"} = 20000 unless defined($Config->{"XmlStarletMaxDepth"});
+
     ## Set default download timeout to 30 minutes
     $Config->{"DownloadTimeout"} = "1800" unless defined($Config->{"DownloadTimeout"});
 }

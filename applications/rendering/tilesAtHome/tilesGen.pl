@@ -1080,9 +1080,10 @@ sub xml2svg
 
     $XslFile = "osmarender/osmarender.xsl";
 
-    my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-      $Config{Niceness},
-      $Config{XmlStarlet},
+    my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
+      $Config{"Niceness"},
+      $Config{"XmlStarlet"},
+      $Config{"XmlStarletMaxDepth"},
       $XslFile,
       "$MapFeatures",
       $TSVG);

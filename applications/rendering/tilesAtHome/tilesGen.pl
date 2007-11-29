@@ -880,7 +880,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             }
             for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
             {
-                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E)) {
+                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
+                {
                     $error = 1;
                     last;
                 }
@@ -900,7 +901,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         {
             for (my $i = $Zoom ; $i <= $maxzoom; $i++)
             {
-                if (GenerateSVG($layer, $X, $Y, $i, $N, $S, $W, $E))
+                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
                 {
                     foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
                     return 0;

@@ -34,7 +34,11 @@ class pyrouteEvents(pyrouteModule):
   def handle_mode(self,params):
     """mode:(name) - sets the transport type in use (e.g. car, bike)"""
     self.set('mode', params)
-  
+
+  def handle_save(self,params):
+    whichModule = params
+    self.m[whichModule].save()
+    
   def handle_option(self,params):
     """option:add|toggle:(name):(value)"""
     method, name = params.split(':',1)

@@ -245,7 +245,7 @@ sub compress
           $Config{"Zip"},
           "a -tzip",
           $Filename,
-          "$Dir/*");
+          "$Dir/*.png");
     }
     else
     {

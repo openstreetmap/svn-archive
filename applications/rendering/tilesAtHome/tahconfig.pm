@@ -154,7 +154,7 @@ sub CheckConfig
     else
     {
         # Inkscape version
-        my $InkscapeV = `$Config->{Inkscape} --version`;
+        my $InkscapeV = `\"$Config->{Inkscape}\" --version`;
         $EnvironmentInfo{Inkscape}=$InkscapeV;
 
         if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
@@ -171,7 +171,7 @@ sub CheckConfig
         print "- Inkscape version $1.$2\n";
     }
     # XmlStarlet version
-    my $XmlV = `$Config->{XmlStarlet} --version`;
+    my $XmlV = `\"$Config->{XmlStarlet}\" --version`;
     $EnvironmentInfo{Xml}=$XmlV;
 
     if($XmlV !~ /(\d+\.\d+\.\d+)/){
@@ -180,7 +180,7 @@ sub CheckConfig
     print "- xmlstarlet version $1\n";
 
     # Zip version
-    my $ZipV = `$Config->{Zip} -v`;
+    my $ZipV = `\"$Config->{Zip}\" -v`;
     $EnvironmentInfo{Zip}=$ZipV;
 
     if ($ZipV eq "") 
@@ -190,7 +190,7 @@ sub CheckConfig
     print "- zip is present\n";
 
     # PNGCrush version
-    my $PngcrushV = `$Config->{Pngcrush} -version`;
+    my $PngcrushV = `\"$Config->{Pngcrush}\" -version`;
     $EnvironmentInfo{Pngcrush}=$PngcrushV;
 
     if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) 

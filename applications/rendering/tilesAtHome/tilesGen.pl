@@ -342,6 +342,7 @@ sub uploadIfEnoughTiles
             # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
             if ($upload_pid != -1)
             {
+                statusMessage("Waiting for previous upload process to finish", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 waitpid($upload_pid, 0);
                 $upload_result = $? >> 8;
             }
@@ -847,38 +848,66 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Add bounding box to osmarender
         # then set the data source
         # then transform it to SVG
-        for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
+        if ($Config{Fork}) 
         {
-            # Create a new copy of rules file to allow background update
-            # don't need zoom or layer in name of file as we'll
-            # process one after the other
-            my $source = $Config{"Layer.$layer.Rules.$i"};
-            my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID-z$i.xml";
-            copy($source, $TempFeatures)
-                or die "Cannot make copy of $source";
-
-            # Update the rules file  with details of what to do (where to get data, what bounds to use)
-            AddBounds($TempFeatures,$W,$S,$E,$N);    
-            SetDataSource($layerDataFile, $TempFeatures);
-
-            # Render the file
-            if (xml2svg(
-                    $TempFeatures,
-                    $Config{WorkingDirectory}."output-$parent_pid-z$i.svg",
-                    $i))
+            my $minimum_zoom = $Zoom;
+            my $increment = 2 * $Config{Fork};
+            my @children_pid;
+            my $error = 0;
+            for (my $i = 0; $i < 2 * $Config{Fork} - 1; $i ++) 
             {
-                # Delete temporary rules file
-                killafile($TempFeatures) if (! $Config{"Debug"});
+                my $pid = fork();
+                if (not defined $pid) 
+                {
+                    cleanUpAndDie("GenerateTileset: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
+                }
+                elsif ($pid == 0) 
+                {
+                    for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
+                    {
+                        if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E)) # if true then error occured
+                        {
+                             exit(1);
+                        }
+                    }
+                    exit(0);
+                }
+                else
+                {
+                    push(@children_pid, $pid);
+                    $minimum_zoom ++;
+                }
             }
-            else 
+            for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
             {
-                # Delete temporary rules file
-                killafile($TempFeatures) if (! $Config{"Debug"});
+                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E)) {
+                    $error = 1;
+                    last;
+                }
+            }
+            foreach (@children_pid) 
+            {
+                waitpid($_, 0);
+                $error |= $?;
+            }
+            if ($error) 
+            {
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
                 return 0;
             }
         }
-
+        else
+        {
+            for (my $i = $Zoom ; $i <= $maxzoom; $i++)
+            {
+                if (GenerateSVG($layer, $X, $Y, $i, $N, $S, $W, $E))
+                {
+                    foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
+                    return 0;
+                }
+            }
+        }
+        
         # Find the size of the SVG file
         my ($ImgH,$ImgW,$Valid) = getSize($Config{WorkingDirectory}."output-$parent_pid-z$maxzoom.svg");
 
@@ -925,6 +954,42 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
     foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
     return 1;
+}
+
+#-----------------------------------------------------------------------------
+# Generate SVG for one zoom level
+#   $layerDataFile - name of the OSM data file
+#   $X, $Y - which tileset (Always the z12 tilenumbers)
+#   $Zoom - which zoom
+#   $N, $S, $W, $E - bounds of the tile
+#-----------------------------------------------------------------------------
+sub GenerateSVG 
+{
+    my ($layerDataFile, $layer, $X, $Y, $Zoom, $N, $S, $W, $E) = @_;
+    # Create a new copy of rules file to allow background update
+    # don't need layer in name of file as we'll
+    # process one layer after the other
+    my $error = 0;
+    my $source = $Config{"Layer.$layer.Rules.$Zoom"};
+    my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID-z$Zoom.xml";
+    copy($source, $TempFeatures)
+        or die "Cannot make copy of $source";
+
+    # Update the rules file  with details of what to do (where to get data, what bounds to use)
+    AddBounds($TempFeatures,$W,$S,$E,$N);
+    SetDataSource($layerDataFile, $TempFeatures);
+
+    # Render the file
+    if (! xml2svg(
+            $TempFeatures,
+            $Config{WorkingDirectory}."output-$parent_pid-z$Zoom.svg",
+            $Zoom))
+    {
+        $error = 1;
+    }
+    # Delete temporary rules file
+    killafile($TempFeatures) if (! $Config{"Debug"});
+    return $error;
 }
 
 #-----------------------------------------------------------------------------

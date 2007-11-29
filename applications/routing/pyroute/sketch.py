@@ -56,5 +56,22 @@ class sketching(pyrouteModule):
   	      cr.line_to(x,y)
       cr.stroke()
       
+  def save(self):
+      self.saveAs("data/sketches/latest.gpx")
       
-  
+  def saveAs(self,filename):
+		file = open(filename,"w")
+		file.write("<?xml version=\"1.0\"?>\n")
+		file.write('<gpx>\n')
+		file.write('<trk>\n')
+		file.write('<name>Sketch</name>\n')
+		for l in self.lines:
+			file.write('<trkseg>\n')
+			for p in l:
+				file.write('<trkpt lat="%f" lon="%f"/>\n'%(p[0], p[1]))
+			file.write('</trkseg>\n')
+		file.write('</trk>\n')
+		file.write('</gpx>\n')
+
+		file.close()
+    

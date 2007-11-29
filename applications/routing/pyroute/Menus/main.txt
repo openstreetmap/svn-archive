@@ -7,7 +7,7 @@ View|menu:view
 GPS|menu:gps
 Download|menu:download
 -----
-
+Data|menu:data
 
 
 -----

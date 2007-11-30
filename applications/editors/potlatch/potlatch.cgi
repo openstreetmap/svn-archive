@@ -670,7 +670,8 @@
 		responder = function() { };
 		responder.onResult = function(result) {
 			_root.waysreceived+=1;
-			if (length(result[1])==0) { removeMovieClip(_root.map.ways[result[0]]); return; }
+			if (length(result[1])==0) { removeMovieClip(_root.map.ways[result[0]]); 
+										removeMovieClip(_root.map.areas[result[0]]); return; }
 			var i,id;
 			_root.map.ways[result[0]].clean=true;
 			_root.map.ways[result[0]].locked=false;
@@ -751,7 +752,7 @@
 			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
 		}
 
-		if (f>-1 || casing[this.attr['highway']]) {
+		if ((f>-1 || casing[this.attr['highway']]) && !this.locked) {
 			if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
 			with (_root.map.areas[this._name]) {
 				clear();

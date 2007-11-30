@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-# Sketch-on-map module for pyroute
+# Library for handling GPX files
 #
 # Usage: 
 # 
@@ -20,27 +20,43 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #-----------------------------------------------------------------------------
-from base import pyrouteModule
 import os
 import cairo
-from lib_gpx import lib_gpx
 
-class sketching(pyrouteModule, lib_gpx):
+class lib_gpx:
   """  """
-  def __init__(self, modules):
-    lib_gpx.__init__(self)
-    pyrouteModule.__init__(self, modules)
-    
-  def startStroke(self,x,y):
-    lat,lon = self.m['projection'].xy2ll(x,y)
-    self.latest = [(lat,lon)]
-    self.lines.append(self.latest)
-    
-  def moveTo(self,x,y):
-    lat,lon = self.m['projection'].xy2ll(x,y)
-    self.latest.append((lat,lon))
-    self.set("needRedraw", 1)
+  def __init__(self):
+    self.lines = []
 
-  def save(self):
-      self.saveAs("data/sketches/latest.gpx")
+  def draw(self,cr,proj):
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    cr.set_source_rgb(0.7,0.7,0)
+    cr.set_line_width(5)
+
+    for l in self.lines:
+      first = 1
+      for p in l:
+        x,y = proj.ll2xy(p[0], p[1])
+        if(first):
+          cr.move_to(x,y)
+          first = 0
+        else:
+  	      cr.line_to(x,y)
+      cr.stroke()
       
+  def saveAs(self,filename):
+		file = open(filename,"w")
+		file.write("<?xml version=\"1.0\"?>\n")
+		file.write('<gpx>\n')
+		file.write('<trk>\n')
+		file.write('<name>Sketch</name>\n')
+		for l in self.lines:
+			file.write('<trkseg>\n')
+			for p in l:
+				file.write('<trkpt lat="%f" lon="%f"/>\n'%(p[0], p[1]))
+			file.write('</trkseg>\n')
+		file.write('</trk>\n')
+		file.write('</gpx>\n')
+
+		file.close()
+    

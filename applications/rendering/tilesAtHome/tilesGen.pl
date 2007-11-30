@@ -1481,7 +1481,7 @@ sub splitImageX
                 {
                     $Redirect = "";
                 }
-                my $Cmd = sprintf("%s %s -q %s %s %s",
+                my $Cmd = sprintf("%s \"%s\" -q %s %s %s",
                   $Config{Niceness},
                   $Config{Pngcrush},
                   $Filename2,

@@ -21,14 +21,15 @@ my %madeDir;
 sub statusMessage 
 {
     my ($msg, $Verbose, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
+    
+    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
 
     if ($Verbose)
     {
-        print STDERR "$msg\n";
+        print STDERR "$toprint\n";
         return;
     }
 
-    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
     my $curmsglen = length($toprint);
     print STDERR "\r$toprint";
     print STDERR " " x ($lastmsglen-$curmsglen);

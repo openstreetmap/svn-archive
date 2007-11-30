@@ -94,11 +94,12 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['sketch'].load("data/sketches/latest.gpx")
     self.set('mode','cycle')
     self.set('centred',False)
+    self.set('logging',True)
     self.modules['osmdata'] = LoadOsm(None)
     self.modules['projection'] = Projection()
     self.modules['projection'].recentre(51.2,-0.2, 0.1)
     self.modules['tracklog'] = tracklog(self.modules)
-    self.modules['tracklog'].load("data/track.gpx")
+    # self.modules['tracklog'].load("data/track.gpx")
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.updatePosition()
     self.set('ownpos', {'valid':False})
@@ -127,7 +128,11 @@ class MapWidget(gtk.Widget, pyrouteModule):
     pos = self.get('ownpos')
     if(not pos['valid']):
       return
-      
+  
+    # Add latest position to tracklog  
+    if(self.get('logging')):
+      self.m['tracklog'].addPoint(pos['lat'], pos['lon'])
+    
     # If we've never actually decided where to display a map yet, do so now
     if(not self.modules['projection'].isValid()):
       print "Projection not yet valid, centering on ownpos"

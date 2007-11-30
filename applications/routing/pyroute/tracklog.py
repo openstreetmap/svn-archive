@@ -30,4 +30,8 @@ class tracklog(pyrouteModule, lib_gpx):
   def __init__(self, modules):
     lib_gpx.__init__(self)
     pyrouteModule.__init__(self, modules)
+    self.active = []
+    self.lines.append(self.active)
     
+  def addPoint(self,lat,lon):
+    self.active.append([lat,lon])

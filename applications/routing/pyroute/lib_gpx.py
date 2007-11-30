@@ -22,8 +22,9 @@
 #-----------------------------------------------------------------------------
 import os
 import cairo
+from xml.sax import make_parser, handler
 
-class lib_gpx:
+class lib_gpx(handler.ContentHandler):
   """  """
   def __init__(self):
     self.lines = []
@@ -59,4 +60,24 @@ class lib_gpx:
 		file.write('</gpx>\n')
 
 		file.close()
-    
+
+  def load(self, filename):
+    if(not os.path.exists(filename)):
+      print "No such tracklog \"%s\"" % filename
+      return
+    self.inField = False
+    parser = make_parser()
+    parser.setContentHandler(self)
+    parser.parse(filename)
+  
+  def startElement(self, name, attrs):
+    if name == 'trk':
+      pass
+    if name == 'trkseg':
+      self.latest = []
+      self.lines.append(self.latest)
+      pass
+    if name == "trkpt":
+			lat = float(attrs.get('lat'))
+			lon = float(attrs.get('lon'))
+			self.latest.append([lat,lon])

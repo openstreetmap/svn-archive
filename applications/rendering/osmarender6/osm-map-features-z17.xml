@@ -222,6 +222,9 @@
             <rule e="way" k="railway" v="rail">
                 <line class='bridge-casing railway-rail-bridge-casing' smart-linecap='no'/>
             </rule>
+            <rule e="way" k="railway" v="abandoned">
+                <line class='bridge-casing railway-rail-bridge-casing' smart-linecap='no'/>
+            </rule>
             <rule e="way" k="railway" v="light_rail">
                 <line class='bridge-casing railway-light-rail-bridge-casing' smart-linecap='no'/>
             </rule>
@@ -466,6 +469,11 @@
             <rule e="way" k="railway" v="rail">
                 <line class='railway-casing railway-rail-casing' />
             </rule>
+            <rule e="way" k="railway" v="abandoned">
+	        <rule e="way" k="bridge" v="yes|true">
+                    <line class='railway-casing railway-rail-casing' />
+		</rule>
+            </rule>
         </rule>
 
         <!-- highway motorway_junctions -->
@@ -574,6 +582,11 @@
             <rule e="way" k="railway" v="rail">
                 <line class='railway-core railway-rail-1-core' />
                 <line class='railway-core railway-rail-2-core' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="railway" v="abandoned">
+	        <rule w="way" k="bridge" v="yes|true">
+                  <line class='railway-core railway-rail-1-core' />
+                </rule>
             </rule>
 			<rule e="way" k="aeroway" v="runway">
 			    <line class='aeroway-runway-core'/>

@@ -241,7 +241,7 @@ sub compress
     my $Command1;
     if ($Config{"7zipWin"})
     {
-        $Command1 = sprintf("%s %s %s %s",
+        $Command1 = sprintf("\"%s\" %s %s %s",
           $Config{"Zip"},
           "a -tzip",
           $Filename,
@@ -249,7 +249,7 @@ sub compress
     }
     else
     {
-        $Command1 = sprintf("%s -r -j %s %s > %s",
+        $Command1 = sprintf("\"%s\" -r -j %s %s > %s",
           $Config{"Zip"},
           $Filename,
           "$Dir",

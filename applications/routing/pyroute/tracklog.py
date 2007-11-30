@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-----------------------------------------------------------------------------
-# Sketch-on-map module for pyroute
+# 
 #
 # Usage: 
 # 
@@ -24,23 +24,32 @@ from base import pyrouteModule
 import os
 import cairo
 from lib_gpx import lib_gpx
+from xml.sax import make_parser, handler
 
-class sketching(pyrouteModule, lib_gpx):
+class tracklog(pyrouteModule, lib_gpx, handler.ContentHandler):
   """  """
   def __init__(self, modules):
     lib_gpx.__init__(self)
     pyrouteModule.__init__(self, modules)
     
-  def startStroke(self,x,y):
-    lat,lon = self.m['projection'].xy2ll(x,y)
-    self.latest = [(lat,lon)]
-    self.lines.append(self.latest)
-    
-  def moveTo(self,x,y):
-    lat,lon = self.m['projection'].xy2ll(x,y)
-    self.latest.append((lat,lon))
-    self.set("needRedraw", 1)
 
-  def save(self):
-      self.saveAs("data/sketches/latest.gpx")
-      
+  def load(self, filename):
+    if(not os.path.exists(filename)):
+      print "No such tracklog \"%s\"" % filename
+      return
+    self.inField = False
+    parser = make_parser()
+    parser.setContentHandler(self)
+    parser.parse(filename)
+  
+  def startElement(self, name, attrs):
+    if name == 'trk':
+      pass
+    if name == 'trkseg':
+      self.latest = []
+      self.lines.append(self.latest)
+      pass
+    if name == "trkpt":
+			lat = float(attrs.get('lat'))
+			lon = float(attrs.get('lon'))
+			self.latest.append([lat,lon])

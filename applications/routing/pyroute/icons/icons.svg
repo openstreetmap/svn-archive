@@ -17,7 +17,7 @@
    sodipodi:docname="icons.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:docbase="/home/owhite/OpenStreetmap/pyroute/icons"
-   sodipodi:modified="true">
+   sodipodi:modified="TRUE">
   <sodipodi:namedview
      inkscape:window-height="917"
      inkscape:window-width="1206"
@@ -54,6 +54,19 @@
   </metadata>
   <defs
      id="defs11">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path6074"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
     <linearGradient
        id="linearGradient7841">
       <stop
@@ -6076,4 +6089,33 @@
      width="71.81488"
      sodipodi:absref="/home/owhite/OpenStreetmap/pyroute/icons/source/openaerialmap.jpeg"
      xlink:href="source/openaerialmap.jpeg" />
+  <rect
+     id="rect2955"
+     x="65.936073"
+     y="974.9505"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/hint.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#c9d2ed;fill-opacity:1;stroke:#9195a6;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stroke-dashoffset:0;opacity:0.49818182" />
+  <path
+     style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M -74.61663,934.01685 L -74.61663,969.17652 L -65.240718,959.80061"
+     id="path5872" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:0.31272727;color:#000000;fill:#c9d2ed;fill-opacity:1;fill-rule:nonzero;stroke:#9195a6;stroke-width:2.29999995;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+     id="path5868"
+     sodipodi:cx="108.01832"
+     sodipodi:cy="1014.2981"
+     sodipodi:rx="12.305884"
+     sodipodi:ry="12.305884"
+     d="M 120.3242 1014.2981 A 12.305884 12.305884 0 1 1  95.712434,1014.2981 A 12.305884 12.305884 0 1 1  120.3242 1014.2981 z"
+     transform="translate(13.477875,3.9066298)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/hint.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
 </svg>

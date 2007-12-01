@@ -27,9 +27,16 @@ class Projection:
     self.xyValid = False
     self.llValid = False
     self.needsEdgeFind = False
+    
+    # Scale is the number of display pixels per projected unit
+    self.scale = tileSizePixels()
+    
   def isValid(self):
+    """Test if the module contains all the information needed to do conversions"""
     return(self.xyValid and self.llValid)
+  
   def setView(self,x,y,w,h):
+    """Setup the display"""
     self.w = w
     self.h = h
     self.xc = x + self.w
@@ -39,103 +46,109 @@ class Projection:
       self.findEdges()
     
   def recentre(self,lat,lon,zoom = None):
+    """Move the projection to a particular geographic location
+    (with optional zoom level)"""
     print "centering on %1.3f, %1.3f" % (lat,lon)
     self.lat = lat
     self.lon = lon
     if(zoom != None):
       self.implementNewZoom(zoom)
+      # note: implementNewZoom calls findEdges, hence the else: statement
     else:
       self.findEdges()
     self.llValid = True
     
   def setZoom(self, value, isAdjustment=False):
+    """Change the zoom level, keeping same map centre
+    if isAdjustment is true, then value is relative to current zoom
+    otherwise it's an absolute value"""
     if(isAdjustment):
+      # TODO: maybe we don't want all zoom levels?
       self.implementNewZoom(self.zoom + value)
     else:
       self.implementNewZoom(value)
   
   def limitZoom(self):
+    """Check the zoom level, and move it if necessary to one of
+    the 'allowed' zoom levels"""
     if(self.zoom < 6):
       self.zoom = 6
     if(self.zoom > 17):
       self.zoom = 17
-      
+  
   def implementNewZoom(self, zoom):
+    """Change the zoom level"""
     self.zoom = int(zoom)
-    print "zoom set to %d" % zoom
+    # Check it's valid
     self.limitZoom()
+    # Update the projection
     self.findEdges()
   
   def findEdges(self):
-    """(S,W,E,N) are derived from (lat,lon,scale)"""
+    """Update the projection meta-info based on its fundamental parameters"""
     if(not self.xyValid):
+      # If the display is not known yet, then we can't do anything, but we'll
+      # mark it as something that needs doing as soon as the display 
+      # becomes valid
       print "Can't find edges"
       self.needsEdgeFind = True
       return
+    
+    # Find the map centre in projection units
     self.px, self.py = latlon2xy(self.lat,self.lon,self.zoom)
     
-    print "Centred on %1.1f,%1.1f" % (self.px,self.py)
-    unitSize = tileSizePixels()
+    # Find the map edges in projection units
+    self.px1 = self.px - 0.5 * self.w / self.scale
+    self.px2 = self.px + 0.5 * self.w / self.scale
+    self.py1 = self.py - 0.5 * self.h / self.scale
+    self.py2 = self.py + 0.5 * self.h / self.scale
     
-    self.px1 = self.px - 0.5 * self.w / unitSize
-    self.px2 = self.px + 0.5 * self.w / unitSize
-    self.py1 = self.py - 0.5 * self.h / unitSize
-    self.py2 = self.py + 0.5 * self.h / unitSize
-    
+    # Store width and height in projection units, just to save time later
     self.pdx = self.px2 - self.px1
     self.pdy = self.py2 - self.py1
     
-    print "Viewing %1.1f - %1.1f, %1.1f - %1.1f" % \
-      (self.px1,
-      self.px2,
-      self.py1,
-      self.py2);
-    
+    # Calculate the bounding box 
+    # ASSUMPTION: (that the projection is regular and north-up)
     self.N,self.W = xy2latlon(self.px1, self.py1, self.zoom)
     self.S,self.E = xy2latlon(self.px2, self.py2, self.zoom)
     
-    print "Lat %1.1f - %1.1f, Lon %1.1f - %1.1f" % \
-      (self.S,
-      self.N,
-      self.W,
-      self.E)
-      
+    # Mark the meta-info as valid
     self.needsEdgeFind = False
   
   def pxpy2xy(self,px,py):
+    """Convert projection units to display units"""
     x = self.w * (px - self.px1) / self.pdx
     y = self.h * (py - self.py1) / self.pdy
     return(x,y)
   
   def nudge(self,dx,dy):
-    unitSize = tileSizePixels()
-    newXC = self.px - dx / unitSize
-    newYC = self.py - dy / unitSize
-    
-    if(1):
-      self.lat,self.lon = xy2latlon(newXC,newYC, self.zoom)
-    else:
-      self.lat,self.lon = self.xy2ll(newXC,newYC) 
+    """Move the map by a number of pixels relative to its current position"""
+    if(dx == 0 and dy == 0):
+      return
+    # Calculate the lat/long of the pixel offset by dx,dy from the centre,
+    # and centre the map on that
+    newXC = self.px - dx / self.scale
+    newYC = self.py - dy / self.scale
+    self.lat,self.lon = xy2latlon(newXC,newYC, self.zoom)
     self.findEdges()
 
   def ll2xy(self,lat,lon):
+    """Convert geographic units to display units"""
     px,py = latlon2xy(lat,lon,self.zoom)
-    #print "%1.3f,%1.3f -> %1.1f,%1.1f" % (lat,lon,px,py)
-    unitSize = tileSizePixels()
-    x = (px - self.px1) * unitSize
-    y = (py - self.py1) * unitSize
+    x = (px - self.px1) * self.scale
+    y = (py - self.py1) * self.scale
     return(x,y)
   
   def xy2ll(self,x,y):
-    unitSize = tileSizePixels()
-    px = self.px1 + x / unitSize
-    py = self.py1 + y / unitSize
+    """Convert display units to geographic units"""
+    px = self.px1 + x / self.scale
+    py = self.py1 + y / self.scale
     lat,lon = xy2latlon(px, py, self.zoom)
     return(lat,lon)
   
   def onscreen(self,x,y):
+    """Test if a position (in display units) is visible"""
     return(x >= 0 and x < self.w and y >= 0 and y < self.h)
   
   def relXY(self,x,y):
     return(x/self.w, y/self.h)
-    

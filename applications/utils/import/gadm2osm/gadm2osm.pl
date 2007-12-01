@@ -21,8 +21,8 @@ sub read_shapes
 	my $shapeFile = new Geo::ShapeFile($filename);
 	print $shapeFile->shapes() . " shapes in " . $filename . "\n";
 
-    my @bounds = $shapeFile->bounds();
-    print "Bounds: " . join(", ", $shapeFile->bounds()) . "\n";
+	my @bounds = $shapeFile->bounds();
+	print "Bounds: " . join(", ", $shapeFile->bounds()) . "\n";
 
 	# x_min, y_min, x_max, y_max
 	my @ids = $shapeFile->shapes_in_area($min_lon, $max_lat, $max_lon, $min_lat);
@@ -46,5 +46,7 @@ sub read_shapes
 #   Run that script...
 #
 
-read_shapes("data/world_bnd_m");
-read_shapes("data/world_boundaries_m");
+# read_shapes("data/world_bnd_m");
+# read_shapes("data/world_boundaries_m");
+read_shapes("data/GADM_v0-6");
+

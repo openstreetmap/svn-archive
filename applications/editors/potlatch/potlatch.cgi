@@ -126,43 +126,6 @@
 	var signature="Potlatch 0.5d";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
-	
-	// Way styling
-	// ** should be moved into presets file
-	// ** area colours need to be value-specific (not just key-specific)
-	colours=new Array();
-	colours["motorway"		]=0x809BC0; colours["motorway_link"	]=0x809BC0;	// 0x3366CC
-	colours["trunk"			]=0x7FC97F;	colours["trunk_link"	]=0x7FC97F; // 0x007700
-	colours["primary"		]=0xE46D71;	colours["primary_link"	]=0xE46D71; // 0x770000
-	colours["secondary"		]=0xFDBF6F; // 0xCC6600
-	colours["tertiary"		]=0xFEFECB; // blank
-	colours["unclassified"	]=0xE8E8E8; colours["residential"	]=0xE8E8E8; // blank
-	colours["footway"		]=0xFF6644;	
-	colours["cycleway"		]=0xFF6644;	
-	colours["bridleway"		]=0xFF6644;	
-	colours["rail"			]=0x000001;	
-	colours["river"			]=0x8888FF;	
-	colours["canal"			]=0x8888FF;	
-	colours["stream"		]=0x8888FF;	
-	
-	casing=new Array();
-	casing['motorway'   ]=1; casing['motorway_link']=1;
-	casing['trunk'		]=1; casing['trunk_link'   ]=1;
-	casing['primary'	]=1; casing['primary_link' ]=1;
-	casing['secondary'	]=1; casing['tertiary'     ]=1;
-	casing['residential']=1; casing['unclassified' ]=1;
-
-	areas=new Array();
-	areas['leisure' ]=0x8CD6B5;
-	areas['amenity' ]=0xADCEB5;
-	areas['shop'    ]=0xADCEB5;
-	areas['tourism' ]=0xF7CECE;
-	areas['historic']=0xF7F7DE;
-	areas['ruins'   ]=0xF7F7DE;
-	areas['landuse' ]=0x444444;
-	areas['military']=0xD6D6D6;
-	areas['natural' ]=0xADD6A5;
-	areas['sport'   ]=0x8CD6B5;
 
 	// =====================================================================================
 	// Icons
@@ -327,6 +290,9 @@
 		_root.presets=result[0];
 		_root.presetmenus=result[1];
 		_root.presetnames=result[2];
+		_root.colours=result[3];
+		_root.casing=result[4];
+		_root.areas=result[5];
 		_root.presetselected='road'; setPresetIcon(presetselected);
 		_root.i_preset._visible=false;
 	};

@@ -49,15 +49,30 @@ class guiOverlay(pyrouteModule):
         ny = 4
         self.clickable = []
         self.cells = {}
-        dx = rect.width / nx
-        dy = rect.height / ny
-        for i in range(0,nx):
-            x1 = rect.x + i * dx
-            self.cells[i] = {}
-            for j in range(0,ny):
-                y1 = rect.y + j * dy
-                self.cells[i][j] = overlayArea(cr,x1,y1,dx,dy,self.modules, self.icons)
-                self.clickable.append(self.cells[i][j])
+        rotate = (rect.width > rect.height)
+        if(not rotate):
+          dx = rect.width / nx
+          dy = rect.height / ny
+          for i in range(0,nx):
+              x1 = rect.x + i * dx
+              self.cells[i] = {}
+              for j in range(0,ny):
+                  y1 = rect.y + j * dy
+                  self.cells[i][j] = overlayArea(cr,x1,y1,dx,dy,self.modules, self.icons)
+                  self.clickable.append(self.cells[i][j])
+        else:
+          dy = rect.height / nx
+          dx = rect.width / ny
+          for i in range(0,nx):
+              y1 = rect.y + i * dy
+              self.cells[i] = {}
+              for j in range(0,ny):
+                  x1 = rect.x + j * dx
+                  self.cells[i][j] = overlayArea(cr,x1,y1,dx,dy,self.modules, self.icons)
+                  self.clickable.append(self.cells[i][j])
+          
+
+          
         currentMenu = self.get('menu')
         if(currentMenu):
             self.drawMenu(currentMenu)

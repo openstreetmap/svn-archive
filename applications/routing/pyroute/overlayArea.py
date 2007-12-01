@@ -52,13 +52,6 @@ class overlayArea:
             self.cr.stroke()
         else:
             self.cr.fill()
-    def mainMenuButton(self):
-        self.cr.set_line_width(2)
-        self.cr.set_dash((2,2,2), 0);
-        self.cr.set_source_rgba(0.4,0,0)
-        self.cr.arc(self.cx,self.cy, 0.5*self.w, 0, 2*3.14)
-        self.cr.stroke()
-        self.setEvent("menu:main")
     def drawTextSomewhere(self,text,px1,py1,px2,py2):
         innerBox = self.copyself(px1,py1,px2,py2)
         innerBox.drawText(text)

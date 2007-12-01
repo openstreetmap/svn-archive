@@ -1,7 +1,7 @@
 import geometry
 from base import pyrouteModule
 
-class dataItem:
+class poi:
   def __init__(self,lat,lon):
     self.lat = lat
     self.lon = lon
@@ -18,12 +18,12 @@ class dataItem:
     else:
       return("%f,%f" % (self.lat,self.lon))
 
-class dataGroup:
+class poiGroup:
   def __init__(self,name):
     self.items = []
     self.name = name
 
-class dataSource(pyrouteModule):
+class poiModule(pyrouteModule):
   def __init__(self, modules):
     pyrouteModule.__init__(self, modules)
     self.groups = []

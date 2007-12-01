@@ -1,4 +1,4 @@
-from mod_base import dataSource, dataGroup, dataItem
+from poi_base import *
 import feedparser
 from xml.sax import make_parser, handler
 
@@ -22,18 +22,17 @@ class geonamesParser(handler.ContentHandler):
     if(name == "entry"):
       self.entries.append(self.entry)
       
-class geonames(dataSource):
-    def __init__(self):
-        dataSource.__init__(self)
-        # self.add(name, feed)
+class geonames(poiModule):
+    def __init__(self, modules):
+        poiModule.__init__(self, modules)
         g = geonamesParser("data/wiki.xml")
         self.add("Wikipedia entries",g)
 
     def add(self, name, parser):
-        group = dataGroup(name)
+        group = poiGroup(name)
         count = 0
         for item in parser.entries:
-            x = dataItem(item['lat'], item['lng'])
+            x = poi(item['lat'], item['lng'])
             x.title = item['title']
             group.items.append(x)
             count = count + 1

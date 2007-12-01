@@ -307,7 +307,12 @@
 				<line class='highway-core highway-footway-core' />
 			</rule>
 			<rule e="way" k="highway" v="pedestrian">
-				<line class='highway-core highway-pedestrian-core' />
+				<rule e="way" k="area" v="yes|true">
+ 					<area class='highway-core highway-pedestrian-area' />
+				</rule>
+				<else>
+ 					<line class='highway-core highway-pedestrian-core' />
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="cycleway">
 				<line class='highway-core highway-cycleway-core' />
@@ -1019,6 +1024,7 @@
             .highway-pedestrian-bridge-core         { stroke-width: 3.5px; }
             .highway-pedestrian-casing              { stroke-width: 2.2px;   stroke: #aaaaaa; }
             .highway-pedestrian-core                { stroke-width: 2.1px;   stroke: #eeeeee; }
+            .highway-pedestrian-area                { stroke-width: 2.1px;   stroke: #eeeeee; fill: #eeeeee; }
             .highway-pedestrian-name                { stroke-width: 0px;     font-size: 2px; }
             .highway-pedestrian-ref                 { stroke-width: 0px;     font-size: 2.5px; }
 

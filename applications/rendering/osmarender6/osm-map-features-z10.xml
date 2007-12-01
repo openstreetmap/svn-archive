@@ -253,7 +253,12 @@
 					</rule>
 				</rule>
                 <rule e="segment|way" k="highway" v="pedestrian">
-                    <line class='highway-core highway-pedestrian-core' />
+			<rule e="way" k="area" v="yes|true">
+ 				<area class='highway-core highway-pedestrian-area' />
+			</rule>
+			<else>
+				<line class='highway-core highway-pedestrian-core' />
+			</else>
                 </rule>
                 <rule e="segment|way" k="highway" v="track">
                     <line class='highway-core highway-track-core' />
@@ -721,6 +726,12 @@
             .highway-pedestrian-core {
                 stroke-width: 1.2px;
                 stroke: #eeeeee;
+            }
+
+            .highway-pedestrian-area {
+                stroke-width: 1.2px;
+                stroke: #eeeeee;
+		fill: #eeeeee;
             }
 
             .highway-service-casing {

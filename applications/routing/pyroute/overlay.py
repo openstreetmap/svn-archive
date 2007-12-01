@@ -65,6 +65,11 @@ class guiOverlay(pyrouteModule):
           self.mapOverlay()
 
     def mapOverlay(self):
+      if(self.get('showHints')):
+        self.cells[0][0].button("Menu",None,"hint")
+        self.cells[1][0].button("Zoom out",None,"hint")
+        self.cells[2][0].button("Zoom in",None,"hint")
+        
       # Tickmarks to show where the 3 active buttons are
       self.cr.set_line_width(2)
       self.cr.set_dash((10,5), 0);
@@ -76,7 +81,7 @@ class guiOverlay(pyrouteModule):
         if(x < 2):
           self.cr.line_to(button.x2,button.yc(0.7))
       self.cr.stroke()
-      
+    
       # Make the buttons clickable
       self.cells[0][0].setEvent("menu:main")
       self.cells[1][0].setEvent("zoom:out")

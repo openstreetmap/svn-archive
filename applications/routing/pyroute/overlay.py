@@ -62,21 +62,23 @@ class guiOverlay(pyrouteModule):
         if(currentMenu):
             self.drawMenu(currentMenu)
         else:
-            self.cells[0][0].mainMenuButton()
-            self.cr.set_line_width(2)
-            self.cr.set_dash((2,2,2), 0);
-            self.cr.set_source_rgba(0.4,0,0)
-            y = 100
-            self.cr.move_to(0,y)
-            self.cr.line_to(rect.width,y)
-            self.cr.stroke()
-            
-            self.cells[1][0].setEvent("zoom:out")
-            self.cells[2][0].setEvent("zoom:in")
-            
-            if(0):
-              if(self.get('sketch',0)):
-                self.sketchOverlay()
+          self.mapOverlay()
+
+    def circle(self,x,y):
+      button = self.cells[x][y]
+      self.cr.set_line_width(2)
+      self.cr.set_dash((2,2,2), 0);
+      self.cr.set_source_rgba(0.4,0,0)
+      self.cr.arc(button.cx,button.cy, 0.5*button.w, 0, 2*3.14)
+      self.cr.stroke()
+      
+    def mapOverlay(self):
+      self.circle(0,0)
+      self.circle(1,0)
+      self.circle(2,0)
+      self.cells[0][0].setEvent("menu:main")
+      self.cells[1][0].setEvent("zoom:out")
+      self.cells[2][0].setEvent("zoom:in")
 
       
     def drawMenu(self, menu):

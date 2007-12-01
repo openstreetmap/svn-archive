@@ -64,18 +64,20 @@ class guiOverlay(pyrouteModule):
         else:
           self.mapOverlay()
 
-    def circle(self,x,y):
-      button = self.cells[x][y]
+    def mapOverlay(self):
+      # Tickmarks to show where the 3 active buttons are
       self.cr.set_line_width(2)
-      self.cr.set_dash((2,2,2), 0);
+      self.cr.set_dash((10,5), 0);
       self.cr.set_source_rgba(0.4,0,0)
-      self.cr.arc(button.cx,button.cy, 0.5*button.w, 0, 2*3.14)
+      for x in (0,1,2):
+        button = self.cells[x][0]
+        self.cr.move_to(button.x1,button.y2)
+        self.cr.line_to(button.x2,button.y2)
+        if(x < 2):
+          self.cr.line_to(button.x2,button.yc(0.7))
       self.cr.stroke()
       
-    def mapOverlay(self):
-      self.circle(0,0)
-      self.circle(1,0)
-      self.circle(2,0)
+      # Make the buttons clickable
       self.cells[0][0].setEvent("menu:main")
       self.cells[1][0].setEvent("zoom:out")
       self.cells[2][0].setEvent("zoom:in")

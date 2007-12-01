@@ -43,7 +43,7 @@ die if($Y1==0);
   my $osm = new osm;
   
   # Enter your OSM username for downloading 
-  $osm->setup("hakan\@gurkensalat.com","qqpp34","almien_coastlines");
+  $osm->setup("username\@domain.com","password","almien_coastlines");
   
   # Specify some temporary filenames the program can use
   $osm->tempfiles("temp1.txt", "temp2.txt");

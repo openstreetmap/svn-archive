@@ -20,53 +20,122 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #-----------------------------------------------------------------------------
+from tilenames import *
 
 class Projection:
   def __init__(self):
-    self.xyValid = 0
-    self.llValid = 0
+    self.xyValid = False
+    self.llValid = False
+    self.needsEdgeFind = False
   def isValid(self):
     return(self.xyValid and self.llValid)
   def setView(self,x,y,w,h):
-    self.w = w / 2
-    self.h = h / 2
+    self.w = w
+    self.h = h
     self.xc = x + self.w
     self.yc = y + self.h
-    self.xyValid = 1
-  def recentre(self,lat,lon,scale = None):
+    self.xyValid = True
+    if(self.needsEdgeFind):
+      self.findEdges()
+    
+  def recentre(self,lat,lon,zoom = None):
+    print "centering on %1.3f, %1.3f" % (lat,lon)
     self.lat = lat
     self.lon = lon
-    if(scale != None):
-      self.scale = scale  # TODO: scale and scaleCosLat
+    if(zoom != None):
+      self.implementNewZoom(zoom)
+    else:
+      self.findEdges()
+    self.llValid = True
+    
+  def setZoom(self, value, isAdjustment=False):
+    if(isAdjustment):
+      self.implementNewZoom(self.zoom + value)
+    else:
+      self.implementNewZoom(value)
+  
+  def limitZoom(self):
+    if(self.zoom < 6):
+      self.zoom = 6
+    if(self.zoom > 17):
+      self.zoom = 17
+      
+  def implementNewZoom(self, zoom):
+    self.zoom = int(zoom)
+    print "zoom set to %d" % zoom
+    self.limitZoom()
     self.findEdges()
-    self.llValid = 1
+  
   def findEdges(self):
     """(S,W,E,N) are derived from (lat,lon,scale)"""
-    self.S = self.lat - self.scale
-    self.N = self.lat + self.scale
-    self.W = self.lon - self.scale
-    self.E = self.lon + self.scale
-  def nudge(self,dx,dy,scale):
-    self.lat = self.lat + dy * scale * self.scale
-    self.lon = self.lon + dx * scale * self.scale
-    self.findEdges()
-  def nudgeZoom(self,amount):
-    self.scale = self.scale * (1 + amount)
-    self.findEdges()    
-  def ll2xy(self,lat,lon):
-    px = (lon - self.lon) / self.scale
-    py = (lat - self.lat) / self.scale
-    x = self.xc + self.w * px
-    y = self.yc - self.h * py
+    if(not self.xyValid):
+      print "Can't find edges"
+      self.needsEdgeFind = True
+      return
+    self.px, self.py = latlon2xy(self.lat,self.lon,self.zoom)
+    
+    print "Centred on %1.1f,%1.1f" % (self.px,self.py)
+    unitSize = tileSizePixels()
+    
+    self.px1 = self.px - 0.5 * self.w / unitSize
+    self.px2 = self.px + 0.5 * self.w / unitSize
+    self.py1 = self.py - 0.5 * self.h / unitSize
+    self.py2 = self.py + 0.5 * self.h / unitSize
+    
+    self.pdx = self.px2 - self.px1
+    self.pdy = self.py2 - self.py1
+    
+    print "Viewing %1.1f - %1.1f, %1.1f - %1.1f" % \
+      (self.px1,
+      self.px2,
+      self.py1,
+      self.py2);
+    
+    self.N,self.W = xy2latlon(self.px1, self.py1, self.zoom)
+    self.S,self.E = xy2latlon(self.px2, self.py2, self.zoom)
+    
+    print "Lat %1.1f - %1.1f, Lon %1.1f - %1.1f" % \
+      (self.S,
+      self.N,
+      self.W,
+      self.E)
+      
+    self.needsEdgeFind = False
+  
+  def pxpy2xy(self,px,py):
+    x = self.w * (px - self.px1) / self.pdx
+    y = self.h * (py - self.py1) / self.pdy
     return(x,y)
+  
+  def nudge(self,dx,dy):
+    unitSize = tileSizePixels()
+    newXC = self.px - dx / unitSize
+    newYC = self.py - dy / unitSize
+    
+    if(1):
+      self.lat,self.lon = xy2latlon(newXC,newYC, self.zoom)
+    else:
+      self.lat,self.lon = self.xy2ll(newXC,newYC) 
+    self.findEdges()
+
+  def ll2xy(self,lat,lon):
+    px,py = latlon2xy(lat,lon,self.zoom)
+    #print "%1.3f,%1.3f -> %1.1f,%1.1f" % (lat,lon,px,py)
+    unitSize = tileSizePixels()
+    x = (px - self.px1) * unitSize
+    y = (py - self.py1) * unitSize
+    return(x,y)
+  
   def xy2ll(self,x,y):
-    px = (x - self.xc) / self.w
-    py = (y - self.yc) / self.h
-    lon = self.lon + px * self.scale
-    lat = self.lat - py * self.scale
+    unitSize = tileSizePixels()
+    px = self.px1 + x / unitSize
+    py = self.py1 + y / unitSize
+    lat,lon = xy2latlon(px, py, self.zoom)
     return(lat,lon)
+  
   def onscreen(self,x,y):
-    return(x >= 0 and x < 2 * self.w and y >= 0 and y < 2 * self.h)
+    return(x >= 0 and x < self.w and y >= 0 and y < self.h)
+  
   def relXY(self,x,y):
-    return(x/(2*self.w), y/(2*self.h))
+    return(x/self.w, y/self.h)
     

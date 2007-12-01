@@ -30,6 +30,13 @@ def tileXY(lat, lon, z):
   x,y = latlon2xy(lat,lon,z)
   return(int(x),int(y))
 
+def xy2latlon(x,y,z):
+  n = numTiles(z)
+  relY = y / n
+  lat = mercatorToLat(pi * (1 - 2 * relY))
+  lon = -180.0 + 360.0 * x / n
+  return(lat,lon)
+  
 def latEdges(y,z):
   n = numTiles(z)
   unit = 1 / n
@@ -53,6 +60,9 @@ def tileEdges(x,y,z):
 
 def mercatorToLat(mercatorY):
   return(degrees(atan(sinh(mercatorY))))
+
+def tileSizePixels():
+  return(256)
 
 def tileLayerExt(layer):
   if(layer in ('oam')):

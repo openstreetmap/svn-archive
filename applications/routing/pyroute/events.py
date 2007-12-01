@@ -27,6 +27,16 @@ class pyrouteEvents(pyrouteModule):
   def __init__(self, modules):
       pyrouteModule.__init__(self,modules)
   
+  def handle_zoom(self,params):
+    """zoom:[in|out|zoomlevel] - zooms to a quadtile level (17=max detail, <6=whole world)"""
+    if(params == 'in'):
+      self.m['projection'].setZoom(1, True)
+    elif(params == 'out'):
+      self.m['projection'].setZoom(-1, True)
+    else:
+      self.m['projection'].setZoom(int(params))
+    self.set("needRedraw", True)
+
   def handle_menu(self,params):
     """menu:(name) - displays a menu. Use blank name to hide the menu"""
     self.set('menu', params)

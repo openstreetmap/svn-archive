@@ -97,7 +97,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.set('logging',True)
     self.modules['osmdata'] = LoadOsm(None)
     self.modules['projection'] = Projection()
-    self.modules['projection'].recentre(51.2,-0.2, 0.1)
+    self.modules['projection'].recentre(51.3,-0.1, 9)
     self.modules['tracklog'] = tracklog(self.modules)
     # self.modules['tracklog'].load("data/track.gpx")
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
@@ -164,21 +164,22 @@ class MapWidget(gtk.Widget, pyrouteModule):
       self.m['sketch'].startStroke(x,y)
     
   def click(self, x, y):
+    print "Clicked %d,%d"%(x,y)
     """Handle clicking on the screen"""
     # Give the overlay a chance to handle all clicks first
-    if(self.modules['overlay'].handleClick(x,y)):
+    if(self.m['overlay'].handleClick(x,y)):
       pass
     # If the overlay is fullscreen and it didn't respond, the click does
     # not fall-through to the map
-    elif(self.modules['overlay'].fullscreen()):
+    elif(self.m['overlay'].fullscreen()):
       return
     elif(self.get('sketch',0)):
       return
     # Map was clicked-on: store the lat/lon and go into the "clicked" menu
     else:
-      lat, lon = self.modules['projection'].xy2ll(x,y)
-      self.modules['data'].set('clicked', (lat,lon))
-      self.modules['data'].set('menu','click')
+      lat, lon = self.m['projection'].xy2ll(x,y)
+      self.set('clicked', (lat,lon))
+      self.set('menu','click')
     self.forceRedraw()
       
   def forceRedraw(self):
@@ -198,7 +199,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
       return
     if(self.get('centred') and self.get('ownpos')['valid']):
       return
-    self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
+    self.modules['projection'].nudge(dx,dy)
     self.forceRedraw()
   
   def zoom(self,dx):
@@ -214,10 +215,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
       self.m['sketch'].moveTo(x,y)
       return
     else:
-      if(startY < 100):
-        self.zoom(dx)
-      else:
-        self.move(dx,dy)
+      self.move(dx,dy)
     
 
   def draw(self, cr):

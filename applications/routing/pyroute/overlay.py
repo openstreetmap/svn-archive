@@ -71,8 +71,12 @@ class guiOverlay(pyrouteModule):
             self.cr.line_to(rect.width,y)
             self.cr.stroke()
             
-            if(self.get('sketch',0)):
-              self.sketchOverlay()
+            self.cells[1][0].setEvent("zoom:out")
+            self.cells[2][0].setEvent("zoom:in")
+            
+            if(0):
+              if(self.get('sketch',0)):
+                self.sketchOverlay()
 
       
     def drawMenu(self, menu):

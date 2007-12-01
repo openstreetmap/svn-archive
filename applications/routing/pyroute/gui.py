@@ -54,9 +54,9 @@ from geoPosition import *
 from projection import Projection
 from overlay import *
 from dataStore import *
-from mod_geoRss import geoRss
-from mod_geonames import geonames
-from mod_waypoints import waypointsModule
+from poi_geoRss import geoRss
+from poi_geonames import geonames
+from poi_waypoints import waypointsModule
 from base import pyrouteModule
 from tiles import tileHandler
 from events import pyrouteEvents
@@ -82,8 +82,8 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules = {'poi':{}}
     pyrouteModule.__init__(self, self.modules)
     
-    #self.modules['poi']['rss'] = geoRss('Setup/feeds.txt')
-    #self.modules['poi']['geonames'] = geonames()
+    #self.modules['poi']['rss'] = geoRss(self.modules, 'Setup/feeds.txt')
+    #self.modules['poi']['geonames'] = geonames(self.modules)
     self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()

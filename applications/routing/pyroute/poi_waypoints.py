@@ -19,14 +19,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #------------------------------------------------------
 from xml.sax import make_parser, handler
-from mod_base import dataSource, dataGroup, dataItem
+from poi_base import *
 import os
 
-class waypointsModule(dataSource, handler.ContentHandler):
+class waypointsModule(poiModule, handler.ContentHandler):
   def __init__(self, modules, filename = None):
-    dataSource.__init__(self, modules)
+    poiModule.__init__(self, modules)
     self.storeFields = ('name','sym')
-    self.groups.append(dataGroup("Waypoints"))
+    self.groups.append(poiGroup("Waypoints"))
     self.filename = None
     self.nextNumericWpt = 1
     if(filename):
@@ -62,7 +62,7 @@ class waypointsModule(dataSource, handler.ContentHandler):
       self.fieldText = self.fieldText + text
     
   def storeWaypoint(self, waypoint):
-    x = dataItem(waypoint['lat'], waypoint['lon'])
+    x = poi(waypoint['lat'], waypoint['lon'])
     x.title = waypoint['name']
     self.groups[0].items.append(x)
     try:

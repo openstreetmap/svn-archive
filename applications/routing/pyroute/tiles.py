@@ -115,7 +115,8 @@ class tileHandler(pyrouteModule):
     # Move the cairo projection onto the area where we want to draw the image
     cr.save()
     cr.translate(bbox[0],bbox[1])
-    cr.scale((bbox[2] - bbox[0]) / 256.0, (bbox[3] - bbox[1]) / 256.0)
+    
+    #cr.scale((bbox[2] - bbox[0]) / 256.0, (bbox[3] - bbox[1]) / 256.0)
     
     # Display the image
     cr.set_source_surface(self.images[name],0,0)
@@ -124,54 +125,34 @@ class tileHandler(pyrouteModule):
     # Return the cairo projection to what it was
     cr.restore()
     
-  def zoomFromScale(self,scale):
-    """Given a 'scale' (such as it is) from the projection module,
-    decide what zoom-level of map tiles to display"""
-    
-    # TODO: This isn't really logical or optimised at all, it's just
-    # a basic guess that needs to be checked at some point
-    if(scale > 5):
-      return(5)
-    if(scale > 0.55):
-      return(7)
-    if(scale > 0.046):
-      return(10)
-    if(scale > 0.0085):
-      return(13)
-    if(scale > 0.0026):
-      return(15)
-    return(17)
-    
-  def tileZoom(self):
-    """Decide (based on global data) what zoom-level of map tiles to display"""
-    return(self.zoomFromScale(self.m['projection'].scale))
-  
   def draw(self, cr):
     """Draw all the map tiles that are in view"""
     proj = self.m['projection']
     layer = self.get("layer","tah")
     
+    if(not proj.isValid()):
+      return;
     # Pick a zoom level
-    z = self.tileZoom()
-    
-    # Find out what tiles are in view at that zoom level
-    view_x1,view_y1 = latlon2xy(proj.N, proj.W, z)
-    view_x2,view_y2 = latlon2xy(proj.S, proj.E, z)
+    z = proj.zoom
     
     # Loop through all tiles
-    for x in range(int(floor(view_x1)), int(ceil(view_x2))):
-      for y in range(int(floor(view_y1)), int(ceil(view_y2))):
+    for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
+      for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
         
-        # Find the edges of the tile as lat/long
-        S,W,N,E = tileEdges(x,y,z) 
         
-        # Convert those edges to screen coordinates
-        x1,y1 = proj.ll2xy(N,W)
-        x2,y2 = proj.ll2xy(S,E)
-        
-        # Check that the image is available in the memory cache
-        # and start downloading it if it's not
-        self.loadImage(x,y,z,layer)
-        
-        # Draw the image
-        self.drawImage(cr,(x,y,z,layer),(x1,y1,x2,y2))
+        if(1):
+          # Find the edges of the tile as lat/long
+          #S,W,N,E = tileEdges(x,y,z) 
+          
+          # Convert those edges to screen coordinates
+          x1,y1 = proj.pxpy2xy(x,y)
+          x2,y2 = proj.pxpy2xy(x+1,y+1)
+          
+          #print "%d,%d,%d -> %1.1f-%1.1f"%(x,y,z,x1,x2)
+          
+          # Check that the image is available in the memory cache
+          # and start downloading it if it's not
+          self.loadImage(x,y,z,layer)
+          
+          # Draw the image
+          self.drawImage(cr,(x,y,z,layer),(x1,y1,x2,y2))

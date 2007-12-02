@@ -145,6 +145,68 @@ class guiOverlay(pyrouteModule):
         "option:set:PositionMode:txt",
         mode == 'txt' and 'selected' or 'unselected')
       
+    def menu_download(self):
+      self.backButton(0,0)
+
+      centreLine = self.cells[1][0].copyAndExtendTo(self.cells[2][0])
+      centreLine.icon("2h")
+      
+      self.cells[1][0].button( \
+        "Around me",
+        "option:set:DownloadCentre:pos",
+        self.get('DownloadCentre') == 'pos' and 'selected' or 'unselected')
+      self.cells[2][0].button( \
+        "Destination",
+        "option:set:DownloadRange:dest",
+        self.get('DownloadCentre') == 'dest' and 'selected' or 'unselected')
+        
+      dataTypeLine = self.cells[0][1].copyAndExtendTo(self.cells[2][1])
+      dataTypeLine.icon("3h")
+      
+      self.cells[0][1].button( \
+        "Data",
+        "option:toggle:DownloadData",
+        self.get('DownloadData') and 'checked' or 'unchecked')
+      self.cells[1][1].button( \
+        "Maps",
+        "option:toggle:DownloadMaps",
+        self.get('DownloadMaps') and 'checked' or 'unchecked')
+      self.cells[2][1].button( \
+        "POI",
+        "option:toggle:DownloadPOI",
+        self.get('DownloadPOI') and 'checked' or 'unchecked')
+
+      distanceLine = self.cells[0][2].copyAndExtendTo(self.cells[2][2])
+      distanceLine.icon("3h")
+      
+      self.cells[0][2].button( \
+        "20km",
+        "option:set:DownloadRange:20",
+        self.get('DownloadRange') == '20' and 'selected' or 'unselected')
+      self.cells[1][2].button( \
+        "100km",
+        "option:set:DownloadRange:100",
+        self.get('DownloadRange') == '100' and 'selected' or 'unselected')
+      self.cells[2][2].button( \
+        "500km",
+        "option:set:DownloadRange:500",
+        self.get('DownloadRange') == '500' and 'selected' or 'unselected')
+      
+      detailLine = self.cells[0][3].copyAndExtendTo(self.cells[1][3])
+      detailLine.icon("2h")
+      
+      self.cells[0][3].button( \
+        "This zoom",
+        "option:set:DownloadDetail:selected",
+        self.get('DownloadDetail') == 'selected' and 'selected' or 'unselected')
+      self.cells[1][3].button( \
+        "All zoom",
+        "option:set:DownloadDetail:all",
+        self.get('DownloadDetail') == 'all' and 'selected' or 'unselected')
+      
+      self.cells[2][3].button("Go",None,"download")
+
+
     def menu_sketch_colour(self):
       self.backButton(0,0)
       self.colourMenu(1,0, 0,1,0, 'sketch')

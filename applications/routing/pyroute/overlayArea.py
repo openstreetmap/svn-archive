@@ -80,15 +80,17 @@ class overlayArea:
         # Rectangle
         if(not icon):
           if(text):
-            self.iconSet.draw(self.cr,"generic",self.x1,self.y1,self.w,self.h)
+            self.icon("generic")
           else:
-            self.iconSet.draw(self.cr,"blank",self.x1,self.y1,self.w,self.h)
+            self.icon("blank")
         else:
-            self.iconSet.draw(self.cr,icon,self.x1,self.y1,self.w,self.h)
+            self.icon(icon)
         if(text):
             self.drawTextSomewhere(text,0.2,0.6,0.8,0.8)
         if(event):
             self.setEvent(event)
+    def icon(self, icon):
+      self.iconSet.draw(self.cr,icon,self.x1,self.y1,self.w,self.h)
     def setEvent(self,text):
         self.event = text
     def xc(self,p):
@@ -104,6 +106,15 @@ class overlayArea:
             y1,
             self.xc(px2) - x1,
             self.yc(py2) - y1,
+            self.modules,
+            self.iconSet))
+    def copyAndExtendTo(self,otherRect):
+        return(overlayArea( \
+            self.cr,
+            self.x1,
+            self.y1,
+            otherRect.x2 - self.x1,
+            otherRect.y2 - self.y1,
             self.modules,
             self.iconSet))
     def xsplit(self,p):

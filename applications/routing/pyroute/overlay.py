@@ -126,6 +126,25 @@ class guiOverlay(pyrouteModule):
       colourMenu.setEvent("menu:sketch_colour")
       # TODO: all clickable places to global array/module
           
+    def menu_gps(self):
+      self.backButton(0,0)
+      
+      selectLine = self.cells[0][1].copyAndExtendTo(self.cells[2][1])
+      selectLine.icon("3h")
+      mode = self.get("PositionMode")
+      self.cells[0][1].button( \
+        "GPSd",
+        "option:set:PositionMode:gpsd",
+        mode == 'gpsd' and 'selected' or 'unselected')
+      self.cells[1][1].button( \
+        "Manual",
+        "option:set:PositionMode:manual",
+        mode == 'manual' and 'selected' or 'unselected')
+      self.cells[2][1].button( \
+        "pos.txt",
+        "option:set:PositionMode:txt",
+        mode == 'txt' and 'selected' or 'unselected')
+      
     def menu_sketch_colour(self):
       self.backButton(0,0)
       self.colourMenu(1,0, 0,1,0, 'sketch')

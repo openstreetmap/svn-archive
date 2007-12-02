@@ -204,7 +204,7 @@ class guiOverlay(pyrouteModule):
         "option:set:DownloadDetail:all",
         self.get('DownloadDetail') == 'all' and 'selected' or 'unselected')
       
-      self.cells[2][3].button("Go",None,"download")
+      self.cells[2][3].button("Go","download:","download")
 
 
     def menu_sketch_colour(self):

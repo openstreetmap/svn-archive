@@ -1779,7 +1779,7 @@
 
 
 			/* Generic under-construction style - makes any way dashed */
-			.under-construction { stroke: #f8f8f8; stroke-dasharray: 4, 4; stroke-linecap: butt;}
+			.under-construction { stroke-dasharray: 4, 4; stroke-linecap: butt;}
 
 
             /* Ferry */

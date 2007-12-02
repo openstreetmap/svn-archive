@@ -1562,7 +1562,7 @@
 
 
 			/* Generic under-construction style - makes any way dashed */
-			.under-construction { stroke: #f8f8f8; stroke-dasharray: 8, 10; }
+			.under-construction { stroke-dasharray: 8, 10; }
 
 
             /* Ferry */

@@ -24,10 +24,9 @@ include("../../lib/layers.inc");
 showByUser($_GET["id"]);
 
 function showByUser($User){
-  $SelectLimit = 100;
-  $Divisor = 5;
+  $SelectLimit = 20;
   
-  $SQL = sprintf("select * from tiles_meta where `user`=%d order by `date` desc limit %d;", $User,
+  $SQL = sprintf("SELECT x,y,z,type,date from tiles_meta where `user`=%d limit %d;", $User,
   $SelectLimit);
   
   $Result = mysql_query($SQL);
@@ -36,16 +35,14 @@ function showByUser($User){
   if(mysql_num_rows($Result) < 1)
     return(0);
   
-  printf("<p>Selecting %d recent uploaded tiles from user #%d, and displaying about 1/%d randomly-selected ones from that list</p>", 
+  printf("<p>Selecting %d uploaded tiles from user #%d (not necessarily the most recent ones).</p>", 
     $SelectLimit,
-    $User,
-    $Divisor);
+    $User);
   
   # Start the HTML table
   print "<table border=1 cellspacing=0 cellpadding=5>";
   
   while($Data = mysql_fetch_assoc($Result)){
-    if(rand() % $Divisor == 1){
       $Row = array();
 
       $X = $Data["x"];
@@ -73,7 +70,6 @@ function showByUser($User){
 
       # Convert all the data into a row of HTML table
       print "<tr><td>" . implode("</td><td>", $Row) . "</td><tr>\n";
-    }
   }
   print "</table>\n";
 }

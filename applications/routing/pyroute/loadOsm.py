@@ -72,7 +72,7 @@ class LoadOsm(handler.ContentHandler):
     start = clock()
     filename = "data/routing.osm"
     
-    if(not os.path.exists(filename)):
+    if(os.path.exists(filename)):
       os.remove(filename)
     urllib.urlretrieve(url, filename)
     end = clock()

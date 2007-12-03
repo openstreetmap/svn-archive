@@ -45,12 +45,12 @@ class lib_gpx(handler.ContentHandler):
   	      cr.line_to(x,y)
       cr.stroke()
       
-  def saveAs(self,filename):
+  def saveAs(self,filename, title="untitled"):
 		file = open(filename,"w")
 		file.write("<?xml version=\"1.0\"?>\n")
 		file.write('<gpx>\n')
 		file.write('<trk>\n')
-		file.write('<name>Sketch</name>\n')
+		file.write('<name>%s</name>\n' % title)
 		for l in self.lines:
 			file.write('<trkseg>\n')
 			for p in l:

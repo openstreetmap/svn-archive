@@ -109,7 +109,11 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['osmdata'].loadfile("data/routing.osm")
     print "Loaded OSM data in %1.3f ms" % (1000.0 * (clock() - a))
     self.timer = gobject.timeout_add(100, update, self)
-
+  
+  def beforeDie(self):
+    print "Handling last few checks before we close"
+    self.m['tracklog'].checkIfNeedsSaving(True)
+  
   def update(self):
     self.updatePosition()
     if(self.get("needRedraw")):
@@ -129,7 +133,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
     if ((oldpos['valid']) and (oldpos['lon'] == newpos['lon']) and (oldpos['lat'] == oldpos['lat'])):
         return
 
-
     # TODO: if we set ownpos and then get a GPS signal, we should decide
     # here what to do
     self.set('ownpos', newpos)
@@ -144,6 +147,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     # Add latest position to tracklog  
     if(self.get('logging')):
       self.m['tracklog'].addPoint(pos['lat'], pos['lon'])
+      self.m['tracklog'].checkIfNeedsSaving()
     
     # If we've never actually decided where to display a map yet, do so now
     if(not self.modules['projection'].isValid()):
@@ -343,6 +347,7 @@ class GuiBase:
     # Finalise the window
     win.show_all()
     gtk.main()
+    self.mapWidget.beforeDie()
     
   def pressed(self, event):
     self.dragstartx = event.x

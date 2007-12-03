@@ -325,7 +325,7 @@ sub uploadIfEnoughTiles
     {
         while(my $File = readdir($dp))
         {
-            $ZipCount++ if ($File =~ /\.zip/);
+            $ZipCount++ if ($File =~ /\.zip$/);
         }
         closedir($dp);
     }

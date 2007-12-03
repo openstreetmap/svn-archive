@@ -76,6 +76,7 @@ sub save_way()
             print OUT "  <tag k=\"name\" v=\"Border ???? - ????\" />\n";
             print OUT "  <tag k=\"boundary\" v=\"administrative\" />\n";
             print OUT "  <tag k=\"border_type\" v=\"nation\" />\n";
+            print OUT "  <tag k=\"admin_level\" v=\"2\" />\n";
             print OUT "  <tag k=\"left:country\" v=\"????\" />\n";
             print OUT "  <tag k=\"right:country\" v=\"????\" />\n";
         }

@@ -305,15 +305,21 @@ class guiOverlay(pyrouteModule):
 
         self.cells[0][2].button("Data","menu:data","data")
         self.cells[1][2].button("","",None)
-        self.cells[2][2].icon("generic")        
-        self.cells[2][2].button("Sketch mode","+option:toggle:sketch",self.get("sketch") and "checked" or "unchecked")
+        self.checkbox(2,2,"Sketch mode","sketch",True)
 
-        self.cells[0][3].icon("generic")
-        self.cells[0][3].button("Centre me","option:toggle:centred",self.get("centred") and "checked" or "unchecked")
+        self.checkbox(0,3, "Centre me","centred")
         #self.cells[1][3].button("Options","menu:options",None)
         self.cells[1][3].button(None,None,None)
         self.cells[2][3].button("Mode","menu:mode","mode")
 
+    def checkbox(self, x,y, label, setting, returnToMap = False):
+      button = self.cells[x][y]
+      button.icon("generic")
+      action = "option:toggle:%s" % setting
+      if(returnToMap):
+        action = "+" + action
+      button.button(label, action, self.get(setting) and "checked" or "unchecked")
+    
     def menu_click(self):
         self.backButton(0,0)
         

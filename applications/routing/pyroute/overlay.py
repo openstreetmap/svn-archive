@@ -241,6 +241,8 @@ class guiOverlay(pyrouteModule):
       self.menu_list("geonames")
     def menu_waypoints(self):
       self.menu_list("waypoints")
+    def menu_poi(self):
+      self.menu_list("osm")
       
     def menu_list(self, module):
       self.backButton(0,0)

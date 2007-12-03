@@ -70,7 +70,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 
   def storeNode(self, n):
     x = poi(n['lat'], n['lon'])
-    x.title = n.get('name', '?')
+    x.title = n.get('amenity','') + ': ' + n.get('name', '?')
     self.loadingGroup.items.append(x)
 
   def save(self):

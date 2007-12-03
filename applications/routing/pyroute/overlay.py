@@ -95,6 +95,14 @@ class guiOverlay(pyrouteModule):
     
       # Make the buttons clickable
       self.cells[0][0].setEvent("menu:main")
+      
+      # New-style zoom buttons on map: much smaller
+      if(0):
+        z1 = self.cells[2][0].copyself(0.5,0,1,0.5)
+        z2 = self.cells[2][0].copyself(0.5,0.5,1,1)
+        z1.button("ZOUT",None,None)
+        z2.button("ZIN",None,None)
+
 
     def drawMenu(self, menu):
       try:

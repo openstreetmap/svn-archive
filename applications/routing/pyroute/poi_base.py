@@ -27,6 +27,7 @@ class poiModule(pyrouteModule):
   def __init__(self, modules):
     pyrouteModule.__init__(self, modules)
     self.groups = []
+    self.draw = True
 
   def report(self):
     for g in self.groups:

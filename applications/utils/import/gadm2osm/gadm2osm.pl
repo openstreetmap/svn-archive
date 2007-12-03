@@ -36,9 +36,11 @@ sub read_shapes
 	    
 	    foreach my $point (@points)
 	    {
-	        print "    Point " . $point . "\n";
+	        # print "    Point " . $point . "\n";
 	    }
 	}
+
+	print "\n";
 }
 
 
@@ -48,5 +50,11 @@ sub read_shapes
 
 # read_shapes("data/world_bnd_m");
 # read_shapes("data/world_boundaries_m");
-read_shapes("data/GADM_v0-6");
+# read_shapes("data/GADM_v0-6");
 
+read_shapes("data/TUR0");
+read_shapes("data/TUR1");
+
+read_shapes("data/TUR_water_areas_dcw");
+
+read_shapes("data/TUR_water_lines_dcw");

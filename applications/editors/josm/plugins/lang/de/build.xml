@@ -7,7 +7,8 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="../../../../editors/josm/dist/josm-custom.jar" destdir="bin" />
+		<javac srcdir="src" classpath="../josm/dist/josm-custom.jar" destdir="bin" />
+		<copy file="src/org/openstreetmap/josm/i18n.properties" tofile="bin/org/openstreetmap/josm/i18n.properties" />
 	</target>
 	
 	<!-- install entry point for eclipse user -->
@@ -16,6 +17,7 @@
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />
 				<attribute name="Plugin-Description" value="German translation / Deutsche Übersetzung." />
+				<attribute name="Plugin-Author" value="sven@anders-hanburg.de" />
 				<attribute name="Plugin-Early" value="true" />
 			</manifest>
 		</jar>
@@ -27,13 +29,13 @@
 
 	<target name="find">
 		<exec executable="find" output="alljava.txt">
-			<arg line="../../../../editors/josm/src ../ -name '*.java'"/>
+			<arg line="../josm/src ../ -name '*.java'"/>
 		</exec>
 	</target>
 	
 	<target name="xgettext">
 		<exec executable="xgettext">
-			<arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -okeys.pot -falljava.txt"/>
+			<arg line="--from-code=iso-8859-1 -ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -okeys.pot -falljava.txt"/>
 		</exec>
 	</target>
 

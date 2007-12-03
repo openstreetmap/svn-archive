@@ -104,7 +104,10 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.set('ownpos', {'valid':False})
     self.updatePosition()
+    
+    a = clock()
     self.modules['osmdata'].loadfile("data/routing.osm")
+    print "Loaded OSM data in %1.3f ms" % (1000.0 * (clock() - a))
     self.timer = gobject.timeout_add(100, update, self)
 
   def update(self):

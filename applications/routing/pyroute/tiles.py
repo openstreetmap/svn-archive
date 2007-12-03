@@ -105,6 +105,7 @@ class tileHandler(pyrouteModule):
       self.threads[name].start()
     else:
       downloadTile(x,y,z,layer,filename)
+    self.set("needRedraw", True)
     
   def drawImage(self,cr, tile, bbox):
     """Draw a tile image"""

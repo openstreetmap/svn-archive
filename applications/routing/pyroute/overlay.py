@@ -296,8 +296,8 @@ class guiOverlay(pyrouteModule):
 
     def menu_main(self):
         self.backButton(0,0)
-        self.cells[1][0].button("Zoom in","zoom:in",None)
-        self.cells[2][0].button("Zoom out","zoom:out",None)
+        self.cells[1][0].button("Zoom out","+zoom:out",None)
+        self.cells[2][0].button("Zoom in","+zoom:in",None)
 
         self.cells[0][1].button("View","menu:view","view")
         self.cells[1][1].button("GPS","menu:gps","gps")

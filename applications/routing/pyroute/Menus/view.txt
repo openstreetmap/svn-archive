@@ -5,7 +5,7 @@ Wiki|menu:geonames
 -----
 Business|menu:search
 RSS|menu:feeds
-Bookmarks
+POIs|menu:poi
 -----
 Routes
 Waypoints|menu:waypoints

@@ -57,6 +57,7 @@ from dataStore import *
 from poi_geoRss import geoRss
 from poi_geonames import geonames
 from poi_waypoints import waypointsModule
+from poi_osm import osmPoiModule
 from base import pyrouteModule
 from tiles import tileHandler
 from events import pyrouteEvents
@@ -77,7 +78,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
   def __init__(self):
     gtk.Widget.__init__(self)
     self.draw_gc = None
-    self.timer = gobject.timeout_add(100, update, self)
     
     self.modules = {'poi':{}}
     pyrouteModule.__init__(self, self.modules)
@@ -85,6 +85,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     #self.modules['poi']['rss'] = geoRss(self.modules, 'Setup/feeds.txt')
     #self.modules['poi']['geonames'] = geonames(self.modules)
     self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
+    #self.modules['poi']['osm'] = osmPoiModule(self.modules)
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
     self.modules['tiles'] = tileHandler(self.modules)
@@ -101,9 +102,10 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['tracklog'] = tracklog(self.modules)
     # self.modules['tracklog'].load("data/track.gpx")
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
-    self.updatePosition()
     self.set('ownpos', {'valid':False})
+    self.updatePosition()
     self.modules['osmdata'].loadfile("data/routing.osm")
+    self.timer = gobject.timeout_add(100, update, self)
 
   def update(self):
     self.updatePosition()
@@ -119,6 +121,12 @@ class MapWidget(gtk.Widget, pyrouteModule):
     if(not newpos['valid']):
       return
     
+    #check if new pos is different than current
+    oldpos = self.get('ownpos');
+    if ((oldpos['valid']) and (oldpos['lon'] == newpos['lon']) and (oldpos['lat'] == oldpos['lat'])):
+        return
+
+
     # TODO: if we set ownpos and then get a GPS signal, we should decide
     # here what to do
     self.set('ownpos', newpos)
@@ -245,15 +253,16 @@ class MapWidget(gtk.Widget, pyrouteModule):
       
       # Each plugin can display on the map
       for name,source in self.modules['poi'].items():
-        for group in source.groups:
-          for item in group.items:
-            x,y = proj.ll2xy(item.lat, item.lon)
-            if(proj.onscreen(x,y)):
-              cr.set_source_rgb(0.0, 0.4, 0.0)
-              cr.set_font_size(12)
-              cr.move_to(x,y)
-              cr.show_text(item.title)
-              cr.stroke()
+        if source.draw:
+          for group in source.groups:
+            for item in group.items:
+              x,y = proj.ll2xy(item.lat, item.lon)
+              if(proj.onscreen(x,y)):
+                cr.set_source_rgb(0.0, 0.4, 0.0)
+                cr.set_font_size(12)
+                cr.move_to(x,y)
+                cr.show_text(item.title)
+                cr.stroke()
 
       self.m['sketch'].draw(cr,proj)
       self.m['tracklog'].draw(cr,proj)
@@ -304,6 +313,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
   def do_expose_event(self, event):
     self.chain(event)
     cr = self.window.cairo_create()
+    print "expose"
     return self._expose_cairo(event, cr)
 
 class GuiBase:

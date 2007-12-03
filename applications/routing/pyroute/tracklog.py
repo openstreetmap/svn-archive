@@ -32,6 +32,17 @@ class tracklog(pyrouteModule, lib_gpx):
     pyrouteModule.__init__(self, modules)
     self.active = []
     self.lines.append(self.active)
+    self.pointsSinceSave = 0
     
   def addPoint(self,lat,lon):
     self.active.append([lat,lon])
+    self.pointsSinceSave = self.pointsSinceSave + 1
+
+  def checkIfNeedsSaving(self, forceSave = False):
+    if(self.pointsSinceSave > 20 or forceSave):
+      self.save()
+      
+  def save(self):
+    self.saveAs("data/tracklogs.gpx", "tracklogs")
+    self.pointsSinceSave = 0
+    

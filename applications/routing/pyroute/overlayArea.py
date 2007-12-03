@@ -89,6 +89,7 @@ class overlayArea:
             self.drawTextSomewhere(text,0.2,0.6,0.8,0.8)
         if(event):
             self.setEvent(event)
+
     def icon(self, icon):
       self.iconSet.draw(self.cr,icon,self.x1,self.y1,self.w,self.h)
     def setEvent(self,text):

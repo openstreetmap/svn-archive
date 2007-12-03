@@ -103,6 +103,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.updatePosition()
     self.set('ownpos', {'valid':False})
+    self.modules['osmdata'].loadfile("data/routing.osm")
 
   def update(self):
     self.updatePosition()

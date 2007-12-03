@@ -13,5 +13,5 @@ Drawings
 -----
 Events
 
-
+Map type|menu:maptype
 -----

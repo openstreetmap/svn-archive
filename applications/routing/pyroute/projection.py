@@ -48,7 +48,6 @@ class Projection:
   def recentre(self,lat,lon,zoom = None):
     """Move the projection to a particular geographic location
     (with optional zoom level)"""
-    print "centering on %1.3f, %1.3f" % (lat,lon)
     self.lat = lat
     self.lon = lon
     if(zoom != None):

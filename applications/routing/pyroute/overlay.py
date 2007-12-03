@@ -80,29 +80,22 @@ class guiOverlay(pyrouteModule):
           self.mapOverlay()
 
     def mapOverlay(self):
-      if(self.get('showHints')):
+      if(1):
         self.cells[0][0].button("Menu",None,"hint")
-        self.cells[1][0].button("Zoom out",None,"hint")
-        self.cells[2][0].button("Zoom in",None,"hint")
-        
-      # Tickmarks to show where the 3 active buttons are
-      self.cr.set_line_width(2)
-      self.cr.set_dash((10,5), 0);
-      self.cr.set_source_rgba(0.4,0,0)
-      for x in (0,1,2):
-        button = self.cells[x][0]
-        self.cr.move_to(button.x1,button.y2)
-        self.cr.line_to(button.x2,button.y2)
-        if(x < 2):
-          self.cr.line_to(button.x2,button.yc(0.7))
-      self.cr.stroke()
+      else:
+	      # Tickmark to show where the active button is
+	      self.cr.set_line_width(2)
+	      self.cr.set_dash((10,5), 0);
+	      self.cr.set_source_rgba(0.4,0,0)
+	      button = self.cells[0][0]
+	      self.cr.move_to(button.xc(0.5),button.y2)
+	      self.cr.line_to(button.x2,button.y2)
+	      self.cr.line_to(button.x2,button.yc(0.5))
+	      self.cr.stroke()
     
       # Make the buttons clickable
       self.cells[0][0].setEvent("menu:main")
-      self.cells[1][0].setEvent("zoom:out")
-      self.cells[2][0].setEvent("zoom:in")
 
-      
     def drawMenu(self, menu):
       try:
         self.genericMenu(self.menus[menu])
@@ -300,6 +293,26 @@ class guiOverlay(pyrouteModule):
           self.clickable.append(button)
         except IndexError:
           pass
+
+    def menu_main(self):
+        self.backButton(0,0)
+        self.cells[1][0].button("Zoom in","zoom:in",None)
+        self.cells[2][0].button("Zoom out","zoom:out",None)
+
+        self.cells[0][1].button("View","menu:view","view")
+        self.cells[1][1].button("GPS","menu:gps","gps")
+        self.cells[2][1].button("Download","menu:download","download")
+
+        self.cells[0][2].button("Data","menu:data","data")
+        self.cells[1][2].button("","",None)
+        self.cells[2][2].icon("generic")        
+        self.cells[2][2].button("Sketch mode","+option:toggle:sketch",self.get("sketch") and "checked" or "unchecked")
+
+        self.cells[0][3].icon("generic")
+        self.cells[0][3].button("Centre me","option:toggle:centred",self.get("centred") and "checked" or "unchecked")
+        #self.cells[1][3].button("Options","menu:options",None)
+        self.cells[1][3].button(None,None,None)
+        self.cells[2][3].button("Mode","menu:mode","mode")
 
     def menu_click(self):
         self.backButton(0,0)

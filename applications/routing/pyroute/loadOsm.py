@@ -30,6 +30,7 @@
 import sys
 import os
 from xml.sax import make_parser, handler
+import xml
 import urllib
 from time import clock
 
@@ -54,9 +55,15 @@ class LoadOsm(handler.ContentHandler):
     self.loadfile(filename)
     
   def loadfile(self, filename):
-    parser = make_parser()
-    parser.setContentHandler(self)
-    parser.parse(filename)
+    if(not os.path.exists(filename)):
+      print "No such data file %s" % filename
+      return
+    try:
+      parser = make_parser()
+      parser.setContentHandler(self)
+      parser.parse(filename)
+    except xml.sax._exceptions.SAXParseException:
+      print "Error loading %s" % filename
   
   def download(self,lat,lon,size):
     url = "http://osm.test.le.ac.uk/api/0.5/way[%1.4f,%1.4f,%1.4f,%1.4f][*=*]" % (lon-size,lat-size,lon+size,lat+size)
@@ -64,11 +71,15 @@ class LoadOsm(handler.ContentHandler):
     print "downloading %s" % url
     start = clock()
     filename = "data/routing.osm"
+    
+    if(not os.path.exists(filename)):
+      os.remove(filename)
     urllib.urlretrieve(url, filename)
     end = clock()
     delay = end - start 
     print "finished downloading, took %1.1f s" % (delay)
     self.loadfile(filename)
+    
   def report(self):
     """Display some info about the loaded data"""
     report = "Loaded %d nodes,\n" % len(self.nodes.keys())

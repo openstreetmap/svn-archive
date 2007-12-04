@@ -60,15 +60,41 @@ void saveTags(struct tags *p,struct nodes *n){
 
 char * addText(char * text)
 {
-	char * storetext;
-	char ** p;
-	storetext = (char *) calloc(1,(strlen(text)+1)*sizeof(char));
+	char *storetext;
+	char **p;
+	unsigned char *ptr;
+	char *ptr2;
+	/* Calculate length of string in UTF-8 */
+	{
+		int textlen = 0;
+		for( ptr = (unsigned char*)text; *ptr; ptr++ )
+			if( *ptr >= 0x80 )
+				textlen += 2;
+			else
+				textlen += 1;
+		storetext = (char *) calloc(1,(textlen+1)*sizeof(char));
+	}
 	if (storetext==NULL)
 	{
 		fprintf(stderr,"out of memory\n");
 		exit(1);
 	}
-	strcpy(storetext,text);
+	/* Copy text to buffer, converting to UTF-8 in the process */
+	ptr2 = storetext;
+	for( ptr = (unsigned char *)text; *ptr; ptr++ )
+		if( *ptr >= 0x80 )
+		{
+			ptr2[0] = 0xC0 | (*ptr >> 6);
+			ptr2[1] = 0x80 | (*ptr & 0x3F);
+			ptr2 += 2;
+		}
+		else
+		{
+			*ptr2 = *ptr;
+			ptr2++;
+		}
+	*ptr2 = 0;
+	/* Check into table */
 	p=(char **) rb_probe (text_table, storetext);
 	if (*p!=storetext)
 	{

@@ -221,6 +221,11 @@ elsif ($Mode eq "loop")
 
         if (-e "stopfile.txt")
         {
+            if ($Config{"ForkForUpload"} && $upload_pid != -1)
+            {
+                statusMessage("Waiting for previous upload process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                waitpid($upload_pid, 0);
+            }
             cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID);
         }
 

@@ -97,6 +97,7 @@ int postgres = 0;
 int osmChange = 0;
 int simplify = 0;
 char FileID[16];
+char *Prefix;
 
 static int use_boundingbox = 0;
 static double mybox_min[2],mybox_max[2];
@@ -158,7 +159,7 @@ int Colinear( struct nodes *n1, struct nodes *n2, double y, double x )
 		return 0;
 }
 
-int readfile(char * inputfile)
+int readfile(char *suffix)
 {
     SHPHandle	hSHP;
     DBFHandle   hDBF;
@@ -168,7 +169,10 @@ int readfile(char * inputfile)
     char	szTitle[12];
     double 	adfMinBound[4], adfMaxBound[4];
 
-
+    char *inputfile = malloc( strlen(suffix) + strlen(Prefix) + 5 );
+    strcpy( inputfile, Prefix );
+    strcat( inputfile, suffix );
+    
 /* -------------------------------------------------------------------- */
 /*      Open the passed shapefile.                                      */
 /* -------------------------------------------------------------------- */
@@ -359,6 +363,8 @@ int readfile(char * inputfile)
     SHPClose( hSHP );
     DBFClose( hDBF );
 
+    free(inputfile);
+
 #ifdef USE_DBMALLOC
     malloc_dump(2);
 #endif
@@ -374,19 +380,19 @@ static void bbox_error(void)
 }
 
 
-#define FILENAME "020"
+#define DEFAULT_PREFIX "020"
 int main(int argc, char ** argv )
 {
 	int c;
 	int do_borders = 1;
 	char *s, *s1, *s2, *s3, *s4, *p;
-	
+	Prefix = DEFAULT_PREFIX;
 
 	init_tags();
 	init_ways();
 	init_nodes();
 	init_relations();
-	while ((c = getopt (argc, argv, "b:np?C:cs")) != -1)
+	while ((c = getopt (argc, argv, "b:np?C:P:cs")) != -1)
 		switch (c)
 		{
 		case 'b':
@@ -427,6 +433,9 @@ int main(int argc, char ** argv )
 		case 'p':
 			postgres = 1;
 			break;
+		case 'P':
+			Prefix = strdup(optarg);
+			break;
 		case 's':
 			simplify = 1;
 			break;
@@ -448,11 +457,16 @@ int main(int argc, char ** argv )
 			                 "   -b minlon,minlat,maxlon,maxlat   - Bounding box to extract\n"
 			                 "   -n                               - Do not extract borders\n"
 			                 "   -p                               - Output postgresql SQL files\n"
+			                 "   -P                               - Prefix of files to process\n"
 			                 "   -s                               - simplify output by removing redundant nodes\n"
 			                 "   -c                               - Output osmChange format\n");
 			exit(1);
 		}
 	
+	char *outfile = "AND2osm.osm";
+	if( argv[optind] )
+		outfile = argv[optind];
+		
 	Err_ND_attached_to_way=0;
 	Err_more_NDIDs_per_node=0;
 	oneway_way_reversed=0;	
@@ -463,30 +477,30 @@ int main(int argc, char ** argv )
 	
 	if (access( "and_nodes.shp", F_OK) == 0)
 		readfile( "and_nodes");
-	readfile(FILENAME "_nosr_p");
-	readfile(FILENAME "_nosr_r");
+	readfile("_nosr_p");
+	readfile("_nosr_r");
 	if (do_borders) 
 	{
-		readfile(FILENAME "_admin0");
-		readfile(FILENAME "_admin1");
-		readfile(FILENAME "_admin8");
+		readfile("_admin0");
+		readfile("_admin1");
+		readfile("_admin8");
 	}
-	readfile(FILENAME "_a");
-	readfile(FILENAME "_ce");
-	readfile(FILENAME "_c");
-	readfile(FILENAME "_f");
-	readfile(FILENAME "_gf");
-	readfile(FILENAME "_in");
-	readfile(FILENAME "_i");
+	readfile("_a");
+	readfile("_ce");
+	readfile("_c");
+	readfile("_f");
+	readfile("_gf");
+	readfile("_in");
+	readfile("_i");
 	if (do_borders)
 	{
-		readfile(FILENAME "_o");
+		readfile("_o");
 	}
-	readfile(FILENAME "_pk");
-	readfile(FILENAME "_r_p");
-	readfile(FILENAME "_r_r");
-	readfile(FILENAME "_w");
-	openOutput();
+	readfile("_pk");
+	readfile("_r_p");
+	readfile("_r_r");
+	readfile("_w");
+	openOutput(outfile);
 	save();
 	closeOutput();
 	printf("\nErr_ND_attached_to_way=%li\n",Err_ND_attached_to_way);
@@ -496,6 +510,7 @@ int main(int argc, char ** argv )
 	printf("way \"fromID\" refers to not present AND ID=%li\n",Err_fromID_without_ANDID);
 	if( simplify )
 		printf("Useless inbetween nodes skipped: %d, deleted: %d\n", Nodes_Skipped, Nodes_Deleted);
+		
 	return 0;
 	
 }

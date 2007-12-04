@@ -75,7 +75,7 @@ struct relations {
         struct attachedWays *ways;
 };
 
-int openOutput();
+int openOutput(char *outfile);
 int closeOutput();
 void save();
 long incr (long i);

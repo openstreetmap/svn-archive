@@ -60,7 +60,7 @@ long incr (long i) {
 		return i-1;
 }
 
-int openOutput()
+int openOutput(char *outfile)
 {
 	if (postgres)
 	{
@@ -84,7 +84,7 @@ int openOutput()
 	}
 	else
 	{
-		fp=fopen("AND2osm.osm","w");
+		fp=fopen(outfile,"w");
 		if (fp==NULL)
 		{
 			printf("error opening file, exiting...");

@@ -13,11 +13,10 @@
    width="1000px"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45"
+   inkscape:version="0.45.1"
    sodipodi:docname="icons.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   sodipodi:docbase="/home/owhite/OpenStreetmap/pyroute/icons"
-   sodipodi:modified="TRUE">
+   sodipodi:docbase="C:\home\osm\pyroute\icons">
   <sodipodi:namedview
      inkscape:window-height="917"
      inkscape:window-width="1206"
@@ -6281,4 +6280,47 @@
      inkscape:export-ydpi="92.790405"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2975"
+     x="73.358665"
+     y="1124.9651"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_in.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="opacity:0.49818181;fill:#c9d2ed;fill-opacity:1;stroke:#9195a6;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <path
+     style="opacity:1;color:#000000;fill:#565656;fill-opacity:0.35643568;fill-rule:nonzero;stroke:none;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+     d="M 128.76254,1137.9427 C 127.65454,1137.9427 126.76253,1138.8347 126.76254,1139.9427 L 126.76254,1158.4427 L 108.26254,1158.4427 C 107.15454,1158.4427 106.26254,1159.3347 106.26254,1160.4427 L 106.26254,1160.7552 C 106.26254,1161.8632 107.15454,1162.7553 108.26254,1162.7552 L 126.76254,1162.7552 L 126.76254,1181.2552 C 126.76254,1182.3632 127.65453,1183.2552 128.76254,1183.2552 L 129.04379,1183.2552 C 130.15179,1183.2552 131.04379,1182.3632 131.04379,1181.2552 L 131.04379,1162.7552 L 149.57504,1162.7552 C 150.68304,1162.7552 151.57504,1161.8633 151.57504,1160.7552 L 151.57504,1160.4427 C 151.57504,1159.3347 150.68304,1158.4427 149.57504,1158.4427 L 131.04379,1158.4427 L 131.04379,1139.9427 C 131.04379,1138.8347 130.15179,1137.9427 129.04379,1137.9427 L 128.76254,1137.9427 z "
+     id="rect3966"
+     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_in.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     style="opacity:1;color:#000000;fill:#565656;fill-opacity:0.35643568;fill-rule:nonzero;stroke:none;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+     id="rect3970"
+     width="45.316906"
+     height="4.2972927"
+     x="104.69768"
+     y="1287.3715"
+     rx="2"
+     ry="2"
+     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_out.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect3973"
+     x="71.796013"
+     y="1253.1025"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_out.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="opacity:0.49818181;fill:#c9d2ed;fill-opacity:1;stroke:#9195a6;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
 </svg>

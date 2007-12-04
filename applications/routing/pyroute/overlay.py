@@ -82,6 +82,8 @@ class guiOverlay(pyrouteModule):
     def mapOverlay(self):
       if(1):
         self.cells[0][0].button("Menu",None,"hint")
+        self.cells[1][0].button("","zoom:out","zoom_out")
+        self.cells[2][0].button("","zoom:in","zoom_in")
       else:
 	      # Tickmark to show where the active button is
 	      self.cr.set_line_width(2)
@@ -306,8 +308,7 @@ class guiOverlay(pyrouteModule):
 
     def menu_main(self):
         self.backButton(0,0)
-        self.cells[1][0].button("Zoom out","+zoom:out",None)
-        self.cells[2][0].button("Zoom in","+zoom:in",None)
+
 
         self.cells[0][1].button("View","menu:view","view")
         self.cells[1][1].button("GPS","menu:gps","gps")

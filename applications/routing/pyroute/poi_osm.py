@@ -87,4 +87,5 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 
 if __name__ == "__main__":
   nodes = osmPoiModule(None)
-  nodes.report()
+  nodes.sort({'valid':True,'lat':51.3,'lon':-0.2})
+  #nodes.report()

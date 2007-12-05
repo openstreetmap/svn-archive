@@ -260,7 +260,6 @@ class guiOverlay(pyrouteModule):
       self.clickable.append(back)
       self.clickable.append(next)
 
-
       self.dragbar = self.rect.copyself(0.0,0.25,0.88,1.0)
 
       try:
@@ -271,6 +270,8 @@ class guiOverlay(pyrouteModule):
       except IndexError:
         line2.drawText("No such set #%d"%selectedFeed)
         return
+        
+      group.sort(self.get('ownpos'))
       
       line1.copyself(0.28,0,0.73,1).drawText("Set %d of %d" % (selectedFeed + 1, len(self.modules['poi'][module].groups)))
       

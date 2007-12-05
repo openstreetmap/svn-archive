@@ -162,7 +162,12 @@ if($Mode eq "xy")
     my $Y = shift();
     if( not defined $X or not defined $Y )
     { die "Must specify tile coordinates\n" }
-    my $Zoom = shift() || 12;
+    my $Zoom = shift();
+    if(not defined $Zoom)
+    {
+       $Zoom = 12;
+       statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", $Config{Verbose}, "warning", $progressJobs, $progressPercent,1);
+    }
     GenerateTileset($X, $Y, $Zoom);
 }
 elsif ($Mode eq "loop") 

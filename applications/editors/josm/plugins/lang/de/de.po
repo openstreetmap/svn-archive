@@ -268,7 +268,7 @@ msgstr "Einstellungen"
 #: ../josm/src/org/openstreetmap/josm/actions/OpenAction.java:43
 #: ../trunk/src/org/openstreetmap/josm/actions/OpenAction.java:43
 msgid "Open ..."
-msgstr "Öffnen...."
+msgstr "Öffnen..."
 
 #: ../josm/src/org/openstreetmap/josm/actions/OpenAction.java:43
 #: ../trunk/src/org/openstreetmap/josm/actions/OpenAction.java:43
@@ -447,7 +447,7 @@ msgstr "Teile Weg {0} in {1} Teile"
 #: ../josm/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
 #: ../trunk/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
 msgid "Save as ..."
-msgstr "Speichern unter ...."
+msgstr "Speichern unter ..."
 
 #: ../josm/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
 #: ../trunk/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
@@ -472,7 +472,7 @@ msgstr "CSV Dateien (.csv .txt)"
 #: ../josm/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:36
 #: ../trunk/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:36
 msgid "Join node to way"
-msgstr "Knotenpunkt in den Weg einfügen."
+msgstr "Knotenpunkt in den Weg einfügen"
 
 #: ../josm/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:37
 #: ../trunk/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:37
@@ -1009,7 +1009,7 @@ msgstr "unbenannt"
 #: ../josm/src/org/openstreetmap/josm/actions/CombineWayAction.java:51
 #: ../trunk/src/org/openstreetmap/josm/actions/CombineWayAction.java:51
 msgid "Combine Way"
-msgstr "Weg verbinden."
+msgstr "Weg verbinden"
 
 #: ../josm/src/org/openstreetmap/josm/actions/CombineWayAction.java:51
 #: ../trunk/src/org/openstreetmap/josm/actions/CombineWayAction.java:51

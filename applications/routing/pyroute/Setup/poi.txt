@@ -2,3 +2,19 @@ Pub|amenity=pub
 Pub food|amenity=pub;food=yes
 Restaurant|amenity=restaurant
 Cafe|amenity=cafe
+Supermarket|amenity=supermarket
+DIY|tourism=diy
+Car park|amenity=parking
+Free car park|amenity=parking;cost=free
+Bike park|amenity=cycle_parking
+Lay-by|amenity=layby
+Police Stn|amenity=police
+Fire Stn|amenity=fire
+Hospital|amenity=hospital
+Ranger|amenity=ranger_station
+Pharmacy|amenity=pharmacy
+Car hire|amenity=car_hire
+Bike hire|amenity=bike_hire
+Ski hire|amenity=ski_hire
+Bike shop|amenity=bike_shop
+Garage|amenity=garage

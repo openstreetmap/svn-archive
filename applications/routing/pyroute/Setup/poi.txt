@@ -1,0 +1,4 @@
+Pub|amenity=pub
+Pub food|amenity=pub;food=yes
+Restaurant|amenity=restaurant
+Cafe|amenity=cafe

@@ -6,7 +6,7 @@ Build-Depends: debhelper (>> 3.7.2), pkg-config
 Standards-Version: 3.6.1
 
 Package: openstreetmap-utils
-Architecture: all
+Architecture: any
 Depends: perl, python, libshp1, libmagick9, libfile-slurp-perl, libdate-manip-perl, postgresql-client
 Build-Depends: libshp-dev, libmagick9-dev, libxml2-dev
 Recommends: gpsdrive, mapnik

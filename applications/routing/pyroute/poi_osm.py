@@ -30,22 +30,34 @@ class osmPoiModule(poiModule, handler.ContentHandler):
     self.loadPOIs("all", "amenity|shop=*")
     
   def loadPOIs(self,name,search):
-    self.loadingGroup = poiGroup(name)
-    self.groups.append(self.loadingGroup)
-    
     print "Loading %s (%s)" % (name,search)
     filename = "data/poi_%s.osm" % name
     url = "http://www.informationfreeway.org/api/0.5/node[%s][%s]" % (search, self.bbox())
     
     if(not os.path.exists(filename)):
       urllib.urlretrieve(url, filename)
-    self.load(filename)
+    self.load(filename, "Setup/poi.txt")
         
   def bbox(self):
     # TODO: based on location!
     return "bbox=-6,48,2.5,61"
   
-  def load(self, filename):
+  def load(self, filename, listfile):
+    self.filters = []
+    print "reading listfile %s" % listfile
+    f = open(listfile,"r")
+    try:
+        for line in f:
+            if(len(line) > 1):
+	            text = line.rstrip()
+	            name, filter = text.split('|')
+	            group = poiGroup(name)
+	            self.groups.append(group)
+	            print "Creating group %s" % name
+	            self.filters.append({'name':name,'filter':filter,'group':group})
+    finally:
+        f.close()
+    
     if(not os.path.exists(filename)):
       print "Can't load %s"%filename
       return
@@ -53,6 +65,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
     parser = make_parser()
     parser.setContentHandler(self)
     parser.parse(filename)
+    
   
   def startElement(self, name, attrs):
     if name == "node":
@@ -68,10 +81,19 @@ class osmPoiModule(poiModule, handler.ContentHandler):
       self.storeNode(self.currentNode)
       self.inNode = False
 
+  def passesFilter(self,n,f):
+    k,v = f.split('=',1)
+    if(n.get(k,'') == v):
+      return(True)
+    return(False)
+    
   def storeNode(self, n):
-    x = poi(n['lat'], n['lon'])
-    x.title = n.get('amenity','') + ': ' + n.get('name', '?')
-    self.loadingGroup.items.append(x)
+    for f in self.filters:
+      if(self.passesFilter(n,f['filter'])):
+				x = poi(n['lat'], n['lon'])
+				x.title = n.get('amenity','') + ': ' + n.get('name', '?')
+				#print "%s matches %s" % (x.title, f['name'])
+				f['group'].items.append(x)
 
   def save(self):
     # Default filename if none was loaded

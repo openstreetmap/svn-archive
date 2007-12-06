@@ -82,10 +82,13 @@ class osmPoiModule(poiModule, handler.ContentHandler):
       self.inNode = False
 
   def passesFilter(self,n,f):
-    k,v = f.split('=',1)
-    if(n.get(k,'') == v):
-      return(True)
-    return(False)
+    parts = f.split(';')
+    matched = True
+    for part in parts:
+      k,v = part.split('=',1)
+      if(n.get(k,'') != v):
+        matched = False
+    return(matched)
     
   def storeNode(self, n):
     for f in self.filters:

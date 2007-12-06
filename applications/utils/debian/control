@@ -2,13 +2,12 @@ Source: openstreetmap-utils
 Section: utils
 Priority: optional
 Maintainer: Joerg Ostertag <debian@ostertag.name>
-Build-Depends: debhelper (>> 3.7.2), pkg-config
+Build-Depends: debhelper (>> 3.7.2), pkg-config, libshp-dev, libmagick9-dev, libxml2-dev, grass-dev, libpq-dev, libgeos-dev, libmysql++-dev
 Standards-Version: 3.6.1
 
 Package: openstreetmap-utils
 Architecture: any
 Depends: perl, python, libshp1, libmagick9, libfile-slurp-perl, libdate-manip-perl, postgresql-client
-Build-Depends: libshp-dev, libmagick9-dev, libxml2-dev
 Recommends: gpsdrive, mapnik
 Suggests: java
 Description: OpenStreetmap Utils

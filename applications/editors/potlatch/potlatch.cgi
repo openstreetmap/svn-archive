@@ -123,7 +123,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.5d";	// current version
+	var signature="Potlatch 0.5e";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 
@@ -573,25 +573,26 @@
 				stopDrawing(); uploadSelected(); deselectAll(); 
 			}
 			this.select();
+			_root.clicktime=new Date();
 			this.beginDrag();
 		}
 	};
 	POI.prototype.beginDrag=function() {
 		this.onMouseMove=function() { this.trackDrag(); };
 		this.onMouseUp  =function() { this.endDrag();   };
-		_root.firstxmouse=_root._xmouse;
-		_root.firstymouse=_root._ymouse;
+		_root.firstxmouse=_root.map._xmouse;
+		_root.firstymouse=_root.map._ymouse;
 	};
 	POI.prototype.trackDrag=function() {
-		this._x=_root.map._xmouse; // _root.lastxmouse=_root._xmouse;
-		this._y=_root.map._ymouse; // _root.lastymouse=_root._ymouse;
+		this._x=_root.map._xmouse;
+		this._y=_root.map._ymouse;
 	};
 	POI.prototype.endDrag=function() {
 		this.onMouseMove=function() {};
 		this.onMouseUp  =function() {};
 		var t=new Date();
-		var xdist=Math.abs(_root._xmouse-_root.firstxmouse);
-		var ydist=Math.abs(_root._xmouse-_root.firstymouse);
+		var xdist=Math.abs(_root.map._xmouse-_root.firstxmouse);
+		var ydist=Math.abs(_root.map._ymouse-_root.firstymouse);
 		var longclick=(t.getTime()-_root.clicktime)>300;
 
 		if ((xdist>=tolerance   || ydist>=tolerance  ) ||

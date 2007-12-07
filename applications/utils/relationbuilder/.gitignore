@@ -2,3 +2,5 @@
 /*.osm
 /data
 /target
+/.classpath
+/.project

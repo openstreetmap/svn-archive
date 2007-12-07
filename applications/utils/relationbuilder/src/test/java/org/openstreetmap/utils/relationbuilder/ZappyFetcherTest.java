@@ -67,13 +67,11 @@ public class ZappyFetcherTest
 			float usak_max_lat = 38.7f;
 
 			ZappyFetcher zf = (new ZappyFetcher());
-			URL u = zf.constructURL("node", "place=city", usak_min_lon,
-					usak_max_lon, usak_min_lat, usak_max_lat);
+			URL u = zf.constructURL("node", "place=city", usak_min_lon, usak_max_lon,
+					usak_min_lat, usak_max_lat);
 
-			assertEquals(
-					"URL contruction failure",
-					"http://www.informationfreeway.org/api/0.5/node[place=city][bbox=29.4,38.6,29.5,38.7]",
-					u.toString());
+			assertEquals("URL contruction failure", ZappyFetcher.getURLBASE()
+					+ "node[place=city][bbox=29.4,38.6,29.5,38.7]", u.toString());
 
 		}
 		catch (Exception e)

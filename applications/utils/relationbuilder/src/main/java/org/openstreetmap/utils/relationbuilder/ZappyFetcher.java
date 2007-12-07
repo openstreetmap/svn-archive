@@ -7,10 +7,15 @@ public class ZappyFetcher
 {
 	// private static String DATA_DIR = "data";
 
-	private static String URLBASE = "http://www.informationfreeway.org/api/0.5/";
+	private static final String URLBASE = "http://www.informationfreeway.org/api/0.5/";
 
-	public void fetchWithBB(String type, String predicate, float east,
-			float west, float south, float north)
+	static final String getURLBASE()
+	{
+		return URLBASE;
+	}
+
+	public void fetchWithBB(String type, String predicate, float east, float west,
+			float south, float north)
 	{
 		try
 		{
@@ -23,8 +28,8 @@ public class ZappyFetcher
 		}
 	}
 
-	URL constructURL(String type, String predicate, float east, float west,
-			float south, float north) throws MalformedURLException
+	URL constructURL(String type, String predicate, float east, float west, float south,
+			float north) throws MalformedURLException
 	{
 		StringBuffer urlBuffer = new StringBuffer(URLBASE);
 

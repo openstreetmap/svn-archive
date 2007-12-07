@@ -1,5 +1,9 @@
 package org.openstreetmap.utils.relationbuilder;
 
+/**
+ * @author Hakan Tandogan
+ * 
+ */
 public class RelationBuilder
 {
 	/**

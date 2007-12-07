@@ -3,6 +3,10 @@ package org.openstreetmap.utils.relationbuilder;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * @author Hakan Tandogan
+ * 
+ */
 public class ZappyFetcher
 {
 	// private static String DATA_DIR = "data";

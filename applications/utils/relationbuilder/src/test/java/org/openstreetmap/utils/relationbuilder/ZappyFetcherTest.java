@@ -14,7 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author ext.tandogan
+ * @author Hakan Tandogan
  * 
  */
 public class ZappyFetcherTest

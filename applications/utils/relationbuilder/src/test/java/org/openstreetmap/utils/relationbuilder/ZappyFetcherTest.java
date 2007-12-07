@@ -5,6 +5,8 @@ package org.openstreetmap.utils.relationbuilder;
 
 import static org.junit.Assert.*;
 
+import java.net.URL;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,9 +57,30 @@ public class ZappyFetcherTest
 	 * {@link org.openstreetmap.utils.relationbuilder.ZappyFetcher#constructURL(java.lang.String, java.lang.String, float, float, float, float)}.
 	 */
 	@Test
-	public void testConstructURL()
+	public void testConstructURL_Usak()
 	{
-		fail("Not yet implemented"); // TODO
+		try
+		{
+			float usak_min_lon = 29.4f;
+			float usak_min_lat = 38.6f;
+			float usak_max_lon = 29.5f;
+			float usak_max_lat = 38.7f;
+
+			ZappyFetcher zf = (new ZappyFetcher());
+			URL u = zf.constructURL("node", "place=city", usak_min_lon,
+					usak_max_lon, usak_min_lat, usak_max_lat);
+
+			assertEquals(
+					"URL contruction failure",
+					"http://www.informationfreeway.org/api/0.5/node[place=city][bbox=29.4,38.6,29.5,38.7]",
+					u.toString());
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(System.err);
+			fail("with exception: " + e.getMessage());
+		}
 	}
 
 }

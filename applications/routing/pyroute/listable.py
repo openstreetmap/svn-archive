@@ -31,6 +31,10 @@ class listable:
     """Return the label for any item number"""
     return("-")
   
+  def getItemStatus(self,n):
+    """Return current status for any item number"""
+    return("-")
+  
   def isLocation(self,n):
     """Return true if the item represents a location"""
     return(False)

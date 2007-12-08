@@ -56,6 +56,8 @@ class overlayArea:
         else:
             self.cr.fill()
     def drawTextSomewhere(self,text,px1,py1,px2,py2):
+        if(text == None or text == ''):
+          return
         innerBox = self.copyself(px1,py1,px2,py2)
         innerBox.drawText(text)
     def drawText(self,text):

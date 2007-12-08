@@ -63,6 +63,7 @@ from tiles import tileHandler
 from events import pyrouteEvents
 from sketch import sketching
 from tracklog import tracklog
+from meta import moduleInfo
 
 def update(mapWidget):
   mapWidget.update();
@@ -100,6 +101,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['projection'] = Projection()
     self.modules['projection'].recentre(51.3,-0.1, 9)
     self.modules['tracklog'] = tracklog(self.modules)
+    self.modules['meta'] = moduleInfo(self.modules)
     # self.modules['tracklog'].load("data/track.gpx")
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.set('ownpos', {'valid':False})

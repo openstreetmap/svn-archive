@@ -45,8 +45,11 @@ class overlayArea:
         self.event = None
         self.modules = modules
         self.iconSet = iconSet
-    def fill(self,r,g,b,outline=0):
-        self.cr.set_source_rgb(r,g,b)
+    def fill(self,r,g,b,outline=0,alpha=None):
+        if(alpha == None):
+          self.cr.set_source_rgb(r,g,b)
+        else:
+          self.cr.set_source_rgba(r,g,b,alpha)
         self.cr.rectangle(self.x1,self.y1,self.w,self.h)
         if(outline):
             self.cr.stroke()

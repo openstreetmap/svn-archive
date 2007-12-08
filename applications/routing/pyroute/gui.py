@@ -284,7 +284,8 @@ class MapWidget(gtk.Widget, pyrouteModule):
         cr.set_source_rgb(1.0, 0.0, 0.0)
         cr.arc(x,y,10, 0,2*3.1415)
         cr.fill()
-        
+      
+
     # Overlay (menus etc)
     self.modules['overlay'].draw(cr, self.rect)
     
@@ -320,7 +321,6 @@ class MapWidget(gtk.Widget, pyrouteModule):
   def do_expose_event(self, event):
     self.chain(event)
     cr = self.window.cairo_create()
-    print "expose"
     return self._expose_cairo(event, cr)
 
 class GuiBase:

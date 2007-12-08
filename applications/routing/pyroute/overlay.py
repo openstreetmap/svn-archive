@@ -14,8 +14,6 @@ class guiOverlay(pyrouteModule):
         self.menus = loadMenus('Menus')
         self.dragbar = None
         self.dragpos = 0
-        for name,stuff in self.menus.items():
-          print "Loaded menu %s" % name
 
     def fullscreen(self):
         """Asks if the menu is fullscreen -- if it is, then the
@@ -80,6 +78,9 @@ class guiOverlay(pyrouteModule):
           self.mapOverlay()
 
     def mapOverlay(self):
+      if(self.get("shaded")):
+        self.rect.fill(0,0,0,False,self.get("shade_amount",0.5))
+      
       if(1):
         self.cells[0][0].button("Menu",None,"hint")
         self.cells[1][0].button("","zoom:out","zoom_out")

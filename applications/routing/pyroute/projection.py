@@ -89,7 +89,6 @@ class Projection:
       # If the display is not known yet, then we can't do anything, but we'll
       # mark it as something that needs doing as soon as the display 
       # becomes valid
-      print "Can't find edges"
       self.needsEdgeFind = True
       return
     

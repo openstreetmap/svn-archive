@@ -249,8 +249,6 @@ class guiOverlay(pyrouteModule):
       
     def menu_list(self, module):
       self.backButton(0,0)
-      n = 9
-      offset = int(self.dragpos)
       selectedFeed = int(self.get('selectedFeed',0))
       titlebar = self.rect.copyself(1.0/3.0,0,1,0.25)
       line1, line2 = titlebar.ysplit(0.5)
@@ -277,7 +275,11 @@ class guiOverlay(pyrouteModule):
       line1.copyself(0.28,0,0.73,1).drawText("Set %d of %d" % (selectedFeed + 1, len(self.modules['poi'][module].groups)))
       
       line2.drawText(group.name)
+      self.drawListableItem(group)
       
+    def drawListableItem(self,group):
+      n = 9
+      offset = int(self.dragpos)
       listrect = self.rect.ysplitn(0, 0.25, 1.0, 1, n)
       ownpos = self.get('ownpos')
       for i in range(0,n):

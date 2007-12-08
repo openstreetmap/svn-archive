@@ -85,7 +85,7 @@ class MapWidget(gtk.Widget, pyrouteModule):
     #self.modules['poi']['rss'] = geoRss(self.modules, 'Setup/feeds.txt')
     #self.modules['poi']['geonames'] = geonames(self.modules)
     self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
-    #self.modules['poi']['osm'] = osmPoiModule(self.modules)
+    self.modules['poi']['osm'] = osmPoiModule(self.modules)
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
     self.modules['tiles'] = tileHandler(self.modules)

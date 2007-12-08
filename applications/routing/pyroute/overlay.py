@@ -5,6 +5,7 @@ from pyrouteMenu import *
 from menuIcons import menuIcons
 from overlayArea import overlayArea
 from colorsys import hsv_to_rgb
+import geometry
 
 class guiOverlay(pyrouteModule):
     def __init__(self, modules):
@@ -282,19 +283,28 @@ class guiOverlay(pyrouteModule):
       offset = int(self.dragpos)
       listrect = self.rect.ysplitn(0, 0.25, 1.0, 1, n)
       ownpos = self.get('ownpos')
+      
+      listLen = group.numItems()
       for i in range(0,n):
+        
+        itemNum = i + offset
+        if(itemNum >= listLen):
+          return
+
+        # Separate area
         textarea, button = listrect[i].xsplit(0.88)
         color, textarea = textarea.xsplit(0.025)
         
         # Pattern for the left hand side to show how far down the list
         # we are - model it as a colour, where red is the top, and purple
         # is bottom
-        h = float(i + offset) / float(len(group.items))
+        h = float(itemNum) / float(listLen)
         v = (((i + offset) % 2) == 0) and 1.0 or 0.95
         r,g,b = hsv_to_rgb(h, 1, v)
         color.fill(r,g,b)
         
         if(i > 0):
+          # Line between list items
           self.cr.set_line_width(0.5)
           self.cr.set_dash((2,2,2), 0);
           self.cr.set_source_rgb(0,0,0)
@@ -302,13 +312,30 @@ class guiOverlay(pyrouteModule):
           self.cr.line_to(textarea.x2,textarea.y1)
           self.cr.stroke()
         try:
-          item = group.items[i + offset]
-          textarea.drawTextSomewhere(item.formatText(), 0.1,0.1,0.9,0.5)
-          textarea.drawTextSomewhere(item.formatPos(ownpos), 0.1,0.6,0.9,0.9)
-          button.button("", "+route:%1.5f:%1.5f" % (item.lat, item.lon), "goto")
-          self.clickable.append(button)
+          # Draw each item
+          label = group.getItemText(itemNum)
+          textarea.drawTextSomewhere(label, 0.1,0.1,0.9,0.5)
+          
+          if(group.isLocation(itemNum)):
+            location = group.getItemLatLon(itemNum)
+            positionText = self.formatPosition(location, ownpos)
+            textarea.drawTextSomewhere(positionText, 0.1,0.6,0.9,0.9)
+            button.button("", "+route:%1.5f:%1.5f" % (location[0], location[1]), "goto")
+            self.clickable.append(button)
+          # TODO: else if clickable...
+          
         except IndexError:
           pass
+        
+    def formatPosition(self,pos, ownPos = None):
+      if(ownPos and ownPos['valid']):
+        a = (ownPos['lat'], ownPos['lon'])
+        b = pos
+        return("%1.2fkm %s" % \
+          (geometry.distance(a,b),
+          geometry.compassPoint(geometry.bearing(a,b))))
+      else:
+        return("%f,%f" % (self.lat,self.lon))
 
     def menu_main(self):
         self.backButton(0,0)

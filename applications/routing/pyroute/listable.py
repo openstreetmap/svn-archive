@@ -27,22 +27,23 @@ class listable:
     """Return how many items are available"""
     return(0)
   
-  def getItemText(self,item):
+  def getItemText(self,n):
     """Return the label for any item number"""
     return("-")
   
-  def isLocation(self,item):
+  def isLocation(self,n):
     """Return true if the item represents a location"""
     return(False)
   
-  def getItemLatLon(self,item):
+  def getItemLatLon(self,n):
     """If the item represents a location, return it's position"""
     return(0,0)
   
-  def getItemClickable(self,item):
-    """Return true if the item should have a button to click on"""
+  def getItemClickable(self,n):
+    """If not a location, return true if the item should have a button to click on"""
     return(False)
     
-  def getItemAction(self,item):
+  def getItemAction(self,n):
     """If the item isn't a location, return what happens if it's selected"""
     return("")
+

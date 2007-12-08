@@ -21,9 +21,9 @@ class poi:
     if(ownPos and ownPos['valid']):
       a = (ownPos['lat'], ownPos['lon'])
       b = (self.lat,self.lon)
-      return("%1.2fkm at %03.1f" % \
+      return("%1.2fkm %s" % \
         (geometry.distance(a,b),
-        geometry.bearing(a,b)))
+        geometry.compassPoint(geometry.bearing(a,b))))
     else:
       return("%f,%f" % (self.lat,self.lon))
 

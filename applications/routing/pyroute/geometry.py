@@ -55,8 +55,25 @@ def distance_haversine(a,b):
   d = 6371 * c
   return(d)
 
- 
+def compassPoint(x):
+  points = ('N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW')
+  part = 360.0 / len(points)
+  x = x + 0.5 * part
+  while(x < 0):
+    x = x + 360
+  while(x > 360):
+    x = x - 360
+  point = int(x / part)
+  return(points[point])
+
 if(__name__ == "__main__"):
+  if(0):
+    # Test compass-point names
+    x = -180
+    while(x < 360):
+      print "%05.1f: %s" % (x, compassPoint(x))
+      x = x + 15
+  
   a = (51.478,-0.4856)
   b = (51.477,-0.4328)
 

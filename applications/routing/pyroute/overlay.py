@@ -260,8 +260,6 @@ class guiOverlay(pyrouteModule):
       self.clickable.append(back)
       self.clickable.append(next)
 
-      self.dragbar = self.rect.copyself(0.0,0.25,0.88,1.0)
-
       try:
         group = self.modules['poi'][module].groups[selectedFeed]
       except KeyError:
@@ -283,6 +281,8 @@ class guiOverlay(pyrouteModule):
       offset = int(self.dragpos)
       listrect = self.rect.ysplitn(0, 0.25, 1.0, 1, n)
       ownpos = self.get('ownpos')
+      
+      self.dragbar = self.rect.copyself(0.0,0.25,0.88,1.0)
       
       listLen = group.numItems()
       for i in range(0,n):
@@ -316,14 +316,21 @@ class guiOverlay(pyrouteModule):
           label = group.getItemText(itemNum)
           textarea.drawTextSomewhere(label, 0.1,0.1,0.9,0.5)
           
+          action = None
           if(group.isLocation(itemNum)):
             location = group.getItemLatLon(itemNum)
-            positionText = self.formatPosition(location, ownpos)
-            textarea.drawTextSomewhere(positionText, 0.1,0.6,0.9,0.9)
-            button.button("", "+route:%1.5f:%1.5f" % (location[0], location[1]), "goto")
-            self.clickable.append(button)
-          # TODO: else if clickable...
+            subtitleText = self.formatPosition(location, ownpos)
+            action = "+route:%1.5f:%1.5f" % (location[0], location[1])
+          else:
+            subtitleText = group.getItemStatus(itemNum)
+            if(group.getItemClickable(itemNum)):
+              action = group.getItemAction(itemNum)
+          textarea.drawTextSomewhere(subtitleText, 0.1,0.6,0.9,0.9)
           
+          if(action != None):
+            button.button("", action, "goto")
+            self.clickable.append(button)
+            
         except IndexError:
           pass
         
@@ -336,10 +343,14 @@ class guiOverlay(pyrouteModule):
           geometry.compassPoint(geometry.bearing(a,b))))
       else:
         return("%f,%f" % (self.lat,self.lon))
-
+    
+    def menu_meta(self):
+      self.backButton(0,0)
+      self.drawListableItem(self.m["meta"])
+      
     def menu_main(self):
         self.backButton(0,0)
-
+        self.checkbox(2,0,"Sketch mode","sketch",True)
 
         self.cells[0][1].button("View","menu:view","view")
         self.cells[1][1].button("GPS","menu:gps","gps")
@@ -347,11 +358,11 @@ class guiOverlay(pyrouteModule):
 
         self.cells[0][2].button("Data","menu:data","data")
         self.cells[1][2].button("","",None)
-        self.checkbox(2,2,"Sketch mode","sketch",True)
+        self.cells[1][2].button("","",None)
 
         self.checkbox(0,3, "Centre me","centred")
         #self.cells[1][3].button("Options","menu:options",None)
-        self.cells[1][3].button(None,None,None)
+        self.cells[1][3].button("Meta","menu:meta",None)
         self.cells[2][3].button("Mode","menu:mode","mode")
 
     def checkbox(self, x,y, label, setting, returnToMap = False):

@@ -31,9 +31,6 @@
 class pyrouteModule:
   def __init__(self, modules):
     self.m  = modules
-  def reportModuleConnectivity(self):
-    for name, data in self.m.items():
-      print "* %s" % name
   def get(self, name, default=None):
     return(self.m['data'].getData(name, default))
   def set(self, name, value):
@@ -42,3 +39,6 @@ class pyrouteModule:
     self.m['events'].handleEvent(message)
   def ownPos(self):
     return(self.m['position'].get())
+  # Meta-info
+  def getStatus(self):
+    return("")

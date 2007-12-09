@@ -14,7 +14,7 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 DEPEND=">=virtual/jdk-1.5
-	=sci-geosciences/josm"
+	sci-geosciences/josm"
 
 IUSE=""
 

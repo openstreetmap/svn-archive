@@ -16,8 +16,13 @@ KEYWORDS="~amd64 ~x86"
 DEPEND=">=sci-geosciences/josm-1.5_p480"
 S="${WORKDIR}"
 
+src_unpack() {
+	einfo "nothing to unpack"
+	cp ../distdir/osmarender.jar .
+}
+
 src_compile() {
-	einfo Nothing to compile
+	einfo "nothing to compile"
 }
 
 src_install() {

@@ -716,7 +716,12 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     }
 
     mergeOsmFiles($DataFile, $filelist);
-    
+
+    if ($Config{KeepDataFile})
+    {
+        copy($DataFile, $Config{WorkingDirectory} . "/" . "data.osm");
+    }
+  
     # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
     $JobTime = [stat $DataFile]->[9];
     

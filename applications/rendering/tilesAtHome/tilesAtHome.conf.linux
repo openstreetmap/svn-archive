@@ -52,6 +52,9 @@ LayerUpload=0
 # if set to 0 this tile will be uploaded as a set
 GatherBlankTiles=0
 
+# If set to 1, make a copy of the data file for later debugging purposes
+KeepDataFile=0
+
 # If set to 1, then Batik will be used for rendering instead of Inkscape
 # If set to 2, then the Batik-wrapper will be used instead of Batik .jar file
 # (adjust the path below accordingly)

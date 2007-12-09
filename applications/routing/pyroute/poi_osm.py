@@ -44,7 +44,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
   
   def load(self, filename, listfile):
     self.filters = []
-    print "reading listfile %s" % listfile
+    print "Loading POIs from %s" % listfile
     f = open(listfile,"r")
     try:
       for line in f:

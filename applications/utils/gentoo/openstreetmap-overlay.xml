@@ -3,7 +3,7 @@
   <overlay
 type="svn"
 src="http://svn.openstreetmap.org/applications/utils/gentoo"
-contact="openstreetmap@lorenz.kiefner.de"
+contact="openstreetmap-ascii64-lorenz.kiefner.de"
 status="official"
 name="openstreetmap">
     <link>

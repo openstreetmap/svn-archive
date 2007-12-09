@@ -29,7 +29,7 @@ josm-plugin-scm_src_unpack() {
 }
 
 josm-plugin-scm_src_compile() {
-	local JAR="${ROOT}/usr/share/josm-scm/lib/josm-custom.jar"
+	local JAR="${ROOT}/usr/lib/josm/josm.jar"
 	mkdir dist
 	eant -Djosm=${JAR} -Djosm.jar=${JAR} -Dplugin.jar="dist/${JOSM_PLUGIN}.jar" -f build.xml
 }

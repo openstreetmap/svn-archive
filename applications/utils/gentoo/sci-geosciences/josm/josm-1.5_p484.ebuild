@@ -4,11 +4,12 @@
 
 inherit eutils
 
+RESTRICT="nomirror"
 MY_P=${PN}-snapshot-${PV/1.5_p/}
 DESCRIPTION="Java-based editor for the OpenStreetMap project"
 HOMEPAGE="http://josm.openstreetmap.de/"
 SRC_URI="http://josm.openstreetmap.de/download/${MY_P}.jar
-	linguas_de? ( mirror://gentoo/lang-de-20061020.jar )
+	linguas_de? ( http://josm.openstreetmap.de/download/plugins/lang-de.jar )
 	linguas_en_GB? ( mirror://gentoo/lang-en_GB-20061020.jar )
 	linguas_fr? ( mirror://gentoo/lang-fr-20061020.jar )
 	linguas_ro? ( mirror://gentoo/lang-ro-20061020.jar )"

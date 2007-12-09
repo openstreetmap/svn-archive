@@ -13,9 +13,10 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-DEPEND=">=virtual/jdk-1.5"
-#=sci-geosciences/josm-svn || =sci-geosciences/josm
-IUSE="sci-geosciences/josm-svn sci-geosciences/josm"
+DEPEND=">=virtual/jdk-1.5
+	=sci-geosciences/josm"
+
+IUSE=""
 
 EXPORT_FUNCTIONS src_unpack src_compile src_install
 ESVN_REPO_URI="http://svn.openstreetmap.org/applications/editors/josm/plugins/${JOSM_PLUGIN}"

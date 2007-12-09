@@ -2,9 +2,9 @@
 <overlays>
   <overlay
 type="svn"
-src="http://svn.openstreetmap.org/applications/utils/gentoo/"
+src="http://svn.openstreetmap.org/applications/utils/gentoo"
 contact="openstreetmap@lorenz.kiefner.de"
-status="unofficial"
+status="official"
 name="openstreetmap">
     <link>
         http://wiki.openstreetmap.org/index.php/Gentoo

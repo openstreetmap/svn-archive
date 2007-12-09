@@ -309,7 +309,7 @@ sub mergeOsmFiles
               if( not $header )
               {
                 my $version = $1 || "'".$Config{"OSMVersion"}."'";
-                print DEST qq(<osm version=$version generator="tilesGen mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
+                print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
                 $header = 1;
               }
               next;

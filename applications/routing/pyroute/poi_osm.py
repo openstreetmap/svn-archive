@@ -47,16 +47,15 @@ class osmPoiModule(poiModule, handler.ContentHandler):
     print "reading listfile %s" % listfile
     f = open(listfile,"r")
     try:
-        for line in f:
-            if(len(line) > 1):
-	            text = line.rstrip()
-	            name, filter = text.split('|')
-	            group = poiGroup(name)
-	            self.groups.append(group)
-	            print "Creating group %s" % name
-	            self.filters.append({'name':name,'filter':filter,'group':group})
+      for line in f:
+        if(len(line) > 1):
+          text = line.rstrip()
+          name, filter = text.split('|')
+          group = poiGroup(name)
+          self.groups.append(group)
+          self.filters.append({'name':name,'filter':filter,'group':group})
     finally:
-        f.close()
+      f.close()
     
     if(not os.path.exists(filename)):
       print "Can't load %s"%filename

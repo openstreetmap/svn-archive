@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<layman>
+<overlay
+      contact="openstreetmap@lorenz.kiefner.de"
+      name="openstreetmap"
+      src="http://svn.openstreetmap.org/applications/utils/gentoo/"
+      type="svn">
+    <link>
+        http://wiki.openstreetmap.org/index.php/Gentoo
+    </link>
+    <description>
+      OpenStreetMap related software.
+    </description>
+</overlay>
+</layman>

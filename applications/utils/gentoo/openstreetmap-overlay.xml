@@ -3,8 +3,8 @@
 type="svn"
 src="http://svn.openstreetmap.org/applications/utils/gentoo/"
 contact="openstreetmap@lorenz.kiefner.de"
-status="unofficial">
-name="openstreetmap"
+status="unofficial"
+name="openstreetmap">
     <link>
         http://wiki.openstreetmap.org/index.php/Gentoo
     </link>

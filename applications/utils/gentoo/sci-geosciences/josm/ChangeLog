@@ -2,6 +2,11 @@
 # Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sci-geosciences/josm/ChangeLog,v 1.5 2007/11/07 15:37:37 hanno Exp $
 
+*josm-1.5_p484 (09 Dec 2007)
+
+  09 Dec 2007; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +josm-1.5_p484.ebuild:
+  Version bump.
+
 *josm-1.5_p457 (07 Nov 2007)
 
   07 Nov 2007; Hanno Boeck <hanno@gentoo.org> +josm-1.5_p457.ebuild:

@@ -9,7 +9,7 @@ DESCRIPTION="Java-based editor for the OpenStreetMap project"
 HOMEPAGE="http://josm.openstreetmap.de/"
 SRC_URI=""
 LICENSE="GPL-2"
-SLOT="scm"
+SLOT="0"
 KEYWORDS="~amd64 ~x86"
 DEPEND=">=virtual/jdk-1.5"
 IUSE=""
@@ -28,5 +28,5 @@ src_compile() {
 src_install() {
 	dobin "${FILESDIR}/josm" || die
 
-	java-pkg_dojar "dist/josm-custom.jar"
+	java-pkg_dojar "dist/josm.jar"
 }

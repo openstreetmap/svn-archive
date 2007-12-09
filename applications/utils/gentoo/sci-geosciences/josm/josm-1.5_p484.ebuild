@@ -15,7 +15,7 @@ SRC_URI="http://josm.openstreetmap.de/download/${MY_P}.jar
 	linguas_ro? ( mirror://gentoo/lang-ro-20061020.jar )"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 DEPEND="virtual/jdk"
 S="${WORKDIR}"
 

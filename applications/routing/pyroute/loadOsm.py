@@ -31,8 +31,6 @@ import sys
 import os
 from xml.sax import make_parser, handler
 import xml
-import urllib
-from time import clock
 
 execfile("weights.py")
 
@@ -52,9 +50,9 @@ class LoadOsm(handler.ContentHandler):
     
     if(filename == None):
       return
-    self.loadfile(filename)
+    self.loadOsm(filename)
     
-  def loadfile(self, filename):
+  def loadOsm(self, filename):
     if(not os.path.exists(filename)):
       print "No such data file %s" % filename
       return
@@ -64,21 +62,6 @@ class LoadOsm(handler.ContentHandler):
       parser.parse(filename)
     except xml.sax._exceptions.SAXParseException:
       print "Error loading %s" % filename
-  
-  def download(self,lat,lon,size):
-    url = "http://osm.test.le.ac.uk/api/0.5/way[%1.4f,%1.4f,%1.4f,%1.4f][*=*]" % (lon-size,lat-size,lon+size,lat+size)
-    url = "http://api.openstreetmap.org/api/0.5/map?bbox=%1.4f,%1.4f,%1.4f,%1.4f" % (lon-size,lat-size,lon+size,lat+size)
-    print "downloading %s" % url
-    start = clock()
-    filename = "data/routing.osm"
-    
-    if(os.path.exists(filename)):
-      os.remove(filename)
-    urllib.urlretrieve(url, filename)
-    end = clock()
-    delay = end - start 
-    print "finished downloading, took %1.1f s" % (delay)
-    self.loadfile(filename)
     
   def report(self):
     """Display some info about the loaded data"""
@@ -193,29 +176,7 @@ class LoadOsm(handler.ContentHandler):
     
   def routeablefrom(self,fr,routeType):
     self.routeableNodes[routeType][fr] = 1
-  
-  def save(self, filename):
-    """Saves routing data (to cache)"""
-    toStore = { \
-      'routing': self.routing,
-      'routeNodes':self.routeableNodes,
-      'nodes':self.nodes,
-      'ways':self.ways}
-    file = open(filename, "w")
-    file.write(str(toStore))
-    file.close()
 
-  def load(self, filename):
-    """Loads routing data (from cache)"""
-    file = open(filename, "r")
-    struct = eval(file.read())
-    self.routing = struct['routing']
-    self.routeableNodes = struct['routeNodes']
-    self.nodes = struct['nodes']
-    self.ways = struct['ways']
-    file.close()
-    print "done"
-    
   def findNode(self,lat,lon,routeType):
     """Find the nearest node to a point.
     Filters for nodes which have a route leading from them"""

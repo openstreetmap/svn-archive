@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=josm
+Comment=Java OpenStreetMap editor
+GenericName=OpenStreetMap editor
+Exec=josm %f
+Icon=josm
+Type=Application
+Categories=Application;

@@ -30,14 +30,14 @@ class osmPoiModule(poiModule, handler.ContentHandler):
     self.loadPOIs("all", "amenity|shop=*")
     
   def loadPOIs(self,name,search):
-    print "Loading %s (%s)" % (name,search)
     filename = "data/poi_%s.osm" % name
     url = "http://www.informationfreeway.org/api/0.5/node[%s][%s]" % (search, self.bbox())
     
     if(not os.path.exists(filename)):
+      print "Downloading POIs from OSM"
       urllib.urlretrieve(url, filename)
     self.load(filename, "Setup/poi.txt")
-        
+
   def bbox(self):
     # TODO: based on location!
     return "bbox=-6,48,2.5,61"

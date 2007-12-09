@@ -116,15 +116,8 @@ class pyrouteEvents(pyrouteModule):
     self.set('needRedraw', True)
 
   def handle_download(self,params):
-    centre = self.get('ownpos')
-    if(not centre['valid']):
-      print "Need to set your own position before downloading"
-    else:
-      sizeToDownload = 0.1
-      self.m['osmdata'].download( \
-        centre['lat'],
-        centre['lon'],
-        sizeToDownload)
+    self.m['osmdata'].download(params)
+    self.set('needRedraw', True)
 
   def handleEvent(self,event):
     closeMenuAfterwards = False

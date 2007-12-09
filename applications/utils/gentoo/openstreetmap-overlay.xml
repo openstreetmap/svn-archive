@@ -1,4 +1,5 @@
 <layman>
+<overlays>
   <overlay
 type="svn"
 src="http://svn.openstreetmap.org/applications/utils/gentoo/"
@@ -12,4 +13,5 @@ name="openstreetmap">
       OpenStreetMap related software.
     </description>
   </overlay>
+</overlays>
 </layman>

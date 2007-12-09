@@ -47,7 +47,7 @@ from time import clock
 from gtk import gdk
 
 # Our modules:
-from loadOsm import *
+from mod_osmData import osmData
 from routeOrDirect import *
 from tilenames import *
 from geoPosition import *
@@ -83,6 +83,15 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules = {'poi':{}}
     pyrouteModule.__init__(self, self.modules)
     
+    self.loadModules()
+    self.blankData()
+    self.loadData()
+    
+    self.updatePosition()
+    
+    self.timer = gobject.timeout_add(100, update, self)
+    
+  def loadModules(self):
     #self.modules['poi']['rss'] = geoRss(self.modules, 'Setup/feeds.txt')
     #self.modules['poi']['geonames'] = geonames(self.modules)
     self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
@@ -93,25 +102,24 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.modules['data'] = DataStore(self.modules)
     self.modules['events'] = pyrouteEvents(self.modules)
     self.modules['sketch'] = sketching(self.modules)
-    self.modules['sketch'].load("data/sketches/latest.gpx")
+    self.modules['osmdata'] = osmData(self.modules)
+    self.modules['projection'] = Projection()
+    self.modules['tracklog'] = tracklog(self.modules)
+    self.modules['meta'] = moduleInfo(self.modules)
+    self.modules['route'] = RouteOrDirect(self.modules['osmdata'].data)
+    
+  def blankData(self):
+    self.set('ownpos', {'valid':False})
     self.set('mode','cycle')
     self.set('centred',False)
     self.set('logging',True)
-    self.modules['osmdata'] = LoadOsm(None)
-    self.modules['projection'] = Projection()
-    self.modules['projection'].recentre(51.3,-0.1, 9)
-    self.modules['tracklog'] = tracklog(self.modules)
-    self.modules['meta'] = moduleInfo(self.modules)
-    # self.modules['tracklog'].load("data/track.gpx")
-    self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
-    self.set('ownpos', {'valid':False})
-    self.updatePosition()
-    
-    a = clock()
-    self.modules['osmdata'].loadfile("data/routing.osm")
-    print "Loaded OSM data in %1.3f ms" % (1000.0 * (clock() - a))
-    self.timer = gobject.timeout_add(100, update, self)
+    self.m['projection'].recentre(51.3,-0.1, 9)
   
+  def loadData(self):
+    self.m['sketch'].load("data/sketches/latest.gpx")
+    self.m['tracklog'].load("data/track.gpx")
+    self.m['osmdata'].loadDefault()
+    
   def beforeDie(self):
     print "Handling last few checks before we close"
     self.m['tracklog'].checkIfNeedsSaving(True)

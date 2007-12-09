@@ -85,6 +85,9 @@ class BinaryOsm(handler.ContentHandler):
     elif(name == 'way'):
       data = 'W' + pack("L", self.meta['id'])
       self.out.write(data)
+      self.out.write(pack('H', len(self.waynodes)))
+      for n in self.waynodes:
+        self.out.write(pack('L', n))
       writeTags = True
       
     if(writeTags):
@@ -95,18 +98,22 @@ class BinaryOsm(handler.ContentHandler):
         return
       self.out.write(pack('B', n))
       for k,v in self.tags.items():
-        self.encodeTag(k)
-        volatile = k in ('name','ref','ncn_ref','note','notes','description','ele','time')
-        self.encodeTag(v,volatile)
+        self.encodeTag(k, False, k)
+        volatile = k in ('name','ref','ncn_ref','note','notes','description','ele','time','url','website','postal_code','image','source_ref','source:ref','source:name','source_ref:name',"FIXME","fixme","place_numbers")
+        self.encodeTag(v,volatile,k)
 
-  def encodeTag(self,text,volatile=False):
+  def encodeTag(self,text,volatile,key):
+    text = text.encode('utf8')
     if(not volatile):
       try:
         ID = self.values[text]
-        print "Using %d to represent %s" % (ID,text)
         self.out.write(pack('H', ID))
       except KeyError:
-        print "Storing %s as %d" % (text,self.nextKID)
+        if(self.nextKID >= 65535):
+          # TODO
+          print "Error: too many stored tags!"
+          sys.exit()
+        print "%d: %s %s" % (self.nextKID, key,text)
         self.values[text] = self.nextKID
         self.out.write(pack('HHB', 1, self.nextKID, len(text)))
         self.out.write(text)

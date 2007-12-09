@@ -59,31 +59,38 @@ class BinaryOsm:
     self.readTags(Input, Output)
     
   def readWay(self, Input, Output):
-    id = Input.read(8)
+    wid = unpack("L", Input.read(4))[0]
+    numNodes = unpack("H", Input.read(2))[0]
+    nodes = []
+    for i in range(numNodes):
+      nid = unpack('L',Input.read(4))[0]
+      nodes.append(nid)
+    #print "Read way %u, %u nodes" % (wid,numNodes)
     self.readTags(Input, Output)
 
   def readTags(self, Input, Output):
     n = unpack('B', Input.read(1))[0]
     if(n == 0):
       return
-    print " - %d tags" % n
     for i in range(n):
       k = self.readKV(Input,Output)
       v = self.readKV(Input,Output)
-      print "%s = %s" % (k,v)
+      #print "%s = %s" % (k,v)
 
   def readKV(self, Input, Output):
     ID = unpack('H', Input.read(2))[0]
     if(ID == 0):
       # one-off
       lenX = unpack('B', Input.read(1))[0]
-      return(Input.read(lenX))
+      text = Input.read(lenX)
+      return(text.decode("utf-8"))
     
     if(ID == 1):
       # New + store
       NewID = unpack('H', Input.read(2))[0]
       lenX = unpack('B', Input.read(1))[0]
       X = Input.read(lenX)
+      X = X.decode("utf-8")
       self.values[NewID] = X
       return(X)
       

@@ -1,0 +1,7 @@
+EBUILD josm-plugin-mappaint-9999.ebuild 24 RMD160 d3bcfea7389f3c8bb46e38ec2a4f0b092a9da6a2 SHA1 ed4a055500cbc4624e6493f2f1ddde55a2fc005f SHA256 957d2ba679323d0f54e6c140968907402b04f0f460871dd53bc1c4889099b8b7
+MD5 3244c058e31ed181c586bc8231c72fe3 josm-plugin-mappaint-9999.ebuild 24
+RMD160 d3bcfea7389f3c8bb46e38ec2a4f0b092a9da6a2 josm-plugin-mappaint-9999.ebuild 24
+SHA256 957d2ba679323d0f54e6c140968907402b04f0f460871dd53bc1c4889099b8b7 josm-plugin-mappaint-9999.ebuild 24
+MD5 d41d8cd98f00b204e9800998ecf8427e files/digest-josm-plugin-mappaint-9999 0
+RMD160 9c1185a5c5e9fc54612808977ee8f548b2258d31 files/digest-josm-plugin-mappaint-9999 0
+SHA256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 files/digest-josm-plugin-mappaint-9999 0

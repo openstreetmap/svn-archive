@@ -26,7 +26,7 @@ src_compile() {
 }
 
 src_install() {
-	dobin "${FILESDIR}/josm-scm" || die
+	dobin "${FILESDIR}/josm" || die
 
 	java-pkg_dojar "dist/josm-custom.jar"
 }

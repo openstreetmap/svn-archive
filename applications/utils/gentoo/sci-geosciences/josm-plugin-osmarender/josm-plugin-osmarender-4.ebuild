@@ -18,7 +18,6 @@ S="${WORKDIR}"
 
 src_unpack() {
 	einfo "nothing to unpack"
-	cp ../distdir/osmarender.jar .
 }
 
 src_compile() {
@@ -26,7 +25,7 @@ src_compile() {
 }
 
 src_install() {
-
 	insinto /usr/lib/josm/plugins
-	doins *.jar
+	newins ${DISTDIR}/osmarender.jar osmarender.jar
+#	doins *.jar
 }

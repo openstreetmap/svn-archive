@@ -37,7 +37,7 @@ src_install() {
 	newins "${DISTDIR}/${MY_P}.jar" josm.jar || die
 
 	insinto /usr/lib/josm/plugins
-	use linguas_de && newins ${DISTDIR}/lang-de-20061020.jar lang-de.jar
+	use linguas_de && newins ${DISTDIR}/lang-de.jar lang-de.jar
 	use linguas_en_GB && newins ${DISTDIR}/lang-en_GB-20061020.jar lang-en_GB.jar
 	use linguas_fr && newins ${DISTDIR}/lang-fr-20061020.jar lang-fr.jar
 	use linguas_ro && newins ${DISTDIR}/lang-ro-20061020.jar lang-ro.jar

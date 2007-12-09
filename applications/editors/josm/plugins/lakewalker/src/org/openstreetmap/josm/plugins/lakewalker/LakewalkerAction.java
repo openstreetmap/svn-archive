@@ -11,25 +11,16 @@ import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitor;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Segment;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.xml.sax.SAXException;
@@ -108,6 +99,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     target += " --dp-epsilon=" + Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003");
     target += " --landsat-res=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000");
     target += " --tilesize=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000");
+    target += " --startdir=" + Main.pref.get(LakewalkerPreferences.PREF_START_DIR, "east");
     target += " --josm";
     
 

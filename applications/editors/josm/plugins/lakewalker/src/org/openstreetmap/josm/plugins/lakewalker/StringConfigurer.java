@@ -1,7 +1,7 @@
 /*
  * $Id: StringConfigurer.java 2073 2007-05-10 14:34:31 +0000 (Thu, 10 May 2007) rodneykinney $
  *
- * Copyright (c) 2000-2003 by Rodney Kinney
+ * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

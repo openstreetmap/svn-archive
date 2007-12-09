@@ -1,7 +1,7 @@
 /*
  * $Id: BooleanConfigurer.java 705 2005-09-15 13:24:50 +0000 (Thu, 15 Sep 2005) rodneykinney $
  *
- * Copyright (c) 2000-2003 by Rodney Kinney
+ * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

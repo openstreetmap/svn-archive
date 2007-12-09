@@ -18,7 +18,6 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class LakewalkerReader {
@@ -44,8 +43,6 @@ public class LakewalkerReader {
      */
 
     Way way = new Way();
-    Node lastNode = null;
-    Node firstNode = null;
     String line;
     setStatus("Initializing");
     double eastOffset = 0.0;
@@ -57,14 +54,15 @@ public class LakewalkerReader {
     catch (Exception e) {
       
     }
-
+    char option = ' ';
+    
     try {
       while ((line = input.readLine()) != null) {
         if (cancel) {
           return;
         }
         System.out.println(line);
-        char option = line.charAt(0);
+        option = line.charAt(0);
         switch (option) {
         case 'n':
           String[] tokens = line.split(" ");
@@ -72,15 +70,7 @@ public class LakewalkerReader {
             LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
             Node n = new Node(ll);
             commands.add(new AddCommand(n));
-            if (lastNode != null) {
-              Segment s = new Segment(lastNode, n);
-              commands.add(new AddCommand(s));
-              way.segments.add(s);
-            }
-            else {
-              firstNode = n;
-            }
-            lastNode = n;
+            way.nodes.add(n);
           }
           catch (Exception ex) {
 
@@ -92,11 +82,13 @@ public class LakewalkerReader {
           break;
           
         case 'x':
-          Segment s = new Segment(lastNode, firstNode);
-          commands.add(new AddCommand(s));
-          way.segments.add(s);
           way.put("created_by", "Dshpak_landsat_lakes");
           commands.add(new AddCommand(way));
+          break;
+          
+        case 'e':
+          String error = line.substring(2);
+          cancel = true;
           break;
         }
       } 

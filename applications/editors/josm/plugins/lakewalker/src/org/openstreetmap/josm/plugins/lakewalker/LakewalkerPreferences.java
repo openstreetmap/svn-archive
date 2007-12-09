@@ -12,6 +12,8 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 public class LakewalkerPreferences implements PreferenceSetting {
 
+  public static final String[] DIRECTIONS = new String[] {"east", "northeast", "north", "northwest", "west", "southwest", "south", "southeast"};
+
   public static final String PREF_PYTHON = "lakewalker.python";
   public static final String PREF_MAX_SEG = "lakewalker.max_segs_in_way";
   public static final String PREF_MAX_NODES = "lakewalker.max_nodes";
@@ -21,7 +23,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
   public static final String PREF_LANDSAT_SIZE = "lakewalker.landsat_size";
   public static final String PREF_EAST_OFFSET = "lakewalker.east_offset";
   public static final String PREF_NORTH_OFFSET = "lakewalker.north_offset";
-  
+  public static final String PREF_START_DIR = "lakewalker.startdir";
+    
   protected StringConfigurer pythonConfig = new StringConfigurer();
   protected JLabel pythonLabel = new JLabel(tr("Python executable"));
   protected IntConfigurer maxSegsConfig = new IntConfigurer();
@@ -40,6 +43,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
   protected JLabel eastOffsetLabel = new JLabel(tr("Shift all traces to east (degrees)"));
   protected DoubleConfigurer northOffsetConfig = new DoubleConfigurer();
   protected JLabel northOffsetLabel = new JLabel(tr("Shift all traces to north (degrees)"));
+  protected StringEnumConfigurer startDirConfig = new StringEnumConfigurer(DIRECTIONS);
+  protected JLabel startDirLabel = new JLabel(tr("Direction to search for land"));
   
   public void addGui(PreferenceDialog gui) {
     pythonConfig.setToolTipText(tr("Path to python executable."));
@@ -51,6 +56,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     landsatSizeConfig.setToolTipText(tr("Size of one landsat tile, measured in pixels. Default 2000."));
     eastOffsetConfig.setToolTipText(tr("Offset all points in East direction (degrees). Default 0."));   
     northOffsetConfig.setToolTipText(tr("Offset all points in North direction (degrees). Default 0."));   
+    startDirConfig.setToolTipText(tr("Direction to search for land. Default east."));   
 
     String description = tr("An interlude to the Lakewalker Python module to trace water bodies on Landsat imagery.<br><br>Version: {0}", LakewalkerPlugin.VERSION);
     JPanel prefPanel = gui.createPreferenceTab("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), description);
@@ -65,6 +71,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     landsatSizeConfig.setValue(Main.pref.get(PREF_LANDSAT_SIZE, "2000"));
     eastOffsetConfig.setValue(Main.pref.get(PREF_EAST_OFFSET, "0.0"));
     northOffsetConfig.setValue(Main.pref.get(PREF_NORTH_OFFSET, "0.0"));
+    startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));
   }
   
   public void buildPreferences(JPanel prefPanel) {
@@ -89,6 +96,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
     prefPanel.add(eastOffsetConfig.getControls(), dataConstraints);
     prefPanel.add(northOffsetLabel, labelConstraints);
     prefPanel.add(northOffsetConfig.getControls(), dataConstraints);
+    prefPanel.add(startDirLabel, labelConstraints);
+    prefPanel.add(startDirConfig.getControls(), dataConstraints);
   }
 
   /*
@@ -104,6 +113,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     Main.pref.put(PREF_LANDSAT_SIZE, landsatSizeConfig.getValueString());
     Main.pref.put(PREF_EAST_OFFSET, eastOffsetConfig.getValueString());
     Main.pref.put(PREF_NORTH_OFFSET, northOffsetConfig.getValueString());
+    Main.pref.put(PREF_START_DIR, startDirConfig.getValueString());
   }
   
 }

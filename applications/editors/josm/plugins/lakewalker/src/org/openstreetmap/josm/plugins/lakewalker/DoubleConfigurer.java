@@ -1,7 +1,7 @@
 /*
  * $Id: DoubleConfigurer.java 5 2003-10-02 15:11:38 +0000 (Thu, 02 Oct 2003) rodneykinney $
  *
- * Copyright (c) 2000-2003 by Rodney Kinney
+ * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.Plugin;
  */
 public class LakewalkerPlugin extends Plugin {
 
-  public static final String VERSION = "0.3";
+  public static final String VERSION = "0.4";
   
   protected String name;
 

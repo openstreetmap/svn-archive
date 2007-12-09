@@ -1,0 +1,1 @@
+inherit josm-plugin-scm

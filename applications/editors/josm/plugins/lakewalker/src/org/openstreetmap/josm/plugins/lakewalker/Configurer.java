@@ -1,7 +1,7 @@
 /*
  * $Id: Configurer.java 2175 2007-06-04 04:19:59 +0000 (Mon, 04 Jun 2007) rodneykinney $
  *
- * Copyright (c) 2000-2003 by Rodney Kinney
+ * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

@@ -1,7 +1,7 @@
 /*
  * $Id: IntConfigurer.java 874 2006-03-15 14:20:56 +0000 (Wed, 15 Mar 2006) rodneykinney $
  *
- * Copyright (c) 2000-2003 by Rodney Kinney
+ * Copyright (c) 2000-2007 by Rodney Kinney, Brent Easton
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

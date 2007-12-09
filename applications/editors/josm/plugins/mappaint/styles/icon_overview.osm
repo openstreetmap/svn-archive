@@ -244,7 +244,7 @@
     <tag k='name' v='library' />
     <tag k='amenity' v='library' />
   </node>
-  <node id='-62' action='modify' visible='true' lat='7.989445464370817' lon='-56.90933073761824'>
+  <node id='-62' action='modify' visible='true' lat='7.9894454643708075' lon='-56.93951734386691'>
     <tag k='name' v='atm' />
     <tag k='amenity' v='atm' />
   </node>
@@ -532,15 +532,15 @@
     <tag k='name' v='bicycle_rental' />
     <tag k='amenity' v='bicycle_rental' />
   </node>
-  <node id='-134' action='modify' visible='true' lat='12.817913067496033' lon='-57.879553474696515'>
+  <node id='-134' action='modify' visible='true' lat='12.788476991243762' lon='-57.88961567677941'>
     <tag k='name' v='car_rental' />
     <tag k='amenity' v='car_rental' />
   </node>
-  <node id='-135' action='modify' visible='true' lat='12.585460322669777' lon='-57.869193292340725'>
+  <node id='-135' action='modify' visible='true' lat='12.555997347712044' lon='-57.88931769650652'>
     <tag k='name' v='car_sharing' />
     <tag k='amenity' v='car_sharing' />
   </node>
-  <node id='-136' action='modify' visible='true' lat='8.194585929414634' lon='-56.92402372591879'>
+  <node id='-136' action='modify' visible='true' lat='8.194585929414627' lon='-56.93408592800167'>
     <tag k='name' v='bureau_de_change' />
     <tag k='amenity' v='bureau_de_change' />
   </node>
@@ -644,7 +644,7 @@
     <tag k='name' v='bunker' />
     <tag k='military' v='bunker' />
   </node>
-  <node id='-162' action='modify' visible='true' lat='8.284335545002378' lon='-61.52405386732443'>
+  <node id='-162' action='modify' visible='true' lat='8.274378213869138' lon='-61.55424047357312'>
     <tag k='name' v='barracks' />
     <tag k='military' v='barracks' />
   </node>
@@ -704,48 +704,48 @@
     <tag k='name' v='coastline' />
     <tag k='natural' v='coastline' />
   </node>
-  <node id='-177' action='modify' visible='true' lat='9.723518097169947' lon='-62.432150424594106'>
-    <tag k='name' v='continent' />
-    <tag k='place' v='continent' />
-  </node>
-  <node id='-178' action='modify' visible='true' lat='9.234010270511796' lon='-62.432150424594106'>
-    <tag k='name' v='state' />
-    <tag k='place' v='state' />
-  </node>
-  <node id='-179' action='modify' visible='true' lat='12.142998524533414' lon='-58.74976221413853'>
-    <tag k='name' v='land' />
-    <tag k='natural' v='land' />
-  </node>
-  <node id='-180' action='modify' visible='true' lat='8.722947931127454' lon='-62.432150424594106'>
-    <tag k='name' v='county' />
-    <tag k='place' v='county' />
-  </node>
-  <node id='-181' action='modify' visible='true' lat='12.607123746055352' lon='-58.7497622141385'>
-    <tag k='name' v='beach' />
-    <tag k='natural' v='beach' />
-  </node>
-  <node id='-182' action='modify' visible='true' lat='7.122856298778426' lon='-62.400472637712596'>
+  <node id='-177' action='modify' visible='true' lat='7.122856298778426' lon='-62.400472637712596'>
     <tag k='name' v='island' />
     <tag k='place' v='island' />
   </node>
-  <node id='-183' action='modify' visible='true' lat='9.004642887394837' lon='-62.432150424594106'>
-    <tag k='name' v='region' />
-    <tag k='place' v='region' />
-  </node>
-  <node id='-184' action='modify' visible='true' lat='12.390634670766032' lon='-58.749762214138514'>
+  <node id='-178' action='modify' visible='true' lat='12.390634670766032' lon='-58.749762214138514'>
     <tag k='name' v='bay' />
     <tag k='natural' v='bay' />
   </node>
-  <node id='-185' action='modify' visible='true' lat='9.473643881265177' lon='-62.44270968688792'>
-    <tag k='name' v='country' />
-    <tag k='place' v='country' />
+  <node id='-179' action='modify' visible='true' lat='12.607123746055352' lon='-58.7497622141385'>
+    <tag k='name' v='beach' />
+    <tag k='natural' v='beach' />
   </node>
-  <node id='-186' action='modify' visible='true' lat='11.926127657912964' lon='-58.749762214138514'>
+  <node id='-180' action='modify' visible='true' lat='11.926127657912964' lon='-58.749762214138514'>
     <tag k='name' v='glacier' />
     <tag k='natural' v='glacier' />
   </node>
-  <node id='-187' action='modify' visible='true' lat='12.827791954292415' lon='-58.759824416221406'>
+  <node id='-181' action='modify' visible='true' lat='12.142998524533414' lon='-58.74976221413853'>
+    <tag k='name' v='land' />
+    <tag k='natural' v='land' />
+  </node>
+  <node id='-182' action='modify' visible='true' lat='12.827791954292415' lon='-58.759824416221406'>
     <tag k='name' v='mud' />
     <tag k='natural' v='mud' />
+  </node>
+  <node id='-183' action='modify' visible='true' lat='9.473643881265177' lon='-62.44270968688792'>
+    <tag k='name' v='country' />
+    <tag k='place' v='country' />
+  </node>
+  <node id='-184' action='modify' visible='true' lat='9.234010270511796' lon='-62.432150424594106'>
+    <tag k='name' v='state' />
+    <tag k='place' v='state' />
+  </node>
+  <node id='-185' action='modify' visible='true' lat='9.004642887394837' lon='-62.432150424594106'>
+    <tag k='name' v='region' />
+    <tag k='place' v='region' />
+  </node>
+  <node id='-186' action='modify' visible='true' lat='8.722947931127454' lon='-62.432150424594106'>
+    <tag k='name' v='county' />
+    <tag k='place' v='county' />
+  </node>
+  <node id='-187' action='modify' visible='true' lat='9.723518097169947' lon='-62.432150424594106'>
+    <tag k='name' v='continent' />
+    <tag k='place' v='continent' />
   </node>
 </osm>

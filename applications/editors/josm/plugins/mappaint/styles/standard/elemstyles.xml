@@ -458,7 +458,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
     
     <rule>
         <condition k="railway" v="subway_entrance"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="transport/underground.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -821,21 +821,21 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="amenity" v="bicycle_rental" />
-		<icon annotate="true" src="vehicle/parking/bike.png" />
+		<icon annotate="true" src="vehicle/bicycle_rental.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="car_rental" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="vehicle/car_rental.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="car_sharing" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="vehicle/car_sharing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1025,7 +1025,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="amenity" v="townhall" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="public.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1941,6 +1941,13 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	</rule>
 
 	<rule>
+		<condition k="amenity" v="shelter" />
+		<icon annotate="true" src="vehicle/caution.png" />
+		<scale_min>1</scale_min>
+		<scale_max>50000</scale_max>
+	</rule>
+	
+	<rule>
 		<condition k="shop" v="laundromat" />
 		<icon annotate="true" src="vehicle/caution.png" />
         <scale_min>1</scale_min>
@@ -2010,4 +2017,10 @@ Using both area and line attributes for the same key/value pair doesn't work!
         <scale_max>50000</scale_max>
 	</rule>
 
+	<rule>
+		<condition k="barrier" v="bollard" />
+		<icon annotate="true" src="vehicle/caution.png" />
+		<scale_min>1</scale_min>
+		<scale_max>50000</scale_max>
+	</rule>
 </rules>

@@ -126,6 +126,8 @@ sub ApplyConfigLogic
 
     ## Set default download timeout to 30 minutes
     $Config->{"DownloadTimeout"} = "1800" unless defined($Config->{"DownloadTimeout"});
+
+    $Config->{"UploadToDirectory"} = 0 unless (defined($Config->{"UploadTargetDirectory"}) and (-d $Config->{"UploadTargetDirectory"}));
 }
 
 #--------------------------------------------------------------------------
@@ -238,10 +240,6 @@ sub CheckConfig
 
     if ($Config->{"UploadToDirectory"})
     {
-        if ((! -d $Config->{"UploadTargetDirectory"}) or (! defined($Config->{"UploadTargetDirectory"}) ))
-        {
-            die "No upload - UploadTargetDirectory \"".$Config->{"UploadTargetDirectory"}."\" does not exist\n";
-        }
         if (! $Config->{"UseHostnameInZipname"}) 
         {
             print " * UseHostnameInZipname should be set when using UploadToDirectory\n";

@@ -186,7 +186,7 @@ sub upload
         ## DEBUG print "\n.$Layer.\n.$layer.\n";
     }
     
-    if (! $Config{UploadToDirectory})
+    if((! $Config{UploadToDirectory}) or (! -d $Config->{"UploadTargetDirectory"}))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
         

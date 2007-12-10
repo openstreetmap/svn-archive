@@ -186,7 +186,7 @@ sub upload
         ## DEBUG print "\n.$Layer.\n.$layer.\n";
     }
     
-    if((! $Config{UploadToDirectory}) or (! -d $Config->{"UploadTargetDirectory"}))
+    if((! $Config{UploadToDirectory}) or (! -d $Config{"UploadTargetDirectory"}))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
         
@@ -247,9 +247,9 @@ sub upload
         }
         my $QueueLength = scalar(@QueueFiles);
         my $Load = 1000 * ($MaxQueue - $QueueLength)/$MaxQueue;
-        if ($Load > 0.8 * 1000)
+        if ($Load > 0.7 * 1000)
         {
-            statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Not uploading, upload directory full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
             sleep(1);
             return $Load;
         }
@@ -257,6 +257,7 @@ sub upload
         {
             my $FileName = $File;
             $FileName =~ s|.*/||;
+            print "\n$File $FileName\n";
             copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n";
             rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans",$Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n";
         }

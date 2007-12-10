@@ -246,12 +246,12 @@ sub upload
             return 0;
         }
         my $QueueLength = scalar(@QueueFiles);
-        my $Load = 1000 * ($MaxQueue - $QueueLength)/$MaxQueue;
-        if ($Load > 0.7 * 1000)
+        my $Load = ($MaxQueue - $QueueLength)/$MaxQueue;
+        if ($Load > 0.7)
         {
             statusMessage("Not uploading, upload directory full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
             sleep(1);
-            return $Load;
+            return $Load * 1000;
         }
         else
         {

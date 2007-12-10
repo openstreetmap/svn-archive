@@ -43,6 +43,7 @@ if ($Config{"LocalSlippymap"})
     exit 1;
 }
 
+
 my $ZipFileCount = 0;
 
 ## FIXME: this is one of the things that make upload.pl not multithread safe
@@ -185,6 +186,8 @@ sub upload
         ## DEBUG print "\n.$Layer.\n.$layer.\n";
     }
     
+  if (! $Config{UploadToDirectory})
+  {
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
     $ua->protocols_allowed( ['http'] );
@@ -221,20 +224,52 @@ sub upload
             print $res->content if ($Config{Debug});
         }
 
-        if($Config{DeleteZipFilesAfterUpload})
-        {
-            unlink($File);
-        }
-        else
-        {
-            rename($File, $File."_uploaded");
-        }
     }
     else
     {
         return $Load; #soft fail
     }
-    
+  }
+  else
+  {
+    ## Check "queue" length
+    my $RemoteZipFileCount = 0;
+    my $MaxQueue = 20;
+    my @QueueFiles;
+    if(opendir(UPDIR, $Config{"UploadTargetDirectory"}))
+    {
+        @QueueFiles = grep { /\.zip$/ } readdir(UPDIR);
+        close UPDIR;
+    }
+    else 
+    {
+        return 0;
+    }
+    my $QueueLength = scalar(@QueueFiles);
+    my $Load = 1000 * ($MaxQueue - $QueueLength)/$MaxQueue;
+    if ($Load > 0.8 * 1000)
+    {
+        statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        sleep(1);
+        return $Load;
+    }
+    else
+    {
+        my $FileName = $File;
+        $FileName =~ s|.*/||;
+        copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n";
+        rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans",$Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n";
+    }
+  }
+    if($Config{DeleteZipFilesAfterUpload})
+    {
+        unlink($File);
+    }
+    else
+    {
+        rename($File, $File."_uploaded");
+    }
+
     return 1;
 }
 

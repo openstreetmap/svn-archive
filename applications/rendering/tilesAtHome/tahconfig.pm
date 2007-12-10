@@ -236,6 +236,18 @@ sub CheckConfig
         }
     }
 
+    if ($Config->{"UploadToDirectory"})
+    {
+        if ((! -d $Config->{"UploadTargetDirectory"}) or (! defined($Config->{"UploadTargetDirectory"}) ))
+        {
+            die "No upload - UploadTargetDirectory \"".$Config->{"UploadTargetDirectory"}."\" does not exist\n";
+        }
+        if (! $Config->{"UseHostnameInZipname"}) 
+        {
+            print " * UseHostnameInZipname should be set when using UploadToDirectory\n";
+        }
+    }
+
     if($Config->{"RequestUrl"}){
         print "- Using $Config->{RequestUrl} for Requests\n";
     }

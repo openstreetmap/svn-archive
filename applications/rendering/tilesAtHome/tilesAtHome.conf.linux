@@ -39,6 +39,11 @@ UploadChunkCount=13650  # default: 10 tilesets (will never be reached in practis
 # if set to 0 the zip files will get renamed to zip_uploaded after upload.
 DeleteZipFilesAfterUpload=0
 
+# set UploadToDirectory to 1 to enable uploading to a common upload 
+# directory from which one central client can handle all the uploading
+UploadToDirectory=0
+UploadTargetDirectory=/set/this/to/your/upload/directory
+
 ## Beziercurve hinting
 NoBezier=0  # Set to 1 if beziercurvehinting causes errors.
 

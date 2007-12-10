@@ -65,6 +65,7 @@ if($Config{MultipleClients}) #Trigger the _other_ codepath...
 # First name the folder timestamp_hostname_inprogress
 # then rename the folder to timestamp_hostname
 {
+    print "MultipleClients config option is deprecated, use UploadToDirectory instead.\n\n";
     my $epochtime = time;
     my $hostname = `hostname`;
     chomp $hostname;
@@ -226,9 +227,9 @@ sub compress
     
     if($Config{UseHostnameInZipname})
     {
-        my $hostname = `hostname`."XXX";
-        $Filename = sprintf("%s/%s_%d_%d_%s%s.zip", $OutputDir,
-          substr($hostname,0,3), $$, $ZipFileCount++, $Layer, $SingleTileset);
+        my $hostname = `hostname`."XXXXX";
+        $Filename = sprintf("%s/%d_%s_%d_%d_%s%s.zip", $OutputDir, $epochtime,
+          substr($hostname,0,5), $$, $ZipFileCount++, $Layer, $SingleTileset);
     }
     else 
     {
@@ -255,7 +256,6 @@ sub compress
           "$Dir",
           $stdOut);
     }
-    # ZIP filename is currently our process ID plus a counter
     
     ## FIXME: this is one of the things that make compress.pl not multithread safe
     # Delete files in the gather directory

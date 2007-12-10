@@ -186,81 +186,81 @@ sub upload
         ## DEBUG print "\n.$Layer.\n.$layer.\n";
     }
     
-  if (! $Config{UploadToDirectory})
-  {
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
-
-    $ua->protocols_allowed( ['http'] );
-    $ua->agent("tilesAtHomeZip");
-    $ua->env_proxy();
-    push @{ $ua->requests_redirectable }, 'POST';
-
-    my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
-    my $URL = $Config{"UploadURL"};
-    
-    my ($UploadToken,$Load) = UploadOkOrNot();
-    
-    if ($UploadToken) 
+    if (! $Config{UploadToDirectory})
     {
-        statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        my $res = $ua->post($URL,
-          Content_Type => 'form-data',
-          Content => [ file => [$File],
-          mp => $Password,
-          version => $Config{ClientVersion},
-          single_tileset => $SingleTileset,
-          token => $UploadToken,
-          layer => $Layer ]);
-      
-        if(!$res->is_success())
+        my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
+        
+        $ua->protocols_allowed( ['http'] );
+        $ua->agent("tilesAtHomeZip");
+        $ua->env_proxy();
+        push @{ $ua->requests_redirectable }, 'POST';
+        
+        my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
+        my $URL = $Config{"UploadURL"};
+        
+        my ($UploadToken,$Load) = UploadOkOrNot();
+        
+        if ($UploadToken) 
         {
-            print STDERR "ERROR\n";
-            print STDERR "  Error uploading $File to $URL:\n";
-            print STDERR "  ".$res->status_line."\n";
-            return 0; # hard fail
+            statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            my $res = $ua->post($URL,
+              Content_Type => 'form-data',
+              Content => [ file => [$File],
+              mp => $Password,
+              version => $Config{ClientVersion},
+              single_tileset => $SingleTileset,
+              token => $UploadToken,
+              layer => $Layer ]);
+             
+            if(!$res->is_success())
+            {
+                print STDERR "ERROR\n";
+                print STDERR "  Error uploading $File to $URL:\n";
+                print STDERR "  ".$res->status_line."\n";
+                return 0; # hard fail
+            }
+            else
+            {
+                print $res->content if ($Config{Debug});
+            }
+            
         }
         else
         {
-            print $res->content if ($Config{Debug});
+            return $Load; #soft fail
         }
-
     }
     else
     {
-        return $Load; #soft fail
+        ## Check "queue" length
+        my $RemoteZipFileCount = 0;
+        my $MaxQueue = 20;
+        my @QueueFiles;
+        if(opendir(UPDIR, $Config{"UploadTargetDirectory"}))
+        {
+            @QueueFiles = grep { /\.zip$/ } readdir(UPDIR);
+            close UPDIR;
+        }
+        else 
+        {
+            return 0;
+        }
+        my $QueueLength = scalar(@QueueFiles);
+        my $Load = 1000 * ($MaxQueue - $QueueLength)/$MaxQueue;
+        if ($Load > 0.8 * 1000)
+        {
+            statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            sleep(1);
+            return $Load;
+        }
+        else
+        {
+            my $FileName = $File;
+            $FileName =~ s|.*/||;
+            copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n";
+            rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans",$Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n";
+        }
     }
-  }
-  else
-  {
-    ## Check "queue" length
-    my $RemoteZipFileCount = 0;
-    my $MaxQueue = 20;
-    my @QueueFiles;
-    if(opendir(UPDIR, $Config{"UploadTargetDirectory"}))
-    {
-        @QueueFiles = grep { /\.zip$/ } readdir(UPDIR);
-        close UPDIR;
-    }
-    else 
-    {
-        return 0;
-    }
-    my $QueueLength = scalar(@QueueFiles);
-    my $Load = 1000 * ($MaxQueue - $QueueLength)/$MaxQueue;
-    if ($Load > 0.8 * 1000)
-    {
-        statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        sleep(1);
-        return $Load;
-    }
-    else
-    {
-        my $FileName = $File;
-        $FileName =~ s|.*/||;
-        copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n";
-        rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans",$Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n";
-    }
-  }
     if($Config{DeleteZipFilesAfterUpload})
     {
         unlink($File);

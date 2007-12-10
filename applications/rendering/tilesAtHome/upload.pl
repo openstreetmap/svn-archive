@@ -246,7 +246,7 @@ sub upload
             return 0;
         }
         my $QueueLength = scalar(@QueueFiles);
-        my $Load = ($MaxQueue - $QueueLength)/$MaxQueue;
+        my $Load = $QueueLength/$MaxQueue;
         if ($Load > 0.7)
         {
             statusMessage("Not uploading, upload directory full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -257,7 +257,7 @@ sub upload
         {
             my $FileName = $File;
             $FileName =~ s|.*/||;
-            print "\n$File $FileName\n";
+            print "\n$File $FileName\n" if $Config{Debug};
             copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n";
             rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans",$Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n";
         }

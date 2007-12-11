@@ -87,18 +87,29 @@ class LoadOsm(handler.ContentHandler):
       count = count + 1
       
     f.write(pack('B', len(self.routing.keys())))
+    errors = 0
     for routeType, data in self.routing.items():
       f.write(pack('B', len(routeType)))
       f.write(routeType)
       
       f.write(pack('L', len(data.keys())))
       for fr, destinations in data.items():
-        f.write(pack('L', self.newIDs[fr]))
+        try:
+          f.write(pack('L', self.newIDs[fr]))
+        except KeyError:
+          f.write(pack('L', 0))
+          errors = errors + 1
+          continue
 
         f.write(pack('B', len(destinations.keys())))
         for to, weight in destinations.items():
-          f.write(pack('Lf', self.newIDs[to], weight))
+          try:
+            f.write(pack('Lf', self.newIDs[to], weight))
+          except KeyError:
+            f.write(pack('Lf', 0, 0))
+            errors = errors + 1
     
+    print "%d key errors" % errors
     f.close()
     
   def loadbin(self,filename):

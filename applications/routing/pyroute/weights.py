@@ -24,7 +24,5 @@ def getWeight(transport, wayType):
   except KeyError:
     # Default: if no weighting is defined, then assume it can't be routed
     return(0)
-  
-
-if __name__ == "__main__":
-  print getWeight(sys.argv[1],sys.argv[2])
+ 
+ 

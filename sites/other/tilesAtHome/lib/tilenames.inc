@@ -1,15 +1,28 @@
 <?php
+require_once('config.inc.php');
 
+/// \brief Returns the tile file location with path ('' if unknown)
 function TileName($X,$Y,$Z,$Layer="tile"){
+  global $conf;
+
   if(!$Layer)
     return("");
   if(!TileValid($X,$Y,$Z))
     return("");
 
-    $BaseDir = "/mnt/agami/openstreetmap/tah/Tiles";
-
-  $Filename = $BaseDir . "/" . $Layer . "/" . TilePartName($X,$Y,$Z);
+  $Filename = $conf['TILEDIR'] . "/" . $Layer . "/" . TilePartName($X,$Y,$Z);
   return($Filename);
+}
+
+/// \brief returns the complexity of a tile (0 if unknown)
+function TileComplexity($X,$Y){
+    $sql = "SELECT * FROM tiles_complexity WHERE x=$X and y=$Y";
+    $r = mysql_query($sql); 
+    if (mysql_num_rows($r)) {
+        $result = mysql_fetch_assoc($r);
+        return $result['complexity'];
+    }
+    return 0;
 }
 
 function TileURL($X,$Y,$Z,$Layer="tile"){

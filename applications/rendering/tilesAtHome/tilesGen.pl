@@ -238,7 +238,6 @@ elsif ($Mode eq "loop")
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
         
-        ## no forking going on
         $upload_result = uploadIfEnoughTiles(); # upload if enough work done
         
         if ($upload_result)  # we got an error in the upload process

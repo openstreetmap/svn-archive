@@ -3,3 +3,4 @@ Main-Class: org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTest
 Plugin-Class: org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTesterAction
 Plugin-Description: Make the Tagging Preset Tester tool available in
   the help menu.
+Plugin-Version: 1.0

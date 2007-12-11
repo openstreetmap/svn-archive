@@ -140,7 +140,7 @@
       TilesetLink("maplint","maplint")
       )));
   
-  if($z >= 12){
+  if($z >= 12 || $z == 8){
     printf("<tr><td colspan=\"%d\" class=\"tbl\">%s</td></tr>\n",
       $Grid + 2,
       UpdateForm($x,$y,$z));
@@ -163,7 +163,7 @@
   }
   
   function UpdateForm($X,$Y,$Z){
-    if($Z < 12) return("");
+    if($Z < 12 && $Z != 8) return("");
     while($Z > 12){
       $X = floor($X / 2);
       $Y = floor($Y / 2);
@@ -174,6 +174,7 @@
     $Html .= "<input type=\"hidden\" name=\"priority\" value=\"1\">\n";
     $Html .= "<input type=\"hidden\" name=\"x\" value=\"$X\">\n";
     $Html .= "<input type=\"hidden\" name=\"y\" value=\"$Y\">\n";
+    $Html .= "<input type=\"hidden\" name=\"z\" value=\"$Z\">\n";
     $Html .= "<input type=\"submit\" value=\"Request update\">\n";
     $Html .= "</form>\n";
     return($Html);

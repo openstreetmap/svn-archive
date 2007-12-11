@@ -196,4 +196,5 @@ class LoadOsm(handler.ContentHandler):
 if __name__ == "__main__":
   print "Loading data..."
   data = LoadOsm(sys.argv[1], True)
-  data.report()
+  print "Loaded"
+  print data.report()

@@ -35,11 +35,15 @@ fetch_map() {
     find ${HERE}/map.${where} -name \*.kal -print0 | xargs -I '{}' -0 cat '{}' | \
 	cat > ${HERE}/map.full/kals.${where}.txt
 
+    GMF_GENERATE=${HERE}/gmf-generate
+    GMF_GENERATE="wine /home/hakan/Archive/2007/2007-11/geotools-dev-bin-2007-11-11/mingw/gmf-generate.exe"
     find ${HERE}/map.${where} -name \*.kal -print0 | xargs -I '{}' -0 cat '{}' | \
- 	${HERE}/gmf-generate ${HERE}/map.${where} ${HERE}/map.full/${where}.gmf > ${HERE}/logs/gmf-generate-${where}.log
+ 	${GMF_GENERATE} ${HERE}/map.${where} ${HERE}/map.full/${where}.gmf > ${HERE}/logs/gmf-generate-${where}.log
 
     [ ! -d ${HERE}/map.kml ] && mkdir ${HERE}/map.kml
-    ${HERE}/gmf-index ${HERE}/map.full/${where}.gmf >  ${HERE}/map.${where}/zzz-${where}.kml
+    GMF_INDEX=${HERE}/gmf-index
+    GMF_INDEX="wine /home/hakan/Archive/2007/2007-11/geotools-dev-bin-2007-11-11/mingw/gmf-index.exe"
+    ${GMF_INDEX} ${HERE}/map.full/${where}.gmf >  ${HERE}/map.${where}/zzz-${where}.kml
     cp ${HERE}/map.${where}/zzz-${where}.kml ${HERE}/map.kml/${where}.kml
 
     rm -f ${HERE}/map.${where}/*.kal

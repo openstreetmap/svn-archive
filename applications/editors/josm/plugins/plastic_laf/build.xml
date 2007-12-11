@@ -17,10 +17,21 @@
     <javac srcdir="src" destdir="${plugin.build.dir}">
       <include name="**/*.java" />
     </javac>
+    <!-- define the version of the jar file -->
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+	<!-- delete intermediate file -->
+    <delete file="REVISION"/>
     <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
 	<attribute name="Plugin-Class" value="plastic_laf.Plugin" />
 	<attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel" />
+	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 	<attribute name="Plugin-Early" value="true" />
       </manifest>
     </jar>

@@ -203,18 +203,6 @@ elsif ($Mode eq "loop")
         {
             cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
         }
-        elsif (getFault("upload") > 5)
-        {
-            cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
-        }
-        elsif (getFault("nodata") > 5)
-        {
-            cleanUpAndDie("Five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
-        }
-        elsif (getFault("nodataXAPI") > 5)
-        {
-            cleanUpAndDie("Five times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
-        }
         elsif (getFault("inkscape") > 5)
         {
             cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
@@ -222,6 +210,41 @@ elsif ($Mode eq "loop")
         elsif (getFault("renderer") > 10)
         {
             cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1,$PID);
+        }
+        elsif (getFault("upload") > 5) 
+        {
+            cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        }
+
+        my $sleepdelay = 1;
+        ## note: Timeouts are cumulative so if there are X timeouts from api and Y timeouts from XAPI then we wait for each timeout, one after the other
+        if (getFault("nodata") > 0) # check every network condition regardless of the other network outcomes
+        {
+            my $numfaults=getFault("nodata");
+            if ($numfaults > 5)
+            {
+                cleanUpAndDie("More than five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+            }
+            else
+            {
+                $sleepdelay=15*(4**$numfaults); # wait 15, 60, 240, 960, 3840 seconds. for a total of less than two hours.
+                $sleepdelay=int($sleepdelay)+1;
+                talkInSleep($numfaults." times no data", $sleepdelay);
+            }
+        }
+        if (getFault("nodataXAPI") > 0)
+        {
+            my $numfaults=getFault("nodataXAPI");
+            if ($numfaults >= 10)
+            {
+                cleanUpAndDie("10 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID); # allow XAPI more leeway
+            }
+            else
+            {
+                $sleepdelay=15*(2**$numfaults); # wait 15, 30, 60, 120, 240, 480, 960, 1920, 3840 seconds. for a total of about two hours.
+                $sleepdelay=int($sleepdelay)+1;
+                talkInSleep($numfaults." times no XAPI data", $sleepdelay);
+            }
         }
 
         if (-e "stopfile.txt")

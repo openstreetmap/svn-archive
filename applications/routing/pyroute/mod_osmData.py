@@ -19,9 +19,14 @@ class osmData(pyrouteModule):
     self.data.loadOsm(filename)
   
   def download(self,params):
-    lat = 51.3
-    lon = 0.1
-    size = 1
+    ownpos = self.get('ownpos')
+    if(not ownpos['valid']):
+      print "Can only download around own position"
+      return
+
+    lat = ownpos['lat']
+    lon = ownpos['lon']
+    size = 0.2
     
     url = "http://informationfreeway.org/api/0.5/way[bbox=%1.4f,%1.4f,%1.4f,%1.4f][highway|railway|waterway=*]" % (lon-size,lat-size,lon+size,lat+size)
     

@@ -256,12 +256,15 @@ sub upload
         else
         {
             my $FileName = $File;
-            $FileName =~ s|.*/||;
-            print "\n$File $FileName\n" if $Config{Debug};
-            copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n";
-            rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans",$Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n";
+            $FileName =~ s|.*/||;       # Get the source filename without path
+            print "\n$File $FileName\n" if $Config{Debug};    #Debug info
+            copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n"; # copy the file over using a temporary name
+            rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans", $Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n"; 
+            # rename so it can be picked up by central uploading client.
         }
     }
+
+    # if we didn't encounter any errors error we get here
     if($Config{DeleteZipFilesAfterUpload})
     {
         unlink($File);

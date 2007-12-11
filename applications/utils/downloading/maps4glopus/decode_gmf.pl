@@ -97,6 +97,7 @@ sub dump_file
     close (IN);
 }
 
-dump_file("by-gmf.gmf");
-
-dump_file("by-gmfgenerate.gmf");
+if ($#ARGV > -1)
+{
+    dump_file($ARGV[0]);   
+}

@@ -76,21 +76,41 @@ class LoadOsm(handler.ContentHandler):
     return(report)
     
   def savebin(self,filename):
+    self.newIDs = {}
+    
     f = open(filename,"wb")
-    f.write(pack('H',len(self.nodes.keys())))
+    f.write(pack('L',len(self.nodes.keys())))
+    count = 0
     for id, n in self.nodes.items():
-      f.write(pack('L',id))
+      self.newIDs[id] = count
       f.write(encodeLL(n[0],n[1]))
+      count = count + 1
+      
+    f.write(pack('B', len(self.routing.keys())))
+    for routeType, data in self.routing.items():
+      f.write(pack('B', len(routeType)))
+      f.write(routeType)
+      
+      f.write(pack('L', len(data.keys())))
+      for fr, destinations in data.items():
+        f.write(pack('L', self.newIDs[fr]))
+
+        f.write(pack('B', len(destinations.keys())))
+        for to, weight in destinations.items():
+          f.write(pack('Lf', self.newIDs[to], weight))
+    
     f.close()
     
   def loadbin(self,filename):
     f = open(filename,"rb")
-    n = unpack('H', f.read(2))[0]
+    n = unpack('L', f.read(4))[0]
     print "%u nodes" % n
+    id = 0
     for i in range(n):
-      id = unpack('L',f.read(4))[0]
       lat,lon = decodeLL(f.read(8))
-      print "%u: %f, %f" % (id,lat,lon)
+      #print "%u: %f, %f" % (id,lat,lon)
+      id = id + 1
+    
     f.close()
 
   def startElement(self, name, attrs):

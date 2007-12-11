@@ -31,6 +31,8 @@ import sys
 import os
 from xml.sax import make_parser, handler
 import xml
+from util_binary import *
+from struct import *
 
 execfile("weights.py")
 
@@ -72,6 +74,24 @@ class LoadOsm(handler.ContentHandler):
         len(self.routing[routeType].keys()),
         routeType)
     return(report)
+    
+  def savebin(self,filename):
+    f = open(filename,"wb")
+    f.write(pack('H',len(self.nodes.keys())))
+    for id, n in self.nodes.items():
+      f.write(pack('L',id))
+      f.write(encodeLL(n[0],n[1]))
+    f.close()
+    
+  def loadbin(self,filename):
+    f = open(filename,"rb")
+    n = unpack('H', f.read(2))[0]
+    print "%u nodes" % n
+    for i in range(n):
+      id = unpack('L',f.read(4))[0]
+      lat,lon = decodeLL(f.read(8))
+      print "%u: %f, %f" % (id,lat,lon)
+    f.close()
 
   def startElement(self, name, attrs):
     """Handle XML elements"""
@@ -196,5 +216,9 @@ class LoadOsm(handler.ContentHandler):
 if __name__ == "__main__":
   print "Loading data..."
   data = LoadOsm(sys.argv[1], True)
-  print "Loaded"
   print data.report()
+  print "Saving binary..."
+  data.savebin("data/routing.bin")
+  print "Loading binary..."
+  data.loadbin("data/routing.bin")
+  print "Done"

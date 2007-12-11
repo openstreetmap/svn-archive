@@ -2,6 +2,17 @@
 OSMGoogleEarth
 --------------
 
+******************************************************************************
+
+  IMPORTANT!
+  
+  OSMGoogleEarth has not been updated to use the 0.5 API. It is recommended
+  that you use the Export package of the newer Ruby OSM Library which also
+  does KML export and is faster and more flexible. See
+  http://osmlib.rubyforge.org/osmlib-export/
+
+******************************************************************************
+
 by Jochen Topf <jochen@topf.org> ([[User:Joto]] in OSM Wiki).
 
 Transform OpenStreetMap .osm file into KML file for Google Earth. 

@@ -305,7 +305,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		textColor = getPreferencesColor ("text", Color.WHITE);
 		showDirectionArrow = Main.pref.getBoolean("draw.segment.direction");
 		showOrderNumber = Main.pref.getBoolean("draw.segment.order_number");
-		useRealWidth = Main.pref.getBoolean("mappaint.useRealWidth",false);
+		useRealWidth = Main.pref.getBoolean("mappaint.useRealWidth",true);
 		zoomLevelDisplay = Main.pref.getBoolean("mappaint.zoomLevelDisplay",false);
 		fillAreas = Main.pref.getBoolean("mappaint.fillareas", true);
 		

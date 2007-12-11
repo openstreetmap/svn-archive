@@ -27,7 +27,7 @@
 
             <folder name="Shopping">
                 <rule e="node" k="amenity" v="supermarket">
-                    <point class="shopping"/>
+                    <point class="supermarket"/>
                 </rule>
             </folder>
 
@@ -222,6 +222,10 @@
                     <point class="power-station"/>
                 </rule>
 
+                <rule e="node" k="power" v="substation">
+                    <point class="power-station"/>
+                </rule>
+
             </folder>
 
         </folder>
@@ -359,7 +363,15 @@
         <Style id="shopping">
             <IconStyle id="iconstyle-shopping">
                 <Icon>
-                    <href>http://maps.google.com/mapfiles/kml/pal3/icon18.png</href>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/shopping.png</href>
+                </Icon>
+            </IconStyle>
+        </Style>
+
+        <Style id="supermarket">
+            <IconStyle id="iconstyle-supermarket">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/grocery.png</href>
                 </Icon>
             </IconStyle>
         </Style>

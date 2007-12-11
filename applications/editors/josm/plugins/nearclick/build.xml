@@ -36,10 +36,21 @@
   </target>
 
   <target name="dist" depends="compile">
+    <!-- define the version of the jar file -->
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+	<!-- delete intermediate file -->
+    <delete file="REVISION"/>
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
 	<attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
+	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
       </manifest>
     </jar>
   </target>

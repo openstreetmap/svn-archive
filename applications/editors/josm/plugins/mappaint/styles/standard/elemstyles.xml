@@ -451,7 +451,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
     
     <rule>
         <condition k="railway" v="subway"/>
-        <line width="1" colour="#202020" dashed="true"/>
+        <line width="1" colour="#303030" dashed="true"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>

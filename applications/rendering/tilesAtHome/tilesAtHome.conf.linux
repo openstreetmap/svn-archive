@@ -24,7 +24,7 @@ DownloadTimeout=1800
 # set this to prepend zip file by three first letters of hostname
 # to allow identification of uploads from different machines in the 
 # upload log
-UseHostnameInZipName=0
+UseHostnameInZipname=0
 
 ## Upload settings
 # UploadChunkSize is the maximum Zip size in MiB (1024^2 byte) for non-tileset uploads

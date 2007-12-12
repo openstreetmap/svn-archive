@@ -122,6 +122,22 @@ class LoadOsm(handler.ContentHandler):
       #print "%u: %f, %f" % (id,lat,lon)
       id = id + 1
     
+    numTypes = unpack('B', f.read(1))[0]
+    print "%u types:" % numTypes
+    for typ in range(numTypes):
+      lenName = unpack('B', f.read(1))[0]
+      name = f.read(lenName)
+      numLinks = 0
+      
+      numHubs = unpack('L', f.read(4))[0]
+      for hub in range(numHubs):
+        fr = unpack('L', f.read(4))[0]
+        numDest = unpack('B', f.read(1))[0]
+        for dest in range(numDest):
+          to,weight = unpack('Lf', f.read(8))
+          numLinks = numLinks + 1
+      print "  \"%s\" (%u segments)" % (name, numLinks)
+
     f.close()
 
   def startElement(self, name, attrs):
@@ -245,11 +261,12 @@ class LoadOsm(handler.ContentHandler):
     
 # Parse the supplied OSM file
 if __name__ == "__main__":
-  print "Loading data..."
-  data = LoadOsm(sys.argv[1], True)
-  print data.report()
-  print "Saving binary..."
-  data.savebin("data/routing.bin")
+  #print "Loading data..."
+  #data = LoadOsm(sys.argv[1], True)
+  #print data.report()
+  #print "Saving binary..."
+  #data.savebin("data/routing.bin")
   print "Loading binary..."
-  data.loadbin("data/routing.bin")
+  data2 = LoadOsm(None, False)
+  data2.loadbin("data/routing.bin")
   print "Done"

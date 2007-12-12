@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,6 +21,7 @@ import org.junit.Test;
  */
 public class ZappyFetcherTest
 {
+	Log log = LogFactory.getLog(ZappyFetcherTest.class);
 
 	/**
 	 * @throws java.lang.Exception
@@ -76,7 +79,7 @@ public class ZappyFetcherTest
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace(System.err);
+			log.error("URL construction failure", e);
 			fail("with exception: " + e.getMessage());
 		}
 	}

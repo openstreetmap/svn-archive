@@ -227,7 +227,7 @@ elsif ($Mode eq "loop")
             }
             else
             {
-                $sleepdelay=15*(4**$numfaults); # wait 15, 60, 240, 960, 3840 seconds. for a total of less than two hours.
+                $sleepdelay=16*(4**$numfaults); # wait 64, 256, 1024, 4096, 16384 seconds. for a total of about 6 hours
                 $sleepdelay=int($sleepdelay)+1;
                 talkInSleep($numfaults." times no data", $sleepdelay);
             }
@@ -241,7 +241,7 @@ elsif ($Mode eq "loop")
             }
             else
             {
-                $sleepdelay=15*(2**$numfaults); # wait 15, 30, 60, 120, 240, 480, 960, 1920, 3840 seconds. for a total of about two hours.
+                $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192 seconds for a total of about 4 hours
                 $sleepdelay=int($sleepdelay)+1;
                 talkInSleep($numfaults." times no XAPI data", $sleepdelay);
             }
@@ -1155,12 +1155,14 @@ sub RenderTile
 #-----------------------------------------------------------------------------
 sub UpdateClient # FIXME: should be called. (triggered by server?)
 {
-    my $Cmd = sprintf("%s%s up",
+    my $Cmd = sprintf("%s%s %s",
         $Config{i18n} ? "LC_ALL=C " : "",
-        $Config{Subversion});
+        $Config{Subversion},
+        $Config{SubversionUpdateCmd});
 
     statusMessage("Updating the Client", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
+    ## TODO: Implement and check output from svn status, too.
 
 }
 

@@ -74,7 +74,7 @@ public class ZappyFetcherTest
 					usak_south, usak_north);
 
 			assertEquals("URL contruction failure", ZappyFetcher.getURLBASE()
-					+ "node[place=city][bbox=29.4,38.6,29.5,38.7]", u.toString());
+					+ "node%5Dplace=city%5B%5Dbbox=29.4,38.6,29.5,38.7%5B", u.toString());
 
 		}
 		catch (Exception e)

@@ -3,12 +3,17 @@ package org.openstreetmap.utils.relationbuilder;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author Hakan Tandogan
  * 
  */
 public class ZappyFetcher
 {
+	Log log = LogFactory.getLog(ZappyFetcher.class);
+
 	// private static String DATA_DIR = "data";
 
 	private static final String URLBASE = "http://www.informationfreeway.org/api/0.5/";
@@ -24,7 +29,7 @@ public class ZappyFetcher
 		try
 		{
 			URL u = constructURL(type, predicate, east, west, south, north);
-			System.err.println(u);
+			log.debug(u);
 		}
 		catch (Exception e)
 		{

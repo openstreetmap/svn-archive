@@ -64,14 +64,14 @@ public class ZappyFetcherTest
 	{
 		try
 		{
-			float usak_min_lon = 29.4f;
-			float usak_min_lat = 38.6f;
-			float usak_max_lon = 29.5f;
-			float usak_max_lat = 38.7f;
+			float usak_east = 29.4f;
+			float usak_south = 38.6f;
+			float usak_west = 29.5f;
+			float usak_north = 38.7f;
 
 			ZappyFetcher zf = (new ZappyFetcher());
-			URL u = zf.constructURL("node", "place=city", usak_min_lon, usak_max_lon,
-					usak_min_lat, usak_max_lat);
+			URL u = zf.constructURL("node", "place=city", usak_east, usak_west,
+					usak_south, usak_north);
 
 			assertEquals("URL contruction failure", ZappyFetcher.getURLBASE()
 					+ "node[place=city][bbox=29.4,38.6,29.5,38.7]", u.toString());

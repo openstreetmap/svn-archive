@@ -11,14 +11,14 @@ public class RelationBuilder
 	 */
 	public static void main(String[] args)
 	{
-		float turkey_min_lat = 35.5f;
-		float turkey_max_lat = 42.2f;
-		float turkey_min_lon = 26.0f;
-		float turkey_max_lon = 45.0f;
+		float turkey_east = 26.0f;
+		float turkey_west = 45.0f;
+		float turkey_south = 35.5f;
+		float turkey_north = 42.2f;
 
-		float usak_min_lon = 29.4f;
-		float usak_min_lat = 38.6f;
-		float usak_max_lon = 29.5f;
-		float usak_max_lat = 38.7f;
+		float usak_east = 29.4f;
+		float usak_west = 29.5f;
+		float usak_south = 38.6f;
+		float usak_north = 38.7f;
 	}
 }

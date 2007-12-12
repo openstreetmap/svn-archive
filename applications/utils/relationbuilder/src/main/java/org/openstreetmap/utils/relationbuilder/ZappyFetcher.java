@@ -49,15 +49,16 @@ public class ZappyFetcher
 
 		if (predicate != null && (!("".equals(predicate))))
 		{
-			urlBuffer.append("[").append(predicate).append("]");
+			urlBuffer.append("%5D").append(predicate).append("%5B");
 		}
 
-		urlBuffer.append("[bbox=");
+		urlBuffer.append("%5D");
+		urlBuffer.append("bbox=");
 		urlBuffer.append(east).append(",");
 		urlBuffer.append(south).append(",");
 		urlBuffer.append(west).append(",");
 		urlBuffer.append(north);
-		urlBuffer.append("]");
+		urlBuffer.append("%5B");
 
 		return new URL(urlBuffer.toString());
 	}

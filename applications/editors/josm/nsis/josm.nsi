@@ -2,7 +2,6 @@
 ; josm.nsi
 ;
 
-
 ; Set the compression mechanism first.
 ; As of NSIS 2.07, solid compression which makes installer about 1MB smaller
 ; is no longer the default, so use the /SOLID switch.
@@ -14,11 +13,6 @@ SetCompressor /SOLID lzma
 !include "INIStrNS.nsh"
 
 !define DEST "josm"
-
-InstType "JOSM (full install)"
-
-InstType "un.Default (keep Personal Settings and plugins)"
-InstType "un.All (remove all)"
 
 ; Used to refresh the display of file association
 !define SHCNE_ASSOCCHANGED 0x08000000
@@ -37,9 +31,6 @@ Name "${PROGRAM_NAME} ${VERSION}"
 
 ; The file to write
 OutFile "${DEST}-setup-${VERSION}.exe"
-
-; Uninstall stuff (NSIS 2.08: "\r\n" don't work here)
-!define MUI_UNCONFIRMPAGE_TEXT_TOP "The following JAVA OpenStreetMap editor (JOSM) installation will be uninstalled. Click 'Next' to continue."
 
 XPStyle on
 
@@ -60,7 +51,7 @@ XPStyle on
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 !define MUI_WELCOMEFINISHPAGE_BITMAP "josm-nsis-brand.bmp"
-!define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of the JAVA OpenStreetMap editor (JOSM).\r\n\r\nBefore starting the installation, make sure any JOSM applications are not running.\r\n\r\nClick 'Next' to continue."
+!define MUI_WELCOMEPAGE_TEXT $(JOSM_WELCOME_TEXT) 
 ;!define MUI_FINISHPAGE_LINK "Install WinPcap to be able to capture packets from a network!"
 ;!define MUI_FINISHPAGE_LINK_LOCATION "http://www.winpcap.org"
 
@@ -100,7 +91,39 @@ XPStyle on
 ; MUI Languages
 ; ============================================================================
 
-!insertmacro MUI_LANGUAGE "English"
+  ;Remember the installer language
+  !define MUI_LANGDLL_REGISTRY_ROOT "HKLM" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" 
+  !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
+  
+  ;; English goes first because its the default. The rest are
+  ;; in alphabetical order (at least the strings actually displayed
+  ;; will be).
+
+  !insertmacro MUI_LANGUAGE "English"
+  !insertmacro MUI_LANGUAGE "German"
+
+;--------------------------------
+;Translations
+
+  !define JOSM_DEFAULT_LANGFILE "locale\english.nsh"
+
+  !include "langmacros.nsh"
+  
+  !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "ENGLISH" "locale\english.nsh"
+  !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "GERMAN" "locale\german.nsh"
+
+; Uninstall stuff (NSIS 2.08: "\r\n" don't work here)
+!define MUI_UNCONFIRMPAGE_TEXT_TOP ${un.JOSM_UNCONFIRMPAGE_TEXT_TOP}
+
+; ============================================================================
+; Installation types
+; ============================================================================
+
+InstType "$(JOSM_FULL_INSTALL)"
+
+InstType "un.$(un.JOSM_DEFAULT_UNINSTALL)"
+InstType "un.$(un.JOSM_FULL_UNINSTALL)"
 
 ; ============================================================================
 ; Reserve Files
@@ -154,7 +177,7 @@ XPStyle on
 ; Directory selection page configuration
 ; ============================================================================
 ; The text to prompt the user to enter a directory
-DirText "Choose a directory in which to install OpenStreeMap."
+DirText $(JOSM_DIR_TEXT)
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\JOSM\
@@ -191,10 +214,10 @@ UpdateIcons.next2_${UPDATEICONS_UNIQUE}:
 	Goto UpdateIcons.quit_${UPDATEICONS_UNIQUE}
 
 UpdateIcons.error1_${UPDATEICONS_UNIQUE}:
-	MessageBox MB_OK|MB_ICONSTOP  "Can't find 'shell32.dll' library. Impossible to update icons"
+	MessageBox MB_OK|MB_ICONSTOP $(JOSM_UPDATEICONS_ERROR1)
 	Goto UpdateIcons.quit_${UPDATEICONS_UNIQUE}
 UpdateIcons.error2_${UPDATEICONS_UNIQUE}:
-	MessageBox MB_OK|MB_ICONINFORMATION "You should install the free 'Microsoft Layer for Unicode' to update JOSM file icons"
+	MessageBox MB_OK|MB_ICONINFORMATION $(JOSM_UPDATEICONS_ERROR2)
 	Goto UpdateIcons.quit_${UPDATEICONS_UNIQUE}
 UpdateIcons.quit_${UPDATEICONS_UNIQUE}:
 	!undef UPDATEICONS_UNIQUE
@@ -237,6 +260,13 @@ FunctionEnd
 Function .onInit
   ;Extract InstallOptions INI files
 ;  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "AdditionalTasksPage.ini"
+  !insertmacro MUI_LANGDLL_DISPLAY
+FunctionEnd
+
+Function un.onInit
+
+  !insertmacro MUI_UNGETLANGUAGE
+  
 FunctionEnd
 
 ;Function DisplayAdditionalTasksPage
@@ -278,7 +308,7 @@ WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Pa
 SectionEnd ; "Required"
 
 
-Section "JOSM" SecJosm
+Section $(JOSM_SEC_JOSM) SecJosm
 ;-------------------------------------------
 SectionIn 1
 SetOutPath $INSTDIR
@@ -305,12 +335,13 @@ ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.op
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
 
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
+
 SectionEnd
 
 
-SectionGroup "Plugins" SecPluginsGroup
+SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 
-Section "mappaint" SecMappaintPlugin
+Section $(JOSM_SEC_MAPPAINT_PLUGIN) SecMappaintPlugin
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext all
@@ -331,7 +362,7 @@ SectionEnd
 ;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osmarender.firefox" "$PROGRAMFILES\Mozilla Firefox\firefox.exe"
 ;SectionEnd
 
-Section "WMS" SecWMSPlugin
+Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext all
@@ -339,7 +370,7 @@ SetOutPath $APPDATA\JOSM\plugins
 File "..\plugins\dist\wmsplugin.jar"
 SectionEnd
 
-Section "namefinder" SecNamefinderPlugin
+Section $(JOSM_SEC_NAMEFINDER_PLUGIN) SecNamefinderPlugin
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext all
@@ -347,7 +378,7 @@ SetOutPath $APPDATA\JOSM\plugins
 File "..\plugins\dist\namefinder.jar"
 SectionEnd
 
-Section "validator" SecValidatorPlugin
+Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext all
@@ -357,7 +388,7 @@ SectionEnd
 
 SectionGroupEnd	; "Plugins"
 
-Section "Start Menu Entry" SecStartMenu
+Section $(JOSM_SEC_STARTMENU) SecStartMenu
 ;-------------------------------------------
 SectionIn 1 2
 ; Create start menu entries (depending on additional tasks page)
@@ -365,11 +396,11 @@ SectionIn 1 2
 ;StrCmp $0 "0" SecRequired_skip_StartMenu
 ; To qoute "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
 ; "Do not include Readme, Help, or Uninstall entries on the Programs menu."
-CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
+CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
 ;SecRequired_skip_StartMenu:
 SectionEnd
 
-Section "Desktop Icon" SecDesktopIcon
+Section $(JOSM_SEC_DESKTOP_ICON) SecDesktopIcon
 ;-------------------------------------------
 ; SectionIn 1 2
 ; is command line option "/desktopicon" set?
@@ -382,11 +413,11 @@ Section "Desktop Icon" SecDesktopIcon
 ;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 3" "State"
 ;StrCmp $0 "0" SecRequired_skip_DesktopIcon
 ;SecRequired_install_DesktopIcon:
-CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
+CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
 ;SecRequired_skip_DesktopIcon:
 SectionEnd
 
-Section "Quick Launch Icon" SecQuickLaunchIcon
+Section $(JOSM_SEC_QUICKLAUNCH_ICON) SecQuickLaunchIcon
 ;-------------------------------------------
 SectionIn 1 2
 ; is command line option "/quicklaunchicon" set?
@@ -399,11 +430,11 @@ SectionIn 1 2
 ;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 4" "State"
 ;StrCmp $0 "0" SecRequired_skip_QuickLaunchIcon
 ;SecRequired_install_QuickLaunchIcon:
-CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
+CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
 ;SecRequired_skip_QuickLaunchIcon:
 SectionEnd
 
-Section "File Extensions" SecFileExtensions
+Section $(JOSM_SEC_FILE_EXTENSIONS) SecFileExtensions
 ;-------------------------------------------
 SectionIn 1 2
 ; Create File Extensions (depending on additional tasks page)
@@ -430,11 +461,20 @@ SectionIn 1 2
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
+!include LogicLib.nsh
+${Switch} $LANGUAGE
+${Case} ${LANG_GERMAN}
+File "..\plugins\dist\lang-de.jar"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,wmsplugin,namefinder,validator,lang-de"
+${Break}
+${Default}
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,wmsplugin,namefinder,validator"
+${Break}
+${EndSwitch}
 SectionEnd
 
 
-Section "Uninstall" un.SecUinstall
+Section "un.$(un.JOSM_SEC_UNINSTALL)" un.SecUinstall
 ;-------------------------------------------
 
 ;
@@ -444,6 +484,10 @@ SectionIn 1 2
 SetShellVarContext all
 
 Delete "$INSTDIR\josm.exe"
+IfErrors 0 NoJOSMErrorMsg
+	MessageBox MB_OK $(un.JOSM_IN_USE_ERROR) IDOK 0 ;skipped if josm.exe removed
+	Abort $(un.JOSM_IN_USE_ERROR)
+NoJOSMErrorMsg:
 Delete "$INSTDIR\uninstall.exe"
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
@@ -452,14 +496,13 @@ Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
 RMDir "$APPDATA\JOSM\plugins"
 RMDir "$APPDATA\JOSM"
-IfErrors 0 NoJOSMErrorMsg
-	MessageBox MB_OK "Please note: josm.exe could not be removed, it's probably in use!" IDOK 0 ;skipped if josm.exe removed
-	Abort "Please note: josm.exe could not be removed, it's probably in use! Abort uninstall process!"
-NoJOSMErrorMsg:
 
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\josm.exe"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe"
+
+; Remove Language preference info
+DeleteRegKey HKCU "Software/JOSM" ;${MUI_LANGDLL_REGISTRY_ROOT} ${MUI_LANGDLL_REGISTRY_KEY}
 
 push $R0
 	StrCpy $R0 ".osm"
@@ -481,7 +524,7 @@ RMDir "$INSTDIR"
 
 SectionEnd ; "Uinstall"
 
-Section /o "Un.Personal Settings" un.SecPersonalSettings
+Section /o "un.$(un.JOSM_SEC_PERSONAL_SETTINGS)" un.SecPersonalSettings
 ;-------------------------------------------
 SectionIn 2
 SetShellVarContext current
@@ -492,7 +535,7 @@ RMDir "$APPDATA\JOSM"
 RMDir "$APPDATA\JOSM\plugins\mappaint"
 SectionEnd
 
-Section /o "Un.Personal Plugins" un.SecPlugins
+Section /o "un.$(un.JOSM_SEC_PLUGINS)"un.SecPlugins
 ;-------------------------------------------
 SectionIn 2
 SetShellVarContext current
@@ -515,7 +558,7 @@ Section "-Un.Finally"
 SectionIn 1 2
 ; this test must be done after all other things uninstalled (e.g. Global Settings)
 IfFileExists "$INSTDIR" 0 NoFinalErrorMsg
-    MessageBox MB_OK "Please note: The directory $INSTDIR could not be removed!" IDOK 0 ; skipped if dir doesn't exist
+    MessageBox MB_OK $(un.JOSM_INSTDIR_ERROR) IDOK 0 ; skipped if dir doesn't exist
 NoFinalErrorMsg:
 SectionEnd
 
@@ -524,25 +567,24 @@ SectionEnd
 ; PLEASE MAKE SURE, THAT THE DESCRIPTIVE TEXT FITS INTO THE DESCRIPTION FIELD!
 ; ============================================================================
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} "JOSM is the JAVA OpenStreetMap editor for .osm files."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} "An assortment of useful JOSM plugins."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecMappaintPlugin} "An alternative renderer for the map with colouring, line thickness, icons after tags."
-;  !insertmacro MUI_DESCRIPTION_TEXT ${SecOsmarenderPlugin} "Displays the current screen as nicely rendered SVG graphics in FireFox."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} "Validates edited data if it conforms to common suggestions."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} "Add a JOSM start menu entry."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} "Add a JOSM desktop icon."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} "Add a JOSM icon to the quick launch bar."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecFileExtensions} "Add JOSM file extensions for .osm and .gpx files."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecMappaintPlugin} $(JOSM_SECDESC_MAPPAINT_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} $(JOSM_SECDESC_NAMEFINDER_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(JOSM_SECDESC_DESKTOP_ICON)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} $(JOSM_SECDESC_QUICKLAUNCH_ICON) 
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecFileExtensions} $(JOSM_SECDESC_FILE_EXTENSIONS)
   
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecUinstall} "Uninstall JOSM."
-  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecPersonalSettings} "Uninstall personal settings like your preferences and bookmarks from your profile: $PROFILE."
-  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecPlugins} "Uninstall all plugins."
+  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecUinstall} $(un.JOSM_SECDESC_UNINSTALL)
+  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecPersonalSettings} $(un.JOSM_SECDESC_PERSONAL_SETTINGS)
+  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecPlugins} $(un.JOSM_SECDESC_PLUGINS)
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_END
 
 ; ============================================================================

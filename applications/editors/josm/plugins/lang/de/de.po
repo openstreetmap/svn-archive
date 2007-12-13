@@ -1081,7 +1081,7 @@ msgstr "Es gibt ungelöste Konfilkte, die zuerst bearbeitet werden müssen."
 #: ../trunk/src/org/openstreetmap/josm/actions/UploadAction.java:133
 #: ../trunk.old/src/org/openstreetmap/josm/actions/UploadAction.java:133
 msgid "No changes to upload."
-msgstr "Kann keine Änderungen speichern."
+msgstr "Keine Änderungen zum hochladen vorhanden."
 
 #: ../josm/src/org/openstreetmap/josm/actions/UploadAction.java:149
 #: ../trunk/src/org/openstreetmap/josm/actions/UploadAction.java:149

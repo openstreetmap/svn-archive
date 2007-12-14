@@ -28,5 +28,9 @@ src_compile() {
 src_install() {
 	dobin "${FILESDIR}/josm" || die
 
-	java-pkg_dojar "dist/josm.jar"
+	insinto "/usr/$(get_libdir)/josm/"
+	newins "dist/josm-custom.jar" "josm.jar"  || die
+
+	domenu "${FILESDIR}/josm.desktop" || die
+	doicon "${FILESDIR}/josm.png" || die
 }

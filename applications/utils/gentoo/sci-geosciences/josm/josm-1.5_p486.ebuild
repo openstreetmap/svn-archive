@@ -16,7 +16,7 @@ SRC_URI="http://josm.openstreetmap.de/download/${MY_P}.jar
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"
-DEPEND="virtual/jdk"
+DEPEND="virtual/jre"
 S="${WORKDIR}"
 
 LINGUAS="en de"
@@ -33,10 +33,10 @@ src_compile() {
 src_install() {
 	dobin "${FILESDIR}/josm" || die
 
-	insinto /usr/lib/josm/
+	insinto /usr/$(get_libdir)/josm/
 	newins "${DISTDIR}/${MY_P}.jar" josm.jar || die
 
-	insinto /usr/lib/josm/plugins
+	insinto /usr/$(get_libdir)/josm/plugins
 	use linguas_de && newins ${DISTDIR}/lang-de.jar lang-de.jar
 	use linguas_en_GB && newins ${DISTDIR}/lang-en_GB-20061020.jar lang-en_GB.jar
 	use linguas_fr && newins ${DISTDIR}/lang-fr-20061020.jar lang-fr.jar

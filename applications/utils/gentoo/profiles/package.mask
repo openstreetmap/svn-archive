@@ -1,0 +1,9 @@
+# $Header: $
+
+# Dennis <dennis.lists@googlemail.com> (14 Dec 2007)
+# svn versions should be masked
+=sci-geosciences/josm-9999
+=sci-geosciences/josm-plugin-osmarender-9999
+=sci-geosciences/josm-plugin-validator-9999
+=sci-geosciences/josm-plugin-wmsplugin-9999
+=sci-geosciences/jmerkaartor-9999

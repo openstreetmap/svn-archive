@@ -1,0 +1,9 @@
+# ChangeLog for sci-geosciences/josm
+# Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*osmosis-9999 (14 Dec 2007)
+
+  14 Dec 2007; Dennis <dennis.lists@googlemail.com> +osmosis-9999.ebuild, +files/osmosis:
+  Initial commit of Osmosis-ebuild
+

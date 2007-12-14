@@ -6,4 +6,5 @@
 =sci-geosciences/josm-plugin-osmarender-9999
 =sci-geosciences/josm-plugin-validator-9999
 =sci-geosciences/josm-plugin-wmsplugin-9999
-=sci-geosciences/jmerkaartor-9999
+=sci-geosciences/merkaartor-9999
+=sci-geosciences/osmosis-9999

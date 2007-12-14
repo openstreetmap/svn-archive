@@ -1,0 +1,9 @@
+#/bin/sh
+
+# No need to check for their existance
+# they will be ignored if they're not
+MY_CP="/usr/share/jdbc-mysql/lib/jdbc-mysql.jar"
+MY_CP="${MY_CP}:/usr/share/jdbc-postgresql/lib/jdbc-postgresql.jar"
+MY_CP="${MY_CP}:/usr/share/osmosis/lib/osmosis.jar"
+
+java -cp ${MY_CP} com.bretth.osmosis.core.Osmosis $@

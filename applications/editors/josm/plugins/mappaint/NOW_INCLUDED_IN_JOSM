@@ -1,3 +1,7 @@
 As of Dec 14, the mappaint plugin has been included in the JOSM core and can
 now be found at http://josm.openstreetmap.de/svn/trunk/.  For details see
 http://lists.openstreetmap.org/pipermail/josm-dev/2007-December/000475.html
+
+Apparently, this version doesn't even build anymore with recent versions of
+JOSM:
+http://lists.openstreetmap.org/pipermail/talk-de/2007-December/005798.html

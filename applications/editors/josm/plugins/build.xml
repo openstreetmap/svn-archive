@@ -28,7 +28,6 @@
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
     <!--ant	dir="duplicateway"	antfile="build.xml"	target="dist"/ code still uses API 0.4 -->
     <ant	dir="lang"		antfile="build.xml"	target="dist"/>
-    <ant	dir="mappaint"		antfile="build.xml"	target="dist"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="dist"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="dist"/>
     <ant	dir="openvisible"	antfile="build.xml"	target="dist"/>
@@ -59,7 +58,6 @@
     <ant	dir="grid"		antfile="build.xml"	target="clean"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="clean"/>
     <ant	dir="lang"		antfile="build.xml"	target="clean"/>
-    <ant	dir="mappaint"		antfile="build.xml"	target="clean"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="clean"/>
     <ant	dir="navigator"		antfile="build.xml"	target="clean"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="clean"/>

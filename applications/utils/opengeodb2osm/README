@@ -1,0 +1,27 @@
+
+Warning: This is a development version. Please do not check in data 
+with this tool to OSM.
+
+Usage:
+
+Get OpenGeoDB Data from:
+
+http://sourceforge.net/project/showfiles.php?group_id=132421
+
+Get:  
+opengeodb-0.2.5a-UTF8-sql.gz
+
+Create a database "oppengeodb" using mysql command.
+
+Then put in the Data:
+
+zcat opengeodb-0.2.5a-UTF8-sql.gz |mysql -uuser -ppw opengeodb
+
+cp opengeodb2osmSettings.pm.TEMPLATE opengeodb2osmSettings.pm
+
+edit  opengeodb2osmSettings.pm and fill in at least mysql username and password
+
+Now you are ready to call: 
+perl opengeodb2osm.pl > test.osm
+
+Use JOSM to test the Data.

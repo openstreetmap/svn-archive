@@ -341,14 +341,6 @@ SectionEnd
 
 SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 
-Section $(JOSM_SEC_MAPPAINT_PLUGIN) SecMappaintPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext all
-SetOutPath $APPDATA\JOSM\plugins
-File "..\plugins\dist\mappaint.jar"
-SectionEnd
-
 ;Section "osmarender" SecOsmarenderPlugin
 ; osmarender needs Firefox (which isn't available on all machines)
 ; and often provides clipped SVG graphics - therefore it's ommited by default
@@ -465,10 +457,10 @@ SetShellVarContext current
 ${Switch} $LANGUAGE
 ${Case} ${LANG_GERMAN}
 File "..\plugins\dist\lang-de.jar"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,wmsplugin,namefinder,validator,lang-de"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,namefinder,validator,lang-de"
 ${Break}
 ${Default}
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,wmsplugin,namefinder,validator"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,namefinder,validator"
 ${Break}
 ${EndSwitch}
 SectionEnd
@@ -490,8 +482,9 @@ IfErrors 0 NoJOSMErrorMsg
 NoJOSMErrorMsg:
 Delete "$INSTDIR\uninstall.exe"
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
+Delete "$APPDATA\JOSM\plugins\lang-de.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
-Delete "$APPDATA\JOSM\plugins\mappaint.jar"
+;Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
 RMDir "$APPDATA\JOSM\plugins"
@@ -532,7 +525,7 @@ Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
 ;Delete "$APPDATA\JOSM\de-streets.xml"
 RMDir "$APPDATA\JOSM"
-RMDir "$APPDATA\JOSM\plugins\mappaint"
+;RMDir "$APPDATA\JOSM\plugins\mappaint"
 SectionEnd
 
 Section /o "un.$(un.JOSM_SEC_PLUGINS)"un.SecPlugins
@@ -542,7 +535,7 @@ SetShellVarContext current
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
-Delete "$APPDATA\JOSM\plugins\mappaint.jar"
+;Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
@@ -569,7 +562,6 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecMappaintPlugin} $(JOSM_SECDESC_MAPPAINT_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} $(JOSM_SECDESC_NAMEFINDER_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)

@@ -2,6 +2,11 @@
 # Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*josm-1.5_p490 (16 Dec 2007)
+
+  16 Dec 2007; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +josm-1.5_p490.ebuild:
+  Version bump
+
 *josm-9999 (14 Dec 2007)
 
   14 Dec 2007; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild:

@@ -5,7 +5,6 @@
 #
 my $version="0.0.1";
 
-
 use DBI;
 my $progname="opengeodb2osm";
 my %osmOGDB;
@@ -20,6 +19,8 @@ $mysqluser="root";
 
 $mysqlpw="";
 
+print "<?xml version='1.0' encoding='iso-8859-1'?>
+<osm version='0.5' generator='$progname'>\n";
 if (-f "opengeodb2osmSettings.pm") {
     require opengeodb2osmSettings;
 }
@@ -52,19 +53,35 @@ my $sthText = $dbh->prepare('select text_type,text_val from geodb_textdata where
 my $sthLoc = $dbh->prepare('select loc_type from geodb_locations where loc_id=?');
 my $sthPop = $dbh->prepare('select int_val from geodb_intdata where loc_id=? and int_type=600700000');
 
+my $sthParts = $dbh->prepare('select loc_id from geodb_textdata where text_type=400100000 and text_val=?');
+
 # Vorbereitetes Statement (Abfrage) ausfuehren
 $sth->execute ||
      die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
 
 $nodeid=-1;
 while ( my @ergebnis = $sth->fetchrow_array() ){
+    my $locid=$ergebnis[0];
+    $locIdHash{$locid}=$nodeid;
+    $nodeid--;
+}
+
+
+# Vorbereitetes Statement (Abfrage) ausfuehren
+$sth->execute ||
+     die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
+
+
+while ( my @ergebnis = $sth->fetchrow_array() ){
    # Im Array @ergebnis steht nun ein Datensatz
     my $locid=$ergebnis[0];
-    print '<node id="'.$nodeid.'" visible="true" lat="' . $ergebnis[2] ."\" lon=\"". $ergebnis[1]."\" >\n";
-    print ' <tag k="openGeoDB:loc_id" v="'.$locid.'" />'."\n";
+    print '<node id="'.$locIdHash{$locid}.'" visible="true" lat="' . $ergebnis[2] ."\" lon=\"". $ergebnis[1]."\" >\n";
+    
+    $tag=' <tag k="openGeoDB:loc_id" v="'.$locid.'" />'."\n";
     $sthText->execute($locid);
     $sthLoc->execute($locid);
     $sthPop->execute($locid);
+
     my %textval;
     while ( my @texterg = $sthText->fetchrow_array() ){
 	my $key=$texterg[0];
@@ -78,9 +95,9 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     for my $key ( keys %textval ) {
         my $value = $textval{$key};
 	if (defined($osmOGDB{$key})) {
-	    print ' <tag k="'.$osmOGDB{$key}.'" v="'.$value.'" />'."\n";
+	    $tag.=' <tag k="'.$osmOGDB{$key}.'" v="'.$value.'" />'."\n";
 	} else {
-	    print ' <tag k="opengeodb:'.$key.'" v="'.$value.'" />'."\n";
+	    $tag.=' <tag k="opengeodb:'.$key.'" v="'.$value.'" />'."\n";
 	}
     }
     my $population="";
@@ -88,7 +105,7 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$population=$poperg[0];
     }
     if ($population ne "") {
-	print ' <tag k="population" v="'.$population.'" />'."\n";
+	$tag.=' <tag k="population" v="'.$population.'" />'."\n";
     }
     my $place="";
     while ( my @locerg = $sthLoc->fetchrow_array() ){
@@ -136,13 +153,31 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	}
     }
     if ($place ne "") {
-	print ' <tag k="place" v="'.$place.'" />'."\n";
+	$tag.=' <tag k="place" v="'.$place.'" />'."\n";
     }
-    print ' <tag k="created_by" v="'.$progname.$version.'" />'."\n";
-    
-    print "</node>\n";
-    $nodeid--;
+    $tag.=' <tag k="created_by" v="'.$progname.$version.'" />'."\n";
+  
+    print "$tag</node>\n";
+
+    $found=0;
+    $sthParts->execute($locid);
+    while ( my @partserg = $sthParts->fetchrow_array() ){
+	if (defined($locIdHash{$partserg[0]})) {
+	    if ($found==0) {
+		$nodeid--;
+		print "<relation id=\"".$nodeid."\" visible='true'>\n";
+		$found++;
+		print $tag;
+		print " <member type='node' ref=\"$locIdHash{$locid}\" role='this' />\n";
+	    }
+	    print " <member type='node' ref=\"$locIdHash{$partserg[0]}\" role='child' />\n";
+	}
+    }
+    if ($found>0) {
+	print "</relation>\n";
+    }
 }
 
 # Datenbank-Verbindung beenden
 $dbh->disconnect;
+print "</osm>\n";

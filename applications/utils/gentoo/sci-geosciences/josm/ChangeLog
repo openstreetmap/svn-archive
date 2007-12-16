@@ -7,6 +7,10 @@
   16 Dec 2007; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +josm-1.5_p490.ebuild:
   Version bump
 
+  16 Dec 2007; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> josm-1.5_p486.ebuild, josm-1.5_p490.ebuild:
+  Updated plugin-urls for language-packs
+
+
 *josm-9999 (14 Dec 2007)
 
   14 Dec 2007; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild:

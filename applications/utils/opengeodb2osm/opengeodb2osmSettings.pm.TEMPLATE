@@ -1,0 +1,16 @@
+
+
+
+$uselat=1;
+$minlat=53;
+$maxlat=54;
+$minlon=9;
+$maxlon=11;
+
+$mysqldb="opengeodb";
+$mysqluser="root"; 
+
+$mysqlpw="blub1234";
+
+
+1;

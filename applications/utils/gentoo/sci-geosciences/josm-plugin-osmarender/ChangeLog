@@ -1,0 +1,8 @@
+# ChangeLog for sci-geosciences/josm
+# Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*josm-plugin-osmarender-4.ebuild (16 Dec 2007)
+
+  16 Dec 2007; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> josm-plugin-osmarender-4.ebuild:
+  Updated src_uri

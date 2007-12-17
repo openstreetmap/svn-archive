@@ -1041,6 +1041,10 @@
 			<wayMarker fill="none" stroke="red" stroke-width="1px" stroke-opacity="0" marker-mid="url(#marker-stile)" />		
 		</rule>
 
+	<!-- Bus stops -->
+	<rule e="node" k="highway" v="bus_stop">
+	    <symbol xlink:href="#symbol-bus" width='6px' height='6px' transform='translate(-3,-3)' />
+	</rule>
 
         <!-- Amenities -->
         <rule e="node" k="aeroway" v="helipad">
@@ -3093,7 +3097,44 @@
 		<svg:symbol id="symbol-peak" viewBox="0 0 100 100">
 			<svg:path  fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
 		</svg:symbol>
-	
+
+		<svg:symbol id="symbol-bus" viewBox="0 0 100 100">
+		  <svg:path
+		      style="fill:#0000ff; fill-rule:evenodd; stroke:#000000; stroke-width:0.33102515; stroke-linecap:butt; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1"
+		      d="M 2,15 L 45,15 C 46,15 48,26 48,27 L 48,30 C 48,31 48,32 47,32 L 2,32 C 1,32 0.1,31 0,30 L 0.2,17 C 0.2,16 1,15 2,15 L 2,15 z " />
+		  <svg:path
+		      type="arc"
+		      style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.75587374;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+		      d="M 38.56,31.36 C 38.56,32.81 37.38,33.98 35.93,33.98 C 34.48,33.98 33.31,32.81 33.31,31.36 C 33.31,29.91 34.48,28.74 35.93,28.74 C 37.38,28.74 38.56,29.91 38.56,31.36 z " />
+		  <svg:path
+		      type="arc"
+		      style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.75587374;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+		      d="M 15.66,31.36 C 15.66,32.81 14.48,33.98 13.03,33.98 C 11.58,33.98 10.41,32.81 10.41,31.36 C 10.41,29.91 11.58,28.74 13.03,28.74 C 14.48,28.74 15.66,29.91 15.66,31.36 z " />
+		  <svg:rect
+		      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.34645978;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		      width="10"
+		      height="8"
+		      x="24"
+		      y="16"
+		      ry="0.6" />
+		  <svg:path
+		      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.34789473;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		      d="M 35.29,16.17 L 44.14,16.17 C 44.79,16.17 46.06,23.95 45.78,23.81 C 44.62,23.84 35.41,23.80 35.22,23.80 C 35.11,23.95 35.21,16.00 35.29,16.17 z " />
+		  <svg:rect
+		      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.35235155;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		      width="10"
+		      height="8"
+		      x="13"
+		      y="16"
+		      ry="0.6" />
+		  <svg:rect
+		      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.35438657;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		      width="10"
+		      height="8"
+		      x="2"
+		      y="16"
+		      ry="0.6" />
+		</svg:symbol>
     </defs>
 
 </rules>

@@ -1002,6 +1002,98 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </text>
   </xsl:template>
 
+  <!-- Process an <areaSymbol> instruction -->
+  <xsl:template match="areaSymbol">
+    <xsl:param name="elements"/>
+
+    <!-- This is the instruction that is currently being processed -->
+    <xsl:variable name="instruction" select="."/>
+
+    <!-- Select all <way> elements -->
+    <xsl:apply-templates select="$elements[name()='way']" mode="areaSymbolPath">
+      <xsl:with-param name="instruction" select="$instruction"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+
+  <xsl:template match="*" mode="areaSymbolPath"/>
+
+
+  <xsl:template match="way" mode="areaSymbolPath">
+    <xsl:param name="instruction"/>
+
+    <!-- The current <way> element -->
+    <xsl:variable name="way" select="."/>
+
+    <xsl:call-template name="renderAreaSymbol">
+      <xsl:with-param name="instruction" select="$instruction"/>
+      <xsl:with-param name="pathId" select="concat('way_normal_',@id)"/>
+    </xsl:call-template>
+
+  </xsl:template>
+
+
+  <xsl:template name="renderAreaSymbol">
+    <xsl:param name="instruction"/>
+
+    <xsl:variable name='left'>
+      <xsl:call-template name='areaExtentLeft'>
+        <xsl:with-param name='nd' select='./nd[1]'/>
+        <!-- First node -->
+        <xsl:with-param name='left' select='key("nodeById",./nd[1]/@ref)/@lon'/>
+        <!-- Longitude of first node -->
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name='right'>
+      <xsl:call-template name='areaExtentRight'>
+        <xsl:with-param name='nd' select='./nd[1]'/>
+        <!-- First node -->
+        <xsl:with-param name='right' select='key("nodeById",./nd[1]/@ref)/@lon'/>
+        <!-- Longitude of first node -->
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name='top'>
+      <xsl:call-template name='areaExtentTop'>
+        <xsl:with-param name='nd' select='./nd[1]'/>
+        <!-- First node -->
+        <xsl:with-param name='top' select='key("nodeById",./nd[1]/@ref)/@lat'/>
+        <!-- Latitude of first node -->
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name='bottom'>
+      <xsl:call-template name='areaExtentBottom'>
+        <xsl:with-param name='nd' select='./nd[1]'/>
+        <!-- First node -->
+        <xsl:with-param name='bottom' select='key("nodeById",./nd[1]/@ref)/@lat'/>
+        <!-- Latitude of first node -->
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name='midLon'>
+      <xsl:value-of select='$left+(($right - $left) div 2)'/>
+    </xsl:variable>
+    <xsl:variable name='midLat'>
+      <xsl:value-of select='$bottom+(($top - $bottom) div 2)'/>
+    </xsl:variable>
+
+    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($midLon))*10000*$scale)"/>
+    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($midLat))*10000*$scale*$projection)"/>
+
+    <g transform="translate({$x},{$y}) scale({$symbolScale})">
+      <use>
+        <xsl:if test="$instruction/@ref">
+          <xsl:attribute name="xlink:href">
+            <xsl:value-of select="concat('#symbol-', $instruction/@ref)"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
+        <!-- Copy all the attributes from the <symbol> instruction -->
+      </use>
+    </g>
+  </xsl:template>
 
   <xsl:template name='areaExtentLeft'>
     <xsl:param name='nd'/>

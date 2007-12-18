@@ -410,6 +410,9 @@
         </rule>
         -->
         <rule k="osmarender:renderName" v="~|yes">
+                        <rule e="node" k="place" v="island">
+                            <text k='name' class='island-caption' />
+			</rule>
 			<rule e="node" k="place" v="county">
 				<text k="name" class='county-caption' />
 			</rule>
@@ -1084,6 +1087,15 @@
                 text-anchor: middle;
             }
 
+            .island-caption {
+                fill: black;
+                stroke: none;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 100px;
+                opacity: 0.7;
+                font-weight: bold;
+                text-anchor: middle;
+            }
 
             /* Natural */
             .natural-water {

@@ -1372,6 +1372,9 @@
 				<text k="name" class='place-caption peak-caption' dy='-1.5px'/>
 				<text k="elevation" class='place-caption' font-size='1px' dy='2.0px'/>
 			</rule>	        
+			<rule e="node" k="place" v="islet" layer="5">
+			    <text k='name' class='place-caption islet-caption' />
+			</rule>
 			<rule e="node" k="place" v="village" layer="5">
 			    <text k='name' class='place-caption village-caption' />
 			</rule>
@@ -1956,6 +1959,7 @@
             }
             
 			.peak-caption           { font-size: 2px; }
+            .islet-caption          { font-size: 3px; }
             .village-caption        { font-size: 3px; }
             .suburb-caption         { font-size: 3px; }
             .hamlet-caption         { font-size: 2px; }

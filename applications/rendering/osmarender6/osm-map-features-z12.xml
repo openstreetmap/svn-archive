@@ -520,6 +520,9 @@
 
         <!-- Place names  -->
         <rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
+                        <rule e="node" k="place" v="island" layer="5">
+                            <text k='name' class='place-caption island-caption' />
+			</rule>
 			<rule e="node" k="place" v="county" layer="5">
 				<text k="name" class='place-caption county-caption' />
 			</rule>
@@ -897,6 +900,7 @@
                 stroke-miterlimit: 1.5;
             }
 
+			.island-caption         { font-size: 65px; }
 			.county-caption         { font-size: 150px; }
 			.city-caption           { font-size: 100px; }
 			.town-caption           { font-size: 65px; }

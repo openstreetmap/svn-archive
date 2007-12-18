@@ -561,6 +561,12 @@
 
 		<!-- Place names  -->
         <rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
+                        <rule e="node" k="place" v="island" layer="5">
+                            <text k='name' class='place-caption island-caption' />
+			</rule>
+                        <rule e="node" k="place" v="islet" layer="5">
+                            <text k='name' class='place-caption islet-caption' />
+			</rule>
 			<rule e="node" k="place" v="city" layer="5">
 			    <text k="name" class='place-caption city-caption' />
 			</rule>
@@ -965,6 +971,8 @@
 
 			.city-caption           { font-size: 50px; }
 			.town-caption           { font-size: 40px; }
+            .island-caption         { font-size: 50px; }
+            .islet-caption          { font-size: 20px; }
             .village-caption        { font-size: 20px; }
             .suburb-caption         { font-size: 20px; }
 

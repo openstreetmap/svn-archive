@@ -835,6 +835,9 @@
 			<rule k="natural" v="peak" layer="5">
 				<text k="name" class='place-caption peak-caption' dy='-5px'/>
 			</rule>	        
+			<rule e="node" k="place" v="islet" layer="5">
+			    <text k='name' class='place-caption islet-caption' />
+			</rule>
 			<rule e="node" k="place" v="village" layer="5">
 			    <text k="name" class='place-caption village-caption' />
 			</rule>
@@ -1312,6 +1315,7 @@
             }
 
 			.peak-caption           { font-size: 6px; }
+            .islet-caption          { font-size: 8px; }
             .village-caption        { font-size: 8px; }
             .suburb-caption         { font-size: 8px; }
             .hamlet-caption         { font-size: 6px;  }

@@ -195,6 +195,9 @@
 		</rule>
     
         <!-- Place names  -->
+        <rule e="node" k="place" v="island" layer="5">
+            <text k="name" class='island-caption' />
+        </rule>
         <rule e="node" k="place" v="continent" layer="5">
             <text k="name" class='continent-caption' />
         </rule>
@@ -405,6 +408,16 @@
             }
 
             .town-caption {
+                fill: black;
+                stroke: none;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 350px;
+                opacity: 0.9;
+                font-weight: normal;
+                text-anchor: middle;
+            }
+
+            .island-caption {
                 fill: black;
                 stroke: none;
                 font-family: "DejaVu Sans",sans-serif;

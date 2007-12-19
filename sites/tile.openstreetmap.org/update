@@ -1,0 +1,33 @@
+#!/bin/bash
+
+while (/bin/true)
+do
+  ymd=`date +%y%m%d`
+#  ymd="071031"
+
+  file="planet-${ymd}.osm.gz"
+  name="${HOME}/planet/${file}"   
+  url="http://planet.openstreetmap.org/${file}"
+
+  if [ -s "${name}" ]
+  then
+    echo "$name Already exists"
+    exit 1
+  fi
+
+  date
+  echo "Fetching: $file"
+
+  wget -O "${name}" "${url}"
+  if [ $? -ne 0 ]
+  then
+      echo "failed"
+      sleep 1200
+  else 
+      echo "ok"
+      # Some zlib fail with files > 2GB, gzip seems OK
+      gzip -dc "${name}" | time osm2pgsql -
+      exit 0
+  fi
+done
+exit -1

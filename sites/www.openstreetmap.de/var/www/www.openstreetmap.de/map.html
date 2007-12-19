@@ -1,6 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <title>OpenStreetMap f&uuml;r Deutschland - Testversion </title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="language" content="de">
+<link rel="stylesheet" type="text/css" media="screen, projection" href="osmstyle.css">
+<link rel="shortcut icon" href="favicon.ico">
+
 <script type="text/javascript">
 	var lon = 8.5;
 	var lat = 50;
@@ -14,8 +20,6 @@
 <script type="text/javascript" src="javascript/OpenLayers.js"></script>
 <script type="text/javascript" src="javascript/site.js"></script>
 
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-</head>
 <script type="text/javascript">
 <!--
 	var map, layer;
@@ -30,7 +34,7 @@
 			maxResolution:156543, units:'meters', 
 			projection: "EPSG:41001"} );
 		/* layer = new OpenLayers.Layer.LikeGoogle ("OSM", "http://tile.osm.kn.op.dlr.de/", {type:'png'}); */
-		layer = new OpenLayers.Layer.LikeGoogle ("OSM", "http://tile.openstreetmap.de/", {type:'png'});
+		layer = new OpenLayers.Layer.LikeGoogle ("OSM", "http://tile.openstreetmap.org/", {type:'png'});
 		map.addLayer (layer);
 		<!-- map.addControl (new OpenLayers.Control.LayerSwitcher()); -->
 		map.setCenter (new OpenLayers.LonLat(lon, lat), zoom);
@@ -47,62 +51,18 @@
 	}
 //-->
 </script>
+</head>
+
 <body onload="init();">
-<table border=0 width="99%" height="99%" id="main_table">
-<tr>
-<td></td>
-<td height="30px" align="left">
-	<ul id="tabnav">
-	     <li> <a class="active" id="viewanchor" href="/index.html" title="view maps">View</a></li>
-	     <li> <a style="font-style:italic" href="http://www.openstreetmap.org/login.html" title="edit maps">Edit</a> </li>
-	     <li> <a href="javascript:
-		    	var e=map.getExtent(); 
-		    	var nelat = ( e.top / 20037508.34) * 180, 
-		    	nelon = ( e.right / 20037508.34) * 180, 
-			swlat = ( e.bottom / 20037508.34) * 180, 
-			swlon = ( e.left / 20037508.34) * 180, 
-			PI = 3.14159265358979323846; 
-			nelat = 180/PI * (2 * Math.atan(Math.exp(nelat * PI / 180)) - PI / 2); 
-			swlat = 180/PI * (2 * Math.atan(Math.exp(swlat * PI / 180)) - PI / 2); 
-			void(alert('('+swlon+', '+nelat+', '+nelon+', '+swlat+')'));">
-			Bounds</a></li>
-		</ul>
-</td>
-</tr>
 
-<tr>
-<td width="200px" valign="top">
+<!--navigationdiv-->
+<!--#include virtual="navigation_content.html" -->
+<!--end navigationdiv-->
 
-	<div id="logo">
-			<center>
-			<h1>OpenStreetMap</h1>
-			<img src="images/mag_map-120x120.png" width="120" height="120"/><br/>
-			<nobr><h2>The Free Wiki World Map</h2></nobr>
-			</center>
-	</div>
-		
-	<div id="intro">
-			OpenStreetMap ist eine frei editierbare Karte der ganzen Welt. Sie wird von leuten wie dir gemacht.
-			<p/>
-			OpenStreetMap erlaubt es die Daten anzuzeigen und zu editieren. 
-			<p/>
-			Dies ist der Deutsche OpennStreetMap Server. Um Daten zu editieren, m&uuml;ssen sie auf den 
-			<A href="http://www.openstreetmap.org/">Englischen Hautserver</a> wechseln.
-	</div>
-	<div>
-		      <center>
-		      <a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="images/somerights20.png" border="0"></a>
-		      </center>
-	</div>
-	</div>
-</td>
-<td>
-	<div style="width:100%; height:100%; border: 1px solid black;z-index: 200" id="map">
+<div style="width:79%; height:99%; position:absolute; top:0px; left:20%; border: 1px solid black;z-index: 200" id="map">
+</div>
 
-  </div>
-</td>
-</tr>
-</table>
+
 
 <script type="text/javascript">
 	if ((lat != undefined) && (lon != undefined) && (zoom != undefined)) {

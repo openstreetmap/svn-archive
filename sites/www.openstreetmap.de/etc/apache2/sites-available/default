@@ -1,7 +1,8 @@
 NameVirtualHost *
 <VirtualHost *>
 	ServerAdmin webmaster@localhost
-	
+        AddOutputFilter INCLUDES .shtml
+
 	DocumentRoot /var/www/
 	<Directory />
 		Options FollowSymLinks

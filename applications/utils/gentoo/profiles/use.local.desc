@@ -1,0 +1,6 @@
+sci-geosciences/viking:expedia - Map support for Expedia
+sci-geosciences/viking:google - Map support for Google
+sci-geosciences/viking:old-google - Old Map support for Google
+sci-geosciences/viking:openstreetmap - Map support for Openstreetmap (mapnik and osmarender)
+sci-geosciences/viking:realtime-gps - Enable realtime GPS-tracking with gpsd
+sci-geosciences/viking:terraserver - Map support for terraserver

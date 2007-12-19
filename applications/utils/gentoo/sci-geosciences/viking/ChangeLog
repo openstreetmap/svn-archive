@@ -1,0 +1,12 @@
+# ChangeLog for sci-geosciences/viking
+# Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*viking-0.9.3 (9 Dec 2007)
+
+  19 Dec 2007; Dennis <dennis.lists@googlemail.com>:
+  right gtk+-version. see
+  http://viking.sourceforge.net/mediawiki/index.php/Download
+
+  9 Dec 2007; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +viking-0.9.3.ebuild:
+  initial commit

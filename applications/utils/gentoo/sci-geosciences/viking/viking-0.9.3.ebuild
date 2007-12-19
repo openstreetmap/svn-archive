@@ -14,7 +14,7 @@ SLOT="0"
 IUSE="expedia google old-google openstreetmap realtime-gps terraserver"
 KEYWORDS="~x86 ~amd64"
 
-DEPEND=">=x11-libs/gtk+-2.4.0
+DEPEND=">=x11-libs/gtk+-2.8
 	>=dev-libs/glib-2.12.0
 	net-misc/curl
 	realtime-gps? ( sci-geosciences/gpsd )"

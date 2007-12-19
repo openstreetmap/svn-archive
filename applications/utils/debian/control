@@ -7,7 +7,7 @@ Standards-Version: 3.6.1
 
 Package: openstreetmap-utils
 Architecture: any
-Depends: perl, python, libshp1, libmagick9, libfile-slurp-perl, libdate-manip-perl, postgresql-client
+Depends: perl, python, libshp1, libmagick9, libfile-slurp-perl, libdate-manip-perl, postgresql-client, gpsbabel
 Recommends: gpsdrive, mapnik
 Suggests: java
 Description: OpenStreetmap Utils

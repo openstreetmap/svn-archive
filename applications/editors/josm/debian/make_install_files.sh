@@ -50,7 +50,7 @@ cd ..
 
 cp ./core/dist/josm-custom.jar $jar_path/josm.jar || exit -1
 
-plugin_jars=`find plugins -name "*.jar"`
+plugin_jars=`find dist -name "*.jar"`
 for src_fn in $plugin_jars ; do 
     fn="`basename ${src_fn}`"
     dst_fn="$plugin_dir/$fn"

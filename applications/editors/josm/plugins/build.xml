@@ -24,7 +24,7 @@
   </target>
 
   <target name="dist" depends="compile">
-    <mkdir dir="dist"/>
+    <mkdir dir="../dist"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
     <!--ant	dir="duplicateway"	antfile="build.xml"	target="dist"/ code still uses API 0.4 -->
     <ant	dir="lang"		antfile="build.xml"	target="dist"/>

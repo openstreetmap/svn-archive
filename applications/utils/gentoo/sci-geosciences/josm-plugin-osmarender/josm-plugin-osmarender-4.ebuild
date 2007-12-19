@@ -9,7 +9,7 @@ RESTRICT="nomirror"
 
 DESCRIPTION="Osmarender-Plugin for josm"
 HOMEPAGE="http://josm.openstreetmap.de/"
-SRC_URI="http://svn.openstreetmap.org/applications/editors/josm/plugins/dist/osmarender.jar"
+SRC_URI="http://svn.openstreetmap.org/applications/editors/josm/dist/osmarender.jar"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"

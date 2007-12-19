@@ -6,8 +6,8 @@
 # The default attribution, if you do not override it in this file, is a copyright
 # sign followed by your screen name.
 #
-# Please do not change attribution for other users unless you have been specifically
-# asked to do so!
+# Please do not change attribution for other users unless you have been 
+# specifically asked to do so!
 #
 # EXAMPLES
 # --------
@@ -29,3 +29,4 @@
 woodpeck=
 keichwa=
 Gabriel Ebner=
+Socks=

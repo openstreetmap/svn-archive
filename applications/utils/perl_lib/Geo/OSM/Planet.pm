@@ -133,6 +133,19 @@ sub planet_dir(;$) {
 }
 
 
+sub sort_unique(@){
+    my @srt = sort @_;
+    my @erg;
+    my $last_val=undef;
+    for my $val ( @srt ){
+	next if $last_val &&  $val eq $last_val;
+	$last_val=$val;
+	push (@erg,$val);
+    }
+    return @erg
+}
+    
+
 # ------------------------------------------------------------------
 # mirror the newest planet.osm File to
 #  ~/osm/planet/planet.osm.bz2
@@ -157,8 +170,15 @@ sub mirror_planet(){
 	    my $index_content = read_file( $index_file ) ;
 
 	    # Get the current planet.osm File
-	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/g);
-	    ( $current_file ) = grep { $_ !~ m/planet-061008/ } @all_files;
+	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2|planet-\d\d\d\d\d\d.osm.gz)/g);
+	    my ( $current_file1,$current_file2 )
+		= grep { $_ !~ m/planet-061008/ } reverse sort_unique(@all_files);
+	    print STDERR " TOP Files:   ( $current_file1,$current_file2 ) \n" if $DEBUG;
+	    $current_file = $current_file1;
+	    $current_file1 =~ s/\.bz2$/\.gz/;
+	    if (  $current_file1 eq $current_file2 ) {
+		$current_file =  $current_file1
+	    };
 	    if ( $current_file ) {
 		$url .= "/$current_file";
 		$current_file = "$mirror_dir/$current_file";
@@ -169,9 +189,7 @@ sub mirror_planet(){
 	}
     }
 
-    my @files= sort { $b cmp $a}  
-    grep { $_ !~ m/planet-061008/ } 
-    glob("$mirror_dir/planet-*.osm.bz2");
+    my @files= reverse sort_unique( grep { $_ !~ m/planet-061008/ } glob("$mirror_dir/planet-*.osm.{bz2,gz}"));
     if ( $DEBUG) {
 	print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
     }

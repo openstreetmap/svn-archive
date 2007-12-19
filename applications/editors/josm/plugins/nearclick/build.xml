@@ -5,9 +5,9 @@
   <property name="josm.home.dir"	value="${user.home}/.josm"/>
   <property name="josm"			location="../../core/dist/josm-custom.jar" />
   <property name="plugin.build.dir"	value="build"/>
-  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.dist.dir"	value="../../dist"/>
   <property name="plugin.name"		value="${ant.project.name}"/>
-  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
+  <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
 
   <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
   <property name="josm" location="../../core/dist/josm-custom.jar" />

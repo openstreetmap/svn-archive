@@ -12,9 +12,9 @@
   <property name="josm.build.dir" value="../../core"/>
   <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
   <property name="plugin.build.dir" value="build"/>
-  <property name="plugin.dist.dir" value="../dist"/>
+  <property name="plugin.dist.dir" value="../../dist"/>
   <property name="plugin.name" value="${ant.project.name}"/>
-  <property name="plugin.jar" value="../dist/${plugin.name}.jar"/>
+  <property name="plugin.jar" value="${plugin.name}.jar"/>
   
   <!-- plugin meta data (enter new version number if anything changed!) -->
   <property name="plugin.version" value="0.2.1"/>
@@ -44,7 +44,7 @@
 	 </copy>
 	 -->
     
-    <mkdir dir="dist"/>
+    <mkdir dir="${plugin.dist.dir}"/>
     
     <!-- create jar file -->
     <jar destfile="${plugin.dist.dir}/${plugin.jar}" basedir="${plugin.build.dir}">
@@ -76,7 +76,7 @@
   </target>
 
   <target name="install" depends="dist">
-    <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+    <copy file="${plugin.dist.dir}/${plugin.jar}" todir="${josm.plugins.dir}"/>
     <!--
 	<copy todir="${josm.home.dir}/plugins">
     	  <fileset dir="lib">
@@ -144,7 +144,7 @@ target="${josm.home.dir}/plugins/${plugin.jar}"/>
 <target name="clean">
   <delete dir="${plugin.build.dir}" />
   <delete dir="${plugin.site.file}" />
-  <delete file="${plugin.jar}" />
+  <delete file="${plugin.dist.dir}/${plugin.jar}" />
 </target>
 
 </project>

@@ -9,10 +9,10 @@ MY_P=${PN}-snapshot-${PV/1.5_p/}
 DESCRIPTION="Java-based editor for the OpenStreetMap project"
 HOMEPAGE="http://josm.openstreetmap.de/"
 SRC_URI="http://josm.openstreetmap.de/download/${MY_P}.jar
-	linguas_de? ( http://svn.openstreetmap.org/applications/editors/josm/plugins/dist/lang-de.jar )
-	linguas_en_GB? ( http://svn.openstreetmap.org/applications/editors/josm/plugins/dist/lang-en_GB.jar )
-	linguas_fr? ( http://svn.openstreetmap.org/applications/editors/josm/plugins/dist/lang-fr.jar )
-	linguas_ro? ( http://svn.openstreetmap.org/applications/editors/josm/plugins/dist/lang-ro.jar )"
+	linguas_de? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-de.jar )
+	linguas_en_GB? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-en_GB.jar )
+	linguas_fr? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-fr.jar )
+	linguas_ro? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-ro.jar )"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"

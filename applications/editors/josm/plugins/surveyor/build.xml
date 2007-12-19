@@ -13,11 +13,11 @@
   <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
   <property name="josm"			location="../../core/dist/josm-custom.jar" />
   <property name="plugin.build.dir"	value="build"/>
-  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.dist.dir"	value="../../dist"/>
   <property name="plugin.name"		value="${ant.project.name}"/>
-  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
+  <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
 
-  <property name="livegpsplugin.jar" value="../dist/livegps.jar"/>
+  <property name="livegpsplugin.jar" value="../../dist/livegps.jar"/>
   
   <!-- plugin meta data (enter new version number if anything changed!) -->
   <property name="plugin.version" value="1.3.3"/>

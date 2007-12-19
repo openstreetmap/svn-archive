@@ -1,15 +1,30 @@
 NameVirtualHost *
 NameVirtualHost *:443
+
+AddType text/html .shtml
+AddType text/html .html
+AddHandler server-parsed .shtml
+AddHandler server-parsed .html
+AddOutputFilter INCLUDES .shtml
+AddOutputFilter INCLUDES .html
+
 <VirtualHost _default_>
 	ServerAdmin webmaster@localhost
-	
+
+	AddType text/html .shtml
+	AddType text/html .html
+	AddHandler server-parsed .shtml
+	AddHandler server-parsed .html
+#        AddOutputFilter INCLUDES .shtml
+#	AddOutputFilter INCLUDES .html
+
 	DocumentRoot /var/www/www.openstreetmap.de/
 	<Directory />
-		Options FollowSymLinks
+		Options FollowSymLinks +Includes IncludesNOEXEC
 		AllowOverride None
 	</Directory>
 	<Directory /var/www/>
-		Options Indexes FollowSymLinks MultiViews
+		Options Indexes FollowSymLinks MultiViews +Includes IncludesNOEXEC
 		AllowOverride None
 		Order allow,deny
 		allow from all
@@ -46,14 +61,16 @@ NameVirtualHost *:443
 
 <VirtualHost _default_:443>
         ServerAdmin webmaster@localhost
+	AddOutputFilter INCLUDES .shtml
+
 
 	DocumentRoot /var/www/www.openstreetmap.de/
 	<Directory />
-		Options FollowSymLinks
+		Options FollowSymLinks  +Includes IncludesNOEXEC
 		AllowOverride None
 	</Directory>
 	<Directory /var/www/>
-		Options Indexes FollowSymLinks MultiViews
+		Options Indexes FollowSymLinks MultiViews  +Includes IncludesNOEXEC
 		AllowOverride None
 		Order allow,deny
 		allow from all

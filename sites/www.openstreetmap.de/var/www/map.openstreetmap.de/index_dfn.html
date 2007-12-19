@@ -30,7 +30,7 @@
 			maxResolution:156543, units:'meters', 
 			projection: "EPSG:41001"} );
 		/* layer = new OpenLayers.Layer.LikeGoogle ("OSM", "http://tile.osm.kn.op.dlr.de/", {type:'png'}); */
-		layer = new OpenLayers.Layer.LikeGoogle ("OSM", "http://tile.osm.dlr-kn.de/", {type:'png'});
+		layer = new OpenLayers.Layer.LikeGoogle ("OSM", "http://extern-2.kn.dlr.de/", {type:'png'});
 		map.addLayer (layer);
 		<!-- map.addControl (new OpenLayers.Control.LayerSwitcher()); -->
 		map.setCenter (new OpenLayers.LonLat(lon, lat), zoom);

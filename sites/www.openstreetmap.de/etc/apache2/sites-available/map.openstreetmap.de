@@ -1,6 +1,7 @@
 <VirtualHost *>
 	ServerName map.openstreetmap.de
 	ServerAdmin webmaster@openstreetmap.de
+
 	DocumentRoot /var/www/map.openstreetmap.de/
 	<Directory />
 		Options FollowSymLinks

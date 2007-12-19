@@ -359,7 +359,7 @@ Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "..\plugins\dist\wmsplugin.jar"
+File "..\dist\wmsplugin.jar"
 SectionEnd
 
 Section $(JOSM_SEC_NAMEFINDER_PLUGIN) SecNamefinderPlugin
@@ -367,7 +367,7 @@ Section $(JOSM_SEC_NAMEFINDER_PLUGIN) SecNamefinderPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "..\plugins\dist\namefinder.jar"
+File "..\dist\namefinder.jar"
 SectionEnd
 
 Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
@@ -375,7 +375,7 @@ Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "..\plugins\dist\validator.jar"
+File "..\dist\validator.jar"
 SectionEnd
 
 SectionGroupEnd	; "Plugins"
@@ -456,7 +456,7 @@ SetShellVarContext current
 !include LogicLib.nsh
 ${Switch} $LANGUAGE
 ${Case} ${LANG_GERMAN}
-File "..\plugins\dist\lang-de.jar"
+File "..\dist\lang-de.jar"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,namefinder,validator,lang-de"
 ${Break}
 ${Default}

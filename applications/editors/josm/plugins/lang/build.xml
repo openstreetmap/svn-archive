@@ -31,7 +31,7 @@
     </exec>
 
     <exec executable="msgfmt">
-      <arg line="--java2 -d${language}/build -rorg.openstreetmap.josm.Translation -l${language} ${language}/${language}.po"/>
+      <arg line="--verbose --java2 -d${language}/build -rorg.openstreetmap.josm.Translation -l${language} ${language}/${language}.po"/>
     </exec>
 
     <copy file="i18n.properties" todir="${language}/build/org/openstreetmap/josm" />
@@ -53,11 +53,11 @@
   
   <target name="keys.pot">
     <exec executable="find" output="alljava.txt">
-      <arg line="${josm.build.dir}/src ${plugins} -name '*.java'"/>
+      <arg line="${josm.build.dir}/src .. -name '*.java'"/>
     </exec>
 
     <exec executable="xgettext">
-      <arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -okeys.pot -falljava.txt"/>
+      <arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava --from-code=UTF-8 -okeys.pot -falljava.txt"/>
     </exec>
   </target>
 

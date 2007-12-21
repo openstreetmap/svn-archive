@@ -57,6 +57,9 @@ public class LakewalkerReader {
     char option = ' ';
     
     try {
+    	
+      Node fn = null; //new Node(new LatLon(0,0));
+    	
       while ((line = input.readLine()) != null) {
         if (cancel) {
           return;
@@ -71,6 +74,9 @@ public class LakewalkerReader {
             Node n = new Node(ll);
             commands.add(new AddCommand(n));
             way.nodes.add(n);
+            if(fn==null){
+            	fn = n;
+            }
           }
           catch (Exception ex) {
 
@@ -82,8 +88,15 @@ public class LakewalkerReader {
           break;
           
         case 'x':
+          String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
+          
+          if(!waytype.equals("none")){
+        	  way.put("natural",waytype);
+          }
+          
           way.put("created_by", "Dshpak_landsat_lakes");
           commands.add(new AddCommand(way));
+          
           break;
           
         case 'e':
@@ -93,6 +106,7 @@ public class LakewalkerReader {
         }
       } 
       input.close();
+      way.nodes.add(fn);
     }
 
     catch (Exception ex) {

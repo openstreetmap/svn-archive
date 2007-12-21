@@ -837,8 +837,11 @@
 			    <text k="name" class='place-caption suburb-caption' />
 			</rule>
 			<rule e="node" k="place" v="hamlet" layer="5">
-			    <text k='name' class='place-caption hamlet-caption'/>
+			    <text k='name' class='place-caption hamlet-caption' />
 			</rule>
+			<rule e="node" k="place" v="locality" layer="5">
+			    <text k='name' class='place-caption locality-caption' />
+			</rule>	
 			<rule e="node" k="place" v="farm" layer="5">
 			    <text k='name' class='place-caption farm-caption'/>
 			</rule>
@@ -1317,6 +1320,7 @@
             .village-caption        { font-size: 10px; }
             .suburb-caption         { font-size: 10px; }
             .hamlet-caption         { font-size: 8px;  }
+            .locality-caption       { font-size: 8px; }            
             .farm-caption           { font-size: 6px;  }
 
 

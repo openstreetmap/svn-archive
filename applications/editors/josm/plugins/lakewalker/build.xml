@@ -27,6 +27,9 @@
 
   <target name="compile" depends="init">
     <mkdir dir="build"></mkdir>
+    <javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
+	  <include name="**/*.java" />
+	</javac>
     <mkdir dir="build/images"></mkdir>
     <copy todir="build">
       <fileset dir="${plugin.build.dir}" casesensitive="yes">

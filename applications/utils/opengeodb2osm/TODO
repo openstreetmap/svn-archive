@@ -1,2 +1,19 @@
 
 * Make Relations for: "select * from geodb_textdata where not ( loc_id IN (select distinct loc_id from geodb_coordinates as bla));"
+
+* Use Type to calculate the place tag:
+ (See Mail from M. Trautmann on opengeodb (at) phpbar.de Mailinglist from  Tue, 18 Dec 2007 07:26:49 -0800 (PST)):
+ >    level : Mögliche Werte und ihre Bedeutung: 0 = ..., 1 =  ... ?
+
+ 1 Kontinent (Europa)
+ 2 Staat
+ 3 Bundesland / Kanton
+ 4 Regierungsbezirk
+ 5 Kreis
+ 6 Gemeinde
+ 7 Ort
+ 8 Ortsteil
+ 9 Strasse
+ 10 Einzelkoordinate
+
+* Calculate a isin tag

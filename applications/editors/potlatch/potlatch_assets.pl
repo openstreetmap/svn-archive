@@ -19,6 +19,7 @@
 
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"auto");
 
 	#		POI
 	

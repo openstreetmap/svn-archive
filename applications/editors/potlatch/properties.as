@@ -9,7 +9,11 @@
 
 	// Still to do
 	// - some way of stopping keys being added twice with same name
-	// - scroll list when lots available
+	//   (probably rename to highway_2?)
+	// - scroll list when lots available 
+	// - wipe preset menu when POI reverted
+	// - some way of invoking full autocomplete menu when value deleted
+	//   (probably using up cursor/down cursor)
 
 	AutoMenu=function() {};
 	AutoMenu.prototype=new MovieClip();
@@ -355,11 +359,12 @@
 			_root.keytarget='';
 			this.removeListener(textfieldListener);
 			_root.auto.remove();
-			if (this._parent.keyname.text=='') { removeMovieClip(this); }
-			// ** bug: the above line does not remove the data from the
-			//		   tags array, so an 'undefined' is written to the db
-			//		   on upload...
-			this._parent.renameKey();
+			if (this._parent.keyname.text=='' || this._parent.keyname.text==undefined) { 
+				delete getAttrArray()[this._parent._name];
+				removeMovieClip(this._parent);
+			} else {
+				this._parent.renameKey();
+			}
 		};
 		setTabOrder();
 		Selection.setFocus(_root.properties.key.keyname); Selection.setSelection(0,3);

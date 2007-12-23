@@ -93,7 +93,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.6 alpha";	// current version
+	var signature="Potlatch 0.6";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
@@ -1240,8 +1240,9 @@
 
 		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","OpenAerialMap","Yahoo! satellite","Osmarender","Mapnik"),
+			new Array("None","------------","Yahoo! satellite"),
 			'Choose the background to display',setBackground,0);
+// "OpenAerialMap","Yahoo! satellite","Osmarender","Mapnik"
 
 		_root.modal.box.attachMovie("checkbox","pointer",5);
 		_root.modal.box.pointer.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });

@@ -3,7 +3,7 @@
 # Author: Sven Anders <sven@anders-hamburg.de>
 # License GPL 2.0
 #
-my $version="0.0.2";
+my $version="0.0.3";
 
 use utf8;
 use DBI;
@@ -36,7 +36,7 @@ $osmOGDB{"500500000"}="opengeodb:car_code";
 $osmOGDB{"500400000"}="opengeodb:telephone_area_code";
 $osmOGDB{"500100000"}="name";
 
-
+my %is_in;
 
 my $dbh = DBI->connect( 'dbi:mysql:'.$mysqldb, $mysqluser, $mysqlpw) ||
      die "Kann keine Verbindung zum MySQL-Server aufbauen: $DBI::errstr\n";
@@ -51,6 +51,7 @@ my $sth = $dbh->prepare( 'SELECT loc_id,lon,lat,valid_since,date_type_since,vali
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
 
 my $sthText = $dbh->prepare('select text_type,text_val,text_locale,is_native_lang,is_default_name from geodb_textdata where loc_id=?');
+
 my $sthLoc = $dbh->prepare('select loc_type from geodb_locations where loc_id=?');
 my $sthPop = $dbh->prepare('select int_val from geodb_intdata where loc_id=? and int_type=600700000');
 
@@ -86,7 +87,10 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     my %textval;
     while ( my @texterg = $sthText->fetchrow_array() ){
 	my $key=$texterg[0];
-	utf8::encode($texterg[1]);
+	my $value=$texterg[1];
+	utf8::encode($value);
+	$value=~s/&/&amp;/g;
+	$value=~s/\"/&quot;/g;
 	my $locale=$texterg[2];
 	my $nativelang=$texterg[3];
 	my $defaultname=$texterg[4];
@@ -99,9 +103,9 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	    $key.=":".$locale;
 	}
 	if (defined $textval{"$key"}) {
-	    $textval{$key}.=",".$texterg[1];
+	    $textval{$key}.=",".$value;
 	} else {
-	    $textval{$key}=$texterg[1];
+	    $textval{$key}=$value;
 	}
 
     }
@@ -110,6 +114,62 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$tag.=' <tag k="'.$key.'" v="'.$value.'" />'."\n";
 	
     }
+    if (defined($textval{"opengeodb:is_in"})) {
+#	print "ISIN: ".$textval{"opengeodb:is_in"}."\n";
+	my $isinval="";
+	if (defined($is_in{$textval{"opengeodb:is_in"}})) {
+	    $isinval=$is_in{$textval{"opengeodb:is_in"}};
+	} else {
+	    my $bla=$textval{"opengeodb:is_in"};
+	    my $ibla=$bla;
+	    while ($bla > -1) {
+		$sthText->execute($bla);
+		$bla=-1;
+		while ( my @texterg= $sthText->fetchrow_array() ) {
+		    my $key=$texterg[0];
+		    my $value=$texterg[1];
+		    utf8::encode($value);
+		    my $locale=$texterg[2];
+		    my $nativelang=$texterg[3];
+		    my $defaultname=$texterg[4];
+		    if (defined($osmOGDB{$key})) {
+			$key=$osmOGDB{$key};
+		    } else {
+			$key='opengeodb:'.$key;
+		    }
+		    if (defined($defaultname) and ($defaultname eq "0")) {
+			$key.=":".$locale;
+		    }
+		    if ($key eq "opengeodb:is_in") {
+			$bla=$value;
+		    }
+		    if ($key eq "name") {
+			if ($isinval ne "") {
+			    $isinval="$value,$isinval";
+			} else {
+			    $isinval=$value;
+			}
+		    }
+		}
+	    }
+	    $is_in{$ibla}=$isinval;
+	}
+	if (defined($isinval)) {
+	    $tag.=' <tag k="is_in" v="'. $isinval.'" />'."\n";
+	} else {
+	    die($locid);
+	}
+	if (defined($textval{'name'})) {
+	    $is_in{$locid}=$isinval.",".$textval{'name'};
+	}
+
+    
+    } else {
+	if (defined($textval{'name'})) {
+	    $is_in{$locid}=$textval{'name'};
+	}
+    }
+
     my $population="";
     while ( my @poperg = $sthPop->fetchrow_array() ){
 	$population=$poperg[0];
@@ -118,26 +178,29 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$tag.=' <tag k="population" v="'.$population.'" />'."\n";
     }
     my $place="";
-    while ( my @locerg = $sthLoc->fetchrow_array() ){
-	my $id=$locerg[0];
-	if ($id == 100100000) {
-	    $place="continent";
-	} elsif ($id == 100200000) {
-	    $place="country";
-	} elsif ($id == 100300000) {
-	    $place="state";
-	} elsif ($id == 100400000) {
-	    $place="county";
-	} elsif ($id == 100500000) {
-	    $place="region";
-	} elsif ($id == 100600000) {
-	    $place="opengeodb:political_structure";
-	} elsif ($id == 100700000) {
-	    $place="opengeodb:locality";
-	} elsif ($id == 100800000) {
-	    $place="opengeodb:postalCodeArea";
-	}
+    # FIXME $place aus OSM holen
+    if ($place eq "") {
+	while ( my @locerg = $sthLoc->fetchrow_array() ){
+	    my $id=$locerg[0];
+	    if ($id == 100100000) {
+		$place="continent";
+	    } elsif ($id == 100200000) {
+		$place="country";
+	    } elsif ($id == 100300000) {
+		$place="state";
+	    } elsif ($id == 100400000) {
+		$place="county";
+	    } elsif ($id == 100500000) {
+		$place="region";
+	    } elsif ($id == 100600000) {
+		$place="opengeodb:political_structure";
+	    } elsif ($id == 100700000) {
+		$place="opengeodb:locality";
+	    } elsif ($id == 100800000) {
+		$place="opengeodb:postalCodeArea";
+	    }
 	
+	}
     }
     if ($place =~ /^opengeodb:/) {
 

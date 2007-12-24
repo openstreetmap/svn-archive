@@ -133,7 +133,7 @@ function HandleUpload($File, $UserID, $VersionID){
   # Check the uploadedZIP file
   $Size = filesize($File);
 
-  logMsg("$FileIdentifier: Handling tileset ($Size bytes) by $UserID (version $VersionID)", 4);
+  logMsg("$LogIdentifier: Handling tileset ($Size bytes) by $UserID (version $VersionID)", 4);
   
   if($Size <= 0){ 
     print("No file uploaded or file too large\n");

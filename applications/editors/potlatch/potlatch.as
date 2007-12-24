@@ -18,8 +18,8 @@
 
 	// Get variables from browser (forcing them into numbers where appropriate)
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
-	var minscale=11;				// don't zoom out past this
-	var maxscale=18;				// don't zoom in past this
+	var minscale=12;				// don't zoom out past this
+	var maxscale=19;				// don't zoom in past this
 	var baselat=Math.pow(lat,1);
 	var baselong=Math.pow(long,1);
 	var scale=Math.max(Math.min(Math.pow(scale,1),maxscale),minscale);
@@ -96,6 +96,7 @@
 	var signature="Potlatch 0.6";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
+	if (preferences.data.baselayer    ==1        ) { preferences.data.baselayer    =2; }	// temporary migration
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 
 	// =====================================================================================

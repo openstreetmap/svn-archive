@@ -43,7 +43,7 @@ if(0){
 }
 
 
-list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(),20);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(),200);
 //logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 //----------------------------------------------------------------------------------

@@ -1409,7 +1409,7 @@
 					_root.yahoo._y=0;
 					_root.ylat=centrelat(_root.bgyoffset);
 					_root.ylon=centrelong(_root.bgxoffset);
-					_root.yzoom=17-_root.scale;
+					_root.yzoom=18-_root.scale;
 					_root.map.tiles._visible=false;
 					break;
 			case 1: ; // OpenAerialMap

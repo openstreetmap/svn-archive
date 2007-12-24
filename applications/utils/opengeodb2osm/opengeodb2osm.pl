@@ -3,7 +3,8 @@
 # Author: Sven Anders <sven@anders-hamburg.de>
 # License GPL 2.0
 #
-my $version="0.0.3";
+my $version="0.4";
+my $dbversion="0.2.5a / 2007-10-04 / http://opengeodb.sourceforge.net/";
 
 use utf8;
 use DBI;
@@ -26,14 +27,14 @@ if (-f "opengeodb2osmSettings.pm") {
     require opengeodb2osmSettings;
 }
 
-$osmOGDB{"400100000"}="opengeodb:is_in";
-$osmOGDB{"400200000"}="opengeodb:layer";
-$osmOGDB{"400300000"}="opengeodb:typ";
-$osmOGDB{"500300000"}="opengeodb:postal_codes";
-$osmOGDB{"500600000"}="opengeodb:community_identification_number";
-$osmOGDB{"500100002"}="opengeodb:sort_name";
-$osmOGDB{"500500000"}="opengeodb:car_code";
-$osmOGDB{"500400000"}="opengeodb:telephone_area_code";
+$osmOGDB{"400100000"}="openGeoDB:is_in";
+$osmOGDB{"400200000"}="openGeoDB:layer";
+$osmOGDB{"400300000"}="openGeoDB:typ";
+$osmOGDB{"500300000"}="openGeoDB:postal_codes";
+$osmOGDB{"500600000"}="openGeoDB:community_identification_number";
+$osmOGDB{"500100002"}="openGeoDB:sort_name";
+$osmOGDB{"500500000"}="openGeoDB:car_code";
+$osmOGDB{"500400000"}="openGeoDB:telephone_area_code";
 $osmOGDB{"500100000"}="name";
 
 my %is_in;
@@ -43,12 +44,33 @@ my $dbh = DBI->connect( 'dbi:mysql:'.$mysqldb, $mysqluser, $mysqlpw) ||
 
 # Befehl fuer Ausfuehrung vorbereiten. Referenz auf Statement
 # Handle Objekt wird zurueckgeliefert
+
+my $sthRel=$dbh->prepare( 'select distinct text_val from geodb_textdata where text_type="400100000" ') ||
+     die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
+my $sth = $dbh->prepare( 'SELECT distinct loc_id FROM geodb_textdata') ||
+     die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
+
 my $where="";
 if ($uselat==1) {
-	$where="where lat>=$minlat and lat<=$maxlat and lon>=$minlon and lon<=$maxlon";
+	$where.="where lat>=$minlat and lat<=$maxlat and lon>=$minlon and lon<=$maxlon";
 }
-my $sth = $dbh->prepare( 'SELECT loc_id,lon,lat,valid_since,date_type_since,valid_until,date_type_until FROM geodb_coordinates '.$where ) ||
+
+
+
+
+
+my $sthNode = $dbh->prepare( 'SELECT distinct loc_id FROM geodb_coordinates '.$where ) ||
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
+
+if ($where ne "") {
+    $where.=" and loc_id=?";
+} else {
+    $where="where loc_id=?";
+}
+
+my $sthCoord = $dbh->prepare( 'SELECT lon,lat,valid_since,date_type_since,valid_until,date_type_until FROM geodb_coordinates '.$where ) ||
+     die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
+
 
 my $sthText = $dbh->prepare('select text_type,text_val,text_locale,is_native_lang,is_default_name from geodb_textdata where loc_id=?');
 
@@ -58,15 +80,24 @@ my $sthPop = $dbh->prepare('select int_val from geodb_intdata where loc_id=? and
 my $sthParts = $dbh->prepare('select loc_id from geodb_textdata where text_type=400100000 and text_val=?');
 
 # Vorbereitetes Statement (Abfrage) ausfuehren
-$sth->execute ||
+$sthNode->execute ||
      die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
 
 $nodeid=-1;
-while ( my @ergebnis = $sth->fetchrow_array() ){
+while ( my @ergebnis = $sthNode->fetchrow_array() ){
     my $locid=$ergebnis[0];
-    $locIdHash{$locid}=$nodeid;
+    $NodelocIdHash{$locid}=$nodeid;
     $nodeid--;
 }
+$sthRel->execute ||
+     die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
+
+while ( my @ergebnis = $sthRel->fetchrow_array() ){
+    my $locid=$ergebnis[0];
+    $RelationlocIdHash{$locid}=$nodeid;
+    $nodeid--;
+}
+
 
 
 # Vorbereitetes Statement (Abfrage) ausfuehren
@@ -77,9 +108,17 @@ $sth->execute ||
 while ( my @ergebnis = $sth->fetchrow_array() ){
    # Im Array @ergebnis steht nun ein Datensatz
     my $locid=$ergebnis[0];
-    print '<node id="'.$locIdHash{$locid}.'" visible="true" lat="' . $ergebnis[2] ."\" lon=\"". $ergebnis[1]."\" >\n";
+
+    my $lat;
+    my $lon;
+
     
     $tag=' <tag k="openGeoDB:loc_id" v="'.$locid.'" />'."\n";
+    $sthCoord->execute($locid);
+    while ( my @corderg = $sthCoord->fetchrow_array() ){
+	$lat=$corderg[1];
+	$lon=$corderg[0];
+    }
     $sthText->execute($locid);
     $sthLoc->execute($locid);
     $sthPop->execute($locid);
@@ -97,7 +136,7 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	if (defined($osmOGDB{$key})) {
 	    $key=$osmOGDB{$key};
 	} else {
-	    $key='opengeodb:'.$key;
+	    $key='openGeoDB:'.$key;
 	}
 	if (defined($defaultname) and ($defaultname eq "0")) {
 	    $key.=":".$locale;
@@ -114,13 +153,13 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$tag.=' <tag k="'.$key.'" v="'.$value.'" />'."\n";
 	
     }
-    if (defined($textval{"opengeodb:is_in"})) {
-#	print "ISIN: ".$textval{"opengeodb:is_in"}."\n";
+    if (defined($textval{"openGeoDB:is_in"})) {
+#	print "ISIN: ".$textval{"openGeoDB:is_in"}."\n";
 	my $isinval="";
-	if (defined($is_in{$textval{"opengeodb:is_in"}})) {
-	    $isinval=$is_in{$textval{"opengeodb:is_in"}};
+	if (defined($is_in{$textval{"openGeoDB:is_in"}})) {
+	    $isinval=$is_in{$textval{"openGeoDB:is_in"}};
 	} else {
-	    my $bla=$textval{"opengeodb:is_in"};
+	    my $bla=$textval{"openGeoDB:is_in"};
 	    my $ibla=$bla;
 	    while ($bla > -1) {
 		$sthText->execute($bla);
@@ -135,12 +174,12 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 		    if (defined($osmOGDB{$key})) {
 			$key=$osmOGDB{$key};
 		    } else {
-			$key='opengeodb:'.$key;
+			$key='openGeoDB:'.$key;
 		    }
 		    if (defined($defaultname) and ($defaultname eq "0")) {
 			$key.=":".$locale;
 		    }
-		    if ($key eq "opengeodb:is_in") {
+		    if ($key eq "openGeoDB:is_in") {
 			$bla=$value;
 		    }
 		    if ($key eq "name") {
@@ -193,16 +232,16 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	    } elsif ($id == 100500000) {
 		$place="region";
 	    } elsif ($id == 100600000) {
-		$place="opengeodb:political_structure";
+		$place="openGeoDB:political_structure";
 	    } elsif ($id == 100700000) {
-		$place="opengeodb:locality";
+		$place="openGeoDB:locality";
 	    } elsif ($id == 100800000) {
-		$place="opengeodb:postalCodeArea";
+		$place="openGeoDB:postalCodeArea";
 	    }
 	
 	}
     }
-    if ($place =~ /^opengeodb:/) {
+    if ($place =~ /^OpenGeoDB:/) {
 
 	my $typ=$textval{$osmOGDB{"400300000"}};
 	if (!defined($typ)) {
@@ -232,21 +271,32 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$tag.=' <tag k="place" v="'.$place.'" />'."\n";
     }
     $tag.=' <tag k="created_by" v="'.$progname.$version.'" />'."\n";
-  
-    print "$tag</node>\n";
+    $tag.=' <tag k="openGeoDB:version" v="'.$dbversion.'" />'."\n";
+    $tag.=' <tag k="openGeoDB:auto_update" v="population,is_in" />'."\n";
 
+    if (defined($lat)) {
+	print '<node id="'.$NodelocIdHash{$locid}.'" visible="true" lat="'." $lat\" lon=\"$lon\" >\n$tag</node>\n";
+    }
     $found=0;
     $sthParts->execute($locid);
     while ( my @partserg = $sthParts->fetchrow_array() ){
-	if (defined($locIdHash{$partserg[0]})) {
+	if ((defined($NodelocIdHash{$partserg[0]})) or (defined($RelationlocIdHash{$partserg[0]}))) {
 	    if ($found==0) {
-		$nodeid--;
-		print "<relation id=\"".$nodeid."\" visible='true'>\n";
+		defined($RelationlocIdHash{$locid}) or die("RelationLocId $locid");
+		print "<relation id=\"".$RelationlocIdHash{$locid}."\" visible='true'>\n";
 		$found++;
 		print $tag;
-		print " <member type='node' ref=\"$locIdHash{$locid}\" role='this' />\n";
+		if (defined($NodelocIdHash{$locid})) {
+		    print " <member type='node' ref=\"$NodelocIdHash{$locid}\" role='this' />\n";
+		}
+
 	    }
-	    print " <member type='node' ref=\"$locIdHash{$partserg[0]}\" role='child' />\n";
+	    if (defined($NodelocIdHash{$partserg[0]})) {
+		print " <member type='node' ref=\"$NodelocIdHash{$partserg[0]}\" role='child' />\n";
+	    }
+	    if (defined($RelationlocIdHash{$partserg[0]})) {
+		print " <member type='relation' ref=\"$RelationlocIdHash{$partserg[0]}\" role='child' />\n";
+	    }
 	}
     }
     if ($found>0) {

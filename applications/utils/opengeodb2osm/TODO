@@ -1,4 +1,2 @@
 
-* Make Relations for: "select * from geodb_textdata where not ( loc_id IN (select distinct loc_id from geodb_coordinates as bla));"
-
-* Find Places in OSM and only merge data
+* Find places in OSM and only merge data

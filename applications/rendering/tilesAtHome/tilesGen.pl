@@ -1486,10 +1486,27 @@ sub splitImageX
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
         {
             copy("emptyland.png", $Filename);
+            # Change the tile to a zero-length file if it's as blank as the parent
+            # We keep the ones at level 15 so the server fallback never has to go more than 3 levels.
+            if( $Z > 12 and $Z != 15 )
+            {
+                my $upfile = tileFilename($layer, ($X * $Size + $xi)>>1, $Ytile>>1, $Z-1);
+                my $upsize = -e $upfile ? -s $upfile : -1;
+                if( $upsize == 0 or $upsize == -s "emptyland.png" )
+                { open my $fh, ">$Filename" }
+            }
         }
         elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
         {
             copy("emptysea.png",$Filename);
+            # Change the tile to a zero-length file if it's as blank as the parent
+            if( $Z > 12 and $Z != 15 )
+            {
+                my $upfile = tileFilename($layer, ($X * $Size + $xi)>>1, $Ytile>>1, $Z-1);
+                my $upsize = -e $upfile ? -s $upfile : -1;
+                if( $upsize == 0 or $upsize == -s "emptysea.png" )
+                { open my $fh, ">$Filename" }
+            }
 #            $allempty = 0; # TODO: enable this line if/when serverside empty tile methods is implemented. Used to make sure we                                     generate all blank seatiles in a tileset.
         }
         else

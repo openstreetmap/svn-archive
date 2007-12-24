@@ -43,7 +43,7 @@ if(0){
 }
 
 
-list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(),1000);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(),20);
 //logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 //----------------------------------------------------------------------------------
@@ -55,14 +55,14 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
     if($CountUploads < $NumToProcess){
       if(preg_match("#(\w+)\.zip$#", $File, $Matches)){
         $Name = $Matches[1];
-        $run = mkdir($Name);
+        $run = @mkdir($Name);
         if ($run) {
-            printf( "\n\n===%s===\n\n", htmlentities($Name));
+            printf( "===%s===\n", htmlentities($Name));
             $CountTiles += HandleQueueItem($Name, $Dir);
             $CountUploads++;
             rmdir($Name);
         } else {
-            printf("Another thread already grabbed $Name");
+            printf("Another thread already grabbed $Name\n");
         }    
 
       }
@@ -126,12 +126,14 @@ function AbortWithError($Message){
 function HandleUpload($File, $UserID, $VersionID){
   print "Handling $File from $UserID\n";
   # Decide on the name of a Temporary directory
-  $Dir = TempDir();
+  $FileIdentifier = substr(strrchr($File, '/'), 1, -4 );
+  $LogIdentifier = substr( $FileIdentifier, 0, 6 );
+  $Dir = TempDir($FileIdentifier);
   
   # Check the uploadedZIP file
   $Size = filesize($File);
 
-  logMsg("Handling ".substr(strrchr($File, '/'), 1 )." ($Size bytes) by $UserID (version $VersionID)", 4);
+  logMsg("$FileIdentifier: Handling tileset ($Size bytes) by $UserID (version $VersionID)", 4);
   
   if($Size <= 0){ 
     print("No file uploaded or file too large\n");
@@ -151,20 +153,26 @@ function HandleUpload($File, $UserID, $VersionID){
   # -j means to ignore any pathnames in the ZIP file
   # -d $Dir specifies the directory to unzip to
   # $Filename is the zip file
+  $ziptime = microtime(true);
   print "Unzipping $File\n";
   $Command = sprintf("unzip -q -j -d %s %s", $Dir, $File);
   #logMsg("Running '$Command'", 3);
   system($Command);
   print "Finished unzipping $File\n";
-  
-  #logMsg("Handling directory $Dir", 4);
+  $ziptime = microtime(true) - $ziptime;
+
   # Process all the tiles (return number of tiles done)
+  $handletime = microtime(true);
   $Count = HandleDir($Dir, $UserID, $VersionID, $Size);
-        
+  $handletime = microtime(true) - $handletime;
+
   # Delete the temporary directory and everything inside
+  $deletetime = microtime(true);
   DelDir($Dir);
+  $deletetime = microtime(true) - $deletetime;
   
-  logMsg("OK, $Count tiles in ".substr(strrchr($File, '/'), 1 ), 4);
+  logMsg(sprintf("$LogIdentifier: Unzip: %.6f seconds, Handling took %.6f secs, Delete took %.6f seconds.", $ziptime, $handletime, $deletetime), 4);
+  logMsg("$LogIdentifier: OK, $Count tiles", 4);
   return($Count);
 }
 
@@ -206,7 +214,11 @@ function HandleDir($Dir, $UserID, $VersionID, $Size = 0){
   else
     SaveMetadata($TileList, $UserID, $VersionID, $Size);
 
-  SaveBlankTiles($BlankTileList, $UserID, $ValidTileset);
+  $deletetime = microtime(true);
+  SaveBlankTiles($BlankTileList, $UserID,$ValidTileset,$TilesetX, $TilesetY, $TilesetLayer);
+  $blanktime = microtime(true) - $deletetime;
+  $FileIdentifier = substr(strrchr($Dir, '/'), 1, 6);
+  logMsg("$FileIdentifier: Blank tiles for $TilesetX,$TilesetY took $blanktime.", 4);
 
   return($Count);
 }
@@ -242,7 +254,46 @@ function SaveMetadata($TileList, $UserID, $VersionID, $Size = 0){
 #------------------------------------------------------------------------------------
 # Save uploaded blank tiles in the database
 #------------------------------------------------------------------------------------
-function SaveBlankTiles($BlankTileList, $UserID, $Tileset){
+function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $TilesetY, $TilesetLayer){
+  # First we run through the set to find the predominant type
+  $CommonType = 0;
+  $ReplaceList = array();
+  
+  # This optimisation is only possible if we have a valid full tileset
+  if( $ValidTileset )
+  {
+    $CountTypes = array( -1 => 0, 1 => 0, 2 => 0 );
+    
+    foreach($BlankTileList as $SqlSnippet){
+
+      list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
+      # If we find levels <12, we set a flag to enable old behaviour
+      if( $Z < 12 ) {
+        $CommonType = -2;
+        break;
+      }
+      # Since we save storage by storing in level 12, if we are given the type we have to use it
+      if( $Z == 12 ) {
+        $CommonType = $Type;
+        break;
+      }
+      $CountType[$Type]++;
+    }
+    # Determine the common type, if we have a choice
+    if( $CommonType == 0 )
+    {
+      if( $CountType[1] > $CountType[2] ) {
+        $CommonType = 1;
+      } else {
+        $CommonType = 2;
+      }
+    }
+    # Store the "common tile" at zoom-12, now we don't have to store this type at any lower levels...
+    if( $CommonType > 0 ) {
+      array_push( $ReplaceList, sprintf("(%d, %d, %d, '%s', %d, now(), %d)", $TilesetX, $TilesetY, 12, $TilesetLayer, $CommonType, $UserID) );
+    }
+  }
+  
   # Each element in BlankTileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($BlankTileList as $SqlSnippet){
 
@@ -253,10 +304,16 @@ function SaveBlankTiles($BlankTileList, $UserID, $Tileset){
       moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
     }
     
-    # Make a blank tile
-    if( $Type >= 0 )
+    # Make a blank tile. Level 12 and 15 are always stored, otherwise we only store tiles not equal to the "common tile"
+    if( $Type >= 0 && ($Z == 12 || $Z == 15 || $Type != $CommonType) )
     {
-      InsertBlankTile($X,$Y,$Z,$Layer,$UserID,$Type);
+      $Fields = "x, y, z, layer, type, date, user";
+      $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
+
+      $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
+      # Store the stuff to replace in the array
+      $Values = sprintf("(%s, now(), %d)", $SqlSnippet, $UserID);
+      array_push( $ReplaceList, $Values );
     }
     else
     {
@@ -267,6 +324,12 @@ function SaveBlankTiles($BlankTileList, $UserID, $Tileset){
     }
     DeleteRealTile($X,$Y,$Z,$Layer);
 
+  }
+  # Execute all queued replacements...
+  if( count($ReplaceList) > 0 ) {
+    $Fields = "x, y, z, layer, type, date, user";
+    $SQL = sprintf( "replace into `tiles_blank` (%s) values %s", $Fields, implode(",",$ReplaceList) );
+    mysql_query($SQL);
   }
 }
 
@@ -490,8 +553,8 @@ function CreateDir($Dir){
 # * md5 gives alphanumeric filename
 # * uniqid means multiple threads are unlikely to conflict
 #----------------------------------------------------------------------
-function TempDir(){
-  return(sprintf("/mnt/agami/openstreetmap/tah/temp/%s", md5(uniqid(rand(), 1))));
+function TempDir($FileIdentifier){
+  return(sprintf("/mnt/agami/openstreetmap/tah/temp/%s", $FileIdentifier));
 }
 
 #----------------------------------------------------------

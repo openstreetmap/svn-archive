@@ -93,8 +93,8 @@ public class SimplifyWayAction extends JosmAction {
 	}
 
 	/*
-	 * Takes an interval [from,to] and adds nodes from the set (from,to) to
-	 * ns.
+	 * Takes an interval [from,to] and adds nodes from (from,to) to ns.
+	 * (from and to are indices of wnew.nodes.)
 	 */
 	public void simplifyWayRange(Way wnew, int from, int to, ArrayList<Node> ns, double thr) {
 		Node fromN = wnew.nodes.get(from), toN = wnew.nodes.get(to);

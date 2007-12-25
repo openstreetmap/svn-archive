@@ -3,7 +3,7 @@
 # Author: Sven Anders <sven@anders-hamburg.de>
 # License GPL 2.0
 #
-my $version="0.4";
+my $version="0.4.1";
 my $dbversion="0.2.5a / 2007-10-04 / http://opengeodb.sourceforge.net/";
 
 use utf8;
@@ -29,12 +29,13 @@ if (-f "opengeodb2osmSettings.pm") {
 
 $osmOGDB{"400100000"}="openGeoDB:is_in";
 $osmOGDB{"400200000"}="openGeoDB:layer";
-$osmOGDB{"400300000"}="openGeoDB:typ";
+$osmOGDB{"400300000"}="openGeoDB:type";
 $osmOGDB{"500300000"}="openGeoDB:postal_codes";
 $osmOGDB{"500600000"}="openGeoDB:community_identification_number";
 $osmOGDB{"500100002"}="openGeoDB:sort_name";
-$osmOGDB{"500500000"}="openGeoDB:car_code";
+$osmOGDB{"500500000"}="openGeoDB:license_plate_code";
 $osmOGDB{"500400000"}="openGeoDB:telephone_area_code";
+
 $osmOGDB{"500100000"}="name";
 
 my %is_in;
@@ -215,33 +216,46 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     }
     if ($population ne "") {
 	$tag.=' <tag k="population" v="'.$population.'" />'."\n";
+	$tag.=' <tag k="openGeoDB:population" v="'.$population.'" />'."\n";
     }
     my $place="";
+    my $geodbPlace="";
     # FIXME $place aus OSM holen
     if ($place eq "") {
 	while ( my @locerg = $sthLoc->fetchrow_array() ){
 	    my $id=$locerg[0];
 	    if ($id == 100100000) {
 		$place="continent";
+		$geodbPlace="continent";
 	    } elsif ($id == 100200000) {
 		$place="country";
+		$geodbPlace="country";
 	    } elsif ($id == 100300000) {
 		$place="state";
+		$geodbPlace="state";
 	    } elsif ($id == 100400000) {
 		$place="county";
+		$geodbPlace="county";
 	    } elsif ($id == 100500000) {
 		$place="region";
+		$geodbPlace="region";
 	    } elsif ($id == 100600000) {
-		$place="openGeoDB:political_structure";
+		$geodbPlace="political_structure";
 	    } elsif ($id == 100700000) {
-		$place="openGeoDB:locality";
+		$geodbPlace="locality";
 	    } elsif ($id == 100800000) {
-		$place="openGeoDB:postalCodeArea";
+		$geodbPlace="postal_code_area";
+	    } else {
+		$geodbPlace=$id;
 	    }
 	
 	}
     }
-    if ($place =~ /^OpenGeoDB:/) {
+    if ($geodbPlace ne "") {
+	$tag.=' <tag k="openGeoDB:location" v="'.$geodbPlace.'" />'."\n";    
+    }
+
+    if ($place eq "") {
 
 	my $typ=$textval{$osmOGDB{"400300000"}};
 	if (!defined($typ)) {
@@ -269,7 +283,11 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     }
     if ($place ne "") {
 	$tag.=' <tag k="place" v="'.$place.'" />'."\n";
+    } else {
+	$tag.=' <tag k="place" v="FIXME" />'."\n";
     }
+
+    
     $tag.=' <tag k="created_by" v="'.$progname.$version.'" />'."\n";
     $tag.=' <tag k="openGeoDB:version" v="'.$dbversion.'" />'."\n";
     $tag.=' <tag k="openGeoDB:auto_update" v="population,is_in" />'."\n";

@@ -1488,7 +1488,7 @@ sub splitImageX
             copy("emptyland.png", $Filename);
             # Change the tile to a zero-length file if it's as blank as the parent
             # We keep the ones at level 15 so the server fallback never has to go more than 3 levels.
-            if( $Z > 12 and $Z != 15 )
+            if( $Z > 12 and $Z != 15 and not $Config{"LocalSlippymap"} )
             {
                 my $upfile = tileFilename($layer, ($X * $Size + $xi)>>1, $Ytile>>1, $Z-1);
                 my $upsize = -e $upfile ? -s $upfile : -1;
@@ -1500,7 +1500,7 @@ sub splitImageX
         {
             copy("emptysea.png",$Filename);
             # Change the tile to a zero-length file if it's as blank as the parent
-            if( $Z > 12 and $Z != 15 )
+            if( $Z > 12 and $Z != 15 and not $Config{"LocalSlippymap"} )
             {
                 my $upfile = tileFilename($layer, ($X * $Size + $xi)>>1, $Ytile>>1, $Z-1);
                 my $upsize = -e $upfile ? -s $upfile : -1;

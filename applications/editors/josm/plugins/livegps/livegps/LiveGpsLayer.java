@@ -17,7 +17,6 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.RawGpsLayer;
 import org.openstreetmap.josm.tools.ColorHelper;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {

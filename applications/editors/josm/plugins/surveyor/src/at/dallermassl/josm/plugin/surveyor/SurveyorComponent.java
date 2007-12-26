@@ -4,6 +4,7 @@
  */
 package at.dallermassl.josm.plugin.surveyor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -102,13 +103,8 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     }
 
     public void addButton(ButtonDescription description) {
-        if(hotKeys.contains(description.getHotkey())) {
-            // <FIXXME date="23.06.2007" author="cdaller">
-            // TODO if i18n is done
-            //JOptionPane.showMessageDialog(Main.parent, tr("Duplicate hotkey for button '{0}' - button will be ignored!",description.getLabel()));
-            JOptionPane.showMessageDialog(Main.parent, "Duplicate hotkey for button '" + description.getLabel() 
-                + "' - button will be ignored!");
-            // </FIXXME> 
+        if(description.getHotkey() != "" &&  hotKeys.contains(description.getHotkey())) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Duplicate hotkey for button '{0}' - button will be ignored!",description.getLabel()));
         } else {
             if(rows == 0 && columns == 0) {
                 setColumns("4");

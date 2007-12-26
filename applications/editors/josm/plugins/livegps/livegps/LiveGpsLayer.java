@@ -12,16 +12,21 @@ import java.util.Date;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.RawGpsLayer;
 import org.openstreetmap.josm.tools.ColorHelper;
 
-public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener {
+public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = "LiveGPS layer";
     public static final String KEY_LIVEGPS_COLOR ="color.livegps.position";
 	LatLon lastPos;
-	GpsPoint lastPoint;
-	Collection<GpsPoint> trackBeingWritten;
+	WayPoint lastPoint;
+	GpxTrack trackBeingWritten;
+	Collection<WayPoint> trackSegment;
 	float speed;
 	float course;
 	String status;
@@ -29,18 +34,14 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 	boolean autocenter;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 	
-	public LiveGpsLayer(Collection<Collection<GpsPoint>> data)
+	public LiveGpsLayer(GpxData data)
 	{
-		super (false, data, LAYER_NAME, null);
-		if (data.isEmpty())
-		{
-			data.add(new ArrayList<GpsPoint>());
-		}
-		// use last track in collection:
-		for (Collection<GpsPoint> track : data) { 
-		    trackBeingWritten = track;
-		}
-		//lbl = new JLabel();
+		super (data, LAYER_NAME);
+		trackBeingWritten = new GpxTrack();
+		trackBeingWritten.attr.put("desc", "josm live gps");
+		trackSegment = new ArrayList<WayPoint>();
+		trackBeingWritten.trackSegs.add(trackSegment);
+		data.tracks.add(trackBeingWritten);
 	}
 	
 	void setCurrentPosition(double lat, double lon)
@@ -54,11 +55,12 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 		}
 			
 		lastPos = thisPos;
-		lastPoint = new GpsPoint (thisPos, dateFormat.format(new Date()));
+		lastPoint = new WayPoint(thisPos);
+		lastPoint.attr.put("time", dateFormat.format(new Date()));
 		// synchronize when adding data, as otherwise the autosave action
 		// needs concurrent access and this results in an exception!
 		synchronized (LiveGpsLock.class) {
-		    trackBeingWritten.add(lastPoint);            
+		    trackSegment.add(lastPoint);            
         }
 		if (autocenter) {
 		    center();

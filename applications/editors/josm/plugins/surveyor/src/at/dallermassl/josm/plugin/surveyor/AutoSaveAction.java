@@ -56,8 +56,7 @@ public class AutoSaveAction extends JosmAction {
             TimerTask task;
             
             String gpxFilename = MessageFormat.format(GPS_FILE_NAME_PATTERN, new Date());
-            task = new AutoSaveGpsAndMarkerLayerTimeTask(gpxFilename, 
-                LiveGpsLayer.LAYER_NAME, SetWaypointAction.MARKER_LAYER_NAME);
+            task = new AutoSaveGpsLayerTimerTask(gpxFilename, LiveGpsLayer.LAYER_NAME);
             gpsDataTimer.schedule(task, 1000, AUTO_SAVE_PERIOD_SEC * 1000);
             
             String osmFilename = MessageFormat.format(OSM_FILE_NAME_PATTERN, new Date());

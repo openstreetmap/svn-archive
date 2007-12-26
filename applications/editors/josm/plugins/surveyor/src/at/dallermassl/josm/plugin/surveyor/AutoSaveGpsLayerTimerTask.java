@@ -6,9 +6,11 @@ package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
@@ -16,13 +18,13 @@ import javax.swing.JOptionPane;
 import livegps.LiveGpsLock;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.RawGpsLayer;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.io.GpxWriter;
-import org.openstreetmap.josm.io.XmlWriter;
+
+import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
 
 /**
- * TimerTask that writes the data of a {@link RawGpsLayer} to a gpx file.
+ * TimerTask that writes the data of a {@link GpxLayer} to a gpx file.
  * Every time the task is run, the layer is retrieved from the map view so it even works
  * if the layer does not exist at the start of the timer task. If the layer does not exist,
  * the file is not written.
@@ -60,67 +62,29 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
     public void run() {
 
         try {            
-            XmlWriter.OsmWriterInterface writer = getXmlWriter();
-            if(writer != null) {
-                // write to temporary file, on success, rename tmp file to target file:
-                File tmpFile = new File(file.getAbsoluteFile()+".tmp");
-                System.out.println("AutoSaving data to file " + file.getAbsolutePath());
-                // synchronize on layer to prevent concurrent adding of data to the layer
-                // quite a hack, but no other object to sync available :-(
-                // @see LiveGpsLayer
-                synchronized(LiveGpsLock.class) {
-                    XmlWriter.output(new FileOutputStream(tmpFile), writer);
-                }   
-                tmpFile.renameTo(file);
+
+            GpxLayer gpsLayer = LayerUtil.findGpsLayer(gpsLayerName, GpxLayer.class);
+            if(gpsLayer == null) {
+                return;
             }
-        } catch (IOException x) {
-            x.printStackTrace();
+            // write to temporary file, on success, rename tmp file to target file:
+            File tmpFile = new File(file.getAbsoluteFile()+".tmp");
+            System.out.println("AutoSaving data to file " + file.getAbsolutePath());
+            // synchronize on layer to prevent concurrent adding of data to the layer
+            // quite a hack, but no other object to sync available :-(
+            // @see LiveGpsLayer
+            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tmpFile)));
+            GpxWriter gpxWriter = new GpxWriter(out);
+            synchronized(LiveGpsLock.class) {
+                gpxWriter.write(gpsLayer.data);
+            }   
+            tmpFile.renameTo(file);
+        } catch (IOException ioExc) {
+            ioExc.printStackTrace();
             JOptionPane.showMessageDialog(Main.parent, 
-                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), x.getMessage()), 
+                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), ioExc.getMessage()), 
                 tr("Error"), 
                 JOptionPane.ERROR_MESSAGE);
         }       
     }
-    
-    /**
-     * Returns the layer with the given name and type from the map view or <code>null</code>.
-     * @param <LayerType> the type of the layer.
-     * @param layerName the name of the layer.
-     * @param layerType the type of the layer.
-     * @return the layer or <code>null</code>.
-     */
-    public <LayerType extends Layer> LayerType findGpsLayer(String layerName, Class<LayerType> layerType) {
-        LayerType result = null;
-        if(Main.map != null && Main.map.mapView != null) {
-            for(Layer layer : Main.map.mapView.getAllLayers()) {
-                if(layerName.equals(layer.name) && layerType.isAssignableFrom(layer.getClass())) {
-                    result = (LayerType) layer;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-    
-    
-    /**
-     * Returns the writer that writes the data. Override this method, if another type
-     * of writer should be used.
-     * @return the writer.
-     */
-    public XmlWriter.OsmWriterInterface getXmlWriter() {
-        return null;
-
-        /*
-         * FIXME! this disables auto-save. need to work with new GPX writing code in JOSM.
-         *
-        RawGpsLayer gpsLayer = findGpsLayer(gpsLayerName, RawGpsLayer.class);
-        if(gpsLayer == null) {
-            return null;
-        }
-        return new GpxWriter.Trk(gpsLayer.data);
-        */
-    }
-
-
 }

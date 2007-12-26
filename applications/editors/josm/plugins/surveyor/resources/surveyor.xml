@@ -89,8 +89,14 @@
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Residential"/>
   </button>
+  <!-- 
+  <button label="Test" hotkey="shift X">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Test X"/>
+  </button>
   <button label="Test" hotkey="F12">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Test"/>
   </button>
+   -->
 </surveyor>

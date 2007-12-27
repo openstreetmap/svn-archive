@@ -1,0 +1,27 @@
+#navigation {
+text-align:left;
+position:absolute;
+left: 0;
+width: 20%;
+height:98%;
+background-color:white;
+overflow:auto;
+padding: 0;
+}
+
+.selflink {color:silver; font-weight:bold; }
+#navigation a:link {color:blue; font-weight:bold; }
+#navigation a:visited {font-weight:bold; color:blue; }
+#navigation a:focus {color:green; font-weight:bold; }
+#navigation a:hover {color:green; font-weight:bold; }
+#navigation a:active {color:silver; font-weight:bold; }
+#navigation ul {list-style-type:none;}
+#navigation li {padding: 5px; list-style-type: none;}
+#navigation li a {text-decoration: none;}
+
+#content {text-align:left; position:absolute; right: 0; width: 80%; height:98%; border: 0px; padding-left: 20; background-color:white; overflow:auto;}
+#content h1 {text-align: center;}
+
+.downloadbox {text-align:left; border: 0px; padding: 20; background-color:#DDDDDD; overflow:auto;}
+.downloadbox h1 {text-align: center;}
+

@@ -215,7 +215,7 @@ function HandleDir($Dir, $UserID, $VersionID, $Size = 0){
     SaveMetadata($TileList, $UserID, $VersionID, $Size);
 
   $deletetime = microtime(true);
-  SaveBlankTiles($BlankTileList, $UserID,$ValidTileset,$TilesetX, $TilesetY, $TilesetLayer);
+  SaveBlankTiles($BlankTileList, $UserID,$ValidTileset,$TilesetX, $TilesetY);
   $blanktime = microtime(true) - $deletetime;
   $FileIdentifier = substr(strrchr($Dir, '/'), 1, 6);
   logMsg("$FileIdentifier: Blank tiles for $TilesetX,$TilesetY took $blanktime.", 4);
@@ -254,7 +254,7 @@ function SaveMetadata($TileList, $UserID, $VersionID, $Size = 0){
 #------------------------------------------------------------------------------------
 # Save uploaded blank tiles in the database
 #------------------------------------------------------------------------------------
-function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $TilesetY, $TilesetLayer){
+function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $TilesetY){
   # First we run through the set to find the predominant type
   $CommonType = 0;
   $ReplaceList = array();
@@ -267,6 +267,7 @@ function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $Tile
     foreach($BlankTileList as $SqlSnippet){
 
       list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
+      $TilesetLayer = $Layer;  # Remember the layer
       # If we find levels <12, we set a flag to enable old behaviour
       if( $Z < 12 ) {
         $CommonType = -2;
@@ -307,10 +308,6 @@ function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $Tile
     # Make a blank tile. Level 12 and 15 are always stored, otherwise we only store tiles not equal to the "common tile"
     if( $Type >= 0 && ($Z == 12 || $Z == 15 || $Type != $CommonType) )
     {
-      $Fields = "x, y, z, layer, type, date, user";
-      $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
-
-      $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
       # Store the stuff to replace in the array
       $Values = sprintf("(%s, now(), %d)", $SqlSnippet, $UserID);
       array_push( $ReplaceList, $Values );
@@ -318,7 +315,7 @@ function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $Tile
     else
     {
       # Delete a blank tile
-      $SQL = sprintf("delete from `tiles_blank` where `x`=%d AND `y`=%s AND `z`=%s AND `layer`=%d", $X, $Y, $Z, $Layer);
+      $SQL = sprintf("delete from `tiles_blank` where `x`=%d AND `y`=%d AND `z`=%d AND `layer`=%d", $X, $Y, $Z, $Layer);
       mysql_query($SQL);
       logSqlError();
     }

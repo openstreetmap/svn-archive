@@ -255,7 +255,7 @@ sub parse_line(){
 				       { lat => $lat2 , lon => $lon2 });
 
 	    printf $FH_OSM "%s,%s,%f\n",$Nodes{$from_node},$Nodes{$to_node},$angle;
-	    $Stats{"nbd_ref read"}++;
+	    $Stats{"nd_ref read"}++;
 	    $Stats{"elem read"}++;
 	}
 	$from_node = $to_node;
@@ -263,6 +263,10 @@ sub parse_line(){
 	$element = "way";
 	$from_node=0;
     } elsif ( $line =~ m/<\/way/ ){
+	#<way id="38" timestamp="2006-03-16T09:50:36Z">
+	#<nd ref="200630" />
+	#<tag k="highway" v="residential" />
+	#</way>
     } elsif ( $line =~ m/<relation/ ){
     } elsif ( $line =~ m/<\/relation/ ){
     } elsif ( $line =~ m/<memberrelation/ ){
@@ -270,6 +274,10 @@ sub parse_line(){
     } elsif ( $line =~ m/<\/node/ ){
     } elsif ( $line =~ m/<\/osm/ ){
     } elsif ( $line =~ m/<bound.*box=[\'\"]/ ){
+    } elsif ( $line =~ m/<tag k="(highway)" v=\"([^\"]*)\"/ ){
+	my $k=$1;
+	my $v=$2;
+	$tag->{$k}=$v;
     } elsif ( $line =~ m/<tag/ ){
     } elsif ( $line =~ m/<?xml version/ ){
     } elsif ( $line =~ m/<osm version=[\'\"]0\.5[\'\"]/ ){

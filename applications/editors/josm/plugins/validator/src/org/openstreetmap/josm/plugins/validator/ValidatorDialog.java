@@ -102,7 +102,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         if( selectionPaths == null )
             return;
         
-        Bag<String, Command> commands = new Bag<String, Command>();
         Set<DefaultMutableTreeNode> processedNodes = new HashSet<DefaultMutableTreeNode>();
         for( TreePath path : selectionPaths )
         {
@@ -125,30 +124,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         			Command fixCommand = error.getFix();
         			if( fixCommand != null )
         			{
-        				commands.add(error.getMessage(), fixCommand);
+        				Main.main.undoRedo.add(fixCommand);
         			}
         		}
     		}
         }
-    		
-		Command fixCommand = null;
-		if( commands.size() == 0 )
-			return;
 		
-		List<Command> allComands = new ArrayList<Command>(50);
-		for( Entry<String, List<Command>> errorType : commands.entrySet())
-		{
-			String description = errorType.getKey();
-			List<Command> errorCommands = errorType.getValue();
-			allComands.add( new SequenceCommand("Fix " + description, errorCommands) );
-		}
-		
-		if( allComands.size() > 1 )
-			fixCommand = new SequenceCommand("Fix errors", allComands);
-		else 
-			fixCommand = allComands.get(0);
-		
-		Main.main.undoRedo.add( fixCommand );
 		Main.map.repaint();
 		DataSet.fireSelectionChanged(Main.ds.getSelected());
 		       

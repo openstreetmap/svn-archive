@@ -58,9 +58,9 @@ sub set_type
   my($image, $x, $y, $type) = @_;
   my $color;
 
-  $color = $image->colorAllocate(0,0,255) if($type == TILETYPE_SEA);
-  $color = $image->colorAllocate(0,255,0) if($type == TILETYPE_LAND);
-  $color = $image->colorAllocate(255,255,255) if($type == TILETYPE_TILE);
+  $color = $image->colorResolve(0,0,255) if($type == TILETYPE_SEA);
+  $color = $image->colorResolve(0,255,0) if($type == TILETYPE_LAND);
+  $color = $image->colorResolve(255,255,255) if($type == TILETYPE_TILE);
   $image->setPixel($x,$y, $color);
 }
 
@@ -82,6 +82,8 @@ if ($#ARGV > -1)
 	    my ($x, $y) = ($ARGV[1], $ARGV[2]);
 
 	    open $world_fh, "<oceantiles_12.png" or die;
+	    # use binmode so it works on windows too
+	    binmode $world_fh;
 
 	    $world_im = GD::Image->newFromPng( $world_fh, 1 );
 
@@ -105,6 +107,8 @@ if ($#ARGV > -1)
 	    my $newtype;
 
 	    open $world_fh, "<oceantiles_12.png" or die;
+	    # use binmode so it works on windows too
+	    binmode $world_fh;
 	    $world_im = GD::Image->newFromPng( $world_fh, 1 );
 	    close $world_fh;
     
@@ -115,6 +119,8 @@ if ($#ARGV > -1)
 	    set_type($world_im, $x, $y, $newtype);
 
 	    open $world_fh, ">oceantiles_12.png" or die;
+	    # use binmode so it works on windows too
+	    binmode $world_fh;
 	    print $world_fh $world_im->png;
 	    close $world_fh;
 	}
@@ -127,6 +133,9 @@ if ($#ARGV > -1)
 # Convert the resulting file in any case...
 open $world_fh, "<oceantiles_12.png" or die;
 open $tileinfo_fh, ">oceantiles_12.dat" or die;
+# use binmode so it works on windows too
+binmode $world_fh;
+binmode $tileinfo_fh;
 print STDERR "Writing output to ./oceantiles_12.dat\n";
 $world_im = GD::Image->newFromPng( $world_fh, 1 );
 

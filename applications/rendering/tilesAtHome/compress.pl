@@ -229,7 +229,7 @@ sub compress
     {
         my $hostname = `hostname`;
         chomp $hostname;
-        hostname .= "XXXXX";
+        $hostname .= "XXXXX";
         $Filename = sprintf("%s/%d_%s_%d_%d_%s%s.zip", $OutputDir, $epochtime,
           substr($hostname,0,5), $$, $ZipFileCount++, $Layer, $SingleTileset);
     }

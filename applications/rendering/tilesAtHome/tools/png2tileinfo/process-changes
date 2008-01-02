@@ -97,6 +97,8 @@ for my $line (@data)
 }
 
 open my $world_fh, "<oceantiles_12.png" or die "Couldn't open oceantiles_12.png ($!)\n";
+# use binmode so it works on windows too
+binmode $world_fh;
 my $world_im = GD::Image->newFromPng( $world_fh, 1 );
 close $world_fh;
 
@@ -131,6 +133,8 @@ for my $entry (@todo)
 print "Complete: done($done), unnecessary($unnecessary), double($double)\n";
 
 open $world_fh, ">oceantiles_12.png" or die;
+# use binmode so it works on windows too
+binmode $world_fh;
 print $world_fh $world_im->png;
 close $world_fh;
 

@@ -20,6 +20,8 @@
   <property name="josm" location="../../core/dist/josm-custom.jar" />
   <property name="rendering" location="../../../../rendering" />
 
+  <property name="ant.build.javac.target" value="1.5"/>
+
   <target name="compile">
     <mkdir dir="${plugin.build.dir}"></mkdir>
     <mkdir dir="${plugin.dist.dir}"></mkdir>

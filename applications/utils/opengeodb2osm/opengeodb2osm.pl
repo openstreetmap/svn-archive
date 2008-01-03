@@ -3,12 +3,15 @@
 # Author: Sven Anders <sven@anders-hamburg.de>
 # License GPL 2.0
 #
-my $version="0.4.1";
-my $dbversion="0.2.5a / 2007-10-04 / http://opengeodb.sourceforge.net/";
+my $version="0.4.2";
+my $progname="opengeodb2osm";
+my $osmApiURL="http://api.openstreetmap.org/api/0.5/node/";
+$dbversion="0.2.5a / 2007-10-04 / http://opengeodb.sourceforge.net/";
 
 use utf8;
 use DBI;
-my $progname="opengeodb2osm";
+use LWP::Simple;
+
 my %osmOGDB;
 $uselat=0;
 $minlat=53;
@@ -48,7 +51,11 @@ my $dbh = DBI->connect( 'dbi:mysql:'.$mysqldb, $mysqluser, $mysqlpw) ||
 
 my $sthRel=$dbh->prepare( 'select distinct text_val from geodb_textdata where text_type="400100000" ') ||
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
-my $sth = $dbh->prepare( 'SELECT distinct loc_id FROM geodb_textdata') ||
+my $sth = $dbh->prepare( 'SELECT distinct loc_id FROM geodb_textdata where loc_id>0 and loc_id!=100') ||
+     die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
+my $sthOSMNode =  $dbh->prepare('SELECT c.loc_id,n.id,SQRT(((c.lat-n.lat)*(c.lat-n.lat))+((c.lon-n.lon)*(c.lon-n.lon)))*100 as dist FROM geodb_coordinates c, geodb_textdata t, nodes n WHERE c.loc_id=t.loc_id and t.text_type=500100000 and n.name=t.text_val  order by c.loc_id ') or 
+     die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
+my $sthOSM = $dbh->prepare('SELECT lat,lon FROM nodes WHERE id=?') ||
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
 
 my $where="";
@@ -80,6 +87,33 @@ my $sthPop = $dbh->prepare('select int_val from geodb_intdata where loc_id=? and
 
 my $sthParts = $dbh->prepare('select loc_id from geodb_textdata where text_type=400100000 and text_val=?');
 
+$sthOSMNode->execute ||
+     die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
+my $oldlocid=-1;
+my $olddist;
+my $maxDist=10;
+my %OsmIdToNodeId;
+while ( my @ergebnis = $sthOSMNode->fetchrow_array() ){
+    my $locid=$ergebnis[0];
+    my $osmid=$ergebnis[1];
+    my $dist=$ergebnis[2];
+    if ($oldlocid != $locid) {
+	if ($oldlocid != -1) {
+	    $OsmIdToNodeId{$oldosmid}=$oldlocid;
+	}
+	$olddist=$maxDist+2;
+    }
+    if (($dist<$maxDist) and ($dist<$olddist)) {
+	if (!(defined($OsmIdToNodeId{$osmid}))) {
+	    $NodelocIdHash{$locid}=$osmid;
+	} 
+	$olddist=$dist;
+	$oldlocid=$locid;
+	$oldosmid=$osmid;
+    }
+}
+
+
 # Vorbereitetes Statement (Abfrage) ausfuehren
 $sthNode->execute ||
      die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
@@ -87,8 +121,10 @@ $sthNode->execute ||
 $nodeid=-1;
 while ( my @ergebnis = $sthNode->fetchrow_array() ){
     my $locid=$ergebnis[0];
-    $NodelocIdHash{$locid}=$nodeid;
-    $nodeid--;
+    if (!(defined($NodelocIdHash{$locid}))) {
+	$NodelocIdHash{$locid}=$nodeid;
+	$nodeid--;
+    }
 }
 $sthRel->execute ||
      die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
@@ -119,6 +155,41 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     while ( my @corderg = $sthCoord->fetchrow_array() ){
 	$lat=$corderg[1];
 	$lon=$corderg[0];
+    }
+    $found=0;
+
+    my %osmTag=();
+    if (defined($NodelocIdHash{$locid}) and ($NodelocIdHash{$locid} >0)) {	
+	$osmContent = get($osmApiURL.$NodelocIdHash{$locid});
+	if (defined($osmContent)) {
+	    @content=split(/\n/,$osmContent);
+	    foreach my $line (@content) {
+		if (($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" user="(.*)" visible="true"/) or ($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" visible="true"/)) { 
+		    
+		    
+		    $lat=$1;
+		    $lon=$2;
+		    $tag.=' <tag k="opengeodb:lat" v="'.$lat.'" />'."\n";
+		    $tag.=' <tag k="opengeodb:lon" v="'.$lon.'" />'."\n";
+		    $found=1;
+
+		} elsif ($line=~/^\s*<tag k=\"(.*)\" v=\"(.*)\"\/>\s*$/) {
+		    my $k=$1;
+		    my $v=$2;
+		    $osmTag{$k}=$v;
+		    if (($k ne "created_by") and (!($k =~/^openGeoDB:/))){
+			$tag.="$line\n";
+		    }
+		} elsif ($line=~/<?xml version=\"/) {
+		} elsif ($line=~/<osm version=\"/) {
+		} elsif ($line=~/^\s*<\/node>/) {
+		} elsif ($line=~/^\s*<\/osm>/) {
+		}else {
+		    warn("line: $line");
+		}
+	    }
+	}
+
     }
     $sthText->execute($locid);
     $sthLoc->execute($locid);
@@ -218,9 +289,12 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$tag.=' <tag k="population" v="'.$population.'" />'."\n";
 	$tag.=' <tag k="openGeoDB:population" v="'.$population.'" />'."\n";
     }
+
     my $place="";
     my $geodbPlace="";
-    # FIXME $place aus OSM holen
+    if (defined($osmTag{"place"})) {
+	$place=$osmTag{"place"};
+    }
     if ($place eq "") {
 	while ( my @locerg = $sthLoc->fetchrow_array() ){
 	    my $id=$locerg[0];
@@ -245,6 +319,9 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 		$geodbPlace="locality";
 	    } elsif ($id == 100800000) {
 		$geodbPlace="postal_code_area";
+	    } elsif ($id == 100900000) {
+		$geodbPlace="district";
+		$place="suburb";
 	    } else {
 		$geodbPlace=$id;
 	    }
@@ -277,7 +354,9 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	    $place="city";
 	} elsif ($population>10000) {
 	    $place="town";
-	} elsif ($population<30) {
+	} elsif ($population>30) {
+	    $place="village";
+	} else {
 	    $place="hamlet";
 	}
     }
@@ -287,16 +366,20 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$tag.=' <tag k="place" v="FIXME" />'."\n";
     }
 
-    
+
     $tag.=' <tag k="created_by" v="'.$progname.$version.'" />'."\n";
     $tag.=' <tag k="openGeoDB:version" v="'.$dbversion.'" />'."\n";
-    $tag.=' <tag k="openGeoDB:auto_update" v="population,is_in" />'."\n";
 
+    $tag.=' <tag k="openGeoDB:auto_update" v="population,is_in" />'."\n";
+    
+    $found=0;
+   
     if (defined($lat)) {
-	print '<node id="'.$NodelocIdHash{$locid}.'" visible="true" lat="'." $lat\" lon=\"$lon\" >\n$tag</node>\n";
+	print '<node id="'.$NodelocIdHash{$locid}.'" visible="true" lat="'."$lat\" lon=\"$lon\" >\n$tag</node>\n";
     }
     $found=0;
     $sthParts->execute($locid);
+
     while ( my @partserg = $sthParts->fetchrow_array() ){
 	if ((defined($NodelocIdHash{$partserg[0]})) or (defined($RelationlocIdHash{$partserg[0]}))) {
 	    if ($found==0) {

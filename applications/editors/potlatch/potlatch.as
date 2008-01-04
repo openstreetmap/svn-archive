@@ -5,7 +5,7 @@
 	// Site-specific URLs
 //	var apiurl='rubyamf.cgi';
 //	var gpsurl='/potlatch/getgps.cgi';
-//	var gpxurl='http://127.0.0.1/~richard/gpx/';
+//	var gpxurl='http://localhost:3000/trace/';
 //	var yahoourl='/~richard/potlatch/ymap.swf';
 	var apiurl='../api/0.5/amf';
 	var gpsurl='../api/0.5/swf/trackpoints';
@@ -93,7 +93,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.6";	// current version
+	var signature="Potlatch 0.6a";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
 	if (preferences.data.baselayer    ==1        ) { preferences.data.baselayer    =2; }	// temporary migration
@@ -162,12 +162,19 @@
 	_root.attachMovie("padlock","padlock",41);
 	with (_root.padlock) { _y=532; _visible=false; };
 	_root.padlock.onPress=function() {
-		if (_root.map.ways[wayselected].path.length>200) {
-			setTooltip("too long to unlock:\nplease split into\nshorter ways");
-		} else {
-			_root.map.ways[wayselected].locked=false;
-			_root.map.ways[wayselected].clean=false;
-			_root.map.ways[wayselected].redraw();
+		if (_root.wayselected) {
+			if (_root.map.ways[wayselected].path.length>200) {
+				setTooltip("too long to unlock:\nplease split into\nshorter ways");
+			} else {
+				_root.map.ways[wayselected].locked=false;
+				_root.map.ways[wayselected].clean=false;
+				_root.map.ways[wayselected].redraw();
+				_root.padlock._visible=false;
+			}
+		} else if (_root.poiselected) {
+			_root.map.pois[poiselected].locked=false;
+			_root.map.pois[poiselected].clean=false;
+//			_root.map.pois[poiselected].recolour();
 			_root.padlock._visible=false;
 		}
 	};
@@ -581,6 +588,9 @@
 		populatePropertyWindow('POI');
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
 	};
+	// POI.prototype.recolour=function() { };
+	// ** above will recolour as red/green depending on whether locked
+	
 	Object.registerClass("poi",POI);
 
 	// =====================================================================================
@@ -1348,7 +1358,7 @@
 							if (zz>100) { _root.chat.text+=id+":"+zz+";"; } }
 	
 	function showTileDebug() {
-		_root.chat._visible=true;
+//		_root.chat._visible=true;
 		lat=centrelat(0);
 		lon=centrelong(0);
 		z=_root.scale;

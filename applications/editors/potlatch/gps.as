@@ -40,6 +40,21 @@
 									}
 								}
 							}
+						} else if (level2[j].nodeName=='wpt') {
+							_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
+							_root.map.pois[newpoiid]._x=long2coord(level2[j].attributes['lon']);
+							_root.map.pois[newpoiid]._y= lat2coord(level2[j].attributes['lat']);
+							_root.map.pois[newpoiid].locked=true;
+							_root.map.pois[newpoiid].clean=false;
+							// _root.map.pois[newpoiid].recolour();
+							var level3=level2[j].childNodes;
+							for (k=0; k<level3.length; k+=1) {
+								if (level3[k].nodeName=='name') { _root.map.pois[newpoiid].attr['name']=level3[k].firstChild.nodeValue; }
+								if (level3[k].nodeName=='ele' ) { _root.map.pois[newpoiid].attr['ele' ]=level3[k].firstChild.nodeValue; }
+								if (level3[k].nodeName=='sym' ) { _root.map.pois[newpoiid].attr['wpt_symbol'     ]=level3[k].firstChild.nodeValue; }
+								if (level3[k].nodeName=='desc') { _root.map.pois[newpoiid].attr['wpt_description']=level3[k].firstChild.nodeValue; }
+							}
+							_root.poicount+=1;
 						}
 					}
 				}
@@ -101,7 +116,6 @@
 			_root.map.ways[newwayid].clean=false;
 			_root.map.ways[newwayid].locked=true;
 			_root.map.ways[newwayid].redraw();
-
 		}
 	}
 

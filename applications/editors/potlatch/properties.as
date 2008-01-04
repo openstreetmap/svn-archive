@@ -261,7 +261,8 @@
 	function setTypeText(a,b) {
 		_root.t_type.text=a; _root.t_type.setTextFormat(boldText);
 		_root.t_details.text=b; _root.t_details.setTextFormat(plainText);
-		if (_root.map.ways[_root.wayselected].locked) {
+		if (_root.map.ways[_root.wayselected].locked ||
+			_root.map.pois[_root.poiselected].locked) {
 			_root.padlock._visible=true;
 			_root.padlock._x=_root.t_details.textWidth+15;
 		} else {
@@ -287,14 +288,14 @@
 	// look in a particular menu
 	
 	function findPresetInMenu(menuname) {
-		f=0;
+		var f=0;
 		for (pre=presetnames[currentproptype][menuname].length-1; pre>-1; pre-=1) {
 			pname=presetnames[currentproptype][menuname][pre];
 			pkeys=_root.presets[pname];
 			if (pkeys) {
 				ok=1;
 				for (pkey in pkeys) {
-					cvalue=getAddrArray()[pkey];
+					cvalue=getAttrArray()[pkey];
 					if (cvalue==null) { cvalue=''; }
 					if (cvalue!=presets[pname][pkey] && presets[pname][pkey].substr(0,6)!='(type ') { ok=0; }
 				}

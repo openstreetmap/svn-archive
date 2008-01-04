@@ -67,3 +67,8 @@ Changelog:
 0.03    - 2007-10-15
           converted for OSM data version 0.5
 
+0.03.1  - 2008-01-03
+          add setpagedevice to set output size correctly
+          update some styles
+          add capability for dashed lines in styles
+

@@ -1,6 +1,6 @@
 #! /usr/bin/ruby
 #
-# OSMPS 0.02.1
+# OSMPS 0.03.1
 #
 # OpenStreetMap .osm to PostScript renderer
 #
@@ -1079,6 +1079,7 @@ class Graph#{{{
     ps += "%%Creator: osmps.rb\n"
     ps += "%%BoundingBox: 0 0 #{wh[:width]} #{wh[:height]}\n"
     ps += "%%EndComments\n"
+    ps += "<< /PageSize [ #{wh[:width]} #{wh[:height]} ] /ImagingBBox null >> setpagedevice\n"
     ps += PSResource
     ps += PSSymbols
     ps += <<EOP
@@ -1307,25 +1308,37 @@ g.importosm(ARGV[0])
   s.adddrawps(20, "10 70 10 c area")
   g.addstyle(s)
 
+  s = Style.new()
+  s.addtag("sport", ["bowls", "tennis"])
+  s.settype(:area)
+  s.adddrawps(20, "40 150 40 c area")
+  g.addstyle(s)
+
 
 # Water 1000-1999
 
   s = Style.new()
   s.addtag("waterway", "river")
   s.settype(:path)
-  s.adddrawps(1100, "1.8 lw 120 120 220 c line")
+  s.adddrawps(1100, "0.8 lw 120 120 220 c line")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("waterway", "canal")
   s.settype(:path)
-  s.adddrawps(1200, "0.7 lw 70 70 220 c line")
+  s.adddrawps(1200, "0.6 lw 70 70 220 c line")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("waterway", "stream")
   s.settype(:path)
-  s.adddrawps(1300, "0.7 lw 120 120 220 c line")
+  s.adddrawps(1300, "0.4 lw 120 120 220 c line")
+  g.addstyle(s)
+
+  s = Style.new()
+  s.addtag("waterway", "drain")
+  s.settype(:path)
+  s.adddrawps(1350, "0.2 lw 120 120 220 c line")
   g.addstyle(s)
 
   s = Style.new()
@@ -1345,24 +1358,30 @@ g.importosm(ARGV[0])
 #   - bridge (true or false)
 #   - casing colour (ps snippet "r g b")
 #   - core colour (ps snippet "r g b")
-def setroad(sty, l1, l2, width, bridge, casecol, corecol)
+def setroad(sty, l1, l2, width, bridge, casecol, corecol, dash = nil)
   brcasew = width * 1.6
   brcorew = width * 1.4
   corew = width * 0.7
   sty.settype(:path)
+  dashps = ""
+  if dash != nil
+    if dash.length % 2 == 0
+      dashps = "[" + dash.join(" ") + "] 0 setdash "
+    end
+  end
   if bridge
     sty.addtag("bridge", "yes")
     sty.adddrawps(4000, "0 setlinecap #{brcasew} lw 0 0 0 c line")
-    sty.adddrawps(4001, "0 setlinecap #{brcorew} lw 255 255 255 c line")
+    sty.adddrawps(4001, dashps + "0 setlinecap #{brcorew} lw 255 255 255 c line")
     if l1 != nil
       sty.adddrawps(l1 + 2000, "0 setlinecap #{width} lw #{casecol} c line") # casing over bridge
     end
-    sty.adddrawps(l2 + 2100, "0 setlinecap #{corew} lw #{corecol} c line") # core
+    sty.adddrawps(l2 + 2100, dashps + "0 setlinecap #{corew} lw #{corecol} c line") # core
   else 
     if l1 != nil
       sty.adddrawps(l1, "#{width} lw #{casecol} c line")  # casing
     end
-    sty.adddrawps(l2, "#{corew} lw #{corecol} c line")  # core
+    sty.adddrawps(l2, dashps + "#{corew} lw #{corecol} c line")  # core
 #    sty.adddrawps(2999, "pathcopy")  # name
     sty.adddrawtagstring(2999, "name")
     sty.adddrawps(2999, "roadname")
@@ -1442,6 +1461,11 @@ for bridge in [false, true]
   s = Style.new()
   s.addtag("highway", "cycleway")
   setroad(s, nil, l-=20, 0.3, bridge, nil, "0 80 0")
+  g.addstyle(s)
+
+  s = Style.new()
+  s.addtag("highway", "bridleway")
+  setroad(s, nil, l-=20, 0.3, bridge, nil, "80 30 0", [0.5, 0.3])
   g.addstyle(s)
 
   s = Style.new()

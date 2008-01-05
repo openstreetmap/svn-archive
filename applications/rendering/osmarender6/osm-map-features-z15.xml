@@ -1499,7 +1499,7 @@
 				stroke: #f9574b;
 				stroke-dasharray: 5, 1, 1, 1;
 			}
-o
+
 			.boundary-administrative-district-core {
 				stroke-width: 0.5px; 
 				stroke: #f9574b;

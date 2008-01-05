@@ -3,7 +3,7 @@
 # Author: Sven Anders <sven@anders-hamburg.de>
 # License GPL 2.0
 #
-my $version="0.4.2";
+my $version="0.5.1";
 my $progname="opengeodb2osm";
 my $osmApiURL="http://api.openstreetmap.org/api/0.5/node/";
 $dbversion="0.2.5a / 2007-10-04 / http://opengeodb.sourceforge.net/";
@@ -30,7 +30,7 @@ if (-f "opengeodb2osmSettings.pm") {
     require opengeodb2osmSettings;
 }
 
-$osmOGDB{"400100000"}="openGeoDB:is_in";
+$osmOGDB{"400100000"}="openGeoDB:is_in_loc_id";
 $osmOGDB{"400200000"}="openGeoDB:layer";
 $osmOGDB{"400300000"}="openGeoDB:type";
 $osmOGDB{"500300000"}="openGeoDB:postal_codes";
@@ -38,6 +38,8 @@ $osmOGDB{"500600000"}="openGeoDB:community_identification_number";
 $osmOGDB{"500100002"}="openGeoDB:sort_name";
 $osmOGDB{"500500000"}="openGeoDB:license_plate_code";
 $osmOGDB{"500400000"}="openGeoDB:telephone_area_code";
+$osmOGDB{"500700000"}="openGeoDB:combination_of_public_administration";
+$osmOGDB{"500100003"}="openGeoDB:ISO-3166-2";
 
 $osmOGDB{"500100000"}="name";
 
@@ -49,18 +51,18 @@ my $dbh = DBI->connect( 'dbi:mysql:'.$mysqldb, $mysqluser, $mysqlpw) ||
 # Befehl fuer Ausfuehrung vorbereiten. Referenz auf Statement
 # Handle Objekt wird zurueckgeliefert
 
-my $sthRel=$dbh->prepare( 'select distinct text_val from geodb_textdata where text_type="400100000" ') ||
+my $sthRel=$dbh->prepare( 'select distinct text_val from geodb_textdata where text_type="400100000" and valid_until>NOW() ') ||
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
-my $sth = $dbh->prepare( 'SELECT distinct loc_id FROM geodb_textdata where loc_id>0 and loc_id!=100') ||
+my $sth = $dbh->prepare( 'SELECT distinct loc_id FROM geodb_textdata where loc_id>0 and loc_id!=100 and valid_until>NOW()') ||
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
 my $sthOSMNode =  $dbh->prepare('SELECT c.loc_id,n.id,SQRT(((c.lat-n.lat)*(c.lat-n.lat))+((c.lon-n.lon)*(c.lon-n.lon)))*100 as dist FROM geodb_coordinates c, geodb_textdata t, nodes n WHERE c.loc_id=t.loc_id and t.text_type=500100000 and n.name=t.text_val  order by c.loc_id ') or 
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
 my $sthOSM = $dbh->prepare('SELECT lat,lon FROM nodes WHERE id=?') ||
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
 
-my $where="";
+my $where="where valid_until>NOW()";
 if ($uselat==1) {
-	$where.="where lat>=$minlat and lat<=$maxlat and lon>=$minlon and lon<=$maxlon";
+	$where.="and lat>=$minlat and lat<=$maxlat and lon>=$minlon and lon<=$maxlon";
 }
 
 
@@ -80,12 +82,12 @@ my $sthCoord = $dbh->prepare( 'SELECT lon,lat,valid_since,date_type_since,valid_
      die "Kann Statement nicht vorbereiten: $DBI::errstr\n";
 
 
-my $sthText = $dbh->prepare('select text_type,text_val,text_locale,is_native_lang,is_default_name from geodb_textdata where loc_id=?');
+my $sthText = $dbh->prepare('select text_type,text_val,text_locale,is_native_lang,is_default_name from geodb_textdata where loc_id=? and valid_until>NOW()');
 
-my $sthLoc = $dbh->prepare('select loc_type from geodb_locations where loc_id=?');
-my $sthPop = $dbh->prepare('select int_val from geodb_intdata where loc_id=? and int_type=600700000');
+my $sthLoc = $dbh->prepare('select loc_type from geodb_locations where loc_id=? ');
+my $sthPop = $dbh->prepare('select int_val from geodb_intdata where loc_id=? and int_type=600700000 and valid_until>NOW()');
 
-my $sthParts = $dbh->prepare('select loc_id from geodb_textdata where text_type=400100000 and text_val=?');
+my $sthParts = $dbh->prepare('select loc_id from geodb_textdata where text_type=400100000 and text_val=? and valid_until>NOW()');
 
 $sthOSMNode->execute ||
      die "Kann Abfrage nicht ausfuehren: $DBI::errstr\n";
@@ -145,7 +147,7 @@ $sth->execute ||
 while ( my @ergebnis = $sth->fetchrow_array() ){
    # Im Array @ergebnis steht nun ein Datensatz
     my $locid=$ergebnis[0];
-
+    my $timestamp="";
     my $lat;
     my $lon;
 
@@ -164,11 +166,12 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	if (defined($osmContent)) {
 	    @content=split(/\n/,$osmContent);
 	    foreach my $line (@content) {
-		if (($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" user="(.*)" visible="true"/) or ($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" visible="true"/)) { 
+		if (($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" user="(.*)" visible="true" timestamp="(.*)"/) or ($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" visible="true" timestamp="(.*)"/)) { 
 		    
 		    
 		    $lat=$1;
 		    $lon=$2;
+		    $timestamp=" timestamp=\"$3\"";
 		    $tag.=' <tag k="opengeodb:lat" v="'.$lat.'" />'."\n";
 		    $tag.=' <tag k="opengeodb:lon" v="'.$lon.'" />'."\n";
 		    $found=1;
@@ -194,7 +197,68 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     $sthText->execute($locid);
     $sthLoc->execute($locid);
     $sthPop->execute($locid);
-
+    my $updatePopulation=1;
+    my $updatePlace=1;
+    my $updateName=1;
+    my $updateIsIn=1;
+    my $autoUpdate="";
+    if (defined($osmTag{"openGeoDB:auto_update"})) {
+	$updatePopulation=0;
+	$updatePlace=0;
+	$updateName=0;
+	$updateIsIn=0;
+	$autoUpdate=$osmTag{"openGeoDB:auto_update"};
+	foreach my $e (split /,/,$osmTag{"openGeoDB:auto_update"}) {
+	    if ($e eq "population") {
+		$updatePopulation=1;
+	    } elsif ($e eq "place") {
+		$updatePlace=1;
+	    } elsif ($e eq "name") {
+		$updateName=1;
+	    } elsif ($e eq "is_in") {
+		$updateIsIn=1;
+	    }
+	}
+    } elsif ($found==0) {
+	$updatePopulation=1;
+	$updatePlace=1;
+	$updateName=1;
+	$updateIsIn=1;
+	$autoUpdate="population,place,name,is_in";
+    } else {
+	my @arr;
+	$updateName=!(defined($osmTag{"name"}));
+	if ($updateName) {
+	    push @arr,"name";
+	}
+	$updatePlace=!(defined($osmTag{"place"}));
+	if ($updatePlace) {
+	    push @arr,"place";
+	}
+	$updatePopulation=!(defined($osmTag{"population"}));
+	if ($updatePopulation) {
+	    push @arr,"population";
+	}
+	$updateIsIn=!(defined($osmTag{"is_in"}));
+	if ($updateIsIn) {
+	    push @arr,"is_in";
+	}
+	$autoUpdate=join(",",@arr);
+    }
+    if ($found) {
+	if ($updateName) {
+	    delete $osmTag{"name"};
+	}
+	if ($updatePlace) {
+	    delete $osmTag{"place"};
+	}
+	if ($updatePopulation) {
+	    delete $osmTag{"population"};
+	}
+	if ($updateIsIn) {
+	    delete $osmTag{"is_in"};
+	}
+    }
     my %textval;
     while ( my @texterg = $sthText->fetchrow_array() ){
 	my $key=$texterg[0];
@@ -222,16 +286,23 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     }
     for my $key ( keys %textval ) {
         my $value = $textval{$key};
-	$tag.=' <tag k="'.$key.'" v="'.$value.'" />'."\n";
+	if (($key eq "name") or ($key=~/^name:/)) {
+	    if ($updateName) {
+		$tag.=' <tag k="'.$key.'" v="'.$value.'" />'."\n";
+	    }
+	    $tag.=' <tag k="openGeoDB:'.$key.'" v="'.$value.'" />'."\n";
+	} else {
+	    $tag.=' <tag k="'.$key.'" v="'.$value.'" />'."\n";
+	}
 	
     }
-    if (defined($textval{"openGeoDB:is_in"})) {
-#	print "ISIN: ".$textval{"openGeoDB:is_in"}."\n";
+    if (defined($textval{"openGeoDB:is_in_loc_id"})) {
+#	print "ISIN: ".$textval{"openGeoDB:is_in_loc_id"}."\n";
 	my $isinval="";
-	if (defined($is_in{$textval{"openGeoDB:is_in"}})) {
-	    $isinval=$is_in{$textval{"openGeoDB:is_in"}};
+	if (defined($is_in{$textval{"openGeoDB:is_in_loc_id"}})) {
+	    $isinval=$is_in{$textval{"openGeoDB:is_in_loc_id"}};
 	} else {
-	    my $bla=$textval{"openGeoDB:is_in"};
+	    my $bla=$textval{"openGeoDB:is_in_loc_id"};
 	    my $ibla=$bla;
 	    while ($bla > -1) {
 		$sthText->execute($bla);
@@ -251,27 +322,32 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 		    if (defined($defaultname) and ($defaultname eq "0")) {
 			$key.=":".$locale;
 		    }
-		    if ($key eq "openGeoDB:is_in") {
+		    if ($key eq "openGeoDB:is_in_loc_id") {
 			$bla=$value;
 		    }
 		    if ($key eq "name") {
 			if ($isinval ne "") {
-			    $isinval="$value,$isinval";
+			    $isinval="$isinval,$value";
 			} else {
 			    $isinval=$value;
 			}
 		    }
 		}
 	    }
+	    $isinval=~s/Hamburg,Freie und Hansestadt Hamburg,Hamburg/Freie und Hansestadt Hamburg/;
 	    $is_in{$ibla}=$isinval;
 	}
 	if (defined($isinval)) {
-	    $tag.=' <tag k="is_in" v="'. $isinval.'" />'."\n";
+	    if ($updateIsIn) {
+		$tag.=' <tag k="is_in" v="'. $isinval.'" />'."\n";
+	    }
+	    $tag.=' <tag k="openGeoDB:is_in" v="'. $isinval.'" />'."\n";
 	} else {
 	    die($locid);
 	}
 	if (defined($textval{'name'})) {
-	    $is_in{$locid}=$isinval.",".$textval{'name'};
+	    $is_in{$locid}=$textval{'name'}.",".$isinval;
+	    $is_in{$locid}=~s/Hamburg,Freie und Hansestadt Hamburg,Hamburg/Freie und Hansestadt Hamburg/;
 	}
 
     
@@ -286,7 +362,9 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	$population=$poperg[0];
     }
     if ($population ne "") {
-	$tag.=' <tag k="population" v="'.$population.'" />'."\n";
+	if ($updatePopulation) {
+	    $tag.=' <tag k="population" v="'.$population.'" />'."\n";
+	}
 	$tag.=' <tag k="openGeoDB:population" v="'.$population.'" />'."\n";
     }
 
@@ -360,22 +438,31 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	    $place="hamlet";
 	}
     }
-    if ($place ne "") {
-	$tag.=' <tag k="place" v="'.$place.'" />'."\n";
-    } else {
-	$tag.=' <tag k="place" v="FIXME" />'."\n";
+    if ($updatePlace) {
+	if ($place ne "") {
+	    $tag.=' <tag k="place" v="'.$place.'" />'."\n";
+	} else {
+	    $tag.=' <tag k="place" v="FIXME" />'."\n";
+	}
     }
 
 
     $tag.=' <tag k="created_by" v="'.$progname.$version.'" />'."\n";
     $tag.=' <tag k="openGeoDB:version" v="'.$dbversion.'" />'."\n";
 
-    $tag.=' <tag k="openGeoDB:auto_update" v="population,is_in" />'."\n";
+    if ($autoUpdate eq "") {
+	$autoUpdate="openGeoDB:NONE";
+    }
+    $tag.=' <tag k="openGeoDB:auto_update" v="'.$autoUpdate.'" />'."\n";
     
-    $found=0;
+
    
     if (defined($lat)) {
-	print '<node id="'.$NodelocIdHash{$locid}.'" visible="true" lat="'."$lat\" lon=\"$lon\" >\n$tag</node>\n";
+	if ($NodelocIdHash{$locid}>-1) {
+	    print '<node id="'.$NodelocIdHash{$locid}.'" visible="true" lat="'."$lat\" lon=\"$lon\" action=\"modify\" $timestamp>\n$tag</node>\n";
+	} else {
+	    print '<node id="'.$NodelocIdHash{$locid}.'" visible="true" lat="'."$lat\" lon=\"$lon\" >\n$tag</node>\n";
+	}
     }
     $found=0;
     $sthParts->execute($locid);

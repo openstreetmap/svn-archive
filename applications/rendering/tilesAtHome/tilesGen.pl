@@ -662,7 +662,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         
         # We only need the bounding box for ways (they will be downloaded completly,
         # but need the extended bounding box for places (names from neighbouring tiles)
-        $URLS = sprintf("%s%s/way[natural=*][bbox=%s] %s%s/way[boundary=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%s] %s%s/way[waterway=river][bbox=%s] %s%s/way[railway=*][bbox=%s] %s%s/node[place=*][bbox=%s]",
+        $URLS = sprintf("%s%s/way[natural=*][bbox=%s] %s%s/way[boundary=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[highway=motorway|motorway_link|trunk|primary|secondary|tertiary][bbox=%s] %s%s/way[waterway=river][bbox=%s] %s%s/way[railway=*][bbox=%s] %s%s/node[place=*][bbox=%s]",
           $Config{XAPIURL},$Config{OSMVersion},$bbox,
           $Config{XAPIURL},$Config{OSMVersion},$bbox,
           $Config{XAPIURL},$Config{OSMVersion},$bbox,

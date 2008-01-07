@@ -1,6 +1,6 @@
 #! /usr/bin/ruby
 #
-# OSMPS 0.03.1
+# OSMPS 0.04
 #
 # OpenStreetMap .osm to PostScript renderer
 #
@@ -677,6 +677,151 @@ class Tags #{{{
 
 # }}}
 end #}}}
+class BBox #{{{
+  attr_reader :minx, :miny, :maxx, :maxy
+
+  def initialize(x1 = nil, y1 = nil, x2 = nil, y2 = nil)# {{{
+    @minx = nil
+    @maxx = nil
+    @miny = nil
+    @maxy = nil
+
+    if x1 and y1 and x2 and y2
+      set(x1, y1, x2, y2)
+    end
+  end
+
+# }}}
+  def set(x1, y1, x2, y2)# {{{
+  # error here if any params are nil...
+    #puts "set: #{x1}  #{y1}  #{x2}  #{y2}"
+    if x1 < x2
+      @minx = x1
+      @maxx = x2
+    else
+      @minx = x2
+      @maxx = x1
+    end
+
+    if y1 < y2
+      @miny = y1
+      @maxy = y2
+    else
+      @miny = y2
+      @maxy = y1
+    end
+  end
+
+# }}}
+  def get# {{{
+    {:minx => @minx, :miny => @miny, 
+     :maxx => @maxx, :maxy => @maxy}
+  end
+
+# }}}
+  def width# {{{
+    @maxx - @minx
+  end
+
+# }}}
+  def height# {{{
+    @maxy - @miny
+  end
+
+# }}}
+  def expand(x, y)# {{{
+  # expand the bbox to include the point (x,y)
+    #puts "expand: #{x}  #{y}"
+    #puts to_s
+    if x < @minx
+      @minx = x
+    end
+
+    if x > @maxx
+      @maxx = x
+    end
+
+    if y < @miny
+      @miny = y
+    end
+
+    if y > @maxy
+      @maxy = y
+    end
+  end
+
+# }}}
+  def merge(bb)# {{{
+    if bb.minx > @minx
+      @minx = bb.minx
+    end
+
+    if bb.maxx > @maxx
+      @maxx = bb.maxx
+    end
+
+    if bb.miny > @miny
+      @miny = bb.miny
+    end
+
+    if bb.maxy > @maxy
+      @maxy = bb.maxy
+    end
+  end
+
+# }}}
+  def overlaps(bb)# {{{
+  # return true if bb overlaps self
+
+    if bb.maxx <= @minx
+      return false
+    end
+
+    if bb.minx >= @maxx
+      return false
+    end
+
+    if bb.maxy <= @miny
+      return false
+    end
+
+    if bb.miny >= @maxy
+      return false
+    end
+
+    true
+  end
+
+# }}}
+  def to_s# {{{
+    "(#{@minx}, #{@miny}), (#{@maxx}, #{@maxy})"
+  end
+
+# }}}
+end #}}}
+class Mercator#{{{
+  def self.to_x(lon)# {{{
+    (lon + 180) / 360
+  end
+
+  # }}}
+  def self.to_y(lat)# {{{
+    ly = self.projf(85.0511)
+    y = self.projf(lat)
+    (ly - y) / (2 * ly)
+  end
+
+  # }}}
+
+  private
+
+  def self.projf(la)# {{{
+    la = la * (3.1415926535897932384/180)
+    Math.log10(Math.tan(la) + (1/Math.cos(la)))
+  end
+
+# }}}
+end #}}}
 class MapObject #{{{
   def initialize# {{{
     @tags = nil
@@ -726,6 +871,8 @@ class MapObject #{{{
 # }}}
 end #}}}
 class Node < MapObject #{{{
+  attr_reader :lon, :lat
+
   def initialize(lon, lat)# {{{
     @lon = lon.to_f
     @lat = lat.to_f
@@ -734,14 +881,12 @@ class Node < MapObject #{{{
 
   # }}}
   def x# {{{
-    (@lon + 180) / 360
+    Projection.to_x(@lon)
   end
 
   # }}}
   def y# {{{
-    ly = projf(85.0511)
-    y = projf(@lat)
-    (ly - y) / (2 * ly)
+    Projection.to_y(@lat)
   end
 
   # }}}
@@ -751,15 +896,6 @@ class Node < MapObject #{{{
   end
   
   # }}}
-
-  private
-
-  def projf(la)# {{{
-    la = la * (3.1415926535897932384/180)
-    Math.log10(Math.tan(la) + (1/Math.cos(la)))
-  end
-
-# }}}
 end #}}}
 class Path < MapObject# {{{
   def initialize(nodelist)# {{{
@@ -769,6 +905,7 @@ class Path < MapObject# {{{
     if nodelist[0] == nodelist[-1]
       @closed = true
     end
+    @bbox = nil
   end
 
 # }}}
@@ -845,6 +982,26 @@ class Path < MapObject# {{{
   end
 
   # }}}
+  def bbox# {{{
+    if !@bbox
+      @bbox = BBox.new(@nodelist[0].x, @nodelist[0].y,
+                   @nodelist[0].x, @nodelist[0].y)
+
+      @nodelist.each do |n|
+        @bbox.expand(n.x, n.y)
+      end
+    end
+
+    @bbox
+  end
+
+  # }}}
+  def inbbox?(checkbb)# {{{
+  # why "not"???
+    !checkbb.overlaps(bbox)
+  end
+
+  # }}}
   def to_s# {{{
     "path(#" + @osmid.to_s + ")"
   end
@@ -852,13 +1009,18 @@ class Path < MapObject# {{{
   # }}}
 end # }}}
 class Area < MapObject# {{{
+  attr_reader :bbox
+
   def initialize(path)# {{{
     super()
     @paths = []
     @tags = nil
     if path != nil
       @paths = [path]
+      @bbox = path.bbox
       @tags = path.tags
+    else
+      @bbox = BBox.new
     end
   end
 
@@ -871,6 +1033,7 @@ class Area < MapObject# {{{
       raise "all paths in an area must have the same tags"
     end
     @paths.push(path)
+    @bbox.merge(path.bbox)
   end
 
   # }}}
@@ -899,8 +1062,16 @@ class Area < MapObject# {{{
   end
 
   # }}}
+  def inbbox?(checkbb)# {{{
+  # why "not"???
+    !checkbb.overlaps(bbox)
+  end
+
+  # }}}
 end # }}}
 class Graph#{{{
+  attr_reader :lonlatbbox
+
   def initialize# {{{
     @nodes = {}
     @paths = {}
@@ -908,6 +1079,9 @@ class Graph#{{{
     @tags = {}
     @styles = []
     @scale = 1000000
+    @clipbbox = nil
+
+    @lonlatbbox = BBox.new
   end
   
   # }}}
@@ -915,6 +1089,7 @@ class Graph#{{{
     # open xml document
     doc = XML::Document.file(file)
     root = doc.root
+
 
     # hash to keep track of osm ids
     nodes = {}
@@ -966,6 +1141,14 @@ class Graph#{{{
 
       if p.closed?
         addarea(Area.new(p))
+      end
+    end
+
+    if nodes.length > 0
+      @lonlatbbox.set(nodes[nodes.keys[0]].lon, nodes[nodes.keys[0]].lat,
+                      nodes[nodes.keys[0]].lon, nodes[nodes.keys[0]].lat)
+      nodes.keys.each do |n|
+        @lonlatbbox.expand(nodes[n].lon, nodes[n].lat)
       end
     end
   end #}}}
@@ -1040,6 +1223,17 @@ class Graph#{{{
   end
   
   # }}}
+  def setclip(lon1, lat1, lon2, lat2)# {{{
+    @clipbbox = BBox.new(Projection.to_x(lon1), Projection.to_y(lat1),
+                         Projection.to_x(lon2), Projection.to_y(lat2))
+  end
+  
+  # }}}
+  def clearclip#{{{
+    @clipbbox = nil
+  end
+  
+  # }}}
   def to_s# {{{
     str = "== nodes ==\n"
     @nodes.keys.each do |n|
@@ -1061,23 +1255,52 @@ class Graph#{{{
   end
   
   # }}}
-  def epsbbox(userscale = 1)# {{{
+  def bbox# {{{
+    mm = {}
+    mm[:miny] = mm[:maxy] = @nodes.keys[0].y
+    mm[:minx] = mm[:maxx] = @nodes.keys[0].x
+
+    @nodes.keys.each do |n|
+      if n.y <  mm[:miny]
+        mm[:miny] = n.y
+      end
+      if n.x < mm[:minx]
+        mm[:minx] = n.x
+      end
+      if n.y >  mm[:maxy]
+        mm[:maxy] = n.y
+      end
+      if n.x > mm[:maxx]
+        mm[:maxx] = n.x
+      end
+    end
+
+    BBox.new(mm[:minx], mm[:miny], mm[:maxx], mm[:maxy])
+#    mm
+  end
+
+  #}}}
+  def epsbbox(mm, userscale = 1)# {{{
     r = {}
-    mm = bbox()
-    r[:width] = (mm[:maxx] - mm[:minx]) * @scale * userscale
-    r[:height] = (mm[:maxy] - mm[:miny]) * @scale * userscale
-    r[:nodeminmax] = mm
+    r[:width] = (mm.maxx - mm.minx) * @scale * userscale
+    r[:height] = (mm.maxy - mm.miny) * @scale * userscale
+    r[:nodeminmax] = mm.get
     r
   end
 
   # }}}
   def eps(userscale = 1)# {{{
-    wh = epsbbox(userscale)
+    if @clipbbox
+      wh = epsbbox(@clipbbox, userscale)
+    else
+      wh = epsbbox(bbox, userscale)
+    end
     mm = wh[:nodeminmax]
 
+# DSC comments need fixing here...
     ps = "%!PS-Adobe-3.0 EPSF-2.0\n"
     ps += "%%Creator: osmps.rb\n"
-    ps += "%%BoundingBox: 0 0 #{wh[:width]} #{wh[:height]}\n"
+    ps += "%%BoundingBox: 0 0 #{wh[:width].to_i} #{wh[:height].to_i}\n"
     ps += "%%EndComments\n"
     ps += "<< /PageSize [ #{wh[:width]} #{wh[:height]} ] /ImagingBBox null >> setpagedevice\n"
     ps += PSResource
@@ -1109,6 +1332,17 @@ EOP
     ps += "% paths\n"
     ps += "1 setlinecap 1 setlinejoin\n"
 
+    if @clipbbox
+      bb = @clipbbox.get
+      ps += "np "
+      ps += "#{bb[:minx]} #{bb[:miny]} m "
+      ps += "#{bb[:minx]} #{bb[:maxy]} l "
+      ps += "#{bb[:maxx]} #{bb[:maxy]} l "
+      ps += "#{bb[:maxx]} #{bb[:miny]} l "
+      ps += "#{bb[:minx]} #{bb[:miny]} l "
+      ps += "closepath clip\n"
+    end
+
     # find out what layers we need to render
     layers = {}
     @tags.keys.each do |tag|
@@ -1124,6 +1358,7 @@ EOP
           content = ""
           if tag.styletypes.include?(:area)
             @areas.keys.each do |a|
+              next if @clipbbox and a.inbbox?(@clipbbox)
               if a.tags == tag
 #                puts "tag #{tag}"
 #                puts "  area #{a} #{a.tags.to_s}"
@@ -1134,7 +1369,8 @@ EOP
           end
           if tag.styletypes.include?(:path)
             @paths.keys.each do |p|
-#              puts "path #{p}"
+              next if @clipbbox and p.inbbox?(@clipbbox)
+#              puts "path #{p}: " + p.bbox.to_s
               if p.tags == tag
                 content += p.renderlayer(l)
               end
@@ -1150,6 +1386,7 @@ EOP
       end
     end
     
+    # this is currently a hack - should call render method of node class
     ps += "% nodes\n"
     @nodes.keys.each do |n|
       if n.tags.tags.include?("amenity")
@@ -1172,30 +1409,6 @@ EOP
 
   private
 
-  def bbox# {{{
-    mm = {}
-    mm[:miny] = mm[:maxy] = @nodes.keys[0].y
-    mm[:minx] = mm[:maxx] = @nodes.keys[0].x
-
-    @nodes.keys.each do |n|
-      if n.y <  mm[:miny]
-        mm[:miny] = n.y
-      end
-      if n.x < mm[:minx]
-        mm[:minx] = n.x
-      end
-      if n.y >  mm[:maxy]
-        mm[:maxy] = n.y
-      end
-      if n.x > mm[:maxx]
-        mm[:maxx] = n.x
-      end
-    end
-
-    mm
-  end
-
-  #}}}
   def taginc(tags)# {{{
     if tags == nil
       return
@@ -1231,7 +1444,11 @@ if not FileTest.exist?(ARGV[0].to_s)
   exit
 end
 
+class Projection < Mercator# {{{
+end# }}}
+
 g = Graph.new
+#puts "Reading OSM data"
 g.importosm(ARGV[0])
 
 # {{{ styles
@@ -1490,5 +1707,28 @@ end
 
 # }}}
 
-puts g.eps()
+puts g.eps
+
+# simple example of how to chop map up into 4x4 and output to
+# different files for a multi-page booklet:
+#
+# prefix = "output-"
+# 
+# wblocks = 4
+# hblocks = 4
+# 
+# wstep = g.lonlatbbox.width / wblocks
+# hstep = g.lonlatbbox.height / hblocks
+# 
+# for lat in 1..hblocks
+#   for lon in 1..wblocks
+#     File.open("#{prefix}-#{lon}-#{lat}.eps", "w") do |f|
+#       g.setclip(g.lonlatbbox.minx + (wstep * (lon-1)),
+#                 g.lonlatbbox.miny + (hstep * (lat-1)),
+#                 g.lonlatbbox.minx + (wstep * lon),
+#                 g.lonlatbbox.miny + (hstep * lat))
+#       f.puts g.eps
+#     end
+#   end
+# end
 

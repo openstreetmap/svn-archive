@@ -72,3 +72,7 @@ Changelog:
           update some styles
           add capability for dashed lines in styles
 
+0.04    - 2008-01-07
+          add ability to define output area (for example to easily
+            produce multi-page map booklets)
+

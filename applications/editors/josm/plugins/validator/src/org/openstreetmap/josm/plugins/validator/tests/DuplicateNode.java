@@ -67,7 +67,7 @@ public class DuplicateNode extends Test
 	@Override
 	public Command fixError(TestError testError)
 	{
-        Collection<OsmPrimitive> sel = testError.getPrimitives();
+        Collection<? extends OsmPrimitive> sel = testError.getPrimitives();
         Collection<OsmPrimitive> nodes = new ArrayList<OsmPrimitive>();
         
         Node target = null;

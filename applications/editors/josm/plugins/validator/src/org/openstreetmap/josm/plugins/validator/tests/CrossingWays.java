@@ -86,10 +86,9 @@ public class CrossingWays extends Test
 		            boolean isCoastline2 = coastline2 != null && (coastline2.equals("water") || coastline2.equals("coastline"));
 	                if( isCoastline1 != isCoastline2 ) continue;
 	                
-                    List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
-                    primitives.add(es1.ws.way);
-                    primitives.add(es2.ws.way);
-                    errors.add( new TestError(this, Severity.WARNING, tr("Crossing ways"), primitives) );
+                    errors.add(new TestError(this, Severity.WARNING, tr("Crossing ways"),
+						Arrays.asList(es1.ws.way, es2.ws.way),
+						Arrays.asList(es1.ws, es2.ws)));
 	            }
 	            segments.add(es1);
             }

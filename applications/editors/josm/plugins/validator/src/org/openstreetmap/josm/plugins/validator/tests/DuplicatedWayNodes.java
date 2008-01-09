@@ -10,6 +10,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import java.util.Collections;
+import java.util.Arrays;
 
 public class DuplicatedWayNodes extends Test {
 	public DuplicatedWayNodes() {
@@ -27,7 +28,8 @@ public class DuplicatedWayNodes extends Test {
 				continue;
 			}
 			if (lastN == n) {
-				errors.add(new TestError(this, Severity.ERROR, tr("Duplicated way nodes"), w));
+				errors.add(new TestError(this, Severity.ERROR, tr("Duplicated way nodes"),
+					Arrays.asList(w), Arrays.asList(n)));
 				break;
 			}
 			lastN = n;

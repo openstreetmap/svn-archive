@@ -577,7 +577,7 @@ sub PutRequestBackToServer
     
     my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&z=" . $Z . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahCltReReq:" . $Cause;
     
-    statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
     DownloadFile(
         $RequestUrlString, 
         $LocalFilename, 

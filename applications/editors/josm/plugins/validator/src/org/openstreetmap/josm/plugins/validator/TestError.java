@@ -309,7 +309,7 @@ public class TestError
         }
 
 		public void visit(WaySegment ws) {
-			if (ws.lowerIndex < 0 || ws.lowerIndex >= ws.way.nodes.size()) return;
+			if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.nodes.size()) return;
 			Node a = ws.way.nodes.get(ws.lowerIndex),
 				 b = ws.way.nodes.get(ws.lowerIndex + 1);
 			if (isSegmentVisible(a, b)) {

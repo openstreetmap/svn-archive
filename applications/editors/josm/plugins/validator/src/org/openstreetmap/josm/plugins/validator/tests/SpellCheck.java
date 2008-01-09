@@ -491,7 +491,7 @@ public class SpellCheck extends Test
 		List<Command> commands = new ArrayList<Command>(50);
 		
 		int i = -1;
-		List<OsmPrimitive> primitives = testError.getPrimitives();
+		List<? extends OsmPrimitive> primitives = testError.getPrimitives();
 		for(OsmPrimitive p : primitives )
 		{
 			i++;
@@ -504,12 +504,12 @@ public class SpellCheck extends Test
 				String key = prop.getKey();
 				String value = prop.getValue();
 				if( value == null || value.trim().length() == 0 )
-					commands.add( new ChangePropertyCommand(primitives.subList(i, i+1), key, null) );
+					commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, null) );
 				else
 				{
 					String replacementKey = spellCheckKeyData.get(key);
 					if( replacementKey != null )
-						commands.add( new ChangePropertyKeyCommand(primitives.subList(i, i+1), key, replacementKey) );					
+						commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)), key, replacementKey) );					
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 package org.openstreetmap.josm.plugins.validator;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.josm.command.Command;
@@ -20,19 +20,23 @@ public class TestError
 	/** The error message */
 	private String message;
 	/** The affected primitives */
-	private List<OsmPrimitive> primitives;
+	private List<? extends OsmPrimitive> primitives;
+	/** The primitives to be highlighted */
+	private List<?> highlighted;
 	/** The tester that raised this error */
 	private Test tester;
 	/** Internal code used by testers to classify errors */
-	private int internalCode;
+	private int internalCode = -1;
     /** If this error is selected */
     private boolean selected;
 	
-	/**
-	 * Constructor
-	 */
-	public TestError()
-	{
+	public TestError(Test tester, Severity severity, String message,
+			List<? extends OsmPrimitive> primitives, List<?> highlighted) {
+		this.tester = tester;
+		this.severity = severity;
+		this.message = message;
+		this.primitives = primitives;
+		this.highlighted = highlighted;
 	}
 
 	/**
@@ -42,12 +46,9 @@ public class TestError
 	 * @param message The error message
 	 * @param primitives The affected primitives
 	 */
-	public TestError(Test tester, Severity severity, String message, List<OsmPrimitive> primitives)
+	public TestError(Test tester, Severity severity, String message, List<? extends OsmPrimitive> primitives)
 	{
-		this.tester = tester;
-		this.severity = severity;
-		this.message = message;
-		this.primitives = primitives;
+		this(tester, severity, message, primitives, primitives);
 	}
 	
 	/**
@@ -59,14 +60,7 @@ public class TestError
 	 */
 	public TestError(Test tester, Severity severity, String message, OsmPrimitive primitive)
 	{
-		this.tester = tester;
-		this.severity = severity;
-		this.message = message;
-		
-		List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
-		primitives.add(primitive);
-		
-		this.primitives = primitives;
+		this(tester, severity, message, Collections.singletonList(primitive));
 	}
 	
 	/**
@@ -105,7 +99,7 @@ public class TestError
 	 * Gets the list of primitives affected by this error 
 	 * @return the list of primitives affected by this error
 	 */
-	public List<OsmPrimitive> getPrimitives() 
+	public List<? extends OsmPrimitive> getPrimitives() 
 	{
 		return primitives;
 	}
@@ -198,10 +192,12 @@ public class TestError
     public void paint(Graphics g, MapView mv)
     {
         PaintVisitor v = new PaintVisitor(g, mv);
-        for( OsmPrimitive p : primitives)
-        {
-            if( !p.deleted || !p.incomplete )
-                p.visit(v);
+        for (Object o : highlighted) {
+			if (o instanceof OsmPrimitive) {
+				v.visit((OsmPrimitive) o);
+			} else if (o instanceof WaySegment) {
+				v.visit((WaySegment) o);
+			}
         }
     }	
     
@@ -226,6 +222,12 @@ public class TestError
             this.g = g;
             this.mv = mv;
         }
+
+		public void visit(OsmPrimitive p) {
+            if (!p.deleted && !p.incomplete) {
+                p.visit(this);
+			}
+		}
 
         /**
          * Draws a circle around the node 
@@ -277,7 +279,6 @@ public class TestError
             }
         }
 
-
         
         /**
          * Draw a small rectangle. 
@@ -306,6 +307,15 @@ public class TestError
 				lastN = n;
 			}
         }
+
+		public void visit(WaySegment ws) {
+			if (ws.lowerIndex < 0 || ws.lowerIndex >= ws.way.nodes.size()) return;
+			Node a = ws.way.nodes.get(ws.lowerIndex),
+				 b = ws.way.nodes.get(ws.lowerIndex + 1);
+			if (isSegmentVisible(a, b)) {
+				drawSegment(a, b, severity.getColor());
+			}
+		}
 
 		public void visit(Relation r)
 		{

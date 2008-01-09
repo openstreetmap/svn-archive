@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.HashSet;
+import java.util.Arrays;
 
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Node;
@@ -27,7 +28,8 @@ public class SelfIntersectingWay extends Test {
 			Node n = w.nodes.get(i);
 			if (nodes.contains(n)) {
 				errors.add(new TestError(this,
-					Severity.WARNING, tr("Self-intersecting ways"), w, 0));
+					Severity.WARNING, tr("Self-intersecting ways"),
+					Arrays.asList(w), Arrays.asList(n)));
 				break;
 			} else {
 				nodes.add(n);

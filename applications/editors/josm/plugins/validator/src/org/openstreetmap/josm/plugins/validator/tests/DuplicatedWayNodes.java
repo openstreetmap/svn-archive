@@ -24,7 +24,7 @@ public class DuplicatedWayNodes extends Test {
 		for (Node n : w.nodes) {
 			if (lastN == null) {
 				lastN = n;
-				break;
+				continue;
 			}
 			if (lastN == n) {
 				errors.add(new TestError(this, Severity.ERROR, tr("Duplicated way nodes"), w));
@@ -56,4 +56,8 @@ public class DuplicatedWayNodes extends Test {
 			return new ChangeCommand(w, wnew);
 		}
 	}
+
+	@Override public boolean isFixable(TestError testError) {
+		return testError.getTester() instanceof DuplicatedWayNodes;
+	}	
 }

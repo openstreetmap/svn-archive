@@ -36,12 +36,13 @@ GetOptions (
              'v|verbose+'         => \$verbose,
              'x|extract+'         => \$extract,
              '3'                  => sub {$api_version |= 3},
+             '4'                  => sub {$api_version |= 3},
              '5'                  => sub {$api_version |= 5},
              ) or pod2usage(1);
 
 pod2usage(1) if $help;
 
-$api_version ||= 3;  # Default API
+$api_version ||= 5;  # Default API
 if( $api_version == 3 )
 {
   eval "use Geo::OSM::OsmChangeReaderV3;".
@@ -56,7 +57,7 @@ elsif( $api_version == 5 )
 }
 else
 {
-  die "Must specify either API 0.3 or API 0.5\n";
+  die "Must specify either API 0.4 or API 0.5\n";
 }
 die $@ if $@;
 
@@ -133,7 +134,7 @@ my $skip_count = 0;  # We track skipped nodes, to stop them screwing the ETA
 my $done_count = 0;  # Like the count inside the cache, but only counts this execution
 
 print qq(<?xml version="1.0" encoding="UTF-8"?>\n) if $extract;
-print qq(<osm version="0.4" generator="bulk_upload.pl">\n) if $extract;
+print qq(<osmChange version="0.$api_version" generator="bulk_upload.pl">\n) if $extract;
 
 do {
   $did_something = 0;
@@ -141,7 +142,7 @@ do {
   $db_file->{loop}++ if defined $api;
 } while($loop and $did_something == 3);  # We exit if all failed *OR* all succeeded *OR* did nothing
 
-print qq(</osm>\n) if $extract;
+print qq(</osmChange>\n) if $extract;
 print STDERR  "\n";
 exit(1) if $did_something >= 2;  # Exiting because something failed
 exit(0);  # Otherwise, nothing to do or everything worked
@@ -243,6 +244,7 @@ sub progress
   
   my $remain;
   my $elapsed_time = $time - $start_time;
+  my $file_perc = $perc;
   
   if( $done_count == 0 and $skip_count > 0 )
   { $spin_delay = $elapsed_time / $skip_count }
@@ -278,7 +280,7 @@ sub progress
   { $remain_str = sprintf "%3d:%02d:%02d", int($remain)/3600, int($remain/60)%60, int($remain)%60 }
   
   $0 = sprintf "bulk_upload  %s  %7.2f%%  ETA:%s  ", $input, $perc*100, $remain_str;
-  printf STDERR "Loop: %2d Done:%10d/%10d %7.2f%%  $remain_str  \r", $db_file->{loop},
+  printf STDERR "Loop: %2d/%.0f%% Done:%10d/%10d %7.2f%%  $remain_str  \r", $db_file->{loop}, $file_perc*100,
        $db_file->{count}, $db_file->{total}, $perc*100;
 }
 
@@ -388,7 +390,7 @@ Reads osmChange files and upload the changes to the server via the API
 
 B<Common usages:>
 
-B<bulk_upload.pl> -i input.osc -u username -p password [-a http://server/api/version] [-c cachefile]
+B<bulk_upload.pl> -i input.osc -u username -p password [-a http://server/api/version] 
 
   -i input.osc                  file read for changes (required)
   -u username                   username for server (required)
@@ -402,6 +404,9 @@ B<bulk_upload.pl> -i input.osc -u username -p password [-a http://server/api/ver
   -l                            keep redoing file until nothing more can be done
                                 useful if file is not sorted
   -t key=value                  Add the tag key=value to each uploaded object
+  -x                            Extract output, display what hasn't been done
+  -3/-4                         Specify OSM v0.3/v0.4 files/API (default)
+  -5                            Specify OSM v0.5 (prototype) files/API
     
 The cachefile is a file that tracks the usage of placeholders and what has
 been uploaded already, allowing aborted uploads to continue. Do not use an

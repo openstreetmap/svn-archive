@@ -215,6 +215,8 @@ sub DoEnd
       else  # FILETYPE_OSM
       {
         # Only entities with a modify tag are interesting, or if they have a negative ID (that's create)
+        if( exists $self->{attr}->{action} and $self->{attr}->{action} eq "modify" and $self->{attr}{id} < 0 )
+        { $self->{attr}->{action} = "create" }
         if( exists $self->{attr}->{action} )
         {
           $self->_process( $self->{attr}->{action}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{members} );

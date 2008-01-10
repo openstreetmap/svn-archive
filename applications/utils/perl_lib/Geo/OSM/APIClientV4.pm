@@ -33,7 +33,7 @@ sub new
 
   $url =~ s,/$,,;   # Strip trailing slash
   $obj->{url} = $url;
-  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV4');
+  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV4', timeout => 1200);
   
   if( defined $attr{username} and defined $attr{password} )
   {

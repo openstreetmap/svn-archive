@@ -35,7 +35,7 @@ sub new
 
   $url =~ s,/$,,;   # Strip trailing slash
   $obj->{url} = URI->new($url);
-  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV5');
+  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV5', timeout => 1200);
   
   if( defined $attr{username} and defined $attr{password} )
   {
@@ -144,7 +144,7 @@ sub modify($)
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/".$ent->id();
   $req->content($content);
   
-  print $req->as_string;
+#  print $req->as_string;
   
   my $res = $self->_request($req);
   
@@ -177,6 +177,7 @@ sub get($$)
   my $extra = shift;
   
   $extra = "/".$extra if (defined $extra);
+  $extra = "" if not defined $extra;
 
   my $req = new HTTP::Request GET => $self->{url}."/$type/$id$extra";
   

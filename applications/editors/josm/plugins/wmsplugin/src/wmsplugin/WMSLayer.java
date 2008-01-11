@@ -166,6 +166,7 @@ public class WMSLayer extends Layer {
 		}
 		public void actionPerformed(ActionEvent ev) {
 			File f = openFileDialog(true);
+			if (f == null) return;
 			try {
 				FileInputStream fis = new FileInputStream(f);
 				ObjectInputStream ois = new ObjectInputStream(fis);

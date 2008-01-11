@@ -1,9 +1,9 @@
 <?php
 $layerData = array (
- "name"   => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"lowzoom"),
- "dir"    => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"tile"),
- "maxZoom"=> array(1=>17, 2=>17, 3=>16, 4=>11),
- "numTileset"=> array(1=>1365, 2=>1365, 3=>341, 4=>1),
+ "name"   => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"lowzoom", 5=>"mapnik", 6=>"captionless", 7=>"caption-en" ),
+ "dir"    => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"tile", 5=>"mapnik", 6=>"captionless", 7=>"caption-en"),
+ "maxZoom"=> array(1=>17, 2=>17, 3=>16, 4=>11, 5=>17, 6=>12, 7=>"11"),
+ "numTileset"=> array(1=>1365, 2=>1365, 3=>341, 4=>1, 5=>1365, 6=>1, 7=>1),
 );
 
 #----------------------------------------------------

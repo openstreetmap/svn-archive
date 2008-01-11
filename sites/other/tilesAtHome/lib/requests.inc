@@ -58,9 +58,14 @@ function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0, $UserID = 0){
       $FromMode);
   } else {
     // Move all unfinished requests to new mode
+    $date_column = "date";
+    if ($ToMode == 3) { 
+        $date_column = "complete_date";
+    }
     $SQL = sprintf(
-      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `z`=%d and `status` < %d;",
+      "update `tiles_queue` set `status`=%d, `%s`=now() where `x`=%d and `y`=%d and `z`=%d and `status` < %d;",
       $ToMode,
+      $date_column,
       $X,
       $Y,
       $Z,

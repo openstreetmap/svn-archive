@@ -30,7 +30,7 @@ function MaxQueueLength(){
 function QueueSpace(){
   $QueueDir=QueueDirectory();
   $bytes=`du $QueueDir | awk '{ print $1 }'`; # FIXME: use php instead of awk
-  return($bytes * 1024);
+  return($bytes * 1024); 
 }
 
 function MaxQueueSpace(){

@@ -3,6 +3,7 @@ $layerData = array (
  "name"   => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"lowzoom", 5=>"mapnik", 6=>"captionless", 7=>"caption" ),
  "dir"    => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"tile", 5=>"mapnik", 6=>"captionless", 7=>"caption"),
  "maxZoom"=> array(1=>17, 2=>17, 3=>16, 4=>11, 5=>17, 6=>12, 7=>"11"),
+ "transparent"=> array(1=>0, 2=>1, 3=>1, 4=>0, 5=>1, 6=>0, 7=>1),
  "numTileset"=> array(1=>1365, 2=>1365, 3=>341, 4=>1, 5=>1365, 6=>1, 7=>1),
 );
 
@@ -41,6 +42,17 @@ function layerMaxZoom($layername){
   global $layerData;
   $data = $layerData['maxZoom'][checkLayer($layername)];
   return ($data != NULL?$data:17);
+}
+
+
+#------------------------------------------------------------------------------
+# returns whether our layer is a base layer or an transparent overlay
+# It is passed a "layer number".
+#------------------------------------------------------------------------------
+function layerIsTransparent($layername){
+  global $layerData;
+  $data = $layerData['transparent'][$layer];
+  return ($data != NULL?$data:0);
 }
 
 #------------------------------------------------------------------------------

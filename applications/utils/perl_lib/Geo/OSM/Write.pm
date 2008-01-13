@@ -73,7 +73,7 @@ sub write_osm_file($$) { # Write an osm File
     print $fh "<osm version=\'0.5\' generator=\'".$osm->{tool}."\'>\n";
     if ( defined ( $osm->{bounds} ) ) {
 	my $bounds = $osm->{bounds};
-	my $bounds_sting = "$bounds->{lat_min}$bounds->{lon_min},$bounds->{lat_max},$bounds->{lon_max}"; 
+	my $bounds_sting = "$bounds->{lat_min},$bounds->{lon_min},$bounds->{lat_max},$bounds->{lon_max}"; 
 	# -90,-180,90,180
 	print $fh "   <bound box=\"$bounds_sting\" origin=\"OSM-perl-writer\" />\n";
 	

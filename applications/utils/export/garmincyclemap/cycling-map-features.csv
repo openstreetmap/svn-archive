@@ -1,0 +1,189 @@
+# highway=:
+#   ncn_major, ncn_minor, ncn_offroad
+#   rcn_major, rcn_minor, rcn_offroad
+#   lcn_major, lcn_minor, lcn_offroad
+
+# Cycle routes
+polyline|highway|ncn_major|0x02||16
+polyline|highway|ncn_minor|0x02||16
+polyline|highway|ncn_offroad|0x01||16
+polyline|highway|rcn_major|0x02||16
+polyline|highway|rcn_minor|0x02||16
+polyline|highway|rcn_offroad|0x01||16
+polyline|highway|lcn_major|0x05||18
+polyline|highway|lcn_minor|0x05||18
+polyline|highway|lcn_offroad|0x05||18
+# Other cycleways
+polyline|highway|bridleway|0x0a||21
+polyline|highway|cycleway|0x06||21
+polyline|highway|byway|0x06||21
+# Main roads
+polyline|highway|motorway|0x1c||16
+polyline|highway|motorway_link|0x1c||16
+polyline|highway|trunk|0x1e||18
+polyline|highway|trunk_link|0x1e||18
+polyline|highway|primary|0x1e||18
+polyline|highway|primary_link|0x1e||18
+# Minor roads
+polyline|highway|minor|0x08||21
+polyline|highway|residential|0x08||21
+polyline|highway|secondary|0x08||19
+polyline|highway|service|0x08||22
+polyline|highway|tertiary|0x08||19
+polyline|highway|unclassified|0x09||19
+polyline|highway|track|0x0a||21
+polyline|highway|unsurfaced|0x0a||21
+# Pedestrians only
+polyline|highway|pedestrian|0x16||22
+polyline|highway|footway|0x16||22
+polyline|highway|steps|0x16||22
+
+# Garmin line types:
+#   0x01	major-highway-thick			thick orange with red border
+#   0x02	principal-highway-thick		thick orange
+#   0x03	principal-highway-medium	thick orange
+#   0x04	arterial-road-medium		thick mustard
+#   0x05	arterial-road-thin			thick mustard
+#   0x06	road						medium brown
+#   0x07	alley						thin brown dashes
+#   0x08	ramp1						medium red
+#   0x09	ramp2						medium red
+#   0x0a	unpaved-road				thin orange dashes
+#   0x0b	major-highway-connector		thick orange
+#	0x0c	roundabout					thick mustard
+#	0x14	railroad					thin grey --|--|--|--
+#	0x15	shoreline					thin blue
+#	0x16	trail						thin brown dashes
+#	0x18	stream						thin blue
+#	0x1c	boundary-political			thick grey with yellow dashes
+#	0x1d	boundary-continent			thin grey
+#	0x1e	boundary-international		thick grey
+#	0x1f	river						medium blue
+#	0x20	land-contour-thin			thin mustard
+#	0x21	land-contour-medium			thin mustard
+#	0x22	land-contour-thick			thin grey
+#	0x23	depth-contour-thin			thin bright blue
+#	0x24	depth-contour-medium		thin blue
+#	0x25	depth-contour-thick			thin blue
+#	0x26	intermittent-river			thin blue
+
+# Points selected for cycling map
+
+point|place|city|0x04||17
+point|place|hamlet|0x11||20
+point|place|suburb|0x0a||20
+point|place|town|0x08||18
+point|place|village|0x0b||20
+point|amenity|place_of_worship|0x2c|0x0b|21
+point|amenity|bicycle_parking|0x2f|0x0b|21
+point|amenity|pub|0x46|0x00|20
+point|amenity|restaurant|0x2a|0x00|20
+point|amenity|cafe|0x2a|0x0e|20
+point|amenity|fast_food|0x2a|0x07|20
+point|amenity|toilets|0x4e|0x00|21
+point|natural|peak|0x66|0x16|21
+point|tourism|camp_site|0x2b|0x03|20
+point|tourism|motel|0x2b|0x01|20
+point|tourism|hotel|0x2b|0x01|20
+point|tourism|guest_house|0x2b|0x02|20
+point|railway|station|0x2f|0x08|18
+point|railway|halt|0x2f|0x08|18
+point|shop|supermarket|0x2e|0x02|20
+point|shop|convenience|0x2e|0x06|20
+point|shop|bicycle|0x2f|0x07|20
+
+# Other points
+
+point|aeroway|airport|0x59|0x00|20
+point|amenity|atm|0x2f|0x06|21
+point|amenity|bank|0x2f|0x06|21
+point|amenity|bank;atm|0x2f|0x06|21
+point|amenity|biergarten|0x2d|0x02|21
+point|amenity|bus_station|0x2f|0x08|21
+point|amenity|car_wash|0x2f|0x0e|21
+point|amenity|cinema|0x2d|0x03|20
+point|amenity|college|0x2c|0x05|21
+point|amenity|courthouse|0x30|0x04|20
+point|amenity|fire_station|0x30|0x08|21
+point|amenity|fuel|0x2f|0x01|19
+point|amenity|grave_yard|0x64|0x03|21
+point|amenity|hospital|0x30|0x02|20
+point|amenity|library|0x2c|0x03|21
+point|amenity|pharmacy|0x2e|0x05|20
+point|amenity|police|0x30|0x01|21
+point|amenity|post_office|0x2f|0x05|20
+point|amenity|public_building|0x30|0x00|21
+point|amenity|school|0x2c|0x05|20
+point|amenity|telephone|0x51|0x00|21
+point|amenity|theatre|0x2d|0x01|21
+point|amenity|townhall|0x30|0x03|21
+point|amenity|university|0x2c|0x05|21
+point|amenity|zoo|0x2c|0x07|21
+point|historic|museum|0x2c|0x02|20
+point|leisure|golf_course|0x2d|0x05|21
+point|leisure|marina|0x43|0x00|21
+point|leisure|park|0x2c|0x06|21
+point|leisure|pitch|0x2c|0x08|21
+point|leisure|sports_centre|0x2d|0x0a|21
+point|leisure|stadium|0x2c|0x08|21
+point|leisure|track|0x2c|0x08|21
+point|man_made|tower|0x64|0x11|21
+point|natural|beach|0x66|0x04|21
+point|natural|cliff|0x66|0x07|21
+point|shop|bakers|0x2e|0x00|20
+point|shop|bakery|0x2e|0x00|20
+point|shop|butchers|0x2e|0x00|20
+point|tourism|caravan_site|0x2b|0x03|20
+point|tourism|information|0x4c|0x00|20
+point|tourism|picnic_site|0x4a|0x00|20
+point|tourism|theme_park|0x2c|0x01|20
+point|tourism|zoo|0x2c|0x07|20
+
+# Land-use and other polygons
+
+polygon|landuse|cemetary|0x1a||18
+polygon|landuse|cemetery|0x1a||18
+polygon|landuse|forest|0x50||18
+polygon|landuse|industrial|0x0c||18
+polygon|landuse|reservoir|0x3f||18
+polygon|leisure|common|0x17||20
+polygon|leisure|garden|0x17||20
+polygon|leisure|golf_course|0x18||20
+polygon|leisure|marina|0x09||20
+polygon|leisure|nature_reserve|0x16||18
+polygon|leisure|park|0x17||20
+polygon|leisure|pitch|0x19||20
+polygon|leisure|sports_center|0x19||20
+polygon|leisure|stadium|0x19||19
+polygon|leisure|track|0x19||18
+polygon|leisure|water_park|0x09||18
+polygon|military|airfield|0x04||18
+polygon|military|barracks|0x04||18
+polygon|military|danger_area|0x04||18
+polygon|military|range|0x04||18
+polygon|natural|marsh|0x51||20
+polygon|natural|mud|0x51||20
+polygon|natural|water|0x3c||20
+polygon|natural|wood|0x50||18
+polygon|amenity|college|0x0a||18
+polygon|amenity|grave_yard|0x1a||18
+polygon|amenity|hospital|0x0b||18
+polygon|amenity|parking|0x05||21
+polygon|amenity|supermarket|0x08||21
+polygon|amenity|university|0x0a||18
+
+# Other polylines
+
+polyline|aeroway|runway|0x27||20
+polyline|contour|elevation|0x21||20
+polyline|natural|coastline|0x15||12
+polyline|power|line|0x29||20
+polyline|railway|light_rail|0x14||18
+polyline|railway|rail|0x14||18
+polyline|railway|subway|0x14||18
+polyline|railway|tram|0x14||18
+polyline|route|ferry|0x1a||18
+polyline|waterway|canal|0x1f||21
+polyline|waterway|drain|0x1f||22
+polyline|waterway|river|0x1f||18
+polyline|waterway|riverbank|0x1f||20

@@ -50,6 +50,11 @@
 			'service','minor',
 			'living_street','minor');
 	
+	# -----	Other routes to highlight (using route= tag)
+	
+	%routes=('National Byway',NCN,
+			 'Four Castles Cycle Route',RCN);
+	
 	# -----	Read in only the tags we use
 	
 	%usetag=('name',1, 'ref',1, 'route',1,
@@ -93,8 +98,10 @@
 			if (exists $tags{'ref'})		{ $refnum=$tags{'ref'}; delete $tags{'ref'}; }
 			if (exists $tags{'highway'})	{ $highway=$tags{'highway'}; delete $tags{'highway'}; }
 			if (exists $tags{'route'})		{ if ($tags{'route'} eq 'ncn'	) { $cycle=NCN; }
-											  if ($tags{'route'} eq 'rcn'	) { $cycle=RCN; }
-											  if ($tags{'route'} eq 'lcn'	) { $cycle=LCN; }
+											  elsif ($tags{'route'} eq 'rcn'	) { $cycle=RCN; }
+											  elsif ($tags{'route'} eq 'lcn'	) { $cycle=LCN; }
+											  elsif (exists $routes{$tags{'route'}}) { $cycle=$routes{$tags{'route'}}; 
+											  										   $cycleref.=$tags{'route'}.' '; }
 											  delete $tags{'route'}; }
 			if (exists $tags{'ncn'})		{ if ($tags{'ncn'} eq 'proposed') { $cycle=NCN_PROPOSED; }
 																	     else { $cycle=NCN; } 
@@ -108,7 +115,7 @@
 
 			#	munge ref tag
 			if (exists $tags{'ncn_ref'})	{ if ($cycle>NCN and $cycle!=NCN_PROPOSED) { $cycle=NCN; }
-											  $cycleref=$tags{'ncn_ref'}; delete $tags{'ncn_ref'};
+											  $cycleref.=$tags{'ncn_ref'}; delete $tags{'ncn_ref'};
 											  if ($cycle==NCN_PROPOSED) { $cycleref.='*'; } 
 											  $cycleref.=' '; }
 			if (exists $tags{'rcn_ref'})	{ if ($cycle>RCN and $cycle!=RCN_PROPOSED) { $cycle=RCN; }

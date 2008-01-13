@@ -163,7 +163,7 @@
 	# ===== Call osmcut to split into smaller files
 	#		(probably save in temporary directory)
 
-	$tempdir='temp'.localtime;
+	$tempdir='temp';
 	print "Splitting with osmcut\n";
 	system ("mkdir $tempdir");
 	system ("java -Xmx512M -jar osmcut.0.5.jar 0.5 $fn.processed $tempdir");

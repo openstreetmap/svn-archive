@@ -2193,38 +2193,79 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="elements"/>
     <xsl:param name="rule"/>
 
-    <xsl:if test="$elements">
-      <xsl:message>
-        Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt;
-        Matched by <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
-      </xsl:message>
 
+    <xsl:if test="$elements">
+  
+      <!-- elementCount is the number of elements we started with (just used for the progress message) -->
+      <xsl:variable name="elementCount" select="count($elements)"/>
       <!-- If there's a proximity attribute on the rule then filter elements based on proximity -->
       <xsl:choose>
         <xsl:when test='$rule/@verticalProximity'>
-          <xsl:variable name='nearbyElements'>
-            <xsl:for-each select="$elements">
-              <xsl:variable name="top"    select="@lat + 90  + $rule/@verticalProximity "/>
-              <xsl:variable name="bottom" select="@lat + 90  - $rule/@verticalProximity "/>
-              <xsl:variable name="left"   select="@lon + 180 "/>
-              <xsl:variable name="right"  select="@lon + 180 + ($rule/@horizontalProximity * 2) "/>
-              <xsl:if test="not($elements[(@lon+180) &lt; $right and (@lon+180) &gt; $left and (@lat+90) &lt; $top and (@lat+90) &gt; $bottom])">
-                <xsl:copy-of select="."/>
-              </xsl:if>
-            </xsl:for-each>
+          <xsl:variable name='nearbyElements1'>
+            <xsl:call-template name="proximityFilter">
+              <xsl:with-param name="elements" select="$elements"/>
+              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 32"/>
+              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 32"/>
+            </xsl:call-template>
           </xsl:variable>
-          
+          <xsl:variable name='nearbyElements2'>
+            <xsl:call-template name="proximityFilter">
+              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements1)/*"/>
+              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 16"/>
+              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 16"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name='nearbyElements3'>
+            <xsl:call-template name="proximityFilter">
+              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements2)/*"/>
+              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 8"/>
+              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 8"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name='nearbyElements4'>
+            <xsl:call-template name="proximityFilter">
+              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements3)/*"/>
+              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 4"/>
+              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 4"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name='nearbyElements5'>
+            <xsl:call-template name="proximityFilter">
+              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements4)/*"/>
+              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 2"/>
+              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 2"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:variable name='nearbyElementsRtf'>
+            <xsl:call-template name="proximityFilter">
+              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements5)/*"/>
+              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity"/>
+              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity"/>
+            </xsl:call-template>
+          </xsl:variable>
+
+          <!-- Convert nearbyElements rtf to a node-set -->
+          <xsl:variable name="nearbyElements" select="exslt:node-set($nearbyElementsRtf)/*"/>
+
           <xsl:message>
-        Proximity: <xsl:value-of select='count(exslt:node-set($nearbyElements)/*)'/> / <xsl:value-of select='count($elements)'/> elements
+            Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"
+                        horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;
+            Matched by <xsl:value-of select="count($nearbyElements)"/> out of <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
           </xsl:message>
-          
+
           <xsl:apply-templates select="*">
             <xsl:with-param name="layer" select="$layer"/>
-            <xsl:with-param name="elements" select="exslt:node-set($nearbyElements)/*"/>
+            <xsl:with-param name="elements" select="$nearbyElements"/>
             <xsl:with-param name="rule" select="$rule"/>
           </xsl:apply-templates>
         </xsl:when>
         <xsl:otherwise>
+
+          <xsl:message>
+            Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt;
+            Matched by <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
+          </xsl:message>
+
           <xsl:apply-templates select="*">
             <xsl:with-param name="layer" select="$layer"/>
             <xsl:with-param name="elements" select="$elements"/>
@@ -2232,11 +2273,44 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           </xsl:apply-templates>
         </xsl:otherwise>
       </xsl:choose>
-
-
-
     </xsl:if>
   </xsl:template>
+
+
+  <!-- Select elements that are not within the specified distance from any other element -->
+  <xsl:template name="proximityFilter">
+    <xsl:param name="elements"/>
+    <xsl:param name="horizontalProximity"/>
+    <xsl:param name="verticalProximity"/>
+    
+    <!-- Offsetting the rectangle to the right gives better results when there are a solitary pair of adjacent elements.  
+         One will get selected but the other won't.  Without the offset neither will get selected.  -->
+    <xsl:variable name="topOffset" select="90  + $verticalProximity"/>
+    <xsl:variable name="bottomOffset" select="90  - $verticalProximity"/>
+    <xsl:variable name="leftOffset" select="180 - ($horizontalProximity * 0.5)"/>
+    <xsl:variable name="rightOffset" select="180 + ($horizontalProximity * 1.5)"/>
+
+    <!-- Test each element to see if it is near any other element -->
+    <xsl:for-each select="$elements">
+      <xsl:variable name="id" select="@id"/>
+      <xsl:variable name="top"    select="@lat + $topOffset"/>
+      <xsl:variable name="bottom" select="@lat + $bottomOffset"/>
+      <xsl:variable name="left"   select="@lon + $leftOffset"/>
+      <xsl:variable name="right"  select="@lon + $rightOffset"/>
+      <!-- Iterate through all of the elements currently selected and if there are no elements other 
+           than the current element in the rectangle then select this element -->
+      <xsl:if test="not($elements[not(@id=$id) 
+                                  and (@lon+180) &lt; $right
+                                  and (@lon+180) &gt; $left 
+                                  and (@lat+90)  &lt; $top 
+                                  and (@lat+90)  &gt; $bottom
+                                  ]
+                        )">
+        <xsl:copy-of select="."/>
+      </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
+
 
   <!-- Draw SVG layers -->
   <xsl:template match="layer">

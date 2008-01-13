@@ -38,9 +38,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:exslt="http://exslt.org/common"
+  xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+  exclude-result-prefixes="exslt msxsl" 
   version="1.0">
 
   <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
+
+  <!-- This msxsl script extension fools msxsl into interpreting exslt extensions as msxsl ones, so 
+       we can write code using exslt extensions even though msxsl only recognises the msxsl extension 
+       namespace.  Thanks to David Carlisle for this: http://dpcarlisle.blogspot.com/2007/05/exslt-node-set-function.html -->
+  <msxsl:script language="JScript" implements-prefix="exslt">
+    this['node-set'] =  function (x) {
+    return x;
+    }
+  </msxsl:script>
 
   <xsl:param name="osmfile" select="/rules/@data"/>
   <xsl:param name="title" select="/rules/@title"/>
@@ -2187,11 +2199,42 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         Matched by <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
       </xsl:message>
 
-      <xsl:apply-templates select="*">
-        <xsl:with-param name="layer" select="$layer"/>
-        <xsl:with-param name="elements" select="$elements"/>
-        <xsl:with-param name="rule" select="$rule"/>
-      </xsl:apply-templates>
+      <!-- If there's a proximity attribute on the rule then filter elements based on proximity -->
+      <xsl:choose>
+        <xsl:when test='$rule/@verticalProximity'>
+          <xsl:variable name='nearbyElements'>
+            <xsl:for-each select="$elements">
+              <xsl:variable name="top"    select="@lat + 90  + $rule/@verticalProximity "/>
+              <xsl:variable name="bottom" select="@lat + 90  - $rule/@verticalProximity "/>
+              <xsl:variable name="left"   select="@lon + 180 "/>
+              <xsl:variable name="right"  select="@lon + 180 + ($rule/@horizontalProximity * 2) "/>
+              <xsl:if test="not($elements[(@lon+180) &lt; $right and (@lon+180) &gt; $left and (@lat+90) &lt; $top and (@lat+90) &gt; $bottom])">
+                <xsl:copy-of select="."/>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:variable>
+          
+          <xsl:message>
+        Proximity: <xsl:value-of select='count(exslt:node-set($nearbyElements)/*)'/> / <xsl:value-of select='count($elements)'/> elements
+          </xsl:message>
+          
+          <xsl:apply-templates select="*">
+            <xsl:with-param name="layer" select="$layer"/>
+            <xsl:with-param name="elements" select="exslt:node-set($nearbyElements)/*"/>
+            <xsl:with-param name="rule" select="$rule"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="*">
+            <xsl:with-param name="layer" select="$layer"/>
+            <xsl:with-param name="elements" select="$elements"/>
+            <xsl:with-param name="rule" select="$rule"/>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
+
+
+
     </xsl:if>
   </xsl:template>
 

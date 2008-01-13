@@ -25,12 +25,12 @@ polyline|highway|trunk_link|0x1e||18
 polyline|highway|primary|0x1e||18
 polyline|highway|primary_link|0x1e||18
 # Minor roads
-polyline|highway|minor|0x08||21
-polyline|highway|residential|0x08||21
-polyline|highway|secondary|0x08||19
-polyline|highway|service|0x08||22
-polyline|highway|tertiary|0x08||19
-polyline|highway|unclassified|0x09||19
+polyline|highway|minor|0x1d||21
+polyline|highway|residential|0x1d||21
+polyline|highway|secondary|0x1d||19
+polyline|highway|service|0x1d||22
+polyline|highway|tertiary|0x1d||19
+polyline|highway|unclassified|0x1d||19
 polyline|highway|track|0x0a||21
 polyline|highway|unsurfaced|0x0a||21
 # Pedestrians only
@@ -39,6 +39,7 @@ polyline|highway|footway|0x16||22
 polyline|highway|steps|0x16||22
 
 # Garmin line types:
+#	0x00								thin black
 #   0x01	major-highway-thick			thick orange with red border
 #   0x02	principal-highway-thick		thick orange
 #   0x03	principal-highway-medium	thick orange
@@ -51,21 +52,23 @@ polyline|highway|steps|0x16||22
 #   0x0a	unpaved-road				thin orange dashes
 #   0x0b	major-highway-connector		thick orange
 #	0x0c	roundabout					thick mustard
+#	0x0d-13								thin black
 #	0x14	railroad					thin grey --|--|--|--
-#	0x15	shoreline					thin blue
+#	0x15	shoreline					thin bright blue
 #	0x16	trail						thin brown dashes
 #	0x18	stream						thin blue
-#	0x1c	boundary-political			thick grey with yellow dashes
+#	0x19-1b								thin black
+#	0x1c	boundary-political			thick grey with yellow dashes (night), black dashes (day)
 #	0x1d	boundary-continent			thin grey
 #	0x1e	boundary-international		thick grey
-#	0x1f	river						medium blue
+#	0x1f	river						medium bright blue
 #	0x20	land-contour-thin			thin mustard
 #	0x21	land-contour-medium			thin mustard
 #	0x22	land-contour-thick			thin grey
-#	0x23	depth-contour-thin			thin bright blue
-#	0x24	depth-contour-medium		thin blue
-#	0x25	depth-contour-thick			thin blue
-#	0x26	intermittent-river			thin blue
+#	0x23	depth-contour-thin			thin deep blue
+#	0x24	depth-contour-medium		thin dark blue
+#	0x25	depth-contour-thick			thin dark blue
+#	0x26	intermittent-river			thin bright blue
 
 # Points selected for cycling map
 

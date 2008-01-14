@@ -31,6 +31,8 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
  */
 public class ValidatorDialog extends ToggleDialog implements ActionListener
 {
+	private OSMValidatorPlugin plugin;
+
     /** Serializable ID */
     private static final long serialVersionUID = 2952292777351992696L;
 
@@ -55,9 +57,10 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     /**
      * Constructor
      */
-    public ValidatorDialog() 
-    {
+    public ValidatorDialog(OSMValidatorPlugin plugin) {
         super(tr("Validation errors"), "validator", tr("Open the validation window."), KeyEvent.VK_V, 150);
+
+		this.plugin = plugin;
         
         tree = new ErrorTreePanel();
 		tree.addMouseListener(new ClickWatch());
@@ -133,7 +136,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		Main.map.repaint();
 		DataSet.fireSelectionChanged(Main.ds.getSelected());
 		       
-    	OSMValidatorPlugin.getPlugin().validateAction.doValidate(e, false);
+    	plugin.validateAction.doValidate(e, false);
 	}	
 	
     /**
@@ -176,7 +179,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		if( actionCommand.equals("Select"))
 			setSelectedItems();
 		else if( actionCommand.equals("Validate"))
-	    	OSMValidatorPlugin.getPlugin().validateAction.actionPerformed(e);
+	    	plugin.validateAction.actionPerformed(e);
 		else if( actionCommand.equals("Fix"))
 	    	fixErrors(e); 
 	}

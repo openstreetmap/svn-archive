@@ -30,13 +30,11 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class ErrorLayer extends Layer implements LayerChangeListener
 {
-	/**
-	 * Constructor 
-	 * @param name
-	 */
-	public ErrorLayer(String name) 
-    {
-		super(name);
+	private OSMValidatorPlugin plugin;
+
+	public ErrorLayer(OSMValidatorPlugin plugin) {
+		super(tr("Validation errors"));
+		this.plugin = plugin;
         Layer.listeners.add(this); 
 	}
 
@@ -56,7 +54,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener
     @Override 
     public void paint(final Graphics g, final MapView mv) 
     {
-        DefaultMutableTreeNode root = OSMValidatorPlugin.getPlugin().validationDialog.tree.getRoot();
+        DefaultMutableTreeNode root = plugin.validationDialog.tree.getRoot();
         if( root == null || root.getChildCount() == 0)
             return;
         
@@ -84,7 +82,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener
     public String getToolTipText() 
     {
         Bag<Severity, TestError> errorTree = new Bag<Severity, TestError>();
-        List<TestError> errors = OSMValidatorPlugin.getPlugin().validationDialog.tree.getErrors();
+        List<TestError> errors = plugin.validationDialog.tree.getErrors();
         for(TestError e : errors)
         {
             errorTree.add(e.getSeverity(), e);

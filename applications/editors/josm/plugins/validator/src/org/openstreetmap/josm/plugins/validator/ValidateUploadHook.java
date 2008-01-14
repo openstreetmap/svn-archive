@@ -31,7 +31,7 @@ public class ValidateUploadHook implements UploadHook
      */
     public boolean checkUpload(Collection<OsmPrimitive> add, Collection<OsmPrimitive> update, Collection<OsmPrimitive> delete)
     {
-        Collection<Test> tests = OSMValidatorPlugin.getTests(false, true);
+        Collection<Test> tests = OSMValidatorPlugin.getEnabledTests(true);
         if( tests.isEmpty() )
             return true;
         
@@ -42,9 +42,6 @@ public class ValidateUploadHook implements UploadHook
         List<TestError> errors = new ArrayList<TestError>(30);
         for(Test test : tests) 
         {
-            if( !test.testBeforeUpload() )
-                continue;
-
             test.setBeforeUpload(true);
             test.setPartialSelection(true);
             test.startTest();

@@ -87,27 +87,19 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		else
             Layer.listeners.remove(this); 
         
-        // Add/Remove the upload hook
-        try
-        {
-            LinkedList<UploadHook> hooks = ((UploadAction)Main.main.menu.upload).uploadHooks;
-            Iterator<UploadHook> hooksIt = hooks.iterator(); 
-            while( hooksIt.hasNext() )
-            {
-                if( hooksIt.next() instanceof ValidateUploadHook )
-                {
-                    if( newFrame == null )
-                        hooksIt.remove();
-                    break;
-                }
-            }
-            if( newFrame != null )
-                hooks.add( 0, new ValidateUploadHook() );
-        }
-        catch(Throwable t)
-        {
-            // JOSM has no upload hooks in older versions 
-        }        
+		LinkedList<UploadHook> hooks = ((UploadAction)Main.main.menu.upload).uploadHooks;
+		Iterator<UploadHook> hooksIt = hooks.iterator(); 
+		while( hooksIt.hasNext() )
+		{
+			if( hooksIt.next() instanceof ValidateUploadHook )
+			{
+				if( newFrame == null )
+					hooksIt.remove();
+				break;
+			}
+		}
+		if( newFrame != null )
+			hooks.add( 0, new ValidateUploadHook() );
 	}
 
 	

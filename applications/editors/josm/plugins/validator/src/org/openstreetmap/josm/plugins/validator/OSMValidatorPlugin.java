@@ -63,7 +63,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	public OSMValidatorPlugin()
 	{
 		PreferenceEditor.importOldPreferences();
-        initializeTests( getAllTests() );
+        initializeTests( getTests() );
 	}
 	
     @Override
@@ -128,60 +128,48 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 				continue;
 			}
 		}
+		applyPrefs(tests, false);
+		applyPrefs(tests, true);
 		return tests;
 	}
 
-	/** Gets a collection of all tests. */
-	public static Collection<Test> getAllTests() {
-		return getAllTestsMap().values();
-	}
-
-	/**
-	 * Gets a collection with the available tests
-	 * 
-	 * @param enabled if false, don't get enabled tests
-	 * @param enabledBeforeUpload if false, don't get tests enabled before upload
-	 * @return A collection with the available tests
-	 */
-	public static Collection<Test> getTests(boolean enabled, boolean enabledBeforeUpload)
-	{
-		Set<Test> tests = new HashSet<Test>();
-		Map<String, Test> enabledTests = getAllTestsMap();
-
+	private static void applyPrefs(Map<String, Test> tests, boolean beforeUpload) {
 		Pattern regexp = Pattern.compile("(\\w+)=(true|false),?");
-		Matcher m = regexp.matcher(Main.pref.get(PreferenceEditor.PREF_TESTS));
+		Matcher m = regexp.matcher(Main.pref.get(beforeUpload
+			? PreferenceEditor.PREF_TESTS_BEFORE_UPLOAD
+			: PreferenceEditor.PREF_TESTS));
 		int pos = 0;
 		while( m.find(pos) )
 		{
 			String testName = m.group(1);
-			Test test = enabledTests.get(testName);
+			Test test = tests.get(testName);
 			if( test != null )
 			{
-				test.enabled = Boolean.valueOf(m.group(2));
-				if( enabled && test.enabled )
-					tests.add(test );
+				boolean enabled = Boolean.valueOf(m.group(2));
+				System.err.println(beforeUpload + " " + testName + " " + enabled);
+				if (beforeUpload) {
+					test.testBeforeUpload = enabled;
+				} else {
+					test.enabled = enabled;
+				}
 			}
 			pos = m.end();
 		}
-
-		m = regexp.matcher(Main.pref.get( PreferenceEditor.PREF_TESTS_BEFORE_UPLOAD ));
-		pos = 0;
-		while( m.find(pos) )
-		{
-			String testName = m.group(1);
-			Test test = enabledTests.get(testName);
-			if( test != null )
-			{
-				test.testBeforeUpload = Boolean.valueOf(m.group(2));
-				if( enabledBeforeUpload && test.testBeforeUpload)
-					tests.add(test );
-			}
-			pos = m.end();
-		}
-		
-		return tests;
 	}
-	
+
+	public static Collection<Test> getTests() {
+		return getAllTestsMap().values();
+	}
+
+	public static Collection<Test> getEnabledTests(boolean beforeUpload) {
+		Collection<Test> enabledTests = getTests();
+		for (Test t : new ArrayList<Test>(enabledTests)) {
+			if (beforeUpload ? t.testBeforeUpload : t.enabled) continue;
+			enabledTests.remove(t);
+		}
+		return enabledTests;
+	}
+
     /**
      * Gets the list of all available test classes
      * 

@@ -141,30 +141,12 @@ public class Test implements Visitor
 	{
 		checkEnabled = new JCheckBox(name, enabled);
 		checkEnabled.setToolTipText(description);
-        checkEnabled.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                setGuiEnabled(checkEnabled.isSelected() || checkBeforeUpload.isSelected() );
-            }
-        });
 		testPanel.add(checkEnabled, GBC.std().insets(20,0,0,0));
 		
         checkBeforeUpload = new JCheckBox();
         checkBeforeUpload.setSelected(testBeforeUpload);
-        checkBeforeUpload.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                setGuiEnabled(checkEnabled.isSelected() || checkBeforeUpload.isSelected() );
-            }
-        });
         testPanel.add(checkBeforeUpload, GBC.eop().insets(20,0,0,0));
 	}
-
-    /**
-     * Enables or disables the test in the preferences gui
-     * @param enabled
-     */
-    public void setGuiEnabled(boolean enabled)
-    {
-    }   
 
 	/**
 	 * Called when the used submits the preferences

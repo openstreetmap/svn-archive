@@ -45,12 +45,11 @@ public class PreferenceEditor implements PreferenceSetting
 		
         testPanel.add( new JLabel(), GBC.std() );
         testPanel.add( new JLabel("On upload"), GBC.eop() );
-        
-		allTests = OSMValidatorPlugin.getAllTests();
+
+		allTests = OSMValidatorPlugin.getTests();
 		for(Test test: allTests) 
 		{
             test.addGui(testPanel);
-            test.setGuiEnabled(test.enabled || test.testBeforeUpload);
 		}
 		
 		JScrollPane testPane = new JScrollPane(testPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

@@ -594,7 +594,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           </xsl:attribute>
         </xsl:if>
         <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
-        <!-- Copy all the attributes from the <symbol> instruction -->
+	<!-- Copy all the attributes from the <symbol> instruction -->
       </use>
     </g>
   </xsl:template>
@@ -955,51 +955,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:template name="renderAreaText">
     <xsl:param name="instruction"/>
 
-    <xsl:variable name='left'>
-      <xsl:call-template name='areaExtentLeft'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='left' select='key("nodeById",./nd[1]/@ref)/@lon'/>
-        <!-- Longitude of first node -->
+    <xsl:variable name='center'>
+      <xsl:call-template name="areaCenter">
+	<xsl:with-param name="element" select="." />
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name='right'>
-      <xsl:call-template name='areaExtentRight'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='right' select='key("nodeById",./nd[1]/@ref)/@lon'/>
-        <!-- Longitude of first node -->
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="centerLon" select="substring-before($center, ',')" />
+    <xsl:variable name="centerLat" select="substring-after($center, ',')" />
 
-    <xsl:variable name='top'>
-      <xsl:call-template name='areaExtentTop'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='top' select='key("nodeById",./nd[1]/@ref)/@lat'/>
-        <!-- Latitude of first node -->
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name='bottom'>
-      <xsl:call-template name='areaExtentBottom'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='bottom' select='key("nodeById",./nd[1]/@ref)/@lat'/>
-        <!-- Latitude of first node -->
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name='midLon'>
-      <xsl:value-of select='$left+(($right - $left) div 2)'/>
-    </xsl:variable>
-    <xsl:variable name='midLat'>
-      <xsl:value-of select='$bottom+(($top - $bottom) div 2)'/>
-    </xsl:variable>
-
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($midLon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($midLat))*10000*$scale*$projection)"/>
+    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($centerLon))*10000*$scale)"/>
+    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($centerLat))*10000*$scale*$projection)"/>
 
     <text>
       <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
@@ -1048,51 +1014,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:template name="renderAreaSymbol">
     <xsl:param name="instruction"/>
 
-    <xsl:variable name='left'>
-      <xsl:call-template name='areaExtentLeft'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='left' select='key("nodeById",./nd[1]/@ref)/@lon'/>
-        <!-- Longitude of first node -->
+    <xsl:variable name='center'>
+      <xsl:call-template name="areaCenter">
+	<xsl:with-param name="element" select="." />
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name='right'>
-      <xsl:call-template name='areaExtentRight'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='right' select='key("nodeById",./nd[1]/@ref)/@lon'/>
-        <!-- Longitude of first node -->
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:message>
+      areaCenter: <xsl:value-of select="$center" />
+    </xsl:message>
 
-    <xsl:variable name='top'>
-      <xsl:call-template name='areaExtentTop'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='top' select='key("nodeById",./nd[1]/@ref)/@lat'/>
-        <!-- Latitude of first node -->
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="centerLon" select="substring-before($center, ',')" />
+    <xsl:variable name="centerLat" select="substring-after($center, ',')" />
 
-    <xsl:variable name='bottom'>
-      <xsl:call-template name='areaExtentBottom'>
-        <xsl:with-param name='nd' select='./nd[1]'/>
-        <!-- First node -->
-        <xsl:with-param name='bottom' select='key("nodeById",./nd[1]/@ref)/@lat'/>
-        <!-- Latitude of first node -->
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name='midLon'>
-      <xsl:value-of select='$left+(($right - $left) div 2)'/>
-    </xsl:variable>
-    <xsl:variable name='midLat'>
-      <xsl:value-of select='$bottom+(($top - $bottom) div 2)'/>
-    </xsl:variable>
-
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($midLon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($midLat))*10000*$scale*$projection)"/>
+    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($centerLon))*10000*$scale)"/>
+    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($centerLat))*10000*$scale*$projection)"/>
 
     <g transform="translate({$x},{$y}) scale({$symbolScale})">
       <use>
@@ -1107,125 +1043,614 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </g>
   </xsl:template>
 
-  <xsl:template name='areaExtentLeft'>
-    <xsl:param name='nd'/>
-    <xsl:param name='left'/>
+  <!--
+      areaCenter: Find a good center point for label/icon placement inside of polygon.
+      Algorithm is described at http://bob.cakebox.net/poly-center.php
+  -->
+  <xsl:template name="areaCenter">
+    <xsl:param name="element" />
 
-    <xsl:variable name='leftmostLon' select='key("nodeById",$nd/@ref)/@lon'/>
-    <xsl:variable name='newLeft'>
+    <!-- A semicolon-separated list of x,y coordinate pairs of points lying halfway into the polygon at angles to the vertex -->
+    <xsl:variable name="points">
+      <xsl:call-template name="areacenterPointsInside">
+	<xsl:with-param name="element" select="$element" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- x,y calculated by a simple average over all x/y's in points -->
+    <xsl:variable name="mediumpoint">
+      <xsl:call-template name="areacenterMediumOfPoints">
+	<xsl:with-param name="points" select="$points" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="mediumpoint_x" select="substring-before($mediumpoint, ',')" />
+    <xsl:variable name="mediumpoint_y" select="substring-after($mediumpoint, ',')" />
+
+    <!-- Find the point in $points that's closest to $mediumpoint -->
+    <xsl:call-template name="areacenterNearestPoint">
+      <xsl:with-param name="points" select="$points" />
+      <xsl:with-param name="x" select="$mediumpoint_x" />
+      <xsl:with-param name="y" select="$mediumpoint_y" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- Returns a semicolon-separated list of x,y pairs -->
+  <xsl:template name="areacenterPointsInside">
+    <xsl:param name="element" />
+
+    <!-- iterate over every vertex except the first one, which is also the last -->
+    <xsl:for-each select="$element/nd[position() &gt; 1]">
+      <xsl:variable name="vertex" select="." />
+      <xsl:variable name="prev" select="$vertex/preceding-sibling::nd[1]" />
+      <xsl:variable name="nextId">
+	<xsl:choose>
+	  <xsl:when test="position() &lt; last()">
+	    <xsl:value-of select="$vertex/following-sibling::nd[1]/@ref" />
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:value-of select="$vertex/../nd[2]/@ref" />
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="next" select="$vertex/../nd[@ref=$nextId]" />
+
+      <!-- Angle at between $prev and $next in $vertex -->
+      <xsl:variable name="angle">
+	<xsl:call-template name="angleThroughPoints">
+	  <xsl:with-param name="from" select="key('nodeById', $prev/@ref)" />
+	  <xsl:with-param name="through" select="key('nodeById', $vertex/@ref)" />
+	  <xsl:with-param name="to" select="key('nodeById', $next/@ref)" />
+	</xsl:call-template>
+      </xsl:variable>
+
+      <!-- Calculate a point on the line going through $vertex at $angle -->
+      <xsl:variable name="linepoint">
+	<xsl:call-template name="areacenterLinepoint">
+	  <xsl:with-param name="point" select="key('nodeById', $vertex/@ref)" />
+	  <xsl:with-param name="angle" select="$angle" />
+	</xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="linepoint_x" select="substring-before($linepoint, ',')" />
+      <xsl:variable name="linepoint_y" select="substring-after($linepoint, ',')" />
+
+      <!-- Find the nearest intersection between the line vertex-linepoint and the nearest edge inwards into the polygon -->
+      <xsl:variable name="intersection">
+	<xsl:call-template name="areacenterFindPointForVertex">
+	  <xsl:with-param name="vertex" select="key('nodeById', $vertex/@ref)" />
+	  <xsl:with-param name="edgestart" select="../nd[1]" />
+	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
+	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
+	</xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="intersection_x" select="substring-before($intersection, ',')" />
+      <xsl:variable name="intersection_y" select="substring-after($intersection, ',')" />
+
+      <xsl:variable name="point_x" select="key('nodeById', $vertex/@ref)/@lon + ( $intersection_x - key('nodeById', $vertex/@ref)/@lon ) div 2" />
+      <xsl:variable name="point_y" select="key('nodeById', $vertex/@ref)/@lat + ( $intersection_y - key('nodeById', $vertex/@ref)/@lat ) div 2" />
+      
+      <xsl:if test="($point_x &lt;= 0 or $point_x &gt; 0)  and ($point_y &lt;= 0 or $point_y &gt; 0)"> <!-- Only return anything if we actually have a result -->
+	<!-- Note: this will produce trailing semicolon, which is nice as it simplifies looping over this later -->
+	<xsl:value-of select="$point_x" />,<xsl:value-of select="$point_y" />;
+      </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Calculate the angle between $from and $to in $through. Returns answer in radians -->
+  <xsl:template name="angleThroughPoints">
+    <xsl:param name="from" />
+    <xsl:param name="through" />
+    <xsl:param name="to" />
+
+    <xsl:variable name="from_x" select="($from/@lon) - ($through/@lon)" />
+    <xsl:variable name="from_y" select="$from/@lat - $through/@lat" />
+    <xsl:variable name="to_x" select="$to/@lon - $through/@lon" />
+    <xsl:variable name="to_y" select="$to/@lat - $through/@lat" />
+
+    <xsl:variable name="from_angle_">
+      <xsl:call-template name="atan2">
+	<xsl:with-param name="x" select="$from_x" />
+	<xsl:with-param name="y" select="$from_y" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="from_angle" select="$from_angle_ + $pi" />
+    <xsl:variable name="to_angle_">
+      <xsl:call-template name="atan2">
+	<xsl:with-param name="x" select="$to_x" />
+	<xsl:with-param name="y" select="$to_y" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="to_angle" select="$to_angle_ + $pi" />
+
+    <xsl:variable name="min_angle">
       <xsl:choose>
-        <xsl:when test='$left>$leftmostLon'>
-          <xsl:value-of select='$leftmostLon'/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select='$left'/>
-        </xsl:otherwise>
+	<xsl:when test="$from_angle &gt; $to_angle">
+	  <xsl:value-of select="$to_angle" />
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:value-of select="$from_angle" />
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="max_angle">
+      <xsl:choose>
+	<xsl:when test="$from_angle &gt; $to_angle">
+	  <xsl:value-of select="$from_angle" />
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:value-of select="$to_angle" />
+	</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:value-of select="$min_angle + ($max_angle - $min_angle) div 2" />
+  </xsl:template>
+
+  <!-- atan2 implementation from http://lists.fourthought.com/pipermail/exslt/2007-March/001540.html -->
+  <xsl:template name="atan2">
+    <xsl:param name="y"/>
+    <xsl:param name="x"/>
+    <!-- http://lists.apple.com/archives/PerfOptimization-dev/2005/Jan/msg00051.html -->
+    <xsl:variable name="PI"    select="number(3.1415926535897)"/>
+    <xsl:variable name="PIBY2" select="$PI div 2.0"/>
     <xsl:choose>
-      <xsl:when test="$nd/following-sibling::nd[1]">
-        <xsl:call-template name='areaExtentLeft'>
-          <xsl:with-param name='nd' select='$nd/following-sibling::nd[1]'/>
-          <!-- next node -->
-          <xsl:with-param name='left' select='$newLeft'/>
-        </xsl:call-template>
+      <xsl:when test="$x = 0.0">
+        <xsl:choose>
+          <xsl:when test="($y &gt; 0.0)">
+            <xsl:value-of select="$PIBY2"/>
+          </xsl:when>
+          <xsl:when test="($y &lt; 0.0)">
+            <xsl:value-of select="-$PIBY2"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- Error: Degenerate x == y == 0.0 -->
+            <xsl:value-of select="number(NaN)"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select='$newLeft'/>
+        <xsl:variable name="z" select="$y div $x"/>
+        <xsl:variable name="absZ">
+          <!-- inline abs function -->
+          <xsl:choose>
+            <xsl:when test="$z &lt; 0.0">
+              <xsl:value-of select="- number($z)"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="number($z)"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="($absZ &lt; 1.0)">
+            <xsl:variable name="f1Z" select="$z div (1.0 + 0.28*$z*$z)"/>
+            <xsl:choose>
+              <xsl:when test="($x &lt; 0.0) and ($y &lt; 0.0)">
+                <xsl:value-of select="$f1Z - $PI"/>
+              </xsl:when>
+              <xsl:when test="($x &lt; 0.0)">
+                <xsl:value-of select="$f1Z + $PI"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$f1Z"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="f2Z" select="$PIBY2 - ($z div ($z*$z +
+0.28))"/>
+            <xsl:choose>
+              <xsl:when test="($y &lt; 0.0)">
+                <xsl:value-of select="$f2Z - $PI"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$f2Z"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+  <!-- Find a point on the line going through $point at $angle that's guaranteed to be outside the polygon -->
+  <xsl:template name="areacenterLinepoint">
+    <xsl:param name="point" />
+    <xsl:param name="angle" />
 
-  <xsl:template name='areaExtentRight'>
-    <xsl:param name='nd'/>
-    <xsl:param name='right'/>
+    <xsl:variable name="cos_angle">
+      <xsl:call-template name="cos">
+	<xsl:with-param name="angle" select="$angle"/>
+      </xsl:call-template>
+    </xsl:variable>
+    
+    <xsl:variable name="sin_angle">
+      <xsl:call-template name="sin">
+	<xsl:with-param name="angle" select="$angle"/>
+      </xsl:call-template>
+    </xsl:variable>
+    
+    <xsl:value-of select="$point/@lon + $cos_angle"/>, <xsl:value-of select="$point/@lat + $sin_angle"/>
+  </xsl:template>
+  
+  <!-- Constants for trig templates -->
+  <xsl:variable name="pi" select="3.1415926535897"/>
+  <xsl:variable name="halfPi" select="$pi div 2"/>
+  <xsl:variable name="twicePi" select="$pi*2"/>
 
-    <xsl:variable name='rightmostLon' select='key("nodeById",$nd/@ref)/@lon'/>
-    <xsl:variable name='newRight'>
+  <xsl:template name="sin">
+    <xsl:param name="angle" />
+    <xsl:param name="precision" select="0.00000001"/>
+
+    <xsl:variable name="y">
       <xsl:choose>
-        <xsl:when test='$rightmostLon>$right'>
-          <xsl:value-of select='$rightmostLon'/>
+        <xsl:when test="not(0 &lt;= $angle and $twicePi > $angle)">
+          <xsl:call-template name="cutIntervals">
+            <xsl:with-param name="length" select="$twicePi"/>
+            <xsl:with-param name="angle" select="$angle"/>
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select='$right'/>
+          <xsl:value-of select="$angle"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
+    <xsl:call-template name="sineIter">
+      <xsl:with-param name="angle2" select="$y*$y"/>
+      <xsl:with-param name="res" select="$y"/>
+      <xsl:with-param name="elem" select="$y"/>
+      <xsl:with-param name="n" select="1"/>
+      <xsl:with-param name="precision" select="$precision" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="sineIter">
+    <xsl:param name="angle2" />
+    <xsl:param name="res" />
+    <xsl:param name="elem" />
+    <xsl:param name="n" />
+    <xsl:param name="precision"/>
+
+    <xsl:variable name="nextN" select="$n+2" />
+    <xsl:variable name="newElem" select="-$elem*$angle2 div ($nextN*($nextN - 1))" />
+    <xsl:variable name="newResult" select="$res + $newElem" />
+    <xsl:variable name="diffResult" select="$newResult - $res" />
+
     <xsl:choose>
-      <xsl:when test="$nd/following-sibling::nd[1]">
-        <xsl:call-template name='areaExtentRight'>
-          <xsl:with-param name='nd' select='$nd/following-sibling::nd[1]'/>
-          <!-- next node -->
-          <xsl:with-param name='right' select='$newRight'/>
+      <xsl:when test="$diffResult > $precision or $diffResult &lt; -$precision">
+        <xsl:call-template name="sineIter">
+          <xsl:with-param name="angle2" select="$angle2" />
+          <xsl:with-param name="res" select="$newResult" />
+          <xsl:with-param name="elem" select="$newElem" />
+          <xsl:with-param name="n" select="$nextN" />
+          <xsl:with-param name="precision" select="$precision" />
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select='$newRight'/>
+        <xsl:value-of select="$newResult"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="cutIntervals">
+    <xsl:param name="length"/>
+    <xsl:param name="angle"/>
 
-  <xsl:template name='areaExtentTop'>
-    <xsl:param name='nd'/>
-    <xsl:param name='top'/>
-
-    <xsl:variable name='topmostLat' select='key("nodeById",$nd/@ref)/@lat'/>
-    <xsl:variable name='newTop'>
+    <xsl:variable name="vsign">
       <xsl:choose>
-        <xsl:when test='$top>$topmostLat'>
-          <xsl:value-of select='$top'/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select='$topmostLat'/>
-        </xsl:otherwise>
+        <xsl:when test="$angle >= 0">1</xsl:when>
+        <xsl:otherwise>-1</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
+    <xsl:variable name="vdiff" select="$length*floor($angle div $length) -$angle"/> 
     <xsl:choose>
-      <xsl:when test="$nd/following-sibling::nd[1]">
-        <xsl:call-template name='areaExtentTop'>
-          <xsl:with-param name='nd' select='$nd/following-sibling::nd[1]'/>
-          <!-- next node -->
-          <xsl:with-param name='top' select='$newTop'/>
-        </xsl:call-template>
+      <xsl:when test="$vdiff*$angle > 0">
+        <xsl:value-of select="$vsign*$vdiff"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select='$newTop'/>
+        <xsl:value-of select="-$vsign*$vdiff"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="cos">
+    <xsl:param name="angle" />
+    <xsl:param name="precision" select="0.00000001"/>
 
-  <xsl:template name='areaExtentBottom'>
-    <xsl:param name='nd'/>
-    <xsl:param name='bottom'/>
+    <xsl:call-template name="sin">
+      <xsl:with-param name="angle" select="$halfPi - $angle" />
+      <xsl:with-param name="precision" select="$precision" />
+    </xsl:call-template>
+  </xsl:template>
 
-    <xsl:variable name='bottommostLat' select='key("nodeById",$nd/@ref)/@lat'/>
-    <xsl:variable name='newBottom'>
-      <xsl:choose>
-        <xsl:when test='$bottommostLat>$bottom'>
-          <xsl:value-of select='$bottom'/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select='$bottommostLat'/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+  <!-- Find the point halfway into the polygon along the line $vertex-$linepoint -->
+  <xsl:template name="areacenterFindPointForVertex">
+    <xsl:param name="vertex" />
+    <xsl:param name="edgestart" />
+    <xsl:param name="linepoint_x" />
+    <xsl:param name="linepoint_y" />
+    <xsl:param name="intersectioncount_on" select="0" /><!-- Number of intersections. Only counts those on segment vertex-linepoint -->
+    <xsl:param name="nearest_on_x" />
+    <xsl:param name="nearest_on_y" />
+    <xsl:param name="nearest_on_dist" select="'NaN'" />
+    <xsl:param name="nearest_off_x" />
+    <xsl:param name="nearest_off_y" />
+    <xsl:param name="nearest_off_dist" select="'NaN'" />
 
     <xsl:choose>
-      <xsl:when test="$nd/following-sibling::nd[1]">
-        <xsl:call-template name='areaExtentBottom'>
-          <xsl:with-param name='nd' select='$nd/following-sibling::nd[1]'/>
-          <!-- next node -->
-          <xsl:with-param name='bottom' select='$newBottom'/>
-        </xsl:call-template>
+      <!-- If there are no more vertices we don't have a second point for the edge, and are finished -->
+      <xsl:when test="$edgestart/following-sibling::nd[1]">
+	<xsl:variable name="edgeend" select="$edgestart/following-sibling::nd[1]" />
+
+	<!-- Get the intersection point between the line $vertex-$linepoint and $edgestart-$edgeend -->
+	<xsl:variable name="intersection">
+	  <xsl:choose>
+	    <xsl:when test="$vertex/@id = $edgestart/@ref or $vertex/@id = $edgeend/@ref">
+	      <!-- Vertex is one of the points in edge, skip -->
+	      NoIntersection
+	    </xsl:when>
+	    <xsl:otherwise>      
+	      <xsl:call-template name="areacenterLinesIntersection">
+		<xsl:with-param name="x1" select="$vertex/@lon" />
+		<xsl:with-param name="y1" select="$vertex/@lat" />
+		<xsl:with-param name="x2" select="$linepoint_x" />
+		<xsl:with-param name="y2" select="$linepoint_y" />
+		<xsl:with-param name="x3" select="key('nodeById', $edgestart/@ref)/@lon" />
+		<xsl:with-param name="y3" select="key('nodeById', $edgestart/@ref)/@lat" />
+		<xsl:with-param name="x4" select="key('nodeById', $edgeend/@ref)/@lon" />
+		<xsl:with-param name="y4" select="key('nodeById', $edgeend/@ref)/@lat" />
+	      </xsl:call-template>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:variable>
+
+	<!-- Haul ix, iy, ua and ub out of the csv -->
+	<xsl:variable name="ix" select="substring-before($intersection, ',')" />
+	<xsl:variable name="iy" select="substring-before(substring-after($intersection, ','), ',')" />
+	<xsl:variable name="ua" select="substring-before(substring-after(substring-after($intersection, ','), ','), ',')" />
+	<xsl:variable name="ub" select="substring-after(substring-after(substring-after($intersection, ','), ','), ',')" />
+
+	<!-- A) Is there actually an intersection? B) Is it on edge? -->
+	<xsl:choose>
+	  <xsl:when test="$intersection != 'NoIntersection' and $ub &gt; 0 and $ub &lt;= 1">
+	    <xsl:variable name="distance">
+	      <xsl:call-template name="areacenterPointDistance">
+		<xsl:with-param name="x1" select="$vertex/@lon" />
+		<xsl:with-param name="y1" select="$vertex/@lat" />
+		<xsl:with-param name="x2" select="$ix" />
+		<xsl:with-param name="y2" select="$iy" />
+	      </xsl:call-template>
+	    </xsl:variable>
+
+	    <!-- Is intersection on the segment $vertex-$linepoint, or on the other side of $vertex? -->
+	    <xsl:variable name="isOnSegment">
+	      <xsl:if test="$ua &gt;= 0">Yes</xsl:if>
+	    </xsl:variable>
+	    
+	    <xsl:variable name="isNewNearestOn">
+	      <xsl:if test="$isOnSegment = 'Yes' and ( $nearest_on_dist = 'NaN' or $distance &lt; $nearest_on_dist )">Yes</xsl:if>
+	    </xsl:variable>
+	    
+	    <xsl:variable name="isNewNearestOff">
+	      <xsl:if test="$isOnSegment != 'Yes' and ( $nearest_off_dist = 'NaN' or $distance &lt; $nearest_off_dist )">Yes</xsl:if>
+	    </xsl:variable>
+
+	    <xsl:call-template name="areacenterFindPointForVertex">
+	      <xsl:with-param name="vertex" select="$vertex" />
+	      <xsl:with-param name="linepoint_x" select="$linepoint_x" />
+	      <xsl:with-param name="linepoint_y" select="$linepoint_y" />
+	      <xsl:with-param name="edgestart" select="$edgeend" />
+	      <xsl:with-param name="intersectioncount_on" select="$intersectioncount_on + number(boolean($isOnSegment = 'Yes'))" />
+	      <xsl:with-param name="nearest_on_dist"> <xsl:choose>
+		<xsl:when test="$isNewNearestOn = 'Yes'"> <xsl:value-of select="$distance" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_on_dist" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	      <xsl:with-param name="nearest_on_x"> <xsl:choose>
+		<xsl:when test="$isNewNearestOn = 'Yes'"> <xsl:value-of select="$ix" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_on_x" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	      <xsl:with-param name="nearest_on_y"> <xsl:choose>
+		<xsl:when test="$isNewNearestOn = 'Yes'"> <xsl:value-of select="$iy" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_on_y" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	      <xsl:with-param name="nearest_off_dist"> <xsl:choose>
+		<xsl:when test="$isNewNearestOff = 'Yes'"> <xsl:value-of select="$distance" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_off_dist" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	      <xsl:with-param name="nearest_off_x"> <xsl:choose>
+		<xsl:when test="$isNewNearestOff = 'Yes'"> <xsl:value-of select="$ix" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_off_x" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	      <xsl:with-param name="nearest_off_y"> <xsl:choose>
+		<xsl:when test="$isNewNearestOff = 'Yes'"> <xsl:value-of select="$iy" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_off_y" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	    </xsl:call-template>
+	    
+	  </xsl:when>
+	  <!-- No intersection, just go on to next edge -->	  
+	  <xsl:otherwise>
+	    <xsl:call-template name="areacenterFindPointForVertex">
+	      <xsl:with-param name="vertex" select="$vertex" />
+	      <xsl:with-param name="linepoint_x" select="$linepoint_x" />
+	      <xsl:with-param name="linepoint_y" select="$linepoint_y" />
+	      <xsl:with-param name="edgestart" select="$edgeend" />
+	      <xsl:with-param name="intersectioncount_on" select="$intersectioncount_on" />
+	      <xsl:with-param name="nearest_on_dist" select="$nearest_on_dist" />
+	      <xsl:with-param name="nearest_on_x" select="$nearest_on_x" />
+	      <xsl:with-param name="nearest_on_y" select="$nearest_on_y" />
+	      <xsl:with-param name="nearest_off_dist" select="$nearest_off_dist" />
+	      <xsl:with-param name="nearest_off_x" select="$nearest_off_x" />
+	      <xsl:with-param name="nearest_off_y" select="$nearest_off_y" />
+	    </xsl:call-template>
+	  </xsl:otherwise>
+	</xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select='$newBottom'/>
+	<!-- No more edges, return point -->
+	<xsl:choose>
+	  <xsl:when test="$intersectioncount_on mod 2 = 0">
+	    <xsl:value-of select="$nearest_off_x"/>,<xsl:value-of select="$nearest_off_y"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:value-of select="$nearest_on_x"/>,<xsl:value-of select="$nearest_on_y"/>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!--
+      Finds intersection point between lines x1,y1 -> x2,y2 and x3,y3 -> x4,y4.
+      Returns a comma-separated list of x,y,ua,ub or NoIntersection if the lines do not intersect
+  -->
+  <xsl:template name="areacenterLinesIntersection">
+    <xsl:param name="x1" />
+    <xsl:param name="y1" />
+    <xsl:param name="x2" />
+    <xsl:param name="y2" />
+    <xsl:param name="x3" />
+    <xsl:param name="y3" />
+    <xsl:param name="x4" />
+    <xsl:param name="y4" />
+
+    <xsl:variable name="denom" select="(( $y4 - $y3 ) * ( $x2 - $x1 )) -
+				       (( $x4 - $x3 ) * ( $y2 - $y1 ))" />
+    <xsl:variable name="nume_a" select="(( $x4 - $x3 ) * ( $y1 - $y3 )) -
+					(( $y4 - $y3 ) * ( $x1 - $x3 ))" />
+    <xsl:variable name="nume_b" select="(( $x2 - $x1 ) * ( $y1 - $y3 )) -
+					(( $y2 - $y1 ) * ( $x1 - $x3 ))" />
+
+    <xsl:choose>
+      <xsl:when test="$denom = 0">
+	NoIntersection
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="ua" select="$nume_a div $denom" />
+	<xsl:variable name="ub" select="$nume_b div $denom" />
+
+	<!-- x,y,ua,ub -->
+	<xsl:value-of select="$x1 + $ua * ($x2 - $x1)" />,<xsl:value-of select="$y1 + $ua * ($y2 - $y1)" />,<xsl:value-of select="$ua" />,<xsl:value-of select="$ub" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Distance between two points -->
+  <xsl:template name="areacenterPointDistance">
+    <xsl:param name="x1" />
+    <xsl:param name="y1" />
+    <xsl:param name="x2" />
+    <xsl:param name="y2" />
+
+    <!-- sqrt( ($x2 - $x1)**2 + ($y2 - $y1)**2 ) -->
+    <xsl:call-template name="sqrt">
+      <xsl:with-param name="num" select="($x2*$x2 - $x2*$x1 - $x1*$x2 + $x1*$x1) + ($y2*$y2 - $y2*$y1 - $y1*$y2 + $y1*$y1)" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="sqrt">
+    <xsl:param name="num" select="0"/>  <!-- The number you want to find the
+					     square root of -->
+    <xsl:param name="try" select="1"/>  <!-- The current 'try'.  This is used
+					     internally. -->
+    <xsl:param name="iter" select="1"/> <!-- The current iteration, checked
+					     against maxiter to limit loop count -->
+    <xsl:param name="maxiter" select="10"/>  <!-- Set this up to insure
+against infinite loops -->
+    
+    <!-- This template was written by Nate Austin using Sir Isaac Newton's
+	 method of finding roots -->
+    
+    <xsl:choose>
+      <xsl:when test="$try * $try = $num or $iter &gt; $maxiter">
+	<xsl:value-of select="$try"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:call-template name="sqrt">
+          <xsl:with-param name="num" select="$num"/>
+          <xsl:with-param name="try" select="$try - (($try * $try - $num) div
+					     (2 * $try))"/>
+          <xsl:with-param name="iter" select="$iter + 1"/>
+          <xsl:with-param name="maxiter" select="$maxiter"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Returns the medium value of all the points -->
+  <xsl:template name="areacenterMediumOfPoints">
+    <xsl:param name="points" />
+    <xsl:param name="total_x" select="0" />
+    <xsl:param name="total_y" select="0" />
+    <xsl:param name="count" select="0" />
+
+    <xsl:variable name="point" select="substring-before($points, ';')" />
+
+    <xsl:choose>
+      <xsl:when test="string-length($point) &gt; 0">
+	<xsl:variable name="x" select="substring-before($point, ',')" />
+	<xsl:variable name="y" select="substring-after($point, ',')" />
+
+	<xsl:call-template name="areacenterMediumOfPoints">
+	  <xsl:with-param name="points" select="substring-after($points, ';')" />
+	  <xsl:with-param name="total_x" select="$total_x + $x" />
+	  <xsl:with-param name="total_y" select="$total_y + $y" />
+	  <xsl:with-param name="count" select="$count + 1" />
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$total_x div $count" />, <xsl:value-of select="$total_y div $count" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Returns the coordinates of the point in points that's nearest x,y -->
+  <xsl:template name="areacenterNearestPoint">
+    <xsl:param name="points" />
+    <xsl:param name="x" />
+    <xsl:param name="y" />
+    <xsl:param name="nearest_x" />
+    <xsl:param name="nearest_y" />
+    <xsl:param name="nearest_dist" select="'NaN'" />
+
+    <xsl:variable name="point" select="substring-before($points, ';')" />
+
+    <xsl:choose>
+      <xsl:when test="string-length($point) &gt; 0"> 
+        <xsl:variable name="point_x" select="substring-before($point, ',')" />
+        <xsl:variable name="point_y" select="substring-after($point, ',')" />
+	
+	<xsl:variable name="distance">
+	  <xsl:call-template name="areacenterPointDistance">
+	    <xsl:with-param name="x1" select="$x" />
+	    <xsl:with-param name="y1" select="$y" />
+	    <xsl:with-param name="x2" select="$point_x" />
+	    <xsl:with-param name="y2" select="$point_y" />
+	  </xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="isNewNearest" select="$nearest_dist = 'NaN' or $distance &lt; $nearest_dist" />
+
+	<xsl:call-template name="areacenterNearestPoint">
+	  <xsl:with-param name="points" select="substring-after($points, ';')" />
+	  <xsl:with-param name="x" select="$x" />
+	  <xsl:with-param name="y" select="$y" />
+	  <xsl:with-param name="nearest_dist"><xsl:choose>
+	    <xsl:when test="$isNewNearest"><xsl:value-of select="$distance" /></xsl:when>
+	    <xsl:otherwise><xsl:value-of select="$nearest_dist" /></xsl:otherwise>
+	  </xsl:choose></xsl:with-param>
+	  <xsl:with-param name="nearest_x"><xsl:choose>
+	    <xsl:when test="$isNewNearest"><xsl:value-of select="$point_x" /></xsl:when>
+	    <xsl:otherwise><xsl:value-of select="$nearest_x" /></xsl:otherwise>
+	  </xsl:choose></xsl:with-param>
+	  <xsl:with-param name="nearest_y"><xsl:choose>
+	    <xsl:when test="$isNewNearest"><xsl:value-of select="$point_y" /></xsl:when>
+	    <xsl:otherwise><xsl:value-of select="$nearest_y" /></xsl:otherwise>
+	  </xsl:choose></xsl:with-param>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$nearest_x" />, <xsl:value-of select="$nearest_y" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

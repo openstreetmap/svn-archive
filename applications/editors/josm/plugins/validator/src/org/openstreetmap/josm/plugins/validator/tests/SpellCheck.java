@@ -250,7 +250,7 @@ public class SpellCheck extends Test
             }
             if( checkFixmes && value != null && value.length() > 0 )
             {
-                if( (value.contains("FIXME") || value.contains("todo") || value.contains("fixme"))
+                if( (value.contains("FIXME") || key.contains("todo") || key.contains("fixme"))
 				  && !withErrors.contains(p, "FIXME"))
                 {
                     errors.add( new TestError(this, Severity.OTHER, tr("FIXMES"), p, FIXME) );

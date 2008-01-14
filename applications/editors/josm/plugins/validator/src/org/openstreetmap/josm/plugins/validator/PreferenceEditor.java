@@ -23,6 +23,8 @@ import org.openstreetmap.josm.tools.GBC;
  */
 public class PreferenceEditor implements PreferenceSetting
 {
+	private OSMValidatorPlugin plugin;
+
 	/** The preferences prefix */
 	public static final String PREFIX = "validator";
 
@@ -37,6 +39,10 @@ public class PreferenceEditor implements PreferenceSetting
 
 	/** The list of all tests */
 	private Collection<Test> allTests;
+
+	public PreferenceEditor(OSMValidatorPlugin plugin) {
+		this.plugin = plugin;
+	}
 
     public void addGui(PreferenceDialog gui)
     {
@@ -80,7 +86,7 @@ public class PreferenceEditor implements PreferenceSetting
 		if (tests.length() > 0 ) tests = tests.deleteCharAt(0);
 		if (testsBeforeUpload.length() > 0 ) testsBeforeUpload = testsBeforeUpload.deleteCharAt(0);
 		
-		OSMValidatorPlugin.getPlugin().initializeTests( allTests );
+		plugin.initializeTests( allTests );
 		
 		Main.pref.put( PREF_TESTS, tests.toString());
 		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());

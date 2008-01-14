@@ -22,6 +22,8 @@ import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
  */
 public class ValidateAction extends JosmAction 
 {
+	private OSMValidatorPlugin plugin;
+
 	/** Serializable ID */
     private static final long serialVersionUID = -2304521273582574603L;
 
@@ -31,9 +33,9 @@ public class ValidateAction extends JosmAction
     /**
 	 * Constructor
 	 */
-	public ValidateAction()
-	{
+	public ValidateAction(OSMValidatorPlugin plugin) {
 		super("Validation", "validator", "Performs the data validation", KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK + KeyEvent.ALT_MASK, true);
+		this.plugin = plugin;
 	}
 
 	public void actionPerformed(ActionEvent ev)
@@ -53,7 +55,6 @@ public class ValidateAction extends JosmAction
 	 */
 	public void doValidate(@SuppressWarnings("unused") ActionEvent ev, boolean getSelectedItems)
 	{
-		OSMValidatorPlugin plugin = OSMValidatorPlugin.getPlugin();
         if( plugin.validateAction == null || Main.map == null || !Main.map.isVisible() )
             return;
         

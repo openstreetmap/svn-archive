@@ -30,7 +30,7 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
 public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 {
     /** The validate action */
-    ValidateAction validateAction = new ValidateAction();
+    ValidateAction validateAction = new ValidateAction(this);
     
     /** The validation dialog */
     ValidatorDialog validationDialog;
@@ -69,7 +69,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
     @Override
 	public PreferenceSetting getPreferenceSetting() 
 	{
-		return new PreferenceEditor();
+		return new PreferenceEditor(this);
 	}
 	
 	@Override
@@ -77,9 +77,9 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	{
 		if (newFrame != null)
 		{
-		    validationDialog = new ValidatorDialog();
+		    validationDialog = new ValidatorDialog(this);
 	        newFrame.addToggleDialog(validationDialog);
-            Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
+            Main.main.addLayer(new ErrorLayer(this));
         	if( Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
         		Main.main.addLayer(new GridLayer(tr("Grid")));
             Layer.listeners.add(this); 
@@ -100,17 +100,6 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		}
 		if( newFrame != null )
 			hooks.add( 0, new ValidateUploadHook() );
-	}
-
-	
-	/**
-	 * Utility method for classes that can't access the plugin directly
-	 * 
-	 * @return The plugin object
-	 */
-	public static OSMValidatorPlugin getPlugin() 
-	{
-		return (OSMValidatorPlugin)Util.getPlugin(OSMValidatorPlugin.class);
 	}
 
 	/** Gets a map from simple names to all tests. */

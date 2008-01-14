@@ -25,27 +25,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class Util 
 {
-
-    /**
-     * Utility method to retrieve the plugin for classes that can't access to the plugin object directly.
-     * 
-     * @param clazz The plugin class
-     * @return The YWMS plugin
-     */
-    public static Plugin getPlugin(Class<? extends Plugin> clazz)
-    {
-    	String classname = clazz.getName();
-        for (PluginProxy plugin : Main.plugins)
-        {
-            if( plugin.info.className.equals(classname) )
-            {
-                return (Plugin)plugin.plugin;
-            }
-        }
-        
-        return null;
-    }
-    
 	/** 
 	 * Returns the plugin's directory of the plugin
 	 * 

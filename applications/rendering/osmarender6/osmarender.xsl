@@ -1983,9 +1983,9 @@ against infinite loops -->
 
         <!-- DODI: handling mulitpolygons: draw area only once 
                    ways is a part of a multipolygon relation so we need process all members-->
-        <xsl:variable name='firsrelationmember' select="$relation/member[@type='way'][key('wayById', @ref)][1]/@ref"/>
-        <!-- DODI: if /me is a real first member, process all, otherwise skip it-->
-        <xsl:if test='$firsrelationmember=@id'>
+	<!-- Bobkare: Changed to use the member with role=outer instead of the search for first member, which gave me some errors -->
+	<xsl:variable name='outerway' select="$relation/member[@type='way'][@role='outer']/@ref"/>
+        <xsl:if test='$outerway=@id'>
           <xsl:message>
             <xsl:value-of select='$relation/@id'/>
           </xsl:message>

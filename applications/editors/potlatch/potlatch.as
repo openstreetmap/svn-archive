@@ -93,7 +93,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.6a";	// current version
+	var signature="Potlatch 0.6b";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
 	if (preferences.data.baselayer    ==1        ) { preferences.data.baselayer    =2; }	// temporary migration
@@ -1186,6 +1186,30 @@
 		_root.map.highlight.endFill();
 	};
 
+	function cycleStacked() {
+		if (_root.pointselected>-2) {
+			_root.wayselected=Math.floor(wayselected); // coerce so < and > work
+			var id=_root.map.ways[_root.wayselected].path[_root.pointselected][2];
+			var firstfound=0; var nextfound=0;
+			for (qway in _root.map.ways) {
+				if (qway!=_root.wayselected) {
+					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
+						if (_root.map.ways[qway].path[qs][2]==id) {
+							var qw=Math.floor(qway);
+							if (firstfound==0 || qw<firstfound) { firstfound=qw; }
+							if ((nextfound==0 || qw<nextfound) && qw>wayselected) { nextfound=qw; }
+						}
+					}
+				}
+			}
+			if (firstfound) {
+				if (nextfound==0) { var nextfound=firstfound; }
+				_root.map.ways[nextfound].swapDepths(_root.map.ways[wayselected]);
+				_root.map.ways[nextfound].select();
+			}
+		}
+	};
+
 	#include 'ui.as'
 
 
@@ -1345,6 +1369,7 @@
 			case 167:		cyclePresetIcon(); break;							// '¤' - cycle presets
 			case 187:		enterNewAttribute(); break;							// '+' - add new attribute
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
+			case 192:		cycleStacked(); break;								// '`' - cycle between stacked ways
 			case 76:		showPosition(); break;								// L - show latitude/longitude
 			case 84:		showTileDebug(); break;								// T - show tile debug information
 			// default:		_root.chat.text=Key.getCode()+" pressed";

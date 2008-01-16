@@ -99,7 +99,8 @@ my $dirent;
 # keep track of the server time for current job
 my $JobTime;
 
-# Check the on disk image tiles havn't been corrupted
+# Check the on disk image tiles havn't been corrupted.
+# these are flagfiles that tell the server certain metainfo through their filesize.
 if( -s "emptyland.png" != 67 )
 {
     print STDERR "Corruption detected in emptyland.png. Trying to redownload from svn automatically.\n";
@@ -199,6 +200,7 @@ elsif ($Mode eq "loop")
     
     while(1) 
     {
+        ## before we start (another) round of rendering we first check if something bad happened in the past.
         if (getFault("fatal") > 0)
         {
             cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
@@ -246,7 +248,7 @@ elsif ($Mode eq "loop")
                 talkInSleep($numfaults." times no XAPI data", $sleepdelay);
             }
         }
-
+        # look for stopfile and exit if found
         if (-e "stopfile.txt")
         {
             if ($Config{"ForkForUpload"} && $upload_pid != -1)
@@ -254,7 +256,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 waitpid($upload_pid, 0);
             }
-            cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID);
+            cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
         }
 
         reExecIfRequired(); ## check for new version of tilesGen.pl and reExec if true
@@ -307,10 +309,10 @@ elsif ($Mode eq "")
     
     if (! $did_something)
     {
-        statusMessage("you may safely press Ctrl-C now if you are not running this from a script", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
         talkInSleep($message, 60);
     }
-    statusMessage("if you want to run this program continuously use loop mode", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+    statusMessage("if you want to run this program continuously, use loop mode", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
 }
 else
 {
@@ -406,7 +408,7 @@ sub uploadIfEnoughTiles
 sub compressAndUpload
 {
   my $error=0;
-  $error=compress(1) + 2 * upload(1) + 4 * compress (2) + 8 * upload(2);
+  $error=compress(1) + 2 * upload(1) + 4 * compress(2) + 8 * upload(2);
   return $error;
 }
 
@@ -492,7 +494,7 @@ sub ProcessRequestsFromServer
     }
     else
     {
-        die "This cannot happen";
+        die "Version is \"".$Version."\". This should not have happened.";
     }
     
     # First field is always "OK" if the server has actually sent a request
@@ -513,6 +515,8 @@ sub ProcessRequestsFromServer
     return (1, "");
 }
 
+
+# actually get the request from the server
 sub GetRequestFromServer
 {
     my $RequestMethod=shift();
@@ -560,7 +564,11 @@ sub GetRequestFromServer
     return $Request;
 }
 
-
+#-----------------------------------------------------------------------------
+# this is called when the client encounters errors in processing a tileset,
+# it's designed to tell the server the tileset will not be returned because
+# of said error
+#-----------------------------------------------------------------------------
 sub PutRequestBackToServer 
 {
     ## TODO: will not be called in some libGD abort situations
@@ -997,8 +1005,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 #-----------------------------------------------------------------------------
 # Generate SVG for one zoom level
 #   $layerDataFile - name of the OSM data file
-#   $X, $Y - which tileset (Always the z12 tilenumbers)
-#   $Zoom - which zoom
+#   $X, $Y - which tileset (Always the tilenumbers of the base zoom. i.e. z12)
+#   $Zoom - which zoom currently is processsed
 #   $N, $S, $W, $E - bounds of the tile
 #-----------------------------------------------------------------------------
 sub GenerateSVG 
@@ -1032,9 +1040,9 @@ sub GenerateSVG
 
 #-----------------------------------------------------------------------------
 # Render a tile
-#   $X, $Y - which tileset (Always the z12 tilenumbers)
+#   $X, $Y - which tileset (Always the tilenumbers at $ZOrig)
 #   $Ytile, $Zoom - which tilestripe
-#   $ZOrig, the lowest zoom level which called tileset generation
+#   $ZOrig, the lowest zoom level which called tileset generation (i.e. z12 for "normal" operation)
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #   $ImageHeight - Height of the entire SVG in SVG units
@@ -1270,7 +1278,7 @@ sub svg2png
     my $Width = $X2 - $X1;
     my $Height = $Y2 - $Y1;
     
-    if ($Config{Batik} == "1")
+    if ($Config{Batik} == "1") # batik as jar
     {
         $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s", 
         $Config{i18n} ? "LC_ALL=C " : "",
@@ -1285,7 +1293,7 @@ sub svg2png
         "output-$parent_pid-z$Zoom.svg",
         $stdOut);
     }
-    elsif ($Config{Batik} == "2")
+    elsif ($Config{Batik} == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
     {
         $Cmd = sprintf("%s%s %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s",
         $Config{i18n} ? "LC_ALL=C " : "",

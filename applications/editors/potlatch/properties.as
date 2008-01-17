@@ -214,28 +214,39 @@
 	// populatePropertyWindow	- set contents of property window
 	// clearPropertyWindow		- clear window
 
-	function populatePropertyWindow(proptype) {
+	function populatePropertyWindow(proptype,startat) {
+		if (!startat) { startat=0; }
+		if (_root.currentproptype ==proptype &&
+			_root.currentpropway  ==wayselected &&
+			_root.currentproppoi  ==poiselected &&
+			_root.currentproppoint==pointselected &&
+			_root.currentstartat  ==startat) { return; }
 		clearPropertyWindow();
 		_root.i_repeatattr._alpha=
 		_root.i_newattr._alpha =100-50*(proptype=='');
 		_root.i_scissors._alpha=100-50*(proptype!='point');
-		if (proptype=='') { return; }
+		if (proptype=='') { _root.currentproptype=''; _root.i_nextattr._alpha=50; return; }
 		
-		if (proptype!=currentproptype) { presetmenu.init(141,505,0,presetnames[proptype][presetselected],'Choose from a menu of preset attributes describing the '+proptype,setAttributesFromPreset,151); }
+		if (proptype!=currentproptype) { presetmenu.init(141,505,0,presetnames[proptype][presetselected],'Choose from a menu of preset tags describing the '+proptype,setAttributesFromPreset,151); }
 		_root.currentproptype=proptype;
-		proparr=getAttrArray();
+		_root.currentstartat=startat;
 		_root.currentproppoint=pointselected;
 		_root.currentpropway=wayselected;
 		_root.currentproppoi=poiselected;
+		var proparr=getAttrArray();
 		for (el in proparr) {
 			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
-				_root.properties.attachMovie("keyvalue",el,_root.propn);
-			}
-			if (proparr[el].substr(0,6)=='(type ') {
-				_root.properties[el]['value'].textColor=0x888888;
+				if (tagcount>=startat && tagcount<startat+12) {
+					_root.properties.attachMovie("keyvalue",el,_root.propn);
+					if (proparr[el].substr(0,6)=='(type ') {
+						_root.properties[el]['value'].textColor=0x888888;
+					}
+				}
+				tagcount+=1;
 			}
 		}
 
+		_root.i_nextattr._alpha=50+50*(tagcount>12);
 		_root.presetmenu._visible=true;
 		_root.i_preset._visible=true;
 		reflectPresets();
@@ -244,7 +255,7 @@
 
 	function clearPropertyWindow() {
 		removeMovieClip(_root.welcome); 
-		_root.propx=0; _root.propy=0; _root.propn=0;
+		_root.propx=0; _root.propy=0; _root.propn=0; _root.tagcount=0;
 		ct=0;
 		for (el in _root.properties) {
 			ct+=1;
@@ -254,6 +265,15 @@
 					_root.savedpoi  =_root.currentproppoi;
 					_root.savedway  =_root.currentpropway;
 					_root.savedtype =_root.currentproptype; }
+	};
+
+	function advancePropertyWindow() {
+		if (_root.i_nextattr._alpha==50) { return; }
+		if (_root.currentstartat+12>_root.tagcount) {
+			populatePropertyWindow(_root.currentproptype,0);
+		} else {
+			populatePropertyWindow(_root.currentproptype,_root.currentstartat+12);
+		}
 	};
 
 	// setTypeText - set contents of type window
@@ -280,7 +300,7 @@
 		for (i=0; i<presetmenus[currentproptype].length; i+=1) {
 			t=findPresetInMenu(presetmenus[currentproptype][i]); if (t) { found=t; presetselected=presetmenus[currentproptype][i]; }
 		}
-		if (found) { presetmenu.init(141,505,found,presetnames[currentproptype][presetselected],'Choose from a menu of preset attributes describing the '+currentproptype,setAttributesFromPreset,151);
+		if (found) { presetmenu.init(141,505,found,presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
 					 setPresetIcon(presetselected); }
 			  else { presetmenu.setValue(0); }
 	}
@@ -336,7 +356,7 @@
 			}
 			presetselected=presetmenus[currentproptype][j%i];
 			setPresetIcon(presetselected);
-			presetmenu.init(141,505,findPresetInMenu(presetselected),presetnames[currentproptype][presetselected],'Choose from a menu of preset attributes describing the '+currentproptype,setAttributesFromPreset,151);
+			presetmenu.init(141,505,findPresetInMenu(presetselected),presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
 		}
 	}
 
@@ -344,9 +364,13 @@
 
 	function enterNewAttribute() {
 		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
-		if (_root.propn==12) { return; }
+		if (_root.tagcount>=_root.currentstartat+12) {
+			populatePropertyWindow(_root.currentproptype,Math.floor((_root.tagcount+1)/12)*12);
+		}
+//		if (_root.propn==12) { return; }
 		getAttrArray().key='(type value here)';
 		_root.properties.attachMovie("keyvalue","key",_root.propn);
+		_root.tagcount+=1; _root.i_nextattr._alpha=50+50*(tagcount>12);
 		_root.properties.key['value'].textColor=0x888888;
 		_root.properties.key.keyname.type="input";
 		_root.properties.key.keyname.setTextFormat(boldSmall);
@@ -363,6 +387,7 @@
 			if (this._parent.keyname.text=='' || this._parent.keyname.text==undefined) { 
 				delete getAttrArray()[this._parent._name];
 				removeMovieClip(this._parent);
+				_root.tagcount-=1;
 			} else {
 				this._parent.renameKey();
 			}
@@ -394,6 +419,7 @@
 	}
 
 	function markAttrUnclean(redrawflag) {
+		markClean(false);
 		switch (currentproptype) {
 			case 'point':	_root.map.ways[wayselected].clean=false; break;
 			case 'POI':		_root.map.pois[poiselected].clean=false; break;

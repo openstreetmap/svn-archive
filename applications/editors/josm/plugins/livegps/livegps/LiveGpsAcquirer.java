@@ -110,6 +110,7 @@ public class LiveGpsAcquirer implements Runnable {
 						gpsdSocket.getOutputStream().write(new byte[] { 'w', 13, 10 });
                         fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
 						connected = true;
+					System.out.println("LiveGps: Connected to gpsd");
 					}
 				}
 
@@ -194,11 +195,19 @@ public class LiveGpsAcquirer implements Runnable {
 
 			}
 		}
-        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
-		if (gpsdSocket != null) try { gpsdSocket.close(); } catch (Exception ignore) {};
-	}
     
-
+    fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
+		if (gpsdSocket != null) {
+      try { 
+        gpsdSocket.close(); 
+        gpsdSocket = null;
+  			System.out.println("LiveGps: Disconnected from gpsd");
+      } 
+      catch (Exception e) {
+        System.out.println("LiveGps: Unable to close socket; reconnection may not be possible");
+      };
+	  }
+  }
 	
 	public void shutdown()
 	{

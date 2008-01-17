@@ -20,7 +20,7 @@ sub ProjectF
     return($Y);
 }
 #-----------------------------------------------------------------------------
-# Project Y to latitude bounds
+# Project tile Y to latitude bounds
 #-----------------------------------------------------------------------------
 sub Project 
 {
@@ -39,16 +39,7 @@ sub Project
 }
 
 #-----------------------------------------------------------------------------
-# Convert Y units in mercator projection to latitudes in degrees
-#-----------------------------------------------------------------------------
-sub ProjectMercToLat($)
-{
-    my $MercY = shift();
-    return(RadToDeg(atan(sinh($MercY))));
-}
-
-#-----------------------------------------------------------------------------
-# Project X to longitude bounds
+# Project tile X to longitude bounds
 #-----------------------------------------------------------------------------
 sub ProjectL 
 {
@@ -57,6 +48,15 @@ sub ProjectL
     my $Unit = 360 / (2 ** $Zoom);
     my $Long1 = -180 + $X * $Unit;
     return(($Long1, $Long1 + $Unit));  
+}
+
+#-----------------------------------------------------------------------------
+# Convert Y units in mercator projection to latitudes in degrees (not tile coordinate Y)
+#-----------------------------------------------------------------------------
+sub ProjectMercToLat($)
+{
+    my $MercY = shift();
+    return(RadToDeg(atan(sinh($MercY))));
 }
 
 #-----------------------------------------------------------------------------

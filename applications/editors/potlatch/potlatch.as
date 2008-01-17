@@ -46,11 +46,8 @@
 	var ylon=baselong;	var lastylon=ylon;		//  |
 	var yzoom=8;		var lastyzoom=yzoom;	//  |
 	var bgxoffset=0;	var bgyoffset=0;		// manually correct Yahoo imagery
-
+	var yahooloaded=false;						// is Yahoo component loaded?
 	_root.createEmptyMovieClip("yahoo",7);
-	loadMovie(yahoourl,_root.yahoo);
-	_root.yahoo.swapDepths(_root.masksquare);
-	_root.yahoo.setMask(_root.masksquare2);
 
 	// Main initialisation
 	_root.map.createEmptyMovieClip("areas"   ,8);  var areadepth=1;
@@ -93,7 +90,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.6b";	// current version
+	var signature="Potlatch 0.6c";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
 	if (preferences.data.baselayer    ==1        ) { preferences.data.baselayer    =2; }	// temporary migration
@@ -132,14 +129,20 @@
 	_root.attachMovie("newattr","i_newattr",33);
 	with (_root.i_newattr) { _x=690; _y=585; };
 	_root.i_newattr.onRelease =function() { enterNewAttribute(); };
-	_root.i_newattr.onRollOver=function() { setFloater("Add a new attribute"); };
+	_root.i_newattr.onRollOver=function() { setFloater("Add a new tag"); };
 	_root.i_newattr.onRollOut =function() { clearFloater(); };
 
 	_root.attachMovie("repeatattr","i_repeatattr",34);
 	with (_root.i_repeatattr) { _x=690; _y=565; };
 	_root.i_repeatattr.onPress=function() { repeatAttributes(); };
-	_root.i_repeatattr.onRollOver=function() { setFloater("Repeat attributes from the previously selected way (R)"); };
+	_root.i_repeatattr.onRollOver=function() { setFloater("Repeat tags from the previously selected way (R)"); };
 	_root.i_repeatattr.onRollOut =function() { clearFloater(); };
+
+	_root.attachMovie("nextattr","i_nextattr",42);
+	with (_root.i_nextattr) { _x=690; _y=545; };
+	_root.i_nextattr.onRelease =function() { advancePropertyWindow(); };
+	_root.i_nextattr.onRollOver=function() { setFloater("Next page of tags"); };
+	_root.i_nextattr.onRollOut =function() { clearFloater(); };
 
 	_root.attachMovie("exclamation","i_warning",35);
 	with (_root.i_warning) { _x=10; _y=545; _visible=false; };
@@ -170,12 +173,14 @@
 				_root.map.ways[wayselected].clean=false;
 				_root.map.ways[wayselected].redraw();
 				_root.padlock._visible=false;
+				markClean(false);
 			}
 		} else if (_root.poiselected) {
 			_root.map.pois[poiselected].locked=false;
 			_root.map.pois[poiselected].clean=false;
 //			_root.map.pois[poiselected].recolour();
 			_root.padlock._visible=false;
+			markClean(false);
 		}
 	};
 
@@ -301,6 +306,7 @@
 			_root.map.pois[newpoiid]._y=_root.map._ymouse;
 			_root.map.pois[newpoiid].select();
 			_root.map.pois[newpoiid].clean=false;
+			markClean(false);
 		} else if (this._name==_root.drawpoint) {
 			// double-click at end of route
 			stopDrawing();
@@ -360,6 +366,7 @@
 			_root.map.ways[wayselected].highlightPoints(5000,"anchor");
 			_root.map.ways[wayselected].highlight();
 			_root.map.ways[wayselected].clean=false;
+			markClean(false);
 
 		} else {
 			this._x=_root.map.ways[wayselected].path[this._name][0];	// Return point to original position
@@ -580,6 +587,7 @@
 		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			this.clean=false;
 			this.select();
+			markClean(false);
 		}
 	};
 	POI.prototype.select=function() {
@@ -656,7 +664,7 @@
 			_root.map.ways[result[0]].xmax=result[4];
 			_root.map.ways[result[0]].ymin=result[5];
 			_root.map.ways[result[0]].ymax=result[6];
-			if (result[0]==wayselected) { _root.map.ways[result[0]].select(); }
+			if (result[0]==wayselected) { _root.map.ways[result[0]].select(); markClean(false); }
 								   else { _root.map.ways[result[0]].locked=true; }
 			_root.map.ways[result[0]].redraw();
 			_root.map.ways[result[0]].clearPOIs();
@@ -694,15 +702,7 @@
 		
 		// Draw fill/casing
 
-		var f=-1; 
-		if (this.path[this.path.length-1][0]==this.path[0][0] &&
-			this.path[this.path.length-1][1]==this.path[0][1] &&
-			this.path.length>2) {
-			if (this.attr['area']) { f='0x777777'; }
-			var z=this.attr;
-			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
-		}
-
+		var f=this.getFill();
 		if ((f>-1 || casing[this.attr['highway']]) && !this.locked) {
 			if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
 			with (_root.map.areas[this._name]) {
@@ -726,6 +726,18 @@
 		for (var i=1; i<this.path.length; i+=1) {
 			this.line.lineTo(this.path[i][0],this.path[i][1]);
 		}
+	};
+
+	OSMWay.prototype.getFill=function() {
+		var f=-1; 
+		if (this.path[this.path.length-1][0]==this.path[0][0] &&
+			this.path[this.path.length-1][1]==this.path[0][1] &&
+			this.path.length>2) {
+			if (this.attr['area']) { f='0x777777'; }
+			var z=this.attr;
+			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
+		}
+		return f;
 	};
 
 	// ----	Show direction
@@ -959,9 +971,9 @@
 			_root.map.ways[newwayid].locked=this.locked;				//  |
 			_root.map.ways[newwayid].upload();							//  |
 
-			pointselected=-2;
-			this.select();
-			this.clean=false;
+			this.upload();												// upload current way
+			pointselected=-2;											//  |
+			this.select();												//  |
 		};
 	};
 
@@ -990,6 +1002,7 @@
 		this.mergedways.push(otherway._name);
 		this.mergedways.concat(otherway.mergedways);
 		this.clean=false;
+		markClean(false);
 		if (otherway.locked) { this.locked=true; }
 		removeMovieClip(_root.map.areas[otherway._name]);
 		removeMovieClip(otherway);
@@ -1015,6 +1028,7 @@
 		this.direction();
 		this.select();
 		this.clean=false;
+		markClean(false);
 	};
 
 
@@ -1070,6 +1084,7 @@
 							   else { _root.map.ways[wayselected].path.pop(); _root.drawpoint-=1; }
 			if (_root.map.ways[wayselected].path.length) {
 				_root.map.ways[wayselected].clean=false;
+				markClean(false);
 				_root.map.ways[wayselected].redraw();
 				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
 				_root.map.ways[wayselected].highlight();
@@ -1113,6 +1128,7 @@
 			_root.drawpoint=-1;
 			_root.map.elastic.clear();
 			clearTooltip();
+			markClean(false);
 			if (_root.wayselected) {
 				_root.map.ways[_root.wayselected].select();
 			}
@@ -1158,6 +1174,7 @@
 		_root.presetmenu._visible=false;
 		_root.i_preset._visible=false;
 		clearPropertyWindow();
+		markClean(true);
 	};
 	
 	function uploadSelected() {
@@ -1219,7 +1236,7 @@
 	// Start
 
 	_root.attachMovie("menu","presetmenu",60);
-	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset attributes describing the way',setAttributesFromPreset,151);
+	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset tags describing the way',setAttributesFromPreset,151);
 	_root.presetmenu._visible=false;
 
 	redrawMap(350-350*Math.pow(2,_root.scale-13),
@@ -1321,6 +1338,7 @@
 		_root.map.ways[way].path.splice(closei,0,newpoint);
 		_root.map.ways[way].clean=false;
 		_root.map.ways[way].redraw();
+		markClean(false);
 		return closei;
 	}
 
@@ -1429,7 +1447,6 @@
 //		_root.coordmonitor.text ="Centre of map: lon "+centrelong()+", lat "+centrelat()+" -- ";
 //		_root.coordmonitor.text+="Edges: lon "+_root.edge_l+"->"+_root.edge_r+" -- ";
 //		_root.coordmonitor.text+="           lat "+_root.edge_b+"->"+_root.edge_t+" -- ";
-
 	}
 
 	function redrawBackground() {
@@ -1438,7 +1455,12 @@
 			case 0: _root.yahoo._visible=false;	// none
 					_root.map.tiles._visible=false;
 					break;
-			case 2: _root.yahoo._visible=true;	// Yahoo
+			case 2: if (!_root.yahooloaded) {	// Yahoo
+						loadMovie(yahoourl,_root.yahoo); _root.yahooloaded=true;
+						_root.yahoo.swapDepths(_root.masksquare);
+						_root.yahoo.setMask(_root.masksquare2);
+					}
+					_root.yahoo._visible=true;
 					_root.yahoo._alpha=alpha;	
 					_root.yahoo._x=0;
 					_root.yahoo._y=0;
@@ -1460,6 +1482,12 @@
 		}
 	}
 
+	// markClean - set JavaScript variable for alert when leaving page
+
+	function markClean(a) {
+		if (!_root.sandbox) { getURL("javascript:var changesaved="+a); }
+	}
+	
 	// zoomIn, zoomOut, changeScaleTo - change scale functions
 	
 	function zoomIn()  {
@@ -1560,6 +1588,8 @@
 	function addEndPoint(x,y,node,tags) {
 		if (tags) {} else { tags=new Array(); }
 		newpoint=new Array(x,y,node,0,tags,0);
+		x1=_root.map.ways[wayselected].path[_root.drawpoint][0];
+		y1=_root.map.ways[wayselected].path[_root.drawpoint][1];
 		if (_root.drawpoint==_root.map.ways[wayselected].path.length-1) {
 			_root.map.ways[wayselected].path.push(newpoint);
 			_root.drawpoint=_root.map.ways[wayselected].path.length-1;
@@ -1567,10 +1597,28 @@
 			_root.map.ways[wayselected].path.unshift(newpoint);	// drawpoint=0, add to start
 		}
 	
-		// Redraw map
+		// Redraw line (if possible, just extend it to save time)
+		if (_root.map.ways[wayselected].getFill()>-1 || 
+			_root.map.ways[wayselected].path.length<3 ||
+			_root.pointselected>-2) {
+			_root.map.ways[wayselected].redraw();
+			_root.map.ways[wayselected].select();
+		} else {
+			_root.map.ways[wayselected].line.moveTo(x1,y1);
+			_root.map.ways[wayselected].line.lineTo(x,y);
+			if (casing[_root.map.ways[wayselected].attr['highway']]) {
+				_root.map.areas[wayselected].moveTo(x1,y1);
+				_root.map.areas[wayselected].lineTo(x,y);
+			}
+			_root.map.highlight.moveTo(x1,y1);
+			_root.map.highlight.lineTo(x,y);
+			_root.map.ways[wayselected].direction();
+			_root.map.ways[wayselected].highlightPoints(5000,"anchor");
+			removeMovieClip(_root.map.anchorhints);
+		}
+		// Mark as unclean
 		_root.map.ways[wayselected].clean=false;
-		_root.map.ways[wayselected].redraw();
-		_root.map.ways[wayselected].select();
+		markClean(false);
 		_root.map.elastic.clear();
 	}
 
@@ -1692,6 +1740,7 @@
 		_root.map.ways[newwayid].clean=false;
 		_root.map.anchors[0].startElastic();
 		_root.drawpoint=0;
+		markClean(false);
 		setTooltip("click to add point\ndouble-click/Return\nto end line",0);
 	}
 

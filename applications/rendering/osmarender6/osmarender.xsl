@@ -920,6 +920,75 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   </xsl:template>
 
+  <!-- wayMarker instruction.  Draws a marker on a node that is perpendicular to a way that passes through the node.
+       If more than one way passes through the node then the result is a bit unspecified.  -->
+  <xsl:template match="wayMarker">
+    <xsl:param name="elements"/>
+    
+    <!-- This is the instruction that is currently being processed -->
+    <xsl:variable name="instruction" select="."/>
+    
+    <g>
+      <!-- Add all the svg attributes of the <wayMarker> instruction to the <g> element -->
+      <xsl:apply-templates select="@*" mode="copyAttributes" />
+      
+      <!-- Process each matched node in turn -->
+      <xsl:for-each select="$elements[name()='node']">
+	<xsl:variable name='nodeId' select="@id" />
+	
+	<xsl:variable name='way' select="key('wayByNode', @id)" />
+	<xsl:variable name='previousNode' select="key('nodeById', $way/nd[@ref=$nodeId]/preceding-sibling::nd[1]/@ref)" />
+	<xsl:variable name='nextNode' select="key('nodeById', $way/nd[@ref=$nodeId]/following-sibling::nd[1]/@ref)" />
+	
+	<xsl:variable name='path'>
+	  <xsl:choose>
+	    <xsl:when test='$previousNode and $nextNode'>
+	      <xsl:call-template name="moveToNode">
+		<xsl:with-param name="node" select="$previousNode"/>
+	      </xsl:call-template>
+	      <xsl:call-template name="lineToNode">
+		<xsl:with-param name="node" select="."/>
+	      </xsl:call-template>
+	      <xsl:call-template name="lineToNode">
+		<xsl:with-param name="node" select="$nextNode"/>
+	      </xsl:call-template>
+	    </xsl:when>
+
+	    <xsl:when test='$previousNode'>
+	      <xsl:call-template name="moveToNode">
+		<xsl:with-param name="node" select="$previousNode"/>
+	      </xsl:call-template>
+	      <xsl:call-template name="lineToNode">
+		<xsl:with-param name="node" select="."/>
+	      </xsl:call-template>
+	      <xsl:call-template name="lineToNode">
+		<xsl:with-param name="node" select="."/>
+	      </xsl:call-template>
+	    </xsl:when>
+
+	    <xsl:when test='$nextNode'>
+	      <xsl:call-template name="moveToNode">
+		<xsl:with-param name="node" select="."/>
+	      </xsl:call-template>
+	      <xsl:call-template name="lineToNode">
+		<xsl:with-param name="node" select="$nextNode"/>
+	      </xsl:call-template>
+	      <xsl:call-template name="lineToNode">
+		<xsl:with-param name="node" select="$nextNode"/>
+	      </xsl:call-template>
+	    </xsl:when>
+	  </xsl:choose>
+	</xsl:variable>
+	
+	<path id="nodePath_{@id}" d="{$path}"/>
+	
+	<use xlink:href="#nodePath_{@id}">
+	  <xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
+	</use>
+      </xsl:for-each>
+    </g>
+    
+  </xsl:template>
 
   <!-- Process an <areaText> instruction -->
   <xsl:template match="areaText">

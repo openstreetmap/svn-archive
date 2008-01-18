@@ -220,7 +220,8 @@
 			_root.currentpropway  ==wayselected &&
 			_root.currentproppoi  ==poiselected &&
 			_root.currentproppoint==pointselected &&
-			_root.currentstartat  ==startat) { return; }
+			_root.currentstartat  ==startat &&
+			_root.redopropertywindow==0) { return; }
 		clearPropertyWindow();
 		_root.i_repeatattr._alpha=
 		_root.i_newattr._alpha =100-50*(proptype=='');

@@ -1560,8 +1560,8 @@
 
 		// ----	Do we need to redraw the property window? (workaround)
 		if (_root.redopropertywindow) {
+			populatePropertyWindow(_root.currentproptype,_root.currentstartat);
 			_root.redopropertywindow=0;
-			populatePropertyWindow(_root.currentproptype);
 		}
 
 		// ----	Control "loading ways" display

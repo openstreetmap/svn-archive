@@ -24,6 +24,8 @@
 	var baselong=Math.pow(long,1);
 	var scale=Math.max(Math.min(Math.pow(scale,1),maxscale),minscale);
 	var usertoken=token;
+	// if (winie=='true' || winie==true) { winie=true; } else { winie=false; }
+	var winie=false;				// fscommand doesn't work, so don't use it
 	
 	// Preferences
 	preferences=SharedObject.getLocal("preferences");
@@ -1438,7 +1440,7 @@
 		_root.coord_b=(500-_root.map._y)/bscale; _root.edge_b=coord2lat(_root.coord_b);
 		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
 		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
-		getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")");
+		updateLinks();
 
 		// ----	Trace
 		//		x radius (lon) is 280/Math.pow(2,_root.scale)
@@ -1485,7 +1487,17 @@
 	// markClean - set JavaScript variable for alert when leaving page
 
 	function markClean(a) {
-		if (!_root.sandbox) { getURL("javascript:var changesaved="+a); }
+		if (!_root.sandbox) {
+			if (winie) { _root.chat._visible=true; fscommand("changesaved",a); }
+				  else { getURL("javascript:var changesaved="+a); }
+		}
+	}
+	
+	// updateLinks - update view/edit tabs
+	
+	function updateLinks() {
+		if (winie) { fscommand("maplinks",centrelong(0),centrelat(0),_root.scale); }
+			  else { getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")"); }
 	}
 	
 	// zoomIn, zoomOut, changeScaleTo - change scale functions

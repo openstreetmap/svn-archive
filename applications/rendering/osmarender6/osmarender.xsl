@@ -2049,12 +2049,11 @@ against infinite loops -->
     <xsl:variable name='relation' select="key('relationByWay',@id)[tag[@k='type' and @v='multipolygon']]"/>
     <xsl:choose>
       <xsl:when test='$relation'>
-
-        <!-- DODI: handling mulitpolygons: draw area only once 
-                   ways is a part of a multipolygon relation so we need process all members-->
-	<!-- Bobkare: Changed to use the member with role=outer instead of the search for first member, which gave me some errors -->
+	<!-- Handle multipolygons.
+	     Draw area only once, draw the outer one first if we know which is it, else just draw the first one -->
 	<xsl:variable name='outerway' select="$relation/member[@type='way'][@role='outer']/@ref"/>
-        <xsl:if test='$outerway=@id'>
+	<xsl:variable name='firsrelationmember' select="$relation/member[@type='way'][key('wayById', @ref)][1]/@ref"/> 
+        <xsl:if test='( $outerway and $outerway=@id ) or ( not($outerway) and $firsrelationmember=@id )'>
           <xsl:message>
             <xsl:value-of select='$relation/@id'/>
           </xsl:message>

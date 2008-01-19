@@ -277,7 +277,7 @@ sub parse_line(){
     } elsif ( $line =~ m/<tag k="(highway)" v=\"([^\"]*)\"/ ){
 	my $k=$1;
 	my $v=$2;
-	$tag->{$k}=$v;
+#	$tag->{$k}=$v;
     } elsif ( $line =~ m/<tag/ ){
     } elsif ( $line =~ m/<?xml version/ ){
     } elsif ( $line =~ m/<osm version=[\'\"]0\.5[\'\"]/ ){

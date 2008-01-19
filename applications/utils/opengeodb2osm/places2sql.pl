@@ -25,13 +25,20 @@ CREATE TABLE \`tages\` (
 ";
 open(FILE,"zcat $filename|") or die;
 foreach my $line (<FILE>) {
- if ($line=~/node id=\"(.*)\" lat=\"(.*)\" lon=\"(.*)\" timestamp=\"(.*)\"/) {
-     $id=$1;
-     $lat=$2;
-     $lon=$3;
-#     $timestamp=$4;
+
+    if (($line=~/node id=\"(.*)\" lat=\"(.*)\" lon=\"(.*)\" timestamp=\"(.*?)\"/) or 
+	($line=~/node id='(.*)' lat='(.*)' lon='(.*?)' .* timestamp='(.*?)'/) or
+	($line=~/node id='(.*)' lat='(.*)' lon='(.*)' timestamp='(.*?)'/)) 
+    {
+	
+	$id=$1;
+	$lat=$2;
+	$lon=$3;
+#        $timestamp=$4;
+
      %tag=();
- } elsif ($line=~/tag k=\"(.*)\" v=\"(.*)\" \/\>/) {
+ } elsif (($line=~/tag k=\"(.*)\" v=\"(.*)\" \/\>/) or 
+	  ($line=~/tag k='(.*)' v='(.*)'\/\>/)) { 
      $key=$1;
      $value=$2;
 

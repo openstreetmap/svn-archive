@@ -173,19 +173,27 @@ sub filter_against_osm($$$){
 
     my $dist_osm_track = $config->{dist} || 40;
 
+    my ($track_count,$point_count) =   count_data($tracks);
+    unless ( $point_count) {
+	printf STDERR "$filename: $track_count tracks with $point_count points): not filtering against osm \n";
+	
+	return $tracks;
+    }
+
     my $bounds = GPS::get_bounding_box($tracks);
-    printf STDERR "Track Bounds: ".Dumper(\$bounds) if $DEBUG>5;
-    my $osm_segments = load_segment_list($segments_filename,$bounds);
+    printf STDERR "Track Bounds: ".Dumper(\$bounds) if $DEBUG>5;  
+    my $all_osm_segments = load_segment_list($segments_filename,$bounds);
 
     enrich_tracks($tracks);
 
     my $parsing_display_time=time();
-    my ($track_count,$point_count) =   count_data($tracks);
     my $track_points_done=0;
     my $track_no=0;
     for my $track ( @{$tracks->{tracks}} ) {
 	$track_no++;
 	next if !$track;
+	my $track_bounds=GPS::get_track_bounding_box($track);
+	my $osm_segments= reduce_segments_list( $all_osm_segments, $track_bounds);
 
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
 	    my $elem = $track->[$track_pos];
@@ -705,6 +713,37 @@ sub get_bounding_box($){
 	}
     }
 
+    my $used_time = time()-$start_time;
+    if ( $DEBUG>10 || ($used_time >5 )) {
+	printf STDERR "Bounds are ($lat_min,$lon_min) ($lat_max,$lon_max)";
+	print_time($start_time);
+    }
+
+    return { lat_min => $lat_min,lon_min => $lon_min,
+	     lat_max => $lat_max,lon_max => $lon_max };
+}
+
+
+# ------------------------------------------------------------------
+# get bounding Box for Single-Track-Data
+sub get_track_bounding_box($){
+    my $track      = shift; # reference to one track
+
+    my $start_time=time();
+
+    my $lat_min =  90;
+    my $lat_max = -90;
+    my $lon_min =  180;
+    my $lon_max = -180;
+
+    for my $elem ( @{$track} ) {
+	$lat_min  = $elem->{lat}	    if $lat_min > $elem->{lat};
+	$lat_max  = $elem->{lat}	    if $lat_max < $elem->{lat};
+	
+	$lon_min  = $elem->{lon}	    if $lon_min > $elem->{lon};
+	$lon_max  = $elem->{lon}	    if $lon_max < $elem->{lon};
+    }
+    
     my $used_time = time()-$start_time;
     if ( $DEBUG>10 || ($used_time >5 )) {
 	printf STDERR "Bounds are ($lat_min,$lon_min) ($lat_max,$lon_max)";

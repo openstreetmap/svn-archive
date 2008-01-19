@@ -49,6 +49,7 @@ sub fill_default_poi_types {
 
     my $icon_file='../data/map-icons/icons.xml';
     $icon_file = '../share/map-icons/icons.xml'         unless -s $icon_file;
+    $icon_file = '/usr/local/share/icons/map-icons/icons.xml' unless -s $icon_file;
     $icon_file = '/usr/local/share/map-icons/icons.xml' unless -s $icon_file;
     $icon_file = '/usr/share/icons/map-icons/icons.xml'       unless -s $icon_file;
     $icon_file = '/usr/share/map-icons/icons.xml'       unless -s $icon_file;
@@ -83,6 +84,10 @@ sub fill_default_poi_types {
         my $scale_max = $poi_elm->first_child('scale_max')->text;
         $title = $title_en unless ($title);
 	$description = $description_en unless ($description);
+
+	# Quick 'n Hacky, but maybe this part will die sometime soon
+	$description =~ s/\'/\\\'/g;
+	$description_en =~ s/\'/\\\'/g;
 
 	Geo::Gpsdrive::DBFuncs::db_exec(
 	  "DELETE FROM `poi_type` WHERE poi_type_id = $poi_type_id ;");

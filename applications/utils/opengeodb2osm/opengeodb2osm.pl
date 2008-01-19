@@ -3,7 +3,7 @@
 # Author: Sven Anders <sven@anders-hamburg.de>
 # License GPL 2.0
 #
-my $version="0.5.1";
+my $version="0.5.2";
 my $progname="opengeodb2osm";
 my $osmApiURL="http://api.openstreetmap.org/api/0.5/node/";
 $dbversion="0.2.5a / 2007-10-04 / http://opengeodb.sourceforge.net/";
@@ -166,7 +166,7 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
 	if (defined($osmContent)) {
 	    @content=split(/\n/,$osmContent);
 	    foreach my $line (@content) {
-		if (($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" user="(.*)" visible="true" timestamp="(.*)"/) or ($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" visible="true" timestamp="(.*)"/)) { 
+		if (($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" user=".*" visible="true" timestamp="(.*)"/) or ($line=~/node id=\"\d*\" lat=\"(.*)\" lon="(.*)" visible="true" timestamp="(.*)"/)) { 
 		    
 		    
 		    $lat=$1;
@@ -466,30 +466,26 @@ while ( my @ergebnis = $sth->fetchrow_array() ){
     }
     $found=0;
     $sthParts->execute($locid);
-
-    while ( my @partserg = $sthParts->fetchrow_array() ){
-	if ((defined($NodelocIdHash{$partserg[0]})) or (defined($RelationlocIdHash{$partserg[0]}))) {
-	    if ($found==0) {
-		defined($RelationlocIdHash{$locid}) or die("RelationLocId $locid");
-		print "<relation id=\"".$RelationlocIdHash{$locid}."\" visible='true'>\n";
-		$found++;
-		print $tag;
-		if (defined($NodelocIdHash{$locid})) {
-		    print " <member type='node' ref=\"$NodelocIdHash{$locid}\" role='this' />\n";
+    if (defined($RelationlocIdHash{$locid})) {
+	print "<relation id=\"".$RelationlocIdHash{$locid}."\" visible='true'>\n";
+	print $tag;
+	if (defined($NodelocIdHash{$locid})) {
+	    print " <member type='node' ref=\"$NodelocIdHash{$locid}\" role='this' />\n";
+	}
+	while ( my @partserg = $sthParts->fetchrow_array() ){
+	    if ((defined($NodelocIdHash{$partserg[0]})) or (defined($RelationlocIdHash{$partserg[0]}))) {
+		if (defined($NodelocIdHash{$partserg[0]})) {
+		    print " <member type='node' ref=\"$NodelocIdHash{$partserg[0]}\" role='child' />\n";
 		}
-
-	    }
-	    if (defined($NodelocIdHash{$partserg[0]})) {
-		print " <member type='node' ref=\"$NodelocIdHash{$partserg[0]}\" role='child' />\n";
-	    }
-	    if (defined($RelationlocIdHash{$partserg[0]})) {
-		print " <member type='relation' ref=\"$RelationlocIdHash{$partserg[0]}\" role='child' />\n";
+		if (defined($RelationlocIdHash{$partserg[0]})) {
+		    print " <member type='relation' ref=\"$RelationlocIdHash{$partserg[0]}\" role='child' />\n";
+		}
 	    }
 	}
-    }
-    if ($found>0) {
+
 	print "</relation>\n";
     }
+
 }
 
 # Datenbank-Verbindung beenden

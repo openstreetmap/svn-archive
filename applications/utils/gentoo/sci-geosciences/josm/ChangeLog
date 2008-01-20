@@ -1,6 +1,17 @@
 # ChangeLog for sci-geosciences/josm
-# Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
+# Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
+
+*josm-1.5_p524 (20 Dec 2008)
+
+  20 Dec 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p524.ebuild:
+  version bump
+
+  20 Dec 2008; Dennis <dennis.lists@googlemail.com> -josm-1.5_p490.ebuild:
+  removed old version
+
+  20 Dec 2008; Dennis <dennis.lists@googlemail.com> josm-1.5_p496.ebuild josm-1.5_p490.ebuild josm-9999.ebuild:
+  Added keywords for ppc
 
 *josm-1.5_p496 (19 Dec 2007)
 

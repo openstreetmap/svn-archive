@@ -15,7 +15,7 @@ SRC_URI="http://josm.openstreetmap.de/download/${MY_P}.jar
 	linguas_ro? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-ro.jar )"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 ppc x86"
 DEPEND="virtual/jre"
 S="${WORKDIR}"
 

@@ -3137,7 +3137,7 @@
 			<svg:path  fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
 		</svg:symbol>
 
-		<svg:symbol id="symbol-bus" viewBox="0 0 48.5 20">
+		<svg:symbol id="symbol-bus" viewBox="0 0 60 20">
 		  <svg:g
 		      transform="translate(5.7695052,2.8188799e-2)">
 		    <svg:path

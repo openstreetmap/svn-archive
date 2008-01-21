@@ -6,6 +6,9 @@
 # graph of a network (e.g. a metro rail system) suitable for
 # dragging the nodes around in a graph editor (e.g. yed) to create
 # a diagram of the network
+#
+# Usage: put the OSM data in subway.osm, then run this program.
+# it will create graph.gml
 #----------------------------------------------------------------
 # Copyright 2008, OJW. Licensed as GNU GPL v3 or later
 #----------------------------------------------------------------

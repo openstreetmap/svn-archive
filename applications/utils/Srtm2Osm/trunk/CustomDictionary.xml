@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+	<Words>
+		<Unrecognized>
+			<Word>cb</Word>
+		</Unrecognized>
+		<Recognized>
+            <Word>a</Word>
+            <Word>b</Word>
+            <Word>Brejc</Word>
+            <Word>conn</Word>
+			<Word>configurator</Word>
+			<Word>contravariant</Word>
+            <Word>coords</Word>
+            <Word>Deg</Word>
+            <Word>dest</Word>
+            <Word>Dms</Word>
+            <Word>dx</Word>
+            <Word>dy</Word>
+			<Word>Ebsy</Word>
+			<Word>exc</Word>
+            <Word>g</Word>
+            <Word>Garmin</Word>
+            <Word>Gdi</Word>
+			<Word>Hsl</Word>
+            <Word>isohypse</Word>
+            <Word>isohypses</Word>
+            <Word>isoplete</Word>
+            <Word>isopleting</Word>
+            <Word>joblet</Word>
+            <Word>Kosmos</Word>
+            <Word>Mkgmap</Word>
+            <Word>Mapnik</Word>
+            <Word>Msmq</Word>
+            <Word>Multi</Word>
+            <Word>normalizer</Word>
+            <Word>num</Word>
+            <Word>offscreen</Word>
+            <Word>Osm</Word>
+            <Word>Osmarender</Word>
+            <Word>png</Word>
+            <Word>polyline</Word>
+            <Word>Raster</Word>
+            <Word>Rasters</Word>
+            <Word>Renderer</Word>
+			<Word>retrier</Word>
+			<Word>retriers</Word>
+            <Word>s</Word>
+			<Word>unpause</Word>
+			<Word>Mobi</Word>
+			<Word>Msisdn</Word>
+            <Word>Gfx</Word>
+            <Word>Qif</Word>
+            <Word>Rad</Word>
+            <Word>Srtm</Word>
+            <Word>Utils</Word>
+            <Word>visualizer</Word>
+            <Word>x</Word>
+            <Word>y</Word>
+            <Word>z</Word>
+        </Recognized>
+		<Deprecated>
+			<!-- Be sure to pascal-case deprecated terms and preferred alternates     -->
+			<!-- Note that terms consisting of one or two tokens only will be flagged -->
+			<!-- eg, ComPlus can be checked for but NewComPlus will not be detected   -->
+			<Term PreferredAlternate="EnterpriseServices">ComPlus</Term>
+		</Deprecated>
+		<Inappropriate />
+	</Words>
+	<Acronyms>
+		<CasingExceptions>
+			<Acronym>CJK</Acronym>
+			<Acronym>Pi</Acronym>
+			<Acronym>NESW</Acronym>
+			<Acronym>NWSE</Acronym>
+		</CasingExceptions>
+	</Acronyms>
+</Dictionary>

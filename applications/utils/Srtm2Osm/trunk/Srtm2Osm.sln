@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02C85369-758F-4120-89B7-E1518044A480}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		BuildSrtm2Osm.bat = BuildSrtm2Osm.bat
+		CustomDictionary.xml = CustomDictionary.xml
+		Scripts\NAntCommon.build = Scripts\NAntCommon.build
+		Srtm2Osm.build = Srtm2Osm.build
+		Srtm2Osm.doxy = Srtm2Osm.doxy
+		Srtm2Osm.FxCop = Srtm2Osm.FxCop
+		Srtm2Osm.ProjectVersion.txt = Srtm2Osm.ProjectVersion.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmUtils.OsmClient", "OsmUtils.OsmClient\OsmUtils.OsmClient.csproj", "{B1D31BAC-CEDF-4972-A3EA-0D73F7CA1FBE}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmUtils.Framework", "OsmUtils.Framework\OsmUtils.Framework.csproj", "{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Srtm2Osm", "Srtm2Osm\Srtm2Osm.csproj", "{63C3B2F6-D8B3-4074-94DB-DB3222F5CAA8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brejc.DemLibrary", "Brejc.DemLibrary\Brejc.DemLibrary.csproj", "{D4F3E35D-3C30-4B8C-B2A9-EC2B3EE649FB}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brejc.Geometry", "Brejc.Geometry\Brejc.Geometry.csproj", "{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1D31BAC-CEDF-4972-A3EA-0D73F7CA1FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1D31BAC-CEDF-4972-A3EA-0D73F7CA1FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1D31BAC-CEDF-4972-A3EA-0D73F7CA1FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1D31BAC-CEDF-4972-A3EA-0D73F7CA1FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63C3B2F6-D8B3-4074-94DB-DB3222F5CAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63C3B2F6-D8B3-4074-94DB-DB3222F5CAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63C3B2F6-D8B3-4074-94DB-DB3222F5CAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63C3B2F6-D8B3-4074-94DB-DB3222F5CAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4F3E35D-3C30-4B8C-B2A9-EC2B3EE649FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4F3E35D-3C30-4B8C-B2A9-EC2B3EE649FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4F3E35D-3C30-4B8C-B2A9-EC2B3EE649FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4F3E35D-3C30-4B8C-B2A9-EC2B3EE649FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

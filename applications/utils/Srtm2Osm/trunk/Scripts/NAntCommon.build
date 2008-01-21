@@ -1,0 +1,1053 @@
+<?xml version="1.0"?>
+
+<!--
+	TARGETS IN THIS FILE:
+	////////////////////
+	build							: builds the whole project
+	build.fxcop						: builds the project quickly and then runs fxcop
+	build.quick						: builds the whole project quickly (just compiling and zipping)
+	cc.build						: CruiseControl build script
+	cc.publish.build				: publishes the build zip to the CruiseControl project artifact directory
+	clean.build						: cleans the build directories
+	clean.output					: cleans the output files of assemblies
+	clean.shadowcache				: deletes assembly shadow copy cache
+	clean.temp						: cleans the build's temporary directory
+	code.stats						: generates source code statistics (lines of code)
+	compile							: compiles the code and copies it into the build directory
+	copy.deliverables				: copies all project deliverables to the build directory
+	copy.web.files					: copies web files from source to the destination
+	create.common.assemblyinfo:		: creates CommonAssemblyInfo.cs file
+	db.create						: creates the database using SQL scripts
+	db.prepare						: prepares the project database
+    db.set.properties               : sets the default values for DB-related properties if these have not been set before
+    docs.db                         : generates database documentation using CodeSmith DB documenter template
+	docs.doxygen					: generates source code documentation using doxygen tool
+	docs.ndoc						: generates source code documentation using NDoc tool
+	fxcop							: executes FxCop on the project
+	generate.wsdl					: generates wsdl based on the existing web services
+    iis.restart                     : restarts the local IIS
+	package.build					: packages the build files
+	rebuild 						: rebuilds the whole project
+    register.asp                    : registers target framework for this virtual directory ($VirtualDirName)
+    run.fxcop                       : runs FxCop Windows application and loads the current project
+	set.build.properties			: sets the basic properties needed for other targets
+	scm.label						: labels the source code in the ClearCase
+	sqlserver.restart				: restarts the local SQL Server
+	sqlserver.start					: starts the local SQL Server
+	test							: test the code with unit tests
+
+    PROPERTIES THAT ARE USED BY THIS FILE:
+	//////////////////////////////////////
+    BuildEngine (string)             : which build engine should be used
+                                       "devenv": VisualStudio will be used
+                                       "MSBuild": MSBuild will be used
+                                       "solution": <solution> NAnt task will be used
+	BuildRoot (directory)            : project build root directory
+    CompanyName (string)             : company name
+    CreateCommonAssemblyInfo (bool)  : should the CommonAssemblyInfo.cs file be generated?
+    DoxygenVersion                   : version of Doxygen
+    ProjectId (string)               : project identification string (used for solution file names and other project files, like FxCop)
+    ProjectTitle (string)            : project title (used in source documentation)
+    PrepareDb (bool)                 : should the database be recreated before running unit tests?
+	RestartIis (bool)                : should the IIS be restarted before cleaning output files?
+    WebDir (directory)               : project web root directory
+    
+    OutputDirsToClean (directory list)  : (optional) list of directories which should be cleaned
+    ShippedStuff (zipfileset)           : defines files/directories which should be included in the build ZIP package
+    SourceFiles (file list)             : (optional) list of source files for which the code statistics should be calculated
+    (TODO: some properties are missing)
+
+	VERSION HISTORY:
+	////////////////
+    0.39.0.0    : 26.12.2007    : removed 'ProjectKey' and 'DoSignAssemblies' properties since is no longer used in .NET 2.0
+                                : refactored logic to allow multiple build targets in the same directory
+                                : added a guard for 'test.merge.results' target
+    0.38.0.0    : 17.12.2007    : added calling of 'run.fxcop' target if the fxcop failed
+    0.37.0.1    : 14.12.2007    : deleting docs directory in cc.publish.build target is now marked with 'failonerror=false'
+    0.37.0.0    : 05.12.2007    : major overhaul of the database-related targets
+                                : DB name, user name and password are now set using filter property expansion
+                                : sqlserver.restart is no longer called when dropping the database, since the "database in use"
+                                  problem can be solved by other means 
+                                : 'db.destroy' target was removed, since dropping is done in the creation script
+                                : added 'build.quick' target for quickly producing a build package
+    0.36.0.0    : 04.12.2007    : added '*.master' to 'copy.web.files' target to support master pages.
+    0.35.0.0    : 09.11.2007    : added 'docs.sandcastle' target
+    0.34.0.0    : 25.10.2007    : major overhaul of the script
+                                : testing separated into 'test.unit' and 'test.integration'
+                                : introduced staged build process
+                                : removed 'build' target as it was not really used
+                                : added target 'test.merge.coverage' which has to be called after the last test to merge coverage results
+    0.33.0.0    : 22.10.2007    : added 'NoCoverage' property for running tests without coverage
+                                : added full path for osql.exe because of CCNet problems (CCNet could not find the exe file)
+    0.32.0.1    : 19.10.2007    : fixed 'copy.web.files' target to exclude file lists
+    0.32.0.0    : 17.10.2007    : added 'FxCopVersion' property
+    0.31.3.0    : 12.10.2007    : 'test' target is now dependent on 'set.build.properties' in order to allow to run it separately
+    0.31.2.0    : 05.10.2007    : added verbose option to NCover console to include detailed coverage data
+    0.31.1.0    : 14.09.2007    : added /consoleloggerparameters:NoSummary command line parameter to MSBuild to prevent duplicate
+                                  error and warning messages
+    0.31.0.0    : 12.09.2007    : refactored 'code.stats' target to use SolutionMaster to search for solution source files automatically
+    0.30.0.0    : 09.08.2007    : added 'xslt' task for XSLT transformations (merged)
+    0.29.0.0    : 08.08.2007    : build ZIP files are now copied to major-minor version-named subdirectories of CCNet artifact directory
+    0.28.0.1    : 07.08.2007    : fixed a bug when calling MbUnit
+    0.28.0.0    : 29.07.2007    : added 'UnitTestEngine' property and added support for MbUnit
+                                : renamed 'NUnitTestResultsDir' property to 'UnitTestResultsDir'
+                                : added 'UnitTestEngine' property
+    0.27.0.0    : 10.07.2007    : added 'scm.lock.label' task
+    0.26.5.0    : 06.07.2007    : excluded NUnit test fixtures from coverage reports
+    0.26.4.0    : 04.07.2007    : added copying of codestats XML report file to the CCNet directory to be merged
+    0.26.3.0    : 04.07.2007    : added 'NCoverVersion' property
+    0.26.2.0    : 23.05.2007    : added 'NCoverExplorerVersion' property
+    0.26.1.0    : 22.05.2007    : 'copy.web.files' now excludes "*.FileList.txt" files from copying
+    0.26.0.0    : 21.05.2007    : added the option to skip the main compile target if the BuildEngine is not defined
+                                : replaced direct reference to NAnt contrib with the appropriate property   
+    0.25.2.0    : 22.03.2007    : added 'ZipLevel' property
+    0.25.1.0    : 19.03.2007    : added 'db.set.properties' target to enableexecuting db.create and db.destroy targets independently
+    0.25.0.0    : 16.03.2007    : defined new 'BuildMaster' DB login to be used by this script for DB administration
+    0.24.2.0    : 25.01.2007    : added 'register.asp' target
+    0.24.1.0    : 22.01.2007    : added 'run.fxcop' target
+	0.24.0.1	: 14.11.2006	: added includeemptydirs="true" option when zipping build packages
+	0.24.0.0	: 24.10.2006	: migration to nant v0.85
+								: added check if 'DoxygenVersion' property exists
+								: renamed 'BuildDocDir' property to 'BuildCodeDocDir' and set it to a new name
+	0.23.0.0	: 19.10.2006	: added 'DoxygenVersion' property
+								: added .NET related shortcut propeties
+								: 'fxcop' target is now run before unit testing
+	0.22.1.0	: 18.10.2006	: added 'build.fxcop' target
+	0.22.0.0	: 04.10.2006	: unit tests are now run using NCover and NCoverExplorer tools; coverage report is integrated into CCNet
+	0.21.0.0	: 03.10.2006	: added optional calling of 'db.post' target
+	0.20.0.0	: 03.10.2006	: added try/finally block in fxcop target to ensure that the report file is copied to CCNet directory
+								  even in the event of failure
+								: done the same with unit tests
+	0.19.0.1	: 26.09.2006	: fixed problems with unit test results not showing in CCNet
+	0.19.0.0	: 15.09.2006	: renamed 'pre.compile' to 'compile.pre', added new 'compile.post' target
+								: updated (corrected) xml namespace
+	0.18.0.0	: 13.09.2006	: implemented 'test.run' functional target and replaced old 'test' target with the new more flexible one
+	0.17.2.0	: 11.09.2006	: implemented checking whether FxCop generated report file, in order to support FailIfFxCopFails
+	0.17.1.1	: 08.09.2006	: added creation of build dir in clean.build target
+    0.17.1.0    : 31.08.2006    : renamed 'ProjectStartDate' property to 'ReleaseStartDate'
+    0.17.0.0    : 30.08.2006    : FxCop project file is now used instead of just running without project file
+                                : added 'FailIfFxCopFails' property, removed 'AssembliesToFxCop' property
+                                : changed FxCop version from 1.32 to 1.35
+                                : added writing of unit test mode to the output
+                                : fixed a category list bug when running nunit console
+                                : fixed a problem when copying unit test results into CruiseControl directory (files weren't flattened)
+                                : changed the system of target dependencies, 'set.build.properties' is now called automatically by dependent
+                                  targets; new 'set.build.properties.custom' target is defined
+	0.16.1.0	: 25.08.2006	: added writing of CruiseControlRunning property value to the output for diagnostic purposes
+								: fixed problems with CruiseControlRunning property - it wasn't checked properly
+	0.16.0.0	: 25.08.2006	: added writing of NAntCommon.build version number to the output (NAntCommonVersion property)
+								: renamed 'prepare.build' target to 'copy.deliverables'
+    0.15.0.0    : 22.08.2006    : added 'MsiPackageFileName' property and conditional shipping of MSI packages
+                                : renamed 'zip.build' target to 'package.build'
+                                : added 'DoUseFixedBuildDir' to set the build directory name option
+	0.14.0.0	: 21.08.2006	: moved 'prepare.build' target to the end of the build process because other targets have to run before it
+								  (for example documentation targets, because docs are be copied as part of prepare.build)
+								: moved creation of 'BuildDocDir' property to the beginning of the build
+    0.13.0.1    : 16.08.2006    : fixed a bug when copying to CCNet directory - there wasn't an if clause for conditional copying of
+                                  upgrade package
+	0.13.0.0	: 14.08.2006	: unit test results are now generated in CCNet directory and then copied to the build dir
+								  this way unit test results can be seen in the CCNet build report even if the build fails
+								  NOTE: this still does not work, research into CCNet is needed
+								: added a special NUnit category ("NoCCNet") for unit test which should not run as part
+								  of CCNet builds
+								: added a special NUnit category ("NoNAnt") for unit test which should not run as part
+								  of NAnt builds								
+								: separated unit testing when running within/without CCNet
+								: fixed problems with boolean operators ('false', 'true')
+	0.12.0.0	: 11.08.2006	: moved 'prepare.build' target to run after the 'test', to allow detection of failed
+								  builds as quickly as possible
+	0.11.1.1	: 10.08.2006	: moved WSDL directory from the build location to the source location (because of problems
+								  with generating WS client code)
+	0.11.1.0	: 07.08.2006	: fixed a problem with double SQL restart
+								: added copying of upgrade package to the CruiseControl.NET artifact directory
+    0.11.0.1    : 28.07.2006    : updated docs.ndoc task to clean up previous generated files before generating new ones
+	0.11.0.0	: 24.07.2006	: integration with CruiseControl label
+								: scm.label is no longer part of the cc.build target, since labelling is done by CruiseControl itself
+	0.10.4.5	: 21.07.2006	: added support for multiple databases (DbNames property)
+	0.10.4.0	: 20.07.2006	: removed some targets which were added by mistake
+								: fixed bug with DbName property (db. targets weren't called)
+								: added default definitions for DbLoginId and DbPassword properties
+								: modified logic for working with SQL server and database
+								: added 'DbScriptsDir' property
+	0.10.3.1	: 12.07.2006	: added conditional generation of AssemblyInfo directives for assembly signing 
+                                  (new DoSignAssemblies property)
+    0.10.3.0    : 11.07.2006    : added conditional generation of AssemblyInfo directives for assembly signing (.NET 2.0 does
+                                  not use it)
+	0.10.2.0	: 11.07.2006	: replaced all slashes '/' in directory names with backslashes '\' (problems with VS6)
+	0.10.1.0	: 07.07.2006	: added publishing of doc directory contents into the CruiseControl artifact directory structure
+	0.10.0.1	: 05.07.2006	: replaced obsolete 'propertyexists' attribute
+    0.10.0.0    : 27.06.2006    : integration with nantcontrib-0.85-rc4, it is now compulsory
+                                : added 'ProjectStartDate' property
+                                : added automatic build versioning
+                                : removed 'nightly' build types
+                                : added publishing to CruiseControl artifact directory as "latest"
+                                : added storing of source control modifications report file from CruiseControl
+	0.9.1.1		: 21.06.2006	: added 'NUnitBin' property
+    0.9.1.0     : 16.06.2006    : added 'Do' properties for conditional execution of certain actions
+                                : added docs.db target
+                                : added shipping of upgrade zip package
+	0.9.0.1		: 15.06.2006	: fixed problem with solution build engine in 1.1
+
+-->
+
+<project name="NAnt Common" basedir="." xmlns="http://nant.sf.net/release/0.85/nant.xsd">
+
+    <property name="NAntCommonVersion" value="0.39.0.0"/>
+    <echo message="NAntCommon.build version: ${NAntCommonVersion}" />
+
+    <description>Common NAnt build script targets</description>
+    <fail unless="${framework::exists(framework::get-target-framework())}"/>
+
+    <loadtasks assembly=".\${NAntContribDir}\bin\NAnt.Contrib.Tasks.dll" />
+
+    <!-- create .NET system properties -->
+    <property name="NetTargetFw" value="${framework::get-target-framework()}"/>
+    <property name="NetAssemblyDir" value="${framework::get-assembly-directory(NetTargetFw)}"/>
+    <property name="NetSdkDir" value="${framework::get-sdk-directory(NetTargetFw)}"/>
+
+    <!-- PROJECT PROPERTIES ############################################################### -->
+
+    <target name="set.build.properties" description="sets the basic properties needed for other targets">
+        <fail if="${target::exists('pre.compile')}" message="Rename 'pre.compile' target to 'compile.pre'."/>
+        <fail unless="${property::exists('DoxygenVersion')}" message="'DoxygenVersion' property has not been set."/>
+
+        <!-- set BuildDate property to current date in format yyyy-MM-dd -->
+        <tstamp property="BuildDate" pattern="yyyy-MM-dd" />
+
+        <property name="ProjectConfig" value="Debug" unless="${property::exists('ProjectConfig')}"/>
+        <property name="ProjectReleaseType" value="dev" unless="${property::exists('ProjectReleaseType')}" />
+
+        <!-- determine if we are building with CCNet -->
+        <property name="CruiseControlRunning" value="${property::exists('CCNetLabel')}" />
+        <echo message="Property 'CruiseControlRunning'='${CruiseControlRunning}'" />
+
+        <!-- build version numbering -->
+
+        <!-- if building via CruiseControl -->
+        <if test="${CruiseControlRunning=='True'}">
+            <fail unless="${string::starts-with(CCNetLabel,ProjectId)}" message="Project label does not start with '${ProjectId}'." />
+
+            <property name="BuildVersion.version" value="${string::substring (CCNetLabel, string::get-length(ProjectId)+1, string::get-length(CCNetLabel) - string::get-length(ProjectId) - 1)}"/>
+            <property name="BuildVersion.major" value="${string::substring (BuildVersion.version, 0, string::index-of(BuildVersion.version, '.'))}"/>
+            <property name="Temp" value="${string::substring (BuildVersion.version, string::index-of(BuildVersion.version, '.') + 1, 4)}"/>
+            <property name="BuildVersion.minor" value="${string::substring (Temp, 0, string::index-of(BuildVersion.version, '.'))}"/>
+        </if>
+
+        <!-- if building outside CruiseControl -->
+        <if test="${CruiseControlRunning == 'False'}">
+            <!-- do this to get the user-defined major and minor versions -->
+            <copy file="${ProjectId}.ProjectVersion.txt" tofile="${ProjectId}.ProjectVersionTemp.txt" overwrite="true"/>
+            <attrib file="${ProjectId}.ProjectVersionTemp.txt" readonly="false"/>
+            <version
+                buildtype="MonthDay"
+				path="${ProjectId}.ProjectVersionTemp.txt"
+				prefix="TempBuildVersion"
+				revisiontype="Increment"
+				startdate="${ReleaseStartDate}"
+			/>
+            <delete file="${ProjectId}.ProjectVersionTemp.txt" />
+
+            <!-- do this to get the automatic build and revision numbers -->
+            <!-- first check if the revision number should be reset to 0 (by deleting the current build version file -->
+            <if test="${file::exists(ProjectId + '.CurrentBuildVersion.txt') == true}">
+                <delete file="${ProjectId}.CurrentBuildVersion.txt"
+						unless="${datetime::get-day-of-year (file::get-last-write-time(ProjectId + '.CurrentBuildVersion.txt'))==datetime::get-day-of-year(datetime::now())}"/>
+            </if>
+            <if test="${file::exists(ProjectId + '.CurrentBuildVersion.txt') == false}">
+                <copy file="${ProjectId}.ProjectVersion.txt" tofile="${ProjectId}.CurrentBuildVersion.txt"/>
+                <attrib file="${ProjectId}.CurrentBuildVersion.txt" readonly="false"/>
+            </if>
+            <version
+				buildtype="MonthDay"
+				path="${ProjectId}.CurrentBuildVersion.txt"
+				prefix="BuildVersion"
+				revisiontype="Increment"
+				startdate="${ReleaseStartDate}"
+			/>
+
+            <!-- merge into a single version -->
+            <property name="BuildVersion.major" value="${TempBuildVersion.major}"/>
+            <property name="BuildVersion.minor" value="${TempBuildVersion.minor}"/>
+            <property name="BuildVersion.version" value="${BuildVersion.major}.${BuildVersion.minor}.${BuildVersion.build}.${BuildVersion.revision}"/>
+        </if>
+
+        <property name="CruiseControlDir" value="${BuildRoot}\CruiseControl" />
+
+        <echo message="ProjectReleaseType=${ProjectReleaseType}" />
+
+        <property name="FullBuildVersion" value="${BuildVersion.version + if(ProjectReleaseType == 'release', '', '-' + ProjectReleaseType)}" dynamic="true" />
+        <echo message="Project full build version: ${FullBuildVersion}" />
+        <property name="FullBuildName" value="${ProjectId}-${FullBuildVersion}"/>
+        <property name="MajorMinorBuildName" value="${ProjectId}-${BuildVersion.major}.${BuildVersion.minor}"/>
+
+        <!-- should we use a fixed build directory or vary it according to the build label? -->
+        <!-- the default option is a fixed build directory -->
+        <property name="DoUseFixedBuildDir" value="true" unless="${property::exists('DoUseFixedBuildDir')}" />
+        <if test="${DoUseFixedBuildDir}">
+            <property name="BuildDir" value="${BuildRoot}\${ProjectId}" />
+        </if>
+        <if test="${not DoUseFixedBuildDir}">
+            <property name="BuildDir" value="${BuildRoot}\${FullBuildName}" />
+        </if>
+
+        <!-- set this property if it has not been set in the command line -->
+        <property name="BuildPostStage1" value="False" unless="${property::exists('BuildPostStage1')}" />
+
+        <property name="TempDir" value="${BuildDir}\temp" />
+        <property name="WsdlDir" value="wsdl" />
+        <property name="DoxygenProjectFile" value="${ProjectId}.doxy" />
+
+        <property name="IsFullRebuild" value="false"/>
+
+        <property name="CurrentYear" value="${datetime::get-year(datetime::now())}" />
+
+        <echo message="Build dir will be: ${BuildDir}" />
+
+        <property name="BuildCodeDocDir" value="${BuildDir}\codedoc" />
+
+        <property name="ZipLevel" value="6"/>
+
+        <call target="set.build.properties.custom"/>
+    </target>
+
+    <!-- BUILDS ############################################################### -->
+
+    <target name="rebuild" description="rebuilds the whole project"
+		depends="set.build.properties, clean.build, clean.output, compile, fxcop, test.unit, db.prepare, test.integration, test.merge.coverage, code.stats, docs.ndoc, docs.sandcastle, docs.doxygen, docs.db, copy.deliverables, package.build" />
+
+    <target name="rebuild.stage1" description="rebuilds the whole project, staged, stage 1"
+		depends="set.build.properties, clean.build, clean.output, compile, fxcop, test.unit, test.merge.coverage, copy.deliverables, package.build" />
+
+    <target name="rebuild.stage2" description="rebuilds the whole project, staged, stage 2"
+		depends="db.prepare, test.integration, test.merge.coverage, code.stats, docs.ndoc, docs.sandcastle, docs.doxygen, docs.db" />
+
+    <target name="build.fxcop" description="builds the project quickly and runs fxcop"
+		depends="set.build.properties, compile, fxcop"/>
+
+    <target name="cc.build" description="CruiseControl build"
+		depends="set.build.properties, rebuild, cc.publish.build" />
+
+    <target name="cc.build.stage1" description="CruiseControl staged build, stage 1"
+		depends="rebuild.stage1, cc.publish.build" />
+
+    <target name="cc.build.stage2" description="CruiseControl staged build, stage 1"
+		depends="rebuild.stage2, cc.publish.build" />
+
+    <target name="build.quick" description="rebuilds the whole project"
+		depends="set.build.properties, clean.build, compile, copy.deliverables, package.build" />
+
+    <!-- CLEANUP ############################################################### -->
+
+    <target name="clean.build" description="cleans the build directories" depends="set.build.properties, clean.shadowcache">
+        <!-- delete the whole build dir -->
+        <echo message="Deleting build dir ${BuildDir}"/>
+        <delete dir="${BuildDir}" if="${directory::exists(BuildDir)}" />
+        <delete dir="${CruiseControlDir}" if="${directory::exists(CruiseControlDir)}" />
+        <mkdir dir="${BuildDir}" />
+    </target>
+
+    <target name="clean.output" description="cleans the output files of assemblies" depends="set.build.properties, iis.restart">
+        <property name="IsFullRebuild" value="true" overwrite="true"/>
+
+        <!-- delete binaries and other stuff from project files -->
+        <echo message="Deleting project binaries and object files"/>
+        <delete>
+            <fileset refid="OutputDirsToClean"/>
+        </delete>
+    </target>
+
+    <target name="clean.shadowcache" description="deletes assembly shadow copy cache">
+        <echo message="Deleting assembly shadow copy cache" />
+        <delete failonerror="false">
+            <fileset basedir="${environment::get-variable('USERPROFILE')}\Local Settings\Application Data\assembly">
+                <include name="**"/>
+                <exclude name="**\*Microsoft*"/>
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset basedir="${environment::get-variable('USERPROFILE')}\Local Settings\Temp\nunit20\ShadowCopyCache">
+                <include name="**"/>
+                <exclude name="**\*Microsoft*"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- COMPILATION ############################################################### -->
+
+    <target name="create.common.assemblyinfo" description="creates CommonAssemblyInfo.cs file" if="${CreateCommonAssemblyInfo}"
+            depends="set.build.properties" >
+        <!-- ensure CommonAssemblyInfo.cs is writable if it already exists -->
+        <attrib file="CommonAssemblyInfo.cs" readonly="false" if="${file::exists('CommonAssemblyInfo.cs')}" />
+        <!-- generate the source file holding the common assembly-level attributes -->
+        <asminfo output="CommonAssemblyInfo.cs" language="CSharp">
+            <imports>
+                <import namespace="System.Reflection" />
+            </imports>
+            <attributes>
+                <attribute type="AssemblyConfigurationAttribute" value="${ProjectReleaseType}" />
+                <attribute type="AssemblyCompanyAttribute" value="${CompanyName}" />
+                <attribute type="AssemblyProductAttribute" value="${ProjectTitle}" />
+                <attribute type="AssemblyCopyrightAttribute" value="Copyright (C) 2007-${CurrentYear} ${CompanyName}" />
+                <attribute type="AssemblyTrademarkAttribute" value="" />
+                <attribute type="AssemblyCultureAttribute" value="" />
+                <attribute type="AssemblyFileVersionAttribute" value="${BuildVersion.version}" />
+                <attribute type="AssemblyInformationalVersionAttribute" value="${BuildVersion.major}.${BuildVersion.minor}" />
+                <attribute type="AssemblyDelaySignAttribute" value="false" />
+                <attribute type="AssemblyKeyNameAttribute" value="" />
+            </attributes>
+        </asminfo>
+    </target>
+
+    <target name="compile" description="compiles the code and copies it into the build directory"
+		depends="set.build.properties,create.common.assemblyinfo">
+        <if test="${target::exists('compile.pre')}">
+            <call target="compile.pre"/>
+        </if>
+
+        <if test="${property::exists('BuildEngine')}">
+            <if test="${NetTargetFw == 'net-1.1'}">
+                <if test="${BuildEngine == 'solution'}">
+                    <solution solutionfile="${ProjectId}.sln" configuration="${ProjectConfig}" />
+                </if>
+                <if test="${BuildEngine != 'solution'}">
+                    <fail message="Build engine ${BuildEngine} is currently not supported on this platform."/>
+                </if>
+            </if>
+            <if test="${NetTargetFw == 'net-2.0'}">
+                <if test="${BuildEngine == 'devenv'}">
+                    <if test="${IsFullRebuild}">
+                        <property name="BuildOption" value="/Rebuild"/>
+                    </if>
+                    <if test="${not IsFullRebuild}">
+                        <property name="BuildOption" value="/Build"/>
+                    </if>
+
+                    <exec program="C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\devenv.exe" verbose="true">
+                        <arg value="${ProjectId}.sln"/>
+                        <arg value="${BuildOption}"/>
+                        <arg value="${ProjectConfig}"/>
+                        <arg value="/Out"/>
+                        <arg value=".\${ProjectId}.build.log"/>
+                        <arg value="/Log"/>
+                        <arg value=".\${ProjectId}.devenv.log"/>
+                        <arg value="/SafeMode"/>
+                    </exec>
+                </if>
+                <if test="${BuildEngine == 'MSBuild'}">
+                    <exec program="${NetAssemblyDir}\msbuild.exe">
+                        <arg value="${ProjectId}.sln"/>
+                        <arg value="/p:Configuration=${ProjectConfig}"/>
+                        <arg value="/consoleloggerparameters:NoSummary"/>
+                    </exec>
+                </if>
+            </if>
+        </if>
+
+        <if test="${target::exists('compile.post')}">
+            <call target="compile.post"/>
+        </if>
+    </target>
+
+    <target name="copy.deliverables" description="copies all project deliverables to the build directory" depends="set.build.properties" >
+        <!-- copy source control modifications report file -->
+        <if test="${property::exists('CCNetArtifactDirectory')}">
+            <copy file="${CCNetArtifactDirectory}\mods.xml" tofile="${BuildDir}\History\Modifications.xml"/>
+        </if>
+
+        <call target="copy.deliverables.custom"/>
+    </target>
+
+    <target name="copy.web.files" description="(internal) copies web files from source to the destination">
+        <copy todir="${copy.web.files.destination}" overwrite="true">
+            <fileset basedir="${copy.web.files.source}">
+                <include name="**\*.asax" />
+                <include name="**\*.aspx" />
+                <include name="**\*.ascx" />
+                <include name="**\*.asmx" />
+                <include name="**\*.master" />
+                <include name="**\*.css" />
+                <include name="**\*.gif" />
+                <include name="**\*.js" />
+                <include name="**\*.htm" />
+                <include name="**\*.config" />
+                <include name="**\*.build" />
+                <include name="**\Resources.resources" />
+                <include name="**\Resources.resx" />
+                <include name="**\*.xslt" />
+                <include name="**\*.txt" />
+                <include name="bin\**"/>
+
+                <exclude name="**\*.log"/>
+                <exclude name="**\*.FileList.txt"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- TESTING ############################################################### -->
+
+    <target name="test.unit" description="test the code with unit tests" depends="set.build.properties"
+		if="${target::exists('test.unit.custom')}">
+        <property name="UnitTestEngine" value="NUnit" unless="${property::exists('UnitTestEngine')}"/>
+        <call target="test.unit.custom"/>
+
+        <property name="HaveAnyTestsRun" value="True"/>
+    </target>
+
+    <target name="test.integration" description="test the code with integration tests" depends="set.build.properties"
+		if="${target::exists('test.integration.custom')}">
+        <property name="UnitTestEngine" value="NUnit" unless="${property::exists('UnitTestEngine')}"/>
+
+        <call target="test.integration.custom"/>
+
+        <property name="HaveAnyTestsRun" value="True"/>
+    </target>
+
+    <target name="test.merge.coverage" if="${target::has-executed('test.unit') or target::has-executed('test.integration')}">
+        <exec
+			program="lib\NCoverExplorer-${NCoverExplorerVersion}\NCoverExplorer.Console.exe"
+			workingdir=".">
+            <arg value="${UnitTestResultsDir}\*-coverage.xml"/>
+            <arg value="/x:${CruiseControlDir}\CoverMerge.xml"/>
+            <arg value="/r:5"/>
+            <arg value="/p:${ProjectId}"/>
+        </exec>
+    </target>
+
+    <!-- AssemblyToTest: path to the assembly which contains test code -->
+    <!-- IncludeTestCategories: -->
+    <!-- ExcludeTestCategories: -->
+    <target name="test.run" description="runs test on a specified assembly">
+        <!-- initialize unit test report file name -->
+        <property name="UnitTestResultsFile" value="" unless="${property::exists('UnitTestResultsFile')}" />
+        <!-- increment unit test report file name -->
+        <property name="UnitTestResultsFile" value="${UnitTestResultsFile}X" />
+
+        <property name="CompleteExcludeTestCategories" value="NoNAnt"/>
+
+        <if test="${property::exists('ExcludeTestCategories') and string::get-length(ExcludeTestCategories) > 0}">
+            <property name="CompleteExcludeTestCategories" value="${CompleteExcludeTestCategories},${ExcludeTestCategories}"/>
+        </if>
+
+        <if test="${CruiseControlRunning == 'True'}">
+            <echo message="Running unit tests in CCNet mode"/>
+            <property name="CompleteExcludeTestCategories" value="${CompleteExcludeTestCategories},NoCCNet"/>
+        </if>
+
+        <property name="UnitTestResultsDir" value="${BuildDir}\UnitTestResults" />
+        <!-- unit test results directory has to exist before runing NUnit, otherwise the build will fail -->
+        <mkdir dir="${UnitTestResultsDir}" unless="${directory::exists(UnitTestResultsDir)}" />
+
+        <!-- this dll has to be registered, otherwise NCover will fail -->
+        <exec program="regsvr32">
+            <arg value="lib\NCover v${NCoverVersion}\CoverLib.dll"/>
+            <arg value="/s"/>
+            <!-- silent -->
+        </exec>
+       
+        <trycatch>
+            <try>
+                <if test="${NoCoverage == 'True'}">
+                    <if test="${UnitTestEngine=='NUnit'}">
+                        <exec
+                            program="${NUnitBin}\nunit-console.exe"
+                            workingdir=".">
+                            <arg value="${AssemblyToTest}"/>
+                            <arg value="/xml=${UnitTestResultsDir}\${UnitTestResultsFile}-results.xml" />
+                            <arg value="/noshadow"/>
+                            <arg value="/include=${IncludeTestCategories}"
+                                if="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}" />
+                            <arg value="/exclude=${CompleteExcludeTestCategories}"
+                                unless="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}"  />
+                        </exec>
+                    </if>
+
+                    <if test="${UnitTestEngine=='MbUnit'}">
+                        <mkdir dir="${CruiseControlDir}"/>
+
+                        <exec
+                            program="${MbUnitBin}\MbUnit.Cons.exe">
+                            <arg value="${AssemblyToTest}"/>
+                            <arg value="/report-folder:${UnitTestResultsDir}"/>
+                            <arg value="/report-name-format:${UnitTestResultsFile}-results" />
+                            <arg value="/report-type:xml"/>
+                            <arg value="/filter-category:${IncludeTestCategories}"
+                                if="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}" />
+                            <arg value="/exclude-category:${CompleteExcludeTestCategories}"
+                                unless="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}"  />
+                            <arg value="/verbose"/>
+                        </exec>
+                    </if>
+                </if>
+
+                <if test="${NoCoverage != 'True'}">
+                    <if test="${UnitTestEngine=='NUnit'}">
+                        <exec
+                            program="lib\NCover v${NCoverVersion}\ncover.console.exe"
+                            workingdir=".">
+                            <arg value="${NUnitBin}\nunit-console.exe"/>
+                            <arg value="${AssemblyToTest}"/>
+                            <arg value="/xml=${UnitTestResultsDir}\${UnitTestResultsFile}-results.xml" />
+                            <arg value="/noshadow"/>
+                            <arg value="/include=${IncludeTestCategories}"
+                                if="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}" />
+                            <arg value="/exclude=${CompleteExcludeTestCategories}"
+                                unless="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}"  />
+                            <arg value="//x"/>
+                            <arg value="${UnitTestResultsDir}\${UnitTestResultsFile}-coverage.xml"/>
+                            <arg value="//ea"/>
+                            <arg value="NUnit.Framework.TestFixtureAttribute"/>
+                        </exec>
+                    </if>
+
+                    <if test="${UnitTestEngine=='MbUnit'}">
+                        <mkdir dir="${CruiseControlDir}"/>
+
+                        <exec
+                            program="lib\NCover v${NCoverVersion}\ncover.console.exe">
+                            <arg value="${MbUnitBin}\MbUnit.Cons.exe"/>
+                            <arg value="${AssemblyToTest}"/>
+                            <arg value="/report-folder:${UnitTestResultsDir}"/>
+                            <arg value="/report-name-format:${UnitTestResultsFile}-results" />
+                            <arg value="/report-type:xml"/>
+                            <arg value="/filter-category:${IncludeTestCategories}"
+                                if="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}" />
+                            <arg value="/exclude-category:${CompleteExcludeTestCategories}"
+                                unless="${property::exists('IncludeTestCategories') and string::get-length(IncludeTestCategories) > 0}"  />
+                            <arg value="/verbose"/>
+                            <arg value="//x"/>
+                            <arg value="${UnitTestResultsDir}\${UnitTestResultsFile}-coverage.xml"/>
+                            <arg value="//ea"/>
+                            <arg value="MbUnit.Framework.TestFixtureAttribute"/>
+                            <arg value="//w"/>
+                            <arg value="${path::get-directory-name (AssemblyToTest)}"/>
+                            <arg value="//v"/>
+                        </exec>
+                    </if>
+                </if>
+            </try>
+
+            <finally>
+                <!-- copy results to CruiseControl dir -->
+                <copy todir="${CruiseControlDir}">
+                    <fileset basedir="${UnitTestResultsDir}">
+                        <include name="*-results.xml" />
+                        <include name="*-coverage.xml" />
+                    </fileset>
+                </copy>
+
+                <!-- unregister coverage libaries -->
+                <exec program="regsvr32">
+                    <arg value="lib\NCover v${NCoverVersion}\CoverLib.dll"/>
+                    <arg value="/s"/>
+                    <!-- silent -->
+                    <arg value="/u"/>
+                    <!-- unregister -->
+                </exec>
+            </finally>
+        </trycatch>
+    </target>
+
+    <!-- SOURCE CODE ANALYSIS ############################################################### -->
+
+    <target name="code.stats" description="generates source code statistics (lines of code)" depends="set.build.properties">
+        <!-- first run SolutionMaster console to get the list of all source files -->
+        <exec program="lib\SolutionMaster\SolutionMaster.Console.exe">
+            <arg file="${ProjectSolutionFile}"/>
+            <arg value="-listsourcefiles"/>
+            <arg value="-o"/>
+            <arg value="SourceFilesList.txt"/>
+        </exec>
+        
+        <!-- now run codestats on this list -->
+        <codestats output="${BuildDir}\CodeStats.xml"
+			buildname="${FullBuildName}">
+            <counts>
+                <count label="C#">
+                    <fileset>
+                        <includesfile name="SourceFilesList.txt"/>
+                    </fileset>
+                </count>
+            </counts>
+        </codestats>
+
+        <!-- copy results to CruiseControl dir -->
+        <copy todir="${CruiseControlDir}">
+            <fileset basedir="${BuildDir}">
+                <include name="CodeStats.xml" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- FxCop -->
+    <target name="fxcop" description="executes FxCop on the project" if="${DoFxCop}" depends="set.build.properties">
+        <trycatch>
+            <try>
+                <!-- now run FxCop -->
+                <exec program=".\lib\Microsoft FxCop ${FxCopVersion}\FxCopCmd.exe" failonerror="${FailIfFxCopFails}">
+                    <arg value="/project:${ProjectId}.FxCop"/>
+                    <arg value="/out:${BuildDir}\${ProjectId}.FxCopReport.xml" />
+                    <arg value="/dictionary:CustomDictionary.xml" />
+                    <arg value="/ignoregeneratedcode" />
+                </exec>
+
+                <!-- check if report file was generated, and fail if it is, since this means that FxCop found violations -->
+                <!-- (but fail only if FailIfFxCopFails property is true -->
+                <!-- for more info see http://forums.microsoft.com/MSDN/ShowPost.aspx?PostID=514908&SiteID=1 -->
+                <fail if="${file::exists(BuildDir + '\' + ProjectId + '.FxCopReport.xml') and FailIfFxCopFails}"
+					message="FxCop analysis found violations in the code."/>
+            </try>
+            <catch>
+                <call target="run.fxcop" if="${CruiseControlRunning!='True'}"/>
+                <fail if="${CruiseControlRunning!='True'}"/>
+            </catch>
+            <finally>
+                <!-- copy results to CruiseControl build dir -->
+                <copy todir="${CruiseControlDir}">
+                    <fileset basedir="${BuildDir}">
+                        <include name="${ProjectId}.FxCopReport.xml" />
+                    </fileset>
+                </copy>
+            </finally>
+        </trycatch>
+    </target>
+
+    <target name="run.fxcop" description="runs FxCop Windows application and loads the project">
+        <exec program=".\lib\Microsoft FxCop ${FxCopVersion}\FxCop.exe" basedir=".">
+            <arg value=".\${ProjectId}.FxCop"/>
+        </exec>
+    </target>
+
+    <!-- SOURCE CODE DOCUMENTATION ############################################################### -->
+
+    <target name="docs.ndoc" description="generates source code documentation using NDoc" 
+            if="${property::exists('DoDocumentAssemblies') and DoDocumentAssemblies}" 
+            depends="set.build.properties">
+        <mkdir dir="${BuildCodeDocDir}" unless="${directory::exists(BuildCodeDocDir)}" />
+
+        <!-- delete output directory -->
+        <delete dir=".\doc\ndoc" if="${directory::exists('.\doc\ndoc')}" />
+        <!-- and create it again -->
+        <mkdir dir=".\doc\ndoc" />
+
+        <ndoc>
+            <assemblies refid="AssembliesToDocument"/>
+            <documenters>
+                <documenter name="MSDN">
+                    <property name="AssemblyVersionInfo" value="AssemblyVersion" />
+                    <property name="CleanIntermediates" value="True" />
+                    <property name="HtmlHelpName" value="${CompanyName} ${ProjectTitle}" />
+                    <property name="OutputDirectory" value=".\doc\ndoc" />
+                    <property name="SdkDocVersion" value="SDK_v1_1" />
+                    <property name="SdkLinksOnWeb" value="True" />
+                    <property name="Title" value="${CompanyName} ${ProjectTitle} Documentation" />
+                    <property name="UseNamespaceDocSummaries" value="True" />
+                    <property name="CopyrightText" value="(C) 2000-${CurrentYear} ${CompanyName}" />
+                    <property name="ProductName" value="${CompanyName} ${ProjectTitle}" />
+                    <property name="ProductVersion" value="${FullBuildVersion}" />
+                    <property name="Preliminary" value="${not(ProjectReleaseType == 'release')}" />
+
+                    <property name="IncludeFavourites" value="True" />
+                    <property name="DocumentAttributes" value="True" />
+                    <property name="ShowMissingParams" value="True" />
+                    <property name="ShowMissingReturns" value="True" />
+                    <property name="ShowMissingSummaries" value="True" />
+                    <property name="ShowMissingValues" value="True" />
+                    <property name="DocumentExplicitInterfaceImplementations" value="True" />
+                </documenter>
+            </documenters>
+        </ndoc>
+
+        <!-- zip docs and copy them to the build dir-->
+        <zip zipfile="${BuildCodeDocDir}\ndoc.zip" ziplevel="${ZipLevel}">
+            <fileset basedir=".\doc\ndoc">
+                <include name="**" />
+            </fileset>
+        </zip>
+    </target>
+
+    <target name="docs.sandcastle" description="generates source code documentation using Sandcastle" 
+            if="${property::exists('DoDocumentAssembliesUsingSandcastle') and DoDocumentAssembliesUsingSandcastle}" 
+            depends="set.build.properties">
+        <mkdir dir="${BuildCodeDocDir}" unless="${directory::exists(BuildCodeDocDir)}" />
+
+        <!-- delete output directory -->
+        <delete dir=".\doc\sandcastle" if="${directory::exists('.\doc\sandcastle')}" />
+        <!-- and create it again -->
+        <mkdir dir=".\doc\sandcastle" />
+
+        <exec program="lib\Sandcastle Help File Builder\SandcastleBuilderConsole.exe">
+            <arg file="Hsl.Ganesha.shfb"/>
+            <arg value="-SandcastlePath=lib\Sandcastle"/>
+            <arg value="-OutputPath=doc\sandcastle"/>
+            <!--<arg value="-verbose"/>-->
+        </exec>
+
+        <!-- zip docs and copy them to the build dir-->
+        <zip zipfile="${BuildCodeDocDir}\sandcastle.zip" ziplevel="${ZipLevel}">
+            <fileset basedir=".\doc\sandcastle">
+                <include name="**" />
+            </fileset>
+        </zip>
+    </target>
+
+    <target name="docs.doxygen" description="generates source code documentation using doxygen tool"
+			if="${file::exists(DoxygenProjectFile)}" depends="set.build.properties">
+
+        <mkdir dir="${BuildCodeDocDir}" unless="${directory::exists(BuildCodeDocDir)}" />
+
+        <property name="DoxygenDocDir" value=".\doc\doxygen" />
+
+        <!-- first prepare output directory -->
+        <mkdir dir="${DoxygenDocDir}" unless="${directory::exists(DoxygenDocDir)}" />
+        <delete dir="${DoxygenDocDir}" includeemptydirs="true" if="${directory::exists(DoxygenDocDir)}" failonerror="false" />
+
+        <exec program=".\lib\doxygen-${DoxygenVersion}\bin\doxygen.exe">
+            <arg value="${DoxygenProjectFile}" />
+        </exec>
+
+        <!-- zip docs and copy them to the build dir-->
+        <zip zipfile="${BuildCodeDocDir}\doxygen.zip" ziplevel="${ZipLevel}">
+            <fileset basedir=".\doc\doxygen">
+                <include name="**" />
+            </fileset>
+        </zip>
+    </target>
+
+    <target name="docs.db" if="${file::exists('.\lib\CodeSmith\v2.6\codesmithconsole.exe') and file::exists('.\lib\CodeSmith\DBDocumenter\master.cst')}"
+            depends="set.build.properties">
+        <mkdir dir="${BuildCodeDocDir}" unless="${directory::exists(BuildCodeDocDir)}" />
+
+        <property name="DbDocDir" value=".\doc\db" />
+
+        <mkdir dir="${DbDocDir}" unless="${directory::exists(DbDocDir)}" />
+
+        <exec program=".\lib\CodeSmith\v2.6\codesmithconsole.exe">
+            <arg value="/t:.\lib\CodeSmith\DBDocumenter\master.cst" />
+            <arg value="/p:${ProjectId}.DBDocumenter_properties.xml" />
+        </exec>
+
+        <!-- copy images and CSS from the DBDocumenter folder -->
+        <copy todir="${DbDocDir}">
+            <fileset basedir=".\lib\CodeSmith\DBDocumenter\output\">
+                <include name="**" />
+            </fileset>
+        </copy>
+
+        <!-- zip docs and copy them to the build dir-->
+        <zip zipfile="${BuildCodeDocDir}\db.zip" ziplevel="${ZipLevel}">
+            <fileset basedir="${DbDocDir}">
+                <include name="**\*"/>
+            </fileset>
+        </zip>
+    </target>
+
+    <!-- BUILD PACKAGING AND PUBLISHING ############################################################### -->
+
+    <target name="clean.temp" description="cleans the build's temporary directory">
+        <delete dir="${TempDir}" if="${directory::exists(TempDir)}" />
+    </target>
+
+    <target name="package.build" description="packages the build files" depends="set.build.properties,clean.temp">
+        <zip zipfile="${BuildDir}\${FullBuildName}.zip" ziplevel="${ZipLevel}" includeemptydirs="true">
+            <fileset refid="ShippedStuff"/>
+        </zip>
+
+        <!-- create upgrade package -->
+        <zip zipfile="${BuildDir}\${FullBuildName}_Upgrade.zip" ziplevel="${ZipLevel}" includeemptydirs="true" if="${DoShipUpgrade}">
+            <fileset refid="ShippedUpgradeStuff"/>
+        </zip>
+
+        <!-- copy MSI package to the build root -->
+        <if test="${property::exists('MsiPackageFileName')}">
+            <copy file="${BuildDir}\setup\${MsiPackageFileName}" todir="${BuildRoot}" overwrite="true" />
+        </if>
+    </target>
+
+    <target name="cc.publish.build" description="publishes the build zip to the CruiseControl project artifact directory" 
+            depends="set.build.properties">
+        <property name="CCNetArtifactDirectoryVersionSubdir" value="${path::combine (CCNetArtifactDirectory, MajorMinorBuildName)}"/>
+        <mkdir dir="${CCNetArtifactDirectoryVersionSubdir}" unless="${directory::exists(CCNetArtifactDirectoryVersionSubdir)}"/>
+
+        <!-- do this only if this is not a first stage of a staged build -->
+        <if test="${BuildPostStage1 != 'True'}">
+            <copy file="${BuildDir}\${FullBuildName}.zip" todir="${CCNetArtifactDirectoryVersionSubdir}" overwrite="true" />
+            <copy file="${BuildDir}\${FullBuildName}.zip" tofile="${CCNetArtifactDirectory}\${ProjectId}-latest.zip" overwrite="true" />
+            <if test="${DoShipUpgrade}">
+                <copy file="${BuildDir}\${FullBuildName}_Upgrade.zip" todir="${CCNetArtifactDirectoryVersionSubdir}" overwrite="true" />
+                <copy file="${BuildDir}\${FullBuildName}_Upgrade.zip" tofile="${CCNetArtifactDirectory}\${ProjectId}_Upgrade-latest.zip" overwrite="true" />
+            </if>            
+
+            <!-- ship MSI package -->
+            <if test="${property::exists('MsiPackageFileName')}">
+                <copy file="${BuildDir}\setup\${MsiPackageFileName}" todir="${CCNetArtifactDirectory}" overwrite="true" />
+            </if>
+        </if>
+
+        <!-- copy code docs to the CruiseControl artifact directory -->
+        <if test="${property::exists('CCNetArtifactDirectory')}">
+            <property name="CCNetArtifactDocDirectory" value="${CCNetArtifactDirectory}\doc" />
+            <delete dir="${CCNetArtifactDocDirectory}" if="${directory::exists(CCNetArtifactDocDirectory)}" failonerror="false" />
+            <copy todir="${CCNetArtifactDocDirectory}">
+                <fileset basedir=".\doc">
+                    <include name="**" />
+                </fileset>
+            </copy>
+        </if>
+    </target>
+
+    <!-- MISCELLANEOUS ############################################################### -->
+
+    <target name="register.asp" description="registers target framework for this virtual directory">
+        <!-- register target framework for this virtual directory -->
+        <!-- http://blogs.msdn.com/solutions/Default.aspx?p=2 -->
+        <exec program="${framework::get-framework-directory(framework::get-target-framework())}\aspnet_regiis.exe">
+            <arg value="-s"/>
+            <arg value="W3SVC/1/ROOT/${VirtualDirName}"/>
+        </exec>
+    </target>
+
+    <!-- SOURCE CONTROL ############################################################### -->
+
+    <target name="scm.label" description="labels the source code in the ClearCase" depends="set.build.properties">
+        <ccmklbtype typename="${FullBuildName}" />
+        <ccmklabel
+            typename="${FullBuildName}"
+            recurse="true"
+            replace="true"
+            viewpath="."
+            />
+    </target>
+
+    <target name="scm.lock.label"
+		description="Changes build label state to 'obsolete'."
+		unless="${property::exists('CCNetIntegrationStatus') and CCNetIntegrationStatus!='Success'}">
+        <fail
+			message="Target requires property 'ClearCaseVob'."
+			unless="${property::exists('ClearCaseVob')}" />
+        <fail
+			message="Target requires property 'CCNetLabel'."
+			unless="${property::exists('CCNetLabel')}" />
+        <cclock
+			objsel="lbtype:${CCNetLabel}@\${ClearCaseVob}"
+			obsolete="true" />
+    </target>
+
+    <!-- DATABASE ############################################################### -->
+
+    <target name="db.prepare" description="prepares the project database" if="${DoPrepareDb}" depends="db.set.properties">
+        <call target="db.create"/>
+
+        <if test="${target::exists('db.post')}">
+            <call target="db.post"/>
+        </if>
+    </target>
+
+    <target name="db.create" description="creates the database using SQL scripts">
+        <foreach item="String" property="DbName" delim="," in="${DbNames}" trim="Both">
+            <do>
+                <property name="ScriptDBName" value="${DbName}"/>
+                <property name="ScriptDBUserName" value="${DbName}_User"/>
+                <property name="ScriptDBUserPassword" value="trabant"/>
+                
+                <copy
+                    todir="${DbScriptsDir}\expanded\"
+                    overwrite="true">
+                    <fileset basedir="${DbScriptsDir}">
+                        <include name="${DbName}.*.sql"/>
+                    </fileset>
+                    <filterchain>
+                        <expandproperties />
+                    </filterchain>
+                </copy>                
+
+                <!-- create database -->
+                <echo message="Creating database ${DbName}"/>
+                <exec program="C:\Program Files\Microsoft SQL Server\90\Tools\Binn\osql.exe" commandline="-U ${DbLoginId} -P ${DbPassword} -i ${DbScriptsDir}\expanded\${DbName}.CreateDatabase.sql" />
+                <exec program="C:\Program Files\Microsoft SQL Server\90\Tools\Binn\osql.exe" commandline="-U ${DbLoginId} -P ${DbPassword} -d ${DbName} -i ${DbScriptsDir}\expanded\${DbName}.DbScript.sql" />
+            </do>
+        </foreach>
+    </target>
+
+    <target name="db.set.properties" description="sets the default values for DB-related properties if these have not been set before">
+        <property name="DbLoginId" value="BuildMaster" unless="${property::exists('DbLoginId')}"/>
+        <property name="DbPassword" value="masterbuild" unless="${property::exists('DbPassword')}"/>
+    </target>
+
+    <target name="sqlserver.restart" description="restarts the local SQL Server">
+        <echo message="Restarting SQL Server"/>
+        <servicecontroller action="Restart" service="MSSQLSERVER" timeout="30000"/>
+    </target>
+
+    <target name="sqlserver.start" description="starts the local SQL Server">
+        <echo message="Starting SQL Server"/>
+        <servicecontroller action="Start" service="MSSQLSERVER" timeout="30000"/>
+    </target>
+
+    <target name="iis.restart" description="restarts the local IIS" if="${RestartIis}">
+        <echo message="Restarting IIS"/>
+        <servicecontroller action="Restart" service="W3SVC" timeout="30000"/>
+    </target>
+
+    <!-- CUSTOM TASKS  ########################################################## -->
+
+    <script language="C#" prefix="Hsl.Brejc.NAntTasks." >
+        <code>
+            <![CDATA[
+    [TaskName("xslt")]
+    public class XsltTask : Task
+    {
+        [TaskAttribute ("inputfile", Required = true)]
+        public string InputFile
+        {
+            get { return inputFile; }
+            set { inputFile = value; }
+        }
+
+        [TaskAttribute ("outputfile", Required = true)]
+        public string OutputFile
+        {
+            get { return outputFile; }
+            set { outputFile = value; }
+        }
+
+        [TaskAttribute ("xsltfile", Required = true)]
+        public string XsltFile
+        {
+            get { return xsltFile; }
+            set { xsltFile = value; }
+        }
+
+        protected override void ExecuteTask ()
+        {
+            XsltSettings xsltSettings = new XsltSettings (true, true);
+            XmlDocument xsltDoc = new XmlDocument();
+            xsltDoc.Load (xsltFile);
+
+            XmlUrlResolver resolver = new XmlUrlResolver ();
+            XslCompiledTransform transform = new XslCompiledTransform (true);
+            transform.Load (xsltDoc, xsltSettings, resolver);
+
+            using (Stream inputStream = File.Open (inputFile, FileMode.Open, FileAccess.Read))
+            {
+                XmlReader reader = XmlReader.Create (inputStream);
+                using (XmlWriter writer = XmlWriter.Create (outputFile))
+                    transform.Transform (reader, writer);
+            }
+        }
+
+        private string inputFile;
+        private string outputFile;
+        private string xsltFile;
+    }
+              ]]>
+        </code>
+        <references>
+            <include name="System.Xml.dll" />
+        </references>
+        <imports>
+            <import namespace="System.IO" />
+            <import namespace="System.Xml" />
+            <import namespace="System.Xml.Xsl" />
+        </imports>
+    </script>
+</project>

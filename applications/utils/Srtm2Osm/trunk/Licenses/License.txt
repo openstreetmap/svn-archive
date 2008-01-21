@@ -1,0 +1,18 @@
+KOSMOS LICENSE
+---------------
+
+Kosmos is licensed by Igor Brejc under Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 Unported License
+(http://creativecommons.org/licenses/by-nc-nd/3.0).
+
+More on Kosmos: http://wiki.openstreetmap.org/index.php/Kosmos
+
+
+
+THIRD PARTY COMPONENTS & DATA LICENSES
+--------------------------------------
+- log4net library is licensed under Apache License version 2.0 (see log4net.LICENSE.txt)
+- Flee is licensed under the LGPL license (see Flee.license.txt)
+- OpenStreetMap data in .OSM files is licensed under the Creative Commons Attribution-ShareAlike 2.0 license 
+	(see http://wiki.openstreetmap.org/index.php/OpenStreetMap_License)
+- Crystal Clear icons are licensed under the LGPGL license (see http://commons.wikimedia.org/wiki/Crystal_Clear)
+- OpenLayers JavaScript library is licensed under the BSD license (see http://www.openlayers.org/)

@@ -1,0 +1,101 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmUtils.Framework</RootNamespace>
+    <AssemblyName>OsmUtils.Framework</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>OsmUtils.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\OsmUtils.Framework.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ciloci.Flee, Version=0.9.14.0, Culture=neutral, PublicKeyToken=c8526a021ef298ed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Flee-0.9.14.0\lib\Ciloci.Flee.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="data.osm.Designer.cs">
+      <DependentUpon>data.osm.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="ExpressionFunctions.cs" />
+    <Compile Include="ExpressionSelector.cs" />
+    <Compile Include="IOsmElementSelector.cs" />
+    <Compile Include="KeyValueSelector.cs" />
+    <Compile Include="MultipleKeyValueSelector.cs" />
+    <Compile Include="OsmDatabase.cs" />
+    <Compile Include="OsmElementSelectorException.cs" />
+    <Compile Include="OsmFeature.cs" />
+    <Compile Include="OsmNode.cs" />
+    <Compile Include="OsmObjectBase.cs" />
+    <Compile Include="OsmReferenceType.cs" />
+    <Compile Include="OsmRelation.cs" />
+    <Compile Include="OsmRelationMember.cs" />
+    <Compile Include="OsmRelationMemberReference.cs" />
+    <Compile Include="OsmSchema.cs" />
+    <Compile Include="OsmTag.cs" />
+    <Compile Include="OsmWay.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data.osm.xsc">
+      <DependentUpon>data.osm.xsd</DependentUpon>
+    </None>
+    <None Include="data.osm.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>data.osm.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="data.osm.xss">
+      <DependentUpon>data.osm.xsd</DependentUpon>
+    </None>
+    <None Include="data.osm.xsx">
+      <DependentUpon>data.osm.xsd</DependentUpon>
+    </None>
+    <None Include="OsmUtils.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brejc.Geometry\Brejc.Geometry.csproj">
+      <Project>{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}</Project>
+      <Name>Brejc.Geometry</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

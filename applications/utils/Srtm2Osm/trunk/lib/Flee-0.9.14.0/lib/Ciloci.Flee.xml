@@ -1,0 +1,1542 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Ciloci.Flee
+</name>
+</assembly>
+<members>
+<member name="M:Ciloci.Flee.ExpressionTokenizer.#ctor(System.IO.TextReader)">
+	<summary>Creates a new tokenizer for the specified input
+stream.</summary>
+	<param name="input">the input stream to read</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParserCreationException">if the tokenizer
+couldn't be initialized correctly</exception>
+</member><member name="M:Ciloci.Flee.ExpressionTokenizer.CreatePatterns">
+	<summary>Initializes the tokenizer by creating all the token
+patterns.</summary>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParserCreationException">if the tokenizer
+couldn't be initialized correctly</exception>
+</member><member name="T:Ciloci.Flee.ExpressionTokenizer">
+	<remarks>A character stream tokenizer.</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionParser.SynteticPatterns">
+	<summary>An enumeration with the generated production node
+identity constants.</summary>
+</member><member name="M:Ciloci.Flee.ExpressionParser.#ctor(System.IO.TextReader)">
+	<summary>Creates a new parser.</summary>
+	<param name="input">the input stream to read from</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParserCreationException">if the parser
+couldn't be initialized correctly</exception>
+</member><member name="M:Ciloci.Flee.ExpressionParser.#ctor(System.IO.TextReader,PerCederberg.Grammatica.Runtime.Analyzer)">
+	<summary>Creates a new parser.</summary>
+	<param name="input">the input stream to read from</param>
+	<param name="analyzer">the analyzer to parse with</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParserCreationException">if the parser
+couldn't be initialized correctly</exception>
+</member><member name="M:Ciloci.Flee.ExpressionParser.CreatePatterns">
+	<summary>Initializes the parser by creating all the production
+patterns.</summary>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParserCreationException">if the parser
+couldn't be initialized correctly</exception>
+</member><member name="T:Ciloci.Flee.ExpressionParser">
+	<remarks>A token stream parser.</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionConstants">
+	<remarks>An enumeration with token and production node
+constants.</remarks>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.Enter(PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.Exit(PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.Child(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterAdd(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitAdd(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterSub(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitSub(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterMul(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitMul(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterDiv(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitDiv(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterPower(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitPower(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterMod(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitMod(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterLeftParen(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitLeftParen(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterRightParen(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitRightParen(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterLeftBrace(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitLeftBrace(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterRightBrace(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitRightBrace(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterEq(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitEq(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterLt(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitLt(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterGt(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitGt(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterLte(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitLte(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterGte(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitGte(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterNe(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitNe(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterAnd(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitAnd(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterOr(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitOr(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterXor(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitXor(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterNot(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitNot(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterDot(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitDot(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterArgumentSeparator(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitArgumentSeparator(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterArrayBraces(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitArrayBraces(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterLeftShift(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitLeftShift(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterRightShift(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitRightShift(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterInteger(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitInteger(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterReal(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitReal(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterStringLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitStringLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterCharLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitCharLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterTrue(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitTrue(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterFalse(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitFalse(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterIdentifier(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitIdentifier(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterHexLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitHexLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterNullLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitNullLiteral(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterIf(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitIf(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterCast(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitCast(PerCederberg.Grammatica.Runtime.Token)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterXorExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitXorExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildXorExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterOrExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitOrExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildOrExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterAndExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitAndExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildAndExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterNotExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitNotExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildNotExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterCompareExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitCompareExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildCompareExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterShiftExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitShiftExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildShiftExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterAdditiveExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitAdditiveExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildAdditiveExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterMultiplicativeExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitMultiplicativeExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildMultiplicativeExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterPowerExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitPowerExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildPowerExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterNegateExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitNegateExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildNegateExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterMemberExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitMemberExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildMemberExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterMemberAccessExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitMemberAccessExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildMemberAccessExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterBasicExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitBasicExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildBasicExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterMemberFunctionExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitMemberFunctionExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildMemberFunctionExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterFieldPropertyExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitFieldPropertyExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildFieldPropertyExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterSpecialFunctionExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitSpecialFunctionExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildSpecialFunctionExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterIfExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitIfExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildIfExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterCastExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitCastExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildCastExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterCastTypeExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitCastTypeExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildCastTypeExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterArrayExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitArrayExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildArrayExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterFunctionCallExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitFunctionCallExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildFunctionCallExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterArgumentList(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitArgumentList(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildArgumentList(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterLiteralExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitLiteralExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildLiteralExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterBooleanLiteralExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitBooleanLiteralExpression(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildBooleanLiteralExpression(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.EnterExpressionGroup(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when entering a parse tree node.</summary>
+	<param name="node">the node being entered</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ExitExpressionGroup(PerCederberg.Grammatica.Runtime.Production)">
+	<summary>Called when exiting a parse tree node.</summary>
+	<param name="node">the node being exited</param>
+	<returns>the node to add to the parse tree, or
+         null if no parse tree should be created</returns>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="M:Ciloci.Flee.ExpressionAnalyzer.ChildExpressionGroup(PerCederberg.Grammatica.Runtime.Production,PerCederberg.Grammatica.Runtime.Node)">
+	<summary>Called when adding a child to a parse tree
+node.</summary>
+	<param name="node">the parent node</param>
+	<param name="child">the child node, or null</param>
+	<exception cref="T:PerCederberg.Grammatica.Runtime.ParseException">if the node analysis
+discovered errors</exception>
+</member><member name="T:Ciloci.Flee.ExpressionAnalyzer">
+	<remarks>A class providing callback methods for the
+parser.</remarks>
+</member><member name="M:Ciloci.Flee.ExpressionFactory.SetParseCulture(System.Globalization.CultureInfo)">
+	<summary>Sets the culture to use when parsing expressions</summary>
+	<param name="culture">The culture to use</param>
+	<remarks>Use this method to allow for parsing of expressions using culture-specific tokens.  This is useful, for example, when you
+  wish to parse numbers using a culture-specific decimal separator.</remarks>
+</member><member name="M:Ciloci.Flee.ExpressionFactory.CreateDynamic(System.String,System.Object,Ciloci.Flee.ExpressionContext)">
+	<overloads>Creates a new dynamic expression</overloads>
+	<summary>Creates a dynamic expression from an expression text string, an expression owner, and a context</summary>
+	<param name="expression">The expression text to parse</param>
+	<param name="owner">The instance that will act as the expression's owner</param>
+	<param name="context">The context that holds all information required to compile the expression</param>
+	<returns>A new dynamic expression</returns>
+	<remarks>Use this method when you want to create a dynamic expression with a given expression owner.</remarks>
+	<exception cref="T:Ciloci.Flee.ExpressionCompileException">The expression could not be compiled</exception>
+</member><member name="M:Ciloci.Flee.ExpressionFactory.CreateDynamic(System.String,Ciloci.Flee.ExpressionContext)">
+	<summary>Creates a dynamic expression from an expression text string and a context</summary>
+	<param name="expression">The expression text to parse</param>
+	<param name="context">The context that holds all information required to compile the expression</param>
+	<returns>A new dynamic expression</returns>
+	<remarks>Use this method when you want to create a dynamic expression and you don't need an expression owner.</remarks>
+	<exception cref="T:Ciloci.Flee.ExpressionCompileException">The expression could not be compiled</exception>
+</member><member name="M:Ciloci.Flee.ExpressionFactory.CreateGeneric``1(System.String,System.Object,Ciloci.Flee.ExpressionContext)">
+	<summary>Creates a generic expression from an expression text string, an expression owner, and a context</summary>
+	<typeparam name="T">The return type of the expression</typeparam>
+	<param name="expression">The expression text to parse</param>
+	<param name="owner">The instance that will act as the expression's owner</param>
+	<param name="context">The context that holds all information required to compile the expression</param>
+	<returns>A new generic expression</returns>
+	<remarks>Use this method when you want to create a generic expression with a given expression owner.</remarks>
+	<exception cref="T:Ciloci.Flee.ExpressionCompileException">The expression could not be compiled</exception>
+</member><member name="M:Ciloci.Flee.ExpressionFactory.CreateGeneric``1(System.String,Ciloci.Flee.ExpressionContext)">
+	<overloads>Creates a new generic expression</overloads>
+	<summary>Creates a generic expression from an expression text string and a context</summary>
+	<typeparam name="T">The return type of the expression</typeparam>
+	<param name="expression">The expression text to parse</param>
+	<param name="context">The context that holds all information required to compile the expression</param>
+	<returns>A new generic expression</returns>
+	<remarks>Use this method when you want to create a generic expression and you don't need an expression owner.</remarks>
+	<exception cref="T:Ciloci.Flee.ExpressionCompileException">The expression could not be compiled</exception>
+</member><member name="T:Ciloci.Flee.ExpressionFactory">
+	<summary>
+  Class responsible for creating expressions
+  </summary>
+	<remarks>This class is responsible for creating all expressions.  It can create two types of expressions: dynamic and generic.
+  Dynamic expressions always evaluate to an Object whereas generic expressions evaluate to a specific type</remarks>
+	<example>
+  This example shows how to declare and evaluate an expression:
+  <code lang="C#">
+  // Define the context of our expression
+  ExpressionContext context = new ExpressionContext();
+  // Import all members of the Math type into the default namespace
+  context.Imports.ImportStaticMembers(typeof(Math));
+
+  // Define an int variable
+  context.Variables.DefineVariable("a", typeof(int));
+  context.Variables.SetVariableValue("a", 100);
+
+  // Create a dynamic expression that evaluates to an Object
+  IDynamicExpression eDynamic = ExpressionFactory.CreateDynamic("sqrt(a) + 1", context);
+  // Create a generic expression that evaluates to a double
+  IGenericExpression&lt;double&gt;
+  eGeneric = ExpressionFactory.CreateGeneric&lt;double&gt;("sqrt(a) + 1", context);
+
+  // Evaluate the expressions
+  double result = (double)eDynamic.Evaluate();
+  result = eGeneric.Evaluate();
+
+  // Update the value of our variable
+  context.Variables.SetVariableValue("a", 144);
+  // Evaluate again to get the updated result
+  result = eGeneric.Evaluate();
+  </code>
+	</example>
+	<threadsafety>
+		<para>
+  The expression parser is shared amongst all expressions.  Access to it is synchronized so it is safe to create expressions from multiple threads.
+  Evaluating an expression is thread-safe as long as any referenced properties and methods are as well.
+  </para>
+	</threadsafety>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.SyntaxError">
+	<summary>The expression text is not parsable because it does not meet the syntax rules of the expression grammar.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.ConstantOverflow">
+	<summary>A constant expression cannot be represented in its type.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.TypeMismatch">
+	<summary>The operation is invalid for the given type.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.UndefinedName">
+	<summary>The expression references a name that cannot be resolved.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.FunctionHasNoReturnValue">
+	<summary>The expression calls a function that does not return a value.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.InvalidExplicitCast">
+	<summary>The requested explicit cast is not valid for the given types.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.AmbiguousMatch">
+	<summary>More than one member matches the required criteria.</summary>
+</member><member name="F:Ciloci.Flee.CompileExceptionReason.AccessDenied">
+	<summary>Access to the specified member is not allowed.</summary>
+</member><member name="T:Ciloci.Flee.CompileExceptionReason">
+	<summary>
+  Defines values to indicate why compilation of an expression failed.      
+  </summary>
+	<remarks>
+  When compilation of an expression fails, an <see cref="T:Ciloci.Flee.ExpressionCompileException"/> will be thrown.
+  The <see cref="P:Ciloci.Flee.ExpressionCompileException.Reason">Reason</see> property
+  on the exception will contain a value from this enumeration.  You can use that value to determine how to handle the exception.
+  For example: if the Reason is a SyntaxError, you can display an error message tailored to syntax errors.
+  </remarks>
+</member><member name="P:Ciloci.Flee.IExpression.Text">
+	<summary>Gets the text the expression was created with</summary>
+	<value>A string with the expression's text</value>
+	<remarks>Use this property to get the text that was used to compile the expression.</remarks>
+</member><member name="P:Ciloci.Flee.IExpression.Info">
+	<summary>
+  Gets the expression's <see cref="T:Ciloci.Flee.ExpressionInfo"/> instance.
+  </summary>
+	<value>The ExpressionInfo instance.</value>
+	<remarks>
+  Use this property to access the expression's ExpressionInfo instance which holds information about the expression.
+  </remarks>
+</member><member name="P:Ciloci.Flee.IExpression.Context">
+	<summary>Gets the context the expression was created with</summary>
+	<value>The expression's <see cref="T:Ciloci.Flee.ExpressionContext"/> instance</value>
+	<remarks>Use this property to get the context that was used to compile the expression.</remarks>
+</member><member name="P:Ciloci.Flee.IExpression.Owner">
+	<summary>Gets or sets the expression's owner</summary>
+	<value>
+  The expression's owner instance.  Must be of the same type as the expression's original owner.
+  </value>
+	<remarks>Use this property to get or set the instance of the expression's owner.</remarks>
+</member><member name="T:Ciloci.Flee.IExpression">
+	<summary>Interface implemented by all expressions</summary>
+	<remarks>This is the base interface that exposes members common to both dynamic and generic expressions.</remarks>
+</member><member name="M:Ciloci.Flee.IDynamicExpression.Evaluate">
+	<summary>Evaluates the dynamic expression</summary>
+	<returns>An Object instance that represents the result of evaluating the expression</returns>
+	<remarks>Use this method to evaluate the expression.</remarks>
+</member><member name="T:Ciloci.Flee.IDynamicExpression">
+	<summary>Interface implemented by all expressions that evaluate to an Object</summary>
+	<remarks>This is the interface that dynamic expressions must implement</remarks>
+</member><member name="M:Ciloci.Flee.IGenericExpression`1.Evaluate">
+	<summary>Evaluates the generic expression</summary>
+	<returns>The result of evaluating the expression</returns>
+	<remarks>Use this method to evaluate the expression.</remarks>
+</member><member name="T:Ciloci.Flee.IGenericExpression`1">
+	<summary>Interface implemented by all expressions that evaluate to a specific type</summary>
+	<typeparam name="T">The type that the expression will evaluate to</typeparam>
+	<remarks>This is the interface that generic expressions must implement</remarks>
+</member><member name="P:Ciloci.Flee.ExpressionCompileException.Reason">
+	<summary>
+  Gets the reason why compilation failed.      
+  </summary>
+	<value>A value indicating the cause of the exception</value>
+	<remarks>Use this property to determine the reason why compilation failed.</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionCompileException">
+	<summary>
+  The exception thrown when an expression cannot be compiled.      
+  </summary>
+	<remarks>
+  This exception is thrown whenever an expression cannot be compiled.
+  The <see cref="P:Ciloci.Flee.ExpressionCompileException.Reason">Reason</see> property
+  will contain a value indicating the specific cause of the exception.
+  </remarks>
+</member><member name="P:Ciloci.Flee.ExpressionContext.CalculationEngine">
+	<summary>Gets or sets the CalculationEngine instance to use when adding an expression to the CalculationEngine</summary>
+	<value>The engine instance</value>
+	<remarks>When this property is set to an instance of a calculation engine and a name is specified in the <see cref="P:Ciloci.Flee.ExpressionContext.ExpressionName"/>
+  property, the expression will be added to the calculation engine and other expressions will be able to reference its result using the given name.
+</remarks>
+</member><member name="P:Ciloci.Flee.ExpressionContext.ExpressionName">
+	<summary>Gets or sets the name an expression will have in the CalculationEngine</summary>
+	<value>The expression name</value>
+	<remarks>The name you give an expression using this property will be the name other expressions can use to reference its result in the CalculationEngine.</remarks>
+</member><member name="P:Ciloci.Flee.ExpressionContext.Options">
+	<summary>Gets the ExpressionOptions to be used in an expression</summary>
+	<value>The ExpressionOptions instance</value>
+	<remarks>Use this property to access the options to be used in an expression.</remarks>
+</member><member name="P:Ciloci.Flee.ExpressionContext.Imports">
+	<summary>
+    Gets or sets the types imported by an expression.
+  </summary>
+	<value>The collection of imported types.</value>
+	<remarks>
+    Use this property to get or set the imports that will be used by an expression.<seealso cref="T:Ciloci.Flee.ImportsCollection"/>
+	</remarks>
+</member><member name="P:Ciloci.Flee.ExpressionContext.Variables">
+	<summary>Gets the VariablesCollection to be used in an expression</summary>
+	<value>The VariableCollection instance</value>
+	<remarks>Use this property to access the variables to be used in an expression.</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionContext">
+	<summary>Class that holds all information required to create an expression</summary>
+	<remarks>This class holds all information required to create an expression such as: variables, static type imports, and expression options.</remarks>
+</member><member name="M:Ciloci.Flee.ExpressionImports.ImportStaticMembers(System.Type,System.String)">
+	<summary>Imports all static members of a type into an expression under a specified prefix</summary>
+	<param name="t">The type to import.</param>
+	<param name="prefix">The prefix that will be used to reference the imported members or -null- to use the type's name as the prefix</param>
+	<remarks>
+  This method lets you import a type's members into an expression under a given prefix.  The members will be accessible from the expression
+  when qualified with the prefix.
+  <example>
+  If you call ImportStaticMembers(typeof(Math), "math"), then you can use <pre>math.cos(100)</pre> in the expression.  Pass null as the prefix to use the type's
+  name as the prefix.
+  </example>
+	</remarks>
+	<exception cref="T:System.ArgumentException">The imported type is not public</exception>
+</member><member name="M:Ciloci.Flee.ExpressionImports.ImportStaticMembers(System.Type)">
+	<overloads>Imports all static members of a type into an expression</overloads>
+	<summary>Imports all static members of a type into the default namespace of an expression</summary>
+	<param name="t">The type to import.</param>
+	<remarks>
+    Use this method to import a type into an expression.  All static public methods, fields, and properties of the type will be
+    directly accessible in the expression without requiring any qualification.  For example: If you import the Math type, you can directly reference
+    the sqrt function and Pi field in the expression.
+  </remarks>
+	<exception cref="T:System.ArgumentException">The imported type is not public</exception>
+</member><member name="M:Ciloci.Flee.ExpressionImports.ImportBuiltinTypes">
+	<summary>
+  Imports the builtin types into an expression
+  </summary>
+	<remarks>
+  Call this method to import the builtin types (int, string, double) into an expression.  After this method is called, you can use members of the 
+  builtin types in an expression ie: <pre>int.maxvalue * 2</pre>
+	</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionImports">
+	<summary>
+  Holds all the types whose static members can be used in an expression.
+  </summary>
+	<remarks>Use this class to allow the static functions, methods, and properties of a type
+  to be used in an expression.  By default, no types are imported.</remarks>
+	<example>This example shows how to use this class to let an expression use all the static members of the Math class:
+  <code lang="C#">
+  // Define the context of our expression
+  ExpressionContext context = new ExpressionContext();
+  // Import all members of the Math type into the default namespace
+  context.Imports.ImportStaticMembers(typeof(Math));
+  </code>
+	</example>
+</member><member name="P:Ciloci.Flee.ExpressionOptions.ResultType">
+	<summary>Gets or sets the type of the expression's result.</summary>
+	<value>
+  A <see cref="T:System.Type"/> indicating the desired result type.
+  </value>
+	<remarks>
+  Use this property to convert the result of an expression to a particular type.  Essentially, it acts as an implicit conversion from the final
+  result of the expression to the given type.  When this property is set, the expression will attempt to convert its result to the set value.
+  If the conversion is invalid, an <see cref="T:Ciloci.Flee.ExpressionCompileException"/> will be thrown.
+  </remarks>
+</member><member name="P:Ciloci.Flee.ExpressionOptions.Checked">
+	<summary>
+  Gets or sets whether arithmetic and conversion operations check for overflow.      
+  </summary>
+	<value>True to emit overflow checks.  False to emit no overflow checks.</value>
+	<remarks>
+  Setting this property to true will cause all arithmetic and conversion operations to emit overflow checks.  When
+  one of those operations is executed and the resultant value cannot fit into the result type, an <see cref="T:System.OverflowException">OverflowException</see>
+  will be thrown.
+  </remarks>
+</member><member name="P:Ciloci.Flee.ExpressionOptions.StringComparison">
+	<summary>
+  Gets or sets a value that determines how strings will be compared.
+  </summary>
+	<value>The type of string comparison to use.</value>
+	<remarks>
+  Use this property to control the type of string comparison used in an expression that compares two strings.  For example: the result of 
+  the expression <span style="font-family: monospace;">"string" = "STRING"</span> will be <b>true</b> if the string comparison is set to ignore case 
+  and <b>false</b> otherwise.  The default is Ordinal.
+  </remarks>
+</member><member name="P:Ciloci.Flee.ExpressionOptions.EmitToAssembly">
+	<summary>
+  Saves the expression's IL to an assembly on disk.
+  </summary>
+	<value>True to save the expression's IL to an assembly; false otherwise.</value>
+	<remarks>
+  Use this method when you want to inspect the IL that an expression emits.  When set to true, the expression will save its IL to the assembly "Expression.dll" 
+  on disk.  You can then view the IL with a disassembler.
+  </remarks>
+</member><member name="P:Ciloci.Flee.ExpressionOptions.OwnerMemberAccess">
+	<summary>
+  Determines which members on the expression owner are accessible.
+  </summary>
+	<value>A combination of BindingFlags that determine which members are accessible.</value>
+	<remarks>
+  Using this property, you can control which members on the expression owner are accessible from an expression.  For example: if users
+  will be inputing expressions, you can prevent private members on the expression owner from being used.  You can use the 
+  <see cref="T:Ciloci.Flee.ExpressionOwnerMemberAccessAttribute"/> attribute on individual members to override the access set using this property.
+  <note>
+  The default is to only allow access to public members on the expression owner.  Currently, only the Public and NonPublic values of the BindingFlags enumeration 
+  are used.
+  </note>
+	</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionOptions">
+	<summary>
+  Allows customization of expression compilation.    
+  </summary>
+	<remarks>
+  Use this class when you need to customize how an expression is compiled.  For example: by setting
+  the <see cref="P:Ciloci.Flee.ExpressionOptions.Checked">Checked</see> property to true,
+  you can cause all arithmetic and conversion operations to check for overflow.
+  </remarks>
+</member><member name="M:Ciloci.Flee.VariableCollection.Clone">
+	<summary>Creates a copy of the current variable collection.</summary>
+	<returns>A new variable collection with copies of all the defined variables</returns>
+	<remarks>Use this method to create a copy of a variable collection with all the same variables and values</remarks>
+</member><member name="M:Ciloci.Flee.VariableCollection.GetVariableType(System.String)">
+	<summary>
+  Gets the type of a variable.
+  </summary>
+	<param name="name">The name of the variable</param>
+	<returns>The type of the variable's value</returns>
+	<remarks>Use this method to get the type of the value of a variable.</remarks>
+</member><member name="M:Ciloci.Flee.VariableCollection.DefineVariable(System.String,System.Type)">
+	<summary>
+  Defines a variable
+  </summary>
+	<param name="name">The name of the variable</param>
+	<param name="variableType">The type of the variable's value</param>
+	<remarks>This method will create a variable with the specified name and of the specified type.</remarks>
+</member><member name="M:Ciloci.Flee.VariableCollection.GetVariableValue(System.String)">
+	<summary>
+  Gets the value of a variable.
+  </summary>
+	<param name="name">The name of the variable</param>
+	<returns>The value of the variable</returns>
+	<remarks>Use this method to get the value of a variable.</remarks>
+</member><member name="M:Ciloci.Flee.VariableCollection.SetVariableValue(System.String,System.Object)">
+	<summary>    
+  Sets the value of a variable.
+  </summary>
+	<param name="name">The name of the variable</param>
+	<param name="value">The new value of the variable</param>
+	<remarks>Use this method to set the value of a variable.</remarks>
+	<exception cref="T:System.ArgumentException">The type of value is not the same as the type the variable was defined with</exception>
+</member><member name="M:Ciloci.Flee.VariableCollection.ContainsVariable(System.String)">
+	<summary>Determines whether a variable is defined in the collection</summary>
+	<param name="name">The variable name to check</param>
+	<returns>True if the variable is defined; false otherwise</returns>
+	<remarks>Use this method to determine whether a variable is defined in the collection.</remarks>
+</member><member name="P:Ciloci.Flee.VariableCollection.Count">
+	<summary>
+  Gets the number of variables defined in the collection
+  </summary>
+	<value>The number of variables defined</value>
+	<remarks>
+  Use this property to get the number of variables defined in the collection.
+  </remarks>
+</member><member name="T:Ciloci.Flee.VariableCollection">
+	<summary>
+  Manages the variables available to an expression
+  </summary>
+	<remarks>
+  Use this class to manage the variables that an expression can use
+  </remarks>
+</member><member name="T:Ciloci.Flee.CircularReferenceException">
+	<summary>
+  Represents the exception thrown when a circular reference is detected in the calculation engine.
+  </summary>
+	<remarks>
+  This exception will be thrown when Recalculate is called on the CalculationEngine and there is a circular reference present.
+  </remarks>
+</member><member name="M:Ciloci.Flee.ExpressionInfo.GetReferencedVariables">
+	<summary>
+  Gets the variables that are used in an expression.
+  </summary>
+	<returns>A string array containing all the variables used in the expression.</returns>
+	<remarks>Use this method when you need to get a list of all variables used in an expression.</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionInfo">
+	<summary>
+  Holds information about a compiled expression.
+  </summary>
+	<remarks>
+  This class holds information about an expression after it has been compiled.  For example: you can use this class to find out what variables
+  an expression uses.
+  </remarks>
+</member><member name="M:Ciloci.Flee.ExpressionOwnerMemberAccessAttribute.#ctor(System.Boolean)">
+	<summary>
+   Initializes the attribute with the desired access.
+  </summary>
+	<param name="allowAccess">True to allow the member to be used in an expression;False otherwise</param>
+	<remarks>Initializes the attribute with the desired access.</remarks>
+</member><member name="T:Ciloci.Flee.ExpressionOwnerMemberAccessAttribute">
+	<summary>
+  Specifies whether access to a member on the expression owner is allowed.      
+  </summary>
+	<remarks>Use this attribute to control the accessibility of individual members on the expression owner.  The access specified in
+  this attribute overrides the access level specified using the <see cref="P:Ciloci.Flee.ExpressionOptions.OwnerMemberAccess"/> property.</remarks>
+</member><member name="E:Ciloci.Flee.CalculationEngine.NodeRecalculated">
+	<summary>
+  Occurs when the calculation engine recalculates a node.
+  </summary>
+	<remarks>You can listen to this event to be notified when a node in the calculation engine is recalculated.</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.Remove(System.String)">
+	<summary>
+  Removes an expression and all its dependents from the calculation engine.
+  </summary>
+	<param name="name">The name whose expression to remove</param>
+	<remarks>Use this method to remove an expression and all its dependents from the calculation engine.</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.GetResult``1(System.String)">
+	<summary>
+    Gets the cached result of a contained expression.
+  </summary>
+	<typeparam name="T">The type of the expression's result.</typeparam>
+	<param name="name">The name that the expression is associated with</param>
+	<returns>The cached result of evaluating the expression</returns>
+	<remarks>Use this method after a recalculate to get the updated value of an expression.</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.GetResult(System.String)">
+	<summary>
+  Gets the cached result of a contained expression.
+  </summary>
+	<param name="name">The name that the expression is associated with</param>
+	<returns>The cached result of evaluating the expression</returns>
+	<remarks>Use this method after a recalculate to get the updated value of an expression.</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.GetExpression(System.String)">
+	<summary>
+  Gets the expression associated with a name.
+  </summary>
+	<param name="name">The name that the expression is associated with</param>
+	<returns>The expression associated with the given name</returns>
+	<remarks>Use this method to obtain the expression associated with a name.</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.GetDependents(System.String)">
+	<summary>
+  Gets the names of the expressions that depend on a given name.
+  </summary>
+	<param name="name">The name of the expression to look up</param>
+	<returns>The names of all expressions that depend on the expression with the given name</returns>
+	<remarks>Use this method to obtain all the expressions that depend on a given name.  For example: if a=100, b=200, and c=a+b, then calling 
+  GetDependents("a") will return "c" since when the value of "a" changes, the value of "c" will also change.  This method is not recursive, so it
+  will only return the names that directly depend on the given name.  This method is the inverse of <see cref="M:Ciloci.Flee.CalculationEngine.GetPrecedents(System.String)"/>
+	</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.GetPrecedents(System.String)">
+	<summary>
+  Gets the names of the expressions that a given name depends on.
+  </summary>
+	<param name="name">The name of the expression to look up</param>
+	<returns>The names of all expressions that the given name depends on</returns>
+	<remarks>
+    Use this method to obtain all the expressions that a given name depends on.  For example: if a=100, b=200, and c=a+b, then calling
+    GetPrecedents("c") will return "a, b" since when either "a" or "b" change, the value of "c" will also change.  This method is not recursive, so it
+    will only return the names that the given name directly depends on.    This method is the inverse of <see cref="M:Ciloci.Flee.CalculationEngine.GetDependents(System.String)"/>
+	</remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.HasDependents(System.String)">
+	<summary>
+  Determines if an expression with a given name has any expressions that depend on it.
+  </summary>
+	<param name="name">The name of the expression to look up</param>
+	<returns>True if the name has expressions that depend on it; False otherwise</returns>
+	<remarks>
+  Use this method to determine if the expression associated with a given name has any expressions that depend on it.  For example: you can use this method to allow 
+  a user to remove an expression only when no other expressions depend on it.
+  </remarks>
+</member><member name="M:Ciloci.Flee.CalculationEngine.Recalculate(System.String[])">
+	<summary>
+  Performs a natural order recalculation of the engine.
+  </summary>
+	<param name="roots">The names representing the starting points of the recalculation</param>
+	<remarks>This method will perform a natural order recalculate on the expressions in the engine.  The recalculation will start at the given roots
+  and continue with all their dependents.  If no roots are given, then a recalculation of all expressions is performed.</remarks>
+	<exception cref="T:Ciloci.Flee.CircularReferenceException">A recalculate is requested on an engine containing a circular reference</exception>
+</member><member name="M:Ciloci.Flee.CalculationEngine.Clear">
+	<summary>
+  Clears all expressions from the CalculationEngine
+  </summary>
+	<remarks>Use this method to reset the CalculationEngine to the empty state.</remarks>
+</member><member name="P:Ciloci.Flee.CalculationEngine.Count">
+	<summary>
+  Gets the number of expressions contained in the calculation engine.
+  </summary>
+	<value>The number of expressions in the calculation engine</value>
+	<remarks>
+  Use this property to see how many expressions are contained in the calculation engine.
+  </remarks>
+</member><member name="P:Ciloci.Flee.CalculationEngine.DependencyGraph">
+	<summary>
+  Gets a string representation of the engine's dependency graph.    
+  </summary>
+	<value>A string representing the graph.</value>
+	<remarks>Use this property to get a string version of the engine's dependency graph.  There will be one line for each dependency. Each line will
+  be of the format "[reference] -&gt; [dependant1, dependant2]" and is read as "A change in [reference] will cause a change in [dependant]".</remarks>
+</member><member name="T:Ciloci.Flee.CalculationEngine">
+	<summary>
+  Represents a class that allows expressions to refer to other expressions and enables natural order recalculation.
+  </summary>
+	<remarks>
+  This class acts as a container for expressions.  As expressions are added to it, their dependencies are tracked and their result is cached.  Expressions defined
+  in this class can reference other contained expressions.  Once all expressions are added, a natural order recalculate can be performed.
+  </remarks>
+	<example>This example shows how to add expressions to the engine and have them reference other contained expressions:
+  <code lang="C#">
+  // Create the calculation engine
+  CalculationEngine engine = new CalculationEngine();
+
+  ExpressionContext context = new ExpressionContext();
+  // Set the calculation engine on the context
+  context.CalculationEngine = engine;
+
+  VariableCollection variables = context.Variables;
+
+  variables.DefineVariable("x", typeof(int));
+  variables.SetVariableValue("x", 100);
+  // Add the expression to the calculation engine as 'a'
+  context.ExpressionName = "a";
+  ExpressionFactory.CreateDynamic("x * 2", context);
+
+  // Add an expression to the engine as "b"
+  variables.DefineVariable("y", typeof(int));
+  variables.SetVariableValue("y", 200);
+  context.ExpressionName = "b";
+  ExpressionFactory.CreateDynamic("y + 100", context);
+
+  // Add an expression that references a and b
+  context.ExpressionName = "c";
+  ExpressionFactory.CreateDynamic("a + b", context);
+
+  // Recalculate a and b (which will also recalculate c)
+  engine.Recalculate("a", "b");
+
+  // Get the value of c
+  int result = engine.GetResult&lt;int&gt;("c");
+
+  // Update the a expression
+  variables.SetVariableValue("x", 200);
+
+  // Recalculate it
+  engine.Recalculate("a");
+
+  // Get the updated result
+  result = engine.GetResult&lt;int&gt;("c");
+  </code>
+	</example>
+</member><member name="P:Ciloci.Flee.NodeEventArgs.Name">
+	<summary>
+    Gets the name of the recalculated node.
+  </summary>
+	<value>The name of the node</value>
+	<remarks>
+    Use this property to get the name of the recalculated node.
+  </remarks>
+</member><member name="P:Ciloci.Flee.NodeEventArgs.Result">
+	<summary>
+    Gets the recalculated result of the node.
+  </summary>
+	<value>The value of the result</value>
+	<remarks>
+    Use this property to get the recalculated result of the node.
+  </remarks>
+</member><member name="T:Ciloci.Flee.NodeEventArgs">
+	<summary>
+  Provides the data for the NodeRecalculated event.
+  </summary>
+	<remarks>Use the members of this class to get additional information about the recalculated node.</remarks>
+</member>
+</members>
+</doc>

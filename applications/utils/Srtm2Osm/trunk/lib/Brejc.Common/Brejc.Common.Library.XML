@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Brejc.Common.Library</name>
+    </assembly>
+    <members>
+        <member name="T:Brejc.Common.Console.ConsoleApplicationBase">
+            <summary>
+            A base abstract class which can be used to implement a console application.
+            </summary>
+        </member>
+        <member name="M:Brejc.Common.Console.ConsoleApplicationBase.#ctor(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Brejc.Common.Console.ConsoleApplicationBase"/> class with the command line arguments specified.
+            </summary>
+            <param name="args">The command line arguments.</param>
+        </member>
+        <member name="M:Brejc.Common.Console.ConsoleApplicationBase.Run">
+            <summary>
+            Runs the console application.
+            </summary>
+        </member>
+        <member name="M:Brejc.Common.Console.ConsoleApplicationBase.ParseArguments">
+            <summary>
+            Parses command line arguments and returns a list of resulting console commands to be executed.
+            An abstract method which needs to be implemented by the inheriting class.
+            </summary>
+            <returns>A list of resulting console commands to be executed.</returns>
+        </member>
+        <member name="M:Brejc.Common.Console.ConsoleApplicationBase.ShowBanner">
+            <summary>
+            Writes the application banner text to the console output stream.
+            An abstract method which needs to be implemented by the inheriting class.
+            </summary>
+        </member>
+        <member name="M:Brejc.Common.Console.ConsoleApplicationBase.ShowHelp">
+            <summary>
+            Writes the application help text to the console output stream.
+            An abstract method which needs to be implemented by the inheriting class.
+            </summary>
+        </member>
+        <member name="P:Brejc.Common.Console.ConsoleApplicationBase.Args">
+            <summary>
+            Gets the console command line arguments.
+            </summary>
+            <value>The console command line arguments.</value>
+        </member>
+        <member name="T:Brejc.Common.Console.IConsoleApplicationCommand">
+            <summary>
+            Interface defining the console command methods.
+            </summary>
+        </member>
+        <member name="M:Brejc.Common.Console.IConsoleApplicationCommand.ParseArgs(System.String[],System.Int32)">
+            <summary>
+            Parse provided console command line arguments, starting from the specified argument.
+            </summary>
+            <param name="args">Console command line arguments.</param>
+            <param name="startFrom">An index of the first argument to start parsing from.</param>
+            <returns>An index of next argument which was not parsed.</returns>
+        </member>
+        <member name="M:Brejc.Common.Console.IConsoleApplicationCommand.Execute">
+            <summary>
+            Executes the console command.
+            </summary>
+        </member>
+    </members>
+</doc>

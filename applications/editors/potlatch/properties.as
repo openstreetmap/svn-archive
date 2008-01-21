@@ -214,14 +214,14 @@
 	// populatePropertyWindow	- set contents of property window
 	// clearPropertyWindow		- clear window
 
-	function populatePropertyWindow(proptype,startat) {
+	function populatePropertyWindow(proptype,startat,force) {
 		if (!startat) { startat=0; }
 		if (_root.currentproptype ==proptype &&
 			_root.currentpropway  ==wayselected &&
 			_root.currentproppoi  ==poiselected &&
 			_root.currentproppoint==pointselected &&
 			_root.currentstartat  ==startat &&
-			_root.redopropertywindow==0) { return; }
+			_root.redopropertywindow==0 && force!=true) { return; }
 		clearPropertyWindow();
 		_root.i_repeatattr._alpha=
 		_root.i_newattr._alpha =100-50*(proptype=='');
@@ -271,9 +271,9 @@
 	function advancePropertyWindow() {
 		if (_root.i_nextattr._alpha==50) { return; }
 		if (_root.currentstartat+12>_root.tagcount) {
-			populatePropertyWindow(_root.currentproptype,0);
+			populatePropertyWindow(_root.currentproptype,0,true);
 		} else {
-			populatePropertyWindow(_root.currentproptype,_root.currentstartat+12);
+			populatePropertyWindow(_root.currentproptype,_root.currentstartat+12,true);
 		}
 	};
 
@@ -336,7 +336,7 @@
 			else { getAttrArray()[pkey]=presets[pname][pkey]; }
 			markAttrUnclean(true);
 		}
-		populatePropertyWindow(currentproptype);
+		populatePropertyWindow(currentproptype,_root.currentstartat,true);
 	}
 
 	// setPresetIcon and cyclePresetIcon
@@ -366,7 +366,7 @@
 	function enterNewAttribute() {
 		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
 		if (_root.tagcount>=_root.currentstartat+12) {
-			populatePropertyWindow(_root.currentproptype,Math.floor((_root.tagcount+1)/12)*12);
+			populatePropertyWindow(_root.currentproptype,Math.floor((_root.tagcount+1)/12)*12,true);
 		}
 //		if (_root.propn==12) { return; }
 		getAttrArray().key='(type value here)';
@@ -452,7 +452,7 @@
 				markAttrUnclean(true);
 			}
 		}
-		populatePropertyWindow(_root.currentproptype);
+		populatePropertyWindow(_root.currentproptype,_root.currentstartat,true);
 	}
 	
 	// textChanged			- listener marks way as dirty when any change made

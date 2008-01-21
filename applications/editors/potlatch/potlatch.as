@@ -24,8 +24,7 @@
 	var baselong=Math.pow(long,1);
 	var scale=Math.max(Math.min(Math.pow(scale,1),maxscale),minscale);
 	var usertoken=token;
-	// if (winie=='true' || winie==true) { winie=true; } else { winie=false; }
-	var winie=false;				// fscommand doesn't work, so don't use it
+	if (winie=='true' || winie==true) { winie=true; } else { winie=false; }
 	
 	// Preferences
 	preferences=SharedObject.getLocal("preferences");
@@ -969,8 +968,8 @@
 			this.redraw();												//  |
 
 			_root.map.ways[newwayid].path.splice(0,pointselected);		// new way
-			_root.map.ways[newwayid].redraw();							//  |
 			_root.map.ways[newwayid].locked=this.locked;				//  |
+			_root.map.ways[newwayid].redraw();							//  |
 			_root.map.ways[newwayid].upload();							//  |
 
 			this.upload();												// upload current way
@@ -1382,10 +1381,10 @@
 			case 88:		_root.map.ways[wayselected].splitWay(); break;		// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
-			case Key.LEFT:  moveMap( 140,0); redrawBackground(); whichWays(); break;	// cursor keys
-			case Key.RIGHT: moveMap(-140,0); redrawBackground(); whichWays(); break;	//  |
-			case Key.DOWN:  moveMap(0,-100); redrawBackground(); whichWays(); break;	//  |
-			case Key.UP:    moveMap(0, 100); redrawBackground(); whichWays(); break;	//  |
+			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
+			case Key.RIGHT: moveMap(-140,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
+			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
+			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case 167:		cyclePresetIcon(); break;							// '¤' - cycle presets
 			case 187:		enterNewAttribute(); break;							// '+' - add new attribute
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
@@ -1440,7 +1439,6 @@
 		_root.coord_b=(500-_root.map._y)/bscale; _root.edge_b=coord2lat(_root.coord_b);
 		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
 		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
-		updateLinks();
 
 		// ----	Trace
 		//		x radius (lon) is 280/Math.pow(2,_root.scale)
@@ -1488,7 +1486,8 @@
 
 	function markClean(a) {
 		if (!_root.sandbox) {
-			if (winie) { _root.chat._visible=true; fscommand("changesaved",a); }
+			if (winie) { // _root.chat._visible=true; fscommand("changesaved",a);
+					   }
 				  else { getURL("javascript:var changesaved="+a); }
 		}
 	}
@@ -1496,8 +1495,10 @@
 	// updateLinks - update view/edit tabs
 	
 	function updateLinks() {
-		if (winie) { fscommand("maplinks",centrelong(0),centrelat(0),_root.scale); }
-			  else { getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")"); }
+//		if (winie) { fscommand("maplinks",centrelong(0),centrelat(0),_root.scale); }
+//			  else { 
+		getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")");
+//				   }
 	}
 	
 	// zoomIn, zoomOut, changeScaleTo - change scale functions
@@ -1509,6 +1510,7 @@
 			if (_root.waycount>500) { purgeWays(); }
 			if (_root.poicount>500) { purgePOIs(); }
 			redrawMap((_root.map._x*2)-350,(_root.map._y*2)-250);
+			updateLinks();
 			redrawBackground();
 			resizePOIs();
 			for (qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
@@ -1525,6 +1527,7 @@
 			blankTileQueue();
 			changeScaleTo(_root.scale-1); 
 			redrawMap((_root.map._x+350)/2,(_root.map._y+250)/2);
+			updateLinks();
 			redrawBackground();
 			resizePOIs();
 			whichWays();
@@ -1660,6 +1663,7 @@
 		_root.map.onMouseMove=function() {};
 		_root.map.onMouseUp  =function() {};
 		redrawBackground();
+		updateLinks();
 		restartElastic();
 		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance*4 &&
 			Math.abs(_root.firstymouse-_root._ymouse)>tolerance*4) {

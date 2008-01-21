@@ -25,7 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `canon`
 -- 
 
-CREATE TABLE `canon` (
+CREATE TABLE `test_canon` (
   `named_id` int(11) NOT NULL,
   `canon` varchar(255) character set utf8 NOT NULL,
   KEY `canon` (`canon`),
@@ -38,7 +38,7 @@ CREATE TABLE `canon` (
 -- Table structure for table `lock`
 -- 
 
-CREATE TABLE `lock` (
+CREATE TABLE `test_lock` (
   `id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -49,7 +49,7 @@ CREATE TABLE `lock` (
 -- Table structure for table `named`
 -- 
 
-CREATE TABLE `named` (
+CREATE TABLE `test_named` (
   `id` int(11) NOT NULL auto_increment,
   `region` int(11) NOT NULL,
   `lat` double NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `named` (
 -- Table structure for table `node`
 -- 
 
-CREATE TABLE `node` (
+CREATE TABLE `test_node` (
   `id` int(11) NOT NULL,
   `lat` double NOT NULL,
   `lon` double NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE `node` (
 -- Table structure for table `options`
 -- 
 
-CREATE TABLE `options` (
+CREATE TABLE `test_options` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `value` text NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE `options` (
 -- Table structure for table `placeindex`
 -- 
 
-CREATE TABLE `placeindex` (
+CREATE TABLE `test_placeindex` (
   `id` int(11) NOT NULL,
   `region` int(11) NOT NULL,
   `lat` double NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE `placeindex` (
 -- Table structure for table `segment`
 -- 
 
-CREATE TABLE `segment` (
+CREATE TABLE `test_way` (
   `id` int(11) NOT NULL,
   `from` int(11) NOT NULL,
   `to` int(11) NOT NULL,

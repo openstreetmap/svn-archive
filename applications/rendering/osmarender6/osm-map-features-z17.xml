@@ -1113,7 +1113,7 @@
         <rule e="node" k="amenity" v="university|college">
             <symbol xlink:href="#symbol-university" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
-        <rule e="node" k="amenity" v="supermarket">
+        <rule e="node" k="amenity|shop" v="supermarket">
             <symbol xlink:href="#symbol-supermarket" width='2px' height='2px' transform='translate(0,0)' />
         </rule>
         <rule e="node" k="amenity" v="library">
@@ -1424,6 +1424,10 @@
 			    <text k="name" class='caption-core generic-caption-core' dy='-3px' />
 			</rule>
 			<rule e="node" k="amenity" v="supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site" layer="5">
+			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
+			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
+			</rule>
+			<rule e="node" k="shop" v="supermarket" layer="5">
 			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
 			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
 			</rule>

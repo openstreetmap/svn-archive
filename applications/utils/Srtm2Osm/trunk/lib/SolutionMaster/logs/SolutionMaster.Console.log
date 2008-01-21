@@ -1,0 +1,54 @@
+2008-01-21 18:35:28,044 DEBUG [1] SolutionMaster.Engine.Solution - Read line (1): 
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (2): Microsoft Visual Studio Solution File, Format Version 9.00
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (3): # Visual Studio 2005
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (4): Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02C85369-758F-4120-89B7-E1518044A480}"
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (5): 	ProjectSection(WebsiteProperties) = preProject
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (6): 		Debug.AspNetCompiler.Debug = "True"
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (7): 		Release.AspNetCompiler.Debug = "False"
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (8): 	EndProjectSection
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (9): 	ProjectSection(SolutionItems) = preProject
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (10): 		BuildSrtm2Osm.bat = BuildSrtm2Osm.bat
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (11): 		CustomDictionary.xml = CustomDictionary.xml
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (12): 		Scripts\NAntCommon.build = Scripts\NAntCommon.build
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (13): 		Srtm2Osm.build = Srtm2Osm.build
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (14): 		Srtm2Osm.doxy = Srtm2Osm.doxy
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (15): 		Srtm2Osm.FxCop = Srtm2Osm.FxCop
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (16): 		Srtm2Osm.ProjectVersion.txt = Srtm2Osm.ProjectVersion.txt
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (17): 	EndProjectSection
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (18): EndProject
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (19): Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmUtils.OsmClient", "OsmUtils.OsmClient\OsmUtils.OsmClient.csproj", "{B1D31BAC-CEDF-4972-A3EA-0D73F7CA1FBE}"
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (20): 	ProjectSection(WebsiteProperties) = preProject
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (21): 		Debug.AspNetCompiler.Debug = "True"
+2008-01-21 18:35:28,059 DEBUG [1] SolutionMaster.Engine.Solution - Read line (22): 		Release.AspNetCompiler.Debug = "False"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (23): 	EndProjectSection
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (24): EndProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (25): Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmUtils.Framework", "OsmUtils.Framework\OsmUtils.Framework.csproj", "{E7BED76C-C9D3-41DF-895E-9AE33230AC2C}"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (26): 	ProjectSection(WebsiteProperties) = preProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (27): 		Debug.AspNetCompiler.Debug = "True"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (28): 		Release.AspNetCompiler.Debug = "False"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (29): 	EndProjectSection
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (30): EndProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (31): Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Srtm2Osm", "Srtm2Osm\Srtm2Osm.csproj", "{63C3B2F6-D8B3-4074-94DB-DB3222F5CAA8}"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (32): 	ProjectSection(WebsiteProperties) = preProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (33): 		Debug.AspNetCompiler.Debug = "True"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (34): 		Release.AspNetCompiler.Debug = "False"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (35): 	EndProjectSection
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (36): EndProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (37): Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brejc.DemLibrary", "Brejc.DemLibrary\Brejc.DemLibrary.csproj", "{D4F3E35D-3C30-4B8C-B2A9-EC2B3EE649FB}"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (38): 	ProjectSection(WebsiteProperties) = preProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (39): 		Debug.AspNetCompiler.Debug = "True"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (40): 		Release.AspNetCompiler.Debug = "False"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (41): 	EndProjectSection
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (42): EndProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (43): Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brejc.Geometry", "Brejc.Geometry\Brejc.Geometry.csproj", "{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (44): 	ProjectSection(WebsiteProperties) = preProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (45): 		Debug.AspNetCompiler.Debug = "True"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (46): 		Release.AspNetCompiler.Debug = "False"
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (47): 	EndProjectSection
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (48): EndProject
+2008-01-21 18:35:28,060 DEBUG [1] SolutionMaster.Engine.Solution - Read line (49): Global
+2008-01-21 18:35:28,067 DEBUG [1] SolutionMaster.Engine.ProjectDataInSolution - OpenProject 'OsmUtils.OsmClient\OsmUtils.OsmClient.csproj'
+2008-01-21 18:35:28,787 DEBUG [1] SolutionMaster.Engine.ProjectDataInSolution - OpenProject 'OsmUtils.Framework\OsmUtils.Framework.csproj'
+2008-01-21 18:35:28,789 DEBUG [1] SolutionMaster.Engine.ProjectDataInSolution - OpenProject 'Srtm2Osm\Srtm2Osm.csproj'
+2008-01-21 18:35:28,798 DEBUG [1] SolutionMaster.Engine.ProjectDataInSolution - OpenProject 'Brejc.DemLibrary\Brejc.DemLibrary.csproj'
+2008-01-21 18:35:28,799 DEBUG [1] SolutionMaster.Engine.ProjectDataInSolution - OpenProject 'Brejc.Geometry\Brejc.Geometry.csproj'

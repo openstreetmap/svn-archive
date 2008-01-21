@@ -1,0 +1,39 @@
+Srtm2Osm tool by Igor Brejc
+
+VERSION HISTORY
+---------------
+
+1.4
+---
+- -large option added for covering large areas
+- fixed a bug which prevented correct usage of Srtm2Osm south of equator or west of Greenwhich
+
+1.3
+---
+- added '-cat' command line option
+- added support for elevation in feet ('-feet' command line option)
+- '-m' option renamed to '-merge'
+- more optimized memory usage
+- BUGFIX: empty (sea) SRTM cells are now handled correctly
+- some other minor bugfixes
+
+1.2
+---
+- complete rewrite of the contour extraction algorithm. The bug when some contours were broken should now be fixed. Hopefully :)
+- contours are now oriented so that the higher altitude is always on the left of the contour
+
+1.1
+---
+- added a new '-bounds3' option to specify the coverage area using a slippymap
+- fixed the bug which prevented entering negative latitudes/longitudes
+- additional checks for out-of-range parameters
+- fixed a bug when calculating the coverage area box size
+
+1.0
+---
+- first (alfa) version of the tool
+
+
+CONTACT
+-------
+- for questions regarding the tool and bug reporting please go to http://wiki.openstreetmap.org/index.php/Srtm2Osm

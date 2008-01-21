@@ -1,0 +1,17 @@
+Flee - Fast Lightweight Expression Evaluator
+-------------
+
+Version: 0.9.14.0
+Release Date: December 4, 2007
+
+New features:
+
+
+Breaking Changes:
+
+
+Bug fixes:
+-Fixed calling GetType() on owner
+-Cleaned up member resolution (resolving on owner first, then imports) 
+-Adjusting subsequent label positions after a long branch is emitted for short-circuited logical ops
+-Demo: Adjusting preset expressions for current culture

@@ -1,0 +1,3412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.36" Name="My FxCop Project">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableControlFlowAnalysis>True</EnableControlFlowAnalysis>
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-US" />
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+  <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
+ </ProjectOptions>
+ <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>$(ProjectDir)/Brejc.SrtmLibrary/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/Brejc.Visualization.WinApp/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/Brejc.Visualization/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/Criticality.WinApp/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/GnuCashUtils.Console/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/GnuCashUtils.Framework/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/Kosmos.Console/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/Kosmos.Gui/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/Kosmos/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/lib/WindowsPowerShell/v1.0/</Directory>
+   <Directory>$(ProjectDir)/OsmUtils.Console/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/OsmUtils.Garmin/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/OsmUtils.MapRender/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/SolutionMaster.Cmdlets/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/SolutionMaster.Console/bin/Release/</Directory>
+   <Directory>$(ProjectDir)/SolutionMaster.Engine/bin/Release/</Directory>
+  </AssemblyReferenceDirectories>
+  <Target Name="$(ProjectDir)/Brejc.DemLibrary/bin/Release/Brejc.DemLibrary.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/Brejc.Geometry/bin/Release/Brejc.Geometry.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/OsmUtils.Framework/bin/Release/OsmUtils.Framework.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/OsmUtils.OsmClient/bin/Release/OsmUtils.OsmClient.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/Srtm2Osm/bin/Release/Srtm2Osm.exe" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="False">
+    <Rule Name="AvoidDuplicateAccelerators" Enabled="True" />
+    <Rule Name="DoNotHardcodeLocaleSpecificStrings" Enabled="True" />
+    <Rule Name="SetLocaleForDataTypes" Enabled="True" />
+    <Rule Name="SpecifyCultureInfo" Enabled="True" />
+    <Rule Name="SpecifyIFormatProvider" Enabled="True" />
+    <Rule Name="SpecifyStringComparison" Enabled="True" />
+    <Rule Name="UseOrdinalStringComparison" Enabled="True" />
+   </RuleFile>
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="1.36">
+  <Namespaces>
+   <Namespace Name="Brejc.Geometry">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Excluded" Created="2007-11-27 22:05:38Z">
+      <Issue>
+       <Item>Brejc.Geometry</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+  </Namespaces>
+  <Targets>
+   <Target Name="$(ProjectDir)/Brejc.DemLibrary/bin/Release/Brejc.DemLibrary.dll">
+    <Modules>
+     <Module Name="brejc.demlibrary.dll">
+      <Namespaces>
+       <Namespace Name="Brejc.DemLibrary">
+        <Types>
+         <Type Name="FtpClient">
+          <Messages>
+           <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Excluded" Created="2008-01-06 17:38:35Z" FixCategory="DependsOnFix">
+            <Issue Name="DependsOnFix">
+             <Item>'FtpClient'</Item>
+             <Item>'Socket'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'FtpClient.FtpClient()'</Item>
+               <Item>'FtpClient.debug'</Item>
+               <Item>'bool'</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>'FtpClient.FtpClient()'</Item>
+               <Item>'FtpClient.logined'</Item>
+               <Item>'bool'</Item>
+               <Item>false</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#chdir(System.String)">
+            <Messages>
+             <Message Id="chdir" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>chdir</Item>
+               <Item>'FtpClient.chdir(string)'</Item>
+               <Item>Chdir</Item>
+              </Issue>
+             </Message>
+             <Message Id="chdir" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>chdir</Item>
+               <Item>'FtpClient.chdir(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#close()">
+            <Messages>
+             <Message Id="close" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>close</Item>
+               <Item>'FtpClient.close()'</Item>
+               <Item>Close</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#createDataSocket()">
+            <Messages>
+             <Message Id="System.Int32.Parse(System.String)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'int.Parse(string)'</Item>
+               <Item>'FtpClient.createDataSocket()'</Item>
+               <Item>'int.Parse(string, IFormatProvider)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#deleteRemoteFile(System.String)">
+            <Messages>
+             <Message Id="delete" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>delete</Item>
+               <Item>'FtpClient.deleteRemoteFile(string)'</Item>
+               <Item>Delete</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#download(System.String)">
+            <Messages>
+             <Message Id="download" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>download</Item>
+               <Item>'FtpClient.download(string)'</Item>
+               <Item>Download</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#download(System.String,System.Boolean)">
+            <Messages>
+             <Message Id="download" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>download</Item>
+               <Item>'FtpClient.download(string, bool)'</Item>
+               <Item>Download</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#download(System.String,System.String)">
+            <Messages>
+             <Message Id="download" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>download</Item>
+               <Item>'FtpClient.download(string, string)'</Item>
+               <Item>Download</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#download(System.String,System.String,System.Boolean)">
+            <Messages>
+             <Message Id="download" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>download</Item>
+               <Item>'FtpClient.download(string, string, bool)'</Item>
+               <Item>Download</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="TestForEmptyStringsUsingStringLength" Category="Microsoft.Performance" CheckId="CA1820" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="IsNullOrEmpty">
+               <Item>'string.Equals(string)'</Item>
+               <Item>'FtpClient.download(string, string, bool)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#getFileList(System.String)">
+            <Messages>
+             <Message Id="get" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>get</Item>
+               <Item>'FtpClient.getFileList(string)'</Item>
+               <Item>Get</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#getFileSize(System.String)">
+            <Messages>
+             <Message Id="get" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>get</Item>
+               <Item>'FtpClient.getFileSize(string)'</Item>
+               <Item>Get</Item>
+              </Issue>
+             </Message>
+             <Message Id="System.Int64.Parse(System.String)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'long.Parse(string)'</Item>
+               <Item>'FtpClient.getFileSize(string)'</Item>
+               <Item>'long.Parse(string, IFormatProvider)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#getRemoteHost()">
+            <Messages>
+             <Message Id="get" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>get</Item>
+               <Item>'FtpClient.getRemoteHost()'</Item>
+               <Item>Get</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'FtpClient.getRemoteHost()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#getRemotePath()">
+            <Messages>
+             <Message Id="get" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>get</Item>
+               <Item>'FtpClient.getRemotePath()'</Item>
+               <Item>Get</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'FtpClient.getRemotePath()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#getRemotePort()">
+            <Messages>
+             <Message Id="get" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>get</Item>
+               <Item>'FtpClient.getRemotePort()'</Item>
+               <Item>Get</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'FtpClient.getRemotePort()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#login()">
+            <Messages>
+             <Message Id="login" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>login</Item>
+               <Item>'FtpClient.login()'</Item>
+               <Item>Login</Item>
+              </Issue>
+             </Message>
+             <Message Id="login" TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>login</Item>
+               <Item>'FtpClient.login()'</Item>
+               <Item>LogOn</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#mkdir(System.String)">
+            <Messages>
+             <Message Id="mkdir" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>mkdir</Item>
+               <Item>'FtpClient.mkdir(string)'</Item>
+               <Item>Mkdir</Item>
+              </Issue>
+             </Message>
+             <Message Id="mkdir" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>mkdir</Item>
+               <Item>'FtpClient.mkdir(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#readReply()">
+            <Messages>
+             <Message Id="System.Int32.Parse(System.String)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'int.Parse(string)'</Item>
+               <Item>'FtpClient.readReply()'</Item>
+               <Item>'int.Parse(string, IFormatProvider)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#renameRemoteFile(System.String,System.String)">
+            <Messages>
+             <Message Id="rename" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>rename</Item>
+               <Item>'FtpClient.renameRemoteFile(string, string)'</Item>
+               <Item>Rename</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#rmdir(System.String)">
+            <Messages>
+             <Message Id="rmdir" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>rmdir</Item>
+               <Item>'FtpClient.rmdir(string)'</Item>
+               <Item>Rmdir</Item>
+              </Issue>
+             </Message>
+             <Message Id="rmdir" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>rmdir</Item>
+               <Item>'FtpClient.rmdir(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setBinaryMode(System.Boolean)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setBinaryMode(bool)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setDebug(System.Boolean)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setDebug(bool)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setRemoteHost(System.String)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setRemoteHost(string)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setRemotePass(System.String)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setRemotePass(string)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setRemotePath(System.String)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setRemotePath(string)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setRemotePort(System.Int32)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setRemotePort(int)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#setRemoteUser(System.String)">
+            <Messages>
+             <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>set</Item>
+               <Item>'FtpClient.setRemoteUser(string)'</Item>
+               <Item>Set</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#upload(System.String)">
+            <Messages>
+             <Message Id="upload" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>upload</Item>
+               <Item>'FtpClient.upload(string)'</Item>
+               <Item>Upload</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#upload(System.String,System.Boolean)">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue>
+               <Item>'FtpClient.upload(string, bool)'</Item>
+               <Item>'Exception'</Item>
+              </Issue>
+             </Message>
+             <Message Id="upload" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2008-01-06 17:38:35Z">
+              <Issue Name="Member">
+               <Item>upload</Item>
+               <Item>'FtpClient.upload(string, bool)'</Item>
+               <Item>Upload</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/OsmUtils.Framework/bin/Release/OsmUtils.Framework.dll">
+    <Modules>
+     <Module Name="osmutils.framework.dll">
+      <Namespaces>
+       <Namespace Name="OsmUtils.Framework">
+        <Types>
+         <Type Name="NewDataSet">
+          <Messages>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.NewDataSet()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet..ctor()&#xD;&#xA;DataSet.BeginInit():Void&#xD;&#xA;NewDataSet.InitClass():Void&#xD;&#xA;DataSet.set_DataSetName(String):Void&#xD;&#xA;DataSet.set_Prefix(String):Void&#xD;&#xA;DataSet.set_EnforceConstraints(Boolean):Void&#xD;&#xA;DataSet.set_SchemaSerializationMode(SchemaSerializationMode):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#.ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="CallBaseClassMethodsOnISerializableTypes" Category="Microsoft.Usage" CheckId="CA2236" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.NewDataSet(SerializationInfo, StreamingContext)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#bound">
+            <Messages>
+             <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>bound</Item>
+               <Item>'NewDataSet.bound'</Item>
+               <Item>Bound</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#node">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.node'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osm'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#tag">
+            <Messages>
+             <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>tag</Item>
+               <Item>'NewDataSet.tag'</Item>
+               <Item>Tag</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#way">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.way'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+boundDataTable">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Certainty="60">
+             <Item>'NewDataSet.boundDataTable'</Item>
+             <Item>IEnumerable</Item>
+            </Issue>
+           </Message>
+           <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>bound</Item>
+             <Item>'NewDataSet.boundDataTable'</Item>
+             <Item>Bound</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundDataTable'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundDataTable'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundDataTable'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.boundDataTable.boundDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+boundDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void</Item>
+              </Issue>
+              <Issue>
+               <Item>'NewDataSet.boundDataTable.boundDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+boundDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void&#xD;&#xA;NewDataSet+boundDataTable.InitClass():Void&#xD;&#xA;&#xD;&#xA;DataTable.EndInit():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddboundRow(OsmUtils.Framework.NewDataSet+boundRow)">
+            <Messages>
+             <Message Id="Addbound" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addbound</Item>
+               <Item>'NewDataSet.boundDataTable.AddboundRow(NewDataSet.boundRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddboundRow(System.String,System.String,OsmUtils.Framework.NewDataSet+osmRow)">
+            <Messages>
+             <Message TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'parentosmRowByosm_bound'</Item>
+               <Item>'NewDataSet.boundDataTable.AddboundRow(string, string, NewDataSet.osmRow)'</Item>
+               <Item>'NewDataSet.osmRow'</Item>
+               <Item>'DataRow'</Item>
+              </Issue>
+             </Message>
+             <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberParameter">
+               <Item>'NewDataSet.boundDataTable.AddboundRow(string, string, NewDataSet.osmRow)'</Item>
+               <Item>bound</Item>
+               <Item>'parentosmRowByosm_bound'</Item>
+               <Item>Bound</Item>
+              </Issue>
+             </Message>
+             <Message Id="Addbound" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addbound</Item>
+               <Item>'NewDataSet.boundDataTable.AddboundRow(string, string, NewDataSet.osmRow)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Byosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberParameter">
+               <Item>'NewDataSet.boundDataTable.AddboundRow(string, string, NewDataSet.osmRow)'</Item>
+               <Item>Byosm</Item>
+               <Item>'parentosmRowByosm_bound'</Item>
+              </Issue>
+             </Message>
+             <Message Id="parentosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberParameter">
+               <Item>'NewDataSet.boundDataTable.AddboundRow(string, string, NewDataSet.osmRow)'</Item>
+               <Item>parentosm</Item>
+               <Item>'parentosmRowByosm_bound'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberParameter">
+               <Item>'NewDataSet.boundDataTable.AddboundRow(string, string, NewDataSet.osmRow)'</Item>
+               <Item>'parentosmRowByosm_bound'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#boxColumn">
+            <Messages>
+             <Message Id="box" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>box</Item>
+               <Item>'NewDataSet.boundDataTable.boxColumn'</Item>
+               <Item>Box</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#NewboundRow()">
+            <Messages>
+             <Message Id="Newbound" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Newbound</Item>
+               <Item>'NewDataSet.boundDataTable.NewboundRow()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#originColumn">
+            <Messages>
+             <Message Id="origin" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>origin</Item>
+               <Item>'NewDataSet.boundDataTable.originColumn'</Item>
+               <Item>Origin</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_IdColumn">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.boundDataTable.osm_IdColumn'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.boundDataTable.osm_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RemoveboundRow(OsmUtils.Framework.NewDataSet+boundRow)">
+            <Messages>
+             <Message Id="Removebound" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Removebound</Item>
+               <Item>'NewDataSet.boundDataTable.RemoveboundRow(NewDataSet.boundRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#boundRowChanged" Kind="Event">
+            <Messages>
+             <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>bound</Item>
+               <Item>'NewDataSet.boundDataTable.boundRowChanged'</Item>
+               <Item>Bound</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#boundRowChanging" Kind="Event">
+            <Messages>
+             <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>bound</Item>
+               <Item>'NewDataSet.boundDataTable.boundRowChanging'</Item>
+               <Item>Bound</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#boundRowDeleted" Kind="Event">
+            <Messages>
+             <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>bound</Item>
+               <Item>'NewDataSet.boundDataTable.boundRowDeleted'</Item>
+               <Item>Bound</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#boundRowDeleting" Kind="Event">
+            <Messages>
+             <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>bound</Item>
+               <Item>'NewDataSet.boundDataTable.boundRowDeleting'</Item>
+               <Item>Bound</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+boundRow">
+          <Messages>
+           <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>bound</Item>
+             <Item>'NewDataSet.boundRow'</Item>
+             <Item>Bound</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundRow'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#box">
+            <Messages>
+             <Message Id="box" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>box</Item>
+               <Item>'NewDataSet.boundRow.box'</Item>
+               <Item>Box</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_box()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.boundRow.box.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#IsboxNull()">
+            <Messages>
+             <Message Id="Isbox" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isbox</Item>
+               <Item>'NewDataSet.boundRow.IsboxNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsoriginNull()">
+            <Messages>
+             <Message Id="Isorigin" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isorigin</Item>
+               <Item>'NewDataSet.boundRow.IsoriginNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Isosm_IdNull()">
+            <Messages>
+             <Message Id="Isosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isosm</Item>
+               <Item>'NewDataSet.boundRow.Isosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.boundRow.Isosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#origin">
+            <Messages>
+             <Message Id="origin" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>origin</Item>
+               <Item>'NewDataSet.boundRow.origin'</Item>
+               <Item>Origin</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_origin()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.boundRow.origin.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#osm_Id">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.boundRow.osm_Id'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.boundRow.osm_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_osm_Id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.boundRow.osm_Id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#osmRow">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.boundRow.osmRow'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetboxNull()">
+            <Messages>
+             <Message Id="Setbox" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setbox</Item>
+               <Item>'NewDataSet.boundRow.SetboxNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetoriginNull()">
+            <Messages>
+             <Message Id="Setorigin" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setorigin</Item>
+               <Item>'NewDataSet.boundRow.SetoriginNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Setosm_IdNull()">
+            <Messages>
+             <Message Id="Setosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setosm</Item>
+               <Item>'NewDataSet.boundRow.Setosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.boundRow.Setosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+boundRowChangeEvent">
+          <Messages>
+           <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>bound</Item>
+             <Item>'NewDataSet.boundRowChangeEvent'</Item>
+             <Item>Bound</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundRowChangeEvent'</Item>
+             <Item>EventArgs</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundRowChangeEvent'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+boundRowChangeEventHandler">
+          <Messages>
+           <Message Id="bound" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>bound</Item>
+             <Item>'NewDataSet.boundRowChangeEventHandler'</Item>
+             <Item>Bound</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.boundRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+nodeDataTable">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Certainty="60">
+             <Item>'NewDataSet.nodeDataTable'</Item>
+             <Item>IEnumerable</Item>
+            </Issue>
+           </Message>
+           <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>node</Item>
+             <Item>'NewDataSet.nodeDataTable'</Item>
+             <Item>Node</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeDataTable'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeDataTable'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeDataTable'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.nodeDataTable.nodeDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+nodeDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void</Item>
+              </Issue>
+              <Issue>
+               <Item>'NewDataSet.nodeDataTable.nodeDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+nodeDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void&#xD;&#xA;NewDataSet+nodeDataTable.InitClass():Void&#xD;&#xA;DataTable.get_Columns():DataColumnCollection&#xD;&#xA;DataT&#xD;&#xA;DataTable.EndInit():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddnodeRow(OsmUtils.Framework.NewDataSet+nodeRow)">
+            <Messages>
+             <Message Id="Addnode" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addnode</Item>
+               <Item>'NewDataSet.nodeDataTable.AddnodeRow(NewDataSet.nodeRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#idColumn">
+            <Messages>
+             <Message Id="id" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberAbbreviation">
+               <Item>id</Item>
+               <Item>'NewDataSet.nodeDataTable.idColumn'</Item>
+               <Item>Id</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#latColumn">
+            <Messages>
+             <Message Id="lat" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>lat</Item>
+               <Item>'NewDataSet.nodeDataTable.latColumn'</Item>
+               <Item>Lat</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#lonColumn">
+            <Messages>
+             <Message Id="lon" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>lon</Item>
+               <Item>'NewDataSet.nodeDataTable.lonColumn'</Item>
+               <Item>Lon</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#NewnodeRow()">
+            <Messages>
+             <Message Id="Newnode" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Newnode</Item>
+               <Item>'NewDataSet.nodeDataTable.NewnodeRow()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#node_IdColumn">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.nodeDataTable.node_IdColumn'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.nodeDataTable.node_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_IdColumn">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.nodeDataTable.osm_IdColumn'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.nodeDataTable.osm_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RemovenodeRow(OsmUtils.Framework.NewDataSet+nodeRow)">
+            <Messages>
+             <Message Id="Removenode" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Removenode</Item>
+               <Item>'NewDataSet.nodeDataTable.RemovenodeRow(NewDataSet.nodeRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#timestampColumn">
+            <Messages>
+             <Message Id="timestamp" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>timestamp</Item>
+               <Item>'NewDataSet.nodeDataTable.timestampColumn'</Item>
+               <Item>Timestamp</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#userColumn">
+            <Messages>
+             <Message Id="user" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>user</Item>
+               <Item>'NewDataSet.nodeDataTable.userColumn'</Item>
+               <Item>User</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#visibleColumn">
+            <Messages>
+             <Message Id="visible" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>visible</Item>
+               <Item>'NewDataSet.nodeDataTable.visibleColumn'</Item>
+               <Item>Visible</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#nodeRowChanged" Kind="Event">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.nodeDataTable.nodeRowChanged'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#nodeRowChanging" Kind="Event">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.nodeDataTable.nodeRowChanging'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#nodeRowDeleted" Kind="Event">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.nodeDataTable.nodeRowDeleted'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#nodeRowDeleting" Kind="Event">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.nodeDataTable.nodeRowDeleting'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+nodeRow">
+          <Messages>
+           <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>node</Item>
+             <Item>'NewDataSet.nodeRow'</Item>
+             <Item>Node</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeRow'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#GettagRows()">
+            <Messages>
+             <Message Id="Gettag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Gettag</Item>
+               <Item>'NewDataSet.nodeRow.GettagRows()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#id">
+            <Messages>
+             <Message Id="id" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberAbbreviation">
+               <Item>id</Item>
+               <Item>'NewDataSet.nodeRow.id'</Item>
+               <Item>Id</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#IsidNull()">
+            <Messages>
+             <Message Id="Isid" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isid</Item>
+               <Item>'NewDataSet.nodeRow.IsidNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IslatNull()">
+            <Messages>
+             <Message Id="Islat" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Islat</Item>
+               <Item>'NewDataSet.nodeRow.IslatNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IslonNull()">
+            <Messages>
+             <Message Id="Islon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Islon</Item>
+               <Item>'NewDataSet.nodeRow.IslonNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Isosm_IdNull()">
+            <Messages>
+             <Message Id="Isosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isosm</Item>
+               <Item>'NewDataSet.nodeRow.Isosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.nodeRow.Isosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IstimestampNull()">
+            <Messages>
+             <Message Id="Istimestamp" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Istimestamp</Item>
+               <Item>'NewDataSet.nodeRow.IstimestampNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsuserNull()">
+            <Messages>
+             <Message Id="Isuser" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isuser</Item>
+               <Item>'NewDataSet.nodeRow.IsuserNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsvisibleNull()">
+            <Messages>
+             <Message Id="Isvisible" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isvisible</Item>
+               <Item>'NewDataSet.nodeRow.IsvisibleNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#lat">
+            <Messages>
+             <Message Id="lat" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>lat</Item>
+               <Item>'NewDataSet.nodeRow.lat'</Item>
+               <Item>Lat</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_lat()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.lat.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#lon">
+            <Messages>
+             <Message Id="lon" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>lon</Item>
+               <Item>'NewDataSet.nodeRow.lon'</Item>
+               <Item>Lon</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_lon()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.lon.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#node_Id">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.nodeRow.node_Id'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.nodeRow.node_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_Id">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.nodeRow.osm_Id'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.nodeRow.osm_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_osm_Id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.osm_Id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#osmRow">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.nodeRow.osmRow'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetidNull()">
+            <Messages>
+             <Message Id="Setid" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setid</Item>
+               <Item>'NewDataSet.nodeRow.SetidNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetlatNull()">
+            <Messages>
+             <Message Id="Setlat" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setlat</Item>
+               <Item>'NewDataSet.nodeRow.SetlatNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetlonNull()">
+            <Messages>
+             <Message Id="Setlon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setlon</Item>
+               <Item>'NewDataSet.nodeRow.SetlonNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Setosm_IdNull()">
+            <Messages>
+             <Message Id="Setosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setosm</Item>
+               <Item>'NewDataSet.nodeRow.Setosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.nodeRow.Setosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SettimestampNull()">
+            <Messages>
+             <Message Id="Settimestamp" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Settimestamp</Item>
+               <Item>'NewDataSet.nodeRow.SettimestampNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetuserNull()">
+            <Messages>
+             <Message Id="Setuser" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setuser</Item>
+               <Item>'NewDataSet.nodeRow.SetuserNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetvisibleNull()">
+            <Messages>
+             <Message Id="Setvisible" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setvisible</Item>
+               <Item>'NewDataSet.nodeRow.SetvisibleNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#timestamp">
+            <Messages>
+             <Message Id="timestamp" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>timestamp</Item>
+               <Item>'NewDataSet.nodeRow.timestamp'</Item>
+               <Item>Timestamp</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_timestamp()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.timestamp.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#user">
+            <Messages>
+             <Message Id="user" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>user</Item>
+               <Item>'NewDataSet.nodeRow.user'</Item>
+               <Item>User</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_user()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.user.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#visible">
+            <Messages>
+             <Message Id="visible" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>visible</Item>
+               <Item>'NewDataSet.nodeRow.visible'</Item>
+               <Item>Visible</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_visible()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.nodeRow.visible.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+nodeRowChangeEvent">
+          <Messages>
+           <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>node</Item>
+             <Item>'NewDataSet.nodeRowChangeEvent'</Item>
+             <Item>Node</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeRowChangeEvent'</Item>
+             <Item>EventArgs</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeRowChangeEvent'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+nodeRowChangeEventHandler">
+          <Messages>
+           <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>node</Item>
+             <Item>'NewDataSet.nodeRowChangeEventHandler'</Item>
+             <Item>Node</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.nodeRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+osmDataTable">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Certainty="60">
+             <Item>'NewDataSet.osmDataTable'</Item>
+             <Item>IEnumerable</Item>
+            </Issue>
+           </Message>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'NewDataSet.osmDataTable'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmDataTable'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmDataTable'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmDataTable'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.osmDataTable.osmDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+osmDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void</Item>
+              </Issue>
+              <Issue>
+               <Item>'NewDataSet.osmDataTable.osmDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+osmDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void&#xD;&#xA;NewDataSet+osmDataTable.InitClass():Void&#xD;&#xA;DataTable.get_Columns():DataColumnCollection&#xD;&#xA;DataTa&#xD;&#xA;DataTable.EndInit():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddosmRow(OsmUtils.Framework.NewDataSet+osmRow)">
+            <Messages>
+             <Message Id="Addosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addosm</Item>
+               <Item>'NewDataSet.osmDataTable.AddosmRow(NewDataSet.osmRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddosmRow(System.String,System.String)">
+            <Messages>
+             <Message Id="Addosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addosm</Item>
+               <Item>'NewDataSet.osmDataTable.AddosmRow(string, string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#generatorColumn">
+            <Messages>
+             <Message Id="generator" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>generator</Item>
+               <Item>'NewDataSet.osmDataTable.generatorColumn'</Item>
+               <Item>Generator</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#NewosmRow()">
+            <Messages>
+             <Message Id="Newosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Newosm</Item>
+               <Item>'NewDataSet.osmDataTable.NewosmRow()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_IdColumn">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osmDataTable.osm_IdColumn'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.osmDataTable.osm_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RemoveosmRow(OsmUtils.Framework.NewDataSet+osmRow)">
+            <Messages>
+             <Message Id="Removeosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Removeosm</Item>
+               <Item>'NewDataSet.osmDataTable.RemoveosmRow(NewDataSet.osmRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#versionColumn">
+            <Messages>
+             <Message Id="version" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>version</Item>
+               <Item>'NewDataSet.osmDataTable.versionColumn'</Item>
+               <Item>Version</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osmRowChanged" Kind="Event">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osmDataTable.osmRowChanged'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osmRowChanging" Kind="Event">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osmDataTable.osmRowChanging'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osmRowDeleted" Kind="Event">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osmDataTable.osmRowDeleted'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osmRowDeleting" Kind="Event">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osmDataTable.osmRowDeleting'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+osmRow">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'NewDataSet.osmRow'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmRow'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#generator">
+            <Messages>
+             <Message Id="generator" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>generator</Item>
+               <Item>'NewDataSet.osmRow.generator'</Item>
+               <Item>Generator</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_generator()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.osmRow.generator.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#GetboundRows()">
+            <Messages>
+             <Message Id="Getbound" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Getbound</Item>
+               <Item>'NewDataSet.osmRow.GetboundRows()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetnodeRows()">
+            <Messages>
+             <Message Id="Getnode" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Getnode</Item>
+               <Item>'NewDataSet.osmRow.GetnodeRows()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetwayRows()">
+            <Messages>
+             <Message Id="Getway" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Getway</Item>
+               <Item>'NewDataSet.osmRow.GetwayRows()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsgeneratorNull()">
+            <Messages>
+             <Message Id="Isgenerator" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isgenerator</Item>
+               <Item>'NewDataSet.osmRow.IsgeneratorNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsversionNull()">
+            <Messages>
+             <Message Id="Isversion" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isversion</Item>
+               <Item>'NewDataSet.osmRow.IsversionNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_Id">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.osmRow.osm_Id'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.osmRow.osm_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetgeneratorNull()">
+            <Messages>
+             <Message Id="Setgenerator" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setgenerator</Item>
+               <Item>'NewDataSet.osmRow.SetgeneratorNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetversionNull()">
+            <Messages>
+             <Message Id="Setversion" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setversion</Item>
+               <Item>'NewDataSet.osmRow.SetversionNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#version">
+            <Messages>
+             <Message Id="version" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>version</Item>
+               <Item>'NewDataSet.osmRow.version'</Item>
+               <Item>Version</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_version()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.osmRow.version.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+osmRowChangeEvent">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'NewDataSet.osmRowChangeEvent'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmRowChangeEvent'</Item>
+             <Item>EventArgs</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmRowChangeEvent'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+osmRowChangeEventHandler">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'NewDataSet.osmRowChangeEventHandler'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.osmRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+tagDataTable">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Certainty="60">
+             <Item>'NewDataSet.tagDataTable'</Item>
+             <Item>IEnumerable</Item>
+            </Issue>
+           </Message>
+           <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>tag</Item>
+             <Item>'NewDataSet.tagDataTable'</Item>
+             <Item>Tag</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagDataTable'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagDataTable'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagDataTable'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.tagDataTable.tagDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+tagDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void</Item>
+              </Issue>
+              <Issue>
+               <Item>'NewDataSet.tagDataTable.tagDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+tagDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void&#xD;&#xA;NewDataSet+tagDataTable.InitClass():Void&#xD;&#xA;Da&#xD;&#xA;DataTable.EndInit():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddtagRow(OsmUtils.Framework.NewDataSet+tagRow)">
+            <Messages>
+             <Message Id="Addtag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addtag</Item>
+               <Item>'NewDataSet.tagDataTable.AddtagRow(NewDataSet.tagRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#kColumn">
+            <Messages>
+             <Message Id="k" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>k</Item>
+               <Item>'NewDataSet.tagDataTable.kColumn'</Item>
+               <Item>K</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#NewtagRow()">
+            <Messages>
+             <Message Id="Newtag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Newtag</Item>
+               <Item>'NewDataSet.tagDataTable.NewtagRow()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#node_IdColumn">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.tagDataTable.node_IdColumn'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagDataTable.node_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RemovetagRow(OsmUtils.Framework.NewDataSet+tagRow)">
+            <Messages>
+             <Message Id="Removetag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Removetag</Item>
+               <Item>'NewDataSet.tagDataTable.RemovetagRow(NewDataSet.tagRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#vColumn">
+            <Messages>
+             <Message Id="v" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>v</Item>
+               <Item>'NewDataSet.tagDataTable.vColumn'</Item>
+               <Item>V</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#way_IdColumn">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.tagDataTable.way_IdColumn'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagDataTable.way_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#tagRowChanged" Kind="Event">
+            <Messages>
+             <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>tag</Item>
+               <Item>'NewDataSet.tagDataTable.tagRowChanged'</Item>
+               <Item>Tag</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#tagRowChanging" Kind="Event">
+            <Messages>
+             <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>tag</Item>
+               <Item>'NewDataSet.tagDataTable.tagRowChanging'</Item>
+               <Item>Tag</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#tagRowDeleted" Kind="Event">
+            <Messages>
+             <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>tag</Item>
+               <Item>'NewDataSet.tagDataTable.tagRowDeleted'</Item>
+               <Item>Tag</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#tagRowDeleting" Kind="Event">
+            <Messages>
+             <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>tag</Item>
+               <Item>'NewDataSet.tagDataTable.tagRowDeleting'</Item>
+               <Item>Tag</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+tagRow">
+          <Messages>
+           <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>tag</Item>
+             <Item>'NewDataSet.tagRow'</Item>
+             <Item>Tag</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagRow'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#IskNull()">
+            <Messages>
+             <Message Id="Isk" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isk</Item>
+               <Item>'NewDataSet.tagRow.IskNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Isnode_IdNull()">
+            <Messages>
+             <Message Id="Isnode" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isnode</Item>
+               <Item>'NewDataSet.tagRow.Isnode_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagRow.Isnode_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Isway_IdNull()">
+            <Messages>
+             <Message Id="Isway" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isway</Item>
+               <Item>'NewDataSet.tagRow.Isway_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagRow.Isway_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#k">
+            <Messages>
+             <Message Id="k" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>k</Item>
+               <Item>'NewDataSet.tagRow.k'</Item>
+               <Item>K</Item>
+              </Issue>
+             </Message>
+             <Message Id="k" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'NewDataSet.tagRow.k'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_k()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.tagRow.k.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#node_Id">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.tagRow.node_Id'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagRow.node_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_node_Id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.tagRow.node_Id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#nodeRow">
+            <Messages>
+             <Message Id="node" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>node</Item>
+               <Item>'NewDataSet.tagRow.nodeRow'</Item>
+               <Item>Node</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetkNull()">
+            <Messages>
+             <Message Id="Setk" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setk</Item>
+               <Item>'NewDataSet.tagRow.SetkNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Setnode_IdNull()">
+            <Messages>
+             <Message Id="Setnode" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setnode</Item>
+               <Item>'NewDataSet.tagRow.Setnode_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagRow.Setnode_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetvNull()">
+            <Messages>
+             <Message Id="Setv" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setv</Item>
+               <Item>'NewDataSet.tagRow.SetvNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Setway_IdNull()">
+            <Messages>
+             <Message Id="Setway" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setway</Item>
+               <Item>'NewDataSet.tagRow.Setway_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagRow.Setway_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#v">
+            <Messages>
+             <Message Id="v" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>v</Item>
+               <Item>'NewDataSet.tagRow.v'</Item>
+               <Item>V</Item>
+              </Issue>
+             </Message>
+             <Message Id="v" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'NewDataSet.tagRow.v'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_v()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.tagRow.v.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#way_Id">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.tagRow.way_Id'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.tagRow.way_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_way_Id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.tagRow.way_Id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#wayRow">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.tagRow.wayRow'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+tagRowChangeEvent">
+          <Messages>
+           <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>tag</Item>
+             <Item>'NewDataSet.tagRowChangeEvent'</Item>
+             <Item>Tag</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagRowChangeEvent'</Item>
+             <Item>EventArgs</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagRowChangeEvent'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+tagRowChangeEventHandler">
+          <Messages>
+           <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>tag</Item>
+             <Item>'NewDataSet.tagRowChangeEventHandler'</Item>
+             <Item>Tag</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.tagRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+wayDataTable">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Certainty="60">
+             <Item>'NewDataSet.wayDataTable'</Item>
+             <Item>IEnumerable</Item>
+            </Issue>
+           </Message>
+           <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>way</Item>
+             <Item>'NewDataSet.wayDataTable'</Item>
+             <Item>Way</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayDataTable'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayDataTable'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayDataTable'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.wayDataTable.wayDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+wayDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void</Item>
+              </Issue>
+              <Issue>
+               <Item>'NewDataSet.wayDataTable.wayDataTable()'</Item>
+               <Item>&#xD;&#xA;&#xD;&#xA;NewDataSet+wayDataTable..ctor()&#xD;&#xA;DataTable.set_TableName(String):Void&#xD;&#xA;DataTable.BeginInit():Void&#xD;&#xA;NewDataSet+wayDataTable.InitClass():Void&#xD;&#xA;DataTable.get_Columns():DataColumnCollection&#xD;&#xA;DataTa&#xD;&#xA;DataTable.EndInit():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AddwayRow(OsmUtils.Framework.NewDataSet+wayRow)">
+            <Messages>
+             <Message Id="Addway" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Addway</Item>
+               <Item>'NewDataSet.wayDataTable.AddwayRow(NewDataSet.wayRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#idColumn">
+            <Messages>
+             <Message Id="id" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberAbbreviation">
+               <Item>id</Item>
+               <Item>'NewDataSet.wayDataTable.idColumn'</Item>
+               <Item>Id</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#NewwayRow()">
+            <Messages>
+             <Message Id="Newway" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Newway</Item>
+               <Item>'NewDataSet.wayDataTable.NewwayRow()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_IdColumn">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.wayDataTable.osm_IdColumn'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.wayDataTable.osm_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RemovewayRow(OsmUtils.Framework.NewDataSet+wayRow)">
+            <Messages>
+             <Message Id="Removeway" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Removeway</Item>
+               <Item>'NewDataSet.wayDataTable.RemovewayRow(NewDataSet.wayRow)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#timestampColumn">
+            <Messages>
+             <Message Id="timestamp" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>timestamp</Item>
+               <Item>'NewDataSet.wayDataTable.timestampColumn'</Item>
+               <Item>Timestamp</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#userColumn">
+            <Messages>
+             <Message Id="user" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>user</Item>
+               <Item>'NewDataSet.wayDataTable.userColumn'</Item>
+               <Item>User</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#visibleColumn">
+            <Messages>
+             <Message Id="visible" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>visible</Item>
+               <Item>'NewDataSet.wayDataTable.visibleColumn'</Item>
+               <Item>Visible</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#way_IdColumn">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.wayDataTable.way_IdColumn'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.wayDataTable.way_IdColumn'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#wayRowChanged" Kind="Event">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.wayDataTable.wayRowChanged'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#wayRowChanging" Kind="Event">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.wayDataTable.wayRowChanging'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#wayRowDeleted" Kind="Event">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.wayDataTable.wayRowDeleted'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#wayRowDeleting" Kind="Event">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.wayDataTable.wayRowDeleting'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+wayRow">
+          <Messages>
+           <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>way</Item>
+             <Item>'NewDataSet.wayRow'</Item>
+             <Item>Way</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayRow'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#GettagRows()">
+            <Messages>
+             <Message Id="Gettag" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Gettag</Item>
+               <Item>'NewDataSet.wayRow.GettagRows()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#id">
+            <Messages>
+             <Message Id="id" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberAbbreviation">
+               <Item>id</Item>
+               <Item>'NewDataSet.wayRow.id'</Item>
+               <Item>Id</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.wayRow.id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#IsidNull()">
+            <Messages>
+             <Message Id="Isid" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isid</Item>
+               <Item>'NewDataSet.wayRow.IsidNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Isosm_IdNull()">
+            <Messages>
+             <Message Id="Isosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isosm</Item>
+               <Item>'NewDataSet.wayRow.Isosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.wayRow.Isosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IstimestampNull()">
+            <Messages>
+             <Message Id="Istimestamp" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Istimestamp</Item>
+               <Item>'NewDataSet.wayRow.IstimestampNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsuserNull()">
+            <Messages>
+             <Message Id="Isuser" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isuser</Item>
+               <Item>'NewDataSet.wayRow.IsuserNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsvisibleNull()">
+            <Messages>
+             <Message Id="Isvisible" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Isvisible</Item>
+               <Item>'NewDataSet.wayRow.IsvisibleNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#osm_Id">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.wayRow.osm_Id'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.wayRow.osm_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_osm_Id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.wayRow.osm_Id.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#osmRow">
+            <Messages>
+             <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>osm</Item>
+               <Item>'NewDataSet.wayRow.osmRow'</Item>
+               <Item>Osm</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetidNull()">
+            <Messages>
+             <Message Id="Setid" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setid</Item>
+               <Item>'NewDataSet.wayRow.SetidNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Setosm_IdNull()">
+            <Messages>
+             <Message Id="Setosm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setosm</Item>
+               <Item>'NewDataSet.wayRow.Setosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.wayRow.Setosm_IdNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SettimestampNull()">
+            <Messages>
+             <Message Id="Settimestamp" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Settimestamp</Item>
+               <Item>'NewDataSet.wayRow.SettimestampNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetuserNull()">
+            <Messages>
+             <Message Id="Setuser" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setuser</Item>
+               <Item>'NewDataSet.wayRow.SetuserNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SetvisibleNull()">
+            <Messages>
+             <Message Id="Setvisible" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Setvisible</Item>
+               <Item>'NewDataSet.wayRow.SetvisibleNull()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#timestamp">
+            <Messages>
+             <Message Id="timestamp" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>timestamp</Item>
+               <Item>'NewDataSet.wayRow.timestamp'</Item>
+               <Item>Timestamp</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_timestamp()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.wayRow.timestamp.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#user">
+            <Messages>
+             <Message Id="user" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>user</Item>
+               <Item>'NewDataSet.wayRow.user'</Item>
+               <Item>User</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_user()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.wayRow.user.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#visible">
+            <Messages>
+             <Message Id="visible" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>visible</Item>
+               <Item>'NewDataSet.wayRow.visible'</Item>
+               <Item>Visible</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_visible()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning">
+                 <Item>'NewDataSet.wayRow.visible.get()'</Item>
+                 <Item>'StrongTypingException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#way_Id">
+            <Messages>
+             <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>way</Item>
+               <Item>'NewDataSet.wayRow.way_Id'</Item>
+               <Item>Way</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>'NewDataSet.wayRow.way_Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NewDataSet+wayRowChangeEvent">
+          <Messages>
+           <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>way</Item>
+             <Item>'NewDataSet.wayRowChangeEvent'</Item>
+             <Item>Way</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayRowChangeEvent'</Item>
+             <Item>EventArgs</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayRowChangeEvent'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NewDataSet+wayRowChangeEventHandler">
+          <Messages>
+           <Message Id="way" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>way</Item>
+             <Item>'NewDataSet.wayRowChangeEventHandler'</Item>
+             <Item>Way</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue>
+             <Item>'NewDataSet.wayRowChangeEventHandler'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="OsmUtils.OsmSchema">
+        <Types>
+         <Type Name="NewDataSet">
+          <Members>
+           <Member Name="#.ctor(System.Collections.Generic.List`1&lt;System.Object&gt;)">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;object&gt;'</Item>
+               <Item>'NewDataSet.NewDataSet(List&lt;object&gt;)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Items">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'NewDataSet.Items'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;object&gt;'</Item>
+               <Item>'NewDataSet.Items'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="osm">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osm'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor(System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmBound&gt;,System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmNode&gt;,System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmWay&gt;,System.Collections.Generic.List`1&lt;OsmUtils.OsmSchema.osmRelation&gt;,System.String,System.String)">
+            <Messages>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmBound&gt;'</Item>
+               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
+              </Issue>
+              <Issue>
+               <Item>'List&lt;osmNode&gt;'</Item>
+               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
+              </Issue>
+              <Issue>
+               <Item>'List&lt;osmRelation&gt;'</Item>
+               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
+              </Issue>
+              <Issue>
+               <Item>'List&lt;osmWay&gt;'</Item>
+               <Item>'osm.osm(List&lt;osmBound&gt;, List&lt;osmNode&gt;, List&lt;osmWay&gt;, List&lt;osmRelation&gt;, string, string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Bound">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osm.Bound'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmBound&gt;'</Item>
+               <Item>'osm.Bound'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Node">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osm.Node'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmNode&gt;'</Item>
+               <Item>'osm.Node'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Relation">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osm.Relation'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmRelation&gt;'</Item>
+               <Item>'osm.Relation'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Way">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osm.Way'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmWay&gt;'</Item>
+               <Item>'osm.Way'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="osmBound">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osmBound'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="osmNode">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osmNode'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Tag">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osmNode.Tag'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;tag&gt;'</Item>
+               <Item>'osmNode.Tag'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="osmRelation">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osmRelation'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Member">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osmRelation.Member'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmRelationMember&gt;'</Item>
+               <Item>'osmRelation.Member'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Tag">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osmRelation.Tag'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;tag&gt;'</Item>
+               <Item>'osmRelation.Tag'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="osmRelationMember">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osmRelationMember'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Type">
+            <Messages>
+             <Message TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721" Status="Excluded" Created="2007-11-27 22:21:53Z" FixCategory="NonBreaking">
+              <Issue Name="BaseType">
+               <Item>'osmRelationMember.Type'</Item>
+               <Item>'object.GetType()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="osmWay">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osmWay'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Nd">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osmWay.Nd'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;osmWayND&gt;'</Item>
+               <Item>'osmWay.Nd'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Nd" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="Member">
+               <Item>Nd</Item>
+               <Item>'osmWay.Nd'</Item>
+               <Item>ND</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Tag">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'osmWay.Tag'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue>
+               <Item>'List&lt;tag&gt;'</Item>
+               <Item>'osmWay.Tag'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="osmWayND">
+          <Messages>
+           <Message Id="osm" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>osm</Item>
+             <Item>'osmWayND'</Item>
+             <Item>Osm</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="tag">
+          <Messages>
+           <Message Id="tag" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Excluded" Created="2007-11-27 22:21:53Z">
+            <Issue Name="Type">
+             <Item>tag</Item>
+             <Item>'tag'</Item>
+             <Item>Tag</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor(System.String,System.String)">
+            <Messages>
+             <Message Id="k" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'tag.tag(string, string)'</Item>
+               <Item>'k'</Item>
+              </Issue>
+             </Message>
+             <Message Id="v" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'tag.tag(string, string)'</Item>
+               <Item>'v'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#K">
+            <Messages>
+             <Message Id="K" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'tag.K'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#V">
+            <Messages>
+             <Message Id="V" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'tag.V'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Rules>
+   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+    <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="CallBaseClassMethodsOnISerializableTypes" Category="Microsoft.Usage" CheckId="CA2236">
+    <Resolution Name="Default">Method {0} should be modified to call its base class implementation.</Resolution>
+   </Rule>
+   <Rule TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227">
+    <Resolution Name="Default" />
+   </Rule>
+   <Rule TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010">
+    <Resolution Name="Default">{0} appears to be a non-generic, strongly typed collection. Add an implementation to the instance of {1}&lt;T&gt; where T is the underlying element type of {0}.</Resolution>
+   </Rule>
+   <Rule TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011">
+    <Resolution Name="Default">Consider changing the type of parameter {0} in {1} from {2} to its base type {3}. This method appears to only require base class members in its implementation. Suppress this violation if there is a compelling reason to require the more derived type in the method signature.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214">
+    <Resolution Name="Default">{0} contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: {1}</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+    <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002">
+    <Resolution Name="Default" />
+   </Rule>
+   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+    <Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization because it will be done automatically by the runtime.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
+    <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+    <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
+    <Resolution Name="MemberAbbreviation" />
+    <Resolution Name="MemberParameter" />
+    <Resolution Name="Type" />
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MemberMoreMeaningfulName" />
+    <Resolution Name="MemberParameter" />
+    <Resolution Name="MemberParameterMoreMeaningfulName" />
+   </Rule>
+   <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
+    <Resolution Name="Default">Rename {0} to end in '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707">
+    <Resolution Name="Member">Remove the underscores from member name {0}.</Resolution>
+    <Resolution Name="MemberParameter" />
+   </Rule>
+   <Rule TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240">
+    <Resolution Name="Default">Add an implementation of GetObjectData to type {0}.</Resolution>
+   </Rule>
+   <Rule TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034">
+    <Resolution Name="Default">Do not nest type {0}. Alternatively, change its accessibility so that it is not externally visible.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721">
+    <Resolution Name="BaseType">The property name {0} is confusing given the existence of inherited method {1}. Rename or remove this property.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="Default">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Resolution>
+   </Rule>
+   <Rule TypeName="TestForEmptyStringsUsingStringLength" Category="Microsoft.Performance" CheckId="CA1820">
+    <Resolution Name="IsNullOrEmpty">Replace the call to {0} in {1} with a call to 'String.IsNullOrEmpty'.</Resolution>
+   </Rule>
+   <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+    <Resolution Name="DependsOnFix">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}. If {0} has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Resolution>
+   </Rule>
+   <Rule TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003">
+    <Resolution Name="Default">Remove {0} and replace its usage with EventHandler&lt;T&gt;</Resolution>
+   </Rule>
+   <Rule TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726">
+    <Resolution Name="Member">Replace the term '{0}' in member name {1} with the preferred alternate '{2}'.</Resolution>
+   </Rule>
+   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+    <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

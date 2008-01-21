@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<project name="OsmUtils" basedir="." xmlns="http://nant.sf.net/release/0.85/nant.xsd">
+	<description>Srtm2Osm build script</description>
+
+    <property name="NAntContribDir" value="lib\nantcontrib-0.85" />
+    <include buildfile=".\Scripts\NAntCommon.build" />
+
+	<!-- setting basic project properties -->
+    <property name="ProjectId" value="Srtm2Osm" />
+    <property name="ReleaseStartDate" value="01/21/2008"/>
+    <property name="CompanyName" value="Igor Brejc"/>
+    <property name="BuildEngine" value="MSBuild"/>
+    <property name="ProjectSolutionFile" value="${ProjectId}.sln" />
+    <property name="ProjectKey" value="${ProjectId}.snk" />
+    <property name="ProjectTitle" value="Srtm2Osm" />
+	<property name="BuildRoot" value="${project::get-base-directory()}\Builds"/>
+	<property name="RestartIis" value="false" />
+    <property name="CreateCommonAssemblyInfo" value="true"/>
+    <property name="DoPrepareDb" value="false"/>
+    <property name="DoUseFixedBuildDir" value="true" />
+    <property name="FxCopVersion" value="1.36"/>
+    <property name="DoxygenVersion" value="1.5.2"/>
+
+    <target name="set.build.properties.custom">
+
+		<fileset id="OutputDirsToClean">
+            <include name="Brejc.DemLibrary\bin\${ProjectConfig}\**"/>
+            <include name="Brejc.DemLibrary\obj\${ProjectConfig}\**"/>
+            <include name="Brejc.Geometry\bin\${ProjectConfig}\**"/>
+            <include name="Brejc.Geometry\obj\${ProjectConfig}\**"/>
+            <include name="OsmUtils.Framework\bin\${ProjectConfig}\**"/>
+            <include name="OsmUtils.Framework\obj\${ProjectConfig}\**"/>
+            <include name="OsmUtils.OsmClient\bin\${ProjectConfig}\**"/>
+            <include name="OsmUtils.OsmClient\obj\${ProjectConfig}\**"/>
+            <include name="Srtm2Osm\bin\${ProjectConfig}\**"/>
+            <include name="Srtm2Osm\obj\${ProjectConfig}\**"/>
+
+            <exclude name="**\*.projdata"/>
+		</fileset>
+		
+		<fileset id="SourceFiles">
+			<include name="**\*.cs"/>
+		</fileset>
+
+		<property name="DoDocumentAssemblies" value="false"/>
+		<assemblyfileset id="AssembliesToDocument">
+            <include name="Srtm2Osm\bin\${ProjectConfig}\Srtm2Osm.exe"/>
+		</assemblyfileset>
+		
+		<property name="DoFxCop" value="true" />
+		<property name="FailIfFxCopFails" value="true" />
+		
+		<zipfileset id="ShippedStuff" basedir="${BuildDir}">
+            <include name="Srtm2Osm\**"/>
+        </zipfileset>
+		
+		<property name="DoShipUpgrade" value="false" />
+		<zipfileset id="ShippedUpgradeStuff" basedir="${BuildDir}">
+		</zipfileset>
+	</target>
+
+    <!--<target name="test.unit.custom">
+        <property name="UnitTestEngine" value="MbUnit"/>
+        <property name="MbUnitBin" value=".\lib\MbUnit" />
+        <property name="NCoverVersion" value="1.5.8"/>
+        <property name="NCoverExplorerVersion" value="1.3.6.36"/>
+        <property name="StopIfTestsFail" value="true" />
+
+        <property name="AssemblyToTest" value="${project::get-base-directory()}\OsmUtils.Tests\bin\${ProjectConfig}\OsmUtils.Tests.dll" />
+        <property name="IncludeTestCategories" value="" />
+        <property name="ExcludeTestCategories" value="NoNAnt" />
+        <property name="NoCoverage" value="False"/>
+        <call target="test.run"/>
+    </target>-->
+
+    <target name="copy.deliverables.custom" description="copies all necessary files to the build directory">
+        <copy todir="${BuildDir}\Srtm2Osm" overwrite="true">
+            <fileset basedir="Srtm2Osm\bin\${ProjectConfig}">
+                <include name="*.dll"/>
+                <include name="*.exe"/>
+                <include name="*.pdb"/>
+                <include name="*.config"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${BuildDir}\Srtm2Osm" overwrite="true">
+            <fileset basedir="Srtm2Osm">
+                <include name="license.txt"/>
+                <include name="ReleaseNotes.txt"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${BuildDir}\Srtm2Osm" overwrite="true">
+            <fileset basedir="lib\log4net-1.2.10">
+                <include name="log4net.LICENSE.txt"/>
+            </fileset>
+        </copy>
+
+    </target>
+</project>

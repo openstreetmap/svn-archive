@@ -203,7 +203,22 @@
                 <line class='highway-casing highway-byway-3-casing' smart-linecap='no'/>
             </rule>
             <rule e="way" k="highway" v="track">
-                <line class='highway-casing highway-track-casing'/>
+		<rule e="way" k="tracktype" v="~">
+	                <line class='highway-casing highway-track-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade1">
+			<line class='highway-casing highway-track-casing highway-track-grade1-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade2">
+			<line class='highway-casing highway-track-casing highway-track-grade2-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade3">
+			<line class='highway-casing highway-track-casing highway-track-grade3-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade4">
+		</rule>
+		<rule e="way" k="tracktype" v="grade5">
+		</rule>
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
                 <line class='highway-casing highway-unsurfaced-casing' smart-linecap='no'/>
@@ -304,7 +319,22 @@
 				<line class='highway-core highway-byway-1-core' />
 			</rule>
 			<rule e="way" k="highway" v="track">
-				<line class='highway-core highway-track-core' />
+				<rule e="way" k="tracktype" v="~">
+					<line class='highway-core highway-track-core' />
+				</rule>
+				<rule e="way" k="tracktype" v="grade1">
+					<line class='highway-core highway-track-core' />
+				</rule>
+				<rule e="way" k="tracktype" v="grade2">
+					<line class='highway-core highway-track-core' />
+				</rule>
+				<rule e="way" k="tracktype" v="grade3">
+					<line class='highway-core highway-track-core' />
+				</rule>
+				<rule e="way" k="tracktype" v="grade4">
+				</rule>
+				<rule e="way" k="tracktype" v="grade5">
+				</rule>
 			</rule>
             <rule e="way" k="highway" v="unsurfaced">
                 <line class='highway-core highway-unsurfaced-core' />
@@ -690,6 +720,12 @@
 
             .highway-track-casing                   { stroke-width: 4px; stroke: #d79331; }
             .highway-track-core                     { stroke-width: 2px; stroke: #ffffff; }
+
+            .highway-track-grade1-casing            { stroke: #c0c0c0; }
+            .highway-track-grade2-casing            { }
+            .highway-track-grade3-casing            { }
+            .highway-track-grade4-casing            { }
+            .highway-track-grade5-casing            { }
 
             .highway-byway-1-casing                 { stroke-width: 2px;     stroke: #555555;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt;}
             .highway-byway-2-casing                 { stroke-width: 1.6px;   stroke: #efadaa; }

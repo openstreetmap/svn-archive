@@ -413,7 +413,24 @@
                 <line class='highway-casing highway-byway-3-casing' smart-linecap='no'/>
             </rule>
             <rule e="way" k="highway" v="track">
-                <line class='highway-casing highway-track-casing'/>
+		<rule e="way" k="tracktype" v="~">
+	                <line class='highway-casing highway-track-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade1">
+			<line class='highway-casing highway-track-casing highway-track-grade1-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade2">
+			<line class='highway-casing highway-track-casing highway-track-grade2-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade3">
+			<line class='highway-casing highway-track-casing highway-track-grade3-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade4">
+			<line class='highway-casing highway-track-casing highway-track-grade4-casing'/>
+		</rule>
+		<rule e="way" k="tracktype" v="grade5">
+			<line class='highway-casing highway-track-casing highway-track-grade5-casing'/>
+		</rule>
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
                 <line class='highway-casing highway-unsurfaced-casing' smart-linecap='no'/>
@@ -1751,6 +1768,12 @@
             .highway-track-area                     { stroke-width: 1px;   stroke: #ffffff; fill: #ffffff; }
             .highway-track-name                     { stroke-width: 0px;     font-size: 1.25px; }
             .highway-track-ref                      { stroke-width: 0px;     font-size: 1.25px; }
+
+            .highway-track-grade1-casing            { stroke: #777777; }
+            .highway-track-grade2-casing            { }
+            .highway-track-grade3-casing            { stroke-dasharray: 0.7, 0.5; stroke-linecap: butt; }
+            .highway-track-grade4-casing            { stroke-dasharray: 0.7, 0.5, 0.2, 0.5; stroke-linecap: butt; }
+            .highway-track-grade5-casing            { stroke-dasharray: 0.2, 0.5; stroke-linecap: butt; }
 
             .highway-byway-bridge-casing            { stroke-width: 1.6px; }
             .highway-byway-bridge-core              { stroke-width: 1.4px; }

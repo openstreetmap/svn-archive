@@ -510,7 +510,7 @@
 				if (poiselected==result[0]) { deselectAll(); }
 				removeMovieClip(_root.map.pois[result[0]]);
 			};
-			remote.call('putpoi',poidelresponder,_root.usertoken,this._name,this._x,this._y,this.attr,0,baselong,basey,masterscale);
+			remote.call('putpoi',poidelresponder,_root.usertoken,Math.floor(this._name),this._x,this._y,this.attr,0,baselong,basey,masterscale);
 		} else {
 			if (this._name==poiselected) { deselectAll(); }
 			removeMovieClip(this);
@@ -524,7 +524,7 @@
 			_root.map.pois[result[0]].attr=result[3];
 			populatePropertyWindow('POI');
 		};
-		remote.call('getpoi',poirelresponder,this._name,baselong,basey,masterscale);
+		remote.call('getpoi',poirelresponder,Math.floor(this._name),baselong,basey,masterscale);
 	};
 	POI.prototype.upload=function() {
 		poiresponder=function() { };
@@ -645,7 +645,7 @@
 			_root.map.ways[result[0]].redraw();
 			_root.map.ways[result[0]].clearPOIs();
 		};
-		remote.call('getway',responder,this._name,wayid,baselong,basey,masterscale);
+		remote.call('getway',responder,Math.floor(this._name),wayid,baselong,basey,masterscale);
 	};
 
 	OSMWay.prototype.loadFromDeleted=function(wayid,version) {
@@ -670,7 +670,7 @@
 			_root.map.ways[result[0]].redraw();
 			_root.map.ways[result[0]].clearPOIs();
 		};
-		remote.call('getway_old',delresponder,this._name,wayid,version,baselong,basey,masterscale);
+		remote.call('getway_old',delresponder,Math.floor(this._name),Math.floor(wayid),Math.floor(version),baselong,basey,masterscale);
 	};
 
 	OSMWay.prototype.clearPOIs=function() {
@@ -775,7 +775,7 @@
 				removeMovieClip(_root.map.ways[result[0]]);
 				removeMovieClip(_root.map.areas[result[0]]);
 			};
-			remote.call('deleteway',deleteresponder,_root.usertoken,this._name);
+			remote.call('deleteway',deleteresponder,_root.usertoken,Math.floor(this._name));
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 			removeMovieClip(_root.map.areas[this._name]);
@@ -818,7 +818,7 @@
 		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
 			this.attr['created_by']=_root.signature;
 			this.uploading=true;
-			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,this.oldversion,baselong,basey,masterscale);
+			remote.call('putway',putresponder,_root.usertoken,Math.floor(this._name),this.path,this.attr,this.oldversion,baselong,basey,masterscale);
 			this.clean=true;
 		}
 	};
@@ -1859,7 +1859,7 @@
 				function(n) { _root.revertversion=versionnums[n]; },0);
 			_root.revertversion=versionnums[0];
 		};
-		remote.call('getway_history',historyresponder,_root.wayselected);
+		remote.call('getway_history',historyresponder,Math.floor(_root.wayselected));
 	};
 	function handleRevert(choice) {
 		if (choice=='Cancel') { return; }

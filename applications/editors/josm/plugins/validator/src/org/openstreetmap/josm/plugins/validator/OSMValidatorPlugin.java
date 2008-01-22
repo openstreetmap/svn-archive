@@ -135,7 +135,6 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 			if( test != null )
 			{
 				boolean enabled = Boolean.valueOf(m.group(2));
-				System.err.println(beforeUpload + " " + testName + " " + enabled);
 				if (beforeUpload) {
 					test.testBeforeUpload = enabled;
 				} else {

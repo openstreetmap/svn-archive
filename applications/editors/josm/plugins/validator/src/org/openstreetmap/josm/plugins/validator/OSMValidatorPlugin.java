@@ -53,6 +53,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
         DuplicatedWayNodes.class, 
         CrossingWays.class,
         SimilarNamedWays.class,
+		NodesWithSameName.class,
         Coastlines.class,
         WronglyOrderedWays.class,
     };

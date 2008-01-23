@@ -198,6 +198,10 @@
                 <text k="name" class="caption-casing railway-halt-caption-casing" dy='-1px'/>
                 <text k="name" class="caption-core railway-halt-caption-core" dy='-1px'/>
 			</rule>
+                        <rule e="node" k="railway" v="tram_stop" layer="5">
+                          <text k="name" class="caption-casing railway-halt-caption-casing" dy='-1px'/>
+                          <text k="name" class="caption-core railway-halt-caption-core" dy='-1px'/>
+                        </rule>
 			<rule e="node" k="amenity" v="pub" layer="5">
 			    <text k="name" class='caption-casing amenity-pub-caption-casing' dy='-1.2px' />
 			    <text k="name" class='caption-core amenity-pub-caption-core' dy='-1.2px' />

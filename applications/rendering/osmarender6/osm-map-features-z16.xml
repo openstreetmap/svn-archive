@@ -976,6 +976,11 @@
             <circle r="1" class="railway-halt" />
         </rule>
 
+        <!-- tram stops -->
+        <rule e="node" k="railway" v="tram_stop">
+          <circle r="1" class="railway-halt" />
+        </rule>
+
         <!-- Level crossings -->
         <!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
@@ -1271,6 +1276,10 @@
                 <text k="name" class="caption-casing railway-halt-caption-casing" dy='-2px'/>
                 <text k="name" class="caption-core railway-halt-caption-core" dy='-2px'/>
 			</rule>
+                        <rule e="node" k="railway" v="tram_stop" layer="5">
+                          <text k="name" class="caption-casing railway-halt-caption-casing" dy='-2px'/>
+                          <text k="name" class="caption-core railway-halt-caption-core" dy='-2px'/>
+                        </rule>
 		</rule>
 
     </rule>

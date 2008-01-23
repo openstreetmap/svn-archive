@@ -752,6 +752,11 @@
         </rule>
 
 
+        <!-- tram stops -->
+        <rule e="node" k="railway" v="tram_stop">
+          <circle r="1.5" class="railway-halt" />
+        </rule>
+        
 
 
         <!-- Amenities -->

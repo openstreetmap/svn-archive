@@ -180,7 +180,7 @@
 											if (_root.auto.ignorekill) { _root.auto.ignorekill=false; return; }
 											this.removeListener(textfieldListener); _root.keytarget='';
 											if (this.text=='') { _root.redopropertywindow=1; } // crashes player if called directly!
-											if (_root.currentproptype=='way') { _root.map.ways[wayselected].redraw(); }
+											if (_root.currentproptype=='way') { _root.ws.redraw(); }
 											_root.auto.remove();
 											reflectPresets(); };
 		with (this.value) {
@@ -282,7 +282,7 @@
 	function setTypeText(a,b) {
 		_root.t_type.text=a; _root.t_type.setTextFormat(boldText);
 		_root.t_details.text=b; _root.t_details.setTextFormat(plainText);
-		if (_root.map.ways[_root.wayselected].locked ||
+		if (_root.ws.locked ||
 			_root.map.pois[_root.poiselected].locked) {
 			_root.padlock._visible=true;
 			_root.padlock._x=_root.t_details.textWidth+15;
@@ -405,9 +405,9 @@
 	
 	function getAttrArray() {
 		switch (_root.currentproptype) {
-			case 'point':	return _root.map.ways[_root.wayselected].path[_root.pointselected][4]; break;
+			case 'point':	return _root.ws.path[_root.pointselected][4]; break;
 			case 'POI':		return _root.map.pois[poiselected].attr; break;
-			case 'way':		return _root.map.ways[wayselected].attr; break;
+			case 'way':		return _root.ws.attr; break;
 		}
 	}
 
@@ -422,10 +422,10 @@
 	function markAttrUnclean(redrawflag) {
 		markClean(false);
 		switch (currentproptype) {
-			case 'point':	_root.map.ways[wayselected].clean=false; break;
+			case 'point':	_root.ws.clean=false; break;
 			case 'POI':		_root.map.pois[poiselected].clean=false; break;
-			case 'way':		if (redrawflag) { _root.map.ways[wayselected].redraw(); }
-							_root.map.ways[wayselected].clean=false; break;
+			case 'way':		if (redrawflag) { _root.ws.redraw(); }
+							_root.ws.clean=false; break;
 		}
 	}
 	

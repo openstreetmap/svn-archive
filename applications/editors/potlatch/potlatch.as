@@ -67,7 +67,7 @@
 	var basey=lat2y(baselat);		// Y co-ordinate of map centre
 	var masterscale=5825.4222222222;// master map scale - how many Flash pixels in 1 degree longitude
 									// (for Landsat, 5120)
-	var wayselected=0;				// way selected?    0 no, otherwise way id
+	selectWay(0);					// way selected?    0 no, otherwise way id
 	var poiselected=0;				// POI selected?    0 no, otherwise way id
 	var pointselected=-2;			// point selected? -2 no, otherwise point order
 	var waycount=0;					// number of ways currently loaded
@@ -111,7 +111,7 @@
 
 	_root.attachMovie("scissors","i_scissors",32);
 	with (_root.i_scissors) { _x=15; _y=583; };
-	_root.i_scissors.onPress   =function() { _root.map.ways[wayselected].splitWay(); };
+	_root.i_scissors.onPress   =function() { _root.ws.splitWay(); };
 	_root.i_scissors.onRollOver=function() { setFloater("Split way at selected point (X)"); };
 	_root.i_scissors.onRollOut =function() { clearFloater(); };
 
@@ -154,7 +154,7 @@
 
 	_root.attachMovie("rotation","i_direction",39);
 	with (_root.i_direction) { _x=40; _y=583; _rotation=-45; _visible=true; _alpha=50; };
-	_root.i_direction.onPress=function() { _root.map.ways[wayselected].reverseWay(); };
+	_root.i_direction.onPress=function() { _root.ws.reverseWay(); };
 	_root.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
 	_root.i_direction.onRollOut =function() { clearFloater(); };
 
@@ -167,12 +167,12 @@
 	with (_root.padlock) { _y=532; _visible=false; };
 	_root.padlock.onPress=function() {
 		if (_root.wayselected) {
-			if (_root.map.ways[wayselected].path.length>200) {
+			if (_root.ws.path.length>200) {
 				setTooltip("too long to unlock:\nplease split into\nshorter ways");
 			} else {
-				_root.map.ways[wayselected].locked=false;
-				_root.map.ways[wayselected].clean=false;
-				_root.map.ways[wayselected].redraw();
+				_root.ws.locked=false;
+				_root.ws.clean=false;
+				_root.ws.redraw();
 				_root.padlock._visible=false;
 				markClean(false);
 			}
@@ -356,7 +356,7 @@
 			for (qway in _root.map.ways) {
 				qdirty=0;
 				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-					if (_root.map.ways[qway].path[qs][2]==_root.map.ways[wayselected].path[this._name][2]) {
+					if (_root.map.ways[qway].path[qs][2]==_root.ws.path[this._name][2]) {
 						_root.map.ways[qway].path[qs][0]=newx;
 						_root.map.ways[qway].path[qs][1]=newy;
 						qdirty=1;
@@ -364,21 +364,21 @@
 				}
 				if (qdirty) { _root.map.ways[qway].redraw(); }
 			}
-			_root.map.ways[wayselected].highlightPoints(5000,"anchor");
-			_root.map.ways[wayselected].highlight();
-			_root.map.ways[wayselected].clean=false;
+			_root.ws.highlightPoints(5000,"anchor");
+			_root.ws.highlight();
+			_root.ws.clean=false;
 			markClean(false);
 
 		} else {
-			this._x=_root.map.ways[wayselected].path[this._name][0];	// Return point to original position
-			this._y=_root.map.ways[wayselected].path[this._name][1];	//  | (in case dragged slightly)
-			if ((this._name==0 || this._name==_root.map.ways[wayselected].path.length-1) && !Key.isDown(17)) {
+			this._x=_root.ws.path[this._name][0];	// Return point to original position
+			this._y=_root.ws.path[this._name][1];	//  | (in case dragged slightly)
+			if ((this._name==0 || this._name==_root.ws.path.length-1) && !Key.isDown(17)) {
 				// ===== Clicked at start or end of line
-				if (_root.drawpoint==0 || _root.drawpoint==_root.map.ways[wayselected].path.length-1) {
+				if (_root.drawpoint==0 || _root.drawpoint==_root.ws.path.length-1) {
 					// - Join looping path
-					addEndPoint(_root.map.ways[wayselected].path[this._name][0],
-								_root.map.ways[wayselected].path[this._name][1],
-								_root.map.ways[wayselected].path[this._name][2]);
+					addEndPoint(_root.ws.path[this._name][0],
+								_root.ws.path[this._name][1],
+								_root.ws.path[this._name][2]);
 					stopDrawing();
 				} else if (_root.drawpoint==-1) {
 					// - Start elastic line for adding new point
@@ -390,9 +390,9 @@
 			} else {
 				// ===== Clicked elsewhere in line
 				if (_root.drawpoint>-1) {
-					addEndPoint(_root.map.ways[wayselected].path[this._name][0],
-								_root.map.ways[wayselected].path[this._name][1],
-								_root.map.ways[wayselected].path[this._name][2]);
+					addEndPoint(_root.ws.path[this._name][0],
+								_root.ws.path[this._name][1],
+								_root.ws.path[this._name][2]);
 					_root.junction=true; restartElastic();
 				}
 			}
@@ -470,14 +470,14 @@
 		if (Key.isDown(Key.SHIFT)) {
 			// Merge ways
 			if (this._name==0 || this._name==_root.map.ways[this.way].path.length-1) {
-				_root.map.ways[wayselected].mergeWay(_root.drawpoint,_root.map.ways[this.way],this._name);
+				_root.ws.mergeWay(_root.drawpoint,_root.map.ways[this.way],this._name);
 				_root.drawpoint=-1;
-				_root.map.ways[wayselected].redraw();
-//				_root.map.ways[wayselected].upload();
+				_root.ws.redraw();
+//				_root.ws.upload();
 //				_root.map.ways[this.way].remove(wayselected);
 				clearTooltip();
 				_root.map.elastic.clear();
-				_root.map.ways[wayselected].select();	// removes anchorhints, so must be last
+				_root.ws.select();	// removes anchorhints, so must be last
 			}
 		} else { 
 			// Join ways (i.e. junction)
@@ -626,51 +626,53 @@
 
 	// ----	Load from remote server
 
-	OSMWay.prototype.load=function(wayid) {
+	OSMWay.prototype.load=function() {
 		responder = function() { };
 		responder.onResult = function(result) {
 			_root.waysreceived+=1;
-			if (length(result[1])==0) { removeMovieClip(_root.map.ways[result[0]]); 
-										removeMovieClip(_root.map.areas[result[0]]); return; }
+			var w=result[0];
+			if (length(result[1])==0) { removeMovieClip(_root.map.ways[w]); 
+										removeMovieClip(_root.map.areas[w]); return; }
 			var i,id;
-			_root.map.ways[result[0]].clean=true;
-			_root.map.ways[result[0]].locked=false;
-			_root.map.ways[result[0]].oldversion=0;
-			_root.map.ways[result[0]].path=result[1];
-			_root.map.ways[result[0]].attr=result[2];
-			_root.map.ways[result[0]].xmin=result[3];
-			_root.map.ways[result[0]].xmax=result[4];
-			_root.map.ways[result[0]].ymin=result[5];
-			_root.map.ways[result[0]].ymax=result[6];
-			_root.map.ways[result[0]].redraw();
-			_root.map.ways[result[0]].clearPOIs();
+			_root.map.ways[w].clean=true;
+			_root.map.ways[w].locked=false;
+			_root.map.ways[w].oldversion=0;
+			_root.map.ways[w].path=result[1];
+			_root.map.ways[w].attr=result[2];
+			_root.map.ways[w].xmin=result[3];
+			_root.map.ways[w].xmax=result[4];
+			_root.map.ways[w].ymin=result[5];
+			_root.map.ways[w].ymax=result[6];
+			_root.map.ways[w].redraw();
+			_root.map.ways[w].clearPOIs();
 		};
-		remote.call('getway',responder,Math.floor(this._name),wayid,baselong,basey,masterscale);
+		remote.call('getway',responder,Math.floor(this._name),baselong,basey,masterscale);
 	};
 
-	OSMWay.prototype.loadFromDeleted=function(wayid,version) {
+	OSMWay.prototype.loadFromDeleted=function(version) {
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,z;
-			_root.map.ways[result[0]].clean=false;
-			_root.map.ways[result[0]].oldversion=result[7];
+			var w=result[0];
+			_root.map.ways[w].clean=false;
+			_root.map.ways[w].oldversion=result[7];
 			z=result[1]; // assign negative IDs to anything moved
 			for (i in z) {
 				if (result[1][i][2]<0) { _root.newnodeid--; result[1][i][2]=newnodeid; }
 			}
-			_root.map.ways[result[0]].path=result[1];
-			_root.map.ways[result[0]].attr=result[2];
-			_root.map.ways[result[0]].xmin=result[3];
-			_root.map.ways[result[0]].xmax=result[4];
-			_root.map.ways[result[0]].ymin=result[5];
-			_root.map.ways[result[0]].ymax=result[6];
-			if (result[0]==wayselected) { _root.map.ways[result[0]].select(); markClean(false); }
-								   else { _root.map.ways[result[0]].locked=true; }
-			_root.map.ways[result[0]].redraw();
-			_root.map.ways[result[0]].clearPOIs();
+			_root.map.ways[w].path=result[1];
+			_root.map.ways[w].attr=result[2];
+			_root.map.ways[w].xmin=result[3];
+			_root.map.ways[w].xmax=result[4];
+			_root.map.ways[w].ymin=result[5];
+			_root.map.ways[w].ymax=result[6];
+			if (w==wayselected) { _root.map.ways[w].select(); markClean(false); }
+						   else { _root.map.ways[w].locked=true; }
+			_root.map.ways[w].redraw();
+			_root.map.ways[w].clearPOIs();
 		};
-		remote.call('getway_old',delresponder,Math.floor(this._name),Math.floor(wayid),Math.floor(version),baselong,basey,masterscale);
+		remote.call('getway_old',delresponder,Math.floor(this._name),Math.floor(version),baselong,basey,masterscale);
 	};
 
 	OSMWay.prototype.clearPOIs=function() {
@@ -795,7 +797,7 @@
 				_root.map.ways[result[0]]._name=nw;
 				if (_root.map.areas[result[0]]) { _root.map.areas[result[0]]._name=nw; }
 				if (_root.t_details.text==result[0]) { _root.t_details.text=nw; _root.t_details.setTextFormat(plainText); }
-				if (wayselected==result[0]) { wayselected=nw; }
+				if (wayselected==result[0]) { selectWay(nw); }
 			}
 			_root.map.ways[nw].xmin=result[3];
 			_root.map.ways[nw].xmax=result[4];
@@ -841,9 +843,9 @@
 			var i=this.mergedways.shift();
 			_root.waysrequested+=1;
 			_root.map.ways.attachMovie("way",i,++waydepth);
-			_root.map.ways[i].load(i);
+			_root.map.ways[i].load();
 		}
-		this.load(this._name);
+		this.load();
 	};
 
 	// ----	Click handling	
@@ -870,21 +872,21 @@
 			_root.map.anchors[pointselected].beginDrag();
 		} else if (Key.isDown(Key.SHIFT) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1) {
 			// shift-click other way: merge two ways
-			var selstart =_root.map.ways[wayselected].path[0][2];
-			var sellen   =_root.map.ways[wayselected].path.length-1;
-			var selend   =_root.map.ways[wayselected].path[sellen][2];
+			var selstart =_root.ws.path[0][2];
+			var sellen   =_root.ws.path.length-1;
+			var selend   =_root.ws.path[sellen][2];
 			var thisstart=_root.map.ways[this._name ].path[0][2];
 			var thislen  =_root.map.ways[this._name ].path.length-1;
 			var thisend  =_root.map.ways[this._name ].path[thislen][2];
-			if      (selstart==thisstart) { _root.map.ways[wayselected].mergeWay(0,_root.map.ways[this._name],0); }
-			else if (selstart==thisend  ) { _root.map.ways[wayselected].mergeWay(0,_root.map.ways[this._name],thislen); }
-			else if (selend  ==thisstart) { _root.map.ways[wayselected].mergeWay(sellen,_root.map.ways[this._name],0); }
-			else if (selend  ==thisend  ) { _root.map.ways[wayselected].mergeWay(sellen,_root.map.ways[this._name],thislen); }
+			if      (selstart==thisstart) { _root.ws.mergeWay(0,_root.map.ways[this._name],0); }
+			else if (selstart==thisend  ) { _root.ws.mergeWay(0,_root.map.ways[this._name],thislen); }
+			else if (selend  ==thisstart) { _root.ws.mergeWay(sellen,_root.map.ways[this._name],0); }
+			else if (selend  ==thisend  ) { _root.ws.mergeWay(sellen,_root.map.ways[this._name],thislen); }
 			else						  { return; }
-			_root.map.ways[wayselected].redraw();
-//			_root.map.ways[wayselected].upload();
+			_root.ws.redraw();
+//			_root.ws.upload();
 //			_root.map.ways[this._name ].remove(wayselected);
-			_root.map.ways[wayselected].select();
+			_root.ws.select();
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
 			if (this.oldversion==0) {
@@ -908,7 +910,7 @@
 	
 	OSMWay.prototype.select=function() {
 		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
-		_root.wayselected=this._name;
+		selectWay(this._name);
 		_root.pointselected=-2;
 		_root.poiselected=0;
 		this.highlightPoints(5000,"anchor");
@@ -1007,6 +1009,7 @@
 		if (otherway.locked) { this.locked=true; }
 		removeMovieClip(_root.map.areas[otherway._name]);
 		removeMovieClip(otherway);
+		if (this._name==_root.wayselected) { populatePropertyWindow(_root.currentproptype,_root.currentstartat,true); }
 	};
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
 		if (topos==0) { if (this.path[0					][2]==otherway.path[srcpt][2]) { return; } }	// don't add duplicate points
@@ -1038,6 +1041,11 @@
 
 	// =====================================================================================
 	// Support functions
+
+	function selectWay(id) {
+		_root.wayselected=Math.floor(id);
+		_root.ws=_root.map.ways[id];
+	}
 
 	function writeText(obj,t) {
 		with (obj) {
@@ -1081,25 +1089,25 @@
 			_root.map.pois[poiselected].remove();
 		} else if (_root.drawpoint>-1) {
 			// delete most recently drawn point
-			if (_root.drawpoint==0) { _root.map.ways[wayselected].path.shift(); }
-							   else { _root.map.ways[wayselected].path.pop(); _root.drawpoint-=1; }
-			if (_root.map.ways[wayselected].path.length) {
-				_root.map.ways[wayselected].clean=false;
+			if (_root.drawpoint==0) { _root.ws.path.shift(); }
+							   else { _root.ws.path.pop(); _root.drawpoint-=1; }
+			if (_root.ws.path.length) {
+				_root.ws.clean=false;
 				markClean(false);
-				_root.map.ways[wayselected].redraw();
-				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
-				_root.map.ways[wayselected].highlight();
+				_root.ws.redraw();
+				_root.ws.highlightPoints(5000,"anchor");
+				_root.ws.highlight();
 				restartElastic();
 			} else {
 				_root.map.anchors[_root.drawpoint].endElastic();
-				_root.map.ways[wayselected].remove();
+				_root.ws.remove();
 				_root.drawpoint=-1;
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
 			if (doall==1) {
 				// remove node from all ways
-				id=_root.map.ways[_root.wayselected].path[_root.pointselected][2];
+				id=_root.ws.path[_root.pointselected][2];
 				for (qway in _root.map.ways) {
 					qdirty=0;
 					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
@@ -1117,12 +1125,12 @@
 				}
 			} else {
 				// remove node from this way only
-				_root.map.ways[wayselected].path.splice(pointselected,1);
-				if (_root.map.ways[wayselected].path.length<2) {
-					_root.map.ways[wayselected].remove();
+				_root.ws.path.splice(pointselected,1);
+				if (_root.ws.path.length<2) {
+					_root.ws.remove();
 				} else {
-					_root.map.ways[wayselected].redraw();
-					_root.map.ways[wayselected].clean=false;
+					_root.ws.redraw();
+					_root.ws.clean=false;
 				}
 			}
 			_root.pointselected=-2;
@@ -1131,7 +1139,7 @@
 			clearTooltip();
 			markClean(false);
 			if (_root.wayselected) {
-				_root.map.ways[_root.wayselected].select();
+				_root.ws.select();
 			}
 		}
 	};
@@ -1139,10 +1147,10 @@
 	function stopDrawing() {
 		_root.map.anchors[_root.drawpoint].endElastic();
 		_root.drawpoint=-1;
-		if (_root.map.ways[wayselected].path.length<=1) { 
+		if (_root.ws.path.length<=1) { 
 			// way not long enough, so abort
 			removeMovieClip(_root.map.areas[wayselected]);
-			removeMovieClip(_root.map.ways[wayselected]);
+			removeMovieClip(_root.ws);
 			removeMovieClip(_root.map.anchors);
 		}
 		_root.map.elastic.clear();
@@ -1152,9 +1160,9 @@
 	function keyRevert() {
 		if		(_root.wayselected<0) { stopDrawing();
 										removeMovieClip(_root.map.areas[wayselected]);
-										removeMovieClip(_root.map.ways[wayselected]); }
+										removeMovieClip(_root.ws); }
 		else if	(_root.wayselected>0) {	stopDrawing();
-										_root.map.ways[wayselected].reload(); }
+										_root.ws.reload(); }
 		else if (_root.poiselected>0) { _root.map.pois[poiselected].reload(); }
 		else if (_root.poiselected<0) { removeMovieClip(_root.map.pois[poiselected]); }
 		deselectAll();
@@ -1162,7 +1170,7 @@
 
 	function deselectAll() {
 		_root.map.createEmptyMovieClip("anchors",5000); 
-		wayselected=0;
+		selectWay(0);
 		poiselected=0;
 		pointselected=-2;
 		removeMovieClip(_root.map.highlight);
@@ -1179,7 +1187,7 @@
 	};
 	
 	function uploadSelected() {
-		if (_root.wayselected!=0 && !_root.map.ways[wayselected].clean) {
+		if (_root.wayselected!=0 && !_root.ws.clean) {
 			for (qway in _root.map.ways) {
 				if (!_root.map.ways[qway].clean) {
 					_root.map.ways[qway].upload();
@@ -1206,8 +1214,7 @@
 
 	function cycleStacked() {
 		if (_root.pointselected>-2) {
-			_root.wayselected=Math.floor(wayselected); // coerce so < and > work
-			var id=_root.map.ways[_root.wayselected].path[_root.pointselected][2];
+			var id=_root.ws.path[_root.pointselected][2];
 			var firstfound=0; var nextfound=0;
 			for (qway in _root.map.ways) {
 				if (qway!=_root.wayselected) {
@@ -1222,7 +1229,7 @@
 			}
 			if (firstfound) {
 				if (nextfound==0) { var nextfound=firstfound; }
-				_root.map.ways[nextfound].swapDepths(_root.map.ways[wayselected]);
+				_root.map.ways[nextfound].swapDepths(_root.ws);
 				_root.map.ways[nextfound].select();
 			}
 		}
@@ -1368,7 +1375,7 @@
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way -- ode
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
-								if (_root.wayselected!=0) { _root.map.ways[wayselected].remove(); }
+								if (_root.wayselected!=0) { _root.ws.remove(); }
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
@@ -1378,7 +1385,7 @@
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
 			case 85:		getDeleted(); break;								// U - undelete
-			case 88:		_root.map.ways[wayselected].splitWay(); break;		// X - split way
+			case 88:		_root.ws.splitWay(); break;		// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
 			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
@@ -1515,8 +1522,8 @@
 			resizePOIs();
 			for (qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
 			if (_root.wayselected) {
-				_root.map.ways[wayselected].highlight();
-				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
+				_root.ws.highlight();
+				_root.ws.highlightPoints(5000,"anchor");
 			}
 			restartElastic();
 		}
@@ -1533,8 +1540,8 @@
 			whichWays();
 			for (qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
 			if (_root.wayselected) {
-				_root.map.ways[wayselected].highlight();
-				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
+				_root.ws.highlight();
+				_root.ws.highlightPoints(5000,"anchor");
 			}
 			restartElastic();
 		}
@@ -1603,36 +1610,36 @@
 	function addEndPoint(x,y,node,tags) {
 		if (tags) {} else { tags=new Array(); }
 		newpoint=new Array(x,y,node,0,tags,0);
-		x1=_root.map.ways[wayselected].path[_root.drawpoint][0];
-		y1=_root.map.ways[wayselected].path[_root.drawpoint][1];
-		if (_root.drawpoint==_root.map.ways[wayselected].path.length-1) {
-			_root.map.ways[wayselected].path.push(newpoint);
-			_root.drawpoint=_root.map.ways[wayselected].path.length-1;
+		x1=_root.ws.path[_root.drawpoint][0];
+		y1=_root.ws.path[_root.drawpoint][1];
+		if (_root.drawpoint==_root.ws.path.length-1) {
+			_root.ws.path.push(newpoint);
+			_root.drawpoint=_root.ws.path.length-1;
 		} else {
-			_root.map.ways[wayselected].path.unshift(newpoint);	// drawpoint=0, add to start
+			_root.ws.path.unshift(newpoint);	// drawpoint=0, add to start
 		}
 	
 		// Redraw line (if possible, just extend it to save time)
-		if (_root.map.ways[wayselected].getFill()>-1 || 
-			_root.map.ways[wayselected].path.length<3 ||
+		if (_root.ws.getFill()>-1 || 
+			_root.ws.path.length<3 ||
 			_root.pointselected>-2) {
-			_root.map.ways[wayselected].redraw();
-			_root.map.ways[wayselected].select();
+			_root.ws.redraw();
+			_root.ws.select();
 		} else {
-			_root.map.ways[wayselected].line.moveTo(x1,y1);
-			_root.map.ways[wayselected].line.lineTo(x,y);
-			if (casing[_root.map.ways[wayselected].attr['highway']]) {
+			_root.ws.line.moveTo(x1,y1);
+			_root.ws.line.lineTo(x,y);
+			if (casing[_root.ws.attr['highway']]) {
 				_root.map.areas[wayselected].moveTo(x1,y1);
 				_root.map.areas[wayselected].lineTo(x,y);
 			}
 			_root.map.highlight.moveTo(x1,y1);
 			_root.map.highlight.lineTo(x,y);
-			_root.map.ways[wayselected].direction();
-			_root.map.ways[wayselected].highlightPoints(5000,"anchor");
+			_root.ws.direction();
+			_root.ws.highlightPoints(5000,"anchor");
 			removeMovieClip(_root.map.anchorhints);
 		}
 		// Mark as unclean
-		_root.map.ways[wayselected].clean=false;
+		_root.ws.clean=false;
 		markClean(false);
 		_root.map.elastic.clear();
 	}
@@ -1747,7 +1754,7 @@
 		uploadSelected();
 		_root.newwayid--;
 		newpoint=new Array(x,y,node,0,new Array(),0);
-		_root.wayselected=newwayid;
+		selectWay(newwayid);
 		_root.poiselected=0;
 		_root.map.ways.attachMovie("way",newwayid,++waydepth);
 		_root.map.ways[newwayid].path[0]=newpoint;
@@ -1863,7 +1870,7 @@
 	};
 	function handleRevert(choice) {
 		if (choice=='Cancel') { return; }
-		_root.map.ways[_root.wayselected].loadFromDeleted(_root.wayselected,_root.revertversion);
+		_root.ws.loadFromDeleted(_root.revertversion);
 	};
 	function getDeleted() {
 		whichdelresponder=function() {};
@@ -1873,7 +1880,7 @@
 				way=waylist[i];											//  |
 				if (!_root.map.ways[way]) {								//  |
 					_root.map.ways.attachMovie("way",way,++waydepth);	//  |
-					_root.map.ways[way].loadFromDeleted(way,-1);		//  |
+					_root.map.ways[way].loadFromDeleted(-1);			//  |
 					_root.waycount+=1;									//  |
 				}
 			}
@@ -1906,7 +1913,7 @@
 					way=waylist[i];											//  |
 					if (!_root.map.ways[way]) {								//  |
 						_root.map.ways.attachMovie("way",way,++waydepth);	//  |
-						_root.map.ways[way].load(way);						//  |
+						_root.map.ways[way].load();							//  |
 						_root.waycount+=1;									//  |
 						_root.waysrequested+=1;								//  |
 					}

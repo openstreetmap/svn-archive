@@ -544,6 +544,11 @@
         <rule e="node" k="railway" v="halt">
             <circle r="4" class="railway-halt" />
         </rule>
+        
+        <!-- Tram stops -->
+        <rule e="node" k="railway" v="tram_stop">
+          <circle r="4" class="railway-halt" />
+        </rule>
 
         <!-- Amenities -->
         <rule e="node" k="amenity" v="hospital">

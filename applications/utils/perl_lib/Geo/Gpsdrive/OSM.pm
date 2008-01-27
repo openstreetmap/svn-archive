@@ -572,7 +572,8 @@ sub import_Data($@){
     for my $fn ( "$ENV{HOME}/.josm/icons.xml",
 		 "../data/map-icons/icons.xml",
 		 "data/map-icons/icons.xml",
-		 "/usr/local/map-icons/icons.xml",
+		 "/usr/share/icons/map-icons/icons.xml",
+		 "/usr/share/map-icons/icons.xml",
 		 "/usr/local/share/map-icons/icons.xml",
 		 ) {
 	unless ( $icons_filename && -s $icons_filename ){

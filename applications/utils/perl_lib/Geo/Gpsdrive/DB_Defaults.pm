@@ -51,7 +51,7 @@ sub fill_default_poi_types {
     $icon_file = '../share/map-icons/icons.xml'         unless -s $icon_file;
     $icon_file = '/usr/local/share/icons/map-icons/icons.xml' unless -s $icon_file;
     $icon_file = '/usr/local/share/map-icons/icons.xml' unless -s $icon_file;
-    $icon_file = '/usr/share/icons/map-icons/icons.xml'       unless -s $icon_file;
+    $icon_file = '/usr/share/icons/map-icons/icons.xml' unless -s $icon_file;
     $icon_file = '/usr/share/map-icons/icons.xml'       unless -s $icon_file;
     $icon_file = '/opt/gpsdrive/icons.xml'              unless -s $icon_file;
     die "no Icon File found" unless -s $icon_file;

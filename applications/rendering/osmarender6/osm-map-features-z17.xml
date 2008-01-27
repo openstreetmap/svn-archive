@@ -1066,7 +1066,7 @@
 
 	<!-- Bus stops -->
 	<rule e="node" k="highway" v="bus_stop">
-	    <symbol xlink:href="#symbol-bus" width='6px' height='2px' transform='translate(-3,-1)' />
+	    <symbol xlink:href="#symbol-bus" width='3px' height='1px' transform='translate(-1.5,-0.5)' />
 	</rule>
 
         <!-- Amenities -->

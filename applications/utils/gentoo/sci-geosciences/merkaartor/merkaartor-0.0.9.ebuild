@@ -13,7 +13,7 @@ HOMEPAGE="http://www.irule.be/bvh/c++/merkaartor/"
 DEPEND="$(qt4_min_version 4.2)"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 
 S=${WORKDIR}/${PN}
 

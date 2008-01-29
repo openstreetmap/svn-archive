@@ -24,5 +24,5 @@ src_compile() {
 }
 
 src_install() {
-	dobin release/merkaartor-scm || die
+	dobin release/merkaartor-scm || die "dobin failed"
 }

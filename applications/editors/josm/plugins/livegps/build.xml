@@ -9,8 +9,10 @@
   </condition>
 
   <!-- compilation properties -->
-  <property name="josm.build.dir"	value="../../core"/>
+  <!--<property name="josm.build.dir"	value="../../JOSM/"/> -->
+  <property name="josm.build.dir"	value="../../core/"/>
   <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
+  <!-- <property name="josm"			location="../../JOSM/dist/josm-custom.jar" /> -->
   <property name="josm"			location="../../core/dist/josm-custom.jar" />
   <property name="plugin.build.dir"	value="build"/>
   <property name="plugin.dist.dir"	value="../../dist"/>
@@ -38,7 +40,7 @@
     <!-- images -->
     <copy todir="${plugin.build.dir}/images">
       <fileset dir="images" />
-    </copy>
+    </copy>  	
     
     <!-- create jar file -->
     <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
@@ -58,6 +60,7 @@
       <classpath>
         <pathelement path="${josm.build.dir}/build"/>
         <fileset dir="${josm.build.dir}/lib">
+          <include name="/usr/lib/josm/josm.jar"/>
           <include name="**/*.jar"/>
         </fileset>
         <pathelement location="${plugin.jar}"/>
@@ -67,6 +70,7 @@
 
   <target name="install" depends="dist">
     <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+  	<copy file="liveGPS.conf" todir="${josm.plugins.dir}/livegps/" />
   </target>
 
   <target name="init">

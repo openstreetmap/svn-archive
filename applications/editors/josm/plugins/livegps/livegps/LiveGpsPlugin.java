@@ -29,7 +29,7 @@ public class LiveGpsPlugin extends Plugin
     private JCheckBoxMenuItem lgpsautocenter;
     private LiveGpsDialog lgpsdialog;
     List<PropertyChangeListener>listenerQueue;
-    
+        
 	private GpxData data = new GpxData();
     private LiveGpsLayer lgpslayer;
     
@@ -124,7 +124,7 @@ public class LiveGpsPlugin extends Plugin
         else if(enable)
         {
             if (acquirer == null) {
-                acquirer = new LiveGpsAcquirer();
+                acquirer = new LiveGpsAcquirer(getPluginDir());
                 if (lgpslayer == null) {
                     lgpslayer = new LiveGpsLayer(data);
                     Main.main.addLayer(lgpslayer);

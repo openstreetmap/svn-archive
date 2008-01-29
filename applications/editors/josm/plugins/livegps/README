@@ -5,11 +5,13 @@ Author: Frederik Ramm <frederik@remote.org>
 Public Domain.
 
 * Install like any other plugin
-* start the unix program "gpsd" on the local machine
+* start the unix program "gpsd" on any machine in the network
   (http://gpsd.berlios.de/)
 * run josm
 * activate track acquisition in "LiveGPS" menu
+* have a look in the plugins directory i.e. /home/stefan/.josm/plugins/livegps
+  there is a liveGPS.conf where you can set the server and port of the host
+  running the gpsd
 
-Current version has "localhost:2947" hardcoded as the gpsd address.
 Some problems exist! 
 

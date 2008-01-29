@@ -4,12 +4,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 
@@ -19,12 +22,42 @@ public class LiveGpsAcquirer implements Runnable {
 	boolean connected = false;
 	String gpsdHost = "localhost";
 	int gpsdPort = 2947;
+	String configFile = "liveGPS.conf";
 	boolean shutdownFlag = false;
     private List<PropertyChangeListener> propertyChangeListener = new ArrayList<PropertyChangeListener>();
     private PropertyChangeEvent lastStatusEvent;
     private PropertyChangeEvent lastDataEvent;
 	
-	public LiveGpsAcquirer() {
+	public LiveGpsAcquirer(String pluginDir) {
+				
+		Properties liveGPSconfig = new Properties();
+		
+		FileInputStream fis = null;
+				
+		try {
+			fis = new FileInputStream(pluginDir + configFile);
+		} catch (FileNotFoundException e) {
+			System.err.println("No liveGPS.conf found, using defaults");
+		}
+		
+		if(fis != null)
+		{		
+			try {
+				liveGPSconfig.load(fis);
+				this.gpsdHost = liveGPSconfig.getProperty("host");
+				this.gpsdPort = Integer.parseInt(liveGPSconfig.getProperty("port"));
+				
+			} catch (IOException e) {
+				System.err.println("Error while loading liveGPS.conf, using defaults");
+			}
+			
+			if(this.gpsdHost == null || this.gpsdPort == 0)
+			{
+				System.err.println("Error in liveGPS.conf, using defaults");
+				this.gpsdHost = "localhost";
+				this.gpsdPort = 2947;
+			}
+		}
 		
 	}
     

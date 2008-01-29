@@ -72,7 +72,8 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                 panel.setBackground(Color.WHITE);
                 latLabel.setText(data.getLatitude() + "deg");
                 longLabel.setText(data.getLongitude() + "deg");
-                speedLabel.setText((data.getSpeed() * 3.6f) + "km/h"); // m(s to km/h
+                double mySpeed = data.getSpeed() * 3.6f;
+                speedLabel.setText((Math.round(mySpeed*100)/100) + "km/h"); // m(s to km/h
                 courseLabel.setText(data.getCourse() + "deg");
                 
                 String wayString = data.getWayInfo();

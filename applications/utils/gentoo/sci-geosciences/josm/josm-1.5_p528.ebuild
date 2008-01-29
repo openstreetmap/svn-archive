@@ -1,6 +1,6 @@
 # Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sci-geosciences/josm/josm-1.5_p457.ebuild,v 1.1 2007/11/07 15:37:37 hanno Exp $
+# $Header: $
 
 inherit eutils
 

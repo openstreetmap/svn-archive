@@ -27,7 +27,7 @@ my $DataDir = "Output";
 my $TempDir = "render";
 my $Images = "html/Samples";
 
-my($W,$H) = (150,150);
+my($W,$H) = (200,200);
 mkdir $TempDir if ! -d $TempDir;
 mkdir $Images if ! -d $Images;
 getOsmarender();
@@ -64,7 +64,7 @@ sub CreateSample{
 
   # Render to PNG
   my $Filename = sprintf("%s/%s_%s.png", $Images, $Key, $Value);
-  my $SvgArea = "60:57:82:86"; # -D option doesn't seem to work!?! 
+  my $SvgArea = "55:52:87:91"; # -D option doesn't seem to work!?! 
   my $Cmd2 = sprintf("inkscape --export-area=%s -w %d -h %d --export-png=%s %s 2>/dev/null",
     $SvgArea,
     $W,$H,$Filename, "$TempDir/output.svg");
@@ -73,14 +73,14 @@ sub CreateSample{
 
 sub getOsmarender{
   # Grab the latest copy of osmarender5 + styles from SVN
-  mirror("http://svn.openstreetmap.org/applications/rendering/osmarender5/osmarender.xsl", "$TempDir/osmarender.xsl");
-  mirror("http://svn.openstreetmap.org/applications/rendering/osmarender5/osm-map-features-z17.xml", "$TempDir/map_features.xml");
+  mirror("http://svn.openstreetmap.org/applications/rendering/osmarender6/osmarender.xsl", "$TempDir/osmarender.xsl");
+  mirror("http://svn.openstreetmap.org/applications/rendering/osmarender6/osm-map-features-z17.xml", "$TempDir/map_features.xml");
 }
 
 sub getDataSample{
   # Get a sample OSM data file (choose API0.4 or API0.5 versions
   # depending on whether osmarender supports segments)
-  open(IN, "<data_sample_0_4.osm") || die;  
+  open(IN, "<data_sample_0_5.osm") || die;  
   my $Sample;
   while(my $Line = <IN>){
     $Sample .= $Line;

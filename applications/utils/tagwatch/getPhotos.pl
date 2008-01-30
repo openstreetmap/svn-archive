@@ -26,17 +26,19 @@ use LWP::Simple;
 use GD;
 
 my $c = MediaWiki->new;
+
 $c->setup({'wiki' => {
             'host' => 'wiki.openstreetmap.org',
             'path' => ''}});
 
-my $PDir = "html/Photos";
+my $PDir = "html/photos";
 my $CacheDir = "original_photos";
 mkdir "html" if ! -d "html";
 mkdir $PDir if ! -d $PDir;
 mkdir $CacheDir if ! -d $CacheDir;
 
 foreach my $Line(split(/\n/, $c->text("Tagwatch/Photos"))){
+  
   if($Line =~ m{^\*\s*(\w+)=(\w+)\s+(.*?)\s*$}){
     print "Fetching: $1 = $2\n";
     

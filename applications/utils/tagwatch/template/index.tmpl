@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title>OSM Tagwatch</title>
+  <meta name="OpenStreetMapTagwatch" content="Tagwatch Statistics for OpenStreetMap">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<p align="center"><img src="images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0">
+<span class="logo">Tagwatch</span></p>
+<p align="center">This webseite shows extended information about the tags <em><small>(Key - value pairs)</small></em> which are used within the Map.<br>
+This includes the general description as well as some statistics about their usage.</p>
+
+<table width="200" align="center">
+  <thead>
+    <tr>
+      <th>Area</th>
+      <th nowrap>OSM data from</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="indexlist">
+    <tr>
+      <td><a href="<TMPL_VAR NAME="country">/index_en.htm"><TMPL_VAR NAME="country"></a></td>
+      <td align="right"><TMPL_VAR NAME="date"></td>
+    </tr>
+</TMPL_LOOP>
+
+
+  </tbody>
+</table>
+
+<p class="note">Site is generated with the planet.osm excerpt data from <a href="http://download.geofabrik.de/osm/europe/" target="_blank">Geofabrik GmbH</a> and a modified version of Tagwatch. <em>(<a href="Tagwatch.tar.gz" target="_blank">Source code</a>)</em><br>
+See the <a href="http://wiki.openstreetmap.org/index.php/Tagwatch" target="_blank">OSMwiki page</a> for more information about the <b>Tagwatch</b> script.</p>
+</body>
+</html>

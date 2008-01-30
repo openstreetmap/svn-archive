@@ -1,0 +1,39 @@
+.logo { 	font-size:x-large;
+        	font-style:italic;
+		font-weight:bold;
+		color:grey; }
+
+.header { 	font-size:small;
+        	font-style:italic;
+		color:grey; }
+
+.footer { 	font-size:small;
+        	font-style:italic;
+		color:grey; }
+
+.note { 	font-size:x-small;
+        	font-style:italic;
+		font-weight:bold;
+		color:grey;text-align:center; }
+
+
+table { 	border:1px solid;
+		vertical-align:top;
+		padding:0px;
+		border-spacing:0px;
+		border-collapse:collapse; }
+
+td, th { 	padding:5px;
+		border:1px solid;
+		border-color:#c2c2c2;
+		border-spacing:0px;}
+
+thead  {	background-color:#E0E0E0;
+		text-align:center; } 
+
+.wiki_red { 	background-color:#FF0000; }
+
+.wiki_green { 	background-color:#00FF00; }
+
+.keydesc { 	font-size:small;
+        	font-style:italic; }

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title>OpenStreetMap Tagwatch for <TMPL_VAR NAME="country"></title>
+  <meta name="GENERATOR" content="Quanta Plus">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class="header"><img src="../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch</span> :: <TMPL_VAR NAME="interlang_header"><hr>
+<TMPL_VAR NAME="interlang_interlang"> :: <a href="index_en.htm">en</a>, <a href="index_fr.htm">fr</a>, <a href="index_de.htm">de</a>, <a href="index_nl.htm">nl</a>, <a href="index_sl.htm">sl</a>, <a href="index_tr.htm">tr</a> :: <a href="../index.htm"><TMPL_VAR NAME="interlang_up"></a></div>
+
+<h2><TMPL_VAR NAME="interlang_everything"></h2>
+<p>All known tags in <TMPL_VAR NAME="country">.</p>
+:: <a href="tags.htm">sorted by key.</a><br>
+<!--:: <a href="top_unapproved.htm">Top 100 unapproved.</a><br> -->
+:: <a href="top_undocumented.htm">Top 100 undeocumented.</a>
+
+<h2><TMPL_VAR NAME="interlang_watchlist"></h2>
+<p>You can find a detailed description for some keys and their values as well as some statistics of their usage here.<br>
+If you like to add a key to this watchlist take a look on the <a href="http://wiki.openstreetmap.org/index.php/Tagwatch" target="_blank">OSMwiki page</a>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th colspan="3">Details</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="watchlist">
+    <tr>
+      <td><TMPL_VAR NAME="name"></td>
+      <td width="500"><span class="keydesc"><TMPL_VAR NAME="desc"></span></td>
+      <td><a href="<TMPL_VAR NAME="lang">_tag_<TMPL_VAR NAME="name">.htm">description</a></td>
+      <td><a href="<TMPL_VAR NAME="lang">_stats_<TMPL_VAR NAME="name">.htm">statistics</a></td>
+    </tr>
+</TMPL_LOOP>
+
+  </tbody>
+</table>
+
+<p><b><TMPL_VAR NAME="count"></b> Keys are not on the watchlist.</p>
+
+<div class="footer"><hr>
+<TMPL_VAR NAME="interlang_credits">.</div>
+</body>
+</html>

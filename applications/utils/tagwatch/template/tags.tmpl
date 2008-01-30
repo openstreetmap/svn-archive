@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title>OpenStreetMap Tagwatch for <TMPL_VAR NAME="country"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class="header"><img src="../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch</span> :: <TMPL_VAR NAME="interlang_header"><hr>
+<a href="index_en.htm"><TMPL_VAR NAME="interlang_up"></a></div>
+<br>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Example values</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="taglist">
+    <tr>
+      <td><TMPL_VAR NAME="key"></td>
+      <td><TMPL_VAR NAME="values"></td>
+    </tr>
+</TMPL_LOOP>
+
+  </tbody>
+</table>
+
+<div class="footer"><hr>
+<TMPL_VAR NAME="interlang_credits">.</div>
+</body>
+</html>
+ 

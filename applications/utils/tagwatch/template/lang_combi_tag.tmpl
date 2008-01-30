@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title>OpenStreetMap Tagwatch for  <TMPL_VAR NAME="country"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class="header"><img src="../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch</span> :: <TMPL_VAR NAME="interlang_header"><hr>
+<a href="index_<TMPL_VAR NAME="lang">.htm"><TMPL_VAR NAME="interlang_up"></a></div>
+
+<h2>Tag:<TMPL_VAR NAME="tag"> Statistics</h2>
+<p><TMPL_VAR NAME="interlang_wiki">.</p>
+
+<p>This page list all tags which are beeing used together with <TMPL_VAR NAME="tag">.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>other tags</th>
+      <th>used counter</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="combilist">
+    <tr>
+      <td nowrap><TMPL_VAR NAME="combi_tag"></td>
+      <td nowrap><TMPL_VAR NAME="tag_count"></td>
+    </tr>
+</TMPL_LOOP>
+
+  </tbody>
+</table>
+
+<div class="footer"><hr>
+<TMPL_VAR NAME="interlang_credits">.</div>
+</body>
+</html>

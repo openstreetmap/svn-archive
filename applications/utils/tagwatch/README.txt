@@ -1,16 +1,17 @@
 Constructs an index of the tags used in OpenStreetMap data
 
+
 +---+----------------+-------------------------------------------------+
-| 1 | process data   | Parses an OSM file (e.g. planet.osm) looking
-|   |                | for tags, and counting how often each one is
-|   |                | used
-+---+----------------+-------------------------------------------------+
-| 2 | get photos     | Downloads sample photos of each tag, resizes
+| 1 | get photos     | Downloads sample photos of each tag, resizes
 |   |                | them, and stores them with a special filename
 +---+----------------+-------------------------------------------------+
-| 3 | construct html | Generates HTML files listing all the tags used,
-|   |                | displaying photos, descriptions, and sample 
-|   |                | renderings
+| 2 |edit conf file  | add all countrys/plant.osm file names to the
+|   |                | tagwatch.conf.
+|   |                | 
++---+----------------+-------------------------------------------------+
+| 3 | construct html | Parse the osm files and generates HTML files 
+|   |                | listing all the tags used,displaying photos,
+|   |                |  descriptions, and sample renderings
 +---+----------------+-------------------------------------------------+
 | 4 | make samples   | Takes a list of requests (from construct.pl) 
 |   |                | for sample renderings, and generates them 

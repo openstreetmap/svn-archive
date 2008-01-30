@@ -210,8 +210,8 @@ my $line_count = 0;
 
 # We assume IDs to be up to 100 million
 # If either nodes or ways have IDs of more than this, increase the figure!
-my $nodes = Bit::Vector->new( 100 * 1000 * 1000 );
-my $ways = Bit::Vector->new( 100 * 1000 * 1000 );
+my $nodes = Bit::Vector->new( 1000 * 1000 * 1000 );
+my $ways = Bit::Vector->new( 1000 * 1000 * 1000 );
 
 # Turn on batching, if the database likes that
 if($batch_inserts) {

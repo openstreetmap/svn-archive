@@ -668,7 +668,7 @@ sub build_way_node_ps($$) {
 	if ($dbtype eq 'pgsql' || $dbtype eq 'monetdb') { 
 		$sql = "INSERT INTO way_nodes (way,node,node_order) VALUES (?,?,?)";
 	} else { 
-		$sql = "INSERT INTO way_nodes (id,node_id,node_id) VALUES (?,?,?)"; 
+		$sql = "INSERT INTO way_nodes (id,node_id,sequence_id) VALUES (?,?,?)"; 
 	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }

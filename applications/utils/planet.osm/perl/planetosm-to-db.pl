@@ -21,6 +21,7 @@ BEGIN {
     unshift(@INC,"../perl_lib");
     unshift(@INC,"../../perl_lib");
     unshift(@INC,"~/svn.openstreetmap.org/utils/perl_lib");
+    unshift(@INC,"$ENV{HOME}/osm/applications/utils/perl_lib");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl_lib");
 }
 
@@ -42,6 +43,7 @@ sub do_way_tag($$$$); # {}
 sub do_relation_tag($$$$); # {}
 sub fetch_schema($); # {}
 sub build_node_ps($$); # {}
+sub build_node_ps_mysql($$); # {}
 sub build_node_tag_ps($$); # {}
 sub build_node_tag_ps_mysql($$); # {}
 sub build_way_ps($$); # {}
@@ -186,6 +188,7 @@ if ( $xml ne "-" && ! -s $xml ) {
 
 # Get our prepared statements
 my $node_ps = build_node_ps($dbtype,$conn);
+my $node_ps_mysql = build_node_ps_mysql($dbtype,$conn);
 my $node_tag_ps = build_node_tag_ps($dbtype,$conn);
 my $node_tag_ps_mysql = build_node_tag_ps_mysql($dbtype,$conn);
 my $way_ps = build_way_ps($dbtype,$conn);
@@ -276,8 +279,13 @@ while(my $line = <XML>) {
 		}
 
 		# Add the node
-		$node_ps->execute($id,$lat,$long) 
-			or warn("Invalid line '$line' : ".$conn->errstr);
+		if ($dbtype eq 'mysql') {
+			$node_ps_mysql->execute($id,$lat,$long,$lat,$long) 
+				or warn("Invalid line '$line' : ".$conn->errstr);
+		} else {
+			$node_ps->execute($id,$lat,$long) 
+				or warn("Invalid line '$line' : ".$conn->errstr);
+		}
 
 		$nodes->Bit_On($id);
 		$last_id = $id;
@@ -626,6 +634,13 @@ sub build_node_ps($$) {
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
+sub build_node_ps_mysql($$) {
+	my ($dbtype,$conn) = @_;
+	my $sql = "INSERT INTO nodes (id,latitude,longitude,tile) VALUES (?,ROUND(?*10000000),ROUND(?*10000000),tile_for_point(CAST(ROUND(?*10000000) AS UNSIGNED),CAST(ROUND(?*10000000) AS UNSIGNED)))";
+	my $sth = $conn->prepare($sql);
+	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
+	return $sth;
+}
 sub build_node_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO node_tags (node,name,value) VALUES (?,?,?)";
@@ -818,14 +833,11 @@ TRUNCATE TABLE way_tags
 TRUNCATE TABLE way_nodes
 TRUNCATE TABLE relations
 TRUNCATE TABLE relation_tags
-TRUNCATE TABLE relation_nodes
+TRUNCATE TABLE relation_members
 TRUNCATE TABLE current_nodes
 TRUNCATE TABLE current_ways
 TRUNCATE TABLE current_way_tags
 TRUNCATE TABLE current_way_nodes
-TRUNCATE TABLE meta_nodes
-TRUNCATE TABLE meta_ways
-TRUNCATE TABLE meta_relations
 EOT
 	}
 }
@@ -857,13 +869,11 @@ EOT
 	} else {
 		return <<EOT;
 UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1
+UPDATE ways SET visible=1
 INSERT INTO current_ways (id,visible) SELECT id,1 FROM ways
 INSERT INTO current_way_tags (id,k,v) SELECT id,k,v FROM way_tags
 INSERT INTO current_way_nodes (id,node_id,sequence_id) SELECT id,node_id,sequence_id FROM way_nodes
-INSERT INTO current_nodes (id,latitude,longitude,tags,visible) SELECT id,latitude,longitude,tags,1 FROM nodes
-INSERT INTO meta_nodes (id) SELECT id FROM nodes
-INSERT INTO meta_ways (id) SELECT id FROM ways
-INSERT INTO meta_relations (id) SELECT id FROM relations
+INSERT INTO current_nodes (id,latitude,longitude,tags,visible,tile) SELECT id,latitude,longitude,tags,1,tile FROM nodes
 EOT
 	}
 }
@@ -877,7 +887,7 @@ __END__
 
 =head1 NAME
 
-B<planertosm-to-db.pl>
+B<planetosm-to-db.pl>
 
 =head1 DESCRIPTION
 
@@ -889,7 +899,7 @@ them into a local database(postgress or mysql.
 B<Common usages:>
 
 
-B<planertosm-to-db.pl> <planet.osm.xml> - parse planet.osm file and upload to db
+B<planetosm-to-db.pl> <planet.osm.xml> - parse planet.osm file and upload to db
 
 =head1 OPTIONS
 
@@ -954,7 +964,7 @@ provide them at commandline or set the Environment Variables.
 
 =head1 COPYRIGHT
 
-Copyright 2006,
+Copyright 2006-8
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -969,6 +979,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Those parts of the program which can be identified as being 
+written by Richard Fairhurst (see trac.openstreetmap.org) may be 
+distributed under the WTFPL (http://sam.zoy.org/wtfpl/).
 
 =head1 AUTHOR
 

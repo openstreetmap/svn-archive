@@ -688,21 +688,33 @@ sub build_way_tag_ps($$) {
 }
 sub build_relation_ps($$) {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO relations (id) VALUES (?)";
+	if ($dbsql eq 'mysql') {
+		my $sql = "INSERT INTO relations (id,version,visible) VALUES (?,1,1)";
+	} else {
+		my $sql = "INSERT INTO relations (id) VALUES (?)";
+	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
 sub build_relation_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO relation_tags (relation,name,value) VALUES (?,?,?)";
+	if ($dbsql eq 'mysql') {
+		my $sql = "INSERT INTO relation_tags (id,k,v,version) VALUES (?,?,?,1)";
+	} else {
+		my $sql = "INSERT INTO relation_tags (relation,name,value) VALUES (?,?,?)";
+	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
 sub build_relation_member_ps($$) {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO relation_members (relation,type,ref,role) VALUES (?,?,?,?)";
+	if ($dbsql eq 'mysql') {
+		my $sql = "INSERT INTO relation_members (id,member_type,member_id,member_role,version) VALUES (?,?,?,?,1)";
+	} else {
+		my $sql = "INSERT INTO relation_members (relation,type,ref,role) VALUES (?,?,?,?)";
+	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -874,6 +886,9 @@ INSERT INTO current_ways (id,visible) SELECT id,1 FROM ways
 INSERT INTO current_way_tags (id,k,v) SELECT id,k,v FROM way_tags
 INSERT INTO current_way_nodes (id,node_id,sequence_id) SELECT id,node_id,sequence_id FROM way_nodes
 INSERT INTO current_nodes (id,latitude,longitude,tags,visible,tile) SELECT id,latitude,longitude,tags,1,tile FROM nodes
+INSERT INTO current_relations (id,visible) SELECT id,1 FROM relations
+INSERT INTO current_relation_tags (id,k,v) SELECT id,k,v FROM relation_tags
+INSERT INTO current_relation_members (id,member_type,member_id,member_role) SELECT id,member_type,member_id,member_role FROM relation_members
 EOT
 	}
 }

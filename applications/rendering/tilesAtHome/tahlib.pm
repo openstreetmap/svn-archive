@@ -190,7 +190,15 @@ sub runCommand
                 if (grep(/preferences.xml/,$_))
                 {
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
-                    addFault("fatal",1); ## this error is fatal because it needs human intervention before processing can continue
+                    if ($Config{"AutoResetInkscapePrefs"} == 1)
+                    {
+                        $ExtraInfo=$ExtraInfo."\n   AutoResetInkscapePrefs set, trying to reset ~/.inkscape/preferences.xml";
+                        unlink (glob("~/.inkscape/preferences.xml")) or addFault("fatal",1);
+                    }
+                    else
+                    {
+                        addFault("fatal",1); ## this error is fatal because it needs human intervention before processing can continue
+                    }
                 }
                 elsif (grep(/infinite template recursion/,$_))
                 {

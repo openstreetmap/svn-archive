@@ -120,6 +120,9 @@ sub ApplyConfigLogic
     $Config->{"SubversionUpdateCmd"} = "up" unless defined($Config->{"SubversionUpdateCmd"});
     $Config->{"Subversion"} = "svn" unless defined($Config->{"Subversion"});
     
+    ## Set defaults for inkscape handling
+    $Config->{"AutoResetInkscapePrefs"} = "0" unless defined($Config->{"AutoResetInkscapePrefs"});
+
     ## Set defaults for Batik options
     $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});
     $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});

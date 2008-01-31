@@ -52,7 +52,8 @@ my $Z = shift();
 my $MaxZ = shift() || 8;
 my $OutputLayer = shift() || "tile";
 my $BaseLayer = shift() || "tile";
-my $CaptionLayer = shift();
+my $CaptionLayer;
+$CaptionLayer = shift() if ($BaseLayer eq "captionless"); #only check for caption layer if a captionless layer was selected as base layer
 my $Options = shift();
 
 # Check the command-line arguments, and display usage information
@@ -65,8 +66,9 @@ if(($MaxZ > 12)
   || ($Y < 0) || (!defined($Y))
   || ($X >= 2 ** $Z)
   || ($Y >= 2 ** $Z)
-  ){
-  die($Usage);
+  )
+{
+    die($Usage);
 }
 
 # Timestamp to assign to generated tiles

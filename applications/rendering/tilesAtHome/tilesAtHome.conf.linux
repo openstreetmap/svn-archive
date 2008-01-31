@@ -89,3 +89,9 @@ ForkForUpload=1
 # Maxdepth for xmlstarlet, reduce if you run into problems with memory,
 # increase if you get "tile too complex" errors.
 XmlStarletMaxDepth=20000
+
+# This feature is experimental and currently linux only. Don't use if you are
+# using inkscape with the same username outside tiles@home. 
+# Set to 1 if you want to t@h to try and autobackup and -restore your inkscape
+# preferences file
+AutoResetInkscapePrefs=0

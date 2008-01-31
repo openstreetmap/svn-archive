@@ -1,0 +1,34 @@
+#!/bin/sh -xe
+
+export PERL5LIB="$HOME/perl/share/perl/5.8/:$HOME/perl/share/perl/5.8.8/:$HOME/perl/lib/perl/5.8.8"
+export TZ=UTC
+DATE=`date +%y%m%d`
+
+cd /home/kleptog
+
+# Extract any and all data relating to coastlines
+if [ planet/planet-$DATE.osm.gz -nt data/coastline.osm.gz ] ; then
+  nice ./osm2coast planet/planet-$DATE.osm.gz | gzip --rsyncable >data/coastline.osm.gz
+fi
+# Go through this file and combine the ways as much as possible
+nice ./merge-coastlines.pl data/coastline.osm.gz >data/coast-merged.txt
+# Convert to shapefiles:
+# coastline_p  - points with errors
+# coastline_i  - incomplete sections of coastline
+# coastline_c  - complete sections
+LD_PRELOAD=$HOME/libtcmalloc.so nice ./coast2shp data/coast-merged.txt data/coastline.osm.gz data/coastline >/dev/null
+# divide the areas into 100km x 100km blocks and close them
+nice ./closeshp data/coastline_{c,i} data/processed >/dev/null
+# Make indexes
+nice shapeindex data/coastline_{c,i,p} data/processed_{p,i}
+# Copy over
+mv data/processed_* coastlines/
+mv data/coastline_p.* coastlines/
+# Reset the cache
+rm -rf /var/lib/tilecache/coastline-error/*
+find /var/lib/tilecache/coastline/ -depth -mindepth 2 -mmin +1500 -print0 |xargs -0 -r rm -r  # 36 hours
+rm -rf /var/lib/tilecache/coastline/0[01234]/*/*
+for i in coastline_p processed_{p,i} ; do
+  zip public_html/$i.zip.tmp -p coastlines/$i.*
+  mv public_html/$i.zip.tmp public_html/$i.zip
+done

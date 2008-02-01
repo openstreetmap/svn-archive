@@ -140,7 +140,7 @@
 
 		t=new Object(); t.x=0; t.y=this.opened._height;
 		this.opened.localToGlobal(t);
-		while (t.y>uheight) { this.opened._y-=15; t.y-=15; }
+		while (t.y>Stage.height) { this.opened._y-=15; t.y-=15; }
 		this.trackMenu();
 	};
 	UIMenu.prototype.closeMenu=function() {
@@ -196,13 +196,13 @@
 	function createModalDialogue(w,h,buttons,closefunction) {
 		clearFloater();
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
-		var ox=(uwidth-w)/2; var oy=(uheight-100-h)/2;	// -100 for visual appeal
+		var ox=(Stage.width-w)/2; var oy=(Stage.height-100-h)/2;	// -100 for visual appeal
 
 		// Blank all other areas
 		_root.modal.createEmptyMovieClip("blank",1);
 		with (_root.modal.blank) {
-			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(uwidth,0);
-			lineTo(uwidth,uheight); lineTo(0,uheight); lineTo(0,0); endFill();
+			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(Stage.width,0);
+			lineTo(Stage.width,Stage.height); lineTo(0,Stage.height); lineTo(0,0); endFill();
 		}
 		_root.modal.blank.onPress=function() {};
 		_root.modal.blank.useHandCursor=false;

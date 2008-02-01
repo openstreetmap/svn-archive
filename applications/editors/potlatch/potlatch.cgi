@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 	# ----------------------------------------------------------------
 	# potlatch.cgi
@@ -29,11 +29,16 @@
 
 	require "potlatch_assets.pl";
 
+	$debug=0;
+
 	# -----	Read ActionScript files
 
 	$actionscript="#include 'potlatch.as'\n";
 	while ($actionscript=~/#include '(.+?)'/g) {
-		$fn=$1; print "Reading $fn\n";
+		$fn=$1;
+		unless (exists($ENV{'DOCUMENT_ROOT'})) {
+			print "Reading $fn              \r";
+		}
 		local $/;
 		open TEXT,$fn or die "Can't open file $fn: $!\n";
 		$text=<TEXT>;
@@ -41,6 +46,7 @@
 		$actionscript=~s/#include '$fn'/$text/;
 	}
 
+	if ($debug) { $actionscript=~s!false;//#debug!true;!g; }
 	$m->add(new SWF::Action($actionscript));
 
 	# -----	Output file
@@ -53,6 +59,7 @@
 		$m->output(9);
 	} else {
 		# Running from command line, so output to file
+		print localtime()."\n";
 		if ($fn=shift @ARGV) { print "Saving to $fn\n"; $m->save($fn); }
 						else { print "Saving to this directory\n"; $m->save("potlatch.swf"); }
 	}

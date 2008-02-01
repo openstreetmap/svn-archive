@@ -10,7 +10,6 @@
 	// Still to do
 	// - some way of stopping keys being added twice with same name
 	//   (probably rename to highway_2?)
-	// - scroll list when lots available 
 	// - wipe preset menu when POI reverted
 	// - some way of invoking full autocomplete menu when value deleted
 	//   (probably using up cursor/down cursor)
@@ -20,10 +19,10 @@
 	AutoMenu.prototype.redraw=function() {
 
 		// Find possible values for autocomplete
-		var a=Selection.getFocus().split('.');	// 2 is key, 3 is keyname|value
-		this.key=a[2];
-		this.field=a[3];
-		var curval=_root.properties[this.key][this.field].text;
+		var a=Selection.getFocus().split('.');	// 3 is key, 4 is keyname|value
+		this.key=a[3];
+		this.field=a[4];
+		var curval=_root.panel.properties[this.key][this.field].text;
 		if (this.field=='value' && curval=='' &&
 		   (_root.lastkeypressed==8 || _root.lastkeypressed==46)) {
 			// if user has just deleted value, don't show autocomplete!
@@ -35,7 +34,7 @@
 		if (this.field=='keyname') {
 			z=_root.autotags[_root.currentproptype];		// key
 			for (i in z) {
-				if (i.slice(0,curval.length)==curval && !_root.properties[i]) { possible.push(i); }
+				if (i.slice(0,curval.length)==curval && !_root.panel.properties[i]) { possible.push(i); }
 			}
 			possible.sort();
 		} else {
@@ -46,9 +45,9 @@
 		}
 
 		// Draw autocomplete window
-		var wx=_root.properties[this.key]._x+110+72*(this.field!='keyname');
-		var wy=_root.properties[this.key]._y+516;
-		this.autonumkeys=Math.min(possible.length,Math.floor(wy/16)); // limit keys if will go off top of screen
+		var wx=_root.panel.properties[this.key]._x+110+72*(this.field!='keyname');
+		var wy=_root.panel.properties[this.key]._y+16;
+		this.autonumkeys=Math.min(possible.length,Math.floor((wy+Stage.height-100)/16)); // limit keys if will go off top of screen
 		if (this.autonumkeys==0) { this.remove(); return; }
 
 		this.createEmptyMovieClip("autolist",1);
@@ -70,10 +69,10 @@
 			var f=this.field;
 			var k=this.key;
 			if (f=='keyname') {
-				var n=_root.properties[k][f].text;
-				_root.properties[k].renameKey();
+				var n=_root.panel.properties[k][f].text;
+				_root.panel.properties[k].renameKey();
 				this.ignorekill=true;
-				Selection.setFocus(_root.properties[n].value);
+				Selection.setFocus(_root.panel.properties[n].value);
 			} else {
 				this.remove();
 				Selection.setFocus(null);
@@ -118,8 +117,8 @@
 
 	AutoMenu.prototype.paste=function() {
 		var newval=this.autolist["o"+this.selected].text;
-		_root.properties[this.key][this.field].text=newval;
-		_root.properties[this.key][this.field].setTextFormat(plainSmall);
+		_root.panel.properties[this.key][this.field].text=newval;
+		_root.panel.properties[this.key][this.field].setTextFormat(plainSmall);
 		Selection.setSelection(newval.length,newval.length);
 	};
 	
@@ -142,7 +141,7 @@
 	// autoEnter			- Enter pressed, move to next field
 
 	function autoEnter() {
-		if (Selection.getFocus().split('.')[3]=='keyname') {
+		if (Selection.getFocus().split('.')[4]=='keyname') {
 			Selection.setFocus(eval(Selection.getFocus())._parent.value);
 		} else {
 			Selection.setFocus(null);
@@ -166,22 +165,23 @@
 			text=this._name;
 			setTextFormat(boldSmall);
 			setNewTextFormat(boldSmall);
+			selectable=false;
 		};
 
 		this.createTextField('value',2,72,-1,110,18);
 		this.value.onSetFocus =function() {	if (this.textColor==0x888888) {
 												this.text=''; this.textColor=0;
-												if (!_root.auto) { _root.attachMovie("auto","auto",75); }
-												_root.auto.redraw();
+												if (!_root.panel.auto) { _root.panel.attachMovie("auto","auto",75); }
+												_root.panel.auto.redraw();
 											}
 											this.addListener(textfieldListener); _root.keytarget=this._name; _root.elselected=this._name;
 											markAttrUnclean(false); };
-		this.value.onKillFocus=function() { if (_root.auto.hitTest(_root._xmouse,_root._ymouse)) { return; }
-											if (_root.auto.ignorekill) { _root.auto.ignorekill=false; return; }
+		this.value.onKillFocus=function() { if (_root.panel.auto.hitTest(_root._xmouse,_root._ymouse)) { return; }
+											if (_root.panel.auto.ignorekill) { _root.panel.auto.ignorekill=false; return; }
 											this.removeListener(textfieldListener); _root.keytarget='';
 											if (this.text=='') { _root.redopropertywindow=1; } // crashes player if called directly!
 											if (_root.currentproptype=='way') { _root.ws.redraw(); }
-											_root.auto.remove();
+											_root.panel.auto.remove();
 											reflectPresets(); };
 		with (this.value) {
 			this.value.backgroundColor=0xDDDDDD;
@@ -223,12 +223,12 @@
 			_root.currentstartat  ==startat &&
 			_root.redopropertywindow==0 && force!=true) { return; }
 		clearPropertyWindow();
-		_root.i_repeatattr._alpha=
-		_root.i_newattr._alpha =100-50*(proptype=='');
-		_root.i_scissors._alpha=100-50*(proptype!='point');
-		if (proptype=='') { _root.currentproptype=''; _root.i_nextattr._alpha=50; return; }
+		_root.panel.i_repeatattr._alpha=
+		_root.panel.i_newattr._alpha =100-50*(proptype=='');
+		_root.panel.i_scissors._alpha=100-50*(proptype!='point');
+		if (proptype=='') { _root.currentproptype=''; _root.panel.i_nextattr._alpha=50; return; }
 		
-		if (proptype!=currentproptype) { presetmenu.init(141,505,0,presetnames[proptype][presetselected],'Choose from a menu of preset tags describing the '+proptype,setAttributesFromPreset,151); }
+		if (proptype!=currentproptype) { _root.panel.presetmenu.init(141,5,0,presetnames[proptype][presetselected],'Choose from a menu of preset tags describing the '+proptype,setAttributesFromPreset,151); }
 		_root.currentproptype=proptype;
 		_root.currentstartat=startat;
 		_root.currentproppoint=pointselected;
@@ -238,29 +238,29 @@
 		for (el in proparr) {
 			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
 				if (tagcount>=startat && tagcount<startat+12) {
-					_root.properties.attachMovie("keyvalue",el,_root.propn);
+					_root.panel.properties.attachMovie("keyvalue",el,_root.propn);
 					if (proparr[el].substr(0,6)=='(type ') {
-						_root.properties[el]['value'].textColor=0x888888;
+						_root.panel.properties[el]['value'].textColor=0x888888;
 					}
 				}
 				tagcount+=1;
 			}
 		}
 
-		_root.i_nextattr._alpha=50+50*(tagcount>12);
-		_root.presetmenu._visible=true;
-		_root.i_preset._visible=true;
+		_root.panel.i_nextattr._alpha=50+50*(tagcount>12);
+		_root.panel.presetmenu._visible=true;
+		_root.panel.i_preset._visible=true;
 		reflectPresets();
 		setTabOrder();
 	};
 
 	function clearPropertyWindow() {
-		removeMovieClip(_root.welcome); 
+		removeMovieClip(_root.panel.welcome); 
 		_root.propx=0; _root.propy=0; _root.propn=0; _root.tagcount=0;
 		ct=0;
-		for (el in _root.properties) {
+		for (el in _root.panel.properties) {
 			ct+=1;
-			removeMovieClip(_root.properties[el]);
+			removeMovieClip(_root.panel.properties[el]);
 		}
 		if (ct>0) { _root.savedpoint=_root.currentproppoint;
 					_root.savedpoi  =_root.currentproppoi;
@@ -269,7 +269,7 @@
 	};
 
 	function advancePropertyWindow() {
-		if (_root.i_nextattr._alpha==50) { return; }
+		if (_root.panel.i_nextattr._alpha==50) { return; }
 		if (_root.currentstartat+12>_root.tagcount) {
 			populatePropertyWindow(_root.currentproptype,0,true);
 		} else {
@@ -280,12 +280,12 @@
 	// setTypeText - set contents of type window
 	
 	function setTypeText(a,b) {
-		_root.t_type.text=a; _root.t_type.setTextFormat(boldText);
-		_root.t_details.text=b; _root.t_details.setTextFormat(plainText);
+		_root.panel.t_type.text=a;    _root.panel.t_type.setTextFormat(boldText);
+		_root.panel.t_details.text=b; _root.panel.t_details.setTextFormat(plainText);
 		if (_root.ws.locked ||
 			_root.map.pois[_root.poiselected].locked) {
-			_root.padlock._visible=true;
-			_root.padlock._x=_root.t_details.textWidth+15;
+			_root.panel.padlock._visible=true;
+			_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
 		} else {
 			_root.padlock._visible=false;
 		}
@@ -297,13 +297,13 @@
 	function reflectPresets() {
 		var i,t;
 		var found=findPresetInMenu(presetselected);
-		if (found) { presetmenu.setValue(found); return; }
+		if (found) { _root.panel.presetmenu.setValue(found); return; }
 		for (i=0; i<presetmenus[currentproptype].length; i+=1) {
 			t=findPresetInMenu(presetmenus[currentproptype][i]); if (t) { found=t; presetselected=presetmenus[currentproptype][i]; }
 		}
-		if (found) { presetmenu.init(141,505,found,presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
+		if (found) { _root.panel.presetmenu.init(141,5,found,presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
 					 setPresetIcon(presetselected); }
-			  else { presetmenu.setValue(0); }
+			  else { _root.panel.presetmenu.setValue(0); }
 	}
 
 	// look in a particular menu
@@ -342,22 +342,22 @@
 	// setPresetIcon and cyclePresetIcon
 
 	function setPresetIcon(category) {
-		 _root.attachMovie("preset_"+category,"i_preset",38);
-		 with (_root.i_preset) { _x=120; _y=515; };
-		_root.i_preset.onPress=function() { cyclePresetIcon(); };
-		_root.i_preset.onRollOver=function() { setFloater("Choose what type of presets are offered in the menu"); };
-		_root.i_preset.onRollOut =function() { clearFloater(); };
+		 _root.panel.attachMovie("preset_"+category,"i_preset",38);
+		 with (_root.panel.i_preset) { _x=120; _y=15; };
+		_root.panel.i_preset.onPress   =function() { cyclePresetIcon(); };
+		_root.panel.i_preset.onRollOver=function() { setFloater("Choose what type of presets are offered in the menu"); };
+		_root.panel.i_preset.onRollOut =function() { clearFloater(); };
 	}
 	function cyclePresetIcon() {
 		var i,j;
-		if (_root.i_preset._visible) {
+		if (_root.panel.i_preset._visible) {
 			j=0;
 			for (i=0; i<presetmenus[currentproptype].length; i+=1) {
 				if (presetmenus[currentproptype][i]==presetselected) { j=i+1; }
 			}
 			presetselected=presetmenus[currentproptype][j%i];
 			setPresetIcon(presetselected);
-			presetmenu.init(141,505,findPresetInMenu(presetselected),presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
+			_root.panel.presetmenu.init(141,5,findPresetInMenu(presetselected),presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
 		}
 	}
 
@@ -370,21 +370,22 @@
 		}
 //		if (_root.propn==12) { return; }
 		getAttrArray().key='(type value here)';
-		_root.properties.attachMovie("keyvalue","key",_root.propn);
+		_root.panel.properties.attachMovie("keyvalue","key",_root.propn);
 		_root.tagcount+=1; _root.i_nextattr._alpha=50+50*(tagcount>12);
-		_root.properties.key['value'].textColor=0x888888;
-		_root.properties.key.keyname.type="input";
-		_root.properties.key.keyname.setTextFormat(boldSmall);
-		_root.properties.key.keyname.setNewTextFormat(boldSmall);
-		_root.properties.key.keyname.onSetFocus=function()  { 
+		_root.panel.properties.key.value.textColor=0x888888;
+		_root.panel.properties.key.keyname.selectable=true;
+		_root.panel.properties.key.keyname.type="input";
+		_root.panel.properties.key.keyname.setTextFormat(boldSmall);
+		_root.panel.properties.key.keyname.setNewTextFormat(boldSmall);
+		_root.panel.properties.key.keyname.onSetFocus=function()  { 
 			this.addListener(textfieldListener);
 			_root.keytarget=this._name;
 		};
-		_root.properties.key.keyname.onKillFocus=function() {
-			if (_root.auto.hitTest(_root._xmouse,_root._ymouse)) { return; }
+		_root.panel.properties.key.keyname.onKillFocus=function() {
+			if (_root.panel.auto.hitTest(_root._xmouse,_root._ymouse)) { return; }
 			_root.keytarget='';
 			this.removeListener(textfieldListener);
-			_root.auto.remove();
+			_root.panel.auto.remove();
 			if (this._parent.keyname.text=='' || this._parent.keyname.text==undefined) { 
 				delete getAttrArray()[this._parent._name];
 				removeMovieClip(this._parent);
@@ -394,9 +395,9 @@
 			}
 		};
 		setTabOrder();
-		Selection.setFocus(_root.properties.key.keyname); Selection.setSelection(0,3);
-		if (!_root.auto) { _root.attachMovie("auto","auto",75); }
-		_root.auto.redraw();
+		Selection.setFocus(_root.panel.properties.key.keyname); Selection.setSelection(0,3);
+		if (!_root.panel.auto) { _root.panel.attachMovie("auto","auto",75); }
+		_root.panel.auto.redraw();
 	}
 	
 	// getAttrArray		- return a reference to the current attribute array
@@ -458,28 +459,28 @@
 	// textChanged			- listener marks way as dirty when any change made
 
 	function textChanged() { 
-		if (Selection.getFocus()=='_level0.properties.key.keyname' && 
-		   (_root.properties.key.keyname.text=='+' ||
-		    _root.properties.key.keyname.text=='=')) {
+		if (Selection.getFocus()=='_level0.panel.properties.key.keyname' && 
+		   (_root.panel.properties.key.keyname.text=='+' ||
+		    _root.panel.properties.key.keyname.text=='=')) {
 			// annoying workaround when user has pressed '+'= and FP
 			// automatically uses it as the name of the new key...
-			_root.properties.key.keyname.text='key';
-			_root.properties.key.keyname.setTextFormat(boldSmall);
-			_root.properties.key.keyname.setNewTextFormat(boldSmall);
-			Selection.setFocus(_root.properties.key.keyname); Selection.setSelection(0,3);
+			_root.panel.properties.key.keyname.text='key';
+			_root.panel.properties.key.keyname.setTextFormat(boldSmall);
+			_root.panel.properties.key.keyname.setNewTextFormat(boldSmall);
+			Selection.setFocus(_root.panel.properties.key.keyname); Selection.setSelection(0,3);
 		}
 		markAttrUnclean(false);
-		if (!_root.auto) { _root.attachMovie("auto","auto",75); }
-		_root.auto.redraw();
+		if (!_root.panel.auto) { _root.panel.attachMovie("auto","auto",75); }
+		_root.panel.auto.redraw();
 	}
 	
 	// setTabOrder		- fix order for tabbing between fields
 
 	function setTabOrder() {
-		for (el in _root.properties) {
-			o=(_root.properties[el]._x/190*4+_root.properties[el]._y/19)*2;
-			_root.properties[el].keyname.tabIndex=o;
-			_root.properties[el].value.tabIndex=o+1;
+		for (el in _root.panel.properties) {
+			o=(_root.panel.properties[el]._x/190*4+_root.panel.properties[el]._y/19)*2;
+			_root.panel.properties[el].keyname.tabIndex=o;
+			_root.panel.properties[el].value.tabIndex=o+1;
 		}
 	}
 

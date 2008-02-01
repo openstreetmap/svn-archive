@@ -1,6 +1,4 @@
 
-	# updated 1.10.2007 - writeExports moved to end (d'oh)
-
 	# ----- Export symbols
 
 	#		Empty movie-clip for ways
@@ -31,6 +29,17 @@
 	$ec->add($ch);
 	$ec->nextFrame();
 	$m->addExport($ec,"poi");
+
+	#		POI in way
+	
+	$ec=new SWF::Sprite();
+	$ch=new SWF::Shape();
+	$ch->setRightFill(0,195,0);
+	$ch->setLine(20,0,0,0);
+	$ch->drawCircle(4);
+	$ec->add($ch);
+	$ec->nextFrame();
+	$m->addExport($ec,"poiinway");
 
 	#		Anchor (selected)
 
@@ -1305,6 +1314,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 
 	#		Properties window
 
+if (1==0) {
 	$ch=new SWF::Shape();
 	$ch->setLine(1,0xCC,0xCC,0xCC);
 	$ch->setRightFill(0xF3,0xF3,0xF3);
@@ -1317,17 +1327,8 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	$ch->setLine(1,0xCC,0xCC,0xCC);
 	$ch->movePen(100,500); $ch->drawLine (0,99 );
 	$i=$m->add($ch);
+}
 
-#	#		Centre crosshair
-	
-#	$ch=new SWF::Shape();
-#	$ch->setLine(1,0xFF,0xFF,0xFF);
-#	$ch->movePenTo(-2,0); $ch->drawLine(-10,0);
-#	$ch->movePenTo( 2,0); $ch->drawLine( 10,0);
-#	$ch->movePenTo(0,-2); $ch->drawLine(0,-10);
-#	$ch->movePenTo(0, 2); $ch->drawLine(0, 10);
-#	$i=$m->add($ch); $i->moveTo(350,250); $i->setDepth(5002);
-	
 	#		Map background
 
 	#		..mask
@@ -1337,24 +1338,23 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	$maskShape->setLine(1,0,0,0);
 	$maskShape->setRightFill($maskShape->addFill(0xE0,0xE0,0xFF));
 	$maskShape->movePenTo(0,0);
-	$maskShape->drawLine( 700,0); $maskShape->drawLine(0,500);
-	$maskShape->drawLine(-700,0); $maskShape->drawLine(0,-500);
+	$maskShape->drawLine( 3000,0); $maskShape->drawLine(0, 3000);
+	$maskShape->drawLine(-3000,0); $maskShape->drawLine(0,-3000);
 	$maskSprite->add($maskShape);
 	$maskSprite->nextFrame();
 	$i=$m->add($maskSprite);
 	$i->setName("masksquare");
 
-	$maskSprite=new SWF::MovieClip();
-	$maskShape =new SWF::Shape();
-	$maskShape->setRightFill($maskShape->addFill(0xF3,0xF3,0xF3));
-	$maskShape->movePenTo(0,500);
-	$maskShape->drawLine( 700,0); $maskShape->drawLine(0,200);
-	$maskShape->drawLine(-700,0); $maskShape->drawLine(0,-200);
-	$maskSprite->add($maskShape);
-	$maskSprite->nextFrame();
-	$i=$m->add($maskSprite);
-	$i->setName("masksquare2");
-
+#	$maskSprite=new SWF::MovieClip();
+#	$maskShape =new SWF::Shape();
+#	$maskShape->setRightFill($maskShape->addFill(0xF3,0xF3,0xF3));
+#	$maskShape->movePenTo(0,500);
+#	$maskShape->drawLine( 700,0); $maskShape->drawLine(0,200);
+#	$maskShape->drawLine(-700,0); $maskShape->drawLine(0,-200);
+#	$maskSprite->add($maskShape);
+#	$maskSprite->nextFrame();
+#	$i=$m->add($maskSprite);
+#	$i->setName("masksquare2");
 
 	# ====== pointers
 	

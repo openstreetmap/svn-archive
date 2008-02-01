@@ -688,10 +688,11 @@ sub build_way_tag_ps($$) {
 }
 sub build_relation_ps($$) {
 	my ($dbtype,$conn) = @_;
-	if ($dbsql eq 'mysql') {
-		my $sql = "INSERT INTO relations (id,version,visible) VALUES (?,1,1)";
+	my $sql;
+	if ($dbtype eq 'mysql') {
+		$sql = "INSERT INTO relations (id,version,visible) VALUES (?,1,1)";
 	} else {
-		my $sql = "INSERT INTO relations (id) VALUES (?)";
+		$sql = "INSERT INTO relations (id) VALUES (?)";
 	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
@@ -699,10 +700,11 @@ sub build_relation_ps($$) {
 }
 sub build_relation_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
-	if ($dbsql eq 'mysql') {
-		my $sql = "INSERT INTO relation_tags (id,k,v,version) VALUES (?,?,?,1)";
+	my $sql;
+	if ($dbtype eq 'mysql') {
+		$sql = "INSERT INTO relation_tags (id,k,v,version) VALUES (?,?,?,1)";
 	} else {
-		my $sql = "INSERT INTO relation_tags (relation,name,value) VALUES (?,?,?)";
+		$sql = "INSERT INTO relation_tags (relation,name,value) VALUES (?,?,?)";
 	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
@@ -710,10 +712,11 @@ sub build_relation_tag_ps($$) {
 }
 sub build_relation_member_ps($$) {
 	my ($dbtype,$conn) = @_;
-	if ($dbsql eq 'mysql') {
-		my $sql = "INSERT INTO relation_members (id,member_type,member_id,member_role,version) VALUES (?,?,?,?,1)";
+	my $sql;
+	if ($dbtype eq 'mysql') {
+		$sql = "INSERT INTO relation_members (id,member_type,member_id,member_role,version) VALUES (?,?,?,?,1)";
 	} else {
-		my $sql = "INSERT INTO relation_members (relation,type,ref,role) VALUES (?,?,?,?)";
+		$sql = "INSERT INTO relation_members (relation,type,ref,role) VALUES (?,?,?,?)";
 	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }

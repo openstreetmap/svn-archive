@@ -33,9 +33,13 @@
 	// resizeWindow - user has enlarged/shrunk window
 
 	function resizeWindow() {
+		updateCoords();
 		// resize Yahoo
 		clearInterval(_root.yahooresizer);
 		_root.yahoo.myMap.setSize(Stage.width,Stage.height-100);
+		_root.ylat=centrelat(_root.bgyoffset);
+		_root.ylon=centrelong(_root.bgxoffset);
+		repositionYahoo(true);
 		// resize main mask and panel
 		_root.masksquare._height=
 		_root.panel._y=Stage.height-100;
@@ -119,15 +123,14 @@
 						loadMovie(yahoourl,_root.yahoo); _root.yahooloaded=true;
 						_root.yahoo.swapDepths(_root.masksquare);
 						_root.yahoorightsize=false;
-//						_root.yahoo.setMask(_root.masksquare2);
 					}
 					_root.yahoo._visible=true;
 					_root.yahoo._alpha=alpha;	
-					_root.yahoo._x=0;
-					_root.yahoo._y=0;
+					_root.yahoo._x=0; _root.yahoo._y=0;
 					_root.ylat=centrelat(_root.bgyoffset);
 					_root.ylon=centrelong(_root.bgxoffset);
 					_root.yzoom=18-_root.scale;
+					repositionYahoo(false);
 					_root.map.tiles._visible=false;
 					break;
 			case 1: ; // OpenAerialMap
@@ -140,5 +143,22 @@
 					_root.map.tiles._visible=true;
 					_root.yahoo._visible=false;
 					break;
+		}
+	}
+
+	function repositionYahoo(force) {
+		clearInterval(_root.yahooresizer);
+		pos=_root.yahoo.myMap.getCenter();
+		if (pos) {
+			pos.lat=_root.ylat;
+			pos.lon=_root.ylon;
+			if (_root.lastyzoom!=_root.yzoom) {
+				_root.yahoo.myMap.setCenterByLatLonAndZoom(pos,_root.yzoom,0);
+			} else if (_root.lastylat!=_root.ylat || _root.lastylon!=_root.ylon || force) {
+				_root.yahoo.myMap.setCenterByLatLon(pos,0);
+			}
+			_root.lastyzoom=_root.yzoom;
+			_root.lastylon =_root.ylon;
+			_root.lastylat =_root.ylat;
 		}
 	}

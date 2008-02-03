@@ -10,7 +10,7 @@
 	var apiurl='../api/0.5/amf';
 	var gpsurl='../api/0.5/swf/trackpoints';
 	var gpxurl='http://www.openstreetmap.org/trace/';
-	var yahoourl='/potlatch/ymap.swf';
+	var yahoourl='/potlatch/ymap2.swf';
 
 	// Resizable window
 	Stage.align="TL";
@@ -67,6 +67,7 @@
 	var yzoom=8;		var lastyzoom=yzoom;	//  |
 	var bgxoffset=0;	var bgyoffset=0;		// manually correct Yahoo imagery
 	var yahooloaded=false;						// is Yahoo component loaded?
+	var yahooinited=false;						// is Yahoo component inited?
 	var yahoorightsize=true;					// do we need to resize Yahoo?
 	_root.createEmptyMovieClip("yahoo",7);
 
@@ -741,9 +742,16 @@
 		// ----	Fix Yahoo! peculiarities
 		_root.yahoo.myMap.enableKeyboardShortcuts(false);
 		_root.yahoo._visible=(preferences.data.baselayer==2);
-		if (_root.yahoo.myMap.config.isLoaded && !_root.yahoorightsize) {
-			_root.yahoorightsize=true;
-			_root.yahooresizer=setInterval(resizeWindow,500);
+		if (_root.yahoo.myMap.config.isLoaded) {
+			if (!_root.yahooinited) {
+				_root.yahooinited=true;
+				_root.yahoorightsize=true;
+				_root.yahoo.myMap.setSize(Stage.width,Stage.height-100);
+				repositionYahoo(true);
+			} else if (!_root.yahoorightsize) {
+				_root.yahoorightsize=true;
+				_root.yahooresizer=setInterval(resizeWindow,1000);
+			}
 		}
 
 		// ----	Do we need to redraw the property window? (workaround)

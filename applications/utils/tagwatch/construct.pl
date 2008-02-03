@@ -307,7 +307,7 @@ sub TagStats{
 			$wiki_sl = "wiki_green"; }
 		if(CheckIfExist("Nl:Tag:$Key=$Value", $tag_articles)) {
 			$wiki_nl = "wiki_green"; }
-		if(CheckIfExist("TrTag:$Key=$Value", $tag_articles)) {
+		if(CheckIfExist("Tr:Tag:$Key=$Value", $tag_articles)) {
 			$wiki_tr = "wiki_green"; }
 
 		my %row = (key => $Key,

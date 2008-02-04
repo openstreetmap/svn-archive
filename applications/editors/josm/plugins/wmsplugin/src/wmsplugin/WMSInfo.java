@@ -12,11 +12,9 @@ public class WMSInfo {
 	String name;
 	String url;
 	int prefid;
-	DownloadWMSTask downloadTask;
 	
 	public WMSInfo(String name, String url, int prefid) {
 		this.name=name; this.url=url; this.prefid=prefid;
-		downloadTask = null;
 	}
 	
 	public void save() {

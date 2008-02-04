@@ -20,7 +20,6 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
 
 	}
-	DownloadWMSTask downloadTask;
 
 	public void actionPerformed(ActionEvent e) {
 
@@ -41,13 +40,9 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
 				//System.out.println(newURL);
 
-			//	if (downloadTask == null){
-					//System.out.println("new download task!");
-					downloadTask = new DownloadWMSTask("rectifier id="+newid, newURL);
-			//	}
 				MapView mv = Main.map.mapView;
 
-				downloadTask.download(null,
+				DownloadWMSTask.download("rectifier id="+newid, newURL,
 						mv.getLatLon(0, mv.getHeight()).lat(),
 						mv.getLatLon(0, mv.getHeight()).lon(),
 						mv.getLatLon(mv.getWidth(), 0).lat(),

@@ -18,7 +18,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 public class WMSAdjustAction extends MapMode implements
 		MouseListener, MouseMotionListener{
 
-	WMSImage selectedImage; 
+	GeorefImage selectedImage;
 	boolean mouseDown;
 	EastNorth prevEastNorth;
 
@@ -45,7 +45,7 @@ public class WMSAdjustAction extends MapMode implements
 			return;
 
 		 for(Layer layer:Main.map.mapView.getAllLayers()) {
-			if (layer instanceof WMSLayer) {
+			if (layer.visible && layer instanceof WMSLayer) {
 				prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
 				selectedImage = ((WMSLayer)layer).findImage(prevEastNorth);
 				if(selectedImage!=null){

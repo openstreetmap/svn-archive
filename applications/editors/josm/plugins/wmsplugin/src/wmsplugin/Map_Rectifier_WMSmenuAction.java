@@ -7,7 +7,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
 
-
 public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
 	/**
@@ -17,45 +16,16 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
 	public Map_Rectifier_WMSmenuAction() {
 		super("Rectified Image ...", "OLmarker", "Download Rectified Image from Metacarta's Map Rectifer WMS", 0, 0, false);
-
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		String newid = JOptionPane.showInputDialog(Main.parent, "Metacarta Map Rectifier image id");
 
-		//String newid;
-		String newURL = "";
-		String newid = "";
+		if (newid != null && !newid.equals("")) {
+			String newURL = "http://labs.metacarta.com/rectifier/wms.cgi?id="+newid+
+			"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png";
 
-		newid = JOptionPane.showInputDialog(Main.parent, "Metacarta Map Rectifier image id ");
-	//	System.out.println("newid= " +newid);
-		if (newid != null){
-
-
-			if (newid.compareTo("") != 0) 
-			{
-				newURL = "http://labs.metacarta.com/rectifier/wms.cgi?id="+newid+
-				"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png";
-
-
-				//System.out.println(newURL);
-
-				MapView mv = Main.map.mapView;
-
-				DownloadWMSTask.download("rectifier id="+newid, newURL,
-						mv.getLatLon(0, mv.getHeight()).lat(),
-						mv.getLatLon(0, mv.getHeight()).lon(),
-						mv.getLatLon(mv.getWidth(), 0).lat(),
-						mv.getLatLon(mv.getWidth(), 0).lon());			
-
-
-			}
+			DownloadWMSTask.download("rectifier id="+newid, newURL);
 		}
-		//else do nuffink
-
 	}
-
-
-
 }
-

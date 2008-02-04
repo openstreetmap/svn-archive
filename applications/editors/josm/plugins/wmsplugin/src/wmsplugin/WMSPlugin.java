@@ -29,7 +29,6 @@ public class WMSPlugin extends Plugin {
 
 	static String VERSION = "2.4";
 	
-	DownloadWMSTask task;
 	WMSLayer wmsLayer;
 	static JMenu wmsJMenu;
 

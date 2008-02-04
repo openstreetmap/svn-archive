@@ -20,11 +20,7 @@ public class WMSDownloadAction extends JosmAction {
 		
 		MapView mv = Main.map.mapView;
 		
-		DownloadWMSTask.download(info.name, info.url,
-				mv.getLatLon(0, mv.getHeight()).lat(),
-				mv.getLatLon(0, mv.getHeight()).lon(),
-				mv.getLatLon(mv.getWidth(), 0).lat(),
-				mv.getLatLon(mv.getWidth(), 0).lon());			
+		DownloadWMSTask.download(info.name, info.url);
 	}
 };
 

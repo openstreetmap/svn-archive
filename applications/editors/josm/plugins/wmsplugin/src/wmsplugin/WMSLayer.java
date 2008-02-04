@@ -28,6 +28,7 @@ import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -41,47 +42,26 @@ import org.openstreetmap.josm.data.coor.EastNorth;
  */
 public class WMSLayer extends Layer {
 
-	protected static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
-	protected final ArrayList<WMSImage> wmsImages;
-	protected final String url;
-	protected final int serializeFormatVersion = 1;
- 
+	protected static final Icon icon =
+		new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
+
+	protected ArrayList<GeorefImage> images = new ArrayList<GeorefImage>();
+	protected Grabber grabber;
+	protected final int serializeFormatVersion = 2;
+
 	public WMSLayer() {
-		super("Blank Layer");
-		wmsImages = new ArrayList<WMSImage>();
-		url = "";
+		this("Blank Layer", null);
 	}
-	public WMSLayer(String name, String url) {
+
+	public WMSLayer(String name, Grabber grabber) {
 		super(name);
-		// to calculate the world dimension, we assume that the projection does
-		// not have problems with translating longitude to a correct scale.
-		// Next to that, the projection must be linear dependend on the lat/lon
-		// unprojected scale.
-		if (Projection.MAX_LON != 180)
-			throw new IllegalArgumentException(tr
-					("Wrong longitude transformation for tile manager. "+
-							"Can't operate on {0}",Main.proj));
-
-		this.url = url;
-		//wmsImage = new WMSImage(url);
-		wmsImages = new ArrayList<WMSImage>();
+		this.grabber = grabber;
 	}
 
-	public void grab() throws IOException
-	{
-		MapView mv = Main.map.mapView;
-		WMSImage wmsImage = new WMSImage(url);
-		wmsImage.grab(mv);
-		wmsImages.add(wmsImage);
-	}
-
-	public void grab(double minlat,double minlon,double maxlat,double maxlon)
-	throws IOException
-	{
-		MapView mv = Main.map.mapView;
-		WMSImage wmsImage = new WMSImage(url);
-		wmsImage.grab(mv,minlat,minlon,maxlat,maxlon);
-		wmsImages.add(wmsImage);
+	public void grab(Bounds b, double pixelPerDegree) throws IOException {
+		if (grabber == null) return;
+		images.add(grabber.grab(b, Main.main.proj, pixelPerDegree));
+		Main.map.mapView.repaint();
 	}
 
 	@Override public Icon getIcon() {
@@ -89,7 +69,7 @@ public class WMSLayer extends Layer {
 	}
 
 	@Override public String getToolTipText() {
-		return tr("WMS layer ({0}), {1} tile(s) loaded", name, wmsImages.size());
+		return tr("WMS layer ({0}), {1} tile(s) loaded", name, images.size());
 	}
 
 	@Override public boolean isMergable(Layer other) {
@@ -100,13 +80,14 @@ public class WMSLayer extends Layer {
 	}
 
 	@Override public void paint(Graphics g, final MapView mv) {
-		for(WMSImage wmsImage : wmsImages) {
-			wmsImage.paint(g,mv);
-		}
+		for (GeorefImage img : images) img.paint(g, mv);
 	}
 
 	@Override public void visitBoundingBox(BoundingXYVisitor v) {
-		// doesn't have a bounding box
+		for (GeorefImage img : images) {
+			v.visit(img.min);
+			v.visit(img.max);
+		}
 	}
 
 	@Override public Object getInfoComponent() {
@@ -123,21 +104,17 @@ public class WMSLayer extends Layer {
 				new JMenuItem(new LayerListPopup.InfoAction(this))};
 	}
 
-	public WMSImage findImage(EastNorth eastNorth)
-	{
-		for(WMSImage wmsImage : wmsImages) {
-			if (wmsImage.contains(eastNorth))  {
-				return wmsImage;
+	public GeorefImage findImage(EastNorth eastNorth) {
+		// Iterate in reverse, so we return the image which is painted last.
+		// (i.e. the topmost one)
+		for (int i = images.size() - 1; i >= 0; i--) {
+			if (images.get(i).contains(eastNorth)) {
+				return images.get(i);
 			}
 		}
 		return null;
 	}
 
-	//to enable the removal of the images when the layer is removed.
-	public void destroy() {
-		wmsImages.clear();
-	}
-	
 	public class SaveWmsAction extends AbstractAction {
 		public SaveWmsAction() {
 			super(tr("Save WMS layer to file"), ImageProvider.get("save"));
@@ -148,9 +125,9 @@ public class WMSLayer extends Layer {
 				FileOutputStream fos = new FileOutputStream(f);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeInt(serializeFormatVersion);
-				oos.writeInt(wmsImages.size());
-				for (WMSImage w : wmsImages) {
-					oos.writeObject(w);
+				oos.writeInt(images.size());
+				for (GeorefImage img : images) {
+					oos.writeObject(img);
 				}
 				oos.close();
 				fos.close();
@@ -180,8 +157,8 @@ public class WMSLayer extends Layer {
 				}
 				int numImg = ois.readInt();
 				for (int i=0; i< numImg; i++) {
-					WMSImage img = (WMSImage) ois.readObject();
-					wmsImages.add(img);
+					GeorefImage img = (GeorefImage) ois.readObject();
+					images.add(img);
 				}
 				ois.close();
 				fis.close();

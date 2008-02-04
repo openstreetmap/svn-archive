@@ -16,6 +16,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -118,11 +120,17 @@ public class WMSImage implements Serializable
 						(int)(heightEN/grabbedScale) );
 	}
 
+	public static NumberFormat latLonFormat = new DecimalFormat("###0.0000000");
+
 	protected URL doGetURL(double w,double s,double e,double n, int wi, 
 					int ht) throws MalformedURLException
 	{
-		String str = constURL + "&bbox=" + w +"," + s + ","+
-				e+","+n + "&width=" + wi + "&height=" + ht;
+		String str = constURL + "&bbox="
+			+ latLonFormat.format(w) + ","
+			+ latLonFormat.format(s) + ","
+			+ latLonFormat.format(e) + ","
+			+ latLonFormat.format(n)
+			+ "&width=" + wi + "&height=" + ht;
 		return new URL(str.replace(" ", "%20"));
 	}
 

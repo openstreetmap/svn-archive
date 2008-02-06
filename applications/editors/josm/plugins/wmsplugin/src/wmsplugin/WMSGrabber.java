@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 
@@ -45,7 +47,8 @@ public class WMSGrabber implements Grabber {
 	}
 
 	public static final NumberFormat
-		latLonFormat = new DecimalFormat("###0.0000000");
+		latLonFormat = new DecimalFormat("###0.0000000",
+			new DecimalFormatSymbols(Locale.US));
 
 	protected URL getURL(double w, double s,double e,double n,
 			int wi, int ht) throws MalformedURLException {

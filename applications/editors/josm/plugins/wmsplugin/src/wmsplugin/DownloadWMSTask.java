@@ -34,37 +34,14 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 	@Override protected void cancel() {}
 	@Override protected void finish() {}
 
-	public static void download(String name, String wmsurl,
-			Bounds b, double pixelPerDegree) {
-		WMSLayer wmsLayer = null;
-
-		// simply check if we already have a layer created. if not, create; if yes, reuse.
-		for (Layer l : Main.main.map.mapView.getAllLayers()) {
-			if (l instanceof WMSLayer && l.name.equals(name)) {
-				wmsLayer = (WMSLayer) l;
-			}
-		}
-
-		// FIXME: move this to WMSPlugin/WMSInfo/preferences.
-		if (wmsLayer == null) {
-			if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
-				wmsLayer = new WMSLayer(name, new OSGBGrabber(wmsurl));
-			} else {
-				wmsLayer = new WMSLayer(name, new WMSGrabber(wmsurl));
-			}
-			Main.main.addLayer(wmsLayer);
-		} 
-
-		Main.worker.execute(new DownloadWMSTask(wmsLayer, b, pixelPerDegree));
-	}
-
-	public static void download(String name, String wmsurl) {
+	public static void download(WMSLayer wmsLayer) {
 		MapView mv = Main.map.mapView;
 
 		Bounds b = new Bounds(
 			mv.getLatLon(0, mv.getHeight()),
 			mv.getLatLon(mv.getWidth(), 0));
 
-		download(name, wmsurl, b, mv.getWidth() / (b.max.lon() - b.min.lon()));
+		Main.worker.execute(new DownloadWMSTask(wmsLayer, b,
+			mv.getWidth() / (b.max.lon() - b.min.lon())));
 	}
 }

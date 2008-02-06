@@ -287,7 +287,7 @@
 			_root.panel.padlock._visible=true;
 			_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
 		} else {
-			_root.padlock._visible=false;
+			_root.panel.padlock._visible=false;
 		}
 	}
 

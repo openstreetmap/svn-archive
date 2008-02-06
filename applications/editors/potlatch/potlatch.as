@@ -12,7 +12,8 @@
 	var gpxurl='http://www.openstreetmap.org/trace/';
 	var yahoourl='/potlatch/ymap2.swf';
 
-	// Resizable window
+	// Resizable window, disable right-click
+	Stage.showMenu = false;
 	Stage.align="TL";
 	Stage.scaleMode="noScale";
 	resizeListener=new Object();
@@ -184,7 +185,7 @@
 	_root.panel.i_circular.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("padlock","padlock",41);
-	with (_root.panel.padlock) { _y=532; _visible=false; };
+	with (_root.panel.padlock) { _y=32; _visible=false; };
 	_root.panel.padlock.onPress=function() {
 		if (_root.wayselected) {
 			if (_root.ws.path.length>200) {

@@ -119,6 +119,14 @@ public class WMSPlugin extends Plugin {
 		wmsJMenu.add(new JMenuItem(new Help_WMSmenuAction()));
 		setEnabledAll(false);
 	}
+
+	public static Grabber getGrabber(String wmsurl) {
+		if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
+			return new OSGBGrabber(wmsurl);
+		} else {
+			return new WMSGrabber(wmsurl);
+		}
+	}
 	
 	private static void setEnabledAll(boolean isEnabled) {
 		for(int i=0; i < wmsJMenu.getItemCount(); i++) {

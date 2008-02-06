@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.layer.Layer;
 
 public class WMSDownloadAction extends JosmAction {
 
@@ -18,9 +19,21 @@ public class WMSDownloadAction extends JosmAction {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(info.url);
 		
-		MapView mv = Main.map.mapView;
-		
-		DownloadWMSTask.download(info.name, info.url);
+		DownloadWMSTask.download(getLayer(info));
+	}
+
+	public static WMSLayer getLayer(WMSInfo info) {
+		// simply check if we already have a layer created. if not, create; if yes, reuse.
+		for (Layer l : Main.main.map.mapView.getAllLayers()) {
+			if (l instanceof WMSLayer && l.name.equals(info.name)) {
+				return (WMSLayer) l;
+			}
+		}
+
+		// FIXME: move this to WMSPlugin/WMSInfo/preferences.
+		WMSLayer wmsLayer = new WMSLayer(info.name, info.grabber);
+		Main.main.addLayer(wmsLayer);
+		return wmsLayer;
 	}
 };
 

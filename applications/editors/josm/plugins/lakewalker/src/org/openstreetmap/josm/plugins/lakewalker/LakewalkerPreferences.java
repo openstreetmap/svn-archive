@@ -14,6 +14,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
 
   public static final String[] DIRECTIONS = new String[] {"east", "northeast", "north", "northwest", "west", "southwest", "south", "southeast"};
   public static final String[] WAYTYPES = new String[] {"water", "coastline", "land", "none"};
+  public static final String[] WMSLAYERS = new String[] {"IR1", "IR2", "IR3"};
 
   public static final String PREF_PYTHON = "lakewalker.python";
   public static final String PREF_MAX_SEG = "lakewalker.max_segs_in_way";
@@ -26,6 +27,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
   public static final String PREF_NORTH_OFFSET = "lakewalker.north_offset";
   public static final String PREF_START_DIR = "lakewalker.startdir";
   public static final String PREF_WAYTYPE = "lakewalker.waytype";
+  public static final String PREF_WMS = "lakewalker.wms";
     
   protected StringConfigurer pythonConfig = new StringConfigurer();
   protected JLabel pythonLabel = new JLabel(tr("Python executable"));
@@ -49,6 +51,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
   protected JLabel startDirLabel = new JLabel(tr("Direction to search for land"));  
   protected StringEnumConfigurer lakeTypeConfig = new StringEnumConfigurer(WAYTYPES);
   protected JLabel lakeTypeLabel = new JLabel(tr("Tag ways as"));
+  protected StringEnumConfigurer wmsConfig = new StringEnumConfigurer(WMSLAYERS);
+  protected JLabel wmsLabel = new JLabel(tr("WMS Layer"));
   
   public void addGui(PreferenceDialog gui) {
     pythonConfig.setToolTipText(tr("Path to python executable."));
@@ -62,6 +66,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     northOffsetConfig.setToolTipText(tr("Offset all points in North direction (degrees). Default 0."));   
     startDirConfig.setToolTipText(tr("Direction to search for land. Default east."));
     lakeTypeConfig.setToolTipText(tr("Tag ways as water, coastline, land or nothing. Default is water."));
+    wmsConfig.setToolTipText(tr("Which WMS layer to use for tracing against. Default is IR1."));
 
     String description = tr("An interlude to the Lakewalker Python module to trace water bodies on Landsat imagery.<br><br>Version: {0}", LakewalkerPlugin.VERSION);
     JPanel prefPanel = gui.createPreferenceTab("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), description);
@@ -78,6 +83,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     northOffsetConfig.setValue(Main.pref.get(PREF_NORTH_OFFSET, "0.0"));
     startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));
     lakeTypeConfig.setValue(Main.pref.get(PREF_WAYTYPE, "water"));
+    wmsConfig.setValue(Main.pref.get(PREF_WMS, "IR1"));
   }
   
   public void buildPreferences(JPanel prefPanel) {
@@ -106,6 +112,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
     prefPanel.add(startDirConfig.getControls(), dataConstraints);    
     prefPanel.add(lakeTypeLabel, labelConstraints);
     prefPanel.add(lakeTypeConfig.getControls(), dataConstraints);
+    prefPanel.add(wmsLabel, labelConstraints);
+    prefPanel.add(wmsConfig.getControls(), dataConstraints);
   }
 
   /*
@@ -123,6 +131,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     Main.pref.put(PREF_NORTH_OFFSET, northOffsetConfig.getValueString());
     Main.pref.put(PREF_START_DIR, startDirConfig.getValueString());
     Main.pref.put(PREF_WAYTYPE, lakeTypeConfig.getValueString());
+    Main.pref.put(PREF_WMS, wmsConfig.getValueString());
   }
   
 }

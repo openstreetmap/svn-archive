@@ -84,7 +84,7 @@ class BBox:
 
 def download_landsat(c1, c2, width, height, fname):
     layer = "global_mosaic_base"
-    style = "IR1"
+    style = options.wmslayer
 
     (min_lat, min_lon) = c1
     (max_lat, max_lon) = c2
@@ -121,7 +121,7 @@ class WMSManager:
             (x, y) = xy
             bottom_left_xy = (int(math.floor(x / options.tilesize)) * options.tilesize, int(math.floor(y / options.tilesize)) * options.tilesize)
             top_right_xy = (bottom_left_xy[0] + options.tilesize, bottom_left_xy[1] + options.tilesize)
-            fname = "landsat_%d_%d_xy_%d_%d.png" % (options.resolution, options.tilesize, bottom_left_xy[0], bottom_left_xy[1])
+            fname = options.wmslayer+"/landsat_%d_%d_xy_%d_%d.png" % (options.resolution, options.tilesize, bottom_left_xy[0], bottom_left_xy[1])
             im = self.images.get(fname, None)
             if im is None:
                 if not os.path.exists(fname):
@@ -445,6 +445,7 @@ def main():
     parser.add_option("--top", type="float", metavar="LATITUDE", default=90, help="Top (north) latitude for bounding box")
     parser.add_option("--bottom", type="float", metavar="LATITUDE", default=-90, help="Bottom (south) latitude for bounding box")
     parser.add_option("--josm", action="store_true", dest="josm_mode", default=False, help="Operate in JOSM plugin mode")
+    parser.add_option("--wms", type="string", dest="wmslayer", default="IR1", help="WMS layer to use")
 
     global options # Ugly, I know...
     (options, args) = parser.parse_args()

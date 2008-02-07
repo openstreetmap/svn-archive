@@ -100,6 +100,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     target += " --landsat-res=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000");
     target += " --tilesize=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000");
     target += " --startdir=" + Main.pref.get(LakewalkerPreferences.PREF_START_DIR, "east");
+    target += " --wms=" + Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");    
     target += " --josm";
     
 

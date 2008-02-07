@@ -63,9 +63,12 @@
     <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     <copy todir="${josm.plugins.dir}/Lakewalker">
       <fileset dir="Lakewalker">
-  	<filename name = "*.py"/>
+  		<filename name = "*.py"/>
       </fileset>
     </copy>
+  	<mkdir dir="${josm.plugins.dir}/Lakewalker/IR1"></mkdir>
+	<mkdir dir="${josm.plugins.dir}/Lakewalker/IR2"></mkdir>
+	<mkdir dir="${josm.plugins.dir}/Lakewalker/IR3"></mkdir>
   </target>
 
 </project>

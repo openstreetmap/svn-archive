@@ -20,9 +20,6 @@
 
 package org.openstreetmap.josmng.ui;
 
-import javax.swing.undo.UndoManager;
-
-import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
@@ -39,6 +36,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         main = this;
         initComponents();
+        setSize(800, 600);
     }
     
     /** This method is called from within the constructor to
@@ -59,6 +57,7 @@ public class Main extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().add(mapView1, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
@@ -83,17 +82,6 @@ public class Main extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
-
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, mapView1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, mapView1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

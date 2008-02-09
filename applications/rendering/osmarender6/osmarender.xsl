@@ -1119,10 +1119,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:template name="areaCenter">
     <xsl:param name="element" />
 
+    <!-- Get multipolygon relation for areas with holes -->
+    <xsl:variable name='holerelation' select="key('relationByWay',$element/@id)[tag[@k='type' and @v='multipolygon']]"/>
+
     <!-- A semicolon-separated list of x,y coordinate pairs of points lying halfway into the polygon at angles to the vertex -->
     <xsl:variable name="points">
       <xsl:call-template name="areacenterPointsInside">
 	<xsl:with-param name="element" select="$element" />
+	<xsl:with-param name="holerelation" select="$holerelation" />
       </xsl:call-template>
     </xsl:variable>
 
@@ -1133,19 +1137,51 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="mediumpoint_x" select="substring-before($mediumpoint, ',')" />
-    <xsl:variable name="mediumpoint_y" select="substring-after($mediumpoint, ',')" />
+    <xsl:variable name="mediumpoint_y" select="substring-before(substring-after($mediumpoint, ','), ',')" />
+    <xsl:variable name="medium_dist" select="substring-after(substring-after($mediumpoint, ','), ',')" />
 
-    <!-- Find the point in $points that's closest to $mediumpoint -->
-    <xsl:call-template name="areacenterNearestPoint">
-      <xsl:with-param name="points" select="$points" />
-      <xsl:with-param name="x" select="$mediumpoint_x" />
-      <xsl:with-param name="y" select="$mediumpoint_y" />
-    </xsl:call-template>
+    <!-- Find out if mediumpoint is inside or outside the polygon -->
+    <xsl:variable name="intersection">
+      <xsl:call-template name="areacenterNearestIntersectionInside">
+	<xsl:with-param name="x" select="$mediumpoint_x" />
+	<xsl:with-param name="y" select="$mediumpoint_y" />
+	<xsl:with-param name="edgestart" select="$element/nd[1]" />
+	<xsl:with-param name="linepoint_x" select="$mediumpoint_x" />
+	<xsl:with-param name="linepoint_y" select="$mediumpoint_y + 1" />
+	<xsl:with-param name="holerelation" select="$holerelation" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="intersection_count" select="substring-before($intersection, ';')" />
+
+    <xsl:variable name="nearestEdge">
+      <xsl:call-template name="areacenterNearestEdge">
+	<xsl:with-param name="x" select="$mediumpoint_x" />
+	<xsl:with-param name="y" select="$mediumpoint_y" />
+	<xsl:with-param name="edgestart" select="$element/nd[1]" />
+	<xsl:with-param name="holerelation" select="$holerelation" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$intersection_count mod 2 = 0 or $nearestEdge div 2 * 1.20 &gt; $medium_dist">
+	<!-- Find the best point in $points to use -->
+	<xsl:call-template name="areacenterBestPoint">
+	  <xsl:with-param name="points" select="$points" />
+	  <xsl:with-param name="x" select="$mediumpoint_x" />
+	  <xsl:with-param name="y" select="$mediumpoint_y" />
+	  <xsl:with-param name="medium_dist" select="$medium_dist" />
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$mediumpoint_x"/>,<xsl:value-of select="$mediumpoint_y"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Returns a semicolon-separated list of x,y pairs -->
   <xsl:template name="areacenterPointsInside">
     <xsl:param name="element" />
+    <xsl:param name="holerelation" />
 
     <!-- iterate over every vertex except the first one, which is also the last -->
     <xsl:for-each select="$element/nd[position() &gt; 1]">
@@ -1182,28 +1218,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <xsl:variable name="linepoint_x" select="substring-before($linepoint, ',')" />
       <xsl:variable name="linepoint_y" select="substring-after($linepoint, ',')" />
 
-      <!-- Get multipolygon relation for areas with holes -->
-      <xsl:variable name='holerelation' select="key('relationByWay',$element/@id)[tag[@k='type' and @v='multipolygon']]"/>
-
       <!-- Find the nearest intersection between the line vertex-linepoint and the nearest edge inwards into the polygon -->
       <xsl:variable name="intersection">
-	<xsl:call-template name="areacenterFindPointForVertex">
-	  <xsl:with-param name="vertex" select="key('nodeById', $vertex/@ref)" />
+	<xsl:call-template name="areacenterNearestIntersectionInside">
+	  <xsl:with-param name="x" select="key('nodeById', $vertex/@ref)/@lon" />
+	  <xsl:with-param name="y" select="key('nodeById', $vertex/@ref)/@lat" />
 	  <xsl:with-param name="edgestart" select="../nd[1]" />
 	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	  <xsl:with-param name="holerelation" select="$holerelation" />
 	</xsl:call-template>
       </xsl:variable>
-      <xsl:variable name="intersection_x" select="substring-before($intersection, ',')" />
-      <xsl:variable name="intersection_y" select="substring-after($intersection, ',')" />
+      <xsl:variable name="intersection_count" select="substring-before($intersection, ';')" />
+      <xsl:variable name="intersection_data">
+	<xsl:choose>
+	  <xsl:when test="$intersection_count mod 2 != 0">
+	    <xsl:value-of select="substring-before(substring-after($intersection, ';'), ';')" />
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:value-of select="substring-after(substring-after($intersection, ';'), ';')" />
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="intersection_x" select="substring-before($intersection_data, ',')" />
+      <xsl:variable name="intersection_y" select="substring-before(substring-after($intersection_data, ','), ',')" />
+      <xsl:variable name="intersection_dist" select="substring-before(substring-after(substring-after($intersection_data, ','), ','), ',')" />
 
       <xsl:variable name="point_x" select="key('nodeById', $vertex/@ref)/@lon + ( $intersection_x - key('nodeById', $vertex/@ref)/@lon ) div 2" />
       <xsl:variable name="point_y" select="key('nodeById', $vertex/@ref)/@lat + ( $intersection_y - key('nodeById', $vertex/@ref)/@lat ) div 2" />
       
       <xsl:if test="($point_x &lt;= 0 or $point_x &gt; 0)  and ($point_y &lt;= 0 or $point_y &gt; 0)"> <!-- Only return anything if we actually have a result -->
 	<!-- Note: this will produce trailing semicolon, which is nice as it simplifies looping over this later -->
-	<xsl:value-of select="$point_x" />,<xsl:value-of select="$point_y" />;
+	<xsl:value-of select="$point_x" />,<xsl:value-of select="$point_y" />,<xsl:value-of select="$intersection_dist" />;
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
@@ -1436,14 +1482,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:call-template>
   </xsl:template>
 
-  <!-- Find the point halfway into the polygon along the line $vertex-$linepoint -->
-  <xsl:template name="areacenterFindPointForVertex">
-    <xsl:param name="vertex" />
+  <!-- Find the nearest intersection into the polygon along the line ($x,$y)-$linepoint.
+       Can also be used for ray-casting point-in-polygon checking -->
+  <xsl:template name="areacenterNearestIntersectionInside">
+    <xsl:param name="x" />
+    <xsl:param name="y" />
     <xsl:param name="edgestart" />
     <xsl:param name="linepoint_x" />
     <xsl:param name="linepoint_y" />
     <xsl:param name="holerelation" />
-    <xsl:param name="intersectioncount_on" select="0" /><!-- Number of intersections. Only counts those on segment vertex-linepoint -->
+    <xsl:param name="intersectioncount_on" select="0" /><!-- Number of intersections. Only counts those on segment (x,y)-linepoint -->
     <xsl:param name="nearest_on_x" />
     <xsl:param name="nearest_on_y" />
     <xsl:param name="nearest_on_dist" select="'NaN'" />
@@ -1455,18 +1503,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <!-- If there are no more vertices we don't have a second point for the edge, and are finished -->
       <xsl:when test="$edgestart/following-sibling::nd[1]">
 	<xsl:variable name="edgeend" select="$edgestart/following-sibling::nd[1]" />
-
-	<!-- Get the intersection point between the line $vertex-$linepoint and $edgestart-$edgeend -->
+	<!-- Get the intersection point between the line ($x,$y)-$linepoint and $edgestart-$edgeend -->
 	<xsl:variable name="intersection">
 	  <xsl:choose>
-	    <xsl:when test="$vertex/@id = $edgestart/@ref or $vertex/@id = $edgeend/@ref">
-	      <!-- Vertex is one of the points in edge, skip -->
+	    <xsl:when test="( $x = key('nodeById', $edgestart/@ref)/@lon and $y = key('nodeById', $edgestart/@ref)/@lat ) or
+			    ( $x = key('nodeById', $edgeend/@ref)/@lon and $y = key('nodeById', $edgeend/@ref)/@lat )">
+	      <!-- (x,y) is one of the points in edge, skip -->
 	      NoIntersection
 	    </xsl:when>
 	    <xsl:otherwise>      
 	      <xsl:call-template name="areacenterLinesIntersection">
-		<xsl:with-param name="x1" select="$vertex/@lon" />
-		<xsl:with-param name="y1" select="$vertex/@lat" />
+		<xsl:with-param name="x1" select="$x" />
+		<xsl:with-param name="y1" select="$y" />
 		<xsl:with-param name="x2" select="$linepoint_x" />
 		<xsl:with-param name="y2" select="$linepoint_y" />
 		<xsl:with-param name="x3" select="key('nodeById', $edgestart/@ref)/@lon" />
@@ -1489,14 +1537,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	  <xsl:when test="$intersection != 'NoIntersection' and $ub &gt; 0 and $ub &lt;= 1">
 	    <xsl:variable name="distance">
 	      <xsl:call-template name="areacenterPointDistance">
-		<xsl:with-param name="x1" select="$vertex/@lon" />
-		<xsl:with-param name="y1" select="$vertex/@lat" />
+		<xsl:with-param name="x1" select="$x" />
+		<xsl:with-param name="y1" select="$y" />
 		<xsl:with-param name="x2" select="$ix" />
 		<xsl:with-param name="y2" select="$iy" />
 	      </xsl:call-template>
 	    </xsl:variable>
 
-	    <!-- Is intersection on the segment $vertex-$linepoint, or on the other side of $vertex? -->
+	    <!-- Is intersection on the segment ($x,$y)-$linepoint, or on the other side of ($x,$y)? -->
 	    <xsl:variable name="isOnSegment">
 	      <xsl:if test="$ua &gt;= 0">Yes</xsl:if>
 	    </xsl:variable>
@@ -1509,8 +1557,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	      <xsl:if test="$isOnSegment != 'Yes' and ( $nearest_off_dist = 'NaN' or $distance &lt; $nearest_off_dist )">Yes</xsl:if>
 	    </xsl:variable>
 
-	    <xsl:call-template name="areacenterFindPointForVertex">
-	      <xsl:with-param name="vertex" select="$vertex" />
+	    <xsl:call-template name="areacenterNearestIntersectionInside">
+	      <xsl:with-param name="x" select="$x" />
+	      <xsl:with-param name="y" select="$y" />
 	      <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	      <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	      <xsl:with-param name="edgestart" select="$edgeend" />
@@ -1544,8 +1593,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	  </xsl:when>
 	  <!-- No intersection, just go on to next edge -->
 	  <xsl:otherwise>
-	    <xsl:call-template name="areacenterFindPointForVertex">
-	      <xsl:with-param name="vertex" select="$vertex" />
+	    <xsl:call-template name="areacenterNearestIntersectionInside">
+	      <xsl:with-param name="x" select="$x" />
+	      <xsl:with-param name="y" select="$y" />
 	      <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	      <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	      <xsl:with-param name="edgestart" select="$edgeend" />
@@ -1565,8 +1615,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <xsl:when test="$holerelation and
 		      $holerelation/member[@ref = $edgestart/../@id][@role='outer']">
 	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@type='way'][@role='inner'][1]/@ref)/nd[1]"/>
-	<xsl:call-template name="areacenterFindPointForVertex">
-	  <xsl:with-param name="vertex" select="$vertex" />
+	<xsl:call-template name="areacenterNearestIntersectionInside">
+	  <xsl:with-param name="x" select="$x" />
+	  <xsl:with-param name="y" select="$y" />
 	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	  <xsl:with-param name="edgestart" select="$nextnode" />
@@ -1582,10 +1633,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       </xsl:when>
       <!-- Is there a hole in the polygon, and were we working working on one of the inner ones? Then go to the next hole, if there is one -->
       <xsl:when test="$holerelation and
-		      $holerelation/member[@ref = $edgestart/../@id][@type='way'][tag[@k='role' and @v='inner']]/following-sibling::member[tag[@k='role' and @v='inner']]">
-	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@ref = $edgestart/../@id][@type='way'][tag[@k='role' and @v='inner']]/following-sibling::member[tag[@k='role' and @v='inner']]/@ref)/nd[1]"/>
-	<xsl:call-template name="areacenterFindPointForVertex">
-	  <xsl:with-param name="vertex" select="$vertex" />
+		      $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']">
+	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']/@ref)/nd[1]"/>
+	<xsl:call-template name="areacenterNearestIntersectionInside">
+	  <xsl:with-param name="x" select="$x" />
+	  <xsl:with-param name="y" select="$y" />
 	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	  <xsl:with-param name="edgestart" select="$nextnode" />
@@ -1600,17 +1652,154 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	</xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-	<!-- No more edges, return point -->
-	<xsl:choose>
-	  <xsl:when test="$intersectioncount_on mod 2 = 0">
-	    <xsl:value-of select="$nearest_off_x"/>,<xsl:value-of select="$nearest_off_y"/>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <xsl:value-of select="$nearest_on_x"/>,<xsl:value-of select="$nearest_on_y"/>
-	  </xsl:otherwise>
-	</xsl:choose>
+	<!-- No more edges, return data -->
+	<xsl:value-of select="$intersectioncount_on" />;
+	<xsl:value-of select="$nearest_on_x"/>,<xsl:value-of select="$nearest_on_y"/>,<xsl:value-of select="$nearest_on_dist"/>;
+	<xsl:value-of select="$nearest_off_x"/>,<xsl:value-of select="$nearest_off_y"/>,<xsl:value-of select="$nearest_off_dist"/>;
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <!-- Find the distance to the edge nearest (x,y) -->
+  <xsl:template name="areacenterNearestEdge">
+    <xsl:param name="x" />
+    <xsl:param name="y" />
+    <xsl:param name="edgestart" />
+    <xsl:param name="holerelation" />
+    <xsl:param name="nearest_dist" select="'NaN'" />
+
+    <xsl:choose>
+      <!-- If there are no more vertices we don't have a second point for the edge, and are finished -->
+      <xsl:when test="$edgestart/following-sibling::nd[1]">
+	<xsl:variable name="edgeend" select="$edgestart/following-sibling::nd[1]" />
+
+	<xsl:variable name="distance">
+	  <xsl:call-template name="areacenterDistancePointSegment">
+	    <xsl:with-param name="x" select="$x" />
+	    <xsl:with-param name="y" select="$y" />
+	    <xsl:with-param name="x1" select="key('nodeById', $edgestart/@ref)/@lon" />
+	    <xsl:with-param name="y1" select="key('nodeById', $edgestart/@ref)/@lat" />
+	    <xsl:with-param name="x2" select="key('nodeById', $edgeend/@ref)/@lon" />
+	    <xsl:with-param name="y2" select="key('nodeById', $edgeend/@ref)/@lat" />
+	  </xsl:call-template>
+	</xsl:variable>
+
+	<!-- Did we get a valid distance?
+	     There is some code in DistancePointSegment that can return NaN in some cases -->
+	<xsl:choose>
+	  <xsl:when test="string(number($distance)) != 'NaN'">
+	    <xsl:call-template name="areacenterNearestEdge">
+	      <xsl:with-param name="x" select="$x" />
+	      <xsl:with-param name="y" select="$y" />
+	      <xsl:with-param name="edgestart" select="$edgeend" />
+	      <xsl:with-param name="holerelation" select="$holerelation" />
+	      <xsl:with-param name="nearest_dist"> <xsl:choose>
+		<xsl:when test="$nearest_dist = 'NaN' or $distance &lt; $nearest_dist"> <xsl:value-of select="$distance" /> </xsl:when>
+		<xsl:otherwise> <xsl:value-of select="$nearest_dist" /> </xsl:otherwise>
+	      </xsl:choose> </xsl:with-param>
+	    </xsl:call-template>
+	  </xsl:when>
+
+	  <xsl:otherwise>
+	    <xsl:call-template name="areacenterNearestEdge">
+	      <xsl:with-param name="x" select="$x" />
+	      <xsl:with-param name="y" select="$y" />
+	      <xsl:with-param name="edgestart" select="$edgeend" />
+	      <xsl:with-param name="holerelation" select="$holerelation" />
+	      <xsl:with-param name="nearest_dist" select="$nearest_dist" />
+	    </xsl:call-template>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:when>
+      <!-- Is there a hole in the polygon, and were we working on the outer one? Then we start edge detection against the hole. -->
+      <xsl:when test="$holerelation and
+		      $holerelation/member[@ref = $edgestart/../@id][@role='outer']">
+	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@type='way'][@role='inner'][1]/@ref)/nd[1]"/>
+	<xsl:call-template name="areacenterNearestEdge">
+	  <xsl:with-param name="x" select="$x" />
+	  <xsl:with-param name="y" select="$y" />
+	  <xsl:with-param name="edgestart" select="$nextnode" />
+	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="nearest_dist" select="$nearest_dist" />
+	</xsl:call-template>
+      </xsl:when>
+      <!-- Is there a hole in the polygon, and were we working working on one of the inner ones? Then go to the next hole, if there is one -->
+      <xsl:when test="$holerelation and
+		      $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']">
+	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']/@ref)/nd[1]"/>
+	<xsl:call-template name="areacenterNearestEdge">
+	  <xsl:with-param name="x" select="$x" />
+	  <xsl:with-param name="y" select="$y" />
+	  <xsl:with-param name="edgestart" select="$nextnode" />
+	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="nearest_dist" select="$nearest_dist" />
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<!-- No more edges, return data -->
+	<xsl:value-of select="$nearest_dist" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Find the distance between the point (x,y) and the segment x1,y1 -> x2,y2 -->
+  <!-- Based on http://local.wasp.uwa.edu.au/~pbourke/geometry/pointline/ and the
+       Delphi example by Graham O'Brien -->
+  <xsl:template name="areacenterDistancePointSegment">
+    <xsl:param name="x" />
+    <xsl:param name="y" />
+    <xsl:param name="x1" />
+    <xsl:param name="y1" />
+    <xsl:param name="x2" />
+    <xsl:param name="y2" />
+
+    <!-- Constants -->
+    <xsl:variable name="EPS" select="0.000001" />
+    <xsl:variable name="EPSEPS" select="$EPS * $EPS" />
+
+    <!-- The line magnitude, squared -->
+    <xsl:variable name="sqLineMagnitude" select="($x2 - $x1) * ($x2 - $x1) + ($y2 - $y1) * ($y2 - $y1)" />
+
+    <xsl:choose>
+      <xsl:when test="sqLineMagnitude &lt; $EPSEPS">
+	NaN
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:variable name="u" select="( ($x - $x1)*($x2 - $x1) + ($y - $y1)*($y2 - $y1) ) div sqLineMagnitude" />
+
+	<xsl:variable name="result">
+	  <xsl:choose>
+	    <xsl:when test="u &lt; $EPS or u &gt; 1">
+	      <!-- Closest point in not on segment, return shortest distance to an endpoint -->
+	      <xsl:variable name="dist1" select="($x1 - $x) * ($x1 - $x) + ($y1 - $y) * ($y1 - $y)" />
+	      <xsl:variable name="dist2" select="($x2 - $x) * ($x2 - $x) + ($y2 - $y) * ($y2 - $y)" />
+	      
+	      <!-- min($dist1, $dist2) -->
+	      <xsl:choose>
+		<xsl:when test="$dist1 &lt; $dist2">
+		  <xsl:value-of select="$dist1" />
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="$dist2" />
+		</xsl:otherwise>
+	      </xsl:choose>
+	      
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <xsl:variable name="ix" select="$x1 + $u * ($x2 - $x1)" />
+	      <xsl:variable name="iy" select="$y1 + $u * ($y2 - $y1)" />
+	      <xsl:value-of select="($ix - $x) * ($ix - $x) + ($iy - $y) * ($iy - $y)" />
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:variable>
+
+	<!-- Finally return the square root of the result, as we were working with squared distances -->
+	<xsl:call-template name="sqrt">
+	  <xsl:with-param name="num" select="$result" />
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+
   </xsl:template>
 
   <!--
@@ -1695,6 +1884,7 @@ against infinite loops -->
     <xsl:param name="points" />
     <xsl:param name="total_x" select="0" />
     <xsl:param name="total_y" select="0" />
+    <xsl:param name="total_dist" select="0" />
     <xsl:param name="count" select="0" />
 
     <xsl:variable name="point" select="substring-before($points, ';')" />
@@ -1702,28 +1892,35 @@ against infinite loops -->
     <xsl:choose>
       <xsl:when test="string-length($point) &gt; 0">
 	<xsl:variable name="x" select="substring-before($point, ',')" />
-	<xsl:variable name="y" select="substring-after($point, ',')" />
+	<xsl:variable name="y" select="substring-before(substring-after($point, ','), ',')" />
+	<xsl:variable name="dist" select="substring-after(substring-after($point, ','), ',')" />
 
 	<xsl:call-template name="areacenterMediumOfPoints">
 	  <xsl:with-param name="points" select="substring-after($points, ';')" />
 	  <xsl:with-param name="total_x" select="$total_x + $x" />
 	  <xsl:with-param name="total_y" select="$total_y + $y" />
+	  <xsl:with-param name="total_dist" select="$total_dist + $dist" />
 	  <xsl:with-param name="count" select="$count + 1" />
 	</xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:value-of select="$total_x div $count" />, <xsl:value-of select="$total_y div $count" />
+	<xsl:value-of select="$total_x div $count" />,<xsl:value-of select="$total_y div $count" />,<xsl:value-of select="$total_dist div $count" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-  <!-- Returns the coordinates of the point in points that's nearest x,y -->
-  <xsl:template name="areacenterNearestPoint">
+  <!-- Returns the coordinates of the point that scores highest.
+       The score is based on the distance to (x,y),
+       the distance between the point and it's vertex,
+       and the medium of that distance in all the points -->
+  <xsl:template name="areacenterBestPoint">
     <xsl:param name="points" />
     <xsl:param name="x" />
     <xsl:param name="y" />
     <xsl:param name="nearest_x" />
     <xsl:param name="nearest_y" />
+    <xsl:param name="medium_dist" />
+    <xsl:param name="nearest_score" />
     <xsl:param name="nearest_dist" select="'NaN'" />
 
     <xsl:variable name="point" select="substring-before($points, ';')" />
@@ -1731,7 +1928,8 @@ against infinite loops -->
     <xsl:choose>
       <xsl:when test="string-length($point) &gt; 0"> 
         <xsl:variable name="point_x" select="substring-before($point, ',')" />
-        <xsl:variable name="point_y" select="substring-after($point, ',')" />
+	<xsl:variable name="point_y" select="substring-before(substring-after($point, ','), ',')" />
+	<xsl:variable name="point_dist" select="substring-after(substring-after($point, ','), ',')" />
 	
 	<xsl:variable name="distance">
 	  <xsl:call-template name="areacenterPointDistance">
@@ -1742,12 +1940,14 @@ against infinite loops -->
 	  </xsl:call-template>
 	</xsl:variable>
 
-	<xsl:variable name="isNewNearest" select="$nearest_dist = 'NaN' or $distance &lt; $nearest_dist" />
+	<xsl:variable name="score" select="0 - $distance + $point_dist + $point_dist - $medium_dist"/>
+	<xsl:variable name="isNewNearest" select="$nearest_dist = 'NaN' or $score &gt; $nearest_score" />
 
-	<xsl:call-template name="areacenterNearestPoint">
+	<xsl:call-template name="areacenterBestPoint">
 	  <xsl:with-param name="points" select="substring-after($points, ';')" />
 	  <xsl:with-param name="x" select="$x" />
 	  <xsl:with-param name="y" select="$y" />
+	  <xsl:with-param name="medium_dist" select="$medium_dist" />
 	  <xsl:with-param name="nearest_dist"><xsl:choose>
 	    <xsl:when test="$isNewNearest"><xsl:value-of select="$distance" /></xsl:when>
 	    <xsl:otherwise><xsl:value-of select="$nearest_dist" /></xsl:otherwise>
@@ -1759,6 +1959,10 @@ against infinite loops -->
 	  <xsl:with-param name="nearest_y"><xsl:choose>
 	    <xsl:when test="$isNewNearest"><xsl:value-of select="$point_y" /></xsl:when>
 	    <xsl:otherwise><xsl:value-of select="$nearest_y" /></xsl:otherwise>
+	  </xsl:choose></xsl:with-param>
+	  <xsl:with-param name="nearest_score"><xsl:choose>
+	    <xsl:when test="$isNewNearest"><xsl:value-of select="$score" /></xsl:when>
+	    <xsl:otherwise><xsl:value-of select="$nearest_score" /></xsl:otherwise>
 	  </xsl:choose></xsl:with-param>
 	</xsl:call-template>
       </xsl:when>

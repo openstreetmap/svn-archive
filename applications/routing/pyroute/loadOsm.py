@@ -250,6 +250,9 @@ class LoadOsm(handler.ContentHandler):
     maxDist = 1000
     nodeFound = None
     for id in self.routeableNodes[routeType].keys():
+      if id not in self.nodes:
+        print "Ignoring undefined node %s" % id
+        continue
       n = self.nodes[id]
       dlat = n[0] - lat
       dlon = n[1] - lon

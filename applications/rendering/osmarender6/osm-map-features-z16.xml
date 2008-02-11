@@ -1507,9 +1507,9 @@
 
             .highway-service-bridge-casing          { stroke-width: 2.8px; }
             .highway-service-bridge-core            { stroke-width: 2.6px; }
-            .highway-service-casing                 { stroke-width: 2.2px;   stroke: #777777; }
-            .highway-service-core                   { stroke-width: 2px;   stroke: #ffffff; }
-            .highway-service-area                   { stroke-width: 2px;   stroke: #ffffff; fill: #ffffff; }
+            .highway-service-casing                 { stroke-width: 1.8px;   stroke: #777777; }
+            .highway-service-core                   { stroke-width: 1.6px;   stroke: #ffffff; }
+            .highway-service-area                   { stroke-width: 1.6px;   stroke: #ffffff; fill: #ffffff; }
             .highway-service-name                   { stroke-width: 0px;     font-size: 2.5px; }
             .highway-service-ref                    { stroke-width: 0px;     font-size: 2.5px; }
 

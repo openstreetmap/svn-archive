@@ -99,26 +99,6 @@
 	}
 
 
-	function showTileDebug() {
-_root.yahoo.myMap.setSize(Stage.width,Stage.height-100);
-		_root.chat._visible=true;
-		lat=centrelat(0);
-		lon=centrelong(0);
-		z=_root.scale;
-		xtile=Math.floor((lon+180)/360*Math.pow(2,z));
-		ytile=Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,z));
-
-		_root.chat.text+="http://tile.openstreetmap.org/"+z+"/"+xtile+"/"+ytile+".png";
-		_root.chat.text+="\n"+long2coord(edge_l)+"->"+long2coord(edge_r)+", "+lat2coord(edge_b)+"->"+lat2coord(edge_t);
-//		_root.chat.text+="\nx: "+(baselong+_root.x/_root.masterscale);
-//		_root.chat.text+="\ny: "+basey   +","+(-_root.y);
-		_root.chat.text+="\ny via Landsat projection: "+lat2y(centrelat(0));
-//		_root.chat.text+="y via spherical Mercator: "+((Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2)*360;
-//		_root.chat.text+="y via OpenLayers code: "+Math.log(Math.tan((90+lat)*Math.PI/360))/(Math.PI/180);
-	}
-
-
-
 	// tile co-ordinates
 
 	function long2tile(lon) { return (Math.floor((lon+180)/360*Math.pow(2,_root.scale))); }

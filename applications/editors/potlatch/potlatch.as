@@ -612,7 +612,6 @@
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
 			case 192:		cycleStacked(); break;								// '`' - cycle between stacked ways
 			case 76:		showPosition(); break;								// L - show latitude/longitude
-			case 84:		showTileDebug(); break;								// T - show tile debug information
 			// default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}

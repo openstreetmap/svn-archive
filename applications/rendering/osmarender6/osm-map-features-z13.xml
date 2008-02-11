@@ -778,8 +778,8 @@
             .highway-unclassified-casing            { stroke-width: 6px; stroke: #222222; }
             .highway-unclassified-core              { stroke-width: 5.5px; stroke: #ffffff; }
 
-            .highway-service-casing                 { stroke-width: 4px; stroke: #222222; }
-            .highway-service-core                   { stroke-width: 3.5px; stroke: #ffffff; }
+            .highway-service-casing                 { stroke-width: 2px; stroke: #222222; }
+            .highway-service-core                   { stroke-width: 1.5px; stroke: #ffffff; }
 
             .highway-unsurfaced-casing              { stroke-width: 4px; stroke: #222222; stroke-dasharray: 4, .2; stroke-linecap: butt; }
             .highway-unsurfaced-core                { stroke-width: 3.5px; stroke: #ffffff; }

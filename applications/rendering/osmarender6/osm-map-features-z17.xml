@@ -1757,9 +1757,9 @@
 
             .highway-service-bridge-casing          { stroke-width: 2.25px; }
             .highway-service-bridge-core            { stroke-width: 1.75px; }
-            .highway-service-casing                 { stroke-width: 1.2px;   stroke: #777777; }
-            .highway-service-core                   { stroke-width: 1px;   stroke: #ffffff; }
-            .highway-service-area                   { stroke-width: 1px;   stroke: #ffffff; fill: #ffffff; }
+            .highway-service-casing                 { stroke-width: 1.0px;   stroke: #777777; }
+            .highway-service-core                   { stroke-width: 0.8px;   stroke: #ffffff; }
+            .highway-service-area                   { stroke-width: 0.8px;   stroke: #ffffff; fill: #ffffff; }
             .highway-service-name                   { stroke-width: 0px;     font-size: 1.25px; }
             .highway-service-ref                    { stroke-width: 0px;     font-size: 1.25px; }
 

@@ -493,14 +493,6 @@
             </rule>
         </rule>
 
-        <!-- highway motorway_junctions -->
-        <rule e="node" k="highway" v="motorway_junction">
-          <circle r="1.825" class="highway-motorway-junction" />
-          <text k="name" class='highway-motorway-junction-caption' dy='-2.3px' />
-          <text k="ref" class='highway-motorway-junction-caption' dy='0.7px' />
-        </rule>
-        
-
         <!-- Linear cores -->
         <rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="highway" v="raceway">
@@ -1068,6 +1060,13 @@
 	<!-- Bus stops -->
 	<rule e="node" k="highway" v="bus_stop">
 	    <symbol xlink:href="#symbol-bus" width='3px' height='1px' transform='translate(-1.5,-0.5)' />
+	</rule>
+
+	<!-- highway motorway_junctions -->
+	<rule e="node" k="highway" v="motorway_junction">
+		<circle r="1.825" class="highway-motorway-junction" />
+		<text k="name" class='highway-motorway-junction-caption' dy='-2.3px' />
+		<text k="ref" class='highway-motorway-junction-caption' dy='0.7px' />
 	</rule>
 
         <!-- Amenities -->

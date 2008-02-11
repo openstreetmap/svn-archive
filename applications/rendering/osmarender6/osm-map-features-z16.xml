@@ -1163,23 +1163,6 @@
             </rule>
         </rule>
 
-            .highway-motorway-junction {
-            fill: yellow;
-            stroke: #4D5D73;
-            stroke-width: 1.5px;
-            }
-            
-            .highway-motorway-junction-caption {
-            fill: black;
-            stroke: black;
-            stroke-width: 0.2px;
-            font-family: "DejaVu Sans",sans-serif;
-            font-size: 4px;
-            font-weight: bold;
-            text-anchor: middle;
-            }
-
-
         <!-- Road numbers for all highways -->
         <rule e="way" k="osmarender:renderRef" v="~|yes" layer="5">
             <rule e="way" k="tunnel" v="~|no|false" layer="5">    <!-- no road numbers in tunnels -->
@@ -1366,6 +1349,23 @@
                 stroke: white;
 				text-anchor: middle;
              }
+
+
+            .highway-motorway-junction {
+                fill: yellow;
+                stroke: #4D5D73;
+                stroke-width: 1.5px;
+            }
+            
+            .highway-motorway-junction-caption {
+                fill: black;
+                stroke: black;
+                stroke-width: 0.2px;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 4px;
+                font-weight: bold;
+                text-anchor: middle;
+            }
 
             .bridge-casing {
                 stroke-linecap: butt;

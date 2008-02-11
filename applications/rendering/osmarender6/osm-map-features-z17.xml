@@ -788,8 +788,8 @@
 				<line class='tunnel-casing railway-tram-casing tunnel' mask-class='tunnel-core railway-tram-core'/>
 				<line class='railway-tram-casing highway-tunnel-ends'/>
             </rule>
-            <rule e="way" k="railway" v="subway"> <!-- draw subways in tunnels just like normal subways -->
-                <line class='tunnel-casing railway-subway-casing' mask-class='tunnel-core'/>
+            <rule e="way" k="railway" v="subway">
+				<line class='tunnel-casing railway-subway-casing tunnel' mask-class='tunnel-core railway-subway-core'/>
 				<line class='railway-subway-casing highway-tunnel-ends'/>
             </rule>
             <rule e="way" k="railway" v="light_rail">

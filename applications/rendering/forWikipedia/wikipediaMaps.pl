@@ -2,6 +2,8 @@
 #-----------------------------------------------------------------
 # Creates maps for wikipedia articles
 #-----------------------------------------------------------------
+# Copyright, 2008, Oliver White
+# 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -14,6 +16,14 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#---------------------------------------------------------------
+# TODO:
+#  * Check the map image page, and only create a map if it doesn't
+#    already exist, or if the existing copy is more than 3 months
+#    old
+#  * Is there any way to get "last modified" date for OSM data
+#    in a certain region?  Don't update wikipedia maps unless the 
+#    OSM data has changed
 #---------------------------------------------------------------
 use strict;
 use MediaWiki;

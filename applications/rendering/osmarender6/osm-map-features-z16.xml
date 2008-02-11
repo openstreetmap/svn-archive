@@ -864,6 +864,7 @@
 
 		<!-- Oneway markers -->
         <rule e="way" k="tunnel" v="~|false|no">
+		<rule e="way" k="area" v="~|false|no">
 			<rule e="way" k="highway" v="*">
 	            <rule e="way" k="oneway" v="1|yes|true">
 					<line class="oneway-casing oneway-casing-1" smart-linecap='no' />
@@ -923,7 +924,7 @@
 					<line class="oneway-core oneway-core-7" smart-linecap='no'/>
 			</rule>
  		</rule>
-
+        </rule>
 
         <!-- Aerialways -->
         <rule e="node|way" k="aerialway" v="*">

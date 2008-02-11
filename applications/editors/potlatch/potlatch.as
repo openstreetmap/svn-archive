@@ -7,10 +7,12 @@
 //	var gpsurl='/potlatch/getgps.cgi';
 //	var gpxurl='http://localhost:3000/trace/';
 //	var yahoourl='/~richard/potlatch/ymap.swf';
+//	var tileprefix='http://127.0.0.1/~richard/cgi-bin/proxy.cgi?url=';
 	var apiurl='../api/0.5/amf';
 	var gpsurl='../api/0.5/swf/trackpoints';
 	var gpxurl='http://www.openstreetmap.org/trace/';
 	var yahoourl='/potlatch/ymap2.swf';
+	var tileprefix='';
 
 	// Resizable window, disable right-click
 	Stage.showMenu = false;
@@ -58,13 +60,10 @@
 	keyListener.onKeyDown=function() { keyPressed(); };
 	Key.addListener(keyListener);
 
-	// Mouse listener - copes with custom pointers
-//	mouseListener=new Object();
-//	mouseListener.onMouseMove=function() { trackMouse(); };
-
 	// Initialise Yahoo
-	var ylat=baselat;	var lastylat=ylat;		// monitored by ymap.swf
+	var ylat=baselat;	var lastylat=ylat;		// current Yahoo state
 	var ylon=baselong;	var lastylon=ylon;		//  |
+	var ywidth=0;		var yheight=0;			//  |
 	var yzoom=8;		var lastyzoom=yzoom;	//  |
 	var bgxoffset=0;	var bgyoffset=0;		// manually correct Yahoo imagery
 	var yahooloaded=false;						// is Yahoo component loaded?
@@ -112,10 +111,9 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.7";	// current version
+	var signature="Potlatch 0.7a";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
-	if (preferences.data.baselayer    ==1        ) { preferences.data.baselayer    =2; }	// temporary migration
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 
 	// =====================================================================================
@@ -408,6 +406,8 @@
 					redrawBackground();								// 0.5s elapsed, so
 					_root.yahootime=new Date();						// request new tiles
 				}
+			} else if (preferences.data.baselayer) {
+				redrawBackground();
 			}
 			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
 		}
@@ -434,8 +434,9 @@
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
 		if (Key.isDown(Key.SPACE)) {
-			_root.bgxoffset+=xdiff;
-			_root.bgyoffset+=ydiff;
+			_root.bgxoffset+=xdiff; _root.map.tiles._x+=xdiff;
+			_root.bgyoffset+=ydiff; _root.map.tiles._y+=ydiff;
+			updateCoords(_root.map._x,_root.map._y);
 		} else {
 			_root.map._x+=xdiff;
 			_root.map._y+=ydiff;
@@ -581,7 +582,13 @@
 			if (presetnames[currentproptype][presetselected][k-48]!=null) {
 				setAttributesFromPreset(k-48);
 			}
+			return;
+		} else if (k>=112 && k<=117) {
+			preferences.data.dimbackground=Key.isDown(Key.SHIFT); 
+			setBackground(k-112);
+			return;
 		}
+
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way -- ode
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
@@ -589,8 +596,6 @@
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
-			case 112:		setBackground(0); break; 							// f1 - no base layer
-			case 113:		preferences.data.dimbackground=Key.isDown(Key.SHIFT); setBackground(2); break;	// f2 - Yahoo! base layer
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
@@ -746,9 +751,8 @@
 		if (_root.yahoo.myMap.config.isLoaded) {
 			if (!_root.yahooinited) {
 				_root.yahooinited=true;
-				_root.yahoorightsize=true;
-				_root.yahoo.myMap.setSize(Stage.width,Stage.height-100);
-				repositionYahoo(true);
+				_root.yahooresizer=setInterval(resizeWindow,1000);
+				setYahooSize();
 			} else if (!_root.yahoorightsize) {
 				_root.yahoorightsize=true;
 				_root.yahooresizer=setInterval(resizeWindow,1000);
@@ -771,21 +775,24 @@
 
 		// ----	Control "loading ways" display
 		_root.waysloading._visible=(_root.waysrequested!=_root.waysreceived) || (_root.whichrequested!=_root.whichreceived);
+
+		// ---- Service tile queue
+		if (preferences.data.baselayer!=0 &&
+			preferences.data.baselayer!=2 ) { serviceTileQueue(); }
 	}
 	
 
 	// Options window
 	
 	function openOptionsWindow() {
-		createModalDialogue(210,110,new Array('Ok'),function() { preferences.flush(); } );
+		createModalDialogue(250,110,new Array('Ok'),function() { preferences.flush(); } );
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		writeText(_root.modal.box.prompt1,"Background:");
 
 		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","------------","Yahoo! satellite"),
+			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)"),
 			'Choose the background to display',setBackground,0);
-// "OpenAerialMap","Yahoo! satellite","Osmarender","Mapnik"
 
 		_root.modal.box.attachMovie("checkbox","pointer",5);
 		_root.modal.box.pointer.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });

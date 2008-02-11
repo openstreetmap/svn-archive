@@ -17,6 +17,11 @@
 		_root.edge_b=coord2lat ((-_root.map._y+2*yradius)/bscale);
 		_root.edge_l=coord2long((-_root.map._x          )/bscale);
 		_root.edge_r=coord2long((-_root.map._x+2*xradius)/bscale);
+
+		_root.tile_t=lat2tile (coord2lat ((-_root.bgyoffset-_root.map._y          )/bscale));
+		_root.tile_b=lat2tile (coord2lat ((-_root.bgyoffset-_root.map._y+2*yradius)/bscale));
+		_root.tile_l=long2tile(coord2long((-_root.bgxoffset-_root.map._x          )/bscale));
+		_root.tile_r=long2tile(coord2long((-_root.bgxoffset-_root.map._x+2*xradius)/bscale));
 	}
 
 	// lat/long <-> coord conversion
@@ -36,10 +41,12 @@
 		updateCoords();
 		// resize Yahoo
 		clearInterval(_root.yahooresizer);
-		_root.yahoo.myMap.setSize(Stage.width,Stage.height-100);
-		_root.ylat=centrelat(_root.bgyoffset);
-		_root.ylon=centrelong(_root.bgxoffset);
-		repositionYahoo(true);
+		if (_root.yahooinited) {
+			setYahooSize();
+			_root.ylat=centrelat(_root.bgyoffset);
+			_root.ylon=centrelong(_root.bgxoffset);
+			repositionYahoo(true);
+		}
 		// resize main mask and panel
 		_root.masksquare._height=
 		_root.panel._y=Stage.height-100;
@@ -50,6 +57,15 @@
 		_root.practice._x=Stage.width-97; _root.practice._y=Stage.height-122;
 		// note time, so we can issue a whichWays soon
 		_root.lastresize=new Date();
+	}
+
+	function setYahooSize() {
+		if (_root.yahoowidth!=Stage.width || _root.yahooheight!=Stage.height-100) {
+			_root.yahoowidth=Stage.width;
+			_root.yahooheight=Stage.height-100;
+			_root.yahoo.myMap.setSize(yahoowidth,yahooheight);
+		}
+		_root.yahoorightsize=true;
 	}
 
 	// updateLinks - update view/edit tabs
@@ -110,6 +126,7 @@
 	function setBackground(n) {
 		preferences.data.baselayer=n;
 		preferences.flush();
+		_root.bgxoffset=0; _root.bgyoffset=0;
 		redrawBackground(); 
 	}
 
@@ -119,35 +136,39 @@
 			case 0: _root.yahoo._visible=false;	// none
 					_root.map.tiles._visible=false;
 					break;
-			case 2: if (!_root.yahooloaded) {	// Yahoo
-						loadMovie(yahoourl,_root.yahoo); _root.yahooloaded=true;
-						_root.yahoo.swapDepths(_root.masksquare);
-						_root.yahoorightsize=false;
-					}
-					_root.yahoo._visible=true;
+			case 2: _root.yahoo._visible=true;
 					_root.yahoo._alpha=alpha;	
 					_root.yahoo._x=0; _root.yahoo._y=0;
 					_root.ylat=centrelat(_root.bgyoffset);
 					_root.ylon=centrelong(_root.bgxoffset);
 					_root.yzoom=18-_root.scale;
-					repositionYahoo(false);
 					_root.map.tiles._visible=false;
+					if (!_root.yahooloaded) {	// Yahoo
+						loadMovie(yahoourl,_root.yahoo); _root.yahooloaded=true;
+						_root.yahoo.swapDepths(_root.masksquare);
+					} else if (_root.yahooinited) {
+						repositionYahoo(true);
+					}
 					break;
-			case 1: ; // OpenAerialMap
-			case 3: ; // Mapnik
-			case 4: ; // Osmarender
+			case 1: var a=1; // OpenAerialMap	(var a=1 is just dummy code)
+			case 3: var a=1; // Mapnik
+			case 4: var a=1; // Osmarender
+			case 5: var a=1; // Maplint
 					if (_root.tilesetloaded!=preferences.data.baselayer) {
 						_root.tilesetloaded=preferences.data.baselayer;
 						initTiles();
 					}
 					_root.map.tiles._visible=true;
+					_root.map.tiles._alpha=alpha;
 					_root.yahoo._visible=false;
+					updateTiles();
 					break;
 		}
 	}
 
 	function repositionYahoo(force) {
 		clearInterval(_root.yahooresizer);
+		if (!_root.yahooinited) { return; }
 		pos=_root.yahoo.myMap.getCenter();
 		if (pos) {
 			pos.lat=_root.ylat;

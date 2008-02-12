@@ -74,7 +74,7 @@ abstract class Style<V extends View> {
 
     public static <V extends View> Style get(V v) {
         getRules();
-        OsmPrimitive prim = v.getOsmPrimitive();
+        OsmPrimitive prim = v.getPrimitive();
         String suffix = prim instanceof Node ? "node" : "way";
 
         for (String k : prim.getTags()) {
@@ -216,7 +216,7 @@ abstract class Style<V extends View> {
             int size = (scale > maxScale/2) ? 7 : (scale > maxScale/4) ? 12 : 24;
             Font font = getFont(g, size); 
             Point p = parent.getPoint(vn);
-            String txt = vn.getNode().getTag("name");
+            String txt = vn.getPrimitive().getTag("name");
             if (txt == null) return;
             
             

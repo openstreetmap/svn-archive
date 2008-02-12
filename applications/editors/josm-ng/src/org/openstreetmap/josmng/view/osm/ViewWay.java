@@ -35,7 +35,7 @@ import org.openstreetmap.josmng.view.*;
  * 
  * @author nenik
  */
-class ViewWay implements View {
+class ViewWay implements View<Way> {
     Way way;
     Rectangle bbox;
     ViewNode[] nodes;
@@ -52,11 +52,7 @@ class ViewWay implements View {
         return Arrays.asList(nodes);
     }
 
-    Way getWay() {
-        return way;
-    }
-
-    public OsmPrimitive getOsmPrimitive() {
+    public Way getPrimitive() {
         return way;
     }
     

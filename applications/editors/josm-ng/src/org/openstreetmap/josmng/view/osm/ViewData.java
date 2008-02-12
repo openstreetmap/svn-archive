@@ -42,11 +42,11 @@ class ViewData {
     
     private Hash<ViewNode, ViewNode> hash = new Hash<ViewNode, ViewNode>() {
         public int getHashCode(ViewNode k) {
-            return k.getNode().hashCode();
+            return k.getPrimitive().hashCode();
         }
 
         public boolean equals(ViewNode k, ViewNode t) {
-            return k.getNode().equals(t.getNode());
+            return k.getPrimitive().equals(t.getPrimitive());
         }
     };
     
@@ -61,7 +61,7 @@ class ViewData {
         }
 
         public boolean equals(Node k, ViewNode t) {
-            return k.equals(t.getNode());
+            return k.equals(t.getPrimitive());
         }
     });
 
@@ -93,7 +93,7 @@ class ViewData {
     private ViewWay getViewForWay(Way w) {
         // XXX
         for (ViewWay vw : ways) {
-            if (vw.getWay() == w) return vw;
+            if (vw.getPrimitive() == w) return vw;
         }
  
         return null; // should not be called this way.
@@ -202,7 +202,7 @@ class ViewData {
             // of thousands of nodes
             for (ViewNode t : w.nodes) {
                 if (t == vn) {
-                    w.bbox = getBBox(w.getWay());
+                    w.bbox = getBBox(w.getPrimitive());
                 }
             }
         }

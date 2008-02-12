@@ -21,6 +21,7 @@
 package org.openstreetmap.josmng.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -64,6 +65,11 @@ public class MapView extends JComponent {
         Position pos = new Position();
         add(pos);
         pos.setBounds(5,5, 200, 20);
+
+        Meter meter = new Meter();
+        add(meter);
+        meter.setBounds(5,25, 101, 101);
+
         setEditMode(new SelectMode(this));
     }
 
@@ -238,7 +244,6 @@ public class MapView extends JComponent {
     }
 
     private class Position extends JLabel implements MouseMotionListener {
-        private MessageFormat format = new MessageFormat("{0,number,0.000000},{1,number,0.000000}");
         Position() {
             MapView.this.addMouseMotionListener(this);
         }
@@ -246,8 +251,7 @@ public class MapView extends JComponent {
         private void updatePosition(Point p) {
             ViewCoords vc = getPoint(p);
             Coordinate coor = proj.viewToCoord(vc);
-            setText(MessageFormat.format("{0,number,0.000000},{1,number,0.000000}",
-                    coor.getLatitude(), coor.getLongitude()));
+            setText(format(COORDS, coor.getLatitude(), coor.getLongitude()));
         }
         
         public void mouseDragged(MouseEvent e) {
@@ -257,5 +261,53 @@ public class MapView extends JComponent {
         public void mouseMoved(MouseEvent e) {
             updatePosition(e.getPoint());
         }
+    }
+
+    
+    private class Meter extends JComponent {
+        
+        public @Override Dimension getPreferredSize() {
+            return new Dimension(101, 101);
+        }
+
+        // in m
+        private double dist(Coordinate c1, Coordinate c2) {
+            double a1 = Math.PI * c1.getLatitude() / 180;
+            double b1 = Math.PI * c1.getLongitude() / 180;
+            double a2 = Math.PI * c2.getLatitude() / 180;
+            double b2 = Math.PI * c2.getLongitude() / 180;
+            return Math.acos(Math.cos(a1)*Math.cos(b1)*Math.cos(a2)*Math.cos(b2)
+                    + Math.cos(a1)*Math.sin(b1)*Math.cos(a2)*Math.sin(b2)
+                    + Math.sin(a1)*Math.sin(a2)) * 6378000;
+        }
+        
+        public @Override void paint(Graphics g) {
+            Coordinate ltc = proj.viewToCoord(getPoint(new Point(0,0)));
+            Coordinate lbc = proj.viewToCoord(getPoint(new Point(0,100)));
+            Coordinate rtc = proj.viewToCoord(getPoint(new Point(100,0)));
+            
+            double dist_h = dist(ltc, rtc);
+            double dist_v = dist(ltc, lbc);
+            
+            g.setColor(Color.ORANGE);
+            g.drawLine(0, 0, 100, 0);
+            g.drawLine(100, 0, 100, 5);
+            g.drawString(format(METERS, dist_h, dist_h/1000), 30, 14);
+
+            if (dist_v/dist_h > 1.01) {
+                g.drawLine(0, 0, 0, 100);
+                g.drawLine(0, 100, 5, 100);
+                g.drawString(format(METERS, dist_v, dist_v/1000), 2, 60);
+            } else {
+                g.drawLine(0, 0, 0, 5);
+            }
+        }
+    }
+
+    private MessageFormat COORDS = new MessageFormat("{0,number,0.000000},{1,number,0.000000}");
+    private MessageFormat METERS = new MessageFormat("{0,choice,0#{0,number,integer}m|1000<{1,number,0.00}km|10000<{1,number,0.0}km|100000<{1,number,integer}km}");
+    
+    private static String format(MessageFormat format, Object ... args) {
+        return format.format(args, new StringBuffer(), null).toString();
     }
 }

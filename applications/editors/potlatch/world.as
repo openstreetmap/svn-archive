@@ -13,10 +13,10 @@
 		_root.map._xscale=100*bscale;
 		_root.map._yscale=100*bscale;
 
-		_root.edge_t=coord2lat ((-_root.map._y          )/bscale);
-		_root.edge_b=coord2lat ((-_root.map._y+2*yradius)/bscale);
-		_root.edge_l=coord2long((-_root.map._x          )/bscale);
-		_root.edge_r=coord2long((-_root.map._x+2*xradius)/bscale);
+		_root.edge_t=coord2lat ((-_root.map._y          )/bscale); _root.tile_t=lat2tile (edge_t);
+		_root.edge_b=coord2lat ((-_root.map._y+2*yradius)/bscale); _root.tile_b=lat2tile (edge_b);
+		_root.edge_l=coord2long((-_root.map._x          )/bscale); _root.tile_l=long2tile(edge_l);
+		_root.edge_r=coord2long((-_root.map._x+2*xradius)/bscale); _root.tile_r=long2tile(edge_r);
 
 		_root.tile_t=lat2tile (coord2lat ((-_root.bgyoffset-_root.map._y          )/bscale));
 		_root.tile_b=lat2tile (coord2lat ((-_root.bgyoffset-_root.map._y+2*yradius)/bscale));
@@ -150,11 +150,7 @@
 						repositionYahoo(true);
 					}
 					break;
-			case 1: var a=1; // OpenAerialMap	(var a=1 is just dummy code)
-			case 3: var a=1; // Mapnik
-			case 4: var a=1; // Osmarender
-			case 5: var a=1; // Maplint
-					if (_root.tilesetloaded!=preferences.data.baselayer) {
+			default: if (_root.tilesetloaded!=preferences.data.baselayer) {
 						_root.tilesetloaded=preferences.data.baselayer;
 						initTiles();
 					}

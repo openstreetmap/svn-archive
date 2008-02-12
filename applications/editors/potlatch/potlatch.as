@@ -583,7 +583,7 @@
 				setAttributesFromPreset(k-48);
 			}
 			return;
-		} else if (k>=112 && k<=117) {
+		} else if (k>=112 && k<=118) {
 			preferences.data.dimbackground=Key.isDown(Key.SHIFT); 
 			setBackground(k-112);
 			return;
@@ -790,7 +790,7 @@
 
 		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)"),
+			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map"),
 			'Choose the background to display',setBackground,0);
 
 		_root.modal.box.attachMovie("checkbox","pointer",5);

@@ -42,7 +42,6 @@ final class ViewNode extends ViewCoords implements View<Node> {
     ViewNode(Node node, ViewCoords position) {
         super(position.getIntLon(), position.getIntLat());
         this.node = node;
-        setFlag(resolveTagged(node));
     }
     
     public Node getPrimitive() {
@@ -50,7 +49,7 @@ final class ViewNode extends ViewCoords implements View<Node> {
     }
     
     public boolean isTagged() {
-        return getFlag();
+        return resolveTagged(node);
     }
 
     void updatePosition(ViewCoords newPos) {

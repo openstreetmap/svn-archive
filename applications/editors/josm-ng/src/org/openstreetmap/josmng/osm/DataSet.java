@@ -57,6 +57,15 @@ public final class DataSet {
     private final Map<String,Integer> usersBack = new HashMap<String, Integer>();
     
     
+    public void atomicEdit(Runnable r) {
+        undoSupport.beginUpdate();
+        try {
+            r.run();
+        } finally {
+            undoSupport.endUpdate();
+        }
+    }
+    
     public void removeUndoableEditListener(UndoableEditListener l) {
         undoSupport.removeUndoableEditListener(l);
     }

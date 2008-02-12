@@ -35,7 +35,7 @@ import org.openstreetmap.josmng.osm.OsmPrimitive;
  * 
  * @author nenik
  */
-final class ViewNode extends ViewCoords implements View {
+final class ViewNode extends ViewCoords implements View<Node> {
     Node node;
     Style current;
 
@@ -45,11 +45,7 @@ final class ViewNode extends ViewCoords implements View {
         setFlag(resolveTagged(node));
     }
     
-    public Node getNode() {
-        return node;
-    }
-    
-    public OsmPrimitive getOsmPrimitive() {
+    public Node getPrimitive() {
         return node;
     }
     

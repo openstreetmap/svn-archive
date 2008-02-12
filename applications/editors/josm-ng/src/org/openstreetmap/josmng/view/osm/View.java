@@ -30,8 +30,8 @@ import org.openstreetmap.josmng.view.MapView;
  * 
  * @author nenik
  */
-interface View {
+interface View<T extends OsmPrimitive> {
      public void resetStyle();
      public void paint(Graphics2D g, MapView parent);
-     public OsmPrimitive getOsmPrimitive();
+     public T getPrimitive();
 }

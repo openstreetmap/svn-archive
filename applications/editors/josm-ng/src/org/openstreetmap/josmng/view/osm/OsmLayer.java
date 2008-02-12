@@ -94,6 +94,6 @@ System.err.println("Painted in " + time + "ms");
                     minPrimitive = (ViewNode)vn;
             }
         }
-        return minPrimitive == null ? null : minPrimitive.getNode();
+        return minPrimitive == null ? null : minPrimitive.getPrimitive();
     }   
 }

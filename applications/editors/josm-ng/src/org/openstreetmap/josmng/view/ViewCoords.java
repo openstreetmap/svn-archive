@@ -23,37 +23,34 @@ package org.openstreetmap.josmng.view;
 /**
  * Coordinates in the view space. They represent "northings and "eastings",
  * that is, latitude and longitude after view transformation, moreover
- * encoded as shift-dot integers for easy view scaling.
+ * normalized into a space of <-1,1> x <-1,1> (or subset thereof for projections
+ * with different aspect ratio) and encoded as (binary) shift-dot integers for
+ * easy view scaling.
  * 
  * The precision of the coordinates is (depending on the actually used
- * projection) about 1/8.000.000 of a degree (a unit),
- * that is, degrees to nearly 7 valid digits, or 13mm on equator per unit.
+ * projection) about 1/12.000.000th of a degree (a unit),
+ * that is, degrees to over 7 valid digits, or 10mm on equator per unit.
  * 
  * The coordinates gets converted to screen coordinates by dividing with
- * current scale, where scale is the number of units per pixel. As the scale
- * is encoded in inverse values, large zooms can be coarse. Let's check this:
- * <table><tr><th>scale</th><th>pixel[m]</th><th>ruler[m]</th></tr>
- * <tr><th>1</th><td>0.0132</td><td>1.2</td></tr>
- * <tr><th>2</th><td>0.0265</td><td>2.4</td></tr>
- * <tr><th>3</th><td>0.0397</td><td>3.6</tr>
- * <tr><th>19</th><td>0.252</td><td>22.6</td></tr>
- * <tr><th>20</th><td>0.265</td><td>23.8</td></tr>
- * <tr><th>21</th><td>0.278</td><td>25</td></tr>
- * </table>
+ * current scale, where scale is the number of units per pixel.
+ * 
+ * As the scale is encoded in such inverse values, large zooms can be coarse.
+ * But even for a 20% zoom step, when the largest availabe zoom in 6,
+ * a pixel would represent ~6cm on equator which is very comfortable
+ * detail level for OSM purposes.
  * 
  * @author nenik
  */
 public class ViewCoords {
-    public static final int SCALE = 1 << 23;
-    private int lon;
-    private int lat;
+    public static final int SCALE = 0x7FFFFFFF;
+    private int x;
+    private int y;
     
     ViewCoords() {
     }   
     
-    public ViewCoords(double lon, double lat, boolean flag) {
+    public ViewCoords(double lon, double lat) {
         setCoordinates(lon, lat);
-        setFlag(flag);
     }
     
     public ViewCoords(int lon, int lat) {
@@ -64,36 +61,28 @@ public class ViewCoords {
         setCoordinates((int)(lon*SCALE), (int)(lat*SCALE));
         
     }
-    
-    protected final void setFlag(boolean flag) {
-        lat = lat & ~(1<<30) | (flag ? 1<<30 : 0);
-    }
 
     public void setCoordinates(ViewCoords from) {
-        lon = from.lon;
-        lat = lat & 0x40000000 | from.lat & 0xBFFFFFFF;
+        x = from.x;
+        y = from.y;
     }
     
     private void setCoordinates(int lon, int lat) {
-        assert lon <= (180 << 23) && lon >= (-180 << 23);
-        assert lat <= (90 << 23) && lat >= (-90 << 23) : "lat=" + (((double)lat)/SCALE);
-        this.lon = lon;
-        this.lat = lat;
+        assert lon <= (1 * SCALE) && lon >= (-1 * SCALE);
+        assert lat <= (1 * SCALE) && lat >= (-1 * SCALE);
+        this.x = lon;
+        this.y = lat;
     }
 
     
     public int getIntLon() {
-        return lon;
+        return x;
     }
 
     public int getIntLat() {
-        return lat<0 ? lat | 0x40000000 : lat & 0xBFFFFFFF;
+        return y;
     }
 
-    protected boolean getFlag() {
-        return (lat & (1<<30)) != 0;
-    }
-    
     public double getLon() {
         return ((double) getIntLon()) / SCALE;
     }

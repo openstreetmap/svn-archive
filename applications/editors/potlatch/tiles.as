@@ -115,5 +115,6 @@
 			case 3: return (tileprefix+"http://tile.openstreetmap.org/"+_root.scale+"/"+x+"/"+y+".png");
 			case 4: return (tileprefix+"http://tah.openstreetmap.org/Tiles/tile.php/"+_root.scale+"/"+x+"/"+y+".png");
 			case 5: return (tileprefix+"http://tah.openstreetmap.org/Tiles/maplint.php/"+_root.scale+"/"+x+"/"+y+".png");
+			case 6: return (tileprefix+"http://thunderflames.org/tiles/cycle/"+_root.scale+"/"+x+"/"+y+".png");
 		}
 	}

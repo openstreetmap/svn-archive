@@ -107,26 +107,16 @@ class ViewData {
     private void addWay(Way way) {
         List<Node> wNodes = way.getNodes();
         ViewNode[] wvNodes = new ViewNode[wNodes.size()];
-        Rectangle r = null;
         for (int i=0; i<wvNodes.length; i++) {
-            Node n = wNodes.get(i);
-            ViewNode vn = getViewForNode(n);
-            Point p = new Point(vn.getIntLon(), vn.getIntLat());
-            if (r == null) {
-                r = new Rectangle(p);
-            } else {
-                r.add(p);
-            }
-            wvNodes[i] = vn;
+            wvNodes[i] = getViewForNode(wNodes.get(i));
         }
-        ViewWay ww = new ViewWay(way, r, wvNodes);
+        ViewWay ww = new ViewWay(way, getBBox(wvNodes), wvNodes);
         ways.add(ww);
     }
 
-    private Rectangle getBBox(Way w) {
+    private Rectangle getBBox(ViewNode[] vns) {
         Rectangle r = null;
-        for (Node n : w.getNodes()) {
-            ViewNode vn = getViewForNode(n);
+        for (ViewNode vn : vns) {
             Point p = new Point(vn.getIntLon(), vn.getIntLat());
             if (r == null) {
                 r = new Rectangle(p);
@@ -134,6 +124,8 @@ class ViewData {
                 r.add(p);
             }
         }
+        r.height++;
+        r.width++;
         return r;
     }
 
@@ -202,7 +194,7 @@ class ViewData {
             // of thousands of nodes
             for (ViewNode t : w.nodes) {
                 if (t == vn) {
-                    w.bbox = getBBox(w.getPrimitive());
+                    w.bbox = getBBox(w.nodes);
                 }
             }
         }

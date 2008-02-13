@@ -136,7 +136,7 @@
     implode(", ", array(
       TilesetLink("tile","Tile@Home"), 
       TilesetLink("mapnik","Mapnik"),
-      TilesetLink("cycle","Experimental lowzoom"),
+      TilesetLink("cycle","Cycle"),
       TilesetLink("maplint","maplint")
       )));
   
@@ -196,6 +196,8 @@
   function ImageURL($x,$y,$z,$layerdir){
     if($layerdir == "mapnik")
       return(sprintf("http://tile.openstreetmap.org/%d/%d/%d.png", $z,$x,$y));
+    elseif($layerdir == "cycle")
+      return(sprintf("http://thunderflames.org/tiles/cycle/%d/%d/%d.png", $z,$x,$y));
     else
       return(TileURL($x,$y,$z,$layerdir));
   }

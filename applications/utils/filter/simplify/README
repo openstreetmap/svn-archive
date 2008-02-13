@@ -1,0 +1,70 @@
+simplify-0.4.pl (c) Jon Burgess
+Initial Version (Oct,2006) by Jon Burgess <jburgess@uklinux.net>
+Version 0.02
+
+Simplify OSM by removing invisible data at high zome levels
+
+When displaying a map of the whole of the UK there is no point including
+information on nodes < 1km apart since this will be less then 1 pixel
+This script removes the redundant data using the following algorithm
+
+Some code taken from check-osm.pl by Joerg Ostertag
+ 
+User specifies the minimum "interesting" square grid size in degrees.
+
+The rough design is as follows.
+
+ 
+Read in nodes from OSM file
+ - Lat / Lon is quantised to nearest multiple of the specified grid size
+ - If this is a new unique location, it gets added as a new node.
+ - Otherwise, a small node entry is created pointing back to the existing node for this square
+ - The position of the node representing this grid square is the average of all nodes within the square.
+
+Read in all segments
+ - Lookup the to/from endpoints in the node table.
+ - If these nodes are duplicate entries then lookup the node representing this grid position
+ - If to/from map to the same grid position then discard the segment
+ - Search segments list to see if a segment for this to/from pair exists
+ - If this is a new segment, add it to the list.
+ - If pair already exists, add a small entry pointing to the existing segment
+
+Read in all ways, for each segment in a way
+ - Find each segment in the segment list.
+ - If segment not present then assume if maps to the same from/to quantised position and discard.
+ - If this entry is a duplicate segment entry, locate the unique segment for this node pair.
+ - Look through list of segments for this way, discard if already present in list for this way
+ 
+When all segments for a way have been processed
+ - Discard if the way has no segment entries (e.g. doesn't cross a grid square boundary).
+
+ 
+Once all data has been read in.
+ - Delete duplicate node & segment entries leaving just those that we want
+ - Write out the simplified OSM file.
+
+
+
+Usage:
+    Common usages:
+
+    simplify.pl [-d] [-v] [-h] --simplify=<Degrees> [--osm-file=planet.osm]
+    [--out=<filename>]
+
+Options:
+    --man Complete documentation
+      Complete documentation
+
+    --no-mirror
+      Do not try mirroring the files from the original Server. Only use
+      files found on local Filesystem.
+
+    --proxy
+      use proxy for download
+
+    --osm-file=path/planet.osm
+      Select the "path/planet.osm" file to use for the checks
+
+    --simplify=0.1
+      Remove all features of less then "0.1" degrees
+

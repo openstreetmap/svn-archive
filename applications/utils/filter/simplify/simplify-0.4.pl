@@ -44,7 +44,7 @@
 
 my $VERSION ="simplify.pl (c) Jon Burgess
 Initial Version (Oct,2006) by Jon Burgess <jburgess@uklinux.net>
-Version 0.03
+Version 0.02
 ";
 
 BEGIN {
@@ -52,10 +52,9 @@ BEGIN {
     $dir =~s,[^/]+/[^/]+$,,;
     unshift(@INC,"$dir/perl");
 
-    unshift(@INC,"../../perl_lib");
-    unshift(@INC,"~/svn.openstreetmap.org/applications/utils/perl_lib");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/applications/utils/perl_lib");
-    unshift(@INC,"$ENV{HOME}/projects/openstreetmap/applications/utils/perl_lib");
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
 }
 
 
@@ -92,12 +91,14 @@ my $OSM_OBJ      = undef; # OSM Object currently read
 
 my $count_node=0;
 my $count_node_all=0;
+my $count_segment=0;
+my $count_segment_all=0;
 my $count_way=0;
 my $count_way_all=0;
 my $output;
 
 my $node_positions={};
-my $node_unique={};
+my $segment_unique={};
 
 
 # -------------------------------------------------------------------
@@ -117,6 +118,17 @@ sub delete_duplicate_nodes_data() {
 	}
     }
 }
+
+# Remove the duplicate segments.
+# Duplicate segments are references to the original segment so look like the have the wrong ID
+sub delete_duplicate_segments() {
+    for my $seg_id ( keys %{$OSM_SEGMENTS} ) {
+	if ($OSM_SEGMENTS->{$seg_id}->{id} != $seg_id) {
+		delete $OSM_SEGMENTS->{$seg_id};
+	}
+    }
+}
+
 
 sub node_ {
     $OSM_OBJ = undef;
@@ -190,7 +202,7 @@ sub way {
 
     if (!$count_way_all ) {
 	# Free memory used for processing segments, not needed for way processing
-	$node_unique = undef;
+	$segment_unique = undef;
 	delete_duplicate_nodes_data();
     }
 
@@ -204,6 +216,73 @@ sub segment_ {
     $OSM_OBJ = undef
 }
 
+sub segment {
+    my($p, $tag, %attrs) = @_;  
+    my $id = delete $attrs{id};
+    $OSM_OBJ = {};
+    $OSM_OBJ->{id} = $id;
+
+    my $from = delete $attrs{from};
+    my $to   = delete $attrs{to};
+
+    delete $attrs{timestamp} if defined $attrs{timestamp};
+
+    if ( keys %attrs ) {
+	warn "segment $id has extra attrs: ".Dumper(\%attrs);
+    }
+
+    if ( defined($OSM_NODES->{$from}) && defined($OSM_NODES->{$to}) ) {
+	$from = $OSM_NODES->{$from}->{id};
+	$to   = $OSM_NODES->{$to}->{id};
+
+	if ($from != $to) {
+		# Re-order all segments, we only want one segment for (A->B, B->A)
+		if ($from > $to) {
+			my $tmp = $from;
+			$from = $to;
+			$to = $tmp;
+		}
+	
+		my $dupe_id = $segment_unique->{"$from,$to"};
+		if (!defined($dupe_id)) {
+			$count_segment++;
+			$segment_unique->{"$from,$to"} = $id;
+			$OSM_OBJ->{from} = $from;
+			$OSM_OBJ->{to}   = $to;
+			$OSM_SEGMENTS->{$id} = $OSM_OBJ;
+		} else {
+			# Create reference to original segment
+			$OSM_SEGMENTS->{$id} = $OSM_SEGMENTS->{$dupe_id};
+		}
+	}
+    }
+
+    if (!$count_segment_all) {
+	# Free node info which is not used once we process segments
+	$node_positions = undef;
+    }
+
+    print "\n" if !$count_segment_all && ($VERBOSE || $DEBUG);
+    $count_segment_all++;
+    printf("segment %d (%d) - %dMB\r",$count_segment,$count_segment_all, mem_usage('vsz')) 
+	if !($count_segment_all%1000) && ($VERBOSE || $DEBUG);
+}
+# --------------------------------------------
+sub seg {
+    my($p, $tag, %attrs) = @_;  
+    my $id = $attrs{id};
+    delete $attrs{timestamp} if defined $attrs{timestamp};
+    return if (!defined($OSM_SEGMENTS->{$id}));
+
+    # If a duplicate segment, locate the unique segment ID.
+    $id = $OSM_SEGMENTS->{$id}->{id};
+
+    for my $exist_id (@{$OSM_OBJ->{seg}}) {
+	return if ($exist_id == $id);
+    }
+
+    push(@{$OSM_OBJ->{seg}},$id);
+}
 # --------------------------------------------
 sub tag {
     my($p, $tag, %attrs) = @_;  
@@ -329,6 +408,7 @@ delete_duplicate_segments();
 
 printf "Finished processing. Final statistics:\n";
 printf " Nodes:    $count_node of $count_node_all\n";
+printf " Segments: $count_segment of $count_segment_all\n";
 printf " Ways:     $count_way of $count_way_all\n";
 
 write_osm_file($output, $OSM);

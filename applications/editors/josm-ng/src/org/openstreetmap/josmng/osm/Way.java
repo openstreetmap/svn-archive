@@ -46,8 +46,8 @@ public class Way extends OsmPrimitive {
     
     public void setNodes(List<Node> n) {
         ChangeNodesEdit ch = new ChangeNodesEdit();
-        source.postEdit(ch);
         setNodesImpl(n.toArray(new Node[n.size()]));
+        source.postEdit(ch);
     }
     
     private void setNodesImpl(Node[] n) {
@@ -55,28 +55,15 @@ public class Way extends OsmPrimitive {
         source.fireWayNodesChanged(this);
     }
 
-    private class ChangeNodesEdit extends AbstractUndoableEdit {
+    private class ChangeNodesEdit extends PrimitiveToggleEdit {
         Node[] savedNodes;
 
         public ChangeNodesEdit() {
+            super("change way nodes");
             savedNodes = nodes.toArray(new Node[nodes.size()]);
         }
-
-        public @Override String getPresentationName() {
-            return "change way nodes";
-        }
-
-        public @Override void undo() throws CannotUndoException {
-            super.undo(); // to validate
-            switchNodes();
-        }
-
-        public @Override void redo() throws CannotRedoException {
-            super.redo(); // to validate
-            switchNodes();
-        }
         
-        private void switchNodes() {
+        protected void toggle() {
             Node[] orig = nodes.toArray(new Node[nodes.size()]);
             setNodesImpl(savedNodes);
             savedNodes = orig;

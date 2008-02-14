@@ -29,8 +29,10 @@ import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.utils.Hash;
 import org.openstreetmap.josmng.utils.Storage;
 
@@ -41,7 +43,7 @@ import org.openstreetmap.josmng.utils.Storage;
  * @author nenik
  */
 public final class DataSet {
-    private final UndoableEditSupport undoSupport = new UndoableEditSupport(this);
+    private final UndoableEditSupport undoSupport = new ComposingUndoSupport();
     private final EventListenerList listeners = new EventListenerList();
 
     private final Map<Long,Node> nodes = createMap(Node.class);
@@ -56,13 +58,17 @@ public final class DataSet {
     private final Map<Integer,String> users = new HashMap<Integer, String>();
     private final Map<String,Integer> usersBack = new HashMap<String, Integer>();
     
+    private final ThreadLocal<Object> currentToken = new  ThreadLocal<Object>();
     
-    public void atomicEdit(Runnable r) {
+    public void atomicEdit(Runnable r, Object token) {
+        Object oldToken = currentToken.get();
+        currentToken.set(token);
         undoSupport.beginUpdate();
         try {
             r.run();
         } finally {
             undoSupport.endUpdate();
+            currentToken.set(oldToken);
         }
     }
     
@@ -192,30 +198,52 @@ public final class DataSet {
         return id;
     }
 
-    private class AddRemovePrimitiveEdit extends AbstractUndoableEdit {
-        OsmPrimitive prim;
-        boolean addEdit;
-
-        public AddRemovePrimitiveEdit(OsmPrimitive prim, boolean addEdit) {
-            this.prim = prim;
-            this.addEdit = addEdit;
-        }
+    abstract static class BaseToggleEdit extends AbstractUndoableEdit {
+        private final String name;
         
+        protected BaseToggleEdit(String dispName) {
+            this.name = dispName;
+        }
+
+        public @Override String getPresentationName() {
+            return name;
+        }
+
         public @Override void undo() throws CannotUndoException {
             super.undo(); // to validate
-            addRemove(!addEdit);
+            doToggle();
         }
 
         public @Override void redo() throws CannotRedoException {
             super.redo(); // to validate
-            addRemove(addEdit);
+            doToggle();
+        }
+
+        protected void doToggle() {
+            toggle();
         }
         
-        private void addRemove(boolean add) {
+        protected abstract void toggle();
+    }
+
+    private class AddRemovePrimitiveEdit extends BaseToggleEdit {
+        OsmPrimitive prim;
+        boolean addEdit;
+
+        public AddRemovePrimitiveEdit(OsmPrimitive prim, boolean addEdit) {
+            super("add");
+            this.prim = prim;
+            this.addEdit = addEdit;
+        }
+        
+        
+        protected void toggle() {
             Collection toModify = (prim instanceof Node) ? nodesCol :
                 (prim instanceof Way) ? waysCol : relationsCol;
             
-            if (add) {
+            addEdit = !addEdit;
+            
+            if (addEdit) {
                 toModify.add(prim);
             } else {
                 toModify.remove(prim);
@@ -245,4 +273,38 @@ public final class DataSet {
         }        
     } 
 
+    private class ComposingUndoSupport extends UndoableEditSupport {
+        ComposingUndoSupport() {
+            super(DataSet.this);
+        }
+        
+        protected @Override CompoundEdit createCompoundEdit() {
+            Object token = currentToken.get();
+            return new SlidingCompoundEdit(token);
+        }
+    }
+    
+    private class SlidingCompoundEdit extends CompoundEdit {
+        private Object token;
+
+        public SlidingCompoundEdit(Object token) {
+            this.token = token != null ? token : new Object();
+        }
+
+        public @Override boolean addEdit(UndoableEdit anEdit) {
+            assert anEdit instanceof BaseToggleEdit;
+            if (super.addEdit(anEdit)) return true; // in progress: collected
+            
+            // already closed edit, check if the comming edit is about
+            // to supersede current one (based on the token)
+            if (anEdit instanceof SlidingCompoundEdit) {
+                SlidingCompoundEdit sce = (SlidingCompoundEdit)anEdit;
+                if (sce.token.equals(token)) {
+                    token = sce.token;
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

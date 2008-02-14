@@ -21,9 +21,7 @@
 package org.openstreetmap.josmng.osm;
 
 import java.util.Date;
-import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoableEdit;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
@@ -89,6 +87,9 @@ public abstract class OsmPrimitive {
         return id;
     }
     
+    public DataSet getOwner() {
+        return source;
+    }
     
     public Date getTimestamp() {
         if (!(timestamp instanceof Date)) {
@@ -125,6 +126,14 @@ public abstract class OsmPrimitive {
         return (flags & FLAG_VISIBLE) != 0;
     }
 
+    protected void setModified(boolean modified) {
+        if (modified) {
+            flags |= FLAG_MODIFIED;
+        } else {
+            flags &= ~FLAG_MODIFIED;
+        }
+    }
+    
     /**
      * Can return null if the user is not known
      * @return the name of the user that, according to the server, modified
@@ -154,14 +163,16 @@ public abstract class OsmPrimitive {
     }
         
     public String putTag(String tag, String value) {
+        UndoableEdit edit = new ChangeTagsEdit(tag);
         String old = putTagImpl(tag, value);
-        source.postEdit(new ChangeTagsEdit(tag, old, value)); // XXX
+        source.postEdit(edit);
         return old;
     }
 
     public String removeTag(String tag) {
+        UndoableEdit edit = new ChangeTagsEdit(tag);
         String old = removeTagImpl(tag);
-        source.postEdit(new ChangeTagsEdit(tag, old, null)); // XXX
+        source.postEdit(edit);
         return old;
     }
 
@@ -201,7 +212,8 @@ public abstract class OsmPrimitive {
                     if (tag.equals(data[i])) {
                         old = data[i+1];
                         data[i+1] = val;
-                        return (String)old;
+                        source.fireTagsChanged(this);
+                        return unescape(old);
                     }
                     
                 }
@@ -215,6 +227,7 @@ public abstract class OsmPrimitive {
                 keys = new Object[] {keys, tag, val};
             }
         }
+        source.fireTagsChanged(this);
         return unescape(old);
     }
     
@@ -248,6 +261,7 @@ public abstract class OsmPrimitive {
             // else it is certainly not there.
         }
         
+        source.fireTagsChanged(this);
         return unescape(old);
     }
 
@@ -274,30 +288,46 @@ public abstract class OsmPrimitive {
         return false; 
     }
     
-    
-    private class ChangeTagsEdit extends AbstractUndoableEdit {
-        String key;
-        String oldVal;
-        String newVal;
-
-        public ChangeTagsEdit(String key, String oldVal, String newVal) {
-            this.key = key;
-            this.oldVal = oldVal;
-            this.newVal = newVal;
-        }
-        public @Override void undo() throws CannotUndoException {
-            super.undo(); // to validate
-            setTag(key, oldVal);
+    abstract class PrimitiveToggleEdit extends DataSet.BaseToggleEdit {
+        private boolean oldModified;
+        
+        protected PrimitiveToggleEdit(String dispName) {
+            super(dispName);
+            oldModified = isModified();
+            setModified(true);
         }
 
-        public @Override void redo() throws CannotRedoException {
-            super.redo(); // to validate
-            setTag(key, newVal);
+        protected OsmPrimitive getPrimitive() {
+            return OsmPrimitive.this;
         }
         
+        protected final void doToggle() {
+            boolean modified = isModified();
+            super.doToggle();
+            setModified(oldModified);
+            oldModified = modified;
+        }
+    }
+    
+    private class ChangeTagsEdit extends PrimitiveToggleEdit {
+        String key;
+        String oldVal;
+
+        public ChangeTagsEdit(String key) {
+            super ("change tags");
+            this.key = key;
+            this.oldVal = getTag(key);
+        }
+        
+        protected void toggle() {
+            String origVal = getTag(key);
+            setTag(key, oldVal);
+            oldVal = origVal;
+        }
+       
         private void setTag(String key, String val) {
             if (val == null) {
-                removeTag(key);
+                removeTagImpl(key);
             } else {
                 putTagImpl(key, val);
             }

@@ -62,46 +62,16 @@ public final class Node extends OsmPrimitive implements Coordinate {
         source.fireNodeMoved(this);
     }
 
-    private class ChangeCoordinatesEdit extends AbstractUndoableEdit {
+    private class ChangeCoordinatesEdit extends PrimitiveToggleEdit {
         double savedLat, savedLon;
-        long timeStamp = System.currentTimeMillis();
         
         public ChangeCoordinatesEdit() {
+            super("move node");
             savedLat = lat;
             savedLon = lon;
         }
 
-        public @Override String getPresentationName() {
-            return "move node";
-        }
-
-        public @Override void undo() throws CannotUndoException {
-            super.undo(); // to validate
-            switchCoordinates();
-        }
-
-        public @Override void redo() throws CannotRedoException {
-            super.redo(); // to validate
-            switchCoordinates();
-        }
-
-        private Node getNode() {
-            return Node.this;
-        }
-
-        public @Override boolean addEdit(UndoableEdit anEdit) {
-            if (anEdit instanceof ChangeCoordinatesEdit) {
-                ChangeCoordinatesEdit nw = (ChangeCoordinatesEdit)anEdit;
-                if (nw.getNode() == getNode() &&
-                        nw.timeStamp - timeStamp < 1000) {
-                    timeStamp = nw.timeStamp;
-                    return true;
-                }
-            }
-            return false;
-        }
-                
-        private void switchCoordinates() {
+        protected @Override void toggle() {
             double origLat = lat;
             double origLon = lon;
             setCoordinateImpl(savedLat, savedLon);

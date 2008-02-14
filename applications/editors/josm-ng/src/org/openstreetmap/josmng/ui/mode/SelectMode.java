@@ -37,6 +37,7 @@ public class SelectMode extends EditMode {
     Point pressPoint;
     boolean pressed;
     Node dragged;
+    Object moveToken;
 
     public SelectMode(MapView view) {
         super("Select", view);
@@ -51,8 +52,10 @@ public class SelectMode extends EditMode {
         ViewCoords end = getMapView().getPoint(p);
         ViewCoords moved = getMapView().getProjection().coordToView(dragged).
                 movedByDelta(end, start);
-        Coordinate c = getMapView().getProjection().viewToCoord(moved);
-        dragged.setCoordinate(c);
+        final Coordinate c = getMapView().getProjection().viewToCoord(moved);
+        dragged.getOwner().atomicEdit(new Runnable() { public void run() {
+            dragged.setCoordinate(c);
+        }}, moveToken);
         pressPoint = p;
     }
     
@@ -61,12 +64,14 @@ public class SelectMode extends EditMode {
         
         pressPoint = e.getPoint();
         dragged = getMapView().getNearestNode(pressPoint);
+        moveToken = new Object();
     }
     
     public @Override void mouseReleased(MouseEvent e) {
         if (dragged != null) moveNodeTo(e.getPoint());
         pressPoint = null;
         dragged = null;
+        moveToken = null;
     }
 
     public @Override void mouseDragged(MouseEvent e) {

@@ -73,7 +73,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     buildPreferences(prefPanel);
     
     pythonConfig.setValue(Main.pref.get(PREF_PYTHON, "python.exe"));
-    maxSegsConfig.setValue(Main.pref.get(PREF_MAX_SEG, "250"));
+    maxSegsConfig.setValue(Main.pref.get(PREF_MAX_SEG, "500"));
     maxNodesConfig.setValue(Main.pref.get(PREF_MAX_NODES, "50000"));
     thresholdConfig.setValue(Main.pref.get(PREF_THRESHOLD, "35"));
     epsilonConfig.setValue(Main.pref.get(PREF_EPSILON, "0.0003"));

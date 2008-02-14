@@ -58,7 +58,9 @@ public class LakewalkerReader {
     
     try {
     	
-      Node fn = null; //new Node(new LatLon(0,0));
+	  Node n = null;  // The current node being created
+	  Node tn = null; // The last node of the previous way
+      Node fn = null; // Node to hold the first node in the trace
     	
       while ((line = input.readLine()) != null) {
         if (cancel) {
@@ -69,18 +71,29 @@ public class LakewalkerReader {
         switch (option) {
         case 'n':
           String[] tokens = line.split(" ");
-          try {
-            LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
-            Node n = new Node(ll);
-            commands.add(new AddCommand(n));
-            way.nodes.add(n);
-            if(fn==null){
-            	fn = n;
-            }
+          
+          if(tn==null){
+		      try {        	
+		        LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
+		        n = new Node(ll);
+		        if(fn==null){
+		          fn = n;
+		        }
+		        commands.add(new AddCommand(n));
+		      }
+	          catch (Exception ex) {
+	        	  
+		      }
+          
+          } else {
+            // If there is a last node, and this node has the same coordinates
+            // then we substitute for the previous node
+      		n = tn;
+        	tn = null;       	
           }
-          catch (Exception ex) {
-
-          }
+	      
+	      way.nodes.add(n);
+          
           break;
 
         case 's':
@@ -98,6 +111,11 @@ public class LakewalkerReader {
           commands.add(new AddCommand(way));
           
           break;
+        
+        case 't':      	
+        	way = new Way();
+        	tn = n;
+        	break;
           
         case 'e':
           String error = line.substring(2);
@@ -106,6 +124,8 @@ public class LakewalkerReader {
         }
       } 
       input.close();
+
+      // Add the start node to the end of the trace to form a closed shape 
       way.nodes.add(fn);
     }
 

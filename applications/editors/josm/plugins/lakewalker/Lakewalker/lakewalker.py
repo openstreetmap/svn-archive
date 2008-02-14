@@ -84,6 +84,7 @@ class BBox:
 
 def download_landsat(c1, c2, width, height, fname):
     layer = "global_mosaic_base"
+    #style = "IR1"
     style = options.wmslayer
 
     (min_lat, min_lon) = c1
@@ -355,11 +356,21 @@ def output_to_josm(lakelist):
     # t nnn - Start tracing node list, nnn nodes following (i.e. there will be one of these for each lake where multiple start points specified)
     # n lat lon - A node
     # x - End of data
+    countnodes = 0
+    
     print "s %s" % len(lakelist)
     for nodelist in lakelist:
         print "t %s" % len(nodelist)
         for node in nodelist:
             print "n %.7f %.7f" % (node[0], node[1])
+            
+            countnodes = countnodes + 1
+            if options.MAXLEN == countnodes:
+              print "x"
+              print "t %s" % len(nodelist)
+              print "n %.7f %.7f" % (node[0], node[1])
+              countnodes = 0
+              
     print "x"
 
 def write_osm(f, lakelist, waysize):
@@ -431,7 +442,7 @@ def main():
     parser.add_option("--out", "-o", default="lake.osm", dest="outfile", metavar="FILE", help="Output filename. Defaults to lake.osm.")
     parser.add_option("--threshold", "-t", type="int", default="35", metavar="VALUE", help="Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Defaults to 35.")
     parser.add_option("--maxnodes", type="int", default="50000", metavar="N", help="Maximum number of nodes to generate before bailing out. Defaults to 50000.")
-    parser.add_option("--waylength", type="int", default=250, metavar="MAXLEN", help="Maximum nuber of nodes allowed in one way. Defaults to 250.")
+    parser.add_option("--waylength", type="int", dest="MAXLEN", default=500, metavar="MAXLEN", help="Maximum nuber of nodes allowed in one way. Defaults to 250.")
     parser.add_option("--landsat-res", type="int", default=4000, dest="resolution", metavar="RES", help="Resolution of Landsat tiles, measured in pixels per degree. Defaults to 4000.")
     parser.add_option("--tilesize", type="int", default=2000, help="Size of one landsat tile, measured in pixels. Defaults to 2000.")
     parser.add_option("--no-dp", action="store_false", dest="use_dp", default=True, help="Disable Douglas-Peucker line simplification (not recommended)")

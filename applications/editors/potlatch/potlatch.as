@@ -71,6 +71,10 @@
 	var yahoorightsize=true;					// do we need to resize Yahoo?
 	_root.createEmptyMovieClip("yahoo",7);
 
+//	var layernames=new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map");
+//	var layernums=new Array();
+//	var j=layernames.length; for (i in layernames) { j--; layernums[layernames[i]]=j; }
+
 	// Main initialisation
 	_root.map.createEmptyMovieClip("areas"   ,8);  var areadepth=1;
 	_root.map.createEmptyMovieClip("gpx"     ,9);
@@ -111,9 +115,11 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.7a";	// current version
+	var signature="Potlatch 0.7b";	// current version
+
+//	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
-	if (preferences.data.dimbackground==undefined) { preferences.data.baselayer    =true; }	// dim background?
+	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 
 	// =====================================================================================
@@ -253,6 +259,8 @@
 		}
 	}
 
+// for (i in layernames) { _root.chat.text+=i+"="+layernames[i]+","; }
+// for (i in layernums ) { _root.chat.text+=i+"="+layernums[i]+","; }
 
 	// Text formats
 	
@@ -394,7 +402,8 @@
 
 	function processMapDrag() {
 		if (Math.abs(_root.firstxmouse-_root._xmouse)>(tolerance*4) ||
-			Math.abs(_root.firstymouse-_root._ymouse)>(tolerance*4)) {
+			Math.abs(_root.firstymouse-_root._ymouse)>(tolerance*4) ||
+			Key.isDown(Key.SPACE)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
 
 			if (_root.yahoo._visible) {
@@ -418,13 +427,13 @@
 //		_root.map.onMouseUp  =function() {};
 		_root.onMouseMove=function() {};
 		_root.onMouseUp  =function() {};
-		redrawBackground();
-		updateLinks();
-		restartElastic();
-		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance*4 &&
+		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance*4 ||
 			Math.abs(_root.firstymouse-_root._ymouse)>tolerance*4) {
+			redrawBackground();
+			updateLinks();
 			whichWays();
 		}
+		restartElastic();
 		_root.dragmap=false;
 		if (_root.wayselected) { setPointer(''); }
 						  else { setPointer('pen'); }
@@ -600,7 +609,7 @@
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
 			case 85:		getDeleted(); break;								// U - undelete
-			case 88:		_root.ws.splitWay(); break;		// X - split way
+			case 88:		_root.ws.splitWay(); break;							// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
 			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
@@ -746,7 +755,14 @@
 
 		// ----	Fix Yahoo! peculiarities
 		_root.yahoo.myMap.enableKeyboardShortcuts(false);
-		_root.yahoo._visible=(preferences.data.baselayer==2);
+		if (preferences.data.baselayer==2) {
+			var t=0;
+			for (i in _root.yahoo.myMap.map["map_"+(18-_root.scale)].mc) {
+				t+=_root.yahoo.myMap.map["map_"+(18-_root.scale)].mc[i][i].getBytesTotal();
+			}
+			_root.yahoo._visible=(t>124000);	// 122850=all blank
+		}
+
 		if (_root.yahoo.myMap.config.isLoaded) {
 			if (!_root.yahooinited) {
 				_root.yahooinited=true;

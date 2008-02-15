@@ -201,7 +201,7 @@ sub way {
 
 sub nd {
     my($p, $tag, %attrs) = @_;
-    my $id = $attrs{ref} 
+    my $id = $attrs{ref};
     delete $attrs{timestamp} if defined $attrs{timestamp};
     return if (!defined($OSM_NODES->{$id}));
 

@@ -86,7 +86,6 @@ use strict;
 use warnings;
 
 my $OSM_NODES    = {};
-my $OSM_SEGMENTS = {};
 my $OSM_WAYS     = {};
 my $OSM_OBJ      = undef; # OSM Object currently read
 
@@ -154,9 +153,9 @@ sub node {
 	my $count = $unique_node->{dupes};
 	$unique_node->{lat} = ($lat + ($unique_node->{lat} * $count)) / ($count + 1);
 	$unique_node->{lon} = ($lon + ($unique_node->{lon} * $count)) / ($count + 1);
-	$unique_node->{dupes} += 1;	
+	$unique_node->{dupes} += 1;
 	# Take reference to the original node at this position
-    	$OSM_NODES->{$id} = $unique_node;
+	$OSM_NODES->{$id} = $unique_node;
     }
 
     $count_node_all++;
@@ -170,7 +169,7 @@ sub node {
 # --------------------------------------------
 sub way_ {
     my $id = $OSM_OBJ->{id};
-    if ( @{$OSM_OBJ->{seg}} >0 ) {
+    if ( @{$OSM_OBJ->{nd}} >0 ) {
 	$OSM_WAYS->{$id} = $OSM_OBJ;
 	$count_way++;
     }
@@ -189,7 +188,7 @@ sub way {
     }
 
     if (!$count_way_all ) {
-	# Free memory used for processing segments, not needed for way processing
+	# Free memory used for processing nodes, not needed for way processing
 	$node_unique = undef;
 	delete_duplicate_nodes_data();
     }
@@ -199,11 +198,22 @@ sub way {
     printf("way %d(%d) - %dMB\r",$count_way,$count_way_all, mem_usage('vsz')) 
 	if !( $count_way_all % 1000 ) && ($VERBOSE || $DEBUG);
 }
-# --------------------------------------------
-sub segment_ {
-    $OSM_OBJ = undef
-}
 
+sub nd {
+    my($p, $tag, %attrs) = @_;
+    my $id = $attrs{ref} 
+    delete $attrs{timestamp} if defined $attrs{timestamp};
+    return if (!defined($OSM_NODES->{$id}));
+
+    # If a duplicate segment, locate the unique segment ID.
+    $id = $OSM_NODES->{$id}->{id};
+
+    for my $exist_id (@{$OSM_OBJ->{nd}}) {
+	return if ($exist_id == $id);
+    }
+
+    push(@{$OSM_OBJ->{nd}},$id);
+}
 # --------------------------------------------
 sub tag {
     my($p, $tag, %attrs) = @_;  
@@ -227,7 +237,7 @@ sub tag {
     $OSM_OBJ->{tag}->{$k} = $v;
     if ( $k eq "alt" ) {
 	$OSM_OBJ->{alt} = $v;
-    }	    
+    }
 }
 
 ############################################
@@ -315,7 +325,6 @@ if (!defined($output)) {
 my $OSM = {};
 $OSM->{tool}     = 'simplify.py';
 $OSM->{nodes}    = $OSM_NODES;
-$OSM->{segments} = $OSM_SEGMENTS;
 $OSM->{ways}     = $OSM_WAYS;
 
 # Make sure we can create the output file before we start processing data
@@ -325,7 +334,7 @@ close OUTFILE;
 my $start_time=time();
 read_osm_file($osm_file);
 
-delete_duplicate_segments();
+delete_duplicate_nodes_data();
 
 printf "Finished processing. Final statistics:\n";
 printf " Nodes:    $count_node of $count_node_all\n";

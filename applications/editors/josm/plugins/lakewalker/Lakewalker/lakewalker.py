@@ -123,6 +123,10 @@ class WMSManager:
             bottom_left_xy = (int(math.floor(x / options.tilesize)) * options.tilesize, int(math.floor(y / options.tilesize)) * options.tilesize)
             top_right_xy = (bottom_left_xy[0] + options.tilesize, bottom_left_xy[1] + options.tilesize)
             fname = options.wmslayer+"/landsat_%d_%d_xy_%d_%d.png" % (options.resolution, options.tilesize, bottom_left_xy[0], bottom_left_xy[1])
+            
+            if not os.path.exists(options.wmslayer+"/"):
+              os.mkdir(options.wmslayer)
+            
             im = self.images.get(fname, None)
             if im is None:
                 if not os.path.exists(fname):

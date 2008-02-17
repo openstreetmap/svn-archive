@@ -2,6 +2,14 @@
 # Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*josm-1.5_p546 (17 Feb 2008)
+
+  17 Feb 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p546.ebuild:
+  version bump
+
+  17 Feb 2008; Dennis <dennis.lists@googlemail.com> -josm-1.5_p524.ebuild:
+  removed old version
+
 *josm-1.5_p528 (29 Jan 2008)
 
   29 Jan 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p528.ebuild:

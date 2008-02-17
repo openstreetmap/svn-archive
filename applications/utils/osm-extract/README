@@ -5,19 +5,15 @@ This directory contains various scripts to extract part of an OSM file
 (e.g. the planet file).
 
 The "polygons" subdirectory contains a script that extracts based on a 
-polygon or a set of polygons, as well as definitions of such polygons.
+polygon or a set of polygons, as well as definitions of such polygons
+(but also see the java program "osmosis" which does similar things and
+supports the same polygon format).
 
 The planetosm-extract-area.pl and planetosm-extract-tags.pl scripts 
 extract a rectangular area and/or items based on certain tag values.
 
-osm-subset.pl does something similar but uses pre-defined bounding
-boxes as opposed to bounding boxes specified on the command line.
-
-Note: for tha AND import the code in the "polygons" subdirectory has been
-significantly expanded. It handles excluding as well as including areas, can
-read compressed planet dumps directly and can provide auxilliary data
-related to nodes included but referenced by excluded stuff. At some point
-the useful features should be ported to the other scripts also.
+"osmcut" is a program to cut an OSM file into several pieces of identical
+size (identical in terms of degrees covered, not file size).
 
 PLEASE EXPAND AND CHANGE THIS README IF YOU MAKE CHANGES!
 

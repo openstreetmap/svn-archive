@@ -117,17 +117,39 @@ public final class DataSet {
             dsl.wayNodesChanged(way);
         }
     }
+
+    private void addRemovePrimitive(OsmPrimitive prim, boolean add) {
+        UndoableEdit edit = new AddRemovePrimitiveEdit(prim, add);
+        addRemovePrimitiveImpl(prim, add);
+        postEdit(edit);
+    }
+    private void addRemovePrimitiveImpl(OsmPrimitive prim, boolean add) {
+        Collection toModify = (prim instanceof Node) ? nodesCol :
+                (prim instanceof Way) ? waysCol : relationsCol;
+            
+        if (add) {
+            toModify.add(prim);
+            firePrimitivesAdded(Collections.singleton(prim));
+        } else {
+            toModify.remove(prim);
+            firePrimitivesRemoved(Collections.singleton(prim));
+        }
+    }
+            
+
+    
+    public Node addNode(double lat, double lon) {
+        Node n = new Node(this, 0, lat, lon, null, null, true);
+        addNode(n);
+        return n;
+    }
     
     public void addNode(Node node) {
-        nodes.put(node.getId(), node);
-        postEdit(new AddRemovePrimitiveEdit(node, true));
-        firePrimitivesAdded(Collections.singleton(node));
+        addRemovePrimitive(node, true);
     }
 
     public void removeNode(Node node) {
-        nodesCol.remove(node);
-        postEdit(new AddRemovePrimitiveEdit(node, false));
-        firePrimitivesRemoved(Collections.singleton(node));
+        addRemovePrimitive(node, false);
     }
 
     public Collection<Node> getNodes() {
@@ -139,15 +161,11 @@ public final class DataSet {
     }
     
     public void addWay(Way way) {
-        waysCol.add(way);
-        postEdit(new AddRemovePrimitiveEdit(way, true));
-        firePrimitivesAdded(Collections.singleton(way));
+        addRemovePrimitive(way, true);
     }
 
     public void removeWay(Way way) {
-        waysCol.remove(way);
-        postEdit(new AddRemovePrimitiveEdit(way, false));
-        firePrimitivesRemoved(Collections.singleton(way));
+        addRemovePrimitive(way, false);
     }
 
     public Collection<Way> getWays() {
@@ -159,15 +177,11 @@ public final class DataSet {
     }
     
     public void addRelation(Relation rel) {
-        relationsCol.add(rel);
-        postEdit(new AddRemovePrimitiveEdit(rel, true));
-        firePrimitivesAdded(Collections.singleton(rel));
+        addRemovePrimitive(rel, true);
     }
 
     public void removeRelation(Relation rel) {
-        relationsCol.remove(rel);
-        postEdit(new AddRemovePrimitiveEdit(rel, false));
-        firePrimitivesRemoved(Collections.singleton(rel));
+        addRemovePrimitive(rel, false);
     }
     
     public Collection<Relation> getRelations() {
@@ -238,18 +252,9 @@ public final class DataSet {
         
         
         protected void toggle() {
-            Collection toModify = (prim instanceof Node) ? nodesCol :
-                (prim instanceof Way) ? waysCol : relationsCol;
-            
             addEdit = !addEdit;
-            
-            if (addEdit) {
-                toModify.add(prim);
-            } else {
-                toModify.remove(prim);
-            }
+            addRemovePrimitiveImpl(prim, addEdit);
         }
-        
     }
     
     private static <T extends OsmPrimitive> Map<Long,T> createMap(Class<T> contents) {

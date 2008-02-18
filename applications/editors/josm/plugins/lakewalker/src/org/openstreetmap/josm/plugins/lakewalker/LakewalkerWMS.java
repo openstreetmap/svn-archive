@@ -10,16 +10,18 @@ import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.geom.*;
+import java.util.*;
 
 public class LakewalkerWMS {
-	
-	public LakewalkerWMS(){
-		
-	}
 	
 	private BufferedImage image;
 	private int imagex;
 	private int imagey;
+	
+	// Vector to cache images in memory
+	private Vector<BufferedImage> images = new Vector<BufferedImage>();
+	// Hashmap to hold the mapping of cached images 
+	private HashMap<String,Integer> imageindex = new HashMap<String,Integer>();
 	
 	public BufferedImage image2 = new BufferedImage(2000, 2000, BufferedImage.TYPE_INT_RGB);
 	
@@ -62,21 +64,39 @@ public class LakewalkerWMS {
 		
         File file = new File(this.working_dir,filename);
         
+        // Calculate the hashmap key
+    	String hashkey = Integer.toString(bottom_left_xy[0])+":"+Integer.toString(bottom_left_xy[1]);
+    	
         // See if this image is already loaded
-        if(this.image != null){
+        if(this.image != null){  
         	if(this.imagex != bottom_left_xy[0] || this.imagey != bottom_left_xy[1]){
-        		this.image = null;
+        		
+        		// Check if this image exists in the hashmap
+        		if(this.imageindex.containsKey(hashkey)){
+        			// Store which image we have
+        			this.imagex = bottom_left_xy[0];
+        			this.imagey = bottom_left_xy[1];
+        			
+        			// Retrieve from cache
+        			this.image = this.images.get(this.imageindex.get(hashkey));
+        			return this.image;
+        		} else {
+        			this.image = null;
+        		}
         	} else {
         		return this.image;
         	}
         }
         
 	    try {	    	
-	    	System.out.println("Looking for image in cache: "+filename);
+	    	System.out.println("Looking for image in disk cache: "+filename);
 	    	
 	        // Read from a file
 	        this.image = ImageIO.read(file);
 	    
+	        this.images.add(this.image);
+	        this.imageindex.put(hashkey,this.images.size()-1);
+	        
 	    } catch(FileNotFoundException e){
 	    	System.out.println("Could not find cached image, downloading.");
 	    } catch(IOException e){
@@ -102,6 +122,9 @@ public class LakewalkerWMS {
 	        } catch(Exception e){
 	        	System.out.println(e.getMessage());
 		    }
+	        
+	        this.images.add(this.image);
+	        this.imageindex.put(hashkey,this.images.size()-1);
 	        
 	        this.saveimage(file,this.image);
 	    }

@@ -149,13 +149,17 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	 * Run the nodelist through a vertex reduction algorithm
 	 */
 	
+	setStatus("Running vertex reduction...");
+	
 	nodelist = lw.vertex_reduce(nodelist, epsilon);
 	
 	System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
 	
 	/**
-	 * And then through douglas-peucker reduction
+	 * And then through douglas-peucker approximation
 	 */
+	
+	setStatus("Running Douglas-Peucker approximation...");
 	
 	nodelist = lw.douglas_peucker(nodelist, epsilon);
 	
@@ -265,5 +269,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
   public void mouseReleased(MouseEvent e) {
   }
-  
+  protected void setStatus(String s) {
+	  Main.pleaseWaitDlg.currentAction.setText(s);
+	  Main.pleaseWaitDlg.repaint();
+  }
 }

@@ -110,6 +110,8 @@ public class Lakewalker {
 		
 		int v;
 		
+		setStatus("Looking for shoreline...");
+		
 		while(true){
 			double[] geo = xy_to_geo(xy[0],xy[1],this.resolution);
 			if(bbox.contains(geo[0],geo[1])==false){
@@ -135,16 +137,16 @@ public class Lakewalker {
 		
 		int[] startxy = new int[] {xy[0], xy[1]};
 		double[] startgeo = xy_to_geo(xy[0],xy[1],this.resolution);
-				
-		System.out.println("Found shore at "+startxy[0]+","+startxy[1]);
-		
+
 		System.out.printf("Found shore at lat %.4f lon %.4f\n",lat,lon);
 		
 		int last_dir = this.getDirectionIndex(this.startdir);
 		
 		for(int i = 0; i < this.maxnode; i++){
 			
+			// Print a counter
 			if(i % 250 == 0){
+				setStatus(i+" nodes so far...");
 				System.out.println(i+" nodes so far...");
 			}
 			
@@ -154,8 +156,10 @@ public class Lakewalker {
 			int test_y=0;
 			int new_dir = 0;
 			
+			// Loop through all the directions we can go
 			for(d = 1; d <= this.dirslat.length; d++){
 				
+				// Decide which direction we want to look at from this pixel
 				new_dir = (last_dir + d + 4) % 8;
 
 				test_x = xy[0] + this.dirslon[new_dir];
@@ -164,6 +168,9 @@ public class Lakewalker {
 				double[] geo = xy_to_geo(test_x,test_y,this.resolution);
 				
 				if(!bbox.contains(geo[0], geo[1])){
+					/**
+					 * TODO: Handle this case
+					 */
 					System.out.println("Outside bbox");
 					break;
 				}
@@ -181,17 +188,22 @@ public class Lakewalker {
 
 			// Remember this direction
 			last_dir = new_dir;
+			
+			// Set the pixel we found as current
 			xy[0] = test_x;
 			xy[1] = test_y;
 			
+			// Break the loop if we managed to get back to our starting point
 			if(xy[0] == startxy[0] && xy[1] == startxy[1]){
 				break;
 			}
 			
+			// Store this node
 			double[] geo = xy_to_geo(xy[0],xy[1],this.resolution);
 			nodelist.add(geo);
 			System.out.println("Adding node at "+xy[0]+","+xy[1]+" ("+geo[1]+","+geo[0]+")");
 			
+			// Check if we got stuck in a loop 
 	        double start_proximity = Math.pow((geo[0] - startgeo[0]),2) + Math.pow((geo[1] - startgeo[1]),2);
 	        
 			if(detect_loop){

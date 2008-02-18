@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1119.6851"
+   height="442.91336"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   version="1.0"
+   sodipodi:docname="osmflyer2.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <pattern
+       id="pattern2692"
+       patternTransform="translate(151.5402,41.65591)"
+       height="77.628510"
+       width="96.697266"
+       patternUnits="userSpaceOnUse">
+      <text
+         sodipodi:linespacing="70%"
+         transform="translate(-141.3592,-41.03091)"
+         id="text2693"
+         y="67.749657"
+         x="189.69904"
+         style="font-size:36.000000;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans;text-anchor:middle;writing-mode:lr;"
+         xml:space="preserve"><tspan
+           id="tspan2694"
+           sodipodi:role="line"
+           y="67.749657"
+           x="189.69904">0010</tspan><tspan
+           id="tspan2696"
+           sodipodi:role="line"
+           y="92.949656"
+           x="189.69904">0100</tspan><tspan
+           id="tspan2698"
+           sodipodi:role="line"
+           y="118.14966"
+           x="189.69904">0111</tspan></text>
+    </pattern>
+    <pattern
+       id="pattern2639"
+       patternTransform="translate(183.7668,59.46841)"
+       height="25.876175"
+       width="32.232422"
+       patternUnits="userSpaceOnUse">
+      <text
+         sodipodi:linespacing="70%"
+         transform="translate(-173.5858,-58.84341)"
+         id="text2640"
+         y="67.749657"
+         x="189.69904"
+         style="font-size:12.000000;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans;text-anchor:middle;writing-mode:lr;"
+         xml:space="preserve"><tspan
+           id="tspan2641"
+           sodipodi:role="line"
+           y="67.749657"
+           x="189.69904">0010</tspan><tspan
+           id="tspan2643"
+           sodipodi:role="line"
+           y="76.149657"
+           x="189.69904">0100</tspan><tspan
+           id="tspan2645"
+           sodipodi:role="line"
+           y="84.549656"
+           x="189.69904">0111</tspan></text>
+    </pattern>
+    <pattern
+       id="pattern2623"
+       patternTransform="translate(183.7668,59.46841)"
+       height="28.276169"
+       width="32.232422"
+       patternUnits="userSpaceOnUse">
+      <text
+         sodipodi:linespacing="80%"
+         transform="translate(-173.5858,-58.84341)"
+         id="text2624"
+         y="67.749657"
+         x="189.69904"
+         style="font-size:12.000000;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans;text-anchor:middle;writing-mode:lr;"
+         xml:space="preserve"><tspan
+           id="tspan2625"
+           sodipodi:role="line"
+           y="67.749657"
+           x="189.69904">0010</tspan><tspan
+           id="tspan2627"
+           sodipodi:role="line"
+           y="77.349657"
+           x="189.69904">0100</tspan><tspan
+           id="tspan2629"
+           sodipodi:role="line"
+           y="86.949657"
+           x="189.69904">0111</tspan></text>
+    </pattern>
+    <pattern
+       id="pattern2606"
+       patternTransform="translate(183.7668,59.46841)"
+       height="37.876175"
+       width="32.232422"
+       patternUnits="userSpaceOnUse">
+      <text
+         sodipodi:linespacing="120%"
+         transform="translate(-173.5858,-58.84341)"
+         id="text2607"
+         y="67.749657"
+         x="189.69904"
+         style="font-size:12.000000;font-style:normal;font-weight:bold;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans;font-stretch:normal;font-variant:normal;text-anchor:middle;writing-mode:lr;"
+         xml:space="preserve"><tspan
+           id="tspan2608"
+           sodipodi:role="line"
+           y="67.749657"
+           x="189.69904">0010</tspan><tspan
+           id="tspan2610"
+           sodipodi:role="line"
+           y="82.149657"
+           x="189.69904">0100</tspan><tspan
+           id="tspan2612"
+           sodipodi:role="line"
+           y="96.549658"
+           x="189.69904">0111</tspan></text>
+    </pattern>
+    <pattern
+       id="pattern2568"
+       patternTransform="translate(190.4901,70.84341)"
+       height="33.076172"
+       width="28.945312"
+       patternUnits="userSpaceOnUse">
+      <text
+         transform="translate(-190.4901,-70.84341)"
+         id="text2569"
+         y="67.749657"
+         x="189.69904"
+         style="font-size:12.000000;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="67.749657"
+           x="189.69904"
+           id="tspan2570"
+           sodipodi:role="line" /><tspan
+           y="82.749657"
+           x="189.69904"
+           id="tspan2576"
+           sodipodi:role="line">0010</tspan><tspan
+           y="97.749657"
+           x="189.69904"
+           id="tspan2578"
+           sodipodi:role="line">0100</tspan><tspan
+           y="112.74966"
+           x="189.69904"
+           id="tspan2580"
+           sodipodi:role="line">0111</tspan><tspan
+           y="127.74966"
+           x="189.69904"
+           id="tspan2582"
+           sodipodi:role="line" /></text>
+    </pattern>
+    <linearGradient
+       id="linearGradient1754">
+      <stop
+         id="stop1755"
+         offset="0.0000000"
+         style="stop-color:#747474;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1757"
+         offset="0.50000000"
+         style="stop-color:#bebebe;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1759"
+         offset="0.62500000"
+         style="stop-color:#d5d5d5;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1758"
+         offset="0.75000000"
+         style="stop-color:#818181;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1756"
+         offset="1.0000000"
+         style="stop-color:#c3c3c3;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1767">
+      <stop
+         id="stop1768"
+         offset="0.0000000"
+         style="stop-color:#3f3318;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1769"
+         offset="1.0000000"
+         style="stop-color:#815f0e;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2411">
+      <stop
+         id="stop2412"
+         offset="0.0000000"
+         style="stop-color:#ffffff;stop-opacity:1.0000000;" />
+      <stop
+         id="stop2413"
+         offset="1.0000000"
+         style="stop-color:#ffffff;stop-opacity:0.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2419">
+      <stop
+         id="stop2420"
+         offset="0.0000000"
+         style="stop-color:#000000;stop-opacity:0.50515461;" />
+      <stop
+         id="stop2421"
+         offset="1.0000000"
+         style="stop-color:#000000;stop-opacity:0.0000000;" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#e1f3fa"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.0314937"
+     inkscape:cx="521.1653"
+     inkscape:cy="221.4567"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     width="316mm"
+     height="125mm"
+     units="mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:guide-points="true"
+     inkscape:window-width="1548"
+     inkscape:window-height="788"
+     inkscape:window-x="34"
+     inkscape:window-y="65">
+    <sodipodi:guide
+       orientation="vertical"
+       position="0"
+       id="guide2160" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="17.716535"
+       id="guide2162" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="35.433071"
+       id="guide2164" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="297.6378"
+       id="guide2166" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="559.84252"
+       id="guide2168" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="822.04724"
+       id="guide2170" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1101.9685"
+       id="guide2174" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1119.685"
+       id="guide2176" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1084.252"
+       id="guide2178" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0"
+       id="guide2182" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="17.716535"
+       id="guide2184" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="35.433071"
+       id="guide2186" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="407.48031"
+       id="guide2188" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="425.19685"
+       id="guide2190" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="442.91339"
+       id="guide2192" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="378"
+       id="guide3395" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="283.46457"
+       id="guide3533" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="311.81102"
+       id="guide3535" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="545.66929"
+       id="guide3537" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="574.01575"
+       id="guide3539" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="807.87402"
+       id="guide3541" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="836.22047"
+       id="guide3543" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1070.0787"
+       id="guide3545" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="49.606299"
+       id="guide3547" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="393.30709"
+       id="guide3549" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="49.606299"
+       id="guide3708" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="361.41732"
+       id="guide3712" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <image
+       y="17.716511"
+       x="-183.63786"
+       id="image3047"
+       height="407.48032"
+       width="1409.6063"
+       sodipodi:absref="./berlin-background.png"
+       xlink:href="berlin-background.png" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="90.608963"
+       y="11.9238"
+       id="text2200"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan2202"
+         x="90.608963"
+         y="11.9238">Rückseite der Titelseite</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 35.433071,-2.9404297e-05 L 35.433071,17.716511"
+       id="path2204"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 17.716535,35.433051 L 0,35.433051"
+       id="path2206"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 17.716535,407.48029 L 0,407.48029"
+       id="path2208"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 35.433071,425.19683 L 35.433071,442.91336"
+       id="path2210"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1084.252,425.19683 L 1084.252,442.91336"
+       id="path2212"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1119.685,407.48029 L 1101.9685,407.48029"
+       id="path2214"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1119.685,35.433051 L 1101.9685,35.433051"
+       id="path2216"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1084.252,-2.9404297e-05 L 1084.252,17.716511"
+       id="path2218"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 822.04724,-2.9404297e-05 L 822.04724,17.716511"
+       id="path2220"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 559.84252,-2.9404297e-05 L 559.84252,17.716511"
+       id="path2222"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 297.6378,-2.9404297e-05 L 297.6378,17.716511"
+       id="path2224"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 297.6378,425.19683 L 297.6378,442.91336"
+       id="path2226"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 559.84252,425.19683 L 559.84252,442.91336"
+       id="path2228"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 822.04724,425.19683 L 822.04724,442.91336"
+       id="path2230"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondExtrabold"
+       x="48.7943"
+       y="64.801361"
+       id="text3391"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan3393"
+         x="48.7943"
+         y="64.801361">Wozu eine freie Weltkarte?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondExtrabold"
+       x="574.01575"
+       y="64.913361"
+       id="text3397"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan3399"
+         x="574.01575"
+         y="64.913361">Wie funktioniert OpenStreetMap?</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3401"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+       transform="translate(13.830799,-9.369603)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion3403"><rect
+           id="rect3405"
+           width="237.09023"
+           height="354.6413"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara3407">Im Internet gibt es kostenlose Stadtpläne und Karten zuhauf. Aber die Angebote sind meist nur zur privaten Nutzung gedacht und dürfen nicht weiterveröffentlicht werden; in einem Flyer wie diesem hier dürfte man sie zum Beispiel nicht abdrucken. Außerdem sind die kos-tenlosen Karten oft nicht aktuell und auch nicht voll-ständig. Fehler werden nur langsam verbessert.</flowPara><flowPara
+         id="flowPara4230"> </flowPara><flowPara
+         id="flowPara2699">            Viel wichtiger ist aber, dass man dort nur fertige</flowPara><flowPara
+         id="flowPara2705">                Kartenbilder bekommt – nicht jedoch die Da-</flowPara><flowPara
+         id="flowPara2707">                       ten, aus denen sie berechnet wurden. </flowPara><flowPara
+         id="flowPara5669">                        Diese Daten braucht man, wenn man</flowPara><flowPara
+         id="flowPara5663">                        eigene Karten herstellen oder die Karte </flowPara><flowPara
+         id="flowPara4232">                        auf beliebigen Geräten verwenden will, </flowPara><flowPara
+         id="flowPara5785">                        beispielsweise zur Routenberechnung.</flowPara><flowPara
+         id="flowPara5787" /><flowPara
+         id="flowPara4218">                        Deshalb sammeln bei OpenStreetMap</flowPara><flowPara
+         id="flowPara5749">                       Menschen wie Du und ich die Rohdaten</flowPara><flowPara
+         id="flowPara5751">                      selbst – weltweit, mal im Team und mal</flowPara><flowPara
+         id="flowPara5789">                     auf eigene Faust. Mit eigenen Daten und eigener Software lösen wir uns aus der Abhängigkeit von kommerziellen Anbietern. Wie bei der Wikipedia kann jeder mitmachen und etwas beisteuern.  </flowPara></flowRoot>    <rect
+       style="fill:#f8f8f8;fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:1.41732283;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect6346"
+       width="233.85828"
+       height="343.70081"
+       x="311.81104"
+       y="49.60627"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <image
+       y="49.60627"
+       x="311.81104"
+       id="image3683"
+       height="343.70081"
+       width="233.85828"
+       sodipodi:absref="./berlin.png"
+       xlink:href="berlin.png"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3714"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+       transform="translate(538.24025,-9.369603)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion3716"><rect
+           id="rect3718"
+           width="233.45358"
+           height="305.03497"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara3724">Die Kartendaten für OpenStreetMap werden auf ganz unterschiedliche Weise erfasst. Sehr verbreitet ist die Aufzeichnung von GPS-Daten. Dabei speichert der GPS-Empfänger jede Sekunde die aktuelle Position, und spä-ter ergibt sich hieraus ein genaues Protokoll der zurück-gelegten Wege. </flowPara></flowRoot>    <image
+       y="48.931595"
+       x="730.95831"
+       id="image4043"
+       height="95.551353"
+       width="63.601379"
+       sodipodi:absref="./notebook.png"
+       xlink:href="notebook.png"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"
+       transform="matrix(0.9894235,0.1450558,-0.1450558,0.9894235,0,0)" />
+    <text
+       xml:space="preserve"
+       style="font-size:30.97386551px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="678.50677"
+       y="208.71629"
+       id="text4046"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan4048"
+         x="678.50677"
+         y="208.71629">+</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4054"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:FrobisherCondensed"
+       transform="translate(538.22925,154.24942)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion4056"><rect
+           id="rect4058"
+           width="233.45358"
+           height="305.03497"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara4060">Während das GPS die Position protokolliert, notiert sich der Datenerfasser (im Projekt: „Mapper“) wichtige In-formationen wie Straßennamen, Gebäude, Park- und Wasserflächen und andere Dinge, die später in der Kar-te verzeichnet sein sollen. Er verwendet dazu Notiz-</flowPara><flowPara
+         id="flowPara6300">block, Diktiergerät oder Digitalkamera. Später am Com- </flowPara><flowPara
+         id="flowPara6302">puter zeichnet er die GPS-Daten nach und reichert sie mit den Aufzeichnungen vom Notizblock an. Die Ergeb-</flowPara><flowPara
+         id="flowPara6304">nisse überträgt er anschließend an die zentrale Projekt-</flowPara><flowPara
+         id="flowPara6318">datenbank, und schon kurze Zeit später sind die neuen Daten für jeden sichtbar.</flowPara></flowRoot>    <image
+       y="310.08923"
+       x="836.22046"
+       id="image4117"
+       height="83.217842"
+       width="233.8582"
+       sodipodi:absref="./finish.png"
+       xlink:href="finish.png"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <image
+       y="49.60627"
+       x="836.22046"
+       id="image4160"
+       height="83.20034"
+       width="233.85825"
+       sodipodi:absref="./gpstrack.png"
+       xlink:href="gpstrack.png"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <image
+       y="179.87518"
+       x="836.22046"
+       id="image4203"
+       height="84.677177"
+       width="233.85823"
+       sodipodi:absref="./editnodes.png"
+       xlink:href="editnodes.png"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:#6f4e25;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M 1004.2351,144.2324 L 1032.0711,168.61376 L 1059.0401,144.2324 L 1004.2351,144.2324 z "
+       id="path4208"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:#6f4e25;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M 1004.2351,273.92571 L 1032.0711,298.30707 L 1059.0401,273.92571 L 1004.2351,273.92571 z "
+       id="path4212"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#644217;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10224"
+       width="234.57812"
+       height="83.371567"
+       x="835.88202"
+       y="310.25812"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#644217;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10226"
+       width="233.83662"
+       height="84.589142"
+       x="836.22687"
+       y="179.93919"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#644217;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect10228"
+       width="233.86008"
+       height="83.268471"
+       x="836.2196"
+       y="49.546162"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot10305"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+       transform="translate(800.44497,54.191216)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion10307"><rect
+           id="rect10309"
+           width="233.45358"
+           height="305.03497"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara10317">Der GPS-Track wird mit anderen Daten </flowPara><flowPara
+         id="flowPara10321">abgeglichen und im Editor nachbearbeitet.</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot10323"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+       transform="translate(800.13697,184.36032)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion10325"><rect
+           id="rect10327"
+           width="231.63525"
+           height="33.196083"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara10339">Der Server nimmt die Daten entgegen </flowPara><flowPara
+         id="flowPara6298">und errechnet neue Kartenbilder.</flowPara></flowRoot>    <image
+       y="182.1373"
+       x="41.6063"
+       id="image2782"
+       height="175.50153"
+       width="70.200615"
+       sodipodi:absref="./garmin.png"
+       xlink:href="garmin.png" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#644217;stroke-opacity:1;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3266"
+       width="233.85828"
+       height="343.70081"
+       x="311.81104"
+       y="49.60627"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <image
+       y="192.12083"
+       x="598.73547"
+       id="image2357"
+       height="79.589569"
+       width="63.927376"
+       sodipodi:absref="./wintec.png"
+       xlink:href="wintec.png"
+       transform="matrix(0.9988307,-4.8345859e-2,4.8345859e-2,0.9988307,0,0)" />
+  </g>
+</svg>

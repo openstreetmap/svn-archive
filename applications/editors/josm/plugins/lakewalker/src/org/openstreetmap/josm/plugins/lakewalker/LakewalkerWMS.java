@@ -41,15 +41,15 @@ public class LakewalkerWMS {
 		String layer = "global_mosaic_base";
 		
 		int[] bottom_left_xy = new int[2]; 
-		bottom_left_xy[0] = (int)(x / this.tilesize) * this.tilesize;
-		bottom_left_xy[1] = (int)(y / this.tilesize) * this.tilesize;
+		bottom_left_xy[0] = floor(x,this.tilesize);
+		bottom_left_xy[1] = floor(y,this.tilesize);
 		
         int[] top_right_xy = new int[2]; 
         top_right_xy[0] = (int)bottom_left_xy[0] + this.tilesize;
         top_right_xy[1] = (int)bottom_left_xy[1] + this.tilesize;
         
-        double[] topright_geo = xy_to_geo(top_right_xy[0],top_right_xy[1]);
-        double[] bottomleft_geo = xy_to_geo(bottom_left_xy[0],bottom_left_xy[1]);
+        double[] topright_geo = xy_to_geo(top_right_xy[0],top_right_xy[1],this.resolution);
+        double[] bottomleft_geo = xy_to_geo(bottom_left_xy[0],bottom_left_xy[1],this.resolution);
           
 		String filename = this.wmslayer+"/landsat_"+this.resolution+"_"+this.tilesize+
 			"_xy_"+bottom_left_xy[0]+"_"+bottom_left_xy[1]+".png";
@@ -128,8 +128,6 @@ public class LakewalkerWMS {
         }
 	}
 	
-	
-	
 	public int getPixel(int x, int y, int pixcol){
 		
 		BufferedImage image = null;
@@ -140,13 +138,15 @@ public class LakewalkerWMS {
 			System.out.println(e.getError());
 			return -1;
 		}
-
-		int tx = (int)(Math.floor(x / this.tilesize) * this.tilesize);
-		int ty = (int)(Math.floor(y / this.tilesize) * this.tilesize);
-		
+	
+		int tx = floor(x,this.tilesize);
+		int ty = floor(y,this.tilesize);
+				
 		int pixel_x = (x-tx);
 		int pixel_y = (this.tilesize-1)-(y-ty);
-				
+					
+		//System.out.println("("+x+","+y+") maps to ("+pixel_x+","+pixel_y+") by ("+tx+", "+ty+")");
+		
 		int rgb = image.getRGB(pixel_x,pixel_y);
 		
 		// DEBUG: set the pixels
@@ -178,11 +178,41 @@ public class LakewalkerWMS {
 	    return tot;
 	}
 
+	public int floor(int num, int precision){
+		double dnum = num/(double)precision;
+		BigDecimal val = new BigDecimal(dnum) ;
+		val = val.setScale(0, BigDecimal.ROUND_FLOOR);
+		return val.intValue()*precision;
+	}
+	
+	public double floor(double num) {
+		BigDecimal val = new BigDecimal(num) ;
+		val = val.setScale(0, BigDecimal.ROUND_FLOOR);
+		return val.doubleValue() ;
+	}
+
+	public double[] xy_to_geo(int x, int y, double resolution){
+		double[] geo = new double[2];
+	    geo[0] = y / resolution;
+	    geo[1] = x / resolution;
+	    return geo;
+	}
+	
+	public int[] geo_to_xy(double lat, double lon, double resolution){
+		int[] xy = new int[2];
+		
+		xy[0] = (int)Math.floor(lon * resolution + 0.5);
+		xy[1] = (int)Math.floor(lat * resolution + 0.5);
+				
+		return xy;
+	}
+	
 	private void printarr(int[] a){
 		for(int i = 0; i<a.length; i++){
 			System.out.println(i+": "+a[i]);
 		}
 	}
+	/*
 	private double[] xy_to_geo(int x, int y){
 		double[] geo = new double[2];
 	    geo[0] = (double)y / (double)this.resolution;
@@ -198,4 +228,5 @@ public class LakewalkerWMS {
 		
 		return xy;
 	}
+	*/
 }

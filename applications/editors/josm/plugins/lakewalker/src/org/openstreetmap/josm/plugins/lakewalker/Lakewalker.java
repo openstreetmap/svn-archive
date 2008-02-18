@@ -102,7 +102,7 @@ public class Lakewalker {
 		
 		ArrayList<double[]> nodelist = new ArrayList<double[]>();
 
-		int[] xy = geo_to_xy(lat,lon); 
+		int[] xy = geo_to_xy(lat,lon,this.resolution); 
 		
 		if(!bbox.contains(lat, lon)){
 			throw new LakewalkerException("The starting location was not within the bbox");
@@ -111,7 +111,7 @@ public class Lakewalker {
 		int v;
 		
 		while(true){
-			double[] geo = xy_to_geo(xy[0],xy[1]);
+			double[] geo = xy_to_geo(xy[0],xy[1],this.resolution);
 			if(bbox.contains(geo[0],geo[1])==false){
 				break;
 			}
@@ -134,7 +134,7 @@ public class Lakewalker {
 		}
 		
 		int[] startxy = new int[] {xy[0], xy[1]};
-		double[] startgeo = xy_to_geo(xy[0],xy[1]);
+		double[] startgeo = xy_to_geo(xy[0],xy[1],this.resolution);
 				
 		System.out.println("Found shore at "+startxy[0]+","+startxy[1]);
 		
@@ -157,13 +157,11 @@ public class Lakewalker {
 			for(d = 1; d <= this.dirslat.length; d++){
 				
 				new_dir = (last_dir + d + 4) % 8;
-				
-				//System.out.println(last_dir+", "+d+" "+new_dir);
-				
+
 				test_x = xy[0] + this.dirslon[new_dir];
 				test_y = xy[1] + this.dirslat[new_dir];
 				
-				double[] geo = xy_to_geo(xy[0],xy[1]);
+				double[] geo = xy_to_geo(test_x,test_y,this.resolution);
 				
 				if(!bbox.contains(geo[0], geo[1])){
 					System.out.println("Outside bbox");
@@ -171,7 +169,6 @@ public class Lakewalker {
 				}
 				
 				v = wms.getPixel(test_x, test_y,0xFF0000FF);
-				//System.out.println(new_dir+" "+test_x+","+test_y+" "+v);
 				if(v > this.threshold){
 					break;
 				}
@@ -181,9 +178,7 @@ public class Lakewalker {
 					break;
 				}
 			}
-			
-			//System.out.println("Found empty space");
-			
+
 			// Remember this direction
 			last_dir = new_dir;
 			xy[0] = test_x;
@@ -193,7 +188,7 @@ public class Lakewalker {
 				break;
 			}
 			
-			double[] geo = xy_to_geo(xy[0],xy[1]);
+			double[] geo = xy_to_geo(xy[0],xy[1],this.resolution);
 			nodelist.add(geo);
 			System.out.println("Adding node at "+xy[0]+","+xy[1]+" ("+geo[1]+","+geo[0]+")");
 			
@@ -297,21 +292,19 @@ public class Lakewalker {
 		return sub;
 	}
 	
-	private double[] xy_to_geo(int x, int y){
+	public double[] xy_to_geo(int x, int y, double resolution){
 		double[] geo = new double[2];
-	    geo[0] = y / (double)this.resolution;
-	    geo[1] = x / (double)this.resolution;
+	    geo[0] = y / resolution;
+	    geo[1] = x / resolution;
 	    return geo;
 	}
 	
-	private int[] geo_to_xy(double lat, double lon){
+	public int[] geo_to_xy(double lat, double lon, double resolution){
 		int[] xy = new int[2];
 		
-		xy[0] = (int)Math.floor(lon * this.resolution + 0.5);
-		xy[1] = (int)Math.floor(lat * this.resolution + 0.5);
-		
-		System.out.println("("+lon+","+lat+") maps to ("+xy[0]+","+xy[1]+")");
-		
+		xy[0] = (int)Math.floor(lon * resolution + 0.5);
+		xy[1] = (int)Math.floor(lat * resolution + 0.5);
+				
 		return xy;
 	}
 	

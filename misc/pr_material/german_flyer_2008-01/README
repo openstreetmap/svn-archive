@@ -1,0 +1,49 @@
+This directory contains files for an OSM flyer (in German) that was
+created by Frederik Ramm <frederik@remote.org> and contributors from 
+the talk-de list in January 2008.
+
+All contents are in the public domain except those derived from OSM 
+which are CC-BY-SA.
+
+The flyer is designed for DIN A7 as the final size (105mm high and
+74mm wide), with 8 pages in a zig-zag ("Leporello") fold, and full
+colour printing.
+
+The flyer was made with Inkscape; osmflyer1.svg and osmflyer2.svg
+are the front and reverse side. 
+
+Some notes in case you want to re-create something yourself:
+
+world3.png created by Jochen Topf <jochen.topf@jtic.de> using Mapnik
+and a Fahey projection, illustrating where we have good coverage.
+
+berlin-background.png is basically an Osmarender rendering of Berlin,
+using a standard stylesheet but with all captions removed, and the 
+resulting PNG file processed with the Gimp roughly like this: First
+convert to grayscale, then use colors->curves to narrow down contrast,
+then convert back to RGB, then use colors->colorify to give it a nice
+hue.
+
+gpstrack.png is a screenshot with gimpically enhanced track points,
+editnodes.png is a pure screenshot using a mappaint style file with
+thicker lines, and final.png is a standard osmarender map.
+
+List of files:
+
+README.................... this file
+berlin-background.png..... see above
+berlin.png................ Berlin map
+buchcover.png............. book cover
+editnodes.png............. see above
+finish.png................ see above
+garmin.png................ Photo of GPSMap 60CSx with OSM data montage
+gpstrack.png.............. see above
+notebook.png.............. notepad clipart
+osm.png................... osm logo (could not do as SVG)
+osmflyer1.png............. preview pic
+osmflyer1.svg............. front page
+osmflyer2.png............. preview pic
+osmflyer2.svg............. rear page
+toronto.png............... Toronto map (bad resolution, should be improved)
+wintec.png................ WBT-201 clipart
+world3.png................ see above

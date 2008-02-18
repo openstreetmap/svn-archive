@@ -19,9 +19,11 @@ public class LakewalkerPlugin extends Plugin {
   public static final String VERSION = "0.4";
   
   protected String name;
+  protected String name2;
 
   public LakewalkerPlugin() {
     name = tr("Lake Walker");
+    name2 = tr("Lake Walker (Old)");
     JMenu toolsMenu = null;
     for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
       JMenu menu = Main.main.menu.getMenu(i);
@@ -39,6 +41,7 @@ public class LakewalkerPlugin extends Plugin {
     else {
       toolsMenu.addSeparator();
       toolsMenu.add(new JMenuItem(new LakewalkerAction(name)));
+      toolsMenu.add(new JMenuItem(new LakewalkerActionOld(name2)));
     }
     
   }

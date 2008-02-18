@@ -198,7 +198,6 @@ class ViewData {
                 }
             }
         }
-        fireChange();
     }
 
     // o1 < o2 iff compare(o1,o2) < 0
@@ -237,6 +236,7 @@ class ViewData {
                     throw new UnsupportedOperationException("Not supported yet.");
                 }
             }
+            fireChange();
         }
 
         public void primtivesRemoved(Collection<? extends OsmPrimitive> removed) {
@@ -249,18 +249,22 @@ class ViewData {
                     throw new UnsupportedOperationException("Not supported yet.");
                 }
             }
+            fireChange();
         }
 
         public void tagsChanged(OsmPrimitive prim) {
             View view = getViewForPrimitive(prim);
             if (view != null) view.resetStyle();
+            fireChange();
         }
 
         public void nodeMoved(Node node) {
             updateNodeAndWays(node);
+            fireChange();
         }
 
         public void wayNodesChanged(Way way) {
+            fireChange();
             throw new UnsupportedOperationException("Not supported yet.");
         }
 

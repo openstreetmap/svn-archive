@@ -48,8 +48,9 @@
       <manifest>
         <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerPlugin" />
         <attribute name="Plugin-Description" value="Interface to Lakewalker module" />
-        <attribute name="Plugin-Version" value="0.1"/>
-        <attribute name="Author" value="Brent Easton &lt;b.easton@uws.edu.au>"/>
+        <attribute name="Plugin-Version" value="0.2"/>
+        <attribute name="Author" value="Brent Easton &lt;b.easton@uws.edu.au>, Jason Reid &lt;jrreid@ucalgary.ca>"/>
+		<attribute name="Main-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerApp"/>
       </manifest>
     </jar>
   </target>

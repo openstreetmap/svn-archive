@@ -12,7 +12,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -23,6 +26,13 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -37,6 +47,10 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   protected Cursor oldCursor;
   protected List<Node> selectedNodes;
   protected Thread executeThread;
+  protected boolean cancel;
+  
+  protected Collection<Command> commands = new LinkedList<Command>();
+  protected Collection<Way> ways = new ArrayList<Way>();
   
   public LakewalkerAction(String name) {
     super(name, "lakewalker-sml", tr("Lake Walker."), KeyEvent.VK_L, KeyEvent.CTRL_MASK
@@ -44,7 +58,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     this.name = name;
     setEnabled(true);
   }
-
+  
   public void actionPerformed(ActionEvent e) {
 
     Main.map.mapView.setCursor(oldCursor);
@@ -72,74 +86,162 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     }
   }
 
-  protected void lakewalk(Point clickPoint) {
-    LatLon pos = Main.map.mapView.getLatLon(clickPoint.x, clickPoint.y);
+  protected void lakewalk(Point clickPoint){
+	/**
+	 * Positional data
+	 */
+	final LatLon pos = Main.map.mapView.getLatLon(clickPoint.x, clickPoint.y);
+	final LatLon topLeft = Main.map.mapView.getLatLon(0, 0);
+	final LatLon botRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), Main.map.mapView
+	     .getHeight());	    
 
-    /*
-     * Collect options
-     */
-    File working_dir = new File(Main.pref.getPreferencesDir(), "plugins");
-    working_dir = new File(working_dir, "Lakewalker");
-    String target = Main.pref.get(LakewalkerPreferences.PREF_PYTHON) + " lakewalker.py";
-    LatLon topLeft = Main.map.mapView.getLatLon(0, 0);
-    LatLon botRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), Main.map.mapView
-        .getHeight());
+	/**
+	 * Cache/working directory location
+	 */
+	final File working_dir = new File(Main.pref.getPreferencesDir(), "plugins/Lakewalker");
+	
+	/*
+	 * Collect options
+	 */
+	final int waylen = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_SEG, "500"));
+	final int maxnode = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_NODES, "50000"));
+	final int threshold = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD, "35"));
+	final double epsilon = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003"));
+	final int resolution = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000"));
+	final int tilesize = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000"));
+	final String startdir = Main.pref.get(LakewalkerPreferences.PREF_START_DIR, "east");
+	final String wmslayer = Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");      
+	   
+	try {
+        PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")){
+          @Override protected void realRun() throws SAXException {
+        	  processnodelist(pos, topLeft, botRight, waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,working_dir);
+          }
+          @Override protected void finish() {
+            
+          }
+          @Override protected void cancel() {
+            cancel();
+          }
+        };
+        Thread executeThread = new Thread(lakewalkerTask);
+        executeThread.start();
+      }
+      catch (Exception ex) {
+        System.out.println("Exception caught: " + ex.getMessage());
+      }      
+  }
+  
+  private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer, File workingdir){
+	  
+	ArrayList<double[]> nodelist = new ArrayList<double[]>();
+	  
+	Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,workingdir);
+	try {
+		nodelist = lw.trace(pos.lat(),pos.lon(),topLeft.lon(),botRight.lon(),topLeft.lat(),botRight.lat());
+	} catch(LakewalkerException e){
+		System.out.println(e.getError());
+	}
+	
+	System.out.println(nodelist.size()+" nodes generated");
+	
+	/**
+	 * Run the nodelist through a vertex reduction algorithm
+	 */
+	
+	nodelist = lw.vertex_reduce(nodelist, epsilon);
+	
+	System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
+	
+	/**
+	 * And then through douglas-peucker reduction
+	 */
+	
+	nodelist = lw.douglas_peucker(nodelist, epsilon);
+	
+	System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
+	  
+	/**
+	 * Turn the arraylist into osm nodes
+	 */
+	
+	Way way = new Way();
+	Node n = null;
+	Node tn = null;
+	Node fn = null;
+	
+	double eastOffset = 0.0;
+	double northOffset = 0.0;
+	try {
+	  eastOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EAST_OFFSET, "0.0"));
+	  northOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_NORTH_OFFSET, "0.0"));
+	}
+	catch (Exception e) {
+	  
+	}
+	char option = ' ';
+	
+	int nodesinway = 0;
+	
+	for(int i = 0; i< nodelist.size(); i++){
+		if (cancel) {
+			return;
+	    }
+		 	
+		try {        	
+		  LatLon ll = new LatLon(nodelist.get(i)[0]+northOffset, nodelist.get(i)[1]+eastOffset);
+		  n = new Node(ll);
+		  if(fn==null){
+		    fn = n;
+		  }
+		  commands.add(new AddCommand(n));
+		  
+		} catch (Exception ex) {		 
+		}	    
+	      
+		way.nodes.add(n);
+		
+		if(nodesinway > Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_SEG, "500"))){
+			String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
+	        
+	        if(!waytype.equals("none")){
+	      	  way.put("natural",waytype);
+	        }
+	        
+	        way.put("created_by", "Dshpak_landsat_lakes");
+	        commands.add(new AddCommand(way));
+	        
+	        way = new Way();
 
-    /*
-     * Build command line
-     */
-    target += " --lat=" + pos.lat();
-    target += " --lon=" + pos.lon();
-    target += " --left=" + topLeft.lon();
-    target += " --right=" + botRight.lon();
-    target += " --top=" + topLeft.lat();
-    target += " --bottom=" + botRight.lat();
-    target += " --waylength=" + Main.pref.get(LakewalkerPreferences.PREF_MAX_SEG, "500");
-    target += " --maxnodes=" + Main.pref.get(LakewalkerPreferences.PREF_MAX_NODES, "50000");
-    target += " --threshold=" + Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD, "35");
-    target += " --dp-epsilon=" + Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003");
-    target += " --landsat-res=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000");
-    target += " --tilesize=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000");
-    target += " --startdir=" + Main.pref.get(LakewalkerPreferences.PREF_START_DIR, "east");
-    target += " --wms=" + Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");    
-    target += " --josm";
+	        way.nodes.add(n);
+	        
+	        nodesinway = 0;
+		}
+		nodesinway++;
+	}
+	
+	commands.add(new AddCommand(way));
+	String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
     
-
-    try {
-      /*
-       * Start the Lakewalker
-       */
-      Runtime rt = Runtime.getRuntime();
-      System.out.println("dir: " + working_dir + ", target: " + target);
-      final Process p = rt.exec(target, null, working_dir);
-      final BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-      
-      /*
-       * Start a thread to read the output
-       */
-      final LakewalkerReader reader = new LakewalkerReader();
-      
-      PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")){
-        @Override protected void realRun() throws SAXException {
-          reader.read(input);
-        }
-        @Override protected void finish() {
-          
-        }
-        @Override protected void cancel() {
-          reader.cancel();
-          executeThread.interrupt();
-          p.destroy();
-        }
-      };
-      Thread executeThread = new Thread(lakewalkerTask);
-      executeThread.start();
+    if(!waytype.equals("none")){
+  	  way.put("natural",waytype);
     }
-    catch (Exception ex) {
-      System.out.println("Exception caught: " + ex.getMessage());
+    
+    way.put("created_by", "Dshpak_landsat_lakes");
+    
+	way.nodes.add(fn);
+	
+	
+	if (!commands.isEmpty()) {
+        Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
+        Main.ds.setSelected(ways);
+    } else {
+  	  System.out.println("Failed");
     }
-
-
+  }
+  
+  public void cancel() {
+	  cancel = true;
   }
 
   protected void lakewalk(List nodes) {
@@ -163,70 +265,5 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
   public void mouseReleased(MouseEvent e) {
   }
-
-
-  // class DuplicateDialog extends JDialog {
-  // private static final long serialVersionUID = 1L;
-  // protected Box mainPanel;
-  // protected IntConfigurer offset;
-  // protected boolean cancelled;
-  // protected String right;
-  // protected String left;
-  // protected JComboBox moveCombo;
-  //
-  // public DuplicateDialog(String title) {
-  // super();
-  // this.setTitle(title);
-  // this.setModal(true);
-  // initComponents();
-  // }
-  //
-  // protected void initComponents() {
-  // mainPanel = Box.createVerticalBox();
-  // offset = new IntConfigurer("", tr("Offset (metres): "), new Integer(15));
-  // mainPanel.add(offset.getControls());
-  // getContentPane().add(mainPanel);
-  //
-  // right = tr("right/down");
-  // left = tr("left/up");
-  // Box movePanel = Box.createHorizontalBox();
-  // movePanel.add(new JLabel(tr("Create new segments to the ")));
-  // moveCombo = new JComboBox(new String[] {right, left});
-  // movePanel.add(moveCombo);
-  // movePanel.add(new JLabel(tr(" of existing segments.")));
-  // mainPanel.add(movePanel);
-  //
-  // Box buttonPanel = Box.createHorizontalBox();
-  // JButton okButton = new JButton(tr("Ok"));
-  // okButton.addActionListener(new ActionListener() {
-  // public void actionPerformed(ActionEvent e) {
-  // cancelled = false;
-  // setVisible(false);
-  //
-  // }
-  // });
-  // JButton canButton = new JButton(tr("Cancel"));
-  // canButton.addActionListener(new ActionListener() {
-  // public void actionPerformed(ActionEvent e) {
-  // cancelled = true;
-  // setVisible(false);
-  // }
-  // });
-  // buttonPanel.add(okButton);
-  // buttonPanel.add(canButton);
-  // mainPanel.add(buttonPanel);
-  //
-  // pack();
-  // }
-  //
-  // protected int getOffset() {
-  // int off = offset.getIntValue(15);
-  // return right.equals(moveCombo.getSelectedItem()) ? off : -off;
-  // }
-  //
-  // protected boolean isCancelled() {
-  // return cancelled;
-  // }
-  //
-  // }
+  
 }

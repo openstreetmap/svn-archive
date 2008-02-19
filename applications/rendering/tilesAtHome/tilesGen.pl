@@ -500,7 +500,16 @@ sub ProcessRequestsFromServer
     # First field is always "OK" if the server has actually sent a request
     if ($ValidFlag eq "XX")
     {
-        return (0, "Server has no work for us"); 
+        if ($Request =~ /Invalid username/)
+        {
+            die "ERROR: Authentication failed - please check your username "
+                    . "and password in 'authentication.conf'.";
+        }
+        else
+        {
+            # unspecified error
+            return (0, "Server has no work for us"); 
+        }
     }
     elsif ($ValidFlag ne "OK")
     {

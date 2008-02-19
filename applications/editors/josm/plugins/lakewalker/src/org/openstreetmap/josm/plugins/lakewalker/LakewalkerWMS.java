@@ -23,8 +23,6 @@ public class LakewalkerWMS {
 	// Hashmap to hold the mapping of cached images 
 	private HashMap<String,Integer> imageindex = new HashMap<String,Integer>();
 	
-	public BufferedImage image2 = new BufferedImage(2000, 2000, BufferedImage.TYPE_INT_RGB);
-	
 	private int resolution;
 	private int tilesize;
 	
@@ -151,7 +149,7 @@ public class LakewalkerWMS {
         }
 	}
 	
-	public int getPixel(int x, int y, int pixcol){
+	public int getPixel(int x, int y) throws LakewalkerException{
 		
 		BufferedImage image = null;
 
@@ -159,7 +157,7 @@ public class LakewalkerWMS {
 			image = this.getTile(x,y);
 		} catch(LakewalkerException e){
 			System.out.println(e.getError());
-			return -1;
+			throw new LakewalkerException(e.getMessage());			
 		}
 	
 		int tx = floor(x,this.tilesize);
@@ -172,35 +170,17 @@ public class LakewalkerWMS {
 		
 		int rgb = image.getRGB(pixel_x,pixel_y);
 		
-		// DEBUG: set the pixels
-		this.image2.setRGB(pixel_x,pixel_y,pixcol);
-		
 		int pixel;
 		
 		int r = (rgb >> 16) & 0xff;
         int g = (rgb >>  8) & 0xff;
         int b = (rgb >>  0) & 0xff;
 
-        //pixel = rgbToGrey(pixel); //(r+g+b)/3; //pixel & 0xff;
-        
-        int pixel2 = (int)((0.212671 * r) + (0.715160 * b) + (0.072169 * b));
-        
         pixel = (int)((0.30 * r) + (0.59 * b) + (0.11 * g));
                 
-		//System.out.println(pixel_y+","+pixel_x+"  "+r+","+g+","+b+"="+pixel+"("+pixel2+")");
-
 		return pixel; 
 	}
 	
-	private int rgbToGrey(int color) {
-		Color c = new Color(color);
-	    int red = c.getRed();
-	    int green = c.getGreen();
-	    int blue = c.getBlue();
-	    int tot = (red + green + blue) / 3;
-	    return tot;
-	}
-
 	public int floor(int num, int precision){
 		double dnum = num/(double)precision;
 		BigDecimal val = new BigDecimal(dnum) ;
@@ -213,7 +193,7 @@ public class LakewalkerWMS {
 		val = val.setScale(0, BigDecimal.ROUND_FLOOR);
 		return val.doubleValue() ;
 	}
-
+	
 	public double[] xy_to_geo(int x, int y, double resolution){
 		double[] geo = new double[2];
 	    geo[0] = y / resolution;

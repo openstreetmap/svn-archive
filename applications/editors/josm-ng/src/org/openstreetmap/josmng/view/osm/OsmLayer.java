@@ -29,6 +29,8 @@ import java.util.Collection;
 import org.openstreetmap.josmng.view.*;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.utils.UndoHelper;
 
 /**
@@ -58,15 +60,11 @@ public class OsmLayer extends EditableLayer {
     }
 
     public @Override void paint(Graphics g) {
-System.err.println("scale:" + parent.getScaleFactor());
         Rectangle viewR = parent.screenToView(g.getClipBounds());
         
-long time = System.currentTimeMillis();
         for (View v : mapData.getViews(viewR, parent.getScaleFactor())) {
             v.paint((Graphics2D)g.create(), parent);
         }
-time = System.currentTimeMillis() - time;
-System.err.println("Painted in " + time + "ms");
     }
 
     @Override
@@ -95,5 +93,75 @@ System.err.println("Painted in " + time + "ms");
             }
         }
         return minPrimitive == null ? null : minPrimitive.getPrimitive();
-    }   
+    }
+    
+    /*
+     * dot-product of vectors (ax) and (xc)
+     */ 
+    private int dotProduct(Point a, Point x, Point c) {
+        return (x.x - a.x)*(c.x - x.x) + (x.y - a.y)*(c.y - x.y);
+    }
+
+    /*
+     * cross-product of vectors (ab) and (bc)
+     */ 
+    private int crossProduct(Point a, Point b, Point c) {
+        return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
+    }
+
+    private double pointSegmentDistanceSq(Point l1, Point l2, Point p) {
+        if (dotProduct(l1, l2, p) > 0) return l2.distanceSq(p);
+        if (dotProduct(l2, l1, p) > 0) return l1.distanceSq(p);
+        double tmp = crossProduct(l1, l2, p) / l1.distance(l2);
+        return tmp*tmp;
+    }
+
+    /** Finds the primitive nearest the given point, up to 10px far.
+     * The algorithm strictly prefers Nodes over Ways as it would be very hard
+     * to pick a node on a stright line segment otherwise.
+     */ 
+    public OsmPrimitive getNearestPrimitive(Point p, int[] idx) {
+        Rectangle r = new Rectangle(p);
+        r.grow(10, 10);
+        Rectangle viewR = parent.screenToView(r);
+        
+        double minDistanceSq = 100;
+        OsmPrimitive minPrimitive = null;
+
+
+        Collection<? extends View> near = mapData.getViews(viewR, 1);
+
+        for (View v : near) {
+            OsmPrimitive prim = v.getPrimitive();
+            if (prim.isDeleted() || prim.isIncomplete()) continue;
+            
+            if (v instanceof ViewNode) {            
+                Point sp = parent.getPoint((ViewNode)v);
+                double dist = p.distanceSq(sp);
+                if (dist < minDistanceSq || (minPrimitive instanceof Way && dist < 100)) {
+                    minDistanceSq = dist;
+                    minPrimitive = prim;
+                }
+            } else if (!(minPrimitive instanceof Node)) {
+                ViewWay vw = (ViewWay)v;
+                
+                for (int i=0; i<vw.nodes.length-1; i++) {
+                    // this is completly wrong!
+                    Point A = parent.getPoint(vw.nodes[i]);
+                    Point B = parent.getPoint(vw.nodes[i+1]);
+                    double dist = pointSegmentDistanceSq(A, B, p);
+                    if (dist < minDistanceSq) {
+                        minDistanceSq = dist;
+                        if (idx != null) idx[0] = i;
+                        minPrimitive = prim;
+                    }
+                }
+            }
+        }
+        return minPrimitive;
+    }
+
+    public DataSet getDataSet() {
+        return data;
+    }
 }

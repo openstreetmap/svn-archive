@@ -124,6 +124,7 @@ class ViewData {
                 r.add(p);
             }
         }
+        if (r == null) return new Rectangle();
         r.height++;
         r.width++;
         return r;
@@ -199,6 +200,16 @@ class ViewData {
             }
         }
     }
+    
+    private void updateWay(ViewWay w) {
+        List<Node> wNodes = w.getPrimitive().getNodes();
+        ViewNode[] wvNodes = new ViewNode[wNodes.size()];
+        for (int i=0; i<wvNodes.length; i++) {
+            wvNodes[i] = getViewForNode(wNodes.get(i));
+        }
+        w.nodes = wvNodes;
+        w.bbox = getBBox(wvNodes);
+    }
 
     // o1 < o2 iff compare(o1,o2) < 0
     private class ViewCoordsComparator implements Comparator<ViewCoords> {
@@ -264,8 +275,8 @@ class ViewData {
         }
 
         public void wayNodesChanged(Way way) {
+            updateWay(getViewForWay(way));
             fireChange();
-            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         

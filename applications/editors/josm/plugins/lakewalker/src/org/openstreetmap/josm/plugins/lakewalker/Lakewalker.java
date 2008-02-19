@@ -118,11 +118,7 @@ public class Lakewalker {
 				break;
 			}
 			
-			v = wms.getPixel(xy[0], xy[1],0xFF00FF00);
-			if(v < 0){
-				return null;
-			}
-			
+			v = wms.getPixel(xy[0], xy[1]);
 			if(v > this.threshold){
 				break;
 			}
@@ -168,14 +164,11 @@ public class Lakewalker {
 				double[] geo = xy_to_geo(test_x,test_y,this.resolution);
 				
 				if(!bbox.contains(geo[0], geo[1])){
-					/**
-					 * TODO: Handle this case
-					 */
 					System.out.println("Outside bbox");
 					break;
 				}
 				
-				v = wms.getPixel(test_x, test_y,0xFF0000FF);
+				v = wms.getPixel(test_x, test_y);
 				if(v > this.threshold){
 					break;
 				}
@@ -217,15 +210,50 @@ public class Lakewalker {
 	            }
 			}			
 		}
-			
-		// DEBUG
-		File f = new File(this.workingdir,"temp.png");
-		wms.saveimage(f,wms.image2);	
-		
+
 		return nodelist;
 	}
 	
-	public ArrayList<double[]> vertex_reduce(ArrayList<double[]> nodes, double proximity){
+	/**
+	 * Remove duplicate nodes from the list
+	 * 
+	 * @param nodes
+	 * @return
+	 */
+	public ArrayList<double[]> duplicateNodeRemove(ArrayList<double[]> nodes){
+		
+		double lastnode[] = new double[] {nodes.get(0)[0], nodes.get(0)[1]};
+		
+		for(int i = 1; i < nodes.size(); i++){
+			double[] thisnode = new double[] {nodes.get(i)[0], nodes.get(i)[1]};
+			
+			if(thisnode[0] == lastnode[0] && thisnode[1] == lastnode[1]){
+				// Remove the node
+				nodes.remove(i);
+				
+				// Shift back one index 
+				i = i - 1;
+			}
+			lastnode = thisnode;
+		}
+		
+		return nodes;
+	}
+	
+	/**
+	 * Reduce the number of vertices based on their proximity to each other 
+	 * 
+	 * @param nodes
+	 * @param proximity
+	 * @return
+	 */
+	public ArrayList<double[]> vertexReduce(ArrayList<double[]> nodes, double proximity){
+		
+		// Check if node list is empty
+		if(nodes.size()==0){
+			return nodes;
+		}
+		
 		double[] test_v = nodes.get(0);
 		ArrayList<double[]> reducednodes = new ArrayList<double[]>();
 		
@@ -241,7 +269,7 @@ public class Lakewalker {
 		return reducednodes;
 	}
 	
-	public double point_line_distance(double[] p1, double[] p2, double[] p3){
+	public double pointLineDistance(double[] p1, double[] p2, double[] p3){
 		
 		double x0 = p1[0]; 
 		double y0 = p1[1];
@@ -257,7 +285,13 @@ public class Lakewalker {
 		}
 	}
 	
-	public ArrayList<double[]> douglas_peucker(ArrayList<double[]> nodes, double epsilon){
+	public ArrayList<double[]> douglasPeucker(ArrayList<double[]> nodes, double epsilon){
+		
+		// Check if node list is empty
+		if(nodes.size()==0){
+			return nodes;
+		}
+		
 		int farthest_node = -1;
 		double farthest_dist = 0;
 		double[] first = nodes.get(0);
@@ -268,7 +302,7 @@ public class Lakewalker {
 		double d = 0;
 		
 		for(int i = 1; i < nodes.size(); i++){
-			d = point_line_distance(nodes.get(i),first,last);
+			d = pointLineDistance(nodes.get(i),first,last);
 			if(d>farthest_dist){
 				farthest_dist = d;
 				farthest_node = i;
@@ -279,8 +313,8 @@ public class Lakewalker {
 		ArrayList<double[]> seg_b = new ArrayList<double[]>();
 		
 		if(farthest_dist > epsilon){
-			seg_a = douglas_peucker(sublist(nodes,0,farthest_node+1),epsilon);
-			seg_b = douglas_peucker(sublist(nodes,farthest_node,nodes.size()-1),epsilon);
+			seg_a = douglasPeucker(sublist(nodes,0,farthest_node+1),epsilon);
+			seg_b = douglasPeucker(sublist(nodes,farthest_node,nodes.size()-1),epsilon);
 				
 			new_nodes.addAll(seg_a);
 			new_nodes.addAll(seg_b);
@@ -352,8 +386,11 @@ public class Lakewalker {
 		}
 		
 		protected Boolean contains(double lat, double lon){
-		  if(lat > this.top || lat < this.bottom){
+		  if(lat >= this.top || lat <= this.bottom){
 		    return false;
+		  }
+		  if(lon >= this.right || lon <= this.left){
+			  return false;
 		  }
 		  if((this.right - this.left) % 360 == 0){
 		    return true;

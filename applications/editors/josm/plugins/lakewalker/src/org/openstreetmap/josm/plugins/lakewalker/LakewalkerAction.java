@@ -151,7 +151,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	
 	setStatus("Running vertex reduction...");
 	
-	nodelist = lw.vertex_reduce(nodelist, epsilon);
+	nodelist = lw.vertexReduce(nodelist, epsilon);
 	
 	System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
 	
@@ -161,10 +161,21 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	
 	setStatus("Running Douglas-Peucker approximation...");
 	
-	nodelist = lw.douglas_peucker(nodelist, epsilon);
+	nodelist = lw.douglasPeucker(nodelist, epsilon);
 	
 	System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
 	  
+	/**
+	 * And then through a duplicate node remover
+	 */
+	
+	setStatus("Removing duplicate nodes...");
+	
+	nodelist = lw.duplicateNodeRemove(nodelist);
+	
+	System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
+	  
+	
 	/**
 	 * Turn the arraylist into osm nodes
 	 */
@@ -224,7 +235,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 		nodesinway++;
 	}
 	
-	commands.add(new AddCommand(way));
+	
 	String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
     
     if(!waytype.equals("none")){
@@ -235,6 +246,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     
 	way.nodes.add(fn);
 	
+	commands.add(new AddCommand(way));
 	
 	if (!commands.isEmpty()) {
         Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
@@ -242,6 +254,10 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     } else {
   	  System.out.println("Failed");
     }
+	
+	commands = new LinkedList<Command>();
+	ways = new ArrayList<Way>();
+	
   }
   
   public void cancel() {

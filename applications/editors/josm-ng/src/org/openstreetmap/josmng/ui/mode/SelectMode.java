@@ -23,11 +23,13 @@ package org.openstreetmap.josmng.ui.mode;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import org.openstreetmap.josmng.osm.Coordinate;
+import java.util.Collection;
+import java.util.Collections;
 import org.openstreetmap.josmng.osm.Node;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
-import org.openstreetmap.josmng.view.ViewCoords;
 
 /**
  *
@@ -36,7 +38,7 @@ import org.openstreetmap.josmng.view.ViewCoords;
 public class SelectMode extends EditMode {
     Point pressPoint;
     boolean pressed;
-    Node dragged;
+    Collection<Node> dragged;
     Object moveToken;
 
     public SelectMode(MapView view) {
@@ -47,14 +49,11 @@ public class SelectMode extends EditMode {
 
     protected @Override void exited() {}
 
-    private void moveNodeTo(Point p) {
-        ViewCoords start = getMapView().getPoint(pressPoint);
-        ViewCoords end = getMapView().getPoint(p);
-        ViewCoords moved = getMapView().getProjection().coordToView(dragged).
-                movedByDelta(end, start);
-        final Coordinate c = getMapView().getProjection().viewToCoord(moved);
-        dragged.getOwner().atomicEdit(new Runnable() { public void run() {
-            dragged.setCoordinate(c);
+    private void moveNodeTo(final Point p) {
+        getData().atomicEdit(new Runnable() { public void run() {
+            for (Node n : dragged) {
+                n.setCoordinate(moveOnScreen(n, pressPoint, p));
+            }
         }}, moveToken);
         pressPoint = p;
     }
@@ -63,7 +62,15 @@ public class SelectMode extends EditMode {
         if (e.getButton() != MouseEvent.BUTTON1) return;
         
         pressPoint = e.getPoint();
-        dragged = getMapView().getNearestNode(pressPoint);
+        OsmPrimitive prim = getNearestPrimitive(pressPoint, null);
+        
+        if (prim == null) return;
+        
+        if (prim instanceof Node) {
+            dragged = Collections.singleton((Node)prim);
+        } else {
+            dragged = ((Way)prim).getNodes();
+        }
         moveToken = new Object();
     }
     

@@ -230,13 +230,13 @@
 			<line class='highway-casing highway-track-casing highway-track-grade2-casing'/>
 		</rule>
 		<else><rule e="way" k="tracktype" v="grade3">
-			<line class='highway-casing highway-track-casing highway-track-grade3-casing'/>
+			<line class='highway-casing highway-track-casing highway-track-grade3-casing' smart-linecap='no'/>
 		</rule>
 		<else><rule e="way" k="tracktype" v="grade4">
-			<line class='highway-casing highway-track-casing highway-track-grade4-casing'/>
+			<line class='highway-casing highway-track-casing highway-track-grade4-casing' smart-linecap='no'/>
 		</rule>
 		<else><rule e="way" k="tracktype" v="grade5">
-			<line class='highway-casing highway-track-casing highway-track-grade5-casing'/>
+			<line class='highway-casing highway-track-casing highway-track-grade5-casing' smart-linecap='no'/>
 		</rule>
 		<else>
 	        	<line class='highway-casing highway-track-casing'/>
@@ -323,7 +323,7 @@
 				    <area class='highway-core highway-footway-area' />
 				</rule>
 				<else>
-				    <line class='highway-core highway-footway-core' />
+				    <line class='highway-core highway-footway-core' smart-linecap='no'/>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="pedestrian">
@@ -339,7 +339,7 @@
  					<area class='highway-core highway-cycleway-area' />
 				</rule>
 				<else>
- 					<line class='highway-core highway-cycleway-core' />
+ 					<line class='highway-core highway-cycleway-core' smart-linecap='no'/>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="bridleway">
@@ -347,7 +347,7 @@
  					<area class='highway-core highway-bridleway-area' />
 				</rule>
 				<else>
- 					<line class='highway-core highway-bridleway-core' />
+ 					<line class='highway-core highway-bridleway-core' smart-linecap='no'/>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="byway">
@@ -357,7 +357,7 @@
 				<else>
 					<line class='highway-core highway-byway-2-casing' smart-linecap='no'/>
 					<line class='highway-core highway-byway-3-casing' smart-linecap='no'/>
-					<line class='highway-core highway-byway-1-core' />
+					<line class='highway-core highway-byway-1-core' smart-linecap='no'/>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="track">
@@ -375,13 +375,13 @@
 						<line class='highway-core highway-track-core' />
 					</rule>
 					<rule e="way" k="tracktype" v="grade3">
-						<line class='highway-core highway-track-core' />
+						<line class='highway-core highway-track-core' smart-linecap='no'/>
 					</rule>
 					<rule e="way" k="tracktype" v="grade4">
-						<line class='highway-core highway-track-core' />
+						<line class='highway-core highway-track-core' smart-linecap='no'/>
 					</rule>
 					<rule e="way" k="tracktype" v="grade5">
-						<line class='highway-core highway-track-core' />
+						<line class='highway-core highway-track-core' smart-linecap='no'/>
 					</rule>
 				</else>
 			</rule>
@@ -390,7 +390,7 @@
  					<area class='highway-core highway-unsurfaced-area' />
 				</rule>
 				<else>
-					<line class='highway-core highway-unsurfaced-core' />
+					<line class='highway-core highway-unsurfaced-core' smart-linecap='no'/>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="service">

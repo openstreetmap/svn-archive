@@ -2213,14 +2213,13 @@ against infinite loops -->
     </xsl:call-template>
   </xsl:template>
 
-
   <xsl:template name="generatePathWayEnd">
-    <xsl:call-template name="moveToNode">
-      <xsl:with-param name="node" select="key('nodeById',nd[position()=last()]/@ref)"/>
+    <xsl:call-template name="moveToMidpointPlus">
+      <xsl:with-param name="fromNode" select="key('nodeById',nd[position()=(last())]/@ref)"/>
+      <xsl:with-param name="toNode" select="key('nodeById',nd[position()=last()-1]/@ref)"/>
     </xsl:call-template>
-    <xsl:call-template name="lineToMidpointMinus">
-      <xsl:with-param name="fromNode" select="key('nodeById',nd[position()=(last()-1)]/@ref)"/>
-      <xsl:with-param name="toNode" select="key('nodeById',nd[position()=last()]/@ref)"/>
+    <xsl:call-template name="lineToNode">
+      <xsl:with-param name="node" select="key('nodeById',nd[position()=last()]/@ref)"/>
     </xsl:call-template>
   </xsl:template>
 

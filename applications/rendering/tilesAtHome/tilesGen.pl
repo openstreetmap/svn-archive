@@ -1333,6 +1333,7 @@ sub svg2png
     
     # stop rendering the current job when inkscape fails
     statusMessage("Rendering", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    print STDERR $Cmd if (not $Config{"Debug"});
     if (not runCommand($Cmd,$PID) or ! -e $TempFile )
     {
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);

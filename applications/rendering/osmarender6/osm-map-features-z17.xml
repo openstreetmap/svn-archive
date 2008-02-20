@@ -1135,6 +1135,11 @@
         <rule e="node" k="amenity" v="parking">
             <symbol xlink:href="#parking" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
+        <rule e="way" k="amenity" v="parking">
+            <rule e="way" k="access" v="~|yes|public">
+                <areaSymbol xlink:href="#parking" width='2px' height='2px' transform='translate(-1,-1)' />
+            </rule>
+        </rule>
         <rule e="node" k="highway" v="traffic_signals">
             <symbol xlink:href="#symbol-traffic_signal" width='2px' height='2px' transform='translate(0,0)'/>
         </rule>

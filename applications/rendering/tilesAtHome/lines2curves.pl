@@ -62,7 +62,7 @@ my %to_transform;      # ways that need transforming
 while (<>) {
     my $line = $_;
     $svg_lines[$line_position] = $line;
-    if ( $line =~ m{(<path \s id=\"(?:way|area)_\w+\" \s d=\") # the prefix of the path
+    if ( $line =~ m{(<path \s id=\"(?:way|area)_\S+\" \s d=\") # the prefix of the path
                     ([^\"Z]+)                          # the core path itself
                     (.*/>)$                           # the rest
                    }x ) { # found a path

@@ -9,3 +9,4 @@ export      - Software that exports OSM data into different formats such as Garm
 filter      - Software that takes OSM data and converts/filters it and creates other OSM data
 gps-tracks  - Software that has something to do with GPS tracks
 
+sync-wiki   - A script to sync an internationalized Map_Features page with its subparts

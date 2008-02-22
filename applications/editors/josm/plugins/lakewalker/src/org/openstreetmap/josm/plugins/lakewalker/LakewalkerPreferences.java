@@ -20,6 +20,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
   public static final String PREF_MAX_SEG = "lakewalker.max_segs_in_way";
   public static final String PREF_MAX_NODES = "lakewalker.max_nodes";
   public static final String PREF_THRESHOLD = "lakewalker.threshold";
+  public static final String PREF_THRESHOLD_VALUE = "lakewalker.thresholdvalue";
   public static final String PREF_EPSILON = "lakewalker.epsilon";
   public static final String PREF_LANDSAT_RES = "lakewalker.landsat_res";
   public static final String PREF_LANDSAT_SIZE = "lakewalker.landsat_size";
@@ -36,7 +37,9 @@ public class LakewalkerPreferences implements PreferenceSetting {
   protected IntConfigurer maxNodesConfig = new IntConfigurer();
   protected JLabel maxNodesLabel = new JLabel(tr("Maximum number of nodes in initial trace"));
   protected IntConfigurer thresholdConfig = new IntConfigurer();
-  protected JLabel thresholdLabel = new JLabel(tr("Maximum gray value to count as water (0-255)"));
+  protected JLabel thresholdLabel = new JLabel(tr("Maximum gray value to count as water (0-255) [For old script]"));
+  protected IntConfigurer thresholdConfigNew = new IntConfigurer();
+  protected JLabel thresholdLabelNew = new JLabel(tr("Maximum gray value to count as water (0-255)"));
   protected DoubleConfigurer epsilonConfig = new DoubleConfigurer();
   protected JLabel epsilonLabel = new JLabel(tr("Line simplification accuracy (degrees)"));
   protected IntConfigurer landsatResConfig = new IntConfigurer();
@@ -59,6 +62,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
     maxNodesConfig.setToolTipText(tr("Maximum number of nodes to generate before bailing out (before simplifying lines). Default 50000."));
     thresholdConfig.setToolTipText(tr("Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Default 35."));
+    thresholdConfigNew.setToolTipText(tr("Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Default 90."));
     epsilonConfig.setToolTipText(tr("Accuracy of Douglas-Peucker line simplification, measured in degrees.<br>Lower values give more nodes, and more accurate lines. Default 0.0003."));
     landsatResConfig.setToolTipText(tr("Resolution of Landsat tiles, measured in pixels per degree. Default 4000."));
     landsatSizeConfig.setToolTipText(tr("Size of one landsat tile, measured in pixels. Default 2000."));
@@ -76,6 +80,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     maxSegsConfig.setValue(Main.pref.get(PREF_MAX_SEG, "500"));
     maxNodesConfig.setValue(Main.pref.get(PREF_MAX_NODES, "50000"));
     thresholdConfig.setValue(Main.pref.get(PREF_THRESHOLD, "35"));
+    thresholdConfigNew.setValue(Main.pref.get(PREF_THRESHOLD_VALUE, "90"));    
     epsilonConfig.setValue(Main.pref.get(PREF_EPSILON, "0.0003"));
     landsatResConfig.setValue(Main.pref.get(PREF_LANDSAT_RES, "4000"));
     landsatSizeConfig.setValue(Main.pref.get(PREF_LANDSAT_SIZE, "2000"));
@@ -98,6 +103,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
     prefPanel.add(maxNodesConfig.getControls(), dataConstraints);
     prefPanel.add(thresholdLabel, labelConstraints);
     prefPanel.add(thresholdConfig.getControls(), dataConstraints);
+    prefPanel.add(thresholdLabelNew, labelConstraints);
+    prefPanel.add(thresholdConfigNew.getControls(), dataConstraints);
     prefPanel.add(epsilonLabel, labelConstraints);
     prefPanel.add(epsilonConfig.getControls(), dataConstraints);
     prefPanel.add(landsatResLabel, labelConstraints);
@@ -124,6 +131,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());    
     Main.pref.put(PREF_MAX_NODES, maxNodesConfig.getValueString());
     Main.pref.put(PREF_THRESHOLD, thresholdConfig.getValueString());
+    Main.pref.put(PREF_THRESHOLD_VALUE, thresholdConfigNew.getValueString());
     Main.pref.put(PREF_EPSILON, epsilonConfig.getValueString());
     Main.pref.put(PREF_LANDSAT_RES, landsatResConfig.getValueString());
     Main.pref.put(PREF_LANDSAT_SIZE, landsatSizeConfig.getValueString());

@@ -222,6 +222,10 @@ public class Lakewalker {
 	 */
 	public ArrayList<double[]> duplicateNodeRemove(ArrayList<double[]> nodes){
 		
+		if(nodes.size() <= 1){
+			return nodes;
+		}
+		
 		double lastnode[] = new double[] {nodes.get(0)[0], nodes.get(0)[1]};
 		
 		for(int i = 1; i < nodes.size(); i++){
@@ -250,7 +254,7 @@ public class Lakewalker {
 	public ArrayList<double[]> vertexReduce(ArrayList<double[]> nodes, double proximity){
 		
 		// Check if node list is empty
-		if(nodes.size()==0){
+		if(nodes.size()<=1){
 			return nodes;
 		}
 		
@@ -285,10 +289,75 @@ public class Lakewalker {
 		}
 	}
 	
+	public ArrayList<double[]> douglasPeuckerNR(ArrayList<double[]> nodes, double epsilon){
+		/*
+		command_stack = [(0, len(nodes) - 1)]
+		                 
+		Vector result_stack = new Vector();
+
+        while(command_stack.size() > 0){
+        	cmd = command_stack.pop();
+        	if(type(cmd) == tuple){
+        		(start, end) = cmd
+        		(node, dist) = dp_findpoint(nodes, start, end)
+        		if(dist > epsilon){
+        			command_stack.append("+")
+        			command_stack.append((start, node))
+        			command_stack.append((node, end))
+        		} else {
+        			result_stack.append((start, end))
+        		}
+        	} elseif(cmd == "+"){
+        		first = result_stack.pop()
+        		second = result_stack.pop()
+        		if(first[-1] == second[0]){
+        			result_stack.append(first + second[1:])
+        			//print "Added %s and %s; result is %s" % (first, second, result_stack[-1])
+        		}else {
+        			error("ERROR: Cannot connect nodestrings!")
+        			#print first
+        			#print second
+        			return;
+        		}
+        	} else {
+        		error("ERROR: Can't understand command \"%s\"" % (cmd,))
+        		return
+ 
+		if(len(result_stack) == 1){
+			return [nodes[x] for x in result_stack[0]];
+		} else {
+			error("ERROR: Command stack is empty but result stack has %d nodes!" % len(result_stack));
+			return;
+		}
+        		
+		farthest_node = None
+		farthest_dist = 0
+		first = nodes[0]
+		last = nodes[-1]
+             
+		for(i in xrange(1, len(nodes) - 1){
+			d = point_line_distance(nodes[i], first, last)
+			if(d > farthest_dist){
+				farthest_dist = d
+				farthest_node = i
+     		}
+		}
+		if(farthest_dist > epsilon){
+			seg_a = douglas_peucker(nodes[0:farthest_node+1], epsilon)
+			seg_b = douglas_peucker(nodes[farthest_node:-1], epsilon)
+			//print "Minimized %d nodes to %d + %d nodes" % (len(nodes), len(seg_a), len(seg_b))
+			nodes = seg_a[:-1] + seg_b
+		} else {
+			return [nodes[0], nodes[-1]];
+		}
+		*/
+		return nodes;
+	}
+	
 	public ArrayList<double[]> douglasPeucker(ArrayList<double[]> nodes, double epsilon){
 		
 		// Check if node list is empty
-		if(nodes.size()==0){
+		if(nodes.size()<=1){
 			return nodes;
 		}
 		

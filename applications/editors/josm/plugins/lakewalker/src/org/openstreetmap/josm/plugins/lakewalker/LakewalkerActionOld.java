@@ -39,8 +39,8 @@ class LakewalkerActionOld extends JosmAction implements MouseListener {
   protected Thread executeThread;
   
   public LakewalkerActionOld(String name) {
-    super(name, "lakewalker-sml", tr("Lake Walker."), KeyEvent.VK_L, KeyEvent.CTRL_MASK
-        | KeyEvent.SHIFT_MASK, true);
+    super(name, "lakewalker-sml", tr("Lake Walker (Old)"), KeyEvent.VK_L, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK
+        | KeyEvent.SHIFT_MASK, false);
     this.name = name;
     setEnabled(true);
   }

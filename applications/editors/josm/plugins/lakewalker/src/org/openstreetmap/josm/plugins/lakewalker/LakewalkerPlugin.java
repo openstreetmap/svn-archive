@@ -35,6 +35,7 @@ public class LakewalkerPlugin extends Plugin {
 
     if (toolsMenu == null) {
       toolsMenu = new JMenu(name);
+      toolsMenu.add(new JMenuItem(new LakewalkerActionOld(name2)));
       toolsMenu.add(new JMenuItem(new LakewalkerAction(name)));
       Main.main.menu.add(toolsMenu, 2);
     }

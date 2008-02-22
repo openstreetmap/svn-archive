@@ -105,7 +105,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	 */
 	final int waylen = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_SEG, "500"));
 	final int maxnode = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_NODES, "50000"));
-	final int threshold = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD, "35"));
+	final int threshold = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD_VALUE, "90"));
 	final double epsilon = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003"));
 	final int resolution = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000"));
 	final int tilesize = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000"));

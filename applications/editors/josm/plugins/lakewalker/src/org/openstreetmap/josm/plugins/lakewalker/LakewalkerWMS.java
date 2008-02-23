@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.awt.geom.*;
 import java.util.*;
+import java.text.*;
 
 public class LakewalkerWMS {
 	
@@ -38,6 +39,9 @@ public class LakewalkerWMS {
 	}
 	
 	public BufferedImage getTile(int x, int y) throws LakewalkerException {
+		String status = getStatus();
+		setStatus("Downloading image tile...");
+		
 		String layer = "global_mosaic_base";
 		
 		int[] bottom_left_xy = new int[2]; 
@@ -50,16 +54,22 @@ public class LakewalkerWMS {
         
         double[] topright_geo = xy_to_geo(top_right_xy[0],top_right_xy[1],this.resolution);
         double[] bottomleft_geo = xy_to_geo(bottom_left_xy[0],bottom_left_xy[1],this.resolution);
-          
+                  
 		String filename = this.wmslayer+"/landsat_"+this.resolution+"_"+this.tilesize+
 			"_xy_"+bottom_left_xy[0]+"_"+bottom_left_xy[1]+".png";
 		
-		String urlloc = String.format("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers="+layer+
-			"&styles="+wmslayer+"&srs=EPSG:4326&format=image/png"+
-			"&bbox=%.6f,%.6f,%.6f,%.6f&width=%d&height=%d",
-			bottomleft_geo[1],bottomleft_geo[0],topright_geo[1],topright_geo[0],
-			this.tilesize,this.tilesize);			
+		// The WMS server only understands decimal points using periods, so we need
+		// to convert to a locale that uses that to build the proper URL
+        NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+		DecimalFormat df = (DecimalFormat)nf;
+		df.applyLocalizedPattern("0.000000");
 		
+		String urlloc = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers="+layer+
+			"&styles="+wmslayer+"&srs=EPSG:4326&format=image/png"+
+			"&bbox="+df.format(bottomleft_geo[1])+","+df.format(bottomleft_geo[0])+
+			","+df.format(topright_geo[1])+","+df.format(topright_geo[0])+
+			"&width="+this.tilesize+"&height="+this.tilesize;
+				
         File file = new File(this.working_dir,filename);
         
         // Calculate the hashmap key
@@ -134,6 +144,8 @@ public class LakewalkerWMS {
 	    	throw new LakewalkerException("Could not acquire image");
 	    }
 		
+	    setStatus(status);
+	    
 		return this.image;
 	}
 	
@@ -150,6 +162,9 @@ public class LakewalkerWMS {
 	}
 	
 	public int getPixel(int x, int y) throws LakewalkerException{
+
+		// Get the previously shown text
+		
 		
 		BufferedImage image = null;
 
@@ -215,21 +230,11 @@ public class LakewalkerWMS {
 			System.out.println(i+": "+a[i]);
 		}
 	}
-	/*
-	private double[] xy_to_geo(int x, int y){
-		double[] geo = new double[2];
-	    geo[0] = (double)y / (double)this.resolution;
-	    geo[1] = (double)x / (double)this.resolution;
-	    return geo;
+	protected void setStatus(String s) {
+		Main.pleaseWaitDlg.currentAction.setText(s);
+		Main.pleaseWaitDlg.repaint();
 	}
-	
-	private int[] geo_to_xy(double lat, double lon){
-		int[] xy = new int[2];
-		
-		xy[0] = (int)(Math.floor(lon * this.resolution) + 0.5);
-		xy[1] = (int)(Math.floor(lat * this.resolution) + 0.5);
-		
-		return xy;
+	protected String getStatus(){
+		return Main.pleaseWaitDlg.currentAction.getText();
 	}
-	*/
 }

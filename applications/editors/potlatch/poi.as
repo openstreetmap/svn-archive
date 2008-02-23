@@ -31,7 +31,8 @@
 			_root.map.pois[result[0]]._x  =result[1];
 			_root.map.pois[result[0]]._y  =result[2];
 			_root.map.pois[result[0]].attr=colon2bar(result[3]);
-			populatePropertyWindow('POI');
+			_root.panel.properties.init('POI');
+//			populatePropertyWindow('POI');
 		};
 		remote.call('getpoi',poirelresponder,Math.floor(this._name),baselong,basey,masterscale);
 	};
@@ -103,7 +104,8 @@
 	POI.prototype.select=function() {
 		_root.poiselected=this._name;
 		setTypeText("Point",this._name);
-		populatePropertyWindow('POI');
+		_root.panel.properties.init('POI');
+//		populatePropertyWindow('POI');
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
 	};
 	// POI.prototype.recolour=function() { };

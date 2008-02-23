@@ -7,7 +7,8 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 18.12.2007 (split into separate files)
+	# see http://wiki.openstreetmap.org/index.php/Potlatch/Changelog
+	# for revision history
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -29,7 +30,7 @@
 
 	require "potlatch_assets.pl";
 
-	$debug=0;
+	$debug=1;
 
 	# -----	Read ActionScript files
 

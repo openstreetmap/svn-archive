@@ -4,6 +4,12 @@
 	// Potlatch property window functions
 	// =====================================================================================
 
+	// Saturday 23rd:
+	// **** if you add two keys in succession, sometimes doesn't notice the first (?)
+	// ** autocomplete disabled
+	// ** preset menu disabled
+	// ** doesn't redraw way according to tag change
+
 	// =====================================================================================
 	// Autocomplete
 
@@ -150,132 +156,194 @@
 
 	Object.registerClass("auto",AutoMenu);
 
+
+	// =====================================================================================
+	// PropertyWindow object
+	// temporarily removed:
+	// ** support for more than 12 tags
+	// ** autocomplete
+	// ** repeat last tags
+
+	PropertyWindow=function() {};
+	PropertyWindow.prototype=new MovieClip();
+	
+	PropertyWindow.prototype.init=function(proptype) {
+		removeMovieClip(_root.panel.welcome); 
+		this.createEmptyMovieClip("attributes",1);
+		this.proptype=proptype;
+		if (proptype=='') { return; }
+
+		switch (proptype) {
+			case 'point':	proparr=_root.ws.path[_root.pointselected][4]; break;
+			case 'POI':		proparr=_root.map.pois[poiselected].attr; break;
+			case 'way':		proparr=_root.ws.attr; break;
+		}
+
+		// Attach keys/values		
+		this.tagcount=0;
+		this.xpos=0; this.ypos=0;
+		for (el in proparr) {
+			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
+				this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
+				this.attributes[this.tagcount]._x=this.xpos;
+				this.attributes[this.tagcount]._y=this.ypos;
+				this.ypos+=19; if (this.ypos>57) { this.ypos=0; this.xpos+=190; }
+				this.attributes[this.tagcount].init(el);
+				this.tagcount+=1;
+			}
+		}
+
+		// ** Attach relations in same way as above
+		// ** Set i_repeatattr, i_newattr, i_scissors?
+		// ** Do presetmenu (reflectPresets) and i_preset?
+
+		this.setTabOrder();
+	};
+
+	PropertyWindow.prototype.setTabOrder=function() {
+		// ** This could perhaps be incorporated into init...
+		for (el in this.attributes) {
+			o=(this.attributes[el]._x/190*4+this.attributes[el]._y/19)*2;
+			this.attributes[el].keyname.tabIndex=o;
+			this.attributes[el].value.tabIndex=o+1;
+		}
+	};
+
+	// PropertyWindow.enterNewAttribute
+
+	PropertyWindow.prototype.enterNewAttribute=function() {
+		// ** check nothing already exists called "key"
+		this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
+		this.attributes[this.tagcount]._x=this.xpos;
+		this.attributes[this.tagcount]._y=this.ypos;
+		this.ypos+=19; if (this.ypos>57) { this.ypos=0; this.xpos+=190; }
+		this.attributes[this.tagcount].init('key');
+		this.setTabOrder();
+		Selection.setFocus(this.attributes[this.tagcount].keyname);
+		Selection.setSelection(0,3);
+		this.tagcount+=1;
+	};
+
+	Object.registerClass("propwindow",PropertyWindow);
+	
+	
+
+
+
 	// =====================================================================================
 	// KeyValue object
 
-	function KeyValue() {
-		this._x=_root.propx;
-		this._y=_root.propy;
-		_root.propy+=19; if (_root.propy>57) { _root.propy=0; _root.propx+=190; }
+	function KeyValue() {};
+	KeyValue.prototype=new MovieClip();
+
+	KeyValue.prototype.init=function(key,value) {
+
+		// Initialise key
 
 		this.createTextField('keyname',1,0,-1,70,18);
 		with (this.keyname) {
 			backgroundColor=0xBBBBBB;
 			background=true;
-			text=this._name;
+			text=key;
+			type='input';
 			setTextFormat(boldSmall);
 			setNewTextFormat(boldSmall);
-			selectable=false;
+//			selectable=false;
 		};
+		this.keyname.onSetFocus=function() { _root.keytarget='key'; };
+		this.keyname.onKillFocus=function() { _root.keytarget=''; };
+		this.keyname.onChanged=function(tf) { renameKey(tf); };
+
+		// Initialise value
 
 		this.createTextField('value',2,72,-1,110,18);
-		this.value.onSetFocus =function() {	if (this.textColor==0x888888) {
-												this.text=''; this.textColor=0;
-												if (!_root.panel.auto) { _root.panel.attachMovie("auto","auto",75); }
-												_root.panel.auto.redraw();
-											}
-											this.addListener(textfieldListener); _root.keytarget=this._name; _root.elselected=this._name;
-											markAttrUnclean(false); };
-		this.value.onKillFocus=function() { if (_root.panel.auto.hitTest(_root._xmouse,_root._ymouse)) { return; }
-											if (_root.panel.auto.ignorekill) { _root.panel.auto.ignorekill=false; return; }
-											this.removeListener(textfieldListener); _root.keytarget='';
-											if (this.text=='') { _root.redopropertywindow=1; } // crashes player if called directly!
-											if (_root.currentproptype=='way') { _root.ws.redraw(); }
-											_root.panel.auto.remove();
-											reflectPresets(); };
-		with (this.value) {
-			this.value.backgroundColor=0xDDDDDD;
-			this.value.background=true;
-			this.value.type='input';
-			// this.value.tabIndex=_root.propn;
+		this.value.onSetFocus =function() {
+			if (this.textColor==0x888888) {
+				this.text=''; this.textColor=0;
+				// ** autocomplete support
+			}
+			_root.keytarget='value'; _root.elselected=this._name;
+			markAttrUnclean(false);
 		};
-		this.value.variable=getAttrArrayName()+'.'+this._name;
-		this.value.text=getAttrArray()[this._name];
-		this.value.setTextFormat(plainSmall);
-		this.value.setNewTextFormat(plainSmall);
-		_root.propn+=1;
+		this.value.onKillFocus=function() {
+			_root.keytarget='';
+			if (this.text=='') { _root.redopropertywindow=1; } // crashes player if called directly!
+			// ** redraw way; autocomplete support; reflect presets
+		};
+		with (this.value) {
+			backgroundColor=0xDDDDDD;
+			background=true;
+			type='input';
+			setTextFormat(plainSmall);
+			setNewTextFormat(plainSmall);
+		};
+		this.value.text=this.getValueFromObject(key);
+		this.value.onChanged=function(tf) { setValueInObject(tf); };
+		this.lastkey=key;
 	};
-	KeyValue.prototype=new MovieClip();
 
-	KeyValue.prototype.renameKey=function() {
-		z=this.keyname.text;
-		if (z!=this._name) {
-			// field has been renamed
-			this.value.variable=null;
-			getAttrArray()[z]=getAttrArray()[this._name];
-			delete getAttrArray()[this._name];
-			this._name=z; 
-			this.value.variable=getAttrArrayName()+'.'+z;
+	// KeyValue.getValueFromObject(key)
+	// for a given key, returns the value from the way, point or POI
+
+	KeyValue.prototype.getValueFromObject=function(k) {
+		var v;
+		switch (this._parent._parent.proptype) {
+			case 'point':	v=_root.ws.path[_root.pointselected][4][k]; break;
+			case 'POI':		v=_root.map.pois[poiselected].attr[k]; break;
+			case 'way':		v=_root.ws.attr[k]; break;
 		}
+		if (v==undefined) { v='(type value here)'; }
+		return v;
 	};
 
 	Object.registerClass("keyvalue",KeyValue);
 
-	// populatePropertyWindow	- set contents of property window
-	// clearPropertyWindow		- clear window
+	// =====================================================================================
+	// KeyValue support functions
 
-	function populatePropertyWindow(proptype,startat,force) {
-		if (!startat) { startat=0; }
-		if (_root.currentproptype ==proptype &&
-			_root.currentpropway  ==wayselected &&
-			_root.currentproppoi  ==poiselected &&
-			_root.currentproppoint==pointselected &&
-			_root.currentstartat  ==startat &&
-			_root.redopropertywindow==0 && force!=true) { return; }
-		clearPropertyWindow();
-		_root.panel.i_repeatattr._alpha=
-		_root.panel.i_newattr._alpha =100-50*(proptype=='');
-		_root.panel.i_scissors._alpha=100-50*(proptype!='point');
-		if (proptype=='') { _root.currentproptype=''; _root.panel.i_nextattr._alpha=50; return; }
-		
-		if (proptype!=currentproptype) { _root.panel.presetmenu.init(141,5,0,presetnames[proptype][presetselected],'Choose from a menu of preset tags describing the '+proptype,setAttributesFromPreset,151); }
-		_root.currentproptype=proptype;
-		_root.currentstartat=startat;
-		_root.currentproppoint=pointselected;
-		_root.currentpropway=wayselected;
-		_root.currentproppoi=poiselected;
-		var proparr=getAttrArray();
-		for (el in proparr) {
-			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
-				if (tagcount>=startat && tagcount<startat+12) {
-					_root.panel.properties.attachMovie("keyvalue",el,_root.propn);
-					if (proparr[el].substr(0,6)=='(type ') {
-						_root.panel.properties[el]['value'].textColor=0x888888;
-					}
-				}
-				tagcount+=1;
+	// setValueInObject(value textfield)
+	// - update the way, point or POI with the new value
+	//   (opposite of getValueFromObject)
+	
+	function setValueInObject(tf) {
+		var k=tf._parent.keyname.text;
+		var v=tf.text;
+		switch (tf._parent._parent._parent.proptype) {
+			case 'point':	_root.ws.path[_root.pointselected][4][k]=v; 
+							_root.ws.clean=false; break;
+			case 'POI':		_root.map.pois[poiselected].attr[k]=v;
+							_root.map.pois[poiselected]=false; break;
+			case 'way':		_root.ws.attr[k]=v; 
+							_root.ws.clean=false; break;
+		}
+	};
+
+	// renameKey(key textfield)
+
+	function renameKey(tf) {
+		var k=tf.text;
+		if (k=='+') {
+			// if FP has picked up the "+" keypress, ignore it and set back to 'key'
+			tf.text='key';
+			tf.setTextFormat(boldSmall);
+			tf.setNewTextFormat(boldSmall);
+			Selection.setFocus(tf); Selection.setSelection(0,3);
+		} else if (k!=tf._parent.lastkey) {
+			// field has been renamed, so delete old one and set new one
+			// (we have to set it to '' sometimes because of Ming delete bug)
+			switch (tf._parent._parent._parent.proptype) {
+				case 'point':	_root.ws.path[_root.pointselected][4][tf._parent.lastkey]=''; break;
+				case 'POI':		_root.map.pois[poiselected].attr[tf._parent.lastkey]=''; break;
+				case 'way':		delete _root.ws.attr[tf._parent.lastkey]; break;
 			}
-		}
-
-		_root.panel.i_nextattr._alpha=50+50*(tagcount>12);
-		_root.panel.presetmenu._visible=true;
-		_root.panel.i_preset._visible=true;
-		reflectPresets();
-		setTabOrder();
-	};
-
-	function clearPropertyWindow() {
-		removeMovieClip(_root.panel.welcome); 
-		_root.propx=0; _root.propy=0; _root.propn=0; _root.tagcount=0;
-		ct=0;
-		for (el in _root.panel.properties) {
-			ct+=1;
-			removeMovieClip(_root.panel.properties[el]);
-		}
-		if (ct>0) { _root.savedpoint=_root.currentproppoint;
-					_root.savedpoi  =_root.currentproppoi;
-					_root.savedway  =_root.currentpropway;
-					_root.savedtype =_root.currentproptype; }
-	};
-
-	function advancePropertyWindow() {
-		if (_root.panel.i_nextattr._alpha==50) { return; }
-		if (_root.currentstartat+12>_root.tagcount) {
-			populatePropertyWindow(_root.currentproptype,0,true);
-		} else {
-			populatePropertyWindow(_root.currentproptype,_root.currentstartat+12,true);
+			setValueInObject(tf._parent.value);
+			tf._parent.lastkey=k;
 		}
 	};
+
+
+	// =====================================================================================
+	// General support functions
 
 	// setTypeText - set contents of type window
 	
@@ -290,197 +358,3 @@
 			_root.panel.padlock._visible=false;
 		}
 	}
-
-	// reflectPresets - set preset menu based on way values
-	// looks in presetselected first, then in all other menus
-
-	function reflectPresets() {
-		var i,t;
-		var found=findPresetInMenu(presetselected);
-		if (found) { _root.panel.presetmenu.setValue(found); return; }
-		for (i=0; i<presetmenus[currentproptype].length; i+=1) {
-			t=findPresetInMenu(presetmenus[currentproptype][i]); if (t) { found=t; presetselected=presetmenus[currentproptype][i]; }
-		}
-		if (found) { _root.panel.presetmenu.init(141,5,found,presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
-					 setPresetIcon(presetselected); }
-			  else { _root.panel.presetmenu.setValue(0); }
-	}
-
-	// look in a particular menu
-	
-	function findPresetInMenu(menuname) {
-		var f=0;
-		for (pre=presetnames[currentproptype][menuname].length-1; pre>-1; pre-=1) {
-			pname=presetnames[currentproptype][menuname][pre];
-			pkeys=_root.presets[pname];
-			if (pkeys) {
-				ok=1;
-				for (pkey in pkeys) {
-					cvalue=getAttrArray()[pkey];
-					if (cvalue==null) { cvalue=''; }
-					if (cvalue!=presets[pname][pkey] && presets[pname][pkey].substr(0,6)!='(type ') { ok=0; }
-				}
-				if (ok==1) { f=pre; }
-			}
-		}
-		return f;
-	}
-
-	// setAttributesFromPreset - update way values based on pop-up choice
-	
-	function setAttributesFromPreset(pre) {
-		pname=presetnames[currentproptype][presetselected][pre];
-		pkeys=presets[pname];
-		for (pkey in pkeys) {
-			if (getAttrArray()[pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
-			else { getAttrArray()[pkey]=presets[pname][pkey]; }
-			markAttrUnclean(true);
-		}
-		populatePropertyWindow(currentproptype,_root.currentstartat,true);
-	}
-
-	// setPresetIcon and cyclePresetIcon
-
-	function setPresetIcon(category) {
-		 _root.panel.attachMovie("preset_"+category,"i_preset",38);
-		 with (_root.panel.i_preset) { _x=120; _y=15; };
-		_root.panel.i_preset.onPress   =function() { cyclePresetIcon(); };
-		_root.panel.i_preset.onRollOver=function() { setFloater("Choose what type of presets are offered in the menu"); };
-		_root.panel.i_preset.onRollOut =function() { clearFloater(); };
-	}
-	function cyclePresetIcon() {
-		var i,j;
-		if (_root.panel.i_preset._visible) {
-			j=0;
-			for (i=0; i<presetmenus[currentproptype].length; i+=1) {
-				if (presetmenus[currentproptype][i]==presetselected) { j=i+1; }
-			}
-			presetselected=presetmenus[currentproptype][j%i];
-			setPresetIcon(presetselected);
-			_root.panel.presetmenu.init(141,5,findPresetInMenu(presetselected),presetnames[currentproptype][presetselected],'Choose from a menu of preset tags describing the '+currentproptype,setAttributesFromPreset,151);
-		}
-	}
-
-	// enterNewAttribute - create new attribute
-
-	function enterNewAttribute() {
-		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
-		if (_root.tagcount>=_root.currentstartat+12) {
-			populatePropertyWindow(_root.currentproptype,Math.floor((_root.tagcount+1)/12)*12,true);
-		}
-//		if (_root.propn==12) { return; }
-		getAttrArray().key='(type value here)';
-		_root.panel.properties.attachMovie("keyvalue","key",_root.propn);
-		_root.tagcount+=1; _root.i_nextattr._alpha=50+50*(tagcount>12);
-		_root.panel.properties.key.value.textColor=0x888888;
-		_root.panel.properties.key.keyname.selectable=true;
-		_root.panel.properties.key.keyname.type="input";
-		_root.panel.properties.key.keyname.setTextFormat(boldSmall);
-		_root.panel.properties.key.keyname.setNewTextFormat(boldSmall);
-		_root.panel.properties.key.keyname.onSetFocus=function()  { 
-			this.addListener(textfieldListener);
-			_root.keytarget=this._name;
-		};
-		_root.panel.properties.key.keyname.onKillFocus=function() {
-			if (_root.panel.auto.hitTest(_root._xmouse,_root._ymouse)) { return; }
-			_root.keytarget='';
-			this.removeListener(textfieldListener);
-			_root.panel.auto.remove();
-			if (this._parent.keyname.text=='' || this._parent.keyname.text==undefined) { 
-				delete getAttrArray()[this._parent._name];
-				removeMovieClip(this._parent);
-				_root.tagcount-=1;
-			} else {
-				this._parent.renameKey();
-			}
-		};
-		setTabOrder();
-		Selection.setFocus(_root.panel.properties.key.keyname); Selection.setSelection(0,3);
-		if (!_root.panel.auto) { _root.panel.attachMovie("auto","auto",75); }
-		_root.panel.auto.redraw();
-	}
-	
-	// getAttrArray		- return a reference to the current attribute array
-	// getAttrArrayName	- return the variable name for the current attribute array
-	// markAttrUnclean	- attributes have been changed, so mark as unclean
-	
-	function getAttrArray() {
-		switch (_root.currentproptype) {
-			case 'point':	return _root.ws.path[_root.pointselected][4]; break;
-			case 'POI':		return _root.map.pois[poiselected].attr; break;
-			case 'way':		return _root.ws.attr; break;
-		}
-	}
-
-	function getAttrArrayName() {
-		switch (_root.currentproptype) {
-			case 'point':	return "_root.map.ways."+wayselected+".path."+pointselected+".4"; break;
-			case 'POI':		return "_root.map.pois."+poiselected+".attr"; break;
-			case 'way':		return "_root.map.ways."+wayselected+".attr"; break;
-		}
-	}
-
-	function markAttrUnclean(redrawflag) {
-		markClean(false);
-		switch (currentproptype) {
-			case 'point':	_root.ws.clean=false; break;
-			case 'POI':		_root.map.pois[poiselected].clean=false; break;
-			case 'way':		if (redrawflag) { _root.ws.redraw(); }
-							_root.ws.clean=false; break;
-		}
-	}
-	
-	// repeatAttributes - paste in last set of attributes
-	
-	function repeatAttributes() {
-		var i,z;
-		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
-		switch (savedtype) {
-			case 'point':	z=_root.map.ways[savedway].path[savedpoint][4]; break;
-			case 'POI':		z=_root.map.pois[savedpoi].attr; _root.map.pois[poiselected].attr=new Array(); break;
-			case 'way':		z=_root.map.ways[savedway].attr; break;
-		}
-		for (i in z) {
-			if (Key.isDown(Key.SHIFT) && (i=='name' || i=='ref') || i=='created_by') {
-				// ignore name and ref if SHIFT pressed
-			} else {
-				switch (savedtype) {
-					case 'point':	j=_root.map.ways[savedway].path[savedpoint][4][i]; break;
-					case 'POI':		j=_root.map.pois[savedpoi].attr[i]; break;
-					case 'way':		j=_root.map.ways[savedway].attr[i]; break;
-				}
-				getAttrArray()[i]=j;
-				markAttrUnclean(true);
-			}
-		}
-		populatePropertyWindow(_root.currentproptype,_root.currentstartat,true);
-	}
-	
-	// textChanged			- listener marks way as dirty when any change made
-
-	function textChanged() { 
-		if (Selection.getFocus()=='_level0.panel.properties.key.keyname' && 
-		   (_root.panel.properties.key.keyname.text=='+' ||
-		    _root.panel.properties.key.keyname.text=='=')) {
-			// annoying workaround when user has pressed '+'= and FP
-			// automatically uses it as the name of the new key...
-			_root.panel.properties.key.keyname.text='key';
-			_root.panel.properties.key.keyname.setTextFormat(boldSmall);
-			_root.panel.properties.key.keyname.setNewTextFormat(boldSmall);
-			Selection.setFocus(_root.panel.properties.key.keyname); Selection.setSelection(0,3);
-		}
-		markAttrUnclean(false);
-		if (!_root.panel.auto) { _root.panel.attachMovie("auto","auto",75); }
-		_root.panel.auto.redraw();
-	}
-	
-	// setTabOrder		- fix order for tabbing between fields
-
-	function setTabOrder() {
-		for (el in _root.panel.properties) {
-			o=(_root.panel.properties[el]._x/190*4+_root.panel.properties[el]._y/19)*2;
-			_root.panel.properties[el].keyname.tabIndex=o;
-			_root.panel.properties[el].value.tabIndex=o+1;
-		}
-	}
-

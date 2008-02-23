@@ -35,7 +35,8 @@
 			_root.pointselected=this._name;
 			_root.map.ways[this.way].highlight();
 			setTypeText("Point",this.node);
-			populatePropertyWindow('point');
+			_root.panel.properties.init('point');
+//			populatePropertyWindow('point');
 			setTooltip("point selected\n(shift-click point to\nstart new line)",0);
 		}
 	};

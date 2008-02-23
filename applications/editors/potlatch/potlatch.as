@@ -115,7 +115,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.7b";	// current version
+	var signature="Potlatch 0.7c development";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -154,7 +154,7 @@
 
 	_root.panel.attachMovie("newattr","i_newattr",33);
 	with (_root.panel.i_newattr) { _x=690; _y=85; };
-	_root.panel.i_newattr.onRelease =function() { enterNewAttribute(); };
+	_root.panel.i_newattr.onRelease =function() { _root.panel.properties.enterNewAttribute(); };
 	_root.panel.i_newattr.onRollOver=function() { setFloater("Add a new tag"); };
 	_root.panel.i_newattr.onRollOut =function() { clearFloater(); };
 
@@ -277,7 +277,7 @@
 
 	// Text fields
 
-	populatePropertyWindow('');	
+//	populatePropertyWindow('');	
 
 	_root.createTextField('waysloading',22,580,5,150,20);
 	with (_root.waysloading) { text="loading ways"; setTextFormat(plainSmall); type='dynamic'; _visible=false; };
@@ -291,12 +291,9 @@
 	_root.panel.createTextField('t_details',24,5,23,220,20);
 	with (_root.panel.t_details) { text=signature; setTextFormat(plainText); };
 	
-	_root.panel.createEmptyMovieClip("properties",50);
-	with (_root.panel.properties) { _x=110; _y=25; };
-
-	// TextField listener
-	textfieldListener=new Object();
-	textfieldListener.onChanged=function() { textChanged(); };
+//	// TextField listener
+//	textfieldListener=new Object();
+//	textfieldListener.onChanged=function() { textChanged(); };
 
 	// Interaction with responder script
 	var loaderWaiting=false;
@@ -335,6 +332,10 @@
 	// Start
 
 	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
+
+//	_root.panel.createEmptyMovieClip("properties",50);
+	_root.panel.attachMovie("propwindow","properties",50);
+	with (_root.panel.properties) { _x=110; _y=25; };
 
 	_root.panel.attachMovie("menu","presetmenu",60);
 	_root.panel.presetmenu.init(141,5,1,presetnames['way'][presetselected],'Choose from a menu of preset tags describing the way',setAttributesFromPreset,151);
@@ -484,7 +485,8 @@
 				_root.newnodeid--;
 				if (_root.pointselected>-2) {
 					setTypeText("Way",_root.wayselected);
-					populatePropertyWindow('way');
+//					populatePropertyWindow('way');
+					_root.panel.properties.init('way');
 				}
 				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
 				restartElastic();
@@ -617,7 +619,7 @@
 			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case 167:		cyclePresetIcon(); break;							// '¤' - cycle presets
-			case 187:		enterNewAttribute(); break;							// '+' - add new attribute
+			case 187:		_root.panel.properties.enterNewAttribute(); break;	// '+' - add new attribute
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
 			case 192:		cycleStacked(); break;								// '`' - cycle between stacked ways
 			case 76:		showPosition(); break;								// L - show latitude/longitude
@@ -776,7 +778,8 @@
 
 		// ----	Do we need to redraw the property window? (workaround)
 		if (_root.redopropertywindow) {
-			populatePropertyWindow(_root.currentproptype,_root.currentstartat);
+			_root.panel.properties.init(_root.panel.properties.proptype);
+//			populatePropertyWindow(_root.currentproptype,_root.currentstartat);
 			_root.redopropertywindow=0;
 		}
 
@@ -839,7 +842,9 @@
 		_root.panel.i_direction._alpha=50;
 		clearTooltip();
 		setTypeText("","");
-		populatePropertyWindow('');
+
+		_root.panel.properties.init('');
+//		populatePropertyWindow('');
 		_root.panel.presetmenu._visible=false;
 		_root.panel.i_preset._visible=false;
 		clearPropertyWindow();

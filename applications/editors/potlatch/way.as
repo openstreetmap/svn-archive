@@ -313,7 +313,8 @@
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
 		setTypeText("Way",this._name);
-		populatePropertyWindow('way');
+//		populatePropertyWindow('way');
+		_root.panel.properties.init('way');
 	};
 	
 	OSMWay.prototype.highlight=function() {
@@ -405,7 +406,10 @@
 		if (otherway.locked) { this.locked=true; }
 		removeMovieClip(_root.map.areas[otherway._name]);
 		removeMovieClip(otherway);
-		if (this._name==_root.wayselected) { populatePropertyWindow(_root.currentproptype,_root.currentstartat,true); }
+		if (this._name==_root.wayselected) { 
+			_root.panel.properties.init(_root.panel.properties.proptype);
+//			populatePropertyWindow(_root.currentproptype,_root.currentstartat,true);
+		}
 	};
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
 		if (topos==0) { if (this.path[0					][2]==otherway.path[srcpt][2]) { return; } }	// don't add duplicate points

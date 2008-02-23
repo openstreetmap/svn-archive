@@ -1,20 +1,11 @@
 
 	# ----- Export symbols
 
-	#		Empty movie-clip for ways
+	#		Empty movie-clips for prototypes
 	
-	$ec=new SWF::Sprite();
-	$ec->nextFrame();
-	$m->addExport($ec,"way");
-
-	#		Empty movie-clip for key/value pairs
-	
-	$ec=new SWF::Sprite();
-	$ec->nextFrame();
-	$m->addExport($ec,"keyvalue");
-
-	#		Empty movie-clip for UI components
-
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"way");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"keyvalue");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"propwindow");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"auto");

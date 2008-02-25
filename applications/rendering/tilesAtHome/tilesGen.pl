@@ -1283,7 +1283,7 @@ sub svg2png
     my $Cmd = "";
     
     my $Left = $X1;
-    my $Top = $ImageHeight - $Y1 - ($Y2 - $Y1);
+    my $Top = $ImageHeight - $Y2;
     my $Width = $X2 - $X1;
     my $Height = $Y2 - $Y1;
     

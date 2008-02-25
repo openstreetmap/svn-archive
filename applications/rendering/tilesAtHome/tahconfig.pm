@@ -331,7 +331,7 @@ sub CheckConfig
         }
 
     }
-    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers" unless defined($Config->{"UploadConfiguredLayersOnly"});
+    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers\n" unless defined($Config->{"UploadConfiguredLayersOnly"});
     return %EnvironmentInfo;
 
 }

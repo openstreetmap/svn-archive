@@ -59,12 +59,38 @@ my($key_articles, $key_subcats) = $c->readcat("Keys");
 my($tag_articles, $tag_subcats) = $c->readcat("Tags");
 
 #parse map feature templates to get approved pages
-my @approvedKeySections = ("highway","cycleway","tracktype", "waterway", "railway","aeroway",
-                           "aerialway", "power", "man_made","leisure", "amenity", "shop","tourism",
-                           "historic", "landuse","military", "natural", "route",
-                           "boundary", "sport","abutters", "accessories", "properties",
-                           "restrictions", "name","references", "place", "annotation",
-                           " editor_keys");
+my @approvedKeySections = (
+"abutters",
+"accessories",
+"aerialway",
+"aeroway",
+"amenity",
+"annotation",
+"boundary",
+"bridge",
+"cycleway",
+"editor_keys"
+"highway",
+"historic",
+"landuse",
+"leisure",
+"man_made",
+"military",
+"name",
+"natural",
+"place",
+"power",
+"properties",
+"railway",
+"references",
+"restrictions",
+"route",
+"shop",
+"sport",
+"tourism",
+"tracktype",
+"waterway",
+);
 #print "get list of \"approved\" tags...\n";
 #my $Approved_tags = GetApprovedTags();
 	

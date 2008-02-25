@@ -180,12 +180,19 @@ sub upload
     my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
     my $Layer;
-    foreach my $layer(split(/,/, $Config{Layers}))
+    if ($Config{UploadConfiguredLayersOnly} == 1)
     {
-        $Layer=$Config{"Layer.$layer.Prefix"} if ($File =~ /$Config{"Layer.$layer.Prefix"}/);
-        ## DEBUG print "\n.$Layer.\n.$layer.\n";
+        foreach my $layer(split(/,/, $Config{Layers}))
+        {
+            $Layer=$Config{"Layer.$layer.Prefix"} if ($File =~ /$Config{"Layer.$layer.Prefix"}/);
+            print "\n.$Layer.\n.$layer.\n" if $Config{Debug};
+        }
     }
-    
+    else
+    {
+        $File=~m{.*_([^_]+)(_tileset)*\.zip}x;
+        $Layer=$1;
+    }
     if((! $Config{UploadToDirectory}) or (! -d $Config{"UploadTargetDirectory"}))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);

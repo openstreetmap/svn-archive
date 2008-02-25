@@ -135,6 +135,7 @@ sub ApplyConfigLogic
     $Config->{"DownloadTimeout"} = "1800" unless defined($Config->{"DownloadTimeout"});
 
     $Config->{"UploadToDirectory"} = 0 unless (defined($Config->{"UploadTargetDirectory"}) and (-d $Config->{"UploadTargetDirectory"}));
+
 }
 
 #--------------------------------------------------------------------------
@@ -330,7 +331,7 @@ sub CheckConfig
         }
 
     }
-
+    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers" unless defined($Config->{"UploadConfiguredLayersOnly"});
     return %EnvironmentInfo;
 
 }

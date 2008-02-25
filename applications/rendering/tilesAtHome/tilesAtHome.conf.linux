@@ -44,6 +44,9 @@ DeleteZipFilesAfterUpload=0
 UploadToDirectory=0
 UploadTargetDirectory=/set/this/to/your/upload/directory
 
+# Upload configured layers only (used to be default behaviour of the client pre-r6978)
+UploadConfiguredLayersOnly=0
+
 ## Beziercurve hinting
 NoBezier=0  # Set to 1 if beziercurvehinting causes errors.
 

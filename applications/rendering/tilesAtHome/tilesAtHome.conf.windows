@@ -38,6 +38,8 @@ DeleteZipFilesAfterUpload=0
 UploadToDirectory=0
 UploadTargetDirectory=Z:\set\this\to\your\upload\directory
 
+# Upload configured layers only (used to be default behaviour of the client pre-r6978)
+UploadConfiguredLayersOnly=0
 
 #Upload layers when they are done? default: 0
 # set to 1, if you want to upload layers as they are done, instead of waiting for all

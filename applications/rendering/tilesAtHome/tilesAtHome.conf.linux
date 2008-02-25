@@ -45,6 +45,7 @@ UploadToDirectory=0
 UploadTargetDirectory=/set/this/to/your/upload/directory
 
 # Upload configured layers only (used to be default behaviour of the client pre-r6978)
+# new default is 0 to upload all zips from "uploadable"
 UploadConfiguredLayersOnly=0
 
 ## Beziercurve hinting

@@ -34,7 +34,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
@@ -62,9 +61,6 @@ public class MapView extends JComponent {
     
     public MapView() {
         new Navigator();
-        Position pos = new Position();
-        add(pos);
-        pos.setBounds(5,5, 200, 20);
 
         Meter meter = new Meter();
         add(meter);
@@ -242,27 +238,6 @@ public class MapView extends JComponent {
 
 	public void mouseMoved(MouseEvent e) {}
     }
-
-    private class Position extends JLabel implements MouseMotionListener {
-        Position() {
-            MapView.this.addMouseMotionListener(this);
-        }
-
-        private void updatePosition(Point p) {
-            ViewCoords vc = getPoint(p);
-            Coordinate coor = proj.viewToCoord(vc);
-            setText(format(COORDS, coor.getLatitude(), coor.getLongitude()));
-        }
-        
-        public void mouseDragged(MouseEvent e) {
-            updatePosition(e.getPoint());
-        }
-
-        public void mouseMoved(MouseEvent e) {
-            updatePosition(e.getPoint());
-        }
-    }
-
     
     private class Meter extends JComponent {
         
@@ -304,7 +279,6 @@ public class MapView extends JComponent {
         }
     }
 
-    private MessageFormat COORDS = new MessageFormat("{0,number,0.000000},{1,number,0.000000}");
     private MessageFormat METERS = new MessageFormat("{0,choice,0#{0,number,integer}m|1000<{1,number,0.00}km|10000<{1,number,0.0}km|100000<{1,number,integer}km}");
     
     private static String format(MessageFormat format, Object ... args) {

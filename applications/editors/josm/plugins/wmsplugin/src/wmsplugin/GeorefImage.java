@@ -34,6 +34,8 @@ public class GeorefImage implements Serializable {
 	}
 
 	public void paint(Graphics g, NavigatableComponent nc) {
+		if (image == null || min == null || max == null) return;
+
 		Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
 
 		if (!g.hitClip(minPt.x, maxPt.y,

@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Way;
@@ -69,7 +70,8 @@ public class SelectMode extends EditMode {
         if (prim instanceof Node) {
             dragged = Collections.singleton((Node)prim);
         } else {
-            dragged = ((Way)prim).getNodes();
+            // drag each node only once even when it is present several times on a way
+            dragged = new HashSet(((Way)prim).getNodes());
         }
         moveToken = new Object();
     }

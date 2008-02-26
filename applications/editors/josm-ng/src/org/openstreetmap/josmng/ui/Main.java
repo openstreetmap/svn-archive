@@ -20,9 +20,18 @@
 
 package org.openstreetmap.josmng.ui;
 
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
+import org.openstreetmap.josmng.ui.mode.SelectMode;
+import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
 
 /**
@@ -32,11 +41,46 @@ import org.openstreetmap.josmng.view.MapView;
 public class Main extends javax.swing.JFrame {
     public static Main main;
     
+    private ButtonGroup modeGroup = new ButtonGroup();
+    
     /** Creates new form Main */
     public Main() {
         main = this;
         initComponents();
+        modesBar.add(createModeButton(new SelectMode(mapView1)));
+
+        addStatusComponent(new Position(mapView1));
+
         setSize(800, 600);
+    }
+    
+    private static final Border BORDER = 
+        BorderFactory.createCompoundBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1,0,0,0,UIManager.getDefaults().getColor("control")),   // NOI18N
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0,0,1,1,UIManager.getDefaults().getColor("controlHighlight")),   // NOI18N
+                BorderFactory.createLineBorder(UIManager.getDefaults().getColor("controlDkShadow"))   // NOI18N
+            )
+        ),
+        BorderFactory.createEmptyBorder(0, 2, 0, 2)
+        );
+
+    
+    private void addStatusComponent(JComponent comp) {
+        comp.setBorder(BORDER);
+        statusBar.add(comp);
+    }
+    
+    private AbstractButton createModeButton(EditMode mode) {
+        JToggleButton button = new JToggleButton(mode);
+        button.setText("");
+        button.putClientProperty("hideActionText", Boolean.TRUE);
+//      String tooltip = (String)mode.getValue(Action.SHORT_DESCRIPTION);
+//	button.setToolTipText(tooltip);
+
+        modeGroup.add(button);
+        return button;
     }
     
     /** This method is called from within the constructor to
@@ -48,6 +92,9 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         mapView1 = new org.openstreetmap.josmng.view.MapView();
+        toolBar = new javax.swing.JToolBar();
+        modesBar = new javax.swing.JToolBar();
+        statusBar = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -58,6 +105,18 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(mapView1, java.awt.BorderLayout.CENTER);
+
+        toolBar.setRollover(true);
+        getContentPane().add(toolBar, java.awt.BorderLayout.PAGE_START);
+
+        modesBar.setFloatable(false);
+        modesBar.setOrientation(1);
+        modesBar.setRollover(true);
+        getContentPane().add(modesBar, java.awt.BorderLayout.LINE_START);
+
+        statusBar.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        statusBar.setLayout(new javax.swing.BoxLayout(statusBar, javax.swing.BoxLayout.LINE_AXIS));
+        getContentPane().add(statusBar, java.awt.BorderLayout.PAGE_END);
 
         jMenu1.setText("File");
 
@@ -110,6 +169,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private org.openstreetmap.josmng.view.MapView mapView1;
+    private javax.swing.JToolBar modesBar;
+    private javax.swing.JPanel statusBar;
+    private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
     
 }

@@ -26,6 +26,8 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Way;
@@ -44,6 +46,7 @@ public class SelectMode extends EditMode {
 
     public SelectMode(MapView view) {
         super("Select", view);
+        putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("/org/openstreetmap/josmng/ui/resources/select.png")));
     }
 
     protected @Override void entered() {}

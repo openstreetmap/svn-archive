@@ -65,8 +65,6 @@ public class MapView extends JComponent {
         Meter meter = new Meter();
         add(meter);
         meter.setBounds(5,25, 101, 101);
-
-        setEditMode(new SelectMode(this));
     }
 
     public void setEditMode(EditMode mode) {

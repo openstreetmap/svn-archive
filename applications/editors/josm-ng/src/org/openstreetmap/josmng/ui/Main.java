@@ -20,6 +20,7 @@
 
 package org.openstreetmap.josmng.ui;
 
+import java.awt.event.ActionEvent;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -48,7 +49,7 @@ public class Main extends javax.swing.JFrame {
         main = this;
         initComponents();
         modesBar.add(createModeButton(new SelectMode(mapView1)));
-
+        
         addStatusComponent(new Position(mapView1));
 
         setSize(800, 600);
@@ -80,6 +81,10 @@ public class Main extends javax.swing.JFrame {
 //	button.setToolTipText(tooltip);
 
         modeGroup.add(button);
+        if (modeGroup.getButtonCount() == 1) {
+            button.getModel().setSelected(true);
+            mode.actionPerformed(new ActionEvent(button, 0, ""));
+        }
         return button;
     }
     

@@ -38,7 +38,6 @@ import javax.swing.JComponent;
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
 import org.openstreetmap.josmng.osm.Node;
-import org.openstreetmap.josmng.ui.mode.SelectMode;
 
 /**
  *

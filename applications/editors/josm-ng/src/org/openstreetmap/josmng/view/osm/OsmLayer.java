@@ -61,9 +61,10 @@ public class OsmLayer extends EditableLayer {
 
     public @Override void paint(Graphics g) {
         Rectangle viewR = parent.screenToView(g.getClipBounds());
+        Collection<OsmPrimitive> sel = getSelection();
         
         for (View v : mapData.getViews(viewR, parent.getScaleFactor())) {
-            v.paint((Graphics2D)g.create(), parent);
+            v.paint((Graphics2D)g.create(), parent, sel.contains(v.getPrimitive()));
         }
     }
 

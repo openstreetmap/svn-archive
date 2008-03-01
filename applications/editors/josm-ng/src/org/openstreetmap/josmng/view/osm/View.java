@@ -32,6 +32,6 @@ import org.openstreetmap.josmng.view.MapView;
  */
 interface View<T extends OsmPrimitive> {
      public void resetStyle();
-     public void paint(Graphics2D g, MapView parent);
+     public void paint(Graphics2D g, MapView parent, boolean selected);
      public T getPrimitive();
 }

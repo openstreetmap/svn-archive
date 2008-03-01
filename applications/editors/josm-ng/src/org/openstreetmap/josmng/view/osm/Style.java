@@ -56,7 +56,7 @@ import org.openstreetmap.josmng.view.MapView;
  * @author nenik
  */
 abstract class Style<V extends View> {    
-    public abstract void paint(Graphics2D g, MapView parent, V view);
+    public abstract void paint(Graphics2D g, MapView parent, V view, boolean selected);
     
     private static Map<String,Style> rules;
     
@@ -94,7 +94,12 @@ abstract class Style<V extends View> {
     private abstract static class AbstractWayStyle extends Style<ViewWay> {
         public abstract void setup(Graphics2D g, MapView parent, ViewWay w);
 
-        public @Override void paint(Graphics2D g, MapView parent, ViewWay w) {
+        public @Override void paint(Graphics2D g, MapView parent, ViewWay w, boolean selected) {
+            if (selected) {
+                drawSelected(g, parent, w);
+                return;
+            }
+
             int scale = parent.getScaleFactor();
             int size = w.getSize();
             if (size < scale) return;
@@ -103,7 +108,7 @@ abstract class Style<V extends View> {
 
             List<ViewNode> nodes = w.getNodes();
             if (nodes.size() < 2) return;
-            
+
             if (size < scale*5) {
                 Point first = parent.getPoint(nodes.get(0));
                 Point last = parent.getPoint(nodes.get(nodes.size()-1));
@@ -112,16 +117,35 @@ abstract class Style<V extends View> {
             }
 
             Polygon poly = new Polygon();
-            Iterator<ViewNode> it = nodes.iterator();
-            Point lastP = parent.getPoint(it.next());
-            poly.addPoint(lastP.x, lastP.y);
-            while(it.hasNext()) {
-                Point p = parent.getPoint(it.next());
-                if (!it.hasNext() || lastP.distanceSq(p) > 25) {
-                    poly.addPoint(p.x, p.y);
+                Iterator<ViewNode> it = nodes.iterator();
+                Point lastP = parent.getPoint(it.next());
+                poly.addPoint(lastP.x, lastP.y);
+                while(it.hasNext()) {
+                    Point p = parent.getPoint(it.next());
+                    if (!it.hasNext() || lastP.distanceSq(p) > 25) {
+                        poly.addPoint(p.x, p.y);
+                    }
                 }
-            }
             g.drawPolyline(poly.xpoints, poly.ypoints, poly.npoints);
+        }
+
+        private static final double PHI = Math.toRadians(20);
+        
+        private void drawSelected(Graphics2D g, MapView parent, ViewWay w) {
+            g.setColor(Color.WHITE);
+        
+            Point lastP = null;
+            for (ViewNode vn : w.getNodes()) {
+                Point p = parent.getPoint(vn);
+                if (lastP != null) { // draw a segment
+                    g.drawLine(lastP.x, lastP.y, p.x, p.y);
+                    double t = Math.atan2(p.y-lastP.y, p.x-lastP.x) + Math.PI;
+                    g.drawLine(p.x,p.y, (int)(p.x + 10*Math.cos(t-PHI)), (int)(p.y + 10*Math.sin(t-PHI)));
+                    g.drawLine(p.x,p.y, (int)(p.x + 10*Math.cos(t+PHI)), (int)(p.y + 10*Math.sin(t+PHI)));
+                }
+                lastP = p;
+            }
+
         }
     }
 
@@ -144,7 +168,7 @@ abstract class Style<V extends View> {
             }
         }
 
-        public @Override void paint(Graphics2D g, MapView parent, ViewWay w) {
+        public @Override void paint(Graphics2D g, MapView parent, ViewWay w, boolean selected) {
             g.setColor(color);
             Polygon poly = new Polygon();
             for (ViewNode vn : w.getNodes()) {
@@ -152,7 +176,7 @@ abstract class Style<V extends View> {
                 poly.addPoint(p.x, p.y);
             }
             g.fillPolygon(poly);
-            g.setColor(color.darker());
+            g.setColor(selected ? Color.WHITE : color.darker());
             g.drawPolygon(poly);
             paintIcon(g, parent, w);
         }
@@ -177,8 +201,8 @@ abstract class Style<V extends View> {
             this.thin = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
         }
 
-        public @Override void paint(Graphics2D g, MapView parent, ViewWay w) {
-            if (parent.getScaleFactor() < maxScale) super.paint(g, parent, w);
+        public @Override void paint(Graphics2D g, MapView parent, ViewWay w, boolean selected) {
+            if (parent.getScaleFactor() < maxScale) super.paint(g, parent, w, selected);
         }
         
         public @Override void setup(Graphics2D g, MapView parent, ViewWay w) {
@@ -230,23 +254,27 @@ abstract class Style<V extends View> {
             g.drawString(txt, p.x, p.y);
         }
 
-        private void paintIcon(Graphics2D g, MapView parent, ViewNode vn) {
+        private void paintIcon(Graphics2D g, MapView parent, ViewNode vn, boolean selected) {
             if (icon != null) {
                 Point p = parent.getPoint(vn);
                 p.x -= icon.getIconWidth()/2;
                 p.y -= icon.getIconHeight()/2;
                 
                 icon.paintIcon(null, g, p.x, p.y);
+                if (selected) {
+                    g.setColor(Color.WHITE);
+                    g.drawRect(p.x-2, p.y-2, icon.getIconWidth()+4, icon.getIconHeight()+4);
+                }
             }
         }
         
-        private void paintMark(Graphics2D g, MapView parent, ViewNode vn) {
+        private void paintMark(Graphics2D g, MapView parent, ViewNode vn, boolean selected) {
             int scale = parent.getScaleFactor();
             boolean big = vn.isTagged();
             Point p = parent.getPoint(vn);
             
             if (!big && scale > 1000) return;
-            g.setColor(Color.RED);
+            g.setColor(selected ? Color.WHITE : Color.RED);
             if (big && scale < 2000) {
                 g.drawRect(p.x-2, p.y-2, 4, 4);
                 g.drawRect(p.x, p.y, 0, 0);
@@ -255,14 +283,14 @@ abstract class Style<V extends View> {
             }
         }
 
-        public @Override void paint(Graphics2D g, MapView parent, ViewNode vn) {
+        public @Override void paint(Graphics2D g, MapView parent, ViewNode vn, boolean selected) {
             int scale = parent.getScaleFactor();
             if (scale > maxScale) return;
             
             if (icon != null) {
-                paintIcon(g, parent, vn);
+                paintIcon(g, parent, vn, selected);
             } else {
-                paintMark(g, parent, vn);
+                paintMark(g, parent, vn, selected);
             }
             if (annotate) paintName(g, parent, vn);
         }

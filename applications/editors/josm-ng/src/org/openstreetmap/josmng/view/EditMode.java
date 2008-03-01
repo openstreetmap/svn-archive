@@ -83,6 +83,10 @@ public abstract class EditMode extends AbstractAction implements MouseListener, 
         return false;
     }
     
+    protected final EditableLayer getLayer() {
+        return layer;
+    }
+    
     protected final DataSet getData() {
         return layer.getDataSet();
     }

@@ -68,7 +68,10 @@ public class SelectMode extends EditMode {
         pressPoint = e.getPoint();
         OsmPrimitive prim = getNearestPrimitive(pressPoint, null);
         
-        if (prim == null) return;
+        if (prim == null) {
+            getLayer().setSelection(Collections.<OsmPrimitive>emptyList());
+            return;
+        }
         
         if (prim instanceof Node) {
             dragged = Collections.singleton((Node)prim);
@@ -76,6 +79,7 @@ public class SelectMode extends EditMode {
             // drag each node only once even when it is present several times on a way
             dragged = new HashSet(((Way)prim).getNodes());
         }
+        getLayer().setSelection(Collections.singleton(prim));
         moveToken = new Object();
     }
     

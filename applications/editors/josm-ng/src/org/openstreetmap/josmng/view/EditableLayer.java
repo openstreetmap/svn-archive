@@ -22,7 +22,11 @@ package org.openstreetmap.josmng.view;
 
 import java.awt.Point;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import org.openstreetmap.josmng.osm.Node;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.utils.UndoHelper;
 
 /**
@@ -35,6 +39,8 @@ import org.openstreetmap.josmng.utils.UndoHelper;
  * @author nenik
  */
 public abstract class EditableLayer extends Layer {
+    
+    private Collection<OsmPrimitive> selection = new LinkedHashSet<OsmPrimitive>();
 
     protected EditableLayer(MapView parent) {
         super(parent);
@@ -44,4 +50,22 @@ public abstract class EditableLayer extends Layer {
 
     public abstract Node getNearestNode(Point screenCoords);
 
+    public Collection<OsmPrimitive> getSelection() {
+        return Collections.unmodifiableCollection(selection);
+    }
+    
+    public void setSelection(Collection<OsmPrimitive> newSelection) {
+        selection.clear();
+        selection.addAll(newSelection);
+        // XXX: notify the change
+    }
+    
+    public void toggleSelected(OsmPrimitive prim) {
+        if (selection.contains(prim)) {
+            selection.remove(prim);
+        } else {
+            selection.add(prim);
+        }
+    }
+    
 }

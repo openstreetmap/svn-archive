@@ -21,6 +21,8 @@
 package org.openstreetmap.josmng.ui;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -28,12 +30,15 @@ import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
+import org.openstreetmap.josmng.osm.DataSet;
+import org.openstreetmap.josmng.osm.io.OsmReader;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
 import org.openstreetmap.josmng.ui.mode.SelectMode;
 import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
+import org.openstreetmap.josmng.view.osm.OsmLayer;
 
 /**
  *
@@ -157,12 +162,18 @@ public class Main extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+    public static void main(String args[]) throws Exception {
+        java.awt.EventQueue.invokeAndWait(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
             }
         });
+        
+        if (args.length == 1 && new File(args[0]).exists()) {
+            DataSet ds = OsmReader.parse(new FileInputStream(args[0]));
+            MapView view = Main.main.mapView1;
+            view.addLayer(new OsmLayer(view, args[0], ds));
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

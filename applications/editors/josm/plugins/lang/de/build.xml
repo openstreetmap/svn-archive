@@ -7,7 +7,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="../josm/dist/josm-custom.jar" destdir="bin" />
+		<javac srcdir="src" classpath="../../../core/dist/josm-custom.jar" destdir="bin" />
 		<copy file="src/org/openstreetmap/josm/i18n.properties" tofile="bin/org/openstreetmap/josm/i18n.properties" />
 	</target>
 	
@@ -29,7 +29,7 @@
 
 	<target name="find">
 		<exec executable="find" output="alljava.txt">
-			<arg line="../josm/src ../ -name '*.java'"/>
+			<arg line="../../../core/src ../ -name '*.java'"/>
 		</exec>
 	</target>
 	

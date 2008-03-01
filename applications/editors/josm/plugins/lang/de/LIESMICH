@@ -1,21 +1,33 @@
 Bauen geht wie folgt:
 
+Variante 1 - per Gesamt-Checkout
+================================
 mkdir buildme
 cd buildme
-svn co http://svn.openstreetmap.org/applications/editors/josm/plugins/lang/de/
+svn co http://svn.openstreetmap.org/applications/editors/josm
+cd core; ant
+cd ../plugins/lang/de
+  # Achtung: Das Plugin wird gleich ohne Rückfrage nach ~/.josm/plugins/ 
+  # installiert!!
+ant
+  # Nun kann man die de.po datei verändern. z.B. mit kbabel
+  # Anschliessend wieder bauen mit
+ant
+
+
+Variante 2 - nur die nötigen Teile auschecken
+=============================================
+mkdir buildme
+cd buildme
+svn co http://svn.openstreetmap.org/applications/editors/josm/plugins/lang/de/ plugins/lang/de
 svn co http://josm.openstreetmap.de/svn/trunk
-ln -s trunk josm
-cd josm
+ln -s trunk core
+cd core
 ant
-cd de
-
-Achtung: Das Plugin wird gleich ohne Rückfrage nach ~/.josm/plugins/ 
-installiert!!
-
+cd ../plugins/lang/de
+  # Achtung: Das Plugin wird gleich ohne Rückfrage nach ~/.josm/plugins/ 
+  # installiert!!
 ant
-
-Nun kann man die de.po datei verändern. z.B. mit kbabel
-
-Anschliessend wieder bauen mit
+  # Nun kann man die de.po datei verändern. z.B. mit kbabel
+  # Anschliessend wieder bauen mit
 ant
-

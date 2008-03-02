@@ -17,7 +17,7 @@
 # ...and then it needs to be 'included' within LocalSettings.php
 # OpenLayers.js and get_osm_url.js must also be placed in the extensions directory
 
-$wgExtensionFunctions[] = "wfslippymap";
+$wgExtensionFunctions[] = 'wfslippymap';
 
 $wgExtensionCredits['parserhook'][] = array(
 	'name' => 'OpenStreetMap Slippy Map',
@@ -50,34 +50,34 @@ function slippymap( $input ) {
 		}
 	}
 
-	$lat		= $params["lat"];
-	$lon		= $params["lon"];
-	$zoom		= $params["z"];
-	$width		= $params["w"];
-	$height		= $params["h"];
-	$layer		= $params["layer"];
+	$lat		= $params['lat'];
+	$lon		= $params['lon'];
+	$zoom		= $params['z'];
+	$width		= $params['w'];
+	$height		= $params['h'];
+	$layer		= $params['layer'];
 
 	$error="";
 
 	//default values (meaning these parameters can be missed out)
-	if ($width=="")		$width ="450"; 
-	if ($height=="")	$height="320"; 
-	if ($layer=="")		$layer="mapnik"; 
+	if ($width=='')		$width ='450'; 
+	if ($height=='')	$height='320'; 
+	if ($layer=='')		$layer='mapnik'; 
 
-	if ($zoom=="")		$zoom = $params["zoom"]; //see if they used 'zoom' rather than 'z' (and allow it)
+	if ($zoom=='')		$zoom = $params['zoom']; //see if they used 'zoom' rather than 'z' (and allow it)
 
 	//trim off the 'px' on the end of pixel measurement numbers (ignore if present)
-	if (substr($width,-2)=="px")	$width = substr($width,0,-2);
-	if (substr($height,-2)=="px")	$height = substr($height,0,-2);
+	if (substr($width,-2)=='px')	$width = substr($width,0,-2);
+	if (substr($height,-2)=='px')	$height = substr($height,0,-2);
 
 	//Validation of parameters values
-	if ($zoom=="") {
+	if ($zoom=='') {
 		$error = "missing z value (for the zoom level)";
-	} else if ($lat=="") {
+	} else if ($lat=='') {
 		$error = "missing lat value (for the lattitude)";
-	} else if ($lon=="") {
+	} else if ($lon=='') {
 		$error = "missing lon value (for the lattitude)";
-		if ($params["long"]!="") $error = "Please use 'lon' instead of 'long' (parameter was renamed)";
+		if ($params['long']!='') $error = "Please use 'lon' instead of 'long' (parameter was renamed)";
 	} else if (!is_numeric($width)) {
 		$error = "width (w) value '$width' is not a valid integer";
 	} else if (!is_numeric($height)) {
@@ -108,9 +108,9 @@ function slippymap( $input ) {
 		$error = "zoom (z) value cannot be less than zero";
 	} else if ($zoom==18) {
 		$error =	"zoom (z) value cannot be greater than 17. ".
-					"Note that this mediawiki extension hooks into the OpenStreetMap 'osmarender' layer ".
-					"which does not go beyond zoom level 17. The Mapnik layer available on ".
-					"openstreetmap.org, goes up to zoom level 18";
+				"Note that this mediawiki extension hooks into the OpenStreetMap 'osmarender' layer ".
+				"which does not go beyond zoom level 17. The Mapnik layer available on ".
+				"openstreetmap.org, goes up to zoom level 18";
 	} else if ($zoom>17) {
 		$error = "zoom (z) value cannot be greater than 17.";
 	} 
@@ -119,12 +119,12 @@ function slippymap( $input ) {
 	//*any* tile server URL for more flexibility, but that might be a security concern.
 
 	$layer = strtolower($layer);
-	$layerObjectDef = "";
-	if ($layer=="osmarender") {        
+	$layerObjectDef = '';
+	if ($layer=='osmarender') {        
 		$layerObjectDef = "OpenLayers.Layer.OSM.Osmarender(\"Osmarender\"); ";
-	} elseif ($layer=="mapnik") {
+	} elseif ($layer=='mapnik') {
 		$layerObjectDef = "OpenLayers.Layer.OSM.Mapnik(\"Mapnik\"); ";
-	} elseif ($layer=="maplint") {
+	} elseif ($layer=='maplint') {
 		$layerObjectDef = "OpenLayers.Layer.OSM.Maplint(\"Maplint\"); ";
 	} else {
 		$error = "Invalid 'layer' value '" . htmlspecialchars($layer) . "'";
@@ -133,7 +133,7 @@ function slippymap( $input ) {
 
 	if ($error!="") {
 		//Something was wrong. Spew the error message and input text.
-		$output  = "";
+		$output  = '';
 		$output .= "<FONT COLOR=\"RED\"><B>map error:</B> " . $error . "</FONT><BR>";
 		$output .= htmlspecialchars($input);
 	} else {
@@ -143,7 +143,7 @@ function slippymap( $input ) {
 		//There are other ways of fixing this, but not for MediaWiki v4
 		//(See http://www.mediawiki.org/wiki/Manual:Tag_extensions#How_can_I_avoid_modification_of_my_extension.27s_HTML_output.3F)
 
-		$output  = "";
+		$output  = '';
 		$output .= "<!-- bring in the OpenLayers javascript library -->";
 		$output .= "<script src=\"http://openlayers.org/api/OpenLayers.js\"></script> ";
 

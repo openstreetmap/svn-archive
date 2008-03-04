@@ -251,7 +251,10 @@ class ViewData {
         }
 
         public void primtivesRemoved(Collection<? extends OsmPrimitive> removed) {
+            Set<OsmPrimitive> sel = new LinkedHashSet<OsmPrimitive>(view.getSelection());
+            
             for (OsmPrimitive prim : removed) {
+                sel.remove(prim);
                 if (prim instanceof Node) {
                     nodes.remove(getViewForNode((Node)prim));
                 } else if (prim instanceof Way) {
@@ -260,6 +263,7 @@ class ViewData {
                     throw new UnsupportedOperationException("Not supported yet.");
                 }
             }
+            view.setSelection(sel);
             fireChange();
         }
 

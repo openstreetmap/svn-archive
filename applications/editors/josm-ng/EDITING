@@ -1,0 +1,46 @@
+Completly modeless? :
+
+JOSM has 4 modes:
+A. Zoom
+B. Select (drag-move, shift=add, ctrl=remove, questionable rotate)
+C. Add node (Shift=no-connect, Alt=new way, Ctrl=don't reuse node)
+D. Delete (delete all, way only, all refering, delete way segment)
+
+User actions necessary to cover:
+1. Zoom
+2. Select, Select group, add to selection
+3. Move node/way/selection
+4. Add node (alone, extend way, extend as new, reuse node)
+5. Delete (node from way, way)
+
+
+UI mapping:
+* 1. Zoom - mouse wheel only (with ',' and '.' keys as zoom in/out at cursor)
+* 2. Select:
+*   Click on node/way - replace select
+*   Shift-Drag - area select (both included and crossed)
+*   Ctrl-click - toggle presence in selection
+* 3a. Move node:
+*   Drag with initial click on node
+* 3b. Move way:
+*   Drag with initial click on a way
+* 3c. Move selection:
+*   Drag with initial click on any selection member
+*  4a. Create lone node:
+*    Alt-click with empty selection on free space
+* 4b. Extend way:
+*   Alt-click on free space or way (injects node into way) with current
+*   way selected.
+*  4c. Extend as new way:
+*    Click on node to select it, then as 4b
+* 4d. extend way with node reuse:
+*   Alt-click on existing node
+  5.  Deletion handled as action, not mode:
+    Select objects to delete, invoke the action
+
+
+*) The rules (of least surprise salted with a grain of heurics) are:
+ - trying to extend the way by a node that is currently the last one
+   does nothing (allows drag)
+ - trying to extend the way by a node that is next-to-the-last does nothing
+   but reverts the last-used-node to the originally last node

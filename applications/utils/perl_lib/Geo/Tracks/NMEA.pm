@@ -106,10 +106,10 @@ sub read_track_NMEA($) {
 	    ZDA => 5,
 	    };
 	
-	if ( $type =~ m/RMC/ && ( $elem_count != 10 ) && ( $elem_count != 11 ) ){
-	    print "!!!!!!! ERROR $elem_count is wrong Number of elements(should be $elem_soll->{$type}): $full_line\n";
+	if ( ( $type =~ m/RMC/) && ( $elem_count != 10 ) && ( $elem_count != 11 ) ){
+	    print "!!!!!!! ERROR $elem_count is wrong Number of elements(should be $elem_soll->{$type} for $type): $full_line\n";
 	    next;
-	} elsif ( $type !~ m/GSV|GSA/ && $elem_count != $elem_soll->{$type} ){
+	} elsif ( $type !~ m/RMC|GSV|GSA/ && $elem_count != $elem_soll->{$type} ){
 	    print "!!!!!!! ERROR $elem_count is wrong Number of elements(should be $elem_soll->{$type}): $full_line\n";
 	    next;
 	}

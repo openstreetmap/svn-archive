@@ -22,6 +22,7 @@ package org.openstreetmap.josmng.view;
 
 import java.awt.Point;
 
+import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -50,6 +51,8 @@ public abstract class EditableLayer extends Layer {
 
     public abstract Node getNearestNode(Point screenCoords);
 
+    public abstract Collection<OsmPrimitive> getPrimitivesInRect(Rectangle screenRect, boolean contained);
+    
     public Collection<OsmPrimitive> getSelection() {
         return Collections.unmodifiableCollection(selection);
     }

@@ -61,6 +61,7 @@ public abstract class EditableLayer extends Layer {
         selection.clear();
         selection.addAll(newSelection);
         // XXX: notify the change
+        parent.repaint();
     }
     
     public void toggleSelected(OsmPrimitive prim) {

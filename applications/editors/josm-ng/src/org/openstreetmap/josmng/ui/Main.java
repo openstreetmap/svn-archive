@@ -56,6 +56,7 @@ public class Main extends javax.swing.JFrame {
         modesBar.add(createModeButton(new SelectMode(mapView1)));
         
         addStatusComponent(new Position(mapView1));
+        addStatusComponent(StatusBar.getDefault());
 
         setSize(800, 600);
     }

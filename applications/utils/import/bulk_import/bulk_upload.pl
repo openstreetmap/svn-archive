@@ -61,7 +61,7 @@ else
 }
 die $@ if $@;
 
-#$api ||= "http://www.openstreetmap.org/api/0.4";
+#$api ||= "http://www.openstreetmap.org/api/0.5";
 if( defined $api and $extract > 0 )
 {
   die "Can only supply one of -a and -x\n";
@@ -74,7 +74,7 @@ if( defined $api and $extract > 0 )
 
 if( not defined $api and $extract == 0)
 {
-  die "Must supply the URL of the API (-a) (standard is http://www.openstreetmap.org/api/0.4/)\n";
+  die "Must supply the URL of the API (-a) (standard is http://www.openstreetmap.org/api/0.5/)\n";
 }
 
 if( not defined $input )
@@ -396,7 +396,7 @@ B<bulk_upload.pl> -i input.osc -u username -p password [-a http://server/api/ver
   -u username                   username for server (required)
   -p password                   password for server (required)
   -a http://server/api/version  server to upload to (required)
-                                OSM is: http://www.openstreetmap.org/api/0.4/
+                                OSM is: http://www.openstreetmap.org/api/0.5/
   -f                            continue even if server returns an transient error
                                 (eg connection timeout)
   -ff                           continue no matter what
@@ -405,8 +405,8 @@ B<bulk_upload.pl> -i input.osc -u username -p password [-a http://server/api/ver
                                 useful if file is not sorted
   -t key=value                  Add the tag key=value to each uploaded object
   -x                            Extract output, display what hasn't been done
-  -3/-4                         Specify OSM v0.3/v0.4 files/API (default)
-  -5                            Specify OSM v0.5 (prototype) files/API
+  -3/-4                         Specify OSM v0.3/v0.4 files/API (obsolete)
+  -5                            Specify OSM v0.5 (default) files/API
     
 The cachefile is a file that tracks the usage of placeholders and what has
 been uploaded already, allowing aborted uploads to continue. Do not use an

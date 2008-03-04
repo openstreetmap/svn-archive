@@ -35,7 +35,7 @@ import org.openstreetmap.josmng.osm.io.OsmReader;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
-import org.openstreetmap.josmng.ui.mode.SelectMode;
+import org.openstreetmap.josmng.ui.mode.TheOnlyMode;
 import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
 import org.openstreetmap.josmng.view.osm.OsmLayer;
@@ -53,7 +53,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         main = this;
         initComponents();
-        modesBar.add(createModeButton(new SelectMode(mapView1)));
+        modesBar.add(createModeButton(new TheOnlyMode(mapView1)));
         
         addStatusComponent(new Position(mapView1));
         addStatusComponent(StatusBar.getDefault());

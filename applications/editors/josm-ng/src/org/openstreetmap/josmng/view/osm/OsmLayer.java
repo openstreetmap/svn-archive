@@ -26,6 +26,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.openstreetmap.josmng.view.*;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
@@ -94,6 +96,42 @@ public class OsmLayer extends EditableLayer {
             }
         }
         return minPrimitive == null ? null : minPrimitive.getPrimitive();
+    }
+    
+    public Collection<OsmPrimitive> getPrimitivesInRect(Rectangle r, boolean contained) {
+        Set<OsmPrimitive> s = new HashSet();
+        Rectangle viewR = parent.screenToView(r);
+
+        Collection<? extends View> near = mapData.getViews(viewR, 1);
+        for (View v : near) {
+            OsmPrimitive prim = v.getPrimitive();
+            
+            if (prim instanceof Node) { // should be in, but double check
+                Node n = (Node)prim;
+                ViewCoords vc = parent.getProjection().coordToView(n); // XXX can do better
+                Point onScreen = parent.getPoint(vc);
+                if (r.contains(onScreen)) s.add(prim);
+            } else if (prim instanceof Way) {
+                ViewWay vw = (ViewWay)v;
+                if (contained) {
+                    if (viewR.contains(vw.bbox)) s.add(prim);
+                } else { // at least touch a segment
+                    ViewNode last = null;
+                    for (ViewNode act : vw.getNodes()) {
+                        if (last != null) {
+                            if (viewR.intersectsLine(last.getIntLon(), last.getIntLat(), act.getIntLon(), act.getIntLat())) {
+                                s.add(prim);
+                                break;
+                            }
+                        }
+                        last = act;
+                    }
+                    
+                }
+            }
+        }
+        
+        return s;
     }
     
     /*

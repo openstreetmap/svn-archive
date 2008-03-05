@@ -67,7 +67,7 @@ public class TheOnlyMode extends EditMode {
     }
 
     protected @Override void entered() {
-        StatusBar.getDefault().setText("Alt - create node, Ctrl - Toggle select, Shift - block select");
+        StatusBar.getDefault().setText("Alt - create node, Shift - Toggle/block select");
     }
 
     protected @Override void exited() {
@@ -82,7 +82,13 @@ public class TheOnlyMode extends EditMode {
         if (e.getButton() != MouseEvent.BUTTON1) return;
         pressPoint = e.getPoint();
         if (modMask(e, SHIFT_DOWN_MASK)) {
-            mode = Mode.SELECT;
+            OsmPrimitive prim = getNearestPrimitive(pressPoint, null);
+            if (prim != null) {
+                mode = Mode.NONE;
+                getLayer().toggleSelected(prim);
+            } else {
+                mode = Mode.SELECT;
+            }
         } else if (modMask(e, 0)) { // no modifiers
             OsmPrimitive prim = getNearestPrimitive(pressPoint, null);
             clicked = prim;
@@ -93,12 +99,6 @@ public class TheOnlyMode extends EditMode {
                 mode = Mode.MOVE;
                 if (!getLayer().getSelection().contains(prim)) 
                     getLayer().setSelection(Collections.<OsmPrimitive>singleton(prim));
-            }
-        } else if (modMask(e, CTRL_DOWN_MASK)) {
-            mode = Mode.NONE;
-            OsmPrimitive prim = getNearestPrimitive(pressPoint, null);
-            if (prim != null) {
-                getLayer().toggleSelected(prim);
             }
         } else if (modMask(e, ALT_DOWN_MASK)) {
             mode = Mode.NODE;
@@ -127,8 +127,6 @@ System.err.println("Adding new node:");
             }
             
             }}, moveToken);
-            
-            
         }
 
         mapView.repaint();

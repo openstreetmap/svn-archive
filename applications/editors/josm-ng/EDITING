@@ -19,7 +19,7 @@ UI mapping:
 * 2. Select:
 *   Click on node/way - replace select
 *   Shift-Drag - area select (both included and crossed)
-*   Ctrl-click - toggle presence in selection
+*   Shift-click - toggle presence in selection
 * 3a. Move node:
 *   Drag with initial click on node
 * 3b. Move way:

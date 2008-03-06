@@ -99,3 +99,7 @@ XmlStarletMaxDepth=20000
 # Set to 1 if you want to t@h to try and autobackup and -restore your inkscape
 # preferences file
 AutoResetInkscapePrefs=0
+
+# Set this to 1 if you want to clear the stopfile.txt on program start. 
+# may unintentionally clear stopfile.txt when (accidentally) running 2 instances
+AutoResetStopfile=0

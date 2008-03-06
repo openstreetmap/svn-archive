@@ -99,6 +99,9 @@ my $dirent;
 # keep track of the server time for current job
 my $JobTime;
 
+# Handle the command-line
+my $Mode = shift();
+
 # Check the on disk image tiles havn't been corrupted.
 # these are flagfiles that tell the server certain metainfo through their filesize.
 if( -s "emptyland.png" != 67 )
@@ -129,12 +132,12 @@ if( -s "emptyland.png" != 67 or
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
 
-if( $ARGV[0] eq "loop" and -e "/dev/null" )
+if( $Mode eq "loop" and -e "/dev/null" )
 {
-    if( qx(svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
+    if( qx($Config{Subversion} status osmarender/*.x[ms]l 2>/dev/null) ne "" )
     {
         print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
-        system("svn status osmarender/*.x[ms]l");
+        system($Config{"Subversion"}." status osmarender/*.x[ms]l");
         cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4,$PID);
     }
 }
@@ -142,17 +145,20 @@ if( $ARGV[0] eq "loop" and -e "/dev/null" )
 # Create the working directory if necessary
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 
-# Handle the command-line
-my $Mode = shift();
-
 ## set all fault counters to 0;
 resetFault("fatal");
+resetFault("inkscape");
 resetFault("nodata");
 resetFault("nodataXAPI");
-resetFault("utf8");
-resetFault("inkscape");
 resetFault("renderer");
+resetFault("utf8");
 resetFault("upload");
+
+
+killafile("stopfile.txt") if $Config{AutoResetStopfile};
+
+
+## Start processing
 
 if($Mode eq "xy")
 {

@@ -86,8 +86,8 @@ case "$osmfile" in
 esac
 
 if [ "$title" == '' ]; then
-    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile $rulefile $OSMARENDER/osmarender.xsl > $mapfile 2>/dev/null
+    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile $rulefile $OSMARENDER/osmarender.xsl > $mapfile 
 else
-    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile --stringparam title="$title" $rulefile $OSMARENDER/osmarender.xsl > $mapfile 2>/dev/null
+    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile --stringparam title="$title" $rulefile $OSMARENDER/osmarender.xsl > $mapfile 
 fi
 

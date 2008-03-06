@@ -1,0 +1,12 @@
+This directory contains or/p, a Perl implementation of the popular
+Osmarender renderer. or/p is designed to be a drop-in replacement
+for the XSLT version of Osmarender, i.e. it processes the same rule
+files and the same data and emits the same output.
+
+Usage:
+
+perl orp.pl -r rulefile.xml datafile.osm
+
+will create "datafile.svg".
+
+Further comments in orp.pl.

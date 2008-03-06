@@ -154,6 +154,12 @@ foreach my $key(split(/,/, $debug_opts))
 my $rules = XML::XPath->new(filename => $rule_file); 
 my $data = get_variable("data", "");
 
+# if data file given in rule file, prepend rule file's path
+if ($rule_file =~ m!(.*)/(.*)! && defined($data))
+{
+    $data = $1."/".$data;
+}
+
 usage ("data file must be specified in rule or on command line")
     if (($data eq "") && (scalar(@ARGV) == 0));
 
@@ -824,18 +830,26 @@ sub make_selection
     my $e = $rulenode->getAttribute("e");
     my $s = $rulenode->getAttribute("s");
     my $rows_affected;
-    if ($e =~ /^(way|node)$/)
+
+    # make sure $e is either "way" or "node" or undefined (=selects both)
+    my $e_pieces = {};
+    $e_pieces->{$_}=1 foreach(split('\|', $e));
+    if ($e_pieces->{'way'} && $e_pieces->{'node'})
     {
-        # values "way" and "node" are ok
-    }
-    elsif ($e =~ /^(way\|node|node\|way|\*|)$/)
-    {
-        # values "way|node" and "node|way" and "*" represent no selection
         undef $e;
+    }
+    elsif ($e_pieces->{'way'})
+    {
+        $e = 'way';
     }
     else
     {
-        die('invalid value for e attribute in rule '.$rulenode->toString(1));
+        $e = 'node';
+    }
+    foreach(keys(%$e_pieces))
+    {
+        warn('ignored invalid value "'.$_.'"for e attribute in rule '.$rulenode->toString(1))
+            unless($_ eq "way" or $_ eq "node");
     }
 
     if ($k eq '*' or !defined($k))

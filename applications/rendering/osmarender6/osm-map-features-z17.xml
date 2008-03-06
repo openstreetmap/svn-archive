@@ -9,7 +9,7 @@
     xmlns:svg="http://www.w3.org/2000/svg"
     data="data.osm"
     svgBaseProfile="full"
-    scale="1"
+    scale=".6"
     symbolScale="1"
 	textAttenuation="14"
     minimumMapWidth="1"
@@ -139,7 +139,7 @@
 
 
 		<!-- ============================ Usernames on most regular roads ========================== -->
-        <rule e="way" k="osmarender:renderUser" v="~|yes">
+        <rule e="way" k="osmarender:renderUser" v="yes">
             <rule e="way" k="tunnel" v="~|no|false">    <!-- no names in tunnels -->
 				<rule e="way" k="junction" v="~"> <!-- no names on or along junctions -->
 					<rule e="way" k="highway" v="unclassified|residential|minor">

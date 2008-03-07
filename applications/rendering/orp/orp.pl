@@ -653,6 +653,57 @@ sub draw_marginalia
     $writer->endTag('g');
 }
         
+
+# -------------------------------------------------------------------
+# sub process_layer()
+#
+# The main workhorse.
+#
+# This is called recursively if you have nested rule elements.
+#
+# Parameters:
+# $rulenode - the XML::XPath node for the <rule> or <else> element
+#   being processed.
+# $depth -    the recursion depth.
+# $layer -    the OSM layer being processed (undef for no layer restriction)
+# $previous - the XML::XPath node for the previous <rule> of the
+#   same depth; used only for debug messages.
+# -------------------------------------------------------------------
+sub process_layer
+{
+
+    my ($layernode, $depth, $layer) = @_;
+
+
+    my $lname = $layernode->getAttribute("name");
+    my $opacity = $layernode->getAttribute("opacity");
+
+    printf("  layer: $lname\n");
+    
+    
+    $writer->startTag("g", "name" => "Layer-$lname", "opacity" => $opacity );
+
+    $selection->[$depth+1] = $selection->[$depth];
+
+    
+    foreach ($layernode->getChildNodes())
+    {
+        my $name = $_->getName();
+
+        if($name eq "rule")
+        {
+           process_rule($_, $depth+1, $layer);
+        }
+        elsif ($name ne "")
+        {
+         debug("'$name' id not allowed layer instruction '$lname' ignored");
+        }
+    }
+    $writer->endTag("g");
+
+}
+
+
 # -------------------------------------------------------------------
 # sub process_rule()
 #
@@ -745,7 +796,11 @@ sub process_rule
     foreach ($rulenode->getChildNodes())
     {
         my $name = $_->getName();
-        if ($name eq "rule")
+        if ($name eq "layer")
+        {
+              process_layer($_, $depth+1, $layer);
+        }
+        elsif ($name eq "rule")
         {
             # a nested rule; make recursive call.
             process_rule($_, $depth+1, $layer);

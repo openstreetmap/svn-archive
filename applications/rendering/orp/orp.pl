@@ -291,20 +291,20 @@ if ($rules->find("//rules/bounds"))
 
 # FIXME find bound element in .osm file and honour it
 
-my $scale = get_variable("scale", 1);
-my $symbolScale = get_variable("symbolScale", 1);
-my $projection = 1 / cos(($maxlat + $minlat) / 360 * pi);
-my $km = 0.0089928*$scale*10000*$projection;
-my $dataWidth = ($maxlon - $minlon) * 10000 * $scale;
-my $dataHeight = ($maxlat - $minlat) * 10000 * $scale * $projection;
-my $minimumMapWidth = get_variable("minimumMapWidth", undef);
-my $minimumMapHeight = get_variable("minimumMapHeight", undef);
-my $documentWidth = ($dataWidth > $minimumMapWidth * $km) ? $dataWidth : $minimumMapWidth * $km;
-my $documentHeight = ($dataHeight > $minimumMapHeight * $km) ? $dataHeight : $minimumMapHeight * $km;
+our $scale = get_variable("scale", 1);
+our $symbolScale = get_variable("symbolScale", 1);
+our $projection = 1 / cos(($maxlat + $minlat) / 360 * pi);
+our $km = 0.0089928*$scale*10000*$projection;
+our $dataWidth = ($maxlon - $minlon) * 10000 * $scale;
+our $dataHeight = ($maxlat - $minlat) * 10000 * $scale * $projection;
+our $minimumMapWidth = get_variable("minimumMapWidth", undef);
+our $minimumMapHeight = get_variable("minimumMapHeight", undef);
+our $documentWidth = ($dataWidth > $minimumMapWidth * $km) ? $dataWidth : $minimumMapWidth * $km;
+our $documentHeight = ($dataHeight > $minimumMapHeight * $km) ? $dataHeight : $minimumMapHeight * $km;
 
 # FIXME: what's the logic behind the following?
-my $width = ($documentWidth + $dataWidth) / 2;
-my $height = ($documentHeight + $dataHeight) / 2;
+our $width = ($documentWidth + $dataWidth) / 2;
+our $height = ($documentHeight + $dataHeight) / 2;
 
 # FIXME don't know what this is for but it seems to be unused
 my $style = get_variable("xml-stylesheet", undef);

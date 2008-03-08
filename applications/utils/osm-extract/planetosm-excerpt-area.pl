@@ -82,8 +82,8 @@ my $way_count = 0;
 my $rel_count = 0;
 my $line_count = 0;
 
-# We assume IDs to be up to 250 million
-my $nodes = Bit::Vector->new( 250 * 1000 * 1000 );
+# We assume IDs to be up to 500 million for nodes, 250 million for ways
+my $nodes = Bit::Vector->new( 500 * 1000 * 1000 );
 my $ways = Bit::Vector->new( 250 * 1000 * 1000 );
 
 # Process

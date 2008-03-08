@@ -51,6 +51,9 @@
 #   make several SVG "tiles" from it
 # - loads more
 #
+# Stuff supported by or/p but not by Osmarender/XSLT:
+# - gridSpacing variable (default 1000, grid spacing in metres)
+#
 # DATA STRUCTURE
 # --------------
 #
@@ -510,23 +513,26 @@ sub draw_map_decoration
     # draw a grid if required
     if (get_variable("showGrid") eq "yes")
     {
+        # grid spacing in metres.
+        my $gridSpacing = get_variable("gridSpacing", 1000);
+        my $gridSpacingPx = $km / 1000 * $gridSpacing;
         $writer->startTag('g', 
             'inkscape:groupmode' => 'layer',
             'inkscape:label' => 'Grid');
-        for (my $i=1; $i<$documentHeight/$km; $i++)
+        for (my $i=1; $i<$documentHeight / $gridSpacingPx; $i++)
         {
             $writer->emptyTag('line',
                 'id' => 'grid-hori-'.$i,
-                'x1' => '0px', 'y1' => sprintf('%dpx', $i * $km),
-                'x2' => $documentWidth.'px', 'y2' => sprintf('%dpx', $i * $km),
+                'x1' => '0px', 'y1' => sprintf('%dpx', $i * $gridSpacingPx),
+                'x2' => $documentWidth.'px', 'y2' => sprintf('%dpx', $i * $gridSpacingPx),
                 'class' => 'map-grid-line');
         }
-        for (my $i=1; $i<$documentWidth/$km; $i++)
+        for (my $i=1; $i<$documentWidth / $gridSpacingPx; $i++)
         {
             $writer->emptyTag('line',
                 'id' => 'grid-vert-'.$i,
-                'x1' => sprintf('%dpx', $i * $km), 'y1' => 0, 
-                'x2' => sprintf('%dpx', $i * $km), 'y2' => $documentHeight.'px',
+                'x1' => sprintf('%dpx', $i * $gridSpacingPx), 'y1' => 0, 
+                'x2' => sprintf('%dpx', $i * $gridSpacingPx), 'y2' => $documentHeight.'px',
                 'class' => 'map-grid-line');
         }
         $writer->endTag('g');

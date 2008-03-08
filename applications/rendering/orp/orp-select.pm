@@ -10,6 +10,12 @@
 # This module contains the implementation for the various styles of
 # object selection supported in <rule> elements.
 
+use strict;
+
+our $index_way_tags;
+our $index_node_tags;
+our $debug;
+
 sub select_elements_without_tags
 {
     my ($oldsel, $e) = @_;

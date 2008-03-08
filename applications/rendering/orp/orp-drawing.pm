@@ -13,6 +13,13 @@
 #require "orp-bobkare-area-center.pl";
 require "orp-bbox-area-center.pm";
 
+use strict;
+
+our $writer;
+our $projection;
+our $symbolScale;
+our $textAttenuation;
+
 # -------------------------------------------------------------------
 # sub draw_lines($rulenode, $layer, $selection)
 #

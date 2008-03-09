@@ -57,6 +57,9 @@
 				<area class='landuse-cemetery' />
 			</else>
         </rule>
+        <rule e="way" k="landuse" v="vineyard">
+            <area class='landuse-vineyard' />
+        </rule>
 
 
         <!-- Natural features -->
@@ -1801,6 +1804,12 @@
                 stroke-width: 0.2px;
             }
 
+            .landuse-vineyard {
+                fill: url(#vineyard-pattern);
+                stroke: #eeeeee;
+                stroke-width: 0.2px;
+            }
+
             .landuse-field {
                 fill: #bde3cb;
                 stroke: #6fc13d;
@@ -2346,6 +2355,254 @@
             <svg:path stroke="black" stroke-width="0.2" d="M1,1 L3,1 M2,0 L2,3 M6,6 L8,6 M7,5 L7,8"/>
         </svg:pattern>
                                                           
+        <svg:pattern patternUnits="userSpaceOnUse" width="104.8886" height="112.38862" patternTransform="scale(0.05,0.05)" id="vineyard-pattern">
+            <svg:rect fill="#d5f2e0" width="104.8886" height="112.38862" x="0" y="0" />
+          <g transform="translate(-35,-59.111382)"> 
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="105" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5156324" height="2.3059964" x="104.54168" y="95.686478" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="120" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5156324" height="2.3059964" x="91.572838" y="95.066086" />
+            <svg:path
+               style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#bf5bc3;stroke-width:1.79999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 102.72166,94.632518 C 102.72166,94.632518 102.51202,95.733107 102.51202,86.247077 C 102.51202,84.082553 104.39875,79.905587 96.851849,75.974911" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-1.4674523,16.770883)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-4.6119891,6.2890801)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(10.27217,-2.7252699)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-6.7083494,-4.4023583)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(4.1927244,9.8528923)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(2.096364,0.6289069)" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="75" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="90" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="110" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="125" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="80" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="95" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="130" y="94" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="85" y="94" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="120" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="75" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="110" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="125" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="80" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="115" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="130" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="85" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="100" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="60" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5156324" height="2.3059964" x="59.541687" y="133.18648" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="75" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5156324" height="2.3059964" x="46.572845" y="132.56609" />
+            <svg:path
+               style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#bf5bc3;stroke-width:1.79999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 57.72166,132.13252 C 57.72166,132.13252 57.51202,133.23311 57.51202,123.74708 C 57.51202,121.58255 59.39875,117.40559 51.85185,113.47491" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-46.467452,54.270883)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-49.611989,43.78908)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-34.72783,34.77473)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-51.708349,33.097642)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-40.807276,47.352892)" />
+            <svg:path
+               style="fill:#ffffff;fill-opacity:1;stroke:#bf5bc3;stroke-width:1.20000005;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M 106.28547 97.357788 A 5.4505372 5.4505372 0 1 1  95.384393,97.357788 A 5.4505372 5.4505372 0 1 1  106.28547 97.357788 z"
+               transform="translate(-42.903636,38.128907)" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="45" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="65" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="80" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="35" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="50" y="119" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="100" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="85" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="40" y="131.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="90" y="144" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="75" y="144" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="95" y="156.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="65" y="156.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="80" y="156.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="35" y="156.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="100" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="70" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="85" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="40" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="55" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="120" y="144" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="105" y="144" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="125" y="156.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="110" y="156.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="115" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="130" y="169" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="35" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="40" y="94" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="60" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="45" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="65" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="50" y="81.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="55" y="94" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="70" y="94" />
+            <svg:rect
+               style="fill:none;fill-opacity:0.92941176;stroke:none;stroke-width:0.22276554;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="104.87722" height="112.37724" x="35.011383" y="59.111382" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="135" y="69" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="135" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="135" y="106.5" />
+            <svg:rect
+               style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               width="2.5" height="2.5" x="135" y="144" />
+          </g>
+        </svg:pattern>
         <svg:marker
             id="bridge-casing-start"
             fill='none'

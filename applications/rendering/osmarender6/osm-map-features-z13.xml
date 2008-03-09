@@ -45,6 +45,9 @@
             <area class='landuse-cemetery' />
         </rule>
 
+        <rule e="way" k="landuse" v="vineyard">
+            <area class='landuse-vineyard' />
+        </rule>
 
         <!-- Natural features -->
         <rule e="way" k="natural" v="coastline">
@@ -1051,6 +1054,12 @@
 
             .landuse-cemetery {
                 fill: #bde3cb;
+                stroke: #eeeeee;
+                stroke-width: 0.2px;
+            }
+
+            .landuse-vineyard {
+                fill: #d5f2e0;
                 stroke: #eeeeee;
                 stroke-width: 0.2px;
             }

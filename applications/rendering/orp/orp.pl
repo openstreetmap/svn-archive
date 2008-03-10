@@ -814,9 +814,9 @@ sub process_rule
         elsif ($name eq "else")
         {
             # an "else" element. 
-            if ($previous_child->getName() ne "rule")
+            if (!defined($previous_child) || $previous_child->getName() ne "rule")
             {
-                debug("<else> not following <rule>, ignored: ".$_->toString(1));
+                debug("<else> not following <rule>, ignored: ".substr($_->toString(0), 0, 60)."...");
             }
             else
             {

@@ -92,6 +92,7 @@ if (open(FAILFILE, ">", $failFile))
 
 sub processOldZips
 {
+    my $MaxDelay;
     my ($runNumber) = @_;
     my @zipfiles;
     if(opendir(ZIPDIR, $ZipDir))
@@ -110,6 +111,14 @@ sub processOldZips
     my $zipCount = scalar(@sorted);
     statusMessage(scalar(@sorted)." zip files to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     my $Reason = "queue full";
+    if(($Config{UploadToDirectory}) and (-d $Config{"UploadTargetDirectory"}))
+    {
+        $MaxDelay = 30; ## uploading to a local directory is a lot less costly than checking the tileserver.
+    }
+    else
+    {
+        $MaxDelay = 600;
+    }
     while(my $File = shift @sorted)
     {
         if($File =~ /\.zip$/i)
@@ -139,9 +148,9 @@ sub processOldZips
                     last;
                 }
                 $sleepdelay = int($sleepdelay) + 1; 
-                if ($sleepdelay > 600)  ## needs adjusting based on real-world experience, if this check is true the above load adapting failed and the server is too overloaded to reasonably process the queue relative to the rendering speed
+                if ($sleepdelay > $MaxDelay)
                 {
-                    $sleepdelay = 600; ## FIXME: since the checking of the queue is much less costly than trying to upload, need to further adapt the max delay.
+                    $sleepdelay = $MaxDelay;
                 }
 
                 statusMessage($Reason.", sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);

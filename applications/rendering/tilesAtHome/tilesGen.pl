@@ -268,9 +268,9 @@ elsif ($Mode eq "loop")
         reExecIfRequired(); ## check for new version of tilesGen.pl and reExec if true
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
-        
+
         $upload_result = uploadIfEnoughTiles(); # upload if enough work done
-        
+
         if ($upload_result)  # we got an error in the upload process
         {
               addFault("upload",1); # we only track errors that occur multple times in a row

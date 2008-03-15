@@ -89,7 +89,10 @@ my @approvedKeySections = (
 "sport",
 "tourism",
 "tracktype",
+"url",
 "waterway",
+"wiki",
+"wikipedia",
 );
 #print "get list of \"approved\" tags...\n";
 #my $Approved_tags = GetApprovedTags();

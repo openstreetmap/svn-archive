@@ -21,6 +21,10 @@
 # along with Tagwatch.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------
 use strict;
+
+use MediaWiki;
+
+
 my %IgnoreTags = IgnoreTags();   # List of tag keys to ignore
 my $Tagtype = '-';               # What object the parser is in
 my %Tags;
@@ -73,34 +77,23 @@ foreach my $Tag(keys %Tags){
 close OUT;
 
 # Create a list of tags to ignore
-# TODO: put this on a wiki page?
-sub IgnoreTags{
-  my %Ignore;
-  foreach my $Tag(
-    'lat','lon','tagtype','id',  # Reserved words (all objects)
-    'created_by', # Not relevant for rendering
-    'ele',        # GPS metadata
-    '',           # Tags without a name
-    'from',       # Reserved word (segment)
-    'to',         # Reserved word (segment)
-    'visible',    # OSM internal metadata
-    'timestamp',  # OSM internal metadata
-    'user',       # OSM internal metadata
-    'source',     # Not relevant for rendering
-    'polyline',   # Reserved word (way)
-    'time',       # GPS metadata?
-    'editor',     # Not relevant for rendering
-    'author',     # Not relevant for rendering
-    'hdop',       # GPS metadata
-    'pdop',       # GPS metadata
-    'sat',        # GPS metadata
-    'speed',      # GPS metadata
-    'fix',        # GPS metadata
-    'course',     # GPS metadata
-    'class',      # depreciated
-    'converted_by', # Some program
-    ){
-    $Ignore{$Tag} = 1;
-  }
-  return(%Ignore);
+# Source http://wiki.openstreetmap.org/index.php/Tagwatch/Ignore
+sub IgnoreTags
+{
+    my %Ignore;
+
+    my $c = MediaWiki->new;
+    $c->setup({'wiki' => {
+	   'host' => 'wiki.openstreetmap.org',
+	   'path' => ''}});
+
+    foreach my $Line(split(/\n/, $c->text("Tagwatch/Ignore")))
+    {
+	if($Line =~ m{\* (\w+)})
+	{
+	    $Ignore{$1} = 1;
+	}
+    }
+
+    return(%Ignore);
 }

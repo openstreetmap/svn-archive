@@ -116,7 +116,7 @@ sub IgnoreValues
 
 	if($Line =~ m{\* })
 	{
-	    # my ($x1, $x2, $x3) = split(/\s+/, $Line);
+	    my ($x1, $x2, $x3) = split(/\s+/, $Line);
 	    print " .... '$x1' '$x2' '$x3' ... \n";
 	    push (@Ignore, $x2);
 	}

@@ -69,7 +69,7 @@ my @approvedKeySections = (
 "boundary",
 "bridge",
 "cycleway",
-"editor_keys"
+"editor_keys",
 "highway",
 "historic",
 "landuse",

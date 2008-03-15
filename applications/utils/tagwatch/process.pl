@@ -25,8 +25,9 @@ use strict;
 use MediaWiki;
 
 
-my %IgnoreTags = IgnoreTags();   # List of tag keys to ignore
-my $Tagtype = '-';               # What object the parser is in
+my %IgnoreTags = IgnoreTags();       # List of tag keys to ignore
+my @IgnoreValues = IgnoreValues();   # List of values that are too volatile to group
+my $Tagtype = '-';                   # What object the parser is in
 my %Tags;
 my %Values;
 my %Usage;
@@ -96,4 +97,30 @@ sub IgnoreTags
     }
 
     return(%Ignore);
+}
+
+# Create a list of values to ignore
+# Source http://wiki.openstreetmap.org/index.php/Tagwatch/Volatile
+sub IgnoreValues
+{
+    my @Ignore;
+
+    my $c = MediaWiki->new;
+    $c->setup({'wiki' => {
+	   'host' => 'wiki.openstreetmap.org',
+	   'path' => ''}});
+
+    foreach my $Line(split(/\n/, $c->text("Tagwatch/Volatile")))
+    {
+	# print "IgnoreValues: '$Line'\n";
+
+	if($Line =~ m{\* })
+	{
+	    # my ($x1, $x2, $x3) = split(/\s+/, $Line);
+	    print " .... '$x1' '$x2' '$x3' ... \n";
+	    push (@Ignore, $x2);
+	}
+    }
+
+    return(@Ignore);
 }

@@ -492,13 +492,13 @@ sub AllTags{
   	close OUT;
 
 	#############################################################################
-	# overview page with top 100 unapproved tags
+	# overview page with top 150 unapproved tags
 	#############################################################################
 	#$count_top = 0;
 	#foreach my $Tag(sort {$unapproved->{$b} <=> $unapproved->{$a}} keys %{$unapproved}){
 	#	my %row = (tag => $Tag,
         #       		   count => $unapproved->{$Tag});
-	#	if($count_top <= 100) {
+	#	if($count_top <= 150) {
 	#		push(@tmpl_loop2, \%row); }
 	#	$count_top++;
 	#}
@@ -517,13 +517,13 @@ sub AllTags{
   	close TOP;
 
 	#############################################################################
-	# overview page with top 100 undocumented tags
+	# overview page with top 150 undocumented tags
 	#############################################################################
 	my $count_top = 0;
 	foreach my $Tag(sort {$undocumented->{$b} <=> $undocumented->{$a}} keys %{$undocumented}){
 		my %row = (tag => $Tag,
                		   count => $undocumented->{$Tag});
-		if($count_top <= 100) {
+		if($count_top <= 150) {
 			push(@tmpl_loop3, \%row); }
 		$count_top++;
 	}

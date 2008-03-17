@@ -716,14 +716,14 @@
             .highway-unclassified-casing            { stroke-width: 5px; stroke: #c0c0c0; }
             .highway-unclassified-core              { stroke-width: 1.2px; stroke: #ffffff; }
 
-            .highway-service-casing                 { stroke-width: 2px; stroke: #222222; }
-            .highway-service-core                   { stroke-width: 1.5px; stroke: #ffffff; }
+            .highway-service-casing                 { stroke-width: 3px; stroke: #222222; }
+            .highway-service-core                   { stroke-width: 2.5px; stroke: #ffffff; }
 
             .highway-unsurfaced-casing              { stroke-width: 4px; stroke: #222222; stroke-dasharray: 1, .5; }
             .highway-unsurfaced-core                { stroke-width: 3.5px; stroke: #ffffff; }
 
-            .highway-track-casing                   { stroke-width: 4px; stroke: #d79331; }
-            .highway-track-core                     { stroke-width: 2px; stroke: #ffffff; }
+            .highway-track-casing                   { stroke-width: 3px; stroke: #d79331; }
+            .highway-track-core                     { stroke-width: 2.5px; stroke: #ffffff; }
 
             .highway-track-grade1-casing            { stroke: #c0c0c0; }
             .highway-track-grade2-casing            { }

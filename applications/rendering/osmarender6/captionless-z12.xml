@@ -609,7 +609,7 @@
             .highway-unsurfaced-core                { stroke-width: 3.5px; stroke: #ffffff; }
 
             .highway-track-casing                   { stroke-width: 4px; stroke: #d79331; }
-            .highway-track-core                     { stroke-width: 2px; stroke: #ffffff; }
+            .highway-track-core                     { stroke-width: 3.5px; stroke: #ffffff; }
 
             .highway-byway-1-casing                 { stroke-width: 2px;     stroke: #555555;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt;}
             .highway-byway-2-casing                 { stroke-width: 1.6px;   stroke: #efadaa; }

@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 # OR/P - Osmarender in Perl
 # -------------------------
 #
@@ -11,6 +9,7 @@
 # object selection supported in <rule> elements.
 
 use strict;
+use warnings;
 
 our $index_way_tags;
 our $index_node_tags;
@@ -73,7 +72,7 @@ sub select_elements_with_given_tag_key
 outer:
     foreach ($oldsel->members())
     {
-        next if (defined($e) and ref($_) != $e);
+        next if (defined($e) and ref($_) ne $e);
         foreach my $key(@keys_wanted)
         {
             if (defined($_->{"tags"}->{$key}))
@@ -97,7 +96,7 @@ sub select_elements_without_given_tag_key
 outer:
     foreach ($oldsel->members())
     {
-        next if defined($e) and ref($_) != $e;
+        next if defined($e) and ref($_) ne $e;
         foreach my $key(@keys_wanted)
         {
             next outer if (defined($_->{"tags"}->{$key}));
@@ -185,7 +184,7 @@ sub select_elements_with_given_tag_key_and_value_slow
 outer:
     foreach ($oldsel->members())
     {   
-        next if defined($e) and ref($_) != $e; 
+        next if defined($e) and ref($_) ne $e; 
         # determine whether we're comparing against the tags of the object
         # itself or the tags selected with the "s" attribute.
         my $tagsets;

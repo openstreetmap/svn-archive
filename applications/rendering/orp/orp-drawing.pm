@@ -10,15 +10,12 @@
 # This module contains the routines that issue SVG drawing instructions
 # object selection supported in <rule> elements.
 
-#require "orp-bobkare-area-center.pl";
+use strict;
+use warnings;
 require "orp-bbox-area-center.pm";
 
-use strict;
+our ($writer, $projection, $symbolScale, $textAttenuation);
 
-our $writer;
-our $projection;
-our $symbolScale;
-our $textAttenuation;
 
 # -------------------------------------------------------------------
 # sub draw_lines($rulenode, $layer, $selection)
@@ -170,18 +167,74 @@ sub draw_areas
     #debug("draw areas of class $class");
     $writer->startTag("g", "class" => $class);
 
+OUTER:
     foreach ($selected->members)
     {
         next unless (ref $_ eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
+
         my $points = [];
-        push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) foreach (@{$_->{"nodes"}});
-        $writer->emptyTag("path", "id" => "area_".$_->{"id"}, "d" => make_path(@$points)."Z");
+        foreach (@{$_->{"nodes"}})
+        {
+            push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
+        }
+        my $path = make_path(@$points)."Z ";
+
+        # find out if we're the "outer" or "inner" polygon of a "multipolygon" relation
+        foreach my $relpair(@{$_->{"relations"}})
+        {
+            my ($role, $rel) = @$relpair;
+            if ($rel->{"tags"}->{"type"} eq "multipolygon" && $role eq "outer")
+            {
+            debug("outer in multi");
+                # right, we are "outer" - find all "inner" ways of this relation 
+                # and add them to our path
+                foreach my $relmember(@{$rel->{"members"}})
+                {
+                    my ($role, $obj) = @$relmember;
+                    if ($role eq "inner" && ref($obj) eq "way")
+                    {
+                        debug(sprintf("collecting way %d as 'hole' in polygon %d",
+                            $obj->{"id"}, $_->{"id"}));
+                        $points = [];
+                        foreach (@{$obj->{"nodes"}})
+                        {
+                            push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
+                        }
+                        $path .= make_path(@$points)."Z";
+                    }
+                }
+            }
+            if ($rel->{"tags"}->{"type"} eq "multipolygon" && $role eq "inner")
+            {
+                # we are "inner" - if the corresponding "outer" poly is tagged 
+                # the same as we are, then don't draw anything (legacy polygon
+                # support). otherwise draw normally.
+                foreach my $relmember($rel->{"members"})
+                {
+                    my ($role, $obj) = @$relmember;
+                    if ($role eq "outer" && ref($obj) eq "way")
+                    {
+                        next OUTER if (tags_equal($obj, $_));
+                        last;
+                    }
+                }
+            }
+        }
+        $writer->emptyTag("path", "id" => "area_".$_->{"id"}, "d" => $path, "style" => "fill-rule:evenodd");
         $writer->emptyTag("use", 
             "xlink:href" => "#area_".$_->{"id"},
             "class" => $class);
     }
     $writer->endTag("g");
+}
+
+sub tags_equal
+{
+    my ($h1, $h2) = @_;
+    my $string1 = join("'", map("$_~".$h1->{"tags"}->{$_}, sort keys(%{$h1->{"tags"}})));
+    my $string2 = join("'", map("$_~".$h2->{"tags"}->{$_}, sort keys(%{$h2->{"tags"}})));
+    return $string1 eq $string2;
 }
 
 # -------------------------------------------------------------------
@@ -260,8 +313,8 @@ sub draw_text_on_path
 {
     my ($textnode, $way) = @_;
 
-    my $sumLon;
-    my $sumLat;
+    my $sumLon = 0;
+    my $sumLat = 0;
     my $nodes = $way->{'nodes'};
     my $id = $way->{'id'};
 
@@ -272,15 +325,15 @@ sub draw_text_on_path
     }
 
     my $reverse = ($nodes->[scalar @$nodes - 1]->{"lon"} < $nodes->[0]->{"lon"});
-    my $att = $textnode->getAttribute("textAttenuation");
-    $att = $textAttenuation if ($att eq "");
-    $att = 99999999 if ($att eq "");
+    my $att = $textnode->getAttribute("textAttenuation") || '';
+       $att = ($textAttenuation || '') if ($att eq '');
+       $att = 99999999 if ($att eq '');
 
     my $pathLength = sqrt(($sumLon*1000*$att)**2 + 
        ($sumLat*1000*$att*$projection)**2);
 
     my $fontsize;
-    my $text = $way->{'tags'}->{$textnode->getAttribute("k")};
+    my $text = $way->{'tags'}{$textnode->getAttribute("k")} || '';
     my $textLength = length($text);
     return if ($textLength == 0);
     #debug("att=$att textLength=$textLength pathLength=$pathLength");

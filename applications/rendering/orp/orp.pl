@@ -79,6 +79,8 @@
 #   * $index_node_keys is a hash with one key for each tag key
 #     present in nodes, the value is an array of node references
 #   * $index_way_keys the same for way tag keys
+#   * each object has a "relations" hash element whose value is
+#     an array of ($role,$relation_ref) pairs
 #
 # SELECTION LISTS:
 #   * $selection is an array that contains references to 
@@ -106,23 +108,26 @@
 # This program does not contain code from the original osmarender.xsl 
 # but since the logic has been copied from Osmarender, it is safe to 
 # assume that this triggers the viral element of the GPL, making orp.pl
-# GPL v2 or later also.
+# GPL v2 or later also. (It would have been Public Domain otherwise.)
 #
 # -----------------------------------------------------------------------------
 use strict;
+use warnings;
 use bytes;
-use XML::Parser::PerlSAX;
-use XML::XPath;
-use XML::XPath::XMLParser;
-use Math::Trig;
-use Set::Object;
-use Getopt::Long;
-use XML::Writer;
-use IO::File;
+
+use XML::Parser::PerlSAX ();
+use XML::XPath ();
+use XML::XPath::XMLParser ();
+use Math::Trig qw(pi);
+use Set::Object ();
+use Getopt::Long qw(GetOptions);
+use XML::Writer ();
+use IO::File ();
+
+use SAXOsmHandler ();
 
 require "orp-select.pm";
 require "orp-drawing.pm";
-require "orp-sax.pm";
 
 # available debug flags:
 our $debug = { 
@@ -138,14 +143,14 @@ our $relation_storage = {};
 my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage);
 my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
 my $rule_file = "rule.xml";
-my $debug_opts;
+my $debug_opts = '';
 my $output_file;
 
-GetOptions("rule=s" => \$rule_file, 
-    "debug=s" => \$debug_opts,
-    "outfile=s" => \$output_file);
+GetOptions("rule=s"    => \$rule_file, 
+           "debug=s"   => \$debug_opts,
+           "outfile=s" => \$output_file);
 
-foreach my $key(split(/,/, $debug_opts))
+for my $key(split(/,/, $debug_opts))
 {
     if (!defined($debug->{"$key"}))
     {
@@ -227,7 +232,7 @@ foreach (values(%$relation_storage))
 
         if (defined($deref))
         {
-            push(@{$deref->{'relations'}}, $_);
+            push(@{$deref->{'relations'}}, [ $member->[0], $_ ]);
         }
     }
 }
@@ -453,7 +458,10 @@ sub generate_paths
         my $id = $way->{"id"};
         my $tags = $way->{"tags"};
         my $points = [];
-        push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) foreach (@{$way->{"nodes"}});
+        foreach (@{$way->{"nodes"}})
+        {
+            push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
+        }
 
         next if (scalar(@$points) < 2);
 
@@ -465,17 +473,20 @@ sub generate_paths
         $writer->emptyTag("path", "id" => "way_normal_$id", "d" => make_path(@$points));
 
         # generate reverse path if needed
-        if (($tags->{"name_direction"} eq "-1") or 
-            ($tags->{"osmarender:nameDirection"} eq "-1") or
-            (($tags->{"name_direction"} ne "1") and 
-             ($tags->{"osmarender:nameDirection"} ne "1") and 
-             ($points->[0]->[1] > $points->[scalar(@$points)-1]->[1])
-            )
-           )
-        {
-            $writer->emptyTag("path", "id" => "way_reverse_$id", 
-                "d" => make_path(reverse @$points));
-        }
+        { no warnings 'uninitialized';
+         
+            if (($tags->{name_direction} eq "-1") or 
+                ($tags->{'osmarender:nameDirection'} eq "-1") or
+                (($tags->{name_direction} ne "1") and 
+                 ($tags->{'osmarender:nameDirection'} ne "1") and 
+                 ($points->[0][1] > $points->[scalar(@$points)-1]->[1])
+                )
+               )
+            {
+                $writer->emptyTag("path", "id" => "way_reverse_$id", 
+                    "d" => make_path(reverse @$points));
+            }
+        };
 
         # generate the start, middle and end paths needed for "smart linecaps".
         # The first and last way segment are split in the middle.
@@ -737,7 +748,7 @@ sub process_rule
     # - if we are on another layer, ignore the rule.
     
     my $rule_layer = $rulenode->getAttribute('layer');
-    if (($rule_layer ne '') && ($layer ne '')) 
+    if ($rule_layer && $layer && ($rule_layer ne '') && ($layer ne '')) 
     {
         if ($rule_layer ne $layer)
         {
@@ -801,7 +812,7 @@ sub process_rule
     my $previous_child;
     foreach ($rulenode->getChildNodes())
     {
-        my $name = $_->getName();
+        my $name = $_->getName() || '';
         if ($name eq "layer")
         {
               process_layer($_, $depth+1, $layer);

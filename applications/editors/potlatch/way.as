@@ -125,6 +125,8 @@
 		for (var i=1; i<this.path.length; i+=1) {
 			this.line.lineTo(this.path[i][0],this.path[i][1]);
 		}
+
+		redrawRelationsForMember('way', this._name);
 	};
 
 	OSMWay.prototype.getFill=function() {
@@ -165,6 +167,7 @@
 	
 	OSMWay.prototype.remove=function() {
 		this.deleteMergedWays();
+		memberDeleted('way', this._name);
 		if (this._name>=0 && !_root.sandbox && this.oldversion==0) {
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
@@ -191,6 +194,7 @@
 			nw=result[1];	// new way ID
 			if (result[0]!=nw) {
 				_root.map.ways[result[0]]._name=nw;
+				renumberMemberOfRelation('way', result[0], nw);
 				if (_root.map.areas[result[0]]) { _root.map.areas[result[0]]._name=nw; }
 				if (_root.panel.t_details.text==result[0]) { _root.panel.t_details.text=nw; _root.panel.t_details.setTextFormat(plainText); }
 				if (wayselected==result[0]) { selectWay(nw); }
@@ -209,6 +213,11 @@
 						_root.map.ways[qway].path[qs][2]=result[2][_root.map.ways[qway].path[qs][2]];
 					}
 				}
+			}
+			// check if renumbered nodes are part of relations
+			for ( var oid in result[2] ) {
+				var nid = result[2][oid];
+				renumberMemberOfRelation('node', oid, nid);
 			}
 			_root.map.ways[nw].clearPOIs();
 			_root.map.ways[nw].deleteMergedWays();
@@ -306,6 +315,7 @@
 	
 	OSMWay.prototype.select=function() {
 		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
+		_root.panel.properties.saveAttributes();
 		selectWay(this._name);
 		_root.pointselected=-2;
 		_root.poiselected=0;
@@ -313,8 +323,10 @@
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
 		setTypeText("Way",this._name);
-//		populatePropertyWindow('way');
-		_root.panel.properties.init('way');
+		_root.panel.properties.init('way',getPanelColumns(),4);
+		_root.panel.presets.init(_root.panel.properties);
+		updateButtons();
+		updateScissors(false);
 	};
 	
 	OSMWay.prototype.highlight=function() {
@@ -407,8 +419,7 @@
 		removeMovieClip(_root.map.areas[otherway._name]);
 		removeMovieClip(otherway);
 		if (this._name==_root.wayselected) { 
-			_root.panel.properties.init(_root.panel.properties.proptype);
-//			populatePropertyWindow(_root.currentproptype,_root.currentstartat,true);
+			_root.panel.properties.reinit();
 		}
 	};
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
@@ -586,6 +597,7 @@
 				_root.whichreceived+=1;
 				waylist  =result[0];
 				pointlist=result[1];
+				relationlist=result[2];
 
 				for (i in waylist) {										// ways
 					way=waylist[i];											//  |
@@ -609,6 +621,16 @@
 						_root.poicount+=1;									//  |
 					}
 				}
+
+				for (i in relationlist) {
+					rel = relationlist[i];
+                    if (!_root.map.relations[rel]) {
+						_root.map.relations.attachMovie("relation",rel,++reldepth);
+						_root.map.relations[rel].load();
+						_root.relcount+=1;
+						_root.relsrequested+=1;
+					}
+                }
 			};
 			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t,baselong,basey,masterscale);
 			_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
@@ -655,3 +677,4 @@
 		}
 		return a;
 	}
+

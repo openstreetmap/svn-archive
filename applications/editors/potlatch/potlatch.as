@@ -21,6 +21,7 @@
 	resizeListener=new Object();
 	resizeListener.onResize=function() { resizeWindow(); };
 	Stage.addListener(resizeListener);
+	var panelheight=110;
 	
 	// Master movieclip for map
 	_root.createEmptyMovieClip("map",10);
@@ -31,7 +32,7 @@
 	_root.panel._x=0; _root.panel._y=500;
 	_root.panel.beginFill(0xF3F3F3,100);
 	_root.panel.moveTo(0,0); _root.panel.lineTo(3000,0);
-	_root.panel.lineTo(3000,100); _root.panel.lineTo(0,100);
+	_root.panel.lineTo(3000,panelheight); _root.panel.lineTo(0,panelheight);
 	_root.panel.lineTo(0,0);
 	_root.panel.endFill();
 
@@ -76,11 +77,12 @@
 //	var j=layernames.length; for (i in layernames) { j--; layernums[layernames[i]]=j; }
 
 	// Main initialisation
-	_root.map.createEmptyMovieClip("areas"   ,8);  var areadepth=1;
-	_root.map.createEmptyMovieClip("gpx"     ,9);
-	_root.map.createEmptyMovieClip("ways"    ,10); var waydepth=1;
-	_root.map.createEmptyMovieClip("pois"	 ,11); var poidepth=1;
-	_root.map.createEmptyMovieClip("elastic",5003); // elastic line
+	_root.map.createEmptyMovieClip("areas"    ,8);  var areadepth=1;
+	_root.map.createEmptyMovieClip("gpx"      ,9);
+	_root.map.createEmptyMovieClip("relations",10); var reldepth=1;
+	_root.map.createEmptyMovieClip("ways"     ,11); var waydepth=1;
+	_root.map.createEmptyMovieClip("pois"	  ,12); var poidepth=1;
+	_root.map.createEmptyMovieClip("elastic"  ,5003); // elastic line
 	initTiles();					// create tile clips on layer 7
 
 	_root.masksquare.useHandCursor=false;
@@ -88,6 +90,7 @@
 	_root.masksquare.onRollOver=function() { mapRollOver(); };
 	_root.masksquare.onRollOut =function() { mapRollOut(); };
 	_root.masksquare.onRelease =function() { mapClickEnd(); };
+	_root.onMouseDown=function() { _root.lastkeypressed=-1; };
 
 	selectWay(0);					// way selected?    0 no, otherwise way id
 	var poiselected=0;				// POI selected?    0 no, otherwise way id
@@ -95,6 +98,9 @@
 	var waycount=0;					// number of ways currently loaded
 	var waysrequested=0;			// total number of ways requested
 	var waysreceived=0;				// total number of ways received
+	var relcount=0;					// number of relations currently loaded
+	var relsrequested=0;			// total number of relations requested
+	var relsreceived=0;				// total number of relations received
 	var poicount=0;					// number of POIs currently loaded
 	var whichrequested=0;			// total number of whichways requested
 	var whichreceived=0;			// total number of whichways received
@@ -102,20 +108,23 @@
 	var lastresize=new Date();		// last time window was resized
 	var dragmap=false;				// map being dragged?
 	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order)
-	var newwayid=-1;				// new way ID  (for those not yet saved)
-	var newnodeid=-2;				// new node ID (for those not yet saved)
-	var newpoiid=-1;				// new POI ID  (for those not yet saved)
+	var newrelid=-1;				// new relation ID  (for those not yet saved)
+	var newwayid=-1;				// new way ID		(for those not yet saved)
+	var newnodeid=-2;				// new node ID		(for those not yet saved)
+	var newpoiid=-1;				// new POI ID		(for those not yet saved)
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
-	var redopropertywindow=0;		// need to redraw property window after deletion?
+	var redopropertywindow=null;	// need to redraw property window after deletion?
 	var lastkeypressed=null;		// code of last key pressed
 	var keytarget='';				// send keys where? ('','dialogue','key','value')
+	var basekeytarget='';			// reset keytarget to what after editing key?
 	var tilesetloaded=-1;			// which tileset is loaded?
 	var tolerance=4/Math.pow(2,_root.scale-13);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
+	var savedtype='';				// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.7c development";	// current version
+	var signature="Potlatch 0.8";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -135,40 +144,46 @@
 	changeScaleTo(_root.scale);
 
 	_root.panel.attachMovie("scissors","i_scissors",32);
-	with (_root.panel.i_scissors) { _x=15; _y=83; };
+	with (_root.panel.i_scissors) { _x=15; _y=93; };
 	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(); };
 	_root.panel.i_scissors.onRollOver=function() { setFloater("Split way at selected point (X)"); };
 	_root.panel.i_scissors.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("gps","i_gps",36);
-	with (_root.panel.i_gps) { _x=65; _y=83; };
+	with (_root.panel.i_gps) { _x=65; _y=93; };
 	_root.panel.i_gps.onPress   =function() { loadGPS(); };
 	_root.panel.i_gps.onRollOver=function() { setFloater("Show GPS tracks (G)"); };
 	_root.panel.i_gps.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("prefs","i_prefs",37);
-	with (_root.panel.i_prefs) { _x=90; _y=83; };
+	with (_root.panel.i_prefs) { _x=90; _y=93; };
 	_root.panel.i_prefs.onPress   =function() { openOptionsWindow(); };
 	_root.panel.i_prefs.onRollOver=function() { setFloater("Set options (choose the map background)"); };
 	_root.panel.i_prefs.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("newattr","i_newattr",33);
-	with (_root.panel.i_newattr) { _x=690; _y=85; };
+	with (_root.panel.i_newattr) { _x=690; _y=95; };
 	_root.panel.i_newattr.onRelease =function() { _root.panel.properties.enterNewAttribute(); };
 	_root.panel.i_newattr.onRollOver=function() { setFloater("Add a new tag"); };
 	_root.panel.i_newattr.onRollOut =function() { clearFloater(); };
 
+	_root.panel.attachMovie("newrel","i_newrel",44);
+	with (_root.panel.i_newrel) { _x=690; _y=75; backgroundColor=0xDDBBBB; background=true;};
+	_root.panel.i_newrel.onRelease =function() { addToRelation(); };
+	_root.panel.i_newrel.onRollOver=function() { setFloater("Add to a relation"); };
+	_root.panel.i_newrel.onRollOut =function() { clearFloater(); };
+
 	_root.panel.attachMovie("repeatattr","i_repeatattr",34);
-	with (_root.panel.i_repeatattr) { _x=690; _y=65; };
-	_root.panel.i_repeatattr.onPress=function() { repeatAttributes(); };
+	with (_root.panel.i_repeatattr) { _x=690; _y=55; };
+	_root.panel.i_repeatattr.onPress=function() { _root.panel.properties.repeatAttributes(); };
 	_root.panel.i_repeatattr.onRollOver=function() { setFloater("Repeat tags from the previously selected way (R)"); };
 	_root.panel.i_repeatattr.onRollOut =function() { clearFloater(); };
 
-	_root.panel.attachMovie("nextattr","i_nextattr",42);
-	with (_root.panel.i_nextattr) { _x=690; _y=45; };
-	_root.panel.i_nextattr.onRelease =function() { advancePropertyWindow(); };
-	_root.panel.i_nextattr.onRollOver=function() { setFloater("Next page of tags"); };
-	_root.panel.i_nextattr.onRollOut =function() { clearFloater(); };
+//	_root.panel.attachMovie("nextattr","i_nextattr",42);
+//	with (_root.panel.i_nextattr) { _x=690; _y=25; };
+//	_root.panel.i_nextattr.onRelease =function() { advancePropertyWindow(); };
+//	_root.panel.i_nextattr.onRollOver=function() { setFloater("Next page of tags"); };
+//	_root.panel.i_nextattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("exclamation","i_warning",35);
 	with (_root.panel.i_warning) { _x=10; _y=45; _visible=false; };
@@ -178,13 +193,13 @@
 	wflashid=setInterval(function() { _root.panel.i_warning._alpha=150-_root.panel.i_warning._alpha; }, 750);
 
 	_root.panel.attachMovie("rotation","i_direction",39);
-	with (_root.panel.i_direction) { _x=40; _y=83; _rotation=-45; _visible=true; _alpha=50; };
+	with (_root.panel.i_direction) { _x=40; _y=93; _rotation=-45; _visible=true; _alpha=50; };
 	_root.panel.i_direction.onPress=function() { _root.ws.reverseWay(); };
 	_root.panel.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
 	_root.panel.i_direction.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("roundabout","i_circular",40);
-	with (_root.panel.i_circular) { _x=40; _y=83; _rotation=-45; _visible=false; };
+	with (_root.panel.i_circular) { _x=40; _y=93; _rotation=-45; _visible=false; };
 	_root.panel.i_circular.onRollOver=function() { setFloater("Circular way"); };
 	_root.panel.i_circular.onRollOut =function() { clearFloater(); };
 
@@ -250,7 +265,7 @@
 		_root.createEmptyMovieClip("crosshair",0xFFFFF0);
 		with (_root.crosshair) {
 			_x=Stage.width/2;
-			_y=(Stage.height-100)/2;
+			_y=(Stage.height-panelheight)/2;
 			lineStyle(1,0xFFFFFF,100);
 			moveTo(-2,0); lineTo(-10,0);
 			moveTo( 2,0); lineTo( 10,0);
@@ -266,6 +281,8 @@
 	
 	plainText =new TextFormat(); plainText.color =0x000000; plainText.size =14; plainText.font ="_sans";
 	plainSmall=new TextFormat(); plainSmall.color=0x000000;	plainSmall.size=12; plainSmall.font="_sans";
+	plainTiny =new TextFormat(); plainTiny.color =0x000000;	plainTiny.size =11; plainTiny.font ="_sans";
+	plainWhite=new TextFormat(); plainWhite.color=0xFFFFFF; plainWhite.size=12; plainWhite.font="_sans";
 	greySmall =new TextFormat(); greySmall.color =0x888888;	greySmall.size =12; greySmall.font ="_sans";
 	boldText  =new TextFormat(); boldText.color  =0x000000; boldText.size  =14; boldText.font  ="_sans"; boldText.bold =true;
 	boldSmall =new TextFormat(); boldSmall.color =0x000000; boldSmall.size =12; boldSmall.font ="_sans"; boldSmall.bold=true;
@@ -295,6 +312,11 @@
 //	textfieldListener=new Object();
 //	textfieldListener.onChanged=function() { textChanged(); };
 
+	// MovieClip loader
+	var tileLoader=new MovieClipLoader();
+	tileListener=new Object();
+	tileLoader.addListener(tileListener);
+
 	// Interaction with responder script
 	var loaderWaiting=false;
 
@@ -313,13 +335,17 @@
 		_root.casing=result[4];
 		_root.areas=result[5];
 		_root.autotags=result[6];
-		_root.presetselected='road'; setPresetIcon(presetselected);
+		_root.relcolours=result[7];
+		_root.relalphas=result[8];
+		_root.relwidths=result[9];
+//		_root.presetselected='road'; setPresetIcon(presetselected);
 		_root.panel.i_preset._visible=false;
 	};
 	remote.call('getpresets',preresponder);
 
 	#include 'anchorpoint.as'
 	#include 'poi.as'
+	#include 'relation.as'
 	#include 'way.as'
 	#include 'history.as'
 	#include 'ui.as'
@@ -333,14 +359,18 @@
 
 	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
 
-//	_root.panel.createEmptyMovieClip("properties",50);
 	_root.panel.attachMovie("propwindow","properties",50);
 	with (_root.panel.properties) { _x=110; _y=25; };
 
-	_root.panel.attachMovie("menu","presetmenu",60);
-	_root.panel.presetmenu.init(141,5,1,presetnames['way'][presetselected],'Choose from a menu of preset tags describing the way',setAttributesFromPreset,151);
-	_root.panel.presetmenu._visible=false;
+	_root.panel.attachMovie("presetmenu","presets",60);
+	with (_root.panel.presets) { _x=110; _y=1; };
 
+//	_root.panel.attachMovie("menu","presetmenu",60);
+//	_root.panel.presetmenu.init(141,5,1,presetnames['way'][presetselected],'Choose from a menu of preset tags describing the way',setAttributesFromPreset,151);
+//	_root.panel.presetmenu._visible=false;
+
+	updateButtons();
+	updateScissors();
 	resizeWindow();
 	updateCoords(0,0);
 	setBackground(preferences.data.baselayer);
@@ -361,7 +391,7 @@
 		_root.sandbox=true; removeMovieClip(_root.panel.welcome);
 		_root.createEmptyMovieClip("practice",62);
 		with (_root.practice) {
-			_x=603; _y=478; beginFill(0xFF0000,100);
+			_x=Stage.width-97; _y=Stage.height-panelheight-22; beginFill(0xFF0000,100);
 			moveTo(0,0); lineTo(90,0); lineTo(90,17);
 			lineTo(0,17); lineTo(0,0); endFill();
 		};
@@ -485,8 +515,9 @@
 				_root.newnodeid--;
 				if (_root.pointselected>-2) {
 					setTypeText("Way",_root.wayselected);
-//					populatePropertyWindow('way');
-					_root.panel.properties.init('way');
+					_root.panel.properties.init('way',getPanelColumns(),4);
+					updateButtons();
+					updateScissors(false);
 				}
 				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
 				restartElastic();
@@ -581,17 +612,23 @@
 		_root.lastkeypressed=k;
 
 		switch (keytarget) {
-			case 'keyname':	;
-			case 'value':	if (_root.panel.auto) { _root.panel.auto.keyRespond(k); }
-							else if (k==13) { autoEnter(); }
-							return; break;
-			case '':		break;
-			default:		return; break;
+			case 'keyname':	 ;
+			case 'value':	 if (_root.auto!=undefined) { _root.auto.keyRespond(k); }
+							 else if (k==13) { autoEnter(); }
+							 return; break;
+			case 'dialogue': if (k==187 && _root.modal.box.properties!=undefined) {
+								_root.modal.box.properties.enterNewAttribute();
+							 };
+							 return; break;
+			case '':		 break;
+			default:		 return; break;
 		}
 
 		if (k>48 && k<58 && (wayselected!=0 || poiselected!=0)) {
-			if (presetnames[currentproptype][presetselected][k-48]!=null) {
-				setAttributesFromPreset(k-48);
+			if (presetnames[_root.panel.properties.proptype][_root.panel.presets.group][k-48]!=null) {
+				_root.panel.presets.setAttributes(k-48);
+				_root.panel.presets.reflect();
+				if (_root.panel.properties.proptype=='way') { _root.ws.redraw(); }
 			}
 			return;
 		} else if (k>=112 && k<=118) {
@@ -609,7 +646,7 @@
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
-			case 82:		repeatAttributes(); break;							// R - repeat attributes
+			case 82:		_root.panel.properties.repeatAttributes(); break;							// R - repeat attributes
 			case 85:		getDeleted(); break;								// U - undelete
 			case 88:		_root.ws.splitWay(); break;							// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
@@ -618,7 +655,7 @@
 			case Key.RIGHT: moveMap(-140,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
-			case 167:		cyclePresetIcon(); break;							// '¤' - cycle presets
+			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' - cycle presets
 			case 187:		_root.panel.properties.enterNewAttribute(); break;	// '+' - add new attribute
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
 			case 192:		cycleStacked(); break;								// '`' - cycle between stacked ways
@@ -702,6 +739,7 @@
 										_root.ws.reload(); }
 		else if (_root.poiselected>0) { _root.map.pois[poiselected].reload(); }
 		else if (_root.poiselected<0) { removeMovieClip(_root.map.pois[poiselected]); }
+		revertDirtyRelations();
 		deselectAll();
 	};
 
@@ -776,14 +814,14 @@
 			}
 		}
 
-		// ----	Do we need to redraw the property window? (workaround)
+		// ----	Do we need to redraw the property window?
 		if (_root.redopropertywindow) {
-			_root.panel.properties.init(_root.panel.properties.proptype);
-//			populatePropertyWindow(_root.currentproptype,_root.currentstartat);
+			_root.redopropertywindow.reinit();
 			_root.redopropertywindow=0;
 		}
 
-		// ---- Issue new whichways if resizing has stopped
+		// ---- If resizing has stopped, issue new whichways
+		//		and resize panel
 		var t=new Date();
 		if ((t.getTime()-lastresize.getTime())>500) {
 			if (lastresize.getTime()>lastwhichways.getTime()) {
@@ -797,6 +835,13 @@
 		// ---- Service tile queue
 		if (preferences.data.baselayer!=0 &&
 			preferences.data.baselayer!=2 ) { serviceTileQueue(); }
+			
+		// ----	Reinstate focus if lost after click event
+		if (_root.reinstatefocus) {
+_root.coordmonitor.text+="!";
+			Selection.setFocus(_root.reinstatefocus); 
+			_root.reinstatefocus=null;
+		}
 	}
 	
 
@@ -809,8 +854,8 @@
 
 		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map"),
-			'Choose the background to display',setBackground,0);
+			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out of copyright map"),
+			'Choose the background to display',setBackground,null,0);
 
 		_root.modal.box.attachMovie("checkbox","pointer",5);
 		_root.modal.box.pointer.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
@@ -833,9 +878,6 @@
 
 	function deselectAll() {
 		_root.map.createEmptyMovieClip("anchors",5000); 
-		selectWay(0);
-		poiselected=0;
-		pointselected=-2;
 		removeMovieClip(_root.map.highlight);
 		_root.panel.i_circular._visible=false;
 		_root.panel.i_direction._visible=true;
@@ -844,10 +886,12 @@
 		setTypeText("","");
 
 		_root.panel.properties.init('');
-//		populatePropertyWindow('');
-		_root.panel.presetmenu._visible=false;
-		_root.panel.i_preset._visible=false;
-		clearPropertyWindow();
+		_root.panel.presets.hide();
+		updateButtons();
+		updateScissors(false);
+		poiselected=0;
+		pointselected=-2;
+		selectWay(0);
 		markClean(true);
 	};
 	
@@ -864,6 +908,7 @@
 		if (_root.poiselected!=0 && !_root.map.pois[poiselected].clean) {
 			_root.map.pois[poiselected].upload();
 		}
+		uploadDirtyRelations();
 	};
 
 	// highlightSquare

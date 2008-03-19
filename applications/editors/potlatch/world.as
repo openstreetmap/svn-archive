@@ -7,7 +7,7 @@
 	function updateCoords(tx,ty) {
 		_root.bscale=Math.pow(2,_root.scale-13);
 		_root.xradius=Stage.width/2;
-		_root.yradius=(Stage.height-100)/2;
+		_root.yradius=(Stage.height-panelheight)/2;
 
 		_root.map._x=tx; _root.map._y=ty;
 		_root.map._xscale=100*bscale;
@@ -49,20 +49,27 @@
 		}
 		// resize main mask and panel
 		_root.masksquare._height=
-		_root.panel._y=Stage.height-100;
+		_root.panel._y=Stage.height-panelheight;
 		_root.masksquare._width=Stage.width;
+		// resize panel window
+		if (_root.panel.properties.proptype!='') {
+			_root.panel.properties.init(_root.panel.properties.proptype,getPanelColumns(),4);
+			_root.panel.i_repeatattr._x=
+			_root.panel.i_newattr._x=
+			_root.panel.i_newrel._x=120+getPanelColumns()*190;
+		}
 		// resize other stuff
 		_root.waysloading._x=
 		_root.tooltip._x=Stage.width-120;
-		_root.practice._x=Stage.width-97; _root.practice._y=Stage.height-122;
+		_root.practice._x=Stage.width-97; _root.practice._y=Stage.height-panelheight-22;
 		// note time, so we can issue a whichWays soon
 		_root.lastresize=new Date();
 	}
 
 	function setYahooSize() {
-		if (_root.yahoowidth!=Stage.width || _root.yahooheight!=Stage.height-100) {
+		if (_root.yahoowidth!=Stage.width || _root.yahooheight!=Stage.height-panelheight) {
 			_root.yahoowidth=Stage.width;
-			_root.yahooheight=Stage.height-100;
+			_root.yahooheight=Stage.height-panelheight;
 			_root.yahoo.myMap.setSize(yahoowidth,yahooheight);
 		}
 		_root.yahoorightsize=true;

@@ -30,7 +30,7 @@
 
 	require "potlatch_assets.pl";
 
-	$debug=1;
+	$debug=0;
 
 	# -----	Read ActionScript files
 

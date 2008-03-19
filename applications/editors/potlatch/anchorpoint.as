@@ -32,11 +32,14 @@
 //			_root.lastymouse=_root._ymouse;
 			_root.clicktime=new Date();
 			this.beginDrag();
+			_root.panel.properties.saveAttributes();
 			_root.pointselected=this._name;
 			_root.map.ways[this.way].highlight();
 			setTypeText("Point",this.node);
-			_root.panel.properties.init('point');
-//			populatePropertyWindow('point');
+			_root.panel.properties.init('point',getPanelColumns(),4);
+			_root.panel.presets.init(_root.panel.properties);
+			updateButtons();
+			updateScissors(true);
 			setTooltip("point selected\n(shift-click point to\nstart new line)",0);
 		}
 	};

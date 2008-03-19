@@ -2,6 +2,36 @@
 	// =====================================================================
 	// Tile management functions
 
+	// tileListener - MovieClipLoader class
+	//				  on complete or error, remove from queue
+	
+	tileListener.onLoadError=function(tile,errorCode) {
+		_root.tilesloaded-=1;
+		delete tilerequested[tile._parent._name+','+tile._name];
+		delete    _root.ages[tile._parent._name+','+tile._name];
+		removeFromTileRequests(tile);
+		tile.removeMovieClip();
+	};
+	tileListener.onLoadComplete=function(tile) {
+		delete tilerequested[tile._parent._name+','+tile._name];
+		removeFromTileRequests(tile);
+	};
+	
+	function removeFromTileRequests(tile) {
+		var sc=tile._parent._name;
+		var x =tile._name.split(',')[0];
+		var y =tile._name.split(',')[1];
+		for (var i=0; i<tilerequests.length; i++) {
+			if (tilerequests[i][0]==x &&
+				tilerequests[i][1]==y &&
+				tilerequests[i][2]==sc) {
+				tilerequests.splice(i,1); i--;
+			}
+		}
+	}
+		
+
+
 	// initTiles - empty all tile layers and queues
 
 	function initTiles() {
@@ -25,7 +55,8 @@
 		}
 		for (var x=_root.tile_l; x<=_root.tile_r; x+=1) {
 			for (var y=_root.tile_t; y<=_root.tile_b; y+=1) {
-				if (!_root.tilerequested[_root.scale+','+x+','+y]) { requestTile(x,y); }
+				if (!_root.tilerequested[_root.scale+','+x+','+y] &&
+					!_root.map.tiles[_root.scale][x+','+y]) { requestTile(x,y); }
 			}
 		}
 		if (_root.tilesloaded>200) { purgeTiles(); }
@@ -48,38 +79,24 @@
 		for (var n=0; n<Math.min(4,tilerequests.length); n++) {
 			var r=tilerequests[n]; var x=r[0]; var y=r[1]; var sc=r[2];
 			if (_root.map.tiles[sc][x+','+y]) {
-				var t=_root.map.tiles[sc][x+','+y];
-				if (t.getBytesLoaded()==t.getBytesTotal() && t.getBytesLoaded()>0) {
-					// tile exists and is fully loaded, so remove from queue
-					delete tilerequested[sc+','+x+','+y];
-					tilerequests.splice(n,1);
-				} else {
-					// tile not fully loaded, keep in queue unless timed out
-					if (r[3]+15000<getTimer()) {
-						delete _root.ages[sc+','+x+','+y];
-						_root.tilesloaded-=1;
-						_root.map.tiles[sc][x+','+y].removeMovieClip();
-					}
+				// tile exists
+			} else if (x>=tile_l && x<=tile_r && y>=tile_t && y<=tile_b) {
+				// tile doesn't exist but is on-screen, so load
+				_root.map.tiles[sc].createEmptyMovieClip(x+","+y,++_root.tiledepth);
+				_root.tileLoader.loadClip(tileURL(x,y),_root.map.tiles[sc][x+","+y]);
+				with (_root.map.tiles[sc][x+','+y]) {
+					_x=long2coord(tile2long(x));
+					_y=lat2coord(tile2lat(y));
+					// ** check that this shouldn't be y-1, etc.
+					_xscale=_yscale=100/Math.pow(2,sc-13);
 				}
+				_root.tilesloaded++;
+				_root.ages[sc+','+x+','+y]=_root.age;
+				tilerequests[n][3]=getTimer();
 			} else {
-				if (x>=tile_l && x<=tile_r && y>=tile_t && y<=tile_b) {
-					// tile doesn't exist but is on-screen, so load
-					_root.map.tiles[sc].createEmptyMovieClip(x+","+y,++_root.tiledepth);
-					loadMovie(tileURL(x,y),_root.map.tiles[sc][x+","+y]);
-					with (_root.map.tiles[sc][x+','+y]) {
-						_x=long2coord(tile2long(x));
-						_y=lat2coord(tile2lat(y));
-						// ** check that this shouldn't be y-1, etc.
-						_xscale=_yscale=100/Math.pow(2,sc-13);
-					}
-					_root.tilesloaded++;
-					_root.ages[sc+','+x+','+y]=_root.age;
-					tilerequests[n][3]=getTimer();
-				} else {
-					// tile doesn't exist and is now off-screen, so delete
-					delete tilerequested[sc+','+x+','+y];
-					tilerequests.splice(n,1);
-				}
+				// tile doesn't exist and is now off-screen, so delete
+				delete tilerequested[sc+','+x+','+y];
+				tilerequests.splice(n,1);
 			}
 		}
 	}
@@ -116,5 +133,7 @@
 			case 4: return (tileprefix+"http://tah.openstreetmap.org/Tiles/tile.php/"+_root.scale+"/"+x+"/"+y+".png");
 			case 5: return (tileprefix+"http://tah.openstreetmap.org/Tiles/maplint.php/"+_root.scale+"/"+x+"/"+y+".png");
 			case 6: return (tileprefix+"http://thunderflames.org/tiles/cycle/"+_root.scale+"/"+x+"/"+y+".png");
+			case 7: return (tileprefix+"http://richard.dev.openstreetmap.org/npe/"+_root.scale+"/"+x+"/"+y+".jpg");
+//			case 7: return (tileprefix+"http://127.0.0.1/~richard/npe/"+_root.scale+"/"+x+"/"+y+".jpg");
 		}
 	}

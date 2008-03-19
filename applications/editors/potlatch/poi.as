@@ -12,6 +12,7 @@
 	};
 	POI.prototype=new MovieClip();
 	POI.prototype.remove=function() {
+		memberDeleted('node', this._name);
 		if (this._name>=0 && !_root.sandbox) {
 			poidelresponder = function() { };
 			poidelresponder.onResult = function(result) {
@@ -31,8 +32,11 @@
 			_root.map.pois[result[0]]._x  =result[1];
 			_root.map.pois[result[0]]._y  =result[2];
 			_root.map.pois[result[0]].attr=colon2bar(result[3]);
-			_root.panel.properties.init('POI');
-//			populatePropertyWindow('POI');
+			_root.panel.properties.init('POI',getPanelColumns(),4);
+			_root.panel.presets.init(_root.panel.properties);
+			updateButtons();
+			updateScissors(false);
+			redrawRelationsForMember('node', result[0]);
 		};
 		remote.call('getpoi',poirelresponder,Math.floor(this._name),baselong,basey,masterscale);
 	};
@@ -43,6 +47,7 @@
 			var ni=result[1];	// new way ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
+				renumberMemberOfRelation('node', result[0], ni);
 				if (poiselected==result[0]) {
 					poiselected=ni;
 					if (_root.panel.t_details.text==result[0]) { _root.panel.t_details.text=ni; _root.panel.t_details.setTextFormat(plainText); }
@@ -99,13 +104,17 @@
 			this.clean=false;
 			this.select();
 			markClean(false);
+			redrawRelationsForMember('node', this._name);
 		}
 	};
 	POI.prototype.select=function() {
+		_root.panel.properties.saveAttributes();
 		_root.poiselected=this._name;
 		setTypeText("Point",this._name);
-		_root.panel.properties.init('POI');
-//		populatePropertyWindow('POI');
+		_root.panel.properties.init('POI',getPanelColumns(),4);
+		_root.panel.presets.init(_root.panel.properties);
+		updateButtons();
+		updateScissors(false);
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
 	};
 	// POI.prototype.recolour=function() { };

@@ -4,8 +4,11 @@
 	#		Empty movie-clips for prototypes
 	
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"way");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"relation");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"keyvalue");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"relmember");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"propwindow");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"presetmenu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"auto");
@@ -1233,6 +1236,86 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	$ec->nextFrame();
 	$m->addExport($ec,"newattr");
+	
+	#		close cross
+	
+	$ec=new SWF::Sprite();
+
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	$s->drawCircle(6);
+	$ec->add($s);
+
+	$s=new SWF::Shape();
+	$s->setLine(40,255,255,255);
+	$s->movePenTo(-2.5,-2.5); $s->drawLineTo(2.5, 2.5);
+	$s->movePenTo(-2.5, 2.5); $s->drawLineTo(2.5,-2.5);
+	$ec->add($s);
+	$ec->nextFrame();
+	$m->addExport($ec,"closecross");
+
+	#		add new relation
+	
+	$ec=new SWF::Sprite();
+
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	drawSmallCircle();
+	$ec->add($s);
+
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-3.97,0.28);
+	$s->drawLineTo(-7.68,0.26);
+	$s->drawLineTo(-7.72,2.56);
+	$s->drawLineTo(-3.70,2.56);
+	$s->drawCurveTo(-2.14,2.56,-1.08,1.41);
+	$s->drawLineTo(-2.22,1.42);
+	$s->drawLineTo(-3.04,1.07);
+	$s->drawLineTo(-3.97,0.28);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-2.91,-2.50);
+	$s->drawLineTo(-4.68,-2.40);
+	$s->drawCurveTo(-4.16,0.55,-1.16,0.55);
+	$s->drawLineTo(2.72,0.55);
+	$s->drawLineTo(2.75,-1.48);
+	$s->drawLineTo(-1.13,-1.48);
+	$s->drawCurveTo(-2.01,-1.49,-2.78,-2.34);
+	$s->drawCurveTo(-2.85,-2.42,-2.90,-2.49);
+	$s->drawCurveTo(-2.90,-2.49,-2.90,-2.49);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-3.84,-6.35);
+	$s->drawCurveTo(-2.77,-7.51,-1.21,-7.51);
+	$s->drawLineTo(2.70,-7.51);
+	$s->drawLineTo(2.81,-5.48);
+	$s->drawLineTo(-1.10,-5.48);
+	$s->drawLineTo(-2.03,-6.11);
+	$s->drawLineTo(-2.77,-6.28);
+	$s->drawLineTo(-3.84,-6.35);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-7.81,-3.51);
+	$s->drawLineTo(-3.83,-3.51);
+	$s->drawCurveTo(-2.65,-3.51,-2.20,-2.88);
+	$s->drawCurveTo(-2.11,-2.75,-1.56,-2.55);
+	$s->drawCurveTo(-1.51,-2.53,-1.47,-2.52);
+	$s->drawCurveTo(-1.46,-2.52,-1.46,-2.51);
+	$s->drawLineTo(-0.01,-2.72);
+	$s->drawCurveTo(-0.59,-5.53,-3.79,-5.53);
+	$s->drawLineTo(-7.77,-5.53);
+	$s->drawLineTo(-7.81,-3.51);
+	$ec->add($s);
+		
+	$ec->nextFrame();
+	$m->addExport($ec,"newrel");
 	
 	#		repeat last attributes
 	

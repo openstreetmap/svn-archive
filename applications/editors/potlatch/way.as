@@ -34,7 +34,7 @@
 			_root.map.ways[w].locked=false;
 			_root.map.ways[w].oldversion=0;
 			_root.map.ways[w].path=result[1];
-			_root.map.ways[w].attr=colon2bar(result[2]);
+			_root.map.ways[w].attr=result[2];
 			_root.map.ways[w].xmin=coord2long(result[3]);
 			_root.map.ways[w].xmax=coord2long(result[4]);
 			_root.map.ways[w].ymin=coord2lat(result[5]);
@@ -617,7 +617,7 @@
 						_root.map.pois[point]._y=pointlist[i][2];			//  |
 						_root.map.pois[point]._xscale=
 						_root.map.pois[point]._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
-						_root.map.pois[point].attr=colon2bar(pointlist[i][3]); //  |
+						_root.map.pois[point].attr=pointlist[i][3];			//  |
 						_root.poicount+=1;									//  |
 					}
 				}
@@ -663,18 +663,3 @@
 		_root.wayselected=Math.floor(id);
 		_root.ws=_root.map.ways[id];
 	}
-
-	// temporary patch to show colon key names as bars
-
-	function colon2bar(hash) {
-		var i,j;
-		var a=new Array();
-		for (i in hash) {
-			j=i; while (j.indexOf(':')>-1) {
-				j=j.substr(0,j.indexOf(':'))+'|'+j.substr(j.indexOf(':')+1);
-			}
-			a[j]=hash[i];
-		}
-		return a;
-	}
-

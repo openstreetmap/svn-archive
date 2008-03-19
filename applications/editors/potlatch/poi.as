@@ -31,7 +31,7 @@
 		poirelresponder.onResult=function(result) {
 			_root.map.pois[result[0]]._x  =result[1];
 			_root.map.pois[result[0]]._y  =result[2];
-			_root.map.pois[result[0]].attr=colon2bar(result[3]);
+			_root.map.pois[result[0]].attr=result[3];
 			_root.panel.properties.init('POI',getPanelColumns(),4);
 			_root.panel.presets.init(_root.panel.properties);
 			updateButtons();

@@ -47,8 +47,8 @@
 	OSMRelation.prototype.getType=function() {
 		if (!this.attr['type']) { return "relation"; }
 		if (this.attr['type']=='route') {
-			if (this.attr['route']) { return this.attr['route']; }
 			if (this.attr['network']) { return this.attr['network']; }
+			if (this.attr['route']) { return this.attr['route']; }
 		}
 		return this.attr['type'];
 	};
@@ -122,7 +122,7 @@
 		var linealpha= this.isHighlighting ? 75 : 50;
 		var c = this.isHighlighting ? 0xff8800 : 0x8888ff;
 
-		var type = this.attr['type'];
+		var type = this.getType();
 		if ( !this.isHighlighting ) {
 			if ( relcolours[type] != undefined ) {
 				c = relcolours[type]; linewidth = relwidths[type]; linealpha = relalphas[type];

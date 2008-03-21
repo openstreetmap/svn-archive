@@ -40,6 +40,9 @@ static iconv_t cd = ICONV_ERROR;
 
 static char escape_tmp[1024];
 
+static char **user_list;
+static unsigned long max_uid;
+
 const char *xmlescape(char *in)
 { 
     // Convert from DB charset to UTF8
@@ -66,7 +69,7 @@ const char *xmlescape(char *in)
 #endif
     /* character escaping as per http://www.w3.org/TR/REC-xml/ */
 
-    /* WARNING: this funxtion uses a static buffer so do not rely on the result
+    /* WARNING: this function uses a static buffer so do not rely on the result
      * being constant if called more than once
      */
     bzero(escape_tmp, sizeof(escape_tmp));
@@ -103,23 +106,30 @@ static void osm_tags(struct keyval *tags)
    resetList(tags);
 }
 
-static void osm_node(int id, long double lat, long double lon, struct keyval *tags, const char *ts)
+static const char *lookup_user(const char *s)
+{
+    unsigned long int user_id = strtoul(s, NULL, 10);
+    const char *user = (user_id >= 0 && user_id <= max_uid) ? user_list[user_id] : "";
+    return user ? user : "";
+}
+
+static void osm_node(int id, long double lat, long double lon, struct keyval *tags, const char *ts, const char *user)
 {
     if (listHasData(tags)) {
-        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\">\n", id, lat, lon, ts);
+        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\"%s>\n", id, lat, lon, ts, user);
         osm_tags(tags);
         printf(INDENT "</node>\n");
     } else {
-        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\"/>\n", id, lat, lon, ts);
+        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\"%s/>\n", id, lat, lon, ts, user);
     }
 }
 
-static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const char *ts)
+static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const char *ts, const char *user)
 {
     struct keyval *p;
 
     if (listHasData(tags) || listHasData(nodes)) {
-        printf(INDENT "<way id=\"%d\" timestamp=\"%s\">\n", id, ts);
+        printf(INDENT "<way id=\"%d\" timestamp=\"%s\"%s>\n", id, ts, user);
         while ((p = popItem(nodes)) != NULL) {
             printf(INDENT INDENT "<nd ref=\"%s\" />\n", p->value);
             freeItem(p);
@@ -127,16 +137,16 @@ static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const cha
         osm_tags(tags);
         printf(INDENT "</way>\n");
     } else {
-        printf(INDENT "<way id=\"%d\" timestamp=\"%s\"/>\n", id, ts);
+        printf(INDENT "<way id=\"%d\" timestamp=\"%s\"%s/>\n", id, ts, user);
     }
 }
 
-static void osm_relation(int id, struct keyval *members, struct keyval *roles, struct keyval *tags, const char *ts)
+static void osm_relation(int id, struct keyval *members, struct keyval *roles, struct keyval *tags, const char *ts, const char *user)
 {
     struct keyval *p, *q;
 
     if (listHasData(tags) || listHasData(members)) {
-        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\">\n", id, ts);
+        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\"%s>\n", id, ts, user);
         while (((p = popItem(members)) != NULL) && ((q = popItem(roles)) != NULL)) {
             const char *m_type = p->key;
             const char *m_id   = p->value;
@@ -148,7 +158,7 @@ static void osm_relation(int id, struct keyval *members, struct keyval *roles, s
         osm_tags(tags);
         printf(INDENT "</relation>\n");
     } else {
-        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\"/>\n", id, ts);
+        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\"%s/>\n", id, ts, user);
     }
 }
 
@@ -243,7 +253,7 @@ void parseDate(struct tm *tm, const char *str)
 
     if (n !=6)
         printf("failed to parse date string, got(%d): %s\n", n, str);
- 
+
     tm->tm_year -= 1900;
     tm->tm_mon  -= 1;
     tm->tm_isdst = -1;
@@ -273,7 +283,7 @@ void nodes(MYSQL *mysql)
 
     initList(&tags);
 
-    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 order by id");
+    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, tags, user_id from current_nodes where visible = 1 order by id");
 
     if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql)))
     {
@@ -287,7 +297,7 @@ void nodes(MYSQL *mysql)
         const char *tag_str;
         struct tm date;
 
-        assert(mysql_num_fields(res) == 5);
+        assert(mysql_num_fields(res) == 6);
 
         id = strtol(row[0], NULL, 10);
         latitude  = strtol(row[1], NULL, 10) / 10000000.0;
@@ -296,7 +306,7 @@ void nodes(MYSQL *mysql)
         tag_str = row[4];
         read_tags(tag_str, &tags);
 
-        osm_node(id, latitude, longitude, &tags, strTime(&date));
+        osm_node(id, latitude, longitude, &tags, strTime(&date), lookup_user(row[5]));
     }
 
     mysql_free_result(res);
@@ -476,7 +486,7 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
     initList(&nodes);
 
     snprintf(ways_query, sizeof(ways_query),
-             "select id, timestamp from current_ways where visible = 1 order by id");
+             "select id, timestamp, user_id from current_ways where visible = 1 order by id");
     snprintf(nodes_query, sizeof(nodes_query),
              "select id, node_id from current_way_nodes ORDER BY id, sequence_id");
 
@@ -497,7 +507,7 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
     nodes_row = mysql_fetch_row(nodes_res);
 
     while (ways_row) {
-        int way_id     = strtol(ways_row[0], NULL, 10);
+        int way_id = strtol(ways_row[0], NULL, 10);
         // Terminating way_nd_id is necessary to ensure final way is generated.
         int way_nd_id = nodes_row ? strtol(nodes_row[0], NULL, 10): INT_MAX;
 
@@ -506,10 +516,10 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
             struct tm date;
             parseDate(&date, ways_row[1]);
             tags = get_generic_tags(tags_mysql, way_id);
-            osm_way(way_id, &nodes, tags, strTime(&date));
+            osm_way(way_id, &nodes, tags, strTime(&date), lookup_user(ways_row[2]));
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
-            assert(mysql_num_fields(ways_res) == 2);
+            assert(mysql_num_fields(ways_res) == 3);
         } else if (way_id > way_nd_id) {
             // we have entries in current_way_nodes for a missing way, discard!
             // fetch next way_seg
@@ -539,7 +549,7 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
     initList(&roles);
 
     snprintf(relations_query, sizeof(relations_query),
-             "select id, timestamp from current_relations where visible = 1 order by id");
+             "select id, timestamp, user_id from current_relations where visible = 1 ORDER BY id");
     snprintf(members_query, sizeof(members_query),
              "select id, member_id, member_type, member_role from current_relation_members ORDER BY id");
 
@@ -569,10 +579,10 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
             struct tm date;
             parseDate(&date, relations_row[1]);
             tags = get_generic_tags(tags_mysql, relation_id);
-            osm_relation(relation_id, &members, &roles, tags, strTime(&date));
+            osm_relation(relation_id, &members, &roles, tags, strTime(&date), lookup_user(relations_row[2]));
             // fetch new way
             relations_row= mysql_fetch_row(relations_res);
-            assert(mysql_num_fields(relations_res) == 2);
+            assert(mysql_num_fields(relations_res) == 3);
         } else if (relation_id > relation_memb_id) {
             // we have entries in current_way_members for a missing way, discard!
             // fetch next way_seg
@@ -594,6 +604,61 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
     mysql_free_result(relations_res);
     mysql_free_result(members_res);
     tags_exit();
+}
+
+unsigned long int max_userid(MYSQL *mysql)
+{
+    const char *sql = "SELECT MAX(id) FROM users";
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    unsigned long int max = 0;
+
+    if ((mysql_query(mysql, sql)) || !(res= mysql_use_result(mysql))) {
+        fprintf(stderr,"Cannot query users: %s\n", mysql_error(mysql));
+        exit(1);
+    }
+
+    while ((row=mysql_fetch_row(res))) {
+        max = strtol(row[0], NULL, 10);
+    }
+
+    mysql_free_result(res);
+    //printf("Maximum user id = %lu\n", max);
+    return max;
+}
+
+
+void fetch_users(MYSQL *mysql)
+{
+    char sql[256];
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+
+    sprintf(sql, "SELECT id,display_name from users where id <= %lu and data_public = 1", max_uid);
+
+    if ((mysql_query(mysql, sql)) || !(res= mysql_use_result(mysql))) {
+        fprintf(stderr,"Cannot query users: %s\n", mysql_error(mysql));
+        exit(1);
+    }
+
+    while ((row=mysql_fetch_row(res))) {
+        unsigned long int id;
+        const char *display_name;
+        int len;
+        assert(mysql_num_fields(res) == 2);
+
+        id = strtoul(row[0], NULL, 10);
+        display_name = xmlescape(row[1]);
+        assert(id <= max_uid);
+        //user_list[id] = display_name;
+        //printf("User: %lu %s\n", id, display_name);
+        len = strlen(display_name) + strlen(" user=\"\"") + 1;
+        user_list[id] = malloc(len);
+        assert(user_list[id]);
+        snprintf(user_list[id], len, " user=\"%s\"", display_name);
+    }
+
+    mysql_free_result(res); 
 }
 
 
@@ -656,6 +721,14 @@ int main(int argc, char **argv)
     printf("<osm version=\"0.5\" generator=\"OpenStreetMap planet.c\">\n");
     printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.5\" />\n");
 
+    max_uid = max_userid(&mysql[0]);
+    user_list = calloc(max_uid + 1, sizeof(char *));
+    if (!user_list) {
+        fprintf(stderr, "Malloc of user_list failed for %lu users\n", max_uid);
+        exit(1);
+    }
+
+    fetch_users(&mysql[0]);
     nodes(&mysql[0]);
     ways(&mysql[0], &mysql[1], &mysql[2]);
     relations(&mysql[0], &mysql[1], &mysql[2]);
@@ -667,5 +740,10 @@ int main(int argc, char **argv)
 #ifdef USE_ICONV
     iconv_close(cd);
 #endif
+
+    for(i=0; i<=max_uid; i++)
+        free(user_list[i]);
+    free(user_list);
+
     return 0;
 }

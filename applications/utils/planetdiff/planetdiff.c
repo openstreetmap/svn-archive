@@ -101,6 +101,17 @@ static int compareKeyval(struct keyval kv[2])
     while(1) {
         if (END(0) && END(1))
             return 0;
+
+        // Ignore user= since we don't want to emit these for the new planet which adds names
+        if (!END(0) && !strcmp(p[0]->key, "user")) {
+            p[0] = p[0]->next;
+            continue;
+        }
+        if (!END(1) && !strcmp(p[1]->key, "user")) {
+            p[1] = p[1]->next;
+            continue;
+        }
+
         if (END(0))
             return -1;
         if (END(1))

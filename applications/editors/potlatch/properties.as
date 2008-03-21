@@ -485,13 +485,20 @@
 			_root.keytarget='keyname';
 		};
 		this.keyname.onKillFocus=function() {
+			renameKey(this);
 			if (_root.lastkeypressed==-1 && _root.auto.autolist.hitTest(_root._xmouse,_root._ymouse)) { return; }
 			if (this.text=='') { _root.redopropertywindow=this._parent._parent._parent; }
 			_root.keytarget=_root.basekeytarget;
 			_root.auto.remove();
 		};
 		this.keyname.onChanged=function(tf) {
-			renameKey(tf);
+			if (tf.text=='+') {
+				// if FP has picked up the "+" keypress, ignore it and set back to 'key'
+				tf.text='key';
+				tf.setTextFormat(boldSmall);
+				tf.setNewTextFormat(boldSmall);
+				Selection.setFocus(tf); Selection.setSelection(0,3);
+			}
 			if (!_root.auto) { _root.attachMovie("auto","auto",75); }
 			_root.auto.redraw(tf);
 			this._parent._parent._parent.saveAttributes();
@@ -613,13 +620,7 @@
 
 	function renameKey(tf) {
 		var k=tf.text;
-		if (k=='+') {
-			// if FP has picked up the "+" keypress, ignore it and set back to 'key'
-			tf.text='key';
-			tf.setTextFormat(boldSmall);
-			tf.setNewTextFormat(boldSmall);
-			Selection.setFocus(tf); Selection.setSelection(0,3);
-		} else if (k!=tf._parent.lastkey) {
+		if (k!=tf._parent.lastkey) {
 			// field has been renamed, so delete old one and set new one
 			// (we have to set it to '' sometimes because of Ming delete bug)
 			switch (tf._parent._parent._parent.proptype) {

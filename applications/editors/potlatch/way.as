@@ -1,3 +1,4 @@
+
 	// =====================================================================================
 	// OOP classes - OSMWay
 
@@ -363,6 +364,7 @@
 	// ----	Split, merge, reverse
 
 	OSMWay.prototype.splitWay=function() {
+		var i,z;
 		if (pointselected>0 && pointselected<(this.path.length-1) && this.oldversion==0) {
 			_root.newwayid--;											// create new way
 			_root.map.ways.attachMovie("way",newwayid,++waydepth);		//  |
@@ -372,8 +374,12 @@
 				_root.map.ways[newwayid].path[i]=new Array();			//  |
 				for (j=0; j<=5; j+=1) { _root.map.ways[newwayid].path[i][j]=this.path[i][j]; }
 			}															// | 
-
 			z=this.attr; for (i in z) { _root.map.ways[newwayid].attr[i]=z[i]; }
+
+			z=getRelationsForWay(this._name);							// copy relations
+			for (i in z) {												//  | 
+				_root.map.relations[z[i]].setWayRole(newwayid,_root.map.relations[z[i]].getWayRole(this._name));
+			}															//  |
 
 			this.path.splice(Math.floor(pointselected)+1);				// current way
 			this.redraw();												//  |
@@ -386,6 +392,7 @@
 			this.upload();												// upload current way
 			pointselected=-2;											//  |
 			this.select();												//  |
+			uploadDirtyRelations();
 		};
 	};
 
@@ -410,6 +417,13 @@
 			}
 			if (!this.attr[i]) { delete this.attr[i]; }
 		}
+
+		z=getRelationsForWay(otherway._name);						// copy relations
+		for (i in z) {												//  | 
+			if (!_root.map.relations[z[i]].hasWay(this._name)) {	//  |
+				_root.map.relations[z[i]].setWayRole(this._name,_root.map.relations[z[i]].getWayRole(otherway._name));
+			}														//  |
+		}															//  |
 
 		this.mergedways.push(otherway._name);
 		this.mergedways.concat(otherway.mergedways);
@@ -533,6 +547,7 @@
 			_root.ws.highlightPoints(5000,"anchor");
 			removeMovieClip(_root.map.anchorhints);
 		}
+		redrawRelationsForMember('way',_root.wayselected);
 		// Mark as unclean
 		_root.ws.clean=false;
 		markClean(false);
@@ -646,6 +661,7 @@
 			if (qway==_root.wayselected) {
 			} else if (!_root.map.ways[qway].clean) {
 				_root.map.ways[qway].upload();
+				uploadDirtyRelations();
 			} else if (((_root.map.ways[qway].xmin<edge_l && _root.map.ways[qway].xmax<edge_l) ||
 						(_root.map.ways[qway].xmin>edge_r && _root.map.ways[qway].xmax>edge_r) ||
 					    (_root.map.ways[qway].ymin<edge_b && _root.map.ways[qway].ymax<edge_b) ||

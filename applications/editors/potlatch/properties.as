@@ -388,13 +388,21 @@
 	};
 	
 	PropertyWindow.prototype.repeatAttributes=function() {
-		var i,z;
+		var i,proparr;
 		switch (savedtype) {
-			case 'point':	z=_root.map.ways[savedway].path[savedpoint][4]; break;
-			case 'POI':		z=_root.map.pois[savedpoi].attr; break; // ** formerly had _root.map.pois[poiselected].attr=new Array(); in here, no obvious reason why
-			case 'way':		z=_root.map.ways[savedway].attr; break;
+			case 'point':	proparr=_root.map.ways[savedway].path[savedpoint][4]; 
+							relarr=getRelationsForNode(savedpoint);
+							break;
+			case 'POI':		proparr=_root.map.pois[savedpoi].attr;
+							relarr=getRelationsForNode(savedpoi);
+							break; // ** formerly had _root.map.pois[poiselected].attr=new Array(); in here, no obvious reason why
+			case 'way':		proparr=_root.map.ways[savedway].attr;
+							relarr=getRelationsForWay(savedway);
+							break;
 		}
-		for (i in z) {
+
+		// repeat tags
+		for (i in proparr) {
 			if (Key.isDown(Key.SHIFT) && (i=='name' || i=='ref') || i=='created_by') {
 				// ignore name and ref if SHIFT pressed
 			} else {
@@ -404,6 +412,16 @@
 					case 'way':		j=_root.map.ways[savedway].attr[i]; break;
 				}
 				setValueInObject(this.proptype,i,j);
+			}
+		}
+
+		// repeat relations
+		for (i in relarr) {
+			var r=_root.map.relations[relarr[i]];	// reference to this relation
+			switch (savedtype) {
+				case 'point':	r.setNodeRole(pointselected,r.getWayRole(savedpoint)); break;
+				case 'POI':		r.setNodeRole(poiselected,r.getWayRole(savedpoi)); break;
+				case 'way':		r.setWayRole(wayselected,r.getWayRole(savedway)); break;
 			}
 		}
 		if (this.proptype=='way') { _root.ws.redraw(); }

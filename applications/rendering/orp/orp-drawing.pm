@@ -14,7 +14,7 @@ use strict;
 use warnings;
 require "orp-bbox-area-center.pm";
 
-our ($writer, $projection, $symbolScale, $textAttenuation);
+our ($writer, $projection, $symbolScale, $textAttenuation, $debug);
 
 
 # -------------------------------------------------------------------
@@ -40,13 +40,15 @@ sub draw_lines
     # FIXME copy node svg: attributes
     my $smart_linecaps = ($linenode->getAttribute("smart-linecap") ne "no");
     my $class = $linenode->getAttribute("class");
+    my $group_started = 0;
 
-    $writer->startTag("g", "class" => $class);
 
     foreach ($selected->members)
     {
         next unless (ref $_  eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
+        $writer->startTag("g", "class" => $class) unless($group_started);
+        $group_started = 1;
         if ($smart_linecaps)
         {
             draw_way_with_smart_linecaps($linenode, $layer, $_, $class);
@@ -56,7 +58,7 @@ sub draw_lines
             draw_path($linenode, "way_normal_".$_->{"id"}, $class);
         }
     }
-    $writer->endTag("g");
+    $writer->endTag("g") if ($group_started);
 }
 
 # The following is from the original osmarender.xsl and describes how
@@ -164,7 +166,6 @@ sub draw_areas
     # FIXME copy node svg: attributes
     my $class = $areanode->getAttribute("class");
 
-    #debug("draw areas of class $class");
     $writer->startTag("g", "class" => $class);
 
 OUTER:
@@ -186,7 +187,6 @@ OUTER:
             my ($role, $rel) = @$relpair;
             if ($rel->{"tags"}->{"type"} eq "multipolygon" && $role eq "outer")
             {
-            debug("outer in multi");
                 # right, we are "outer" - find all "inner" ways of this relation 
                 # and add them to our path
                 foreach my $relmember(@{$rel->{"members"}})
@@ -194,8 +194,8 @@ OUTER:
                     my ($role, $obj) = @$relmember;
                     if ($role eq "inner" && ref($obj) eq "way")
                     {
-                        debug(sprintf("collecting way %d as 'hole' in polygon %d",
-                            $obj->{"id"}, $_->{"id"}));
+                        #debug(sprintf("collecting way %d as 'hole' in polygon %d",
+                        #    $obj->{"id"}, $_->{"id"}));
                         $points = [];
                         foreach (@{$obj->{"nodes"}})
                         {
@@ -273,7 +273,9 @@ sub draw_text
         next if defined($layer) and $_->{'layer'} != $layer;
         if (ref $_ eq 'node')
         {
+            my $text = $_->{'tags'}{$textnode->getAttribute("k")} || '';
             my $projected = project([$_->{'lat'}, $_->{'lon'}]);
+            debug("draw node text '$text'") if ($debug->{"drawing"});
             $writer->startTag("text", 
                 "x" => $projected->[0],
                 "y" => $projected->[1],
@@ -336,7 +338,6 @@ sub draw_text_on_path
     my $text = $way->{'tags'}{$textnode->getAttribute("k")} || '';
     my $textLength = length($text);
     return if ($textLength == 0);
-    #debug("att=$att textLength=$textLength pathLength=$pathLength");
 
     if ($pathLength > $textLength)
     {
@@ -357,6 +358,8 @@ sub draw_text_on_path
 
     if ($fontsize)
     {
+        debug("draw text on path '$text'") if ($debug->{"drawing"});
+
         my $path = ($reverse) ?
             "#way_reverse_$id" : "#way_normal_$id";
         $writer->startTag("text", 
@@ -366,10 +369,14 @@ sub draw_text_on_path
             "xlink:href" => $path, 
             ($fontsize == 100) ? () : ("font-size", $fontsize."%"), 
             copy_attributes_in_list($textnode, 
-                [ "class", "startOffset","method","spacing","lengthAdjust","textLength" ]));
+                [ "font-size", "startOffset","method","spacing","lengthAdjust","textLength" ]));
         $writer->characters($text);
         $writer->endTag("textPath");
         $writer->endTag("text");
+    }
+    elsif ($debug->{"drawing"})
+    {
+        debug("do not draw text on path '$text' - no room");
     }
 }
 

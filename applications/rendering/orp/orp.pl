@@ -16,8 +16,6 @@
 # --------------------
 #
 # Known bugs:
-# - something is wrong with the text length detection and I haven't found
-#   it yet. 
 # - something seems to be wrong with my implementation of bobkare's area
 #   center algorithm; it works "mostly" but sometimes it is a bit off. It
 #   doesn't support relations (polygons with holes) yet but even for those
@@ -131,9 +129,9 @@ require "orp-drawing.pm";
 
 # available debug flags:
 our $debug = { 
-    "rules" => 0,    # print all rules and how many matches
+    "rules" => 1,    # print all rules and how many matches
     "indexes" => 0,  # print messages about the use of indexes
-    "drawing" => 0,  # print out all drawing instructions executed
+    "drawing" => 1,  # print out all drawing instructions executed
 };
 
 our $node_storage = {};
@@ -261,7 +259,7 @@ my $title = get_variable("title", "");
 my $showBorder = get_variable("showBorder", "no");
 my $showScale = get_variable("showScale", "no");
 my $showLicense = get_variable("showLicense", "no");
-my $textAttenuation = get_variable("textAttenuation");
+our $textAttenuation = get_variable("textAttenuation");
 
 # extra height for marginalia
 my $marginaliaTopHeight = ($title ne "") ? 40 : 
@@ -674,17 +672,8 @@ sub draw_marginalia
 # -------------------------------------------------------------------
 # sub process_layer()
 #
-# The main workhorse.
+# Used for layer instructions.
 #
-# This is called recursively if you have nested rule elements.
-#
-# Parameters:
-# $rulenode - the XML::XPath node for the <rule> or <else> element
-#   being processed.
-# $depth -    the recursion depth.
-# $layer -    the OSM layer being processed (undef for no layer restriction)
-# $previous - the XML::XPath node for the previous <rule> of the
-#   same depth; used only for debug messages.
 # -------------------------------------------------------------------
 sub process_layer
 {
@@ -709,11 +698,11 @@ sub process_layer
 
         if($name eq "rule")
         {
-           process_rule($_, $depth+1, $layer);
+            process_rule($_, $depth+1, $layer);
         }
         elsif ($name ne "")
         {
-         debug("'$name' id not allowed layer instruction '$lname' ignored");
+            debug("'$name' id not allowed layer instruction '$lname' ignored");
         }
     }
     $writer->endTag("g");
@@ -748,11 +737,11 @@ sub process_rule
     # - if we are on another layer, ignore the rule.
     
     my $rule_layer = $rulenode->getAttribute('layer');
-    if ($rule_layer && $layer && ($rule_layer ne '') && ($layer ne '')) 
+    if (defined($rule_layer) && defined($layer))
     {
-        if ($rule_layer ne $layer)
+        if ($rule_layer != $layer)
         {
-            #debug("rule ignored on layer '$layer': ".$rulenode->toString(1));
+            debug("rule ignored on layer '$layer': ".$rulenode->toString(1));
             return;
         }
         undef $layer;

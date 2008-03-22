@@ -35,21 +35,13 @@ public class DataSetTest {
     private static final double EPSILON = 1e-9;
      
     private DataSet data = new DataSet();
-    private Node n1 = new Node(data, 1, 10, 11, null, null, true); 
-    private Node n2 = new Node(data, 2, 20, 21, null, null, true); 
-    private Node n3 = new Node(data, 3, 30, 31, null, null, true); 
-    private Way w1 = new Way(data, 1, null, null, true);
-    private Way w2 = new Way(data, 2, null, null, true);
+    private Node n1 = data.createNode(10, 11);
+    private Node n2 = data.createNode(20, 21); 
+    private Node n3 = data.createNode(30, 31); 
+    private Way w1 = data.createWay(n1, n2, n3);
+    private Way w2 = data.createWay(n3, n1);
     UndoManager undo = new UndoManager();
-    
     {
-        data.addNode(n1);
-        data.addNode(n2);
-        data.addNode(n3);
-        w1.setNodes(Arrays.asList(n1,n2,n3));
-        w2.setNodes(Arrays.asList(n3,n1));
-        data.addWay(w1);
-        data.addWay(w2);
         data.addUndoableEditListener (undo);
     }
 
@@ -105,8 +97,14 @@ public class DataSetTest {
         assertFalse(n1.isModified());
         
         //perform two back-to-back edits
-        n1.setCoordinate(new CoordinateImpl(15, 16));
-        n1.setCoordinate(new CoordinateImpl(17, 18));
+        Object token = new Object();
+        data.atomicEdit(new Runnable() {public void run() {
+            n1.setCoordinate(new CoordinateImpl(15, 16));
+        }}, token);
+        
+        data.atomicEdit(new Runnable() {public void run() {
+            n1.setCoordinate(new CoordinateImpl(17, 18));
+        }}, token);
 
         // check the final state
         checkPrimitives(true, 17, 18);
@@ -272,20 +270,21 @@ public class DataSetTest {
     
     public @Test void testAtomicallyDeletePrimitives() {
         data.atomicEdit(new Runnable() {public void run() {
-            data.removeWay(w1);
-            data.removeNode(n2);
+            w1.delete();
+            n2.delete();
         }}, null);
         
-        assertNull(data.getWay(w1.getId()));
-        assertNull(data.getNode(n2.getId()));
+        assertFalse(data.getWays().contains(w1));
+        assertFalse(data.getNodes().contains(n2));
 
         undo.undo();
-        assertSame(w1, data.getWay(w1.getId()));
-        assertSame(n2, data.getNode(n2.getId()));
+        // would like to test for == instead of equals
+        assertTrue(data.getWays().contains(w1));
+        assertTrue(data.getNodes().contains(n2));
 
         undo.redo();
-        assertNull(data.getWay(w1.getId()));
-        assertNull(data.getNode(n2.getId()));
+        assertFalse(data.getWays().contains(w1));
+        assertFalse(data.getNodes().contains(n2));
     }
     
     
@@ -319,7 +318,7 @@ public class DataSetTest {
     }
 
     @Test
-    public void addNode() {
+    public void createNode() {
     }
 
     @Test
@@ -335,7 +334,7 @@ public class DataSetTest {
     }
 
     @Test
-    public void addWay() {
+    public void createWay() {
     }
 
     @Test

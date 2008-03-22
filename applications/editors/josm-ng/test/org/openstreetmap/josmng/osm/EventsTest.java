@@ -37,22 +37,15 @@ import static org.junit.Assert.*;
 public class EventsTest {
     
     private DataSet data = new DataSet();
-    private Node n1 = new Node(data, 1, 10, 11, null, null, true); 
-    private Node n2 = new Node(data, 2, 20, 21, null, null, true); 
-    private Node n3 = new Node(data, 3, 30, 31, null, null, true); 
-    private Way w1 = new Way(data, 1, null, null, true);
-    private Way w2 = new Way(data, 2, null, null, true);
+    private Node n1 = data.createNode(10, 11);
+    private Node n2 = data.createNode(20, 21); 
+    private Node n3 = data.createNode(30, 31); 
+    private Way w1 = data.createWay(n1, n2, n3);
+    private Way w2 = data.createWay(n3, n1);
     UndoManager undo = new UndoManager();
     Listener l = new Listener();
     
     {
-        data.addNode(n1);
-        data.addNode(n2);
-        data.addNode(n3);
-        w1.setNodes(Arrays.asList(n1,n2,n3));
-        w2.setNodes(Arrays.asList(n3,n1));
-        data.addWay(w1);
-        data.addWay(w2);
         data.addUndoableEditListener (undo);
         data.addDataSetListener(l);
     }
@@ -61,7 +54,7 @@ public class EventsTest {
     }
 
     public @Test void testAdd() {
-        data.addNode(1, 1);
+        data.createNode(1, 1);
         l.check(1, 0, 0, 0, 0);
         
         undo.undo();
@@ -72,7 +65,7 @@ public class EventsTest {
     }
     
     public @Test void testRemove() {
-        data.removeWay(w2);
+        w2.delete();
         l.check(0, 1, 0, 0, 0);
         
         undo.undo();

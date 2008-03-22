@@ -31,7 +31,6 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import org.openstreetmap.josmng.osm.DataSet;
-import org.openstreetmap.josmng.osm.io.OsmReader;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
@@ -171,7 +170,7 @@ public class Main extends javax.swing.JFrame {
         });
         
         if (args.length == 1 && new File(args[0]).exists()) {
-            DataSet ds = OsmReader.parse(new FileInputStream(args[0]));
+            DataSet ds = DataSet.fromStream(new FileInputStream(args[0]));
             MapView view = Main.main.mapView1;
             view.addLayer(new OsmLayer(view, args[0], ds));
         }

@@ -27,7 +27,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
 import org.openstreetmap.josmng.osm.DataSet;
-import org.openstreetmap.josmng.osm.io.OsmReader;
 import org.openstreetmap.josmng.ui.Main;
 import org.openstreetmap.josmng.view.Layer;
 import org.openstreetmap.josmng.view.MapView;
@@ -54,7 +53,7 @@ public class OpenAction extends AbstractAction {
 
     private void doOpen(String fName) {
         try {
-            DataSet ds = OsmReader.parse(new FileInputStream(fName));
+            DataSet ds = DataSet.fromStream(new FileInputStream(fName));
             MapView view = Main.main.getMapView();
             Layer layer = new OsmLayer(view, "fName", ds);
             view.addLayer(layer);

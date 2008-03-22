@@ -23,9 +23,6 @@ package org.openstreetmap.josmng.osm;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 
 /**
  * A representation of a single OSM way. Contains an ordered list of way nodes

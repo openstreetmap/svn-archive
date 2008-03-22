@@ -129,6 +129,7 @@ require "orp-drawing.pm";
 
 # available debug flags:
 our $debug = { 
+    "general" => 0,  # general status messages
     "rules" => 0,    # print all rules and how many matches
     "indexes" => 0,  # print messages about the use of indexes
     "drawing" => 0,  # print out all drawing instructions executed
@@ -253,7 +254,7 @@ foreach (values(%$node_storage))
 }
 
 my $count = $selection->[0]->size();
-debug("$count objects in level-0 selection");
+debug("$count objects in level-0 selection") if ($debug->{"general"});
 
 my $title = get_variable("title", "");
 my $showBorder = get_variable("showBorder", "no");
@@ -417,7 +418,7 @@ else
     # didn't work out.
     foreach my $layer(sort { $a <=> $b } keys %$layers)
     {
-        debug("processing layer $layer");
+        debug("processing layer $layer") if ($debug->{"general"});
         $writer->startTag('g',
             'inkscape:groupmode' => 'layer',
             'id' => "layer$layer",
@@ -736,12 +737,12 @@ sub process_rule
     #   (i.e. lift the "only objects on layer X" restriction)
     # - if we are on another layer, ignore the rule.
     
-    my $rule_layer = $rulenode->getAttribute('layer');
-    if (defined($rule_layer) && defined($layer))
+    my $rule_layer = $rulenode->getAttribute('layer') || '';
+    if (($rule_layer ne '') && defined($layer))
     {
         if ($rule_layer != $layer)
         {
-            debug("rule ignored on layer '$layer': ".$rulenode->toString(1))
+            debug("rule has layer '$rule_layer', ignored on layer '$layer': ".$rulenode->toString(1))
                 if ($debug->{"rules"});
             return;
         }

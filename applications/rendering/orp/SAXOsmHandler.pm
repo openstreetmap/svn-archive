@@ -111,8 +111,7 @@ sub start_element
     elsif ($element->{Name} eq 'relation')
     {
         undef $self->{current};
-        return if defined $element->{'Attributes'}{'action'}
-               && $element->{'Attributes'}{'action'} eq 'delete';
+        return if $element->{'Attributes'}{'action'} eq 'delete';
         
         my $id = $element->{'Attributes'}{'id'};
         $self->{relation}{$id} =
@@ -192,7 +191,6 @@ sub end_element
 #--------------------------------------------------------------------
 sub start_document 
 {
-    print "Starting SAX OSM parser\n";
 }
 
 
@@ -205,7 +203,6 @@ sub start_document
 #--------------------------------------------------------------------
 sub end_document 
 {
-    print "SAX OSM parser finished\n";
 }
 
 

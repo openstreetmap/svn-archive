@@ -25,14 +25,44 @@ import java.util.EventListener;
 
 /**
  * A listener listening for all DataSet changes.
- * INCOMPLETE!
+ * INCOMPLETE (missing relation-related events)!
  * 
  * @author nenik
  */
 public interface DataSetListener extends EventListener {
+    /**
+     * A bunch of primitives were added into the DataSet, or existing
+     * deleted/invisible primitives were resurrected.
+     * 
+     * @param added A collection of newly-visible primitives
+     */
     public void primtivesAdded(Collection<? extends OsmPrimitive> added);
+
+    /**
+     * A bunch of primitives were removed from the DataSet, or preexisting
+     * primitives were marked as deleted.
+     * 
+     * @param removed A collection of newly-invisible primitives
+     */
     public void primtivesRemoved(Collection<? extends OsmPrimitive> removed);
+    
+    /**
+     * There was some change in the tag set of a primitive. It can have been
+     * a tag addition, tag removal or change in tag value.
+     * 
+     * @param prim the primitive, whose tags were affected.
+     */
     public void tagsChanged(OsmPrimitive prim);
+    
+    /**
+     * A node's coordinates were modified.
+     * @param node The node that was moved.
+     */
     public void nodeMoved(Node node);
+    
+    /**
+     * A way's node list was changed.
+     * @param way The way that was modified.
+     */
     public void wayNodesChanged(Way way);
 }

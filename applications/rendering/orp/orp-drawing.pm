@@ -61,8 +61,8 @@ sub draw_lines
     $writer->endTag("g") if ($group_started);
 }
 
-# The following is from the original osmarender.xsl and describes how
-# "smart linecaps" work:
+# The following comment is from the original osmarender.xsl and describes 
+# how "smart linecaps" work:
 #
 # The first half of the first segment and the last half of the last segment 
 # are treated differently from the main part of the way path.  The main part 
@@ -265,15 +265,14 @@ sub draw_text
     # (b) <text>The name is <tag k="name"> and the ref is <tag k="ref"></text>
     #     This inserts the values of the named tags into the given text and 
     #     writes the result.
-    # 
-    # This method currently only supports (a).
+    # both are supported (through the substitute_text function)
 
     foreach($selected->members())
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         if (ref $_ eq 'node')
         {
-            my $text = $_->{'tags'}{$textnode->getAttribute("k")} || '';
+            my $text = substitute_text($textnode, $_);
             my $projected = project([$_->{'lat'}, $_->{'lon'}]);
             debug("draw node text '$text'") if ($debug->{"drawing"});
             $writer->startTag("text", 
@@ -315,6 +314,7 @@ sub draw_text_on_path
 {
     my ($textnode, $way) = @_;
 
+    my $text = substitute_text($textnode, $way);
     my $sumLon = 0;
     my $sumLat = 0;
     my $nodes = $way->{'nodes'};
@@ -335,7 +335,6 @@ sub draw_text_on_path
        ($sumLat*1000*$att*$projection)**2);
 
     my $fontsize;
-    my $text = $way->{'tags'}{$textnode->getAttribute("k")} || '';
     my $textLength = length($text);
     return if ($textLength == 0);
 
@@ -380,6 +379,79 @@ sub draw_text_on_path
     }
 }
 
+# -------------------------------------------------------------------
+# sub substitute_text($rulenode, $object)
+#
+# returns the string to be drawn by the given text rule.
+# 
+# Supports simple text instructions that have no content and just
+# a "k" attribute specifying the tag key whose value should be 
+# printed, as well as the complex text instruction where the text
+# instruction as abitrary fixed content interspresed with 
+# "<tag k=.../>" elements that insert tag values in their place.
+# 
+# Parameters:
+# $rulenode - the XML::XPath::Node object for the <text> instruction
+#    in the rules file.
+# $object - the object from which to read tag values
+#
+# Return value:
+# the string to be drawn.
+# -------------------------------------------------------------------
+sub substitute_text
+{
+    my ($textnode, $object) = @_;
+    my $text = '';
+    my $k_attr = $textnode->getAttribute("k");
+
+    if ($k_attr ne '')
+    {
+        # the simple case where the text is exactly one tag value
+        $text = $object->{'tags'}{$k_attr} || '';
+    }
+    else
+    {
+        # need to examine the child nodes of the text node.
+        foreach my $child($textnode->getChildNodes())
+        {
+            if ($child->getNodeType() == XML::XPath::Node::TEXT_NODE())
+            {
+                $text .= $child->string_value;
+            }
+            elsif ($child->getNodeType() == XML::XPath::Node::ELEMENT_NODE())
+            {
+                my $elname = $child->getName();
+                if ($elname eq "tag")
+                {
+                    my $k = $child->getAttribute("k");
+                    my $d = $child->getAttribute("default");
+                    my $val;
+                    if ($k =~ /^osm:(user|timestamp|id)$/)
+                    {
+                        $val = $object->{$1}
+                    }
+                    else
+                    {
+                        $val = $object->{'tags'}{$k};
+                    }
+                    $val = $d unless defined($val);
+                    $text .= $val if defined($val);
+                }
+                else
+                {
+                    debug("ignoring <$elname> tag in text instruction");
+                }
+            }
+            else
+            {
+                # error
+                die "error parsing text instruction '".
+                    $textnode->toString()."'";
+            }
+        }
+    }
+    return $text;
+}
 # -------------------------------------------------------------------
 # sub draw_area_text($rulenode, $layer, $selection)
 #

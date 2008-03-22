@@ -40,14 +40,16 @@ sub draw_lines
     # FIXME copy node svg: attributes
     my $smart_linecaps = ($linenode->getAttribute("smart-linecap") ne "no");
     my $class = $linenode->getAttribute("class");
+    my $mask_class = $linenode->getAttribute("mask-class") || '';
     my $group_started = 0;
-
 
     foreach ($selected->members)
     {
         next unless (ref $_  eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
-        $writer->startTag("g", "class" => $class) unless($group_started);
+        $writer->startTag("g", 
+            "class" => $class,
+            ($mask_class ne "") ? ("mask-class", $mask_class) : ()) unless $group_started;
         $group_started = 1;
         if ($smart_linecaps)
         {
@@ -55,7 +57,7 @@ sub draw_lines
         }
         else
         {
-            draw_path($linenode, "way_normal_".$_->{"id"}, $class);
+            draw_path($linenode, "way_normal_".$_->{"id"});
         }
     }
     $writer->endTag("g") if ($group_started);
@@ -83,8 +85,8 @@ sub draw_way_with_smart_linecaps
     return unless(scalar(@$nodes));
 
     # first draw middle segment if we have more than 2 nodes
-    draw_path($linenode, "way_mid_$id", $class.
-        " osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end") 
+    draw_path($linenode, "way_mid_$id", 
+        "osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end") 
         if (scalar(@$nodes)>2);
 
     # count connectors on first and last node
@@ -114,32 +116,32 @@ sub draw_way_with_smart_linecaps
 
     if ($first_node_connection_count == 1)
     {
-        draw_path($linenode, "way_start_$id", $class." osmarender-no-marker-end");
+        draw_path($linenode, "way_start_$id", "osmarender-no-marker-end");
     } 
     elsif ($first_node_lower_layer_connection_count > 0)
     {
-        draw_path($linenode, "way_start_$id", $class.
-            " osmarender-stroke-linecap-butt osmarender-no-marker-end");
+        draw_path($linenode, "way_start_$id", 
+            "osmarender-stroke-linecap-butt osmarender-no-marker-end");
     }
     else
     {
-        draw_path($linenode, "way_start_$id", $class.
-            " osmarender-stroke-linecap-round osmarender-no-marker-end");
+        draw_path($linenode, "way_start_$id",
+            "osmarender-stroke-linecap-round osmarender-no-marker-end");
     }
 
     if ($last_node_connection_count == 1)
     {
-        draw_path($linenode, "way_end_$id", $class." osmarender-no-marker-start");
+        draw_path($linenode, "way_end_$id", "osmarender-no-marker-start");
     } 
     elsif ($last_node_lower_layer_connection_count > 0)
     {
-        draw_path($linenode, "way_end_$id", $class.
-            " osmarender-stroke-linecap-butt osmarender-no-marker-start");
+        draw_path($linenode, "way_end_$id", 
+            "osmarender-stroke-linecap-butt osmarender-no-marker-start");
     }
     else
     {
-        draw_path($linenode, "way_end_$id", $class.
-            " osmarender-stroke-linecap-round osmarender-no-marker-start");
+        draw_path($linenode, "way_end_$id", 
+            "osmarender-stroke-linecap-round osmarender-no-marker-start");
     }
 }
 
@@ -711,9 +713,10 @@ sub draw_way_markers
 # -------------------------------------------------------------------
 sub draw_path
 {
-    my ($rulenode, $path_id, $class) = @_;
+    my ($rulenode, $path_id, $addclass) = @_;
 
     my $mask_class = $rulenode->getAttribute("mask-class");
+    my $class = $rulenode->getAttribute("class");
     my $extra_attr = [];
     if ($mask_class ne "")
     {
@@ -741,7 +744,7 @@ sub draw_path
     $writer->emptyTag("use", 
         "xlink:href" => "#$path_id",
         @$extra_attr,
-        "class" => $class);
+        "class" => "$class $addclass");
 }
 
 1;

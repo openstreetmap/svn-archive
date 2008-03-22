@@ -20,6 +20,7 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.util.Collections;
 import java.util.Date;
 import javax.swing.undo.UndoableEdit;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -102,7 +103,32 @@ public abstract class OsmPrimitive {
         return (Date) timestamp;
     }
 
+    /**
+     * Delete the primitive from its enclosing DataSet.
+     * The primitive might be either really removed from the DataSet (in case
+     * it has no ID assigned yet) or just marked (and notified)
+     * as {@link isDeleted()} if it already has one.
+     */
+    public void delete() {
+        if (id == 0) { // locally created, really delete
+            source.addRemovePrimitive(this, false);
+        } else {
+            UndoableEdit edit = new DeleteEdit();
+            setDeletedImpl(true);
+            source.postEdit(edit);
+        }
+    }
         
+    private void setDeletedImpl(boolean deleted) {
+        if (deleted) {
+            flags |= FLAG_DELETED;
+            source.firePrimitivesRemoved(Collections.singleton(this));
+        } else {
+            flags &= ~FLAG_DELETED;
+            source.firePrimitivesAdded(Collections.singleton(this));
+        }
+    }
+    
     // -------- Flags processing --------
     private static final int FLAG_MODIFIED = 1 << 30;
     private static final int FLAG_DELETED = 1 << 29;
@@ -287,7 +313,22 @@ public abstract class OsmPrimitive {
         }
         return false; 
     }
-    
+
+    private class DeleteEdit extends DataSet.BaseToggleEdit {
+        boolean wasDeleted;
+
+        public DeleteEdit() {
+            super ("Delete");
+            wasDeleted = isDeleted(); // false
+        }
+        
+        protected void toggle() {
+            boolean origVal = isDeleted();
+            setDeletedImpl(wasDeleted);
+            wasDeleted = origVal;
+        }
+    }
+
     abstract class PrimitiveToggleEdit extends DataSet.BaseToggleEdit {
         private boolean oldModified;
         

@@ -118,7 +118,7 @@ public final class DataSet {
         }
     }
 
-    private void addRemovePrimitive(OsmPrimitive prim, boolean add) {
+    void addRemovePrimitive(OsmPrimitive prim, boolean add) {
         UndoableEdit edit = new AddRemovePrimitiveEdit(prim, add);
         addRemovePrimitiveImpl(prim, add);
         postEdit(edit);

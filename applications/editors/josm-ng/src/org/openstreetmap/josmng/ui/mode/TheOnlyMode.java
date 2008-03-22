@@ -115,14 +115,14 @@ System.err.println("Preexisting node:");
             } else if (prim instanceof Way) { // add a node into a way
 System.err.println("Preexisting way:");
                 Coordinate c = viewToCoord(pointToView(pressPoint));
-                clicked = ds.addNode(c.getLatitude(), c.getLongitude());
+                clicked = ds.createNode(c.getLatitude(), c.getLongitude());
                 insertNodeInto((Way)prim, idx[0], (Node)clicked);
                 extendWay(ds, (Node)clicked);
             } else {
                 assert prim == null;
 System.err.println("Adding new node:");
                 Coordinate c = viewToCoord(pointToView(pressPoint));
-                clicked = ds.addNode(c.getLatitude(), c.getLongitude());
+                clicked = ds.createNode(c.getLatitude(), c.getLongitude());
                 extendWay(ds, (Node)clicked);
             }
             
@@ -239,9 +239,7 @@ System.err.println("Adding new node:");
             getLayer().setSelection(Collections.<OsmPrimitive>singleton(et.way));
         } else if (et.node != null) { // selected node only, create way
             if (et.node == n) return; // don't self-append
-            Way way = new Way(ds, 0, null, null, true);
-            ds.addWay(way);
-            way.setNodes(Arrays.asList((Node)et.node, n));
+            Way way = ds.createWay(et.node, n);
             getLayer().setSelection(Collections.<OsmPrimitive>singleton(way));
             last = n;
         } else {

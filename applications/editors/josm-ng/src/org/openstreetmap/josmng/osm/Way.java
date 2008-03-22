@@ -33,7 +33,7 @@ import java.util.List;
 public class Way extends OsmPrimitive {
     private List<Node> nodes = Collections.EMPTY_LIST;
 
-    public Way(DataSet constructed, long id, String time, String user, boolean vis) {
+    Way(DataSet constructed, long id, String time, String user, boolean vis) {
         super(constructed, id, time, user, vis);
     }
     

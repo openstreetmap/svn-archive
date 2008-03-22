@@ -20,9 +20,14 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.UndoableEditListener;
@@ -32,9 +37,15 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
-import org.openstreetmap.josmng.osm.OsmPrimitive;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.openstreetmap.josmng.utils.Hash;
 import org.openstreetmap.josmng.utils.Storage;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * A single encapsulated OSM dataset. It might be parsed from file, loaded from
@@ -137,19 +148,10 @@ public final class DataSet {
     }
             
 
-    
-    public Node addNode(double lat, double lon) {
+    public Node createNode(double lat, double lon) {
         Node n = new Node(this, 0, lat, lon, null, null, true);
-        addNode(n);
+        addRemovePrimitive(n, true);
         return n;
-    }
-    
-    public void addNode(Node node) {
-        addRemovePrimitive(node, true);
-    }
-
-    public void removeNode(Node node) {
-        addRemovePrimitive(node, false);
     }
 
     public Collection<Node> getNodes() {
@@ -160,12 +162,11 @@ public final class DataSet {
         return nodes.get(id);
     }
     
-    public void addWay(Way way) {
+    public Way createWay(Node ... nodes) {
+        Way way = new Way(this, 0, null, null, true);
+        way.setNodes(Arrays.asList(nodes));
         addRemovePrimitive(way, true);
-    }
-
-    public void removeWay(Way way) {
-        addRemovePrimitive(way, false);
+        return way;
     }
 
     public Collection<Way> getWays() {
@@ -175,15 +176,7 @@ public final class DataSet {
     public Way getWay(long id) {
         return ways.get(id);
     }
-    
-    public void addRelation(Relation rel) {
-        addRemovePrimitive(rel, true);
-    }
 
-    public void removeRelation(Relation rel) {
-        addRemovePrimitive(rel, false);
-    }
-    
     public Collection<Relation> getRelations() {
         return Collections.unmodifiableCollection(relationsCol);        
     }
@@ -310,6 +303,113 @@ public final class DataSet {
                 }
             }
             return false;
+        }
+    }
+    
+    public static DataSet fromStream(InputStream is) throws  IOException {
+        Throwable cause;
+        try {
+            OsmStreamReader osr = new OsmStreamReader();
+            InputSource src = new InputSource(is);
+            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            
+            parser.parse(src, osr);
+            return osr.constructed;
+        } catch (ParserConfigurationException ex) {
+            cause = ex;
+        } catch (SAXException ex) {
+            cause = ex;
+        }
+        IOException ioe = new IOException("Can't read the source");
+        ioe.initCause(cause);
+        throw ioe;
+        
+    }
+    
+    private static class OsmStreamReader extends DefaultHandler {
+        private OsmPrimitive current;
+        private DataSet constructed = new DataSet();
+        private List<Node> wayNodes = new ArrayList<Node>();
+    
+        private Storage<String> strings = new Storage<String>();
+       
+    
+        public @Override void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+            if (qName.equals("osm")) {
+                    if (atts == null || !"0.5".equals(atts.getValue("version")))
+                        throw new SAXException("Unknown version");
+            } else if (qName.equals("bound")) {
+            } else if (qName.equals("node")) {
+                //  <node id='704062' timestamp='2007-07-25T09:26:24+01:00' user='Kubajz' visible='true' lat='50.0461188' lon='14.4748857'>
+                //    <tag k='created_by' v='JOSM' />
+                //  </node>
+
+                // common attribs
+                long id = getLong(atts, "id");
+                String time = getString(atts, "timestamp");
+                String user = atts.getValue("user");
+                boolean vis = getBoolean(atts, "visible");
+
+                double lat = getDouble(atts, "lat");
+                double lon = getDouble(atts, "lon");
+
+                Node n = new Node(constructed, id, lat, lon, time, user, vis);
+                constructed.addRemovePrimitive(n, true);
+                current = n;
+            } else if (qName.equals("way")) {
+                // common attribs
+                long id = getLong(atts, "id");
+                String time = getString(atts, "timestamp");
+                String user = atts.getValue("user");
+                boolean vis = getBoolean(atts, "visible");
+
+                Way w = new Way(constructed, id, time, user, vis);
+                constructed.addRemovePrimitive(w, true);
+                current = w;
+            } else if (qName.equals("nd")) {
+                assert current instanceof Way;
+                long nid = getLong(atts, "ref");
+                Node n = constructed.getNode(nid);
+                //assert n != null;
+                if (n != null) wayNodes.add(n);
+            } else if (qName.equals("tag")) {
+    //            assert current != null;
+                if (current != null) current.putTag(getString(atts, "k"), getString(atts, "v"));
+            } else if (qName.equals("relation")) {
+                // TODO: relation parsing 
+            } else if (qName.equals("member")) {
+                // TODO
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            if (qName.equals("tag")) return;
+            if (qName.equals("way")) {
+                assert current instanceof Way;
+                ((Way)current).setNodes(wayNodes);
+                wayNodes.clear();
+            }
+            if (qName.equals("node") || qName.equals("way") || qName.equals("relation")) {
+                current = null;
+            }
+        }
+    
+        private String getString(Attributes atts, String name) {
+            String orig = atts.getValue(name);
+            if (orig == null) return null;
+            return strings.putUnique(orig);
+        }
+
+        private double getDouble(Attributes atts, String name) {
+            return Double.parseDouble(atts.getValue(name));
+        }
+        private long getLong(Attributes atts, String name) {
+            return Long.parseLong(atts.getValue(name));
+        }
+
+        private boolean getBoolean(Attributes atts, String name) {
+            return Boolean.parseBoolean(atts.getValue(name));
         }
     }
 }

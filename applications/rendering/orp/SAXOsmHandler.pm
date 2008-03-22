@@ -84,6 +84,8 @@ sub start_element
                               layer     => 0, 
                               lat       => $element->{'Attributes'}{'lat'}, 
                               lon       => $element->{'Attributes'}{'lon'}, 
+                              user      => $element->{'Attributes'}{'user'}, 
+                              timestamp => $element->{'Attributes'}{'timestamp'}, 
                               ways      => [],
                               relations => [] };
         bless $self->{current}, 'node';
@@ -98,6 +100,8 @@ sub start_element
         $self->{way}{$id}  =
           $self->{current} = {id    => $id,
                               layer => 0, 
+                              user      => $element->{'Attributes'}{'user'}, 
+                              timestamp => $element->{'Attributes'}{'timestamp'}, 
                               nodes => [],
                               relations => [] };
 
@@ -112,6 +116,8 @@ sub start_element
         my $id = $element->{'Attributes'}{'id'};
         $self->{relation}{$id} =
               $self->{current} = {id        => $id, 
+                                  user      => $element->{'Attributes'}{'user'}, 
+                                  timestamp => $element->{'Attributes'}{'timestamp'}, 
                                   members   => [],
                                   relations => [] };
               

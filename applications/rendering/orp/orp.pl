@@ -129,9 +129,9 @@ require "orp-drawing.pm";
 
 # available debug flags:
 our $debug = { 
-    "rules" => 1,    # print all rules and how many matches
+    "rules" => 0,    # print all rules and how many matches
     "indexes" => 0,  # print messages about the use of indexes
-    "drawing" => 1,  # print out all drawing instructions executed
+    "drawing" => 0,  # print out all drawing instructions executed
 };
 
 our $node_storage = {};
@@ -741,7 +741,8 @@ sub process_rule
     {
         if ($rule_layer != $layer)
         {
-            debug("rule ignored on layer '$layer': ".$rulenode->toString(1));
+            debug("rule ignored on layer '$layer': ".$rulenode->toString(1))
+                if ($debug->{"rules"});
             return;
         }
         undef $layer;

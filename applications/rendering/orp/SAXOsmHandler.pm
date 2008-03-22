@@ -111,7 +111,8 @@ sub start_element
     elsif ($element->{Name} eq 'relation')
     {
         undef $self->{current};
-        return if $element->{'Attributes'}{'action'} eq 'delete';
+        return if defined $element->{'Attributes'}{'action'}
+               && $element->{'Attributes'}{'action'} eq 'delete';
         
         my $id = $element->{'Attributes'}{'id'};
         $self->{relation}{$id} =

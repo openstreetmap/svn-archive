@@ -210,12 +210,12 @@ OUTER:
                 # we are "inner" - if the corresponding "outer" poly is tagged 
                 # the same as we are, then don't draw anything (legacy polygon
                 # support). otherwise draw normally.
-                foreach my $relmember($rel->{"members"})
+                foreach my $relmember(@{$rel->{"members"}})
                 {
                     my ($role, $obj) = @$relmember;
                     if ($role eq "outer" && ref($obj) eq "way")
                     {
-                        next OUTER if (tags_equal($obj, $_));
+                        next OUTER if (tags_subset($_, $obj));
                         last;
                     }
                 }
@@ -229,12 +229,17 @@ OUTER:
     $writer->endTag("g");
 }
 
-sub tags_equal
+# returns true if the first has a subset of the second object's tags,
+# with some tags being ignored
+sub tags_subset
 {
-    my ($h1, $h2) = @_;
-    my $string1 = join("'", map("$_~".$h1->{"tags"}->{$_}, sort keys(%{$h1->{"tags"}})));
-    my $string2 = join("'", map("$_~".$h2->{"tags"}->{$_}, sort keys(%{$h2->{"tags"}})));
-    return $string1 eq $string2;
+    my ($first, $second) = @_;
+    foreach my $tag(%{$first->{"tags"}})
+    {
+        next if ($tag =~ /^(name|created_by|note)$/);
+        return 0 unless defined($second->{'tags'}{$tag}) && $first->{'tags'}{$tag} eq $second->{'tags'}{$tag};
+    }
+    return 1;
 }
 
 # -------------------------------------------------------------------

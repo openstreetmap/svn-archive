@@ -136,6 +136,8 @@ sub ApplyConfigLogic
 
     $Config->{"UploadToDirectory"} = 0 unless (defined($Config->{"UploadTargetDirectory"}) and (-d $Config->{"UploadTargetDirectory"}));
 
+    ## Default to rendering with Osmarender/XSLT
+    $Config->{"Osmarender"} = "XSLT" unless defined($Config->{"Osmarender"});
 }
 
 #--------------------------------------------------------------------------
@@ -180,14 +182,31 @@ sub CheckConfig
         }
         print "- Inkscape version $1.$2\n";
     }
-    # XmlStarlet version
-    my $XmlV = `\"$Config->{XmlStarlet}\" --version`;
-    $EnvironmentInfo{Xml}=$XmlV;
 
-    if($XmlV !~ /(\d+\.\d+\.\d+)/){
-        die("Can't find xmlstarlet (using \"$Config->{XmlStarlet}\")\n");
+    # Rendering through Omsarender/XSLT or or/p
+    if ($Config->{Osmarender} eq "XSLT")
+    {
+        print "- rendering using Osmarender/XSLT\n";
+        die "! Can't find osmarender/osmarender.xsl" unless (-f "osmarender/osmarender.xsl");
+
+        # XmlStarlet version
+        my $XmlV = `\"$Config->{XmlStarlet}\" --version`;
+        $EnvironmentInfo{Xml}=$XmlV;
+
+        if($XmlV !~ /(\d+\.\d+\.\d+)/) {
+            die("Can't find xmlstarlet (using \"$Config->{XmlStarlet}\")\n");
+        }
+        print "- xmlstarlet version $1\n";
     }
-    print "- xmlstarlet version $1\n";
+    elsif ($Config->{Osmarender} eq "orp")
+    {
+        print "- rendering using or/p\n";
+        die "! Can't find orp/orp.pl" unless (-f "orp/orp.pl");
+    }
+    else
+    {
+        die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
+    }
 
     # Zip version
     my $ZipV = `\"$Config->{Zip}\" -v`;
@@ -195,7 +214,7 @@ sub CheckConfig
 
     if ($ZipV eq "") 
     {
-        die("Can't find zip (using \"$Config->{Zip}\")\n");
+        die("! Can't find zip (using \"$Config->{Zip}\")\n");
     }
     print "- zip is present\n";
 

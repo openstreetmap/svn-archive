@@ -1204,20 +1204,39 @@ sub xml2svg
         $TSVG = "$SVG-temp.svg";
     }
 
-    my $XslFile;
+    if ($Config{Osmarender} eq "XSLT")
+    {
+        my $XslFile;
 
-    $XslFile = "osmarender/osmarender.xsl";
+        $XslFile = "osmarender/osmarender.xsl";
 
-    my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
-      $Config{"Niceness"},
-      $Config{"XmlStarlet"},
-      $Config{"XmlStarletMaxDepth"},
-      $XslFile,
-      "$MapFeatures",
-      $TSVG);
+        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
+          $Config{"Niceness"},
+          $Config{"XmlStarlet"},
+          $Config{"XmlStarletMaxDepth"},
+          $XslFile,
+          "$MapFeatures",
+          $TSVG);
 
-    statusMessage("Transforming zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    runCommand($Cmd,$PID);
+        statusMessage("Transforming zoom level $zoom with XSLT", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand($Cmd,$PID);
+    }
+    elsif($Config{Osmarender} eq "orp")
+    {
+        chdir "orp";
+        my $Cmd = sprintf("%s perl orp.pl -r %s -o %s",
+          $Config{"Niceness"},
+          $MapFeatures,
+          $TSVG);
+
+        statusMessage("Transforming zoom level $zoom with or/p", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand($Cmd,$PID);
+        chdir "..";
+    }
+    else
+    {
+        die "invalid Osmarender setting in config";
+    }
 
     # look at temporary svg wether it really is a svg or just the 
     # xmlstarlet dump and exit if the latter.

@@ -236,7 +236,7 @@ sub MagicMkdir
     my $file = shift;
     my @paths = split("/", $file);
     pop(@paths);
-    my $dir = "";
+    my $dir = (substr($file,0,1) eq "/") ? "/" : "";
     foreach my $path(@paths)
     {
         if ($dir eq "")

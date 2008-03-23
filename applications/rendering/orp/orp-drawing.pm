@@ -744,7 +744,7 @@ sub draw_path
     $writer->emptyTag("use", 
         "xlink:href" => "#$path_id",
         @$extra_attr,
-        "class" => "$class $addclass");
+        "class" => defined($addclass) ? "$class $addclass" : $class);
 }
 
 1;

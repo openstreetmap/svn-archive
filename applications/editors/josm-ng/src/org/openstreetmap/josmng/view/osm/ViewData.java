@@ -74,9 +74,17 @@ class ViewData {
     public ViewData(OsmLayer view, DataSet source) {
         this.view = view;
         source.addDataSetListener(l);
-        for (Node n : source.getNodes()) addNode(n);
+        for (Node n : source.getNodes()) {
+            if (valid(n)) addNode(n);
+        }
         
-        for (Way w : source.getWays()) addWay(w);
+        for (Way w : source.getWays()) {
+            if (valid(w)) addWay(w);
+        }
+    }
+    
+    private static boolean valid(OsmPrimitive prim) {
+        return !prim.isDeleted() && prim.isVisible();
     }
 
     private void addNode(Node n) {

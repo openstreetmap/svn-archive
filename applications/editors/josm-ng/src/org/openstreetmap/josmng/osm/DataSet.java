@@ -348,7 +348,7 @@ public final class DataSet {
                 long id = getLong(atts, "id");
                 String time = getString(atts, "timestamp");
                 String user = atts.getValue("user");
-                boolean vis = getBoolean(atts, "visible");
+                boolean vis = getBoolean(atts, "visible", true);
 
                 double lat = getDouble(atts, "lat");
                 double lon = getDouble(atts, "lon");
@@ -361,7 +361,7 @@ public final class DataSet {
                 long id = getLong(atts, "id");
                 String time = getString(atts, "timestamp");
                 String user = atts.getValue("user");
-                boolean vis = getBoolean(atts, "visible");
+                boolean vis = getBoolean(atts, "visible", true);
 
                 Way w = new Way(constructed, id, time, user, vis);
                 constructed.addRemovePrimitive(w, true);
@@ -408,8 +408,9 @@ public final class DataSet {
             return Long.parseLong(atts.getValue(name));
         }
 
-        private boolean getBoolean(Attributes atts, String name) {
-            return Boolean.parseBoolean(atts.getValue(name));
+        private boolean getBoolean(Attributes atts, String name, boolean def) {
+            String val = atts.getValue(name);
+            return val == null ? def : Boolean.parseBoolean(val);
         }
     }
 }

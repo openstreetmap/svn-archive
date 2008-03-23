@@ -676,10 +676,10 @@ sub draw_way_markers
         {
             if ($way->{'nodes'}->[$i] eq $_)
             {
-                # note: perl arrays are not bounds checked, undef is
-                # returned for accesses outside bounds.
-                $next = $way->{'nodes'}->[$i+1];
-                $previous = $way->{'nodes'}->[$i-1];
+                $next = $way->{'nodes'}->[$i+1] 
+                    if ($i<scalar(@{$way->{'nodes'}})-1);
+                $previous = $way->{'nodes'}->[$i-1] 
+                    if ($i>0);
                 last;
             }
         }

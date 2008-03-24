@@ -142,10 +142,10 @@
 
 
         <!-- Airfields and airports -->
-        <rule e="segment|way" k="aeroway" v="runway">
+        <rule e="way" k="aeroway" v="runway">
             <line class='aeroway-runway-casing'/>
         </rule>
-        <rule e="segment|way" k="aeroway" v="taxiway">
+        <rule e="way" k="aeroway" v="taxiway">
             <line class='aeroway-taxiway-casing'/>
         </rule>
 
@@ -154,28 +154,28 @@
         <rule e="way" k="waterway" v="riverbank">
             <area class='waterway-riverbank'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="river">
+        <rule e="way" k="waterway" v="river">
             <line class='waterway-casing waterway-river-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="stream">
+        <rule e="way" k="waterway" v="stream">
             <line class='waterway-casing waterway-stream-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="canal">
+        <rule e="way" k="waterway" v="canal">
             <line class='waterway-casing waterway-canal-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="drain">
+        <rule e="way" k="waterway" v="drain">
             <line class='waterway-casing waterway-drain-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="river">
+        <rule e="way" k="waterway" v="river">
             <line class='waterway-core waterway-river-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="stream">
+        <rule e="way" k="waterway" v="stream">
             <line class='waterway-core waterway-stream-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="canal">
+        <rule e="way" k="waterway" v="canal">
             <line class='waterway-core waterway-canal-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="drain">
+        <rule e="way" k="waterway" v="drain">
             <line class='waterway-core waterway-drain-core'/>
         </rule>
         <rule e="way" k="waterway" v="dock">
@@ -242,7 +242,7 @@
             <rule e="way" k="highway" v="tertiary">
                 <line class='bridge-casing highway-tertiary-bridge-casing' smart-linecap='no'/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <line class='bridge-casing highway-unclassified-bridge-casing' smart-linecap='no'/>
             </rule>
             <rule e="way" k="highway" v="service">
@@ -322,7 +322,7 @@
             <rule e="way" k="highway" v="tertiary">
                 <line class='bridge-core highway-tertiary-bridge-core' smart-linecap='no'/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <line class='bridge-core highway-unclassified-bridge-core' smart-linecap='no'/>
             </rule>
             <rule e="way" k="highway" v="service">
@@ -415,6 +415,9 @@
             </rule>
             <rule e="way" k="highway" v="unclassified|residential|minor">
                 <line class='highway-casing highway-unclassified-casing' />
+            </rule>
+            <rule e="way" k="highway" v="living_street">
+                <line class='highway-casing highway-livingstreet-casing' />
             </rule>
             <rule e="way" k="highway" v="tertiary">
                 <line class='highway-casing highway-tertiary-casing' />
@@ -561,6 +564,15 @@
 					<line class='highway-core highway-unclassified-core' />
 				</else>
 			</rule>
+            <rule e="way" k="highway" v="living_street">
+                <rule e="way" k="area" v="yes|true">
+                     <area class='highway-core highway-livingstreet-area' />
+                 </rule>
+                <else>
+                     <line class='highway-core highway-livingstreet-core-1' smart-linecap='no' />
+                     <line class='highway-core highway-livingstreet-core-2' smart-linecap='no' />
+                </else>
+            </rule>
 			<rule e="way" k="highway" v="tertiary">
 				<rule e="way" k="area" v="yes|true">
  					<area class='highway-core highway-tertiary-area' />
@@ -698,7 +710,7 @@
 				<line class='tunnel-casing highway-service-casing tunnel' mask-class='tunnel-core highway-service-core'/>
 				<line class='highway-service-casing highway-tunnel-ends'/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|tertiary">
+            <rule e="way" k="highway" v="unclassified|residential|minor|tertiary|living_street">
 				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-unclassified-core'/>
 				<line class='highway-unclassified-casing highway-tunnel-ends'/>
             </rule>
@@ -802,7 +814,7 @@
             <rule e="way" k="construction" v="service">
                 <line class='highway-core highway-service-core under-construction' />
             </rule>
-            <rule e="way" k="construction" v="unclassified|residential|minor">
+            <rule e="way" k="construction" v="unclassified|residential|minor|living_street">
                 <line class='highway-core highway-unclassified-core under-construction' />
             </rule>
             <rule e="way" k="construction" v="tertiary">
@@ -962,7 +974,7 @@
 
 
         <!-- Non-pysical routes -->
-        <rule e="segment|way" k="route" v="ferry">
+        <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>
 
@@ -989,12 +1001,12 @@
         <!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
 			<rule e="node" s="way" k="railway" v="rail">
-				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track">
+				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street">
 					<symbol xlink:href="#symbol-railway-crossing" width='7px' height='7px' transform='translate(-3.5,-3.5)' />
 				</rule>
 			</rule>
 			<else>
-			    <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track">
+			    <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street">
 					<symbol xlink:href="#symbol-railway-crossing" width='6px' height='6px' transform='translate(-3,-3)' />
 			    </rule>
 			</else>
@@ -1114,7 +1126,7 @@
 					<rule e="way" k="highway" v="service" layer="5">
 					    <text k="name" startOffset='50%' class="highway-name highway-service-name" dy='0.7px' />
 					</rule>
-					<rule e="way" k="highway" v="unclassified|residential|minor" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
 					    <text k="name" startOffset='50%' class="highway-name highway-unclassified-name" dy='0.7px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
@@ -1199,7 +1211,7 @@
 					<rule e="way" k="highway" v="service" layer="5">
 					    <text k="ref" startOffset='30%' class='highway-ref highway-service-ref' dy='-2px' />
 					</rule>
-					<rule e="way" k="highway" v="unclassified|residential|minor" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
 					    <text k="ref" startOffset='30%' class='highway-ref highway-unclassified-ref' dy='-2.4px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
@@ -1508,6 +1520,11 @@
             .highway-unclassified-area              { stroke-width: 2.25px;   stroke: #ffffff; fill: #ffffff; }
             .highway-unclassified-name              { stroke-width: 0px;     font-size: 2.5px; }
             .highway-unclassified-ref               { stroke-width: 0px;     font-size: 3px; }
+
+            .highway-livingstreet-casing            { stroke-width: 2.5px;  stroke: #777777; }
+            .highway-livingstreet-core-1            { stroke-width: 2.25px; stroke: #ffffff; stroke-linecap: round; }
+            .highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #eeeeee; stroke-dasharray: 0.2,0.5; stroke-linecap: butt; }
+            .highway-livingstreet-area              { stroke-width: 2.25px;   stroke: #ffffff; fill: #ffffff; }
 
             .highway-service-bridge-casing          { stroke-width: 2.8px; }
             .highway-service-bridge-core            { stroke-width: 2.6px; }

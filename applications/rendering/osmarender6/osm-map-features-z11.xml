@@ -126,28 +126,28 @@
         <rule e="way" k="waterway" v="riverbank">
             <area class='waterway-riverbank'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="river">
+        <rule e="way" k="waterway" v="river">
             <line class='waterway-river-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="stream">
+        <rule e="way" k="waterway" v="stream">
             <line class='waterway-stream-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="canal">
+        <rule e="way" k="waterway" v="canal">
             <line class='waterway-canal-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="drain">
+        <rule e="way" k="waterway" v="drain">
             <line class='waterway-drain-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="river">
+        <rule e="way" k="waterway" v="river">
             <line class='waterway-river-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="stream">
+        <rule e="way" k="waterway" v="stream">
             <line class='waterway-stream-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="canal">
+        <rule e="way" k="waterway" v="canal">
             <line class='waterway-canal-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="drain">
+        <rule e="way" k="waterway" v="drain">
             <line class='waterway-drain-core'/>
         </rule>
         <rule e="way" k="waterway" v="dock">
@@ -164,8 +164,8 @@
         </rule>
 
         <!-- Highway casings -->
-        <rule e="segment|way" k="tunnel" v="~|no">
-			<rule e="segment|way" k="highway" v="raceway">
+        <rule e="way" k="tunnel" v="~|no">
+			<rule e="way" k="highway" v="raceway">
 				<rule e="way" k="use_status" v="~">
 					<line class='highway-raceway-casing' />
 				</rule>
@@ -176,60 +176,60 @@
 					<line class='highway-raceway-casing-dismantled' />
 				</rule>
 			</rule>
-            <rule e="segment|way" k="highway" v="pedestrian">
+            <rule e="way" k="highway" v="pedestrian">
                 <line class='highway-casing highway-pedestrian-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="track">
+            <rule e="way" k="highway" v="track">
                 <line class='highway-casing highway-track-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="unclassified|residential|minor">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="unsurfaced">
+            <rule e="way" k="highway" v="unsurfaced">
                 <line class='highway-casing highway-unsurfaced-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="service">
+            <rule e="way" k="highway" v="service">
                 <line class='highway-casing highway-service-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="tertiary">
+            <rule e="way" k="highway" v="tertiary">
                 <line class='highway-casing highway-tertiary-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="secondary">
+            <rule e="way" k="highway" v="secondary">
                 <line class='highway-casing highway-secondary-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="primary|primary_link">
+            <rule e="way" k="highway" v="primary|primary_link">
                 <line class='highway-casing highway-primary-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="trunk|trunk_link">
+            <rule e="way" k="highway" v="trunk|trunk_link">
                 <line class='highway-casing highway-trunk-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="motorway_link">
+            <rule e="way" k="highway" v="motorway_link">
                 <line class='highway-casing highway-motorway-link-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="motorway">
+            <rule e="way" k="highway" v="motorway">
                 <line class='highway-casing highway-motorway-casing' />
             </rule>
         </rule>
 
         <!-- Paths in tunnels -->
-        <rule e="segment|way" k="tunnel" v="yes|true">
-            <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
+        <rule e="way" k="tunnel" v="yes|true">
+            <rule e="way" k="highway" v="footway|steps|cycleway|bridleway|byway">
                 <tunnel width="0" class='highway-tunnel-narrow' />
             </rule>
         </rule>
 
         <!-- Paths not in tunnels -->
-        <rule e="segment|way" k="tunnel" v="~|no">
-            <rule e="segment|way" k="highway" v="footway|steps">
+        <rule e="way" k="tunnel" v="~|no">
+            <rule e="way" k="highway" v="footway|steps">
                 <line class='highway-core highway-footway' />
             </rule>
-            <rule e="segment|way" k="highway" v="steps">
+            <rule e="way" k="highway" v="steps">
                 <line class='highway-core highway-steps' />
             </rule>
-            <rule e="segment|way" k="highway" v="cycleway">
+            <rule e="way" k="highway" v="cycleway">
                 <line class='highway-core highway-cycleway' />
             </rule>
-            <rule e="segment|way" k="highway" v="bridleway">
+            <rule e="way" k="highway" v="bridleway">
                 <line class='highway-core highway-bridleway' />
             </rule>
             <rule e="way" k="highway" v="byway">
@@ -239,9 +239,9 @@
 
 
         <!-- Highway cores (not in tunnel) -->
-        <rule e="segment|way" k="tunnel" v="~|false|no">
-            <addclass e="segment|way" k="bridge" v="yes|true" class="round">
-				<rule e="segment|way" k="highway" v="raceway">
+        <rule e="way" k="tunnel" v="~|false|no">
+            <addclass e="way" k="bridge" v="yes|true" class="round">
+				<rule e="way" k="highway" v="raceway">
 					<rule e="way" k="use_status" v="~">
 						<line class='highway-raceway-core' />
 					</rule>
@@ -252,7 +252,7 @@
 						<line class='highway-raceway-core-dismantled' />
 					</rule>
 				</rule>
-                <rule e="segment|way" k="highway" v="pedestrian">
+                <rule e="way" k="highway" v="pedestrian">
 			<rule e="way" k="area" v="yes|true">
  				<area class='highway-core highway-pedestrian-area' />
 			</rule>
@@ -260,69 +260,69 @@
 				<line class='highway-core highway-pedestrian-core' />
 			</else>
                 </rule>
-                <rule e="segment|way" k="highway" v="track">
+                <rule e="way" k="highway" v="track">
                     <line class='highway-core highway-track-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="unclassified|residential|minor">
+                <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                     <line class='highway-core highway-unclassified-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="unsurfaced">
+                <rule e="way" k="highway" v="unsurfaced">
                     <line class='highway-core highway-unsurfaced-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="service">
+                <rule e="way" k="highway" v="service">
                     <line class='highway-core highway-service-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="tertiary">
+                <rule e="way" k="highway" v="tertiary">
                     <line class='highway-core highway-tertiary-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="secondary">
+                <rule e="way" k="highway" v="secondary">
                     <line class='highway-core highway-secondary-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="primary|primary_link">
+                <rule e="way" k="highway" v="primary|primary_link">
                     <line class='highway-core highway-primary-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="trunk|trunk_link">
+                <rule e="way" k="highway" v="trunk|trunk_link">
                     <line class='highway-core highway-trunk-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="motorway_link">
+                <rule e="way" k="highway" v="motorway_link">
                     <line class='highway-core highway-motorway-link-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="motorway">
+                <rule e="way" k="highway" v="motorway">
                     <line class='highway-core highway-motorway-core' />
                 </rule>
             </addclass>
         </rule>
 
         <!-- Highway cores in tunnels -->
-        <rule e="segment|way" k="tunnel" v="true|yes">
-            <rule e="segment|way" k="highway" v="pedestrian">
+        <rule e="way" k="tunnel" v="true|yes">
+            <rule e="way" k="highway" v="pedestrian">
                 <tunnel width="2" class='highway-core highway-pedestrian' />
             </rule>
-            <rule e="segment|way" k="highway" v="track">
+            <rule e="way" k="highway" v="track">
                 <tunnel width="2" class='highway-core highway-track' />
             </rule>
-            <rule e="segment|way" k="highway" v="unclassified|residential|minor">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <tunnel width="2" class='highway-core highway-unclassified' />
             </rule>
-            <rule e="segment|way" k="highway" v="unsurfaced">
+            <rule e="way" k="highway" v="unsurfaced">
                 <tunnel width="2" class='highway-core highway-unsurfaced' />
             </rule>
-            <rule e="segment|way" k="highway" v="service">
+            <rule e="way" k="highway" v="service">
                 <tunnel width="1" class='highway-core highway-service' />
             </rule>
-            <rule e="segment|way" k="highway" v="tertiary">
+            <rule e="way" k="highway" v="tertiary">
                 <tunnel width="2" class='highway-core highway-tertiary' />
             </rule>
-            <rule e="segment|way" k="highway" v="secondary">
+            <rule e="way" k="highway" v="secondary">
                 <tunnel width="3" class='highway-core highway-secondary' />
             </rule>
-            <rule e="segment|way" k="highway" v="primary|primary_link">
+            <rule e="way" k="highway" v="primary|primary_link">
                 <tunnel width="3" class='highway-core highway-primary' />
             </rule>
-            <rule e="segment|way" k="highway" v="trunk|trunk_link">
+            <rule e="way" k="highway" v="trunk|trunk_link">
                 <tunnel width="4" class='highway-core highway-trunk' />
             </rule>
-            <rule e="segment|way" k="highway" v="motorway|motorway_link">
+            <rule e="way" k="highway" v="motorway|motorway_link">
                 <tunnel width="4" class='highway-core highway-motorway' />
             </rule>
         </rule>
@@ -342,46 +342,46 @@
 
         <!-- Railway lines -->
         <!-- not in tunnel -->
-        <rule e="segment|way" k="tunnel" v="~|no|false">
-            <rule e="segment|way" k="railway" v="rail">
+        <rule e="way" k="tunnel" v="~|no|false">
+            <rule e="way" k="railway" v="rail">
                 <line class='railway-rail' />
             </rule>
-            <rule e="segment|way" k="railway" v="light_rail|tram">
+            <rule e="way" k="railway" v="light_rail|tram">
                 <line class='railway-light-rail' />
             </rule>
-            <rule e="segment|way" k="railway" v="subway">
+            <rule e="way" k="railway" v="subway">
                 <line class='railway-subway-rail' />
             </rule>
-            <rule e="segment|way" k="railway" v="preserved">
+            <rule e="way" k="railway" v="preserved">
                 <line class='railway-preserved' />
             </rule>
         </rule>
 
         <!-- in tunnel -->
-        <rule e="segment|way" k="tunnel" v="true|yes">
-            <rule e="segment|way" k="railway" v="rail">
+        <rule e="way" k="tunnel" v="true|yes">
+            <rule e="way" k="railway" v="rail">
                 <tunnel width="1" class='railway-rail' />
             </rule>
-            <rule e="segment|way" k="railway" v="light_rail|subway|tram">
+            <rule e="way" k="railway" v="light_rail|subway|tram">
                 <tunnel width="0" class='railway-tunnel-narrow' />
             </rule>
-            <rule e="segment|way" k="railway" v="preserved">
+            <rule e="way" k="railway" v="preserved">
                 <tunnel width="1" class='railway-preserved' />
             </rule>
         </rule>
 
 
         <!-- Airfields and airports -->
-        <rule e="segment|way" k="aeroway" v="runway">
+        <rule e="way" k="aeroway" v="runway">
             <line class='aeroway-runway-casing'/>
         </rule>
-        <rule e="segment|way" k="aeroway" v="taxiway">
+        <rule e="way" k="aeroway" v="taxiway">
             <line class='aeroway-taxiway-casing'/>
         </rule>
-        <rule e="segment|way" k="aeroway" v="runway">
+        <rule e="way" k="aeroway" v="runway">
             <line class='aeroway-runway-core'/>
         </rule>
-        <rule e="segment|way" k="aeroway" v="taxiway">
+        <rule e="way" k="aeroway" v="taxiway">
             <line class='aeroway-taxiway-core'/>
         </rule>
         <rule e="node" k="aeroway" v="airport">
@@ -390,7 +390,7 @@
 
 
         <!-- Non-pysical routes -->
-        <rule e="segment|way" k="route" v="ferry">
+        <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>
 

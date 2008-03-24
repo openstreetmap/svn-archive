@@ -142,10 +142,10 @@
 
 
         <!-- Airfields and airports -->
-        <rule e="segment|way" k="aeroway" v="runway">
+        <rule e="way" k="aeroway" v="runway">
             <line class='aeroway-runway-casing'/>
         </rule>
-        <rule e="segment|way" k="aeroway" v="taxiway">
+        <rule e="way" k="aeroway" v="taxiway">
             <line class='aeroway-taxiway-casing'/>
         </rule>
 
@@ -154,28 +154,28 @@
         <rule e="way" k="waterway" v="riverbank">
             <area class='waterway-riverbank'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="river">
+        <rule e="way" k="waterway" v="river">
             <line class='waterway-casing waterway-river-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="stream">
+        <rule e="way" k="waterway" v="stream">
             <line class='waterway-casing waterway-stream-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="canal">
+        <rule e="way" k="waterway" v="canal">
             <line class='waterway-casing waterway-canal-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="drain">
+        <rule e="way" k="waterway" v="drain">
             <line class='waterway-casing waterway-drain-casing'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="river">
+        <rule e="way" k="waterway" v="river">
             <line class='waterway-core waterway-river-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="stream">
+        <rule e="way" k="waterway" v="stream">
             <line class='waterway-core waterway-stream-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="canal">
+        <rule e="way" k="waterway" v="canal">
             <line class='waterway-core waterway-canal-core'/>
         </rule>
-        <rule e="segment|way" k="waterway" v="drain">
+        <rule e="way" k="waterway" v="drain">
             <line class='waterway-core waterway-drain-core'/>
         </rule>
         <rule e="way" k="waterway" v="dock">
@@ -251,7 +251,7 @@
             <rule e="way" k="highway" v="service">
                 <line class='highway-casing highway-service-casing' />
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
             <rule e="way" k="highway" v="tertiary">
@@ -404,7 +404,7 @@
 					<line class='highway-core highway-service-core' />
 				</else>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
 				<rule e="way" k="area" v="yes|true">
  					<area class='highway-core highway-unclassified-area' />
 				</rule>
@@ -544,7 +544,7 @@
 				<line class='tunnel-casing highway-service-casing tunnel' mask-class='tunnel-core highway-service-core'/>
 				<line class='highway-service-casing highway-tunnel-ends'/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|tertiary">
+            <rule e="way" k="highway" v="unclassified|residential|minor|tertiary|living_street">
 				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-unclassified-core'/>
 				<line class='highway-unclassified-casing highway-tunnel-ends'/>
             </rule>
@@ -649,7 +649,7 @@
             <rule e="way" k="construction" v="service">
                 <line class='highway-core highway-service-core under-construction' />
             </rule>
-            <rule e="way" k="construction" v="unclassified|residential|minor">
+            <rule e="way" k="construction" v="unclassified|residential|minor|living_street">
                 <line class='highway-core highway-unclassified-core under-construction' />
             </rule>
             <rule e="way" k="construction" v="tertiary">
@@ -738,7 +738,7 @@
 
 
         <!-- Non-pysical routes -->
-        <rule e="segment|way" k="route" v="ferry">
+        <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>
 
@@ -814,7 +814,7 @@
 					    <text k="name" startOffset='50%' class="waterway-name-core waterway-river-name-core" dy='2px' />
 					</rule>
 					
-					<rule e="way" k="highway" v="unclassified|residential|minor" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
 					    <text k="name" startOffset='50%' class="highway-name highway-unclassified-name" dy='1.6px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">

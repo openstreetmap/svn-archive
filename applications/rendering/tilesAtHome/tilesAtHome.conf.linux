@@ -21,9 +21,6 @@ i18n=1
 # Set the timeout when downloading files (in seconds)
 DownloadTimeout=1800
 
-# Which osmarender processor to use (Currently either "XSLT" or "orp", set without quotes)
-Osmarender=XSLT
-
 # set this to prepend zip file by three first letters of hostname
 # to allow identification of uploads from different machines in the 
 # upload log

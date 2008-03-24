@@ -164,8 +164,8 @@ public final class DataSet {
     
     public Way createWay(Node ... nodes) {
         Way way = new Way(this, 0, null, null, true);
-        way.setNodes(Arrays.asList(nodes));
         addRemovePrimitive(way, true);
+        way.setNodes(Arrays.asList(nodes));
         return way;
     }
 

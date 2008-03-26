@@ -353,7 +353,7 @@ my $symbolsDir = get_variable("symbolsDir");
 if (defined($symbolsDir))
 {
     $writer->startTag("defs", "id" => "defs-symbols");
-    my $refs = $rules->find('//rules//symbol/\@ref');
+    my $refs = $rules->find('//rules//symbol/@ref');
     foreach my $node ($refs->get_nodelist) 
     {
         my $file = XML::XPath::XMLParser::as_string($node);
@@ -685,8 +685,7 @@ sub process_layer
     my $lname = $layernode->getAttribute("name");
     my $opacity = $layernode->getAttribute("opacity");
 
-    printf("  layer: $lname\n");
-    
+    debug("layer: $lname") if ($debug->{'rules'});
     
     $writer->startTag("g", "name" => "Layer-$lname", "opacity" => $opacity );
 
@@ -695,7 +694,7 @@ sub process_layer
     
     foreach ($layernode->getChildNodes())
     {
-        my $name = $_->getName();
+        my $name = $_->getName() || "";
 
         if($name eq "rule")
         {
@@ -911,7 +910,7 @@ sub make_selection
     }
     foreach(keys(%$e_pieces))
     {
-        warn('ignored invalid value "'.$_.'"for e attribute in rule '.$rulenode->toString(1))
+        warn('ignored invalid value "'.$_.'" for e attribute in rule '.$rulenode->toString(1))
             unless($_ eq "way" or $_ eq "node");
     }
 

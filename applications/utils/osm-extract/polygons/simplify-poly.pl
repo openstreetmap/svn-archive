@@ -19,13 +19,12 @@ help() if $help;
 my $line = <>;
 print $line;
 
-
 while(1)
 {
     my @poly;
     my $line = <>;
     last if ($line =~ /^END/); # end of file
-    print $line;
+    my $hdr=$line;
     print STDERR "polygon $line";
     while($line = <>)
     {
@@ -39,6 +38,8 @@ while(1)
     my $simplified = $poly->simplify(max_points => $max_points, 
         same => $same, slope => $slope);
     printf STDERR "%d points simplified\n", $simplified->nrPoints;
+    next if ($simplified->nrPoints<3);
+    print $hdr;
     foreach my $pt($simplified->points)
     {
         printf "   %E   %E\n", $pt->[0], $pt->[1];

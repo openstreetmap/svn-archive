@@ -104,7 +104,7 @@ unless( -s $xml ) {
 
 
 # We assume IDs to be up to 250 million
-my $wanted_nodes = Bit::Vector->new( 250 * 1000 * 1000 );
+my $wanted_nodes = Bit::Vector->new( 500 * 1000 * 1000 );
 my $wanted_ways  = Bit::Vector->new( 250 * 1000 * 1000 );
 
 
@@ -227,13 +227,14 @@ sub processXML {
 			} elsif($type eq "way") {
 				push @rel_ways, \%m;
 			} else {
+                # FIXME doesn't support nested relations...
 				warn("Got unknown member type '$type' in '$line'"); next;
 			}
 		}
 
 		# Do the decisions when closing tags - can be self closing
 		elsif($line =~ /^\s*<\/?node/) {
-			my ($id,$lat,$long) = ($main_line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+			my ($id,$lat,$long) = ($main_line =~ /^\s*<node id=['"](\d+)['"].* lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
 
 			unless($id) { warn "Invalid node line '$main_line'"; next; }
 			unless($main_type eq "node") { warn "$main_type ended with $line"; next; }

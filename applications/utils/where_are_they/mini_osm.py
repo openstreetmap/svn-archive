@@ -6,10 +6,12 @@
 # Provides OSM functionality from a local (normally planet.osm powered)
 #  OSM database, in Python.
 #
+# Supports OSM v0.5
+#
 # GPL
 #
 # Nick Burch
-#		v0.02  (31/07/2006)
+#		v0.03  (27/03/2008)
 
 import os
 import sys
@@ -185,118 +187,63 @@ class mini_osm:
 
 	# ######################################################################
 
-	def _getSegmentsForNodesSQL(self,node_ids):
-		sql = "SELECT id, node_a, node_b, name, value               \
-		       FROM segments                                        \
-		       LEFT OUTER JOIN segment_tags                         \
-		          ON (segment = id)                                 \
-		       WHERE node_a IN (%s) OR node_b IN (%s)" % (node_ids,node_ids)
+	def _getWaysForNodesSQL(self,node_ids):
+		"Returns all the different ways, and their tags, but not nodes"
+		sql = """SELECT way_tags.way AS id, name, value               
+                 FROM way_nodes   
+                 LEFT OUTER JOIN way_tags
+                    ON (way_nodes.way = way_tags.way)
+                 WHERE node IN (%s)""" % (node_ids)
 		return sql
 
-	def getSegmentsForNodes(self,nodes):
-		"""Fetch all the segments for the given list of nodes"""
+	def _getWaysNodesForWaysSQL(self,way_ids):
+		"Returns all the different nodes for the supplied ways"
+		sql = """SELECT way, node
+                 FROM way_nodes   
+                 WHERE way IN (%s)
+                 ORDER BY node_order""" % (way_ids)
+		return sql
+
+	def getWaysForNodes(self,nodes):
+		"""Fetch all the ways for the given list of nodes"""
 		global dbh
 
-		# Get list of ids
-		ids = ""
-		for id in (nodes.keys()):
-			if len(ids):
-				ids += ","
-			ids += str(id)
+		# Get list of node ids
+		ids = ",".join( [str(n) for n in nodes.keys() if n] )
 
-		# Find
-		sql = self._getSegmentsForNodesSQL(ids)
-		sth = self.dbh.cursor()
-		sth.execute(sql)
-
-		segs_db = sth.fetchall()
-
-		segs = {}
-		last_seg = { "id":-1 }
-		for seg in (segs_db):
-			if last_seg["id"] != seg.id:
-				if last_seg["id"] != -1:
-					segs[last_seg["id"]] = last_seg
-				last_seg = { "id":seg.id, "node_a":seg.node_a, "node_b":seg.node_b, "tags":[] }
-			if seg.name != None:
-				last_seg["tags"].append( (seg.name,seg.value) )
-		if last_seg["id"] != -1:
-			segs[last_seg["id"]] = last_seg
-
-		return segs
-
-	# ######################################################################
-
-	def _getWayIdsForSegments(self,segs):
-		"""Fetch the IDs of all the ways for the given list of segments"""
-		global dbh
-
-		# Get list of ids
-		ids = ""
-		for id in (segs.keys()):
-			if len(ids):
-				ids += ","
-			ids += str(id)
-
-		# Find
-		sql = "SELECT way FROM way_segments WHERE segment IN (%s)" % ids
+		# Find the ways and their tags
+		sql = self._getWaysForNodesSQL(ids)
 		sth = self.dbh.cursor()
 		sth.execute(sql)
 
 		ways_db = sth.fetchall()
-		way_ids = []
-		for way in (ways_db):
-			way_ids.append(way.way)
-		return way_ids
 
-	def getWaysForSegments(self,segs):
-		"""Fetch all the ways for the given list of segments"""
-		global dbh
-
-		# Get list of way ids
-		way_ids = self._getWayIdsForSegments(segs)
-		if len(way_ids) == 0:
-			return []
-		ids = ""
 		ways = {}
-		for id in (way_ids):
-			if len(ids):
-				ids += ","
-			ids += str(id)
-			ways[id] = { "id":id, "segments":[], "tags":[] }
+		for way in (ways_db):
+			if not ways.has_key(way.id):
+				ways[way.id] = { "id":way.id, "nodes":[], "tags":[] }
+			if way.name != None:
+				ways[way.id]["tags"].append( (way.name,way.value) )
 
-		# Find segments
-		sql = "SELECT way, segment FROM way_segments WHERE way IN (%s)" % ids
-		sth = self.dbh.cursor()
-		sth.execute(sql)
+		# Now find their tags
+		ids = ",".join( [str(w) for w in ways.keys() if w] )
 
-		segs_db = sth.fetchall()
-		for seg in (segs_db):
-			ways[seg.way]["segments"].append(seg.segment)
+		if len(ids):
+			sql = self._getWaysNodesForWaysSQL(ids)
+			sth = self.dbh.cursor()
+			sth.execute(sql)
 
-		# Find tags
-		sql = "SELECT way, name, value FROM way_tags WHERE way IN (%s)" % ids
-		sth = self.dbh.cursor()
-		sth.execute(sql)
+			ways_db = sth.fetchall()
+		else:
+			ways_db = []
 
-		tags_db = sth.fetchall()
-		for tag in (tags_db):
-			ways[tag.way]["tags"].append( (tag.name,tag.value) )
+		last_way = { "id":-1 }
+		for way in (ways_db):
+			ways[way.way]["nodes"].append( way.node )
 
 		return ways
 
 	# ######################################################################
-
-	def splatWayTagsOntoSegments(self,ways,segments):
-		"""Splats the way tags out onto the segments that make up the way"""
-
-	    # Push tags from ways down onto segments
-		for way in (ways.values()):
-			for seg_id in (way["segments"]):
-				# Skip segments out of area
-				if segments.has_key(seg_id):
-					for tag in (way["tags"]):
-						segments[seg_id]["tags"].append(tag)
 
 	def splatTagsOntoObjects(self,objects,want_tags):
 		"""Splats certain tags down onto the main objects, setting them to None if not found"""
@@ -310,42 +257,51 @@ class mini_osm:
 				if want_tags.__contains__(tagname):
 					obj[tagname] = tagvalue
 
-	def calculateDistanceToSegments(self,lat,long,segments,nodes):
-		"""Calculates the distances to the segments"""
+	def calculateDistanceToWays(self,lat,long,ways,nodes):
+		"""Calculates the distances to the ways"""
 
-		for seg in (segments):
-			node_a = nodes[seg["node_a"]]
-			node_b = nodes[seg["node_b"]]
-			seg["node_a_node"] = node_a
-			seg["node_b_node"] = node_b
-			avg_lat = 0.5 * (node_a["lat"] + node_b["lat"])
-			avg_long = 0.5 * (node_a["long"] + node_b["long"])
+		for way in (ways):
+			# Get their nodes from inside the bbox
+			f_nodes = []
+			for node_id in way["nodes"]:
+				if nodes.has_key(node_id):
+					f_nodes.append( nodes[node_id] )
+			# Now find the distance of each node-node gap
+			for node_pos in range(len(f_nodes) - 1):
+				node_a = f_nodes[node_pos]
+				node_b = f_nodes[node_pos+1]
 
-			dist_bearing = calculate_distance_and_bearing(lat,long,avg_lat,avg_long)
-			seg["distance"] = dist_bearing[0]
-			seg["bearing"] = dist_bearing[1]
+				avg_lat = 0.5 * (node_a["lat"] + node_b["lat"])
+				avg_long = 0.5 * (node_a["long"] + node_b["long"])
 
-	def filterSegmentsByTags(self,segments,nodes,want_tag_names,want_tag_values=None):
-		"""Filters the segments, only returning ones with one of the given tags, optionally also by tag value"""
+				dist_bearing = calculate_distance_and_bearing(lat,long,avg_lat,avg_long)
+				if not way.has_key("distance"):
+					way["distance"] = dist_bearing[0]
+
+				if way["distance"] <= dist_bearing[0]:
+					way["distance"] = dist_bearing[0]
+					way["bearing"] = dist_bearing[1]
+
+	def filterWaysByTags(self,ways,nodes,want_tag_names,want_tag_values=None):
+		"""Filters the ways, only returning ones with one of the given tags, optionally also by tag value"""
 
 		wanted = []
-		for seg in (segments.values()):
+		for way in (ways.values()):
 			# Exclude any sections that pass out of the boundary
-			if not nodes.has_key(seg["node_a"]):
-				continue
-			if not nodes.has_key(seg["node_b"]):
-				continue
+			for node in way["nodes"]:
+				if not nodes.has_key(node):
+					continue
 
 			# Filter by tags
-			for tag in seg["tags"]:
+			for tag in way["tags"]:
 				(tagname,tagvalue) = tag
 				if want_tag_names.__contains__(tagname):
 					# Check value, if required
 					if want_tag_values == None:
-						wanted.append(seg)
+						wanted.append(way)
 					else:
 						if want_tag_values.__contains__(tagvalue):
-							wanted.append(seg)
+							wanted.append(way)
 		return wanted
 
 # ######################################################################
@@ -356,7 +312,7 @@ class mini_osm_pgsql(mini_osm):
 
 	# Database settings
 	dbname = "planetosm"
-	dbhost = "localhost"
+	dbhost = ""
 	dbuser = "nick"
 	dbpass = ""
 

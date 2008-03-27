@@ -116,7 +116,7 @@ use bytes;
 use XML::Parser::PerlSAX ();
 use XML::XPath ();
 use XML::XPath::XMLParser ();
-use Math::Trig qw(pi);
+use Math::Trig qw(great_circle_distance deg2rad pi);
 use Set::Object ();
 use Getopt::Long qw(GetOptions);
 use XML::Writer ();
@@ -138,6 +138,7 @@ our $debug = {
 our $node_storage = {};
 our $way_storage = {};
 our $relation_storage = {};
+our $text_index = {};
 
 my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage);
 my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
@@ -1028,6 +1029,16 @@ sub project
         $height + ($minlat-$latlon->[0])*10000*$scale*$projection
     ];
 }
+
+sub distance
+{
+    my ($p1, $p2) = @_;
+    return great_circle_distance(deg2rad($p1->{"lon"}),
+        deg2rad(90-$p1->{"lat"}), 
+        deg2rad($p2->{"lon"}), 
+        deg2rad(90-$p2->{"lat"}), 6378135);
+}
+
 
 # -------------------------------------------------------------------
 # sub get_variable($name)

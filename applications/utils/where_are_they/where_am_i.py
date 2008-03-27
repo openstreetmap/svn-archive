@@ -17,14 +17,15 @@
 # Can output as html (format=html - default) or xml (format=xml)
 #  or OSM XML (format=osm) or GPX XML (format=gpx)
 #
-# Requires that Plant.OSM has been loaded into a local postgres database
+# Requires that Plant.OSM has been loaded into a local postgres database,
+#  using planetosm-to-db.pl (currently needs OSM 0.5)
 #
 # See http://wiki.openstreetmap.org/index.php/Where_Are_They
 #
 # GPL
 #
 # Nick Burch
-#		v0.07  (07/08/2006)
+#		v0.08  (27/03/2008)
 
 import sys
 from osm_io_helper import hasOpt, getOpt, hasAnyOpts, printHTTPHeaders, renderResults
@@ -216,42 +217,36 @@ if type == "road":
 	# So, go and fetch them for our area
 	nodes = miniosm.getNodesInArea(lat,long,distance)
 
-	segs = {}
 	ways = {}
 	if len(nodes):
-		segs = miniosm.getSegmentsForNodes(nodes)
-		if len(segs):
-			ways = miniosm.getWaysForSegments(segs)
-
-	# Push tags from ways down onto segments
-	miniosm.splatWayTagsOntoSegments(ways,segs)
+		ways = miniosm.getWaysForNodes(nodes)
 
 	# Push interesting tags down as main keys
 	interesting_tags = ["name","ref"] + segment_types
-	miniosm.splatTagsOntoObjects(segs, interesting_tags)
+	miniosm.splatTagsOntoObjects(ways, interesting_tags)
 
-	# Grab just the segments of interest
-	highways = miniosm.filterSegmentsByTags(segs,nodes,segment_types,main_roads)
+	# Grab just the ways of interest
+	highways = miniosm.filterWaysByTags(ways,nodes,segment_types,main_roads)
 
 	# Calculate the distance from the segment waypoints
-	miniosm.calculateDistanceToSegments(lat,long,highways,nodes)
+	miniosm.calculateDistanceToWays(lat,long,highways,nodes)
 	highways.sort(sortByDistance)
 
 	# Sort out the type, and only have one with each name+ref
-	seen_segments = {}
+	seen_ways = {}
 	want_highways = []
-	for seg in (highways):
-		tup = (seg["name"],seg["ref"])
-		if not seen_segments.has_key(tup):
-			seen_segments[tup] = seg
+	for way in (highways):
+		tup = (way["name"],way["ref"])
+		if not seen_ways.has_key(tup):
+			seen_ways[tup] = way
 
 			# Now do type
 			type = None
 			for tag in (segment_types):
-				if not seg[tag] == None:
-					type = seg[tag]
-			seg["type"] = type
-			want_highways.append(seg)
+				if not way[tag] == None:
+					type = way[tag]
+			way["type"] = type
+			want_highways.append(way)
 
 	# All done, display
 	if len(want_highways) == 0:

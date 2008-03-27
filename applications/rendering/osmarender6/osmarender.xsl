@@ -3227,7 +3227,7 @@ against infinite loops -->
       <style type="text/css">
         <![CDATA[
                 .license-text {
-                    text-anchor: left;
+                    text-anchor: start;
                     font-family: "DejaVu Sans",sans-serif;
                     font-size: 6px;
                     fill: black;

@@ -27,7 +27,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -218,28 +218,32 @@ public class MapView extends JComponent {
             addMouseWheelListener(this);
         }
 
+        private boolean acceptPanGesture(MouseEvent e) {
+            return ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0) ||
+                 ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0);
+        }
+
+        public @Override void mousePressed(MouseEvent e) {
+            if (acceptPanGesture(e)) {
+                drag = true;
+                origin = getPoint(e.getPoint());
+            }
+        }
         
         public void mouseDragged(MouseEvent e) {
-            if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0) {
-                if (!drag) {
-                    drag = true;
-                    origin = getPoint(e.getPoint());
-                } else {
-                    // do the move
-                    ViewCoords center = getCenter();
-                    ViewCoords mouseCenter = getPoint(e.getPoint());
-                    setCenter(center.movedByDelta(origin, mouseCenter));
-                }
-            } else {
-                // cancel movement
+            if (drag) {
+                // do the move
+                ViewCoords center = getCenter();
+                ViewCoords mouseCenter = getPoint(e.getPoint());
+                setCenter(center.movedByDelta(origin, mouseCenter));
             }
 	}
 
         public @Override void mouseReleased(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                drag = false;
-            }
+            drag = false;
 	}
+
+        public void mouseMoved(MouseEvent e) {}
 
 	/**
 	 * Zoom the map by 1/5th of current zoom per wheel-delta.
@@ -280,8 +284,6 @@ public class MapView extends JComponent {
             setCenter(getCenter().movedByDelta(pos, pos2));
         }
         
-	public void mouseMoved(MouseEvent e) {}
-
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
             if (ZOOM_IN.equals(cmd)) {

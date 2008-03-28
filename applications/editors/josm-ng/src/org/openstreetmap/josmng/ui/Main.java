@@ -169,10 +169,12 @@ public class Main extends javax.swing.JFrame {
             }
         });
         
+        MapView view = Main.main.mapView1;
         if (args.length == 1 && new File(args[0]).exists()) {
             DataSet ds = DataSet.fromStream(new FileInputStream(args[0]));
-            MapView view = Main.main.mapView1;
             view.addLayer(new OsmLayer(view, args[0], ds));
+        } else {
+            view.addLayer(new OsmLayer(view, "new", new DataSet()));
         }
     }
     

@@ -25,6 +25,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -33,8 +36,12 @@ import java.awt.event.MouseWheelListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 
+import javax.swing.KeyStroke;
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
 import org.openstreetmap.josmng.osm.Node;
@@ -58,8 +65,24 @@ public class MapView extends JComponent {
     
     public static final String PROP_LAYER = "layer";
     
+    private static final String[] KEYMAP = new String[] {
+        "control UP", Navigator.UP,
+        "control DOWN", Navigator.DOWN,
+        "control LEFT", Navigator.LEFT,
+        "control RIGHT", Navigator.RIGHT,
+        "control PAGE_UP", Navigator.ZOOM_OUT,
+        "control PAGE_DOWN", Navigator.ZOOM_IN
+    };
+    
     public MapView() {
-        new Navigator();
+        InputMap im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = getActionMap();
+        Navigator nav = new Navigator(); // registers itself as mouse tracker too
+
+        for (int i=0; i<KEYMAP.length; i += 2) {
+            im.put(KeyStroke.getKeyStroke(KEYMAP[i]), KEYMAP[i+1]);
+            am.put(KEYMAP[i+1], new ActionWrapper(KEYMAP[i+1], nav));
+        }
 
         Meter meter = new Meter();
         add(meter);
@@ -178,7 +201,14 @@ public class MapView extends JComponent {
         g.fillRect(paint.x, paint.y, paint.width, paint.height);
     }
 
-    private class Navigator extends MouseAdapter implements MouseMotionListener, MouseWheelListener {
+    private class Navigator extends MouseAdapter implements MouseMotionListener, MouseWheelListener, ActionListener {
+        private static final String ZOOM_IN = "zoom_in";
+        private static final String ZOOM_OUT = "zoom_out";
+        private static final String LEFT = "left";
+        private static final String RIGHT = "right";
+        private static final String UP = "up";
+        private static final String DOWN = "down";
+        
         private boolean drag;
         private ViewCoords origin;
 
@@ -216,24 +246,75 @@ public class MapView extends JComponent {
 	 * @param e The wheel event.
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) {
-            // remember where the cursor was
-            ViewCoords cursor = getPoint(e.getPoint());
+            zoomBy(e.getWheelRotation(), e.getPoint());
+        }
+        
+        private void zoomBy(int steps, Point invariant) {
+            // center on the screen if not specified otherwise
+            if (invariant == null) invariant = new Point(getWidth()/2, getHeight()/2);
+
+            // remember the invariant position
+            ViewCoords pos = getPoint(invariant);
             
             // perform zoom, view center is invariant
             int fact = getScaleFactor();
-            int clicks = e.getWheelRotation();
-            fact = Math.max(6, (int)(Math.pow(1.2, clicks) * fact));
+            fact = Math.max(6, (int)(Math.pow(1.2, steps) * fact));
             setScaleFactor(fact);
 
-            // sample where is the cursor now
-            ViewCoords cursor2 = getPoint(e.getPoint());
+            // sample what location is the invariant now
+            ViewCoords pos2 = getPoint(invariant);
 
-            //adjust the center to make cursor the invariant            
+            //adjust the center to keep the invariant
             ViewCoords center = getCenter();
-            setCenter(center.movedByDelta(cursor, cursor2));
+            setCenter(center.movedByDelta(pos, pos2));
         }
 
+        private void moveBy(Dimension percent) {
+            Point ref = new Point(0,0);
+            Point place = new Point(percent.width * getWidth() / 100,
+                    percent.height * getHeight() / 100);
+            
+            ViewCoords pos = getPoint(ref);
+            ViewCoords pos2 = getPoint(place);
+
+            setCenter(getCenter().movedByDelta(pos, pos2));
+        }
+        
 	public void mouseMoved(MouseEvent e) {}
+
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (ZOOM_IN.equals(cmd)) {
+                zoomBy(-1, null);
+            } else if (ZOOM_OUT.equals(cmd)) {
+                zoomBy(1, null);                
+            } else if (LEFT.equals(cmd)) {
+                moveBy(new Dimension(-20, 0));
+            } else if (RIGHT.equals(cmd)) {
+                moveBy(new Dimension(20, 0));
+            } else if (UP.equals(cmd)) {
+                moveBy(new Dimension(0, 20));
+            } else if (DOWN.equals(cmd)) {
+                moveBy(new Dimension(0, -20));
+            }
+        }
+    }
+    
+    private class ActionWrapper extends AbstractAction {
+        private final String cmd;
+        private final ActionListener delegate;
+
+        public ActionWrapper(String cmd, ActionListener delegate) {
+            this.cmd = cmd;
+            this.delegate = delegate;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            ActionEvent evt = new ActionEvent(e.getSource(), e.getID(),
+                    cmd, e.getWhen(), e.getModifiers());
+            delegate.actionPerformed(evt);
+        }
+        
     }
     
     private class Meter extends JComponent {

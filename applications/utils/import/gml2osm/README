@@ -16,10 +16,12 @@ Metadata ("tags") are not defined by GML; the definition of the meanings of the 
 Features
 --------
 
-Features, as v0.2, include:
+Features, as v0.3, include:
+- Outputs API 0.5 -compatible .osm files
 - Import of Points, Linestrings, MultiLinestrings and Multipolygons
-- Detection of nodes and segments used more than once: no data duplication
+- Detection of nodes used more than once: no data duplication
 - Partial EGM metadata translation to OSM Map Features: Roads, Railways, Ferries, Populated places
+- Best-effort attempt to fix malformed GML missing the last point (useful for the Nama City import)
 
 
 Features not implemented yet:

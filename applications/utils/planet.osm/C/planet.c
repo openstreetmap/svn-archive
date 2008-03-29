@@ -86,6 +86,7 @@ const char *xmlescape(char *in)
             case  '<': strncat(escape_tmp, "&lt;",   left); break;
             case  '>': strncat(escape_tmp, "&gt;",   left); break;
             case  '"': strncat(escape_tmp, "&quot;", left); break;
+            case  '\033': strncat(escape_tmp, "?", left); break;
             default: escape_tmp[len] = *in;
         }
         in++;

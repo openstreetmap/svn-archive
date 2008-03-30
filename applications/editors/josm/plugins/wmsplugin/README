@@ -5,3 +5,13 @@ landsat plugin could plus more.
 
 See also utils/ywms for a way to get Yahoo satellite images with this
 plugin (Linux required for ywms).
+
+AUTHORS and LICENSE:
+
+This plugin has been created by tim <chippy2005@gmail.com>
+and has received major contributions from Frederik Ramm 
+<frederik@remote.org>. It is based on the "Landsat" plugin
+by Nick Whitelegg <Nick.Whitelegg@solent.ac.uk> and includes
+some code from Jonathan Stott <jonathan@jstott.me.uk>.
+
+This plugin is licensed under the GNU GPL v2 or later.

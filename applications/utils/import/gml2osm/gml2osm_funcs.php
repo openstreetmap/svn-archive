@@ -63,6 +63,8 @@ function point2node($gml)
 /// @return An entity ID corresponding to the newly created way.
 function linestring2way($gml,$boundingbox=NULL)
 {
+// 	var_dump($gml);
+
 	$gml_attrs  = $gml->attributes();
 	$source_srs = $gml_atrts['srsName'];
 	$line_attrs = trim($gml->coordinates->attributes());
@@ -80,6 +82,7 @@ function linestring2way($gml,$boundingbox=NULL)
 	/// TODO: refactor code: lots in common with point2node!
 	global $node_list,$segment_list,$way_list;
 	global $entity_id, $node_coords, $node_tags;
+	global $newpoints;
 	$mynodes = array();
 	$mysegments = array();
 	$lats = array();
@@ -101,48 +104,32 @@ function linestring2way($gml,$boundingbox=NULL)
 	
 	
 	/// HACK: if the starting point of the geometry is in a corner of the bounding box, will force the endpoint to be the opposite corner.
-	if ($boundingbox)
-	{
-		$bpoints = explode($ts,trim($boundingbox->coordinates));
-		list($blon0, $blat0) = explode($cs,$bpoints[0]);
-		list($blon1, $blat1) = explode($cs,$bpoints[1]);
-		$firstlat = $lats[0];
-		$firstlon = $lons[0];
-		
-		echo "Way with $coord_count points so far; $firstlat vs ($blat0, $blat1) ,$firstlon vs ($blon0,$blon1)\n";
-		
-		// Case-by-case:
-		$newpoint = true;
-		if ($firstlat == $blat0 && $firstlon == $blon0)
-			{$lats[] = $blat1; $lons[] = $blon1;}
-		elseif ($firstlat == $blat0 && $firstlon == $blon1)
-			{$lats[] = $blat1; $lons[] = $blon0;}
-		elseif ($firstlat == $blat1 && $firstlon == $blon0)
-			{$lats[] = $blat0; $lons[] = $blon1;}
-		elseif ($firstlat == $blat1 && $firstlon == $blon1)
-			{$lats[] = $blat0; $lons[] = $blon0;}
-		else
-			$newpoint = false;
-			
-		if ($newpoint) echo "Added a new point to the tail of the way\n";
-	}
-
-// 	if ($coord_count == 2 && $hint)
+// 	if ($boundingbox)
 // 	{
-// // 		print_r($lats); print_r($lons); print_r($hint);
-// 	
-// 		if (($lats[0] == $hint['lat']
-// 		  && $lons[1] == $hint['lon'])
-// 		 || ($lats[1] == $hint['lat']
-// 		  && $lons[0] == $hint['lon']))
-// 		{
-// 			//Swap just the lats
-// 			$lat0 = $lats[0];
-// 			$lat1 = $lats[1];
-// 			$lats = array( 0=>$lat1, 1=>$lat0 );
-// 			echo "Warning: While fixing malformed GML, swapped the bounding box!\n";
-// 		}
+// 		$bpoints = explode($ts,trim($boundingbox->coordinates));
+// 		list($blon0, $blat0) = explode($cs,$bpoints[0]);
+// 		list($blon1, $blat1) = explode($cs,$bpoints[1]);
+// 		$firstlat = $lats[0];
+// 		$firstlon = $lons[0];
+// 		
+// // 		echo "Way with $coord_count points so far; $firstlat vs ($blat0, $blat1) ,$firstlon vs ($blon0,$blon1)\n";
+// 		
+// 		// Case-by-case:
+// 		$newpoint = true;
+// 		if ($firstlat == $blat0 && $firstlon == $blon0)
+// 			{$lats[] = $blat1; $lons[] = $blon1;}
+// 		elseif ($firstlat == $blat0 && $firstlon == $blon1)
+// 			{$lats[] = $blat1; $lons[] = $blon0;}
+// 		elseif ($firstlat == $blat1 && $firstlon == $blon0)
+// 			{$lats[] = $blat0; $lons[] = $blon1;}
+// 		elseif ($firstlat == $blat1 && $firstlon == $blon1)
+// 			{$lats[] = $blat0; $lons[] = $blon0;}
+// 		else
+// 			$newpoint = false;
+// 			
+// // 		if ($newpoint) echo "Added a new point to the tail of the way\n";
 // 	}
+
 	
 	
 	foreach ($lats as $key=>$lat)
@@ -161,7 +148,7 @@ function linestring2way($gml,$boundingbox=NULL)
 		else
 		{
 			$entity_id--;
-			echo $entity_id . "        ($lat,$lon)\n";
+// 			echo $entity_id . "        ($lat,$lon)\n";
 			$node_coords[$entity_id] = array($lat,$lon);
 			$nodeid = $node_list[$lat][$lon] = $entity_id;
 			$node_tags[$nodeid] = array();	// The main script needs $node_tags to iterate over.
@@ -170,8 +157,11 @@ function linestring2way($gml,$boundingbox=NULL)
 	}
 	
 	$entity_id--;
-	echo $entity_id . " (way) \n";
+// 	echo $entity_id . " (way) \n";
 	$way_list[$entity_id] = $mynodes;
+	
+// 	// Mark if a new point was added, for citing so in the tags
+// 	$newpoints[$entity_id] = $newpoint;
 	
 	return $entity_id;
 	

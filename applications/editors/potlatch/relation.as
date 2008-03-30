@@ -36,6 +36,7 @@
 			if ( this.attr['route'] )	text += this.attr['route'] + " ";
 			if ( this.attr['network'] )	text += this.attr['network'] + " ";
 			if ( this.attr['ref'] )		text += this.attr['ref']+" ";
+			if ( this.attr['name'] )	text += this.attr['name']+" ";
 			if ( this.attr['state'] )	text += "("+this.attr['state']+") ";
 		} else if ( this.attr['name'] )	text += this.attr['name'];
 

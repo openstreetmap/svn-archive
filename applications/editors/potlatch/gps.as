@@ -14,6 +14,10 @@
 	// parsePoint
 	
 	function parseGPX(gpxname) {
+		createModalDialogue(295,35,new Array(),null);
+		_root.modal.box.createTextField("prompt",2,7,9,280,20);
+		writeText(_root.modal.box.prompt,"Please wait while the GPX track is processed.");
+
 		_root.tracks=new Array();
 		var lastTime=0;
 		_root.curtrack=0; _root.tracks[curtrack]=new Array();
@@ -59,10 +63,14 @@
 					}
 				}
 			}
+			clearModalDialogue();
 		};
 	}
 
 	function parsePoint(xmlobj) {
+		if (lat) {} else { lat =xmlobj.attributes['lat'];	// Get root co-ords
+						   long=xmlobj.attributes['lon'];	//  from GPX?
+						   startPotlatch(); }				//   |
 		var y= lat2coord(xmlobj.attributes['lat']);
 		var x=long2coord(xmlobj.attributes['lon']);
 		var tme=new Date();

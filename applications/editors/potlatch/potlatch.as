@@ -40,17 +40,12 @@
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
 	var minscale=12;				// don't zoom out past this
 	var maxscale=19;				// don't zoom in past this
+	if (scale) {} else {scale=14;}	// default scale if not provided (e.g. GPX)
 	var scale=Math.max(Math.min(Math.floor(scale),maxscale),minscale);
 	var masterscale=5825.4222222222;// master map scale - how many Flash pixels in 1 degree longitude
 									// (for Landsat, 5120)
 	updateCoords();					// get radius, scale
 	
-	var urllat  =Math.pow(lat ,1);	// LL from query string
-	var urllong =Math.pow(long,1);	//  |
-	var baselong=urllong-xradius/masterscale/bscale;		// this works!
-	var basey   =lat2y(urllat)+yradius/masterscale/bscale;	//  |
-	var baselat =y2lat(basey);								//  |
-
 	// Preferences
 	preferences=SharedObject.getLocal("preferences");
 	var usertoken=token;
@@ -62,9 +57,7 @@
 	Key.addListener(keyListener);
 
 	// Initialise Yahoo
-	var ylat=baselat;	var lastylat=ylat;		// current Yahoo state
-	var ylon=baselong;	var lastylon=ylon;		//  |
-	var ywidth=0;		var yheight=0;			//  |
+	var ywidth=0;		var yheight=0;			// current Yahoo state
 	var yzoom=8;		var lastyzoom=yzoom;	//  |
 	var bgxoffset=0;	var bgyoffset=0;		// manually correct Yahoo imagery
 	var yahooloaded=false;						// is Yahoo component loaded?
@@ -122,9 +115,9 @@
 	var tolerance=4/Math.pow(2,_root.scale-13);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
-	var savedtype='';				// no saved presets yet
+	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.8";	// current version
+	var signature="Potlatch 0.8a";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -354,10 +347,9 @@
 	#include 'tiles.as'
 	#include 'gps.as'
 
+
 	// =====================================================================================
 	// Start
-
-	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
 
 	_root.panel.attachMovie("propwindow","properties",50);
 	with (_root.panel.properties) { _x=110; _y=25; };
@@ -365,17 +357,12 @@
 	_root.panel.attachMovie("presetmenu","presets",60);
 	with (_root.panel.presets) { _x=110; _y=1; };
 
-//	_root.panel.attachMovie("menu","presetmenu",60);
-//	_root.panel.presetmenu.init(141,5,1,presetnames['way'][presetselected],'Choose from a menu of preset tags describing the way',setAttributesFromPreset,151);
-//	_root.panel.presetmenu._visible=false;
-
 	updateButtons();
 	updateScissors();
 	resizeWindow();
-	updateCoords(0,0);
-	setBackground(preferences.data.baselayer);
-	whichWays();
-	_root.onEnterFrame=function() { everyFrame(); };
+
+	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
+		else { startPotlatch(); }		//  |
 
 	// Welcome buttons
 
@@ -411,6 +398,23 @@
 		_root.panel.welcome.createEmptyMovieClip("convert",4);
 		drawButton(_root.panel.welcome.convert,250,73,"Track","Convert your GPS track to (locked) ways for editing.");
 		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); gpxToWays(); };
+	}
+
+	// =====================================================================
+	// Main start function
+
+	function startPotlatch() {
+		_root.urllat  =Number(lat);		// LL from query string
+		_root.urllong =Number(long);	//  |
+		_root.baselong=urllong-xradius/masterscale/bscale;
+		_root.basey   =lat2y(urllat)+yradius/masterscale/bscale;
+		_root.baselat =y2lat(basey);
+		_root.ylat=baselat;	 _root.lastylat=ylat;		// current Yahoo state
+		_root.ylon=baselong; _root.lastylon=ylon;		//  |
+		updateCoords(0,0);
+		setBackground(preferences.data.baselayer);
+		whichWays();
+		_root.onEnterFrame=function() { everyFrame(); };
 	}
 
 	// =====================================================================
@@ -692,17 +696,19 @@
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
+			// ** should be moved into way class
 			if (doall==1) {
 				// remove node from all ways
 				id=_root.ws.path[_root.pointselected][2];
 				for (qway in _root.map.ways) {
-					qdirty=0;
+					var qdirty=false;
 					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
 						if (_root.map.ways[qway].path[qs][2]==id) {
 							_root.map.ways[qway].path.splice(qs,1);
-							qdirty=1;
+							qdirty=true;
 						}
 					}
+					if (qdirty) { _root.map.ways[qway].removeDuplicates(); }
 					if (qdirty && _root.map.ways[qway]["path"].length<2) {
 						_root.map.ways[qway].remove();
 					} else if (qdirty) {
@@ -713,6 +719,7 @@
 			} else {
 				// remove node from this way only
 				_root.ws.path.splice(pointselected,1);
+				_root.ws.removeDuplicates();
 				if (_root.ws.path.length<2) {
 					_root.ws.remove();
 				} else {
@@ -817,7 +824,7 @@
 		// ----	Do we need to redraw the property window?
 		if (_root.redopropertywindow) {
 			_root.redopropertywindow.reinit();
-			_root.redopropertywindow=0;
+			_root.redopropertywindow=null;
 		}
 
 		// ---- If resizing has stopped, issue new whichways

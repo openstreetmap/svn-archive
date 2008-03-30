@@ -25,6 +25,7 @@
 
 	PresetMenu.prototype.init=function(pw) {
 		this.pw=pw;			// reference to property window
+		pw.presetmenu=this;	// and back again!
 		this.group='road';	// what group of tags? (e.g. 'road')
 		this.setIcon(this.group);
 		this.reflect();
@@ -237,7 +238,9 @@
 	// =====================================================================================
 	// PropertyWindow object
 
-	PropertyWindow=function() {};
+	PropertyWindow=function() {
+		this.proptype='';
+	};
 	PropertyWindow.prototype=new MovieClip();
 	
 	PropertyWindow.prototype.reinit=function() {
@@ -245,7 +248,6 @@
 	};
 
 	PropertyWindow.prototype.init=function(proptype,w,h) {
-		removeMovieClip(_root.panel.welcome);
 		this.createEmptyMovieClip("attributes",1);
 		this.createEmptyMovieClip("attrmask",2);
 		this.createEmptyMovieClip("scrollbar",3);
@@ -256,6 +258,7 @@
 		this.ynumber=h;
 		this.tagcount=0;
 		if (proptype=='') { return; }
+		removeMovieClip(_root.panel.welcome);
 
 		var relarr = [];
 		switch (proptype) {
@@ -389,15 +392,15 @@
 	
 	PropertyWindow.prototype.repeatAttributes=function() {
 		var i,proparr;
-		switch (savedtype) {
-			case 'point':	proparr=_root.map.ways[savedway].path[savedpoint][4]; 
-							relarr=getRelationsForNode(savedpoint);
+		switch (this.proptype) {
+			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']][4]; 
+							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']][2]);
 							break;
-			case 'POI':		proparr=_root.map.pois[savedpoi].attr;
-							relarr=getRelationsForNode(savedpoi);
+			case 'POI':		proparr=_root.saved['POI'].attr;
+							relarr=getRelationsForNode(_root.saved['POI']._name);
 							break; // ** formerly had _root.map.pois[poiselected].attr=new Array(); in here, no obvious reason why
-			case 'way':		proparr=_root.map.ways[savedway].attr;
-							relarr=getRelationsForWay(savedway);
+			case 'way':		proparr=_root.saved['way'].attr;
+							relarr=getRelationsForWay(_root.saved['way']._name);
 							break;
 		}
 
@@ -406,10 +409,10 @@
 			if (Key.isDown(Key.SHIFT) && (i=='name' || i=='ref') || i=='created_by') {
 				// ignore name and ref if SHIFT pressed
 			} else {
-				switch (savedtype) {
-					case 'point':	j=_root.map.ways[savedway].path[savedpoint][4][i]; break;
-					case 'POI':		j=_root.map.pois[savedpoi].attr[i]; break;
-					case 'way':		j=_root.map.ways[savedway].attr[i]; break;
+				switch (this.proptype) {
+					case 'point':	j=_root.savedpointway.path[_root.saved['point']][4][i]; break;
+					case 'POI':		j=_root.saved['POI'].attr[i]; break;
+					case 'way':		j=_root.saved['way'].attr[i]; break;
 				}
 				setValueInObject(this.proptype,i,j);
 			}
@@ -418,10 +421,10 @@
 		// repeat relations
 		for (i in relarr) {
 			var r=_root.map.relations[relarr[i]];	// reference to this relation
-			switch (savedtype) {
-				case 'point':	r.setNodeRole(pointselected,r.getWayRole(savedpoint)); break;
-				case 'POI':		r.setNodeRole(poiselected,r.getWayRole(savedpoi)); break;
-				case 'way':		r.setWayRole(wayselected,r.getWayRole(savedway)); break;
+			switch (this.proptype) {
+				case 'point':	r.setNodeRole(pointselected,r.getNodeRole(_root.savedpointway.path[_root.saved['point']][2])); break;
+				case 'POI':		r.setNodeRole(poiselected  ,r.getNodeRole(_root.saved['POI']._name)); break;
+				case 'way':		r.setWayRole (wayselected  ,r.getWayRole (_root.saved['way']._name)); break;
 			}
 		}
 		if (this.proptype=='way') { _root.ws.redraw(); }
@@ -430,10 +433,11 @@
 
 	PropertyWindow.prototype.saveAttributes=function() {
 		if (this.tagcount==0) { return; }
-		_root.savedtype =this.proptype;
-		_root.savedpoi  =_root.poiselected;
-		_root.savedway  =_root.wayselected;
-		_root.savedpoint=_root.pointselected;
+		switch (this.proptype) {
+			case 'point':	_root.saved[this.proptype]=_root.pointselected; _root.savedpointway=_root.ws; break;
+			case 'POI':		_root.saved[this.proptype]=_root.map.pois[poiselected]; break;
+			case 'way':		_root.saved[this.proptype]=_root.ws; break;
+		};
 	};
 
 	PropertyWindow.prototype.findInPresetMenu=function(group) {
@@ -453,6 +457,10 @@
 			}
 		}
 		return f;
+	};
+
+	PropertyWindow.prototype.reflect=function() {
+		if (this.presetmenu) { this.presetmenu.reflect(); }
 	};
 
 	Object.registerClass("propwindow",PropertyWindow);
@@ -479,6 +487,7 @@
 			type='input';
 			setTextFormat(boldSmall);
 			setNewTextFormat(boldSmall);
+			restrict="^"+chr(0)+"-"+chr(31);
 		};
 		this.keyname.onSetFocus =function() {
 			this._parent.scrollToField();
@@ -490,6 +499,7 @@
 			if (this.text=='') { _root.redopropertywindow=this._parent._parent._parent; }
 			_root.keytarget=_root.basekeytarget;
 			_root.auto.remove();
+			this._parent._parent._parent.reflect();
 		};
 		this.keyname.onChanged=function(tf) {
 			if (tf.text=='+') {
@@ -506,7 +516,7 @@
 
 		// Initialise value
 
-		this.createTextField('value',2,72,-1,110,18);
+		this.createTextField('value',2,72,-1,100,18);
 		this.value.onSetFocus =function() {
 			this._parent.scrollToField();
 			if (this.textColor==0x888888) { this.text=''; this.textColor=0; }
@@ -518,12 +528,20 @@
 			if (_root.reinstatefocus) { return; }
 			if (_root.lastkeypressed==-1 && _root.auto.autolist.hitTest(_root._xmouse,_root._ymouse)) { return; }
 			_root.keytarget=_root.basekeytarget;
-			if (this.text=='') { _root.redopropertywindow=this._parent._parent._parent; }
+			if (this.text=='') {
+				if (this._parent.lastvalue.substr(0,6)=='(type ') {
+					this.text=this._parent.lastvalue; this.textColor=0x888888;
+				} else {
+					_root.redopropertywindow=this._parent._parent._parent; 
+				}
+			}
 			switch (this._parent._parent._parent.proptype) {
 				case 'way':		 	_root.ws.redraw(); break;
 				case 'relation':	_root.ws.redraw(); break;
 			}
 			_root.auto.remove();
+			this._parent._parent._parent.reflect();
+			this._parent.lastvalue=this.text;
 		};
 		this.value.onChanged=function(tf) {
 			setValueFromTextfield(tf);
@@ -537,11 +555,13 @@
 			type='input';
 			setTextFormat(plainSmall);
 			setNewTextFormat(plainSmall);
+			restrict="^"+chr(0)+"-"+chr(31);
 		};
 		this.value.text=this.getValueFromObject(key);
 		if (this.value.text.substr(0,6)=='(type ') { this.value.textColor=0x888888; }
 		this.lastkey=key;
-
+		this.lastvalue=this.value.text;
+		
 		this.attachMovie("closecross", "i_remove", 4);
 		with (this.i_remove) { _x=174; _y=8; };
 		this.i_remove.onPress=function() {
@@ -687,6 +707,7 @@
 			type='input';
 			setTextFormat(plainTiny);
 			setNewTextFormat(plainTiny);
+			restrict="^"+chr(0)+"-"+chr(31);
 		};
 		this.value.text=this.getRole();
 		this.value.onSetFocus =function() { this._parent.scrollToField();
@@ -768,11 +789,19 @@
 	
 	function updateButtons() {
 		var pt=_root.panel.properties.proptype;
-		_root.panel.i_repeatattr._alpha=100-50*(pt=='' || _root.savedtype=='');
+		_root.panel.i_repeatattr._alpha=100-50*(pt=='' || _root.saved[pt]=='');
 		_root.panel.i_newattr._alpha   =100-50*(pt=='');
 		_root.panel.i_newrel._alpha    =100-50*(pt=='');
 	}
 
 	function updateScissors(v) {
 		_root.panel.i_scissors._alpha=50+50*v;
+	}
+
+	// hashLength
+	
+	function hashLength (a) {
+		var l=0;
+		for (var i in a) { l++; }
+		return l;
 	}

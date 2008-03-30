@@ -460,6 +460,18 @@
 		markClean(false);
 	};
 
+	// ----	Check for duplicates (e.g. when C is removed from ABCB)
+	
+	OSMWay.prototype.removeDuplicates=function() {
+		var z=this.path; var ch=false;
+		for (var i in z) {
+			if (i>0) {
+				if (this.path[i][2]==this.path[i-1][2]) { this.path.splice(i,1); ch=true; }
+			}
+		}
+		return ch;
+	};
+
 	Object.registerClass("way",OSMWay);
 
 

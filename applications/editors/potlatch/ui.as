@@ -198,6 +198,7 @@
 	Object.registerClass("menu",UIMenu);
 
 
+	// ========================================================================
 	// modalDialogue
 
 	function createModalDialogue(w,h,buttons,closefunction) {
@@ -248,6 +249,8 @@
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
 	}
 
+	// ========================================================================
+	// Support functions
 
 	// drawButton		- draw white-on-grey button
 	// (object,x,y,button text, text to right)

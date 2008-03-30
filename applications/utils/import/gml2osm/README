@@ -16,7 +16,8 @@ Metadata ("tags") are not defined by GML; the definition of the meanings of the 
 Features
 --------
 
-Features, as v0.3, include:
+Features, as v0.4, include:
+- Use of relations to model polygons with outer and inner hulls
 - Outputs API 0.5 -compatible .osm files
 - Import of Points, Linestrings, MultiLinestrings and Multipolygons
 - Detection of nodes used more than once: no data duplication
@@ -25,7 +26,6 @@ Features, as v0.3, include:
 
 
 Features not implemented yet:
-- Support of polygons with inner hulls
 - Full EGM metadata translation
 - Add custom tags to every piece of data, to mark attribution of the data source.
 

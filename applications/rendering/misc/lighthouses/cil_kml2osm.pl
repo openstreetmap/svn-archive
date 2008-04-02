@@ -215,70 +215,73 @@ sub toOsm
   
   # Add some standard fields
   $Text .= makeTag('name', $Name);
-  $Text .= makeTag('man_made', $Manmade);
   $Text .= makeTag('source', 'Commissioners of Irish Lights');
   $Text .= makeTag('website:source', 'http://cil.ie/');
   $Text .= makeTag('description', $Data->{description});
   
-  $Text .= makeTag(
-    'building', 
-    $Data->{'structure'}->{'main'}->{type});
+  if($Name =~ m{Helicopter Landing Base})
+    {
+    # Helicopter landing bases aren't actually lighthouses!
+    $Text .= makeTag('aeroway', 'heliport');
+    }
+  else
+    {
+    $Text .= makeTag('man_made', $Manmade);
     
-  $Text .= makeTag(
-    'building:colour', 
-    $Data->{'structure'}->{'main'}->{colour});
-    
-  $Text .= makeTag(
-    'building:shape', 
-    $Data->{'structure'}->{'main'}->{shape});
-    
-  $Text .= makeTag(
-    'building:cladding', 
-    $Data->{'structure'}->{'main'}->{cladding});
-    
-  $Text .= makeTag(
-    'building:decoration:single_band', 
-    $Data->{'structure'}->{band});
-  
-  $Text .= makeTag(
-    'building:decoration:multiple_bands', 
-    $Data->{'structure'}->{bands});
-  
-  $Text .= makeTag(
-    'building:lantern:colour', 
-    $Data->{'structure'}->{lantern});
-    
-  
-  # Take certain things out of "technical data" and into other named tags
-  my %ConvertToOsm = (
-    'Height of Tower/Structure'=>'building:height',
-    'Fog Signal'=>'audio:as_text', 
-    'Height of Light Above MHWS'=>'ele:mhws', 
-    'DGPS'=>'dgps',
-    'Built'=>'start_date', 
-    'AIS'=>'automatic_identification_system');
-  while(my($from,$to) = each(%ConvertToOsm))
-  {
     $Text .= makeTag(
-      $to, 
-      $Data->{'Technical Data'}->{$from});
+      'building', 
+      $Data->{'structure'}->{'main'}->{type});
+      
+    $Text .= makeTag(
+      'building:colour', 
+      $Data->{'structure'}->{'main'}->{colour});
+      
+    $Text .= makeTag(
+      'building:shape', 
+      $Data->{'structure'}->{'main'}->{shape});
+      
+    $Text .= makeTag(
+      'building:cladding', 
+      $Data->{'structure'}->{'main'}->{cladding});
+      
+    $Text .= makeTag(
+      'building:decoration:band', 
+      $Data->{'structure'}->{band});
     
-    undef($Data->{'Technical Data'}->{$from});
-  }
-  
-  # List any other technical data
-  while(my($k,$v) = each(%{$Data->{'Technical Data'}}))
-  {
-    $k =~ s{\s+}{_}g;
-    $Text .= makeTag('navaid:sea:'.$k, $v);
-  }
+    $Text .= makeTag(
+      'building:decoration:bands', 
+      $Data->{'structure'}->{bands});
     
-  $Text .= makeTag(
-    'start_date', 
-    $Data->{'Technical Data'}->{Built});
+    $Text .= makeTag(
+      'building:lantern:colour', 
+      $Data->{'structure'}->{lantern});
+      
+    
+    # Take certain things out of "technical data" and into other named tags
+    my %ConvertToOsm = (
+      'Height of Tower/Structure'=>'building:height',
+      'Height of Light Above MHWS'=>'ele:mhws', 
+      'DGPS'=>'dgps',
+      'Built'=>'start_date', 
+      'AIS'=>'automatic_identification_system',
+      'Character'=>'lighting:sequence');
+    while(my($from,$to) = each(%ConvertToOsm))
+    {
+      $Text .= makeTag(
+        $to, 
+        $Data->{'Technical Data'}->{$from});
+      
+      undef($Data->{'Technical Data'}->{$from});
+    }
+    
+    # List any other technical data
+    while(my($k,$v) = each(%{$Data->{'Technical Data'}}))
+    {
+      $k =~ s{\s+}{_}g;
+      $Text .= makeTag('navaid:sea:'.$k, $v);
+    }
+  } # end of "if a lighthouse"
   
-  makeTag('signal_light', $Data->{structure}->{lantern});
-
   # List any URLs that were found
   while(my($Type,$Link) = each(%{$Data->{Links}}))
   {
@@ -293,8 +296,7 @@ sub toOsm
       $Text .= makeTag("website_description:$Type", $Link->{title});
     }
   }
-  
-  
+
   $Text .= sprintf "</node>\n";
 }
 

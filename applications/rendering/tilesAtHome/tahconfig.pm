@@ -222,16 +222,39 @@ sub CheckConfig
     }
     print "- zip is present\n";
 
+    # check a correct pngoptimizer is set
+    if ! (($Config{"PngOptimizer"} eq "pngcrush") or ($Config{"PngOptimizer"} eq "optipng"))
+    {
+        die("! Can't find valid PngOptimizer setting, check config");
+    }
+
     # PNGCrush version
     my $PngcrushV = `\"$Config->{Pngcrush}\" -version`;
     $EnvironmentInfo{Pngcrush}=$PngcrushV;
 
-    if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) 
+    if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($Config{"PngOptimizer"} eq "pngcrush") 
     {
         # die here if pngcrush shall be mandatory
         print "Can't find pngcrush (using \"$Config->{Pngcrush}\")\n";
     }
-    print "- pngcrush version $1\n";
+    else
+    {
+        print "- Pngcrush version $1\n";
+    }
+
+    # Optipng version
+    my $OptipngV = `\"$Config->{Optipng}\" -version`;
+    $EnvironmentInfo{Pngcrush}=$OptipngV;
+
+    if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config{"PngOptimizer"} eq "optipng")
+    {
+        # die here if optipng shall be mandatory
+        print "Can't find OptiPNG (using \"$Config->{Optipng}\")\n";
+    }
+    else
+    {
+        print "- OptiPNG version $1\n";
+    }
 
     if ($Config->{"LocalSlippymap"})
     {

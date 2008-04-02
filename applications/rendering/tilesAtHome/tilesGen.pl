@@ -1576,13 +1576,14 @@ sub splitImageX
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
             my $Redirect = ">/dev/null";
+            my $Cmd;
             if ($^O eq "MSWin32")
             {
                 $Redirect = "";
             }
             if ($Config{PngOptimizer} eq "pngcrush")
             {
-                my $Cmd = sprintf("%s \"%s\" -q %s %s %s",
+                $Cmd = sprintf("%s \"%s\" -q %s %s %s",
                   $Config{Niceness},
                   $Config{Pngcrush},
                   $Filename2,
@@ -1591,7 +1592,7 @@ sub splitImageX
             }
             elsif ($Config{PngOptimizer} eq "optipng")
             {
-                my $Cmd = sprintf("%s \"%s\" -q %s -out %s %s",
+                $Cmd = sprintf("%s \"%s\" -q %s -out %s %s",
                   $Config{Niceness},
                   $Config{Optipng},
                   $Filename2,

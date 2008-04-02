@@ -1581,6 +1581,7 @@ sub splitImageX
             {
                 $Redirect = "";
             }
+
             if ($Config{PngOptimizer} eq "pngcrush")
             {
                 $Cmd = sprintf("%s \"%s\" -q %s %s %s",
@@ -1603,14 +1604,14 @@ sub splitImageX
             {
                 cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4,$PID);
             }
-            statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Optimizing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
             if(runCommand($Cmd,$PID))
             {
                 unlink($Filename2);
             }
             else
             {
-                statusMessage("Pngcrushing $Basename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+                statusMessage("Optimizing $Basename with $Config{PngOptimizer} failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
                 rename($Filename2, $Filename);
             }
         }

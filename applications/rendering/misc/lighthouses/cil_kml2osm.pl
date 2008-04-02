@@ -3,8 +3,6 @@ use XML::Simple;
 use Data::Dumper;
 use strict;
 $Data::Dumper::Terse = 1;
-#$Data::Dumper::Indent = 0;
-
 
 # Location of source data (unzip the KMZ file first to get doc.kml)
 my $Data = XMLin("doc.kml");
@@ -63,7 +61,6 @@ while(my($Set, $Items) = each(%{$Data->{Folder}->{Document}}))
   }
 }
 print OSM "</osm>\n";
-close;
 
 # Parse some description text from the irish lighthouses KML file
 sub parse
@@ -101,7 +98,6 @@ sub parse
     else
     {
       push(@{$Data->{FreeText}},$Line);
-      #print MISC "$Line\n";
     }
     
     # If the line contains a hyperlink
@@ -228,6 +224,14 @@ sub toOsm
     {
     $Text .= makeTag('man_made', $Manmade);
     
+    # Detect unlighted
+    if($Name =~ m{Unlighted}i
+      or 
+      $Data->{'Technical Data'}->{'Character'} =~ m{unlit}i)
+    {
+      $Text .= makeTag('lighting', 'no');
+    }
+    
     $Text .= makeTag(
       'building', 
       $Data->{'structure'}->{'main'}->{type});
@@ -255,8 +259,21 @@ sub toOsm
     $Text .= makeTag(
       'building:lantern:colour', 
       $Data->{'structure'}->{lantern});
+       
+    my $Ranges = $Data->{'Technical Data'}->{'Nominal Range(s)'};
+    if(defined $Ranges)
+    {
+      my $Max = 0;
+      foreach my $R(split(/\//, $Ranges))
+      {
+        $Max = $R if($R > $Max);
+      }
       
-    
+      $Text .= makeTag("light:range", sprintf("%1.0f km", $Max * 1.852)) if($Max > 0);
+      $Text .= makeTag("light:ranges", $Ranges . " nmi");
+      undef $Data->{'Technical Data'}->{'Nominal Range(s)'};
+    }
+   
     # Take certain things out of "technical data" and into other named tags
     my %ConvertToOsm = (
       'Height of Tower/Structure'=>'building:height',
@@ -278,7 +295,7 @@ sub toOsm
     while(my($k,$v) = each(%{$Data->{'Technical Data'}}))
     {
       $k =~ s{\s+}{_}g;
-      $Text .= makeTag('navaid:sea:'.$k, $v);
+      $Text .= makeTag('navaid:sea:'.lc($k), $v);
     }
   } # end of "if a lighthouse"
   

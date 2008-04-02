@@ -223,7 +223,7 @@ sub CheckConfig
     print "- zip is present\n";
 
     # check a correct pngoptimizer is set
-    if ! (($Config{"PngOptimizer"} eq "pngcrush") or ($Config{"PngOptimizer"} eq "optipng"))
+    if ! (($Config->{"PngOptimizer"} eq "pngcrush") or ($Config->{"PngOptimizer"} eq "optipng"))
     {
         die("! Can't find valid PngOptimizer setting, check config");
     }
@@ -232,7 +232,7 @@ sub CheckConfig
     my $PngcrushV = `\"$Config->{Pngcrush}\" -version`;
     $EnvironmentInfo{Pngcrush}=$PngcrushV;
 
-    if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($Config{"PngOptimizer"} eq "pngcrush") 
+    if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($Config->{"PngOptimizer"} eq "pngcrush") 
     {
         # die here if pngcrush shall be mandatory
         print "Can't find pngcrush (using \"$Config->{Pngcrush}\")\n";
@@ -246,7 +246,7 @@ sub CheckConfig
     my $OptipngV = `\"$Config->{Optipng}\" -version`;
     $EnvironmentInfo{Pngcrush}=$OptipngV;
 
-    if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config{"PngOptimizer"} eq "optipng")
+    if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config->{"PngOptimizer"} eq "optipng")
     {
         # die here if optipng shall be mandatory
         print "Can't find OptiPNG (using \"$Config->{Optipng}\")\n";

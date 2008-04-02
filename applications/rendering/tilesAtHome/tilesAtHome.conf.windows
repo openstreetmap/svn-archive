@@ -2,17 +2,22 @@
 # Configuration file for TilesAtHome
 #
 
+## Path strings are later quoted by t@h, do not use quotes here
 ## File Locations
 WorkingDirectory=c:\temp\
 Inkscape=c:\program files\inkscape\inkscape.exe
 XmlStarlet=c:\program files\xmlstarlet\xml.exe
 Zip=c:\program files\zip\zip.exe
 Pngcrush=c:\program files\pngcrush\pngcrush.exe
+Optipng=c:\program files\optipng\optipng.exe
 Niceness=
 Subversion=c:\program files\subversion\svn.exe
 
 ## If you want to use 7Zip set this to 1 and set "Zip" above to your 7zip.exe
 7zipWin=0
+
+## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
+PngOptimizer=pngcrush
 
 ## Workaround for inkscape internationalisation problems. Default off (0) for windows
 i18n=0

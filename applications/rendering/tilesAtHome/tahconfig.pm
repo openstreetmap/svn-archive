@@ -100,8 +100,12 @@ sub ApplyConfigLogic
         $Config->{"Verbose"} = 1;
     }
 
-    ## check for Pngcrush config option and set to default if not found
+    ## check for Pngcrush/Optipng config option and set to default if not found
     $Config->{"Pngcrush"} = "pngcrush" unless defined($Config->{"Pngcrush"});
+    $Config->{"Optipng"} = "optipng" unless defined($Config->{"Optipng"});
+
+    ## Default to optimize with pngcrush
+    $Config->{"PngOptimizer"} = "pngcrush" unless defined($Config->{"PngOptimizer"});
 
     ## do the same for Zip
     $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
@@ -138,9 +142,6 @@ sub ApplyConfigLogic
 
     ## Default to rendering with Osmarender/XSLT
     $Config->{"Osmarender"} = "XSLT" unless defined($Config->{"Osmarender"});
-
-    ## Default to optimize with pngcrush
-    $Config->{"PngOptimizer"} = "pngcrush" unless defined($Config->{"PngOptimizer"});
 }
 
 #--------------------------------------------------------------------------

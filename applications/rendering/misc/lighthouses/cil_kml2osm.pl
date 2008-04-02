@@ -345,7 +345,7 @@ sub xmlSafe
   # Not using this, because none of our data happens to contain double-quotes
   #$Text =~ s{'}{''}g;
   
-  $Text =~ s{\xB0}{&deg;}g; # degree characters
+  $Text =~ s{\xB0}{&amp;deg;}g; # degree characters
   
   return($Text);
 }

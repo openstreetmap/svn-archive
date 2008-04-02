@@ -138,6 +138,9 @@ sub ApplyConfigLogic
 
     ## Default to rendering with Osmarender/XSLT
     $Config->{"Osmarender"} = "XSLT" unless defined($Config->{"Osmarender"});
+
+    ## Default to optimize with pngcrush
+    $Config->{"PngOptimizer"} = "pngcrush" unless defined($Config->{"PngOptimizer"});
 }
 
 #--------------------------------------------------------------------------

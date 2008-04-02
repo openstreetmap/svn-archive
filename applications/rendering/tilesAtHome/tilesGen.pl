@@ -1576,17 +1576,32 @@ sub splitImageX
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
             my $Redirect = ">/dev/null";
-                if ($^O eq "MSWin32")
-                {
-                    $Redirect = "";
-                }
+            if ($^O eq "MSWin32")
+            {
+                $Redirect = "";
+            }
+            if ($Config{PngOptimizer} eq "pngcrush")
+            {
                 my $Cmd = sprintf("%s \"%s\" -q %s %s %s",
                   $Config{Niceness},
                   $Config{Pngcrush},
                   $Filename2,
                   $Filename,
                   $Redirect);
-
+            }
+            elsif ($Config{PngOptimizer} eq "optipng")
+            {
+                my $Cmd = sprintf("%s \"%s\" -q %s -out %s %s",
+                  $Config{Niceness},
+                  $Config{Optipng},
+                  $Filename2,
+                  $Filename,
+                  $Redirect);
+            }
+            else
+            {
+                cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn)","EXIT",4,$PID);
+            }
             statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
             if(runCommand($Cmd,$PID))
             {

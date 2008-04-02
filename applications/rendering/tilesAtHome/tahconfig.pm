@@ -227,7 +227,7 @@ sub CheckConfig
     {
         die("! Can't find valid PngOptimizer setting, check config");
     }
-
+    print "going to use ".$Config->{"PngOptimizer"}."\n";
     # PNGCrush version
     my $PngcrushV = `\"$Config->{Pngcrush}\" -version`;
     $EnvironmentInfo{Pngcrush}=$PngcrushV;

@@ -1,38 +1,21 @@
-%Tags = (
-	"building:colour" => 'black',
-	"building:bands" => 'yellow',
-	"building:top:colour" => 'green',
-	"building" => 'tower',
-	"building:shape" => 'round',
-	"lighting:sequence" => "Fl WR 3s"
-        );
-
-
+use strict;
 use Data::Dumper;
 use parseFlashSequence;
 use renderFlashSequence;
 use flashSequenceToImage;
-
-$Data = parseFlashSequence($Tags{"lighting:sequence"});
-#print Dumper($Data);
-
-$Text = renderFlashSequence($Data);
-
-#print "$Text\n\n";
-flashSequenceToImage($Text, "lights.png");
-
 use renderIconLighthouse;
-
-#$SVG = renderIconLighthouse(\%Tags);
-#print $SVG;
-
 use XML::Simple;
-$OSM = XMLin("lighthouses.osm");
 
-open OUT, ">dumper.txt"; print OUT Dumper($OSM); close OUT;
-open HTML, ">html/index.html";
-print HTML "<table border=1>\n";
-my $Dir = getcwd;
+my $OSM = XMLin("lighthouses.osm");
+
+my $OutDir = "html";
+mkdir $OutDir if ! -d $OutDir;
+
+# open OUT, ">dumper.txt"; print OUT Dumper($OSM); close OUT;
+
+open HTML, ">$OutDir/index.html";
+
+my $Cwd = getcwd;
 while(my($id, $fields) = each(%{$OSM->{node}}))
 {
 	my %Tags;
@@ -41,17 +24,32 @@ while(my($id, $fields) = each(%{$OSM->{node}}))
 		$Tags{$Tag->{k}} = $Tag->{v};
 	}
 
-	printf "%s\n", $Tags{name};
+	printf HTML "<h3>%s</h3>\n", $Tags{name};
 
 	if($Tags{man_made} eq 'lighthouse')
 	{	
-	$SVG = renderIconLighthouse(\%Tags);
+	my $SVG = renderIconLighthouse(\%Tags);
 	open(OUT, ">temp.svg"); print OUT $SVG;close OUT;
-	open(OUT, ">html/$Tags{name}.txt"); print OUT Dumper(%Tags);close OUT;
+	#open(OUT, ">$OutDir/$Tags{name}.txt"); print OUT Dumper(%Tags);close OUT;
 	
-	renderSvg("$Dir/temp.svg", "$Dir/html/$Tags{name}.png");
+	my $BuildingFilename = "building_$Tags{name}.png";
+	renderSvg("$Cwd/temp.svg", "$Cwd/$OutDir/$BuildingFilename", 200);
+	unlink "temp.svg";
 	
-	printf HTML "<tr><td><img src='$Tags{name}.png'></td><td>$Tags{name}</td><td>$Tags{description}</td></tr>\n";
+	my $LightFilename = "lighting_$Tags{name}.png";
+	my $Sequence = parseFlashSequence($Tags{"lighting:sequence"});
+	my $SequenceText = renderFlashSequence($Sequence);
+	flashSequenceToImage($SequenceText, "$OutDir/$LightFilename");
+
+	printf HTML "<p><img src='$BuildingFilename'></p>";
+	printf HTML "<p>Description: $Tags{description}</p>\n";
+	printf HTML "<p><img src='$LightFilename'></p>";
+	printf HTML "<p>Sequence: %s</p>\n", $Tags{"lighting:sequence"};
+	
 	}
 }
+
 close HTML;
+
+
+

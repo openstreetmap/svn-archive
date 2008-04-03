@@ -8,7 +8,7 @@ $Data::Dumper::Terse = 1;
 my $Data = XMLin("doc.kml");
 
 # Dump some debugging output into this directory
-my $Dir = "html";
+my $Dir = "debug_conversion";
 mkdir $Dir if ! -d $Dir;
 
 # Optional: just dump the entire XML payload to STDOUT
@@ -62,14 +62,6 @@ while(my($Set, $Items) = each(%{$Data->{Folder}->{Document}}))
 }
 print OSM "</osm>\n";
 
-while(my($Tag,$Values) = each(%{$TagUse}))
-{
-  printf "\n===%s===\n", $Tag;
-  while(my($Value,$Use) = each(%{$Values}))
-  {
-    printf "* %s\n", $Value;
-  }
-}
 # Parse some description text from the irish lighthouses KML file
 sub parse
 {

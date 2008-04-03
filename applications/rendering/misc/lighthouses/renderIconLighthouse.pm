@@ -13,18 +13,18 @@ sub renderIconLighthouse
 		band3colour => $Data->{'building:colour'},
 	};
 	
-	if(exists($Data->{'building:decoration:multiple_bands'}))
+	if(exists($Data->{'building:decoration:bands'}))
 	{
 		$Templates->{band1colour} = 
-			$Templates->{band3colour} = $Data->{'building:decoration:multiple_bands'};
+			$Templates->{band3colour} = $Data->{'building:decoration:bands'};
 	}
-	if(exists($Data->{'building:decoration:single_band'}))
+	if(exists($Data->{'building:decoration:band'}))
 	{
-		$Templates->{band2colour} = $Data->{'building:decoration:single_band'};
+		$Templates->{band2colour} = $Data->{'building:decoration:band'};
 	}
-	if(exists($Data->{'lighting:colour'}))
+	if(exists($Data->{'building:lantern:colour'}))
 	{
-		$Templates->{lampcolour} = $Data->{'lighting:colour'};
+		$Templates->{lampcolour} = $Data->{'building:lantern:colour'};
 	}
 	
 	$SVG = doTemplates($SVG, $Templates);
@@ -55,10 +55,10 @@ sub saveFile{
 }
 sub renderSvg
 {
-	my ($SVG, $PNG) = @_;
+	my ($SVG, $PNG, $Size) = @_;
 	use Cwd;
 	my $Ink = "C:\\program files\\Inkscape\\inkscape.exe";
-	my $Cmd = "\"$Ink\" --export-png=\"$PNG\" -D -w 400 -h 400 \"$SVG\"";
+	my $Cmd = "\"$Ink\" --export-png=\"$PNG\" -D -w $Size -h $Size \"$SVG\"";
 	#print $Cmd, "\n";
 	`$Cmd`;
 	

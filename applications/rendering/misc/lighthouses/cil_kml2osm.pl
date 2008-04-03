@@ -308,6 +308,11 @@ sub toOsm
       $Text .= makeTag("website", $Link->{URL});
       $Text .= makeTag("website_description", $Link->{title});
     }
+    if($Type eq 'operator')
+    {
+      $Text .= makeTag("operator", $Link->{title});
+      $Text .= makeTag("website:operator", $Link->{URL});
+    }
     else
     {
       $Text .= makeTag("website:$Type", $Link->{URL});

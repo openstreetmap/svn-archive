@@ -62,6 +62,14 @@ while(my($Set, $Items) = each(%{$Data->{Folder}->{Document}}))
 }
 print OSM "</osm>\n";
 
+while(my($Tag,$Values) = each(%{$TagUse}))
+{
+  printf "\n===%s===\n", $Tag;
+  while(my($Value,$Use) = each(%{$Values}))
+  {
+    printf "* %s\n", $Value;
+  }
+}
 # Parse some description text from the irish lighthouses KML file
 sub parse
 {
@@ -281,7 +289,8 @@ sub toOsm
       'DGPS'=>'dgps',
       'Built'=>'start_date', 
       'AIS'=>'automatic_identification_system',
-      'Character'=>'lighting:sequence');
+      'Character'=>'lighting:sequence',
+      'Auxiliary Character' => 'lighting:sequence:auxiliary');
     while(my($from,$to) = each(%ConvertToOsm))
     {
       $Text .= makeTag(

@@ -2300,7 +2300,7 @@
                 fill: none;
                 stroke: #31ff31;
                 stroke-width: 5px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2309,7 +2309,7 @@
                 fill: none;
                 stroke: #3131ff;
                 stroke-width: 5px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2318,7 +2318,7 @@
                 fill: none;
                 stroke: #ff3131;
                 stroke-width: 5px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2327,7 +2327,7 @@
                 fill: none;
                 stroke: #060606;
                 stroke-width: 5px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2336,7 +2336,7 @@
                 fill: none;
                 stroke: #f6800a;
                 stroke-width: 5px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2345,7 +2345,7 @@
                 fill: none;
                 stroke: #f6dd0a;
                 stroke-width: 5px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2354,7 +2354,7 @@
                 fill: none;
                 stroke: #505050;
                 stroke-width: 4px;
-		stroke-linecap:butt;
+		stroke-linecap:round;
 		stroke-linejoin:round;
                 opacity: 0.8;
             }
@@ -2372,7 +2372,7 @@
                 font-family: "DejaVu Sans";
                 font-weight: normal;
                 font-size: 5px;
-				text-anchor: middle;
+		text-anchor: middle;
             }
 
             .piste-type-sled {

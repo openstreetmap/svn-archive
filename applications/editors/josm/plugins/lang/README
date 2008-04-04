@@ -1,0 +1,8 @@
+JOSM language plugin.
+
+The framework for this plugin (i.e. everything apart from the
+translations themselves) has been written by Immanuel Scholz
+<imi@eigenheimstrasse.de> and is released under the same license
+as JOSM itself (GPL).
+
+

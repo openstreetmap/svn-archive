@@ -969,11 +969,119 @@
  		</rule>
         </rule>	
 
-        <!-- Aerialways -->
-        <rule e="node|way" k="aerialway" v="*">
-            <line class='aerialway-line'/>
-            <line class='aerialway-struts'/>
+        <!-- Piste maps -->
+        <rule e="way" k="piste:type" v="downhill">
+            <rule e="way" k="piste:difficulty" v="novice">
+            	<line class='piste-difficulty-novice' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="easy">
+            	<line class='piste-difficulty-easy' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="intermediate">
+            	<line class='piste-difficulty-intermediate' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="advanced">
+            	<line class='piste-difficulty-advanced' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="expert">
+            	<line class='piste-difficulty-expert' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="freeride">
+            	<line class='piste-difficulty-freeride' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="~">
+            	<line class='piste-difficulty-other' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="name|ref" v="*">
+                <!-- prefer to render name, otherwise render ref -->
+                <!-- text is rendered at 75%, refs at 25%, aerialway name at 50% -->
+                <rule e="way" k="name" v="~">
+                    <rule e="way" k="ref" v="*">
+                        <text k="ref" dy="2px" class="piste-downhill-ref" text-anchor="middle" startOffset="75%"/>
+                    </rule>
+                </rule>
+                <else>
+                    <rule e="way" k="ref" v="*">
+                        <text k="ref" dy="2px" class="piste-downhill-ref" text-anchor="middle" startOffset="75%"/>
+                    </rule>
+                    <rule e="way" k="name" v="*">
+                        <text k="name" dy="2px" class="piste-downhill-name" text-anchor="middle" startOffset="75%"/>
+                    </rule>
+                </else>
+            </rule>
         </rule>
+        <rule e="way" k="piste:type" v="sled">
+            <line class="piste-type-sled"/>
+        </rule>
+        <rule e="way" k="piste:type" v="nordic">
+            <line class="piste-type-nordic"/>
+        </rule>
+        <rule e="way" k="man_made" v="piste:halfpipe">
+            <area class="man-made-piste-halfpipe"/>
+            <areaSymbol xlink:href="#symbol-man-made-halfpipe" width='7px' height='7px' transform='translate(-3.5,-3.5)' />
+        </rule>
+
+        <!-- Surface lifts (render over pistes) -->
+        <rule e="way" k="piste:lift" v="*">
+            <rule e="way" k="piste:lift" v="t-bar|j-bar|platter">
+                <line class="aerialway-line piste-lift-t-bar-marker"/>
+                <line smart-linecap="no" class='aerialway-struts'/>
+            </rule>
+            <rule e="way" k="piste:lift" v="rope_tow">
+                <line smart-linecap="no" class="piste-lift-rope-tow"/>
+            </rule>
+            <rule e="way" k="piste:lift" v="magic_carpet">
+                <line smart-linecap="no" class="piste-lift-magic-carpet"/>
+            </rule>
+            <rule e="way" k="name" v="*">
+                <text k="name" dx='0px' dy='-3px' class="aerialway-name" text-anchor='middle' startOffset='50%'/>
+            </rule>
+        </rule>
+
+        <!-- Aerialways (render over pistes) -->
+        <rule e="node|way" k="aerialway" v="*">
+            <rule e="way" k="aerialway" v="cable_car">
+                <line class="aerialway-line aerialway-cablecar-marker"/>
+            </rule>
+            <else>
+                <rule e="way" k="aerialway" v="gondola">
+                    <line class="aerialway-line aerialway-gondola-marker"/>
+                </rule>
+                <else>
+                    <rule e="way" k="aerialway" v="chair_lift">
+                        <rule e="way" k="piste:lift:occupancy" v="4|5|6">
+                            <line class="aerialway-line aerialway-chairlift4-marker"/>
+                        </rule>
+                        <else>
+                            <line class="aerialway-line aerialway-chairlift2-marker"/>
+                        </else>
+                    </rule>
+                    <else>
+                        <rule e="way" k="aerialway" v="mixed_lift">
+                            <line class="aerialway-line aerialway-mixedlift-marker"/>
+                        </rule>
+                        <else>
+                            <rule e="way" k="aerialway" v="*">
+                                <line class='aerialway-line'/>
+                            </rule>
+                        </else>
+                    </else>
+                </else>
+            </else>
+            <line smart-linecap="no" class='aerialway-struts'/>
+            <rule e="node" k="aerialway" v="station">
+                <circle r='0.75px' class="aerialway-station"/>
+            </rule>
+            <rule e="node" s="way" k="aerialway" v="*">
+                <rule e="node" k="ele" v="*">
+                    <text k="ele" dx="0px" dy="-2.5px" class="aerialway-elevation-text"/>
+                </rule>
+            </rule>
+            <rule e="way" k="name" v="*">
+                <text k="name" dx='0px' dy='-3px' class="aerialway-name" text-anchor='middle' startOffset='50%'/>
+            </rule>
+        </rule>
+
 
 		<!-- Natural features -->
 		<rule e="node" k="natural" v="peak">
@@ -2385,15 +2493,182 @@
             .aerialway-line {
                 fill: none;
                 stroke: #202020;
-                stroke-width: 0.2px;
+                stroke-width: 0.4px;
+            }
+
+            .aerialway-cablecar-marker {
+                marker-start:url(#marker-cablecar);
+            }
+
+            .aerialway-gondola-marker {
+                marker-start:url(#marker-gondola);
+            }
+
+            .aerialway-chairlift2-marker {
+                marker-start:url(#marker-chair-lift-2);
+            }
+
+            .aerialway-chairlift4-marker {
+                marker-start:url(#marker-chair-lift-4);
+            }
+
+            .aerialway-mixedlift-marker {
+                marker-start:url(#marker-mixed-lift);
             }
 
             .aerialway-struts {
                 fill: none;
                 stroke: #202020;
-                stroke-width: 2px;
-                stroke-dasharray: 0.2,10;
+                stroke-width: 4px;
+                stroke-dasharray: 0.2,20;
             }
+
+            .aerialway-station {
+                fill: black;
+                stroke: black;
+                stroke-width: 1px;
+            }
+
+            .aerialway-name {
+                fill: #606060;
+                font-family: "DejaVu Sans";
+                font-weight: normal;
+                font-size: 4px;
+                stroke: none;
+				text-anchor: middle;
+            }
+
+            .aerialway-elevation-text {
+                fill: #606060;
+                font-family: "DejaVu Sans";
+                font-weight: normal;
+                font-size: 3px;
+				text-anchor: middle;
+            }
+
+            /* surface lifts */
+
+            .piste-lift-t-bar-marker {
+                marker-start:url(#marker-piste-lift-t-bar);
+            }
+
+            .piste-lift-rope-tow {
+                fill: none;
+                stroke: #a47c41;
+                stroke-width: 0.5px;
+                stroke-dasharray: 1,1;
+                stroke-linecap: square;
+            }
+
+            .piste-lift-magic-carpet {
+                fill: none;
+                stroke: #101010;
+                stroke-width: 0.8px;
+            }
+
+            /* Piste maps */
+
+            .piste-difficulty-novice {
+                fill: none;
+                stroke: #31ff31;
+                stroke-width: 5px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-easy {
+                fill: none;
+                stroke: #3131ff;
+                stroke-width: 5px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-intermediate {
+		fill: none;
+                stroke: #ff3131;
+                stroke-width: 5px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-advanced {
+                fill: none;
+                stroke: #060606;
+                stroke-width: 5px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-expert {
+                fill: none;
+                stroke: #f6800a;
+                stroke-width: 5px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-freeride {
+                fill: none;
+                stroke: #f6dd0a;
+                stroke-width: 5px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-other {
+                fill: none;
+                stroke: #505050;
+                stroke-width: 4px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+                opacity: 0.8;
+            }
+
+            .piste-downhill-name {
+                fill: #ffffff;
+                font-family: "DejaVu Sans";
+                font-weight: normal;
+                font-size: 5px;
+		text-anchor: middle;
+            }
+
+            .piste-downhill-ref {
+                fill: #000000;
+                font-family: "DejaVu Sans";
+                font-weight: normal;
+                font-size: 5px;
+				text-anchor: middle;
+            }
+
+            .piste-type-sled {
+                fill: none;
+                /* stroke: #8040a0; */
+                stroke: #cdabde;
+                stroke-width: 2.5px;
+                marker-start:url(#marker-piste-type-sled);
+            }
+
+            .piste-type-nordic {
+                fill: none;
+                stroke: #c00000;
+                stroke-width: 1px;
+                stroke-dasharray: 3,0.5;
+                marker-start:url(#marker-piste-type-nordic);
+            }
+
+            .man-made-piste-halfpipe {
+                fill: #a0f0ff;
+                stroke: #00bcdf;
+                stroke-width: 0.4px;
+            }
+
 
             /* Power line */
             .power-line {

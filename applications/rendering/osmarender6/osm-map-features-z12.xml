@@ -506,10 +506,19 @@
 				<line class='railway-rail-casing highway-tunnel-ends'/>
 			</rule>
         </rule>
-		<!-- Natural features -->
-		<rule e="node" k="natural" v="peak">
-			<symbol xlink:href="#symbol-peak" width='24px' height='24px' transform='translate(-12,-12)' />
-		</rule>
+
+	
+	<!-- Aerialways -->
+	<rule e="way" k="aerialway" v="cable_car|gondola">
+		<line class="aerialway-line" smart-linecap='no'/>
+		<line class="aerialway-struts" smart-linecap='no'/>
+	</rule>
+
+
+	<!-- Natural features -->
+	<rule e="node" k="natural" v="peak">
+		<symbol xlink:href="#symbol-peak" width='24px' height='24px' transform='translate(-12,-12)' />
+	</rule>
 
         <!-- Non-pysical routes -->
         <rule e="way" k="route" v="ferry">
@@ -1214,6 +1223,19 @@
                 stroke-width: 0.2px;
             }
 
+            /* Aerialways */
+            .aerialway-line {
+	       fill: none;
+	       stroke: #000000;
+	       stroke-width: 1px;
+	    }
+
+            .aerialway-struts {
+	    	fill:none;
+		stroke: #000000;
+		stroke-width: 5px;
+		stroke-dasharray: 0.5, 10;
+	    }
 
             /* Map decoration */
             .map-grid-line {

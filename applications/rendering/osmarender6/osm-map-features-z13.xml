@@ -283,6 +283,9 @@
             <rule e="way" k="railway" v="light_rail">
                 <line class='railway-casing railway-light-rail-casing' />
             </rule>
+            <rule e="way" k="railway" v="incline">
+                <line class='railway-casing railway-incline-casing' />
+            </rule>
             <rule e="way" k="railway" v="rail">
                 <line class='railway-casing railway-rail-casing' />
             </rule>
@@ -401,6 +404,9 @@
             <rule e="way" k="railway" v="light_rail">
                 <line class='railway-core railway-light-rail-core' />
             </rule>
+            <rule e="way" k="railway" v="incline">
+                <line class='railway-core railway-incline-core' />
+            </rule>
             <rule e="way" k="railway" v="rail">
                 <line class='railway-core railway-rail-1-core' />
                 <line class='railway-core railway-rail-2-core' smart-linecap='no'/>
@@ -511,6 +517,10 @@
 				<line class='tunnel-casing railway-light-rail-casing tunnel' mask-class='tunnel-core railway-light-rail-core'/>
 				<line class='railway-light-rail-casing highway-tunnel-ends'/>
             </rule>
+            <rule e="way" k="railway" v="incline">
+                <line class='tunnel-casing railway-incline-casing tunnel' mask-class='tunnel-core railway-incline-core'/>
+                <line class='railway-incline-casing highway-tunnel-ends'/>
+            </rule>
 			<rule e="way" k="railway" v="rail">
 				<line class='tunnel-casing railway-rail-casing tunnel' mask-class='tunnel-core railway-rail-1-core'/>
 				<line class='railway-rail-casing highway-tunnel-ends'/>
@@ -518,12 +528,46 @@
         </rule>
 
 
-        <!-- Aerialways -->
-        <rule e="node|way" k="aerialway" v="*">
-            <line class='aerialway-line'/>
-            <line class='aerialway-struts'/>
+        <!-- Piste maps -->
+        <rule e="way" k="piste:type" v="downhill">
+            <rule e="way" k="piste:difficulty" v="novice">
+            	<line class='piste-difficulty-novice' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="easy">
+            	<line class='piste-difficulty-easy' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="intermediate">
+            	<line class='piste-difficulty-intermediate' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="advanced">
+            	<line class='piste-difficulty-advanced' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="expert">
+            	<line class='piste-difficulty-expert' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="freeride">
+            	<line class='piste-difficulty-freeride' smart-linecap='no'/>
+            </rule>
+            <rule e="way" k="piste:difficulty" v="~">
+            	<line class='piste-difficulty-other' smart-linecap='no'/>
+            </rule>
+        </rule>
+        <rule e="way" k="piste:type" v="sled">
+            <line class="piste-type-sled"/>
+        </rule>
+        <rule e="way" k="piste:type" v="nordic">
+            <line class="piste-type-nordic"/>
         </rule>
 
+        <!-- Aerialways (render over pistes) -->
+        <rule e="node|way" k="aerialway" v="*">
+            <line class='aerialway-line'/>
+            <line smart-linecap="no" class='aerialway-struts'/>
+            <rule e="node" k="aerialway" v="station">
+                <circle r='1.5px' class="aerialway-station"/>
+            </rule>
+            <!-- no names are rendered in this level -->
+        </rule>
 
 
 		<!-- Natural features -->
@@ -738,6 +782,9 @@
 
             .railway-light-rail-casing              { stroke-width: 4.0px; stroke: #666666; }
             .railway-light-rail-core                { stroke-width: 3.0px; stroke: #666666; }
+
+            .railway-incline-casing                 { stroke-width: 3.5px; stroke: #666666; }
+            .railway-incline-core                   { stroke-width: 2.8px; stroke: #666666; }
 
             .railway-subway-casing                  { stroke-width: 4.0px; stroke: #aaaaaa; }
             .railway-subway-core                    { stroke-width: 3.0px; stroke: #ffffff; stroke-dasharray: 3, 9; }
@@ -1313,6 +1360,7 @@
 
 
             /* Aerialway */
+
             .aerialway-line {
                 fill: none;
                 stroke: #202020;
@@ -1322,8 +1370,105 @@
             .aerialway-struts {
                 fill: none;
                 stroke: #202020;
-                stroke-width: 2px;
+                stroke-width: 4px;
                 stroke-dasharray: 0.2,10;
+                stroke-linecap: butt;
+            }
+
+            .aerialway-station {
+                fill: black;
+                stroke: black;
+                stroke-width: 1px;
+            }
+
+            .aerialway-name {
+                fill: black;
+                font-family: "DejaVu Sans";
+                font-weight: normal;
+                font-size: 5px;
+                stroke: none;
+				text-anchor: middle;
+            }
+
+            /* Piste maps */
+
+            .piste-difficulty-novice {
+                fill: none;
+                stroke: #31ff31;
+                stroke-width: 5px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-easy {
+                fill: none;
+                stroke: #3131ff;
+                stroke-width: 5px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-intermediate {
+                fill: none;
+                stroke: #ff3131;
+                stroke-width: 5px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-advanced {
+                fill: none;
+                stroke: #060606;
+                stroke-width: 5px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-expert {
+                fill: none;
+                stroke: #f6800a;
+                stroke-width: 5px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-freeride {
+                fill: none;
+                stroke: #f6dd0a;
+                stroke-width: 5px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-difficulty-other {
+                fill: none;
+                stroke: #505050;
+                stroke-width: 4px;
+		stroke-linecap:round;
+		stroke-linejoin:round;
+                opacity: 0.8;
+            }
+
+            .piste-type-sled {
+                fill: none;
+                /* stroke: #8040a0; */
+                stroke: #cdabde;
+                stroke-width: 2.5px;
+                marker-start:url(#marker-piste-type-sled);
+            }
+
+            .piste-type-nordic {
+                fill: none;
+                stroke: #c00000;
+                stroke-width: 1px;
+                stroke-dasharray: 3,0.5;
+                marker-start:url(#marker-piste-type-nordic);
             }
 
             /* Power line */

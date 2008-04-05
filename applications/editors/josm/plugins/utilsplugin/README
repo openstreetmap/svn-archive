@@ -4,6 +4,9 @@ and has been mostly merged into josm.
 Some of the remaining parts are written by 
 Frederik Ramm <frederik@remote.org>.
 
+The "simplify way" action has been rewritten by
+Gabriel Ebner <ge@gabrielebner.at>.
+
 License: GPL v2 or later.
 
 The complete text of the GNU General Public License can be found

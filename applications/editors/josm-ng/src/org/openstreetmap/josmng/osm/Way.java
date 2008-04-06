@@ -47,7 +47,7 @@ public class Way extends OsmPrimitive {
         source.postEdit(ch);
     }
     
-    private void setNodesImpl(Node[] n) {
+    void setNodesImpl(Node[] n) {
         nodes = Arrays.asList(n);
         source.fireWayNodesChanged(this);
     }

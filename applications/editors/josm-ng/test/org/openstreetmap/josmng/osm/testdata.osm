@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  Test:
+   1. existing primitive
+   2. New primitive
+   3. modified primitive
+   3. deleted primitive
+   4. way with different kinds of nodes
+   5. implicit/explicit visibility
+-->
+
+<osm version='0.5' generator='JOSM'>
+  <bound box='50.150972195282556,14.18559562851972,50.16414923549285,14.203521151688685' origin='http://www.openstreetmap.org/api/0.5' />
+  <bound box='50.09955967076041,14.050278351175672,50.219275149430636,14.213134542880217' origin='http://www.openstreetmap.org/api/0.5' />
+
+  <node id='42' timestamp='2007-12-17T11:11:11+00:00' user='Nenik' visible='true' lat='50' lon='14'>
+    <tag k='created_by' v='JOSM' />
+  </node>
+  <node id='-3' timestamp='2003-03-11T11:11:11+00:00' lat='50' lon='15'/>
+  <node id='43' action='modify' timestamp='2007-12-17T11:11:11+00:00' user='Nenik' visible='true' lat='51' lon='16'>
+    <tag k='created_by' v='JOSM' />
+  </node>
+  <node id='44' action='delete' timestamp='2007-12-17T11:11:11+00:00' user='Nenik' visible='true' lat='50' lon='17'>
+    <tag k='created_by' v='JOSM' />
+  </node>
+  
+  <way id='314' action='modify' timestamp='2007-11-03T12:36:14+00:00' user='Nenik' visible='true'>
+    <nd ref='42' />
+    <nd ref='-3' />
+    <nd ref='43' />
+    <tag k='highway' v='residential' />
+  </way>
+
+  <way id='315' action='delete' timestamp='2007-11-03T12:36:14+00:00' user='Nenik' visible='true'>
+    <nd ref='42' />
+    <nd ref='43' />
+    <tag k='highway' v='residential' />
+  </way>
+
+  <way id='-4' timestamp='2007-11-03T12:36:14+00:00' visible='true'>
+    <nd ref='42' />
+    <nd ref='44' />
+    <nd ref='43' />
+    <tag k='highway' v='residential' />
+  </way>
+</osm>

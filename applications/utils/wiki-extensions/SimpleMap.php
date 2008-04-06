@@ -102,7 +102,7 @@ function map( $input ) {
 			$error = "height (h)) value cannot be less than 50";
 		} else if ($lat>90) {
 			$error = "lattitude (lat) value cannot be greater than 90";
-		} else if ($lon<-90) {
+		} else if ($lat<-90) {
 			$error = "lattitude (lat) value cannot be less than -90";
 		} else if ($lon>180) {
 			$error = "longitude (lon) value cannot be greater than 180";

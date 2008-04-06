@@ -26,6 +26,7 @@
   </target>
 
   <target name="compile" depends="init">
+    <echo message="creating ${plugin.jar}"/>
     <mkdir dir="build"></mkdir>
     <javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
 	  <include name="**/*.java" />

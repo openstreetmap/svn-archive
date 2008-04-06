@@ -37,6 +37,7 @@
   </target>
 
   <target name="compile" depends="init">
+    <echo message="creating ${plugin.jar}"/>
     <javac srcdir="src" classpath="../../core/dist/josm-custom.jar" destdir="build" />
   </target>
   

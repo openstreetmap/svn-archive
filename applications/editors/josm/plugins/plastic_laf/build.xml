@@ -1,4 +1,4 @@
-<project name="plastic_laf" default="dist" basedir=".">
+ <project name="plastic_laf" default="dist" basedir=".">
 
   <!-- compilation properties -->
   <property name="josm.build.dir"	value="../../core"/>
@@ -12,7 +12,8 @@
   <property name="ant.build.javac.target" value="1.5"/>
 
   <target name="dist">
-    <mkdir dir="dist"></mkdir>
+    <echo message="creating ${plugin.jar}"/>
+   <mkdir dir="dist"></mkdir>
     <unjar dest="${plugin.build.dir}" src="lib/looks-2.0.4.jar" />
     <javac srcdir="src" destdir="${plugin.build.dir}">
       <include name="**/*.java" />

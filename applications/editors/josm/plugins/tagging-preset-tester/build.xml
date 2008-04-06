@@ -12,6 +12,7 @@
   <property name="ant.build.javac.target" value="1.5"/>
 
   <target name="compile">
+    <echo message="creating ${plugin.jar}"/>
     <mkdir dir="build"/>
     <javac srcdir="src" destdir="build" classpath="../../core/dist/josm-custom.jar" />
   </target>

@@ -24,6 +24,7 @@
   
   <!-- compile target -->
   <target name="compile" depends="init">
+    <echo message="creating ${plugin.jar}"/>
     <javac srcdir="namefinder" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <classpath>
         <pathelement path="${josm.build.dir}/build"/>

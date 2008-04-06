@@ -23,6 +23,7 @@
   <property name="ant.build.javac.target" value="1.5"/>
   
   <target name="dist" depends="compile, site">
+    <echo message="creating ${plugin.jar}"/>
     <!-- images -->
     <!-- 
 	 <copy todir="${plugin.build.dir}/images">

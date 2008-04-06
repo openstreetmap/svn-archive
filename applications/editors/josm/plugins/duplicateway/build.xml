@@ -17,6 +17,7 @@
 
 
   <target name="compile" depends="init">
+    <echo message="creating ${plugin.jar}"/>
     <mkdir dir="build"></mkdir>
     <mkdir dir="${plugin.build.dir}/images"></mkdir>
     <copy todir="build">

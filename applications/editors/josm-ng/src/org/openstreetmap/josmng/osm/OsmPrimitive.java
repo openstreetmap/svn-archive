@@ -118,8 +118,8 @@ public abstract class OsmPrimitive {
             source.postEdit(edit);
         }
     }
-        
-    private void setDeletedImpl(boolean deleted) {
+
+    void setDeletedImpl(boolean deleted) {
         if (deleted) {
             flags |= FLAG_DELETED;
             source.firePrimitivesRemoved(Collections.singleton(this));
@@ -216,7 +216,7 @@ public abstract class OsmPrimitive {
         return null;
     }
 
-    private String putTagImpl(String tag, String value) {
+    String putTagImpl(String tag, String value) {
         Object old = null;
         Object val = value == null ? NULL_VALUE : value; // escape nulls
 
@@ -342,7 +342,7 @@ public abstract class OsmPrimitive {
             return OsmPrimitive.this;
         }
         
-        protected final void doToggle() {
+        protected @Override final void doToggle() {
             boolean modified = isModified();
             super.doToggle();
             setModified(oldModified);

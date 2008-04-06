@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.event.EventListenerList;
@@ -332,7 +333,10 @@ public final class DataSet {
         private List<Node> wayNodes = new ArrayList<Node>();
     
         private Storage<String> strings = new Storage<String>();
-       
+        private Map<Long,Node> newNodes = new HashMap<Long, Node>();
+        private Map<Long,Way> newWays = new HashMap<Long, Way>();
+        private Map<Long,Relation> newRels = new HashMap<Long, Relation>();
+        
     
         public @Override void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             if (qName.equals("osm")) {
@@ -352,9 +356,16 @@ public final class DataSet {
 
                 double lat = getDouble(atts, "lat");
                 double lon = getDouble(atts, "lon");
-
-                Node n = new Node(constructed, id, lat, lon, time, user, vis);
+                
+                Node n;
+                if (id < 0) {
+                    n = new Node(constructed, 0, lat, lon, time, user, vis);
+                    newNodes.put(id, n);
+                } else {
+                    n = new Node(constructed, id, lat, lon, time, user, vis);
+                }
                 constructed.addRemovePrimitive(n, true);
+                updateFlags(n, getString(atts, "action"));
                 current = n;
             } else if (qName.equals("way")) {
                 // common attribs
@@ -363,18 +374,25 @@ public final class DataSet {
                 String user = atts.getValue("user");
                 boolean vis = getBoolean(atts, "visible", true);
 
-                Way w = new Way(constructed, id, time, user, vis);
+                Way w;
+                if (id < 0) {
+                    w = new Way(constructed, 0, time, user, vis);
+                } else {
+                    w = new Way(constructed, id, time, user, vis);
+                    newWays.put(id, w);
+                }
                 constructed.addRemovePrimitive(w, true);
+                updateFlags(w, getString(atts, "action"));
                 current = w;
             } else if (qName.equals("nd")) {
                 assert current instanceof Way;
                 long nid = getLong(atts, "ref");
-                Node n = constructed.getNode(nid);
+                Node n = getNode(nid);
                 //assert n != null;
                 if (n != null) wayNodes.add(n);
             } else if (qName.equals("tag")) {
     //            assert current != null;
-                if (current != null) current.putTag(getString(atts, "k"), getString(atts, "v"));
+                if (current != null) current.putTagImpl(getString(atts, "k"), getString(atts, "v"));
             } else if (qName.equals("relation")) {
                 // TODO: relation parsing 
             } else if (qName.equals("member")) {
@@ -382,12 +400,28 @@ public final class DataSet {
             }
         }
 
+        private void updateFlags(OsmPrimitive prim, String action) {
+            if ("delete".equals(action)) {
+                prim.setDeletedImpl(true);
+            } else if ("modify".equals(action)) {
+                prim.setModified(true);
+            }
+        }
+        
+        private Node getNode(long id) {
+            if (id < 0) {
+                return newNodes.get(id);
+            } else {
+                return constructed.getNode(id);
+            }
+        }
+        
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (qName.equals("tag")) return;
             if (qName.equals("way")) {
                 assert current instanceof Way;
-                ((Way)current).setNodes(wayNodes);
+                ((Way)current).setNodesImpl(wayNodes.toArray(new Node[wayNodes.size()]));
                 wayNodes.clear();
             }
             if (qName.equals("node") || qName.equals("way") || qName.equals("relation")) {

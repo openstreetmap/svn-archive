@@ -23,6 +23,7 @@
   <property name="ant.build.javac.target" value="1.5"/>
 
   <target name="compile">
+    <echo message="creating ${plugin.jar}"/>
     <mkdir dir="${plugin.build.dir}"></mkdir>
     <mkdir dir="${plugin.dist.dir}"></mkdir>
     <javac srcdir="src" debug="true" classpath="${josm}" destdir="${plugin.build.dir}">

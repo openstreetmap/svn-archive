@@ -30,6 +30,7 @@
   </target>
 
   <target name="compile" depends="init">
+    <echo message="creating ${plugin.jar}"/>
     <javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
       <include name="**/*.java" />
     </javac>

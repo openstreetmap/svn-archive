@@ -1,3 +1,39 @@
+#----------------------------------------------------------------------------
+# Given a perl structure containing some lighthouse or buoy flash sequence
+# (as returned by parseFlashSequence.pm), convert that into a series of
+# colour changes which can be rendered, animated, etc.
+#
+# This program does not generate an image, it returns a string which can
+# be converted into an image or animation.
+#
+# Format of return value:
+#
+# e.g. "red,1|black,2|green,1|black,10" means :
+#  1 time unit of red light
+#  then 2 time units of darkness
+#  then 1 time units of green light
+#  then 10 time units of darkness
+#  then repeat
+#
+# time units are integer, equal to the highest-resolution feature that
+# can be represented, and are currently about 0.25 seconds ("very quick")
+# (todo: create a function to return this)
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#----------------------------------------------------------------------------
 
 sub renderFlashSequence
 {

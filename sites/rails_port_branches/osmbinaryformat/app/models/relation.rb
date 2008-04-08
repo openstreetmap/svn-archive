@@ -100,9 +100,98 @@ class Relation < ActiveRecord::Base
       el1 << e
     end
     return el1
-  end 
-
+  end
+  
+  def to_obf_properties(usetags, ignore_property_key=nil)
+    output = ""
+    propkey = Obf.const_get :PropertiesKey
+    propenumtags = Obf.const_get :TagsEnums
+    propkeepstring = Obf.const_get :PropertiesKeepString
     
+    usetags.each_pair do |k,v|
+      keyid = propkey[k]
+      valueid = 0
+      if propenumtags[k]
+        valueid = propenumtags[k][v]
+      end
+      if keyid && valueid && valueid > 0 && k!=ignore_property_key
+        #output += " gotkeyandval "+keyid.to_s+" "+valueid.to_s+" "
+        oa = [ keyid, valueid ]
+        output += oa.pack("CC")
+      else
+        #output += " propks " + k + " " + propkeepstring.include?(k).to_s + " "
+        if keyid && propkeepstring.include?(k)
+	  value = v[0,255]
+          #output += " param "+k+" value "+v+" "
+          oa = [ keyid, value.length ]
+          output += oa.pack("CC")
+          output += value
+        end
+      end
+    end
+    return output
+  end
+  
+  def to_obf
+    output = "r"
+    oa = [ self.id ]
+    output += oa.pack("V")
+    reltypes = Obf.const_get :RelationsTypes
+    propkey = Obf.const_get :PropertiesKey
+    propenumtags = Obf.const_get :TagsEnums
+    
+    outputtags = ""
+    self.relation_tags.each do |tag|
+      keyid = propkey[tag.k]
+      valueid = 0
+      if propenumtags[tag.k]
+        valueid = propenumtags[tag.k][tag.v]
+      end
+      if tag.k == "type"
+        type = reltypes[tag.v]
+        if type
+          oa = [ type ]
+          #output += " gotrel type: "+type.to_s+" "
+          output += oa.pack("C")
+        end
+      end
+    end
+    
+    memberscount = 0
+    outputmembers = ""
+    relrole = Obf.const_get :RelationsRoles
+    self.relation_members.each do |member|
+      if member.member.visible
+        ref = member.member_id
+        role = relrole[member.member_role]
+	if member.member_type == "way"
+	  role += 128
+          #outputmembers += " gotmemway ref: "+ref.to_s+", role: "+role.to_s+" "
+          oa = [ ref, role ]
+          outputmembers += oa.pack("VC")
+	  memberscount += 1
+	end
+	if member.member_type == "node"
+          #outputmembers += " gotmemnode ref: "+ref.to_s+", role: "+role.to_s+" "
+          oa = [ ref, role ]
+          outputmembers += oa.pack("QC")
+	  memberscount += 1
+	end
+      end
+    end
+    oa = [ memberscount ]
+    output += oa.pack("V")
+    output += outputmembers
+    
+    outputproperties = to_obf_properties(tags, "type")
+    if outputproperties.length > 0
+      output += outputproperties
+    end
+    
+    ob = [ output.length ]
+    return ob.pack("V") + output
+  end
+  
   # collect relationships. currently done in one big block at the end;
   # may need to move this upwards if people want automatic completion of
   # relationships, i.e. deliver referenced objects like we do with ways... 

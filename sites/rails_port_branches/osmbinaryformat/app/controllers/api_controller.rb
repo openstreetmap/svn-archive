@@ -199,6 +199,133 @@ class ApiController < ApplicationController
     end
   end
 
+  def bmap
+    GC.start
+    @@count+=1
+    # Figure out the bbox
+    bbox = params['bbox']
+
+    unless bbox and bbox.count(',') == 3
+      # alternatively: report_error(TEXT['boundary_parameter_required']
+      report_error("The parameter bbox is required, and must be of the form min_lon,min_lat,max_lon,max_lat")
+      return
+    end
+
+    bbox = bbox.split(',')
+
+    min_lon, min_lat, max_lon, max_lat = sanitise_boundaries(bbox)
+
+    # check boundary is sane and area within defined
+    # see /config/application.yml
+    begin
+      check_boundaries(min_lon, min_lat, max_lon, max_lat)
+    rescue Exception => err
+      report_error(err.message)
+      return
+    end
+
+    @nodes = Node.find_by_area(min_lat, min_lon, max_lat, max_lon, :conditions => "visible = 1", :limit => APP_CONFIG['max_number_of_nodes']+1)
+    # get all the nodes, by tag not yet working, waiting for change from NickB
+    # need to be @nodes (instance var) so tests in /spec can be performed
+    #@nodes = Node.search(bbox, params[:tag])
+
+    node_ids = @nodes.collect(&:id)
+    if node_ids.length > APP_CONFIG['max_number_of_nodes']
+      report_error("You requested too many nodes (limit is 50,000). Either request a smaller area, or use planet.osm")
+      return
+    end
+    if node_ids.length == 0
+      contentspec = [ 2, 0x23 ]
+      render :text => contentspec.pack("LC") + "F"
+      return
+    end
+
+    doc = ""
+
+    # get ways
+    # find which ways are needed
+    ways = Array.new
+    if node_ids.length > 0
+      way_nodes = WayNode.find_all_by_node_id(node_ids)
+      way_ids = way_nodes.collect { |way_node| way_node.id[0] }
+      ways = Way.find(way_ids)
+
+      list_of_way_nodes = ways.collect { |way|
+        way.way_nodes.collect { |way_node| way_node.node_id }
+      }
+      list_of_way_nodes.flatten!
+
+    else
+      list_of_way_nodes = Array.new
+    end
+
+    # - [0] in case some thing links to node 0 which doesn't exist. Shouldn't actually ever happen but it does. FIXME: file a ticket for this
+    nodes_to_fetch = (list_of_way_nodes.uniq - node_ids) - [0]
+
+    if nodes_to_fetch.length > 0
+      @nodes += Node.find(nodes_to_fetch)
+    end
+
+    visible_nodes = {}
+    user_display_name_cache = {}
+
+    @nodes.each do |node|
+      if node.visible?
+        doc += node.to_obf()
+        visible_nodes[node.id] = node
+      end
+    end
+
+    way_ids = Array.new
+    ways.each do |way|
+      if way.visible?
+        doc += way.to_obf()
+        way_ids << way.id
+      end
+    end
+
+    # collect relationships. currently done in one big block at the end;
+    # may need to move this upwards if people want automatic completion of
+    # relationships, i.e. deliver referenced objects like we do with ways...
+    relations = Array.new
+    if visible_nodes.length > 0
+        relations += Relation.find_by_sql("select e.* from current_relations e,current_relation_members em where " +
+            "e.visible=1 and " +
+            "em.id = e.id and em.member_type='node' and em.member_id in (#{visible_nodes.keys.join(',')})")
+    end
+    if way_ids.length > 0
+        relations += Relation.find_by_sql("select e.* from current_relations e,current_relation_members em where " +
+            "e.visible=1 and " +
+            "em.id = e.id and em.member_type='way' and em.member_id in (#{way_ids.join(',')})")
+    end
+    # we do not normally return the "other" partners referenced by an relation, 
+    # e.g. if we return a way A that is referenced by relation X, and there's 
+    # another way B also referenced, that is not returned. But we do make 
+    # an exception for cases where an relation references another *relation*; 
+    # in that case we return that as well (but we don't go recursive here)
+    relation_ids = relations.collect { |relation| relation.id }
+    if relation_ids.length > 0
+        relations += Relation.find_by_sql("select e.* from current_relations e,current_relation_members em where " +
+            "e.visible=1 and " +
+            "em.id = e.id and em.member_type='relation' and em.member_id in (#{relation_ids.join(',')})")
+    end
+
+    # this "uniq" may be slightly inefficient; it may be better to first collect and output
+    # all node-related relations, then find the *not yet covered* way-related ones etc.
+    relations.uniq.each do |relation|
+      doc += relation.to_obf()
+    end
+
+    render :text => doc
+    
+    #exit when we have too many requests
+    if @@count > MAX_COUNT
+      @@count = COUNT
+      
+      exit!
+    end
+  end
+
   def changes
     zoom = (params[:zoom] || '12').to_i
 

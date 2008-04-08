@@ -116,6 +116,122 @@ class Way < ActiveRecord::Base
     return el1
   end 
 
+  def to_obf_properties(usetags, ignore_property_key=nil)
+    output = ""
+    propkey = Obf.const_get :PropertiesKey
+    propenumtags = Obf.const_get :TagsEnums
+    propkeepstring = Obf.const_get :PropertiesKeepString
+    
+    usetags.each_pair do |k,v|
+      keyid = propkey[k]
+      valueid = 0
+      if propenumtags[k]
+        valueid = propenumtags[k][v]
+      end
+      if keyid && valueid && valueid > 0 && k!=ignore_property_key
+        #output += " gotkeyandval "+keyid.to_s+" "+valueid.to_s+" "
+        oa = [ keyid, valueid ]
+        output += oa.pack("CC")
+      else
+        #output += " propks " + k + " " + propkeepstring.include?(k).to_s + " "
+        if keyid && propkeepstring.include?(k)
+	  value = v[0,255]
+          #output += " param "+k+" value "+v+" "
+          oa = [ keyid, value.length ]
+          output += oa.pack("CC")
+          output += value
+        end
+      end
+    end
+    return output
+  end
+  
+  def to_obf
+    output = "w"
+    oa = [ self.id ]
+    output += oa.pack("V")
+    nodescount = 0
+    outputnodes = ""
+    first = 1
+    lastlon = 0
+    lastlat = 0
+    self.nodes.each do |node|
+      if first
+        lastlon = node.lon_obf
+        lastlat = node.lat_obf
+        oa = [ lastlon, lastlat ]
+        outputnodes += oa.pack("ll")
+        nodescount += 1
+        first = 0
+      else
+        thislon = node.lon_obf
+        thislat = node.lat_obf
+        lon = thislon-lastlon
+        lat = thislat-lastlat
+        while lon > 32767 || lon < -32767
+	  partlon = 0
+          if lon > 32767
+            partlon = 32767
+          else
+            partlon = -32767
+          end
+          partlat = lat/(lon/partlon)
+          if partlat > 32767 || partlat < -32767
+            if partlat > 32767
+              partlat = 32767
+            else
+              partlat = -32767
+            end
+            partlon = lon/(lat/partlat)
+          end
+          lon = lon-partlon
+          lat = lat-partlat
+	  oa = [ partlon, partlat ]
+          outputnodes += oa.pack("ss")
+          nodescount += 1
+        end
+        while lat > 32767 || lat < -32767
+	  partlat = 0
+          if lat > 32767
+            partlat = 32767
+          else
+            partlat = -32767
+          end
+          partlon = lon/(lat/partlat)
+          if partlon > 32767 || partlon < -32767
+            if partlon > 32767
+              partlon = 32767
+            else
+              partlon = -32767
+            end
+            partlat = lat/(lon/partlon)
+          end
+          lon = lon-partlon
+          lat = lat-partlat
+	  oa = [ partlon, partlat ]
+          outputnodes += oa.pack("ss")
+          nodescount += 1
+        end
+        oa = [ lon, lat ]
+        outputnodes += oa.pack("ss")
+        nodescount += 1
+        lastlon = thislon
+        lastlat = thislat
+      end
+    end
+    #output += " got nodes "+nodescount.to_s+" "
+    ob = [ nodescount ]
+    output += ob.pack("V") + outputnodes
+    
+    outputproperties = to_obf_properties(tags)
+    if outputproperties.length > 0
+      output += outputproperties
+    end
+    
+    ob = [ output.length ]
+    return ob.pack("V") + output
+  end
+  
   def nds
     unless @nds
       @nds = Array.new

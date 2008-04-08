@@ -140,6 +140,77 @@ class Node < GeoRecord
     return el1
   end
 
+  def to_obf_properties(usetags, ignore_property_key=nil)
+    output = ""
+    propkey = Obf.const_get :PropertiesKey
+    propenumtags = Obf.const_get :TagsEnums
+    propkeepstring = Obf.const_get :PropertiesKeepString
+    
+    usetags.each_pair do |k,v|
+      keyid = propkey[k]
+      valueid = 0
+      if propenumtags[k]
+        valueid = propenumtags[k][v]
+      end
+      if keyid && valueid && valueid > 0 && k!=ignore_property_key
+        #output += " gotkeyandval "+keyid.to_s+" "+valueid.to_s+" "
+        oa = [ keyid, valueid ]
+        output += oa.pack("CC")
+      else
+        #output += " propks " + k + " " + propkeepstring.include?(k).to_s + " "
+        if keyid && propkeepstring.include?(k)
+	  value = v[0,255]
+          #output += " param "+k+" value "+v+" "
+          oa = [ keyid, value.length ]
+          output += oa.pack("CC")
+          output += value
+        end
+      end
+    end
+    return output
+  end
+  
+  # Turn this Node in to OSM Binary Format
+  def to_obf
+    includenode = false
+    output = "i"
+    oa = [ self.id, self.lon_obf, self.lat_obf ]
+    output += oa.pack("QVV")
+    
+    primarypropkey = ""
+    primaryprop = 0
+    primaryproperties = Obf.const_get :NodePrimaryProperties
+    primaryproperties.each_pair do |nodeprop,nodepropval|
+      key = ""
+      Tags.split(self.tags) do |k,v|
+        if v == nodeprop
+          key = k
+        end
+      end
+      primarypropkey = key
+      if key.length > 0
+        primaryprop = nodepropval
+        #output += " found key "+key+" prop "+nodepropval.to_s+" "
+	includenode = true
+      end
+    end
+    oa = [ primaryprop ]
+    output += oa.pack("C")
+    
+    outputproperties = to_obf_properties(tags_as_hash,primarypropkey)
+    if outputproperties.length > 0
+      output += outputproperties
+      includenode = true
+    end
+    
+    ob = [ output.length ]
+    if includenode
+      return ob.pack("V") + output
+    else
+      return ""
+    end
+  end
+
   # Return the node's tags as a Hash of keys and their values
   def tags_as_hash
     hash = {}

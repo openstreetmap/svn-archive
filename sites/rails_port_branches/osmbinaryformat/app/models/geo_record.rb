@@ -46,6 +46,15 @@ class GeoRecord < ActiveRecord::Base
     -(lat2y(self.lat)-basey)*masterscale
   end
   
+  # Osm Binary Format
+  def lon_obf
+    self.longitude / 10
+  end
+  
+  def lat_obf
+    self.latitude / 10
+  end
+  
   private
   
   def lat2y(a)

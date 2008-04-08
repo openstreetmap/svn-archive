@@ -38,13 +38,22 @@
 static iconv_t cd = ICONV_ERROR;
 #endif
 
-static char escape_tmp[1024];
 
 static char **user_list;
 static unsigned long max_uid;
 
-const char *xmlescape(char *in)
+
+/* const char *xmlescape(char *in)
+ *
+ * Character escaping for valid XML output as per http://www.w3.org/TR/REC-xml/
+ *
+ * WARNING: this function uses a static buffer so do not rely on the result
+ * being constant if called more than once
+ */
+static const char *xmlescape(char *in)
 { 
+    static char escape_tmp[1024];
+    int len;
     // Convert from DB charset to UTF8
     // Note: this assumes that inbuf is C-string compatible, i.e. has no embedded NUL like UTF16!
     // To fix this we'd need to fix the DB output parameters too
@@ -67,30 +76,37 @@ const char *xmlescape(char *in)
         in = iconv_tmp;
     }
 #endif
-    /* character escaping as per http://www.w3.org/TR/REC-xml/ */
 
-    /* WARNING: this function uses a static buffer so do not rely on the result
-     * being constant if called more than once
-     */
-    bzero(escape_tmp, sizeof(escape_tmp));
+    len = 0;
     while(*in) {
-        int len = strlen(escape_tmp);
         int left = sizeof(escape_tmp) - len - 1;
 
         if (left < 7)
             break;
 
-        switch(*in) {
-            case  '&': strncat(escape_tmp, "&amp;",  left); break;
-            //case '\'': strncat(escape_tmp, "&apos;", left); break;
-            case  '<': strncat(escape_tmp, "&lt;",   left); break;
-            case  '>': strncat(escape_tmp, "&gt;",   left); break;
-            case  '"': strncat(escape_tmp, "&quot;", left); break;
-            case  '\033': strncat(escape_tmp, "?", left); break;
-            default: escape_tmp[len] = *in;
+        if (*in == '&') {
+            strcpy(&escape_tmp[len], "&amp;");
+            len += strlen("&amp;");
+        } else if (*in == '<') {
+            strcpy(&escape_tmp[len], "&lt;");
+            len += strlen("&lt;");
+        } else if (*in == '>') {
+            strcpy(&escape_tmp[len], "&gt;");
+            len += strlen("&lt;");
+        } else if (*in == '"') {
+            strcpy(&escape_tmp[len], "&quot;");
+            len += strlen("&quot;");
+        } else if ((*in >= 0) && (*in < 32)) {
+            escape_tmp[len] = '?';
+            len++;
+        } else {
+            escape_tmp[len] = *in;
+            len++;
         }
+	
         in++;
     }
+    escape_tmp[len] = '\0';
     return escape_tmp;
 }
 

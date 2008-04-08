@@ -259,33 +259,39 @@ void read_tags(const char *str, struct keyval *tags)
    }
 }
 
-void parseDate(struct tm *tm, const char *str)
+const char *reformDate(const char *str)
 {
+    static char out[64], prev[64]; // Not thread safe
+
     time_t tmp;
+    struct tm tm;
+
+    // Re-use the previous answer if we asked to convert the same timestamp twice
+    // This accelerates bulk uploaded data where sequential features often have the same timestamp
+    if (!strncmp(prev, str, sizeof(prev)))
+        return out;
+    else
+        strncpy(prev, str, sizeof(prev));
+
     // 2007-05-20 13:51:35
-    bzero(tm, sizeof(*tm));
+    bzero(&tm, sizeof(tm));
     int n = sscanf(str, "%d-%d-%d %d:%d:%d",
-                   &tm->tm_year, &tm->tm_mon, &tm->tm_mday, &tm->tm_hour, &tm->tm_min, &tm->tm_sec);
+                   &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec);
 
     if (n !=6)
         printf("failed to parse date string, got(%d): %s\n", n, str);
 
-    tm->tm_year -= 1900;
-    tm->tm_mon  -= 1;
-    tm->tm_isdst = -1;
+    tm.tm_year -= 1900;
+    tm.tm_mon  -= 1;
+    tm.tm_isdst = -1;
 
     // Rails stores the timestamps in the DB using UK localtime (ugh), convert to UTC
-    tmp = mktime(tm);
-    gmtime_r(&tmp, tm);
-}
-
-const char *strTime(struct tm *tm)
-{
-    static char out[64]; // Not thread safe
+    tmp = mktime(&tm);
+    gmtime_r(&tmp, &tm);
 
     //2007-07-10T11:32:32Z
     snprintf(out, sizeof(out), "%d-%02d-%02dT%02d:%02d:%02dZ",
-             tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+             tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
     return out;
 }
@@ -310,19 +316,15 @@ void nodes(MYSQL *mysql)
     while ((row= mysql_fetch_row(res))) {
         long int id;
         long double latitude,longitude;
-        const char *tag_str;
-        struct tm date;
 
         assert(mysql_num_fields(res) == 6);
 
         id = strtol(row[0], NULL, 10);
         latitude  = strtol(row[1], NULL, 10) / 10000000.0;
         longitude = strtol(row[2], NULL, 10) / 10000000.0;
-        parseDate(&date, row[3]);
-        tag_str = row[4];
-        read_tags(tag_str, &tags);
+        read_tags(row[4], &tags);
 
-        osm_node(id, latitude, longitude, &tags, strTime(&date), lookup_user(row[5]));
+        osm_node(id, latitude, longitude, &tags, reformDate(row[3]), lookup_user(row[5]));
     }
 
     mysql_free_result(res);
@@ -529,10 +531,8 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
 
         if (way_id < way_nd_id) {
             // no more nodes in this way
-            struct tm date;
-            parseDate(&date, ways_row[1]);
             tags = get_generic_tags(tags_mysql, way_id);
-            osm_way(way_id, &nodes, tags, strTime(&date), lookup_user(ways_row[2]));
+            osm_way(way_id, &nodes, tags, reformDate(ways_row[1]), lookup_user(ways_row[2]));
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
             assert(mysql_num_fields(ways_res) == 3);
@@ -592,10 +592,8 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
 
         if (relation_id < relation_memb_id) {
             // no more members in this way
-            struct tm date;
-            parseDate(&date, relations_row[1]);
             tags = get_generic_tags(tags_mysql, relation_id);
-            osm_relation(relation_id, &members, &roles, tags, strTime(&date), lookup_user(relations_row[2]));
+            osm_relation(relation_id, &members, &roles, tags, reformDate(relations_row[1]), lookup_user(relations_row[2]));
             // fetch new way
             relations_row= mysql_fetch_row(relations_res);
             assert(mysql_num_fields(relations_res) == 3);

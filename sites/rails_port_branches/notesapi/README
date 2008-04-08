@@ -1,0 +1,5 @@
+Documentation
+=============
+
+Try `rake doc:app` and see /doc/
+

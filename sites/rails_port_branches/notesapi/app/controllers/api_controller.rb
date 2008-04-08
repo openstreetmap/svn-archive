@@ -199,6 +199,56 @@ class ApiController < ApplicationController
     end
   end
 
+  def notes
+    GC.start
+    @@count+=1
+    # Figure out the bbox
+    bbox = params['bbox']
+
+    unless bbox and bbox.count(',') == 3
+      # alternatively: report_error(TEXT['boundary_parameter_required']
+      report_error("The parameter bbox is required, and must be of the form min_lon,min_lat,max_lon,max_lat")
+      return
+    end
+
+    bbox = bbox.split(',')
+
+    min_lon, min_lat, max_lon, max_lat = sanitise_boundaries(bbox)
+
+    # check boundary is sane and area within defined
+    # see /config/application.yml
+    begin
+      check_boundaries(min_lon, min_lat, max_lon, max_lat)
+    rescue Exception => err
+      report_error(err.message)
+      return
+    end
+
+    @notes = Note.find_by_area(min_lat, min_lon, max_lat, max_lon, :conditions => "visible = 1")
+
+    if @notes.length == 0
+      render :text => "<osm version='0.5' length='0'></osm>", :content_type => "text/xml"
+      return
+    end
+    
+    doc = OSM::API.new.get_xml_doc
+    
+    @notes.each do |note|
+      if note.visible?
+        doc.root << note.to_xml_note()
+      end
+    end
+    
+    render :text => doc.to_s, :content_type => "text/xml"
+    
+    #exit when we have too many requests
+    if @@count > MAX_COUNT
+      @@count = COUNT
+      
+      exit!
+    end
+  end
+  
   def changes
     zoom = (params[:zoom] || '12').to_i
 

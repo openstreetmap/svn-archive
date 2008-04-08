@@ -111,7 +111,23 @@ module OSM
         gotlatlon = true
         gotele = false
         gotdate = false
+        gotname = false
         @possible_points += 1
+      end
+      
+      parser.listen( :start_element,  %w{ wpt }) do |uri,localname,qname,attributes| 
+        lat = attributes['lat'].to_f
+        lon = attributes['lon'].to_f
+        gotlatlon = true
+        gotele = false
+        gotdate = false
+        gotname = false
+        @possible_points += 1
+      end
+
+      parser.listen( :characters, %w{ name } ) do |text|
+        name = text
+        gotname = true
       end
 
       parser.listen( :characters, %w{ ele } ) do |text|
@@ -136,14 +152,29 @@ module OSM
       parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname|
         if gotlatlon && gotdate
           ele = '0' unless gotele
+          name = '' unless gotname
           if lat < 90 && lat > -90 && lon > -180 && lon < 180
             @actual_points += 1
-            yield Hash['latitude' => lat, 'longitude' => lon, 'timestamp' => date, 'altitude' => ele, 'segment' => @tracksegs]
+            yield Hash['latitude' => lat, 'longitude' => lon, 'timestamp' => date, 'altitude' => ele, 'segment' => @tracksegs, 'name' => name]
           end
         end
         gotlatlon = false
         gotele = false
         gotdate = false
+      end
+      
+      parser.listen( :end_element, %w{ wpt } ) do |uri,localname,qname|
+        if gotlatlon && gotdate && gotname
+          ele = '0' unless gotele
+          if lat < 90 && lat > -90 && lon > -180 && lon < 180
+            @actual_points += 1
+            yield Hash['latitude' => lat, 'longitude' => lon, 'timestamp' => date, 'altitude' => ele, 'name' => name]
+          end
+        end
+        gotlatlon = false
+        gotele = false
+        gotdate = false
+        gotname = false
       end
 
       parser.parse

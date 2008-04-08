@@ -10,6 +10,13 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "api/#{API_VERSION}/node/:id", :controller => 'node', :action => 'delete', :id => /\d+/, :conditions => { :method => :delete }
   map.connect "api/#{API_VERSION}/nodes", :controller => 'node', :action => 'nodes', :id => nil
   
+  map.connect "api/#{API_VERSION}/note/create", :controller => 'note', :action => 'create'
+  map.connect "api/#{API_VERSION}/note/:id/history", :controller => 'old_note', :action => 'history', :id => /\d+/
+  map.connect "api/#{API_VERSION}/note/:id", :controller => 'note', :action => 'read', :id => /\d+/, :conditions => { :method => :get }
+  map.connect "api/#{API_VERSION}/note/:id", :controller => 'note', :action => 'update', :id => /\d+/, :conditions => { :method => :put }
+  map.connect "api/#{API_VERSION}/note/:id", :controller => 'note', :action => 'delete', :id => /\d+/, :conditions => { :method => :delete }
+  map.connect "api/#{API_VERSION}/notes", :controller => 'api', :action => 'notes'
+
   map.connect "api/#{API_VERSION}/way/create", :controller => 'way', :action => 'create'
   map.connect "api/#{API_VERSION}/way/:id/history", :controller => 'old_way', :action => 'history', :id => /\d+/
   map.connect "api/#{API_VERSION}/way/:id/full", :controller => 'way', :action => 'full', :id => /\d+/

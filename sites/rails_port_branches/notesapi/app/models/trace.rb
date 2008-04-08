@@ -192,6 +192,19 @@ class Trace < ActiveRecord::Base
         f_lat = point['latitude']
         f_lon = point['longitude']
       end
+      
+      if point['name']
+        note = Note.new
+        note.lat = point['latitude'].to_f
+        note.lon = point['longitude'].to_f
+        note.summary = point['name'].to_f
+        note.trace = id
+        note.visible = true
+        note.date = point['timestamp']
+        note.timestamp = point['timestamp']
+        note.user_id = user.id
+        note.save!
+      end
 
       tp = Tracepoint.new
       tp.lat = point['latitude'].to_f

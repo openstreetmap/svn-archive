@@ -42,7 +42,6 @@ static iconv_t cd = ICONV_ERROR;
 static char **user_list;
 static unsigned long max_uid;
 
-
 /* const char *xmlescape(char *in)
  *
  * Character escaping for valid XML output as per http://www.w3.org/TR/REC-xml/
@@ -690,9 +689,31 @@ int main(int argc, char **argv)
 #endif
     int i;
     const char *set_timeout = "SET SESSION net_write_timeout=60*60*6";
+    int want_nodes, want_ways, want_relations;
 
     // Database timestamps use UK localtime
     setenv("TZ", ":GB", 1);
+
+    if (argc == 1)
+        want_nodes = want_ways = want_relations = 1;
+    else {
+        want_nodes = want_ways = want_relations = 0;
+        for(i=1; i<argc; i++) {
+            if (!strcmp(argv[i], "--nodes"))
+                want_nodes = 1;
+            else if (!strcmp(argv[i], "--ways"))
+                want_ways = 1;
+            else if (!strcmp(argv[i], "--relations"))
+                want_relations = 1;
+            else {
+                fprintf(stderr, "Usage error:\n");
+                fprintf(stderr, "\t%s [--nodes] [--ways] [--relations]\n\n", argv[0]);
+                fprintf(stderr, "Writes OSM planet dump to STDOUT. If no flags are specified then all data is output.\n");
+                fprintf(stderr, "If one or more flags are set then only the requested data is dumped.\n");
+                exit(2);
+            }
+        }
+    }
 
     for (i=0; i<NUM_CONN; i++) {
         mysql_init(&mysql[i]);
@@ -746,9 +767,15 @@ int main(int argc, char **argv)
     }
 
     fetch_users(&mysql[0]);
-    nodes(&mysql[0]);
-    ways(&mysql[0], &mysql[1], &mysql[2]);
-    relations(&mysql[0], &mysql[1], &mysql[2]);
+
+    if (want_nodes)
+        nodes(&mysql[0]);
+
+    if (want_ways)
+        ways(&mysql[0], &mysql[1], &mysql[2]);
+
+    if (want_relations)
+        relations(&mysql[0], &mysql[1], &mysql[2]);
 
     printf("</osm>\n");
 

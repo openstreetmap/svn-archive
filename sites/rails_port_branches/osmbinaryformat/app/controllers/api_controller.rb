@@ -240,7 +240,8 @@ class ApiController < ApplicationController
       return
     end
 
-    doc = ""
+    oa = [ 2, 5, 0x3b]
+    doc = oa.pack("VCC")
 
     # get ways
     # find which ways are needed

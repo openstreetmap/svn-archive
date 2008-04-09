@@ -1,0 +1,152 @@
+# default values for variables, may be overridden in any other config file
+### DO NOT EDIT ###
+
+### defaults for command line options
+
+mode = none
+
+### defaults for authentication settings (in case someone forgot to create his authentication.conf
+
+UploadUsername = I_forgot_to_edit_authentication.conf
+UploadPassword = none
+
+### defaults for server settings (kinda redundant)
+
+OSMVersion=0.5
+
+APIURL=http://www.openstreetmap.org/api/
+XAPIURL=http://www.informationfreeway.org/api/
+
+# How much "extra" do we get? (fraction of tilesize)
+BorderN=0.17
+BorderS=0.17
+BorderE=0.5
+BorderW=0.5
+
+# upload.pl will use whatever limit is reached first, either ChunkSize or Filecount.
+GoNogoURL=http://tah.openstreetmap.org/Upload/go_nogo.php
+UploadURL=http://tah.openstreetmap.org/Upload/tile2.php
+
+RequestURL=http://tah.openstreetmap.org/Requests/
+RequestMethod=POST
+
+ReRequestURL=http://tah.openstreetmap.org/NeedRender/
+
+ReRequestPrio=3
+
+ZipHardLimit=24     # MB (1000*1000 Bytes)
+
+ClientVersion=x_tahNG
+
+### defaults for user settings:
+
+Debug=0
+Verbose=0
+
+WorkingDirectory=tmp/
+
+DownloadTimeout = 1800
+KeepDataFile=0
+
+i18n=1
+
+Osmarender = orp
+
+Inkscape=inkscape
+
+BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
+BatikJVMSize = 1536M
+Batik = 0
+
+XmlStarlet=xmlstarlet
+XmlStarletMaxDepth = 20000
+
+Niceness=nice -n10
+
+Pngcrush = pngcrush
+Optipng = optipng
+PngOptimizer = pngcrush
+
+Subversion=svn
+SubversionUpdateCmd = up
+
+Zip=zip
+7zipWin=0
+
+DownloadTimeout=1800
+
+UseHostnameInZipname=0
+UploadChunkSize=9
+
+UploadToDirectory = 0
+UploadTargetDirectory=/set/this/to/your/upload/directory
+UploadConfiguredLayersOnly=0
+LayerUpload=0
+GatherBlankTiles=0
+DeleteZipFilesAfterUpload=0
+
+Fork=0
+ForkForUpload=1
+
+AutoResetInkscapePrefs=0
+AutoResetStopfile=0
+
+LocalSlippymap = 0
+
+### defaults for layer settings
+
+LayersCapability = default,maplint,captionless,lowzoom
+Layers = tile,maplint,captionless
+
+[tile]
+BaseZoom=12
+MaxZoom=17
+Prefix=tile
+Preprocessor=close-areas,attribution
+Transparent=0
+RequiredFiles=osmarender/osmarender.xsl
+RenderFullTileset=0
+
+Rules.12=osmarender/osm-map-features-z12.xml
+Rules.13=osmarender/osm-map-features-z13.xml
+Rules.14=osmarender/osm-map-features-z14.xml
+Rules.15=osmarender/osm-map-features-z15.xml
+Rules.16=osmarender/osm-map-features-z16.xml
+Rules.17=osmarender/osm-map-features-z17.xml
+
+
+[lowzoom]
+BaseZoom=8
+MaxZoom=11
+Prefix=tile
+Preprocessor=close-areas
+RequiredFiles=osmarender/osmarender.xsl
+RenderFullTileset=1
+
+[maplint]
+BaseZoom=12
+MaxZoom=16
+Prefix=maplint
+Preprocessor=maplint
+RequiredFiles=maplint/lib/run-tests.xsl,maplint/lib/convert-to-tags.xsl,maplint/tests.xsl
+Transparent=1
+RenderFullTileset=1
+
+Rules.12=maplint/rules-small.xml
+Rules.13=maplint/rules-small.xml
+Rules.14=maplint/rules-medium.xml
+Rules.15=maplint/rules-large.xml
+Rules.16=maplint/rules-largest.xml
+Rules.17=maplint/rules-largest.xml
+
+
+[captionless]
+BaseZoom=12
+MaxZoom=12
+Prefix=captionless
+Preprocessor=close-areas
+RequiredFiles=osmarender/osmarender.xsl
+Transparent=0
+RenderFullTileset=0
+
+Rules.12=osmarender/captionless-z12.xml

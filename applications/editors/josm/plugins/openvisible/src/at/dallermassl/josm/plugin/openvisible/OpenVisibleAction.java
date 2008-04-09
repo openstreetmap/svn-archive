@@ -100,8 +100,7 @@ public class OpenVisibleAction extends JosmAction {
             DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), null, Main.pleaseWaitDlg);
             OsmDataLayer layer = new OsmDataLayer(dataSet, file.getName(), file);
             Main.main.addLayer(layer);
-        } else if (ExtensionFileFilter.filters[ExtensionFileFilter.CSV].acceptName(fn))
-            JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("CSV Data import for non-GPS data is not implemented yet."));
+        }
         else
             JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(file.getName().lastIndexOf('.')+1)));
     }
@@ -116,8 +115,9 @@ public class OpenVisibleAction extends JosmAction {
                 r = new GpxReader(new FileInputStream(file), file.getAbsoluteFile().getParentFile());
             }
             r.data.storageFile = file;
-            Main.main.addLayer(new GpxLayer(r.data, fn));
-            Main.main.addLayer(new MarkerLayer(r.data, tr("Markers from {0}", fn), file));
+            GpxLayer gpxLayer = new GpxLayer(r.data, fn);
+            Main.main.addLayer(gpxLayer);
+            Main.main.addLayer(new MarkerLayer(r.data, tr("Markers from {0}", fn), file, gpxLayer));
 
         } else {
             throw new IllegalStateException();

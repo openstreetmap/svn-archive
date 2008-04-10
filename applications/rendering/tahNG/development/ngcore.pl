@@ -49,3 +49,5 @@ $Config->file("config.svn");
 ApplyConfigLogic($Config);
 my %EnvironmentInfo = CheckConfig($Config);
 
+my $Version = '$Revision$';
+$Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;

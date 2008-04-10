@@ -34,3 +34,9 @@ Python 2.3 or higher
 cElementTree (Note: you can use the native python ElementTree but its much slower. To 
 do so change the relevant import line in the script)
 
+
+Notes:
+-------------
+This is a very memory intensive process for some of the larger Geobase datasets. Things will
+be optimized in the future, currently processing requires roughly 10 times the datafile size 
+of memory.

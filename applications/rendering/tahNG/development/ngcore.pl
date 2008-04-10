@@ -49,7 +49,3 @@ $Config->file("config.svn");
 ApplyConfigLogic($Config);
 my %EnvironmentInfo = CheckConfig($Config);
 
-my %varlist = $Config->varlist(".*");
-foreach my $key (sort(keys(%varlist))) {
-  print $key." = ".$varlist{$key}."\n";
-}

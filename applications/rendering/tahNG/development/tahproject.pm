@@ -35,7 +35,7 @@ sub Project
     
     my $Lat1 = ProjectMercToLat($relY1);
     my $Lat2 = ProjectMercToLat($relY2);
-    return(($Lat1, $Lat2));
+    return(($Lat1, $Lat2)); #latitude of top and bottom tileborder
 }
 
 #-----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ sub ProjectL
     
     my $Unit = 360 / (2 ** $Zoom);
     my $Long1 = -180 + $X * $Unit;
-    return(($Long1, $Long1 + $Unit));  
+    return(($Long1, $Long1 + $Unit)); #longitude of right and left tileborder
 }
 
 #-----------------------------------------------------------------------------

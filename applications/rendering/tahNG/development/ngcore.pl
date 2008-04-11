@@ -76,7 +76,7 @@ if(not defined $Zoom)
     $Zoom = 12;
     statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", "warning", $progressJobs, $progressPercent,1);
 }
-GenerateTileset($X, $Y, $Zoom);
+GenerateTilesets($X, $Y, $Zoom);
 
 
 sub statusMessage
@@ -157,25 +157,20 @@ sub downloadData
     }
 
     mergeOsmFiles($DataFile, $filelist);
-    return 0,@tempfiles;
+    return 1,@tempfiles;
 }
 
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
 #-----------------------------------------------------------------------------
-sub GenerateTileset ## TODO: split some subprocesses to own subs
+sub GenerateTilesets ## TODO: split some subprocesses to own subs
 {
     my ($X, $Y, $Zoom) = @_;
-    
-    my ($N, $S) = Project($Y, $Zoom);
-    my ($W, $E) = ProjectL($X, $Zoom);
     
     $progress = 0;
     $progressPercent = 0;
     $progressJobs++;
-    $currentSubTask = "jobinit";
-    
-##    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $currentSubTask, $progressJobs, $progressPercent, 1);
+    $currentSubTask = "getdata";
     
     my $maxCoords = (2 ** $Zoom - 1);
     
@@ -184,8 +179,25 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         #maybe do something else here
         die("\n Coordinates out of bounds (0..$maxCoords)\n");
     }
+
+    my ($N, $S) = Project($Y, $Zoom);
+    my ($W, $E) = ProjectL($X, $Zoom);
     
-    $currentSubTask = "Preproc";
+    my @lon;
+    my @lat;
+    
+    ($lon[0],$lon[1]) = ProjectL($X * 4, $Zoom + 2);
+    ($lon[2],$lon[3]) = ProjectL($X * 4 + 2, $Zoom + 2);
+    $lon[4]=$E;
+
+    ($lat[0],$lat[1]) = Project($Y * 4, $Zoom + 2);
+    ($lat[2],$lat[3]) = Project($Y * 4 + 2, $Zoom + 2);
+    $lat[4]=$S;
+
+    ## we now build our bboxes:
+    # TODO...
+
+    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $currentSubTask, $progressJobs, $progressPercent, 1);
     
     # Adjust requested area to avoid boundary conditions
     my $N1 = $N + ($N-$S)*$Config->get("BorderN");
@@ -207,17 +219,24 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     my $bbox = sprintf("%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
 
-    my $DataFile = $Config->get("WorkingDirectory")."data-$PID.osm";
+    my $DataFile = $Config->get("WorkingDirectory").$PID."/data-$Zoom.osm"; ## FIXME broken TODO: make sure tempdir is created.
 
+    my $filelist = [];
     my ($status,@tempfiles) = downloadData($bbox,$DataFile);
+    push(@{$filelist}, $DataFile) if (-s $DataFile > 0 and $status);
+
+    mergeOsmFiles($DataFile, $filelist);
+
 
     if ($Config->get("KeepDataFile"))
     {
         copy($DataFile, $Config->get("WorkingDirectory") . "/" . "data.osm");
     }
-  
+    
+    $currentSubTask = "Preproc";
+    
     # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
-    $JobTime = [stat $DataFile]->[9];
+    $JobTime = [stat $DataFile]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure from when the data is
     
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.

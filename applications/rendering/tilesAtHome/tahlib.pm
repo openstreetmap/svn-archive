@@ -20,11 +20,11 @@ my %madeDir;
 #-----------------------------------------------------------------------------
 sub statusMessage 
 {
-    my ($msg, $Verbose, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
+    my ($msg, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
     
     my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
 
-    if ($Verbose)
+    if ($Config{"Verbose"})
     {
         print STDERR "$toprint\n";
         return;

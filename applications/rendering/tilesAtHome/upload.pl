@@ -109,7 +109,7 @@ sub processOldZips
     }
     @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
     my $zipCount = scalar(@sorted);
-    statusMessage(scalar(@sorted)." zip files to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage(scalar(@sorted)." zip files to upload", $currentSubTask, $progressJobs, $progressPercent,0);
     my $Reason = "queue full";
     if(($Config{UploadToDirectory}) and (-d $Config{"UploadTargetDirectory"}))
     {
@@ -153,12 +153,12 @@ sub processOldZips
                     $sleepdelay = $MaxDelay;
                 }
 
-                statusMessage($Reason.", sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage($Reason.", sleeping for " . $sleepdelay . " seconds", $currentSubTask, $progressJobs, $progressPercent,0);
                 sleep ($sleepdelay);
             }
 
         }
-        statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage(scalar(@sorted)." zip files left to upload", $currentSubTask, $progressJobs, $progressPercent,0);
         
     }
 }
@@ -172,7 +172,7 @@ sub upload
     my $ZipSize += -s $File;
     if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
     {
-        statusMessage("zip is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("zip is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,1);
         runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})
@@ -218,7 +218,7 @@ sub upload
         
         if ($UploadToken) 
         {
-            statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Uploading $File", $currentSubTask, $progressJobs, $progressPercent,0);
             my $res = $ua->post($URL,
               Content_Type => 'form-data',
               Content => [ file => [$File],
@@ -265,7 +265,7 @@ sub upload
         my $Load = $QueueLength/$MaxQueue;
         if ($Load > 0.7)
         {
-            statusMessage("Not uploading, upload directory full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Not uploading, upload directory full", $currentSubTask, $progressJobs, $progressPercent,0);
             sleep(1);
             return $Load * 1000;
         }
@@ -297,7 +297,7 @@ sub upload
 sub UploadOkOrNot
 {
     my $LocalFilename = $Config{WorkingDirectory} . "/go-nogo-".$PID.".tmp";
-    statusMessage("Checking server queue", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Checking server queue", $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile($Config{GoNogoURL}, $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file
@@ -311,7 +311,7 @@ sub UploadOkOrNot
     # $Token=1 if (! $Token);
     if ($Load > 0.8) 
     {
-        statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Not uploading, server queue full", $currentSubTask, $progressJobs, $progressPercent,0);
         sleep(1);
         return (0,$Load*1000);
     }

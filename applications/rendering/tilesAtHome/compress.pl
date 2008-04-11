@@ -106,7 +106,7 @@ else
     my $TileDir = $Config{WorkingDirectory};
     
     # Group and upload the tiles
-    statusMessage("Searching for tiles in $TileDir", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Searching for tiles in $TileDir", $currentSubTask, $progressJobs, $progressPercent,0);
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     
@@ -153,7 +153,7 @@ else
               $allowedPrefixes)) 
             {};
         }
-        statusMessage("done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0); 
+        statusMessage("done", $currentSubTask, $progressJobs, $progressPercent, 0); 
         ## TODO: fix progress display
     }
 } #done main/else.
@@ -177,7 +177,7 @@ sub processTileBatch
     mkdir $OutputDir if ! -d $OutputDir;
 
     $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
-    statusMessage(scalar(@tiles)." tiles to process for ".$allowedPrefixes, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage(scalar(@tiles)." tiles to process for ".$allowedPrefixes, $currentSubTask, $progressJobs, $progressPercent,0);
 
     while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles))
     {
@@ -196,13 +196,13 @@ sub processTileBatch
     
     if($Count)
     {
-        statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $currentSubTask, $progressJobs, $progressPercent,0);
         return compress($TempDir, $OutputDir, 'no', $allowedPrefixes);
     }
     else
     {
 
-        statusMessage("compress finished", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("compress finished", $currentSubTask, $progressJobs, $progressPercent,0);
         return 0;
     }
 }
@@ -285,7 +285,7 @@ sub compress
     my $ZipSize += -s $Filename; ## Add the 10 MB check here.
     if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
     {
-        statusMessage($Filename." is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage($Filename." is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand("unzip -qj $Filename -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})

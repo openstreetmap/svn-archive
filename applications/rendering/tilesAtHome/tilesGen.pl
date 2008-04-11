@@ -107,7 +107,7 @@ my $Mode = shift();
 if( -s "emptyland.png" != 67 )
 {
     print STDERR "Corruption detected in emptyland.png. Trying to redownload from svn automatically.\n";
-    statusMessage("Downloading: emptyland.png", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Downloading: emptyland.png", $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
       "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptyland.png", # TODO: should be svn update, instead of http get... 
       "emptyland.png",
@@ -116,7 +116,7 @@ if( -s "emptyland.png" != 67 )
 if( -s "emptysea.png" != 69 )
 {
     print STDERR "Corruption detected in emptysea.png. Trying to redownload from svn automatically.\n";
-    statusMessage("Downloading: emptysea.png", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Downloading: emptysea.png", $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
       "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptysea.png", # TODO: should be svn update, instead of http get... 
       "emptysea.png",
@@ -173,7 +173,7 @@ if($Mode eq "xy")
     if(not defined $Zoom)
     {
        $Zoom = 12;
-       statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", $Config{Verbose}, "warning", $progressJobs, $progressPercent,1);
+       statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", "warning", $progressJobs, $progressPercent,1);
     }
     GenerateTileset($X, $Y, $Zoom);
 }
@@ -259,7 +259,7 @@ elsif ($Mode eq "loop")
         {
             if ($Config{"ForkForUpload"} && $upload_pid != -1)
             {
-                statusMessage("Waiting for previous upload process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Waiting for previous upload process", $currentSubTask, $progressJobs, $progressPercent,0);
                 waitpid($upload_pid, 0);
             }
             cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
@@ -293,13 +293,13 @@ elsif ($Mode eq "loop")
 elsif ($Mode eq "upload") 
 {
     $currentSubTask = "warning";
-    statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+    statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     compressAndUpload();
 }
 elsif ($Mode eq "upload_conditional") 
 {
     $currentSubTask = "warning";
-    statusMessage("don't run this parallel to another tilesGen.pl instance",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+    statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     uploadIfEnoughTiles();
 }
 elsif ($Mode eq "version") 
@@ -315,10 +315,10 @@ elsif ($Mode eq "")
     
     if (! $did_something)
     {
-        statusMessage("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line.", $currentSubTask, $progressJobs, $progressPercent,1);
         talkInSleep($message, 60);
     }
-    statusMessage("if you want to run this program continuously, use loop mode", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+    statusMessage("if you want to run this program continuously, use loop mode", $currentSubTask, $progressJobs, $progressPercent,1);
 }
 else
 {
@@ -382,7 +382,7 @@ sub uploadIfEnoughTiles
             # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
             if ($upload_pid != -1)
             {
-                statusMessage("Waiting for previous upload process to finish", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Waiting for previous upload process to finish", $currentSubTask, $progressJobs, $progressPercent,0);
                 waitpid($upload_pid, 0);
                 $upload_result = $? >> 8;
             }
@@ -523,7 +523,7 @@ sub ProcessRequestsFromServer
     }
     
     # Information text to say what's happening
-    statusMessage("Got work from the \"$ModuleName\" server module", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Got work from the \"$ModuleName\" server module", $currentSubTask, $progressJobs, $progressPercent,0);
     
     # Create the tileset requested
     GenerateTileset($X, $Y, $Z);
@@ -600,7 +600,7 @@ sub PutRequestBackToServer
     
     my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&z=" . $Z . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahCltReReq:" . $Cause;
     
-    statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+    statusMessage("Putting Job ".$X.",".$Y." back to server", $currentSubTask, $progressJobs, $progressPercent,1);
     DownloadFile(
         $RequestUrlString, 
         $LocalFilename, 
@@ -638,7 +638,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     $progressJobs++;
     $currentSubTask = "jobinit";
     
-    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $currentSubTask, $progressJobs, $progressPercent, 1);
     
     my $maxCoords = (2 ** $Zoom - 1);
     
@@ -704,7 +704,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my $partialFile = $Config{"WorkingDirectory"}."data-$PID-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
-        statusMessage("Downloading: Map data for $Layers to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Downloading: Map data for $Layers to $partialFile", $currentSubTask, $progressJobs, $progressPercent,0);
         print "Download $URL\n" if ($Config{Debug});
         DownloadFile($URL, $partialFile, 0);
 
@@ -712,7 +712,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         {
             if ($Zoom < 12)
             {
-                statusMessage("No data here...",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                statusMessage("No data here...", $currentSubTask, $progressJobs, $progressPercent, 1);
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
@@ -723,7 +723,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             }
             else
             {
-                statusMessage("No data here, trying smaller slices",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                statusMessage("No data here, trying smaller slices", $currentSubTask, $progressJobs, $progressPercent, 1);
                 my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
                 for (my $j = 1 ; $j<=10 ; $j++)
                 {
@@ -732,12 +732,12 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     $partialFile = $Config{"WorkingDirectory"}."data-$PID-$i-$j.osm";
                     push(@{$filelist}, $partialFile);
                     push(@tempfiles, $partialFile);
-                    statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                    statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $currentSubTask, $progressJobs, $progressPercent,0);
                     DownloadFile($URL, $partialFile, 0);
 
                     if (-s $partialFile == 0)
                     {
-                        statusMessage("No data here (sliced)...",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                        statusMessage("No data here (sliced)...", $currentSubTask, $progressJobs, $progressPercent, 1);
                         PutRequestBackToServer($X,$Y,$Zoom,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
@@ -772,7 +772,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
-    statusMessage("Checking for UTF-8 errors in $DataFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
+    statusMessage("Checking for UTF-8 errors in $DataFile", $currentSubTask, $progressJobs, $progressPercent, 0);
     open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
     my @toCheck = <OSMDATA>;
     close(OSMDATA);
@@ -780,7 +780,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     {
       if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
       {
-        statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $currentSubTask, $progressJobs, $progressPercent, 1);
         PutRequestBackToServer($X,$Y,$Zoom,"BadUTF8");
         addFault("utf8",1);
         return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
@@ -847,7 +847,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         "maplint/lib/run-tests.xsl",
                         "$inputFile",
                         "tmp.$PID");
-                statusMessage("Running maplint", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Running maplint", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
                 $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
                         $Config{Niceness},
@@ -855,7 +855,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         "maplint/lib/convert-to-tags.xsl",
                         "tmp.$PID",
                         "$outputFile");
-                statusMessage("Creating tags from maplint", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Creating tags from maplint", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
                 killafile("tmp.$PID");
             }
@@ -865,7 +865,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         $Config{Niceness},
                         "$inputFile",
                         "$outputFile");
-                statusMessage("Running close-areas", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Running close-areas", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
             elsif ($preprocessor eq "attribution")
@@ -874,7 +874,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         $Config{Niceness},
                         "$inputFile",
                         "$outputFile");
-                statusMessage("Running attribution", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Running attribution", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
             elsif ($preprocessor eq "mercator")
@@ -883,7 +883,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         $Config{Niceness},
                         "$inputFile",
                         "$outputFile");
-                statusMessage("Running Mercatorization", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage("Running Mercatorization", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
             else
@@ -1105,7 +1105,7 @@ sub RenderTile
 
     if (($progressPercent=$progress*100/(2**($Config{"Layer.$layer.MaxZoom"}-$ZOrig+1)-1)) == 100)
     {
-        statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        statusMessage("Finished $X,$Y for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
     }
     else
     {
@@ -1115,7 +1115,7 @@ sub RenderTile
         }
         else
         {
-            statusMessage("Working", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Working", $currentSubTask, $progressJobs, $progressPercent,0);
         }
     }
     
@@ -1160,7 +1160,7 @@ sub RenderTile
         }
         if ($Zoom == $ZOrig) {
             $progressPercent=100 if (! $Config{"Debug"}); # workaround for not correctly updating %age in fork, disable in debug mode
-            statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+            statusMessage("Finished $X,$Y for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
         }
     } else {
         ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
@@ -1183,7 +1183,7 @@ sub UpdateClient # FIXME: should be called. (triggered by server?)
         $Config{Subversion},
         $Config{SubversionUpdateCmd});
 
-    statusMessage("Updating the Client", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Updating the Client", $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
     ## TODO: Implement and check output from svn status, too.
 
@@ -1218,7 +1218,7 @@ sub xml2svg
           "$MapFeatures",
           $TSVG);
 
-        statusMessage("Transforming zoom level $zoom with XSLT", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Transforming zoom level $zoom with XSLT", $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand($Cmd,$PID);
     }
     elsif($Config{Osmarender} eq "orp")
@@ -1229,7 +1229,7 @@ sub xml2svg
           $MapFeatures,
           $TSVG);
 
-        statusMessage("Transforming zoom level $zoom with or/p", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Transforming zoom level $zoom with or/p", $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand($Cmd,$PID);
         chdir "..";
     }
@@ -1247,7 +1247,7 @@ sub xml2svg
 
     if (grep(!/</, $TestLine))
     {
-       statusMessage("File $TSVG doesn't look like svg, aborting render.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+       statusMessage("File $TSVG doesn't look like svg, aborting render.", $currentSubTask, $progressJobs, $progressPercent,1);
        return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
     }
 #-----------------------------------------------------------------------------
@@ -1259,7 +1259,7 @@ sub xml2svg
           $Config{Niceness},
           $TSVG,
           $SVG);
-        statusMessage("Beziercurvehinting zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Beziercurvehinting zoom level $zoom", $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand($Cmd,$PID);
 #-----------------------------------------------------------------------------
 # Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
@@ -1268,13 +1268,13 @@ sub xml2svg
         if (!$filesize) 
         {
             copy($TSVG,$SVG);
-            statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $currentSubTask, $progressJobs, $progressPercent,0);
         }
         killafile($TSVG) if (!$Config{"Debug"});
     }
     else
     {   # don't do bezier curve hinting
-        statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Bezier Curve hinting disabled.", $currentSubTask, $progressJobs, $progressPercent,0);
     }
     return 1;
 }
@@ -1357,11 +1357,11 @@ sub svg2png
     }
     
     # stop rendering the current job when inkscape fails
-    statusMessage("Rendering", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Rendering", $currentSubTask, $progressJobs, $progressPercent,0);
     print STDERR "\n$Cmd\n" if ($Config{"Debug"});
     if (not runCommand($Cmd,$PID) or ! -e $TempFile )
     {
-        statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        statusMessage("$Cmd failed", $currentSubTask, $progressJobs, $progressPercent, 1);
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
         addFault("inkscape",1);
@@ -1485,7 +1485,7 @@ sub splitImageX
     my $allempty=1;
   
     # Load the tileset image
-    statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
+    statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size), $currentSubTask, $progressJobs, $progressPercent, 0);
     my $Image = newFromPng GD::Image($File);
     if( not defined $Image )
     {
@@ -1570,7 +1570,7 @@ sub splitImageX
             # $SubImage->trueColorToPalette($dither,$numcolors);
 
             # Store the tile
-            statusMessage(" -> $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0) if ($Config{Verbose});
+            statusMessage(" -> $Basename", $currentSubTask, $progressJobs, $progressPercent,0) if ($Config{Verbose});
             WriteImage($SubImage,$Filename2);
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
@@ -1604,14 +1604,14 @@ sub splitImageX
             {
                 cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4,$PID);
             }
-            statusMessage("Optimizing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Optimizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
             if(runCommand($Cmd,$PID))
             {
                 unlink($Filename2);
             }
             else
             {
-                statusMessage("Optimizing $Basename with $Config{PngOptimizer} failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+                statusMessage("Optimizing $Basename with $Config{PngOptimizer} failed", $currentSubTask, $progressJobs, $progressPercent,1);
                 rename($Filename2, $Filename);
             }
         }
@@ -1667,7 +1667,7 @@ sub reExecIfRequired
     }
     elsif ($dirent ne $de)
     {
-        statusMessage("tilesGen.pl has changed, re-start new version", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        statusMessage("tilesGen.pl has changed, re-start new version", $currentSubTask, $progressJobs, $progressPercent, 1);
         exec "perl", $0, "loop", "reexec", 
             "progressJobs=$progressJobs", 
             "idleSeconds=" . getIdle(1), 

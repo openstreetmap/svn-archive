@@ -1,0 +1,30 @@
+Overview
+
+The file mp2osm_ukraine.py is used to convert data for populated places in Ukraine from Polish Map format to OSM format. Polish Map format (extension .MP) is used by cgpsmapper (http://cgpsmapper.com/) to produced native Garmin format.
+
+The data about ukrainian populated cities is available here:
+http://www.travelgps.com.ua
+http://www.travelgps.com.ua/forum/viewtopic.php?t=198
+
+Instructions
+
+Filtering for a given region is done. See string good_criteria_str. 
+
+Some places should be ignored since they are already in the OSM database, hence ingore_list is used.
+
+KOATUU - official statistics place code (not postcode).
+
+Both Russian and Ukrainian names are imported. Russian name is imported with suffix :ru.
+
+The present version determines attribute place (city, town, village) based on the following criteria: 
+
+if field is Nas= М or ВМ (misto, velyke misto) the attribute place is either "city" or "town", in all other cases it is "village". The names of places with population more than 100,000 is determined from other sources (wikipedia, oficial statistics, here is website for Donetsk region that has links to other regions
+http://donetskstat.gov.ua/). Cities are written in the set explicitly and each place is checked against it. It is marked as "city" only if it is in the list.
+
+Caution
+
+Field Type with Garmin notation 0x800, 0x100 etc. cannot be used -- many mistakes.
+
+In Donetsk region there were cases when villages had the same name as cities, this is why check by names is not used.
+
+The criteria mentioned above is quite good. Nevertheless, a check against other data sources (wikipedia ...) should be done.

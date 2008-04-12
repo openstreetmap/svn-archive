@@ -165,8 +165,8 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 					iStartSelectionPoint = null;
 				}
 				else if(e.getClickCount() == 2){
+					iSlippyMapChooser.zoomIn(e.getPoint());
 					iSlippyMapChooser.centerOnScreenPoint(e.getPoint());
-					iSlippyMapChooser.zoomIn();
 				}		
 			}
 		}			
@@ -208,11 +208,11 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 		int rot = e.getWheelRotation();
 		//scroll wheel rotated away from user
 		if(rot < 0){
-			iSlippyMapChooser.zoomIn();
+			iSlippyMapChooser.zoomIn(e.getPoint());
 		}
 		//scroll wheel rotated towards the user
 		else if(rot > 0){
-			iSlippyMapChooser.zoomOut();
+			iSlippyMapChooser.zoomOut(e.getPoint());
 		}
 	}
 

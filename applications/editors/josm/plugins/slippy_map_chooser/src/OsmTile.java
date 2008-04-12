@@ -1,8 +1,12 @@
 // License: GPL. Copyright 2007 by Tim Haussmann
 
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 
 /**
  * @author Tim Haussmann 
@@ -47,7 +51,7 @@ public class OsmTile {
 		return iZoomLevel;
 	}
 	
-	public void paint(Graphics g){
+	public void paint(Graphics g,TileDB db){
 		
 		if(iMapImage != null && ! isInvalid){
 			g.drawImage( iMapImage, iX, iY, null );
@@ -56,10 +60,31 @@ public class OsmTile {
 			//draw nothing
 		}
 		else{
-			g.setColor(Color.RED);
-			g.drawLine(iX, iY, iX+WIDTH-1, iY+HEIGHT-1);
-			g.drawLine(iX, iY+HEIGHT-1, iX+WIDTH-1, iY);
-			g.drawRect(iX, iY, WIDTH-1, HEIGHT-1);
+			// first try to interpolate tile from parent			
+			OsmTile parent = getParent(db);
+			if (parent!=null){
+				Graphics2D g2d = (Graphics2D) g;
+				AffineTransform oldTr = g2d.getTransform();
+				Shape oldClip = g2d.getClip();
+				g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+				
+				// since the parent will paint 4 tiles in the 
+				// current zoom level we have to clip the drawing
+				// region to the current tile
+				g2d.clipRect(iX, iY, WIDTH, HEIGHT);
+				g2d.scale(2, 2);				
+				parent.paint(g,db);
+				
+				g2d.setTransform(oldTr);
+				g2d.setClip(oldClip);
+			}
+			else{
+				// otherwise draw placeholder
+				g.setColor(Color.RED);
+				g.drawLine(iX, iY, iX+WIDTH-1, iY+HEIGHT-1);
+				g.drawLine(iX, iY+HEIGHT-1, iX+WIDTH-1, iY);
+				g.drawRect(iX, iY, WIDTH-1, HEIGHT-1);
+			}
 		}
 	} 
 	
@@ -92,4 +117,11 @@ public class OsmTile {
 		return "/"+toString()+".png";
 	}
 	
+	public OsmTile getParent(TileDB db){
+		return iZoomLevel == 0 ? null : db.get(parentKey());
+	}
+
+	public String parentKey() {
+		return key(iZoomLevel - 1,iIndexX/2,iIndexY/2);
+	}
 }

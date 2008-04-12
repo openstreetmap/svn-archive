@@ -60,7 +60,7 @@ highway["Local / Street"] = "residential"
 highway["Local / Strata"] = "unclassified"
 highway["Local / Unknown"] = "unclassified"
 highway["Alleyway / Lane"] = "service"
-highway["Ramp"] = "primary_link"
+highway["Ramp"] = "unclassified"
 highway["Service Lane"] = "service"
 highway["Resource / Recreation"] = "unclassified"
 highway["Service Lane"] = "service"
@@ -244,41 +244,53 @@ class gmlHandler(sax.ContentHandler):
   
     # Features common to both roads and ferries
     if self.roadSegment == True or self.ferrySegment == True:
+    
       if name == 'nrn:nid':
         self.tags['nrn:nid'] = text
         
       if name == 'nrn:routeNumber1' and text!='None':
-        self.tags['ref'] = text
-      if name == 'nrn:routeNumber2' and text!='None':
-        self.tags['ref'] = self.tags['ref'] + ";" + text
-      if name == 'nrn:routeNumber3' and text!='None':
-        self.tags['ref'] = self.tags['ref'] + ";" + text
-      if name == 'nrn:routeNumber4' and text!='None':
-        self.tags['ref'] = self.tags['ref'] + ";" + text
-      
+        self.tags['ref'] = set([text])
+        
+      if self.tags.has_key('ref'):
+        if name == 'nrn:routeNumber2' and text!='None':
+          self.tags['ref'].add(text)
+          
+        if name == 'nrn:routeNumber3' and text!='None':
+          self.tags['ref'].add(text)
+          
+        if name == 'nrn:routeNumber4' and text!='None':
+          self.tags['ref'].add(text)
+          
       if name == 'nrn:routeNameEnglish1' and text!='None':
-        self.tags['name'] = text
-      if name == 'nrn:routeNameEnglish2' and text!='None':
-        self.tags['name'] = self.tags['name'] + ";" + text
-      if name == 'nrn:routeNameEnglish3' and text!='None':
-        self.tags['name'] = self.tags['name'] + ";" + text
-      if name == 'nrn:routeNameEnglish4' and text!='None':
-        self.tags['name'] = self.tags['name'] + ";" + text
+        self.tags['name'] = set([text])
+        
+      if self.tags.has_key('name'):
+        if name == 'nrn:routeNameEnglish2' and text!='None':
+          self.tags['name'].add(text)
+          
+        if name == 'nrn:routeNameEnglish3' and text!='None':
+          self.tags['name'].add(text)
+          
+        if name == 'nrn:routeNameEnglish4' and text!='None':
+          self.tags['name'].add(text)
       
       if name == 'nrn:routeNameFrench1' and text!='None':
-        self.tags['name:fr'] = text
-      if name == 'nrn:routeNameFrench2' and text!='None':
-        self.tags['name:fr'] = self.tags['name:fr'] + ";" + text
-      if name == 'nrn:routeNameFrench3' and text!='None': 
-        self.tags['name:fr'] = self.tags['name:fr'] + ";" + text
-      if name == 'nrn:routeNameFrench4' and text!='None':
-        self.tags['name:fr'] = self.tags['name:fr'] + ";" + text
-      
+        self.tags['name:fr'] = set([text])
+        
+      if self.tags.has_key('name:fr'):
+        if name == 'nrn:routeNameFrench2' and text!='None':
+          self.tags['name:fr'].add(text)
+          
+        if name == 'nrn:routeNameFrench3' and text!='None': 
+          self.tags['name:fr'].add(text)
+          
+        if name == 'nrn:routeNameFrench4' and text!='None':
+          self.tags['name:fr'].add(text)
       
       if name == 'gml:coordinates':
-        for set in self.cstring.split(' '):
+        for coordset in self.cstring.split(' '):
           
-          coord = set.split(',')
+          coord = coordset.split(',')
           
           if len(coord) == 2:
             lon = coord[0]
@@ -300,7 +312,7 @@ class gmlHandler(sax.ContentHandler):
               self.nodeid -= 1
             else: 
               print "Could not add node due to empty coordinate"
-              print "set = " + set
+              print "set = " + coordset
               print "str = " + self.cstring
         
         self.cstring = None
@@ -313,13 +325,6 @@ class gmlHandler(sax.ContentHandler):
   
     if name=='nrn:RoadSegment':
       
-      # Convert the ref to a number if its numeric
-      if self.tags.has_key('ref'):
-        try:
-          self.tags['ref'] = int(self.tags['ref'])
-        except ValueError:
-          pass
-      
       if self.tags['nrn:datasetName'] == 'Newfoundland and Labrador':
         pass
         
@@ -331,7 +336,7 @@ class gmlHandler(sax.ContentHandler):
         
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
             # Tag Transcanada/Yellowhead as trunk
-            if self.tags['ref'] == '1' and ( self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary'):
+            if 1 in self.tags['ref'] and ( self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary'):
               self.tags['highway'] = 'trunk'
             
       if self.tags['nrn:datasetName'] == 'New Brunswick':
@@ -431,15 +436,23 @@ class gmlHandler(sax.ContentHandler):
         
       if self.tags['nrn:datasetName'] == 'Nunavut':
         pass
-      
-      # set ref back to being a string
-      if self.tags.has_key('ref'):
-        try:
-          self.tags['ref'] = str(self.tags['ref'])
-        except ValueError:
-          pass
-
+        
+      # Catch all transcanada/yellowhead highway segments that we may have missed
+      if self.tags.has_key('name'):
+        if (self.tags['name'] == 'TransCanada Highway' or self.tags['name'] == 'Yellowhead Highway') and self.tags['highway'] != 'motorway':
+          self.tags['highway'] = 'trunk'
+    
     if name == 'nrn:FerryConnectionSegment' or name=='nrn:RoadSegment':
+    
+      # Convert the sets back to semicolon separated strings      
+      if self.tags.has_key('ref'):      
+        self.tags['ref'] = setToString(self.tags['ref']);
+      
+      if self.tags.has_key('name'):
+        self.tags['name'] = setToString(self.tags['name']);
+      
+      if self.tags.has_key('name:fr'):
+        self.tags['name:fr'] = setToString(self.tags['name:fr']);
         
       # Convert the tags to xml nodes
       for key, value in self.tags.iteritems():
@@ -462,13 +475,31 @@ class gmlHandler(sax.ContentHandler):
     self.depth = self.depth - 1
     return
 
+# Convert a set to a semicolon separated string
+def setToString(tagset):
+  
+  if len(tagset) == 0:
+    return ""
+  
+  elif len(tagset) == 1:
+    string = tagset.pop()
+    return string
+    
+  else:
+    string = tagset.pop()
+    
+    for x in tagset:
+      string = string + ";" + x
+    print string
+    return string
+
 def main():
 
   usage = "usage: %prog -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o outfilefile.osm] [--pretty]"
   parser = OptionParser(usage)
   parser.add_option("-i", dest="geomfile", help="read data from GEOMFILE")
   parser.add_option("-a", dest="addrfile", help="read optional data from ADDRFILE")
-  parser.add_option("-o", dest="outputfile", default="geobase.osm", help="store data to OUTPUTFILE")  
+  parser.add_option("-o", dest="outputfile", default="geobase.osm", help="store data to OUTPUTFILE")
   parser.add_option("--pretty", action="store_true", dest="indent", help="stylize the output file")
     
   (options, args) = parser.parse_args()
@@ -478,6 +509,8 @@ def main():
   saxparser = sax.make_parser()
 
   handler = gmlHandler()
+
+  print "Preparing to read '"+options.geomfile+"'"
 
   sax.parse(open(options.geomfile), handler)
 

@@ -84,6 +84,8 @@ class gmlHandler(sax.ContentHandler):
   way = None
   nodes = None
   
+  tags = None
+  
   nodeid = -1000
   
   waiting = False
@@ -121,6 +123,7 @@ class gmlHandler(sax.ContentHandler):
     if name == "nrn:RoadSegment":
       self.roadSegment = True
       self.way = ET.Element("way",visible="true",id=str(self.nodeid))
+      self.tags = {}
       self.nodeid -= 1
 
       self.counter()
@@ -178,46 +181,68 @@ class gmlHandler(sax.ContentHandler):
         self.cstring = self.cstring + string
 
   def endElement(self, name):
+  
+    # Prepare a cleaned and stripped text string
+    text = self.string
+  
     if self.roadSegment == True:
+      if text != None:
+        text = self.string.strip()
+      
       if name == 'nrn:nid':
-        self.way.append(ET.Element('tag', k="nrn:nid",v=self.string))
+        self.way.append(ET.Element('tag', k="nrn:nid",v=text))
+        self.tags['nrn:nid'] = text
         #print self.string
       
       if name == 'nrn:roadSegmentId':
-        self.way.append(ET.Element('tag', k="nrn:roadSegmentId",v=self.string))
+        self.way.append(ET.Element('tag', k="nrn:roadSegmentId",v=text))
+        self.tags['nrn:roadSegmentId'] = text
         
       if name == 'nrn:functionalRoadClass':
         #print self.string
-        self.way.append(ET.Element('tag', k="highway",v=highway[self.string.strip() ]))
+        self.way.append(ET.Element('tag', k="highway",v=highway[text ]))
+        self.tags['highway'] = highway[text ]
               
       if name == 'nrn:numberOfLanes' :
-        self.way.append(ET.Element('tag', k="lanes",v=self.string))
+        self.way.append(ET.Element('tag', k="lanes",v=text))
+        self.tags['lanes'] = text
               
       if name == 'nrn:pavementStatus' and self.string!='Paved' :
-        self.way.append(ET.Element('tag', k="surface",v=self.string))
+        self.way.append(ET.Element('tag', k="surface",v=text.lower()))
+        self.tags['surface'] = text.lower()
               
-      if name == 'nrn:routeNameEnglish1' and self.string!='None' :
-        self.way.append(ET.Element('tag', k="name",v=self.string))
+      if name == 'nrn:routeNameEnglish1' and text!='None' :
+        self.way.append(ET.Element('tag', k="name",v=text))
+        self.tags['name'] = text
             
-      if name == 'nrn:routeNameFrench1' and self.string!='None':
-        self.way.append(ET.Element('tag', k="name:fr",v=self.string))
+      if name == 'nrn:routeNameFrench1' and text!='None':
+        self.way.append(ET.Element('tag', k="name:fr",v=text))
+        self.tags['name:fr'] = text
               
-      if name == 'nrn:routeNumber1' and self.string!='None':
-        self.way.append(ET.Element('tag', k="ref",v=self.string))
+      if name == 'nrn:routeNumber1' and text!='None':
+        self.way.append(ET.Element('tag', k="ref",v=text))
+        self.tags['ref'] = text
             
       if name == 'nrn:datasetName':
-        self.way.append(ET.Element('tag', k="nrn:datasetName",v=self.string))
+        self.way.append(ET.Element('tag', k="nrn:datasetName",v=text))
+        self.tags['nrn:datasetName'] = text
             
       if name == 'nrn:structureType':
-        if self.string == 'Bridge' or self.string == 'Bridge Covered' or self.string == 'Bridge moveable' or self.string == 'Bridge unknown':
+        if text == 'Bridge' or text == 'Bridge Covered' or text == 'Bridge moveable' or text == 'Bridge unknown':
           # Found a bridge
           self.way.append(ET.Element('tag', k="bridge",v="yes"))
           self.way.append(ET.Element('tag', k="layer",v="1"))
           
-        elif self.string == 'Tunnel':
+          self.tags['bridge'] = 'yes'
+          self.tags['layer'] = '1'
+          
+        elif text == 'Tunnel':
           # Found a tunnel              
           self.way.append(ET.Element('tag', k="tunnel",v="yes"))
           self.way.append(ET.Element('tag', k="layer",v="-1"))
+          
+          self.tags['tunnel'] = 'yes'
+          self.tags['layer'] = '-1'
   
       self.string = None
   
@@ -228,7 +253,7 @@ class gmlHandler(sax.ContentHandler):
           
           if len(coord) == 2:
             lon = coord[0]
-            lat = coord[1]            
+            lat = coord[1]
             
             if len(lat) > 0 and len(lon) > 0:
               node = ET.Element("node", visible='true', id=str(self.nodeid), lat=lat, lon=lon)
@@ -255,6 +280,134 @@ class gmlHandler(sax.ContentHandler):
         self.waiting = True
   
     if name=='nrn:RoadSegment':
+    
+      # Customization rules
+      
+      # Convert the ref to a number if its numeric
+      try:
+        self.tags['ref'] = int(self.tags['ref'])
+      except ValueError:
+        pass
+      
+      if self.tags['nrn:datasetName'] == 'Newfoundland and Labrador':
+        pass
+        
+      if self.tags['nrn:datasetName'] == 'Nova Scotia':
+        pass
+        
+      if self.tags['nrn:datasetName'] == 'Prince Edward Island':
+        if self.tags.has_key('ref'):
+        
+          # Tag Transcanada/Yellowhead as trunk
+          if self.tags['ref'] == '1' and ( self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary'):
+            print "setting to trunk from " + self.tags['highway']
+            self.tags['highway'] = 'trunk'
+            
+        
+      if self.tags['nrn:datasetName'] == 'New Brunswick':
+        pass
+        
+      if self.tags['nrn:datasetName'] == 'Quebec':
+        pass
+        
+      if self.tags['nrn:datasetName'] == 'Ontario':
+        if self.tags.has_key('ref'):
+          
+          if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
+          
+            # Primary (1-101)
+            if self.tags['ref'] <= 101:
+              self.tags['highway'] = 'primary'
+              
+            # Secondary (102 and up)
+            if self.tags['ref'] > 101:
+              self.tags['highway'] = 'secondary'
+          
+            # Tag Transcanada/Yellowhead as trunk
+            if self.tags['ref'] == 17 or self.tags['ref'] == 11 or self.tags['ref'] == 69 or self.tags['ref'] == 12 or self.tags['ref'] == 7 or self.tags['ref'] == 115 or self.tags['ref'] == 71:
+              self.tags['highway'] = 'trunk'
+              
+            # 400-series as motorway
+            if self.tags['ref'] >= 400 and self.tags['ref'] < 500:
+              self.tags['highway'] = 'motorway'
+        
+      if self.tags['nrn:datasetName'] == 'Manitoba':
+        if self.tags.has_key('ref'):
+          
+          if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
+          
+            # Primary (1-101)
+            if self.tags['ref'] <= 101:
+              self.tags['highway'] = 'primary'
+              
+            # Secondary (102 and up)
+            if self.tags['ref'] > 101:
+              self.tags['highway'] = 'secondary'
+          
+            # Tag Transcanada/Yellowhead as trunk
+            if self.tags['ref'] == 1 or self.tags['ref'] == 16:
+              self.tags['highway'] = 'trunk'
+              
+      if self.tags['nrn:datasetName'] == 'Saskatchewan':
+        if self.tags.has_key('ref'):
+        
+          if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
+            
+            # Tag Transcanada/Yellowhead as trunk
+            if self.tags['ref'] == 1 or self.tags['ref'] == 16 or self.tags['ref'] == 75 or self.tags['ref'] == 100:
+              self.tags['highway'] = 'trunk'
+              
+      if self.tags['nrn:datasetName'] == 'Alberta':
+
+        if self.tags.has_key('ref'):
+        
+          if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
+          
+            # Tag Transcanada/Yellowhead as trunk
+            if self.tags['ref'] >= 1 and self.tags['ref'] <= 3:
+              self.tags['highway'] = 'trunk'
+              
+            if self.tags['ref'] == 16:
+              self.tags['highway'] = 'trunk'
+              
+            if self.tags['ref'] == 201 or self.tags['ref'] == 202:
+              self.tags['highway'] = 'trunk'
+              
+            # Primary (4-100)
+            if self.tags['ref'] >= 4 and self.tags['ref'] <= 100:
+              self.tags['highway'] = 'primary'
+            
+            # Secondary (500-899, 901, 940)
+            if self.tags['ref'] >= 500 and self.tags['ref'] < 900:
+              self.tags['highway'] = 'secondary'
+            
+            if self.tags['ref'] == 201 or self.tags['ref'] == 202:
+              self.tags['highway'] = 'secondary'
+            
+        
+      if self.tags['nrn:datasetName'] == 'British Columbia':
+        if self.tags.has_key('ref'):
+        
+          if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
+          
+            # Tag Transcanada/Yellowhead as trunk 
+            if self.tags['ref'] == 1 or self.tags['ref'] == 16:
+              self.tags['highway'] = 'trunk'
+      
+      if self.tags['nrn:datasetName'] == 'Yukon Territory':
+        pass
+      
+      if self.tags['nrn:datasetName'] == 'Northwest Territories':
+        pass
+        
+      if self.tags['nrn:datasetName'] == 'Nunavut':
+        pass
+      
+      # Convert the tags to xml nodes
+      for key, value in self.tags.iteritems():
+        self.way.append(ET.Element('tag', k=key,v=value))
+        
+      self.tags = None
     
       # add the default tags
       self.way.append(ET.Element('tag', k='attribution',v=self.attribution))

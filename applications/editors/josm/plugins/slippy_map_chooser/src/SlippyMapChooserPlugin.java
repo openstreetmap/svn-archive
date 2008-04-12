@@ -17,9 +17,11 @@ public class SlippyMapChooserPlugin extends Plugin implements PreferenceChangedL
 	
 	private static final String KEY_MAX_TILES_IN_DB = "slippy_map_chooser.max_tiles";
 	private static final String KEY_MAX_TILES_REDUCE_BY = "slippy_map_chooser.max_tiles_reduce_by";
+	public static boolean DEBUG_MODE = false;
 	
-	static int MAX_TILES_IN_DB = 1000;
-	static int MAX_TILES_REDUCE_BY = 100;
+	
+	static int MAX_TILES_IN_DB = 200;
+	static int MAX_TILES_REDUCE_BY = 40;
 	
 	public SlippyMapChooserPlugin(){
 		// create the plugin folder 
@@ -72,8 +74,5 @@ public class SlippyMapChooserPlugin extends Plugin implements PreferenceChangedL
 			}
 		}
 	}
-	
-	
-	
 	
 }

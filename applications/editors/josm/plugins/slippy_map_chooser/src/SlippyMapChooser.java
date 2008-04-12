@@ -184,7 +184,7 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 			for(int x=0; x<iVisibleTilesX; x++){					
 				OsmTile t = iTileDB.get(OsmTile.key(iZoomlevel,  (-iOffsetX + x*OsmTile.WIDTH)/OsmTile.WIDTH, ((-iOffsetY+ y*OsmTile.HEIGHT)/OsmTile.HEIGHT)));
 				if(t != null){
-					t.paint(g);						
+					t.paint(g,iTileDB);						
 				}
 			} 
 		}		
@@ -203,6 +203,15 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 		}
 		
 		iSizeButton.paint(g);
+		
+		
+		if(SlippyMapChooserPlugin.DEBUG_MODE){
+			g.setColor(Color.black);
+			g.drawString("Free Memory: " + Runtime.getRuntime().freeMemory()/1024 + "/" + Runtime.getRuntime().totalMemory()/1024 + "kB" , 5, 50);
+			g.drawString("Tiles in DB: " + iTileDB.getCachedTilesSize(), 5, 65);
+			g.drawString("Loading Queue Size: " + iTileDB.getLoadingQueueSize(), 5, 80);
+			
+		}
 	}
 
 	
@@ -355,10 +364,10 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 	 * Zoom in one level	
 	 * Callback for OsmMapControl. Zoom out one level		 
 	 */
-	void zoomIn(){	
+	void zoomIn(Point curPos){	
 		
 		//cache center of screen and the selection rectangle
-		LatLon l = getLatLonOfScreenPoint(new Point(getWidth()/2, getHeight()/2));
+		LatLon l = getLatLonOfScreenPoint(curPos);
 		LatLon selStart = null;
 		LatLon selEnd   = null;
 		if(iSelectionRectEnd != null && iSelectionRectStart != null){
@@ -373,8 +382,7 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 			return;
 		}
 					
-		//center on cached location
-		centerOnLatLon(l);
+		setLatLonAtPoint(l, curPos);
 		
 		//restore selection 
 		if(selStart != null && selEnd != null){
@@ -393,9 +401,9 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 	 * Zoom out one level.
 	 * Callback for OsmMapControl. 
 	 */
-	void zoomOut(){
+	void zoomOut(Point curPos){
 		//cache center of screen and the selction rect
-		LatLon l = getLatLonOfScreenPoint(new Point(getWidth()/2, getHeight()/2));
+		LatLon l = getLatLonOfScreenPoint(curPos);
 		LatLon selStart = null;
 		LatLon selEnd   = null;
 		if(iSelectionRectEnd != null && iSelectionRectStart != null){
@@ -410,8 +418,7 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 			return;
 		}
 		
-		//center on cached location
-		centerOnLatLon(l);
+		setLatLonAtPoint(l, curPos);
 		
 		//restore selection 
 		if(selStart != null && selEnd != null){
@@ -484,11 +491,21 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 	 * Centers the map on the location given by LatLon
 	 * @param aLatLon the location to center on
 	 */
-	private void centerOnLatLon(LatLon aLatLon){		
+	private void centerOnLatLon(LatLon aLatLon){
+		setLatLonAtPoint(aLatLon, new Point(getWidth()/2,getHeight()/2));
+	}
+
+	/**
+	 * Moves the map that the specified latLon is shown at the point on screen
+	 * given
+	 * @param aLatLon a position
+	 * @param p a point on the screen
+	 */
+	private void setLatLonAtPoint(LatLon aLatLon, Point p){
 		int x = OsmMercator.LonToX(aLatLon.lon(), iZoomlevel);
 		int y = OsmMercator.LatToY(aLatLon.lat(), iZoomlevel);
-		iOffsetX = -x +getWidth()/2;
-		iOffsetY = -y +getHeight()/2;
+		iOffsetX = - x + p.x;
+		iOffsetY = - y + p.y;
 		repaint();
 	}
 	

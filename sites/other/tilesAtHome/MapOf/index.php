@@ -75,11 +75,13 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
   }
 
   if($Format == "jpeg"){
-    header("Content-type: image/JPEG");
+    header("Content-Type: image/jpeg");
+    header("Content-Disposition: attachment; filename=\"map.jpg\"");
     imagejpeg($Image);
   }
   else{
-    header("Content-type: image/PNG");
+    header("Content-Type: image/png");
+    header("Content-Disposition: attachment; filename=\"map.png\"");
     imagepng($Image);
   }
 }

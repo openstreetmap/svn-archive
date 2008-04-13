@@ -41,7 +41,13 @@ print "</osm>\n";
 
 sub process_poly()
 {
-    my $poly_id = (defined($workaround)) ? $workaround : <>; chomp($poly_id);
+    my $poly_id;
+    if ($workaround==0) {
+       $poly_id=<>;
+    } else {
+       $poly_id=$workaround;
+    }
+    chomp($poly_id);
     my $startnode = $nodecnt;
     return 0 if ($poly_id =~ /^END/); # end of file
 

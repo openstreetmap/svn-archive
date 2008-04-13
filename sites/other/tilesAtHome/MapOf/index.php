@@ -42,7 +42,7 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
   $GridSize = 10;
   
   $Image = imagecreatetruecolor($Width, $Height);
-  $BG = imagecolorallocate($Image, 255, 255, 255);
+  $BG = imagecolorallocate($Image, 248, 248, 248);
   imagefilledrectangle($Image, 0,0,$Width, $Height, $BG);
   
   list($X,$Y) = XY($Lat, $Long, $Zoom);

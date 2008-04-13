@@ -117,8 +117,16 @@ class gmlHandler(sax.ContentHandler):
           
   def startElement(self, name, attributes):
     
-    # A blocked passage (dead end)
+    # A blocked passage (barrier across road)
     if name == "nrn:BlockedPassage":
+      self.counter()
+      
+    # A junction of two or more roads, a dead end road, a ferry route and a road, or the edge of a road on a dataset boundary
+    if name == "nrn:Junction":
+      self.counter()
+      
+    # A toll point (physical or virtual)
+    if name == "nrn:TollPoint":
       self.counter()
     
     # A ferry connection
@@ -350,38 +358,40 @@ class gmlHandler(sax.ContentHandler):
           
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
           
-            # Primary (1-101)
-            if self.tags['ref'] <= 101:
-              self.tags['highway'] = 'primary'
-              
-            # Secondary (102 and up)
-            if self.tags['ref'] > 101:
-              self.tags['highway'] = 'secondary'
-          
-            # Tag Transcanada/Yellowhead as trunk
-            if self.tags['ref'] == 17 or self.tags['ref'] == 11 or self.tags['ref'] == 69 or self.tags['ref'] == 12 or self.tags['ref'] == 7 or self.tags['ref'] == 115 or self.tags['ref'] == 71:
-              self.tags['highway'] = 'trunk'
-              
-            # 400-series as motorway
-            if self.tags['ref'] >= 400 and self.tags['ref'] < 500:
-              self.tags['highway'] = 'motorway'
+            for ref in self.tags['ref']:
+              # Primary (1-101)
+              if ref <= 101:
+                self.tags['highway'] = 'primary'
+                
+              # Secondary (102 and up)
+              if ref > 101:
+                self.tags['highway'] = 'secondary'
+            
+              # Tag Transcanada/Yellowhead as trunk
+              if ref == 17 or ref == 11 or ref == 69 or ref == 12 or ref == 7 or ref == 115 or ref == 71:
+                self.tags['highway'] = 'trunk'
+                
+              # 400-series as motorway
+              if ref >= 400 and ref < 500:
+                self.tags['highway'] = 'motorway'
         
       if self.tags['nrn:datasetName'] == 'Manitoba':
         if self.tags.has_key('ref'):
           
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
           
-            # Primary (1-101)
-            if self.tags['ref'] <= 101:
-              self.tags['highway'] = 'primary'
-              
-            # Secondary (102 and up)
-            if self.tags['ref'] > 101:
-              self.tags['highway'] = 'secondary'
-          
-            # Tag Transcanada/Yellowhead as trunk
-            if self.tags['ref'] == 1 or self.tags['ref'] == 16:
-              self.tags['highway'] = 'trunk'
+            for ref in self.tags['ref']:
+              # Primary (1-101)
+              if ref <= 101:
+                self.tags['highway'] = 'primary'
+                
+              # Secondary (102 and up)
+              if ref > 101:
+                self.tags['highway'] = 'secondary'
+            
+              # Tag Transcanada/Yellowhead as trunk
+              if ref == 1 or ref == 16 or ref == 75 or ref == 100:
+                self.tags['highway'] = 'trunk'
               
       if self.tags['nrn:datasetName'] == 'Saskatchewan':
         if self.tags.has_key('ref'):
@@ -389,44 +399,39 @@ class gmlHandler(sax.ContentHandler):
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
             
             # Tag Transcanada/Yellowhead as trunk
-            if self.tags['ref'] == 1 or self.tags['ref'] == 16 or self.tags['ref'] == 75 or self.tags['ref'] == 100:
-              self.tags['highway'] = 'trunk'
-              
+            for ref in self.tags['ref']:
+              if ref == 1 or ref == 16:
+                self.tags['highway'] = 'trunk'
+                
       if self.tags['nrn:datasetName'] == 'Alberta':
 
         if self.tags.has_key('ref'):
         
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
           
-            # Primary (4-100)
-            if self.tags['ref'] >= 4 and self.tags['ref'] <= 100:
-              self.tags['highway'] = 'primary'
-            
-            # Secondary (500-899, 901, 940)
-            if self.tags['ref'] >= 500 and self.tags['ref'] < 900:
-              self.tags['highway'] = 'secondary'
-            
-            if self.tags['ref'] == 201 or self.tags['ref'] == 202:
-              self.tags['highway'] = 'secondary'
+            for ref in self.tags['ref']:
+              # Primary (4-100)
+              if ref >= 4 and ref <= 100:
+                self.tags['highway'] = 'primary'
               
-            # Tag Transcanada/Yellowhead as trunk
-            if self.tags['ref'] >= 1 and self.tags['ref'] <= 3:
-              self.tags['highway'] = 'trunk'
+              # Secondary (500-899, 901, 940)
+              if ref >= 500 and ref < 900:
+                self.tags['highway'] = 'secondary'
               
-            if self.tags['ref'] == 16:
-              self.tags['highway'] = 'trunk'
-              
-            if self.tags['ref'] == 201 or self.tags['ref'] == 216:
-              self.tags['highway'] = 'trunk'
-        
+              # Tag Transcanada/Yellowhead as trunk
+              if ref >= 1 and ref <= 3 or ref == 16 or ref == 201 or ref == 216:
+                self.tags['highway'] = 'trunk'
+                
       if self.tags['nrn:datasetName'] == 'British Columbia':
         if self.tags.has_key('ref'):
         
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
           
-            # Tag Transcanada/Yellowhead as trunk 
-            if self.tags['ref'] == 1 or self.tags['ref'] == 16:
-              self.tags['highway'] = 'trunk'
+            for ref in self.tags['ref']:
+            
+              # Tag Transcanada/Yellowhead as trunk 
+              if ref == 1 or ref == 16:
+                self.tags['highway'] = 'trunk'
       
       if self.tags['nrn:datasetName'] == 'Yukon Territory':
         pass
@@ -439,7 +444,7 @@ class gmlHandler(sax.ContentHandler):
         
       # Catch all transcanada/yellowhead highway segments that we may have missed
       if self.tags.has_key('name'):
-        if (self.tags['name'] == 'TransCanada Highway' or self.tags['name'] == 'Yellowhead Highway') and self.tags['highway'] != 'motorway':
+        if ('TransCanada Highway' in self.tags['name'] or 'Yellowhead Highway' in self.tags['name']) and self.tags['highway'] != 'motorway':
           self.tags['highway'] = 'trunk'
     
     if name == 'nrn:FerryConnectionSegment' or name=='nrn:RoadSegment':
@@ -490,7 +495,7 @@ def setToString(tagset):
     
     for x in tagset:
       string = string + ";" + x
-    print string
+
     return string
 
 def main():

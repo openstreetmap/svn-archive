@@ -117,10 +117,9 @@ sub killafile($){
 #------------------------------------------------------
 sub downloadData
 {
-    my ($bbox,$bboxref,$DataFile) = @_;
+    my ($bbox,$bboxref,$DataFile,$URLS) = @_;
     
     killafile($DataFile);
-    my $URLS = sprintf("%s%s/*[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox);
 
     my @tempfiles;
     push(@tempfiles, $DataFile);
@@ -265,9 +264,21 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
     }
 
     my $filelist = [];
+    my $URLS;
+
     foreach $bboxRef (sort (keys %bbox)) 
     {
         print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
+        if ($bboxRef =~ m/AreaAndLabels/)
+        {
+            $URLS = sprintf("%s%s/nodes[bbox=%s] %s%s/ways[natural=*][bbox=%s]", 
+               $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef},
+               $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef});
+        }
+        else
+        {
+            $URLS = sprintf("%s%s/*[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef});
+        }
         $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
         my ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$DataFile);
         push(@{$filelist}, $DataFile) if (-s $DataFile > 0 and $status);

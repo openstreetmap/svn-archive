@@ -105,8 +105,8 @@
     $layer);
   
   $PrintableURL = sprintf(
-    "http://tah.openstreetmap.org/MapOf/index.php?lat=%d&amp;long=%d&amp;z=%d&amp;w=800&amp;h=600&amp;format=jpeg",
-      $Lat, $Lon, $z);
+    "http://tah.openstreetmap.org/MapOf/index.php?lat=%f&amp;long=%f&amp;z=%d&amp;w=800&amp;h=600&amp;format=jpeg",
+      $Lat, $Long, $z);
   
   $DataURL = sprintf("http://www.openstreetmap.org/api/0.5/map?bbox=%f,%f,%f,%f",
     $W,$S,$E,$N);

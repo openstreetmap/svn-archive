@@ -35,7 +35,7 @@ use tahconfig;
 use tahproject;
 
 my $Config = AppConfig->new({ 
-            CREATE => 1,                      # Autocreate unknown variables
+            CREATE => 1,                      # Autocreate unknown config variables
             GLOBAL => {
                     DEFAULT  => "<undef>",    # Create undefined Variables by default
                     ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
@@ -62,6 +62,9 @@ my $JobTime;
 # as used in sub GenerateTileset() and tileFilename()
 my $JobDirectory;
 
+#keep track of temporary files
+my @tempfiles;
+
 # We need to keep parent PID so that child get the correct files after fork()
 my $parent_pid = $PID;
 my $upload_pid = -1;
@@ -76,6 +79,10 @@ if(not defined $Zoom)
     $Zoom = 12;
     statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", "warning", $progressJobs, $progressPercent,1);
 }
+
+$JobDirectory = $Config->get("WorkingDirectory");
+mkdir $JobDirectory unless -d $JobDirectory;
+
 GenerateTilesets($X, $Y, $Zoom);
 
 
@@ -110,7 +117,7 @@ sub killafile($){
 #------------------------------------------------------
 sub downloadData
 {
-    my ($bbox,$DataFile) = @_;
+    my ($bbox,$bboxref,$DataFile) = @_;
     
     killafile($DataFile);
     my $URLS = sprintf("%s%s/*[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox);
@@ -122,7 +129,7 @@ sub downloadData
     foreach my $URL (split(/ /,$URLS)) 
     {
         ++$i;
-        my $partialFile = $Config->get("WorkingDirectory")."data-$PID-$i.osm";
+        my $partialFile = $Config->get("WorkingDirectory")."data-$PID-$bboxref-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data for ".$Config->get("Layers")." to ".$partialFile, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -166,12 +173,14 @@ sub downloadData
 sub GenerateTilesets ## TODO: split some subprocesses to own subs
 {
     my ($X, $Y, $Zoom) = @_;
-    
     $progress = 0;
     $progressPercent = 0;
     $progressJobs++;
     $currentSubTask = "getdata";
     
+    $JobDirectory = $Config->get("WorkingDirectory").$PID;
+    mkdir $JobDirectory unless -d $JobDirectory;
+
     my $maxCoords = (2 ** $Zoom - 1);
     
     if ( ($X < 0) or ($X > $maxCoords) or ($Y < 0) or ($Y > $maxCoords) )
@@ -180,53 +189,93 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         die("\n Coordinates out of bounds (0..$maxCoords)\n");
     }
 
-    my ($N, $S) = Project($Y, $Zoom);
-    my ($W, $E) = ProjectL($X, $Zoom);
-    
     my @lon;
     my @lat;
+    my $Z=$Zoom+2;
     
-    ($lon[0],$lon[1]) = ProjectL($X * 4, $Zoom + 2);
-    ($lon[2],$lon[3]) = ProjectL($X * 4 + 2, $Zoom + 2);
-    $lon[4]=$E;
+    ($lon[0],$lon[1]) = ProjectL($X * 4, $Z);
+    ($lon[2],$lon[3]) = ProjectL($X * 4 + 2, $Z);
+    ($lon[0],$lon[4]) = ProjectL($X, $Zoom);
 
-    ($lat[0],$lat[1]) = Project($Y * 4, $Zoom + 2);
-    ($lat[2],$lat[3]) = Project($Y * 4 + 2, $Zoom + 2);
-    $lat[4]=$S;
+    ($lat[0],$lat[1]) = Project($Y * 4, $Z);
+    ($lat[2],$lat[3]) = Project($Y * 4 + 2, $Z);
+    ($lat[0],$lat[4]) = Project($Y, $Zoom);
+
+    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", $lat[2], $lon[2]), $currentSubTask, $progressJobs, $progressPercent, 1);
 
     ## we now build our bboxes:
-    # TODO...
 
-    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $currentSubTask, $progressJobs, $progressPercent, 1);
-    
+    my $bboxRef;
+    my %bbox;
+    my $DataFile;
+
+    $bboxRef = sprintf("%d-AreaAndLabels",$Zoom); # get everything outside the tile area that might affect the tile itself, like areas and large labels.
+
+    my $N1 = $lat[0] + ($lat[0] - $lat[4]) * $Config->get("BorderN");
+    my $S1 = $lat[4] - ($lat[0] - $lat[4]) * $Config->get("BorderS");
+    my $E1 = $lon[4] + ($lon[4] - $lon[0]) * $Config->get("BorderE");
+    my $W1 = $lon[0] - ($lon[4] - $lon[0]) * $Config->get("BorderW");
+
     # Adjust requested area to avoid boundary conditions
-    my $N1 = $N + ($N-$S)*$Config->get("BorderN");
-    my $S1 = $S - ($N-$S)*$Config->get("BorderS");
-    my $E1 = $E + ($E-$W)*$Config->get("BorderE");
-    my $W1 = $W - ($E-$W)*$Config->get("BorderW");
-
     # TODO: verify the current system cannot handle segments/ways crossing the 
     # 180/-180 deg meridian and implement proper handling of this case, until 
     # then use this workaround: 
 
-    if($W1 <= -180) {
+    if($W1 < -180) {
       $W1 = -180; # api apparently can handle -180
     }
     if($E1 > 180) {
       $E1 = 180;
     }
 
-    my $bbox = sprintf("%f,%f,%f,%f",
+    $bbox{$bboxRef} = sprintf("%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
 
-    my $DataFile = $Config->get("WorkingDirectory").$PID."/data-$Zoom.osm"; ## FIXME broken TODO: make sure tempdir is created.
+
+    # now build the 16 zoom+2 (usually z14) bboxes
+
+    #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)
+    #
+    #  00.00  00.01  01.00  01.01
+    #
+    #  00.10  00.11  01.10  01.11
+    #
+    #  10.00  10.01  11.00  11.01
+    #
+    #  10.10  10.11  11.10  11.11
+
+
+    for (my $QR="0"; $QR le "1"; $QR++)
+    {
+        for (my $QC="0"; $QC le "1"; $QC++)
+        {
+            for (my $SR="0"; $SR le "1"; $SR++)
+            {
+                for (my $SC="0"; $SC le "1"; $SC++)
+                {
+                    $N1 = $lat[$QR * 2 + $SR];
+                    $S1 = $lat[$QR * 2 + $SR + 1];
+                    $W1 = $lon[$QC * 2 + $SC];
+                    $E1 = $lon[$QC * 2 + $SC + 1];
+                    $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 12-0..3-0..3 will be used later in stitching.
+                    $bbox{$bboxRef} = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
+                }
+            }
+        }
+    }
 
     my $filelist = [];
-    my ($status,@tempfiles) = downloadData($bbox,$DataFile);
-    push(@{$filelist}, $DataFile) if (-s $DataFile > 0 and $status);
+    foreach $bboxRef (sort (keys %bbox)) 
+    {
+        print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
+        $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
+        my ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$DataFile);
+        push(@{$filelist}, $DataFile) if (-s $DataFile > 0 and $status);
+    }
+
+    $DataFile = $Config->get("WorkingDirectory").$PID."/data-z12.osm"; # FIXME: the part between "data-" annd ".osm" should be a variable, it's needed later
 
     mergeOsmFiles($DataFile, $filelist);
-
 
     if ($Config->get("KeepDataFile"))
     {
@@ -236,7 +285,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
     $currentSubTask = "Preproc";
     
     # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
-    $JobTime = [stat $DataFile]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure from when the data is
+    $JobTime = [stat $DataFile]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure for from when the data is
     
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
@@ -267,7 +316,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         $currentSubTask = $layer;
         
         $JobDirectory = sprintf("%s%s_%d_%d_%d.tmpdir",
-                                $Config->get("WorkingDirectory"),
+                                $Config->get("WorkingDirectory").$PID."/",
                                 $Config->get($layer."_Prefix"),
                                 $Zoom, $X, $Y);
         mkdir $JobDirectory unless -d $JobDirectory;
@@ -278,7 +327,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         # Faff around
         for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
         {
-            killafile($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg");
+            killafile($Config->get("WorkingDirectory").$PID."/output-$parent_pid-z$i.svg");
         }
         
         my $Margin = " " x ($Zoom - 8);
@@ -288,16 +337,16 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
         #------------------------------------------------------
-        my @ppchain = ($PID);
+        my @ppchain = ("z12");
         # config option may be empty, or a comma separated list of preprocessors
         foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
         {
             my $inputFile = sprintf("%sdata-%s.osm", 
-                $Config->get("WorkingDirectory"),
+                $Config->get("WorkingDirectory").$PID."/",
                 join("-", @ppchain));
             push(@ppchain, $preprocessor);
             my $outputFile = sprintf("%sdata-%s.osm", 
-                $Config->get("WorkingDirectory"),
+                $Config->get("WorkingDirectory").$PID."/",
                 join("-", @ppchain));
 
             if (-f $outputFile)
@@ -356,7 +405,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
             }
             else
             {
-                die "Invalid preprocessing step '$preprocessor'";
+                die "I have no preprocessor called '$preprocessor'";
             }
 ## Uncomment to have the output files checked for validity
 #            if( $preprocessor ne "maplint" )
@@ -376,72 +425,22 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         # Add bounding box to osmarender
         # then set the data source
         # then transform it to SVG
-        if ($Config->get("Fork")) 
+        
+        for (my $i = $Zoom ; $i <= $maxzoom; $i++)
         {
-            my $minimum_zoom = $Zoom;
-            my $increment = 2 * $Config->get("Fork");
-            my @children_pid;
-            my $error = 0;
-            for (my $i = 0; $i < 2 * $Config->get("Fork") - 1; $i ++) 
-            {
-                my $pid = fork();
-                if (not defined $pid) 
-                {
-                    cleanUpAndDie("GenerateTileset: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
-                }
-                elsif ($pid == 0) 
-                {
-                    for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
-                    {
-                        if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E)) # if true then error occured
-                        {
-                             exit(1);
-                        }
-                    }
-                    exit(0);
-                }
-                else
-                {
-                    push(@children_pid, $pid);
-                    $minimum_zoom ++;
-                }
-            }
-            for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
-            {
-                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
-                {
-                    $error = 1;
-                    last;
-                }
-            }
-            foreach (@children_pid) 
-            {
-                waitpid($_, 0);
-                $error |= $?;
-            }
-            if ($error) 
+            if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $lat[0], $lat[4], $lon[0], $lon[4]))
             {
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
                 return 0;
             }
         }
-        else
-        {
-            for (my $i = $Zoom ; $i <= $maxzoom; $i++)
-            {
-                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
-                {
-                    foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
-                    return 0;
-                }
-            }
-        }
+        
         
         # Find the size of the SVG file
         my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory")."output-$parent_pid-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
-        my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $lat[0], $lat[4], $lon[0], $lon[4], 0,0,$ImgW,$ImgH,$ImgH,0);
         if (!$success)
         {
             addFault("renderer",1);
@@ -484,3 +483,116 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
     return 1;
 }
+
+
+#-----------------------------------------------------------------------------
+# GET a URL and save contents to file
+#-----------------------------------------------------------------------------
+sub DownloadFile 
+{
+    my ($URL, $File, $UseExisting) = @_;
+
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config->get("DownloadTimeout"));
+    $ua->agent("tilesAtHome");
+    $ua->env_proxy();
+
+    if(!$UseExisting) 
+    {
+        killafile($File);
+    }
+
+    # Note: mirror sets the time on the file to match the server time. This
+    # is important for the handling of JobTime later.
+    $ua->mirror($URL, $File);
+
+    doneMessage(sprintf("done, %d bytes", -s $File));
+}
+#-----------------------------------------------------------------------------
+# Used to display task completion. Only for verbose mode.
+#-----------------------------------------------------------------------------
+sub doneMessage
+{
+    my ($msg,$Verbose) = @_;
+    $msg = "done" if ($msg eq "");
+
+    if ($Verbose)
+    {
+        print STDERR "$msg\n";
+        return;
+    }
+}
+
+#-----------------------------------------------------------------------------
+# Merge multiple OSM files into one, making sure that elements are present in
+# the destination file only once even if present in more than one of the input
+# files.
+# 
+# This has become necessary in the course of supporting maplint, which would
+# get upset about duplicate objects created by combining downloaded stripes.
+#-----------------------------------------------------------------------------
+sub mergeOsmFiles
+{
+    my ($destFile, $sourceFiles) = @_;
+    my $existing = {};
+
+    # If there's only one file, just copy the input to the output
+    if( scalar(@$sourceFiles) == 1 )
+    {
+      copy $sourceFiles->[0], $destFile;
+      killafile ($sourceFiles->[0]) if (! $Config->get("Debug"));
+      return;
+    }
+    
+    open (DEST, "> $destFile");
+
+    print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
+    my $header = 0;
+
+    foreach my $sourceFile(@{$sourceFiles})
+    {
+        open(SOURCE, $sourceFile);
+        while(<SOURCE>)
+        {
+            next if /^\s*<\?xml/;
+            # We want to copy the version number, but only the first time (obviously)
+            # Handle where the input doesn't have a version
+            if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
+            {
+              if( not $header )
+              {
+                my $version = $1 || "'".$Config->get("OSMVersion")."'";
+                print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
+                $header = 1;
+              }
+              next;
+            }
+            last if (/^\s*<\/osm>/);
+            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
+            {
+                my ($what, $id, $slash) = ($1, $2, $3);
+                my $key = substr($what, 0, 1) . $id;
+                if (defined($existing->{$key}))
+                {
+                    # object exists already. skip!
+                    next if ($slash eq "/");
+                    while(<SOURCE>)
+                    {
+                        last if (/^\s*<\/$what>/);
+                    }
+                    next;
+                }
+                else
+                {
+                    # object didn't exist, note
+                    $existing->{$key} = 1;
+                }
+            }
+            print DEST;
+        }
+        close(SOURCE);
+        killafile ($sourceFile) if (!$Config->get("Debug"));
+    }
+    print DEST "</osm>\n";
+    close(DEST);
+}
+

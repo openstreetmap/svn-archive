@@ -271,16 +271,22 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
         if ($bboxRef =~ m/AreaAndLabels/)
         {
-            $URLS = sprintf("%s%s/nodes[bbox=%s] %s%s/ways[natural=*][bbox=%s]", 
-               $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef},
-               $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef});
+        #area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*]
+            $URLS = sprintf("%s%s/node[bbox=%s] %s%s/way[area=yes][bbox=%s] %s%s/way[leisure=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[military=*][bbox=%s] %s%s/way[natural=*][bbox=%s] %s%s/relation[bbox=%s]", 
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
+               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef});
         }
         else
         {
             $URLS = sprintf("%s%s/*[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef});
         }
         $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
-        my ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$DataFile);
+        my ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$DataFile,$URLS);
         push(@{$filelist}, $DataFile) if (-s $DataFile > 0 and $status);
     }
 

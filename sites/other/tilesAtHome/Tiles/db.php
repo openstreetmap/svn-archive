@@ -39,6 +39,11 @@
     BlankTile("error", TRUE);
     }
 
+  // if the layer is transparent, then just return that
+  if (layerIsTransparent($Layer)) {
+    BlankTile("transparent", TRUE);
+    }
+
   // look for landsea tiles if everything else fails
   if(1){
     $Blank = LookUpBlankTile($X,$Y,$Z,$LayerID);

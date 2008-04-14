@@ -49,7 +49,7 @@ function layerMaxZoom($layername){
 # returns whether our layer is a base layer or an transparent overlay
 # It is passed a "layer number".
 #------------------------------------------------------------------------------
-function layerIsTransparent($layername){
+function layerIsTransparent($layer){
   global $layerData;
   $data = $layerData['transparent'][$layer];
   return ($data != NULL?$data:0);

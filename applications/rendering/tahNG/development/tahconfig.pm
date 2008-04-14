@@ -41,16 +41,18 @@ sub ApplyConfigLogic
     ## switch on verbose mode if Debug is set
     if ($Config->get("Debug"))
     {
-        $Config->set("Verbose") = 1;
+        print $Config->get("Verbose")."\n";
+        $Config->set("Verbose",1);
     }
 
     if (($Config->get("WorkingDirectory") !~ /\/$/) and ("MSWin32" ne $^O))
     {
-        $Config->set("WorkingDirectory") = $Config->get("WorkingDirectory") . "/";
+        $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "/");
     }
     elsif (($Config->get("WorkingDirectory") !~ /\\$/) and ("MSWin32" eq $^O))
     {
-        $Config->set("WorkingDirectory") = $Config->get("WorkingDirectory") . "\\";
+        $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "\\")
+;
     }
 
 }

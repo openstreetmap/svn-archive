@@ -40,7 +40,7 @@
     }
 
   // if the layer is transparent, then just return that
-  if (layerIsTransparent($Layer)) {
+  if (layerIsTransparent($LayerID)) {
     BlankTile("transparent", TRUE);
     }
 

@@ -128,7 +128,7 @@ sub downloadData
     foreach my $URL (split(/ /,$URLS)) 
     {
         ++$i;
-        my $partialFile = $Config->get("WorkingDirectory")."data-$PID-$bboxref-$i.osm";
+        my $partialFile = $Config->get("WorkingDirectory").$PID."/data-$PID-$bboxref-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data for ".$Config->get("Layers")." to ".$partialFile, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -272,7 +272,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         if ($bboxRef =~ m/AreaAndLabels/)
         {
         #area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*]
-            $URLS = sprintf("%s%s/node[bbox=%s] %s%s/way[area=yes][bbox=%s] %s%s/way[leisure=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[military=*][bbox=%s] %s%s/way[natural=*][bbox=%s] %s%s/relation[bbox=%s]", 
+            $URLS = sprintf("%s%s/node[bbox=%s] %s%s/way[area=yes][bbox=%s] %s%s/way[leisure=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[military=*][bbox=%s] %s%s/way[natural=*][bbox=%s] %s%s/relation[bbox=%s]",
                $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
                $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
                $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},

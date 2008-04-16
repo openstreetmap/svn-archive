@@ -322,16 +322,16 @@ sub mergeOsmFiles
             # Handle where the input doesn't have a version
             if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
             {
-              if( not $header )
-              {
-                my $version = $1 || "'".$Config->get("OSMVersion")."'";
-                print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
-                $header = 1;
-              }
-              next;
+                if( not $header )
+                {
+                    my $version = $1 || "'".$Config->get("OSMVersion")."'";
+                    print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
+                    $header = 1;
+                }
+                next;
             }
             last if (/^\s*<\/osm>/);
-            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
+            if (/^\s*<(node|segment|way|relation) id=['"](\d+)['"].*(.)>/)
             {
                 my ($what, $id, $slash) = ($1, $2, $3);
                 my $key = substr($what, 0, 1) . $id;
@@ -360,6 +360,71 @@ sub mergeOsmFiles
     close(DEST);
 }
 
+
+#-----------------------------------------------------------------------------
+# cut out a bbox from OSM data, keeping tagged nodes and area types outside 
+# the bbox, throw away all other entities that are irrelevant to the bbox.
+#-----------------------------------------------------------------------------
+sub cropDataToBBox
+{
+    #area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*]
+    my ($bllat, $bllon, $trlat, $trlon, $sourceFile, $destFile) = @_;
+    my $Config = $main::Config;
+    open (DEST, "> $destFile") or return 0;
+    open (SOURCE, $sourceFile);
+    my $KeepNode = {};
+    my $KeepWay = {};
+    my $KeepRelation = {};
+    my ($what, $id, $lat, $lon, $slash);
+    while (<SOURCE>)
+    {
+        print DEST; # FIXME: don't blindly copy all the data
+        if (/^\s*<(node).*id=['"](\d+)['"].*lat=['"](\d+\.\d+)['"].*lon=['"](\d+\.\d+)['"].*(\/?)>/)
+        {
+            ($what, $id, $lat, $lon, $slash)=($1,$2,$3,$4,$5);
+            print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") > 1);
+            if ($lat > $bllat and $lat < $trlat and $lon > $bllon and $lon < $trlon)
+            {
+                $KeepNode{$id}=1;
+            }
+            next if ( $slash eq "/" );
+        }
+        elsif (/^\s*<(way|relation).*id=['"](\d+)['"].*(\/?)>/)
+        {
+            ($what, $id, $slash)=($1,$2,$3);
+            ($lat, $lon) = (undef,undef);
+            print "*** $what   id=$id slash=$slash \n" if ($Config->get("Debug") > 1);
+            next if ( $slash eq "/" );
+            while (<SOURCE>)
+            {
+                last if (/^\s*<\/$what>/);
+                if ($what eq "way" and (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/))
+                {
+                    my ($nodeId,$slash) = ($1,$2);
+                    $KeepWay{$id} = 1  if ($KeepNode{$nodeId});
+                }
+                elsif ($what eq "relation" and (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/))
+                {
+                    my ($type,$ref,$slash) = ($1,$2,$3);
+                    if ($type eq "node")
+                    {
+                        $KeepRelation{$id} = 1  if ($KeepNode{$ref});
+                    }
+                    if ($type eq "way")
+                    { 
+                        $KeepRelation{$id} = 1  if ($KeepWay{$ref});
+                    }
+                    if ($type eq "relation")
+                    { 
+                        $KeepRelation{$id} = 1  if ($KeepRelation{$ref}); # FIXME this only works if the relation referenced has already been checked
+                    }
+                }
+            }
+        }
+    }
+    close(SOURCE);
+    close(DEST);
+}
 
 #-----------------------------------------------------------------------------
 # Clean up temporary files before exit, then exit or return with error 
@@ -391,6 +456,7 @@ sub cleanUpAndDie
     print STDERR "\n$Reason\n" if (! $Config->get("Verbose")); #print error only once, and only if fatal.
     exit($Severity);
 }
+
 
 1;
 

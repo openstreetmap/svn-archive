@@ -206,8 +206,15 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
     $bbox{$bboxRef} = sprintf("%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
 
+    my $status;
+    my $filelist = [];
+    my $URLS = sprintf("%s%s/*[bbox=%s]",
+         $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef});
 
-    # now build the 16 zoom+2 (usually z14) bboxes
+    my $rootDataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
+    ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$rootDataFile,$URLS);
+
+    ## now build the 16 zoom+2 (usually z14) bboxes
 
     #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)
     #
@@ -239,36 +246,22 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         }
     }
 
-    my $filelist = [];
-    my $URLS;
-
     foreach $bboxRef (sort (keys %bbox)) 
     {
         print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
         if ($bboxRef =~ m/AreaAndLabels/)
         {
-        #area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*]
-            $URLS = sprintf("%s%s/node[bbox=%s] %s%s/way[area=yes][bbox=%s] %s%s/way[leisure=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[military=*][bbox=%s] %s%s/way[natural=*][bbox=%s] %s%s/relation[bbox=%s]",
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef},
-               $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef});
+            $DataFile = $Config->get("WorkingDirectory").$PID."/data-z12.osm"; # FIXME: the part between "data-" annd ".osm" should be a variable, it's needed later
         }
         else
         {
-            $URLS = sprintf("%s%s/*[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$bbox{$bboxRef});
+            $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm";
+
         }
-        $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
-        my ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$DataFile,$URLS);
-        push(@{$filelist}, $DataFile) if (-s $DataFile > 0 and $status);
+        print "cropping $bbox{$bboxRef} from $rootDataFile to $DataFile \n";
+        cropDataToBBox(split(/,/,$bbox{$bboxRef}), $rootDataFile, $DataFile); 
     }
 
-    $DataFile = $Config->get("WorkingDirectory").$PID."/data-z12.osm"; # FIXME: the part between "data-" annd ".osm" should be a variable, it's needed later
-
-    mergeOsmFiles($DataFile, $filelist);
 
     if ($Config->get("KeepDataFile"))
     {

@@ -31,21 +31,21 @@ use AppConfig qw(:argcount);
 use FindBin qw($Bin);
 use English '-no_match_vars';
 use tahconfig;
-#use tahlib;
+use tahlib;
 use tahproject;
 
-my $Config = AppConfig->new({ 
-            CREATE => 1,                      # Autocreate unknown config variables
-            GLOBAL => {
-                    DEFAULT  => "<undef>",    # Create undefined Variables by default
-                    ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
+our $Config = AppConfig->new({
+                CREATE => 1,                      # Autocreate unknown config variables
+                GLOBAL => {
+                  DEFAULT  => "<undef>",    # Create undefined Variables by default
+                  ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
                 }
-        });
+              });
 
 $Config->define("help|usage!");
-$Config->file("config.defaults", "authentication.conf", "tahng.conf");
-$Config->args();
-$Config->file("config.svn");
+$Config->file("config.defaults", "authentication.conf", "tahng.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
+$Config->args();              # overwrite config options with command line options
+$Config->file("config.svn");  # overwrite with hardcoded values that must not be changed
 ApplyConfigLogic($Config);
 my %EnvironmentInfo = CheckConfig($Config);
 
@@ -83,33 +83,9 @@ if(not defined $Zoom)
 $JobDirectory = $Config->get("WorkingDirectory");
 mkdir $JobDirectory unless -d $JobDirectory;
 
-GenerateTilesets($X, $Y, $Zoom);
-
-
-sub statusMessage
+if ($Mode eq "xy")
 {
-    my $message = shift();
-    print $message."\n";
-}
-
-sub resetFault
-{
-   1;
-}
-
-sub runCommand
-{
-    my ($cmd,$mainPID) = @_;
-    my $retval = system($cmd);
-    return $retval == 0;
-}
-
-#-----------------------------------------------------------------------------
-# Delete a file if it exists
-#-----------------------------------------------------------------------------
-sub killafile($){
-  my $file = shift();
-  unlink $file if(-f $file);
+    GenerateTilesets($X, $Y, $Zoom);
 }
 
 #------------------------------------------------------
@@ -502,114 +478,5 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
 }
 
 
-#-----------------------------------------------------------------------------
-# GET a URL and save contents to file
-#-----------------------------------------------------------------------------
-sub DownloadFile 
-{
-    my ($URL, $File, $UseExisting) = @_;
 
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config->get("DownloadTimeout"));
-    $ua->agent("tilesAtHome");
-    $ua->env_proxy();
-
-    if(!$UseExisting) 
-    {
-        killafile($File);
-    }
-
-    # Note: mirror sets the time on the file to match the server time. This
-    # is important for the handling of JobTime later.
-    $ua->mirror($URL, $File);
-
-    doneMessage(sprintf("done, %d bytes", -s $File));
-}
-#-----------------------------------------------------------------------------
-# Used to display task completion. Only for verbose mode.
-#-----------------------------------------------------------------------------
-sub doneMessage
-{
-    my ($msg,$Verbose) = @_;
-    $msg = "done" if ($msg eq "");
-
-    if ($Verbose)
-    {
-        print STDERR "$msg\n";
-        return;
-    }
-}
-
-#-----------------------------------------------------------------------------
-# Merge multiple OSM files into one, making sure that elements are present in
-# the destination file only once even if present in more than one of the input
-# files.
-# 
-# This has become necessary in the course of supporting maplint, which would
-# get upset about duplicate objects created by combining downloaded stripes.
-#-----------------------------------------------------------------------------
-sub mergeOsmFiles
-{
-    my ($destFile, $sourceFiles) = @_;
-    my $existing = {};
-
-    # If there's only one file, just copy the input to the output
-    if( scalar(@$sourceFiles) == 1 )
-    {
-      copy $sourceFiles->[0], $destFile;
-      killafile ($sourceFiles->[0]) if (! $Config->get("Debug"));
-      return;
-    }
-    
-    open (DEST, "> $destFile");
-
-    print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
-    my $header = 0;
-
-    foreach my $sourceFile(@{$sourceFiles})
-    {
-        open(SOURCE, $sourceFile);
-        while(<SOURCE>)
-        {
-            next if /^\s*<\?xml/;
-            # We want to copy the version number, but only the first time (obviously)
-            # Handle where the input doesn't have a version
-            if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
-            {
-              if( not $header )
-              {
-                my $version = $1 || "'".$Config->get("OSMVersion")."'";
-                print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
-                $header = 1;
-              }
-              next;
-            }
-            last if (/^\s*<\/osm>/);
-            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
-            {
-                my ($what, $id, $slash) = ($1, $2, $3);
-                my $key = substr($what, 0, 1) . $id;
-                if (defined($existing->{$key}))
-                {
-                    # object exists already. skip!
-                    next if ($slash eq "/");
-                    while(<SOURCE>)
-                    {
-                        last if (/^\s*<\/$what>/);
-                    }
-                    next;
-                }
-                else
-                {
-                    # object didn't exist, note
-                    $existing->{$key} = 1;
-                }
-            }
-            print DEST;
-        }
-        close(SOURCE);
-        killafile ($sourceFile) if (!$Config->get("Debug"));
-    }
-    print DEST "</osm>\n";
-    close(DEST);
-}
 

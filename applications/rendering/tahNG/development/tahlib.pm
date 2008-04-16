@@ -3,7 +3,7 @@ use strict;
 # =====================================================================
 # The following is duplicated from tilesGen.pl
 # =====================================================================
-my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
+
 my $lastmsglen = 0;
 
 my $idleFor = 0;
@@ -20,11 +20,12 @@ my %madeDir;
 #-----------------------------------------------------------------------------
 sub statusMessage 
 {
-    my ($msg, $Verbose, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
+    my ($msg, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
+    my $Config = $main::Config;
     
     my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
 
-    if ($Verbose)
+    if ($Config->get("Verbose"))
     {
         print STDERR "$toprint\n";
         return;
@@ -50,10 +51,12 @@ sub statusMessage
 #-----------------------------------------------------------------------------
 sub doneMessage
 {
-    my ($msg,$Verbose) = @_;
+    my $msg = shift();
+    my $Config = $main::Config;
+
     $msg = "done" if ($msg eq "");
 
-    if ($Verbose)
+    if ($Config->get("Verbose"))
     {
         print STDERR "$msg\n";
         return;
@@ -65,8 +68,9 @@ sub doneMessage
 #-----------------------------------------------------------------------------
 sub talkInSleep
 {
-    my ($message, $duration,$progstart,$Verbose) = @_;
-    if ($Verbose)
+    my ($message, $duration,$progstart) = @_;
+    my $Config = $main::Config;
+    if ($Config->get("Verbose"))
     {
         print STDERR "$message: sleeping $duration seconds\n";
         sleep $duration;
@@ -146,18 +150,19 @@ sub resetFault
 sub runCommand
 {
     my ($cmd,$mainPID) = @_;
+    my $Config = $main::Config;
 
     # $message is deprecated, issue statusmessage prior to exec.
     # statusMessage($message, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 
 
-    if ($Config{Verbose})
+    if ($Config->get("Verbose"))
     {
         my $retval = system($cmd);
         return $retval == 0;
     }
 
-    my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";
+    my $ErrorFile = $Config->get("WorkingDirectory")."/".$mainPID.".stderr";
     my $retval = system("$cmd 2> $ErrorFile");
     my $ok = 0;
     my $ExtraInfo = "\nAdditional info about the Error(s):\n";
@@ -190,7 +195,7 @@ sub runCommand
                 if (grep(/preferences.xml/,$_))
                 {
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
-                    if ($Config{"AutoResetInkscapePrefs"} == 1)
+                    if ($Config->get("AutoResetInkscapePrefs") == 1)
                     {
                         $ExtraInfo=$ExtraInfo."\n   AutoResetInkscapePrefs set, trying to reset ~/.inkscape/preferences.xml";
                         unlink (glob("~/.inkscape/preferences.xml")) or addFault("fatal",1);
@@ -262,8 +267,9 @@ sub MagicMkdir
 sub DownloadFile 
 {
     my ($URL, $File, $UseExisting) = @_;
+    my $Config = $main::Config;
 
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config{DownloadTimeout});
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config->get("DownloadTimeout"));
     $ua->agent("tilesAtHome");
     $ua->env_proxy();
 
@@ -271,11 +277,87 @@ sub DownloadFile
     {
         killafile($File);
     }
+
     # Note: mirror sets the time on the file to match the server time. This
     # is important for the handling of JobTime later.
-        $ua->mirror($URL, $File);
+    $ua->mirror($URL, $File);
 
     doneMessage(sprintf("done, %d bytes", -s $File));
+}
+
+#-----------------------------------------------------------------------------
+# Merge multiple OSM files into one, making sure that elements are present in
+# the destination file only once even if present in more than one of the input
+# files.
+# 
+# This has become necessary in the course of supporting maplint, which would
+# get upset about duplicate objects created by combining downloaded stripes.
+#-----------------------------------------------------------------------------
+sub mergeOsmFiles
+{
+    my ($destFile, $sourceFiles) = @_;
+    my $Config = $main::Config;
+    my $existing = {};
+
+    # If there's only one file, just copy the input to the output
+    if( scalar(@$sourceFiles) == 1 )
+    {
+      copy $sourceFiles->[0], $destFile;
+      killafile ($sourceFiles->[0]) if (! $Config->get("Debug"));
+      return;
+    }
+    
+    open (DEST, "> $destFile");
+
+    print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
+    my $header = 0;
+
+    foreach my $sourceFile(@{$sourceFiles})
+    {
+        open(SOURCE, $sourceFile);
+        while(<SOURCE>)
+        {
+            next if /^\s*<\?xml/;
+            # We want to copy the version number, but only the first time (obviously)
+            # Handle where the input doesn't have a version
+            if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
+            {
+              if( not $header )
+              {
+                my $version = $1 || "'".$Config->get("OSMVersion")."'";
+                print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
+                $header = 1;
+              }
+              next;
+            }
+            last if (/^\s*<\/osm>/);
+            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
+            {
+                my ($what, $id, $slash) = ($1, $2, $3);
+                my $key = substr($what, 0, 1) . $id;
+                if (defined($existing->{$key}))
+                {
+                    # object exists already. skip!
+                    next if ($slash eq "/");
+                    while(<SOURCE>)
+                    {
+                        last if (/^\s*<\/$what>/);
+                    }
+                    next;
+                }
+                else
+                {
+                    # object didn't exist, note
+                    $existing->{$key} = 1;
+                }
+            }
+            print DEST;
+        }
+        close(SOURCE);
+        killafile ($sourceFile) if (!$Config->get("Debug"));
+    }
+    print DEST "</osm>\n";
+    close(DEST);
 }
 
 
@@ -286,26 +368,27 @@ sub DownloadFile
 sub cleanUpAndDie
 {
     my ($Reason,$Mode,$Severity,$mainPID) = @_;
+    my $Config = $main::Config;
 
     ## TODO: clean up *.tempdir too
 
-    print STDERR "\n$Reason\n" if ($Config{"Verbose"});
+    print STDERR "\n$Reason\n" if ($Config->get("Verbose"));
 
-    if (! $Config{"Debug"}) 
+    if (! $Config->get("Debug")) 
     {
-        opendir (TEMPDIR, $Config{"WorkingDirectory"});
+        opendir (TEMPDIR, $Config->get("WorkingDirectory"));
         my @files = grep { /$mainPID/ } readdir(TEMPDIR); # FIXME: this will get files from other processes using the same Working Directory for low pids because the numbers will collide with tile coordinates
         closedir (TEMPDIR);
         while (my $file = shift @files)
         {
-             print STDERR "deleting ".$Config{"WorkingDirectory"}."/".$file."\n" if ($Config{"Verbose"});
-             killafile($Config{"WorkingDirectory"}."/".$file);
+             print STDERR "deleting ".$Config->get("WorkingDirectory")."/".$file."\n" if ($Config->get("Verbose"));
+             killafile($Config->get("WorkingDirectory")."/".$file);
         }
         
     }
     
     return 0 if ($Mode eq "loop");
-    print STDERR "\n$Reason\n" if (! $Config{"Verbose"}); #print error only once, and only if fatal.
+    print STDERR "\n$Reason\n" if (! $Config->get("Verbose")); #print error only once, and only if fatal.
     exit($Severity);
 }
 

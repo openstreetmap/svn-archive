@@ -3,6 +3,10 @@
 # $Header: $
 
 *josm-1.5_p546 (17 Feb 2008)
+  16 Apr 2008; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +josm-1.5_p607.ebuild:
+  Version bump
+
+*josm-1.5_p546 (17 Feb 2008)
 
   17 Feb 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p546.ebuild:
   version bump

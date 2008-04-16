@@ -323,7 +323,7 @@ sub mergeOsmFiles
               next;
             }
             last if (/^\s*<\/osm>/);
-            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
+            if (/^\s*<(node|segment|way|relation) id=['"](\d+)['"].*(.)>/)
             {
                 my ($what, $id, $slash) = ($1, $2, $3);
                 my $key = substr($what, 0, 1) . $id;

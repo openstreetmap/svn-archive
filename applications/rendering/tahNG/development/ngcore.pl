@@ -170,11 +170,11 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
     
     ($lon[0],$lon[1]) = ProjectL($X * 4, $Z);
     ($lon[2],$lon[3]) = ProjectL($X * 4 + 2, $Z);
-    ($lon[0],$lon[4]) = ProjectL($X, $Zoom);
+    (undef,$lon[4]) = ProjectL($X, $Zoom);
 
     ($lat[0],$lat[1]) = Project($Y * 4, $Z);
     ($lat[2],$lat[3]) = Project($Y * 4 + 2, $Z);
-    ($lat[0],$lat[4]) = Project($Y, $Zoom);
+    (undef,$lat[4]) = Project($Y, $Zoom);
 
     statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", $lat[2], $lon[2]), $currentSubTask, $progressJobs, $progressPercent, 1);
 

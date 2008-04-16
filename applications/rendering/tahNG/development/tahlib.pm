@@ -360,7 +360,6 @@ sub mergeOsmFiles
     close(DEST);
 }
 
-
 #-----------------------------------------------------------------------------
 # cut out a bbox from OSM data, keeping tagged nodes and area types outside 
 # the bbox, throw away all other entities that are irrelevant to the bbox.
@@ -370,22 +369,36 @@ sub cropDataToBBox
     #area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*]
     my ($bllat, $bllon, $trlat, $trlon, $sourceFile, $destFile) = @_;
     my $Config = $main::Config;
-    open (DEST, "> $destFile") or return 0;
-    open (SOURCE, $sourceFile);
+    open (SOURCE, $sourceFile) or die("unable to read file $sourceFile");
     my $KeepNode = {};
     my $KeepWay = {};
     my $KeepRelation = {};
     my ($what, $id, $lat, $lon, $slash);
     while (<SOURCE>)
     {
-        print DEST; # FIXME: don't blindly copy all the data
         if (/^\s*<(node).*id=['"](\d+)['"].*lat=['"](\d+\.\d+)['"].*lon=['"](\d+\.\d+)['"].*(\/?)>/)
         {
             ($what, $id, $lat, $lon, $slash)=($1,$2,$3,$4,$5);
             print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") > 1);
+
             if ($lat > $bllat and $lat < $trlat and $lon > $bllon and $lon < $trlon)
             {
-                $KeepNode{$id}=1;
+                $KeepNode->{$id}=1;
+            }
+            else
+            {
+                while(<SOURCE>)
+                {
+                    last if (/^\s*<\/$what>/);
+                    if (/^\s*<tag.*k=['"](.+)['"].*v=['"](.+)['"].*(\/?)>/)
+                    {
+                        my ($key,$value,$subslash) = ($1,$2,$3);
+                        if ($key eq "name") #assume label relevant to tile if "name" present
+                        {
+                            $KeepNode->{$id}=1;
+                        }
+                    }
+                }
             }
             next if ( $slash eq "/" );
         }
@@ -400,26 +413,100 @@ sub cropDataToBBox
                 last if (/^\s*<\/$what>/);
                 if ($what eq "way" and (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/))
                 {
-                    my ($nodeId,$slash) = ($1,$2);
-                    $KeepWay{$id} = 1  if ($KeepNode{$nodeId});
+                    my ($ref,$subslash) = ($1,$2);# TODO: check for continuation on next line if slash is not there 
+                    $KeepWay->{$id} = 1  if ($KeepNode->{$ref});
                 }
                 elsif ($what eq "relation" and (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/))
                 {
-                    my ($type,$ref,$slash) = ($1,$2,$3);
+                    my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for continuation on next line if slash is not there 
                     if ($type eq "node")
                     {
-                        $KeepRelation{$id} = 1  if ($KeepNode{$ref});
+                        $KeepRelation->{$id} = 1  if ($KeepNode->{$ref});
                     }
-                    if ($type eq "way")
-                    { 
-                        $KeepRelation{$id} = 1  if ($KeepWay{$ref});
+                    elsif ($type eq "way")
+                    {
+                        $KeepRelation->{$id} = 1  if ($KeepWay->{$ref});
                     }
-                    if ($type eq "relation")
-                    { 
-                        $KeepRelation{$id} = 1  if ($KeepRelation{$ref}); # FIXME this only works if the relation referenced has already been checked
+                    elsif ($type eq "relation")
+                    {
+                        $KeepRelation->{$id} = 1  if ($KeepRelation->{$ref}); # FIXME this only works if the relation referenced has already been checked
                     }
                 }
             }
+        }
+    }
+    seek(SOURCE,0,0); # restart at the beginning and mark all nodes, ways and relations "to keep" that are referenced by already kept relations
+    while(<SOURCE>)
+    {
+        if (/^\s*<(relation).*id=['"](\d+)['"].*(\/?)>/)
+        {
+            ($what,$id,$slash)=($1,$2,$3);
+            if ($KeepRelation->{$id})
+            {
+                while(<SOURCE>)
+                {
+                    last if (/^\s*<\/$what>/);
+                    if (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/)
+                    {
+                        my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for continuation on next line if slash is not there 
+                        if ($type eq "node")
+                        {
+                            $KeepNode->{$ref} = 1;
+                        }
+                        elsif ($type eq "way")
+                        { 
+                            $KeepWay->{$ref} = 1;
+                        }
+                        elsif ($type eq "relation")
+                        { 
+                            $KeepRelation->{$ref} = 1; # FIXME this only works correctly if the relation referenced has not already been checked
+                        }
+                    }
+                    last if ($slash eq "/");
+                }
+            }
+        }
+    }
+
+    seek(SOURCE,0,0); # restart at the beginning and mark all nodes "to keep" that are referenced by already kept ways
+    while(<SOURCE>)
+    {
+        if (/^\s*<(way).*id=['"](\d+)['"].*(\/?)>/)
+        {
+            ($what,$id,$slash)=($1,$2,$3);
+            if ($KeepWay->{$id})
+            {
+                while(<SOURCE>)
+                {
+                    last if (/^\s*<\/$what>/);
+                    if (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/)
+                    {
+                        my ($ref,$subslash) = ($1,$2); # TODO: check for continuation on next line if slash is not there 
+                        $KeepNode->{$ref} = 1;
+                    }
+                    last if ($slash eq "/");
+                }
+            }
+        }
+    }
+    seek(SOURCE,0,0);#reset a last time to actually copy data
+    open (DEST, "> $destFile") or die("can't open file $destFile for writing");
+    while (<SOURCE>)
+    {
+        if (/^\s*<(node|way|relation).*id=['"](\d+)['"].*(\/?)>/)
+        {
+            ($what, $id, $slash)=($1,$2,$3);
+            if (($what eq "node" and $KeepNode->{$id}) or ($what eq "way" and $KeepWay->{$id}) or ($what eq "relation" and $KeepRelation->{$id}))
+            {
+                print DEST;
+                while (<SOURCE>)
+                {
+                    print DEST;
+                    last if (/^\s*<\/$what>/);
+                    last if ($slash eq "/");
+                }
+            }
+            print DEST; 
         }
     }
     close(SOURCE);

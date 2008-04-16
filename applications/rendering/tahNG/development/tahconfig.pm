@@ -6,7 +6,8 @@ use strict;
 #--------------------------------------------------------------------------
 sub ApplyConfigLogic
 {
-    my $Config = shift();
+    #my $Config = shift();
+    my $Config = $main::Config;
 
     if (!defined($Config->get("Layers")))
     {
@@ -41,7 +42,6 @@ sub ApplyConfigLogic
     ## switch on verbose mode if Debug is set
     if ($Config->get("Debug"))
     {
-        print $Config->get("Verbose")."\n";
         $Config->set("Verbose",1);
     }
 
@@ -51,8 +51,7 @@ sub ApplyConfigLogic
     }
     elsif (($Config->get("WorkingDirectory") !~ /\\$/) and ("MSWin32" eq $^O))
     {
-        $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "\\")
-;
+        $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "\\");
     }
 
 }

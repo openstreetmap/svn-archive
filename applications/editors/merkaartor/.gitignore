@@ -1,5 +1,7 @@
 /Makefile*
 /*.qm
-/debug
-/release
 /GeneratedFiles
+/binaries
+/obj
+/tmp
+/qrc_AllIcons.cpp

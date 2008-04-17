@@ -1593,7 +1593,7 @@ sub splitImageX
             }
             elsif ($Config{PngOptimizer} eq "optipng")
             {
-                $Cmd = sprintf("%s \"%s\" -q %s -out %s %s",
+                $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
                   $Config{Niceness},
                   $Config{Optipng},
                   $Filename2,

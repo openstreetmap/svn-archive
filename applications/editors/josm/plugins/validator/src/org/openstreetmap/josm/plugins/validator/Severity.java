@@ -2,16 +2,16 @@ package org.openstreetmap.josm.plugins.validator;
 
 import java.awt.Color;
 
-import org.openstreetmap.josm.data.osm.visitor.SimplePaintVisitor;
+import org.openstreetmap.josm.data.Preferences;
 
 /** The error severity */
 public enum Severity {
 	/** Error messages */
-	ERROR("Errors", "error.gif",       SimplePaintVisitor.getPreferencesColor("validation error", Color.RED)),
+	ERROR("Errors", "error.gif",       Preferences.getPreferencesColor("validation error", Color.RED)),
 	/** Warning messages */ 
-	WARNING("Warnings", "warning.gif", SimplePaintVisitor.getPreferencesColor("validation warning", Color.YELLOW)), 
+	WARNING("Warnings", "warning.gif", Preferences.getPreferencesColor("validation warning", Color.YELLOW)), 
 	/** Other messages */ 
-	OTHER("Other", "other.gif",        SimplePaintVisitor.getPreferencesColor("validation other", Color.CYAN)); 
+	OTHER("Other", "other.gif",        Preferences.getPreferencesColor("validation other", Color.CYAN)); 
 	
 	/** Description of the severity code */
 	private final String message;

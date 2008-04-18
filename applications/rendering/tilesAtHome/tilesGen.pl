@@ -13,7 +13,7 @@ use strict;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
 #
-# Contact OJW on the Openstreetmap wiki for help using this program
+# Contact Deelkar or OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
 # Copyright 2006, Oliver White, Etienne Cherdlu, Dirk-Lueder Kreie,
 # Sebastian Spaeth and others

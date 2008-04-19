@@ -1606,6 +1606,21 @@
 			</rule>
 		</rule>
 
+        <!-- House numbers -->
+        <rule e="way" k="addr:interpolation" v="odd" layer="5">
+            <line class="housenumber-interpolation housenumber-interpolation-odd"/>
+		</rule>
+        <rule e="way" k="addr:interpolation" v="even" layer="5">
+            <line class="housenumber-interpolation housenumber-interpolation-even"/>
+		</rule>
+        <rule e="way" k="addr:interpolation" v="all" layer="5">
+            <line class="housenumber-interpolation housenumber-interpolation-all"/>
+		</rule>
+
+        <rule e="node" k="addr:housenumber" v="*" layer="5">
+            <circle r='0.8px' class="housenumber-node"/>
+		    <text k="addr:housenumber" class='housenumber-caption' dy='0.3px' />
+		</rule>
 
 		<!-- Area captions -->
         <rule e="way" k="natural" v="*" layer="5">
@@ -2149,6 +2164,35 @@
             .locality-caption       { font-size: 2px; }
             .farm-caption           { font-size: 1.5px; }
 
+            .housenumber-interpolation {
+                stroke: #b0b0b0;
+                stroke-width: 0.25px;
+            }
+
+            .housenumber-interpolation-all {
+            }
+
+            .housenumber-interpolation-even {
+                stroke-dasharray: 0.5 0.5;
+            }
+
+            .housenumber-interpolation-odd {
+                stroke-dasharray: 0.2 0.2;
+            }
+
+            .housenumber-node {
+                stroke: none;
+                fill: #b0b0b0;
+            }
+
+            .housenumber-caption {
+                stroke-width: 0px;
+                fill: #ffffff;
+                font-family: "DejaVu Sans";
+                text-anchor: middle;
+                stroke-miterlimit: 1.5;
+                font-size: 0.8px;
+            }
 
             /* Natural */
             .natural-water {

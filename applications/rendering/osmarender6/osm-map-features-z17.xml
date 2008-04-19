@@ -1607,6 +1607,11 @@
 		</rule>
 
         <!-- House numbers -->
+        <rule e="way" k="addr:housenumber" v="*" layer="5">
+            <areaSymbol xlink:href="#symbol-housenumber" width='1px' height='1px' />
+            <areaText k="addr:housenumber" startOffset='50%' class="housenumber-caption" dy='0.3px' />
+        </rule>
+
         <rule e="way" k="addr:interpolation" v="odd" layer="5">
             <line class="housenumber-interpolation housenumber-interpolation-odd"/>
 		</rule>
@@ -2165,6 +2170,7 @@
             .farm-caption           { font-size: 1.5px; }
 
             .housenumber-interpolation {
+                fill: none;
                 stroke: #b0b0b0;
                 stroke-width: 0.25px;
             }
@@ -3348,6 +3354,13 @@
           viewBox="0 0 5 10"
           fill='#000000'>
             <svg:path d="M 0 10 L 0 5 L 5 5 L 5 10 z M 0 2 L 5 2 L 5 3 L 0 3 z M 2 0 L 2 5 L 3 5 L 3 0 z" />
+        </svg:symbol>
+
+        <svg:symbol
+          id="symbol-housenumber"
+          viewBox="0 0 1 1"
+          fill='#a0a0a0'>
+            <circle r='0.8px' class="housenumber-node"/>
         </svg:symbol>
 
         <svg:symbol

@@ -5,6 +5,7 @@ import cElementTree as ET
 import sys
 import codecs
 import optparse
+import gzip
 
 import string
 from xml import sax
@@ -73,7 +74,74 @@ import sys
 from xml import sax
 from operator import itemgetter
 
-class gmlHandler(sax.ContentHandler):
+class addrHandler(sax.ContentHandler):
+  count = 0
+  
+  string = None
+  
+  addressRange = False
+  streetName = False
+  
+  streets = {}
+  
+  waiting = False
+  
+  nid = None
+  
+  def __init__(self):
+    print "Starting to process street address information..."
+  
+  def counter(self):
+    if self.count % 5000 == 0:
+      print self.count
+    self.count += 1  
+  
+  def startDocument(self):
+    return
+   
+  def endDocument(self):
+    return
+    
+  def startElement(self, name, attributes):
+    print "Start of "+name
+    if name == 'nrn:AddressRange':       
+      self.counter()
+      
+    if name == 'nrn:AlternateNameLink':
+      self.counter()
+    
+    if name == 'nrn:StreetPlaceNames':
+      self.streetName = True
+    
+    if name == 'nrn:nid':
+      self.waiting = True
+
+  
+  def endElement(self,name):
+    if name == 'nrn:AddressRange':
+      self.waiting = False
+      
+    if self.streetName == True:
+      if name == 'nrn:nid':
+        self.nid = self.string
+        print "Found nid = "+self.nid
+        self.waiting = False
+        
+    if name == 'nrn:StreetPlaceNames':
+      self.streetName = False
+    
+    print "End of "+name
+    
+  def characters(self,string):
+    string = unicode(string)
+  
+    if self.waiting == True:
+      if self.string == None:
+        self.string = string
+      else :
+        self.string = self.string + string
+
+class geomHandler(sax.ContentHandler):
 
   count = 0
 
@@ -191,6 +259,9 @@ class gmlHandler(sax.ContentHandler):
     return
 
   def characters(self,string):
+  
+    string = unicode(string)
+  
     if self.waiting == True:
       if self.string == None:
         self.string = string
@@ -205,6 +276,8 @@ class gmlHandler(sax.ContentHandler):
 
   def endElement(self, name):
   
+    name = unicode(name)
+    
     # Prepare a cleaned and stripped text string
     text = self.string
     
@@ -256,43 +329,43 @@ class gmlHandler(sax.ContentHandler):
       if name == 'nrn:nid':
         self.tags['nrn:nid'] = text
         
-      if name == 'nrn:routeNumber1' and text!='None':
+      if name == 'nrn:routeNumber1' and text!="None":
         self.tags['ref'] = set([stringToInteger(text)])
         
       if self.tags.has_key('ref'):
-        if name == 'nrn:routeNumber2' and text!='None':
+        if name == 'nrn:routeNumber2' and text!="None":
           self.tags['ref'].add(stringToInteger(text))
           
-        if name == 'nrn:routeNumber3' and text!='None':
+        if name == 'nrn:routeNumber3' and text!="None":
           self.tags['ref'].add(stringToInteger(text))
           
-        if name == 'nrn:routeNumber4' and text!='None':
+        if name == 'nrn:routeNumber4' and text!="None":
           self.tags['ref'].add(stringToInteger(text))
           
-      if name == 'nrn:routeNameEnglish1' and text!='None':
+      if name == 'nrn:routeNameEnglish1' and text!="None":
         self.tags['name'] = set([text])
         
       if self.tags.has_key('name'):
-        if name == 'nrn:routeNameEnglish2' and text!='None':
+        if name == 'nrn:routeNameEnglish2' and text!="None":
           self.tags['name'].add(text)
           
-        if name == 'nrn:routeNameEnglish3' and text!='None':
+        if name == 'nrn:routeNameEnglish3' and text!="None":
           self.tags['name'].add(text)
           
-        if name == 'nrn:routeNameEnglish4' and text!='None':
+        if name == 'nrn:routeNameEnglish4' and text!="None":
           self.tags['name'].add(text)
       
-      if name == 'nrn:routeNameFrench1' and text!='None':
+      if name == 'nrn:routeNameFrench1' and text!="None":
         self.tags['name:fr'] = set([text])
         
       if self.tags.has_key('name:fr'):
-        if name == 'nrn:routeNameFrench2' and text!='None':
+        if name == 'nrn:routeNameFrench2' and text!="None":
           self.tags['name:fr'].add(text)
           
-        if name == 'nrn:routeNameFrench3' and text!='None': 
+        if name == 'nrn:routeNameFrench3' and text!="None": 
           self.tags['name:fr'].add(text)
           
-        if name == 'nrn:routeNameFrench4' and text!='None':
+        if name == 'nrn:routeNameFrench4' and text!="None":
           self.tags['name:fr'].add(text)
       
       if name == 'gml:coordinates':
@@ -380,30 +453,33 @@ class gmlHandler(sax.ContentHandler):
               if ref >= 200 and ref <= 1000:
                 self.tags['highway'] = 'tertiary'
                 
-      if self.tags['nrn:datasetName'] == 'Quebec':
+      if self.tags['nrn:datasetName'] == u'Québec':
+
         if self.tags.has_key('ref'):
           
           if self.tags.has_key('highway'):
+          
+            old = self.tags['highway']
           
             for ref in self.tags['ref']:
             
               # Set all autoroute's to motorway
               if ref >= 1 and ref <= 100:
-                this.tags['highway'] = 'motorway'
+                self.tags['highway'] = 'motorway'
+                
               if ref >= 400 and ref <= 1000:
-                this.tags['highway'] = 'motorway'
+                self.tags['highway'] = 'motorway'
               
               if ref >= 101 and ref <= 199:
-                this.tags['highway'] = 'primary'
+                self.tags['highway'] = 'primary'
+                
               if ref >= 200 and ref <= 399:
-                this.tags['highway'] = 'secondary'
-          
+                self.tags['highway'] = 'secondary'
         
       if self.tags['nrn:datasetName'] == 'Ontario':
         if self.tags.has_key('ref'):
           
           if self.tags.has_key('highway'):
-          #if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
           
             for ref in self.tags['ref']:
               # Primary (1-101)
@@ -426,13 +502,13 @@ class gmlHandler(sax.ContentHandler):
         if self.tags.has_key('ref'):
           
           if self.tags.has_key('highway'):
-          #if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
           
             for ref in self.tags['ref']:
+            
               # Primary (1-101)
               if ref <= 101:
                 self.tags['highway'] = 'primary'
-                
+              
               # Secondary (102 and up)
               if ref > 101:
                 self.tags['highway'] = 'secondary'
@@ -445,10 +521,19 @@ class gmlHandler(sax.ContentHandler):
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
-          #if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
             
             # Tag Transcanada/Yellowhead as trunk
             for ref in self.tags['ref']:
+            
+              if ref >= 1 and ref <= 199:
+                self.tags['highway'] = 'primary'
+                
+              if ref >= 200 and ref <= 600:
+                self.tags['highway'] = 'secondary'
+              
+              if ref > 600 and ref <= 1000:
+                self.tags['highway'] = 'tertiary'
+            
               if ref == 1 or ref == 16 or ref == 7 or ref == 1 or ref == 6 or ref == 39:
                 self.tags['highway'] = 'trunk'
                 
@@ -457,7 +542,6 @@ class gmlHandler(sax.ContentHandler):
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
-          #if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary' or self.tags['highway'] == 'tertiary':
           
             for ref in self.tags['ref']:
               
@@ -542,6 +626,7 @@ class gmlHandler(sax.ContentHandler):
       self.roadSegment = False
       self.ferrySegment = False
     
+    self.waiting = False
     self.depth = self.depth - 1
     return
 
@@ -563,24 +648,39 @@ def setToString(tagset):
   
   elif len(tagset) == 1:
     string = tagset.pop()
-    return str(string)
+    
+    if isinstance(string, basestring ):
+      return string
+    else: 
+      return str(string)
     
   else:
-    string = str(tagset.pop())
+    
+    string = tagset.pop()
+    
+    if isinstance(string,basestring):
+      pass
+    else:
+      string = str(string)
     
     for x in tagset:
-      string = string + ";" + str(x)
+      if x != "None":
+        if isinstance(x, basestring ):
+          string = string + ";" + x
+        else: 
+          string = string + ";" + str(x)
 
     return string
 
 def main():
 
-  usage = "usage: %prog -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o outfilefile.osm] [--pretty]"
+  usage = "usage: %prog -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o outfilefile.osm] [--zip] [--pretty]"
   parser = OptionParser(usage)
-  parser.add_option("-i", dest="geomfile", help="read data from GEOMFILE")
-  parser.add_option("-a", dest="addrfile", help="read optional data from ADDRFILE")
-  parser.add_option("-o", dest="outputfile", default="geobase.osm", help="store data to OUTPUTFILE")
-  parser.add_option("--pretty", action="store_true", dest="indent", help="stylize the output file")
+  parser.add_option("-i", "--input", dest="geomfile", help="read data from GEOMFILE")
+  parser.add_option("-a", "--addr", dest="addrfile", help="read optional data from ADDRFILE")
+  parser.add_option("-o", "--output", dest="outputfile", default="geobase.osm", help="store data to OUTPUTFILE")
+  parser.add_option("-z", "--zip", dest="compress", action="store_true", help="compress the output using gzip")
+  parser.add_option("-p", "--pretty", dest="indent", action="store_true", help="stylize the output file")
     
   (options, args) = parser.parse_args()
 
@@ -588,22 +688,39 @@ def main():
 
   saxparser = sax.make_parser()
 
-  handler = gmlHandler()
-
+  # If we were given the addr file parse it
+  if len(options.addrfile) > 0:
+    print "Preparing to read '"+options.addrfile+"'"
+    
+    handler = addrHandler()
+    
+    sax.parse(open(options.addrfile), handler)
+  
+  return
+  
+  # Then parse the geom file
   print "Preparing to read '"+options.geomfile+"'"
+  
+  handler = geomHandler()
 
   sax.parse(open(options.geomfile), handler)
-
 
   # Format the code by default
   if options.indent:
     print "Formatting output"
     indent(handler.osm)
-  
-  print "Saving to '" + options.outputfile + "'"
-  
-  f = open(options.outputfile, 'w')
-  f.write(ET.tostring(handler.osm))
+    
+  if options.compress:
+    print "Saving to '" + options.outputfile + ".gz'"
+    f = gzip.GzipFile(options.outputfile+".gz", 'wb');
+    f.write(ET.tostring(handler.osm))
+    f.close()
+
+  else:
+    print "Saving to '" + options.outputfile + "'"
+    f = open(options.outputfile, 'w')
+    f.write(ET.tostring(handler.osm))
+    f.close()
 
 if __name__ == "__main__":
     main()

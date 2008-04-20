@@ -364,9 +364,8 @@ sub mergeOsmFiles
 # cut out a bbox from OSM data, keeping tagged nodes and area types outside 
 # the bbox, throw away all other entities that are irrelevant to the bbox.
 #-----------------------------------------------------------------------------
-sub cropDataToBBox
+sub cropDataToBBox # TODO: Get area types to stick
 {
-    #area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*]
     my ($bllat, $bllon, $trlat, $trlon, $sourceFile, $destFile) = @_;
     my $Config = $main::Config;
     open (SOURCE, $sourceFile) or die("unable to read file $sourceFile");
@@ -379,49 +378,54 @@ sub cropDataToBBox
         if (/^\s*<(node).*id=['"](\d+)['"].*lat=['"](\d+\.\d+)['"].*lon=['"](\d+\.\d+)['"].*(\/?)>/)
         {
             ($what, $id, $lat, $lon, $slash)=($1,$2,$3,$4,$5);
-            print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") > 1);
+            print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") > 2);
 
             if ($lat > $bllat and $lat < $trlat and $lon > $bllon and $lon < $trlon)
             {
-                $KeepNode->{$id}=1;
+                $KeepNode->{$id}=10;
+                print " ** Keep node $id for it is in bbox\n" if ($Config->get("Debug") > 1);
             }
             else
             {
+                next if ( $slash eq "/" );
                 while(<SOURCE>)
                 {
                     last if (/^\s*<\/$what>/);
                     if (/^\s*<tag.*k=['"](.+)['"].*v=['"](.+)['"].*(\/?)>/)
                     {
-                        my ($key,$value,$subslash) = ($1,$2,$3);
+                        my ($key,$value,$subslash) = ($1,$2,$3);# TODO: check for slash not there 
                         if ($key eq "name") #assume label relevant to tile if "name" present
                         {
-                            $KeepNode->{$id}=1;
+                            $KeepNode->{$id}=1 if (not $KeepNode->{$id}); #don't overwrite nodes that are already selected by bbox with a "lower" value
+                            print " ** Keep node $id for it has a name\n" if ($Config->get("Debug") > 1);
                         }
                     }
                 }
             }
-            next if ( $slash eq "/" );
         }
         elsif (/^\s*<(way|relation).*id=['"](\d+)['"].*(\/?)>/)
         {
             ($what, $id, $slash)=($1,$2,$3);
             ($lat, $lon) = (undef,undef);
-            print "*** $what   id=$id slash=$slash \n" if ($Config->get("Debug") > 1);
+            print "*** $what   id=$id slash=$slash \n" if ($Config->get("Debug") > 2);
             next if ( $slash eq "/" );
             while (<SOURCE>)
             {
                 last if (/^\s*<\/$what>/);
                 if ($what eq "way" and (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/))
                 {
-                    my ($ref,$subslash) = ($1,$2);# TODO: check for continuation on next line if slash is not there 
-                    $KeepWay->{$id} = 1  if ($KeepNode->{$ref});
+                    my ($ref,$subslash) = ($1,$2);# TODO: check for slash not there 
+                    $KeepWay->{$id} = 1  if ($KeepNode->{$ref} == 10); # only select way if node is in bbox
+                    # TODO: check for other conditions that make us keep this way (area running around the bbox, area-names that run into the bbox, etc.)
+                    # area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*] 
+                    # *=usually small areas.
                 }
                 elsif ($what eq "relation" and (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/))
                 {
-                    my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for continuation on next line if slash is not there 
+                    my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for slash not there 
                     if ($type eq "node")
                     {
-                        $KeepRelation->{$id} = 1  if ($KeepNode->{$ref});
+                        $KeepRelation->{$id} = 1  if ($KeepNode->{$ref} == 10); #only select relation if node is in bbox
                     }
                     elsif ($type eq "way")
                     {
@@ -430,6 +434,7 @@ sub cropDataToBBox
                     elsif ($type eq "relation")
                     {
                         $KeepRelation->{$id} = 1  if ($KeepRelation->{$ref}); # FIXME this only works if the relation referenced has already been checked
+                        # TODO: keep relation if multipolygon or otherwise relevant for rendering relating to bbox.
                     }
                 }
             }
@@ -443,15 +448,16 @@ sub cropDataToBBox
             ($what,$id,$slash)=($1,$2,$3);
             if ($KeepRelation->{$id})
             {
+                next if ( $slash eq "/" );
                 while(<SOURCE>)
                 {
                     last if (/^\s*<\/$what>/);
                     if (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/)
                     {
-                        my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for continuation on next line if slash is not there 
+                        my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for slash not there 
                         if ($type eq "node")
                         {
-                            $KeepNode->{$ref} = 1;
+                            $KeepNode->{$ref} = 1 if (not $KeepNode->{$ref});
                         }
                         elsif ($type eq "way")
                         { 
@@ -462,7 +468,6 @@ sub cropDataToBBox
                             $KeepRelation->{$ref} = 1; # FIXME this only works correctly if the relation referenced has not already been checked
                         }
                     }
-                    last if ($slash eq "/");
                 }
             }
         }
@@ -476,15 +481,15 @@ sub cropDataToBBox
             ($what,$id,$slash)=($1,$2,$3);
             if ($KeepWay->{$id})
             {
+                next if ( $slash eq "/" );
                 while(<SOURCE>)
                 {
                     last if (/^\s*<\/$what>/);
                     if (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/)
                     {
-                        my ($ref,$subslash) = ($1,$2); # TODO: check for continuation on next line if slash is not there 
-                        $KeepNode->{$ref} = 1;
+                        my ($ref,$subslash) = ($1,$2); # TODO: check for slash not there 
+                        $KeepNode->{$ref} = 1 if (not $KeepNode->{$ref});
                     }
-                    last if ($slash eq "/");
                 }
             }
         }
@@ -499,14 +504,33 @@ sub cropDataToBBox
             if (($what eq "node" and $KeepNode->{$id}) or ($what eq "way" and $KeepWay->{$id}) or ($what eq "relation" and $KeepRelation->{$id}))
             {
                 print DEST;
+                next if ( $slash eq "/" );
                 while (<SOURCE>)
                 {
                     print DEST;
                     last if (/^\s*<\/$what>/);
-                    last if ($slash eq "/");
                 }
             }
-            print DEST; 
+        }
+        elsif (/^\s*<(\/?)(osm)[^\/>]*(\/?)(>?)/) # .* matches too greedily so we have to use [^\/>]*
+        {
+            my ($endslash,$what,$slash,$angbr) = ($1,$2,$3,$4);
+            print DEST;
+            print if ($Config->get("Debug"));
+            print "endslash: ".$endslash.", what: ".$what.", slash: ".$slash.", angbr: ".$angbr." -- " if ($Config->get("Debug"));
+            last if (($slash eq "/" and $angbr eq ">") or $endslash eq "/");
+            next if ($angbr eq ">");
+            while (<SOURCE>)
+            {
+                print if ($Config->get("Debug") > 1);
+                print DEST;
+                last if (/>/);
+            }
+        }
+        elsif (/^\s*<\?xml.*\?>/)
+        {
+            print if ($Config->get("Debug") > 1);
+            print DEST;
         }
     }
     close(SOURCE);

@@ -164,7 +164,7 @@ public class PlaceSelection implements DownloadSelection {
 				{
 					component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					component.repaint();
-					URL url = new URL("http://www.frankieandshadow.com/osm/search.xml?find="+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
+					URL url = new URL("http://gazetteer.openstreetmap.org/namefinder/?find="+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
 					HttpURLConnection activeConnection = (HttpURLConnection)url.openConnection();
 					System.out.println("got return: "+activeConnection.getResponseCode());
 					activeConnection.setConnectTimeout(15000);

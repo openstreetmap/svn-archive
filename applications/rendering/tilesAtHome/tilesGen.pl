@@ -680,19 +680,17 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
       $Config{APIURL},$Config{OSMVersion},$bbox);
     if ($Zoom < 12) 
     {
-        # FIXME: hardcoded: assume lowzoom layer now!
+        # FIXME: zoom 12 hardcoded: assume lowzoom layer now!
+        # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
         $Layers="lowzoom" if ($Mode eq "xy");
         
-        # We only need the bounding box for ways (they will be downloaded completly,
-        # but need the extended bounding box for places (names from neighbouring tiles)
-        $URLS = sprintf("%s%s/way[natural=*][bbox=%s] %s%s/way[boundary=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[highway=motorway|motorway_link|trunk|primary|secondary|tertiary][bbox=%s] %s%s/way[waterway=river][bbox=%s] %s%s/way[railway=*][bbox=%s] %s%s/node[place=*][bbox=%s]",
-          $Config{XAPIURL},$Config{OSMVersion},$bbox,
-          $Config{XAPIURL},$Config{OSMVersion},$bbox,
-          $Config{XAPIURL},$Config{OSMVersion},$bbox,
-          $Config{XAPIURL},$Config{OSMVersion},$bbox,
-          $Config{XAPIURL},$Config{OSMVersion},$bbox,
-          $Config{XAPIURL},$Config{OSMVersion},$bbox,
-          $Config{XAPIURL},$Config{OSMVersion},$bbox);
+        # Get the predicates for lowzoom, and build the URLS for them
+        my $predicates = $Config{"Layer.$Layers.Predicates"};
+        $URLS="";
+        foreach my $predicate (split(/,/,$predicates)) {
+            $URLS = $URLS . sprintf("%s%s/%s[bbox=%s] ",
+                $Config{XAPIURL},$Config{OSMVersion},$predicate,$bbox);
+        }
     }
     my @tempfiles;
     push(@tempfiles, $DataFile);

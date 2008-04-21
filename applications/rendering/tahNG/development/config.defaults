@@ -116,12 +116,21 @@ Rules.17=osmarender/osm-map-features-z17.xml
 
 
 [lowzoom]
-BaseZoom=8
+BaseZoom=6
 MaxZoom=11
-Prefix=tile
+Prefix=caption
 Preprocessor=close-areas
+Transparent=1
 RequiredFiles=osmarender/osmarender.xsl
 RenderFullTileset=1
+Predicates=node[place=town|city|country]
+
+Rules.6=osmarender/caption-z6.xml
+Rules.7=osmarender/caption-z7.xml
+Rules.8=osmarender/caption-z8.xml
+Rules.9=osmarender/caption-z9.xml
+Rules.10=osmarender/caption-z10.xml
+Rules.11=osmarender/caption-z11.xml
 
 [maplint]
 BaseZoom=12

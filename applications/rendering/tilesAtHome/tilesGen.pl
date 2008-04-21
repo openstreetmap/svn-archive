@@ -747,7 +747,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         }
         else
         {
-            if ($Zoom < 12)
+            if ($Zoom < 12) ## FIXME: hardcoded zoom
             {
                 resetFault("nodataXAPI"); #reset to zero if data downloaded
             }
@@ -812,7 +812,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         }
         
         my $Margin = " " x ($Zoom - 8);
-        #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
+        printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E if ($Config{"Debug"});
         
         
         #------------------------------------------------------

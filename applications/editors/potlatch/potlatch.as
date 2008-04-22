@@ -364,6 +364,7 @@
 
 	if (lat) { startPotlatch(); }			// Parse GPX if supplied
 	if (gpx) { parseGPX(gpx); }				//  |
+	if (lat) {} else { lat=0; long=51.5; startPotlatch(); } // London if none!
 
 	// Welcome buttons
 
@@ -413,6 +414,7 @@
 		_root.ylat=baselat;	 _root.lastylat=ylat;		// current Yahoo state
 		_root.ylon=baselong; _root.lastylon=ylon;		//  |
 		updateCoords(0,0);
+		updateLinks();
 		setBackground(preferences.data.baselayer);
 		whichWays();
 		_root.onEnterFrame=function() { everyFrame(); };
@@ -660,12 +662,14 @@
 			case Key.RIGHT: moveMap(-140,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
-			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' - cycle presets
-			case 187:		_root.panel.properties.enterNewAttribute(); break;	// '+' - add new attribute
+			case 192:		;													// '`' - cycle presets
+			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' -  |
+			case 107:		;													// '+' - add new attribute
+			case 187:		_root.panel.properties.enterNewAttribute(); break;	//  |
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
-			case 192:		cycleStacked(); break;								// '`' - cycle between stacked ways
+			case 191:		cycleStacked(); break;								// '/' - cycle between stacked ways
 			case 76:		showPosition(); break;								// L - show latitude/longitude
-			// default:		_root.chat.text=Key.getCode()+" pressed";
+//			default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}
 

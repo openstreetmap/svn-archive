@@ -43,6 +43,7 @@ our $Config = AppConfig->new({
               });
 
 $Config->define("help|usage!");
+$Config->define("nodownload=s");
 $Config->file("config.defaults", "authentication.conf", "tahng.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
 $Config->args();              # overwrite config options with command line options
 $Config->file("config.svn");  # overwrite with hardcoded values that must not be changed
@@ -212,8 +213,14 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
          $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef});
 
     my $rootDataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
-    ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$rootDataFile,$URLS);
-
+    if ($Config->get("nodownload"))
+    {
+        copy $Config->get("nodownload"), $rootDataFile or die "no such file ".$Config->get("nodownload");
+    }
+    else
+    {
+        ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$rootDataFile,$URLS);
+    }
     ## now build the 16 zoom+2 (usually z14) bboxes
 
     #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)

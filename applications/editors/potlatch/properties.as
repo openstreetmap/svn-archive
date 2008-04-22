@@ -428,6 +428,7 @@
 			}
 		}
 		if (this.proptype=='way') { _root.ws.redraw(); }
+		this.reflect();
 		this.reinit();
 	};
 
@@ -502,7 +503,7 @@
 			this._parent._parent._parent.reflect();
 		};
 		this.keyname.onChanged=function(tf) {
-			if (tf.text=='+') {
+			if (tf.text=='+' || tf.text=='=') {
 				// if FP has picked up the "+" keypress, ignore it and set back to 'key'
 				tf.text='key';
 				tf.setTextFormat(boldSmall);
@@ -562,12 +563,27 @@
 		this.lastkey=key;
 		this.lastvalue=this.value.text;
 		
+		// Initialise close box
+		
+		this.createEmptyMovieClip('grey',3);
+		with (this.grey) {
+			beginFill(0xDDDDDD,100);
+			moveTo(172,-1); lineTo(182,-1);
+			lineTo(182,17); lineTo(172,17);
+			endFill();
+		};
+
 		this.attachMovie("closecross", "i_remove", 4);
 		with (this.i_remove) { _x=174; _y=8; };
 		this.i_remove.onPress=function() {
 			this._parent.value.text='';
 			setValueFromTextfield(this._parent.value);
 			_root.auto.remove();
+			this._parent._parent._parent.reflect();
+			switch (this._parent._parent._parent.proptype) {
+				case 'way':		 	_root.ws.redraw(); break;
+				case 'relation':	_root.ws.redraw(); break;
+			}
 			_root.redopropertywindow=this._parent._parent._parent;
 		};
 	};

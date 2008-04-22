@@ -11,7 +11,19 @@
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"presetmenu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"radio");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"auto");
+
+	#		Radio buttons
+	
+	$ec=new SWF::Sprite(); $ch=new SWF::Shape();
+	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
+	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_off");
+
+	$ec=new SWF::Sprite(); $ch=new SWF::Shape();
+	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
+	$ch->setRightFill(0   ,0   ,0   ); $ch->setLine(20,0,0,0); $ch->drawCircle(4);
+	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_on");
 
 	#		POI
 	

@@ -185,6 +185,27 @@
 		}
 	};
 
+	// ---- Variant with confirmation if any nodes have tags
+	
+	OSMWay.prototype.removeWithConfirm=function() {
+		var c=true;
+		var z=this.path;
+		for (var i in z) {
+			var y=this.path[i][4];
+			for (var j in y) {
+				if (j!='created_by' && y[j]!='') { c=false; }
+			}
+		}
+		if (c) {
+			this.remove();
+		} else {
+			createModalDialogue(275,80,new Array('Cancel','Delete'),
+				function(choice) { if (choice=='Delete') { _root.ws.remove(); } });
+			_root.modal.box.createTextField("prompt",2,7,9,250,100);
+			writeText(_root.modal.box.prompt,"Some of the points on this way are tagged. Really delete?");
+		}
+	};
+
 	// ----	Upload to server
 	
 	OSMWay.prototype.upload=function() {

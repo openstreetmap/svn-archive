@@ -44,6 +44,7 @@ our $Config = AppConfig->new({
 
 $Config->define("help|usage!");
 $Config->define("nodownload=s");
+$Config->set("nodownload",0);
 $Config->file("config.defaults", "authentication.conf", "tahng.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
 $Config->args();              # overwrite config options with command line options
 $Config->file("config.svn");  # overwrite with hardcoded values that must not be changed

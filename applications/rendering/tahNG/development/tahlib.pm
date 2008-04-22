@@ -366,7 +366,7 @@ sub mergeOsmFiles
 #-----------------------------------------------------------------------------
 sub cropDataToBBox # TODO: Get area types to stick
 {
-    my ($bllat, $bllon, $trlat, $trlon, $sourceFile, $destFile) = @_;
+    my ($bllon, $bllat, $trlon, $trlat, $sourceFile, $destFile) = @_;
     my $Config = $main::Config;
     open (SOURCE, $sourceFile) or die("unable to read file $sourceFile");
     my $KeepNode = {};
@@ -378,15 +378,16 @@ sub cropDataToBBox # TODO: Get area types to stick
         if (/^\s*<(node).*id=['"](\d+)['"].*lat=['"](\d+\.\d+)['"].*lon=['"](\d+\.\d+)['"].*(\/?)>/)
         {
             ($what, $id, $lat, $lon, $slash)=($1,$2,$3,$4,$5);
-            print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") > 2);
-
-            if ($lat > $bllat and $lat < $trlat and $lon > $bllon and $lon < $trlon)
+            print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") >= 5);
+            die "wrong bbox $bllat, $bllon, $trlat, $trlon" if ($bllat > $trlat or $bllon > $trlon);
+            if ($lat >= $bllat and $lat <= $trlat and $lon >= $bllon and $lon <= $trlon)
             {
                 $KeepNode->{$id}=10;
-                print " ** Keep node $id for it is in bbox\n" if ($Config->get("Debug") > 1);
+                print " ** Keep node $id for it is in bbox\n" if ($Config->get("Debug") >= 5);
             }
             else
             {
+                print " ** node $id lat=$lat lon=$lon is not in bbox $bllat, $bllon, $trlat, $trlon\n" if ($Config->get("Debug") >= 5);
                 next if ( $slash eq "/" );
                 while(<SOURCE>)
                 {
@@ -396,8 +397,9 @@ sub cropDataToBBox # TODO: Get area types to stick
                         my ($key,$value,$subslash) = ($1,$2,$3);# TODO: check for slash not there 
                         if ($key eq "name") #assume label relevant to tile if "name" present
                         {
-                            $KeepNode->{$id}=1 if (not $KeepNode->{$id}); #don't overwrite nodes that are already selected by bbox with a "lower" value
-                            print " ** Keep node $id for it has a name\n" if ($Config->get("Debug") > 1);
+                            print " ** KeepNode before: $KeepNode->{$id} \n" if ($Config->get("Debug") >= 5 and defined($KeepNode->{$id}));
+                            $KeepNode->{$id}=1 unless ($KeepNode->{$id}); #don't overwrite nodes that are already selected by bbox with a "lower" value
+                            print " ** Keep node $id for it has a name\n" if ($Config->get("Debug") >= 5);
                         }
                     }
                 }
@@ -407,34 +409,45 @@ sub cropDataToBBox # TODO: Get area types to stick
         {
             ($what, $id, $slash)=($1,$2,$3);
             ($lat, $lon) = (undef,undef);
-            print "*** $what   id=$id slash=$slash \n" if ($Config->get("Debug") > 2);
+            print "*** $what   id=$id slash=$slash \n" if ($Config->get("Debug") >= 5);
             next if ( $slash eq "/" );
             while (<SOURCE>)
             {
                 last if (/^\s*<\/$what>/);
-                if ($what eq "way" and (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/))
+                if ($what eq "way") 
                 {
-                    my ($ref,$subslash) = ($1,$2);# TODO: check for slash not there 
-                    $KeepWay->{$id} = 1  if ($KeepNode->{$ref} == 10); # only select way if node is in bbox
+                    if (/^\s*<nd.*ref=['"](\d+)['"].*(\/?)>/)
+                    {
+                        my ($ref,$subslash) = ($1,$2);# TODO: check for slash not there 
+                        $KeepWay->{$id} = 1  if (defined $KeepNode->{$ref} and $KeepNode->{$ref} == 10); # only select way if node is in bbox
+                        print " ** way ".$id." node ".$ref."  KeepNode: ".$KeepNode->{$ref}." \n" if ($Config->get("Debug") >= 5 and defined($KeepNode->{$ref}));
+                    }
+                    elsif (/^\s*<tag k=['"](.*)['"].*v=['"](.*)['"].*/)
                     # TODO: check for other conditions that make us keep this way (area running around the bbox, area-names that run into the bbox, etc.)
                     # area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*] 
                     # *=usually small areas.
+                    {
+                        my ($key,$value) = ($1,$2);
+                    }
                 }
-                elsif ($what eq "relation" and (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/))
-                {
-                    my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for slash not there 
-                    if ($type eq "node")
+                elsif ($what eq "relation") 
+                { 
+                    if (/^\s*<member.*type=['"](way|node|relation)['"].*ref=['"](\d+)['"].*(\/?)>/)
                     {
-                        $KeepRelation->{$id} = 1  if ($KeepNode->{$ref} == 10); #only select relation if node is in bbox
-                    }
-                    elsif ($type eq "way")
-                    {
-                        $KeepRelation->{$id} = 1  if ($KeepWay->{$ref});
-                    }
-                    elsif ($type eq "relation")
-                    {
-                        $KeepRelation->{$id} = 1  if ($KeepRelation->{$ref}); # FIXME this only works if the relation referenced has already been checked
-                        # TODO: keep relation if multipolygon or otherwise relevant for rendering relating to bbox.
+                        my ($type,$ref,$subslash) = ($1,$2,$3);# TODO: check for slash not there 
+                        if ($type eq "node")
+                        {
+                            $KeepRelation->{$id} = 1  if ($KeepNode->{$ref} == 10); #only select relation if node is in bbox
+                        }
+                        elsif ($type eq "way")
+                        {
+                            $KeepRelation->{$id} = 1  if ($KeepWay->{$ref});
+                        }
+                        elsif ($type eq "relation")
+                        {
+                            $KeepRelation->{$id} = 1  if ($KeepRelation->{$ref}); # FIXME this only works if the relation referenced has already been checked
+                            # TODO: keep relation if multipolygon or otherwise relevant for rendering relating to bbox.
+                        }
                     }
                 }
             }

@@ -19,52 +19,64 @@
 		writeText(_root.modal.box.prompt,"Please wait while the GPX track is processed.");
 
 		_root.tracks=new Array();
-		var lastTime=0;
 		_root.curtrack=0; _root.tracks[curtrack]=new Array();
-		var gpxdoc=new XML();
-		gpxdoc.load(gpxurl+gpxname);
-		gpxdoc.onLoad=function() {
-			_root.map.gpx.createEmptyMovieClip("line",1);
-			_root.map.gpx.line.lineStyle(1,0x00FFFF,100,false,"none");
-	
-			var level1=this.childNodes;
-			for (i=0; i<level1.length; i+=1) {
-				if (level1[i].nodeName=='gpx') {
-					var level2=level1[i].childNodes;
-					for (j=0; j<level2.length; j+=1) {
-						if (level2[j].nodeName=='trk') {
-							var level3=level2[j].childNodes;
-							for (k=0; k<level3.length; k+=1) {
-								if (level3[k].nodeName=='trkseg') {
-									var level4=level3[k].childNodes;
-									for (l=0; l<level4.length; l+=1) {
-										if (level4[l].nodeName=='trkpt') {
-											parsePoint(level4[l]);
+		_root.map.gpx.createEmptyMovieClip("line",1);
+		_root.map.gpx.line.lineStyle(1,0x00FFFF,100,false,"none");
+
+		var gpxs=gpxname.split(',');
+		for (var g in gpxs) {
+			var gpxdoc=new XML();
+			gpxdoc.load(gpxurl+gpxs[g]+gpxsuffix);
+			gpxdoc.onLoad=function() {
+		
+				_root.lastTime=0;
+				var waypoints=new Array();
+				var level1=this.childNodes;
+				for (i=0; i<level1.length; i+=1) {
+					if (level1[i].nodeName=='gpx') {
+						var level2=level1[i].childNodes;
+						for (j=0; j<level2.length; j+=1) {
+							if (level2[j].nodeName=='trk') {
+								var level3=level2[j].childNodes;
+								for (k=0; k<level3.length; k+=1) {
+									if (level3[k].nodeName=='trkseg') {
+										var level4=level3[k].childNodes;
+										for (l=0; l<level4.length; l+=1) {
+											if (level4[l].nodeName=='trkpt') {
+												parsePoint(level4[l]);
+											}
 										}
 									}
 								}
+							} else if (level2[j].nodeName=='wpt') {
+								var wpattr=new Array();
+								var level3=level2[j].childNodes;
+								for (k=0; k<level3.length; k+=1) {
+									if (level3[k].nodeName=='name') { wpattr['name'			  ]=level3[k].firstChild.nodeValue; }
+									if (level3[k].nodeName=='ele' ) { wpattr['ele'			  ]=level3[k].firstChild.nodeValue; }
+									if (level3[k].nodeName=='sym' ) { wpattr['wpt_symbol'     ]=level3[k].firstChild.nodeValue; }
+									if (level3[k].nodeName=='desc') { wpattr['wpt_description']=level3[k].firstChild.nodeValue; }
+								}
+								waypoints.push(new Array(long2coord(level2[j].attributes['lon']),
+														  lat2coord(level2[j].attributes['lat']),wpattr));
 							}
-						} else if (level2[j].nodeName=='wpt') {
-							_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
-							_root.map.pois[newpoiid]._x=long2coord(level2[j].attributes['lon']);
-							_root.map.pois[newpoiid]._y= lat2coord(level2[j].attributes['lat']);
-							_root.map.pois[newpoiid].locked=true;
-							_root.map.pois[newpoiid].clean=false;
-							// _root.map.pois[newpoiid].recolour();
-							var level3=level2[j].childNodes;
-							for (k=0; k<level3.length; k+=1) {
-								if (level3[k].nodeName=='name') { _root.map.pois[newpoiid].attr['name']=level3[k].firstChild.nodeValue; }
-								if (level3[k].nodeName=='ele' ) { _root.map.pois[newpoiid].attr['ele' ]=level3[k].firstChild.nodeValue; }
-								if (level3[k].nodeName=='sym' ) { _root.map.pois[newpoiid].attr['wpt_symbol'     ]=level3[k].firstChild.nodeValue; }
-								if (level3[k].nodeName=='desc') { _root.map.pois[newpoiid].attr['wpt_description']=level3[k].firstChild.nodeValue; }
-							}
-							_root.poicount+=1;
 						}
 					}
 				}
-			}
-			clearModalDialogue();
-		};
+				// Do waypoints last, because we might not have the base lat/lon at the start
+				for (i in waypoints) {
+					_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
+					_root.map.pois[newpoiid]._x=waypoints[i][0];
+					_root.map.pois[newpoiid]._y=waypoints[i][1];
+					_root.map.pois[newpoiid].attr=waypoints[i][2];
+					_root.map.pois[newpoiid].locked=true;
+					_root.map.pois[newpoiid].clean=false;
+					// _root.map.pois[newpoiid].recolour();
+					_root.poicount+=1;
+				}
+				clearModalDialogue();
+			};
+		}
 	}
 
 	function parsePoint(xmlobj) {
@@ -105,8 +117,9 @@
 	// gpxToWays	- convert all GPS tracks to ways
 	
 	function gpxToWays() {
+		var tol=0.2; if (Key.isDown(Key.SHIFT)) { tol=0.1; }
 		for (var i=0; i<_root.tracks.length; i+=1) {
-			_root.tracks[i]=simplifyPath(_root.tracks[i]);
+			_root.tracks[i]=simplifyPath(_root.tracks[i],tol);
 
 			_root.newwayid--;
 			_root.map.ways.attachMovie("way",newwayid,++waydepth);
@@ -140,7 +153,7 @@
 		return Math.sqrt(px*px+py*py);
 	}
 
-	function simplifyPath(track) {
+	function simplifyPath(track,tolerance) {
 		if (track.length<=2) { return track; }
 		
 		result=new Array();
@@ -158,7 +171,7 @@
 			// find furthest-out point
 			for (var i=anchor+1; i<float; i+=1) {
 				var d=distance(xa,ya,xb,yb,l,track[i][0],track[i][1]);
-				if (d>furthdist && d>0.2) { furthest=i; furthdist=d; }
+				if (d>furthdist && d>tolerance) { furthest=i; furthdist=d; }
 			}
 			
 			if (furthest==0) {

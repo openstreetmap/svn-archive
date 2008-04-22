@@ -3,6 +3,38 @@
 	// Standard UI
 	// =====================================================================================
 
+	// Radio buttons
+	// UIRadio.init
+	// UIRadio.addButton(x,y,text)
+	// UIRadio.select(n)
+
+	UIRadio=function() {
+		this.selected=0;
+		this.buttons=0;
+		this.xpos=new Array();
+		this.ypos=new Array();
+		this.doOnChange=null;
+	};
+	UIRadio.prototype=new MovieClip();
+	UIRadio.prototype.addButton=function(x,y,prompttext) {
+		this.buttons++;
+		this.xpos[this.buttons]=x;
+		this.ypos[this.buttons]=y;
+		createHitRegion(this,prompttext,this.buttons+10,this.buttons+20);
+	};
+	UIRadio.prototype.select=function(n) {
+		var i,s;
+		for (i=1; i<=this.buttons; i++) {
+			if (i==n) { s='radio_on'; } else { s='radio_off'; }
+			this.attachMovie(s,i,i);
+			this[i]._x=this.xpos[i];
+			this[i]._y=this.ypos[i];
+		}
+		this.selected=n;
+		if (this.doOnChange!=null) { this.doOnChange(n); }
+	};
+	Object.registerClass("radio",UIRadio);
+
 	// Checkboxes
 	// UICheckbox.init(x,y,text,state,changefunction)
 
@@ -14,18 +46,7 @@
 		this._y=y;
 		this.state=state;
 		this.doOnChange=changefunction;
-		this.createTextField('prompt',0,13,-5,200,19);
-		this.prompt.text=prompttext;
-		this.prompt.setTextFormat(plainSmall);
-		tw=this.prompt._width=this.prompt.textWidth+5;
-
-		this.createEmptyMovieClip('hitregion',1);
-		with (this.hitregion) {
-			clear(); beginFill(0,0);
-			moveTo(0,0); lineTo(tw+15,0);
-			lineTo(tw+15,15); lineTo(0,15);
-			endFill();
- 		};
+		createHitRegion(this,prompttext,0,1);
 		this.hitregion.onPress=function() {
 			this._parent.state=!this._parent.state;
 			this._parent.draw();
@@ -275,3 +296,21 @@
 			writeText(buttonobject.explain,ltext);
 		}
 	}
+
+	// createHitRegion		- write a prompt and draw a hit region around it
+	// (object,prompt text,depth for text object,depth for hit region)
+
+	function createHitRegion(obj,prompttext,promptdepth,hitdepth) {
+		obj.createTextField('prompt',promptdepth,13,-5,200,19);
+		obj.prompt.text=prompttext;
+		obj.prompt.setTextFormat(plainSmall);
+		tw=obj.prompt._width=obj.prompt.textWidth+5;
+
+		obj.createEmptyMovieClip('hitregion',hitdepth);
+		with (obj.hitregion) {
+			clear(); beginFill(0,0);
+			moveTo(0,0); lineTo(tw+15,0);
+			lineTo(tw+15,15); lineTo(0,15);
+			endFill();
+ 		};
+	};

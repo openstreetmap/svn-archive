@@ -13,6 +13,7 @@
 	var gpxurl='http://www.openstreetmap.org/trace/';
 	var yahoourl='/potlatch/ymap2.swf';
 	var tileprefix='';
+	var gpxsuffix='/data.xml';
 
 	// Resizable window, disable right-click
 	Stage.showMenu = false;
@@ -117,7 +118,7 @@
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.8a";	// current version
+	var signature="Potlatch 0.8b";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -200,7 +201,7 @@
 	with (_root.panel.padlock) { _y=32; _visible=false; };
 	_root.panel.padlock.onPress=function() {
 		if (_root.wayselected) {
-			if (_root.ws.path.length>200) {
+			if (_root.ws.path.length>200 && _root.ws.oldversion==0) {
 				setTooltip("too long to unlock:\nplease split into\nshorter ways");
 			} else {
 				_root.ws.locked=false;
@@ -361,8 +362,8 @@
 	updateScissors();
 	resizeWindow();
 
-	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
-		else { startPotlatch(); }		//  |
+	if (lat) { startPotlatch(); }			// Parse GPX if supplied
+	if (gpx) { parseGPX(gpx); }				//  |
 
 	// Welcome buttons
 
@@ -635,7 +636,7 @@
 				if (_root.panel.properties.proptype=='way') { _root.ws.redraw(); }
 			}
 			return;
-		} else if (k>=112 && k<=118) {
+		} else if (k>=112 && k<=120) {
 			preferences.data.dimbackground=Key.isDown(Key.SHIFT); 
 			setBackground(k-112);
 			return;
@@ -644,7 +645,7 @@
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way -- ode
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
-								if (_root.wayselected!=0) { _root.ws.remove(); }
+								if (_root.wayselected!=0) { _root.ws.removeWithConfirm(); }
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
@@ -855,13 +856,13 @@ _root.coordmonitor.text+="!";
 	// Options window
 	
 	function openOptionsWindow() {
-		createModalDialogue(250,110,new Array('Ok'),function() { preferences.flush(); } );
+		createModalDialogue(290,110,new Array('Ok'),function() { preferences.flush(); } );
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		writeText(_root.modal.box.prompt1,"Background:");
 
 		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out of copyright map"),
+			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
 
 		_root.modal.box.attachMovie("checkbox","pointer",5);
@@ -891,6 +892,7 @@ _root.coordmonitor.text+="!";
 		_root.panel.i_direction._alpha=50;
 		clearTooltip();
 		setTypeText("","");
+		_root.panel.padlock._visible=false;
 
 		_root.panel.properties.init('');
 		_root.panel.presets.hide();

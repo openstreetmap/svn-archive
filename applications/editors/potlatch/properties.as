@@ -390,7 +390,7 @@
 		}
 	};
 	
-	PropertyWindow.prototype.repeatAttributes=function() {
+	PropertyWindow.prototype.repeatAttributes=function(dotags) {
 		var i,proparr;
 		switch (this.proptype) {
 			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']][4]; 
@@ -405,16 +405,18 @@
 		}
 
 		// repeat tags
-		for (i in proparr) {
-			if (Key.isDown(Key.SHIFT) && (i=='name' || i=='ref') || i=='created_by') {
-				// ignore name and ref if SHIFT pressed
-			} else {
-				switch (this.proptype) {
-					case 'point':	j=_root.savedpointway.path[_root.saved['point']][4][i]; break;
-					case 'POI':		j=_root.saved['POI'].attr[i]; break;
-					case 'way':		j=_root.saved['way'].attr[i]; break;
+		if (dotags) {
+			for (i in proparr) {
+				if (Key.isDown(Key.SHIFT) && (i=='name' || i=='ref') || i=='created_by') {
+					// ignore name and ref if SHIFT pressed
+				} else {
+					switch (this.proptype) {
+						case 'point':	j=_root.savedpointway.path[_root.saved['point']][4][i]; break;
+						case 'POI':		j=_root.saved['POI'].attr[i]; break;
+						case 'way':		j=_root.saved['way'].attr[i]; break;
+					}
+					setValueInObject(this.proptype,i,j);
 				}
-				setValueInObject(this.proptype,i,j);
 			}
 		}
 

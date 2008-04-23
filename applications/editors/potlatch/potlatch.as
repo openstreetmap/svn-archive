@@ -163,13 +163,14 @@
 
 	_root.panel.attachMovie("newrel","i_newrel",44);
 	with (_root.panel.i_newrel) { _x=690; _y=75; backgroundColor=0xDDBBBB; background=true;};
-	_root.panel.i_newrel.onRelease =function() { addToRelation(); };
+	_root.panel.i_newrel.onRelease =function() { if (Key.isDown(Key.SHIFT)) { _root.panel.properties.repeatAttributes(false); }
+												 else { addToRelation(); } };
 	_root.panel.i_newrel.onRollOver=function() { setFloater("Add to a relation"); };
 	_root.panel.i_newrel.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("repeatattr","i_repeatattr",34);
 	with (_root.panel.i_repeatattr) { _x=690; _y=55; };
-	_root.panel.i_repeatattr.onPress=function() { _root.panel.properties.repeatAttributes(); };
+	_root.panel.i_repeatattr.onPress=function() { _root.panel.properties.repeatAttributes(true); };
 	_root.panel.i_repeatattr.onRollOver=function() { setFloater("Repeat tags from the previously selected way (R)"); };
 	_root.panel.i_repeatattr.onRollOut =function() { clearFloater(); };
 
@@ -653,7 +654,7 @@
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
-			case 82:		_root.panel.properties.repeatAttributes(); break;							// R - repeat attributes
+			case 82:		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
 			case 85:		getDeleted(); break;								// U - undelete
 			case 88:		_root.ws.splitWay(); break;							// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
@@ -787,10 +788,16 @@
 		if (choice=='Retry') {
 			// loop through all ways which are uploading, and reupload
 			_root.panel.i_warning._visible=false;
-			for (qway in _root.map.ways) {
+			for (var qway in _root.map.ways) {
 				if (_root.map.ways[qway].uploading) {
 					_root.map.ways[qway].uploading=false;
 					_root.map.ways[qway].upload();
+				}
+			}
+			for (var qrel in _root.map.relations) {
+				if (_root.map.relations[qrel].uploading) {
+					_root.map.relations[qrel].uploading=false;
+					_root.map.relations[qrel].upload();
 				}
 			}
 		}

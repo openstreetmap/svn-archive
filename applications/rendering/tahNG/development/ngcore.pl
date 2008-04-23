@@ -115,28 +115,18 @@ sub downloadData
 
         if (-s $partialFile == 0)
         {
-            if ($Zoom < 12)
-            {
-                statusMessage("No data here...", $currentSubTask, $progressJobs, $progressPercent, 1);
-                # if loop was requested just return  or else exit with an error. 
-                # (to enable wrappers to better handle this situation 
-                # i.e. tell the server the job hasn't been done yet)
-                PutRequestBackToServer($X,$Y,$Zoom,"NoData");
-                foreach my $file(@tempfiles) { killafile($file); }
-                addFault("nodataXAPI",1);
-                return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
-            }
+            statusMessage("No data here...", $currentSubTask, $progressJobs, $progressPercent, 1);
+            # if loop was requested just return  or else exit with an error. 
+            # (to enable wrappers to better handle this situation 
+            # i.e. tell the server the job hasn't been done yet)
+            PutRequestBackToServer($X,$Y,$Zoom,"NoData");
+            foreach my $file(@tempfiles) { killafile($file); }
+            addFault("nodataXAPI",1);
+            return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
         }
         else
         {
-            if ($Zoom < 12)
-            {
-                resetFault("nodataXAPI"); #reset to zero if data downloaded
-            }
-            else 
-            {
-                resetFault("nodata"); #reset to zero if data downloaded
-            }
+            resetFault("nodataXAPI"); #reset to zero if data downloaded
         }
     }
 

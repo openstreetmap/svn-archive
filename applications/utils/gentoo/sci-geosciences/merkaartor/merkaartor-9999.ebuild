@@ -18,11 +18,13 @@ IUSE=""
 ESVN_REPO_URI="http://svn.openstreetmap.org/applications/editors/merkaartor/"
 
 src_compile() {
-	eqmake4 Merkaartor.pro
+	local qmake_params=''
+	qmake_params="${qmake_params} NOUSEWEBKIT=1"
+	eqmake4 Merkaartor.pro ${qmake_params}
 	emake || die "emake failed"
-	mv release/merkaartor release/merkaartor-scm
+	mv binaries/debug/bin/merkaartor merkaartor-scm
 }
 
 src_install() {
-	dobin release/merkaartor-scm || die "dobin failed"
+	dobin merkaartor-scm || die "dobin failed"
 }

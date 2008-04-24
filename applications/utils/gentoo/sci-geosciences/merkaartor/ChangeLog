@@ -2,6 +2,14 @@
 # Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*merkaartor-9999 (24 Apr 2008)
+
+  24 Apr 2008; Dennis <dennis.lists@googlemail.com> -merkaartor-0.0.8.ebuild, -merkaartor-0.0.9.ebuild:
+  removed old versions (portage has merkaartor up to 0.0.10)
+
+  24 Apr 2008; Dennis <dennis.lists@googlemail.com> merkaartor-9999.ebuild:
+  prevent build of webkit (doesn't work for the time being)
+
 *merkaartor-0.0.9 (29 Jan 2008)
 
   29 Jan 2008; Dennis <dennis.lists@googlemail.com> +merkaartor-0.0.9.ebuild:

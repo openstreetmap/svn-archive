@@ -2,6 +2,14 @@
 # Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*josm-1.5_p620 (24 Apr 2008)
+
+  24 Apr 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p620.ebuild:
+  version bump
+
+  24 Apr 2008; Dennis <dennis.lists@googlemail.com> -josm-1.5_p546.ebuild:
+  removed old version
+
 *josm-1.5_p546 (17 Feb 2008)
   16 Apr 2008; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +josm-1.5_p607.ebuild:
   Version bump

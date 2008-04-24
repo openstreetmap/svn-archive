@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-# osmunbraid.pl
+# osm-unbraid.pl
 
 # Copyright 2008 by Alan Millar.  Released under the GNU Public
 #   License.  Everybody share and play nicely together.
@@ -810,7 +810,7 @@ sub SaveNewData {
     print "Skip making sides oneway\n";
   } # if oneway
 
-  $osm->{'generator'}='osmunbraid.pl';
+  $osm->{'generator'}='osm-unbraid.pl';
 
   print "Saving to file $NewXmlFile\n";
 
@@ -1002,7 +1002,7 @@ sub ErrorExit {
   print "FATAL ERROR: $ErrorMsg\n" .
 	"Saving data to $ErrorFile\n";
 
-  $osm->{'generator'}='osmunbraid.pl';
+  $osm->{'generator'}='osm-unbraid.pl';
 
   $xmlobj->XMLout($osm,OutputFile=>$ErrorFile);
 
@@ -1016,11 +1016,11 @@ __END__
 
 =head1 NAME
 
-osmunbraid - unravel "braided" streets in OpenStreetMap
+osm-unbraid - unravel "braided" streets in OpenStreetMap
 
 =head1 SYNOPSIS
 
-  osmunbraid.pl [--nostraighten] [--nooneway] [--nobbox]
+  osm-unbraid.pl [--nostraighten] [--nooneway] [--nobbox]
     [--inputfile filename] [--outputfile filename] [--errorfile filename]
     waynumber1 waynumber2
 

@@ -7,6 +7,7 @@
 #  of the import of US Census Bureau TIGER street data.
 
 # Written by Edward Betts.  Contributed to the public domain.
+#    http://www.openstreetmap.org/user/Edward
 
 #-----------------------------
 use strict;

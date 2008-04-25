@@ -1,5 +1,14 @@
 #!/usr/bin/perl
+#-----------------------------
+# find_braided_streets - OpenStreetMap utility
 
+# This script will read an OSM file and search for streets that share
+#  several common nodes.  These are often "braided" streets, an artifact
+#  of the import of US Census Bureau TIGER street data.
+
+# Written by Edward Betts.  Contributed to the public domain.
+
+#-----------------------------
 use strict;
 use warnings;
 

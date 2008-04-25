@@ -1,0 +1,77 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+open my $fh, "data.osm" or die $!;
+my $state = 1;
+my $way_id;
+my %node_way;
+my %way_node;
+my %way_tag;
+my %node_loc;
+while (<$fh>) {
+    if ($state == 1) {
+        if (/<node/) {
+            /<node id='(\d+)' lat='(-?[0-9.]+)' lon='(-?[0-9.]+)'/ or die $_;
+            $node_loc{$1} = { lat => $2, lon => $3 };
+            next;
+        }
+        /^  <way id='(\d+)' / and $state = 2;
+    }
+    if ($state == 2 and /^  <way id='(\d+)' /) {
+        $way_id = $1;
+        $way_tag{$1} = {};
+        $state = 3;
+        next;
+    }
+    if ($state == 3) {
+        if (/^    <nd ref='(\d+)'/) {
+            push @{$node_way{$1} ||= []}, $way_id;
+            push @{$way_node{$way_id} ||= []}, $1; next;
+        }
+        if (/^    <tag k='(.*)' v='(.*)'/) {
+            $way_tag{$way_id}{$1} = $2; next;
+        }
+        if (m!^  </way>!) {
+            $state = 2; next;
+        }
+    }
+}
+close $fh;
+
+my %look_at;
+while (my ($k, $v) = each %node_way) {
+    @$v > 1 or next;
+    $way_tag{$_}{highway} and $look_at{$_} = 1 for @$v;
+}
+
+my %seen;
+$seen{$_} or linked_ways($_) for keys %look_at;
+
+sub api {
+    my $way = shift;
+    return "$way_tag{$way}{name} ([http://api.openstreetmap.org/api/0.5/way/$way $way])";
+}
+
+sub linked_ways {
+    my $way = shift;
+    my $name = $way_tag{$way}{name} or return;
+    $way_node{$way} or die $way;
+    my %cross_way;
+    foreach my $node (@{$way_node{$way}}) {
+        my @ways = grep { $way_tag{$_}{name} } @{$node_way{$node}};
+        @ways or next;
+        $cross_way{$_}++ for @ways;
+        $cross_way{$way}--;
+    }
+    while (my ($k, $v) = each %cross_way) {
+        $v < 3 and delete $cross_way{$k}
+    }
+    %cross_way or return;
+    my $loc = $node_loc{$way_node{$way}[0]};
+    print "# [http://informationfreeway.org/?lat=$loc->{lat}&lon=$loc->{lon}&zoom=17 map]: ";
+    $seen{$_} = 1 for keys %cross_way;
+    print join (", ", map api($_), $way, keys %cross_way);
+    print "\n";
+}

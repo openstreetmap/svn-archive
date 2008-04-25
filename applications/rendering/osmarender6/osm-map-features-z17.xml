@@ -1621,12 +1621,12 @@
 		</rule>
 
         <!-- House numbers -->
-        <rule e="way" k="addr:housenumber" v="*">
+        <rule e="way" k="addr:housenumber" v="*" layer="5">
             <areaSymbol xlink:href="#symbol-housenumber" width='1px' height='1px' />
             <areaText k="addr:housenumber" startOffset='50%' class="housenumber-caption" dy='0.3px' />
         </rule>
 
-        <rule e="node" k="addr:housenumber" v="*">
+        <rule e="node" k="addr:housenumber" v="*" layer="5">
             <circle r='0.8px' class="housenumber-node"/>
 		    <text k="addr:housenumber" class='housenumber-caption' dy='0.3px' />
 		</rule>

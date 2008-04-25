@@ -1088,6 +1088,12 @@ where 0 is north, 90 is east, +/- 180 is south, and -90 or 270 is west.
 Relative bearings range from -180 to +180, where 0 is straight ahead, 
 +90 is on the right, -90 is on the left, and +/-180 is directly behind.
 
+XML Performance: If you find the XML parser taking much too long (such
+as taking 30 minutes to parse the downloaded data when it should take
+30 seconds) then you need to update your Perl installation.  The default
+XML::SAX parser performs poorly.  Installing XML::SAX::Expat or
+XML::LibXML may fix it.
+
 Tested in Linux with Perl 5.8, using OpenStreetMap API 0.5.
 
 =head1 SEE ALSO
@@ -1097,6 +1103,6 @@ For a list of braided streets that need correction, see
 
 =head1 AUTHOR
 
- Alan Millar
+ Alan Millar     http://www.openstreetmap.org/user/amillar
 
 =cut

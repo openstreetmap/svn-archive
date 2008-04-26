@@ -2,19 +2,6 @@
 	// =====================================================================================
 	// Initialise
 
-	// Site-specific URLs
-//	var apiurl='rubyamf.cgi';
-//	var gpsurl='/potlatch/getgps.cgi';
-//	var gpxurl='http://localhost:3000/trace/';
-//	var yahoourl='/~richard/potlatch/ymap.swf';
-//	var tileprefix='http://127.0.0.1/~richard/cgi-bin/proxy.cgi?url=';
-	var apiurl='../api/0.5/amf';
-	var gpsurl='../api/0.5/swf/trackpoints';
-	var gpxurl='http://www.openstreetmap.org/trace/';
-	var yahoourl='/potlatch/ymap2.swf';
-	var tileprefix='';
-	var gpxsuffix='/data.xml';
-
 	// Resizable window, disable right-click
 	Stage.showMenu = false;
 	Stage.align="TL";

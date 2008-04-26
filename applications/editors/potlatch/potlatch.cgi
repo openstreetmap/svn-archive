@@ -1,14 +1,22 @@
 #!/usr/bin/perl
 
 	# ----------------------------------------------------------------
-	# potlatch.cgi
+	# potlatch.pl
 	# Flash editor for Openstreetmap
 
-	# editions Systeme D / Richard Fairhurst 2006-7
+	# editions Systeme D / Richard Fairhurst 2006-8
 	# public domain
 
-	# see http://wiki.openstreetmap.org/index.php/Potlatch/Changelog
+	# See http://wiki.openstreetmap.org/index.php/Potlatch/Changelog
 	# for revision history
+
+	# To compile:
+	# perl potlatch.pl [options] [destination path]
+
+	# Options:
+	# --dev		- use OSM dev server instead of localhost
+	# --trace	- enable trace windows
+	# Destination path is ./potlatch.swf if not specified
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -30,11 +38,36 @@
 
 	require "potlatch_assets.pl";
 
-	$debug=0;
+	# -----	Get server addresses
+
+	$ofn=''; $debug=0; $dev=0;
+	foreach $a (@ARGV) {
+		if    ($a eq '--trace') { $debug=1; }
+		elsif ($a eq '--dev'  ) { $dev  =1; }
+		else					{ $ofn=$a;  }
+	}
+	
+	if ($dev) { $actionscript=<<EOF;
+	var apiurl='http://main.dev.openstreetmap.org/api/0.5/amf';
+	var gpsurl='http://main.dev.openstreetmap.org/api/0.5/swf/trackpoints';
+	var gpxurl='http://main.dev.openstreetmap.org/trace/';
+	var tileprefix='';
+	var yahoourl='http://main.dev.openstreetmap.org/potlatch/ymap2.swf';
+	var gpxsuffix='/data.xml';
+EOF
+	} else { $actionscript=<<EOF;
+	var apiurl='../api/0.5/amf';
+	var gpsurl='../api/0.5/swf/trackpoints';
+	var gpxurl='http://www.openstreetmap.org/trace/';
+	var tileprefix='';
+	var yahoourl='/potlatch/ymap2.swf';
+	var gpxsuffix='/data.xml';
+EOF
+	}
 
 	# -----	Read ActionScript files
 
-	$actionscript="#include 'potlatch.as'\n";
+	$actionscript.="#include 'potlatch.as'\n";
 	while ($actionscript=~/#include '(.+?)'/g) {
 		$fn=$1;
 		unless (exists($ENV{'DOCUMENT_ROOT'})) {
@@ -48,6 +81,7 @@
 	}
 
 	if ($debug) { $actionscript=~s!false;//#debug!true;!g; }
+print $actionscript;
 	$m->add(new SWF::Action($actionscript));
 
 	# -----	Output file
@@ -61,7 +95,7 @@
 	} else {
 		# Running from command line, so output to file
 		print localtime()."\n";
-		if ($fn=shift @ARGV) { print "Saving to $fn\n"; $m->save($fn); }
-						else { print "Saving to this directory\n"; $m->save("potlatch.swf"); }
+		if ($ofn) { print "Saving to $ofn\n"; $m->save($ofn); }
+			 else { print "Saving to this directory\n"; $m->save("potlatch.swf"); }
 	}
 

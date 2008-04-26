@@ -57,8 +57,7 @@
 									if (level3[k].nodeName=='sym' ) { wpattr['wpt_symbol'     ]=level3[k].firstChild.nodeValue; }
 									if (level3[k].nodeName=='desc') { wpattr['wpt_description']=level3[k].firstChild.nodeValue; }
 								}
-								waypoints.push(new Array(long2coord(level2[j].attributes['lon']),
-														  lat2coord(level2[j].attributes['lat']),wpattr));
+								waypoints.push(new Array(level2[j].attributes['lon'],level2[j].attributes['lat'],wpattr));
 							}
 						}
 					}
@@ -66,8 +65,8 @@
 				// Do waypoints last, because we might not have the base lat/lon at the start
 				for (i in waypoints) {
 					_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
-					_root.map.pois[newpoiid]._x=waypoints[i][0];
-					_root.map.pois[newpoiid]._y=waypoints[i][1];
+					_root.map.pois[newpoiid]._x=long2coord(waypoints[i][0]);
+					_root.map.pois[newpoiid]._y=lat2coord (waypoints[i][1]);
 					_root.map.pois[newpoiid].attr=waypoints[i][2];
 					_root.map.pois[newpoiid].locked=true;
 					_root.map.pois[newpoiid].clean=false;

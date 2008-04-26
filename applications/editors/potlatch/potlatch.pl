@@ -44,15 +44,24 @@
 	foreach $a (@ARGV) {
 		if    ($a eq '--trace') { $debug=1; }
 		elsif ($a eq '--dev'  ) { $dev  =1; }
+		elsif ($a eq '--local') { $dev  =2; }
 		else					{ $ofn=$a;  }
 	}
 	
-	if ($dev) { $actionscript=<<EOF;
+	if ($dev==1) { $actionscript=<<EOF;
 	var apiurl='http://main.dev.openstreetmap.org/api/0.5/amf';
 	var gpsurl='http://main.dev.openstreetmap.org/api/0.5/swf/trackpoints';
 	var gpxurl='http://main.dev.openstreetmap.org/trace/';
 	var tileprefix='';
 	var yahoourl='http://main.dev.openstreetmap.org/potlatch/ymap2.swf';
+	var gpxsuffix='/data.xml';
+EOF
+	} elsif ($dev==2) { $actionscript=<<EOF;
+	var apiurl='../api/0.5/amf';
+	var gpsurl='../api/0.5/swf/trackpoints';
+	var gpxurl='http://localhost:3000/trace/';
+	var tileprefix='http://127.0.0.1/~richard/cgi-bin/proxy.cgi?url=';
+	var yahoourl='/potlatch/ymap2.swf';
 	var gpxsuffix='/data.xml';
 EOF
 	} else { $actionscript=<<EOF;
@@ -81,7 +90,6 @@ EOF
 	}
 
 	if ($debug) { $actionscript=~s!false;//#debug!true;!g; }
-print $actionscript;
 	$m->add(new SWF::Action($actionscript));
 
 	# -----	Output file

@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <script src="http://main.dev.openstreetmap.org/javascripts/prototype.js?1209006421" type="text/javascript"></script>
+    <script src="http://main.dev.openstreetmap.org/javascripts/site.js?1209006421" type="text/javascript"></script>
+    <!--[if lt IE 7]><script src="http://main.dev.openstreetmap.org/javascripts/pngfix.js?1209006421" type="text/javascript"></script><![endif]--> <!-- thanks, microsoft! -->
+    <link href="http://main.dev.openstreetmap.org/stylesheets/site.css?1209006422" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://main.dev.openstreetmap.org/stylesheets/print.css?1209006422" media="print" rel="stylesheet" type="text/css" />
+    <link href="http://main.dev.openstreetmap.org/opensearch/osm.xml" rel="search" title="OpenStreetMap Search" type="application/opensearchdescription+xml" />
+    <title>OpenStreetMap</title>
+  </head>
+  <body>
+    <div id="content">
+<div id="sidebar">
+  <table class="sidebar_title" width="100%">
+    <tr>
+      <td align="left" id="sidebar_title">Search Results</td>
+      <td align="right"><a href="javascript:closeSidebar()">Close</a></td>
+    </tr>
+  </table>
+  <div id="sidebar_content">
+  </div>
+</div>
+
+<script type="text/javascript">
+<!--
+  var onclose;
+
+  function openSidebar(options) {
+    options = options || {};
+
+    if (onclose) {
+       onclose();
+       onclose = null;
+    }
+
+    if (options.width) { $("sidebar").style.width = options.width; }
+    else { $("sidebar").style.width = "30%"; }
+
+    $("sidebar").style.display = "block";
+
+    resizeMap();
+
+    onclose = options.onclose;
+  }
+
+  function closeSidebar() {
+    $("sidebar").style.display = "none";
+
+    resizeMap();
+
+    if (onclose) {
+       onclose();
+       onclose = null;
+    }
+  }
+
+  function updateSidebar(title, content) {
+    $("sidebar_title").innerHTML = title;
+    $("sidebar_content").innerHTML = content;
+  }
+
+  function sidebarOpen(title) {
+    return $("sidebar").style.display == "block" &&
+           $("sidebar_title").innerHTML == title;
+  }
+// -->
+</script>
+
+<script type="text/javascript">
+<!--
+  function startSearch() {
+    updateSidebar("Search Results", "<p class='search_results_entry'>Searching...</p>");
+
+    $("search_field").style.display = "none";
+    $("search_active").style.display = "inline";
+  }
+
+  function endSearch() {
+    $("search_field").style.display = "inline";
+    $("search_active").style.display = "none";
+  }
+
+  function describeLocation() {
+    var position = getPosition();
+
+    new Ajax.Request('/geocoder/description', {asynchronous:true, evalScripts:true, onComplete:function(request){endSearch()}, onLoading:function(request){startSearch()}, parameters:'lat=' + position.lat + '&lon=' + position.lon})
+  }
+
+  
+// -->
+</script>
+
+
+
+
+
+
+
+	
+	
+	
+
+
+<div id="map">
+	You need a Flash player to use Potlatch, the
+    OpenStreetMap Flash editor, but you probably know that. :)
+</div>
+
+<script src="http://main.dev.openstreetmap.org/javascripts/swfobject.js?1209006421" type="text/javascript"></script>
+<script type="text/javascript" defer="defer">
+  var brokenContentSize = $("content").offsetWidth == 0;
+  var fo = new SWFObject("potlatch.swf?d="+Math.round(Math.random()*1000), "potlatch", "100%", "100%", "6", "#FFFFFF");
+  // 700,600 for fixed size, 100%,100% for resizable
+  var changesaved=true;
+  var winie=false; if (document.all && window.print) { winie=true; }
+  
+  window.onbeforeunload=function() {
+	if (!changesaved && !winie) {
+	    return "You have unsaved changes. (To save in Potlatch, you should deselect the current way or point.)";
+	}
+  }
+
+  function doSWF(lat,lon,sc) {
+    if (sc < 11) sc = 11;
+    fo.addVariable('scale',sc);
+    fo.addVariable('token','VeSiWDkofUzgLLx5DgAU4rh1Wn23ro');
+    if (lat) { fo.addVariable('lat',lat); }
+    if (lon) { fo.addVariable('long',lon); }
+    
+    fo.write("map");
+  }
+
+  doSWF(51.8722,-1.4678,13);
+
+  function setPosition(lat, lon, zoom) {
+    doSWF(lat, lon, zoom);
+  }
+
+  function resizeContent() {
+    var content = $("content");
+    var rightMargin = parseInt(getStyle(content, "right"));
+    var bottomMargin = parseInt(getStyle(content, "bottom"));
+
+    content.style.width = document.documentElement.clientWidth - content.offsetLeft - rightMargin;
+    content.style.height = document.documentElement.clientHeight - content.offsetTop - bottomMargin;
+  }
+  
+  function resizeMap() {
+    var sidebar_width = $("sidebar").offsetWidth;
+
+    if (sidebar_width > 0) {
+      sidebar_width = sidebar_width + 5
+    }
+
+    $("map").style.left = (sidebar_width) + "px";
+    $("map").style.width = ($("content").offsetWidth - sidebar_width) + "px";
+    $("map").style.height = ($("content").offsetHeight - 2) + "px";
+  }
+
+  function handleResize() {
+    if (brokenContentSize) {
+      resizeContent();
+    }
+
+    resizeMap();
+  }
+  
+  handleResize();
+
+  window.onload = handleResize;
+  window.onresize = handleResize;
+</script>
+
+
+    </div>
+
+    <span id="greeting">
+      
+        Welcome, <a href="http://main.dev.openstreetmap.org/user/Potlatch">Potlatch</a> dev :) | 
+        
+        
+
+
+        <a href="http://main.dev.openstreetmap.org/user/Potlatch/inbox" style="font-weight: ;">inbox (0)</a> |
+        <a href="http://main.dev.openstreetmap.org/logout?referer=%2Fedit%3Flat%3D51.8722%26lon%3D-1.4678%26zoom%3D13" id="logoutanchor">logout</a>
+      
+    </span>
+
+    <div>
+      <ul id="tabnav">
+        
+        <li><a href="http://main.dev.openstreetmap.org/" class="" id="viewanchor" title="view maps">View</a></li>
+        <li><a href="http://main.dev.openstreetmap.org/edit" class="active" id="editanchor" title="edit maps">Edit</a></li>
+        
+        <li><a href="http://main.dev.openstreetmap.org/export" class="" id="exportanchor" title="export map data">Export</a></li>
+        
+        <li><a href="http://main.dev.openstreetmap.org/traces" class="" id="traceanchor" title="manage traces">GPS Traces</a></li>
+        <li><a href="http://main.dev.openstreetmap.org/diary" id="diaryanchor" title="view user diaries">User Diaries</a></li>
+      </ul>
+    </div>
+
+    <div id="left">
+
+      <div id="logo">
+        <center>
+          <h1>OpenStreetMap</h1>
+          <a href="http://main.dev.openstreetmap.org/"><img alt="Osm_logo" border="0" height="120" src="http://main.dev.openstreetmap.org/images/osm_logo.png?1209006422" width="120" /></a><br/>
+          <h2 class="nowrap">The Free Wiki World Map</h2>
+        </center>
+      </div>
+
+      
+
+      
+
+      <div id="left_menu" class="left_menu">
+        <a href="http://wiki.openstreetmap.org">Help &amp; Wiki</a><br />
+        <a href="http://www.opengeodata.org/">News blog</a><br />
+        <a href="http://wiki.openstreetmap.org/index.php/Merchandise">Shop</a><br />
+        
+      </div>
+
+      <div id="sotm" class="left_menu">
+        <div id="sotminfo">
+        Come to the second OpenStreetMap Conference, <a href="http://www.stateofthemap.org">The State of the Map</a>: 12th-13th July 2008, Limerick, Ireland.
+        </div>
+      </div>
+
+      
+  <div class="optionalbox">
+    <span class="oboxheader">Search</span>
+    <span class="whereami"><a href="javascript:describeLocation()">Where am I?</a></span>
+    <div class="search_form">
+    <span id="search_field">
+    <form action="/geocoder/search" method="post" onsubmit="new Ajax.Request('/geocoder/search', {asynchronous:true, evalScripts:true, onComplete:function(request){endSearch()}, onLoading:function(request){startSearch()}, parameters:Form.serialize(this)}); return false;">
+      <input id="query" name="query" type="text" value="" />
+    </form>
+    </span>
+    <p id="search_active">Searching...</p>
+    </div>
+    <p class="search_help">
+      examples: 'Alkmaar', 'Regent Street, Cambridge', 'CB2 5AQ',
+      or 'post offices near LŸnen'
+      <a href="http://wiki.openstreetmap.org/index.php/Search">more examples...</a>
+    </p>
+  </div>
+
+    </div>
+  </body>
+</html>

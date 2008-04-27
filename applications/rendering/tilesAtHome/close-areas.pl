@@ -592,6 +592,7 @@ sub make_way
 sub make_multipolygon
 {
     my ($seglistlist) = @_;
+    return unless scalar(@$seglistlist);
     my $waylist = [];
     foreach (@$seglistlist) 
     {

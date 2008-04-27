@@ -3,31 +3,31 @@
 
 	#		Empty movie-clips for prototypes
 	
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"way");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"relation");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"keyvalue");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"relmember");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"propwindow");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"presetmenu");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"radio");
-	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"auto");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"way");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"relation");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"keyvalue");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"relmember");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"propwindow");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"presetmenu");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"menu");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"radio");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"auto");
 
 	#		Radio buttons
 	
-	$ec=new SWF::Sprite(); $ch=new SWF::Shape();
+	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
 	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_off");
 
-	$ec=new SWF::Sprite(); $ch=new SWF::Shape();
+	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
 	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
 	$ch->setRightFill(0   ,0   ,0   ); $ch->setLine(20,0,0,0); $ch->drawCircle(4);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_on");
 
 	#		POI
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
 	$ch->setRightFill(0,155,0);
 	$ch->setLine(20,0,0,0);
@@ -38,7 +38,7 @@
 
 	#		POI in way
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
 	$ch->setRightFill(0,195,0);
 	$ch->setLine(20,0,0,0);
@@ -49,7 +49,7 @@
 
 	#		Anchor (selected)
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
 	$ch->setRightFill(255,0,0); $ch->movePenTo(-2,-2);
 	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
@@ -59,7 +59,7 @@
 
 	#		Anchor (mouseover)
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
 	$ch->setRightFill(0,0,255); $ch->movePenTo(-2,-2);
 	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
@@ -69,7 +69,7 @@
 
 	#		Zoom in
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$bq=new SWF::Shape();
 	$bq->setRightFill($bq->addFill(0,0,0x8b));
 	$bq->movePenTo(0,20);
@@ -87,7 +87,7 @@
 	
 	#		Zoom out
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$bq=new SWF::Shape();
 	$bq->setRightFill($bq->addFill(0,0,0x8b));
 	$bq->drawLineTo(0,10);
@@ -102,7 +102,7 @@
 
 	# ------ padlock sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	$s=new SWF::Shape();
 	$s->movePenTo(3,-2); $s->setLine(35,0,0,0); $s->drawCircle(2);
 	$s->movePenTo(0,0); $s->setRightFill($s->addFill(0,0,0));
@@ -115,7 +115,7 @@
 
 	# ------ exclamation sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(255,0,0);
@@ -177,7 +177,7 @@
 
 	# ------ potlatch_rotation sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -205,7 +205,7 @@
 	
 	# ------ potlatch_roundabout sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -271,7 +271,7 @@
 
 	#		Scissors (auto-generated from AI-to-Ming script)
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(127,127,127));
@@ -371,7 +371,7 @@
 
 	#		GPS
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -427,7 +427,7 @@
 	
 	#		Prefs
 
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -485,7 +485,7 @@
 		
 # ------ potlatch_iplace sprite
 
-$ec=new SWF::Sprite();
+$ec=new SWF::MovieClip();
 
 $s=new SWF::Shape();
 $s->setRightFill(190,190,190);
@@ -528,7 +528,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_place");
 
 # ------ potlatch_itourism sprite
 
-$ec=new SWF::Sprite();
+$ec=new SWF::MovieClip();
 
 $s=new SWF::Shape();
 $s->setRightFill(190,190,190);
@@ -555,7 +555,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_tourism");
 
 # ------ potlatch_inatural sprite
 
-$ec=new SWF::Sprite();
+$ec=new SWF::MovieClip();
 
 $s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
@@ -606,7 +606,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 
 	# ----- potlatch_iboat sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
@@ -701,7 +701,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	# ------ potlatch_icar sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
@@ -822,7 +822,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	# ------ potlatch_icycle sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
@@ -1039,7 +1039,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	# ------ potlatch_itrain sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
@@ -1142,7 +1142,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	# ------ potlatch_iwalking sprite
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
@@ -1221,7 +1221,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 
 	#		add new attribute
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -1251,7 +1251,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	#		close cross
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -1268,7 +1268,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 
 	#		add new relation
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -1331,7 +1331,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	#		repeat last attributes
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -1367,7 +1367,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	
 	#		next page of attributes
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -1446,7 +1446,7 @@ if (1==0) {
 	
 	# ------ hand pointer
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	
 	$s=new SWF::Shape();
 	$s->setLine(0.94,0,0,0);
@@ -1493,13 +1493,13 @@ if (1==0) {
 
 	# ------ pen pointer
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	drawPen();
 	$ec->nextFrame(); $m->addExport($ec,"pen");
 	
 	# ------ penx pointer
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	drawPen();
 	$s=new SWF::Shape();
 	$s->setLine(3,0,0,0);
@@ -1510,7 +1510,7 @@ if (1==0) {
 	
 	# ------ penplus pointer
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	drawPen();
 	$s=new SWF::Shape();
 	$s->setLine(3,0,0,0);
@@ -1521,7 +1521,7 @@ if (1==0) {
 	
 	# ------ peno pointer
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	drawPen();
 	$s=new SWF::Shape();
 	$s->setLine(2,0,0,0);
@@ -1532,7 +1532,7 @@ if (1==0) {
 	
 	# ------ penso pointer (solid o)
 	
-	$ec=new SWF::Sprite();
+	$ec=new SWF::MovieClip();
 	drawPen();
 	$s=new SWF::Shape();
 	$s->setLine(2,0,0,0);

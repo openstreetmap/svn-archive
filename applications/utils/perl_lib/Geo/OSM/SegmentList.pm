@@ -30,7 +30,9 @@ sub load_segment_list($;$){
 
     my $osm_segments;
     print STDERR "load_segment_list from: '$do_filter_against_osm'\n";
-    if ( -s $do_filter_against_osm ) {
+    if (  $do_filter_against_osm =~ m/^postgis|mapnik$/ ) {
+	$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_postgis($bounds);
+    } elsif ( -s $do_filter_against_osm ) {
 	if (  $do_filter_against_osm =~ m/\.csv/ ) {
 	    $osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($do_filter_against_osm, $bounds);
 	} elsif ( $do_filter_against_osm =~ m/\.osm/ ) {
@@ -166,6 +168,96 @@ sub LoadOSM_segment_csv($;$){
 	    }
 	};
     }
+
+
+    return($segments);
+}
+
+
+
+# -------------------------------------------------------
+# Load the segment list from postgis
+# Args: {lat_min=> .., lat_max => ..., lon_min => .., lon_max => .. }
+# This is a test to see if we can handle all segments of the world 
+# with reasonable query times
+sub LoadOSM_segment_postgis($;$){
+    my $bounds  = shift;
+    printf STDERR "Reading OSM-Segments form PostGis($bounds->{lat_min} ... $bounds->{lat_max} , $bounds->{lon_min} ... $bounds->{lon_max})\n"
+	if $DEBUG || $VERBOSE;
+    my $start_time=time();
+
+    my $segments;
+    my $check_bounds = 1 if defined $bounds;
+
+    use DBI;
+    
+    my $dbname="gis";
+    my $dbh = DBI->connect("dbi:Pg:dbname=$dbname", "", "", {AutoCommit => 0});
+
+
+    # WHERE  the_geom && setsrid('BOX(47.36 21.40,51.185 21.53)'::box2d, 42102)
+    # WHERE GeomFromText('POINT(25.3 25.40)', 42102) && the_geom \
+    #       AND distance(the_geom, GeomFromText('POINT(25.7 5.3)', 42102)) = 0
+    # WHERE distance(the_geom, setsrid('BOX(4.36 2.3,1.5 2.8)'::box2d, 42102)) = 0 
+    # WHERE  the_point && setsrid('BOX(295149 2315499, 465992 2163790)'::box2d, -1)
+
+    my $polygon=sprintf("POLYGON((%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f))",
+	    $bounds->{lat_min} , $bounds->{lon_min},
+	    $bounds->{lat_max} , $bounds->{lon_min} , 
+	    $bounds->{lat_max} , $bounds->{lon_max} , 
+	    $bounds->{lat_min} , $bounds->{lon_max} , 
+	    $bounds->{lat_min} , $bounds->{lon_min});
+
+    my $select = "select osm_id,highway,name from planet_osm_line where highway is not null and way && ".
+	"transform(GeomFromText('$polygon',4326),3395) ".
+	"limit 5;";
+
+    my $distance="distance(way,     GeomFromText('POINT(856371.58 6683083.41)', 3395))";
+#     $select = "SELECT name ,astext(way),$distance FROM planet_osm_roads WHERE  $distance < 500 order by  $distance;";
+
+    #"SELECT name FROM planet_osm_roa1ds WHERE distance(way,
+    #     GeomFromText('POINT(856371.58 6683083.41)', 3395)) < 1000;",
+    #SELECT * FROM planet_osm_roads WHERE way in ?",
+    print "\nprepare: $select\n";
+    my $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
+    $sth->execute();
+
+    $select = "SELECT name FROM planet_osm_roads WHERE distance(way,GeomFromText('POINT(856371.58 6683083.41)', 3395)) < 1000;";
+    print "\nprepare: $select\n";
+    $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
+    $sth->execute();
+
+
+    my $count=0;
+    my $count_read=0;
+    my @row;
+    while ( @row = $sth->fetchrow_array ) {
+	print "postgis ROW: @row\n";
+
+	$count++;
+	my $line="";
+	chomp $line;
+	my @segment;
+	my $dummy;
+	($segment[0],$segment[1],$segment[2],$segment[3],$segment[4]) = split(/,/,$line,5);
+	#print STDERR Dumper(\@segment);
+
+	if ( $check_bounds ) {
+	    next unless $segment[0] >= $bounds->{lat_min};
+	    next unless $segment[0] <= $bounds->{lat_max};
+	    next unless $segment[1] >= $bounds->{lon_min};
+	    next unless $segment[1] <= $bounds->{lon_max};
+	    next unless $segment[2] >= $bounds->{lat_min};
+	    next unless $segment[2] <= $bounds->{lat_max};
+	    next unless $segment[3] >= $bounds->{lon_min};
+	    next unless $segment[3] <= $bounds->{lon_max};
+	}
+
+	push (@{$segments},\@segment);
+	$count_read++;
+    }
+
+    $dbh->disconnect;
 
 
     return($segments);

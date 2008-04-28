@@ -1622,7 +1622,7 @@
 
         <!-- House numbers -->
         <rule e="way" k="addr:housenumber" v="*" layer="5">
-            <areaSymbol xlink:href="#symbol-housenumber" width='1px' height='1px' />
+            <areaSymbol xlink:href="#symbol-housenumber" width='1px' height='1px' transform='translate(0,0)' />
             <areaText k="addr:housenumber" startOffset='50%' class="housenumber-caption" dy='0.3px' />
         </rule>
 
@@ -3364,7 +3364,7 @@
           id="symbol-housenumber"
           viewBox="0 0 1 1"
           fill='#a0a0a0'>
-            <circle r='0.8px' class="housenumber-node"/>
+            <svg:circle r='0.8px' class="housenumber-node"/>
         </svg:symbol>
 
         <svg:symbol

@@ -96,6 +96,7 @@ echo "---> osm2pqsql"
     make || exit -1
     ) || exit -1 
 cp export/osm2pgsql/osm2pgsql ${bin_path}
+cp export/osm2pgsql/default.style ${bin_path}
 
 echo ""
 echo "---> UTF8Sanitizer"

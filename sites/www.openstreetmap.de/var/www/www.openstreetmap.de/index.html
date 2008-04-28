@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>OpenStreetMap: Die freie Wiki-Weltkarte</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="Content-Language" content="de" />
+        <link rel="stylesheet" type="text/css" href="/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="/css/main.css" />
+        <link rel="shortcut icon" href="/img/favicon.png" />
+        <script src="/js/prototype.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/ol/OpenLayers.js"></script>
+        <script type="text/javascript" src="/js/OpenStreetMap.js"></script>
+        <script type="text/javascript" src="/js/util.js"></script>
+        <script type="text/javascript" src="/js/markers.js"></script>
+        <script type="text/javascript">
+
+var map;
+var layer_mapnik;
+var layer_tah;
+var layer_news;
+var layer_events;
+var layer_local;
+
+function init() {
+//    return;
+
+    OpenLayers.Lang.setCode('de');
+    var lon = 10.3;
+    var lat = 51.3;
+    var zoom = 5;
+
+    map = new OpenLayers.Map('map', {
+        projection: new OpenLayers.Projection("EPSG:900913"),
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        controls: [
+            new OpenLayers.Control.MouseDefaults(),
+            new OpenLayers.Control.LayerSwitcher(),
+            new OpenLayers.Control.PanZoomBar()],
+        maxExtent:
+            new OpenLayers.Bounds(-20037508.34,-20037508.34,
+                                    20037508.34, 20037508.34),
+        numZoomLevels: 18,
+        maxResolution: 156543,
+        units: 'meters'
+    });
+
+    layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+    layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+    layer_news = new OpenLayers.Layer.Markers("News", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
+    layer_events = new OpenLayers.Layer.Markers("Events", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
+    layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
+    map.addLayers([layer_mapnik, layer_tah, layer_news, layer_events, layer_local]);
+
+    createMarkers();
+
+    jumpTo(lon, lat, zoom)
+}
+
+        </script>
+    </head>
+    <body onload="init()">
+
+        <div class="menu">
+            <a href="/news.html">News</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="/karte.html">Karte</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="/faq.html">FAQ</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="http://wiki.openstreetmap.org/index.php/Hauptseite">Wiki</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="/community.html">Community</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="/aktionen.html">Aktionen</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="/events.html">Events</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+            <a href="/kontakt.html">Kontakt</a>
+        </div>
+
+        <div class="left">
+            <div class="box" id="title">
+                <a href="/index.html"><img src="/img/logo.gif" alt="OpenStreetMap"/></a>
+                <p><b>Die freie Wiki-Weltkarte</b></p>
+            </div>
+            <div class="box" id="faq">
+                <a href="/faq.html"><h2>Fragen und Antworten</h2></a>
+                <ul>
+                    <li><a href="/faq.html#was_ist_osm">Was ist OpenStreetMap?</a></li>
+                    <li><a href="/faq.html#wie_mitmachen">Wie kann ich mitmachen?</a></li>
+                    <li><a href="/faq.html#wie_daten_nutzen">Wie kann ich die Daten nutzen?</a></li>
+                    <li><a href="/faq.html#lizenz">Wie ist das mit der Lizenz?</a></li>
+                    <li><a href="/faq.html#wie_vollstaendig">Wie vollständig sind die Daten?</a></li>
+                </ul>
+                <p><a href="/faq.html">Mehr...</a></p>
+            </div>
+            <div class="box" id="community">
+                <a href="/community.html"><h2>Community</h2></a>
+                <a href="/community.html#wiki">Wiki</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                <a href="/community.html#ml">Mailinglisten</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                <a href="/community.html#foren">Foren</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                <a href="/community.html#irc">IRC</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                <a href="/community.html#party">Mapping&nbsp;Parties</a><br/>
+                <div class="localgroup">
+                    <img class="tomap" onclick="showLayer(layer_local);" src="/img/tomapl.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/>
+                    <a href="/community.html#local">Lokale Gruppen:</a><br/>
+                        <a href="http://wiki.openstreetmap.org/index.php/Braunschweig">BS</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                        <a href="http://wiki.openstreetmap.org/index.php/DresdnerOSMStammtisch">DD</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                        <a href="http://wiki.openstreetmap.org/index.php/Hamburger_Mappertreffen">HH</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                        <a href="http://wiki.openstreetmap.org/index.php/Karlsruhe">KA</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                        <a href="http://wiki.openstreetmap.org/index.php/München">M</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                        <a href="http://wiki.openstreetmap.org/index.php/NFE-Treffen">N/FÜ/ER</a>
+                </div>
+            </div>
+            <div class="box" id="aktionen">
+                <a href="/aktionen.html"><h2>Aktionen</h2></a>
+                <p>
+                    <a href="/aktionen.html#flyer"><img style="padding: 2px 3px 2px 0px;" src="/img/flyer-titel.png" alt=""/></a>
+                    OSM-Prospekte zum Verteilen. <a href="/aktionen.html#flyer">Mehr...</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="box" id="international">
+                <a href="http://www.openstreetmap.org/"><h2>OSM International</h2></a>
+                <a href="http://www.openstreetmap.ca/"><img src="/img/flags/ca.png" alt="Kanada" width="24" height="13"/></a>
+                <a href="http://www.openstreetmap.ch/"><img src="/img/flags/ch.png" alt="Schweiz" width="24" height="13"/></a>
+                <a href="http://www.openstreetmap.de/"><img src="/img/flags/de.png" alt="Deutschland" width="24" height="13"/></a>
+                <a href="http://www.openstreetmap.es/"><img src="/img/flags/es.png" alt="Spanien" width="24" height="13"/></a><br/>
+                <a href="http://www.openstreetmap.fr/"><img src="/img/flags/fr.png" alt="Frankreich" width="24" height="13"/></a>
+                <a href="http://www.openstreetmap.jp/"><img src="/img/flags/jp.png" alt="Japan" width="24" height="13"/></a>
+                <a href="http://www.openstreetmap.nl/"><img src="/img/flags/nl.png" alt="Niederlande" width="24" height="13"/></a>
+                <a href="http://www.openstreetmap.se/"><img src="/img/flags/se.png" alt="Schweden" width="24" height="13"/></a>
+            </div>
+            <div class="box" id="book">
+                <h2>OpenStreetMap-Buch</h2>
+                <a href="http://www.openstreetmap.info/"><img src="/img/openstreetmap-buch-cover.png" alt="OpenStreetMap: Die freie Weltkarte nutzen und mitgestalten"/></a>
+                <a href="http://www.openstreetmap.info/">www.openstreetmap.info</a>
+            </div>
+            <div class="box" id="sotm">
+                <a href="http://www.stateofthemap.org/"><img src="/img/sotm.png" alt="State of the Map"/></a><br/>
+                12. - 13. Juli 2008<br/>
+                Limerick, Irland
+            </div>
+            <div class="box" id="showcase">
+                <a href="schaufenster/index.html"><h2>Schaufenster</h2></a>
+                <a href="schaufenster/index.html"><img src="/schaufenster/schaufenster-overview.png" alt="" width="180" height="53"/></a><br/>
+                Ein Blick in die OpenStreetMap-Welt
+            </div>
+            <div class="box" id="123" style="text-align: center;">
+                <a href="/123/index.html"><img src="/img/123.png" alt="OSM Schritt für Schritt" width="180" height="75"/></a>
+            </div>
+        </div>
+
+        <div class="main">
+            <div id="mapborder">
+                <div id="map">
+                    <img id="border-tl" src="/img/border-tl.gif" alt="" width="10" height="10"/>
+                    <img id="border-tr" src="/img/border-tr.gif" alt="" width="10" height="10"/>
+                </div>
+            </div>
+            <div id="marginalia">
+                <div id="germany">
+                    <a href="#" onclick="jumpTo(10.3, 51.3, 5)"><img src="/img/germany.gif" alt="Zoom auf Deutschland" width="32" height="40"/></a>
+                </div>
+                <div id="fullscreen">
+                    <a href="/karte.html"><img src="/img/view-fullscreen.gif" alt="[Große Karte]" width="42" height="40"/></a>
+                </div>
+                <div id="destinations">
+                    <img src="/img/arrow.gif" alt=" " width="7" height="9"/><a href="#" onclick="jumpTo(13.381, 52.521, 12)">Berlin</a>
+                    <img src="/img/arrow.gif" alt=" " width="7" height="9"/><a href="#" onclick="jumpTo(9.99, 53.57, 12)">Hamburg</a>
+                    <img src="/img/arrow.gif" alt=" " width="7" height="9"/><a href="#" onclick="jumpTo(11.57, 48.14, 11)">München</a> 
+                    <img src="/img/arrow.gif" alt=" " width="7" height="9"/><a href="#" onclick="jumpTo(6.95, 50.94, 13)">Köln</a>
+                </div>
+                <div id="search">
+<!--                    <form action="/geocoder/search" method="POST" onsubmit="doSearch()">
+                        <input id="query" name="query" type="text" size="30" maxlength="80"/>
+                        <input type="submit" value="Suchen"/>
+                    </form>-->
+                </div>
+                <div id="corners">
+                    <img id="border-bl" src="/img/border-bl.gif" alt="" width="10" height="10"/>
+                    <img id="border-br" src="/img/border-br.gif" alt="" width="10" height="10"/>
+                </div>
+            </div>
+            <table id="content">
+                <tr>
+                    <td class="tdcontent" id="news">
+                        <h2><a href="/news.html">News</a> <img style="position: absolute; margin-left: 10px; margin-top: 3px;" onclick="showLayer(layer_news);" src="/img/tomap.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/></h2>
+                        <p><b>OpenStreetMap.de Relaunch</b><br/>
+                        <span style="font-size: small">28. April 2008</span></p>
+                        <p>Heute ist die neue Openstreetmap.de-Webseite online gegangen.</p>
+                    </td>
+                    <td class="tdcontent" id="events">
+                        <h2><a href="/events.html">Events</a> <img style="position: absolute; margin-left: 10px; margin-top: 3px;" onclick="showLayer(layer_events);" src="/img/tomap.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/></h2>
+                        <p>Die nächsten Termine...</p>
+                        <table class="event">
+                            <tr>
+                                <td>28.-31.5.</td>
+                                <td>Berlin</td>
+                                <td><a href="http://wiki.openstreetmap.org/index.php/OSM_at_Linuxtag_2008">LinuxTag 2008</a></td>
+                            </tr>
+                            <tr>
+                                <td>12.-13.7.</td>
+                                <td>Limerick</td>
+                                <td><a href="http://www.stateofthemap.org/">State of the Map 2008</a></td>
+                            </tr>
+                        </table>
+                        <p>
+                            <a href="/events.html">Gesamter Kalender</a><!-- <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
+                            <a href="#">Kalender im iCal-Format</a>-->
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <div id="attribution">
+                <a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/img/cc-by-sa.png" alt="[CC-BY-SA]" width="88" height="31"/></a>
+                Alle Karten(daten) auf diesen Seiten sind dem OpenStreetMap-Projekt entnommen und stehen unter der Lizenz
+                <a href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution Share Alike-Lizenz 2.0</a>.
+                <a href="/faq.html#lizenz">Mehr zur Lizenz...</a>
+                || <a href="/impressum.html">Impressum</a>
+            </div>
+        </div>
+    </body>
+</html>

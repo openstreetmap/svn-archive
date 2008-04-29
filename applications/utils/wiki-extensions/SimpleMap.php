@@ -23,8 +23,8 @@ function wfmap() {
 	global $wgParser;
 	# register the extension with the WikiText parser
 	# the first parameter is the name of the new tag.
-	# In this case it defines the tag <map> ... </map>a
-	# the second parameter is the callback function for
+	# In this case it defines the tag <map> ... </map>
+	# The second parameter is the callback function for
 	# processing the text between the tags
 	$wgParser->setHook( "map", "map" );
 }
@@ -32,7 +32,7 @@ function wfmap() {
 # The callback function for converting the input text to HTML output
 function map( $input ) {
 	global $wgMapOfServiceUrl;
-
+	
 	//Parse pipe separated name value pairs (e.g. 'aaa=bbb|ccc=ddd')
 	$paramStrings=explode('|',$input);
 	foreach ($paramStrings as $paramString) {
@@ -41,9 +41,10 @@ function map( $input ) {
 		if ($eqPos===false) {
 			$params[$paramString] = "true";
 		} else {
-			$params[substr($paramString,0,$eqPos)] = htmlspecialchars(substr($paramString,$eqPos+1));
+			$params[substr($paramString,0,$eqPos)] = trim(htmlspecialchars(substr($paramString,$eqPos+1)));
 		}
 	}
+
 
 	$lat	= $params["lat"];
 	$lon	= $params["lon"];
@@ -75,14 +76,7 @@ function map( $input ) {
 	if ($error=='') {
 		//no errors so far. Now check the values	
 		
-		if ($zoom=="") {
-			$error = "missing z value (for the zoom level)";
-		} else if ($lat=="") {
-			$error = "missing lat value (for the lattitude)";
-		} else if ($lon=="") {
-			$error = "missing lon value (for the lattitude)";
-			if ($params["long"]!="") $error = "Please use 'lon' instead of 'long' (parameter was renamed)";
-		} else if (!is_numeric($width)) {
+		if (!is_numeric($width)) {
 			$error = "width (w) value '$width' is not a valid integer";
 		} else if (!is_numeric($height)) {
 			$error = "height (h) value '$height' is not a valid integer";
@@ -93,13 +87,13 @@ function map( $input ) {
 		} else if (!is_numeric($lon)) {
 			$error = "logiditude (lon) value '$lon' is not a valid number";
 		} else if ($width>1000) {
-			$error = "width (w)) value cannot be greater than 1000";
+			$error = "width (w) value cannot be greater than 1000";
 		} else if ($width<50) {
-			$error = "width (w)) value cannot be less than 50";
+			$error = "width (w) value cannot be less than 50";
 		} else if ($height>1000) {
-			$error = "height (h)) value cannot be greater than 1000";
+			$error = "height (h) value cannot be greater than 1000";
 		} else if ($height<50) {
-			$error = "height (h)) value cannot be less than 50";
+			$error = "height (h) value cannot be less than 50";
 		} else if ($lat>90) {
 			$error = "lattitude (lat) value cannot be greater than 90";
 		} else if ($lat<-90) {

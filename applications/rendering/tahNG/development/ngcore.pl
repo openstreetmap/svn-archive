@@ -45,7 +45,7 @@ our $Config = AppConfig->new({
 $Config->define("help|usage!");
 $Config->define("nodownload=s");
 $Config->set("nodownload",0);
-$Config->file("config.defaults", "authentication.conf", "tahng.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
+$Config->file("config.defaults", "layers.conf", "authentication.conf", "tahng.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
 $Config->args();              # overwrite config options with command line options
 $Config->file("config.svn");  # overwrite with hardcoded values that must not be changed
 ApplyConfigLogic($Config);
@@ -122,7 +122,7 @@ sub downloadData
             PutRequestBackToServer($X,$Y,$Zoom,"NoData");
             foreach my $file(@tempfiles) { killafile($file); }
             addFault("nodataXAPI",1);
-            return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
+            return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID),@tempfiles;
         }
         else
         {
@@ -204,77 +204,26 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
          $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef});
 
     my $rootDataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
+    my $ppchainStart = $bboxRef;
+
     if ($Config->get("nodownload"))
     {
         copy $Config->get("nodownload"), $rootDataFile or die "no such file ".$Config->get("nodownload");
+        # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
+        $JobTime = [stat $Config->get("nodownload")]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure for from when the data is
     }
     else
     {
         ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$rootDataFile,$URLS);
-    }
-    ## now build the 16 zoom+2 (usually z14) bboxes
-
-    #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)
-    #
-    #  00.00  00.01  01.00  01.01
-    #
-    #  00.10  00.11  01.10  01.11
-    #
-    #  10.00  10.01  11.00  11.01
-    #
-    #  10.10  10.11  11.10  11.11
-
-
-    for (my $QR="0"; $QR le "1"; $QR++)
-    {
-        for (my $QC="0"; $QC le "1"; $QC++)
-        {
-            for (my $SR="0"; $SR le "1"; $SR++)
-            {
-                for (my $SC="0"; $SC le "1"; $SC++)
-                {
-                    $N1 = $lat[$QR * 2 + $SR];
-                    $S1 = $lat[$QR * 2 + $SR + 1];
-                    $W1 = $lon[$QC * 2 + $SC];
-                    $E1 = $lon[$QC * 2 + $SC + 1];
-                    $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 12-0..3-0..3 will be used later in stitching.
-                    $bbox{$bboxRef} = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
-                }
-            }
-        }
-    }
-
-    foreach $bboxRef (sort (keys %bbox)) 
-    {
-        print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
-        if ($bboxRef =~ m/AreaAndLabels/)
-        {
-            $DataFile = $Config->get("WorkingDirectory").$PID."/data-z12.osm"; # FIXME: the part between "data-" annd ".osm" should be a variable, it's needed later
-        }
-        else
-        {
-            $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm";
-
-        }
-        print "cropping $bbox{$bboxRef} from $rootDataFile to $DataFile \n";
-        cropDataToBBox(split(/,/,$bbox{$bboxRef}), $rootDataFile, $DataFile); 
-    }
-
-
-    if ($Config->get("KeepDataFile"))
-    {
-        copy($DataFile, $Config->get("WorkingDirectory") . "/" . "data.osm");
-    }
+        # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
+        $JobTime = [stat $rootDataFile]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure for from when the data is
     
-    $currentSubTask = "Preproc";
-    
-    # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
-    $JobTime = [stat $DataFile]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure for from when the data is
-    
+    }
+
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
     statusMessage("Checking for UTF-8 errors in $DataFile", $currentSubTask, $progressJobs, $progressPercent, 0);
-    open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
+    open(OSMDATA, $rootDataFile) or die ("could not open $rootDataFile for UTF-8 check");
     my @toCheck = <OSMDATA>;
     close(OSMDATA);
     while (my $osmline = shift @toCheck)
@@ -288,6 +237,14 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
       }
     }
     resetFault("utf8"); #reset to zero if no UTF8 errors found.
+
+    if ($Config->get("KeepDataFile"))
+    {
+        copy($rootDataFile, $Config->get("WorkingDirectory") . "/" . "data.osm");
+    }
+    
+    $currentSubTask = "Preproc";
+    
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -321,7 +278,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
         #------------------------------------------------------
-        my @ppchain = ("z12");
+        my @ppchain = ($ppchainStart);
         # config option may be empty, or a comma separated list of preprocessors
         foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
         {
@@ -378,24 +335,60 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
                 statusMessage("Running attribution", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
-            elsif ($preprocessor eq "mercator")
+            elsif ($preprocessor eq "autocut")
             {
-                my $Cmd = sprintf("%s perl mercatorize.pl %s > %s",
-                        $Config->get("Niceness"),
-                        "$inputFile",
-                        "$outputFile");
-                statusMessage("Running Mercatorization", $currentSubTask, $progressJobs, $progressPercent,0);
-                runCommand($Cmd,$PID);
+                statusMessage("Running autocut", $currentSubTask, $progressJobs, $progressPercent,0);
+                ## build the 16 zoom+2 (usually z14) bboxes
+
+                #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)
+                #
+                #  00.00  00.01  01.00  01.01
+                #
+                #  00.10  00.11  01.10  01.11
+                #
+                #  10.00  10.01  11.00  11.01
+                #
+                #  10.10  10.11  11.10  11.11
+
+                for (my $QR="0"; $QR le "1"; $QR++)
+                {
+                    for (my $QC="0"; $QC le "1"; $QC++)
+                    {
+                        for (my $SR="0"; $SR le "1"; $SR++)
+                        {
+                            for (my $SC="0"; $SC le "1"; $SC++)
+                            {
+                                $N1 = $lat[$QR * 2 + $SR];
+                                $S1 = $lat[$QR * 2 + $SR + 1];
+                                $W1 = $lon[$QC * 2 + $SC];
+                                $E1 = $lon[$QC * 2 + $SC + 1];
+                                $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 12-0..3-0..3 will be used later in stitching.
+                                $bbox{$bboxRef} = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
+                            }
+                        }
+                    }
+                }
+
+                foreach $bboxRef (sort (keys %bbox)) 
+                {
+                    print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
+                    if ($bboxRef =~ m/AreaAndLabels/)
+                    {
+                        $DataFile = $outputFile; 
+                    }
+                    else
+                    {
+                        $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm";
+                        push(@tempfiles, $DataFile);
+                    }
+                    print "cropping $bbox{$bboxRef} from $inputFile to $DataFile \n";
+                    cropDataToBBox(split(/,/,$bbox{$bboxRef}), $inputFile, $DataFile); 
+                }
             }
             else
             {
                 die "I have no preprocessor called '$preprocessor'";
             }
-## Uncomment to have the output files checked for validity
-#            if( $preprocessor ne "maplint" )
-#            {
-#              runCommand( qq(xmllint --dtdvalid http://dev.openstreetmap.org/~kleptog/tilesAtHome-0.3.dtd --noout $outputFile), $PID );
-#            }
             push(@tempfiles, $outputFile);
         }
 
@@ -403,7 +396,6 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         # Preprocessing finished, start rendering
         #------------------------------------------------------
 
-        #$layerDataFile = sprintf("%sdata-%s.osm", $Config->get("WorkingDirectory"), join("-", @ppchain));
         $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
         
         # Add bounding box to osmarender

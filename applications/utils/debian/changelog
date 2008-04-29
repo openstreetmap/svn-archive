@@ -1,3 +1,9 @@
+openstreetmap-utils (7593) unstable; urgency=low
+
+   * export/osm2pgsql/mapnik-osm-updater.sh: go to right directory for asm2pqsql call
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-29 23:11:44 +0200 (Tue, 29 Apr 2008)
+
 openstreetmap-utils (7592) unstable; urgency=low
 
    * mapnik default.style:remove gpsdrive line

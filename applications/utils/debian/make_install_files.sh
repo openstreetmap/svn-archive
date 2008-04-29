@@ -1,4 +1,7 @@
 #!/bin/sh
+# This script replaces a make ; make install for creation of the debian package.
+# Maybe you can also use it to install the stuff on your system.
+# If sou please state so here.
 
 dst_path=$1
 
@@ -57,6 +60,7 @@ for lib in ccoord ; do
 	cp ../lib/$lib/lib${lib}.a ${lib_path}
     done
 
+# ------------------------------------------------------------------
 # As soon as libosm compiles here on my debian machine
 if false ; then
     echo ""
@@ -79,6 +83,7 @@ if false ; then
 fi
 # of later
 
+# ------------------------------------------------------------------
 echo ""
 echo "---> color255"
 (
@@ -88,6 +93,7 @@ echo "---> color255"
 ) || exit -1
 cp color255/color255 ${bin_path}
 
+# ------------------------------------------------------------------
 echo ""
 echo "---> osm2pqsql"
 (
@@ -96,8 +102,9 @@ echo "---> osm2pqsql"
     make || exit -1
     ) || exit -1 
 cp export/osm2pgsql/osm2pgsql ${bin_path}
-cp export/osm2pgsql/default.style ${bin_path}
+(cat export/osm2pgsql/default.style ; echo "node       poi          text")>${share_path}/default.style
 
+# ------------------------------------------------------------------
 echo ""
 echo "---> UTF8Sanitizer"
 (
@@ -112,7 +119,7 @@ cp planet.osm/C/UTF8sanitizer ${bin_path}
 # Copy Perl libraries
 find perl_lib/ -name "*.pm" | while read src_fn ; do 
     dst_fn="$perl_path/${src_fn#perl_lib/}"
-    dst_dir="`dirname "$dst_fn"`"
+    dst_dir=`dirname "$dst_fn"`
     test -d "$dst_dir" || mkdir -p "$dst_dir"
     cp "$src_fn" "$dst_fn"
 done
@@ -134,8 +141,7 @@ find ./ -name "*.pl" | while read src_fn ; do
 	echo "First Line: `head -1 "$src_fn"`"
     fi
 
-
-
+    # ----- Try to create man Pages
     if perldoc "$src_fn" >/dev/null 2>&1 ; then
 	echo "Create Man Page from pod '$man1_fn'"
 	pod2man $src_fn >"$man1_fn"
@@ -154,6 +160,7 @@ find ./ -name "*.pl" | while read src_fn ; do
     fi
 done
 
+# --------------------------------------------
 # Copy Python Binaries
 find ./ -name "*.py" | while read src_fn ; do 
     dst_fn="$bin_path/${src_fn##*/}"

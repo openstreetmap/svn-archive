@@ -256,7 +256,7 @@ sub CheckConfig
 
         # any combination of comma-separated preprocessor names is allowed
         die "config option $layer._Preprocessor has invalid value" 
-            if (grep { $_ !~ /frollo|maplint|close-areas|mercator|attribution/} split(/,/, $Config->get($layer."_Preprocessor")));
+            if (grep { $_ !~ /frollo|maplint|close-areas|mercator|attribution|autocut/} split(/,/, $Config->get($layer."_Preprocessor")));
 
         foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
         {

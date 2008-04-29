@@ -33,4 +33,7 @@ function createMarkers() {
     addMarker(layer_local, 9.95, 49.8,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Würzburg">Würzburg</a></b><br/>Unregelmäßige Treffen</p>'
     ); 
+    addMarker(layer_local, 9.5794793, 48.979546,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Murrhardt">Murrhardt</a></b></p>'
+    ); 
 }

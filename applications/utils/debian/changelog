@@ -1,3 +1,9 @@
+openstreetmap-utils (7595) unstable; urgency=low
+
+   * comment out creation of users, because it might break the system
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-29 23:41:27 +0200 (Tue, 29 Apr 2008)
+
 openstreetmap-utils (7594) unstable; urgency=low
 
    * applications/utils/debian: do not override svnrevision in changelog

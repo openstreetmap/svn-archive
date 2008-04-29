@@ -1,34 +1,40 @@
-josm (7478) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
+
+   * josm/debian/changelog: Replace changelog with automatically created one
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-29 02:33:41 +0200 (Tue, 29 Apr 2008)
+
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new build with new url
 
  -- Frederik Ramm   2008-04-21 14:14:02 +0200 (Mon, 21 Apr 2008)
 
-josm (7477) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change frankieandshadow url in namefinder plugin
 
  -- Frederik Ramm   2008-04-21 14:11:37 +0200 (Mon, 21 Apr 2008)
 
-josm (7404) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - fix compatibility with newer JOSM versions where getPreferencesColor is moved from SimplePaintVisitor to Preferences
 
  -- Frederik Ramm   2008-04-18 00:36:34 +0200 (Fri, 18 Apr 2008)
 
-josm (7396) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new build with JOSM r608+
 
  -- Frederik Ramm   2008-04-17 11:30:03 +0200 (Thu, 17 Apr 2008)
 
-josm (7395) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * bogus change to make build process use a new version number
 
  -- Frederik Ramm   2008-04-17 11:21:18 +0200 (Thu, 17 Apr 2008)
 
-josm (7343) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * CHANGED slippy_map_chooser:
    * - Tried to fix ticket #629 and #599 (IllegalArgumentException when zooming on Japan)
@@ -38,110 +44,110 @@ josm (7343) unstable; urgency=low
 
  -- tim   2008-04-12 15:59:42 +0200 (Sat, 12 Apr 2008)
 
-josm (7342) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Files needed for packaging in Debian and other distributions.
 
  -- Francisco R. Santos <frsantos@gmail.com>    2008-04-12 14:47:42 +0200 (Sat, 12 Apr 2008)
 
-josm (7341) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Files needed for packaging in Debian and other distributions.
 
  -- Francisco R. Santos <frsantos@gmail.com>    2008-04-12 14:44:15 +0200 (Sat, 12 Apr 2008)
 
-josm (7320) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * make sure jdk1.5 is used to compile
 
  -- Christof Dallermassl   2008-04-10 00:30:01 +0200 (Thu, 10 Apr 2008)
 
-josm (7319) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * version 0.2.2
 
  -- Christof Dallermassl   2008-04-10 00:22:23 +0200 (Thu, 10 Apr 2008)
 
-josm (7318) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version 0.2.2
 
  -- Christof Dallermassl   2008-04-10 00:19:55 +0200 (Thu, 10 Apr 2008)
 
-josm (7317) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * adopted to latest josm code
 
  -- Christof Dallermassl   2008-04-10 00:14:35 +0200 (Thu, 10 Apr 2008)
 
-josm (7288) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins/build.xml: deactivate broken plugins
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-06 21:21:59 +0200 (Sun, 06 Apr 2008)
 
-josm (7287) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins/*/build.xml: add echo to identify which compile failes
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-06 21:10:11 +0200 (Sun, 06 Apr 2008)
 
-josm (7283) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * utilsplugin: Let the people know who is to be blamed for the missing comments.
 
  -- Gabriel Ebner   2008-04-06 00:54:18 +0200 (Sun, 06 Apr 2008)
 
-josm (7280) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added license
 
  -- Frederik Ramm   2008-04-04 02:12:33 +0200 (Fri, 04 Apr 2008)
 
-josm (7279) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added license info
 
  -- Frederik Ramm   2008-04-04 02:07:18 +0200 (Fri, 04 Apr 2008)
 
-josm (7270) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: If we're keeping an authors list, we might as well list those who
    * turn up in the svn log.
 
  -- Gabriel Ebner   2008-04-03 17:49:13 +0200 (Thu, 03 Apr 2008)
 
-josm (7223) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added license info to readme
 
  -- Frederik Ramm   2008-03-31 01:13:03 +0200 (Mon, 31 Mar 2008)
 
-josm (7200) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added slippy_map_chooser binary
 
  -- tim   2008-03-27 01:43:28 +0100 (Thu, 27 Mar 2008)
 
-josm (7199) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import of slippy_map_chooser source version 1.1
 
  -- tim   2008-03-27 01:42:30 +0100 (Thu, 27 Mar 2008)
 
-josm (7198) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * ADDED folder for josm plugin slippy_map_chooser
 
  -- tim   2008-03-27 01:06:14 +0100 (Thu, 27 Mar 2008)
 
-josm (7036) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
-   * remove obsolete comment about josm (core) settings - it's no longer required for some time
+   * remove obsolete comment about josm (6217574) settings - it's no longer required for some time
 
  -- Ulf Lamping   2008-03-05 21:13:48 +0100 (Wed, 05 Mar 2008)
 
-josm (7014) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/lang/de:
    *   * forgot <html> in some translations for YWMS
@@ -149,7 +155,7 @@ josm (7014) unstable; urgency=low
 
  -- matt_gnu   2008-03-03 23:50:49 +0100 (Mon, 03 Mar 2008)
 
-josm (7013) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/lang/de
    *   * updated translations
@@ -157,7 +163,7 @@ josm (7013) unstable; urgency=low
 
  -- matt_gnu   2008-03-03 23:42:58 +0100 (Mon, 03 Mar 2008)
 
-josm (7002) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/lang/de:
    *   * change classpath in build.xml to facilitate build inside one svn-checkout
@@ -167,7 +173,7 @@ josm (7002) unstable; urgency=low
 
  -- matt_gnu   2008-03-01 16:06:51 +0100 (Sat, 01 Mar 2008)
 
-josm (7001) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/lang-de:
    *   * correct spelling
@@ -176,268 +182,268 @@ josm (7001) unstable; urgency=low
 
  -- matt_gnu   2008-03-01 15:34:06 +0100 (Sat, 01 Mar 2008)
 
-josm (6984) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Don't fail while drawing.
 
  -- Gabriel Ebner   2008-02-26 20:21:51 +0100 (Tue, 26 Feb 2008)
 
-josm (6972) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
-   * add the (generated) "build" dir to the svn-ignore list
+   * add the (6217574) "build" dir to the svn-ignore list
 
  -- Ulf Lamping   2008-02-24 21:03:53 +0100 (Sun, 24 Feb 2008)
 
-josm (6954) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated Lakewalker 0.2 jar
 
  -- Jason Reid   2008-02-23 07:49:58 +0100 (Sat, 23 Feb 2008)
 
-josm (6953) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update lakewalker's dialog messages, and fix a localization error that created a malformed URL for the wms request
 
  -- Jason Reid   2008-02-23 07:47:39 +0100 (Sat, 23 Feb 2008)
 
-josm (6949) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update lakewalker to use new preference value, switch shortcut to fire java based tracer, handle cases when no, or only a single node, are found
 
  -- Jason Reid   2008-02-22 09:49:07 +0100 (Fri, 22 Feb 2008)
 
-josm (6924) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated lakewalker plugin v0.2
 
  -- Jason Reid   2008-02-19 01:25:27 +0100 (Tue, 19 Feb 2008)
 
-josm (6923) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated lakewalker to remove some debugging calls, add a duplicate node reducer, rename some methods and fixes to reduce wms requests when checking pixels right on the bbox edge
 
  -- Jason Reid   2008-02-19 01:24:25 +0100 (Tue, 19 Feb 2008)
 
-josm (6915) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated lakewalker plugin v0.2
 
  -- Jason Reid   2008-02-18 14:01:47 +0100 (Mon, 18 Feb 2008)
 
-josm (6914) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update status text while running, and add a memory based cache to the lakewalker plugin
 
  -- Jason Reid   2008-02-18 14:00:37 +0100 (Mon, 18 Feb 2008)
 
-josm (6913) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Correct rounding inaccuracy in lakewalker 0.2 and other minor fixes
 
  -- Jason Reid   2008-02-18 13:09:09 +0100 (Mon, 18 Feb 2008)
 
-josm (6911) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Lakewalker 0.2 (with native java implementation of script)
 
  -- Jason Reid   2008-02-18 09:07:38 +0100 (Mon, 18 Feb 2008)
 
-josm (6910) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updates to lakewalker to add native java port of the python script (consider it an alpha release). Older style of calling the python script still supported (via an additional menu item)
 
  -- Jason Reid   2008-02-18 09:06:14 +0100 (Mon, 18 Feb 2008)
 
-josm (6899) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * svn-ignore josm plugin build dirs
 
  -- Ulf Lamping   2008-02-17 00:58:25 +0100 (Sun, 17 Feb 2008)
 
-josm (6879) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update lakewalker to automatically create directory to store wms images in
 
  -- Jason Reid   2008-02-15 08:21:26 +0100 (Fri, 15 Feb 2008)
 
-josm (6875) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated lakewalker jar with changes from [6874]
 
  -- Jason Reid   2008-02-14 07:07:21 +0100 (Thu, 14 Feb 2008)
 
-josm (6874) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update lakewalker plugin to automatically break ways up into sections of  length as specified in preferences
 
  -- Jason Reid   2008-02-14 07:06:04 +0100 (Thu, 14 Feb 2008)
 
-josm (6790) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add new option to lakewalker to allow selecting of landsat layer
 
  -- Jason Reid   2008-02-07 09:23:20 +0100 (Thu, 07 Feb 2008)
 
-josm (6789) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update lakewalker to have a preference for the WMS layer to use
 
  -- Jason Reid   2008-02-07 04:54:29 +0100 (Thu, 07 Feb 2008)
 
-josm (6788) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Fix coordinate formatting under locales that have a decimal comma.
    * Patch by Bernd Raichle <bernd@dante.de>
 
  -- Gabriel Ebner   2008-02-07 00:18:09 +0100 (Thu, 07 Feb 2008)
 
-josm (6787) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Fix build.
 
  -- Gabriel Ebner   2008-02-06 23:43:35 +0100 (Wed, 06 Feb 2008)
 
-josm (6780) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Move graber chooser out of WMSDownloadAction.
 
  -- Gabriel Ebner   2008-02-06 16:45:02 +0100 (Wed, 06 Feb 2008)
 
-josm (6777) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Rework the code.
 
  -- Gabriel Ebner   2008-02-04 18:49:57 +0100 (Mon, 04 Feb 2008)
 
-josm (6776) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Fix downloading after canceling.
 
  -- Gabriel Ebner   2008-02-04 15:50:57 +0100 (Mon, 04 Feb 2008)
 
-josm (6775) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Remove executable bits from source files.
 
  -- Gabriel Ebner   2008-02-04 15:18:27 +0100 (Mon, 04 Feb 2008)
 
-josm (6774) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Don't use scientific notation for coordinates in the URL.
 
  -- Gabriel Ebner   2008-02-04 15:10:54 +0100 (Mon, 04 Feb 2008)
 
-josm (6711) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added Readme information
 
  -- t2000   2008-01-29 22:26:20 +0100 (Tue, 29 Jan 2008)
 
-josm (6709) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added configfile to livegps to be able to change host and port where gpsd is running on
 
  -- t2000   2008-01-29 19:15:15 +0100 (Tue, 29 Jan 2008)
 
-josm (6557) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Check for nodes with same name.
 
  -- Gabriel Ebner   2008-01-23 12:14:44 +0100 (Wed, 23 Jan 2008)
 
-josm (6549) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Remove debugging output.
 
  -- Gabriel Ebner   2008-01-22 21:06:52 +0100 (Tue, 22 Jan 2008)
 
-josm (6418) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new 1.4 version
 
  -- Frederik Ramm   2008-01-17 01:15:58 +0100 (Thu, 17 Jan 2008)
 
-josm (6417) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Properly re-connect after losing gpsd connection, and more debug output for LiveGPS plugin; patch by Gervase Markham <gerv@gerv.net>
 
  -- Frederik Ramm   2008-01-17 01:07:16 +0100 (Thu, 17 Jan 2008)
 
-josm (6392) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * WMS plugin: Rebuild.
 
  -- Gabriel Ebner   2008-01-14 23:56:05 +0100 (Mon, 14 Jan 2008)
 
-josm (6391) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Rebuild.
 
  -- Gabriel Ebner   2008-01-14 23:37:03 +0100 (Mon, 14 Jan 2008)
 
-josm (6389) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Remove Util.getPlugin() hack.
 
  -- Gabriel Ebner   2008-01-14 19:59:57 +0100 (Mon, 14 Jan 2008)
 
-josm (6388) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Preference sanity
 
  -- Gabriel Ebner   2008-01-14 19:38:29 +0100 (Mon, 14 Jan 2008)
 
-josm (6387) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: SpellCheck: Report primitives with 'todo' or 'fixme' *keys*
    * as FIXMEs.
 
  -- Gabriel Ebner   2008-01-14 12:16:12 +0100 (Mon, 14 Jan 2008)
 
-josm (6386) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Remove outdated backwards compatibility check for JOSM
    * versions without upload hooks.
 
  -- Gabriel Ebner   2008-01-14 12:15:13 +0100 (Mon, 14 Jan 2008)
 
-josm (6374) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add a test to check for coastline, water and land ways that are reversed
 
  -- Jason Reid   2008-01-13 09:11:09 +0100 (Sun, 13 Jan 2008)
 
-josm (6314) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * seems to be superseded by presets in the JOSM core (I've also asked the ML but got no response against removing this)
 
  -- Ulf Lamping   2008-01-12 01:22:10 +0100 (Sat, 12 Jan 2008)
 
-josm (6310) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix lakewalker plugin build.
 
  -- Gabriel Ebner   2008-01-11 14:52:07 +0100 (Fri, 11 Jan 2008)
 
-josm (6309) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Don't print an error message when canceling the file dialog.
 
  -- Gabriel Ebner   2008-01-11 14:47:15 +0100 (Fri, 11 Jan 2008)
 
-josm (6303) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Fix safety range check.
 
  -- Gabriel Ebner   2008-01-09 20:24:42 +0100 (Wed, 09 Jan 2008)
 
-josm (6302) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin: Highlight way segments instead of ways (where applicable).
 
  -- Gabriel Ebner   2008-01-09 19:05:45 +0100 (Wed, 09 Jan 2008)
 
-josm (6301) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Validator plugin:
    *  - Fix fixing duplicate way nodes errors.
@@ -445,13 +451,13 @@ josm (6301) unstable; urgency=low
 
  -- Gabriel Ebner   2008-01-09 18:24:09 +0100 (Wed, 09 Jan 2008)
 
-josm (6233) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild the osmarender plugin for java 1.5.
 
  -- Gabriel Ebner   2008-01-03 14:48:08 +0100 (Thu, 03 Jan 2008)
 
-josm (6202) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator plugin: Don't combine the fix commands into a sequence command.
    * This is just a hack so that we don't step on our toes when fixing duplicate
@@ -459,110 +465,110 @@ josm (6202) unstable; urgency=low
 
  -- Gabriel Ebner   2007-12-31 16:37:22 +0100 (Mon, 31 Dec 2007)
 
-josm (6170) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added some translations
 
  -- Christof Dallermassl   2007-12-27 09:26:51 +0100 (Thu, 27 Dec 2007)
 
-josm (6169) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updated to latest version
 
  -- Christof Dallermassl   2007-12-27 08:52:04 +0100 (Thu, 27 Dec 2007)
 
-josm (6168) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updated to latest version
 
  -- Christof Dallermassl   2007-12-27 08:47:39 +0100 (Thu, 27 Dec 2007)
 
-josm (6166) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed import RawGpsLayer
 
  -- Christof Dallermassl   2007-12-26 23:52:56 +0100 (Wed, 26 Dec 2007)
 
-josm (6165) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * do not use RawGpsLayer but GpxLayer now (add wpt to gpx, so markers do not need to be saved anymore)
 
  -- Christof Dallermassl   2007-12-26 23:51:59 +0100 (Wed, 26 Dec 2007)
 
-josm (6164) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * do not use RawGpsLayer but GpxLayer now (add wpt to gpx, so markers do not need to be saved anymore)
 
  -- Christof Dallermassl   2007-12-26 23:48:57 +0100 (Wed, 26 Dec 2007)
 
-josm (6163) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * commented test actions
 
  -- Christof Dallermassl   2007-12-26 23:46:52 +0100 (Wed, 26 Dec 2007)
 
-josm (6162) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using GpxLayer/GpxData instead of RawGpsLayer
    * version from 1.2 to 1.3
 
  -- Christof Dallermassl   2007-12-26 23:45:07 +0100 (Wed, 26 Dec 2007)
 
-josm (6161) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using GpxLayer/GpxData instead of RawGpsLayer
 
  -- Christof Dallermassl   2007-12-26 23:44:43 +0100 (Wed, 26 Dec 2007)
 
-josm (6160) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using GpxLayer instead of RawGpsLayer
 
  -- Christof Dallermassl   2007-12-26 23:44:14 +0100 (Wed, 26 Dec 2007)
 
-josm (6159) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed i18n for error message for duplicate buttons
 
  -- Christof Dallermassl   2007-12-26 22:30:30 +0100 (Wed, 26 Dec 2007)
 
-josm (6157) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * utilsplugin: SimplifyWayAction: Clarify comment.
 
  -- Gabriel Ebner   2007-12-26 00:18:01 +0100 (Wed, 26 Dec 2007)
 
-josm (6141) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update for josm lang.de.jar
 
  -- Sven Anders   2007-12-22 08:21:39 +0100 (Sat, 22 Dec 2007)
 
-josm (6127) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add preference to select the default tag applied to the ways, and correct a bug that resulted in the ways not being closed. Also update build.xml to call javac to compile automatically.
 
  -- Jason Reid   2007-12-21 03:27:11 +0100 (Fri, 21 Dec 2007)
 
-josm (6120) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * i18n josm german: small fix
 
  -- Sven Anders   2007-12-20 20:18:44 +0100 (Thu, 20 Dec 2007)
 
-josm (6119) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated josm-latest German translation.
 
  -- Sven Anders   2007-12-20 20:17:30 +0100 (Thu, 20 Dec 2007)
 
-josm (6118) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Remove the mappaint plugin completely.
 
  -- Gabriel Ebner   2007-12-20 18:17:46 +0100 (Thu, 20 Dec 2007)
 
-josm (6110) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix some settings to generate the lang plugins:
    * - msgfmt: "--verbose" to get some more output on failure
@@ -571,176 +577,176 @@ josm (6110) unstable; urgency=low
 
  -- Ulf Lamping   2007-12-20 06:47:07 +0100 (Thu, 20 Dec 2007)
 
-josm (6103) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove duplicate plugin. ywms.jar is now located in dist/ywms.jar
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-19 19:18:27 +0100 (Wed, 19 Dec 2007)
 
-josm (6102) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm: move plugins/dist directory one level up
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-19 19:13:39 +0100 (Wed, 19 Dec 2007)
 
-josm (6101) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm: move plugins/dist directory one level up
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-19 19:13:07 +0100 (Wed, 19 Dec 2007)
 
-josm (6100) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm: move plugins/dist directory one level up
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-19 19:09:31 +0100 (Wed, 19 Dec 2007)
 
-josm (6099) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm: move dist directory one level up
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-19 19:07:50 +0100 (Wed, 19 Dec 2007)
 
-josm (6098) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm: move dist directory one level up
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-19 18:58:11 +0100 (Wed, 19 Dec 2007)
 
-josm (6075) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove mappaint plugin from install ...
 
  -- Ulf Lamping   2007-12-16 12:30:29 +0100 (Sun, 16 Dec 2007)
 
-josm (6070) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove mappaint, now built into JOSM core
 
  -- Frederik Ramm   2007-12-16 01:07:11 +0100 (Sun, 16 Dec 2007)
 
-josm (6069) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove mappaint plugin 
 
  -- Frederik Ramm   2007-12-16 01:04:31 +0100 (Sun, 16 Dec 2007)
 
-josm (6067) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Revert r6066 (remove mappaint/build.xml), and remove instead the reference to
    * it from plugins/build.xml, which the bug reporter was actually using.
 
  -- Gabriel Ebner   2007-12-15 11:19:13 +0100 (Sat, 15 Dec 2007)
 
-josm (6066) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed mappaint build.xml
 
  -- Frederik Ramm   2007-12-15 10:28:24 +0100 (Sat, 15 Dec 2007)
 
-josm (6064) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * osmarender plugin: Check for incomplete nodes.
 
  -- Gabriel Ebner   2007-12-14 21:04:46 +0100 (Fri, 14 Dec 2007)
 
-josm (6063) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add note that the mappaint plugin is now included in JOSM.
 
  -- Gabriel Ebner   2007-12-14 21:01:39 +0100 (Fri, 14 Dec 2007)
 
-josm (6056) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix a misleading translation
 
  -- Ulf Lamping   2007-12-13 22:56:24 +0100 (Thu, 13 Dec 2007)
 
-josm (6054) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add multi language support to the installer
 
  -- Ulf Lamping   2007-12-13 03:21:16 +0100 (Thu, 13 Dec 2007)
 
-josm (6053) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * latest plugin version from http://josm.openstreetmap.de/download/plugins/
 
  -- Ulf Lamping   2007-12-13 02:59:24 +0100 (Thu, 13 Dec 2007)
 
-josm (6052) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add taxi icon
 
  -- Ulf Lamping   2007-12-12 23:06:23 +0100 (Wed, 12 Dec 2007)
 
-josm (6044) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add some more icons and some realwidth values
 
  -- Ulf Lamping   2007-12-12 11:35:04 +0100 (Wed, 12 Dec 2007)
 
-josm (6037) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add plugin version 1.0
 
  -- Ulf Lamping   2007-12-11 23:39:19 +0100 (Tue, 11 Dec 2007)
 
-josm (6036) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add plugin version 1.0
 
  -- Ulf Lamping   2007-12-11 23:38:51 +0100 (Tue, 11 Dec 2007)
 
-josm (6035) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a version number
 
  -- Ulf Lamping   2007-12-11 23:33:34 +0100 (Tue, 11 Dec 2007)
 
-josm (6034) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a version number to the plugin
 
  -- Ulf Lamping   2007-12-11 23:31:35 +0100 (Tue, 11 Dec 2007)
 
-josm (6033) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a version number to the plugin
 
  -- Ulf Lamping   2007-12-11 23:28:53 +0100 (Tue, 11 Dec 2007)
 
-josm (6032) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a version number to the plugin
 
  -- Ulf Lamping   2007-12-11 23:28:00 +0100 (Tue, 11 Dec 2007)
 
-josm (6031) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new mappaint version
 
  -- Ulf Lamping   2007-12-11 22:57:10 +0100 (Tue, 11 Dec 2007)
 
-josm (6030) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * enable useRealWidth as default
 
  -- Ulf Lamping   2007-12-11 22:56:00 +0100 (Tue, 11 Dec 2007)
 
-josm (6028) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * railway=subway is too dark, make it a little bit brighter
 
  -- Ulf Lamping   2007-12-11 21:58:37 +0100 (Tue, 11 Dec 2007)
 
-josm (6010) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/debian: also allow jdk5
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-12-10 19:02:46 +0100 (Mon, 10 Dec 2007)
 
-josm (5993) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to latest changes:
    * - add some existing icons to the styles/icon_overview.osm
@@ -748,370 +754,370 @@ josm (5993) unstable; urgency=low
 
  -- Ulf Lamping   2007-12-09 16:02:24 +0100 (Sun, 09 Dec 2007)
 
-josm (5979) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add start search direction preference
 
  -- brent   2007-12-09 13:41:19 +0100 (Sun, 09 Dec 2007)
 
-josm (5924) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * German JOSM i18n changes
 
  -- Sven Anders   2007-12-07 09:50:36 +0100 (Fri, 07 Dec 2007)
 
-josm (5903) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix some dots
 
  -- Ulf Lamping   2007-12-05 02:45:22 +0100 (Wed, 05 Dec 2007)
 
-josm (5902) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed some typos, changed some strings to better fit german language, ...
 
  -- Ulf Lamping   2007-12-05 02:38:24 +0100 (Wed, 05 Dec 2007)
 
-josm (5900) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * German JOSM Languagepack: Testversion vom 04.12.2007
 
  -- Sven Anders   2007-12-04 21:04:09 +0100 (Tue, 04 Dec 2007)
 
-josm (5882) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * New German Josm Plungin (not realy full translated but a start)
 
  -- Sven Anders   2007-12-03 19:55:27 +0100 (Mon, 03 Dec 2007)
 
-josm (5869) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updates to latest changes in map features, add a "swimming" icon, other cleanup
 
  -- Ulf Lamping   2007-12-02 20:08:47 +0100 (Sun, 02 Dec 2007)
 
-josm (5867) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * the new style seems to be widely accepted, remove old "flat icon" style
 
  -- Ulf Lamping   2007-12-02 15:11:18 +0100 (Sun, 02 Dec 2007)
 
-josm (5861) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * switch back to former Epsg4326 projection default after some discussion on the josm-dev ML:
    * WMS server usually won't provide Mercator projection and the WMS plugin doesn't care, so data derived from WMS will be inaccurate due to projection differences
 
  -- Ulf Lamping   2007-12-02 13:38:53 +0100 (Sun, 02 Dec 2007)
 
-josm (5824) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the default projection to Mercator
 
  -- Ulf Lamping   2007-11-30 00:09:43 +0100 (Fri, 30 Nov 2007)
 
-josm (5798) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a branding image
 
  -- Ulf Lamping   2007-11-28 20:52:43 +0100 (Wed, 28 Nov 2007)
 
-josm (5790) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * set preferences according to current JOSM default changes
 
  -- Ulf Lamping   2007-11-28 11:13:13 +0100 (Wed, 28 Nov 2007)
 
-josm (5787) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add Eclipse project files
 
  -- Hakan Tandogan   2007-11-27 14:52:35 +0100 (Tue, 27 Nov 2007)
 
-josm (5755) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * elemstyles.xml: remove deprecated Features
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-11-26 00:48:13 +0100 (Mon, 26 Nov 2007)
 
-josm (5696) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Really fixed the install target
 
  -- Hakan Tandogan   2007-11-22 17:21:30 +0100 (Thu, 22 Nov 2007)
 
-josm (5695) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fixed output path
 
  -- Hakan Tandogan   2007-11-22 17:19:32 +0100 (Thu, 22 Nov 2007)
 
-josm (5694) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Ignore the build directory
 
  -- Hakan Tandogan   2007-11-22 17:18:56 +0100 (Thu, 22 Nov 2007)
 
-josm (5693) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fixed install target
 
  -- Hakan Tandogan   2007-11-22 17:17:33 +0100 (Thu, 22 Nov 2007)
 
-josm (5692) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * slippymap jar of SVN 5691
 
  -- Hakan Tandogan   2007-11-22 16:54:14 +0100 (Thu, 22 Nov 2007)
 
-josm (5691) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Drop-down preferences dialog for tile sources
 
  -- Hakan Tandogan   2007-11-22 16:53:48 +0100 (Thu, 22 Nov 2007)
 
-josm (5690) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * pref.put() automatically saves, no need to do that again
 
  -- Hakan Tandogan   2007-11-22 16:18:19 +0100 (Thu, 22 Nov 2007)
 
-josm (5689) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Ask a Preferences holder for tile URLs
 
  -- Hakan Tandogan   2007-11-22 16:09:11 +0100 (Thu, 22 Nov 2007)
 
-josm (5685) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Constant interface
 
  -- Hakan Tandogan   2007-11-22 15:30:18 +0100 (Thu, 22 Nov 2007)
 
-josm (5681) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Refactoring into clean package structure
 
  -- Hakan Tandogan   2007-11-22 15:01:36 +0100 (Thu, 22 Nov 2007)
 
-josm (5680) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Listen to our own preferences
 
  -- Hakan Tandogan   2007-11-22 14:59:32 +0100 (Thu, 22 Nov 2007)
 
-josm (5679) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Extract clearTileStorage() for later use
 
  -- Hakan Tandogan   2007-11-22 14:44:21 +0100 (Thu, 22 Nov 2007)
 
-josm (5676) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Ignore the serialVersionUID warning
 
  -- Hakan Tandogan   2007-11-22 13:48:31 +0100 (Thu, 22 Nov 2007)
 
-josm (5675) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Reformatted a little bit
 
  -- Hakan Tandogan   2007-11-22 12:46:39 +0100 (Thu, 22 Nov 2007)
 
-josm (5674) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Refactoring into clean package structure
 
  -- Hakan Tandogan   2007-11-22 11:46:27 +0100 (Thu, 22 Nov 2007)
 
-josm (5673) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Refactoring into clean package structure
 
  -- Hakan Tandogan   2007-11-22 11:40:30 +0100 (Thu, 22 Nov 2007)
 
-josm (5670) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * elemstyles.xml: Add railway=subway
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-11-21 23:08:06 +0100 (Wed, 21 Nov 2007)
 
-josm (5669) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reorganized imports
 
  -- Christof Dallermassl   2007-11-21 22:05:15 +0100 (Wed, 21 Nov 2007)
 
-josm (5667) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fetch map tiles from the official server
 
  -- Hakan Tandogan   2007-11-21 16:54:38 +0100 (Wed, 21 Nov 2007)
 
-josm (5666) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix project name for eclipse
 
  -- Hakan Tandogan   2007-11-21 16:52:51 +0100 (Wed, 21 Nov 2007)
 
-josm (5631) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * elemstyles.xml: Add supermarket
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-11-20 07:07:30 +0100 (Tue, 20 Nov 2007)
 
-josm (5609) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator plugin: check for incomplete/deleted objects, take 2
 
  -- Gabriel Ebner   2007-11-19 14:19:00 +0100 (Mon, 19 Nov 2007)
 
-josm (5583) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator plugin: check for incomplete objects.
 
  -- Gabriel Ebner   2007-11-18 19:11:52 +0100 (Sun, 18 Nov 2007)
 
-josm (5508) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm.sh: remove old EOF error in shell script
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-11-15 14:38:35 +0100 (Thu, 15 Nov 2007)
 
-josm (5478) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/debian:Add menue to dependencies
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-11-12 18:39:54 +0100 (Mon, 12 Nov 2007)
 
-josm (5455) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * be a bit more precise what to do, if firefox couldn't be found
 
  -- Ulf Lamping   2007-11-11 15:10:00 +0100 (Sun, 11 Nov 2007)
 
-josm (5452) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * move "join node to way" function from UtilsPlugin to core
    * also remove Mergenodes code, it's already in the core for a while
 
  -- Ulf Lamping   2007-11-11 14:19:08 +0100 (Sun, 11 Nov 2007)
 
-josm (5449) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rename mergenodeway to joinnodeway, to reflect it's menu name
 
  -- Ulf Lamping   2007-11-11 14:01:05 +0100 (Sun, 11 Nov 2007)
 
-josm (5437) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - change the install target, so it uses the right home dir even on windows
    * - use "/osmarender6/osm-map-features-z17.xml", probably that's the right file
 
  -- Ulf Lamping   2007-11-10 14:45:15 +0100 (Sat, 10 Nov 2007)
 
-josm (5436) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
-   * disable duplicateway plugin, still uses API 0.4 things (Segments)
+   * disable duplicateway plugin, still uses API 0.4 things (6217574)
 
  -- Ulf Lamping   2007-11-10 14:08:49 +0100 (Sat, 10 Nov 2007)
 
-josm (5435) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a comment, that the code is not updated to API 0.5 (still uses Segments)
 
  -- Ulf Lamping   2007-11-10 14:06:56 +0100 (Sat, 10 Nov 2007)
 
-josm (5434) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add keyboard shortcuts
 
  -- Ulf Lamping   2007-11-10 13:57:37 +0100 (Sat, 10 Nov 2007)
 
-josm (5431) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * some minor menu changes
 
  -- Ulf Lamping   2007-11-10 13:14:03 +0100 (Sat, 10 Nov 2007)
 
-josm (5430) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copy the former icon into 24*24 pixels "canvas", so it will be aligned correct in the menu
 
  -- Ulf Lamping   2007-11-10 13:13:14 +0100 (Sat, 10 Nov 2007)
 
-josm (5429) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add icons and keyboard shortcuts to the menu items
 
  -- Ulf Lamping   2007-11-10 12:46:57 +0100 (Sat, 10 Nov 2007)
 
-josm (5428) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the install target, so it uses the right home dir even on windows
 
  -- Ulf Lamping   2007-11-10 12:45:07 +0100 (Sat, 10 Nov 2007)
 
-josm (5427) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add icons to the menu entries
 
  -- Ulf Lamping   2007-11-10 12:42:58 +0100 (Sat, 10 Nov 2007)
 
-josm (5424) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add tooltips for the menu items
 
  -- Ulf Lamping   2007-11-10 10:21:20 +0100 (Sat, 10 Nov 2007)
 
-josm (5423) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * resize icon to 16*16 pixel, so it fits better into the layer dialog
 
  -- Ulf Lamping   2007-11-10 03:57:26 +0100 (Sat, 10 Nov 2007)
 
-josm (5422) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the install target, so it uses the right home dir even on windows
 
  -- Ulf Lamping   2007-11-10 03:56:35 +0100 (Sat, 10 Nov 2007)
 
-josm (5421) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * move the LiveGPS menu more to the right and fix accelerator keys
 
  -- Ulf Lamping   2007-11-10 03:17:25 +0100 (Sat, 10 Nov 2007)
 
-josm (5420) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the install target, so it uses the right home dir even on windows
 
  -- Ulf Lamping   2007-11-10 03:16:35 +0100 (Sat, 10 Nov 2007)
 
-josm (5419) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix the "Open Visible" menu item
 
  -- Ulf Lamping   2007-11-10 03:06:04 +0100 (Sat, 10 Nov 2007)
 
-josm (5418) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the install target, so it uses the right home dir even on windows
 
  -- Ulf Lamping   2007-11-10 02:54:05 +0100 (Sat, 10 Nov 2007)
 
-josm (5417) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * move the two remaining UtilsPlugin functions from the toolbar to the Tools menu, as they are much more in common with that menu
 
  -- Ulf Lamping   2007-11-10 02:05:09 +0100 (Sat, 10 Nov 2007)
 
-josm (5416) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the install target, so it uses the right home dir even on windows
 
  -- Ulf Lamping   2007-11-10 02:03:32 +0100 (Sat, 10 Nov 2007)
 
-josm (5415) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - move the WMS menu top level item more to the right (well, it's a plugin)
    * - add an icon and a tooltip for the recently added "blank layer" menu item
@@ -1119,164 +1125,164 @@ josm (5415) unstable; urgency=low
 
  -- Ulf Lamping   2007-11-10 01:23:47 +0100 (Sat, 10 Nov 2007)
 
-josm (5413) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change the install target, so it uses the right home dir even on windows
 
  -- Ulf Lamping   2007-11-10 00:49:56 +0100 (Sat, 10 Nov 2007)
 
-josm (5411) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove some more preferences tweaking, that are already defaults in JOSM
 
  -- Ulf Lamping   2007-11-09 23:30:46 +0100 (Fri, 09 Nov 2007)
 
-josm (5410) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * as of JOSM 459 (fixed as trac bug 426), the download dialog will now by default have the "Download OpenStreetMap Data" checked - no need to do this in the installer any longer ...
 
  -- Ulf Lamping   2007-11-09 23:19:24 +0100 (Fri, 09 Nov 2007)
 
-josm (5408) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to API 0.5
 
  -- Ulf Lamping   2007-11-09 22:02:30 +0100 (Fri, 09 Nov 2007)
 
-josm (5326) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * re-build 0.2.1
 
  -- Frederik Ramm   2007-11-05 10:23:34 +0100 (Mon, 05 Nov 2007)
 
-josm (5324) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * archeological.png -> archaeological.png
 
  -- Ulf Lamping   2007-11-05 09:21:22 +0100 (Mon, 05 Nov 2007)
 
-josm (5322) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * newest
 
  -- Frederik Ramm   2007-11-05 02:55:31 +0100 (Mon, 05 Nov 2007)
 
-josm (5321) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * build fix for wms plugin
 
  -- Frederik Ramm   2007-11-05 02:54:59 +0100 (Mon, 05 Nov 2007)
 
-josm (5320) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * newest
 
  -- Frederik Ramm   2007-11-05 02:52:21 +0100 (Mon, 05 Nov 2007)
 
-josm (5319) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added very simple capability of loading and saving wms layers to WMSPlugin; requires at least JOSM v456 to work
 
  -- Frederik Ramm   2007-11-05 02:51:55 +0100 (Mon, 05 Nov 2007)
 
-josm (5318) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * archeological -> archaeological 
 
  -- Ulf Lamping   2007-11-05 00:50:31 +0100 (Mon, 05 Nov 2007)
 
-josm (5284) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild validator plugin.
 
  -- Gabriel Ebner   2007-11-03 00:11:14 +0100 (Sat, 03 Nov 2007)
 
-josm (5283) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator plugin: Don't show areas, roundabouts, etc. as "self-intersecting
    * ways".
 
  -- Gabriel Ebner   2007-11-03 00:11:02 +0100 (Sat, 03 Nov 2007)
 
-josm (5271) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed to work with new JOSM
 
  -- Frederik Ramm   2007-11-01 09:06:40 +0100 (Thu, 01 Nov 2007)
 
-josm (5270) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * temporary changes to support new gpx handling in JOSM; CAUTION: autosave currently disabled!
 
  -- Frederik Ramm   2007-11-01 09:05:28 +0100 (Thu, 01 Nov 2007)
 
-josm (5269) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed unused references to RawGpsLayer
 
  -- Frederik Ramm   2007-11-01 08:59:11 +0100 (Thu, 01 Nov 2007)
 
-josm (5268) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix for JOSM GPX changes
 
  -- Frederik Ramm   2007-11-01 08:48:01 +0100 (Thu, 01 Nov 2007)
 
-josm (5247) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator plugin: Check for self-intersecting ways.
 
  -- Gabriel Ebner   2007-10-30 14:30:54 +0100 (Tue, 30 Oct 2007)
 
-josm (5246) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator plugin: Check for ways with just one node.
 
  -- Gabriel Ebner   2007-10-30 14:21:23 +0100 (Tue, 30 Oct 2007)
 
-josm (5245) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Escape spaces in URLs.
 
  -- Gabriel Ebner   2007-10-30 14:09:05 +0100 (Tue, 30 Oct 2007)
 
-josm (5230) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * make the windows shell mostly the same as the unix version
 
  -- Ulf Lamping   2007-10-29 21:10:52 +0100 (Mon, 29 Oct 2007)
 
-josm (5229) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * "fix" some comments
 
  -- Ulf Lamping   2007-10-29 21:09:17 +0100 (Mon, 29 Oct 2007)
 
-josm (5226) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * UtilsPlugin: Simplify math in SimplifyWayAction.
 
  -- Gabriel Ebner   2007-10-29 15:02:21 +0100 (Mon, 29 Oct 2007)
 
-josm (5219) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * mappaint: Check whether primitives are incomplete when painting.
 
  -- Gabriel Ebner   2007-10-28 20:22:52 +0100 (Sun, 28 Oct 2007)
 
-josm (5214) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove the need for a downloads dir, as we download nothing and get all files from the subversion directory directly
 
  -- Ulf Lamping   2007-10-28 15:50:35 +0100 (Sun, 28 Oct 2007)
 
-josm (5213) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/debian: Add java 1.5 dependency, remove some old testing stuff, put preferences and bookmarks into there own files, add proxy support to josm.sh starter
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-28 13:57:58 +0100 (Sun, 28 Oct 2007)
 
-josm (5207) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - find the JOSM home dir independent of the platform
    * - some cleanup
@@ -1284,241 +1290,241 @@ josm (5207) unstable; urgency=low
 
  -- Ulf Lamping   2007-10-28 11:34:37 +0100 (Sun, 28 Oct 2007)
 
-josm (5206) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * delete old josm.exe file before building a new one (to better detect build problems)
 
  -- Ulf Lamping   2007-10-28 10:16:55 +0100 (Sun, 28 Oct 2007)
 
-josm (5204) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix some texts
 
  -- Ulf Lamping   2007-10-27 19:10:22 +0200 (Sat, 27 Oct 2007)
 
-josm (5203) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to latest plugin jar locations
 
  -- Ulf Lamping   2007-10-27 15:02:44 +0200 (Sat, 27 Oct 2007)
 
-josm (5197) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Build all JOSM plugins for 1.5 by default.
 
  -- Gabriel Ebner   2007-10-26 19:19:40 +0200 (Fri, 26 Oct 2007)
 
-josm (5196) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild the remaining JOSM plugins for 1.5.
 
  -- Gabriel Ebner   2007-10-26 19:12:26 +0200 (Fri, 26 Oct 2007)
 
-josm (5195) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild the osmarender and ywms plugins for 1.5.
 
  -- Gabriel Ebner   2007-10-26 19:01:15 +0200 (Fri, 26 Oct 2007)
 
-josm (5194) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Adapt the validator plugin to changes in the JOSM core.
 
  -- Gabriel Ebner   2007-10-26 18:57:21 +0200 (Fri, 26 Oct 2007)
 
-josm (5179) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * modified YWMS plugin HTTP server component to listen on localhost only to avoid external clients remote-controlling firefox
 
  -- Frederik Ramm   2007-10-26 11:40:20 +0200 (Fri, 26 Oct 2007)
 
-josm (5178) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild utilsplugin for 1.5.
 
  -- Gabriel Ebner   2007-10-26 09:52:22 +0200 (Fri, 26 Oct 2007)
 
-josm (5177) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild wmsplugin for 1.5.
 
  -- Gabriel Ebner   2007-10-26 09:51:37 +0200 (Fri, 26 Oct 2007)
 
-josm (5176) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * plugin.jar must be deleted with "file", not with "dir"
 
  -- Ulf Lamping   2007-10-25 23:25:28 +0200 (Thu, 25 Oct 2007)
 
-josm (5172) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change highway=pedestrian from greyish (looks just like a residential road) to green with width 2, so it looks more like a "wider footway"
 
  -- Ulf Lamping   2007-10-25 20:32:34 +0200 (Thu, 25 Oct 2007)
 
-josm (5164) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm-setup-unix.sh: warn and exit if files are not build, move lanch4j executable to /usr/share
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-25 08:20:52 +0200 (Thu, 25 Oct 2007)
 
-josm (5163) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm-setup-unix.sh: reduce Verbosity while building
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-25 08:18:24 +0200 (Thu, 25 Oct 2007)
 
-josm (5162) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * the mentioned NSIS forum thread is NOT in german
 
  -- Ulf Lamping   2007-10-25 05:31:03 +0200 (Thu, 25 Oct 2007)
 
-josm (5161) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * clarify required launch4j and NSIS versions and mention NSIS problems under Debian
 
  -- Ulf Lamping   2007-10-25 05:14:31 +0200 (Thu, 25 Oct 2007)
 
-josm (5159) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Update nsis/launch4j.xml to newer Version
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 23:26:21 +0200 (Wed, 24 Oct 2007)
 
-josm (5158) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * nsis/bookmarks: expand bookmarks
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 23:26:06 +0200 (Wed, 24 Oct 2007)
 
-josm (5157) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/nsis/josm-setup-unix.sh: code svn-revision into package name
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 20:51:47 +0200 (Wed, 24 Oct 2007)
 
-josm (5156) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
-   * josm compile(nsis/debian): reduce verbosity while compiling
+   * josm compile(6217574): reduce verbosity while compiling
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 20:46:00 +0200 (Wed, 24 Oct 2007)
 
-josm (5155) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins/build.xml: dist directory may not be deleted, because otherwise you loose the svn information
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 20:44:41 +0200 (Wed, 24 Oct 2007)
 
-josm (5154) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugin/*/*.jar: remove old scattered *.jar Files
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 20:26:11 +0200 (Wed, 24 Oct 2007)
 
-josm (5153) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins/*build.xml: now we use the unique target dist for creating .jar files. Use a lot more variables to be able to move the build directory. destination directory for .jar files is now plugins/dist/*.jar. correcteed clean targets
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 20:13:09 +0200 (Wed, 24 Oct 2007)
 
-josm (5152) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugin/dist/*: Add new location for compiled jar Files
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 20:05:01 +0200 (Wed, 24 Oct 2007)
 
-josm (5149) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * nsis/josm-setup-unix.sh: Bug in Directory changing
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 08:06:59 +0200 (Wed, 24 Oct 2007)
 
-josm (5148) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * nsis/josm-setup-unix.sh: First Version of unix Version for creating Windows Installer Files
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 07:51:07 +0200 (Wed, 24 Oct 2007)
 
-josm (5147) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins: reindent build Files, sort plugin build order
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-24 07:31:46 +0200 (Wed, 24 Oct 2007)
 
-josm (5142) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * utilsplugin: Simplify ways: don't remove tagged nodes.
 
  -- Gabriel Ebner   2007-10-23 20:52:25 +0200 (Tue, 23 Oct 2007)
 
-josm (5141) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Rebuild YWMS for java 1.5.
 
  -- Gabriel Ebner   2007-10-23 20:51:57 +0200 (Tue, 23 Oct 2007)
 
-josm (5140) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * version 0.2
 
  -- Christof Dallermassl   2007-10-23 15:42:04 +0200 (Tue, 23 Oct 2007)
 
-josm (5139) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed jar path in upload target
 
  -- Christof Dallermassl   2007-10-23 15:40:14 +0200 (Tue, 23 Oct 2007)
 
-josm (5138) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reorganized imports
 
  -- Christof Dallermassl   2007-10-23 15:37:17 +0200 (Tue, 23 Oct 2007)
 
-josm (5137) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-10-23 15:35:55 +0200 (Tue, 23 Oct 2007)
 
-josm (5136) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-10-23 15:35:20 +0200 (Tue, 23 Oct 2007)
 
-josm (5126) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add make clean to really be sure we have new .jar Files
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-23 07:32:06 +0200 (Tue, 23 Oct 2007)
 
-josm (5125) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/debian: move recommends to suggest
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-23 07:30:57 +0200 (Tue, 23 Oct 2007)
 
-josm (5124) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * replace my personal settings with some more general favourites
 
  -- Ulf Lamping   2007-10-22 23:29:30 +0200 (Mon, 22 Oct 2007)
 
-josm (5123) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * don't install a "de-streets.xml", in the meantime JOSM provides "in build" tagging presets
 
  -- Ulf Lamping   2007-10-22 22:26:09 +0200 (Mon, 22 Oct 2007)
 
-josm (5122) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * don't install a "de-streets.xml", in the meantime JOSM provides "in build" tagging presets
 
  -- Ulf Lamping   2007-10-22 22:24:47 +0200 (Mon, 22 Oct 2007)
 
-josm (5120) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * comment out osmarender:
    * - needs Firefox which is not available on all Windows machines
@@ -1526,121 +1532,121 @@ josm (5120) unstable; urgency=low
 
  -- Ulf Lamping   2007-10-22 22:17:24 +0200 (Mon, 22 Oct 2007)
 
-josm (5119) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use slash instead of backslash, so it's working on Linux and Windows
 
  -- Ulf Lamping   2007-10-22 20:39:41 +0200 (Mon, 22 Oct 2007)
 
-josm (5115) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Add build to SVN.
 
  -- Gabriel Ebner   2007-10-22 13:58:11 +0200 (Mon, 22 Oct 2007)
 
-josm (5114) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * wmsplugin: Improve progress display.
 
  -- Gabriel Ebner   2007-10-22 13:57:42 +0200 (Mon, 22 Oct 2007)
 
-josm (5111) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix text
 
  -- Ulf Lamping   2007-10-21 23:44:07 +0200 (Sun, 21 Oct 2007)
 
-josm (5084) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * utilsplugin: Simplify ways without junctions.
 
  -- Gabriel Ebner   2007-10-19 14:40:17 +0200 (Fri, 19 Oct 2007)
 
-josm (5080) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * utilsplugin: fix merge-nodes action
 
  -- Gabriel Ebner   2007-10-19 12:47:09 +0200 (Fri, 19 Oct 2007)
 
-josm (5077) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add the utilsplugin build.
 
  -- Gabriel Ebner   2007-10-19 00:16:58 +0200 (Fri, 19 Oct 2007)
 
-josm (5076) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * utilsplugin: Port to API 0.5.
 
  -- Gabriel Ebner   2007-10-19 00:13:15 +0200 (Fri, 19 Oct 2007)
 
-josm (5075) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Import the latest upstream version of utilsplugin.
 
  -- Gabriel Ebner   2007-10-19 00:06:14 +0200 (Fri, 19 Oct 2007)
 
-josm (5059) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * osmarender seems to work on Win32 again
 
  -- Ulf Lamping   2007-10-18 01:23:30 +0200 (Thu, 18 Oct 2007)
 
-josm (5057) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * very slightly improve string output while connecting to gpsd
 
  -- Ulf Lamping   2007-10-17 22:23:11 +0200 (Wed, 17 Oct 2007)
 
-josm (5056) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add opacity level to fill areas
 
  -- Ulf Lamping   2007-10-17 21:54:47 +0200 (Wed, 17 Oct 2007)
 
-josm (5024) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use "mappaint.fillalpha" preference to set the opacity of fillareas
 
  -- Ulf Lamping   2007-10-15 23:35:04 +0200 (Mon, 15 Oct 2007)
 
-josm (5022) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * tways plugin not needed any more since 0.5.
 
  -- Frederik Ramm   2007-10-15 22:35:37 +0200 (Mon, 15 Oct 2007)
 
-josm (5019) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove java 1.5 from recommends since it does not work with this Version
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-15 19:12:52 +0200 (Mon, 15 Oct 2007)
 
-josm (5018) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins/build.xml: remove surveyor plugin, because it's not compiling
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-15 18:31:54 +0200 (Mon, 15 Oct 2007)
 
-josm (5017) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins: add clean target to some plugins, reactivate compiling plugins
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-15 18:27:44 +0200 (Mon, 15 Oct 2007)
 
-josm (5016) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugin/build.xml: Add comments to surveyor plugin, since it currently doesn't compile
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-15 18:11:49 +0200 (Mon, 15 Oct 2007)
 
-josm (5001) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/debian: Add Java dependencies for Ubuntu, adapt description
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-14 21:15:06 +0200 (Sun, 14 Oct 2007)
 
-josm (4972) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Make 0.5 compatible.
    * The osmarender output looks kinda strange, and <bounds> is not implemented.
@@ -1648,37 +1654,37 @@ josm (4972) unstable; urgency=low
 
  -- Gabriel Ebner   2007-10-13 18:02:56 +0200 (Sat, 13 Oct 2007)
 
-josm (4971) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Remove out of date mappaint-JOSM1.5.jar.
 
  -- Gabriel Ebner   2007-10-13 17:18:49 +0200 (Sat, 13 Oct 2007)
 
-josm (4958) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/debian/make_install_files.sh: remove unnedded Files from build/copy process
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-12 23:38:28 +0200 (Fri, 12 Oct 2007)
 
-josm (4957) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm/plugins/build.xml: uncomment non compiling plugins. This enables debian package building again
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-10-12 23:36:58 +0200 (Fri, 12 Oct 2007)
 
-josm (4945) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix removal of "global plugins"
 
  -- Ulf Lamping   2007-10-11 23:23:30 +0200 (Thu, 11 Oct 2007)
 
-josm (4944) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator URL was outdated
 
  -- Ulf Lamping   2007-10-11 23:12:00 +0200 (Thu, 11 Oct 2007)
 
-josm (4943) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updates to API 0.5 changes:
    * - tways plugin is no longer useful
@@ -1687,176 +1693,176 @@ josm (4943) unstable; urgency=low
 
  -- Ulf Lamping   2007-10-11 22:43:43 +0200 (Thu, 11 Oct 2007)
 
-josm (4909) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * 4848
 
  -- Frederik Ramm   2007-10-09 16:07:23 +0200 (Tue, 09 Oct 2007)
 
-josm (4872) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * 4871
 
  -- Frederik Ramm   2007-10-08 01:24:27 +0200 (Mon, 08 Oct 2007)
 
-josm (4868) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator: Rebuild using 1.5.
 
  -- Gabriel Ebner   2007-10-07 22:08:19 +0200 (Sun, 07 Oct 2007)
 
-josm (4867) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator: Rebuild.
 
  -- Gabriel Ebner   2007-10-07 21:02:55 +0200 (Sun, 07 Oct 2007)
 
-josm (4866) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator: Show all tests in the pref dialog, even if they're not in the prefs.
 
  -- Gabriel Ebner   2007-10-07 20:55:36 +0200 (Sun, 07 Oct 2007)
 
-josm (4865) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * 1.0
 
  -- Frederik Ramm   2007-10-07 19:59:58 +0200 (Sun, 07 Oct 2007)
 
-josm (4864) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * i name you 1.0
 
  -- Frederik Ramm   2007-10-07 19:56:50 +0200 (Sun, 07 Oct 2007)
 
-josm (4858) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * binary commit
 
  -- Frederik Ramm   2007-10-07 15:29:37 +0200 (Sun, 07 Oct 2007)
 
-josm (4849) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * lakewalker: Take the build directory out of SVN.
 
  -- Gabriel Ebner   2007-10-07 14:09:51 +0200 (Sun, 07 Oct 2007)
 
-josm (4848) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new 0.5 compatible version
 
  -- Frederik Ramm   2007-10-07 14:05:50 +0200 (Sun, 07 Oct 2007)
 
-josm (4847) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changes for 0.5 compatibility
 
  -- Frederik Ramm   2007-10-07 13:57:09 +0200 (Sun, 07 Oct 2007)
 
-josm (4844) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * validator: Make changes to support relations.
 
  -- Gabriel Ebner   2007-10-07 13:38:17 +0200 (Sun, 07 Oct 2007)
 
-josm (4843) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Make changes for 0.5.
 
  -- Gabriel Ebner   2007-10-07 13:25:21 +0200 (Sun, 07 Oct 2007)
 
-josm (4821) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updated NameFinder to not require MinML2
 
  -- Frederik Ramm   2007-10-05 00:15:01 +0200 (Fri, 05 Oct 2007)
 
-josm (4815) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove some ugly white pixels
 
  -- Ulf Lamping   2007-10-03 13:15:47 +0200 (Wed, 03 Oct 2007)
 
-josm (4788) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * typo patch submitted by Hanno Boeck
 
  -- Frederik Ramm   2007-10-01 13:31:02 +0200 (Mon, 01 Oct 2007)
 
-josm (4740) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new features for slippymap plugin: show tile details, request update, load all tiles
 
  -- Frederik Ramm   2007-09-27 21:21:47 +0200 (Thu, 27 Sep 2007)
 
-josm (4670) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed branch, now a proper branch in openstreetmap.de repository under 
    * http://josm.openstreetmap.de/svn/branch/0.5
 
  -- Frederik Ramm   2007-09-24 01:42:00 +0200 (Mon, 24 Sep 2007)
 
-josm (4669) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new for relation dialog
 
  -- Frederik Ramm   2007-09-24 00:32:16 +0200 (Mon, 24 Sep 2007)
 
-josm (4668) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * option to highlight selected member
 
  -- Frederik Ramm   2007-09-24 00:31:49 +0200 (Mon, 24 Sep 2007)
 
-josm (4667) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixes for node deletion
 
  -- Frederik Ramm   2007-09-24 00:31:27 +0200 (Mon, 24 Sep 2007)
 
-josm (4651) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Improved Version
 
  -- brent   2007-09-22 03:17:53 +0200 (Sat, 22 Sep 2007)
 
-josm (4640) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * switch josm external to new server
 
  -- Steve Coast   2007-09-21 18:00:34 +0200 (Fri, 21 Sep 2007)
 
-josm (4522) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made it easier for translators
 
  -- Christof Dallermassl   2007-09-12 08:55:00 +0200 (Wed, 12 Sep 2007)
 
-josm (4499) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version, ButtonDescription, renamed setType to setButtonType due to problems with XmlObjectParser under windows (using the wrong method by reflection)
 
  -- Christof Dallermassl   2007-09-10 22:28:41 +0200 (Mon, 10 Sep 2007)
 
-josm (4492) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version, fixed problem with "<" in waypoint names
 
  -- Christof Dallermassl   2007-09-09 22:16:24 +0200 (Sun, 09 Sep 2007)
 
-josm (4491) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix problem with names including a <
 
  -- Christof Dallermassl   2007-09-09 22:15:04 +0200 (Sun, 09 Sep 2007)
 
-josm (4480) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - added "relation" type to search compiler
 
  -- Frederik Ramm   2007-09-06 23:16:00 +0200 (Thu, 06 Sep 2007)
 
-josm (4479) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - fixed hint line drawing
    * - fixed selection list update
@@ -1864,79 +1870,79 @@ josm (4479) unstable; urgency=low
 
  -- Frederik Ramm   2007-09-06 22:42:51 +0200 (Thu, 06 Sep 2007)
 
-josm (4471) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * make installation of icons and file extensions optional
 
  -- Ulf Lamping   2007-09-06 05:58:27 +0200 (Thu, 06 Sep 2007)
 
-josm (4470) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * install plugins into "program files" and not into personal folder
 
  -- Ulf Lamping   2007-09-06 03:17:47 +0200 (Thu, 06 Sep 2007)
 
-josm (4469) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm 0.5: Fix image path.
 
  -- Gabriel Ebner   2007-09-06 01:25:20 +0200 (Thu, 06 Sep 2007)
 
-josm (4468) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm 0.5: Fix UTF-8 errors.
 
  -- Gabriel Ebner   2007-09-06 00:59:58 +0200 (Thu, 06 Sep 2007)
 
-josm (4467) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm 0.5: forgot to remove some files in the working copy
 
  -- Gabriel Ebner   2007-09-06 00:59:17 +0200 (Thu, 06 Sep 2007)
 
-josm (4466) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * josm 0.5: unify line endings & replace entities with relations in comments.
 
  -- Gabriel Ebner   2007-09-06 00:55:02 +0200 (Thu, 06 Sep 2007)
 
-josm (4464) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * initial changeset for 0.5 functionality. this version works with 0.5 as specified but there are some minor bugs to be fixed.
 
  -- Frederik Ramm   2007-09-05 23:55:17 +0200 (Wed, 05 Sep 2007)
 
-josm (4442) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changes to match main JOSM changeset #317
 
  -- Frederik Ramm   2007-09-04 00:28:05 +0200 (Tue, 04 Sep 2007)
 
-josm (4440) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * cleanup of wget / cp calls
 
  -- Ulf Lamping   2007-09-03 23:37:10 +0200 (Mon, 03 Sep 2007)
 
-josm (4439) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * "lang" build.xml doesn't have a clean target, comment it out so "clean" for all plugins works
 
  -- Ulf Lamping   2007-09-03 23:35:34 +0200 (Mon, 03 Sep 2007)
 
-josm (4437) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * clone of original josm revision 316, to be used as a base for 0.5 changes.
 
  -- Frederik Ramm   2007-09-03 22:39:12 +0200 (Mon, 03 Sep 2007)
 
-josm (4436) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updated release with better highway=tertiary style
 
  -- Ulf Lamping   2007-09-03 21:36:49 +0200 (Mon, 03 Sep 2007)
 
-josm (4435) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use a better highway=tertiary style: 
    * same color as osmarender, at least as thick as "unclassified":
@@ -1944,49 +1950,49 @@ josm (4435) unstable; urgency=low
 
  -- Ulf Lamping   2007-09-03 21:29:54 +0200 (Mon, 03 Sep 2007)
 
-josm (4431) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed old version
 
  -- Christof Dallermassl   2007-09-03 11:13:09 +0200 (Mon, 03 Sep 2007)
 
-josm (4430) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update mappaint.jar, so it keeps up with latest incompatible changes in josm
 
  -- Ulf Lamping   2007-09-03 02:41:36 +0200 (Mon, 03 Sep 2007)
 
-josm (4429) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * as latest changes from Fred will break 1.5 compatibility, keep a JOSM 1.5 compatible version
 
  -- Ulf Lamping   2007-09-03 02:30:30 +0200 (Mon, 03 Sep 2007)
 
-josm (4428) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add SVN version number to the jar file
 
  -- Ulf Lamping   2007-09-03 01:40:47 +0200 (Mon, 03 Sep 2007)
 
-josm (4427) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * last commit was bad idea, this way the install target doesn't work - leave this issue open, I'll comment out "lang" build locally
 
  -- Ulf Lamping   2007-09-03 01:38:08 +0200 (Mon, 03 Sep 2007)
 
-josm (4425) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version with rendering speedup. needs josm-latest.jar build 315 or later (3 sept 2007 or later)
 
  -- Frederik Ramm   2007-09-03 00:36:45 +0200 (Mon, 03 Sep 2007)
 
-josm (4423) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * performance improvements by Brent Easton <b.easton@uws.edu.au>
 
  -- Frederik Ramm   2007-09-03 00:23:03 +0200 (Mon, 03 Sep 2007)
 
-josm (4422) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * building the lang plugin doesn't work on windows, as it depends on gettext (which is not available on win)
    * I've split the build into two targets, one for all platforms and one that builds on unix only (that calls the all target then).
@@ -1994,7 +2000,7 @@ josm (4422) unstable; urgency=low
 
  -- Ulf Lamping   2007-09-02 22:29:12 +0200 (Sun, 02 Sep 2007)
 
-josm (4421) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version of the mappaint plugin:
    * - provides lot's of new icons
@@ -2005,266 +2011,266 @@ josm (4421) unstable; urgency=low
 
  -- Ulf Lamping   2007-09-02 21:06:58 +0200 (Sun, 02 Sep 2007)
 
-josm (4420) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * instead of keeping outdated information here, just provide a link to the OSM wiki
 
  -- Ulf Lamping   2007-09-02 20:55:26 +0200 (Sun, 02 Sep 2007)
 
-josm (4419) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * slightly better explain changes
 
  -- Ulf Lamping   2007-09-02 20:54:34 +0200 (Sun, 02 Sep 2007)
 
-josm (4418) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to latest cleanup of icon locations
 
  -- Ulf Lamping   2007-09-02 20:45:05 +0200 (Sun, 02 Sep 2007)
 
-josm (4417) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * don't throw a NullPointerException, if an icon png wasn't found - put a warning on the console instead
 
  -- Ulf Lamping   2007-09-02 20:26:53 +0200 (Sun, 02 Sep 2007)
 
-josm (4416) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rename standard to standard.old to keep it visible for reference, but replacing mappaint default with osmfeatures style (using the classic.small icons)
 
  -- Ulf Lamping   2007-09-02 20:05:17 +0200 (Sun, 02 Sep 2007)
 
-josm (4415) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rename standard to standard.old to keep it visible for reference, but replacing mappaint default with osmfeatures style (using the classic.small icons) shortly
 
  -- Ulf Lamping   2007-09-02 20:04:01 +0200 (Sun, 02 Sep 2007)
 
-josm (4407) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove dir mirrored by "svn:externals icons ...", as it's now mirrored at mappaint/styles/osmfeatures - and to my knowledge no one needs it here
 
  -- Ulf Lamping   2007-09-01 22:27:06 +0200 (Sat, 01 Sep 2007)
 
-josm (4405) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove old icons propset
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-09-01 21:52:55 +0200 (Sat, 01 Sep 2007)
 
-josm (4404) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * set propset for map-icons to be seen inside mappaint
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-09-01 21:35:49 +0200 (Sat, 01 Sep 2007)
 
-josm (4308) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * first version of debian package for josm
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-08-25 09:14:17 +0200 (Sat, 25 Aug 2007)
 
-josm (4307) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version with nicer table for results; fixed bug that would close the download dialog on pressing ENTER; added wait cursor
 
  -- Frederik Ramm   2007-08-25 03:07:47 +0200 (Sat, 25 Aug 2007)
 
-josm (4279) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added gpl v2 license
 
  -- Christof Dallermassl   2007-08-23 11:29:23 +0200 (Thu, 23 Aug 2007)
 
-josm (4278) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added copyright comment
 
  -- Christof Dallermassl   2007-08-23 08:14:57 +0200 (Thu, 23 Aug 2007)
 
-josm (4277) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added copyright comment
 
  -- Christof Dallermassl   2007-08-23 08:14:10 +0200 (Thu, 23 Aug 2007)
 
-josm (4276) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added source/target 1.5 to javac task
 
  -- Christof Dallermassl   2007-08-23 08:02:26 +0200 (Thu, 23 Aug 2007)
 
-josm (4246) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * DuplicateWay v1.0
 
  -- brent   2007-08-21 08:22:23 +0200 (Tue, 21 Aug 2007)
 
-josm (4245) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * DuplicateWay v1.0
 
  -- brent   2007-08-21 05:30:30 +0200 (Tue, 21 Aug 2007)
 
-josm (4210) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Create duplicateway structure
 
  -- brent   2007-08-17 23:04:46 +0200 (Fri, 17 Aug 2007)
 
-josm (4209) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * More Lakewalker preferences
 
  -- brent   2007-08-17 23:04:07 +0200 (Fri, 17 Aug 2007)
 
-josm (4189) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Tidied up
 
  -- brent   2007-08-17 01:30:51 +0200 (Fri, 17 Aug 2007)
 
-josm (4162) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Include water and coastline in crossing roads test
    * Fix calculation of the cells that a segment crosses
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-16 02:39:09 +0200 (Thu, 16 Aug 2007)
 
-josm (4122) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Preferences prefix moved from "tests" to "validator".
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-14 14:54:51 +0200 (Tue, 14 Aug 2007)
 
-josm (4096) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * v0.3 with latest python module
 
  -- brent   2007-08-13 12:59:20 +0200 (Mon, 13 Aug 2007)
 
-josm (4095) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * v0.3
 
  -- brent   2007-08-13 12:55:42 +0200 (Mon, 13 Aug 2007)
 
-josm (4093) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix retrieval of tests
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-13 03:17:03 +0200 (Mon, 13 Aug 2007)
 
-josm (4088) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
 
  -- david   2007-08-12 13:08:46 +0200 (Sun, 12 Aug 2007)
 
-josm (4087) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Allow "by user" and "before upload" validations be enabled separately
    * Preferences prefix moved from "tests" to "validator".
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-11 21:19:21 +0200 (Sat, 11 Aug 2007)
 
-josm (4086) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fixing deprecated Layer listeners code
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-11 19:07:23 +0200 (Sat, 11 Aug 2007)
 
-josm (4081) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added PD license
 
  -- Frederik Ramm   2007-08-10 22:23:24 +0200 (Fri, 10 Aug 2007)
 
-josm (4080) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed bug in slippymap that referenced the wrong LayerChangeListener
 
  -- Immanuel Scholz   2007-08-10 21:20:39 +0200 (Fri, 10 Aug 2007)
 
-josm (4071) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Version 0.2 Lakewalker - support for multi data layers
 
  -- brent   2007-08-10 13:39:56 +0200 (Fri, 10 Aug 2007)
 
-josm (4061) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Version 0.1 - Very rough basic working version
 
  -- brent   2007-08-10 00:00:15 +0200 (Fri, 10 Aug 2007)
 
-josm (4035) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fixed URI in Windows
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-09 00:37:16 +0200 (Thu, 09 Aug 2007)
 
-josm (4034) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fixed URI in Windows
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-09 00:36:35 +0200 (Thu, 09 Aug 2007)
 
-josm (4033) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Check for empty (without segments) ways
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 23:58:24 +0200 (Wed, 08 Aug 2007)
 
-josm (4029) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial coastline checks
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:39:17 +0200 (Wed, 08 Aug 2007)
 
-josm (4028) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * No longer used
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:38:39 +0200 (Wed, 08 Aug 2007)
 
-josm (4027) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * New image for the layer dialog
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:38:19 +0200 (Wed, 08 Aug 2007)
 
-josm (4026) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial coastline checks
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:36:58 +0200 (Wed, 08 Aug 2007)
 
-josm (4025) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Removed unused javadoc
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:36:04 +0200 (Wed, 08 Aug 2007)
 
-josm (4024) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Store version and build date in jar Manifest instead of REVISION file
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:30:31 +0200 (Wed, 08 Aug 2007)
 
-josm (4023) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Support for multiple layers
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 22:28:09 +0200 (Wed, 08 Aug 2007)
 
-josm (4021) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Removed unneeded casting
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 21:45:39 +0200 (Wed, 08 Aug 2007)
 
-josm (4020) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Use URI instead of URL, since URI handles encoding/decodingg of international characters
    * Store version and build date in jar Manifest instead of REVISION file
@@ -2272,92 +2278,92 @@ josm (4020) unstable; urgency=low
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 21:14:23 +0200 (Wed, 08 Aug 2007)
 
-josm (4019) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added some space below version and date
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 21:12:23 +0200 (Wed, 08 Aug 2007)
 
-josm (4018) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Store version and build date in jar Manifest instead of REVISION file
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 21:08:40 +0200 (Wed, 08 Aug 2007)
 
-josm (4017) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Use URI instead of URL, since URI handles encoding/decodingg of international characters
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-08-08 21:07:16 +0200 (Wed, 08 Aug 2007)
 
-josm (3996) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed build.xml and several svn:ignore's for JOSM plugins
 
  -- Immanuel Scholz   2007-08-07 23:46:08 +0200 (Tue, 07 Aug 2007)
 
-josm (3976) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Create Structure
 
  -- brent   2007-08-06 12:32:13 +0200 (Mon, 06 Aug 2007)
 
-josm (3968) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * only insert the classic.small icons here
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-08-06 07:33:18 +0200 (Mon, 06 Aug 2007)
 
-josm (3966) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new action that emits a beep
 
  -- Christof Dallermassl   2007-08-05 21:55:57 +0200 (Sun, 05 Aug 2007)
 
-josm (3965) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use debug variable
 
  -- Christof Dallermassl   2007-08-05 21:55:31 +0200 (Sun, 05 Aug 2007)
 
-josm (3964) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reorganize imports
 
  -- Christof Dallermassl   2007-08-05 21:55:06 +0200 (Sun, 05 Aug 2007)
 
-josm (3963) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use debug mode for offline test
 
  -- Christof Dallermassl   2007-08-05 21:54:31 +0200 (Sun, 05 Aug 2007)
 
-josm (3962) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * moved resources into separate directory
    * made play sound in background thread
 
  -- Christof Dallermassl   2007-08-05 21:54:03 +0200 (Sun, 05 Aug 2007)
 
-josm (3895) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed nullpointerexception when deleting the last mapFrame
 
  -- Christof Dallermassl   2007-08-03 09:34:48 +0200 (Fri, 03 Aug 2007)
 
-josm (3892) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * check for null segments or ways
 
  -- Christof Dallermassl   2007-08-02 10:18:22 +0200 (Thu, 02 Aug 2007)
 
-josm (3891) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reset stroke to former value after painting
 
  -- Christof Dallermassl   2007-08-02 10:17:59 +0200 (Thu, 02 Aug 2007)
 
-josm (3865) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use multigraph to allow multiple ways for a segment.
    * added weights for streets
@@ -2365,157 +2371,157 @@ josm (3865) unstable; urgency=low
 
  -- Christof Dallermassl   2007-07-29 22:33:42 +0200 (Sun, 29 Jul 2007)
 
-josm (3837) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version
 
  -- Christof Dallermassl   2007-07-29 01:08:50 +0200 (Sun, 29 Jul 2007)
 
-josm (3836) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new micro version
 
  -- Christof Dallermassl   2007-07-29 01:07:07 +0200 (Sun, 29 Jul 2007)
 
-josm (3835) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * read color from preferences
 
  -- Christof Dallermassl   2007-07-29 01:04:38 +0200 (Sun, 29 Jul 2007)
 
-josm (3834) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add way and length
 
  -- Christof Dallermassl   2007-07-29 01:03:37 +0200 (Sun, 29 Jul 2007)
 
-josm (3833) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * description of route
 
  -- Christof Dallermassl   2007-07-29 01:03:13 +0200 (Sun, 29 Jul 2007)
 
-josm (3832) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add way to edge for description
 
  -- Christof Dallermassl   2007-07-29 01:02:57 +0200 (Sun, 29 Jul 2007)
 
-josm (3831) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add navigator to toggle group
 
  -- Christof Dallermassl   2007-07-29 01:02:24 +0200 (Sun, 29 Jul 2007)
 
-josm (3830) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add description to route
 
  -- Christof Dallermassl   2007-07-29 01:02:05 +0200 (Sun, 29 Jul 2007)
 
-josm (3829) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reset model
 
  -- Christof Dallermassl   2007-07-29 01:01:39 +0200 (Sun, 29 Jul 2007)
 
-josm (3828) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add calculated route to layer
 
  -- Christof Dallermassl   2007-07-29 01:01:21 +0200 (Sun, 29 Jul 2007)
 
-josm (3802) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * annotation.sources -> taggingpreset.sources
 
  -- Ulf Lamping   2007-07-27 12:08:05 +0200 (Fri, 27 Jul 2007)
 
-josm (3801) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update validator URL
 
  -- Ulf Lamping   2007-07-27 11:55:43 +0200 (Fri, 27 Jul 2007)
 
-josm (3800) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rename build target in tways from jar to build
 
  -- Ulf Lamping   2007-07-27 11:19:59 +0200 (Fri, 27 Jul 2007)
 
-josm (3792) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * replace the two remaining install targets
 
  -- Ulf Lamping   2007-07-27 06:43:12 +0200 (Fri, 27 Jul 2007)
 
-josm (3791) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a clean target for the tagging-preset-tester plugin
 
  -- Ulf Lamping   2007-07-27 06:37:58 +0200 (Fri, 27 Jul 2007)
 
-josm (3790) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * surveyor: fix path to livegps.jar
 
  -- Ulf Lamping   2007-07-27 06:32:23 +0200 (Fri, 27 Jul 2007)
 
-josm (3789) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a build.xml for the nearclick plugin
 
  -- Ulf Lamping   2007-07-27 06:29:51 +0200 (Fri, 27 Jul 2007)
 
-josm (3788) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add remaining plugins to the global build
 
  -- Ulf Lamping   2007-07-27 06:19:08 +0200 (Fri, 27 Jul 2007)
 
-josm (3787) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add pastic_laf and pluginmanager to global build
 
  -- Ulf Lamping   2007-07-27 06:01:54 +0200 (Fri, 27 Jul 2007)
 
-josm (3786) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add osmarender to global build
 
  -- Ulf Lamping   2007-07-27 05:52:47 +0200 (Fri, 27 Jul 2007)
 
-josm (3785) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add colorscheme, lang and grid, lang and grid doesn't compile :-(
 
  -- Ulf Lamping   2007-07-27 05:43:07 +0200 (Fri, 27 Jul 2007)
 
-josm (3784) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add livegps to global build
 
  -- Ulf Lamping   2007-07-27 05:32:21 +0200 (Fri, 27 Jul 2007)
 
-josm (3783) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * create jar file into dist dir (as other plugins also do), otherwise you'll always get a change .jar file to upload to svn
 
  -- Ulf Lamping   2007-07-27 05:30:22 +0200 (Fri, 27 Jul 2007)
 
-josm (3782) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add namefinder to global build
 
  -- Ulf Lamping   2007-07-27 05:22:15 +0200 (Fri, 27 Jul 2007)
 
-josm (3781) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add mappaint plugin
 
  -- Ulf Lamping   2007-07-27 05:16:31 +0200 (Fri, 27 Jul 2007)
 
-josm (3780) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change settings, so josm from svn can be used
    * update description to match reality
@@ -2523,277 +2529,277 @@ josm (3780) unstable; urgency=low
 
  -- Ulf Lamping   2007-07-27 05:16:03 +0200 (Fri, 27 Jul 2007)
 
-josm (3779) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * start a "global" ant script
 
  -- Ulf Lamping   2007-07-27 05:01:06 +0200 (Fri, 27 Jul 2007)
 
-josm (3778) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * change "josm.build.dir", so navigator.jar can be build directly in SVN
 
  -- Ulf Lamping   2007-07-27 05:00:25 +0200 (Fri, 27 Jul 2007)
 
-josm (3777) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * don't use class= tags, add Bushaltestelle
 
  -- Ulf Lamping   2007-07-27 03:54:02 +0200 (Fri, 27 Jul 2007)
 
-josm (3776) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * simply use "latest" as the version number, instead of the fictional 0.0.x.
    * Unfortunately, JOSM and Plugins have different SVN versions, some plugin sources are not even in SVN
 
  -- Ulf Lamping   2007-07-27 03:50:07 +0200 (Fri, 27 Jul 2007)
 
-josm (3775) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * remove remains of the validator plugin while uninstalling
 
  -- Ulf Lamping   2007-07-27 03:48:36 +0200 (Fri, 27 Jul 2007)
 
-josm (3774) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to latest changes
 
  -- Ulf Lamping   2007-07-27 03:14:48 +0200 (Fri, 27 Jul 2007)
 
-josm (3773) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Use wget -N instead of -nc. Let wget download files when they are newer on the server only (or the server date cannot be retrieved). Formerly, the files were downloaded only once and not updated when existing.
    * This should make automated build of the installer much easier.
 
  -- Ulf Lamping   2007-07-27 03:06:03 +0200 (Fri, 27 Jul 2007)
 
-josm (3772) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add tways plugin
 
  -- Ulf Lamping   2007-07-27 02:58:01 +0200 (Fri, 27 Jul 2007)
 
-josm (3771) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update files according to the recent dir move
 
  -- Ulf Lamping   2007-07-27 02:22:07 +0200 (Fri, 27 Jul 2007)
 
-josm (3770) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * move nsis files to the josm folder, as this will be JOSM only for quite a while
 
  -- Ulf Lamping   2007-07-27 02:05:19 +0200 (Fri, 27 Jul 2007)
 
-josm (3769) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * start a style set based on applications/share/map-icons instead of the former flat dir
 
  -- Ulf Lamping   2007-07-27 01:58:12 +0200 (Fri, 27 Jul 2007)
 
-josm (3768) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * landuse/cemetery should be an area, not a line
 
  -- Ulf Lamping   2007-07-27 01:51:51 +0200 (Fri, 27 Jul 2007)
 
-josm (3766) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * handle null newFrame in mapFrameInitialized
 
  -- Christof Dallermassl   2007-07-27 00:20:19 +0200 (Fri, 27 Jul 2007)
 
-josm (3756) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new description, new version
 
  -- Christof Dallermassl   2007-07-26 17:28:26 +0200 (Thu, 26 Jul 2007)
 
-josm (3755) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * adopted to new interface in josm
 
  -- Christof Dallermassl   2007-07-26 17:27:43 +0200 (Thu, 26 Jul 2007)
 
-josm (3752) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added some icons (need improvement!)
 
  -- Christof Dallermassl   2007-07-26 16:06:05 +0200 (Thu, 26 Jul 2007)
 
-josm (3751) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * pack images into jar
 
  -- Christof Dallermassl   2007-07-26 16:05:41 +0200 (Thu, 26 Jul 2007)
 
-josm (3750) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added some icons (need improvement!)
 
  -- Christof Dallermassl   2007-07-26 16:04:57 +0200 (Thu, 26 Jul 2007)
 
-josm (3749) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added a mode and a layer to paint the start/end/middle points.
    * modified length calculation
 
  -- Christof Dallermassl   2007-07-26 16:04:28 +0200 (Thu, 26 Jul 2007)
 
-josm (3744) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * renamed to TaggingPresetAction
 
  -- Christof Dallermassl   2007-07-26 10:26:07 +0200 (Thu, 26 Jul 2007)
 
-josm (3743) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version due to josm interface changes
 
  -- Christof Dallermassl   2007-07-26 10:24:42 +0200 (Thu, 26 Jul 2007)
 
-josm (3742) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * adopted to new josm source
 
  -- Christof Dallermassl   2007-07-26 10:24:26 +0200 (Thu, 26 Jul 2007)
 
-josm (3741) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changed imports
 
  -- Christof Dallermassl   2007-07-26 10:24:07 +0200 (Thu, 26 Jul 2007)
 
-josm (3740) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new version (new version of josm)
 
  -- Christof Dallermassl   2007-07-26 10:22:18 +0200 (Thu, 26 Jul 2007)
 
-josm (3739) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * renamed to taggingpresetaction
 
  -- Christof Dallermassl   2007-07-26 10:21:46 +0200 (Thu, 26 Jul 2007)
 
-josm (3736) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using jgrapht as josm plugin
    * added some documentation
 
  -- Christof Dallermassl   2007-07-26 09:37:58 +0200 (Thu, 26 Jul 2007)
 
-josm (3686) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-07-24 17:13:33 +0200 (Tue, 24 Jul 2007)
 
-josm (3685) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-07-24 17:12:50 +0200 (Tue, 24 Jul 2007)
 
-josm (3652) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updated josm translation keys.pot
 
  -- Immanuel Scholz   2007-07-21 14:10:39 +0200 (Sat, 21 Jul 2007)
 
-josm (3648) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * slightly improve the chuch, by "indicating" the tower a bit more
 
  -- Ulf Lamping   2007-07-21 03:09:57 +0200 (Sat, 21 Jul 2007)
 
-josm (3640) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed build.xml to point to new plugin's name directory
 
  -- Immanuel Scholz   2007-07-20 17:55:44 +0200 (Fri, 20 Jul 2007)
 
-josm (3639) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * renamed annotataion presets to tagging presets
 
  -- Immanuel Scholz   2007-07-20 17:22:15 +0200 (Fri, 20 Jul 2007)
 
-josm (3638) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * bugfix: avoid adding line rules, if no such rules are in elemstyles.xml
 
  -- Ulf Lamping   2007-07-20 12:44:23 +0200 (Fri, 20 Jul 2007)
 
-josm (3624) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added future code to check livegps plugin availability
 
  -- Christof Dallermassl   2007-07-19 12:50:09 +0200 (Thu, 19 Jul 2007)
 
-josm (3622) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix OOBE while fixing am error when the it was manually fixed
    * Removed unused param
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-19 10:54:34 +0200 (Thu, 19 Jul 2007)
 
-josm (3621) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * comment out a println, left over from debugging
 
  -- Ulf Lamping   2007-07-19 04:17:53 +0200 (Thu, 19 Jul 2007)
 
-josm (3620) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * slightly improve the map scale calculation
 
  -- Ulf Lamping   2007-07-19 02:05:17 +0200 (Thu, 19 Jul 2007)
 
-josm (3619) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - add an experimental way to show unknown key/value combinations (currently commented out)
    * - don't add duplicate rules into the internal hashtable
 
  -- Ulf Lamping   2007-07-19 02:03:17 +0200 (Thu, 19 Jul 2007)
 
-josm (3618) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a light grey area for hospitals in addition to the already existing icon
 
  -- Ulf Lamping   2007-07-19 01:25:42 +0200 (Thu, 19 Jul 2007)
 
-josm (3614) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * use long for the scale value (instead of int), as the scale values are potentially larger than an int, probably causing overflow exceptions
 
  -- Ulf Lamping   2007-07-17 22:07:04 +0200 (Tue, 17 Jul 2007)
 
-josm (3613) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Updated version
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-17 21:10:52 +0200 (Tue, 17 Jul 2007)
 
-josm (3612) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Don't use Plugin.copy() method, as it does it wrong
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-17 20:48:52 +0200 (Tue, 17 Jul 2007)
 
-josm (3606) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added build to SVN ignore
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-16 13:15:14 +0200 (Mon, 16 Jul 2007)
 
-josm (3605) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * plugin jar
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-16 13:12:04 +0200 (Mon, 16 Jul 2007)
 
-josm (3602) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add missing rules:
    * - cycleway
@@ -2804,13 +2810,13 @@ josm (3602) unstable; urgency=low
 
  -- Ulf Lamping   2007-07-15 17:16:03 +0200 (Sun, 15 Jul 2007)
 
-josm (3601) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * implement a way to set both maxScale and minScale, exchanging former zoom funtionality
 
  -- Ulf Lamping   2007-07-15 17:09:07 +0200 (Sun, 15 Jul 2007)
 
-josm (3593) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * two "line" improvements:
    * - fix the annotate attribute handling (simply had no effect)
@@ -2818,40 +2824,40 @@ josm (3593) unstable; urgency=low
 
  -- Ulf Lamping   2007-07-15 04:42:24 +0200 (Sun, 15 Jul 2007)
 
-josm (3592) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix a typo in toString()
 
  -- Ulf Lamping   2007-07-15 04:37:39 +0200 (Sun, 15 Jul 2007)
 
-josm (3591) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix the whole XML handler, so the sequence of the XML tags doesn't matter
-   * optional new feature (experimental): show/hide elements depending on current zoomlevel and scale_max setting in elemstyles.xml. Can be enabled by setting mappaint.zoomLevelDisplay to true (default is false). It's working fine, but is still really experimental, as the scale_max settings in elemstyles.xml currently doesn't make a lot of sense (at least for editing).
+   * optional new feature (6217574): show/hide elements depending on current zoomlevel and scale_max setting in elemstyles.xml. Can be enabled by setting mappaint.zoomLevelDisplay to true (default is false). It's working fine, but is still really experimental, as the scale_max settings in elemstyles.xml currently doesn't make a lot of sense (at least for editing).
 
  -- Ulf Lamping   2007-07-15 03:44:47 +0200 (Sun, 15 Jul 2007)
 
-josm (3590) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * make it possible to have both an icon and an area for the same key/value pair (in a single or two rules - as you like). I've used it for amenity=parking, but this will probably be useful for other key/values as well.
    * Mixing area and line is still not possible, basically because JOSM core doesn't make a difference here (it's both just a way for JOSM). Fortunately, rules with both area and line possible are pretty rare.
 
  -- Ulf Lamping   2007-07-14 23:25:09 +0200 (Sat, 14 Jul 2007)
 
-josm (3589) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fix a typo of recent commit
 
  -- Ulf Lamping   2007-07-14 22:58:09 +0200 (Sat, 14 Jul 2007)
 
-josm (3588) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add a more verbose comment why and how to change settings for local development.
    * The install target doesn't work on Windows, as the plugins dir is different, add a setting and a commented example for (german ;-) Windows developers
 
  -- Ulf Lamping   2007-07-14 21:08:03 +0200 (Sat, 14 Jul 2007)
 
-josm (3587) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * bugfix: getPluginDir() is deprecated and in fact doesn't work with current josm versions (it returns the path of the latest loaded plugin, which is often wrong). So external styles are not found. 
    * I've replaced getPluginDir() with the now recommended: "Main.pref.getPreferencesDir()+"plugins/mappaint/""
@@ -2859,89 +2865,89 @@ josm (3587) unstable; urgency=low
 
  -- Ulf Lamping   2007-07-14 21:03:50 +0200 (Sat, 14 Jul 2007)
 
-josm (3583) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * again, add some missing icons - partly self drawn, partly derived from existing stuff
 
  -- Ulf Lamping   2007-07-13 02:42:31 +0200 (Fri, 13 Jul 2007)
 
-josm (3582) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * again, add two self drawn new icons and improve some existing ones
 
  -- Ulf Lamping   2007-07-13 01:25:56 +0200 (Fri, 13 Jul 2007)
 
-josm (3580) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Set output dir to "build"
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 22:17:27 +0200 (Thu, 12 Jul 2007)
 
-josm (3579) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix JOSM jar location
    * Add plugin version
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:33:56 +0200 (Thu, 12 Jul 2007)
 
-josm (3578) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Removed deprecated warning
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:33:27 +0200 (Thu, 12 Jul 2007)
 
-josm (3577) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Removed unused code
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:22:38 +0200 (Thu, 12 Jul 2007)
 
-josm (3576) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix JOSM jar location
    * Add plugin version
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:21:36 +0200 (Thu, 12 Jul 2007)
 
-josm (3575) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Javadoc
    * Imported class Util from validator plugin
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:18:34 +0200 (Thu, 12 Jul 2007)
 
-josm (3574) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Javadoc
    * Imported class Util from validator plugin
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:15:19 +0200 (Thu, 12 Jul 2007)
 
-josm (3573) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Javadoc
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-12 21:14:26 +0200 (Thu, 12 Jul 2007)
 
-josm (3572) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * again, add a set of new icons (e.g. waterway topic), some self drawn, some derived and copied from existing things
 
  -- Ulf Lamping   2007-07-12 13:13:35 +0200 (Thu, 12 Jul 2007)
 
-josm (3567) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to latest shop topic changes
 
  -- Ulf Lamping   2007-07-11 14:25:41 +0200 (Wed, 11 Jul 2007)
 
-josm (3566) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update to shop topic changes
 
  -- Ulf Lamping   2007-07-11 14:24:15 +0200 (Wed, 11 Jul 2007)
 
-josm (3565) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * an overview page, of all the icons mappaint could/should display, based on the current map features page
    * While developing a set of new mappaint icons - based on the map features page, I have created a single "JOSM page", that shows all icons that the current elemstyles.xml file in "standard" can handle. 
@@ -2949,25 +2955,25 @@ josm (3565) unstable; urgency=low
 
  -- Ulf Lamping   2007-07-11 12:53:36 +0200 (Wed, 11 Jul 2007)
 
-josm (3563) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add some missing highway icon rules, icons of it still missing
 
  -- Ulf Lamping   2007-07-10 11:54:44 +0200 (Tue, 10 Jul 2007)
 
-josm (3562) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add fire_station icon
 
  -- Ulf Lamping   2007-07-10 11:27:39 +0200 (Tue, 10 Jul 2007)
 
-josm (3561) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add some of the missing and improve some existing icons
 
  -- Ulf Lamping   2007-07-10 11:00:38 +0200 (Tue, 10 Jul 2007)
 
-josm (3547) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * various fixes and enhancements:
    * - add missing leisure tags
@@ -2977,193 +2983,193 @@ josm (3547) unstable; urgency=low
 
  -- Ulf Lamping   2007-07-09 01:07:00 +0200 (Mon, 09 Jul 2007)
 
-josm (3545) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * it's no longer required to copy the elemstyles.xml, as it's already included in the jar file
 
  -- Ulf Lamping   2007-07-08 02:37:08 +0200 (Sun, 08 Jul 2007)
 
-josm (3544) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add remaining stuff from proposed icons (power and man_made), add some icons with a white background as otherwise their not visible on a black JOSM background. I've tried to add a new tower icon, as the proposed one wasn't really visible with a 16*16 resolution.
 
  -- Ulf Lamping   2007-07-08 01:15:53 +0200 (Sun, 08 Jul 2007)
 
-josm (3543) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
-   * updated josm translation file (keys.pot)
+   * updated josm translation file (6217574)
 
  -- Immanuel Scholz   2007-07-08 01:01:13 +0200 (Sun, 08 Jul 2007)
 
-josm (3542) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add some more scaled icons from map features / proposed icons pages, add a lot of missing areas (the colors *will* be strange)
 
  -- Ulf Lamping   2007-07-08 00:06:05 +0200 (Sun, 08 Jul 2007)
 
-josm (3541) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * adding lot's of missing tags and the icons I've recently copied/created
 
  -- Ulf Lamping   2007-07-07 21:38:53 +0200 (Sat, 07 Jul 2007)
 
-josm (3540) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from http://wiki.openstreetmap.org/index.php/User:Batchoy and scaled down to about 16 pixels
 
  -- Ulf Lamping   2007-07-07 21:37:23 +0200 (Sat, 07 Jul 2007)
 
-josm (3539) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from http://wiki.openstreetmap.org/index.php/User:Batchoy and scaled down to about 16 pixels
 
  -- Ulf Lamping   2007-07-07 21:23:16 +0200 (Sat, 07 Jul 2007)
 
-josm (3538) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons, scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 21:11:39 +0200 (Sat, 07 Jul 2007)
 
-josm (3537) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from applications\share\map-icons, scaled down to 16x16 pixels and put on a red background
 
  -- Ulf Lamping   2007-07-07 20:51:58 +0200 (Sat, 07 Jul 2007)
 
-josm (3536) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:50:56 +0200 (Sat, 07 Jul 2007)
 
-josm (3535) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from map features page and scaled down to about 16 pixels
 
  -- Ulf Lamping   2007-07-07 20:50:14 +0200 (Sat, 07 Jul 2007)
 
-josm (3534) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons, scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:49:02 +0200 (Sat, 07 Jul 2007)
 
-josm (3533) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons, scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:48:30 +0200 (Sat, 07 Jul 2007)
 
-josm (3532) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from applications\share\map-icons, scaled down to 16x16 pixels and put on a red background
 
  -- Ulf Lamping   2007-07-07 20:47:28 +0200 (Sat, 07 Jul 2007)
 
-josm (3531) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from applications\share\map-icons, scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:46:43 +0200 (Sat, 07 Jul 2007)
 
-josm (3530) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:45:48 +0200 (Sat, 07 Jul 2007)
 
-josm (3529) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * freshly made out of new pixels :-)
 
  -- Ulf Lamping   2007-07-07 20:44:33 +0200 (Sat, 07 Jul 2007)
 
-josm (3528) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:43:14 +0200 (Sat, 07 Jul 2007)
 
-josm (3527) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from applications\share\map-icons, scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:42:07 +0200 (Sat, 07 Jul 2007)
 
-josm (3526) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * loosely derived from applications\share\map-icons, scaled down to 16x16 pixels and put on a grey background
 
  -- Ulf Lamping   2007-07-07 20:40:37 +0200 (Sat, 07 Jul 2007)
 
-josm (3525) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:39:33 +0200 (Sat, 07 Jul 2007)
 
-josm (3524) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons, scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:38:28 +0200 (Sat, 07 Jul 2007)
 
-josm (3523) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from proposed icons page
 
  -- Ulf Lamping   2007-07-07 20:37:24 +0200 (Sat, 07 Jul 2007)
 
-josm (3522) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from http://wiki.openstreetmap.org/index.php/User:Batchoy and scaled down to about 16 pixels
 
  -- Ulf Lamping   2007-07-07 20:35:17 +0200 (Sat, 07 Jul 2007)
 
-josm (3521) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:33:50 +0200 (Sat, 07 Jul 2007)
 
-josm (3520) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:33:07 +0200 (Sat, 07 Jul 2007)
 
-josm (3519) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from map features page and scaled down to about 16 pixels
 
  -- Ulf Lamping   2007-07-07 20:32:12 +0200 (Sat, 07 Jul 2007)
 
-josm (3518) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * derived from applications\share\map-icons, scaled down to 16x16 pixels and put on a red background
 
  -- Ulf Lamping   2007-07-07 20:29:34 +0200 (Sat, 07 Jul 2007)
 
-josm (3517) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons and scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:28:25 +0200 (Sat, 07 Jul 2007)
 
-josm (3516) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons
 
  -- Ulf Lamping   2007-07-07 20:27:47 +0200 (Sat, 07 Jul 2007)
 
-josm (3515) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * copied from applications\share\map-icons and scaled down to 16x16 pixels
 
  -- Ulf Lamping   2007-07-07 20:26:48 +0200 (Sat, 07 Jul 2007)
 
-josm (3508) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - updated keys.pot
    * - removed landsat (outdated, superseeded by wmsplugin)
@@ -3171,381 +3177,381 @@ josm (3508) unstable; urgency=low
 
  -- Immanuel Scholz   2007-07-06 10:05:52 +0200 (Fri, 06 Jul 2007)
 
-josm (3467) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * tried to set a propset to point to the map-icons
 
  -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2007-07-03 22:04:03 +0200 (Tue, 03 Jul 2007)
 
-josm (3456) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add some items from Michael Klugmann, fix some typos
 
  -- Ulf Lamping   2007-07-03 00:04:52 +0200 (Tue, 03 Jul 2007)
 
-josm (3455) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * merge content of applications/etc/elemstyles.xml and applications/editors/josm/plugins/mappaint/styles/standard/elemstyles.xml
 
  -- Ulf Lamping   2007-07-02 22:19:19 +0200 (Mon, 02 Jul 2007)
 
-josm (3454) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changed completely
 
  -- Christof Dallermassl   2007-07-02 20:02:35 +0200 (Mon, 02 Jul 2007)
 
-josm (3443) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reorder all the tags in this file according to the map features wiki page
 
  -- Ulf Lamping   2007-07-02 02:07:34 +0200 (Mon, 02 Jul 2007)
 
-josm (3441) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * If segment is in a way, update the way
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-01 22:31:02 +0200 (Sun, 01 Jul 2007)
 
-josm (3440) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * getPluginDir is now deprecated (it was failing, anyway)
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-01 22:30:16 +0200 (Sun, 01 Jul 2007)
 
-josm (3439) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Remove sequence command when there is no more than 1 commands
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-07-01 22:20:12 +0200 (Sun, 01 Jul 2007)
 
-josm (3416) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * main site on tegmento.org referencing other plugins sites
 
  -- Christof Dallermassl   2007-06-29 18:43:56 +0200 (Fri, 29 Jun 2007)
 
-josm (3415) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add handling of urls without trailing slash
 
  -- Christof Dallermassl   2007-06-29 18:43:12 +0200 (Fri, 29 Jun 2007)
 
-josm (3414) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added handling of referenced sites
 
  -- Christof Dallermassl   2007-06-29 18:42:50 +0200 (Fri, 29 Jun 2007)
 
-josm (3413) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * clearing plugins before trying to read from url
 
  -- Christof Dallermassl   2007-06-29 18:42:28 +0200 (Fri, 29 Jun 2007)
 
-josm (3412) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added error handling for plugins
 
  -- Christof Dallermassl   2007-06-29 18:41:54 +0200 (Fri, 29 Jun 2007)
 
-josm (3411) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added site generation for pluginmanagement
    * most values are put into property values
 
  -- Christof Dallermassl   2007-06-29 18:41:21 +0200 (Fri, 29 Jun 2007)
 
-josm (3410) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added site generation for pluginmanagement
    * most values are put into property values
 
  -- Christof Dallermassl   2007-06-29 18:40:54 +0200 (Fri, 29 Jun 2007)
 
-josm (3409) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added site generation for pluginmanagement
    * most values are put into property values
 
  -- Christof Dallermassl   2007-06-29 18:40:31 +0200 (Fri, 29 Jun 2007)
 
-josm (3352) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added plugin version
 
  -- Christof Dallermassl   2007-06-25 19:19:09 +0200 (Mon, 25 Jun 2007)
 
-josm (3351) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added plugin version
 
  -- Christof Dallermassl   2007-06-25 19:18:38 +0200 (Mon, 25 Jun 2007)
 
-josm (3350) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made 1.5 compatible (no @Override for interface methods)
 
  -- Christof Dallermassl   2007-06-25 19:17:58 +0200 (Mon, 25 Jun 2007)
 
-josm (3349) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made 1.5 compatible (no @Override for interface methods)
 
  -- Christof Dallermassl   2007-06-25 19:17:45 +0200 (Mon, 25 Jun 2007)
 
-josm (3348) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made 1.5 compatible (no @Override for interface methods)
 
  -- Christof Dallermassl   2007-06-25 19:17:26 +0200 (Mon, 25 Jun 2007)
 
-josm (3347) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added hotkeys for zoomin, zoomout and autocenter to component
 
  -- Christof Dallermassl   2007-06-25 19:16:56 +0200 (Mon, 25 Jun 2007)
 
-josm (3346) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added hotkey
 
  -- Christof Dallermassl   2007-06-25 19:16:29 +0200 (Mon, 25 Jun 2007)
 
-josm (3345) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * check for duplicate keys
    * adopted to new way in gpsdata
 
  -- Christof Dallermassl   2007-06-25 19:14:27 +0200 (Mon, 25 Jun 2007)
 
-josm (3344) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made methods public
 
  -- Christof Dallermassl   2007-06-25 19:13:48 +0200 (Mon, 25 Jun 2007)
 
-josm (3343) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * only forward data if gps has a fix
 
  -- Christof Dallermassl   2007-06-25 19:13:33 +0200 (Mon, 25 Jun 2007)
 
-josm (3342) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added comment, code beautification
 
  -- Christof Dallermassl   2007-06-25 19:13:08 +0200 (Mon, 25 Jun 2007)
 
-josm (3341) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added todo
 
  -- Christof Dallermassl   2007-06-25 19:12:33 +0200 (Mon, 25 Jun 2007)
 
-josm (3340) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made string s i18nable
    * changed autocenter visibility
 
  -- Christof Dallermassl   2007-06-25 19:11:54 +0200 (Mon, 25 Jun 2007)
 
-josm (3339) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made autocenter public
 
  -- Christof Dallermassl   2007-06-25 19:11:11 +0200 (Mon, 25 Jun 2007)
 
-josm (3338) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * adopted to change of way representation in gpsdata
 
  -- Christof Dallermassl   2007-06-25 19:10:55 +0200 (Mon, 25 Jun 2007)
 
-josm (3337) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * print some status messages
    * fire only events if something changed
 
  -- Christof Dallermassl   2007-06-25 19:10:28 +0200 (Mon, 25 Jun 2007)
 
-josm (3336) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changed way's string representation
 
  -- Christof Dallermassl   2007-06-25 19:09:35 +0200 (Mon, 25 Jun 2007)
 
-josm (3335) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-06-25 19:08:47 +0200 (Mon, 25 Jun 2007)
 
-josm (3334) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-06-25 19:07:42 +0200 (Mon, 25 Jun 2007)
 
-josm (3333) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-06-25 19:05:37 +0200 (Mon, 25 Jun 2007)
 
-josm (3332) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-06-25 19:04:31 +0200 (Mon, 25 Jun 2007)
 
-josm (3310) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * corrected JOSM jar location.
 
  -- twalraet   2007-06-24 02:05:48 +0200 (Sun, 24 Jun 2007)
 
-josm (3278) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changed completely
 
  -- Christof Dallermassl   2007-06-20 14:24:06 +0200 (Wed, 20 Jun 2007)
 
-josm (3277) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed bug on point time format
 
  -- Christof Dallermassl   2007-06-20 14:23:50 +0200 (Wed, 20 Jun 2007)
 
-josm (3276) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * make backup before saving
 
  -- Christof Dallermassl   2007-06-20 14:23:23 +0200 (Wed, 20 Jun 2007)
 
-josm (3275) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * write data to surveyor...osm file, not to file of datalayer
 
  -- Christof Dallermassl   2007-06-20 14:22:49 +0200 (Wed, 20 Jun 2007)
 
-josm (3262) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * New check for detecting typos
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-06-18 21:54:30 +0200 (Mon, 18 Jun 2007)
 
-josm (3261) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * New check for detecting typos
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-06-18 21:54:13 +0200 (Mon, 18 Jun 2007)
 
-josm (3260) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add more types of ways: railway and waterway
    * Reduce the cell size, to speed the things up
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-06-18 21:53:37 +0200 (Mon, 18 Jun 2007)
 
-josm (3259) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Restrict the type of highways that can be named
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-06-18 21:03:26 +0200 (Mon, 18 Jun 2007)
 
-josm (3258) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fixed IndexOutOfBoundsException
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-06-18 21:02:51 +0200 (Mon, 18 Jun 2007)
 
-josm (3257) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed format of date in gpspoints
 
  -- Christof Dallermassl   2007-06-18 15:59:25 +0200 (Mon, 18 Jun 2007)
 
-josm (3164) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed time format in gpx export
 
  -- Christof Dallermassl   2007-06-11 15:42:59 +0200 (Mon, 11 Jun 2007)
 
-josm (3163) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed time format in gpx export
 
  -- Christof Dallermassl   2007-06-11 15:38:05 +0200 (Mon, 11 Jun 2007)
 
-josm (3162) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed time format in gpx export
 
  -- Christof Dallermassl   2007-06-11 15:36:56 +0200 (Mon, 11 Jun 2007)
 
-josm (3099) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * moved away from test package
 
  -- Christof Dallermassl   2007-06-04 13:52:04 +0200 (Mon, 04 Jun 2007)
 
-josm (3098) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add autoclosing dialog for waypoints to set addtional info
 
  -- Christof Dallermassl   2007-06-04 13:51:49 +0200 (Mon, 04 Jun 2007)
 
-josm (3097) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed behavior on setting row/columns
 
  -- Christof Dallermassl   2007-06-04 13:51:20 +0200 (Mon, 04 Jun 2007)
 
-josm (3096) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed printing of way name
 
  -- Christof Dallermassl   2007-06-04 11:49:38 +0200 (Mon, 04 Jun 2007)
 
-josm (3095) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added synchronization to prevent ConcurrentAccess during painting
 
  -- Christof Dallermassl   2007-06-04 11:49:27 +0200 (Mon, 04 Jun 2007)
 
-josm (3081) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * initial checkin
 
  -- Christof Dallermassl   2007-06-01 10:41:15 +0200 (Fri, 01 Jun 2007)
 
-josm (3080) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using the original livegps now
    * small fixes in build variable usage
 
  -- Christof Dallermassl   2007-06-01 10:40:48 +0200 (Fri, 01 Jun 2007)
 
-josm (3079) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using the original livegps now
 
  -- Christof Dallermassl   2007-06-01 10:40:14 +0200 (Fri, 01 Jun 2007)
 
-josm (3078) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added large label for the current way information
 
  -- Christof Dallermassl   2007-06-01 10:39:50 +0200 (Fri, 01 Jun 2007)
 
-josm (3077) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * do not derive from livegpsplugin anymore, only use it
 
  -- Christof Dallermassl   2007-06-01 10:39:16 +0200 (Fri, 01 Jun 2007)
 
-josm (3076) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rewrote livegpsplugin
    * * added a dialog showing the information
@@ -3553,7 +3559,7 @@ josm (3076) unstable; urgency=low
 
  -- Christof Dallermassl   2007-06-01 10:30:13 +0200 (Fri, 01 Jun 2007)
 
-josm (3075) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rewrote livegpsplugin
    * * added a dialog showing the information
@@ -3561,7 +3567,7 @@ josm (3075) unstable; urgency=low
 
  -- Christof Dallermassl   2007-06-01 10:29:34 +0200 (Fri, 01 Jun 2007)
 
-josm (3074) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rewrote livegpsplugin
    * * added a dialog showing the information
@@ -3569,7 +3575,7 @@ josm (3074) unstable; urgency=low
 
  -- Christof Dallermassl   2007-06-01 10:29:09 +0200 (Fri, 01 Jun 2007)
 
-josm (3073) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * rewrote livegpsplugin
    * * added a dialog showing the information
@@ -3577,45 +3583,45 @@ josm (3073) unstable; urgency=low
 
  -- Christof Dallermassl   2007-06-01 10:25:30 +0200 (Fri, 01 Jun 2007)
 
-josm (3067) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * reordered imports
    * fixed result list from resizing on click
 
  -- Christof Dallermassl   2007-05-30 19:02:33 +0200 (Wed, 30 May 2007)
 
-josm (3066) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed build directory of josm
 
  -- Christof Dallermassl   2007-05-30 19:01:49 +0200 (Wed, 30 May 2007)
 
-josm (3038) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * New tests: Crossing roads, reused segments, untagged way, fixmes
    * Add timeout to mirror connections
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-27 20:32:30 +0200 (Sun, 27 May 2007)
 
-josm (3037) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * javadoc
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-27 20:25:38 +0200 (Sun, 27 May 2007)
 
-josm (3036) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix typo
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-27 20:24:24 +0200 (Sun, 27 May 2007)
 
-josm (2997) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * mispelled the icon ressource name.
 
  -- Immanuel Scholz   2007-05-22 22:00:14 +0200 (Tue, 22 May 2007)
 
-josm (2996) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * - added josm.plugins - Java property to load plugins regardless of preferences
    * - fixed posibility to load Plugins from bootstrap classloader (with full manifest support)
@@ -3623,152 +3629,152 @@ josm (2996) unstable; urgency=low
 
  -- Immanuel Scholz   2007-05-22 21:57:55 +0200 (Tue, 22 May 2007)
 
-josm (2994) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed path to downloadTask for new JOSM download dialog
 
  -- Immanuel Scholz   2007-05-22 19:33:30 +0200 (Tue, 22 May 2007)
 
-josm (2974) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed unused imports, added serial ids for all classes that needed it, etc. so only a couple of warnings remain
 
  -- Christof Dallermassl   2007-05-21 10:11:58 +0200 (Mon, 21 May 2007)
 
-josm (2949) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * do not set a node, annotation preset uses the selected object
 
  -- Christof Dallermassl   2007-05-19 23:51:19 +0200 (Sat, 19 May 2007)
 
-josm (2948) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * moved test code
 
  -- Christof Dallermassl   2007-05-19 23:50:40 +0200 (Sat, 19 May 2007)
 
-josm (2947) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * moved test code
 
  -- Christof Dallermassl   2007-05-19 23:50:23 +0200 (Sat, 19 May 2007)
 
-josm (2946) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * set frame to stay on top
 
  -- Christof Dallermassl   2007-05-19 23:49:52 +0200 (Sat, 19 May 2007)
 
-josm (2945) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add frame set/getter
 
  -- Christof Dallermassl   2007-05-19 23:49:16 +0200 (Sat, 19 May 2007)
 
-josm (2944) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * removed test code
    * move surveyor frame to front after action execution
 
  -- Christof Dallermassl   2007-05-19 23:48:54 +0200 (Sat, 19 May 2007)
 
-josm (2943) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * changed AnnotationPreset behavior (need a SetNodeAction first)
 
  -- Christof Dallermassl   2007-05-19 23:48:14 +0200 (Sat, 19 May 2007)
 
-josm (2938) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * using the real preset dialog
 
  -- Christof Dallermassl   2007-05-19 22:21:47 +0200 (Sat, 19 May 2007)
 
-josm (2936) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-05-19 21:42:08 +0200 (Sat, 19 May 2007)
 
-josm (2935) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Initial import.
 
  -- Christof Dallermassl   2007-05-19 21:40:23 +0200 (Sat, 19 May 2007)
 
-josm (2926) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * nicer build script by Christoph Dallermassl <christof@dallermassl.at>
 
  -- Frederik Ramm   2007-05-18 10:59:07 +0200 (Fri, 18 May 2007)
 
-josm (2925) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * very simple first shot at name finder plugin
 
  -- Frederik Ramm   2007-05-18 04:44:38 +0200 (Fri, 18 May 2007)
 
-josm (2866) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * new jar file
 
  -- damians   2007-05-10 22:50:02 +0200 (Thu, 10 May 2007)
 
-josm (2856) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Modified menu label
 
  -- twalraet   2007-05-10 00:49:35 +0200 (Thu, 10 May 2007)
 
-josm (2853) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * ls.incomplete fixed
 
  -- damians   2007-05-09 23:39:04 +0200 (Wed, 09 May 2007)
 
-josm (2845) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Generation of REVISION file on jar build
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-09 10:42:35 +0200 (Wed, 09 May 2007)
 
-josm (2844) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * tways 0.1
 
  -- twalraet   2007-05-09 02:12:45 +0200 (Wed, 09 May 2007)
 
-josm (2843) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * add validator.jar and build/ to svn:ignore
 
  -- twalraet   2007-05-09 01:54:44 +0200 (Wed, 09 May 2007)
 
-josm (2842) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * update JOSM location to new SVN organisation
 
  -- twalraet   2007-05-09 01:43:46 +0200 (Wed, 09 May 2007)
 
-josm (2839) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Add the validation hook before the upload window
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-08 19:40:37 +0200 (Tue, 08 May 2007)
 
-josm (2838) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Adapted to changes in ReorderAction
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-08 16:11:53 +0200 (Tue, 08 May 2007)
 
-josm (2808) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed stroke bug
 
  -- damians   2007-05-07 00:43:02 +0200 (Mon, 07 May 2007)
 
-josm (2807) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added military danger_area 
    * direction arows only when selected
@@ -3776,97 +3782,97 @@ josm (2807) unstable; urgency=low
 
  -- damians   2007-05-06 23:59:34 +0200 (Sun, 06 May 2007)
 
-josm (2804) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Removed unused import
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 22:04:12 +0200 (Sun, 06 May 2007)
 
-josm (2803) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added tooltip and info
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 22:03:36 +0200 (Sun, 06 May 2007)
 
-josm (2802) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Don't close expanded banches after revalidation
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 21:48:11 +0200 (Sun, 06 May 2007)
 
-josm (2801) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Don't close expanded banches after revalidation
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 21:44:24 +0200 (Sun, 06 May 2007)
 
-josm (2800) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Avoid painting the tree twice
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 21:43:38 +0200 (Sun, 06 May 2007)
 
-josm (2798) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix all selected errors
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 20:32:32 +0200 (Sun, 06 May 2007)
 
-josm (2796) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added help to elemstyles.xml and fixed a small bug
 
  -- damians   2007-05-06 19:57:08 +0200 (Sun, 06 May 2007)
 
-josm (2794) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Removed bin directory
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:53:47 +0200 (Sun, 06 May 2007)
 
-josm (2793) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Perform data validation on upload
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:51:46 +0200 (Sun, 06 May 2007)
 
-josm (2792) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Perform data validation on upload
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:51:19 +0200 (Sun, 06 May 2007)
 
-josm (2791) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Utility for mirroring files
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:51:00 +0200 (Sun, 06 May 2007)
 
-josm (2790) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Read spellcheck data from user file
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:50:55 +0200 (Sun, 06 May 2007)
 
-josm (2789) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * No longer used
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:50:46 +0200 (Sun, 06 May 2007)
 
-josm (2788) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix for duplicated nodes
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-05-06 19:50:38 +0200 (Sun, 06 May 2007)
 
-josm (2787) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added useRealWidth function
 
  -- damians   2007-05-06 18:12:25 +0200 (Sun, 06 May 2007)
 
-josm (2768) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added standard style loading
    * Dashed areas
@@ -3874,19 +3880,19 @@ josm (2768) unstable; urgency=low
 
  -- damians   2007-05-05 19:38:16 +0200 (Sat, 05 May 2007)
 
-josm (2711) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed minor bugs
 
  -- damians   2007-05-01 23:13:45 +0200 (Tue, 01 May 2007)
 
-josm (2709) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * updated mappaint.jar
 
  -- damians   2007-05-01 23:03:18 +0200 (Tue, 01 May 2007)
 
-josm (2708) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Larger update:
    * - removed images folder
@@ -3899,13 +3905,13 @@ josm (2708) unstable; urgency=low
 
  -- damians   2007-05-01 23:02:45 +0200 (Tue, 01 May 2007)
 
-josm (2689) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Edited elemstyles.xml
 
  -- damians   2007-04-30 11:57:12 +0200 (Mon, 30 Apr 2007)
 
-josm (2688) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added support for the shown tag.
    * Changed the isVisible code so that position for visible points is not computed twice.
@@ -3914,98 +3920,98 @@ josm (2688) unstable; urgency=low
 
  -- damians   2007-04-30 11:48:22 +0200 (Mon, 30 Apr 2007)
 
-josm (2687) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * added mappaint.jar as the latest build
 
  -- damians   2007-04-29 23:37:39 +0200 (Sun, 29 Apr 2007)
 
-josm (2686) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * fixed build.xml
 
  -- damians   2007-04-29 23:36:33 +0200 (Sun, 29 Apr 2007)
 
-josm (2685) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * made it compile with new josm version, drawSegments with direction
 
  -- damians   2007-04-29 23:35:57 +0200 (Sun, 29 Apr 2007)
 
-josm (2673) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added a new layer where all errors are highlighted
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-26 22:22:36 +0200 (Thu, 26 Apr 2007)
 
-josm (2672) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Added a new layer where all errors are highlighted
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-26 22:20:17 +0200 (Thu, 26 Apr 2007)
 
-josm (2623) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix detection of orphaned segments when there is selected data
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-22 14:56:56 +0200 (Sun, 22 Apr 2007)
 
-josm (2622) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Latest from wiki
    * Removed -note
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-22 14:56:11 +0200 (Sun, 22 Apr 2007)
 
-josm (2611) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Fix activation of values check
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-22 02:56:05 +0200 (Sun, 22 Apr 2007)
 
-josm (2602) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Improvement on segment numbering to include areas
 
  -- andystreet   2007-04-19 22:59:49 +0200 (Thu, 19 Apr 2007)
 
-josm (2597) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Paint segment order numbers on ways
 
  -- andystreet   2007-04-19 19:31:48 +0200 (Thu, 19 Apr 2007)
 
-josm (2596) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Improve performance by only drawing the visible area rather than the whole layer
 
  -- andystreet   2007-04-19 19:00:44 +0200 (Thu, 19 Apr 2007)
 
-josm (2591) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Automatic fixes
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-18 23:56:19 +0200 (Wed, 18 Apr 2007)
 
-josm (2590) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * Use hash instead of compare, since primitives may have id=0
 
  -- Francisco R. Santos <frsantos@gmail.com>    2007-04-18 23:45:54 +0200 (Wed, 18 Apr 2007)
 
-josm (2549) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * resort
 
  -- Frederik Ramm   2007-04-15 14:35:21 +0200 (Sun, 15 Apr 2007)
 
-josm (2548) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * move
 
  -- Frederik Ramm   2007-04-15 14:32:45 +0200 (Sun, 15 Apr 2007)
 
-josm (2547) unstable; urgency=low
+openstreetmap-josm (6217574) unstable; urgency=low
 
    * move
 

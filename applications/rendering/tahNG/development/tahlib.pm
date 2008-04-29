@@ -375,7 +375,7 @@ sub cropDataToBBox # TODO: Get area types to stick
     my ($what, $id, $lat, $lon, $slash);
     while (<SOURCE>)
     {
-        if (/^\s*<(node).*id=['"](\d+)['"].*lat=['"](\d+\.\d+)['"].*lon=['"](\d+\.\d+)['"].*(\/?)>/)
+        if (/^\s*<(node).*id=['"](\d+)['"].*lat=["']([0-9.Ee-]+)["'].*lon=["']([0-9.Ee-]+)["'][^\/>]*(\/?)>/)
         {
             ($what, $id, $lat, $lon, $slash)=($1,$2,$3,$4,$5);
             print "*** $what   id=$id lat=$lat lon=$lon slash=$slash \n" if ($Config->get("Debug") >= 5);
@@ -423,11 +423,9 @@ sub cropDataToBBox # TODO: Get area types to stick
                         print " ** way ".$id." node ".$ref."  KeepNode: ".$KeepNode->{$ref}." \n" if ($Config->get("Debug") >= 5 and defined($KeepNode->{$ref}));
                     }
                     elsif (/^\s*<tag k=['"](.*)['"].*v=['"](.*)['"].*/)
-                    # TODO: check for other conditions that make us keep this way (area running around the bbox, area-names that run into the bbox, etc.)
-                    # area tags: area, building*, leisure, tourism*, ruins*, historic*, landuse, military, natural, sport*] 
-                    # *=usually small areas.
                     {
                         my ($key,$value) = ($1,$2);
+                        $KeepWay->{$id} = 1  if (keepWayByTag($key,$value));
                     }
                 }
                 elsif ($what eq "relation") 
@@ -550,6 +548,29 @@ sub cropDataToBBox # TODO: Get area types to stick
     close(DEST);
 }
 
+#-----------------------------------------------------------------------------
+# check for tags that make us keep this way, i.e. area running around the bbox, 
+# TODO: area-names that run into the bbox, etc.
+# area tags: area, leisure, landuse, military, natural, 
+#            building*, historic*, ruins*, sport*, tourism*
+#   * =usually small areas. TODO: fix for those.
+#-----------------------------------------------------------------------------
+sub keepWayByTag
+{
+    my ($key,$value) = @_;
+    if ($key =~ /(area|leisure|landuse|military|natural)/) # Landuse and natural should be the main focus.
+    {
+        return 1;
+    }
+    elsif ($key eq "sport" and $value =~ /(soccer|football|tennis|yes)/) # FIXME: get better tag list
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 #-----------------------------------------------------------------------------
 # Clean up temporary files before exit, then exit or return with error 
 # depending on mode (loop, xy, ...)

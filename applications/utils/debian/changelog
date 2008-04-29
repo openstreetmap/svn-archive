@@ -1,3 +1,21 @@
+openstreetmap-utils (7592) unstable; urgency=low
+
+   * mapnik default.style:remove gpsdrive line
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-29 22:57:53 +0200 (Tue, 29 Apr 2008)
+
+openstreetmap-utils (7591) unstable; urgency=low
+
+   * mapnik default.style: move to /usr/share/openstreetmap-utils for debian package
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-29 22:57:05 +0200 (Tue, 29 Apr 2008)
+
+openstreetmap-utils (7590) unstable; urgency=low
+
+   * applications/utils/debian/changelog: Adapt revision Numbers
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>   2008-04-29 22:56:10 +0200 (Tue, 29 Apr 2008)
+
 openstreetmap-utils (7573) unstable; urgency=low
 
    * applications/utils: Automatically created Changelog

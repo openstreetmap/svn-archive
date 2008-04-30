@@ -125,6 +125,7 @@
 		if (_root.scale==_root.maxscale) { _root.i_zoomin._alpha =25;  }
 									else { _root.i_zoomin._alpha =100; }
 		_root.tolerance=4/Math.pow(2,_root.scale-13);
+		_root.linewidth=3+Math.pow(Math.max(0,_root.scale-15),2);
 	}
 
 	// =====================================================================================

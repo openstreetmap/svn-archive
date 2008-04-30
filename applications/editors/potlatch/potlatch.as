@@ -89,6 +89,8 @@
 	var lastresize=new Date();		// last time window was resized
 	var dragmap=false;				// map being dragged?
 	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order)
+	var lastpoint=0;				// last value of drawpoint (triple-click detection)
+	var lastpointtime=null;			// time of last double-click (triple-click detection)
 	var newrelid=-1;				// new relation ID  (for those not yet saved)
 	var newwayid=-1;				// new way ID		(for those not yet saved)
 	var newnodeid=-2;				// new node ID		(for those not yet saved)
@@ -105,7 +107,7 @@
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.8b";	// current version
+	var signature="Potlatch 0.8c";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -427,9 +429,7 @@
 	// processMapDrag, moveMap - process map dragging
 
 	function processMapDrag() {
-		if (Math.abs(_root.firstxmouse-_root._xmouse)>(tolerance*4) ||
-			Math.abs(_root.firstymouse-_root._ymouse)>(tolerance*4) ||
-			Key.isDown(Key.SPACE)) {
+		if (mapDragged() || Key.isDown(Key.SPACE)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
 
 			if (_root.yahoo._visible) {
@@ -453,8 +453,7 @@
 //		_root.map.onMouseUp  =function() {};
 		_root.onMouseMove=function() {};
 		_root.onMouseUp  =function() {};
-		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance*4 ||
-			Math.abs(_root.firstymouse-_root._ymouse)>tolerance*4) {
+		if (mapDragged()) {
 			redrawBackground();
 			updateLinks();
 			whichWays();
@@ -497,13 +496,27 @@
 		_root.yahootime=new Date();
 	}
 
+	// mapDragged - test whether map was dragged or just clicked
+	
+	function mapDragged() {
+		var t=new Date();
+		var tol=Math.max(_root.tolerance,2);
+		var longclick=(t.getTime()-_root.clicktime)>300;
+		var xdist=Math.abs(_root.firstxmouse-_root._xmouse);
+		var ydist=Math.abs(_root.firstymouse-_root._ymouse);
+		if ((xdist<tol*4  && ydist<tol*4 ) ||
+		   ((xdist<tol*10 && ydist<tol*10) && !longclick)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	// mapClickEnd - end of click within map area
 
 	function mapClickEnd() {
-
+		if (!mapDragged()) {
 		// Clicked on map without dragging
-		if (Math.abs(_root.firstxmouse-_root._xmouse)<(tolerance*4) &&
-			Math.abs(_root.firstymouse-_root._ymouse)<(tolerance*4)) {
 			_root.dragmap=false;
 			// Adding a point to the way being drawn
 			if (_root.drawpoint>-1) {
@@ -637,7 +650,7 @@
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
 								if (_root.wayselected!=0) { _root.ws.removeWithConfirm(); }
 							} else { keyDelete(1); }; break;					//  |
-			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
+			case 13:		_root.junction=false; stopDrawing(); break;								// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
@@ -844,7 +857,6 @@
 			
 		// ----	Reinstate focus if lost after click event
 		if (_root.reinstatefocus) {
-_root.coordmonitor.text+="!";
 			Selection.setFocus(_root.reinstatefocus); 
 			_root.reinstatefocus=null;
 		}

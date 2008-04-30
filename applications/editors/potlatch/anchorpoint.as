@@ -11,6 +11,7 @@
 	};
 	AnchorPoint.prototype=new MovieClip();
 	AnchorPoint.prototype.onPress=function() {
+		var t=new Date();
 		if (this._name==0 && _root.map.ways[this.way].path.length==1) {
 			// solo double-click - create new POI
 			stopDrawing();
@@ -20,11 +21,14 @@
 			_root.map.pois[newpoiid].select();
 			_root.map.pois[newpoiid].clean=false;
 			markClean(false);
-		} else if (this._name==_root.drawpoint) {
+		} else if (this._name==_root.drawpoint ||
+				  (this._name==_root.lastpoint && (t.getTime()-_root.lastpointtime)<700)) {
 			// double-click at end of route
+			_root.lastpoint=_root.drawpoint;	// trap triple-click
+			_root.lastpointtime=new Date();		//  |
 			stopDrawing();
 		} else if (Key.isDown(Key.SHIFT) && _root.map.ways[this.way].oldversion==0) {
-			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
+			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
 			startNewWay(_root.map.ways[this.way].path[this._name][0],
 						_root.map.ways[this.way].path[this._name][1],this.node);
 		} else {
@@ -95,6 +99,8 @@
 					addEndPoint(_root.ws.path[this._name][0],
 								_root.ws.path[this._name][1],
 								_root.ws.path[this._name][2]);
+					_root.lastpoint=_root.drawpoint;	// trap triple-click
+					_root.lastpointtime=new Date();		//  |
 					stopDrawing();
 				} else if (_root.drawpoint==-1) {
 					// - Start elastic line for adding new point
@@ -122,7 +128,7 @@
 	
 	AnchorPoint.prototype.trackElastic=function() {
 		_root.map.elastic.clear();
-		_root.map.elastic.lineStyle(3,0x000000,100,false,"none");
+		_root.map.elastic.lineStyle(Math.min(linewidth,6),0x000000,100,false,"none");
 		_root.map.elastic.moveTo(_root.map._xmouse,_root.map._ymouse);
 		_root.map.elastic.lineTo(this._x,this._y);
 	};

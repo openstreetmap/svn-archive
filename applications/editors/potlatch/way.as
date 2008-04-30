@@ -85,7 +85,6 @@
 
 	OSMWay.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
-		var linewidth=3; //Math.max(2/Math.pow(2,_root.scale-13),0)+1;
 		var linealpha=100; // -50*(this.locked==true);
 		
 		// Set stroke
@@ -294,7 +293,13 @@
 	OSMWay.prototype.onPress=function() {
 		if (Key.isDown(Key.SHIFT) && this._name==_root.wayselected && _root.drawpoint==-1) {
 			// shift-click current way: insert point
-			_root.pointselected=insertAnchorPoint(this._name);
+			_root.newnodeid--;
+			_root.pointselected=this.insertAnchorPoint(_root.newnodeid);
+			for (qway in _root.map.ways) {
+				if (_root.map.ways[qway].hitTest(_root._xmouse,_root._ymouse,true) && qway!=this._name) {
+					_root.map.ways[qway].insertAnchorPoint(_root.newnodeid);
+				}
+			}
 			this.highlightPoints(5000,"anchor");
 			_root.map.anchors[pointselected].beginDrag();
 		} else if (Key.isDown(Key.SHIFT) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1) {
@@ -320,7 +325,8 @@
 				if (this._name==_root.wayselected && _root.drawpoint>0) {
 					_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
 				}
-				insertAnchorPoint(this._name);
+				_root.newnodeid--;
+				this.insertAnchorPoint(_root.newnodeid);
 				this.highlightPoints(5001,"anchorhint");
 				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
 			}
@@ -356,9 +362,8 @@
 		if (_root.pointselected>-2) {
 			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y,8/Math.pow(2,Math.min(_root.scale,17)-13));
 		} else {
-			var linewidth=11;
 			var linecolour=0xFFFF00; if (this.locked) { var linecolour=0x00FFFF; }
-			_root.map.highlight.lineStyle(linewidth,linecolour,80,false,"none");
+			_root.map.highlight.lineStyle(linewidth*1.5+8,linecolour,80,false,"none");
 			_root.map.highlight.moveTo(this.path[0][0],this.path[0][1]);
 			for (var i=1; i<this.path.length; i+=1) {
 				_root.map.highlight.lineTo(this.path[i][0],this.path[i][1]);
@@ -368,8 +373,17 @@
 	};
 
 	OSMWay.prototype.highlightPoints=function(d,atype) {
-		anchorsize=120/Math.pow(2,_root.scale-13);
-		group=atype+"s";
+		var anchorsize=120/Math.pow(2,_root.scale-13);
+		if (_root.scale>15) {
+			switch (_root.scale) {
+				case 15: anchorsize+=10; break;
+				case 16: anchorsize+=7 ; break;
+				case 17: anchorsize+=5 ; break;
+				case 18: anchorsize+=6 ; break;
+				case 19: anchorsize+=7 ; break;
+			}
+		}
+		var group=atype+"s";
 		_root.map.createEmptyMovieClip(group,d);
 		for (var i=0; i<this.path.length; i+=1) {
 			_root.map[group].attachMovie(atype,i,i);
@@ -493,24 +507,18 @@
 		return ch;
 	};
 
-	Object.registerClass("way",OSMWay);
-
-
-	// =====================================================================================
-	// Drawing support functions
-
-	// insertAnchorPoint		- add point into way with SHIFT-clicking
+	// ----	Add point into way with SHIFT-clicking
 	
-	function insertAnchorPoint(way) {
+	OSMWay.prototype.insertAnchorPoint=function(nodeid) {
 		var nx,ny,closest,closei,i,x1,y1,x2,y2,direct,via,newpoint;
 		nx=_root.map._xmouse;	// where we're inserting it
 		ny=_root.map._ymouse;	//	|
 		closest=0.05; closei=0;
-		for (i=0; i<(_root.map.ways[way].path.length)-1; i+=1) {
-			x1=_root.map.ways[way].path[i][0];
-			y1=_root.map.ways[way].path[i][1];
-			x2=_root.map.ways[way].path[i+1][0];
-			y2=_root.map.ways[way].path[i+1][1];
+		for (i=0; i<(this.path.length)-1; i+=1) {
+			x1=this.path[i][0];
+			y1=this.path[i][1];
+			x2=this.path[i+1][0];
+			y2=this.path[i+1][1];
 			direct=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
 			via   =Math.sqrt((nx-x1)*(nx-x1)+(ny-y1)*(ny-y1));
 			via  +=Math.sqrt((nx-x2)*(nx-x2)+(ny-y2)*(ny-y2));
@@ -519,14 +527,20 @@
 				closest=Math.abs(via/direct-1);
 			}
 		}
-		_root.newnodeid--;
-		newpoint=new Array(nx,ny,newnodeid,1,new Array(),0);
-		_root.map.ways[way].path.splice(closei,0,newpoint);
-		_root.map.ways[way].clean=false;
-		_root.map.ways[way].redraw();
+		newpoint=new Array(nx,ny,nodeid,1,new Array(),0);
+		this.path.splice(closei,0,newpoint);
+		this.clean=false;
+		this.redraw();
 		markClean(false);
 		return closei;
-	}
+	};
+
+
+	Object.registerClass("way",OSMWay);
+
+
+	// =====================================================================================
+	// Drawing support functions
 
 	// startNewWay	- create new way with first point x,y,node
 

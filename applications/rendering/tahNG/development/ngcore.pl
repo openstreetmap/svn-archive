@@ -37,7 +37,7 @@ use tahproject;
 our $Config = AppConfig->new({
                 CREATE => 1,                      # Autocreate unknown config variables
                 GLOBAL => {
-                  DEFAULT  => "<undef>",    # Create undefined Variables by default
+                  DEFAULT  => undef,    # Create undefined Variables by default
                   ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
                 }
               });
@@ -204,7 +204,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
          $Config->get("XAPIURL"), $Config->get("OSMVersion"), $bbox{$bboxRef});
 
     my $rootDataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm"; ## FIXME broken TODO: make sure tempdir is created.
-    my $ppchainStart = $bboxRef;
+    my $ppchainStart = $bboxRef; #the bit between data- and .osm is used as entry for the preprocessing chain later
 
     if ($Config->get("nodownload"))
     {
@@ -217,12 +217,41 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         ($status,@tempfiles) = downloadData($bbox{$bboxRef},$bboxRef,$rootDataFile,$URLS);
         # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
         $JobTime = [stat $rootDataFile]->[9]; ## TODO: change this to use the XAPI timestamp which is a more accurate measure for from when the data is
-    
+    }
+
+     ## build the 16 zoom+2 (usually z14) bboxes
+     #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)
+     #
+     #  00.00  00.01  01.00  01.01
+     #
+     #  00.10  00.11  01.10  01.11
+     #
+     #  10.00  10.01  11.00  11.01
+     #
+     #  10.10  10.11  11.10  11.11
+
+     for (my $QR="0"; $QR le "1"; $QR++)
+     {
+        for (my $QC="0"; $QC le "1"; $QC++)
+        {
+            for (my $SR="0"; $SR le "1"; $SR++)
+            {
+                for (my $SC="0"; $SC le "1"; $SC++)
+                {
+                     my $N1 = $lat[$QR * 2 + $SR];
+                     my $S1 = $lat[$QR * 2 + $SR + 1];
+                     my $W1 = $lon[$QC * 2 + $SC];
+                     my $E1 = $lon[$QC * 2 + $SC + 1];
+                     $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 12-0..3-0..3 will be used later in stitching.
+                     $bbox{$bboxRef} = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
+                }
+            }
+        }
     }
 
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
-    statusMessage("Checking for UTF-8 errors in $DataFile", $currentSubTask, $progressJobs, $progressPercent, 0);
+    statusMessage("Checking for UTF-8 errors in $rootDataFile", $currentSubTask, $progressJobs, $progressPercent, 0);
     open(OSMDATA, $rootDataFile) or die ("could not open $rootDataFile for UTF-8 check");
     my @toCheck = <OSMDATA>;
     close(OSMDATA);
@@ -263,8 +292,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         mkdir $JobDirectory unless -d $JobDirectory;
 
         my $maxzoom = $Config->get($layer."_MaxZoom");
-        my $layerDataFile;
-
+        
         # Faff around
         for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
         {
@@ -274,140 +302,35 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         my $Margin = " " x ($Zoom - 8);
         #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
         
-        
-        #------------------------------------------------------
-        # Go through preprocessing steps for the current layer
-        #------------------------------------------------------
-        my @ppchain = ($ppchainStart);
-        # config option may be empty, or a comma separated list of preprocessors
-        foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
-        {
-            my $inputFile = sprintf("%sdata-%s.osm", 
-                $Config->get("WorkingDirectory").$PID."/",
-                join("-", @ppchain));
-            push(@ppchain, $preprocessor);
-            my $outputFile = sprintf("%sdata-%s.osm", 
-                $Config->get("WorkingDirectory").$PID."/",
-                join("-", @ppchain));
-
-            if (-f $outputFile)
-            {
-                # no action; files for this preprocessing step seem to have been created 
-                # by another layer already!
-            }
-            elsif ($preprocessor eq "maplint")
-            {
-                # Pre-process the data file using maplint
-                # TODO may put this into a subroutine of its own
-                my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
-                        $Config->get("XmlStarlet"),
-                        "maplint/lib/run-tests.xsl",
-                        "$inputFile",
-                        "tmp.$PID");
-                statusMessage("Running maplint", $currentSubTask, $progressJobs, $progressPercent,0);
-                runCommand($Cmd,$PID);
-                $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
-                        $Config->get("XmlStarlet"),
-                        "maplint/lib/convert-to-tags.xsl",
-                        "tmp.$PID",
-                        "$outputFile");
-                statusMessage("Creating tags from maplint", $currentSubTask, $progressJobs, $progressPercent,0);
-                runCommand($Cmd,$PID);
-                killafile("tmp.$PID");
-            }
-            elsif ($preprocessor eq "close-areas")
-            {
-                my $Cmd = sprintf("%s perl close-areas.pl $X $Y $Zoom < %s > %s",
-                        $Config->get("Niceness"),
-                        "$inputFile",
-                        "$outputFile");
-                statusMessage("Running close-areas", $currentSubTask, $progressJobs, $progressPercent,0);
-                runCommand($Cmd,$PID);
-            }
-            elsif ($preprocessor eq "attribution")
-            {
-                my $Cmd = sprintf("%s perl attribution.pl < %s > %s",
-                        $Config->get("Niceness"),
-                        "$inputFile",
-                        "$outputFile");
-                statusMessage("Running attribution", $currentSubTask, $progressJobs, $progressPercent,0);
-                runCommand($Cmd,$PID);
-            }
-            elsif ($preprocessor eq "autocut")
-            {
-                statusMessage("Running autocut", $currentSubTask, $progressJobs, $progressPercent,0);
-                ## build the 16 zoom+2 (usually z14) bboxes
-
-                #  QR QC . SR SC: (QuadRow QuadColum SubRow SubColumn)
-                #
-                #  00.00  00.01  01.00  01.01
-                #
-                #  00.10  00.11  01.10  01.11
-                #
-                #  10.00  10.01  11.00  11.01
-                #
-                #  10.10  10.11  11.10  11.11
-
-                for (my $QR="0"; $QR le "1"; $QR++)
-                {
-                    for (my $QC="0"; $QC le "1"; $QC++)
-                    {
-                        for (my $SR="0"; $SR le "1"; $SR++)
-                        {
-                            for (my $SC="0"; $SC le "1"; $SC++)
-                            {
-                                $N1 = $lat[$QR * 2 + $SR];
-                                $S1 = $lat[$QR * 2 + $SR + 1];
-                                $W1 = $lon[$QC * 2 + $SC];
-                                $E1 = $lon[$QC * 2 + $SC + 1];
-                                $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 12-0..3-0..3 will be used later in stitching.
-                                $bbox{$bboxRef} = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
-                            }
-                        }
-                    }
-                }
-
-                foreach $bboxRef (sort (keys %bbox)) 
-                {
-                    print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
-                    if ($bboxRef =~ m/AreaAndLabels/)
-                    {
-                        $DataFile = $outputFile; 
-                    }
-                    else
-                    {
-                        $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm";
-                        push(@tempfiles, $DataFile);
-                    }
-                    print "cropping $bbox{$bboxRef} from $inputFile to $DataFile \n";
-                    cropDataToBBox(split(/,/,$bbox{$bboxRef}), $inputFile, $DataFile); 
-                }
-            }
-            else
-            {
-                die "I have no preprocessor called '$preprocessor'";
-            }
-            push(@tempfiles, $outputFile);
-        }
-
+        my $layerDataFile = PreProcess($ppchainStart, $layer, %bbox);
         #------------------------------------------------------
         # Preprocessing finished, start rendering
         #------------------------------------------------------
 
-        $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
-        
         # Add bounding box to osmarender
         # then set the data source
         # then transform it to SVG
         
-        for (my $i = $Zoom ; $i <= $maxzoom; $i++)
+        for (my $i = $Zoom ; $i <= $maxzoom and ($i < $zoom + 2 or not $Config->get($layer."_Preprocessor") =~ /autocut/); $i++)
         {
             if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $lat[0], $lat[4], $lon[0], $lon[4]))
             {
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
                 return 0;
+            }
+        }
+        for (my $i = $Zoom+2 ; $i <= $maxzoom and $Config->get($layer."_Preprocessor") =~ /autocut/; $i++)
+        {
+            for (my $ilat = 0 ; $ilat <= 3; $ilat++)
+            {
+                for (my $ilon = 0 ; $ilon <= 3; $ilon++)
+                {
+                    if (GenerateSVG($layerDataFile, $layer, $X*4+$ilon, $Y*4+$ilat, $i, $lat[$ilat], $lat[$ilat+1], $lon[$ilon], $lon[$ilon+1]))
+                    {
+                        foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+                        return 0;
+                    }
+                }
             }
         }
         
@@ -460,6 +383,139 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
     return 1;
 }
 
+#------------------------------------------------------
+# Go through preprocessing steps for the current layer
+#------------------------------------------------------
+sub PreProcess
+{
+    my ($ppchainStart, $layer, %bbox) = @_;
+    my @ppchain = ($ppchainStart);
+    # config option may be empty, or a comma separated list of preprocessors
+    foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
+    {
+        my $inputFile = sprintf("%sdata-%s.osm", 
+            $Config->get("WorkingDirectory").$PID."/",
+            join("-", @ppchain));
+        push(@ppchain, $preprocessor);
+        my $outputFile = sprintf("%sdata-%s.osm", 
+            $Config->get("WorkingDirectory").$PID."/",
+            join("-", @ppchain));
 
+        if (-f $outputFile)
+        {
+            # no action; files for this preprocessing step seem to have been created 
+            # by another layer already!
+        }
+        elsif ($preprocessor eq "maplint")
+        {
+            # Pre-process the data file using maplint
+            # TODO may put this into a subroutine of its own
+            my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+                    $Config->get("Niceness"),
+                    $Config->get("XmlStarlet"),
+                    "maplint/lib/run-tests.xsl",
+                    "$inputFile",
+                    "tmp.$PID");
+            statusMessage("Running maplint", $currentSubTask, $progressJobs, $progressPercent,0);
+            runCommand($Cmd,$PID);
+            $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+                    $Config->get("Niceness"),
+                    $Config->get("XmlStarlet"),
+                    "maplint/lib/convert-to-tags.xsl",
+                    "tmp.$PID",
+                    "$outputFile");
+            statusMessage("Creating tags from maplint", $currentSubTask, $progressJobs, $progressPercent,0);
+            runCommand($Cmd,$PID);
+            killafile("tmp.$PID");
+        }
+        elsif ($preprocessor eq "close-areas")
+        {
+            my $Cmd = sprintf("%s perl close-areas.pl $X $Y $Zoom < %s > %s",
+                    $Config->get("Niceness"),
+                    "$inputFile",
+                    "$outputFile");
+            statusMessage("Running close-areas", $currentSubTask, $progressJobs, $progressPercent,0);
+            runCommand($Cmd,$PID);
+        }
+        elsif ($preprocessor eq "attribution")
+        {
+            my $Cmd = sprintf("%s perl attribution.pl < %s > %s",
+                    $Config->get("Niceness"),
+                    "$inputFile",
+                    "$outputFile");
+            statusMessage("Running attribution", $currentSubTask, $progressJobs, $progressPercent,0);
+            runCommand($Cmd,$PID);
+        }
+        elsif ($preprocessor eq "autocut")
+        {
+            statusMessage("Running autocut", $currentSubTask, $progressJobs, $progressPercent,0);
+            my $autocutJobs = scalar(keys %bbox);
+            my $progressAutocut = 0;
+            my $DataFile;
+            foreach my $bboxRef (sort (keys %bbox)) 
+            {
+                print $bboxRef.": ".$bbox{$bboxRef}."\n" if $Config->get("Debug");
+                if ($bboxRef =~ m/AreaAndLabels/)
+                {
+                    $DataFile = $outputFile; 
+                }
+                else
+                {
+                    $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm";
+                    push(@tempfiles, $DataFile);
+                }
+                statusMessage("cropping $bbox{$bboxRef} from $inputFile to $DataFile","autocut", $progressAutocut, $progressPercent,0);
+                cropDataToBBox(split(/,/,$bbox{$bboxRef}), $inputFile, $DataFile); 
+                $progressAutocut++;
+                $progressPercent=100*$progressAutocut/$autocutJobs;
+                doneMessage("");
+            }
+            statusMessage("complete","autocut", $progressAutocut, $progressPercent,0);
+            $progressPercent=0;
+        }
+        else
+        {
+            die "I have no preprocessor called '$preprocessor'";
+        }
+        push(@tempfiles, $outputFile);
+    }
 
+    my $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
+    return $layerDataFile;
+}
 
+#-----------------------------------------------------------------------------
+# Generate SVG for one zoom level
+#   $layerDataFile - name of the OSM data file
+#   $X, $Y - which tileset (Always the tilenumbers of the base zoom. i.e. z12)
+#   $Zoom - which zoom currently is processsed
+#   $N, $S, $W, $E - bounds of the tile
+#-----------------------------------------------------------------------------
+sub GenerateSVG 
+{
+    my ($layerDataFile, $layer, $X, $Y, $Zoom, $N, $S, $W, $E) = @_;
+    # Create a new copy of rules file to allow background update
+    # don't need layer in name of file as we'll
+    # process one layer after the other
+    my $error = 0;
+    my $source = $Config{"Layer.$layer.Rules.$Zoom"};
+    my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID-z$Zoom.xml";
+    copy($source, $TempFeatures)
+        or die "Cannot make copy of $source";
+
+    # Update the rules file  with details of what to do (where to get data, what bounds to use)
+    AddBounds($TempFeatures,$W,$S,$E,$N);
+    SetDataSource($layerDataFile, $TempFeatures);
+
+    # Render the file
+    if (! xml2svg(
+            $TempFeatures,
+            $Config{WorkingDirectory}."output-$parent_pid-$X-$Y-z$Zoom.svg",
+            $Zoom))
+    {
+        $error = 1;
+    }
+    # Delete temporary rules file
+    killafile($TempFeatures) if (! $Config{"Debug"});
+    return $error;
+}

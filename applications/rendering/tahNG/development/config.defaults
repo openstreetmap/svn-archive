@@ -4,6 +4,7 @@
 ### defaults for command line options
 
 mode = none
+nobezier = 0
 
 ### defaults for authentication settings (in case someone forgot to create his authentication.conf
 

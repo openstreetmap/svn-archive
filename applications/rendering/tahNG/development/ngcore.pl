@@ -311,7 +311,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         # then set the data source
         # then transform it to SVG
         
-        for (my $i = $Zoom ; $i <= $maxzoom and ($i < $zoom + 2 or not $Config->get($layer."_Preprocessor") =~ /autocut/); $i++)
+        for (my $i = $Zoom ; $i <= $maxzoom and ($i < $Zoom + 2 or not $Config->get($layer."_Preprocessor") =~ /autocut/); $i++)
         {
             if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $lat[0], $lat[4], $lon[0], $lon[4]))
             {
@@ -498,8 +498,8 @@ sub GenerateSVG
     # don't need layer in name of file as we'll
     # process one layer after the other
     my $error = 0;
-    my $source = $Config{"Layer.$layer.Rules.$Zoom"};
-    my $TempFeatures = $Config{"WorkingDirectory"}."map-features-$PID-z$Zoom.xml";
+    my $source = $Config->get($layer."_Rules.$Zoom");
+    my $TempFeatures = $Config->get("WorkingDirectory").$PID."/map-features-$PID-$X-$Y-z$Zoom.xml";
     copy($source, $TempFeatures)
         or die "Cannot make copy of $source";
 
@@ -510,12 +510,140 @@ sub GenerateSVG
     # Render the file
     if (! xml2svg(
             $TempFeatures,
-            $Config{WorkingDirectory}."output-$parent_pid-$X-$Y-z$Zoom.svg",
+            $Config->get("WorkingDirectory").$PID."/output-$parent_pid-$X-$Y-z$Zoom.svg",
             $Zoom))
     {
         $error = 1;
     }
     # Delete temporary rules file
-    killafile($TempFeatures) if (! $Config{"Debug"});
+    killafile($TempFeatures) if (! $Config->get("Debug"));
     return $error;
+}
+
+#-----------------------------------------------------------------------------
+# Add bounding-box information to an osm-map-features file
+#-----------------------------------------------------------------------------
+sub AddBounds 
+{
+    my ($Filename,$W,$S,$E,$N,$Size) = @_;
+    
+    # Read the old file
+    open(my $fpIn, "<", "$Filename");
+    my $Data = join("",<$fpIn>);
+    close $fpIn;
+    die("no such $Filename") if(! -f $Filename);
+    
+    # Change some stuff
+    my $BoundsInfo = sprintf(
+      "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
+      $S, $W, $N, $E);
+    
+    $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n$2/s;
+    
+    # Save back to the same location
+    open(my $fpOut, ">$Filename");
+    print $fpOut $Data;
+    close $fpOut;
+}
+
+#-----------------------------------------------------------------------------
+# Set data source file name in map-features file
+#-----------------------------------------------------------------------------
+sub SetDataSource 
+{
+    my ($Datafile, $Rulesfile) = @_;
+
+    # Read the old file
+    open(my $fpIn, "<", "$Rulesfile");
+    my $Data = join("",<$fpIn>);
+    close $fpIn;
+    die("no such $Rulesfile") if(! -f $Rulesfile);
+
+    $Data =~ s/(  data=\").*(  scale=\")/$1$Datafile\"\n$2/s;
+
+    # Save back to the same location
+    open(my $fpOut, ">$Rulesfile");
+    print $fpOut $Data;
+    close $fpOut;
+}
+
+#-----------------------------------------------------------------------------
+# Get the width and height (in SVG units, must be pixels) of an SVG file
+#-----------------------------------------------------------------------------
+sub getSize($)
+{
+    my $SVG = shift();
+    open(my $fpSvg,"<",$SVG);
+    while(my $Line = <$fpSvg>)
+    {
+        if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
+        {
+            close $fpSvg;
+            return(($1,$2,1));
+        }
+    }
+    close $fpSvg;
+    return((0,0,0));
+}
+
+#-----------------------------------------------------------------------------
+# Transform an OSM file (using osmarender) into SVG
+#-----------------------------------------------------------------------------
+sub xml2svg 
+{
+    my($MapFeatures, $SVG, $zoom) = @_;
+    my $TSVG = "$SVG";
+    my $NoBezier = $Config->get("NoBezier") || $zoom <= 11;
+
+    if (!$NoBezier) 
+    {
+        $TSVG = "$SVG-temp.svg";
+    }
+
+    if ($Config->get("Osmarender") eq "XSLT")
+    {
+        my $XslFile;
+
+        $XslFile = "osmarender/osmarender.xsl";
+
+        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
+          $Config->get("Niceness"),
+          $Config->get("XmlStarlet"),
+          $Config->get("XmlStarletMaxDepth"),
+          $XslFile,
+          "$MapFeatures",
+          $TSVG);
+
+        statusMessage("Transforming zoom level $zoom with XSLT", $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand($Cmd,$PID);
+    }
+    elsif($Config->get("Osmarender") eq "orp")
+    {
+        chdir "orp";
+        my $Cmd = sprintf("%s perl orp.pl -r %s -o %s",
+          $Config->("Niceness"),
+          $MapFeatures,
+          $TSVG);
+
+        statusMessage("Transforming zoom level $zoom with or/p", $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand($Cmd,$PID);
+        chdir "..";
+    }
+    else
+    {
+        die "invalid Osmarender setting in config";
+    }
+
+    # look at temporary svg wether it really is a svg or just the 
+    # xmlstarlet dump and exit if the latter.
+    open(SVGTEST, "<", $TSVG) || return;
+    my $TestLine = <SVGTEST>;
+    chomp $TestLine;
+    close SVGTEST;
+
+    if (grep(!/</, $TestLine))
+    {
+       statusMessage("File $TSVG doesn't look like svg, aborting render.", $currentSubTask, $progressJobs, $progressPercent,1);
+       return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
+    }
 }

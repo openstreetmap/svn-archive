@@ -109,12 +109,7 @@
 		redrawBackground();
 		resizePOIs();
 		if (ww) { whichWays(); }
-		for (qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
-		if (_root.wayselected) {
-			_root.ws.highlight();
-			_root.ws.highlightPoints(5000,"anchor");
-		}
-		restartElastic();
+		redrawWays();
 	}
 
 	function changeScaleTo(newscale) {
@@ -125,7 +120,20 @@
 		if (_root.scale==_root.maxscale) { _root.i_zoomin._alpha =25;  }
 									else { _root.i_zoomin._alpha =100; }
 		_root.tolerance=4/Math.pow(2,_root.scale-13);
-		_root.linewidth=3+Math.pow(Math.max(0,_root.scale-15),2);
+		if (preferences.data.thinlines) {
+			_root.linewidth=3;
+		} else {
+			_root.linewidth=3+Math.pow(Math.max(0,_root.scale-15),2);
+		}
+	}
+
+	function redrawWays() {
+		for (var qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
+		if (_root.wayselected) {
+			_root.ws.highlight();
+			_root.ws.highlightPoints(5000,"anchor");
+		}
+		restartElastic();
 	}
 
 	// =====================================================================================

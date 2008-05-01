@@ -113,6 +113,7 @@
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
+	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
 
 	// =====================================================================================
 	// Icons
@@ -866,7 +867,7 @@
 	// Options window
 	
 	function openOptionsWindow() {
-		createModalDialogue(290,110,new Array('Ok'),function() { preferences.flush(); } );
+		createModalDialogue(290,130,new Array('Ok'),function() { preferences.flush(); } );
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		writeText(_root.modal.box.prompt1,"Background:");
 
@@ -875,11 +876,14 @@
 			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
 
-		_root.modal.box.attachMovie("checkbox","pointer",5);
-		_root.modal.box.pointer.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+		_root.modal.box.attachMovie("checkbox","fadepref",5);
+		_root.modal.box.fadepref.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+
+		_root.modal.box.attachMovie("checkbox","linepref",8);
+		_root.modal.box.linepref.init(10,60,"Use thin lines at all scales",preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
 
 		_root.modal.box.attachMovie("checkbox","pointer",4);
-		_root.modal.box.pointer.init(10,60,"Use pen and hand pointers",preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		_root.modal.box.pointer.init(10,80,"Use pen and hand pointers",preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 	}
 	
 	// markClean - set JavaScript variable for alert when leaving page

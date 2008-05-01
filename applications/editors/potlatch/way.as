@@ -373,14 +373,16 @@
 	};
 
 	OSMWay.prototype.highlightPoints=function(d,atype) {
+		var enlarge=1;
 		var anchorsize=120/Math.pow(2,_root.scale-13);
+		if (preferences.data.thinlines) { enlarge=0.5; }
 		if (_root.scale>15) {
 			switch (_root.scale) {
-				case 15: anchorsize+=10; break;
-				case 16: anchorsize+=7 ; break;
-				case 17: anchorsize+=5 ; break;
-				case 18: anchorsize+=6 ; break;
-				case 19: anchorsize+=7 ; break;
+				case 15: anchorsize+=10*enlarge; break;
+				case 16: anchorsize+=7 *enlarge; break;
+				case 17: anchorsize+=5 *enlarge; break;
+				case 18: anchorsize+=6 *enlarge; break;
+				case 19: anchorsize+=6 *enlarge; break;
 			}
 		}
 		var group=atype+"s";

@@ -666,10 +666,10 @@ void fetch_users(MYSQL *mysql)
         assert(id <= max_uid);
         //user_list[id] = display_name;
         //printf("User: %lu %s\n", id, display_name);
-        len = strlen(display_name) + strlen(" user=\"\"") + 1;
+        len = strlen(display_name) + strlen(" user=\"\" uid=\"%lu\"") + strlen("4294967296") + 1;
         user_list[id] = malloc(len);
         assert(user_list[id]);
-        snprintf(user_list[id], len, " user=\"%s\"", display_name);
+        snprintf(user_list[id], len, " user=\"%s\" uid=\"%lu\"", display_name, id);
     }
 
     mysql_free_result(res); 

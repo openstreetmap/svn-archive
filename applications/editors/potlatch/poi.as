@@ -86,6 +86,8 @@
 		this.onMouseUp  =function() { this.endDrag();   };
 		_root.firstxmouse=_root.map._xmouse;
 		_root.firstymouse=_root.map._ymouse;
+		this.originalx=this._x;		// saved for undo
+		this.originaly=this._y;		//  |
 	};
 	POI.prototype.trackDrag=function() {
 		this._x=_root.map._xmouse;
@@ -104,7 +106,9 @@
 			this.clean=false;
 			this.select();
 			markClean(false);
-			redrawRelationsForMember('node', this._name);
+			_root.undo.append(UndoStack.prototype.undo_movepoi,
+							  new Array(this,this.originalx,this.originaly),
+							  "moving a POI");
 		}
 	};
 	POI.prototype.select=function() {
@@ -116,6 +120,7 @@
 		updateButtons();
 		updateScissors(false);
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
+		redrawRelationsForMember('node', this._name);
 	};
 	// POI.prototype.recolour=function() { };
 	// ** above will recolour as red/green depending on whether locked

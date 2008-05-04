@@ -74,6 +74,7 @@
 		var pname=presetnames[this.pw.proptype][this.group][pre];
 		var pkeys=presets[pname];
 		var pkey;
+		this.pw.saveUndo();
 		for (pkey in pkeys) {
 			if (this.pw.proparr[pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
 			else { setValueInObject(this.pw.proptype, pkey, presets[pname][pkey]); }
@@ -244,7 +245,9 @@
 	PropertyWindow.prototype=new MovieClip();
 	
 	PropertyWindow.prototype.reinit=function() {
+		var n=this.savedundo;
 		this.init(this.proptype,this.xnumber,this.ynumber);
+		this.savedundo=n;
 	};
 
 	PropertyWindow.prototype.init=function(proptype,w,h) {
@@ -257,22 +260,23 @@
 		this.xnumber=w;
 		this.ynumber=h;
 		this.tagcount=0;
+		this.savedundo=false;
 		if (proptype=='') { return; }
 		removeMovieClip(_root.panel.welcome);
 
-		var relarr = [];
+		this.relarr = [];
 		switch (proptype) {
 			case 'point':
 				this.proparr=_root.ws.path[_root.pointselected][4];
-				relarr=getRelationsForNode(_root.pointselected);
+				this.relarr=getRelationsForNode(_root.pointselected);
 				break;
 			case 'POI':
 				this.proparr=_root.map.pois[poiselected].attr;
-				relarr=getRelationsForNode(poiselected);
+				this.relarr=getRelationsForNode(poiselected);
 				break;
 			case 'way':
 				this.proparr=_root.ws.attr;
-				relarr=getRelationsForWay(wayselected);
+				this.relarr=getRelationsForWay(wayselected);
 				break;
 			case 'relation':
 				this.proparr=_root.editingrelation.attr;
@@ -295,6 +299,7 @@
 			}
 		}
 
+		relarr=this.relarr;
 		for (var rel in relarr) {
 			if (_root.map.relations[relarr[rel]]) {
 				this.attributes.attachMovie("relmember",this.tagcount, this.tagcount);
@@ -310,6 +315,25 @@
 
 		this.scrollbar._x=0; this.scrollbar._y=this.ynumber*19;
 		this.updateMask();					// Draw scrollbar
+	};
+
+	PropertyWindow.prototype.saveUndo=function() {
+		// don't have more than two consecutive undos for the same way
+		if (this.savedundo) { return; }
+		var task  =_root.undo[_root.undo.length-1][0];
+		var params=_root.undo[_root.undo.length-1][1];
+
+		switch (this.proptype) {
+			case 'way':		_root.undo.append(UndoStack.prototype.undo_waytags,
+											  new Array(_root.ws,deepCopy(this.proparr)),
+											  "setting tags on a way"); break;
+			case 'point':	_root.undo.append(UndoStack.prototype.undo_pointtags,
+											  new Array(_root.ws,_root.pointselected,deepCopy(this.proparr)),
+											  "setting tags on a point"); break;
+			case 'POI':		_root.undo.append(UndoStack.prototype.undo_poitags,
+											  new Array(_root.map.pois[poiselected],deepCopy(this.proparr)),
+											  "setting tags on a POI"); break;
+		};
 	};
 
 	PropertyWindow.prototype.getXY=function(i) {
@@ -329,6 +353,7 @@
 
 	PropertyWindow.prototype.enterNewAttribute=function() {
 		// ** check nothing already exists called "key"
+		this.saveUndo();
 		this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
 		var pos = this.getXY(this.tagcount);
 		this.attributes[this.tagcount]._x=pos[0];
@@ -391,7 +416,8 @@
 	};
 	
 	PropertyWindow.prototype.repeatAttributes=function(dotags) {
-		var i,proparr;
+		var i,proparr,relarr;
+		this.saveUndo();
 		switch (this.proptype) {
 			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']][4]; 
 							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']][2]);
@@ -636,6 +662,7 @@
 	//   (opposite of getValueFromObject)
 	
 	function setValueFromTextfield(tf) {
+		tf._parent._parent._parent.saveUndo();
 		setValueInObject(tf._parent._parent._parent.proptype,
 						 tf._parent.keyname.text,
 						 tf.text);
@@ -658,6 +685,7 @@
 
 	function renameKey(tf) {
 		var k=tf.text;
+		tf._parent._parent._parent.saveUndo();
 		if (k!=tf._parent.lastkey) {
 			// field has been renamed, so delete old one and set new one
 			// (we have to set it to '' sometimes because of Ming delete bug)

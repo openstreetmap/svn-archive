@@ -107,7 +107,7 @@
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.8c";	// current version
+	var signature="Potlatch 0.9";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -129,7 +129,7 @@
 
 	_root.panel.attachMovie("scissors","i_scissors",32);
 	with (_root.panel.i_scissors) { _x=15; _y=93; };
-	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(); };
+	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(_root.pointselected); };
 	_root.panel.i_scissors.onRollOver=function() { setFloater("Split way at selected point (X)"); };
 	_root.panel.i_scissors.onRollOut =function() { clearFloater(); };
 
@@ -153,14 +153,14 @@
 
 	_root.panel.attachMovie("newrel","i_newrel",44);
 	with (_root.panel.i_newrel) { _x=690; _y=75; backgroundColor=0xDDBBBB; background=true;};
-	_root.panel.i_newrel.onRelease =function() { if (Key.isDown(Key.SHIFT)) { _root.panel.properties.repeatAttributes(false); }
-												 else { addToRelation(); } };
+	_root.panel.i_newrel.onRelease =function() { if (Key.isDown(Key.SHIFT)) { _root.panel.properties.repeatAttributes(false);
+												} else { addToRelation(); } };
 	_root.panel.i_newrel.onRollOver=function() { setFloater("Add to a relation"); };
 	_root.panel.i_newrel.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("repeatattr","i_repeatattr",34);
 	with (_root.panel.i_repeatattr) { _x=690; _y=55; };
-	_root.panel.i_repeatattr.onPress=function() { _root.panel.properties.repeatAttributes(true); };
+	_root.panel.i_repeatattr.onPress   =function() { _root.panel.properties.repeatAttributes(true); };
 	_root.panel.i_repeatattr.onRollOver=function() { setFloater("Repeat tags from the previously selected way (R)"); };
 	_root.panel.i_repeatattr.onRollOut =function() { clearFloater(); };
 
@@ -338,10 +338,13 @@
 	#include 'world.as'
 	#include 'tiles.as'
 	#include 'gps.as'
+	#include 'undo.as'
 
 
 	// =====================================================================================
 	// Start
+
+	var undo=new UndoStack();
 
 	_root.panel.attachMovie("propwindow","properties",50);
 	with (_root.panel.properties) { _x=110; _y=25; };
@@ -655,9 +658,10 @@
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
-			case 82:		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
+			case 82:		_root.panel.properties.repeatAttributes(true);break;//  |
 			case 85:		getDeleted(); break;								// U - undelete
-			case 88:		_root.ws.splitWay(); break;							// X - split way
+			case 88:		_root.ws.splitWay(_root.pointselected); break;		// X - split way
+			case 90:		_root.undo.rollback(); break;						// Z - undo
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
 			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
@@ -703,45 +707,14 @@
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
-			// ** should be moved into way class
-			if (doall==1) {
-				// remove node from all ways
-				id=_root.ws.path[_root.pointselected][2];
-				for (qway in _root.map.ways) {
-					var qdirty=false;
-					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-						if (_root.map.ways[qway].path[qs][2]==id) {
-							_root.map.ways[qway].path.splice(qs,1);
-							qdirty=true;
-						}
-					}
-					if (qdirty) { _root.map.ways[qway].removeDuplicates(); }
-					if (qdirty && _root.map.ways[qway]["path"].length<2) {
-						_root.map.ways[qway].remove();
-					} else if (qdirty) {
-						_root.map.ways[qway].redraw();
-						_root.map.ways[qway].clean=false;
-					}
-				}
-			} else {
-				// remove node from this way only
-				_root.ws.path.splice(pointselected,1);
-				_root.ws.removeDuplicates();
-				if (_root.ws.path.length<2) {
-					_root.ws.remove();
-				} else {
-					_root.ws.redraw();
-					_root.ws.clean=false;
-				}
-			}
+			if (doall==1) { removeNodeFromWays(_root.ws.path[_root.pointselected][2]); }
+					 else { _root.ws.removeAnchorPoint(pointselected); }
 			_root.pointselected=-2;
 			_root.drawpoint=-1;
 			_root.map.elastic.clear();
 			clearTooltip();
 			markClean(false);
-			if (_root.wayselected) {
-				_root.ws.select();
-			}
+			if (_root.wayselected) { _root.ws.select(); }
 		}
 	};
 
@@ -947,4 +920,15 @@
 		_root.map.highlight.lineTo(-ss,-ss);
 		_root.map.highlight.lineTo(-ss, ss);
 		_root.map.highlight.endFill();
+	};
+
+	// deepCopy - return a deep copy of a hash
+	
+	function deepCopy(z) {
+		var a=new Array();
+		for (var i in z) {
+			// needs to do a typeof here, to recursively deepCopy arrays
+			a[i]=z[i];
+		}
+		return a;
 	};

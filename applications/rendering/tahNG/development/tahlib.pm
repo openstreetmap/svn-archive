@@ -527,8 +527,8 @@ sub cropDataToBBox # TODO: Get area types to stick
         {
             my ($endslash,$what,$slash,$angbr) = ($1,$2,$3,$4);
             print DEST;
-            print if ($Config->get("Debug"));
-            print "endslash: ".$endslash.", what: ".$what.", slash: ".$slash.", angbr: ".$angbr." -- " if ($Config->get("Debug"));
+            print if ($Config->get("Debug") >=5);
+            print "endslash: ".$endslash.", what: ".$what.", slash: ".$slash.", angbr: ".$angbr." -- " if ($Config->get("Debug") > 2);
             last if (($slash eq "/" and $angbr eq ">") or $endslash eq "/");
             next if ($angbr eq ">");
             while (<SOURCE>)

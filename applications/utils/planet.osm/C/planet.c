@@ -129,23 +129,23 @@ static const char *lookup_user(const char *s)
     return user ? user : "";
 }
 
-static void osm_node(int id, long double lat, long double lon, struct keyval *tags, const char *ts, const char *user)
+static void osm_node(int id, long double lat, long double lon, struct keyval *tags, const char *ts, const char *user, int version)
 {
     if (listHasData(tags)) {
-        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\"%s>\n", id, lat, lon, ts, user);
+        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\" version=\"%d\"%s>\n", id, lat, lon, ts, version, user);
         osm_tags(tags);
         printf(INDENT "</node>\n");
     } else {
-        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\"%s/>\n", id, lat, lon, ts, user);
+        printf(INDENT "<node id=\"%d\" lat=\"%.7Lf\" lon=\"%.7Lf\" timestamp=\"%s\" version=\"%d\"%s/>\n", id, lat, lon, ts, version, user);
     }
 }
 
-static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const char *ts, const char *user)
+static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const char *ts, const char *user, int version)
 {
     struct keyval *p;
 
     if (listHasData(tags) || listHasData(nodes)) {
-        printf(INDENT "<way id=\"%d\" timestamp=\"%s\"%s>\n", id, ts, user);
+        printf(INDENT "<way id=\"%d\" timestamp=\"%s\" version=\"%d\"%s>\n", id, ts, version, user);
         while ((p = popItem(nodes)) != NULL) {
             printf(INDENT INDENT "<nd ref=\"%s\" />\n", p->value);
             freeItem(p);
@@ -153,16 +153,16 @@ static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const cha
         osm_tags(tags);
         printf(INDENT "</way>\n");
     } else {
-        printf(INDENT "<way id=\"%d\" timestamp=\"%s\"%s/>\n", id, ts, user);
+        printf(INDENT "<way id=\"%d\" timestamp=\"%s\" version=\"%d\"%s/>\n", id, ts, version, user);
     }
 }
 
-static void osm_relation(int id, struct keyval *members, struct keyval *roles, struct keyval *tags, const char *ts, const char *user)
+static void osm_relation(int id, struct keyval *members, struct keyval *roles, struct keyval *tags, const char *ts, const char *user, int version)
 {
     struct keyval *p, *q;
 
     if (listHasData(tags) || listHasData(members)) {
-        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\"%s>\n", id, ts, user);
+        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\" version=\"%d\"%s>\n", id, ts, version, user);
         while (((p = popItem(members)) != NULL) && ((q = popItem(roles)) != NULL)) {
             const char *m_type = p->key;
             const char *m_id   = p->value;
@@ -174,7 +174,7 @@ static void osm_relation(int id, struct keyval *members, struct keyval *roles, s
         osm_tags(tags);
         printf(INDENT "</relation>\n");
     } else {
-        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\"%s/>\n", id, ts, user);
+        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\" version=\"%d\"%s/>\n", id, ts, version, user);
     }
 }
 
@@ -296,39 +296,6 @@ const char *reformDate(const char *str)
     return out;
 }
 
-void nodes(MYSQL *mysql)
-{
-    char query[255];
-    MYSQL_RES *res;
-    MYSQL_ROW row;
-    struct keyval tags;
-
-    initList(&tags);
-
-    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, tags, user_id from current_nodes where visible = 1 order by id");
-
-    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql)))
-    {
-        fprintf(stderr,"Cannot query nodes: %s\n", mysql_error(mysql));
-        exit(1);
-    }
-
-    while ((row= mysql_fetch_row(res))) {
-        long int id;
-        long double latitude,longitude;
-
-        assert(mysql_num_fields(res) == 6);
-
-        id = strtol(row[0], NULL, 10);
-        latitude  = strtol(row[1], NULL, 10) / 10000000.0;
-        longitude = strtol(row[2], NULL, 10) / 10000000.0;
-        read_tags(row[4], &tags);
-
-        osm_node(id, latitude, longitude, &tags, reformDate(row[3]), lookup_user(row[5]));
-    }
-
-    mysql_free_result(res);
-}
 
 #define TAG_CACHE (10000)
 
@@ -494,6 +461,41 @@ struct keyval *get_generic_tags(MYSQL *mysql, const int id)
     }
 }
 
+void nodes(MYSQL *mysql, MYSQL *tags_mysql)
+{
+    char query[255];
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    struct keyval *tags;
+
+    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, user_id, version from current_nodes where visible = 1 order by id");
+
+    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql))) 
+    {
+        fprintf(stderr, "Cannot query nodes: %s\n", mysql_error(mysql));
+        exit(1);
+    }
+
+    tags_init(tags_mysql, "current_node_tags");
+
+    while ((row= mysql_fetch_row(res))) {
+        int id, version;
+        long double latitude,longitude;
+
+        assert(mysql_num_fields(res) == 6);
+
+        id = strtol(row[0], NULL, 10);
+        latitude  = strtol(row[1], NULL, 10) / 10000000.0;
+        longitude = strtol(row[2], NULL, 10) / 10000000.0;
+        version = strtol(row[5], NULL, 10);
+        tags = get_generic_tags(tags_mysql, id);
+        osm_node(id, latitude, longitude, tags, reformDate(row[3]), lookup_user(row[4]), version);
+    }
+
+    mysql_free_result(res);
+    tags_exit();
+}
+
 void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
 {
     char ways_query[255], nodes_query[255];
@@ -504,7 +506,7 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
     initList(&nodes);
 
     snprintf(ways_query, sizeof(ways_query),
-             "select id, timestamp, user_id from current_ways where visible = 1 order by id");
+             "select id, timestamp, user_id, version from current_ways where visible = 1 order by id");
     snprintf(nodes_query, sizeof(nodes_query),
              "select id, node_id from current_way_nodes ORDER BY id, sequence_id");
 
@@ -526,16 +528,17 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
 
     while (ways_row) {
         int way_id = strtol(ways_row[0], NULL, 10);
+        int way_version = strtol(ways_row[3], NULL, 10);
         // Terminating way_nd_id is necessary to ensure final way is generated.
         int way_nd_id = nodes_row ? strtol(nodes_row[0], NULL, 10): INT_MAX;
 
         if (way_id < way_nd_id) {
             // no more nodes in this way
             tags = get_generic_tags(tags_mysql, way_id);
-            osm_way(way_id, &nodes, tags, reformDate(ways_row[1]), lookup_user(ways_row[2]));
+            osm_way(way_id, &nodes, tags, reformDate(ways_row[1]), lookup_user(ways_row[2]), way_version);
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
-            assert(mysql_num_fields(ways_res) == 3);
+            assert(mysql_num_fields(ways_res) == 4);
         } else if (way_id > way_nd_id) {
             // we have entries in current_way_nodes for a missing way, discard!
             // fetch next way_seg
@@ -565,7 +568,7 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
     initList(&roles);
 
     snprintf(relations_query, sizeof(relations_query),
-             "select id, timestamp, user_id from current_relations where visible = 1 ORDER BY id");
+             "select id, timestamp, user_id, version from current_relations where visible = 1 ORDER BY id");
     snprintf(members_query, sizeof(members_query),
              "select id, member_id, member_type, member_role from current_relation_members ORDER BY id");
 
@@ -586,17 +589,18 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
     members_row = mysql_fetch_row(members_res);
 
     while (relations_row) {
-        int relation_id     = strtol(relations_row[0], NULL, 10);
+        int relation_id      = strtol(relations_row[0], NULL, 10);
+        int relation_version = strtol(relations_row[3], NULL, 10);
         // Terminating relation_memb_id is necessary to ensure final way is generated.
         int relation_memb_id = members_row ? strtol(members_row[0], NULL, 10): INT_MAX;
 
         if (relation_id < relation_memb_id) {
             // no more members in this way
             tags = get_generic_tags(tags_mysql, relation_id);
-            osm_relation(relation_id, &members, &roles, tags, reformDate(relations_row[1]), lookup_user(relations_row[2]));
+            osm_relation(relation_id, &members, &roles, tags, reformDate(relations_row[1]), lookup_user(relations_row[2]), relation_version);
             // fetch new way
             relations_row= mysql_fetch_row(relations_res);
-            assert(mysql_num_fields(relations_res) == 3);
+            assert(mysql_num_fields(relations_res) == 4);
         } else if (relation_id > relation_memb_id) {
             // we have entries in current_way_members for a missing way, discard!
             // fetch next way_seg
@@ -766,7 +770,7 @@ int main(int argc, char **argv)
     fetch_users(&mysql[0]);
 
     if (want_nodes)
-        nodes(&mysql[0]);
+        nodes(&mysql[0], &mysql[2]);
 
     if (want_ways)
         ways(&mysql[0], &mysql[1], &mysql[2]);

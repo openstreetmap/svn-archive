@@ -36,16 +36,20 @@
 //			_root.lastymouse=_root._ymouse;
 			_root.clicktime=new Date();
 			this.beginDrag();
-			_root.panel.properties.saveAttributes();
-			_root.pointselected=this._name;
-			_root.map.ways[this.way].highlight();
-			setTypeText("Point",this.node);
-			_root.panel.properties.init('point',getPanelColumns(),4);
-			_root.panel.presets.init(_root.panel.properties);
-			updateButtons();
-			updateScissors(true);
-			setTooltip("point selected\n(shift-click point to\nstart new line)",0);
+			this.select();
 		}
+	};
+
+	AnchorPoint.prototype.select=function() {
+		_root.panel.properties.saveAttributes();
+		_root.pointselected=this._name;
+		_root.map.ways[this.way].highlight();
+		setTypeText("Point",this.node);
+		_root.panel.properties.init('point',getPanelColumns(),4);
+		_root.panel.presets.init(_root.panel.properties);
+		updateButtons();
+		updateScissors(true);
+		setTooltip("point selected\n(shift-click point to\nstart new line)",0);
 	};
 
 	AnchorPoint.prototype.beginDrag=function() {
@@ -73,17 +77,13 @@
 		if ((xdist>=tolerance   || ydist>=tolerance  ) ||
 		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			// ====	Move existing point
-			for (qway in _root.map.ways) {
-				qdirty=0;
-				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-					if (_root.map.ways[qway].path[qs][2]==_root.ws.path[this._name][2]) {
-						_root.map.ways[qway].path[qs][0]=newx;
-						_root.map.ways[qway].path[qs][1]=newy;
-						qdirty=1;
-					}
-				}
-				if (qdirty) { _root.map.ways[qway].redraw(); }
-			}
+_root.chat.text+="(";
+			_root.undo.append(UndoStack.prototype.undo_movenode,
+							  new Array(_root.ws.path[this._name][2],
+							  			_root.ws.path[this._name][0],
+							  			_root.ws.path[this._name][1]),
+							  "moving a point");
+			moveNode(_root.ws.path[this._name][2],newx,newy);
 			_root.ws.highlightPoints(5000,"anchor");
 			_root.ws.highlight();
 			_root.ws.clean=false;
@@ -211,3 +211,22 @@
 	Object.registerClass("anchorhint",AnchorHint);
 
 
+
+	// =====================================================================================
+	// Support functions
+
+	function moveNode(id,newx,newy) {
+		var qchanged;
+		for (var qway in _root.map.ways) {
+			var qdirty=0;
+			for (var qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
+				if (_root.map.ways[qway].path[qs][2]==id) {
+					_root.map.ways[qway].path[qs][0]=newx;
+					_root.map.ways[qway].path[qs][1]=newy;
+					qdirty=1;
+				}
+			}
+			if (qdirty) { _root.map.ways[qway].redraw(); qchanged=qway; }
+		}
+		return qchanged;	// return ID of last changed way
+	}

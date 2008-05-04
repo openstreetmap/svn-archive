@@ -242,7 +242,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
                      my $S1 = $lat[$QR * 2 + $SR + 1];
                      my $W1 = $lon[$QC * 2 + $SC];
                      my $E1 = $lon[$QC * 2 + $SC + 1];
-                     $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 12-0..3-0..3 will be used later in stitching.
+                     $bboxRef = sprintf("%d-%d-%d", $Z, $QR*2 + $QC, $SR*2 + $SC); # ref: 14-0..3-0..3 will be used later in stitching.
                      $bbox{$bboxRef} = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
                 }
             }
@@ -514,6 +514,7 @@ sub GenerateSVG
             $Zoom))
     {
         $error = 1;
+        print "some error occured in xml2svg \n" if ($Config->get("Debug"));
     }
     # Delete temporary rules file
     killafile($TempFeatures) if (! $Config->get("Debug"));
@@ -578,11 +579,11 @@ sub getSize($)
     {
         if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
         {
-            close $fpSvg;
-            return(($1,$2,1));
+            my ($width, $height)=($2,$1);
         }
     }
     close $fpSvg;
+    return($height,$width,1) if ($width > 0 and $height > 0);
     return((0,0,0));
 }
 
@@ -636,7 +637,7 @@ sub xml2svg
 
     # look at temporary svg wether it really is a svg or just the 
     # xmlstarlet dump and exit if the latter.
-    open(SVGTEST, "<", $TSVG) || return;
+    open(SVGTEST, "<", $TSVG) || return cleanUpAndDie("xml2svg failed to open svg",$Mode,3,$PID);
     my $TestLine = <SVGTEST>;
     chomp $TestLine;
     close SVGTEST;
@@ -646,4 +647,31 @@ sub xml2svg
        statusMessage("File $TSVG doesn't look like svg, aborting render.", $currentSubTask, $progressJobs, $progressPercent,1);
        return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
     }
+#-----------------------------------------------------------------------------
+# Process lines to Bezier curve hinting
+#-----------------------------------------------------------------------------
+    if (!$NoBezier) 
+    {   # do bezier curve hinting
+        my $Cmd = sprintf("%s perl ./lines2curves.pl %s > %s",
+          $Config->get("Niceness"),
+          $TSVG,
+          $SVG);
+        statusMessage("Beziercurvehinting zoom level $zoom", $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand($Cmd,$PID);
+#-----------------------------------------------------------------------------
+# Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
+#-----------------------------------------------------------------------------
+        my $filesize= -s $SVG;
+        if (!$filesize) 
+        {
+            copy($TSVG,$SVG);
+            statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $currentSubTask, $progressJobs, $progressPercent,0);
+        }
+        killafile($TSVG) if (!$Config->get("Debug"));
+    }
+    else
+    {   # don't do bezier curve hinting
+        statusMessage("Bezier Curve hinting disabled.", $currentSubTask, $progressJobs, $progressPercent,0);
+    }
+    return 1;
 }

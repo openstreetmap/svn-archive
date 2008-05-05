@@ -574,12 +574,13 @@ sub SetDataSource
 sub getSize($)
 {
     my $SVG = shift();
+    my ($width, $height);
     open(my $fpSvg,"<",$SVG);
     while(my $Line = <$fpSvg>)
     {
         if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
         {
-            my ($width, $height)=($2,$1);
+            ($width, $height)=($2,$1);
         }
     }
     close $fpSvg;
@@ -622,7 +623,7 @@ sub xml2svg
     {
         chdir "orp";
         my $Cmd = sprintf("%s perl orp.pl -r %s -o %s",
-          $Config->("Niceness"),
+          $Config->get("Niceness"),
           $MapFeatures,
           $TSVG);
 

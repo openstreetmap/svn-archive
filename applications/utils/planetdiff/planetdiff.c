@@ -12,7 +12,7 @@
 # Files can be gzip or bzip2 compressed.
 #
 #-----------------------------------------------------------------------------
-# Written by Jon Burgess, Copyright 2007
+# Written by Jon Burgess, Copyright 2007,2008
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -102,12 +102,12 @@ static int compareKeyval(struct keyval kv[2])
         if (END(0) && END(1))
             return 0;
 
-        // Ignore user= since we don't want to emit these for the new planet which adds names
-        if (!END(0) && !strcmp(p[0]->key, "user")) {
+        // Ignore user, uid and version since we don't want to emit these for the new planet which add these
+        if (!END(0) && (!strcmp(p[0]->key, "user") || !strcmp(p[0]->key, "uid") || !strcmp(p[0]->key, "version"))) {
             p[0] = p[0]->next;
             continue;
         }
-        if (!END(1) && !strcmp(p[1]->key, "user")) {
+        if (!END(1) && (!strcmp(p[1]->key, "user") || !strcmp(p[1]->key, "uid") || !strcmp(p[1]->key, "version"))) {
             p[1] = p[1]->next;
             continue;
         }

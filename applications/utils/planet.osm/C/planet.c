@@ -757,8 +757,8 @@ int main(int argc, char **argv)
 #endif
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    printf("<osm version=\"0.5\" generator=\"OpenStreetMap planet.c\">\n");
-    printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.5\" />\n");
+    printf("<osm version=\"0.6\" generator=\"OpenStreetMap planet.c\">\n");
+    printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.6\" />\n");
 
     max_uid = max_userid(&mysql[0]);
     user_list = calloc(max_uid + 1, sizeof(char *));

@@ -1311,6 +1311,8 @@ sub svg2png
     my $Width = $X2 - $X1;
     my $Height = $Y2 - $Y1;
     
+    my $svgFile = "output-$parent_pid-z$Zoom.svg";
+
     if ($Config{Batik} == "1") # batik as jar
     {
         $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s", 
@@ -1323,7 +1325,7 @@ sub svg2png
         $Left,$Top,$Width,$Height,
         $TempFile,
         $Config{WorkingDirectory},
-        "output-$parent_pid-z$Zoom.svg",
+        $svgFile,
         $stdOut);
     }
     elsif ($Config{Batik} == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
@@ -1337,7 +1339,7 @@ sub svg2png
         $Left,$Top,$Width,$Height,
         $TempFile,
         $Config{WorkingDirectory},
-        "output-$PID-z$Zoom.svg",
+        $svgFile,
         $stdOut);
     }
     else
@@ -1351,7 +1353,7 @@ sub svg2png
         $X1,$Y1,$X2,$Y2,
         $TempFile,
         $Config{WorkingDirectory},
-        "output-$parent_pid-z$Zoom.svg",
+        $svgFile,
         $stdOut);
     }
     

@@ -45,6 +45,11 @@ sub ApplyConfigLogic
         $Config->set("Verbose",1);
     }
 
+    if ($Config->get("WorkingDirectory"))
+    {
+        $Config->set("WorkingDirectory",File::Spec->rel2abs($Config->get("WorkingDirectory")));
+    }
+
     if (($Config->get("WorkingDirectory") !~ /\/$/) and ("MSWin32" ne $^O))
     {
         $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "/");

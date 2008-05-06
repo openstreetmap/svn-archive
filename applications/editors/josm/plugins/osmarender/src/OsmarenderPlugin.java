@@ -76,7 +76,7 @@ public class OsmarenderPlugin extends Plugin {
                 // launch up the viewer
                 Runtime.getRuntime().exec(exec);
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(Main.parent, tr("FireFox not found. Please set firefox executable in the Map Settings page of the preferences."));
+                JOptionPane.showMessageDialog(Main.parent, tr("Firefox not found. Please set firefox executable in the Map Settings page of the preferences."));
             }
         }
     }
@@ -126,7 +126,7 @@ public class OsmarenderPlugin extends Plugin {
             private JTextField firefox = new JTextField(10);
             public void addGui(PreferenceDialog gui) {
                 gui.map.add(new JLabel(tr("osmarender options")), GBC.eol().insets(0,5,0,0));
-                gui.map.add(new JLabel(tr("FireFox executable")), GBC.std().insets(10,5,5,0));
+                gui.map.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
                 gui.map.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
                 firefox.setText(Main.pref.get("osmarender.firefox"));
             }

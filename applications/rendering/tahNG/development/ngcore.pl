@@ -22,6 +22,7 @@
 #-----------------------------------------------------------------------------
 
 use strict;
+use GD qw(:DEFAULT :cmp);
 use Image::Magick;
 use LWP::UserAgent;
 use Math::Trig;
@@ -84,6 +85,15 @@ if(not defined $Zoom)
 
 $JobDirectory = $Config->get("WorkingDirectory");
 mkdir $JobDirectory unless -d $JobDirectory;
+my $TempDir = $Config{WorkingDirectory} . $PID . "/"; # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
+if (! -e $TempDir ) 
+{
+    mkdir($TempDir) or cleanUpAndDie("cannot create working directory $TempDir","EXIT",3,$PID);
+}
+elsif (! -d $TempDir )
+{
+    cleanUpAndDie("could not use $TempDir: is not a directory","EXIT",3,$PID);
+}
 
 if ($Mode eq "xy")
 {
@@ -293,11 +303,11 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
 
         my $maxzoom = $Config->get($layer."_MaxZoom");
         
-        # Faff around
-        for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
-        {
-            killafile($Config->get("WorkingDirectory").$PID."/output-$parent_pid-z$i.svg");
-        }
+#        # Faff around
+#        for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
+#        {
+#            killafile($Config->get("WorkingDirectory").$PID."/output-$parent_pid-z$i.svg");
+#        }
         
         my $Margin = " " x ($Zoom - 8);
         #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
@@ -310,7 +320,8 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         # Add bounding box to osmarender
         # then set the data source
         # then transform it to SVG
-        
+        # and immediately render it.
+
         for (my $i = $Zoom ; $i <= $maxzoom and ($i < $Zoom + 2 or not $Config->get($layer."_Preprocessor") =~ /autocut/); $i++)
         {
             if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $lat[0], $lat[4], $lon[0], $lon[4]))
@@ -318,7 +329,18 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
                 return 0;
             }
+            else
+            {
+                # Find the size of the SVG file
+                my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory").$PID."/output-$parent_pid-$X-$Y-z$i.svg");
+                die "invalid coordinates" unless $Valid;
+                # Render the tile(s)
+                #my ($success,$empty) = svg2png($Config->get("WorkingDirectory").$PID."/output-$parent_pid-$X-$Y-z$i.svg",$i,$Zoom,$layer);
+  
+                #die "couldn't render png" unless $success;
+            }
         }
+# svg2png($svgFile, $Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Xtile, $Ytile)
         for (my $i = $Zoom+2 ; $i <= $maxzoom and $Config->get($layer."_Preprocessor") =~ /autocut/; $i++)
         {
             for (my $ilat = 0 ; $ilat <= 3; $ilat++)
@@ -335,11 +357,9 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         }
         
         
-        # Find the size of the SVG file
-        my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory")."output-$parent_pid-z$maxzoom.svg");
+        
 
-        # Render it as loads of recursive tiles
-        my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $lat[0], $lat[4], $lon[0], $lon[4], 0,0,$ImgW,$ImgH,$ImgH,0);
+        #### FIXME: my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $lat[0], $lat[4], $lon[0], $lon[4], 0,0,$ImgW,$ImgH,$ImgH,0);
         if (!$success)
         {
             addFault("renderer",1);
@@ -354,6 +374,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
         {
             killafile($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg") if (!$Config->get("Debug"));
         }
+
 
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
         if ($empty == 1 && $Config->get("GatherBlankTiles")) 
@@ -464,7 +485,8 @@ sub PreProcess
                     $DataFile = $Config->get("WorkingDirectory").$PID."/data-$bboxRef.osm";
                     push(@tempfiles, $DataFile);
                 }
-                statusMessage("cropping $bbox{$bboxRef} from $inputFile to $DataFile","autocut", $progressAutocut, $progressPercent,0);
+                statusMessage("processing ".$bboxRef,"autocut", $progressAutocut, $progressPercent,0);
+                statusMessage("cropping $bbox{$bboxRef} from $inputFile to $DataFile","autocut", $progressAutocut, $progressPercent,1) if $Config->get("Verbose");
                 cropDataToBBox(split(/,/,$bbox{$bboxRef}), $inputFile, $DataFile); 
                 $progressAutocut++;
                 $progressPercent=100*$progressAutocut/$autocutJobs;
@@ -581,10 +603,12 @@ sub getSize($)
         if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
         {
             ($width, $height)=($2,$1);
+            last;
         }
     }
     close $fpSvg;
-    return($height,$width,1) if ($width > 0 and $height > 0);
+    return($height,$width,1) if ($width and $height);
+    print "$SVG has no width and height info";
     return((0,0,0));
 }
 
@@ -676,3 +700,102 @@ sub xml2svg
     }
     return 1;
 }
+
+
+#-----------------------------------------------------------------------------
+# Render a SVG file
+# $ZOrig - the lowest zoom level of the tileset
+# $X, $Y - tilemnumbers of the tileset
+# $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
+#-----------------------------------------------------------------------------
+sub svg2png
+{
+    my($svgFile, $Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Xtile, $Ytile) = @_;
+    
+    my $TempFile;
+    my $stdOut;
+    my $TempDir = $Config->get("WorkingDirectory") . $PID . "/";
+#    if (! -e $TempDir ) 
+#    {
+#        mkdir($TempDir) or cleanUpAndDie("cannot create working directory $TempDir","EXIT",3,$PID);
+#    }
+#    elsif (! -d $TempDir )
+#    {
+#        cleanUpAndDie("could not use $TempDir: is not a directory","EXIT",3,$PID);
+#    }
+    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png", OPEN => 0);
+    (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config->get("WorkingDirectory"), SUFFIX => ".stdout", OPEN => 0);
+
+    
+    my $Cmd = "";
+    
+    my $Left = $X1;
+    my $Top = $ImageHeight - $Y2;
+    my $Width = $X2 - $X1;
+    my $Height = $Y2 - $Y1;
+    
+    if ($Config->get("Batik") == "1") # batik as jar
+    {
+        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s", 
+        $Config->get("i18n") ? "LC_ALL=C " : "",
+        $Config->get("Niceness"),
+        $Config->get("BatikJVMSize"),
+        $Config->get("BatikPath"),
+        $SizeX,
+        $SizeY,
+        $Left,$Top,$Width,$Height,
+        $TempFile,
+        $Config->get("WorkingDirectory") . $parent_pid . "/",
+        $svgFile,
+        $stdOut);
+    }
+    elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
+    {
+        $Cmd = sprintf("%s%s %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s",
+        $Config->get("i18n") ? "LC_ALL=C " : "",
+        $Config->get("Niceness"),
+        $Config->get("BatikPath"),
+        $SizeX,
+        $SizeY,
+        $Left,$Top,$Width,$Height,
+        $TempFile,
+        $Config->get("WorkingDirectory") . $parent_pid . "/",
+        $svgFile,
+        $stdOut);
+    }
+    else
+    {
+        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
+        $Config->get("i18n") ? "LC_ALL=C " : "",
+        $Config->get("Niceness"),
+        $Config->get("Inkscape"),
+        $SizeX,
+        $SizeY,
+        $X1,$Y1,$X2,$Y2,
+        $TempFile,
+        $Config->get("WorkingDirectory") . $parent_pid . "/",
+        $svgFile,
+        $stdOut);
+    }
+    
+    # stop rendering the current job when inkscape fails
+    statusMessage("Rendering", $currentSubTask, $progressJobs, $progressPercent,0);
+    print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
+    if (not runCommand($Cmd,$PID) or ! -e $TempFile )
+    {
+        statusMessage("$Cmd failed", $currentSubTask, $progressJobs, $progressPercent, 1);
+        ## TODO: check this actually gets the correct coords 
+        PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
+        addFault("inkscape",1);
+        cleanUpAndDie("svg2png failed",$Mode,3,$PID);
+        return (0,0);
+    }
+    resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
+    killafile($stdOut) if (not $Config->get("Debug"));
+    
+    my $ReturnValue = splitImage($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Xtile, $Ytile); # returns true if tiles were all empty
+    
+    killafile($TempFile) if (not $Config->get("Debug"));
+    return (1,$ReturnValue); #return true if empty
+}
+

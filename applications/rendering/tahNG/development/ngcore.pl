@@ -331,16 +331,18 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
             }
             else
             {
+                my $SvgFile = $Config->get("WorkingDirectory").$PID."/output-$parent_pid-$X-$Y-z$i.svg";
                 # Find the size of the SVG file
-                my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory").$PID."/output-$parent_pid-$X-$Y-z$i.svg");
+                my ($ImgH,$ImgW,$Valid) = getSize($SvgFile);
                 die "invalid coordinates" unless $Valid;
+
                 # Render the tile(s)
-                #my ($success,$empty) = svg2png($Config->get("WorkingDirectory").$PID."/output-$parent_pid-$X-$Y-z$i.svg",$i,$Zoom,$layer);
-  
-                #die "couldn't render png" unless $success;
+                my ($success,$empty) = svg2png($SvgFile,$i,$Zoom,$layer,0,0,$ImgW,$ImgH,$X,$Y,
+                                       $Config->get("WorkingDirectory").$PID."/".$layer."_".$X."_".$Y."_".$Zoom.".tmpdir"); ## FIXME: really necessary?
+
+                die "couldn't render png" unless $success;
             }
         }
-# svg2png($svgFile, $Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Xtile, $Ytile)
         for (my $i = $Zoom+2 ; $i <= $maxzoom and $Config->get($layer."_Preprocessor") =~ /autocut/; $i++)
         {
             for (my $ilat = 0 ; $ilat <= 3; $ilat++)
@@ -706,31 +708,25 @@ sub xml2svg
 # Render a SVG file
 # $ZOrig - the lowest zoom level of the tileset
 # $X, $Y - tilemnumbers of the tileset
-# $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
+# SizeX,Y - png size (i.e. 256x256)
 #-----------------------------------------------------------------------------
 sub svg2png
 {
-    my($svgFile, $Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Xtile, $Ytile) = @_;
+    my($svgFile, $Zoom, $ZOrig, $layer, $X1, $Y1, $X2, $Y2, $X, $Y, $OutputDir) = @_;
+    my $SizeX = 256 * 2**($Zoom - $ZOrig);
+    my $SizeY = $SizeX;
     
     my $TempFile;
     my $stdOut;
-    my $TempDir = $Config->get("WorkingDirectory") . $PID . "/";
-#    if (! -e $TempDir ) 
-#    {
-#        mkdir($TempDir) or cleanUpAndDie("cannot create working directory $TempDir","EXIT",3,$PID);
-#    }
-#    elsif (! -d $TempDir )
-#    {
-#        cleanUpAndDie("could not use $TempDir: is not a directory","EXIT",3,$PID);
-#    }
-    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png", OPEN => 0);
+    my $TempDir = $Config->get("WorkingDirectory") . $parent_pid . "/";
+    (undef, $TempFile) = tempfile($layer."_".$PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png", OPEN => 0);
     (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config->get("WorkingDirectory"), SUFFIX => ".stdout", OPEN => 0);
 
     
     my $Cmd = "";
     
     my $Left = $X1;
-    my $Top = $ImageHeight - $Y2;
+    my $Top = $Y1;
     my $Width = $X2 - $X1;
     my $Height = $Y2 - $Y1;
     

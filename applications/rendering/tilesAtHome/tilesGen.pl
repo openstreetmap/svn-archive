@@ -306,6 +306,21 @@ elsif ($Mode eq "version")
 {
     exit(1);
 }
+elsif ($Mode eq "stop")
+{
+    if (open F, '>', "stopfile.txt") 
+    {
+        close F;
+        statusMessage("stop signal was sent to the currently running tilesGen.pl", $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("please note that it may take a while for it to exit", $currentSubTask, $progressJobs, $progressPercent,1);
+    }
+    else
+    {
+        statusMessage("stop signal was NOT sent to the currently running tilesGen.pl - stopfile.txt could NOT be created", $currentSubTask, $progressJobs, $progressPercent,1);
+    }
+ #   talkInSleep("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line", 60);
+    exit(1);
+}
 elsif ($Mode eq "") 
 {
     # ----------------------------------

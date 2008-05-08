@@ -125,7 +125,20 @@
 	// POI.prototype.recolour=function() { };
 	// ** above will recolour as red/green depending on whether locked
 	
+	POI.prototype.saveUndo=function(str) {
+		_root.undo.append(UndoStack.prototype.undo_deletepoi,
+						  new Array(this._name,this._x,this._y,
+									deepCopy(this.attr)),str+" a POI");
+	};
+
 	Object.registerClass("poi",POI);
+
+
+
+
+
+	// ==============================================================
+	// Support functions
 
 	function resizePOIs() {
 		var n=Math.max(100/Math.pow(2,_root.scale-13),6.25);

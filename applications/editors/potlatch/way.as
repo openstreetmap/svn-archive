@@ -166,6 +166,7 @@
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function() {
+		// ** undo
 		this.deleteMergedWays();
 		memberDeleted('way', this._name);
 		if (this._name>=0 && !_root.sandbox && this.oldversion==0) {
@@ -187,6 +188,7 @@
 	// ---- Variant with confirmation if any nodes have tags
 	
 	OSMWay.prototype.removeWithConfirm=function() {
+		// ** undo
 		var c=true;
 		var z=this.path;
 		for (var i in z) {
@@ -196,10 +198,13 @@
 			}
 		}
 		if (c) {
+			_root.ws.saveUndo("deleting");
 			this.remove();
 		} else {
 			createModalDialogue(275,80,new Array('Cancel','Delete'),
-				function(choice) { if (choice=='Delete') { _root.ws.remove(); } });
+				function(choice) {
+					if (choice=='Delete') { _root.ws.saveUndo("deleting"); _root.ws.remove(); }
+				});
 			_root.modal.box.createTextField("prompt",2,7,9,250,100);
 			writeText(_root.modal.box.prompt,"Some of the points on this way are tagged. Really delete?");
 		}
@@ -273,6 +278,16 @@
 		}
 		this.load();
 	};
+	
+	// ----	Save for undo
+
+	OSMWay.prototype.saveUndo=function(str) {
+		_root.undo.append(UndoStack.prototype.undo_deleteway,
+						  new Array(this._name,this._x,this._y,
+									deepCopy(this.attr),
+									deepCopy(this.path)),str+" a way");
+	};
+
 
 	// ----	Click handling	
 
@@ -331,6 +346,48 @@
 			// click way: select
 			this.select();
 			clearTooltip();
+			_root.clicktime=new Date();
+			this.beginDrag();
+		}
+	};
+
+	OSMWay.prototype.beginDrag=function() {
+		this.onMouseMove=function() { this.trackDrag(); };
+		this.onMouseUp  =function() { this.endDrag();   };
+		this.dragged=false;
+		_root.firstxmouse=_root.map._xmouse;
+		_root.firstymouse=_root.map._ymouse;
+	};
+
+	OSMWay.prototype.trackDrag=function() {
+		var t=new Date();
+		var longclick=(t.getTime()-_root.clicktime)>1000;
+		var xdist=Math.abs(_root.map._xmouse-_root.firstxmouse);
+		var ydist=Math.abs(_root.map._ymouse-_root.firstymouse);
+		if ((xdist>=tolerance*4 || ydist>=tolerance*4) ||
+		   ((xdist>=tolerance/4 || ydist>=tolerance/4) && longclick)) {
+			this.dragged=true;
+		}
+		if (this.dragged) {
+			_root.map.anchors._x=_root.map.areas[this._name]._x=_root.map.highlight._x=this._x=_root.map._xmouse-_root.firstxmouse;
+			_root.map.anchors._y=_root.map.areas[this._name]._y=_root.map.highlight._y=this._y=_root.map._ymouse-_root.firstymouse;
+		}
+	};
+	
+	OSMWay.prototype.endDrag=function() {
+		this.onMouseMove=function() {};
+		this.onMouseUp  =function() {};
+		_root.map.anchors._x=_root.map.areas[this._name]._x=_root.map.highlight._x=this._x=0;
+		_root.map.anchors._y=_root.map.areas[this._name]._y=_root.map.highlight._y=this._y=0;
+		if (this.dragged) {
+			this.moveNodes(_root.map._xmouse-_root.firstxmouse,_root.map._ymouse-_root.firstymouse);
+			this.upload();
+			this.redraw();
+			this.select();
+			_root.undo.append(UndoStack.prototype.undo_movenodes,
+							  new Array(this,_root.map._xmouse-_root.firstxmouse,
+								  			 _root.map._ymouse-_root.firstymouse),
+							  "moving a way");
 		}
 	};
 	
@@ -401,11 +458,7 @@
 			_root.newwayid--;											// create new way
 			_root.map.ways.attachMovie("way",newwayid,++waydepth);		//  |
 
-			z=this.path;												// copy path array
-			for (i in z) {												//  | (deep copy)
-				_root.map.ways[newwayid].path[i]=new Array();			//  |
-				for (j=0; j<=5; j+=1) { _root.map.ways[newwayid].path[i][j]=this.path[i][j]; }
-			}															// | 
+			_root.map.ways[newwayid].path=deepCopy(this.path);			// deep copy path array
 
 			if (newattr) { _root.map.ways[newwayid].attr=newattr; }
 					else { _root.map.ways[newwayid].attr=deepCopy(this.attr); }
@@ -441,7 +494,7 @@
 
 		var mergepoint=this.path.length;
 		_root.undo.append(UndoStack.prototype.undo_mergeways,
-						  new Array(this,deepCopy(this.attr),deepCopy(otherway.attr),mergepoint),
+						  new Array(this,deepCopy(this.attr),deepCopy(otherway.attr),topos),
 						  "merging two ways");
 		if (frompos==0) { for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); } }
 				   else { for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); } }
@@ -513,6 +566,25 @@
 		this.select();
 		this.clean=false;
 		markClean(false);
+		_root.undo.append(UndoStack.prototype.undo_reverse,new Array(this),"reversing a way");
+	};
+
+	// ----	Move all nodes within a way
+	
+	OSMWay.prototype.moveNodes=function(xdiff,ydiff) {
+		var movedalready=new Array();
+		this.clean=false;
+		markClean(false);
+		for (var i=0; i<this.path.length; i+=1) {
+			if (movedalready[this.path[i][2]]) {
+			} else {
+				moveNode(this.path[i][2],
+						 this.path[i][0]+xdiff,
+						 this.path[i][1]+ydiff,
+						 this._name);
+				movedalready[this.path[i][2]]=true;
+			}
+		}
 	};
 
 	// ----	Check for duplicates (e.g. when C is removed from ABCB)

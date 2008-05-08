@@ -127,20 +127,44 @@
 	_root.i_zoomout.onPress=function() { zoomOut(); };
 	changeScaleTo(_root.scale);
 
+	// Way-specific
+
 	_root.panel.attachMovie("scissors","i_scissors",32);
-	with (_root.panel.i_scissors) { _x=15; _y=93; };
+	with (_root.panel.i_scissors) { _x=15; _y=63; };
 	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(_root.pointselected); };
 	_root.panel.i_scissors.onRollOver=function() { setFloater("Split way at selected point (X)"); };
 	_root.panel.i_scissors.onRollOut =function() { clearFloater(); };
 
+	_root.panel.attachMovie("rotation","i_direction",39);
+	with (_root.panel.i_direction) { _x=40; _y=63; _rotation=-45; _visible=true; _alpha=50; };
+	_root.panel.i_direction.onPress=function() { _root.ws.reverseWay(); };
+	_root.panel.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
+	_root.panel.i_direction.onRollOut =function() { clearFloater(); };
+
+	_root.panel.attachMovie("roundabout","i_circular",40);
+	with (_root.panel.i_circular) { _x=40; _y=63; _rotation=-45; _visible=false; };
+	_root.panel.i_circular.onRollOver=function() { setFloater("Circular way"); };
+	_root.panel.i_circular.onRollOut =function() { clearFloater(); };
+
+	// General tools
+
+	_root.panel.lineStyle(1,0xCCCCCC,100);
+	_root.panel.moveTo(5,78); _root.panel.lineTo(75,78);
+
+	_root.panel.attachMovie("undo","i_undo",38);
+	with (_root.panel.i_undo) { _x=15; _y=93; _alpha=50; };
+	_root.panel.i_undo.onPress   =function() { _root.undo.rollback(); };
+	_root.panel.i_undo.onRollOver=function() { setFloater("Nothing to undo"); };
+	_root.panel.i_undo.onRollOut =function() { clearFloater(); };
+
 	_root.panel.attachMovie("gps","i_gps",36);
-	with (_root.panel.i_gps) { _x=65; _y=93; };
+	with (_root.panel.i_gps) { _x=40; _y=93; };
 	_root.panel.i_gps.onPress   =function() { loadGPS(); };
 	_root.panel.i_gps.onRollOver=function() { setFloater("Show GPS tracks (G)"); };
 	_root.panel.i_gps.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("prefs","i_prefs",37);
-	with (_root.panel.i_prefs) { _x=90; _y=93; };
+	with (_root.panel.i_prefs) { _x=65; _y=93; };
 	_root.panel.i_prefs.onPress   =function() { openOptionsWindow(); };
 	_root.panel.i_prefs.onRollOver=function() { setFloater("Set options (choose the map background)"); };
 	_root.panel.i_prefs.onRollOut =function() { clearFloater(); };
@@ -171,22 +195,11 @@
 //	_root.panel.i_nextattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("exclamation","i_warning",35);
-	with (_root.panel.i_warning) { _x=10; _y=45; _visible=false; };
+	with (_root.panel.i_warning) { _x=58; _y=50; _visible=false; };
 	_root.panel.i_warning.onPress=function() { handleWarning(); };
 	_root.panel.i_warning.onRollOver=function() { setFloater("An error occurred - click for details"); };
 	_root.panel.i_warning.onRollOut =function() { clearFloater(); };
 	wflashid=setInterval(function() { _root.panel.i_warning._alpha=150-_root.panel.i_warning._alpha; }, 750);
-
-	_root.panel.attachMovie("rotation","i_direction",39);
-	with (_root.panel.i_direction) { _x=40; _y=93; _rotation=-45; _visible=true; _alpha=50; };
-	_root.panel.i_direction.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
-	_root.panel.i_direction.onRollOut =function() { clearFloater(); };
-
-	_root.panel.attachMovie("roundabout","i_circular",40);
-	with (_root.panel.i_circular) { _x=40; _y=93; _rotation=-45; _visible=false; };
-	_root.panel.i_circular.onRollOver=function() { setFloater("Circular way"); };
-	_root.panel.i_circular.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("padlock","padlock",41);
 	with (_root.panel.padlock) { _y=32; _visible=false; };
@@ -688,9 +701,17 @@
 	function keyDelete(doall) {
 		if (_root.poiselected) {
 			// delete POI
+			_root.map.pois[poiselected].saveUndo("deleting");
 			_root.map.pois[poiselected].remove();
 		} else if (_root.drawpoint>-1) {
-			// delete most recently drawn point
+			// 'backspace' most recently drawn point
+			_root.undo.append(UndoStack.prototype.undo_deletepoint,
+							  new Array(_root.ws.path[drawpoint][2],
+										_root.ws.path[drawpoint][0],
+										_root.ws.path[drawpoint][1],
+										_root.ws.path[drawpoint][4],
+										[wayselected],[drawpoint]),
+							  "deleting a point");
 			if (_root.drawpoint==0) { _root.ws.path.shift(); }
 							   else { _root.ws.path.pop(); _root.drawpoint-=1; }
 			if (_root.ws.path.length) {
@@ -719,13 +740,17 @@
 	};
 
 	function keyRevert() {
-		if		(_root.wayselected<0) { stopDrawing();
+		if		(_root.wayselected<0) { _root.ws.saveUndo("deleting");
+										stopDrawing();
 										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.ws); }
-		else if	(_root.wayselected>0) {	stopDrawing();
+		else if	(_root.wayselected>0) {	_root.ws.saveUndo("reverting");
+										stopDrawing();
 										_root.ws.reload(); }
-		else if (_root.poiselected>0) { _root.map.pois[poiselected].reload(); }
-		else if (_root.poiselected<0) { removeMovieClip(_root.map.pois[poiselected]); }
+		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo("reverting");
+										_root.map.pois[poiselected].reload(); }
+		else if (_root.poiselected<0) { _root.map.pois[poiselected].saveUndo("deleting");
+										removeMovieClip(_root.map.pois[poiselected]); }
 		revertDirtyRelations();
 		deselectAll();
 	};
@@ -828,6 +853,14 @@
 		// ---- Service tile queue
 		if (preferences.data.baselayer!=0 &&
 			preferences.data.baselayer!=2 ) { serviceTileQueue(); }
+
+		// ----	Alpha display for capslock
+		_root.map.areas._alpha=
+		_root.map.gpx._alpha=
+		_root.map.highlight._alpha=
+		_root.map.relations._alpha=
+		_root.map.ways._alpha=
+		_root.map.pois._alpha=Key.isToggled(Key.CAPSLOCK)?30:100;
 			
 		// ----	Reinstate focus if lost after click event
 		if (_root.reinstatefocus) {
@@ -844,7 +877,7 @@
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		writeText(_root.modal.box.prompt1,"Background:");
 
-		_root.modal.box.attachMovie("menu","background",6);
+		_root.modal.box.attachMovie("menu","background",10);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
 			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
@@ -922,13 +955,13 @@
 		_root.map.highlight.endFill();
 	};
 
-	// deepCopy - return a deep copy of a hash
-	
+	// deepCopy (recursive)
+
 	function deepCopy(z) {
 		var a=new Array();
 		for (var i in z) {
-			// needs to do a typeof here, to recursively deepCopy arrays
-			a[i]=z[i];
+			if (typeof(z[i])=='object') { a[i]=deepCopy(z[i]); }
+								   else { a[i]=z[i]; }
 		}
 		return a;
 	};

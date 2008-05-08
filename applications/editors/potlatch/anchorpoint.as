@@ -21,6 +21,9 @@
 			_root.map.pois[newpoiid].select();
 			_root.map.pois[newpoiid].clean=false;
 			markClean(false);
+			_root.undo.append(UndoStack.prototype.undo_createpoi,
+							  [_root.map.pois[newpoiid]],"creating a POI");
+
 		} else if (this._name==_root.drawpoint ||
 				  (this._name==_root.lastpoint && (t.getTime()-_root.lastpointtime)<700)) {
 			// double-click at end of route
@@ -77,13 +80,12 @@
 		if ((xdist>=tolerance   || ydist>=tolerance  ) ||
 		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			// ====	Move existing point
-_root.chat.text+="(";
 			_root.undo.append(UndoStack.prototype.undo_movenode,
 							  new Array(_root.ws.path[this._name][2],
 							  			_root.ws.path[this._name][0],
 							  			_root.ws.path[this._name][1]),
 							  "moving a point");
-			moveNode(_root.ws.path[this._name][2],newx,newy);
+			moveNode(_root.ws.path[this._name][2],newx,newy,undefined);
 			_root.ws.highlightPoints(5000,"anchor");
 			_root.ws.highlight();
 			_root.ws.clean=false;
@@ -215,7 +217,7 @@ _root.chat.text+="(";
 	// =====================================================================================
 	// Support functions
 
-	function moveNode(id,newx,newy) {
+	function moveNode(id,newx,newy,ignoreway) {
 		var qchanged;
 		for (var qway in _root.map.ways) {
 			var qdirty=0;
@@ -226,7 +228,7 @@ _root.chat.text+="(";
 					qdirty=1;
 				}
 			}
-			if (qdirty) { _root.map.ways[qway].redraw(); qchanged=qway; }
+			if (qdirty && qway!=ignoreway) { _root.map.ways[qway].redraw(); qchanged=qway; }
 		}
 		return qchanged;	// return ID of last changed way
 	}

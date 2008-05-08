@@ -369,6 +369,53 @@
 	$ec->nextFrame();
 	$m->addExport($ec,"scissors");
 
+	#		Undo
+	
+	$ec=new SWF::MovieClip();
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	$s->movePenTo(-10.00,0.00);
+	$s->drawCurveTo(-10.00,-6.72,-3.75,-9.27);
+	$s->drawCurveTo(-1.96,-10.00,0.00,-10.00);
+	$s->drawCurveTo(7.41,-10.00,9.58,-2.89);
+	$s->drawCurveTo(10.00,-1.48,10.00,0.00);
+	$s->drawCurveTo(10.00,6.72,3.75,9.27);
+	$s->drawCurveTo(1.96,10.00,0.00,10.00);
+	$s->drawCurveTo(-7.41,10.00,-9.58,2.89);
+	$s->drawCurveTo(-10.00,1.48,-10.00,0.00);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	$s->movePenTo(-0.38,-1.25);
+	$s->drawCurveTo(-0.38,-0.89,-0.04,-0.89);
+	$s->drawCurveTo(0.30,-0.89,0.30,-1.25);
+	$s->drawCurveTo(0.30,-1.60,-0.04,-1.60);
+	$s->drawCurveTo(-0.38,-1.60,-0.38,-1.25);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-0.65,-1.60);
+	$s->drawLineTo(0.04,0.80);
+	$s->drawCurveTo(-3.26,-2.07,-6.53,-3.28);
+	$s->drawCurveTo(-2.66,-4.72,0.04,-7.07);
+	$s->drawLineTo(-0.57,-4.82);
+	$s->drawCurveTo(7.85,-2.68,5.36,1.99);
+	$s->drawCurveTo(3.92,4.65,0.15,6.85);
+	$s->drawCurveTo(-0.41,7.18,-0.55,6.60);
+	$s->drawCurveTo(-0.56,6.55,-0.56,6.50);
+	$s->drawCurveTo(-0.56,6.49,-0.56,6.49);
+	$s->drawCurveTo(-0.56,6.49,-0.56,6.49);
+	$s->drawCurveTo(-0.55,6.48,-0.54,6.47);
+	$s->drawCurveTo(-0.38,6.34,-0.19,6.17);
+	$s->drawCurveTo(1.83,4.33,2.51,2.66);
+	$s->drawCurveTo(3.80,-0.52,-0.65,-1.60);
+	$ec->add($s);
+	
+	$ec->nextFrame(); $m->addExport($ec,"undo");
+
 	#		GPS
 
 	$ec=new SWF::MovieClip();

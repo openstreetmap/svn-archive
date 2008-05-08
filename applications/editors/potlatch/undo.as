@@ -4,10 +4,6 @@
 	// Potlatch undo stack code
 	// =====================================================================================
 
-	// needs new hash of which nodes are in which ways
-	//		so you can undo changes to a renumbered node
-	//		also makes moving nodes faster, and enables (()) linked-node display
-
 	function UndoStack() {
 		this.sp=0;
 	};
@@ -35,9 +31,11 @@
 
 	UndoStack.prototype.setTooltip=function(str) {
 		if (str=='') {
-			// Dim button, say "nothing to undo"
+			_root.panel.i_undo.onRollOver=function() { setFloater("Nothing to undo"); };
+			_root.panel.i_undo._alpha=50;
 		} else {
-			// Light button, set tooltip to "Undo "+str+" (Z)"
+			_root.panel.i_undo.onRollOver=function() { setFloater("Undo "+str+" (Z)"); };
+			_root.panel.i_undo._alpha=100;
 		}
 	};
 	
@@ -46,23 +44,26 @@
 	// ----	Individual undo methods
 	
 	//		Added point into way
-	//		** to do - add node into middle of way (shift-click)
-	//				   including intersection variant
 
 	UndoStack.prototype.undo_addpoint=function(params) {
 		var waylist=params[0]; var poslist=params[1]; var w;
 		for (var i in waylist) {
 			w=waylist[i];
 			w.removeAnchorPoint(poslist[i]);
+			w.clean=false;
 		}
 		w.select();
+		stopDrawing();
 	};
 
 	//		Moved node
 	
 	UndoStack.prototype.undo_movenode=function(params) {
-		var w=moveNode(params[0],params[1],params[2]);
-		if (w) { _root.map.ways[w].select(); }
+		var w=moveNode(params[0],params[1],params[2],undefined);
+		if (w) { 
+			_root.map.ways[w].clean=false;
+			_root.map.ways[w].select();
+		}
 	};
 	
 	//		Merged ways
@@ -99,6 +100,7 @@
 			this.clear(); return;
 		} else {
 			way.attr=params[1];
+			way.clean=false;
 			way.redraw();
 			way.select();
 		}
@@ -109,6 +111,7 @@
 			this.clear(); return;
 		} else {
 			way.path[point][4]=params[2];
+			way.clean=false;
 			way.select(); _root.map.anchors[point].select();
 		}
 	};
@@ -118,6 +121,7 @@
 			this.clear(); return;
 		} else {
 			poi.attr=params[1];
+			poi.clean=false;
 			poi.select();
 		}
 	};
@@ -150,12 +154,10 @@
 			_root.map.ways[waylist[qway]].redraw();
 			last=waylist[qway];	// select last one
 		}
+		stopDrawing();
 		_root.map.ways[last].select();
 	};
 
-	//		Deleted way (also: Escape revert)
-	//		Merged ways and made junction
-	//		Created POI
 	//		Moved POI
 
 	UndoStack.prototype.undo_movepoi=function(params) {
@@ -168,9 +170,68 @@
 		}
 	};
 
-	//		Deleted POI
-	
+	//		Moved way (and any nodes used in other ways)
 
+	UndoStack.prototype.undo_movenodes=function(params) {
+		var way=params[0]; if (!way) {
+			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			this.clear(); return;
+		} else {
+			way.moveNodes(-params[1],-params[2]);
+			way.redraw();
+			way.select();
+		}
+	};
+
+	//		Reversed way
+
+	UndoStack.prototype.undo_reverse=function(params) {
+		var way=params[0]; if (!way) {
+			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			this.clear(); return;
+		} else {
+			way.reverseWay();
+		}
+	};
+
+	//		Deleted POI
+
+	UndoStack.prototype.undo_deletepoi=function(params) {
+		var poi=params[0];
+		stopDrawing();
+		if (_root.map.pois[poi]) {} else {
+			_root.map.pois.attachMovie("poi",poi,++poidepth);
+		}
+		_root.map.pois[poi]._x=params[1];
+		_root.map.pois[poi]._y=params[2];
+		_root.map.pois[poi].attr=params[3];
+		_root.map.pois[poi].select();
+		_root.map.pois[poi].clean=false;
+		markClean(false);
+	};
+	
+	//		Deleted way
+
+	UndoStack.prototype.undo_deleteway=function(params) {
+		var way=params[0];
+		stopDrawing();
+		_root.map.ways.attachMovie("way",way,++waydepth);
+		_root.map.ways[way]._x=params[1];
+		_root.map.ways[way]._y=params[2];
+		_root.map.ways[way].attr=params[3];
+		_root.map.ways[way].path=params[4];
+		_root.map.ways[way].redraw();
+		_root.map.ways[way].select();
+		_root.map.ways[way].clean=false;
+		markClean(false);
+	};
+
+	//		Created POI
+
+	UndoStack.prototype.undo_createpoi=function(params) {
+		poi=params[0]; poi.remove();
+		markClean(false);
+	};
 
 
 	// Trace stuff - not used

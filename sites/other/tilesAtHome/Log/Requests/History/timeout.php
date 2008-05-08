@@ -14,10 +14,9 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  // retry active requests twice after 2h, then every 6h, then
+  // retry active requests four times every 6h, then
   // expire unfinished requests after another 7 hours
   // make sure delete timeout is bigger than restart timeout if used simulatanously
-  timeout(REQUEST_ACTIVE, 1.5, 2, "restart");
   timeout(REQUEST_ACTIVE, 6, 4, "restart");
   timeout(REQUEST_ACTIVE, 7, 0, "delete");
   timeout(REQUEST_DONE, 48, 0, "delete");
@@ -28,6 +27,7 @@
   # Parmameters:
   #   Status - what status a request must be, to be considered
   #   MaxAge - how many hours old the request must be
+  #   MaxRetries - How often we repeat this
   #   Effect - what happens to it when this age is reached
   #     : "restart" - put it back in the queue
   #     : "delete" - delete it

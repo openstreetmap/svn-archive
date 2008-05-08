@@ -320,6 +320,7 @@
 	PropertyWindow.prototype.saveUndo=function() {
 		// don't have more than two consecutive undos for the same way
 		if (this.savedundo) { return; }
+		this.savedundo=true;
 		var task  =_root.undo[_root.undo.length-1][0];
 		var params=_root.undo[_root.undo.length-1][1];
 

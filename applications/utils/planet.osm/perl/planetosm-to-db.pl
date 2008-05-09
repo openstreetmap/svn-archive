@@ -506,10 +506,6 @@ while(my $line = <XML>) {
 if($batch_inserts) {
 	$conn->commit();
 	$conn->{AutoCommit} = 1;
-} else {
-    enable_keys($dbtype,$conn,"nodes");
-    enable_keys($dbtype,$conn,"ways");
-    enable_keys($dbtype,$conn,"relations");
 }
 
 # Post-processing

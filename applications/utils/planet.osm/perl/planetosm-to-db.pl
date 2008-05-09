@@ -853,6 +853,9 @@ TRUNCATE TABLE current_nodes
 TRUNCATE TABLE current_ways
 TRUNCATE TABLE current_way_tags
 TRUNCATE TABLE current_way_nodes
+TRUNCATE TABLE current_relations
+TRUNCATE TABLE current_relation_tags
+TRUNCATE TABLE current_relation_members
 EOT
 	}
 }

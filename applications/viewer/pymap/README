@@ -1,0 +1,26 @@
+Frustrated by the lack of a nice map viewing tool for my eee pc, I have
+written my own hack. It's a local OpenLayers installation that is served
+by a python script (stock python, no additional libs). If the tile does
+not exist yet, it will be downloaded from the OSM tile server and be
+stored locally, so those tiles will be available for offline viewing.
+Tiles will be downloaded and stored in a directory called 'tiles' in the
+pyweb directory. If anybody finds it useful that is cool, otherwise I
+have just scratched my itch.
+
+It's a total of 56 lines of code including the license... so go figure
+how elaborate my error checking is. It works for me though...
+Including a stock OpenLayers 2.6, the tar.bz2 is 128kb
+This will only run on unix systems as it assumes '/' as path separator
+
+How to install:
+1) wget http://dev.openstreetmap.org/~spaetz/pymap.tar.bz2
+2) tar xvjf pymap.tar.bz2
+
+How to run:
+1) cd pymap
+2) python pymap (or ./pymap)
+3) visit http://localhost:8000 and have fun.
+4) pres Ctrl-C to kill the server
+
+How to uninstall:
+1) delete pymap directory

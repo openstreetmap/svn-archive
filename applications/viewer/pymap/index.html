@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <style type="text/css">
+#map {
+        width: 100%;
+        height: 100%;
+        border: 0px;
+        padding: 0px;
+        position: absolute;
+     }
+body {
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+     }
+    </style>
+    <script src="/static/OpenLayers.js"></script>
+    <script type="text/javascript">
+        <!--
+        var map;
+
+     function getOSMURL(bounds) {
+        var res = this.map.getResolution();
+        var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+        var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+        var z = this.map.getZoom();
+        var limit = Math.pow(2, z);
+        x = ((x % limit) + limit) % limit;
+        var url = this.url;
+        var path = z + "/" + x + "/" + y + ".png";
+        if (url instanceof Array)
+          {
+                url = this.selectUrl(path, url);
+          }
+          return url + path;
+     }
+
+
+        function init(){
+            map = new OpenLayers.Map('map',
+                    { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                      numZoomLevels: 19,
+                      maxResolution: 156543.0399,
+                      units: 'm',
+		      transitionEffect: "resize",
+                      projection: new OpenLayers.Projection("EPSG:900913")});
+
+            var layerMapnik = new OpenLayers.Layer.TMS("Mapnik",'/tiles/mapnik/',{transitionEffect:'resize',getURL:getOSMURL});
+            var layerOsma = new OpenLayers.Layer.TMS("Osmarender",'/tiles/osma/',{transitionEffect:'resize',getURL:getOSMURL});
+            map.addLayers([layerMapnik,layerOsma]);
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            map.setCenter(new OpenLayers.LonLat(11.59,48.14).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913")), 12);
+        }
+        // -->
+    </script>
+  </head>
+  <body onload="init()">
+    <div id="map"></div>
+  </body>
+</html>

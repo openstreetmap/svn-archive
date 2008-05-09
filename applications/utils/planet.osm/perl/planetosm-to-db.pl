@@ -225,6 +225,7 @@ open(XML, "<$xml") or die("$!");
 # Hold the id and type of the last valid main tag
 my $last_id;
 my $last_type;
+my $last_ts;
 
 # Hold the nodes and tags list for a way
 # (We only add the way+nodes+tags if has valid nodes)
@@ -250,7 +251,7 @@ while(my $line = <XML>) {
 
 	# Process the line of XML
 	if($line =~ /^\s*<node/) {
-		my ($id,$lat,$long) = ($line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+		my ($id,$lat,$long,$ts) = ($line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]? timestamp=['"]?(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z['"]?/);
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "node";
 
@@ -280,10 +281,10 @@ while(my $line = <XML>) {
 
 		# Add the node
 		if ($dbtype eq 'mysql') {
-			$node_ps_mysql->execute($id,$lat,$long,$lat,$long) 
+			$node_ps_mysql->execute($id,$lat,$long,$ts,$lat,$long) 
 				or warn("Invalid line '$line' : ".$conn->errstr);
 		} else {
-			$node_ps->execute($id,$lat,$long) 
+			$node_ps->execute($id,$lat,$long,$ts) 
 				or warn("Invalid line '$line' : ".$conn->errstr);
 		}
 
@@ -294,9 +295,10 @@ while(my $line = <XML>) {
 		&display_count("node", $node_count);
 	}
 	elsif($line =~ /^\s*\<way/) {
-		my ($id) = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
+		my ($id,$ts) = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"] timestamp=['"]?(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z['"]?/);
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "way";
+                $last_ts = $ts;
 
 		unless($id) { warn "Invalid line '$line'"; next; }
 
@@ -328,7 +330,7 @@ while(my $line = <XML>) {
 		}
 
 		# Add way
-		$way_ps->execute($way_id)
+		$way_ps->execute($way_id,$last_ts)
 			or warn("Invalid line '$way_line' : ".$conn->errstr);
 		$ways->Bit_On($way_id);
 
@@ -363,10 +365,11 @@ while(my $line = <XML>) {
 		push (@way_nodes,\%wn);
 	}
 	elsif($line =~ /^\s*\<relation /) {
-		my ($id) = ($line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/);
+		my ($id,$ts) = ($line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"] timestamp=['"]?(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z['"]?/);
 
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "relation";
+                $last_ts = $ts;
 
 		unless($id) { warn "Invalid line '$line'"; next; }
 
@@ -398,7 +401,7 @@ while(my $line = <XML>) {
 		}
 
 		# Add relation
-		$rel_ps->execute($rel_id)
+		$rel_ps->execute($rel_id,$last_ts)
 			or warn("Invalid line '$rel_line' : ".$conn->errstr);
 
 		# Add relation members
@@ -625,14 +628,14 @@ sub open_connection($$$$$) {
 
 sub build_node_ps($$) {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO nodes (id,latitude,longitude) VALUES (?,?,?)";
+	my $sql = "INSERT INTO nodes (id,latitude,longitude,timestamp) VALUES (?,?,?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
 sub build_node_ps_mysql($$) {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO nodes (id,latitude,longitude,tile) VALUES (?,ROUND(?*10000000),ROUND(?*10000000),tile_for_point(CAST(ROUND(?*10000000) AS UNSIGNED),CAST(ROUND(?*10000000) AS UNSIGNED)))";
+	my $sql = "INSERT INTO nodes (id,latitude,longitude,timestamp,tile) VALUES (?,ROUND(?*10000000),ROUND(?*10000000),?,tile_for_point(CAST(ROUND(?*10000000) AS UNSIGNED),CAST(ROUND(?*10000000) AS UNSIGNED)))";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -653,7 +656,7 @@ sub build_node_tag_ps_mysql($$) {
 }
 sub build_way_ps($$) {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO ways (id) VALUES (?)";
+	my $sql = "INSERT INTO ways (id,timestamp) VALUES (?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -686,9 +689,9 @@ sub build_relation_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql;
 	if ($dbtype eq 'mysql') {
-		$sql = "INSERT INTO relations (id,version,visible) VALUES (?,1,1)";
+		$sql = "INSERT INTO relations (id,timestamp,version,visible) VALUES (?,?,1,1)";
 	} else {
-		$sql = "INSERT INTO relations (id) VALUES (?)";
+		$sql = "INSERT INTO relations (id,timestamp) VALUES (?,?)";
 	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
@@ -746,6 +749,7 @@ CREATE TABLE nodes (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_nodes'),
 	latitude REAL NOT NULL,
 	longitude REAL NOT NULL,
+        timestamp TIMESTAMP NOT NULL,
 	CONSTRAINT pk_nodes_id PRIMARY KEY (id)
 );
 
@@ -758,6 +762,7 @@ CREATE TABLE node_tags (
 
 CREATE TABLE ways (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_ways'),
+        timestamp TIMESTAMP NOT NULL,
 	CONSTRAINT pk_ways_id PRIMARY KEY (id)
 );
 
@@ -779,6 +784,7 @@ CREATE TABLE way_nodes (
 
 CREATE TABLE relations (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_relations'),
+        timestamp TIMESTAMP NOT NULL,
 	CONSTRAINT pk_relations_id PRIMARY KEY (id)
 );
 
@@ -884,11 +890,11 @@ EOT
 		return <<EOT;
 UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1
 UPDATE ways SET visible=1
-INSERT INTO current_ways (id,visible) SELECT id,1 FROM ways
+INSERT INTO current_ways (id,timestamp,visible) SELECT id,timestamp,1 FROM ways
 INSERT INTO current_way_tags (id,k,v) SELECT id,k,v FROM way_tags
 INSERT INTO current_way_nodes (id,node_id,sequence_id) SELECT id,node_id,sequence_id FROM way_nodes
-INSERT INTO current_nodes (id,latitude,longitude,tags,visible,tile) SELECT id,latitude,longitude,tags,1,tile FROM nodes
-INSERT INTO current_relations (id,visible) SELECT id,1 FROM relations
+INSERT INTO current_nodes (id,latitude,longitude,timestamp,tags,visible,tile) SELECT id,latitude,longitude,tags,timestamp,1,tile FROM nodes
+INSERT INTO current_relations (id,timestamp,visible) SELECT id,timestamp,1 FROM relations
 INSERT INTO current_relation_tags (id,k,v) SELECT id,k,v FROM relation_tags
 INSERT INTO current_relation_members (id,member_type,member_id,member_role) SELECT id,member_type,member_id,member_role FROM relation_members
 EOT

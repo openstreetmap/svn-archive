@@ -17,7 +17,6 @@ body {
     </style>
     <script src="/static/OpenLayers.js"></script>
     <script type="text/javascript">
-        <!--
         var map;
 
      function getOSMURL(bounds) {
@@ -52,7 +51,6 @@ body {
             map.addControl(new OpenLayers.Control.LayerSwitcher());
             map.setCenter(new OpenLayers.LonLat(11.59,48.14).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913")), 12);
         }
-        // -->
     </script>
   </head>
   <body onload="init()">

@@ -1,26 +1,34 @@
+Pymap
+=====
+(c) Sebastian Spaeth. Released under a BSD license of your choice. Contains OpenLayers which is also BSD-style licensed
+
+Summary
+-------
+pymap is a viewer for OpenStreetMap maps. Maps are downloaded to the local drive and are still available when offline. As this is an OpenLayers installation it will look and behave very similar to the standard map on openstreetmap.org. pymap (currently) requires a unix operating system and python to run.
+
+Description
+-----------
 Frustrated by the lack of a nice map viewing tool for my eee pc, I have
 written my own hack. It's a local OpenLayers installation that is served
 by a python script (stock python, no additional libs). If the tile does
 not exist yet, it will be downloaded from the OSM tile server and be
 stored locally, so those tiles will be available for offline viewing.
 Tiles will be downloaded and stored in a directory called 'tiles' in the
-pyweb directory. If anybody finds it useful that is cool, otherwise I
+pymap directory. If anybody finds this tool useful that is cool, otherwise I
 have just scratched my itch.
 
 It's a total of 56 lines of code including the license... so go figure
 how elaborate my error checking is. It works for me though...
-Including a stock OpenLayers 2.6, the tar.bz2 is 128kb
-This will only run on unix systems as it assumes '/' as path separator
+Including a stock OpenLayers 2.6, the tar.bz2 is 128kb big. This will only run on unix systems as it assumes '/' as path separator
 
 How to install:
-1) wget http://dev.openstreetmap.org/~spaetz/pymap.tar.bz2
-2) tar xvjf pymap.tar.bz2
+1) svn co http://svn.openstreetmap.org/applications/viewer/pymap
 
 How to run:
 1) cd pymap
 2) python pymap (or ./pymap)
 3) visit http://localhost:8000 and have fun.
-4) pres Ctrl-C to kill the server
+4) press Ctrl-C to kill the server (if it still busy serving tiles you might have to press multiple times)
 
 How to uninstall:
 1) delete pymap directory

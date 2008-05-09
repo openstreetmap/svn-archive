@@ -1,0 +1,58 @@
+#!/usr/bin/python
+# licensed under a BSD license of your choice
+import urllib,re,os,sys,stat,errno
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+
+class MyHttpHandler(BaseHTTPRequestHandler):
+  def fetch_tile(self):
+    m= re.compile('/tiles/(\w+)/(\d+)/(\d+)/(\d+).png').match(self.path)
+    if not m: return None
+    (layer,z,x,y)=(m.group(1),m.group(2),m.group(3),m.group(4))
+    localpath = installpath + '/tiles/' + layer + '/' + z + '/' + x + '/' + y + '.png'
+
+    if layer == 'mapnik':
+      tileurl = 'http://tile.openstreetmap.org/'+z+'/'+x+'/'+y+'.png'
+    elif layer == 'osma':
+      tileurl = 'http://tah.openstreetmap.org/Tiles/tile/'+z+'/'+x+'/'+y+'.png'
+    else: return None
+
+    try: os.makedirs(os.path.dirname(localpath))
+    except os.error, e:
+      if e.errno != errno.EEXIST:
+        raise
+
+    urllib.urlretrieve(tileurl, localpath)
+    return True
+
+  def return_file(self,path):
+      if path.endswith(".png"):contenttype='image/png'
+      else: contenttype='text/html'
+      try:
+        f = open(installpath + path)
+        self.send_response(200)
+        self.send_header('Content-type',contenttype)
+        self.end_headers()
+        self.wfile.write(f.read())
+        f.close()
+        return
+      except IOError:
+        self.send_error(404,'File Not Found: %s' % self.path)
+
+  def do_GET(self):
+        if self.path=='/': self.return_file('/index.html')
+        elif self.path.startswith('/static'):self.return_file(self.path)
+        elif self.path.startswith('/tiles'):
+          try:
+            #TODO, use mtime to refetch old tiles
+            os.stat(installpath+self.path).st_mtime
+          except os.error, e:
+            if e.errno == errno.ENOENT:
+              self.fetch_tile()
+            else: raise            
+          self.return_file(self.path)
+        else: self.send_error(404,'File Not Found: %s' % self.path)
+        return
+#main():
+installpath=sys.path[0]
+server = HTTPServer(('127.0.0.1', 8000), MyHttpHandler)
+server.serve_forever()

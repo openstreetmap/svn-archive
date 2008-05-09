@@ -28,7 +28,7 @@ class MyHttpHandler(BaseHTTPRequestHandler):
       if path.endswith(".png"):contenttype='image/png'
       else: contenttype='text/html'
       try:
-        f = open(installpath + path)
+        f = open(installpath + path, 'rb')
         self.send_response(200)
         self.send_header('Content-type',contenttype)
         self.end_headers()

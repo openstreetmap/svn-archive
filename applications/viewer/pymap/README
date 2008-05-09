@@ -32,3 +32,12 @@ How to run:
 
 How to uninstall:
 1) delete pymap directory
+
+Tips and Tricks
+---------------
+There is no cache expiry (yet), so old tiles will never be updated. In order to update old tiles you can simply delete those that have not been accessed for a while. They will then be refetched when you view them next (you will need to be online of course):
+
+This command helps you find files that have been modified more than 1 day ago in the tiles directory:
+  find tiles -mtime 1
+Correspondingly this one will delete all the ones that are older than 30 days. Use this command with care! It will delete file in the sub-directory 'tiles':
+  find tiles -mtime 30 -exec rm {} \;

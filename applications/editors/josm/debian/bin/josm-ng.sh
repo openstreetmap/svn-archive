@@ -1,6 +1,6 @@
 #!/bin/sh
 josm_dir="/usr/local/share/josm"
-josm_bin="$josm_dir/josm.jar"
+josm_bin="$josm_dir/josm-ng.jar"
 
 if ! [ -s ~/.josm/preferences ]; then
      echo "Installing Preferences File"

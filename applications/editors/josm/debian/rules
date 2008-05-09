@@ -35,7 +35,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	./debian/update_svn_revision.sh
+#	./debian/update_svn_revision.sh
 	./debian/make_install_files.sh ${destdir} || exit -1
 
 

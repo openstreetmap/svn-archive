@@ -32,23 +32,31 @@ mkdir -p "$dst_path/usr/lib/josm"
 
 # ------------------------------------------------------------------
 # Compile the Jar Files 
-echo "Compile Josm"
+echo "------------- Compile Josm"
 cd core
 ant -q clean
 ant -q compile || exit -1
 cd ..
 
-echo "Compile Josm Plugins"
+echo "------------- Compile Josm Plugins"
 cd plugins
 ant -q clean
 ant -q dist|| exit -1
 cd ..
 
+# Compile the Josm-ng Files 
+echo "------------- Compile Josm-ng"
+cd ../josm-ng
+    ant -q clean
+    ant -q josm-ng-impl.jar || exit -1
+cd ../josm
+
 
 # ------------------------------------------------------------------
-# Copy Jar Files
+echo "------------- Copy Jar Files"
 
 cp ./core/dist/josm-custom.jar $jar_path/josm.jar || exit -1
+cp ../josm-ng/dist/josm-ng.jar $jar_path/josm-ng.jar || exit -1
 
 plugin_jars=`find dist -name "*.jar"`
 for src_fn in $plugin_jars ; do 
@@ -72,6 +80,7 @@ cp ../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
 
 # ------------------------------------------------------------------
 cp "debian/bin/josm.sh" "$bin_path/josm"
+cp "debian/bin/josm-ng.sh" "$bin_path/josm-ng"
 
 sed "s/PLUGIN_LIST/$plugins/;" <debian/bin/preferences >"$jar_path/preferences"
 cp nsis/bookmarks "$jar_path/bookmarks"

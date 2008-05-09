@@ -1,0 +1,144 @@
+<html>
+<head>
+<title>test</title>
+<script type="text/javascript">
+	var lon = "";
+	var lat = "";
+	var zoom = "";
+	var user = "";
+	if (lon=="") lon=1.0996
+	if (lat=="") lat=35.5862
+	if (zoom=="") zoom=2
+
+	lat=parseFloat(lat)
+	lon=parseFloat(lon)
+	zoom=parseInt(zoom)
+	var PI = 3.14159265358979323846;
+
+	lon = lon * 20037508.34 / 180;
+	lat = Math.log (Math.tan ((90 + lat) * PI / 360)) / (PI / 180);
+	lat = lat * 20037508.34 / 180;
+
+	var gDragged=false // Dragged indicator
+	var goTarget // Highlighted tile
+</script>
+<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js"></script>
+</head>
+<script type="text/javascript">
+<!--
+	var map;
+    function get_osm_url (bounds) {
+        var res = this.map.getResolution();
+        var x = Math.round ((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+        var y = Math.round ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+        var z = this.map.getZoom();
+   var limit = Math.pow(2, z);
+
+   if (y < 0 || y >= limit)
+   {
+     return null;
+   }
+   else
+   {
+     x = ((x % limit) + limit) % limit;
+
+        var path = z + "/" + x + "/" + y + "." + this.type; 
+        var url = this.url;
+	if (url=="http://tah.openstreetmap.org/~ojw/Tiles/cycle.php/") {
+		if (z<12) url="http://tah.openstreetmap.org/~ojw/Tiles/cycle.php/"
+		else url="http://tah.openstreetmap.org/Tiles/tile/"
+	}
+        if (url instanceof Array) {
+            url = this.selectUrl(path, url);
+        }
+        return url + path;
+        }
+    }
+
+
+	function init() {
+
+    OpenLayers.IMAGE_RELOAD_ATTEMPTS = 0;
+//   OpenLayers.Util.onImageLoadError = function() {
+  //    this.src='http://www.informationfreeway.org/images/emptysea.png'
+  // }
+
+
+		map = new OpenLayers.Map ("map", {
+			controls:[
+				new OpenLayers.Control.Permalink(),
+				new OpenLayers.Control.MouseDefaults(),
+				new OpenLayers.Control.LayerSwitcher(),
+				new OpenLayers.Control.MousePosition(),
+				new OpenLayers.Control.PanZoomBar()],
+			maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+			numZoomLevels:18, maxResolution:156543, units:'meters', projection: "EPSG:41001"} );
+		
+
+
+	layerTilesAtHome = new OpenLayers.Layer.TMS( 
+		"Base map", 
+		["http://a.tah.openstreetmap.org/Tiles/tile/", "http://b.tah.openstreetmap.org/Tiles/tile/", "http://c.tah.openstreetmap.org/Tiles/tile/"],
+		{type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true }, {'buffer':1} );
+
+	layerRender = new OpenLayers.Layer.TMS( 
+		"Python render", 
+		["http://localhost:1280/default/"],
+		{type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true }, {'buffer':0});
+
+	
+        map.addLayers([layerTilesAtHome, layerRender]);
+	
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+	    map.addControl(new OpenLayers.Control.KeyboardDefaults());
+
+
+		map.setCenter (new OpenLayers.LonLat(lon, lat), zoom);
+
+
+		map.events.register ("mousemove", map, function(e) {
+			gDragged=true
+		});
+
+		map.events.register ("mousedown", map, function(e) {
+			gDragged=false
+		});
+
+	}
+
+
+function fnTileTitle(tile) {
+
+	var url=tile.src
+	var urls=url.split("/")
+	var x=urls[urls.length-2]
+	var y=urls[urls.length-1].split(".")[0]
+
+	tile.parentNode.title=x + " " + y
+	document.status=x +" " + y
+	tile.focus()
+
+}
+
+	function lowZoom(tile) {
+		tileHighlightOn(tile)
+
+		var url=tile.src
+		var urls=url.split("/")
+		var x=urls[urls.length-2]
+		var y=urls[urls.length-1].split(".")[0]
+				
+		alert("To render this tileset run: \n\nlowZoom.pl "+x+" "+y+" 6 12")
+		tileHighlightOff(tile)
+	}
+
+
+
+//-->
+</script>
+<body style='margin: 0px;' onload="init();">
+  <div style=" width:100%; height:100%;" id="map"></div>
+
+
+</body>
+</html>

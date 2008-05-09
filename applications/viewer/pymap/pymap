@@ -4,6 +4,7 @@ import urllib,re,os,sys,stat,errno
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 class MyHttpHandler(BaseHTTPRequestHandler):
+  query_string=''
   def fetch_tile(self):
     m= re.compile('/tiles/(\w+)/(\d+)/(\d+)/(\d+).png').match(self.path)
     if not m: return None
@@ -39,6 +40,9 @@ class MyHttpHandler(BaseHTTPRequestHandler):
         self.send_error(404,'File Not Found: %s' % self.path)
 
   def do_GET(self):
+        if self.path.find('?') != -1: 
+          (self.path, self.query_string) = self.path.split('?', 1)
+
         if self.path=='/': self.return_file('/index.html')
         elif self.path.startswith('/static'):self.return_file(self.path)
         elif self.path.startswith('/tiles'):

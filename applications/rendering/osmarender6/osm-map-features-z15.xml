@@ -371,21 +371,24 @@
 					<rule e="way" k="tracktype" v="~">
 						<line class='highway-core highway-track-core' />
 					</rule>
-					<rule e="way" k="tracktype" v="grade1">
+					<else><rule e="way" k="tracktype" v="grade1">
 						<line class='highway-core highway-track-core' />
 					</rule>
-					<rule e="way" k="tracktype" v="grade2">
+					<else><rule e="way" k="tracktype" v="grade2">
 						<line class='highway-core highway-track-core' />
 					</rule>
-					<rule e="way" k="tracktype" v="grade3">
+					<else><rule e="way" k="tracktype" v="grade3">
 						<line class='highway-core highway-track-core' smart-linecap='no'/>
 					</rule>
-					<rule e="way" k="tracktype" v="grade4">
+					<else><rule e="way" k="tracktype" v="grade4">
 						<line class='highway-core highway-track-core' smart-linecap='no'/>
 					</rule>
-					<rule e="way" k="tracktype" v="grade5">
+					<else><rule e="way" k="tracktype" v="grade5">
 						<line class='highway-core highway-track-core' smart-linecap='no'/>
 					</rule>
+	                                <else>
+						<line class='highway-core highway-track-core' />
+					</else></else></else></else></else></else>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">

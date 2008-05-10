@@ -69,6 +69,7 @@ my $do_schema=0;
 my $do_bbox='';
 my $do_exbbox='';
 my $decode_entities=0;
+my $user=1;
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -83,13 +84,15 @@ GetOptions (
 	     'no-mirror'        => \$Utils::LWP::Utils::NO_MIRROR,
 	     'proxy=s'          => \$Utils::LWP::Utils::PROXY,
 
-         'decode-entities'  => \$decode_entities,
+             'decode-entities'  => \$decode_entities,
 	     'empty'            => \$do_empty,
 	     'schema'           => \$do_schema,
 	     'bbox:s'           => \$do_bbox,
 	     'exbbox:s'         => \$do_exbbox,
 	     'exbox:s'          => \$do_exbbox,
 	     'ebbox:s'          => \$do_exbbox,
+
+             'user:s'           => \$user,
 
 	     'dbtype:s'         => \$dbtype,
 	     'dbname:s'         => \$dbname,
@@ -888,13 +891,14 @@ CREATE INDEX i_relation_tags_value ON relation_tags(value);
 EOT
 	} else {
 		return <<EOT;
-UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1
-UPDATE ways SET visible=1
-INSERT INTO current_ways (id,timestamp,visible) SELECT id,timestamp,1 FROM ways
+UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1,user_id=$user
+UPDATE ways SET visible=1,user_id=$user
+UPDATE relations SET user_id=$user
+INSERT INTO current_ways (id,user_id,timestamp,visible) SELECT id,user_id,timestamp,1 FROM ways
 INSERT INTO current_way_tags (id,k,v) SELECT id,k,v FROM way_tags
 INSERT INTO current_way_nodes (id,node_id,sequence_id) SELECT id,node_id,sequence_id FROM way_nodes
-INSERT INTO current_nodes (id,latitude,longitude,timestamp,tags,visible,tile) SELECT id,latitude,longitude,tags,timestamp,1,tile FROM nodes
-INSERT INTO current_relations (id,timestamp,visible) SELECT id,timestamp,1 FROM relations
+INSERT INTO current_nodes (id,user_id,latitude,longitude,timestamp,tags,visible,tile) SELECT id,user_id,latitude,longitude,tags,timestamp,1,tile FROM nodes
+INSERT INTO current_relations (id,user_id,timestamp,visible) SELECT id,user_id,timestamp,1 FROM relations
 INSERT INTO current_relation_tags (id,k,v) SELECT id,k,v FROM relation_tags
 INSERT INTO current_relation_members (id,member_type,member_id,member_role) SELECT id,member_type,member_id,member_role FROM relation_members
 EOT
@@ -950,6 +954,7 @@ min lat, min long, max lat, max long)
 
 Use "20,-180,80,-45" to exclude the Tiger data
 
+=item B<--user> - user to assign objects to
 
 =item B<--dbtype>
 

@@ -170,6 +170,22 @@ sub upload
 {
     my ($File) = @_;
     my $ZipSize += -s $File;
+    my $ZipAge = -M $File;   # days since last modified
+
+    if($ZipAge > 2)
+    {
+        if($Config{DeleteZipFilesAfterUpload})
+        {
+            unlink($File);
+        }
+        else
+        {
+            rename($File, $File."_overage"); 
+        }
+
+        return 0;
+    }
+
     if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
     {
         statusMessage("zip is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,1);

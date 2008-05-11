@@ -190,7 +190,8 @@
 			} else if (_root.lastylat!=_root.ylat || _root.lastylon!=_root.ylon || force) {
 				_root.yahoo.myMap.setCenterByLatLon(pos,0);
 			}
-			copyrightID=setInterval(refreshYahooCopyright,1000);
+			clearInterval(_root.copyrightID);
+			_root.copyrightID=setInterval(refreshYahooCopyright,1000);
 			_root.lastyzoom=_root.yzoom;
 			_root.lastylon =_root.ylon;
 			_root.lastylat =_root.ylat;
@@ -198,8 +199,8 @@
 	}
 
 	function refreshYahooCopyright() {
+		clearInterval(_root.copyrightID);
 		_root.yahoo.myMap.map.updateCopyright();
-		clearInterval(copyrightID);
 	};
 
 	function enableYahooZoom() {

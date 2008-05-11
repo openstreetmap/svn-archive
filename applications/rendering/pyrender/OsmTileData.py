@@ -85,8 +85,11 @@ def GetOsmTileData(z,x,y, AllowSplit = False):
     
   else: 
     # use larger tile
-    # TODO: return the filename
-    print "Using larger one"
+    while(z > DownloadLevel):
+      z = z - 1
+      x = int(x / 2)
+      y = int(y / 2)
+    return(GetOsmTileData(z,x,y))
 
 if(__name__ == "__main__"):
   """test mode"""

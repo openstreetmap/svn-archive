@@ -54,10 +54,10 @@
 		// resize panel window
 		if (_root.panel.properties.proptype!='') {
 			_root.panel.properties.init(_root.panel.properties.proptype,getPanelColumns(),4);
-			_root.panel.i_repeatattr._x=
-			_root.panel.i_newattr._x=
-			_root.panel.i_newrel._x=120+getPanelColumns()*190;
 		}
+		_root.panel.i_repeatattr._x=
+		_root.panel.i_newattr._x=
+		_root.panel.i_newrel._x=120+getPanelColumns()*190;
 		// resize other stuff
 		_root.waysloading._x=
 		_root.tooltip._x=Stage.width-120;
@@ -190,8 +190,56 @@
 			} else if (_root.lastylat!=_root.ylat || _root.lastylon!=_root.ylon || force) {
 				_root.yahoo.myMap.setCenterByLatLon(pos,0);
 			}
+			copyrightID=setInterval(refreshYahooCopyright,1000);
 			_root.lastyzoom=_root.yzoom;
 			_root.lastylon =_root.ylon;
 			_root.lastylat =_root.ylat;
 		}
+	}
+
+	function refreshYahooCopyright() {
+		_root.yahoo.myMap.map.updateCopyright();
+		clearInterval(copyrightID);
+	};
+
+	function enableYahooZoom() {
+		b=_global.com.yahoo.maps.projections.Projection.prototype;
+		ASSetPropFlags(b,null,0,true);
+		b.MAXLEVEL=20;
+	
+		b=_global.com.yahoo.maps.projections.MercatorProjection.prototype;
+		ASSetPropFlags(b,null,0,true);
+	
+		b.ll_to_pxy = function (lat, lon) {
+			var ys=18-_root.scale;
+			var cp=1 << 26 - ys;
+			this.level_=ys;
+			this.ntiles_w_ = cp / this.tile_w_;
+			this.ntiles_h_ = cp / this.tile_h_;
+			this.meters_per_pixel_ = 111111*360 / cp;
+			this.x_per_lon_ = cp / 360;
+			
+			alat = Math.abs(lat);
+			alon = lon + 180;
+			v_pxy = new this.PixelXY();
+			if (alat >= 90 || alon > 360 || alon < 0) {
+				return v_pxy;
+			}
+			alat *= this.RAD_PER_DEG;
+			v_pxy.m_x = alon * this.x_per_lon_;
+			ytemp = Math.log(Math.tan(alat) + 1 / Math.cos(alat)) / Math.PI;
+			v_pxy.m_y = ytemp * this.pixel_height() / 2;
+			if (lat < 0) {
+				v_pxy.m_y = -v_pxy.m_y;
+			}
+			this.status_ = 1;
+			return v_pxy;
+		};
+	
+		b=_global.com.yahoo.maps.flash.ExtensibleTileUrl.prototype;
+		ASSetPropFlags(b,null,0,true);
+	
+		b.makeUrl = function (row, col, mapViewType) {
+		  return this.satelliteUrl + '&x=' + col + '&y=' + row + '&z=' + String(19-this.zoom) + '&r=1&v=' + this.satelliteBatch + '&t=a';
+		};
 	}

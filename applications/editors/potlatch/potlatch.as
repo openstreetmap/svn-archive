@@ -107,7 +107,7 @@
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.9";	// current version
+	var signature="Potlatch 0.9a";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
@@ -744,10 +744,10 @@
 										stopDrawing();
 										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.ws); }
-		else if	(_root.wayselected>0) {	_root.ws.saveUndo("reverting");
+		else if	(_root.wayselected>0) {	_root.ws.saveUndo("cancelling changes to");
 										stopDrawing();
 										_root.ws.reload(); }
-		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo("reverting");
+		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo("cancelling changes to");
 										_root.map.pois[poiselected].reload(); }
 		else if (_root.poiselected<0) { _root.map.pois[poiselected].saveUndo("deleting");
 										removeMovieClip(_root.map.pois[poiselected]); }
@@ -813,6 +813,7 @@
 
 		// ----	Fix Yahoo! peculiarities
 		_root.yahoo.myMap.enableKeyboardShortcuts(false);
+
 		if (preferences.data.baselayer==2) {
 			var t=0;
 			for (i in _root.yahoo.myMap.map["map_"+(18-_root.scale)].mc) {
@@ -826,6 +827,8 @@
 				_root.yahooinited=true;
 				_root.yahooresizer=setInterval(resizeWindow,1000);
 				setYahooSize();
+				enableYahooZoom();
+				_root.yahoo.myMap.map.updateCopyright();
 			} else if (!_root.yahoorightsize) {
 				_root.yahoorightsize=true;
 				_root.yahooresizer=setInterval(resizeWindow,1000);
@@ -856,7 +859,6 @@
 
 		// ----	Alpha display for capslock
 		_root.map.areas._alpha=
-		_root.map.gpx._alpha=
 		_root.map.highlight._alpha=
 		_root.map.relations._alpha=
 		_root.map.ways._alpha=

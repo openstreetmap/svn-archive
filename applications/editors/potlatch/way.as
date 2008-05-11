@@ -14,6 +14,7 @@
 		this.locked=false;				// locked against upload?
 		this.oldversion=0;				// is this an undeleted, not-uploaded way?
 		this.mergedways=new Array();	// list of ways merged into this
+		this.checkconnections=false;	// check shared nodes on reload
 		this.xmin=0;
 		this.xmax=0;
 		this.ymin=0;
@@ -42,6 +43,14 @@
 			_root.map.ways[w].ymax=coord2lat(result[6]);
 			_root.map.ways[w].redraw();
 			_root.map.ways[w].clearPOIs();
+			if (_root.map.ways[w].checkconnections) {	// move nodes in other ways
+				for (i=0;  i<_root.map.ways[w].path.length; i++) {
+					moveNode(_root.map.ways[w].path[i][2],
+							 _root.map.ways[w].path[i][0],
+							 _root.map.ways[w].path[i][1],w);
+				}
+				this.checkconnections=false;
+			}
 		};
 		remote.call('getway',responder,Math.floor(this._name),baselong,basey,masterscale);
 	};
@@ -276,6 +285,7 @@
 			_root.map.ways.attachMovie("way",i,++waydepth);
 			_root.map.ways[i].load();
 		}
+		this.checkconnections=true;
 		this.load();
 	};
 	
@@ -355,6 +365,7 @@
 		this.onMouseMove=function() { this.trackDrag(); };
 		this.onMouseUp  =function() { this.endDrag();   };
 		this.dragged=false;
+		this.held=true;
 		_root.firstxmouse=_root.map._xmouse;
 		_root.firstymouse=_root.map._ymouse;
 	};
@@ -364,8 +375,14 @@
 		var longclick=(t.getTime()-_root.clicktime)>1000;
 		var xdist=Math.abs(_root.map._xmouse-_root.firstxmouse);
 		var ydist=Math.abs(_root.map._ymouse-_root.firstymouse);
+		// Don't enable drag unless way held for a while after click
+		if ((xdist>=tolerance   || ydist>=tolerance  ) &&
+			(t.getTime()-_root.clicktime)<300 &&
+			lastwayselected!=wayselected) { this.held=false; }
+		// Move way if dragged a long way, or dragged a short way after a while
 		if ((xdist>=tolerance*4 || ydist>=tolerance*4) ||
-		   ((xdist>=tolerance/4 || ydist>=tolerance/4) && longclick)) {
+		   ((xdist>=tolerance/4 || ydist>=tolerance/4) && longclick) &&
+		   this.held) {
 			this.dragged=true;
 		}
 		if (this.dragged) {
@@ -381,7 +398,6 @@
 		_root.map.anchors._y=_root.map.areas[this._name]._y=_root.map.highlight._y=this._y=0;
 		if (this.dragged) {
 			this.moveNodes(_root.map._xmouse-_root.firstxmouse,_root.map._ymouse-_root.firstymouse);
-			this.upload();
 			this.redraw();
 			this.select();
 			_root.undo.append(UndoStack.prototype.undo_movenodes,
@@ -867,6 +883,7 @@
 	}
 
 	function selectWay(id) {
+		_root.lastwayselected=_root.wayselected;
 		_root.wayselected=Math.floor(id);
 		_root.ws=_root.map.ways[id];
 	}

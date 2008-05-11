@@ -621,7 +621,7 @@ sub PutRequestBackToServer
         $LocalFilename, 
         0);
     
-    if(! -f $LocalFilename)
+    if(! -f $LocalFilename) ## should check returncode from DownloadFile
     {
         return (0, "Error reading response from server");
     }
@@ -720,9 +720,9 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data for $Layers to $partialFile", $currentSubTask, $progressJobs, $progressPercent,0);
         print "Download $URL\n" if ($Config{Debug});
-        DownloadFile($URL, $partialFile, 0);
+        my $res = DownloadFile($URL, $partialFile, 0);
 
-        if (-s $partialFile == 0)
+        if (! $res)
         {
             if ($Zoom < 12)
             {
@@ -747,9 +747,9 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     push(@{$filelist}, $partialFile);
                     push(@tempfiles, $partialFile);
                     statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $currentSubTask, $progressJobs, $progressPercent,0);
-                    DownloadFile($URL, $partialFile, 0);
+                    $res = DownloadFile($URL, $partialFile, 0);
 
-                    if (-s $partialFile == 0)
+                    if (! $res)
                     {
                         statusMessage("No data here (sliced)...", $currentSubTask, $progressJobs, $progressPercent, 1);
                         PutRequestBackToServer($X,$Y,$Zoom,"NoData");

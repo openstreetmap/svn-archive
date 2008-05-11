@@ -32,7 +32,21 @@ class tileServer(BaseHTTPRequestHandler):
   def log_message(self, format, *args):
     pass  # Kill logging to stderr
   
+  def return_file(self, filename, contentType='text/HTML'):
+    # Serve a real file from disk (for indexes etc.)
+    f = open(filename, "r")
+    self.send_response(200)
+    self.send_header('Content-type',contentType) # TODO: more headers
+    self.end_headers()
+    self.wfile.write(f.read())
+    f.close()
+
   def do_GET(self):
+    # Specific files to serve:
+    if self.path=='/':
+      self.return_file('slippy.html')
+      return
+
     # See if a tile was requested
     match = self.re.search(self.path)
     if(match):

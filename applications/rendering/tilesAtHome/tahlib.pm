@@ -273,9 +273,19 @@ sub DownloadFile
     }
     # Note: mirror sets the time on the file to match the server time. This
     # is important for the handling of JobTime later.
-        $ua->mirror($URL, $File);
+    my $res = $ua->mirror($URL, $File);
 
-    doneMessage(sprintf("done, %d bytes", -s $File));
+    if ($res->is_success()) 
+    {
+        doneMessage(sprintf("done, %d bytes", -s $File));
+        return 1;
+    }
+    else
+    {
+        killafile($File) if (! $UseExisting);
+        doneMessage("failed");
+        return 0;
+    }
 }
 
 #-----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # licensed under a BSD license of your choice
-import urllib,re,os,sys,stat,errno
+import urllib,re,os,sys,stat,errno,time
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 class MyHttpHandler(BaseHTTPRequestHandler):
@@ -47,8 +47,9 @@ class MyHttpHandler(BaseHTTPRequestHandler):
         elif self.path.startswith('/static'):self.return_file(self.path)
         elif self.path.startswith('/tiles'):
           try:
-            #TODO, use mtime to refetch old tiles
-            os.stat(installpath+self.path).st_mtime
+            #if mtime older than 30 days then refetch
+            mtime = os.stat(installpath+self.path).st_mtime
+            if time.time()-2592000 > mtime: self.fetch_tile()
           except os.error, e:
             if e.errno == errno.ENOENT:
               self.fetch_tile()

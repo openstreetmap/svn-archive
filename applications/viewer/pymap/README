@@ -4,22 +4,25 @@ Pymap
 
 Summary
 -------
-pymap is a viewer for OpenStreetMap maps. Maps are downloaded to the local drive and are still available when offline. As this is an OpenLayers installation it will look and behave very similar to the standard map on openstreetmap.org. pymap (currently) requires a unix operating system and python to run.
+pymap is a viewer for OpenStreetMap maps. Maps are downloaded to the
+local drive and are still available when offline. They will be
+re-fetched if older than 30 days. As this is an OpenLayers
+installation it will look and behave very similar to the standard map
+on openstreetmap.org. pymap requires only python to run.
 
 Description
 -----------
-Frustrated by the lack of a nice map viewing tool for my eee pc, I have
-written my own hack. It's a local OpenLayers installation that is served
-by a python script (stock python, no additional libs). If the tile does
-not exist yet, it will be downloaded from the OSM tile server and be
-stored locally, so those tiles will be available for offline viewing.
-Tiles will be downloaded and stored in a directory called 'tiles' in the
-pymap directory. If anybody finds this tool useful that is cool, otherwise I
-have just scratched my itch.
+Frustrated by the lack of a nice map viewing tool for my eee pc, I
+have written my own hack. It's a local OpenLayers installation that is
+served by a python script (stock python, no additional libs). If the
+tile does not exist yet, it will be downloaded from the OSM tile
+server and be stored locally, so those tiles will be available for
+offline viewing.  Tiles will be downloaded and stored in a directory
+called 'tiles' in the pymap directory. Tiles older than 30 days will be refetched. If anybody finds this tool
+useful that is cool, otherwise I have just scratched my itch.
 
-It's a total of 56 lines of code including the license... so go figure
+It's a total of 60 lines of code including the license... so go figure
 how elaborate my error checking is. It works for me though...
-Including a stock OpenLayers 2.6, the tar.bz2 is 128kb big. This will only run on unix systems as it assumes '/' as path separator
 
 How to install:
 1) svn co http://svn.openstreetmap.org/applications/viewer/pymap
@@ -32,12 +35,3 @@ How to run:
 
 How to uninstall:
 1) delete pymap directory
-
-Tips and Tricks
----------------
-There is no cache expiry (yet), so old tiles will never be updated. In order to update old tiles you can simply delete those that have not been accessed for a while. They will then be refetched when you view them next (you will need to be online of course):
-
-This command helps you find files that have been modified more than 1 day ago in the tiles directory:
-  find tiles -mtime 1
-Correspondingly this one will delete all the ones that are older than 30 days. Use this command with care! It will delete file in the sub-directory 'tiles':
-  find tiles -mtime 30 -exec rm {} \;

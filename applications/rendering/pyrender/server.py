@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #----------------------------------------------------------------------------
 from BaseHTTPServer import *
-import OsmRender
+from OsmRender import OsmRenderBase as Renderer
 import re
 import sys
 
@@ -58,7 +58,8 @@ class tileServer(BaseHTTPRequestHandler):
       
       # Render the tile
       print 'Request for %d,%d at zoom %d, layer %s' % (x,y,z,layer)
-      pngData = OsmRender.RenderTile(z,x,y, None)
+      renderer = Renderer()
+      pngData = renderer.RenderTile(z,x,y, None)
       
       if(pngData == None):
         print "Not found"

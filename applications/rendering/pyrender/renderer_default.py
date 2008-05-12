@@ -1,7 +1,8 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Basic test of the PIL rendering engine, using OSM tags to control
-# width and colour of the lines
-#-----------------------------------------------------------------------------# Copyright 2008, authors:
+#-----------------------------------------------------------------------------
+# Basic cairo renderer, that can plot OSM ways as coloured lines
+#-----------------------------------------------------------------------------
+# Copyright 2008, authors:
 # * Oliver White
 # * Sebastian Spaeth
 #

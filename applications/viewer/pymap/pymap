@@ -1,20 +1,25 @@
 #!/usr/bin/python
 # licensed under a BSD license of your choice
-import urllib,re,os,sys,stat,errno,time
+import urllib,re,os,sys,stat,errno,socket,time,socket
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 class MyHttpHandler(BaseHTTPRequestHandler):
   query_string=''
+
   def fetch_tile(self):
+    """Retrieve a tile from a remote server and store it locally"""
     m= re.compile('/tiles/(\w+)/(\d+)/(\d+)/(\d+).png').match(self.path)
     if not m: return None
     (layer,z,x,y)=(m.group(1),m.group(2),m.group(3),m.group(4))
     localpath = installpath + '/tiles/' + layer + '/' + z + '/' + x + '/' + y + '.png'
 
+    # decide the URL to download from
     if layer == 'mapnik':
       tileurl = 'http://tile.openstreetmap.org/'+z+'/'+x+'/'+y+'.png'
     elif layer == 'osma':
       tileurl = 'http://tah.openstreetmap.org/Tiles/tile/'+z+'/'+x+'/'+y+'.png'
+    elif layer == 'cycle':
+      tileurl = 'http://www.thunderflames.org/tiles/cycle/'+z+'/'+x+'/'+y+'.png'
     else: return None
 
     try: os.makedirs(os.path.dirname(localpath))
@@ -38,6 +43,9 @@ class MyHttpHandler(BaseHTTPRequestHandler):
         return
       except IOError:
         self.send_error(404,'File Not Found: %s' % self.path)
+      except socket.error:
+        #client most likely aborted connection (zooming etc)
+        return None
 
   def do_GET(self):
         if self.path.find('?') != -1: 

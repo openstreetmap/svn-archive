@@ -47,8 +47,8 @@ public class ChangePropertyKeyCommand extends Command {
 		this.newKey = newKey;
 	}
 	
-	@Override public void executeCommand() {
-		super.executeCommand(); // save old
+	@Override public boolean executeCommand() {
+		if (!super.executeCommand()) return false; // save old
 		for (OsmPrimitive osm : objects) {
 			if(osm.keys != null) 
 			{
@@ -56,6 +56,7 @@ public class ChangePropertyKeyCommand extends Command {
 				osm.put(newKey, osm.keys.remove(key) );
 			}
 		}
+        return true;
 	}
 
 	@Override public void fillModifiedData(Collection<OsmPrimitive> modified, Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {

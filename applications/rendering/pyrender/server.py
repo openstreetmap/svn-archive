@@ -24,7 +24,7 @@ import re
 import sys
 
 # Choose which rendering engine you want to use here
-import renderer_PIL as RenderModule
+import renderer_default as RenderModule
 
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):

@@ -1,7 +1,9 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Basic test of the PIL rendering engine, using OSM tags to control
+#----------------------------------------------------------------------------
+# Basic test of the PIL rendering engine, using OSM tags to control
 # width and colour of the lines
-#-----------------------------------------------------------------------------# Copyright 2008, Oliver White
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 from render_base import OsmRenderBase
 
 roadColours = {

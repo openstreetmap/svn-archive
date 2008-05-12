@@ -1,5 +1,6 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Download OSM data covering the area of a slippy-map tile 
+#----------------------------------------------------------------------------
+# Download OSM data covering the area of a slippy-map tile 
 #
 # Features:
 #  * Recursive (downloads are all at z15, and merged if necessary to get
@@ -8,7 +9,8 @@
 # 
 # DON'T RUN THIS ON LARGE AREAS WITHOUT ASKING THE OPERATOR OF THE
 # API SERVER.  Currently it's limited to downloading a z-13 area or smaller
-#-----------------------------------------------------------------------------# Copyright 2008, Oliver White
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +24,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 from tilenames import *
 from urllib import *
 from OsmMerge import OsmMerge

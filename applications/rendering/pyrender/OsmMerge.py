@@ -1,6 +1,8 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Merge multiple OSM files (in memory) and save to another OSM file
-#-----------------------------------------------------------------------------# Copyright 2008, Oliver White
+#----------------------------------------------------------------------------
+# Merge multiple OSM files (in memory) and save to another OSM file
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 from parseOsm import *
 
 def OsmMerge(dest, sources):

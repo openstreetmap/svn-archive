@@ -1,5 +1,6 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Library for handling OpenStreetMap data
+#----------------------------------------------------------------------------
+# Library for handling OpenStreetMap data
 #
 # Optimised for use in the pyrender system
 #
@@ -7,7 +8,8 @@
 #   * Interesting nodes, with tags (store as list)
 #   * Ways, with tags (store as list)
 #   * Position of all nodes (store as hash)
-#-----------------------------------------------------------------------------# Copyright 2008, Oliver White
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +23,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 import sys
 import os
 from xml.sax import make_parser, handler

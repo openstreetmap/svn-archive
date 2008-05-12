@@ -1,9 +1,11 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Python rendering engine for OpenStreetMap data
+#----------------------------------------------------------------------------
+# Python rendering engine for OpenStreetMap data
 #
 # Input:  OSM XML files
 # Output: 256x256px PNG images in slippy-map format
-#-----------------------------------------------------------------------------# Copyright 2008, Oliver White
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 import Image
 import StringIO
 import ImageDraw

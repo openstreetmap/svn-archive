@@ -1,10 +1,10 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 # Python rendering engine for OpenStreetMap data
 #
 # Input:  OSM XML files
 # Output: 256x256px PNG images in slippy-map format
-#-----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 # Copyright 2008, authors:
 # * Sebastian Spaeth
 # * Oliver White
@@ -21,7 +21,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 import StringIO
 import cairo
 import xml.sax

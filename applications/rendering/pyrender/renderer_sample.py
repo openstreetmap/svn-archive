@@ -1,5 +1,6 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Sample rendering engine
+#----------------------------------------------------------------------------
+# Sample rendering engine
 #
 # Copy and modify this file to create your own rendering engine
 # - please keep this file clean so it's easy to understand how to
@@ -12,7 +13,8 @@
 #   import renderer_yourNewModule as RenderModule
 #
 # ..then run server.py and view it on http://localhost:1280/ as usual
-#-----------------------------------------------------------------------------# Copyright 2008, Oliver White
+#----------------------------------------------------------------------------
+# Copyright 2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +28,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 from render_base import OsmRenderBase
 
 class RenderClass(OsmRenderBase):

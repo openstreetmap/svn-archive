@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 # Sample rendering engine
 #
 # Copy and modify this file to create your own rendering engine
@@ -13,7 +13,7 @@
 #   import renderer_yourNewModule as RenderModule
 #
 # ..then run server.py and view it on http://localhost:1280/ as usual
-#-----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 # Copyright 2008, authors:
 # * Sebastian Spaeth
 # * Oliver White
@@ -30,7 +30,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 from render_cairo_base import OsmRenderBase
 
 class RenderClass(OsmRenderBase):

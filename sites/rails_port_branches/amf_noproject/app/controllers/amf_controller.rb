@@ -108,9 +108,6 @@ class AmfController < ApplicationController
     ymin = args[1].to_f-0.01
     xmax = args[2].to_f+0.01
     ymax = args[3].to_f+0.01
-    baselong    = args[4]
-    basey       = args[5]
-    masterscale = args[6]
 
     RAILS_DEFAULT_LOGGER.info("  Message: whichways, bbox=#{xmin},#{ymin},#{xmax},#{ymax}")
 
@@ -120,7 +117,7 @@ class AmfController < ApplicationController
 
     # find the node ids in an area that aren't part of ways
     nodes_not_used_in_area = nodes_in_area.select { |node| node.ways.empty? }
-    points = nodes_not_used_in_area.collect { |n| [n.id, n.lon_potlatch(baselong,masterscale), n.lat_potlatch(basey,masterscale), n.tags_as_hash] }
+    points = nodes_not_used_in_area.collect { |n| [n.id, n.lon, n.lat, n.tags_as_hash] }
 
     # find the relations used by those nodes and ways
     relation_ids = (Relation.find_for_nodes_and_ways(nodes_in_area.collect {|n| n.id}, way_ids)).collect {|n| n.id}.uniq
@@ -138,9 +135,6 @@ class AmfController < ApplicationController
     ymin = args[1].to_f-0.01
     xmax = args[2].to_f+0.01
     ymax = args[3].to_f+0.01
-    baselong    = args[4]
-    basey       = args[5]
-    masterscale = args[6]
 
     sql=<<-EOF
      SELECT DISTINCT current_ways.id 
@@ -160,9 +154,6 @@ class AmfController < ApplicationController
   # Get a way with all of it's nodes and tags
   # The input is an array with the following components, in order:
   # 0. wayid - the ID of the way to get
-  # 1. baselong - origin of SWF map (longitude)
-  # 2. basey - origin of SWF map (latitude)
-  # 3. masterscale - SWF map scale
   #
   # The output is an array which contains all the nodes (with projected 
   # latitude and longitude) and tags for a way (and all the nodes tags). 
@@ -171,7 +162,7 @@ class AmfController < ApplicationController
   # FIXME: The server really shouldn't be figuring out a ways bounding box and doing projection for potlatch
   # FIXME: the argument splitting should be done in the 'talk' method, not here
   def getway(args) #:doc:
-    wayid,baselong,basey,masterscale = args
+    wayid = args
     wayid = wayid.to_i
 
     RAILS_DEFAULT_LOGGER.info("  Message: getway, id=#{wayid}")
@@ -186,8 +177,8 @@ class AmfController < ApplicationController
     points = []
 
     way.nodes.each do |node|
-      projected_longitude = node.lon_potlatch(baselong,masterscale) # do projection for potlatch
-      projected_latitude = node.lat_potlatch(basey,masterscale)
+      projected_longitude = node.lon # do projection for potlatch
+      projected_latitude = node.lat
       id = node.id
       tags_hash = node.tags_as_hash
 
@@ -203,7 +194,6 @@ class AmfController < ApplicationController
   #		  returns old version of way
   #		  in:	[0] way id,
   #				[1] way version to get (or -1 for "last deleted version")
-  #				[2] baselong, [3] basey, [4] masterscale
   #		  does:	gets old version of way and all constituent nodes
   #				for undelete, always uses the most recent version of each node
   #				  (even if it's moved)
@@ -217,7 +207,7 @@ class AmfController < ApplicationController
     RAILS_DEFAULT_LOGGER.info("  Message: getway_old (server is #{SERVER_URL})")
     #	if SERVER_URL=="www.openstreetmap.org" then return -1,"Revert is not currently enabled on the OpenStreetMap server." end
 
-    wayid,version,baselong,basey,masterscale=args
+    wayid,version=args
     wayid = wayid.to_i
     version = version.to_i
     xmin = ymin =  999999
@@ -230,7 +220,7 @@ class AmfController < ApplicationController
       historic=true
     end
     readwayquery_old(wayid,version,historic).each { |row|
-      points<<[long2coord(row['longitude'].to_f,baselong,masterscale),lat2coord(row['latitude'].to_f,basey,masterscale),row['id'].to_i,row['visible'].to_i,tag2array(row['tags'].to_s)]
+      points<<[row['longitude'].to_f,row['latitude'].to_f,row['id'].to_i,row['visible'].to_i,tag2array(row['tags'].to_s)]
       xmin=[xmin,row['longitude'].to_f].min
       xmax=[xmax,row['longitude'].to_f].max
       ymin=[ymin,row['latitude' ].to_f].min

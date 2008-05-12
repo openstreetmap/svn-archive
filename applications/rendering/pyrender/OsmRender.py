@@ -54,70 +54,78 @@ class proj:
     x = self.x1 + pLon * self.dx
     y = self.y2 - pLat * self.dy
     return(x,y)
-  
-def OsmRender(im,filename,tx,ty,tz,layer):
-  """Render an OSM tile
-  im - an image to render onto
-  filename - location of OSM data for the tile
-  tx,ty,tz - the tile number
-  layer - which map style to use
-  """
-  
-  osm = parseOsm(filename)  # get OSM data into memory
-  p = proj(tx,ty,tz,im.size)  # create a projection for this tile
-  draw = ImageDraw.Draw(im)  # create a drawing context
-  
-  # Draw ways
-  for w in osm.ways:
-    # TODO: stuff
-    last = (0,0,False)
-    for n in w['n']:
-      (lat,lon) = osm.nodes[n]
-      (x,y) = p.project(lat,lon)
-      if(last[2]):
-        draw.line((last[0], last[1], x, y), fill=128)
-      last = (x,y,True)
-  
-  # Draw POI
-  for poi in osm.poi:
-    n = poi['id']
-    (lat,lon) = osm.nodes[n]
-    (x,y) = p.project(lat,lon)
-    s = 1
-    draw.rectangle((x-s,y-s,x+s,y+s),fill='yellow')
-  
-  # cleanup
-  del draw 
 
-
-def RenderTile(z,x,y, outputFile):
-  """Render an OSM tile
-  z,x,y - slippy map tilename
-  outputFile - optional file to save to
-  otherwise returns PNG image data"""
+class OsmRenderBase:
   
-  # Create the image
-  im = Image.new('RGBA',(256,256), 'blue')
-
-  # Get some OSM data for the area, and return which file it's stored in
-  filename = GetOsmTileData(z,x,y)
-  if(filename == None):
-    return(None)
-
-  # Render the map
-  OsmRender(im,filename,x,y,z,'default')
-
-  # Either save the result to a file
-  if(outputFile):
-    im.save(outputFile)
-    return
-  else:
-    # Or return it in a string
-    f = StringIO.StringIO()
-    im.save(f, "PNG")
-    data = f.getvalue()
-    return(data)
+  def draw(self):
+    # Draw ways
+    for w in self.osm.ways:
+      # TODO: stuff
+      last = (0,0,False)
+      for n in w['n']:
+        (lat,lon) = self.osm.nodes[n]
+        (x,y) = self.proj.project(lat,lon)
+        if(last[2]):
+          self.drawContext.line((last[0], last[1], x, y), fill=128)
+        last = (x,y,True)
+    
+    # Draw POI
+    for poi in self.osm.poi:
+      n = poi['id']
+      (lat,lon) = self.osm.nodes[n]
+      (x,y) = self.proj.project(lat,lon)
+      s = 1
+      self.drawContext.rectangle((x-s,y-s,x+s,y+s),fill='yellow')
+    
+  def Render(self, im,filename,tx,ty,tz,layer):
+    """Render an OSM tile
+    im - an image to render onto
+    filename - location of OSM data for the tile
+    tx,ty,tz - the tile number
+    layer - which map style to use
+    """
+    
+    self.osm = parseOsm(filename)  # get OSM data into memory
+    self.proj = proj(tx,ty,tz,im.size)  # create a projection for this tile
+    self.drawContext = ImageDraw.Draw(im)  # create a drawing context
+    
+    # Call the draw function
+    self.draw()
+    
+    del self.drawContext # cleanup
+  
+  def imageBackgroundColour(self):
+    return("blue")
+  
+  def RenderTile(self, z,x,y, outputFile):
+    """Render an OSM tile
+    z,x,y - slippy map tilename
+    outputFile - optional file to save to
+    otherwise returns PNG image data"""
+    
+    # Create the image
+    im = Image.new('RGBA',(256,256), self.imageBackgroundColour())
+  
+    # Get some OSM data for the area, and return which file it's stored in
+    filename = GetOsmTileData(z,x,y)
+    if(filename == None):
+      return(None)
+  
+    # Render the map
+    self.Render(im,filename,x,y,z,'default')
+  
+    # Either save the result to a file
+    if(outputFile):
+      im.save(outputFile)
+      return
+    else:
+      # Or return it in a string
+      f = StringIO.StringIO()
+      im.save(f, "PNG")
+      data = f.getvalue()
+      return(data)
 
 if(__name__ == '__main__'):
   # Test suite: render a tile in hersham, and save it to a file
-  RenderTile(17,65385,43658, "sample2.png")
+  a = OsmRenderBase()
+  a.RenderTile(17,65385,43658, "sample2.png")

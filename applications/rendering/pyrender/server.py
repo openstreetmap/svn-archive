@@ -20,9 +20,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #----------------------------------------------------------------------------
 from BaseHTTPServer import *
-from render_base import OsmRenderBase as Renderer
 import re
 import sys
+
+# Choose which rendering engine you want to use here
+import renderer_simple as RenderModule
 
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):
@@ -55,10 +57,9 @@ class tileServer(BaseHTTPRequestHandler):
       x = int(x)
       y = int(y)
       
-      
       # Render the tile
       print 'Request for %d,%d at zoom %d, layer %s' % (x,y,z,layer)
-      renderer = Renderer()
+      renderer = RenderModule.RenderClass()
       pngData = renderer.RenderTile(z,x,y, None)
       
       if(pngData == None):

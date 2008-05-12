@@ -636,7 +636,7 @@ sub PutRequestBackToServer
     
     killafile($LocalFilename); # don't leave old files laying around
 
-    talkInSleep("Waiting befor new tile is requested", 15);
+    talkInSleep("Waiting before new tile is requested", 15);
 }
 
 #-----------------------------------------------------------------------------

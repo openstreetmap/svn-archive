@@ -50,13 +50,13 @@ def GetOsmTileData(z,x,y, AllowSplit = False):
     
     
     # Which API to use
-    # 
-    Server = 'api.openstreetmap.org/api/0.5'
+    if(1): 
+      URL = 'http://%s/api/0.5/map?bbox=%f,%f,%f,%f' % ('api.openstreetmap.org',W,S,E,N)
+    else:
+      URL = 'http://%s/api/0.5/*[bbox=%f,%f,%f,%f]' % ('www.informationfreeway.org',W,S,E,N)
     
-    
-    URL = 'http://%s/map?bbox=%f,%f,%f,%f' % (Server,W,S,E,N)
     if(not os.path.exists(filename)): # TODO: allow expiry of old data
-      print "Downloading %s" % filename
+      print "Downloading %s\n  from %s" % (filename, URL)
       urlretrieve(URL, filename)
       print "Done"
     else:

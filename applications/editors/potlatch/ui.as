@@ -221,32 +221,17 @@
 
 	// ========================================================================
 	// modalDialogue
+	// ** ought to be a method like the above, so we could stack dialogues, etc.
 
-	function createModalDialogue(w,h,buttons,closefunction) {
+	function createModalDialogue(w,h,buttons,closefunction,leavepanel) {
 		clearFloater();
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
-		var ox=(Stage.width-w)/2; var oy=(Stage.height-panelheight-h)/2;
-
-		// Blank all other areas
 		_root.modal.createEmptyMovieClip("blank",1);
-		with (_root.modal.blank) {
-			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(Stage.width,0);
-			lineTo(Stage.width,Stage.height); lineTo(0,Stage.height); lineTo(0,0); endFill();
-		}
-		_root.modal.blank.onPress=function() {};
-		_root.modal.blank.useHandCursor=false;
-		_root.keytarget='dialogue';
-		_root.basekeytarget=_root.keytarget;
-
-		// Create dialogue box
 		_root.modal.createEmptyMovieClip("box",2);
-		with (_root.modal.box) {
-			_x=ox; _y=oy;
-			beginFill(0xBBBBBB,100);
-			moveTo(0,0);
-			lineTo(w,0); lineTo(w,h);
-			lineTo(0,h); lineTo(0,0); endFill();
-		}
+		_root.modalwidth=w;		// workaround for Stage.width suddenly changing
+		_root.modalheight=h;	//  |
+		_root.modalleave=leavepanel;
+		drawModalAreas();
 
 		// Create buttons
 		for (var i=0; i<buttons.length; i+=1) {
@@ -268,6 +253,34 @@
 		_root.keytarget='';
 		_root.basekeytarget='';
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
+	}
+	
+	function drawModalAreas() {
+		var w=_root.modalwidth;
+		var h=_root.modalheight;
+		var ox=(Stage.width-w)/2; var oy=(Stage.height-panelheight-h)/2;
+
+		// Blank all other areas
+		var bh=Stage.height; if (_root.modalleave) { bh-=panelheight; }
+		with (_root.modal.blank) {
+			clear();
+			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(Stage.width,0);
+			lineTo(Stage.width,bh); lineTo(0,bh); lineTo(0,0); endFill();
+		}
+		_root.modal.blank.onPress=function() {};
+		_root.modal.blank.useHandCursor=false;
+		_root.keytarget='dialogue';
+		_root.basekeytarget=_root.keytarget;
+
+		// Create dialogue box
+		with (_root.modal.box) {
+			_x=ox; _y=oy;
+			clear();
+			beginFill(0xBBBBBB,100);
+			moveTo(0,0);
+			lineTo(w,0); lineTo(w,h);
+			lineTo(0,h); lineTo(0,0); endFill();
+		}
 	}
 
 	// ========================================================================

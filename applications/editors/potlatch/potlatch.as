@@ -110,10 +110,11 @@
 	var signature="Potlatch 0.9a";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
-	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
+	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
+	if (preferences.data.nosplash     ==undefined) { preferences.data.nosplash     =false; }// hide splash screen?
 
 	// =====================================================================================
 	// Icons
@@ -301,10 +302,10 @@
 	with (_root.tooltip  ) { text=""; setTextFormat(plainSmall); selectable=false; type='dynamic'; };
 
 	_root.panel.createTextField('t_type',23,5,5,220,20);
-	with (_root.panel.t_type	 ) { text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
+	with (_root.panel.t_type	 ) { text=signature; setTextFormat(boldText); };
 	
 	_root.panel.createTextField('t_details',24,5,23,220,20);
-	with (_root.panel.t_details) { text=signature; setTextFormat(plainText); };
+	with (_root.panel.t_details) { text=""; setTextFormat(plainText); };
 	
 //	// TextField listener
 //	textfieldListener=new Object();
@@ -372,6 +373,42 @@
 	if (lat) { startPotlatch(); }			// Parse GPX if supplied
 	if (gpx) { parseGPX(gpx); }				//  |
 	if (lat) {} else { lat=0; long=51.5; startPotlatch(); } // London if none!
+	
+	// Splash screen
+	
+	if (!preferences.data.nosplash) {
+		createModalDialogue(400,225,[],null,true);
+
+		_root.modal.box.createTextField("title",1,7,7,400-14,20);
+		with (_root.modal.box.title) {
+			type='dynamic';
+			text="Welcome to OpenStreetMap!"; setTextFormat(boldText);
+		}
+
+		// Light grey background
+		_root.modal.box.createEmptyMovieClip('lightgrey',2);
+		with (_root.modal.box.lightgrey) {
+			beginFill(0xF3F3F3,100);
+			moveTo(10,30); lineTo(392,30);
+			lineTo(392,195); lineTo(10,195);
+			lineTo(10,30); endFill();
+		};
+		
+		_root.modal.box.createTextField("prompt",3,15,35,400-30,180);
+		writeText(_root.modal.box.prompt,
+			"Choose a button below to get editing. If you click 'Start', "+
+			"you'll be editing the main map directly - changes usually show "+
+			"up every Thursday. If you click 'Play', your changes won't be "+
+			"saved, so you can practise editing.\n\n"+
+			"Remember the golden rules of OpenStreetMap:\n\n"+
+			chr(0x278A)+"  Don't copy from other maps\n"+
+			chr(0x278B)+"  Accuracy is important - only map places you've been\n"+
+			chr(0x278C)+"  And have fun!\n");
+
+		_root.modal.box.attachMovie("checkbox","nosplash",5);
+		_root.modal.box.nosplash.init(12,205,"Don't show this message again",preferences.data.nosplash,function(n) { preferences.data.nosplash=n; });
+
+	}
 
 	// Welcome buttons
 
@@ -379,11 +416,12 @@
 
 	_root.panel.welcome.createEmptyMovieClip("start",1);
 	drawButton(_root.panel.welcome.start,250,7,"Start","Start mapping with OpenStreetMap.");
-	_root.panel.welcome.start.onPress=function() { removeMovieClip(_root.panel.welcome); };
+	_root.panel.welcome.start.onPress=function() { removeMovieClip(_root.panel.welcome); clearModalDialogue(); };
 
 	_root.panel.welcome.createEmptyMovieClip("play",2);
 	drawButton(_root.panel.welcome.play,250,29,"Play","Practice mapping - your changes won't be saved.");
 	_root.panel.welcome.play.onPress=function() {
+		clearModalDialogue(); 
 		_root.sandbox=true; removeMovieClip(_root.panel.welcome);
 		_root.createEmptyMovieClip("practice",62);
 		with (_root.practice) {
@@ -406,7 +444,7 @@
 	if (gpx) {
 		_root.panel.welcome.createEmptyMovieClip("convert",4);
 		drawButton(_root.panel.welcome.convert,250,73,"Track","Convert your GPS track to (locked) ways for editing.");
-		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); gpxToWays(); };
+		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); clearModalDialogue(); gpxToWays(); };
 	}
 
 	// =====================================================================

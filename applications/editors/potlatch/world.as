@@ -38,7 +38,6 @@
 	// resizeWindow - user has enlarged/shrunk window
 
 	function resizeWindow() {
-		updateCoords();
 		// resize Yahoo
 		clearInterval(_root.yahooresizer);
 		if (_root.yahooinited) {
@@ -62,7 +61,9 @@
 		_root.waysloading._x=
 		_root.tooltip._x=Stage.width-120;
 		_root.practice._x=Stage.width-97; _root.practice._y=Stage.height-panelheight-22;
+		if (_root.modal) { drawModalAreas(); }
 		// note time, so we can issue a whichWays soon
+		updateCoords(_root.map._x,_root.map._y);
 		_root.lastresize=new Date();
 	}
 

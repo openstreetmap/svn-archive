@@ -1,6 +1,5 @@
-import sys
-sys.path.unshift("..")
-from OsmRender import OsmRenderBase
+
+from render_base import OsmRenderBase
 
 class SimpleOsmRender(OsmRenderBase):
   def imageBackgroundColour(self):

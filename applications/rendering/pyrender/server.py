@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #----------------------------------------------------------------------------
 from BaseHTTPServer import *
-from renderers.Base import OsmRenderBase as Renderer
+from render_base import OsmRenderBase as Renderer
 import re
 import sys
 

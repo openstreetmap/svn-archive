@@ -1,9 +1,11 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Python rendering engine for OpenStreetMap data
+#-----------------------------------------------------------------------------
+# Python rendering engine for OpenStreetMap data
 #
 # Input:  OSM XML files
 # Output: 256x256px PNG images in slippy-map format
-#-----------------------------------------------------------------------------# Copyright 2008, authors:
+#-----------------------------------------------------------------------------
+# Copyright 2008, authors:
 # * Sebastian Spaeth
 # * Oliver White
 #

@@ -1,5 +1,6 @@
 #!/usr/bin/python
-#-----------------------------------------------------------------------------# Sample rendering engine
+#-----------------------------------------------------------------------------
+# Sample rendering engine
 #
 # Copy and modify this file to create your own rendering engine
 # - please keep this file clean so it's easy to understand how to
@@ -12,7 +13,8 @@
 #   import renderer_yourNewModule as RenderModule
 #
 # ..then run server.py and view it on http://localhost:1280/ as usual
-#-----------------------------------------------------------------------------# Copyright 2008, authors:
+#-----------------------------------------------------------------------------
+# Copyright 2008, authors:
 # * Sebastian Spaeth
 # * Oliver White
 #

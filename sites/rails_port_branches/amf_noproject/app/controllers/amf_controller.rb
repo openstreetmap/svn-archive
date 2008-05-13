@@ -54,17 +54,17 @@ class AmfController < ApplicationController
       case message
       when 'getpresets';		results[index]=AMF.putdata(index,getpresets)
       when 'whichways';			results[index]=AMF.putdata(index,whichways(args))
-      when 'whichways_deleted';	results[index]=AMF.putdata(index,whichways_deleted(args))
+      when 'whichways_deleted';        results[index]=AMF.putdata(index,whichways_deleted(args))
       when 'getway';			results[index]=AMF.putdata(index,getway(args))
       when 'getrelation';		results[index]=AMF.putdata(index,getrelation(args))
       when 'getway_old';		results[index]=AMF.putdata(index,getway_old(args))
-      when 'getway_history';	results[index]=AMF.putdata(index,getway_history(args))
+      when 'getway_history';			results[index]=AMF.putdata(index,getway_history(args))
       when 'putway';			r=putway(args,renumberednodes)
-								renumberednodes=r[3]
-								if r[1] != r[2]
-									renumberedways[r[1]] = r[2]
-								end
-								results[index]=AMF.putdata(index,r)
+					renumberednodes=r[3]
+					if r[1] != r[2]
+						renumberedways[r[1]] = r[2]
+					end
+					results[index]=AMF.putdata(index,r)
       when 'putrelation';		results[index]=AMF.putdata(index,putrelation(args, renumberednodes, renumberedways))
       when 'deleteway';			results[index]=AMF.putdata(index,deleteway(args))
       when 'putpoi';			results[index]=AMF.putdata(index,putpoi(args))
@@ -228,6 +228,8 @@ class AmfController < ApplicationController
     }
 
     # get tags from this version
+    
+
     attributes={}
     attrlist=ActiveRecord::Base.connection.select_all "SELECT k,v FROM way_tags WHERE id=#{wayid} AND version=#{version}"
     attrlist.each {|a| attributes[a['k'].gsub(':','|')]=a['v'] }
@@ -241,24 +243,17 @@ class AmfController < ApplicationController
   #		  in:	[0] way id
   #		  does:	finds history of a way
   #		  out:	[0] array of previous versions (where each is
-  #					[0] version, [1] db timestamp (string),
-  #					[2] visible 0 or 1,
+  #					[0] version (string), [1] db timestamp (string),
+  #					[2] visible '0' or '1',
   #					[3] username or 'anonymous' (string))
   def getway_history(args) #:doc:
     wayid=args[0]
     history=[]
-    sql=<<-EOF
-  SELECT version,timestamp,visible,display_name,data_public
-    FROM ways,users
-   WHERE ways.id=#{wayid}
-     AND ways.user_id=users.id
-     AND ways.visible=1
-   ORDER BY version DESC
-  EOF
-    histlist=ActiveRecord::Base.connection.select_all(sql)
-    histlist.each { |row|
-      if row['data_public'].to_i==1 then user=row['display_name'] else user='anonymous' end
-      history<<[row['version'],row['timestamp'],row['visible'],user]
+    way = Way.find(wayid)
+    
+    way.old_ways.reverse.each { |oldway|
+      user = oldway.user.data_public ? oldway.user.display_name : "anonymous"
+      history << [oldway.version.to_s, oldway.timestamp.to_s(:db), oldway.visible ? '1' : '0', user.to_s]
     }
     [history]
   end

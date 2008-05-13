@@ -554,7 +554,7 @@ class AmfController < ApplicationController
   #		  out:	[0] id (unchanged), [1] projected long, [2] projected lat,
   #				[3] hash of tags
   def getpoi(args) #:doc:
-    id,baselong,basey,masterscale = args
+    id = args[0]
     
     n = Node.find(id.to_i)
     if n

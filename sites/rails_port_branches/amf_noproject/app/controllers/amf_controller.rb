@@ -162,7 +162,7 @@ class AmfController < ApplicationController
   # FIXME: The server really shouldn't be figuring out a ways bounding box and doing projection for potlatch
   # FIXME: the argument splitting should be done in the 'talk' method, not here
   def getway(args) #:doc:
-    wayid = args
+    wayid = args[0]
     wayid = wayid.to_i
 
     RAILS_DEFAULT_LOGGER.info("  Message: getway, id=#{wayid}")

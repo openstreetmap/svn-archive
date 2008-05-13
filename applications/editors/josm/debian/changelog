@@ -1,3 +1,21 @@
+openstreetmap-josm (7804) unstable; urgency=low
+
+   * fix validator build with new JOSM
+
+ -- Frederik Ramm  Tue, 13 May 2008 01:39:31 +0200
+
+openstreetmap-josm (7739) unstable; urgency=low
+
+   * josm/debian: add josm-ng to package, change icon-path, remove auto versionnumbering of changelog
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Fri, 09 May 2008 19:25:37 +0200
+
+openstreetmap-josm (7738) unstable; urgency=low
+
+   * fix date strings in changelog
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Fri, 09 May 2008 19:23:47 +0200
+
 openstreetmap-josm (7707) unstable; urgency=low
 
    * added more translations, still missing some

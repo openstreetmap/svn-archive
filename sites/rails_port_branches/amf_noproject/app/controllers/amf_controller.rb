@@ -344,7 +344,6 @@ class AmfController < ApplicationController
   #				[2] array of points (as getway/getway_old),
   #				[3] hash of way tags,
   #				[4] original way version (0 if not a reverted/undeleted way),
-  #				[5] baselong, [6] basey, [7] masterscale
   #		  does: saves way to the database
   #				all constituent nodes are created/updated as necessary
   #				(or deleted if they were in the old version and are otherwise unused)
@@ -353,7 +352,7 @@ class AmfController < ApplicationController
   #				[4] xmin, [5] xmax, [6] ymin, [7] ymax (unprojected bbox)
   def putway(args,renumberednodes) #:doc:
     RAILS_DEFAULT_LOGGER.info("  putway started")
-    usertoken,originalway,points,attributes,oldversion,baselong,basey,masterscale=args
+    usertoken,originalway,points,attributes,oldversion=args
     uid=getuserid(usertoken)
     if !uid then return -1,"You are not logged in, so the way could not be saved." end
 
@@ -407,8 +406,8 @@ class AmfController < ApplicationController
     nodelist=[]
 
     points.each_index do |i|
-      xs=coord2long(points[i][0],masterscale,baselong)
-      ys=coord2lat(points[i][1],masterscale,basey)
+      xs=points[i][0]
+      ys=points[i][1]
       xmin=[xs,xmin].min; xmax=[xs,xmax].max
       ymin=[ys,ymin].min; ymax=[ys,ymax].max
       node=points[i][2].to_i
@@ -508,13 +507,12 @@ class AmfController < ApplicationController
   #				[1] original node id (may be negative),
   #			  	[2] projected longitude, [3] projected latitude,
   #				[4] hash of tags, [5] visible (0 to delete, 1 otherwise), 
-  #				[6] baselong, [7] basey, [8] masterscale
   #		  does:	saves POI node to the database
   #				refuses save if the node has since become part of a way
   #		  out:	[0] 0 (success), [1] original node id (unchanged),
   #				[2] new node id
   def putpoi(args) #:doc:
-    usertoken,id,x,y,tags,visible,baselong,basey,masterscale=args
+    usertoken,id,x,y,tags,visible=args
     uid=getuserid(usertoken)
     if !uid then return -1,"You are not logged in, so the point could not be saved." end
 
@@ -530,8 +528,8 @@ class AmfController < ApplicationController
       deleteitemrelations(id,'node',uid,db_now)
     end
 
-    x=coord2long(x.to_f,masterscale,baselong)
-    y=coord2lat(y.to_f,masterscale,basey)
+    x=x.to_f
+    y=y.to_f
     tagsql="'"+sqlescape(array2tag(tags))+"'"
     lat=(y * 10000000).round
     long=(x * 10000000).round
@@ -551,7 +549,7 @@ class AmfController < ApplicationController
   # ----- getpoi
   # read POI from database
   #		  (only called on revert: POIs are usually read by whichways)
-  #		  in:	[0] node id, [1] baselong, [2] basey, [3] masterscale
+  #		  in:	[0] node id
   #		  does: reads POI
   #		  out:	[0] id (unchanged), [1] projected long, [2] projected lat,
   #				[3] hash of tags
@@ -560,7 +558,7 @@ class AmfController < ApplicationController
     
     n = Node.find(id.to_i)
     if n
-      return [n.id, n.lon_potlatch(baselong,masterscale), n.lat_potlatch(basey,masterscale), n.tags_as_hash]
+      return [n.id, n.lon, n.lat, n.tags_as_hash]
     else
       return [nil,nil,nil,'']
     end
@@ -783,31 +781,5 @@ class AmfController < ApplicationController
     return user ? user.id : nil;
   end
 
-  # ====================================================================
-  # Co-ordinate conversion
-
-  def lat2coord(a,basey,masterscale) #:doc:
-    -(lat2y(a)-basey)*masterscale
-  end
-
-  def long2coord(a,baselong,masterscale) #:doc:
-    (a-baselong)*masterscale
-  end
-
-  def lat2y(a) #:doc:
-    180/Math::PI * Math.log(Math.tan(Math::PI/4+a*(Math::PI/180)/2))
-  end
-
-  def coord2lat(a,masterscale,basey) #:doc:
-    y2lat(a/-masterscale+basey)
-  end
-
-  def coord2long(a,masterscale,baselong) #:doc:
-    a/masterscale+baselong
-  end
-
-  def y2lat(a)
-    180/Math::PI * (2*Math.atan(Math.exp(a*Math::PI/180))-Math::PI/2)
-  end
 
 end

@@ -73,7 +73,7 @@ for line in file_mp:
                     coords = coords.split(',', 2)
                     nodes = ET.Element("node", visible='true', id=str(nodeid), lat=str(float(coords[0][1:])), lon=str(float(coords[1][:-1])))
                     nodeid -= 1
-                    nodes.append(ET.Element('tag', k='attribution',v=attribution))
+                    nodes.append(ET.Element('tag', k='source',v=attribution))
                     if roadid:
                         nodes.append(ET.Element('tag', k='catmp-RoadID',v=roadid))
 

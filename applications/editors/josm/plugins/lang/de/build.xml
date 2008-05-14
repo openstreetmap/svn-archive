@@ -29,7 +29,7 @@
 
 	<target name="find">
 		<exec executable="find" output="alljava.txt">
-			<arg line="../../../core/src ../ -name '*.java'"/>
+			<arg line="../../../core/src ../.. -name '*.java'"/>
 		</exec>
 	</target>
 	

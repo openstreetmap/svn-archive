@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-13 11:40+0200\n"
-"PO-Revision-Date: 2008-05-14 17:39+0200\n"
+"PO-Revision-Date: 2008-05-14 18:00+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -3889,7 +3889,7 @@ msgstr "Ungeordnete Küsten"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:112
 msgid "Properties checker."
-msgstr "Eigenschaftsprüfer."
+msgstr "Eigenschaftsprüfer:"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:113
 msgid "This plugin checks for errors in property keys and values."

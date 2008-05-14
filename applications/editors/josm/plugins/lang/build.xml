@@ -82,6 +82,7 @@
   <target name="clean_lang">
     <delete file="../../dist/lang-${language}.jar" />
     <delete dir="${language}/build"/>
+    <delete file="keys.pot"/>
   </target>
 
 </project>

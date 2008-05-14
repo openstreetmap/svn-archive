@@ -36,10 +36,20 @@
     <copy tofile="${plugin.build.dir}/osm-map-features.xml"
 	  file="${rendering}/osmarender6/osm-map-features-z17.xml"/>
 	  <!--file="${rendering}/osmarender5/osm-map-features-z17.xml"/>-->
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
     <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
 	<attribute name="Plugin-Class" value="OsmarenderPlugin" />
 	<attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image" />
+	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+	<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>
   </target>

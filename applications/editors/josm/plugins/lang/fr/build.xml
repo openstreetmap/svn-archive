@@ -27,7 +27,7 @@
 
 	<target name="find">
 		<exec executable="find" output="alljava.txt">
-			<arg line="../../../../editors/josm/src ../ -name '*.java'"/>
+			<arg line="../../../../editors/josm/src ../.. -name '*.java'"/>
 		</exec>
 	</target>
 	

@@ -1,7 +1,0 @@
-<%= error_messages_for 'diary_entry' %>
-
-<% form_tag :controller => 'diary_entry', :action => 'new' do %>
-subject<%= text_field 'diary_entry', 'title' %><br>
-body<%= text_area 'diary_entry', 'body' %><br>
-  <%= submit_tag 'Save' %>
-<% end %>

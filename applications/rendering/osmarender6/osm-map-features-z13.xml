@@ -60,7 +60,7 @@
             <area class='landuse-wood'/>
         </rule>
 	<rule e="way" k="natural" v="heath">
-	    <area class='natural-heath'>
+	    <area class='natural-heath'/>
 	</rule>
         
         

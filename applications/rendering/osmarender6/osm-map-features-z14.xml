@@ -72,8 +72,11 @@
 	<rule e="way" k="natural" v="beach">
 	    <area class='natural-beach' />
 	</rule>
-        <rule e="way" k="natural" v="forest|wood|heath|scrub">
+        <rule e="way" k="natural" v="forest|wood|scrub">
             <area class='landuse-wood'/>
+        </rule>
+        <rule e="way" k="natural" v="heath">
+            <area class='natural-heath'/>
         </rule>
 
 
@@ -1459,6 +1462,12 @@
             .natural-land {
                 fill: #ffffff;
                 stroke: #e0e0e0;
+                stroke-width: 0.2px;
+            }
+
+            .natural-heath {
+                fill: #ffffc0;
+                stroke: #ffff90;
                 stroke-width: 0.2px;
             }
 

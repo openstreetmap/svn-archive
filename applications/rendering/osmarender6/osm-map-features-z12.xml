@@ -47,10 +47,12 @@
         <rule e="way" k="natural" v="land">
             <area class='natural-land' />
         </rule>
-        <rule e="way" k="landuse|natural" v="forest|wood|heath|scrub">
+        <rule e="way" k="landuse|natural" v="forest|wood|scrub">
             <area class='landuse-wood'/>
         </rule>
-
+	<rule e="way" k="natural" v="heath">
+	    <area class="'natural-heath">
+	</rule>
         
 		<!-- Artificial landuse -->        
         <rule e="way" k="landuse" v="field|farm|allotments|village_green|recreation_ground|meadow">
@@ -977,6 +979,11 @@
                 stroke-width: 0.1px;
             }
 
+            .natural-heath {
+                fill: #ffffc0;
+		stroke: #ffff90;
+		stroke-width: 0.2px;
+            }
 
             /* Landuse */
             .landuse-all {

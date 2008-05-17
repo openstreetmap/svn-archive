@@ -114,6 +114,9 @@
         <rule e="way" k="tourism" v="attraction">
             <area class='tourism-attraction'/>
         </rule>
+    <rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
+            <area class='tourism-green-area'/>
+        </rule>
         <rule e="way" k="aeroway" v="terminal">
             <area class='building-block'/>
         </rule>
@@ -1333,6 +1336,11 @@
                 fill: #f2caea;
                 stroke: #f124cb;
                 stroke-width: 0px;
+            }
+            .tourism-green-area {
+                fill: #c7f1a3;
+                stroke: #6fc18e;
+                stroke-width: 0.2px;
             }
 
             /* Building */

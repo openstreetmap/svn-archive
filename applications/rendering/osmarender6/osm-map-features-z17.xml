@@ -134,9 +134,12 @@
         <rule e="way" k="tourism" v="attraction">
             <area class='tourism-attraction'/>
         </rule>
-		<rule e="way" k="aeroway" v="terminal">
-			<area class='building-block'/>
-		</rule>
+        <rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
+            <area class='tourism-green-area'/>
+        </rule>
+	<rule e="way" k="aeroway" v="terminal">
+             <area class='building-block'/>
+	</rule>
         <rule e="way" k="building" v="*">
 	        <area class='building-block'/>
         </rule>
@@ -1665,7 +1668,7 @@
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
         </rule>
-        <rule e="way" k="tourism" v="attraction" layer="5">
+        <rule e="way" k="tourism" v="tourism-attraction|zoo|picnic_site|caravan_site|camp_site" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
         </rule>
@@ -2501,7 +2504,11 @@
                 stroke: #f124cb;
                 stroke-width: 0px;
             }
-
+           .tourism-green-area {
+                fill: #c7f1a3;
+                stroke: #6fc18e;
+                stroke-width: 0.2px;
+            }            
             .tourism-attraction-caption {
                 fill: #f124cb;
                 stroke: white;

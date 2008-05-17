@@ -256,7 +256,7 @@
             <rule e="way" k="highway" v="service">
                 <line class='highway-casing highway-service-casing' />
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
             <rule e="way" k="highway" v="tertiary">
@@ -420,6 +420,14 @@
 					<line class='highway-core highway-unclassified-core' />
 				</else>
 			</rule>
+			<rule e="way" k="highway" v="road">
+				<rule e="way" k="area" v="yes|true">
+ 					<area class='highway-core highway-road-area' />
+				</rule>
+				<else>
+					<line class='highway-core highway-road-core' />
+				</else>
+			</rule>
 			<rule e="way" k="highway" v="tertiary">
 				<rule e="way" k="area" v="yes|true">
  					<area class='highway-core highway-tertiary-area' />
@@ -556,6 +564,10 @@
 				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-unclassified-core'/>
 				<line class='highway-unclassified-casing highway-tunnel-ends'/>
             </rule>
+            <rule e="way" k="highway" v="road">
+				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-road-core'/>
+				<line class='highway-unclassified-casing highway-tunnel-ends'/>
+            </rule>
             <rule e="way" k="highway" v="tertiary">
 				<line class='tunnel-casing highway-tertiary-casing tunnel' mask-class='tunnel-core highway-tertiary-core'/>
 				<line class='highway-tertiary-casing highway-tunnel-ends'/>
@@ -659,6 +671,9 @@
             </rule>
             <rule e="way" k="construction" v="unclassified|residential|minor|living_street">
                 <line class='highway-core highway-unclassified-core under-construction' />
+            </rule>
+            <rule e="way" k="construction" v="road">
+                <line class='highway-core highway-road-core under-construction' />
             </rule>
             <rule e="way" k="construction" v="tertiary">
                 <line class='highway-core highway-tertiary-core under-construction' />
@@ -922,7 +937,7 @@
 					    <text k="name" startOffset='50%' class="waterway-name-core waterway-river-name-core" dy='2px' />
 					</rule>
 					
-					<rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
 					    <text k="name" startOffset='50%' class="highway-name highway-unclassified-name" dy='1.6px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
@@ -1230,6 +1245,8 @@
             .highway-unclassified-area              { stroke-width: 3.5px;   stroke: #ffffff; fill: #ffffff; }
             .highway-unclassified-name              { stroke-width: 0px;     font-size: 4.5px; }
             .highway-unclassified-ref               { stroke-width: 0px;     font-size: 4.5px; }
+            .highway-road-core                      { stroke-width: 3.5px;   stroke: #d0d0d0; }
+            .highway-road-area                      { stroke-width: 3.5px;   stroke: #d0d0d0; fill: #d0d0d0; }
 
             .highway-service-bridge-casing          { stroke-width: 4.5px; }
             .highway-service-bridge-core            { stroke-width: 3.5px; }

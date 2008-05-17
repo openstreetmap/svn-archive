@@ -233,7 +233,7 @@
             <rule e="way" k="highway" v="service">
                 <line class='highway-casing highway-service-casing' />
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
             <rule e="way" k="highway" v="tertiary">
@@ -357,6 +357,9 @@
             <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <line class='highway-core highway-unclassified-core' />
             </rule>
+            <rule e="way" k="highway" v="road">
+                <line class='highway-core highway-road-core' />
+            </rule>
             <rule e="way" k="highway" v="tertiary">
                 <line class='highway-core highway-tertiary-core' />
             </rule>
@@ -451,6 +454,10 @@
             </rule>
             <rule e="way" k="highway" v="unclassified|residential|minor|tertiary|living_street">
 				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-unclassified-core'/>
+				<line class='highway-unclassified-casing highway-tunnel-ends'/>
+            </rule>
+            <rule e="way" k="highway" v="road">
+				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-road-core'/>
 				<line class='highway-unclassified-casing highway-tunnel-ends'/>
             </rule>
             <rule e="way" k="highway" v="tertiary">
@@ -732,6 +739,7 @@
               
             .highway-unclassified-casing            { stroke-width: 5px; stroke: #c0c0c0; }
             .highway-unclassified-core              { stroke-width: 1.2px; stroke: #ffffff; }
+            .highway-road-core                      { stroke-width: 1.2px; stroke: #d0d0d0; }
 
             .highway-service-casing                 { stroke-width: 3px; stroke: #222222; }
             .highway-service-core                   { stroke-width: 2.5px; stroke: #ffffff; }

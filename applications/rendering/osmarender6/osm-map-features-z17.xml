@@ -149,7 +149,7 @@
         <rule e="way" k="osmarender:renderUser" v="~|yes">
             <rule e="way" k="tunnel" v="~|no|false">    <!-- no names in tunnels -->
 				<rule e="way" k="junction" v="~"> <!-- no names on or along junctions -->
-					<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
 					    <text startOffset='50%' class="highway-name highway-user" dy='1.7px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 					<rule e="way" k="highway" v="tertiary">
@@ -285,7 +285,7 @@
             <rule e="way" k="highway" v="tertiary">
                 <line class='bridge-casing highway-tertiary-bridge-casing' smart-linecap='no'/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
                 <line class='bridge-casing highway-unclassified-bridge-casing' smart-linecap='no'/>
             </rule>
             <rule e="way" k="highway" v="service">
@@ -364,7 +364,7 @@
             <rule e="way" k="highway" v="tertiary">
                 <line class='bridge-core highway-tertiary-bridge-core' smart-linecap='no'/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
                 <line class='bridge-core highway-unclassified-bridge-core' smart-linecap='no'/>
             </rule>
             <rule e="way" k="highway" v="service">
@@ -456,7 +456,7 @@
             <rule e="way" k="highway" v="service">
                 <line class='highway-casing highway-service-casing' />
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor">
+            <rule e="way" k="highway" v="unclassified|residential|minor|road">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
             <rule e="way" k="highway" v="living_street">
@@ -607,6 +607,14 @@
                      <line class='highway-core highway-unclassified-core' />
                 </else>
 	        </rule>
+            <rule e="way" k="highway" v="road">
+                <rule e="way" k="area" v="yes|true">
+                     <area class='highway-core highway-road-area' />
+                 </rule>
+                <else>
+                     <line class='highway-core highway-road-core' />
+                </else>
+	    </rule>
             <rule e="way" k="highway" v="living_street">
                 <rule e="way" k="area" v="yes|true">
                      <area class='highway-core highway-livingstreet-area' />
@@ -762,6 +770,10 @@
 				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-unclassified-core'/>
 				<line class='highway-unclassified-casing highway-tunnel-ends'/>
             </rule>
+            <rule e="way" k="highway" v="road">
+				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-road-core'/>
+				<line class='highway-unclassified-casing highway-tunnel-ends'/>
+            </rule>
             <rule e="way" k="highway" v="tertiary">
 				<line class='tunnel-casing highway-tertiary-casing tunnel' mask-class='tunnel-core highway-tertiary-core'/>
 				<line class='highway-tertiary-casing highway-tunnel-ends'/>
@@ -858,6 +870,9 @@
             </rule>
             <rule e="way" k="construction" v="unclassified|residential|minor|living_street">
                 <line class='highway-core highway-unclassified-core under-construction' />
+            </rule>
+            <rule e="way" k="construction" v="road">
+                <line class='highway-core highway-road-core under-construction' />
             </rule>
             <rule e="way" k="construction" v="tertiary">
                 <line class='highway-core highway-tertiary-core under-construction' />
@@ -1168,12 +1183,12 @@
         <!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
 			<rule e="node" s="way" k="railway" v="rail">
-				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street">
+				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road">
 					<symbol xlink:href="#symbol-railway-crossing" width='3.5px' height='3.5px' transform='translate(-1.75,-1.75)' />
 				</rule>
 			</rule>
 			<else>
-			    <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street">
+			    <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road">
 					<symbol xlink:href="#symbol-railway-crossing" width='3px' height='3px' transform='translate(-1.5,-1.5)' />
 			    </rule>
 			</else>
@@ -1431,7 +1446,7 @@
 					<rule e="way" k="highway" v="service" layer="5">
 					    <text k="name" startOffset='50%' class="highway-name highway-service-name" dy='0.35px' />
 					</rule>
-					<rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
 					    <text k="name" startOffset='50%' class="highway-name highway-unclassified-name" dy='0.35px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
@@ -1466,7 +1481,7 @@
                     <rule e="way" k="highway" v="pedestrian" layer="5">
                         <areaText k="name" startOffset='50%' class="highway-name highway-pedestrian-name" dy='0.75px' />
                     </rule>
-                    <rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
+                    <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
                         <areaText k="name" startOffset='50%' class="highway-name highway-unclassified-name" dy='0.75px' />
                     </rule>
                     <rule e="way" k="highway" v="tertiary" layer="5">
@@ -1523,7 +1538,7 @@
 					<rule e="way" k="highway" v="service" layer="5">
 					    <text k="ref" startOffset='30%' class='highway-ref highway-service-ref' dy='-1px' />
 					</rule>
-					<rule e="way" k="highway" v="unclassified|residential|minor|living_street" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
 					    <text k="ref" startOffset='30%' class='highway-ref highway-unclassified-ref' dy='-1.2px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
@@ -1921,6 +1936,8 @@
             .highway-unclassified-area              { stroke-width: 1.25px;   stroke: #ffffff; fill: #ffffff; }
             .highway-unclassified-name              { stroke-width: 0px;     font-size: 1.25px; }
             .highway-unclassified-ref               { stroke-width: 0px;     font-size: 1.5px; }
+            .highway-road-core                      { stroke-width: 1.25px;   stroke: #d0d0d0; }
+            .highway-road-area                      { stroke-width: 1.25px;   stroke: #d0d0d0; fill: #d0d0d0; }
 
             .highway-livingstreet-casing            { stroke-width: 1.5px;  stroke: #777777; }
             .highway-livingstreet-core-1            { stroke-width: 1.25px; stroke: #ffffff; stroke-linecap: round; }

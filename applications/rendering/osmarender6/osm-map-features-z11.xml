@@ -185,7 +185,7 @@
             <rule e="way" k="highway" v="track">
                 <line class='highway-casing highway-track-casing' />
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
@@ -269,6 +269,9 @@
                 <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                     <line class='highway-core highway-unclassified-core' />
                 </rule>
+                <rule e="way" k="highway" v="road">
+                    <line class='highway-core highway-road-core' />
+                </rule>
                 <rule e="way" k="highway" v="unsurfaced">
                     <line class='highway-core highway-unsurfaced-core' />
                 </rule>
@@ -306,6 +309,9 @@
             </rule>
             <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
                 <tunnel width="2" class='highway-core highway-unclassified' />
+            </rule>
+            <rule e="way" k="highway" v="road">
+                <tunnel width="2" class='highway-core highway-road' />
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
                 <tunnel width="2" class='highway-core highway-unsurfaced' />
@@ -702,6 +708,11 @@
             .highway-unclassified-core {
                 stroke-width: 1.2px;
                 stroke: #ffffff;
+            }
+
+            .highway-road-core {
+                stroke-width: 1.2px;
+                stroke: #d0d0d0;
             }
 
             .highway-unsurfaced-casing {

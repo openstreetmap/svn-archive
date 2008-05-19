@@ -1,18 +1,12 @@
-<html>
-<head>
-<title>tiles@home - lookup tile meta-information</title>
-<link rel="stylesheet" href="../styles.css">
-<style>
-.chat{color:#AAA;font-size:small;}
-.notes{color:#4F4; font-size:small}
-</style>
-<meta name="robots" content="nofollow,noindex">
-</head>
-<body>
-<div class="all">
-<h1 class="title"><a href="../"><img src="../Gfx/tah.png" alt="tiles@home" width="600" height="109"></a></h1>
-<p class="title">Lookup tile meta-information</p>
-<hr>
+<?php
+$Layer = $_GET["layer"];
+$Z = $_GET["z"];
+$X = $_GET["x"];
+$Y = $_GET["y"];
+$title = "Tile Information: $X, $Y, $Z";
+include "../lib/template/header.inc" 
+?>  
+
 <?php
   
   include("../lib/tilenames.inc");
@@ -51,14 +45,19 @@
     }
 
   // Open database connection
-  if ($Z > 12) {
+  if ($Z >= 12) {
     list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
   }
+  $data = NULL;
   if ($Z >= 12) {
     $complexity = TileComplexity($X12, $Y12);
     print "<h2>Tile Info</h2> <p>Complexity: $complexity</p>"; 
     $data = request_info($X12, $Y12, 12);
-    if ($data) {
+  } else {
+    $data = request_info($X, $Y, $Z);
+  }
+
+  if ($data) {
       $States = Array( 
         0 => "Pending",
         1 => "New",
@@ -71,7 +70,6 @@
       if ($data['status'] >= 2) {
           print "Taken by client at ".$data['active_date'].".";
       }    
-    }  
   }
   print "<h2>Tile on disk</h2>\n";
   // look up filesystem

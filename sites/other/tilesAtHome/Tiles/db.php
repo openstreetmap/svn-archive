@@ -55,9 +55,8 @@
         BlankTile("land", FALSE);
         break;
       default:
-        header("HTTP/1.0 302 Found");
-        header("Location: http://dev.openstreetmap.org/~ojw/Tiles/tile.php/$Z/$X/$Y.png");
-        //BlankTile("unknown", TRUE); // probably shouldn't reach this line
+        //header("HTTP/1.0 302 Found");
+        //header("Location: http://dev.openstreetmap.org/~ojw/Tiles/tile.php/$Z/$X/$Y.png");
         //Request the render of this missing tile
         if ($Z == 12) {
           $complexity = FindComplexity($X, $Y, $Z);
@@ -81,6 +80,7 @@
                 InsertBlankTile($X, $Y, 12, $LayerID, 334, $type);  
             }
         }
+        BlankTile("unknown", TRUE); // probably shouldn't reach this line
         break;
       }
   }

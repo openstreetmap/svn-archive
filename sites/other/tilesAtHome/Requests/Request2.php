@@ -68,9 +68,9 @@
     #}
   }
 
-  if ($_POST["layerspossible"] == 'default,maplint,lowzoom'){
-    $Z = -1;
-  }
+//  if ($_POST["layerspossible"] == 'default,maplint,lowzoom'){ // should check for "default" and "lowzoom" each instead of entire string.
+//    $Z = -1;
+//  }
 
   CheckForRequest($Z, $UserID);
   printf("XX|%d||||nothing_to_do",$APIVersion);
@@ -80,11 +80,11 @@ function CheckForRequest($Z, $UserID = 0){
   
   global $APIVersion;
   # next request that is handed out: order by priority, then date.
-  if ($Z >= 0){
+//  if ($Z >= 0){
     $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." and `z`=".$Z." order by `priority`,`date` limit 1;";
-  } else {
-    $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." order by `priority`,`date` limit 1;";
-  }
+//  } else {
+//    $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." order by `priority`,`date` limit 1;";
+//  }
   
   $Result = mysql_query($SQL);
 

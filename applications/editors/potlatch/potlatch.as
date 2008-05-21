@@ -415,11 +415,11 @@
 	_root.panel.createEmptyMovieClip("welcome",61);
 
 	_root.panel.welcome.createEmptyMovieClip("start",1);
-	drawButton(_root.panel.welcome.start,250,7,"Start","Start mapping with OpenStreetMap.");
+	drawButton(_root.panel.welcome.start,150,7,"Start","Start mapping with OpenStreetMap.");
 	_root.panel.welcome.start.onPress=function() { removeMovieClip(_root.panel.welcome); clearModalDialogue(); };
 
 	_root.panel.welcome.createEmptyMovieClip("play",2);
-	drawButton(_root.panel.welcome.play,250,29,"Play","Practice mapping - your changes won't be saved.");
+	drawButton(_root.panel.welcome.play,150,29,"Play","Practice mapping - your changes won't be saved.");
 	_root.panel.welcome.play.onPress=function() {
 		clearModalDialogue(); 
 		_root.sandbox=true; removeMovieClip(_root.panel.welcome);
@@ -438,12 +438,12 @@
 	};
 
 	_root.panel.welcome.createEmptyMovieClip("help",3);
-	drawButton(_root.panel.welcome.help,250,51,"Help","Find out how to use Potlatch, this map editor.");
+	drawButton(_root.panel.welcome.help,150,51,"Help","Find out how to use Potlatch, this map editor.");
 	_root.panel.welcome.help.onPress=function() { getUrl("http://wiki.openstreetmap.org/index.php/Potlatch","_blank"); };
 
 	if (gpx) {
 		_root.panel.welcome.createEmptyMovieClip("convert",4);
-		drawButton(_root.panel.welcome.convert,250,73,"Track","Convert your GPS track to (locked) ways for editing.");
+		drawButton(_root.panel.welcome.convert,150,73,"Track","Convert your GPS track to (locked) ways for editing.");
 		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); clearModalDialogue(); gpxToWays(); };
 	}
 
@@ -701,11 +701,11 @@
 		}
 
 		switch (k) {
-			case 46:		;													// DELETE/backspace - delete way -- ode
+			case 46:		;													// DELETE/backspace - delete way/node
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
 								if (_root.wayselected!=0) { _root.ws.removeWithConfirm(); }
 							} else { keyDelete(1); }; break;					//  |
-			case 13:		_root.junction=false; stopDrawing(); break;								// ENTER - stop drawing line
+			case 13:		_root.junction=false; stopDrawing(); break;			// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
@@ -719,6 +719,7 @@
 			case Key.RIGHT: moveMap(-140,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
+			case Key.CAPSLOCK: dimMap(); break;										// CAPS LOCK - dim map
 			case 192:		;													// '`' - cycle presets
 			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' -  |
 			case 107:		;													// '+' - add new attribute
@@ -895,12 +896,9 @@
 		if (preferences.data.baselayer!=0 &&
 			preferences.data.baselayer!=2 ) { serviceTileQueue(); }
 
-		// ----	Alpha display for capslock
-		_root.map.areas._alpha=
-		_root.map.highlight._alpha=
-		_root.map.relations._alpha=
-		_root.map.ways._alpha=
-		_root.map.pois._alpha=Key.isToggled(Key.CAPSLOCK)?30:100;
+		if (_root.map.ways._alpha<40) {
+			if (!Key.isToggled(Key.CAPSLOCK)) { dimMap(); }
+		}
 			
 		// ----	Reinstate focus if lost after click event
 		if (_root.reinstatefocus) {
@@ -909,6 +907,15 @@
 		}
 	}
 	
+	// Dim map on CAPS LOCK
+
+	function dimMap() {
+		_root.map.areas._alpha=
+		_root.map.highlight._alpha=
+		_root.map.relations._alpha=
+		_root.map.ways._alpha=
+		_root.map.pois._alpha=Key.isToggled(Key.CAPSLOCK)?30:100;
+	}
 
 	// Options window
 	

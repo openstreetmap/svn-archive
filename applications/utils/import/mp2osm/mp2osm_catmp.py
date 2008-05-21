@@ -60,10 +60,78 @@ for line in file_mp:
             tag.tail = '\n    '
             node.append(tag)
         if line.startswith('Type'):
-            typecode = int(line.split('=')[1].strip())
+            typecode = line.split('=')[1].strip()
             tag = ET.Element('tag', k='garmin_type',v=typecode)
             tag.tail = '\n    '
             node.append(tag)
+            typecode = "%#x" % int(typecode, 16)
+            poitagmap = {# Warning: this particular 'gate' typecode usage is specific to Calgary Trails maps
+                 ('0x1612', '0x1c00', '0x6400'): {'highway': 'gate'}, 
+                 ('0x2b00'): {'tourism': 'hotel'},
+                 ('0x2b01'): {'tourism': 'motel'},
+                 ('0x2b03'): {'tourism': 'caravan_site'},
+                 ('0x2e02'): {'shop': 'supermarket'},
+                 ('0x2f08'): {'amenity': 'bus_station'},
+                 ('0x4400'): {'amenity': 'fuel'},
+                 ('0x4700'): {'leisure': 'slipway'},
+                 ('0x4800'): {'tourism': 'campsite'},
+                 ('0x4900'): {'leisure': 'park'},
+                 ('0x4a00'): {'tourism': 'picnic_site'},
+                 ('0x4c00'): {'tourism': 'information'},
+                 ('0x4d00'): {'amenity': 'parking'},
+                 ('0x4e00'): {'amenity': 'toilets'},
+                 ('0x5100'): {'amenity': 'telephone'},
+                 ('0x5200'): {'tourism': 'viewpoint'},
+                 ('0x5400'): {'sport': 'swimming'},
+                 ('0x5904'): {'aeroway': 'helipad'},
+                 ('0x5905'): {'aeroway': 'aerodrome'},
+                 ('0x5904'): {'aeroway': 'helipad'},
+                 ('0x5a00'): {'distance_marker': 'yes'}, # Not approved
+                 ('0x6401'): {'bridge': 'yes'}, # Apply to points?
+                 ('0x6401'): {'building': 'yes'},
+                 ('0x6406'): {'highway': 'crossing'},
+                 ('0x640c'): {'man_made': 'mineshaft'},
+                 ('0x640d'): {'man_made': 'pumping_rig', 'type': 'oil'},
+                 ('0x6411'): {'man_made': 'tower'},
+                 ('0x6412'): {'highway': 'trailhead'}, # This is not even a proposed value
+                 ('0x6413'): {'tunnel': 'yes'}, # Apply to points?
+                 ('0x6500', '0x650d'): {'natural': 'water'},
+                 ('0x6508'): {'waterway': 'waterfall'},
+                 ('0x6605'): {'natural': 'bench'},
+                 ('0x6616'): {'natural': 'peak'}
+                }
+            polylinetagmap = {
+                 ('0x2'): {'highway': 'trunk'},
+                 ('0x3'): {'highway': 'primary'},
+                 ('0x4'): {'highway': 'secondary'},
+                 ('0x5'): {'highway': 'tertiary'},
+                 ('0x6'): {'highway': 'residential'},
+                 ('0xa'): {'highway': 'track', 'surface': 'unpaved'},
+                 ('0x16'): {'highway': 'footpath'},
+                 ('0x18'): {'waterway': 'stream'},
+                 ('0x1f'): {'waterway': 'river'},
+                 ('0x29'): {'power': 'line'}
+                }
+            polygontagmap = {
+                 ('0x5'): {'amenity': 'parking', 'area': 'yes'},
+                 ('0xd'): {'landuse': 'reservation', 'area': 'yes'}, # reservation is not even a proposed value
+                 ('0x3c', '0x40', '0x41'): {'natural': 'water', 'area': 'yes'},
+                 ('0x48', '0x49'): {'waterway': 'riverbank', 'area': 'yes'},
+                 ('0x4c'): {'waterway': 'intermittent', 'area': 'yes'},
+                 ('0x51'): {'natural': 'marsh', 'area': 'yes'}
+                }
+            if poi:
+                elementtagmap = poitagmap
+            if polyline:
+                elementtagmap = polylinetagmap
+            if polygon:
+                elementtagmap = polygontagmap
+            for codes, taglist in elementtagmap.iteritems():
+                if typecode in codes:
+                    for key, value in taglist.iteritems():
+                        tag = ET.Element('tag', k=key, v=value)
+                        tag.tail = '\n    '
+                        node.append(tag)
         if line.startswith('RoadID'):
             roadid = line.split('=')[1].strip()
             tag = ET.Element('tag', k='catmp-RoadID',v=roadid)
@@ -122,7 +190,7 @@ for line in file_mp:
                 node.set('lat',str(float(coords[0][1:])))
                 node.set('lon',str(float(coords[1][:-1])))
             if polyline or polygon:
-                # Just grab the line and parse it when the [END] element is encountered
+                # Just grab the line and parse it later when the [END] element is encountered
                 coords = line.split('=')[1].strip() + ','
         if line.startswith('Nod'):
             if polyline:

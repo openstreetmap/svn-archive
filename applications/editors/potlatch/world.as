@@ -150,6 +150,7 @@
 	function redrawBackground() {
 		var alpha=100-50*preferences.data.dimbackground;
 		switch (preferences.data.baselayer) {
+			case 1: ; // temporarily disable OAM
 			case 0: _root.yahoo._visible=false;	// none
 					_root.map.tiles._visible=false;
 					break;

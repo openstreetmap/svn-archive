@@ -926,7 +926,7 @@
 
 		_root.modal.box.attachMovie("menu","background",10);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","Aerial - OpenAerialMap","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
+			new Array("None","-----------------------------------------","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
 
 		_root.modal.box.attachMovie("checkbox","fadepref",5);

@@ -1298,7 +1298,7 @@
         </rule>
         <rule e="way" k="amenity" v="parking">
             <rule e="way" k="access" v="~|yes|public">
-                <areaSymbol xlink:href="#parking" width='2px' height='2px' transform='translate(-1,-1)' />
+                <areaSymbol xlink:href="#parking" width='2px' height='2px' transform='translate(0,0)' />
             </rule>
         </rule>
         <rule e="node" k="highway" v="traffic_signals">
@@ -1312,6 +1312,14 @@
         </rule>
         <rule e="node" k="amenity|shop" v="supermarket">
             <symbol xlink:href="#symbol-supermarket" width='2px' height='2px' transform='translate(0,0)' />
+        </rule>
+        <rule e="node" k="amenity" v="shelter">
+            <rule e="node" k="fireplace" v="yes">
+              <symbol xlink:href="#symbol-shelter-fireplace" width='2px' height='2px' transform='translate(-1,-1.33)' />
+	    </rule>
+            <else>
+              <symbol xlink:href="#symbol-shelter" width='2px' height='2px' transform='translate(-1,-1.33)' />
+            </else>
         </rule>
         <rule e="node" k="amenity" v="library">
             <symbol xlink:href="#symbol-library" width='2px' height='2px' transform='translate(0,0)' />
@@ -1630,7 +1638,7 @@
 			    <text k="name" class='caption-casing generic-caption-casing' dy='-3px' />
 			    <text k="name" class='caption-core generic-caption-core' dy='-3px' />
 			</rule>
-			<rule e="node" k="amenity" v="supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site" layer="5">
+			<rule e="node" k="amenity" v="shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site" layer="5">
 			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
 			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
 			</rule>
@@ -4116,7 +4124,117 @@
 		        d="M 114.9996,71.691476 L 114.9996,160.4199 L 126.82978,160.4199 L 126.82978,170.98263 L 124.71757,170.98263 L 73.170217,170.98263 L 73.170217,160.4199 L 85.000937,160.4199 L 85.000937,82.254149 L 73.170217,82.254149 L 73.170217,71.691412 L 75.282973,71.691412 L 114.99957,71.691412 L 114.9996,71.691476 z M 84.155594,43.805631 C 84.155594,40.002758 85.529241,36.587522 88.275447,33.559351 C 91.021656,30.531181 94.578158,29.017365 98.943844,29.017365 L 101.0566,29.017365 C 104.71822,29.017365 108.09842,30.35543 111.19668,33.031558 C 114.29548,35.707143 115.84433,39.29868 115.84433,43.805631 C 115.84433,47.607949 114.5068,51.023202 111.83067,54.051372 C 109.15455,57.079542 105.56355,58.593358 101.0566,58.593358 L 98.943844,58.593358 C 95.28222,58.593358 91.902019,57.255293 88.803763,54.579704 C 85.704967,51.90358 84.155578,48.312043 84.155578,43.805631 L 84.155594,43.805631 z "
 		        />
 		</svg:symbol>
-		
+
+		<svg:symbol id="symbol-shelter" viewBox="0 0 12 12">
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		       d="M 3.25,2.25 L 2.25,3.25" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 3.6,3.4 L 2.3679807,4.6320194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 5.1320193,3.1179806 L 3.9,4.35" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 3.1,4.9 L 2.1331457,5.8668544" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 6.3820193,2.8679806 L 5.15,4.1" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 8.1320193,2.1179806 L 6.9,3.35" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 8.6320193,3.6179806 L 7.4,4.85" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 10.029592,3.5035534 L 9.1179807,4.3820194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 10.029592,2.0035534 L 9.1179802,2.8820194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 10.062738,4.7093592 L 9.1179803,5.6320194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+ 		       d="M 8.5434563,4.9896893 L 8.1179807,5.3820194" />
+ 		    <svg:path
+  		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+ 		       d="M 7.2633009,4.0087961 L 6.65,4.6" />
+		    <svg:path
+ 		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 4.841767,2.1361359 L 4.1179807,2.8820194" />
+		    <svg:path
+ 		       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;marker-mid:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+   		       d="M 2.25,6.5 L 6,4.5 L 9.75,6.5 L 9.4989134,6.7556834 L 8.2452133,6.25 L 5.9986595,5.9796244 L 3.7469743,6.2460938 L 2.4998353,6.7500598 L 2.25,6.5 z " />
+  		    <svg:rect
+ 		       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+       		       width="0.5" height="3.5" x="3.75" y="6" />
+ 		    <svg:rect
+ 		       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.40000001;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+        	       width="0.5" height="3.5" x="7.75" y="6" />
+                </svg:symbol>
+
+		<svg:symbol id="symbol-shelter-fireplace" viewBox="0 0 12 12">
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+		       d="M 3.25,2.25 L 2.25,3.25" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 3.6,3.4 L 2.3679807,4.6320194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 5.1320193,3.1179806 L 3.9,4.35" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 3.1,4.9 L 2.1331457,5.8668544" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 6.3820193,2.8679806 L 5.15,4.1" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 8.1320193,2.1179806 L 6.9,3.35" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 8.6320193,3.6179806 L 7.4,4.85" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 10.029592,3.5035534 L 9.1179807,4.3820194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 10.029592,2.0035534 L 9.1179802,2.8820194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 10.062738,4.7093592 L 9.1179803,5.6320194" />
+		    <svg:path
+		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+ 		       d="M 8.5434563,4.9896893 L 8.1179807,5.3820194" />
+ 		    <svg:path
+  		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+ 		       d="M 7.2633009,4.0087961 L 6.65,4.6" />
+		    <svg:path
+ 		       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+		       d="M 4.841767,2.1361359 L 4.1179807,2.8820194" />
+		    <svg:path
+ 		       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;marker-mid:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+   		       d="M 2.25,6.5 L 6,4.5 L 9.75,6.5 L 9.4989134,6.7556834 L 8.2452133,6.25 L 5.9986595,5.9796244 L 3.7469743,6.2460938 L 2.4998353,6.7500598 L 2.25,6.5 z " />
+  		    <svg:rect
+ 		       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+       		       width="0.5" height="3.5" x="3.75" y="6" />
+ 		    <svg:rect
+ 		       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.40000001;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+        	       width="0.5" height="3.5" x="7.75" y="6" />
+  		    <svg:path
+                       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.21333456;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                       d="M 6.0132105,9.4927507 C 8.5559855,9.4927507 6.0132105,6.7566673 6.0132105,6.7566673 C 6.0132105,6.7566673 3.4109882,9.5713193 6.0132105,9.4927507 z " />
+                    <svg:path
+                       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+                       d="M 6.0086658,9.2482305 C 7.6766678,9.2482305 6.0086658,8 6.0086658,8 C 6.0086658,8 4.3016678,9.2840744 6.0086658,9.2482305 z " />
+                    <svg:path
+                       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+                       d="M 7.015165,9.7610485 C 6.7416602,8.8729417 5.2679806,8.8743495 4.9958835,9.7610485 C 4.9958835,9.7610485 7.015165,9.7610485 7.015165,9.7610485 z " />
+                </svg:symbol>		
     </defs>
 
 </rules>

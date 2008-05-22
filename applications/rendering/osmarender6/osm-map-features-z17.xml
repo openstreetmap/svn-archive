@@ -1315,10 +1315,10 @@
         </rule>
         <rule e="node" k="amenity" v="shelter">
             <rule e="node" k="fireplace" v="yes">
-              <symbol xlink:href="#symbol-shelter-fireplace" width='2px' height='2px' transform='translate(-1,-1.33)' />
+              <symbol xlink:href="#symbol-shelter-fireplace" width='4px' height='4px' transform='translate(-2,-2.6)' />
 	    </rule>
             <else>
-              <symbol xlink:href="#symbol-shelter" width='2px' height='2px' transform='translate(-1,-1.33)' />
+              <symbol xlink:href="#symbol-shelter" width='4px' height='4px' transform='translate(-2,-2.6)' />
             </else>
         </rule>
         <rule e="node" k="amenity" v="library">

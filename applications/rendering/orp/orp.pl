@@ -534,16 +534,16 @@ sub draw_map_decoration
         {
             $writer->emptyTag('line',
                 'id' => 'grid-hori-'.$i,
-                'x1' => '0px', 'y1' => sprintf('%dpx', $i * $gridSpacingPx),
-                'x2' => $documentWidth.'px', 'y2' => sprintf('%dpx', $i * $gridSpacingPx),
+                'x1' => '0px', 'y1' => sprintf('%fpx', $i * $gridSpacingPx),
+                'x2' => $documentWidth.'px', 'y2' => sprintf('%fpx', $i * $gridSpacingPx),
                 'class' => 'map-grid-line');
         }
         for (my $i=1; $i<$documentWidth / $gridSpacingPx; $i++)
         {
             $writer->emptyTag('line',
                 'id' => 'grid-vert-'.$i,
-                'x1' => sprintf('%dpx', $i * $gridSpacingPx), 'y1' => 0, 
-                'x2' => sprintf('%dpx', $i * $gridSpacingPx), 'y2' => $documentHeight.'px',
+                'x1' => sprintf('%fpx', $i * $gridSpacingPx), 'y1' => 0, 
+                'x2' => sprintf('%fpx', $i * $gridSpacingPx), 'y2' => $documentHeight.'px',
                 'class' => 'map-grid-line');
         }
         $writer->endTag('g');

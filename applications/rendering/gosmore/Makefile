@@ -33,14 +33,12 @@ all: gosmore
 
 gosmore:	gosmore.cpp
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
-                 `[ -e /usr/include/gps.h ] && echo -DUSE_GPSD -lgps` \
                  `[ -d /usr/include/flite ] && echo ${USE_FLITE}` \
                   gosmore.cpp -o gosmore ${EXTRA}
 
-elemstyles.xml:
-		wget http://josm.openstreetmap.de/svn/trunk/styles/standard/elemstyles.xml
+#elemstyles.xml:
+#		wget http://josm.openstreetmap.de/svn/trunk/styles/standard/elemstyles.xml
 
-#		wget http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/styles/standard/elemstyles.xml
 
 commit:		clean
 		rm -f *~; cd ..; tar czf - gosmore | ssh \

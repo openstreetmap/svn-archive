@@ -13,6 +13,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <libxml/xmlreader.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #define TEXT(x) x
 #define wchar_t char
 #else
@@ -30,9 +33,6 @@
 
 #if !defined (HEADLESS) && !defined (WIN32)
 #include <gtk/gtk.h>
-#endif
-#ifdef USE_GPSD
-#include <gps.h>
 #endif
 
 #ifdef USE_FLITE
@@ -521,11 +521,68 @@ void Route (int recalculate)
 
 GtkWidget *draw, *followGPSr;
 GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
-int clon, clat, zoom;
+int clon, clat, zoom, gpsSockTag;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
-#if 0
-#if defined (USE_GPSD) || defined (ROUTE_TEST)
+struct gpsNewStruct {
+  struct {
+    double latitude, longitude, track, speed, hdop, ele;
+    int mode;
+    char date[6], tm[6];
+  } fix;
+} gpsNew;
+
+int ProcessNmea (char *rx, unsigned *got)
+{
+  unsigned dataReady = FALSE, i;
+  for (i = 0; i < *got && rx[i] != '$'; i++, (*got)--) {}
+  while (rx[i] == '$') {
+    //for (j = 0; j < got; i++, j++) rx[j] = rx[i];
+    int fLen[19], fStart[19], fNr;
+    memmove (rx, rx + i, *got);
+    for (i = 1, fNr = 0; i < *got && rx[i] != '$' && fNr < 19; fNr++) {
+      fStart[fNr] = i;
+      while (i < *got && (rx[i] == '.' || isdigit (rx[i]))) i++;
+      fLen[fNr] = i - fStart[fNr];
+      while (i < *got && rx[i] != '$' && rx[i++] != ',') {}
+    }
+    while (i < *got && rx[i] != '$') i++;
+    int col = memcmp (rx, "$GPGLL", 6) == 0 ? 1 :
+      memcmp (rx, "$GPGGA", 6) == 0 ? 2 :
+      memcmp (rx, "$GPRMC", 6) == 0 ? 3 : 0;
+    if (fNr >= (col == 0 ? 2 : col == 1 ? 6 : col == 2 ? 13 : 10)) {
+      if (col > 0 && fLen[col == 1 ? 5 : 1] >= 6 &&
+          memcmp (gpsNew.fix.tm, rx + fStart[col == 1 ? 5 : 1], 6) != 0) {
+        memcpy (gpsNew.fix.tm, rx + fStart[col == 1 ? 5 : 1], 6);
+        dataReady = TRUE; // Notify only when parsing is complete
+      }
+      if (col == 2) gpsNew.fix.hdop = atof (rx + fStart[8]);
+      if (col == 3 && fLen[7] > 0 && fLen[8] > 0 && fLen[9] >= 6) {
+        memcpy (gpsNew.fix.date, rx + fStart[9], 6);
+        gpsNew.fix.speed = atof (rx + fStart[7]);
+        gpsNew.fix.track = atof (rx + fStart[8]);
+      }
+      if (col == 2 && fLen[9] > 0) gpsNew.fix.ele = atoi (rx + fStart[9]);
+      if (col > 0 && fLen[col] > 6 && memchr ("SsNn", rx[fStart[col + 1]], 4)
+        && fLen[col + 2] > 7 && memchr ("EeWw", rx[fStart[col + 3]], 4)) {
+        double nLat = (rx[fStart[col]] - '0') * 10 + rx[fStart[col] + 1]
+          - '0' + atof (rx + fStart[col] + 2) / 60;
+        double nLon = ((rx[fStart[col + 2]] - '0') * 10 +
+          rx[fStart[col + 2] + 1] - '0') * 10 + rx[fStart[col + 2] + 2]
+          - '0' + atof (rx + fStart[col + 2] + 3) / 60;
+        if (tolower (rx[fStart[col + 1]]) == 's') nLat = -nLat;
+        if (tolower (rx[fStart[col + 3]]) == 'w') nLon = -nLon;
+        if (fabs (nLat) < 90 && fabs (nLon) < 180) {
+          gpsNew.fix.latitude = nLat;
+          gpsNew.fix.longitude = nLon;
+        }
+      }
+    }
+    else if (i == *got) break; // Retry when we receive more data
+    *got -= i;
+  } /* If we know the sentence type */
+  return dataReady;
+}
 
 #ifdef ROUTE_TEST
 gint RouteTest (GtkWidget *widget, GdkEventButton *event, void *)
@@ -541,9 +598,20 @@ gint RouteTest (GtkWidget *widget, GdkEventButton *event, void *)
     int plat = clat -
       lrint ((event->y - draw->allocation.height / 2) * perpixel);
 #else
-void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
+// void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
+void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
 {
-  if (gps->fix.mode >= MODE_2D &&
+  static char rx[1200];
+  static unsigned got = 0;
+  int cnt = read (source, rx + got, sizeof (rx) - got);
+  if (cnt == 0) {
+    gdk_input_remove (gpsSockTag);
+    return;
+  }
+  got += cnt;
+  gpsNewStruct *gps = &gpsNew;
+  
+  if (ProcessNmea (rx, &got) && //gps->fix.mode >= MODE_2D &&
       gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr))) {
     clon = Longitude (gps->fix.longitude);
     clat = Latitude (gps->fix.latitude);
@@ -553,11 +621,13 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
     int plat = Latitude (gps->fix.latitude + gps->fix.speed * 3600.0 /
       40000000.0 * cos (gps->fix.track * (M_PI / 180.0)));
     // Predict the vector that will be traveled in the next 10seconds
-    printf ("%5.1lf m/s Heading %3.0lf\n", gps->fix.speed, gps->fix.track);
+//    printf ("%5.1lf m/s Heading %3.0lf\n", gps->fix.speed, gps->fix.track);
+//    printf ("%lf %lf\n", gps->fix.latitude, gps->fix.longitude);
 #endif
     
     flon = clon;
     flat = clat;
+    #if 0
     Route (FALSE);
     if (shortest) {
       __int64 dlon = plon - clon, dlat = plat - clat;
@@ -612,11 +682,10 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
         }
       } // While looking for a turn ahead.
     } // If the routing was successful
+    #endif
     gtk_widget_queue_clear (draw);
   } // If following the GPSr and it has a fix.
 }
-#endif
-#endif // #if 0
 
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
@@ -634,9 +703,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     if (event->button == 1) {
       clon += lrint ((event->x - w / 2) * perpixel);
       clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
-      #ifdef USE_GPSD
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
-      #endif
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
     }
     else if (event->button == 2) {
       flon = clon + lrint ((event->x - w / 2) * perpixel);
@@ -1148,9 +1215,7 @@ void SelectName (GtkWidget * /*w*/, gint row, gint /*column*/,
   clon = incrementalWay[row]->clon;
   clat = incrementalWay[row]->clat;
   zoom = incrementalWay[row]->dlat + incrementalWay[row]->dlon + (2 << 14);
-  #ifdef USE_GPSD
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
-  #endif
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
   gtk_widget_queue_clear (draw);
 }
 #endif // !WIN32
@@ -1306,25 +1371,23 @@ int UserInterface (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
     GTK_SIGNAL_FUNC (GetDirections), NULL);
 */
-#ifdef USE_GPSD
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
-  gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
-  //gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
+    
+  struct sockaddr_in sa;
+  int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
+  sa.sin_family = AF_INET;
+  sa.sin_port = htons (2947);
+  sa.sin_addr.s_addr = htonl (0x7f000001); //(204<<24)|(17<<16)|(205<<8)|18); 
+  if (gpsSock != -1 &&
+      connect (gpsSock, (struct sockaddr *)&sa, sizeof (sa)) == 0) {
+    send (gpsSock, "R\n", 2, 0);
+    gpsSockTag = gdk_input_add (/*gpsData->gps_fd*/ gpsSock, GDK_INPUT_READ,
+      (GdkInputFunction) ReceiveNmea /*gps_poll*/, NULL);
 
-#ifndef ROUTE_TEST
-  gps_data_t *gpsData = gps_open ("127.0.0.1", "2947");
-  if (gpsData) {
+    gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
     gtk_widget_show (followGPSr);
-    
-//    gps_set_raw_hook (gpsData, GpsMove);
-    gps_query (gpsData, "w+x\n");
-    gdk_input_add (gpsData->gps_fd, GDK_INPUT_READ,
-      (GdkInputFunction) gps_poll, gpsData);
-    /* gps_poll will just ignore the parameters he doesn't expect */
-    
+    // gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
   }
-#endif
-#endif
 
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
@@ -1959,14 +2022,6 @@ int main (int argc, char *argv[])
 #else
 HANDLE port;
 volatile int gpsNewDataReady = FALSE; // Serves as lock on gpsNew
-struct {
-  struct {
-    double latitude, longitude, track, speed, hdop, ele;
-    int mode;
-    char date[6], tm[6];
-  } fix;
-} gpsNew;
-
 
 HINSTANCE hInst;
 HWND   hwnd;
@@ -2163,8 +2218,7 @@ volatile int guiDone = FALSE;
 DWORD WINAPI NmeaReader (LPVOID lParam)
 {
  // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
-  DWORD nBytes, got = 0, i;
-  int lon, lat;
+  DWORD nBytes, i;
   DCB    portState;
   COMMTIMEOUTS commTiming;
   char rx[1200];
@@ -2233,63 +2287,18 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
   while (!guiDone) {
     //nBytes = sizeof (rx) - got;
     //got = 0;
-    if (!ReadFile(port, rx, sizeof(rx) - got, &nBytes, NULL) || nBytes <= 0) {
+    if (!ReadFile(port, rx, sizeof(rx), &nBytes, NULL) || nBytes <= 0) {
       continue;
     }
     if (log) fwrite (rx, nBytes, 1, log);
 
-    if (gpsNewDataReady) continue; // Main thread can't keep up ?!
-    int mustSend = FALSE;
     //wndStr[0]='\0';
     //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
     //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
-    for (i = 0; i < got + nBytes && rx[i] != '$'; i++) {}
-    got += nBytes - i;
-    while (rx[i] == '$') {
-      //for (j = 0; j < got; i++, j++) rx[j] = rx[i];
-      int fLen[19], fStart[19], fNr;
-      memmove (rx, rx + i, got);
-      for (i = 1, fNr = 0; i < got && rx[i] != '$' && fNr < 19; fNr++) {
-        fStart[fNr] = i;
-        while (i < got && (rx[i] == '.' || isdigit (rx[i]))) i++;
-        fLen[fNr] = i - fStart[fNr];
-        while (i < got && rx[i] != '$' && rx[i++] != ',') {}
-      }
-      int col = memcmp (rx, "$GPGLL", 6) == 0 ? 1 :
-        memcmp (rx, "$GPGGA", 6) == 0 ? 2 :
-        memcmp (rx, "$GPRMC", 6) == 0 ? 3 : 0;
-      if (fNr >= (col == 0 ? 2 : col == 1 ? 6 : col == 2 ? 13 : 10)) {
-        if (col > 0 && fLen[col == 1 ? 5 : 1] >= 6 &&
-            memcmp (gpsNew.fix.tm, rx + fStart[col == 1 ? 5 : 1], 6) != 0) {
-          memcpy (gpsNew.fix.tm, rx + fStart[col == 1 ? 5 : 1], 6);
-          gpsNewDataReady = TRUE; // Notify only when parsing is complete
-        }
-        if (col == 2) gpsNew.fix.hdop = atof (rx + fStart[8]);
-        if (col == 3 && fLen[7] > 0 && fLen[8] > 0 && fLen[9] >= 6) {
-          memcpy (gpsNew.fix.date, rx + fStart[9], 6);
-          gpsNew.fix.speed = atof (rx + fStart[7]);
-          gpsNew.fix.track = atof (rx + fStart[8]);
-        }
-        if (col == 2 && fLen[9] > 0) gpsNew.fix.ele = atoi (rx + fStart[9]);
-        if (col > 0 && fLen[col] > 6 && memchr ("SsNn", rx[fStart[col + 1]], 4)
-          && fLen[col + 2] > 7 && memchr ("EeWw", rx[fStart[col + 3]], 4)) {
-          double nLat = (rx[fStart[col]] - '0') * 10 + rx[fStart[col] + 1]
-            - '0' + atof (rx + fStart[col] + 2) / 60;
-          double nLon = ((rx[fStart[col + 2]] - '0') * 10 +
-            rx[fStart[col + 2] + 1] - '0') * 10 + rx[fStart[col + 2] + 2]
-            - '0' + atof (rx + fStart[col + 2] + 3) / 60;
-          if (tolower (rx[fStart[col + 1]]) == 's') nLat = -nLat;
-          if (tolower (rx[fStart[col + 3]]) == 'w') nLon = -nLon;
-          if (fabs (nLat) < 90 && fabs (nLon) < 180) {
-            gpsNew.fix.latitude = nLat;
-            gpsNew.fix.longitude = nLon;
-          }
-        }
-      }
-      else if (i == got) break; // Retry when we receive more data
-      got -= i;
-    } /* If we know the sentence type */
-    if (gpsNewDataReady) PostMessage (hwnd, WM_USER + 1, lat, lon);
+    
+    if (!gpsNewDataReader && (gpsNewData = ProcessNmea (rx, &nBytes))) {
+      PostMessage (hwnd, WM_USER + 1, 0, 0);
+    }
   }
   guiDone = FALSE;
   if (log) fclose (log);

@@ -143,39 +143,17 @@ for line in file_mp:
             rclass = ET.Element('tag', k='garmin_road_class', v=str(rparams[1]))
             rclass.tail = '\n    '
             node.append(rclass)
-            if int(rparams[2]):
-                oneway = ET.Element('tag', k='oneway', v='true')
-                oneway.tail = '\n    '
-                node.append(oneway)
-            if int(rparams[3]):
-                toll = ET.Element('tag', k='toll', v='true')
-                toll.tail = '\n    '
-                node.append(toll)
-            emergency = ET.Element('tag', k='emergency', v=('yes', 'no')[int(rparams[4])])
-            emergency.tail = '\n    '
-            node.append(emergency)
-            delivery = ET.Element('tag', k='goods', v=('yes', 'no')[int(rparams[5])])
-            delivery.tail = '\n    '
-            node.append(delivery)
-            motorcar = ET.Element('tag', k='motorcar', v=('yes', 'no')[int(rparams[6])])
-            motorcar.tail = '\n    '
-            node.append(motorcar)
-            bus = ET.Element('tag', k='psv', v=('yes', 'no')[int(rparams[7])])
-            bus.tail = '\n    '
-            node.append(bus)
+            for att, attval in zip(('oneway', 'toll'), rparams[2:3]):
+                if int(attval):
+                    attrib = ET.Element('tag', k=att, v='true')
+                    attrib.tail = '\n    '
+                    node.append(attrib)
             # Note: taxi is not an approved access key
-            taxi = ET.Element('tag', k='taxi', v=('yes', 'no')[int(rparams[8])])
-            taxi.tail = '\n    '
-            node.append(taxi)
-            ped = ET.Element('tag', k='foot', v=('yes', 'no')[int(rparams[9])])
-            ped.tail = '\n    '
-            node.append(ped)
-            bicycle = ET.Element('tag', k='bicycle', v=('yes', 'no')[int(rparams[10])])
-            bicycle.tail = '\n    '
-            node.append(bicycle)
-            truck = ET.Element('tag', k='psv', v=('yes', 'no')[int(rparams[11])])
-            truck.tail = '\n    '
-            node.append(truck)
+            vehicles = ['emergency', 'goods', 'motorcar', 'psv', 'taxi', 'foot', 'bicycle', 'hgv']
+            for veh, res in zip(vehicles, rparams[4:]):
+                vehtag = ET.Element('tag', k=veh, v=('yes', 'no')[int(res)]) 
+                vehtag.tail = '\n    '
+                node.append(vehtag)
 
         # Get nodes from all zoom levels (ie. Data0, Data1, etc)
         # TODO: Only grab the lowest-numbered data line (highest-resolution) and ignore the rest

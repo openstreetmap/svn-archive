@@ -89,10 +89,13 @@ function init() {
 
 div#map {
     position: absolute;
-    top:0px;
+    top: 0px;
     bottom: 40px;
     left: 0px;
     right: 0px;
+    /* for ie */
+    width:expression((document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth)-200);
+    height:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-50);
     padding: 1px;
 }
 
@@ -103,6 +106,9 @@ div#content {
     bottom: 0px;
     left: 0px;
     right: 0px;
+    /* for ie */
+    width:expression((document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth)-200);
+    top:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-48);
     background-image: url('/img/marginaliabg.png');
     border-bottom: 1px solid #bfc0d8;
 }

@@ -1,3 +1,7 @@
+# Written by Nic Roets with contributions by Petter Reinholdtsen
+# Placed in the public domain
+# Don't run mkicons.sh until my patched pnmmontage is part of debian-netpbm
+
 TODAY := `exec date +%Y%m%d`
 VERSION = 0.0.0.$(TODAY)
 
@@ -14,7 +18,7 @@ WARNFLAGS= -W -Wall
 #CFLAGS += -DROUTE_TEST
 
 ifneq (${OS},Windows_NT)
-EXTRA=`pkg-config --cflags --libs gtk+-2.0`
+EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS`
 else
 EXTRA=-mms-bitfields -mno-cygwin -I/usr/include/mingw/gtk-2.0 \
   -I/usr/include/mingw/cairo     -I/usr/include/mingw/glib-2.0 \
@@ -22,21 +26,26 @@ EXTRA=-mms-bitfields -mno-cygwin -I/usr/include/mingw/gtk-2.0 \
   -I/usr/lib/glib-2.0/include    -I/usr/lib/gtk-2.0/include \
   -lgtk-win32-2.0 -lgdk-win32-2.0 -lglib-2.0 -lgobject-2.0
 endif
+XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
+  `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
 
 all: gosmore
 
-gosmore:	gosmore.cc
-		g++ ${CFLAGS} ${WARNFLAGS} \
+gosmore:	gosmore.cpp
+		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
                  `[ -e /usr/include/gps.h ] && echo -DUSE_GPSD -lgps` \
                  `[ -d /usr/include/flite ] && echo ${USE_FLITE}` \
-                  gosmore.cc -o gosmore ${EXTRA}
+                  gosmore.cpp -o gosmore ${EXTRA}
 
-commit:		gosmore
-		tar cf - Makefile gosmore.cc | ssh \
-		  sabiepark@www.rational.co.za 'cd www; tar xvf -'
+elemstyles.xml:
+		wget http://josm.openstreetmap.de/svn/trunk/styles/standard/elemstyles.xml
 
-CountColours:	CountColours.c
-		gcc `pkg-config --cflags --libs gtk+-2.0` CountColours.c -o CountColours
+#		wget http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/styles/standard/elemstyles.xml
+
+commit:		clean
+		rm -f *~; cd ..; tar czf - gosmore | ssh \
+		  sabiepark@www.rational.co.za 'cd www/gosmore; \
+		  cat >gosmore-`exec date +%Y%m%d`.tar.gz'
 
 install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
@@ -49,4 +58,4 @@ dist:
 	rm -rf gosmore-$(VERSION)
 
 clean:
-	$(RM) gosmore
+	$(RM) gosmore gosmore.pak *.tmp *~

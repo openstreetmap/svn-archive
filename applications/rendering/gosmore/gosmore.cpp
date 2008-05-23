@@ -1,22 +1,36 @@
-/* gosmore - European weed widely naturalized in North America having yellow
-   flower heads and leaves resembling a cat's ears */
-   
 /* This software is placed by in the public domain by its authors. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen. */
 
-/* 
-Dual core with 1GB RAM  : real   8m12.369s user 11m7.727s sys 0m15.199s
-*/
-
+#define WIN32_LEAN_AND_MEAN
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
-#include <gtk/gtk.h>
 #include <assert.h>
-#include <unistd.h>
+#ifndef _WIN32
 #include <sys/types.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <libxml/xmlreader.h>
+#define TEXT(x) x
+#define wchar_t char
+#else
+#include <windows.h>
+#define M_PI 3.14159265358979323846 // Not in math ??
+//#include <aygshell.h>
+#include <tpcshell.h>
+#include <winuserm.h>
+#include "resource.h"
+#endif
+#ifndef TRUE
+#define TRUE 1
+#define FALSE 0
+#endif
+
+#if !defined (HEADLESS) && !defined (WIN32)
+#include <gtk/gtk.h>
+#endif
 #ifdef USE_GPSD
 #include <gps.h>
 #endif
@@ -29,160 +43,57 @@ extern "C" {
 #endif
 FILE *flitePipe = stdout;
 
+#ifndef _WIN32
 #define stricmp strcasecmp
+typedef long long __int64;
+#else
+#define strncasecmp _strnicmp
+#define stricmp _stricmp
+#define lrint(x) int ((x) < 0 ? (x) - 0.5 : (x) + 0.5) 
+// We emulate just enough of gtk to make it work
+#define gtk_widget_queue_clear(x) // After Click() returns we Invalidate
+struct GtkWidget { 
+  struct {
+    int width, height;
+  } allocation;
+  int window;
+};
+typedef int GtkComboBox;
+struct GdkEventButton {
+  int x, y, button;
+};
+#endif
 
-#define BUCKETS (1<<22) /* Must be power of 2 */
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)
+#ifndef INT_MIN
+#define INT_MIN -2147483648
+#endif
 
-#define MAX_NODES 28141120
-#define MAX_SEGMENTS 28141120
-#define MAX_WAYS 2800000
-#define MAX_NAMED_NODES 140000
+#define RESTRICTIONS M (access) M (bicycle) M (foot) M (goods) M (hgv) \
+  M (horse) M (motorcycle) M (motorcar) M (psv) M (motorboat) M (boat) \
+  M (oneway)
 
-inline int Hash (int lon, int lat)
-{ /* This is a universal hashfuntion in GF(2^31-1). The hexadecimal numbers */
-  /* are from random.org, but experimentation will surely yield better */
-  /* numbers. The more we right shift lon and lat, the larger */
-  /* each tile will be. We can add constants to the lat and lon variables */
-  /* to make them positive, but the clashes will still occur between the */
-  /* same tiles. */
+#define M(field) field ## R,
+enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
+#undef M
 
-  /* Mercator projection means tiles are not the same physical size. */
-  /* Compensating for this very low on the agenda vs. e.g. compensating for */
-  /* high node density in Western Europe. */
-  long long v = ((lon >> TILEBITS) /* + (1<<19) */) * (long long) 0x00d20381 +
-    ((lat >> TILEBITS) /*+ (1<<19)*/) * (long long) 0x75d087d9;
-  while (v >> 31) v = (v & ((1<<31) - 1)) + (v >> 31);
-  /* Replace loop with v = v % ((1<<31)-1) ? */
-  return v & (BUCKETS - 1);
-} /* This mask means the last bucket is very, very slightly under used. */
-
-struct nodeType {
-  int id, lon, lat;
+struct styleStruct {
+  int  x[16], lineWidth, lineRWidth, lineColour, lineColourBg, dashed;
+  int  scaleMax, areaColour, dummy /* pad to 8 for 64 bit compatibility */;
+  double aveSpeed[l1], invSpeed[l1];
 };
 
-#define TO_HALFSEG -1
-
-struct halfSegType {
-  int lon, lat, other, wayPtr;
+struct ndType {
+  int wayPtr, lat, lon, other[2];
 };
 
 struct wayType {
-  int type : 6;
-  int layer : 3;
-  int oneway : 1;
-  int zoom16384 : 17; /* To make the way just fill the display */
-  int name; /* Offset into pak file */
-  int clat, clon; /* Centre */
+  int bits;
+  int clat, clon, dlat, dlon; /* Centre coordinates and (half)diameter */
 };
 
-struct wayBuildType {
-  wayType w;
-  char *name;
-  int idx;
-};
-
-enum { motorway, motorway_link, trunk, primary, secondary, tertiary,
-  unclassified, residential, service, track, footway, rail, river, stream,
-  canel, city, town, station, suburb, village, hamlet, junction, place,
-  unsupportedWayType, unwayed
-};
-
-struct highwayType {
-  char *feature, *name, *colour;
-  int width;
-  double invSpeed; /* 1.0 is the fastest. Everything else must be bigger. */
-  GdkLineStyle style;
-} highway[] = {
-  /* ways */
-  { "highway", "motorway"     , "blue",   3, 1.0, GDK_LINE_SOLID },
-  { "highway", "motorway_link", "blue",   3, 1.0, GDK_LINE_SOLID },
-  { "highway", "trunk"        , "green",  3, 120.0 / 70.0, GDK_LINE_SOLID },
-  { "highway", "primary"      , "red",    2, 120.0 / 60.0, GDK_LINE_SOLID },
-  { "highway", "secondary"    , "orange", 2, 120.0 / 50.0, GDK_LINE_SOLID },
-  { "highway", "tertiary"     , "yellow", 1, 120.0 / 40.0, GDK_LINE_SOLID },
-  { "highway", "unclassified" , "darkgrey", 1, 120.0 / 40.0, GDK_LINE_SOLID },
-  { "highway", "residential"  , "white",  1, 120.0 / 34.0, GDK_LINE_SOLID },
-  { "highway", "service"      , "darkgrey", 1, 120.0 / 40.0, GDK_LINE_SOLID },
-  { "highway", "track"        , "brown",  1, 120.0 / 30.0, GDK_LINE_SOLID },
-  { "highway", "footway"      , "brown",  1, 120.0 / 5.0, GDK_LINE_SOLID },
-  { "railway", "rail"         , "black",  3, 99.0, GDK_LINE_ON_OFF_DASH },
-  { "waterway", "river"       , "blue",   2, 120.0 / 5.0, GDK_LINE_SOLID },
-  { "waterway", "stream"      , "brown",  1, 120.0 / 5.0, GDK_LINE_SOLID },
-  { "waterway", "canal"       , "brown",  1, 120.0 / 5.0, GDK_LINE_SOLID },
-  /* nodes : */
-  { "place",   "city"         , "black",  3, 1.0, GDK_LINE_SOLID },
-  { "place",   "town"         , "black",  2, 1.0, GDK_LINE_SOLID },
-  { "railway", "station"      , "red",    1, 1.0, GDK_LINE_SOLID },
-  { "place",   "suburb"       , "black",  2, 1.0, GDK_LINE_SOLID },
-  { "place",   "village"      , "black",  1, 1.0, GDK_LINE_SOLID },
-  { "place",   "halmet"       , "black",  1, 1.0, GDK_LINE_SOLID },
-  { "place",   "junction"     , "black",  1, 1.0, GDK_LINE_SOLID },
-  { NULL, NULL /* named node of unidentified type i.e. place */  , "gray",
-    1, 1.0, GDK_LINE_SOLID },
-  { NULL, NULL /* unsupportedWayType */, "gray",   1, 99.0, GDK_LINE_SOLID },
-  { NULL, NULL /* unwayed */  , "gray",   1, 99.0, GDK_LINE_SOLID }
-};
-
-inline nodeType *FindNode (nodeType *table, int id)
-{
-  unsigned hash = id;
-  for (;;) {
-    nodeType *n = &table[hash % MAX_NODES];
-    if (n->id < 0 || n->id == id) return n;
-    hash = hash * (long long) 1664525 + 1013904223;
-  }
-}
-
-inline halfSegType *FindSegment (halfSegType *table, int id)
-{
-  unsigned hash = id;
-  for (;;) {
-    halfSegType *s = &table[(hash % MAX_SEGMENTS) * 2];
-    if (s->wayPtr < 0 || s->other == id) return s;
-    hash = hash * (long long) 1664525 + 1013904223;
-  }
-}
-
-int HalfSegCmp (const halfSegType *a, const halfSegType *b)
-{
-  int hasha = Hash (a->lon, a->lat), hashb = Hash (b->lon, b->lat);
-  return hasha != hashb ? hasha - hashb : a->lon != b->lon ? a->lon - b->lon :
-    a->lat - b->lat;
-}
-
-int WayBuildCmp (const void *a, const void *b)
-{
-  return !((wayBuildType *)a)->name ? -1 : !((wayBuildType *)b)->name ? 1 :
-    strcmp (((wayBuildType *)a)->name, ((wayBuildType *)b)->name);
-}
-
-void quicksort (void *base, int n, int size,
-  int (*cmp)(const void *, const void*))
-{ /* Builtin qsort performs badly when dataset does not fit into memory,
-     probably because it uses mergesort. quicksort quickly divides the
-     problem into sections that is small enough to fit into memory and
-     finishes them before tackling the rest. */
-  static halfSegType pivot[2]; /* 1 segment is largest object we're sorting */
-  
-  if (size * n > 50000000) printf ("%9d items of %d bytes\n", n, size);
-  char *l = (char*) base, *h = (char*) base + (n - 1) * size;
-  memcpy (pivot, l + n / 2 * size, size);
-  memcpy (l + n / 2 * size, l, size);
-  while (l < h) {
-    while (l < h && (*cmp)(pivot, h) <= 0) h -= size;
-    if (l < h) memcpy (l, h, size);
-    while (l < h && (*cmp)(pivot, l) >= 0) l += size;
-    if (l < h) memcpy (h, l, size);
-  }
-  if (l > h) fprintf (stderr, "sort warning !\n");
-  memcpy (l, pivot, size);
-  if (l - (char*) base > size)
-    quicksort (base, (l - (char*) base) / size, size, cmp);
-  if ((n - 2) * size > h - (char*) base)
-    quicksort (h + size, n - (h - (char*) base) / size - 1, size, cmp);
-}
+inline int Layer (wayType *w) { return w->bits >> 29; }
 
 int Latitude (double lat)
 { /* Mercator projection onto a square means we have to clip
@@ -197,52 +108,207 @@ int Longitude (double lon)
 }
 
 /*---------- Global variables -----------*/
-int *hashTable;
+int *hashTable, bucketsMin1;
 char *data;
+ndType *ndBase;
+styleStruct *style;
+
+inline int StyleNr (wayType *w) { return w->bits & ((2 << STYLE_BITS) - 1); }
+
+inline styleStruct *Style (wayType *w) { return &style[StyleNr (w)]; }
+
+int Holes (int x)
+{
+  x = ((x & 0xff00) << 8) | (x & 0xff);
+  x = ((x & 0xf000f0) << 4) | (x & 0xf000f);
+  x = ((x & 0xc0c0c0c) << 2) | (x & 0x3030303);
+  return ((x & 0xaaaaaaaa) << 1) | (x & 0x55555555);
+}
+
+int inline ZEnc (int lon, int lat)
+{ // Input as bits : lon15,lon14,...lon0 and lat15,lat14,...,lat0
+  int t = (lon << 16) | lat;
+  t = (t & 0xff0000ff) | ((t & 0x00ff0000) >> 8) | ((t & 0x0000ff00) << 8);
+  t = (t & 0xf00ff00f) | ((t & 0x0f000f00) >> 4) | ((t & 0x00f000f0) << 4);
+  t = (t & 0xc3c3c3c3) | ((t & 0x30303030) >> 2) | ((t & 0x0c0c0c0c) << 2);
+  return (t & 0x99999999) | ((t & 0x44444444) >> 1) | ((t & 0x22222222) << 1);
+} // Output as bits : lon15,lat15,lon14,lat14,...,lon0,lat0
+
+inline int Hash (int lon, int lat, int lowz = 0)
+{ /* All the normal tiles (that make up a super tile) are mapped to sequential
+     buckets thereby improving caching and reducing the number of disk tracks
+     required to render / route through a super tile sized area. 
+     The map to sequential buckets is a 2-D Hilbert curve. */
+  if (lowz) {
+    lon >>= 7;
+    lat >>= 7;
+  }
+  
+  int t = ZEnc (lon >> TILEBITS, ((unsigned) lat) >> TILEBITS);
+  int s = ((((unsigned)t & 0xaaaaaaaa) >> 1) | ((t & 0x55555555) << 1)) ^ ~t;
+  // s=ZEnc(lon,lat)^ZEnc(lat,lon), so it can be used to swap lat and lon.
+  #define SUPERTILEBITS (TILEBITS + 8)
+  for (int lead = 1 << (SUPERTILEBITS * 2 - TILEBITS * 2); lead; lead >>= 2) {
+    if (!(t & lead)) t ^= ((t & (lead << 1)) ? s : ~s) & (lead - 1);
+  }
+
+  return (((((t & 0xaaaaaaaa) >> 1) ^ t) + (lon >> SUPERTILEBITS) * 0x00d20381
+    + (lat >> SUPERTILEBITS) * 0x75d087d9) &
+    (lowz ? bucketsMin1 >> 7 : bucketsMin1)) + (lowz ? bucketsMin1 + 1 : 0);
+}
+
+int TagCmp (char *a, char *b)
+{ // This works like the ordering of books in a library : We ignore
+  // meaningless words like "the", "street" and "north". We (should) also map
+  // deprecated words to their new words, like petrol to fuel
+  // TODO : We should consider an algorithm like double metasound.
+  static char *omit[] = { /* "the", in the middle ?? */ "ave", "avenue", 
+    "blvd", "boulevard", "byp", "bypass",
+    "cir", "circle", "cres", "crescent", "ct", "court", "ctr", "center",
+    "dr", "drive", "hwy", "highway", "ln", "lane", "loop",
+    "pass", "pky", "parkway", "pl", "place", "plz", "plaza",
+    /* "run" */ "rd", "road", "sq", "square", "st", "street",
+    "ter", "terrace", "tpke", "turnpike", /*trce, trace, trl, trail */
+    "walk",  "way"
+  };
+  static char *words[] = { "", "first", "second", "third", "fourth", "fifth",
+    "sixth", "seventh", "eighth", "nineth", "tenth", "eleventh", "twelth",
+    "thirteenth", "fourteenth", "fifthteenth", "sixteenth", "seventeenth",
+    "eighteenth", "nineteenth", "twentieth" };
+  static char *teens[] = { "", "", "twenty ", "thirty ", "fourty ",
+    "fifty ", "sixty ", "seventy ", "eighty ", "ninety " };
+  
+  if (stricmp (a, "the ") == 0) a += 4;
+  if (stricmp (b, "the ") == 0) b += 4;
+  if (strchr ("WEST", a[0]) && a[1] == ' ') a += 2; // e.g. N 21st St
+  if (strchr ("WEST", b[0]) && b[1] == ' ') b += 2;
+
+  for (;;) {
+    char n[2][30] = { "", "" }, *ptr[2];
+    int wl[2];
+    for (int i = 0; i < 2; i++) {
+      char **p = i ? &b : &a;
+      if ((*p)[0] == ' ') {
+        for (int i = 0; i < int (sizeof (omit) / sizeof (omit[0])); i++) {
+          if (strncasecmp (*p + 1, omit[i], strlen (omit[i])) == 0 &&
+              !isalpha ((*p)[1 + strlen (omit[i])])) {
+            (*p) += 1 + strlen (omit[i]);
+            break;
+          }
+        }
+      }
+      if (isdigit (**p) && (!isdigit((*p)[1]) || !isdigit ((*p)[2]))
+              /* && isalpha (*p + strcspn (*p, "0123456789"))*/) {
+        // while (atoi (*p) > 99) (*p)++; // Buggy
+        if (atoi (*p) > 20) strcpy (n[i], teens[atoi ((*p)++) / 10]);
+        strcat (n[i], words[atoi (*p)]);
+        while (isdigit (**p) /*|| isalpha (**p)*/) (*p)++;
+        ptr[i] = n[i];
+        wl[i] = strlen (n[i]);
+      }
+      else {
+        ptr[i] = *p;
+        wl[i] = **p == ' ' ? 1 : strcspn (*p , " \n");
+      }
+    }
+    int result = strncasecmp (ptr[0], ptr[1], wl[0] < wl[1] ? wl[1] : wl[0]);
+    if (result || *ptr[0] == '\0' || *ptr[0] == '\n') return result;
+    if (n[0][0] == '\0') a += wl[1]; // In case b was 21st
+    if (n[1][0] == '\0') b += wl[0]; // In case a was 32nd
+  }
+}
 
 struct OsmItr { // Iterate over all the objects in a square
-  halfSegType *hs[2]; /* Readonly. Either can be 'from' or 'to', but you */
+  ndType *nd[1]; /* Readonly. Either can be 'from' or 'to', but you */
   /* can be guaranteed that nodes will be in hs[0] */
   
-  int slat, slon, left, right, top, bottom; /* Private */
-  halfSegType *end;
+  int slat, slon, left, right, top, bottom, tsize; /* Private */
+  ndType *end;
   
   OsmItr (int l, int t, int r, int b)
   {
-    left = l & (~(TILESIZE - 1));
-    right = (r + TILESIZE - 1) & (~(TILESIZE-1));
-    top = t & (~(TILESIZE - 1));
-    bottom = (b + TILESIZE - 1) & (~(TILESIZE-1));
+    tsize = r - l > 10000000 ? TILESIZE << 7 : TILESIZE;
+    left = l & (~(tsize - 1));
+    right = (r + tsize - 1) & (~(tsize-1));
+    top = t & (~(tsize - 1));
+    bottom = (b + tsize - 1) & (~(tsize-1));
     
     slat = top;
-    slon = left - TILESIZE;
-    hs[0] = end = NULL;
+    slon = left - tsize;
+    nd[0] = end = NULL;
   }
 };
 
 int Next (OsmItr &itr) /* Friend of osmItr */
 {
   do {
-    itr.hs[0]++;
-    while (itr.hs[0] >= itr.end) {
-      if ((itr.slon += TILESIZE) == itr.right) {
+    itr.nd[0]++;
+    while (itr.nd[0] >= itr.end) {
+      if ((itr.slon += itr.tsize) == itr.right) {
         itr.slon = itr.left;  /* Here we wrap around from N85 to S85 ! */
-        if ((itr.slat += TILESIZE) == itr.bottom) return FALSE;
+        if ((itr.slat += itr.tsize) == itr.bottom) return FALSE;
       }
-      int bucket = Hash (itr.slon, itr.slat);
-      itr.hs[0] = (halfSegType *) (data + hashTable[bucket]);
-      itr.end = (halfSegType *) (data + hashTable[bucket + 1]);
+      int bucket = Hash (itr.slon, itr.slat, itr.tsize != TILESIZE);
+      itr.nd[0] = ndBase + hashTable[bucket];
+      itr.end = ndBase + hashTable[bucket + 1];
     }
-  } while (((itr.hs[0]->lon ^ itr.slon) >> TILEBITS) ||
-           ((itr.hs[0]->lat ^ itr.slat) >> TILEBITS) ||
-      ((itr.hs[1] = (halfSegType *) (data + itr.hs[0]->other)) > itr.hs[0] &&
+  } while (((itr.nd[0]->lon ^ itr.slon) & (~(itr.tsize - 1))) ||
+           ((itr.nd[0]->lat ^ itr.slat) & (~(itr.tsize - 1))));
+/*      ((itr.hs[1] = (halfSegType *) (data + itr.hs[0]->other)) > itr.hs[0] &&
        itr.left <= itr.hs[1]->lon && itr.hs[1]->lon < itr.right &&
-       itr.top <= itr.hs[1]->lat && itr.hs[1]->lat < itr.bottom));
-/* while hs[0] is a hash collision, or is the other half of something that
-has already or will soon be iterated over. Test doesn't work for wrapping. */
+       itr.top <= itr.hs[1]->lat && itr.hs[1]->lat < itr.bottom)); */
+/* while nd[0] is a hash collision, */ 
   return TRUE;
 }
 
+enum { langEn, langDe, langEs, langFr, langIt, langNl, numberOfLang };
+
+#define OPTIONS \
+  o (FollowGPSr, "?", "?", "?", "?", "?")
+
+#define notImplemented \
+  o (English,         "Deutsch", "Español", "Français", "Italiano", \
+                      "Nederlands"),\
+  o (CommPort,        "?", "?", "?", "?", "?"), \
+  o (BaudRate,        "?", "?", "?", "?", "?"), \
+  o (OrientNorthward, "?", "?", "?", "?", "?"), \
+  o (ZoomInKey,       "?", "?", "?", "?", "?"), \
+  o (HideZInButton,   "?", "?", "?", "?", "?"), \
+  o (ZoomOutKey,      "?", "?", "?", "?", "?"), \
+  o (HideZOutButton,  "?", "?", "?", "?", "?"), \
+  o (ShowCompass,     "?", "?", "?", "?", "?"), \
+  o (ShowCoordinates, "?", "?", "?", "?", "?"), \
+  o (ShowPrecision,   "?", "?", "?", "?", "?"), \
+  o (ShowSpeed,       "?", "?", "?", "?", "?"), \
+  o (ShowHeading,     "?", "?", "?", "?", "?"), \
+  o (ShowElevation,   "?", "?", "?", "?", "?"), \
+  o (ShowDate,        "?", "?", "?", "?", "?"), \
+  o (ShowTime,        "?", "?", "?", "?", "?"), \
+  o (ShowSearchButton,"?", "?", "?", "?", "?"), \
+  o (ShowCreatePoint, "?", "?", "?", "?", "?"), \
+  o (ConfigureKey,    "?", "?", "?", "?", "?"), \
+  o (HideConfButton,  "?", "?", "?", "?", "?"), \
+  o (SmallIcons,      "?", "?", "?", "?", "?"), \
+  o (SquareIcons,     "?", "?", "?", "?", "?"), \
+  o (FastestRoute,    "?", "?", "?", "?", "?"), \
+  o (PedestrianRoute, "?", "?", "?", "?", "?")
+
+#define o(en,de,es,fr,it,nl) en
+enum { OPTIONS, numberOfOptions };
+#undef o
+
+#define o(en,de,es,fr,it,nl) { \
+  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) }
+wchar_t *optionNameTable[][numberOfLang] = { OPTIONS };
+#undef o
+
+int option[numberOfOptions];
+
+#define optionName(x) optionNameTable[x][option[English]]
+
+//------------------------------- WIN32 ---------------------------------
+
+#define Sqr(x) ((x)*(x))
 /* Routing starts at the 'to' point and moves to the 'from' point. This will
    help when we do in car navigation because the 'from' point will change
    often while the 'to' point stays fixed, so we can keep the array of nodes.
@@ -256,28 +322,24 @@ has already or will soon be iterated over. Test doesn't work for wrapping. */
 
    We call nodes that rescently had their "best" increased "active". The
    active nodes are stored in a heap so that we can quickly find the most
-   promissing one. */
+   promissing one.
+   
+   OSM nodes are not our "graph-theor"etic nodes. Our "graph-theor"etic nodes
+   are "states", namely the ability to reach nd direkly from nd->other[dir]
+*/
 struct routeNodeType {
-  halfSegType *hs;
+  ndType *nd;
   routeNodeType *shortest;
-  int best, heapIdx;
+  int best, heapIdx, dir; // Dir is 0 or 1
 } *route = NULL, *shortest = NULL, **routeHeap;
 int dhashSize, routeHeapSize, limit, tlat, tlon, flat, flon, car, fastest;
 
-#define Sqr(x) ((x)*(x))
-int Best (routeNodeType *n)
-{
-  return limit < 2000000000 ? n->best : n->best +
-    lrint (sqrt (Sqr ((long long)(n->hs->lon - flon)) +
-                 Sqr ((long long)(n->hs->lat - flat))));
-}
-
-void AddHs (halfSegType *hs, int cost, routeNodeType *shortest)
+void AddNd (ndType *nd, int dir, int cost, routeNodeType *shortest)
 { /* This function is called when we find a valid route that consists of the
      segments (hs, hs->other), (shortest->hs, shortest->hs->other),
      (shortest->shortest->hs, shortest->shortest->hs->other), .., 'to'
      with cost 'cost'. */
-  unsigned hash = (intptr_t) hs, i = 0;
+  unsigned hash = (intptr_t) nd / 10 + dir, i = 0;
   routeNodeType *n;
   do {
     if (i++ > 10) {
@@ -285,22 +347,23 @@ void AddHs (halfSegType *hs, int cost, routeNodeType *shortest)
         "bad or no route exists\n");
       return;
     }
-    hash = hash * (long long) 1664525 + 1013904223;
-    /* Linear congruential generator from wikipedia */
     n = route + hash % dhashSize;
-    if (n->hs == NULL) { /* First visit of this node */
-      n->hs = hs;
+    /* Linear congruential generator from wikipedia */
+    hash = hash * (__int64) 1664525 + 1013904223;
+    if (n->nd == NULL) { /* First visit of this node */
+      n->nd = nd;
       n->best = cost + 1;
       /* Will do later : routeHeap[routeHeapSize] = n; */
       n->heapIdx = routeHeapSize++;
+      n->dir = dir;
     }
-  } while (n->hs != hs);
+  } while (n->nd != nd && n->dir != dir);
   if (n->best > cost) {
     n->best = cost;
     n->shortest = shortest;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
     for (; n->heapIdx > 1 &&
-         Best (n) < Best (routeHeap[n->heapIdx / 2]); n->heapIdx /= 2) {
+         n->best < routeHeap[n->heapIdx / 2]->best; n->heapIdx /= 2) {
       routeHeap[n->heapIdx] = routeHeap[n->heapIdx / 2];
       routeHeap[n->heapIdx]->heapIdx = n->heapIdx;
     }
@@ -308,25 +371,29 @@ void AddHs (halfSegType *hs, int cost, routeNodeType *shortest)
   }
 }
 
-void Route (gboolean recalculate)
+void Route (int recalculate)
 { /* Recalculate is faster but only valid if 'to', 'car' and 'fastest' did not
      change */
 /* We start by finding the segment that is closest to 'from' and 'to' */
-  halfSegType *endHs[2][2];
-  int toEndHs[2][2];
+  ndType *endNd[2];
+  int toEndNd[2][2];
   
   shortest = NULL;
   for (int i = recalculate ? 0 : 1; i < 2; i++) {
     int lon = i ? flon : tlon, lat = i ? flat : tlat;
-    long long bestd = 4000000000000000000LL;
+    __int64 bestd = 4000000000000000000LL;
     /* find min (Sqr (distance)). Use long long so we don't loose accuracy */
     OsmItr itr (lon - 100000, lat - 100000, lon + 100000, lat + 100000);
     /* Search 1km x 1km around 'from' for the nearest segment to it */
     while (Next (itr)) {
-      long long lon0 = lon - itr.hs[0]->lon, lat0 = lat - itr.hs[0]->lat,
-                lon1 = lon - itr.hs[1]->lon, lat1 = lat - itr.hs[1]->lat,
-                dlon = itr.hs[0]->lon - itr.hs[1]->lon,
-                dlat = itr.hs[0]->lat - itr.hs[1]->lat;
+      // We don't do for (int dir = 0; dir < 1; dir++) {
+      // because if our search box is large enough, it will also give us
+      // the other node.
+      if (itr.nd[0]->other[0] < 0) continue;
+      long long lon0 = lon - itr.nd[0]->lon, lat0 = lat - itr.nd[0]->lat,
+              lon1 = lon - (ndBase + itr.nd[0]->other[0])->lon,
+              lat1 = lat - (ndBase + itr.nd[0]->other[0])->lat,
+              dlon = lon1 - lon0, dlat = lat1 - lat0;
       /* We use Pythagoras to test angles for being greater that 90 and
          consequently if the point is behind hs[0] or hs[1].
          If the point is "behind" hs[0], measure distance to hs[0] with
@@ -336,22 +403,20 @@ void Route (gboolean recalculate)
       long long d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
         dlon * lon1 <= - dlat * lat1 ? Sqr (lon1) + Sqr (lat1) :
         Sqr ((dlon * lat1 - dlat * lon1) / segLen);
-      if (segLen > 0 /* Don't start or end at named nodes */ && d < bestd) {
-        int firstSeg = itr.hs[0]->wayPtr == TO_HALFSEG ? 1 : 0, oneway =
-          ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->oneway;
-          
+      if (d < bestd) {
+        wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
         bestd = d;
-        double invSpeed = !fastest ? 1.0 : highway[
-          ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->type].invSpeed;
-        toEndHs[i][0] = lrint (sqrt (Sqr (lon0) + Sqr (lat0)) * invSpeed);
-        toEndHs[i][1] = lrint (sqrt (Sqr (lon1) + Sqr (lat1)) * invSpeed);
-        if (dlon * lon1 <= -dlat * lat1) toEndHs[i][0] += toEndHs[i][1] * 9;
-        if (dlon * lon0 >= - dlat * lat0) toEndHs[i][1] += toEndHs[i][0] * 9;
-        if (oneway) toEndHs[i][i ? firstSeg : 1 - firstSeg] = 200000000;
+        double invSpeed = !fastest ? 1.0 : Style (w)->invSpeed[car];
+        toEndNd[i][0] = lrint (sqrt (Sqr (lon0) + Sqr (lat0)) * invSpeed);
+        toEndNd[i][1] = lrint (sqrt (Sqr (lon1) + Sqr (lat1)) * invSpeed);
+        if (dlon * lon1 <= -dlat * lat1) toEndNd[i][1] += toEndNd[i][0] * 9;
+        if (dlon * lon0 >= -dlat * lat0) toEndNd[i][0] += toEndNd[i][1] * 9;
+
+        if (w->bits & (1 << onewayR)) toEndNd[i][1] = 200000000;
         /* It's possible to go up a oneway at the end, but at a huge penalty*/
         /* It's also possible to go up a 1 segment of a footway with a car
            without penalty. */
-        memcpy (endHs[i], itr.hs, sizeof (endHs[i]));
+        endNd[i] = itr.nd[0];
         /* The router only stops after it has traversed endHs[1], so if we
            want 'limit' to be accurate, we must subtract it's length
         if (i) {
@@ -364,37 +429,44 @@ void Route (gboolean recalculate)
       fprintf (stderr, "No segment nearby\n");
       return;
     }
-  } /* For 'from' and 'to', find the corresponding hs */
+  } /* For 'from' and 'to', find segment that passes nearby */
   if (recalculate) {
     free (route);
     dhashSize = Sqr ((tlon - flon) >> 17) + Sqr ((tlat - flat) >> 17) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
+    // This memory management may not match computer capabilities
     route = (routeNodeType*) calloc (dhashSize, sizeof (*route));
   }
 
   routeHeapSize = 1; /* Leave position 0 open to simplify the math */
   routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
   
-  limit = 2000000000; // AddHs checks this when adding to the heap
+  limit = 2000000000; // AddNd checks this when adding to the heap
   if (recalculate) {
-    for (int j = 0; j < 2; j++) AddHs (endHs[0][j], toEndHs[0][j], NULL);
+    AddNd (endNd[0], 0, toEndNd[0][0], NULL);
+    AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
   }
   else {
     for (int i = 0; i < dhashSize; i++) {
-      if (route[i].hs) {
+      if (route[i].nd) {
         route[i].best++; // Force re-add to the heap
-        AddHs (route[i].hs, route[i].best - 1, route[i].shortest);
+        AddNd (route[i].nd, route[i].dir, route[i].best - 1,
+          route[i].shortest);
       }
     }
   }
   
   while (routeHeapSize > 1) {
     routeNodeType *root = routeHeap[1];
+    if (root->nd == ndBase - 1) { // ndBase - 1 is a marker for 'from'
+      shortest = root->shortest;
+      break;
+    }
     routeHeapSize--;
-    int beste = Best (routeHeap[routeHeapSize]);
+    int beste = routeHeap[routeHeapSize]->best;
     for (int i = 2; ; ) {
-      int besti = i < routeHeapSize ? Best (routeHeap[i]) : beste;
-      int bestipp = i + 1 < routeHeapSize ? Best (routeHeap[i + 1]) : beste;
+      int besti = i < routeHeapSize ? routeHeap[i]->best : beste;
+      int bestipp = i + 1 < routeHeapSize ? routeHeap[i + 1]->best : beste;
       if (besti > bestipp) i++;
       else bestipp = besti;
       if (beste <= bestipp) {
@@ -407,39 +479,35 @@ void Route (gboolean recalculate)
       i = i * 2;
     }
     root->heapIdx = -1; /* Root now removed from the heap */
-    if (root->best + lrint (sqrt (Sqr (root->hs->lon - tlon) +
-                                  Sqr (root->hs->lat - tlat))) < limit) {
-      for (int i = 0; i < 2; i++) {
-        if (root->hs == endHs[1][i] &&
-            limit > root->best + toEndHs[1][1 - i]) {
-          shortest = root;
-          /* if (limit == 2000000000) rebuild the heap for the new metric.
-          Shouldn't be necessary */
-          limit = root->best + toEndHs[1][1 - i];
-        }
+    if (root->best + lrint (sqrt (Sqr (root->nd->lon - tlon) +
+                                  Sqr (root->nd->lat - tlat))) < limit) {
+      if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
+        AddNd (ndBase - 1, 0, root->best + toEndNd[1][1 - root->dir], root);
       }
-      halfSegType *hs = root->hs, *other;
-      while ((char *) hs > data + hashTable[0] && hs[-1].lon == hs->lon &&
-        hs[-1].lat == hs->lat) hs--; /* Find first hs in node */
+      ndType *nd = root->nd, *other;
+      while (nd > ndBase && nd[-1].lon == nd->lon &&
+        nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
 
       /* Now work through the segments connected to root. */
       do {
-        if (hs == root->hs) continue;
-        /* Don't consider an immediate U-turn to reach root->hs->other.
-           This doesn't exclude 179.99 degree turns though. */
-        
-        other = (halfSegType *)(data + hs->other);
-        int forward = hs->wayPtr != TO_HALFSEG;
-        wayType *w = (wayType *)(data + (forward ? hs : other)->wayPtr);
-        if (w->type <= footway && (!forward || !w->oneway) &&
-              (car ? w->type != footway : w->type > motorway_link)) {
-          int d = lrint (sqrt (Sqr ((long long)(hs->lon - other->lon)) +
-                               Sqr ((long long)(hs->lat - other->lat))) *
-                               (fastest ? highway[w->type].invSpeed : 1.0));
-          AddHs (other, root->best + d, root);
-        } // If we found a segment we may follow
-      } while ((char*)++hs < data + hashTable[BUCKETS] &&
-               hs->lon == hs[-1].lon && hs->lat == hs[-1].lat);
+        for (int dir = 0; dir < 2; dir++) {
+          if (nd == root->nd && dir == root->dir) continue;
+          /* Don't consider an immediate U-turn to reach root->hs->other.
+             This doesn't exclude 179.99 degree turns though. */
+          
+          if (nd->other[dir] < 0) continue; // Named node
+          
+          other = ndBase + nd->other[dir];
+          wayType *w = (wayType *)(data + nd->wayPtr);
+          if ((w->bits & (1<<car)) && (dir || !(w->bits & (1 << onewayR)))) {
+            int d = lrint (sqrt (Sqr ((__int64)(nd->lon - other->lon)) +
+                                 Sqr ((__int64)(nd->lat - other->lat))) *
+                                 (fastest ? Style (w)->invSpeed[car] : 1.0));
+            AddNd (other, 1 - dir, root->best + d, root);
+          } // If we found a segment we may follow
+        }
+      } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+               nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
     } // if root->best is a candidate
   } // While there are active nodes left
   free (routeHeap + 1);
@@ -447,15 +515,17 @@ void Route (gboolean recalculate)
 //  printf ("%lf km\n", limit / 100000.0);
 }
 
+#ifndef HEADLESS
 #define ZOOM_PAD_SIZE 20
 #define STATUS_BAR    0
 
-GtkWidget *draw, *carBtn, *fastestBtn;
+GtkWidget *draw, *followGPSr;
+GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
+#if 0
 #if defined (USE_GPSD) || defined (ROUTE_TEST)
-GtkWidget *followGPSr;
 
 #ifdef ROUTE_TEST
 gint RouteTest (GtkWidget *widget, GdkEventButton *event, void *)
@@ -490,7 +560,7 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
     flat = clat;
     Route (FALSE);
     if (shortest) {
-      long long dlon = plon - clon, dlat = plat - clat;
+      __int64 dlon = plon - clon, dlat = plat - clat;
       if (!shortest->shortest && dlon * (tlon - clon) > dlat * (clat - tlat)
                              && dlon * (tlon - plon) < dlat * (plat - tlat)) {
         // Only stop once both C and P are acute angles in CPT, according to
@@ -500,21 +570,21 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
       char *oldName = NULL;
       for (routeNodeType *ahead = shortest; ahead;
            ahead = ahead->shortest) {
-        long long alon = ((halfSegType *)(ahead->hs->other + data))->lon -
+        __int64 alon = ((halfSegType *)(ahead->hs->other + data))->lon -
           ahead->hs->lon;
-        long long alat = ((halfSegType *)(ahead->hs->other + data))->lat -
+        __int64 alat = ((halfSegType *)(ahead->hs->other + data))->lat -
           ahead->hs->lat;
-        long long divisor = dlon * alat - dlat * alon;
-        long long dividend = dlon * alon + dlat * alat;
-        long long slon = ahead->hs->lon - clon;
-        long long slat = ahead->hs->lat - clat;
+        __int64 divisor = dlon * alat - dlat * alon;
+        __int64 dividend = dlon * alon + dlat * alat;
+        __int64 slon = ahead->hs->lon - clon;
+        __int64 slat = ahead->hs->lat - clat;
         if (ahead == shortest && ahead->shortest && dividend < 0 &&
             dividend < divisor && divisor < -dividend &&
             Sqr (slon + alon) + Sqr (slat + alat) > 64000000) {
           fprintf (flitePipe, "%ld U turn\n", (long)time (NULL));
           break; // Only when first node is far behind us.
         }
-        long long dintercept = divisor == 0 ? 9223372036854775807LL :
+        __int64 dintercept = divisor == 0 ? 9223372036854775807LL :
             dividend * (dlon * slat - dlat * slon) /
             divisor + dlon * slon + dlat * slat;
         char *name = data + ((wayType *)(data +
@@ -546,8 +616,9 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
   } // If following the GPSr and it has a fix.
 }
 #endif
+#endif // #if 0
 
-gint Click (GtkWidget *widget, GdkEventButton *event, void *para)
+int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   int w = draw->allocation.width - ZOOM_PAD_SIZE;
   #ifdef ROUTE_TEST
@@ -575,8 +646,8 @@ gint Click (GtkWidget *widget, GdkEventButton *event, void *para)
       tlon = clon + lrint ((event->x - w / 2) * perpixel);
       tlat = clat -
         lrint ((event->y - draw->allocation.height / 2) * perpixel);
-      car = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (carBtn));
-      fastest = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fastestBtn));
+      car = !gtk_combo_box_get_active (carBtn) ? motorcarR : bicycleR;
+      fastest = !gtk_combo_box_get_active (fastestBtn);
       Route (TRUE);
     }
   }
@@ -584,6 +655,7 @@ gint Click (GtkWidget *widget, GdkEventButton *event, void *para)
   return FALSE;
 }
 
+#if 0
 void GetDirections (GtkWidget *, gpointer)
 {
   char *msg;
@@ -594,7 +666,7 @@ void GetDirections (GtkWidget *, gpointer)
     for (int i = 0; i < 2; i++) {
       int len = 0;
       char *last = "";
-      long long dlon = 0, dlat = 1, bSqr = 1; /* Point North */
+      __int64 dlon = 0, dlat = 1, bSqr = 1; /* Point North */
       for (routeNodeType *x = shortest; x; x = x->shortest) {
         halfSegType *other = (halfSegType *)(data + x->hs->other);
         int forward = x->hs->wayPtr != TO_HALFSEG;
@@ -602,9 +674,9 @@ void GetDirections (GtkWidget *, gpointer)
         
         // I think the formula below can be substantially simplified using
         // the method used in GpsMove
-        long long nlon = other->lon - x->hs->lon, nlat = other->lat-x->hs->lat;
-        long long cSqr = Sqr (nlon) + Sqr (nlat);
-        long long lhs = bSqr + cSqr - Sqr (nlon - dlon) - Sqr (nlat - dlat);
+        __int64 nlon = other->lon - x->hs->lon, nlat = other->lat-x->hs->lat;
+        __int64 cSqr = Sqr (nlon) + Sqr (nlat);
+        __int64 lhs = bSqr + cSqr - Sqr (nlon - dlon) - Sqr (nlat - dlat);
         /* Use cosine rule to determine if the angle is obtuse or greater than
            45 degrees */
         if (lhs < 0 || Sqr (lhs) < 2 * bSqr * cSqr) {
@@ -644,129 +716,296 @@ void GetDirections (GtkWidget *, gpointer)
   gtk_widget_show (window);
 }
 
-gint Scroll (GtkWidget *widget, GdkEventScroll *event, void *w_current)
+#endif
+#ifndef WIN32
+gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 {
-   switch (event->direction) {
-   case(GDK_SCROLL_UP):
-           zoom = zoom*3/4;
-           break;
-   case(GDK_SCROLL_DOWN):
-           zoom = zoom*4/3;
-           break;
-   }
-   gtk_widget_queue_clear (draw);
+  if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
+  if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
+  gtk_widget_queue_clear (draw);
+  return FALSE;
 }
+#endif
 
 struct name2renderType { // Build a list of names, sort by name,
   wayType *w;            // make unique by name, sort by y, then render
   int x, y, width;       // only if their y's does not overlap
 };
 
-int Name2RenderNameCmp (const void *a, const void *b)
+#ifdef WIN32
+int Expose (HDC mygc, HDC icons, HPEN *pen)
 {
-  return strcmp (((name2renderType *)a)->w->name + data,
-    ((name2renderType *)b)->w->name + data);
-}
+  struct {
+    int width, height;
+  } clip;
+  clip.width = GetSystemMetrics(SM_CXSCREEN);
+  clip.height = GetSystemMetrics(SM_CYSCREEN);
+  HFONT sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
+  LOGFONT logFont;
+  GetObject (sysFont, sizeof (logFont), &logFont);
+  WCHAR wcTmp[70];
+  int detail = 2;
 
-int Name2RenderYCmp (const void *a, const void *b)
-{
-  return ((name2renderType *)a)->y - ((name2renderType *)b)->y;
-}
-
+#define gtk_combo_box_get_active(x) 1
+#define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
+  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCCOPY)
+#define gdk_draw_line(win,gc,sx,sy,dx,dy) \
+  MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
+#else
 gint Expose (void)
 {
-  GdkColor highwayColour[sizeof (highway) / sizeof (highway[0])];
-  for (int i = 0; i < sizeof (highway) / sizeof (highway[0]); i++) {
-    gdk_color_parse (highway[i].colour, &highwayColour[i]);
-    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
-      &highwayColour[i], FALSE, TRUE); /* Possibly only at startup ? */
-  }
+  static GdkColor styleColour[2 << STYLE_BITS][2];
+  static GdkPixmap *icons = NULL;
+  static GdkGC *mygc = NULL;
+  if (!mygc) {
+    mygc = gdk_gc_new (draw->window);
+    for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
+      for (int j = 0; j < 2; j++) {
+        int c = !j ? style[i].areaColour 
+          : style[i].lineColour ? style[i].lineColour
+          : (style[i].areaColour >> 1) & 0xefefef; // Dark border
+        styleColour[i][j].red =    (c >> 16)        * 0x101;
+        styleColour[i][j].green = ((c >> 8) & 0xff) * 0x101;
+        styleColour[i][j].blue =   (c       & 0xff) * 0x101;
+        gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
+          &styleColour[i][j], FALSE, TRUE);
+      }
+    }
+    gdk_gc_set_fill (mygc, GDK_SOLID);
+    icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
+      "icons.xpm");
+  }  
 
   GdkRectangle clip;
   clip.x = 0;
   clip.y = 0;
   clip.height = draw->allocation.height - STATUS_BAR;
   clip.width = draw->allocation.width;
-  gdk_gc_set_clip_rectangle (draw->style->fg_gc[0], &clip);
-  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[0]);
-  gdk_draw_line (draw->window, draw->style->fg_gc[0],
+  gdk_gc_set_clip_rectangle (mygc, &clip);
+  gdk_gc_set_foreground (mygc, &styleColour[0][0]);
+  gdk_gc_set_line_attributes (mygc,
+    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+  gdk_draw_line (draw->window, mygc,
     clip.width - ZOOM_PAD_SIZE / 2, 0,
     clip.width - ZOOM_PAD_SIZE / 2, clip.height); // Visual queue for zoom bar
-  gdk_draw_line (draw->window, draw->style->fg_gc[0],
+  gdk_draw_line (draw->window, mygc,
     clip.width - ZOOM_PAD_SIZE, clip.height - ZOOM_PAD_SIZE / 2,
     clip.width - ZOOM_PAD_SIZE / 2, clip.height); // Visual queue for zoom bar
-  gdk_draw_line (draw->window, draw->style->fg_gc[0],
+  gdk_draw_line (draw->window, mygc,
     clip.width, clip.height - ZOOM_PAD_SIZE / 2,
     clip.width - ZOOM_PAD_SIZE / 2, clip.height); // Visual queue for zoom bar
-  gdk_draw_line (draw->window, draw->style->fg_gc[0],
+  gdk_draw_line (draw->window, mygc,
     clip.width - ZOOM_PAD_SIZE, ZOOM_PAD_SIZE / 2,
     clip.width - ZOOM_PAD_SIZE / 2, 0); // Visual queue for zoom bar
-  gdk_draw_line (draw->window, draw->style->fg_gc[0],
+  gdk_draw_line (draw->window, mygc,
     clip.width, ZOOM_PAD_SIZE / 2,
     clip.width - ZOOM_PAD_SIZE / 2, 0); // Visual queue for zoom bar
     
   clip.width = draw->allocation.width - ZOOM_PAD_SIZE;
-  gdk_gc_set_clip_rectangle (draw->style->fg_gc[0], &clip);
+  gdk_gc_set_clip_rectangle (mygc, &clip);
   
   GdkFont *f = gtk_style_get_font (draw->style);
-  name2renderType name[3000];
-  int perpixel = zoom / clip.width, nameCnt = 0;
+  int detail = 4 - gtk_combo_box_get_active (detailBtn);
+#endif // !WIN32
+  #ifdef CAIRO_VERSION
+  cairo_t *cai = gdk_cairo_create (draw->window);
+  if (detail < 4) {
+    cairo_font_options_t *caiFontOptions = cairo_font_options_create ();
+    cairo_get_font_options (cai, caiFontOptions);
+    cairo_font_options_set_antialias (caiFontOptions, CAIRO_ANTIALIAS_NONE);
+    cairo_set_font_options (cai, caiFontOptions);
+  }
+  cairo_matrix_t mat;
+  cairo_matrix_init_identity (&mat);
+  #endif
+  if (zoom < 0) zoom = 2012345678;
+  if (zoom / clip.width == 0) zoom += 4000;
+  int perpixel = zoom / clip.width, iset = gtk_combo_box_get_active (iconSet);
+  int doAreas = TRUE;
 //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
-  for (int thisLayer = -5, nextLayer; thisLayer < 6; thisLayer = nextLayer) {
-    OsmItr itr (clon - perpixel * clip.width, clat - perpixel * clip.height,
-      clon + perpixel * clip.width, clat + perpixel * clip.height);
+  for (int thisLayer = -5, nextLayer; thisLayer < 6;
+       thisLayer = nextLayer, doAreas = !doAreas) {
+    OsmItr itr (clon - perpixel * clip.width / 2,
+      clat - perpixel * clip.height / 2,
+      clon + perpixel * clip.width / 2, clat + perpixel * clip.height / 2);
     // Widen this a bit so that we render nodes that are just a bit offscreen ?
     nextLayer = 6;
+    
     while (Next (itr)) {
-      wayType *w = (wayType *)(data + (itr.hs[0]->wayPtr != TO_HALFSEG ?
-        itr.hs[0]->wayPtr : itr.hs[1]->wayPtr));
-      if (thisLayer < w->layer && w->layer < nextLayer) nextLayer = w->layer;
-      if (w->layer != thisLayer) continue;
-      if (nameCnt < sizeof (name) / sizeof (name[0]) &&
-            data[w->name] != '\0') {
-        gint lbearing, rbearing, width, ascent, descent;
-        gdk_string_extents (f, w->name + data, &lbearing, &rbearing, &width,
-          &ascent, &descent);
-        
-        name[nameCnt].width = itr.hs[1]->lon - itr.hs[0]->lon;
-        if (name[nameCnt].width < 0) name[nameCnt].width *= -1; /* abs () */
-        name[nameCnt].x = (itr.hs[0]->lon / 2 + itr.hs[1]->lon / 2 - clon) /
-          perpixel + clip.width / 2 - width / 2;
-        name[nameCnt].y = f->descent + clip.height / 2 -
-          (itr.hs[0]->lat / 2 + itr.hs[1]->lat / 2 - clat) / perpixel;
-        if (-f->ascent < name[nameCnt].y &&
-            name[nameCnt].y < clip.height + f->descent &&
-            -width / 2 < name[nameCnt].x &&
-            name[nameCnt].x < clip.width + width / 2) name[nameCnt++].w = w;
-      }
+      wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
+      if (Style (w)->scaleMax < perpixel * 175 / (detail + 4)) continue;
       
-      if (w->type < city || w->type == unwayed) {
-        gdk_gc_set_foreground (draw->style->fg_gc[0],
-          &highwayColour[w->type]);
-        gdk_gc_set_line_attributes (draw->style->fg_gc[0],
-          highway[w->type].width, highway[w->type].style, GDK_CAP_PROJECTING,
-          GDK_JOIN_MITER);
-        gdk_draw_line (draw->window, draw->style->fg_gc[0],
-          (itr.hs[0]->lon - clon) / perpixel + clip.width / 2,
-          clip.height / 2 - (itr.hs[0]->lat - clat) / perpixel,
-          (itr.hs[1]->lon - clon) / perpixel + clip.width / 2,
-          clip.height / 2 - (itr.hs[1]->lat - clat) / perpixel);
+      if (detail < 4 && Style (w)->areaColour) {
+        if (thisLayer > -5) continue;  // Draw all areas with layer -5
       }
+      else if (zoom < 100000*100) {
+      // Under low-zoom we draw everything on layer -5 (faster)
+        if (thisLayer < Layer (w) && Layer (w) < nextLayer) {
+          nextLayer = Layer (w);
+        }
+        if (detail == 4) {
+          if (doAreas) nextLayer = thisLayer;
+          if (Style (w)->areaColour ? !doAreas : doAreas) continue;
+        }
+        if (Layer (w) != thisLayer) continue;
+      }
+      ndType *nd = itr.nd[0];
+      if (itr.nd[0]->other[0] >= 0) {
+        nd = ndBase + itr.nd[0]->other[0];
+        if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build
+        else if (itr.left <= nd->lon && nd->lon < itr.right &&
+            itr.top  <= nd->lat && nd->lat < itr.bottom) continue;
+      } // Only process this way when the Itr gives us the first node, or
+      // the first node that's inside the viewing area
+ 
+      #ifndef WIN32
+      __int64 maxLenSqr = 0;
+      double x0, y0;
+      #else
+      int best = 0, bestW, bestH, x0, y0;
+      #endif
+      int len = strcspn ((char *)(w + 1) + 1, "\n");
+      
+      if (nd->other[0] < 0 && nd->other[1] < 0) {
+        int x = clip.width / 2 + (nd->lon - clon) / perpixel;
+        int y = clip.height / 2 - (nd->lat - clat) / perpixel;
+        int *icon = Style (w)->x + 4 * iset;
+        if (icons && icon[2] != 0) {
+          gdk_draw_drawable (draw->window, mygc, icons,
+            icon[0], icon[1], x - icon[2] / 2, y - icon[3] / 2,
+            icon[2], icon[3]);
+        }
+        
+	#ifdef WIN32
+        SelectObject (mygc, sysFont);
+        MultiByteToWideChar (CP_UTF8, 0, (char *)(w + 1) + 1,
+          len, wcTmp, sizeof (wcTmp));
+        ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
+  	      wcTmp, len, NULL);	
+	#endif
+        #ifdef CAIRO_VERSION
+        if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
+          mat.xx = mat.yy = 12.0;
+          mat.xy = mat.yx = 0;
+          x0 = x - mat.xx / 12.0 * 3 * len; /* Render the name of the node */
+          y0 = y + mat.xx * f->ascent / 12.0 + icon[3] / 2;
+          maxLenSqr = 4000000000000LL; // Without scaleMax, use 400000000
+        }
+        #endif
+      }
+      else if (Style (w)->areaColour) {
+        #ifndef WIN32
+        while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
+        static GdkPoint pt[1000];
+        unsigned pts;
+        for (pts = 0; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] >= 0;
+             pts++) {
+          pt[pts].x = (nd->lon - clon) / perpixel + clip.width / 2;
+          pt[pts].y = clip.height / 2 - (nd->lat - clat) / perpixel;
+          nd = ndBase + nd->other[1];
+        }
+        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
+        gdk_draw_polygon (draw->window, mygc, TRUE, pt, pts);
+        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
+        gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
+          Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
+          : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+        gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
+	#endif
+      }
+      else if (nd->other[1] >= 0) {
+        #ifndef WIN32
+        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
+        gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
+          Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
+          : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+        #else
+	SelectObject (mygc, pen[w->type]);
+        #endif
+        do {
+          ndType *next = ndBase + nd->other[1];
+          if (next->lat == INT_MIN) break; // Node excluded from build
+          gdk_draw_line (draw->window, mygc,
+            (nd->lon - clon) / perpixel + clip.width / 2,
+            clip.height / 2 - (nd->lat - clat) / perpixel,
+            (next->lon - clon) / perpixel + clip.width / 2,
+            clip.height / 2 - (next->lat - clat) / perpixel);
+	  #ifdef WIN32
+	  if (best < nd->lon - next->lon) best = nd->lon - next->lon;
+	  else if (best < next->lon - nd->lon) best = next->lon - nd->lon;
+	  else if (best < nd->lat - next->lat) best = nd->lat - next->lat;
+	  else if (best < next->lat - nd->lat) best = next->lat - nd->lat;
+	  else goto notBest;
+	    bestW = (next->lon > nd->lon ? -1 : 1) * (next->lon - nd->lon);
+	    bestH = (next->lon > nd->lon ? -1 : 1) * (next->lat - nd->lat);
+            x0 = next->lon / 2 + nd->lon / 2;
+	    y0 = next->lat / 2 + nd->lat / 2;
+	  notBest:
+	  #endif
+          #ifdef CAIRO_VERSION
+          __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
+                             (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
+          if (lenSqr > maxLenSqr) {
+            maxLenSqr = lenSqr;
+            mat.yy = mat.xx = 12 * fabs (nd->lon - next->lon) / sqrt (lenSqr);
+            mat.xy = (nd->lon > next->lon ? 12.0 : -12.0) *
+                                        (nd->lat - next->lat) / sqrt (lenSqr);
+            mat.yx = -mat.xy;
+            x0 = clip.width / 2 + (nd->lon / 2 + next->lon / 2 - clon) /
+              perpixel + mat.yx * f->descent / 12.0 - mat.xx / 12.0 * 3 * len;
+            y0 = clip.height / 2 - (nd->lat / 2 + next->lat / 2 - clat) /
+              perpixel - mat.xx * f->descent / 12.0 - mat.yx / 12.0 * 3 * len;
+          }
+	  #endif
+          nd = next;
+        } while (itr.left <= nd->lon && nd->lon < itr.right &&
+                 itr.top  <= nd->lat && nd->lat < itr.bottom &&
+                 nd->other[1] >= 0);
+      } /* If it has one or more segments */
+
+      #ifdef WIN32
+      if (best > perpixel * len * 4) {
+        double hoek = atan2 (bestH, bestW);
+        logFont.lfEscapement = logFont.lfOrientation =
+          1800 + int ((1800 / M_PI) * hoek);
+        
+        HFONT customFont = CreateFontIndirect (&logFont);
+        HGDIOBJ oldf = SelectObject (mygc, customFont);
+        MultiByteToWideChar (CP_UTF8, 0, (char *)(w + 1) + 1,
+          len, wcTmp, sizeof (wcTmp));
+        ExtTextOut (mygc, (x0 - clon) / perpixel + clip.width / 2 +
+	      int (len * 3 * cos (hoek)),
+              clip.height / 2 - (y0 - clat) / perpixel -
+	      int (len * 3 * sin (hoek)), 0, NULL,
+  	      wcTmp, len, NULL);
+        SelectObject (mygc, customFont);
+        DeleteObject (customFont);
+      }
+      #endif
+      #ifdef CAIRO_VERSION
+      if (maxLenSqr * detail > perpixel * (__int64) perpixel *
+          len * len * 100 && len > 0) {
+        for (char *txt = (char *)(w + 1) + 1; *txt != '\0';) {
+          cairo_set_font_matrix (cai, &mat);
+          char *line = (char *) malloc (strcspn (txt, "\n") + 1);
+          memcpy (line, txt, strcspn (txt, "\n"));
+          line[strcspn (txt, "\n")] = '\0';
+          cairo_move_to (cai, x0, y0);
+          cairo_show_text (cai, line);
+          free (line);
+          if (perpixel > 10) break;
+          y0 += mat.xx * (f->ascent + f->descent) / 12;
+          x0 += mat.xy * (f->ascent + f->descent) / 12;
+          while (*txt != '\0' && *txt++ != '\n') {}
+        }
+      }
+      #endif
     } /* for each visible tile */
   }
-  qsort (name, nameCnt, sizeof (name[0]), Name2RenderNameCmp);
-  for (int i = 1, deleted = 0; i < nameCnt; ) {
-    memcpy (name + i, name + i + deleted, sizeof (name[0]));
-    // I guess memcpy will always work (do nothing) if deleted == 0
-    if (i && !strcmp (name[i - 1].w->name + data, name[i].w->name + data)) {
-      if (name[i - 1].width < name[i].width) 
-        memcpy (name + i - 1, name + i + deleted, sizeof (name[0]));
-      deleted++; // Keep only coordinates with larger 'width'
-      nameCnt--;
-    }
-    else i++;
-  }
-  qsort (name, nameCnt, sizeof (name[0]), Name2RenderYCmp);
+  #ifdef CAIRO_VERSION
+  cairo_destroy (cai);
+  #endif
+#if 0
 //  printf ("%d %d %s\n", name[0].x, name[0].y, name[0].w->name + data);
   for (int i = 0, y = -1000; i < nameCnt; i++) {
     if (y + f->ascent + f->descent < name[i].y) {
@@ -777,27 +1016,27 @@ gint Expose (void)
         name[i].x, name[i].y, name[i].w->name + data);
     }
   }
-  
-  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
-  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
-    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+#endif
+//  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
+//  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
+//    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
   routeNodeType *x;
   if (shortest && (x  = shortest->shortest)) {
-    gdk_draw_line (draw->window, draw->style->fg_gc[0],
+    gdk_draw_line (draw->window, draw->style->white_gc,
       (flon - clon) / perpixel + clip.width / 2,
       clip.height / 2 - (flat - clat) / perpixel,
-      (x->hs->lon - clon) / perpixel + clip.width / 2,
-      clip.height / 2 - (x->hs->lat - clat) / perpixel);
+      (x->nd->lon - clon) / perpixel + clip.width / 2,
+      clip.height / 2 - (x->nd->lat - clat) / perpixel);
     for (; x->shortest; x = x->shortest) {
-      gdk_draw_line (draw->window, draw->style->fg_gc[0],
-        (x->hs->lon - clon) / perpixel + clip.width / 2,
-        clip.height / 2 - (x->hs->lat - clat) / perpixel,
-        (x->shortest->hs->lon - clon) / perpixel + clip.width / 2,
-        clip.height / 2 - (x->shortest->hs->lat - clat) / perpixel);
+      gdk_draw_line (draw->window, draw->style->white_gc,
+        (x->nd->lon - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (x->nd->lat - clat) / perpixel,
+        (x->shortest->nd->lon - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (x->shortest->nd->lat - clat) / perpixel);
     }
-    gdk_draw_line (draw->window, draw->style->fg_gc[0],
-      (x->hs->lon - clon) / perpixel + clip.width / 2,
-      clip.height / 2 - (x->hs->lat - clat) / perpixel,
+    gdk_draw_line (draw->window, draw->style->white_gc,
+      (x->nd->lon - clon) / perpixel + clip.width / 2,
+      clip.height / 2 - (x->nd->lat - clat) / perpixel,
       (tlon - clon) / perpixel + clip.width / 2,
       clip.height / 2 - (tlat - clat) / perpixel);
   }
@@ -812,44 +1051,114 @@ gint Expose (void)
 
 GtkWidget *search;
 GtkWidget *list;
-wayType *incrementalWay;
-#define wayArray ((wayType *)data)
-#define wayCount (wayArray[0].name / sizeof (wayArray[0]))
+wayType *incrementalWay[40];
+
+#ifndef WIN32
+/* Current algorithm performs badly in many cases.
+   Solution :
+   1. Bsearch idx such that
+      ZEnc (way[idx]) < ZEnc (clon/lat) < ZEnc (way[idx+1])
+   2. Fill the list with ways around idx.
+   3. Now there's a circle with clon/clat as its centre and that runs through
+      the worst way just found. Let's say it's diameter is d. There exist
+      4 Z squares smaller that 2d by 2d that cover this circle. Find them
+      with binary search and search through them for the nearest ways.
+*/
+void PopulateList (int *base, int num, int *count, int firstInR)
+{ // May not change incrementalWay[0..firstInR-1]
+  static __int64 dista[sizeof (incrementalWay)/sizeof (incrementalWay[0])];
+  if (num <= 0) return;
+  while (TagCmp (data + base[0], data + base[num / 2]) != 0) {
+    num = num / 2; // Range contains more than one name. Do only 1st half.
+  }
+  char *name = data + base[num / 2], *n = name;
+  while (*--n) {}
+  wayType *w = (wayType *)n - 1;
+  int lt = ZEnc ((unsigned) clon >> 16, (unsigned) clat >> 16) <
+    ZEnc ((unsigned) w->clon >> 16, (unsigned) w->clat >> 16);
+  if (lt) PopulateList (base, num / 2, count, firstInR);
+  else PopulateList (base + num / 2 + 1, num - 1 - num / 2, count, firstInR);
+  
+  int i;
+  __int64 dist = Sqr ((__int64)(clon - w->clon)) +
+    Sqr ((__int64)(clat - w->clat));
+  for (i = *count - 1; firstInR <= i && dist < dista[i]; i--) {
+    if (i + 1 < int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) {
+      incrementalWay[i + 1] = incrementalWay[i];
+      dista[i + 1] = dista[i];
+    }
+  }
+  if (i + 1 < int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) {
+    incrementalWay[i + 1] = w;
+    dista[i + 1] = dist;
+  }
+  if (*count < int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) {
+    char *m = (char *) malloc (strcspn (name, "\n") + 1);
+    sprintf (m, "%.*s", strcspn (name, "\n"), name); // asprintf ?
+    gtk_clist_append (GTK_CLIST (list), &m);
+    free (m);
+    (*count)++;
+  }
+  int mask = !lt ? w->clon | w->clat : (~w->clon) | (~w->clat);
+  mask |= mask >> 1;
+  mask |= mask >> 2;
+  mask |= mask >> 4;
+  mask |= mask >> 8;
+  mask |= mask >> 16;
+  if (*count < int (sizeof (incrementalWay) / sizeof (incrementalWay[0])) ||
+      (!lt ? mask < clon && mask < clat && Sqr ((__int64)(clon - mask)) + 
+             Sqr ((__int64)(clat - mask)) < dista[*count - 1]
+           : clon < ~mask && clat < ~mask && Sqr ((__int64)(~mask - clon)) +
+             Sqr ((__int64)(~mask - clat)) < dista[*count - 1])) {
+    if (!lt) PopulateList (base, num / 2, count, firstInR);
+    else PopulateList (base + num/2 + 1, num - 1 - num/2, count, firstInR);
+  }
+}
 
 gint IncrementalSearch (void)
 {
-  const gchar *key = gtk_entry_get_text (GTK_ENTRY (search));
-  int i, l = 0, h = wayCount;
+  char *key = (char *) gtk_entry_get_text (GTK_ENTRY (search));
+  int *idx =
+    (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
+  int l = 0, h = hashTable - idx, count;
   while (l < h) {
-    if (strcmp (data + wayArray[(h + l) / 2].name, key) >= 0) h = (h + l) / 2;
+    if (TagCmp (data + idx[(h + l) / 2], key) >= 0) h = (h + l) / 2;
     else l = (h + l) / 2 + 1;
   }
-  incrementalWay = wayArray + l;
   gtk_clist_freeze (GTK_CLIST (list));
   gtk_clist_clear (GTK_CLIST (list));
-  for (i = 0; i < 40 && i + l < wayCount; i++) {
-    char *name = data + incrementalWay[i].name;
-    gtk_clist_append (GTK_CLIST (list), &name);
+//  char *lastName = data + idx[min (hashTable - idx), 
+//    int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) + l - 1];
+  for (count = 0; count + l < hashTable - idx && count <
+      int (sizeof (incrementalWay) / sizeof (incrementalWay[0]));) {
+    PopulateList (idx + l + count, hashTable - idx - l >=
+      int (sizeof (incrementalWay) / sizeof (incrementalWay[0])) &&
+      TagCmp (data + idx[l + count], data +
+    idx[l + sizeof (incrementalWay) / sizeof (incrementalWay[0]) - 1]) != 0
+      ? int (sizeof (incrementalWay) / sizeof (incrementalWay[0])) - count
+      : hashTable - idx - l - count, &count, count);
   }
   gtk_clist_thaw (GTK_CLIST (list));
+  return FALSE;
 }
 
-void SelectName (GtkWidget *w, gint row, gint column, GdkEventButton *ev,
-  gpointer data)
+void SelectName (GtkWidget * /*w*/, gint row, gint /*column*/,
+  GdkEventButton * /*ev*/, gpointer /*data*/)
 {
-  clon = incrementalWay[row].clon;
-  clat = incrementalWay[row].clat;
-  zoom = incrementalWay[row].zoom16384 + 2 << 14;
+  clon = incrementalWay[row]->clon;
+  clat = incrementalWay[row]->clat;
+  zoom = incrementalWay[row]->dlat + incrementalWay[row]->dlon + (2 << 14);
   #ifdef USE_GPSD
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
   #endif
   gtk_widget_queue_clear (draw);
 }
+#endif // !WIN32
+#endif // HEADLESS
 
-int main (int argc, char *argv[])
+#ifndef WIN32
+int UserInterface (int argc, char *argv[])
 {
-  FILE *pak;
-  printf ("%s is in the public domain and comes without warrantee\n",argv[0]);
   #ifdef USE_FLITE
     int pyp[2];
     pipe (pyp);
@@ -867,255 +1176,72 @@ int main (int argc, char *argv[])
     flitePipe = fdopen (pyp[1], "w");
     setlinebuf (flitePipe);
   #endif
-  if (argc > 1) {
-    if (argc > 2 || stricmp (argv[1], "rebuild")) {
-      fprintf (stderr, "Usage : %s [rebuild]\n", argv[0]);
-      return 1;
-    }
-    if (!(pak = fopen ("gosmore.pak", "w+"))) {
-      fprintf (stderr, "Cannot create gosmore.pak\n");
-      return 2;
-    }
-    // Set up something for unwayed segments to point to. This will be
-    // written to location 0 when we encounter the first <way> tag.
-  
-    char tag[301], key[301], value[301], quote, feature[301];
-    int wayCnt = 0, from, segId;
-    enum { doNodes, doSegments, doWays } mode = doNodes;
-    int wleft, wright, wtop, wbottom;
-
-    printf ("Reading nodes...\n");
-    nodeType *node = (nodeType *) malloc (sizeof (*node) * MAX_NODES), *n;
-    halfSegType *halfSeg = (halfSegType *) malloc (sizeof (*halfSeg) *
-      (MAX_SEGMENTS + MAX_NAMED_NODES) * 2);
-    halfSegType *namedNodeHs = halfSeg + 2 * MAX_SEGMENTS;
-    wayBuildType *w = (wayBuildType *) calloc (sizeof (*w), MAX_WAYS);
-    if (!node || !halfSeg || !w) {
-      fprintf (stderr, "Out of memory. It may work if MAX_SEGMENTS and / or\n"
-        "MAX_NODES are reduced\n");
-      return 3;
-    }
-    memset (node, -1, sizeof (*node) * MAX_NODES);
-    memset (halfSeg, -1, sizeof (*halfSeg) * MAX_SEGMENTS * 2);
-/* Initially this array is a hashtable with 2 adjacent entries for each
-   segment and the segment id stored in 'other'.
-   
-   After processing the ways the named nodes are added and the blanks are
-   removed. 'other' then is the index into the array before it is sorted.
-   Then we sort by bucket number, lon and lat. Then we set 'other'
-   to the offset of the other half in the sorted pak file. */
-    w[wayCnt].idx = wayCnt;
-    w[wayCnt].w.type = unwayed;
-    w[wayCnt].w.layer = 5; // 5 means show duplicated segments clearly.
-    w[wayCnt].name = strdup ("_unwayed");
-    assert (unwayed == sizeof (highway) / sizeof (highway[0]) - 1);
-   
-    while (scanf (" <%300[a-zA-Z0-9?/]", tag) == 1) {
-      //printf ("%s", tag);
-      do {
-        while (scanf (" %300[a-zA-Z0-9]", key)) {
-          if (getchar () == '=') {
-            quote = getchar ();
-            if (quote == '\'') scanf ("%300[^']'", value); /* " */
-            else if (quote == '"') scanf ("%300[^\"]\"", value); /* " */
-            else {
-              ungetc (quote, stdin);
-              scanf ("%300[^ ]", value); /* " */
-            }
-            //printf (" %s='%s'", key, value);
-            if (mode == doWays && !stricmp (tag, "seg") &&
-                !stricmp (key, "id")) {
-              halfSegType *hs = FindSegment (halfSeg, atoi (value));
-              if (hs->wayPtr >= 0) {
-                hs->wayPtr = wayCnt;
-                for (int i = 0; i < 2; i++) {
-                  if (wleft > hs[i].lon) wleft = hs[i].lon;
-                  else if (wright < hs[i].lon) wright = hs[i].lon;
-                  if (wbottom > hs[i].lat) wbottom = hs[i].lat;
-                  else if (wtop < hs[i].lat) wtop = hs[i].lat;
-                }
-                w[wayCnt].w.clon = wleft / 2 + wright / 2; /* eager evaluat */
-                w[wayCnt].w.clat = wtop / 2 + wbottom / 2;
-                w[wayCnt].w.zoom16384 = (wright - wleft > wtop - wbottom ?
-                  wright - wleft : wtop - wbottom) >> 14;
-              }
-            }
-            else if (!stricmp (tag, "tag") /* && mode != doSegments but
-            then we will have hundreds of complains of tagged segments */) {
-              if (!stricmp (key, "k")) strcpy (feature, value);
-              if (mode != doSegments && !stricmp (key, "v")) {
-                if (!stricmp (feature, "oneway") &&
-                  tolower (value[0]) == 'y') w[wayCnt].w.oneway = 1;
-                else if (!strcmp (feature, "layer"))
-                  w[wayCnt].w.layer = atoi (value);
-                else if (!strcmp (feature, "name")) {
-                  w[wayCnt].name = strdup (value);
-                  if (mode == doNodes) namedNodeHs += 2;
-                }
-                //else if (!strcmp (feature, "ref")) strcpy (ref, value);
-                else for (int i = 0; highway[i].name; i++) {
-		  if (!stricmp (highway[i].feature, feature) &&
-                      !stricmp (value, highway[i].name)) w[wayCnt].w.type = i;
-                }
-              }
-            }
-            else if (strcmp (tag, "?xml") && strcmp (tag, "osm")) {
-              /* First flush out a way in progress */
-              if (mode == doWays && !w[wayCnt].name) {
-                w[wayCnt].name = strdup ("");
-              }
-              if (w[wayCnt].name) wayCnt++;
-              mode = doNodes;
-              if (!stricmp (tag, "node")) {
-                if (!stricmp (key, "id")) {
-                  n = FindNode (node, atoi (value));
-                  n->id = atoi (value);
-                }
-                if (!stricmp (key, "lat")) n->lat = Latitude (atof (value));
-                if (!stricmp (key, "lon")) {
-                  n->lon = Longitude (atof (value));
-                  
-                  if (w[wayCnt].name) wayCnt++;
-                  /* Now there is a way for the unwayed segment plus
-                     wayCnt - 1 nodes with names, each with 2 half segments */
-                  w[wayCnt].w.type = place; /* generic */
-                  w[wayCnt].idx = wayCnt;
-                  w[wayCnt].w.clat = n->lat;
-                  w[wayCnt].w.clon = n->lon;
-                  w[wayCnt].w.zoom16384 = 10;
-                  /* We prepare a way and two segments in case this node has
-                     a name. */
-                  /* namedNodeHs->other = 0; */
-                  namedNodeHs->lat = w[wayCnt].w.clat;
-                  namedNodeHs->lon = w[wayCnt].w.clon;
-                  namedNodeHs->wayPtr = wayCnt;
-                  memcpy (namedNodeHs+1, namedNodeHs, sizeof (*namedNodeHs));
-                  
-                  //if (nodeCnt % 100000 == 0) printf ("%9d nodes\n", nodeCnt);
-                }
-              }
-              else if (!stricmp (tag, "segment")) {
-                mode = doSegments;
-                if (!stricmp (key, "id")) segId = atoi (value);
-                if (!stricmp (key, "from")) n = FindNode (node, atoi (value));
-                if (!stricmp (key, "to") && n->id != -1) {
-                  nodeType *to = FindNode (node, atoi (value));
-                  if (to->id != -1) {
-                    halfSegType *seg = FindSegment (halfSeg, segId);
-                    seg[0].other = segId;
-                    seg[0].wayPtr = 0;
-                    seg[0].lon = n->lon;
-                    seg[0].lat = n->lat;
-                    /* seg[1].other = ; */
-                    seg[1].wayPtr = TO_HALFSEG;
-                    seg[1].lon = to->lon;
-                    seg[1].lat = to->lat;
-                  }
-                }
-              }
-              else if (!stricmp (tag, "way")) {
-                mode = doWays;
-                w[wayCnt].idx = wayCnt;
-                w[wayCnt].w.type = unsupportedWayType;
-                wleft = INT_MAX;
-                wright = -INT_MAX;
-                wbottom = INT_MAX;
-                wtop = -INT_MAX;
-              }
-              else fprintf (stderr, "Unexpected tag %s\n", tag);
-            } /* If we expected a node, a segment or a way */
-          } /* if key / value pair found */
-        } /* while search for key / value pairs */
-      } while (getchar () != '>');
-      //printf ("\n");
-    } /* while we found another tag */
-    if (mode == doWays && !w[wayCnt].name) {
-      w[wayCnt].name = strdup ("");
-    }
-    if (w[wayCnt].name) wayCnt++; /* Flush the last way */
-    free (node);
-    printf ("Sorting ways by name\n");
-    qsort (w, wayCnt, sizeof (*w), WayBuildCmp);
-    int *wIdx = (int *) malloc (sizeof (*wIdx) * wayCnt);
-    printf ("Writing ways\n");
-    for (int i = 0, strPtr = wayCnt * sizeof (w[0].w); i < wayCnt; i++) {
-      w[i].w.name = strPtr;
-      fwrite (&w[i].w, sizeof (w[i].w), 1, pak);
-      strPtr += strlen (w[i].name) + 1;
-      wIdx[w[i].idx] = i * sizeof (w[0].w); // = ftell (pak)
-    }
-    for (int i = 0; i < wayCnt; i++) {
-      fwrite (w[i].name, strlen (w[i].name) + 1, 1, pak);
-      free (w[i].name);
-    }
-    free (w);
-    printf ("Preparing for sorting half segments\n");
-    int halfSegCnt;
-    for (halfSegCnt = 0; halfSeg + halfSegCnt < namedNodeHs; ) {
-      if (namedNodeHs[-2].wayPtr == -1) namedNodeHs -= 2;
-      else {
-        if (halfSeg[halfSegCnt].wayPtr == -1) {
-          memcpy (&halfSeg[halfSegCnt], namedNodeHs - 2,
-            sizeof (*halfSeg) * 2);
-          namedNodeHs -= 2;
-        }
-        halfSeg[halfSegCnt].other = halfSegCnt;
-        halfSeg[halfSegCnt + 1].other = halfSegCnt + 1;
-        halfSegCnt += 2;
-      }
-    }
-    printf ("Sorting\n");
-    quicksort (halfSeg, halfSegCnt, sizeof (*halfSeg),
-	       (int (*)(const void*, const void*)) HalfSegCmp);
-	       
-    printf ("Calculating addresses\n");
-    int *hsIdx = (int *) malloc (sizeof (*hsIdx) * halfSegCnt);
-    int hsBase = ftell (pak);
-    if (hsBase & 15) hsBase += fwrite (&hsBase, 1, 16 - (hsBase & 15), pak);
-    /* Align to 16 bytes */
-    for (int i = halfSegCnt - 1; i >= 0; i--)
-	       hsIdx[halfSeg[i].other] = hsBase + i * sizeof (*halfSeg);
-    printf ("Writing Data\n");
-    for (int i = 0; i < halfSegCnt; i++) {
-      halfSeg[i].other = hsIdx[halfSeg[i].other ^ 1];
-      halfSeg[i].wayPtr = halfSeg[i].wayPtr == TO_HALFSEG ? TO_HALFSEG :
-        wIdx[halfSeg[i].wayPtr]; // Final pos of way.
-      fwrite (&halfSeg[i], sizeof (*halfSeg), 1, pak);
-    }
-    printf ("Writing hash table\n");
-    fwrite (&hsBase, sizeof (hsBase), 1, pak);
-    for (int bucket = 0, i = 0; bucket < BUCKETS; bucket++) {
-      while (i < halfSegCnt && Hash (halfSeg[i].lon,
-				     halfSeg[i].lat) == bucket) {
-        i++;
-        hsBase += sizeof (*halfSeg);
-      }
-      fwrite (&hsBase, sizeof (hsBase), 1, pak);
-    }
-    fclose (pak); /* fflush instead ? */
-    free (wIdx);
-    free (halfSeg);
-    free (hsIdx);
-    /* It has BUCKETS + 1 entries so that we can easily look up where each
-       bucket begins and ends */
-  } /* if rebuilding */
+  #if defined (__linux__)
+  FILE *gmap = fopen64 ("gosmore.pak", "r");
+  #else
   GMappedFile *gmap = g_mapped_file_new ("gosmore.pak", FALSE, NULL);
+  #endif
   if (!gmap) {
     fprintf (stderr, "Cannot read gosmore.pak\nYou can (re)build it from\n"
       "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
       argv[0]);
     return 4;
   }
+  #ifdef __linux__
+  int ndCount[3];
+  fseek (gmap, -sizeof (ndCount), SEEK_END);
+  fread (ndCount, sizeof (ndCount), 1, gmap);
+  long pakSize = ftello64 (gmap);
+  data = (char *) mmap (NULL, ndCount[2],
+                 PROT_READ, MAP_SHARED, fileno (gmap), 0);
+
+  ndBase = (ndType *) ((char *)mmap (NULL, pakSize - (ndCount[2] & ~0xfff), //ndCount[0] * sizeof (*ndBase),
+       PROT_READ, MAP_SHARED, fileno (gmap), ndCount[2] & ~0xfff) +
+     (ndCount[2] & 0xfff));
+  bucketsMin1 = ndCount[1];
+  hashTable = (int *)((char *)ndBase + pakSize - ndCount[2]) - bucketsMin1
+    - (bucketsMin1 >> 7) - 5;
+  #else
   data = (char*) g_mapped_file_get_contents (gmap);
-  hashTable = (int *) (data + g_mapped_file_get_length (gmap)) - BUCKETS - 1;
+  //#define pakSize 
+  hashTable = (int *) (data + g_mapped_file_get_length (gmap)) - BUCKETS - 2;
+  ndBase = (ndType *)(data + hashTable[BUCKETS + 1]);
+  #endif
+  if (!data || !ndBase || !hashTable) {
+    fprintf (stderr, "mmap failed\n");
+    return 8;
+  }
+  style = (struct styleStruct *)(data + 4);
 
-  wayType *w = 0 + (wayType *) data;
-  //printf ("%d ways %d\n", w[0].name / sizeof (w[0]), w[w[0].name / sizeof (w[0]) - 1].name);
-  clon = Longitude (28.30803);
-  clat = Latitude (-25.78569);
-  zoom = (w[0].zoom16384 + 3) << 14;
-    //lrint (0.1 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
+  if (getenv ("QUERY_STRING")) {
+    double x0, y0, x1, y1;
+    char vehicle[20];
+    sscanf (getenv ("QUERY_STRING"),
+      "flat=%lf&flon=%lf&tlat=%lf&tlon=%lf&fast=%d&v=%19[a-z]",
+      &y0, &x0, &y1, &x1, &fastest, vehicle);
+    flat = Latitude (y0);
+    flon = Longitude (x0);
+    tlat = Latitude (y1);
+    tlon = Longitude (x1);
+    #define M(v) if (strcmp (vehicle, #v) == 0) car = v ## R;
+    RESTRICTIONS
+    #undef M
+    Route (TRUE);
+    printf ("Content-Type: text/text\n\r\n\r");
+    for (; shortest; shortest = shortest->shortest) {
+      printf ("%lf,%lf\n\r", (atan (exp (shortest->nd->lat / 2147483648.0 *
+        M_PI)) - M_PI / 4) / M_PI * 360,
+        shortest->nd->lon / 2147483648.0 * 180);
+    }
+    return 0;
+  }
 
+  printf ("%s is in the public domain and comes without warrantee\n",argv[0]);
+  #ifndef HEADLESS
+  clon = ndBase[0].lon; // Longitude (-0.272228);
+  clat = ndBase[0].lat; // Latitude (51.927977);
+  zoom = lrint (0.1 / 5 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
+  
   gtk_init (&argc, &argv);
   draw = gtk_drawing_area_new ();
   gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
@@ -1145,23 +1271,41 @@ int main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (list), "select_row",
     GTK_SIGNAL_FUNC (SelectName), NULL);
     
-  carBtn = gtk_radio_button_new_with_label (NULL, "car");
-  gtk_box_pack_start (GTK_BOX (vbox), carBtn, FALSE, FALSE, 5);
-  GtkWidget *bike = gtk_radio_button_new_with_label (
-    gtk_radio_button_get_group (GTK_RADIO_BUTTON (carBtn)), "bike");
-  gtk_box_pack_start (GTK_BOX (vbox), bike, FALSE, FALSE, 5);
+  carBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_combo_box_append_text (carBtn, "car");
+  gtk_combo_box_append_text (carBtn, "bicycle");
+  gtk_combo_box_set_active (carBtn, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (carBtn), FALSE, FALSE, 5);
 
-  fastestBtn = gtk_radio_button_new_with_label (NULL, "fastest");
-  gtk_box_pack_start (GTK_BOX (vbox), fastestBtn, FALSE, FALSE, 5);
-  GtkWidget *shortestBtn = gtk_radio_button_new_with_label (
-    gtk_radio_button_get_group (GTK_RADIO_BUTTON (fastestBtn)), "shortest");
-  gtk_box_pack_start (GTK_BOX (vbox), shortestBtn, FALSE, FALSE, 5);
+  fastestBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_combo_box_append_text (fastestBtn, "fastest");
+  gtk_combo_box_append_text (fastestBtn, "shortest");
+  gtk_combo_box_set_active (fastestBtn, 0);
+  gtk_box_pack_start (GTK_BOX (vbox),
+    GTK_WIDGET (fastestBtn), FALSE, FALSE, 5);
+
+  detailBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_combo_box_append_text (detailBtn, "Highest");
+  gtk_combo_box_append_text (detailBtn, "High");
+  gtk_combo_box_append_text (detailBtn, "Normal");
+  gtk_combo_box_append_text (detailBtn, "Low");
+  gtk_combo_box_append_text (detailBtn, "Lowest");
+  gtk_combo_box_set_active (detailBtn, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (detailBtn), FALSE, FALSE,5);
+
+  iconSet = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_combo_box_append_text (iconSet, "CLASSIC");
+  gtk_combo_box_append_text (iconSet, "classic");
+  gtk_combo_box_append_text (iconSet, "SQUARE");
+  gtk_combo_box_append_text (iconSet, "square");
+  gtk_combo_box_set_active (iconSet, 1);
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (iconSet), FALSE, FALSE, 5);
   
   GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
-  gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
+/*  gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
     GTK_SIGNAL_FUNC (GetDirections), NULL);
-
+*/
 #ifdef USE_GPSD
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
   gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
@@ -1172,7 +1316,7 @@ int main (int argc, char *argv[])
   if (gpsData) {
     gtk_widget_show (followGPSr);
     
-    gps_set_raw_hook (gpsData, GpsMove);
+//    gps_set_raw_hook (gpsData, GpsMove);
     gps_query (gpsData, "w+x\n");
     gdk_input_add (gpsData->gps_fd, GDK_INPUT_READ,
       (GdkInputFunction) gps_poll, gpsData);
@@ -1189,14 +1333,1019 @@ int main (int argc, char *argv[])
   gtk_widget_show (search);
   gtk_widget_show (list);
   gtk_widget_show (draw);
-  gtk_widget_show (carBtn);
-  gtk_widget_show (bike);
-  gtk_widget_show (fastestBtn);
-  gtk_widget_show (shortestBtn);
+  gtk_widget_show (GTK_WIDGET (carBtn));
+  gtk_widget_show (GTK_WIDGET (fastestBtn));
+  gtk_widget_show (GTK_WIDGET (detailBtn));
+  gtk_widget_show (GTK_WIDGET (iconSet));
   gtk_widget_show (getDirs);
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
   gtk_widget_show (window);
   IncrementalSearch ();
   gtk_main ();
+  #endif // HEADLESS
+  return 0;
 }
+#endif // !WIN32
+
+/*--------------------------------- Rebuid code ---------------------------*/
+#ifndef WIN32
+// These defines are only used during rebuild
+#define MAX_BUCKETS (1<<22)
+#define IDXGROUPS 676
+#define NGROUPS 90
+#define NGROUP(x)  ((x) / 3000000 % NGROUPS + IDXGROUPS)
+#define S1GROUPS NGROUPS
+#define S1GROUP(x) ((x) / 3000000 % NGROUPS + IDXGROUPS + NGROUPS)
+#define S2GROUPS 33 // Last group is reserved for lowzoom halfSegs
+#define S2GROUP(x) ((x) / (MAX_BUCKETS / (S2GROUPS - 1)) + IDXGROUPS + NGROUPS * 2)
+#define PAIRS (32 * 1024 * 1024)
+#define PAIRGROUPS 50
+#define PAIRGROUP(x) ((x) / PAIRS + S2GROUP (0) + S2GROUPS)
+#define PAIRGROUPS2 50
+#define PAIRGROUP2(x) ((x) / PAIRS + PAIRGROUP (0) + PAIRGROUPS)
+#define MAX_NODES 3000000 /* Max in a group */
+#define FIRST_LOWZ_OTHER (PAIRS * (PAIRGROUPS - 1))
+
+#define REBUILDWATCH(x) fprintf (stderr, "%3d %s\n", ++rebuildCnt, #x); x
+
+#define TO_HALFSEG -1 // Rebuild only
+
+struct halfSegType { // Rebuild only
+  int lon, lat, other, wayPtr;
+};
+
+struct nodeType {
+  int id, lon, lat;
+};
+
+inline nodeType *FindNode (nodeType *table, int id)
+{
+  unsigned hash = id;
+  for (;;) {
+    nodeType *n = &table[hash % MAX_NODES];
+    if (n->id < 0 || n->id == id) return n;
+    hash = hash * (__int64) 1664525 + 1013904223;
+  }
+}
+
+int HalfSegCmp (const halfSegType *a, const halfSegType *b)
+{
+  int lowz = a->other < -2 || FIRST_LOWZ_OTHER <= a->other;
+  int hasha = Hash (a->lon, a->lat, lowz), hashb = Hash (b->lon, b->lat, lowz);
+  return hasha != hashb ? hasha - hashb : a->lon != b->lon ? a->lon - b->lon :
+    a->lat - b->lat;
+}
+
+int IdxCmp (const void *aptr, const void *bptr)
+{
+  char *ta = data + *(unsigned *)aptr, *tb = data + *(unsigned *)bptr;
+  int tag = TagCmp (ta, tb);
+  while (*--ta) {}
+  while (*--tb) {}
+  unsigned a = ZEnc ((unsigned)((wayType *)ta)[-1].clat >> 16, 
+                     (unsigned)((wayType *)ta)[-1].clon >> 16);
+  unsigned b = ZEnc ((unsigned)((wayType *)tb)[-1].clat >> 16, 
+                     (unsigned)((wayType *)tb)[-1].clon >> 16);
+  return tag ? tag : a < b ? -1 : 1;
+}
+
+int main (int argc, char *argv[])
+{
+  int rebuildCnt = 0;
+  if (argc > 1) {
+    if ((argc != 6 && argc > 2) || stricmp (argv[1], "rebuild")) {
+      fprintf (stderr, "Usage : %s [rebuild [bbox for 2 pass]]\n"
+      "See http://wiki.openstreetmap.org/index.php/gosmore\n", argv[0]);
+      return 1;
+    }
+    FILE *pak, *masterf;
+    int head = 0xEB3A941, styleCnt = 0, ndStart;
+    int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
+    wayType *master = /* shutup gcc */ NULL;
+    if (argc == 6) {
+      if (!(masterf = fopen64 ("master.pak", "r")) ||
+          fseek (masterf, -sizeof (ndStart), SEEK_END) != 0 ||
+          fread (&ndStart, sizeof (ndStart), 1, masterf) != 1 ||
+          (long)(master = (wayType *)mmap (NULL, ndStart, PROT_READ,
+                                MAP_SHARED, fileno (masterf), 0)) == -1) {
+        fprintf (stderr, "Unable to open master.pak for bbox rebuild\n");
+        return 4;
+      }
+      bbox[0] = Latitude (atof (argv[2]));
+      bbox[1] = Longitude (atof (argv[3]));
+      bbox[2] = Latitude (atof (argv[4]));
+      bbox[3] = Longitude (atof (argv[5]));
+    }
+    if (!(pak = fopen64 ("gosmore.pak", "w+"))) {
+      fprintf (stderr, "Cannot create gosmore.pak\n");
+      return 2;
+    }
+    fwrite (&head, sizeof (head), 1, pak);
+    
+    //------------------------- elemstyle.xml : --------------------------
+    char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS];
+    int defaultRestrict[2 << STYLE_BITS];
+    memset (defaultRestrict, 0, sizeof (defaultRestrict));
+    FILE *icons_csv = fopen ("icons.csv", "r");
+    xmlTextReaderPtr sXml = xmlNewTextReaderFilename ("elemstyles.xml");
+    if (!sXml || !icons_csv) {
+      fprintf (stderr, "Either icons.csv or elemstyles.xml not found\n");
+      return 3;
+    }
+    styleStruct srec[2 << STYLE_BITS];
+    memset (&srec, 0, sizeof (srec));
+    while (xmlTextReaderRead (sXml)) {
+      char *name = (char*) xmlTextReaderName (sXml);
+      //xmlChar *val = xmlTextReaderValue (sXml);
+      if (xmlTextReaderNodeType (sXml) == XML_READER_TYPE_ELEMENT) {
+        if (strcasecmp (name, "scale_max") == 0) {
+          while (xmlTextReaderRead (sXml) && // memory leak :
+            xmlStrcmp (xmlTextReaderName (sXml), BAD_CAST "#text") != 0) {}
+          srec[styleCnt].scaleMax = atoi ((char *) xmlTextReaderValue (sXml));
+        }
+        while (xmlTextReaderMoveToNextAttribute (sXml)) {
+          char *n = (char *) xmlTextReaderName (sXml);
+          char *v = (char *) xmlTextReaderValue (sXml);
+          if (strcasecmp (name, "condition") == 0) {
+            if (strcasecmp (n, "k") == 0) style_k[styleCnt] = strdup (v);
+            if (strcasecmp (n, "v") == 0) style_v[styleCnt] = strdup (v);
+          }                                     // memory leak -^
+          if (strcasecmp (name, "line") == 0) {
+            if (strcasecmp (n, "width") == 0) {
+              srec[styleCnt].lineWidth = atoi (v);
+            }
+            if (strcasecmp (n, "realwidth") == 0) {
+              srec[styleCnt].lineRWidth = atoi (v);
+            }
+            if (strcasecmp (n, "colour") == 0) {
+              sscanf (v, "#%x", &srec[styleCnt].lineColour);
+            }
+            if (strcasecmp (n, "colour_bg") == 0) {
+              sscanf (v, "#%x", &srec[styleCnt].lineColourBg);
+            }
+            srec[styleCnt].dashed = srec[styleCnt].dashed ||
+              (strcasecmp (n, "dashed") == 0 && strcasecmp (v, "true") == 0);
+          }
+          if (strcasecmp (name, "area") == 0) {
+            if (strcasecmp (n, "colour") == 0) {
+              sscanf (v, "#%x", &srec[styleCnt].areaColour);
+            }
+          }
+          if (strcasecmp (name, "icon") == 0) {
+            if (strcasecmp (n, "src") == 0) {
+              while (v[strcspn ((char *) v, "/ ")]) {
+                v[strcspn ((char *) v, "/ ")] = '_';
+              }
+              char line[80];
+              static char *set[] = { "classic.big_", "classic.small_",
+                "square.big_", "square.small_" };
+              for (int i = 0; i < 4; i++) {
+                int slen = strlen (set[i]), vlen = strlen (v);
+                rewind (icons_csv);
+                while (fgets (line, sizeof (line) - 1, icons_csv)) {
+                  if (strncmp (line, set[i], slen) == 0 &&
+                      strncmp (line + slen, v, vlen - 1) == 0) {
+                    sscanf (line + slen + vlen, ":%d:%d:%d:%d",
+                      srec[styleCnt].x + i * 4, srec[styleCnt].x + i * 4 + 1,
+                      srec[styleCnt].x + i * 4 + 2,
+                      srec[styleCnt].x + i * 4 + 3);
+                  }
+                }
+              }
+            }
+          }
+          if (strcasecmp (name, "routing") == 0 && atoi (v) > 0) {
+            #define M(field) if (strcasecmp (n, #field) == 0) {\
+              defaultRestrict[styleCnt] |= 1 << field ## R; \
+              srec[styleCnt].aveSpeed[field ## R] = atof (v); \
+            }
+            RESTRICTIONS
+            #undef M
+          }
+          
+          xmlFree (v);
+          xmlFree (n);
+        }
+      }
+      else if (xmlTextReaderNodeType (sXml) == XML_READER_TYPE_END_ELEMENT
+                  && strcasecmp ((char *) name, "rule") == 0) {
+        if (styleCnt < (2 << STYLE_BITS) - 1) styleCnt++;
+        else fprintf (stderr, "Too many rules. Increase STYLE_BITS\n");
+      }
+      xmlFree (name);
+      //xmlFree (val);      
+    }
+    for (int i = 0; i < l1; i++) {
+      double max = 0;
+      for (int j = 0; j < styleCnt; j++) {
+        if (srec[j].aveSpeed[i] > max) max = srec[j].aveSpeed[i];
+      }
+      for (int j = 0; j < styleCnt; j++) {
+        srec[j].invSpeed[i] = max / srec[j].aveSpeed[i];
+      }
+    }
+    fwrite (&srec, sizeof (srec[0]), styleCnt + 1, pak);    
+    xmlFreeTextReader (sXml);
+
+    //-------------------------- OSM Data File : ---------------------------
+    xmlTextReaderPtr xml = xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
+//    xmlTextReaderPtr xml = xmlReaderForFile ("/dosc/osm/r28_2.osm", "", 0);
+    FILE *groupf[PAIRGROUP2 (0) + PAIRGROUPS2];
+    char groupName[PAIRGROUP2 (0) + PAIRGROUPS2][9];
+    for (int i = 0; i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
+      sprintf (groupName[i], "%c%c%d.tmp", i / 26 % 26 + 'a', i % 26 + 'a',
+        i / 26 / 26);
+      if (!(groupf[i] = fopen64 (groupName[i], "w+"))) {
+        fprintf (stderr, "Cannot create temporary file.\nPossibly too many"
+          " open files, in which case you must run ulimit -n or recompile\n");
+        return 9;
+      }
+    }
+    
+    #if 0 // For making sure we have a Hilbert curve
+    bucketsMin1 = MAX_BUCKETS - 1;
+    for (int x = 0; x < 16; x++) {
+      for (int y = 0; y < 16; y++) {
+        printf ("%7d ", Hash (x << TILEBITS, y << TILEBITS));
+      }
+      printf ("\n");
+    }
+    #endif
+    
+    nodeType nd;
+    halfSegType s[2];
+    int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
+    int yesMask = 0, noMask = 0, wayInBbox = 1;
+    int lowzList[1000], lowzListCnt = 0;
+    // wayInBox : 1 way slips through...
+    s[0].lat = 0; // Should be -1 ?
+    s[0].other = -2;
+    s[1].other = -1;
+    wayType w;
+    w.clat = 0;
+    w.clon = 0;
+    w.dlat = INT_MIN;
+    w.dlon = INT_MIN;
+    w.bits = styleCnt;
+    
+    master = (wayType *)(((char *)master) + ftell (pak));
+    
+    char *tag_k = NULL, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
+    REBUILDWATCH (while (xmlTextReaderRead (xml))) {
+      char *name = (char *) BAD_CAST xmlTextReaderName (xml);
+      //xmlChar *value = xmlTextReaderValue (xml); // always empty
+      if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
+        isNode = stricmp (name, "way") != 0 && 
+                 (stricmp (name, "node") == 0 || isNode);
+        while (xmlTextReaderMoveToNextAttribute (xml)) {
+          char *aname = (char *) BAD_CAST xmlTextReaderName (xml);
+          char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
+  //        if (xmlStrcasecmp (name, "node") == 0) 
+          if (stricmp (aname, "id") == 0) nd.id = atoi (avalue);
+          if (stricmp (aname, "lat") == 0) nd.lat = Latitude (atof (avalue));
+          if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
+          if (stricmp (name, "nd") == 0 && stricmp (aname, "ref") == 0
+              && wayInBbox) {
+            if (s[0].lat) {
+              fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+            }
+            s[0].wayPtr = ftello64 (pak);
+            s[1].wayPtr = TO_HALFSEG;
+            s[1].other = s[0].other + 1;
+            s[0].other = nOther++ * 2;
+            s[0].lat = atoi (avalue);
+            if (lowzListCnt >=
+                int (sizeof (lowzList) / sizeof (lowzList[0]))) lowzListCnt--;
+            lowzList[lowzListCnt++] = atoi (avalue);
+          }
+          if (stricmp (aname, "v") == 0) {
+            #define K_IS(x) (stricmp (tag_k, x) == 0)
+            #define V_IS(x) (stricmp (avalue, x) == 0)
+            if (StyleNr (&w) == styleCnt) {
+              for (w.bits &= ~((2<<STYLE_BITS) - 1); StyleNr (&w) < styleCnt
+                        && !(K_IS (style_k[StyleNr (&w)])
+                             && V_IS (style_v[StyleNr (&w)])); w.bits++) {}
+            }
+            if (K_IS ("name")) {
+              xmlChar *tmp = xmlStrdup (BAD_CAST "\n");
+              tmp = xmlStrcat (BAD_CAST tmp, BAD_CAST avalue);
+              avalue = tags; // Old 'tags' will be freed
+              tags = (char*) xmlStrcat (tmp, BAD_CAST tags);
+              // name always first tag.
+            }
+            else if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
+            
+            #define M(field) else if (K_IS (#field)) { \
+                if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive")) { \
+                  yesMask |= 1 << field ## R; \
+                } else if (V_IS ("no") || V_IS ("0") || V_IS ("private")) { \
+                  noMask |= 1 << field ## R; \
+                } \
+              }
+            RESTRICTIONS
+            #undef M
+            
+            else if (!K_IS ("created_by") && !K_IS ("converted_by") &&
+              strncasecmp (tag_k, "source", 6) != 0 &&
+              !V_IS ("no") && !V_IS ("false") && 
+              strncasecmp (tag_k, "tiger:", 6) != 0 &&
+              !K_IS ("attribution") /* Mostly MassGIS */ &&
+              !K_IS ("sagns_id") && !K_IS ("sangs_id") && 
+              !K_IS ("is_in") && !V_IS ("residential") &&
+              !V_IS ("junction") && /* Not approved and when it isn't obvious
+                from the ways that it's a junction, the tag will often be
+                something ridiculous like junction=junction ! */
+// blocked as highway:  !V_IS ("mini_roundabout") && !V_IS ("roundabout") &&
+              !V_IS ("traffic_signals") && !K_IS ("editor") &&
+              !K_IS ("time") && !K_IS ("ele") && !K_IS ("hdop") &&
+                !K_IS ("sat") && !K_IS ("pdop") && !K_IS ("speed") &&
+                !K_IS ("course") && !K_IS ("fix") && !K_IS ("vdop") &&
+              !K_IS ("class") /* esp. class=node */ &&
+              !K_IS ("type") /* This is only for boules, but we drop it
+                because it's often misused */ &&
+              !V_IS ("coastline_old") &&
+              !K_IS ("upload_tag") && !K_IS ("admin_level") &&
+              (!isNode || (!K_IS ("highway") && !V_IS ("water") &&
+                           !K_IS ("abutters") && !V_IS ("coastline")))) {
+              // First block out tags that will bloat the index, will not make
+              // sense or are implied.
+
+              // tags = xmlStrcat (tags, tag_k); // with this it's
+              // tags = xmlStrcat (tags, "="); // it's amenity=fuel
+              tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST "\n");
+              tags = (char *) BAD_CAST xmlStrcat (BAD_CAST tags,  
+                V_IS ("yes") || V_IS ("1") || V_IS ("true")
+                ? BAD_CAST tag_k : BAD_CAST avalue);
+            }
+          }
+          if (stricmp (aname, "k") == 0) {
+            xmlFree (tag_k);
+            tag_k = avalue;
+          }
+          else xmlFree (avalue);
+          xmlFree (aname);
+        } /* While it's an attribute */
+        if (stricmp (name, "node") == 0 && bbox[0] <= nd.lat &&
+            bbox[1] <= nd.lon && nd.lat <= bbox[2] && nd.lon <= bbox[3]) {
+          fwrite (&nd, sizeof (nd), 1, groupf[NGROUP (nd.id)]);
+        }
+      }
+      if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
+        int nameIsNode = stricmp (name, "node") == 0;
+        if (stricmp (name, "way") == 0 || nameIsNode) {
+          if (!nameIsNode || (strlen (tags) > 8 || StyleNr (&w)!=styleCnt)) {
+            if (nameIsNode && wayInBbox) {
+              if (s[0].lat) { // Flush s
+                fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+              }
+              s[0].lat = nd.id; // Create 2 fake halfSegs
+              s[0].wayPtr = ftello64 (pak);
+              s[1].wayPtr = TO_HALFSEG;
+              s[0].other = -2; // No next
+              s[1].other = -1; // No prev
+              lowzList[lowzListCnt++] = nd.id;
+            }
+            if (s[0].other >= 0) nOther--; // Reclaim unused 'other' number
+            s[0].other = -2;
+
+            if (srec[StyleNr (&w)].scaleMax > 10000000 && wayInBbox) {
+              for (int i = 0; i < lowzListCnt; i++) {
+                if (i % 4 && i < lowzListCnt - 1) continue; // Skip some
+                if (s[0].lat) { // Flush s
+                  fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+                }
+                s[0].lat = lowzList[i];
+                s[0].wayPtr = ftello64 (pak);
+                s[1].wayPtr = TO_HALFSEG;
+                s[1].other = i == 0 ? -4 : lowzOther++;
+                s[0].other = i == lowzListCnt -1 ? -4 : lowzOther++;
+              }
+            }
+            lowzListCnt = 0;
+          
+            if (StyleNr (&w) < styleCnt && stricmp (style_v[StyleNr (&w)],
+                                     "city") == 0 && tags[0] == '\n') {
+              int nlen = strcspn (tags + 1, "\n");
+              char *n = (char *) xmlMalloc (strlen (tags) + 1 + nlen + 5 + 1);
+              strcpy (n, tags);
+              memcpy (n + strlen (tags), tags, 1 + nlen);
+              strcpy (n + strlen (tags) + 1 + nlen, " City");
+              //fprintf (stderr, "Mark : %s\n", n + strlen (tags) + 1);
+              xmlFree (tags);
+              tags = n; 
+            }
+            w.bits |= (defaultRestrict[StyleNr (&w)] | yesMask) &
+              ((noMask & accessR) ? 0 : ~noMask);
+            char *compact = tags[0] == '\n' ? tags + 1 : tags;
+            if (wayInBbox) {
+              fwrite (&w, sizeof (w), 1, pak);
+              fwrite (tags + strlen (tags), 1, 1, pak); // '\0' at the front
+              for (char *ptr = tags; *ptr != '\0'; ) {
+                if (*ptr++ == '\n') {
+                  unsigned idx = ftello64 (pak) + ptr - 1 - tags, grp;
+                  for (grp = 0; grp < IDXGROUPS - 1 &&
+                     TagCmp (groupName[grp], ptr) < 0; grp++) {}
+                  fwrite (&idx, sizeof (idx), 1, groupf[grp]);
+                }
+              }
+              fwrite (compact, strlen (compact) + 1, 1, pak);
+            
+              // Write variable length tags and align on 4 bytes
+              if (ftello64 (pak) & 3) {
+                fwrite (tags, 4 - (ftello64 (pak) & 3), 1, pak);
+              }
+            }
+            master = (wayType*)((char*)master +
+              ((1 + strlen (compact) + 1 + 3) & ~3)) + 1;
+            wayInBbox = argc < 6 || (bbox[0] <= master->clat + master->dlat
+                                  && bbox[1] <= master->clon + master->dlon
+                                  && master->clat - master->dlat <= bbox[2]
+                                  && master->clon - master->dlat <= bbox[3]);
+            //xmlFree (tags); // Just set tags[0] = '\0'
+            //tags = (char *) xmlStrdup (BAD_CAST "");
+          }
+          tags[0] = '\0'; // Erase nodes with short names
+          yesMask = noMask = 0;
+          w.bits = styleCnt;
+        }
+      } // if it was </...>
+      xmlFree (name);
+    } // While reading xml
+    if (s[0].lat && wayInBbox) {
+      fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+    }
+    assert (nOther * 2 < FIRST_LOWZ_OTHER);
+    bucketsMin1 = (nOther >> 8) | (nOther >> 9);
+    bucketsMin1 |= bucketsMin1 >> 2;
+    bucketsMin1 |= bucketsMin1 >> 4;
+    bucketsMin1 |= bucketsMin1 >> 8;
+    bucketsMin1 |= bucketsMin1 >> 16;
+    assert (bucketsMin1 < MAX_BUCKETS);
+    
+    nodeType *nodes = (nodeType *) malloc (sizeof (*nodes) * MAX_NODES);
+    if (!nodes) {
+      fprintf (stderr, "Out of memory. Reduce MAX_NODES and increase GRPs\n");
+      return 3;
+    }
+    for (int i = NGROUP (0); i < NGROUP (0) + NGROUPS; i++) {
+      rewind (groupf[i]);
+      memset (nodes, -1, sizeof (*nodes) * MAX_NODES);
+      REBUILDWATCH (while (fread (&nd, sizeof (nd), 1, groupf[i]) == 1)) {
+        memcpy (FindNode (nodes, nd.id), &nd, sizeof (nd));
+      }
+      fclose (groupf[i]);
+      unlink (groupName[i]);
+      rewind (groupf[i + NGROUPS]);
+      REBUILDWATCH (while (fread (s, sizeof (s), 1, groupf[i + NGROUPS])
+          == 1)) {
+        nodeType *n = FindNode (nodes, s[0].lat);
+        //if (n->id == -1) printf ("** Undefined node %d\n", s[0].lat);
+        s[0].lat = s[1].lat = n->id != -1 ? n->lat : INT_MIN;
+        s[0].lon = s[1].lon = n->id != -1 ? n->lon : INT_MIN;
+        fwrite (s, sizeof (s), 1,
+          groupf[-2 <= s[0].other && s[0].other < FIRST_LOWZ_OTHER
+            ? S2GROUP (Hash (s[0].lon, s[0].lat)) : PAIRGROUP (0) - 1]);
+      }
+      fclose (groupf[i + NGROUPS]);
+      unlink (groupName[i + NGROUPS]);
+    }
+    free (nodes);
+    
+    struct {
+      int nOther1, final;
+    } offsetpair;
+    offsetpair.final = 0;
+    
+    hashTable = (int *) malloc (sizeof (*hashTable) *
+      (bucketsMin1 + (bucketsMin1 >> 7) + 3));
+    int bucket = -1;
+    for (int i = S2GROUP (0); i < S2GROUP (0) + S2GROUPS; i++) {
+      fflush (groupf[i]);
+      int size = ftell (groupf[i]);
+      rewind (groupf[i]);
+      REBUILDWATCH (halfSegType *seg = (halfSegType *) mmap (NULL, size,
+        PROT_READ | PROT_WRITE, MAP_SHARED, fileno (groupf[i]), 0));
+      qsort (seg, size / sizeof (s), sizeof (s),
+        (int (*)(const void *, const void *))HalfSegCmp);
+      for (int j = 0; j < size / (int) sizeof (seg[0]); j++) {
+        if (!(j & 1)) {
+          while (bucket < Hash (seg[j].lon, seg[j].lat,
+                               i >= S2GROUP (0) + S2GROUPS - 1)) {
+            hashTable[++bucket] = offsetpair.final / 2;
+          }
+        }
+        offsetpair.nOther1 = seg[j].other;
+        if (seg[j].other >= 0) fwrite (&offsetpair, sizeof (offsetpair), 1,
+          groupf[PAIRGROUP (offsetpair.nOther1)]);
+        offsetpair.final++;
+      }
+      munmap (seg, size);
+    }
+    while (bucket < bucketsMin1 + (bucketsMin1 >> 7) + 2) {
+      hashTable[++bucket] = offsetpair.final / 2;
+    }
+    
+    ndStart = ftello64 (pak);
+    
+    int *pairing = (int *) malloc (sizeof (*pairing) * PAIRS);
+    for (int i = PAIRGROUP (0); i < PAIRGROUP (0) + PAIRGROUPS; i++) {
+      REBUILDWATCH (rewind (groupf[i]));
+      while (fread (&offsetpair, sizeof (offsetpair), 1, groupf[i]) == 1) {
+        pairing[offsetpair.nOther1 % PAIRS] = offsetpair.final;
+      }
+      int pairs = ftell (groupf[i]) / sizeof (offsetpair);
+      for (int j = 0; j < pairs; j++) {
+        offsetpair.final = pairing[j ^ 1];
+        offsetpair.nOther1 = pairing[j];
+        fwrite (&offsetpair, sizeof (offsetpair), 1,
+          groupf[PAIRGROUP2 (offsetpair.nOther1)]);
+      }
+      fclose (groupf[i]);
+      unlink (groupName[i]);
+    }
+    free (pairing);
+    
+    int s2grp = S2GROUP (0), pairs;
+    halfSegType *seg = (halfSegType *) malloc (PAIRS * sizeof (*seg));
+    ndType ndWrite;
+    for (int i = PAIRGROUP2 (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
+      REBUILDWATCH (for (pairs = 0; pairs < PAIRS &&
+                                s2grp < S2GROUP (0) + S2GROUPS; )) {
+        if (fread (&seg[pairs], sizeof (seg[0]), 2, groupf [s2grp]) == 2) {
+          pairs += 2;
+        }
+        else {
+          fclose (groupf[s2grp]);
+          unlink (groupName[s2grp]);
+          s2grp++;
+        }
+      }
+      rewind (groupf[i]);
+      while (fread (&offsetpair, sizeof (offsetpair), 1, groupf[i]) == 1) {
+        seg[offsetpair.nOther1 % PAIRS].other = offsetpair.final;
+      }
+      for (int j = 0; j < pairs; j += 2) {
+        ndWrite.wayPtr = seg[j].wayPtr;
+        ndWrite.lat = seg[j].lat;
+        ndWrite.lon = seg[j].lon;
+        ndWrite.other[0] = seg[j].other >> 1; // Right shift handles -1 the
+        ndWrite.other[1] = seg[j + 1].other >> 1; // way we want.
+        fwrite (&ndWrite, sizeof (ndWrite), 1, pak);
+      }
+      fclose (groupf[i]);
+      unlink (groupName[i]);
+    }
+    free (seg);
+    
+    fflush (pak);
+    data = (char *) mmap (NULL, ndStart,
+      PROT_READ | PROT_WRITE, MAP_SHARED, fileno (pak), 0);
+    fseek (pak, ndStart, SEEK_SET);
+    REBUILDWATCH (while (fread (&ndWrite, sizeof (ndWrite), 1, pak) == 1)) {
+      //if (bucket > Hash (ndWrite.lon, ndWrite.lat)) printf ("unsorted !\n");
+      wayType *way = (wayType*) (data + ndWrite.wayPtr);
+      
+      /* The difficult way of calculating bounding boxes,
+         namely to adjust the centerpoint (it does save us a pass) : */
+      // Block lost nodes with if (ndWrite.lat == INT_MIN) continue;
+      if (way->clat + way->dlat < ndWrite.lat) {
+        way->dlat = way->dlat < 0 ? 0 : // Bootstrap
+          (way->dlat - way->clat + ndWrite.lat) / 2;
+        way->clat = ndWrite.lat - way->dlat;
+      }
+      if (way->clat - way->dlat > ndWrite.lat) {
+        way->dlat = (way->dlat + way->clat - ndWrite.lat) / 2;
+        way->clat = ndWrite.lat + way->dlat;
+      }
+      if (way->clon + way->dlon < ndWrite.lon) {
+        way->dlon = way->dlon < 0 ? 0 : // Bootstrap
+          (way->dlon - way->clon + ndWrite.lon) / 2;
+        way->clon = ndWrite.lon - way->dlon;
+      }
+      if (way->clon - way->dlon > ndWrite.lon) {
+        way->dlon = (way->dlon + way->clon - ndWrite.lon) / 2;
+        way->clon = ndWrite.lon + way->dlon;
+      }
+    }
+    REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
+      int fsize = ftell (groupf[i]);
+      fflush (groupf[i]);
+      unsigned *idx = (unsigned *) mmap (NULL, fsize,
+        PROT_READ | PROT_WRITE, MAP_SHARED, fileno (groupf[i]), 0);
+      qsort (idx, fsize / sizeof (*idx), sizeof (*idx), IdxCmp);
+      fwrite (idx, fsize, 1, pak);
+      #if 0
+      for (int j = 0; j < fsize / (int) sizeof (*idx); j++) {
+        printf ("%.*s\n", strcspn (data + idx[j], "\n"), data + idx[j]);
+      }
+      #endif
+      munmap (idx, fsize);
+      fclose (groupf[i]);
+      unlink (groupName[i]);
+    }
+//    printf ("ndCount=%d\n", ndCount);
+    munmap (pak, ndStart);
+    fwrite (hashTable, sizeof (*hashTable),
+      bucketsMin1 + (bucketsMin1 >> 7) + 3, pak);
+    fwrite (&bucketsMin1, sizeof (bucketsMin1), 1, pak);
+    fwrite (&ndStart, sizeof (ndStart), 1, pak); /* for ndBase */
+    fclose (pak);
+    free (hashTable);
+  } /* if rebuilding */
+  return UserInterface (argc, argv);
+}
+//----------------------------- WIN32 ------------------
+#else
+HANDLE port;
+volatile int gpsNewDataReady = FALSE; // Serves as lock on gpsNew
+struct {
+  struct {
+    double latitude, longitude, track, speed, hdop, ele;
+    int mode;
+    char date[6], tm[6];
+  } fix;
+} gpsNew;
+
+
+HINSTANCE hInst;
+HWND   hwnd;
+HBITMAP bmp;
+HDC memDc, bufDc;
+HPEN pen[2 << STYLE_BITS];
+
+BOOL CALLBACK DlgSearchProc (
+	HWND hwnd, 
+	UINT Msg, 
+	WPARAM wParam, 
+	LPARAM lParam)
+{
+    switch (Msg) {
+    case WM_COMMAND:
+      if (LOWORD (wParam) == IDC_EDIT1) {
+        HWND hwndList = GetDlgItem (hwnd, IDC_LIST1);
+        //SendMessage (hwndList, LB_SETITEMDATA, 
+        SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) TEXT ("45")); //, 123);
+	return TRUE;
+      }
+      else if (wParam == IDC_SEARCHGO
+        /* || LOWORD (wParam) == IDC_LIST1 && HIWORD (wParam) == LBN_DBLCLK */) {
+        HWND hwndList = GetDlgItem (hwnd, IDC_LIST1);
+        int idx = SendMessage (hwndList, LB_GETCURSEL, 0, 0);
+        EndDialog (hwnd, 0);
+        return TRUE;
+      }
+    }
+    return FALSE;
+}
+
+int pakSize;
+LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
+                                  WPARAM wParam,LPARAM lParam)
+{
+  PAINTSTRUCT ps;
+  RECT rect;
+  static wchar_t msg[200] = TEXT("No coms");
+  static int done = FALSE;
+
+  switch(message) {
+    #if 0
+    case WM_HOTKEY:
+      if (VK_TBACK == HIWORD(lParam) && (0 != (MOD_KEYUP & LOWORD(lParam)))) {
+        PostQuitMessage (0);
+      }
+      break;
+    #endif
+
+    case WM_DESTROY:
+      PostQuitMessage(0);
+      break;
+    case WM_PAINT:
+      do { // Keep compiler happy.
+      BeginPaint (hWnd, &ps);
+      //GetClientRect (hWnd, &r);
+      //SetBkColor(ps.hdc,RGB(63,63,63));
+      //SetTextColor(ps.hdc,(i==state)?RGB(0,128,0):RGB(0,0,0));
+      //r.left = 50;
+      // r.top = 50;
+      if (data) {
+	if (!done) {
+          bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP1));
+          memDc = CreateCompatibleDC (ps.hdc);
+          SelectObject(memDc, bmp);
+
+          bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
+          bmp = CreateCompatibleBitmap (ps.hdc, GetSystemMetrics(SM_CXSCREEN),
+            GetSystemMetrics(SM_CYSCREEN));
+          SelectObject (bufDc, bmp);
+          for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
+            pen[i] = CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
+              style[i].lineWidth, (style[i].lineColour >> 16) |
+                (style[i].lineColour & 0xff00) |
+                ((style[i].lineColour & 0xff) << 16));
+          }
+          done = TRUE;
+        }
+	rect.top = rect.left = 0;
+	rect.right = GetSystemMetrics(SM_CXSCREEN);
+	rect.bottom = GetSystemMetrics(SM_CYSCREEN);
+        Expose (bufDc, memDc, pen);
+	BitBlt (ps.hdc, 0, 0, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
+	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
+      }
+      else {
+        wsprintf (msg, TEXT ("Can't allocate %d bytes"), pakSize);
+//        wsprintf (msg, TEXT ("%x bytes"), *(int*)&w);
+        ExtTextOut (ps.hdc, 50, 50, 0, NULL, msg, wcslen (msg), NULL);
+      }
+//      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,
+      EndPaint (hWnd, &ps);
+      } while (0);
+      break;
+    case WM_CHAR:
+
+      break;
+    case WM_KEYDOWN:
+      // The TGPS 375 can generate 12 keys :
+      // VK_RETURN, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT,
+      // 193=0xC1=Zoom in, 194=0xC2=Zoom out, 198=0xC6=menu 197=0xC5=settings
+      // 195=0xC3=V+, 196=0xC4=V- which is VK_APP1 to VK_APP6
+      // and WM_CHAR:VK_BACK
+//        nResult = DialogBox(hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
+//	  NULL, (DLGPROC)DlgSearchProc);
+      if (wParam == 193) zoom = zoom * 3 / 4;
+      if (wParam == 194) zoom = zoom * 4 / 3;
+      if (wParam == 197) option[FollowGPSr] = !option[FollowGPSr];
+
+      if (VK_DOWN == wParam) clat -= zoom / 2;
+      else if (VK_UP == wParam) clat += zoom / 2;
+      else if (VK_LEFT == wParam) clon -= zoom / 2;
+      else if (VK_RIGHT == wParam) clon += zoom / 2;
+      else goto noChangeFollow;
+        option[FollowGPSr] = FALSE;
+      noChangeFollow:
+
+      if (VK_RETURN == wParam) {
+        PostMessage (hwnd, WM_CLOSE, 0, 0);
+      }
+      else InvalidateRect (hWnd, NULL, FALSE);
+      break;
+    case WM_USER + 1:
+      /*
+      wsprintf (msg, TEXT ("%c%c %c%c %9.5lf %10.5lf %lf %lf"),
+        gpsNew.fix.date[0], gpsNew.fix.date[1],
+        gpsNew.fix.tm[4], gpsNew.fix.tm[5],
+        gpsNew.fix.latitude, gpsNew.fix.longitude, gpsNew.fix.ele,
+	gpsNew.fix.hdop); */
+      if (option[FollowGPSr]) {
+        clat = Latitude (gpsNew.fix.latitude);
+        clon = Longitude (gpsNew.fix.longitude);
+        InvalidateRect (hWnd, NULL, FALSE);
+      }
+      gpsNewDataReady = FALSE;
+      break;
+/*    case WM_LBUTTONDOWN:
+      //MoveTo (LOWORD(lParam), HIWORD(lParam));
+      //PostQuitMessage (0);
+      //if (HIWORD(lParam) < 30) {
+        // state=LOWORD(lParam)/STATEWID;
+      //}
+      break;
+    case WM_LBUTTONUP:
+      break;
+    case WM_MOUSEMOVE:
+      //LineTo (LOWORD(lParam), HIWORD(lParam));
+      break;
+    case WM_COMMAND:
+     //switch(wParam) {
+     //}
+     break; */
+    default:
+      return(DefWindowProc(hWnd,message,wParam,lParam));
+  }
+  return(NULL);
+}
+
+BOOL InitApplication (void)
+{
+  WNDCLASS wc;
+
+  wc.style=0;
+  wc.lpfnWndProc=(WNDPROC)MainWndProc;
+  wc.cbClsExtra=0;
+  wc.cbWndExtra=0;
+  wc.hInstance= hInst;
+  wc.hIcon=NULL; 
+  wc.hCursor=LoadCursor(NULL,IDC_ARROW);
+  wc.hbrBackground=(HBRUSH) GetStockObject(WHITE_BRUSH);
+  wc.lpszMenuName = NULL;
+  wc.lpszClassName = TEXT ("GosmoreWClass");
+
+  return(RegisterClass(&wc));
+}
+
+HWND InitInstance(int nCmdShow)
+{
+  hwnd= CreateWindow (TEXT ("GosmoreWClass"), TEXT ("gosmore"), WS_DLGFRAME,
+    0, 0, CW_USEDEFAULT/* 20 */,/* 240*/CW_USEDEFAULT,NULL,NULL, hInst,NULL);
+
+  if(!hwnd) return(FALSE);
+
+  ShowWindow(hwnd,nCmdShow);
+  UpdateWindow(hwnd);
+
+
+  return hwnd;
+}
+
+volatile int guiDone = FALSE;
+
+DWORD WINAPI NmeaReader (LPVOID lParam)
+{
+ // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
+  DWORD nBytes, got = 0, i;
+  int lon, lat;
+  DCB    portState;
+  COMMTIMEOUTS commTiming;
+  char rx[1200];
+
+  //ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
+//  Sleep (1000);
+  /* It seems as the CreateFile before returns the action has been completed, causing
+  the subsequent change of baudrate to fail. This read / sleep ensures that the port is open
+  before continuing. */
+    #if 0
+    GetCommTimeouts (port, &commTiming);
+    commTiming.ReadIntervalTimeout=20; /* Blocking reads */
+    commTiming.ReadTotalTimeoutMultiplier=0;
+    commTiming.ReadTotalTimeoutConstant=0;
+
+    commTiming.WriteTotalTimeoutMultiplier=5; /* No writing */
+    commTiming.WriteTotalTimeoutConstant=5;
+    SetCommTimeouts (port, &commTiming);
+    #endif
+#if 0
+    if(!GetCommState(port, &portState)) {
+      MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
+        MB_APPLMODAL|MB_OK);
+      return(1);
+    }
+    portState.BaudRate=CBR_38400;
+    portState.Parity=0;
+    portState.StopBits=ONESTOPBIT;
+    portState.ByteSize=8;
+    portState.fBinary=1;
+    portState.fParity=0;
+    portState.fOutxCtsFlow=0;
+    portState.fOutxDsrFlow=0;
+    portState.fDtrControl=DTR_CONTROL_ENABLE;
+    portState.fDsrSensitivity=0;
+    portState.fTXContinueOnXoff=1;
+    portState.fOutX=0;
+    portState.fInX=0;
+    portState.fErrorChar=0;
+    portState.fNull=0;
+    portState.fRtsControl=RTS_CONTROL_ENABLE;
+    portState.fAbortOnError=1;
+
+    if(!SetCommState(port, &portState)) {
+      MessageBox (NULL, TEXT ("SetCommState Error"), TEXT (""),
+        MB_APPLMODAL|MB_OK);
+      return(1);
+    }
+#endif
+
+  #if 0
+  PurgeComm (port, PURGE_RXCLEAR); /* Baud rate wouldn't change without this ! */
+  DWORD nBytes2 = 0;
+  COMSTAT cStat;
+  ClearCommError (port, &nBytes, &cStat);
+  rx2 = (char*) malloc (600);
+  ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
+    if(!GetCommState(port, &portState)) {
+      MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
+        MB_APPLMODAL|MB_OK);
+      return(1);
+    }
+  ReadFile(port, rx2, 600, &nBytes2, NULL);
+  #endif
+  FILE *log = fopen ("\\My Documents\\log.nmea", "a");
+  while (!guiDone) {
+    //nBytes = sizeof (rx) - got;
+    //got = 0;
+    if (!ReadFile(port, rx, sizeof(rx) - got, &nBytes, NULL) || nBytes <= 0) {
+      continue;
+    }
+    if (log) fwrite (rx, nBytes, 1, log);
+
+    if (gpsNewDataReady) continue; // Main thread can't keep up ?!
+    int mustSend = FALSE;
+    //wndStr[0]='\0';
+    //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
+    //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
+    for (i = 0; i < got + nBytes && rx[i] != '$'; i++) {}
+    got += nBytes - i;
+    while (rx[i] == '$') {
+      //for (j = 0; j < got; i++, j++) rx[j] = rx[i];
+      int fLen[19], fStart[19], fNr;
+      memmove (rx, rx + i, got);
+      for (i = 1, fNr = 0; i < got && rx[i] != '$' && fNr < 19; fNr++) {
+        fStart[fNr] = i;
+        while (i < got && (rx[i] == '.' || isdigit (rx[i]))) i++;
+        fLen[fNr] = i - fStart[fNr];
+        while (i < got && rx[i] != '$' && rx[i++] != ',') {}
+      }
+      int col = memcmp (rx, "$GPGLL", 6) == 0 ? 1 :
+        memcmp (rx, "$GPGGA", 6) == 0 ? 2 :
+        memcmp (rx, "$GPRMC", 6) == 0 ? 3 : 0;
+      if (fNr >= (col == 0 ? 2 : col == 1 ? 6 : col == 2 ? 13 : 10)) {
+        if (col > 0 && fLen[col == 1 ? 5 : 1] >= 6 &&
+            memcmp (gpsNew.fix.tm, rx + fStart[col == 1 ? 5 : 1], 6) != 0) {
+          memcpy (gpsNew.fix.tm, rx + fStart[col == 1 ? 5 : 1], 6);
+          gpsNewDataReady = TRUE; // Notify only when parsing is complete
+        }
+        if (col == 2) gpsNew.fix.hdop = atof (rx + fStart[8]);
+        if (col == 3 && fLen[7] > 0 && fLen[8] > 0 && fLen[9] >= 6) {
+          memcpy (gpsNew.fix.date, rx + fStart[9], 6);
+          gpsNew.fix.speed = atof (rx + fStart[7]);
+          gpsNew.fix.track = atof (rx + fStart[8]);
+        }
+        if (col == 2 && fLen[9] > 0) gpsNew.fix.ele = atoi (rx + fStart[9]);
+        if (col > 0 && fLen[col] > 6 && memchr ("SsNn", rx[fStart[col + 1]], 4)
+          && fLen[col + 2] > 7 && memchr ("EeWw", rx[fStart[col + 3]], 4)) {
+          double nLat = (rx[fStart[col]] - '0') * 10 + rx[fStart[col] + 1]
+            - '0' + atof (rx + fStart[col] + 2) / 60;
+          double nLon = ((rx[fStart[col + 2]] - '0') * 10 +
+            rx[fStart[col + 2] + 1] - '0') * 10 + rx[fStart[col + 2] + 2]
+            - '0' + atof (rx + fStart[col + 2] + 3) / 60;
+          if (tolower (rx[fStart[col + 1]]) == 's') nLat = -nLat;
+          if (tolower (rx[fStart[col + 3]]) == 'w') nLon = -nLon;
+          if (fabs (nLat) < 90 && fabs (nLon) < 180) {
+            gpsNew.fix.latitude = nLat;
+            gpsNew.fix.longitude = nLon;
+          }
+        }
+      }
+      else if (i == got) break; // Retry when we receive more data
+      got -= i;
+    } /* If we know the sentence type */
+    if (gpsNewDataReady) PostMessage (hwnd, WM_USER + 1, lat, lon);
+  }
+  guiDone = FALSE;
+  if (log) fclose (log);
+  CloseHandle (port);
+  return 0;
+}
+
+
+int WINAPI WinMain(
+    HINSTANCE  hInstance,	  // handle of current instance
+    HINSTANCE  hPrevInstance,	  // handle of previous instance
+    LPWSTR  lpszCmdLine,	          // pointer to command line
+    int  nCmdShow)	          // show state of window
+{
+  if(hPrevInstance) return(FALSE);
+  hInst = hInstance;
+  FILE *gmap = fopen ("\\sdmmc\\gosmore.pak", "rb");
+
+  if (!gmap) {
+    MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
+    return 1;
+  }
+  fseek (gmap, 0, SEEK_END);
+  pakSize = ftell (gmap);
+  fseek (gmap, 0, SEEK_SET);
+  data = (char *) malloc (pakSize);
+  if (!data) {
+    MessageBox (NULL, TEXT ("Out of memory"), TEXT (""), MB_APPLMODAL|MB_OK);
+    return 1; // This may mean memory is available, but fragmented.
+  } // Splitting the 5 parts may help.
+  fread (data, pakSize, 1, gmap);
+  hashTable = (int *) (data + pakSize) - BUCKETS - 2;
+  ndBase = (ndType *)(data + hashTable[BUCKETS + 1]);
+  style = (struct styleStruct *)(data + 4);
+
+  clon = ndBase[1].lon; //Longitude (-0.272228);
+  clat = ndBase[1].lat; //Latitude (51.927977);
+  zoom = lrint (0.1 / 5 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
+
+  if(!InitApplication ()) return(FALSE);
+  if (!InitInstance (nCmdShow)) return(FALSE);
+
+  DWORD threadId;
+  if((port=CreateFile (TEXT ("COM1:"), GENERIC_READ | GENERIC_WRITE, 0,
+          NULL, OPEN_EXISTING, 0, 0)) != INVALID_HANDLE_VALUE) {
+    CreateThread (NULL, 0, NmeaReader, NULL, 0, &threadId);
+  }
+  else MessageBox (NULL, TEXT ("No Port"), TEXT (""), MB_APPLMODAL|MB_OK);
+
+  MSG    msg;
+  while (GetMessage (&msg, NULL, 0, 0)) {
+    TranslateMessage (&msg);
+    DispatchMessage (&msg);
+  }
+  guiDone = TRUE;
+  while (guiDone) Sleep (1000);
+  return 0;
+}
+#endif

@@ -1,6 +1,57 @@
 <?php
-// note: large sample test is 91949
-
+#----------------------------------------------------------------
+# Load a GPX tracklog from openstreetmap.org/traces and
+# store it in a binary file
+#
+#------------------------------------------------------
+# File format:
+#
+# +---------+--------+------+--------------------------+
+# | size    | type   | name | description              |
+# +---------+--------+------+--------------------------+
+# | 4 bytes | int    | n    | number of trackpoints    |
+# | 8 bytes | double | xmin | bounding box (W)         |
+# | 8 bytes | double | xmax | bounding box (E)         |
+# | 8 bytes | double | ymin | bounding box (S)         |
+# | 8 bytes | double | ymax | bounding box (N)         |
+# +---------+--------+------+--------------------------+
+#   then n pairs of:
+# +---------+--------+------+--------------------------+
+# | 4 bytes | int    | x    | coded position           |
+# | 4 bytes | int    | y    | coded position           |
+# +---------+--------+------+--------------------------+
+#
+# xmin,xmax,ymin,ymax,x,and y are stored as positions 
+# relative to the coverage of the slippy map system
+#
+# x positions from 0 = 180 degrees west to 1 = 180 degrees west
+# y positions from 0 = 85.0511 north to 1 = 85.0511 south
+#
+# encoding of x and y:
+# the positions described above are divided by 2^32 for
+# storage as an integer, 
+# i.e.:
+#  x: 0 = fully west, to 2^32-1 = fully east
+#  y: 0 = fully north, to 2^32-1 = fully south
+#
+# integers are big-endian
+# double-precision floats are platform-dependant
+#------------------------------------------------------
+# Copyright 2008, Oliver White
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#------------------------------------------------------
 include_once("projection.php");
 
 function getGpx($ID)

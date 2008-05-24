@@ -87,7 +87,7 @@ function getGpx($ID)
   fwrite($fpOut, pack("N", 0), 4);
   fwrite($fpOut, pack("d4", 0,0,0,0), 32);
   
-  $Resolution = 1 / pow(2.0, 32);
+  $Resolution = 1 / pow(2.0, 31);
   
   while(!feof($fpIn))
   {

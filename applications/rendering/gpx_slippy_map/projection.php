@@ -21,6 +21,17 @@ function sec($x)
 {
   return(1.0/cos($x));
 }
+function relativeTileEdges($x,$y,$z)
+{
+  $n = numTiles($z);
+  $portion = 1.0 / $n;
+  
+  $x1 = $x * $portion;
+  $y1 = $y * $portion; 
+
+  return(array($x1,$y1,$x1+$portion,$y1+$portion, $portion, $portion));
+}
+
 function latlon2relativeXY($lat,$lon)
 {
   $x = ($lon + 180.0) / 360.0;

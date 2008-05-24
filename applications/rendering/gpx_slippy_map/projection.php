@@ -98,34 +98,4 @@ function tileEdges($x,$y,$z)
   return(array($lat2, $lon1, $lat1, $lon2)); # S,W,N,E
 }
 
-
-
-
-function proj_init($tx,$ty,$tz, $w, $h)
-{
-  $Proj = array('tx'=>$tx,'ty'=>$ty,'tz'=>$tz);
-  
-  list(
-    $Proj['S'],
-    $Proj['W'],
-    $Proj['N'],
-    $Proj['E']) = tileEdges($tx,$ty,$tz); // S,W,N,E
-  $Proj['dLat'] = $Proj['N'] - $Proj['S'];
-  $Proj['dLon'] = $Proj['E'] - $Proj['W'];
-  $Proj['dx'] = $w;
-  $Proj['dy'] = $h;
-  //print_r($Proj);
-  return($Proj);
-  }
-  
-function project($Proj, $lat,$lon)
-{
-  $pLat = ($lat - $Proj['S']) / $Proj['dLat'];
-  $pLon = ($lon - $Proj['W']) / $Proj['dLon'];
-  $x = $Proj['dx'] * $pLon;
-  $y = $Proj['dy'] * (1 - $pLat);
-  return(array($x,$y));
-}
-
-
 ?>

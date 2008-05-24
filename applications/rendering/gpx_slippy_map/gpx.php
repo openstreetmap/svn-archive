@@ -31,11 +31,11 @@
 # dLat/dy is not constant
 #
 # encoding of x and y:
-# the positions described above are divided by 2^32 for
+# the positions described above are divided by 2^31 for
 # storage as an integer, 
 # i.e.:
-#  x: 0 = fully west, to 2^32-1 = fully east
-#  y: 0 = fully north, to 2^32-1 = fully south
+#  x: 0 = fully west, to 2^31-1 = fully east
+#  y: 0 = fully north, to 2^31-1 = fully south
 #
 # integers are big-endian
 # double-precision floats are platform-dependant

@@ -156,7 +156,7 @@ function getMeta($Filename, $LeaveOpen = 0)
   return($Data);
 }
 
-if(0)
+if($_GET['test_gpx_reader'])
 {
   header("Content-type:text/plain");
   $a = getGpx(112168);

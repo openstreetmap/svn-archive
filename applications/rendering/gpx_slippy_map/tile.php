@@ -104,11 +104,11 @@ function makeTile($Image,$W,$H,$x,$y,$z,$Filename)
     || $Data['ymin'] > $y2
     || $Data['ymax'] < $y1);
 
-  if(!$NothingOnThisTile)
+  if(!$NothingOnThisTile || 1)
     {
     
     $s = 2; # half-size of GPX points (pixels)
-    $Resolution = 1 / pow(2.0, 32);
+    $Resolution = 1 / pow(2.0, 31);
     
     # Loop through the points
     for($ii = 0; $ii < $Data['points']; $ii++)

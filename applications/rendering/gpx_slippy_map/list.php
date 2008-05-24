@@ -1,3 +1,4 @@
+<?php header('Content-type:text/HTML; charset="UTF-8"'); ?>
 <html><head><title>Slippy-map for GPX tracklogs</title>
 </head>
 <body>

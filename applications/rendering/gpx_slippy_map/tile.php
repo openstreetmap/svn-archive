@@ -82,20 +82,11 @@ function makeTile($Image,$W,$H,$x,$y,$z,$Filename)
 
   list($x1,$y1,$x2,$y2,$dx,$dy) = relativeTileEdges($x,$y,$z);
 
-  #$a = proj_init($x,$y,$z,$W,$H);
   $FG = imagecolorallocate($Image,0,0,50);
   
   # Get the GPX details
   $Data = getMeta($Filename, 1); // 1 means leave the filepointer open
   
-  $Debug = 0;
-  if($Debug)
-    {
-    header("Content-type:text/plain");
-    print_r($Data);
-    print "From $x1,$y1\n To $x2,$y2\n Size $dx,$dy\n"; 
-    }
-
   if(!$Data['exists'] || !$Data['valid'])
     {
     print "Invalid";
@@ -123,14 +114,9 @@ function makeTile($Image,$W,$H,$x,$y,$z,$Filename)
     for($ii = 0; $ii < $Data['points']; $ii++)
     {
       # rx,ry are relative to the mercator projection (0-1)
-      if(0)
-        list($spare, $rx, $ry) = unpack("d2", fread($fp, 16));
-      else
-      {
-        list($spare, $rx, $ry) = unpack("N2", fread($fp, 8));
-        $rx *= $Resolution;
-        $ry *= $Resolution;
-      }
+      list($spare, $rx, $ry) = unpack("N2", fread($fp, 8));
+      $rx *= $Resolution;
+      $ry *= $Resolution;
   
       # Convert to pixel positions on the image
       $x = floor($W * ($rx - $x1) / $dx);

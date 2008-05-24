@@ -93,14 +93,7 @@ function getGpx($ID)
     {
       list($x,$y) = latlon2relativeXY($Matches[1]+0, $Matches[2]+0);
       
-      if(0)
-      {
-      fwrite($fpOut, pack("dd", $x, $y), 16);
-      }
-      else
-      {
       fwrite($fpOut, pack("NN", $x / $Resolution, $y / $Resolution), 8);
-      }
       
       if($x < $A) $A = $x;
       if($x > $B) $B = $x;

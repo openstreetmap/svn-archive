@@ -103,12 +103,12 @@ function endElement($parser, $tag)
       
       $User = sprintf("<a href='http://openstreetmap.org/user/%s'>%s</a>",
         urlencode($fields['author']),
-        htmlentities($fields['author']));
+        htmlentities($fields['author'], ENT_COMPAT, "UTF-8"));
         
     printf("<p><a href='%s'>%d</a>: %s by %s</p>\n",
       $URL,
       $GPX,
-      htmlentities($fields['title']),
+      htmlentities($fields['title'], ENT_COMPAT, "UTF-8"),
       $User
       );
 

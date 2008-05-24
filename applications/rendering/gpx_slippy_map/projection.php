@@ -1,4 +1,13 @@
 <?php
+#-------------------------------------------------------
+# Translates between lat/long and the slippy-map tile
+# numbering scheme
+# 
+# http://wiki.openstreetmap.org/index.php/Slippy_map_tilenames
+# 
+# Written by Oliver White, 2008
+# This file is public-domain
+#-------------------------------------------------------
 function degrees($rad){return($rad * 57.2957795);}
 function radians($deg){return($deg / 57.2957795);}
 
@@ -21,6 +30,7 @@ function sec($x)
 {
   return(1.0/cos($x));
 }
+
 function relativeTileEdges($x,$y,$z)
 {
   $n = numTiles($z);

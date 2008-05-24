@@ -27,6 +27,9 @@
 # x positions from 0 = 180 degrees west to 1 = 180 degrees west
 # y positions from 0 = 85.0511 north to 1 = 85.0511 south
 #
+# note that these are in the mercator projection, i.e.
+# dLat/dy is not constant
+#
 # encoding of x and y:
 # the positions described above are divided by 2^32 for
 # storage as an integer, 

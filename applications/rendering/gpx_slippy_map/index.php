@@ -1,6 +1,12 @@
+<?php
+if(!array_key_exists('gpx', $_GET))
+{
+  header("Location:list.php");
+  exit;
+}
+?>
 <html>
 <head>
-    <title>OpenStreetMap</title>
     <script src="http://openlayers.org/api/OpenLayers.js"></script> 
     <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 
@@ -12,17 +18,17 @@
         print " var lat = $lat;\n var lon = $lon;\n var zoom = $z;\n";
         
         $Base = '';
+        $Title = "OpenStreetMap tracklog viewer";
         $Tiles = 'tile.php?';
+        $gpx = 0;
         if(array_key_exists('gpx', $_GET))
         {
-          $gpx = $_GET['gpx'];
+          $gpx = floor($_GET['gpx'] + 0);
           $Base = sprintf("?gpx=%d", $gpx);
           $Tiles .= sprintf("gpx=%d&t=", $gpx);
+          $Title = sprintf("Tracklog #%d", $gpx);
         }
-        else
-        {
-          $Tiles .= sprintf("t=", $gpx);
-        }
+          #$Tiles .= sprintf("t=", $gpx);
         
         print "var routeServer = '$Tiles'\n";
         print "var extraUrlParams = '$Base';\n";
@@ -58,22 +64,17 @@
                 displayProjection: new OpenLayers.Projection("EPSG:4326")
             } );
                 
-
-            // Define the map layer
-            // Note that we use a predefined layer that will be
-            // kept up to date with URL changes
-            // Here we define just one layer, but providing a choice
-            // of several layers is also quite simple
-            // Other defined layers are OpenLayers.Layer.OSM.Mapnik and OpenLayers.Layer.OSM.Maplint
+            
+            // Base map
             layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-
-            route = new OpenLayers.Layer.OSM("Route",
-              routeServer, //"tile.php?gpx=blibble&t=",
+            // GPX overlay
+            route = new OpenLayers.Layer.OSM(
+              "Route",
+              routeServer,
               {
                 isBaseLayer: false, 
                 type:'png', 
-                /*opacity: 0.3*/
               },
               {'buffer':1});
 
@@ -87,14 +88,20 @@
         }
         
     </script>
-</head>
-
-<!-- body.onload is called once the page is loaded (call the 'init' function) -->
-<body onload="init();">
-
-    <!-- define a DIV into which the map will appear. Make it take up the whole window -->
-    <div style="width:100%; height:100%" id="map"></div>
     
-</body>
+<?php
+print "<title>$Title</title>\n";
+?>
+</head><body onload="init();">
 
+<div style="width:100%; height:100%" id="map">
+<!-- <div style="position:absolute; bottom:10px;width:700px;"><form action='./' method='get'>
+<input type='text' size='10' name='gpx' value='<?php print $gpx ?>' />
+<input type='submit' value='View GPX' />
+<a href="http://openstreetmap.org/traces/">List of GPX traces</a>
+</form></div> -->
+
+</div>
+
+</body>
 </html>

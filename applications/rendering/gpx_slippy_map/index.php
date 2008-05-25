@@ -1,8 +1,50 @@
 <?php
 if(!array_key_exists('gpx', $_GET))
 {
+  # No GPX requested - so redirect to an index where one can be selected
   header("Location:list.php");
   exit;
+}
+
+# By default, use lat/long/zoom from query parameters
+$z = floor($_GET['zoom'] + 0);
+$lat = $_GET['lat'] + 0;
+$lon = $_GET['lon'] + 0;
+
+# However, if they don't exist:
+if(!array_key_exists('lat', $_GET))
+{
+  # Lat/long unknown, so look it up from the GPX file rather than
+  # just starting with a view of the whole world!
+  
+  include("gpx.php");
+  $LeaveFilepointerOpen = 1;
+  $Data = getMeta(getGpx($_GET["gpx"] + 0), $LeaveFilepointerOpen);
+  
+  if(!$Data['exists'] || !$Data['valid'])
+    {
+    header("Location:list.php?error=nofile");
+    exit;
+    }
+  if($Data['points'] < 1)
+    {
+    header("Location:list.php?error=nopoints");
+    exit;
+    }
+  $fp = $Data['fp'];
+  
+  # Read the first point
+  list($spare, $rx, $ry) = unpack("N2", fread($fp, 8));
+  $Resolution = 1 / pow(2.0, 31);
+  $rx *= $Resolution;
+  $ry *= $Resolution;
+  
+  # Convert to lat/long
+  $lat = mercatorToLat(M_PI * (1.0 - 2.0 * $ry));
+  $lon = -180.0 + 360.0 * $rx;
+  $z = 14;
+  
+  fclose($fp);
 }
 ?>
 <html>
@@ -12,9 +54,7 @@ if(!array_key_exists('gpx', $_GET))
 
     <script type="text/javascript">
         <?php
-        $z = floor($_GET['zoom'] + 0);
-        $lat = $_GET['lat'] + 0;
-        $lon = $_GET['lon'] + 0;
+
         print " var lat = $lat;\n var lon = $lon;\n var zoom = $z;\n";
         
         $Base = '';

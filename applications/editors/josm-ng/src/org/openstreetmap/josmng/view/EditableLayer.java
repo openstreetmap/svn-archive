@@ -46,6 +46,8 @@ public abstract class EditableLayer extends Layer {
     protected EditableLayer(MapView parent) {
         super(parent);
     }
+
+    public abstract boolean isEmpty();
     
     public abstract UndoHelper getUndoManager();
 

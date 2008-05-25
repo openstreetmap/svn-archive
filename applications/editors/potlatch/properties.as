@@ -159,7 +159,7 @@
 			} else {
 				this.remove();
 				Selection.setFocus(null);
-				_root.keytarget=_root.basekeytarget;
+				_root.keytarget='';
 			}
 		};
 
@@ -527,7 +527,7 @@
 			renameKey(this);
 			if (_root.lastkeypressed==-1 && _root.auto.autolist.hitTest(_root._xmouse,_root._ymouse)) { return; }
 			if (this.text=='') { _root.redopropertywindow=this._parent._parent._parent; }
-			_root.keytarget=_root.basekeytarget;
+			_root.keytarget='';
 			_root.auto.remove();
 			this._parent._parent._parent.reflect();
 		};
@@ -557,7 +557,7 @@
 		this.value.onKillFocus=function() {
 			if (_root.reinstatefocus) { return; }
 			if (_root.lastkeypressed==-1 && _root.auto.autolist.hitTest(_root._xmouse,_root._ymouse)) { return; }
-			_root.keytarget=_root.basekeytarget;
+			_root.keytarget='';
 			if (this.text=='') {
 				if (this._parent.lastvalue.substr(0,6)=='(type ') {
 					this.text=this._parent.lastvalue; this.textColor=0x888888;
@@ -759,7 +759,7 @@
 		this.value.text=this.getRole();
 		this.value.onSetFocus =function() { this._parent.scrollToField();
 											_root.keytarget='value'; };
-		this.value.onKillFocus=function() { _root.keytarget=_root.basekeytarget; };
+		this.value.onKillFocus=function() { _root.keytarget=''; };
 		this.value.onChanged  =function(tf) { this._parent.setRole(tf); };
 	};
 

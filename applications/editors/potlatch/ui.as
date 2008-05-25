@@ -220,60 +220,62 @@
 
 
 	// ========================================================================
-	// modalDialogue
-	// ** ought to be a method like the above, so we could stack dialogues, etc.
+	// ModalDialogue
 
-	function createModalDialogue(w,h,buttons,closefunction,leavepanel) {
+	// ModalDialogue.prototype.init(w,h,buttons,closefunction,leavepanel);
+	// ModalDialogue.prototype.remove();
+	// ModalDialogue.prototype.drawAreas();
+
+	ModalDialogue=function() {};
+	ModalDialogue.prototype=new MovieClip();
+	ModalDialogue.prototype.init=function(w,h,buttons,closefunction,leavepanel) {
 		clearFloater();
-		_root.createEmptyMovieClip("modal",0xFFFFFE);
-		_root.modal.createEmptyMovieClip("blank",1);
-		_root.modal.createEmptyMovieClip("box",2);
-		_root.modalwidth=w;		// workaround for Stage.width suddenly changing
-		_root.modalheight=h;	//  |
-		_root.modalleave=leavepanel;
-		drawModalAreas();
-
+		this.createEmptyMovieClip("blank",1);
+		this.createEmptyMovieClip("box",2);
+		this.modalwidth=w;		// workaround for Stage.width suddenly changing
+		this.modalheight=h;		//  |
+		this.modalleave=leavepanel;
+		this.drawAreas();
+		_root.windowsopen++;
+		
 		// Create buttons
 		for (var i=0; i<buttons.length; i+=1) {
-			_root.modal.box.createEmptyMovieClip(i,i*2+1);
-			drawButton(_root.modal.box[i],w-60*(buttons.length-i),h-30,buttons[i],"");
-			_root.modal.box[i].onPress=function() {
+			this.box.createEmptyMovieClip(i,i*2+1);
+			drawButton(this.box[i],w-60*(buttons.length-i),h-30,buttons[i],"");
+			this.box[i].onPress=function() {
 				if (closefunction) {
 					var keep = closefunction(buttons[this._name]);
-					if ( !keep )
-						clearModalDialogue();
-				} else
-					clearModalDialogue();
+					if ( !keep ) { this._parent._parent.remove(); }
+				} else { 
+					this._parent._parent.remove();
+				}
 			};
-			_root.modal.box[i].useHandCursor=true;
+			this.box[i].useHandCursor=true;
 		}
-	}
+	};
 
-	function clearModalDialogue() {
-		_root.keytarget='';
-		_root.basekeytarget='';
-		_root.createEmptyMovieClip("modal",0xFFFFFE);
-	}
-	
-	function drawModalAreas() {
-		var w=_root.modalwidth;
-		var h=_root.modalheight;
+	ModalDialogue.prototype.remove=function() {
+		_root.windowsopen--;
+		removeMovieClip(this);
+	};
+
+	ModalDialogue.prototype.drawAreas=function() {
+		var w=this.modalwidth;
+		var h=this.modalheight;
 		var ox=(Stage.width-w)/2; var oy=(Stage.height-panelheight-h)/2;
 
 		// Blank all other areas
-		var bh=Stage.height; if (_root.modalleave) { bh-=panelheight; }
-		with (_root.modal.blank) {
+		var bh=Stage.height; if (this.modalleave) { bh-=panelheight; }
+		with (this.blank) {
 			clear();
 			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(Stage.width,0);
 			lineTo(Stage.width,bh); lineTo(0,bh); lineTo(0,0); endFill();
 		}
-		_root.modal.blank.onPress=function() {};
-		_root.modal.blank.useHandCursor=false;
-		_root.keytarget='dialogue';
-		_root.basekeytarget=_root.keytarget;
+		this.blank.onPress=function() {};
+		this.blank.useHandCursor=false;
 
 		// Create dialogue box
-		with (_root.modal.box) {
+		with (this.box) {
 			_x=ox; _y=oy;
 			clear();
 			beginFill(0xBBBBBB,100);
@@ -281,7 +283,9 @@
 			lineTo(w,0); lineTo(w,h);
 			lineTo(0,h); lineTo(0,0); endFill();
 		}
-	}
+	};
+
+	Object.registerClass("modal",ModalDialogue);
 
 	// ========================================================================
 	// Support functions

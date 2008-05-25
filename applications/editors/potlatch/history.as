@@ -8,9 +8,10 @@
 	function wayHistory() {
 		historyresponder = function() { };
 		historyresponder.onResult = function(result) {
-			createModalDialogue(275,90,new Array('Revert','Cancel'),handleRevert);
-			_root.modal.box.createTextField("prompt",2,7,9,250,100);
-			writeText(_root.modal.box.prompt,"Revert to an earlier saved version:");
+			_root.windows.attachMovie("modal","history",++windowdepth);
+			_root.windows.history.init(275,90,new Array('Revert','Cancel'),handleRevert);
+			_root.windows.history.box.createTextField("prompt",2,7,9,250,100);
+			writeText(_root.windows.history.box.prompt,"Revert to an earlier saved version:");
 
 			var versionlist=new Array();
 			_root.versionnums=new Array();
@@ -18,8 +19,8 @@
 				versionlist.push(result[0][i][1]+' ('+result[0][i][3]+')');
 				versionnums[i]=result[0][i][0];
 			}
-			_root.modal.box.attachMovie("menu","version",6);
-			_root.modal.box.version.init(9,32,0,versionlist,
+			_root.windows.history.box.attachMovie("menu","version",6);
+			_root.windows.history.box.version.init(9,32,0,versionlist,
 				'Choose the version to revert to',
 				function(n) { _root.revertversion=versionnums[n]; },0);
 			_root.revertversion=versionnums[0];

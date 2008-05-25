@@ -9,29 +9,32 @@
 #include <ctype.h>
 #include <assert.h>
 #ifndef _WIN32
-#include <sys/types.h>
 #include <sys/mman.h>
-#include <unistd.h>
 #include <libxml/xmlreader.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #define TEXT(x) x
-#define wchar_t char
 #else
 #include <windows.h>
 #define M_PI 3.14159265358979323846 // Not in math ??
+#endif
+#ifdef _WIN32_WCE
 //#include <aygshell.h>
 #include <tpcshell.h>
 #include <winuserm.h>
 #include "resource.h"
+typedef int intptr_t;
+#else
+#include <unistd.h>
+#define wchar_t char
 #endif
 #ifndef TRUE
 #define TRUE 1
 #define FALSE 0
 #endif
 
-#if !defined (HEADLESS) && !defined (WIN32)
+#if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
 #endif
 
@@ -51,6 +54,8 @@ typedef long long __int64;
 #define stricmp _stricmp
 #define lrint(x) int ((x) < 0 ? (x) - 0.5 : (x) + 0.5) 
 // We emulate just enough of gtk to make it work
+#endif
+#ifdef _WIN32_WCE
 #define gtk_widget_queue_clear(x) // After Click() returns we Invalidate
 struct GtkWidget { 
   struct {
@@ -306,8 +311,6 @@ int option[numberOfOptions];
 
 #define optionName(x) optionNameTable[x][option[English]]
 
-//------------------------------- WIN32 ---------------------------------
-
 #define Sqr(x) ((x)*(x))
 /* Routing starts at the 'to' point and moves to the 'from' point. This will
    help when we do in car navigation because the 'from' point will change
@@ -349,7 +352,7 @@ void AddNd (ndType *nd, int dir, int cost, routeNodeType *shortest)
     }
     n = route + hash % dhashSize;
     /* Linear congruential generator from wikipedia */
-    hash = hash * (__int64) 1664525 + 1013904223;
+    hash = (unsigned) (hash * (__int64) 1664525 + 1013904223);
     if (n->nd == NULL) { /* First visit of this node */
       n->nd = nd;
       n->best = cost + 1;
@@ -381,7 +384,7 @@ void Route (int recalculate)
   shortest = NULL;
   for (int i = recalculate ? 0 : 1; i < 2; i++) {
     int lon = i ? flon : tlon, lat = i ? flat : tlat;
-    __int64 bestd = 4000000000000000000LL;
+    __int64 bestd = (__int64) 1 << 62;
     /* find min (Sqr (distance)). Use long long so we don't loose accuracy */
     OsmItr itr (lon - 100000, lat - 100000, lon + 100000, lat + 100000);
     /* Search 1km x 1km around 'from' for the nearest segment to it */
@@ -390,7 +393,7 @@ void Route (int recalculate)
       // because if our search box is large enough, it will also give us
       // the other node.
       if (itr.nd[0]->other[0] < 0) continue;
-      long long lon0 = lon - itr.nd[0]->lon, lat0 = lat - itr.nd[0]->lat,
+      __int64 lon0 = lon - itr.nd[0]->lon, lat0 = lat - itr.nd[0]->lat,
               lon1 = lon - (ndBase + itr.nd[0]->other[0])->lon,
               lat1 = lat - (ndBase + itr.nd[0]->other[0])->lat,
               dlon = lon1 - lon0, dlat = lat1 - lat0;
@@ -399,16 +402,18 @@ void Route (int recalculate)
          If the point is "behind" hs[0], measure distance to hs[0] with
          Pythagoras. If it's "behind" hs[1], use Pythagoras to hs[1]. If
          neither, use perpendicular distance from a point to a line */
-      int segLen = lrint (sqrt (Sqr(dlon) + Sqr (dlat)));
-      long long d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
+      int segLen = lrint (sqrt ((double)(Sqr(dlon) + Sqr (dlat))));
+      __int64 d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
         dlon * lon1 <= - dlat * lat1 ? Sqr (lon1) + Sqr (lat1) :
         Sqr ((dlon * lat1 - dlat * lon1) / segLen);
       if (d < bestd) {
         wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
         bestd = d;
         double invSpeed = !fastest ? 1.0 : Style (w)->invSpeed[car];
-        toEndNd[i][0] = lrint (sqrt (Sqr (lon0) + Sqr (lat0)) * invSpeed);
-        toEndNd[i][1] = lrint (sqrt (Sqr (lon1) + Sqr (lat1)) * invSpeed);
+        toEndNd[i][0] =
+          lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
+        toEndNd[i][1] =
+          lrint (sqrt ((double)(Sqr (lon1) + Sqr (lat1))) * invSpeed);
         if (dlon * lon1 <= -dlat * lat1) toEndNd[i][1] += toEndNd[i][0] * 9;
         if (dlon * lon0 >= -dlat * lat0) toEndNd[i][0] += toEndNd[i][1] * 9;
 
@@ -425,7 +430,7 @@ void Route (int recalculate)
         } */
       }
     } /* For each candidate segment */
-    if (bestd == 4000000000000000000LL) {
+    if (bestd == (__int64) 1 << 62) {
       fprintf (stderr, "No segment nearby\n");
       return;
     }
@@ -441,7 +446,7 @@ void Route (int recalculate)
   routeHeapSize = 1; /* Leave position 0 open to simplify the math */
   routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
   
-  limit = 2000000000; // AddNd checks this when adding to the heap
+  limit = 2000000000;
   if (recalculate) {
     AddNd (endNd[0], 0, toEndNd[0][0], NULL);
     AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
@@ -479,36 +484,34 @@ void Route (int recalculate)
       i = i * 2;
     }
     root->heapIdx = -1; /* Root now removed from the heap */
-    if (root->best + lrint (sqrt (Sqr (root->nd->lon - tlon) +
-                                  Sqr (root->nd->lat - tlat))) < limit) {
-      if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
-        AddNd (ndBase - 1, 0, root->best + toEndNd[1][1 - root->dir], root);
-      }
-      ndType *nd = root->nd, *other;
-      while (nd > ndBase && nd[-1].lon == nd->lon &&
-        nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
+    if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
+      AddNd (ndBase - 1, 0, root->best + toEndNd[1][1 - root->dir], root);
+    }
+    ndType *nd = root->nd, *other;
+    while (nd > ndBase && nd[-1].lon == nd->lon &&
+      nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
 
-      /* Now work through the segments connected to root. */
-      do {
-        for (int dir = 0; dir < 2; dir++) {
-          if (nd == root->nd && dir == root->dir) continue;
-          /* Don't consider an immediate U-turn to reach root->hs->other.
-             This doesn't exclude 179.99 degree turns though. */
-          
-          if (nd->other[dir] < 0) continue; // Named node
-          
-          other = ndBase + nd->other[dir];
-          wayType *w = (wayType *)(data + nd->wayPtr);
-          if ((w->bits & (1<<car)) && (dir || !(w->bits & (1 << onewayR)))) {
-            int d = lrint (sqrt (Sqr ((__int64)(nd->lon - other->lon)) +
-                                 Sqr ((__int64)(nd->lat - other->lat))) *
-                                 (fastest ? Style (w)->invSpeed[car] : 1.0));
-            AddNd (other, 1 - dir, root->best + d, root);
-          } // If we found a segment we may follow
-        }
-      } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
-               nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
-    } // if root->best is a candidate
+    /* Now work through the segments connected to root. */
+    do {
+      for (int dir = 0; dir < 2; dir++) {
+        if (nd == root->nd && dir == root->dir) continue;
+        /* Don't consider an immediate U-turn to reach root->hs->other.
+           This doesn't exclude 179.99 degree turns though. */
+        
+        if (nd->other[dir] < 0) continue; // Named node
+        
+        other = ndBase + nd->other[dir];
+        wayType *w = (wayType *)(data + nd->wayPtr);
+        if ((w->bits & (1<<car)) && (dir || !(w->bits & (1 << onewayR)))) {
+          int d = lrint (sqrt ((double)
+            (Sqr ((__int64)(nd->lon - other->lon)) +
+             Sqr ((__int64)(nd->lat - other->lat)))) *
+                               (fastest ? Style (w)->invSpeed[car] : 1.0));
+          AddNd (other, 1 - dir, root->best + d, root);
+        } // If we found a segment we may follow
+      }
+    } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+             nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
   } // While there are active nodes left
   free (routeHeap + 1);
 //  if (fastest) printf ("%lf
@@ -584,6 +587,7 @@ int ProcessNmea (char *rx, unsigned *got)
   return dataReady;
 }
 
+#ifndef _WIN32_WCE
 #ifdef ROUTE_TEST
 gint RouteTest (GtkWidget *widget, GdkEventButton *event, void *)
 {
@@ -696,7 +700,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   #endif
   if (event->x > w) {
-    zoom = lrint (exp (8 - 8*event->y / draw->allocation.width) * 10000);
+    zoom = lrint (exp (12 - 12*event->y / draw->allocation.height) * 5000);
   }
   else {
     int perpixel = zoom / w;
@@ -721,6 +725,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
+#endif // _WIN32_WCE
 
 #if 0
 void GetDirections (GtkWidget *, gpointer)
@@ -784,22 +789,13 @@ void GetDirections (GtkWidget *, gpointer)
 }
 
 #endif
-#ifndef WIN32
-gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
-{
-  if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
-  if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
-  gtk_widget_queue_clear (draw);
-  return FALSE;
-}
-#endif
 
 struct name2renderType { // Build a list of names, sort by name,
   wayType *w;            // make unique by name, sort by y, then render
   int x, y, width;       // only if their y's does not overlap
 };
 
-#ifdef WIN32
+#ifdef _WIN32_WCE
 int Expose (HDC mygc, HDC icons, HPEN *pen)
 {
   struct {
@@ -819,6 +815,14 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
 #define gdk_draw_line(win,gc,sx,sy,dx,dy) \
   MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
 #else
+gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
+{
+  if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
+  if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
+  gtk_widget_queue_clear (draw);
+  return FALSE;
+}
+
 gint Expose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2];
@@ -873,7 +877,7 @@ gint Expose (void)
   
   GdkFont *f = gtk_style_get_font (draw->style);
   int detail = 4 - gtk_combo_box_get_active (detailBtn);
-#endif // !WIN32
+#endif // !_WIN32_WCE
   #ifdef CAIRO_VERSION
   cairo_t *cai = gdk_cairo_create (draw->window);
   if (detail < 4) {
@@ -925,7 +929,7 @@ gint Expose (void)
       } // Only process this way when the Itr gives us the first node, or
       // the first node that's inside the viewing area
  
-      #ifndef WIN32
+      #ifndef _WIN32_WCE
       __int64 maxLenSqr = 0;
       double x0, y0;
       #else
@@ -943,7 +947,7 @@ gint Expose (void)
             icon[2], icon[3]);
         }
         
-	#ifdef WIN32
+	#ifdef _WIN32_WCE
         SelectObject (mygc, sysFont);
         MultiByteToWideChar (CP_UTF8, 0, (char *)(w + 1) + 1,
           len, wcTmp, sizeof (wcTmp));
@@ -961,7 +965,7 @@ gint Expose (void)
         #endif
       }
       else if (Style (w)->areaColour) {
-        #ifndef WIN32
+        #ifndef _WIN32_WCE
         while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
         static GdkPoint pt[1000];
         unsigned pts;
@@ -981,13 +985,13 @@ gint Expose (void)
 	#endif
       }
       else if (nd->other[1] >= 0) {
-        #ifndef WIN32
+        #ifndef _WIN32_WCE
         gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
         gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
           Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
           : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
         #else
-	SelectObject (mygc, pen[w->type]);
+	SelectObject (mygc, pen[StyleNr (w)]);
         #endif
         do {
           ndType *next = ndBase + nd->other[1];
@@ -997,7 +1001,7 @@ gint Expose (void)
             clip.height / 2 - (nd->lat - clat) / perpixel,
             (next->lon - clon) / perpixel + clip.width / 2,
             clip.height / 2 - (next->lat - clat) / perpixel);
-	  #ifdef WIN32
+	  #ifdef _WIN32_WCE
 	  if (best < nd->lon - next->lon) best = nd->lon - next->lon;
 	  else if (best < next->lon - nd->lon) best = next->lon - nd->lon;
 	  else if (best < nd->lat - next->lat) best = nd->lat - next->lat;
@@ -1030,7 +1034,7 @@ gint Expose (void)
                  nd->other[1] >= 0);
       } /* If it has one or more segments */
 
-      #ifdef WIN32
+      #ifdef _WIN32_WCE
       if (best > perpixel * len * 4) {
         double hoek = atan2 (bestH, bestW);
         logFont.lfEscapement = logFont.lfOrientation =
@@ -1087,6 +1091,7 @@ gint Expose (void)
 //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
 //  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
 //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+#ifndef _WIN32_WCE
   routeNodeType *x;
   if (shortest && (x  = shortest->shortest)) {
     gdk_draw_line (draw->window, draw->style->white_gc,
@@ -1107,6 +1112,7 @@ gint Expose (void)
       (tlon - clon) / perpixel + clip.width / 2,
       clip.height / 2 - (tlat - clat) / perpixel);
   }
+#endif
 /*
   clip.height = draw->allocation.height;
   gdk_gc_set_clip_rectangle (draw->style->fg_gc[0], &clip);
@@ -1120,7 +1126,7 @@ GtkWidget *search;
 GtkWidget *list;
 wayType *incrementalWay[40];
 
-#ifndef WIN32
+#ifndef _WIN32_WCE
 /* Current algorithm performs badly in many cases.
    Solution :
    1. Bsearch idx such that
@@ -1218,10 +1224,10 @@ void SelectName (GtkWidget * /*w*/, gint row, gint /*column*/,
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
   gtk_widget_queue_clear (draw);
 }
-#endif // !WIN32
+#endif // !_WIN32_WCE
 #endif // HEADLESS
 
-#ifndef WIN32
+#ifndef _WIN32_WCE
 int UserInterface (int argc, char *argv[])
 {
   #ifdef USE_FLITE
@@ -1268,9 +1274,10 @@ int UserInterface (int argc, char *argv[])
     - (bucketsMin1 >> 7) - 5;
   #else
   data = (char*) g_mapped_file_get_contents (gmap);
-  //#define pakSize 
-  hashTable = (int *) (data + g_mapped_file_get_length (gmap)) - BUCKETS - 2;
-  ndBase = (ndType *)(data + hashTable[BUCKETS + 1]);
+  bucketsMin1 = ((int *) (data + g_mapped_file_get_length (gmap)))[-2];
+  hashTable = (int *) (data + g_mapped_file_get_length (gmap)) -
+    bucketsMin1 - (bucketsMin1 >> 7) - 5;
+  ndBase = (ndType *)(data + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 4]);
   #endif
   if (!data || !ndBase || !hashTable) {
     fprintf (stderr, "mmap failed\n");
@@ -1372,7 +1379,8 @@ int UserInterface (int argc, char *argv[])
     GTK_SIGNAL_FUNC (GetDirections), NULL);
 */
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
-    
+  
+  #ifndef WIN32  
   struct sockaddr_in sa;
   int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
   sa.sin_family = AF_INET;
@@ -1388,6 +1396,7 @@ int UserInterface (int argc, char *argv[])
     gtk_widget_show (followGPSr);
     // gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
   }
+  #endif
 
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
@@ -1409,10 +1418,10 @@ int UserInterface (int argc, char *argv[])
   #endif // HEADLESS
   return 0;
 }
-#endif // !WIN32
+#endif // !_WIN32_WCE
 
 /*--------------------------------- Rebuid code ---------------------------*/
-#ifndef WIN32
+#ifndef _WIN32_WCE
 // These defines are only used during rebuild
 #define MAX_BUCKETS (1<<22)
 #define IDXGROUPS 676
@@ -1475,6 +1484,7 @@ int IdxCmp (const void *aptr, const void *bptr)
 
 int main (int argc, char *argv[])
 {
+  #ifndef WIN32
   int rebuildCnt = 0;
   if (argc > 1) {
     if ((argc != 6 && argc > 2) || stricmp (argv[1], "rebuild")) {
@@ -2016,10 +2026,11 @@ int main (int argc, char *argv[])
     fclose (pak);
     free (hashTable);
   } /* if rebuilding */
+  #endif // WIN32
   return UserInterface (argc, argv);
 }
-//----------------------------- WIN32 ------------------
-#else
+#else // _WIN32_WCE
+//----------------------------- _WIN32_WCE ------------------
 HANDLE port;
 volatile int gpsNewDataReady = FALSE; // Serves as lock on gpsNew
 
@@ -2218,9 +2229,9 @@ volatile int guiDone = FALSE;
 DWORD WINAPI NmeaReader (LPVOID lParam)
 {
  // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
-  DWORD nBytes, i;
-  DCB    portState;
-  COMMTIMEOUTS commTiming;
+  DWORD nBytes;
+//  DCB    portState;
+//  COMMTIMEOUTS commTiming;
   char rx[1200];
 
   //ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
@@ -2296,7 +2307,8 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
     //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
     //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
     
-    if (!gpsNewDataReader && (gpsNewData = ProcessNmea (rx, &nBytes))) {
+    if (!gpsNewDataReady &&
+        (gpsNewDataReady = ProcessNmea (rx, (unsigned*)&nBytes))) {
       PostMessage (hwnd, WM_USER + 1, 0, 0);
     }
   }
@@ -2315,7 +2327,7 @@ int WINAPI WinMain(
 {
   if(hPrevInstance) return(FALSE);
   hInst = hInstance;
-  FILE *gmap = fopen ("\\sdmmc\\gosmore.pak", "rb");
+  FILE *gmap = fopen ("gosmore.pak", "rb");
 
   if (!gmap) {
     MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
@@ -2330,9 +2342,11 @@ int WINAPI WinMain(
     return 1; // This may mean memory is available, but fragmented.
   } // Splitting the 5 parts may help.
   fread (data, pakSize, 1, gmap);
-  hashTable = (int *) (data + pakSize) - BUCKETS - 2;
-  ndBase = (ndType *)(data + hashTable[BUCKETS + 1]);
   style = (struct styleStruct *)(data + 4);
+  hashTable = (int *) (data + pakSize);
+  ndBase = (ndType *)(data + hashTable[-1]);
+  bucketsMin1 = hashTable[-2];
+  hashTable -= bucketsMin1 + (bucketsMin1 >> 7) + 5;
 
   clon = ndBase[1].lon; //Longitude (-0.272228);
   clat = ndBase[1].lat; //Latitude (51.927977);

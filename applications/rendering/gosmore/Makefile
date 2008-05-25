@@ -19,15 +19,15 @@ WARNFLAGS= -W -Wall
 
 ifneq (${OS},Windows_NT)
 EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS`
+XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
+  `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
 else
 EXTRA=-mms-bitfields -mno-cygwin -I/usr/include/mingw/gtk-2.0 \
   -I/usr/include/mingw/cairo     -I/usr/include/mingw/glib-2.0 \
   -I/usr/include/mingw/pango-1.0 -I/usr/include/mingw/atk-1.0 \
   -I/usr/lib/glib-2.0/include    -I/usr/lib/gtk-2.0/include \
-  -lgtk-win32-2.0 -lgdk-win32-2.0 -lglib-2.0 -lgobject-2.0
+  -lgtk-win32-2.0 -lgdk-win32-2.0 -lglib-2.0 -lgobject-2.0 -lcairo
 endif
-XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
-  `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
 
 all: gosmore
 
@@ -39,6 +39,15 @@ gosmore:	gosmore.cpp
 #elemstyles.xml:
 #		wget http://josm.openstreetmap.de/svn/trunk/styles/standard/elemstyles.xml
 
+zip:
+	rm -f gosmore.zip
+	zip -j gosmore.zip gosmore.exe icons.xpm /bin/libcairo-2.dll \
+	/bin/libgtk-win32-2.0-0.dll /bin/libgdk* /bin/libglib-2.0-0.dll \
+	/bin/libgobject-2.0-0.dll /bin/libatk-1.0-0.dll /bin/libpango* \
+	/bin/libpng13.dll /bin/libgmodule-2.0-0.dll
+	zip gosmore.zip /etc/gtk-2.0/*
+	scp gosmore.zip ARMV4Rel/gosm_arm.exe \
+	  sabiepark@www.rational.co.za:www/gosmore/
 
 commit:		clean
 		rm -f *~; cd ..; tar czf - gosmore | ssh \
@@ -56,4 +65,4 @@ dist:
 	rm -rf gosmore-$(VERSION)
 
 clean:
-	$(RM) gosmore gosmore.pak *.tmp *~
+	$(RM) gosmore gosmore.pak *.tmp *~ gosmore.zip

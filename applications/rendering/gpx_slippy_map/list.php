@@ -3,6 +3,17 @@
 </head>
 <body>
 
+<?php
+switch($_GET['error'])
+{
+  case "nofile": headerMessage("The GPX file you selected couldn't be downloaded from openstreetmap.org/traces");break;
+  case "nopoints": headerMessage("The GPX file you selected doesn't seem to contain any data (this may be a parser problem - report it if you think this is incorrect)");break;
+}
+function headerMessage($Message)
+{
+  print "<p style='background-color:#EFE;border:1px dashed green;padding:8px'>$Message</p>";
+}
+?>
 <h1>Slippy-map for GPX tracklogs</h1>
 
 <p>This page lets you view public GPX traces from
@@ -122,7 +133,7 @@ function getRss()
 {
   $Filename = "cache/rss";
   $URL = "http://openstreetmap.org/traces/rss";
-  $StaleTime = 1.0; # hours
+  $StaleTime = 0.5; // hours
   
   printf("<p>Updated every %1.0f hours</p>", $StaleTime);
   
@@ -136,7 +147,7 @@ function getRss()
       return($Filename);
     }
     
-  print "<p>Downloading RSS!</p>";
+  #print "<p>Downloading RSS!</p>";
   file_put_contents($Filename, file_get_contents($URL));
   return($Filename);
 }

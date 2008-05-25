@@ -163,9 +163,9 @@ my $rules = XML::XPath->new(filename => $rule_file);
 my $data = get_variable("data", "");
 
 # if data file given in rule file, prepend rule file's path
-if ($rule_file =~ m!(.*)/(.*)! && defined($data))
+if ($rule_file =~ m!(.*[/\\])(.*)! && defined($data))
 {
-    $data = $1."/".$data;
+    $data = $1.$data;
 }
 
 usage ("data file must be specified in rule or on command line")

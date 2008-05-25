@@ -100,9 +100,10 @@ public class MapView extends JComponent {
     public void addLayer(Layer layer) {
         layers.add(layer);
         if (layer instanceof EditableLayer) {
-            Layer old = editLayer;
+            EditableLayer old = editLayer;
             editLayer = (EditableLayer) layer;
             firePropertyChange(PROP_LAYER, old, editLayer);
+            if (old != null && old.isEmpty()) layers.remove(old);
         }
         repaint();
     }

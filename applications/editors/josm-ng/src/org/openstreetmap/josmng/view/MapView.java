@@ -154,6 +154,15 @@ public class MapView extends JComponent {
         repaint();
     }
 
+    /* A horizontal scale in m/px in the middle of the canvas.
+     */
+    private double getMeanScaleFactor() {
+        Point p1 = new Point(getWidth()/2-50, getHeight()/2);
+        Point p2 = new Point(p1.x+50, p1.y);
+        Coordinate left = proj.viewToCoord(getPoint(p1));
+        Coordinate right = proj.viewToCoord(getPoint(p2));
+        return dist(left, right)/100;
+    }
     
     /**
      * Convert a point in screen-relative coordinates to
@@ -186,13 +195,25 @@ public class MapView extends JComponent {
         return view;
     }
 
+    private boolean inPaint = false;
+    private double scaleCache;
+
+    public int getWidthInPixels(int inMeters, int minWidth) {
+        assert inPaint;
+        return Math.max((int)(inMeters / scaleCache), minWidth);
+    }
+
     public @Override void paint(Graphics g) {
+        inPaint = true;
+        scaleCache = getMeanScaleFactor();
+        
         paintBackground(g.create());
         for(Layer layer : layers) {
             layer.paint(g.create());
         }
 
         super.paint(g);
+        inPaint = false;
     }    
 
     private void paintBackground(Graphics g) {
@@ -318,24 +339,24 @@ public class MapView extends JComponent {
         }
         
     }
-    
+
+    // in m
+    private static double dist(Coordinate c1, Coordinate c2) {
+        double a1 = Math.PI * c1.getLatitude() / 180;
+        double b1 = Math.PI * c1.getLongitude() / 180;
+        double a2 = Math.PI * c2.getLatitude() / 180;
+        double b2 = Math.PI * c2.getLongitude() / 180;
+        return Math.acos(Math.cos(a1)*Math.cos(b1)*Math.cos(a2)*Math.cos(b2)
+                + Math.cos(a1)*Math.sin(b1)*Math.cos(a2)*Math.sin(b2)
+                + Math.sin(a1)*Math.sin(a2)) * 6378000;
+    }
+
     private class Meter extends JComponent {
         
         public @Override Dimension getPreferredSize() {
             return new Dimension(101, 101);
         }
 
-        // in m
-        private double dist(Coordinate c1, Coordinate c2) {
-            double a1 = Math.PI * c1.getLatitude() / 180;
-            double b1 = Math.PI * c1.getLongitude() / 180;
-            double a2 = Math.PI * c2.getLatitude() / 180;
-            double b2 = Math.PI * c2.getLongitude() / 180;
-            return Math.acos(Math.cos(a1)*Math.cos(b1)*Math.cos(a2)*Math.cos(b2)
-                    + Math.cos(a1)*Math.sin(b1)*Math.cos(a2)*Math.sin(b2)
-                    + Math.sin(a1)*Math.sin(a2)) * 6378000;
-        }
-        
         public @Override void paint(Graphics g) {
             Coordinate ltc = proj.viewToCoord(getPoint(new Point(0,0)));
             Coordinate lbc = proj.viewToCoord(getPoint(new Point(0,100)));

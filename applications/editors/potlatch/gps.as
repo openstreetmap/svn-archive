@@ -14,9 +14,10 @@
 	// parsePoint
 	
 	function parseGPX(gpxname) {
-		createModalDialogue(295,35,new Array(),null);
-		_root.modal.box.createTextField("prompt",2,7,9,280,20);
-		writeText(_root.modal.box.prompt,"Please wait while the GPX track is processed.");
+		_root.windows.attachMovie("modal","pleasewait",++windowdepth);
+		_root.windows.pleasewait.init(295,35,new Array(),null);
+		_root.windows.pleasewait.box.createTextField("prompt",2,7,9,280,20);
+		writeText(_root.windows.pleasewait.box.prompt,"Please wait while the GPX track is processed.");
 
 		_root.tracks=new Array();
 		_root.curtrack=0; _root.tracks[curtrack]=new Array();
@@ -73,7 +74,7 @@
 					// _root.map.pois[newpoiid].recolour();
 					_root.poicount+=1;
 				}
-				clearModalDialogue();
+				_root.windows.pleasewait.remove();
 			};
 		}
 	}

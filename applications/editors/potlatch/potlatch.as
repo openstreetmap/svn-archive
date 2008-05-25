@@ -24,6 +24,10 @@
 	_root.panel.lineTo(0,0);
 	_root.panel.endFill();
 
+	_root.createEmptyMovieClip("windows",0xFFFFFD);
+	var windowdepth=1;
+	var windowsopen=0;
+
 	// Co-ordinates
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
 	var minscale=12;				// don't zoom out past this
@@ -99,15 +103,14 @@
 	var pointertype='';				// current mouse pointer
 	var redopropertywindow=null;	// need to redraw property window after deletion?
 	var lastkeypressed=null;		// code of last key pressed
-	var keytarget='';				// send keys where? ('','dialogue','key','value')
-	var basekeytarget='';			// reset keytarget to what after editing key?
+	var keytarget='';				// send keys where? ('','key','value')
 	var tilesetloaded=-1;			// which tileset is loaded?
 	var tolerance=4/Math.pow(2,_root.scale-13);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.9a";	// current version
+	var signature="Potlatch 0.9b";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
@@ -224,14 +227,7 @@
 		}
 	};
 
-	_root.createEmptyMovieClip("pointers",90000);
-	_root.pointers.attachMovie("penso"  ,"penso"  ,1); _root.pointers.penso._visible=false;
-	_root.pointers.attachMovie("penx"   ,"penx"   ,2); _root.pointers.penx._visible=false;
-	_root.pointers.attachMovie("peno"   ,"peno"   ,3); _root.pointers.peno._visible=false;
-	_root.pointers.attachMovie("penplus","penplus",5); _root.pointers.penplus._visible=false;
-	_root.pointers.attachMovie("pen"    ,"pen"    ,6); _root.pointers.pen._visible=false;
-	_root.pointers.attachMovie("hand"   ,"hand"   ,7); _root.pointers.hand._visible=false;
-
+	_root.createEmptyMovieClip("pointer",0xFFFFFF);
 
 	// =====================================================================================
 	// Initialise text areas
@@ -250,7 +246,7 @@
 		_visible=false;//#debug
 	};
 
-	_root.createTextField('floater',0xFFFFFF,15,30,200,18);
+	_root.createTextField('floater',0xFFFFFE,15,30,200,18);
 	with (floater) {
 		background=true; backgroundColor=0xFFEEEE;
 		border=true; borderColor=0xAAAAAA;
@@ -377,25 +373,26 @@
 	// Splash screen
 	
 	if (!preferences.data.nosplash) {
-		createModalDialogue(400,225,[],null,true);
+		_root.windows.attachMovie("modal","splashscreen",++windowdepth);
+		_root.windows.splashscreen.init(400,225,[],null,true);
 
-		_root.modal.box.createTextField("title",1,7,7,400-14,20);
-		with (_root.modal.box.title) {
+		_root.windows.splashscreen.box.createTextField("title",1,7,7,400-14,20);
+		with (_root.windows.splashscreen.box.title) {
 			type='dynamic';
 			text="Welcome to OpenStreetMap!"; setTextFormat(boldText);
 		}
 
 		// Light grey background
-		_root.modal.box.createEmptyMovieClip('lightgrey',2);
-		with (_root.modal.box.lightgrey) {
+		_root.windows.splashscreen.box.createEmptyMovieClip('lightgrey',2);
+		with (_root.windows.splashscreen.box.lightgrey) {
 			beginFill(0xF3F3F3,100);
 			moveTo(10,30); lineTo(392,30);
 			lineTo(392,195); lineTo(10,195);
 			lineTo(10,30); endFill();
 		};
 		
-		_root.modal.box.createTextField("prompt",3,15,35,400-30,180);
-		writeText(_root.modal.box.prompt,
+		_root.windows.splashscreen.box.createTextField("prompt",3,15,35,400-30,180);
+		writeText(_root.windows.splashscreen.box.prompt,
 			"Choose a button below to get editing. If you click 'Start', "+
 			"you'll be editing the main map directly - changes usually show "+
 			"up every Thursday. If you click 'Play', your changes won't be "+
@@ -405,8 +402,8 @@
 			chr(0x278B)+"  Accuracy is important - only map places you've been\n"+
 			chr(0x278C)+"  And have fun!\n");
 
-		_root.modal.box.attachMovie("checkbox","nosplash",5);
-		_root.modal.box.nosplash.init(12,205,"Don't show this message again",preferences.data.nosplash,function(n) { preferences.data.nosplash=n; });
+		_root.windows.splashscreen.box.attachMovie("checkbox","nosplash",5);
+		_root.windows.splashscreen.box.nosplash.init(12,205,"Don't show this message again",preferences.data.nosplash,function(n) { preferences.data.nosplash=n; });
 
 	}
 
@@ -416,12 +413,12 @@
 
 	_root.panel.welcome.createEmptyMovieClip("start",1);
 	drawButton(_root.panel.welcome.start,150,7,"Start","Start mapping with OpenStreetMap.");
-	_root.panel.welcome.start.onPress=function() { removeMovieClip(_root.panel.welcome); clearModalDialogue(); };
+	_root.panel.welcome.start.onPress=function() { removeMovieClip(_root.panel.welcome); _root.windows.splashscreen.remove(); };
 
 	_root.panel.welcome.createEmptyMovieClip("play",2);
 	drawButton(_root.panel.welcome.play,150,29,"Play","Practice mapping - your changes won't be saved.");
 	_root.panel.welcome.play.onPress=function() {
-		clearModalDialogue(); 
+		_root.windows.splashscreen.remove();
 		_root.sandbox=true; removeMovieClip(_root.panel.welcome);
 		_root.createEmptyMovieClip("practice",62);
 		with (_root.practice) {
@@ -444,7 +441,7 @@
 	if (gpx) {
 		_root.panel.welcome.createEmptyMovieClip("convert",4);
 		drawButton(_root.panel.welcome.convert,150,73,"Track","Convert your GPS track to (locked) ways for editing.");
-		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); clearModalDialogue(); gpxToWays(); };
+		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); _root.windows.splashscreen.remove(); gpxToWays(); };
 	}
 
 	// =====================================================================
@@ -647,16 +644,18 @@
 
 	function setPointer(ptype) {
 		if (_root.pointertype==ptype) { return; }
-		_root.pointers[_root.pointertype]._visible=false;
 		if ((ptype) && preferences.data.custompointer) {
-			_root.pointers[ptype]._x=_root._xmouse;
-			_root.pointers[ptype]._y=_root._ymouse;
-			_root.pointers[ptype].startDrag(true);
-			_root.pointers[ptype]._visible=true;
+			_root.attachMovie(ptype,"pointer",0xFFFFFF);
+			_root.pointer.cacheAsBitmap=true;
+			_root.pointer._x=_root._xmouse;
+			_root.pointer._y=_root._ymouse;
+			_root.pointer.startDrag(true);
 			Mouse.hide();
 		} else {
-			_root.pointers[_root.pointertype].stopDrag();
+			_root.pointer._visible=false;
+			_root.pointer.stopDrag();
 			Mouse.show();
+			removeMovieClip(_root.pointer);
 		}
 		_root.pointertype=ptype;
 	}
@@ -674,18 +673,16 @@
 		var k=Key.getCode();
 		_root.lastkeypressed=k;
 
-		switch (keytarget) {
-			case 'keyname':	 ;
-			case 'value':	 if (_root.auto!=undefined) { _root.auto.keyRespond(k); }
-							 else if (k==13) { autoEnter(); }
-							 return; break;
-			case 'dialogue': if (k==187 && _root.modal.box.properties!=undefined) {
-								_root.modal.box.properties.enterNewAttribute();
-							 };
-							 return; break;
-			case '':		 break;
-			default:		 return; break;
-		}
+		if (keytarget=='keyname' || keytarget=='value') {
+			if (_root.auto!=undefined) { _root.auto.keyRespond(k); }
+					   else if (k==13) { autoEnter(); }
+			return;
+		} else if (_root.windowsopen) {
+			if (k==187 && _root.windows.relation.box.properties!=undefined) {
+				_root.windows.relation.box.properties.enterNewAttribute();
+			};
+			return;
+		} else if (keytarget!='') { return; }
 
 		if (k>48 && k<58 && (wayselected!=0 || poiselected!=0)) {
 			if (presetnames[_root.panel.properties.proptype][_root.panel.presets.group][k-48]!=null) {
@@ -811,15 +808,17 @@
 		var h=100;
 		if (code==-1) { error=result[0]; }
 				 else { error=result[0]+"\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time."; h+=50; }
-		createModalDialogue(275,h,new Array('Ok'),null);
-		_root.modal.box.createTextField("prompt",2,7,9,250,h-30);
-		writeText(_root.modal.box.prompt,error);
+		_root.windows.attachMovie("modal","error",++windowdepth);
+		_root.windows.error.init(275,h,new Array('Ok'),null);
+		_root.windows.error.box.createTextField("prompt",2,7,9,250,h-30);
+		writeText(_root.windows.error.box.prompt,error);
 	}
 
 	function handleWarning() {
-		createModalDialogue(275,130,new Array('Retry','Cancel'),handleWarningAction);
-		_root.modal.box.createTextField("prompt",2,7,9,250,100);
-		writeText(_root.modal.box.prompt,"Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?");
+		_root.windows.attachMovie("modal","error",++windowdepth);
+		_root.windows.error.init(275,130,new Array('Retry','Cancel'),handleWarningAction);
+		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
+		writeText(_root.windows.error.box.prompt,"Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?");
 	};
 
 	function handleWarningAction(choice) {
@@ -920,23 +919,24 @@
 	// Options window
 	
 	function openOptionsWindow() {
-		createModalDialogue(290,130,new Array('Ok'),function() { preferences.flush(); } );
-		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
-		writeText(_root.modal.box.prompt1,"Background:");
+		_root.windows.attachMovie("modal","options",++windowdepth);
+		_root.windows.options.init(290,130,new Array('Ok'),function() { preferences.flush(); } );
+		_root.windows.options.box.createTextField("prompt1",2,7,9,80,20);
+		writeText(_root.windows.options.box.prompt1,"Background:");
 
-		_root.modal.box.attachMovie("menu","background",10);
-		_root.modal.box.background.init(87,10,preferences.data.baselayer,
+		_root.windows.options.box.attachMovie("menu","background",10);
+		_root.windows.options.box.background.init(87,10,preferences.data.baselayer,
 			new Array("None","-----------------------------------------","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
 
-		_root.modal.box.attachMovie("checkbox","fadepref",5);
-		_root.modal.box.fadepref.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+		_root.windows.options.box.attachMovie("checkbox","fadepref",5);
+		_root.windows.options.box.fadepref.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
 
-		_root.modal.box.attachMovie("checkbox","linepref",8);
-		_root.modal.box.linepref.init(10,60,"Use thin lines at all scales",preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
+		_root.windows.options.box.attachMovie("checkbox","linepref",8);
+		_root.windows.options.box.linepref.init(10,60,"Use thin lines at all scales",preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
 
-		_root.modal.box.attachMovie("checkbox","pointer",4);
-		_root.modal.box.pointer.init(10,80,"Use pen and hand pointers",preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		_root.windows.options.box.attachMovie("checkbox","pointer",4);
+		_root.windows.options.box.pointer.init(10,80,"Use pen and hand pointers",preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 	}
 	
 	// markClean - set JavaScript variable for alert when leaving page

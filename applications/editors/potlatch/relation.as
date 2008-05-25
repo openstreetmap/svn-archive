@@ -281,9 +281,10 @@
 		rel.setHighlight(true);
 		_root.panel.properties.enableTabs(false);
 		
-		createModalDialogue(402, 255, ["OK"], completeEdit);
+		_root.windows.attachMovie("modal","relation",++windowdepth);
+		_root.windows.relation.init(402, 255, ["OK"], completeEdit);
 		var z=5;
-		var box=_root.modal.box;
+		var box=_root.windows.relation.box;
 		
 		box.createTextField("title",z++,7,7,400-14,20);
 		with (box.title) {
@@ -396,7 +397,7 @@
 		var completeAdd = function(button) {
 			if ( button != 'Add' ) return false;
 
-			var box = _root.modal.box;
+			var box = _root.windows.relation.box;
 
 			var selected = box.addroute_menu.selected;
 			var keepDialog = false;
@@ -412,7 +413,7 @@
 				_root.map.relations.attachMovie("relation",nid,++reldepth);
 				_root.map.relations[nid].setRole(type, id, '');
 				_root.map.relations[nid].attr['type'] = undefined;
-				clearModalDialogue(); keepDialog = true;
+				_root.windows.relation.remove(); keepDialog = true;
 				_root.map.relations[nid].editRelation();
 			}
 			_root.panel.properties.reinit();
@@ -420,9 +421,10 @@
 			return keepDialog;
 		};
 
-		createModalDialogue(300, 140, ["Cancel", "Add"], completeAdd);
+		_root.windows.attachMovie("modal","relation",++windowdepth);
+		_root.windows.relation.init(300, 140, ["Cancel", "Add"], completeAdd);
 		var z = 5;
-		var box = _root.modal.box;
+		var box = _root.windows.relation.box;
 		
 		box.createTextField("title",z++,7,7,300-14,20);
 		box.title.text = "Add "+proptype+" to a relation";

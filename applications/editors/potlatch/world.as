@@ -61,7 +61,9 @@
 		_root.waysloading._x=
 		_root.tooltip._x=Stage.width-120;
 		_root.practice._x=Stage.width-97; _root.practice._y=Stage.height-panelheight-22;
-		if (_root.modal) { drawModalAreas(); }
+		for (var w in _root.windows) {
+			if (typeof(_root.windows[w])=='movieclip') { _root.windows[w].drawAreas(); }
+		}
 		// note time, so we can issue a whichWays soon
 		updateCoords(_root.map._x,_root.map._y);
 		_root.lastresize=new Date();

@@ -210,12 +210,13 @@
 			_root.ws.saveUndo("deleting");
 			this.remove();
 		} else {
-			createModalDialogue(275,80,new Array('Cancel','Delete'),
+			_root.windows.attachMovie("modal","confirm",++windowdepth);
+			_root.windows.confirm.init(275,80,new Array('Cancel','Delete'),
 				function(choice) {
 					if (choice=='Delete') { _root.ws.saveUndo("deleting"); _root.ws.remove(); }
 				});
-			_root.modal.box.createTextField("prompt",2,7,9,250,100);
-			writeText(_root.modal.box.prompt,"Some of the points on this way are tagged. Really delete?");
+			_root.windows.confirm.box.createTextField("prompt",2,7,9,250,100);
+			writeText(_root.windows.confirm.box.prompt,"Some of the points on this way are tagged. Really delete?");
 		}
 	};
 

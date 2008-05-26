@@ -49,5 +49,6 @@ table.event td {
     padding: 2px 8px 2px 2px;
     border-top: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
 }
 

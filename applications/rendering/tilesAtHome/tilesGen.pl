@@ -1647,7 +1647,7 @@ sub splitImageX
             }
             else
             {
-                statusMessage("Optimizing $Basename with $Config->get("PngOptimizer") failed", $currentSubTask, $progressJobs, $progressPercent,1);
+                statusMessage("Optimizing $Basename with ".$Config->get("PngOptimizer")." failed", $currentSubTask, $progressJobs, $progressPercent,1);
                 rename($Filename2, $Filename);
             }
         }

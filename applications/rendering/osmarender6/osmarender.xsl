@@ -274,6 +274,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   baseProfile="{$svgBaseProfile}"
   width="{$svgWidth}px"
   height="{$svgHeight}px"
+  preserveAspectRatio="none"
   viewBox="{-$extraWidth div 2} {-$extraHeight div 2} {$svgWidth} {$svgHeight}">
       <xsl:if test="/rules/@interactive='yes'">
         <xsl:attribute name="onscroll">fnOnScroll(evt)</xsl:attribute>

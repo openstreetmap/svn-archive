@@ -37,7 +37,7 @@
 
 #include "input.h"
 
-#define MAX_NODE_ID 250000000
+#define MAX_NODE_ID (300*1024*1024)
 #define MAX_NODES_PER_WAY 10000
 
 static int count_node,    max_node;
@@ -146,6 +146,11 @@ void EndElement(const xmlChar *name)
     if (xmlStrEqual(name, BAD_CAST "node")) {
         if( pass == 1 )
         {
+            if( osm_id > MAX_NODE_ID )
+            {
+              fprintf( stderr, "Exceeded maximum node ID: %d\n", MAX_NODE_ID );
+              exit(1);
+            }
             if( bitmap[ osm_id >> 3 ] & (1<<(osm_id&7)) )
                 printf( "<node id=\"%d\" lat=\"%f\" lon=\"%f\" />\n", osm_id, node_lat, node_lon );
         }
@@ -161,6 +166,11 @@ void EndElement(const xmlChar *name)
             printf( "<way id=\"%d\">\n", osm_id );
             for( i=0; i<nd_count; i++ )
             {
+                if( nds[i] > MAX_NODE_ID )
+                {
+                  fprintf( stderr, "Exceeded maximum node ID: %d\n", MAX_NODE_ID );
+                  exit(1);
+                }
                 bitmap[ nds[i] >> 3 ] |= (1<<(nds[i]&7));
                 printf( "<nd ref=\"%d\" />\n", nds[i] );
             }
@@ -270,7 +280,7 @@ int main(int argc, char *argv[])
     count_way = max_way = 0;
     count_rel = max_rel = 0;
 
-    printf("<osm>\n");
+    printf("<osm version=\"0.5\">\n");
     fprintf(stderr, "\nReading in file: %s\n", argv[1]);
     if (streamFile(argv[1]) != 0)
         exit_nicely();
@@ -285,7 +295,9 @@ int main(int argc, char *argv[])
     if (streamFile(argv[1]) != 0)
         exit_nicely();
 
-    printf("</osm>\n");
+    /* Try to detect output error */
+    if( printf("</osm>\n") < 0 )
+      exit(1);
     xmlCleanupParser();
     xmlMemoryDump();
 

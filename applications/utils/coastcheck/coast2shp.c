@@ -420,6 +420,7 @@ static int processList(char *filename, char *output_prefix)
       SHPObject *p;
       p = SHPCreateSimpleObject( SHPT_POINT, 1, &x, &y, NULL );
       int idx = SHPWriteObject( shp_point, -1, p );
+      if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
       DBFWriteIntegerAttribute( dbf_point, idx, 0, t );
       SHPDestroyObject(p);
       
@@ -469,10 +470,13 @@ static int processList(char *filename, char *output_prefix)
           first_match = node_match;
         if( last_match == node_match )
           continue;
-        if( last_match && fabs( last_match->lat - node_match->lat ) < 1e-6
-                       && fabs( last_match->lon - node_match->lon ) < 1e-6 )
+        if( last_match && fabs( last_match->lat - node_match->lat ) < 3e-6*DEG_TO_RAD
+                       && fabs( last_match->lon - node_match->lon ) < 3e-6*DEG_TO_RAD )
         {
-//          printf( "{%.6f,%.6f} ", node_match->lat, node_match->lon );
+#if 0
+          if( way_id == 22650041 )
+            fprintf(stderr, "Skipped (too close) {%.6f,%.6f} ", node_match->lat, node_match->lon );
+#endif
           continue;
         }
         /* Extend array as necessary */
@@ -592,15 +596,17 @@ static int processList(char *filename, char *output_prefix)
     if( type == 'C' && vertex_count >= 4 )
     {
       int idx = SHPWriteObject( shp_poly, -1, tmp );
+      if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
       shp_poly_count++;
       DBFWriteIntegerAttribute( dbf_poly, idx, 0, 0 );
       DBFWriteIntegerAttribute( dbf_poly, idx, 1, vertex_count );
       DBFWriteIntegerAttribute( dbf_poly, idx, 2, way_id );
     }
-    else
+    else if( vertex_count > 0 )
     {
       tmp->nSHPType = SHPT_ARC;
       int idx = SHPWriteObject( shp_arc, -1, tmp );
+      if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
       shp_arc_count++;
       DBFWriteIntegerAttribute( dbf_arc, idx, 0, 1 );
       DBFWriteIntegerAttribute( dbf_arc, idx, 1, vertex_count );
@@ -609,6 +615,7 @@ static int processList(char *filename, char *output_prefix)
       SHPObject *p;
       p = SHPCreateSimpleObject( SHPT_POINT, 1, &v_x[0], &v_y[0], NULL );
       idx = SHPWriteObject( shp_point, -1, p );
+      if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
       DBFWriteIntegerAttribute( dbf_point, idx, 0, 2 );
       SHPDestroyObject(p);
       
@@ -616,6 +623,7 @@ static int processList(char *filename, char *output_prefix)
       {
         p = SHPCreateSimpleObject( SHPT_POINT, 1, &v_x[vertex_count-1], &v_y[vertex_count-1], NULL );
         idx = SHPWriteObject( shp_point, -1, p );
+        if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
         DBFWriteIntegerAttribute( dbf_point, idx, 0, 2 );
         SHPDestroyObject(p);
       }

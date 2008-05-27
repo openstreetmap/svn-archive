@@ -253,6 +253,9 @@ int main( int argc, char *argv[] )
       double bottom = -MERC_MAX + (j*MERC_BLOCK) - TILE_OVERLAP;
       double top    = -MERC_MAX + ((j+1)*MERC_BLOCK) + TILE_OVERLAP;
       
+      if( left  < -MERC_MAX ) left  = -MERC_MAX;
+      if( right > +MERC_MAX ) right = +MERC_MAX;
+      
       state.lb[0] = left;
       state.lb[1] = bottom;
       state.rt[0] = right;
@@ -324,6 +327,7 @@ static void SplitCoastlines2( int show, SHPHandle shp, DBFHandle dbf, SHPHandle 
     if( obj->nVertices <= MAX_NODES_PER_ARC )
     {
       int new_id = SHPWriteObject( shp_arc_out, -1, obj );
+      if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 0, way_id );
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 1, show );
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 2, obj->nVertices < 4 );  /* Flag not real objects */
@@ -340,6 +344,7 @@ static void SplitCoastlines2( int show, SHPHandle shp, DBFHandle dbf, SHPHandle 
 //      printf( "Subobject start=%d, length=%d\n", j*len, this_len );
       SHPObject *new_obj = SHPCreateSimpleObject( SHPT_ARC, this_len, &obj->padfX[j*len], &obj->padfY[j*len], &obj->padfZ[j*len] );
       int new_id = SHPWriteObject( shp_arc_out, -1, new_obj );
+      if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 0, way_id );
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 1, show );
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 2, 0 );
@@ -540,12 +545,13 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
       if( polygon )
       {
         int new_id = SHPWriteObject( shp_out, -1, obj );
-        SHPDestroyObject( obj );
+        if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
         DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, 1 );
         DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );
         DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_Y, state->y );
       }
     #endif
+      SHPDestroyObject( obj );
       continue;
     }
 
@@ -814,6 +820,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
     
     SHPDestroyObject(obj);
   }
+  free(list);
 //  printf( "segcount: %d\n", state->seg_count );
 }
 
@@ -956,6 +963,7 @@ void OutputSegs( struct state *state )
       if(VERBOSE) printf( "Created shape orientation: %f,%s\n", CalcArea( shape ), !inverted?"good":"bad" );
       SHPRewindObject( NULL, shape );
       int new_id = SHPWriteObject( shp_out, -1, shape );
+      if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
       SHPDestroyObject( shape );
       
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, inverted ? 1 : 0 );
@@ -983,6 +991,7 @@ void OutputSegs( struct state *state )
                                         part_count, Parts, Parttypes, 
                                         node_count, v_x, v_y, v_z, NULL );
       int new_id = SHPWriteObject( shp_out, -1, obj );
+      if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
       SHPDestroyObject( obj );
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, (sub_area->areasize > 0)?0:1 );
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );
@@ -1162,6 +1171,7 @@ void ProcessSubareas(struct state *state, int *pc, int *nc)
       SHPObject *obj = SHPReadObject( sub_area->shp, sub_area->index );
       if(VERBOSE) printf( "Outputting error shape (x,y)=(%f,%f), n=%d\n", obj->padfX[0], obj->padfY[0], obj->nVertices );
       int new_id = SHPWriteObject( shp_out, -1, obj );
+      if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
       SHPDestroyObject( obj );
       
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, 1 );

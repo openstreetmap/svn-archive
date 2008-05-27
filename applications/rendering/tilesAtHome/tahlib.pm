@@ -1,9 +1,9 @@
-use strict; 
+use strict;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
 # =====================================================================
-my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
+#my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 my $lastmsglen = 0;
 
 my $idleFor = 0;
@@ -20,11 +20,13 @@ my %madeDir;
 #-----------------------------------------------------------------------------
 sub statusMessage 
 {
+    my $Config = $main::Config;
+
     my ($msg, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
     
     my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
 
-    if ($Config{"Verbose"})
+    if ($Config->get("Verbose"))
     {
         print STDERR "$toprint\n";
         return;
@@ -145,19 +147,20 @@ sub resetFault
 #-----------------------------------------------------------------------------
 sub runCommand
 {
+    my $Config = $main::Config;
     my ($cmd,$mainPID) = @_;
 
     # $message is deprecated, issue statusmessage prior to exec.
-    # statusMessage($message, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    # statusMessage($message, $Config->get("Verbose"), $currentSubTask, $progressJobs, $progressPercent,0);
 
 
-    if ($Config{Verbose})
+    if ($Config->get("Verbose"))
     {
         my $retval = system($cmd);
         return $retval == 0;
     }
 
-    my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";
+    my $ErrorFile = $Config->get("WorkingDirectory")."/".$mainPID.".stderr";
     my $retval = system("$cmd 2> $ErrorFile");
     my $ok = 0;
     my $ExtraInfo = "\nAdditional info about the Error(s):\n";
@@ -190,7 +193,7 @@ sub runCommand
                 if (grep(/preferences.xml/,$_))
                 {
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
-                    if ($Config{"AutoResetInkscapePrefs"} == 1)
+                    if ($Config->get("AutoResetInkscapePrefs") == 1)
                     {
                         $ExtraInfo=$ExtraInfo."\n   AutoResetInkscapePrefs set, trying to reset ~/.inkscape/preferences.xml";
                         unlink (glob("~/.inkscape/preferences.xml")) or addFault("fatal",1);
@@ -261,9 +264,10 @@ sub MagicMkdir
 #-----------------------------------------------------------------------------
 sub DownloadFile 
 {
+    my $Config = $main::Config;
     my ($URL, $File, $UseExisting) = @_;
 
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config{DownloadTimeout});
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config->get("DownloadTimeout"));
     $ua->agent("tilesAtHome");
     $ua->env_proxy();
 
@@ -298,6 +302,7 @@ sub DownloadFile
 #-----------------------------------------------------------------------------
 sub mergeOsmFiles
 {
+    my $Config = $main::Config;
     my ($destFile, $sourceFiles) = @_;
     my $existing = {};
 
@@ -305,7 +310,7 @@ sub mergeOsmFiles
     if( scalar(@$sourceFiles) == 1 )
     {
       copy $sourceFiles->[0], $destFile;
-      killafile ($sourceFiles->[0]) if (!$Config{Debug});
+      killafile ($sourceFiles->[0]) if (!$Config->get("Debug"));
       return;
     }
     
@@ -326,7 +331,7 @@ sub mergeOsmFiles
             {
               if( not $header )
               {
-                my $version = $1 || "'".$Config{"OSMVersion"}."'";
+                my $version = $1 || "'".$Config->get("OSMVersion")."'";
                 print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
                 $header = 1;
               }
@@ -356,7 +361,7 @@ sub mergeOsmFiles
             print DEST;
         }
         close(SOURCE);
-        killafile ($sourceFile) if (!$Config{Debug});
+        killafile ($sourceFile) if (!$Config->get("Debug"));
     }
     print DEST "</osm>\n";
     close(DEST);
@@ -369,27 +374,28 @@ sub mergeOsmFiles
 #-----------------------------------------------------------------------------
 sub cleanUpAndDie
 {
+    my $Config = $main::Config;
     my ($Reason,$Mode,$Severity,$mainPID) = @_;
 
     ## TODO: clean up *.tempdir too
 
-    print STDERR "\n$Reason\n" if ($Config{"Verbose"});
+    print STDERR "\n$Reason\n" if ($Config->get("Verbose"));
 
-    if (! $Config{"Debug"}) 
+    if (! $Config->get("Debug")) 
     {
-        opendir (TEMPDIR, $Config{"WorkingDirectory"});
+        opendir (TEMPDIR, $Config->get("WorkingDirectory"));
         my @files = grep { /$mainPID/ } readdir(TEMPDIR); # FIXME: this will get files from other processes using the same Working Directory for low pids because the numbers will collide with tile coordinates
         closedir (TEMPDIR);
         while (my $file = shift @files)
         {
-             print STDERR "deleting ".$Config{"WorkingDirectory"}."/".$file."\n" if ($Config{"Verbose"});
-             killafile($Config{"WorkingDirectory"}."/".$file);
+             print STDERR "deleting ".$Config->get("WorkingDirectory")."/".$file."\n" if ($Config->get("Verbose"));
+             killafile($Config->get("WorkingDirectory")."/".$file);
         }
         
     }
     
     return 0 if ($Mode eq "loop");
-    print STDERR "\n$Reason\n" if (! $Config{"Verbose"}); #print error only once, and only if fatal.
+    print STDERR "\n$Reason\n" if (! $Config->get("Verbose")); #print error only once, and only if fatal.
     exit($Severity);
 }
 

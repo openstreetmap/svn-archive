@@ -35,9 +35,23 @@ if (not $ARGV[0])
 }
 
 # conf file, will contain username/password and environment info
-my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
+# Read the config file
+our $Config = AppConfig->new({
+                CREATE => 1,                      # Autocreate unknown config variables
+                GLOBAL => {
+                  DEFAULT  => undef,    # Create undefined Variables by default
+                  ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
+                }
+              });
 
-if ($Config{"LocalSlippymap"})
+$Config->define("help|usage!");
+$Config->define("nodownload=s");
+$Config->set("nodownload",0);
+$Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authentication.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
+$Config->args();              # overwrite config options with command line options
+$Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
+
+if ($Config->get("LocalSlippymap"))
 {
     print "No upload - LocalSlippymap set in config file\n";
     exit 1;
@@ -47,7 +61,7 @@ if ($Config{"LocalSlippymap"})
 my $ZipFileCount = 0;
 
 ## FIXME: this is one of the things that make upload.pl not multithread safe
-my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
+my $ZipDir = $Config->get("WorkingDirectory") . "/uploadable";
 
 my @sorted;
 
@@ -61,7 +75,7 @@ my $lastmsglen;
 
 ### TODO: implement locking, this is one of the things that make upload not multithread-safe.
 my $sleepdelay;
-my $failFile = $Config{WorkingDirectory} . "/failurecount.txt";
+my $failFile = $Config->get("WorkingDirectory") . "/failurecount.txt";
 if (open(FAILFILE, "<", $failFile))
 {
     $sleepdelay = <FAILFILE>;
@@ -111,7 +125,7 @@ sub processOldZips
     my $zipCount = scalar(@sorted);
     statusMessage(scalar(@sorted)." zip files to upload", $currentSubTask, $progressJobs, $progressPercent,0);
     my $Reason = "queue full";
-    if(($Config{UploadToDirectory}) and (-d $Config{"UploadTargetDirectory"}))
+    if(($Config->get("UploadToDirectory")) and (-d $Config->get("UploadTargetDirectory")))
     {
         $MaxDelay = 30; ## uploading to a local directory is a lot less costly than checking the tileserver.
     }
@@ -174,7 +188,7 @@ sub upload
 
     if($ZipAge > 2)
     {
-        if($Config{DeleteZipFilesAfterUpload})
+        if($Config->get("DeleteZipFilesAfterUpload"))
         {
             unlink($File);
         }
@@ -186,12 +200,12 @@ sub upload
         return 0;
     }
 
-    if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
+    if($ZipSize > $Config->get("ZipHardLimit") * 1000 * 1000) 
     {
-        statusMessage("zip is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,1);
-        runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
+        statusMessage("zip is larger than ".$Config->get("ZipHardLimit")." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,1);
+        runCommand("unzip -qj $File -d $Config->get("WorkingDirectory")",$PID);
 
-        if($Config{DeleteZipFilesAfterUpload})
+        if($Config->get("DeleteZipFilesAfterUpload"))
         {
             unlink($File);
         }
@@ -205,12 +219,12 @@ sub upload
     my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
     my $Layer;
-    if ($Config{UploadConfiguredLayersOnly} == 1)
+    if ($Config->get("UploadConfiguredLayersOnly") == 1)
     {
-        foreach my $layer(split(/,/, $Config{Layers}))
+        foreach my $layer(split(/,/, $Config->get("Layers")))
         {
-            $Layer=$Config{"Layer.$layer.Prefix"} if ($File =~ /$Config{"Layer.$layer.Prefix"}/);
-            print "\n.$Layer.\n.$layer.\n" if $Config{Debug};
+            $Layer=$Config->get("Layer.$layer.Prefix") if ($File =~ /$Config->get("Layer.$layer.Prefix")/);
+            print "\n.$Layer.\n.$layer.\n" if $Config->get("Debug");
         }
     }
     else
@@ -218,7 +232,7 @@ sub upload
         $File=~m{.*_([^_]+)(_tileset)*\.zip}x;
         $Layer=$1;
     }
-    if((! $Config{UploadToDirectory}) or (! -d $Config{"UploadTargetDirectory"}))
+    if((! $Config->get("UploadToDirectory")) or (! -d $Config->get("UploadTargetDirectory")))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
         
@@ -227,8 +241,8 @@ sub upload
         $ua->env_proxy();
         push @{ $ua->requests_redirectable }, 'POST';
         
-        my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
-        my $URL = $Config{"UploadURL"};
+        my $Password = join("|", ($Config->get("UploadUsername"), $Config->get("UploadPassword")));
+        my $URL = $Config->get("UploadURL");
         
         my ($UploadToken,$Load) = UploadOkOrNot();
         
@@ -239,7 +253,7 @@ sub upload
               Content_Type => 'form-data',
               Content => [ file => [$File],
               mp => $Password,
-              version => $Config{ClientVersion},
+              version => $Config->get("ClientVersion"),
               single_tileset => $SingleTileset,
               token => $UploadToken,
               layer => $Layer ]);
@@ -253,7 +267,7 @@ sub upload
             }
             else
             {
-                print $res->content if ($Config{Debug});
+                print $res->content if ($Config->get("Debug"));
             }
             
         }
@@ -268,7 +282,7 @@ sub upload
         my $RemoteZipFileCount = 0;
         my $MaxQueue = 20;
         my @QueueFiles;
-        if(opendir(UPDIR, $Config{"UploadTargetDirectory"}))
+        if(opendir(UPDIR, $Config->get("UploadTargetDirectory")))
         {
             @QueueFiles = grep { /\.zip$/ } readdir(UPDIR);
             close UPDIR;
@@ -289,15 +303,15 @@ sub upload
         {
             my $FileName = $File;
             $FileName =~ s|.*/||;       # Get the source filename without path
-            print "\n$File $FileName\n" if $Config{Debug};    #Debug info
-            copy($File,$Config{"UploadTargetDirectory"}."/".$FileName."_trans") or die "$!\n"; # copy the file over using a temporary name
-            rename($Config{"UploadTargetDirectory"}."/".$FileName."_trans", $Config{"UploadTargetDirectory"}."/".$FileName) or die "$!\n"; 
+            print "\n$File $FileName\n" if $Config->get("Debug");    #Debug info
+            copy($File,$Config->get("UploadTargetDirectory")."/".$FileName."_trans") or die "$!\n"; # copy the file over using a temporary name
+            rename($Config->get("UploadTargetDirectory")."/".$FileName."_trans", $Config->get("UploadTargetDirectory")."/".$FileName) or die "$!\n"; 
             # rename so it can be picked up by central uploading client.
         }
     }
 
     # if we didn't encounter any errors error we get here
-    if($Config{DeleteZipFilesAfterUpload})
+    if($Config->get("DeleteZipFilesAfterUpload"))
     {
         unlink($File);
     }
@@ -312,9 +326,9 @@ sub upload
 
 sub UploadOkOrNot
 {
-    my $LocalFilename = $Config{WorkingDirectory} . "/go-nogo-".$PID.".tmp";
+    my $LocalFilename = $Config->get("WorkingDirectory") . "/go-nogo-".$PID.".tmp";
     statusMessage("Checking server queue", $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile($Config{GoNogoURL}, $LocalFilename, 1);
+    DownloadFile($Config->get("GoNogoURL"), $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file
     my $Token = <$fp>; ##read another line from file

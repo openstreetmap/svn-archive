@@ -1,41 +1,4 @@
-use strict; 
-
-#--------------------------------------------------------------------------
-# Reads a tiles@home config file, returns a hash array
-#--------------------------------------------------------------------------
-sub ReadConfig
-{
-    my %Config;
-    while (my $Filename = shift())
-    {
-
-        open(my $fp,"<$Filename") || die("Can't open \"$Filename\" ($!)\n");
-        while(my $Line = <$fp>)
-        {
-            $Line =~ s/#.*$//; # Comments
-            $Line =~ s/\s*$//; # Trailing whitespace
-
-            if($Line =~ m{
-                        ^
-                        \s*
-                        ([A-Za-z0-9._-]+) # Keyword: just one single word no spaces
-                        \s*            # Optional whitespace
-                        =              # Equals
-                        \s*            # Optional whitespace
-                        (.*)           # Value
-                        }x)
-            {
-# Store config options in a hash array
-                $Config{$1} = $2;
-                print "Found $1 ($2)\n" if(0); # debug option
-            }
-        }
-        close $fp;
-    }
-    ApplyConfigLogic(\%Config);
-
-    return %Config;
-}
+use strict;
 
 #--------------------------------------------------------------------------
 # Any application-specific knowledge regarding config file options
@@ -43,105 +6,58 @@ sub ReadConfig
 #--------------------------------------------------------------------------
 sub ApplyConfigLogic
 {
-    my $Config = shift();
+    my $Config = $main::Config;
 
-    $Config->{"OsmUsername"} =~ s/@/%40/;  # Encode the @-symbol in OSM passwords
-    if (!defined($Config->{"Layers"}))
+    if (!defined($Config->get("Layers")))
     {
-        $Config->{"Layers"} = "default";
+        die("no layers configured");
     }
 
     # check layer configuration and if not present, use sensible defaults
-    foreach my $layer(split(/,/, $Config->{"Layers"}))
+    foreach my $layer(split(/,/, $Config->get("Layers")))
     {
-        $Config->{"Layer.$layer.MaxZoom"} = 17 unless defined($Config->{"Layer.$layer.MaxZoom"});
 
-        for(my $zoom=12; $zoom<=$Config->{"Layer.$layer.MaxZoom"}; $zoom++)
+        if (!defined($Config->get($layer."_Prefix")))
         {
-            if (!defined($Config->{"Layer.$layer.Rules.$zoom"}))
-            {
-                if ($layer eq "default")
-                {
-                    $Config->{"Layer.$layer.Rules.$zoom"} = "osm-map-features-z$zoom.xml";
-                }
-            }
+            die($layer.": Prefix not configured");
         }
 
-        if (!defined($Config->{"Layer.$layer.Prefix"}))
+        if (!defined($Config->get($layer."_Preprocessor")))
         {
-            if($layer eq "default")
-            {
-                $Config->{"Layer.$layer.Prefix"} = "tile";
-            }
+            die($layer.": Preprocessor not configured");
         }
 
-        if (!defined($Config->{"Layer.$layer.Preprocessor"}))
+        if (!defined($Config->get($layer."_Transparent")))
         {
-            if($layer eq "default")
-            {
-                $Config->{"Layer.$layer.Preprocessor"} = "frollo";
-            }
+            die($layer.": Transparent not configured");
         }
 
-        if (!defined($Config->{"Layer.$layer.Transparent"}))
+        if (!defined($Config->get($layer."_RenderFullTileset")))
         {
-            $Config->{"Layer.$layer.Transparent"} = 0;
-        }
-
-        if (!defined($Config->{"Layer.$layer.RenderFullTileset"}))
-        {
-            $Config->{"Layer.$layer.RenderFullTileset"} = 0;
+            die($layer.": RenderFullTileset not configured");
         }
     }
 
     ## switch on verbose mode if Debug is set
-    if ($Config->{"Debug"})
+    if ($Config->get("Debug"))
     {
-        $Config->{"Verbose"} = 1;
+        $Config->set("Verbose",1);
     }
 
-    ## check for Pngcrush/Optipng config option and set to default if not found
-    $Config->{"Pngcrush"} = "pngcrush" unless defined($Config->{"Pngcrush"});
-    $Config->{"Optipng"} = "optipng" unless defined($Config->{"Optipng"});
-
-    ## Default to optimize with pngcrush
-    $Config->{"PngOptimizer"} = "pngcrush" unless defined($Config->{"PngOptimizer"});
-
-    ## do the same for Zip
-    $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
-    $Config->{"7zipWin"} = 0 unless defined($Config->{"7zipWin"});
-
-    if (($Config->{"WorkingDirectory"} !~ /\/$/) and ("MSWin32" ne $^O))
+    if ($Config->get("WorkingDirectory"))
     {
-        $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "/";
+        $Config->set("WorkingDirectory",File::Spec->rel2abs($Config->get("WorkingDirectory")));
     }
-    elsif (($Config->{"WorkingDirectory"} !~ /\\$/) and ("MSWin32" eq $^O))
+
+    if (($Config->get("WorkingDirectory") !~ /\/$/) and ("MSWin32" ne $^O))
     {
-        $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "\\";
+        $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "/");
     }
-    
-    ## Set defaults for subversion
-    $Config->{"SubversionUpdateCmd"} = "up" unless defined($Config->{"SubversionUpdateCmd"});
-    $Config->{"Subversion"} = "svn" unless defined($Config->{"Subversion"});
-    
-    ## Set defaults for inkscape handling
-    $Config->{"AutoResetInkscapePrefs"} = "0" unless defined($Config->{"AutoResetInkscapePrefs"});
+    elsif (($Config->get("WorkingDirectory") !~ /\\$/) and ("MSWin32" eq $^O))
+    {
+        $Config->set("WorkingDirectory",$Config->get("WorkingDirectory") . "\\");
+    }
 
-    ## Set defaults for Batik options
-    $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});
-    $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});
-    $Config->{"BatikPath"} = "batik-rasterizer.jar" unless defined($Config->{"BatikPath"});
-    
-    ## Set defaults for Xmlstarlet options:
-    $Config->{"XmlStarletMaxDepth"} = 20000 unless defined($Config->{"XmlStarletMaxDepth"});
-
-    ## Set default download timeout to 30 minutes
-    $Config->{"DownloadTimeout"} = "1800" unless defined($Config->{"DownloadTimeout"});
-
-    $Config->{"UploadToDirectory"} = 0 unless (defined($Config->{"UploadTargetDirectory"}) and (-d $Config->{"UploadTargetDirectory"}));
-
-    ## Default to rendering with Osmarender/XSLT
-    $Config->{"Osmarender"} = "XSLT" unless defined($Config->{"Osmarender"});
 }
 
 #--------------------------------------------------------------------------
@@ -151,17 +67,17 @@ sub CheckConfig
 {
     my $Config = shift();
     my %EnvironmentInfo;
+    my $cmd;
+    printf "- Using working directory %s\n", $Config->get("WorkingDirectory");
 
-    printf "- Using working directory %s\n", $Config->{"WorkingDirectory"};
-
-    if ($Config->{Batik})
+    if ($Config->get("Batik"))
     {
         print "- Using Batik";
-        if ($Config->{Batik} == 1)
+        if ($Config->get("Batik") == 1)
         {
             print " in jar mode";
         }
-        if ($Config->{Batik} == 2)
+        if ($Config->get("Batik") == 2)
         {
             print " in wrapper mode";
         }
@@ -170,12 +86,13 @@ sub CheckConfig
     else
     {
         # Inkscape version
-        my $InkscapeV = `\"$Config->{Inkscape}\" --version`;
-        $EnvironmentInfo{Inkscape}=$InkscapeV;
-
+        $cmd=$Config->get("Inkscape");
+        my $InkscapeV = `\"$cmd\" --version`;
+        $EnvironmentInfo{"Inkscape"}=$InkscapeV;
+ 
         if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
         {
-            die("Can't find inkscape (using \"$Config->{Inkscape}\")\n");
+            die("Can't find inkscape (using \"".$Config->get("Inkscape")."\")\n");
         }
     
         if($2 < 42.0){
@@ -188,21 +105,22 @@ sub CheckConfig
     }
 
     # Rendering through Omsarender/XSLT or or/p
-    if ($Config->{Osmarender} eq "XSLT")
+    if ($Config->get("Osmarender") eq "XSLT")
     {
         print "- rendering using Osmarender/XSLT\n";
         die "! Can't find osmarender/osmarender.xsl" unless (-f "osmarender/osmarender.xsl");
 
         # XmlStarlet version
-        my $XmlV = `\"$Config->{XmlStarlet}\" --version`;
+        $cmd=$Config->get("XmlStarlet");
+        my $XmlV = `\"$cmd\" --version`;
         $EnvironmentInfo{Xml}=$XmlV;
 
         if($XmlV !~ /(\d+\.\d+\.\d+)/) {
-            die("Can't find xmlstarlet (using \"$Config->{XmlStarlet}\")\n");
+            die("Can't find xmlstarlet (using \"".$Config->{"XmlStarlet"}."\")\n");
         }
         print "- xmlstarlet version $1\n";
     }
-    elsif ($Config->{Osmarender} eq "orp")
+    elsif ($Config->get("Osmarender") eq "orp")
     {
         print "- rendering using or/p\n";
         die "! Can't find orp/orp.pl" unless (-f "orp/orp.pl");
@@ -213,29 +131,32 @@ sub CheckConfig
     }
 
     # Zip version
-    my $ZipV = `\"$Config->{Zip}\" -v`;
+    $cmd=$Config->get("Zip");
+    my $ZipV = `\"$cmd\" -v`;
     $EnvironmentInfo{Zip}=$ZipV;
 
     if ($ZipV eq "") 
     {
-        die("! Can't find zip (using \"$Config->{Zip}\")\n");
+        die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");
     }
     print "- zip is present\n";
 
     # check a correct pngoptimizer is set
-    if ( ! (($Config->{"PngOptimizer"} eq "pngcrush") or ($Config->{"PngOptimizer"} eq "optipng")))
+    if ( ! (($Config->get("PngOptimizer") eq "pngcrush") or ($Config->get("PngOptimizer") eq "optipng")))
     {
         die("! Can't find valid PngOptimizer setting, check config");
     }
-    print "going to use ".$Config->{"PngOptimizer"}."\n";
+    print "going to use ".$Config->get("PngOptimizer")."\n";
+    
     # PNGCrush version
-    my $PngcrushV = `\"$Config->{Pngcrush}\" -version`;
+    $cmd=$Config->get("Pngcrush");
+    my $PngcrushV = `\"$cmd\" -version`;
     $EnvironmentInfo{Pngcrush}=$PngcrushV;
 
-    if (($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($Config->{"PngOptimizer"} eq "pngcrush"))
+    if (($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($Config->get("PngOptimizer") eq "pngcrush"))
     {
         # die here if pngcrush shall be mandatory
-        print "Can't find pngcrush (using \"$Config->{Pngcrush}\")\n";
+        print "Can't find pngcrush (using \"".$Config->get("Pngcrush")."\")\n";
     }
     else
     {
@@ -243,141 +164,112 @@ sub CheckConfig
     }
 
     # Optipng version
-    my $OptipngV = `\"$Config->{Optipng}\" -v`;
+    $cmd=$Config->get("Optipng");
+    my $OptipngV = `\"$cmd\" -v`;
     $EnvironmentInfo{Pngcrush}=$OptipngV;
 
-    if (($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config->{"PngOptimizer"} eq "optipng"))
+    if (($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config->get("PngOptimizer") eq "optipng"))
     {
         # die here if optipng shall be mandatory
-        print "Can't find OptiPNG (using \"$Config->{Optipng}\")\n";
+        print "Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n";
     }
     else
     {
         print "- OptiPNG version $1\n";
     }
 
-    if ($Config->{"LocalSlippymap"})
+    if ($Config->get("LocalSlippymap"))
     {
         print "- Writing LOCAL slippy map directory hierarchy, no uploading\n";
     }
     else
     {
         # Upload URL, username
-        printf "- Uploading with username \"$Config->{UploadUsername}\"\n", ;
-        if($Config->{"UploadPassword"} =~ /\W/){
+        printf "- Uploading with username \"".$Config->get("UploadUsername")."\"\n", ;
+        my $pw = $Config->get("UploadPassword");
+        if($pw =~ /\W/){
             die("Check your upload password\n");
         }
 
-        if ($Config->{"UploadURL2"})
-        {
-            if(($Config->{"UploadURL"} ne $Config->{"UploadURL2"}) and ($Config->{"UploadURL"}))
-            {
-                print "! Please use only UploadURL in the config, this is the default setting";
-            }
-        }
-
-        if( ($Config->{"UploadChunkSize"}*1024*1024) > ($Config->{"ZipHardLimit"}*1000*1000)){
+        if( ($Config->get("UploadChunkSize")*1024*1024) > ($Config->get("ZipHardLimit")*1000*1000)){
             die("! Upload chunks may be too large for server\n");
         }
 
-        if($Config->{"UploadChunkSize"} < 0.2){
-            $Config->{"UploadChunkSize"} = 2;
+        if($Config->get("UploadChunkSize") < 0.2){
+            $Config->get("UploadChunkSize") = 2;
             print "! Using default upload chunk size of 2.0 MB\n";
         }
 
-        # $Config->{"UploadURL2"};
-
-        if($Config->{"DeleteZipFilesAfterUpload"}){
+        if($Config->get("DeleteZipFilesAfterUpload")){
             print "- Deleting ZIP files after upload\n";
         }
     }
 
-    if ($Config->{"UploadToDirectory"})
+    if ($Config->get("UploadToDirectory"))
     {
-        if (! $Config->{"UseHostnameInZipname"}) 
+        if (! $Config->get("UseHostnameInZipname")) 
         {
             print " * UseHostnameInZipname should be set when using UploadToDirectory\n";
         }
     }
 
-    if($Config->{"RequestUrl"}){
-        print "- Using $Config->{RequestUrl} for Requests\n";
-    }
-
-    # OSM username
-    if (defined($Config->{"OsmUsername"}))
-    {
-        print "- Using OSM username \"$Config->{OsmUsername}\"\n";
-        print "You have set your OSM username in tilesAtHome.conf or authentication.conf. This is no longer necessary, because from the 0.4 API on the API allows map requests without login. It is recommended you remove the option \"OsmUsername\" from the config files\n";
-    }
-    #if($Config->{OsmUsername} !~ /%40/){
-    #    die("OsmUsername should be an email address, with the \@ replaced by %40\n");
-    #}
-
-    if (defined($Config->{"OsmPassword"}))
-    {
-        print "You have set your OSM password in tilesAtHome.conf or authentication.conf. It is recommended you remove the option \"OsmPassword\" from the config files\n";
-
+    if($Config->get("RequestUrl")){
+        print "- Using ".$Config->get("RequestUrl")." for Requests\n";
     }
 
     # Misc stuff
     foreach(qw(N S E W)){
-        if($Config->{"Border$_"} > 0.5){
-            printf "Border$_ looks abnormally large\n";
+        if($Config->get("Border".$_) > 0.5){
+            printf "Border".$_." looks abnormally large\n";
         }
     }
 
-    if (defined($Config->{"RenderFullTileset"}))
-    {
-        die "You have the RenderFullTileset option mentioned in one of your config files. This option is no longer supported and has been replaced by a layer-specific option of the same name set in layers.conf. Please remove RenderFullTileset to avoid confusion - ";
-    }
-
     ## not used any longer, superseded by per-layer value
-    #if($Config->{"MaxZoom"} < 12 || $Config->{"MaxZoom"} > 20){
+    #if($Config->get("MaxZoom") < 12 || $Config->get("MaxZoom") > 20){
     #    print "Check MaxZoom\n";
     #}
 
     # layers
-    foreach my $layer(split(/,/, $Config->{"Layers"}))
+    foreach my $layer(split(/,/, $Config->get("Layers")))
     {
         print "- Configured Layer: $layer\n";
 
-        if ($Config->{"Layer.$layer.MaxZoom"} < 12 || $Config->{"Layer.$layer.MaxZoom"} > 20) 
+        if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20) 
         {
-            print "Check Layer.$layer.MaxZoom\n";
+            print "Check $layer._MaxZoom\n";
         }
 
-        for(my $zoom=12; $zoom<=$Config->{"Layer.$layer.MaxZoom"}; $zoom++)
+        for(my $zoom=12; $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
         {
-            if (!defined($Config->{"Layer.$layer.Rules.$zoom"}))
+            if (!defined($Config->get($layer."_Rules.$zoom")))
             {
-                die "config option Layer.$layer.Rules.$zoom is not set";
+                die "config option $layer._Rules.$zoom is not set";
             }
-            if (!-f $Config->{"Layer.$layer.Rules.$zoom"})
+            if (!-f $Config->get($layer."_Rules.$zoom"))
             {
-                die "rules file ".$Config->{"Layer.$layer.Rules.$zoom"}.
-                    " referenced by config option Layer.$layer.Rules.$zoom ".
+                die "rules file ".$Config->get($layer."_Rules.$zoom").
+                    " referenced by config option $layer._Rules.$zoom ".
                     "is not present";
             }
         }
 
-        if (!defined($Config->{"Layer.$layer.Prefix"}))
+        if (!defined($Config->get($layer."_Prefix")))
         {
-            die "config option Layer.$layer.Prefix is not set";
+            die "config option $layer._Prefix is not set";
         }
 
         # any combination of comma-separated preprocessor names is allowed
-        die "config option Layer.$layer.Preprocessor has invalid value" 
-            if (grep { $_ !~ /frollo|maplint|close-areas|mercator|attribution/} split(/,/, $Config->{"Layer.$layer.Preprocessor"}));
+        die "config option $layer._Preprocessor has invalid value" 
+            if (grep { $_ !~ /frollo|maplint|close-areas|mercator|attribution|autocut/} split(/,/, $Config->get($layer."_Preprocessor")));
 
-        foreach my $reqfile(split(/,/, $Config->{"Layer.$layer.RequiredFiles"}))
+        foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
         {
             die "file $reqfile required for layer $layer as per config option ".
-                "Layer.$layer.RequiredFiles not found" unless (-f $reqfile);
+                $layer."_RequiredFiles not found" unless (-f $reqfile);
         }
 
     }
-    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers\n" unless defined($Config->{"UploadConfiguredLayersOnly"});
+    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers\n" unless defined($Config->get("UploadConfiguredLayersOnly"));
     return %EnvironmentInfo;
 
 }

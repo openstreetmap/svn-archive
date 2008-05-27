@@ -5,6 +5,6 @@
 # Edit this file and save as "authentication.conf"
 
 ## Upload
-# this is handed out by Deelkar. OSM or Wiki account will NOT work.
+# this is handed out by OjW/almien or Deelkar. OSM or Wiki account will NOT work.
 UploadUsername=CHANGEME
 UploadPassword=CHANGEME

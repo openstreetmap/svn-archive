@@ -127,7 +127,7 @@ else
     
     foreach my $UploadLayer (split(/,/, $Config->get("Layers")))
     {
-        $allowedPrefixes = $Config->get("Layer.$UploadLayer.Prefix"); #just select the current layer for compressing
+        $allowedPrefixes = $Config->get($UploadLayer."_Prefix"); #just select the current layer for compressing
         ## DEBUG print "\n.$allowedPrefixes.\n";
         opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
         my @dir = readdir($dp);

@@ -35,8 +35,6 @@ Batik = 0
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000
 
-Niceness=nice -n10
-
 Pngcrush = pngcrush
 Optipng = optipng
 PngOptimizer = pngcrush

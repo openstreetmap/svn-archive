@@ -18,6 +18,7 @@ Debug=0
 Verbose=0
 
 WorkingDirectory = tmp/
+Niceness=nice -n10
 
 DownloadTimeout = 1800
 KeepDataFile=0

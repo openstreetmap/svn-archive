@@ -6,6 +6,8 @@ use File::Copy;
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
+use AppConfig qw(:argcount);
+
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, upload module
 # Takes any tiles generated, adds them into ZIP files, and uploads them
@@ -203,7 +205,7 @@ sub upload
     if($ZipSize > $Config->get("ZipHardLimit") * 1000 * 1000) 
     {
         statusMessage("zip is larger than ".$Config->get("ZipHardLimit")." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,1);
-        runCommand("unzip -qj $File -d $Config->get("WorkingDirectory")",$PID);
+        runCommand("unzip -qj $File -d ".$Config->get("WorkingDirectory") ,$PID);
 
         if($Config->get("DeleteZipFilesAfterUpload"))
         {

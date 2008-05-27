@@ -28,9 +28,22 @@ use tahlib;
 #-----------------------------------------------------------------------------
 
 # conf file, will contain username/password and environment info
-my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
+our $Config = AppConfig->new({
+                CREATE => 1,                      # Autocreate unknown config variables
+                GLOBAL => {
+                  DEFAULT  => undef,    # Create undefined Variables by default
+                  ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
+                }
+              });
 
-if ($Config{"LocalSlippymap"})
+$Config->define("help|usage!");
+$Config->define("nodownload=s");
+$Config->set("nodownload",0);
+$Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authentication.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
+$Config->args();              # overwrite config options with command line options
+$Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
+
+if ($Config->get("LocalSlippymap"))
 {
     print "No upload - LocalSlippymap set in config file\n";
     exit 1;
@@ -39,7 +52,7 @@ if ($Config{"LocalSlippymap"})
 my $ZipFileCount = 0;
 
 ## FIXME: this is one of the things that make upload.pl not multithread safe
-my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
+my $ZipDir = $Config->get("WorkingDirectory") . "/uploadable";
 
 my @sorted;
 
@@ -60,7 +73,7 @@ my @tiles;
 
 ## TODO: re-implement MultipleClients so it shoves the completed zips onto the upload computer instead of the single tiles.
 
-if($Config{MultipleClients}) #Trigger the _other_ codepath...
+if($Config->get("MultipleClients")) #Trigger the _other_ codepath...
 # move the finished tiles to a subfolder of UploadDirectory
 # First name the folder timestamp_hostname_inprogress
 # then rename the folder to timestamp_hostname
@@ -70,8 +83,8 @@ if($Config{MultipleClients}) #Trigger the _other_ codepath...
     my $hostname = `hostname`;
     chomp $hostname;
     $hostname.="XXXXXXXX";
-    my $UploadDir = $Config{UploadDirectory};
-    my $WorkDir = $Config{WorkingDirectory};
+    my $UploadDir = $Config->get("UploadDirectory");
+    my $WorkDir = $Config->get("WorkingDirectory");
     my $folder = sprintf("%s/%s_%s_%d", $UploadDir, $epochtime, substr($hostname,0,8),$$);
     while(-e $folder)  # avoid the improbable... the folder exists.
     {
@@ -103,16 +116,16 @@ else
     
     my $allowedPrefixes;
     
-    my $TileDir = $Config{WorkingDirectory};
+    my $TileDir = $Config->get("WorkingDirectory");
     
     # Group and upload the tiles
     statusMessage("Searching for tiles in $TileDir", $currentSubTask, $progressJobs, $progressPercent,0);
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     
-    foreach my $UploadLayer (split(/,/, $Config{"Layers"}))
+    foreach my $UploadLayer (split(/,/, $Config->get("Layers")))
     {
-        $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
+        $allowedPrefixes = $Config->get("Layer.$UploadLayer.Prefix"); #just select the current layer for compressing
         ## DEBUG print "\n.$allowedPrefixes.\n";
         opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
         my @dir = readdir($dp);
@@ -167,8 +180,8 @@ sub processTileBatch
     my ($TileDir, $TempDir, $OutputDir, $allowedPrefixes) = @_;
     my ($Size,$Count) = (0,0);
     my $MB = 1024*1024;
-    my $SizeLimit = $Config{"UploadChunkSize"} * $MB;
-    my $CountLimit = $Config{"UploadChunkCount"};
+    my $SizeLimit = $Config->get("UploadChunkSize") * $MB;
+    my $CountLimit = $Config->get("UploadChunkCount");
 
     #prevent too small zips, 683=half a tileset
     $CountLimit = 683 if ($CountLimit < 100);
@@ -225,7 +238,7 @@ sub compress
         mkdir $OutputDir;
     }
     
-    if($Config{UseHostnameInZipname})
+    if($Config->get("UseHostnameInZipname"))
     {
         my $hostname = `hostname`;
         chomp $hostname;
@@ -240,12 +253,12 @@ sub compress
     }
     
     # ZIP all the tiles into a single file
-    my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
+    my $stdOut = $Config->get("WorkingDirectory")."/".$PID.".stdout";
     my $Command1;
-    if ($Config{"7zipWin"})
+    if ($Config->get("7zipWin"))
     {
         $Command1 = sprintf("\"%s\" %s %s %s",
-          $Config{"Zip"},
+          $Config->get("Zip"),
           "a -tzip",
           $Filename,
           "$Dir/*.png");
@@ -253,7 +266,7 @@ sub compress
     else
     {
         $Command1 = sprintf("\"%s\" -r -j %s %s > %s",
-          $Config{"Zip"},
+          $Config->get("Zip"),
           $Filename,
           "$Dir",
           $stdOut);
@@ -278,17 +291,17 @@ sub compress
     {
         while(my $File = shift @zippedFiles)
         {
-            rename($Dir . "/" . $File, $Config{WorkingDirectory} . $File);
+            rename($Dir . "/" . $File, $Config->get("WorkingDirectory") . $File);
         }
     }
     
     my $ZipSize += -s $Filename; ## Add the 10 MB check here.
-    if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
+    if($ZipSize > $Config->get("ZipHardLimit") * 1000 * 1000) 
     {
-        statusMessage($Filename." is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,0);
-        runCommand("unzip -qj $Filename -d $Config{WorkingDirectory}",$PID);
+        statusMessage($Filename." is larger than ".$Config->get("ZipHardLimit")." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand("unzip -qj $Filename -d $Config->get("WorkingDirectory")",$PID);
 
-        if($Config{DeleteZipFilesAfterUpload})
+        if($Config->get("DeleteZipFilesAfterUpload"))
         {
             unlink($Filename);
         }

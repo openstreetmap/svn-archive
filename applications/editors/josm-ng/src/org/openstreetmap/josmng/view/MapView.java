@@ -159,7 +159,7 @@ public class MapView extends JComponent {
      */
     private double getMeanScaleFactor() {
         Point p1 = new Point(getWidth()/2-50, getHeight()/2);
-        Point p2 = new Point(p1.x+50, p1.y);
+        Point p2 = new Point(p1.x+100, p1.y);
         Coordinate left = proj.viewToCoord(getPoint(p1));
         Coordinate right = proj.viewToCoord(getPoint(p2));
         return dist(left, right)/100;

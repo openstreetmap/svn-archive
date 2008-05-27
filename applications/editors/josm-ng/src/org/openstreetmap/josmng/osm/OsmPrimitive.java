@@ -107,7 +107,7 @@ public abstract class OsmPrimitive {
      * Delete the primitive from its enclosing DataSet.
      * The primitive might be either really removed from the DataSet (in case
      * it has no ID assigned yet) or just marked (and notified)
-     * as {@link isDeleted()} if it already has one.
+     * as {@link #isDeleted()} if it already has one.
      */
     public void delete() {
         if (id == 0) { // locally created, really delete

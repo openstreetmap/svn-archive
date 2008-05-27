@@ -4,6 +4,8 @@ use Data::Dumper;
 use DBI;
 use dbpassword;
 
+print STDERR "way data - ctrl-c to quit in next 10 seconds\n";sleep(10);print STDERR "Running...\n";
+
 # Connect to database
 my $db = DBI->connect("dbi:mysql:ojw:localhost:3306", getUser, getPass) or die();
 
@@ -18,12 +20,18 @@ my $Count = 0;
 my $inWay;
 my $Way;
 
+$db->prepare("delete from wayloc")->execute();
+$db->prepare("delete from waydata")->execute();
+
 # List of tags to ignore (not save)
 my %Ignore;
 foreach my $Word(split(/,\s*/,"created_by, ele, source, time, editor, author, hdop, pdop, sat, speed, fix, course, converted_by"))
 {
   $Ignore{$Word} = 1;
 }
+
+my $InsertSQL = $db->prepare("INSERT INTO wayloc VALUES (?,?)");
+my $WaySQL = $db->prepare("INSERT INTO waydata VALUES (?,?)");
 
 $xml->parse(STDIN);
 
@@ -69,20 +77,32 @@ sub end_handler {
   my($xml, $element, %attr) = @_;
   if($element eq 'way')
   {
-    #print Dumper($Way);
-    $WayAsXml = way2xml($Way);
+    print "$Count ways\n" if(($Count++ % 5000) == 0);
     
     if($Way->{numtags} > 0) # Don't store untagged ways
     {
-      foreach my $Tile(keys(%{$Way->{tiles}}))
+      #print Dumper($Way);
+      $ID = $Way->{id};
+      $WayAsXml = way2xml($Way);
+      
+      if(0)
       {
-        my ($tx,$ty) = split(/,/, $Tile);
-        
-        my $Filename = getFilename(15, $tx, $ty);
-        
-        open($fp, ">>$Filename") || die("Can't write to $Filename ($!)\n");
+        my $Filename = wayFilename($ID);
+        #print "Saving $ID to $Filename\n";
+        open($fp, ">$Filename") || die("Can't write to $Filename ($!)\n");
         print $fp $WayAsXml;
         close $fp;
+      }
+      else
+      {
+        $WaySQL->execute($ID, $WayAsXml);
+      }
+    
+      foreach my $Tile(keys(%{$Way->{tiles}}))
+      {
+        #my ($tx,$ty) = split(/,/, $Tile);
+        
+        $InsertSQL->execute($Way->{id}, $Tile);
         
         #print "Saving to $Filename\n";
       }
@@ -92,17 +112,29 @@ sub end_handler {
   }
 }
 
-sub getFilename
+
+sub wayFilename
 {
-  my($z,$x,$y) = @_;
-  my $Filename = "tiles";
-  foreach my $Part($z, $x, $y)
+  my $ID = "".shift();
+  
+  $ID =~ s/(\d{3}?)(?=(\d{1,3})+$)/$1,/g;
+  @Parts = split(/,/, $ID);
+
+  makeFilename("tiles/ways", \@Parts, "way.txt")
+}
+
+sub makeFilename
+{
+  my ($Base, $Dirs, $File) = @_;
+  my $Filename = $Base;
+  foreach my $Part(@{$Dirs})
   {
     $Filename .= sprintf("/%d", $Part);
     mkdir($Filename) if(!-d $Filename);
   }
-  return($Filename . "/ways.txt");
+  return($Filename . "/$File");
 }
+
 sub way2xml
 {
   my $Way = shift();
@@ -122,5 +154,6 @@ sub way2xml
   }
   $Text .= "</way>\n";
 }
+
 
 sub default_handler{}

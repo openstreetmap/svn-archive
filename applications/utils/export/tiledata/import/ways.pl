@@ -30,52 +30,39 @@ foreach my $Word(split(/,\s*/,"created_by, ele, source, time, editor, author, hd
   $Ignore{$Word} = 1;
 }
 
-my $InsertSQL = $db->prepare("INSERT INTO wayloc VALUES (?,?)");
-my $WaySQL = $db->prepare("INSERT INTO waydata VALUES (?,?)");
+my $InsertSQL = $db->prepare('INSERT INTO wayloc VALUES (?,?)');
+my $WaySQL = $db->prepare('INSERT INTO waydata VALUES (?,?)');
+my $GetNodeSQL = $db->prepare('select * from nodepos where id=?');
 
-$xml->parse(STDIN);
+while(my $Line = <>)
+{
 
-sub char_handler {
-  my($xml, $data) = @_;
-}
-
-sub start_handler {
-  my($xml, $element, %attr) = @_;
-  if($element eq 'way')
+  if($Line =~ m{<way id='(\d+)'})
   {
-    $Way = {id => $attr{id}, nodes=>[], tags=>{}, numtags=>0, tiles=>{}};
+    $Way = {id => $1, nodes=>[], tags=>{}, numtags=>0, tiles=>{}};
     $inWay = 1;
   }
-  elsif($element eq 'nd')
+  elsif($Line =~ m{<nd ref='(\d+)'})
   {
-    my $ID = $attr{ref};
+    my $ID = $1;
     
-    # Lookup the node
-    my $SQL = sprintf('select * from nodepos where id=%d', $ID);
-    my $Query = $db->prepare($SQL);
-    $Query->execute();
-    
-    if(@row = $Query->fetchrow_array())
+    my ($ID,$x,$y,$tile) = getNode($ID);
+    if($ID == $ID2)
     {
-      push(@{$Way->{nodes}}, [@row]);
-      $Way->{tiles}->{$row[3]} = 1;
-    } 
-    
+      push(@{$Way->{nodes}}, [$ID,$x,$y]);
+      $Way->{tiles}->{$tile} = 1;
+    }
+  
   }
-  elsif($inWay && $element eq 'tag')
+  elsif($inWay && $Line =~ m{<tag k='(.*)' v='(.*)' />})
   {
-    if(!$Ignore{$attr{k}})
+    if(!$Ignore{$1})
       {
-      $Way->{tags}->{$attr{k}} = $attr{v};
+      $Way->{tags}->{$1} = $2;
       $Way->{numtags}++;
       }
   }
-  
-}
-
-sub end_handler {
-  my($xml, $element, %attr) = @_;
-  if($element eq 'way')
+  elsif($Line =~ m{</way>})
   {
     print "$Count ways\n" if(($Count++ % 5000) == 0);
     
@@ -85,54 +72,16 @@ sub end_handler {
       $ID = $Way->{id};
       $WayAsXml = way2xml($Way);
       
-      if(0)
-      {
-        my $Filename = wayFilename($ID);
-        #print "Saving $ID to $Filename\n";
-        open($fp, ">$Filename") || die("Can't write to $Filename ($!)\n");
-        print $fp $WayAsXml;
-        close $fp;
-      }
-      else
-      {
-        $WaySQL->execute($ID, $WayAsXml);
-      }
+      $WaySQL->execute($ID, $WayAsXml);
     
       foreach my $Tile(keys(%{$Way->{tiles}}))
       {
         #my ($tx,$ty) = split(/,/, $Tile);
         
         $InsertSQL->execute($Way->{id}, $Tile);
-        
-        #print "Saving to $Filename\n";
       }
     }
-    #print way2xml($Way);
-    #die;
   }
-}
-
-
-sub wayFilename
-{
-  my $ID = "".shift();
-  
-  $ID =~ s/(\d{3}?)(?=(\d{1,3})+$)/$1,/g;
-  @Parts = split(/,/, $ID);
-
-  makeFilename("tiles/ways", \@Parts, "way.txt")
-}
-
-sub makeFilename
-{
-  my ($Base, $Dirs, $File) = @_;
-  my $Filename = $Base;
-  foreach my $Part(@{$Dirs})
-  {
-    $Filename .= sprintf("/%d", $Part);
-    mkdir($Filename) if(!-d $Filename);
-  }
-  return($Filename . "/$File");
 }
 
 sub way2xml
@@ -156,4 +105,15 @@ sub way2xml
 }
 
 
-sub default_handler{}
+sub getNode
+{
+  my $ID = shift();
+  # Lookup the node
+  $GetNodeSQL->execute($ID);
+  if(@row = $GetNodeSQL->fetchrow_array())
+  {
+    return(@row);
+  }   
+  
+  return(0,0,0,'');
+}

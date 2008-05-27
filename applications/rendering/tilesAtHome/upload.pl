@@ -225,7 +225,7 @@ sub upload
     {
         foreach my $layer(split(/,/, $Config->get("Layers")))
         {
-            $Layer=$Config->get("Layer.$layer.Prefix") if ($File =~ /$Config->get("Layer.$layer.Prefix")/);
+            $Layer=$Config->get($layer."_Prefix") if ($File =~ /$Config->get($layer."_Prefix")/);
             print "\n.$Layer.\n.$layer.\n" if $Config->get("Debug");
         }
     }

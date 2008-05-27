@@ -1,5 +1,5 @@
 #!/usr/bin/perl
--------------------------------------------------------------
+#-------------------------------------------------------------
 # OpenStreetMap tiles@home
 #
 # Contact Deelkar or OJW on the Openstreetmap wiki for help using this program

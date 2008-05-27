@@ -339,6 +339,7 @@ $writer->startTag("svg",
     "baseProfile" => get_variable("svgBaseProfile"), 
     "width" => "${svgWidth}px", 
     "height" => "${svgHeight}px", 
+    "preserveAspectRatio" => "none", 
     "viewBox" => sprintf("%f %f %f %f", 
        -$extraWidth/2, -$extraHeight/2, $svgWidth, $svgHeight));
 # FIXME add interactive stuff

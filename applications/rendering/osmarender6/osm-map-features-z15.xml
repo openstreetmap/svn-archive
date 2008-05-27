@@ -153,6 +153,22 @@
             <area class='building-block'/>
         </rule>
 
+	<!-- access rules for parking -->
+	<rule e="way" k="amenity" v="parking">
+		<rule e="way" k="access" v="private">
+			<area class='access-private-small-area' />
+		</rule>
+		<rule e="way" k="access" v="permissive">
+			<area class='access-permissive-small-area' />
+		</rule>
+		<rule e="way" k="access" v="destination">
+			<area class='access-destination-small-area' />
+		</rule>
+		<rule e="way" k="access" v="no">
+			<area class='access-no-small-area' />
+		</rule>
+	</rule>
+
 
         <!-- Airfields and airports -->
         <rule e="way" k="aeroway" v="runway">
@@ -731,6 +747,86 @@
                 <line class='railway-core railway-rail-1-core under-construction' />
             </rule>
         </rule>
+
+	<!-- access restrictions -->
+	<rule e="way" k="highway" v="*">
+		<rule e="way" k="area" v="yes|true">
+			<rule e="way" k="access" v="private">
+				<area class='access-private-area' />
+			</rule>
+			<rule e="way" k="access" v="permissive">
+				<area class='access-permissive-area' />
+			</rule>
+			<rule e="way" k="access" v="destination">
+				<area class='access-destination-area' />
+			</rule>
+			<rule e="way" k="access" v="no">
+				<area class='access-no-area' />
+			</rule>
+		</rule>
+		<else>
+			<rule e="way" k="highway" v="footway|footpath|cycleway|bridleway|byway|unsurfaced">
+				<rule e="way" k="access" v="private">
+					<line class='access-private-line' smart-linecap='no' />
+				</rule>
+				<rule e="way" k="access" v="permissive">
+					<line class='access-permissive-line' smart-linecap='no' />
+				</rule>
+				<rule e="way" k="access" v="destination">
+					<line class='access-destination-line' smart-linecap='no' />
+				</rule>
+				<rule e="way" k="access" v="no">
+					<line class='access-no-line' smart-linecap='no' />
+				</rule>
+			</rule>
+			<else>
+				<rule e="way" k="highway" v="track">
+					<rule e="way" k="tracktype" v="grade3|grade4|grade5">
+						<rule e="way" k="access" v="private">
+							<line class='access-private-line' smart-linecap='no' />
+						</rule>
+						<rule e="way" k="access" v="permissive">
+							<line class='access-permissive-line' smart-linecap='no' />
+						</rule>
+						<rule e="way" k="access" v="destination">
+							<line class='access-destination-line' smart-linecap='no' />
+						</rule>
+						<rule e="way" k="access" v="no">
+							<line class='access-no-line' smart-linecap='no' />
+						</rule>
+					</rule>
+					<else>
+						<rule e="way" k="access" v="private">
+							<line class='access-private-line' />
+						</rule>
+						<rule e="way" k="access" v="permissive">
+							<line class='access-permissive-line' />
+						</rule>
+						<rule e="way" k="access" v="destination">
+							<line class='access-destination-line' />
+						</rule>
+						<rule e="way" k="access" v="no">
+							<line class='access-no-line' />
+						</rule>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="access" v="private">
+						<line class='access-private-line' />
+					</rule>
+					<rule e="way" k="access" v="permissive">
+						<line class='access-permissive-line' />
+					</rule>
+					<rule e="way" k="access" v="destination">
+						<line class='access-destination-line' />
+					</rule>
+					<rule e="way" k="access" v="no">
+						<line class='access-no-line' />
+					</rule>
+				</else>
+			</else>
+		</else>
+	</rule>
 
 		<!-- Mini-roundabouts -->
         <rule e="node" k="highway" v="mini_roundabout">
@@ -2182,6 +2278,71 @@
             }
 
 
+	    /* Access restrictions */
+	    .access-private-line {
+		fill: none;
+		stroke: url(#access-private-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-private-area {
+		fill: url(#access-private-pattern);
+		stroke: url(#access-private-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-private-small-area {
+		fill: url(#access-private-pattern);
+		stroke: url(#access-private-pattern);
+		stroke-width: 2px;
+	    }
+
+	    .access-permissive-line {
+		fill: none;
+		stroke: url(#access-permissive-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-permissive-area {
+		fill: url(#access-permissive-pattern);
+		stroke: url(#access-permissive-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-permissive-small-area {
+		fill: url(#access-permissive-pattern);
+		stroke: url(#access-permissive-pattern);
+		stroke-width: 2px;
+	    }
+
+	    .access-destination-line {
+		fill: none;
+		stroke: url(#access-destination-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-destination-area {
+		fill: url(#access-destination-pattern);
+		stroke: url(#access-destination-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-destination-small-area {
+		fill: url(#access-destination-pattern);
+		stroke: url(#access-destination-pattern);
+		stroke-width: 2px;
+	    }
+
+	    .access-no-line {
+		fill: none;
+		stroke: url(#access-no-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-no-area {
+		fill: url(#access-no-pattern);
+		stroke: url(#access-no-pattern);
+		stroke-width: 4px;
+	    }
+	    .access-no-small-area {
+		fill: url(#access-no-pattern);
+		stroke: url(#access-no-pattern);
+		stroke-width: 2px;
+	    }
+
             /* Map decoration */
             .map-grid-line {
                 fill: none;
@@ -2328,7 +2489,20 @@
            <svg:rect fill="#bde3cb" width="11" height="11" x="0" y="0" />
             <svg:path stroke="black" stroke-width="0.2" d="M1,1 L3,1 M2,0 L2,3 M6,6 L8,6 M7,5 L7,8"/>
         </svg:pattern>
-                                                          
+
+	<svg:pattern id="access-private-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+	    <svg:path fill="none" stroke="#ff4040" stroke-width="0.2" d="M10,0 L0,10 M0,0 L10,10" />
+	</svg:pattern>
+	<svg:pattern id="access-permissive-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+	    <svg:path fill="none" stroke="#40ff40" stroke-width="0.2" d="M10,0 L0,10 M0,0 L10,10" />
+	</svg:pattern>
+	<svg:pattern id="access-destination-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+	    <svg:path fill="none" stroke="#4040ff" stroke-width="0.2" d="M10,0 L0,10 M0,0 L10,10" />
+	</svg:pattern>
+	<svg:pattern id="access-no-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+	    <svg:path fill="none" stroke="#ff4040" stroke-width="0.2" d="M10,0 L0,10 M0,0 L10,10" />
+	</svg:pattern>
+
         <svg:pattern patternUnits="userSpaceOnUse" width="104.8886" height="112.38862" patternTransform="scale(0.05,0.05)" id="vineyard-pattern">
             <svg:rect fill="#d5f2e0" width="104.8886" height="112.38862" x="0" y="0" />
           <svg:g transform="translate(-35,-59.111382)"> 

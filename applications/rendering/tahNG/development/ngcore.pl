@@ -338,7 +338,7 @@ sub GenerateTilesets ## TODO: split some subprocesses to own subs
 
                 # Render the tile(s)
                 my ($success,$empty) = svg2png($SvgFile,$i,$Zoom,$layer,0,0,$ImgW,$ImgH,$X,$Y,
-                                       $Config->get("WorkingDirectory").$PID."/".$layer."_".$X."_".$Y."_".$Zoom.".tmpdir"); ## FIXME: really necessary?
+                                       $Config->get("WorkingDirectory").$PID."/".$layer."_".$X."_".$Y."_".$Zoom.".tmpdir/"); ## FIXME: really necessary?
 
                 die "couldn't render png" unless $success;
             }
@@ -741,7 +741,7 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        $Config->get("WorkingDirectory") . $parent_pid . "/",
+        $OutputDir,
         $svgFile,
         $stdOut);
     }
@@ -755,7 +755,7 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        $Config->get("WorkingDirectory") . $parent_pid . "/",
+        $OutputDir,
         $svgFile,
         $stdOut);
     }
@@ -769,7 +769,7 @@ sub svg2png
         $SizeY,
         $X1,$Y1,$X2,$Y2,
         $TempFile,
-        $Config->get("WorkingDirectory") . $parent_pid . "/",
+        $OutputDir,
         $svgFile,
         $stdOut);
     }
@@ -784,14 +784,10 @@ sub svg2png
         PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
         addFault("inkscape",1);
         cleanUpAndDie("svg2png failed",$Mode,3,$PID);
-        return (0,0);
+        return 0;
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     killafile($stdOut) if (not $Config->get("Debug"));
-    
-    my $ReturnValue = splitImage($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Xtile, $Ytile); # returns true if tiles were all empty
-    
-    killafile($TempFile) if (not $Config->get("Debug"));
-    return (1,$ReturnValue); #return true if empty
+    return 1; #return true if success
 }
 

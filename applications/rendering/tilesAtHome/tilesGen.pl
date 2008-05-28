@@ -722,6 +722,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         
         # Get the predicates for lowzoom, and build the URLS for them
         my $predicates = $Config->get($Layers."_Predicates");
+	# strip spaces in predicates because that is the separator used below
+	$predicates =~ s/\s+//g;
         $URLS="";
         foreach my $predicate (split(/,/,$predicates)) {
             $URLS = $URLS . sprintf("%s%s/%s[bbox=%s] ",

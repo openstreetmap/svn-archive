@@ -577,7 +577,7 @@ sub GetRequestFromServer
 
     if ($RequestMethod eq "POST")
     {
-        my $URL = $Config->get("RequestURL")."Request2.php"."?v=".$Config->get("ClientVersion")."&usr=".$Config->get("UploadUsername");
+        my $URL = $Config->get("RequestURL")."?v=".$Config->get("ClientVersion")."&usr=".$Config->get("UploadUsername");
     
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 

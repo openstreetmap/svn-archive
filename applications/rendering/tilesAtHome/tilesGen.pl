@@ -762,11 +762,10 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 statusMessage("No data here, trying OSMXAPI", $currentSubTask, $progressJobs, $progressPercent, 1);
                 $bbox = $URL;
                 $bbox =~ s/.*bbox=//;
-                $predicate="*";
                 $URL=sprintf("%s%s/%s[bbox=%s] ",
                     $Config->get("XAPIURL"),
                     $Config->get("OSMVersion"),
-                    $predicate,
+                    "*",
                     $bbox);
             }
             else

@@ -80,6 +80,7 @@
 			else { setValueInObject(this.pw.proptype, pkey, presets[pname][pkey]); }
 		}
 		this.pw.reinit();
+		this.pw.saveAttributes();
 		if (this.pw.proptype=='way') { _root.ws.redraw(); }
 	};
 
@@ -254,7 +255,7 @@
 		this.createEmptyMovieClip("attributes",1);
 		this.createEmptyMovieClip("attrmask",2);
 		this.createEmptyMovieClip("scrollbar",3);
-		if (proptype=='') { this.saveAttributes(); }
+//		if (proptype=='') { this.saveAttributes(); }
 		this.proptype=proptype;
 		this.tab=0;
 		this.xnumber=w;
@@ -283,22 +284,9 @@
 				break;
 		}
 
-		// Attach keys/values
 		this.xpos=0; this.ypos=0;
-		proparr=this.proparr;	// annoying scope issues
-		for (el in proparr) {
-			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
-				this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
-				var pos = this.getXY(this.tagcount);
-				this.attributes[this.tagcount]._x=pos[0];
-				this.attributes[this.tagcount]._y=pos[1];
-				this.attributes[this.tagcount].init(el);
-				this.attributes[this.tagcount].keyname.tabIndex=++this.tab;
-				this.attributes[this.tagcount].value.tabIndex=++this.tab;
-				this.tagcount+=1;
-			}
-		}
 
+		// Attach relations
 		relarr=this.relarr;
 		for (var rel in relarr) {
 			if (_root.map.relations[relarr[rel]]) {
@@ -312,6 +300,34 @@
 				this.tagcount+=1;
 			}
 		}
+
+		// Attach keys/values
+		// sorted alphabetically, but with namespaced tags at the end
+
+		proparr=this.proparr;	// annoying scope issues
+		proplist=new Array();
+		for (el in proparr) { proplist.push(el); }
+		proplist.sort(function(a,b) {
+			if      (a.indexOf(':')<b.indexOf(':')) { return -1; }
+			else if (a.indexOf(':')>b.indexOf(':')) { return  1; }
+			else if (a<b) { return -1; }
+			else if (a>b) { return  1; }
+			else		  { return  0; }
+		});
+		for (i=0; i<proplist.length; i++) {
+			el=proplist[i];
+			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
+				this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
+				var pos = this.getXY(this.tagcount);
+				this.attributes[this.tagcount]._x=pos[0];
+				this.attributes[this.tagcount]._y=pos[1];
+				this.attributes[this.tagcount].init(el);
+				this.attributes[this.tagcount].keyname.tabIndex=++this.tab;
+				this.attributes[this.tagcount].value.tabIndex=++this.tab;
+				this.tagcount+=1;
+			}
+		}
+
 
 		this.scrollbar._x=0; this.scrollbar._y=this.ynumber*19;
 		this.updateMask();					// Draw scrollbar

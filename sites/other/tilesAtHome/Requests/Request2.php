@@ -26,7 +26,20 @@
   include("../lib/requests.inc");
   include("../lib/versions.inc");
   include("../lib/users.inc");
+  include("../lib/queue.inc");
 
+  $Value = QueueLength();
+  $Min = 10;
+  $Max = MaxQueueLength();
+  
+  $Portion = ($Max - $Value) / ($Max - $Min);
+  if($Portion < 0) $Portion = 0;
+  if($Portion > 1) $Portion = 1;
+
+  // if (rand(1,100) > 100*$Portion) {
+  //   printf("XX|%d||||Upload Queue Full",$APIVersion);
+  //   exit; # probably Redundant
+  // }
 
   $User = $_POST["user"];
   $Pass = $_POST["pass"];

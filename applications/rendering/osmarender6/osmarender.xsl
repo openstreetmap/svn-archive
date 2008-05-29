@@ -957,6 +957,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:apply-templates select="$elements" mode="circle">
       <xsl:with-param name="instruction" select="$instruction"/>
       <xsl:with-param name="layer" select="$layer"/>
+      <xsl:with-param name="elements" select="$elements"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -968,6 +969,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Draw lines for a way  -->
   <xsl:template match="node" mode="circle">
     <xsl:param name="instruction"/>
+    <xsl:param name="elements"/>
 
     <xsl:for-each select="$elements[name()='node']">
       <xsl:call-template name="drawCircle">

@@ -155,8 +155,7 @@ sub CheckConfig
 
     if (($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($Config->get("PngOptimizer") eq "pngcrush"))
     {
-        # die here if pngcrush shall be mandatory
-        print "Can't find pngcrush (using \"".$Config->get("Pngcrush")."\")\n";
+        print "! Can't find pngcrush (using \"".$Config->get("Pngcrush")."\")\n";
     }
     else
     {
@@ -166,12 +165,11 @@ sub CheckConfig
     # Optipng version
     $cmd=$Config->get("Optipng");
     my $OptipngV = `\"$cmd\" -v`;
-    $EnvironmentInfo{Pngcrush}=$OptipngV;
+    $EnvironmentInfo{Optipng}=$OptipngV;
 
     if (($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config->get("PngOptimizer") eq "optipng"))
     {
-        # die here if optipng shall be mandatory
-        print "Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n";
+        die("! Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n");
     }
     else
     {

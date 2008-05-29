@@ -20,12 +20,13 @@
     showGrid="no"
     showBorder="no"
     showLicense="no"
-    interactive="no">
+    interactive="no"
+    showRelationRoute="no">
 
     <!--bounds_mkr1-->
     <!--bounds_mkr2-->
 
-    
+
     <!-- Select all nodes and ways (unless they have an osmarender:render=no tag) -->
     <rule e="node|way" k="osmarender:render" v="~|yes">
 
@@ -1807,6 +1808,79 @@
 	</rule>
     </rule>
 
+    <!-- Relation/Routes SDW -->
+    <rule e="relation" k="type" v="route">
+      <rule e="relation" k="prefered_color" v="*">
+        <rule e="relation" k="prefered_color" v="white">
+          <line class='relationroute-way relationroute-white' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="silver">
+          <line class='relationroute-way relationroute-silver' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="gray">
+          <line class='relationroute-way relationroute-gray' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="black">
+          <line class='relationroute-way relationroute-black' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="red">
+          <line class='relationroute-way relationroute-red' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="maroon">
+          <line class='relationroute-way relationroute-maroon' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="green">
+          <line class='relationroute-way relationroute-green' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="lime">
+          <line class='relationroute-way relationroute-lime' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="blue">
+          <line class='relationroute-way relationroute-blue' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="navy">
+          <line class='relationroute-way relationroute-navy' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="fuchsia">
+          <line class='relationroute-way relationroute-fuchsia' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="purple">
+          <line class='relationroute-way relationroute-purple' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="yellow">
+          <line class='relationroute-way relationroute-yellow' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="olive">
+          <line class='relationroute-way relationroute-olive' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="aqua">
+          <line class='relationroute-way relationroute-aqua' smart-linecap='no'/>
+        </rule>
+        <rule e="relation" k="prefered_color" v="teal">
+          <line class='relationroute-way relationroute-teal' smart-linecap='no'/>
+        </rule>
+      </rule>
+      <else>
+        <rule e="relation" k="route" v="road">
+          <line class='relationroute-way relationroute-yellow' smart-linecap='no'/>
+          <circle class="relationroute-yellow relationroute-stop" r='0.5px'/>
+        </rule>
+        <rule e="relation" k="route" v="bicycle">
+          <line class='relationroute-way relationroute-blue' smart-linecap='no'/>
+          <circle class="relationroute-blue relationroute-stop" r='0.5px'/>
+        </rule>
+        <rule e="relation" k="route" v="hiking">
+          <line class='relationroute-way relationroute-red' smart-linecap='no'/>
+          <circle class="relationroute-red relationroute-stop" r='0.5px'/>
+        </rule>
+        <rule e="relation" k="route" v="bus">
+          <line class='relationroute-way relationroute-green' smart-linecap='no'/>
+          <circle class="relationroute-green relationroute-stop" r='0.5px'/>
+        </rule>
+      </else>
+    </rule>
+    
+    
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>
@@ -1858,6 +1932,40 @@
                 stroke-linejoin: round;
                 fill: none;
 			}				
+
+            /* RelationRoute - generic styles */
+            .relationroute-way {
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                smart-linecap: no;
+                fill: none;
+                stroke-width: 2.5px;
+                opacity: 0.75;
+            }
+            
+            .relationroute-stop {
+                stroke-width: 4px;
+                fill: none;
+                opacity: 0.75;
+            }
+
+            /* VGA colours supported, add more if necessary */
+            .relationroute-white                      { stroke: #FFFFFF; }
+            .relationroute-silver                     { stroke: #C0C0C0; }
+            .relationroute-gray                       { stroke: #808080; }
+            .relationroute-black                      { stroke: #000000; }
+            .relationroute-red                        { stroke: #FF0000; }
+            .relationroute-maroon                     { stroke: #800000; }
+            .relationroute-green                      { stroke: #008000; }
+            .relationroute-lime                       { stroke: #00FF00; }
+            .relationroute-blue                       { stroke: #0000FF; }
+            .relationroute-navy                       { stroke: #000080; }
+            .relationroute-fuchsia                    { stroke: #FF00FF; }
+            .relationroute-purple                     { stroke: #800080; }
+            .relationroute-yellow                     { stroke: #FFFF00; }
+            .relationroute-olive                      { stroke: #808000; }
+            .relationroute-aqua                       { stroke: #00FFFF; }
+            .relationroute-teal                       { stroke: #008080; }
 
 
             /* Highways - generic styles */

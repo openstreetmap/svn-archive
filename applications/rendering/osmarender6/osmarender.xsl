@@ -69,6 +69,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:param name="showScale" select="/rules/@showScale"/>
   <xsl:param name="showLicense" select="/rules/@showLicense"/>
 
+  <xsl:param name="showRelationRoute" select="/rules/@showRelationRoute"/>
+
   <xsl:key name="nodeById" match="/osm/node" use="@id"/>
   <xsl:key name="wayById" match="/osm/way" use="@id"/>
   <xsl:key name="wayByNode" match="/osm/way" use="nd/@ref"/>
@@ -844,6 +846,58 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:if >
   </xsl:template>
 
+  <!-- Draw items for a RelationRoute -->
+  <xsl:template match="relation" mode="line">
+    <xsl:param name="instruction"/>
+    <xsl:param name="layer"/>
+
+    <xsl:if test="($showRelationRoute!='') and ($showRelationRoute!='no')">
+      <xsl:variable name="relation" select="@id"/>
+
+      <!-- Draw lines for a RelationRoute -->
+      <xsl:for-each select="$data/osm/relation[@id=$relation]/member[@type='way']">
+        <xsl:variable name="wayid" select="@ref"/>
+
+        <xsl:for-each select="$data/osm/way[@id=$wayid]">
+          <!-- The current <way> element -->
+          <xsl:variable name="way" select="."/>
+
+          <!-- DODI: !!!WORKAROUND!!! skip one node ways-->
+          <xsl:if test="count($way/nd) &gt; 1">
+            <xsl:call-template name="drawWay">
+              <xsl:with-param name="instruction" select="$instruction"/>
+              <xsl:with-param name="way" select="$way"/>
+              <xsl:with-param name="layer" select="$layer"/>
+            </xsl:call-template>
+          </xsl:if >
+        </xsl:for-each >
+      </xsl:for-each >
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template match="relation" mode="circle">
+    <xsl:param name="instruction"/>
+    <xsl:param name="layer"/>
+
+    <xsl:if test="($showRelationRoute!='') and ($showRelationRoute!='no')">
+      <xsl:variable name="relation" select="@id"/>
+
+      <!-- Draw lines for a RelationRoute -->
+      <xsl:for-each select="$data/osm/relation[@id=$relation]/member[@type='node']">
+        <xsl:variable name="nodeid" select="@ref"/>
+
+        <xsl:for-each select="$data/osm/node[@id=$nodeid]">
+          <xsl:call-template name="drawCircle">
+            <xsl:with-param name="instruction" select="$instruction"/>
+            <xsl:with-param name="node" select="@id"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:for-each>
+
+    </xsl:if>
+  </xsl:template>
+
 
   <!-- Process an <area> instruction -->
   <xsl:template match="area">
@@ -894,15 +948,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Process <circle> instruction -->
   <xsl:template match="circle">
     <xsl:param name="elements"/>
+    <xsl:param name="layer"/>
 
     <!-- This is the instruction that is currently being processed -->
     <xsl:variable name="instruction" select="."/>
+
+    <!-- For each circle -->
+    <xsl:apply-templates select="$elements" mode="circle">
+      <xsl:with-param name="instruction" select="$instruction"/>
+      <xsl:with-param name="layer" select="$layer"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+
+  <!-- Suppress output of any unhandled elements -->
+  <xsl:template match="*" mode="circle"/>
+
+
+  <!-- Draw lines for a way  -->
+  <xsl:template match="node" mode="circle">
+    <xsl:param name="instruction"/>
 
     <xsl:for-each select="$elements[name()='node']">
       <xsl:call-template name="drawCircle">
         <xsl:with-param name="instruction" select="$instruction"/>
       </xsl:call-template>
     </xsl:for-each>
+
   </xsl:template>
 
 

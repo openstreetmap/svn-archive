@@ -549,7 +549,7 @@ sub ProcessRequestsFromServer
         else
         {
             # unspecified error
-            return (0, "Server has no work for us"); 
+            return (0, "Server has no work for us: ".$ModuleName); 
         }
     }
     elsif ($ValidFlag ne "OK")

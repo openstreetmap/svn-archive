@@ -741,7 +741,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data for $Layers to $partialFile", $currentSubTask, $progressJobs, $progressPercent,0);
-        print "Download $URL\n" if ($Config->get("Debug"));
+        print "Download\n$URL\n" if ($Config->get("Debug"));
         my $res = DownloadFile($URL, $partialFile, 0);
 
         if (! $res)
@@ -769,6 +769,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     push(@{$filelist}, $partialFile);
                     push(@tempfiles, $partialFile);
                     statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $currentSubTask, $progressJobs, $progressPercent,0);
+                    print "Download\n$URL\n" if ($Config->get("Debug"));
                     $res = DownloadFile($URL, $partialFile, 0);
 
                     if (! $res)

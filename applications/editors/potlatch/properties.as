@@ -269,7 +269,7 @@
 		switch (proptype) {
 			case 'point':
 				this.proparr=_root.ws.path[_root.pointselected][4];
-				this.relarr=getRelationsForNode(_root.pointselected);
+				this.relarr=getRelationsForNode(_root.ws.path[_root.pointselected][2]);
 				break;
 			case 'POI':
 				this.proparr=_root.map.pois[poiselected].attr;
@@ -467,9 +467,9 @@
 		for (i in relarr) {
 			var r=_root.map.relations[relarr[i]];	// reference to this relation
 			switch (this.proptype) {
-				case 'point':	r.setNodeRole(pointselected,r.getNodeRole(_root.savedpointway.path[_root.saved['point']][2])); break;
-				case 'POI':		r.setNodeRole(poiselected  ,r.getNodeRole(_root.saved['POI']._name)); break;
-				case 'way':		r.setWayRole (wayselected  ,r.getWayRole (_root.saved['way']._name)); break;
+				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected][2],r.getNodeRole(_root.savedpointway.path[_root.saved['point']][2])); break;
+				case 'POI':		r.setNodeRole(poiselected,r.getNodeRole(_root.saved['POI']._name)); break;
+				case 'way':		r.setWayRole (wayselected,r.getWayRole (_root.saved['way']._name)); break;
 			}
 		}
 		if (this.proptype=='way') { _root.ws.redraw(); }
@@ -782,7 +782,7 @@
 	RelMember.prototype.getRole=function() {
 		var v;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=this.rel.getNodeRole(_root.pointselected); break;
+			case 'point':	v=this.rel.getNodeRole(_root.ws.path[_root.pointselected][2]); break;
 			case 'POI':		v=this.rel.getNodeRole(poiselected); break;
 			case 'way':		v=this.rel.getWayRole(wayselected); break;
 		}
@@ -793,7 +793,7 @@
 	RelMember.prototype.setRole=function(tf) {
 		var role = tf.text;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=this.rel.setNodeRole(_root.pointselected, role); break;
+			case 'point':	v=this.rel.setNodeRole(_root.ws.path[_root.pointselected][2], role); break;
 			case 'POI':		v=this.rel.setNodeRole(poiselected, role); break;
 			case 'way':		v=this.rel.setWayRole(wayselected, role); break;
 		}
@@ -801,7 +801,7 @@
 
 	RelMember.prototype.removeRelation=function() {
 		switch (this._parent._parent.proptype) {
-			case 'point': this.rel.removeNode(_root.pointselected); break;
+			case 'point': this.rel.removeNode(_root.ws.path[_root.pointselected][2]); break;
 			case 'POI': this.rel.removeNode(poiselected); break;
 			case 'way': this.rel.removeWay(wayselected); break;
 		}

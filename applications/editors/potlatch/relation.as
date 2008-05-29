@@ -389,7 +389,7 @@
 		var type, id;
 		switch (proptype) {
 			case 'way':		type='way' ; id=wayselected; break;
-			case 'point':	type='node'; id=_root.pointselected; break;
+			case 'point':	type='node'; id=_root.ws.path[_root.pointselected][2]; break;
 			case 'POI':		type='node'; id=poiselected; break;
 		}
 		if ( type == undefined || id == undefined ) return;

@@ -36,10 +36,15 @@
   if($Portion < 0) $Portion = 0;
   if($Portion > 1) $Portion = 1;
 
-  // if (rand(1,100) > 100*$Portion) {
-  //   printf("XX|%d||||Upload Queue Full",$APIVersion);
-  //   exit; # probably Redundant
-  // }
+
+  // if the queue is empty $Portion will be 1 so no chance of rand being 
+  // larger, so this gets skipped (and all other thing being OK, a request 
+  // will be issued.)
+
+  if (rand(0,100) > 100*$Portion) { 
+    printf("XX|%d||||Upload Queue Full",$APIVersion);
+    exit; # probably Redundant
+  }
 
   $User = $_POST["user"];
   $Pass = $_POST["pass"];

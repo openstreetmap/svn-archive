@@ -154,23 +154,46 @@
 
 	OSMWay.prototype.direction=function() {
 		if (this.path.length<2) {
-			_root.panel.i_circular._visible=false;
+			_root.panel.i_clockwise._visible=false;
+			_root.panel.i_anticlockwise._visible=false;
 			_root.panel.i_direction._visible=true;
 			_root.panel.i_direction._alpha=50;
 		} else {
-			dx=this.path[this.path.length-1][0]-this.path[0][0];
-			dy=this.path[this.path.length-1][1]-this.path[0][1];
-			if (dx==0 && dy==0) {
-				_root.panel.i_circular._visible=true;
-				_root.panel.i_direction._visible=false;
-			} else {
+			var dx=this.path[this.path.length-1][0]-this.path[0][0];
+			var dy=this.path[this.path.length-1][1]-this.path[0][1];
+			if (dx!=0 || dy!=0) {
+				// Non-circular
 				_root.panel.i_direction._rotation=180-Math.atan2(dx,dy)*(180/Math.PI)-45;
 				_root.panel.i_direction._alpha=100;
 				_root.panel.i_direction._visible=true;
-				_root.panel.i_circular._visible=false;
+				_root.panel.i_clockwise._visible=false;
+				_root.panel.i_anticlockwise._visible=false;
+			} else {
+				// Circular
+				_root.panel.i_direction._visible=false;
+				// Find lowest rightmost point
+				// cf http://geometryalgorithms.com/Archive/algorithm_0101/
+				var lowest=0;
+				var xmax=-999999; var ymin=-999999;
+				for (var i=0; i<this.path.length; i++) {
+					if      (this.path[i][1]> ymin) { lowest=i; xmin=this.path[i][0]; ymin=this.path[i][1]; }
+					else if (this.path[i][1]==ymin
+						  && this.path[i][0]> xmax) { lowest=i; xmin=this.path[i][0]; ymin=this.path[i][1]; }
+				}
+				var clockwise=(this.onLeft(lowest)>0);
+				_root.panel.i_clockwise._visible=clockwise;
+				_root.panel.i_anticlockwise._visible=!clockwise;
 			}
 		}
 	};
+
+	OSMWay.prototype.onLeft=function(j) {
+		var i=j-1; if (i==-1) { i=this.path.length-1; }
+		var k=j+1; if (k==this.path.length) { k=0; }
+		return ((this.path[j][0]-this.path[i][0]) * (this.path[k][1]-this.path[i][1]) -
+			    (this.path[k][0]-this.path[i][0]) * (this.path[j][1]-this.path[i][1]));
+	};
+	
 
 	// ----	Remove from server
 	
@@ -203,7 +226,7 @@
 		for (var i in z) {
 			var y=this.path[i][4];
 			for (var j in y) {
-				if (j!='created_by' && y[j]!='') { c=false; }
+				if (j!='created_by' && y[j]!='' && j!='source' && j.indexOf('tiger:')!=0) { c=false; }
 			}
 		}
 		if (c) {
@@ -349,12 +372,13 @@
 				_root.newnodeid--;
 				this.insertAnchorPoint(_root.newnodeid);
 				this.highlightPoints(5001,"anchorhint");
-				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
+				addEndPoint(_root.adjustedxmouse,_root.adjustedymouse,newnodeid);
 			}
 			_root.junction=true;
 			restartElastic();
 		} else {
 			// click way: select
+			_root.panel.properties.saveAttributes();
 			this.select();
 			clearTooltip();
 			_root.clicktime=new Date();
@@ -412,7 +436,7 @@
 	
 	OSMWay.prototype.select=function() {
 		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
-		_root.panel.properties.saveAttributes();
+//		_root.panel.properties.saveAttributes();
 		selectWay(this._name);
 		_root.pointselected=-2;
 		_root.poiselected=0;
@@ -520,8 +544,8 @@
 		for (i in z) {
 			if (otherway.attr[i].substr(0,6)=='(type ') { otherway.attr[i]=null; }
 			if (this.attr[i].substr(0,6)=='(type ') { this.attr[i]=null; }
-			if (this.attr[i]!=null) {
-				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]!=null) { this.attr[i]+='; '+otherway.attr[i]; }
+			if (this.attr[i]) {
+				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]) { this.attr[i]+='; '+otherway.attr[i]; }
 			} else {
 				this.attr[i]=otherway.attr[i];
 			}
@@ -617,9 +641,11 @@
 	};
 
 	// ----	Add point into way with SHIFT-clicking
+	//		cf http://local.wasp.uwa.edu.au/~pbourke/geometry/pointline/source.vba
+	//		for algorithm to find nearest point on a line
 	
 	OSMWay.prototype.insertAnchorPoint=function(nodeid) {
-		var nx,ny,closest,closei,i,x1,y1,x2,y2,direct,via,newpoint;
+		var nx,ny,tx,ty,u,closest,closei,i,x1,y1,x2,y2,direct,via,newpoint;
 		nx=_root.map._xmouse;	// where we're inserting it
 		ny=_root.map._ymouse;	//	|
 		closest=0.05; closei=0;
@@ -634,13 +660,19 @@
 			if (Math.abs(via/direct-1)<closest) {
 				closei=i+1;
 				closest=Math.abs(via/direct-1);
+				u=((nx-x1)*(x2-x1)+(ny-y1)*(y2-y1))/(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+				tx=x1+u*(x2-x1);
+				ty=y1+u*(y2-y1);
 			}
 		}
-		newpoint=new Array(nx,ny,nodeid,1,new Array(),0);
+		// Insert
+		newpoint=new Array(tx,ty,nodeid,1,new Array(),0);
 		this.path.splice(closei,0,newpoint);
 		this.clean=false;
 		this.redraw();
 		markClean(false);
+		_root.adjustedxmouse=tx;	// in case we're adding extra points...
+		_root.adjustedymouse=ty;	// should probably return an array or an object **
 		return closei;
 	};
 

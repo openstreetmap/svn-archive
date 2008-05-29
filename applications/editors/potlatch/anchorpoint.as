@@ -24,16 +24,16 @@
 			_root.undo.append(UndoStack.prototype.undo_createpoi,
 							  [_root.map.pois[newpoiid]],"creating a POI");
 
+		} else if (Key.isDown(Key.SHIFT) && _root.map.ways[this.way].oldversion==0) {
+			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
+			startNewWay(_root.map.ways[this.way].path[this._name][0],
+						_root.map.ways[this.way].path[this._name][1],this.node);
 		} else if (this._name==_root.drawpoint ||
 				  (this._name==_root.lastpoint && (t.getTime()-_root.lastpointtime)<700)) {
 			// double-click at end of route
 			_root.lastpoint=_root.drawpoint;	// trap triple-click
 			_root.lastpointtime=new Date();		//  |
 			stopDrawing();
-		} else if (Key.isDown(Key.SHIFT) && _root.map.ways[this.way].oldversion==0) {
-			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
-			startNewWay(_root.map.ways[this.way].path[this._name][0],
-						_root.map.ways[this.way].path[this._name][1],this.node);
 		} else {
 //			_root.lastxmouse=_root._xmouse;
 //			_root.lastymouse=_root._ymouse;

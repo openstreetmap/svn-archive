@@ -110,7 +110,7 @@
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.9b";	// current version
+	var signature="Potlatch 0.9c";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
@@ -145,10 +145,17 @@
 	_root.panel.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
 	_root.panel.i_direction.onRollOut =function() { clearFloater(); };
 
-	_root.panel.attachMovie("roundabout","i_circular",40);
-	with (_root.panel.i_circular) { _x=40; _y=63; _rotation=-45; _visible=false; };
-	_root.panel.i_circular.onRollOver=function() { setFloater("Circular way"); };
-	_root.panel.i_circular.onRollOut =function() { clearFloater(); };
+	_root.panel.attachMovie("clockwise","i_clockwise",40);
+	with (_root.panel.i_clockwise) { _x=40; _y=63; _visible=false; };
+	_root.panel.i_clockwise.onPress=function() { _root.ws.reverseWay(); };
+	_root.panel.i_clockwise.onRollOver=function() { setFloater("Clockwise circular way - click to reverse"); };
+	_root.panel.i_clockwise.onRollOut =function() { clearFloater(); };
+
+	_root.panel.attachMovie("anticlockwise","i_anticlockwise",42);
+	with (_root.panel.i_anticlockwise) { _x=40; _y=63; _visible=false; };
+	_root.panel.i_anticlockwise.onPress=function() { _root.ws.reverseWay(); };
+	_root.panel.i_anticlockwise.onRollOver=function() { setFloater("Anti-clockwise circular way - click to reverse"); };
+	_root.panel.i_anticlockwise.onRollOut =function() { clearFloater(); };
 
 	// General tools
 
@@ -954,7 +961,8 @@
 	function deselectAll() {
 		_root.map.createEmptyMovieClip("anchors",5000); 
 		removeMovieClip(_root.map.highlight);
-		_root.panel.i_circular._visible=false;
+		_root.panel.i_clockwise._visible=false;
+		_root.panel.i_anticlockwise._visible=false;
 		_root.panel.i_direction._visible=true;
 		_root.panel.i_direction._alpha=50;
 		clearTooltip();

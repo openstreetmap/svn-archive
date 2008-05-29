@@ -285,7 +285,7 @@ elsif ($Mode eq "loop")
             cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
         }
 
-        reExecIfRequired(); ## check for new version of tilesGen.pl and reExec if true
+        reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
 
@@ -1706,9 +1706,11 @@ sub WriteImage
 #-----------------------------------------------------------------------------
 sub reExecIfRequired
 {
+    my $child_pid = shift();## FIXME: make more general
     # until proven to work with other systems, only attempt a re-exec
     # on linux. 
     return unless ($^O eq "linux" || $^O eq "cygwin");
+
 
     my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
         $ctime,$blksize,$blocks) = stat($0);
@@ -1721,6 +1723,11 @@ sub reExecIfRequired
     elsif ($dirent ne $de)
     {
         statusMessage("tilesGen.pl has changed, re-start new version", $currentSubTask, $progressJobs, $progressPercent, 1);
+        if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general
+        {
+            statusMessage("Waiting for child process", $currentSubTask, $progressJobs, $progressPercent,0);
+            waitpid($child_pid, 0);
+        }
         exec "perl", $0, "loop", "reexec", 
             "progressJobs=$progressJobs", 
             "idleSeconds=" . getIdle(1), 

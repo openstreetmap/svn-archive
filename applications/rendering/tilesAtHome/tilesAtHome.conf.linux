@@ -25,6 +25,11 @@ i18n=1
 # Set the timeout when downloading files (in seconds)
 DownloadTimeout=1800
 
+# Fall back to XAPI in case we get a "no data here" error.
+# assumes XAPI is current enough for rendering 
+# (tests show 8 minutes lag, which is very much OK, so this is the default)
+FallBackToXAPI = 1
+
 # set this to prepend zip file by three first letters of hostname
 # to allow identification of uploads from different machines in the 
 # upload log

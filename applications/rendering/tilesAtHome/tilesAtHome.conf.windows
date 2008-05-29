@@ -25,6 +25,11 @@ i18n=0
 # Set the timeout when downloading files (on tenths of a second)
 DownloadTimeout=1800
 
+# Fall back to XAPI in case we get a "no data here" error.
+# assumes XAPI is current enough for rendering 
+# (tests show 8 minutes lag, which is very much OK, so this is the default)
+FallBackToXAPI = 1
+
 ## Upload settings
 # UploadChunkSize is the maximum Zip size in MiB (1024^2 byte) for non-tileset uploads
 UploadChunkSize=9   # Megabyte, hard limit 9.5 MiB (10 MB)

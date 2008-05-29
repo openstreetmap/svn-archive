@@ -757,6 +757,18 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 addFault("nodataXAPI",1);
                 return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
             }
+            elsif ($Config->get("FallBackToXAPI"))
+            {
+                statusMessage("No data here, trying OSMXAPI", $currentSubTask, $progressJobs, $progressPercent, 1);
+                $bbox = $URL;
+                $bbox =~ s/.*bbox=//;
+                $predicate="*";
+                $URL=sprintf("%s%s/%s[bbox=%s] ",
+                    $Config->get("XAPIURL"),
+                    $Config->get("OSMVersion"),
+                    $predicate,
+                    $bbox);
+            }
             else
             {
                 statusMessage("No data here, trying smaller slices", $currentSubTask, $progressJobs, $progressPercent, 1);

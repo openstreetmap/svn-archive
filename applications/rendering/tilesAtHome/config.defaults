@@ -22,6 +22,7 @@ Niceness=nice -n10
 
 DownloadTimeout = 1800
 KeepDataFile=0
+FallBackToXAPI = 1
 
 i18n=1
 
@@ -45,8 +46,6 @@ SubversionUpdateCmd = up
 
 Zip=zip
 7zipWin=0
-
-DownloadTimeout = 1800
 
 UseHostnameInZipname = 0
 UploadChunkSize = 9

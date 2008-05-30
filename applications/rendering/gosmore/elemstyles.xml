@@ -302,6 +302,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="junction" v="roundabout" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
+        <routing oneway="1" modifier="1"/>
 	</rule>
 	
 <!-- cycleway tags -->

@@ -346,8 +346,8 @@ void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
   routeNodeType *n;
   do {
     if (i++ > 10) {
-      fprintf (stderr, "Double hash bailout : Table full, hash function "
-        "bad or no route exists\n");
+      //fprintf (stderr, "Double hash bailout : Table full, hash function "
+      //  "bad or no route exists\n");
       return;
     }
     n = route + hash % dhashSize;
@@ -359,19 +359,16 @@ void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
       /* Will do later : routeHeap[routeHeapSize] = n; */
       n->heapIdx = routeHeapSize++;
       n->dir = dir;
-      n->remain = nd == ndBase - 1
-        ? sqrt (Sqr ((__int64)(tlat - flat)) + Sqr ((__int64)(tlon - flon)))
+      n->remain = nd == ndBase - 1 ? 0
         : sqrt (Sqr ((__int64)(nd->lat - flat)) +
                 Sqr ((__int64)(nd->lon - flon)));
       if (!shortest || n->remain < shortest->remain) shortest = n;
-//        printf ("%9d %9d %9d %9d %9d\n", n->remain, nd->lat, nd->lon, flat, flon);
-//      }
     }
-  } while (n->nd != nd && n->dir != dir);
+  } while (n->nd != nd || n->dir != dir);
 
-  int total = cost + (newshort ? newshort->remain + newshort->best : 0);
-  if (n->best > total - n->remain) {
-    n->best = total - n->remain;
+  int diff = n->remain + (newshort ? newshort->best - newshort->remain : 0);
+  if (n->best > cost + diff) {
+    n->best = cost + diff;
     n->shortest = newshort;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
     for (; n->heapIdx > 1 &&
@@ -419,7 +416,8 @@ void Route (int recalculate)
       if (d < bestd) {
         wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
         bestd = d;
-        double invSpeed = !fastest ? 1.0 : Style (w)->invSpeed[car];
+        double invSpeed = 1;//!fastest ? 1.0 : Style (w)->invSpeed[car];
+        //printf ("%d %lf\n", i, invSpeed);
         toEndNd[i][0] =
           lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
         toEndNd[i][1] =
@@ -457,10 +455,10 @@ void Route (int recalculate)
   routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
   
   if (recalculate) {
-    AddNd (endNd[0], 0, 0, NULL);
-    AddNd (ndBase + endNd[0]->other[0], 1, 0, NULL);
-    AddNd (endNd[0], 1, 0, NULL);
-    AddNd (ndBase + endNd[0]->other[0], 0, 0, NULL);
+    AddNd (endNd[0], 0, toEndNd[0][0], NULL);
+    AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
+    AddNd (endNd[0], 1, toEndNd[0][0], NULL);
+    AddNd (ndBase + endNd[0]->other[0], 0, toEndNd[0][1], NULL);
   }
   else {
     for (int i = 0; i < dhashSize; i++) {
@@ -496,7 +494,7 @@ void Route (int recalculate)
     }
     root->heapIdx = -1; /* Root now removed from the heap */
     if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
-      AddNd (ndBase - 1, 0, 0, root);
+      AddNd (ndBase - 1, 0, toEndNd[1][1 - root->dir], root);
     }
     ndType *nd = root->nd, *other;
     while (nd > ndBase && nd[-1].lon == nd->lon &&

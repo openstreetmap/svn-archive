@@ -43,6 +43,7 @@
 
 use strict;
 use Carp;
+use Math::Trig;
 use Math::Complex;
 use Math::Vec qw(:terse);
 
@@ -411,7 +412,7 @@ sub from_lines_to_curves {
 # between 90 & 180 degrees return a number between 0 & 1.
 sub normalise_cp {
     my ($start_v, $end_v) = @_;
-    my $PI = 3.1415926;
+    my $PI = pi;
     my $max_angle = $PI/2; # 180degrees
     my $angle = $start_v->InnerAngle($end_v);
 

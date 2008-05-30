@@ -333,14 +333,14 @@ int option[numberOfOptions];
 struct routeNodeType {
   ndType *nd;
   routeNodeType *shortest;
-  int best, heapIdx, dir; // Dir is 0 or 1
+  int best, heapIdx, dir, remain; // Dir is 0 or 1
 } *route = NULL, *shortest = NULL, **routeHeap;
-int dhashSize, routeHeapSize, limit, tlat, tlon, flat, flon, car, fastest;
+int dhashSize, routeHeapSize, tlat, tlon, flat, flon, car, fastest;
 
-void AddNd (ndType *nd, int dir, int cost, routeNodeType *shortest)
+void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
-     segments (hs, hs->other), (shortest->hs, shortest->hs->other),
-     (shortest->shortest->hs, shortest->shortest->hs->other), .., 'to'
+     segments (hs, hs->other), (newshort->hs, newshort->hs->other),
+     (newshort->shortest->hs, newshort->shortest->hs->other), .., 'to'
      with cost 'cost'. */
   unsigned hash = (intptr_t) nd / 10 + dir, i = 0;
   routeNodeType *n;
@@ -355,15 +355,24 @@ void AddNd (ndType *nd, int dir, int cost, routeNodeType *shortest)
     hash = (unsigned) (hash * (__int64) 1664525 + 1013904223);
     if (n->nd == NULL) { /* First visit of this node */
       n->nd = nd;
-      n->best = cost + 1;
+      n->best = 0x7fffffff;
       /* Will do later : routeHeap[routeHeapSize] = n; */
       n->heapIdx = routeHeapSize++;
       n->dir = dir;
+      n->remain = nd == ndBase - 1
+        ? sqrt (Sqr ((__int64)(tlat - flat)) + Sqr ((__int64)(tlon - flon)))
+        : sqrt (Sqr ((__int64)(nd->lat - flat)) +
+                Sqr ((__int64)(nd->lon - flon)));
+      if (!shortest || n->remain < shortest->remain) shortest = n;
+//        printf ("%9d %9d %9d %9d %9d\n", n->remain, nd->lat, nd->lon, flat, flon);
+//      }
     }
   } while (n->nd != nd && n->dir != dir);
-  if (n->best > cost) {
-    n->best = cost;
-    n->shortest = shortest;
+
+  int total = cost + (newshort ? newshort->remain + newshort->best : 0);
+  if (n->best > total - n->remain) {
+    n->best = total - n->remain;
+    n->shortest = newshort;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
     for (; n->heapIdx > 1 &&
          n->best < routeHeap[n->heapIdx / 2]->best; n->heapIdx /= 2) {
@@ -392,6 +401,7 @@ void Route (int recalculate)
       // We don't do for (int dir = 0; dir < 1; dir++) {
       // because if our search box is large enough, it will also give us
       // the other node.
+      if (!(((wayType*)(data + itr.nd[0]->wayPtr))->bits & (1<<car))) continue;
       if (itr.nd[0]->other[0] < 0) continue;
       __int64 lon0 = lon - itr.nd[0]->lon, lat0 = lat - itr.nd[0]->lat,
               lon1 = lon - (ndBase + itr.nd[0]->other[0])->lon,
@@ -446,10 +456,11 @@ void Route (int recalculate)
   routeHeapSize = 1; /* Leave position 0 open to simplify the math */
   routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
   
-  limit = 2000000000;
   if (recalculate) {
-    AddNd (endNd[0], 0, toEndNd[0][0], NULL);
-    AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
+    AddNd (endNd[0], 0, 0, NULL);
+    AddNd (ndBase + endNd[0]->other[0], 1, 0, NULL);
+    AddNd (endNd[0], 1, 0, NULL);
+    AddNd (ndBase + endNd[0]->other[0], 0, 0, NULL);
   }
   else {
     for (int i = 0; i < dhashSize; i++) {
@@ -485,7 +496,7 @@ void Route (int recalculate)
     }
     root->heapIdx = -1; /* Root now removed from the heap */
     if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
-      AddNd (ndBase - 1, 0, root->best + toEndNd[1][1 - root->dir], root);
+      AddNd (ndBase - 1, 0, 0, root);
     }
     ndType *nd = root->nd, *other;
     while (nd > ndBase && nd[-1].lon == nd->lon &&
@@ -507,7 +518,7 @@ void Route (int recalculate)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
                                (fastest ? Style (w)->invSpeed[car] : 1.0));
-          AddNd (other, 1 - dir, root->best + d, root);
+          AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
       }
     } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
@@ -825,7 +836,7 @@ gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 
 gint Expose (void)
 {
-  static GdkColor styleColour[2 << STYLE_BITS][2];
+  static GdkColor styleColour[2 << STYLE_BITS][2], routeColour;
   static GdkPixmap *icons = NULL;
   static GdkGC *mygc = NULL;
   if (!mygc) {
@@ -842,6 +853,10 @@ gint Expose (void)
           &styleColour[i][j], FALSE, TRUE);
       }
     }
+    routeColour.red = 0xffff;
+    routeColour.green = routeColour.blue = 0;
+    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
+      &routeColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
       "icons.xpm");
@@ -928,7 +943,7 @@ gint Expose (void)
             itr.top  <= nd->lat && nd->lat < itr.bottom) continue;
       } // Only process this way when the Itr gives us the first node, or
       // the first node that's inside the viewing area
- 
+
       #ifndef _WIN32_WCE
       __int64 maxLenSqr = 0;
       double x0, y0;
@@ -955,13 +970,13 @@ gint Expose (void)
   	      wcTmp, len, NULL);	
 	#endif
         #ifdef CAIRO_VERSION
-        if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
+        //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
           mat.xx = mat.yy = 12.0;
           mat.xy = mat.yx = 0;
           x0 = x - mat.xx / 12.0 * 3 * len; /* Render the name of the node */
           y0 = y + mat.xx * f->ascent / 12.0 + icon[3] / 2;
           maxLenSqr = 4000000000000LL; // Without scaleMax, use 400000000
-        }
+        //}
         #endif
       }
       else if (Style (w)->areaColour) {
@@ -970,10 +985,11 @@ gint Expose (void)
         static GdkPoint pt[1000];
         unsigned pts;
         for (pts = 0; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] >= 0;
-             pts++) {
-          pt[pts].x = (nd->lon - clon) / perpixel + clip.width / 2;
-          pt[pts].y = clip.height / 2 - (nd->lat - clat) / perpixel;
-          nd = ndBase + nd->other[1];
+             nd = ndBase + nd->other[1]) {
+          if (nd->lat != INT_MIN) {
+            pt[pts].x = (nd->lon - clon) / perpixel + clip.width / 2;
+            pt[pts++].y = clip.height / 2 - (nd->lat - clat) / perpixel;
+          }
         }
         gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
         gdk_draw_polygon (draw->window, mygc, TRUE, pt, pts);
@@ -1002,16 +1018,17 @@ gint Expose (void)
             (next->lon - clon) / perpixel + clip.width / 2,
             clip.height / 2 - (next->lat - clat) / perpixel);
 	  #ifdef _WIN32_WCE
-	  if (best < nd->lon - next->lon) best = nd->lon - next->lon;
-	  else if (best < next->lon - nd->lon) best = next->lon - nd->lon;
-	  else if (best < nd->lat - next->lat) best = nd->lat - next->lat;
-	  else if (best < next->lat - nd->lat) best = next->lat - nd->lat;
-	  else goto notBest;
+	  int newb = nd->lon > next->lon
+	    ? nd->lon - next->lon : next->lon - nd->lon;
+	  if (newb < nd->lat - next->lat) newb = nd->lat - next->lat;
+	  if (newb < next->lat - nd->lat) newb = next->lat - nd->lat;
+	  if (best < newb) {
+	    best = newb;
 	    bestW = (next->lon > nd->lon ? -1 : 1) * (next->lon - nd->lon);
 	    bestH = (next->lon > nd->lon ? -1 : 1) * (next->lat - nd->lat);
             x0 = next->lon / 2 + nd->lon / 2;
 	    y0 = next->lat / 2 + nd->lat / 2;
-	  notBest:
+	  }
 	  #endif
           #ifdef CAIRO_VERSION
           __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
@@ -1093,20 +1110,25 @@ gint Expose (void)
 //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
 #ifndef _WIN32_WCE
   routeNodeType *x;
-  if (shortest && (x  = shortest->shortest)) {
-    gdk_draw_line (draw->window, draw->style->white_gc,
-      (flon - clon) / perpixel + clip.width / 2,
-      clip.height / 2 - (flat - clat) / perpixel,
-      (x->nd->lon - clon) / perpixel + clip.width / 2,
-      clip.height / 2 - (x->nd->lat - clat) / perpixel);
+  if (shortest && (x = shortest->shortest)) {
+    gdk_gc_set_foreground (mygc, &routeColour);
+    gdk_gc_set_line_attributes (mygc, 5,
+      GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+    if (routeHeapSize > 1) {
+      gdk_draw_line (draw->window, mygc,
+        (flon - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (flat - clat) / perpixel,
+        (x->nd->lon - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (x->nd->lat - clat) / perpixel);
+    }
     for (; x->shortest; x = x->shortest) {
-      gdk_draw_line (draw->window, draw->style->white_gc,
+      gdk_draw_line (draw->window, mygc,
         (x->nd->lon - clon) / perpixel + clip.width / 2,
         clip.height / 2 - (x->nd->lat - clat) / perpixel,
         (x->shortest->nd->lon - clon) / perpixel + clip.width / 2,
         clip.height / 2 - (x->shortest->nd->lat - clat) / perpixel);
     }
-    gdk_draw_line (draw->window, draw->style->white_gc,
+    gdk_draw_line (draw->window, mygc,
       (x->nd->lon - clon) / perpixel + clip.width / 2,
       clip.height / 2 - (x->nd->lat - clat) / perpixel,
       (tlon - clon) / perpixel + clip.width / 2,
@@ -1299,7 +1321,9 @@ int UserInterface (int argc, char *argv[])
     RESTRICTIONS
     #undef M
     Route (TRUE);
-    printf ("Content-Type: text/text\n\r\n\r");
+    printf ("Content-Type: text/plain\n\r\n\r");
+    if (!shortest) printf ("No route found\n\r");
+    else if (routeHeapSize <= 1) printf ("Jump\n\r");
     for (; shortest; shortest = shortest->shortest) {
       printf ("%lf,%lf\n\r", (atan (exp (shortest->nd->lat / 2147483648.0 *
         M_PI)) - M_PI / 4) / M_PI * 360,
@@ -1423,7 +1447,7 @@ int UserInterface (int argc, char *argv[])
 /*--------------------------------- Rebuid code ---------------------------*/
 #ifndef _WIN32_WCE
 // These defines are only used during rebuild
-#define MAX_BUCKETS (1<<22)
+#define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
 #define NGROUPS 90
 #define NGROUP(x)  ((x) / 3000000 % NGROUPS + IDXGROUPS)
@@ -1651,7 +1675,7 @@ int main (int argc, char *argv[])
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
     int yesMask = 0, noMask = 0, wayInBbox = 1;
     int lowzList[1000], lowzListCnt = 0;
-    // wayInBox : 1 way slips through...
+    // wayInBbox : 1 way slips through...
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;
     s[1].other = -1;
@@ -1779,8 +1803,10 @@ int main (int argc, char *argv[])
               s[1].other = -1; // No prev
               lowzList[lowzListCnt++] = nd.id;
             }
-            if (s[0].other >= 0) nOther--; // Reclaim unused 'other' number
-            s[0].other = -2;
+            if (s[0].other > -2) { // Not lowz
+              if (s[0].other >= 0) nOther--; // Reclaim unused 'other' number
+              s[0].other = -2;
+            }
 
             if (srec[StyleNr (&w)].scaleMax > 10000000 && wayInBbox) {
               for (int i = 0; i < lowzListCnt; i++) {
@@ -1849,7 +1875,7 @@ int main (int argc, char *argv[])
       fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
     }
     assert (nOther * 2 < FIRST_LOWZ_OTHER);
-    bucketsMin1 = (nOther >> 8) | (nOther >> 9);
+    bucketsMin1 = (nOther >> 5) | (nOther >> 6);
     bucketsMin1 |= bucketsMin1 >> 2;
     bucketsMin1 |= bucketsMin1 >> 4;
     bucketsMin1 |= bucketsMin1 >> 8;

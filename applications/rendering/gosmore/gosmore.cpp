@@ -77,7 +77,7 @@ struct GdkEventButton {
 
 #define RESTRICTIONS M (access) M (bicycle) M (foot) M (goods) M (hgv) \
   M (horse) M (motorcycle) M (motorcar) M (psv) M (motorboat) M (boat) \
-  M (oneway)
+  M (oneway) M (modifier)
 
 #define M(field) field ## R,
 enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
@@ -1506,6 +1506,7 @@ int IdxCmp (const void *aptr, const void *bptr)
 
 int main (int argc, char *argv[])
 {
+  assert (l3 < 32);
   #ifndef WIN32
   int rebuildCnt = 0;
   if (argc > 1) {
@@ -1717,11 +1718,16 @@ int main (int argc, char *argv[])
           if (stricmp (aname, "v") == 0) {
             #define K_IS(x) (stricmp (tag_k, x) == 0)
             #define V_IS(x) (stricmp (avalue, x) == 0)
-            if (StyleNr (&w) == styleCnt) {
-              for (w.bits &= ~((2<<STYLE_BITS) - 1); StyleNr (&w) < styleCnt
-                        && !(K_IS (style_k[StyleNr (&w)])
-                             && V_IS (style_v[StyleNr (&w)])); w.bits++) {}
+            int newStyle = 0;
+            for (; newStyle < styleCnt && !(K_IS (style_k[newStyle])
+                             && V_IS (style_v[newStyle])); newStyle++) {}
+            if (defaultRestrict[newStyle] & (1 << modifierR)) {
+              yesMask |= defaultRestrict[newStyle];
             }
+            else if (newStyle < styleCnt) {
+              w.bits = (w.bits & ~((2<<STYLE_BITS) - 1)) + newStyle;
+            }
+
             if (K_IS ("name")) {
               xmlChar *tmp = xmlStrdup (BAD_CAST "\n");
               tmp = xmlStrcat (BAD_CAST tmp, BAD_CAST avalue);

@@ -70,8 +70,8 @@ final class ViewNode extends ViewCoords implements View<Node> {
         current = null;
     }
 
-    public void paint(Graphics2D g, MapView parent, boolean selected) {
+    public void collect(Drawer drawer, MapView parent, boolean selected) {
         if (current == null) current = Style.get(this);
-        current.paint(g, parent, this, selected);
+        current.collect(drawer, parent, this, selected);
     }
 }

@@ -224,7 +224,7 @@ public class MapView extends JComponent {
     }    
 
     private void paintBackground(Graphics g) {
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         Rectangle paint = g.getClipBounds();
         g.fillRect(paint.x, paint.y, paint.width, paint.height);
     }

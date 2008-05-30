@@ -64,9 +64,9 @@ class ViewWay implements View<Way> {
         style = null;
     }
     
-    public void paint(Graphics2D g, MapView parent, boolean selected) {
+    public void collect(Drawer drawer, MapView parent, boolean selected) {
         if (style == null) style = Style.get(this);
-        style.paint(g, parent, this, selected);
+        style.collect(drawer, parent, this, selected);
     }
 
 }

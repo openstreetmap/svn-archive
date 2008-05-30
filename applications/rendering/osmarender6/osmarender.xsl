@@ -846,14 +846,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:if >
   </xsl:template>
 
-  <!-- Draw items for a RelationRoute -->
+
+  <!-- Draw lines for a relation -->
   <xsl:template match="relation" mode="line">
     <xsl:param name="instruction"/>
     <xsl:param name="layer"/>
 
-    <xsl:if test="($showRelationRoute!='') and ($showRelationRoute!='no')">
-      <xsl:variable name="relation" select="@id"/>
+    <xsl:variable name="relation" select="@id"/>
 
+    <xsl:if test="(tag[@k='type']/@v='route') and ($showRelationRoute!='~|no')">
       <!-- Draw lines for a RelationRoute -->
       <xsl:for-each select="$data/osm/relation[@id=$relation]/member[@type='way']">
         <xsl:variable name="wayid" select="@ref"/>
@@ -873,29 +874,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         </xsl:for-each >
       </xsl:for-each >
     </xsl:if>
-  </xsl:template>
 
+    <!-- Handle other types of Relations if necessary -->
 
-  <xsl:template match="relation" mode="circle">
-    <xsl:param name="instruction"/>
-    <xsl:param name="layer"/>
-
-    <xsl:if test="($showRelationRoute!='') and ($showRelationRoute!='no')">
-      <xsl:variable name="relation" select="@id"/>
-
-      <!-- Draw lines for a RelationRoute -->
-      <xsl:for-each select="$data/osm/relation[@id=$relation]/member[@type='node']">
-        <xsl:variable name="nodeid" select="@ref"/>
-
-        <xsl:for-each select="$data/osm/node[@id=$nodeid]">
-          <xsl:call-template name="drawCircle">
-            <xsl:with-param name="instruction" select="$instruction"/>
-            <xsl:with-param name="node" select="@id"/>
-          </xsl:call-template>
-        </xsl:for-each>
-      </xsl:for-each>
-
-    </xsl:if>
   </xsl:template>
 
 
@@ -966,7 +947,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:template match="*" mode="circle"/>
 
 
-  <!-- Draw lines for a way  -->
+  <!-- Draw circle for a node -->
   <xsl:template match="node" mode="circle">
     <xsl:param name="instruction"/>
     <xsl:param name="elements"/>
@@ -976,6 +957,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:with-param name="instruction" select="$instruction"/>
       </xsl:call-template>
     </xsl:for-each>
+
+  </xsl:template>
+
+
+  <!-- Draw circle for a relation -->
+  <xsl:template match="relation" mode="circle">
+    <xsl:param name="instruction"/>
+    <xsl:param name="layer"/>
+
+    <xsl:variable name="relation" select="@id"/>
+
+    <xsl:if test="(tag[@k='type']/@v='route') and ($showRelationRoute!='~|no')">
+      <!-- Draw Circles for a RelationRoute Stop -->
+      <xsl:for-each select="$data/osm/relation[@id=$relation]/member[@type='node']">
+        <xsl:variable name="nodeid" select="@ref"/>
+
+        <xsl:for-each select="$data/osm/node[@id=$nodeid]">
+          <xsl:call-template name="drawCircle">
+            <xsl:with-param name="instruction" select="$instruction"/>
+            <xsl:with-param name="node" select="@id"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:for-each>
+    </xsl:if>
+
+    <!-- Handle other types of Relations if necessary -->
 
   </xsl:template>
 

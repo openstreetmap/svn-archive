@@ -444,6 +444,7 @@ sub uploadIfEnoughTiles
     {
         print "Not uploading yet, only $Count tiles\n"  if ($Config->get("Verbose"));
     }
+    return 0; # no error, just nothing to upload
 }
 
 sub compressAndUpload

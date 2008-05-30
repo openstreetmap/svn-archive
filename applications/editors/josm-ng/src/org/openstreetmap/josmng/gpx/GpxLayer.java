@@ -47,18 +47,20 @@ import org.openstreetmap.josmng.view.*;
  * @author nenik
  */
 public class GpxLayer extends Layer {
-    private Projection current = Projection.MERCATOR; //EPSG4326;
+    private Projection projCache;
     private String name;
     private ViewCoords[][] coords;
 
     public GpxLayer(MapView parent, String name, InputStream src) throws IOException {
         super(parent);
+        projCache = parent.getProjection();
         this.name = name;
-        coords = parse(src);
+        coords = parse(projCache, src);
     }
     
     @Override
     public void paint(Graphics g) {
+        checkProjection();
         final int ptSize = 3;
         g.setColor(Color.GRAY);
         
@@ -76,6 +78,22 @@ public class GpxLayer extends Layer {
         }
     }
 
+    private void checkProjection() {
+        if (projCache != parent.getProjection()) {
+            // projection changed, recompute to the new one...
+            Projection old = projCache;
+            Projection nw = parent.getProjection();
+
+            for (ViewCoords[] track : coords) {
+                for (int i = 0; i<track.length; i++) {
+                    track[i] = nw.coordToView(old.viewToCoord(track[i]));
+                }
+            }
+            
+            projCache = nw;
+        }
+    }
+
     private void drawPoint(Graphics g, Point pt, int size) {
         g.fillRect(pt.x-size/3, pt.y-size/3, size, size);
     }
@@ -85,9 +103,9 @@ public class GpxLayer extends Layer {
         return name;
     }
 
-    private static ViewCoords[][] parse(InputStream src) throws IOException {
+    private static ViewCoords[][] parse(Projection proj, InputStream src) throws IOException {
         InputSource inputSource = new InputSource(new InputStreamReader(src, "UTF-8"));
-        Parser parser = new Parser();
+        Parser parser = new Parser(proj);
         try {
             SAXParserFactory.newInstance().newSAXParser().parse(inputSource, parser);
             return parser.getData();
@@ -106,7 +124,11 @@ public class GpxLayer extends Layer {
         private List<ViewCoords> currTrack = new ArrayList<ViewCoords>();
         private List<ViewCoords[]> tracks = new ArrayList();
         private Stack<String> state = new Stack<String>();
-        private Projection proj = Projection.MERCATOR;
+        private final Projection proj;
+
+        public Parser(Projection proj) {
+            this.proj = proj;
+        }
 
         public @Override void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             state.push(qName);
@@ -118,7 +140,6 @@ public class GpxLayer extends Layer {
             } else if(qName.equals("trkpt")) {
                 double lon = getDouble(atts,"lon");
                 double lat = getDouble(atts, "lat");
-                System.err.println("lat=" + lat + ", lon=" + lon);
                 ViewCoords vc = proj.coordToView(new CoordinateImpl(lat, lon));
                 currTrack.add(vc);
             }

@@ -29,6 +29,7 @@ import org.openstreetmap.josmng.view.projection.Mercator;
 import org.openstreetmap.josmng.view.projection.Epsg4326;
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
+import org.openstreetmap.josmng.view.projection.Sinusoidal;
 
 /**
  * TODO: pluggable projections by means of ServiceLoader
@@ -51,6 +52,7 @@ public final class Projection {
 
     public static final Projection MERCATOR = create(new Mercator());
     public static final Projection EPSG4326 = create(new Epsg4326());
+    public static final Projection SINUSOIDAL = create(new Sinusoidal());
     
            
     private Impl impl;
@@ -63,7 +65,7 @@ public final class Projection {
 
     public static Collection<Projection> getAvailableProjections() {
         return Arrays.asList(new Projection[] {
-            MERCATOR, EPSG4326
+            MERCATOR, EPSG4326, SINUSOIDAL
         });
     }
 

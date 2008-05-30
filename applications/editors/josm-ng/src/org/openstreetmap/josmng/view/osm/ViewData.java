@@ -35,9 +35,9 @@ import org.openstreetmap.josmng.utils.Storage;
  * @author nenik
  */
 class ViewData {
-    DataSet source;
+    private final DataSet source;
     OsmLayer view;
-    Projection proj = Projection.MERCATOR;
+    Projection projCache;
     Listener l = new Listener();
     
     private Hash<ViewNode, ViewNode> hash = new Hash<ViewNode, ViewNode>() {
@@ -73,14 +73,28 @@ class ViewData {
 
     public ViewData(OsmLayer view, DataSet source) {
         this.view = view;
+        this.source = source;
         source.addDataSetListener(l);
+        recreate();
+    }
+
+    void checkProjection() {
+        if (projCache != view.parent.getProjection()) recreate();
+    }
+    
+    private void recreate() {
+        nodes.clear();
+        taggedNodes.clear();
+        nodesId.clear();
+        ways.clear();
+        projCache = view.parent.getProjection();
         for (Node n : source.getNodes()) {
             if (valid(n)) addNode(n);
         }
         
         for (Way w : source.getWays()) {
             if (valid(w)) addWay(w);
-        }
+        }        
     }
     
     private static boolean valid(OsmPrimitive prim) {
@@ -88,7 +102,7 @@ class ViewData {
     }
 
     private void addNode(Node n) {
-        ViewNode vn = new ViewNode(n, proj.coordToView(n));
+        ViewNode vn = new ViewNode(n, projCache.coordToView(n));
         nodes.add(vn);
         nodesId.add(vn);
         if (vn.isTagged()) taggedNodes.add(vn);
@@ -194,7 +208,7 @@ class ViewData {
 
         // update the coords index
         nodes.remove(vn);
-        vn.updatePosition(proj.coordToView(n));
+        vn.updatePosition(projCache.coordToView(n));
         nodes.add(vn);
         
         for (ViewWay w : ways) {

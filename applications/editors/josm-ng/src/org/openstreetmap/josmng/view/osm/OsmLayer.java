@@ -66,6 +66,7 @@ public class OsmLayer extends EditableLayer {
     }
 
     public @Override void paint(Graphics g) {
+        mapData.checkProjection();
         Rectangle viewR = parent.screenToView(g.getClipBounds());
         Collection<OsmPrimitive> sel = getSelection();
 

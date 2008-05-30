@@ -27,16 +27,19 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
+import org.openstreetmap.josmng.ui.actions.SetProjectionAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
 import org.openstreetmap.josmng.ui.mode.TheOnlyMode;
 import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
+import org.openstreetmap.josmng.view.Projection;
 import org.openstreetmap.josmng.view.osm.OsmLayer;
 
 /**
@@ -52,6 +55,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         main = this;
         initComponents();
+        initProjections();
         modesBar.add(createModeButton(new TheOnlyMode(mapView1)));
         
         addStatusComponent(new Position(mapView1));
@@ -106,10 +110,12 @@ public class Main extends javax.swing.JFrame {
         modesBar = new javax.swing.JToolBar();
         statusBar = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        fileMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        viewMenu = new javax.swing.JMenu();
+        projection = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
 
@@ -128,27 +134,34 @@ public class Main extends javax.swing.JFrame {
         statusBar.setLayout(new javax.swing.BoxLayout(statusBar, javax.swing.BoxLayout.LINE_AXIS));
         getContentPane().add(statusBar, java.awt.BorderLayout.PAGE_END);
 
-        jMenu1.setText("File");
+        fileMenu.setText("File");
 
         jMenuItem1.setAction(new OpenAction());
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        jMenu1.add(jMenuItem1);
+        fileMenu.add(jMenuItem1);
 
         jMenuItem4.setAction(new OpenGpxAction());
-        jMenu1.add(jMenuItem4);
+        fileMenu.add(jMenuItem4);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(fileMenu);
 
-        jMenu2.setText("Edit");
+        viewMenu.setText("View");
+
+        projection.setText("Switch projection");
+        viewMenu.add(projection);
+
+        jMenuBar1.add(viewMenu);
+
+        editMenu.setText("Edit");
 
         jMenuItem2.setAction(new UndoAction());
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        jMenu2.add(jMenuItem2);
+        editMenu.add(jMenuItem2);
 
         jMenuItem3.setText("Redo");
-        jMenu2.add(jMenuItem3);
+        editMenu.add(jMenuItem3);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(editMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -179,8 +192,8 @@ public class Main extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -188,8 +201,21 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private org.openstreetmap.josmng.view.MapView mapView1;
     private javax.swing.JToolBar modesBar;
+    private javax.swing.JMenu projection;
     private javax.swing.JPanel statusBar;
     private javax.swing.JToolBar toolBar;
+    private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
+
+    private void initProjections() {
+        ButtonGroup bg = new ButtonGroup();
+        
+        for (Projection proj : Projection.getAvailableProjections()) {
+            JRadioButtonMenuItem jrb = new JRadioButtonMenuItem(new SetProjectionAction(proj));
+            bg.add(jrb);
+            if (proj.equals(mapView1.getProjection())) jrb.setSelected(true);
+            projection.add(jrb);
+        }
+    }
     
 }

@@ -20,19 +20,23 @@
 
 package org.openstreetmap.josmng.view.osm;
 
-import org.openstreetmap.josmng.osm.OsmPrimitive;
-import org.openstreetmap.josmng.view.MapView;
+import java.awt.Graphics2D;
 
 /**
- * Visual representation of an OSM primitive. The visualization is actually
- * performed by passing a number of {@link Part}s to the {@link Drawer} during
- * the {@link #collect(org.openstreetmap.josmng.view.osm.Drawer, org.openstreetmap.josmng.view.MapView, boolean)}
- * callback.
+ * A drawing primitive preconfigured for final visualization.
+ * A single OSM primitive may end up being painted by several Parts,
+ * each on some z-order layer. 
+ * @see Drawer
  * 
  * @author nenik
  */
-interface View<T extends OsmPrimitive> {
-     public void resetStyle();
-     public void collect(Drawer drawer, MapView parent, boolean selected);
-     public T getPrimitive();
+interface Part {
+    /**
+     * Render the part through provided graphics. The method can freely
+     * manipulate the graphics, but shouldn't change the settings which don't
+     * directly specify the rendering (e.g. rendering hints).
+     * 
+     * @param g the Graphics to render through. 
+     */
+    public void paint(Graphics2D g);
 }

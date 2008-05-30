@@ -120,6 +120,12 @@ public class MapView extends JComponent {
         return proj;
     }
     
+    public void setProjection(Projection proj) {
+        center = proj.coordToView(this.proj.viewToCoord(center));
+        this.proj = proj;
+        repaint();
+    }
+    
     public Point getPoint(ViewCoords c) {
         int x = getWidth()/2 + (c.getIntLon() - center.getIntLon()) / factor;
         int y = getHeight()/2 - (c.getIntLat() - center.getIntLat()) / factor;

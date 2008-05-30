@@ -18,29 +18,28 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-package org.openstreetmap.josmng.view;
+package org.openstreetmap.josmng.ui.actions;
 
-import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+
+import org.openstreetmap.josmng.ui.Main;
+import org.openstreetmap.josmng.view.Projection;
 
 /**
- * A Layer is generic visualization of a single data source of some kind.
- * A MapView instance displays a stack of layers, so single layer shouldn't
- * try to clear the background during painting.
+ * An action switching the projection currently used for central MapView.
  * 
  * @author nenik
  */
-public abstract class Layer {
-    public final MapView parent;
-
-    protected Layer(MapView parent) {
-        this.parent = parent;
+public class SetProjectionAction extends AbstractAction {
+    private final Projection projection;
+    
+    public SetProjectionAction(Projection projection) {
+        super(projection.getName());
+        this.projection = projection;
     }
 
-    // painting needs projection and transformation.
-    // both is available from MapView at the time of the paint
-    // the layer instance can cache the transformed data
-    public abstract void paint(Graphics g);
-    
-    public abstract String getName();
-
+    public void actionPerformed(ActionEvent e) {
+        Main.main.getMapView().setProjection(projection);
+    }
 }

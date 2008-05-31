@@ -39,4 +39,7 @@ function createMarkers() {
     addMarker(layer_local, 9.5794793, 48.979546,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Murrhardt">Murrhardt</a></b></p>'
     ); 
+    addMarker(layer_local, 13.3172, 52.5138,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Berlin">Berlin</a></b></p>'
+    );
 }

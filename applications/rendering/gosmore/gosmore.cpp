@@ -1925,13 +1925,13 @@ int main (int argc, char *argv[])
     int bucket = -1;
     for (int i = S2GROUP (0); i < S2GROUP (0) + S2GROUPS; i++) {
       fflush (groupf[i]);
-      int size = ftell (groupf[i]);
+      size_t size = ftell (groupf[i]);
       rewind (groupf[i]);
       REBUILDWATCH (halfSegType *seg = (halfSegType *) mmap (NULL, size,
         PROT_READ | PROT_WRITE, MAP_SHARED, fileno (groupf[i]), 0));
       qsort (seg, size / sizeof (s), sizeof (s),
         (int (*)(const void *, const void *))HalfSegCmp);
-      for (int j = 0; j < size / (int) sizeof (seg[0]); j++) {
+      for (int j = 0; j < int (size / sizeof (seg[0])); j++) {
         if (!(j & 1)) {
           while (bucket < Hash (seg[j].lon, seg[j].lat,
                                i >= S2GROUP (0) + S2GROUPS - 1)) {

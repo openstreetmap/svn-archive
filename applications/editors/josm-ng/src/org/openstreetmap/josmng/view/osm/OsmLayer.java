@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.openstreetmap.josmng.osm.Bounds;
 import org.openstreetmap.josmng.view.*;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
@@ -58,7 +59,7 @@ public class OsmLayer extends EditableLayer {
     }
 
     public @Override boolean isEmpty() {
-        return data.getNodes().isEmpty() && data.getWays().isEmpty() && data.getRelations().isEmpty();
+        return !data.getPrimitives(Bounds.WORLD).iterator().hasNext();
     }
     
     void callRepaint() {

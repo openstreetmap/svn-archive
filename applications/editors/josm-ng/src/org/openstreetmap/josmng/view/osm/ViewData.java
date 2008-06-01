@@ -88,12 +88,14 @@ class ViewData {
         nodesId.clear();
         ways.clear();
         projCache = view.parent.getProjection();
-        for (Node n : source.getNodes()) {
-            if (valid(n)) addNode(n);
-        }
-        
-        for (Way w : source.getWays()) {
-            if (valid(w)) addWay(w);
+        for (OsmPrimitive prim : source.getPrimitives(Bounds.WORLD)) {
+            if (valid(prim)) {
+                if (prim instanceof Node) {
+                    addNode((Node)prim);
+                } else if (prim instanceof Way) {
+                    addWay((Way)prim);
+                }
+            }
         }        
     }
     
@@ -102,6 +104,7 @@ class ViewData {
     }
 
     private void addNode(Node n) {
+        if (nodeToView.containsKey(n)) return;
         ViewNode vn = new ViewNode(n, projCache.coordToView(n));
         nodes.add(vn);
         nodesId.add(vn);
@@ -109,6 +112,7 @@ class ViewData {
     }
 
     private ViewNode getViewForNode(Node n) {
+        addNode(n);
         return nodeToView.get(n);
     }
 

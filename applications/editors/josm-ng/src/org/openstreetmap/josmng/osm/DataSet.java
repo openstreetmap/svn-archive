@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.event.EventListenerList;
@@ -41,7 +40,6 @@ import javax.swing.undo.UndoableEditSupport;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.openstreetmap.josmng.utils.Hash;
 import org.openstreetmap.josmng.utils.Storage;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -50,23 +48,16 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * A single encapsulated OSM dataset. It might be parsed from file, loaded from
- * server or obtained by any other means.
+ * server or obtained by any other means. It can be held in memory or
+ * implemented over a database, or even using some hybrid storage, based
+ * on subclassing.
  * 
  * @author nenik
  */
-public final class DataSet {
+public abstract class DataSet {
     private final UndoableEditSupport undoSupport = new ComposingUndoSupport();
     private final EventListenerList listeners = new EventListenerList();
 
-    private final Map<Long,Node> nodes = createMap(Node.class);
-    private final Collection<Node> nodesCol = nodes.values();
-    
-    private final Map<Long,Way> ways = createMap(Way.class);
-    private final Collection<Way> waysCol = ways.values();
-    
-    private final Map<Long,Relation> relations = createMap(Relation.class);
-    private final Collection<Relation> relationsCol = relations.values();
-    
     private final Map<Integer,String> users = new HashMap<Integer, String>();
     private final Map<String,Integer> usersBack = new HashMap<String, Integer>();
     
@@ -135,34 +126,23 @@ public final class DataSet {
         addRemovePrimitiveImpl(prim, add);
         postEdit(edit);
     }
+
     private void addRemovePrimitiveImpl(OsmPrimitive prim, boolean add) {
-        Collection toModify = (prim instanceof Node) ? nodesCol :
-                (prim instanceof Way) ? waysCol : relationsCol;
-            
         if (add) {
-            toModify.add(prim);
+            addPrimitive(prim);
             firePrimitivesAdded(Collections.singleton(prim));
         } else {
-            toModify.remove(prim);
+            removePrimitive(prim);
             firePrimitivesRemoved(Collections.singleton(prim));
         }
     }
-            
 
     public Node createNode(double lat, double lon) {
         Node n = new Node(this, 0, lat, lon, null, null, true);
         addRemovePrimitive(n, true);
         return n;
     }
-
-    public Collection<Node> getNodes() {
-        return Collections.unmodifiableCollection(nodesCol);
-    }
-    
-    public Node getNode(long id) {
-        return nodes.get(id);
-    }
-    
+        
     public Way createWay(Node ... nodes) {
         Way way = new Way(this, 0, null, null, true);
         addRemovePrimitive(way, true);
@@ -170,21 +150,23 @@ public final class DataSet {
         return way;
     }
 
-    public Collection<Way> getWays() {
-        return Collections.unmodifiableCollection(waysCol);
-    }
-    
-    public Way getWay(long id) {
-        return ways.get(id);
-    }
+    // The minimal interface to the backing store implementation.
+    protected abstract void addPrimitive(OsmPrimitive prim);
+    protected abstract void removePrimitive(OsmPrimitive prim);
 
-    public Collection<Relation> getRelations() {
-        return Collections.unmodifiableCollection(relationsCol);        
-    }
-
-    public Relation getRelation(long id) {
-        return relations.get(id);
-    }
+    /**
+     * Get the primitives inside given {@link Bounds}. The backing store
+     * implementation can return data outside of the bounds, or may
+     * even return all the data it knows about, without any filtering,
+     * but it must return all the data within bounds.
+     * 
+     * @param b the Bounds limiting the query
+     * @return all the primitives within bounds.
+     */
+    abstract public Iterable<OsmPrimitive> getPrimitives(Bounds b);
+    abstract public Way getWay(long id);    
+    abstract public Node getNode(long id);
+    abstract public Relation getRelation(long id);
     
     void postEdit(UndoableEdit edit) {
         undoSupport.postEdit(edit);        
@@ -251,27 +233,6 @@ public final class DataSet {
         }
     }
     
-    private static <T extends OsmPrimitive> Map<Long,T> createMap(Class<T> contents) {
-        return new Storage<T>().foreignKey(new IdHash(contents));
-    }
-    
-    private static class IdHash<T extends OsmPrimitive> implements Hash<Long,T> {
-        Class<T> cls;
-        
-        IdHash(Class<T> cls) {
-            this.cls = cls;
-        }
-
-        public int getHashCode(Long k) {
-            return (int)k.intValue() ^ cls.hashCode();
-        }
-
-        public boolean equals(Long k, T t) {
-            if (k == 0 || t == null) return false;
-            return t.getId() == k.longValue() && t.getClass() == cls;
-        }        
-    } 
-
     private class ComposingUndoSupport extends UndoableEditSupport {
         ComposingUndoSupport() {
             super(DataSet.this);
@@ -306,6 +267,10 @@ public final class DataSet {
             return false;
         }
     }
+
+    public static DataSet empty() {
+        return new DataSetMemoryImpl();
+    }
     
     public static DataSet fromStream(InputStream is) throws  IOException {
         Throwable cause;
@@ -329,7 +294,7 @@ public final class DataSet {
     
     private static class OsmStreamReader extends DefaultHandler {
         private OsmPrimitive current;
-        private DataSet constructed = new DataSet();
+        private DataSet constructed = new DataSetMemoryImpl();
         private List<Node> wayNodes = new ArrayList<Node>();
     
         private Storage<String> strings = new Storage<String>();

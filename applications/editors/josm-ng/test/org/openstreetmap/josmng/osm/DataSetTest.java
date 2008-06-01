@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 public class DataSetTest {
     private static final double EPSILON = 1e-9;
      
-    private DataSet data = new DataSet();
+    private DataSet data = DataSet.empty();
     private Node n1 = data.createNode(10, 11);
     private Node n2 = data.createNode(20, 21); 
     private Node n3 = data.createNode(30, 31); 
@@ -274,20 +274,26 @@ public class DataSetTest {
             n2.delete();
         }}, null);
         
-        assertFalse(data.getWays().contains(w1));
-        assertFalse(data.getNodes().contains(n2));
+        assertFalse(contains(w1));
+        assertFalse(contains(n2));
 
         undo.undo();
         // would like to test for == instead of equals
-        assertTrue(data.getWays().contains(w1));
-        assertTrue(data.getNodes().contains(n2));
+        assertTrue(contains(w1));
+        assertTrue(contains(n2));
 
         undo.redo();
-        assertFalse(data.getWays().contains(w1));
-        assertFalse(data.getNodes().contains(n2));
+        assertFalse(contains(w1));
+        assertFalse(contains(n2));
     }
-    
-    
+
+    private boolean contains(OsmPrimitive prim) {
+        for (OsmPrimitive curr : data.getPrimitives(Bounds.WORLD)) {
+            if (prim == curr) return true;
+        }
+        return false;
+    }
+        
     /*
     @BeforeClass
     public static void setUpClass() throws Exception {

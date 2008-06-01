@@ -187,7 +187,7 @@ public class Main extends javax.swing.JFrame {
             DataSet ds = DataSet.fromStream(new FileInputStream(args[0]));
             view.addLayer(new OsmLayer(view, args[0], ds));
         } else {
-            view.addLayer(new OsmLayer(view, "new", new DataSet()));
+            view.addLayer(new OsmLayer(view, "new", DataSet.empty()));
         }
     }
     

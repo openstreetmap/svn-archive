@@ -229,7 +229,7 @@
             <rule e="way" k="railway" v="abandoned">
                 <line class='bridge-casing railway-rail-bridge-casing' smart-linecap='no'/>
             </rule>
-            <rule e="way" k="railway" v="light_rail">
+            <rule e="way" k="railway" v="light_rail|incline">
                 <line class='bridge-casing railway-light-rail-bridge-casing' smart-linecap='no'/>
             </rule>
             <rule e="way" k="railway" v="subway">
@@ -309,7 +309,7 @@
             <rule e="way" k="railway" v="rail">
                 <line class='bridge-core railway-rail-bridge-core' smart-linecap='no'/>
             </rule>
-            <rule e="way" k="railway" v="light_rail">
+            <rule e="way" k="railway" v="light_rail|incline">
                 <line class='bridge-core railway-light-rail-bridge-core' smart-linecap='no'/>
             </rule>
             <rule e="way" k="railway" v="subway">
@@ -487,7 +487,7 @@
             <rule e="way" k="railway" v="subway">
                 <line class='railway-casing railway-subway-casing' />
             </rule>
-            <rule e="way" k="railway" v="light_rail">
+            <rule e="way" k="railway" v="light_rail|incline">
                 <line class='railway-casing railway-light-rail-casing' />
             </rule>
             <rule e="way" k="railway" v="rail">
@@ -689,7 +689,7 @@
             <rule e="way" k="railway" v="subway">
                 <line class='railway-core railway-subway-core' />
             </rule>
-            <rule e="way" k="railway" v="light_rail">
+            <rule e="way" k="railway" v="light_rail|incline">
                 <line class='railway-core railway-light-rail-core' />
             </rule>
             <rule e="way" k="railway" v="rail">
@@ -807,7 +807,7 @@
 				<line class='tunnel-casing railway-subway-casing tunnel' mask-class='tunnel-core railway-subway-core'/>
 				<line class='railway-subway-casing highway-tunnel-ends'/>
             </rule>
-            <rule e="way" k="railway" v="light_rail">
+            <rule e="way" k="railway" v="light_rail|incline">
 				<line class='tunnel-casing railway-light-rail-casing tunnel' mask-class='tunnel-core railway-light-rail-core'/>
 				<line class='railway-light-rail-casing highway-tunnel-ends'/>
             </rule>
@@ -902,7 +902,7 @@
             <rule e="way" k="construction" v="subway">
                 <line class='railway-core railway-subway-core under-construction' />
             </rule>
-            <rule e="way" k="construction" v="light_rail">
+            <rule e="way" k="construction" v="light_rail|incline">
                 <line class='railway-core railway-light-rail-core under-construction' />
             </rule>
             <rule e="way" k="construction" v="rail">

@@ -32,13 +32,10 @@ execfile("weights.py")
 
 class LoadOsm:
   """Parse an OSM file looking for routing information, and do routing with it"""
-  def __init__(self, transport, storeMap = 0):
+  def __init__(self, transport):
     """Initialise an OSM-file parser"""
     self.routing = {}
-    self.routeableNodes = {}
-    self.nodes = {}
-    self.ways = []
-    self.storeMap = storeMap
+    self.rnodes = {}
     self.transport = transport
   
   def getArea(self, lat, lon):
@@ -93,6 +90,7 @@ class LoadOsm:
     reversible = not oneway in('yes','true','1')
 
     # Calculate what vehicles can use this route
+    # TODO: just use getWeight != 0
     access = {}
     access['cycle'] = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'track','service')
     access['car'] = highway in ('motorway','trunk','primary','secondary','tertiary','unclassified','minor','residential', 'service')
@@ -101,28 +99,25 @@ class LoadOsm:
     access['horse'] = highway in ('track','unclassified','bridleway')
 
     # Store routing information
-    last = -1
-    for i_obj in nodes:
-      i = i_obj[0]
-      if last != -1:
+    last = [None,None,None]
+    
+    for node in nodes:
+      (node_id,x,y) = node
+      if last[0]:
         if(access[self.transport]):
           weight = getWeight(self.transport, highway)
-          self.addLink(last, i, weight)
+          self.addLink(last[0], node_id, weight)
+          self.makeNodeRouteable(last)
           if reversible or self.transport == 'foot':
-            self.addLink(i, last, weight)
-      last = i
+            self.addLink(node_id, last[0], weight)
+            self.makeNodeRouteable(node)
+      last = node
 
-    # Store map information
-    if(self.storeMap):
-      wayType = self.WayType(tags)
-      if(wayType):
-        self.ways.append({ \
-          't':wayType,
-          'n':nodes})
-
+  def makeNodeRouteable(self,node):
+    self.rnodes[node[0]] = [node[1],node[2]]
+    
   def addLink(self,fr,to, weight=1):
     """Add a routeable edge to the scenario"""
-    self.routeablefrom(fr)
     try:
       if to in self.routing[fr].keys():
         return
@@ -130,13 +125,6 @@ class LoadOsm:
     except KeyError:
       self.routing[fr] = {to: weight}
 
-  def WayType(self, tags):
-    # Look for a variety of tags (priority order - first one found is used)
-    for key in ('highway','railway','waterway','natural'):
-      value = tags.get('highway', '')
-      if value:
-        return(self.equivalent(value))
-    return('')
   def equivalent(self,tag):
     """Simplifies a bunch of tags to nearly-equivalent ones"""
     equivalent = { \
@@ -164,38 +152,34 @@ class LoadOsm:
     except KeyError:
       return(tag)
     
-  def routeablefrom(self,fr):
-    self.routeableNodes[fr] = 1
-
-  def findNode(self,lat,lon,routeType):
-    """Find the nearest node to a point.
-    Filters for nodes which have a route leading from them"""
-    maxDist = 1000
+  def findNode(self,lat,lon):
+    """Find the nearest node that can be the start of a route"""
+    (x,y) = tilenames.latlon2xy(lat,lon,31)
+    return(self.findNodeXY(x,y))
+    
+  def findNodeXY(self,x,y):
+    """Find the nearest node that can be the start of a route"""
+    maxDist = 1E+20
     nodeFound = None
-    for id in self.routeableNodes[routeType].keys():
-      if id not in self.nodes:
-        print "Ignoring undefined node %s" % id
-        continue
-      n = self.nodes[id]
-      dlat = n[0] - lat
-      dlon = n[1] - lon
-      dist = dlat * dlat + dlon * dlon
+    for (node_id,pos) in self.rnodes.items():
+      dx = pos[0] - x
+      dy = pos[1] - y
+      dist = dx * dx + dy * dy
       if(dist < maxDist):
         maxDist = dist
-        nodeFound = id
+        nodeFound = node_id
     return(nodeFound)
       
   def report(self):
     """Display some info about the loaded data"""
-    report = "Loaded %d nodes,\n" % len(self.nodes.keys())
-    report = report + "%d ways, and...\n" % len(self.ways)
-    report = report + "%d %s routes\n" % (len(self.routing.keys()), self.transport)
-    return(report)
+    print "Loaded %d nodes" % len(self.rnodes.keys())
+    print "Loaded %d %s routes" % (len(self.routing.keys()), self.transport)
 
 # Parse the supplied OSM file
 if __name__ == "__main__":
-  data = LoadOsm("cycle", True)
-  if(data.getArea(52.55291,-1.81824)):
-    print data.report()
-  else:
+  data = LoadOsm("cycle")
+  if(not data.getArea(52.55291,-1.81824)):
     print "Failed to get data"
+  data.report()
+
+  print "Searching for node: found " + str(data.findNode(52.55291,-1.81824))

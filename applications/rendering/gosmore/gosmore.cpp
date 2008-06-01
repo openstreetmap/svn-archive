@@ -1971,6 +1971,7 @@ int main (int argc, char *argv[])
     
     int s2grp = S2GROUP (0), pairs;
     halfSegType *seg = (halfSegType *) malloc (PAIRS * sizeof (*seg));
+    assert (seg /* Out of memory. Reduce PAIRS for small scale rebuilds. */);
     ndType ndWrite;
     for (int i = PAIRGROUP2 (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
       REBUILDWATCH (for (pairs = 0; pairs < PAIRS &&

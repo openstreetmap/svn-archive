@@ -10,6 +10,9 @@ a little help:
 		- colour
 5. icon attributes
 		- icon path to icon , relative from where this file is
+6. routing attributes
+		- any of the keys under 'Map_Features#Restrictions' together
+		  with an integer for the km/h. 'modifier' is special.
 
 Using both area and line attributes for the same key/value pair doesn't work!
 -->
@@ -181,7 +184,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="highway" v="mini_roundabout" />
 		<icon annotate="true" src="vehicle/restrictions/roundabout_left.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -195,7 +198,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="highway" v="traffic_signals" />
 		<icon annotate="true" src="vehicle/restrictions/traffic-light.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 	
 	<rule>
@@ -209,7 +212,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="highway" v="gate" />
 		<icon annotate="true" src="vehicle/gate.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 	
 	<rule>
@@ -927,7 +930,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="vehicle/parking.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -973,7 +976,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="amenity" v="fuel" />
 		<icon annotate="true" src="vehicle/fuel_station.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 
 	<rule>
@@ -2205,35 +2208,35 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="place" v="town" />
 		<icon annotate="true" src="places/settlement/town.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="place" v="village" />
 		<icon annotate="true" src="places/settlement/town.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="place" v="hamlet" />
 		<icon annotate="true" src="places/settlement/town.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="place" v="suburb" />
 		<icon annotate="true" src="places/settlement/town.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="place" v="locality" />
 		<icon annotate="true" src="places/locality.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>

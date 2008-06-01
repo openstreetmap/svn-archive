@@ -47,6 +47,7 @@ class LoadOsm:
 
     tileID = '%d,%d'%(x,y)
     if(self.tiles.get(tileID,False)):
+      print "Already got %s" % tileID
       return
     self.tiles[tileID] = True
     
@@ -82,10 +83,13 @@ class LoadOsm:
       elif(in_way):
         result_nd = re_nd.match(line)
         if(result_nd):
-          way_nodes.append([
-            int(result_nd.group(1)),
-            int(result_nd.group(2)),
-            int(result_nd.group(3))])
+          node_id = int(result_nd.group(1))
+          x = float(result_nd.group(2))
+          y = float(result_nd.group(3))
+
+          (lat,lon) = tilenames.xy2latlon(x,y,31)
+          
+          way_nodes.append([node_id,lat,lon])
         else:
           result_tag = re_tag.match(line)
           if(result_tag):
@@ -109,7 +113,10 @@ class LoadOsm:
 
     # Store routing information
     last = [None,None,None]
-    
+
+    if(wayID == 41):
+      print nodes
+      sys.exit()
     for node in nodes:
       (node_id,x,y) = node
       if last[0]:
@@ -163,20 +170,19 @@ class LoadOsm:
     
   def findNode(self,lat,lon):
     """Find the nearest node that can be the start of a route"""
-    (x,y) = tilenames.latlon2xy(lat,lon,31)
-    return(self.findNodeXY(x,y))
-    
-  def findNodeXY(self,x,y):
-    """Find the nearest node that can be the start of a route"""
+    self.getArea(lat,lon)
     maxDist = 1E+20
     nodeFound = None
+    posFound = None
     for (node_id,pos) in self.rnodes.items():
-      dx = pos[0] - x
-      dy = pos[1] - y
+      dy = pos[0] - lat
+      dx = pos[1] - lon
       dist = dx * dx + dy * dy
       if(dist < maxDist):
         maxDist = dist
         nodeFound = node_id
+        posFound = pos
+    #print "found at %s"%str(posFound)
     return(nodeFound)
       
   def report(self):

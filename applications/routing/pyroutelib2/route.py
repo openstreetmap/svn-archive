@@ -66,7 +66,7 @@ class Router:
 
     # Limit for how long it will search
     count = 0
-    while count < 10000:
+    while count < 1000000:
       #print "Q contains %d" % len(self.queue)
       count = count + 1
       try:

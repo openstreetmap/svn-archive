@@ -47,12 +47,12 @@ class LoadOsm:
 
     tileID = '%d,%d'%(x,y)
     if(self.tiles.get(tileID,False)):
-      print "Already got %s" % tileID
+      #print "Already got %s" % tileID
       return
     self.tiles[tileID] = True
     
-    print "Downloading %d,%d at z%d" % (x,y,z)
     filename = tiledata.GetOsmTileData(z,x,y)
+    #print "Loading %d,%d at z%d from %s" % (x,y,z,filename)
     return(self.loadOsm(filename))
 
   def loadOsm(self, filename):
@@ -114,7 +114,7 @@ class LoadOsm:
     # Store routing information
     last = [None,None,None]
 
-    if(wayID == 41):
+    if(wayID == 41 and 0):
       print nodes
       sys.exit()
     for node in nodes:

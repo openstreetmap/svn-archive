@@ -142,7 +142,7 @@ public class OsmPrimitiveTest {
         }
     }
 
-    private static DataSet testing = new DataSet();
+    private static DataSet testing = DataSet.empty();
     
     private static class Prim extends OsmPrimitive {
         public Prim() {

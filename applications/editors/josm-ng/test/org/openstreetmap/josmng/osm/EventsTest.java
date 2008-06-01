@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  */
 public class EventsTest {
     
-    private DataSet data = new DataSet();
+    private DataSet data = DataSet.empty();
     private Node n1 = data.createNode(10, 11);
     private Node n2 = data.createNode(20, 21); 
     private Node n3 = data.createNode(30, 31); 

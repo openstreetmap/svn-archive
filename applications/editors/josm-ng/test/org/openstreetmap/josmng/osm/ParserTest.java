@@ -21,6 +21,8 @@
 package org.openstreetmap.josmng.osm;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -50,11 +52,27 @@ public class ParserTest {
         assertEquals(deleted, prim.isDeleted());
     }
     
+    private Collection<Node> getNodes() {
+        Collection<Node> nodes = new ArrayList<Node>();
+        for (OsmPrimitive prim : data.getPrimitives(Bounds.WORLD)) {
+            if (prim instanceof Node) nodes.add((Node)prim);
+        }
+        return nodes;
+    }
+
+    private Collection<Way> getWays() {
+        Collection<Way> ways = new ArrayList<Way>();
+        for (OsmPrimitive prim : data.getPrimitives(Bounds.WORLD)) {
+            if (prim instanceof Way) ways.add((Way)prim);
+        }
+        return ways;
+    }
+    
     public @Test void testIndividualEdits() {
-        assertEquals(4, data.getNodes().size());
+        assertEquals(4, getNodes().size());
 
         int zeros = 0;
-        for (Node n : data.getNodes()) {
+        for (Node n : getNodes()) {
             assertFalse(n.getId() < 0);
             if (n.getId() == 0) zeros++;
         }
@@ -65,7 +83,7 @@ public class ParserTest {
         checkFlags(data.getNode(44), true, false, true);
 
         zeros = 0;
-        for (Way w : data.getWays()) {
+        for (Way w : getWays()) {
             assertFalse(w.getId() < 0);
             if (w.getId() == 0) zeros++;
         }

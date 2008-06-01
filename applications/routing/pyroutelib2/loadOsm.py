@@ -35,11 +35,7 @@ class LoadOsm:
   def __init__(self, transport, storeMap = 0):
     """Initialise an OSM-file parser"""
     self.routing = {}
-    self.routeTypes = ('cycle','car','train','foot','horse')
     self.routeableNodes = {}
-    for routeType in self.routeTypes:
-      self.routing[routeType] = {}
-      self.routeableNodes[routeType] = {}
     self.nodes = {}
     self.ways = []
     self.storeMap = storeMap
@@ -109,12 +105,11 @@ class LoadOsm:
     for i_obj in nodes:
       i = i_obj[0]
       if last != -1:
-        for routeType in self.routeTypes:
-          if(access[routeType]):
-            weight = getWeight(routeType, highway)
-            self.addLink(last, i, routeType, weight)
-            if reversible or routeType == 'foot':
-              self.addLink(i, last, routeType, weight)
+        if(access[self.transport]):
+          weight = getWeight(self.transport, highway)
+          self.addLink(last, i, weight)
+          if reversible or self.transport == 'foot':
+            self.addLink(i, last, weight)
       last = i
 
     # Store map information
@@ -125,15 +120,15 @@ class LoadOsm:
           't':wayType,
           'n':nodes})
 
-  def addLink(self,fr,to, routeType, weight=1):
+  def addLink(self,fr,to, weight=1):
     """Add a routeable edge to the scenario"""
-    self.routeablefrom(fr,routeType)
+    self.routeablefrom(fr)
     try:
-      if to in self.routing[routeType][fr].keys():
+      if to in self.routing[fr].keys():
         return
-      self.routing[routeType][fr][to] = weight
+      self.routing[fr][to] = weight
     except KeyError:
-      self.routing[routeType][fr] = {to: weight}
+      self.routing[fr] = {to: weight}
 
   def WayType(self, tags):
     # Look for a variety of tags (priority order - first one found is used)
@@ -169,8 +164,8 @@ class LoadOsm:
     except KeyError:
       return(tag)
     
-  def routeablefrom(self,fr,routeType):
-    self.routeableNodes[routeType][fr] = 1
+  def routeablefrom(self,fr):
+    self.routeableNodes[fr] = 1
 
   def findNode(self,lat,lon,routeType):
     """Find the nearest node to a point.
@@ -194,14 +189,13 @@ class LoadOsm:
     """Display some info about the loaded data"""
     report = "Loaded %d nodes,\n" % len(self.nodes.keys())
     report = report + "%d ways, and...\n" % len(self.ways)
-    for routeType in self.routeTypes:
-      report = report + " %d %s routes\n" % ( \
-        len(self.routing[routeType].keys()),
-        routeType)
+    report = report + "%d %s routes\n" % (len(self.routing.keys()), self.transport)
     return(report)
 
 # Parse the supplied OSM file
 if __name__ == "__main__":
   data = LoadOsm("cycle", True)
-  print data.getArea(52.55291,-1.81824)
-  print data.report()
+  if(data.getArea(52.55291,-1.81824)):
+    print data.report()
+  else:
+    print "Failed to get data"

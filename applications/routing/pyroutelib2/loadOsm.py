@@ -37,10 +37,19 @@ class LoadOsm:
     self.routing = {}
     self.rnodes = {}
     self.transport = transport
+    self.tiles = {}
   
   def getArea(self, lat, lon):
+    """Download data in the vicinity of a lat/long"""
+    
     z = tiledata.DownloadLevel()
     (x,y) = tilenames.tileXY(lat, lon, z)
+
+    tileID = '%d,%d'%(x,y)
+    if(self.tiles.get(tileID,False)):
+      return
+    self.tiles[tileID] = True
+    
     print "Downloading %d,%d at z%d" % (x,y,z)
     filename = tiledata.GetOsmTileData(z,x,y)
     return(self.loadOsm(filename))
@@ -180,6 +189,7 @@ if __name__ == "__main__":
   data = LoadOsm("cycle")
   if(not data.getArea(52.55291,-1.81824)):
     print "Failed to get data"
+  data.getArea(52.55291,-1.81824)
   data.report()
 
   print "Searching for node: found " + str(data.findNode(52.55291,-1.81824))

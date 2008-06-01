@@ -1,13 +1,13 @@
 #!/usr/bin/python
 #----------------------------------------------------------------
-# routeAsOsm - routes within an OSM file, and generates a
+# routeAsOsm - routes with OSM data, and generates a
 # GPX file containing the result
 #
 #------------------------------------------------------
 # Usage: 
-#  routeAsGpx.py [input OSM file] [start node] [end node] [transport] [description]
+#  routeAsGpx.py [lat1] [lon1] [lat2] [lon2] [transport]
 #------------------------------------------------------
-# Copyright 2007, Oliver White
+# Copyright 2007-2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,10 +21,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#------------------------------------------------------
-# Changelog:
-#  2007-11-04  OJW  Created
-#  2007-11-05  OJW  Multiple forms of transport
 #------------------------------------------------------
 from route import *
   

@@ -26,9 +26,9 @@
   <rule e="node|way" k="osmarender:render" v="~|yes">
 		<rule e="node|way" k="osmarender:renderName" v="~|yes">
 		
-      <rule e="node" k="place" v="country" horizontalProximity="0.8" verticalProximity="0.6">
-        <text k="name" class='caption-casing country-caption-casing' />
-        <text k="name" class='caption-core country-caption' />
+      <rule e="node" k="place" v="city" horizontalProximity="0.8" verticalProximity="0.6">
+        <text k="name" class='caption-casing city-caption-casing' />
+        <text k="name" class='caption-core city-caption' />
       </rule>
 
     </rule> <!-- k="osmarender:renderName" v="~|yes" -->
@@ -66,15 +66,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-	.country-caption-casing {
-		font-size: 4000px;
-		stroke-width: 1000px;
-		font-weight: bold; 
-	}
-	.country-caption {
-		font-size: 4000px;
-		font-weight: bold;
-	}
+			.city-caption-casing    { font-size: 3000px; stroke-width: 800px; }
+			.city-caption           { font-size: 3000px; }
 
 
             /* Map decoration */

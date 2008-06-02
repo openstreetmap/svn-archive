@@ -1311,7 +1311,7 @@ sub NewClientVersion
 
     if ($runningVersion > $currentVersion)
     {
-        print "\n! WARNNG: you can't have a more current client than the server\n";
+        print "\n! WARNNG: you can't have a more current client than the server: $runningVersion > $currentVersion\n";
         return 0;
     }
     elsif ($runningVersion == $curVerFile)

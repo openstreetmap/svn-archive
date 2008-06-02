@@ -771,6 +771,14 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 statusMessage("Downloading: Map data for $Layers to $partialFile", $currentSubTask, $progressJobs, $progressPercent,0);
                 print "Download\n$URL\n" if ($Config->get("Debug"));
                 my $res = DownloadFile($URL, $partialFile, 0);
+                if (! $res)
+                {
+                    statusMessage("No data on OSMXAPI either...", $currentSubTask, $progressJobs, $progressPercent, 1);
+                    PutRequestBackToServer($X,$Y,$Zoom,"NoData");
+                    foreach my $file(@tempfiles) { killafile($file); }
+                    addFault("nodataXAPI",1);
+                    return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$Mode,1,$PID);
+                }
             }
             else
             {
@@ -793,7 +801,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         PutRequestBackToServer($X,$Y,$Zoom,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
-                        return cleanUpAndDie("GenerateTilesetSliced, no data (sliced).",$Mode,1,$PID);
+                        return cleanUpAndDie("GenerateTileset: no data! (sliced).",$Mode,1,$PID);
                     }
                 }
                 print STDERR "\n";

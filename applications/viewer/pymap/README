@@ -30,7 +30,7 @@ How to install:
 How to run:
 1) cd pymap
 2) python pymap (or ./pymap)
-3) visit http://localhost:8000 and have fun.
+3) visit http://localhost:8008 and have fun.
 4) press Ctrl-C to kill the server (if it still busy serving tiles you might have to press multiple times)
 
 How to uninstall:

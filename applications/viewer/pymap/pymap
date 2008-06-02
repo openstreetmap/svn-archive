@@ -67,5 +67,5 @@ class MyHttpHandler(BaseHTTPRequestHandler):
         return
 #main():
 installpath=sys.path[0]
-server = HTTPServer(('127.0.0.1', 8000), MyHttpHandler)
+server = HTTPServer(('127.0.0.1', 8008), MyHttpHandler)
 server.serve_forever()

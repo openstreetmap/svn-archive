@@ -2,8 +2,7 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -47,14 +46,52 @@ public class OverlappingWays extends Test
 	@Override
 	public void endTest() 
 	{
+		Map<List<Way>, List<WaySegment>> ways_seen = 
+                        new HashMap<List<Way>, List<WaySegment>>(500);
+
 		for (List<WaySegment> duplicated : nodePairs.values())
 		{
+			int highway = 0;
+			int railway = 0;
+
 			if (duplicated.size() > 1)
 			{
 				List<OsmPrimitive> prims = new ArrayList<OsmPrimitive>();
-				for (WaySegment ws : duplicated) prims.add(ws.way);
-				errors.add(new TestError(this, Severity.OTHER,
-					tr("Overlapping ways"), prims, duplicated));
+				List<Way> current_ways = new ArrayList<Way>();
+				List<WaySegment> highlight;
+
+				for (WaySegment ws : duplicated) 
+				{
+					if (ws.way.get("highway") != null)
+						highway++;
+					else if (ws.way.get("railway") != null)
+						railway++;
+
+					prims.add(ws.way);
+					current_ways.add(ws.way);
+				}
+				/* These ways not seen before 
+				 * If two or more of the overlapping ways are
+ 				 * highways or railways mark a seperate error   
+  				*/
+				if ((highlight = ways_seen.get(current_ways)) == null)
+                                {
+				    String errortype = tr("Overlapping ways");
+
+				     if (highway >1)
+					errortype = tr("Overlapping highways");
+				     else if (railway >1)
+					errortype = tr("Overlapping railways");
+
+				     errors.add(new TestError(this, Severity.OTHER,
+					tr(errortype), prims, duplicated));
+				     ways_seen.put(current_ways, duplicated);
+				}
+				else	/* way seen, mark highlight layer only */
+				{
+					for (WaySegment ws : duplicated) 
+                                            highlight.add(ws);
+				}
 			}
 		}
 		nodePairs = null;

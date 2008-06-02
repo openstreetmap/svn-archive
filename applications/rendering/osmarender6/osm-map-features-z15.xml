@@ -150,7 +150,7 @@
             <area class='building-block'/>
         </rule>
         <rule e="way" k="building" v="*">
-            <area class='building-block'/>
+            <area class='building-block no-bezier'/>
         </rule>
 
 	<!-- access rules for parking -->
@@ -893,7 +893,7 @@
         <!-- Surface lifts (render over pistes) -->
         <rule e="way" k="piste:lift" v="*">
             <rule e="way" k="piste:lift" v="t-bar|j-bar|platter">
-                <line class="aerialway-line piste-lift-t-bar-marker"/>
+                <line class="aerialway-line piste-lift-t-bar-marker no-bezier"/>
                 <line smart-linecap="no" class='aerialway-struts'/>
             </rule>
             <rule e="way" k="piste:lift" v="rope_tow">
@@ -910,19 +910,19 @@
         <!-- Aerialways (render over pistes) -->
         <rule e="node|way" k="aerialway" v="*">
             <rule e="way" k="aerialway" v="cable_car">
-                <line class="aerialway-line aerialway-cablecar-marker"/>
+                <line class="aerialway-line aerialway-cablecar-marker no-bezier"/>
             </rule>
             <else>
                 <rule e="way" k="aerialway" v="gondola">
-                    <line class="aerialway-line aerialway-gondola-marker"/>
+                    <line class="aerialway-line aerialway-gondola-marker no-bezier"/>
                 </rule>
                 <else>
                     <rule e="way" k="aerialway" v="chair_lift">
                         <rule e="way" k="piste:lift:occupancy" v="4|5|6">
-                            <line class="aerialway-line aerialway-chairlift4-marker"/>
+                            <line class="aerialway-line aerialway-chairlift4-marker no-bezier"/>
                         </rule>
                         <else>
-                            <line class="aerialway-line aerialway-chairlift2-marker"/>
+                            <line class="aerialway-line aerialway-chairlift2-marker no-bezier"/>
                         </else>
                     </rule>
                     <else>
@@ -931,7 +931,7 @@
                         </rule>
                         <else>
                             <rule e="way" k="aerialway" v="*">
-                                <line class='aerialway-line'/>
+                                <line class='aerialway-line no-bezier'/>
                             </rule>
                         </else>
                     </else>

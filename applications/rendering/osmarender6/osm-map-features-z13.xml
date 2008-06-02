@@ -130,7 +130,7 @@
             <area class='building-block'/>
         </rule>
         <rule e="way" k="building" v="*">
-            <area class='building-block'/>
+            <area class='building-block no-bezier'/>
         </rule>
 
 
@@ -577,7 +577,7 @@
 
         <!-- Aerialways (render over pistes) -->
         <rule e="node|way" k="aerialway" v="*">
-            <line class='aerialway-line'/>
+            <line class='aerialway-line no-bezier'/>
             <line smart-linecap="no" class='aerialway-struts'/>
             <rule e="node" k="aerialway" v="station">
                 <circle r='1.5px' class="aerialway-station"/>

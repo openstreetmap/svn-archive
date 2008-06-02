@@ -119,7 +119,7 @@
             <area class='building-block'/>
         </rule>
         <rule e="way" k="building" v="*">
-            <area class='building-block'/>
+            <area class='building-block no-bezier'/>
         </rule>
 
 
@@ -525,8 +525,8 @@
 	
 	<!-- Aerialways -->
 	<rule e="way" k="aerialway" v="cable_car|gondola">
-		<line class="aerialway-line" smart-linecap='no'/>
-		<line class="aerialway-struts" smart-linecap='no'/>
+		<line class="aerialway-line no-bezier" smart-linecap='no'/>
+		<line class="aerialway-struts no-bezier" smart-linecap='no'/>
 	</rule>
 
 

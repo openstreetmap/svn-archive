@@ -154,7 +154,7 @@
             <area class='building-block'/>
         </rule>
         <rule e="way" k="building" v="*">
-            <area class='building-block'/>
+            <area class='building-block no-bezier'/>
         </rule>
 
 
@@ -773,23 +773,23 @@
         <!-- Surface lifts (render over pistes) -->
         <rule e="way" k="piste:lift" v="*">
             <rule e="way" k="piste:lift" v="t-bar|j-bar|platter">
-                <line class="aerialway-line piste-lift-t-bar-marker"/>
+                <line class="aerialway-line piste-lift-t-bar-marker no-bezier"/>
                 <line smart-linecap="no" class='aerialway-struts'/>
                 <rule e="way" k="name" v="*">
                     <text k="name" dx='0px' dy='-3px' class="aerialway-name" text-anchor='middle' startOffset='50%'/>
                 </rule>
             </rule>
             <rule e="way" k="piste:lift" v="rope_tow">
-                <line smart-linecap="no" class="piste-lift-rope-tow"/>
+                <line smart-linecap="no" class="piste-lift-rope-tow no-bezier"/>
             </rule>
             <rule e="way" k="piste:lift" v="magic_carpet">
-                <line smart-linecap="no" class="piste-lift-magic-carpet"/>
+                <line smart-linecap="no" class="piste-lift-magic-carpet no-bezier"/>
             </rule>
         </rule>
 
         <!-- Aerialways (render over pistes) -->
         <rule e="node|way" k="aerialway" v="*">
-            <line class='aerialway-line'/>
+            <line class='aerialway-line no-bezier'/>
             <line smart-linecap="no" class='aerialway-struts'/>
             <rule e="node" k="aerialway" v="station">
                 <circle r='1.5px' class="aerialway-station"/>

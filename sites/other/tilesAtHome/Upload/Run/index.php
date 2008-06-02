@@ -315,9 +315,12 @@ function SaveBlankTiles($BlankTileList, $UserID, $ValidTileset, $TilesetX, $Tile
     else
     {
       # Delete a blank tile
-      $SQL = sprintf("delete from `tiles_blank` where `x`=%d AND `y`=%d AND `z`=%d AND `layer`=%d", $X, $Y, $Z, $Layer);
-      mysql_query($SQL);
-      logSqlError();
+      ## No need to delete blankness entries here. We can vacuum this in a non-performance
+      ## critical process. Not executing the below leads to a few redundant blankness entries.
+      ;
+      ##$SQL = sprintf("delete from `tiles_blank` where `x`=%d AND `y`=%d AND `z`=%d AND `layer`=%d", $X, $Y, $Z, $Layer);
+      ##mysql_query($SQL);
+      ##logSqlError();
     }
     DeleteRealTile($X,$Y,$Z,$Layer);
 

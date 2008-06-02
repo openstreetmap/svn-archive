@@ -80,6 +80,8 @@
                 InsertBlankTile($X, $Y, 12, $LayerID, 334, $type);  
             }
         }
+        //The next line is here temporarily to get rid of the captionless "unknown tile" tiles.
+        fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile:$complexity","r");
         BlankTile("unknown", TRUE); // probably shouldn't reach this line
         break;
       }

@@ -121,6 +121,7 @@ my $JobTime;
 # Handle the command-line
 my $Mode = shift();
 
+
 # Check the on disk image tiles havn't been corrupted.
 # these are flagfiles that tell the server certain metainfo through their filesize.
 if( -s "emptyland.png" != 67 )
@@ -185,6 +186,13 @@ if($Mode eq "xy")
     # ----------------------------------
     # "xy" as first argument means you want to specify a tileset to render
     # ----------------------------------
+
+    # Add a basic auto-updating mechanism. 
+    if (NewClientVersion()) 
+    {
+        UpdateClient();
+    }
+
     my $X = shift();
     my $Y = shift();
     if( not defined $X or not defined $Y )
@@ -285,6 +293,13 @@ elsif ($Mode eq "loop")
             cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
         }
 
+        # Add a basic auto-updating mechanism. 
+        if (NewClientVersion()) 
+        {
+            UpdateClient();
+            $dirent = "0/0/0"; # force reexec after update
+        }
+
         reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
@@ -341,11 +356,22 @@ elsif ($Mode eq "stop")
  #   talkInSleep("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line", 60);
     exit(1);
 }
+elsif ($Mode eq "update") 
+{
+    UpdateClient();
+}
 elsif ($Mode eq "") 
 {
     # ----------------------------------
     # Normal mode downloads request from server
     # ----------------------------------
+
+    # Add a basic auto-updating mechanism. 
+    if (NewClientVersion()) 
+    {
+        UpdateClient();
+    }
+
     my ($did_something, $message) = ProcessRequestsFromServer();
     
     if (! $did_something)
@@ -1236,7 +1262,7 @@ sub RenderTile
 #-----------------------------------------------------------------------------
 # Gets latest copy of osmarender from repository
 #-----------------------------------------------------------------------------
-sub UpdateClient # FIXME: should be called. (triggered by server?)
+sub UpdateClient # 
 {
     my $Cmd = sprintf("%s%s %s",
         $Config->get("i18n") ? "LC_ALL=C " : "",
@@ -1245,8 +1271,57 @@ sub UpdateClient # FIXME: should be called. (triggered by server?)
 
     statusMessage("Updating the Client", $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
-    ## TODO: Implement and check output from svn status, too.
+    ## FIXME TODO: Implement and check output from svn status, too.
 
+}
+
+sub NewClientVersion 
+{
+    my $versionfile = $Config->get("WorkingDirectory") . "/version.txt";
+    my $runningVersion;
+    if (open(versionfile, "<", $versionfile))
+    {
+        $runningVersion = <versionfile>;
+        chomp $runningVersion;
+        close versionfile;
+    }
+    elsif (open(versionfile, ">", $versionfile))
+    {
+        $runningVersion = 0; 
+        print versionfile $runningVersion;
+        close versionfile;
+    }
+    else
+    {
+        die("can't open $versionfile");
+    }
+    # return 0;
+
+    my $curVerFile = $Config->get("WorkingDirectory") . "/newversion.txt";
+    my $currentVersion;
+   
+    DownloadFile($Config->get("VersionCheckURL"), $curVerFile ,0);
+    if (open(versionfile, "<", $curVerFile))
+    {
+        $currentVersion = <versionfile>;
+        chomp $runningVersion;
+        close versionfile;
+        killafile($curVerFile);
+    }
+
+    if ($runningVersion > $currentVersion)
+    {
+        print "\n! WARNNG: you can't have a more current client than the server\n";
+        return 0;
+    }
+    elsif ($runningVersion == $curVerFile)
+    {
+        return 0; # no new version
+    }
+    else
+    {
+        return 1; # version on server is newer
+    }
 }
 
 

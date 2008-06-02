@@ -90,6 +90,12 @@ elsif (open(FAILFILE, ">", $failFile))
     print FAILFILE $sleepdelay;
     close FAILFILE;
 }
+else
+{
+    die("can't open $failFile");
+
+}
+
 
 ### don't compress, this is handled from tilesGen.pl now
 

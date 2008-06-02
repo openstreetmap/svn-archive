@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-13 11:40+0200\n"
-"PO-Revision-Date: 2008-05-14 18:00+0200\n"
+"POT-Creation-Date: 2008-05-30 14:20+0200\n"
+"PO-Revision-Date: 2008-05-30 14:21+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -352,8 +352,8 @@ msgstr[1] "Knotenpunkte"
 #, java-format
 msgid " ({0} node)"
 msgid_plural " ({0} nodes)"
-msgstr[0] "{0} Knotenpunkt"
-msgstr[1] "{0} Knotenpunkte"
+msgstr[0] " {0} Knotenpunkt"
+msgstr[1] " {0} Knotenpunkte"
 
 #: ../../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:88
 #: ../../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:185
@@ -1349,7 +1349,9 @@ msgstr ""
 msgid ""
 "Drag play head and release near track to play audio from there; SHIFT"
 "+release to synchronize audio at that point."
-msgstr "Abspielposition in der Nähe eines Tracks ablegen um Audio abzuspielen. Zusätzliches Drucken von SHIFT sychronisiert Audio an diesem Punkt."
+msgstr ""
+"Abspielposition in der Nähe eines Tracks ablegen um Audio abzuspielen. "
+"Zusätzliches Drucken von SHIFT sychronisiert Audio an diesem Punkt."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:75
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:80
@@ -1384,25 +1386,25 @@ msgstr "Fügt einen Knotenpunkt in einen bestehenden Weg ein"
 msgid "Add node into way and connect"
 msgstr "Knotenpunkt in einen Weg einfügen und verbinden"
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:595
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:597
 msgid "Click to create a new way to the existing node."
 msgstr "Klicken, um einen neuen Weg zum existierenden Knotenpunkt zu erstellen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:597
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:599
 msgid "Click to make a connection to the existing node."
 msgstr "Klicken, um eine Verbindung zum existierenden Knotenpunkt zu erzeugen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:600
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:602
 msgid "Click to insert a node and create a new way."
 msgstr "Klicken, um einen Knotenpunkt einzufügen und einen neuen Weg zu erstellen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:602
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:604
 msgid "Click to insert a new node and make a connection."
 msgstr ""
 "Klicken, um einen neuen Knotenpunkt einzufügen und eine Verbindung zu "
 "erstellen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:606
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:608
 msgid "Click to insert a new node."
 msgstr "Klicken, um einen neuen Knotenpunkt zu erzeugen."
 
@@ -1569,8 +1571,14 @@ msgid "Change Properties"
 msgstr "Einstellungen ändern"
 
 #: ../../core/src/org/openstreetmap/josm/gui/GettingStarted.java:55
-msgid "<h2>(Message of the day not available)</h2>"
-msgstr "<h2>(Meldung des Tages nicht verfügbar)</h2>"
+msgid ""
+"<html>\n"
+"<h1>JOSM, the Java OpenStreetMap editor</h1>\n"
+"<h2>(Message of the day not available)</h2>"
+msgstr ""
+"<html>\n"
+"<h1>JOSM, der Java-OpenStreetMap-Editor</h1>\n"
+"<h2>(Meldung des Tages nicht verfügbar)</h2>"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:50
 msgid "You can paste an URL here to download the area."
@@ -1974,19 +1982,25 @@ msgstr "Einige Wegpunkte mit Zeitstempeln vor Beginn des Tracks wurden überspru
 msgid ""
 "Some waypoints which were too far from the track to sensibly estimate their "
 "time were omitted."
-msgstr "Einige Wegpunkte, welche für eine vernünftige Zeitabschätzung zu weit vom Track entfernt waren, wurden übersprungen."
+msgstr ""
+"Einige Wegpunkte, welche für eine vernünftige Zeitabschätzung zu weit vom "
+"Track entfernt waren, wurden übersprungen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:203
 msgid ""
 "You need to Drag the play head near to the GPX track whose associated sound "
 "track you were playing."
-msgstr "Die Abspielposition muss in die Nähe des GPX-Tracks, dessen Aufnahme abgespielt werden soll, bewegt werden."
+msgstr ""
+"Die Abspielposition muss in die Nähe des GPX-Tracks, dessen Aufnahme "
+"abgespielt werden soll, bewegt werden."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:249
 msgid ""
 "You need to SHIFT-Drag the play head onto an audio marker or onto the track "
 "point where you want to synchronize."
-msgstr "Die Abspielposition muss mit gedrückter SHIFT-Taste auf die zu sychronisierende Audio-Marke oder den Wegpunkt bewegt werden."
+msgstr ""
+"Die Abspielposition muss mit gedrückter SHIFT-Taste auf die zu "
+"sychronisierende Audio-Marke oder den Wegpunkt bewegt werden."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:258
 #: ../../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:213
@@ -2067,7 +2081,7 @@ msgstr "{0} besteht aus:"
 #: ../../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:308
 #, java-format
 msgid " ({0} deleted.)"
-msgstr "({0} gelöscht.)"
+msgstr " ({0} gelöscht.)"
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:387
 msgid "Convert to GPX layer"
@@ -2396,7 +2410,9 @@ msgstr "Audio-Marken (und Bild- und Web-Marken) und deren Bildsymbole beschrifte
 msgid ""
 "Automatically make a marker layer from any waypoints when opening a GPX "
 "layer."
-msgstr "Markenebene automatisch aus Wegpunkten erzeugen, wenn eine GPX-Ebene geöffnet wird."
+msgstr ""
+"Markenebene automatisch aus Wegpunkten erzeugen, wenn eine GPX-Ebene "
+"geöffnet wird."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:91
 msgid "When importing audio, make markers from..."
@@ -3649,7 +3665,9 @@ msgstr "Zum Tracing genutzte WMS-Ebene. Standard ist IR1."
 msgid ""
 "An interlude to the Lakewalker Python module to trace water bodies on "
 "Landsat imagery.<br><br>Version: {0}"
-msgstr "Ein Zwischenprogramm zum Lakewalker-Pythonmodul um  Wasserflächen auf Landsat-Bildern zu kennzeichnen.<br><br>Version: {0}"
+msgstr ""
+"Ein Zwischenprogramm zum Lakewalker-Pythonmodul um  Wasserflächen auf "
+"Landsat-Bildern zu kennzeichnen.<br><br>Version: {0}"
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:76
 msgid "Lakewalker Plugin Preferences"
@@ -3706,7 +3724,9 @@ msgstr "links"
 msgid ""
 "Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and "
 "move mouse."
-msgstr "Zoom: Mausrad oder Doppelklick.   Karte bewegen: Rechte Maustatse halten und Maus bewegen."
+msgstr ""
+"Zoom: Mausrad oder Doppelklick.   Karte bewegen: Rechte Maustatse halten und "
+"Maus bewegen."
 
 #: ../grid/src/grid/GridLayer.java:192
 msgid "Grid origin location"
@@ -3841,11 +3861,11 @@ msgstr "Falsch geordnete Wege."
 msgid "This test checks the direction of water, land and coastline ways."
 msgstr "Dieser Test überprüft die Richtung von Wasser, Land und Küsten."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:34
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:33
 msgid "Overlapping ways."
 msgstr "Wege überlappen sich."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:35
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:34
 msgid ""
 "This test checks that a connection between two nodes is not used by more "
 "than one way."
@@ -3853,9 +3873,17 @@ msgstr ""
 "Dieser Test prüft dass eine Verbindung zwischen zwei Knoten nicht von mehr "
 "als einem Weg verwendet wird."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:57
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:79
 msgid "Overlapping ways"
-msgstr "Wege überlappen sich"
+msgstr "Überlappende Wege"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:82
+msgid "Overlapping highways"
+msgstr "Überlappende Straßen"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:84
+msgid "Overlapping railways"
+msgstr "Überlappende Schienen"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:19
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:45

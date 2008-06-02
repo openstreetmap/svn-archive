@@ -1306,7 +1306,7 @@ sub NewClientVersion
         $currentVersion = <versionfile>;
         chomp $runningVersion;
         close versionfile;
-        killafile($curVerFile);
+        rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
     }
 
     if ($runningVersion > $currentVersion)

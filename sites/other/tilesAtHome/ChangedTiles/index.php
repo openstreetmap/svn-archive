@@ -1,6 +1,6 @@
 <?php
 
-  $handle = fopen("http://www.openstreetmap.org/api/0.5/changes?hours=4", "r");
+  $handle = fopen("http://www.openstreetmap.org/api/0.5/changes?hours=6", "r");
   $contents = stream_get_contents($handle);
   fclose($handle);
 
@@ -58,10 +58,28 @@
          }
          print "OK\n";
       } else {
-         print "Already in queue\n";
+        print "Already in queue: ";
+        if ($P != 3) {
+        # Check existing priority, and increase priority if requested/allowed priority is higher.
+        # There should only ever be one row returned here, so the 'max' is just a safety case.
+        $SQL = sprintf("SELECT priority as p FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d ",
+                $X, $Y, $Z, REQUEST_DONE);
+        $Result = mysql_query($SQL);
+        if ($row = mysql_fetch_assoc($Result) and $row['p'] > $P) {
+            $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d",
+              $P, $X, $Y, $Z, REQUEST_DONE);
+            mysql_query($SQL);
+            if(mysql_error()) {
+               printf("Database error %s ", mysql_error());
+            } else {
+                print "Updated priority from ".$row['p'] ." to $P ";
+            }
+        } else {
+          print "Current priority is ".$row['p'].".";
+        }
+        print "\n";
       }
-
     }
   }
-
+}
 ?>

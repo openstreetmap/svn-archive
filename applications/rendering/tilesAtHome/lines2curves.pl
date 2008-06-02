@@ -58,18 +58,28 @@ my @svg_lines = ();    # the lines from the svg file
 my %point_is_in;       # lookup for 'what ways is this point in?'
 my %to_transform;      # ways that need transforming
 
+my %no_bezier_ids;	# id with no bezier hinting
+
 # first pass, read in the svg lines, build the %point_is_in @svg_lines &
 # %to_transform structures.
+
 while (<>) {
     my $line = $_;
     $svg_lines[$line_position] = $line;
-    if ( $line =~ m{(<path \s id=\"(?:way|area)_\S+\" \s d=\") # the prefix of the path
+    if ( $line =~ m{<use \s xlink:href=\"\#(?:way|area)_(\S+)\" \s class=\" # get path name 
+		    .*no\-bezier.*/>$	
+		    }x ) {
+		$no_bezier_ids{$1} = 0;
+	}
+
+    if ( $line =~ m{(<path \s id=\"(?:way|area)_(\S+)\" \s d=\") # the prefix of the path
                     ([^\"Z]+)                          # the core path itself
                     (.*/>)$                           # the rest
                    }x ) { # found a path
         my $path_prefix    = $1;
-        my $path_statement = $2;
-        my $path_suffix    = $3;
+	my $path_id	   = $2;
+        my $path_statement = $3;
+        my $path_suffix    = $4;
         my $path_points_ref = path_points($path_statement);
         foreach my $point (@$path_points_ref) {
             my $point_index = $point->[0].$point->[1];
@@ -79,7 +89,7 @@ while (<>) {
         }
 
         $to_transform{$path_prefix}
-            = [$line_position, $path_statement, $path_suffix, $path_points_ref];
+            = [$line_position, $path_statement, $path_suffix, $path_points_ref, $path_id];
         
     }
     $line_position++;
@@ -93,9 +103,14 @@ foreach my $path (keys %to_transform) {
     my $line_index     = $path_info_ref->[0];
     my $path_statement = $path_info_ref->[1];
     my $path_suffix    = $path_info_ref->[2];
+    my $path_id        = $path_info_ref->[4];
 
-    my $transformed_path = curvify_path($path_statement, $path);
-    $svg_lines[$line_index] = $path.$transformed_path.$path_suffix."\n";
+    if (!exists $no_bezier_ids{$path_id}) {
+	my $transformed_path = curvify_path($path_statement, $path);
+	$svg_lines[$line_index] = $path.$transformed_path.$path_suffix."\n";
+    } else {
+	$svg_lines[$line_index] = $path.$path_statement.$path_suffix."\n";
+    }
 }
 
 # print out the transformed svg file.

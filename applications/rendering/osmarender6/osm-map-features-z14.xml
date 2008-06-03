@@ -780,10 +780,10 @@
                 </rule>
             </rule>
             <rule e="way" k="piste:lift" v="rope_tow">
-                <line smart-linecap="no" class="piste-lift-rope-tow no-bezier" smart-linecap="no"/>
+                <line smart-linecap="no" class="piste-lift-rope-tow no-bezier"/>
             </rule>
             <rule e="way" k="piste:lift" v="magic_carpet">
-                <line smart-linecap="no" class="piste-lift-magic-carpet no-bezier" smart-linecap="no"/>
+                <line smart-linecap="no" class="piste-lift-magic-carpet no-bezier"/>
             </rule>
         </rule>
 

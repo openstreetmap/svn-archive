@@ -8,13 +8,11 @@ use dbpassword;
 
 # Connect to database
 my $db = DBI->connect("dbi:mysql:ojw:localhost:3306", getUser, getPass) or die();
+my $GetNodeSQL = $db->prepare('select * from nodepos where id=?');
 
-# Parse XML from stdin
-my $xml = new XML::Parser(Handlers => {
-  Char =>  \&char_handler,
-  Start =>  \&start_handler,
-  End =>  \&end_handler,
-  Default => \&default_handler});
+#print getNode(200575), "\n";
+#print getNode(200575), "\n";
+#exit;
 
 my $Count = 0;
 my $inWay = 0;
@@ -39,17 +37,16 @@ foreach my $Word(split(/,\s*/,"created_by, ele, source, time, editor, author, hd
 
 my $InsertSQL = $db->prepare('INSERT INTO wayloc VALUES (?,?)');
 my $WaySQL = $db->prepare('INSERT INTO waydata VALUES (?,?)');
-my $GetNodeSQL = $db->prepare('select * from nodepos where id=?');
 
 while(my $Line = <>)
 {
   $LineNum++;
-  
-  if($Line =~ m{^\s*<way id='(\d+)'})
+  # next if( $LineNum < 840000000);  #all nodes!
+  if($Line =~ m{^\s*<way id=["'](\d+)['"]})
   {
     $Way = {id => $1, nodes=>[], tags=>{}, numtags=>0, tiles=>{}};
     $inWay = 1;
-    $FoundStart = 1 if(!$FoundStart);
+    $FoundStart = 1;
   }
   elsif(!$FoundStart)
   {
@@ -60,11 +57,11 @@ while(my $Line = <>)
     }
     next;
   }
-  elsif($Line =~ m{^\s*<nd ref='(\d+)'})
+  elsif($Line =~ m{^\s*<nd ref=['"](\d+)['"]})
   {
     my $ID = $1;
     
-    my ($ID,$x,$y,$tile) = getNode($ID);
+    my ($ID2,$x,$y,$tile) = getNode($ID);
     if($ID == $ID2)
     {
       push(@{$Way->{nodes}}, [$ID,$x,$y]);
@@ -72,7 +69,7 @@ while(my $Line = <>)
     }
   
   }
-  elsif($inWay && $Line =~ m{^\s*<tag k='(.*)' v='(.*)' />})
+  elsif($inWay && $Line =~ m{^\s*<tag k=['"](.*)["'] v=["'](.*)["'] />})
   {
     if(!$Ignore{$1})
       {
@@ -93,20 +90,11 @@ while(my $Line = <>)
     
       foreach my $Tile(keys(%{$Way->{tiles}}))
       {
-        #my ($tx,$ty) = split(/,/, $Tile);
-        
         $InsertSQL->execute($Way->{id}, $Tile);
       }
     }
   }
-  #elsif($Line =~ m{<node})
-  #{
-  #  if((++$NodeCount % 1000000) == 0)
-  #  {
-  #    printf "%d million nodes\n", $NodeCount / 1000000;
-  #  }
-  #}
-  
+
 }
 printf "Cache hit %d of %d = %1.2f%%\n", 
   $Hit, 
@@ -137,11 +125,13 @@ sub way2xml
 sub getNode
 {
   my $ID = shift();
-  
+
   if(exists($NodeCache{$ID}))
   {
     $Hit++;
-    return($NodeCache{$ID}->[1]);
+    #print Dumper($NodeCache{$ID});
+    
+    return(@{$NodeCache{$ID}->[1]});
   }
   
   $Miss++;
@@ -173,6 +163,7 @@ sub getNode
   if(@row = $GetNodeSQL->fetchrow_array())
   {
     $NodeCache{$ID} = [$NodeCount, [@row]];
+    #print Dumper($NodeCache{$ID});
     return(@row);
   }   
   

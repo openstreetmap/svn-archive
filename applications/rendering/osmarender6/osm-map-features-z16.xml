@@ -1121,7 +1121,7 @@
         <!-- Surface lifts (render over pistes) -->
         <rule e="way" k="piste:lift" v="*">
             <rule e="way" k="piste:lift" v="t-bar|j-bar|platter">
-                <line class="aerialway-line piste-lift-t-bar-marker no-bezier"/>
+                <line smart-linecap="no" class="aerialway-line piste-lift-t-bar-marker no-bezier"/>
                 <line smart-linecap="no" class='aerialway-struts'/>
             </rule>
             <rule e="way" k="piste:lift" v="rope_tow">
@@ -1138,34 +1138,34 @@
         <!-- Aerialways (render over pistes) -->
         <rule e="node|way" k="aerialway" v="*">
             <rule e="way" k="aerialway" v="cable_car">
-                <line class="aerialway-line aerialway-cablecar-marker no-bezier"/>
+                <line class="aerialway-line aerialway-cablecar-marker no-bezier" smart-linecap="no"/>
             </rule>
             <else>
                 <rule e="way" k="aerialway" v="gondola">
-                    <line class="aerialway-line aerialway-gondola-marker no-bezier"/>
+                    <line class="aerialway-line aerialway-gondola-marker no-bezier" smart-linecap="no"/>
                 </rule>
                 <else>
                     <rule e="way" k="aerialway" v="chair_lift">
                         <rule e="way" k="piste:lift:occupancy" v="4|5|6">
-                            <line class="aerialway-line aerialway-chairlift4-marker no-bezier"/>
+                            <line class="aerialway-line aerialway-chairlift4-marker no-bezier" smart-linecap="no"/>
                         </rule>
                         <else>
-                            <line class="aerialway-line aerialway-chairlift2-marker no-bezier"/>
+                            <line class="aerialway-line aerialway-chairlift2-marker no-bezier" smart-linecap="no"/>
                         </else>
                     </rule>
                     <else>
                         <rule e="way" k="aerialway" v="mixed_lift">
-                            <line class="aerialway-line aerialway-mixedlift-marker no-bezier"/>
+                            <line class="aerialway-line aerialway-mixedlift-marker no-bezier" smart-linecap="no"/>
                         </rule>
                         <else>
                             <rule e="way" k="aerialway" v="*">
-                                <line class='aerialway-line no-bezier'/>
+                                <line class="aerialway-line no-bezier" smart-linecap="no"/>
                             </rule>
                         </else>
                     </else>
                 </else>
             </else>
-            <line smart-linecap="no" class='aerialway-struts'/>
+            <line smart-linecap="no" class="aerialway-struts no-bezier"/>
             <rule e="node" k="aerialway" v="station">
                 <circle r='1.5px' class="aerialway-station"/>
             </rule>

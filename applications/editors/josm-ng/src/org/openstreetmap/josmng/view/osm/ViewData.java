@@ -88,15 +88,7 @@ class ViewData {
         nodesId.clear();
         ways.clear();
         projCache = view.parent.getProjection();
-        for (OsmPrimitive prim : source.getPrimitives(Bounds.WORLD)) {
-            if (valid(prim)) {
-                if (prim instanceof Node) {
-                    addNode((Node)prim);
-                } else if (prim instanceof Way) {
-                    addWay((Way)prim);
-                }
-            }
-        }        
+        new AddVisitor().visitCollection(source.getPrimitives(Bounds.WORLD));
     }
     
     private static boolean valid(OsmPrimitive prim) {
@@ -260,35 +252,36 @@ class ViewData {
         }
     }
 
+    private class AddVisitor extends Visitor {
+        protected @Override void visit(Node n) {
+            if (valid(n)) addNode(n);
+        }
+        protected @Override void visit(Way w) {
+            if (valid(w)) addWay(w);
+        }
+    }
     
     private class Listener implements DataSetListener {
 
         public void primtivesAdded(Collection<? extends OsmPrimitive> added) {
-            for (OsmPrimitive prim : added) {
-                if (prim instanceof Node) {
-                    addNode((Node)prim);
-                } else if (prim instanceof Way) {
-                    addWay((Way)prim);
-                } else {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            }
+            new AddVisitor().visitCollection(added);
             fireChange();
         }
 
         public void primtivesRemoved(Collection<? extends OsmPrimitive> removed) {
-            Set<OsmPrimitive> sel = new LinkedHashSet<OsmPrimitive>(view.getSelection());
+            final Set<OsmPrimitive> sel = new LinkedHashSet<OsmPrimitive>(view.getSelection());
             
-            for (OsmPrimitive prim : removed) {
-                sel.remove(prim);
-                if (prim instanceof Node) {
-                    nodes.remove(getViewForNode((Node)prim));
-                } else if (prim instanceof Way) {
-                    ways.remove(getViewForWay((Way)prim));
-                } else {
-                    throw new UnsupportedOperationException("Not supported yet.");
+            new Visitor() {
+                protected @Override void visit(Node n) {
+                    sel.remove(n);
+                    nodes.remove(getViewForNode(n));
                 }
-            }
+                protected @Override void visit(Way w) {
+                    sel.remove(w);
+                    ways.remove(getViewForWay(w));
+                }
+            }.visitCollection(removed);
+
             view.setSelection(sel);
             fireChange();
         }
@@ -308,7 +301,5 @@ class ViewData {
             updateWay(getViewForWay(way));
             fireChange();
         }
-
-        
     }
 }

@@ -1,0 +1,166 @@
+<html><head><title>Pyroute webGUI</title>
+  <script src="http://openlayers.org/api/OpenLayers.js"></script>
+  <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+  <script type="text/javascript">
+  var lat = "";
+	var lon = "";
+	var zoom = "";
+  if (lat=="") lat=52.3
+	if (lon=="") lon=-0.5
+	if (zoom=="") zoom=8
+	lat=parseFloat(lat)
+	lon=parseFloat(lon)
+	zoom=parseInt(zoom)
+  var projMap = new OpenLayers.Projection("EPSG:900913")
+  var projDisp = new OpenLayers.Projection("EPSG:4326");
+  var map;
+  var menu = null;
+  
+  OpenLayers.Control.Click
+    = OpenLayers.Class(OpenLayers.Control,
+    {
+    defaultHandlerOptions: {
+      'single': true,
+      'double': false,
+      'pixelTolerance': 0,
+      'stopSingle': false,
+      'stopDouble': false
+    },
+    initialize:
+      function(options)
+        {
+        this.handlerOptions = OpenLayers.Util.extend({}, this.defaultHandlerOptions);
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);
+        this.handler
+          = new OpenLayers.Handler.Click(
+            this,
+            {
+            'click': this.trigger
+            },
+            this.handlerOptions);
+        },
+     trigger:
+      function(e)
+        {
+        var xy = map.getLonLatFromViewPortPx(e.xy);
+        var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        lonlat.transform(projMap,projDisp);
+
+        if(menu != null)
+          menu.hide();
+        
+        menu = new OpenLayers.Popup(
+          "chicken",
+          xy,
+          new OpenLayers.Size(170,200),
+          newMenu(lonlat),
+          true);
+        menu.border = "2px solid green";
+        map.addPopup(menu);
+                
+        // Click position in lat/long coordinates
+        //  alert("You clicked near " + lonlat.lat + " N, " + lonlat.lon + " E");
+        }
+    });
+
+  function formatNum(num)
+  {
+    return(Math.floor(num * 10000.0) / 10000.0);
+  }
+  function formatPos(lonlat)
+  {
+    return(formatNum(lonlat.lat) + ", " + formatNum(lonlat.lon));
+  }
+  function newMenu(lonlat)
+  {
+    var a = "" + formatPos(lonlat);
+    a += "<p><a href=''>Add waypoint</a></p>";
+    a += "<p><a href=''>Add to route</a></p>";
+    a += "<p><a href=''>Download data</a></p>";
+    a += "<p><a href=''>Download maps</a></p>";
+    return(a);
+  }
+  // Initialise the map
+  function init()
+    {
+    map = new OpenLayers.Map(
+      "map",
+      {
+      controls:
+        [
+        new OpenLayers.Control.Navigation(),
+        new OpenLayers.Control.Permalink(),
+        new OpenLayers.Control.PanZoomBar()
+        ],
+      maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+      maxResolution: 156543.0399,
+      numZoomLevels: 19,
+      units: 'meters',
+      projection: projMap,
+      displayProjection: projDisp
+      });
+                
+
+    layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+    map.addLayer(layerTilesAtHome);
+
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    map.addLayer(markers);
+
+    // Add a sample marker
+    var size = new OpenLayers.Size(10,17);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
+    var pos = new OpenLayers.LonLat(-3, 52);
+    pos.transform(projDisp, projMap);
+     
+     /*
+    marker = new OpenLayers.Marker(pos,icon);
+    marker.events.register(
+      'mousedown',
+      marker,
+      function(evt)
+      {
+        alert(this.icon.url);
+        OpenLayers.Event.stop(evt);
+      });
+    markers.addMarker(marker);
+    */
+    
+    var lonLat = new OpenLayers.LonLat(lon, lat).transform(projDisp, projMap);
+    map.setCenter(lonLat, zoom);
+
+    popupicon = new OpenLayers.Icon(
+      'http://boston.openguides.org/markers/AQUA.png',
+      new OpenLayers.Size(10,17),
+      new OpenLayers.Pixel(-5, -17));
+    
+    /*
+    popup = new OpenLayers.Popup(
+      "chicken",
+      new OpenLayers.LonLat(0,52).transform(projDisp, projMap),
+      new OpenLayers.Size(200,200),
+      newMenu(),
+      true);
+    popup.border = "2px solid green";
+    map.addPopup(popup);
+    */
+
+
+    var click = new OpenLayers.Control.Click();
+    map.addControl(click);
+    click.activate();
+    }
+  </script>
+</head>
+<body onload="init();">
+<table border=1 style="width:100%; height:100%"><tr>
+<td><div id="map" style="width:100%; height:100%"></div></td>
+<td width="200" valign="top">
+<h2>Waypoints</h2><div id="wpt">None</div>
+<h2>Route</h2><div id="rte">None</div>
+<h2>Help</h2><div><a href="">Help</a></div>
+</td>
+</tr></table>
+</body>
+</html>

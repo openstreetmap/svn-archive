@@ -577,8 +577,8 @@
 
         <!-- Aerialways (render over pistes) -->
         <rule e="node|way" k="aerialway" v="*">
-            <line class='aerialway-line no-bezier'/>
-            <line smart-linecap="no" class='aerialway-struts'/>
+            <line smart-linecap="no" class="aerialway-line no-bezier"/>
+            <line smart-linecap="no" class="aerialway-struts no-bezier"/>
             <rule e="node" k="aerialway" v="station">
                 <circle r='1.5px' class="aerialway-station"/>
             </rule>

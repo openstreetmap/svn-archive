@@ -525,8 +525,8 @@
 	
 	<!-- Aerialways -->
 	<rule e="way" k="aerialway" v="cable_car|gondola">
-		<line class="aerialway-line no-bezier" smart-linecap='no'/>
-		<line class="aerialway-struts no-bezier" smart-linecap='no'/>
+		<line class="aerialway-line no-bezier" smart-linecap="no"/>
+		<line class="aerialway-struts no-bezier" smart-linecap="no"/>
 	</rule>
 
 

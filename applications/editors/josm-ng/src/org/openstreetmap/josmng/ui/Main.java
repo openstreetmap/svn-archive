@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
+import org.openstreetmap.josmng.ui.actions.ReverseWayAction;
 import org.openstreetmap.josmng.ui.actions.SetProjectionAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
 import org.openstreetmap.josmng.ui.mode.TheOnlyMode;
@@ -118,6 +119,8 @@ public class Main extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        toolsMenu = new javax.swing.JMenu();
+        reverse = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(mapView1, java.awt.BorderLayout.CENTER);
@@ -163,6 +166,13 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(editMenu);
 
+        toolsMenu.setText("Tools");
+
+        reverse.setAction(new ReverseWayAction());
+        toolsMenu.add(reverse);
+
+        jMenuBar1.add(toolsMenu);
+
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -202,8 +212,10 @@ public class Main extends javax.swing.JFrame {
     private org.openstreetmap.josmng.view.MapView mapView1;
     private javax.swing.JToolBar modesBar;
     private javax.swing.JMenu projection;
+    private javax.swing.JMenuItem reverse;
     private javax.swing.JPanel statusBar;
     private javax.swing.JToolBar toolBar;
+    private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 

@@ -3,10 +3,7 @@
 function createMarkers() {
     /* news */
     addMarker(layer_events, 13.3172, 52.5138,
-        '<p><b><a href="http://wiki.openstreetmap.org/index.php/Berlin#Meeting_Linuxtag_2008">OSM-Treffen</a></b><br/></p>Informelles OSM-Treffen. Insbesondere natürlich für OSMler aus der Berliner Gegend und die Leute vom Stand, das Treffen ist aber offen und jeder ist willkommen.</p>'
-    );
-    addMarker(layer_events, 13.27279, 52.50161,
-        '<p><b><a href="http://wiki.openstreetmap.org/index.php/OSM_at_Linuxtag_2008">LinuxTag 2008</a></b><br/>Open-Source-Messe und -Konferenz mit OSM-Stand/Vortrag<br/>28.-31 Mai 2008<br/>Messe unter dem Funkturm, Berlin</p>'
+        '<p><b><a href="http://wiki.openstreetmap.org/index.php/Berlin#Berlin_und_Brandenburger_OSM-Stammtisch">OSM-Treffen</a></b></p>'
     );
     addMarker(layer_events, -8.5534518, 52.6688727, 
         '<p><b><a href="http://www.stateofthemap.org/">State of the Map 2008</a></b><br/>Jährliche OpenStreetMap-Konferenz<br/>12.-13. Juli 2008<br/>Limerick, Irland</p>'

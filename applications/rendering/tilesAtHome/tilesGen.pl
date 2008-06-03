@@ -805,6 +805,10 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     addFault("nodataXAPI",1);
                     return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$Mode,1,$PID);
                 }
+                else
+                {
+                    resetFault("nodataXAPI"); #reset to zero if data downloaded
+                }
             }
             else
             {
@@ -828,6 +832,10 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
                         return cleanUpAndDie("GenerateTileset: no data! (sliced).",$Mode,1,$PID);
+                    }
+                    else
+                    {
+                        resetFault("nodata"); #reset to zero if data downloaded
                     }
                 }
                 print STDERR "\n";

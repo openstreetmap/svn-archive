@@ -8,10 +8,14 @@
 	# http://sam.zoy.org/wtfpl/COPYING
 	
 	# Options:
-	# --xmin, --xmax, --ymin, --ymax	bounding box
-	# --projection						mercator or osgb
 	# --output							output filename
 	# --filters							filter filename
+
+	# and either:
+	# --input							input filename
+	# or:
+	# --xmin, --xmax, --ymin, --ymax	bounding box
+	# --projection						mercator or osgb
 	# --db, --user, --password			database connection (will use environment variables if present)
 
 	# ----------------------------------------------------------------
@@ -39,27 +43,18 @@
 	$xmin=-3.7; $xmax= 1.9; $ymin=50.5 ; $ymax=54.3;	#	$xmin=-2.3; $xmax=-2.2; $ymin=52.15; $ymax=52.25;
 	$proj='mercator';									#	$proj='osgb';
 	$outfile='output.ai';
+	$infile='';
 	$filters='';
 	$help=$man=0;
 	
-	GetOptions('xmin=f'=>\$xmin, 'xmax=f'=>\$xmax,
-			   'ymin=f'=>\$ymin, 'ymax=f'=>\$ymax,
-			   'projection=s'=>\$proj, 'help|?' => \$help, man => \$man,
-			   'output=s'=>\$outfile, 'filters=s'=>\$filters,
-			   'password=s'=>\$dbpass, 'user=s'=>\$dbuser, 'db=s'=>\$dbname);
+	GetOptions('xmin=f' =>\$xmin, 'xmax=f' =>\$xmax,
+			   'ymin=f' =>\$ymin, 'ymax=f' =>\$ymax,
+			   'projection=s' =>\$proj, 'help|?' => \$help, man => \$man,
+			   'input=s' =>\$infile, 'output=s' =>\$outfile, 'filters=s' =>\$filters,
+			   'password=s' =>\$dbpass, 'user=s' =>\$dbuser, 'db=s' =>\$dbname);
 	pod2usage(1) if $help;
 	pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 	$proj=lc $proj;
-
-	# Set from options
-
-	$dbh=DBI->connect("DBI:mysql:$dbname",$dbuser,$dbpass, { RaiseError =>1 } );
-	if ($proj eq 'osgb') {
-		($basex,$basey)=ll_to_grid($ymin,$xmin); $masterscale=1/250;
-	} else {
-		$baselong=$xmin; $basey=lat2y($ymin);
-		$masterscale=500/($xmax-$xmin);
-	}
 
 	# Read filters
 	
@@ -80,7 +75,63 @@
 	}
 
 	# ================================================================
+	# Read ways from file
+
+	if ($infile) {
+		open INFILE,$infile or die "Can't open input file: $!\n";
+		$way=0;
+		$xmin=99999; $xmax=-99999;
+		$ymin=99999; $ymax=-99999;
+		%lat=(); %lon=();
+		%paths=(); # hash of arrays
+		%attributes=(); # hash of hashes
+		print "Reading input file\n";
+		while (<INFILE>) {
+			chomp ($a=$_);
+			if ($a=~/<node id="(\d+)" lat="([\d.\-]+)" lon="([\d.\-]+)"/) {
+				$lat{$1}=$2; $lon{$1}=$3;
+				if ($2<$ymin) { $ymin=$2; }
+				if ($2>$ymax) { $ymax=$2; }
+				if ($3<$xmin) { $xmin=$3; }
+				if ($3>$xmax) { $xmax=$3; }
+			} elsif ($a=~/<way id="(\d+)"/) {
+				$way=$1;
+				@path=(); %attribute=();
+				push @waylist,$way;
+			} elsif ($a=~/<\/way>/) {
+				$paths{$way}=[@path];
+				$attributes{$way}={%attribute};
+				$way=0;
+				# set path and attributes
+				# write to waylist
+			} elsif ($a=~/<nd ref="(\d+)"/) {
+				push @path,$1;
+			} elsif ($a=~/<tag k="(.+?)" v="(.+?)"/) {
+				$attribute{$1}=$2;
+			}
+		}
+		close INFILE;
+	
+	# ================================================================
+	# Read ways from database
+
+	} else {
+		$dbh=DBI->connect("DBI:mysql:$dbname",$dbuser,$dbpass, { RaiseError =>1 } );
+		print "Getting list of ways\n";
+		@waylist=Which_Ways();
+	}
+
+	# ================================================================
 	# Generate file
+
+	# -----	Set scale
+
+	if ($proj eq 'osgb') {
+		($basex,$basey)=ll_to_grid($ymin,$xmin); $masterscale=1/250;
+	} else {
+		$baselong=$xmin; $basey=lat2y($ymin);
+		$masterscale=500/($xmax-$xmin);
+	}
 
 	# -----	Process conditions
 
@@ -91,19 +142,29 @@
 		$layer{$1}=[];
 	}
 
-	print "Getting list of ways\n";
-	@waylist=Which_Ways();
+	# -----	Read all ways
 
 	$i=0; $al=@waylist;
 	foreach $way (@waylist) {
 		$i++;
 		print "Reading way $i of $al\r";
-		($path,$attribute)=Get_Way($way);						# Read the way
-		$paths{$way}=$path;
-		$attributes{$way}=$attribute;
+		if ($infile) {
+			$newpath=[];										# Project
+			foreach $id (@{$paths{$way}}) {
+				if ($proj eq 'mercator') { $xs=long2coord($lon{$id}); $ys=lat2coord($lat{$id}); }
+				elsif ($proj eq 'osgb')  { ($xs,$ys)=ll2osgb($lon{$id},$lat{$id}); }
+				push @{$newpath},[$xs,$ys,$id];
+			}
+			$paths{$way}=$newpath;
+			$attribute=$attributes{$way};
+		} else {
+			($path,$attribute)=Get_Way($way);					# Read the way
+			$paths{$way}=$path;
+			$attributes{$way}=$attribute;
+		}
 
-		CONDS: foreach $condition (@conditions) {				#ÊWhich conditions does it satisfy?
-			next unless $condition=~/^(.+):\s*(.*)=(.*)$/;		#Ê |
+		CONDS: foreach $condition (@conditions) {				# Which conditions does it satisfy?
+			next unless $condition=~/^(.+):\s*(.*)=(.*)$/;		#  |
 			$l=$1; $k=$2; $v=$3;								#  |
 			if (exists(${$attribute}{$k})) {					#  |
 				if ($v eq '*' or ${$attribute}{$k} eq $v) {		#  |
@@ -136,6 +197,7 @@
 
 	Illustrator_Footer();
 	close OUTFILE;
+	unless ($infile) { $dbh->disconnect(); }
 
 
 
@@ -423,14 +485,21 @@ B<osm2ai.pl>
 
 =head1 DESCRIPTION
 
-osm2ai takes data from an OpenStreetMap-like MySQL database, 
-and converts it to a file readable by Adobe Illustrator.
+osm2ai takes OpenStreetMap data and converts it to a file 
+readable by Adobe Illustrator.
+
+You can either take the data from a .osm XML file (via the 
+site's Export tab), or for bigger exports, by specifying a 
+bounding box to your own OpenStreetMap-like MySQL
+database.
 
 The data is wholly unstyled - the idea is that you make the 
 cartographic decisions yourself. Data is grouped into layers 
 to help you.
 
 =head1 SYNOPSIS
+
+osm2ai.pl --input map.osm --projection osgb --output mymap.ai
 
 osm2ai.pl --xmin -2.3 --xmax -2.2 --ymin 52.15 --ymax 52.25
           --projection osgb --output mymap.ai
@@ -439,27 +508,16 @@ osm2ai.pl --xmin -2.3 --xmax -2.2 --ymin 52.15 --ymax 52.25
 
 =over 2
 
-=item B<--xmin> longitude
-B<--xmax> longitude
-B<--ymin> latitude
-B<--ymax> latitude
-
-The bounding box of the area you want to extract.
-
 =item B<--projection> name
 
 The projection for your map. Should be either B<osgb> 
 (Ordnance Survey National Grid) or B<mercator> (spherical
 Mercator).
 
-=item B<--db> database_name
-B<--user> database_user
-B<--password> database_password
+=item B<--input> filename
 
-Connection details for the MySQL database which contains the
-data. If you don't supply this, the DBNAME, DBUSER and DBPASS 
-environment variables will be used. If they're not set, it'll 
-default to openstreetmap, openstreetmap and openstreetmap.
+Specifies the input OSM XML file, if you're reading from 
+file.
 
 =item B<--filters> filename
 
@@ -469,6 +527,24 @@ used to put appropriately tagged ways in the right layers.
 =item B<--output> filename
 
 Specifies the output filename. Defaults to output.ai.
+
+=item B<--xmin> longitude
+B<--xmax> longitude
+B<--ymin> latitude
+B<--ymax> latitude
+
+The bounding box of the area you want to extract, if you're
+reading from a database.
+
+=item B<--db> database_name
+B<--user> database_user
+B<--password> database_password
+
+Connection details for the MySQL database which contains the
+data, if you're reading from a database. If you don't supply 
+this, the DBNAME, DBUSER and DBPASS environment variables 
+will be used. If they're not set, it'll default to 
+openstreetmap, openstreetmap and openstreetmap.
 
 =item B<--man>
 
@@ -503,10 +579,11 @@ two conditions.
 
 =head1 SETTING UP A DATABASE
 
-Of course, before you run this, you'll need a database 
-populated with OpenStreetMap data. This will typically 
-involve downloading B<planet.osm> and then uploading it 
-using a program such as B<planetosm-to-db.pl>.
+If you want to make a map of a greater area than is available 
+through the site's Export tab, you will need to set up a MySQL 
+database and populate it with OpenStreetMap data. This will 
+typically involve downloading B<planet.osm> and then uploading 
+it using a program such as B<planetosm-to-db.pl>.
 
 For details, see http://wiki.openstreetmap.org/index.php/Planet.osm
 
@@ -534,10 +611,12 @@ It doesn't do POIs or relations, only tagged ways.
 
 The quadtile stuff really ought to be in a library.
 
-The whole caboodle should be on an OSM Export tab.
+The whole caboodle should be on the OSM Export tab.
 
 There should be a grid, or constant scale, or something, so you can mix and
 match different maps.
+
+Reading from an .osm file has been kludged on really messily.
 
 =head1 COPYRIGHT
 

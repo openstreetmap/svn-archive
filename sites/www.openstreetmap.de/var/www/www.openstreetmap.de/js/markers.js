@@ -12,6 +12,12 @@ function createMarkers() {
     /* events */
 
     /* local groups */
+    addMarker(layer_local, 9.146, 49.974,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Aschaffenburg">Aschaffenburg</a></b></p>'
+    );
+    addMarker(layer_local, 13.3172, 52.5138,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Berlin">Berlin</a></b></p>'
+    );
     addMarker(layer_local, 10.556111, 52.319167,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Braunschweig">Braunschweig</a></b><br/>Treffen jeden 1. Dienstag im Monat<br/><a href="https://mail.atekon.de/mailman/listinfo/osm-bs">Mailingliste</a></p>'
     );
@@ -36,7 +42,4 @@ function createMarkers() {
     addMarker(layer_local, 9.5794793, 48.979546,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Murrhardt">Murrhardt</a></b></p>'
     ); 
-    addMarker(layer_local, 13.3172, 52.5138,
-        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Berlin">Berlin</a></b></p>'
-    );
 }

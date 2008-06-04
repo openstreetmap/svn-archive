@@ -14,6 +14,7 @@
   var projMap = new OpenLayers.Projection("EPSG:900913")
   var projDisp = new OpenLayers.Projection("EPSG:4326");
   var map;
+  var markers;
   var menu = null;
   
   OpenLayers.Control.Click
@@ -62,7 +63,31 @@
         //  alert("You clicked near " + lonlat.lat + " N, " + lonlat.lon + " E");
         }
     });
-
+  function addRouteMarker(lat,lon, type)
+  {
+    var size = new OpenLayers.Size(10,17);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
+    var pos = new OpenLayers.LonLat(lon, lat);
+    pos.transform(projDisp, projMap);
+    
+    marker = new OpenLayers.Marker(pos,icon);
+    marker.events.register(
+      'mousedown',
+      marker,
+      function(evt)
+      {
+        alert(this.icon.url);
+        OpenLayers.Event.stop(evt);
+      });
+   
+    markers.addMarker(marker);
+    if(menu != null)
+      {
+      menu.hide();
+      menu = null;
+      }
+    }
   function formatNum(num)
   {
     return(Math.floor(num * 10000.0) / 10000.0);
@@ -74,8 +99,11 @@
   function newMenu(lonlat)
   {
     var a = "" + formatPos(lonlat);
-    a += "<p><a href=''>Add waypoint</a></p>";
-    a += "<p><a href=''>Add to route</a></p>";
+    
+    link1 = "addRouteMarker("+formatPos(lonlat)+",1);return(false);";
+    a += "<p><a href='' onclick='"+link1+"'>Add waypoint</a></p>";
+    link2 = "addRouteMarker("+formatPos(lonlat)+",2);return(false);";
+    a += "<p><a href='' onclick='"+link2+"'>Add to route</a></p>";
     a += "<p><a href=''>Download data</a></p>";
     a += "<p><a href=''>Download maps</a></p>";
     return(a);
@@ -104,52 +132,17 @@
     layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
     map.addLayer(layerTilesAtHome);
 
-    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    markers = new OpenLayers.Layer.Markers( "Markers" );
     map.addLayer(markers);
-
-    // Add a sample marker
-    var size = new OpenLayers.Size(10,17);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
-    var pos = new OpenLayers.LonLat(-3, 52);
-    pos.transform(projDisp, projMap);
-     
-     /*
-    marker = new OpenLayers.Marker(pos,icon);
-    marker.events.register(
-      'mousedown',
-      marker,
-      function(evt)
-      {
-        alert(this.icon.url);
-        OpenLayers.Event.stop(evt);
-      });
-    markers.addMarker(marker);
-    */
-    
+   
     var lonLat = new OpenLayers.LonLat(lon, lat).transform(projDisp, projMap);
     map.setCenter(lonLat, zoom);
-
-    popupicon = new OpenLayers.Icon(
-      'http://boston.openguides.org/markers/AQUA.png',
-      new OpenLayers.Size(10,17),
-      new OpenLayers.Pixel(-5, -17));
-    
-    /*
-    popup = new OpenLayers.Popup(
-      "chicken",
-      new OpenLayers.LonLat(0,52).transform(projDisp, projMap),
-      new OpenLayers.Size(200,200),
-      newMenu(),
-      true);
-    popup.border = "2px solid green";
-    map.addPopup(popup);
-    */
-
 
     var click = new OpenLayers.Control.Click();
     map.addControl(click);
     click.activate();
+    
+    addRouteMarker(52,-1.3,3);
     }
   </script>
 </head>

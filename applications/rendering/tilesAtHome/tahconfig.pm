@@ -70,6 +70,18 @@ sub CheckConfig
     my $cmd;
     printf "- Using working directory %s\n", $Config->get("WorkingDirectory");
 
+    if ($Config->get("Subversion"))
+    {
+        $cmd=$Config->get("Subversion");
+        my $SubversionV = `\"$cmd\" --version`;
+        $EnvironmentInfo{"Subversion"}=$SubversionV;
+        # die here if svn executable not found, but before enabling try on windows machines wether --version works.
+    }
+    else
+    {
+        die ("! no subversion command set");
+    }
+
     if ($Config->get("Batik"))
     {
         print "- Using Batik";

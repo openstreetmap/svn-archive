@@ -8,7 +8,7 @@
 
 	<!-- setting basic project properties -->
     <property name="ProjectId" value="Srtm2Osm" />
-    <property name="ReleaseStartDate" value="01/21/2008"/>
+    <property name="ReleaseStartDate" value="06/05/2008"/>
     <property name="CompanyName" value="Igor Brejc"/>
     <property name="BuildEngine" value="MSBuild"/>
     <property name="ProjectSolutionFile" value="${ProjectId}.sln" />
@@ -25,6 +25,8 @@
     <target name="set.build.properties.custom">
 
 		<fileset id="OutputDirsToClean">
+            <include name="Brejc.Common.Library\bin\${ProjectConfig}\**"/>
+            <include name="Brejc.Common.Library\obj\${ProjectConfig}\**"/>
             <include name="Brejc.DemLibrary\bin\${ProjectConfig}\**"/>
             <include name="Brejc.DemLibrary\obj\${ProjectConfig}\**"/>
             <include name="Brejc.Geometry\bin\${ProjectConfig}\**"/>

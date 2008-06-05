@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brejc.Geometry", "Brejc.Geo
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brejc.Common.Library", "Brejc.Common.Library\Brejc.Common.Library.csproj", "{D4BAE3FE-4326-4E6D-B1AC-9769D92A8D2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEDD0CA6-FE3D-49B1-B473-1F193C5FB59B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4BAE3FE-4326-4E6D-B1AC-9769D92A8D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4BAE3FE-4326-4E6D-B1AC-9769D92A8D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4BAE3FE-4326-4E6D-B1AC-9769D92A8D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4BAE3FE-4326-4E6D-B1AC-9769D92A8D2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

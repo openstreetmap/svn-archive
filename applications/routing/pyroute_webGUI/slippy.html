@@ -63,6 +63,36 @@
         //  alert("You clicked near " + lonlat.lat + " N, " + lonlat.lon + " E");
         }
     });
+
+  function waypointHtml(lat,lon,id)
+  {
+    var text = "<h3>Waypoint #"+id+"</h3>";
+    text += "<p>"+formatNum(lat) + ", " + formatNum(lon)+"</p>";
+    text = "<div class='wpt' id=wpt_'"+id+"'>"+text+"</div>";
+    return(text);
+  }
+  function waypointHtml(lat,lon,id)
+  {
+    var text = "<h3>Waypoint #"+id+"</h3>";
+    text += "<p>"+formatNum(lat) + ", " + formatNum(lon)+"</p>";
+    text += "<p><a href='#'>delete</a></p>";
+    return(text);
+  }
+  function routepointHtml(lat,lon,id)
+  {
+    var text = "<p>"+formatNum(lat) + ", " + formatNum(lon)+"</p>";
+    text += "<p>Set as <a href='#'>start</a>, <a href='#'>end</a></p>";
+    text += "<p><a href='#'>delete</a></p>";
+    return(text);
+  }
+
+  function addItem(type,text,id)
+  {
+    d = document.getElementById(type);
+    text = "<div class='"+type+"' id='"+type+"_"+id+"'>"+text+"</div>";
+    d.innerHTML += text;
+  }
+      
   function addRouteMarker(lat,lon, type)
   {
     var size = new OpenLayers.Size(10,17);
@@ -70,6 +100,15 @@
     var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
     var pos = new OpenLayers.LonLat(lon, lat);
     pos.transform(projDisp, projMap);
+    
+    if(type == 1)
+    {
+      addItem("wpt", waypointHtml(lat,lon,0));
+    }
+    if(type == 2)
+    {
+      addItem("rte", routepointHtml(lat,lon,0));
+    }
     
     marker = new OpenLayers.Marker(pos,icon);
     marker.events.register(
@@ -143,7 +182,9 @@
     click.activate();
     
     addRouteMarker(52,-1.3,3);
+
     }
+
   </script>
 </head>
 <body onload="init();">

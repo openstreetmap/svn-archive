@@ -1,5 +1,4 @@
-<?php
-  
+<?php  
   include("../lib/tilenames.inc");
   include("../lib/layers.inc");
   include("../lib/users.inc");
@@ -24,8 +23,6 @@
   if($LayerID < 0){
     dieMsg("Invalid layer");
     }
-
-  include("../connect/connect.php");
 
   print "OK | $X | $Y | $Z | $Layer ";
 

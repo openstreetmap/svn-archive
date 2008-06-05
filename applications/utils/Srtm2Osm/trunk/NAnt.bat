@@ -1,1 +1,1 @@
-.\lib\nant-0.85\bin\NAnt %*
+.\lib\nant-0.86-beta1\bin\NAnt %*

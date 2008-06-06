@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------------
-# Map tile rendering
+# Base class for rendering tile-style images
 #----------------------------------------------------------------------------
 # Copyright 2008, authors:
 # * Sebastian Spaeth
@@ -21,7 +21,6 @@
 #---------------------------------------------------------------------------
 import StringIO
 import cairo
-import xml.sax
 from tilenames import *
 
 class proj:

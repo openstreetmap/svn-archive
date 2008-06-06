@@ -66,7 +66,7 @@ class tileServer(BaseHTTPRequestHandler):
       print 'Request for %d,%d at zoom %d, layer %s' % (x,y,z,layer)
 
 
-      a = TileRoute("route/route_52.218100_0.116200_52.218400_0.142700_.gpx")
+      a = TileRoute("route/latest.csv")
       pngData = a.RenderTile(z,x,y,None)
 
       # Return the tile as a PNG
@@ -81,19 +81,17 @@ class tileServer(BaseHTTPRequestHandler):
       dy = y2 - y1
       dist = math.sqrt(dx * dx + dy * dy)
       print "Routing from %f,%f to %f,%f = distance %f" % (x1,y1,x2,y2,dist)
-      filename = "route/route_%f_%f_%f_%f_%s.gpx" % (x1,y1,x2,y2,type)
+      filename = "route/latest.csv"
       if(not os.path.exists(filename)):
         routeAsCSV.routeToCSVFile(
           x1,y1,x2,y2,
           "cycle",
           filename)
-      f = open(filename,"r")
-      gpx = f.read()
-      f.close()
       self.send_response(200)
-      self.send_header('Content-type','text/plain')
+      self.send_header('Content-type','text/HTML')
       self.end_headers()
-      self.wfile.write(gpx)
+      self.wfile.write("<p>Your route is available on the <a href='/'>map</a></p>")
+      
     else:
       print "404: %s" % self.path
       self.send_response(404)

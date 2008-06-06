@@ -20,10 +20,14 @@
 from BaseHTTPServer import *
 import re
 import sys
+import math
+sys.path.append("../pyroutelib2")
+import routeAsGpx
 
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):
-    self.re = re.compile('/(\w+)/(\d+)/(\d+)/(\d+)\.png')
+    self.re_tile = re.compile('/(\w+)/(\d+)/(\d+)/(\d+)\.png')
+    self.re_route = re.compile('/route\?start=(.*?)%2C(.*?)&end=(.*?)%2C(.*?)&type=(.*?)')
     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
   def log_message(self, format, *args):
@@ -40,14 +44,16 @@ class tileServer(BaseHTTPRequestHandler):
 
   def do_GET(self):
     # Specific files to serve:
-    if self.path[0:1]=='/':
+    if self.path=='/':
       self.return_file('slippy.html')
       return
 
     # See if a tile was requested
-    match = self.re.search(self.path)
-    if(match):
-      (layer,z,x,y) = match.groups()
+    match_tile = self.re_tile.search(self.path)
+    match_route = self.re_route.search(self.path)
+    
+    if(match_tile):
+      (layer,z,x,y) = match_tile.groups()
       z = int(z)
       x = int(x)
       y = int(y)
@@ -62,7 +68,24 @@ class tileServer(BaseHTTPRequestHandler):
       self.send_header('Content-type','image/PNG')
       self.end_headers()
       self.wfile.write(pngData)
+    elif(match_route):
+      (x1,y1,x2,y2,type) = match_route.groups()
+      (x1,y1,x2,y2) = map(float, (x1,y1,x2,y2))
+      dx = x2 - x1
+      dy = y2 - y1
+      dist = math.sqrt(dx * dx + dy * dy)
+      print "Routing from %f,%f to %f,%f = distance %f" % (x1,y1,x2,y2,dist)
+      gpx = routeAsGpx.routeToGpx(
+        x1,y1,x2,y2,
+        "cycle",
+        "Route",
+        "track")
+      self.send_response(200)
+      self.send_header('Content-type','text/plain')
+      self.end_headers()
+      self.wfile.write(gpx)
     else:
+      print "404: %s" % self.path
       self.send_response(404)
 
 try:

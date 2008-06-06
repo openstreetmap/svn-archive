@@ -43,7 +43,6 @@ class Router:
     dlon = lon2 - lon1
     dist2 = dlat * dlat + dlon * dlon
     dist = math.sqrt(dist2)
-    #print "%d to %d = %f" % (n1,n2,dist)
     return(dist)
   
   def doRoute(self,start,end):
@@ -54,10 +53,7 @@ class Router:
     
     # Start by queueing all outbound links from the start node
     blankQueueItem = {'end':-1,'distance':0,'nodes':str(start)}
-    if(0):
-      print self.data.routing[start]
-      sys.exit()
-      
+
     try:
       for i, weight in self.data.routing[start].items():
         self.addToQueue(start,i, blankQueueItem, weight)
@@ -67,12 +63,12 @@ class Router:
     # Limit for how long it will search
     count = 0
     while count < 1000000:
-      #print "Q contains %d" % len(self.queue)
       count = count + 1
       try:
         nextItem = self.queue.pop(0)
       except IndexError:
         # Queue is empty: failed
+        # TODO: return partial route?
         return('no_route',[])
       x = nextItem['end']
       if x in closed:
@@ -94,12 +90,15 @@ class Router:
   def addToQueue(self,start,end, queueSoFar, weight = 1):
     """Add another potential route to the queue"""
 
+    # getArea() checks that map data is available around the end-point,
+    # and downloads it if necessary
+    #
+    # TODO: we could reduce downloads even more by only getting data around
+    # the tip of the route, rather than around all nodes linked from the tip
     end_pos = self.data.rnodes[end]
-    #print "queuing %s" % str(end_pos)
-    #print "queuing %d" % end
     self.data.getArea(end_pos[0], end_pos[1])
     
-    # If already in queue
+    # If already in queue, ignore
     for test in self.queue:
       if test['end'] == end:
         return
@@ -127,6 +126,7 @@ class Router:
       self.queue.append(queueItem)
 
 if __name__ == "__main__":
+  # Test suite - do a little bit of easy routing in birmingham
   data = LoadOsm("cycle")
 
   node1 = data.findNode(52.552394,-1.818763)
@@ -138,8 +138,10 @@ if __name__ == "__main__":
   router = Router(data)
   result, route = router.doRoute(node1, node2)
   if result == 'success':
-    #print "Route: %s" % ",".join("%1.4f,%1.4f" % (i[0],i[1]) for i in route)
+    # list the nodes
     print route
+
+    # list the lat/long
     for i in route:
       node = data.rnodes[i]
       print "%d: %f,%f" % (i,node[0],node[1])

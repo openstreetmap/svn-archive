@@ -171,6 +171,7 @@
         [
         new OpenLayers.Control.Navigation(),
         new OpenLayers.Control.Permalink(),
+        new OpenLayers.Control.LayerSwitcher(),
         new OpenLayers.Control.PanZoomBar()
         ],
       maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
@@ -184,6 +185,16 @@
 
     layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
     map.addLayer(layerTilesAtHome);
+
+    layerOverlay = new OpenLayers.Layer.OSM(
+      "Route",
+      "tile/base/",
+      {
+        isBaseLayer: false,
+        type:'png',
+      },
+      {'buffer':0});
+    map.addLayer(layerOverlay);
 
     markers = new OpenLayers.Layer.Markers( "Markers" );
     map.addLayer(markers);

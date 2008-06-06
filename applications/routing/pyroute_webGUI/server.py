@@ -21,12 +21,16 @@ from BaseHTTPServer import *
 import re
 import sys
 import math
+import os
+
+from tile_route import TileRoute
+
 sys.path.append("../pyroutelib2")
 import routeAsGpx
 
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):
-    self.re_tile = re.compile('/(\w+)/(\d+)/(\d+)/(\d+)\.png')
+    self.re_tile = re.compile('/tile/(\w+)/(\d+)/(\d+)/(\d+)\.png')
     self.re_route = re.compile('/route\?start=(.*?)%2C(.*?)&end=(.*?)%2C(.*?)&type=(.*?)')
     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
@@ -60,9 +64,12 @@ class tileServer(BaseHTTPRequestHandler):
       
       # Render the tile
       print 'Request for %d,%d at zoom %d, layer %s' % (x,y,z,layer)
-      self.send_response(404)
-      return
-      
+
+
+      a = TileRoute()
+      pngData = a.RenderTile(z,x,y,None)
+      # "route/route_52.218100_0.116200_52.218400_0.142700_.gpx"
+        
       # Return the tile as a PNG
       self.send_response(200)
       self.send_header('Content-type','image/PNG')
@@ -75,11 +82,20 @@ class tileServer(BaseHTTPRequestHandler):
       dy = y2 - y1
       dist = math.sqrt(dx * dx + dy * dy)
       print "Routing from %f,%f to %f,%f = distance %f" % (x1,y1,x2,y2,dist)
-      gpx = routeAsGpx.routeToGpx(
-        x1,y1,x2,y2,
-        "cycle",
-        "Route",
-        "track")
+      filename = "route/route_%f_%f_%f_%f_%s.gpx" % (x1,y1,x2,y2,type)
+      if(os.path.exists(filename)):
+        f = open(filename,"r")
+        gpx = f.read()
+        f.close()
+      else:
+        gpx = routeAsGpx.routeToGpx(
+          x1,y1,x2,y2,
+          "cycle",
+          "Route",
+          "track")
+        f = open(filename,"w")
+        f.write(gpx)
+        f.close()          
       self.send_response(200)
       self.send_header('Content-type','text/plain')
       self.end_headers()

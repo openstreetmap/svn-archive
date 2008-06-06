@@ -25,15 +25,16 @@ class TileRoute(TileBase):
   def draw(self):
     self.ctx.set_source_rgb(0, 0, 0)
     f = open(self.filename, 'r')
-    first = True
-    for line in f:
-      (id,lat,lon) = map(float, line.split(','))
-      (x,y) = self.proj.project(lat,lon)
-      #print "%f,%f -> %f,%f" % (lat,lon,x,y)
-      if(first):
-        self.ctx.move_to(x,y)
-        first = False
-      else:
-        self.ctx.line_to(x,y)
-    f.close()
-    self.ctx.stroke()
+    if(f):
+      first = True
+      for line in f:
+        (id,lat,lon) = map(float, line.split(','))
+        (x,y) = self.proj.project(lat,lon)
+        #print "%f,%f -> %f,%f" % (lat,lon,x,y)
+        if(first):
+          self.ctx.move_to(x,y)
+          first = False
+        else:
+          self.ctx.line_to(x,y)
+      f.close()
+      self.ctx.stroke()

@@ -71,28 +71,29 @@
     text = "<div class='wpt' id=wpt_'"+id+"'>"+text+"</div>";
     return(text);
   }
-  function waypointHtml(lat,lon,id)
-  {
-    var text = "<h3>Waypoint #"+id+"</h3>";
-    text += "<p>"+formatNum(lat) + ", " + formatNum(lon)+"</p>";
-    text += "<p><a href='#'>delete</a></p>";
-    return(text);
-  }
-  function routepointHtml(lat,lon,id)
-  {
-    var text = "<p>"+formatNum(lat) + ", " + formatNum(lon)+"</p>";
-    text += "<p>Set as <a href='#'>start</a>, <a href='#'>end</a></p>";
-    text += "<p><a href='#'>delete</a></p>";
-    return(text);
-  }
 
   function addItem(type,text,id)
   {
     d = document.getElementById(type);
     text = "<div class='"+type+"' id='"+type+"_"+id+"'>"+text+"</div>";
-    d.innerHTML += text;
+    if(d.innerHTML == "None")
+      d.innerHTML = text;
+    else
+      d.innerHTML += text;
   }
-      
+  function setRoute(type,lat,lon,id)
+  {
+    var text = "<p>"+formatNum(lat) + ", " + formatNum(lon)+"</p>";
+
+    d = document.getElementById("rte_"+type);
+    d.innerHTML = "<div class='"+type+"' id='"+type+"_"+id+"'>"+text+"</div>";
+    
+  }
+  function showRouteButton()
+  {
+    var d = document.getElementById("rte_btn");
+    d.style.display = '';
+  }
   function addRouteMarker(lat,lon, type)
   {
     var size = new OpenLayers.Size(10,17);
@@ -107,7 +108,16 @@
     }
     if(type == 2)
     {
-      addItem("rte", routepointHtml(lat,lon,0));
+      document.route.start.value = formatNum(lat) + "," + formatNum(lon);
+      setRoute("start", lat,lon, 0);
+    }
+    if(type == 3)
+    {
+      document.route.end.value = formatNum(lat) + "," + formatNum(lon);
+      setRoute("end", lat,lon, 0);
+
+      if(document.route.start.value)
+        showRouteButton();
     }
     
     marker = new OpenLayers.Marker(pos,icon);
@@ -135,16 +145,20 @@
   {
     return(formatNum(lonlat.lat) + ", " + formatNum(lonlat.lon));
   }
+  function menuItem(lonlat, type, text)
+  {
+    var js = "addRouteMarker("+formatPos(lonlat)+","+type+");return(false);";
+    return("<div class='menu_item'><a href='' onclick='"+js+"'>"+text+"</a></div>");
+  }
   function newMenu(lonlat)
   {
     var a = "" + formatPos(lonlat);
     
-    link1 = "addRouteMarker("+formatPos(lonlat)+",1);return(false);";
-    a += "<p><a href='' onclick='"+link1+"'>Add waypoint</a></p>";
-    link2 = "addRouteMarker("+formatPos(lonlat)+",2);return(false);";
-    a += "<p><a href='' onclick='"+link2+"'>Add to route</a></p>";
-    a += "<p><a href=''>Download data</a></p>";
-    a += "<p><a href=''>Download maps</a></p>";
+    a += menuItem(lonlat,1,"Add waypoint");
+    a += menuItem(lonlat,2,"Set route start");
+    a += menuItem(lonlat,3,"Set route end");
+    a += "<div class='menu_item'><a href=''>Download data</a></div>";
+    a += "<div class='menu_item'><a href=''>Download images</a></div>";
     return(a);
   }
   // Initialise the map
@@ -180,9 +194,6 @@
     var click = new OpenLayers.Control.Click();
     map.addControl(click);
     click.activate();
-    
-    addRouteMarker(52,-1.3,3);
-
     }
 
   </script>
@@ -191,8 +202,24 @@
 <table border=1 style="width:100%; height:100%"><tr>
 <td><div id="map" style="width:100%; height:100%"></div></td>
 <td width="200" valign="top">
-<h2>Waypoints</h2><div id="wpt">None</div>
-<h2>Route</h2><div id="rte">None</div>
+
+<h2>Waypoints</h2>
+<div id="wpt">None</div>
+
+<h2>Route</h2>
+<div id="rte_start"></div>
+<div id="rte_via"></div>
+<div id="rte_end"></div>
+<div id="rte_misc"></div>
+<div id="rte_control">
+<form name="route" action="route" method="get">
+<input type="hidden" name="start" value="" />
+<input type="hidden" name="end" value="" />
+<input type="hidden" name="type" value="" />
+<div id="rte_btn" style="display:none"><input type="submit" value="Calculate route" /></div>
+</form>
+</div>
+
 <h2>Help</h2><div><a href="">Help</a></div>
 </td>
 </tr></table>

@@ -27,8 +27,7 @@ import os
 import tiledata
 import tilenames
 import re
-
-execfile("weights.py")
+import weights
 
 class LoadOsm:
   """Parse an OSM file looking for routing information, and do routing with it"""
@@ -38,6 +37,7 @@ class LoadOsm:
     self.rnodes = {}
     self.transport = transport
     self.tiles = {}
+    self.weights = weights.RoutingWeights()
   
   def getArea(self, lat, lon):
     """Download data in the vicinity of a lat/long"""
@@ -121,7 +121,7 @@ class LoadOsm:
       (node_id,x,y) = node
       if last[0]:
         if(access[self.transport]):
-          weight = getWeight(self.transport, highway)
+          weight = self.weights.get(self.transport, highway)
           self.addLink(last[0], node_id, weight)
           self.makeNodeRouteable(last)
           if reversible or self.transport == 'foot':

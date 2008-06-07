@@ -9,6 +9,8 @@ if (! function_exists('mb_strlen')) {
   include_once('mb.php');
 }
 
+error_reporting(0);
+
 include_once('classysql/classysql.php');
 $db =& new y_db($config);
 

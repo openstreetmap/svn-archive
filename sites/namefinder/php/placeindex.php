@@ -72,7 +72,7 @@ class placeindex {
 
     /* sort the result by increasing distance from this, and limit to max requested */
     $q->where($conditions);
-    $q->ascending(canon::distancerestriction($this->lat, $this->lon));
+    $q->ascending(canonical::distancerestriction($this->lat, $this->lon, 0));
     $q->limit($maxresults);
 
     $placeindex = new placeindex();

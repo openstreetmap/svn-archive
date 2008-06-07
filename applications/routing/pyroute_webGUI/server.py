@@ -22,6 +22,7 @@ import re
 import sys
 import math
 import os
+import pickle
 
 from tile_route import TileRoute
 
@@ -30,10 +31,32 @@ import routeAsCSV
 
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):
+    self.settings = None
     self.re_tile = re.compile('/tile/(\w+)/(\d+)/(\d+)/(\d+)\.png')
     self.re_route = re.compile('/route\?start=(.*?)%2C(.*?)&end=(.*?)%2C(.*?)&type=(.*?)')
     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
+  def settingsFilename(self):
+    return("settings.txt")
+  
+  def getSettings(self):
+    """Load self.settings from disk, or return existing copy, or create blank copy"""
+    if(not self.settings):
+      try:
+        self.settings = {}
+        f = open(self.settingsFilename(), "r")
+        self.settings = pickle.load(f)
+        f.close()
+      except IOError:
+        print "Couldn't load settings from disk"
+        
+        
+  def saveSettings(self):
+    """save self.settings to disk"""
+    f = open(self.settingsFilename(), "w")
+    pickle.dump(self.settings, f)
+    f.close()
+    
   def log_message(self, format, *args):
     pass  # Kill logging to stderr
   
@@ -56,7 +79,17 @@ class tileServer(BaseHTTPRequestHandler):
     match_tile = self.re_tile.search(self.path)
     match_route = self.re_route.search(self.path)
     
-    if(match_tile):
+    if self.path=='/counter':
+      self.send_response(200)
+      self.send_header('Content-type','text/plain')
+      self.end_headers()
+      
+      self.getSettings()
+      self.settings['test'] = self.settings.get('test',0) + 1
+      self.wfile.write(self.settings['test'])
+      self.saveSettings()
+    
+    elif(match_tile):
       (layer,z,x,y) = match_tile.groups()
       z = int(z)
       x = int(x)

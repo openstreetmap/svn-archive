@@ -36,6 +36,12 @@ class tileServer(BaseHTTPRequestHandler):
     self.re_route = re.compile('/route\?start=(.*?)%2C(.*?)&end=(.*?)%2C(.*?)&type=(.*?)')
     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
+  def getNextRoute(self):
+    for id in range(1,10000):
+      filename = "route/%d.txt" % id
+      if(not os.path.exists(filename)):
+        return(filename,id)
+
   def settingsFilename(self):
     return("settings.txt")
   
@@ -71,7 +77,7 @@ class tileServer(BaseHTTPRequestHandler):
 
   def do_GET(self):
     # Specific files to serve:
-    if self.path=='/':
+    if(self.path[0:4]=='/map/' or self.path=='/'):
       self.return_file('slippy.html')
       return
 
@@ -107,6 +113,7 @@ class tileServer(BaseHTTPRequestHandler):
       self.send_header('Content-type','image/PNG')
       self.end_headers()
       self.wfile.write(pngData)
+    
     elif(match_route):
       (x1,y1,x2,y2,type) = match_route.groups()
       (x1,y1,x2,y2) = map(float, (x1,y1,x2,y2))
@@ -114,17 +121,18 @@ class tileServer(BaseHTTPRequestHandler):
       dy = y2 - y1
       dist = math.sqrt(dx * dx + dy * dy)
       print "Routing from %f,%f to %f,%f = distance %f" % (x1,y1,x2,y2,dist)
-      filename = "route/latest.csv"
-      if(not os.path.exists(filename)):
+      (filename,id) = self.getNextRoute()
+      if(filename):
         routeAsCSV.routeToCSVFile(
           x1,y1,x2,y2,
           "cycle",
           filename)
-      self.send_response(200)
-      self.send_header('Content-type','text/HTML')
-      self.end_headers()
-      self.wfile.write("<p>Your route is available on the <a href='/'>map</a></p>")
-      
+        self.send_response(200)
+        self.send_header('Content-type','text/HTML')
+        self.end_headers()
+        self.wfile.write("<p>Your route is available on the <a href='/map/?route=%d'>map</a></p>" % id)
+      else:
+        self.send_response(404)
     else:
       print "404: %s" % self.path
       self.send_response(404)

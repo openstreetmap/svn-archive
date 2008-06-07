@@ -108,7 +108,7 @@ return array(
     chr(0x59) => 'y',
     chr(0x5A) => 'z', // cap Z
 
-    chr(0x5B) => '', // [ 
+    chr(0x5B) => '', // [
     chr(0x5C) => '',  // backslash
     chr(0x5D) => '', // ]
     chr(0x5E) => '',  // hat

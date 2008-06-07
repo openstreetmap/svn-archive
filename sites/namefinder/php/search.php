@@ -1,5 +1,7 @@
 <?php
 
+include_once('word.php');
+
 class search {
 
   /* The common point of call for doing searches. Call search::xmlise(). */
@@ -29,12 +31,17 @@ class search {
     global $db;
     include_once('options.php');
 
+    $closedfile = "{$config['installdir']}/closed.xml";
+    if (file_exists($closedfile)) {
+      return file_get_contents($closedfile);
+    }
+
     /* oxml is the return string. Put admin stuff in the top level element */
     $oxml = '<' . '?' . 'xml version="1.0" encoding="UTF-8"' . '?'. '>' . "\n";
     $oxml .= "<searchresults find='" . htmlspecialchars($find, ENT_QUOTES, 'UTF-8') . "'";
     $indexdate = options::getoption('indexdate');
     if ($indexdate == '') {
-      $oxml .= " error='updating index, temporarily unavailable'>\n</searchresults>\n";
+      $oxml .= " error='index temporarily unavailable'>\n</searchresults>\n";
       return $oxml;
     }
     $oxml .= " sourcedate='".
@@ -213,7 +220,7 @@ class search {
 
     global $db, $config;
 
-    include_once('canon.php');
+    include_once('canonical.php');
     include_once('named.php');
     include_once('region.php');
 
@@ -252,7 +259,7 @@ class search {
       } else {
         /* case 2 or 3 above: search is qualified. Find any places of the name given as 
            the second term  */
-        $places = array_merge($places, named::lookupplaces($terms[1]));
+        $places = array_merge($places, named::lookupplaces($terms[1], NULL, TRUE));
         if (count($places) == 0) { return "I can't find {$terms[1]}"; }
 
         // $db->log ("found places " . print_r($places, 1));
@@ -261,9 +268,10 @@ class search {
         $placeisin = $nterms > 2 ? array_slice($terms, 2) : array();
         if (! empty($placeisin)) {
           foreach($placeisin as $isin) {
-            $isinstrings = canon::canonical($isin);
+            $isinstrings = explode(' ', canonical::canonicalise_to_string($isin));
             for ($i = 0; $i < count($places); $i++) {
-              $sourceisinstrings = canon::canonical($places[$i]->is_in);
+              $sourceisinstrings = 
+                explode(' ', canonical::canonicalise_to_string($places[$i]->is_in));
               $found = FALSE;
               foreach($isinstrings as $isin) {
                 foreach ($sourceisinstrings as $sourceisin) {
@@ -273,9 +281,9 @@ class search {
                   }
                 }
               }
-              if ($found) {
+              if (! $found) {
                 array_splice($places, $i, 1);
-                break 2;
+                $i--;
               }
             }
           }
@@ -302,32 +310,29 @@ class search {
        which we only require context */
 
 
-    /* special cases for some plural objects: search on churches near
-       ... => church near; and for place like things, limit search
+    /* special cases for place like things: limit search
        only to places (rank > 0) rather than including streets named
        'Somewhere Place' etc */
+
     switch ($terms[0]) {
-    case 'churches':
-      $terms[0] = 'church'; 
-      break;
     case 'cities':
       $terms[0] = 'city';
-      $placesonly = y_op::eq('rank', named::placerank('city'));
+      $placesonly = y_op::eq(y_op::field('rank',0), named::placerank('city'));
       break;
     case 'towns':
-      $placesonly = y_op::eq('rank', named::placerank('town'));
+      $placesonly = y_op::eq(y_op::field('rank',0), named::placerank('town'));
       break;
     case 'suburbs':
-      $placesonly = y_op::eq('rank', named::placerank('suburb'));
+      $placesonly = y_op::eq(y_op::field('rank',0), named::placerank('suburb'));
       break;
     case 'villages':
-      $placesonly = y_op::eq('rank', named::placerank('village'));
+      $placesonly = y_op::eq(y_op::field('rank',0), named::placerank('village'));
       break;
     case 'hamlets':
-      $placesonly = y_op::eq('rank', named::placerank('hamlet'));
+      $placesonly = y_op::eq(y_op::field('rank',0), named::placerank('hamlet'));
       break;
     case 'places':
-      $placesonly = y_op::gt('rank', 0);
+      $placesonly = y_op::gt(y_op::field('rank',0), 0);
       break;
     }
 
@@ -335,7 +340,7 @@ class search {
        try matching against equivalents in the database. There's more than one because 
        Hinton Road becomes Hinton Rd as well, and so on */
 
-    $canonstrings = canon::canonical_with_synonym($terms[0]);
+    $canonterms = canonical::canonical_basic($terms[0]);
 
     if (count($places) > 0) {
       /* There are qualifying places. 
@@ -348,30 +353,30 @@ class search {
 
         /* find occurences of the name ordered by distance from the place, 
            for each of the places we found */
-        $q = $db->query();
-        $ands = array();
-        $ands[] = canon::likecanon($canonstrings);
         $region = new region($place->lat, $place->lon);
         $regionnumbers = $region->considerregions();
-        $regionors = array();
-        foreach ($regionnumbers as $regionnumber) {
-          $regionors[] = y_op::eq('region', $regionnumber);
+
+        $q = $db->query();
+        if (! isset($placesonly)) {
+          $q->where(word::whereword($joiners, $canonterms, FALSE, $regionnumbers));
+        } else {
+          $joiners = array(new placeindex(), new named());
+          $ors = array();
+          foreach ($regionnumbers as $regionnumber) { 
+            $ors[] = y_op::eq(y_op::field('region',0), $regionnumber); 
+          }
+          $ands = array($placesonly,
+                        count($ors) == 1 ? $ors[0] : y_op::oor($ors),
+                        y_op::feq(y_op::field('id',0),y_op::field('id',1)));
+          $q->where(y_op::aand($ands));
         }
-        $ands[] = count($regionors) == 1 ? $regionors[0] : y_op::oor($regionors);
-        if (! empty($placesonly)) { $ands[] = $placesonly; }
-
-        $q->where(y_op::aand($ands));
-        $q->ascending(canon::distancerestriction($place->lat, $place->lon));
+        $q->ascending(canonical::distancerestriction($place->lat, $place->lon, count($joiners)-1));
         $q->limit($maxresults);
-        $q->groupbyonly('id');
-
-        $named = new named();
-        $canon = new canon();
+        // $q->groupby(y_op::field('id',count($joiners)-1));
 
         $toofar = empty($toofars[$place->rank]) ? $toofars[0]: $toofars[$place->rank];
-
-        while ($q->selectjoin($named, $canon) > 0) { 
-
+        while ($q->select($joiners) > 0) { 
+          $named = $joiners[count($joiners) - 1];
           $named->place = clone $place;
           $named->place->localdistancefrom($named);
 
@@ -405,22 +410,20 @@ class search {
          this by going round the loop twice, relaxing the exactness
          condition on the second time round */
       $limit = $maxresults;
-      $exact = TRUE; 
+      $exact = TRUE;
       for ($i = 0; $i < 2 && $limit > 0; $i++) {
         $q = $db->query();
+        $q->where(word::whereword($joiners, $canonterms, $exact));
         $q->limit($limit);
-        $condition = canon::likecanon($canonstrings, $exact);
-        if (! $exact) {
-          $condition = y_op::aand($condition, y_op::not(canon::likecanon($canonstrings, TRUE)));
-        }
         // $condition = y_op::aand($condition, y_op::le('rank',named::placerank('city')));
-        $q->where($condition);
         /* prioritise places, and those in order of importance, cities first */
         $q->descending('rank');
-        $q->groupbyonly('id');
-        $named= new named();
-        $canon = new canon();
-        while ($q->selectjoin($named, $canon) > 0) { 
+        // $q->groupby(y_op::field('id',count($joiners)-1));
+
+        while ($q->select($joiners) > 0) { 
+          $db->log(print_r($joiners,1));
+          $db->log(print_r($named,1));
+          $named = $joiners[count($joiners) - 1];
           $namedclone = clone $named;
           if ($namedclone->rank > 0) {
             $namedclone->assigncontext();

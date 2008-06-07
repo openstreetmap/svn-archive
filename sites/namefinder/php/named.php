@@ -35,6 +35,7 @@ class named {
                     number in square brackets, e.g. "Main Street
                     [A1134]", and language equivalents, e.g. "London
                     [fr:Londres]" */
+  var $canonical; /* a canonical UTF-8 string, as per canonical.php */
   var $category; /* The kind of item represented by the named - the
                     tag name of the main tag of the object, such as
                     'highway'or 'amenity'. This is used to ensure that
@@ -328,7 +329,7 @@ class named {
        lat,lon and north-east lat,lon, if latlon is non-null
     */
     global $db;
-    include_once('canon.php');
+    include_once('canonical.php');
     $places = array();
     $q = $db->query();
     $ands = array();
@@ -338,16 +339,14 @@ class named {
       $ands[] = y_op::lt('lat',$latlon[2]);
       $ands[] = y_op::lt('lon',$latlon[3]);
     }
-    $canonstrings = canon::canonical_with_synonym($name);
-    if (empty($canonstrings)) { return $places; /* empty array */ }
-    $ands[] = canon::likecanon($canonstrings, $exact);
+    $canonterms = canonical::canonical_basic($name);
+    if (empty($canonterms)) { return $places; /* empty array */ }
+    $ands[] = word::whereword($joiners, $canonterms, $exact);
     $ands[] = y_op::gt('rank',0);
     $q->where(y_op::aand($ands));
 
-    $placecandidate = new named();
-    $canon = new canon();
-    while ($q->selectjoin($placecandidate, $canon) > 0) {
-      $places[] = clone $placecandidate;
+    while ($q->select($joiners) > 0) {
+      $places[] = clone $joiners[count($joiners)-1];
     }
     return $places;
   }
@@ -357,7 +356,7 @@ class named {
      description of the location of this in relation to nearby places */
 
   // --------------------------------------------------
-  function describebasic($resetisin=FALSE) {
+  function describebasic($resetisin=FALSE, $omitqualifier=FALSE) {
     /* Builds the basic elements of this's description, returning the
        result as a string resetisin: when TRUE avoids putting 'ditto'
        when is_in is the same as the most recent one, so the first
@@ -365,6 +364,10 @@ class named {
     $info = $this->info;
     if ($info == 'airport; airport') { $info = 'airport'; /* until I can fix it in the index */}
     $infohtml = htmlspecialchars($info, ENT_QUOTES, 'UTF-8');
+    $name = $this->name;
+    if ($omitqualifier) {
+      $name = preg_replace('/ *\\[\[^\\]]*\]/', '', $name); 
+    }
     $namehtml = htmlspecialchars($this->name, ENT_QUOTES, 'UTF-8');
     $isinhtml = htmlspecialchars($this->info, ENT_QUOTES, 'UTF-8');
     $isinhtml = htmlspecialchars($this->tidyupisin($resetisin), ENT_QUOTES, 'UTF-8');
@@ -400,12 +403,12 @@ class named {
     $andprefix = ' and ';
     if (isset($this->nearesttown1)) {
       $s .= $prefix . $this->nearesttown1->describedistancefrom() . ' ' . 
-        $this->nearesttown1->describebasic();
+        $this->nearesttown1->describebasic(FALSE, TRUE);
       $prefix = $andprefix;
     }
     if (isset($this->nearesttown2)) {
       $s .= $prefix . $this->nearesttown2->describedistancefrom() . ' ' . 
-        $this->nearesttown2->describebasic();
+        $this->nearesttown2->describebasic(FALSE, TRUE);
       $prefix = $andprefix;
     }
     if ($prefix == $andprefix) { $s .= ')'; }
@@ -478,8 +481,8 @@ class named {
   // --------------------------------------------------
   function getosmid(&$type) { 
     /* Helper function to get the type and id of this */
-    include_once('canon.php');
-    return canon::getosmid($this->id, $type);
+    include_once('canonical.php');
+    return canonical::getosmid($this->id, $type);
   }
 
   // --------------------------------------------------

@@ -40,7 +40,7 @@
 // ====================================================
 class y_db {
 
-  var $version = '2.02';
+  var $version = '2.07';
 
   /* constructor */ function y_db ($config) {
     $this->db_name     = $config['y_db_name'];
@@ -48,6 +48,7 @@ class y_db {
     $this->db_user     = $config['y_db_user'];
     $this->db_password = $config['y_db_password'];
     if (isset($config['y_db_log']))      { $this->db_log =         $config['y_db_log']; }
+    if (isset($config['y_db_log_size'])) { $this->db_log_size =    $config['y_db_log_size']; }
     if (isset($config['y_db_backup']))   { $this->db_backup =      $config['y_db_backup']; }
     if (isset($config['y_db_prefix']))   { $this->db_prefix =      $config['y_db_prefix']; }
     if (isset($config['y_db_no_locks'])) { $this->db_no_locks =    $config['y_db_no_locks']; }
@@ -62,6 +63,7 @@ class y_db {
   var $db_user;
   var $db_password;
   var $db_log;
+  var $db_log_size;
   var $db_backup;
   var $db_prefix = '';
   var $db_no_locks = TRUE;
@@ -307,7 +309,21 @@ class y_db {
 
   // --------------------------------------------------
   /* private */ function log ($text) {
+    static $generation = 1;
     if (isset($this->db_log)) {
+      if (isset ($this->logfh) && ! empty($this->db_log_size) && 
+          ftell($this->logfh) > $this->db_log_size) 
+      {
+        fclose($this->logfh);
+        unset($this->logfh);
+        if ($generation > 1) {
+          $generationless1 = $generation - 1;
+          $oldname = str_replace("-G{$generation}.log", "-G{$generationless1}.log", 
+                                 $this->logname);
+          @unlink($oldname);
+        }
+        $generation++;
+      }
       if (! isset ($this->logfh)) {
         $id = session_id();
         if (empty($id)) { 
@@ -320,7 +336,7 @@ class y_db {
             $_SESSION['y_db_log'] = $id;
           }
         }
-        $this->logname = "{$this->db_log}/{$id}.log";
+        $this->logname = "{$this->db_log}/{$id}-G{$generation}.log";
         $this->logfh = fopen ($this->logname, 'a');
       }
       fwrite ($this->logfh, date('Y-m-d:H:i:s')."\n".$text."\n\n");
@@ -344,7 +360,7 @@ class y_db {
     fwrite($fd, $qs);
     fwrite($fd, "\n");
     fclose($fd);
-    $this->log("chmod($filename,0666);");
+    // $this->log("chmod($filename,0666);");
     @chmod($filename,0666); /* may fail if I didn't create it 
                               (cant chmod file with different owner), but that's ok */
     if (@rename($unlockedname, $lockedname) === FALSE) {
@@ -434,8 +450,8 @@ class y_db {
   function le ($f, $v) { return y_op_binary::y_op_binary_fv ('<=', $f, $v); }
   function ge ($f, $v) { return y_op_binary::y_op_binary_fv ('>=', $f, $v); }
   function like ($f, $v) { return y_op_binary::y_op_binary_fv ('LIKE', $f, $v); }
-  function isnull ($f) { return new y_op_left ('IS NULL', array(y_op_field::make($f))); }
-  function isntnull ($f) { return new y_op_left ('IS NOT NULL', array(y_op_field::make($f))); }
+  function isnull ($f) { return new y_op_right ('IS NULL', array(y_op_field::make($f))); }
+  function isntnull ($f) { return new y_op_right ('IS NOT NULL', array(y_op_field::make($f))); }
   function between ($f, $v1, $v2) { 
     return new y_op_ternary ('BETWEEN', 'AND', 
       array(y_op_field::make($f), new y_op_value($v1), new y_op_value($v2))); 
@@ -509,14 +525,21 @@ class y_db {
 // --------------------------------------------------
 class y_op_oprintf extends y_op {
   function y_op_oprintf($string, $args) { parent::y_op($string, $args); }
-  function renderop(&$maps) {
+  function renderop(&$maps, $paren=TRUE) {
     $string = $this->op;
+    if ($paren) { $string = '(' . $string; }
     foreach ($this->args as $field) {
-      $map =& $maps[0]->identifymapbyfield($maps, $field, 0);
+      if (is_a($field, 'y_op_field')) {
+        $renderedfield = $field->renderop($maps);
+      } else /* string field name */ {
+        $map =& $maps[0]->identifymapbyfield($maps, $field, 0);
+        $renderedfield = $map->renderfield($field);
+      }
       $pos = strpos($string, '%f');
       if ($pos === FALSE) { break; }
-      $string = substr($string, 0, $pos) . $map->renderfield($field) . substr($string, $pos+2);
+      $string = substr($string, 0, $pos) . $renderedfield . substr($string, $pos+2);
     }
+    if ($paren) { $string .= ')'; }
     return $string;
   }
 }
@@ -554,7 +577,7 @@ class y_op_left extends y_op {
 }
 
 class y_op_right extends y_op {
-  function y_op_right($op, $args) { parent::y_op($op, $args); }
+  function renderop(&$maps) { return '(' . $this->args[0]->renderop($maps) . $this->op .') '; }
 }
 
 class y_op_binary extends y_op {
@@ -756,7 +779,8 @@ class y_class2db {
        'datetime'=>'integer', 'timestamp'=>'integer', 'time'=>'integer',
       'year'=>'integer', 'char'=>'string', 'tinyblob'=>'string', 'tinytext'=>'integer', 
       'blob'=>'string', 'mediumblob'=>'string', 'mediumtext'=>'string', 'longblob'=>'string',
-      'longtext'=>'string', 'enum'=>'integer', 'set'=>'integer', 'bool'=>'boolean');
+      'longtext'=>'string', 'enum'=>'integer', 'set'=>'integer', 'bool'=>'boolean', 
+      'varbinary'=>'string');
 
     if (is_string($this->o->$field)) {
       $fieldtype = $this->table[$this->fieldmap[$field]]['type']; // from the db column description
@@ -884,7 +908,6 @@ class y_query {
   var $distinct = FALSE;
   var $groupby = '';
   var $doinggroupby = FALSE;
-  var $groupbyonly = FALSE;
   var $doinginfo = FALSE;
 
   // --------------------------------------------------
@@ -982,14 +1005,14 @@ class y_query {
     $this->setaggregates($yop);
     $this->doinginfo = TRUE;
     $this->select($oc);
-    if ($this->nrowstotal != 1) { $this->db->oops("{$operator} no result"); }
+    if ($this->nrowstotal != 1) { $this->db->oops("no result"); }
     $result = $this->db->nextrow($this->handle);
     return $result[0];
   }
 
   // --------------------------------------------------
-  /* public */ function groupby ($fieldops)
-    /* either a mixture of fields and yops (for operations), or a single array of same */
+  /* public */ function groupby ($fieldops 
+    /* either a mixture of fields and yops (for operations), or a single array of same */) 
   {
     /* SELECT field1, ..., MAX(field2), ... FROM table WHERE condition GROUP BY field1, ...
        call select() to get results */
@@ -997,15 +1020,6 @@ class y_query {
     if (! is_array($fieldops)) { $fieldops = func_get_args(); }
     $this->setaggregates($fieldops);
     $this->doinggroupby = TRUE;
-    $this->groupbyonly = FALSE;
-  }
-
-  // --------------------------------------------------
-  /* public */ function groupbyonly ($fieldops)
-       /* as groupby, but does not affect which fields are selected */
-  {
-    $this->groupby($fieldops);
-    $this->groupbyonly = TRUE;
   }
 
   // --------------------------------------------------
@@ -1153,16 +1167,25 @@ class y_query {
         $n = func_num_args() - 1; 
         $keys = array_slice(func_get_args(), 1, $n); 
       }
+      if (is_a ($keys[0], 'y_op_oprintf')) {
+        $set = array_splice($keys, 0, 1);
+        $set = $set[0];
+      }
       $ws = $this->renderwhere($keys);
       if (empty ($ws)) { $this->db->oops ("update: no condition - would update all!"); }
       $this->qs = 'UPDATE ' . $this->omaps[0]->rendertable();
-      $prefix = ' SET ';
-      $map =& $this->omaps[0];
-      for ($map->field_all(); $map->field_more(); $map->field_next()) {
-        if ($map->is_set()) {
-          $this->qs .= $prefix . $map->renderfield() . "='" . y_db::sqe($map->rendervalue()) . "'";
-          $prefix = ', ';
+
+      if (! isset($set)) {
+        $prefix = ' SET ';
+        $map =& $this->omaps[0];
+        for ($map->field_all(); $map->field_more(); $map->field_next()) {
+          if ($map->is_set()) {
+            $this->qs .= $prefix . $map->renderfield() . "='" . y_db::sqe($map->rendervalue()) . "'";
+            $prefix = ', ';
+          }
         }
+      } else {
+        $this->qs .= ' SET ' . $set->renderop($this->omaps, FALSE /* no surrounding brackets */);
       }
       $this->qs .= " {$ws} ;";
     }
@@ -1216,6 +1239,7 @@ class y_query {
 
     // separate inserts
     $count = 0;
+    $this->qs = '';
     for ($i = 0; $i < count($os); $i++) { $count += $this->insertsimple($i); }
     return $count;
   }
@@ -1225,7 +1249,7 @@ class y_query {
     /* INSERT table SET col=val, col=val, ... ; */
 
     $map =& $this->omaps[$i];
-    $qs = 'INSERT ' . $map->rendertable();
+    $qs = 'INSERT IGNORE ' . $map->rendertable();
     $prefix = ' SET ';
     for($map->field_all(); $map->field_more(); $map->field_next()) {
       if ($map->is_set()) {
@@ -1234,6 +1258,7 @@ class y_query {
       }
     }
     $qs .= ';';
+    $this->qs .= $qs;
     $this->db->run($qs, 'w', TRUE);
     return $this->db->affected();
   }
@@ -1243,31 +1268,31 @@ class y_query {
     /* INSERT table (col, col, ...) VALUES (val, val, ...), (val, val, ...)  */
 
     $map =& $this->omaps[0];
-    $qs = 'INSERT ' . $map->rendertable();
+    $this->qs = 'INSERT IGNORE ' . $map->rendertable();
     $prefix = '(';
     for($map->field_all(); $map->field_more(); $map->field_next()) {
       if ($map->is_set()) {
-        $qs .= $prefix . $map->renderfield();
+        $this->qs .= $prefix . $map->renderfield();
         $prefix = ',';
       }
     }
-    $qs .= ') VALUES ';
+    $this->qs .= ') VALUES ';
     $prefix = '(';
     for ($i = 0; $i < count($this->omaps); $i++) {
       $map =& $this->omaps[$i];
-      $qs .= $prefix;
+      $this->qs .= $prefix;
       $prefix = ',(';
       $prefix2 = '';
       for($map->field_all(); $map->field_more(); $map->field_next()) {
         if ($map->is_set()) {
-          $qs .= $prefix2 . "'" . y_db::sqe($map->rendervalue()) . "'";
+          $this->qs .= $prefix2 . "'" . y_db::sqe($map->rendervalue()) . "'";
           $prefix2 = ', ';
         }
       }
-      $qs .= ")";
+      $this->qs .= ")";
     }
-    $qs .= ";";
-    $this->db->run($qs, 'w', TRUE);
+    $this->qs .= ";";
+    $this->db->run($this->qs, 'w', TRUE);
     return $this->db->affected();
   }
 
@@ -1292,16 +1317,15 @@ class y_query {
     for ($i = 0; $i < count($this->aggregates); $i++) {
       $a =& $this->aggregates[$i];
       if (is_a($a, 'y_op')) { 
-        if (! $this->groupbyonly) { $qs .= $prefix . $a->renderop($this->omaps); }
+        $qs .= $prefix . $a->renderop($this->omaps);
       } else {
         $fop = new y_op_field($a);
         $fops = $fop->renderop($this->omaps);
-        if (! $this->groupbyonly) { $qs .= "{$prefix}{$fops}"; }
+        $qs .= "{$prefix}{$fops}";
         if ($this->doinggroupby) { $this->groupby = "{$prefix}{$fops}"; }
       }
       $prefix = ',';
     }
-    if ($this->groupbyonly) { $qs .= '*'; }
     return $qs;
   }
 
@@ -1560,6 +1584,10 @@ class y_query {
     return $ws;
   }
 
+  // --------------------------------------------------
+  /* public */ function sql() {
+    return $this->qs;
+  }
 }
 
 ?>

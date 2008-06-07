@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------------
-# DEVELOPMENT CODE, DO NOT USE
+# 
 #----------------------------------------------------------------------------
 # Copyright 2008, Oliver White
 #
@@ -74,10 +74,24 @@ class tileServer(BaseHTTPRequestHandler):
     self.end_headers()
     self.wfile.write(f.read())
     f.close()
+  def sendError(self,code,text):
+    self.send_response(code)
+    self.send_header('Content-type','text/HTML')
+    self.end_headers()
+    self.wfile.write("<html><title>Error %d</title></head><body><h1>%d: %s</h1></body></html>" % (code,code,text))
 
   def do_GET(self):
+    # Filter-out unwanted addresses
+    # (TODO: you should be able to run the server on your phone and connect
+    # to it from your desktop, so we need some other authentication here)
+    (host,port) = self.client_address
+    if(not host in ("127.0.0.1")):
+      print "Ignored connection from %s" % host
+      self.sendError(403, "Access this from the machine running the server")
+      return
+    
     # Specific files to serve:
-    if(self.path[0:4]=='/map/' or self.path=='/'):
+    if(self.path[0:5]=='/map/' or self.path=='/'):
       self.return_file('slippy.html')
       return
 
@@ -132,10 +146,10 @@ class tileServer(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write("<p>Your route is available on the <a href='/map/?route=%d'>map</a></p>" % id)
       else:
-        self.send_response(404)
+        self.sendError(500, "Can't find a good name to call this route")
     else:
       print "404: %s" % self.path
-      self.send_response(404)
+      self.sendError(404, "Unrecognised URL")
 
 try:
   server = HTTPServer(('',1280), tileServer)

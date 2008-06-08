@@ -61,7 +61,7 @@ public class GPSListener implements LocationListener
 				cr.setHorizontalAccuracy(500);
 				lp=LocationProvider.getInstance(cr);
 			}
-			lp.setLocationListener(this,5,-1,-1);
+			lp.setLocationListener(this,60,-1,-1);
 		}	
 		catch(LocationException e) 
 		{

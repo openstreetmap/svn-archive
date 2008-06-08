@@ -110,7 +110,7 @@ my $file ;
 
 for (my $xloop = $xtile - $neighbormaps;$xloop <= $xtile + $neighbormaps;$xloop++) {
   for (my $yloop = $ytile - $neighbormaps;$yloop <= $ytile + $neighbormaps;$yloop++) {
-    $file = "OSM_z${Z}_x${xloop}_y${yloop}_p${Width}" ;
+    $file = "OSM_z${Z}_y${yloop}_x${xloop}_p${Width}" ;
     print "########## start generating $file \n";
     MakeMapTile ($xloop,$yloop,$Z,$Z2,$extension);
     MakeMapCal  ($xloop,$yloop,$Z,$Z2,$extension);

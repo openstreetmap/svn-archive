@@ -1,0 +1,8 @@
+MIDlet-1: FreemapMobile, FreemapMobile.png, FreemapMobile
+MIDlet-Jar-Size: 9880
+MIDlet-Jar-URL: FreemapMobile.jar
+MIDlet-Name: FreemapMobile
+MIDlet-Vendor: Unknown
+MIDlet-Version: 1.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0

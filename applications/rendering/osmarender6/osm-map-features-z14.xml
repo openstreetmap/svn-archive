@@ -43,6 +43,9 @@
         <rule e="way" k="landuse" v="commercial">
             <area class="landuse-commercial" />
         </rule>
+        <rule e="way" k="landuse" v="quarry">
+            <area class="landuse-quarry" />
+        </rule>
         <rule e="way" k="landuse" v="field|farm|allotments|village_green|recreation_ground|meadow|grass">
             <area class='landuse-field' />
         </rule>
@@ -1573,6 +1576,12 @@
                 fill: #fcffc9;
                 stroke: #eeeeee;
                 stroke-width: 0.4px;
+            }
+
+            .landuse-quarry {
+                fill: #E2CF80;
+                stroke: #5A6332;
+                stroke-width: 0.2px;
             }
 
             .landuse-retail {

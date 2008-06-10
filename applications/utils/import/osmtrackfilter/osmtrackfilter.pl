@@ -135,7 +135,7 @@ sub is_segment_of_list_nearby($$$){
     my $min_dist = 40000;
     my $compare_dist = $elem1->{compare_dist};
 
-    for my $segment_num ( 0 .. $#{@{$osm_segments}} ) {
+    for my $segment_num ( 0 .. $#$osm_segments ) {
 	my $segment = $osm_segments->[$segment_num];
 	# The line from or to the element has to be fairly parallel
 	next unless
@@ -195,7 +195,7 @@ sub filter_against_osm($$$){
 	my $track_bounds=GPS::get_track_bounding_box($track);
 	my $osm_segments= reduce_segments_list( $all_osm_segments, $track_bounds);
 
-	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	for my $track_pos ( 0 .. $#$track ) {
 	    my $elem = $track->[$track_pos];
 	    $track_points_done++;
 	    if ( ! is_segment_of_list_nearby($track,$track_pos,$osm_segments)){
@@ -647,7 +647,7 @@ sub split_tracks($$){
 	print_count_data($tracks,"before splitting");
     }
     for my $track ( @{$tracks->{tracks}} ) {
-	my $max_pos = $#{@{$track}};
+	my $max_pos = $#$track;
 	for  ( my $track_pos=0; $track_pos <= $max_pos;$track_pos++ ) {
 	    my $elem = $track->[$track_pos];
 	    unless ( defined($elem->{lat}) && defined($elem->{lon})){
@@ -765,7 +765,7 @@ sub filter_track_by_area($){
     my $start_time=time();
 
     for my $track ( @{$tracks->{tracks}} ) {
-	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	for my $track_pos ( 0 .. $#$track ) {
 	    my $elem = $track->[$track_pos];
 	    $elem->{good_point} = check_allowed_area($elem,$internal__filter_area_list);
 	    $elem->{split_track} =! $elem->{good_point};
@@ -794,7 +794,7 @@ sub is_gps_combineable($$){
 
     my $elem0 = $track->[$track_pos];
     my $dist_over=0;
-    my $pos_max = $#{@{$track}};
+    my $pos_max = $#$track;
     for my $track_pos_test ( $track_pos .. $pos_max ) {
 	my $elem2 = $track->[$track_pos_test];
 	$sum_dist = $sum_dist + $elem2->{dist};
@@ -852,7 +852,7 @@ sub filter_data_reduce_points($){
 
     enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
-	my $last_track_elem= $#{@{$track}};
+	my $last_track_elem= $#$track;
 	for  ( my $track_pos=0; $track_pos <= $last_track_elem;$track_pos++ ) {
 	    my $count_combinable = is_gps_combineable($track,$track_pos);
 	    if ( $track_pos+1+$count_combinable >= $last_track_elem ) {
@@ -966,11 +966,11 @@ sub filter_dup_trace_segments($$){
     my $track_points_done=0;
 
     my $segment_list=[];
-    for my $track_no ( 0 .. $#{@{$tracks->{tracks}}} ) {
+    for my $track_no ( 0 .. $#$tracks->{tracks} ) {
 	my $track = $tracks->{tracks}->[$track_no];
 	next if !$track;
 	my $sliding_track_pos=0;
-	my $pos_max= $#{@{$track}};
+	my $pos_max= $#$track;
 	for my $track_pos ( 1 .. $pos_max ) {
 	    my $elem = $track->[$track_pos];
 	    $elem->{good_point} =
@@ -1035,7 +1035,7 @@ sub filter_null_dist($){
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	
-	for  ( my $track_pos=1; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	for  ( my $track_pos=1; $track_pos <= $#$track;$track_pos++ ) {
 	    my $elem0  =$track->[$track_pos-1];
 	    my $elem1  =$track->[$track_pos];
 	    next if $elem0->{lat} !=  $elem1->{lat};
@@ -1069,8 +1069,8 @@ sub find_max_points_in_bbox_for_track($$$){
 
     my $count=0;
 
-    my $last_track_point = $#{@{$track}};
-    for my $track_pos_test ( $track_pos .. $#{@{$track}} ) {
+    my $last_track_point = $#$track;
+    for my $track_pos_test ( $track_pos .. $#$track ) {
 	my $elem  =$track->[$track_pos_test];
 	$lat_min  = $elem->{lat}	    if $lat_min > $elem->{lat};
 	$lat_max  = $elem->{lat}	    if $lat_max < $elem->{lat};
@@ -1103,7 +1103,7 @@ sub is_gps_clew($$){
     # This reduces the cost for this action dramatically
     my $bbox=find_max_points_in_bbox_for_track($track,$track_pos,0.050);
 
-    my $pos_max = $#{@{$track}};
+    my $pos_max = $#$track;
     for my $track_pos_test ( $track_pos .. min($track_pos+$bbox,$pos_max) ) {
 	#print "track_pos_test($track_pos): $track_pos_test\n";
 	my $elem0 = $track->[$track_pos_test];
@@ -1137,7 +1137,7 @@ sub filter_gps_clew($$){
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	
-	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	for  ( my $track_pos=0; $track_pos <= $#$track;$track_pos++ ) {
 	    my $count_clew = is_gps_clew($track,$track_pos);
 	    set_number_bad_points($track,$track_pos,$count_clew);
 	    $track_points_done++;
@@ -1150,7 +1150,7 @@ sub filter_gps_clew($$){
 		print STDERR "\r";
 	    }
 	}
-	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	for  ( my $track_pos=0; $track_pos <= $#$track;$track_pos++ ) {
 	    my $elem = $track->[$track_pos];
 	    $elem->{split_track} =! $elem->{good_point};
 	}

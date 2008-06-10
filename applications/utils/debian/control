@@ -6,7 +6,6 @@ Build-Depends:
 	debhelper (>> 3.7.2)
 	grass-dev
 	libgeos-dev
-	libgeos-dev
 	libmagick9-dev | libmagick10-dev 
 	libmysql++-dev
 	libpq-dev

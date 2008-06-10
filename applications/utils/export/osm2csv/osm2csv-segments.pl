@@ -28,6 +28,7 @@ use Utils::File;
 use Utils::LWP::Utils;
 use Utils::Math;
 use File::Slurp;
+use File::Basename;
 
 sub parse_planet($$); # {}
 
@@ -40,7 +41,9 @@ my $tie_nodes_hash=undef;
 my $Filename;
 
 our $SEGMENTS_FILENAME;
-our $FH_OSM;
+our $EXT=".csv";
+our $FH_OSM_HIGHWAY;
+our $FH_OSM_OTHER;
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -61,7 +64,7 @@ GetOptions (
 	     )
     or pod2usage(1);
 
-$areas_todo ||= 'germany';
+$areas_todo ||= 'world';
 $areas_todo=lc($areas_todo);
 
 # See if we'll have to tie the Nodes Hash to a File
@@ -80,10 +83,13 @@ if ( ! defined $tie_nodes_hash ) {
 	world_east => 4000,
 	world_west => 4000,
     };
-    for my $area ( split(",",$areas_todo )){
-	$tie_nodes_hash=1
-	    if $estimated_memory->{$area} > $max_ram;
-     }
+    if ( $Filename =~ /planet/ 
+	 && ( -s "$Filename" > 1000*1000*500) ) { # only for the original full Planet Files
+	for my $area ( split(",",$areas_todo )){
+	    $tie_nodes_hash=1
+		if $estimated_memory->{$area} > $max_ram;
+	}
+	}
 }
 
 pod2usage(1) if $help;
@@ -110,7 +116,7 @@ our $READ_FH=undef;
 our $OK_POS=0;
 
 
-our (%MainAttr,$Type,%Tags);
+our (%MainAttr,$Type,%Tags,@NodeD);
 # Stored data
 our (%Nodes, %Stats);
 our $AREA_FILTER;
@@ -121,10 +127,15 @@ our $PARSING_ELEM_COUNT=0;
 my $data_dir=planet_dir()."/csv";
 mkdir_if_needed( $data_dir );
 
+our $IN_BASENAME='';
+$IN_BASENAME=basename($Filename);
+$IN_BASENAME =~ s/\.(gz|bz|bz2)$//;
+$IN_BASENAME =~ s/\.osm$//;
+
 for my $area_name ( split(",",$areas_todo) ) {
     if ( $do_update_only ) {
 	my $needs_update=0;
-	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/osm-segents-$area_name.csv");
+	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/osm-segents-$IN_BASENAME-$area_name${EXT}");
 	next unless $needs_update;
 	print STDERR "Update needed. One of the files is old or non existent\n" if $VERBOSE;
     }
@@ -148,16 +159,15 @@ for my $area_name ( split(",",$areas_todo) ) {
     # Processing stage
     #----------------------------------------------
 
-    print STDERR "creating $data_dir/osm-segments-$area_name.csv\n" if $VERBOSE;
-
-    my $base_filename="$data_dir/osm-segments-$area_name";
+    $SEGMENTS_FILENAME = "$data_dir/osm-segents-$IN_BASENAME-$area_name";
+    print STDERR "creating $SEGMENTS_FILENAME${EXT}\n" if $VERBOSE;
 
     if ( $tie_nodes_hash ) {
 	# maybe we should move this file to /tmp 
 	# and lock it, and delete it in an END {} -Block
-	print STDERR "Tie-ing Nodes Hash to '$base_filename-Nodes.db'\n";
-	dbmopen(%Nodes,"$base_filename-Nodes.db",0666) 
-	    or die "Could not open DBM File '$base_filename-Nodes.db': $!";
+	print STDERR "Tie-ing Nodes Hash to '$SEGMENTS_FILENAME-Nodes.db'\n";
+	dbmopen(%Nodes,"$SEGMENTS_FILENAME-Nodes.db",0666) 
+	    or die "Could not open DBM File '$SEGMENTS_FILENAME-Nodes.db': $!";
     }
     $Stats{"Tie Nodes_hash"} = $tie_nodes_hash;
 
@@ -165,13 +175,19 @@ for my $area_name ( split(",",$areas_todo) ) {
     die "No Area Name defined\n"
 	unless $area_name;
 
-    $SEGMENTS_FILENAME = "$data_dir/osm-segments-$area_name.csv";
-    $FH_OSM = IO::File->new(">$SEGMENTS_FILENAME.part");
-    if( ! $FH_OSM ) {
+    $FH_OSM_HIGHWAY = IO::File->new(">$SEGMENTS_FILENAME.part");
+    if( ! $FH_OSM_HIGHWAY ) {
 	warn "output_osm: Cannot write to $SEGMENTS_FILENAME\n";
 	return;
     }
-    $FH_OSM->binmode(":utf8");
+    $FH_OSM_HIGHWAY->binmode(":utf8");
+
+    $FH_OSM_OTHER = IO::File->new(">${SEGMENTS_FILENAME}_other.part");
+    if( ! $FH_OSM_OTHER ) {
+	warn "output_osm: Cannot write to ${SEGMENTS_FILENAME}_other.part\n";
+	return;
+    }
+    $FH_OSM_OTHER->binmode(":utf8");
 
     parse_planet($Filename,$area_name);
 
@@ -204,13 +220,19 @@ sub parse_planet($$){
     while ( my $line = $READ_FH->getline() ) {
 	parse_line($line);
     };
-    if ($FH_OSM) {
-	$FH_OSM->close() || warn "Cannot close Segment File:$!\n";
-	$FH_OSM=0;
-	rename("$SEGMENTS_FILENAME.part",$SEGMENTS_FILENAME)
+    if ($FH_OSM_OTHER) {
+	$FH_OSM_OTHER->close() || warn "Cannot close Segments other File:$!\n";
+	$FH_OSM_OTHER=0;
+	rename("${SEGMENTS_FILENAME}_other.part","${SEGMENTS_FILENAME}_other${EXT}")
+	    if -s "${SEGMENTS_FILENAME}_other.part";
+    }
+    if ($FH_OSM_HIGHWAY) {
+	$FH_OSM_HIGHWAY->close() || warn "Cannot close Segments highway File:$!\n";
+	$FH_OSM_HIGHWAY=0;
+	rename("$SEGMENTS_FILENAME.part","$SEGMENTS_FILENAME${EXT}")
 	    if -s "$SEGMENTS_FILENAME.part";
 	
-	print STDERR "we're done\n";
+	print STDERR "\nwe're done\n";
     }
 
     $READ_FH->close();
@@ -225,7 +247,6 @@ sub parse_planet($$){
 
 # Function is called whenever an XML tag is ended
 #----------------------------------------------
-my $from_node=0;
 sub parse_line(){
     my $line = shift;
 
@@ -242,32 +263,43 @@ sub parse_line(){
 	    $Stats{"elem read"}++;
 	}
     } elsif ( $line =~ m/<nd.*ref=[\'\"]([\d\.\+\-]+)[\'\"]/ ){
-	$element = "nd_ref";
-	my $to_node   = $1;
-	if ( $from_node &&
-	     defined($Nodes{$from_node}) &&
-	     defined($Nodes{$to_node}) 
-	     ) {
-	    my ($lat1,$lon1)=split(",",$Nodes{$from_node});
-	    my ($lat2,$lon2)=split(",",$Nodes{$to_node});
-	    my $angle = angle_north_relative(
-				       { lat => $lat1 , lon => $lon1 },
-				       { lat => $lat2 , lon => $lon2 });
-
-	    printf $FH_OSM "%s,%s,%f\n",$Nodes{$from_node},$Nodes{$to_node},$angle;
-	    $Stats{"nd_ref read"}++;
-	    $Stats{"elem read"}++;
-	}
-	$from_node = $to_node;
-    } elsif ( $line =~ m/<way.*id=/ ) {
-	$element = "way";
-	$from_node=0;
+	push (@NodeD,$1);
+#	print "<nd: ",@NodeD,"\n";
     } elsif ( $line =~ m/<\/way/ ){
-	#<way id="38" timestamp="2006-03-16T09:50:36Z">
-	#<nd ref="200630" />
-	#<tag k="highway" v="residential" />
-	#</way>
+	# TODO: if this way is a member of a relation which has a highway tag 
+	# we would have to classify it as highway too, but this would need to keep 
+	# every way in Memory. Or read 3 passes (first relation, then way then node).
+	$element = "nd_ref";
+	my $from_node=0;
+#	print "</nd: ",@NodeD,"\n";
+	for my $to_node ( @NodeD ) {
+	    if ( $from_node &&
+		 defined($Nodes{$from_node}) &&
+		 defined($Nodes{$to_node}) 
+		) {
+		my ($lat1,$lon1)=split(",",$Nodes{$from_node});
+		my ($lat2,$lon2)=split(",",$Nodes{$to_node});
+		my $angle = angle_north_relative(
+		    { lat => $lat1 , lon => $lon1 },
+		    { lat => $lat2 , lon => $lon2 });
+
+#		print "highway: $Tags{highway}\n";
+		if ( defined $Tags{highway} && $Tags{highway} ) {
+		    printf $FH_OSM_HIGHWAY "%s,%s,%f\n",$Nodes{$from_node},$Nodes{$to_node},$angle;
+		} else {
+		    printf $FH_OSM_OTHER "%s,%s,%f\n",$Nodes{$from_node},$Nodes{$to_node},$angle;
+		}		
+		$Stats{"nd_ref read"}++;
+		$Stats{"elem read"}++;
+	    }
+	    $from_node = $to_node;
+	}
+	@NodeD=();
+    } elsif ( $line =~ m/<way.*id=/ ) {
+	(%MainAttr,%Tags)=((),());
+	$element = "way";
     } elsif ( $line =~ m/<relation/ ){
+	(%MainAttr,%Tags)=((),());
     } elsif ( $line =~ m/<\/relation/ ){
     } elsif ( $line =~ m/<memberrelation/ ){
     } elsif ( $line =~ m/<member / ){
@@ -277,7 +309,8 @@ sub parse_line(){
     } elsif ( $line =~ m/<tag k="(highway)" v=\"([^\"]*)\"/ ){
 	my $k=$1;
 	my $v=$2;
-#	$tag->{$k}=$v;
+	$Tags{$k}=$v;
+#	print "line: $line\n";
     } elsif ( $line =~ m/<tag/ ){
     } elsif ( $line =~ m/<?xml version/ ){
     } elsif ( $line =~ m/<osm version=[\'\"]0\.5[\'\"]/ ){

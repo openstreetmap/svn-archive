@@ -82,7 +82,7 @@ sub tracks_only_good_point($){
 
 	# Copy only those with good_point set to 1
 	# split if split_track is set
-	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	for my $track_pos ( 0 .. $#$track ) {
 	    my $elem=$track->[$track_pos];
 	    
 	    if ( $elem->{split_track} ) {
@@ -113,7 +113,7 @@ sub set_number_bad_points($$$){
 
     return unless $count;
 
-    my $max_pos = $#{@{$track}};
+    my $max_pos = $#$track;
     for my $i ( 0 .. $count-1 ){
 	last if $start_pos+$i > $max_pos;
 	$track->[$start_pos+$i]->{good_point}= 0;
@@ -128,7 +128,7 @@ sub count_good_point($){
     my $count =0;
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
-	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	for  ( my $track_pos=0; $track_pos <= $#$track;$track_pos++ ) {
 	    $count++ if $track->[$track_pos]->{good_point};
 	}
     }
@@ -148,7 +148,7 @@ sub count_good_point($){
 #                  meter we can later use for distance comparison
 sub enrich_single_track($){
     my $track = shift;
-    my $last_track_point = $#{@{$track}};
+    my $last_track_point = $#$track;
     my $compare_dist=30;
     for my $track_pos ( 0 ..  $last_track_point) {
 	my $elem0=$track->[$track_pos-1];
@@ -225,7 +225,7 @@ sub track_point_speed($$){
     $pos_start = 0        if $pos_start<0;
 
     my $pos_end =  $pos_start+20;
-    my $max_pos = $#{@{$track}};
+    my $max_pos = $#$track;
     $pos_end   = $max_pos if $pos_end> $max_pos;
  
     return track_part_speed($track,$pos_start,$pos_end);
@@ -241,7 +241,7 @@ sub track_part_speed($$$){
 
     return 0 unless defined $track;
 
-    my $max_pos = $#{@{$track}};
+    my $max_pos = $#$track;
     $pos_start = 0        if $pos_start<0;
     $pos_end   = $max_pos if $pos_end> $max_pos;
 

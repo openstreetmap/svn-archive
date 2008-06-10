@@ -94,15 +94,17 @@ echo "---> color255"
 cp color255/color255 ${bin_path}
 
 # ------------------------------------------------------------------
-echo ""
-echo "---> osm2pqsql"
-(
-    cd export/osm2pgsql
-    make clean
-    make || exit -1
-    ) || exit -1 
-cp export/osm2pgsql/osm2pgsql ${bin_path}
-(cat export/osm2pgsql/default.style ; echo "node       poi          text")>${share_path}/default.style
+if false ; then
+    echo ""
+    echo "---> osm2pqsql"
+    (
+	cd export/osm2pgsql
+	make clean
+	make || exit -1
+	) || exit -1 
+    cp export/osm2pgsql/osm2pgsql ${bin_path}
+    (cat export/osm2pgsql/default.style ; echo "node       poi          text")>${share_path}/default.style
+fi
 
 # ------------------------------------------------------------------
 echo ""

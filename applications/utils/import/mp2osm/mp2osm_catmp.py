@@ -216,6 +216,7 @@ for line in file_mp:
             polyline = False 
             polygon = False 
             roadid = ''
+            rnodes = {} # Clear out routing nodes to prepare for next entity
 
             node.text = '\n    '
             node.tail = '\n  '

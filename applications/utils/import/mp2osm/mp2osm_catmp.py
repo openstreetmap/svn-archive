@@ -23,8 +23,8 @@ polygon_counter = 0
 osm = ET.Element("osm", version='0.5', generator='mp2osm_catmp' )
 osm.text = '\n  '
 osm.tail = '\n'
-attrib = ET.Element('tag', k='source',v=attribution)
-attrib.tail = '\n    '
+source = ET.Element('tag', k='source',v=attribution)
+source.tail = '\n    '
 nodeid = -1
 # Define the mapping from Garmin type codes to OSM tags
 poitagmap = {# Warning: this particular 'gate' typecode usage is specific to Calgary Trails maps
@@ -88,7 +88,7 @@ for line in file_mp:
     if line.startswith('[POI]'):
         node = ET.Element("node", visible='true', id=str(nodeid))
         nodeid -= 1
-        node.append(attrib)
+        node.append(source)
         poi = True
         elementtagmap = poitagmap
         poi_counter += 1
@@ -96,7 +96,7 @@ for line in file_mp:
     if line.startswith('[POLYLINE]'):
         node = ET.Element("way", visible='true', id=str(nodeid))
         nodeid -= 1
-        node.append(attrib)
+        node.append(source)
         polyline = True
         elementtagmap = polylinetagmap
         rnodes = {} # Track routing nodes for current polyline
@@ -105,7 +105,7 @@ for line in file_mp:
     if line.startswith('[POLYGON]'):
         node = ET.Element("way", visible='true', id=str(nodeid))
         nodeid -= 1
-        node.append(attrib)
+        node.append(source)
         polygon = True
         elementtagmap = polygontagmap
         polygon_counter += 1

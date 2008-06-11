@@ -33,6 +33,7 @@
                 controls:[
                     new OpenLayers.Control.Navigation(),
                     new OpenLayers.Control.Permalink(),
+                    new OpenLayers.Control.LayerSwitcher(),
                     new OpenLayers.Control.PanZoomBar()],
                 maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                 maxResolution: 156543.0399,
@@ -50,11 +51,14 @@
             // of several layers is also quite simple
             // Other defined layers are OpenLayers.Layer.OSM.Mapnik and OpenLayers.Layer.OSM.Maplint
             layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-
-            map.addLayer(layerTilesAtHome);
+            layerPyrender = new OpenLayers.Layer.OSM(
+                 "Pyrender",
+                 "/tile/",
+	         {isBaseLayer:false, maxResolution:37}
+             );
+            map.addLayers([layerPyrender,layerTilesAtHome]);
 
             var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
-
             map.setCenter (lonLat, zoom);
         }
         

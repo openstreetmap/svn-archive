@@ -69,7 +69,7 @@ polylinetagmap = {
      ('0x5'): {'highway': 'tertiary'},
      ('0x6'): {'highway': 'residential'},
      ('0xa'): {'highway': 'track', 'surface': 'unpaved'},
-     ('0x16'): {'highway': 'footpath'},
+     ('0x16'): {'highway': 'footway'},
      ('0x18'): {'waterway': 'stream'},
      ('0x1f'): {'waterway': 'river'},
      ('0x29'): {'power': 'line'}
@@ -198,14 +198,7 @@ for line in file_mp:
                         nodes = ET.Element("node", visible='true', id=str(curId), lat=str(float(coords[0][1:])), lon=str(float(coords[1][:-1])))
                         nodes.text = '\n    '
                         nodes.tail = '\n  '
-                        tag = ET.Element('tag', k='source',v=attribution)
-                        tag.tail = '\n    '
-                        nodes.append(tag)
-                        if roadid:
-                            tag = ET.Element('tag', k='catmp-RoadID',v=roadid)
-                            tag.tail = '\n    '
-                            nodes.append(tag)
-                            osm.append(nodes)
+                        osm.append(nodes)
                     coords = coords[2]
                     reused = False
                     nodidx += 1

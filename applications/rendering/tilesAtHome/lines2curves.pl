@@ -147,8 +147,8 @@ sub remove_duplicate_points {
     shift @$points_ref;
 
     foreach my $point_ref (@$points_ref) {
-        if ($point_ref->[0].$point_ref->[1] eq
-                $clean_points_ref->[-1][0].$clean_points_ref->[-1][1]) {
+        if (($point_ref->[0] == $clean_points_ref->[-1][0]) &&
+            ($point_ref->[1] == $clean_points_ref->[-1][1])) {
                 next;
         }
 

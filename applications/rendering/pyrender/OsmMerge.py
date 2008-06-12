@@ -19,7 +19,7 @@
 #---------------------------------------------------------------------------
 import codecs
 from parseOsm import *
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import quoteattr
 
 def OsmMerge(dest, sources):
   """Merge multiple OSM files together
@@ -59,13 +59,13 @@ def OsmMerge(dest, sources):
     tags = node_tags.get(n, None)
     if(tags):
       for k,v in tags.items():
-        f.write('\n<tag k="%s" v="%s"/>' % (escape(k),escape(v)))
+        f.write('\n<tag k=%s v=%s/>' % (quoteattr(k),quoteattr(v)))
     f.write("</node>\n")
     
   for id,way in ways.items():
     f.write('<way id="%d">' % id)
     for k,v in way['t'].items():
-      f.write('\n<tag k="%s" v="%s"/>' % (escape(k),escape(v)))
+      f.write('\n<tag k=%s v=%s/>' % (quoteattr(k),quoteattr(v)))
     for n in way['n']:
       f.write('\n<nd ref="%d"/>' % n)
     f.write("</way>\n")

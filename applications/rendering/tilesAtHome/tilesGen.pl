@@ -693,6 +693,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 {
     my ($X, $Y, $Zoom) = @_;
     
+    keepLog("start",$X,$Y,$Zoom,$Layers) if $Config->get("ProcessLog");
+    
     my ($N, $S) = Project($Y, $Zoom);
     my ($W, $E) = ProjectL($X, $Zoom);
     
@@ -1108,6 +1110,9 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     }
 
     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+
+    keepLog("stop",$X,$Y,$Zoom,$Layers) if $Config->get("ProcessLog");
+
     return 1;
 }
 

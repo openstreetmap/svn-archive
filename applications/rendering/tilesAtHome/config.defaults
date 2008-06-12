@@ -17,6 +17,9 @@ UploadPassword = none
 Debug=0
 Verbose=0
 
+ProcessLog=0
+ProcessLogFile=/tmp/tah.log
+
 WorkingDirectory = tmp/
 Niceness=nice -n10
 

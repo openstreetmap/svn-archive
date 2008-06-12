@@ -369,6 +369,41 @@ sub mergeOsmFiles
 
 
 #-----------------------------------------------------------------------------
+# write log about t@h progress
+#-----------------------------------------------------------------------------
+
+sub keepLog
+{
+    my ($Startstop,$X,$Y,$Zoom,$Layers) = @_;
+    my $Config = $main::Config;
+    if ($Startstop eq "start")
+    {
+        my $logFile = $Config->get("ProcessLogFile");
+
+        open(my $fpLog, ">>$logFile");
+        if ($fpLog) {
+             print $fpLog time()." Begin tile x=$X y=$Y at zoom=$Zoom for layers $Layers\n";
+             close $fpLog;
+        }
+
+    }
+    elsif ($Startstop eq "stop")
+    {
+        open(my $fpLog, ">>/tmp/$logFile");
+        if ($fpLog) 
+        {
+            print $fpLog time()." End tile x=$X y=$Y at zoom=$Zoom for layers $Layers\n";
+            close $fpLog;
+        }
+    }
+    else 
+    {
+        print STDERR "\nstart or end of tile not specified, not logging.\n";
+        return 0;
+    }
+}
+
+#-----------------------------------------------------------------------------
 # Clean up temporary files before exit, then exit or return with error 
 # depending on mode (loop, xy, ...)
 #-----------------------------------------------------------------------------

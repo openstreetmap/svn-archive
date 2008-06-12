@@ -1287,7 +1287,7 @@ sub RenderTile
 #-----------------------------------------------------------------------------
 sub UpdateClient # 
 {
-    my $Cmd = sprintf("%s%s %s",
+    my $Cmd = sprintf("%s\"%s\" %s",
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Subversion"),
         $Config->get("SubversionUpdateCmd"));
@@ -1489,7 +1489,7 @@ sub svg2png
     }
     elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
     {
-        $Cmd = sprintf("%s%s %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s",
+        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s",
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Niceness"),
         $Config->get("BatikPath"),

@@ -56,7 +56,7 @@ class RenderClass(OsmRenderBase):
     
     self.ctx.set_source_rgb(0, 0, 0)
     # Example of parsing through all the ways
-    for w in self.osm.ways.calues():
+    for w in self.osm.ways.values():
       count = 0
      
       # way['n'] contains the list of its nodes

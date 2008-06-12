@@ -22,13 +22,14 @@
 from render_cairo_base import OsmRenderBase
 
 roadColours = {
-  'highway=motorway':'128,128,255,9',
-  'highway=primary':'255,128,128,6',
-  'highway=secondary':'255,128,0,4',
-  'highway=residential':'60,60,60,2',
-  'highway=unclassified':'60,60,60,2',
+  #tag=value:'r,g,b,width' with r,g,b between [0,1]
+  'highway=motorway':'0.5,0.5,1,9',
+  'highway=primary':'1,0.5,0.5,6',
+  'highway=secondary':'1,0.5,0,4',
+  'highway=residential':'0.25,0.25,0.25,2',
+  'highway=unclassified':'0.25,0.25,0.25,2',
   'railway=rail':'0,0,0,1',
-  'waterway=river':'255,40,40,4'
+  'waterway=river':'1,0.2,0.2,4',
   }
 
 def wayStyle(tags):
@@ -54,7 +55,7 @@ class RenderClass(OsmRenderBase):
       if(style != None):
         
         (r,g,b, width) = style.split(",")
-        self.ctx.set_source_rgb(int(r),int(g),int(b))
+        self.ctx.set_source_rgb(float(r),float(g),float(b))
         self.ctx.set_line_width(int(width))
         count = 0
         for n in w['n']: 

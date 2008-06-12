@@ -487,8 +487,13 @@ sub compress
 
     my ($runNumber) = @_;
 
+    keepLog("compress","start","$runNumber $progressJobs") if $Config->get("ProcessLog");
+
     my $CompressScript = "perl $Bin/compress.pl $runNumber $progressJobs";
     my $retval = system($CompressScript);
+
+    keepLog("compress","stop","return=$retval") if $Config->get("ProcessLog");
+
     return $retval;
 }
 
@@ -499,8 +504,13 @@ sub upload
 
     my ($runNumber) = @_;
 
+    keepLog("upload","start","$runNumber $progressJobs") if $Config->get("ProcessLog");
+
     my $UploadScript = "perl $Bin/upload.pl $runNumber $progressJobs";
     my $retval = system($UploadScript);
+
+    keepLog("upload","stop","return=$retval") if $Config->get("ProcessLog");
+
     return $retval;
 }
 
@@ -693,7 +703,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 {
     my ($X, $Y, $Zoom) = @_;
     
-    keepLog("start",$X,$Y,$Zoom,$Layers) if $Config->get("ProcessLog");
+    keepLog("GenerateTileset","start","x=$X,y=$Y,z=$Zoom for layers $Layers") if $Config->get("ProcessLog");
     
     my ($N, $S) = Project($Y, $Zoom);
     my ($W, $E) = ProjectL($X, $Zoom);
@@ -1111,7 +1121,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
 
-    keepLog("stop",$X,$Y,$Zoom,$Layers) if $Config->get("ProcessLog");
+    keepLog("GenerateTileset","stop","x=$X,y=$Y,z=$Zoom for layers $Layers") if $Config->get("ProcessLog");
 
     return 1;
 }

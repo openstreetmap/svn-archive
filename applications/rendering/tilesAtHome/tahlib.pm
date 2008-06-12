@@ -374,32 +374,14 @@ sub mergeOsmFiles
 
 sub keepLog
 {
-    my ($Startstop,$X,$Y,$Zoom,$Layers) = @_;
+    my ($Process,$Action,$Message) = @_;
     my $Config = $main::Config;
     my $logFile = $Config->get("ProcessLogFile");
 
-    if ($Startstop eq "start")
-    {
-        open(my $fpLog, ">>$logFile");
-        if ($fpLog) {
-             print $fpLog time()." Begin tile x=$X y=$Y at zoom=$Zoom for layers $Layers\n";
-             close $fpLog;
-        }
-
-    }
-    elsif ($Startstop eq "stop")
-    {
-        open(my $fpLog, ">>$logFile");
-        if ($fpLog) 
-        {
-            print $fpLog time()." End tile x=$X y=$Y at zoom=$Zoom for layers $Layers\n";
-            close $fpLog;
-        }
-    }
-    else 
-    {
-        print STDERR "\nstart or end of tile not specified, not logging.\n";
-        return 0;
+    open(my $fpLog, ">>$logFile");
+    if ($fpLog) {
+	print $fpLog time()." [".$Config->get("ClientVersion")."] $Process $Action $Message\n";
+	close $fpLog;
     }
 }
 

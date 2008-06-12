@@ -389,7 +389,7 @@ sub keepLog
     }
     elsif ($Startstop eq "stop")
     {
-        open(my $fpLog, ">>/tmp/$logFile");
+        open(my $fpLog, ">>$logFile");
         if ($fpLog) 
         {
             print $fpLog time()." End tile x=$X y=$Y at zoom=$Zoom for layers $Layers\n";

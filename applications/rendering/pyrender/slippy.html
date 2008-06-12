@@ -5,20 +5,13 @@
     <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 
     <script type="text/javascript">
-        // Start position for the map (hardcoded here for simplicity,
-        // but maybe you want to get from URL params)
-        /*
-        var lat=51.50869333187912
-        var lon=-0.11768043178514825
-        var zoom=13
-        */
+        // Default map position if not overridden by URL parameters
 	var lon = "";
-	var lat = "";
+        var lat = "";
 	var zoom = "";
-	var user = "";
-	if (lon=="") lon=1.0996
-	if (lat=="") lat=35.5862
-	if (zoom=="") zoom=2
+	if (lon=="")  var lon=-0.11768
+	if (lat=="")  var lat=51.50869
+	if (zoom=="") var zoom=13
 
 	lat=parseFloat(lat)
 	lon=parseFloat(lon)

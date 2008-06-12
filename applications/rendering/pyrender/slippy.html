@@ -6,16 +6,13 @@
 
     <script type="text/javascript">
         // Default map position if not overridden by URL parameters
-	var lon = "";
-        var lat = "";
-	var zoom = "";
-	if (lon=="")  var lon=-0.11768
-	if (lat=="")  var lat=51.50869
-	if (zoom=="") var zoom=13
+	lat=parseFloat(lat);
+	lon=parseFloat(lon);
+	zoom=parseInt(zoom);
+	if (lon==null)  var lon=-0.11768;
+	if (lat==null)  var lat=51.50869;
+	if (zoom==null) var zoom=13;
 
-	lat=parseFloat(lat)
-	lon=parseFloat(lon)
-	zoom=parseInt(zoom)
 	        
         var map; //complex object of type OpenLayers.Map 
 

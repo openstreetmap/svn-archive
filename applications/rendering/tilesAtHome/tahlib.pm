@@ -376,10 +376,10 @@ sub keepLog
 {
     my ($Startstop,$X,$Y,$Zoom,$Layers) = @_;
     my $Config = $main::Config;
+    my $logFile = $Config->get("ProcessLogFile");
+
     if ($Startstop eq "start")
     {
-        my $logFile = $Config->get("ProcessLogFile");
-
         open(my $fpLog, ">>$logFile");
         if ($fpLog) {
              print $fpLog time()." Begin tile x=$X y=$Y at zoom=$Zoom for layers $Layers\n";

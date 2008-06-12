@@ -62,7 +62,7 @@ def GetOsmTileData(z,x,y, AllowSplit = False):
       try:
         urlretrieve(URL, filename)
         print "Done"
-      except IOError:
+      except:
         print "Error downloading " + filename
         unlink(filename)
         return

@@ -43,7 +43,7 @@ class RenderClass(OsmRenderBase):
   
   # Specify the background for new tiles
   def imageBackgroundColour(self):
-    return("white")
+    return(1,0.9,0.8,0.5)  #r,g,b,a background color
   
   # Draw a tile
   def draw(self):

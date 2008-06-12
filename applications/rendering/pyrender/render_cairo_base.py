@@ -61,7 +61,7 @@ class proj:
 class OsmRenderBase:
   
   def imageBackgroundColour(self):
-    return("blue") # Override this function
+    return (0,0,0.5,0.5) # Override this function (r,g,b,a)
   
   def draw(self):
     pass # Override this function
@@ -77,6 +77,12 @@ class OsmRenderBase:
     self.osm = parseOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,(256,256))  # create a projection for this tile
     self.ctx = cairo.Context(im)  # create a drawing context
+
+    # Fill with background color
+    (r,g,b,a) = self.imageBackgroundColour()
+    self.ctx.set_source_rgba(r,g,b,a)
+    self.ctx.rectangle(0, 0, 256, 256)
+    self.ctx.fill()
     
     # Call the draw function
     self.draw()

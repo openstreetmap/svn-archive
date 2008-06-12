@@ -41,8 +41,8 @@ def GetOsmTileData(z,x,y, AllowSplit = False):
   
   MergeLevels = 2  # How many layers 'below' the download level to go
   
-  directory = 'cache/%d/%d/%d' % (z,x,y)
-  filename = '%s/data.osm' % (directory)
+  directory = 'cache/%d/%d' % (z,x)
+  filename = '%s/%d.osm' % (directory,y)
   if(not os.path.exists(directory)):
     os.makedirs(directory)
   

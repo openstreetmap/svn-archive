@@ -59,8 +59,13 @@ def GetOsmTileData(z,x,y, AllowSplit = False):
     
     if(not os.path.exists(filename)): # TODO: allow expiry of old data
       print "Downloading %s\n  from %s" % (filename, URL)
-      urlretrieve(URL, filename)
-      print "Done"
+      try:
+        urlretrieve(URL, filename)
+        print "Done"
+      except IOError:
+        print "Error downloading " + filename
+        unlink(filename)
+        return
     else:
       print "Using cached %s" % filename
     return(filename)

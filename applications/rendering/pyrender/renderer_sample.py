@@ -55,7 +55,7 @@ class RenderClass(OsmRenderBase):
     #    (x,y) = self.proj.project(lat,lon)
     
     # Example of parsing through all the ways
-    for w in self.osm.ways:
+    for w in self.osm.ways.values():
       last = (0,0,False)
      
       # way['n'] contains the list of its nodes

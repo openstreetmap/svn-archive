@@ -19,6 +19,7 @@
 #---------------------------------------------------------------------------
 import codecs
 from parseOsm import *
+from xml.sax.saxutils import escape
 
 def OsmMerge(dest, sources):
   """Merge multiple OSM files together
@@ -30,7 +31,7 @@ def OsmMerge(dest, sources):
        'input_file_3.osm'])
   """
   
-  ways = []
+  ways = {}
   poi = []
   node_tags = {}
   nodes = {}
@@ -39,33 +40,34 @@ def OsmMerge(dest, sources):
   for source in sources:
     osm = parseOsm(source)
     
-    ways = ways + osm.ways
     for p in osm.poi:
       node_tags[p['id']] = p['t']
 
     for id,n in osm.nodes.items():
       nodes[id] = n
+    for id,w in osm.ways.items():
+      ways[id] = w
 
   # Store the result as an OSM XML file
   f=codecs.open(dest, mode='w', encoding='utf-8')
-  f.write("<?xml version='1.0' encoding='UTF-8'?>\n")
-  f.write("<osm version='0.5' generator='OsmMerge'>\n")
+  f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+  f.write('<osm version="0.5" generator="OsmMerge">\n')
   
   for n,data in nodes.items():
     (lat,lon) = nodes[n]
-    f.write("<node id='%d' lat='%f' lon='%f'>" % (n,lat,lon))
+    f.write('<node id="%d" lat="%f" lon="%f">' % (n,lat,lon))
     tags = node_tags.get(n, None)
     if(tags):
       for k,v in tags.items():
-        f.write("\n<tag k='%s' v='%s'/>" % (k,v))
+        f.write('\n<tag k="%s" v="%s"/>' % (escape(k),escape(v)))
     f.write("</node>\n")
     
-  for w in ways:
-    f.write("<way id='%d'>")
-    for k,v in w['t'].items():
-      f.write("\n<tag k='%s' v='%s'/>" % (k,v))
-    for n in w['n']:
-      f.write("\n<nd ref='%d'/>" % n)
+  for id,way in ways.items():
+    f.write('<way id="%d">' % id)
+    for k,v in way['t'].items():
+      f.write('\n<tag k="%s" v="%s"/>' % (escape(k),escape(v)))
+    for n in way['n']:
+      f.write('\n<nd ref="%d"/>' % n)
     f.write("</way>\n")
   
   f.write("</osm>\n")

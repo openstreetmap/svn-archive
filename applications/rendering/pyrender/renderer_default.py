@@ -54,7 +54,7 @@ class RenderClass(OsmRenderBase):
   # Draw a tile
   def draw(self):
     # Ways
-    for w in self.osm.ways:
+    for w in self.osm.ways.values():
       style = wayStyle(w['t'])
       
       if(style != None):

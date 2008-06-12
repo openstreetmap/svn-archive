@@ -33,7 +33,7 @@ class parseOsm(handler.ContentHandler):
   def __init__(self, filename):
     """Load an OSM XML file into memory"""
     self.nodes = {}
-    self.ways = []
+    self.ways = {}
     self.poi = []
     if(filename != None):
       self.loadOsm(filename)
@@ -63,6 +63,9 @@ class parseOsm(handler.ContentHandler):
         lat = float(attrs.get('lat'))
         lon = float(attrs.get('lon'))
         self.nodes[id] = (lat,lon)
+      elif name == 'way':
+        id = int(attrs.get('id'))
+        self.wayID = id
     elif name == 'nd':
       """Nodes within a way -- add them to a list"""
       self.waynodes.append(int(attrs.get('ref')))
@@ -78,7 +81,7 @@ class parseOsm(handler.ContentHandler):
   
   def endElement(self, name):
     if name == 'way':
-      self.ways.append({'t':self.tags, 'n':self.waynodes})
+      self.ways[self.wayID] = ({'t':self.tags, 'n':self.waynodes})
     elif name == 'node':
       if(self.isInteresting):
         self.poi.append({'t':self.tags, 'id':self.nodeID})

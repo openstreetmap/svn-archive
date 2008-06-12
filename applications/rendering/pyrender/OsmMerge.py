@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
+import codecs
 from parseOsm import *
 
 def OsmMerge(dest, sources):
@@ -46,7 +47,7 @@ def OsmMerge(dest, sources):
       nodes[id] = n
 
   # Store the result as an OSM XML file
-  f=open(dest, 'w')
+  f=codecs.open(dest, mode='w', encoding='utf-8')
   f.write("<?xml version='1.0' encoding='UTF-8'?>\n")
   f.write("<osm version='0.5' generator='OsmMerge'>\n")
   

@@ -46,6 +46,10 @@ class tileServer(BaseHTTPRequestHandler):
     f.close()
 
   def do_GET(self):
+    # split query strings off and store separately
+    if self.path.find('?') != -1: 
+      (self.path, self.query_string) = self.path.split('?', 1)
+
     # Specific files to serve:
     if self.path=='/':
       self.return_file('slippy.html')

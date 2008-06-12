@@ -5,14 +5,25 @@
     <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 
     <script type="text/javascript">
-        // Default map position if not overridden by URL parameters
-	lat=parseFloat(lat);
-	lon=parseFloat(lon);
-	zoom=parseInt(zoom);
-	if (lon==null)  var lon=-0.11768;
-	if (lat==null)  var lat=51.50869;
-	if (zoom==null) var zoom=13;
+      function getUrlParam( name )
+      {
+      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+      var regexS = "[\\?&]"+name+"=([^&#]*)";
+      var regex = new RegExp( regexS );
+      var results = regex.exec( window.location.href );
+      if( results == null )
+      return "";
+      else
+      return results[1];
+      }
 
+        // Default map position if not overridden by URL parameters
+	var lon = getUrlParam("lon");
+	var lat = getUrlParam("lat");
+	var zoom = getUrlParam("zoom");
+	if (lon=="") lon=-0.11768
+	if (lat=="") lat=51.50869
+	if (zoom=="") zoom=13
 	        
         var map; //complex object of type OpenLayers.Map 
 

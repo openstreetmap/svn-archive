@@ -23,13 +23,18 @@ from render_cairo_base import OsmRenderBase
 
 roadColours = {
   #tag=value:'r,g,b,width' with r,g,b between [0,1]
+  #a width of 0 means filling an area with a color
   'highway=motorway':'0.5,0.5,1,9',
   'highway=primary':'1,0.5,0.5,6',
   'highway=secondary':'1,0.5,0,4',
+  'highway=tertiary':'1,0.5,0,2',
   'highway=residential':'0.25,0.25,0.25,2',
   'highway=unclassified':'0.25,0.25,0.25,2',
   'railway=rail':'0,0,0,1',
   'waterway=river':'1,0.2,0.2,4',
+  'landuse=forest':'0,0.7,0,0',
+  'natural=wood':'0,0.7,0,0',
+  'natural=water':'0,0,0.8,0',
   }
 
 def wayStyle(tags):
@@ -44,7 +49,7 @@ class RenderClass(OsmRenderBase):
   
   # Specify the background for new tiles
   def imageBackgroundColour(self):
-    return(1,0.9,0.8,0.5)  #r,g,b,a background color
+    return(1,0.95,0.85,0.8)  #r,g,b,a background color
   
   # Draw a tile
   def draw(self):
@@ -53,10 +58,10 @@ class RenderClass(OsmRenderBase):
       style = wayStyle(w['t'])
       
       if(style != None):
-        
         (r,g,b, width) = style.split(",")
+        width = int(width)
         self.ctx.set_source_rgb(float(r),float(g),float(b))
-        self.ctx.set_line_width(int(width))
+        self.ctx.set_line_width(width)
         count = 0
         for n in w['n']: 
           # need to lookup that node's lat/long from the osm.nodes dictionary
@@ -71,7 +76,8 @@ class RenderClass(OsmRenderBase):
           else:
             self.ctx.line_to(x, y)
           count = count + 1
-        self.ctx.stroke()
+        if width > 0:self.ctx.stroke()
+        else: self.ctx.fill()
     
     # POIs
     if(0):

@@ -21,28 +21,35 @@
 #----------------------------------------------------------------------------
 from render_cairo_base import OsmRenderBase
 
-roadColours = {
+roadColours = [
   #tag=value:'r,g,b,width' with r,g,b between [0,1]
   #a width of 0 means filling an area with a color
-  'highway=motorway':'0.5,0.5,1,9',
-  'highway=primary':'1,0.5,0.5,6',
-  'highway=secondary':'1,0.5,0,4',
-  'highway=tertiary':'1,0.5,0,2',
-  'highway=residential':'0.25,0.25,0.25,2',
-  'highway=unclassified':'0.25,0.25,0.25,2',
-  'railway=rail':'0,0,0,1',
-  'waterway=river':'1,0.2,0.2,4',
-  'landuse=forest':'0,0.7,0,0',
-  'natural=wood':'0,0.7,0,0',
-  'natural=water':'0,0,0.8,0',
-  }
+  ('highway=motorway','0,0,0,13'),
+  ('highway=motorway','0.5,0.5,1,9'),
+  ('highway=primary','0,0,0,10'),    # primary casing
+  ('highway=primary','1,0.5,0.5,6'), # primary core
+  ('highway=secondary','0,0,0,8'),   # secondary casing
+  ('highway=secondary','1,0.5,0,4'),
+  ('highway=tertiary','0,0,0,6'),    # tertiary casing
+  ('highway=tertiary','1,0.5,0,2'),
+  ('highway=residential','0,0,0,4'),
+  ('highway=residential','0.75,0.75,0.75,2'),
+  ('highway=unclassified','0,0,0,4'),
+  ('highway=unclassified','0.75,0.75,0.75,2'),
+  ('railway=rail','0,0,0,1'),
+  ('waterway=river','1,0.2,0.2,4'),
+  ('landuse=forest','0.1,0.7,0.1,0'),
+  ('natural=wood','0.1,0.7,0.1,0'),
+  ('natural=water','0.1,0.1,0.8,0'),
+  ]
 
-def wayStyle(tags):
-  for (ident, style) in roadColours.items():
+def wayStyles(tags):
+  styles = []
+  for (ident, style) in roadColours:
     (tag,value) = ident.split('=')
     if(tags.get(tag,'default') == value):
-      return(style)
-  return(None)  
+      styles.append(style)
+  return(styles)  
 
 
 class RenderClass(OsmRenderBase):
@@ -55,9 +62,7 @@ class RenderClass(OsmRenderBase):
   def draw(self):
     # Ways
     for w in self.osm.ways.values():
-      style = wayStyle(w['t'])
-      
-      if(style != None):
+      for style in wayStyles(w['t']):
         (r,g,b, width) = style.split(",")
         width = int(width)
         self.ctx.set_source_rgb(float(r),float(g),float(b))

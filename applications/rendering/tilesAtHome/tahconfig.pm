@@ -158,7 +158,7 @@ sub CheckConfig
     {
         die("! Can't find valid PngOptimizer setting, check config");
     }
-    print "going to use ".$Config->get("PngOptimizer")."\n";
+    print "- going to use ".$Config->get("PngOptimizer")."\n";
     
     # PNGCrush version
     $cmd=$Config->get("Pngcrush");

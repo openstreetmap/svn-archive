@@ -41,7 +41,7 @@
 
   // if the layer is transparent, then just return that
   if (layerIsTransparent($LayerID)) {
-    BlankTile("transparent", TRUE);
+    BlankTile("transparent", FALSE);
     }
 
   // look for landsea tiles if everything else fails

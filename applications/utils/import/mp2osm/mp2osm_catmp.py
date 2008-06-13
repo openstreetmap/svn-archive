@@ -20,81 +20,82 @@ poi_counter = 0
 polyline_counter = 0
 polygon_counter = 0
 
-osm = ET.Element("osm", version='0.5', generator='mp2osm_catmp' )
+osm = ET.Element('osm', version='0.5', generator='mp2osm_catmp' )
 osm.text = '\n  '
 osm.tail = '\n'
 source = ET.Element('tag', k='source',v=attribution)
 source.tail = '\n    '
 nodeid = -1
 # Define the mapping from Garmin type codes to OSM tags
+# Note that single items in parentheses need a trailing comma
 poitagmap = {# Warning: this particular 'gate' typecode usage is specific to Calgary Trails maps
-     ('0x1612', '0x1c00', '0x6400'): {'highway': 'gate'}, 
-     ('0x2b00'): {'tourism': 'hotel'},
-     ('0x2b01'): {'tourism': 'motel'},
-     ('0x2b03'): {'tourism': 'caravan_site'},
-     ('0x2e02'): {'shop': 'supermarket'},
-     ('0x2f08'): {'amenity': 'bus_station'},
-     ('0x4400'): {'amenity': 'fuel'},
-     ('0x4700'): {'leisure': 'slipway'},
-     ('0x4800'): {'tourism': 'campsite'},
-     ('0x4900'): {'leisure': 'park'},
-     ('0x4a00'): {'tourism': 'picnic_site'},
-     ('0x4c00'): {'tourism': 'information'},
-     ('0x4d00'): {'amenity': 'parking'},
-     ('0x4e00'): {'amenity': 'toilets'},
-     ('0x5100'): {'amenity': 'telephone'},
-     ('0x5200'): {'tourism': 'viewpoint'},
-     ('0x5400'): {'sport': 'swimming'},
-     ('0x5904'): {'aeroway': 'helipad'},
-     ('0x5905'): {'aeroway': 'aerodrome'},
-     ('0x5904'): {'aeroway': 'helipad'},
-     ('0x5a00'): {'distance_marker': 'yes'}, # Not approved
-     ('0x6401'): {'bridge': 'yes'}, # Apply to points?
-     ('0x6401'): {'building': 'yes'},
-     ('0x6406'): {'highway': 'crossing'},
-     ('0x640c'): {'man_made': 'mineshaft'},
-     ('0x640d'): {'man_made': 'pumping_rig', 'type': 'oil'},
-     ('0x6411'): {'man_made': 'tower'},
-     ('0x6412'): {'highway': 'trailhead'}, # This is not even a proposed value
-     ('0x6413'): {'tunnel': 'yes'}, # Apply to points?
-     ('0x6500', '0x650d'): {'natural': 'water'},
-     ('0x6508'): {'waterway': 'waterfall'},
-     ('0x6605'): {'natural': 'bench'},
-     ('0x6616'): {'natural': 'peak'}
+     (0x1612, 0x1c00, 0x6400): {'highway': 'gate'}, 
+     (0x2b00,): {'tourism': 'hotel'},
+     (0x2b01,): {'tourism': 'motel'},
+     (0x2b03,): {'tourism': 'caravan_site'},
+     (0x2e02,): {'shop': 'supermarket'},
+     (0x2f08,): {'amenity': 'bus_station'},
+     (0x4400,): {'amenity': 'fuel'},
+     (0x4700,): {'leisure': 'slipway'},
+     (0x4800,): {'tourism': 'campsite'},
+     (0x4900,): {'leisure': 'park'},
+     (0x4a00,): {'tourism': 'picnic_site'},
+     (0x4c00,): {'tourism': 'information'},
+     (0x4d00,): {'amenity': 'parking'},
+     (0x4e00,): {'amenity': 'toilets'},
+     (0x5100,): {'amenity': 'telephone'},
+     (0x5200,): {'tourism': 'viewpoint'},
+     (0x5400,): {'sport': 'swimming'},
+     (0x5904,): {'aeroway': 'helipad'},
+     (0x5905,): {'aeroway': 'aerodrome'},
+     (0x5904,): {'aeroway': 'helipad'},
+     (0x5a00,): {'distance_marker': 'yes'}, # Not approved
+     (0x6401,): {'bridge': 'yes'}, # Apply to points?
+     (0x6401,): {'building': 'yes'},
+     (0x6406,): {'highway': 'crossing'},
+     (0x640c,): {'man_made': 'mineshaft'},
+     (0x640d,): {'man_made': 'pumping_rig', 'type': 'oil'},
+     (0x6411,): {'man_made': 'tower'},
+     (0x6412,): {'highway': 'trailhead'}, # This is not even a proposed value
+     (0x6413,): {'tunnel': 'yes'}, # Apply to points?
+     (0x6500, 0x650d): {'natural': 'water'},
+     (0x6508,): {'waterway': 'waterfall'},
+     (0x6605,): {'natural': 'bench'},
+     (0x6616,): {'natural': 'peak'}
     }
 polylinetagmap = {
-     ('0x2'): {'highway': 'trunk'},
-     ('0x3'): {'highway': 'primary'},
-     ('0x4'): {'highway': 'secondary'},
-     ('0x5'): {'highway': 'tertiary'},
-     ('0x6'): {'highway': 'residential'},
-     ('0xa'): {'highway': 'track', 'surface': 'unpaved'},
-     ('0x16'): {'highway': 'footway'},
-     ('0x18'): {'waterway': 'stream'},
-     ('0x1f'): {'waterway': 'river'},
-     ('0x29'): {'power': 'line'}
+     (0x2,): {'highway': 'trunk'},
+     (0x3,): {'highway': 'primary'},
+     (0x4,): {'highway': 'secondary'},
+     (0x5,): {'highway': 'tertiary'},
+     (0x6,): {'highway': 'residential'},
+     (0xa,): {'highway': 'track', 'surface': 'unpaved'},
+     (0x16,): {'highway': 'footway'},
+     (0x18,): {'waterway': 'stream'},
+     (0x1f,): {'waterway': 'river'},
+     (0x29,): {'power': 'line'}
     }
 polygontagmap = {
-     ('0x5'): {'amenity': 'parking', 'area': 'yes'},
-     ('0xd'): {'landuse': 'reservation', 'area': 'yes'}, # reservation is not even a proposed value
-     ('0x3c', '0x40', '0x41'): {'natural': 'water', 'area': 'yes'},
-     ('0x48', '0x49'): {'waterway': 'riverbank', 'area': 'yes'},
-     ('0x4c'): {'waterway': 'intermittent', 'area': 'yes'},
-     ('0x51'): {'natural': 'marsh', 'area': 'yes'}
+     (0x5,): {'amenity': 'parking', 'area': 'yes'},
+     (0xd,): {'landuse': 'reservation', 'area': 'yes'}, # reservation is not even a proposed value
+     (0x3c, 0x40, 0x41): {'natural': 'water', 'area': 'yes'},
+     (0x48, 0x49): {'waterway': 'riverbank', 'area': 'yes'},
+     (0x4c,): {'waterway': 'intermittent', 'area': 'yes'},
+     (0x51,): {'natural': 'marsh', 'area': 'yes'}
     }
 
 for line in file_mp:
     # Marker for start of sections
-    if line.startswith('[POI]'):
-        node = ET.Element("node", visible='true', id=str(nodeid))
+    if line.startswith(('[POI]','[RGN10]','[RGN20]')):
+        node = ET.Element('node', visible='true', id=str(nodeid))
         nodeid -= 1
         node.append(source)
         poi = True
         elementtagmap = poitagmap
         poi_counter += 1
 
-    if line.startswith('[POLYLINE]'):
-        node = ET.Element("way", visible='true', id=str(nodeid))
+    if line.startswith(('[POLYLINE]','[RGN40]')):
+        node = ET.Element('way', visible='true', id=str(nodeid))
         nodeid -= 1
         node.append(source)
         polyline = True
@@ -102,8 +103,8 @@ for line in file_mp:
         rnodes = {} # Track routing nodes for current polyline
         polyline_counter += 1
 
-    if line.startswith('[POLYGON]'):
-        node = ET.Element("way", visible='true', id=str(nodeid))
+    if line.startswith(('[POLYGON]','[RGN80]')):
+        node = ET.Element('way', visible='true', id=str(nodeid))
         nodeid -= 1
         node.append(source)
         polygon = True
@@ -112,8 +113,16 @@ for line in file_mp:
 
     # parsing data
     if poi or polyline or polygon:
+        
         if line.startswith('Label'):
-            tag = ET.Element('tag', k='name',v=line.split('=')[1].strip())
+            label = line.split('=')[1].strip()
+            # Now strip out control codes such as ~[0x2f]
+            codestart = label.find('~[')
+            if codestart != -1:
+                codeend = label.find(']',codestart)
+                if codeend != -1:
+                    label = label[0:codestart] + ' ' + label[codeend+1:]
+            tag = ET.Element('tag', k='name',v=label.strip().title()) # convert to title case
             tag.tail = '\n    '
             node.append(tag)
         if line.startswith('Type'):
@@ -121,7 +130,7 @@ for line in file_mp:
             tag = ET.Element('tag', k='garmin_type',v=typecode)
             tag.tail = '\n    '
             node.append(tag)
-            typecode = "%#x" % int(typecode, 16)
+            typecode = int(typecode, 16) 
             for codes, taglist in elementtagmap.iteritems():
                 if typecode in codes:
                     for key, value in taglist.iteritems():
@@ -195,7 +204,7 @@ for line in file_mp:
                     nodIds.append(curId)
                     # Don't write another node element if we reused an existing one
                     if not reused:
-                        nodes = ET.Element("node", visible='true', id=str(curId), lat=str(float(coords[0][1:])), lon=str(float(coords[1][:-1])))
+                        nodes = ET.Element('node', visible='true', id=str(curId), lat=str(float(coords[0][1:])), lon=str(float(coords[1][:-1])))
                         nodes.text = '\n    '
                         nodes.tail = '\n  '
                         osm.append(nodes)

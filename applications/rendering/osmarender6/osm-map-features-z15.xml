@@ -244,10 +244,17 @@
 
         <!-- Linear casings -->
         <rule e="way" k="tunnel" v="~|no">
-	    <rule e="way" k="highway" v="raceway">
-		<line class='highway-raceway-casing-white' smart-linecap='no'/>
-		<line class='highway-raceway-casing-red' smart-linecap='no'/>
-	   </rule>
+			<rule e="way" k="highway" v="raceway">
+				<rule e="way" k="use_status" v="~">
+					<line class='highway-raceway-casing' />
+				</rule>
+				<rule e="way" k="use_status" v="disused">
+					<line class='highway-raceway-casing-disused' />
+				</rule>
+				<rule e="way" k="use_status" v="dismantled">
+					<line class='highway-raceway-casing-dismantled' />
+				</rule>
+			</rule>
             <rule e="way" k="highway" v="steps">
                 <line class='highway-casing highway-steps-casing' />
             </rule>
@@ -347,9 +354,17 @@
 
         <!-- Linear cores -->
         <rule e="way" k="tunnel" v="~|false|no">
-	    <rule e="way" k="highway" v="raceway">
-		<line class='highway-raceway-core' />
-	    </rule>
+			<rule e="way" k="highway" v="raceway">
+				<rule e="way" k="use_status" v="~">
+					<line class='highway-raceway-core' />
+				</rule>
+				<rule e="way" k="use_status" v="disused">
+					<line class='highway-raceway-core-disused' />
+				</rule>
+				<rule e="way" k="use_status" v="dismantled">
+					<line class='highway-raceway-core-dismantled' />
+				</rule>
+			</rule>
             <rule e="way" k="scramble" v="*">
                 <line class='highway-core highway-scramble-core' />
             </rule>
@@ -1851,41 +1866,60 @@
 
 
 			/* Racetracks */
-			.highway-raceway-casing-red {
-			  fill: none; 
-			  stroke-width: 1.7px; 
-			  stroke-linecap: butt;
-			  stroke-linejoin: round; 
-			  stroke-dasharray: 0.2, 0.2;
-			  stroke: #ff0000;
-			  }
-
-			.highway-raceway-casing-white {
-			  stroke-width: 1.7px;
-			  stroke-linecap: round;
-			  stroke-linejoin: round;
-			  fill: none;
-			  stroke:#ffffff;
-			}
-
-			.highway-raceway-core {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: round; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #f0f0f0;
-			}
-			  
-			.landuse-raceway {
-			  stroke-width: 0.3px; 
+			.highway-raceway-casing {
+			  stroke-width: 4px; 
 			  stroke-linecap: butt; 
 			  stroke-linejoin: round; 
-			  fill: #f0f0f0;
+			  fill: none;
 			  stroke: #101010;
 			  }
 
-			.landuse-raceway-disused {
-			  stroke-width: 0.3px; 
+			.highway-raceway-casing-disused {
+			  stroke-width: 4px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #808080;
+			  stroke-dasharray: 2, 2;
+			  }
+
+			.highway-raceway-casing-dismantled {
+			  stroke-width: 4px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #808080;
+			  stroke-dasharray: 0.6, 3.4;
+			  opacity: 0.5;
+			  }
+
+			.highway-raceway-core {
+			  stroke-width: 3px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #f0f0f0;
+			  }
+
+			.highway-raceway-core-disused {
+			  stroke-width: 3px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke-dasharray: 2, 2;
+			  stroke: #f7f7f7;
+			  }
+
+			.highway-raceway-core-dismantled {
+			  stroke-width: 3px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #fbfbfb;
+			  stroke-dasharray: 0.6, 3.4;
+			  opacity: 0.5;
+			  }
+			  
 			.landuse-raceway {
 			  stroke-width: 0.6px; 
 			  stroke-linecap: butt; 

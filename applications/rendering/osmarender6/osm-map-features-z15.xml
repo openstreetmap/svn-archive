@@ -291,9 +291,13 @@
 		<else><rule e="way" k="tracktype" v="grade5">
 			<line class='highway-casing highway-track-casing highway-track-grade5-casing' smart-linecap='no'/>
 		</rule>
+		<else><rule e="way" k="track" v="racetrack">
+			<line class="highway-racetrack-casing-white" smart-linecap='no'/>
+			<line class="highway-racetrack-casing-red" smart-linecap='no' />
+		</rule>
 		<else>
 	        	<line class='highway-casing highway-track-casing'/>
-		</else></else></else></else></else>
+		</else></else></else></else></else></else>
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
                 <line class='highway-casing highway-unsurfaced-casing' smart-linecap='no'/>
@@ -418,27 +422,12 @@
  					<area class='highway-core highway-track-area' />
 				</rule>
 				<else>
-					<rule e="way" k="tracktype" v="~">
-						<line class='highway-core highway-track-core' />
-					</rule>
-					<else><rule e="way" k="tracktype" v="grade1">
-						<line class='highway-core highway-track-core' />
-					</rule>
-					<else><rule e="way" k="tracktype" v="grade2">
-						<line class='highway-core highway-track-core' />
-					</rule>
-					<else><rule e="way" k="tracktype" v="grade3">
-						<line class='highway-core highway-track-core' smart-linecap='no'/>
-					</rule>
-					<else><rule e="way" k="tracktype" v="grade4">
-						<line class='highway-core highway-track-core' smart-linecap='no'/>
-					</rule>
-					<else><rule e="way" k="tracktype" v="grade5">
-						<line class='highway-core highway-track-core' smart-linecap='no'/>
+					<rule e="way" k="tracktype" v="race">
+						<line class='highway-racetrack-core' />
 					</rule>
 	                                <else>
 						<line class='highway-core highway-track-core' />
-					</else></else></else></else></else></else>
+					</else>
 				</else>
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">
@@ -1866,6 +1855,31 @@
 
 
 			/* Racetracks */
+			.highway-racetrack-core {
+			  stroke-width: 1.5px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  fill: none;
+			  stroke: #f0f0f0;
+			}
+
+			.highway-racetrack-casing-red {
+			  stroke-width: 1.7px;
+			  stroke-dasharray: 0.2, 0.2;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  fill: none;
+			  stroke: #ff0000;
+			}
+
+			.highway-racetrack-casing-white {
+			  stroke-width: 1.7px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  fill: none;
+			  stroke: #ffffff;
+			}
+
 			.highway-raceway-casing {
 			  stroke-width: 4px; 
 			  stroke-linecap: butt; 

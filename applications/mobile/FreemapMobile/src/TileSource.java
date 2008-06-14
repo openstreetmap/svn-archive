@@ -7,25 +7,37 @@ import javax.microedition.rms.*;
 public class TileSource
 {
     static final int FREEMAP = 0,  OSMARENDER=1, OSM_MAPNIK=2;
-	boolean wrapCache, rsfWarningGiven;
-	private static TileSource instance = null;
+    boolean wrapCache, rsfWarningGiven;
+    private static TileSource instance = null;
+    int tileLimit;
 
-	public static TileSource getInstance()
+    public static TileSource getInstance()
+    {
+        if(instance==null)
+            instance=new TileSource();
+        return instance;
+    }
+
+    private TileSource()
+    {
+        wrapCache = rsfWarningGiven = false;
+        tileLimit=0;
+    }
+
+    public void setTileLimit (int tileLimit)
+    {
+        this.tileLimit=tileLimit;
+    }
+
+	public int getTileLimit()
 	{
-		if(instance==null)
-			instance=new TileSource();
-		return instance;
+		return tileLimit;
 	}
 
-	private TileSource()
-	{
-		wrapCache = rsfWarningGiven = false;
-	}
-
-	public void setCacheWrap(boolean wrapCache)
-	{
-		this.wrapCache = wrapCache;
-	} 
+    public void setCacheWrap(boolean wrapCache)
+    {
+        this.wrapCache = wrapCache;
+    } 
 
     
     // 050608 no longer attempts to load from JAR; this is because record 
@@ -61,11 +73,11 @@ public class TileSource
             }
             catch(RecordStoreFullException e)
             {
-				if(rsfWarningGiven==false)
-				{
-					rsfWarningGiven=true;
-                	throw e;
-				}
+                if(rsfWarningGiven==false)
+                {
+                    rsfWarningGiven=true;
+                    throw e;
+                }
             }
             catch(Exception e)
             {
@@ -85,11 +97,7 @@ public class TileSource
         throws IOException, RecordStoreFullException, RecordStoreException
     {
             int width=image.getWidth(),height=image.getHeight();
-            System.out.println("Creating image width="+width+" height="+height+
-                " size:" + width*height);
-        
             int[] rgb = new int[width*height];
-            System.out.println("done.");
             image.getRGB(rgb,0,width,0,0,width,height);
           
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -106,18 +114,25 @@ public class TileSource
             }
             dos.flush();
             dos.close();
-            System.out.println("Wrote to stream");
             rgb=null;
             byte[] bytes = bos.toByteArray();
             bos.close();
-            System.out.println("done. Creating record store...");
             RecordStore store = RecordStore.openRecordStore("tiles",true);
-			if(store.getSizeAvailable() < bytes.length && wrapCache==true)
-				freeRecordStoreSpace(store);	
+
+            // If we have reached the user defined tile storage limit, free
+            // the first tile
+            if(tileLimit>0)
+            {
+                RecordEnumeration re=store.enumerateRecords(null,null,true);
+                if(re.numRecords()==tileLimit)
+                    freeRecordStoreSpace(store);
+            }            
+            // if no more room, free the first tile
+            else if(store.getSizeAvailable() < bytes.length && wrapCache==true)
+                freeRecordStoreSpace(store);    
+            
             int id=store.addRecord(bytes,0,bytes.length);
-            System.out.println("Stored tile in recordstore: x="+
-                    x+" y="+y+" z="+z+" id="+id);
-	   		store.closeRecordStore(); 
+               store.closeRecordStore(); 
     }
 
     // Deletes the first record in the store to make way for a new one.
@@ -143,7 +158,7 @@ public class TileSource
         try
         {
             RecordStore.deleteRecordStore("tiles");
-			rsfWarningGiven=false;
+            rsfWarningGiven=false;
         }
         catch(Exception e)
         {

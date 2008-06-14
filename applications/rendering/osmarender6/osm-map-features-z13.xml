@@ -135,8 +135,10 @@
         <rule e="way" k="building" v="*">
             <area class='building-block no-bezier'/>
         </rule>
-
-
+        <rule e="way" k="military" v="*">
+            <area class='military-area' />
+        </rule>
+                     
         <!-- Airfields and airports -->
         <rule e="way" k="aeroway" v="runway">
             <line class='aeroway-runway-casing'/>
@@ -1236,7 +1238,12 @@
                 stroke-width: 0.2px;
             }
 
-
+            .military-area {
+                fill: #969632;
+                stroke: #eeeeee;
+                stroke-width: 0.2px;                                          
+            }
+            
 
 			/* Non-physical boundaries */
             .boundary {

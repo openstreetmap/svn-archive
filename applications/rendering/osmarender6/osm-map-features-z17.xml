@@ -446,15 +446,8 @@
         <!-- Linear casings -->
         <rule e="way" k="tunnel" v="~|no">
 			<rule e="way" k="highway" v="raceway">
-				<rule e="way" k="use_status" v="~">
-					<line class='highway-raceway-casing' />
-				</rule>
-				<rule e="way" k="use_status" v="disused">
-					<line class='highway-raceway-casing-disused' />
-				</rule>
-				<rule e="way" k="use_status" v="dismantled">
-					<line class='highway-raceway-casing-dismantled' />
-				</rule>
+				<line class='highway-raceway-casing-white' smart-linecap='no'/>
+				<line class='highway-raceway-casing-red' smart-linecap='no'/>
 			</rule>
             <rule e="way" k="highway" v="steps">
                 <line class='highway-casing highway-steps-casing' />
@@ -563,15 +556,7 @@
         <!-- Linear cores -->
         <rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="highway" v="raceway">
-				<rule e="way" k="use_status" v="~">
-					<line class='highway-raceway-core' />
-				</rule>
-				<rule e="way" k="use_status" v="disused">
-					<line class='highway-raceway-core-disused' />
-				</rule>
-				<rule e="way" k="use_status" v="dismantled">
-					<line class='highway-raceway-core-dismantled' />
-				</rule>
+				<line class='highway-raceway-core' />
 			</rule>
             <rule e="way" k="scramble" v="*">
                 <line class='highway-core highway-scramble-core' />
@@ -2048,15 +2033,15 @@
 				marker-end: url(#bridge-casing-end);
 			}
 			
-			.bridge-core {
+	   .bridge-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #f8f8f8;
                 fill: none;
-			}
+	   }
 
             .tunnel-casing {
-				stroke-linecap: butt;
+		stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
@@ -2067,7 +2052,7 @@
                 fill: none;
             }
 
-			.tunnel { stroke-dasharray: 0.4, 0.4; }
+           .tunnel { stroke-dasharray: 0.4, 0.4; }
 
 
             .railway-rail-bridge-casing             { stroke-width: 2.75px; }
@@ -2156,7 +2141,7 @@
 
             .highway-secondary-bridge-casing        { stroke-width: 2.5px; }
             .highway-secondary-bridge-core          { stroke-width: 2.2px; }
-            .highway-secondary-casing				{ stroke-width: 1.7px;	 stroke: #777777; }
+            .highway-secondary-casing		    { stroke-width: 1.7px;	 stroke: #777777; }
             .highway-secondary-core                 { stroke-width: 1.5px;  stroke: #FDBF6F; }
             .highway-secondary-area                 { stroke-width: 1.5px;  stroke: #FDBF6F; fill: #FDBF6F; }
             .highway-secondary-name                 { stroke-width: 0px;     font-size: 1.5px;}
@@ -2164,11 +2149,11 @@
 
             .highway-tertiary-bridge-casing         { stroke-width: 2.5px; }
             .highway-tertiary-bridge-core           { stroke-width: 2.2px; }
-			.highway-tertiary-casing                { stroke-width: 1.7px;  stroke: #777777; }
-			.highway-tertiary-core                  { stroke-width: 1.5px;   stroke: #f7f496; }
-			.highway-tertiary-area                  { stroke-width: 1.5px;   stroke: #f7f496; fill: #f7f496; }
+	    .highway-tertiary-casing                { stroke-width: 1.7px;  stroke: #777777; }
+	    .highway-tertiary-core                  { stroke-width: 1.5px;   stroke: #f7f496; }
+	    .highway-tertiary-area                  { stroke-width: 1.5px;   stroke: #f7f496; fill: #f7f496; }
             .highway-tertiary-name                  { stroke-width: 0px;     font-size: 1.25px; }
-            .highway-tertiary-ref					{ stroke-width: 0px;     font-size: 1.5px; }
+            .highway-tertiary-ref		    { stroke-width: 0px;     font-size: 1.5px; }
 
             .highway-unclassified-bridge-casing     { stroke-width: 2.2px; }
             .highway-unclassified-bridge-core       { stroke-width: 2.0px; }
@@ -2385,8 +2370,8 @@
 			.waterway-drain-name-core               { font-size: 1.5px; }
 
 
-			/* Generic under-construction style - makes any way dashed */
-			.under-construction { stroke-dasharray: 4, 4; stroke-linecap: butt;}
+	   /* Generic under-construction style - makes any way dashed */
+	   .under-construction { stroke-dasharray: 4, 4; stroke-linecap: butt;}
 
 
             /* Ferry */
@@ -2401,17 +2386,17 @@
 
 
             /* Place names */
-			/* General style for captions */
-			.place-caption {
-				fill: black;
-				stroke: none;
+	    /* General style for captions */
+	    .place-caption {
+		fill: black;
+		stroke: none;
                 font-family: "DejaVu Sans";
                 font-weight: bold;
-				text-anchor: middle;
-			}
+		text-anchor: middle;
+	   }
 
             .caption-casing {
-				fill: white;
+		fill: white;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: bold;
@@ -2428,7 +2413,7 @@
                 stroke-miterlimit: 1.5;
             }
             
-			.peak-caption           { font-size: 2px; }
+	    .peak-caption           { font-size: 2px; }
             .islet-caption          { font-size: 3px; }
             .village-caption        { font-size: 3px; }
             .suburb-caption         { font-size: 3px; }
@@ -2707,59 +2692,30 @@
 
 
 			/* Racetracks */
-			.highway-raceway-casing {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
+			.highway-raceway-casing-red {
+			  fill: none; 
+			  stroke-width: 1.7px; 
+			  stroke-linecap: butt;
 			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #101010;
+			  stroke-dasharray: 0.2, 0.2;
+			  stroke: #ff0000;
 			  }
 
-			.highway-raceway-casing-disused {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			.highway-raceway-casing-white {
+			  stroke-width: 1.7px;
+			  stroke-linecap: round;
+			  stroke-linejoin: round;
 			  fill: none;
-			  stroke: #808080;
-			  stroke-dasharray: 1, 1;
-			  }
-
-			.highway-raceway-casing-dismantled {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #808080;
-			  stroke-dasharray: 0.3, 1.7;
-			  opacity: 0.5;
-			  }
+			  stroke:#ffffff;
+			}
 
 			.highway-raceway-core {
 			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
+			  stroke-linecap: round; 
 			  stroke-linejoin: round; 
 			  fill: none;
 			  stroke: #f0f0f0;
-			  }
-
-			.highway-raceway-core-disused {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke-dasharray: 1, 1;
-			  stroke: #f7f7f7;
-			  }
-
-			.highway-raceway-core-dismantled {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #fbfbfb;
-			  stroke-dasharray: 0.3, 1.7;
-			  opacity: 0.5;
-			  }
+			}
 			  
 			.landuse-raceway {
 			  stroke-width: 0.3px; 

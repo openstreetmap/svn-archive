@@ -11,7 +11,7 @@ public class FreemapMobile extends MIDlet implements CommandListener
     FMCanvas canvas;
     GPSListener gpsListener;
     LocationProvider lp;
-    List list, zlList;
+    List list, zlList, cacheList;
     
     
     // Constructor for the class
@@ -36,11 +36,11 @@ public class FreemapMobile extends MIDlet implements CommandListener
         ok = new Command("OK",Command.OK,0);
         exit = new Command("Exit",Command.EXIT,0);
         menu = new Command("Menu", Command.OK, 0);    
+
         list = new List("Menu",List.IMPLICIT);
-        
         list.append("Navigate",null);
         list.append("Zoom level",null);
-        list.append("Clear cache",null);
+        list.append("Cache",null);
         list.setCommandListener(this);
 
         zlList = new List ("Zoom",List.EXCLUSIVE);
@@ -48,14 +48,19 @@ public class FreemapMobile extends MIDlet implements CommandListener
         zlList.append("Medium",null);
         zlList.append("High",null);
         zlList.setSelectedIndex(1,true);
-        
         zlList.setCommandListener(this);
+
+        cacheList = new List("Cache",List.IMPLICIT);
+        cacheList.append("Clear",null);
+        //cacheList.append("Set tile limit",null);
+        cacheList.setCommandListener(this);
 
         canvas.addCommand(menu);
         canvas.addCommand(exit);
         list.addCommand(back);
         zlList.addCommand(back);
         zlList.addCommand(ok);
+        cacheList.addCommand(back);
         canvas.setCommandListener(this);
         gpsListener = new GPSListener(canvas);
         Display display = Display.getDisplay(this);
@@ -141,18 +146,33 @@ public class FreemapMobile extends MIDlet implements CommandListener
                 {
                     Display.getDisplay(this).setCurrent(zlList);
                 }
-                else if (cmd.equals("Clear cache"))
+                else if (cmd.equals("Cache"))
                 {
-                    
-                    canvas.getTileSource().clearCache();    
-                    Display.getDisplay(this).setCurrent(canvas);            
+                    Display.getDisplay(this).setCurrent(cacheList);            
                 }
             
             }
-            
-                
-                
         }
+        else if (s==cacheList)
+        {
+            System.out.println("cacheList");
+            if(c==back)
+            {
+                Display.getDisplay(this).setCurrent(list);
+            }
+            else if (c==List.SELECT_COMMAND)
+            {
+                String cmd = cacheList.getString(cacheList.getSelectedIndex());
+                if (cmd.equals("Clear"))
+                {
+                    canvas.getTileSource().clearCache();    
+                    Display.getDisplay(this).setCurrent(canvas);            
+                }
+                   else if (cmd.equals("Set tile limit"))
+                {
+                }
+            }
+        }    
         else if (s==zlList)
         {
             if (c==ok)
@@ -162,18 +182,22 @@ public class FreemapMobile extends MIDlet implements CommandListener
             }    
             else if (c==back)
             {
-                Display.getDisplay(this).setCurrent(list);        
+                Display.getDisplay(this).setCurrent(cacheList);        
             }
         }    
-
+        else if (s instanceof TextBox)
+        {
+            canvas.getTileSource().setTileLimit(Integer.parseInt
+                                                (((TextBox)s).getString()));
+        }
         else if (s==canvas)
         {
             if (c==menu)
             {
-            canvas.removeCommand(menu);
+                canvas.removeCommand(menu);
         
-            System.out.println("you started the menu");
-            Display.getDisplay(this).setCurrent(list);    
+                System.out.println("you started the menu");
+                Display.getDisplay(this).setCurrent(list);    
         
             }
         }

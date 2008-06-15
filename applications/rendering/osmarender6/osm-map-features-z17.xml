@@ -1799,9 +1799,12 @@
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
         </rule>
-        <rule e="way" k="leisure" v="*" layer="5">
+
+        <rule e="way" k="sport" v="~" layer="5"> <!-- omit rendering captions for leisure, if sport is also set -->
+            <rule e="way" k="leisure" v="*" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
+            </rule>
         </rule>
         <rule e="way" k="sport" v="*" layer="5">
 		<!-- Offset captions for areas with icons -->
@@ -1822,9 +1825,11 @@
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
         </rule>
-        <rule e="way" k="building" v="*" layer="5">
+        <rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
+            <rule e="way" k="building" v="*" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
+            </rule>
         </rule>
         <rule e="way" k="tourism" v="tourism-attraction|zoo|picnic_site|caravan_site|camp_site" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>

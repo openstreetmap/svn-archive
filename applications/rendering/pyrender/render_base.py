@@ -25,7 +25,7 @@ import StringIO
 import ImageDraw
 import xml.sax
 from OsmTileData import *
-from parseOsm import *
+from loadOsm import *
 from tilenames import *
 
 class proj:
@@ -73,7 +73,7 @@ class OsmRenderBase:
     layer - which map style to use
     """
     
-    self.osm = parseOsm(filename)  # get OSM data into memory
+    self.osm = LoadOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,im.size)  # create a projection for this tile
     self.drawContext = ImageDraw.Draw(im)  # create a drawing context
     

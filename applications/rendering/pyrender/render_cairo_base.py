@@ -25,7 +25,7 @@
 import StringIO
 import cairo
 import xml.sax
-from OsmTileData import *
+from tiledata import *
 from parseOsm import *
 from tilenames import *
 
@@ -36,14 +36,20 @@ class proj:
     tx,ty,tz is the slippy map tile number.  
     to is the (width,height) of an image to render onto
     """ 
-    (S,W,N,E) = tileEdges(tx,ty,tz)
+    #(S,W,N,E) = tileEdges(tx,ty,tz)
+    dd = 1.0 / float(numTiles(tz))
     self.to = to
-    self.S = S
-    self.N = N
-    self.E = E
-    self.W = W
-    self.dLat = N - S
-    self.dLon = E - W
+    self.S = ty * dd
+    self.N = self.S + dd
+    self.W = tx * dd
+    self.E = self.W + dd
+    self.dLat = dd
+    self.dLon = dd
+    
+    print "From %f to %f" % (self.S, self.N)
+    print "From %f to %f" % (self.W, self.E)
+    
+    print "to %f, %f" %(to[0],to[1])
     self.x1 = 0
     self.y1 = 0
     self.x2 = to[0]

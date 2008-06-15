@@ -70,11 +70,11 @@ class RenderClass(OsmRenderBase):
         count = 0
         for n in w['n']: 
           # need to lookup that node's lat/long from the osm.nodes dictionary
-          (lat,lon) = self.osm.nodes[n]
           
           # project that into image coordinates
-          (x,y) = self.proj.project(lat,lon)
+          (x,y) = self.proj.project(n['lat'], n['lon'])
           
+          #print "%f, %f -> %f, %f" % (n['lat'], n['lon'], x, y)
           # draw lines on the image
           if(count == 0):
             self.ctx.move_to(x, y)
@@ -85,18 +85,14 @@ class RenderClass(OsmRenderBase):
         else: self.ctx.fill()
     
     # POIs
-    if(1):
-      self.ctx.set_line_width (0.5);
+    if(0):
       for poi in self.osm.poi:
         n = poi['id']
         (lat,lon) = self.osm.nodes[n]
         (x,y) = self.proj.project(lat,lon)
-        s = 2
-        self.ctx.rectangle(x-s,y-s,2*s,2*s)
-        self.ctx.set_source_rgb(0,0,1)
-        self.ctx.fill_preserve()
-        self.ctx.set_source_rgb(0,0,0.5)
-        self.ctx.stroke()
+        s = 1
+        self.drawContext.rectangle((x-s,y-s,x+s,y+s),fill='blue')
+
 
 
 #-----------------------------------------------------------------

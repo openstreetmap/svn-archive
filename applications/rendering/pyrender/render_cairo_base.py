@@ -39,17 +39,13 @@ class proj:
     #(S,W,N,E) = tileEdges(tx,ty,tz)
     dd = 1.0 / float(numTiles(tz))
     self.to = to
-    self.S = ty * dd
-    self.N = self.S + dd
+    self.N = ty * dd
+    self.S = self.N + dd
     self.W = tx * dd
     self.E = self.W + dd
-    self.dLat = dd
+    self.dLat = -dd
     self.dLon = dd
     
-    print "From %f to %f" % (self.S, self.N)
-    print "From %f to %f" % (self.W, self.E)
-    
-    print "to %f, %f" %(to[0],to[1])
     self.x1 = 0
     self.y1 = 0
     self.x2 = to[0]
@@ -71,8 +67,26 @@ class OsmRenderBase:
   
   def draw(self):
     pass # Override this function
+  
+  def getLayer(self, layernum):
+    layerid = str(layernum)
+    #print "Getting layer for %s" % layernum
+    layer = self.layers.get(layerid, None)
+    if(not layer):
+      print "Creating layer %s" % layerid
+      # Create the image
+      im = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
+      ctx = cairo.Context(im)  # create a drawing context
+      layer = [im, ctx, layerid]
+      self.layers[layerid] = layer
+    return(layer)
+
+  def getCtx(self, layernum):
+    #print "Getting context for %s" % layernum
+    layer = self.getLayer(layernum)
+    return(layer[1])
     
-  def Render(self, im,filename,tx,ty,tz,layer):
+  def Render(self, filename,tx,ty,tz,layer):
     """Render an OSM tile
     im - an image to render onto
     filename - location of OSM data for the tile
@@ -82,25 +96,27 @@ class OsmRenderBase:
     
     self.osm = parseOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,(256,256))  # create a projection for this tile
-    self.ctx = cairo.Context(im)  # create a drawing context
+    #self.ctx = cairo.Context(im)  # create a drawing context
 
-    # Fill with background color
-    (r,g,b,a) = self.imageBackgroundColour()
-    self.ctx.set_source_rgba(r,g,b,a)
-    self.ctx.rectangle(0, 0, 256, 256)
-    self.ctx.fill()
-    
     # Call the draw function
     self.draw()
-  
+  def addBackground(self,ctx):
+    # Fill with background color
+    (r,g,b,a) = self.imageBackgroundColour()
+    ctx.set_source_rgba(r,g,b,a)
+    ctx.rectangle(0, 0, 256, 256)
+    ctx.fill()
+
   def RenderTile(self, z,x,y, outputFile):
     """Render an OSM tile
     z,x,y - slippy map tilename
     outputFile - optional file to save to
     otherwise returns PNG image data"""
     
+    self.layers = {}
+    
     # Create the image
-    im = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
+    #im = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
   
     # Get some OSM data for the area, and return which file it's stored in
     filename = GetOsmTileData(z,x,y)
@@ -108,20 +124,34 @@ class OsmRenderBase:
       return(None)
   
     # Render the map
-    self.Render(im,filename,x,y,z,'default')
+    self.Render(filename,x,y,z,'default')
   
+    out = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
+    outCtx = cairo.Context(out)
+    #self.addBackground(outCtx)
+    
+    layerIDs = self.layers.keys()
+    layerIDs.sort()
+    for num in layerIDs:
+      layer = self.layers[num]
+      print "Adding layer %s" % num
+      #(im,ctx,num) = layer
+      outCtx.set_source_surface(layer[0], 0, 0)
+      outCtx.set_operator(cairo.OPERATOR_OVER)  # was: OPERATOR_SOURCE
+      outCtx.paint();
+
     # Either save the result to a file
     if(outputFile):
-      im.write_to_png(outputFile) # Output to PNG
+      out.write_to_png(outputFile) # Output to PNG
       return
     else:
       # Or return it in a string
       f = StringIO.StringIO()
-      im.write_to_png(f)
+      out.write_to_png(f)
       data = f.getvalue()
       return(data)
 
 if(__name__ == '__main__'):
-  # Test suite: render a tile in hersham, and save it to a file
+  # Test suite: render a tile in london, and save it to a file
   a = OsmRenderBase()
-  a.RenderTile(17,65385,43658, "sample2.png")
+  a.RenderTile(15, 16372, 10895, "sample2.png")

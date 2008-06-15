@@ -26,6 +26,8 @@ roadColours = [
   #a width of 0 means filling an area with a color
   ('highway=motorway','0,0,0,13'),
   ('highway=motorway','0.5,0.5,1,9'),
+  ('highway=motorway_link','0,0,0,13'),
+  ('highway=motorway_link','0.5,0.5,1,9'),
   ('highway=primary','0,0,0,10'),    # primary casing
   ('highway=primary','1,0.5,0.5,6'), # primary core
   ('highway=secondary','0,0,0,8'),   # secondary casing
@@ -49,6 +51,8 @@ def wayStyles(tags):
     (tag,value) = ident.split('=')
     if(tags.get(tag,'default') == value):
       styles.append(style)
+  if(not styles):
+    styles.append('0.8,0.8,0.8,1') # default/debug
   return(styles)  
 
 
@@ -62,27 +66,30 @@ class RenderClass(OsmRenderBase):
   def draw(self):
     # Ways
     for w in self.osm.ways.values():
+      layeradd = 0
       for style in wayStyles(w['t']):
         (r,g,b, width) = style.split(",")
         width = int(width)
-        self.ctx.set_source_rgb(float(r),float(g),float(b))
-        self.ctx.set_line_width(width)
+        
+        layer = float(w['t'].get('layer',0)) + layeradd
+        ctx = self.getCtx(layer)
+        layeradd = layeradd + 0.1
+        
+        ctx.set_source_rgb(float(r),float(g),float(b))
+        ctx.set_line_width(width)
         count = 0
         for n in w['n']: 
-          # need to lookup that node's lat/long from the osm.nodes dictionary
-          
           # project that into image coordinates
           (x,y) = self.proj.project(n['lat'], n['lon'])
-          
-          #print "%f, %f -> %f, %f" % (n['lat'], n['lon'], x, y)
+
           # draw lines on the image
           if(count == 0):
-            self.ctx.move_to(x, y)
+            ctx.move_to(x, y)
           else:
-            self.ctx.line_to(x, y)
+            ctx.line_to(x, y)
           count = count + 1
-        if width > 0:self.ctx.stroke()
-        else: self.ctx.fill()
+        if width > 0:ctx.stroke()
+        else: ctx.fill()
     
     # POIs
     if(0):
@@ -101,6 +108,8 @@ class RenderClass(OsmRenderBase):
 if(__name__ == '__main__'):
   a = RenderClass()
   filename = "sample_"+__file__+".png"
-  a.RenderTile(17,65385,43658, filename)
+  # a.RenderTile(15, 16372, 10895, filename) # london
+  a.RenderTile(15, 16363, 10886, filename) # Multi-layer junction
+  
   print "------------------------------------"
   print "Saved image to " + filename

@@ -72,6 +72,10 @@ class tileServer(BaseHTTPRequestHandler):
         print "Not found"
         self.send_response(404)
         return
+      if(pngData[0] == ':'):
+        self.send_response(200)
+        self.wfile.write(pngData)
+        return
       
       # Return the tile as a PNG
       self.send_response(200)

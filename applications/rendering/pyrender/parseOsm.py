@@ -35,6 +35,7 @@ class parseOsm(handler.ContentHandler):
     self.nodes = {}
     self.ways = {}
     self.poi = []
+    self.divisor = float(2 ** 31)
     if(filename != None):
       self.loadOsm(filename)
 
@@ -68,7 +69,11 @@ class parseOsm(handler.ContentHandler):
         self.wayID = id
     elif name == 'nd':
       """Nodes within a way -- add them to a list"""
-      self.waynodes.append(int(attrs.get('ref')))
+      node = {
+        'id': int(attrs.get('id')),
+        'lat': float(attrs.get('y')) / self.divisor, 
+        'lon': float(attrs.get('x')) / self.divisor}
+      self.waynodes.append(node)
     elif name == 'tag':
       """Tags - store them in a hash"""
       k,v = (attrs.get('k'), attrs.get('v'))

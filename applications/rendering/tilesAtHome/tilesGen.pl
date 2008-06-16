@@ -1293,7 +1293,7 @@ sub UpdateClient #
         $Config->get("Subversion"),
         $Config->get("SubversionUpdateCmd"));
 
-    statusMessage("Updating the Client", $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Updating the Client", $currentSubTask, $progressJobs, $progressPercent,1);
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
     ## FIXME TODO: Implement and check output from svn status, too.
 

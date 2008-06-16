@@ -70,5 +70,62 @@ class TestAltitudeServer(unittest.TestCase):
     self.assertEqual(getAltitude(-37,144), 88)
     self.assertEqual(getAltitude(-37.3,144.4), 109)
 
+  def testGoogleChartURL(self):
+    # Tests if the server returns the expected Google Chart URL for the
+    # example routes.
+
+    # First 4 points of route 2:
+
+    route = [\
+      {'id' : 1, 'lat' : -37.794528, 'lon' : 144.989826},
+      {'id' : 2, 'lat' : -37.795407, 'lon' : 145.000048},
+      {'id' : 3, 'lat' : -37.791279, 'lon' : 145.013591},
+      {'id' : 4, 'lat' : -37.791322, 'lon' : 145.029184}\
+    ]
+    # For the horizontal scale, we need to know the horizontal distance 
+    # between the coordinates.
+    distances = []
+    for i in range(3):
+      distances.append(distance.distance(
+        (route[i]['lat'],route[i]['lon'] ),
+        (route[i+1]['lat'],route[i+1]['lon'] ),
+      ).kilometers) 
+
+    # First point will have coordinate 0, last point the sum of all distances
+    x_coordinates = [\
+      0,
+      distances[0],
+      distances[0] + distances[1],
+      sum(distances)
+    ]
+    
+    # y coordinates are the altitudes:
+    # Note: this test will fail if the altitudes are calculated differently.
+    # Point 1 : 207
+    # Point 2 : 190
+    # Point 3 : 160
+    # Point 4 : 142
+
+    y_coordinates = [207, 190,160, 142]
+
+    # Create gchart
+    # http://code.google.com/apis/chart/#line_charts
+    # http://pygooglechart.slowchop.com/
+    chart = XYLineChart(325, 200, 
+                        x_range=(0,max(x_coordinates)), y_range=(min(y_coordinates),max(y_coordinates)))
+    chart.add_data(x_coordinates)
+    chart.add_data(y_coordinates)
+
+    chart.set_axis_labels(Axis.BOTTOM, ['0', str(max(x_coordinates))[0:4] + " km"])
+    
+    chart.set_axis_labels(Axis.LEFT, [str(min(y_coordinates)) + " m", str(max(y_coordinates)) + " m"])
+    
+    expected_url = chart.get_url() 
+    
+    # So let's test that:    
+
+    result = altitude_profile_gchart_function(route)
+    self.assertEqual(result['gchart_url'], expected_url) 
+
 if __name__ == '__main__':
     unittest.main()

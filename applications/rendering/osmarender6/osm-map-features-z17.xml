@@ -1463,6 +1463,9 @@
         <rule e="node" k="amenity" v="drinking_water">
             <symbol xlink:href="#drinking_water" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
+	<rule e="node" k="amenity" v="bank">
+		<symbol xlink:href="#bank" width="2px" height="2px" transform="translate(-1,-1)"/>
+	</rule>
 
         <!-- Leisure symbols -->
         <rule e="node" k="leisure" v="golf_course">
@@ -1765,7 +1768,7 @@
 			    <text k="name" class='caption-casing generic-caption-casing' dy='-3px' />
 			    <text k="name" class='caption-core generic-caption-core' dy='-3px' />
 			</rule>
-			<rule e="node" k="amenity" v="shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site" layer="5">
+			<rule e="node" k="amenity" v="shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank" layer="5">
 			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
 			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
 			</rule>
@@ -4621,7 +4624,13 @@
                     <svg:path
                        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
                        d="M 7.015165,9.7610485 C 6.7416602,8.8729417 5.2679806,8.8743495 4.9958835,9.7610485 C 4.9958835,9.7610485 7.015165,9.7610485 7.015165,9.7610485 z " />
-                </svg:symbol>		
+                </svg:symbol>
+		<svg:symbol id="bank" viewBox="0 0 125 125">
+			<svg:path style="fill:#000000; stroke:none;"
+			d="M 65,0.2965772 L 0,50 L 15,50 L 15,125 L 110,125 L 110,50 L 125,50 L 65,0.2965772 z" />
+			<svg:path style="fill:#ffffff; stroke:none"
+			d="M 62,102 C 57,102 43,100 44,91 C 45,82 55,87 62,88 L 62,75 C 54,73 44,67 44,56 C 44,45 54,38 62,38 C 62,32 62,30 65,30 C 68,30 68,32 68,38 C 74,38 88,40 85,47 C 82,54 73,51 68,50 L 68,63 C 77,65 87,71 87,82 C 87,93 78,102 68,102 C 68,108 68,110 65,110 C 62,110 62,108 62,102 z M 62,61 L 62,50 C 55,51 55,60 62,61 z M 68,77 L 68,88 C 75,87 75,78 68,77 z" />
+		</svg:symbol>
     </defs>
 
 </rules>

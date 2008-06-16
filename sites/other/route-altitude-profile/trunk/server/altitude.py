@@ -77,13 +77,21 @@ def getAltitude(lat,lon):
 ##### Helper functions ######
 
 def posFromLatLon(lat,lon):
+  # The file name of an srtm tile corresponds to the coordinate
+  # of its bottom left element. However, the files start at top left. 
+
+  # The top left element (row 1, col 1) has index 0, the left most element
+  # (col 1) of the second row has index 1200, etc. 
+  # The bottom left element (row 1200, col 1) of a tile therefore has index
+  # 1199 * 1200 = 1 438 800
+
   # First we determine the tile and its offset, pos0:
-  lat0 = ceil(lat)
+  lat0 = floor(lat)
   lon0 = floor(lon)
-  pos0 = (-lat0 * 360 + lon0) * 1200 * 1200
+  pos0 = (lat0 * 360 + lon0) * 1200 * 1200
   
   # Then we determine the position within the tile
-  lat_pos = (ceil(lat) - lat) * 1200 * 1200
+  lat_pos = (1199./1200 - (lat - floor(lat))) * 1200 * 1200
   lon_pos = (lon - floor(lon)) * 1200
 
   # We then round lat_pos and lon_pos in case the coordinate was somewhere

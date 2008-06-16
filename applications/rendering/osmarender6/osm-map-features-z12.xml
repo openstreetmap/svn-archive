@@ -71,7 +71,6 @@
             <area class='leisure-track'/>
         </rule>
 
-
 		<!-- Airports and runways -->
 		<rule e="way" k="aeroway" v="apron">
 			<area class='aeroway-apron'/>			
@@ -121,6 +120,10 @@
         <rule e="way" k="building" v="*">
             <area class='building-block no-bezier'/>
         </rule>
+        <rule e="way" k="military" v="*">
+            <area class='military-area'/> 
+        </rule>
+                            
 
 
         <!-- Airfields and airports -->
@@ -1229,7 +1232,12 @@
                 stroke: #6fc18e;
                 stroke-width: 0.2px;
             }
-
+            .military-area {
+                fill: #969632;
+                stroke: #eeeeee;
+                stroke-width: 0.2px;
+            }
+                                                      
             /* Building */
             .building {
                 fill: #dddddd;

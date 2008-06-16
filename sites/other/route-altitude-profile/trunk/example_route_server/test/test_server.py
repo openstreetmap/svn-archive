@@ -10,13 +10,14 @@ import unittest
 class TestAltitudeServerInteraction(unittest.TestCase):
   def testRoutes(self):
     for route in [route1, route2, route3, route4]:
-      expected_result = []
-      for point in route:
-        point['alt'] = 1
-        expected_result.append(point)
-
       result = server.server.altitude_profile(route)
-      self.assertEqual(result,expected_result)
+
+      for i in range(len(route)):
+        self.assertEqual(result[i]['lat'],route[i]['lat'])
+        self.assertEqual(result[i]['lon'],route[i]['lon'])
+        # We'll just trust the produced altitude; that tested elsewhere.
+        # Just make sure that an altitude is returned.
+        self.assert_(result[i]['alt'])
 
 if __name__ == '__main__':
     unittest.main()

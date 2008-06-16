@@ -896,10 +896,10 @@
 
         <!-- Linear cores (under construction) -->
         <rule e="way" k="highway" v="construction">
-			<rule e="way" k="constuction" v="steps">
+			<rule e="way" k="construction" v="steps">
 				<line class='highway-core highway-steps-core under-construction' />
 			</rule>
-			<rule e="way" k="constuction" v="footway|footpath">
+			<rule e="way" k="construction" v="footway|footpath">
 				<line class='highway-core highway-footway-core under-construction' />
 			</rule>
 			<rule e="way" k="construction" v="pedestrian">
@@ -1274,7 +1274,7 @@
         </rule>
 
 
-        <!-- Non-pysical routes -->
+        <!-- Non-physical routes -->
         <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>

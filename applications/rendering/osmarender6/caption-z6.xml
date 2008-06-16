@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- Render just captions for z7 -->
+<!-- Render just captions for z6 -->
 
 <rules
     xmlns:xlink="http://www.w3.org/1999/xlink"

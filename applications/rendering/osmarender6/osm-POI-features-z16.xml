@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- Tiles@Home Rules File for zoom level 12 -->
+<!-- Tiles@Home Rules File for zoom level 16 -->
 
 <rules
     xmlns:xlink="http://www.w3.org/1999/xlink"

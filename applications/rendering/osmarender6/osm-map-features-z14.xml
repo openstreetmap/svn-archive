@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
 
-<!-- Tiles@Home Rules File for zoom level 15 -->
+<!-- Tiles@Home Rules File for zoom level 14 -->
 
 <rules
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -839,7 +839,7 @@
 
 
 
-        <!-- Non-pysical routes -->
+        <!-- Non-physical routes -->
         <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>

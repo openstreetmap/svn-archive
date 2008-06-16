@@ -1235,7 +1235,7 @@
         </rule>
 
 
-        <!-- Non-pysical routes -->
+        <!-- Non-physical routes -->
         <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>

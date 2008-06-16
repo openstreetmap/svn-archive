@@ -471,7 +471,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="layer"/>
 
     <!-- The first half of the first segment and the last half of the last segment are treated differently from the main
-			part of the way path.  The main part is always rendered with a butt line-cap.  Each end fragement is rendered with
+			part of the way path.  The main part is always rendered with a butt line-cap.  Each end fragment is rendered with
 			either a round line-cap, if it connects to some other path, or with its default line-cap if it is not connected
 			to anything.  That way, cul-de-sacs etc are terminated with round, square or butt as specified in the style for the
 			way. -->

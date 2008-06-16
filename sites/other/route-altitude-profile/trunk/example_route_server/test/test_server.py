@@ -6,7 +6,6 @@ from server import route1, route2, route3, route4
 from numpy import ones
 import unittest
 
-
 class TestAltitudeServerInteraction(unittest.TestCase):
   def testRoutes(self):
     for route in [route1, route2, route3, route4]:

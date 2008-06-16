@@ -109,7 +109,6 @@ route3 = [\
 route4 = [\
  {'id' : 1, 'lat' : -30.088850, 'lon' : 145.937740},
  {'id' : 2, 'lat' : -30.094060, 'lon' : 145.936930},
- {'id' : 3, 'lat' : -30.094060, 'lon' : 145.936930},
  {'id' : 4, 'lat' : -30.097138, 'lon' : 145.947483},
  {'id' : 5, 'lat' : -30.097252, 'lon' : 145.947610},
  {'id' : 6, 'lat' : -30.101589, 'lon' : 145.950951},
@@ -147,7 +146,7 @@ class MyHandler(BaseHTTPRequestHandler):
             f.close()
             return
 
-        if self.path[:-1] == "/index.html?route=":
+        if self.path[:-1] == "/index.html?type=xml&route=":
             route_number = int(self.path[-1])
 
             # Get route altitude profile:
@@ -160,6 +159,20 @@ class MyHandler(BaseHTTPRequestHandler):
 
             tuple_params = tuple(result)
             self.wfile.write(xmlrpclib.dumps(tuple_params, 'route' + str(route_number)))
+            return
+        
+        if self.path[:-1] == "/index.html?type=gchart&route=":
+            # Return Google Chart image
+            route_number = int(self.path[-1])
+
+            result = server.altitude_profile_gchart(routes[route_number - 1])
+            
+            self.send_response(200)
+            self.send_header('Content-type',	'text/html')
+            self.end_headers()
+
+            tuple_params = tuple(result)
+            self.wfile.write("<img src='" + result['gchart_url'] + "' alt = '" + str(route_number) + "'/>")
             return
 
         return

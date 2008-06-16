@@ -70,6 +70,8 @@ sub CheckConfig
     my $cmd;
     printf "- Using working directory %s\n", $Config->get("WorkingDirectory");
 
+    printf "- Using process log file %s\n", $Config->get("ProcessLogFile") if ($Config->get("ProcessLog"));
+
     if ($Config->get("Subversion"))
     {
         $cmd=$Config->get("Subversion");

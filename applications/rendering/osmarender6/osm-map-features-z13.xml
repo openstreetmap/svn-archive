@@ -567,25 +567,25 @@
         <!-- Piste maps -->
         <rule e="way" k="piste:type" v="downhill">
             <rule e="way" k="piste:difficulty" v="novice">
-            	<line class='piste-difficulty-novice' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-novice' smart-linecap='no'/>
             </rule>
             <rule e="way" k="piste:difficulty" v="easy">
-            	<line class='piste-difficulty-easy' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-easy' smart-linecap='no'/>
             </rule>
             <rule e="way" k="piste:difficulty" v="intermediate">
-            	<line class='piste-difficulty-intermediate' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-intermediate' smart-linecap='no'/>
             </rule>
             <rule e="way" k="piste:difficulty" v="advanced">
-            	<line class='piste-difficulty-advanced' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-advanced' smart-linecap='no'/>
             </rule>
             <rule e="way" k="piste:difficulty" v="expert">
-            	<line class='piste-difficulty-expert' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-expert' smart-linecap='no'/>
             </rule>
             <rule e="way" k="piste:difficulty" v="freeride">
-            	<line class='piste-difficulty-freeride' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-freeride' smart-linecap='no'/>
             </rule>
             <rule e="way" k="piste:difficulty" v="~">
-            	<line class='piste-difficulty-other' smart-linecap='no'/>
+            	<line class='piste-core piste-difficulty-other' smart-linecap='no'/>
             </rule>
         </rule>
         <rule e="way" k="piste:type" v="sled">
@@ -1466,86 +1466,38 @@
 				text-anchor: middle;
             }
 
-            /* Piste maps */
+		/* Piste maps */
+		.piste-core {
+			fill: none;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 5px;
+			opacity: 0.8;
+		}
 
-            .piste-difficulty-novice {
-                fill: none;
-                stroke: #31ff31;
-                stroke-width: 5px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
+		.piste-difficulty-novice       { stroke: #31ff31; }
+		.piste-difficulty-easy         { stroke: #3131ff; }
+		.piste-difficulty-intermediate { stroke: #ff3131; }
+		.piste-difficulty-advanced     { stroke: #060606; }
+		.piste-difficulty-expert       { stroke: #f6800a; }
+		.piste-difficulty-freeride     { stroke: #f6dd0a; }
+		.piste-difficulty-other        { stroke: #505050; }
 
-            .piste-difficulty-easy {
-                fill: none;
-                stroke: #3131ff;
-                stroke-width: 5px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
+		.piste-type-sled {
+			fill: none;
+			/* stroke: #8040a0; */
+			stroke: #cdabde;
+			stroke-width: 2.5px;
+			marker-start:url(#marker-piste-type-sled);
+		}
 
-            .piste-difficulty-intermediate {
-                fill: none;
-                stroke: #ff3131;
-                stroke-width: 5px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
-
-            .piste-difficulty-advanced {
-                fill: none;
-                stroke: #060606;
-                stroke-width: 5px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
-
-            .piste-difficulty-expert {
-                fill: none;
-                stroke: #f6800a;
-                stroke-width: 5px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
-
-            .piste-difficulty-freeride {
-                fill: none;
-                stroke: #f6dd0a;
-                stroke-width: 5px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
-
-            .piste-difficulty-other {
-                fill: none;
-                stroke: #505050;
-                stroke-width: 4px;
-		stroke-linecap:round;
-		stroke-linejoin:round;
-                opacity: 0.8;
-            }
-
-            .piste-type-sled {
-                fill: none;
-                /* stroke: #8040a0; */
-                stroke: #cdabde;
-                stroke-width: 2.5px;
-                marker-start:url(#marker-piste-type-sled);
-            }
-
-            .piste-type-nordic {
-                fill: none;
-                stroke: #c00000;
-                stroke-width: 1px;
-                stroke-dasharray: 3,0.5;
-                marker-start:url(#marker-piste-type-nordic);
-            }
+		.piste-type-nordic {
+			fill: none;
+			stroke: #c00000;
+			stroke-width: 1px;
+			stroke-dasharray: 3,0.5;
+			marker-start:url(#marker-piste-type-nordic);
+		}
 
             /* Power line */
             .power-line {

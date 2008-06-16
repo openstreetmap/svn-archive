@@ -86,8 +86,8 @@ class TestAltitudeServer(unittest.TestCase):
     self.assertEqual(getAltitude(-37.3,144.4), 519)
 
   def testGoogleChartURL(self):
-    # Tests if the server returns the expected Google Chart URL for the
-    # example routes.
+    # Tests if the server returns a Google Chart URL for an
+    # example routes. We will not check if it is correct.
 
     # First 4 points of route 2:
 
@@ -97,47 +97,87 @@ class TestAltitudeServer(unittest.TestCase):
       {'id' : 3, 'lat' : -37.791279, 'lon' : 145.013591},
       {'id' : 4, 'lat' : -37.791322, 'lon' : 145.029184}\
     ]
-    # For the horizontal scale, we need to know the horizontal distance 
-    # between the coordinates.
-    distances = []
-    for i in range(3):
-      distances.append(distance.distance(
-        (route[i]['lat'],route[i]['lon'] ),
-        (route[i+1]['lat'],route[i+1]['lon'] ),
-      ).kilometers) 
 
-    # First point will have coordinate 0, last point the sum of all distances
-    x_coordinates = [\
-      0,
-      distances[0],
-      distances[0] + distances[1],
-      sum(distances)
+    self.assert_(altitude_profile_gchart_function(route))
+
+  def testInterpolation(self):
+    # We'll use route 1 as an example
+
+    route = [\
+      {'id' : 1, 'lat' : -37.817460, 'lon' : 144.967450},
+      {'id' : 2, 'lat' : -37.806643, 'lon' : 144.962394}
     ]
-    
-    # y coordinates are the altitudes:
-    
-    y_coordinates = []
-    for i in range(4):
-      y_coordinates.append(getAltitude(route[i]['lat'],route[i]['lon']))        
 
-    # Create gchart
-    # http://code.google.com/apis/chart/#line_charts
-    # http://pygooglechart.slowchop.com/
-    chart = XYLineChart(325, 200, 
-                        x_range=(0,max(x_coordinates)), y_range=(min(y_coordinates),max(y_coordinates)))
-    chart.add_data(x_coordinates)
-    chart.add_data(y_coordinates)
+    # It's 1.28 kilometers long and only consists of two points.
+    
+    # We'll add one extra point to it.
+    # Its coordinate should be:
+    # lat = (-37.806643 + - 37.817460) / 2 = -37.812051499999995
+    # lon = (144.967450 + 144.962394) / 2 = 144.964922
 
-    chart.set_axis_labels(Axis.BOTTOM, ['0', str(max(x_coordinates))[0:4] + " km"])
-    
-    chart.set_axis_labels(Axis.LEFT, [str(min(y_coordinates)) + " m", str(max(y_coordinates)) + " m"])
-    
-    expected_url = chart.get_url() 
-    
-    # So let's test that:    
+    pair = route[:] # mind in Python there is a *big* difference between
+                    # a = b and a = b[:]. 
 
-    result = altitude_profile_gchart_function(route)
-    self.assertEqual(result['gchart_url'], expected_url) 
+    expected_result = [\
+      {'id' : 1, 'lat' : -37.817460, 'lon' : 144.967450},
+      {'id' : 2, 'lat' : -37.812051499999995, 'lon' : 144.964922},
+      {'id' : 3, 'lat' : -37.806643, 'lon' : 144.962394}
+    ]
+      
+    self.assertEqual(addPointsToPair(pair, 1), expected_result) 
+    
+    # Return route to its original state:
+    route = [\
+      {'id' : 1, 'lat' : -37.817460, 'lon' : 144.967450},
+      {'id' : 2, 'lat' : -37.806643, 'lon' : 144.962394}
+    ]
+
+    # The minimum resolution is the length of the route dived by 100.
+    # In this case 12.8 meters.
+  
+    origin = [route[0]['lat'], route[0]['lon']]
+    destination = route[1]['lat'], route[1]['lon']
+ 
+    expected_route_length =  distance.distance(origin, destination).kilometers
+
+    route_length = getRouteLength(route)
+
+    self.assertEqual(route_length, expected_route_length)
+
+    min_res = route_length / 100.   
+
+    # If two points are more than than 1.5 times this minimum resolution
+    # apart, they will be supplemented by extra points.
+    
+    # In this case, the distance between two points is the same as the
+    # length of the route.
+    
+    distance_between_points = route_length
+    
+    # The number of extra points is given by floor(distance / min_res) - 1,
+    # which should be 99
+
+    pair = route[:] 
+
+    number_of_extra_points = getNumberOfExtraPoints(pair, min_res)
+
+    #floor(distance_between_points / min_res) - 1
+
+    self.assertEqual(number_of_extra_points, 99)
+  
+    # Now we add these extra points    
+    interpolateRoute(route, 100)
+
+    # It should now have 101 points
+    self.assertEqual(len(route), 101)
+
+    # The 'id' elements should have been renumbered:
+    for i in range(101):
+      self.assertEqual(route[i]['id'], i + 1)
+
+    # We calculated the coordinates of the middle points above:
+    self.assertEqual(route[50]['lat'], -37.812051499999995)
+    self.assertEqual(route[50]['lon'], 144.964922)
 
 if __name__ == '__main__':
     unittest.main()

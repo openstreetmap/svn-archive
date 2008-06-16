@@ -14,6 +14,7 @@ from pygooglechart import XYLineChart, Axis
 
 def altitude_profile_function(route):
     answer = []
+    interpolateRoute(route, 100)
     for point in route:
       point['alt'] = getAltitude(point['lat'], point['lon'])
       answer.append(point)
@@ -105,13 +106,67 @@ def posFromLatLon(lat,lon):
 
   return int(pos) 
 
+def addPointsToPair(points, n):
+  # Adds n points between a pair of points (a and b).
+  [a,b] = points
+
+  # id fields must be corrected:
+  id_start = a['id']
+  b['id'] = b['id'] + n
+
+  for i in range(n):
+    points.insert(-1,{\
+      'id' : id_start + i + 1,
+      'lat' : a['lat'] + (b['lat'] - a['lat']) / (n + 1) * (i + 1),
+      'lon' : a['lon'] + (b['lon'] - a['lon']) / (n + 1) * (i + 1)
+    })
+  
+  return points
+
+def getRouteLength(route):
+    # Returns the length of the route in kilometers.
+    length = 0
+
+    for i in range(len(route) - 1):
+      origin = [route[i]['lat'], route[i]['lon']]
+      destination = route[i + 1]['lat'], route[i + 1]['lon']
+      length += distance.distance(origin, destination).kilometers
+
+    return length
+
+def getNumberOfExtraPoints(pair, min_res):
+    origin = [pair[0]['lat'], pair[0]['lon']]
+    destination = pair[1]['lat'], pair[1]['lon']
+    length = distance.distance(origin, destination).kilometers
+
+    return int(floor(length / min_res) - 1)
+
+def interpolateRoute(route, n):
+  # Adds extra points to the route, so that no points in the route
+  # are more than length_of_route / n apart. A higher value for n 
+  # means a higher resolution.
+  
+  # First calculate the length of the route
+  route_length = getRouteLength(route)
+  min_res = route_length / n 
+
+  # For each pair of points, add points in between if necessary:
+  for i in range(len(route) - 1):
+    pair = [route[i], route[i+1]]
+    number_of_extra_points = getNumberOfExtraPoints(pair, min_res)
+    addPointsToPair(pair, number_of_extra_points)
+    for j in range(len(pair) - 2): 
+      route.insert(-1, pair[j + 1])    
+
+    i = i + len(pair) - 2
+
 # Whether testing or runnins, always connect to the database
 
 db = connectToDatabase(database)
 
 if __name__ == '__main__':
   # Create server
-  server = SimpleXMLRPCServer(("localhost", 8000))
+  server = SimpleXMLRPCServer(("", 8000))
   server.register_introspection_functions()
 
   server.register_function(altitude_profile_function, 'altitude_profile')

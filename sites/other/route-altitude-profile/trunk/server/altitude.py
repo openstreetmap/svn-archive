@@ -14,9 +14,12 @@ from pygooglechart import XYLineChart, Axis
 
 def altitude_profile_function(route):
     answer = []
+    # print route
     interpolateRoute(route, 100)
+    # print route
     for point in route:
       point['alt'] = getAltitude(point['lat'], point['lon'])
+      # print str(point['id']) + " "  + str(point['alt'])
       answer.append(point)
 
     return answer
@@ -112,7 +115,7 @@ def addPointsToPair(points, n):
 
   # id fields must be corrected:
   id_start = a['id']
-  b['id'] = b['id'] + n
+  b['id'] = a['id'] + n + 1
 
   for i in range(n):
     points.insert(-1,{\
@@ -139,7 +142,7 @@ def getNumberOfExtraPoints(pair, min_res):
     destination = pair[1]['lat'], pair[1]['lon']
     length = distance.distance(origin, destination).kilometers
 
-    return int(floor(length / min_res) - 1)
+    return max(int(floor(length / min_res) - 1),0)
 
 def interpolateRoute(route, n):
   # Adds extra points to the route, so that no points in the route
@@ -151,14 +154,17 @@ def interpolateRoute(route, n):
   min_res = route_length / n 
 
   # For each pair of points, add points in between if necessary:
-  for i in range(len(route) - 1):
+  i = 0
+  while(i < len(route) - 1):
     pair = [route[i], route[i+1]]
     number_of_extra_points = getNumberOfExtraPoints(pair, min_res)
+    # print "Add " + str(number_of_extra_points) + " extra points after " + str(i)
     addPointsToPair(pair, number_of_extra_points)
-    for j in range(len(pair) - 2): 
-      route.insert(-1, pair[j + 1])    
 
-    i = i + len(pair) - 2
+    for j in range(len(pair) - 2):
+      route.insert(i + j + 1, pair[j+1])
+
+    i = i + len(pair) - 1 
 
 # Whether testing or runnins, always connect to the database
 

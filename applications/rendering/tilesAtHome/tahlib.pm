@@ -374,13 +374,13 @@ sub mergeOsmFiles
 
 sub keepLog
 {
-    my ($Process,$Action,$Message) = @_;
+    my ($Pid,$Process,$Action,$Message) = @_;
     my $Config = $main::Config;
     my $logFile = $Config->get("ProcessLogFile");
 
     open(my $fpLog, ">>$logFile");
     if ($fpLog) {
-	print $fpLog time()." [".$Config->get("ClientVersion")."] $Process $Action $Message\n";
+	print $fpLog time()." [".$Config->get("ClientVersion")."] $Pid $Process $Action $Message\n";
 	close $fpLog;
     }
 }

@@ -93,3 +93,7 @@ XmlStarletMaxDepth=20000
 # Set this to 1 if you want to clear the stopfile.txt on program start. 
 # may unintentionally clear stopfile.txt when (accidentally) running 2 instances
 AutoResetStopfile=0
+
+# Set this to 1 if you want to have som logs dump in ProcessLogFile
+ProcessLog=0
+ProcessLogFile="tah-process.log"

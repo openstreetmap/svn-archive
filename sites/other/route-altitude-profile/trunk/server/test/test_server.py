@@ -85,22 +85,8 @@ class TestAltitudeServer(unittest.TestCase):
     self.assertEqual(getAltitude(-36,144), 88)
     self.assertEqual(getAltitude(-37.3,144.4), 519)
 
-  def testGoogleChartURL(self):
-    # Tests if the server returns a Google Chart URL for an
-    # example routes. We will not check if it is correct.
-
-    # First 4 points of route 2:
-
-    route = [\
-      {'id' : 1, 'lat' : -37.794528, 'lon' : 144.989826},
-      {'id' : 2, 'lat' : -37.795407, 'lon' : 145.000048},
-      {'id' : 3, 'lat' : -37.791279, 'lon' : 145.013591},
-      {'id' : 4, 'lat' : -37.791322, 'lon' : 145.029184}\
-    ]
-
-    self.assert_(altitude_profile_gchart_function(route))
-
   def testInterpolation(self):
+    print "\nTest interpolation"
     # We'll use route 1 as an example
 
     route = [\
@@ -178,6 +164,22 @@ class TestAltitudeServer(unittest.TestCase):
     # We calculated the coordinates of the middle points above:
     self.assertEqual(route[50]['lat'], -37.812051499999995)
     self.assertEqual(route[50]['lon'], 144.964922)
+
+  def testGoogleChartURL(self):
+    print "\nTest Google Chart URL"
+    # Tests if the server returns a Google Chart URL for an
+    # example routes. We will not check if it is correct.
+
+    # First 4 points of route 2:
+
+    route = [\
+      {'id' : 1, 'lat' : -37.794528, 'lon' : 144.989826},
+      {'id' : 2, 'lat' : -37.795407, 'lon' : 145.000048},
+      {'id' : 3, 'lat' : -37.791279, 'lon' : 145.013591},
+      {'id' : 4, 'lat' : -37.791322, 'lon' : 145.029184}\
+    ]
+
+    self.assert_(altitude_profile_gchart_function(route))
 
 if __name__ == '__main__':
     unittest.main()

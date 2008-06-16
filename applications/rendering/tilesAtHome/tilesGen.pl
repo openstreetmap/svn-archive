@@ -271,14 +271,15 @@ elsif ($Mode eq "loop")
         if (getFault("nodataXAPI") > 0)
         {
             my $numfaults=getFault("nodataXAPI");
-            if ($numfaults >= 10)
+            if ($numfaults >= 20)
             {
-                cleanUpAndDie("10 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID); # allow XAPI more leeway
+                cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID); # allow XAPI more leeway
             }
             else
             {
-                $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192 seconds for a total of about 4 hours
+                $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192, 14400, 14400, 14400... seconds.
                 $sleepdelay=int($sleepdelay)+1;
+                $sleepdelay=14400 if ($sleepdelay > 14400);
                 talkInSleep($numfaults." times no XAPI data", $sleepdelay);
             }
         }

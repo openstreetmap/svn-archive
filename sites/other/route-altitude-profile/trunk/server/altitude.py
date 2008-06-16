@@ -16,6 +16,12 @@ def altitude_profile_function(route):
     return answer
 server.register_function(altitude_profile_function, 'altitude_profile')
 
-# Run the server's main loop
-server.serve_forever()
+if __name__ == '__main__':
+  # Run the server's main loop
+  try:
+    print 'started server...'
+    server.serve_forever()
+  except KeyboardInterrupt:
+    print '^C received, shutting down server'
+    server.socket.close()
 

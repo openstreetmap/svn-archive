@@ -103,7 +103,7 @@ if true ; then
 	make || exit -1
 	) || exit -1 
     cp export/osm2pgsql/osm2pgsql ${bin_path}
-    (cat export/osm2pgsql/default.style ; echo "node       poi          text")>${share_path}/default.style
+    cp export/osm2pgsql/default.style ${share_path}/default.style
 fi
 
 # ------------------------------------------------------------------

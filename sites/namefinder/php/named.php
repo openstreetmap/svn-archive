@@ -450,8 +450,12 @@ class named {
     }
 
     $this->description = $s;
+    $this->assignzoom();
+  }
 
-    $zoomlevels = array(
+  // --------------------------------------------------
+  function assignzoom() {
+    static $zoomlevels = array(
                         'default'=>16,
                         'water'=>13,
                         'school'=>17,
@@ -512,9 +516,8 @@ class named {
     if (! empty($this->direction)) { 
       $xml .= sprintf(" direction='%s'", htmlspecialchars($this->direction, ENT_QUOTES, 'UTF-8'));
     }
-    if (! empty($this->zoom)) {
-      $xml .= " zoom='{$this->zoom}'";
-    }
+    if (empty($this->zoom)) { $this->assignzoom(); }
+    $xml .= " zoom='{$this->zoom}'";
     $xml .= ">\n";
     if (! empty($this->description)) {
       // already htmlspecialchar

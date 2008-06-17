@@ -70,7 +70,6 @@ class OsmRenderBase:
   
   def getLayer(self, layernum):
     layerid = str(layernum)
-    #print "Getting layer for %s" % layernum
     layer = self.layers.get(layerid, None)
     if(not layer):
       # Create the image
@@ -81,7 +80,6 @@ class OsmRenderBase:
     return(layer)
 
   def getCtx(self, layernum):
-    #print "Getting context for %s" % layernum
     layer = self.getLayer(layernum)
     return(layer[1])
     
@@ -95,7 +93,6 @@ class OsmRenderBase:
     
     self.osm = parseOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,(256,256))  # create a projection for this tile
-    #self.ctx = cairo.Context(im)  # create a drawing context
 
     # Call the draw function
     self.draw(layer)
@@ -114,9 +111,6 @@ class OsmRenderBase:
     
     self.layers = {}
     
-    # Create the image
-    #im = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
-  
     # Get some OSM data for the area, and return which file it's stored in
     filename = GetOsmTileData(z,x,y)
     print "Got filename %s" % filename
@@ -124,7 +118,7 @@ class OsmRenderBase:
       return(None)
   
     # Render the map
-    self.Render(filename,x,y,z,'default')
+    self.Render(filename,x,y,z,mapLayer)
   
     out = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
     outCtx = cairo.Context(out)

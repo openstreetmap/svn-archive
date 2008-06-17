@@ -60,7 +60,6 @@ def HTMLColorToRGB(colorstring):
 def convert(colorstring):
   (r,g,b) = HTMLColorToRGB(colorstring)
   text = "%1.2f,%1.2f,%1.2f,%d" % (r,g,b,6)
-  print "Converting %s to %s" %(colorstring,text)
   return(text)
   
 metroColours = [
@@ -82,12 +81,17 @@ metroColours = [
   ('railway=station', '0,0,0,0'),
   ]
 
-def wayStyles(tags):
+stylesheets = {'underground':metroColours, 'tile':roadColours};
+
+def wayStyles(layer, tags):
   styles = []
-  for (ident, style) in metroColours: #roadColours:
+  stylesheet = stylesheets.get(layer, None)
+  if(stylesheet == None):
+    return(None)
+  
+  for (ident, style) in stylesheet: #roadColours:
     (tag,value) = ident.split('=')
     if(tags.get(tag,'default') == value):
-      print "matched %s"  % ident
       styles.append(style)
   if(not styles):
     styles.append('0.8,0.8,0.8,1') # default/debug
@@ -101,13 +105,13 @@ class RenderClass(OsmRenderBase):
     return(1,0.95,0.85,0.8)  #r,g,b,a background color
   
   # Draw a tile
-  def draw(self, layer):
-    if(layer == 'blank'):
+  def draw(self, mapLayer):
+    if(mapLayer == 'blank'):
       return
     # Ways
     for w in self.osm.ways.values():
       layeradd = 0
-      for style in wayStyles(w['t']):
+      for style in wayStyles(mapLayer, w['t']):
         (r,g,b, width) = style.split(",")
         width = int(width)
         

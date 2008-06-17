@@ -52,12 +52,20 @@
             // of several layers is also quite simple
             // Other defined layers are OpenLayers.Layer.OSM.Mapnik and OpenLayers.Layer.OSM.Maplint
             layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-            layerPyrender = new OpenLayers.Layer.OSM(
-                 "Pyrender",
+            
+            layerA = new OpenLayers.Layer.OSM(
+                 "Default",
                  "/tile/",
-	         {isBaseLayer:false, maxResolution:37}
+	             {isBaseLayer:false, maxResolution:37}
              );
-            map.addLayers([layerPyrender,layerTilesAtHome]);
+            layerB = new OpenLayers.Layer.OSM(
+                 "Underground",
+                 "/underground/",
+               {isBaseLayer:false, maxResolution:37}
+             );
+
+             
+            map.addLayers([layerA, layerB, layerTilesAtHome]);
 
             var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
             map.setCenter (lonLat, zoom);

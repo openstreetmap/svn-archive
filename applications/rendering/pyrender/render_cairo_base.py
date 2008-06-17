@@ -65,7 +65,7 @@ class OsmRenderBase:
   def imageBackgroundColour(self):
     return (0,0,0.5,0.5) # Override this function (r,g,b,a)
   
-  def draw(self):
+  def draw(self, layer):
     pass # Override this function
   
   def getLayer(self, layernum):
@@ -73,7 +73,6 @@ class OsmRenderBase:
     #print "Getting layer for %s" % layernum
     layer = self.layers.get(layerid, None)
     if(not layer):
-      print "Creating layer %s" % layerid
       # Create the image
       im = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
       ctx = cairo.Context(im)  # create a drawing context
@@ -99,7 +98,7 @@ class OsmRenderBase:
     #self.ctx = cairo.Context(im)  # create a drawing context
 
     # Call the draw function
-    self.draw()
+    self.draw(layer)
   def addBackground(self,ctx):
     # Fill with background color
     (r,g,b,a) = self.imageBackgroundColour()
@@ -107,7 +106,7 @@ class OsmRenderBase:
     ctx.rectangle(0, 0, 256, 256)
     ctx.fill()
 
-  def RenderTile(self, z,x,y, outputFile):
+  def RenderTile(self, z,x,y, mapLayer, outputFile=None):
     """Render an OSM tile
     z,x,y - slippy map tilename
     outputFile - optional file to save to
@@ -120,6 +119,7 @@ class OsmRenderBase:
   
     # Get some OSM data for the area, and return which file it's stored in
     filename = GetOsmTileData(z,x,y)
+    print "Got filename %s" % filename
     if(filename == None):
       return(None)
   
@@ -128,13 +128,12 @@ class OsmRenderBase:
   
     out = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
     outCtx = cairo.Context(out)
-    #self.addBackground(outCtx)
+    self.addBackground(outCtx)
     
     layerIDs = self.layers.keys()
     layerIDs.sort()
     for num in layerIDs:
       layer = self.layers[num]
-      print "Adding layer %s" % num
       #(im,ctx,num) = layer
       outCtx.set_source_surface(layer[0], 0, 0)
       outCtx.set_operator(cairo.OPERATOR_OVER)  # was: OPERATOR_SOURCE

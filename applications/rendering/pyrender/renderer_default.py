@@ -45,11 +45,49 @@ roadColours = [
   ('natural=water','0.1,0.1,0.8,0'),
   ]
 
+def HTMLColorToRGB(colorstring):
+    """ convert #RRGGBB to an (R, G, B) tuple """
+    colorstring = colorstring.strip()
+    if colorstring[0] == '#': colorstring = colorstring[1:]
+    if len(colorstring) != 6:
+        raise ValueError, "input #%s is not in #RRGGBB format" % colorstring
+    r, g, b = colorstring[:2], colorstring[2:4], colorstring[4:]
+    r, g, b = [int(n, 16) for n in (r, g, b)]
+    r, g, b = [float(n) / 256.0 for n in (r, g, b)]
+    return (r, g, b)
+
+
+def convert(colorstring):
+  (r,g,b) = HTMLColorToRGB(colorstring)
+  text = "%1.2f,%1.2f,%1.2f,%d" % (r,g,b,6)
+  print "Converting %s to %s" %(colorstring,text)
+  return(text)
+  
+metroColours = [
+  ('line=Bakerloo', convert('996633')),
+  ('line=Central', convert('CC3333')),
+  ('line=Circle', convert('FFCC00')),
+  ('line=District', convert('006633')),
+  ('line=EastLondon', convert('FF9900')),
+  ('line=HammersmithAndCity', convert('CC9999')),
+  ('line=Jubilee', convert('868F98')),
+  ('line=Metropolitan', convert('660066')),
+  ('line=Northern', convert('000000')),
+  ('line=Piccadilly', convert('000099')),
+  ('line=Victoria', convert('0099CC')),
+  ('line=WaterlooAndCity', convert('66CCCC')),
+  ('line=Tramlink', convert('808080')),
+  ('line=DLR', convert('8080FF')),
+  ('railway=rail', '0,0,0,1'),
+  ('railway=station', '0,0,0,0'),
+  ]
+
 def wayStyles(tags):
   styles = []
-  for (ident, style) in roadColours:
+  for (ident, style) in metroColours: #roadColours:
     (tag,value) = ident.split('=')
     if(tags.get(tag,'default') == value):
+      print "matched %s"  % ident
       styles.append(style)
   if(not styles):
     styles.append('0.8,0.8,0.8,1') # default/debug
@@ -63,7 +101,9 @@ class RenderClass(OsmRenderBase):
     return(1,0.95,0.85,0.8)  #r,g,b,a background color
   
   # Draw a tile
-  def draw(self):
+  def draw(self, layer):
+    if(layer == 'blank'):
+      return
     # Ways
     for w in self.osm.ways.values():
       layeradd = 0

@@ -100,7 +100,7 @@ metroColours = [
 
 stylesheets = {
   'underground':metroColours,
-  'tile':roadColours,
+  'default':roadColours,
   'water':waterColours,
   'power':powerColours,
   };
@@ -109,7 +109,7 @@ def wayStyles(layer, tags):
   styles = []
   stylesheet = stylesheets.get(layer, None)
   if(stylesheet == None):
-    return(None)
+    return([])
   
   for (ident, style) in stylesheet: #roadColours:
     (tag,value) = ident.split('=')

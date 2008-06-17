@@ -45,6 +45,23 @@ roadColours = [
   ('natural=water','0.1,0.1,0.8,0'),
   ]
 
+waterColours = [
+  ('natural=water','0.1,0.1,0.8,0'),
+  ('waterway=river','0.1,0.1,0.8,8'),
+  ('waterway=riverbank','0.1,0.1,0.8,3'),
+  ('waterway=canal','0.1,0.1,0.8,6'),
+  ('waterway=aqueduct','0.1,0.1,0.8,6'),
+  ('waterway=drain','0.1,0.1,0.8,2'),
+  ('waterway=ditch','0.1,0.1,0.8,2'),
+  ('natural=coastline','0.1,0.1,0.8,6'),
+  ]
+
+powerColours = [
+  ('power=line','0,0,0,8'),
+  ('power=sub_station','0,0,0,0'),
+  ('power=substation','1,0,0,0'), # debug colour to show misspelling!
+  ]
+  
 def HTMLColorToRGB(colorstring):
     """ convert #RRGGBB to an (R, G, B) tuple """
     colorstring = colorstring.strip()
@@ -81,7 +98,12 @@ metroColours = [
   ('railway=station', '0,0,0,0'),
   ]
 
-stylesheets = {'underground':metroColours, 'tile':roadColours};
+stylesheets = {
+  'underground':metroColours,
+  'tile':roadColours,
+  'water':waterColours,
+  'power':powerColours,
+  };
 
 def wayStyles(layer, tags):
   styles = []
@@ -97,7 +119,7 @@ def wayStyles(layer, tags):
     styles.append('0.8,0.8,0.8,1') # default/debug
   return(styles)  
 
-
+# TODO: these need to be static images, if we use them at all
 backgrounds = {
   'parchment': (1.0,0.95,0.85,1),
   'white': (1,1,1,1),

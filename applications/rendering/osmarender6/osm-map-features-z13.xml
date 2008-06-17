@@ -153,6 +153,11 @@
         <rule e="way" k="military" v="*">
             <area class='military-area' />
         </rule>
+        <rule e="way" k="landuse" v="military">
+             <rule e="way" k="military" v="~">
+                 <area class='military-area' />
+             </rule>
+        </rule>
                      
         <!-- Airfields and airports -->
         <rule e="way" k="aeroway" v="runway">

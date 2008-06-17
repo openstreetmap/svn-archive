@@ -121,10 +121,13 @@
             <area class='building-block no-bezier'/>
         </rule>
         <rule e="way" k="military" v="*">
-            <area class='military-area'/> 
+            <area class='military-area' /> 
         </rule>
-                            
-
+        <rule e="way" k="landuse" v="military">
+             <rule e="way" k="military" v="~"> 
+                 <area class='military-area' />
+             </rule>                           
+        </rule>
 
         <!-- Airfields and airports -->
         <rule e="way" k="aeroway" v="runway">
@@ -133,7 +136,6 @@
         <rule e="way" k="aeroway" v="taxiway">
             <line class='aeroway-taxiway-casing'/>
         </rule>
-
 
         <!-- Waterways -->
         <rule e="way" k="waterway" v="riverbank">
@@ -175,7 +177,6 @@
         <rule e="way" k="landuse" v="basin">
             <area class='natural-water' />
         </rule>
-
 
         <!-- Linear casings -->
         <rule e="way" k="tunnel" v="~|no">

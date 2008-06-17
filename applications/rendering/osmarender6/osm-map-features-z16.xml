@@ -173,6 +173,11 @@
         <rule e="way" k="military" v="*">
              <area class='military-area' />
         </rule>
+        <rule e="way" k="landuse" v="military">
+             <rule e="way" k="military" v="~">
+                 <area class='military-area' />
+             </rule>
+        </rule>
 
 	<!-- access rules for parking -->
 	<rule e="way" k="amenity" v="parking">
@@ -2934,7 +2939,7 @@
         </svg:pattern>
 
         <svg:pattern id="military-pattern" x="0" y="0" width="500" height="500" patternUnits="userSpaceOnUse" patternTransform="scale(0.01)">
-           <svg:rect width="505" height="505" x="0" y="0" fill="#969632" />
+           <svg:rect width="510" height="510" x="0" y="0" fill="#969632" />
            <svg:path fill="#505000" d="M 311.4875,112.4725 L 240.86574,112.4725 L 219.18975,100.81875 L 219.18975,67.95515 L 358.10253,55.13602 L 358.10253,98.02185 L 311.4875,107.11177 L 311.4875,112.4725 z " />
            <svg:path fill="#505000" d="M 86.10386,157.81856 L 404.48447,158.3883 L 404.43115,99.18722 L 313.11903,119.23168 L 180.26621,119.23168 L 86.10386,144.40379 C 80.55682,146.64725 78.71816,157.81856 86.10386,157.81856 z " />
            <svg:path fill="#505000" d="M 176.69134,184.53979 C 176.69131,195.84684 167.54017,205.02094 156.23316,205.04931 C 144.92615,205.07768 135.72909,195.94962 135.67232,184.64271 C 135.61555,173.33581 144.72048,164.11585 156.02721,164.03068 C 167.33393,163.94551 176.57673,173.02726 176.6903,184.33373" />

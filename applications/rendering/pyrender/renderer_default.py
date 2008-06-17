@@ -28,6 +28,8 @@ roadColours = [
   ('highway=motorway','0.5,0.5,1,9'),
   ('highway=motorway_link','0,0,0,13'),
   ('highway=motorway_link','0.5,0.5,1,9'),
+  ('highway=trunk','0,0,0,10'),    # primary casing
+  ('highway=trunk','1,0.5,0.5,6'), # primary core
   ('highway=primary','0,0,0,10'),    # primary casing
   ('highway=primary','1,0.5,0.5,6'), # primary core
   ('highway=secondary','0,0,0,8'),   # secondary casing
@@ -98,11 +100,46 @@ metroColours = [
   ('railway=station', '0,0,0,0'),
   ]
 
+cycleColours = [
+  #tag=value:'r,g,b,width' with r,g,b between [0,1]
+  #a width of 0 means filling an area with a color
+  ('highway=footway','0.4,0,0,2'),
+  ('highway=cycleway','0,0.8,0,5'),
+  ('highway=bridleway','0,0.8,0,5'),
+  ('highway=residential','0.6,0.6,0.6,5'),
+  ('highway=unclassified','0.6,0.6,0.6,5'),
+  ('highway=tertiary','0.6,0.6,0.6,6'),
+  ('highway=secondary','0.6,0.6,0.6,6'),
+  ('highway=primary','0.6,0.6,0.6,7'),
+  ('highway=trunk','0.6,0.6,0.6,8'),
+  ('highway=motorway','0.6,0.6,0.6,9'),
+  ('cycleway=lane','0,0.8,0,3'),
+  ('cycleway=track','0,0.8,0,3'),
+  ('cycleway=opposite_lane','0,0.8,0,3'),
+  ('cycleway=opposite_track','0,0.8,0,3'),
+  ('cycleway=opposite','0,0.8,0,3'),
+  ('ncn_ref=*','1,0,0,5'),
+  ('rcn_ref=*','1,0,0.3,5'),
+  ('ncn=*','1,0,0,5'),
+  ('rcn=*','1,0,0.3,5'),
+  ]
+
+landuseColours = [
+  ('landuse=*', '0.6,0.6,0.6,0'),
+  ]
+
+boundaryColours = [
+  ('boundary=*', '0.6,0,0.6,2'),
+  ]
+  
 stylesheets = {
   'underground':metroColours,
   'default':roadColours,
   'water':waterColours,
   'power':powerColours,
+  'cycle':cycleColours,
+  'landuse':landuseColours,
+  'boundaries':boundaryColours,
   };
 
 def wayStyles(layer, tags):
@@ -114,6 +151,8 @@ def wayStyles(layer, tags):
   for (ident, style) in stylesheet: #roadColours:
     (tag,value) = ident.split('=')
     if(tags.get(tag,'default') == value):
+      styles.append(style)
+    elif((value == '*') and (tags.get(tag, None) != None)):
       styles.append(style)
   if(not styles):
     styles.append('0.8,0.8,0.8,1') # default/debug

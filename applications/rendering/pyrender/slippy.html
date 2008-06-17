@@ -77,21 +77,49 @@
 	             {
                isBaseLayer:false,
                maxResolution:37,
-               visibility:true
-               }
-             );
+               visibility:true,
+               border:0
+               });
             layerB = new OpenLayers.Layer.OSM(
                  "Underground",
                  "/underground/",
                {
                isBaseLayer:false,
                maxResolution:37,
+               border:0,
                visibility:false
-               }
-             );
-
-             
-            map.addLayers([layerA, layerB, layerBase1,layerBase2,layerBase3,layerBase4,layerBase5, layerTilesAtHome]);
+               });
+            layerC = new OpenLayers.Layer.OSM(
+                 "Water",
+                 "/water/",
+               {
+               isBaseLayer:false,
+               border:0,
+               maxResolution:37,
+               visibility:false
+               });
+            layerD = new OpenLayers.Layer.OSM(
+                 "Power",
+                 "/power/",
+               {
+               isBaseLayer:false,
+               maxResolution:37,
+               border:0,
+               visibility:false
+               });
+               
+            // TODO: javascript arrays!
+            map.addLayers([
+              layerA,
+              layerB,
+              layerC,
+              layerD,
+              layerBase1,
+              layerBase2,
+              layerBase3,
+              layerBase4,
+              layerBase5,
+              layerTilesAtHome]);
 
             var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
             map.setCenter (lonLat, zoom);

@@ -66,7 +66,7 @@ class tileServer(BaseHTTPRequestHandler):
       # Render the tile
       print 'Request for %d,%d at zoom %d, layer %s' % (x,y,z,layer)
       renderer = RenderModule.RenderClass()
-      pngData = renderer.RenderTile(z,x,y, None)
+      pngData = renderer.RenderTile(z,x,y, layer)
       
       if(pngData == None):
         print "Not found"

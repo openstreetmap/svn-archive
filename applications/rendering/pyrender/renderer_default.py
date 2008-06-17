@@ -63,6 +63,10 @@ powerColours = [
   ('power=sub_station','0,0,0,0'),
   ('power=substation','1,0,0,0'), # debug colour to show misspelling!
   ]
+
+buildingColours = [
+  ('building=*','0,0,0,0'),
+  ]
   
 def HTMLColorToRGB(colorstring):
     """ convert #RRGGBB to an (R, G, B) tuple """
@@ -131,7 +135,20 @@ landuseColours = [
 boundaryColours = [
   ('boundary=*', '0.6,0,0.6,2'),
   ]
-  
+
+nonameColours = [
+  ('name=~', '0.8,0,0,3'),
+  ]
+   
+unfinishedColours = [
+  ('todo=*', '0.8,0,0,3'),
+  ('to_do=*', '0.8,0,0,3'),
+  ('fixme=*', '0.8,0,0,3'),
+  ('fix_me=*', '0.8,0,0,3'),
+  ('note=*', '0,0.8,0,3'),
+  ('notes=*', '0,0.8,0,3'),
+  ]
+
 stylesheets = {
   'underground':metroColours,
   'default':roadColours,
@@ -140,6 +157,9 @@ stylesheets = {
   'cycle':cycleColours,
   'landuse':landuseColours,
   'boundaries':boundaryColours,
+  'buildings':buildingColours,
+  'noname':nonameColours,
+  'unfinished':unfinishedColours,
   };
 
 def wayStyles(layer, tags):
@@ -153,6 +173,8 @@ def wayStyles(layer, tags):
     if(tags.get(tag,'default') == value):
       styles.append(style)
     elif((value == '*') and (tags.get(tag, None) != None)):
+      styles.append(style)
+    elif((value == '~') and (tags.get(tag, None) == None)):
       styles.append(style)
   if(not styles):
     styles.append('0.8,0.8,0.8,1') # default/debug

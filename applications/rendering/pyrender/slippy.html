@@ -53,73 +53,47 @@
             // Other defined layers are OpenLayers.Layer.OSM.Mapnik and OpenLayers.Layer.OSM.Maplint
             layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 
-            new OpenLayers.Layer
+            var baseColours = new Array(
+              "white",
+              "black",
+              "parchment",
+              "blue",
+              "green"
+              );
+            for(loop1 in baseColours)
+            {
+              baseLayerObject = new OpenLayers.Layer.OSM(
+                  ""+baseColours[loop1],
+                  "/"+baseColours[loop1]+"/",
+                {isBaseLayer:true,
+                  border:0});
+              map.addLayer(baseLayerObject);
+            }
             
-            layerBase1 = new OpenLayers.Layer.OSM(
-                 "Parchment", "/parchment/",
-               {isBaseLayer:true});
-            layerBase2 = new OpenLayers.Layer.OSM(
-                 "White", "/white/",
-               {isBaseLayer:true});
-            layerBase3 = new OpenLayers.Layer.OSM(
-                 "Black", "/black/",
-               {isBaseLayer:true});
-            layerBase4 = new OpenLayers.Layer.OSM(
-                 "Blue", "/blue/",
-               {isBaseLayer:true});
-            layerBase5 = new OpenLayers.Layer.OSM(
-                 "Green", "/green/",
-               {isBaseLayer:true});
-            
-            layerA = new OpenLayers.Layer.OSM(
-                 "Default",
-                 "/tile/",
-	             {
-               isBaseLayer:false,
-               maxResolution:37,
-               visibility:true,
-               border:0
-               });
-            layerB = new OpenLayers.Layer.OSM(
-                 "Underground",
-                 "/underground/",
-               {
-               isBaseLayer:false,
-               maxResolution:37,
-               border:0,
-               visibility:false
-               });
-            layerC = new OpenLayers.Layer.OSM(
-                 "Water",
-                 "/water/",
-               {
-               isBaseLayer:false,
-               border:0,
-               maxResolution:37,
-               visibility:false
-               });
-            layerD = new OpenLayers.Layer.OSM(
-                 "Power",
-                 "/power/",
-               {
-               isBaseLayer:false,
-               maxResolution:37,
-               border:0,
-               visibility:false
-               });
-               
-            // TODO: javascript arrays!
-            map.addLayers([
-              layerA,
-              layerB,
-              layerC,
-              layerD,
-              layerBase1,
-              layerBase2,
-              layerBase3,
-              layerBase4,
-              layerBase5,
-              layerTilesAtHome]);
+            var layerNames = new Array(
+              "default",
+              "underground",
+              "water",
+              "power"
+              );
+
+            var first = true;
+            for (loop2 in layerNames)
+            {
+              layerObject = new OpenLayers.Layer.OSM(
+                  "" + layerNames[loop2],
+                  "/"+layerNames[loop2]+"/",
+                {
+                isBaseLayer:false,
+                maxResolution:37,
+                visibility:first,
+                border:0
+                });
+            map.addLayer(layerObject);
+            first = false;
+            }
+
+            map.addLayer(layerTilesAtHome);
 
             var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
             map.setCenter (lonLat, zoom);

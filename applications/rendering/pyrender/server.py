@@ -64,7 +64,7 @@ class tileServer(BaseHTTPRequestHandler):
       y = int(y)
       
       # Render the tile
-      print 'Request for %d,%d at zoom %d, layer %s' % (x,y,z,layer)
+      print 'z%d: %d,%d - %s' % (z,x,y,layer)
       renderer = RenderModule.RenderClass()
       pngData = renderer.RenderTile(z,x,y, layer)
       

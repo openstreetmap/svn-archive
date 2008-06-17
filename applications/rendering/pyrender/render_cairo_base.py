@@ -62,7 +62,7 @@ class proj:
 
 class OsmRenderBase:
   
-  def imageBackgroundColour(self):
+  def imageBackgroundColour(self, mapLayer=None):
     return (0,0,0.5,0.5) # Override this function (r,g,b,a)
   
   def draw(self, layer):
@@ -96,9 +96,9 @@ class OsmRenderBase:
 
     # Call the draw function
     self.draw(layer)
-  def addBackground(self,ctx):
+  def addBackground(self,ctx, mapLayer):
     # Fill with background color
-    (r,g,b,a) = self.imageBackgroundColour()
+    (r,g,b,a) = self.imageBackgroundColour(mapLayer)
     ctx.set_source_rgba(r,g,b,a)
     ctx.rectangle(0, 0, 256, 256)
     ctx.fill()
@@ -113,7 +113,6 @@ class OsmRenderBase:
     
     # Get some OSM data for the area, and return which file it's stored in
     filename = GetOsmTileData(z,x,y)
-    print "Got filename %s" % filename
     if(filename == None):
       return(None)
   
@@ -122,7 +121,7 @@ class OsmRenderBase:
   
     out = cairo.ImageSurface (cairo.FORMAT_ARGB32, 256, 256)
     outCtx = cairo.Context(out)
-    self.addBackground(outCtx)
+    self.addBackground(outCtx, mapLayer)
     
     layerIDs = self.layers.keys()
     layerIDs.sort()

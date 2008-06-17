@@ -98,16 +98,25 @@ def wayStyles(layer, tags):
   return(styles)  
 
 
+backgrounds = {
+  'parchment': (1.0,0.95,0.85,1),
+  'white': (1,1,1,1),
+  'black': (0,0,0,1),
+  'blue': (0.8,0.8,1,1),
+  'green': (0.8,1,0.8,1),
+  }
+
 class RenderClass(OsmRenderBase):
   
   # Specify the background for new tiles
-  def imageBackgroundColour(self):
-    return(1,0.95,0.85,0.8)  #r,g,b,a background color
+  def imageBackgroundColour(self, mapLayer=None):
+    return(backgrounds.get(mapLayer, (0,0,0,0)))
   
   # Draw a tile
   def draw(self, mapLayer):
-    if(mapLayer == 'blank'):
+    if(backgrounds.get(mapLayer, None) != None):
       return
+    
     # Ways
     for w in self.osm.ways.values():
       layeradd = 0

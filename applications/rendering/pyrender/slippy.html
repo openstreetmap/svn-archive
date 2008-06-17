@@ -55,13 +55,21 @@
 
             new OpenLayers.Layer
             
-            layerBase = new OpenLayers.Layer.OSM(
-                 "Base",
-                 "/blank/",
-               {
-               isBaseLayer:true
-               }
-             );
+            layerBase1 = new OpenLayers.Layer.OSM(
+                 "Parchment", "/parchment/",
+               {isBaseLayer:true});
+            layerBase2 = new OpenLayers.Layer.OSM(
+                 "White", "/white/",
+               {isBaseLayer:true});
+            layerBase3 = new OpenLayers.Layer.OSM(
+                 "Black", "/black/",
+               {isBaseLayer:true});
+            layerBase4 = new OpenLayers.Layer.OSM(
+                 "Blue", "/blue/",
+               {isBaseLayer:true});
+            layerBase5 = new OpenLayers.Layer.OSM(
+                 "Green", "/green/",
+               {isBaseLayer:true});
             
             layerA = new OpenLayers.Layer.OSM(
                  "Default",
@@ -83,7 +91,7 @@
              );
 
              
-            map.addLayers([layerA, layerB, layerBase, layerTilesAtHome]);
+            map.addLayers([layerA, layerB, layerBase1,layerBase2,layerBase3,layerBase4,layerBase5, layerTilesAtHome]);
 
             var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
             map.setCenter (lonLat, zoom);

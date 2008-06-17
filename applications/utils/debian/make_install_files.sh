@@ -94,7 +94,7 @@ echo "---> color255"
 cp color255/color255 ${bin_path}
 
 # ------------------------------------------------------------------
-if false ; then
+if true ; then
     echo ""
     echo "---> osm2pqsql"
     (

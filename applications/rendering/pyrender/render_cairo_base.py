@@ -36,7 +36,6 @@ class proj:
     tx,ty,tz is the slippy map tile number.  
     to is the (width,height) of an image to render onto
     """ 
-    #(S,W,N,E) = tileEdges(tx,ty,tz)
     dd = 1.0 / float(numTiles(tz))
     self.to = to
     self.N = ty * dd
@@ -52,8 +51,6 @@ class proj:
     self.y2 = to[1]
     self.dx = self.x2 - self.x1
     self.dy = self.y2 - self.y1
-    #print "Creating proj %f to %f (%f)" % (self.W,self.E,self.dLon)
-    #print "To %f + %f" % (self.x1,self.dx)
   def project(self,lat,lon):
     """Project lat/long (in degrees) into pixel position on the tile"""
     pLat = (lat - self.S) / self.dLat
@@ -92,7 +89,6 @@ class OsmRenderBase:
     tx,ty,tz - the tile number
     layer - which map style to use
     """
-    
     self.osm = parseOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,(256,256))  # create a projection for this tile
 
@@ -108,6 +104,7 @@ class OsmRenderBase:
   def RenderTile(self, z,x,y, mapLayer, outputFile=None):
     """Render an OSM tile
     z,x,y - slippy map tilename
+    mapLayer - what style of map to draw
     outputFile - optional file to save to
     otherwise returns PNG image data"""
     

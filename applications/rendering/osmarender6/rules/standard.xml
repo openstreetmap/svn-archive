@@ -249,7 +249,7 @@
         <layer name="Roads and Paths">
 
             <!-- Highway casings -->
-            <rule e="segment|way" k="tunnel" v="~|no">
+            <rule e="segment|way" k="tunnel" v="~|no|false">
                 <rule e="segment|way" k="highway" v="pedestrian">
                     <line class='highway-pedestrian-casing' />
                 </rule>
@@ -302,7 +302,7 @@
             </rule>
 
             <!-- Paths not in tunnels -->
-            <rule e="segment|way" k="tunnel" v="~|no">
+            <rule e="segment|way" k="tunnel" v="~|no|false">
                 <rule e="segment|way" k="highway" v="footway|steps">
                     <line class='highway-footway' />
                     <text k="ref" class='highway-footway-ref' dx='2px' dy='-2px' />

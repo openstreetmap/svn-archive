@@ -174,7 +174,7 @@
 
 
         <!-- Highway casings -->
-        <rule e="way" k="tunnel" v="~|no">
+        <rule e="way" k="tunnel" v="~|no|false">
 			<rule e="way" k="highway" v="raceway">
 				<rule e="way" k="use_status" v="~">
 					<line class='highway-raceway-casing' />
@@ -229,7 +229,7 @@
         </rule>
 
         <!-- Paths not in tunnels -->
-        <rule e="way" k="tunnel" v="~|no">
+        <rule e="way" k="tunnel" v="~|no|false">
             <rule e="way" k="highway" v="footway|steps">
                 <line class='highway-core highway-footway' />
             </rule>

@@ -34,7 +34,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 		<condition k="highway" v="trunk"/>
 		<line width="3" realwidth="6" colour="#7fc97f"/>
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>1000000</scale_max>
 	</rule>
 
 	<rule>
@@ -69,7 +69,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
         <condition k="highway" v="tertiary"/>
         <line width="2" realwidth="5" colour="#f7f496"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>

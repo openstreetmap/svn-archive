@@ -56,7 +56,7 @@
             var baseColours = new Array(
               "white",
               "black",
-              "parchment",
+              "canvas",
               "blue",
               "green"
               );
@@ -64,7 +64,7 @@
             {
               baseLayerObject = new OpenLayers.Layer.OSM(
                   ""+baseColours[loop1],
-                  "/"+baseColours[loop1]+"/",
+                  "/blank/"+baseColours[loop1]+"/",
                 {isBaseLayer:true,
                   border:0});
               map.addLayer(baseLayerObject);

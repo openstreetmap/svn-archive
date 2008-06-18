@@ -53,7 +53,7 @@ roadColours = [
 waterColours = [
   ('natural=water','0.1,0.1,0.8,0'),
   ('waterway=river','0.1,0.1,0.8,8'),
-  ('waterway=riverbank','0.1,0.1,0.8,0'),
+  ('waterway=riverbank','0.1,0.1,0.8,3'),
   ('waterway=canal','0.1,0.1,0.8,6'),
   ('waterway=stream', '0.1,0.1,0.8,2'),
   ('waterway=aqueduct','0.1,0.1,0.8,6'),
@@ -185,26 +185,14 @@ def wayStyles(layer, tags):
     styles.append('0.8,0.8,0.8,1') # default/debug
   return(styles)  
 
-# TODO: these need to be static images, if we use them at all
-backgrounds = {
-  'parchment': (1.0,0.95,0.85,1),
-  'white': (1,1,1,1),
-  'black': (0,0,0,1),
-  'blue': (0.8,0.8,1,1),
-  'green': (0.8,1,0.8,1),
-  }
-
 class RenderClass(OsmRenderBase):
   
   # Specify the background for new tiles
   def imageBackgroundColour(self, mapLayer=None):
-    return(backgrounds.get(mapLayer, (0,0,0,0)))
+    return(0,0,0,0)
   
   # Draw a tile
   def draw(self, mapLayer):
-    if(backgrounds.get(mapLayer, None) != None):
-      return
-    
     # Ways
     for w in self.osm.ways.values():
       layeradd = 0
@@ -251,7 +239,7 @@ if(__name__ == '__main__'):
   a = RenderClass()
   filename = "sample_"+__file__+".png"
   # a.RenderTile(15, 16372, 10895, filename) # london
-  a.RenderTile(15, 16363, 10886, filename) # Multi-layer junction
+  a.RenderTile(14, 8166, 5447, 'default', filename) # Z14
   
   print "------------------------------------"
   print "Saved image to " + filename

@@ -52,6 +52,8 @@ class proj:
     self.y2 = to[1]
     self.dx = self.x2 - self.x1
     self.dy = self.y2 - self.y1
+    #print "Creating proj %f to %f (%f)" % (self.W,self.E,self.dLon)
+    #print "To %f + %f" % (self.x1,self.dx)
   def project(self,lat,lon):
     """Project lat/long (in degrees) into pixel position on the tile"""
     pLat = (lat - self.S) / self.dLat

@@ -36,6 +36,8 @@ def OsmMerge(dest, sources):
   node_tags = {}
   nodes = {}
   
+  divisor = float(2 ** 31)
+  
   # Trawl through the source files, putting everything into memory
   for source in sources:
     osm = parseOsm(source)
@@ -53,21 +55,22 @@ def OsmMerge(dest, sources):
   f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
   f.write('<osm version="0.5" generator="OsmMerge">\n')
   
-  for n,data in nodes.items():
-    (lat,lon) = nodes[n]
-    f.write('<node id="%d" lat="%f" lon="%f">' % (n,lat,lon))
-    tags = node_tags.get(n, None)
-    if(tags):
-      for k,v in tags.items():
-        f.write('\n<tag k=%s v=%s/>' % (quoteattr(k),quoteattr(v)))
-    f.write("</node>\n")
+  if(0):
+	  for n,data in nodes.items():
+	    (lat,lon) = nodes[n]
+	    f.write('<node id="%d" lat="%f" lon="%f">' % (n,lat,lon))
+	    tags = node_tags.get(n, None)
+	    if(tags):
+	      for k,v in tags.items():
+	        f.write('\n<tag k=%s v=%s/>' % (quoteattr(k),quoteattr(v)))
+	    f.write("</node>\n")
     
   for id,way in ways.items():
     f.write('<way id="%d">' % id)
     for k,v in way['t'].items():
       f.write('\n<tag k=%s v=%s/>' % (quoteattr(k),quoteattr(v)))
     for n in way['n']:
-      f.write('\n<nd ref="%d"/>' % n)
+      f.write("\n<nd id='%d' x='%1.0f' y='%1.0f'/>" % (n['id'], n['lat'] * divisor, n['lon'] * divisor))
     f.write("</way>\n")
   
   f.write("</osm>\n")

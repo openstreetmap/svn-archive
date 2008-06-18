@@ -216,7 +216,8 @@ class RenderClass(OsmRenderBase):
         count = 0
         for n in w['n']: 
           # project that into image coordinates
-          (x,y) = self.proj.project(n['lat'], n['lon'])
+          (x,y) = self.proj.project(float(n['lat']), float(n['lon']))
+          #print "%f,%f -> %f, %f" % (n['lat'], n['lon'], x,y)
 
           # draw lines on the image
           if(count == 0):

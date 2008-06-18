@@ -17,8 +17,8 @@
    sodipodi:docname="readme.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/owhite/OpenStreetmap/pyrender/readme.png"
-   inkscape:export-xdpi="175.27626"
-   inkscape:export-ydpi="175.27626"
+   inkscape:export-xdpi="175.27788"
+   inkscape:export-ydpi="175.27788"
    sodipodi:modified="TRUE">
   <defs
      id="defs4" />
@@ -33,7 +33,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.97916667"
-     inkscape:cx="165.07265"
+     inkscape:cx="-38.651036"
      inkscape:cy="849.85657"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -60,7 +60,7 @@
      id="layer1">
     <path
        style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 657.35491,110.74516 L 736.68766,110.74516"
+       d="M 657.88228,110.74516 L 779.05388,110.74516"
        id="path8224" />
     <path
        style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
@@ -111,7 +111,7 @@
          y="135.25581"
          x="46.723389"
          height="23.999996"
-         width="93.957436"
+         width="130.72339"
          id="rect5146"
          style="opacity:1;color:#000000;fill:#f3ffec;fill-opacity:1;fill-rule:nonzero;stroke:#40bb07;stroke-width:2.19999981;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
       <text
@@ -143,7 +143,7 @@
            y="151.59624"
            x="52.085114"
            id="tspan2188"
-           sodipodi:role="line">osmrender.py</tspan></text>
+           sodipodi:role="line">renderer_default.py</tspan></text>
     </g>
     <g
        id="g7138"
@@ -246,11 +246,11 @@
            y="213.89409"
            x="314.04254"
            id="tspan2204"
-           sodipodi:role="line">osmTileData.py, downloads and caches</tspan><tspan
+           sodipodi:role="line">tileData.py, downloads and caches</tspan><tspan
            id="tspan2206"
            y="228.89409"
            x="314.04254"
-           sodipodi:role="line">z15 tiles, and is able to merge those</tspan><tspan
+           sodipodi:role="line">z15 tiles, and will later merge those</tspan><tspan
            id="tspan2208"
            y="243.89409"
            x="314.04254"
@@ -302,9 +302,9 @@
     </g>
     <g
        id="g7187"
-       transform="translate(106.21277,-103.14894)">
+       transform="translate(90.893621,-106.21277)">
       <path
-         transform="translate(395.74468,-187.91489)"
+         transform="matrix(2.5910058,0,0,2.5940444,97.163533,-817.93043)"
          d="M 273.1915,406.40472 L 253.6748,411.55202 L 252.68413,431.71175 L 238.46809,417.38345 L 220.51392,426.60537 L 225.81458,407.12976 L 208.85107,396.19196 L 228.36777,391.04466 L 229.35844,370.88493 L 243.57448,385.21323 L 261.52865,375.99131 L 256.22799,395.46691 L 273.1915,406.40472 z "
          inkscape:randomized="0"
          inkscape:rounded="0"
@@ -317,19 +317,19 @@
          sodipodi:cx="241.02129"
          sodipodi:sides="6"
          id="path6149"
-         style="opacity:1;color:#000000;fill:#feffec;fill-opacity:1;fill-rule:nonzero;stroke:#b4bb07;stroke-width:2.20000005;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         style="opacity:1;color:#000000;fill:#feffec;fill-opacity:1;fill-rule:nonzero;stroke:#b4bb07;stroke-width:0.84859371;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
          sodipodi:type="star" />
       <text
          sodipodi:linespacing="125%"
          id="text2214"
-         y="217.75748"
-         x="627.8158"
+         y="221.84259"
+         x="671.73071"
          style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
          xml:space="preserve"><tspan
-           y="217.75748"
-           x="627.8158"
-           id="tspan2216"
-           sodipodi:role="line">API</tspan></text>
+           y="221.84259"
+           x="671.73071"
+           sodipodi:role="line"
+           id="tspan2234">Tile data server</tspan></text>
     </g>
     <g
        id="g8226"
@@ -437,36 +437,21 @@
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="333.95746"
-       y="89.298363"
+       x="320.68088"
+       y="92.36219"
        id="text8242"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan8244"
-         x="333.95746"
-         y="89.298363">OSM</tspan><tspan
+         x="320.68088"
+         y="92.36219">OSM-like</tspan><tspan
          sodipodi:role="line"
-         x="333.95746"
-         y="104.29836"
+         x="320.68088"
+         y="107.36219"
          id="tspan8246">XML</tspan><tspan
          sodipodi:role="line"
-         x="333.95746"
-         y="119.29836"
+         x="320.68088"
+         y="122.36219"
          id="tspan8248">files</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="680.17023"
-       y="88.277077"
-       id="text8250"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan8252"
-         x="680.17023"
-         y="88.277077">OSM</tspan><tspan
-         sodipodi:role="line"
-         x="680.17023"
-         y="103.27708"
-         id="tspan8254">API</tspan></text>
   </g>
 </svg>

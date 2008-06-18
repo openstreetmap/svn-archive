@@ -211,7 +211,7 @@
 
 
         <!-- Linear casings -->
-        <rule e="way" k="tunnel" v="~|no">
+        <rule e="way" k="tunnel" v="~|no|false">
 			<rule e="way" k="highway" v="raceway">
 				<rule e="way" k="use_status" v="~">
 					<line class='highway-raceway-casing' />

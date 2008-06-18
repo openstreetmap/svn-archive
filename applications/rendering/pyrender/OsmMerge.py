@@ -70,7 +70,7 @@ def OsmMerge(dest, sources):
     for k,v in way['t'].items():
       f.write('\n<tag k=%s v=%s/>' % (quoteattr(k),quoteattr(v)))
     for n in way['n']:
-      f.write("\n<nd id='%d' x='%1.0f' y='%1.0f'/>" % (n['id'], n['lat'] * divisor, n['lon'] * divisor))
+      f.write("\n<nd id='%d' x='%1.0f' y='%1.0f'/>" % (n['id'], n['lon'] * divisor, n['lat'] * divisor))
     f.write("</way>\n")
   
   f.write("</osm>\n")

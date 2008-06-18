@@ -24,6 +24,7 @@
 from BaseHTTPServer import *
 import re
 import sys
+import os
 
 # Choose which rendering engine you want to use here
 import renderer_default as RenderModule
@@ -31,6 +32,7 @@ import renderer_default as RenderModule
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):
     self.re = re.compile('/(\w+)/(\d+)/(\d+)/(\d+)\.png')
+    self.blankre = re.compile('/blank/(\w+)/')
     BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
   def log_message(self, format, *args):
@@ -39,12 +41,15 @@ class tileServer(BaseHTTPRequestHandler):
   def return_file(self, filename, contentType='text/HTML'):
     # Serve a real file from disk (for indexes etc.)
     f = open(filename, "r")
-    self.send_response(200)
-    self.send_header('Content-type',contentType) # TODO: more headers
-    self.end_headers()
-    self.wfile.write(f.read())
-    f.close()
-
+    if(f):
+      self.send_response(200)
+      self.send_header('Content-type',contentType) # TODO: more headers
+      self.end_headers()
+      self.wfile.write(f.read())
+      f.close()
+    else:
+      self.send_response(404)
+      
   def do_GET(self):
     # split query strings off and store separately
     if self.path.find('?') != -1: 
@@ -56,9 +61,19 @@ class tileServer(BaseHTTPRequestHandler):
       return
 
     # See if a tile was requested
-    match = self.re.search(self.path)
-    if(match):
-      (layer,z,x,y) = match.groups()
+    blankmatch = self.blankre.match(self.path)
+    
+    if(blankmatch):
+      (name) = blankmatch.groups()
+      filename = "blank/%s.png" % name
+      if(not os.path.exists(filename)):
+        filename = "blank/white.png"
+      self.return_file(filename, 'image/PNG')
+      return
+    
+    tilematch = self.re.match(self.path)
+    if(tilematch):
+      (layer,z,x,y) = tilematch.groups()
       z = int(z)
       x = int(x)
       y = int(y)

@@ -34,19 +34,13 @@ import javax.xml.datatype.DatatypeFactory;
  * @author nenik
  */
 public abstract class OsmPrimitive {
-    private static final DatatypeFactory XML_DATE;
-    static {
-        DatatypeFactory fact = null;
-        try {
-            fact = DatatypeFactory.newInstance();
-        } catch(DatatypeConfigurationException ce) {
-            ce.printStackTrace();
-        }
-        XML_DATE = fact;
-    }
     
     private long id;
-    private Object timestamp; // Either String or parsed date
+    /**
+     * Seconds from epoch (January 1, 1970, 00:00:00 GMT)
+     * This field have to be revisited before Jan 19, 2038, 03:14:08 GMT
+     */
+    private int timestamp;
     
     /**
      * A field containing one of the possible implementations
@@ -75,11 +69,10 @@ public abstract class OsmPrimitive {
      */
     protected final DataSet source;
         
-    OsmPrimitive(DataSet source, long id, String stamp, String user, boolean vis) {
+    OsmPrimitive(DataSet source, long id, int timestamp, String user, boolean vis) {
         this.source = source;
         this.id = id;
-        this.timestamp = stamp;
-        int uid = source.getIdForUser(user);
+        this.timestamp = timestamp;
         flags = source.getIdForUser(user) & MASK_USER;
         if (vis) flags |= FLAG_VISIBLE;
     }
@@ -93,14 +86,7 @@ public abstract class OsmPrimitive {
     }
     
     public Date getTimestamp() {
-        if (!(timestamp instanceof Date)) {
-            try {
-                timestamp = XML_DATE.newXMLGregorianCalendar((String)timestamp).toGregorianCalendar().getTime();
-            } catch (Exception ex) {
-	        timestamp = new Date();
-            }
-        }
-        return (Date) timestamp;
+        return new Date(1000l*timestamp);
     }
 
     /**

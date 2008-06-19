@@ -31,7 +31,7 @@ import javax.swing.undo.*;
 public final class Node extends OsmPrimitive implements Coordinate {
     private double lat, lon;
 
-    Node(DataSet source, long id, double lat, double lon, String stamp, String user, boolean vis) {
+    Node(DataSet source, long id, double lat, double lon, int stamp, String user, boolean vis) {
         super(source, id, stamp, user, vis);
         this.lat = lat;
         this.lon = lon;

@@ -26,9 +26,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.AbstractUndoableEdit;
@@ -37,6 +40,8 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoableEditSupport;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -138,13 +143,13 @@ public abstract class DataSet {
     }
 
     public Node createNode(double lat, double lon) {
-        Node n = new Node(this, 0, lat, lon, null, null, true);
+        Node n = new Node(this, 0, lat, lon, -1, null, true);
         addRemovePrimitive(n, true);
         return n;
     }
         
     public Way createWay(Node ... nodes) {
-        Way way = new Way(this, 0, null, null, true);
+        Way way = new Way(this, 0, -1, null, true);
         addRemovePrimitive(way, true);
         way.setNodes(Arrays.asList(nodes));
         return way;
@@ -315,7 +320,7 @@ public abstract class DataSet {
 
                 // common attribs
                 long id = getLong(atts, "id");
-                String time = getString(atts, "timestamp");
+                int time = getDate(atts, "timestamp");
                 String user = atts.getValue("user");
                 boolean vis = getBoolean(atts, "visible", true);
 
@@ -335,7 +340,7 @@ public abstract class DataSet {
             } else if (qName.equals("way")) {
                 // common attribs
                 long id = getLong(atts, "id");
-                String time = getString(atts, "timestamp");
+                int time = getDate(atts, "timestamp");
                 String user = atts.getValue("user");
                 boolean vis = getBoolean(atts, "visible", true);
 
@@ -394,6 +399,12 @@ public abstract class DataSet {
             }
         }
     
+        private int getDate(Attributes atts, String name) {
+            String orig = atts.getValue(name);
+            if (orig == null) return -1;
+            return (int)getTimestamp(orig).getTime()/1000;
+        }
+        
         private String getString(Attributes atts, String name) {
             String orig = atts.getValue(name);
             if (orig == null) return null;
@@ -411,5 +422,66 @@ public abstract class DataSet {
             String val = atts.getValue(name);
             return val == null ? def : Boolean.parseBoolean(val);
         }
+
+        // An instance reused throughout the lifetime of the parser.
+        private GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        { calendar.setTimeInMillis(0);}
+
+        private Date getTimestamp(String str) {
+            // "2007-07-25T09:26:24{Z|{+|-}01:00}"
+            if (checkLayout(str, "xxxx-xx-xxTxx:xx:xxZ") ||
+                    checkLayout(str, "xxxx-xx-xxTxx:xx:xx+xx:00") ||
+                    checkLayout(str, "xxxx-xx-xxTxx:xx:xx-xx:00")) {
+                calendar.set(
+                    parsePart(str, 0, 4),
+                    parsePart(str, 5, 2)-1,
+                    parsePart(str, 8, 2),
+                    parsePart(str, 11, 2),
+                    parsePart(str, 14,2),
+                    parsePart(str, 17, 2));
+                
+                if (str.length() == 25) {
+                    int plusHr = parsePart(str, 20, 2);
+                    int mul = str.charAt(19) == '+' ? -3600000 : 3600000;
+                    calendar.setTimeInMillis(calendar.getTimeInMillis()+plusHr*mul);
+                }
+                
+                return calendar.getTime();
+            }
+            
+            try {
+                return XML_DATE.newXMLGregorianCalendar((String)str).toGregorianCalendar().getTime();
+            } catch (Exception ex) {
+                return new Date();
+            }
+        }
+        
+        private boolean checkLayout(String text, String pattern) {
+            if (text.length() != pattern.length()) return false;
+            for (int i=0; i<pattern.length(); i++) {
+                if (pattern.charAt(i) == 'x') continue;
+                if (pattern.charAt(i) != text.charAt(i)) return false;
+            }
+            return true;
+        }
+
     }
+    
+    private static final DatatypeFactory XML_DATE;
+
+    static {
+        DatatypeFactory fact = null;
+        try {
+            fact = DatatypeFactory.newInstance();
+        } catch(DatatypeConfigurationException ce) {
+            ce.printStackTrace();
+        }
+        XML_DATE = fact;
+    }
+
+
+    private static int parsePart(String str, int off, int len) {
+        return Integer.valueOf(str.substring(off, off+len));
+    }
+
 }

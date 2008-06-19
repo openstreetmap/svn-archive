@@ -28,7 +28,7 @@ package org.openstreetmap.josmng.osm;
  */
 public class Relation extends OsmPrimitive {
 
-    public Relation(DataSet source, long id, String stamp, String user, boolean vis) {
+    public Relation(DataSet source, long id, int stamp, String user, boolean vis) {
         super(source, id, stamp, user, vis);
     }
 

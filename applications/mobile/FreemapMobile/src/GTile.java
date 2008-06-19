@@ -94,7 +94,7 @@ public class GTile
     public void paint (Graphics g, int x, int y)
 
     {
-        if(x==-1 && y==-1)
+        if((x==-1 && y==-1) || image==null)
         {
             g.setColor(0x00ffff);
             g.fillRect(x,y,256,256);

@@ -69,8 +69,10 @@ public class FMCanvas extends Canvas
 
     public void setZoom (int zoom)
     {
-        this.zoom=zoom;
-        doUpdatePosition();
+		System.out.println("setZoom: state=" + state);
+		this.zoom=zoom;
+		if(state==ACTIVE)
+			doUpdatePosition();
     }
 
     public void paint (Graphics g)

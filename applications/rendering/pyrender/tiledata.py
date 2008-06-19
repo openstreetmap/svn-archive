@@ -70,7 +70,7 @@ def GetOsmTileData(z,x,y):
         # download (or otherwise obtain) each subtile
         filenames.append(GetOsmTileData(lz,lx,ly))
     # merge them together
-    OsmMerge(filename, filenames)
+    OsmMerge(filename, z, filenames)
     return(filename)
     
   print "Below download level"

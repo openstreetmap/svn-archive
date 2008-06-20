@@ -20,6 +20,7 @@
 from parseOsm import parseOsm
 import tiledata 
 from tilenames import *
+import sys
 
 def distancePointToLine(x,y,x1,y1,x2,y2):
   """http://www.allegro.cc/forums/thread/589720"""
@@ -74,4 +75,8 @@ def describe(lat,lon):
   return(name)
 
 if(__name__ == "__main__"):
-  print describe(51.678935, -0.826256)
+  if(len(sys.argv) >= 3):
+    print describe(float(sys.argv[1]), float(sys.argv[2]))
+  else:
+    print "no position supplied, using default"
+    print describe(51.678935, -0.826256)

@@ -69,8 +69,10 @@ def describe(lat,lon):
       if(lastvalid):
         distance =  distancePointToLine(sx,sy,lastx,lasty,x,y)
         if(distance < mindist):
-          mindist = distance
-          name = w['t'].get('name', w['t'].get('ref', 'No name'))
+          tempname = w['t'].get('name', w['t'].get('ref', None))
+          if(tempname != None):
+            mindist = distance
+            name=tempname
       (lastx,lasty,lastvalid) = (x,y,True)
   return(name)
 

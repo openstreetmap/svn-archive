@@ -19,6 +19,7 @@
 #---------------------------------------------------------------------------
 from module_base import ranaModule
 import cairo
+from datetime import *
 
 def getModule(m,d):
   return(infoOverlay(m,d))
@@ -30,7 +31,7 @@ class infoOverlay(ranaModule):
     self.lines = ['hello', 'world']
     self.oldlines = ['','']
     self.mode = 0
-    self.modes = ['pos', 'speed', 'bearing']
+    self.modes = ['pos', 'speed', 'bearing', 'time']
 
   def get_none(self):
     pass
@@ -48,6 +49,11 @@ class infoOverlay(ranaModule):
   
   def get_bearing(self):
     self.lines.append('Bearing: ???')
+  
+  def get_time(self):
+    now = datetime.now()
+    self.lines.append(now.strftime("%Y-%m-%d (%a)"))
+    self.lines.append(now.strftime("%H:%M:%S"))
 
   def update(self):
     # The get_xxx functions all fill-in the self.lines array with

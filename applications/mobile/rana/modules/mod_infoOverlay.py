@@ -2,7 +2,7 @@
 #----------------------------------------------------------------------------
 # Overlay some information on the map screen
 #----------------------------------------------------------------------------
-# Copyright 2007, Oliver White
+# Copyright 2007-2008, Oliver White
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

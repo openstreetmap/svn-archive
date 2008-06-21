@@ -1,12 +1,7 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- This file should be used with Osmarender 4 -->
-<!-- This file implements a sub-set of the items described at http://wiki.openstreetmap.org/index.php/Map_Features -->
-
-<!-- A scale of 0.1 will make fat roads on a small map, a scale of 5 will draw very thin roads on a large scale map -->
-<!-- minimumMapWidth/Height is in kilometres -->
-<!-- Set javaScript="no" if you want an svg file that contains no javascript.  This is so that you can upload it to Wikipedia etc -->
+<!-- Tiles@Home Rules File for zoom level 9 -->
 <rules
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svg="http://www.w3.org/2000/svg"
@@ -32,103 +27,101 @@
 
         <!-- Draw land areas first -->
         <rule e="way" k="natural" v="land">
-            <area class='natural-land' />
+            <area class="natural-land"/>
         </rule>
 
         <!-- Landuse -->
         <!-- render all landuse in the same colour so it doesn't look too psychedelic -->
         <rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
-            <area class='landuse-all'/>
+            <area class="landuse-all"/>
         </rule>
-
 
         <!-- Natural features -->
         <rule e="way" k="natural" v="coastline">
-            <area class='natural-coastline'/>
+            <area class="natural-coastline"/>
         </rule>
         <rule e="way" k="landuse|natural" v="forest|wood">
-            <area class='landuse-wood'/>
+            <area class="landuse-wood"/>
         </rule>
         <rule e="way" k="landuse" v="field|village_green|meadow">
-            <area class='landuse-field'/>
+            <area class="landuse-field"/>
         </rule>
         <rule e="way" k="amenity" v="school|college|university">
-            <area class='landuse-all'/>
+            <area class="landuse-all"/>
         </rule>
         <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
-            <area class='leisure-park'/>
+            <area class="leisure-park"/>
         </rule>
         <rule e="way" k="leisure" v="stadium|sports_centre">
-            <area class='leisure-stadium'/>
+            <area class="leisure-stadium"/>
         </rule>
-
 
         <!-- Airports and runways -->
 
         <!-- Raceways and racetracks -->
         <rule e="way" k="landuse" v="raceway">
             <rule e="way" k="use_status" v="~">
-                <area class='landuse-raceway' />
+                <area class="landuse-raceway"/>
             </rule>
         </rule>
 
         <!-- Man-made areas -->
         <rule e="way" k="sport" v="*">
-            <area class='sport'/>
+            <area class="sport"/>
         </rule>
         <rule e="way" k="aeroway" v="terminal">
-            <area class='building-block'/>
+            <area class="building-block"/>
         </rule>
-
 
         <!-- Waterways, lakes and ponds -->
         <rule e="way" k="waterway" v="riverbank">
-            <area class='waterway-riverbank'/>
+            <area class="waterway-riverbank"/>
         </rule>
         <rule e="way" k="waterway" v="river">
-            <line class='waterway-river-core'/>
+            <line class="waterway-river-core"/>
         </rule>
         <rule e="way" k="waterway" v="canal">
-            <line class='waterway-canal-core'/>
+            <line class="waterway-canal-core"/>
         </rule>
         <rule e="way" k="waterway" v="dock">
-            <area class='natural-water' />
+            <area class="natural-water"/>
         </rule>
         <rule e="way" k="natural" v="water|pond|lake">
-            <area class='natural-water' />
+            <area class="natural-water"/>
         </rule>
         <rule e="way" k="landuse" v="reservoir">
-            <area class='natural-water' />
+            <area class="natural-water"/>
         </rule>
         <rule e="way" k="landuse" v="basin">
-            <area class='natural-water' />
+            <area class="natural-water"/>
         </rule>
 
         <!-- Paths in tunnels -->
+
         <!-- Paths not in tunnels -->
 
         <!-- Highway cores (not in tunnel) -->
         <rule e="way" k="tunnel" v="~|false|no">
             <addclass e="way" k="bridge" v="yes|true" class="round">
-		<rule e="way" k="highway" v="raceway">
+                <rule e="way" k="highway" v="raceway">
                     <rule e="way" k="use_status" v="~">
-                        <line class='highway-raceway-core' />
+                        <line class="highway-raceway-core"/>
                     </rule>
                 </rule>
                 <rule e="way" k="highway" v="secondary">
-                    <line class='highway-core highway-secondary-core' />
+                    <line class="highway-core highway-secondary-core"/>
                 </rule>
                 <rule e="way" k="highway" v="primary|primary_link">
-                    <line class='highway-core highway-primary-core' />
+                    <line class="highway-core highway-primary-core"/>
                 </rule>
                 <rule e="way" k="highway" v="trunk|trunk_link">
-                    <line class='highway-core highway-trunk-core' />
+                    <line class="highway-core highway-trunk-core"/>
                 </rule>
                 <rule e="way" k="highway" v="motorway_link">
-                    <line class='highway-core highway-motorway-link-core' />
+                    <line class="highway-core highway-motorway-link-core"/>
                 </rule>
                 <rule e="way" k="highway" v="motorway">
-                    <line class='highway-core highway-motorway-core' />
+                    <line class="highway-core highway-motorway-core"/>
                 </rule>
             </addclass>
         </rule>
@@ -136,99 +129,92 @@
         <!-- Highway cores in tunnels -->
         <rule e="way" k="tunnel" v="true|yes">
             <rule e="way" k="highway" v="service">
-                <tunnel width="10" class='highway-core highway-service-core' />
+                <tunnel width="10" class="highway-core highway-service-core"/>
             </rule>
             <rule e="way" k="highway" v="secondary">
-                <tunnel width="30" class='highway-core highway-secondary-core' />
+                <tunnel width="30" class="highway-core highway-secondary-core"/>
             </rule>
             <rule e="way" k="highway" v="primary|primary_link">
-                <tunnel width="30" class='highway-core highway-primary-core' />
+                <tunnel width="30" class="highway-core highway-primary-core"/>
             </rule>
             <rule e="way" k="highway" v="trunk|trunk_link">
-                <tunnel width="40" class='highway-core highway-trunk-core' />
+                <tunnel width="40" class="highway-core highway-trunk-core"/>
             </rule>
             <rule e="way" k="highway" v="motorway|motorway_link">
-                <tunnel width="40" class='highway-core highway-motorway-core' />
+                <tunnel width="40" class="highway-core highway-motorway-core"/>
             </rule>
         </rule>
 
         <!-- highway motorway-junctions -->
         <rule e="node" k="highway" v="motorway_junction">
-          <circle r="7" class="highway-motorway-junction" />
-          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
-          <text k="ref" class='highway-motorway-junction-caption' dy='+5px' />
+            <circle r="7" class="highway-motorway-junction"/>
+            <text k="name" class="highway-motorway-junction-caption" dy="-2px"/>
+            <text k="ref" class="highway-motorway-junction-caption" dy="+5px"/>
         </rule>
-
 
         <!-- Railway lines -->
         <rule e="way" k="railway" v="rail">
-            <line class='railway-rail' />
+            <line class="railway-rail"/>
         </rule>
-
 
         <!-- Airfields and airports -->
         <rule e="way" k="aeroway" v="runway">
-            <line class='aeroway-runway-core'/>
+            <line class="aeroway-runway-core"/>
         </rule>
         <rule e="node" k="aeroway" v="airport">
-            <symbol xlink:href="#airport" width='200px' height='200px' transform='translate(-100,-100)' />
+            <symbol xlink:href="#airport" width="200px" height="200px" transform="translate(-100,-100)"/>
         </rule>
-
 
         <!-- Non-physical routes -->
         <rule e="way" k="route" v="ferry">
-            <line class='route-ferry' />
+            <line class="route-ferry"/>
         </rule>
-
-    </rule> <!-- k="osmarender:render" v="~|yes" -->
+    </rule>
 
     <!-- ==================================== Layer 5 ================================== -->
     <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
-    
-		<!-- Non-physical boundaries -->
-		<rule e="way" k="boundary" v="administrative" layer="5">
-			<rule e="way" k="border_type" v="state" layer="5">
-				<line class="boundary boundary-administrative-state-casing" />
-				<line class="boundary boundary-administrative-state-core" />
-			</rule>	
-			<else>
-				<line class="boundary boundary-administrative-state-core" />
-			</else>	
-		</rule>
-        
+
+        <!-- Non-physical boundaries -->
+        <rule e="way" k="boundary" v="administrative" layer="5">
+            <rule e="way" k="border_type" v="state" layer="5">
+                <line class="boundary boundary-administrative-state-casing"/>
+                <line class="boundary boundary-administrative-state-core"/>
+            </rule>
+            <else>
+                <line class="boundary boundary-administrative-state-core"/>
+            </else>
+        </rule>
+
         <!-- Place names  -->
         <rule e="node" k="place" v="island" layer="5">
-            <text k="name" class='island-caption' />
+            <text k="name" class="island-caption"/>
         </rule>
         <rule e="node" k="place" v="continent" layer="5">
-            <text k="name" class='continent-caption' />
+            <text k="name" class="continent-caption"/>
         </rule>
         <rule e="node" k="place" v="country" layer="5">
-            <text k="name" class='country-caption' />
+            <text k="name" class="country-caption"/>
         </rule>
         <rule e="node" k="place" v="state" layer="5">
-            <text k="name" class='state-caption' />
+            <text k="name" class="state-caption"/>
         </rule>
         <rule e="node" k="place" v="region" layer="5">
-            <text k="name" class='region-caption' />
+            <text k="name" class="region-caption"/>
         </rule>
         <rule e="node" k="place" v="county" layer="5">
-            <text k="name" class='county-caption' />
+            <text k="name" class="county-caption"/>
         </rule>
         <rule e="node" k="place" v="city" layer="5">
-            <text k="name" class='city-caption' />
+            <text k="name" class="city-caption"/>
         </rule>
         <rule e="node" k="place" v="town" layer="5">
-            <text k="name" class='town-caption' />
+            <text k="name" class="town-caption"/>
         </rule>
     </rule> <!-- End Layer 5 -->
 
-
-
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>
-
-        <style id="styles" type="text/css" xmlns="http://www.w3.org/2000/svg">
+        <style xmlns="http://www.w3.org/2000/svg" id="styles" type="text/css">
             .debug {
                 stroke-width: 0.1px;
                 stroke-linecap: round;
@@ -607,15 +593,8 @@
             }
         </style>
 
-        <svg:symbol
-          id="airport"
-          viewBox="0 0 10 10"
-          fill="black"
-          fill-opacity="1"
-          fill-rule="evenodd"
-          stroke="none">
-            <svg:path d="M 9.2,5 C 9.2,4.5 9.8,3.2 10,3 L 9,3 L 8,4 L 5.5,4 L 8,0 L 6,0 L 3,4 C 2,4 1,4.2 0.5,4.5 C 0,5 0,5 0.5,5.5 C 1,5.8 2,6 3,6 L 6,10 L 8,10 L 5.5,6 L 7.8,6 L 9,7 L 10,7 C 9.8,6.8 9.2,5.5 9.2,5 z " />
+        <svg:symbol id="airport" viewBox="0 0 10 10" fill="black" fill-opacity="1" fill-rule="evenodd" stroke="none">
+            <svg:path d="M 9.2,5 C 9.2,4.5 9.8,3.2 10,3 L 9,3 L 8,4 L 5.5,4 L 8,0 L 6,0 L 3,4 C 2,4 1,4.2 0.5,4.5 C 0,5 0,5 0.5,5.5 C 1,5.8 2,6 3,6 L 6,10 L 8,10 L 5.5,6 L 7.8,6 L 9,7 L 10,7 C 9.8,6.8 9.2,5.5 9.2,5 z "/>
         </svg:symbol>
-
     </defs>
 </rules>

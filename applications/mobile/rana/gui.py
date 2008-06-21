@@ -73,17 +73,15 @@ class MapWidget(gtk.Widget):
         a = __import__(filename)
         self.m[name] = a.getModule(self.m,self.d)
         print " * %s: %s" % (name, self.m[name].__doc__)
-    
-  def blankData(self):
-    self.d['ownpos'] = {'valid':False}
-    self.d['mode'] = 'cycle'
-    self.d['centred'] = False
-    self.d['logging'] = True
-  
+
   def beforeDie(self):
-    print "Handling last few checks before we close"
+    print "Shutting-down modules"
+    for m in self.m.values():
+      m.shutdown()
   
   def update(self):
+    for m in self.m.values():
+      m.update()
     if(self.d.get("needRedraw", False)):
       self.forceRedraw()
 
@@ -112,9 +110,15 @@ class MapWidget(gtk.Widget):
 
   def draw(self, cr):
     start = clock()
-    #proj = self.modules['projection']
+    
+    if(self.d.get('menu', None) != None):
+      for m in self.m.values():
+        m.drawMenu(cr)
+    else:
+      for m in self.m.values():
+        m.drawMap(cr)
 
-    print "Redraw took %1.2f ms" % (1000 * (clock() - start))
+    #print "Redraw took %1.2f ms" % (1000 * (clock() - start))
     
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)

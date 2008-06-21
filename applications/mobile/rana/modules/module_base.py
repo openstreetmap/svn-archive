@@ -53,6 +53,9 @@ class ranaModule:
   def drawMap(self, cr):
     """Draw module on the map"""
     pass
+  def handleMessage(self, message):
+    """Handles a message from another module, or in response to user action"""
+    pass
   def shutdown(self):
     """Program is about to shutdown (don't rely solely on this for anything important like saving someone's tracklog!)"""
     pass

@@ -27,9 +27,11 @@
 #include <sipapi.h>
 #include "resource.h"
 typedef int intptr_t;
+#define DOC_PREFIX "\\My Documents\\"
 #else
 #include <unistd.h>
 #define wchar_t char
+#define DOC_PREFIX ""
 #endif
 #ifndef TRUE
 #define TRUE 1
@@ -604,7 +606,7 @@ void FlushGpx (void)
   struct gpsNewStruct *a, *best, *first = NULL;
   for (best = gpsNew; gpsTrack <= best && best->dropped == 0; best--) {}
   gpsNew = gpsTrack;
-  if (best == gpsTrack) return; // No observations
+  if (best <= gpsTrack) return; // No observations
   for (a = best - 1; gpsTrack <= a && best < a + best->dropped; a--) {
     if (best->dropped > best - a + a->dropped) best = a;
   }
@@ -617,7 +619,7 @@ void FlushGpx (void)
     best = a;
   }
   char fname[18];
-  sprintf (fname, "%.2s%.2s%.2s-%.6s.gpx", first->fix.date + 4,
+  sprintf (fname, DOC_PREFIX "%.2s%.2s%.2s-%.6s.gpx", first->fix.date + 4,
     first->fix.date + 2, first->fix.date, first->fix.tm);
   FILE *gpx = fopen (fname, "wb");
   if (!gpx) return;
@@ -1473,7 +1475,7 @@ void InitializeOptions (void)
   clat = ndBase[0].lat; // Latitude (51.927977);
   zoom = lrint (0.1 / 5 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
   
-  FILE *optFile = fopen ("gosmore.opt", "r");
+  FILE *optFile = fopen (DOC_PREFIX "gosmore.opt", "r");
   IconSet = 1;
   DetailLevel = 3;
   ButtonSize = 4;
@@ -1489,7 +1491,7 @@ void InitializeOptions (void)
 void SaveOptions (void)
 {
   FlushGpx ();
-  FILE *optFile = fopen ("gosmore.opt", "w");
+  FILE *optFile = fopen (DOC_PREFIX "gosmore.opt", "w");
   if (optFile) {
     #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
     OPTIONS
@@ -2625,7 +2627,6 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
   return 0;
 }
 
-
 int WINAPI WinMain(
     HINSTANCE  hInstance,	  // handle of current instance
     HINSTANCE  hPrevInstance,	  // handle of previous instance
@@ -2634,7 +2635,10 @@ int WINAPI WinMain(
 {
   if(hPrevInstance) return(FALSE);
   hInst = hInstance;
-  FILE *gmap = fopen ("gosmore.pak", "rb");
+  wchar_t argv0[80];
+  GetModuleFileName (NULL, argv0, sizeof (argv0));
+  wcscpy (argv0 + wcslen (argv0) - 8, TEXT ("ore.pak")); // _arm.exe to ore.pak
+  FILE *gmap = _wfopen (/*"./gosmore.pak"*/ argv0, TEXT ("rb"));
 
   if (!gmap) {
     MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);

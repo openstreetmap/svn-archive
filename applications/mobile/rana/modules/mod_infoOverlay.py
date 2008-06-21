@@ -31,7 +31,7 @@ class infoOverlay(ranaModule):
     self.lines = ['hello', 'world']
     self.oldlines = ['','']
     self.mode = 0
-    self.modes = ['pos', 'speed', 'bearing', 'time']
+    self.modes = ['pos', 'road', 'speed', 'bearing', 'time']
 
   def get_none(self):
     pass
@@ -43,6 +43,14 @@ class infoOverlay(ranaModule):
     else:
       self.lines.append('%1.4f, %1.4f' % pos)
       self.lines.append("Position from: %s" % self.get('pos_source', 'unknown'))
+  
+  def get_road(self):
+    text = self.get('nearest_road', None)
+    if(text != None):
+      self.lines.append(text)
+    else:
+      self.lines.append('Nearest road:')
+      self.lines.append('not available')
 
   def get_speed(self):
     self.lines.append('Speed: ???')
@@ -54,6 +62,7 @@ class infoOverlay(ranaModule):
     now = datetime.now()
     self.lines.append(now.strftime("%Y-%m-%d (%a)"))
     self.lines.append(now.strftime("%H:%M:%S"))
+  
 
   def update(self):
     # The get_xxx functions all fill-in the self.lines array with
@@ -72,11 +81,15 @@ class infoOverlay(ranaModule):
           self.set('needRedraw', True)
     self.oldlines = self.lines
 
+  def onModeChange(self):
+    self.set('lookup_road', self.modes[self.mode] == 'road')
+
   def handleMessage(self, message):
     if(message == 'nextField'):
       self.mode += 1
       if(self.mode >= len(self.modes)):
         self.mode = 0
+      self.onModeChange()
       
   def drawMap(self, cr):
     """Draw an overlay on top of the map, showing various information

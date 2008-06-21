@@ -31,10 +31,13 @@ to download it.
 Reporting bugs and improvements
 -------------------------------
 
-[Need to documented email address to use]
+Send them to nroets@gmail.com and wait up to 1 year !
 
 License
 -------
 
-This software is placed by in the public domain by its authors.
+elemstyle.xml, icons.csv and icons.xpm comes from JOSM / gpsdrive and are
+licensed under the Gnu Public License v2 or later.
+
+Everything else are placed by in the public domain by its authors.
 Written by Nic Roets with contribution(s) from Dave Hansen.

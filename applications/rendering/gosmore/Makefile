@@ -65,4 +65,5 @@ dist:
 	rm -rf gosmore-$(VERSION)
 
 clean:
-	$(RM) gosmore gosmore.pak *.tmp *~ gosmore.zip
+	$(RM) gosmore gosmore.pak *.tmp *~ gosmore.zip gosmore.exe \
+	  gosmore.aps gosmore.vcl gosmore.vcw

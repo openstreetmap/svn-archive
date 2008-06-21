@@ -65,6 +65,10 @@ class infoOverlay(ranaModule):
     y1 = y2 - dy
     x1 = x
 
+    m = self.m.get('clickHandler', None)
+    if(m != None):
+      m.registerXYWH(x1,y1,w,dy, "Hello world")
+
     numlines = len(self.lines)
     linespacing = (dy / numlines)
     fontsize = linespacing * 0.8
@@ -73,7 +77,7 @@ class infoOverlay(ranaModule):
     cr.set_source_rgb(0,0,0)
     cr.rectangle(x1,y1,w,dy)
     cr.fill()
-    
+
     cr.set_source_rgb(1.0, 1.0, 0.0)
 
     liney = y1

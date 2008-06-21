@@ -27,15 +27,32 @@ class infoOverlay(ranaModule):
   """Overlay info on the map"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-    self.lines = [['hello',''], ['world',''], ['line3',''], ['line4','']]
+    self.lines = ['hello', 'world']
+    self.oldlines = ['','']
     
+  def gatherData(self):
+    self.lines = []
+
+    pos = self.get('pos', None)
+    if(pos == None):
+      self.lines.append('No position')
+    else:
+      self.lines.append('%1.4f, %1.4f' % pos)
+      self.lines.append("Position from: %s" % self.get('pos_source', 'unknown'))
+      
+  
   def update(self):
-    # Detect changes to the line text, and ask for redraw if necessary
-    for line in self.lines:
-      (value,oldvalue) = line
-      if(value != oldvalue):
-        self.set('needRedraw', True)
-        line[1] = line[0] # copy new value to old
+    # Fill-in the lines
+    self.gatherData()
+    
+    # Then detect changes to the line text, and ask for redraw if necessary
+    if(len(self.lines) != len(self.oldlines)):
+      self.set('needRedraw', True)
+    else:
+      for i in range(len(self.lines)):
+        if(self.lines[i] != self.oldlines[i]):
+          self.set('needRedraw', True)
+    self.oldlines = self.lines
 
   def drawMap(self, cr):
     (x,y,w,h) = self.get('viewport')
@@ -48,27 +65,29 @@ class infoOverlay(ranaModule):
     y1 = y2 - dy
     x1 = x
 
-    print "dy = %f" % dy
     numlines = len(self.lines)
-    print "%d lines" % numlines
     linespacing = (dy / numlines)
     fontsize = linespacing * 0.8
-    print "Line space %f" % linespacing
-    print "Font size %f" % fontsize
+
+    # Draw a background
     cr.set_source_rgb(0,0,0)
     cr.rectangle(x1,y1,w,dy)
     cr.fill()
-    cr.set_source_rgb(1,0,0)
-    cr.stroke()
     
     cr.set_source_rgb(1.0, 1.0, 0.0)
-    cr.set_font_size(fontsize)
 
     liney = y1
-    for line in self.lines:
-      text = line[0]
+    for text in self.lines:
+      # Check that font size is small enough to display width of text
+      fontx = w / len(text)
+      if(fontx < fontsize):
+        cr.set_font_size(fontx)
+      else:
+        cr.set_font_size(fontsize)
+
+      # Draw the text
       cr.move_to(x1+border,liney + (0.9 * linespacing))
-      cr.show_text(text)
+      cr.show_text(str(text))
       cr.stroke()
       liney += linespacing
 

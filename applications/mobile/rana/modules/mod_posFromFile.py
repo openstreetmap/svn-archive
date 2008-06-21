@@ -33,7 +33,7 @@ class posFromFile(ranaModule):
     ranaModule.__init__(self, m, d)
  
   def update(self):
-    filename = self.get('pos_filename', 'pos2.txt')
+    filename = self.get('pos_filename', 'pos.txt')
     if(not os.path.exists(filename)):
       self.status = "File not available"
       return

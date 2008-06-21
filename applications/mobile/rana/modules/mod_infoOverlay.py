@@ -29,6 +29,7 @@ class infoOverlay(ranaModule):
     ranaModule.__init__(self, m, d)
     self.lines = ['hello', 'world']
     self.oldlines = ['','']
+    self.field = 0
     
   def gatherData(self):
     self.lines = []
@@ -39,8 +40,8 @@ class infoOverlay(ranaModule):
     else:
       self.lines.append('%1.4f, %1.4f' % pos)
       self.lines.append("Position from: %s" % self.get('pos_source', 'unknown'))
-      
-  
+      self.lines.append("Field %d" % self.field)
+
   def update(self):
     # Fill-in the lines
     self.gatherData()
@@ -54,6 +55,10 @@ class infoOverlay(ranaModule):
           self.set('needRedraw', True)
     self.oldlines = self.lines
 
+  def handleMessage(self, message):
+    if(message == 'nextField'):
+      self.field += 1
+      
   def drawMap(self, cr):
     (x,y,w,h) = self.get('viewport')
 
@@ -65,9 +70,10 @@ class infoOverlay(ranaModule):
     y1 = y2 - dy
     x1 = x
 
+    # Clicking on the rectangle should toggle which field we display
     m = self.m.get('clickHandler', None)
     if(m != None):
-      m.registerXYWH(x1,y1,w,dy, "Hello world")
+      m.registerXYWH(x1,y1,w,dy, "infoOverlay:nextField")
 
     numlines = len(self.lines)
     linespacing = (dy / numlines)

@@ -89,7 +89,9 @@ class MapWidget(gtk.Widget):
     pass
     
   def click(self, x, y):
-    print "Clicked %d,%d"%(x,y)
+    m = self.m.get("clickHandler",None)
+    if(m != None):
+      m.handleClick(x,y)
       
   def forceRedraw(self):
     """Make the window trigger a draw event.  
@@ -110,7 +112,9 @@ class MapWidget(gtk.Widget):
 
   def draw(self, cr):
     start = clock()
-    
+    for m in self.m.values():
+      m.beforeDraw()
+      
     if(self.d.get('menu', None) != None):
       for m in self.m.values():
         m.drawMenu(cr)

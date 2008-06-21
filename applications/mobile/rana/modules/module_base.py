@@ -44,6 +44,9 @@ class ranaModule:
   def update(self):
     """Regular updates (several per second)"""
     pass
+  def beforeDraw(self):
+    """Before a screen is redrawn (don't use this for regular updates)"""
+    pass
   def drawMenu(self, cr):
     """Drawing, in menu mode.  Only handle this if you know your menu is active"""
     pass

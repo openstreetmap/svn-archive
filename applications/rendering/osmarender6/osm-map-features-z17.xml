@@ -1445,11 +1445,20 @@
         <rule e="node" k="amenity" v="school">
             <symbol xlink:href="#symbol-school" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
+        <rule e="way" k="amenity" v="school">
+            <areaSymbol xlink:href="#symbol-school" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
         <rule e="node" k="amenity" v="university|college">
             <symbol xlink:href="#symbol-university" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
+        <rule e="way" k="amenity" v="university|college">
+            <areaSymbol xlink:href="#symbol-university" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
         <rule e="node" k="amenity|shop" v="supermarket">
             <symbol xlink:href="#symbol-supermarket" width="2px" height="2px" transform="translate(0,0)"/>
+        </rule>
+        <rule e="way" k="amenity|shop" v="supermarket">
+            <areaSymbol xlink:href="#symbol-supermarket" width='2px' height='2px' transform='translate(0,0)' />
         </rule>
         <rule e="node" k="amenity" v="shelter">
             <rule e="node" k="fireplace" v="yes">
@@ -1837,14 +1846,20 @@
             <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
             <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
         </rule>
-        <rule e="way" k="amenity" v="school|college|university|parking" layer="5">
-            <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-            <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+        <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
+	     <areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
+	     <areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
         </rule>
+        
         <rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
             <rule e="way" k="building" v="*" layer="5">
-                <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-                <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+                 <!-- same goes if one of the following is set -->
+	         <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
+	         </rule>
+                 <else>
+   		    <areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
+		    <areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
+                 </else>
             </rule>
         </rule>
         <rule e="way" k="tourism" v="tourism-attraction|zoo|picnic_site|caravan_site|camp_site" layer="5">
@@ -2683,8 +2698,8 @@
             }
 
             .sport-tennis {
-                fill: #A7453B;
-                stroke: #A71203;
+                fill: #d18a6a;
+                stroke: #B36C4C;
                 stroke-width: 0.2px;
             }
 

@@ -29,24 +29,35 @@ class infoOverlay(ranaModule):
     ranaModule.__init__(self, m, d)
     self.lines = ['hello', 'world']
     self.oldlines = ['','']
-    self.field = 0
-    
-  def gatherData(self):
-    self.lines = []
+    self.mode = 0
+    self.modes = ['pos', 'speed', 'bearing']
 
+  def get_none(self):
+    pass
+  
+  def get_pos(self):
     pos = self.get('pos', None)
     if(pos == None):
       self.lines.append('No position')
     else:
       self.lines.append('%1.4f, %1.4f' % pos)
       self.lines.append("Position from: %s" % self.get('pos_source', 'unknown'))
-      self.lines.append("Field %d" % self.field)
+
+  def get_speed(self):
+    self.lines.append('Speed: ???')
+  
+  def get_bearing(self):
+    self.lines.append('Bearing: ???')
 
   def update(self):
-    # Fill-in the lines
-    self.gatherData()
+    # The get_xxx functions all fill-in the self.lines array with
+    # text to display, where xxx is the selected mode
+    self.lines = []
+    fn = getattr(self, "get_%s" % self.modes[self.mode], self.get_none)
+    fn()
     
-    # Then detect changes to the line text, and ask for redraw if necessary
+    # Detect changes to the lines being displayed,
+    # and ask for redraw if they change
     if(len(self.lines) != len(self.oldlines)):
       self.set('needRedraw', True)
     else:
@@ -57,9 +68,13 @@ class infoOverlay(ranaModule):
 
   def handleMessage(self, message):
     if(message == 'nextField'):
-      self.field += 1
+      self.mode += 1
+      if(self.mode >= len(self.modes)):
+        self.mode = 0
       
   def drawMap(self, cr):
+    """Draw an overlay on top of the map, showing various information
+    about position etc."""
     (x,y,w,h) = self.get('viewport')
 
     # Bottom of screen:
@@ -74,15 +89,16 @@ class infoOverlay(ranaModule):
     m = self.m.get('clickHandler', None)
     if(m != None):
       m.registerXYWH(x1,y1,w,dy, "infoOverlay:nextField")
-
-    numlines = len(self.lines)
-    linespacing = (dy / numlines)
-    fontsize = linespacing * 0.8
-
     # Draw a background
     cr.set_source_rgb(0,0,0)
     cr.rectangle(x1,y1,w,dy)
     cr.fill()
+
+    numlines = len(self.lines)
+    if(numlines < 1):
+      return
+    linespacing = (dy / numlines)
+    fontsize = linespacing * 0.8
 
     cr.set_source_rgb(1.0, 1.0, 0.0)
 

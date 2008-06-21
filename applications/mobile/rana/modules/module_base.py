@@ -37,8 +37,19 @@ class ranaModule:
       self.m['watchlist'].notify(name, value)
     self.d[name] = value
     
-  # Overridable
   def getStatus(self):
     return(self.status)
+  
+  # Overridable
   def update(self):
+    """Regular updates (several per second)"""
+    pass
+  def drawMenu(self, cr):
+    """Drawing, in menu mode.  Only handle this if you know your menu is active"""
+    pass
+  def drawMap(self, cr):
+    """Draw module on the map"""
+    pass
+  def shutdown(self):
+    """Program is about to shutdown (don't rely solely on this for anything important like saving someone's tracklog!)"""
     pass

@@ -1,9 +1,6 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------------
-# Pyroute main GUI
-#
-# Usage: 
-#   gui.py
+# Rana main GUI.  Displays maps, for use on a mobile device
 #
 # Controls:
 #   * drag left/right along top of window to zoom in/out

@@ -21,6 +21,7 @@ class ranaModule:
   def __init__(self, modules={}, data={}):
     self.m = modules
     self.d = data
+    self.status = ''
     
   def module_exists(self, module):
     """Test whether a named module is loaded"""
@@ -38,6 +39,6 @@ class ranaModule:
     
   # Overridable
   def getStatus(self):
-    return("")
+    return(self.status)
   def update(self):
     pass

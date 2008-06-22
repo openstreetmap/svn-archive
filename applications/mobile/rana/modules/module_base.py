@@ -51,7 +51,10 @@ class ranaModule:
     """Drawing, in menu mode.  Only handle this if you know your menu is active"""
     pass
   def drawMap(self, cr):
-    """Draw module on the map"""
+    """Draw the map"""
+    pass
+  def drawMapOverlay(self, cr):
+    """Draw overlay on top of a map"""
     pass
   def handleMessage(self, message):
     """Handles a message from another module, or in response to user action"""

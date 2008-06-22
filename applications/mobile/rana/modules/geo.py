@@ -31,13 +31,16 @@ def distance(lat1,lon1,lat2,lon2):
   return(R * c)
 
 def bearing(lat1,lon1,lat2,lon2):
+  """Bearing from one point to another in degrees (0-360)"""
   dLat = lat2-lat1
   dLon = lon2-lon1
   y = sin(radians(dLon)) * cos(radians(lat2))
   x = cos(radians(lat1)) * sin(radians(lat2)) - \
           sin(radians(lat1)) * cos(radians(lat2)) * cos(radians(dLon))
-          
-  return(degrees(atan2(y, x)))
+  bearing = degrees(atan2(y, x))
+  if(bearing < 0.0):
+    bearing += 360.0
+  return(bearing)
 
 
 if(__name__ == "__main__"):

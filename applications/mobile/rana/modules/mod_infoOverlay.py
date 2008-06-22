@@ -31,7 +31,7 @@ class infoOverlay(ranaModule):
     self.lines = ['hello', 'world']
     self.oldlines = ['','']
     self.mode = 0
-    self.modes = ['pos', 'road', 'speed', 'bearing', 'time']
+    self.modes = ['pos', 'road', 'speed', 'maxSpeed', 'bearing', 'time']
 
   def get_none(self):
     pass
@@ -57,6 +57,9 @@ class infoOverlay(ranaModule):
   
   def get_bearing(self):
     self.lines.append('Bearing: %03.0f' % self.get('bearing', 0))
+  def get_maxSpeed(self):
+    self.lines.append('Max: %1.1f mph' % self.get('maxSpeed', 0))
+    self.lines.append('Average: %1.1f mph' % self.get('avgSpeed', 0))
   
   def get_time(self):
     now = datetime.now()

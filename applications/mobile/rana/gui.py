@@ -3,18 +3,7 @@
 # Rana main GUI.  Displays maps, for use on a mobile device
 #
 # Controls:
-#   * drag left/right along top of window to zoom in/out
-#   * drag the map to move around
-#   * click on the map for a position menu
-#       * set your own position, if the GPS didn't already do that
-#       * set that location as a destination
-#       * route to that point
-#   * click on the top-left of the window for the main menu
-#       * download routing data around your position
-#       * browse geoRSS, wikipedia, and OSM points of interest
-#       * select your mode of transport for routing
-#           * car, bike, foot currently supported
-#       * toggle whether the map is centred on your GPS position
+#   * click on the overlay text to change fields displayed
 #----------------------------------------------------------------------------
 # Copyright 2007-2008, Oliver White
 #

@@ -56,9 +56,17 @@ class stats(ranaModule):
         pos[0],
         pos[1]) * 1000.0 # metres
 
+      bearing = geo.bearing(
+        self.lastpos[0],
+        self.lastpos[1],
+        pos[0],
+        pos[1]) # degrees
+
       speed = distance / dt # km/sec
       speedMh = speed * 2.23693629  # miles/hour
       self.set('speed', speedMh)
+      self.set('bearing', bearing)
+      
     self.lastpos = pos
 
 if(__name__ == '__main__'):

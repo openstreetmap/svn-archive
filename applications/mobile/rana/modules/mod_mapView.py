@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
 from module_base import ranaModule
+from time import time
 
 def getModule(m,d):
   return(mapView(m,d))
@@ -26,7 +27,14 @@ class mapView(ranaModule):
   """Controls the view being displayed on the map"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
+    self.updateTime = 0
   
   def update(self):
-    self.set('map_centre', self.get('pos', [53.1, -0.5]))
+    # Run scheduledUpdate every second
+    t = time()
+    dt = t - self.updateTime
+    if(dt > 2):
+      self.updateTime = t
+      self.set('map_centre', self.get('pos', [53.1, -0.5]))
+      self.set('needRedraw', True)
   

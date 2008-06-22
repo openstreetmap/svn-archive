@@ -30,6 +30,9 @@ class stats(ranaModule):
     ranaModule.__init__(self, m, d)
     self.lastpos = [0,0]
     self.lastT = None
+    self.maxSpeed = 0
+    self.avg1 = 0
+    self.avg2 = 0
   
   def update(self):
     # Run scheduledUpdate every second
@@ -62,11 +65,18 @@ class stats(ranaModule):
         pos[0],
         pos[1]) # degrees
 
-      speed = distance / dt # km/sec
+      speed = distance / dt # m/sec
       speedMh = speed * 2.23693629  # miles/hour
-      self.set('speed', speedMh)
-      self.set('bearing', bearing)
-      
+      if(speedMh < 10000):
+        self.set('speed', speedMh)
+        self.set('bearing', bearing)
+        if(speed > self.maxSpeed):
+          self.set('maxSpeed', speedMh)
+          self.maxSpeed = speed
+        self.avg1 += speedMh
+        self.avg2 += dt
+        self.set('avgSpeed', self.avg1/self.avg2)
+
     self.lastpos = pos
 
 if(__name__ == '__main__'):

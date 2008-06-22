@@ -36,15 +36,26 @@ class mapTiles(ranaModule):
   
   def drawMapOverlay(self, cr):
     (sx,sy,sw,sh) = self.get('viewport')
+    angle = self.get('bearing', 0)
     (cx,cy) = (sx + 0.5 * sw, sy + 0.5 * sh)
-    
+
+    cr.set_source_rgb(1.0, 1.0, 0.0)
+    cr.save()
+    cr.translate(cx,cy)
+    cr.rotate(radians(angle))
+    cr.move_to(-10, 15)
+    cr.line_to( 10, 15)
+    cr.line_to(  0, -15)
+    cr.fill()
     cr.set_source_rgb(0.0, 0.0, 0.0)
-    cr.arc(cx,cy,14, 0,2*3.1415)
-    cr.fill()
-    cr.set_source_rgb(1.0, 0.0, 0.0)
-    cr.arc(cx,cy,10, 0,2*3.1415)
-    cr.fill()
-        
+    cr.set_line_width(3)
+    cr.move_to(-10, 15)
+    cr.line_to( 10, 15)
+    cr.line_to(  0, -15)
+    cr.close_path()
+    cr.stroke()
+    cr.restore()
+
   def drawMap(self, cr):
     (sx,sy,sw,sh) = self.get('viewport')
     pos = self.get('map_centre', None)

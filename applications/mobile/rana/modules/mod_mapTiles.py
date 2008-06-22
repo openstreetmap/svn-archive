@@ -22,6 +22,7 @@ from threading import Thread
 import cairo
 import os
 import urllib
+from tilenames import *
 
 def getModule(m,d):
   return(mapTiles(m,d))
@@ -33,12 +34,45 @@ class mapTiles(ranaModule):
     self.images = {}
     self.threads = {}
   
-  def drawMap(self, cr):
-    (x,y,w,h) = self.get('viewport')
-    # TODO: draw correct images
-    self.loadImage(16308, 10871, 15, 'default')
-    self.drawImage(cr, "default_15_16308_10871", 100,100)
+  def drawMapOverlay(self, cr):
+    (sx,sy,sw,sh) = self.get('viewport')
+    (cx,cy) = (sx + 0.5 * sw, sy + 0.5 * sh)
     
+    cr.set_source_rgb(0.0, 0.0, 0.0)
+    cr.arc(cx,cy,14, 0,2*3.1415)
+    cr.fill()
+    cr.set_source_rgb(1.0, 0.0, 0.0)
+    cr.arc(cx,cy,10, 0,2*3.1415)
+    cr.fill()
+        
+  def drawMap(self, cr):
+    (sx,sy,sw,sh) = self.get('viewport')
+    pos = self.get('map_centre', None)
+    if(pos == None):
+      return
+    (lat,lon) = pos
+    
+    z = 17
+    x,y = latlon2xy(lat,lon,z)
+
+    proj = self.m.get('projection', None)
+    if(proj == None):
+      return;
+
+    proj.setView(sx,sy,sw,sh)
+    proj.recentre(lat,lon,z)
+
+    for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
+      for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
+        
+        # Convert corner to screen coordinates
+        x1,y1 = proj.pxpy2xy(x,y)
+
+        name = self.loadImage(x,y,z,'default')
+
+        if(name != None):
+          self.drawImage(cr,name,x1,y1)
+
   def update(self):
     # TODO: detect images finished downloading, and request update
     pass
@@ -68,26 +102,29 @@ class mapTiles(ranaModule):
     # First: is the image already in memory?
     name = self.imageName(x,y,z,layer)
     if name in self.images.keys():
-      return
+      return(name)
     
     # Second, is it already in the process of being downloaded?
     if name in self.threads.keys():
       if(not self.threads[name].finished):
-        return
+        return(None)
     
     # Third, is it in the disk cache?  (including ones recently-downloaded)
     filename = "cache/images/%s.png" % name
     if os.path.exists(filename):
       self.images[name]  = cairo.ImageSurface.create_from_png(filename)
-      return
+      return(name)
     
     # Image not found anywhere - resort to downloading it
     if(1):
       self.threads[name] = tileLoader(x,y,z,layer,filename)
       self.threads[name].start()
+      return(None)
     else:
       downloadTile(x,y,z,layer,filename)
-    self.set("needRedraw", True)
+      return(name)
+    #self.set("needRedraw", True)
+
     
   def imageName(self,x,y,z,layer):
     """Get a unique name for a tile image 

@@ -79,7 +79,7 @@ class mapTiles(ranaModule):
         # Convert corner to screen coordinates
         x1,y1 = proj.pxpy2xy(x,y)
 
-        name = self.loadImage(x,y,z,'default')
+        name = self.loadImage(x,y,z,'pyrender_default')
 
         if(name != None):
           self.drawImage(cr,name,x1,y1)
@@ -144,9 +144,15 @@ class mapTiles(ranaModule):
 
 
 
+def getURL(x,y,z,layer):
+  if(layer == 'tilesathome'):
+    return('http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png' % (z,x,y))
+  if(layer == 'pyrender_default'):
+    return('http://localhost:1280/default/%d/%d/%d.png' % (z,x,y))
+
 def downloadTile(x,y,z,layer,filename):
   """Downloads an image"""
-  url = 'http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png' % (z,x,y)
+  url = getURL(x,y,z,layer)
   urllib.urlretrieve(url, filename)
   
 class tileLoader(Thread):

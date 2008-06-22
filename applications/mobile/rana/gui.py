@@ -108,8 +108,11 @@ class MapWidget(gtk.Widget):
       for m in self.m.values():
         m.drawMenu(cr)
     else:
+      # TODO: make these different contexts
       for m in self.m.values():
         m.drawMap(cr)
+      for m in self.m.values():
+        m.drawMapOverlay(cr)
 
     #print "Redraw took %1.2f ms" % (1000 * (clock() - start))
     

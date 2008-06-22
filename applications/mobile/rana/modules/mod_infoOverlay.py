@@ -91,7 +91,7 @@ class infoOverlay(ranaModule):
         self.mode = 0
       self.onModeChange()
       
-  def drawMap(self, cr):
+  def drawMapOverlay(self, cr):
     """Draw an overlay on top of the map, showing various information
     about position etc."""
     (x,y,w,h) = self.get('viewport')

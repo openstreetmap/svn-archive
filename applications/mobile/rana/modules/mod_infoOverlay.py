@@ -53,10 +53,10 @@ class infoOverlay(ranaModule):
       self.lines.append('not available')
 
   def get_speed(self):
-    self.lines.append('Speed: ???')
+    self.lines.append('Speed: %1.1f mph' % self.get('speed', 0))
   
   def get_bearing(self):
-    self.lines.append('Bearing: ???')
+    self.lines.append('Bearing: %03.0f' % self.get('bearing', 0))
   
   def get_time(self):
     now = datetime.now()

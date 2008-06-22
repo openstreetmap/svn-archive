@@ -35,11 +35,14 @@ class mapTiles(ranaModule):
   
   def drawMap(self, cr):
     (x,y,w,h) = self.get('viewport')
+    # TODO: draw correct images
     self.loadImage(16308, 10871, 15, 'default')
     self.drawImage(cr, "default_15_16308_10871", 100,100)
+    
   def update(self):
     # TODO: detect images finished downloading, and request update
     pass
+  
   def drawImage(self,cr, name, x,y):
     """Draw a tile image"""
     
@@ -65,25 +68,20 @@ class mapTiles(ranaModule):
     # First: is the image already in memory?
     name = self.imageName(x,y,z,layer)
     if name in self.images.keys():
-      print "Alredy loaded"
       return
     
     # Second, is it already in the process of being downloaded?
     if name in self.threads.keys():
       if(not self.threads[name].finished):
-        print "Waiting"
         return
     
     # Third, is it in the disk cache?  (including ones recently-downloaded)
     filename = "cache/images/%s.png" % name
     if os.path.exists(filename):
       self.images[name]  = cairo.ImageSurface.create_from_png(filename)
-      print "Loading from disk: %s" % filename
-      print "as: %s" % name
       return
     
     # Image not found anywhere - resort to downloading it
-    print "Downloading %s" % (name)
     if(1):
       self.threads[name] = tileLoader(x,y,z,layer,filename)
       self.threads[name].start()
@@ -99,15 +97,13 @@ class mapTiles(ranaModule):
 
 
 def downloadTile(x,y,z,layer,filename):
+  """Downloads an image"""
   url = 'http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png' % (z,x,y)
-  print "Downloading %s" % url
-  print "to %s" % filename
   urllib.urlretrieve(url, filename)
   
 class tileLoader(Thread):
-  """Downloads images in a separate thread"""
+  """Downloads an image (in a thread)"""
   def __init__(self, x,y,z,layer,filename):
-    """Download a tile image"""
     self.x = x
     self.y = y
     self.z = z
@@ -123,5 +119,4 @@ class tileLoader(Thread):
       self.z,
       self.layer,
       self.filename)
-      
     self.finished = 1

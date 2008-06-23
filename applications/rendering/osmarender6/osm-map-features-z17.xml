@@ -788,9 +788,7 @@
                     </else>
                 </rule>
                 <rule e="way" k="highway" v="unsurfaced">
-                    <else>
-                        <line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
-                    </else>
+                    <line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
                 </rule>
                 <rule e="way" k="highway" v="service">
                     <line class="highway-core highway-service-core"/>

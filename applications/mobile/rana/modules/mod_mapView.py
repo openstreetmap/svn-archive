@@ -28,7 +28,14 @@ class mapView(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.updateTime = 0
-  
+    
+  def handleMessage(self, message):
+    z = self.get('z', 15)
+    if(message == 'zoomIn'):
+      self.set('z', z + 1)
+    elif(message == 'zoomOut'):
+      self.set('z', max(z - 1, 8))
+      
   def update(self):
     # Run scheduledUpdate every second
     t = time()

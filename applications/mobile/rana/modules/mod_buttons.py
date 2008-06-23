@@ -39,13 +39,11 @@ class buttons(ranaModule):
         self.mode = 0
       self.onModeChange()
 
-  def drawButton(self, cr, x1, y1, w, h, action):
-    r = 0.5 * min(w,h) - 6
-    cr.set_line_width(3)
-
-    cr.arc(x1+0.5*w, y1+0.5*h, r, 0, 2.0*pi)
-    cr.set_source_rgb(0,0,1)
-    cr.stroke()
+  def drawButton(self, cr, x1, y1, w, h, icon, action):
+    m = self.m.get('icons', None)
+    if(m == None):
+      return
+    m.draw(cr,icon,x1,y1,w,h)
 
     m = self.m.get('clickHandler', None)
     if(m != None):
@@ -59,6 +57,6 @@ class buttons(ranaModule):
     dx = w / 5.0
     dy = dx
     
-    self.drawButton(cr, x+dx, y, dx, dy, "mapView:zoomOut")
-    self.drawButton(cr, x, y, dx, dy, "menu:show")
-    self.drawButton(cr, x, y+dy, dx, dy, "mapView:zoomOut")
+    self.drawButton(cr, x+dx, y, dx, dy, "zoom_out", "mapView:zoomOut")
+    self.drawButton(cr, x, y, dx, dy, "blank", "menu:show")
+    self.drawButton(cr, x, y+dy, dx, dy, "zoom_in", "mapView:zoomOut")

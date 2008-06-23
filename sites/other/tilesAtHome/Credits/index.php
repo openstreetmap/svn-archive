@@ -1,14 +1,8 @@
-<html>
-<head>
-<title>tiles@home credits</title>
-<link rel="stylesheet" href="../styles.css">
-<meta name="robots" content="nofollow,noindex">
-</head>
-<body>
-<div class="all">
-<h1 class="title"><a href="../"><img src="../Gfx/tah.png" alt="tiles@home" width="600" height="109"></a></h1>
-<p class="title">Credits</p>
-<hr>
+<?php
+$title = "Credits";
+include "../lib/template/header.inc" 
+?>  
+
 <p>The following people have been uploading tiles to the program:</p>
 
 <p>blue row = upload within the last 10 minutes.</p>
@@ -36,7 +30,7 @@ if(!mysql_error()){
     print "<table border=1 cellspacing=0 cellpadding=5 width='100%'>";
     
     # Header
-    $Columns = "Rank, Name, Activity<a href='".$_server[php-self]."?order='>&darr;</a>, Last upload<a href='".$_server[php-self]."?order=date'>&darr;</a>, Version, Uploaded Bytes (Since 2007/11/11)<a href='".$_server[php-self]."?order=bytes'>&darr;</a>";
+    $Columns = "Rank, Name, Activity<a href='".$_server[php-self]."?order='>&darr;</a>, Last upload<a href='".$_server[php-self]."?order=date'>&darr;</a>, Version, Uploaded Bytes (Since 2007/11/11)<a href='".$_server[php-self]."?order=bytes'>&darr;</a>, Disabled";
     print "<tr><th>" . str_replace(", ", "</th><th>", $Columns) . "</th></tr>\n";
     
     ##-------------------------------------------------------
@@ -69,6 +63,8 @@ if(!mysql_error()){
       # Version ID
       array_push($Row, htmlentities(number_Format($Data["bytes"], 0, ".", ",")));
       
+      array_push($Row, $Data["disabled"]);
+      
       # Convert all the data into a row of HTML table
       $Style = $OnNow
         ? "background-color:#44C"
@@ -92,24 +88,22 @@ function FormatAge($Age){
   if($Age < 0)
     return("future");
   if($Age < 120)
-    return(sprintf("%d seconds ago", $Age));
+    return(sprintf("%d seconds", $Age));
   $Age /= 60;
   if($Age < 120)
-    return(sprintf("%d minutes ago", $Age));
+    return(sprintf("%d minutes", $Age));
   $Age /= 60;
-  if($Age < 24)
-    return(sprintf("%d hours ago", $Age));
+  if($Age < 48)
+    return(sprintf("%d&nbsp;hours", $Age));
   $Age /= 24;
-  if($Age < 7)
-    return(sprintf("%d days ago", $Age));
-  $Age /= 7;
-  if($Age < 40)
-    return(sprintf("%d weeks ago", $Age));
-  $Age /= 30;
-  if($Age < 12)
-    return(sprintf("%d months ago", $Age));
-  
-  return("ages ago...");
+  if($Age < 14)
+    return(sprintf("%d&nbsp;days", $Age));
+  if($Age < 60)
+    return(sprintf("%d&nbsp;weeks", $Age/7));
+  else if($Age < 356)
+    return(sprintf("%d&nbsp;months", $Age/30));
+  else
+    return(sprintf("%d&nbsp;years", $Age/356));
 }
 ?>
 

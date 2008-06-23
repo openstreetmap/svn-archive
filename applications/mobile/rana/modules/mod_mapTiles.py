@@ -63,7 +63,7 @@ class mapTiles(ranaModule):
       return
     (lat,lon) = pos
     
-    z = 17
+    z = int(self.get('z', 15))
     x,y = latlon2xy(lat,lon,z)
 
     proj = self.m.get('projection', None)

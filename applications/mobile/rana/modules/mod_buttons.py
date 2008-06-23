@@ -39,33 +39,17 @@ class buttons(ranaModule):
         self.mode = 0
       self.onModeChange()
 
-  def drawButton2(self, cr, x1, y1, w, h, text, bg, fg):
-    # Draw a background
-    cr.set_source_rgb(bg[0],bg[1],bg[2])
-    cr.rectangle(x1,y1,w,h)
-    cr.fill()
-    cr.set_source_rgb(bg[0],bg[1],bg[2])
-
-    cr.set_font_size(1)
-    _x1, _x2, tw, th, _x3, _x4= (cr.text_extents(text))
-    ratio = max(w/tw, h/th)
-    tw /= ratio
-    th /= ratio
-    cr.set_font_size(ratio)
-    cr.move_to(x1, y1 + 0.5 * (h + th) )
-    cr.set_source_rgb(fg[0],fg[1],fg[2])
-    cr.show_text(str(text))
-    cr.stroke()
-    
-  def drawButton(self, cr, x1, y1, w, h, text, bg, fg):
-    cr.set_source_rgb(bg[0],bg[1],bg[2])
-
+  def drawButton(self, cr, x1, y1, w, h, action):
     r = 0.5 * min(w,h) - 6
     cr.set_line_width(3)
-    cr.set_source_rgb(bg[0],bg[1],bg[2])
+
     cr.arc(x1+0.5*w, y1+0.5*h, r, 0, 2.0*pi)
+    cr.set_source_rgb(0,0,1)
     cr.stroke()
 
+    m = self.m.get('clickHandler', None)
+    if(m != None):
+      m.registerXYWH(x1,y1,w,h, action)
 
   def drawMapOverlay(self, cr):
     """Draw an overlay on top of the map, showing various information
@@ -75,14 +59,6 @@ class buttons(ranaModule):
     dx = w / 5.0
     dy = dx
     
-    self.drawButton(cr, x, y, dx, dy, "Minus", (0,0,1), (1,1,0))
-    self.drawButton(cr, x+dx, y, dx, dy, "Menu", (0,0,1), (1,1,0))
-    self.drawButton(cr, x, y+dy, dx, dy, "Plus", (0,0,1), (1,1,0))
-    
-    # Clicking on the rectangle should toggle which field we display
-    #m = self.m.get('clickHandler', None)
-    #if(m != None):
-    #  m.registerXYWH(x1,y1,w,dy, "infoOverlay:nextField")
-    
-
-
+    self.drawButton(cr, x, y, dx, dy, "mapView:zoomOut")
+    self.drawButton(cr, x+dx, y, dx, dy, "menu:show")
+    self.drawButton(cr, x, y+dy, dx, dy, "mapView:zoomOut")

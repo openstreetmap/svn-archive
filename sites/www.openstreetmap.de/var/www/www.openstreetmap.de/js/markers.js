@@ -24,6 +24,9 @@ function createMarkers() {
     addMarker(layer_local, 13.71299, 51.02516,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/DresdnerOSMStammtisch">Dresden</a></b><br/>Treffen jeden 1. Donnerstag im Monat</p>'
     );
+    addMarker(layer_local, 8.666, 50.5833,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Stammtisch_Mittelhessen">Gießen</a> (Mittelhessen)</b><br/>Unregelmäßige Treffen</p>'
+    );
     addMarker(layer_local, 9.99, 53.57,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Hamburger_Mappertreffen">Hamburg</a></b><br/>Monatliche Treffen</p>'
     );

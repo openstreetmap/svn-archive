@@ -29,16 +29,6 @@ class buttons(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
   
-  def update(self):
-    pass
-  
-  def handleMessage(self, message):
-    if(message == 'nextField'):
-      self.mode += 1
-      if(self.mode >= len(self.modes)):
-        self.mode = 0
-      self.onModeChange()
-
   def drawButton(self, cr, x1, y1, w, h, icon, action):
     m = self.m.get('icons', None)
     if(m == None):
@@ -59,4 +49,4 @@ class buttons(ranaModule):
     
     self.drawButton(cr, x+dx, y, dx, dy, "zoom_out", "mapView:zoomOut")
     self.drawButton(cr, x, y, dx, dy, "blank", "menu:show")
-    self.drawButton(cr, x, y+dy, dx, dy, "zoom_in", "mapView:zoomOut")
+    self.drawButton(cr, x, y+dy, dx, dy, "zoom_in", "mapView:zoomIn")

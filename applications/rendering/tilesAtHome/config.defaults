@@ -29,7 +29,7 @@ FallBackToXAPI = 1
 
 i18n=1
 
-Osmarender = orp
+Osmarender = XSLT
 
 Inkscape=inkscape
 

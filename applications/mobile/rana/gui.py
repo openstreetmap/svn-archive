@@ -58,8 +58,8 @@ class MapWidget(gtk.Widget):
     for f in os.listdir(module_path):
       if(f[0:4] == 'mod_' and f[-3:] == '.py'):
         name = f[4:-3]
-        filename = os.path.join(module_path, f[0:-3]) # with directory name, but without .py extension
-        a = __import__(filename)
+        filename = "%s\\%s" % ( module_path, f[0:-3]) # with directory name, but without .py extension
+        a = __import__(f[0:-3])
         self.m[name] = a.getModule(self.m,self.d)
         print " * %s: %s" % (name, self.m[name].__doc__)
 

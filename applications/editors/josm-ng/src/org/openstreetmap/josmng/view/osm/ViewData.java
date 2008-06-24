@@ -161,7 +161,7 @@ class ViewData {
      * @param hint
      * @return a collection of at least all nodes inside given rectangle.
      */
-    public Collection<? extends ViewCoords> getTaggedNodes(Rectangle viewSpaceHint) {
+    private Collection<? extends ViewCoords> getTaggedNodes(Rectangle viewSpaceHint) {
         // XXX filtering
         return taggedNodes;
     }
@@ -170,13 +170,14 @@ class ViewData {
      * @param hint
      * @return a collection of at least all nodes inside given rectangle.
      */
-    public Collection<? extends ViewCoords> getNodes(Rectangle viewSpaceHint) {
+    private Collection<? extends ViewCoords> getNodes(Rectangle viewSpaceHint) {
         Collection<ViewCoords> nd = nodes.subSet(getTopLeft(viewSpaceHint),
                 getBottomRight(viewSpaceHint));
         return nd;
     }
     
     public Collection<? extends View> getViews(Rectangle viewSpaceHint, int zoom) {
+        update(); // reindex moved nodes and affected ways
         Collection<View> matching = new ArrayList();
         
         for (ViewWay way : ways) {
@@ -199,24 +200,43 @@ class ViewData {
         view.callRepaint();
     }
 
-    private void updateNodeAndWays(Node n) {
-        ViewNode vn = getViewForNode(n);
+    private Set<Node> toUpdate = new Storage<Node>();
 
-        // update the coords index
-        nodes.remove(vn);
-        vn.updatePosition(projCache.coordToView(n));
-        nodes.add(vn);
+    private void update() {
+        if (toUpdate.isEmpty()) return;
+
+        Rectangle r = null;
+        for (Node n : toUpdate) {
+            ViewNode vn = getViewForNode(n);
+            if (r == null) {
+                r = new Rectangle(vn.getIntLon(), vn.getIntLat(), 0, 0);
+            } else {
+                r.add(vn.getIntLon(), vn.getIntLat());
+            }
+
+            // update the coords index
+            nodes.remove(vn);
+            vn.updatePosition(projCache.coordToView(n));
+            nodes.add(vn);
+        }
         
+        r.width++;
+        r.height++;
+        
+        // should use more effective update, but as long as the dataset
+        // fits in memory, this is fast enough - few ms for hundreds
+        // of thousands of nodes
         for (ViewWay w : ways) {
-            // should use more effective update, but as long as the dataset
-            // fits in memory, this is fast enough - few ms for hundreds
-            // of thousands of nodes
+            if (! r.intersects(w.bbox)) continue;
             for (ViewNode t : w.nodes) {
-                if (t == vn) {
+                if (toUpdate.contains(t.getPrimitive())) {
                     w.bbox = getBBox(w.nodes);
+                    break;
                 }
             }
         }
+
+        toUpdate.clear();
     }
     
     private void updateWay(ViewWay w) {
@@ -293,7 +313,7 @@ class ViewData {
         }
 
         public void nodeMoved(Node node) {
-            updateNodeAndWays(node);
+            toUpdate.add(node);
             fireChange();
         }
 

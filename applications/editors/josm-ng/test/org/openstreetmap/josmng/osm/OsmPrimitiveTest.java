@@ -146,7 +146,7 @@ public class OsmPrimitiveTest {
     
     private static class Prim extends OsmPrimitive {
         public Prim() {
-            super(testing, 1, "", "", true);
+            super(testing, 1, -1, "", true);
         }        
     }
 }

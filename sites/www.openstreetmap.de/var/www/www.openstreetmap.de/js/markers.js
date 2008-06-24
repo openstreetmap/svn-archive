@@ -36,13 +36,16 @@ function createMarkers() {
     addMarker(layer_local, 11.58843, 48.1227,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/München">München</a></b><br/>Treffen jeden 3. Dienstag im Monat</p>'
     );
+    addMarker(layer_local, 9.5794793, 48.979546,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Murrhardt">Murrhardt</a></b></p>'
+    ); 
     addMarker(layer_local, 10.99603, 49.47368,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/NFE-Treffen">Nürnberg/Fürth/Erlangen</a></b><br/>Unregelmäßige Treffen</p>'
     ); 
+    addMarker(layer_local, 8.05, 52.27,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Osnabrück">Osnabrück</a></b></p>'
+    ); 
     addMarker(layer_local, 9.95, 49.8,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Würzburg">Würzburg</a></b><br/>Unregelmäßige Treffen</p>'
-    ); 
-    addMarker(layer_local, 9.5794793, 48.979546,
-        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Murrhardt">Murrhardt</a></b></p>'
     ); 
 }

@@ -1864,8 +1864,8 @@
             }
 
             .sport-tennis {
-                fill: #A7453B;
-                stroke: #A71203;
+                fill: #d18a6a;
+                stroke: #B36C4C;
                 stroke-width: 0.2px;
             }
 

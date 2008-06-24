@@ -99,3 +99,8 @@ table.gallery td {
     border: 10px solid #ffffff;
 }
 
+img.frame {
+    border: 1px solid #bfc0d8;
+    padding: 1px;
+}
+

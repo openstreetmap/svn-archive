@@ -28,10 +28,49 @@
 #include "resource.h"
 typedef int intptr_t;
 #define DOC_PREFIX "\\My Documents\\"
+
+// Unfortunately eMbedded Visual C++ TEXT() function does not use UTF8
+// So we have to repeat the OPTIONS table
+#define OPTIONS \
+  o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
+  o (Search,          "?", "?", "?", "?", "?", 0, 1) \
+  o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
+  o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
+  o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
+  o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
+  o (English,         "Deutsch", "Espa�ol", "Fran�ais", "Italiano", \
+                      "Nederlands", 0, 6) \
+  o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
+  o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
+  o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
+  o (CommPort,        "?", "?", "?", "?", "?", 0, 9) \
+  o (BaudRate,        "?", "?", "?", "?", "?", 0, 6) \
+  o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
+  o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 1) \
+  o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 1) \
+  o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
+  o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 2) \
+  o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2)
 #else
 #include <unistd.h>
 #define wchar_t char
+#define wsprintf sprintf
 #define DOC_PREFIX ""
+#define OPTIONS \
+  o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
+  o (Search,          "?", "?", "?", "?", "?", 0, 1) \
+  o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
+  o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
+  o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
+  o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
+  o (English,         "Deutsch", "Español", "Français", "Italiano", \
+                      "Nederlands", 0, 6) \
+  o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
+  o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
+  o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
+  o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
+
+#define HideZoomButtons 0
 #endif
 #ifndef TRUE
 #define TRUE 1
@@ -65,7 +104,8 @@ HWND hwndList;
 wchar_t appendTmp[50];
 char searchStr[50];
 #define gtk_clist_append(x,str) { \
-   MultiByteToWideChar (CP_UTF8, 0, *str, strlen (*str) + 1, appendTmp, sizeof (appendTmp)); \
+   MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, *str, \
+     strlen (*str) + 1, appendTmp, sizeof (appendTmp)); \
    SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) appendTmp); \
   }
 #define gtk_entry_get_text(x) searchStr
@@ -124,16 +164,26 @@ struct wayType {
 
 inline int Layer (wayType *w) { return w->bits >> 29; }
 
-int Latitude (double lat)
+inline int Latitude (double lat)
 { /* Mercator projection onto a square means we have to clip
      everything beyond N85.05 and S85.05 */
   return lat > 85.051128779 ? 2147483647 : lat < -85.051128779 ? -2147483647 :
     lrint (log (tan (M_PI / 4 + lat * M_PI / 360)) / M_PI * 2147483648.0);
 }
 
-int Longitude (double lon)
+inline int Longitude (double lon)
 {
   return lrint (lon / 180 * 2147483648.0);
+}
+
+inline double LatInverse (int lat)
+{
+  return (atan (exp (lat / 2147483648.0 * M_PI)) - M_PI / 4) / M_PI * 360;
+}
+
+inline double LonInverse (int lon)
+{
+  return lon / 2147483648.0 * 180;
 }
 
 /*---------- Global variables -----------*/
@@ -292,32 +342,9 @@ int Next (OsmItr &itr) /* Friend of osmItr */
 
 enum { langEn, langDe, langEs, langFr, langIt, langNl, numberOfLang };
 
-#define OPTIONS \
-  o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
-  o (Search,          "?", "?", "?", "?", "?", 0, 1) \
-  o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
-  o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
-  o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
-  o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
-  o (English,         "Deutsch", "Español", "Français", "Italiano", \
-                      "Nederlands", 0, 6) \
-  o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
-  o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
-  o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
-  o (CommPort,        "?", "?", "?", "?", "?", 0, 5) \
-  o (BaudRate,        "?", "?", "?", "?", "?", 0, 6) \
-  o (Exit,            "?", "?", "?", "?", "?", 0, 2)
-
 #define notImplemented \
-  o (CommPort,        "?", "?", "?", "?", "?") \
-  o (BaudRate,        "?", "?", "?", "?", "?") \
   o (OrientNorthward, "?", "?", "?", "?", "?") \
-  o (ZoomInKey,       "?", "?", "?", "?", "?") \
-  o (HideZInButton,   "?", "?", "?", "?", "?") \
-  o (ZoomOutKey,      "?", "?", "?", "?", "?") \
-  o (HideZOutButton,  "?", "?", "?", "?", "?") \
   o (ShowCompass,     "?", "?", "?", "?", "?") \
-  o (ShowCoordinates, "?", "?", "?", "?", "?") \
   o (ShowPrecision,   "?", "?", "?", "?", "?") \
   o (ShowSpeed,       "?", "?", "?", "?", "?") \
   o (ShowHeading,     "?", "?", "?", "?", "?") \
@@ -337,8 +364,8 @@ enum { OPTIONS numberOfOptions };
 #undef o
 
 #define o(en,de,es,fr,it,nl,min,max) { \
-  #en, de, es, fr, it, nl },
-char *optionNameTable[][numberOfLang] = { OPTIONS };
+  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
+wchar_t *optionNameTable[][numberOfLang] = { OPTIONS };
 #undef o
 
 #define o(en,de,es,fr,it,nl,min,max) int en = min;
@@ -569,11 +596,40 @@ void Route (int recalculate)
 #ifndef HEADLESS
 #define STATUS_BAR    0
 
-GtkWidget *draw; //, *followGPSr;
+GtkWidget *draw, *location; //, *followGPSr;
 //GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
+inline void SetLocation (int nlon, int nlat)
+{
+  clon = nlon;
+  clat = nlat;
+  #ifndef _WIN32_WCE
+  char lstr[50];
+  int zl = 0;
+  while (zoom >> zl) zl++;
+  sprintf (lstr, "?lat=%.5lf&lon=%.5lf&zoom=%d", LatInverse (nlat),
+    LonInverse (nlon), 33 - zl);
+  gtk_entry_set_text (GTK_ENTRY (location), lstr);
+  #endif
+}
+
+#ifndef _WIN32_WCE
+int ChangeLocation (void)
+{
+  char *lstr = (char *) gtk_entry_get_text (GTK_ENTRY (location));
+  double lat, lon;
+  if (sscanf (lstr, /*"%*[^?]"*/"?lat=%lf&lon=%lf&zoom=%d", &lat, &lon, &zoom)
+       == 3) {
+    clat = Latitude (lat);
+    clon = Longitude (lon);
+    zoom = 0xffffffff >> (zoom - 1);
+    gtk_widget_queue_clear (draw);
+  }
+  return FALSE;
+}
+#endif
 /*-------------------------------- NMEA processing ------------------------*/
 /* My TGPS 374 frequently produces corrupt NMEA output (probably when the
    CPU goes into sleep mode) and this may also be true for GPS receivers on
@@ -784,8 +840,7 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
   gpsNewStruct *gps = gpsNew;
   
   if (ProcessNmea (rx, &got) && /*gps->fix.mode >= MODE_2D &&*/ FollowGPSr) {
-    clon = Longitude (gps->fix.longitude);
-    clat = Latitude (gps->fix.latitude);
+    SetLocation (Longitude (gps->fix.longitude),Latitude (gps->fix.latitude));
     int plon = Longitude (gps->fix.longitude + gps->fix.speed * 3600.0 /
       40000000.0 / cos (gps->fix.latitude * (M_PI / 180.0)) *
       sin (gps->fix.track * (M_PI / 180.0)));
@@ -869,7 +924,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   #endif
   if (ButtonSize <= 0) ButtonSize = 4;
   int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
-  if (event->x > w - ButtonSize * 20 && b < 3) {
+  if (event->x > w - ButtonSize * 20 && b <
+      (HideZoomButtons && option == numberOfOptions ? 1 : 3)) {
     if (b == 0) option = (option + 1) % (numberOfOptions + 1);
     else if (option == StartRouteNum) {
       flon = clon;
@@ -895,14 +951,16 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else {
       if (b == 2) zoom = zoom / 4 * 3;
       if (b == 1) zoom = zoom / 3 * 4;
+      if (b > 0) SetLocation (clon, clat);
     }
     if (b > 0 && option <= FastestRouteNum) option = numberOfOptions;
   }
   else {
     int perpixel = zoom / w;
     if (event->button == 1) {
-      clon += lrint ((event->x - w / 2) * perpixel);
-      clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
+      SetLocation (clon + lrint ((event->x - w / 2) * perpixel),
+        clat - lrint ((event->y - draw->allocation.height / 2) * perpixel));
+
       //gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
       FollowGPSr = 0;
     }
@@ -1015,6 +1073,7 @@ gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 {
   if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
   if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
+  SetLocation (clon, clat);
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
@@ -1136,7 +1195,7 @@ gint Expose (void)
           
           #ifdef _WIN32_WCE
           SelectObject (mygc, sysFont);
-          MultiByteToWideChar (CP_UTF8, 0, (char *)(w + 1) + 1,
+          MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, (char *)(w + 1) + 1,
             len, wcTmp, sizeof (wcTmp));
           ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
                 wcTmp, len, NULL);	
@@ -1231,7 +1290,7 @@ gint Expose (void)
           
           HFONT customFont = CreateFontIndirect (&logFont);
           HGDIOBJ oldf = SelectObject (mygc, customFont);
-          MultiByteToWideChar (CP_UTF8, 0, (char *)(w + 1) + 1,
+          MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, (char *)(w + 1) + 1,
             len, wcTmp, sizeof (wcTmp));
           ExtTextOut (mygc, (x0 - clon) / perpixel + clip.width / 2 +
                 int (len * 3 * cos (hoek)),
@@ -1308,14 +1367,14 @@ gint Expose (void)
     }
   } // Not in the menu
   else {
-    char optStr[30];
+    wchar_t optStr[30];
     if (option == VehicleNum) {
-      #define M(v) Vehicle == v ## R ? #v :
-      sprintf (optStr, "%s : %s", optionNameTable[option][English],
+      #define M(v) Vehicle == v ## R ? TEXT (#v) :
+      wsprintf (optStr, TEXT ("%s : %s"), optionNameTable[option][English],
         RESTRICTIONS NULL);
       #undef M
     }
-    else sprintf (optStr, "%s : %d", optionNameTable[option][English],
+    else wsprintf (optStr, TEXT ("%s : %d"), optionNameTable[option][English],
     #define o(en,de,es,fr,it,nl,min,max) option == en ## Num ? en :
     OPTIONS
     #undef o
@@ -1325,10 +1384,10 @@ gint Expose (void)
     cairo_show_text (cai, optStr);
     #else
     SelectObject (mygc, sysFont);
-    MultiByteToWideChar (CP_UTF8, 0, optStr,
-       strlen (optStr), wcTmp, sizeof (wcTmp));
+//    MultiByteToWideChar (CP_UTF8, 0 /* MB_ERR_INVALID_CHARS*/, optStr,
+//       strlen (optStr), wcTmp, sizeof (wcTmp));
     ExtTextOut (mygc, 50, draw->allocation.height / 2, 0, NULL,
-       wcTmp, strlen (optStr), NULL);	
+       optStr, wcslen (optStr), NULL);	
     #endif
   }
   #ifndef _WIN32_WCE
@@ -1341,17 +1400,25 @@ gint Expose (void)
       ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
   }
   #else
+  int i = (HideZoomButtons && option == numberOfOptions ? 1 : 3);
   RECT r;
   r.left = clip.width - ButtonSize * 20;
-  r.top = clip.height - ButtonSize * 60;
+  r.top = clip.height - ButtonSize * 20 * i;
   r.right = clip.width;
   r.bottom = clip.height;
   FillRect (mygc, &r, (HBRUSH) GetStockObject(LTGRAY_BRUSH));
   SelectObject (mygc, sysFont);
-  for (int i = 0; i < 3; i++) {
+  while (--i >= 0) {
     ExtTextOut (mygc, clip.width - ButtonSize * 10 - 5, clip.height - 5 -
         ButtonSize * (20 * i + 10), 0, NULL, i == 0 ? TEXT ("O") :
         i == 1 ? TEXT ("-") : TEXT ("+"), 1, NULL);
+  }
+
+  wchar_t coord[21];
+  if (ShowCoordinates) {
+    wsprintf (coord, TEXT ("%9.5lf %10.5lf"), LatInverse (clat),
+      LonInverse (clon));
+    ExtTextOut (mygc, 0, clip.height - 15, 0, NULL, coord, 20, NULL);
   }
   #endif
   #ifdef CAIRO_VERSION
@@ -1461,21 +1528,19 @@ int IncrementalSearch (void)
 void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
   GdkEventButton * /*ev*/, void * /*data*/)
 {
-  clon = incrementalWay[row]->clon;
-  clat = incrementalWay[row]->clat;
+  SetLocation (incrementalWay[row]->clon, incrementalWay[row]->clat);
   zoom = incrementalWay[row]->dlat + incrementalWay[row]->dlon + (2 << 14);
 //  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
   FollowGPSr = FALSE;
   gtk_widget_queue_clear (draw);
 }
 
-void InitializeOptions (void)
+void InitializeOptions (FILE *optFile)
 {
-  clon = ndBase[0].lon; // Longitude (-0.272228);
-  clat = ndBase[0].lat; // Latitude (51.927977);
+  SetLocation (ndBase[0].lon, ndBase[0].lat);
   zoom = lrint (0.1 / 5 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
   
-  FILE *optFile = fopen (DOC_PREFIX "gosmore.opt", "r");
+  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "r");
   IconSet = 1;
   DetailLevel = 3;
   ButtonSize = 4;
@@ -1484,14 +1549,15 @@ void InitializeOptions (void)
     OPTIONS
     #undef o
     fclose (optFile);
+    option = numberOfOptions;
   }
   Exit = 0;
 }
 
-void SaveOptions (void)
+void SaveOptions (FILE *optFile)
 {
   FlushGpx ();
-  FILE *optFile = fopen (DOC_PREFIX "gosmore.opt", "w");
+  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "w");
   if (optFile) {
     #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
     OPTIONS
@@ -1577,16 +1643,14 @@ int UserInterface (int argc, char *argv[])
     if (!shortest) printf ("No route found\n\r");
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
     for (; shortest; shortest = shortest->shortest) {
-      printf ("%lf,%lf\n\r", (atan (exp (shortest->nd->lat / 2147483648.0 *
-        M_PI)) - M_PI / 4) / M_PI * 360,
-        shortest->nd->lon / 2147483648.0 * 180);
+      printf ("%lf,%lf\n\r", LatInverse (shortest->nd->lat),
+        LonInverse (shortest->nd->lon));
     }
     return 0;
   }
 
   printf ("%s is in the public domain and comes without warrantee\n",argv[0]);
   #ifndef HEADLESS
-  InitializeOptions ();
   
   gtk_init (&argc, &argv);
   draw = gtk_drawing_area_new ();
@@ -1617,6 +1681,11 @@ int UserInterface (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (list), "select_row",
     GTK_SIGNAL_FUNC (SelectName), NULL);
     
+  location = gtk_entry_new ();
+  gtk_box_pack_start (GTK_BOX (vbox), location, FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (location), "changed",
+    GTK_SIGNAL_FUNC (ChangeLocation), NULL);
+  
 /*  carBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   gtk_combo_box_append_text (carBtn, "car");
   gtk_combo_box_append_text (carBtn, "bicycle");
@@ -1677,6 +1746,7 @@ int UserInterface (int argc, char *argv[])
   gtk_widget_set_usize (window, 400, 300);
   gtk_widget_show (search);
   gtk_widget_show (list);
+  gtk_widget_show (location);
   gtk_widget_show (draw);
 /*   gtk_widget_show (GTK_WIDGET (carBtn));
   gtk_widget_show (GTK_WIDGET (fastestBtn));
@@ -1686,9 +1756,10 @@ int UserInterface (int argc, char *argv[])
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
   gtk_widget_show (window);
+  InitializeOptions (NULL);
   IncrementalSearch ();
   gtk_main ();
-  SaveOptions ();
+  SaveOptions (NULL);
   
   #endif // HEADLESS
   return 0;
@@ -2319,7 +2390,6 @@ int main (int argc, char *argv[])
 #else // _WIN32_WCE
 //----------------------------- _WIN32_WCE ------------------
 HANDLE port = INVALID_HANDLE_VALUE;
-volatile int gpsNewDataReady = FALSE; // Serves as lock on gpsNew
 
 HBITMAP bmp;
 HDC memDc, bufDc;
@@ -2338,7 +2408,7 @@ BOOL CALLBACK DlgSearchProc (
         HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
         int wstrlen = Edit_GetLine (edit, 0, appendTmp, sizeof (appendTmp));
         //wstr[wstrlen] = 0;
-        WideCharToMultiByte (CP_UTF8, 0, appendTmp, wstrlen, searchStr, sizeof (searchStr),
+        WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, appendTmp, wstrlen, searchStr, sizeof (searchStr),
           NULL, NULL);
         //SendMessage (edit, EM_GETLINE, 0, wstr);
         hwndList = GetDlgItem (hwnd, IDC_LIST1);
@@ -2435,28 +2505,31 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       // 193=0xC1=Zoom in, 194=0xC2=Zoom out, 198=0xC6=menu 197=0xC5=settings
       // 195=0xC3=V+, 196=0xC4=V- which is VK_APP1 to VK_APP6
       // and WM_CHAR:VK_BACK
+      InvalidateRect (hWnd, NULL, FALSE);
+      if (ZoomInKeyNum <= option && option < HideZoomButtonsNum) {
+        #define o(en,de,es,fr,it,nl,min,max) if (option == en ## Num) en = wParam;
+        OPTIONS
+        #undef o
+        break;
+      }
       if (wParam == 198) {
         SipShowIM (SIPF_ON);
         ShowWindow (dlgWnd, SW_SHOW);
         //else DialogBox(hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
 	//  NULL, (DLGPROC)DlgSearchProc); /* Create from WinMain ?? */
       }
-      if (wParam == 193) zoom = zoom * 3 / 4;
-      if (wParam == 194) zoom = zoom * 4 / 3;
+      if (wParam == (DWORD) ZoomInKey) zoom = zoom * 3 / 4;
+      if (wParam == (DWORD) ZoomOutKey) zoom = zoom * 4 / 3;
       if (wParam == 197) FollowGPSr = !FollowGPSr;
 
-      if (VK_DOWN == wParam) clat -= zoom / 2;
-      else if (VK_UP == wParam) clat += zoom / 2;
-      else if (VK_LEFT == wParam) clon -= zoom / 2;
-      else if (VK_RIGHT == wParam) clon += zoom / 2;
-      else goto noChangeFollow;
-        FollowGPSr = FALSE;
-      noChangeFollow:
-
-      if (VK_RETURN == wParam) {
-        PostMessage (hWnd, WM_CLOSE, 0, 0);
-      }
-      else InvalidateRect (hWnd, NULL, FALSE);
+      do { // Keep compiler happy
+        int oldCsum = clat + clon;
+        if (VK_DOWN == wParam) clat -= zoom / 2;
+        else if (VK_UP == wParam) clat += zoom / 2;
+        else if (VK_LEFT == wParam) clon -= zoom / 2;
+        else if (VK_RIGHT == wParam) clon += zoom / 2;
+        if (oldCsum != clat + clon) FollowGPSr = FALSE;
+      } while (0);
       break;
     case WM_USER + 1:
       /*
@@ -2466,11 +2539,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         gpsNew.fix.latitude, gpsNew.fix.longitude, gpsNew.fix.ele,
 	gpsNew.fix.hdop); */
       if (FollowGPSr) {
-        clat = Latitude (gpsNew->fix.latitude);
-        clon = Longitude (gpsNew->fix.longitude);
+        SetLocation (Latitude (((gpsNewStruct*)lParam)->fix.longitude),
+          Longitude (((gpsNewStruct*)lParam)->fix.latitude));
         InvalidateRect (hWnd, NULL, FALSE);
       }
-      gpsNewDataReady = FALSE;
       break;
     case WM_LBUTTONDOWN:
       //MoveTo (LOWORD(lParam), HIWORD(lParam));
@@ -2616,9 +2688,8 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
     //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
     //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
     
-    if (!gpsNewDataReady &&
-        (gpsNewDataReady = ProcessNmea (rx, (unsigned*)&nBytes))) {
-      PostMessage (mWnd, WM_USER + 1, 0, 0);
+    if (ProcessNmea (rx, (unsigned*)&nBytes)) {
+      PostMessage (mWnd, WM_USER + 1, 0, (intptr_t) gpsNew);
     }
   }
   guiDone = FALSE;
@@ -2662,7 +2733,10 @@ int WINAPI WinMain(
   if(!InitApplication ()) return(FALSE);
   if (!InitInstance (nCmdShow)) return(FALSE);
 
-  InitializeOptions ();
+  wcscpy (argv0 + wcslen (argv0) - 3, TEXT ("opt")); // _arm.exe to ore.pak
+  FILE *optFile = _wfopen (argv0, TEXT ("r"));
+  InitializeOptions (optFile);
+
   GtkWidget dumdraw;
   dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
   dumdraw.allocation.height = GetSystemMetrics(SM_CYSCREEN);
@@ -2674,8 +2748,10 @@ int WINAPI WinMain(
   DWORD threadId;
   if (CommPort == 0) {}
   else if((port=CreateFile (CommPort == 1 ? TEXT ("COM1:") :
-    CommPort == 2 ? TEXT ("COM2") : CommPort == 3 ? TEXT ("COM3") :
-                    TEXT ("COM4"), GENERIC_READ | GENERIC_WRITE, 0,
+    CommPort == 2 ? TEXT ("COM2:") : CommPort == 3 ? TEXT ("COM3:") :
+    CommPort == 4 ? TEXT ("COM4:") : CommPort == 5 ? TEXT ("COM5:") :
+    CommPort == 6 ? TEXT ("COM6:") : CommPort == 7 ? TEXT ("COM7:") :
+                    TEXT ("COM8:"), GENERIC_READ | GENERIC_WRITE, 0,
           NULL, OPEN_EXISTING, 0, 0)) != INVALID_HANDLE_VALUE) {
     CreateThread (NULL, 0, NmeaReader, NULL, 0, &threadId);
   }
@@ -2688,7 +2764,8 @@ int WINAPI WinMain(
   }
   guiDone = TRUE;
   while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
-  SaveOptions ();
+  optFile = _wfopen (argv0, TEXT ("r+"));
+  SaveOptions (optFile);
   return 0;
 }
 #endif

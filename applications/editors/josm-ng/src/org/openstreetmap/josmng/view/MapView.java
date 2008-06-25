@@ -136,16 +136,6 @@ public class MapView extends JComponent {
         Point view = screenToView(p);
         return new ViewCoords(view.x, view.y);
     }
-
-    /**
-     * Return the nearest point to the screen point given.
-     * If a node within 10 pixel is found, the nearest node is returned.
-     */
-    public final Node getNearestNode(Point p) {
-        if (editLayer == null) return null;
-
-        return editLayer.getNearestNode(p);
-    }
     
     void setCenter(ViewCoords newCenter) {
         center = newCenter;

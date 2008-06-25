@@ -84,29 +84,6 @@ public class OsmLayer extends EditableLayer {
         return name;
     }
 
-    public @Override Node getNearestNode(Point p) {
-        Rectangle r = new Rectangle(p);
-        r.grow(10, 10);
-        Rectangle viewR = parent.screenToView(r);
-        
-        double minDistanceSq = Double.MAX_VALUE;
-        ViewNode minPrimitive = null;
-        
-        Collection<? extends ViewCoords> col = mapData.getNodes(viewR);
-        System.err.println("10-area (" + viewR + ") contains " + col.size() + " nodes");
-
-        for (ViewCoords vn : col) {
-            // if (n.deleted || n.incomplete) continue;
-            Point sp = parent.getPoint(vn);
-            double dist = p.distanceSq(sp);
-            if (minDistanceSq > dist && dist < 100) {
-                    minDistanceSq = p.distanceSq(sp);
-                    minPrimitive = (ViewNode)vn;
-            }
-        }
-        return minPrimitive == null ? null : minPrimitive.getPrimitive();
-    }
-    
     public Collection<OsmPrimitive> getPrimitivesInRect(Rectangle r, boolean contained) {
         Set<OsmPrimitive> s = new HashSet();
         Rectangle viewR = parent.screenToView(r);

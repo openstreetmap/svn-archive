@@ -1,0 +1,1372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.5" generator="OpenStreetMap server">
+  <node id="27301225" lat="51.5511798" lon="-0.2750485" visible="true" timestamp="2007-04-11T19:57:49+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301229" lat="51.5509863" lon="-0.2723234" visible="true" timestamp="2007-04-11T19:57:53+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301230" lat="51.5502991" lon="-0.272656" visible="true" timestamp="2007-04-11T19:57:54+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+
+  </node>
+  <node id="27301275" lat="51.5511664" lon="-0.2695339" visible="true" timestamp="2007-04-11T19:59:50+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301276" lat="51.5504926" lon="-0.2700489" visible="true" timestamp="2007-04-11T19:59:51+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="86125035" lat="51.5503184" lon="-0.2693036" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="27301226" lat="51.5522405" lon="-0.2744477" visible="true" timestamp="2007-04-11T19:57:50+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301227" lat="51.5519696" lon="-0.2731939" user="Paul Todd" visible="true" timestamp="2007-10-25T22:04:47+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301228" lat="51.5516868" lon="-0.2719693" visible="true" timestamp="2007-04-11T19:57:52+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301393" lat="51.5540083" lon="-0.2735036" visible="true" timestamp="2007-04-11T20:06:37+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="25733403" lat="51.5506439" lon="-0.2640391" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:16+01:00"/>
+  <node id="25733405" lat="51.5506225" lon="-0.2642451" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:02+01:00"/>
+  <node id="25733406" lat="51.5505425" lon="-0.2648716" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:14+01:00"/>
+  <node id="86122742" lat="51.5508575" lon="-0.2688058" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122744" lat="51.5506707" lon="-0.268986" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122745" lat="51.5504892" lon="-0.2690718" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86124242" lat="51.5507988" lon="-0.2685054" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+
+  <node id="86124243" lat="51.5509696" lon="-0.2682736" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125036" lat="51.5507774" lon="-0.2690375" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125054" lat="51.5505746" lon="-0.2686427" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125102" lat="51.5505212" lon="-0.2685054" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:24+01:00"/>
+  <node id="86125103" lat="51.550628" lon="-0.2677844" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:24+01:00"/>
+  <node id="86125104" lat="51.5505639" lon="-0.2676041" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:24+01:00"/>
+  <node id="86125136" lat="51.5508948" lon="-0.2676213" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:29+01:00"/>
+  <node id="86125137" lat="51.5509375" lon="-0.2675612" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:29+01:00"/>
+  <node id="20952279" lat="51.5524404" lon="-0.2648399" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:14+00:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952280" lat="51.5526187" lon="-0.2645228" user="Paul Todd" visible="true" timestamp="2007-10-24T23:19:51+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="25733422" lat="51.5521357" lon="-0.2641188" user="Steve Clark" visible="true" timestamp="2007-02-09T17:01:15+00:00"/>
+  <node id="25733425" lat="51.5515065" lon="-0.26421" user="Paul Todd" visible="true" timestamp="2007-10-25T22:57:54+01:00"/>
+  <node id="27301395" lat="51.5533012" lon="-0.2683537" visible="true" timestamp="2007-04-11T20:06:43+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+
+  </node>
+  <node id="27457013" lat="51.553219" lon="-0.267839" user="Welshie" visible="true" timestamp="2007-04-18T21:16:54+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="86122735" lat="51.554113" lon="-0.2669347" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122736" lat="51.5539209" lon="-0.2667544" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122738" lat="51.553526" lon="-0.2660163" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122739" lat="51.5533232" lon="-0.2658618" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122740" lat="51.5530083" lon="-0.2659218" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+
+  <node id="86122741" lat="51.552576" lon="-0.2662909" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86124244" lat="51.5514019" lon="-0.2675011" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86124245" lat="51.551546" lon="-0.2673123" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86124246" lat="51.5522077" lon="-0.2664111" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86124247" lat="51.5524372" lon="-0.2659905" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86124248" lat="51.5525493" lon="-0.2654755" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86124249" lat="51.5526187" lon="-0.2653639" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125037" lat="51.5516207" lon="-0.2678015" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125038" lat="51.552133" lon="-0.2675011" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+
+  <node id="86125041" lat="51.5522344" lon="-0.2675612" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125042" lat="51.5523038" lon="-0.2677243" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125043" lat="51.5523679" lon="-0.2680419" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125044" lat="51.5524319" lon="-0.2680676" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125045" lat="51.5527788" lon="-0.267896" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125046" lat="51.553019" lon="-0.2676556" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125047" lat="51.553115" lon="-0.2676041" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="87344512" lat="51.5536272" lon="-0.2636958" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:38+01:00"/>
+  <node id="87344513" lat="51.5536806" lon="-0.2646571" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:38+01:00"/>
+
+  <node id="87344514" lat="51.5536433" lon="-0.2647687" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:38+01:00"/>
+  <node id="87344515" lat="51.553227" lon="-0.2648287" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:38+01:00"/>
+  <node id="526000" lat="51.5555602" lon="-0.2696915" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526002" lat="51.5554908" lon="-0.2739144" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134923" lat="51.5550529" lon="-0.2710777" user="Firefishy" visible="true" timestamp="2006-10-23T03:05:26+01:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27301394" lat="51.5541551" lon="-0.2720015" visible="true" timestamp="2007-04-11T20:06:39+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301398" lat="51.5544086" lon="-0.2704351" visible="true" timestamp="2007-04-11T20:06:58+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="29465920" lat="51.5557683" lon="-0.2731333" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="29465921" lat="51.555763" lon="-0.2708932" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="29465923" lat="51.5555496" lon="-0.2735196" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="73991293" lat="51.5555976" lon="-0.2698975" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+
+  <node id="73991297" lat="51.5557203" lon="-0.270155" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="73991299" lat="51.5558057" lon="-0.2713566" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="88904321" lat="51.555761" lon="-0.2706902" user="Paul Todd" visible="true" timestamp="2007-10-27T10:53:16+01:00"/>
+  <node id="19134956" lat="51.5556016" lon="-0.2646877" user="Firefishy" visible="true" timestamp="2006-10-23T03:05:29+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27301396" lat="51.5543686" lon="-0.2682894" visible="true" timestamp="2007-04-11T20:06:44+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+
+  <node id="27301397" lat="51.5543819" lon="-0.2676242" visible="true" timestamp="2007-04-11T20:06:45+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="73991291" lat="51.555747" lon="-0.2670565" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="87345290" lat="51.5550628" lon="-0.2642966" user="Paul Todd" visible="true" timestamp="2007-10-25T23:21:41+01:00"/>
+  <node id="25733404" lat="51.5508548" lon="-0.2622681" user="Steve Clark" visible="true" timestamp="2007-02-09T16:59:26+00:00"/>
+  <node id="27301177" lat="51.5513666" lon="-0.2608221" visible="true" timestamp="2007-04-11T19:56:19+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+
+  <node id="27301185" lat="51.5502213" lon="-0.2609999" user="Paul Todd" visible="true" timestamp="2007-10-27T10:40:18+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="88895440" lat="51.5507977" lon="-0.2609227" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="197152" lat="51.5514901" lon="-0.2615116" user="80n" visible="true" timestamp="2006-08-13T21:35:41+01:00"/>
+  <node id="197153" lat="51.5513904" lon="-0.2613021" user="80n" visible="true" timestamp="2006-08-13T21:35:43+01:00"/>
+  <node id="526041" lat="51.5529889" lon="-0.2615783" user="Paul Todd" visible="true" timestamp="2007-10-25T23:21:39+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+
+  <node id="526042" lat="51.5519568" lon="-0.261035" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:40+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378753" lat="51.5518591" lon="-0.2608959" user="80n" visible="true" timestamp="2006-08-13T21:35:23+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378761" lat="51.5516028" lon="-0.2609369" visible="true" timestamp="2007-04-11T19:56:16+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+
+  <node id="20952282" lat="51.5525246" lon="-0.2618985" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:00+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952283" lat="51.55253" lon="-0.2615724" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952298" lat="51.5527007" lon="-0.2614179" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+
+  <node id="20952299" lat="51.5524232" lon="-0.2613321" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952300" lat="51.5526794" lon="-0.2612548" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952301" lat="51.5524873" lon="-0.261169" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+
+  <node id="20952304" lat="51.5520281" lon="-0.2608669" user="Steve Clark" visible="true" timestamp="2006-11-09T20:50:34+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="25733423" lat="51.5520289" lon="-0.2622037" user="Steve Clark" visible="true" timestamp="2007-02-09T17:01:17+00:00"/>
+  <node id="25733424" lat="51.5515465" lon="-0.2625953" user="Paul Todd" visible="true" timestamp="2007-10-25T22:57:54+01:00"/>
+  <node id="29466790" lat="51.5536646" lon="-0.2616702" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="87294850" lat="51.5517508" lon="-0.2610917" user="Paul Todd" visible="true" timestamp="2007-10-25T22:39:29+01:00"/>
+
+  <node id="87295559" lat="51.552594" lon="-0.2611432" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00"/>
+  <node id="87295560" lat="51.5524553" lon="-0.2614865" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00"/>
+  <node id="87295561" lat="51.5526367" lon="-0.261538" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:27+01:00"/>
+  <node id="87296473" lat="51.5526154" lon="-0.2609286" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:51+01:00"/>
+  <node id="87296474" lat="51.5525599" lon="-0.2607689" user="Paul Todd" visible="true" timestamp="2007-10-25T23:21:00+01:00"/>
+  <node id="87296475" lat="51.5521884" lon="-0.2607055" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:51+01:00"/>
+  <node id="87344206" lat="51.5519942" lon="-0.2617903" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:44+01:00"/>
+  <node id="87344208" lat="51.5519088" lon="-0.26155" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:36+01:00"/>
+  <node id="87344209" lat="51.5518554" lon="-0.2613783" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:44+01:00"/>
+
+  <node id="87344211" lat="51.5520635" lon="-0.2610951" user="Paul Todd" visible="true" timestamp="2007-10-25T23:19:40+01:00"/>
+  <node id="87344363" lat="51.5525812" lon="-0.2633524" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:27+01:00"/>
+  <node id="87344510" lat="51.5530455" lon="-0.2633181" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:38+01:00"/>
+  <node id="87344511" lat="51.5532056" lon="-0.2633696" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:38+01:00"/>
+  <node id="87344771" lat="51.553275" lon="-0.2631293" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:55+01:00"/>
+  <node id="87344772" lat="51.5531469" lon="-0.2623568" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:55+01:00"/>
+  <node id="87344773" lat="51.5531523" lon="-0.261962" user="Paul Todd" visible="true" timestamp="2007-10-25T23:20:55+01:00"/>
+  <node id="87344916" lat="51.5522663" lon="-0.2607775" user="Paul Todd" visible="true" timestamp="2007-10-25T23:21:00+01:00"/>
+  <node id="254585481" lat="51.553592" lon="-0.2613311" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+
+  <node id="254585742" lat="51.5531758" lon="-0.2613396" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="254585743" lat="51.5529143" lon="-0.2613053" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="254585744" lat="51.5527168" lon="-0.2611251" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="254585745" lat="51.5527115" lon="-0.2608676" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="254585746" lat="51.5526261" lon="-0.2606616" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="526043" lat="51.5545932" lon="-0.2615414" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134926" lat="51.5557096" lon="-0.2624217" user="Paul Todd" visible="true" timestamp="2007-10-15T22:19:39+01:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="25733532" lat="51.5550148" lon="-0.2611123" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="73987708" lat="51.5556403" lon="-0.2606793" user="Paul Todd" visible="true" timestamp="2007-10-15T22:19:39+01:00"/>
+  <node id="87345292" lat="51.5552816" lon="-0.2616101" user="Paul Todd" visible="true" timestamp="2007-10-25T23:21:41+01:00"/>
+  <node id="87345293" lat="51.5552122" lon="-0.2613612" user="Paul Todd" visible="true" timestamp="2007-10-25T23:21:41+01:00"/>
+  <node id="87345494" lat="51.5543904" lon="-0.2616358" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="87345495" lat="51.5548013" lon="-0.2613783" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="254585495" lat="51.5542645" lon="-0.2613396" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+
+  <node id="197144" lat="51.554098" lon="-0.2536039" user="Welshie" visible="true" timestamp="2005-09-10T17:54:38+01:00"/>
+  <node id="197145" lat="51.5540329" lon="-0.2533686" user="80n" visible="true" timestamp="2006-08-13T21:58:24+01:00"/>
+  <node id="197146" lat="51.5529806" lon="-0.2548639" user="80n" visible="true" timestamp="2006-08-13T21:58:23+01:00"/>
+  <node id="197147" lat="51.5528115" lon="-0.2546569" user="80n" visible="true" timestamp="2006-08-13T21:58:24+01:00"/>
+  <node id="197148" lat="51.5524355" lon="-0.2578252" user="80n" visible="true" timestamp="2006-08-13T21:58:21+01:00"/>
+  <node id="197149" lat="51.5522386" lon="-0.2578035" user="80n" visible="true" timestamp="2006-08-13T21:58:23+01:00"/>
+  <node id="197150" lat="51.5520153" lon="-0.2604314" user="80n" visible="true" timestamp="2006-08-13T21:35:52+01:00"/>
+  <node id="197151" lat="51.5518496" lon="-0.2602747" user="80n" visible="true" timestamp="2006-08-13T21:58:24+01:00"/>
+  <node id="197154" lat="51.5497529" lon="-0.262895" user="80n" visible="true" timestamp="2006-08-13T21:52:03+01:00"/>
+
+  <node id="197155" lat="51.5496565" lon="-0.2626107" user="80n" visible="true" timestamp="2006-08-13T21:35:45+01:00"/>
+  <node id="197156" lat="51.5487047" lon="-0.2636684" user="80n" visible="true" timestamp="2006-08-13T21:52:02+01:00"/>
+  <node id="197157" lat="51.5486096" lon="-0.2634323" user="80n" visible="true" timestamp="2006-08-13T21:35:58+01:00"/>
+  <node id="197158" lat="51.5473652" lon="-0.2661944" user="Welshie" visible="true" timestamp="2007-04-17T20:37:02+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="197159" lat="51.5472046" lon="-0.2659694" user="Welshie" visible="true" timestamp="2007-04-17T20:37:05+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+
+  <node id="197160" lat="51.5468408" lon="-0.2674945" user="Welshie" visible="true" timestamp="2005-09-10T18:01:38+01:00"/>
+  <node id="197161" lat="51.5466747" lon="-0.2673176" user="80n" visible="true" timestamp="2006-08-13T21:52:04+01:00"/>
+  <node id="197162" lat="51.545916" lon="-0.2698731" user="80n" visible="true" timestamp="2006-08-13T21:35:52+01:00"/>
+  <node id="197163" lat="51.5457922" lon="-0.2697211" user="Paul Todd" visible="true" timestamp="2007-10-25T23:06:43+01:00"/>
+  <node id="197164" lat="51.5447961" lon="-0.2723012" user="Paul Todd" visible="true" timestamp="2007-10-25T22:06:00+01:00"/>
+  <node id="197165" lat="51.5446979" lon="-0.2720986" user="Paul Todd" visible="true" timestamp="2007-10-25T23:06:43+01:00"/>
+  <node id="197166" lat="51.5446798" lon="-0.2725466" user="80n" visible="true" timestamp="2006-08-13T21:35:55+01:00"/>
+  <node id="197167" lat="51.5445324" lon="-0.2724247" user="Paul Todd" visible="true" timestamp="2007-10-25T23:06:43+01:00"/>
+  <node id="197168" lat="51.5436677" lon="-0.2737551" user="Paul Todd" visible="true" timestamp="2007-10-25T23:08:27+01:00"/>
+
+  <node id="197169" lat="51.5438385" lon="-0.2740614" user="80n" visible="true" timestamp="2006-08-13T21:52:04+01:00"/>
+  <node id="197170" lat="51.542892" lon="-0.2752428" user="80n" visible="true" timestamp="2006-08-13T21:52:03+01:00"/>
+  <node id="197171" lat="51.5427199" lon="-0.2748938" user="80n" visible="true" timestamp="2006-08-13T21:52:03+01:00"/>
+  <node id="197172" lat="51.5417554" lon="-0.2760477" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197173" lat="51.5416703" lon="-0.2758077" user="80n" visible="true" timestamp="2006-08-13T21:52:03+01:00"/>
+  <node id="197174" lat="51.5402607" lon="-0.2772751" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197175" lat="51.54017" lon="-0.2770519" user="Paul Todd" visible="true" timestamp="2007-10-24T22:57:33+01:00"/>
+  <node id="197176" lat="51.5396201" lon="-0.2781592" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197177" lat="51.5394693" lon="-0.2780633" user="80n" visible="true" timestamp="2006-08-13T21:52:02+01:00"/>
+
+  <node id="197178" lat="51.5392411" lon="-0.2787771" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197179" lat="51.539129" lon="-0.2786398" user="Paul Todd" visible="true" timestamp="2007-10-24T22:57:33+01:00"/>
+  <node id="197180" lat="51.5383113" lon="-0.2809306" user="80n" visible="true" timestamp="2006-08-13T21:52:03+01:00"/>
+  <node id="197181" lat="51.5383816" lon="-0.2811375" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197182" lat="51.5377943" lon="-0.2827253" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197183" lat="51.5377218" lon="-0.2824972" user="80n" visible="true" timestamp="2006-08-13T21:35:46+01:00"/>
+  <node id="197190" lat="51.5351516" lon="-0.288064" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197191" lat="51.5357122" lon="-0.287077" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197192" lat="51.536835" lon="-0.2844682" user="80n" visible="true" timestamp="2006-08-13T21:35:51+01:00"/>
+
+  <node id="197193" lat="51.5350786" lon="-0.2878934" user="80n" visible="true" timestamp="2006-08-13T21:35:42+01:00"/>
+  <node id="197194" lat="51.5369028" lon="-0.2846823" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197195" lat="51.5356234" lon="-0.2869193" user="80n" visible="true" timestamp="2006-08-13T21:35:53+01:00"/>
+  <node id="197196" lat="51.5346391" lon="-0.2889137" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197197" lat="51.5340464" lon="-0.2897806" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197198" lat="51.5334111" lon="-0.2907162" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197199" lat="51.532765" lon="-0.2915659" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197200" lat="51.5319481" lon="-0.2926474" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="197201" lat="51.5319038" lon="-0.2924329" user="80n" visible="true" timestamp="2006-08-13T21:35:41+01:00"/>
+
+  <node id="197202" lat="51.5326601" lon="-0.2914258" user="80n" visible="true" timestamp="2006-08-13T21:35:56+01:00"/>
+  <node id="197203" lat="51.5332883" lon="-0.2905617" user="Paul Todd" visible="true" timestamp="2007-10-24T22:57:33+01:00"/>
+  <node id="197204" lat="51.5339546" lon="-0.2896341" user="80n" visible="true" timestamp="2006-08-13T21:35:44+01:00"/>
+  <node id="197205" lat="51.5345534" lon="-0.2887382" user="80n" visible="true" timestamp="2006-08-13T21:35:51+01:00"/>
+  <node id="197206" lat="51.5314173" lon="-0.2928478" user="Welshie" visible="true" timestamp="2005-09-10T18:55:22+01:00"/>
+  <node id="197207" lat="51.5315699" lon="-0.2931795" user="80n" visible="true" timestamp="2006-08-13T21:35:59+01:00"/>
+  <node id="197299" lat="51.5315133" lon="-0.292688" user="Welshie" visible="true" timestamp="2005-09-11T12:58:32+01:00"/>
+  <node id="525998" lat="51.5555869" lon="-0.2573233" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="525999" lat="51.5558057" lon="-0.2605162" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526001" lat="51.5559879" lon="-0.2724" user="Firefishy" visible="true" timestamp="2007-05-22T00:32:51+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526003" lat="51.5554934" lon="-0.2765099" user="Firefishy" visible="true" timestamp="2007-05-22T00:05:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="526005" lat="51.55884" lon="-0.2702697" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526006" lat="51.5590962" lon="-0.2746299" user="Paul Todd" visible="true" timestamp="2007-10-27T10:57:36+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526044" lat="51.5552261" lon="-0.2600996" user="Firefishy" visible="true" timestamp="2007-05-22T00:46:11+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="526045" lat="51.5545772" lon="-0.2584258" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526051" lat="51.5589788" lon="-0.271231" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="526052" lat="51.5589628" lon="-0.270716" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="13378743" lat="51.5479404" lon="-0.26437" user="80n" visible="true" timestamp="2006-08-13T21:52:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378744" lat="51.5526382" lon="-0.2562537" user="80n" visible="true" timestamp="2006-08-13T21:35:22+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378752" lat="51.5484019" lon="-0.2640249" user="80n" visible="true" timestamp="2006-08-13T21:35:22+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="13378755" lat="51.5533942" lon="-0.2539307" user="80n" visible="true" timestamp="2006-08-13T21:58:23+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378760" lat="51.5482516" lon="-0.2638397" user="80n" visible="true" timestamp="2006-08-13T21:52:03+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378762" lat="51.5535113" lon="-0.2541528" user="80n" visible="true" timestamp="2006-08-13T21:58:23+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="13378768" lat="51.5480859" lon="-0.2645712" user="80n" visible="true" timestamp="2006-08-13T21:35:24+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378769" lat="51.5524526" lon="-0.2561801" user="80n" visible="true" timestamp="2006-08-13T21:58:24+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13378805" lat="51.5316224" lon="-0.292965" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="13380341" lat="51.5522077" lon="-0.2593389" user="80n" visible="true" timestamp="2006-08-13T21:58:19+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13380342" lat="51.5520602" lon="-0.2592027" user="80n" visible="true" timestamp="2006-08-13T21:58:19+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="13380343" lat="51.552793" lon="-0.2554878" user="80n" visible="true" timestamp="2006-08-13T21:58:19+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="13380344" lat="51.5526103" lon="-0.2553507" user="80n" visible="true" timestamp="2006-08-13T21:58:19+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134902" lat="51.559491" lon="-0.3443023" user="Firefishy" visible="true" timestamp="2007-02-17T22:19:29+00:00"/>
+  <node id="19134903" lat="51.5593879" lon="-0.3416463" user="Firefishy" visible="true" timestamp="2007-02-17T22:19:32+00:00"/>
+  <node id="19134904" lat="51.5588728" lon="-0.3378658" user="Firefishy" visible="true" timestamp="2007-01-16T15:05:40+00:00"/>
+  <node id="19134905" lat="51.5574881" lon="-0.3317629" user="Firefishy" visible="true" timestamp="2007-01-16T15:04:32+00:00"/>
+  <node id="19134907" lat="51.556416" lon="-0.3271164" user="Firefishy" visible="true" timestamp="2007-01-16T15:04:36+00:00"/>
+
+  <node id="19134909" lat="51.5550672" lon="-0.3213942" user="Firefishy" visible="true" timestamp="2007-01-16T15:06:04+00:00"/>
+  <node id="19134910" lat="51.5546169" lon="-0.3186317" user="blackadder" visible="true" timestamp="2007-12-10T14:59:17+00:00"/>
+  <node id="19134914" lat="51.5543191" lon="-0.3068381" user="Paul Todd" visible="true" timestamp="2007-10-28T17:46:04+00:00"/>
+  <node id="19134915" lat="51.5543458" lon="-0.3039713" user="Paul Todd" visible="true" timestamp="2007-10-28T17:46:04+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134918" lat="51.5543682" lon="-0.2886469" visible="true" timestamp="2007-04-11T20:05:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+
+  <node id="19134919" lat="51.5542199" lon="-0.285079" user="Paul Todd" visible="true" timestamp="2007-10-27T22:19:24+01:00">
+    <tag k="name" v="Wembley Stadium"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="tube" v="Bakerloo"/>
+    <tag k="railway" v="station"/>
+    <tag k="source" v="NPE"/>
+  </node>
+  <node id="19134921" lat="51.5540997" lon="-0.2811675" visible="true" timestamp="2007-04-11T20:05:17+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="19134922" lat="51.5542109" lon="-0.2781425" visible="true" timestamp="2007-04-11T20:05:18+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134927" lat="51.555535" lon="-0.2590082" user="Firefishy" visible="true" timestamp="2007-12-16T01:57:18+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134928" lat="51.5548912" lon="-0.2539805" user="Firefishy" visible="true" timestamp="2007-12-16T01:57:15+00:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="19134930" lat="51.5535098" lon="-0.2483492" user="Paul Todd" visible="true" timestamp="2007-10-25T23:39:10+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134931" lat="51.5522717" lon="-0.2417918" user="Paul Todd" visible="true" timestamp="2007-10-25T23:39:10+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134932" lat="51.5512363" lon="-0.2352343" user="Paul Todd" visible="true" timestamp="2007-10-25T23:39:10+01:00">
+    <tag k="created_by" v="JOSM"/>
+
+  </node>
+  <node id="19134934" lat="51.5501956" lon="-0.2284194" user="Paul Todd" visible="true" timestamp="2007-10-25T23:39:10+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134935" lat="51.5489851" lon="-0.2213412" user="Steve Chilton" visible="true" timestamp="2007-10-12T15:12:47+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134936" lat="51.5474249" lon="-0.2109997" user="Steve Chilton" visible="true" timestamp="2007-10-12T15:12:47+01:00"/>
+  <node id="19134954" lat="51.5546425" lon="-0.2953574" user="blackadder" visible="true" timestamp="2007-12-10T14:59:17+00:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="19134957" lat="51.5469202" lon="-0.2074094" user="sladen" visible="true" timestamp="2007-12-22T03:10:32+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952272" lat="51.5487223" lon="-0.2679931" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:12+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952273" lat="51.5488478" lon="-0.267648" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:12+00:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952274" lat="51.5489733" lon="-0.2665969" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:12+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952275" lat="51.5493342" lon="-0.2653419" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:12+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952276" lat="51.5495381" lon="-0.264981" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:12+00:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20952277" lat="51.5499146" lon="-0.2648242" user="Steve Clark" visible="true" timestamp="2006-11-09T20:43:12+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="20956813" lat="51.5464422" lon="-0.2685197" user="Steve Clark" visible="true" timestamp="2006-11-10T20:41:32+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="21136979" lat="51.5544125" lon="-0.3162745" user="blackadder" visible="true" timestamp="2007-12-10T14:59:17+00:00"/>
+
+  <node id="21362517" lat="51.5585236" lon="-0.3361368" user="Paul Todd" visible="true" timestamp="2007-10-27T22:19:24+01:00">
+    <tag k="name" v="Sudbury Hill Harrow"/>
+    <tag k="railway" v="station"/>
+  </node>
+  <node id="25733378" lat="51.5466416" lon="-0.2734609" user="Steve Clark" visible="true" timestamp="2007-02-09T16:54:22+00:00"/>
+  <node id="25733379" lat="51.5468017" lon="-0.2732678" user="Steve Clark" visible="true" timestamp="2007-02-09T16:54:24+00:00"/>
+  <node id="25733384" lat="51.5470886" lon="-0.273064" user="Steve Clark" visible="true" timestamp="2007-02-09T16:54:26+00:00"/>
+  <node id="25733385" lat="51.5481761" lon="-0.2752419" user="Steve Clark" visible="true" timestamp="2007-02-09T16:54:28+00:00"/>
+  <node id="25733386" lat="51.5473888" lon="-0.2757354" user="Steve Clark" visible="true" timestamp="2007-02-09T16:54:30+00:00"/>
+
+  <node id="25733387" lat="51.5476891" lon="-0.2741798" user="Steve Clark" visible="true" timestamp="2007-02-09T16:54:34+00:00"/>
+  <node id="25733400" lat="51.5482128" lon="-0.267772" user="Steve Clark" visible="true" timestamp="2007-02-09T16:59:18+00:00"/>
+  <node id="25733401" lat="51.5484597" lon="-0.2657549" user="Steve Clark" visible="true" timestamp="2007-02-09T16:59:20+00:00"/>
+  <node id="25733402" lat="51.5493136" lon="-0.2637165" user="Steve Clark" visible="true" timestamp="2007-02-09T16:59:22+00:00"/>
+  <node id="25733531" lat="51.5552069" lon="-0.2596274" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="25733533" lat="51.5544438" lon="-0.2571726" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="25733541" lat="51.554664" lon="-0.2562975" user="Steve Clark" visible="true" timestamp="2007-02-09T17:06:54+00:00"/>
+  <node id="27301102" lat="51.548371" lon="-0.2605324" user="Gregory Williams" visible="true" timestamp="2007-11-20T11:07:08+00:00">
+    <tag k="highway" v="mini_roundabout"/>
+
+    <tag k="direction" v="clockwise"/>
+  </node>
+  <node id="27301105" lat="51.5495008" lon="-0.2608283" user="Paul Todd" visible="true" timestamp="2007-10-27T10:40:18+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301217" lat="51.550139" lon="-0.2756493" visible="true" timestamp="2007-04-11T19:57:00+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301218" lat="51.5498655" lon="-0.274319" visible="true" timestamp="2007-04-11T19:57:00+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301219" lat="51.5495586" lon="-0.2730851" visible="true" timestamp="2007-04-11T19:57:02+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301221" lat="51.5478707" lon="-0.2770119" visible="true" timestamp="2007-04-11T19:57:15+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301223" lat="51.5494252" lon="-0.2760892" visible="true" timestamp="2007-04-11T19:57:27+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301231" lat="51.5513666" lon="-0.2758854" visible="true" timestamp="2007-04-11T19:57:55+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301238" lat="51.5528609" lon="-0.2771621" visible="true" timestamp="2007-04-11T19:58:35+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301239" lat="51.5531678" lon="-0.2787071" visible="true" timestamp="2007-04-11T19:58:39+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301240" lat="51.5532545" lon="-0.2799516" visible="true" timestamp="2007-04-11T19:58:41+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301241" lat="51.5533079" lon="-0.2815502" visible="true" timestamp="2007-04-11T19:58:42+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301277" lat="51.5498588" lon="-0.270639" visible="true" timestamp="2007-04-11T19:59:52+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301278" lat="51.5491516" lon="-0.2712183" visible="true" timestamp="2007-04-11T19:59:52+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301296" lat="51.5533612" lon="-0.2836316" visible="true" timestamp="2007-04-11T20:03:40+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27301297" lat="51.5534213" lon="-0.2852302" visible="true" timestamp="2007-04-11T20:03:44+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27456785" lat="51.5531122" lon="-0.2859493" user="Welshie" visible="true" timestamp="2007-04-18T21:09:01+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27456833" lat="51.5487892" lon="-0.2735468" user="Welshie" visible="true" timestamp="2007-04-18T21:12:26+01:00">
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="27456836" lat="51.5484689" lon="-0.2718301" user="Welshie" visible="true" timestamp="2007-04-18T21:12:01+01:00">
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+  </node>
+  <node id="29466792" lat="51.5544278" lon="-0.257722" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="31472785" lat="51.554389" lon="-0.3158302" user="Paul Todd" visible="true" timestamp="2007-10-27T22:19:24+01:00">
+    <tag k="name" v="Sudbury Harrow Road"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="railway" v="station"/>
+
+  </node>
+  <node id="68573065" lat="51.5471371" lon="-0.208796" user="Harry Wood" visible="true" timestamp="2007-10-13T13:45:51+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="68573069" lat="51.5466907" lon="-0.2052465" user="sladen" visible="true" timestamp="2007-12-22T03:10:32+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="73988191" lat="51.555747" lon="-0.2579327" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="73988192" lat="51.555779" lon="-0.2585335" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+
+  <node id="73988193" lat="51.5557417" lon="-0.2592288" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="73988194" lat="51.5558271" lon="-0.2625762" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="73989170" lat="51.5553788" lon="-0.2569371" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="73991289" lat="51.5558303" lon="-0.263283" user="Paul Todd" visible="true" timestamp="2007-10-27T10:53:19+01:00"/>
+  <node id="73991301" lat="51.5559445" lon="-0.2717515" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="73991497" lat="51.5559071" lon="-0.2729273" user="Paul Todd" visible="true" timestamp="2007-10-15T22:21:53+01:00"/>
+  <node id="86107026" lat="51.5317666" lon="-0.2925272" user="Paul Todd" visible="true" timestamp="2007-10-24T22:57:33+01:00"/>
+  <node id="86111492" lat="51.5388247" lon="-0.2793093" user="Paul Todd" visible="true" timestamp="2007-10-24T22:57:33+01:00"/>
+  <node id="86111612" lat="51.5388621" lon="-0.2797213" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+
+  <node id="86112473" lat="51.536812" lon="-0.2848625" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="86113489" lat="51.5410081" lon="-0.2766571" user="Paul Todd" visible="true" timestamp="2007-10-24T23:10:12+01:00"/>
+  <node id="86113490" lat="51.540928" lon="-0.2763825" user="Paul Todd" visible="true" timestamp="2007-10-24T22:57:30+01:00"/>
+  <node id="86122747" lat="51.5500729" lon="-0.2691834" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122748" lat="51.5499128" lon="-0.2691577" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122749" lat="51.5493043" lon="-0.2689603" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122750" lat="51.5491549" lon="-0.2689431" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122751" lat="51.548904" lon="-0.2690118" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122752" lat="51.5485358" lon="-0.2692521" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+
+  <node id="86122753" lat="51.5477832" lon="-0.2701962" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122755" lat="51.5473082" lon="-0.2707284" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122756" lat="51.5470253" lon="-0.2709086" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122757" lat="51.5455894" lon="-0.2717755" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122760" lat="51.5453119" lon="-0.2719386" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86122761" lat="51.5451304" lon="-0.2721875" user="Paul Todd" visible="true" timestamp="2007-10-24T23:18:09+01:00"/>
+  <node id="86124020" lat="51.5489467" lon="-0.2701018" user="Paul Todd" visible="true" timestamp="2007-10-24T23:20:56+01:00"/>
+  <node id="86124105" lat="51.5490375" lon="-0.2685826" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86124240" lat="51.5500302" lon="-0.268883" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+
+  <node id="86124241" lat="51.5501049" lon="-0.2689345" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125031" lat="51.5492777" lon="-0.2699044" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125032" lat="51.5493417" lon="-0.2698872" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125033" lat="51.5496246" lon="-0.2698443" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="86125034" lat="51.5497473" lon="-0.2698186" user="Paul Todd" visible="true" timestamp="2007-10-24T23:23:18+01:00"/>
+  <node id="87296476" lat="51.5521297" lon="-0.2605682" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:51+01:00"/>
+  <node id="87296477" lat="51.5524339" lon="-0.2587743" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:51+01:00"/>
+  <node id="87296478" lat="51.5525033" lon="-0.2587142" user="Paul Todd" visible="true" timestamp="2007-10-25T22:07:51+01:00"/>
+  <node id="87297403" lat="51.5530316" lon="-0.2543884" user="Paul Todd" visible="true" timestamp="2007-10-25T22:38:01+01:00"/>
+
+  <node id="87339925" lat="51.5461231" lon="-0.2688113" user="Paul Todd" visible="true" timestamp="2007-10-25T23:08:27+01:00"/>
+  <node id="87343734" lat="51.5488452" lon="-0.2606659" user="andrewpmk" visible="true" timestamp="2007-11-18T23:08:59+00:00"/>
+  <node id="87345496" lat="51.5551696" lon="-0.2606316" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="87345807" lat="51.5549988" lon="-0.2590695" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+  <node id="87346677" lat="51.5550895" lon="-0.2593184" user="Gregory Williams" visible="true" timestamp="2007-11-20T11:10:24+00:00">
+    <tag k="highway" v="mini_roundabout"/>
+    <tag k="direction" v="clockwise"/>
+  </node>
+  <node id="87346982" lat="51.5544865" lon="-0.2568465" user="Paul Todd" visible="true" timestamp="2007-10-25T23:23:32+01:00"/>
+
+  <node id="87358021" lat="51.5530135" lon="-0.2463236" user="sladen" visible="true" timestamp="2007-12-22T03:10:32+00:00"/>
+  <node id="87358022" lat="51.5525065" lon="-0.2435341" user="sladen" visible="true" timestamp="2007-12-22T03:10:32+00:00"/>
+  <node id="88895582" lat="51.5507657" lon="-0.2603305" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895584" lat="51.5508831" lon="-0.2599013" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895585" lat="51.5509044" lon="-0.2596009" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895586" lat="51.5509365" lon="-0.2590258" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895588" lat="51.5510432" lon="-0.2584336" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895589" lat="51.5510165" lon="-0.2582019" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895590" lat="51.5509845" lon="-0.2580645" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+
+  <node id="88895591" lat="51.5508244" lon="-0.25791" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895592" lat="51.5505469" lon="-0.2578414" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895593" lat="51.5503974" lon="-0.2578414" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895594" lat="51.5502907" lon="-0.2578242" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895867" lat="51.5509898" lon="-0.2586911" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88895884" lat="51.5509044" lon="-0.2597296" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88896016" lat="51.5509311" lon="-0.2590859" user="Paul Todd" visible="true" timestamp="2007-10-27T10:41:14+01:00"/>
+  <node id="88898601" lat="51.5523454" lon="-0.2570002" user="Paul Todd" visible="true" timestamp="2007-10-27T10:44:48+01:00"/>
+  <node id="88898720" lat="51.5520412" lon="-0.259352" user="Paul Todd" visible="true" timestamp="2007-10-27T10:44:49+01:00"/>
+
+  <node id="88901752" lat="51.5587547" lon="-0.2700637" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00"/>
+  <node id="88901753" lat="51.5584558" lon="-0.2698148" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00"/>
+  <node id="88901755" lat="51.5582531" lon="-0.2697633" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00"/>
+  <node id="88902618" lat="51.5565774" lon="-0.2697375" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00"/>
+  <node id="88903002" lat="51.5565614" lon="-0.2705186" user="Paul Todd" visible="true" timestamp="2007-10-27T10:53:16+01:00"/>
+  <node id="88903003" lat="51.5565081" lon="-0.2706301" user="Paul Todd" visible="true" timestamp="2007-10-27T10:53:16+01:00"/>
+  <node id="88903005" lat="51.5559531" lon="-0.2708018" user="Paul Todd" visible="true" timestamp="2007-10-27T10:53:16+01:00"/>
+  <node id="88904016" lat="51.555905" lon="-0.2716" user="Paul Todd" visible="true" timestamp="2007-10-27T10:53:19+01:00"/>
+  <node id="88904846" lat="51.5590268" lon="-0.272527" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00"/>
+
+  <node id="88904922" lat="51.5590908" lon="-0.2731536" user="Paul Todd" visible="true" timestamp="2007-10-27T10:54:15+01:00"/>
+  <node id="89379335" lat="51.5546721" lon="-0.2975251" user="blackadder" visible="true" timestamp="2007-12-10T14:59:17+00:00"/>
+  <node id="159745121" lat="51.5548471" lon="-0.3202494" user="blackadder" visible="true" timestamp="2007-12-10T14:59:16+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="159745124" lat="51.5544603" lon="-0.3172145" user="blackadder" visible="true" timestamp="2007-12-10T14:59:16+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="172051975" lat="51.5551472" lon="-0.2557288" user="Firefishy" visible="true" timestamp="2007-12-16T01:57:13+00:00">
+
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="244209734" lat="51.5471951" lon="-0.2599875" user="GrumpyLump" visible="true" timestamp="2008-01-30T20:58:50+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="254585482" lat="51.5536187" lon="-0.2598891" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585483" lat="51.5534426" lon="-0.2596316" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585484" lat="51.5535387" lon="-0.2594599" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585485" lat="51.5525353" lon="-0.2581896" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+
+  <node id="254585486" lat="51.5526421" lon="-0.257297" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585487" lat="51.5528129" lon="-0.2569966" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585488" lat="51.553496" lon="-0.2579579" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585489" lat="51.5535067" lon="-0.2580523" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585490" lat="51.5543819" lon="-0.2592368" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585491" lat="51.5543499" lon="-0.2592883" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585492" lat="51.5543926" lon="-0.2593398" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585493" lat="51.554099" lon="-0.2599578" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+  <node id="254585494" lat="51.5542965" lon="-0.2602238" user="Paul Todd" visible="true" timestamp="2008-03-29T10:09:21+00:00"/>
+
+  <node id="254585747" lat="51.5522365" lon="-0.2605414" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="254585748" lat="51.5524766" lon="-0.2588763" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <node id="254585749" lat="51.5526794" lon="-0.2583699" user="Paul Todd" visible="true" timestamp="2008-03-29T10:11:04+00:00"/>
+  <way id="3814379" visible="true" timestamp="2007-12-22T03:10:32+00:00" user="sladen">
+    <nd ref="19134956"/>
+    <nd ref="19134926"/>
+    <nd ref="73987708"/>
+    <nd ref="19134927"/>
+    <nd ref="172051975"/>
+
+    <nd ref="19134928"/>
+    <nd ref="19134930"/>
+    <nd ref="87358021"/>
+    <nd ref="87358022"/>
+    <nd ref="19134931"/>
+    <nd ref="19134932"/>
+    <nd ref="19134934"/>
+    <nd ref="19134935"/>
+    <nd ref="19134936"/>
+
+    <nd ref="68573065"/>
+    <nd ref="19134957"/>
+    <nd ref="68573069"/>
+    <tag k="source" v="NPE + GPX"/>
+    <tag k="railway" v="rail"/>
+    <tag k="created_by" v="Potlatch 0.5d"/>
+    <tag k="name" v="Chiltern Main Line"/>
+  </way>
+  <way id="3996073" visible="true" timestamp="2007-10-25T22:07:27+01:00" user="Paul Todd">
+
+    <nd ref="20952298"/>
+    <nd ref="20952300"/>
+    <nd ref="87295559"/>
+    <nd ref="20952301"/>
+    <nd ref="20952299"/>
+    <nd ref="87295560"/>
+    <nd ref="20952283"/>
+    <nd ref="87295561"/>
+    <nd ref="20952298"/>
+
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="junction" v="roundabout"/>
+    <tag k="highway" v="secondary"/>
+  </way>
+  <way id="3996074" visible="true" timestamp="2007-10-25T22:07:10+01:00" user="Paul Todd">
+    <nd ref="20952301"/>
+    <nd ref="20952304"/>
+    <nd ref="197150"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+
+    <tag k="oneway" v="true"/>
+    <tag k="highway" v="secondary"/>
+  </way>
+  <way id="4008032" visible="true" timestamp="2007-12-10T14:59:18+00:00" user="blackadder">
+    <nd ref="19134902"/>
+    <nd ref="19134903"/>
+    <nd ref="19134904"/>
+    <nd ref="21362517"/>
+    <nd ref="19134905"/>
+
+    <nd ref="19134907"/>
+    <nd ref="19134909"/>
+    <nd ref="159745121"/>
+    <nd ref="19134910"/>
+    <nd ref="159745124"/>
+    <nd ref="21136979"/>
+    <nd ref="31472785"/>
+    <nd ref="19134914"/>
+    <nd ref="19134915"/>
+
+    <nd ref="89379335"/>
+    <nd ref="19134954"/>
+    <nd ref="19134918"/>
+    <nd ref="19134919"/>
+    <nd ref="19134921"/>
+    <nd ref="19134922"/>
+    <nd ref="19134923"/>
+    <nd ref="19134956"/>
+    <tag k="railway" v="rail"/>
+
+    <tag k="created_by" v="Potlatch 0.4b"/>
+    <tag k="name" v="Chiltern Main Line"/>
+    <tag k="source" v="NPE + GPX"/>
+  </way>
+  <way id="4276020" visible="true" timestamp="2007-10-25T23:19:16+01:00" user="Paul Todd">
+    <nd ref="25733400"/>
+    <nd ref="25733401"/>
+    <nd ref="25733402"/>
+    <nd ref="25733403"/>
+
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4276021" visible="true" timestamp="2007-10-25T23:19:10+01:00" user="Paul Todd">
+    <nd ref="25733404"/>
+    <nd ref="25733403"/>
+    <nd ref="25733405"/>
+    <nd ref="25733406"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4336469" visible="true" timestamp="2007-10-27T10:44:49+01:00" user="Paul Todd">
+    <nd ref="197145"/>
+    <nd ref="13378755"/>
+    <nd ref="87297403"/>
+    <nd ref="197147"/>
+    <nd ref="13380344"/>
+    <nd ref="13378769"/>
+
+    <nd ref="88898601"/>
+    <nd ref="197149"/>
+    <nd ref="13380342"/>
+    <nd ref="88898720"/>
+    <nd ref="197151"/>
+    <nd ref="13378761"/>
+    <nd ref="197153"/>
+    <nd ref="197155"/>
+    <nd ref="197157"/>
+
+    <nd ref="13378760"/>
+    <nd ref="13378743"/>
+    <nd ref="197159"/>
+    <nd ref="197161"/>
+    <nd ref="87339925"/>
+    <nd ref="197163"/>
+    <nd ref="197165"/>
+    <nd ref="197167"/>
+    <nd ref="197168"/>
+
+    <nd ref="197171"/>
+    <nd ref="197173"/>
+    <nd ref="86113490"/>
+    <nd ref="197175"/>
+    <nd ref="197177"/>
+    <nd ref="197179"/>
+    <nd ref="86111492"/>
+    <nd ref="197180"/>
+    <nd ref="197183"/>
+
+    <nd ref="197192"/>
+    <nd ref="197195"/>
+    <nd ref="197193"/>
+    <nd ref="197205"/>
+    <nd ref="197204"/>
+    <nd ref="197203"/>
+    <nd ref="197202"/>
+    <nd ref="197201"/>
+    <nd ref="86107026"/>
+
+    <nd ref="197299"/>
+    <nd ref="197206"/>
+    <tag k="oneway" v="yes"/>
+    <tag k="ref" v="A406"/>
+    <tag k="highway" v="trunk"/>
+    <tag k="name" v="North Circular Road"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="4478695" visible="true" timestamp="2007-10-25T22:04:47+01:00" user="Paul Todd">
+
+    <nd ref="27456785"/>
+    <nd ref="27301297"/>
+    <nd ref="27301296"/>
+    <nd ref="27301241"/>
+    <nd ref="27301240"/>
+    <nd ref="27301239"/>
+    <nd ref="27301238"/>
+    <nd ref="27301226"/>
+    <nd ref="27301227"/>
+
+    <nd ref="27301228"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="name" v="Oakington Manor Drive"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4478706" visible="true" timestamp="2007-04-18T21:10:47+01:00" user="Welshie">
+    <nd ref="27301221"/>
+    <nd ref="27301223"/>
+    <nd ref="27301217"/>
+
+    <nd ref="27301225"/>
+    <nd ref="27301226"/>
+    <nd ref="27301393"/>
+    <nd ref="27301394"/>
+    <tag k="name" v="Victoria Avenue"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4478707" visible="true" timestamp="2007-04-18T21:11:06+01:00" user="Welshie">
+
+    <nd ref="25733386"/>
+    <nd ref="25733385"/>
+    <nd ref="27301218"/>
+    <nd ref="27301227"/>
+    <nd ref="27301394"/>
+    <tag k="name" v="Wyld Way"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+
+  <way id="4478719" visible="true" timestamp="2007-05-22T00:46:26+01:00" user="Firefishy">
+    <nd ref="27301396"/>
+    <nd ref="27301395"/>
+    <nd ref="27301275"/>
+    <nd ref="27301276"/>
+    <nd ref="27301277"/>
+    <nd ref="27301278"/>
+    <nd ref="27456836"/>
+    <nd ref="25733384"/>
+
+    <nd ref="25733379"/>
+    <nd ref="25733378"/>
+    <tag k="highway" v="residential"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="name" v="Monks Park"/>
+  </way>
+  <way id="4478722" visible="true" timestamp="2007-04-18T21:13:29+01:00" user="Welshie">
+    <nd ref="27301394"/>
+    <nd ref="27301398"/>
+
+    <nd ref="27301396"/>
+    <nd ref="27301397"/>
+    <tag k="name" v="Park View"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4478732" visible="true" timestamp="2007-04-18T21:15:15+01:00" user="Welshie">
+    <nd ref="25733387"/>
+    <nd ref="27456833"/>
+
+    <nd ref="27301219"/>
+    <nd ref="27301230"/>
+    <nd ref="27301229"/>
+    <nd ref="27301228"/>
+    <tag k="name" v="Chalfont Avenue"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4478773" visible="true" timestamp="2007-04-18T21:17:26+01:00" user="Welshie">
+
+    <nd ref="27301394"/>
+    <nd ref="27301395"/>
+    <nd ref="27457013"/>
+    <tag k="name" v="Grove Way"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4478774" visible="true" timestamp="2007-04-18T21:18:18+01:00" user="Welshie">
+    <nd ref="27301228"/>
+
+    <nd ref="27301275"/>
+    <tag k="highway" v="residential"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="name" v="Chippenham Avenue"/>
+  </way>
+  <way id="4478775" visible="true" timestamp="2007-04-18T21:18:28+01:00" user="Welshie">
+    <nd ref="27301229"/>
+    <nd ref="27301276"/>
+    <tag k="name" v="Brent Way"/>
+
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="4478777" visible="true" timestamp="2007-04-18T21:18:42+01:00" user="Welshie">
+    <nd ref="27301230"/>
+    <nd ref="27301277"/>
+    <tag k="name" v="Wembley Way"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+
+  </way>
+  <way id="4478803" visible="true" timestamp="2007-04-18T21:23:44+01:00" user="Welshie">
+    <nd ref="27301231"/>
+    <nd ref="27301225"/>
+    <tag k="name" v="Grand Avenue"/>
+    <tag k="created_by" v="YahooApplet 1.0"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="8131239" visible="true" timestamp="2007-10-25T23:19:14+01:00" user="Paul Todd">
+
+    <nd ref="20952272"/>
+    <nd ref="20952273"/>
+    <nd ref="20952274"/>
+    <nd ref="20952275"/>
+    <nd ref="20952276"/>
+    <nd ref="20952277"/>
+    <nd ref="25733406"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+
+  </way>
+  <way id="8131240" visible="true" timestamp="2007-10-24T23:19:46+01:00" user="Paul Todd">
+    <nd ref="20952279"/>
+    <nd ref="25733406"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="8131241" visible="true" timestamp="2007-10-25T23:20:27+01:00" user="Paul Todd">
+    <nd ref="20952279"/>
+
+    <nd ref="20952280"/>
+    <nd ref="87344363"/>
+    <nd ref="20952282"/>
+    <nd ref="20952283"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="8206938" visible="true" timestamp="2007-10-25T23:19:40+01:00" user="Paul Todd">
+    <nd ref="87294850"/>
+
+    <nd ref="526042"/>
+    <nd ref="87344211"/>
+    <nd ref="20952299"/>
+    <tag k="oneway" v="yes"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="8206945" visible="true" timestamp="2007-10-27T10:54:15+01:00" user="Paul Todd">
+    <nd ref="526006"/>
+
+    <nd ref="88904922"/>
+    <nd ref="88904846"/>
+    <nd ref="526051"/>
+    <nd ref="526052"/>
+    <nd ref="526005"/>
+    <nd ref="88901752"/>
+    <nd ref="88901753"/>
+    <nd ref="88901755"/>
+    <nd ref="88902618"/>
+
+    <nd ref="526000"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="unclassified"/>
+  </way>
+  <way id="8370214" visible="true" timestamp="2007-10-25T23:20:02+01:00" user="Paul Todd">
+    <nd ref="25733405"/>
+    <nd ref="25733425"/>
+    <nd ref="25733422"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="8370216" visible="true" timestamp="2007-10-25T23:19:50+01:00" user="Paul Todd">
+    <nd ref="25733422"/>
+    <nd ref="25733423"/>
+    <nd ref="87344206"/>
+    <nd ref="87344208"/>
+    <nd ref="87344209"/>
+    <nd ref="87344211"/>
+
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="8370218" visible="true" timestamp="2007-10-25T23:19:57+01:00" user="Paul Todd">
+    <nd ref="25733423"/>
+    <nd ref="25733424"/>
+    <nd ref="25733425"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+
+  </way>
+  <way id="8413573" visible="true" timestamp="2008-01-30T20:59:42+00:00" user="GrumpyLump">
+    <nd ref="13378761"/>
+    <nd ref="27301177"/>
+    <nd ref="88895440"/>
+    <nd ref="27301185"/>
+    <nd ref="27301105"/>
+    <nd ref="87343734"/>
+    <nd ref="27301102"/>
+
+    <nd ref="244209734"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="secondary"/>
+  </way>
+  <way id="9558499" visible="true" timestamp="2007-10-27T10:53:19+01:00" user="Paul Todd">
+    <nd ref="73989170"/>
+    <nd ref="525998"/>
+    <nd ref="73988191"/>
+    <nd ref="73988192"/>
+
+    <nd ref="73988193"/>
+    <nd ref="525999"/>
+    <nd ref="73988194"/>
+    <nd ref="73991289"/>
+    <nd ref="73991291"/>
+    <nd ref="526000"/>
+    <nd ref="73991293"/>
+    <nd ref="73991297"/>
+    <nd ref="88904321"/>
+
+    <nd ref="29465921"/>
+    <nd ref="73991299"/>
+    <nd ref="88904016"/>
+    <nd ref="73991301"/>
+    <nd ref="526001"/>
+    <nd ref="73991497"/>
+    <nd ref="29465920"/>
+    <nd ref="29465923"/>
+    <nd ref="526002"/>
+
+    <nd ref="526003"/>
+    <tag k="oneway" v="yes"/>
+    <tag k="name" v="South Way"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="10277836" visible="true" timestamp="2007-10-24T23:18:09+01:00" user="Paul Todd">
+    <nd ref="86122735"/>
+    <nd ref="86122736"/>
+
+    <nd ref="86122738"/>
+    <nd ref="86122739"/>
+    <nd ref="86122740"/>
+    <nd ref="86122741"/>
+    <nd ref="86122742"/>
+    <nd ref="86122744"/>
+    <nd ref="86122745"/>
+    <nd ref="86122747"/>
+    <nd ref="86122748"/>
+
+    <nd ref="86122749"/>
+    <nd ref="86122750"/>
+    <nd ref="86122751"/>
+    <nd ref="86122752"/>
+    <nd ref="86122753"/>
+    <nd ref="86122755"/>
+    <nd ref="86122756"/>
+    <nd ref="86122757"/>
+    <nd ref="86122760"/>
+
+    <nd ref="86122761"/>
+    <tag k="boat" v="no"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="waterway" v="river"/>
+  </way>
+  <way id="10277912" visible="true" timestamp="2007-10-24T23:23:18+01:00" user="Paul Todd">
+    <nd ref="86124105"/>
+    <nd ref="86124240"/>
+    <nd ref="86124241"/>
+
+    <nd ref="86125054"/>
+    <nd ref="86124242"/>
+    <nd ref="86124243"/>
+    <nd ref="86124244"/>
+    <nd ref="86124245"/>
+    <nd ref="86124246"/>
+    <nd ref="86124247"/>
+    <nd ref="86124248"/>
+    <nd ref="86124249"/>
+
+    <tag k="highway" v="footway"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="foot" v="yes"/>
+  </way>
+  <way id="10277930" visible="true" timestamp="2007-10-24T23:23:18+01:00" user="Paul Todd">
+    <nd ref="86124020"/>
+    <nd ref="86125031"/>
+    <nd ref="86125032"/>
+    <nd ref="86125033"/>
+
+    <nd ref="86125034"/>
+    <nd ref="86125035"/>
+    <nd ref="86125036"/>
+    <nd ref="86125037"/>
+    <nd ref="86125038"/>
+    <nd ref="86125041"/>
+    <nd ref="86125042"/>
+    <nd ref="86125043"/>
+    <nd ref="86125044"/>
+
+    <nd ref="86125045"/>
+    <nd ref="86125046"/>
+    <nd ref="86125047"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="footway"/>
+    <tag k="foot" v="yes"/>
+  </way>
+  <way id="10277931" visible="true" timestamp="2007-10-24T23:23:24+01:00" user="Paul Todd">
+    <nd ref="86125054"/>
+
+    <nd ref="86125102"/>
+    <nd ref="86125103"/>
+    <nd ref="86125104"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="footway"/>
+    <tag k="foot" v="yes"/>
+  </way>
+  <way id="10277934" visible="true" timestamp="2007-10-24T23:23:29+01:00" user="Paul Todd">
+    <nd ref="86125103"/>
+
+    <nd ref="86125136"/>
+    <nd ref="86125137"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="footway"/>
+    <tag k="foot" v="yes"/>
+  </way>
+  <way id="10317141" visible="true" timestamp="2007-10-25T22:39:29+01:00" user="Paul Todd">
+    <nd ref="197207"/>
+    <nd ref="13378805"/>
+
+    <nd ref="197200"/>
+    <nd ref="197199"/>
+    <nd ref="197198"/>
+    <nd ref="197197"/>
+    <nd ref="197196"/>
+    <nd ref="197190"/>
+    <nd ref="197191"/>
+    <nd ref="86112473"/>
+    <nd ref="197194"/>
+
+    <nd ref="197182"/>
+    <nd ref="197181"/>
+    <nd ref="86111612"/>
+    <nd ref="197178"/>
+    <nd ref="197176"/>
+    <nd ref="197174"/>
+    <nd ref="86113489"/>
+    <nd ref="197172"/>
+    <nd ref="197170"/>
+
+    <nd ref="197169"/>
+    <nd ref="197166"/>
+    <nd ref="197164"/>
+    <nd ref="197162"/>
+    <nd ref="20956813"/>
+    <nd ref="197160"/>
+    <nd ref="197158"/>
+    <nd ref="13378768"/>
+    <nd ref="13378752"/>
+
+    <nd ref="197156"/>
+    <nd ref="197154"/>
+    <nd ref="197152"/>
+    <nd ref="87294850"/>
+    <nd ref="13378753"/>
+    <nd ref="197150"/>
+    <nd ref="13380341"/>
+    <nd ref="197148"/>
+    <nd ref="13378744"/>
+
+    <nd ref="13380343"/>
+    <nd ref="197146"/>
+    <nd ref="13378762"/>
+    <nd ref="197144"/>
+    <tag k="ref" v="A406"/>
+    <tag k="highway" v="trunk"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="name" v="North Circular Road"/>
+    <tag k="oneway" v="yes"/>
+
+  </way>
+  <way id="10317532" visible="true" timestamp="2007-10-25T23:21:00+01:00" user="Paul Todd">
+    <nd ref="87295559"/>
+    <nd ref="87296473"/>
+    <nd ref="87296474"/>
+    <nd ref="87344916"/>
+    <nd ref="87296475"/>
+    <nd ref="87296476"/>
+    <nd ref="87296477"/>
+
+    <nd ref="87296478"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="unclassified"/>
+  </way>
+  <way id="10320708" visible="true" timestamp="2007-10-25T23:18:22+01:00" user="Paul Todd">
+    <nd ref="13378761"/>
+    <nd ref="13378753"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="secondary"/>
+
+    <tag k="oneway" v="yes"/>
+  </way>
+  <way id="10320769" visible="true" timestamp="2007-10-25T23:20:38+01:00" user="Paul Todd">
+    <nd ref="87344363"/>
+    <nd ref="87344510"/>
+    <nd ref="87344511"/>
+    <nd ref="87344512"/>
+    <nd ref="87344513"/>
+    <nd ref="87344514"/>
+
+    <nd ref="87344515"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="10320792" visible="true" timestamp="2007-10-25T23:20:55+01:00" user="Paul Todd">
+    <nd ref="87344511"/>
+    <nd ref="87344771"/>
+    <nd ref="87344772"/>
+    <nd ref="87344773"/>
+
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="10320864" visible="true" timestamp="2007-10-25T23:21:41+01:00" user="Paul Todd">
+    <nd ref="87345290"/>
+    <nd ref="87345292"/>
+    <nd ref="87345293"/>
+    <nd ref="25733532"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+
+    <tag k="highway" v="unclassified"/>
+  </way>
+  <way id="10320927" visible="true" timestamp="2007-10-25T23:23:32+01:00" user="Paul Todd">
+    <nd ref="20952298"/>
+    <nd ref="526041"/>
+    <nd ref="29466790"/>
+    <nd ref="87345494"/>
+    <nd ref="526043"/>
+    <nd ref="87345495"/>
+
+    <nd ref="25733532"/>
+    <nd ref="87345496"/>
+    <nd ref="526044"/>
+    <nd ref="25733531"/>
+    <nd ref="87346677"/>
+    <nd ref="87345807"/>
+    <nd ref="526045"/>
+    <nd ref="29466792"/>
+    <nd ref="25733533"/>
+
+    <nd ref="87346982"/>
+    <nd ref="25733541"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="10413714" visible="true" timestamp="2007-10-27T10:41:14+01:00" user="Paul Todd">
+    <nd ref="88895440"/>
+    <nd ref="88895582"/>
+    <nd ref="88895584"/>
+
+    <nd ref="88895884"/>
+    <nd ref="88895585"/>
+    <nd ref="88896016"/>
+    <nd ref="88895586"/>
+    <nd ref="88895867"/>
+    <nd ref="88895588"/>
+    <nd ref="88895589"/>
+    <nd ref="88895590"/>
+    <nd ref="88895591"/>
+
+    <nd ref="88895592"/>
+    <nd ref="88895593"/>
+    <nd ref="88895594"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="10413960" visible="true" timestamp="2007-10-27T10:53:16+01:00" user="Paul Todd">
+    <nd ref="88902618"/>
+    <nd ref="88903002"/>
+
+    <nd ref="88903003"/>
+    <nd ref="88903005"/>
+    <nd ref="88904321"/>
+    <tag k="highway" v="unclassified"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="23507186" visible="true" timestamp="2008-03-29T10:11:04+00:00" user="Paul Todd">
+    <nd ref="254585481"/>
+    <nd ref="254585482"/>
+
+    <nd ref="254585483"/>
+    <nd ref="254585484"/>
+    <nd ref="254585749"/>
+    <nd ref="254585485"/>
+    <nd ref="254585486"/>
+    <nd ref="254585487"/>
+    <nd ref="254585488"/>
+    <nd ref="254585489"/>
+    <nd ref="254585490"/>
+
+    <nd ref="254585491"/>
+    <nd ref="254585492"/>
+    <nd ref="254585493"/>
+    <nd ref="254585494"/>
+    <nd ref="254585495"/>
+    <nd ref="254585481"/>
+    <tag k="building" v="yes"/>
+    <tag k="created_by" v="Potlatch 0.8"/>
+    <tag k="name" v="Ikea"/>
+
+  </way>
+  <way id="23507251" visible="true" timestamp="2008-03-29T10:11:04+00:00" user="Paul Todd">
+    <nd ref="254585481"/>
+    <nd ref="254585742"/>
+    <nd ref="254585743"/>
+    <nd ref="254585744"/>
+    <nd ref="254585745"/>
+    <nd ref="254585746"/>
+    <nd ref="254585747"/>
+
+    <nd ref="254585748"/>
+    <nd ref="254585749"/>
+    <nd ref="254585484"/>
+    <nd ref="254585483"/>
+    <nd ref="254585482"/>
+    <nd ref="254585481"/>
+    <tag k="created_by" v="Potlatch 0.8"/>
+    <tag k="amenity" v="parking"/>
+  </way>
+
+</osm>

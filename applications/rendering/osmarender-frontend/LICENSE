@@ -3,11 +3,24 @@ LICENSE
 
 Written by Mario Ferraro <fadinlight@gmail.com>
 
-osmarender.xsl is Copyright (C) 2006-2007  Etienne Cherdlu, Jochen Topf
+osmarender.xsl and osm-map-features-zXX.xml files are
+Copyright (C) 2006-2008  Etienne Cherdlu, Jochen Topf
 and released under GPL v2 or later.
 
-CSS_parse.js is Copyright (C) Trevor McCauley. Original code can be found at the following link:
+data.osm, rome_centre.osm and somewhere_in_london.osm are
+OpenStreetMap sample data files, released under CC-BY-SA license
+
+CSS_parse.js is Copyright (C) Trevor McCauley. Original code can be
+found at the following link:
 http://www.senocular.com/index.php?id=1.289
 All modification done in that file follow the same license.
 
-The code for Osmarender Frontend and CMYK library in this directory is released under GPL v2 or later
+Sarissa version 0.9.9.3, under /gr directory, is Copyright 2004-2008
+Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net.
+Most recent version can be find at the following link:
+http://dev.abiss.gr/sarissa
+
+The code for Osmarender Frontend (demo.xml and osmarender_frontend.js files)
+and CMYK library (cmyk.js) in this very directory
+are Copyright (C) 2008 Mario Ferraro <fadinlight@gmail.com>
+and are released under GPL v2 or later

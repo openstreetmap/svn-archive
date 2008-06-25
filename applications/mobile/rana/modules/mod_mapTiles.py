@@ -21,6 +21,7 @@ from module_base import ranaModule
 from threading import Thread
 import cairo
 import os
+import sys
 import urllib
 from tilenames import *
 sys.path.append("../pyrender")
@@ -81,7 +82,7 @@ class mapTiles(ranaModule):
         # Convert corner to screen coordinates
         x1,y1 = proj.pxpy2xy(x,y)
 
-        name = self.loadImage(x,y,z,'pyrender_default')
+        name = self.loadImage(x,y,z,'default')
 
         if(name != None):
           self.drawImage(cr,name,x1,y1)
@@ -124,12 +125,12 @@ class mapTiles(ranaModule):
     
     # Third, is it in the disk cache?  (including ones recently-downloaded)
     filename = "cache/images/%s.png" % name
-    if os.path.exists(filename):
+    if(os.path.exists(filename)):
       self.images[name]  = cairo.ImageSurface.create_from_png(filename)
       return(name)
     
     # Image not found anywhere - resort to downloading it
-    if(1):
+    if(0):
       self.threads[name] = tileLoader(x,y,z,layer,filename)
       self.threads[name].start()
       return(None)
@@ -155,7 +156,10 @@ def getURL(x,y,z,layer):
 def downloadTile(x,y,z,layer,filename):
   """Downloads an image"""
   renderer = RenderModule.RenderClass()
-  pngData = renderer.RenderTile(z,x,y, layer, filename)  
+  print "rendering to %s" % filename
+  pngData = renderer.RenderTile(z,x,y, layer, filename)
+  #print "Got %d bytes" % len(pngData)
+  
   #url = getURL(x,y,z,layer)
   #urllib.urlretrieve(url, filename)
   

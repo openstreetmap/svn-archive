@@ -7,12 +7,12 @@ public class GPSListener implements LocationListener
 {
     LocationProvider lp;
     Location location;
-    FMCanvas canvas;
+    FreemapMobile app;
     int interval;
 
-    public GPSListener(FMCanvas canvas)
+    public GPSListener(FreemapMobile app)
     {
-        this.canvas=canvas;
+        this.app=app;
         interval=60;
     }
     
@@ -46,11 +46,11 @@ public class GPSListener implements LocationListener
             {
                 System.out.println("locationUpdated");
                 Coordinates c = location.getQualifiedCoordinates();
-                canvas.updatePosition(c.getLongitude(),c.getLatitude());
+                app.updatePosition(c.getLongitude(),c.getLatitude());
             }
             else 
             {
-                canvas.setState(FMCanvas.GPS_FAILED);
+                // handle unable to get GPS position
             }
         }
     }

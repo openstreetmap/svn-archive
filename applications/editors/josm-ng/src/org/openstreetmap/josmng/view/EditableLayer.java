@@ -51,8 +51,6 @@ public abstract class EditableLayer extends Layer {
     
     public abstract UndoHelper getUndoManager();
 
-    public abstract Node getNearestNode(Point screenCoords);
-
     public abstract Collection<OsmPrimitive> getPrimitivesInRect(Rectangle screenRect, boolean contained);
     
     public Collection<OsmPrimitive> getSelection() {

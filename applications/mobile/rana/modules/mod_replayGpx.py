@@ -62,7 +62,6 @@ class replayGpx(ranaModule):
     if(self.pos >= self.numNodes):
       self.pos = 0
     (lat,lon) = self.nodes[self.pos]
-    print "%f,%f" % (lat,lon)
     self.set('pos', (lat,lon))
     self.set('pos_source', 'replay')
   

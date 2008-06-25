@@ -56,6 +56,8 @@ class replayGpx(ranaModule):
       print "%1.4f, %1.4f" % (n[0], n[1])
 
   def scheduledUpdate(self):
+    if(self.numNodes < 1):
+      return
     self.pos += 1
     if(self.pos >= self.numNodes):
       self.pos = 0

@@ -102,6 +102,7 @@ class tileServer(BaseHTTPRequestHandler):
 
 try:
   server = HTTPServer(('',1280), tileServer)
+  print "Starting web server. Open http://localhost:1280 to access pyrender."
   server.serve_forever()
 except KeyboardInterrupt:
   server.socket.close()

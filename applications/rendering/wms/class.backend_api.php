@@ -58,7 +58,8 @@ class backend_api /* extends backend */
 		curl_setopt($ch, CURLOPT_URL, self::data_url($bbox) );
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	
+		curl_setopt($ch, CURLOPT_USERAGENT, 'OSM WMS');
+		
 		$data = curl_exec($ch);
 	
 		$http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);

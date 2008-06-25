@@ -36,6 +36,8 @@ if ($_REQUEST['REQUEST'] == 'GetCapabilities')
 // 	else
 // 		fpassthru(fopen('osm_capabilities_1_3_0.xml','r'));
 
+	header('Content-type: text/xml');
+
 // 	require("capabilities.php");
 // 	require("capabilities_1_3_0.php");
 	require("capabilities_1_1_0.php");

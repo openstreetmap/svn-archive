@@ -181,15 +181,19 @@ sub CheckConfig
     my $OptipngV = `\"$cmd\" -v`;
     $EnvironmentInfo{Optipng}=$OptipngV;
 
-    if (($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) and ($Config->get("PngOptimizer") eq "optipng"))
+    if ( $Config->get("PngOptimizer") eq "optipng" ) 
     {
-        die("! Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n");
-    }
-    else
-    {
-        print "- OptiPNG version $1\n";
+	if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) 
+	{
+	    die("! Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n");
+	}
+	else
+	{
+	    print "- OptiPNG version $1\n";
+	}
     }
 
+    # LocalSplippymap
     if ($Config->get("LocalSlippymap"))
     {
         print "- Writing LOCAL slippy map directory hierarchy, no uploading\n";

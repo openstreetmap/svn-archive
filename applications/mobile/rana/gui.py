@@ -62,6 +62,7 @@ class MapWidget(gtk.Widget):
         a = __import__(f[0:-3])
         self.m[name] = a.getModule(self.m,self.d)
         print " * %s: %s" % (name, self.m[name].__doc__)
+    print "Loaded all modules"
 
   def beforeDie(self):
     print "Shutting-down modules"
@@ -157,7 +158,7 @@ class GuiBase:
     win.set_title('Rana')
     win.connect('delete-event', gtk.main_quit)
     win.resize(480,640)
-    win.move(50, gtk.gdk.screen_height() - 650)
+    win.move(gtk.gdk.screen_width() - 500, 50)
     
     # Events
     event_box = gtk.EventBox()

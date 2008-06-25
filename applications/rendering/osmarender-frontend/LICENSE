@@ -1,0 +1,13 @@
+LICENSE
+-------
+
+Written by Mario Ferraro <fadinlight@gmail.com>
+
+osmarender.xsl is Copyright (C) 2006-2007  Etienne Cherdlu, Jochen Topf
+and released under GPL v2 or later.
+
+CSS_parse.js is Copyright (C) Trevor McCauley. Original code can be found at the following link:
+http://www.senocular.com/index.php?id=1.289
+All modification done in that file follow the same license.
+
+The code for Osmarender Frontend and CMYK library in this directory is released under GPL v2 or later

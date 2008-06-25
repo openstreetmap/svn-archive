@@ -23,6 +23,8 @@ import cairo
 import os
 import urllib
 from tilenames import *
+sys.path.append("../pyrender")
+import renderer_default as RenderModule
 
 def getModule(m,d):
   return(mapTiles(m,d))
@@ -152,8 +154,10 @@ def getURL(x,y,z,layer):
 
 def downloadTile(x,y,z,layer,filename):
   """Downloads an image"""
-  url = getURL(x,y,z,layer)
-  urllib.urlretrieve(url, filename)
+  renderer = RenderModule.RenderClass()
+  pngData = renderer.RenderTile(z,x,y, layer, filename)  
+  #url = getURL(x,y,z,layer)
+  #urllib.urlretrieve(url, filename)
   
 class tileLoader(Thread):
   """Downloads an image (in a thread)"""

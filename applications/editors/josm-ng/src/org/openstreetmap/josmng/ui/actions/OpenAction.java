@@ -23,6 +23,8 @@ package org.openstreetmap.josmng.ui.actions;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
@@ -47,15 +49,19 @@ public class OpenAction extends AbstractAction {
         JFileChooser jfc = new JFileChooser();
         int returnVal = jfc.showOpenDialog(null);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
-            doOpen(jfc.getSelectedFile().getAbsolutePath());
+            open(jfc.getSelectedFile().getAbsolutePath());
         }
     }
 
-    private void doOpen(String fName) {
+    public static void open(String fName) {
         try {
-            DataSet ds = DataSet.fromStream(new FileInputStream(fName));
+            InputStream is = new FileInputStream(fName);
+            if (fName.length() >= 3 && fName.substring(fName.length()-3).equalsIgnoreCase(".gz")) {
+                is = new GZIPInputStream(is);
+            }
+            DataSet ds = DataSet.fromStream(is);
             MapView view = Main.main.getMapView();
-            Layer layer = new OsmLayer(view, "fName", ds);
+            Layer layer = new OsmLayer(view, fName, ds);
             view.addLayer(layer);
         } catch (IOException ex) {
             System.err.println("open failed:");

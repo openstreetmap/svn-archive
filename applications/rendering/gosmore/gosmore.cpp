@@ -1,7 +1,6 @@
 /* This software is placed by in the public domain by its authors. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen. */
 
-//#define WIN32_LEAN_AND_MEAN
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,8 +19,6 @@
 #define M_PI 3.14159265358979323846 // Not in math ??
 #endif
 #ifdef _WIN32_WCE
-//#include <aygshell.h>
-//#include <tpcshell.h>
 #include <windowsx.h>
 #include <winuserm.h>
 #include <sipapi.h>
@@ -608,7 +605,7 @@ inline void SetLocation (int nlon, int nlat)
   #ifndef _WIN32_WCE
   char lstr[50];
   int zl = 0;
-  while (zoom >> zl) zl++;
+  while (zl < 32 && (zoom >> zl)) zl++;
   sprintf (lstr, "?lat=%.5lf&lon=%.5lf&zoom=%d", LatInverse (nlat),
     LonInverse (nlon), 33 - zl);
   gtk_entry_set_text (GTK_ENTRY (location), lstr);
@@ -1828,6 +1825,34 @@ int IdxCmp (const void *aptr, const void *bptr)
   return tag ? tag : a < b ? -1 : 1;
 }
 
+/* To reduce the number of cache misses and disk seeks we need to construct
+ the pack file so that waysTypes that are physically close to each other, are
+ also close to each other in the file. We only know where ways are physically
+ after the first pass, so the reordering is one done during a bbox rebuild.
+ 
+ Finding an optimal solution is quite similar to find a soluting to the
+ traveling salesman problem. Instead we just place them in 2-D Hilbert curve
+ order using a qsort. */
+typedef struct {
+  wayType *w;
+  int idx;
+} masterWayType;
+
+int MasterWayCmp (const void *a, const void *b)
+{
+  int r[2], t, s, i, lead;
+  for (i = 0; i < 2; i++) {
+    t = ZEnc (((masterWayType *)(i ? b : a))->w->clon >> 16,
+      ((unsigned)((masterWayType *)(i ? b : a))->w->clat) >> 16);
+    s = ((((unsigned)t & 0xaaaaaaaa) >> 1) | ((t & 0x55555555) << 1)) ^ ~t;
+    for (lead = 1 << 30; lead; lead >>= 2) {
+      if (!(t & lead)) t ^= ((t & (lead << 1)) ? s : ~s) & (lead - 1);
+    }
+    r[i] = ((t & 0xaaaaaaaa) >> 1) ^ t;
+  }
+  return r[0] < r[1] ? 1 : r[0] > r[1] ? -1 : 0;
+}
+
 int main (int argc, char *argv[])
 {
   assert (l3 < 32);
@@ -1996,9 +2021,8 @@ int main (int argc, char *argv[])
     nodeType nd;
     halfSegType s[2];
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
-    int yesMask = 0, noMask = 0, wayInBbox = 1;
+    int yesMask = 0, noMask = 0, *wayFseek = NULL;
     int lowzList[1000], lowzListCnt = 0;
-    // wayInBbox : 1 way slips through...
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;
     s[1].other = -1;
@@ -2009,7 +2033,35 @@ int main (int argc, char *argv[])
     w.dlon = INT_MIN;
     w.bits = styleCnt;
     
-    master = (wayType *)(((char *)master) + ftell (pak));
+    if (argc >= 6) {
+      masterWayType *masterWay = (masterWayType *) malloc (
+        sizeof (*masterWay) * (ndStart / (sizeof (wayType) + 4)));
+
+      unsigned i = 0, offset = ftell (pak), wcnt;
+      wayType *m = (wayType *)(((char *)master) + offset);
+      for (wcnt = 0; (char*) m < (char*) master + ndStart; wcnt++) {
+        if (bbox[0] <= m->clat + m->dlat && bbox[1] <= m->clon + m->dlon &&
+            m->clat - m->dlat <= bbox[2] && m->clon - m->dlon <= bbox[3]) {
+          masterWay[i].idx = wcnt;
+          masterWay[i++].w = m;
+        }
+        m = (wayType*)((char*)m +
+          ((1 + strlen ((char*)(m + 1) + 1) + 1 + 3) & ~3)) + 1;
+      }
+      qsort (masterWay, i, sizeof (*masterWay), MasterWayCmp);
+      assert (wayFseek = (int*) calloc (sizeof (*wayFseek),
+        ndStart / (sizeof (wayType) + 4)));
+      for (unsigned j = 0; j < i; j++) {
+        wayFseek[masterWay[j].idx] = offset;
+        offset += sizeof (*masterWay[j].w) +
+          ((1 + strlen ((char*)(masterWay[j].w + 1) + 1) + 1 + 3) & ~3);
+      }
+      wayFseek[wcnt] = offset;
+      fflush (pak);
+      ftruncate (fileno (pak), offset); // fflush first ?
+      free (masterWay);
+      fseek (pak, *wayFseek, SEEK_SET);
+    }
     
     char *tag_k = NULL, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
     REBUILDWATCH (while (xmlTextReaderRead (xml))) {
@@ -2026,11 +2078,11 @@ int main (int argc, char *argv[])
           if (stricmp (aname, "lat") == 0) nd.lat = Latitude (atof (avalue));
           if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
           if (stricmp (name, "nd") == 0 && stricmp (aname, "ref") == 0
-              && wayInBbox) {
+              && (!wayFseek || *wayFseek)) {
             if (s[0].lat) {
               fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
             }
-            s[0].wayPtr = ftello64 (pak);
+            s[0].wayPtr = ftell (pak);
             s[1].wayPtr = TO_HALFSEG;
             s[1].other = s[0].other + 1;
             s[0].other = nOther++ * 2;
@@ -2123,12 +2175,12 @@ int main (int argc, char *argv[])
         int nameIsNode = stricmp (name, "node") == 0;
         if (stricmp (name, "way") == 0 || nameIsNode) {
           if (!nameIsNode || (strlen (tags) > 8 || StyleNr (&w)!=styleCnt)) {
-            if (nameIsNode && wayInBbox) {
+            if (nameIsNode && (!wayFseek || *wayFseek)) {
               if (s[0].lat) { // Flush s
                 fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
               }
               s[0].lat = nd.id; // Create 2 fake halfSegs
-              s[0].wayPtr = ftello64 (pak);
+              s[0].wayPtr = ftell (pak);
               s[1].wayPtr = TO_HALFSEG;
               s[0].other = -2; // No next
               s[1].other = -1; // No prev
@@ -2139,14 +2191,15 @@ int main (int argc, char *argv[])
               s[0].other = -2;
             }
 
-            if (srec[StyleNr (&w)].scaleMax > 10000000 && wayInBbox) {
+            if (srec[StyleNr (&w)].scaleMax > 10000000 &&
+                                                  (!wayFseek || *wayFseek)) {
               for (int i = 0; i < lowzListCnt; i++) {
                 if (i % 4 && i < lowzListCnt - 1) continue; // Skip some
                 if (s[0].lat) { // Flush s
                   fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
                 }
                 s[0].lat = lowzList[i];
-                s[0].wayPtr = ftello64 (pak);
+                s[0].wayPtr = ftell (pak);
                 s[1].wayPtr = TO_HALFSEG;
                 s[1].other = i == 0 ? -4 : lowzOther++;
                 s[0].other = i == lowzListCnt -1 ? -4 : lowzOther++;
@@ -2168,12 +2221,12 @@ int main (int argc, char *argv[])
             w.bits |= (defaultRestrict[StyleNr (&w)] | yesMask) &
               ((noMask & accessR) ? 0 : ~noMask);
             char *compact = tags[0] == '\n' ? tags + 1 : tags;
-            if (wayInBbox) {
+            if (!wayFseek || *wayFseek) {
               fwrite (&w, sizeof (w), 1, pak);
               fwrite (tags + strlen (tags), 1, 1, pak); // '\0' at the front
               for (char *ptr = tags; *ptr != '\0'; ) {
                 if (*ptr++ == '\n') {
-                  unsigned idx = ftello64 (pak) + ptr - 1 - tags, grp;
+                  unsigned idx = ftell (pak) + ptr - 1 - tags, grp;
                   for (grp = 0; grp < IDXGROUPS - 1 &&
                      TagCmp (groupName[grp], ptr) < 0; grp++) {}
                   fwrite (&idx, sizeof (idx), 1, groupf[grp]);
@@ -2182,16 +2235,11 @@ int main (int argc, char *argv[])
               fwrite (compact, strlen (compact) + 1, 1, pak);
             
               // Write variable length tags and align on 4 bytes
-              if (ftello64 (pak) & 3) {
-                fwrite (tags, 4 - (ftello64 (pak) & 3), 1, pak);
+              if (ftell (pak) & 3) {
+                fwrite (tags, 4 - (ftell (pak) & 3), 1, pak);
               }
             }
-            master = (wayType*)((char*)master +
-              ((1 + strlen (compact) + 1 + 3) & ~3)) + 1;
-            wayInBbox = argc < 6 || (bbox[0] <= master->clat + master->dlat
-                                  && bbox[1] <= master->clon + master->dlon
-                                  && master->clat - master->dlat <= bbox[2]
-                                  && master->clon - master->dlat <= bbox[3]);
+            if (wayFseek) fseek (pak, *++wayFseek, SEEK_SET);
             //xmlFree (tags); // Just set tags[0] = '\0'
             //tags = (char *) xmlStrdup (BAD_CAST "");
           }
@@ -2202,7 +2250,7 @@ int main (int argc, char *argv[])
       } // if it was </...>
       xmlFree (name);
     } // While reading xml
-    if (s[0].lat && wayInBbox) {
+    if (s[0].lat && (!wayFseek || *wayFseek)) {
       fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
     }
     assert (nOther * 2 < FIRST_LOWZ_OTHER);
@@ -2276,7 +2324,7 @@ int main (int argc, char *argv[])
       hashTable[++bucket] = offsetpair.final / 2;
     }
     
-    ndStart = ftello64 (pak);
+    ndStart = ftell (pak);
     
     int *pairing = (int *) malloc (sizeof (*pairing) * PAIRS);
     for (int i = PAIRGROUP (0); i < PAIRGROUP (0) + PAIRGROUPS; i++) {

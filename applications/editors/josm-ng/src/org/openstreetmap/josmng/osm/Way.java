@@ -31,14 +31,15 @@ import java.util.List;
  * @author nenik
  */
 public class Way extends OsmPrimitive {
-    private List<Node> nodes = Collections.EMPTY_LIST;
+    private static final Node[] EMPTY_NODES = new Node[0];
+    private Node[] nodes = EMPTY_NODES;
 
     Way(DataSet constructed, long id, int time, String user, boolean vis) {
         super(constructed, id, time, user, vis);
     }
     
     public List<Node> getNodes() {
-        return Collections.unmodifiableList(nodes);
+        return Collections.unmodifiableList(Arrays.asList(nodes));
     }
     
     public void setNodes(List<Node> n) {
@@ -48,7 +49,7 @@ public class Way extends OsmPrimitive {
     }
     
     void setNodesImpl(Node[] n) {
-        nodes = Arrays.asList(n);
+        nodes = n;
         source.fireWayNodesChanged(this);
     }
 
@@ -57,11 +58,11 @@ public class Way extends OsmPrimitive {
 
         public ChangeNodesEdit() {
             super("change way nodes");
-            savedNodes = nodes.toArray(new Node[nodes.size()]);
+            savedNodes = nodes;
         }
         
         protected void toggle() {
-            Node[] orig = nodes.toArray(new Node[nodes.size()]);
+            Node[] orig = nodes;
             setNodesImpl(savedNodes);
             savedNodes = orig;
         }

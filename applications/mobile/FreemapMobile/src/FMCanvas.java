@@ -24,6 +24,7 @@ public class FMCanvas extends Canvas
     Image clock;
     FreemapMobile app;
     TileSource tileSource;
+    boolean doShowPOIs;
 
     
     // Have all these to minimise computations due to limited power of phone?
@@ -72,7 +73,7 @@ public class FMCanvas extends Canvas
 		System.out.println("setZoom: state=" + state);
 		this.zoom=zoom;
 		if(state==ACTIVE)
-			doUpdatePosition();
+			updatePosition(app.getLon(),app.getLat());
     }
 
     public void paint (Graphics g)
@@ -140,14 +141,12 @@ public class FMCanvas extends Canvas
 
     public void updatePosition(double lon,double lat) 
     {
-        this.lon=lon;
-        this.lat=lat; 
-        doUpdatePosition();
-    }
-
-    
-    private void doUpdatePosition()
-    {
+		  if(lat<1 && lon<1)
+		  {
+		    lat=51.05;
+		    lon=-0.72;
+		  }
+		 
         topLeftX = GProjection.lonToX(lon,zoom)-getWidth()/2;
         topLeftY = GProjection.latToY(lat,zoom)-getHeight()/2;
         topLeftXTile = topLeftX/256;
@@ -251,18 +250,25 @@ public class FMCanvas extends Canvas
     {
         if(state==ACTIVE || state==GPS_FAILED)
         {
+            double lon=app.getLon(), lat=app.getLat();
             switch(getGameAction(keyCode))
             {
-                case LEFT:  updatePosition(lon-0.001,lat); break;
-                case RIGHT: updatePosition(lon+0.001,lat); break;
-                case UP:    updatePosition(lon,lat+0.001); break;
-                case DOWN:  updatePosition(lon,lat-0.001); break;
-                case FIRE:  // add POIs/annotations
+                case LEFT:  lon -= 0.001; handleCursorPress(lon,lat);break;
+                case RIGHT: lon += 0.001; handleCursorPress(lon,lat);break;
+                case UP:    lat += 0.001; handleCursorPress(lon,lat);break;
+                case DOWN:  lat -= 0.001; handleCursorPress(lon,lat);break;
+                case FIRE:  app.addAnnotation();// add POIs/annotations
                    break;       
         
             }    
         }
     }    
+    
+    private void handleCursorPress(double lon, double lat)
+    {
+      app.updatePosition(lon,lat);
+      updatePosition(lon,lat);
+    }
 
     public void setState(int state)
     {
@@ -279,12 +285,19 @@ public class FMCanvas extends Canvas
     public void setSource(int source)
     {
         this.source=source;
-        doUpdatePosition();
+        updatePosition(app.getLon(),app.getLat());
     }
 
     public TileSource getTileSource()
     {
         return tileSource;
     }
+	 
+	 
+	  public void showPOIs(boolean doShowPOIs)
+	  {
+	     this.doShowPOIs = doShowPOIs;
+    }
+   
 }
 

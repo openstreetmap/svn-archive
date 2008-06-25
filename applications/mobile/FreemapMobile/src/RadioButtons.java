@@ -14,7 +14,7 @@ public class RadioButtons extends ActionList
 
 	public void commandAction(Command c,Displayable s)
 	{
-		System.out.println("RadioButtons.CommandAction");
+	
 		if(c==back)
 		{
 			parent.handleBackCommand();
@@ -22,7 +22,7 @@ public class RadioButtons extends ActionList
 		else if (c==ok)
 		{
 			selected=list.getSelectedIndex();
-			System.out.println("Chose radio button: "+ selected);
+		
 			MenuAction action = (MenuAction)(menuActions.elementAt(selected));
 			action.action(selected);
 		}
@@ -30,9 +30,5 @@ public class RadioButtons extends ActionList
 		{
 		}
 	}
-	public void action(int i)
-	{
-		System.out.println("RadioButtons.action: i="+i);
-		super.action(i);
-	}
+	
 }

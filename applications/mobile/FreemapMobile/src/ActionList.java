@@ -30,6 +30,11 @@ public class ActionList implements CommandListener, MenuAction,Parent
 		return list;
 	}
 
+	public void clear()
+	{
+		list.deleteAll();
+		menuActions.removeAllElements();
+	}
 	public String getEntry(int i)
 	{
 		return list.getString(i);
@@ -56,7 +61,7 @@ public class ActionList implements CommandListener, MenuAction,Parent
     // the code to respond to commands
     public void commandAction(Command c, Displayable s)
     {
-		System.out.println("ActionList.commandAction");
+	
         // What command type is it?
 		if(c==back)
 		{
@@ -65,7 +70,6 @@ public class ActionList implements CommandListener, MenuAction,Parent
 		else if (c==List.SELECT_COMMAND)
 		{
 			int i = list.getSelectedIndex();
-			System.out.println("i is " + i);
 			MenuAction action = (MenuAction)menuActions.elementAt(i);
 			action.action(i);
         }    

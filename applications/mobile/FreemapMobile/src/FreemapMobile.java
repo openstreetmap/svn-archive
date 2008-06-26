@@ -15,15 +15,15 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
     FMCanvas canvas;
     GPSListener gpsListener;
     LocationProvider lp;
-    ActionList mainMenu, zlMenu, cacheMenu, poiMenu;
+    ActionList mainMenu, zlMenu, cacheMenu, poiMenu, serverMenu;
     LandmarkStore osmStore,freemapStore;
     POIManager poiManager;
     double lat,lon;
+	String username, password;
     
     // Constructor for the class
     public FreemapMobile()
     {
-        
     
     }
 
@@ -165,7 +165,31 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
             }
         }                    
                         
-             
+            
+		class ServerMenuHandler implements MenuAction
+		{
+			public void action(int i)
+			{
+				switch(i)
+				{
+					case 0:
+						if(serverMenu.getEntry(0).equals("Login"))
+						{
+							serverMenu.setEntry(0,"Logout");
+							LoginForm loginForm = 
+								new LoginForm(FreemapMobile.this);
+							Display.getDisplay(FreemapMobile.this).	
+								setCurrent(loginForm);
+						}
+						else
+						{
+							serverMenu.setEntry(0,"Login");
+							username=password="";
+						}
+				}
+			}
+		}
+
 
         try
         {
@@ -204,6 +228,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         ZoomMenuHandler zoomMenuHandler=new ZoomMenuHandler();
         CacheMenuHandler cacheMenuHandler=new CacheMenuHandler();
         POIMenuHandler poiMenuHandler=new POIMenuHandler();
+		ServerMenuHandler serverMenuHandler = new ServerMenuHandler();
     
         poiManager=new POIManager(this,osmStore);  
 
@@ -214,11 +239,15 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                         Display.getDisplay(this));
         poiMenu = new ActionList("POIs",mainMenu,List.IMPLICIT,
                         Display.getDisplay(this));
+		serverMenu = new ActionList("Server",mainMenu,List.IMPLICIT,
+						Display.getDisplay(this));
+
 
         mainMenu.addItem("Navigate",mainMenuHandler);
         mainMenu.addItem("Zoom level",zlMenu);
         mainMenu.addItem("Cache",cacheMenu);
         mainMenu.addItem("POIs",poiMenu);
+        mainMenu.addItem("Server",serverMenu);
         zlMenu.addItem("Low",zoomMenuHandler);
         zlMenu.addItem("Medium",zoomMenuHandler);
         zlMenu.addItem("High",zoomMenuHandler);
@@ -226,6 +255,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         poiMenu.addItem("Update",poiMenuHandler);
         poiMenu.addItem("Find", poiManager);
         poiMenu.addItem("Show",poiMenuHandler);
+		serverMenu.addItem("Login",serverMenuHandler);
 
       
 
@@ -240,6 +270,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
 		lat=51.05;
 		lon=-0.72;
             
+       	username=password=""; 
     }
     
 
@@ -331,7 +362,15 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                   "&lat="+lat+"&lon="+lon;
 			  System.out.println("Sending to : " + url);
               HttpConnection conn = (HttpConnection)Connector.open(url);
-        
+   
+			  // Supply authentication if we have username/password
+			  if(!(username.equals("")) && !(password.equals("")))     
+			  {
+				String b64=Base64Coder.encodeString
+						(username+":"+password);
+				conn.setRequestProperty("Authorization","Basic "+b64);	
+			  }
+
               // from http://java.sun.com/javame/reference/apis/jsr118/
               // We're not posting anything, so it seems we can just get the
               // response code direct
@@ -374,6 +413,13 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         handleBackCommand();
         new AnnotationSendThread(annotation,type).run();
     }
+
+	public void login(String username,String password)
+	{
+		this.username=username;
+		this.password=password;
+		handleBackCommand();
+	}
     
     public double getLon()
     {

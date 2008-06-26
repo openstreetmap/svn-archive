@@ -108,13 +108,19 @@ addCSSProperty = function (dom_here) {
 	var container = dom_here.parentNode;
 	with (container) {
 		removeChild(firstChild);
-		appendChild(createElementCB("label").appendChild(document.createTextNode("Name: ")));
+		var label_property_name = createElementCB("label");
+		label_property_name.appendChild(document.createTextNode("Name: "));
+		label_property_name.setAttribute("id","label_property_name_to_add");
+		appendChild(label_property_name);
 		appendChild(createElementCB("br"));
 		var input_property_name = createElementCB("input");
 		input_property_name.setAttribute("id","property_name_to_add");
 		appendChild(input_property_name);
 		appendChild(createElementCB("br"));
-		appendChild(createElementCB("label").appendChild(document.createTextNode("Value: ")));
+		var label_property_value = createElementCB("label");
+		label_property_value.appendChild(document.createTextNode("Value: "));
+		label_property_value.setAttribute("id","label_property_value_to_add");
+		appendChild(label_property_value);
 		appendChild(createElementCB("br"));
 		var input_property_value = createElementCB("input");
 		input_property_value.setAttribute("id","property_value_to_add");
@@ -134,6 +140,9 @@ addCSSProperty = function (dom_here) {
 addSingleProp = function (class,property_name,property_value) {
 	cmyk.addSingleStyle(class,property_name,property_value);
 	document.getElementById("select_class").onchange();
+	if(document.getElementById("transform_on_style_add").checked) {
+		Osmatransform();
+	}
 }
 
 deleteSingleProp = function (button) {
@@ -142,6 +151,9 @@ deleteSingleProp = function (button) {
 	class_to_delete = document.getElementById("select_class").value;
 	cmyk.deleteSingleStyle(class_to_delete,property);
 	document.getElementById("select_class").onchange();
+	if (document.getElementById("transform_on_style_delete").checked) {
+		Osmatransform();
+	}
 }
 
 /*
@@ -239,7 +251,7 @@ refreshProperties = function() {
 	return sorted_list_of_unique_classes.sort();
 }
 
-Osmatranform = function() {
+function Osmatransform () {
 	var osmfilename_written = document.getElementById("osm_file_name_written").value;
 	var osmfilename_selected = document.getElementById("osm_file_name_selected").value;
 
@@ -281,22 +293,25 @@ Osmatranform = function() {
 }
 
 setStyle = function () {
-var class = document.getElementById("select_class").value;
-var labels_array = document.getElementsByTagName("label");
-var magic_string_to_search="label_property_";
-var labels_styles_array = new Array();
+	var class = document.getElementById("select_class").value;
+	var labels_array = document.getElementsByTagName("label");
+	var magic_string_to_search="label_property_";
+	var labels_styles_array = new Array();
 
-for(labels in labels_array) {
-	var label_id = labels_array[labels].id;
-	if (!!label_id) {
-		if (label_id.substring(0,(magic_string_to_search.length))==magic_string_to_search) {
-			property = labels_array[labels].getAttribute("id").substring((magic_string_to_search.length));
-			editValue = document.getElementById(property).value;
-			cmyk.setSingleStyle(class,property,editValue);
+	for(labels in labels_array) {
+		var label_id = labels_array[labels].id;
+		if (!!label_id) {
+			if (label_id.substring(0,(magic_string_to_search.length))==magic_string_to_search) {
+				property = labels_array[labels].getAttribute("id").substring((magic_string_to_search.length));
+				editValue = document.getElementById(property).value;
+				cmyk.setSingleStyle(class,property,editValue);
+			}
 		}
 	}
-}
 	cmyk.setStyle();
+	if (document.getElementById("transform_on_style_set").checked) {
+		Osmatransform();
+	}
 }
 
 saveFile = function() {

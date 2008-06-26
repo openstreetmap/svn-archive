@@ -1321,12 +1321,12 @@
         <!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
             <rule e="node" s="way" k="railway" v="rail">
-                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road">
+                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|footway">
                     <symbol xlink:href="#symbol-railway-crossing" width="7px" height="7px" transform="translate(-3.5,-3.5)"/>
                 </rule>
             </rule>
             <else>
-                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road">
+                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|footway">
                     <symbol xlink:href="#symbol-railway-crossing" width="6px" height="6px" transform="translate(-3,-3)"/>
                 </rule>
             </else>

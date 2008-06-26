@@ -63,6 +63,9 @@ class OsmRenderBase:
   
   def imageBackgroundColour(self, mapLayer=None):
     return (0,0,0.5,0.5) # Override this function (r,g,b,a)
+
+  def requireDataTile(self):
+    return(True)  # override this if you don't want OSM data
   
   def draw(self, layer):
     pass # Override this function
@@ -89,7 +92,9 @@ class OsmRenderBase:
     tx,ty,tz - the tile number
     layer - which map style to use
     """
-    self.osm = parseOsm(filename)  # get OSM data into memory
+
+    if(filename):
+      self.osm = parseOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,(256,256))  # create a projection for this tile
 
     # Call the draw function
@@ -107,13 +112,17 @@ class OsmRenderBase:
     mapLayer - what style of map to draw
     outputFile - optional file to save to
     otherwise returns PNG image data"""
-    
+
+    print "Rendering %d,%d@%d, %s to %s" % (x,y,z,mapLayer, outputFile)
     self.layers = {}
     
     # Get some OSM data for the area, and return which file it's stored in
-    filename = GetOsmTileData(z,x,y)
-    if(filename == None):
-      return(None)
+    if(self.requireDataTile()):
+      filename = GetOsmTileData(z,x,y)
+      if(filename == None):
+        return(None)
+    else:
+      filename = None
   
     # Render the map
     self.Render(filename,x,y,z,mapLayer)

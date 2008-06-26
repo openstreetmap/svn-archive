@@ -27,7 +27,8 @@ import sys
 import os
 
 # Choose which rendering engine you want to use here
-import renderer_default as RenderModule
+import renderer_default as RenderModule1
+import renderer_labels as RenderModule2
 
 class tileServer(BaseHTTPRequestHandler):
   def __init__(self, request, client_address, server):
@@ -80,7 +81,11 @@ class tileServer(BaseHTTPRequestHandler):
       
       # Render the tile
       print 'z%d: %d,%d - %s' % (z,x,y,layer)
-      renderer = RenderModule.RenderClass()
+
+      if(layer == 'labels'):
+        renderer = RenderModule2.RenderClass()
+      else:
+        renderer = RenderModule1.RenderClass()
       pngData = renderer.RenderTile(z,x,y, layer)
       
       if(pngData == None):

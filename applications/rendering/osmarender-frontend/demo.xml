@@ -97,7 +97,9 @@
 		<br /><br /-->
 		<div id="commands">
 		<a href="javascript:setStyle()">Set Style</a><br />
-		
+		<input type="checkbox" id="transform_on_style_add" />Transform when Adding Styles<br />
+		<input type="checkbox" id="transform_on_style_set" />Transform when Setting Styles<br />
+		<input type="checkbox" id="transform_on_style_delete" />Transform when Deleting Styles<br />
 		<a href="javascript:Osmatranform()">Transform</a><br />
 		<a href="javascript:saveFile()">Save actual rule file</a><br />
 		<a href="javascript:clearSVG()">Clear SVG canvas</a><br />

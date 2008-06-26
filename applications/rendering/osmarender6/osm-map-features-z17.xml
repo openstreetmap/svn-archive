@@ -1939,6 +1939,7 @@
     </rule>
 
     <!-- Relation/Routes SDW -->
+    <!--
     <rule e="relation" k="type" v="route">
         <rule e="relation" k="prefered_color" v="*">
             <rule e="relation" k="prefered_color" v="white">
@@ -2009,6 +2010,7 @@
             </rule>
         </else>
     </rule>
+-->
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>

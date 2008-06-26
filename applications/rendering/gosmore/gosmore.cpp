@@ -193,14 +193,6 @@ inline int StyleNr (wayType *w) { return w->bits & ((2 << STYLE_BITS) - 1); }
 
 inline styleStruct *Style (wayType *w) { return &style[StyleNr (w)]; }
 
-int Holes (int x)
-{
-  x = ((x & 0xff00) << 8) | (x & 0xff);
-  x = ((x & 0xf000f0) << 4) | (x & 0xf000f);
-  x = ((x & 0xc0c0c0c) << 2) | (x & 0x3030303);
-  return ((x & 0xaaaaaaaa) << 1) | (x & 0x55555555);
-}
-
 int inline ZEnc (int lon, int lat)
 { // Input as bits : lon15,lon14,...lon0 and lat15,lat14,...,lat0
   int t = (lon << 16) | lat;
@@ -1432,92 +1424,110 @@ gint Expose (void)
 
 GtkWidget *search;
 GtkWidget *list;
-wayType *incrementalWay[40];
+#define numIncWays 40
+wayType *incrementalWay[numIncWays];
 
-/* Current algorithm performs badly in many cases.
-   Solution :
-   1. Bsearch idx such that
+int IdxSearch (int *idx, int h, char *key, int z)
+{
+  for (int l = 0; l < h;) {
+    char *tag = data + idx[(h + l) / 2];
+    int diff = TagCmp (tag, key);
+    while (*--tag) {}
+    if (diff > 0 || (diff == 0 &&
+      ZEnc ((unsigned)((wayType *)tag)[-1].clat >> 16, 
+            (unsigned)((wayType *)tag)[-1].clon >> 16) > z)) h = (h + l) / 2;
+    else l = (h + l) / 2 + 1;
+  }
+  return h;
+}
+
+/* 1. Bsearch idx such that
       ZEnc (way[idx]) < ZEnc (clon/lat) < ZEnc (way[idx+1])
    2. Fill the list with ways around idx.
    3. Now there's a circle with clon/clat as its centre and that runs through
       the worst way just found. Let's say it's diameter is d. There exist
       4 Z squares smaller that 2d by 2d that cover this circle. Find them
       with binary search and search through them for the nearest ways.
+   The worst case is when the nearest nodes are far along a relatively
+   straight line.
 */
-void PopulateList (int *base, int num, int *count, int firstInR)
-{ // May not change incrementalWay[0..firstInR-1]
-  static __int64 dista[sizeof (incrementalWay)/sizeof (incrementalWay[0])];
-  if (num <= 0) return;
-  while (TagCmp (data + base[0], data + base[num / 2]) != 0) {
-    num = num / 2; // Range contains more than one name. Do only 1st half.
-  }
-  char *name = data + base[num / 2], *n = name;
-  while (*--n) {}
-  wayType *w = (wayType *)n - 1;
-  int lt = ZEnc ((unsigned) clon >> 16, (unsigned) clat >> 16) <
-    ZEnc ((unsigned) w->clon >> 16, (unsigned) w->clat >> 16);
-  if (lt) PopulateList (base, num / 2, count, firstInR);
-  else PopulateList (base + num / 2 + 1, num - 1 - num / 2, count, firstInR);
-  
-  int i;
-  __int64 dist = Sqr ((__int64)(clon - w->clon)) +
-    Sqr ((__int64)(clat - w->clat));
-  for (i = *count - 1; firstInR <= i && dist < dista[i]; i--) {
-    if (i + 1 < int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) {
-      incrementalWay[i + 1] = incrementalWay[i];
-      dista[i + 1] = dista[i];
-    }
-  }
-  if (i + 1 < int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) {
-    incrementalWay[i + 1] = w;
-    dista[i + 1] = dist;
-  }
-  if (*count < int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) {
-    char *m = (char *) malloc (strcspn (name, "\n") + 1);
-    sprintf (m, "%.*s", strcspn (name, "\n"), name); // asprintf ?
-    gtk_clist_append (GTK_CLIST (list), &m);
-    free (m);
-    (*count)++;
-  }
-  int mask = !lt ? w->clon | w->clat : (~w->clon) | (~w->clat);
-  mask |= mask >> 1;
-  mask |= mask >> 2;
-  mask |= mask >> 4;
-  mask |= mask >> 8;
-  mask |= mask >> 16;
-  if (*count < int (sizeof (incrementalWay) / sizeof (incrementalWay[0])) ||
-      (!lt ? mask < clon && mask < clat && Sqr ((__int64)(clon - mask)) + 
-             Sqr ((__int64)(clat - mask)) < dista[*count - 1]
-           : clon < ~mask && clat < ~mask && Sqr ((__int64)(~mask - clon)) +
-             Sqr ((__int64)(~mask - clat)) < dista[*count - 1])) {
-    if (!lt) PopulateList (base, num / 2, count, firstInR);
-    else PopulateList (base + num/2 + 1, num - 1 - num/2, count, firstInR);
-  }
-}
-
 int IncrementalSearch (void)
 {
+  __int64 dista[numIncWays];
   char *key = (char *) gtk_entry_get_text (GTK_ENTRY (search));
   int *idx =
     (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
-  int l = 0, h = hashTable - idx, count;
-  while (l < h) {
-    if (TagCmp (data + idx[(h + l) / 2], key) >= 0) h = (h + l) / 2;
-    else l = (h + l) / 2 + 1;
-  }
+  int l = IdxSearch (idx, hashTable - idx, key, INT_MIN), count;
   gtk_clist_freeze (GTK_CLIST (list));
   gtk_clist_clear (GTK_CLIST (list));
 //  char *lastName = data + idx[min (hashTable - idx), 
 //    int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) + l - 1];
-  for (count = 0; count + l < hashTable - idx && count <
-      int (sizeof (incrementalWay) / sizeof (incrementalWay[0]));) {
-    PopulateList (idx + l + count, hashTable - idx - l >=
-      int (sizeof (incrementalWay) / sizeof (incrementalWay[0])) &&
-      TagCmp (data + idx[l + count], data +
-    idx[l + sizeof (incrementalWay) / sizeof (incrementalWay[0]) - 1]) != 0
-      ? int (sizeof (incrementalWay) / sizeof (incrementalWay[0])) - count
-      : hashTable - idx - l - count, &count, count);
-  }
+  int cz = ZEnc ((unsigned) clon >> 16, (unsigned) clat >> 16);
+  for (count = 0; count + l < hashTable - idx && count < numIncWays;) {
+    int m[2], c = count, ipos, dir, bits;
+    m[0] = IdxSearch (idx, hashTable - idx, data + idx[count + l], cz);
+    m[1] = m[0] - 1;
+    __int64 distm[2] = { -1, -1 };
+    while (c < numIncWays && ((distm[0] >> 62) < 1 || (distm[1] >> 62) < 1)) {
+      dir = distm[0] < distm[1] ? 0 : 1;
+      if (distm[dir] != -1) {
+        for (ipos = c; count < ipos && distm[dir] < dista[ipos - 1]; ipos--) {
+          dista[ipos] = dista[ipos - 1];
+          incrementalWay[ipos] = incrementalWay[ipos - 1];
+        }
+        char *tag = data + idx[m[dir]];
+        char *m = (char *) malloc (strcspn (tag, "\n") + 1);
+        sprintf (m, "%.*s", strcspn (tag, "\n"), tag);
+        gtk_clist_append (GTK_CLIST (list), &m);
+        free (m);
+
+        while (*--tag) {}
+        incrementalWay[ipos] = (wayType*)tag - 1;
+        dista[ipos] = distm[dir];
+        c++;
+      }
+      m[dir] += dir ? 1 : -1;
+      char *tag = data + idx[m[dir]];
+      while (*--tag) {}
+
+      distm[dir] = 0 <= m[dir] && m[dir] < hashTable - idx &&
+        TagCmp (data + idx[m[dir]], data + idx[count + l]) == 0
+        ? Sqr ((__int64)(clon - ((wayType*)tag)[-1].clon)) +
+          Sqr ((__int64)(clat - ((wayType*)tag)[-1].clat))
+        : ((__int64) 1 << 62);
+    }
+    if (c >= numIncWays) {
+      for (bits = 0; dista[numIncWays - 1] >> (bits * 2 + 16); bits++) {}
+      int swap = cz ^ ZEnc (
+        (unsigned) (clon + (clon & (1 << bits)) * 4 - (2 << bits)) >> 16,
+        (unsigned) (clat + (clat & (1 << bits)) * 4 - (2 << bits)) >> 16);
+      // Now we search through the 4 squares around (clat, clon)
+      for (int mask = 0; (mask & 7) != 4; mask += 0x55555555) {
+        int s = IdxSearch (idx, hashTable - idx, data + idx[count + l],
+          (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1));
+        for (;;) {
+          char *tag = data + idx[s++];
+          if (TagCmp (data + idx[count], tag) != 0) break;
+          while (*--tag) {}
+          wayType *w = (wayType*)tag - 1;
+          if ((ZEnc ((unsigned)w->clon >> 16, (unsigned) w->clat >> 16) ^
+               cz ^ (mask & swap)) >> (bits << 1)) break;
+          __int64 d = Sqr ((__int64)(w->clat - clat)) +
+                      Sqr ((__int64)(w->clon - clon));
+          if (d < dista[numIncWays - 1]) {
+            for (ipos = numIncWays - 1; ipos > count && d < dista[ipos - 1];
+                 ipos--) {
+              dista[ipos - 1] = dista[ipos];
+              incrementalWay[ipos - 1] = incrementalWay[ipos];
+            }
+            incrementalWay[ipos] = w;
+            dista[ipos - 1] = d;
+          }
+        } // For each entry in the square
+      } // For each of the 4 squares
+    } // If the search list is filled by tags with this text
+    count = c;
+  } // For each
   gtk_clist_thaw (GTK_CLIST (list));
   return FALSE;
 }

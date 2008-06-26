@@ -2,6 +2,7 @@
 
   <!-- compilation properties -->
   <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.presets"		value="../../core/presets/presets.xml"/>
   <property name="josm.home.dir"	value="${user.home}/.josm"/>
   <property name="josm"			location="../../core/dist/josm-custom.jar" />
   <property name="plugin.build.dir"	value="build"/>
@@ -60,8 +61,12 @@
   <target name="josm-build">
     <ant dir="${josm.build.dir}" />
   </target>
-  
+
   <target name="keys.pot">
+    <exec executable="perl" output="presets.java">
+      <arg line="convpreset.pl ${josm.presets}"/>
+    </exec>
+
     <exec executable="find" output="alljava.txt">
       <arg line="${josm.build.dir}/src .. -name '*.java'"/>
     </exec>
@@ -83,6 +88,7 @@
     <delete file="../../dist/lang-${language}.jar" />
     <delete dir="${language}/build"/>
     <delete file="keys.pot"/>
+    <delete file="presets.java"/>
   </target>
 
 </project>

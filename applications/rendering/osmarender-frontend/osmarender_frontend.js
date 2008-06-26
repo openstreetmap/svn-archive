@@ -11,23 +11,17 @@ var classesAndProperties = new Array();
 viewPropertiesFromClass = function(key) {
 	if (key=="osmarender_frontend:null") return false;
 
+	//Search rules in which this class is used
 	var array_da_aggiornare = new Array();
 	cmyk.getRuleFromClass(cmyk.getRuleModel(),key,array_da_aggiornare);
 	
 	console.debug(array_da_aggiornare);
-	
+
+
 	var div_result = document.getElementById("result_process_rules");
 
 	var todelete = document.getElementById("result_process_css_key");
 	if (todelete) div_result.removeChild(document.getElementById("result_process_css_key"));
-
-
-/*	if (document.getElementById("label_feature_value")) {
-		div_result.removeChild(document.getElementById("label_feature_value"));
-		div_result.removeChild(document.getElementById("select_feature_value"));
-		div_result.removeChild(document.getElementById("label_feature_rule"));
-		div_result.removeChild(document.getElementById("select_feature_rule"));
-	}*/
 
 	var div_properties = createElementCB("div");
 	div_properties.setAttribute("id","result_process_css_key");
@@ -39,7 +33,14 @@ viewPropertiesFromClass = function(key) {
 
 	var dl_container = createElementCB("dl");
 	div_properties.appendChild(dl_container);
+	
+	// Insert button for adding new properties:
 
+	dl_container.appendChild(createElementCB("dt"));
+	dd_container_button = createElementCB("dd");
+	dd_container_button.appendChild(addCSSPropertyButton());
+	dl_container.appendChild(dd_container_button);
+	
 	for(single_property in propertiesToPrint) {
 		
 		var dt_container = createElementCB("dt");
@@ -84,20 +85,65 @@ viewPropertiesFromClass = function(key) {
 				dd_container.appendChild(svg_container);
 			}
 		}
-		
+		delete_button = createElementCB("button");
+		delete_button.setAttribute("id","delete_property_button_"+single_property);
+		delete_button.setAttribute("onclick","javascript:deleteSingleProp(this);")
+		delete_button.appendChild(document.createTextNode("Delete"));
+		dd_container.appendChild(delete_button);
 		dl_container.appendChild(createElementCB("br"));
 
 	}
-	/*	for (pippo in classesAndProperties) {
-		alert(pippo); //untagged-segments
-		for (pluto in classesAndProperties[pippo]) {
-			alert(pluto); //stroke-width
-			alert(classesAndProperties[pippo][pluto]); //0.5pixels
-		}
-	}*/
-
-
 }
+
+addCSSPropertyButton = function () {
+	var button_add = createElementCB("button");
+	button_add.setAttribute("id","add_property_button");
+	button_add.setAttribute("onclick","javascript:addCSSProperty(this);");
+	var button_text = document.createTextNode("Add a CSS Property");
+	button_add.appendChild(button_text);
+	return button_add;
+}
+
+addCSSProperty = function (dom_here) {
+	var container = dom_here.parentNode;
+	with (container) {
+		removeChild(firstChild);
+		appendChild(createElementCB("label").appendChild(document.createTextNode("Name: ")));
+		appendChild(createElementCB("br"));
+		var input_property_name = createElementCB("input");
+		input_property_name.setAttribute("id","property_name_to_add");
+		appendChild(input_property_name);
+		appendChild(createElementCB("br"));
+		appendChild(createElementCB("label").appendChild(document.createTextNode("Value: ")));
+		appendChild(createElementCB("br"));
+		var input_property_value = createElementCB("input");
+		input_property_value.setAttribute("id","property_value_to_add");
+		appendChild(input_property_value);
+		appendChild(createElementCB("br"));
+		var button_to_add = createElementCB("button");
+		button_to_add.setAttribute("id","confirm_add_property_button");
+		button_to_add.setAttribute("onclick","javascript:addSingleProp(document.getElementById(\"select_class\").value,document.getElementById(\"property_name_to_add\").value,document.getElementById(\"property_value_to_add\").value);")
+		button_to_add.appendChild(document.createTextNode("Add Property"));
+		appendChild(button_to_add);
+	}
+//	dt_container.appendChild()
+//	var dd_container=
+	
+}
+
+addSingleProp = function (class,property_name,property_value) {
+	cmyk.addSingleStyle(class,property_name,property_value);
+	document.getElementById("select_class").onchange();
+}
+
+deleteSingleProp = function (button) {
+	var magic_string_to_search="delete_property_button_";
+	property = button.getAttribute("id").substring((magic_string_to_search.length));
+	class_to_delete = document.getElementById("select_class").value;
+	cmyk.deleteSingleStyle(class_to_delete,property);
+	document.getElementById("select_class").onchange();
+}
+
 /*
  * Utility to clone objects
  * Thanks to http://keithdevens.com/weblog/archive/2007/Jun/07/javascript.clone
@@ -190,14 +236,6 @@ refreshProperties = function() {
 			}
 		}
 	}
-/*	for (pippo in classesAndProperties) {
-		alert(pippo); //untagged-segments
-		for (pluto in classesAndProperties[pippo]) {
-			alert(pluto); //stroke-width
-			alert(classesAndProperties[pippo][pluto]); //0.5pixels
-		}
-	}*/
-//	sorted_list_of_unique_classes = sorted_list_of_unique_classes.sort();
 	return sorted_list_of_unique_classes.sort();
 }
 
@@ -231,7 +269,6 @@ Osmatranform = function() {
 				document.getElementById("svgfile").removeChild(document.getElementById("svgfile").firstChild);
 			}
 			var title_container = createElementCB("h1");
-//			var title = document.createTextNode("data file: "+osmfilename+" with rules : "+rulesfilename);
 			var title = document.createTextNode("data file: "+osmfilename);
 			title_container.appendChild(title);
 			document.getElementById("svgfile").appendChild(title_container);
@@ -264,7 +301,6 @@ for(labels in labels_array) {
 
 saveFile = function() {
 	var string = new XMLSerializer().serializeToString(cmyk.getRulesFile().documentElement);
-//	console.debug(string);
 	var newWindow = window.open("","xml");
 	newWindow.location="data:text/xml;charset=utf8,"+encodeURIComponent(string);
 	//var newWindow = window.open("","xml");

@@ -644,15 +644,8 @@ CMYK.prototype.getRuleModel = function() {
 CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn) {
 	if (rulemodel.childrenRules.length>0) {
 		for (childrenIndex in rulemodel.childrenRules) {
-/*			tempmodel = this.getRuleFromClass(rulemodel.childrenRules[childrenIndex],CSSclassname,rulestoreturn);
-			if (!!tempmodel) {
-				console.debug(tempmodel);
-				rulestoreturn[rulestoreturn.length] = tempmodel;
-			};*/
 			this.getRuleFromClass(rulemodel.childrenRules[childrenIndex],CSSclassname,rulestoreturn);
 		}
-//		console.debug("ritorno");
-//		console.debug(rulestoreturn);
 		return rulestoreturn;
 	}
 	else {
@@ -661,8 +654,6 @@ CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn)
 				var classesAssociated = rulemodel.render[renderRules].class;
 				for (class in classesAssociated) {
 					if (classesAssociated[class]==CSSclassname) {
-//						console.debug("ho trovato la classe!");
-//						return rulemodel;
 						rulestoreturn[rulestoreturn.length]=rulemodel;
 						return;
 					}
@@ -670,8 +661,6 @@ CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn)
 				var maskclassesAssociated = rulemodel.render[renderRules]["mask-class"];
 				for (class in maskclassesAssociated) {
 					if (maskclassesAssociated[class]==CSSclassname) {
-//						console.debug("ho trovato la classe!");
-//						return rulemodel;
 						rulestoreturn[rulestoreturn.length]=rulemodel;
 						return;
 					}
@@ -697,13 +686,37 @@ CMYK.prototype.setStyle = function() {
 
 CMYK.prototype.setSingleStyle = function(class,property,editValue) {
 	for (object in this.Styles) {
-		if (this.Styles[object].selectors[0].singleSelectors[0].classes.values==class) {
-			for (inner_property in this.Styles[object].selectors[0].properties.values) {
-				if (typeof(inner_property) != "function") {
-					if (inner_property==property) {
-						this.Styles[object].selectors[0].properties.values[inner_property]=editValue;
+		with (this.Styles[object].selectors[0]) {
+			if (singleSelectors[0].classes.values==class) {
+				for (inner_property in properties.values) {
+					if (typeof(inner_property) != "function") {
+						if (inner_property==property) {
+							properties.values[inner_property]=editValue;
+						}
 					}
 				}
+			}
+		}
+	}
+	this.setStyle();
+}
+
+CMYK.prototype.addSingleStyle = function(class,property,editValue) {
+	for (object in this.Styles) {
+		with (this.Styles[object].selectors[0]) {
+			if (singleSelectors[0].classes.values==class) {
+				properties.values[property]=editValue;
+			}
+		}
+	}
+	this.setStyle();
+}
+
+CMYK.prototype.deleteSingleStyle = function(class,property) {
+	for (object in this.Styles) {
+		with (this.Styles[object].selectors[0]) {
+			if (singleSelectors[0].classes.values==class) {
+				delete properties.values[property];
 			}
 		}
 	}

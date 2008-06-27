@@ -9,8 +9,6 @@ DESTDIR=
 prefix = /usr/local
 bindir = $(prefix)/bin
 
-USE_FLITE=-DUSE_FLITE -lflite_cmu_us_kal16 -lflite_usenglish -lflite_cmulex \
-  -lflite
 CFLAGS=-O2
 WARNFLAGS= -W -Wall
 
@@ -33,7 +31,7 @@ all: gosmore
 
 gosmore:	gosmore.cpp
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
-                 `[ -d /usr/include/flite ] && echo ${USE_FLITE}` \
+		  -D RES_DIR='"$(prefix)/usr/share/"' \
                   gosmore.cpp -o gosmore ${EXTRA}
 
 #elemstyles.xml:
@@ -49,21 +47,19 @@ zip:
 	scp gosmore.zip ARMV4Rel/gosm_arm.exe \
 	  sabiepark@www.rational.co.za:www/gosmore/
 
-commit:		clean
-		rm -f *~; cd ..; tar czf - gosmore | ssh \
-		  sabiepark@www.rational.co.za 'cd www/gosmore; \
-		  cat >gosmore-`exec date +%Y%m%d`.tar.gz'
-
 install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
+	mkdir -p $(DESTDIR)$(prefix)/share/gosmore
+	cp -a elemstyle.xml icon.csv icon.xpm $(DESTDIR)$(prefix)/share/gosmore
 
 dist:
 	mkdir gosmore-$(VERSION)
-	cp gosmore.cc Makefile  README gosmore-$(VERSION)
+	cp gosmore.cpp Makefile elemstyle.xml icon.csv icon.xpm  README \
+	  gosmore-$(VERSION)
 	tar zcf gosmore-$(VERSION).tar.gz gosmore-$(VERSION)
 	rm -rf gosmore-$(VERSION)
 
 clean:
-	$(RM) gosmore gosmore.pak *.tmp *~ gosmore.zip gosmore.exe \
+	$(RM) gosmore *.tmp *~ gosmore.zip gosmore.exe \
 	  gosmore.aps gosmore.vcl gosmore.vcw

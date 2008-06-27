@@ -26,10 +26,10 @@ def getModule(m,d):
   return(placenames(m,d))
 
 class placenames(ranaModule):
-  """Overlay info on the map"""
+  """Lookup nearest town or village"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-    self.places = {'v':[],'c':[],'t':[]}
+    self.places = {'v':[],'c':[],'t':[]} # village, city, town
     self.load("places.txt")
     self.lastpos = (0,0)
 
@@ -39,12 +39,9 @@ class placenames(ranaModule):
     for line in file:
       line = line.strip()
       (lat,lon,id,type,name) = line.split("\t")
-      item = (float(lat),float(lon),name)
-      #array = self.places.get(type, None)
-      #if(array == None):
-      #  self.places[type] = [item]
-      #else:
-      self.places[type].append(item)
+      if(type in ('t','c','v')):
+        item = (float(lat),float(lon),name)
+        self.places[type].append(item)
         
   def lookupPlace(self, lat, lon, type, radiusKm):
     kmToDeg = 360.0 / 40041.0
@@ -64,10 +61,12 @@ class placenames(ranaModule):
     if(0):
       if(nearest != None):
         print "Found %s at %1.4f km" % (nearest, math.sqrt(nearestDist) / kmToDeg)
-  
     return(nearest)
   
   def lookup(self, lat, lon):
+    # Search small to large - i.e. if you're near a village,
+    # return that rather than the nearby city.
+    # Use limits, so we don't claim to be 'near' a town > 30km away
     for lookup in (('v',10.0), ('t', 30.0), ('c', 150.0)):
       (type, rangefilter) = lookup
       place = self.lookupPlace(lat,lon,type, rangefilter)

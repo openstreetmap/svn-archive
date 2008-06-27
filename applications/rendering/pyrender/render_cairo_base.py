@@ -170,7 +170,7 @@ class OsmRenderBase:
     cp = list()
     cp.append(xy[0])
 
-    for index in range(2,len(xy)-1):
+    for index in range(1,len(xy)-1):
       x1,y1 = xy[index-1]
       x2,y2 = xy[index]
       x3,y3 = xy[index+1]

@@ -27,7 +27,7 @@
     <rule e="node|way" k="osmarender:render" v="~|yes">
 
         <!-- Landuse -->
-        <rule e="way" k="landuse" v="residential">
+        <rule e="way" k="landuse" v="residential|farmyard">
             <area class="landuse-residential"/>
         </rule>
         <rule e="way" k="landuse" v="retail">
@@ -42,7 +42,7 @@
         <rule e="way" k="landuse" v="quarry">
             <area class="landuse-quarry"/>
         </rule>
-        <rule e="way" k="landuse" v="field|farm|allotments|village_green|recreation_ground|meadow|grass">
+        <rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
             <area class="landuse-field"/>
         </rule>
         <rule e="way" k="landuse" v="cemetery">

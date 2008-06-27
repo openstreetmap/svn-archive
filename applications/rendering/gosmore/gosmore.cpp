@@ -236,8 +236,8 @@ int TagCmp (char *a, char *b)
   // TODO : We should consider an algorithm like double metasound.
   static char *omit[] = { /* "the", in the middle ?? */ "ave", "avenue", 
     "blvd", "boulevard", "byp", "bypass",
-#pragma warn Add 'close' here
-    "cir", "circle", "cres", "crescent", "ct", "court", "ctr", "center",
+    "cir", "circle", "close", "cres", "crescent", "ct", "court", "ctr",
+      "center",
     "dr", "drive", "hwy", "highway", "ln", "lane", "loop",
     "pass", "pky", "parkway", "pl", "place", "plz", "plaza",
     /* "run" */ "rd", "road", "sq", "square", "st", "street",
@@ -1326,18 +1326,6 @@ gint Expose (void)
         #endif
       } /* for each visible tile */
     }
-  #if 0
-  //  printf ("%d %d %s\n", name[0].x, name[0].y, name[0].w->name + data);
-    for (int i = 0, y = -1000; i < nameCnt; i++) {
-      if (y + f->ascent + f->descent < name[i].y) {
-        y = name[i].y;
-        gdk_gc_set_foreground (draw->style->fg_gc[0],
-          &highwayColour[name[i].w->type]);
-        gdk_draw_string (draw->window, f, draw->style->fg_gc[0],
-          name[i].x, name[i].y, name[i].w->name + data);
-      }
-    }
-  #endif
   //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
   //  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
@@ -1401,8 +1389,8 @@ gint Expose (void)
     clip.width, clip.height);
   for (int i = 0; i < 3; i++) {
     gdk_draw_string (draw->window, f, draw->style->fg_gc[0],
-      clip.width - ButtonSize * 10 - 5, clip.height - 5 -
-      ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
+      clip.width - ButtonSize * 10 - 5, clip.height + (f->ascent - f->descent)
+      / 2 - ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
   }
   #else
   int i = (HideZoomButtons && option == numberOfOptions ? 1 : 3);
@@ -1482,7 +1470,7 @@ int IncrementalSearch (void)
     int m[2], c = count, ipos, dir, bits;
     m[0] = IdxSearch (idx, hashTable - idx, data + idx[count + l], cz);
     m[1] = m[0] - 1;
-    __int64 distm[2] = { -1, -1 }, big = ((__int64) 1 << 63) - 1;
+    __int64 distm[2] = { -1, -1 }, big = ((unsigned __int64) 1 << 63) - 1;
     while (c < numIncWays && (distm[0] < big || distm[1] < big)) {
       dir = distm[0] < distm[1] ? 0 : 1;
       if (distm[dir] != -1) {
@@ -2623,8 +2611,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         gpsNew.fix.latitude, gpsNew.fix.longitude, gpsNew.fix.ele,
 	gpsNew.fix.hdop); */
       if (FollowGPSr) {
-        SetLocation (Latitude (((gpsNewStruct*)lParam)->fix.longitude),
-          Longitude (((gpsNewStruct*)lParam)->fix.latitude));
+        SetLocation (Longitude (((gpsNewStruct*)lParam)->fix.longitude),
+          Latitude (((gpsNewStruct*)lParam)->fix.latitude));
         InvalidateRect (hWnd, NULL, FALSE);
       }
       break;
@@ -2833,7 +2821,7 @@ int WINAPI WinMain(
   }
   Exit = 0;
   IncrementalSearch ();
-  InitializeOptions (NULL);
+  InitializeOptions ();
 
   GtkWidget dumdraw;
   dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);

@@ -1595,9 +1595,8 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
 
 void InitializeOptions (void)
 {
-  wayType *w = (wayType*)(data + ndBase[0].wayPtr);
-  SetLocation (w->clon, w->clat);
-  zoom = w->dlat + w->dlon + (1 << 15);
+  SetLocation (incrementalWay[0]->clon, incrementalWay[0]->clat);
+  zoom = incrementalWay[0]->dlat + incrementalWay[0]->dlon + (1 << 15);
 }
 
 #endif // HEADLESS
@@ -1731,7 +1730,7 @@ int UserInterface (int argc, char *argv[])
 
   iconSet = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   gtk_combo_box_append_text (iconSet, "Classic.Big");
-  gtk_combo_box_append_text (iconSet, "Classic.Small                      ");
+  gtk_combo_box_append_text (iconSet, "Classic.Small                       ");
   gtk_combo_box_append_text (iconSet, "Square.Big");
   gtk_combo_box_append_text (iconSet, "Square.Small");
   gtk_combo_box_set_active (iconSet, 1);
@@ -1786,10 +1785,10 @@ int UserInterface (int argc, char *argv[])
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
   gtk_widget_show (window);
-  InitializeOptions ();
   option = numberOfOptions;
   ChangeOption ();
   IncrementalSearch ();
+  InitializeOptions ();
   gtk_main ();
   FlushGpx ();
   
@@ -2833,6 +2832,7 @@ int WINAPI WinMain(
     option = numberOfOptions;
   }
   Exit = 0;
+  IncrementalSearch ();
   InitializeOptions (NULL);
 
   GtkWidget dumdraw;

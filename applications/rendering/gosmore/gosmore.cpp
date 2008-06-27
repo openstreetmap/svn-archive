@@ -50,6 +50,9 @@ typedef int intptr_t;
   o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2)
 #else
 #include <unistd.h>
+#include <sys/stat.h>
+#include <string>
+using namespace std;
 #define wchar_t char
 #define wsprintf sprintf
 #define DOC_PREFIX ""
@@ -65,7 +68,6 @@ typedef int intptr_t;
   o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
   o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
   o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
-  o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
 
 #define HideZoomButtons 0
 #endif
@@ -77,14 +79,6 @@ typedef int intptr_t;
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
 #endif
-
-#ifdef USE_FLITE
-#include <flite/flite.h>
-extern "C" {
-  cst_voice *register_cmu_us_kal (void);
-}
-#endif
-FILE *flitePipe = stdout;
 
 #ifndef _WIN32
 #define stricmp strcasecmp
@@ -109,6 +103,7 @@ char searchStr[50];
 #define gtk_clist_freeze(x)
 #define gtk_clist_clear(x)
 #define gtk_clist_thaw(x)
+#define gtk_toggle_button_set_active(x,y) // followGPRr
 struct GtkWidget { 
   struct {
     int width, height;
@@ -127,7 +122,16 @@ BOOL CALLBACK DlgSearchProc (
 	UINT Msg, 
 	WPARAM wParam, 
 	LPARAM lParam);
-
+#else
+const char *FindResource (char *fname)
+{
+  static string s;
+  struct stat dummy;
+  if (stat (fname, &dummy) == 0) return fname;
+  s = (string) getenv ("HOME") + "/.gosmore/" + fname;
+  if (stat (s.c_str (), &dummy) != 0) s = (string) RES_DIR + fname;
+  return s.c_str ();
+}
 #endif
 
 #define TILEBITS (18)
@@ -193,7 +197,7 @@ inline int StyleNr (wayType *w) { return w->bits & ((2 << STYLE_BITS) - 1); }
 
 inline styleStruct *Style (wayType *w) { return &style[StyleNr (w)]; }
 
-int inline ZEnc (int lon, int lat)
+unsigned inline ZEnc (int lon, int lat)
 { // Input as bits : lon15,lon14,...lon0 and lat15,lat14,...,lat0
   int t = (lon << 16) | lat;
   t = (t & 0xff0000ff) | ((t & 0x00ff0000) >> 8) | ((t & 0x0000ff00) << 8);
@@ -232,6 +236,7 @@ int TagCmp (char *a, char *b)
   // TODO : We should consider an algorithm like double metasound.
   static char *omit[] = { /* "the", in the middle ?? */ "ave", "avenue", 
     "blvd", "boulevard", "byp", "bypass",
+#pragma warn Add 'close' here
     "cir", "circle", "cres", "crescent", "ct", "court", "ctr", "center",
     "dr", "drive", "hwy", "highway", "ln", "lane", "loop",
     "pass", "pky", "parkway", "pl", "place", "plz", "plaza",
@@ -360,9 +365,6 @@ wchar_t *optionNameTable[][numberOfLang] = { OPTIONS };
 #define o(en,de,es,fr,it,nl,min,max) int en = min;
 OPTIONS
 #undef o
-
-//int option[numberOfOptions];
-//#define optionName(x) optionNameTable[x][option[English]]
 
 #define Sqr(x) ((x)*(x))
 /* Routing starts at the 'to' point and moves to the 'from' point. This will
@@ -585,9 +587,9 @@ void Route (int recalculate)
 #ifndef HEADLESS
 #define STATUS_BAR    0
 
-GtkWidget *draw, *location; //, *followGPSr;
-//GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
-int clon, clat, zoom, option = EnglishNum, gpsSockTag;
+GtkWidget *draw, *location, *followGPSr;
+GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
+int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
 inline void SetLocation (int nlon, int nlat)
@@ -600,22 +602,36 @@ inline void SetLocation (int nlon, int nlat)
   while (zl < 32 && (zoom >> zl)) zl++;
   sprintf (lstr, "?lat=%.5lf&lon=%.5lf&zoom=%d", LatInverse (nlat),
     LonInverse (nlon), 33 - zl);
+  setLocBusy = TRUE;
   gtk_entry_set_text (GTK_ENTRY (location), lstr);
+  setLocBusy = FALSE;
   #endif
 }
 
 #ifndef _WIN32_WCE
 int ChangeLocation (void)
 {
+  if (setLocBusy) return FALSE;
   char *lstr = (char *) gtk_entry_get_text (GTK_ENTRY (location));
   double lat, lon;
-  if (sscanf (lstr, /*"%*[^?]"*/"?lat=%lf&lon=%lf&zoom=%d", &lat, &lon, &zoom)
-       == 3) {
+  while (*lstr != '?' && *lstr != '\0') lstr++;
+  if (sscanf (lstr, "?lat=%lf&lon=%lf&zoom=%d", &lat, &lon, &zoom) == 3) {
     clat = Latitude (lat);
     clon = Longitude (lon);
     zoom = 0xffffffff >> (zoom - 1);
     gtk_widget_queue_clear (draw);
   }
+  return FALSE;
+}
+
+int ChangeOption (void)
+{
+  IconSet = gtk_combo_box_get_active (iconSet);
+  Vehicle = gtk_combo_box_get_active (carBtn) + motorcarR;
+  DetailLevel = 4 - gtk_combo_box_get_active (detailBtn);
+  FollowGPSr = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr));
+  FastestRoute = !gtk_combo_box_get_active (fastestBtn);
+  gtk_widget_queue_clear (draw);
   return FALSE;
 }
 #endif
@@ -950,7 +966,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       SetLocation (clon + lrint ((event->x - w / 2) * perpixel),
         clat - lrint ((event->y - draw->allocation.height / 2) * perpixel));
 
-      //gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
       FollowGPSr = 0;
     }
     else if (event->button == 2) {
@@ -1092,7 +1108,7 @@ gint Expose (void)
       &routeColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
-      "icons.xpm");
+      FindResource ("icons.xpm"));
   }  
 
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
@@ -1422,12 +1438,12 @@ gint Expose (void)
   return FALSE;
 }
 
-GtkWidget *search;
+GtkWidget *searchW;
 GtkWidget *list;
 #define numIncWays 40
 wayType *incrementalWay[numIncWays];
 
-int IdxSearch (int *idx, int h, char *key, int z)
+int IdxSearch (int *idx, int h, char *key, unsigned z)
 {
   for (int l = 0; l < h;) {
     char *tag = data + idx[(h + l) / 2];
@@ -1454,33 +1470,29 @@ int IdxSearch (int *idx, int h, char *key, int z)
 int IncrementalSearch (void)
 {
   __int64 dista[numIncWays];
-  char *key = (char *) gtk_entry_get_text (GTK_ENTRY (search));
+  char *taga[numIncWays];
+  char *key = (char *) gtk_entry_get_text (GTK_ENTRY (searchW));
   int *idx =
     (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
   int l = IdxSearch (idx, hashTable - idx, key, INT_MIN), count;
-  gtk_clist_freeze (GTK_CLIST (list));
-  gtk_clist_clear (GTK_CLIST (list));
 //  char *lastName = data + idx[min (hashTable - idx), 
 //    int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) + l - 1];
-  int cz = ZEnc ((unsigned) clon >> 16, (unsigned) clat >> 16);
+  int cz = ZEnc ((unsigned) clat >> 16, (unsigned) clon >> 16);
   for (count = 0; count + l < hashTable - idx && count < numIncWays;) {
     int m[2], c = count, ipos, dir, bits;
     m[0] = IdxSearch (idx, hashTable - idx, data + idx[count + l], cz);
     m[1] = m[0] - 1;
-    __int64 distm[2] = { -1, -1 };
-    while (c < numIncWays && ((distm[0] >> 62) < 1 || (distm[1] >> 62) < 1)) {
+    __int64 distm[2] = { -1, -1 }, big = ((__int64) 1 << 63) - 1;
+    while (c < numIncWays && (distm[0] < big || distm[1] < big)) {
       dir = distm[0] < distm[1] ? 0 : 1;
       if (distm[dir] != -1) {
         for (ipos = c; count < ipos && distm[dir] < dista[ipos - 1]; ipos--) {
           dista[ipos] = dista[ipos - 1];
           incrementalWay[ipos] = incrementalWay[ipos - 1];
+          taga[ipos] = taga[ipos - 1];
         }
         char *tag = data + idx[m[dir]];
-        char *m = (char *) malloc (strcspn (tag, "\n") + 1);
-        sprintf (m, "%.*s", strcspn (tag, "\n"), tag);
-        gtk_clist_append (GTK_CLIST (list), &m);
-        free (m);
-
+        taga[ipos] = tag;
         while (*--tag) {}
         incrementalWay[ipos] = (wayType*)tag - 1;
         dista[ipos] = distm[dir];
@@ -1493,41 +1505,80 @@ int IncrementalSearch (void)
       distm[dir] = 0 <= m[dir] && m[dir] < hashTable - idx &&
         TagCmp (data + idx[m[dir]], data + idx[count + l]) == 0
         ? Sqr ((__int64)(clon - ((wayType*)tag)[-1].clon)) +
-          Sqr ((__int64)(clat - ((wayType*)tag)[-1].clat))
-        : ((__int64) 1 << 62);
+          Sqr ((__int64)(clat - ((wayType*)tag)[-1].clat)) : big;
     }
     if (c >= numIncWays) {
-      for (bits = 0; dista[numIncWays - 1] >> (bits * 2 + 16); bits++) {}
+      for (bits = 0; bits < 16 && dista[numIncWays - 1] >> (bits * 2 + 32);
+        bits++) {}
+/* Print centre, up, down, right and left to see if they're in the square
+      for (int i = 0; i < 32; i++) printf ("%d%s", (cz >> (31 - i)) & 1,
+        i == 31 ? " x\n" : i % 2 ? " " : "");
+      for (int i = 0; i < 32; i++) printf ("%d%s", (
+        ZEnc ((unsigned)(clat + (int) sqrt (dista[numIncWays - 1])) >> 16,
+              (unsigned)clon >> 16) >> (31 - i)) & 1,
+        i == 31 ? " x\n" : i % 2 ? " " : "");
+      for (int i = 0; i < 32; i++) printf ("%d%s", (
+        ZEnc ((unsigned)(clat - (int) sqrt (dista[numIncWays - 1])) >> 16,
+              (unsigned)clon >> 16) >> (31 - i)) & 1,
+        i == 31 ? " x\n" : i % 2 ? " " : "");
+      for (int i = 0; i < 32; i++) printf ("%d%s", (
+        ZEnc ((unsigned)clat >> 16,
+              (unsigned)(clon + (int) sqrt (dista[numIncWays - 1])) >> 16) >> (31 - i)) & 1,
+        i == 31 ? " x\n" : i % 2 ? " " : "");
+      for (int i = 0; i < 32; i++) printf ("%d%s", (
+        ZEnc ((unsigned)clat >> 16,
+              (unsigned)(clon - (int) sqrt (dista[numIncWays - 1])) >> 16) >> (31 - i)) & 1,
+        i == 31 ? " x\n" : i % 2 ? " " : "");
+*/      
       int swap = cz ^ ZEnc (
-        (unsigned) (clon + (clon & (1 << bits)) * 4 - (2 << bits)) >> 16,
-        (unsigned) (clat + (clat & (1 << bits)) * 4 - (2 << bits)) >> 16);
+        (unsigned) (clat + (clat & (1 << (bits + 16))) * 4 -
+                                              (2 << (bits + 16))) >> 16,
+        (unsigned) (clon + (clon & (1 << (bits + 16))) * 4 -
+                                              (2 << (bits + 16))) >> 16);
       // Now we search through the 4 squares around (clat, clon)
       for (int mask = 0; (mask & 7) != 4; mask += 0x55555555) {
         int s = IdxSearch (idx, hashTable - idx, data + idx[count + l],
           (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1));
+/* Print the bbox
+        for (int i = 0; i < 32; i++) printf ("%d%s", 
+          (((cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1)) >> (31 - i)) & 1,
+          i == 31 ? "\n" : i % 2 ? " " : "");
+*/
         for (;;) {
           char *tag = data + idx[s++];
-          if (TagCmp (data + idx[count], tag) != 0) break;
+          if (TagCmp (data + idx[count + l], tag) != 0) break;
           while (*--tag) {}
           wayType *w = (wayType*)tag - 1;
-          if ((ZEnc ((unsigned)w->clon >> 16, (unsigned) w->clat >> 16) ^
-               cz ^ (mask & swap)) >> (bits << 1)) break;
+          if ((ZEnc ((unsigned)w->clat >> 16, (unsigned) w->clon >> 16) ^
+               cz ^ (mask & swap)) >> (2 + (bits << 1))) break;
           __int64 d = Sqr ((__int64)(w->clat - clat)) +
                       Sqr ((__int64)(w->clon - clon));
+//          printf ("%8x %20.0lf %20.0lf\n", mask, sqrt (d),
+//            sqrt (dista[numIncWays - 1]));
           if (d < dista[numIncWays - 1]) {
             for (ipos = numIncWays - 1; ipos > count && d < dista[ipos - 1];
                  ipos--) {
-              dista[ipos - 1] = dista[ipos];
-              incrementalWay[ipos - 1] = incrementalWay[ipos];
+              dista[ipos] = dista[ipos - 1];
+              incrementalWay[ipos] = incrementalWay[ipos - 1];
+              taga[ipos] = taga[ipos - 1];
             }
             incrementalWay[ipos] = w;
-            dista[ipos - 1] = d;
+            dista[ipos] = d;
+            taga[ipos] = data + idx[s - 1];
           }
         } // For each entry in the square
       } // For each of the 4 squares
     } // If the search list is filled by tags with this text
     count = c;
   } // For each
+  gtk_clist_freeze (GTK_CLIST (list));
+  gtk_clist_clear (GTK_CLIST (list));
+  for (int i = 0; i < count; i++) {
+    char *m = (char *) malloc (strcspn (taga[i], "\n") + 1);
+    sprintf (m, "%.*s", strcspn (taga[i], "\n"), taga[i]);
+    gtk_clist_append (GTK_CLIST (list), &m);
+    free (m);
+  }
   gtk_clist_thaw (GTK_CLIST (list));
   return FALSE;
 }
@@ -1536,64 +1587,24 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
   GdkEventButton * /*ev*/, void * /*data*/)
 {
   SetLocation (incrementalWay[row]->clon, incrementalWay[row]->clat);
-  zoom = incrementalWay[row]->dlat + incrementalWay[row]->dlon + (2 << 14);
-//  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
+  zoom = incrementalWay[row]->dlat + incrementalWay[row]->dlon + (1 << 15);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
   FollowGPSr = FALSE;
   gtk_widget_queue_clear (draw);
 }
 
-void InitializeOptions (FILE *optFile)
+void InitializeOptions (void)
 {
-  SetLocation (ndBase[0].lon, ndBase[0].lat);
-  zoom = lrint (0.1 / 5 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
-  
-  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "r");
-  IconSet = 1;
-  DetailLevel = 3;
-  ButtonSize = 4;
-  if (optFile) {
-    #define o(en,de,es,fr,it,nl,min,max) fread (&en, sizeof (en), 1, optFile);
-    OPTIONS
-    #undef o
-    fclose (optFile);
-    option = numberOfOptions;
-  }
-  Exit = 0;
+  wayType *w = (wayType*)(data + ndBase[0].wayPtr);
+  SetLocation (w->clon, w->clat);
+  zoom = w->dlat + w->dlon + (1 << 15);
 }
 
-void SaveOptions (FILE *optFile)
-{
-  FlushGpx ();
-  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "w");
-  if (optFile) {
-    #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
-    OPTIONS
-    #undef o
-    fclose (optFile);
-  }
-}
 #endif // HEADLESS
 
 #ifndef _WIN32_WCE
 int UserInterface (int argc, char *argv[])
 {
-  #ifdef USE_FLITE
-    int pyp[2];
-    pipe (pyp);
-    if (fork () == 0) { // A simple child to play all the voices it has
-      FILE *rpipe = fdopen (pyp[0], "r");
-      flite_init ();    // time for without blocking the main process
-      cst_voice *fliteV = register_cmu_us_kal ();
-      for (;;) {
-        char msg[301];
-        time_t preread = time (NULL), other;
-        fscanf (rpipe, "%ld %300[^\n]", &other, msg);
-        if (preread <= other) flite_text_to_speech (msg, fliteV, "play");
-      }
-    }
-    flitePipe = fdopen (pyp[1], "w");
-    setlinebuf (flitePipe);
-  #endif
   #if defined (__linux__)
   FILE *gmap = fopen64 ("gosmore.pak", "r");
   #else
@@ -1676,10 +1687,10 @@ int UserInterface (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), draw, TRUE, TRUE, 0);
   gtk_box_pack_end (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
-  search = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), search, FALSE, FALSE, 5);
-  gtk_entry_set_text (GTK_ENTRY (search), "Search");
-  gtk_signal_connect (GTK_OBJECT (search), "changed",
+  searchW = gtk_entry_new ();
+  gtk_box_pack_start (GTK_BOX (vbox), searchW, FALSE, FALSE, 5);
+  gtk_entry_set_text (GTK_ENTRY (searchW), "Search");
+  gtk_signal_connect (GTK_OBJECT (searchW), "changed",
     GTK_SIGNAL_FUNC (IncrementalSearch), NULL);
   
   list = gtk_clist_new (1);
@@ -1688,16 +1699,15 @@ int UserInterface (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (list), "select_row",
     GTK_SIGNAL_FUNC (SelectName), NULL);
     
-  location = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), location, FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (location), "changed",
-    GTK_SIGNAL_FUNC (ChangeLocation), NULL);
-  
-/*  carBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  gtk_combo_box_append_text (carBtn, "car");
-  gtk_combo_box_append_text (carBtn, "bicycle");
+  carBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  #define M(x) if (motorcarR <= x ## R && x ## R < onewayR) \
+                             gtk_combo_box_append_text (carBtn, #x);
+  RESTRICTIONS
+  #undef M
   gtk_combo_box_set_active (carBtn, 0);
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (carBtn), FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (carBtn), "changed",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
 
   fastestBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   gtk_combo_box_append_text (fastestBtn, "fastest");
@@ -1705,6 +1715,8 @@ int UserInterface (int argc, char *argv[])
   gtk_combo_box_set_active (fastestBtn, 0);
   gtk_box_pack_start (GTK_BOX (vbox),
     GTK_WIDGET (fastestBtn), FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (fastestBtn), "changed",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
 
   detailBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   gtk_combo_box_append_text (detailBtn, "Highest");
@@ -1714,21 +1726,30 @@ int UserInterface (int argc, char *argv[])
   gtk_combo_box_append_text (detailBtn, "Lowest");
   gtk_combo_box_set_active (detailBtn, 2);
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (detailBtn), FALSE, FALSE,5);
+  gtk_signal_connect (GTK_OBJECT (detailBtn), "changed",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
 
   iconSet = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  gtk_combo_box_append_text (iconSet, "CLASSIC");
-  gtk_combo_box_append_text (iconSet, "classic");
-  gtk_combo_box_append_text (iconSet, "SQUARE");
-  gtk_combo_box_append_text (iconSet, "square");
+  gtk_combo_box_append_text (iconSet, "Classic.Big");
+  gtk_combo_box_append_text (iconSet, "Classic.Small                      ");
+  gtk_combo_box_append_text (iconSet, "Square.Big");
+  gtk_combo_box_append_text (iconSet, "Square.Small");
   gtk_combo_box_set_active (iconSet, 1);
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (iconSet), FALSE, FALSE, 5);
-*/
+  gtk_signal_connect (GTK_OBJECT (iconSet), "changed",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
+
   GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
 /*  gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
     GTK_SIGNAL_FUNC (GetDirections), NULL);
 */
-//  followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
+  location = gtk_entry_new ();
+  gtk_box_pack_start (GTK_BOX (vbox), location, FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (location), "changed",
+    GTK_SIGNAL_FUNC (ChangeLocation), NULL);
+  
+  followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
   
   #ifndef WIN32  
   struct sockaddr_in sa;
@@ -1742,31 +1763,35 @@ int UserInterface (int argc, char *argv[])
     gpsSockTag = gdk_input_add (/*gpsData->gps_fd*/ gpsSock, GDK_INPUT_READ,
       (GdkInputFunction) ReceiveNmea /*gps_poll*/, NULL);
 
-//    gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
-//    gtk_widget_show (followGPSr);
+    gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
+    gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
+      GTK_SIGNAL_FUNC (ChangeOption), NULL);
+    gtk_widget_show (followGPSr);
   }
   #endif
 
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   
-  gtk_widget_set_usize (window, 400, 300);
-  gtk_widget_show (search);
+  gtk_widget_set_usize (window, 750, 550);
+  gtk_widget_show (searchW);
   gtk_widget_show (list);
   gtk_widget_show (location);
   gtk_widget_show (draw);
-/*   gtk_widget_show (GTK_WIDGET (carBtn));
+  gtk_widget_show (GTK_WIDGET (carBtn));
   gtk_widget_show (GTK_WIDGET (fastestBtn));
   gtk_widget_show (GTK_WIDGET (detailBtn));
   gtk_widget_show (GTK_WIDGET (iconSet));
-  gtk_widget_show (getDirs); */
+/*  gtk_widget_show (getDirs); */
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
   gtk_widget_show (window);
-  InitializeOptions (NULL);
+  InitializeOptions ();
+  option = numberOfOptions;
+  ChangeOption ();
   IncrementalSearch ();
   gtk_main ();
-  SaveOptions (NULL);
+  FlushGpx ();
   
   #endif // HEADLESS
   return 0;
@@ -1903,7 +1928,9 @@ int main (int argc, char *argv[])
     int defaultRestrict[2 << STYLE_BITS];
     memset (defaultRestrict, 0, sizeof (defaultRestrict));
     FILE *icons_csv = fopen ("icons.csv", "r");
-    xmlTextReaderPtr sXml = xmlNewTextReaderFilename ("elemstyles.xml");
+    if (!icons_csv) icons_csv = fopen (FindResource ("icons.csv"), "r");
+    xmlTextReaderPtr sXml = xmlNewTextReaderFilename (
+      FindResource ("elemstyles.xml"));
     if (!sXml || !icons_csv) {
       fprintf (stderr, "Either icons.csv or elemstyles.xml not found\n");
       return 3;
@@ -2793,7 +2820,20 @@ int WINAPI WinMain(
 
   wcscpy (argv0 + wcslen (argv0) - 3, TEXT ("opt")); // _arm.exe to ore.pak
   FILE *optFile = _wfopen (argv0, TEXT ("r"));
-  InitializeOptions (optFile);
+  
+  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "r");
+  IconSet = 1;
+  DetailLevel = 3;
+  ButtonSize = 4;
+  if (optFile) {
+    #define o(en,de,es,fr,it,nl,min,max) fread (&en, sizeof (en), 1, optFile);
+    OPTIONS
+    #undef o
+    fclose (optFile);
+    option = numberOfOptions;
+  }
+  Exit = 0;
+  InitializeOptions (NULL);
 
   GtkWidget dumdraw;
   dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
@@ -2823,7 +2863,13 @@ int WINAPI WinMain(
   guiDone = TRUE;
   while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
   optFile = _wfopen (argv0, TEXT ("r+"));
-  SaveOptions (optFile);
+  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "w");
+  if (optFile) {
+    #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
+    OPTIONS
+    #undef o
+    fclose (optFile);
+  }
   return 0;
 }
 #endif

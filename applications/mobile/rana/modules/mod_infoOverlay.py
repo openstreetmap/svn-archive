@@ -48,9 +48,11 @@ class infoOverlay(ranaModule):
     text = self.get('nearest_road', None)
     if(text != None):
       self.lines.append(text)
-    else:
-      self.lines.append('Nearest road:')
-      self.lines.append('not available')
+    text = self.get('nearest_place', None)
+    if(text != None):
+      self.lines.append(text)
+    if(len(self.lines) == 0):
+      self.lines.append('No data')
 
   def get_speed(self):
     self.lines.append('Speed: %1.1f mph' % self.get('speed', 0))
@@ -86,6 +88,7 @@ class infoOverlay(ranaModule):
 
   def onModeChange(self):
     self.set('lookup_road', self.modes[self.mode] == 'road')
+    self.set('lookup_place', self.modes[self.mode] == 'road')
 
   def handleMessage(self, message):
     if(message == 'nextField'):

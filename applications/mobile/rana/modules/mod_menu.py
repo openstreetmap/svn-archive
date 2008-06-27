@@ -30,17 +30,6 @@ class menus(ranaModule):
     self.menus = {}
     self.setupGeneralMenus()
 
-  def update(self):
-    pass
-
-  def handleMessage(self, message):
-    """handle requests to change the menu"""
-    if(message == 'close'):
-      self.set('menu', None)
-    else:
-      self.set('menu', message)
-    print "Set menu to %s" % message
-    
   def drawButton(self, cr, x1, y1, w, h, icon='generic', action=''):
     # Draw icon
     if(icon != None):
@@ -119,7 +108,7 @@ class menus(ranaModule):
       cr.stroke()
       liney += linespacing
   
-  def clearMenu(self, menu, cancelButton='menu:close'):
+  def clearMenu(self, menu, cancelButton='set:menu:None'):
     self.menus[menu] = {}
     if(cancelButton != None):
       self.addItem(menu,'','up', cancelButton, 0)

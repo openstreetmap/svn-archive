@@ -31,6 +31,7 @@ use warnings;
 
 use XML::Simple;
 use LWP::UserAgent;
+use Data::Dumper;
 
 sub add_feature( $$$ );
 
@@ -39,6 +40,7 @@ my $ua = LWP::UserAgent->new;
 $ua->agent("maplint:mapfeatures.pl/0.1");
 
 my $req = HTTP::Request->new(GET => "http://wiki.openstreetmap.org/index.php?title=Special:Export/Map_Features");
+warn "Fetching Map_Features\n";
 my $res = $ua->request($req);
 if(! $res->is_success) {
     die "Couldn't fetch Map_Features: ".$res->status_line . "\n";
@@ -46,59 +48,98 @@ if(! $res->is_success) {
 
 my $xml = XMLin($res->content);
 
-# Read every table line and extract key, value and types
-while( $xml->{page}{revision}{text}{content} =~ /\n\|\s*(.*?)\s*\|\|\s*(.*?)\s*\|\|\s*(.*?)\|\|/g ){
-    my $key = $1;
-    my $value = $2;
-    my $types = $3;
+&parse_map_features($xml);
 
-    # Clean away wikilinks
-    $key =~ s/\[\[(?:.*?\|\s*)?(.*?)\]\]/$1/g;
-    $value =~ s/\[\[(?:.*?\|\s*)?(.*?)\]\]/$1/g;
+# Add some additional features
+add_feature('osmarender:nameDirection', 1, ['way']);
+add_feature('osmarender:render', 'no', ['node', 'way', 'area']);
+add_feature('osmarender:renderName', 'no', ['node', 'way', 'area']);
+add_feature('osmarender:renderRef', 'no', ['node', 'way', 'area']);
 
-    # Clean away hyperlinks
-    $key =~ s/\[\S+:\/\/(?:[^\]]+\s+([^\]]+)|[^\]]+\/([^\]]+)(?:\.\w{2,5})?\s*)\]/$1 ? $1 : $2/ge;
-    $value =~ s/\[\S+:\/\/(?:[^\]]+\s+([^\]]+)|[^\]]+\/([^\]]+)(?:\.\w{2,5})?\s*)\]/$1 ? $1 : $2/ge;
+sub parse_map_features( $ ){
+    my $template;
+    while( $xml->{page}->{revision}{text}{content} =~ /{{(.*?)}}/gs ){
+        my $template = $1;
+        next unless $template =~ /(Map_Features:\S+)/;
+        my $page = $1;
 
-    # Clean away other markup
-    $key =~ s/<[^>]+>(.*?)<\/[^>]+/$1/g;
-    $value =~ s/<[^>]+>(.*?)<\/[^>]+/$1/g;
-
-    # Very ugly hack because I can't think of how the syntax used on the oneway tag could be handled:
-    if( $key eq 'oneway' && $value =~ /<br>/ ){
-	$value = 'yes / true / 1 / no / false / -1';
-    }
-
-    # Clean away approved icons
-    $value =~ s/{{IconApproved(?:\|.*?)?}}(?:\[\[.*?\]\])?//;
-
-    # Clean away nbsp entities
-    $key =~ s/&nbsp;//;
-    $value =~ s/&nbsp;//;
-
-    # Get all types for the feature
-    my @types;
-    while ( $types =~ /{{Icon(node|segment|way|area)}}/ig ){
-	push(@types, $1);
-    }
-
-    # Is it a single value, or a slash-separated list?
-    if( $value =~ /\// ){
-	foreach my $subvalue ( split(/\s*\/\s*/, $value) ){
-	    add_feature($key, $subvalue, \@types);
-	}
-    } else {
-	add_feature($key, $value, \@types);
+        my $req = HTTP::Request->new(GET => "http://wiki.openstreetmap.org/api.php?action=expandtemplates&text={{$page}}&format=xml");
+        warn "Fetching $page\n";
+        my $res = $ua->request($req);
+        if(! $res->is_success) {
+            die "Couldn't fetch $page: ".$res->status_line . "\n";
+        }
+        
+        my $xml = XMLin($res->content);
+        
+        &parse_featuretemplate($xml);
     }
 }
 
-# Add some additional features
-add_feature('created_by', 'user defined', ['segment']); # Not in map features, but all data has it.
+sub parse_featuretemplate( $ ){
+    my $xml = shift;
 
-add_feature('osmarender:nameDirection', 1, ['way']);
-add_feature('osmarender:render', 'no', ['node', 'segment', 'way', 'area']);
-add_feature('osmarender:renderName', 'no', ['node', 'segment', 'way', 'area']);
-add_feature('osmarender:renderRef', 'no', ['node', 'segment', 'way', 'area']);
+    # Read every table line and extract key, value and types
+
+#    warn "XML: ".Dumper($xml);
+#    $xml->{page}{revision}{text}{content} =~ /{\|(.*)\|}/s;
+    $xml->{expandtemplates} =~ /{\|(.*)\|}/s;
+    my $table = $1;
+#    warn "Table: ".Dumper($table);
+
+    my @lines = split(/\|-/, $table);
+    foreach my $line (@lines){
+        my @columns = split("\n", $line);
+
+        # Ignore lines not starting with "| "
+        @columns = grep {/^\| /} @columns;
+
+        # Skip lines that doesn't have 6 columns
+        next unless $#columns == 5;
+
+        my $key = $columns[0];
+        my $value = $columns[1];
+        my $types = $columns[2];
+
+        $key =~ s/^\| //;
+        $value =~ s/^\| //;
+        $types =~ s/^\| //;
+
+        # Strip leading and trailing whitespace
+        $key =~ s/^\s*//;
+        $value =~ s/^\s*//;
+        $key =~ s/\s*$//;
+        $value =~ s/\s*$//;
+
+        # Clean away wikilinks
+        $key =~ s/\[\[(?:.*?\|\s*)?(.*?)\]\]/$1/g;
+        $value =~ s/\[\[(?:.*?\|\s*)?(.*?)\]\]/$1/g;
+
+        # Clean away hyperlinks
+        $key =~ s/\[\S+:\/\/(?:[^\]]+\s+([^\]]+)|[^\]]+\/([^\]]+)(?:\.\w{2,5})?\s*)\]/$1 ? $1 : $2/ge;
+        $value =~ s/\[\S+:\/\/(?:[^\]]+\s+([^\]]+)|[^\]]+\/([^\]]+)(?:\.\w{2,5})?\s*)\]/$1 ? $1 : $2/ge;
+
+        # Clean away other markup
+        $key =~ s/<[^>]+>//g;
+        $value =~ s/<[^>]+>//g;
+
+        # Get all types for the feature
+        my @types;
+        push(@types, 'node') if $types =~ /node/;
+        push(@types, 'way') if $types =~ /way/;
+        push(@types, 'area') if $types =~ /area/;
+
+        # Is it a single value, or a slash-separated list?
+        my @values = ();
+        if( $value =~ /\/|\bor\b/ ){
+            foreach my $subvalue ( split(/\s*(?:\/|or)\s*/, $value) ){
+                add_feature($key, $subvalue, \@types);
+            }
+        } else {
+            add_feature($key, $value, \@types);
+        }
+    }
+}
 
 # add_feature( $key, $value, \@types )
 # Pushes the feature onto the global list after
@@ -116,8 +157,8 @@ sub add_feature( $$$ ){
 	$key = "contains(\@k, '$1')";
     }
 
-    # User defined value
-    if( $value =~ /user defined/i ){
+    # Arbitrarily defined value
+    if( $value =~ /user defined|defined by editor/i ){
 	$value = 'userdef';
     }
     # Numeric value
@@ -127,6 +168,28 @@ sub add_feature( $$$ ){
     # Range value
     elsif( $value =~ /^(-?\d+)\s+to\s+(-?\d+)$/i ){
 	$special = {type => 'range', from => $1, to => $2};
+    }
+    # Date value
+    elsif( lc($value) eq 'date'  ){
+        #TODO: if anybody ever decides on a date format then this should be {type => 'date'} and there should be a test against the format
+        $value = 'userdef';
+    }
+    # Day of week
+    elsif( lc($value) eq 'day of week' ){
+        $special = { type => 'list',
+                     list => ['monday', 'mon',
+                              'tuesday', 'tue',
+                              'wednesday', 'wed',
+                              'thursday', 'thu',
+                              'friday', 'fri',
+                              'saturday', 'sat',
+                              'sunday', 'sun'
+                              ]};
+    }
+    # Time value
+    elsif( lc($value) eq 'time' ){
+        #TODO: if anybody ever decides on a time format then this should be {type => 'time'} and there should be a test against the format
+        $value = 'userdef';
     }
 
     foreach my $type ( @types ){
@@ -190,6 +253,12 @@ foreach my $type ( keys(%main::keys) ){
     print "<xsl:when test=\"starts-with(\@k, 'massgis:')\">\n";
     print "</xsl:when>\n";
 
+    # Special handling of openGeoDB/opengeodb:*
+    print "<xsl:when test=\"starts-with(\@k, 'openGeoDB:')\">\n";
+    print "</xsl:when>\n";
+    print "<xsl:when test=\"starts-with(\@k, 'opengeodb:')\">\n";
+    print "</xsl:when>\n";
+
     # Key
     foreach my $key ( sort( keys( %{$main::keys{$type}} ) ) ){
 	# Key must either be a simple string or a valid XSL expression
@@ -217,6 +286,10 @@ foreach my $type ( keys(%main::keys) ){
 		    } elsif( $special->{type} eq 'range' ){
 			my $from = $special->{from}; my $to = $special->{to};
 			print "<xsl:when test=\"\@v &gt; $from and \@v &lt; $to\" />\n";
+                    } elsif( $special->{type} eq 'list' ){
+                        foreach my $item ( @{$special->{list}} ){
+                            print "<xsl:when test=\"\@v='$item'\" />\n";
+                        }
 		    } else {
 			die "BUG: special ref but unknown type";
 		    }

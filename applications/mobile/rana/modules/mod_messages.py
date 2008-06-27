@@ -33,9 +33,14 @@ class messageModule(ranaModule):
     ranaModule.__init__(self, m, d)
 
   def routeMessage(self, message):
-    (module, text) = message.split(":", 2)
+    (module, text) = message.split(":", 1)
     
-    if(module == "*"):
+    if(module == 'set'):
+      (key,value) = text.split(":")
+      if(value == "None"):
+        value = None
+      self.set(key, value)
+    elif(module == "*"):
       for m in self.m.items():
         m.handleMessage(text)
     else:

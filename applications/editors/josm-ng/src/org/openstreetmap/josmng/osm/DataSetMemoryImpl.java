@@ -31,15 +31,26 @@ import org.openstreetmap.josmng.utils.Storage;
  * @author nenik
  */
 final class DataSetMemoryImpl extends DataSet {
-    private final Storage<OsmPrimitive> primitives = new Storage<OsmPrimitive>();
+    private final Storage<OsmPrimitive> primitives;
     
     // Beware, maps declared this way have all other types inside their
     // values() collection. Do not use these maps in other way than
     // id-based lookup
-    private final Map<Long,Node> nodes = asMap(primitives, Node.class);
-    private final Map<Long,Way> ways = asMap(primitives, Way.class);
-    private final Map<Long,Relation> relations = asMap(primitives, Relation.class);
-        
+    private final Map<Long,Node> nodes;
+    private final Map<Long,Way> ways;
+    private final Map<Long,Relation> relations;
+
+    public DataSetMemoryImpl() {
+        this(1000);
+    }
+    
+    public DataSetMemoryImpl(int capacity) {
+        primitives = new Storage<OsmPrimitive>(capacity);
+        nodes = asMap(primitives, Node.class);
+        ways = asMap(primitives, Way.class);
+        relations = asMap(primitives, Relation.class);
+    }
+    
     public Node getNode(long id) {
         return nodes.get(id);
     }

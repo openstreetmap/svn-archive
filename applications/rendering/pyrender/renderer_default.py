@@ -211,12 +211,22 @@ class RenderClass(OsmRenderBase):
           xy.append(self.proj.project(float(n['lat']), float(n['lon'])))
           #print "%f,%f -> %f, %f" % (n['lat'], n['lon'], x,y)
 
+        #returns a list of 2*xy control points for bezier curving
+        #set to None to disable bezier curving
+        if self.z > 15: bezier_cp = self.beziercurve(xy)
+        else: bezier_cp = None
+
         # draw lines on the image
         # first return starting point of path
         x,y = xy.pop(0) 
         ctx.move_to(x, y)
         # next, draw all path segments
-        for (x,y) in xy[1:]: ctx.line_to(x, y)
+        for (x,y) in xy[1:]: 
+          if bezier_cp != None:
+              cp1_x,cp1_y = bezier_cp.pop(0)
+              cp2_x,cp2_y = bezier_cp.pop(0)
+              ctx.curve_to(cp1_x,cp1_y,cp2_x,cp2_y,x ,y)
+          else: ctx.line_to(x, y)
 
         #finally fill with area color or stroke a path
         if width > 0: ctx.stroke()

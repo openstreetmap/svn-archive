@@ -69,8 +69,8 @@ class menus(ranaModule):
     dy = h / rows
 
     id = 0
-    for x in range(cols):
-      for y in range(rows):
+    for y in range(rows):
+      for x in range(cols):
         self.drawMenuItem(cr, menu, id, x1+x*dx, y1+y*dy, dx, dy)
         id += 1
 
@@ -114,11 +114,22 @@ class menus(ranaModule):
       self.addItem(menu,'','up', cancelButton, 0)
 
   def addItem(self, menu, text, icon=None, action=None, pos=None):
+    i = 0
+    while(pos == None):
+      if(self.menus[menu].get(i, None) == None):
+        pos = i
+      i += 1
+      if(i > 20):
+        print "Menu full, can't add %s" % text
     self.menus[menu][pos] = (text, icon, action)
     
   def setupGeneralMenus(self):
     self.clearMenu('main')
-    
+    self.addItem('main', 'map', 'generic', 'set:menu:layers')
+    self.addItem('main', 'centre', 'centre', 'toggle:centred')
+    self.addItem('main', 'view', 'view', 'set:menu:view')
+    self.addItem('main', 'options', 'options', 'set:menu:options')
+    self.addItem('main', 'mode', 'transport', 'set:menu:transport')
     
     
 if(__name__ == "__main__"):

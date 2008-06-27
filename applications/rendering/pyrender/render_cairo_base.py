@@ -93,12 +93,17 @@ class OsmRenderBase:
     layer - which map style to use
     """
 
+    #set context variables that should be available during drawing
+    self.z = tz
+    self.mapLayer = layer
+
     if(filename):
       self.osm = parseOsm(filename)  # get OSM data into memory
     self.proj = proj(tx,ty,tz,(256,256))  # create a projection for this tile
 
     # Call the draw function
-    self.draw(layer)
+    self.draw()
+
   def addBackground(self,ctx, mapLayer):
     # Fill with background color
     (r,g,b,a) = self.imageBackgroundColour(mapLayer)

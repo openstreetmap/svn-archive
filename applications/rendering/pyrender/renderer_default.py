@@ -211,9 +211,13 @@ class RenderClass(OsmRenderBase):
           xy.append(self.proj.project(float(n['lat']), float(n['lon'])))
           #print "%f,%f -> %f, %f" % (n['lat'], n['lon'], x,y)
 
-        #returns a list of 2*xy control points for bezier curving
+        #return a list of 2*xy control points for bezier curving
         #set to None to disable bezier curving
-        if self.z > 15: bezier_cp = self.beziercurve(xy)
+        #filter zoom>15; disable 'buildings' layer; also not building=*  
+        if self.z > 15 \
+        and self.mapLayer != 'buildings' \
+        and w['t'].get('building','') == '':
+            bezier_cp = self.beziercurve(xy)
         else: bezier_cp = None
 
         # draw lines on the image

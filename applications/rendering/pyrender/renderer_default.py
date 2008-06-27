@@ -222,10 +222,10 @@ class RenderClass(OsmRenderBase):
 
         # draw lines on the image
         # first return starting point of path
-        x,y = xy.pop(0) 
+        x,y = xy[1] 
         ctx.move_to(x, y)
         # next, draw all path segments
-        for (x,y) in xy[1:]: 
+        for (x,y) in xy[2:]: 
           if bezier_cp != None:
               cp1_x,cp1_y = bezier_cp.pop(0)
               cp2_x,cp2_y = bezier_cp.pop(0)

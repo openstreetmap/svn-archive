@@ -27,6 +27,9 @@ function createMarkers() {
     addMarker(layer_local, 9.99, 53.57,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Hamburger_Mappertreffen">Hamburg</a></b><br/>Monatliche Treffen</p>'
     );
+    addMarker(layer_local, 9.739, 52.375,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Stammtisch_Hannover">Hannover</a></b><br/>Monatliche Treffen</p>'
+    );
     addMarker(layer_local, 8.403978, 49.009192,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Karlsruhe">Karlsruhe</a></b><br/>Unregelmäßige Treffen<br/><a href="http://www.remote.org/mailman/listinfo/ka-geo/">Mailingliste</a></p>'
     );

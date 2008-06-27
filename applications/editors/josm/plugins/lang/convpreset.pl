@@ -37,9 +37,15 @@ while(my $line = <>)
   {
     print "tr($1) /* item $item check $1 */\n";
   }
-  elsif($line =~ /<combo.*text=(".*?")/)
+  elsif($line =~ /<combo.*text=(".*?").*values="(.*?)"/)
   {
-    print "tr($1) /* item $item combo $1 */\n";
+    print "tr($1) /* item $item combo $1 */";
+    foreach my $val (split ",",$2)
+    {
+      next if $val =~ /^[0-9-]+$/; # search for non-numbers
+      print " tr(\"$val\")";
+    }
+    print "\n";
   }
   elsif($line =~ /^\s*$/
      || $line =~ /<\/item>/

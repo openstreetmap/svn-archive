@@ -14,7 +14,7 @@ while(my $line = <>)
   chomp($line);
   if($line =~ /<item\s+name="(.*?)\/ ".*<\/item>/)
   {
-    print "/* empty item \"$1\" */\n";
+    print "tr(\"$1/ \") /* empty item \"$1\" */\n";
   }
   elsif($line =~ /<item\s+name=(".*?")/)
   {

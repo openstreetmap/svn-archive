@@ -25,7 +25,7 @@
 			}
 			dd {
 				float:left;
-				width:30%;
+				width:40%;
 				margin:0 0 0.5em 0.25em;
 			}
 			#commands {
@@ -40,10 +40,9 @@
 		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa_ieemu_xpath.js"></script>
 		<script type="text/javascript" src="cmyk.js"></script>
 		<script type="text/javascript" src="osmarender_frontend.js"></script>
-		<!--script type="text/javascript" src="demo.js"></script-->
 	</head>
 	<body>
-		<label for="osm_file_name_selected">Select an OSM data file name or..:</label>
+		<label id="label_select_osm_file" for="osm_file_name_selected">Select an OSM data file name or..:</label>
 		<select id="osm_file_name_selected">
 			<option value="">No one, I'm writing my file name</option>
 			<option value="data.osm">data.osm</option>
@@ -53,7 +52,7 @@
 
 		<br /><br />
 
-		<label for="osm_file_name_written">..write an OSM data file name:</label>
+		<label id="label_write_osm_file" for="osm_file_name_written">..write an OSM data file name:</label>
 		<input id="osm_file_name_written" type="text" value="data.osm" /><br />
 		<!--a id="link_preprocess" href="javascript:preProcessOsm()">Preprocess OSM file for rules handling</a><br />
 		<a id="link_clear_preprocess" href="javascript:clearPreProcess()" style="display:none;">Clear additional rule</a>
@@ -64,7 +63,7 @@
 			
 		<br /><br />
 
-		<label for="rules_file_name">Select a rules file name or..:</label>
+		<label id="label_rules_file_name" for="rules_file_name">Select a rules file name or..:</label>
 		<select id="rules_file_name">
 			<option value="">No one, I'm writing my file name</option>
 			<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
@@ -75,7 +74,7 @@
 		</select>
 		<br /><br />
 
-		<label for="rules_file_name_written">..write a rules file name:</label>
+		<label id="label_rules_file_name_written" for="rules_file_name_written">..write a rules file name:</label>
 		<input id="rules_file_name_written" type="text" value="osm-map-features-z13.xml" style="width:15em;" /><br />
 
 		<a id="link_load" href="javascript:loadOsmAndRules()">Load OSM file and Rule File</a><br />
@@ -100,7 +99,7 @@
 		<input type="checkbox" id="transform_on_style_add" />Transform when Adding Styles<br />
 		<input type="checkbox" id="transform_on_style_set" />Transform when Setting Styles<br />
 		<input type="checkbox" id="transform_on_style_delete" />Transform when Deleting Styles<br />
-		<a href="javascript:Osmatranform()">Transform</a><br />
+		<a href="javascript:Osmatransform()">Transform</a><br />
 		<a href="javascript:saveFile()">Save actual rule file</a><br />
 		<a href="javascript:clearSVG()">Clear SVG canvas</a><br />
 		</div>

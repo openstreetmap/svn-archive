@@ -20,10 +20,10 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -149,9 +149,8 @@ public abstract class DataSet {
     }
         
     public Way createWay(Node ... nodes) {
-        Way way = new Way(this, 0, -1, null, true);
+        Way way = new Way(this, 0, -1, null, true, nodes);
         addRemovePrimitive(way, true);
-        way.setNodes(Arrays.asList(nodes));
         return way;
     }
 
@@ -274,18 +273,22 @@ public abstract class DataSet {
     }
 
     public static DataSet empty() {
-        return new DataSetMemoryImpl();
+        return factory(1000).create();
+    }
+
+    public static Factory factory(int capacity) {
+        return new Factory(capacity);
     }
     
     public static DataSet fromStream(InputStream is) throws  IOException {
         Throwable cause;
         try {
             OsmStreamReader osr = new OsmStreamReader();
-            InputSource src = new InputSource(is);
+            InputSource src = new InputSource(new BufferedInputStream(is));
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             
             parser.parse(src, osr);
-            return osr.constructed;
+            return osr.factory.create();
         } catch (ParserConfigurationException ex) {
             cause = ex;
         } catch (SAXException ex) {
@@ -297,9 +300,49 @@ public abstract class DataSet {
         
     }
     
+    public static final class Factory {
+        private DataSet ds;
+
+        private Factory(int capa) {
+            ds = new DataSetMemoryImpl(capa);
+        }
+
+        public DataSet create() {
+            DataSet ret = ds;
+            ds = null; // disable further modifications
+            return ret;
+        }
+        public Node getNode(long id) {
+            return ds.getNode(id);
+        }
+                
+        public Node node(long id, double lat, double lon, int time, String user, boolean visible) {
+            ds.getClass(); // null check
+            Node n = new Node(ds, id, lat, lon, time, user, visible);
+            ds.addPrimitive(n);
+            return n;
+        }
+
+        public Way getWay(long id) {
+            return ds.getWay(id);
+        }
+
+        public Way way(long id, int time, String user, boolean visible, Node[] nodes) {
+            ds.getClass(); // null check
+            Way w = new Way(ds, id, time, user, visible, nodes); // XXX vis
+            ds.addPrimitive(w);
+            return w;
+        }
+        
+        public void setTags(OsmPrimitive prim, String[] pairs) {
+            ds.getClass(); // null check
+            prim.setTags(pairs);
+        }
+    }
+    
     private static class OsmStreamReader extends DefaultHandler {
         private OsmPrimitive current;
-        private DataSet constructed = new DataSetMemoryImpl();
+        private DataSet.Factory factory = DataSet.factory(1000);
         private List<Node> wayNodes = new ArrayList<Node>();
     
         private Storage<String> strings = new Storage<String>();
@@ -327,14 +370,9 @@ public abstract class DataSet {
                 double lat = getDouble(atts, "lat");
                 double lon = getDouble(atts, "lon");
                 
-                Node n;
-                if (id < 0) {
-                    n = new Node(constructed, 0, lat, lon, time, user, vis);
-                    newNodes.put(id, n);
-                } else {
-                    n = new Node(constructed, id, lat, lon, time, user, vis);
-                }
-                constructed.addRemovePrimitive(n, true);
+                Node n = factory.node(id < 0 ? 0 : id, lat, lon, time, user, vis);
+                if (id < 0) newNodes.put(id, n);
+
                 updateFlags(n, getString(atts, "action"));
                 current = n;
             } else if (qName.equals("way")) {
@@ -344,14 +382,9 @@ public abstract class DataSet {
                 String user = atts.getValue("user");
                 boolean vis = getBoolean(atts, "visible", true);
 
-                Way w;
-                if (id < 0) {
-                    w = new Way(constructed, 0, time, user, vis);
-                } else {
-                    w = new Way(constructed, id, time, user, vis);
-                    newWays.put(id, w);
-                }
-                constructed.addRemovePrimitive(w, true);
+                Way w = factory.way(id < 0 ? 0 : id, time, user, vis, null);
+                if (id < 0) newWays.put(id, w);
+
                 updateFlags(w, getString(atts, "action"));
                 current = w;
             } else if (qName.equals("nd")) {
@@ -382,7 +415,7 @@ public abstract class DataSet {
             if (id < 0) {
                 return newNodes.get(id);
             } else {
-                return constructed.getNode(id);
+                return factory.getNode(id);
             }
         }
         

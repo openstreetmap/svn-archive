@@ -23,8 +23,6 @@ package org.openstreetmap.josmng.osm;
 import java.util.Collections;
 import java.util.Date;
 import javax.swing.undo.UndoableEdit;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 
 /**
  * A common base for all kinds of OSM-stored primitives. It keeps identity,
@@ -243,6 +241,37 @@ public abstract class OsmPrimitive {
         return unescape(old);
     }
     
+    /**
+     * Package-private method to be called only from the DataSet factory
+     * to load the initial 
+     * @param pairs
+     */
+    void setTags(String[] pairs) {
+        assert keys == null;
+        assert (pairs.length & 1) == 0;
+        
+        // scan for default value
+        int defIndex = -1;
+        for (int i=0; i<pairs.length; i+=2) {
+            if (DEFAULT_KEY.equals(pairs[i])) {
+                defIndex = i;
+                break;
+            }
+        }
+        
+        if (defIndex == -1) { // no default
+            keys = new Object[pairs.length+1];
+            System.arraycopy(pairs, 0, keys, 1, pairs.length);
+        } else if (pairs.length == 2) { // default only
+            keys = pairs[1] == null ? NULL_VALUE : pairs[1];
+        } else { // defKey mixed in: [k v D V k v] -> [V k v k v] , defIndex=2
+            Object[] kLocal = new Object[pairs.length-1];
+            kLocal[0] = pairs[defIndex+1];
+            System.arraycopy(pairs, 0, kLocal, 1, defIndex);
+            System.arraycopy(pairs, defIndex+2, kLocal, defIndex+1, kLocal.length - defIndex - 1);
+            keys = kLocal;
+        }
+    }
     
     private String removeTagImpl(String tag) {
         Object old = null;

@@ -34,8 +34,9 @@ public class Way extends OsmPrimitive {
     private static final Node[] EMPTY_NODES = new Node[0];
     private Node[] nodes = EMPTY_NODES;
 
-    Way(DataSet constructed, long id, int time, String user, boolean vis) {
+    Way(DataSet constructed, long id, int time, String user, boolean vis, Node[] nodes) {
         super(constructed, id, time, user, vis);
+        if (nodes != null) this.nodes = nodes.clone();
     }
     
     public List<Node> getNodes() {

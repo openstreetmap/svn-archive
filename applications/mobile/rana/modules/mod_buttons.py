@@ -48,5 +48,5 @@ class buttons(ranaModule):
     dy = dx
     
     self.drawButton(cr, x+dx, y, dx, dy, "zoom_out", "mapView:zoomOut")
-    self.drawButton(cr, x, y, dx, dy, "blank", "menu:show")
+    self.drawButton(cr, x, y, dx, dy, "blank", "set:menu:main")
     self.drawButton(cr, x, y+dy, dx, dy, "zoom_in", "mapView:zoomIn")

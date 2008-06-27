@@ -30,7 +30,7 @@ class RenderClass(OsmRenderBase):
     return(False)
   
   # Draw a tile
-  def draw(self, mapLayer):
+  def draw(self):
     file = open("places.txt","r")
     ctx = self.getCtx("mainlayer")
 

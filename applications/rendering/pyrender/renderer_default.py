@@ -191,12 +191,10 @@ class RenderClass(OsmRenderBase):
   def imageBackgroundColour(self, mapLayer=None):
     return(0,0,0,0)
   
-  # Draw a tile
-  def draw(self, mapLayer):
-    # Ways
-    for w in self.osm.ways.values():
+  # draws a complete way
+  def draw_way(self, w):
       layeradd = 0
-      for style in wayStyles(mapLayer, w['t']):
+      for style in wayStyles(self.mapLayer, w['t']):
         (r,g,b, width) = style.split(",")
         width = int(width)
         
@@ -206,21 +204,35 @@ class RenderClass(OsmRenderBase):
         
         ctx.set_source_rgb(float(r),float(g),float(b))
         ctx.set_line_width(width)
-        count = 0
+        xy = []
+
         for n in w['n']: 
           # project that into image coordinates
-          (x,y) = self.proj.project(float(n['lat']), float(n['lon']))
+          xy.append(self.proj.project(float(n['lat']), float(n['lon'])))
           #print "%f,%f -> %f, %f" % (n['lat'], n['lon'], x,y)
 
-          # draw lines on the image
-          if(count == 0):
-            ctx.move_to(x, y)
-          else:
-            ctx.line_to(x, y)
-          count = count + 1
-        if width > 0:ctx.stroke()
+        # draw lines on the image
+        # first return starting point of path
+        x,y = xy.pop(0) 
+        ctx.move_to(x, y)
+        # next, draw all path segments
+        for (x,y) in xy[1:]: ctx.line_to(x, y)
+
+        #finally fill with area color or stroke a path
+        if width > 0: ctx.stroke()
         else: ctx.fill()
-    
+
+  # Draw a complete tile
+  def draw(self):
+    """Draw a complete tile. This is the main function that is used by the
+    plug-in rendering system. Context information is available through:
+    self.mapLayer= Layer that should be used for drawing (e.g. 'underground')
+    self.z       = Zoom level that we draw
+    """
+    # Ways
+    for w in self.osm.ways.values():
+      self.draw_way(w)
+
     # POIs
     if(0):
       for poi in self.osm.poi:

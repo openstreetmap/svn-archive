@@ -96,10 +96,19 @@ public class Storage<T> extends AbstractSet<T> {
     public Storage() {
         this(Storage.<T>defaultHash());
     }
+
+    public Storage(int capacity) {
+        this(Storage.<T>defaultHash(), capacity);
+    }
     
     public Storage(Hash<T,T> ha) {
+        this(ha, 16);
+    }
+
+    public Storage(Hash<T,T> ha, int capacity) {
         this.hash = ha;
-        data = new Object[16];
+        int cap = 1 << (int)(Math.ceil(Math.log(2*capacity) / Math.log(2)));
+        data = new Object[cap];
         mask = data.length - 1;
     }
     

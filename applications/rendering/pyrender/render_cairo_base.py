@@ -24,6 +24,7 @@
 #---------------------------------------------------------------------------
 import StringIO
 import cairo
+import math
 import xml.sax
 from tiledata import *
 from parseOsm import *
@@ -155,6 +156,49 @@ class OsmRenderBase:
       out.write_to_png(f)
       data = f.getvalue()
       return(data)
+
+  def beziercurve(self,xy):
+    """is handed a list of (x,y) tuples of a path and returns a list
+       of 2*xy control points that can be used to draw bezier curves.
+       Algorithm based on: 
+       http://www.antigrain.com/research/bezier_interpolation/index.html
+    """
+    
+    point_distance = lambda a,b: math.sqrt(pow(a[0]-b[0],2)+pow(a[1]-b[1],2))
+
+    # first control point is 1st point
+    cp = list()
+    cp.append(xy[0])
+
+    for index in range(2,len(xy)-1):
+      x1,y1 = xy[index-1]
+      x2,y2 = xy[index]
+      x3,y3 = xy[index+1]
+      
+      L1=point_distance((x2,y2),(x1,y1))
+      L2=point_distance((x3,y3),(x2,y2))
+      C1=0.5 * (x1+x2), 0.5 *(y1+y2)
+      C2=0.5 * (x2+x3), 0.5 *(y2+y3)
+      C1x,C1y = C1
+      C2x,C2y = C2
+      
+      if (L1+L2==0) or (C2x==C1x) or (C2y==C1y):
+        #if impossible, just use the point as control points
+        cp.append(xy[index])
+        cp.append(xy[index])
+      else:
+        #usually just calculate the control points properly:
+        Mx = L1/(L1+L2) * (C2x - C1x) + C1x
+        My = L1/(L1+L2) * (C2y - C1y) + C1y 
+        cp1x,cp1y = C1x-Mx + x2, C1y-My + y2
+        cp2x,cp2y = C2x-Mx + x2, C2y-My + y2      
+
+        cp.append((cp1x,cp1y))
+        cp.append((cp2x,cp2y))
+    #last control point is last point
+    cp.append(xy[-1])
+    return cp
+
 
 if(__name__ == '__main__'):
   # Test suite: render a tile in london, and save it to a file

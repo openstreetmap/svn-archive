@@ -32,7 +32,7 @@
 
         <!-- Landuse -->
         <!-- render all landuse in the same colour so it doesn't look too psychedelic -->
-        <rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
+        <rule e="way" k="landuse" v="residential|farmyard|retail|industrial|commercial|cemetery">
             <area class="landuse-all"/>
         </rule>
 

@@ -28,29 +28,42 @@ class menus(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.menus = {}
+    self.setupGeneralMenus()
 
   def update(self):
     pass
 
   def handleMessage(self, message):
+    """handle requests to change the menu"""
     if(message == 'close'):
       self.set('menu', None)
     else:
       self.set('menu', message)
     print "Set menu to %s" % message
     
-  def drawButton(self, cr, x1, y1, w, h, icon, action):
-    m = self.m.get('icons', None)
-    if(m == None):
-      return
-    m.draw(cr,icon,x1,y1,w,h)
-
-    m = self.m.get('clickHandler', None)
-    if(m != None):
-      m.registerXYWH(x1,y1,w,h, action)
+  def drawButton(self, cr, x1, y1, w, h, icon='generic', action=''):
+    # Draw icon
+    if(icon != None):
+      m = self.m.get('icons', None)
+      if(m != None):
+        m.draw(cr,icon,x1,y1,w,h)
+    
+    # Make clickable
+    if(action != None):
+      m = self.m.get('clickHandler', None)
+      if(m != None):
+        m.registerXYWH(x1,y1,w,h, action)
       
-  def drawMenuItem(self, cr, menu, x, y, w, h):
-    self.drawButton(cr, x,y,w,h,'default', 'menu:close')
+  def drawMenuItem(self, cr, menu, id, x, y, w, h):
+    menu = self.menus.get(menu, None)
+    if(menu == None):
+      return
+    item = menu.get(id, None)
+    if(item == None):
+      return
+      
+    (text, icon, action) = item
+    self.drawButton(cr,x,y,w,h,icon,action)
   
   def drawMenu(self, cr):
     """Draw menus"""
@@ -69,7 +82,7 @@ class menus(ranaModule):
     id = 0
     for x in range(cols):
       for y in range(rows):
-        self.drawMenuItem(cr, menu, x1+x*dx, y1+y*dy, dx, dy)
+        self.drawMenuItem(cr, menu, id, x1+x*dx, y1+y*dy, dx, dy)
         id += 1
 
     return
@@ -105,7 +118,20 @@ class menus(ranaModule):
       cr.show_text(str(text))
       cr.stroke()
       liney += linespacing
+  
+  def clearMenu(self, menu, cancelButton='menu:close'):
+    self.menus[menu] = {}
+    if(cancelButton != None):
+      self.addItem(menu,'','up', cancelButton, 0)
 
+  def addItem(self, menu, text, icon=None, action=None, pos=None):
+    self.menus[menu][pos] = (text, icon, action)
+    
+  def setupGeneralMenus(self):
+    self.clearMenu('main')
+    
+    
+    
 if(__name__ == "__main__"):
   a = menus({},{'viewport':(0,0,600,800)})
   a.drawMapOverlay(None)

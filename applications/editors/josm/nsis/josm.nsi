@@ -484,7 +484,6 @@ Delete "$INSTDIR\uninstall.exe"
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 Delete "$APPDATA\JOSM\plugins\lang-de.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
-;Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
 RMDir "$APPDATA\JOSM\plugins"
@@ -525,7 +524,6 @@ Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
 ;Delete "$APPDATA\JOSM\de-streets.xml"
 RMDir "$APPDATA\JOSM"
-;RMDir "$APPDATA\JOSM\plugins\mappaint"
 SectionEnd
 
 Section /o "un.$(un.JOSM_SEC_PLUGINS)"un.SecPlugins
@@ -535,7 +533,6 @@ SetShellVarContext current
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 ;Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
-;Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 Delete "$APPDATA\JOSM\plugins\validator.jar"

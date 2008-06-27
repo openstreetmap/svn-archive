@@ -60,6 +60,13 @@ viewPropertiesFromClass = function(key) {
 		text_container.setAttribute("id",single_property);
 		text_container.setAttribute("value",propertiesToPrint[single_property]);
 		dd_container.appendChild(text_container);
+		if (single_property=="fill" || single_property=="stroke") {
+			var div_container=createElementCB("div");
+			div_container.setAttribute("id","viewColor["+single_property+"]");
+			div_container.setAttribute("style","float:left;display:table-cell;display:inline-block;border: medium dotted grey;height:20px;width:20px;background-color:"+propertiesToPrint[single_property]+";");
+			text_container.setAttribute("onkeyup","javascript:changeInputBackground(this)");
+			dd_container.appendChild(div_container);
+		}
 		
 		if ((single_property=="marker-end" || single_property=="marker-mid" || single_property=="marker-start" || single_property=="fill") && propertiesToPrint[single_property].substring(0,3)=="url") {
 			var svg_url=propertiesToPrint[single_property].split("(")[1].split("#")[1].split(")")[0];
@@ -93,6 +100,10 @@ viewPropertiesFromClass = function(key) {
 		dl_container.appendChild(createElementCB("br"));
 
 	}
+}
+
+changeInputBackground = function(dom) {
+	document.getElementById("viewColor["+dom.id+"]").setAttribute("style","float:left;display:table-cell;display:inline-block;border: medium dotted grey;height:20px;width:20px;background-color: "+dom.value+";");
 }
 
 addCSSPropertyButton = function () {
@@ -208,6 +219,7 @@ loadOsmAndRules = function() {
 	}
 
 	var label_container = createElementCB("label");
+	label_container.setAttribute("id","select_class_label");
 	label_container.setAttribute("for","select_class");
 	var label = document.createTextNode("Select a CSS class: ");
 	label_container.appendChild(label);

@@ -216,7 +216,7 @@ class RenderClass(OsmRenderBase):
         #filter zoom>15; disable 'buildings' layer; also not building=*  
         if self.z > 15 \
         and self.mapLayer != 'buildings' \
-        and w['t'].get('building','') == '':
+        and not w['t'].has_key('building'):
             bezier_cp = self.beziercurve(xy)
         else: bezier_cp = None
 

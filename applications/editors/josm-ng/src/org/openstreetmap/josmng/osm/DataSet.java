@@ -338,6 +338,11 @@ public abstract class DataSet {
             ds.getClass(); // null check
             prim.setTags(pairs);
         }
+        
+        public void setFlags(OsmPrimitive prim, boolean modified, boolean deleted) {
+            prim.setModified(modified);
+            prim.setDeletedImpl(deleted);
+        }
     }
     
     private static class OsmStreamReader extends DefaultHandler {

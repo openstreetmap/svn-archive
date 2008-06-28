@@ -55,7 +55,6 @@ class menus(ranaModule):
     # Draw text
     cr.set_font_size(test_fontsize / ratio)
     cr.move_to(x, y + h)
-    cr.set_source_rgb(0, 0, 0)
     cr.show_text(text)
         
   def drawButton(self, cr, x1, y1, w, h, text='', icon='generic', action=''):
@@ -68,6 +67,7 @@ class menus(ranaModule):
         m.draw(cr,icon,x1,y1,w,h)
 
     # Draw text
+    cr.set_source_rgb(0, 0, 0.3)
     self.drawText(cr, text, x1, y1+0.5*h, w, 0.4*h, 0.15)
 
     # Make clickable
@@ -110,7 +110,7 @@ class menus(ranaModule):
         
         # Draw it
         (text, icon, action) = item
-        self.drawButton(cr, x1+x*dx, y1+y*dy,dx, dy,text, icon,action)
+        self.drawButton(cr, x1+x*dx, y1+y*dy, dx, dy, text, icon, action)
         id += 1
 
   def clearMenu(self, menu, cancelButton='set:menu:None'):

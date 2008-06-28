@@ -32,20 +32,22 @@ class messageModule(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
 
-  def routeMessage(self, message):
-    (module, text) = message.split(":", 1)
-    
-    if(module == 'set'):
-      (key,value) = text.split(":")
-      if(value == "None"):
-        value = None
-      self.set(key, value)
-    elif(module == "*"):
-      for m in self.m.items():
-        m.handleMessage(text)
-    else:
-      m = self.m.get(module, None)
-      if(m != None):
-        m.handleMessage(text)
+  def routeMessage(self, messages):
+    for message in messages.split('|'):
+      (module, text) = message.split(":", 1)
+      
+      if(module == 'set'):
+        (key,value) = text.split(":")
+        for i in(None, True, False):
+          if(value == str(i)):
+            value = i
+        self.set(key, value)
+      elif(module == "*"):
+        for m in self.m.items():
+          m.handleMessage(text)
       else:
-        print "Message addressed to %s which isn't loaded" % module
+        m = self.m.get(module, None)
+        if(m != None):
+          m.handleMessage(text)
+        else:
+          print "Message addressed to %s which isn't loaded" % module

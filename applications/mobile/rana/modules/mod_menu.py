@@ -29,85 +29,90 @@ class menus(ranaModule):
     ranaModule.__init__(self, m, d)
     self.menus = {}
     self.setupGeneralMenus()
+    
+  def drawText(self,cr,text,x,y,w,h,border=0):
+    if(not text):
+      return
+    # Put a border around the area
+    if(border != 0):
+      x += w * border
+      y += h * border
+      w *= (1-2*border)
+      h *= (1-2*border)
+    
+    if(0): # optional choose a font
+      self.cr.select_font_face(
+        'Verdana',
+        cairo.FONT_SLANT_NORMAL,
+        cairo.FONT_WEIGHT_BOLD)
 
-  def drawButton(self, cr, x1, y1, w, h, icon='generic', action=''):
+    # Pick a font size to fit
+    test_fontsize = 60
+    cr.set_font_size(test_fontsize)
+    _s1, _s2, textwidth, textheight, _s3, _s4 = cr.text_extents(text)
+    ratio = max(textwidth / w, textheight / h)
+
+    # Draw text
+    cr.set_font_size(test_fontsize / ratio)
+    cr.move_to(x, y + h)
+    cr.set_source_rgb(0, 0, 0)
+    cr.show_text(text)
+        
+  def drawButton(self, cr, x1, y1, w, h, text='', icon='generic', action=''):
+    """Draw a clickable button, with icon image and text"""
+    
     # Draw icon
     if(icon != None):
       m = self.m.get('icons', None)
       if(m != None):
         m.draw(cr,icon,x1,y1,w,h)
-    
+
+    # Draw text
+    self.drawText(cr, text, x1, y1+0.5*h, w, 0.4*h, 0.15)
+
     # Make clickable
     if(action != None):
       m = self.m.get('clickHandler', None)
       if(m != None):
         m.registerXYWH(x1,y1,w,h, action)
-      
-  def drawMenuItem(self, cr, menu, id, x, y, w, h):
-    menu = self.menus.get(menu, None)
-    if(menu == None):
-      return
-    item = menu.get(id, None)
-    if(item == None):
-      return
-      
-    (text, icon, action) = item
-    self.drawButton(cr,x,y,w,h,icon,action)
-  
+
   def drawMenu(self, cr):
     """Draw menus"""
-    menu = self.get('menu', None)
-    if(menu == None):
+    menuName = self.get('menu', None)
+    if(menuName == None):
       return
-    
+
+    # Find the menu
+    menu = self.menus.get(menuName, None)
+    if(menu == None):
+      print "Menu %s doesn't exist, returning to main screen" % menuName
+      self.set('menu', None)
+      self.set('needRedraw', True)
+      return
+
+    # Find the screen
     (x1,y1,w,h) = self.get('viewport')
 
+    # Decide how to layout the menu
     cols = 3
     rows = 4
     
     dx = w / cols
     dy = h / rows
 
+    # for each item in the menu
     id = 0
     for y in range(rows):
       for x in range(cols):
-        self.drawMenuItem(cr, menu, id, x1+x*dx, y1+y*dy, dx, dy)
+        item = menu.get(id, None)
+        if(item == None):
+          return
+        
+        # Draw it
+        (text, icon, action) = item
+        self.drawButton(cr, x1+x*dx, y1+y*dy,dx, dy,text, icon,action)
         id += 1
 
-    return
-      
-    # Clicking on the rectangle should toggle which field we display
-    m = self.m.get('clickHandler', None)
-    if(m != None):
-      m.registerXYWH(x1,y1,w,dy, "infoOverlay:nextField")
-    # Draw a background
-    cr.set_source_rgb(0,0,0)
-    cr.rectangle(x1,y1,w,dy)
-    cr.fill()
-
-    numlines = len(self.lines)
-    if(numlines < 1):
-      return
-    linespacing = (dy / numlines)
-    fontsize = linespacing * 0.8
-
-    cr.set_source_rgb(1.0, 1.0, 0.0)
-
-    liney = y1
-    for text in self.lines:
-      # Check that font size is small enough to display width of text
-      fontx = w / len(text)
-      if(fontx < fontsize):
-        cr.set_font_size(fontx)
-      else:
-        cr.set_font_size(fontsize)
-
-      # Draw the text
-      cr.move_to(x1+border,liney + (0.9 * linespacing))
-      cr.show_text(str(text))
-      cr.stroke()
-      liney += linespacing
-  
   def clearMenu(self, menu, cancelButton='set:menu:None'):
     self.menus[menu] = {}
     if(cancelButton != None):

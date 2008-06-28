@@ -139,7 +139,11 @@ class menus(ranaModule):
       'FastBike':'cycle',
       'Train':'train',
       'HGV':'hgv'}.items():
-      self.addItem('transport', label, label.lower(), 'set:mode:'+mode)
+      self.addItem(
+        'transport',                       # menu
+        label,                             # label
+        label.lower(),                     # icon
+        'set:mode:'+mode+"|set:menu:None") # action
     
   def setupGeneralMenus(self):
     self.clearMenu('main')

@@ -127,8 +127,14 @@ class menus(ranaModule):
       if(i > 20):
         print "Menu full, can't add %s" % text
     self.menus[menu][pos] = (text, icon, action)
+
+  def setupMaplayerMenus(self):
+    self.clearMenu('layers')
+    for layer in ('pyrender','osma','mapnik','aerial'):
+      self.addItem('layers', layer, layer, 'set:layer:'+layer+'|set:menu:None')
     
   def setupTransportMenu(self):
+    """Create menus for routing modes"""
     self.clearMenu('transport')
     for(label, mode) in { \
       'Bike':'cycle',
@@ -146,6 +152,7 @@ class menus(ranaModule):
         'set:mode:'+mode+"|set:menu:None") # action
 
   def setupSearchMenus(self):
+    """Create a load of menus that are just filters for OSM tags"""
     f = open("data/search_menu.txt", "r")
     self.clearMenu('search')
     sectionID = None
@@ -172,6 +179,7 @@ class menus(ranaModule):
     self.addItem('main', 'mode', 'transport', 'set:menu:transport')
     self.setupTransportMenu()
     self.setupSearchMenus()
+    self.setupMaplayerMenus()
     
     
 if(__name__ == "__main__"):

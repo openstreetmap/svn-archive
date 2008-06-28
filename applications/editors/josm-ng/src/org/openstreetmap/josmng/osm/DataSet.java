@@ -335,13 +335,19 @@ public abstract class DataSet {
         }
         
         public void setTags(OsmPrimitive prim, String[] pairs) {
+            checkIfOurs(prim);
             ds.getClass(); // null check
             prim.setTags(pairs);
         }
         
         public void setFlags(OsmPrimitive prim, boolean modified, boolean deleted) {
+            checkIfOurs(prim);
             prim.setModified(modified);
             prim.setDeletedImpl(deleted);
+        }
+        
+        private void checkIfOurs(OsmPrimitive prim) {
+            if (prim.getOwner() != ds) throw new IllegalArgumentException();
         }
     }
     

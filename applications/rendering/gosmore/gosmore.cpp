@@ -40,14 +40,15 @@ typedef int intptr_t;
   o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
   o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
   o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
-  o (CommPort,        "?", "?", "?", "?", "?", 0, 9) \
+  o (CommPort,        "?", "?", "?", "?", "?", 0, 13) \
   o (BaudRate,        "?", "?", "?", "?", "?", 0, 6) \
   o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
   o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 1) \
   o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 1) \
   o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
   o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 2) \
-  o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2)
+  o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2) \
+  o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -117,6 +118,7 @@ struct GdkEventButton {
 
 HINSTANCE hInst;
 HWND   mWnd, dlgWnd = NULL;
+
 BOOL CALLBACK DlgSearchProc (
 	HWND hwnd, 
 	UINT Msg, 
@@ -919,18 +921,8 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
 }
 #endif // _WIN32_WCE
 
-int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
+void HitButton (int b)
 {
-  int w = draw->allocation.width;
-  #ifdef ROUTE_TEST
-  if (event->state) {
-    return RouteTest (widget, event, para);
-  }
-  #endif
-  if (ButtonSize <= 0) ButtonSize = 4;
-  int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
-  if (event->x > w - ButtonSize * 20 && b <
-      (HideZoomButtons && option == numberOfOptions ? 1 : 3)) {
     if (b == 0) option = (option + 1) % (numberOfOptions + 1);
     else if (option == StartRouteNum) {
       flon = clon;
@@ -944,7 +936,9 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     #ifdef _WIN32_WCE
     else if (option == SearchNum) {
       SipShowIM (SIPF_ON);
-      ShowWindow (dlgWnd, SW_SHOW);
+      if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
+      else DialogBox (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
+               NULL, (DLGPROC)DlgSearchProc);
     }
     else if (option == BaudRateNum) BaudRate += b * 4800 - 7200;
     #endif
@@ -959,7 +953,20 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       if (b > 0) SetLocation (clon, clat);
     }
     if (b > 0 && option <= FastestRouteNum) option = numberOfOptions;
+}
+
+int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
+{
+  int w = draw->allocation.width;
+  #ifdef ROUTE_TEST
+  if (event->state) {
+    return RouteTest (widget, event, para);
   }
+  #endif
+  if (ButtonSize <= 0) ButtonSize = 4;
+  int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
+  if (event->x > w - ButtonSize * 20 && b <
+      (HideZoomButtons && option == numberOfOptions ? 1 : 3)) HitButton (b);
   else {
     int perpixel = zoom / w;
     if (event->button == 1) {
@@ -1487,13 +1494,15 @@ int IncrementalSearch (void)
         c++;
       }
       m[dir] += dir ? 1 : -1;
-      char *tag = data + idx[m[dir]];
-      while (*--tag) {}
 
-      distm[dir] = 0 <= m[dir] && m[dir] < hashTable - idx &&
-        TagCmp (data + idx[m[dir]], data + idx[count + l]) == 0
-        ? Sqr ((__int64)(clon - ((wayType*)tag)[-1].clon)) +
-          Sqr ((__int64)(clat - ((wayType*)tag)[-1].clat)) : big;
+      if (0 <= m[dir] && m[dir] < hashTable - idx &&
+        TagCmp (data + idx[m[dir]], data + idx[count + l]) == 0) {
+        char *tag = data + idx[m[dir]];
+        while (*--tag) {}
+        distm[dir] = Sqr ((__int64)(clon - ((wayType*)tag)[-1].clon)) +
+          Sqr ((__int64)(clat - ((wayType*)tag)[-1].clat));
+      }
+      else distm[dir] = big;
     }
     if (c >= numIncWays) {
       for (bits = 0; bits < 16 && dista[numIncWays - 1] >> (bits * 2 + 32);
@@ -1583,8 +1592,11 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
 
 void InitializeOptions (void)
 {
-  SetLocation (incrementalWay[0]->clon, incrementalWay[0]->clat);
-  zoom = incrementalWay[0]->dlat + incrementalWay[0]->dlon + (1 << 15);
+  char *tag = data +
+    *(int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
+  while (*--tag) {}
+  SetLocation (((wayType*)tag)[-1].clon, ((wayType*)tag)[-1].clat);
+  zoom = ((wayType*)tag)[-1].dlat + ((wayType*)tag)[-1].dlon + (1 << 15);
 }
 
 #endif // HEADLESS
@@ -2478,14 +2490,13 @@ BOOL CALLBACK DlgSearchProc (
     case WM_COMMAND:
       if (LOWORD (wParam) == IDC_EDIT1) {
         HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
+        memset (appendTmp, 0, sizeof (appendTmp));
         int wstrlen = Edit_GetLine (edit, 0, appendTmp, sizeof (appendTmp));
         //wstr[wstrlen] = 0;
-        WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, appendTmp, wstrlen, searchStr, sizeof (searchStr),
-          NULL, NULL);
-        //SendMessage (edit, EM_GETLINE, 0, wstr);
+        WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, appendTmp,
+          wstrlen, searchStr, sizeof (searchStr), NULL, NULL);
         hwndList = GetDlgItem (hwnd, IDC_LIST1);
         SendMessage (hwndList, LB_RESETCONTENT, 0, 0);
-         //TEXT ("45")); //, 123);
         IncrementalSearch ();
 	return TRUE;
       }
@@ -2494,12 +2505,16 @@ BOOL CALLBACK DlgSearchProc (
         HWND hwndList = GetDlgItem (hwnd, IDC_LIST1);
         int idx = SendMessage (hwndList, LB_GETCURSEL, 0, 0);
         SipShowIM (SIPF_OFF);
-        //dlgWnd = hwnd;
-        ShowWindow (hwnd, SW_HIDE);
-        //EndDialog (hwnd, 0);
-        SelectName (NULL, idx, 0, NULL, NULL);
+        if (ModelessDialog) ShowWindow (hwnd, SW_HIDE);
+        else EndDialog (hwnd, 0);
+        if (idx != LB_ERR) SelectName (NULL, idx, 0, NULL, NULL);
         InvalidateRect (mWnd, NULL, FALSE);
         return TRUE;
+      }
+      else if (wParam == IDC_BUTTON1) {
+        SipShowIM (SIPF_OFF);
+        if (ModelessDialog) ShowWindow (hwnd, SW_HIDE);
+        else EndDialog (hwnd, 0);
       }
     }
     return FALSE;
@@ -2578,6 +2593,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       // 195=0xC3=V+, 196=0xC4=V- which is VK_APP1 to VK_APP6
       // and WM_CHAR:VK_BACK
       InvalidateRect (hWnd, NULL, FALSE);
+      if (wParam == '0') HitButton (0);
+      if (wParam == '8') HitButton (1);
+      if (wParam == '9') HitButton (2);
+      if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
       if (ZoomInKeyNum <= option && option < HideZoomButtonsNum) {
         #define o(en,de,es,fr,it,nl,min,max) if (option == en ## Num) en = wParam;
         OPTIONS
@@ -2586,9 +2605,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       }
       if (wParam == 198) {
         SipShowIM (SIPF_ON);
-        ShowWindow (dlgWnd, SW_SHOW);
-        //else DialogBox(hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
-	//  NULL, (DLGPROC)DlgSearchProc); /* Create from WinMain ?? */
+        if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
+        else DialogBox(hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
+	  NULL, (DLGPROC)DlgSearchProc);
       }
       if (wParam == (DWORD) ZoomInKey) zoom = zoom * 3 / 4;
       if (wParam == (DWORD) ZoomOutKey) zoom = zoom * 4 / 3;
@@ -2829,15 +2848,13 @@ int WINAPI WinMain(
   draw = &dumdraw;
 
   dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
-    NULL, (DLGPROC)DlgSearchProc);
+    NULL, (DLGPROC)DlgSearchProc); // Just in case user goes modeless
 
   DWORD threadId;
+  wchar_t portname[6];
+  wsprintf (portname, TEXT ("COM%d:"), CommPort);
   if (CommPort == 0) {}
-  else if((port=CreateFile (CommPort == 1 ? TEXT ("COM1:") :
-    CommPort == 2 ? TEXT ("COM2:") : CommPort == 3 ? TEXT ("COM3:") :
-    CommPort == 4 ? TEXT ("COM4:") : CommPort == 5 ? TEXT ("COM5:") :
-    CommPort == 6 ? TEXT ("COM6:") : CommPort == 7 ? TEXT ("COM7:") :
-                    TEXT ("COM8:"), GENERIC_READ | GENERIC_WRITE, 0,
+  else if((port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
           NULL, OPEN_EXISTING, 0, 0)) != INVALID_HANDLE_VALUE) {
     CreateThread (NULL, 0, NmeaReader, NULL, 0, &threadId);
   }

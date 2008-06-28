@@ -128,6 +128,19 @@ class menus(ranaModule):
         print "Menu full, can't add %s" % text
     self.menus[menu][pos] = (text, icon, action)
     
+  def setupTransportMenu(self):
+    self.clearMenu('transport')
+    for(label, mode) in { \
+      'Bike':'cycle',
+      'Walk':'foot',
+      'MTB':'cycle',
+      'Car':'car',
+      'Hike':'foot',
+      'FastBike':'cycle',
+      'Train':'train',
+      'HGV':'hgv'}.items():
+      self.addItem('transport', label, label.lower(), 'set:mode:'+mode)
+    
   def setupGeneralMenus(self):
     self.clearMenu('main')
     self.addItem('main', 'map', 'generic', 'set:menu:layers')
@@ -135,7 +148,7 @@ class menus(ranaModule):
     self.addItem('main', 'view', 'view', 'set:menu:view')
     self.addItem('main', 'options', 'options', 'set:menu:options')
     self.addItem('main', 'mode', 'transport', 'set:menu:transport')
-    
+    self.setupTransportMenu()
     
 if(__name__ == "__main__"):
   a = menus({},{'viewport':(0,0,600,800)})

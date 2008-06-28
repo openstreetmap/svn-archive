@@ -144,16 +144,38 @@ class menus(ranaModule):
         label,                             # label
         label.lower(),                     # icon
         'set:mode:'+mode+"|set:menu:None") # action
-    
+
+  def setupSearchMenus(self):
+    f = open("data/search_menu.txt", "r")
+    self.clearMenu('search')
+    sectionID = None
+    for line in f:
+      if(line[0:3] == '== '):
+        section = line[3:].strip()
+        sectionID = 'search_'+section.lower()
+        self.addItem('search', section, section.lower(), 'set:menu:'+sectionID)
+        self.clearMenu(sectionID)
+      else:
+        details = line.strip()
+        if(details and sectionID):
+          (name,filter) = details.split('|')
+          self.addItem(sectionID, name, name, '')
+    f.close()
+  
   def setupGeneralMenus(self):
     self.clearMenu('main')
     self.addItem('main', 'map', 'generic', 'set:menu:layers')
     self.addItem('main', 'centre', 'centre', 'toggle:centred')
+    self.addItem('main', 'search', 'business', 'set:menu:search')
     self.addItem('main', 'view', 'view', 'set:menu:view')
     self.addItem('main', 'options', 'options', 'set:menu:options')
     self.addItem('main', 'mode', 'transport', 'set:menu:transport')
     self.setupTransportMenu()
+    self.setupSearchMenus()
+    
     
 if(__name__ == "__main__"):
   a = menus({},{'viewport':(0,0,600,800)})
-  a.drawMapOverlay(None)
+  #a.drawMapOverlay(None)
+  a.setupSearchMenus()
+  

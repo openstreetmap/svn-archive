@@ -79,7 +79,7 @@ public abstract class OsmPrimitive {
         return id;
     }
     
-    public DataSet getOwner() {
+    final DataSet getOwner() {
         return source;
     }
     

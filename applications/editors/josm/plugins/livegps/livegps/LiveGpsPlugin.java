@@ -63,7 +63,7 @@ public class LiveGpsPlugin extends Plugin
 
         public void actionPerformed(ActionEvent e) {
             if(lgpslayer != null) {
-                lgpslayer.center();
+                setAutoCenter(lgpsautocenter.isSelected());
             }
         }
     }

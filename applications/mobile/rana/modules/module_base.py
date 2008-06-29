@@ -59,6 +59,9 @@ class ranaModule:
   def handleMessage(self, message):
     """Handles a message from another module, or in response to user action"""
     pass
+  def dragEvent(self,startX,startY,dx,dy,x,y):
+    """Handles notification of a drag event"""
+    pass
   def shutdown(self):
     """Program is about to shutdown (don't rely solely on this for anything important like saving someone's tracklog!)"""
     pass

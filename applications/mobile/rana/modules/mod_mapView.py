@@ -35,7 +35,11 @@ class mapView(ranaModule):
       self.set('z', z + 1)
     elif(message == 'zoomOut'):
       self.set('z', max(z - 1, 8))
-      
+  
+  def dragEvent(self,startX,startY,dx,dy,x,y):
+    #print "Map move from %1.2f,%1.2f by %1.2f,%1.2f to %1.2f,%1.2f" % (startX,startY,dx,dy,x,y)
+    pass
+
   def update(self):
     # Run scheduledUpdate every second
     t = time()

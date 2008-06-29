@@ -50,3 +50,8 @@ class buttons(ranaModule):
     self.drawButton(cr, x+dx, y, dx, dy, "zoom_out", "mapView:zoomOut")
     self.drawButton(cr, x, y, dx, dy, "blank", "set:menu:main")
     self.drawButton(cr, x, y+dy, dx, dy, "zoom_in", "mapView:zoomIn")
+
+    m = self.m.get('clickHandler', None)
+    if(m != None):
+      m.registerDraggable(x,y,x+w,y+h, "mapView")
+    

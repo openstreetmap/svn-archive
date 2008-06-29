@@ -82,7 +82,14 @@ class MapWidget(gtk.Widget):
     m = self.m.get("clickHandler",None)
     if(m != None):
       m.handleClick(x,y)
+      self.update()
       
+  def handleDrag(self,x,y,dx,dy,startX,startY):
+    m = self.m.get("clickHandler",None)
+    if(m != None):
+      m.handleDrag(startX,startY,dx,dy,x,y)
+      self.update()
+        
   def forceRedraw(self):
     """Make the window trigger a draw event.  
     TODO: consider replacing this if porting pyroute to another platform"""
@@ -92,14 +99,6 @@ class MapWidget(gtk.Widget):
     except AttributeError:
       pass
     
-  def zoom(self,dx):
-    """Handle dragging left/right along top of the screen to zoom"""
-    pass
-
-  def handleDrag(self,x,y,dx,dy,startX,startY):
-    pass
-    
-
   def draw(self, cr):
     start = clock()
     for m in self.m.values():

@@ -38,14 +38,15 @@ class mapView(ranaModule):
       self.set('z', max(z - 1, 8))
   
   def dragEvent(self,startX,startY,dx,dy,x,y):
-    m = self.m.get('projection', None)
-    if(m):
-      m.nudge(dx,dy)
-      self.set('needRedraw', True)
+    if(not self.get("centred",True)):
+      m = self.m.get('projection', None)
+      if(m):
+        m.nudge(dx,dy)
+        self.set('needRedraw', True)
 
   def update(self):
     # Run scheduledUpdate every second
-    if(not self.get('centreOnce', False)):
+    if(self.get("centred",True) or self.get('neverBeenCentred', True)):
       t = time()
       dt = t - self.updateTime
       if(dt > 2):
@@ -55,7 +56,7 @@ class mapView(ranaModule):
           self.set('map_centre', pos)
           self.setCentre(pos)
           self.set('needRedraw', True)
-          self.set('centreOnce', True)
+          self.set('neverBeenCentred', False)
 
   def setCentre(self,pos):
     proj = self.m.get('projection', None)

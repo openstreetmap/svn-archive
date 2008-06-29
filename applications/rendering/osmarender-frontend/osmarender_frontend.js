@@ -15,9 +15,6 @@ viewPropertiesFromClass = function(key) {
 	var array_da_aggiornare = new Array();
 	cmyk.getRuleFromClass(cmyk.getRuleModel(),key,array_da_aggiornare);
 	
-	console.debug(array_da_aggiornare);
-
-
 	var div_result = document.getElementById("result_process_rules");
 
 	var todelete = document.getElementById("result_process_css_key");
@@ -30,6 +27,35 @@ viewPropertiesFromClass = function(key) {
 	refreshProperties();
 
 	propertiesToPrint = classesAndProperties[key];
+
+	if (array_da_aggiornare.length) {
+
+		div_properties.appendChild(document.createTextNode("Applies to: "));
+	
+		var rules_list = createElementCB("ol");
+		div_properties.appendChild(rules_list);
+
+		for (single_rule in array_da_aggiornare) {
+			for (single_key_value in array_da_aggiornare[single_rule].keys) {
+				var li_rule = createElementCB("li");
+				var li_rule_strong_1 = createElementCB("strong");
+				li_rule_strong_1.appendChild(document.createTextNode("key: "));
+				li_rule.appendChild(li_rule_strong_1);
+				li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].keys[single_key_value]));
+				var li_rule_strong_2 = createElementCB("strong");
+				li_rule_strong_2.appendChild(document.createTextNode(", value: "));
+				li_rule.appendChild(li_rule_strong_2);
+				li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].values[single_key_value]));
+				rules_list.appendChild(li_rule);
+				//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
+			}
+		}
+	} else {
+		var bold_string = createElementCB("strong");
+		bold_string.appendChild(document.createTextNode("Attention! "));
+		div_properties.appendChild(bold_string);
+		div_properties.appendChild(document.createTextNode("Selected class is not associated to any rule!"));
+	}
 
 	var dl_container = createElementCB("dl");
 	div_properties.appendChild(dl_container);

@@ -38,8 +38,10 @@ class mapView(ranaModule):
       self.set('z', max(z - 1, 8))
   
   def dragEvent(self,startX,startY,dx,dy,x,y):
-    #print "Map move from %1.2f,%1.2f by %1.2f,%1.2f to %1.2f,%1.2f" % (startX,startY,dx,dy,x,y)
-    pass
+    m = self.m.get('projection', None)
+    if(m):
+      m.nudge(dx,dy)
+      self.set('needRedraw', True)
 
   def update(self):
     # Run scheduledUpdate every second

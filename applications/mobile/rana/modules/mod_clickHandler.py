@@ -33,6 +33,7 @@ class clickHandler(ranaModule):
 
   def beforeDraw(self):
     self.areas = []
+    self.dragareas = []
 
   def register(self, rect, action):
     self.areas.append([rect, action])
@@ -55,6 +56,19 @@ class clickHandler(ranaModule):
           m.routeMessage(action)
         else:
           print "No message handler to receive clicks"
+          
+  def registerDraggable(self, x1,y1,x2,y2, module):
+    self.dragareas.append((rect(x1,y1,x2-x1,y2-y1), module))
+          
+  def handleDrag(self,startX,startY,dx,dy,x,y):
+    for area in self.dragareas:
+      (rect, module) = area
+      if(rect.contains(startX,startY)):
+        m = self.m.get(module, None)
+        if(m != None):
+          m.dragEvent(startX,startY,dx,dy,x,y)
+        else:
+          print "Drag registered to nonexistant module %s" % module
   
   def update(self):
     self.cycle += 1

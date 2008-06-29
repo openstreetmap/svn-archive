@@ -32,8 +32,12 @@ from time import clock
 from gtk import gdk
 
 
-def update(mapWidget):
-  mapWidget.update();
+def update1(mapWidget):
+  mapWidget.update()
+  return(True)
+
+def update2(mapWidget):
+  mapWidget.checkForRedraw()
   return(True)
 
 class MapWidget(gtk.Widget):
@@ -46,7 +50,8 @@ class MapWidget(gtk.Widget):
   def __init__(self):
     gtk.Widget.__init__(self)
     self.draw_gc = None
-    self.timer = gobject.timeout_add(100, update, self)
+    self.timer1 = gobject.timeout_add(100, update1, self)
+    self.timer2 = gobject.timeout_add(10, update2, self)
     self.d = {} # List of data
     self.m = {} # List of modules
     self.loadModules('modules')
@@ -72,6 +77,9 @@ class MapWidget(gtk.Widget):
   def update(self):
     for m in self.m.values():
       m.update()
+    self.checkForRedraw()
+  
+  def checkForRedraw(self):
     if(self.d.get("needRedraw", False)):
       self.forceRedraw()
 

@@ -62,15 +62,23 @@ viewPropertiesFromClass = function(key) {
 	
 	// Insert button for adding new properties:
 
+	var div_container_button = createElementCB("div");
+	div_container_button.setAttribute("style","display:table-cell;");
+	dl_container.appendChild(div_container_button);
+
 	dl_container.appendChild(createElementCB("dt"));
 	dd_container_button = createElementCB("dd");
 	dd_container_button.appendChild(addCSSPropertyButton());
-	dl_container.appendChild(dd_container_button);
+	div_container_button.appendChild(dd_container_button);
+	div_container_button.appendChild(createElementCB("br"));
 	
 	for(single_property in propertiesToPrint) {
-		
+		var div_container = createElementCB("div");
+		div_container.setAttribute("style","display:table-cell;border:1px solid grey;border-left:none;border-right:none;");
+		dl_container.appendChild(div_container);
+	
 		var dt_container = createElementCB("dt");
-		dl_container.appendChild(dt_container);
+		div_container.appendChild(dt_container);
 		
 		var label_container = createElementCB("label");
 		label_container.setAttribute("id","label_property_"+single_property);
@@ -80,18 +88,77 @@ viewPropertiesFromClass = function(key) {
 		dt_container.appendChild(label_container);
 		
 		var dd_container = createElementCB("dd");
-		dl_container.appendChild(dd_container);
+		div_container.appendChild(dd_container);
 
 		var text_container = createElementCB("input");
 		text_container.setAttribute("id",single_property);
 		text_container.setAttribute("value",propertiesToPrint[single_property]);
 		dd_container.appendChild(text_container);
+		
 		if (single_property=="fill" || single_property=="stroke") {
 			var div_container=createElementCB("div");
 			div_container.setAttribute("id","viewColor["+single_property+"]");
 			div_container.setAttribute("style","float:left;display:table-cell;display:inline-block;border: medium dotted grey;height:20px;width:20px;background-color:"+propertiesToPrint[single_property]+";");
-			text_container.setAttribute("onkeyup","javascript:changeInputBackground(this)");
+			text_container.setAttribute("onkeyup","javascript:changeInputBackground(this);");
 			dd_container.appendChild(div_container);
+			
+			var button_color_picker=createElementCB("button");
+			button_color_picker.setAttribute("id","button_color_picker["+single_property+"]");
+			button_color_picker.setAttribute("osmarender_frontend_button_property",single_property);
+			button_color_picker.setAttribute("onclick","javascript:viewColorPicker(this);");
+			button_color_picker.appendChild(document.createTextNode("Pick color"));
+			dd_container.appendChild(button_color_picker);
+		}
+//TODO: unique index of active dojo widgets to destroy when select menu changes
+/*		if (single_property=="opacity") {
+			text_container.parentNode.removeChild(text_container);
+		  	var slider = new dijit.form.NumberSpinner(
+ 				{id: "opacity_spinner["+single_property+"]",
+				value: propertiesToPrint[single_property],
+				constraints: {min:0,max:1,places:1},
+				smallDelta: 0.1,
+				style: "width:5em"
+ 				}, dd_container
+ 			);
+		 	slider.startup();
+		}
+		
+		if (single_property=="stroke-width") {
+//TODO: compatibility with other units (em, ecc)
+			text_container.parentNode.removeChild(text_container);
+			var div_interno=createElementCB("div");
+			dd_container.appendChild(div_interno);
+		  	var slider = new dijit.form.NumberSpinner(
+ 				{id: "stroke_width_spinner["+single_property+"]",
+				value: propertiesToPrint[single_property].substring(0,propertiesToPrint[single_property].indexOf("p")),
+				constraints: {min:0,places:1},
+				smallDelta: 0.1,
+				style: "width:5em"
+ 				}, div_interno
+ 			);
+		 	slider.startup();
+			dd_container.appendChild(document.createTextNode("px"));
+		}*/
+		
+		if (single_property=="stroke-linecap" || single_property=="stroke-linejoin" || single_property=="font-weight") {
+			text_container.parentNode.removeChild(text_container);
+			var select_strokes=createElementCB("select");
+			select_strokes.setAttribute("id",single_property);
+			var types_of_strokes = {
+				"stroke-linecap": ["butt","round","square","inherit"],
+				"stroke-linejoin": ["miter","round","bevel","inherit"],
+				"font-weight": ["normal","bold","bolder","lighter","100","200","300","400","500","600","700","800","900","inherit"]
+			};
+			for (types in types_of_strokes[single_property]) {
+				var option = createElementCB("option");
+				option.setAttribute("value",types_of_strokes[single_property][types]);
+				option.appendChild(document.createTextNode(types_of_strokes[single_property][types]));
+				if (types_of_strokes[single_property][types]==propertiesToPrint[single_property]) {
+					option.setAttribute("selected","selected");
+				}
+				select_strokes.appendChild(option);
+			}
+			dd_container.appendChild(select_strokes);
 		}
 		
 		if ((single_property=="marker-end" || single_property=="marker-mid" || single_property=="marker-start" || single_property=="fill") && propertiesToPrint[single_property].substring(0,3)=="url") {
@@ -123,9 +190,40 @@ viewPropertiesFromClass = function(key) {
 		delete_button.setAttribute("onclick","javascript:deleteSingleProp(this);")
 		delete_button.appendChild(document.createTextNode("Delete"));
 		dd_container.appendChild(delete_button);
-		dl_container.appendChild(createElementCB("br"));
+		div_container.appendChild(createElementCB("br"));
 
 	}
+}
+
+viewColorPicker = function(button) {
+	var div = createElementCB("div");
+	div.setAttribute("id","div_color_picker["+button.getAttribute("osmarender_frontend_button_property")+"]");
+	div.setAttribute("style","float:left;margin-left:5px;margin-bottom:10px;display:block;border: 1px solid black;padding:5px");
+	button.parentNode.appendChild(div);
+	div.appendChild(createElementCB("div"));
+  	var color_picker = new dojox.widget.ColorPicker(
+ 		{id: "color_picker["+button.getAttribute("osmarender_frontend_button_property")+"]",
+ 		}, div.firstChild
+ 	);
+ 	color_picker.startup();
+	var button_close_save = createElementCB("button");
+	button_close_save.appendChild(document.createTextNode("Close and Save"));
+	button_close_save.setAttribute("onclick","javascript:closeColorPicker(document.getElementById(\"color_picker["+button.getAttribute("osmarender_frontend_button_property")+"]\"),\""+button.getAttribute("osmarender_frontend_button_property")+"\",true)");
+	div.appendChild(button_close_save);
+
+	var button_close_discard = createElementCB("button");
+	button_close_discard.appendChild(document.createTextNode("Close and Discard"));
+	button_close_discard.setAttribute("onclick","javascript:closeColorPicker(document.getElementById(\"color_picker["+button.getAttribute("osmarender_frontend_button_property")+"]\"),\""+button.getAttribute("osmarender_frontend_button_property")+"\",false)");
+	div.appendChild(button_close_discard);
+}
+
+closeColorPicker = function(color_picker,property,save) {
+	if (save) {
+		document.getElementById(property).setAttribute("value",color_picker.value);
+		document.getElementById("viewColor["+property+"]").setAttribute("style","float:left;display:table-cell;display:inline-block;border: medium dotted grey;height:20px;width:20px;background-color:"+color_picker.value+";");
+	}
+	document.getElementById("div_color_picker["+property+"]").parentNode.removeChild(document.getElementById("div_color_picker["+property+"]"));
+	dijit.byId("color_picker["+property+"]").destroy();
 }
 
 changeInputBackground = function(dom) {
@@ -335,14 +433,19 @@ setStyle = function () {
 	var labels_array = document.getElementsByTagName("label");
 	var magic_string_to_search="label_property_";
 	var labels_styles_array = new Array();
+	
+	if (labels_array && labels_array.length) {
 
-	for(labels in labels_array) {
-		var label_id = labels_array[labels].id;
-		if (!!label_id) {
-			if (label_id.substring(0,(magic_string_to_search.length))==magic_string_to_search) {
-				property = labels_array[labels].getAttribute("id").substring((magic_string_to_search.length));
-				editValue = document.getElementById(property).value;
-				cmyk.setSingleStyle(class,property,editValue);
+		for(labels in labels_array) {
+			if (labels_array[labels]) {
+				var label_id = labels_array[labels].id;
+				if (!!label_id) {
+					if (label_id.substring(0,(magic_string_to_search.length))==magic_string_to_search) {
+						property = labels_array[labels].getAttribute("id").substring((magic_string_to_search.length));
+						editValue = document.getElementById(property).value;
+						cmyk.setSingleStyle(class,property,editValue);
+					}
+				}
 			}
 		}
 	}

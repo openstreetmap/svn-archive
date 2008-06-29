@@ -38,13 +38,31 @@ class mapTiles(ranaModule):
     self.threads = {}
   
   def drawMapOverlay(self, cr):
-    (sx,sy,sw,sh) = self.get('viewport')
-    angle = self.get('bearing', 0)
-    (cx,cy) = (sx + 0.5 * sw, sy + 0.5 * sh)
+    """Draw an "own position" marker (TODO: probably should be in different module)"""
 
+    # Where are we?
+    pos = self.get('pos', None)
+    if(pos == None):
+      return
+    (lat,lon) = pos
+
+    # Where is the map?
+    proj = self.m.get('projection', None)
+    if(proj == None):
+      return
+    if(not proj.isValid()):
+      return
+
+    # Where are we on the map?
+    x1,y1 = proj.ll2xy(lat,lon)
+
+    # What are we?
+    angle = self.get('bearing', 0)
+
+    # Draw yellow/black triangle showing us
     cr.set_source_rgb(1.0, 1.0, 0.0)
     cr.save()
-    cr.translate(cx,cy)
+    cr.translate(x1,y1)
     cr.rotate(radians(angle))
     cr.move_to(-10, 15)
     cr.line_to( 10, 15)
@@ -60,30 +78,26 @@ class mapTiles(ranaModule):
     cr.restore()
 
   def drawMap(self, cr):
+    """Draw map tile images"""
     (sx,sy,sw,sh) = self.get('viewport')
-    pos = self.get('map_centre', None)
-    if(pos == None):
-      return
-    (lat,lon) = pos
     
     z = int(self.get('z', 15))
-    x,y = latlon2xy(lat,lon,z)
 
     proj = self.m.get('projection', None)
     if(proj == None):
-      return;
+      return
+    if(not proj.isValid()):
+      return
 
-    proj.setView(sx,sy,sw,sh)
-    proj.recentre(lat,lon,z)
-
+    # Cover the whole map view with tiles
     for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
         
         # Convert corner to screen coordinates
         x1,y1 = proj.pxpy2xy(x,y)
 
+        # Try to load and display images
         name = self.loadImage(x,y,z,'default')
-
         if(name != None):
           self.drawImage(cr,name,x1,y1)
 
@@ -99,7 +113,7 @@ class mapTiles(ranaModule):
       print "Not loaded"
       return
     
-    # TODO: Move the cairo projection onto the area where we want to draw the image
+    # Move the cairo projection onto the area where we want to draw the image
     cr.save()
     cr.translate(x,y)
     
@@ -130,21 +144,18 @@ class mapTiles(ranaModule):
       return(name)
     
     # Image not found anywhere - resort to downloading it
-    if(0):
+    if(self.get('threadedDownload',True)):
       self.threads[name] = tileLoader(x,y,z,layer,filename)
       self.threads[name].start()
       return(None)
     else:
       downloadTile(x,y,z,layer,filename)
       return(name)
-    #self.set("needRedraw", True)
 
-    
   def imageName(self,x,y,z,layer):
     """Get a unique name for a tile image 
     (suitable for use as part of filenames, dictionary keys, etc)"""
     return("%s_%d_%d_%d" % (layer,z,x,y))
-
 
 
 def getURL(x,y,z,layer):
@@ -156,7 +167,7 @@ def getURL(x,y,z,layer):
 def downloadTile(x,y,z,layer,filename):
   """Downloads an image"""
   renderer = RenderModule.RenderClass()
-  print "rendering to %s" % filename
+  #print "rendering to %s" % filename
   pngData = renderer.RenderTile(z,x,y, layer, filename)
   #print "Got %d bytes" % len(pngData)
   

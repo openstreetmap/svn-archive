@@ -19,6 +19,7 @@
 #---------------------------------------------------------------------------
 from module_base import ranaModule
 from time import time
+from tilenames import *
 
 def getModule(m,d):
   return(mapView(m,d))
@@ -42,10 +43,29 @@ class mapView(ranaModule):
 
   def update(self):
     # Run scheduledUpdate every second
-    t = time()
-    dt = t - self.updateTime
-    if(dt > 2):
-      self.updateTime = t
-      self.set('map_centre', self.get('pos', [53.1, -0.5]))
-      self.set('needRedraw', True)
-  
+    if(not self.get('centreOnce', False)):
+      t = time()
+      dt = t - self.updateTime
+      if(dt > 2):
+        self.updateTime = t
+        pos = self.get('pos', False)
+        if(pos != False):
+          self.set('map_centre', pos)
+          self.setCentre(pos)
+          self.set('needRedraw', True)
+          self.set('centreOnce', True)
+
+  def setCentre(self,pos):
+    proj = self.m.get('projection', None)
+    if(proj == None):
+      return;
+
+    (lat,lon) = pos
+
+    z = int(self.get('z', 15))
+    x,y = latlon2xy(lat,lon,z)
+
+    (sx,sy,sw,sh) = self.get('viewport')
+    proj.setView(sx,sy,sw,sh)
+    proj.recentre(lat,lon,z)
+    proj.setZoom(z)

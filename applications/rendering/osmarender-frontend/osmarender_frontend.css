@@ -71,6 +71,10 @@ dd {
 }
 
 /* LINKS */
+#result_symbols {
+	display:none;
+}
+
 #result_process_rules {
 	display:none;
 }

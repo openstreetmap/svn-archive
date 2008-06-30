@@ -105,7 +105,7 @@ viewPropertiesFromClass = function(key) {
 		text_container.setAttribute("value",propertiesToPrint[single_property]);
 		dd_container.appendChild(text_container);
 		
-		if (single_property=="fill" || single_property=="stroke") {
+		if ((single_property=="fill" || single_property=="stroke") && propertiesToPrint[single_property].substring(0,3)!="url") {
 			var div_container=createElementCB("div");
 			div_container.setAttribute("id","viewColor["+single_property+"]");
 			div_container.setAttribute("style","float:left;display:table-cell;display:inline-block;border: medium dotted grey;height:20px;width:20px;background-color:"+propertiesToPrint[single_property]+";");
@@ -171,7 +171,7 @@ viewPropertiesFromClass = function(key) {
 			dd_container.appendChild(select_strokes);
 		}
 		
-		if ((single_property=="marker-end" || single_property=="marker-mid" || single_property=="marker-start" || single_property=="fill") && propertiesToPrint[single_property].substring(0,3)=="url") {
+		if ((single_property=="marker-end" || single_property=="marker-mid" || single_property=="marker-start" || single_property=="fill" || single_property=="stroke") && propertiesToPrint[single_property].substring(0,3)=="url") {
 			var svg_url=propertiesToPrint[single_property].split("(")[1].split("#")[1].split(")")[0];
 			if (cmyk.getRulesFile().getElementById(svg_url)) {
 				var svg_marker = cmyk.getRulesFile().getElementById(svg_url);
@@ -346,6 +346,8 @@ loadOsmAndRules = function() {
 //	var rulesfilename = document.getElementById("rules_file_name").value;
 	cmyk = new CMYK(rulesfilename);
 
+	SymbolsResult();
+
 	var div_result = document.getElementById("result_process_rules");
 
 	while (div_result.hasChildNodes()) {
@@ -365,6 +367,14 @@ loadOsmAndRules = function() {
 	viewKeyValuePairs.setAttribute("href","javascript:listKeys();");
 	viewKeyValuePairs.appendChild(document.createTextNode("View Key/Value Pairs"));
 	div_result.appendChild(viewKeyValuePairs);
+
+	div_result.appendChild(createElementCB("br"));
+
+	var viewSymbols = createElementCB("a");
+	viewSymbols.setAttribute("id","link_symbols_load");
+	viewSymbols.setAttribute("href","javascript:displaySymbols();");
+	viewSymbols.appendChild(document.createTextNode("View Symbols"));
+	div_result.appendChild(viewSymbols);
 
 	div_result.appendChild(createElementCB("br"));
 
@@ -399,17 +409,179 @@ loadOsmAndRules = function() {
 
 }
 
+SymbolsResult = function() {
+	var div_result = document.getElementById("result_symbols");
+
+	while (div_result.hasChildNodes()) {
+		div_result.removeChild(div_result.firstChild);
+	}
+
+	var return_load_link = createElementCB("a");
+	return_load_link.setAttribute("id","link_return_load");
+	return_load_link.setAttribute("href","javascript:displayLoad();");
+	return_load_link.appendChild(document.createTextNode("Reload other files"));
+	div_result.appendChild(return_load_link);
+
+	div_result.appendChild(createElementCB("br"));
+
+	var viewKeyValuePairs = createElementCB("a");
+	viewKeyValuePairs.setAttribute("id","link_key_value_pairs_load");
+	viewKeyValuePairs.setAttribute("href","javascript:listKeys();");
+	viewKeyValuePairs.appendChild(document.createTextNode("View Key/Value Pairs"));
+	div_result.appendChild(viewKeyValuePairs);
+
+	div_result.appendChild(createElementCB("br"));
+
+	var viewSymbols = createElementCB("a");
+	viewSymbols.setAttribute("id","link_css_load");
+	viewSymbols.setAttribute("href","javascript:displayRules();");
+	viewSymbols.appendChild(document.createTextNode("View CSS"));
+	div_result.appendChild(viewSymbols);
+
+	div_result.appendChild(createElementCB("br"));
+	div_result.appendChild(createElementCB("br"));
+
+	var label_select_symbol = createElementCB("label");
+	label_select_symbol.setAttribute("id","label_symbols");
+	label_select_symbol.setAttribute("for","select_symbols");
+	label_select_symbol.appendChild(document.createTextNode("Select a Symbol ID: "));
+	
+	div_result.appendChild(label_select_symbol);
+
+	var symbols_section = cmyk.getSymbols();
+
+	var select_symbols = createElementCB("select");
+	select_symbols.setAttribute("id","select_symbols");
+	select_symbols.setAttribute("onchange","javascript:viewSymbol(this.value);");
+
+	var new_option_null = createElementCB("option");
+	new_option_null.setAttribute("value","osmarender_frontend:null");
+	var new_option_null_text = document.createTextNode("Select a Symbol ID");
+	new_option_null.appendChild(new_option_null_text);
+	select_symbols.appendChild(new_option_null);
+
+	var symbols_array=new Array();
+
+	for (single_symbol in symbols_section) {
+		if (typeof(symbols_section[single_symbol])=="object" && symbols_section[single_symbol].id) {
+			symbols_array[symbols_array.length]=symbols_section[single_symbol].id;
+		}
+	}
+
+	for (single_symbol in symbols_array.sort()) {
+		var new_option = createElementCB("option");
+		new_option.setAttribute("value",symbols_array[single_symbol]);
+		var new_option_text = document.createTextNode(symbols_array[single_symbol]);
+		new_option.appendChild(new_option_text);
+		select_symbols.appendChild(new_option);
+	}
+	div_result.appendChild(select_symbols);
+	
+	div_symbol = createElementCB("div");
+	div_symbol.setAttribute("id","div_viewSymbol");
+	div_result.appendChild(div_symbol);
+}
+
+viewSymbol = function(svg_url) {
+	if (cmyk.getRulesFile().getElementById(svg_url)) {
+		div_result = document.getElementById("div_viewSymbol");
+		div_result.setAttribute("style","align:center;");
+		var svg_symbol = cmyk.getRulesFile().getElementById(svg_url);
+		var svg_container;
+		if (typeof document.createElementNS != 'undefined') {
+			svg_container = document.createElementNS("http://www.w3.org/2000/svg","svg");
+		}
+		else {
+			svg_container = createElementCB("svg");
+		}
+		for (var a=0; a<svg_symbol.attributes.length; a++) {
+			svg_container.setAttribute(svg_symbol.attributes[a].name,svg_symbol.attributes[a].value);
+		}
+		svg_container.setAttribute("height","100px");
+
+		//TODO: Fixing viewBox, more hack needed
+		var viewBox_string = svg_container.getAttribute("viewBox");
+		var viewBox_array = viewBox_string.split(" ");
+		if (viewBox_array[1]>0) {
+			viewBox_array[1]="0";
+		}
+		viewBox_string = viewBox_array.join(" ");
+		svg_container.setAttribute("viewBox",viewBox_string);
+
+		for (var a=0; a<svg_symbol.childNodes.length; a++) {
+			if (svg_symbol.childNodes[a].nodeType!=Node.TEXT_NODE) {
+				svg_container.appendChild(svg_symbol.childNodes[a].cloneNode(true));
+			}
+		}
+		while (div_result.hasChildNodes()) {
+			div_result.removeChild(div_result.firstChild);
+		}
+		div_result.appendChild(svg_container);
+		
+		// Get key/value pairs applied
+		//Search rules in which this symbol is used
+		var array_da_aggiornare = new Array();
+		cmyk.getRuleFromSymbol(cmyk.getRuleModel(),svg_url,array_da_aggiornare);
+
+		if (array_da_aggiornare.length) {
+
+			div_result.appendChild(createElementCB("br"));
+			div_result.appendChild(document.createTextNode("Applies to: "));
+	
+			var rules_list = createElementCB("ol");
+			div_result.appendChild(rules_list);
+
+			for (single_rule in array_da_aggiornare) {
+				for (single_key_value in array_da_aggiornare[single_rule].keys) {
+					var li_rule = createElementCB("li");
+					var li_rule_strong_1 = createElementCB("strong");
+					li_rule_strong_1.appendChild(document.createTextNode("key: "));
+					li_rule.appendChild(li_rule_strong_1);
+					li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].keys[single_key_value]));
+					var li_rule_strong_2 = createElementCB("strong");
+					li_rule_strong_2.appendChild(document.createTextNode(", values: "));
+					li_rule.appendChild(li_rule_strong_2);
+					first_value_found=false;
+					for (single_value_value in array_da_aggiornare[single_rule].values) {
+						if (first_value_found) {
+							li_rule.appendChild(document.createTextNode(", "));
+						}
+						li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].values[single_value_value]));
+						first_value_found=true;
+					}
+					rules_list.appendChild(li_rule);
+				//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
+				}
+			}
+		} else {
+			var bold_string = createElementCB("strong");
+			bold_string.appendChild(document.createTextNode("Attention! "));
+			div_result.appendChild(bold_string);
+			div_result.appendChild(document.createTextNode("Selected symbol is not associated to any rule!"));
+		}
+	}
+}
+
 displayLoad = function() {
 	document.getElementById("result_process_rules").style.display="none";
 	document.getElementById("result_process_key").style.display="none";
+	document.getElementById("result_symbols").style.display="none";
 	document.getElementById("load_file").style.display="block";
 	if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
 }
 
 displayRules = function() {
 	document.getElementById("load_file").style.display="none";
+	document.getElementById("result_symbols").style.display="none";
 	document.getElementById("result_process_key").style.display="none";
 	document.getElementById("result_process_rules").style.display="block";
+}
+
+displaySymbols = function() {
+	document.getElementById("load_file").style.display="none";
+	document.getElementById("result_symbols").style.display="block";
+	document.getElementById("result_process_key").style.display="none";
+	document.getElementById("result_process_rules").style.display="none";
 }
 
 refreshProperties = function() {
@@ -488,6 +660,7 @@ listKeys = function() {
 	sorted_list_of_unique_keys = RemoveDuplicates(sorted_list_of_unique_keys.sort());
 	
 	document.getElementById("result_process_rules").style.display="none";
+	document.getElementById("result_symbols").style.display="none";
 	document.getElementById("load_file").style.display="none";
 	
 	var div_result = document.getElementById("result_process_key");
@@ -512,13 +685,21 @@ listKeys = function() {
 	div_result.appendChild(return_css_link);
 
 	div_result.appendChild(createElementCB("br"));
+
+	var viewSymbols = createElementCB("a");
+	viewSymbols.setAttribute("id","link_symbols_load");
+	viewSymbols.setAttribute("href","javascript:displaySymbols();");
+	viewSymbols.appendChild(document.createTextNode("View Symbols"));
+	div_result.appendChild(viewSymbols);
+
+	div_result.appendChild(createElementCB("br"));
 	div_result.appendChild(createElementCB("br"));
 	
 	// View Part of MVC
 	
 	var label_container = createElementCB("label");
 	label_container.setAttribute("for","select_feature_way");
-	var label = document.createTextNode("Select way feature: ");
+	var label = document.createTextNode("Select feature: ");
 	label_container.appendChild(label);
 	div_result.appendChild(label_container);
 	
@@ -544,7 +725,7 @@ listKeys = function() {
 	
 	var new_option_null = createElementCB("option");
 	new_option_null.setAttribute("value","osmarender_frontend:null");
-	var new_option_null_text = document.createTextNode("Select a way feature");
+	var new_option_null_text = document.createTextNode("Select a feature");
 	new_option_null.appendChild(new_option_null_text);
 	select_ways_key.appendChild(new_option_null);
 
@@ -633,10 +814,17 @@ searchCSSfromKeyValue = function() {
 		div_list_css.removeChild(div_list_css.firstChild);
 	}
 
-	//Search rules in which this class is used
+	//Search classes that applies this key/value pair
 	var array_da_aggiornare = new Array();
 	cmyk.getClassFromRule(cmyk.getRuleModel(),my_key,my_value,array_da_aggiornare);
-	
+
+	if (array_da_aggiornare.length) {
+		var strong_section = createElementCB("strong");
+		strong_section.appendChild(document.createTextNode("CSS classes associated:"));
+		div_list_css.appendChild(strong_section);
+		div_list_css.appendChild(createElementCB("br"));
+	}
+
 	for (CSSclass in array_da_aggiornare) {
 		// no-bezier is actually not a class
 		if (array_da_aggiornare[CSSclass] != "no-bezier") {
@@ -647,6 +835,40 @@ searchCSSfromKeyValue = function() {
 			div_list_css.appendChild(createElementCB("br"));
 		}
 	}
+	
+	// Search symbols that applies this key/value pair
+
+	var array_da_aggiornare = new Array();
+	cmyk.getSymbolFromRule(cmyk.getRuleModel(),my_key,my_value,array_da_aggiornare);
+
+	if (array_da_aggiornare.length) {
+		div_list_css.appendChild(createElementCB("br"));
+		var strong_section = createElementCB("strong");
+		strong_section.appendChild(document.createTextNode("Symbols associated:"));
+		div_list_css.appendChild(strong_section);
+		div_list_css.appendChild(createElementCB("br"));
+	}
+
+	for (symbols in array_da_aggiornare) {
+		a_list_symbol = createElementCB("a");
+		a_list_symbol.setAttribute("href","javascript:loadSymbol(\""+array_da_aggiornare[symbols]+"\")");
+		a_list_symbol.appendChild(document.createTextNode(array_da_aggiornare[symbols]));
+		div_list_css.appendChild(a_list_symbol);
+		div_list_css.appendChild(createElementCB("br"));
+	}
+
+}
+
+loadSymbol = function(symbolname) {
+	displaySymbols();
+	selectSymbols = document.getElementById("select_symbols");
+	for (item in selectSymbols.options) {
+		if (selectSymbols.options[item].value==symbolname) {
+			selectSymbols.selectedIndex=item;
+			break;
+		}
+	}
+	selectSymbols.onchange();
 }
 
 loadCSS = function(cssname) {

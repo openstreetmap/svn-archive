@@ -497,7 +497,11 @@ for (var stylesobject in Styles) {
 }
 alert(stylestoprint);*/
 
-// Analysing rule file
+// Create symbols links/data
+
+this.symbols = css.getElementsByTagName("symbol");
+
+// Analysing rule file to model rules
 
 function RuleFile() {
 	this.baseAttributes = new Object();
@@ -628,6 +632,10 @@ this.rulemodelresult=rulemodel;
 	
 };
 
+CMYK.prototype.getSymbols = function() {
+	return this.symbols;
+}
+
 CMYK.prototype.setOsmFile = function(osmfilename) {
 	tags = rulesfile.getElementsByTagName("rules");
 	tags[0].setAttribute("data",osmfilename);
@@ -648,14 +656,12 @@ CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn)
 			for (class in classesAssociated) {
 				if (classesAssociated[class]==CSSclassname) {
 					rulestoreturn[rulestoreturn.length]=rulemodel;
-					console.debug(rulemodel);
 				}
 			}
 			var maskclassesAssociated = rulemodel.render[renderRules]["mask-class"];
 			for (class in maskclassesAssociated) {
 				if (maskclassesAssociated[class]==CSSclassname) {
 					rulestoreturn[rulestoreturn.length]=rulemodel;
-					console.debug(rulemodel);
 				}
 			}
 		}
@@ -696,6 +702,50 @@ CMYK.prototype.getClassFromRule = function(rulemodel,my_key,my_value,csstoreturn
 	if (rulemodel.childrenRules && rulemodel.childrenRules.length) {
 		for (childrenIndex in rulemodel.childrenRules) {
 			this.getClassFromRule(rulemodel.childrenRules[childrenIndex],my_key,my_value,csstoreturn);
+		}
+		return;
+	}
+}
+
+CMYK.prototype.getRuleFromSymbol = function(rulemodel,symbol_url,rulestoreturn) {
+	if (rulemodel.render && rulemodel.render.length) {
+		for (renderRules in rulemodel.render) {
+			if (rulemodel.render[renderRules].type =="symbol" && symbol_url==rulemodel.render[renderRules]["xlink:href"].substring(1)) {
+				rulestoreturn[rulestoreturn.length]=rulemodel;
+			}
+		}
+	}
+	if (rulemodel.childrenRules && rulemodel.childrenRules.length) {
+		for (childrenIndex in rulemodel.childrenRules) {
+			this.getRuleFromSymbol(rulemodel.childrenRules[childrenIndex],symbol_url,rulestoreturn);
+		}
+		return;
+	}
+}
+
+CMYK.prototype.getSymbolFromRule = function(rulemodel,my_key,my_value,symboltoreturn) {
+	if (rulemodel.keys && rulemodel.keys.length) {
+		var key_found=false;
+		for (single_key in rulemodel.keys) {
+			if (my_key == rulemodel.keys[single_key]) key_found=true;
+		}
+		if (key_found) {
+			for (single_value in rulemodel.values) {
+				if (my_value == rulemodel.values[single_value] || rulemodel.values[single_value]=="*") {
+					if (rulemodel.render && rulemodel.render.length) {
+						for (renderRules in rulemodel.render) {
+							if (rulemodel.render[renderRules].type =="symbol") {
+								symboltoreturn[symboltoreturn.length]=rulemodel.render[renderRules]["xlink:href"].substring(1);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if (rulemodel.childrenRules && rulemodel.childrenRules.length) {
+		for (childrenIndex in rulemodel.childrenRules) {
+			this.getSymbolFromRule(rulemodel.childrenRules[childrenIndex],my_key,my_value,symboltoreturn);
 		}
 		return;
 	}

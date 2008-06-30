@@ -24,7 +24,8 @@ function QueueDirectory(){
 }
 
 function MaxQueueLength(){
-  return(1500);
+//  return(1500); 
+  return(750); // temporarily reduce queue length for faster turnaround (revert after 21/05/08)
 }
 
 function QueueSpace(){

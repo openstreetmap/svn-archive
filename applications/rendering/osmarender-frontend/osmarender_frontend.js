@@ -15,6 +15,8 @@ viewPropertiesFromClass = function(key) {
 	var array_da_aggiornare = new Array();
 	cmyk.getRuleFromClass(cmyk.getRuleModel(),key,array_da_aggiornare);
 	
+	//console.debug(array_da_aggiornare);
+	
 	var div_result = document.getElementById("result_process_rules");
 
 	var todelete = document.getElementById("result_process_css_key");

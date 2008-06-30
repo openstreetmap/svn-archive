@@ -1600,10 +1600,10 @@
                 stroke-width: 0px;
             }
 
-            .waterway-river-casing                  { stroke-width: 6px; }
-            .waterway-river-core                    { stroke-width: 4px; }
-			.waterway-river-name-casing             { font-size: 6px; stroke-width: 0.4px;}
-			.waterway-river-name-core               { font-size: 6px; }
+            .waterway-river-casing                  { stroke-width: 3px; }
+            .waterway-river-core                    { stroke-width: 2px; }
+			.waterway-river-name-casing             { font-size: 3px; stroke-width: 0.3px;}
+			.waterway-river-name-core               { font-size: 3px; }
 
             .waterway-stream-casing                 { stroke-width: 1px; }
             .waterway-stream-core                   { stroke-width: 0.8px; }

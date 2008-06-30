@@ -1346,6 +1346,9 @@
                 </else>
             </else>
         </rule>
+        <rule e="node" k="highway|barrier" v="bollard">
+            <circle r='0.3px' class='bollard' />
+        </rule>
 
         <!-- Bus stops -->
         <rule e="node" k="highway" v="bus_stop">
@@ -1636,7 +1639,12 @@
                 marker-mid: url(#marker-gate-open);
             }
             
-			/* Railways - generic styles */
+            .bollard { 
+                fill: #777777; 
+                stroke: none; 
+            }    
+                                                                   
+            /* Railways - generic styles */
             .railway-casing {
 				stroke-linecap: butt;
                 stroke-linejoin: round;
@@ -2043,10 +2051,10 @@
                 stroke-width: 0px;
             }
 
-            .waterway-river-casing                  { stroke-width: 6px; }
-            .waterway-river-core                    { stroke-width: 4px; }
-			.waterway-river-name-casing             { font-size: 3px; stroke-width: 0.2px;}
-			.waterway-river-name-core               { font-size: 3px; }
+            .waterway-river-casing                  { stroke-width: 2px; }
+            .waterway-river-core                    { stroke-width: 1.7px; }
+			.waterway-river-name-casing             { font-size: 2px; stroke-width: 0.1px;}
+			.waterway-river-name-core               { font-size: 2px; }
 
             .waterway-stream-casing                 { stroke-width: 1px; }
             .waterway-stream-core                   { stroke-width: 0.8px; }

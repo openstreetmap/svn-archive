@@ -1421,6 +1421,9 @@
         <rule e="node" k="highway" v="stile">
             <wayMarker fill="none" stroke="red" stroke-width="1px" stroke-opacity="0" marker-mid="url(#marker-stile)"/>
         </rule>
+        <rule e="node" k="highway|barrier" v="bollard">
+            <circle r='0.2px' class='bollard' />
+        </rule>
 
         <!-- Bus stops -->
         <rule e="node" k="highway" v="bus_stop">
@@ -2048,7 +2051,12 @@
                 stroke-opacity: 0;
                 marker-mid: url(#marker-gate-open);
             }
-
+            
+            .bollard {
+         	fill: #777777;
+         	stroke: none;
+            }   
+         
             /* Railways - generic styles */
             .railway-casing {
                 stroke-linecap: butt;
@@ -2494,8 +2502,8 @@
                 stroke-width: 0px;
             }
 
-            .waterway-river-casing                  { stroke-width: 4px; }
-            .waterway-river-core                    { stroke-width: 3px; }
+            .waterway-river-casing                  { stroke-width: 2px; }
+            .waterway-river-core                    { stroke-width: 1.7px; }
             .waterway-river-name-casing             { font-size: 1.5px; stroke-width: 0.1px;}
             .waterway-river-name-core               { font-size: 1.5px; }
 

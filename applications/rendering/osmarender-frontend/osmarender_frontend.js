@@ -75,6 +75,7 @@ viewPropertiesFromClass = function(key) {
 	div_container_button.appendChild(createElementCB("br"));
 	
 	for(single_property in propertiesToPrint) {
+		dl_container.appendChild(createElementCB("br"));
 		var div_container = createElementCB("div");
 		div_container.setAttribute("style","display:table-cell;border:1px solid grey;border-left:none;border-right:none;");
 		dl_container.appendChild(div_container);
@@ -269,9 +270,6 @@ addCSSProperty = function (dom_here) {
 		button_to_add.appendChild(document.createTextNode("Add Property"));
 		appendChild(button_to_add);
 	}
-//	dt_container.appendChild()
-//	var dd_container=
-	
 }
 
 addSingleProp = function (class,property_name,property_value) {
@@ -321,6 +319,9 @@ deleteSingleProp = function (button) {
 	}
 
 loadOsmAndRules = function() {
+
+	document.getElementById("load_file").style.display="none";
+
 	var rulesfilename_written = document.getElementById("rules_file_name_written").value;
 	var rulesfilename_selected = document.getElementById("rules_file_name").value;
 
@@ -343,6 +344,13 @@ loadOsmAndRules = function() {
 	while (div_result.hasChildNodes()) {
 		div_result.removeChild(div_result.firstChild);
 	}
+
+	var return_load_link = createElementCB("a");
+	return_load_link.setAttribute("id","link_return_load");
+	return_load_link.setAttribute("href","javascript:displayLoad();");
+	return_load_link.appendChild(document.createTextNode("Reload other files"));
+	div_result.appendChild(return_load_link);
+	div_result.appendChild(createElementCB("br"));
 
 	var label_container = createElementCB("label");
 	label_container.setAttribute("id","select_class_label");
@@ -371,7 +379,19 @@ loadOsmAndRules = function() {
 			select_css_classes.appendChild(new_option);
 	}
 	div_result.appendChild(select_css_classes);
+	div_result.style.display="block";
 
+}
+
+displayLoad = function() {
+	document.getElementById("result_process_rules").style.display="none";
+	document.getElementById("load_file").style.display="block";
+	if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
+}
+
+displayRules = function() {
+	document.getElementById("load_file").style.display="none";
+	document.getElementById("result_process_rules").style.display="block";
 }
 
 refreshProperties = function() {

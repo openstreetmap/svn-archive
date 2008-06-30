@@ -143,10 +143,12 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                             }
                             catch(Exception e)
                             {
-                                System.out.println("Error parsing:" + e);
+								                showAlert("Error loading",
+                                "Error parsing:" + e,
+								              AlertType.ERROR);
                             }
                         }
-                    }.run();
+                    }.start();
                 break;
                 
                 case 2: // show/hide
@@ -247,7 +249,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         mainMenu.addItem("Zoom level",zlMenu);
         mainMenu.addItem("Cache",cacheMenu);
         mainMenu.addItem("POIs",poiMenu);
-        mainMenu.addItem("Server",serverMenu);
+        mainMenu.addItem("Tests",serverMenu);
         zlMenu.addItem("Low",zoomMenuHandler);
         zlMenu.addItem("Medium",zoomMenuHandler);
         zlMenu.addItem("High",zoomMenuHandler);
@@ -330,90 +332,6 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                                                           Float.NaN,Float.NaN));
     }
     
-    
-    // For adding a new annotation or POI
-    public void addAnnotation()
-    {
-      // load up an annotation addition form
-      gpsListener.forceUpdate();
-      AnnotationForm form = new AnnotationForm(this);
-      Display.getDisplay(this).setCurrent(form);
-    }
-    
-    public void sendAnnotation(String annotation,String type)
-    { 
-       
-        class AnnotationSendThread extends Thread
-        {
-          String annotation, type;
-          
-          public AnnotationSendThread(String annotation,String type)
-          {
-            this.annotation=annotation;
-            this.type=type;
-          }
-          public void run()
-          {
-            try
-            {
-            
-              String url="http://www.free-map.org.uk/freemap/api/markers.php?"+
-                  "action=add&type="+type+"&description="+annotation+
-                  "&lat="+lat+"&lon="+lon;
-			  System.out.println("Sending to : " + url);
-              HttpConnection conn = (HttpConnection)Connector.open(url);
-   
-			  // Supply authentication if we have username/password
-			  if(!(username.equals("")) && !(password.equals("")))     
-			  {
-				String b64=Base64Coder.encodeString
-						(username+":"+password);
-				conn.setRequestProperty("Authorization","Basic "+b64);	
-			  }
-
-              // from http://java.sun.com/javame/reference/apis/jsr118/
-              // We're not posting anything, so it seems we can just get the
-              // response code direct
-              int rc = conn.getResponseCode();
-			  System.out.println("Response code: " + rc);
-              if(rc!=HttpConnection.HTTP_OK)
-              {
-                showAlert("Error sending annotation",
-                          "The server returned a response code: " + rc,
-                          AlertType.ERROR);
-              }
-              else
-              {
-                InputStream in = conn.openInputStream();
-				// This won't give you the content-length
-                int len = (int)conn.getLength();
-				System.out.println("Content-length: " +len);
-				// so we have to do it this way...
-				int i;
-				StringBuffer sb=new StringBuffer();
-				System.out.print("*");
-				while ((i=in.read()) != -1)
-				{
-					System.out.print((char)i);
-					sb.append((char)i);
-				}
-				String id=new String(sb);
-                System.out.println("Added successfully - new ID="+id);
-                showAlert("Annotation added successfully",
-                          "Annotation added successfully, ID=" + id,
-                          AlertType.INFO);
-              }
-            }
-            catch(IOException e)
-            {
-              System.out.println(e);
-            }
-          }
-        }
-        handleBackCommand();
-        new AnnotationSendThread(annotation,type).run();
-    }
-
 	public void login(String username,String password)
 	{
 		this.username=username;
@@ -430,5 +348,12 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
     {
       return lat;
     }
+
+	public void addAnnotation()
+	{
+		gpsListener.forceUpdate();
+		AnnotationManager am=new AnnotationManager(this);
+		am.annotate(lon,lat);
+	}
 }
 

@@ -1,20 +1,4 @@
-<?php
-/// \file
-/// \brief Entrypoint which links to some status pages. Virtually no php here.
-///
-/// The only php used here embeds a sample map excerpt in the page.
-?>
-<html>
-<head>
-<title>OpenStreetMap tiles@home</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="all">
-  <h1 class="title"><a href="http://wiki.openstreetmap.org/index.php/Tiles%40home"><img src="Gfx/tah.png" alt="tiles@home" width="600" height="109"></a></h1>
-  <p class="title">A project to render free maps of the whole world.</p>
-  
-  <hr>
+<? include "lib/template/header.inc" ?>  
   <p>Welcome to the world of Creative Commons mapping.  The main page is at
   <a href="http://www.openstreetmap.org/">openstreetmap.org</a>.  This page
   provides map images, which you can use on your website, on a handheld device
@@ -28,26 +12,25 @@
   <p><a href="MapOf/">Download a map image</a> of anywhere you like</p>
   
   <p>Status pages:<ul>
-	<li><a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html">Server status graphs</a></li>
-	<li><a href="Credits/">List of people uploading tiles</a></li>
-	<li><a href="Stats/">Downloadable list of all tiles</a></li>
-	<li><a href="Stats/Data/access.htm">Access logs</a></li>
-	<li><a href="Log/Requests/">Status of the requests queue</a></li>
 	<li><a href="Log/Requests/Recent/">Recent requests</a></li>
+	<li><a href="Credits/">List of people uploading tiles</a></li>
+	<li><a href="Log/Requests/">Status of the requests queue</a></li>
+	<li><a href="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap.html">Server status graphs</a></li>
+	<li><a href="Stats/">Downloadable list of all tiles</a></li>
 	<li><a href="Log/">Error messages</a></li>
   </ul></p>
   
   <?php
-  $Z = 16;    ///< z value of the displayed example maps (local to this file)
-  $X = 32684; ///< x value of the displayed example map (local to this file)
-  $Y = 21834; ///< y value of the displayed example map (local to this file)
+  $Z = 16;
+  $X = 32684;
+  $Y = 21834;
   
-  print "<table border=\"0\">";
+  print "<table border=\"0\" cellspacing=0 cellpadding=0>";
   for($yi = 0; $yi < 2; $yi++){
     print "<tr>";
     for($xi = 0; $xi < 2; $xi++){
       $Img = sprintf(
-      "http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png", 
+      "http://tah.openstreetmap.org/Tiles/tile.php/%d/%d/%d.png", 
         $Z, 
         $X + $xi, 
         $Y + $yi);
@@ -67,7 +50,4 @@
   including development activity, the people involved, and discussing future directions
   for the project</p>
     
-  
-</div>
-</body>
-</html>
+<? include "lib/template/footer.inc" ?>  

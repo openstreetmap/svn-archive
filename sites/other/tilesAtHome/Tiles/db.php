@@ -64,7 +64,8 @@
           $complexity = 5;
         }
         if ($Z==12 && $complexity) {
-          fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile:$complexity","r");
+            # Commented out while disks are not available.
+            #fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile:$complexity","r");
         } else if ($Z == 12) {
             $im = @imagecreatefrompng("/var/www/osm/dev/oceantiles.png");
             $color = imagecolorsforindex($im, imagecolorat($im, $X, $Y));

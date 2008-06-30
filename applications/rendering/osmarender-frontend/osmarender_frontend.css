@@ -75,6 +75,10 @@ dd {
 	display:none;
 }
 
+#result_process_key {
+	display:none;
+}
+
 #return_to_rules {
 	display:none;
 }

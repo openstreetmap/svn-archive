@@ -45,9 +45,16 @@ viewPropertiesFromClass = function(key) {
 				li_rule.appendChild(li_rule_strong_1);
 				li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].keys[single_key_value]));
 				var li_rule_strong_2 = createElementCB("strong");
-				li_rule_strong_2.appendChild(document.createTextNode(", value: "));
+				li_rule_strong_2.appendChild(document.createTextNode(", values: "));
 				li_rule.appendChild(li_rule_strong_2);
-				li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].values[single_key_value]));
+				first_value_found=false;
+				for (single_value_value in array_da_aggiornare[single_rule].values) {
+					if (first_value_found) {
+						li_rule.appendChild(document.createTextNode(", "));
+					}
+					li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].values[single_value_value]));
+					first_value_found=true;
+				}
 				rules_list.appendChild(li_rule);
 				//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
 			}
@@ -350,6 +357,15 @@ loadOsmAndRules = function() {
 	return_load_link.setAttribute("href","javascript:displayLoad();");
 	return_load_link.appendChild(document.createTextNode("Reload other files"));
 	div_result.appendChild(return_load_link);
+
+	div_result.appendChild(createElementCB("br"));
+
+	var viewKeyValuePairs = createElementCB("a");
+	viewKeyValuePairs.setAttribute("id","link_key_value_pairs_load");
+	viewKeyValuePairs.setAttribute("href","javascript:listKeys();");
+	viewKeyValuePairs.appendChild(document.createTextNode("View Key/Value Pairs"));
+	div_result.appendChild(viewKeyValuePairs);
+
 	div_result.appendChild(createElementCB("br"));
 
 	var label_container = createElementCB("label");
@@ -385,12 +401,14 @@ loadOsmAndRules = function() {
 
 displayLoad = function() {
 	document.getElementById("result_process_rules").style.display="none";
+	document.getElementById("result_process_key").style.display="none";
 	document.getElementById("load_file").style.display="block";
 	if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
 }
 
 displayRules = function() {
 	document.getElementById("load_file").style.display="none";
+	document.getElementById("result_process_key").style.display="none";
 	document.getElementById("result_process_rules").style.display="block";
 }
 
@@ -408,6 +426,257 @@ refreshProperties = function() {
 	}
 	return sorted_list_of_unique_classes.sort();
 }
+
+// This section will be ported into cmyk.js file, to divide it into logical MVC sections
+var elements = new Array("nodes","ways");
+
+listKeys = function() {
+	elements["nodes"] = new Array();
+	elements["ways"] = new Array();
+
+	var osmfilename_written = document.getElementById("osm_file_name_written").value;
+	var osmfilename_selected = document.getElementById("osm_file_name_selected").value;
+
+	var osmfilename="data.osm";
+	
+	if (osmfilename_selected == "") {
+		if (osmfilename_written != "") {
+			osmfilename = osmfilename_written;
+		}
+	}
+	else {
+		osmfilename = osmfilename_selected;
+	}
+
+	osmfile = Sarissa.getDomDocument();
+	osmfile.async=false;
+	osmfile.load(osmfilename);
+
+	nodes = osmfile.documentElement.selectNodes("//node");
+	ways = osmfile.documentElement.selectNodes("//way");
+
+	for (var nodes_counter = 0; nodes_counter < nodes.length; nodes_counter++) {
+		var nodetags = nodes[nodes_counter].selectNodes("tag");
+		var addmetags = elements["nodes"][nodes[nodes_counter].getAttribute("id")]=new Array();
+		for (var nodetag_counter = 0; nodetag_counter < nodetags.length; nodetag_counter++) {
+			addmetags[nodetags[nodetag_counter].getAttribute("k")] = nodetags[nodetag_counter].getAttribute("v");
+		}
+	}
+
+	for (var ways_counter = 0; ways_counter < ways.length; ways_counter++) {
+		var waytags = ways[ways_counter].selectNodes("tag");
+		var addmetags = elements["ways"][ways[ways_counter].getAttribute("id")]=new Array();
+		for (var waytag_counter = 0; waytag_counter < waytags.length; waytag_counter++) {
+			addmetags[waytags[waytag_counter].getAttribute("k")] = waytags[waytag_counter].getAttribute("v");
+		}
+	}
+
+	var sorted_list_of_unique_keys = new Array();
+	
+	for (var dettaglio in elements.ways) {
+		for (var tag in elements.ways[dettaglio]) {
+			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
+		}
+	}
+	
+	for (var dettaglio in elements.nodes) {
+		for (var tag in elements.nodes[dettaglio]) {
+			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
+		}
+	}
+
+	sorted_list_of_unique_keys = RemoveDuplicates(sorted_list_of_unique_keys.sort());
+	
+	document.getElementById("result_process_rules").style.display="none";
+	document.getElementById("load_file").style.display="none";
+	
+	var div_result = document.getElementById("result_process_key");
+	while (div_result.hasChildNodes()) {
+		div_result.removeChild(div_result.firstChild);
+	}
+
+	div_result.style.display="block";
+	
+	var return_load_link = createElementCB("a");
+	return_load_link.setAttribute("id","link_return_load");
+	return_load_link.setAttribute("href","javascript:displayLoad();");
+	return_load_link.appendChild(document.createTextNode("Reload other files"));
+	div_result.appendChild(return_load_link);
+
+	div_result.appendChild(createElementCB("br"));
+
+	var return_css_link = createElementCB("a");
+	return_css_link.setAttribute("id","return_to_rules_2");
+	return_css_link.setAttribute("href","javascript:displayRules();");
+	return_css_link.appendChild(document.createTextNode("Return to styles without changing style"));
+	div_result.appendChild(return_css_link);
+
+	div_result.appendChild(createElementCB("br"));
+	div_result.appendChild(createElementCB("br"));
+	
+	// View Part of MVC
+	
+	var label_container = createElementCB("label");
+	label_container.setAttribute("for","select_feature_way");
+	var label = document.createTextNode("Select way feature: ");
+	label_container.appendChild(label);
+	div_result.appendChild(label_container);
+	
+	var select_ways_key = createElementCB("select");
+	select_ways_key.setAttribute("id","select_feature_way");
+	select_ways_key.setAttribute("onchange","javascript:viewValuesFromKey(this.value);");
+	
+/*	var sorted_list_of_unique_keys = new Array();
+	
+	for (var dettaglio in elements.ways) {
+		for (var tag in elements.ways[dettaglio]) {
+			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
+		}
+	}
+	
+	for (var dettaglio in elements.nodes) {
+		for (var tag in elements.nodes[dettaglio]) {
+			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
+		}
+	}
+
+	sorted_list_of_unique_keys = RemoveDuplicates(sorted_list_of_unique_keys.sort());*/
+	
+	var new_option_null = createElementCB("option");
+	new_option_null.setAttribute("value","osmarender_frontend:null");
+	var new_option_null_text = document.createTextNode("Select a way feature");
+	new_option_null.appendChild(new_option_null_text);
+	select_ways_key.appendChild(new_option_null);
+
+	for (var key_name in sorted_list_of_unique_keys) {
+			var new_option = createElementCB("option");
+			new_option.setAttribute("value",sorted_list_of_unique_keys[key_name]);
+			var new_option_text = document.createTextNode(sorted_list_of_unique_keys[key_name]);
+			new_option.appendChild(new_option_text);
+			select_ways_key.appendChild(new_option);
+	}
+	
+	div_result.appendChild(select_ways_key);
+	
+
+}
+
+function viewValuesFromKey(key) {
+	if (key=="osmarender_frontend:null") return false;
+	
+	var div_result = document.getElementById("result_process_key");
+
+	if (document.getElementById("label_feature_value")) {
+		div_result.removeChild(document.getElementById("list_css"));
+		div_result.removeChild(document.getElementById("label_feature_value"));
+		div_result.removeChild(document.getElementById("select_feature_value"));
+	}
+
+	var label_container = createElementCB("label");
+	label_container.setAttribute("id","label_feature_value");
+	label_container.setAttribute("for","select_feature_value");
+	var label = document.createTextNode("Select value: ");
+	label_container.appendChild(label);
+	div_result.appendChild(label_container);
+	
+	var select_ways_value = createElementCB("select");
+	select_ways_value.setAttribute("id","select_feature_value");
+	select_ways_value.setAttribute("onchange","javascript:searchCSSfromKeyValue();");
+	
+	var sorted_list_of_unique_values = new Array();
+	
+	for (var dettaglio in elements.ways) {
+		for (var tag in elements.ways[dettaglio]) {
+			if (tag == key) {
+				sorted_list_of_unique_values[sorted_list_of_unique_values.length] = elements.ways[dettaglio][tag];
+			}
+		}
+	}
+
+	for (var dettaglio in elements.nodes) {
+		for (var tag in elements.nodes[dettaglio]) {
+			if (tag == key) {
+				sorted_list_of_unique_values[sorted_list_of_unique_values.length] = elements.nodes[dettaglio][tag];
+			}
+		}
+	}
+
+	sorted_list_of_unique_values = RemoveDuplicates(sorted_list_of_unique_values.sort());
+	
+	for (var value_name in sorted_list_of_unique_values) {
+			var new_option = createElementCB("option");
+			new_option.setAttribute("value",sorted_list_of_unique_values[value_name]);
+			var new_option_text = document.createTextNode(sorted_list_of_unique_values[value_name]);
+			new_option.appendChild(new_option_text);
+			select_ways_value.appendChild(new_option);
+	}
+	
+	div_result.appendChild(select_ways_value);
+
+	div_list_css = createElementCB("div");
+	div_list_css.setAttribute("id","list_css");
+	
+	div_result.appendChild(div_list_css);
+	
+	searchCSSfromKeyValue();
+
+}
+
+searchCSSfromKeyValue = function() {
+
+	var my_key = document.getElementById("select_feature_way").value
+	var my_value = document.getElementById("select_feature_value").value
+
+	div_list_css = document.getElementById("list_css");
+
+	while (div_list_css.hasChildNodes()) {
+		div_list_css.removeChild(div_list_css.firstChild);
+	}
+
+	//Search rules in which this class is used
+	var array_da_aggiornare = new Array();
+	cmyk.getClassFromRule(cmyk.getRuleModel(),my_key,my_value,array_da_aggiornare);
+	
+	for (CSSclass in array_da_aggiornare) {
+		// no-bezier is actually not a class
+		if (array_da_aggiornare[CSSclass] != "no-bezier") {
+			a_list_css = createElementCB("a");
+			a_list_css.setAttribute("href","javascript:loadCSS(\""+array_da_aggiornare[CSSclass]+"\")");
+			a_list_css.appendChild(document.createTextNode(array_da_aggiornare[CSSclass]));
+			div_list_css.appendChild(a_list_css);
+			div_list_css.appendChild(createElementCB("br"));
+		}
+	}
+}
+
+loadCSS = function(cssname) {
+	displayRules();
+	selectCSS = document.getElementById("select_class");
+	for (item in selectCSS.options) {
+		if (selectCSS.options[item].value==cssname) {
+			selectCSS.selectedIndex=item;
+			break;
+		}
+	}
+	selectCSS.onchange();
+}
+
+
+function RemoveDuplicates(arr) {
+	//get sorted array as input and returns the same array without duplicates.
+	var result=new Array();
+	var lastValue="";
+	for (var i=0; i<arr.length; i++) {
+		var curValue=arr[i];
+		if (curValue != lastValue) {
+			result[result.length] = curValue;
+		}
+		lastValue=curValue;
+    }
+    return result;
+}
+
+//End section to port
 
 function Osmatransform () {
 	var osmfilename_written = document.getElementById("osm_file_name_written").value;

@@ -3,6 +3,7 @@ import javax.microedition.lcdui.*;
 import javax.microedition.midlet.*;
 import javax.microedition.io.*;
 import javax.microedition.rms.*;
+import javax.microedition.io.file.*;
 
 public class TileSource
 {
@@ -46,14 +47,16 @@ public class TileSource
     // other exceptions (e.g. RecordStore) dealt with internally
     
     public Image getTile(int x, int y, int z,int source) throws 
-            IOException,RecordStoreFullException 
+            IOException /*,RecordStoreFullException  */
     {
         Image image=null;
         String url = "http://www.free-map.org.uk/cgi-bin/render2?x="+x+
                              "&y="+y+"&z="+z;
         
         // First try record store
-        image = loadFromRecordStore(x,y,z,source);
+        //image = loadFromRecordStore(x,y,z,source);
+		//First try file store
+		image = loadTile(x,y,z,source);
         if(image==null)
         {    
             // If that doesn't work, load from the network
@@ -69,8 +72,10 @@ public class TileSource
                 foundMessage(x,y,z,"web");
             try
             {
-                storeTile(x,y,z,source,image);
+                //storeTile(x,y,z,source,image);
+				saveTile(x,y,z,source,dis);
             }
+			/*
             catch(RecordStoreFullException e)
             {
                 if(rsfWarningGiven==false)
@@ -79,6 +84,7 @@ public class TileSource
                     throw e;
                 }
             }
+			*/
             catch(Exception e)
             {
                 System.out.println("Error storing tile");
@@ -215,6 +221,44 @@ public class TileSource
         
         return null;
     }
+
+    private void saveTile(int x,int y,int z,int source,
+							InputStream is) throws IOException
+    {
+		int i;
+		String filename = z+"."+x+"."+y+".png";
+		FileConnection fc = (FileConnection)
+			Connector.open("file:///root1/tiles/"+filename);
+		fc.create();
+		OutputStream os = fc.openOutputStream();
+		while((i=is.read()) != -1)
+			os.write(i);
+		fc.close();
+		os.close();
+    }
+
+	private Image loadTile(int x,int y,int z,int source) 
+	{
+		Image image=null;
+		try
+		{
+			String filename=z+"."+x+"."+y+".png";
+			FileConnection fc=(FileConnection)Connector.open
+				("file:///root1/tiles/"+filename);
+			if(fc.exists())
+			{
+				InputStream is = fc.openInputStream();
+				image = Image.createImage(is);
+				is.close();
+			}
+			fc.close();
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error loading tile:" + e);
+		}
+		return image;
+	}
 
     public void foundMessage(int x,int y,int z,String place)
     {

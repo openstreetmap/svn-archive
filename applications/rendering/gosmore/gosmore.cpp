@@ -79,6 +79,7 @@ using namespace std;
 
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
+#include "icons.xpm"
 #endif
 
 #ifndef _WIN32
@@ -1114,8 +1115,13 @@ gint Expose (void)
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &routeColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
+    #ifndef WIN32
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
-      FindResource ("icons.xpm"));
+      FindResource ("g:/gosmore/icons.xpm"));
+    #else
+    icons = gdk_pixmap_create_from_xpm_d (draw->window, NULL, NULL,
+      icons_xpm);
+    #endif
   }  
 
 //  gdk_gc_set_clip_rectangle (mygc, &clip);

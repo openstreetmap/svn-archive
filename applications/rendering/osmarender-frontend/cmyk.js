@@ -448,7 +448,7 @@ for (var key in features_classification) {
 
 
 //This could be a future test case
-var stringtoprint="";
+/*var stringtoprint="";
 for (var object in osmafeats) {
 	supercategoryparsed = osmafeats[object].getCategoryObject().getSuperCategory().getName();
 	if (supercategoryparsed) {
@@ -458,7 +458,7 @@ for (var object in osmafeats) {
 		stringtoprint+="macrocategory: no one,";
 	}
 	stringtoprint+=" category: "+osmafeats[object].getCategoryName()+" key: "+osmafeats[object].getKey()+" value: "+osmafeats[object].getValue()+"\r\n";
-}
+}*/
 //alert(stringtoprint);
 
 // Load the rule file
@@ -648,14 +648,14 @@ CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn)
 			for (class in classesAssociated) {
 				if (classesAssociated[class]==CSSclassname) {
 					rulestoreturn[rulestoreturn.length]=rulemodel;
-					return;
+					console.debug(rulemodel);
 				}
 			}
 			var maskclassesAssociated = rulemodel.render[renderRules]["mask-class"];
 			for (class in maskclassesAssociated) {
 				if (maskclassesAssociated[class]==CSSclassname) {
 					rulestoreturn[rulestoreturn.length]=rulemodel;
-					return;
+					console.debug(rulemodel);
 				}
 			}
 		}
@@ -663,6 +663,39 @@ CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn)
 	if (rulemodel.childrenRules && rulemodel.childrenRules.length) {
 		for (childrenIndex in rulemodel.childrenRules) {
 			this.getRuleFromClass(rulemodel.childrenRules[childrenIndex],CSSclassname,rulestoreturn);
+		}
+		return;
+	}
+}
+
+CMYK.prototype.getClassFromRule = function(rulemodel,my_key,my_value,csstoreturn) {
+	if (rulemodel.keys && rulemodel.keys.length) {
+		var key_found=false;
+		for (single_key in rulemodel.keys) {
+			if (my_key == rulemodel.keys[single_key]) key_found=true;
+		}
+		if (key_found) {
+			for (single_value in rulemodel.values) {
+				if (my_value == rulemodel.values[single_value] || rulemodel.values[single_value]=="*") {
+					if (rulemodel.render && rulemodel.render.length) {
+						for (renderRules in rulemodel.render) {
+							var classesAssociated = rulemodel.render[renderRules].class;
+							for (class in classesAssociated) {
+								csstoreturn[csstoreturn.length]=classesAssociated[class];
+							}
+							var maskclassesAssociated = rulemodel.render[renderRules]["mask-class"];
+							for (class in maskclassesAssociated) {
+								csstoreturn[csstoreturn.length]=maskclassesAssociated[class];
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if (rulemodel.childrenRules && rulemodel.childrenRules.length) {
+		for (childrenIndex in rulemodel.childrenRules) {
+			this.getClassFromRule(rulemodel.childrenRules[childrenIndex],my_key,my_value,csstoreturn);
 		}
 		return;
 	}

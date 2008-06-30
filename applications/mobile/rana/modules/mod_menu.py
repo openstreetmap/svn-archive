@@ -19,6 +19,7 @@
 #---------------------------------------------------------------------------
 from module_base import ranaModule
 import cairo
+from listable_menu import listable_menu
 
 def getModule(m,d):
   return(menus(m,d))
@@ -28,6 +29,7 @@ class menus(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.menus = {}
+    self.lists = {}
     self.setupGeneralMenus()
     
   def drawText(self,cr,text,x,y,w,h,border=0):
@@ -82,6 +84,19 @@ class menus(ranaModule):
     if(menuName == None):
       return
 
+    # Find the screen
+    (x1,y1,w,h) = self.get('viewport')
+
+    list = self.lists.get(menuName, None)
+    if(list != None):
+      m = self.m.get(list, None)
+      if(m != None):
+        listHelper = listable_menu(x1,y1,w,h)
+        m.drawList(menuName, listHelper)
+      return
+
+
+    
     # Find the menu
     menu = self.menus.get(menuName, None)
     if(menu == None):
@@ -90,8 +105,6 @@ class menus(ranaModule):
       self.set('needRedraw', True)
       return
 
-    # Find the screen
-    (x1,y1,w,h) = self.get('viewport')
 
     # Decide how to layout the menu
     cols = 3
@@ -173,6 +186,7 @@ class menus(ranaModule):
     self.clearMenu('main')
     self.addItem('main', 'map', 'generic', 'set:menu:layers')
     self.addItem('main', 'centre', 'centre', 'toggle:centred')
+    self.addItem('main', 'places', 'generic', 'set:menu:places')
     self.addItem('main', 'search', 'business', 'set:menu:search')
     self.addItem('main', 'view', 'view', 'set:menu:view')
     self.addItem('main', 'options', 'options', 'set:menu:options')
@@ -180,7 +194,7 @@ class menus(ranaModule):
     self.setupTransportMenu()
     self.setupSearchMenus()
     self.setupMaplayerMenus()
-    
+    self.lists['places'] = 'placenames'
     
 if(__name__ == "__main__"):
   a = menus({},{'viewport':(0,0,600,800)})

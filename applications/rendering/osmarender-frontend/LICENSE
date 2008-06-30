@@ -3,6 +3,11 @@ LICENSE
 
 Written by Mario Ferraro <fadinlight@gmail.com>
 
+The code for Osmarender Frontend (demo.html, osmarender_frontend.css,
+osmarender_frontend.js files) and CMYK library (cmyk.js)
+in this very directory and in osmarender_frontend.zip file are Copyright (C) 2008
+Mario Ferraro <fadinlight@gmail.com> and are released under GPL v2 or later
+
 osmarender.xsl and osm-map-features-zXX.xml files are
 Copyright (C) 2006-2008  Etienne Cherdlu, Jochen Topf
 and released under GPL v2 or later.
@@ -20,7 +25,8 @@ Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net.
 Most recent version can be find at the following link:
 http://dev.abiss.gr/sarissa
 
-The code for Osmarender Frontend (demo.xml and osmarender_frontend.js files)
-and CMYK library (cmyk.js) in this very directory
-are Copyright (C) 2008 Mario Ferraro <fadinlight@gmail.com>
-and are released under GPL v2 or later
+Dojotoolkit version 1.1.1, under /dojotoolkit directory in
+osmarender_frontend.zip files is Copyright (c) 2004-2008, The Dojo Foundation
+Licensed under the Academic Free License version 2.1 or above OR the
+modified BSD license. For more information on Dojo licensing, see:
+http://dojotoolkit.org/book/dojo-book-0-9/introduction/licensing

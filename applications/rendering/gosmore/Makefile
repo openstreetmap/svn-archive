@@ -42,8 +42,9 @@ zip:
 	zip -j gosmore.zip gosmore.exe icons.xpm /bin/libcairo-2.dll \
 	/bin/libgtk-win32-2.0-0.dll /bin/libgdk* /bin/libglib-2.0-0.dll \
 	/bin/libgobject-2.0-0.dll /bin/libatk-1.0-0.dll /bin/libpango* \
-	/bin/libpng13.dll /bin/libgmodule-2.0-0.dll
-	zip gosmore.zip /etc/gtk-2.0/*
+	/bin/libpng13.dll /bin/libgmodule-2.0-0.dll w32/zlib1.dll \
+	w32/iconv.dll w32/intl.dll
+	zip gosmore.zip /etc/gtk-2.0/* /lib/gtk-2.0/2.10.0/loaders/*
 	scp gosmore.zip ARMV4Rel/gosm_arm.exe \
 	  sabiepark@www.rational.co.za:www/gosmore/
 

@@ -84,6 +84,9 @@ class placenames(ranaModule):
         self.set('nearest_place', self.lookup(pos[0], pos[1]))
         self.lastpos = pos
 
+  def drawList(self, menuName, listhelper):
+    print "Drawing places list"
+    
   def handleMessage(self, message):
     pass
       

@@ -577,7 +577,7 @@ function createRuleModel(dom,model) {
 }
 
 this.rulemodelresult=rulemodel;
-console.debug(this.rulemodelresult);
+//console.debug(this.rulemodelresult);
 
 
 // Utility functions
@@ -642,31 +642,29 @@ CMYK.prototype.getRuleModel = function() {
 }
 
 CMYK.prototype.getRuleFromClass = function(rulemodel,CSSclassname,rulestoreturn) {
-	if (rulemodel.childrenRules.length>0) {
-		for (childrenIndex in rulemodel.childrenRules) {
-			this.getRuleFromClass(rulemodel.childrenRules[childrenIndex],CSSclassname,rulestoreturn);
-		}
-		return rulestoreturn;
-	}
-	else {
-		if (rulemodel.render.length>0) {
-			for (renderRules in rulemodel.render) {
-				var classesAssociated = rulemodel.render[renderRules].class;
-				for (class in classesAssociated) {
-					if (classesAssociated[class]==CSSclassname) {
-						rulestoreturn[rulestoreturn.length]=rulemodel;
-						return;
-					}
+	if (rulemodel.render && rulemodel.render.length) {
+		for (renderRules in rulemodel.render) {
+			var classesAssociated = rulemodel.render[renderRules].class;
+			for (class in classesAssociated) {
+				if (classesAssociated[class]==CSSclassname) {
+					rulestoreturn[rulestoreturn.length]=rulemodel;
+					return;
 				}
-				var maskclassesAssociated = rulemodel.render[renderRules]["mask-class"];
-				for (class in maskclassesAssociated) {
-					if (maskclassesAssociated[class]==CSSclassname) {
-						rulestoreturn[rulestoreturn.length]=rulemodel;
-						return;
-					}
+			}
+			var maskclassesAssociated = rulemodel.render[renderRules]["mask-class"];
+			for (class in maskclassesAssociated) {
+				if (maskclassesAssociated[class]==CSSclassname) {
+					rulestoreturn[rulestoreturn.length]=rulemodel;
+					return;
 				}
 			}
 		}
+	}
+	if (rulemodel.childrenRules && rulemodel.childrenRules.length) {
+		for (childrenIndex in rulemodel.childrenRules) {
+			this.getRuleFromClass(rulemodel.childrenRules[childrenIndex],CSSclassname,rulestoreturn);
+		}
+		return;
 	}
 }
 

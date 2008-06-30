@@ -162,27 +162,26 @@ abstract class Style<V extends View> {
                 if (selected) drawer.put(z+1, new PathPart(dirArrows(parent, w, 4*strokeWidth), Color.RED, getStroke(1, false)));
             }
         }
-        
+    }
     
-        private static final double PHI = Math.toRadians(30);
+    private static final double PHI = Math.toRadians(30);
+    
+    private static GeneralPath dirArrows(MapView parent, ViewWay w, int len) {
+        GeneralPath gp = new GeneralPath();
 
-        private GeneralPath dirArrows(MapView parent, ViewWay w, int len) {
-            GeneralPath gp = new GeneralPath();
-            
-            Point lastP = null;
-            for (ViewNode vn : w.getNodes()) {
-                Point p = parent.getPoint(vn);
-                if (lastP != null) { // draw only the arrowhead
-                    double t = Math.atan2(p.y-lastP.y, p.x-lastP.x) + Math.PI;
-                    gp.moveTo((int)(p.x + len*Math.cos(t-PHI)), (int)(p.y + len*Math.sin(t-PHI)));
-                    gp.lineTo(p.x, p.y);
-                    gp.lineTo((int)(p.x + len*Math.cos(t+PHI)), (int)(p.y + len*Math.sin(t+PHI)));
-                }
-                lastP = p;
+        Point lastP = null;
+        for (ViewNode vn : w.getNodes()) {
+            Point p = parent.getPoint(vn);
+            if (lastP != null) { // draw only the arrowhead
+                double t = Math.atan2(p.y-lastP.y, p.x-lastP.x) + Math.PI;
+                gp.moveTo((int)(p.x + len*Math.cos(t-PHI)), (int)(p.y + len*Math.sin(t-PHI)));
+                gp.lineTo(p.x, p.y);
+                gp.lineTo((int)(p.x + len*Math.cos(t+PHI)), (int)(p.y + len*Math.sin(t+PHI)));
             }
-            
-            return gp;
+            lastP = p;
         }
+
+        return gp;
     }
 
     private static class AreaStyle extends Style<ViewWay> {
@@ -212,7 +211,8 @@ abstract class Style<V extends View> {
             if (size < 2*scale) return;
 
             LazyPoly poly = new LazyPoly(w, parent);
-            drawer.put(0, new AreaPart(poly, color, outline));
+            drawer.put(0, new AreaPart(poly, color, selected ? Color.RED : null));
+            if (selected) drawer.put(1, new PathPart(dirArrows(parent, w, 10), Color.RED, getStroke(1, false)));
             paintIcon(drawer, parent, w);
         }
     }
@@ -453,8 +453,10 @@ abstract class Style<V extends View> {
             Polygon p = poly.getPoly();
             g.setColor(color);            
             g.fillPolygon(p);
-            g.setColor(outline);
-            g.drawPolygon(p);
+            if (outline != null) {
+                g.setColor(outline);
+                g.drawPolyline(p.xpoints, p.ypoints, p.npoints);
+            }
             poly = null;
         }
     }

@@ -1,13 +1,7 @@
-<html>
-<head>
-<title>OpenStreetMap tiles@home</title>
-<link rel="stylesheet" href="../../../styles.css">
-</head>
-<body>
-<div class="all">
-<h1 class="title"><img src="../../../Gfx/tah.png" alt="tiles@home" width="600" height="109"></h1>
-<p class="title">Rendering requests</p>
-<hr>
+<? 
+$title = "Rendering Requests";
+include "../../../lib/template/header.inc";
+?>  
 
 <?php
   /* Displays logfiles of recent requests for the tiles@home website

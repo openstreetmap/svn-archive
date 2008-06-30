@@ -93,6 +93,33 @@ abstract class Style<V extends View> {
     private static Style WF_BIG = new GenericNodeStyle(20000, false, null);
     private static Style WIRE = new GenericRoadStyle(Integer.MAX_VALUE, Color.BLUE, 1, 0, false);
 
+    private static class LazyPoly {
+        private final ViewWay vw;
+        private final MapView parent;
+        private Polygon poly;
+
+        public LazyPoly(ViewWay vw, MapView parent) {
+            this.vw = vw;
+            this.parent = parent;
+        }
+        
+        public Polygon getPoly() {
+            if (poly == null) {
+                poly = new Polygon();
+                Iterator<ViewNode> it = vw.getNodes().iterator();
+                Point lastP = parent.getPoint(it.next());
+                poly.addPoint(lastP.x, lastP.y);
+                while(it.hasNext()) {
+                    Point p = parent.getPoint(it.next());
+                    if (!it.hasNext() || lastP.distanceSq(p) > 25) {
+                        poly.addPoint(p.x, p.y);
+                    }
+                }
+            }
+            return poly;
+        }
+    }
+    
     private static class GenericRoadStyle extends Style<ViewWay> {
         private final int maxScale;
         private final Color color;
@@ -122,16 +149,8 @@ abstract class Style<V extends View> {
             List<ViewNode> nodes = w.getNodes();
             if (nodes.size() < 2) return;
 
-            Polygon poly = new Polygon();
-            Iterator<ViewNode> it = nodes.iterator();
-            Point lastP = parent.getPoint(it.next());
-            poly.addPoint(lastP.x, lastP.y);
-            while(it.hasNext()) {
-                Point p = parent.getPoint(it.next());
-                if (!it.hasNext() || lastP.distanceSq(p) > 25) {
-                    poly.addPoint(p.x, p.y);
-                }
-            }
+            LazyPoly poly = new LazyPoly(w, parent);
+
             int z = 60+10*getWayLayer(w.way);
             int j = getWayType(w.way);
             if (scale > 5000 || strokeWidth == 1) {
@@ -192,11 +211,7 @@ abstract class Style<V extends View> {
             int size = w.getSize();
             if (size < 2*scale) return;
 
-            Polygon poly = new Polygon();
-            for (ViewNode vn : w.getNodes()) {
-                Point p = parent.getPoint(vn);
-                poly.addPoint(p.x, p.y);
-            }
+            LazyPoly poly = new LazyPoly(w, parent);
             drawer.put(0, new AreaPart(poly, color, outline));
             paintIcon(drawer, parent, w);
         }
@@ -405,11 +420,11 @@ abstract class Style<V extends View> {
     }
 
     private static final class PolyPart implements Part {
-        private final Polygon poly;
+        private LazyPoly poly;
         private final Color color;
         private final Stroke stroke;
 
-        public PolyPart(Polygon poly, Color color, Stroke stroke) {
+        public PolyPart(LazyPoly poly, Color color, Stroke stroke) {
             this.poly = poly;
             this.color = color;
             this.stroke = stroke;
@@ -418,25 +433,29 @@ abstract class Style<V extends View> {
         public void paint(Graphics2D g) {
             g.setColor(color);
             g.setStroke(stroke);
-            g.drawPolyline(poly.xpoints, poly.ypoints, poly.npoints);
+            Polygon p = poly.getPoly();
+            g.drawPolyline(p.xpoints, p.ypoints, p.npoints);
+            poly = null;
         }
     }
 
     private static final class AreaPart implements Part {
-        private final Polygon poly;
+        private LazyPoly poly;
         private final Color color;
         private final Color outline;
 
-        public AreaPart(Polygon poly, Color color, Color outline) {
+        public AreaPart(LazyPoly poly, Color color, Color outline) {
             this.poly = poly;
             this.color = color;
             this.outline = outline;
         }
         public void paint(Graphics2D g) {
+            Polygon p = poly.getPoly();
             g.setColor(color);            
-            g.fillPolygon(poly);
+            g.fillPolygon(p);
             g.setColor(outline);
-            g.drawPolygon(poly);
+            g.drawPolygon(p);
+            poly = null;
         }
     }
     

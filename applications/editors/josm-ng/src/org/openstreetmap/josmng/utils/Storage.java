@@ -87,7 +87,7 @@ import java.util.Set;
  * @author nenik
  */
 public class Storage<T> extends AbstractSet<T> {
-    private final Hash<T,T> hash;
+    private final Hash<? super T,? super T> hash;
     private Object[] data;
     private int mask;
     private int size;
@@ -101,11 +101,11 @@ public class Storage<T> extends AbstractSet<T> {
         this(Storage.<T>defaultHash(), capacity);
     }
     
-    public Storage(Hash<T,T> ha) {
+    public Storage(Hash<? super T,? super T> ha) {
         this(ha, 16);
     }
 
-    public Storage(Hash<T,T> ha, int capacity) {
+    public Storage(Hash<? super T, ? super T> ha, int capacity) {
         this.hash = ha;
         int cap = 1 << (int)(Math.ceil(Math.log(2*capacity) / Math.log(2)));
         data = new Object[cap];
@@ -193,7 +193,7 @@ public class Storage<T> extends AbstractSet<T> {
         return bucket < 0 ? null : doRemove(bucket);
     }
 
-    public <K> Map<K,T> foreignKey(Hash<K,T> h) {
+    public <K> Map<K,T> foreignKey(Hash<K,? super T> h) {
         return new FMap(h);
     }
     
@@ -214,7 +214,7 @@ public class Storage<T> extends AbstractSet<T> {
      * @return the bucket equivalent to the key or -(bucket) as an empty slot
      * where such an entry can be stored.
      */
-    private <K> int getBucket(Hash<K,T> ha, K key) {
+    private <K> int getBucket(Hash<K,? super T> ha, K key) {
         T entry;
         int hcode = rehash(ha.getHashCode(key));
         int bucket = hcode & mask;
@@ -308,9 +308,9 @@ public class Storage<T> extends AbstractSet<T> {
 */
         
     private class FMap<K> implements Map<K,T> {
-        Hash<K,T> fHash;
+        Hash<K,? super T> fHash;
 
-        private FMap(Hash<K,T> h) {
+        private FMap(Hash<K,? super T> h) {
             fHash = h;
         }
 

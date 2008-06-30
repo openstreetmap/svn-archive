@@ -1117,7 +1117,7 @@ gint Expose (void)
     gdk_gc_set_fill (mygc, GDK_SOLID);
     #ifndef WIN32
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
-      FindResource ("g:/gosmore/icons.xpm"));
+      FindResource ("icons.xpm"));
     #else
     icons = gdk_pixmap_create_from_xpm_d (draw->window, NULL, NULL,
       icons_xpm);

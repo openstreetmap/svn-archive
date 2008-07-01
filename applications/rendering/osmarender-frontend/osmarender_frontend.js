@@ -513,6 +513,10 @@ SymbolsResult = function() {
 		if (typeof(symbols_section[single_symbol])=="object" && symbols_section[single_symbol].id) {
 			symbols_array[symbols_array.length]=symbols_section[single_symbol].id;
 		}
+//Necessary change for firefox3... handles SVG as SVG not as XML/DOM
+		else if (typeof(symbols_section[single_symbol]) == "object" && symbols_section[single_symbol]["attributes"][0]) {
+			symbols_array[symbols_array.length]=symbols_section[single_symbol]["attributes"][0].nodeValue.substring(1);
+		}
 	}
 
 	for (single_symbol in symbols_array.sort()) {

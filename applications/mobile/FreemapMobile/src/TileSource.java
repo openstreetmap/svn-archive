@@ -47,16 +47,16 @@ public class TileSource
     // other exceptions (e.g. RecordStore) dealt with internally
     
     public Image getTile(int x, int y, int z,int source) throws 
-            IOException /*,RecordStoreFullException  */
+            IOException ,RecordStoreFullException 
     {
         Image image=null;
         String url = "http://www.free-map.org.uk/cgi-bin/render2?x="+x+
                              "&y="+y+"&z="+z;
         
         // First try record store
-        //image = loadFromRecordStore(x,y,z,source);
+        image = loadFromRecordStore(x,y,z,source);
 		//First try file store
-		image = loadTile(x,y,z,source);
+		//image = loadTile(x,y,z,source);
         if(image==null)
         {    
             // If that doesn't work, load from the network
@@ -68,14 +68,28 @@ public class TileSource
                     new DataInputStream(conn.openInputStream());
                 System.out.println
                         ("Creating Image from DataInputStream...");
-                image=Image.createImage(dis);
                 foundMessage(x,y,z,"web");
+                image=Image.createImage(dis);
+				/*
+				// for filesystem
+				int i;
+            	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				while((i=dis.read()) != -1)
+					bos.write(i);
+				byte[] bytes = bos.toByteArray();
+				bos.close();
+				dis.close();
+				System.out.println("createImage: length="+bytes.length);
+				image=Image.createImage(bytes,0,bytes.length);
+				System.out.println("done");
+				*/
+				conn.close();
+
             try
             {
-                //storeTile(x,y,z,source,image);
-				saveTile(x,y,z,source,dis);
+                storeTile(x,y,z,source,image);
+				//saveTile(x,y,z,source,bytes);
             }
-			/*
             catch(RecordStoreFullException e)
             {
                 if(rsfWarningGiven==false)
@@ -83,12 +97,12 @@ public class TileSource
                     rsfWarningGiven=true;
                     throw e;
                 }
-            }
-			*/
+			}
             catch(Exception e)
             {
                 System.out.println("Error storing tile");
             }
+			dis.close();
         }
         else
         {
@@ -223,7 +237,7 @@ public class TileSource
     }
 
     private void saveTile(int x,int y,int z,int source,
-							InputStream is) throws IOException
+							byte[] bytes)throws IOException
     {
 		int i;
 		String filename = z+"."+x+"."+y+".png";
@@ -231,8 +245,7 @@ public class TileSource
 			Connector.open("file:///root1/tiles/"+filename);
 		fc.create();
 		OutputStream os = fc.openOutputStream();
-		while((i=is.read()) != -1)
-			os.write(i);
+		os.write(bytes);
 		fc.close();
 		os.close();
     }

@@ -32,8 +32,16 @@ public class LandmarkLoader
 
     public void load() throws Exception
     {
-        Enumeration en = store.getLandmarks
-                                    (null,s,n,w,e);
+		Enumeration en=null;
+		try
+		{
+        en = store.getLandmarks (null,s,n,w,e);
+		}
+		catch(IllegalArgumentException e)
+		{
+			throw new FreemapMobileException
+			("IllegalArgument at getLandmarks "+ e.getMessage(),"");
+		}
 		if(en!=null) // getLandmarks() returns null if none could be found
 		{
         	while(en.hasMoreElements())
@@ -52,7 +60,15 @@ public class LandmarkLoader
                                     SAXParserFactory.newInstance().
                                     newSAXParser();    
         parserHandler.setLandmarkStore(store);                      
-        parser.parse(dis,parserHandler);    
+		try
+		{
+        	parser.parse(dis,parserHandler);    
+		}
+		catch(IllegalArgumentException e)
+		{
+			throw new FreemapMobileException
+			("IllegalArgument at parser.parse "+ e.getMessage(),"");
+		}
     }
    
 }

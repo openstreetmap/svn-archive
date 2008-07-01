@@ -42,6 +42,18 @@ sed -i "s/of_server=\"\"/of_server=\"http:\/\/dev.openstreetmap.org\/~Merio\/osm
 
 sed -i "s/cmyk_server=\"\"/cmyk_server=\"http:\/\/dev.openstreetmap.org\/~Merio\/osmarender_frontend\/\"/g" osmarender_frontend.html
 
+echo "*** OSMARENDER FRONTEND *** Setting HTML file to not display input fields for custom files"
+
+sed -i "s/<option value=\"\">No one, I'm writing my file name<\/option>//g" osmarender_frontend.html
+
+sed -i "s/<label id=\"label_write_osm_file\" for=\"osm_file_name_written\">/<label id=\"label_write_osm_file\" for=\"osm_file_name_written\" style=\"display:none;\">/g" osmarender_frontend.html
+
+sed -i "s/<input id=\"osm_file_name_written\" type=\"text\" value=\"data.osm\" \/>/<input id=\"osm_file_name_written\" type=\"text\" value=\"data.osm\"  style=\"display:none;\"\/>/g" osmarender_frontend.html
+
+sed -i "s/<label id=\"label_rules_file_name_written\" for=\"rules_file_name_written\">/<label id=\"label_rules_file_name_written\" for=\"rules_file_name_written\" style=\"display:none;\">/g" osmarender_frontend.html
+
+sed -i "s/<input id=\"rules_file_name_written\" type=\"text\" value=\"osm-map-features-z13.xml\" \/>/<input id=\"rules_file_name_written\" type=\"text\" value=\"osm-map-features-z13.xml\" style=\"display:none;\" \/>/g" osmarender_frontend.html
+
 ###
 echo "*** OSMARENDER FRONTEND *** Setting HTML file for OSM file to become XML file"
 #otherwise document.load() doesn't work in online version

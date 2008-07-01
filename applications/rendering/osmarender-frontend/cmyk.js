@@ -7,6 +7,7 @@
 PROGRAM_NAME="osmarender_frontend";
 XHTML_NS="http://www.w3.org/1999/xhtml";
 var rulesfile;
+var server;
 // Models for faceting features
 CMYK = function(rulesfilename) {
 	var rulesfilename=rulesfilename;
@@ -464,9 +465,17 @@ for (var object in osmafeats) {
 // Load the rule file
 
 rulesfile = function () {
+	var scripts = document.getElementsByTagName("script");
+
+	for (script in scripts) {
+		if (typeof(scripts[script])=="object" && scripts[script].getAttribute("cmyk_server")!=null && scripts[script].getAttribute("cmyk_server")!=undefined) {
+			server = scripts[script].getAttribute("cmyk_server");
+		}
+	}
+
 	rulesfile = Sarissa.getDomDocument();
 	rulesfile.async=false;
-	rulesfile.load(rulesfilename);
+	rulesfile.load(server+rulesfilename);
 	return rulesfile;
 }();
 

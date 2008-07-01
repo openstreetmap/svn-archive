@@ -30,17 +30,42 @@ echo "*** OSMARENDER FRONTEND *** Removing .svn hidden files, if any"
 
 rm -rf `find . -type d -name .svn`
 
-echo "*** OSMARENDER FRONTEND *** Setting HTML file"
+echo "*** OSMARENDER FRONTEND *** Setting HTML file for Dojo"
 
 sed -i "s/dojotoolkit\//osmarenderfrontend_dojo\//g" osmarender_frontend.html
 
 sed -i "s/osmarenderfrontend_dojo\/dojo\/dojo.js/osmarenderfrontend_dojo\/dojo\/dojo.js/g" osmarender_frontend.html
 
+echo "*** OSMARENDER FRONTEND *** Changing all permissions"
+#Thanks to http://erlug.linux.it/pipermail/erlug/2005-12/msg00081.html
+
+FILE_MOD="644"
+DIR_MOD="755"
+
+ls | while read file; do
+    if [ -d "$file" ]; then
+        echo " Entering directory '$file'"
+        
+        chmod u+rwx "$file" || { echo " No permission to enter
+'$file'" 
+                                 continue; }
+        cd "$file"; $0 $@; cd -
+        
+        chmod $DIR_MOD "$file" 2> /dev/null && echo " Directory '$file'
+set."
+    elif [ -f "$file" ]; then
+        echo -n "  $file ... "
+        chmod $FILE_MOD "$file" && echo " [ OK ]"
+    else
+        echo " Ignoring '$file', probably a link."
+    fi
+done
+
 echo "*** OSMARENDER FRONTEND *** Zipping OsmarenderFrontend"
 
-zip -qr9 osmarender_frontend.zip *
+zip -qr9 osmarender_frontend_offline.zip *
 
-mv osmarender_frontend.zip ../
+mv osmarender_frontend_offline.zip ../
 
 cd ..
 

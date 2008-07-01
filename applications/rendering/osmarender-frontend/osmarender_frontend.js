@@ -8,6 +8,8 @@ var cmyk;
 
 var classesAndProperties = new Array();
 
+var server;
+
 var dojowidgets = new Array();
 
 viewPropertiesFromClass = function(key) {
@@ -665,9 +667,17 @@ listKeys = function() {
 		osmfilename = osmfilename_selected;
 	}
 
+	var scripts = document.getElementsByTagName("script");
+
+	for (script in scripts) {
+		if (typeof(scripts[script])=="object" && scripts[script].getAttribute("of_server")!=null && scripts[script].getAttribute("of_server")!=undefined) {
+			server = scripts[script].getAttribute("of_server");
+		}
+	}
+
 	osmfile = Sarissa.getDomDocument();
 	osmfile.async=false;
-	osmfile.load(osmfilename);
+	osmfile.load(server+osmfilename);
 
 	nodes = osmfile.documentElement.selectNodes("//node");
 	ways = osmfile.documentElement.selectNodes("//way");
@@ -979,10 +989,18 @@ function Osmatransform () {
 	}
 	
 	cmyk.setOsmFile(osmfilename);
-	
+
+	var scripts = document.getElementsByTagName("script");
+
+	for (script in scripts) {
+		if (typeof(scripts[script])=="object" && scripts[script].getAttribute("of_server")!=null && scripts[script].getAttribute("of_server")!=undefined) {
+			server = scripts[script].getAttribute("of_server");
+		}
+	}
+
 	xslfile = Sarissa.getDomDocument();
 	xslfile.async=false;
-	xslfile.load("osmarender.xsl");
+	xslfile.load(server+"osmarender.xsl");
 	
 	var rulesfile=cmyk.getRulesFile();
 	try{

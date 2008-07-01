@@ -23,14 +23,14 @@
 /// Backend for using the OSM 0.5 API to retrieve the data
 
 
-class backend_api /* extends backend */
+class backend_api extends backend
 {
 
 	const base_api_url = "http://www.openstreetmap.org";
 	
 	/// Returns an URL to retrieve the data from. Might be a live HTTP URL, or a local temporary .osm file.
 	/// TODO: projection, projection, projection.
-	static function data_url($bbox)
+	function data_url($bbox)
 	{
 		list($left,$bottom,$right,$top) = explode(',',$bbox);
 		
@@ -50,15 +50,16 @@ class backend_api /* extends backend */
 	/// Returns the data as a string, corresponding to an .osm file
 	/// TODO: catch any errors encountered when downloading data.
 	/// TODO: use CURL.
-	static function get_data_as_osm($bbox)
+	function get_data_as_osm($bbox)
 	{
 		$ch = curl_init();
 
 		// set URL and other appropriate options
-		curl_setopt($ch, CURLOPT_URL, self::data_url($bbox) );
-		curl_setopt($ch, CURLOPT_HEADER, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_URL, $this->data_url($bbox) );
+// 		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'OSM WMS');
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		
 		$data = curl_exec($ch);
 	
@@ -66,51 +67,55 @@ class backend_api /* extends backend */
 		
 		if ($http_code != 200)
 		{
-			$headers = explode("\n",substr($data,0,strpos($data,"\r\n\r\n")));
+			/// FIXME: The CURL request has to follow 302 headers, in order to work with OSMXAPI. This, in turn, makes it more difficult to extract the headers from the returned text.
+/*			$headers = explode("\n",substr($data,0,strpos($data,"\r\n\r\n")));
 			foreach($headers as $header)
 			{
 				if (strstr($header,'Error: '))
-					trigger_error("OSM server returned HTTP code $http_code.\nOSM server also returned the following error information:\n$header"  ,E_USER_ERROR);
-			}
+					trigger_error("OSM server returned HTTP code $http_code.\nOSM server also returned the following error information:\n$header\n(URL was " . $this->data_url($bbox) . ")"  ,E_USER_ERROR);
+			}*/
 			
-			trigger_error("OSM server returned HTTP code $http_code."  ,E_USER_ERROR);
+			trigger_error("OSM server returned HTTP code $http_code.\n(URL was " . $this->data_url($bbox) . ")"  ,E_USER_ERROR);
 		}
 	
 		// No errors, cut the header...
 // 	var_dump($data);
 // 	var_dump( strstr($data,"\r\n\r\n"));
-		$data = strstr($data,"\r\n\r\n");
-		return substr($data,4);
+// 		$data = strstr($data,"\r\n\r\n");
+// 		return substr($data,4);
+
+
+		return $data;
 	}
 	
 	
 	/// Returns two arrays, filled with the requested data
-	static function get_parsed_data($bbox,&$nodes,&$ways)
-	{
-		$nodes = $ways = array();
-		$xml = simplexml_load_string(self::get_data_as_osm($bbox));
-	
-// 	var_dump($xml);
-	
-		foreach($xml->node as $parsed_node)
-		{
-		// 	$attrs = $parsed_node->attributes();
-			$nodes[ (int)$parsed_node['id'] ] = array( (float)$parsed_node['lat'], (float)$parsed_node['lon'] );
-		}
-		
-		
-		foreach($xml->way as $parsed_way)
-		{
-			$way_id = (int)$parsed_way['id'];
-			foreach($parsed_way->nd as $nd)
-			{
-				$ways[ $way_id ][] = (int)$nd['ref'];
-			}
-				
-		// 	$attrs = $parsed_node->attributes();
-		// 	$nodes[ $attrs['id'] ] = array( $attrs['lat'],$attrs['lon'] );
-		}	
-	}
+// 	static function get_parsed_data($bbox,&$nodes,&$ways)
+// 	{
+// 		$nodes = $ways = array();
+// 		$xml = simplexml_load_string($this->get_data_as_osm($bbox));
+// 	
+// // 	var_dump($xml);
+// 	
+// 		foreach($xml->node as $parsed_node)
+// 		{
+// 		// 	$attrs = $parsed_node->attributes();
+// 			$nodes[ (int)$parsed_node['id'] ] = array( (float)$parsed_node['lat'], (float)$parsed_node['lon'] );
+// 		}
+// 		
+// 		
+// 		foreach($xml->way as $parsed_way)
+// 		{
+// 			$way_id = (int)$parsed_way['id'];
+// 			foreach($parsed_way->nd as $nd)
+// 			{
+// 				$ways[ $way_id ][] = (int)$nd['ref'];
+// 			}
+// 				
+// 		// 	$attrs = $parsed_node->attributes();
+// 		// 	$nodes[ $attrs['id'] ] = array( $attrs['lat'],$attrs['lon'] );
+// 		}	
+// 	}
 	
 }
 

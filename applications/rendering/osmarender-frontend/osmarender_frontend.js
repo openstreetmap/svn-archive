@@ -132,7 +132,7 @@ viewPropertiesFromClass = function(key) {
 			dd_container.appendChild(button_color_picker);
 		}
 
-		if ((single_property=="opacity" || single_property=="fill-opacity" || single_property=="stroke-opacity" || single_property=="stroke-miterlimit") && (propertiesToPrint[single_property].search("^[0-9]")!=-1)) {
+		if ((single_property=="opacity" || single_property=="fill-opacity" || single_property=="stroke-opacity" || single_property=="stroke-miterlimit") && (propertiesToPrint[single_property].search("[0-9]")!=-1)) {
 			text_container.parentNode.removeChild(text_container);
 			var delta_for_editing;
 			if (propertiesToPrint[single_property].indexOf(".")!=-1) delta_for_editing = 0.1; else delta_for_editing = 1;
@@ -152,7 +152,7 @@ viewPropertiesFromClass = function(key) {
 		 	slider.startup();
 			dojowidgets[dojowidgets.length]=slider;
 		}
-		if ((single_property=="stroke-width" || single_property=="font-size") && (propertiesToPrint[single_property].search("^[0-9]")!=-1)) {
+		if ((single_property=="stroke-width" || single_property=="font-size") && (propertiesToPrint[single_property].search("[0-9]")!=-1)) {
 //TODO: compatibility with other units (em, ecc)
 			text_container.parentNode.removeChild(text_container);
 			var delta_for_editing;
@@ -351,6 +351,8 @@ deleteSingleProp = function (button) {
 	}
 
 loadOsmAndRules = function() {
+
+	clearSVG();
 
 	document.getElementById("load_file").style.display="none";
 

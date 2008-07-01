@@ -73,7 +73,10 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 	// Backend class should be able to return PHP arrays (nodes/ways), string, URL.
 // 	list($left,$bottom,$right,$top) = explode(',',$bbox);
 	
-	backend_api::get_parsed_data($bbox,$nodes,$ways);
+// 	backend_api::get_parsed_data($bbox,$nodes,$ways);
+// 	backend_osmxapi::get_parsed_data($bbox,$nodes,$ways);
+	$backend = new backend_osmxapi;
+	$backend->get_parsed_data($bbox,$nodes,$ways);
 	
 	/// Convert the node's coordinates into X-Y, related to (0,0) and the final image size
 	

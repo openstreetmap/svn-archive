@@ -3,7 +3,6 @@
 use strict;
 
 my $item;
-my $line = 1;
 my $comment = 0;
 
 # this is a simple conversion and in no way a complete XML parser
@@ -15,6 +14,10 @@ while(my $line = <>)
   if($line =~ /<item\s+name="(.*?)\/ ".*<\/item>/)
   {
     print "tr(\"$1/ \") /* empty item \"$1\" */\n";
+  }
+  elsif($line =~ /<item\s+name=" ".*<\/item>/)
+  {
+    print "/* empty item */\n";
   }
   elsif($line =~ /<item\s+name=(".*?")/)
   {
@@ -31,16 +34,31 @@ while(my $line = <>)
   }
   elsif($line =~ /<text.*text=(".*?")/)
   {
-    print "tr($1) /* item $item text $1 */\n";
+    my $n = $1;
+    print "tr($n) /* item $item text $n */\n";
   }
   elsif($line =~ /<check.*text=(".*?")/)
   {
-    print "tr($1) /* item $item check $1 */\n";
+    my $n = $1;
+    print "tr($n) /* item $item check $n */\n";
+  }
+  # first handle display values
+  elsif($line =~ /<combo.*text=(".*?").*display_values="(.*?)"/)
+  {
+    my ($n,$vals) = ($1,$2);
+    print "tr($n) /* item $item combo $n */";
+    foreach my $val (split ",",$vals)
+    {
+      next if $val =~ /^[0-9-]+$/; # search for non-numbers
+      print " tr(\"$val\")";
+    }
+    print "\n";
   }
   elsif($line =~ /<combo.*text=(".*?").*values="(.*?)"/)
   {
-    print "tr($1) /* item $item combo $1 */";
-    foreach my $val (split ",",$2)
+    my ($n,$vals) = ($1,$2);
+    print "tr($n) /* item $item combo $n */";
+    foreach my $val (split ",",$vals)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
       print " tr(\"$val\")";

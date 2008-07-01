@@ -126,7 +126,7 @@ class menus(ranaModule):
         self.drawButton(cr, x1+x*dx, y1+y*dy, dx, dy, text, icon, action)
         id += 1
 
-  def clearMenu(self, menu, cancelButton='set:menu:None'):
+  def clearMenu(self, menu, cancelButton='set:menu:main'):
     self.menus[menu] = {}
     if(cancelButton != None):
       self.addItem(menu,'','up', cancelButton, 0)
@@ -143,8 +143,15 @@ class menus(ranaModule):
 
   def setupMaplayerMenus(self):
     self.clearMenu('layers')
-    for layer in ('pyrender','osma','mapnik','aerial'):
-      self.addItem('layers', layer, layer, 'set:layer:'+layer+'|set:menu:None')
+    m = self.m.get('mapTiles', None)
+    if(m):
+      layers = m.layers()
+      for (name, layer) in layers.items():
+        self.addItem(
+          'layers',
+          layer.get('label',name),
+          name,
+          'set:layer:'+name+'|set:menu:None')
     
   def setupTransportMenu(self):
     """Create menus for routing modes"""
@@ -183,9 +190,9 @@ class menus(ranaModule):
     f.close()
   
   def setupGeneralMenus(self):
-    self.clearMenu('main')
+    self.clearMenu('main', "set:menu:None")
     self.addItem('main', 'map', 'generic', 'set:menu:layers')
-    self.addItem('main', 'centre', 'centre', 'toggle:centred')
+    self.addItem('main', 'centre', 'centre', 'toggle:centred|set:menu:None')
     self.addItem('main', 'places', 'generic', 'set:menu:places')
     self.addItem('main', 'search', 'business', 'set:menu:search')
     self.addItem('main', 'view', 'view', 'set:menu:view')

@@ -509,7 +509,9 @@ alert(stylestoprint);*/
 
 // Create symbols links/data
 
-this.symbols = css.getElementsByTagName("symbol");
+//Necessary change for firefox3... handles SVG as SVG not as XML/DOM
+//this.symbols = css.getElementsByTagName("symbol");
+this.symbols = rulesfile.getElementsByTagName("symbol");
 
 // Analysing rule file to model rules
 

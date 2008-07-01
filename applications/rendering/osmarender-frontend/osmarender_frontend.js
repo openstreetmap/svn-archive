@@ -49,28 +49,46 @@ viewPropertiesFromClass = function(key) {
 		var rules_list = createElementCB("ol");
 		div_properties.appendChild(rules_list);
 
+		var array_without_duplicates = new Array();
+		
 		for (single_rule in array_da_aggiornare) {
 			for (single_key_value in array_da_aggiornare[single_rule].keys) {
-				var li_rule = createElementCB("li");
-				var li_rule_strong_1 = createElementCB("strong");
-				li_rule_strong_1.appendChild(document.createTextNode("key: "));
-				li_rule.appendChild(li_rule_strong_1);
-				li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].keys[single_key_value]));
-				var li_rule_strong_2 = createElementCB("strong");
-				li_rule_strong_2.appendChild(document.createTextNode(", values: "));
-				li_rule.appendChild(li_rule_strong_2);
-				first_value_found=false;
 				for (single_value_value in array_da_aggiornare[single_rule].values) {
-					if (first_value_found) {
-						li_rule.appendChild(document.createTextNode(", "));
+					if (array_without_duplicates[array_da_aggiornare[single_rule].keys[single_key_value]]==null) {
+						array_without_duplicates[array_da_aggiornare[single_rule].keys[single_key_value]]=new Array();
 					}
-					li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].values[single_value_value]));
-					first_value_found=true;
+					if (array_without_duplicates[array_da_aggiornare[single_rule].keys[single_key_value]][array_da_aggiornare[single_rule].values[single_value_value]]==null) {
+						array_without_duplicates[array_da_aggiornare[single_rule].keys[single_key_value]][array_da_aggiornare[single_rule].values[single_value_value]]=0;
+					}
+					array_without_duplicates[array_da_aggiornare[single_rule].keys[single_key_value]][array_da_aggiornare[single_rule].values[single_value_value]]++;
 				}
-				rules_list.appendChild(li_rule);
-				//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
 			}
 		}
+
+		for (single_key in array_without_duplicates) {
+			var li_rule = createElementCB("li");
+			var li_rule_strong_1 = createElementCB("strong");
+			li_rule_strong_1.appendChild(document.createTextNode("key: "));
+			li_rule.appendChild(li_rule_strong_1);
+			li_rule.appendChild(document.createTextNode(single_key));
+			var li_rule_strong_2 = createElementCB("strong");
+			li_rule_strong_2.appendChild(document.createTextNode(", values: "));
+			li_rule.appendChild(li_rule_strong_2);
+			first_value_found=false;
+			for (single_value in array_without_duplicates[single_key]) {
+				if (first_value_found) {
+					li_rule.appendChild(document.createTextNode(", "));
+				}
+				li_rule.appendChild(document.createTextNode(single_value+" ("+array_without_duplicates[single_key][single_value]+")"));
+				first_value_found=true;
+			}
+			rules_list.appendChild(li_rule);
+			//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
+		}
+
+//TODO: add type of checking everywhere, look for safeRef() method at http://blog.stchur.com/2006/07/08/safely-referencing-objects-in-javascript-understanding-null-and-undefined/2/
+
+//TODO: add removing duplicates also in symbols list
 	} else {
 		var bold_string = createElementCB("strong");
 		bold_string.appendChild(document.createTextNode("Attention! "));
@@ -862,15 +880,23 @@ searchCSSfromKeyValue = function() {
 		div_list_css.appendChild(createElementCB("br"));
 	}
 
+	var temp_CSS_list = new Array();
+
 	for (CSSclass in array_da_aggiornare) {
 		// no-bezier is actually not a class
 		if (array_da_aggiornare[CSSclass] != "no-bezier") {
-			a_list_css = createElementCB("a");
-			a_list_css.setAttribute("href","javascript:loadCSS(\""+array_da_aggiornare[CSSclass]+"\")");
-			a_list_css.appendChild(document.createTextNode(array_da_aggiornare[CSSclass]));
-			div_list_css.appendChild(a_list_css);
-			div_list_css.appendChild(createElementCB("br"));
+			temp_CSS_list[temp_CSS_list.length] = array_da_aggiornare[CSSclass];
 		}
+	}
+	
+	temp_CSS_list = RemoveDuplicates(temp_CSS_list.sort());
+	
+	for (CSSname in temp_CSS_list) {
+		a_list_css = createElementCB("a");
+		a_list_css.setAttribute("href","javascript:loadCSS(\""+temp_CSS_list[CSSname]+"\")");
+		a_list_css.appendChild(document.createTextNode(temp_CSS_list[CSSname]));
+		div_list_css.appendChild(a_list_css);
+		div_list_css.appendChild(createElementCB("br"));
 	}
 	
 	// Search symbols that applies this key/value pair

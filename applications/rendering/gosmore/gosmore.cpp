@@ -1452,7 +1452,7 @@ int IdxSearch (int *idx, int h, char *key, unsigned z)
     while (*--tag) {}
     if (diff > 0 || (diff == 0 &&
       ZEnc ((unsigned)((wayType *)tag)[-1].clat >> 16, 
-            (unsigned)((wayType *)tag)[-1].clon >> 16) > z)) h = (h + l) / 2;
+            (unsigned)((wayType *)tag)[-1].clon >> 16) >= z)) h = (h + l) / 2;
     else l = (h + l) / 2 + 1;
   }
   return h;
@@ -1475,7 +1475,7 @@ int IncrementalSearch (void)
   char *key = (char *) gtk_entry_get_text (GTK_ENTRY (searchW));
   int *idx =
     (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
-  int l = IdxSearch (idx, hashTable - idx, key, INT_MIN), count;
+  int l = IdxSearch (idx, hashTable - idx, key, 0), count;
 //  char *lastName = data + idx[min (hashTable - idx), 
 //    int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) + l - 1];
   int cz = ZEnc ((unsigned) clat >> 16, (unsigned) clon >> 16);
@@ -1511,8 +1511,16 @@ int IncrementalSearch (void)
       else distm[dir] = big;
     }
     if (c >= numIncWays) {
+      c = count; // Redo the adding
       for (bits = 0; bits < 16 && dista[numIncWays - 1] >> (bits * 2 + 32);
         bits++) {}
+/* Print Z's for first solution 
+      for (int j = c; j < numIncWays; j++) {
+        for (int i = 0; i < 32; i++) printf ("%d%s",
+          (ZEnc ((unsigned) incrementalWay[j]->clat >> 16,
+                 (unsigned) incrementalWay[j]->clon >> 16) >> (31 - i)) & 1,
+          i == 31 ? " x\n" : i % 2 ? " " : "");
+      } */
 /* Print centre, up, down, right and left to see if they're in the square
       for (int i = 0; i < 32; i++) printf ("%d%s", (cz >> (31 - i)) & 1,
         i == 31 ? " x\n" : i % 2 ? " " : "");
@@ -1542,9 +1550,12 @@ int IncrementalSearch (void)
       for (int mask = 0; (mask & 7) != 4; mask += 0x55555555) {
         int s = IdxSearch (idx, hashTable - idx, data + idx[count + l],
           (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1));
-/* Print the bbox
+/* Print the square
         for (int i = 0; i < 32; i++) printf ("%d%s", 
           (((cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1)) >> (31 - i)) & 1,
+          i == 31 ? "\n" : i % 2 ? " " : "");
+        for (int i = 0; i < 32; i++) printf ("%d%s", 
+          (((cz ^ (mask & swap)) | ((4 << (bits << 1)) - 1)) >> (31 - i)) & 1,
           i == 31 ? "\n" : i % 2 ? " " : "");
 */
         for (;;) {
@@ -1556,11 +1567,9 @@ int IncrementalSearch (void)
                cz ^ (mask & swap)) >> (2 + (bits << 1))) break;
           __int64 d = Sqr ((__int64)(w->clat - clat)) +
                       Sqr ((__int64)(w->clon - clon));
-//          printf ("%8x %20.0lf %20.0lf\n", mask, sqrt (d),
-//            sqrt (dista[numIncWays - 1]));
-          if (d < dista[numIncWays - 1]) {
-            for (ipos = numIncWays - 1; ipos > count && d < dista[ipos - 1];
-                 ipos--) {
+          if (count == c || d < dista[c - 1]) {
+            if (c < numIncWays) c++;
+            for (ipos = c - 1; ipos > count && d < dista[ipos - 1]; ipos--) {
               dista[ipos] = dista[ipos - 1];
               incrementalWay[ipos] = incrementalWay[ipos - 1];
               taga[ipos] = taga[ipos - 1];

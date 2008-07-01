@@ -8,8 +8,20 @@ var cmyk;
 
 var classesAndProperties = new Array();
 
+var dojowidgets = new Array();
+
 viewPropertiesFromClass = function(key) {
 	if (key=="osmarender_frontend:null") return false;
+
+// destroy dojowidgets found
+	if (dojowidgets.length) {
+		for (widget in dojowidgets) {
+			if (dojowidgets[widget].id) {
+				dijit.byId(dojowidgets[widget].id).destroy();
+			}
+		}
+		dojowidgets = new Array();
+	}
 
 	//Search rules in which this class is used
 	var array_da_aggiornare = new Array();
@@ -104,7 +116,7 @@ viewPropertiesFromClass = function(key) {
 		text_container.setAttribute("id",single_property);
 		text_container.setAttribute("value",propertiesToPrint[single_property]);
 		dd_container.appendChild(text_container);
-		
+//Thanks to http://www.zvon.org/xxl/svgReference/Output/attr_text-anchor.html and such for SVG attributes
 		if ((single_property=="fill" || single_property=="stroke") && propertiesToPrint[single_property].substring(0,3)!="url") {
 			var div_container=createElementCB("div");
 			div_container.setAttribute("id","viewColor["+single_property+"]");
@@ -119,45 +131,58 @@ viewPropertiesFromClass = function(key) {
 			button_color_picker.appendChild(document.createTextNode("Pick color"));
 			dd_container.appendChild(button_color_picker);
 		}
-//TODO: unique index of active dojo widgets to destroy when select menu changes
-/*		if (single_property=="opacity") {
+
+		if ((single_property=="opacity" || single_property=="fill-opacity" || single_property=="stroke-opacity" || single_property=="stroke-miterlimit") && (propertiesToPrint[single_property].search("^[0-9]")!=-1)) {
 			text_container.parentNode.removeChild(text_container);
+			var delta_for_editing;
+			if (propertiesToPrint[single_property].indexOf(".")!=-1) delta_for_editing = 0.1; else delta_for_editing = 1;
 		  	var slider = new dijit.form.NumberSpinner(
- 				{id: "opacity_spinner["+single_property+"]",
+ 				{id: single_property,
 				value: propertiesToPrint[single_property],
-				constraints: {min:0,max:1,places:1},
-				smallDelta: 0.1,
-				style: "width:5em"
+				smallDelta: delta_for_editing,
+				style: "width:5em;height:1.1em;"
  				}, dd_container
  			);
+			if (single_property=="stroke-miterlimit") {
+				slider.constraints={min:0};
+			}
+			else {
+				slider.constraints={min:0,max:1};
+			}
 		 	slider.startup();
+			dojowidgets[dojowidgets.length]=slider;
 		}
-		
-		if (single_property=="stroke-width") {
+		if ((single_property=="stroke-width" || single_property=="font-size") && (propertiesToPrint[single_property].search("^[0-9]")!=-1)) {
 //TODO: compatibility with other units (em, ecc)
 			text_container.parentNode.removeChild(text_container);
+			var delta_for_editing;
+			if (propertiesToPrint[single_property].indexOf(".")!=-1) delta_for_editing = 0.1; else delta_for_editing = 1;
 			var div_interno=createElementCB("div");
 			dd_container.appendChild(div_interno);
 		  	var slider = new dijit.form.NumberSpinner(
- 				{id: "stroke_width_spinner["+single_property+"]",
+ 				{id: single_property,
 				value: propertiesToPrint[single_property].substring(0,propertiesToPrint[single_property].indexOf("p")),
-				constraints: {min:0,places:1},
-				smallDelta: 0.1,
-				style: "width:5em"
+				constraints: {min:0},
+				smallDelta: delta_for_editing,
+				style: "width:5em;height:1.1em;"
  				}, div_interno
  			);
 		 	slider.startup();
+			dojowidgets[dojowidgets.length]=slider;
 			dd_container.appendChild(document.createTextNode("px"));
-		}*/
-		
-		if (single_property=="stroke-linecap" || single_property=="stroke-linejoin" || single_property=="font-weight") {
+		}
+
+		if (single_property=="stroke-linecap" || single_property=="stroke-linejoin" || single_property=="font-weight" || single_property=="text-anchor" || single_property=="display" || single_property=="fill-rule") {
 			text_container.parentNode.removeChild(text_container);
 			var select_strokes=createElementCB("select");
 			select_strokes.setAttribute("id",single_property);
 			var types_of_strokes = {
 				"stroke-linecap": ["butt","round","square","inherit"],
 				"stroke-linejoin": ["miter","round","bevel","inherit"],
-				"font-weight": ["normal","bold","bolder","lighter","100","200","300","400","500","600","700","800","900","inherit"]
+				"font-weight": ["normal","bold","bolder","lighter","100","200","300","400","500","600","700","800","900","inherit"],
+				"text-anchor": ["start","middle","end","inherit"],
+				"display": ["inline","block","list-item","run-in","compact","marker","table","inline-table","table-row-group","table-header-group","table-footer-group","table-row","table-column-group","table-column","table-cell","table-caption","none","inherit"],
+				"fill-rule": ["nonzero","evenodd","inherit"]
 			};
 			for (types in types_of_strokes[single_property]) {
 				var option = createElementCB("option");
@@ -956,6 +981,9 @@ setStyle = function () {
 					if (label_id.substring(0,(magic_string_to_search.length))==magic_string_to_search) {
 						property = labels_array[labels].getAttribute("id").substring((magic_string_to_search.length));
 						editValue = document.getElementById(property).value;
+						if (property=="stroke-width") {
+							editValue+=document.getElementById("widget_"+property).nextSibling.nodeValue;
+						}
 						cmyk.setSingleStyle(class,property,editValue);
 					}
 				}

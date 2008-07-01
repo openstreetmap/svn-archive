@@ -328,10 +328,10 @@
             <rule e="way" k="highway" v="motorway_link">
                 <line class="bridge-casing highway-motorway-link-bridge-casing" smart-linecap="no"/>
             </rule>
-            <rule e="way" k="highway" v="trunk-link">
+            <rule e="way" k="highway" v="trunk_link">
                 <line class="bridge-casing highway-trunk-link-bridge-casing" smart-linecap="no"/>
             </rule>
-            <rule e="way" k="highway" v="primary-link">
+            <rule e="way" k="highway" v="primary_link">
                 <line class="bridge-casing highway-primary-link-bridge-casing" smart-linecap="no"/>
             </rule>
             <rule e="way" k="highway" v="secondary">
@@ -407,10 +407,10 @@
             <rule e="way" k="highway" v="motorway_link">
                 <line class="bridge-core highway-motorway-link-bridge-core" smart-linecap="no"/>
             </rule>
-            <rule e="way" k="highway" v="trunk-link">
+            <rule e="way" k="highway" v="trunk_link">
                 <line class="bridge-core highway-trunk-link-bridge-core" smart-linecap="no"/>
             </rule>
-            <rule e="way" k="highway" v="primary-link">
+            <rule e="way" k="highway" v="primary_link">
                 <line class="bridge-core highway-primary-link-bridge-core" smart-linecap="no"/>
             </rule>
             <rule e="way" k="highway" v="secondary">

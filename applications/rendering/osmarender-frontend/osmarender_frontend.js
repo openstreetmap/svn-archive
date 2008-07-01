@@ -811,6 +811,16 @@ function viewValuesFromKey(key) {
 
 	sorted_list_of_unique_values = RemoveDuplicates(sorted_list_of_unique_values.sort());
 	
+	//List undefined value, ~
+	
+	var new_option = createElementCB("option");
+	new_option.setAttribute("value","~");
+	var new_option_text = document.createTextNode("~");
+	new_option.appendChild(new_option_text);
+	select_ways_value.appendChild(new_option);
+
+	//List all other values
+
 	for (var value_name in sorted_list_of_unique_values) {
 			var new_option = createElementCB("option");
 			new_option.setAttribute("value",sorted_list_of_unique_values[value_name]);

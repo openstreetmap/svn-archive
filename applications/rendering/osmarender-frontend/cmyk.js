@@ -473,9 +473,10 @@ rulesfile = function () {
 		}
 	}
 
-	rulesfile = Sarissa.getDomDocument();
-	rulesfile.async=false;
-	rulesfile.load(server+rulesfilename);
+	var xmlhttp = new XMLHttpRequest();  
+	xmlhttp.open("GET", server+rulesfilename, false);  
+	xmlhttp.send('');  
+	rulesfile=xmlhttp.responseXML;
 	return rulesfile;
 }();
 

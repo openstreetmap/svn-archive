@@ -675,9 +675,10 @@ listKeys = function() {
 		}
 	}
 
-	osmfile = Sarissa.getDomDocument();
-	osmfile.async=false;
-	osmfile.load(server+osmfilename);
+	var xmlhttp = new XMLHttpRequest();  
+	xmlhttp.open("GET", server+osmfilename, false);  
+	xmlhttp.send('');  
+	osmfile=xmlhttp.responseXML;
 
 	nodes = osmfile.documentElement.selectNodes("//node");
 	ways = osmfile.documentElement.selectNodes("//way");
@@ -998,9 +999,10 @@ function Osmatransform () {
 		}
 	}
 
-	xslfile = Sarissa.getDomDocument();
-	xslfile.async=false;
-	xslfile.load(server+"osmarender.xsl");
+	var xmlhttp = new XMLHttpRequest();  
+	xmlhttp.open("GET", server+"osmarender.xsl", false);  
+	xmlhttp.send('');  
+	xslfile=xmlhttp.responseXML;
 	
 	var rulesfile=cmyk.getRulesFile();
 	try{

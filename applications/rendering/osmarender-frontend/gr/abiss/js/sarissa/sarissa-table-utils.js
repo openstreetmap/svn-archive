@@ -2,10 +2,10 @@
  * ====================================================================
  * About Sarissa: http://dev.abiss.gr/sarissa
  * ====================================================================
- * Sarissa is an ECMAScript library acting as a cross-browser wrapper for native XML APIs.
- * The library supports Gecko based browsers like Mozilla and Firefox,
- * Internet Explorer (5.5+ with MSXML3.0+), Konqueror, Safari and Opera
- * @author: @author: Copyright 2004-2007 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
+ * Sarissa table utils are dependent on sarissa.js and are used for 
+ * stuff like table sorting.
+ * @version 0.9.9.4
+ * @author: Copyright 2004-2008 Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net
  * ====================================================================
  * Licence
  * ====================================================================

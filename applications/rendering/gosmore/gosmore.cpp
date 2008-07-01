@@ -395,6 +395,19 @@ struct routeNodeType {
 } *route = NULL, *shortest = NULL, **routeHeap;
 int dhashSize, routeHeapSize, tlat, tlon, flat, flon;
 
+#ifdef ROUTE_CALIBRATE
+int routeAddCnt;
+#define ROUTE_SET_ADDND_COUNT(x) routeAddCnt = (x)
+#define ROUTE_SHOW_STATS printf ("%d / %d\n", routeAddCnt, dhashSize); \
+  fprintf (stderr, "flat=%lf&flon=%lf&tlat=%lf&tlon=%lf&fast=%d&v=motorcar\n", \
+    LatInverse (flat), LonInverse (flon), LatInverse (tlat), \
+    LonInverse (tlon), FastestRoute)
+// This ratio must be around 0.5. Close to 0 or 1 is bad
+#else
+#define ROUTE_SET_ADDND_COUNT(x)
+#define ROUTE_SHOW_STATS
+#endif
+
 void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
      segments (hs, hs->other), (newshort->hs, newshort->hs->other),
@@ -421,6 +434,7 @@ void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
         : lrint (sqrt (Sqr ((__int64)(nd->lat - flat)) +
                        Sqr ((__int64)(nd->lon - flon))));
       if (!shortest || n->remain < shortest->remain) shortest = n;
+      ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
     }
   } while (n->nd != nd || n->dir != dir);
 
@@ -445,6 +459,7 @@ void Route (int recalculate)
   ndType *endNd[2];
   int toEndNd[2][2];
   
+  ROUTE_SET_ADDND_COUNT (0);
   shortest = NULL;
   for (int i = recalculate ? 0 : 1; i < 2; i++) {
     int lon = i ? flon : tlon, lat = i ? flat : tlat;
@@ -505,7 +520,7 @@ void Route (int recalculate)
   } /* For 'from' and 'to', find segment that passes nearby */
   if (recalculate) {
     free (route);
-    dhashSize = Sqr ((tlon - flon) >> 17) + Sqr ((tlat - flat) >> 17) + 20;
+    dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
     // This memory management may not match computer capabilities
     route = (routeNodeType*) calloc (dhashSize, sizeof (*route));
@@ -575,7 +590,7 @@ void Route (int recalculate)
           int d = lrint (sqrt ((double)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
-                        (FastestRoute ? Style (w)->invSpeed[Vehicle] : 1.0));
+                        (FastestRoute ? Style (w)->invSpeed[Vehicle] : 1.0));                  
           AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
       }
@@ -583,6 +598,7 @@ void Route (int recalculate)
              nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
   } // While there are active nodes left
   free (routeHeap + 1);
+  ROUTE_SHOW_STATS;
 //  if (fastest) printf ("%lf
 //  printf ("%lf km\n", limit / 100000.0);
 }
@@ -2038,6 +2054,14 @@ int main (int argc, char *argv[])
         if (srec[j].aveSpeed[i] > max) max = srec[j].aveSpeed[i];
       }
       for (int j = 0; j < styleCnt; j++) {
+        if (srec[j].aveSpeed[i] == 0) { // e.g. highway=foot motorcar=yes
+          for (int k = 0; k < l1; k++) {
+            if (srec[j].aveSpeed[i] < srec[j].aveSpeed[k]) {
+              srec[j].aveSpeed[i] = srec[j].aveSpeed[k];
+            } // As fast as any other vehicle,
+          } // without breaking our own speed limit :
+          if (srec[j].aveSpeed[i] > max) srec[j].aveSpeed[i] = max;
+        }
         srec[j].invSpeed[i] = max / srec[j].aveSpeed[i];
       }
     }

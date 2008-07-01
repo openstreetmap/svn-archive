@@ -30,6 +30,45 @@ import renderer_default as RenderModule
 def getModule(m,d):
   return(mapTiles(m,d))
 
+maplayers = {
+  'pyrender':
+    {
+    'label':'pyrender',
+    'pyrender':True,
+    'type':'png'
+    },
+  'osma':
+    {
+    'label':'OSM T@h',
+    'tiles':'http://tah.openstreetmap.org/Tiles/tile/',
+    'type':'png'
+    },
+  'mapnik':
+    {
+    'label':'Mapnik',
+    'tiles':'http://tile.openstreetmap.org/',
+    'type':'png'
+    },
+  'aerial':
+    {
+    'label':'Aerialmap',
+    'tiles':'http://oam1.hypercube.telascience.org/tiles/1.0.0/openaerialmap-900913/',
+    'type':'jpg'
+    },
+  'cycle':
+    {
+    'label':'Cycle map',
+    'tiles':'http://thunderflames.org/tiles/cycle/',
+    'type':'png'
+    },
+  'localhost':
+    {
+    'label':'Localhost',
+    'tiles':'http://localhost:1280/default/',
+    'type':'png'
+    }
+  };
+  
 class mapTiles(ranaModule):
   """Display map images"""
   def __init__(self, m, d):
@@ -89,6 +128,8 @@ class mapTiles(ranaModule):
     if(not proj.isValid()):
       return
 
+    layer = self.get('layer','pyrender')
+    
     # Cover the whole map view with tiles
     for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
@@ -97,7 +138,7 @@ class mapTiles(ranaModule):
         x1,y1 = proj.pxpy2xy(x,y)
 
         # Try to load and display images
-        name = self.loadImage(x,y,z,'default')
+        name = self.loadImage(x,y,z,layer)
         if(name != None):
           self.drawImage(cr,name,x1,y1)
 
@@ -138,9 +179,17 @@ class mapTiles(ranaModule):
         return(None)
     
     # Third, is it in the disk cache?  (including ones recently-downloaded)
-    filename = "cache/images/%s.png" % name
+    layerInfo = maplayers.get(layer, None)
+    if(layerInfo == None):
+      return
+
+    layerType = layerInfo.get('type','png')
+    filename = "cache/images/%s.%s" % (name, layerType)
     if(os.path.exists(filename)):
-      self.images[name]  = cairo.ImageSurface.create_from_png(filename)
+      if(layerType == 'jpg'):
+        self.images[name]  = cairo.ImageSurface.create_from_jpeg(filename)
+      else:
+        self.images[name]  = cairo.ImageSurface.create_from_png(filename)
       return(name)
     
     # Image not found anywhere - resort to downloading it
@@ -157,22 +206,26 @@ class mapTiles(ranaModule):
     (suitable for use as part of filenames, dictionary keys, etc)"""
     return("%s_%d_%d_%d" % (layer,z,x,y))
 
-
-def getURL(x,y,z,layer):
-  if(layer == 'tilesathome'):
-    return('http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png' % (z,x,y))
-  if(layer == 'pyrender_default'):
-    return('http://localhost:1280/default/%d/%d/%d.png' % (z,x,y))
+  def layers(self):
+    return(maplayers)
 
 def downloadTile(x,y,z,layer,filename):
   """Downloads an image"""
-  renderer = RenderModule.RenderClass()
-  #print "rendering to %s" % filename
-  pngData = renderer.RenderTile(z,x,y, layer, filename)
-  #print "Got %d bytes" % len(pngData)
-  
-  #url = getURL(x,y,z,layer)
-  #urllib.urlretrieve(url, filename)
+  layerDetails = maplayers.get(layer, None)
+  if(layerDetails == None):
+    return
+
+  if(layerDetails.get('pyrender',False)):
+    # Generate from local data
+    renderer = RenderModule.RenderClass()
+    renderer.RenderTile(z,x,y, 'default', filename) # TODO: pyrender layers
+  else:
+    # Download from network
+    url = '%s/%d/%d/%d.%s' % (
+      layerDetails['tiles'],
+      z,x,y,
+      layerDetails.get('type','png'))
+    urllib.urlretrieve(url, filename)
   
 class tileLoader(Thread):
   """Downloads an image (in a thread)"""

@@ -42,6 +42,8 @@ class messageModule(ranaModule):
           if(value == str(i)):
             value = i
         self.set(key, value)
+      if(module == 'toggle'):
+        self.set(text, not self.get(text,0))
       elif(module == "*"):
         for m in self.m.items():
           m.handleMessage(text)

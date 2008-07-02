@@ -273,6 +273,9 @@ sub supertile {
     {#if its a "404 sea" or a "sea.png" and all 4 sizes are the same, make one 69 bytes sea of it
             my $SeaFilename = "../../emptysea.png"; 
             link($SeaFilename,$BaseFile);
+	    if ( $BaseFile ne $OutputFile ) {
+              link($SeaFilename,$OutputFile);
+	    }
             deleteBlankSubtiles($X,$Y,$Z,$OutputLayer);
             return;
     }
@@ -280,6 +283,9 @@ sub supertile {
     {#if its a "blank land" or a "land.png" and all 4 sizes are the same, make one 69 bytes land of it
             my $LandFilename = "../../emptyland.png"; 
             link($LandFilename,$BaseFile);
+	    if ( $BaseFile ne $OutputFile ) {
+              link($LandFilename,$OutputFile);
+	    }
             deleteBlankSubtiles($X,$Y,$Z,$OutputLayer);
             return;
     }
@@ -490,7 +496,11 @@ sub remotefile {
 }
 # Option: what to use as temporary storage for tiles
 sub tempdir {
-  return("temp");
+  if ( -d  "temp".$Z ) {
+    return("temp".$Z)
+  } else {
+    return("temp");
+  }
 }
 
 package status;

@@ -15,11 +15,11 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 	boolean inItem, inDescription, inPoint,inType,inName, inID;
 	double curLon, curLat;
 	String curName, curType, curDescription,curID;
+  FreemapMobile app;
 
-
-	public FreemapParserHandler()
+	public FreemapParserHandler(FreemapMobile app)
 	{
-	
+	   this.app=app;
 	}
 
 	public void startDocument()
@@ -42,10 +42,6 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 		{
 			inDescription=true;
 		}
-		else if (qName.equals("title"))
-		{
-			inName=true;
-		}
 		else if (qName.equals("georss:point"))
 		{
 			inPoint=true;
@@ -67,7 +63,7 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 			inItem=false;
 			try
 			{
-				curName = (curName==null) ? "Annotation-"+curID : curName;
+				curName =   "#"+curID;
 				System.out.println("Creating a landmark: " +
 					curName+","+curDescription+","+curType);
 				Landmark landmark = new Landmark(curName,curDescription,
@@ -83,10 +79,6 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 		else if (qName.equals("description"))
 		{
 			inDescription=false;
-		}
-		else if (qName.equals("title"))
-		{
-			inName=false;
 		}
 		else if (qName.equals("georss:point"))
 		{
@@ -110,10 +102,6 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 			if(inDescription==true)
 			{
 			curDescription=new String(ch,start,length);
-			}
-			else if (inName==true)
-			{
-			curName=new String(ch,start,length);
 			}
 			else if (inType==true)
 			{

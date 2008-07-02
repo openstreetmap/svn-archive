@@ -17,6 +17,8 @@ Usage
 
 Simply copy all files to a PHP-enabled web server, and point your favorite WMS client to wms.php.
 
+In order to coordinate systems other than EPSG 4326 to work, however, the proj4 library has to be installed in your system, and the "cs2cs" executable must be in the default path. In most linux distributions, this means that you just have to install the "proj" package.
+
 
 
 Legal stuff

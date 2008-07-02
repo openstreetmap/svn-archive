@@ -21,6 +21,8 @@
 #---------------------------------------------------------------------------
 include("../../conn/connect.php");
 
+header("Content-type: text/plain");
+
 switch($_REQUEST['A'])
 {
 case 'newusr':

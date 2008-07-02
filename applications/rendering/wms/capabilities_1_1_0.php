@@ -95,12 +95,14 @@ $server_addr = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}";
       <Title>OpenStreetMap</Title>
 <!--       <SRS>EPSG:4326</SRS> -->
 <?php
-	foreach(datafactory::$available_crs as $crs)
-	{	echo "<SRS>$crs</SRS>";	}
-?>
-      <LatLonBoundingBox minx="-180" miny="-90" maxx="180" maxy="90" />
-      <BoundingBox SRS="EPSG:4326" minx="-180" miny="-90" maxx="180" maxy="90" />
-<?php
+	foreach(datafactory::$available_crs as $crs=>$bounds)
+	{	echo "<SRS>$crs</SRS><BoundingBox SRS='$crs' minx='{$bounds[0]}' miny='{$bounds[1]}' maxx='{$bounds[2]}' maxy='{$bounds[3]}' />";
+}
+	
+	echo "<LatLonBoundingBox minx='-180' miny='-90' maxx='180' maxy='90' />";
+     
+     
+     
      echo wireframe::getCapabilities();
 ?>
     </Layer>

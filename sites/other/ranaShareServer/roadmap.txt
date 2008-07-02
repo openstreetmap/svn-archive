@@ -1,0 +1,22 @@
+
+Things to do with the share server in future:
+
+Public-key encrypted groups:
+
+  There is no reason why the server should be able to read your position - make the groups allow uploading of reports encrypted with the group's public key.
+
+Share vector data:
+
+  Sketches, routes, waypoints, tracklogs...
+
+Text messaging:
+
+  Set your 'status' (exactly the same conceptually as setting your nickname) so that people in the group can read something about you (e.g. your ETA to some meeting)
+
+Map errors:
+
+  Allow map errors to be reported via this interface, e.g. to openstreetbugs
+
+And more...
+
+  Other features you want

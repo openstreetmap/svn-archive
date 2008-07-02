@@ -21,8 +21,14 @@
 #---------------------------------------------------------------------------
 include("../../conn/connect.php");
 
-header("Content-type: text/plain");
+if(!array_key_exists("A", $_REQUEST))
+{
+  addForms();
+  exit;
+}
 
+
+header("Content-type: text/plain");
 switch($_REQUEST['A'])
 {
 case 'newusr':
@@ -51,7 +57,7 @@ case 'usrnam':
   break;
   
 default:
-  addForms();
+  print "Unrecognised action.\nSupported:newusr,newgrp,nick,pos,get,getfmt,grpnam,usrnam";
   break;
 }
 
@@ -69,7 +75,7 @@ function addForms()
 
 function addForm($Title, $Action, $Fields)
 {
-  print "<h2>$Title</h2><form action=./ method=post>\n";
+  print "<h2>$Title</h2><form action=./ method=get>\n";
   print "<input type=hidden name=A value=$Action /></p>\n";
   foreach(explode(", ", $Fields) as $Field)
   {

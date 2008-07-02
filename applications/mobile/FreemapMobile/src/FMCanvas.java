@@ -25,6 +25,7 @@ public class FMCanvas extends Canvas
     FreemapMobile app;
     TileSource tileSource;
     boolean doShowPOIs;
+    Landmark nearestAnnotation;
 
     
     // Have all these to minimise computations due to limited power of phone?
@@ -99,8 +100,20 @@ public class FMCanvas extends Canvas
                 curY+=256;
             }
 
+            if(nearestAnnotation != null)
+            {
+              g.setColor(0xffff00);
+              QualifiedCoordinates qc=
+                  nearestAnnotation.getQualifiedCoordinates();
+              int anX = GProjection.lonToX(qc.getLongitude(), zoom),
+                  anY = GProjection.latToY(qc.getLatitude(), zoom); 
+                  
+                
+            
+            
             g.setColor(0xff0000);
-         
+            g.fillArc(anX-topLeftX, anY-topLeftY, 10,10,0,360);
+            }
         if (state==UPDATING)    
         {
         Image im=clock;
@@ -248,7 +261,7 @@ public class FMCanvas extends Canvas
 
     protected void keyPressed(int keyCode)
     {
-        if(state==ACTIVE || state==GPS_FAILED)
+        if(true)//state==ACTIVE || state==GPS_FAILED)
         {
             double lon=app.getLon(), lat=app.getLat();
             switch(getGameAction(keyCode))
@@ -298,6 +311,10 @@ public class FMCanvas extends Canvas
 	  {
 	     this.doShowPOIs = doShowPOIs;
     }
-   
+    
+    public void setAnnotation (Landmark annotation)
+    {
+      nearestAnnotation=annotation;
+    }
 }
 

@@ -8,6 +8,7 @@ import org.xml.sax.helpers.*;
 import javax.microedition.location.Landmark;
 import javax.microedition.location.LandmarkStore;
 import javax.microedition.location.QualifiedCoordinates;
+import javax.microedition.lcdui.*;
 
 
 public class OSMParserHandler extends LandmarkSourceParserHandler
@@ -18,10 +19,12 @@ public class OSMParserHandler extends LandmarkSourceParserHandler
 	double curLon, curLat;
 	String curName, curType, curDescription;
 	String curID;
+	FreemapMobile app;
 
 
-	public OSMParserHandler()
+	public OSMParserHandler(FreemapMobile app)
 	{
+	 this.app=app;
 
 	}
 
@@ -33,7 +36,9 @@ public class OSMParserHandler extends LandmarkSourceParserHandler
 	public void startElement(String uri,String localName,String qName,
 				Attributes attributes) throws SAXException
 	{
-		System.out.println("OSMParserHandler: element="+qName);
+	  try
+	  {
+		//app.showAlert("element="+qName,"",AlertType.INFO);
 		if (qName.equals("node"))
 		{
 			System.out.println("Found a node");
@@ -67,6 +72,13 @@ public class OSMParserHandler extends LandmarkSourceParserHandler
 				curType = curValue;
 			}
 		}
+		}
+		catch(Exception e)
+		{
+		app.showAlert(e.toString()+" "+e.getMessage(),"",AlertType.ERROR);
+		if(e instanceof SAXException)
+		  throw (SAXException)e;
+    }
 	}
 
 	public void endElement(String uri,String localName,String qName)
@@ -77,16 +89,16 @@ public class OSMParserHandler extends LandmarkSourceParserHandler
 			try
 			{
 				curName=(curName==null) ? "OSMID-"+curID : curName;
-				System.out.println("Creating a landmark: " +
-					curName+","+curDescription+","+curType);
+				
+			
 				Landmark landmark = new Landmark(curName,curDescription,
 						new QualifiedCoordinates(curLat,curLon,Float.NaN,	
 									Float.NaN,Float.NaN),null);
-				store.addLandmark(landmark,curType);
+				app.addLandmarkToStore(landmark,curType);
 			}
 			catch(Exception e)
 			{
-				System.out.println("WARNING - could not create landmark : " + e);
+				app.showAlert("Exception: " + e.getMessage(),"",AlertType.ERROR);
 			}
 		}
 	}

@@ -20,6 +20,8 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
     POIManager poiManager;
     double lat,lon;
 	String username, password;
+	  Landmark nearestAnnotation;
+	  AnnotationViewer annotationViewer;
     
     // Constructor for the class
     public FreemapMobile()
@@ -120,12 +122,9 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                                   
                                 LandmarkLoader osm = new LandmarkLoader
                                   (osmStore,w,s,e,n,
-                                  "http://osmxapi.hypercube.telascience.org/"+
-                                "api/0.5/"+    
-                                "node[amenity|tourism|natural|place=village|"+
-                                    "hamlet|town|pub|peak|restaurant|hotel]"+
-                                "[bbox="+w+","+s+","+e+","+n+"]",
-                                   new OSMParserHandler()
+                                  "http://www.free-map.org.uk/freemap/"+
+                                  "osmxapi.php?bbox="+w+","+s+","+e+","+n,
+                                   new OSMParserHandler(FreemapMobile.this)
                                   );
                                 
                                 LandmarkLoader freemap = new LandmarkLoader
@@ -133,19 +132,28 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                                   "http://www.free-map.org.uk/freemap/api/"+
                                 "markers.php?action=get"+
                                 "&bbox="+w+","+s+","+e+","+n,
-                                  new FreemapParserHandler()
+                                  new FreemapParserHandler(FreemapMobile.this)
                                   );
                                 
                                 osm.load();
-                                freemap.load();
+                                //freemap.load();
+                                showAlert("Loaded successfully",
+										"Loaded successfully",
+                                        AlertType.INFO);
                                   
                                
                             }
+                            catch(IllegalArgumentException e)
+                            {
+                            	showAlert("Error loading",
+										e.getMessage(),
+										AlertType.ERROR);
+                            }
                             catch(Exception e)
                             {
-								                showAlert("Error loading",
-                                "Error parsing:" + e,
-								              AlertType.ERROR);
+								showAlert("Error loading",
+									"Error parsing:" + e,
+							  		AlertType.ERROR);
                             }
                         }
                     }.start();
@@ -196,10 +204,12 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         try
         {
             osmStore = LandmarkStore.getInstance("OSM_POIs");
+            
             if(osmStore==null)
             {
                 LandmarkStore.createLandmarkStore("OSM_POIs");
                 osmStore = LandmarkStore.getInstance("OSM_POIs");
+          
                 osmStore.addCategory("pub");
                 osmStore.addCategory("restaurant");
                 osmStore.addCategory("hotel");
@@ -208,6 +218,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                 osmStore.addCategory("hamlet");
                 osmStore.addCategory("town");
             }
+            
             freemapStore = LandmarkStore.getInstance("Freemap_annotations");
             if(freemapStore==null)
             {
@@ -216,11 +227,12 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                 freemapStore.addCategory("hazard");
                 freemapStore.addCategory("info");
                 freemapStore.addCategory("directions");
-            }    
+            }   
         }
+        
         catch(Exception e)
         {
-            System.out.println("Couldn't create landmark store: "+ e);
+            showAlert("","Couldn't create landmark store: "+e,AlertType.ERROR);
         }
         exit = new Command("Exit",Command.EXIT,0);
         menu = new Command("Menu", Command.OK, 0);    
@@ -232,7 +244,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         POIMenuHandler poiMenuHandler=new POIMenuHandler();
 		ServerMenuHandler serverMenuHandler = new ServerMenuHandler();
     
-        poiManager=new POIManager(this,osmStore);  
+        poiManager=new POIManager(this,osmStore,3000);  
 
         mainMenu = new ActionList("Menu",this,List.IMPLICIT,
                         Display.getDisplay(this));
@@ -271,8 +283,12 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
 
 		lat=51.05;
 		lon=-0.72;
-            
+            poiManager.setCurrentCoords
+              (new QualifiedCoordinates(lat,lon,
+                Float.NaN,Float.NaN,Float.NaN));
        	username=password=""; 
+       	
+       	annotationViewer=new AnnotationViewer(freemapStore,50,this);
     }
     
 
@@ -328,9 +344,21 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
       this.lon=lon;
 	  }
       canvas.updatePosition(lon,lat);
-      poiManager.setCurrentCoords(new QualifiedCoordinates(lat,lon,Float.NaN,
-                                                          Float.NaN,Float.NaN));
+      QualifiedCoordinates qc=new QualifiedCoordinates(lat,lon,Float.NaN,
+                                    Float.NaN,Float.NaN);
+      poiManager.setCurrentCoords(qc);
+      try
+      {
+        annotationViewer.getNearestAnnotation(qc);
+      }
+      catch(IOException e)
+      {
+        showAlert("Error",e.getMessage(),AlertType.ERROR);
+      }
+  
     }
+    
+   
     
 	public void login(String username,String password)
 	{
@@ -354,6 +382,34 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
 		gpsListener.forceUpdate();
 		AnnotationManager am=new AnnotationManager(this);
 		am.annotate(lon,lat);
+	}
+	public void addLandmarkToStore(Landmark landmark,String category)
+	{
+		try
+		{
+	 		osmStore.addLandmark(landmark,category);
+  		}
+  		catch(IOException e)
+  		{
+  			showAlert(e.toString(),"",AlertType.ERROR);
+  		}
+  	}
+
+	public void removeDefaultCommands()
+	{
+		canvas.removeCommand(menu);
+		canvas.removeCommand(exit);
+	}
+
+	public void addDefaultCommands()
+	{
+		canvas.addCommand(exit);
+		canvas.addCommand(menu);
+	}
+	
+	public FMCanvas getCanvas()
+	{
+		return canvas;
 	}
 }
 

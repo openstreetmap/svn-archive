@@ -14,6 +14,7 @@ public class AnnotationManager implements CommandListener
 	double lat,lon;
 	Command back, ok;
 	VideoControl videoControl;
+	Player player;
 	String id;
 	TextField details;
 	ChoiceGroup type;
@@ -51,12 +52,12 @@ public class AnnotationManager implements CommandListener
 	// Reference: http://developers.sun.com/mobility/midp/articles/picture/
 
 
-	class CameraTestForm extends Form 
+	class CameraTestCanvas extends Canvas 
 	{
   
-  		public CameraTestForm()
+  		public CameraTestCanvas()
   		{
-    		super("Camera Test");
+    	
     		back = new Command("Back", Command.BACK, 0);
     		ok = new Command("OK", Command.OK, 0);
     		addCommand(back);
@@ -65,31 +66,43 @@ public class AnnotationManager implements CommandListener
 
     		try
     		{
-    			Player player = Manager.createPlayer("capture://video");
+    			player = Manager.createPlayer("capture://video");
     			player.realize();
    				videoControl = (VideoControl)player.getControl("VideoControl");
-    			Item item = (Item)videoControl.initDisplayMode
-        			(GUIControl.USE_GUI_PRIMITIVE,null);
-   				append(item);
-   				Display.getDisplay(app).setCurrent(this);
+    		  videoControl.initDisplayMode
+        			(VideoControl.USE_DIRECT_VIDEO,this);
+        	try
+        	{
+   				 videoControl.setDisplayLocation(2,2);
+   				 videoControl.setDisplaySize(getWidth()-4,getHeight()-4);
+   				}
+   				catch(MediaException e)
+   				{
+   				videoControl.setDisplayFullScreen(true);
+           }
+          videoControl.setVisible(true);
     		}
     		catch(MediaException e)
     		{
-    			app.showAlert("Camera Media Error",e.toString(),
+    			app.showAlert("Camera Media Error",e.getMessage(),
 								AlertType.ERROR);
 				app.handleBackCommand();
     		}
     		catch(IOException e)
     		{
-    			app.showAlert("Camera IO Error",e.toString(),AlertType.ERROR);
+    			app.showAlert("Camera IO Error",e.getMessage(),AlertType.ERROR);
 				app.handleBackCommand();
     		}
   		}
+  		
+  		public void paint(Graphics g)
+  		{
+      }
 	}
 
 	AnnotationForm annotationForm;
 	CameraYesNoForm cameraYesNoForm;
-	CameraTestForm cameraTestForm;
+	CameraTestCanvas cameraTestCanvas;
 
 	public AnnotationManager(FreemapMobile app)
 	{
@@ -131,21 +144,13 @@ public class AnnotationManager implements CommandListener
 			  System.out.println("Sending to : " + url);
               HttpConnection conn = (HttpConnection)Connector.open(url);
    
-			  // Supply authentication if we have username/password
-			  /*
-			  if((!(username.equals("")) && !(password.equals("")))     
-			  {
-				String b64=Base64Coder.encodeString
-						(username+":"+password);
-				conn.setRequestProperty("Authorization","Basic "+b64);	
-			  }
-			  */
+			 
 
               // from http://java.sun.com/javame/reference/apis/jsr118/
               // We're not posting anything, so it seems we can just get the
               // response code direct
               int rc = conn.getResponseCode();
-			  System.out.println("Response code: " + rc);
+			         System.out.println("Response code: " + rc);
               if(rc!=HttpConnection.HTTP_OK)
               {
                 app.showAlert("Error sending annotation",
@@ -183,7 +188,7 @@ public class AnnotationManager implements CommandListener
             catch(IOException e)
             {
 			  app.showAlert("Error uploading",
-							"Error uploading: "+ e,
+							"Error uploading: "+ e.getMessage(),
 							AlertType.ERROR);
       		  Display.getDisplay(app).setCurrent(annotationForm);
             }
@@ -214,11 +219,21 @@ public class AnnotationManager implements CommandListener
 				app.handleBackCommand();
 			else
 			{
-			cameraTestForm=new CameraTestForm();
-				Display.getDisplay(app).setCurrent(cameraTestForm);
+			cameraTestCanvas=new CameraTestCanvas();
+			try
+			{
+		
+        Display.getDisplay(app).setCurrent(cameraTestCanvas);
+   				player.start();
+   		}
+   		catch(MediaException e)
+			{ 
+					app.showAlert("Error starting player",e.getMessage(),	
+								AlertType.ERROR);
+				}	
 			}
 		}
-		else if (s==cameraTestForm)
+		else if (s==cameraTestCanvas)
 		{
     		if(c==back)
     		{
@@ -229,25 +244,25 @@ public class AnnotationManager implements CommandListener
       			try
       			{
       				byte[] imgBytes = videoControl.getSnapshot("encoding=jpeg");
-					String filename = "freemap-"+id+".jpg";
-					FileConnection fc = (FileConnection)
-						Connector.open("file:///root1/photos/"+filename);
-					fc.create();
-					OutputStream os = fc.openOutputStream();
-					os.write(imgBytes);
-					fc.close();
-					os.close();
+					String filename = id+".jpg";
+			
       			}
 				catch(MediaException e)
 				{ 
-					app.showAlert("Error capturing photo",e.toString(),	
+					app.showAlert("Error capturing photo",e.getMessage(),	
 								AlertType.ERROR);
 				}
+				/*
 				catch(IOException e)
 				{ 
-					app.showAlert("Error saving photo",e.toString(),	
+					app.showAlert("Error saving photo",e.getMessage(),	
 								AlertType.ERROR);
 				}
+				*/
+				catch(Exception e)
+				{
+				  app.showAlert("Other exception",e.getMessage(),AlertType.ERROR);
+        }
     		}
 	   	}
     }

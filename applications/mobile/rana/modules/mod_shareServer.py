@@ -85,11 +85,11 @@ class shareServer(ranaModule):
     result = self.sendRequest('get', {
       'G':group,
       'RP':group_read_pin})
-    users = {}
+    users = []
     for line in result.split("\n"):
       if(line):
-        (user,lat,lon) = line.split(",")
-        users[user] = (lat,lon)
+        (nickname,lat,lon) = line.split(",")
+        users.append((nickname,lat,lon))
     return(users)
       
     
@@ -116,10 +116,12 @@ if __name__ == "__main__":
   a = shareServer({},d)
 
   if(0):
+    # To test uploading
     a.register();
     a.joinGroup(1,2222, "rana user")
     a.sendPos(1, 53, 12);
   else:
+    # To test downloading
     print a.getPos(1, 1111)
   
 

@@ -27,7 +27,10 @@
 class backend_osmxapi extends backend_api
 {
 
-	const base_api_url = "http://www.informationfreeway.org";
+// 	const base_api_url = "http://www.informationfreeway.org";
+	
+	static $base_api_url = "http://osmxapi.hypercube.telascience.org";
+	
 	
 	/// Returns an URL to retrieve the data from. Might be a live HTTP URL, or a local temporary .osm file.
 	/// TODO: projection, projection, projection.
@@ -41,11 +44,13 @@ class backend_osmxapi extends backend_api
 		     !is_numeric($top))
 			trigger_error("Coordinates of the bounding box are not numbers!",E_USER_ERROR);
 		
+		
+		// The arbitrary limit of 2 degrees can be changed as desired.
 		if ( ($top-$bottom > 2) || ($right-$left > 2) )
 			trigger_error("OSM eXtended API backend won't accept a request greater than 2 degrees (measured in latitude-longitude). Please request a smaller area.",E_USER_ERROR);
 		
 		
-		return self::base_api_url . "/api/0.5/*[*=*][bbox=$left,$bottom,$right,$top]";
+		return self::$base_api_url . "/api/0.5/*[*=*][bbox=$left,$bottom,$right,$top]";
 	}
 	
 

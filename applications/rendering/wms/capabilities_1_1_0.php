@@ -49,7 +49,6 @@ $server_addr = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}";
         <DCPType>
           <HTTP>
             <Get>
-              <!-- TODO: replace with URL when on a live server! -->
               <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="<?php echo $server_addr; ?>" />
             </Get>
             <!--          <Post>
@@ -61,8 +60,8 @@ $server_addr = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}";
         </DCPType>
       </GetCapabilities>
       <GetMap>
-        <Format>image/gif</Format>
         <Format>image/png</Format>
+        <Format>image/gif</Format>
         <Format>image/jpeg</Format>
         <DCPType>
           <HTTP>
@@ -94,7 +93,11 @@ $server_addr = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}";
     <VendorSpecificCapabilities />    
     <Layer>
       <Title>OpenStreetMap</Title>
-      <SRS>EPSG:4326</SRS>
+<!--       <SRS>EPSG:4326</SRS> -->
+<?php
+	foreach(datafactory::$available_crs as $crs)
+	{	echo "<SRS>$crs</SRS>";	}
+?>
       <LatLonBoundingBox minx="-180" miny="-90" maxx="180" maxy="90" />
       <BoundingBox SRS="EPSG:4326" minx="-180" miny="-90" maxx="180" maxy="90" />
 <?php

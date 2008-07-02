@@ -31,7 +31,9 @@ class shareServer(ranaModule):
  
   def update(self):
     pass
+  
   def base(self):
+    """Server name to use"""
     return(self.get('shareServer','http://dev.openstreetmap.org/~ojw/pos/'))
   
   def register(self):
@@ -98,9 +100,6 @@ class shareServer(ranaModule):
     """Used by the other functions to send requests to the server"""
     fields['A'] = action
     URL = self.base() + "?" +  urlencode(fields)
-    #URL = self.base() + "?A=" + action
-    #for k,v in fields.items():
-    #  URL += "&%s=%s" % (urlencode(k), urlencode(str(v)))
     file = self.get("shareServerTempFile", "cache/temp.txt")
     print "Sending " + URL
     urlretrieve(URL, file)

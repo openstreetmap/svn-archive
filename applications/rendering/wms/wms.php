@@ -30,6 +30,9 @@ require_once('class.wireframe.php');
 require_once('class.backend.php');
 require_once('class.backend_api.php');
 require_once('class.backend_osmxapi.php');
+require_once('class.datafactory.php');
+
+
 
 if ($_REQUEST['REQUEST'] == 'GetCapabilities')
 {

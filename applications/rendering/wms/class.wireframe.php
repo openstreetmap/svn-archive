@@ -52,12 +52,14 @@ static public function GetCapabilities()
 //       </Layer>
 // ";
 
+// Capabilities for WMS 1.1.0 
 return "
       <Layer queryable='0' opaque='0'>
         <Name>wireframe</Name>
         <Title>OSM Wireframe</Title>
 	<BoundingBox SRS='EPSG:4326' minx='-180' miny='-90' maxx='180' maxy='90' />
-        <Style>
+	<BoundingBox SRS='EPSG:32630' minx='-1050000' miny='3000000' maxx='1150000' maxy='5000000' />
+	<Style>
           <Name>Default</Name>
           <Title>Default</Title>
         </Style>
@@ -75,8 +77,10 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 	
 // 	backend_api::get_parsed_data($bbox,$nodes,$ways);
 // 	backend_osmxapi::get_parsed_data($bbox,$nodes,$ways);
-	$backend = new backend_osmxapi;
-	$backend->get_parsed_data($bbox,$nodes,$ways);
+// 	$backend = new backend_osmxapi;
+// 	$backend->get_parsed_data($bbox,$nodes,$ways);
+
+	datafactory::get_parsed_data($bbox,$crs,$nodes,$ways);
 	
 	/// Convert the node's coordinates into X-Y, related to (0,0) and the final image size
 	
@@ -94,20 +98,28 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 		$node[1] = ($node[1]-$left) * $x_factor;
 	}
 	
-	// foreach($nodes as $id=>$node)
-	// {
-	// 	echo "$id: {$node[0]},{$node[1]}\n";
-	// }
-	// print_r($nodes);
+// 	foreach($nodes as $id=>$node)
+// 	{
+// 		echo "$id: {$node[0]},{$node[1]}\n";
+// 	}
+// 	print_r($nodes);
 	
-	// echo "x-f: $x_factor; y-f: $y_factor; \n\n";
+// 	echo "x-f: $x_factor; y-f: $y_factor; bbox: $bbox\n\n";
 	
 	
 	/// Prepare GD stuff for the image
 	
 	$im = imagecreate ( $width , $height );
 	
-	$backgroundcolor = imagecolorallocate ( $im , 0 , 0 , 0 );	// Black
+	if (isset($_REQUEST['BGCOLOR']))
+	{
+		sscanf ($_REQUEST['BGCOLOR'],"0x%02X%02X%02X",$red,$green,$blue);
+		$backgroundcolor = imagecolorallocate ( $im , $red,$green,$blue );
+	}
+	else
+	{
+		$backgroundcolor = imagecolorallocate ( $im , 0 , 0 , 0 );	// Black
+	}
 	
 	if ($_REQUEST['TRANSPARENT'])
 		imagecolortransparent( $im , $backgroundcolor );

@@ -26,7 +26,7 @@
 class backend_api extends backend
 {
 
-	const base_api_url = "http://www.openstreetmap.org";
+	static $base_api_url = "http://www.openstreetmap.org";
 	
 	/// Returns an URL to retrieve the data from. Might be a live HTTP URL, or a local temporary .osm file.
 	/// TODO: projection, projection, projection.
@@ -44,7 +44,7 @@ class backend_api extends backend
 			trigger_error("OSM API backend won't accept a request greater than 0.25 degrees (measured in latitude-longitude). Please request a smaller area.",E_USER_ERROR);
 		
 		
-		return self::base_api_url . "/api/0.5/map?bbox=$left,$bottom,$right,$top";
+		return self::$base_api_url . "/api/0.5/map?bbox=$left,$bottom,$right,$top";
 	}
 	
 	/// Returns the data as a string, corresponding to an .osm file
@@ -56,10 +56,10 @@ class backend_api extends backend
 
 		// set URL and other appropriate options
 		curl_setopt($ch, CURLOPT_URL, $this->data_url($bbox) );
-// 		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'OSM WMS');
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+// 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		
 		$data = curl_exec($ch);
 	
@@ -67,13 +67,12 @@ class backend_api extends backend
 		
 		if ($http_code != 200)
 		{
-			/// FIXME: The CURL request has to follow 302 headers, in order to work with OSMXAPI. This, in turn, makes it more difficult to extract the headers from the returned text.
-/*			$headers = explode("\n",substr($data,0,strpos($data,"\r\n\r\n")));
+			$headers = explode("\n",substr($data,0,strpos($data,"\r\n\r\n")));
 			foreach($headers as $header)
 			{
 				if (strstr($header,'Error: '))
 					trigger_error("OSM server returned HTTP code $http_code.\nOSM server also returned the following error information:\n$header\n(URL was " . $this->data_url($bbox) . ")"  ,E_USER_ERROR);
-			}*/
+			}
 			
 			trigger_error("OSM server returned HTTP code $http_code.\n(URL was " . $this->data_url($bbox) . ")"  ,E_USER_ERROR);
 		}
@@ -81,41 +80,14 @@ class backend_api extends backend
 		// No errors, cut the header...
 // 	var_dump($data);
 // 	var_dump( strstr($data,"\r\n\r\n"));
-// 		$data = strstr($data,"\r\n\r\n");
-// 		return substr($data,4);
+		$data = strstr($data,"\r\n\r\n");
+		return substr($data,4);
 
 
-		return $data;
+// 		return $data;
 	}
 	
-	
-	/// Returns two arrays, filled with the requested data
-// 	static function get_parsed_data($bbox,&$nodes,&$ways)
-// 	{
-// 		$nodes = $ways = array();
-// 		$xml = simplexml_load_string($this->get_data_as_osm($bbox));
-// 	
-// // 	var_dump($xml);
-// 	
-// 		foreach($xml->node as $parsed_node)
-// 		{
-// 		// 	$attrs = $parsed_node->attributes();
-// 			$nodes[ (int)$parsed_node['id'] ] = array( (float)$parsed_node['lat'], (float)$parsed_node['lon'] );
-// 		}
-// 		
-// 		
-// 		foreach($xml->way as $parsed_way)
-// 		{
-// 			$way_id = (int)$parsed_way['id'];
-// 			foreach($parsed_way->nd as $nd)
-// 			{
-// 				$ways[ $way_id ][] = (int)$nd['ref'];
-// 			}
-// 				
-// 		// 	$attrs = $parsed_node->attributes();
-// 		// 	$nodes[ $attrs['id'] ] = array( $attrs['lat'],$attrs['lon'] );
-// 		}	
-// 	}
+
 	
 }
 

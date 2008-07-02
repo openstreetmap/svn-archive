@@ -1,0 +1,7 @@
+Things on this list should be fixed in the short-term.
+
+
+User IDs are being exposed - they should be private
+
+Position reports should be deleted after certain number of hours
+

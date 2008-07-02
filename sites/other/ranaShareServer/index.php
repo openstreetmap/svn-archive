@@ -129,14 +129,17 @@ function groupName($Group, $ReadPw)
   
 }
   
-function userName($User, $Group, $ReadPw)
+function userName($User, $Group, $ReadPw, $Plain = false)
 {
   if(!testGroupRead($Group, $ReadPw))
     showErr('supply G= for group and RP= for group read PIN');
   $Result = mysql_query(sprintf("select text from pos_text where `user`=%d and `group`=%d and `type`=%d;", $User, $Group, 1));
   checkErr();
   $Fields = mysql_fetch_row($Result);
-  print("OK: " . $Fields[0]);
+  if($Plain)
+    return(mysql_num_rows($Result) > 0 ? $Fields[0] : 'anon');
+  else
+    print("OK: " . $Fields[0]);
 }
 
 function listGroup($Group, $ReadPw, $Format)
@@ -147,7 +150,10 @@ function listGroup($Group, $ReadPw, $Format)
   checkErr();
   while($Fields = mysql_fetch_row($Result))
   {
-    printf("%s\n", implode(",", $Fields));
+    list($User, $Lat, $Lon) = $Fields;
+
+    $Username = userName($User, $Group, $ReadPw, true);
+    printf("%s,%1.6f,%1.6f\n", $Username, $Lat, $Lon);
   }
 }
 

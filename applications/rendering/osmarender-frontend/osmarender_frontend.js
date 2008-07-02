@@ -679,9 +679,9 @@ listKeys = function() {
 		}
 	}
 
-	var xmlhttp = new XMLHttpRequest();  
+	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("GET", server+osmfilename, false);  
-	xmlhttp.send('');  
+	xmlhttp.send('');
 	osmfile=xmlhttp.responseXML;
 
 	nodes = osmfile.documentElement.selectNodes("//node");
@@ -1062,6 +1062,22 @@ saveFile = function() {
 	var string = new XMLSerializer().serializeToString(cmyk.getRulesFile().documentElement);
 	var newWindow = window.open("","xml");
 	newWindow.location="data:text/xml;charset=utf8,"+encodeURIComponent(string);
+	//var newWindow = window.open("","xml");
+	//newWindow.document.open();
+	//newWindow.document.write(<p>pippo</p>);
+	//newWindow.document.documentElement.appendChild(cmyk.getRulesFile().documentElement);
+	//newWindow.document.close();
+	
+//	<a href="javascript: window.location='data:text/csv;charset=utf8,' + encodeURIComponent('a,b,c,d');">dowload CSV</a>
+}
+
+saveSVGFile = function() {
+	if (document.getElementById("svgfile").childNodes.length>1) {
+		var string = new XMLSerializer().serializeToString(document.getElementById("svgfile").childNodes[1]);
+		console.debug(string);
+		var newWindow = window.open("","xml");
+		newWindow.location="data:text/xml;charset=utf8,"+encodeURIComponent(string);
+	}
 	//var newWindow = window.open("","xml");
 	//newWindow.document.open();
 	//newWindow.document.write(<p>pippo</p>);

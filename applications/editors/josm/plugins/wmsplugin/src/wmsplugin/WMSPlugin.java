@@ -33,6 +33,9 @@ public class WMSPlugin extends Plugin {
 	static JMenu wmsJMenu;
 
 	static ArrayList<WMSInfo> wmsList = new ArrayList<WMSInfo>();
+
+       // remember state of menu item to restore on changed preferences
+       static private boolean menuEnabled = false;
 	
 	public WMSPlugin() {
 		refreshMenu();
@@ -117,7 +120,7 @@ public class WMSPlugin extends Plugin {
 		}));
 		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new Help_WMSmenuAction()));
-		setEnabledAll(false);
+               setEnabledAll(menuEnabled);
 	}
 
 	public static Grabber getGrabber(String wmsurl) {
@@ -134,6 +137,7 @@ public class WMSPlugin extends Plugin {
 			
 			if(item != null) item.setEnabled(isEnabled);
 		}
+               menuEnabled = isEnabled;
 	}
 	
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {

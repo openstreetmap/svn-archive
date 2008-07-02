@@ -110,11 +110,11 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 			}
 		}
 		
-		// josm doesn't seem to give us an option to delete preferences, 
-		// we can only overwrite them with empty strings...
+               // using null values instead of empty string really deletes
+               // the preferences entry
 		for (WMSInfo i : oldValues.values()) {
-			i.url = ""; 
-			i.name = "";
+                       i.url = null;
+                       i.name = null;
 			i.save();
 			change = true;
 		}

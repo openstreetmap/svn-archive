@@ -35,10 +35,20 @@
     <copy todir="build/images" >
       <fileset dir="images" />
     </copy>
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
+
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
-	<attribute name="Plugin-Version" value="3.0" />
+    <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+    <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 	<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed." />
       </manifest>
     </jar>

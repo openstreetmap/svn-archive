@@ -17,17 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
-from module_base import ranaModule
+from base_poi import poiModule
+
 from random import *
 from urllib import *
 
 def getModule(m,d):
   return(shareServer(m,d))
 
-class shareServer(ranaModule):
+class shareServer(poiModule):
   """Shares position info with groups"""
   def __init__(self, m, d):
-    ranaModule.__init__(self, m, d)
+    poiModule.__init__(self, m, d)
  
   def update(self):
     pass

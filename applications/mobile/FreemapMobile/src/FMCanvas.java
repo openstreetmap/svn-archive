@@ -316,5 +316,10 @@ public class FMCanvas extends Canvas
     {
       nearestAnnotation=annotation;
     }
+
+	public Image getImage(int i)
+	{
+		return tiles[i].getImage();
+	}
 }
 

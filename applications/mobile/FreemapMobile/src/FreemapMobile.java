@@ -15,13 +15,13 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
     FMCanvas canvas;
     GPSListener gpsListener;
     LocationProvider lp;
-    ActionList mainMenu, zlMenu, cacheMenu, poiMenu, serverMenu;
+    ActionList mainMenu, zlMenu, cacheMenu, poiMenu, annotationMenu;
     LandmarkStore osmStore,freemapStore;
     POIManager poiManager;
     double lat,lon;
-	String username, password;
 	  Landmark nearestAnnotation;
 	  AnnotationViewer annotationViewer;
+   boolean autoAnnotationShow;
     
     // Constructor for the class
     public FreemapMobile()
@@ -176,31 +176,42 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         }                    
                         
             
-		class ServerMenuHandler implements MenuAction
+		class AnnotationMenuHandler implements MenuAction
 		{
 			public void action(int i)
 			{
 				switch(i)
 				{
 					case 0:
-						if(serverMenu.getEntry(0).equals("Login"))
+						if(annotationMenu.getEntry(0).equals("Auto on"))
 						{
-							serverMenu.setEntry(0,"Logout");
-							LoginForm loginForm = 
-								new LoginForm(FreemapMobile.this);
-							Display.getDisplay(FreemapMobile.this).	
-								setCurrent(loginForm);
+							annotationMenu.setEntry(0,"Auto off");
+							autoAnnotationShow=true;
 						}
 						else
 						{
-							serverMenu.setEntry(0,"Login");
-							username=password="";
+							annotationMenu.setEntry(0,"Auto on");
+							autoAnnotationShow=false;
 						}
+						break;
+
+					case 1:
+      					QualifiedCoordinates qc=new 	
+							QualifiedCoordinates(lat,lon,Float.NaN, 
+							Float.NaN,Float.NaN);
+      					try
+      					{
+        					annotationViewer.getNearestAnnotation(qc);
+      					}
+      					catch(IOException e)
+      					{
+        					showAlert("Error",e.getMessage(),AlertType.ERROR);
+      					}
+						break;
 				}
 			}
 		}
-
-
+				
         try
         {
             osmStore = LandmarkStore.getInstance("OSM_POIs");
@@ -242,7 +253,8 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         ZoomMenuHandler zoomMenuHandler=new ZoomMenuHandler();
         CacheMenuHandler cacheMenuHandler=new CacheMenuHandler();
         POIMenuHandler poiMenuHandler=new POIMenuHandler();
-		ServerMenuHandler serverMenuHandler = new ServerMenuHandler();
+		AnnotationMenuHandler annotationMenuHandler = 
+			new AnnotationMenuHandler();
     
         poiManager=new POIManager(this,osmStore,3000);  
 
@@ -253,7 +265,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                         Display.getDisplay(this));
         poiMenu = new ActionList("POIs",mainMenu,List.IMPLICIT,
                         Display.getDisplay(this));
-		serverMenu = new ActionList("Server",mainMenu,List.IMPLICIT,
+		annotationMenu = new ActionList("Annotations",mainMenu,List.IMPLICIT,
 						Display.getDisplay(this));
 
 
@@ -261,7 +273,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         mainMenu.addItem("Zoom level",zlMenu);
         mainMenu.addItem("Cache",cacheMenu);
         mainMenu.addItem("POIs",poiMenu);
-        mainMenu.addItem("Tests",serverMenu);
+        mainMenu.addItem("Tests",annotationMenu);
         zlMenu.addItem("Low",zoomMenuHandler);
         zlMenu.addItem("Medium",zoomMenuHandler);
         zlMenu.addItem("High",zoomMenuHandler);
@@ -269,7 +281,8 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
         poiMenu.addItem("Update",poiMenuHandler);
         poiMenu.addItem("Find", poiManager);
         poiMenu.addItem("Show",poiMenuHandler);
-		serverMenu.addItem("Login",serverMenuHandler);
+		annotationMenu.addItem("Auto on",annotationMenuHandler);
+		annotationMenu.addItem("Find nearest",annotationMenuHandler);
 
       
 
@@ -286,7 +299,6 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
             poiManager.setCurrentCoords
               (new QualifiedCoordinates(lat,lon,
                 Float.NaN,Float.NaN,Float.NaN));
-       	username=password=""; 
        	
        	annotationViewer=new AnnotationViewer(freemapStore,50,this);
     }
@@ -347,25 +359,19 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
       QualifiedCoordinates qc=new QualifiedCoordinates(lat,lon,Float.NaN,
                                     Float.NaN,Float.NaN);
       poiManager.setCurrentCoords(qc);
-      try
-      {
-        annotationViewer.getNearestAnnotation(qc);
-      }
-      catch(IOException e)
-      {
-        showAlert("Error",e.getMessage(),AlertType.ERROR);
-      }
+	  if(autoAnnotationShow)
+	  {
+      	try
+      	{
+        	annotationViewer.getNearestAnnotation(qc);
+      	}
+      	catch(IOException e)
+      	{
+        	showAlert("Error",e.getMessage(),AlertType.ERROR);
+      	}
+	  }
   
     }
-    
-   
-    
-	public void login(String username,String password)
-	{
-		this.username=username;
-		this.password=password;
-		handleBackCommand();
-	}
     
     public double getLon()
     {

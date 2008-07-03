@@ -8,6 +8,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.microedition.location.Landmark;
 import javax.microedition.location.LandmarkStore;
 import javax.microedition.location.QualifiedCoordinates;
+import javax.microedition.lcdui.AlertType;
 
 
 public class FreemapParserHandler extends LandmarkSourceParserHandler
@@ -31,6 +32,8 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 					Attributes attributes) throws SAXException
 	{
 	
+	  try
+	   {
 		System.out.println("FreemapParserHandler: element="+qName);
 		if (qName.equals("item"))
 		{
@@ -54,10 +57,19 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 		{
 			inID = true;
 		}
+		}
+	  catch(Exception e)
+	  {
+		app.showAlert(e.toString()+" "+e.getMessage(),"",AlertType.ERROR);
+		if(e instanceof SAXException)
+		  throw (SAXException)e;
+   	 } 
 	}
 
 	public void endElement(String uri,String localName,String qName)
 	{
+		try
+		{
 		if(qName.equals("item"))
 		{
 			inItem=false;
@@ -91,6 +103,11 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 		else if (qName.equals("guid"))
 		{
 			inID=false;
+		}
+		}
+		catch(Exception e)
+		{
+				app.showAlert("Exception: "+e.getMessage(),"",AlertType.ERROR);
 		}
 	}
 

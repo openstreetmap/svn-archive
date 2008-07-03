@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
 from module_base import ranaModule
+from base_poi import poiModule
 import cairo
 from datetime import *
 import math
@@ -25,10 +26,10 @@ import math
 def getModule(m,d):
   return(placenames(m,d))
 
-class placenames(ranaModule):
+class placenames(poiModule):
   """Lookup nearest town or village"""
   def __init__(self, m, d):
-    ranaModule.__init__(self, m, d)
+    poiModule.__init__(self, m, d)
     self.places = {'v':[],'c':[],'t':[]} # village, city, town
     self.load("places.txt")
     self.lastpos = (0,0)
@@ -84,9 +85,6 @@ class placenames(ranaModule):
         self.set('nearest_place', self.lookup(pos[0], pos[1]))
         self.lastpos = pos
 
-  def drawList(self, menuName, listhelper):
-    print "Drawing places list"
-    
   def handleMessage(self, message):
     pass
       

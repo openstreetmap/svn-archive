@@ -91,11 +91,9 @@ class menus(ranaModule):
     if(list != None):
       m = self.m.get(list, None)
       if(m != None):
-        listHelper = listable_menu(x1,y1,w,h)
-        m.drawList(menuName, listHelper)
+        listHelper = listable_menu(cr,x1,y1,w,h)
+        m.drawList(cr, menuName, listHelper)
       return
-
-
     
     # Find the menu
     menu = self.menus.get(menuName, None)

@@ -18,27 +18,35 @@
   <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
 
   <property name="ant.build.javac.target" value="1.5"/>
-  
 
   <target name="dist" depends="compile">
     <!-- images -->
     <copy todir="build/images">
       <fileset dir="images" />
     </copy>
-    
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
+
     <jar destfile="${plugin.jar}" basedir="build">
     	<manifest>
-			<attribute name="Plugin-Class" value="SlippyMapChooserPlugin" />
+          <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.SlippyMapChooserPlugin" />
 			<attribute name="Plugin-Description" value="Adds a new download dialog that allows to select the download rectangle on the slippy map. With this plugin it's possible to download ways and gpx logs without knowing the coordinates of the desired download rectangle - just navigate to the desired area by zooming and moving the slippy map, mark the area with a rectangle and click download. Works great together with the namefinder plugin!" />
 			<attribute name="Plugin-Author" value="slippy_map_chooser@freakmail.de" />
-			<attribute name="Plugin-Version" value="1.1" />
+                        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 		</manifest>
     </jar>
   </target>
 
   <target name="compile" depends="init">
     <echo message="creating ${plugin.jar}"/>
-    <javac srcdir="src" classpath="../../core/dist/josm-custom.jar" destdir="build" />
+    <javac srcdir="src" classpath="${josm}" destdir="build" />
   </target>
   
   <target name="init">

@@ -156,13 +156,42 @@ function listGroup($Group, $ReadPw, $Format)
     showErr('supply G= for group and RP= for group read PIN');
   $Result = mysql_query(sprintf("select user,lat,lon from pos_reports where `group`=%d;", $Group));
   checkErr();
+
+    switch($Format)
+    {
+      case "gpx":
+        printf("<?xml version=\"1.0\"?>\n<gpx version=\"1.0\" creator=\"ranaShareServer\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/0\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">\n");
+        break;
+      default:
+        break;
+    }
+
+
   while($Fields = mysql_fetch_row($Result))
   {
     list($User, $Lat, $Lon) = $Fields;
 
     $Username = userName($User, $Group, $ReadPw, true);
-    printf("%s,%1.6f,%1.6f\n", $Username, $Lat, $Lon);
+    switch($Format)
+    {
+      case "gpx":
+        printf("<wpt lat=\"%1.6f\" lon=\"%1.6f\">\n  <name>%s</name>\n</wpt>\n", $Lat, $Lon, $Username);
+        break;
+      default:
+        printf("%s,%1.6f,%1.6f\n", $Username, $Lat, $Lon);
+        break;
+    }
   }
+
+    switch($Format)
+    {
+      case "gpx":
+        printf("</gpx>");
+        break;
+      default:
+        break;
+    }
+
 }
 
 function addGroup($User, $PIN, $GroupName, $ReadPw, $WritePw, $Timeout)

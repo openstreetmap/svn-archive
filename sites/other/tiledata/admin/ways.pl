@@ -7,7 +7,7 @@ use dbpassword;
 #print STDERR "way data - ctrl-c to quit in next 10 seconds\n";sleep(10);print STDERR "Running...\n";
 
 # Connect to database
-my $db = DBI->connect("dbi:mysql:ojw:localhost:3306", getUser, getPass) or die();
+my $db = DBI->connect(getDatabase, getUser, getPass) or die();
 my $GetNodeSQL = $db->prepare('select * from nodepos where id=?');
 
 #print getNode(200575), "\n";
@@ -27,6 +27,7 @@ my $TimeSinceWhine = 0;
 
 $db->prepare("delete from wayloc")->execute();
 $db->prepare("delete from waydata")->execute();
+$db->prepare("delete from nodedep")->execute();
 
 # List of tags to ignore (not save)
 my %Ignore;
@@ -37,6 +38,7 @@ foreach my $Word(split(/,\s*/,"created_by, ele, source, time, editor, author, hd
 
 my $InsertSQL = $db->prepare('INSERT INTO wayloc VALUES (?,?)');
 my $WaySQL = $db->prepare('INSERT INTO waydata VALUES (?,?)');
+my $NodeDepSQL = $db->prepare('INSERT INTO nodedep VALUES (?,?)');
 
 while(my $Line = <>)
 {
@@ -69,7 +71,7 @@ while(my $Line = <>)
     }
   
   }
-  elsif($inWay && $Line =~ m{^\s*<tag k=['"](.*)["'] v=["'](.*)["'] />})
+  elsif($inWay && $Line =~ m{^\s*<tag k=['"](.*)["'] v=["'](.*)["']\s*/>})
   {
     if(!$Ignore{$1})
       {
@@ -87,6 +89,10 @@ while(my $Line = <>)
       $WayAsXml = way2xml($Way);
       
       $WaySQL->execute($ID, $WayAsXml);
+      foreach my $Node(@{ $Way->{nodes} })
+      {
+	  $NodeDepSQL->execute(@{ $Node }[0], $ID);
+      }
     
       foreach my $Tile(keys(%{$Way->{tiles}}))
       {
@@ -114,8 +120,9 @@ sub way2xml
       $Node->[1],
       $Node->[2]);
   }
-  while(my($k,$v) = each(%{$Way->{tags}}))
+  foreach my $k (sort (keys %{$Way->{tags}}))
   {
+    my $v = $Way->{tags}->{$k};
     $Text .= sprintf("  <tag k='%s' v='%s' />\n", $k, $v);
   }
   $Text .= "</way>\n";

@@ -26,8 +26,8 @@ public class PhotoLoader
       }
       
        
-      String url = "http://www.free-map.org.uk/images/annotations/"+
-                        id+".jpg";
+      String url = "http://www.free-map.org.uk/freemap/api/markers.php?"+
+                       "action=getPhoto&id="+id; 
       HttpConnection conn = (HttpConnection)Connector.open(url);
    
       DataInputStream dis=

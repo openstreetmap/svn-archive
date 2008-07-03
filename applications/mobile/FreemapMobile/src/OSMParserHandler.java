@@ -78,7 +78,7 @@ public class OSMParserHandler extends LandmarkSourceParserHandler
 		app.showAlert(e.toString()+" "+e.getMessage(),"",AlertType.ERROR);
 		if(e instanceof SAXException)
 		  throw (SAXException)e;
-    }
+    	}
 	}
 
 	public void endElement(String uri,String localName,String qName)

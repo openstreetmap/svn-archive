@@ -1,0 +1,112 @@
+Minutely diff support to import
+-------------------------------
+
+References
+==========
+
+http://dev.openstreetmap.org/~ojw/files/TileDataServer/schema.txt
+http://wiki.openstreetmap.org/index.php/OJW%27s_tile_data_server
+
+Database changes
+================
+
+We need one extra table that can answer the question "What ways use
+node X?" quickly:
+
+CREATE TABLE `nodedep` (
+ `node` bigint(20) NOT NULL,
+ `way` bigint(20) NOT NULL,
+ KEY `node` (`node`)
+) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_bin;
+
+create/node
+===========
+
+ just like in nodes.pl:
+
+ INSERT INTO nodepos VALUES ($id, $x,$y,$tx$ty)
+
+modify/node
+===========
+
+ UPDATE nodepos SET VALUES ($id, $x, $y, $tx$ty) where ID=$id
+
+ dirtyNode{$id} = 1
+
+delete/node
+===========
+
+ DELETE FROM nodepos WHERE ID=$id
+
+ TODO: are we sure ways that depend on this node have been deleted before?
+
+create/way
+==========
+
+ just like in ways.pl:
+
+ INSERT INTO wayloc VALUES (?,?)
+ INSERT INTO waydata VALUES (?,?)
+ (and nodedep too)
+
+ TODO: are we sure all nodes used by this way have already been added?
+
+modify/way
+==========
+
+ delete way
+ add the way again
+
+handling dirty ways
+===================
+
+When location of a node changes a way becomes dirty. This is bit
+tricky: we can't just delete/re-add ways normally since the diff does
+not have enough information for re-adding them. We need to backup old
+waydata and reconstruct the new way using that info.
+
+for n in keys(dirtyNode) {
+  SELECT way FROM nodedep WHERE node=$n
+   dirtyWay{$way} = 1
+}
+
+for n in keys(dirtyWay) {
+  SELECT data FROM waydata WHERE id=$n
+    old_waydata = $data
+    delete way
+    ....    
+
+}
+
+TODO:
+ if N1 is part of W1
+  modify/node N1
+  modify/way W1
+
+ W1 is dirty even after it has been updated to reflect changes in N1
+ since we only track dirty nodes and only later figure out what ways
+ are affected. Maybe modify/way should set some $refreshedWay[$ID]?
+
+delete/way
+==========
+
+ DELETE FROM wayloc WHERE way=$id
+ DELETE FROM waydata WHERE id=$id
+ DELETE FROM nodedep WHERE way=$id
+
+
+test cases
+==========
+
+./nodes.pl < ../maps/south-080618.osm # 1m30s
+time ./ways.pl < ../maps/south-080618.osm # 3m57s
+time ./diffs.pl < ../maps/south-080618-080625.osc # 2m10s
+mysqldump --password=osm -u osm --skip-opt --order-by-primary osm > a
+
+time ./nodes.pl < ../maps/south-080625.osm # 1m31s
+time ./ways.pl < ../maps/south-080625.osm # 3m40s
+mysqldump --password=osm -u osm --skip-opt --order-by-primary osm > b
+
+sort a > a.sort
+sort b > b.sort
+diff -u a.sort b.sort |less -S

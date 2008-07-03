@@ -643,7 +643,7 @@ sub draw_symbols
 # node then the result is a bit unspecified."
 #
 # This implementation currently only looks at the first way using
-# the specified node.
+# the specified node that matches the given k= and v= attributes.
 #
 # Parameters:
 # $rulenode - the XML::XPath::Node object for the <wayMarker> instruction

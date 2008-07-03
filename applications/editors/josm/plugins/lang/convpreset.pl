@@ -1,11 +1,14 @@
 #! /usr/bin/perl -w
 
+# Written by Dirk Stöcker <openstreetmap@dstoecker.de>
+# Public domain, no rights reserved.
+
 use strict;
 
 my $item;
 my $comment = 0;
 
-# this is a simple conversion and in no way a complete XML parser
+# This is a simple conversion and in no way a complete XML parser
 # but it works with a default Perl installation
 
 while(my $line = <>)

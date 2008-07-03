@@ -1335,14 +1335,14 @@
         <!-- Gates -->
         <rule e="node" k="highway" v="gate">
             <rule e="node" k="status" v="open">
-                <wayMarker class="gate-open"/>
+                <wayMarker k="highway" class="gate-open"/>
             </rule>
             <else>
                 <rule e="node" k="status" v="locked">
-                    <wayMarker class="gate-locked"/>
+                    <wayMarker k="highway" class="gate-locked"/>
                 </rule>
                 <else>
-                    <wayMarker class="gate-closed"/>
+                    <wayMarker k="highway" class="gate-closed"/>
                 </else>
             </else>
         </rule>

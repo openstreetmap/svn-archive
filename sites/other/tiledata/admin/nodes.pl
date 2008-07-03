@@ -8,7 +8,7 @@ open LOG, ">log.txt" || die("Can't open logfile\n");
 
 print STDERR "This will delete existing nodes - ctrl-c to quit in next 10 seconds\n";sleep(10);print STDERR "Running...\n";
 
-my $db = DBI->connect("dbi:mysql:ojw:localhost:3306", getUser, getPass) or die();
+my $db = DBI->connect(getDatabase, getUser, getPass) or die();
 
 $db->prepare('delete from nodepos')->execute();
 
@@ -21,7 +21,7 @@ while(my $Line = <>)
   if($Line =~ m{^\s*<node (.*)})
   {
     my $Data = $1;
-    if($Data =~ m{id="(\d+)" lat="(.*?)" lon="(.*?)"})
+    if($Data =~ m{id="(\d+)" .*lat="(.*?)" lon="(.*?)"})
     {
       my $ID = $1;
       my ($lat, $lon) = ($2,$3);

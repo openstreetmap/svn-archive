@@ -31,7 +31,7 @@ class gpsd(ranaModule):
   """Supplies position info from GPSD"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-    position_regexp = re.compile('P=(.*?)\s*$')
+    self.position_regexp = re.compile('P=(.*?)\s*$')
     self.connected = False
     try:
       self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -54,7 +54,7 @@ class gpsd(ranaModule):
       self.status = "Not connected"
       return
     posString = self.socket_cmd("p")
-    match = position_regexp.search(posString)
+    match = self.position_regexp.search(posString)
     if(match == None):
       self.status = "Invalid message"
       return

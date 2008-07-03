@@ -35,7 +35,7 @@
 
     <jar destfile="${plugin.jar}" basedir="build">
     	<manifest>
-          <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.SlippyMapChooserPlugin" />
+          <attribute name="Plugin-Class" value="SlippyMapChooserPlugin" />
 			<attribute name="Plugin-Description" value="Adds a new download dialog that allows to select the download rectangle on the slippy map. With this plugin it's possible to download ways and gpx logs without knowing the coordinates of the desired download rectangle - just navigate to the desired area by zooming and moving the slippy map, mark the area with a rectangle and click download. Works great together with the namefinder plugin!" />
 			<attribute name="Plugin-Author" value="slippy_map_chooser@freakmail.de" />
                         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

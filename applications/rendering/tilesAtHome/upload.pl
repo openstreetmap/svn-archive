@@ -237,7 +237,7 @@ sub upload
     }
     else
     {
-        $File=~m{.*_([^_]+)(_tileset)*\.zip}x;
+        $File=~m{_([^_]+)(_tileset)?\.zip}x;
         $Layer=$1;
     }
     if((! $Config->get("UploadToDirectory")) or (! -d $Config->get("UploadTargetDirectory")))

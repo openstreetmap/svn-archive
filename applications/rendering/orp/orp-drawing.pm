@@ -668,7 +668,19 @@ sub draw_way_markers
 
         # find the (first) way using this node and use it to determine
         # previous and next nodes
-        my $way = $_->{"ways"}->[0];
+	my $way = undef;
+	my $k = $markernode->getAttribute('k');
+	my $v = $markernode->getAttribute('v');
+	if ($k || $v) {
+		foreach (@{$_->{'ways'}}) {
+			next if $k && (!defined($_->{'tags'}->{$k}));
+			next if $k && $v && ($_->{'tags'}{$k} ne $v);
+			$way = $_;
+			last;
+		}
+	} else {
+        	$way = $_->{'ways'}->[0];
+	}
         next unless defined($way);
         my $previous;
         my $next;

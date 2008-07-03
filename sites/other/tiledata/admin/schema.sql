@@ -35,3 +35,15 @@ CREATE TABLE `wayloc` (
   `tile` char(11) character set ascii collate ascii_bin NOT NULL,
   KEY `tile` (`tile`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Ways that depend on nodes
+-- 
+
+CREATE TABLE `nodedep` (
+ `node` bigint(20) NOT NULL,
+ `way` bigint(20) NOT NULL,
+ KEY `node` (`node`)
+) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_bin;

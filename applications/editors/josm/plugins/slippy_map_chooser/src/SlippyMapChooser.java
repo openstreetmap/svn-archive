@@ -80,7 +80,7 @@ public class SlippyMapChooser extends JComponent implements DownloadSelection{
 		JPanel temp = new JPanel();
 		temp.setLayout(new BorderLayout());
 		temp.add(this, BorderLayout.CENTER);
-		temp.add(new JLabel((tr("Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and move mouse."))), BorderLayout.SOUTH);
+		temp.add(new JLabel((tr("Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and move mouse.   Select: Click."))), BorderLayout.SOUTH);
 		iGui.tabpane.add(temp, "Slippy map");
 		
 		new OsmMapControl(this,temp, iSizeButton);

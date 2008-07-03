@@ -20,8 +20,11 @@ public class CrossingWays extends Test
 {
 	/** All way segments, grouped by cells */
 	Map<Point2D,List<ExtendedSegment>> cellSegments;
-    /** The already detected errors */
+	/** The already detected errors */
 	HashSet<WaySegment> errorSegments;
+	/** The already detected ways in error */
+	Map<List<Way>, List<WaySegment>> ways_seen;
+
 	
 	/**
 	 * Constructor
@@ -37,7 +40,8 @@ public class CrossingWays extends Test
 	public void startTest() 
 	{
 		cellSegments = new HashMap<Point2D,List<ExtendedSegment>>(1000);
-        errorSegments = new HashSet<WaySegment>();
+		errorSegments = new HashSet<WaySegment>();
+		ways_seen = new HashMap<List<Way>, List<WaySegment>>(50);
 	}
 
 	@Override
@@ -45,64 +49,82 @@ public class CrossingWays extends Test
 	{
 		cellSegments = null;
 		errorSegments = null;
+		ways_seen = null;
 	}
 
 	@Override
 	public void visit(Way w) 
 	{
-        if( w.deleted || w.incomplete )
-            return;
-        
-        String coastline1 = w.get("natural"); 
-        boolean isCoastline1 = coastline1 != null && (coastline1.equals("water") || coastline1.equals("coastline"));
-        String railway1 = w.get("railway"); 
-        boolean isSubway1 = railway1 != null && railway1.equals("subway");
-        if( w.get("highway") == null && w.get("waterway") == null && !isSubway1 && !isCoastline1) 
-        	return;
-        
-        String layer1 = w.get("layer");
+		if( w.deleted || w.incomplete )
+			return;
+
+		String coastline1 = w.get("natural"); 
+		boolean isCoastline1 = coastline1 != null && (coastline1.equals("water") || coastline1.equals("coastline"));
+		String railway1 = w.get("railway"); 
+		boolean isSubway1 = railway1 != null && railway1.equals("subway");
+		if( w.get("highway") == null && w.get("waterway") == null && (railway1 == null || isSubway1)  && !isCoastline1) 
+			return;
+
+	        String layer1 = w.get("layer");
 
 		int nodesSize = w.nodes.size();
 		for (int i = 0; i < nodesSize - 1; i++) {
 			WaySegment ws = new WaySegment(w, i);
-            ExtendedSegment es1 = new ExtendedSegment(ws, layer1, railway1, coastline1);
-            List<List<ExtendedSegment>> cellSegments = getSegments(es1.n1, es1.n2);
-            for( List<ExtendedSegment> segments : cellSegments)
-            {
-	            for( ExtendedSegment es2 : segments)
-	            {
+			ExtendedSegment es1 = new ExtendedSegment(ws, layer1, railway1, coastline1);
+			List<List<ExtendedSegment>> cellSegments = getSegments(es1.n1, es1.n2);
+			for( List<ExtendedSegment> segments : cellSegments)
+			{
+				for( ExtendedSegment es2 : segments)
+				{
+					List<Way> prims;
+					List<WaySegment> highlight;
+
 					if (errorSegments.contains(ws) && errorSegments.contains(es2.ws))
-	            		continue;
-	            	
-	                String layer2 = es2.layer;
-	                String railway2 = es2.railway;
-	                String coastline2 = es2.coastline;
+						continue;
+
+					String layer2 = es2.layer;
+					String railway2 = es2.railway;
+					String coastline2 = es2.coastline;
 					if (layer1 == null ? layer2 != null : !layer1.equals(layer2))
-	                	continue;
-	                
-	                if( !es1.intersects(es2) ) continue;
-		            if( isSubway1 && "subway".equals(railway2)) continue;
-		            
-		            boolean isCoastline2 = coastline2 != null && (coastline2.equals("water") || coastline2.equals("coastline"));
-	                if( isCoastline1 != isCoastline2 ) continue;
-	                
-                    errors.add(new TestError(this, Severity.WARNING, tr("Crossing ways"),
-						Arrays.asList(es1.ws.way, es2.ws.way),
-						Arrays.asList(es1.ws, es2.ws)));
-	            }
-	            segments.add(es1);
-            }
-        }
+						continue;
+
+					if( !es1.intersects(es2) ) continue;
+					if( isSubway1 && "subway".equals(railway2)) continue;
+
+					boolean isCoastline2 = coastline2 != null && (coastline2.equals("water") || coastline2.equals("coastline"));
+					if( isCoastline1 != isCoastline2 ) continue;
+
+					prims = Arrays.asList(es1.ws.way, es2.ws.way);
+					if ((highlight = ways_seen.get(prims)) == null)
+					{
+						highlight = new ArrayList<WaySegment>();
+						highlight.add(es1.ws);
+						highlight.add(es2.ws);
+
+						errors.add(new TestError(this, Severity.WARNING, tr("Crossing ways"),
+						prims,
+						highlight));
+						ways_seen.put(prims, highlight);
+					}
+					else
+					{
+						highlight.add(es1.ws);
+						highlight.add(es2.ws);
+					}
+				}
+				segments.add(es1);
+			}
+		}
 	}
-	
+
 	/**
-     * Returns all the cells this segment crosses.  Each cell contains the list
-     * of segments already processed
-     * 
-     * @param n1 The first node.
-     * @param n2 The second node.
-     * @return A list with all the cells the segment crosses.
-     */
+	* Returns all the cells this segment crosses.  Each cell contains the list
+	* of segments already processed
+	*
+	* @param n1 The first node
+	* @param n2 The second node
+	* @return A list with all the cells the segment crosses
+	*/
 	public List<List<ExtendedSegment>> getSegments(Node n1, Node n2)
 	{
 		List<List<ExtendedSegment>> cells = new ArrayList<List<ExtendedSegment>>();

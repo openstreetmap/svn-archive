@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-03 08:46+0200\n"
-"PO-Revision-Date: 2008-07-01 12:26+0200\n"
+"POT-Creation-Date: 2008-07-03 15:08+0200\n"
+"PO-Revision-Date: 2008-07-03 15:31+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -49,8 +49,7 @@ msgstr "Kann das Plugin {0} nicht von {1} laden"
 
 #: ../../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:134
 #, java-format
-msgid ""
-"The plugin {0} seem to be broken or could not be downloaded automatically."
+msgid "The plugin {0} seem to be broken or could not be downloaded automatically."
 msgstr ""
 "Das Plugin {0} scheint fehlerhaft zu sein oder kann nicht automatisch "
 "heruntergeladen werden."
@@ -86,8 +85,9 @@ msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
 msgstr "Überspiele {0} {1} (id: {2}) {3}% {4}/{5} ({6} verbleiben)..."
 
 #: ../../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:132
-msgid "An error occoured: "
-msgstr "Ein Fehler ist aufgetreten: "
+#, java-format
+msgid "An error occoured: {0}"
+msgstr "Ein Fehler ist aufgetreten: {0}"
 
 #: ../../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:149
 msgid "Opening changeset..."
@@ -215,8 +215,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/Main.java:411
 msgid "Hint: Some changes came from uploading new data to the server."
-msgstr ""
-"Hinweis: Einige Änderungen sind durch das Übertragen zum Server enstanden."
+msgstr "Hinweis: Einige Änderungen sind durch das Übertragen zum Server enstanden."
 
 #: ../../core/src/org/openstreetmap/josm/Main.java:413
 msgid "There are unsaved changes. Discard the changes and continue?"
@@ -276,8 +275,7 @@ msgstr "Information"
 
 #: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:62
 #, java-format
-msgid ""
-"An unexpected exception occurred that may have come from the ''{0}'' plugin."
+msgid "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
 "Eine unvorhergesehene Ausnahme trat auf, welche vom Plugin \"{0}\" kommen "
 "könnte."
@@ -488,7 +486,7 @@ msgstr "Löse {0} Konflikte in {1} Objekten"
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:519
 #: ../colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:79
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:55
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:381
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:391
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -504,7 +502,7 @@ msgstr "Hinzufügen"
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:521
 #: ../colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:93
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:75
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:405
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:415
 msgid "Delete"
 msgstr "Löschen"
 
@@ -1374,8 +1372,7 @@ msgid "Release the mouse button to select the objects in the rectangle."
 msgstr "Maustaste loslassen um Objekte im Rechteck auszuwählen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:313
-msgid ""
-"Release the mouse button to stop moving. Ctrl to merge with nearest node."
+msgid "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "Um die Bewegung zu stoppen, Maustaste loslassen. Strg: mit dem nächsten "
 "Punkt vereinigen."
@@ -1436,8 +1433,7 @@ msgstr "Knotenpunkt in einen Weg einfügen und verbinden"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:597
 msgid "Click to create a new way to the existing node."
-msgstr ""
-"Klicken, um einen neuen Weg zum existierenden Knotenpunkt zu erstellen."
+msgstr "Klicken, um einen neuen Weg zum existierenden Knotenpunkt zu erstellen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:599
 msgid "Click to make a connection to the existing node."
@@ -1445,8 +1441,7 @@ msgstr "Klicken, um eine Verbindung zum existierenden Knotenpunkt zu erzeugen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:602
 msgid "Click to insert a node and create a new way."
-msgstr ""
-"Klicken, um einen Knotenpunkt einzufügen und einen neuen Weg zu erstellen."
+msgstr "Klicken, um einen Knotenpunkt einzufügen und einen neuen Weg zu erstellen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:604
 msgid "Click to insert a new node and make a connection."
@@ -1472,8 +1467,7 @@ msgstr "Weg ausweiten"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:262
 msgid "Draw a rectangle of the desired size, then release the mouse button."
-msgstr ""
-"Ein Rechteck der gewünschten Größe zeichnen und dann den Mausknopf loslassen."
+msgstr "Ein Rechteck der gewünschten Größe zeichnen und dann den Mausknopf loslassen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:266
 msgid "Drag a way segment to make a rectangle."
@@ -1809,7 +1803,7 @@ msgstr "Datei"
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:86
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:520
 #: ../grid/src/grid/GridPlugin.java:43 ../grid/src/grid/GridPlugin.java:49
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:391
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:401
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -2045,8 +2039,7 @@ msgstr "Beschreibung"
 msgid ""
 "Some waypoints with timestamps from before the start of the track were "
 "omitted."
-msgstr ""
-"Einige Wegpunkte mit Zeitstempeln vor Beginn des Tracks wurden übersprungen."
+msgstr "Einige Wegpunkte mit Zeitstempeln vor Beginn des Tracks wurden übersprungen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:765
 msgid ""
@@ -2100,8 +2093,7 @@ msgid "Synchronize Audio"
 msgstr "Ton synchronisieren"
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:208
-msgid ""
-"You need to pause audio at the moment when you hear your synchronization cue."
+msgid "You need to pause audio at the moment when you hear your synchronization cue."
 msgstr ""
 "Sie müssen die Tonwiedergabe auf Pause stellen, sobald Sie Ihren "
 "Synchronisationston hören."
@@ -2353,8 +2345,7 @@ msgstr ""
 "werden um die Linien entlang des Weges zu vervollständigen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:45
-msgid ""
-"Force drawing of lines if the imported data contain no line information."
+msgid "Force drawing of lines if the imported data contain no line information."
 msgstr ""
 "Das Zeichnen von Linien erzwingen, wenn die importierten Daten keine Linien-"
 "Informationen enthalten."
@@ -2395,8 +2386,7 @@ msgstr "Anzeige-Einstellungen"
 msgid ""
 "Various settings that influence the visual representation of the whole "
 "program."
-msgstr ""
-"Diverse Optionen die die visuelle Repräsentation des Programms beinflussen."
+msgstr "Diverse Optionen die die visuelle Repräsentation des Programms beinflussen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:40
 msgid "Connection Settings"
@@ -2478,8 +2468,7 @@ msgstr ""
 msgid ""
 "Put text labels against audio (and image and web) markers as well as their "
 "button icons."
-msgstr ""
-"Audio-Marken (und Bild- und Web-Marken) und deren Bildsymbole beschriften."
+msgstr "Audio-Marken (und Bild- und Web-Marken) und deren Bildsymbole beschriften."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:88
 msgid ""
@@ -2521,8 +2510,7 @@ msgstr "Schrittweite vorwärts/zurück (s)"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:143
 msgid "The amount by which the speed is multiplied for fast forwarding"
-msgstr ""
-"Der Faktor um den die Geschwindigkeit bei schnellem Vorlauf erhöht wird"
+msgstr "Der Faktor um den die Geschwindigkeit bei schnellem Vorlauf erhöht wird"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:144
 msgid "Fast forward multiplier"
@@ -2559,8 +2547,7 @@ msgid "Login name (email) to the OSM account."
 msgstr "Benutzername (E-Mail) für den OSM Server."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:37
-msgid ""
-"Login password to the OSM account. Leave blank to not store any password."
+msgid "Login password to the OSM account. Leave blank to not store any password."
 msgstr ""
 "Passwort für den OSM Server. Leer lassen, wenn kein Passwort gespeichert "
 "werden soll."
@@ -2682,7 +2669,7 @@ msgstr "Voreinstellungs-Quelle"
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:65
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:116
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:507
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:395
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:405
 msgid "Please select the row to edit."
 msgstr "Bitte wählen sie eine Zeile zum Bearbeiten."
 
@@ -2690,7 +2677,7 @@ msgstr "Bitte wählen sie eine Zeile zum Bearbeiten."
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:84
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:512
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:80
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:409
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:419
 msgid "Please select the row to delete."
 msgstr "Bitte wählen Sie die zu löschende Zeile."
 
@@ -2707,7 +2694,7 @@ msgid "Add a new tagging preset source to the list."
 msgstr "Eine neue Voreinstellungsquelle zu der Liste hinzufügen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:91
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:420
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:430
 msgid "Delete the selected source from the list."
 msgstr "Ausgewählte Quelle löschen."
 
@@ -2913,8 +2900,7 @@ msgid "true: the property is explicitly switched on"
 msgstr "wahr: diese Eigenschaft wurde explicit angeschaltet"
 
 #: ../../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:96
-msgid ""
-"partial: different selected objects have different values, do not change"
+msgid "partial: different selected objects have different values, do not change"
 msgstr ""
 "teilweise: verschiedene gewählte Objekte haben verschiedene Werte, nicht "
 "ändern"
@@ -2985,8 +2971,7 @@ msgstr "jeder"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplet.java:58
 msgid "If specified, reset the configuration instead of reading it."
-msgstr ""
-"Wenn angegeben, wird die Konfiguration zurückgesetzt anstatt sie zu lesen."
+msgstr "Wenn angegeben, wird die Konfiguration zurückgesetzt anstatt sie zu lesen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:54
 msgid "Conflict"
@@ -3002,12 +2987,10 @@ msgstr "Lösen"
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:67
 msgid "Open a merge dialog of all selected items in the list above."
-msgstr ""
-"Öffnet ein Dialog-Fenster mit den gewählten Objekten aus der obigen Liste."
+msgstr "Öffnet ein Dialog-Fenster mit den gewählten Objekten aus der obigen Liste."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:77
-msgid ""
-"Set the selected elements on the map to the selected items in the list above."
+msgid "Set the selected elements on the map to the selected items in the list above."
 msgstr ""
 "Setze die gewählten Elemente auf der Karte auf die obige Liste der "
 "ausgewählten Objekte."
@@ -3118,13 +3101,11 @@ msgstr "Entferne alle gewählten Objekte von der Relation"
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:232
 msgid "Remove the member in the current table row from this relation"
-msgstr ""
-"Entferne das Mitglied in der aktuellen Tabellenzeile von dieser Relation."
+msgstr "Entferne das Mitglied in der aktuellen Tabellenzeile von dieser Relation."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:245
 msgid "Highlight the member from the current table row as JOSM's selection"
-msgstr ""
-"Übernehme das Mitglied der aktuellen Tabellenzeile als Auswahl in JOSM."
+msgstr "Übernehme das Mitglied der aktuellen Tabellenzeile als Auswahl in JOSM."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:253
 msgid "Download Members"
@@ -3204,8 +3185,7 @@ msgstr "Zeige alle bislang ausgeführten (und rückänderbaren) Befehle an."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:128
 msgid "Please select the objects you want to change properties for."
-msgstr ""
-"Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
+msgstr "Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:131
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:281
@@ -3233,8 +3213,7 @@ msgstr[1] "Ändere Eigenschaften für {0} Objekte"
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:276
 msgid "Please select objects for which you want to change properties."
-msgstr ""
-"Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
+msgstr "Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:281
 msgid "Please select a key"
@@ -3487,7 +3466,7 @@ msgstr "Straßen/Autobahn"
 
 #: ../lang/presets.java:12
 msgid "Edit a Motorway"
-msgstr "Autobahn anpassen"
+msgstr "Autobahn bearbeiten"
 
 #: ../lang/presets.java:15 ../lang/presets.java:51 ../lang/presets.java:70
 #: ../lang/presets.java:99 ../lang/presets.java:135 ../lang/presets.java:154
@@ -3606,7 +3585,7 @@ msgstr "Straßen/Autobahnanschluß"
 
 #: ../lang/presets.java:31
 msgid "Edit a Motorway Link"
-msgstr "Autobahnanschluß anpassen"
+msgstr "Autobahnanschluß bearbeiten"
 
 #: ../lang/presets.java:47
 msgid "Streets/Trunk"
@@ -3722,7 +3701,9 @@ msgstr "Oberfläche"
 #: ../lang/presets.java:219 ../lang/presets.java:237 ../lang/presets.java:255
 #: ../lang/presets.java:319 ../lang/presets.java:348 ../lang/presets.java:367
 #: ../lang/presets.java:389 ../lang/presets.java:408 ../lang/presets.java:427
-#: ../lang/presets.java:446 ../lang/presets.java:473
+#: ../lang/presets.java:446 ../lang/presets.java:473 ../lang/presets.java:502
+#: ../lang/presets.java:520 ../lang/presets.java:538 ../lang/presets.java:556
+#: ../lang/presets.java:574 ../lang/presets.java:592
 msgid "paved"
 msgstr "geteert"
 
@@ -3736,7 +3717,9 @@ msgstr "unbefestigt"
 #: ../lang/presets.java:219 ../lang/presets.java:237 ../lang/presets.java:255
 #: ../lang/presets.java:319 ../lang/presets.java:348 ../lang/presets.java:367
 #: ../lang/presets.java:389 ../lang/presets.java:408 ../lang/presets.java:427
-#: ../lang/presets.java:446 ../lang/presets.java:473
+#: ../lang/presets.java:446 ../lang/presets.java:473 ../lang/presets.java:502
+#: ../lang/presets.java:520 ../lang/presets.java:538 ../lang/presets.java:556
+#: ../lang/presets.java:574 ../lang/presets.java:592
 msgid "cobblestone"
 msgstr "gepflastert"
 
@@ -3799,14 +3782,14 @@ msgstr "Privat"
 #: ../lang/presets.java:458 ../lang/presets.java:459 ../lang/presets.java:460
 #: ../lang/presets.java:461 ../lang/presets.java:462
 msgid "designated"
-msgstr ""
+msgstr "Nutzungsart beschildert"
 
 #: ../lang/presets.java:266 ../lang/presets.java:267 ../lang/presets.java:268
 #: ../lang/presets.java:269 ../lang/presets.java:270 ../lang/presets.java:271
 #: ../lang/presets.java:272 ../lang/presets.java:273 ../lang/presets.java:274
 #: ../lang/presets.java:275 ../lang/presets.java:276
 msgid "destination"
-msgstr ""
+msgstr "Fahrtziel am Weg"
 
 #: ../lang/presets.java:266 ../lang/presets.java:267 ../lang/presets.java:268
 #: ../lang/presets.java:269 ../lang/presets.java:270 ../lang/presets.java:271
@@ -4132,28 +4115,23 @@ msgstr "Track bearbeiten"
 
 #: ../lang/presets.java:502 ../lang/presets.java:520 ../lang/presets.java:538
 #: ../lang/presets.java:556 ../lang/presets.java:574 ../lang/presets.java:592
-msgid "copperstone"
-msgstr ""
-
-#: ../lang/presets.java:502 ../lang/presets.java:520 ../lang/presets.java:538
-#: ../lang/presets.java:556 ../lang/presets.java:574 ../lang/presets.java:592
 msgid "gravel"
-msgstr ""
+msgstr "Schotter"
 
 #: ../lang/presets.java:502 ../lang/presets.java:520 ../lang/presets.java:538
 #: ../lang/presets.java:556 ../lang/presets.java:574 ../lang/presets.java:592
 msgid "ground"
-msgstr ""
+msgstr "Erde"
 
 #: ../lang/presets.java:502 ../lang/presets.java:520 ../lang/presets.java:538
 #: ../lang/presets.java:556 ../lang/presets.java:574 ../lang/presets.java:592
 msgid "grass"
-msgstr ""
+msgstr "Gras"
 
 #: ../lang/presets.java:502 ../lang/presets.java:520 ../lang/presets.java:538
 #: ../lang/presets.java:556 ../lang/presets.java:574 ../lang/presets.java:592
 msgid "sand"
-msgstr ""
+msgstr "Sand"
 
 #: ../lang/presets.java:507
 msgid "Ways/Track Grade 1"
@@ -4516,979 +4494,813 @@ msgid "Edit Hostel"
 msgstr "Jugendherberge bearbeiten"
 
 #: ../lang/presets.java:803
-#, fuzzy
 msgid "Accomodation/Caravan Site"
-msgstr "Neue Relation bearbeiten"
+msgstr "Quartier/Wohnwagenstellplätze"
 
 #: ../lang/presets.java:804
-#, fuzzy
 msgid "Edit Caravan Site"
-msgstr "Neue Relation bearbeiten"
+msgstr "Wohnwagenstellplätze bearbeiten"
 
 #: ../lang/presets.java:809
-#, fuzzy
 msgid "Accomodation/Camping Site"
-msgstr "Neue Relation bearbeiten"
+msgstr "Quartier/Campingplatz"
 
 #: ../lang/presets.java:810
-#, fuzzy
 msgid "Edit Camping Site"
-msgstr "Neue Relation bearbeiten"
+msgstr "Campingplatz bearbeiten"
 
 #: ../lang/presets.java:815
-#, fuzzy
 msgid "Food+Drinks/Restaurant"
-msgstr "Neue Relation bearbeiten"
+msgstr "Essen & Drinken/Restaurant"
 
 #: ../lang/presets.java:816
-#, fuzzy
 msgid "Edit Restaurant"
-msgstr "Neue Relation bearbeiten"
+msgstr "Restaurant bearbeiten"
 
 #: ../lang/presets.java:821
-#, fuzzy
 msgid "Food+Drinks/Biergarten"
-msgstr "Neue Relation bearbeiten"
+msgstr "Essen & Drinken/Biergarten"
 
 #: ../lang/presets.java:822
-#, fuzzy
 msgid "Edit Biergarten"
-msgstr "Neue Relation bearbeiten"
+msgstr "Biergarten bearbeiten"
 
 #: ../lang/presets.java:827
-#, fuzzy
 msgid "Food+Drinks/Fast Food"
-msgstr "Neue Relation bearbeiten"
+msgstr "Essen + Drinken/Imbiss (Fast Food)"
 
 #: ../lang/presets.java:828
-#, fuzzy
 msgid "Edit Fast Food Restaurant"
-msgstr "Neue Relation bearbeiten"
+msgstr "Imbiss (Fast Food-Resaurant) bearbeiten"
 
 #: ../lang/presets.java:833
-#, fuzzy
 msgid "Food+Drinks/Cafe"
-msgstr "Neue Relation bearbeiten"
+msgstr "Essen & Drinken/Cafe"
 
 #: ../lang/presets.java:834
-#, fuzzy
 msgid "Edit Cafe"
-msgstr "Bearbeiten"
+msgstr "Cafe bearbeiten"
 
 #: ../lang/presets.java:839
-#, fuzzy
 msgid "Food+Drinks/Pub"
-msgstr "Neue Relation bearbeiten"
+msgstr "Essen & Drinken/Kneipe"
 
 #: ../lang/presets.java:840
-#, fuzzy
 msgid "Edit Pub"
-msgstr "Bearbeiten"
+msgstr "Kneipe bearbeiten"
 
 #: ../lang/presets.java:845
-#, fuzzy
 msgid "Food+Drinks/Nightclub"
-msgstr "Neue Relation bearbeiten"
+msgstr "Essen & Drinken/Nachtclub"
 
 #: ../lang/presets.java:846
-#, fuzzy
 msgid "Edit Nightclub"
-msgstr "Bearbeiten"
+msgstr "Nachtclub bearbeiten"
 
 #: ../lang/presets.java:854
-#, fuzzy
 msgid "Tourism/Information"
-msgstr "Information"
+msgstr "Tourismus/Information"
 
 #: ../lang/presets.java:855
-#, fuzzy
 msgid "Edit Tourist Information"
-msgstr "Information zum Autor hinzufügen."
+msgstr "Tourismusinformation bearbeiten"
 
 #: ../lang/presets.java:860
-#, fuzzy
 msgid "Tourism/Museum"
-msgstr "Information"
+msgstr "Tourismus/Museum"
 
 #: ../lang/presets.java:861
-#, fuzzy
 msgid "Edit Museum"
-msgstr "Bearbeiten"
+msgstr "Museum bearbeiten"
 
 #: ../lang/presets.java:866
-#, fuzzy
 msgid "Tourism/Zoo"
-msgstr "Information"
+msgstr "Tourismus/Zoo"
 
 #: ../lang/presets.java:867
-#, fuzzy
 msgid "Edit Zoo"
-msgstr "Bearbeiten"
+msgstr "Zoo bearbeiten"
 
 #: ../lang/presets.java:872
-#, fuzzy
 msgid "Tourism/Viewpoint"
-msgstr "Information"
+msgstr "Tourismus/Aussichtspunkt"
 
 #: ../lang/presets.java:873
-#, fuzzy
 msgid "Edit Viewpoint"
-msgstr "Neue Relation bearbeiten"
+msgstr "Aussichtspunkt bearbeiten"
 
 #: ../lang/presets.java:878
-#, fuzzy
 msgid "Tourism/Attraction"
-msgstr "Information"
+msgstr "Tourismus/Attraktion"
 
 #: ../lang/presets.java:879
-#, fuzzy
 msgid "Edit Attraction"
-msgstr "Neue Relation bearbeiten"
+msgstr "Attraktion bearbeiten"
 
 #: ../lang/presets.java:884
-#, fuzzy
 msgid "Tourism/Picnic Site"
-msgstr "Bearbeiten"
+msgstr "Tourismus/Picknickplatz"
 
 #: ../lang/presets.java:885
-#, fuzzy
 msgid "Edit Picnic Site"
-msgstr "Bearbeiten"
+msgstr "Picknickplatz bearbeiten"
 
 #: ../lang/presets.java:890
-#, fuzzy
 msgid "Tourism/Theme Park"
-msgstr "Bearbeiten"
+msgstr "Tourismus/Themenpark"
 
 #: ../lang/presets.java:891
-#, fuzzy
 msgid "Edit Theme Park"
-msgstr "Bearbeiten"
+msgstr "Themenpark bearbeiten"
 
 #: ../lang/presets.java:896
-#, fuzzy
 msgid "Tourism/Artwork"
-msgstr "Information"
+msgstr "Tourismus/Kunstausstellung"
 
 #: ../lang/presets.java:897
-#, fuzzy
 msgid "Edit Artwork"
-msgstr "Neue Relation bearbeiten"
+msgstr "Kunstausstellung bearbeiten"
 
 #: ../lang/presets.java:905
 msgid "Historic Places/Castle"
-msgstr ""
+msgstr "Historische Stätten/Burg"
 
 #: ../lang/presets.java:906
-#, fuzzy
 msgid "Edit Castle"
-msgstr "Küsten."
+msgstr "Burg berabeiten"
 
 #: ../lang/presets.java:911
 msgid "Historic Places/Ruins"
-msgstr ""
+msgstr "Historische Stätten/Ruinen"
 
 #: ../lang/presets.java:912
-#, fuzzy
 msgid "Edit Ruins"
-msgstr "Neue Relation bearbeiten"
+msgstr "Ruinen bearbeiten"
 
 #: ../lang/presets.java:917
 msgid "Historic Places/Archaeological Site"
-msgstr ""
+msgstr "Historische Stätten/Ausgrabungsstelle"
 
 #: ../lang/presets.java:918
-#, fuzzy
 msgid "Edit Archaeological Site"
-msgstr "Bearbeiten"
+msgstr "Ausgrabungsstelle bearbeiten"
 
 #: ../lang/presets.java:923
-#, fuzzy
 msgid "Historic Places/Monument"
-msgstr "Orte"
+msgstr "Historische Stätten/Baudenkmal"
 
 #: ../lang/presets.java:924
-#, fuzzy
 msgid "Edit Monument"
-msgstr "Leeres Dokument"
+msgstr "Baudenkmal bearbeiten"
 
 #: ../lang/presets.java:929
 msgid "Historic Places/Memorial"
-msgstr ""
+msgstr "Historische Stätten/Gedenkstätte"
 
 #: ../lang/presets.java:930
-#, fuzzy
 msgid "Edit Memorial"
-msgstr "Autobahn anpassen"
+msgstr "Gedenkstätte bearbeiten"
 
 #: ../lang/presets.java:935
-#, fuzzy
 msgid "Historic Places/Battlefield"
-msgstr "Küsten."
+msgstr "Historische Stätten/Schlachtfeld"
 
 #: ../lang/presets.java:936
-#, fuzzy
 msgid "Edit Battlefield"
-msgstr "Küsten."
+msgstr "Schlachtfeld bearbeiten"
 
 #: ../lang/presets.java:944
-#, fuzzy
 msgid "Leisure/Water Park"
-msgstr "Bearbeiten"
+msgstr "Freizeit/Schwimmbad"
 
 #: ../lang/presets.java:945
-#, fuzzy
 msgid "Edit Water Park"
-msgstr "Bearbeiten"
+msgstr "Schwimmbad bearbeiten"
 
 #: ../lang/presets.java:950
 msgid "Leisure/Marina"
-msgstr ""
+msgstr "Freizeit/Jachthafen"
 
 #: ../lang/presets.java:951
-#, fuzzy
 msgid "Edit Marina"
-msgstr "Neue Relation bearbeiten"
+msgstr "Jachthafen bearbeiten"
 
 #: ../lang/presets.java:956
 msgid "Leisure/Slipway"
-msgstr ""
+msgstr "Freizeit/Bootshebeanlage"
 
 #: ../lang/presets.java:957
-#, fuzzy
 msgid "Edit Slipway"
-msgstr "Bearbeiten"
+msgstr "Bootshebeanlage bearbeiten"
 
 #: ../lang/presets.java:962
 msgid "Leisure/Fishing"
-msgstr ""
+msgstr "Freizeit/Angeln"
 
 #: ../lang/presets.java:963
-#, fuzzy
 msgid "Edit Fishing"
-msgstr "Neue Relation bearbeiten"
+msgstr "Angelplatz bearbeiten"
 
 #: ../lang/presets.java:968
 msgid "Leisure/Nature Reserve"
-msgstr ""
+msgstr "Freizeit/Naturdenkmal & Reservat"
 
 #: ../lang/presets.java:969
-#, fuzzy
 msgid "Edit Nature Reserve"
-msgstr "Bearbeiten"
+msgstr "Naturdenkmal oder Reservat bearbeiten"
 
 #: ../lang/presets.java:974
 msgid "Leisure/Park"
-msgstr ""
+msgstr "Freizeit/Park"
 
 #: ../lang/presets.java:975
-#, fuzzy
 msgid "Edit Park"
-msgstr "Bearbeiten"
+msgstr "Park bearbeiten"
 
 #: ../lang/presets.java:980
-#, fuzzy
 msgid "Leisure/Playground"
-msgstr "Neue Relation bearbeiten"
+msgstr "Freizeit/Spielplatz"
 
 #: ../lang/presets.java:981
-#, fuzzy
 msgid "Edit Playground"
-msgstr "Neue Relation bearbeiten"
+msgstr "Spielplatz bearbeiten"
 
 #: ../lang/presets.java:986
 msgid "Leisure/Garden"
-msgstr ""
+msgstr "Freizeit/Garten"
 
 #: ../lang/presets.java:987
-#, fuzzy
 msgid "Edit Garden"
-msgstr "Bearbeiten"
+msgstr "Garten bearbeiten"
 
 #: ../lang/presets.java:992
 msgid "Leisure/Common"
-msgstr ""
+msgstr "Freizeit/Öffentlicher Bereich"
 
 #: ../lang/presets.java:993
-#, fuzzy
 msgid "Edit Common"
-msgstr "Bearbeiten"
+msgstr "Öffentlichen Bereich bearbeiten"
 
 #: ../lang/presets.java:1000
-#, fuzzy
 msgid "Sport/Stadium"
-msgstr "Neue Relation bearbeiten"
+msgstr "Sport/Stadion"
 
 #: ../lang/presets.java:1001
-#, fuzzy
 msgid "Edit Stadium"
-msgstr "Neue Relation bearbeiten"
+msgstr "Stadion bearbeiten"
 
 #: ../lang/presets.java:1006
-#, fuzzy
 msgid "Sport/Sports Centre"
-msgstr "Track"
+msgstr "Sport/Fitnesscenter"
 
 #: ../lang/presets.java:1007
-#, fuzzy
 msgid "Edit Sports Centre"
-msgstr "Neue Relation bearbeiten"
+msgstr "Fitnesscenter bearbeiten"
 
 #: ../lang/presets.java:1012
-#, fuzzy
 msgid "Sport/Pitch"
-msgstr "Track"
+msgstr "Sport/Spielfeld"
 
 #: ../lang/presets.java:1013
-#, fuzzy
 msgid "Edit Pitch"
-msgstr "Bearbeiten"
+msgstr "Spielfeld bearbeiten"
 
 #: ../lang/presets.java:1018
-#, fuzzy
 msgid "Sport/Soccer"
-msgstr "Track"
+msgstr "Sport/Fußball"
 
 #: ../lang/presets.java:1019
-#, fuzzy
 msgid "Edit Soccer"
-msgstr "Bearbeiten"
+msgstr "Fußballplatz bearbeiten"
 
 #: ../lang/presets.java:1024
-#, fuzzy
 msgid "Sport/Football"
-msgstr "Track"
+msgstr "Sport/American Football"
 
 #: ../lang/presets.java:1025
-#, fuzzy
 msgid "Edit Football"
-msgstr "Bearbeiten"
+msgstr "American Football-Platz bearbeiten"
 
 #: ../lang/presets.java:1030
 msgid "Sport/Australian Football"
-msgstr ""
+msgstr "Sport/Australian Football"
 
 #: ../lang/presets.java:1031
-#, fuzzy
 msgid "Edit Australian Football"
-msgstr "Bearbeiten"
+msgstr "Australian Foootball-Platz bearbeiten"
 
 #: ../lang/presets.java:1036
-#, fuzzy
 msgid "Sport/Baseball"
-msgstr "Bearbeiten"
+msgstr "Sport/Baseball"
 
 #: ../lang/presets.java:1037
-#, fuzzy
 msgid "Edit Baseball"
-msgstr "Bearbeiten"
+msgstr "Baseballplatz bearbeiten"
 
 #: ../lang/presets.java:1042
-#, fuzzy
 msgid "Sport/Basketball"
-msgstr "Bearbeiten"
+msgstr "Sport/Baskettball"
 
 #: ../lang/presets.java:1043
-#, fuzzy
 msgid "Edit Basketball"
-msgstr "Bearbeiten"
+msgstr "Baskettballplatz bearbeiten"
 
 #: ../lang/presets.java:1048
-#, fuzzy
 msgid "Sport/Golf Course"
-msgstr "Bearbeiten"
+msgstr "Sport/Golfanlage"
 
 #: ../lang/presets.java:1049
-#, fuzzy
 msgid "Edit Golf Course"
-msgstr "Bearbeiten"
+msgstr "Golfanlage bearbeiten"
 
 #: ../lang/presets.java:1054
-#, fuzzy
 msgid "Sport/Track"
-msgstr "Track"
+msgstr "Sport/Rennbahn"
 
 #: ../lang/presets.java:1055
-#, fuzzy
 msgid "Edit Track"
-msgstr "Track"
+msgstr "Rennbahn bearbeiten"
 
 #: ../lang/presets.java:1060
-#, fuzzy
 msgid "Sport/Multi"
-msgstr "Track"
+msgstr "Sport/Mehrfachnutzung"
 
 #: ../lang/presets.java:1061
-#, fuzzy
 msgid "Edit Multi"
-msgstr "Bearbeiten"
+msgstr "Mehrfach genutzten Sportplatz bearbeiten"
 
 #: ../lang/presets.java:1066
-#, fuzzy
 msgid "Sport/10pin"
-msgstr "Track"
+msgstr "Sport/Bowling"
 
 #: ../lang/presets.java:1067
-#, fuzzy
 msgid "Edit 10pin"
-msgstr "Neue Relation bearbeiten"
+msgstr "Bowlinghalle bearbeiten"
 
 #: ../lang/presets.java:1072
-#, fuzzy
 msgid "Sport/Athletics"
-msgstr "Neue Relation bearbeiten"
+msgstr "Sport/Leichtathletik"
 
 #: ../lang/presets.java:1073
-#, fuzzy
 msgid "Edit Athletics"
-msgstr "Neue Relation bearbeiten"
+msgstr "Leichtathletikfeld bearbeiten"
 
 #: ../lang/presets.java:1078
-#, fuzzy
 msgid "Sport/Boules"
-msgstr "Track"
+msgstr "Sport/Boule"
 
 #: ../lang/presets.java:1079
-#, fuzzy
 msgid "Edit Boules"
-msgstr "Bearbeiten"
+msgstr "Boule-Spielbereich bearbeiten"
 
 #: ../lang/presets.java:1084
-#, fuzzy
 msgid "Sport/Bowls"
-msgstr "Track"
+msgstr "Sport/Bowls"
 
 #: ../lang/presets.java:1085
-#, fuzzy
 msgid "Edit Bowls"
-msgstr "Bearbeiten"
+msgstr "Bowls-Spielfeld bearbeiten"
 
 #: ../lang/presets.java:1090
-#, fuzzy
 msgid "Sport/Climbing"
-msgstr "Track"
+msgstr "Sport/Klettern"
 
 #: ../lang/presets.java:1091
-#, fuzzy
 msgid "Edit Climbing"
-msgstr "Küsten."
+msgstr "Kletterbereich bearbeiten"
 
 #: ../lang/presets.java:1096
-#, fuzzy
 msgid "Sport/Cricket"
-msgstr "Track"
+msgstr "Sport/Kricket"
 
 #: ../lang/presets.java:1097
-#, fuzzy
 msgid "Edit Cricket"
-msgstr "Bearbeiten"
+msgstr "Kricketspielfeld bearbeiten"
 
 #: ../lang/presets.java:1102
-#, fuzzy
 msgid "Sport/Cricket Nets"
-msgstr "Track"
+msgstr "Sport/Kricketnetze"
 
 #: ../lang/presets.java:1103
-#, fuzzy
 msgid "Edit Cricket Nets"
-msgstr "Bearbeiten"
+msgstr "Kricketnetze bearbeiten"
 
 #: ../lang/presets.java:1108
-#, fuzzy
 msgid "Sport/Croquet"
-msgstr "Track"
+msgstr "Sport/Krocket"
 
 #: ../lang/presets.java:1109
-#, fuzzy
 msgid "Edit Croquet"
-msgstr "Leeres Dokument"
+msgstr "Krocketspielfeld bearbeiten"
 
 #: ../lang/presets.java:1114
-#, fuzzy
 msgid "Sport/Cycling"
-msgstr "Track"
+msgstr "Sport/Radfahren"
 
 #: ../lang/presets.java:1115
-#, fuzzy
 msgid "Edit Cycling"
-msgstr "Küsten."
+msgstr "Radsporthalle oder -kurs bearbeiten"
 
 #: ../lang/presets.java:1120
-#, fuzzy
 msgid "Sport/Dog Racing"
-msgstr "Track"
+msgstr "Sport/Hundeschule"
 
 #: ../lang/presets.java:1121
-#, fuzzy
 msgid "Edit Dog Racing"
-msgstr "Neue Relation bearbeiten"
+msgstr "Trainingsplatz für Hunde bearbeiten"
 
 #: ../lang/presets.java:1126
-#, fuzzy
 msgid "Sport/Equestrian"
-msgstr "Küsten."
+msgstr "Sport/Reitplatz"
 
 #: ../lang/presets.java:1127
-#, fuzzy
 msgid "Edit Equestrian"
-msgstr "Küsten."
+msgstr "Reitplatz bearbeiten"
 
 #: ../lang/presets.java:1132
-#, fuzzy
 msgid "Sport/Horse Racing"
-msgstr "Track"
+msgstr "Sport/Pferderennen"
 
 #: ../lang/presets.java:1133
-#, fuzzy
 msgid "Edit Horse Racing"
-msgstr "Neue Relation bearbeiten"
+msgstr "Pferderennplatz bearbeiten"
 
 #: ../lang/presets.java:1138
-#, fuzzy
 msgid "Sport/Golf"
-msgstr "Track"
+msgstr "Sport/Golfplatz"
 
 #: ../lang/presets.java:1139
-#, fuzzy
 msgid "Edit Golf"
-msgstr "Bearbeiten"
+msgstr "Golfplatz bearbeiten"
 
 #: ../lang/presets.java:1144
-#, fuzzy
 msgid "Sport/Gymnastics"
-msgstr "Küsten."
+msgstr "Sport/Gymnastik"
 
 #: ../lang/presets.java:1145
-#, fuzzy
 msgid "Edit Gymnastics"
-msgstr "Küsten."
+msgstr "Gymnastikbereich bearbeiten"
 
 #: ../lang/presets.java:1150
-#, fuzzy
 msgid "Sport/Hockey"
-msgstr "Track"
+msgstr "Sport/Hockey"
 
 #: ../lang/presets.java:1151
-#, fuzzy
 msgid "Edit Hockey"
-msgstr "Track"
+msgstr "Hockeyplatz bearbeiten"
 
 #: ../lang/presets.java:1156
-#, fuzzy
 msgid "Sport/Motor Sports"
-msgstr "Autobahn anpassen"
+msgstr "Sport/Motorsport"
 
 #: ../lang/presets.java:1157
-#, fuzzy
 msgid "Edit Motor Sports"
-msgstr "Autobahn anpassen"
+msgstr "Motorsportplatz bearbeiten"
 
 #: ../lang/presets.java:1162
-#, fuzzy
 msgid "Sport/Pelota"
-msgstr "Track"
+msgstr "Sport/Pelota"
 
 #: ../lang/presets.java:1163
-#, fuzzy
 msgid "Edit Pelota"
-msgstr "Bearbeiten"
+msgstr "Pelotaplatz bearbeiten"
 
 #: ../lang/presets.java:1168
-#, fuzzy
 msgid "Sport/Racquet"
-msgstr "Track"
+msgstr "Sport/Schlagball (Racquet)"
 
 #: ../lang/presets.java:1169
-#, fuzzy
 msgid "Edit Racquet"
-msgstr "Bearbeiten"
+msgstr "Schlagball (Racquet)-Platz Bearbeiten"
 
 #: ../lang/presets.java:1174
-#, fuzzy
 msgid "Sport/Rugby"
-msgstr "Track"
+msgstr "Sport/Rugby"
 
 #: ../lang/presets.java:1175
-#, fuzzy
 msgid "Edit Rugby"
-msgstr "Bearbeiten"
+msgstr "Rugbyplatz bearbeiten"
 
 #: ../lang/presets.java:1180
-#, fuzzy
 msgid "Sport/Skating"
-msgstr "Neue Relation bearbeiten"
+msgstr "Sport/Eislaufen"
 
 #: ../lang/presets.java:1181
-#, fuzzy
 msgid "Edit Skating"
-msgstr "Neue Relation bearbeiten"
+msgstr "Eislaufbahn bearbeiten"
 
 #: ../lang/presets.java:1186
-#, fuzzy
 msgid "Sport/Skateboard"
-msgstr "Neue Relation bearbeiten"
+msgstr "Sport/Skateboard"
 
 #: ../lang/presets.java:1187
-#, fuzzy
 msgid "Edit Skateboard"
-msgstr "Neue Relation bearbeiten"
+msgstr "Skateboardplatz bearbeiten"
 
 #: ../lang/presets.java:1192
-#, fuzzy
 msgid "Sport/Swimming"
-msgstr "Track"
+msgstr "Sport/Schwimmen"
 
 #: ../lang/presets.java:1193
-#, fuzzy
 msgid "Edit Swimming"
-msgstr "Neue Relation bearbeiten"
+msgstr "Schwimmbad bearbeiten"
 
 #: ../lang/presets.java:1198
-#, fuzzy
 msgid "Sport/Skiing"
-msgstr "Track"
+msgstr "Sort/Skifahren"
 
 #: ../lang/presets.java:1199
-#, fuzzy
 msgid "Edit Skiing"
-msgstr "Neue Relation bearbeiten"
+msgstr "Skipiste bearbeiten"
 
 #: ../lang/presets.java:1204
-#, fuzzy
 msgid "Sport/Table Tennis"
-msgstr "Track"
+msgstr "Sport/Tischtennis"
 
 #: ../lang/presets.java:1205
-#, fuzzy
 msgid "Edit Table Tennis"
-msgstr "Bearbeiten"
+msgstr "Tischtennisplatz bearbeiten"
 
 #: ../lang/presets.java:1210
-#, fuzzy
 msgid "Sport/Tennis"
-msgstr "Track"
+msgstr "Sport/Tennis"
 
 #: ../lang/presets.java:1211
-#, fuzzy
 msgid "Edit Tennis"
-msgstr "Bearbeiten"
+msgstr "Tennisplatz bearbeiten"
 
 #: ../lang/presets.java:1218
-#, fuzzy
 msgid "Buildings/Public Building"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Öffentliches Gebäude"
 
 #: ../lang/presets.java:1219
-#, fuzzy
 msgid "Edit Public Building"
-msgstr "Neue Relation bearbeiten"
+msgstr "Öffentliches Gebäuden bearbeiten"
 
 #: ../lang/presets.java:1224
-#, fuzzy
 msgid "Buildings/Townhall"
-msgstr "Bearbeiten"
+msgstr "Gebäude/Rathaus"
 
 #: ../lang/presets.java:1225
-#, fuzzy
 msgid "Edit Townhall"
-msgstr "Bearbeiten"
+msgstr "Rathaus bearbeiten"
 
 #: ../lang/presets.java:1230
-#, fuzzy
 msgid "Buildings/Fire Station"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Feuerwache"
 
 #: ../lang/presets.java:1231
-#, fuzzy
 msgid "Edit Fire Station"
-msgstr "Neue Relation bearbeiten"
+msgstr "Feuerwache bearbeiten"
 
 #: ../lang/presets.java:1236
-#, fuzzy
 msgid "Buildings/Courthouse"
-msgstr "Küsten."
+msgstr "Gebäude/Gericht"
 
 #: ../lang/presets.java:1237
-#, fuzzy
 msgid "Edit Courthouse"
-msgstr "Küsten."
+msgstr "Gericht bearbeiten"
 
 #: ../lang/presets.java:1242
-#, fuzzy
 msgid "Buildings/Prison"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Gefängnis"
 
 #: ../lang/presets.java:1243
-#, fuzzy
 msgid "Edit Prison"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gefängnis bearbeiten"
 
 #: ../lang/presets.java:1248
-#, fuzzy
 msgid "Buildings/Police"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Polizei"
 
 #: ../lang/presets.java:1249
-#, fuzzy
 msgid "Edit Police"
-msgstr "Bearbeiten"
+msgstr "Polizei bearbeiten"
 
 #: ../lang/presets.java:1254
-#, fuzzy
 msgid "Buildings/Post Office"
-msgstr "Küsten."
+msgstr "Gebäude/Post"
 
 #: ../lang/presets.java:1255
-#, fuzzy
 msgid "Edit Post Office"
-msgstr "Küsten."
+msgstr "Post bearbeiten"
 
 #: ../lang/presets.java:1260 ../lang/presets.java:1275
 #: ../lang/presets.java:1301
-#, fuzzy
 msgid "Buildings/ "
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/ "
 
 #: ../lang/presets.java:1262
-#, fuzzy
 msgid "Buildings/Pharmacy"
-msgstr "Bearbeiten"
+msgstr "Gebäude/Apotheke"
 
 #: ../lang/presets.java:1263
-#, fuzzy
 msgid "Edit Pharmacy"
-msgstr "Bearbeiten"
+msgstr "Apotheke bearbeiten"
 
 #: ../lang/presets.java:1265
-#, fuzzy
 msgid "Dispensing"
-msgstr "Anzeige-Einstellungen"
+msgstr "Rezepteinlösung"
 
 #: ../lang/presets.java:1269
-#, fuzzy
 msgid "Buildings/Hospital"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Krankenhaus"
 
 #: ../lang/presets.java:1270
-#, fuzzy
 msgid "Edit Hospital"
-msgstr "Küsten."
+msgstr "Krankenhaus bearbeiten"
 
 #: ../lang/presets.java:1277
-#, fuzzy
 msgid "Buildings/Kindergarten"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Kindergarten"
 
 #: ../lang/presets.java:1278
-#, fuzzy
 msgid "Edit Kindergarten"
-msgstr "Neue Relation bearbeiten"
+msgstr "Kindergarten bearbeiten"
 
 #: ../lang/presets.java:1283
-#, fuzzy
 msgid "Buildings/School"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Schule"
 
 #: ../lang/presets.java:1284
-#, fuzzy
 msgid "Edit School"
-msgstr "Bearbeiten"
+msgstr "Schule bearbeiten"
 
 #: ../lang/presets.java:1289
-#, fuzzy
 msgid "Buildings/University"
-msgstr "Bearbeiten"
+msgstr "Gebäude/Universität"
 
 #: ../lang/presets.java:1290
-#, fuzzy
 msgid "Edit University"
-msgstr "Bearbeiten"
+msgstr "Universität bearbeiten"
 
 #: ../lang/presets.java:1295
-#, fuzzy
 msgid "Buildings/College"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/College"
 
 #: ../lang/presets.java:1296
-#, fuzzy
 msgid "Edit College"
-msgstr "Küsten."
+msgstr "College bearbeiten"
 
 #: ../lang/presets.java:1303
-#, fuzzy
 msgid "Buildings/Cinema"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Kino"
 
 #: ../lang/presets.java:1304
-#, fuzzy
 msgid "Edit Cinema"
-msgstr "Küsten."
+msgstr "Kino bearbeiten"
 
 #: ../lang/presets.java:1309
-#, fuzzy
 msgid "Buildings/Library"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Bibliothek"
 
 #: ../lang/presets.java:1310
-#, fuzzy
 msgid "Edit Library"
-msgstr "Bearbeiten"
+msgstr "Bibliothek bearbeiten"
 
 #: ../lang/presets.java:1315
-#, fuzzy
 msgid "Buildings/Arts Centre"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Kunstausstellung"
 
 #: ../lang/presets.java:1316
-#, fuzzy
 msgid "Edit Arts Centre"
-msgstr "Neue Relation bearbeiten"
+msgstr "Kunstausstellung bearbeiten"
 
 #: ../lang/presets.java:1321
-#, fuzzy
 msgid "Buildings/Theatre"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Theater"
 
 #: ../lang/presets.java:1322
-#, fuzzy
 msgid "Edit Theatre"
-msgstr "Neue Relation bearbeiten"
+msgstr "Theater bearbeiten"
 
 #: ../lang/presets.java:1327
 msgid "Buildings/Place of Worship"
-msgstr ""
+msgstr "Gebäude/Kirche"
 
 #: ../lang/presets.java:1328
-#, fuzzy
 msgid "Edit Place of Worship"
-msgstr "Autobahn anpassen"
+msgstr "Kirche bearbeiten"
 
 #: ../lang/presets.java:1331
-#, fuzzy
 msgid "Religion"
-msgstr "Version"
+msgstr "Religion"
 
 #: ../lang/presets.java:1331
 msgid "bahai"
-msgstr ""
+msgstr "bahaiistisch"
 
 #: ../lang/presets.java:1331
 msgid "buddhist"
-msgstr ""
+msgstr "buddistisch"
 
 #: ../lang/presets.java:1331
 msgid "christian"
-msgstr ""
+msgstr "christlich"
 
 #: ../lang/presets.java:1331
 msgid "hindu"
-msgstr ""
+msgstr "hinduistisch"
 
 #: ../lang/presets.java:1331
 msgid "jain"
-msgstr ""
+msgstr "jainistisch"
 
 #: ../lang/presets.java:1331
 msgid "jewish"
-msgstr ""
+msgstr "jüdisch"
 
 #: ../lang/presets.java:1331
 msgid "muslim"
-msgstr ""
+msgstr "moslemisch"
 
 #: ../lang/presets.java:1331
 msgid "sikh"
-msgstr ""
+msgstr "sikhistisch"
 
 #: ../lang/presets.java:1331
 msgid "spiritualist"
-msgstr ""
+msgstr "spiritistisch"
 
 #: ../lang/presets.java:1331
 msgid "taoist"
-msgstr ""
+msgstr "taoistisch"
 
 #: ../lang/presets.java:1331
 msgid "unitarianist"
-msgstr ""
+msgstr "unitarisch"
 
 #: ../lang/presets.java:1331
 msgid "zoroastrian"
-msgstr ""
+msgstr "zoroastrisch"
 
 #: ../lang/presets.java:1332
-#, fuzzy
 msgid "Denomination"
-msgstr "Information"
+msgstr "Konfession"
 
 #: ../lang/presets.java:1332
 msgid "anglican"
-msgstr ""
+msgstr "anglikanisch"
 
 #: ../lang/presets.java:1332
 msgid "baptist"
-msgstr ""
+msgstr "baptistisch"
 
 #: ../lang/presets.java:1332
-#, fuzzy
 msgid "catholic"
-msgstr "Konflikt"
+msgstr "katholisch"
 
 #: ../lang/presets.java:1332
 msgid "evangelical"
-msgstr ""
+msgstr "evangelisch"
 
 #: ../lang/presets.java:1332
 msgid "jehovahs_witness"
-msgstr ""
+msgstr "Zeugen Jehovas"
 
 #: ../lang/presets.java:1332
 msgid "lutheran"
-msgstr ""
+msgstr "lutherisch"
 
 #: ../lang/presets.java:1332
 msgid "methodist"
-msgstr ""
+msgstr "methodistisch"
 
 #: ../lang/presets.java:1332
 msgid "mormon"
-msgstr ""
+msgstr "mormonisch"
 
 #: ../lang/presets.java:1332
 msgid "orthodox"
-msgstr ""
+msgstr "orthodox"
 
 #: ../lang/presets.java:1332
 msgid "pentecostal"
-msgstr ""
+msgstr "Pfingstgemeinde"
 
 #: ../lang/presets.java:1332
-#, fuzzy
 msgid "presbyterian"
-msgstr "Küsten."
+msgstr "presbyterianisch"
 
 #: ../lang/presets.java:1332
-#, fuzzy
 msgid "protestant"
-msgstr "Küsten."
+msgstr "protestantisch"
 
 #: ../lang/presets.java:1332
-#, fuzzy
 msgid "quaker"
-msgstr "Wegpunkt"
+msgstr "Quäker"
 
 #: ../lang/presets.java:1332
 msgid "shia"
-msgstr ""
+msgstr "schiitisch"
 
 #: ../lang/presets.java:1332
 msgid "sunni"
-msgstr ""
+msgstr "sunnitisch"
 
 #: ../lang/presets.java:1335
-#, fuzzy
 msgid "Buildings/Shelter"
-msgstr "Neue Relation bearbeiten"
+msgstr "Gebäude/Schutzraum"
 
 #: ../lang/presets.java:1340
 msgid "Amenities/Toilets"
@@ -5526,16 +5338,15 @@ msgstr "Neue Relation bearbeiten"
 
 #: ../lang/presets.java:1361
 msgid "Glass"
-msgstr ""
+msgstr "Glas"
 
 #: ../lang/presets.java:1362
-#, fuzzy
 msgid "Clothes"
-msgstr "Farben"
+msgstr "Kleidung"
 
 #: ../lang/presets.java:1363
 msgid "Batteries"
-msgstr ""
+msgstr "Batterien"
 
 #: ../lang/presets.java:1366
 #, fuzzy
@@ -5569,39 +5380,35 @@ msgstr "Neue Relation bearbeiten"
 
 #: ../lang/presets.java:1384
 msgid "Cash/Bank"
-msgstr ""
+msgstr "Geld/Bank"
 
 #: ../lang/presets.java:1385
-#, fuzzy
 msgid "Edit Bank"
-msgstr "Bearbeiten"
+msgstr "Bank bearbeiten"
 
 #: ../lang/presets.java:1388
 msgid "Automated Teller Machine"
-msgstr ""
+msgstr "Geldautomat"
 
 #: ../lang/presets.java:1391
-#, fuzzy
 msgid "Cash/Money Exchange"
-msgstr "Leeres Dokument"
+msgstr "Geld/Wechselstube"
 
 #: ../lang/presets.java:1392
-#, fuzzy
 msgid "Edit Money Exchange"
-msgstr "Leeres Dokument"
+msgstr "Wechselstube bearbeiten"
 
 #: ../lang/presets.java:1397
 msgid "Cash/Automated Teller Machine"
-msgstr ""
+msgstr "Geld/Geldautomat"
 
 #: ../lang/presets.java:1398
 msgid "Edit Automated Teller Machine"
-msgstr ""
+msgstr "Geldautomat bearbeiten"
 
 #: ../lang/presets.java:1400
-#, fuzzy
 msgid "Provider"
-msgstr "Raster Ebene:"
+msgstr "Anbieter"
 
 #: ../lang/presets.java:1404
 #, fuzzy
@@ -5816,33 +5623,28 @@ msgid "Places/Addresses"
 msgstr "Neue Relation bearbeiten"
 
 #: ../lang/presets.java:1548
-#, fuzzy
 msgid "Edit address information"
-msgstr "Information zum Autor hinzufügen."
+msgstr "Adressinformationen bearbeiten"
 
 #: ../lang/presets.java:1550
-#, fuzzy
 msgid "House number"
-msgstr "Benutzername"
+msgstr "Hausnummer"
 
 #: ../lang/presets.java:1554
-#, fuzzy
 msgid "House name"
-msgstr "Benutzername"
+msgstr "Hausname"
 
 #: ../lang/presets.java:1555
-#, fuzzy
 msgid "Street name"
-msgstr "Vorlagen"
+msgstr "Straßenname"
 
 #: ../lang/presets.java:1556
-#, fuzzy
 msgid "City"
-msgstr "Bearbeiten"
+msgstr "Stadt"
 
 #: ../lang/presets.java:1557
 msgid "Post code"
-msgstr ""
+msgstr "Postleitzahl"
 
 #: ../lang/presets.java:1560
 #, fuzzy
@@ -5856,22 +5658,19 @@ msgstr "Neue Relation bearbeiten"
 
 #: ../lang/presets.java:1563
 msgid "Numbering scheme"
-msgstr ""
+msgstr "Nummernschema"
 
 #: ../lang/presets.java:1563
-#, fuzzy
 msgid "odd"
-msgstr "Hinzufügen"
+msgstr "ungerade"
 
 #: ../lang/presets.java:1563
-#, fuzzy
 msgid "even"
-msgstr "Entfernen"
+msgstr "gerade"
 
 #: ../lang/presets.java:1563
-#, fuzzy
 msgid "all"
-msgstr "Installieren"
+msgstr "alle"
 
 #: ../lang/presets.java:1566
 msgid "Boundaries/National"
@@ -6011,15 +5810,15 @@ msgstr "Bearbeiten"
 
 #: ../lang/presets.java:1664 ../lang/presets.java:1837
 msgid "coniferous"
-msgstr ""
+msgstr "Nadelwald"
 
 #: ../lang/presets.java:1664 ../lang/presets.java:1837
 msgid "deciduous"
-msgstr ""
+msgstr "Laubwald"
 
 #: ../lang/presets.java:1664 ../lang/presets.java:1837
 msgid "mixed"
-msgstr ""
+msgstr "Mischwald"
 
 #: ../lang/presets.java:1667
 #, fuzzy
@@ -6574,8 +6373,7 @@ msgstr "Navigator"
 
 #: ../navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorModeAction.java:28
 msgid "Set start/end for autorouting. Middle Mouse button to reset."
-msgstr ""
-"Setze Anfang/Ende für Routenberechnung. Zurücksetzen mit mittlerer Maustaste."
+msgstr "Setze Anfang/Ende für Routenberechnung. Zurücksetzen mit mittlerer Maustaste."
 
 #: ../waypoints/src/WaypointOpenAction.java:33
 msgid "Open waypoints file"
@@ -6673,8 +6471,7 @@ msgid "Save captured data to file every minute."
 msgstr "Speichere die aufgezeichneten Daten jede Minute."
 
 #: ../ywms/src/org/openstreetmap/josm/plugins/ywms/GeckoSupport.java:57
-msgid ""
-"Could not start browser. Please check that the executable path is correct."
+msgid "Could not start browser. Please check that the executable path is correct."
 msgstr ""
 "Konnte den Browser nicht starten. Bitte prüfen Sie, ob der korrekte Pfad "
 "angegeben wurde."
@@ -6796,8 +6593,7 @@ msgstr "Maximale Anzahl von Knoten im Anfangs-Trace"
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:40
 msgid "Maximum gray value to count as water (0-255) [For old script]"
-msgstr ""
-"Höchster Grauwert, der als Wasser betrachtet wird (0-255) [altes Skript]"
+msgstr "Höchster Grauwert, der als Wasser betrachtet wird (0-255) [altes Skript]"
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:42
 msgid "Maximum gray value to count as water (0-255)"
@@ -6841,8 +6637,7 @@ msgstr "Pfad zum Python-Interpreter"
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:62
 msgid "Maximum number of segments allowed in each generated way. Default 250."
-msgstr ""
-"Maximale Anzahl von Abschnitten in jedem generierten Weg. Standard ist 250."
+msgstr "Maximale Anzahl von Abschnitten in jedem generierten Weg. Standard ist 250."
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:63
 msgid ""
@@ -6878,8 +6673,7 @@ msgstr ""
 "0.0003."
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:67
-msgid ""
-"Resolution of Landsat tiles, measured in pixels per degree. Default 4000."
+msgid "Resolution of Landsat tiles, measured in pixels per degree. Default 4000."
 msgstr ""
 "Auflösung der Landsat-Kacheln, gemessen in Pixel pro Grad. Standard ist "
 "4.000."
@@ -6902,8 +6696,7 @@ msgstr "Richtung in der nach Land gesucht werden soll. Standardmäßig Ost."
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:72
 msgid "Tag ways as water, coastline, land or nothing. Default is water."
-msgstr ""
-"Tagge Wege als Wasser, Küstenlinie, Land oder nichts. Standard ist Wasser."
+msgstr "Tagge Wege als Wasser, Küstenlinie, Land oder nichts. Standard ist Wasser."
 
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:73
 msgid "Which WMS layer to use for tracing against. Default is IR1."
@@ -6956,16 +6749,14 @@ msgid "Tagging Preset Tester"
 msgstr "Tester für Tagging-Presets"
 
 #: ../tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:20
-msgid ""
-"Open the tagging preset test tool for previewing tagging preset dialogs."
+msgid "Open the tagging preset test tool for previewing tagging preset dialogs."
 msgstr ""
 "Öffne das Testtool für Tagging-Vorlagen, um eine Vorschau auf die Vorlagen "
 "zu erhalten."
 
 #: ../tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:28
 msgid "You have to specify tagging preset sources in the preferences first."
-msgstr ""
-"Sie müssen zuerst in den Einstellungen eine Quelle für Presets hinzufügen."
+msgstr "Sie müssen zuerst in den Einstellungen eine Quelle für Presets hinzufügen."
 
 #: ../slippy_map_chooser/src/OsmMapControl.java:63
 msgid "left"
@@ -7035,8 +6826,7 @@ msgid "Similar named ways."
 msgstr "Ähnlich benannte Wege."
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:34
-msgid ""
-"This test checks for ways with similar names that may have been misspelled."
+msgid "This test checks for ways with similar names that may have been misspelled."
 msgstr ""
 "Dieser Test prüft auf ähnlich benannte Wege, was auf Schreibfehler hinweisen "
 "könnte."
@@ -7091,8 +6881,7 @@ msgid "Self-intersecting ways"
 msgstr "Wege, die sich selbst überschneiden"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:20
-msgid ""
-"This test checks for ways that contain some of their nodes more than once"
+msgid "This test checks for ways that contain some of their nodes more than once"
 msgstr "Dieser Test sucht nach Wegen, die einine Knoten mehrfach enthalten"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:34
@@ -7101,8 +6890,7 @@ msgstr "Knoten ohne Zusatzinformationen."
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:35
 msgid "This test checks for untagged nodes that are not part of any way."
-msgstr ""
-"Dieser Test prüft auf ungetaggte Knoten, die nicht Teil eines Weges sind."
+msgstr "Dieser Test prüft auf ungetaggte Knoten, die nicht Teil eines Weges sind."
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:101
 msgid "Untagged and unconnected nodes"
@@ -7192,32 +6980,41 @@ msgid "Tags with empty values"
 msgstr "Tags mit leerem Wert"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:239
-#, fuzzy, java-format
+#, java-format
 msgid "Invalid property key ''{0}''"
-msgstr "Ungültige Schlüssel"
+msgstr "Ungültiger Schlüssel \"{0}\""
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:247
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:244
+#, fuzzy, java-format
+msgid "Invalid white space in property key ''{0}''"
+msgstr "Ungültiger Schlüssel \"{0}\""
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:249
+msgid "Property values start or end with white space"
+msgstr ""
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:257
 msgid "Unknown property values"
 msgstr "Unbekannter Werte"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:256
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:266
 msgid "FIXMES"
 msgstr "FIXMEs"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:364
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:374
 msgid "Check property keys."
 msgstr "Schlüssel prüfen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:365
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:375
 msgid "Validate that property keys are valid checking against list of words."
 msgstr "Überprüft Schlüssel auf Gültigkeit durch Abgleich mit einer Liste."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:384
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:397
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:394
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:407
 msgid "Spellcheck source"
 msgstr "Quelle für Rechtschreibüberprüfung"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:417
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:427
 msgid ""
 "The sources (url or filename) of spell check data files. See http://wiki."
 "openstreetmap.org/index.php/User:JLS/speller for help."
@@ -7225,32 +7022,31 @@ msgstr ""
 "Die Quellen (URL oder Dateiname) für Datendateien von SpellCheck. Siehe "
 "http://wiki.openstreetmap.org/index.php/User:JLS/speller."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:418
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:428
 msgid "Add a new spellcheck source to the list."
-msgstr ""
-"Eine neue Quelle für die Rechtschreibüberprüfung zu der Liste hinzufügen"
+msgstr "Eine neue Quelle für die Rechtschreibüberprüfung zu der Liste hinzufügen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:419
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:429
 msgid "Edit the selected source."
 msgstr "Ausgewählte Quelle bearbeiten."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:422
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:432
 msgid "Spellcheck data sources"
 msgstr "Quelle für Rechtschreibüberprüfungsdaten"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:446
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:456
 msgid "Check property values."
 msgstr "Werte überprüfen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:447
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:457
 msgid "Validate that property values are valid checking against presets."
 msgstr "Prüft die Gültigkeit von Werten anhand von Presets."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:455
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:465
 msgid "Check for FIXMES."
 msgstr "Prüfe auf FIXMEs"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:456
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:466
 msgid "Looks for nodes or ways with FIXME in any property value."
 msgstr ""
 "Sucht nach Knoten oder Wegen, die im Wert eines Schlüssels FIXME stehen "
@@ -7334,8 +7130,7 @@ msgstr "Site(s) prüfen"
 
 #: ../pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:128
 msgid "Please select the site(s) to check for updates."
-msgstr ""
-"Bitte die Quelle(n) auswählen, bei denen nach Updates gesucht werden soll."
+msgstr "Bitte die Quelle(n) auswählen, bei denen nach Updates gesucht werden soll."
 
 #: ../pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:152
 msgid "Add a new plugin site."
@@ -7373,3 +7168,4 @@ msgstr "Bitte mindestens einen Weg auswählen."
 #: ../duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:240
 msgid "Create duplicate way"
 msgstr "Weg duplizieren"
+

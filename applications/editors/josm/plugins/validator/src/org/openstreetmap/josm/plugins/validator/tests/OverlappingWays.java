@@ -51,46 +51,67 @@ public class OverlappingWays extends Test
 
 		for (List<WaySegment> duplicated : nodePairs.values())
 		{
-			int highway = 0;
-			int railway = 0;
+			int ways = duplicated.size();
 
-			if (duplicated.size() > 1)
+			if (ways > 1)
 			{
 				List<OsmPrimitive> prims = new ArrayList<OsmPrimitive>();
 				List<Way> current_ways = new ArrayList<Way>();
 				List<WaySegment> highlight;
+				int highway = 0;
+				int railway = 0;
+				int area = 0;
 
 				for (WaySegment ws : duplicated) 
 				{
+					String ar;
+
 					if (ws.way.get("highway") != null)
 						highway++;
 					else if (ws.way.get("railway") != null)
 						railway++;
+					ar = ws.way.get("area");
+					if (ar != null && ("true".equalsIgnoreCase(ar) || "yes".equalsIgnoreCase(ar) || "1".equals(ar)))
+						area++;
+					if (ws.way.get("landuse") != null)
+					{
+						area++; ways--;
+					}
 
 					prims.add(ws.way);
 					current_ways.add(ws.way);
 				}
-				/* These ways not seen before 
+				/* These ways not seen before
 				 * If two or more of the overlapping ways are
- 				 * highways or railways mark a seperate error   
+ 				 * highways or railways mark a seperate error
   				*/
 				if ((highlight = ways_seen.get(current_ways)) == null)
                                 {
-				    String errortype = tr("Overlapping ways");
+					String errortype;
 
-				     if (highway >1)
-					errortype = tr("Overlapping highways");
-				     else if (railway >1)
-					errortype = tr("Overlapping railways");
+					if(area > 0)
+					{
+						if (highway == ways)
+							errortype = tr("Overlapping highways (with area)");
+						else if (railway == ways)
+							errortype = tr("Overlapping railways (with area)");
+						else
+							errortype = tr("Overlapping ways (with area)");
+					}
+					else if (highway == ways)
+						errortype = tr("Overlapping highways");
+					else if (railway == ways)
+						errortype = tr("Overlapping railways");
+					else
+						errortype = tr("Overlapping ways");
 
-				     errors.add(new TestError(this, Severity.OTHER,
-					tr(errortype), prims, duplicated));
-				     ways_seen.put(current_ways, duplicated);
+					errors.add(new TestError(this, Severity.OTHER, tr(errortype), prims, duplicated));
+					ways_seen.put(current_ways, duplicated);
 				}
 				else	/* way seen, mark highlight layer only */
 				{
-					for (WaySegment ws : duplicated) 
-                                            highlight.add(ws);
+					for (WaySegment ws : duplicated)
+						highlight.add(ws);
 				}
 			}
 		}

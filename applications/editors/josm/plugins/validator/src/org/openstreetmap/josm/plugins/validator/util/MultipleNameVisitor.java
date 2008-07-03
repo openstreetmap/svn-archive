@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.validator.util;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.util.Collection;
@@ -20,6 +21,8 @@ public class MultipleNameVisitor extends NameVisitor
 {
 	/** The class name of the combined primitives */
 	String multipleClassname;
+	/* name to be displayed */
+	String displayName;
 	/** Size of the collection */
 	int size;
 	
@@ -29,25 +32,48 @@ public class MultipleNameVisitor extends NameVisitor
 	 */
 	public void visit(Collection<? extends OsmPrimitive> data) 
 	{
+		String multipleName = null;
+		String firstName = null;
+		boolean initializedname = false;
 		size = data.size();
+
 		multipleClassname = null;
 		for (OsmPrimitive osm : data) 
 		{
+			String name = osm.get("name");
+			if(name == null) name = osm.get("ref");
+			if(!initializedname)
+			{
+				multipleName = name; initializedname = true;
+			}
+			else if(multipleName != null && (name == null  || !name.equals(multipleName)))
+			{
+				multipleName = null;
+			}
+
+			if(firstName == null && name != null)
+				firstName = name;
 			osm.visit(this);
 			if (multipleClassname == null)
 				multipleClassname = className;
 			else if (!multipleClassname.equals(className))
 				multipleClassname = "object";
 		}
+		
+		if( size == 1 )
+			displayName = name;
+		else if(multipleName != null)
+			displayName = size + " " + trn(multipleClassname, multipleClassname + "s", size) + ": " + multipleName;
+		else if(firstName != null)
+			displayName = size + " " + trn(multipleClassname, multipleClassname + "s", size) + ": " + tr("{0}, ...", firstName);
+		else
+			displayName = size + " " + trn(multipleClassname, multipleClassname + "s", size);
 	}
 
 	@Override
 	public JLabel toLabel() 
 	{
-		if( size == 1 )
-			return super.toLabel();
-		else
-			return new JLabel( size + " " + trn(multipleClassname, multipleClassname + "s", size), ImageProvider.get("data", multipleClassname), JLabel.HORIZONTAL);
+		return new JLabel(getText(), getIcon(), JLabel.HORIZONTAL);
 	}
 	
 	/**
@@ -56,10 +82,7 @@ public class MultipleNameVisitor extends NameVisitor
 	 */
 	public String getText()
 	{
-		if( size == 1 )
-			return name;
-		else
-			return size + " " + trn(multipleClassname, multipleClassname + "s", size);
+		return displayName;
 	}
 
 	/**

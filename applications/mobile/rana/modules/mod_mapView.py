@@ -51,8 +51,8 @@ class mapView(ranaModule):
       dt = t - self.updateTime
       if(dt > 2):
         self.updateTime = t
-        pos = self.get('pos', False)
-        if(pos != False):
+        pos = self.get('pos', None)
+        if(pos != None):
           self.set('map_centre', pos)
           self.setCentre(pos)
           self.set('needRedraw', True)
@@ -62,7 +62,9 @@ class mapView(ranaModule):
     proj = self.m.get('projection', None)
     if(proj == None):
       return;
-
+    if(pos == None):
+      return
+    
     (lat,lon) = pos
 
     z = int(self.get('z', 15))

@@ -1407,19 +1407,19 @@
         <!-- Gates -->
         <rule e="node" k="highway" v="gate">
             <rule e="node" k="status" v="open">
-                <wayMarker class="gate-open"/>
+                <wayMarker k="highway" class="gate-open"/>
             </rule>
             <else>
                 <rule e="node" k="status" v="locked">
-                    <wayMarker class="gate-locked"/>
+                    <wayMarker k="highway" class="gate-locked"/>
                 </rule>
                 <else>
-                    <wayMarker class="gate-closed"/>
+                    <wayMarker k="highway" class="gate-closed"/>
                 </else>
             </else>
         </rule>
         <rule e="node" k="highway" v="stile">
-            <wayMarker fill="none" stroke="red" stroke-width="1px" stroke-opacity="0" marker-mid="url(#marker-stile)"/>
+            <wayMarker k="highway" fill="none" stroke="red" stroke-width="1px" stroke-opacity="0" marker-mid="url(#marker-stile)"/>
         </rule>
         <rule e="node" k="highway|barrier" v="bollard">
             <circle r='0.2px' class='bollard' />

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-03 15:08+0200\n"
-"PO-Revision-Date: 2008-07-03 15:31+0200\n"
+"POT-Creation-Date: 2008-07-03 18:14+0200\n"
+"PO-Revision-Date: 2008-07-03 18:55+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5411,216 +5411,180 @@ msgid "Provider"
 msgstr "Anbieter"
 
 #: ../lang/presets.java:1404
-#, fuzzy
 msgid "Shops/Supermarket"
-msgstr "Neue Relation bearbeiten"
+msgstr "Geschäfte/Supermarkt"
 
 #: ../lang/presets.java:1405
-#, fuzzy
 msgid "Edit Supermarket"
-msgstr "Neue Relation bearbeiten"
+msgstr "Supermarkt bearbeiten"
 
 #: ../lang/presets.java:1410
 msgid "Shops/Convenience Store"
-msgstr ""
+msgstr "Geschäfte/Tante-Emma-Laden"
 
 #: ../lang/presets.java:1411
-#, fuzzy
 msgid "Edit Convenience Store"
-msgstr "Bearbeiten"
+msgstr "Tante-Emma-Laden bearbeiten"
 
 #: ../lang/presets.java:1416
 msgid "Shops/Kiosk"
-msgstr ""
+msgstr "Geschäfte/Kiosk"
 
 #: ../lang/presets.java:1417
-#, fuzzy
 msgid "Edit Kiosk"
-msgstr "Bearbeiten"
+msgstr "Kiosk bearbeiten"
 
 #: ../lang/presets.java:1422
 msgid "Shops/Butcher"
-msgstr ""
+msgstr "Geschäfte/Fleischer"
 
 #: ../lang/presets.java:1423
-#, fuzzy
 msgid "Edit Butcher"
-msgstr "Bearbeiten"
+msgstr "Fleischer bearbeiten"
 
 #: ../lang/presets.java:1428
 msgid "Shops/Baker"
-msgstr ""
+msgstr "Geschäfte/Bäcker"
 
 #: ../lang/presets.java:1429
-#, fuzzy
 msgid "Edit Baker"
-msgstr "Bearbeiten"
+msgstr "Bäcker bearbeiten"
 
 #: ../lang/presets.java:1434
 msgid "Shops/Do-it-yourself-store"
-msgstr ""
+msgstr "Geschäft/Heimwerker"
 
 #: ../lang/presets.java:1435
 msgid "Edit Do-it-yourself-store"
-msgstr ""
+msgstr "Geschäft für Heimwerker bearbeiten"
 
 #: ../lang/presets.java:1440
-#, fuzzy
 msgid "Shops/Dry Cleaning"
-msgstr "Neue Relation bearbeiten"
+msgstr "Geschäft/Chemische Reinigung"
 
 #: ../lang/presets.java:1441
-#, fuzzy
 msgid "Edit Dry Cleaning"
-msgstr "Neue Relation bearbeiten"
+msgstr "Chemische Reinigung bearbeiten"
 
 #: ../lang/presets.java:1446
 msgid "Shops/Laundry"
-msgstr ""
+msgstr "Geschäft/Waschsalon"
 
 #: ../lang/presets.java:1447
-#, fuzzy
 msgid "Edit Laundry"
-msgstr "Bearbeiten"
+msgstr "Waschsalon bearbeiten"
 
 #: ../lang/presets.java:1452
 msgid "Shops/Outdoor"
-msgstr ""
+msgstr "Geschäft/Camping (Outdoor)"
 
 #: ../lang/presets.java:1453
-#, fuzzy
 msgid "Edit Outdoor Shop"
-msgstr "Autobahn anpassen"
+msgstr "Laden für Camping- (Outdoor-)bedarf bearbeiten"
 
 #: ../lang/presets.java:1461
-#, fuzzy
 msgid "Places/Continent"
-msgstr "Orte"
+msgstr "Orte/Kontinent"
 
 #: ../lang/presets.java:1462
-#, fuzzy
 msgid "Edit a Continent"
-msgstr "Küsten."
+msgstr "Kontinent bearbeiten"
 
 #: ../lang/presets.java:1468
-#, fuzzy
 msgid "Places/Country"
-msgstr "Orte"
+msgstr "Orte/Staat"
 
 #: ../lang/presets.java:1469
-#, fuzzy
 msgid "Edit Country"
-msgstr "Bearbeiten"
+msgstr "Staat bearbeiten"
 
 #: ../lang/presets.java:1475
-#, fuzzy
 msgid "Places/State"
-msgstr "Orte"
+msgstr "Orte/Bundesland"
 
 #: ../lang/presets.java:1476
-#, fuzzy
 msgid "Edit State"
-msgstr "Bearbeiten"
+msgstr "Bundesland bearbeiten"
 
 #: ../lang/presets.java:1482
-#, fuzzy
 msgid "Places/Region"
-msgstr "Orte"
+msgstr "Orte/Region"
 
 #: ../lang/presets.java:1483
-#, fuzzy
 msgid "Edit Region"
-msgstr "Neue Relation bearbeiten"
+msgstr "Region bearbeiten"
 
 #: ../lang/presets.java:1489
-#, fuzzy
 msgid "Places/County"
-msgstr "Orte"
+msgstr "Orte/Landkreis"
 
 #: ../lang/presets.java:1490
-#, fuzzy
 msgid "Edit County"
-msgstr "Bearbeiten"
+msgstr "Landkreis bearbeiten"
 
 #: ../lang/presets.java:1496
-#, fuzzy
 msgid "Places/Island"
-msgstr "Orte"
+msgstr "Orte/Insel"
 
 #: ../lang/presets.java:1497
-#, fuzzy
 msgid "Edit Island"
-msgstr "Bearbeiten"
+msgstr "Insel bearbeiten"
 
 #: ../lang/presets.java:1503
-#, fuzzy
 msgid "Places/City"
-msgstr "Orte"
+msgstr "Orte/Großstadt"
 
 #: ../lang/presets.java:1504
-#, fuzzy
 msgid "Edit City"
-msgstr "Bearbeiten"
+msgstr "Großstadt bearbeiten"
 
 #: ../lang/presets.java:1510
-#, fuzzy
 msgid "Places/Town"
-msgstr "Orte"
+msgstr "Orte/Stadt"
 
 #: ../lang/presets.java:1511
-#, fuzzy
 msgid "Edit Town"
-msgstr "Bearbeiten"
+msgstr "Stadt bearbeiten"
 
 #: ../lang/presets.java:1517
-#, fuzzy
 msgid "Places/Suburb"
-msgstr "Orte"
+msgstr "Orte/Stadteil"
 
 #: ../lang/presets.java:1518
-#, fuzzy
 msgid "Edit Suburb"
-msgstr "Bearbeiten"
+msgstr "Stadtteil bearbeiten"
 
 #: ../lang/presets.java:1524
-#, fuzzy
 msgid "Places/Village"
-msgstr "Orte"
+msgstr "Orte/Dorf"
 
 #: ../lang/presets.java:1525
-#, fuzzy
 msgid "Edit Village"
-msgstr "Bearbeiten"
+msgstr "Dorf bearbeiten"
 
 #: ../lang/presets.java:1531
-#, fuzzy
 msgid "Places/Hamlet"
-msgstr "Orte"
+msgstr "Orte/Weiler"
 
 #: ../lang/presets.java:1532
-#, fuzzy
 msgid "Edit Hamlet"
-msgstr "Bearbeiten"
+msgstr "Weiler bearbeiten"
 
 #: ../lang/presets.java:1538
-#, fuzzy
 msgid "Places/Locality"
-msgstr "Orte"
+msgstr "Orte/Unbewohnter Ort"
 
 #: ../lang/presets.java:1539
-#, fuzzy
 msgid "Edit Locality"
-msgstr "Bearbeiten"
+msgstr "Unbewohnten Ort bearbeiten"
 
 #: ../lang/presets.java:1545
-#, fuzzy
 msgid "Places/ "
-msgstr "Orte"
+msgstr "Orte/ "
 
 #: ../lang/presets.java:1547
-#, fuzzy
 msgid "Places/Addresses"
-msgstr "Neue Relation bearbeiten"
+msgstr "Orte/Adressen"
 
 #: ../lang/presets.java:1548
 msgid "Edit address information"
@@ -5647,14 +5611,12 @@ msgid "Post code"
 msgstr "Postleitzahl"
 
 #: ../lang/presets.java:1560
-#, fuzzy
 msgid "Places/Address Interpolation"
-msgstr "Neue Relation bearbeiten"
+msgstr "Orte/Adressinterpolation"
 
 #: ../lang/presets.java:1561
-#, fuzzy
 msgid "Edit address interpolation"
-msgstr "Neue Relation bearbeiten"
+msgstr "Adressinterpolation bearbeiten"
 
 #: ../lang/presets.java:1563
 msgid "Numbering scheme"
@@ -5674,49 +5636,43 @@ msgstr "alle"
 
 #: ../lang/presets.java:1566
 msgid "Boundaries/National"
-msgstr ""
+msgstr "Grenzen/Staat"
 
 #: ../lang/presets.java:1567
-#, fuzzy
 msgid "Edit National Boundary"
-msgstr "Neue Relation bearbeiten"
+msgstr "Staatsgrenze bearbeiten"
 
 #: ../lang/presets.java:1573
-#, fuzzy
 msgid "Boundaries/Administrative"
-msgstr "Neue Relation bearbeiten"
+msgstr "Grenzen/Innerstaatlich"
 
 #: ../lang/presets.java:1574
-#, fuzzy
 msgid "Edit Administrative Boundary"
-msgstr "Neue Relation bearbeiten"
+msgstr "Innerstaatliche Grenze bearbeiten"
 
 #: ../lang/presets.java:1580
 msgid "Boundaries/Civil"
-msgstr ""
+msgstr "Grenzen/Zivil"
 
 #: ../lang/presets.java:1581
-#, fuzzy
 msgid "Edit Civil Boundary"
-msgstr "Bearbeiten"
+msgstr "Zivilrechtliche Grenze bearbeiten"
 
 #: ../lang/presets.java:1587
 msgid "Boundaries/political"
-msgstr ""
+msgstr "Grenzen/Politisch"
 
 #: ../lang/presets.java:1588
-#, fuzzy
 msgid "Edit Political Boundary"
-msgstr "Neue Relation bearbeiten"
+msgstr "Politische Grenze bearbeiten"
 
 #: ../lang/presets.java:1594
 msgid "Boundaries/National_park"
-msgstr ""
+msgstr "Grenzen/Nationalpark"
 
 #: ../lang/presets.java:1595
-#, fuzzy
 msgid "Edit National Park Boundary"
-msgstr "Neue Relation bearbeiten"
+msgstr "Nationalparkgrenze bearbeiten"
 
 #: ../lang/presets.java:1604
 #, fuzzy
@@ -6763,13 +6719,12 @@ msgid "left"
 msgstr "links"
 
 #: ../slippy_map_chooser/src/SlippyMapChooser.java:83
-#, fuzzy
 msgid ""
 "Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and "
 "move mouse.   Select: Click."
 msgstr ""
 "Zoom: Mausrad oder Doppelklick.   Karte bewegen: Rechte Maustaste halten und "
-"Maus bewegen."
+"Maus bewegen.   Auswahl: Klick."
 
 #: ../grid/src/grid/GridLayer.java:192
 msgid "Grid origin location"
@@ -6805,11 +6760,11 @@ msgstr "Fenster mit dem Ergebnis der Prüfung öffnen."
 msgid "Data with errors. Upload anyway?"
 msgstr "Die Daten enthalten Fehler. Trotzdem hochladen?"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:31
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:34
 msgid "Crossing ways."
 msgstr "Überschneidende Wege."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:32
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:35
 msgid ""
 "This test checks if two roads, railways or waterways crosses in the same "
 "layer, but are not connected by a node."
@@ -6817,7 +6772,7 @@ msgstr ""
 "Dieser Test prüft, ob zwei Straßen, Einsenbahnlinien oder Wasserwege sich in "
 "der selben Ebene überschneiden, aber nicht durch einen Knoten verbunden sind"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:89
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:104
 msgid "Crossing ways"
 msgstr "Überschneidende Wege"
 
@@ -6916,17 +6871,29 @@ msgstr ""
 "Dieser Test prüft dass eine Verbindung zwischen zwei Knoten nicht von mehr "
 "als einem Weg verwendet wird."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:79
-msgid "Overlapping ways"
-msgstr "Überlappende Wege"
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:95
+msgid "Overlapping highways (with area)"
+msgstr "Überlappende Straßen (mit Fläche)"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:82
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:97
+msgid "Overlapping railways (with area)"
+msgstr "Überlappende Schienen (mit Fläche)"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:99
+msgid "Overlapping ways (with area)"
+msgstr "Überlappende Wege (mit Fläche)"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:102
 msgid "Overlapping highways"
 msgstr "Überlappende Straßen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:84
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:104
 msgid "Overlapping railways"
 msgstr "Überlappende Schienen"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:106
+msgid "Overlapping ways"
+msgstr "Überlappende Wege"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:19
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:45
@@ -6985,13 +6952,13 @@ msgid "Invalid property key ''{0}''"
 msgstr "Ungültiger Schlüssel \"{0}\""
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:244
-#, fuzzy, java-format
+#, java-format
 msgid "Invalid white space in property key ''{0}''"
-msgstr "Ungültiger Schlüssel \"{0}\""
+msgstr "Ungültiger Leerraum in Schlüssel \"{0}\""
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:249
 msgid "Property values start or end with white space"
-msgstr ""
+msgstr "Werte beginnen oder enden mit Leerraum"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:257
 msgid "Unknown property values"
@@ -7095,6 +7062,11 @@ msgid ""
 "Error initializing test {0}:\n"
 " {1}"
 msgstr "Fehler beim Initialisieren von Test {0}: \"{1}\""
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/util/MultipleNameVisitor.java:68
+#, java-format
+msgid "{0}, ..."
+msgstr "{0}, ..."
 
 #: ../pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:59
 msgid "Install"

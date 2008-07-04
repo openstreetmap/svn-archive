@@ -34,6 +34,13 @@ class placenames(poiModule):
     #self.load("places.txt")
     self.lastpos = (0,0)
 
+  def firstTime(self):
+    m = self.m.get('menu', None)
+    if(m != None):
+      m.register("places", "list", self.moduleName)
+      for type in self.poi.keys():
+        m.register("poi:"+type, "list", self.moduleName)
+      
   def load(self, filename):
     file = open(filename,"r")
     types = {'v':'villages','c':'cities','t':'towns'}

@@ -30,19 +30,20 @@ class placenames(poiModule):
   """Lookup nearest town or village"""
   def __init__(self, m, d):
     poiModule.__init__(self, m, d)
-    self.places = {'v':[],'c':[],'t':[]} # village, city, town
-    self.load("places.txt")
+    self.poi = {'villages':[],'cities':[],'towns':[]} # village, city, town
+    #self.load("places.txt")
     self.lastpos = (0,0)
 
   def load(self, filename):
     file = open(filename,"r")
-
+    types = {'v':'villages','c':'cities','t':'towns'}
     for line in file:
       line = line.strip()
-      (lat,lon,id,type,name) = line.split("\t")
-      if(type in ('t','c','v')):
+      (lat,lon,id,typeID,name) = line.split("\t")
+      type = types.get(typeID, None)
+      if(type != None):
         item = (float(lat),float(lon),name)
-        self.places[type].append(item)
+        self.poi[type].append(item)
         
   def lookupPlace(self, lat, lon, type, radiusKm):
     kmToDeg = 360.0 / 40041.0
@@ -51,7 +52,7 @@ class placenames(poiModule):
     nearest = None
     nearestDist = limitSq
     
-    for place in self.places[type]:
+    for place in self.poi[type]:
       (plat,plon,name) = place
       dx = plon - lon
       dy = plat - lat
@@ -68,7 +69,7 @@ class placenames(poiModule):
     # Search small to large - i.e. if you're near a village,
     # return that rather than the nearby city.
     # Use limits, so we don't claim to be 'near' a town > 30km away
-    for lookup in (('v',10.0), ('t', 30.0), ('c', 150.0)):
+    for lookup in (('villages',10.0), ('towns', 30.0), ('cities', 150.0)):
       (type, rangefilter) = lookup
       place = self.lookupPlace(lat,lon,type, rangefilter)
       if(place != None):
@@ -90,4 +91,5 @@ class placenames(poiModule):
       
 if(__name__ == "__main__"):
   a = placenames({},{})
+  a.load("../places.txt")
   print a.lookup(51.3,-0.5)

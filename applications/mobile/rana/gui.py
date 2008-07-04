@@ -66,9 +66,13 @@ class MapWidget(gtk.Widget):
         filename = "%s\\%s" % ( module_path, f[0:-3]) # with directory name, but without .py extension
         a = __import__(f[0:-3])
         self.m[name] = a.getModule(self.m,self.d)
+        self.m[name].moduleName = name
         print " * %s: %s" % (name, self.m[name].__doc__)
-    print "Loaded all modules"
 
+    print "Loaded all modules, initialising"
+    for m in self.m.values():
+      m.firstTime()
+      
   def beforeDie(self):
     print "Shutting-down modules"
     for m in self.m.values():

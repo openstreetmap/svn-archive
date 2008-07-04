@@ -70,6 +70,8 @@ class mapView(ranaModule):
     z = int(self.get('z', 15))
     x,y = latlon2xy(lat,lon,z)
 
+    if(not self.d.has_key('viewport')):
+      return
     (sx,sy,sw,sh) = self.get('viewport')
     proj.setView(sx,sy,sw,sh)
     proj.recentre(lat,lon,z)

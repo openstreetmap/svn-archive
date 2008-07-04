@@ -1832,7 +1832,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 		<condition k="boundary" v="administrative"/>
         <line width="1" colour="#3a5d8c"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000000</scale_max>
 	</rule>
 
 	<rule>

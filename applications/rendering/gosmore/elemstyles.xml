@@ -887,7 +887,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="amenity" v="pub" />
 		<icon annotate="true" src="food/pub.png"  />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -901,21 +901,21 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="amenity" v="nightclub" />
 		<icon annotate="true" src="recreation/nightclub.png"  />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>25000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="cafe" />
 		<icon annotate="true" src="food/cafe.png"  />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="restaurant" />
 		<icon annotate="true" src="food/restaurant.png" />
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>

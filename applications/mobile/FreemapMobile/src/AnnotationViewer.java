@@ -120,7 +120,8 @@ public class AnnotationViewer implements CommandListener
      {
   		  if(s==ld)
   		  {
-  		    Display.getDisplay(app).setCurrent(photoCanvas);
+  		    Display.getDisplay(app).setCurrent
+				(curImage==null ? app.getCanvas() : photoCanvas);
 		  }
 	  	  else if(s==photoCanvas)
 	  	  {

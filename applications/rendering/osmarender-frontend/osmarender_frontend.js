@@ -13,7 +13,6 @@ var server;
 var dojowidgets = new Array();
 
 viewPropertiesFromClass = function(key) {
-	if (key=="osmarender_frontend:null") return false;
 
 // destroy dojowidgets found
 	if (dojowidgets.length) {
@@ -110,6 +109,12 @@ viewPropertiesFromClass = function(key) {
 	dl_container.appendChild(createElementCB("dt"));
 	dd_container_button = createElementCB("dd");
 	dd_container_button.appendChild(addCSSPropertyButton());
+	
+	button_set_style=createElementCB("button");
+	button_set_style.setAttribute("onclick","javascript:setStyle();");
+	button_set_style.appendChild(document.createTextNode("Set Style"));
+	dd_container_button.appendChild(button_set_style);
+
 	div_container_button.appendChild(dd_container_button);
 	div_container_button.appendChild(createElementCB("br"));
 	
@@ -370,28 +375,72 @@ deleteSingleProp = function (button) {
 		}
 	}
 
-loadOsmAndRules = function() {
-
-	clearSVG();
-
-	document.getElementById("load_file").style.display="none";
-
-	var rulesfilename_written = document.getElementById("rules_file_name_written").value;
-	var rulesfilename_selected = document.getElementById("rules_file_name").value;
-
-	var rulesfilename="osm-map-features-z13.xml";
+var MAX_TOTAL_STEPS=3;
 	
-	if (rulesfilename_selected == "") {
-		if (rulesfilename_written != "") {
-			rulesfilename = rulesfilename_written;
+var progressData = {
+	total: {
+		id: "",
+		progress:0,
+		maximum:MAX_TOTAL_STEPS,
+		message:""
+	},
+	step : {
+		id: "",
+		progress:0,
+		maximum:1,
+		message:""
+	}
+};
+
+function updateProgressBar() {
+	for (progressBar in progressData) {
+		with (progressData[progressBar]) {
+			dijit.byId(id).update({
+				progress:progress,
+				maximum:maximum,
+				report: function(percent) {
+					return message;
+				}
+			});
 		}
 	}
-	else {
-		rulesfilename = rulesfilename_selected;
+}
+
+loadOsmAndRules = function(rulesfilename,osmfilename,ProgressBarTotal,ProgressBarStep) {
+
+	with (progressData) {
+		with(total) {
+			id = ProgressBarTotal;
+			message = "Clearing map";
+		}
+		with(step) {
+			id = ProgressBarStep;
+		}
 	}
 
-//	var rulesfilename = document.getElementById("rules_file_name").value;
-	cmyk = new CMYK(rulesfilename);
+	updateProgressBar();
+	clearSVG();
+	
+	with (progressData) {
+		with(total) {
+			progress = 1;
+			message = "Getting rules file nodes";
+		}
+	}
+	updateProgressBar();
+
+	cmyk = new CMYK(rulesfilename,progressData,updateProgressBar,AfterCMYKLoad);
+
+}
+
+AfterCMYKLoad = function() {
+	with (progressData) {
+		with(total) {
+			progress = 2;
+			message = "Getting symbols";
+		}
+	}
+	updateProgressBar();
 
 	SymbolsResult();
 
@@ -431,27 +480,71 @@ loadOsmAndRules = function() {
 	var label = document.createTextNode("Select a CSS class: ");
 	label_container.appendChild(label);
 	div_result.appendChild(label_container);
-	
-	var select_css_classes = createElementCB("select");
+
+
+
+/*	var select_css_classes = createElementCB("select");
 	select_css_classes.setAttribute("id","select_class");
-	select_css_classes.setAttribute("onchange","javascript:viewPropertiesFromClass(this.value);");
+	select_css_classes.setAttribute("dojoType","dijit.form.FilteringSelect");
+	select_css_classes.setAttribute("autoComplete","false");
+	select_css_classes.setAttribute("invalidMessage","Select a Valid CSS class!");
+	select_css_classes.setAttribute("onchange","javascript:viewPropertiesFromClass(this.value);");*/
 
 	var sorted_list_of_unique_classes = refreshProperties() 
 	
-	var new_option_null = createElementCB("option");
+	/*var new_option_null = createElementCB("option");
 	new_option_null.setAttribute("value","osmarender_frontend:null");
 	var new_option_null_text = document.createTextNode("Select a CSS class");
 	new_option_null.appendChild(new_option_null_text);
-	select_css_classes.appendChild(new_option_null);
+	select_css_classes.appendChild(new_option_null);*/
 
+	var store_classes = {
+		identifier: "name",
+		items : []
+	};
+	
 	for (var key_name in sorted_list_of_unique_classes) {
+			store_classes.items[store_classes.items.length]= {name: ""+sorted_list_of_unique_classes[key_name]};
+	}
+	store_classes_data_store = new dojo.data.ItemFileReadStore({data:store_classes});
+
+	//There was a duplicate "landuse-retail" on z13.xml, so check for duplicates
+	//TODO: copy this type of check for "duplicates" in cmyk parsing too
+	var printError = function (error,request) {
+		alert(error);
+	}
+	store_classes_data_store.fetch({
+		onError: printError
+	});
+
+	var div_to_insert = createElementCB("div");
+	div_result.appendChild(div_to_insert);
+
+	var select_css_classes = new dijit.form.FilteringSelect(
+ 		{
+			id:"select_class",
+			autoComplete:"false",
+			invalidMessage:"Select a Valid CSS class!",
+			onChange:	function (value) {
+						if (value!=undefined) {
+							viewPropertiesFromClass(value);
+						}
+					},
+			store:store_classes_data_store,
+			searchAttr: "name"
+ 		}, div_to_insert
+ 	);
+/*	for (var key_name in sorted_list_of_unique_classes) {
 			var new_option = createElementCB("option");
 			new_option.setAttribute("value",sorted_list_of_unique_classes[key_name]);
 			var new_option_text = document.createTextNode(sorted_list_of_unique_classes[key_name]);
 			new_option.appendChild(new_option_text);
 			select_css_classes.appendChild(new_option);
-	}
-	div_result.appendChild(select_css_classes);
+	}*/
+	//div_result.appendChild(select_css_classes);
+	select_css_classes.startup();
+	document.getElementById("load_file").style.display="none";
+	document.getElementById("menu").style.display="block";
 	div_result.style.display="block";
 
 }
@@ -657,7 +750,8 @@ listKeys = function() {
 	elements["nodes"] = new Array();
 	elements["ways"] = new Array();
 
-	var osmfilename_written = document.getElementById("osm_file_name_written").value;
+//	var osmfilename_written = document.getElementById("osm_file_name_written").value;
+	var osmfilename_written="";
 	var osmfilename_selected = document.getElementById("osm_file_name_selected").value;
 
 	var osmfilename="data.osm";
@@ -979,7 +1073,8 @@ function RemoveDuplicates(arr) {
 //End section to port
 
 function Osmatransform () {
-	var osmfilename_written = document.getElementById("osm_file_name_written").value;
+//	var osmfilename_written = document.getElementById("osm_file_name_written").value;
+	var osmfilename_written = "";
 	var osmfilename_selected = document.getElementById("osm_file_name_selected").value;
 
 	var osmfilename="data.osm";
@@ -1059,6 +1154,7 @@ setStyle = function () {
 }
 
 saveFile = function() {
+//TODO: need to find something more attractive to do it, perhaps pasting in the main body instead of the location bar, if I can find a way to do it
 	var string = new XMLSerializer().serializeToString(cmyk.getRulesFile().documentElement);
 	var newWindow = window.open("","xml");
 	newWindow.location="data:text/xml;charset=utf8,"+encodeURIComponent(string);
@@ -1069,6 +1165,25 @@ saveFile = function() {
 	//newWindow.document.close();
 	
 //	<a href="javascript: window.location='data:text/csv;charset=utf8,' + encodeURIComponent('a,b,c,d');">dowload CSV</a>
+}
+
+handleLoadPreset = function (rule_file_name,osm_file_name) {
+	var setButton = function() {
+		dojo.byId("span_load_preset_data").innerHTML=osm_file_name;
+		dojo.byId("span_load_preset_rule").innerHTML=rule_file_name;
+	}
+	if (rule_file_name!="" && osm_file_name!="") {
+		dojo.fadeIn({
+			 node:"load_preset_button_div",
+			 beforeBegin: setButton()
+		}).play();
+	}
+	else {
+		dojo.fadeOut({
+			 node:"load_preset_button_div",
+			 onEnd: setButton
+		}).play();
+	}
 }
 
 saveSVGFile = function() {

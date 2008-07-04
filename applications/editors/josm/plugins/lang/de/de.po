@@ -1,17 +1,17 @@
 # translation of de.po to
+# # translation of de.po to
 #
 #
 # Sven Anders <s.anders@digitec.de>, 2006.
 # Sven Anders <sven@anders-hamburg.de>, 2006, 2007.
 # Matthias Merz <openstreetmap@merz.inka.de>, 2008.
 # Dirk Stöcker <openstreetmap@dstoecker.de>, 2008.
-# Dirk Stöcker <lang@dstoecker.de>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-03 18:14+0200\n"
-"PO-Revision-Date: 2008-07-03 18:55+0200\n"
+"POT-Creation-Date: 2008-07-04 12:27+0200\n"
+"PO-Revision-Date: 2008-07-04 12:28+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2809,35 +2809,35 @@ msgstr "Farbe"
 #: ../lang/presets.java:1542 ../lang/presets.java:1570
 #: ../lang/presets.java:1577 ../lang/presets.java:1584
 #: ../lang/presets.java:1591 ../lang/presets.java:1598
-#: ../lang/presets.java:1607 ../lang/presets.java:1614
-#: ../lang/presets.java:1621 ../lang/presets.java:1628
-#: ../lang/presets.java:1635 ../lang/presets.java:1642
-#: ../lang/presets.java:1649 ../lang/presets.java:1656
-#: ../lang/presets.java:1663 ../lang/presets.java:1671
-#: ../lang/presets.java:1678 ../lang/presets.java:1685
-#: ../lang/presets.java:1692 ../lang/presets.java:1699
-#: ../lang/presets.java:1706 ../lang/presets.java:1713
-#: ../lang/presets.java:1720 ../lang/presets.java:1727
-#: ../lang/presets.java:1734 ../lang/presets.java:1741
-#: ../lang/presets.java:1748 ../lang/presets.java:1755
-#: ../lang/presets.java:1762 ../lang/presets.java:1770
-#: ../lang/presets.java:1776 ../lang/presets.java:1782
-#: ../lang/presets.java:1788 ../lang/presets.java:1794
-#: ../lang/presets.java:1800 ../lang/presets.java:1806
-#: ../lang/presets.java:1812 ../lang/presets.java:1818
-#: ../lang/presets.java:1824 ../lang/presets.java:1830
-#: ../lang/presets.java:1836 ../lang/presets.java:1843
-#: ../lang/presets.java:1849 ../lang/presets.java:1855
-#: ../lang/presets.java:1861 ../lang/presets.java:1867
-#: ../lang/presets.java:1873 ../lang/presets.java:1882
-#: ../lang/presets.java:1888 ../lang/presets.java:1894
-#: ../lang/presets.java:1900 ../lang/presets.java:1906
-#: ../lang/presets.java:1912 ../lang/presets.java:1918
-#: ../lang/presets.java:1924 ../lang/presets.java:1930
-#: ../lang/presets.java:1936 ../lang/presets.java:1942
-#: ../lang/presets.java:1948 ../lang/presets.java:1954
-#: ../lang/presets.java:1960 ../lang/presets.java:1966
-#: ../lang/presets.java:1972 ../lang/presets.java:1978
+#: ../lang/presets.java:1607 ../lang/presets.java:1616
+#: ../lang/presets.java:1623 ../lang/presets.java:1630
+#: ../lang/presets.java:1637 ../lang/presets.java:1644
+#: ../lang/presets.java:1651 ../lang/presets.java:1658
+#: ../lang/presets.java:1665 ../lang/presets.java:1673
+#: ../lang/presets.java:1680 ../lang/presets.java:1687
+#: ../lang/presets.java:1694 ../lang/presets.java:1701
+#: ../lang/presets.java:1708 ../lang/presets.java:1715
+#: ../lang/presets.java:1722 ../lang/presets.java:1729
+#: ../lang/presets.java:1736 ../lang/presets.java:1743
+#: ../lang/presets.java:1752 ../lang/presets.java:1759
+#: ../lang/presets.java:1766 ../lang/presets.java:1774
+#: ../lang/presets.java:1780 ../lang/presets.java:1786
+#: ../lang/presets.java:1792 ../lang/presets.java:1798
+#: ../lang/presets.java:1804 ../lang/presets.java:1810
+#: ../lang/presets.java:1816 ../lang/presets.java:1822
+#: ../lang/presets.java:1828 ../lang/presets.java:1834
+#: ../lang/presets.java:1840 ../lang/presets.java:1847
+#: ../lang/presets.java:1853 ../lang/presets.java:1859
+#: ../lang/presets.java:1865 ../lang/presets.java:1871
+#: ../lang/presets.java:1877 ../lang/presets.java:1886
+#: ../lang/presets.java:1892 ../lang/presets.java:1898
+#: ../lang/presets.java:1904 ../lang/presets.java:1910
+#: ../lang/presets.java:1916 ../lang/presets.java:1922
+#: ../lang/presets.java:1928 ../lang/presets.java:1934
+#: ../lang/presets.java:1940 ../lang/presets.java:1946
+#: ../lang/presets.java:1952 ../lang/presets.java:1958
+#: ../lang/presets.java:1964 ../lang/presets.java:1970
+#: ../lang/presets.java:1976 ../lang/presets.java:1982
 #: ../pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginTableModel.java:107
 msgid "Name"
 msgstr "Name"
@@ -3641,7 +3641,7 @@ msgstr "Bundesstraßenanschluß bearbeiten"
 
 #: ../lang/presets.java:131
 msgid "Streets/Secondary"
-msgstr "Straßen/Landesstraßen"
+msgstr "Straßen/Landesstraße"
 
 #: ../lang/presets.java:132
 msgid "Edit a Secondary Road"
@@ -3789,7 +3789,7 @@ msgstr "Nutzungsart beschildert"
 #: ../lang/presets.java:272 ../lang/presets.java:273 ../lang/presets.java:274
 #: ../lang/presets.java:275 ../lang/presets.java:276
 msgid "destination"
-msgstr "Fahrtziel am Weg"
+msgstr "Anlieger"
 
 #: ../lang/presets.java:266 ../lang/presets.java:267 ../lang/presets.java:268
 #: ../lang/presets.java:269 ../lang/presets.java:270 ../lang/presets.java:271
@@ -3876,8 +3876,8 @@ msgid "Edit a Junction"
 msgstr "Kreuzung bearbeiten"
 
 #: ../lang/presets.java:289 ../lang/presets.java:456 ../lang/presets.java:483
-#: ../lang/presets.java:662 ../lang/presets.java:721 ../lang/presets.java:1664
-#: ../lang/presets.java:1837
+#: ../lang/presets.java:662 ../lang/presets.java:721 ../lang/presets.java:1666
+#: ../lang/presets.java:1841
 msgid "Type"
 msgstr "Typ"
 
@@ -4527,7 +4527,7 @@ msgstr "Biergarten bearbeiten"
 
 #: ../lang/presets.java:827
 msgid "Food+Drinks/Fast Food"
-msgstr "Essen + Drinken/Imbiss (Fast Food)"
+msgstr "Essen & Drinken/Imbiss (Fast Food)"
 
 #: ../lang/presets.java:828
 msgid "Edit Fast Food Restaurant"
@@ -5007,7 +5007,7 @@ msgstr "Schwimmbad bearbeiten"
 
 #: ../lang/presets.java:1198
 msgid "Sport/Skiing"
-msgstr "Sort/Skifahren"
+msgstr "Sport/Skifahren"
 
 #: ../lang/presets.java:1199
 msgid "Edit Skiing"
@@ -5182,119 +5182,148 @@ msgstr "Gebäude/Kirche"
 msgid "Edit Place of Worship"
 msgstr "Kirche bearbeiten"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "Religion"
 msgstr "Religion"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "bahai"
 msgstr "bahaiistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "buddhist"
 msgstr "buddistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "christian"
 msgstr "christlich"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "hindu"
 msgstr "hinduistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "jain"
 msgstr "jainistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "jewish"
 msgstr "jüdisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "muslim"
 msgstr "moslemisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "sikh"
 msgstr "sikhistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "spiritualist"
 msgstr "spiritistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "taoist"
 msgstr "taoistisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "unitarianist"
 msgstr "unitarisch"
 
-#: ../lang/presets.java:1331
+#: ../lang/presets.java:1331 ../lang/presets.java:1608
+#: ../lang/presets.java:1744
 msgid "zoroastrian"
 msgstr "zoroastrisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "Denomination"
 msgstr "Konfession"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "anglican"
 msgstr "anglikanisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "baptist"
 msgstr "baptistisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "catholic"
 msgstr "katholisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "evangelical"
 msgstr "evangelisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "jehovahs_witness"
 msgstr "Zeugen Jehovas"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "lutheran"
 msgstr "lutherisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "methodist"
 msgstr "methodistisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "mormon"
 msgstr "mormonisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "orthodox"
 msgstr "orthodox"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "pentecostal"
 msgstr "Pfingstgemeinde"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "presbyterian"
 msgstr "presbyterianisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "protestant"
 msgstr "protestantisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "quaker"
 msgstr "Quäker"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "shia"
 msgstr "schiitisch"
 
-#: ../lang/presets.java:1332
+#: ../lang/presets.java:1332 ../lang/presets.java:1609
+#: ../lang/presets.java:1745
 msgid "sunni"
 msgstr "sunnitisch"
 
@@ -5304,37 +5333,31 @@ msgstr "Gebäude/Schutzraum"
 
 #: ../lang/presets.java:1340
 msgid "Amenities/Toilets"
-msgstr ""
+msgstr "Einrichtung/Toiletten"
 
 #: ../lang/presets.java:1344
-#, fuzzy
 msgid "Amenities/Bus Station"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Busbahnhof"
 
 #: ../lang/presets.java:1345
-#, fuzzy
 msgid "Edit a Bus Station"
-msgstr "Neue Relation bearbeiten"
+msgstr "Busbahnhof bearbeiten"
 
 #: ../lang/presets.java:1350
-#, fuzzy
 msgid "Amenities/Post Box"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Briefkasten"
 
 #: ../lang/presets.java:1354
-#, fuzzy
 msgid "Amenities/Telephone"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Telefon"
 
 #: ../lang/presets.java:1358
-#, fuzzy
 msgid "Amenities/Recycling"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Recyclingstelle & -container"
 
 #: ../lang/presets.java:1359
-#, fuzzy
 msgid "Edit a Recycling station"
-msgstr "Neue Relation bearbeiten"
+msgstr "Recyclingstelle oder -container bearbeiten"
 
 #: ../lang/presets.java:1361
 msgid "Glass"
@@ -5349,34 +5372,28 @@ msgid "Batteries"
 msgstr "Batterien"
 
 #: ../lang/presets.java:1366
-#, fuzzy
 msgid "Amenities/Taxi"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Taxi"
 
 #: ../lang/presets.java:1367
-#, fuzzy
 msgid "Edit a Taxi station"
-msgstr "Neue Relation bearbeiten"
+msgstr "Taxihaltepunkt bearbeiten"
 
 #: ../lang/presets.java:1372
-#, fuzzy
 msgid "Amenities/Fountain"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Springbrunnen"
 
 #: ../lang/presets.java:1373
-#, fuzzy
 msgid "Edit a Fountain"
-msgstr "Neue Relation bearbeiten"
+msgstr "Springbrunnen bearbeiten"
 
 #: ../lang/presets.java:1378
-#, fuzzy
 msgid "Amenities/Drinking Water"
-msgstr "Neue Relation bearbeiten"
+msgstr "Einrichtung/Trinkwasser"
 
 #: ../lang/presets.java:1379
-#, fuzzy
 msgid "Edit Drinking Water"
-msgstr "Neue Relation bearbeiten"
+msgstr "Trinkwasserabgabe bearbeiten"
 
 #: ../lang/presets.java:1384
 msgid "Cash/Bank"
@@ -5452,7 +5469,7 @@ msgstr "Bäcker bearbeiten"
 
 #: ../lang/presets.java:1434
 msgid "Shops/Do-it-yourself-store"
-msgstr "Geschäft/Heimwerker"
+msgstr "Geschäfte/Heimwerker"
 
 #: ../lang/presets.java:1435
 msgid "Edit Do-it-yourself-store"
@@ -5460,7 +5477,7 @@ msgstr "Geschäft für Heimwerker bearbeiten"
 
 #: ../lang/presets.java:1440
 msgid "Shops/Dry Cleaning"
-msgstr "Geschäft/Chemische Reinigung"
+msgstr "Geschäfte/Chemische Reinigung"
 
 #: ../lang/presets.java:1441
 msgid "Edit Dry Cleaning"
@@ -5468,7 +5485,7 @@ msgstr "Chemische Reinigung bearbeiten"
 
 #: ../lang/presets.java:1446
 msgid "Shops/Laundry"
-msgstr "Geschäft/Waschsalon"
+msgstr "Geschäfte/Waschsalon"
 
 #: ../lang/presets.java:1447
 msgid "Edit Laundry"
@@ -5476,7 +5493,7 @@ msgstr "Waschsalon bearbeiten"
 
 #: ../lang/presets.java:1452
 msgid "Shops/Outdoor"
-msgstr "Geschäft/Camping (Outdoor)"
+msgstr "Geschäfte/Camping (Outdoor)"
 
 #: ../lang/presets.java:1453
 msgid "Edit Outdoor Shop"
@@ -5675,594 +5692,485 @@ msgid "Edit National Park Boundary"
 msgstr "Nationalparkgrenze bearbeiten"
 
 #: ../lang/presets.java:1604
-#, fuzzy
 msgid "Landuse/Grave Yard"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Kleiner Friedhof"
 
 #: ../lang/presets.java:1605
-#, fuzzy
 msgid "Edit Grave Yard"
-msgstr "Bearbeiten"
+msgstr "Kleinen Friedhof bearbeiten"
 
-#: ../lang/presets.java:1610
-#, fuzzy
+#: ../lang/presets.java:1612
 msgid "Landuse/Farmyard"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Bauernhof"
 
-#: ../lang/presets.java:1611
-#, fuzzy
+#: ../lang/presets.java:1613
 msgid "Edit Farmyard Landuse"
-msgstr "Bearbeiten"
+msgstr "Bauernhof bearbeiten"
 
-#: ../lang/presets.java:1617
-#, fuzzy
+#: ../lang/presets.java:1619
 msgid "Landuse/Farmland"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Acker"
 
-#: ../lang/presets.java:1618
-#, fuzzy
+#: ../lang/presets.java:1620
 msgid "Edit Farmland Landuse"
-msgstr "Bearbeiten"
+msgstr "Ackerfläche bearbeiten"
 
-#: ../lang/presets.java:1624
-#, fuzzy
+#: ../lang/presets.java:1626
 msgid "Landuse/Vineyard"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Weinberg"
 
-#: ../lang/presets.java:1625
-#, fuzzy
+#: ../lang/presets.java:1627
 msgid "Edit Vineyard Landuse"
-msgstr "Bearbeiten"
+msgstr "Weinberg bearbeiten"
 
-#: ../lang/presets.java:1631
-#, fuzzy
+#: ../lang/presets.java:1633
 msgid "Landuse/Quarry"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Steinbruch"
 
-#: ../lang/presets.java:1632
-#, fuzzy
+#: ../lang/presets.java:1634
 msgid "Edit Quarry Landuse"
-msgstr "Bearbeiten"
+msgstr "Steinbruch bearbeiten"
 
-#: ../lang/presets.java:1638
-#, fuzzy
+#: ../lang/presets.java:1640
 msgid "Landuse/Landfill"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Deponie"
 
-#: ../lang/presets.java:1639
-#, fuzzy
+#: ../lang/presets.java:1641
 msgid "Edit Landfill Landuse"
-msgstr "Bearbeiten"
+msgstr "Deponie bearbeiten"
 
-#: ../lang/presets.java:1645
-#, fuzzy
+#: ../lang/presets.java:1647
 msgid "Landuse/Basin"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Wasserbecken"
 
-#: ../lang/presets.java:1646
-#, fuzzy
+#: ../lang/presets.java:1648
 msgid "Edit Basin Landuse"
-msgstr "Bearbeiten"
+msgstr "Wasserbecken bearbeiten"
 
-#: ../lang/presets.java:1652
-#, fuzzy
+#: ../lang/presets.java:1654
 msgid "Landuse/Reservoir"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Speicherbecken"
 
-#: ../lang/presets.java:1653
-#, fuzzy
+#: ../lang/presets.java:1655
 msgid "Edit Reservoir Landuse"
-msgstr "Bearbeiten"
+msgstr "Speicherbecken bearbeiten"
 
-#: ../lang/presets.java:1659
-#, fuzzy
+#: ../lang/presets.java:1661
 msgid "Landuse/Forest"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Forst"
 
-#: ../lang/presets.java:1660
-#, fuzzy
+#: ../lang/presets.java:1662
 msgid "Edit Forest Landuse"
-msgstr "Bearbeiten"
+msgstr "Forst bearbeiten"
 
-#: ../lang/presets.java:1664 ../lang/presets.java:1837
+#: ../lang/presets.java:1666 ../lang/presets.java:1841
 msgid "coniferous"
 msgstr "Nadelwald"
 
-#: ../lang/presets.java:1664 ../lang/presets.java:1837
+#: ../lang/presets.java:1666 ../lang/presets.java:1841
 msgid "deciduous"
 msgstr "Laubwald"
 
-#: ../lang/presets.java:1664 ../lang/presets.java:1837
+#: ../lang/presets.java:1666 ../lang/presets.java:1841
 msgid "mixed"
 msgstr "Mischwald"
 
-#: ../lang/presets.java:1667
-#, fuzzy
+#: ../lang/presets.java:1669
 msgid "Landuse/Allotments"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Schrebergärten"
 
-#: ../lang/presets.java:1668
-#, fuzzy
+#: ../lang/presets.java:1670
 msgid "Edit Allotments Landuse"
-msgstr "Bearbeiten"
+msgstr "Schrebergärten bearbeiten"
 
-#: ../lang/presets.java:1674
-#, fuzzy
+#: ../lang/presets.java:1676
 msgid "Landuse/Residential"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Wohngebiet"
 
-#: ../lang/presets.java:1675
-#, fuzzy
+#: ../lang/presets.java:1677
 msgid "Edit Residential Landuse"
-msgstr "Bearbeiten"
+msgstr "Wohngebiet bearbeiten"
 
-#: ../lang/presets.java:1681
-#, fuzzy
+#: ../lang/presets.java:1683
 msgid "Landuse/Retail"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Einkaufsbereich"
 
-#: ../lang/presets.java:1682
-#, fuzzy
+#: ../lang/presets.java:1684
 msgid "Edit Retail Landuse"
-msgstr "Bearbeiten"
+msgstr "Einkaufsbereich bearbeiten"
 
-#: ../lang/presets.java:1688
-#, fuzzy
+#: ../lang/presets.java:1690
 msgid "Landuse/Commercial"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Gewerbegebiet"
 
-#: ../lang/presets.java:1689
-#, fuzzy
+#: ../lang/presets.java:1691
 msgid "Edit Commercial Landuse"
-msgstr "Bearbeiten"
+msgstr "Gewerbegebiet bearbeiten"
 
-#: ../lang/presets.java:1695
-#, fuzzy
+#: ../lang/presets.java:1697
 msgid "Landuse/Industrial"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Industrie"
 
-#: ../lang/presets.java:1696
-#, fuzzy
+#: ../lang/presets.java:1698
 msgid "Edit Industrial Landuse"
-msgstr "Bearbeiten"
+msgstr "Industriegebiet bearbeiten"
 
-#: ../lang/presets.java:1702
-#, fuzzy
+#: ../lang/presets.java:1704
 msgid "Landuse/Brownfield"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Baulücke"
 
-#: ../lang/presets.java:1703
-#, fuzzy
+#: ../lang/presets.java:1705
 msgid "Edit Brownfield Landuse"
-msgstr "Bearbeiten"
+msgstr "Baulücke bearbeiten"
 
-#: ../lang/presets.java:1709
-#, fuzzy
+#: ../lang/presets.java:1711
 msgid "Landuse/Greenfield"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Bauland"
 
-#: ../lang/presets.java:1710
-#, fuzzy
+#: ../lang/presets.java:1712
 msgid "Edit Greenfield Landuse"
-msgstr "Bearbeiten"
+msgstr "Bauland bearbeiten"
 
-#: ../lang/presets.java:1716
-#, fuzzy
+#: ../lang/presets.java:1718
 msgid "Landuse/Railway"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Eisenbahn"
 
-#: ../lang/presets.java:1717
-#, fuzzy
+#: ../lang/presets.java:1719
 msgid "Edit Railway Landuse"
-msgstr "Bearbeiten"
+msgstr "Eisenbahnfläche bearbeiten"
 
-#: ../lang/presets.java:1723
-#, fuzzy
+#: ../lang/presets.java:1725
 msgid "Landuse/Construction"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Baustelle"
 
-#: ../lang/presets.java:1724
-#, fuzzy
+#: ../lang/presets.java:1726
 msgid "Edit Construction Landuse"
-msgstr "Küsten."
+msgstr "Baustelle bearbeiten"
 
-#: ../lang/presets.java:1730
-#, fuzzy
+#: ../lang/presets.java:1732
 msgid "Landuse/Military"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Militärgebiet"
 
-#: ../lang/presets.java:1731
-#, fuzzy
+#: ../lang/presets.java:1733
 msgid "Edit Military Landuse"
-msgstr "Bearbeiten"
+msgstr "Militärgebiet bearbeiten"
 
-#: ../lang/presets.java:1737
-#, fuzzy
+#: ../lang/presets.java:1739
 msgid "Landuse/Cemetery"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Friedhof"
 
-#: ../lang/presets.java:1738
-#, fuzzy
+#: ../lang/presets.java:1740
 msgid "Edit Cemetery Landuse"
-msgstr "Bearbeiten"
+msgstr "Friedhof bearbeiten"
 
-#: ../lang/presets.java:1744
+#: ../lang/presets.java:1748
 msgid "Landuse/Village Green"
-msgstr ""
+msgstr "Landnutzung/Dorfanger"
 
-#: ../lang/presets.java:1745
-#, fuzzy
+#: ../lang/presets.java:1749
 msgid "Edit Village Green Landuse"
-msgstr "Bearbeiten"
+msgstr "Dorfanger bearbeiten"
 
-#: ../lang/presets.java:1751
-#, fuzzy
+#: ../lang/presets.java:1755
 msgid "Landuse/Grass"
-msgstr "Mitwirkung"
+msgstr "Landnutzung/Gras"
 
-#: ../lang/presets.java:1752
-#, fuzzy
+#: ../lang/presets.java:1756
 msgid "Edit Grass Landuse"
-msgstr "Bearbeiten"
+msgstr "Grasfläche bearbeiten"
 
-#: ../lang/presets.java:1758
+#: ../lang/presets.java:1762
 msgid "Landuse/Recreation Ground"
-msgstr ""
+msgstr "Landnutzung/Erholungsgebiet"
 
-#: ../lang/presets.java:1759
-#, fuzzy
+#: ../lang/presets.java:1763
 msgid "Edit Recreation Ground Landuse"
-msgstr "Bearbeiten"
+msgstr "Erholungsgebiet bearbeiten"
 
-#: ../lang/presets.java:1767
-#, fuzzy
+#: ../lang/presets.java:1771
 msgid "Natural/Water"
-msgstr "Küsten."
+msgstr "Natur/Wasserf"
 
-#: ../lang/presets.java:1768
-#, fuzzy
+#: ../lang/presets.java:1772
 msgid "Edit Water"
-msgstr "Bearbeiten"
+msgstr "Wasserfläche bearbeiten"
 
-#: ../lang/presets.java:1773
-#, fuzzy
+#: ../lang/presets.java:1777
 msgid "Natural/Land"
-msgstr "Küsten."
+msgstr "Natur/Land"
 
-#: ../lang/presets.java:1774
-#, fuzzy
+#: ../lang/presets.java:1778
 msgid "Edit Land"
-msgstr "Bearbeiten"
+msgstr "Landfläche bearbeiten"
 
-#: ../lang/presets.java:1779
-#, fuzzy
+#: ../lang/presets.java:1783
 msgid "Natural/Spring"
-msgstr "Küsten."
+msgstr "Natur/Quelle"
 
-#: ../lang/presets.java:1780
-#, fuzzy
+#: ../lang/presets.java:1784
 msgid "Edit Spring"
-msgstr "Neue Relation bearbeiten"
+msgstr "Quelle bearbeiten"
 
-#: ../lang/presets.java:1785
-#, fuzzy
+#: ../lang/presets.java:1789
 msgid "Natural/Peak"
-msgstr "Küsten."
+msgstr "Natur/Berg"
 
-#: ../lang/presets.java:1786
-#, fuzzy
+#: ../lang/presets.java:1790
 msgid "Edit Peak"
-msgstr "Bearbeiten"
+msgstr "Bergspitze bearbeiten"
 
-#: ../lang/presets.java:1791
-#, fuzzy
+#: ../lang/presets.java:1795
 msgid "Natural/Glacier"
-msgstr "Küsten."
+msgstr "Natur/Gletscher"
 
-#: ../lang/presets.java:1792
-#, fuzzy
+#: ../lang/presets.java:1796
 msgid "Edit Glacier"
-msgstr "Bearbeiten"
+msgstr "Gletscher bearbeiten"
 
-#: ../lang/presets.java:1797
-#, fuzzy
+#: ../lang/presets.java:1801
 msgid "Natural/Volcano"
-msgstr "Küsten."
+msgstr "Natur/Vulkan"
 
-#: ../lang/presets.java:1798
-#, fuzzy
+#: ../lang/presets.java:1802
 msgid "Edit Volcano"
-msgstr "Bearbeiten"
+msgstr "Vulkan bearbeiten"
 
-#: ../lang/presets.java:1803
-#, fuzzy
+#: ../lang/presets.java:1807
 msgid "Natural/Cliff"
-msgstr "Küsten."
+msgstr "Natur/Klippe"
 
-#: ../lang/presets.java:1804
-#, fuzzy
+#: ../lang/presets.java:1808
 msgid "Edit Cliff"
-msgstr "Bearbeiten"
+msgstr "Klippe bearbeiten"
 
-#: ../lang/presets.java:1809
-#, fuzzy
+#: ../lang/presets.java:1813
 msgid "Natural/Scree"
-msgstr "Küsten."
+msgstr "Natur/Geröll"
 
-#: ../lang/presets.java:1810
-#, fuzzy
+#: ../lang/presets.java:1814
 msgid "Edit Scree"
-msgstr "Neue Relation bearbeiten"
+msgstr "Geröll bearbeiten"
 
-#: ../lang/presets.java:1815
-#, fuzzy
+#: ../lang/presets.java:1819
 msgid "Natural/Scrub"
-msgstr "Küsten."
+msgstr "Natur/Buschland"
 
-#: ../lang/presets.java:1816
-#, fuzzy
+#: ../lang/presets.java:1820
 msgid "Edit Scrub"
-msgstr "Bearbeiten"
+msgstr "Buschland bearbeiten"
 
-#: ../lang/presets.java:1821
-#, fuzzy
+#: ../lang/presets.java:1825
 msgid "Natural/Fell"
-msgstr "Küsten."
+msgstr "Natur/Gebirge"
 
-#: ../lang/presets.java:1822
-#, fuzzy
+#: ../lang/presets.java:1826
 msgid "Edit Fell"
-msgstr "Bearbeiten"
+msgstr "Gebirge bearbeiten"
 
-#: ../lang/presets.java:1827
-#, fuzzy
+#: ../lang/presets.java:1831
 msgid "Natural/Heath"
-msgstr "Küsten."
+msgstr "Natur/Heide"
 
-#: ../lang/presets.java:1828
-#, fuzzy
+#: ../lang/presets.java:1832
 msgid "Edit Heath"
-msgstr "Bearbeiten"
+msgstr "Neide bearbeiten"
 
-#: ../lang/presets.java:1833
-#, fuzzy
+#: ../lang/presets.java:1837
 msgid "Natural/Wood"
-msgstr "Küsten."
+msgstr "Natur/Wald"
 
-#: ../lang/presets.java:1834
-#, fuzzy
+#: ../lang/presets.java:1838
 msgid "Edit Wood"
-msgstr "Bearbeiten"
+msgstr "Wald bearbeiten"
 
-#: ../lang/presets.java:1840
-#, fuzzy
+#: ../lang/presets.java:1844
 msgid "Natural/Marsh"
-msgstr "Küsten."
+msgstr "Natur/Marsch & Sumpf"
 
-#: ../lang/presets.java:1841
-#, fuzzy
+#: ../lang/presets.java:1845
 msgid "Edit Marsh"
-msgstr "Bearbeiten"
+msgstr "Sumpfige Landschaft bearbeiten"
 
-#: ../lang/presets.java:1846
-#, fuzzy
+#: ../lang/presets.java:1850
 msgid "Natural/Coastline"
-msgstr "Küsten."
+msgstr "Natur/Küstenlinie"
 
-#: ../lang/presets.java:1847
-#, fuzzy
+#: ../lang/presets.java:1851
 msgid "Edit Coastline"
-msgstr "Küsten."
+msgstr "Küstenlinie bearbeiten"
 
-#: ../lang/presets.java:1852
-#, fuzzy
+#: ../lang/presets.java:1856
 msgid "Natural/Mud"
-msgstr "Küsten."
+msgstr "Natur/Schlick & Moor"
 
-#: ../lang/presets.java:1853
-#, fuzzy
+#: ../lang/presets.java:1857
 msgid "Edit Mud"
-msgstr "Bearbeiten"
+msgstr "Schlickiges Gebiet bearbeiten"
 
-#: ../lang/presets.java:1858
-#, fuzzy
+#: ../lang/presets.java:1862
 msgid "Natural/Beach"
-msgstr "Küsten."
+msgstr "Natur/Strand"
 
-#: ../lang/presets.java:1859
-#, fuzzy
+#: ../lang/presets.java:1863
 msgid "Edit Beach"
-msgstr "Neue Relation bearbeiten"
+msgstr "Strand bearbeiten"
 
-#: ../lang/presets.java:1864
-#, fuzzy
+#: ../lang/presets.java:1868
 msgid "Natural/Bay"
-msgstr "Küsten."
+msgstr "Natur/Meeresbucht"
 
-#: ../lang/presets.java:1865
-#, fuzzy
+#: ../lang/presets.java:1869
 msgid "Edit Bay"
-msgstr "Bearbeiten"
+msgstr "Meeresbucht bearbeiten"
 
-#: ../lang/presets.java:1870
-#, fuzzy
+#: ../lang/presets.java:1874
 msgid "Natural/Cave Entrance"
-msgstr "Küsten."
+msgstr "Natur/Höhleneingang"
 
-#: ../lang/presets.java:1871
-#, fuzzy
+#: ../lang/presets.java:1875
 msgid "Edit Cave Entrance"
-msgstr "Neue Relation bearbeiten"
+msgstr "Höhleneingang bearbeiten"
 
-#: ../lang/presets.java:1879
+#: ../lang/presets.java:1883
 msgid "Man Made/Works"
-msgstr ""
+msgstr "Zivilisationsbauten/Fabrik"
 
-#: ../lang/presets.java:1880
-#, fuzzy
+#: ../lang/presets.java:1884
 msgid "Edit Works"
-msgstr "Bearbeiten"
+msgstr "Fabrik bearbeiten"
 
-#: ../lang/presets.java:1885
-#, fuzzy
+#: ../lang/presets.java:1889
 msgid "Man Made/Power Wind"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Windkraftanlage"
 
-#: ../lang/presets.java:1886
-#, fuzzy
+#: ../lang/presets.java:1890
 msgid "Edit Power Wind"
-msgstr "Neue Relation bearbeiten"
+msgstr "Windkraftanlage bearbeiten"
 
-#: ../lang/presets.java:1891
-#, fuzzy
+#: ../lang/presets.java:1895
 msgid "Man Made/Power Hydro"
-msgstr "Bearbeiten"
+msgstr "Zivilisationsbauten/Wasserkraftwerk"
 
-#: ../lang/presets.java:1892
-#, fuzzy
+#: ../lang/presets.java:1896
 msgid "Edit Power Hydro"
-msgstr "Bearbeiten"
+msgstr "Wasserkraftwerk bearbeiten"
 
-#: ../lang/presets.java:1897
-#, fuzzy
+#: ../lang/presets.java:1901
 msgid "Man Made/Power Fossil"
-msgstr "Bearbeiten"
+msgstr "Zivilisationsbauten/Kohle- & Ölkraftwerk"
 
-#: ../lang/presets.java:1898
-#, fuzzy
+#: ../lang/presets.java:1902
 msgid "Edit Power Fossil"
-msgstr "Bearbeiten"
+msgstr "Kohle- oder Ölfraftwerk bearbeiten"
 
-#: ../lang/presets.java:1903
-#, fuzzy
+#: ../lang/presets.java:1907
 msgid "Man Made/Power Nuclear"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Kernkraftwerk"
 
-#: ../lang/presets.java:1904
-#, fuzzy
+#: ../lang/presets.java:1908
 msgid "Edit Power Nuclear"
-msgstr "Bearbeiten"
+msgstr "Kernkraftwerk bearbeiten"
 
-#: ../lang/presets.java:1909
-#, fuzzy
+#: ../lang/presets.java:1913
 msgid "Man Made/Tower"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Turm"
 
-#: ../lang/presets.java:1910
-#, fuzzy
+#: ../lang/presets.java:1914
 msgid "Edit Tower"
-msgstr "Bearbeiten"
+msgstr "Turm bearbeiten"
 
-#: ../lang/presets.java:1915
-#, fuzzy
+#: ../lang/presets.java:1919
 msgid "Man Made/Water Tower"
-msgstr "Bearbeiten"
+msgstr "Zivilisationsbauten/Wasserturm"
 
-#: ../lang/presets.java:1916
-#, fuzzy
+#: ../lang/presets.java:1920
 msgid "Edit Water Tower"
-msgstr "Bearbeiten"
+msgstr "Wasserturm bearbeiten"
 
-#: ../lang/presets.java:1921
-#, fuzzy
+#: ../lang/presets.java:1925
 msgid "Man Made/Gasometer"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Gasometer"
 
-#: ../lang/presets.java:1922
-#, fuzzy
+#: ../lang/presets.java:1926
 msgid "Edit Gasometer"
-msgstr "Leeres Dokument"
+msgstr "Gasometer bearbeiten"
 
-#: ../lang/presets.java:1927
+#: ../lang/presets.java:1931
 msgid "Man Made/Covered Reservoir"
-msgstr ""
+msgstr "Zivilisationsbauten/Überdecktes Speicherbassin"
 
-#: ../lang/presets.java:1928
+#: ../lang/presets.java:1932
 msgid "Edit Covered Reservoir"
-msgstr ""
+msgstr "Überdecktes Speicherbassin bearbeite"
 
-#: ../lang/presets.java:1933
-#, fuzzy
+#: ../lang/presets.java:1937
 msgid "Man Made/Lighthouse"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Leuchtturm"
 
-#: ../lang/presets.java:1934
-#, fuzzy
+#: ../lang/presets.java:1938
 msgid "Edit Lighthouse"
-msgstr "Neue Relation bearbeiten"
+msgstr "Leuchtturm bearbeiten"
 
-#: ../lang/presets.java:1939
-#, fuzzy
+#: ../lang/presets.java:1943
 msgid "Man Made/Windmill"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Windmühle"
 
-#: ../lang/presets.java:1940
-#, fuzzy
+#: ../lang/presets.java:1944
 msgid "Edit Windmill"
-msgstr "Bearbeiten"
+msgstr "Windmühle bearbeiten"
 
-#: ../lang/presets.java:1945
-#, fuzzy
+#: ../lang/presets.java:1949
 msgid "Man Made/Pier"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Anlegestelle (Pier)"
 
-#: ../lang/presets.java:1946
-#, fuzzy
+#: ../lang/presets.java:1950
 msgid "Edit Pier"
-msgstr "Bearbeiten"
+msgstr "Anlegestelle (Pier) bearbeiten"
 
-#: ../lang/presets.java:1951
-#, fuzzy
+#: ../lang/presets.java:1955
 msgid "Man Made/Pipeline"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Pipeline"
 
-#: ../lang/presets.java:1952
-#, fuzzy
+#: ../lang/presets.java:1956
 msgid "Edit Pipeline"
-msgstr "Neue Relation bearbeiten"
+msgstr "Pipeline bearbeiten"
 
-#: ../lang/presets.java:1957
+#: ../lang/presets.java:1961
 msgid "Man Made/Wastewater Plant"
-msgstr ""
+msgstr "Zivilisationsbauten/Kläranlage"
 
-#: ../lang/presets.java:1958
-#, fuzzy
+#: ../lang/presets.java:1962
 msgid "Edit Wastewater Plant"
-msgstr "Autobahn anpassen"
+msgstr "Kläranlage bearbeiten"
 
-#: ../lang/presets.java:1963
-#, fuzzy
+#: ../lang/presets.java:1967
 msgid "Man Made/Crane"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Stationärer Kran"
 
-#: ../lang/presets.java:1964
-#, fuzzy
+#: ../lang/presets.java:1968
 msgid "Edit Crane"
-msgstr "Bearbeiten"
+msgstr "Stationären Kran bearbeiten"
 
-#: ../lang/presets.java:1969
-#, fuzzy
+#: ../lang/presets.java:1973
 msgid "Man Made/Beacon"
-msgstr "Neue Relation bearbeiten"
+msgstr "Zivilisationsbauten/Bake"
 
-#: ../lang/presets.java:1970
-#, fuzzy
+#: ../lang/presets.java:1974
 msgid "Edit Beacon"
-msgstr "Neue Relation bearbeiten"
+msgstr "Bake bearbeiten"
 
-#: ../lang/presets.java:1975
-#, fuzzy
+#: ../lang/presets.java:1979
 msgid "Man Made/Survey Point"
-msgstr "Leeres Dokument"
+msgstr "Zivilisationsbauten/Vermessungspunkt"
 
-#: ../lang/presets.java:1976
-#, fuzzy
+#: ../lang/presets.java:1980
 msgid "Edit Survey Point"
-msgstr "Leeres Dokument"
+msgstr "Vermessungspunkt bearbeiten"
 
 #: ../wmsplugin/src/wmsplugin/DownloadWMSTask.java:22
-msgid "Downloading "
-msgstr "Lade Daten aus dem Internet "
+#, java-format
+msgid "Downloading {0}"
+msgstr "Lade {0} herunter"
 
 #: ../wmsplugin/src/wmsplugin/DownloadWMSTask.java:30
 msgid "Contacting WMS Server..."
@@ -6276,9 +6184,45 @@ msgstr "Einstellungen für WMS Plugin"
 msgid "Modify list of WMS servers displayed in the WMS plugin menu"
 msgstr "Liste der WMS-Server ändern, die im WMS Plugin-Menü angezeigt werden"
 
+#: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:38
+#: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:61
+msgid "Menu Name"
+msgstr "Menüname"
+
+#: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:38
+#: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:65
+msgid "WMS URL"
+msgstr "WMS-URL"
+
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:67
 msgid "Enter a menu name and WMS URL"
 msgstr "Bitte einen Bezeichner und einen WMS-URL eingeben"
+
+#: ../wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
+msgid "Rectified Image ..."
+msgstr "Berichtigtes Bild ..."
+
+#: ../wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
+msgid "Download Rectified Image from Metacarta's Map Rectifer WMS"
+msgstr "Berichtigtes Bild von Metacartas-WMS-Kartenkorrektur herunterladen"
+
+#: ../wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:24
+msgid "Metacarta Map Rectifier image id"
+msgstr "Metacarta-Kartenkorrektur Bildnummer"
+
+#: ../wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:31
+#, java-format
+msgid "rectifier id={0}"
+msgstr "Korrekturnummer={0}"
+
+#: ../wmsplugin/src/wmsplugin/WMSGrabber.java:47
+msgid "WMSGrabber: Illegal url."
+msgstr "WMS-Lader: Ungültige URL."
+
+#: ../wmsplugin/src/wmsplugin/WMSLayer.java:53
+#: ../wmsplugin/src/wmsplugin/WMSPlugin.java:114
+msgid "Blank Layer"
+msgstr "Leere Ebene"
 
 #: ../wmsplugin/src/wmsplugin/WMSLayer.java:72
 #, java-format
@@ -6306,9 +6250,97 @@ msgstr "Dateiformatfehler"
 msgid "Error loading file"
 msgstr "Fehler beim Laden der Datei"
 
-#: ../wmsplugin/src/wmsplugin/WMSPlugin.java:100
+#: ../wmsplugin/src/wmsplugin/WMSDownloadAction.java:17
+#, java-format
+msgid "Download WMS tile from {0}"
+msgstr "Lade WMS-Ebene aus Datei {0}"
+
+#: ../wmsplugin/src/wmsplugin/WMSPlugin.java:82
+msgid "Landsat"
+msgstr "LandSat"
+
+#: ../wmsplugin/src/wmsplugin/WMSPlugin.java:89
+msgid "NPE Maps"
+msgstr "NPE-Karten"
+
+#: ../wmsplugin/src/wmsplugin/WMSPlugin.java:98
 msgid "WMS"
 msgstr "WMS"
+
+#: ../wmsplugin/src/wmsplugin/WMSPlugin.java:114
+msgid "Open a blank WMS layer to load data from a file"
+msgstr "Eine leere WMS-Ebene öffnen, um Daten aus einer Datei zu laden"
+
+#: ../wmsplugin/src/wmsplugin/WMSAdjustAction.java:26
+msgid "landsatAdjust"
+msgstr "LandSatAnpassung"
+
+#: ../wmsplugin/src/wmsplugin/WMSAdjustAction.java:27
+msgid "Adjust the position of the WMS layer"
+msgstr "Die Position der WMS-Ebene anpassen"
+
+#: ../wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:20
+msgid "help"
+msgstr "Hilfe"
+
+#: ../wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:20
+msgid "Help  / About"
+msgstr "Hilfe / Über"
+
+#: ../wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:27
+msgid ""
+"You can add, edit and delete WMS entries in the WMSplugin Preference Tab - "
+"these will then show up in the WMS menu.\n"
+"\n"
+"You can also do this manually in the Advanced Preferences, using the "
+"following schema:\n"
+"wmsplugin.url.1.name=Landsat\n"
+"wmsplugin.url.1.url=http://onearth.jpl.nasa.gov....\n"
+"wmsplugin.url.2.name=NPE Maps... etc\n"
+"\n"
+"Full WMS URL input format example (landsat)\n"
+"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&\n"
+"layers=global_mosaic&styles=&srs=EPSG:4326&\n"
+"format=image/jpeg \n"
+"\n"
+"For Metacartas Map Rectifier http://labs.metacarta.com/rectifier/ , you only "
+"need to input the relevant 'id'.\n"
+"To add a Metacarta Map Rectifer menu item, manually create the url like in "
+"this example,replacing 73 with your image id: \n"
+"http://labs.metacarta.com/rectifier/wms.cgi?id=73\n"
+"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png\n"
+" \n"
+"Note: Make sure the image is suitable, copyright-wise, if in doubt, don't "
+"use."
+msgstr ""
+"Sie können WMS-Einträge in den WMSPlugin-Einstellungen hinzufügen, ändern "
+"und löschen - Diese werden dann im WMS-Menü angezeigt. \n"
+"\n"
+"Sie können dies in den erweiterten Einstellungen auch manuell nach folgendem "
+"Schema erledigen:\n"
+"wmsplugin.url.1.name=LandSat\n"
+"wmsplugin.url.1.url=http://onearth.jpl.nasa.gov....\n"
+"wmsplugin.url.2.name=NPE-Karten ...\n"
+"\n"
+"Die komplette LandSat-WMS-URL aus dem Beispiel ist:\n"
+"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&\n"
+"layers=global_mosaic&styles=&srs=EPSG:4326&\n"
+"format=image/jpeg \n"
+"\n"
+"Für die Metacarta-Kartenkorrektur http://labs.metacarta.com/rectifier/ , "
+"muss nur die relevant ID eingegeben werden.\n"
+"Um einen Metacarta-Kartenkorrektur-Menueintrag anzulegen, erstellen sie "
+"manuell eine URL wie in folgendem Beispiel(und ersetzen die 73 durch Ihre "
+"Bild-ID): \n"
+"http://labs.metacarta.com/rectifier/wms.cgi?id=73\n"
+"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png\n"
+"\n"
+"Achtung: Stellen Sie sicher, dass  die Bilder urheberrechtlicht unbedenklich "
+"sind. Im Zweifel verzichten Sie auf die Nutzung."
+
+#: ../wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:54
+msgid "WMS Plugin Help"
+msgstr "Hilfe für WMS Plugin"
 
 #: ../navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorAction.java:28
 msgid "Navigate"

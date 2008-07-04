@@ -30,5 +30,6 @@ class poiModule(ranaModule):
     for i in range(0, min(listHelper.numItems, len(items))):
       text = items[i]
       listHelper.write(i, "%d: %s"% (i,text))
+      listHelper.makeClickable(i, "set:menu:poi:%s" % text)
 
     

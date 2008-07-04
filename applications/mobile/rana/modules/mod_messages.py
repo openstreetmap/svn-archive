@@ -37,7 +37,7 @@ class messageModule(ranaModule):
       (module, text) = message.split(":", 1)
       
       if(module == 'set'):
-        (key,value) = text.split(":")
+        (key,value) = text.split(":", 1)
         for i in(None, True, False):
           if(value == str(i)):
             value = i

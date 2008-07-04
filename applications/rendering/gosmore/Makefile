@@ -52,11 +52,11 @@ install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
 	mkdir -p $(DESTDIR)$(prefix)/share/gosmore
-	cp -a elemstyle.xml icon.csv icon.xpm $(DESTDIR)$(prefix)/share/gosmore
+	cp -a elemstyles.xml icons.csv icons.xpm $(DESTDIR)$(prefix)/share/gosmore
 
 dist:
 	mkdir gosmore-$(VERSION)
-	cp gosmore.cpp Makefile elemstyle.xml icon.csv icon.xpm  README \
+	cp gosmore.cpp Makefile elemstyles.xml icons.csv icons.xpm  README \
 	  gosmore-$(VERSION)
 	tar zcf gosmore-$(VERSION).tar.gz gosmore-$(VERSION)
 	rm -rf gosmore-$(VERSION)

@@ -191,7 +191,7 @@ inline double LonInverse (int lon)
 }
 
 /*---------- Global variables -----------*/
-int *hashTable, bucketsMin1;
+int *hashTable, bucketsMin1, pakHead = 0xEB3A942;
 char *data;
 ndType *ndBase;
 styleStruct *style;
@@ -1176,9 +1176,10 @@ gint Expose (void)
   //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
     for (int thisLayer = -5, nextLayer; thisLayer < 6;
          thisLayer = nextLayer, doAreas = !doAreas) {
-      OsmItr itr (clon - perpixel * clip.width / 2,
-        clat - perpixel * clip.height / 2,
-        clon + perpixel * clip.width / 2, clat + perpixel * clip.height / 2);
+      OsmItr itr (clon - perpixel * clip.width / 2 - 10000,
+        clat - perpixel * clip.height / 2 - 10000,
+        clon + perpixel * clip.width / 2 + 10000,
+        clat + perpixel * clip.height / 2 + 10000);
       // Widen this a bit so that we render nodes that are just a bit offscreen ?
       nextLayer = 6;
       
@@ -1240,7 +1241,8 @@ gint Expose (void)
             mat.xy = mat.yx = 0;
             x0 = x - mat.xx / 12.0 * 3 * len; /* Render the name of the node */
             y0 = y + mat.xx * f->ascent / 12.0 + icon[3] / 2;
-            maxLenSqr = 4000000000000LL; // Without scaleMax, use 400000000
+            maxLenSqr = Sqr ((__int64) Style (w)->scaleMax);
+            //4000000000000LL; // Without scaleMax, use 400000000
           //}
           #endif
         }
@@ -1640,35 +1642,42 @@ int UserInterface (int argc, char *argv[])
   #else
   GMappedFile *gmap = g_mapped_file_new ("gosmore.pak", FALSE, NULL);
   #endif
-  if (!gmap) {
+  if (gmap) {
+    #ifdef __linux__
+    int ndCount[3];
+    fseek (gmap, -sizeof (ndCount), SEEK_END);
+    fread (ndCount, sizeof (ndCount), 1, gmap);
+    long pakSize = ftello64 (gmap);
+    data = (char *) mmap (NULL, ndCount[2],
+                   PROT_READ, MAP_SHARED, fileno (gmap), 0);
+
+    ndBase = (ndType *) ((char *)mmap (NULL, pakSize - (ndCount[2] & ~0xfff),
+    //ndCount[0] * sizeof (*ndBase),
+         PROT_READ, MAP_SHARED, fileno (gmap), ndCount[2] & ~0xfff) +
+       (ndCount[2] & 0xfff));
+    bucketsMin1 = ndCount[1];
+    hashTable = (int *)((char *)ndBase + pakSize - ndCount[2]) - bucketsMin1
+      - (bucketsMin1 >> 7) - 5;
+    #else
+    data = (char*) g_mapped_file_get_contents (gmap);
+    bucketsMin1 = ((int *) (data + g_mapped_file_get_length (gmap)))[-2];
+    hashTable = (int *) (data + g_mapped_file_get_length (gmap)) -
+      bucketsMin1 - (bucketsMin1 >> 7) - 5;
+    ndBase = (ndType *)(data + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 4]);
+    #endif
+  }
+  if (!gmap || !data || !ndBase || !hashTable || *(int*) data != pakHead) {
     fprintf (stderr, "Cannot read gosmore.pak\nYou can (re)build it from\n"
       "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
       argv[0]);
-    return 4;
-  }
-  #ifdef __linux__
-  int ndCount[3];
-  fseek (gmap, -sizeof (ndCount), SEEK_END);
-  fread (ndCount, sizeof (ndCount), 1, gmap);
-  long pakSize = ftello64 (gmap);
-  data = (char *) mmap (NULL, ndCount[2],
-                 PROT_READ, MAP_SHARED, fileno (gmap), 0);
-
-  ndBase = (ndType *) ((char *)mmap (NULL, pakSize - (ndCount[2] & ~0xfff), //ndCount[0] * sizeof (*ndBase),
-       PROT_READ, MAP_SHARED, fileno (gmap), ndCount[2] & ~0xfff) +
-     (ndCount[2] & 0xfff));
-  bucketsMin1 = ndCount[1];
-  hashTable = (int *)((char *)ndBase + pakSize - ndCount[2]) - bucketsMin1
-    - (bucketsMin1 >> 7) - 5;
-  #else
-  data = (char*) g_mapped_file_get_contents (gmap);
-  bucketsMin1 = ((int *) (data + g_mapped_file_get_length (gmap)))[-2];
-  hashTable = (int *) (data + g_mapped_file_get_length (gmap)) -
-    bucketsMin1 - (bucketsMin1 >> 7) - 5;
-  ndBase = (ndType *)(data + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 4]);
-  #endif
-  if (!data || !ndBase || !hashTable) {
-    fprintf (stderr, "mmap failed\n");
+    #ifndef HEADLESS
+    gtk_init (&argc, &argv);
+    gtk_dialog_run (GTK_DIALOG (gtk_message_dialog_new (NULL,
+      GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+      "Cannot read gosmore.pak\nYou can (re)build it from\n"
+      "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
+      argv[0])));
+    #endif
     return 8;
   }
   style = (struct styleStruct *)(data + 4);
@@ -1930,7 +1939,7 @@ int main (int argc, char *argv[])
       return 1;
     }
     FILE *pak, *masterf;
-    int head = 0xEB3A941, styleCnt = 0, ndStart;
+    int styleCnt = 0, ndStart;
     int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
     wayType *master = /* shutup gcc */ NULL;
     if (argc == 6) {
@@ -1951,7 +1960,7 @@ int main (int argc, char *argv[])
       fprintf (stderr, "Cannot create gosmore.pak\n");
       return 2;
     }
-    fwrite (&head, sizeof (head), 1, pak);
+    fwrite (&pakHead, sizeof (pakHead), 1, pak);
     
     //------------------------- elemstyle.xml : --------------------------
     char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS];

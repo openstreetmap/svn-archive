@@ -85,7 +85,9 @@ class menus(ranaModule):
       return
 
     # Find the screen
-    (x1,y1,w,h) = self.get('viewport')
+    if not self.d.has_key('viewport'):
+      return
+    (x1,y1,w,h) = self.get('viewport', None)
 
     list = self.lists.get(menuName, None)
     if(list != None):
@@ -124,6 +126,13 @@ class menus(ranaModule):
         self.drawButton(cr, x1+x*dx, y1+y*dy, dx, dy, text, icon, action)
         id += 1
 
+  def register(self, menu, type, module):
+    """Register a menu as being handled by some other module"""
+    if(type == 'list'):
+      self.lists[menu] = module
+    else:
+      print "Can't register \"%s\" menu - unknown type" % type
+    
   def clearMenu(self, menu, cancelButton='set:menu:main'):
     self.menus[menu] = {}
     if(cancelButton != None):

@@ -1,5 +1,7 @@
 package wmsplugin;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
@@ -15,18 +17,18 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 	private static final long serialVersionUID = 1L;
 
 	public Map_Rectifier_WMSmenuAction() {
-		super("Rectified Image ...", "OLmarker", "Download Rectified Image from Metacarta's Map Rectifer WMS", 0, 0, false);
+		super(tr("Rectified Image ..."), "OLmarker", tr("Download Rectified Image from Metacarta's Map Rectifer WMS"), 0, 0, false);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		String newid = JOptionPane.showInputDialog(Main.parent, "Metacarta Map Rectifier image id");
+		String newid = JOptionPane.showInputDialog(Main.parent, tr("Metacarta Map Rectifier image id"));
 
 		if (newid != null && !newid.equals("")) {
 			String newURL = "http://labs.metacarta.com/rectifier/wms.cgi?id="+newid+
 			"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png";
 
 			DownloadWMSTask.download(WMSDownloadAction.getLayer(
-				new WMSInfo("rectifier id="+newid, newURL, -1)));
+				new WMSInfo(tr("rectifier id={0}",newid), newURL, -1)));
 		}
 	}
 }

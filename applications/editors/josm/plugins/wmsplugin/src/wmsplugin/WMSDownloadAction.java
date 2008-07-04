@@ -1,5 +1,7 @@
 package wmsplugin;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.Main;
@@ -12,7 +14,7 @@ public class WMSDownloadAction extends JosmAction {
 	private WMSInfo info;
 	
 	public WMSDownloadAction(WMSInfo info) {
-		super(info.name, "wmsmenu", "Download WMS tile from "+info.name, 0, 0, false);
+		super(info.name, "wmsmenu", tr("Download WMS tile from {0}",info.name), 0, 0, false);
 		this.info = info;
 	}
 	

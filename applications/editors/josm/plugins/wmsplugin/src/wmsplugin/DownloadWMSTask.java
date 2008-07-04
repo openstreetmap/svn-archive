@@ -19,7 +19,7 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 	private double pixelPerDegree;
 	
 	public DownloadWMSTask(WMSLayer wmsLayer, Bounds bounds, double pixelPerDegree) {
-		super(tr("Downloading " + wmsLayer.name));
+		super(tr("Downloading {0}", wmsLayer.name));
 
 		this.wmsLayer = wmsLayer;
 		this.bounds = bounds;

@@ -27,8 +27,6 @@ import org.openstreetmap.josm.actions.JosmAction;
 
 public class WMSPlugin extends Plugin {
 
-	static String VERSION = "2.4";
-	
 	WMSLayer wmsLayer;
 	static JMenu wmsJMenu;
 
@@ -81,14 +79,14 @@ public class WMSPlugin extends Plugin {
 		
 		// if no (valid) prefs are set, initialize to a sensible default.
 		if (wmsList.isEmpty()) {
-			WMSInfo landsatInfo = new WMSInfo("Landsat", 
+			WMSInfo landsatInfo = new WMSInfo(tr("Landsat"),
 					"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
 					"layers=global_mosaic&styles=&srs=EPSG:4326&"+
 					"format=image/jpeg", 1);
 			landsatInfo.save();
 			wmsList.add(landsatInfo);
 			
-			WMSInfo npeInfo = new WMSInfo("NPE Maps", 
+			WMSInfo npeInfo = new WMSInfo(tr("NPE Maps"),
 					"http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&", 2);
 			npeInfo.save();
 			wmsList.add(npeInfo);
@@ -113,7 +111,7 @@ public class WMSPlugin extends Plugin {
 		
 		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new 
-				JosmAction("Blank Layer", "blankmenu", "Open a blank WMS layer to load data from a file", 0, 0, false) {
+				JosmAction(tr("Blank Layer"), "blankmenu", tr("Open a blank WMS layer to load data from a file"), 0, 0, false) {
 			public void actionPerformed(ActionEvent ev) {
 				Main.main.addLayer(new WMSLayer());
 			}

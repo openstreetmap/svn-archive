@@ -91,7 +91,7 @@ class menus(ranaModule):
     if(list != None):
       m = self.m.get(list, None)
       if(m != None):
-        listHelper = listable_menu(cr,x1,y1,w,h)
+        listHelper = listable_menu(cr,x1,y1,w,h, self.m.get('clickHandler', None))
         m.drawList(cr, menuName, listHelper)
       return
     

@@ -8,8 +8,10 @@ PROGRAM_NAME="osmarender_frontend";
 XHTML_NS="http://www.w3.org/1999/xhtml";
 var rulesfile;
 var server;
+var updateProgressBar;
 // Models for faceting features
-CMYK = function(rulesfilename) {
+CMYK = function(rulesfilename,progressData,progressBar,callBackFunc) {
+	updateProgressBar=progressBar;
 	var rulesfilename=rulesfilename;
 	
 	function elementTypes() {
@@ -475,7 +477,7 @@ rulesfile = function () {
 
 	var xmlhttp = new XMLHttpRequest();  
 	xmlhttp.open("GET", server+rulesfilename, false);  
-	xmlhttp.send('');  
+	xmlhttp.send('');
 	rulesfile=xmlhttp.responseXML;
 	return rulesfile;
 }();
@@ -538,10 +540,28 @@ function SingleRule() {
 	this.render=new Array();
 }
 
+var toprogress=0,progressMax=0;
 createRuleModel(rulesfile.getElementsByTagName("rules")[0],rulemodel);
+var id = setInterval(checkOk,10);
+
+function checkOk() {
+	if (progressMax!=0 && toprogress==progressMax) {
+		clearInterval(id);
+		callBackFunc();
+	}
+}
 
 function createRuleModel(dom,model) {
-	for (var index=0; index<dom.childNodes.length; index++) {
+// Thanks to http://jsninja.com/Timers
+	progressData.step.maximum=(progressMax+=dom.childNodes.length);
+	progressData.step.message="Processing node "+toprogress+"of"+progressMax;
+	updateProgressBar();
+	var i=0;
+	setTimeout(function() {
+	for (var index = i; index<dom.childNodes.length; index++) {
+		progressData.step.progress=(++toprogress);
+		progressData.step.message="Processing node "+toprogress+"of"+progressMax;
+		updateProgressBar();
 		if (dom.childNodes[index].nodeName=="rule") {
 			var temp = new SingleRule();
 			for (var a=0; a<dom.childNodes[index].attributes.length; a++) {
@@ -588,8 +608,8 @@ function createRuleModel(dom,model) {
 					}
 				}
 			}
-		}
-	}
+		}i++;
+	}if (i<dom.childNodes.length) setTimeout(arguments.callee,0);},0);
 }
 
 this.rulemodelresult=rulemodel;

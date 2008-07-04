@@ -22,6 +22,7 @@ class ranaModule:
     self.m = modules
     self.d = data
     self.status = ''
+    self.moduleName = '' # will be provided by gui.py
     
   def module_exists(self, module):
     """Test whether a named module is loaded"""
@@ -41,6 +42,9 @@ class ranaModule:
     return(self.status)
   
   # Overridable
+  def firstTime(self):
+    """Runs on application start (after all other modules are loaded)"""
+    pass
   def update(self):
     """Regular updates (several per second)"""
     pass

@@ -1,5 +1,7 @@
 package wmsplugin;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +44,7 @@ public class WMSGrabber implements Grabber {
 				proj.latlon2eastNorth(b.max));
 		} catch (MalformedURLException e) {
 			throw (IOException) new IOException(
-				"WMSGrabber: Illegal url.").initCause(e);
+				tr("WMSGrabber: Illegal url.")).initCause(e);
 		}
 	}
 

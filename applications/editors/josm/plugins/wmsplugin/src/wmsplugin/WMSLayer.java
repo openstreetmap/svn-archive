@@ -50,7 +50,7 @@ public class WMSLayer extends Layer {
 	protected final int serializeFormatVersion = 2;
 
 	public WMSLayer() {
-		this("Blank Layer", null);
+		this(tr("Blank Layer"), null);
 	}
 
 	public WMSLayer(String name, Grabber grabber) {

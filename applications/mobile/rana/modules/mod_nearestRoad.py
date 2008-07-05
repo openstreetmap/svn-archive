@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
-from module_base import ranaModule
+from base_module import ranaModule
 
 # OK, we need to somehow import modules from pyrender directory here.
 # replace this with location of your pyrender modules

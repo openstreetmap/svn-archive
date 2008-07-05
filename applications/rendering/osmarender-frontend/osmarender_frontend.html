@@ -37,41 +37,32 @@
 			dojo.require("dijit.form.Button");
 			dojo.require("dijit.form.CheckBox");
 			dojo.require("dijit.form.FilteringSelect");
+			dojo.require("dijit.form.TextBox");
 			dojo.require("dijit.ProgressBar");
 			dojo.require("dijit.Toolbar");
 			dojo.require("dijit.Tooltip");
 			dojo.require("dijit.layout.BorderContainer");
 			dojo.require("dijit.layout.ContentPane");
+			dojo.require("dijit.layout.TabContainer");
 			dojo.require("dojox.layout.ResizeHandle");
 			dojo.require("dijit.form.NumberSpinner");
 			dojo.require("dojox.widget.ColorPicker");
 			dojo.require("dojo.data.ItemFileReadStore");
-  			dojo.require("dojo.parser");
+			dojo.require("dojo.parser");
 			var initDND = function() {
 				var osm3 = new dojo.dnd.Moveable("osm3",{handle:"moveMe"});
 			};
 			dojo.addOnLoad(initDND);
-  		</script>
+		</script>
 	</head>
 	<body class="tundra">
 	<div id ="osm3" dojoType="dijit.layout.BorderContainer">
-		<div id="topcontainer">
-			<div id="movePane" dojoType="dijit.layout.ContentPane" region="top">
-				<div id="moveMe">Osmarender Frontend</div>
+		<div id="topcontainer" dojoType="dijit.layout.ContentPane" region="top">
+			<div id="moveMe" dojoType="dijit.layout.ContentPane">
+				Osmarender Frontend
 			</div>
 			<div id="menu" dojoType="dijit.layout.ContentPane">
-				<!--div dojoType="dijit.form.DropDownButton">
-	    				<span>File</span>
-	    				<div dojoType="dijit.Menu">
-						<div dojoType="dijit.MenuItem" onClick="alert('Hello world');">Enabled Item</div>
-  						<div dojoType="dijit.MenuItem" disabled="true">Disabled Item</div>
-  						<div dojoType="dijit.MenuSeparator"></div>
-  						<div dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconCut" onClick="doNothing();">Cut</div>
-  						<div dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconCopy" onClick="doNothing();">Copy</div>
-  						<div dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconPaste" onClick="doNothing();">Paste</div>
-					</div>
-				</div-->
-				<div dojoType="dijit.Toolbar" id="toolbar" layoutAlign="top" style="height:25px;">
+				<div dojoType="dijit.Toolbar" id="toolbar" layoutAlign="center">
 					<button id="transform" dojoType="dijit.form.Button">Render Map
 						<script type="dojo/method" event="onClick">
 							Osmatransform();
@@ -141,38 +132,108 @@
 					</div>
 				</div>
 			</div>
+			<div id="menu_views" dojoType="dijit.layout.ContentPane">
+				<div dojoType="dijit.Toolbar" id="toolbar_views" layoutAlign="center">
+					<button id="panel_styles" dojoType="dijit.form.Button">Styles Panel
+						<script type="dojo/method" event="onClick">
+							displayRules();
+						</script>
+					</button>
+					<span id="help_panel_styles" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_styles">
+    						View and Modify Styles
+					</div>
+					
+					<button id="panel_rules" dojoType="dijit.form.Button">Rules Panel
+						<script type="dojo/method" event="onClick">
+							listKeys();
+						</script>
+					</button>
+					<span id="help_panel_rules" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_rules">
+    						View Key/Value Pairs
+					</div>
+
+					<button id="panel_symbols" dojoType="dijit.form.Button">Symbols Panel
+						<script type="dojo/method" event="onClick">
+							displaySymbols();
+						</script>
+					</button>
+					<span id="help_panel_symbols" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_symbols">
+    						Display Symbols
+					</div>
+
+					<div dojoType="dijit.ToolbarSeparator"></div>
+
+					<button id="panel_load" dojoType="dijit.form.Button">Load Panel
+						<script type="dojo/method" event="onClick">
+							displayLoad();
+						</script>
+					</button>
+					<span id="help_panel_load" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_load">
+    						Load other files
+					</div>
+				</div>
+			</div>
 		</div>
-		<div id="main_content"  dojoType="dijit.layout.ContentPane">
-			<div id="load_file">
-				<div id="load_preset">
-					<h1>Load a preset file</h1><br />
-					Data File: 
-					<select 	dojoType="dijit.form.FilteringSelect"
-      							id="osm_file_name_selected"
-      							autoComplete="false"
-							invalidMessage="Invalid OSM file name"
-      							onChange="handleLoadPreset(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value)"
-					>
-						<option value="blank"></option>
-						<option value="data.xml">data.xml</option>
-						<option value="somewhere_in_london.xml">somewhere_in_london.xml</option>
-						<option value="rome_centre.xml">rome_centre.xml</option>
-					</select><br />
-					Rule File: 
-					<select 	dojoType="dijit.form.FilteringSelect"
-      							id="rules_file_name"
-      							autoComplete="false"
-							invalidMessage="Invalid rules file name"
-      							onChange="handleLoadPreset(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value)"
-					>
-						<option value="blank"></option>
-						<option value="osm-map-features-z12.xml">osm-map-features-z12.xml</option>
-						<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
-						<option value="osm-map-features-z14.xml">osm-map-features-z14.xml</option>
-						<option value="osm-map-features-z15.xml">osm-map-features-z15.xml</option>
-						<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
-						<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
-					</select><br /><br />
+		<div id="main_content" dojoType="dijit.layout.ContentPane">
+			<div id="load_file" dojoType="dijit.layout.BorderContainer">
+				<div id="load_file_tab" dojoType="dijit.layout.TabContainer">
+					<div id="load_preset" dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true">
+						<h1>Load a preset file</h1><br />
+						Data File: 
+						<select 	dojoType="dijit.form.FilteringSelect"
+      								id="osm_file_name_selected"
+      								autoComplete="false"
+								invalidMessage="Invalid OSM file name"
+      								onChange="handleLoadPreset(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value)"
+						>
+							<option value="blank"></option>
+							<option value="data.xml">data.xml</option>
+							<option value="somewhere_in_london.xml">somewhere_in_london.xml</option>
+							<option value="rome_centre.xml">rome_centre.xml</option>
+						</select><br />
+						Rule File: 
+						<select 	dojoType="dijit.form.FilteringSelect"
+      								id="rules_file_name"
+      								autoComplete="false"
+								invalidMessage="Invalid rules file name"
+      								onChange="handleLoadPreset(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value)"
+						>
+							<option value="blank"></option>
+							<option value="osm-map-features-z12.xml">osm-map-features-z12.xml</option>
+							<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
+							<option value="osm-map-features-z14.xml">osm-map-features-z14.xml</option>
+							<option value="osm-map-features-z15.xml">osm-map-features-z15.xml</option>
+							<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
+							<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
+						</select><br /><br />
+						<script type="dojo/method" event="onShow">
+							handleLoadPreset(dojo.byId("rules_file_name").value,dojo.byId("osm_file_name_selected").value);
+						</script>
+					</div>
+					<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">
+						<h1>Load a custom file</h1><br />
+						Data File: 
+						<input id="data_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
+						<br />
+						Rule File: 
+						<input id="rule_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
+						<br /><br />
+						<script type="dojo/method" event="onShow">
+							handleLoadPreset(dojo.byId("rule_file_name_custom").value,dojo.byId("data_file_name_custom").value);
+						</script>
+					</div>
+					<div id="load_url" title="Load URL" dojoType="dijit.layout.ContentPane">
+						<p>Feature not yet implemented</p>
+						<script type="dojo/method" event="onShow">
+							dojo.fadeOut({node:"load_preset_button_div"}).play();
+						</script>
+					</div>
+				</div>
+				<div id="load_button_progress" dojoType="dijit.layout.ContentPane" region="bottom">
 					<div id="load_preset_button_div">
 						<button id="load_preset_button" dojoType="dijit.form.Button">Load <span id="span_load_preset_data" class="bold"></span> data file<br />with <span id="span_load_preset_rule" class="bold"></span> rule file
 							<script type="dojo/method" event="onClick">
@@ -180,66 +241,39 @@
 								var fadeInProgressBar = dojo.fadeIn({node:"progressContainer"});
 								var Chain = dojo.fx.chain([fadeOutButton,fadeInProgressBar]);
 								dojo.connect(Chain,"onEnd",function() {
-									loadOsmAndRules(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value,"progressTotal","progressStep")
+									var rule_file_name="";
+									var osm_file_name="";
+									if (dijit.byId("load_file_tab").selectedChildWidget.id=="load_preset") {
+										rule_file_name=dojo.byId('rules_file_name').value;
+										osm_file_name=dojo.byId('osm_file_name_selected').value;
+									} else if(dijit.byId("load_file_tab").selectedChildWidget.id=="load_custom") {
+										rule_file_name=dojo.byId('rule_file_name_custom').value;
+										osm_file_name=dojo.byId('data_file_name_custom').value;
+									}
+									loadOsmAndRules(rule_file_name,osm_file_name,"progressTotal","progressStep",dojo.byId('transform_on_load').checked)
 								});
 								Chain.play();
 							</script>
-					</button>
+						</button><br />
+						<input dojoType="dijit.form.CheckBox" id="transform_on_load" />Render map after loading
+
 					</div>
-					<div style="opacity:0" id="progressContainer">
+					<div style="opacity:0" id="progressContainer" dojoType="dijit.layout.ContentPane">
 						<div annotate="true" id="progressTotal" dojoType="dijit.ProgressBar" class="progressBarLoad"></div>
 						<div annotate="true" id="progressStep" dojoType="dijit.ProgressBar" class="progressBarLoad"></div>
 					</div>
 				</div>
-				<div id="load_custom">
-				</div>
-				<div id="load_url">
-				</div>
 			</div>
-			<!--div id="load_file">
-				<label id="label_select_osm_file" for="osm_file_name_selected">Select an OSM data file name or..:</label>
-				<select id="osm_file_name_selected">
-					<option value="">No one, I'm writing my file name</option>
-					<option value="data.xml">data.xml</option>
-					<option value="somewhere_in_london.xml">somewhere_in_london.xml</option>
-					<option value="rome_centre.xml">rome_centre.xml</option>
-				</select>
-
-				<br /><br />
-
-				<label id="label_write_osm_file" for="osm_file_name_written">..write an OSM data file name:</label>
-				<input id="osm_file_name_written" type="text" value="data.xml" /><br />
-			
-				<br /><br />
-
-				<label id="label_rules_file_name" for="rules_file_name">Select a rules file name or..:</label>
-				<select id="rules_file_name">
-					<option value="">No one, I'm writing my file name</option>
-					<option value="osm-map-features-z12.xml">osm-map-features-z12.xml</option>
-					<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
-					<option value="osm-map-features-z14.xml">osm-map-features-z14.xml</option>
-					<option value="osm-map-features-z15.xml">osm-map-features-z15.xml</option>
-					<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
-					<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
-				</select>
-				<br /><br />
-
-				<label id="label_rules_file_name_written" for="rules_file_name_written">..write a rules file name:</label>
-				<input id="rules_file_name_written" type="text" value="osm-map-features-z13.xml" /><br />
-
-				<a id="link_load" href="javascript:loadOsmAndRules()">Load OSM file and Rule File</a><br />
-				<a id="return_to_rules" href="javascript:displayRules()">Return to styles without loading</a>
-			</div-->
-			<div id="result_process_rules"></div>
-			<div id="result_process_key"></div>
-			<div id="result_symbols"></div>
+			<div id="result_process_rules" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_process_key" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_symbols" dojoType="dijit.layout.ContentPane"></div>
 			<br /><br />
 		</div>
 		<div id="resizePane" dojoType="dijit.layout.ContentPane" region="bottom">
 			<div id="resizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="osm3" resizeAxis="xy" class="handle"></div>
 		</div>
 	</div>
-	<div id ="svgfile"></div>
+	<div id ="svgfile" dojoType="dijit.layout.ContentPane"></div>
 	</body>
 </html>
 

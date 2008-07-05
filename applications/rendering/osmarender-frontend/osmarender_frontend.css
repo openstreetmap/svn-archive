@@ -46,9 +46,9 @@ dd {
 	position: absolute;
 	background: #fff;
 	width:  60%;
-	height: 50%;
+	height: 70%;
 	left: 20%;
-	top:  25%;
+	top:  15%;
 	border: 2px solid grey;
 	radius:8pt;
 	-moz-border-radius:8pt 8pt;
@@ -80,7 +80,19 @@ dd {
 	display:none;
 }
 
+#menu_views {
+	width:100%;
+	overflow:hidden;
+	display:none;
+}
+
 #toolbar {
+	height:25px;
+	width:100%;
+	overflow:hidden;
+}
+
+#toolbar_views {
 	width:100%;
 	overflow:hidden;
 }
@@ -92,6 +104,8 @@ dd {
 }
 
 #main_content {
+	top:65px;
+	padding:10px;
 	overflow:auto;
 	position:relative;
 	height:80%;
@@ -122,14 +136,32 @@ dd {
 
 /* PANELS */
 
-#load_preset {
+#load_file {
+	top:45px;
+	height:100%;
+	width:100%;
 	text-align:center;
 }
+#load_file_tab {
+	text-align:center;
+	height:50%;
+	position:relative;
+}
+#load_button_progress {
+	text-align:center;
+	height:50%;
+	position:absolute;
+	bottom: 2px;
+}
+
+	#load_preset {
+		text-align:center;
+	}
 
 	#load_preset_button_div {
 		opacity:0;
 	}
-	
+
 	#progressContainer {
 		width:70%;
 		left:15%;
@@ -139,23 +171,27 @@ dd {
 		color:blue;
 	}
 
-#load_custom {
-	display:none;
-}
-
-#load_url {
-	display:none;
-}
-
 #result_symbols {
+	top:25px;
+	height:100%;
+	width:100%;
+	position:relative;
 	display:none;
 }
 
 #result_process_rules {
+	top:25px;
+	height:100%;
+	width:100%;
+	position:relative;
 	display:none;
 }
 
 #result_process_key {
+	top:25px;
+	height:100%;
+	width:100%;
+	position:relative;
 	display:none;
 }
 

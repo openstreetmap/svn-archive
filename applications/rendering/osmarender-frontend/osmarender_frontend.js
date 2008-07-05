@@ -381,7 +381,7 @@ var progressData = {
 	total: {
 		id: "",
 		progress:0,
-		maximum:MAX_TOTAL_STEPS,
+		maximum:1,
 		message:""
 	},
 	step : {
@@ -406,11 +406,18 @@ function updateProgressBar() {
 	}
 }
 
-loadOsmAndRules = function(rulesfilename,osmfilename,ProgressBarTotal,ProgressBarStep) {
+var onLoadTransform;
+var osmfilename;
+loadOsmAndRules = function(rulesfilename,osmfilenameOut,ProgressBarTotal,ProgressBarStep,TransformonLoad) {
+
+	onLoadTransform=TransformonLoad;
+	osmfilename=osmfilenameOut;
 
 	with (progressData) {
 		with(total) {
 			id = ProgressBarTotal;
+			progress++;
+			maximum = MAX_TOTAL_STEPS;
 			message = "Clearing map";
 		}
 		with(step) {
@@ -423,20 +430,22 @@ loadOsmAndRules = function(rulesfilename,osmfilename,ProgressBarTotal,ProgressBa
 	
 	with (progressData) {
 		with(total) {
-			progress = 1;
+			progress++;
 			message = "Getting rules file nodes";
 		}
 	}
 	updateProgressBar();
 
 	cmyk = new CMYK(rulesfilename,progressData,updateProgressBar,AfterCMYKLoad);
-
+	
 }
 
 AfterCMYKLoad = function() {
+	cmyk.setOsmFile(osmfilename);
+
 	with (progressData) {
 		with(total) {
-			progress = 2;
+			progress++;
 			message = "Getting symbols";
 		}
 	}
@@ -444,33 +453,20 @@ AfterCMYKLoad = function() {
 
 	SymbolsResult();
 
+	with (progressData) {
+		with(total) {
+			progress++;
+			message = "Drawing interface";
+		}
+	}
+	updateProgressBar();
+
+
 	var div_result = document.getElementById("result_process_rules");
 
 	while (div_result.hasChildNodes()) {
 		div_result.removeChild(div_result.firstChild);
 	}
-
-	var return_load_link = createElementCB("a");
-	return_load_link.setAttribute("id","link_return_load");
-	return_load_link.setAttribute("href","javascript:displayLoad();");
-	return_load_link.appendChild(document.createTextNode("Reload other files"));
-	div_result.appendChild(return_load_link);
-
-	div_result.appendChild(createElementCB("br"));
-
-	var viewKeyValuePairs = createElementCB("a");
-	viewKeyValuePairs.setAttribute("id","link_key_value_pairs_load");
-	viewKeyValuePairs.setAttribute("href","javascript:listKeys();");
-	viewKeyValuePairs.appendChild(document.createTextNode("View Key/Value Pairs"));
-	div_result.appendChild(viewKeyValuePairs);
-
-	div_result.appendChild(createElementCB("br"));
-
-	var viewSymbols = createElementCB("a");
-	viewSymbols.setAttribute("id","link_symbols_load");
-	viewSymbols.setAttribute("href","javascript:displaySymbols();");
-	viewSymbols.appendChild(document.createTextNode("View Symbols"));
-	div_result.appendChild(viewSymbols);
 
 	div_result.appendChild(createElementCB("br"));
 
@@ -511,6 +507,8 @@ AfterCMYKLoad = function() {
 	//There was a duplicate "landuse-retail" on z13.xml, so check for duplicates
 	//TODO: copy this type of check for "duplicates" in cmyk parsing too
 	var printError = function (error,request) {
+		document.getElementById("progressContainer").style.display="none";
+		document.getElementById("load_preset_button_div").style.display="block";
 		alert(error);
 	}
 	store_classes_data_store.fetch({
@@ -519,9 +517,9 @@ AfterCMYKLoad = function() {
 
 	var div_to_insert = createElementCB("div");
 	div_result.appendChild(div_to_insert);
-
+	if (dijit.byId("select_class")) dijit.byId("select_class").destroy();
 	var select_css_classes = new dijit.form.FilteringSelect(
- 		{
+			{
 			id:"select_class",
 			autoComplete:"false",
 			invalidMessage:"Select a Valid CSS class!",
@@ -532,8 +530,8 @@ AfterCMYKLoad = function() {
 					},
 			store:store_classes_data_store,
 			searchAttr: "name"
- 		}, div_to_insert
- 	);
+			}, div_to_insert
+		);
 /*	for (var key_name in sorted_list_of_unique_classes) {
 			var new_option = createElementCB("option");
 			new_option.setAttribute("value",sorted_list_of_unique_classes[key_name]);
@@ -544,8 +542,27 @@ AfterCMYKLoad = function() {
 	//div_result.appendChild(select_css_classes);
 	select_css_classes.startup();
 	document.getElementById("load_file").style.display="none";
+	// Reset progress Bars and fade out them
+	with (progressData) {
+		with(total) {
+			progress=0;
+			maximum=0;
+			message = "";
+		}
+		with(step) {
+			progress=0;
+			maximum=0;
+			message = "";
+		}
+	}
+	updateProgressBar();
+	dojo.fadeOut({node:"progressContainer"}).play();
+	document.getElementById("load_preset_button_div").style.display="block";
 	document.getElementById("menu").style.display="block";
+	document.getElementById("menu_views").style.display="block";
 	div_result.style.display="block";
+	
+	if (onLoadTransform) Osmatransform();
 
 }
 
@@ -555,28 +572,6 @@ SymbolsResult = function() {
 	while (div_result.hasChildNodes()) {
 		div_result.removeChild(div_result.firstChild);
 	}
-
-	var return_load_link = createElementCB("a");
-	return_load_link.setAttribute("id","link_return_load");
-	return_load_link.setAttribute("href","javascript:displayLoad();");
-	return_load_link.appendChild(document.createTextNode("Reload other files"));
-	div_result.appendChild(return_load_link);
-
-	div_result.appendChild(createElementCB("br"));
-
-	var viewKeyValuePairs = createElementCB("a");
-	viewKeyValuePairs.setAttribute("id","link_key_value_pairs_load");
-	viewKeyValuePairs.setAttribute("href","javascript:listKeys();");
-	viewKeyValuePairs.appendChild(document.createTextNode("View Key/Value Pairs"));
-	div_result.appendChild(viewKeyValuePairs);
-
-	div_result.appendChild(createElementCB("br"));
-
-	var viewSymbols = createElementCB("a");
-	viewSymbols.setAttribute("id","link_css_load");
-	viewSymbols.setAttribute("href","javascript:displayRules();");
-	viewSymbols.appendChild(document.createTextNode("View CSS"));
-	div_result.appendChild(viewSymbols);
 
 	div_result.appendChild(createElementCB("br"));
 	div_result.appendChild(createElementCB("br"));
@@ -711,7 +706,7 @@ displayLoad = function() {
 	document.getElementById("result_process_key").style.display="none";
 	document.getElementById("result_symbols").style.display="none";
 	document.getElementById("load_file").style.display="block";
-	if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
+	//if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
 }
 
 displayRules = function() {
@@ -749,21 +744,6 @@ var elements = new Array("nodes","ways");
 listKeys = function() {
 	elements["nodes"] = new Array();
 	elements["ways"] = new Array();
-
-//	var osmfilename_written = document.getElementById("osm_file_name_written").value;
-	var osmfilename_written="";
-	var osmfilename_selected = document.getElementById("osm_file_name_selected").value;
-
-	var osmfilename="data.osm";
-	
-	if (osmfilename_selected == "") {
-		if (osmfilename_written != "") {
-			osmfilename = osmfilename_written;
-		}
-	}
-	else {
-		osmfilename = osmfilename_selected;
-	}
 
 	var scripts = document.getElementsByTagName("script");
 
@@ -824,28 +804,6 @@ listKeys = function() {
 
 	div_result.style.display="block";
 	
-	var return_load_link = createElementCB("a");
-	return_load_link.setAttribute("id","link_return_load");
-	return_load_link.setAttribute("href","javascript:displayLoad();");
-	return_load_link.appendChild(document.createTextNode("Reload other files"));
-	div_result.appendChild(return_load_link);
-
-	div_result.appendChild(createElementCB("br"));
-
-	var return_css_link = createElementCB("a");
-	return_css_link.setAttribute("id","return_to_rules_2");
-	return_css_link.setAttribute("href","javascript:displayRules();");
-	return_css_link.appendChild(document.createTextNode("Return to styles without changing style"));
-	div_result.appendChild(return_css_link);
-
-	div_result.appendChild(createElementCB("br"));
-
-	var viewSymbols = createElementCB("a");
-	viewSymbols.setAttribute("id","link_symbols_load");
-	viewSymbols.setAttribute("href","javascript:displaySymbols();");
-	viewSymbols.appendChild(document.createTextNode("View Symbols"));
-	div_result.appendChild(viewSymbols);
-
 	div_result.appendChild(createElementCB("br"));
 	div_result.appendChild(createElementCB("br"));
 	
@@ -1044,15 +1002,10 @@ loadSymbol = function(symbolname) {
 }
 
 loadCSS = function(cssname) {
+	selectCSS = dijit.byId("select_class");
+	selectCSS.setDisplayedValue(cssname);
+	selectCSS.onChange();
 	displayRules();
-	selectCSS = document.getElementById("select_class");
-	for (item in selectCSS.options) {
-		if (selectCSS.options[item].value==cssname) {
-			selectCSS.selectedIndex=item;
-			break;
-		}
-	}
-	selectCSS.onchange();
 }
 
 
@@ -1073,23 +1026,6 @@ function RemoveDuplicates(arr) {
 //End section to port
 
 function Osmatransform () {
-//	var osmfilename_written = document.getElementById("osm_file_name_written").value;
-	var osmfilename_written = "";
-	var osmfilename_selected = document.getElementById("osm_file_name_selected").value;
-
-	var osmfilename="data.osm";
-	
-	if (osmfilename_selected == "") {
-		if (osmfilename_written != "") {
-			osmfilename = osmfilename_written;
-		}
-	}
-	else {
-		osmfilename = osmfilename_selected;
-	}
-	
-	cmyk.setOsmFile(osmfilename);
-
 	var scripts = document.getElementsByTagName("script");
 
 	for (script in scripts) {

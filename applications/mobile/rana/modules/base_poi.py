@@ -58,19 +58,23 @@ class poiModule(ranaModule):
       
       items = self.poi.get(type, [])
       items.sort(lambda x, y: int(x.get('d',1E+5)) - int(y.get('d',1E+5)))
-      items = [a['name'] for a in items]
       submenu = False
     else:
-      items = self.poi.keys()
+      items = [{'name':a} for a in self.poi.keys()]
       submenu = True
     
     for i in range(0, min(listHelper.numItems, len(items))):
-      text = items[i]
-      listHelper.write(i, "%d: %s"% (i,text))
+      item = items[i]
+      listHelper.write(i, "%d: %s"% (i,item['name']))
       if(submenu):
-        listHelper.makeClickable(i, "set:menu:poi:%s" % text)
+        listHelper.makeClickable(i, "set:menu:poi:%s" % item['name'])
       else:
-        listHelper.makeClickable(i, "set:selected_type:poi|set:selected_name:%s|set:menu:poi" % text)
+        actions = (
+          "set:selected_type:poi",
+          "set:selected_name:%s" % item['name'],
+          "set:selected_pos:%f,%f" % (item['lat'], item['lon']),
+          "set:menu:poi")
+        listHelper.makeClickable(i, "|".join(actions))
         
 
     

@@ -168,7 +168,7 @@ public class OsmFormat {
         private int getDate(Attributes atts, String name) {
             String orig = atts.getValue(name);
             if (orig == null) return -1;
-            return (int)getTimestamp(orig).getTime()/1000;
+            return (int)(getTimestamp(orig).getTime()/1000);
         }
         
         private String getString(Attributes atts, String name) {

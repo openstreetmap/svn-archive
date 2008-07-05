@@ -1205,11 +1205,6 @@
                 fill: #f0f0f0;
             }
 
-            .landuse-retail {
-                stroke: none;
-                fill: #ffebeb;
-            }
-
             .landuse-industrial {
                 fill: #ecd8ff;
                 stroke: #eeeeee;

@@ -554,13 +554,13 @@ function checkOk() {
 function createRuleModel(dom,model) {
 // Thanks to http://jsninja.com/Timers
 	progressData.step.maximum=(progressMax+=dom.childNodes.length);
-	progressData.step.message="Processing node "+toprogress+"of"+progressMax;
+	progressData.step.message="Processing node "+toprogress+" of "+progressMax;
 	updateProgressBar();
 	var i=0;
 	setTimeout(function() {
 	for (var index = i; index<dom.childNodes.length; index++) {
 		progressData.step.progress=(++toprogress);
-		progressData.step.message="Processing node "+toprogress+"of"+progressMax;
+		progressData.step.message="Processing node "+toprogress+" of "+progressMax;
 		updateProgressBar();
 		if (dom.childNodes[index].nodeName=="rule") {
 			var temp = new SingleRule();

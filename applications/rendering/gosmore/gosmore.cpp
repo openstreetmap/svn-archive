@@ -69,6 +69,7 @@ using namespace std;
   o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
   o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
   o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
+  o (ShowActiveRouteNodes,     "?", "?", "?", "?", "?", 0, 2)
 
 #define HideZoomButtons 0
 #endif
@@ -393,7 +394,7 @@ struct routeNodeType {
   routeNodeType *shortest;
   int best, heapIdx, dir, remain; // Dir is 0 or 1
 } *route = NULL, *shortest = NULL, **routeHeap;
-int dhashSize, routeHeapSize, tlat, tlon, flat, flon;
+int dhashSize, routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 
 #ifdef ROUTE_CALIBRATE
 int routeAddCnt;
@@ -408,38 +409,41 @@ int routeAddCnt;
 #define ROUTE_SHOW_STATS
 #endif
 
-void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
+routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
      segments (hs, hs->other), (newshort->hs, newshort->hs->other),
      (newshort->shortest->hs, newshort->shortest->hs->other), .., 'to'
-     with cost 'cost'. */
+     with cost 'cost'.
+     
+     When cost is -1 this function just returns the entry for nd without
+     modifying anything. */
   unsigned hash = (intptr_t) nd / 10 + dir, i = 0;
   routeNodeType *n;
   do {
     if (i++ > 10) {
       //fprintf (stderr, "Double hash bailout : Table full, hash function "
       //  "bad or no route exists\n");
-      return;
+      return NULL;
     }
     n = route + hash % dhashSize;
     /* Linear congruential generator from wikipedia */
     hash = (unsigned) (hash * (__int64) 1664525 + 1013904223);
     if (n->nd == NULL) { /* First visit of this node */
+      if (cost < 0) return NULL;
       n->nd = nd;
       n->best = 0x7fffffff;
       /* Will do later : routeHeap[routeHeapSize] = n; */
       n->heapIdx = routeHeapSize++;
       n->dir = dir;
-      n->remain = nd == ndBase - 1 ? 0
-        : lrint (sqrt (Sqr ((__int64)(nd->lat - flat)) +
-                       Sqr ((__int64)(nd->lon - flon))));
+      n->remain = lrint (sqrt (Sqr ((__int64)(nd->lat - rlat)) +
+                               Sqr ((__int64)(nd->lon - rlon))));
       if (!shortest || n->remain < shortest->remain) shortest = n;
       ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
     }
   } while (n->nd != nd || n->dir != dir);
 
   int diff = n->remain + (newshort ? newshort->best - newshort->remain : 0);
-  if (n->best > cost + diff) {
+  if (cost >= 0 && n->best > cost + diff) {
     n->best = cost + diff;
     n->shortest = newshort;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
@@ -450,14 +454,15 @@ void AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
     }
     routeHeap[n->heapIdx] = n;
   }
+  return n;
 }
 
 void Route (int recalculate)
 { /* Recalculate is faster but only valid if 'to', 'car' and 'fastest' did not
      change */
 /* We start by finding the segment that is closest to 'from' and 'to' */
-  ndType *endNd[2];
-  int toEndNd[2][2];
+  static ndType *endNd[2] = { NULL, NULL}, from;
+  static int toEndNd[2][2];
   
   ROUTE_SET_ADDND_COUNT (0);
   shortest = NULL;
@@ -491,7 +496,7 @@ void Route (int recalculate)
       if (d < bestd) {
         wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
         bestd = d;
-        double invSpeed = 1;//!fastest ? 1.0 : Style (w)->invSpeed[car];
+        double invSpeed = !FastestRoute ? 1.0 : Style (w)->invSpeed[Vehicle];
         //printf ("%d %lf\n", i, invSpeed);
         toEndNd[i][0] =
           lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
@@ -513,44 +518,47 @@ void Route (int recalculate)
         } */
       }
     } /* For each candidate segment */
-    if (bestd == (__int64) 1 << 62) {
+    if (bestd == (__int64) 1 << 62 || !endNd[0]) {
+      endNd[i] = NULL;
       fprintf (stderr, "No segment nearby\n");
       return;
     }
   } /* For 'from' and 'to', find segment that passes nearby */
+  from.lat = flat;
+  from.lon = flon;
   if (recalculate) {
     free (route);
     dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
-    // This memory management may not match computer capabilities
-    route = (routeNodeType*) calloc (dhashSize, sizeof (*route));
-  }
+    // Allocate one piece of memory for both route and routeHeap, so that
+    // we can easily retry if it fails on a small device
+    while (dhashSize > 0 && !(route = (routeNodeType*)
+        malloc ((sizeof (*route) + sizeof (*routeHeap)) * dhashSize))) {
+      dhashSize = dhashSize / 4 * 3;
+    }
+    memset (route, 0, sizeof (dhashSize) * dhashSize);
+    routeHeapSize = 1; /* Leave position 0 open to simplify the math */
+    routeHeap = (routeNodeType**) (route + dhashSize) - 1;
 
-  routeHeapSize = 1; /* Leave position 0 open to simplify the math */
-  routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
-  
-  if (recalculate) {
+    rlat = flat;
+    rlon = flon;
     AddNd (endNd[0], 0, toEndNd[0][0], NULL);
     AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
     AddNd (endNd[0], 1, toEndNd[0][0], NULL);
     AddNd (ndBase + endNd[0]->other[0], 0, toEndNd[0][1], NULL);
   }
   else {
-    for (int i = 0; i < dhashSize; i++) {
-      if (route[i].nd) {
-        route[i].best++; // Force re-add to the heap
-        AddNd (route[i].nd, route[i].dir, route[i].best - 1,
-          route[i].shortest);
-      }
-    }
+    routeNodeType *frn = AddNd (&from, 0, -1, NULL);
+    if (frn) frn->best = 0x7fffffff;
+
+    routeNodeType *rn = AddNd (endNd[1], 0, -1, NULL);
+    if (rn) AddNd (&from, 0, toEndNd[1][1], rn);
+    routeNodeType *rno = AddNd (ndBase + endNd[1]->other[0], 1, -1, NULL);
+    if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
   
   while (routeHeapSize > 1) {
     routeNodeType *root = routeHeap[1];
-    if (root->nd == ndBase - 1) { // ndBase - 1 is a marker for 'from'
-      shortest = root->shortest;
-      break;
-    }
     routeHeapSize--;
     int beste = routeHeap[routeHeapSize]->best;
     for (int i = 2; ; ) {
@@ -568,8 +576,12 @@ void Route (int recalculate)
       i = i * 2;
     }
     root->heapIdx = -1; /* Root now removed from the heap */
+    if (root->nd == &from) { // Remove 'from' from the heap in case we
+      shortest = root->shortest; // get called with recalculate=0
+      break;
+    }
     if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
-      AddNd (ndBase - 1, 0, toEndNd[1][1 - root->dir], root);
+      AddNd (&from, 0, toEndNd[1][1 - root->dir], root);
     }
     ndType *nd = root->nd, *other;
     while (nd > ndBase && nd[-1].lon == nd->lon &&
@@ -597,7 +609,6 @@ void Route (int recalculate)
     } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
              nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
   } // While there are active nodes left
-  free (routeHeap + 1);
   ROUTE_SHOW_STATS;
 //  if (fastest) printf ("%lf
 //  printf ("%lf km\n", limit / 100000.0);
@@ -837,7 +848,7 @@ int ProcessNmea (char *rx, unsigned *got)
 
 #ifndef _WIN32_WCE
 #ifdef ROUTE_TEST
-gint RouteTest (GtkWidget *widget, GdkEventButton *event, void *)
+gint RouteTest (GtkWidget * /*widget*/, GdkEventButton *event, void *)
 {
   static int ptime = 0;
   if (TRUE) {
@@ -877,8 +888,8 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
     
     flon = clon;
     flat = clat;
-    #if 0
     Route (FALSE);
+    #if 0 // No verbal instructions to driver yet !
     if (shortest) {
       __int64 dlon = plon - clon, dlat = plat - clat;
       if (!shortest->shortest && dlon * (tlon - clon) > dlat * (clat - tlat)
@@ -977,7 +988,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   int w = draw->allocation.width;
   #ifdef ROUTE_TEST
   if (event->state) {
-    return RouteTest (widget, event, para);
+    return RouteTest (NULL /*widget*/, event, NULL /*para*/);
   }
   #endif
   if (ButtonSize <= 0) ButtonSize = 4;
@@ -1362,6 +1373,9 @@ gint Expose (void)
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
     routeNodeType *x;
     if (shortest && (x = shortest->shortest)) {
+      double len;
+      int nodeCnt = 1;
+      __int64 sumLat = x->nd->lat;
       #ifndef _WIN32_WCE
       gdk_gc_set_foreground (mygc, &routeColour);
       gdk_gc_set_line_attributes (mygc, 5,
@@ -1376,19 +1390,47 @@ gint Expose (void)
           (x->nd->lon - clon) / perpixel + clip.width / 2,
           clip.height / 2 - (x->nd->lat - clat) / perpixel);
       }
+      len = sqrt (Sqr ((double) (x->nd->lat - flat)) +
+        Sqr ((double) (x->nd->lon - flon)));
       for (; x->shortest; x = x->shortest) {
         gdk_draw_line (draw->window, mygc,
           (x->nd->lon - clon) / perpixel + clip.width / 2,
           clip.height / 2 - (x->nd->lat - clat) / perpixel,
           (x->shortest->nd->lon - clon) / perpixel + clip.width / 2,
           clip.height / 2 - (x->shortest->nd->lat - clat) / perpixel);
+        len += sqrt (Sqr ((double) (x->nd->lat - x->shortest->nd->lat)) +
+          Sqr ((double) (x->nd->lon - x->shortest->nd->lon)));
+        sumLat += x->nd->lat;
+        nodeCnt++;
       }
       gdk_draw_line (draw->window, mygc,
         (x->nd->lon - clon) / perpixel + clip.width / 2,
         clip.height / 2 - (x->nd->lat - clat) / perpixel,
         (tlon - clon) / perpixel + clip.width / 2,
         clip.height / 2 - (tlat - clat) / perpixel);
+      len += sqrt (Sqr ((double) (x->nd->lat - tlat)) +
+        Sqr ((double) (x->nd->lon - tlon)));
+      wchar_t distStr[13];
+      wsprintf (distStr, TEXT ("%.3lf km"), len * (20000 / 2147483648.0) *
+        cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
+      #ifndef _WIN32_WCE
+      gdk_draw_string (draw->window, f, draw->style->fg_gc[0],
+        clip.width - 7 * strlen (distStr), 10, distStr);
+      #else
+      SelectObject (mygc, sysFont);
+      ExtTextOut (mygc, clip.width - 7 * wcslen (distStr), 0, 0, NULL,
+        distStr, wcslen (distStr), NULL);
+      #endif
     }
+    #ifndef _WIN32_WCE
+    for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
+      gdk_draw_line (draw->window, mygc,
+        (routeHeap[i]->nd->lon - clon) / perpixel + clip.width / 2 - 2,
+        clip.height / 2 - (routeHeap[i]->nd->lat - clat) / perpixel,
+        (routeHeap[i]->nd->lon - clon) / perpixel + clip.width / 2 + 2,
+        clip.height / 2 - (routeHeap[i]->nd->lat - clat) / perpixel);
+    }
+    #endif
   } // Not in the menu
   else {
     wchar_t optStr[30];
@@ -1442,7 +1484,7 @@ gint Expose (void)
   if (ShowCoordinates) {
     wsprintf (coord, TEXT ("%9.5lf %10.5lf"), LatInverse (clat),
       LonInverse (clon));
-    ExtTextOut (mygc, 0, clip.height - 15, 0, NULL, coord, 20, NULL);
+    ExtTextOut (mygc, 0, 0, 0, NULL, coord, 20, NULL);
   }
   #endif
   #ifdef CAIRO_VERSION
@@ -2680,6 +2722,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (FollowGPSr) {
         SetLocation (Longitude (((gpsNewStruct*)lParam)->fix.longitude),
           Latitude (((gpsNewStruct*)lParam)->fix.latitude));
+        flat = clat;
+        flon = clon;
+        Route (FALSE);
         InvalidateRect (hWnd, NULL, FALSE);
       }
       break;
@@ -2923,6 +2968,7 @@ int WINAPI WinMain(
     #undef o
     fclose (optFile);
   }
+  FlushGpx ();
   return 0;
 }
 #endif

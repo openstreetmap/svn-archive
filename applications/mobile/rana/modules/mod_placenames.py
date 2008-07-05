@@ -48,7 +48,7 @@ class placenames(poiModule):
       (lat,lon,id,typeID,name) = line.split("\t")
       type = types.get(typeID, None)
       if(type != None):
-        item = (float(lat),float(lon),name)
+        item = (name, float(lat),float(lon))
         self.poi[type].append(item)
         
   def lookupPlace(self, lat, lon, type, radiusKm):
@@ -59,7 +59,7 @@ class placenames(poiModule):
     nearestDist = limitSq
     
     for place in self.poi[type]:
-      (plat,plon,name) = place
+      (name,plat,plon) = place
       dx = plon - lon
       dy = plat - lat
       dist = dx * dx + dy * dy
@@ -89,7 +89,7 @@ class placenames(poiModule):
     pos = self.get('pos', None)
     if(pos != None):
       if(pos != self.lastpos):
-        self.set('nearest_place', self.lookup(pos[0], pos[1]))
+        self.set('nearest_place', self.lookup(pos[1], pos[2]))
         self.lastpos = pos
 
   def handleMessage(self, message):

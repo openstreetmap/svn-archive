@@ -26,7 +26,14 @@ class poiModule(ranaModule):
     self.poi = {}
 
   def drawList(self, cr, menuName, listHelper):
-    items = self.poi.keys()
+    if(menuName[0:4] == "poi:"):
+      type = menuName[4:]
+      items = [a[0] for a in self.poi.get(type, [])]
+    else:
+      items = self.poi.keys()
+    
+    
+    
     for i in range(0, min(listHelper.numItems, len(items))):
       text = items[i]
       listHelper.write(i, "%d: %s"% (i,text))

@@ -24,7 +24,7 @@ import os
 import sys
 import urllib
 from tilenames import *
-sys.path.append("../pyrender")
+sys.path.append("modules/pyrender")
 import renderer_default as RenderModule
 
 def getModule(m,d):

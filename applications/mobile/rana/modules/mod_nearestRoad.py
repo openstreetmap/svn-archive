@@ -22,7 +22,7 @@ from module_base import ranaModule
 # OK, we need to somehow import modules from pyrender directory here.
 # replace this with location of your pyrender modules
 import sys
-sys.path.append('../pyrender')
+sys.path.append('modules/pyrender')
 import whatAmIOn
 
 def getModule(m,d):

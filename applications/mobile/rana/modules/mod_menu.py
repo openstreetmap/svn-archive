@@ -195,7 +195,15 @@ class menus(ranaModule):
           (name,filter) = details.split('|')
           self.addItem(sectionID, name, name, '')
     f.close()
-  
+
+  def setupPoiMenu(self):
+    self.clearMenu('poi', "set:menu:None")
+    self.addItem('poi', 'route to', 'generic', '')
+    self.addItem('poi', 'direct to', 'generic', '')
+    self.addItem('poi', 'view map', 'generic', '')
+    self.addItem('poi', 'make waypoint', 'generic', '')
+    
+    
   def setupGeneralMenus(self):
     self.clearMenu('main', "set:menu:None")
     self.addItem('main', 'map', 'generic', 'set:menu:layers')
@@ -208,6 +216,7 @@ class menus(ranaModule):
     self.setupTransportMenu()
     self.setupSearchMenus()
     self.setupMaplayerMenus()
+    self.setupPoiMenu()
     self.lists['places'] = 'placenames'
     
 if(__name__ == "__main__"):

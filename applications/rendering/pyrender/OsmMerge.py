@@ -98,8 +98,8 @@ def OsmMerge(dest, z, sources):
 
     (lastx,lasty,count) = (0,0,False)
     for n in way['n']:
-      lat = n['lon']
-      lon = n['lat']
+      lat = n['lat']
+      lon = n['lon']
       
       storeThisNode = False
       if(count == 0):
@@ -109,7 +109,7 @@ def OsmMerge(dest, z, sources):
       else:
         dx = lon - lastx
         dy = lat - lasty
-        dd = dx + dx + dy + dy
+        dd = dx * dx + dy * dy
         if(dd > limitSq):
           storeThisNode = True  # Store ever x pixels
           

@@ -30,8 +30,8 @@ class placenames(poiModule):
   def __init__(self, m, d):
     poiModule.__init__(self, m, d)
     self.poi = {'villages':[],'cities':[],'towns':[]} # village, city, town
-    #self.load("places.txt")
-    self.lastpos = (0,0)
+    self.load("places.txt")
+    self.lastpos = (None, None)
 
   def firstTime(self):
     m = self.m.get('menu', None)

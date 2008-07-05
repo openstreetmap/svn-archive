@@ -48,24 +48,29 @@ class poiModule(ranaModule):
         dy = item['lat'] - ownlat
         # TODO: cos(lat)
         item['d'] = math.sqrt(dx * dx + dy * dy) * degToKm
-        print "%s at %1.1f" % (item['name'], item['d'])
+        
     self.needUpdate = False
     
   def drawList(self, cr, menuName, listHelper):
+    
     if(menuName[0:4] == "poi:"):
       type = menuName[4:]
+      
       items = self.poi.get(type, [])
-      #items = sorted(items,
       items.sort(lambda x, y: int(x.get('d',1E+5)) - int(y.get('d',1E+5)))
-      
       items = [a['name'] for a in items]
-      
+      submenu = False
     else:
       items = self.poi.keys()
+      submenu = True
     
     for i in range(0, min(listHelper.numItems, len(items))):
       text = items[i]
       listHelper.write(i, "%d: %s"% (i,text))
-      listHelper.makeClickable(i, "set:menu:poi:%s" % text)
+      if(submenu):
+        listHelper.makeClickable(i, "set:menu:poi:%s" % text)
+      else:
+        listHelper.makeClickable(i, "set:selected_type:poi|set:selected_name:%s|set:menu:poi" % text)
+        
 
     

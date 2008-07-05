@@ -203,4 +203,4 @@ class OsmRenderBase:
 if(__name__ == '__main__'):
   # Test suite: render a tile in london, and save it to a file
   a = OsmRenderBase()
-  a.RenderTile(15, 16372, 10895, "sample2.png")
+  a.RenderTile(15, 16372, 10895, "default", "sample2.png")

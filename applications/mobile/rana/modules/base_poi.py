@@ -18,21 +18,50 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
 from base_module import ranaModule
+import math
 
 class poiModule(ranaModule):
   
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.poi = {}
+    self.needUpdate = False
 
+  def addItem(self, type, name, lat, lon):
+    item = {'name':name, 'lat':float(lat),'lon':float(lon)}
+    self.poi[type].append(item)
+
+  def updatePoi(self):
+    """Update distances etc. to each POI"""
+    if(not self.needUpdate):
+      return
+    
+    pos = self.get("pos", None)
+    if(pos == None):
+      return(False)
+
+    (ownlat, ownlon) = pos
+    degToKm = 40041.0 / 360.0
+    for type,items in self.poi.items():
+      for item in items:
+        dx = item['lon'] - ownlon
+        dy = item['lat'] - ownlat
+        # TODO: cos(lat)
+        item['d'] = math.sqrt(dx * dx + dy * dy) * degToKm
+        print "%s at %1.1f" % (item['name'], item['d'])
+    self.needUpdate = False
+    
   def drawList(self, cr, menuName, listHelper):
     if(menuName[0:4] == "poi:"):
       type = menuName[4:]
-      items = [a[0] for a in self.poi.get(type, [])]
+      items = self.poi.get(type, [])
+      #items = sorted(items,
+      items.sort(lambda x, y: int(x.get('d',1E+5)) - int(y.get('d',1E+5)))
+      
+      items = [a['name'] for a in items]
+      
     else:
       items = self.poi.keys()
-    
-    
     
     for i in range(0, min(listHelper.numItems, len(items))):
       text = items[i]

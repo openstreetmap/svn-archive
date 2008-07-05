@@ -198,8 +198,8 @@ class menus(ranaModule):
 
   def setupPoiMenu(self):
     self.clearMenu('poi', "set:menu:None")
-    self.addItem('poi', 'route to', 'generic', '')
-    self.addItem('poi', 'direct to', 'generic', '')
+    self.addItem('poi', 'route to', 'generic', 'route:route')
+    self.addItem('poi', 'direct to', 'generic', 'nav:direct_to')
     self.addItem('poi', 'view map', 'generic', '')
     self.addItem('poi', 'make waypoint', 'generic', '')
     

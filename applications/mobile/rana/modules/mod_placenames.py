@@ -48,8 +48,8 @@ class placenames(poiModule):
       (lat,lon,id,typeID,name) = line.split("\t")
       type = types.get(typeID, None)
       if(type != None):
-        item = (name, float(lat),float(lon))
-        self.poi[type].append(item)
+        self.addItem(type, name, lat, lon)
+    self.needUpdate = True # Request update of meta-info
         
   def lookupPlace(self, lat, lon, type, radiusKm):
     kmToDeg = 360.0 / 40041.0
@@ -59,7 +59,8 @@ class placenames(poiModule):
     nearestDist = limitSq
     
     for place in self.poi[type]:
-      (name,plat,plon) = place
+      plat = place['lat']
+      plon = place['lon']
       dx = plon - lon
       dy = plat - lat
       dist = dx * dx + dy * dy
@@ -84,13 +85,13 @@ class placenames(poiModule):
   
   def update(self):
     """If requested, lookup the nearest place name"""
-    if(not self.get('lookup_place', False)):
-      return
-    pos = self.get('pos', None)
-    if(pos != None):
-      if(pos != self.lastpos):
-        self.set('nearest_place', self.lookup(pos[1], pos[2]))
-        self.lastpos = pos
+    self.updatePoi()
+    if(self.get('lookup_place', False)):
+      pos = self.get('pos', None)
+      if(pos != None):
+        if(pos != self.lastpos):
+          self.set('nearest_place', self.lookup(pos['lat'], pos['lon']))
+          self.lastpos = pos
 
   def handleMessage(self, message):
     pass

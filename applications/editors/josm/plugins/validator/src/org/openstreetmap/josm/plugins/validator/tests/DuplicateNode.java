@@ -57,7 +57,8 @@ public class DuplicateNode extends Test
 	@Override
 	public void visit(Node n) 
 	{
-		nodes.add(n.coor, n);
+		if(!n.deleted && !n.incomplete)
+			nodes.add(n.coor, n);
 	}
 	
     /**

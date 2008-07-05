@@ -31,7 +31,8 @@ class route(ranaModule):
   """Routes"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-
+    self.route = []
+    
   def handleMessage(self, message):
     if(message == "route"): # simple route, from here to selected point
       to_pos = self.get("selected_pos", None)
@@ -41,20 +42,20 @@ class route(ranaModule):
         from_pos = self.get("pos", None)
         if(from_pos):
           (from_lat, from_lon) = from_pos
-
-          print "Routing %1.3f,%1.3f to %1.3f,%1.3f" % (from_lat, from_lon, to_lat, to_lon)
+          #print "Routing %1.3f,%1.3f to %1.3f,%1.3f" % (from_lat, from_lon, to_lat, to_lon)
 
           # TODO: wait message
           self.doRoute(from_lat, from_lon, to_lat, to_lon)
           self.set("menu",None)
 
   def doRoute(self, from_lat, from_lon, to_lat, to_lon):
+    """Route from one point to another, and set that as the active route"""
     data = LoadOsm("cycle")
 
     node1 = data.findNode(from_lat, from_lon)
     node2 = data.findNode(to_lat, to_lon)
-    print "From %d to %d" %(node1,node2)
-    
+    print "Routing from node %d to %d..." %(node1,node2)
+
     router = Router(data)
     result, route = router.doRoute(node1, node2)
     
@@ -63,14 +64,36 @@ class route(ranaModule):
       for node_id in route:
         node = data.rnodes[node_id]
         self.route.append((node[0], node[1]))
-        
-        #print "%d: %f,%f" % (node_id, node[0], node[1])
-        print self.route
-      
+      print "Route discovered"
     else:
-      print "Error: " + result
+      print "Error in routing: " + result
       
 
+  def drawMapOverlay(self, cr):
+    """Draw a route"""
+
+    # Where is the map?
+    proj = self.m.get('projection', None)
+    if(proj == None):
+      return
+    if(not proj.isValid()):
+      return
+    if(not len(self.route)):
+      return
+    cr.set_source_rgb(0,0, 0.5)
+    cr.set_line_width(7)
+    first = True
+    for p in self.route:
+      (lat,lon) = p
+      x,y = proj.ll2xy(lat,lon)
+      if(first):
+        cr.move_to(x,y)
+        first = False
+      else:
+        cr.line_to(x,y)
+      
+    cr.stroke()
+    
 if(__name__ == '__main__'):
   d = {'selected_pos':"51.678935,-0.826256"}
   a = route({},d)

@@ -30,6 +30,7 @@ typedef int intptr_t;
 // So we have to repeat the OPTIONS table
 #define OPTIONS \
   o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
+  o (AddWayOrNode,    "?", "?", "?", "?", "?", 0, 2) \
   o (Search,          "?", "?", "?", "?", "?", 0, 1) \
   o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
   o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
@@ -518,7 +519,7 @@ void Route (int recalculate)
         } */
       }
     } /* For each candidate segment */
-    if (bestd == (__int64) 1 << 62 || !endNd[0]) {
+    if (bestd == ((__int64) 1 << 62) || !endNd[0]) {
       endNd[i] = NULL;
       fprintf (stderr, "No segment nearby\n");
       return;
@@ -526,7 +527,7 @@ void Route (int recalculate)
   } /* For 'from' and 'to', find segment that passes nearby */
   from.lat = flat;
   from.lon = flon;
-  if (recalculate) {
+  if (recalculate || !route) {
     free (route);
     dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
@@ -947,10 +948,97 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
     gtk_widget_queue_clear (draw);
   } // If following the GPSr and it has a fix.
 }
+#else
+#define NEWWAY_MAX_COORD 10
+struct {
+  int coord[NEWWAY_MAX_COORD][2], klas, cnt, oneway, bridge;
+  char name[40];
+} newWays[500];
+
+struct {
+  wchar_t *desc;
+  char *tags;
+} klasTable[] = { // See http://etricceline.de/osm/Europe/En/tags.htm
+{ TEXT ("residential"),     "  <tag k='highway' v='residential' />\n" },
+{ TEXT ("unclassified"),    "  <tag k='highway' v='unclassified' />\n" },
+{ TEXT ("tertiary"),        "  <tag k='highway' v='tertiary' />\n" },
+{ TEXT ("secondary"),       "  <tag k='highway' v='secondary' />\n" },
+{ TEXT ("primary"),         "  <tag k='highway' v='primary' />\n" },
+{ TEXT ("trunk"),           "  <tag k='highway' v='trunk' />\n" },
+{ TEXT ("footway"),         "  <tag k='highway' v='footway' />\n" },
+{ TEXT ("service"),         "  <tag k='highway' v='service' />\n" },
+{ TEXT ("track"),           "  <tag k='highway' v='track' />\n" },
+{ TEXT ("cycleway"),        "  <tag k='highway' v='cycleway' />\n" },
+{ TEXT ("pedestrian"),      "  <tag k='highway' v='pedestrian' />\n" },
+{ TEXT ("steps"),           "  <tag k='highway' v='steps' />\n" },
+{ TEXT ("bridleway"),       "  <tag k='highway' v='bridleway' />\n" },
+{ TEXT ("railway rail"),    "  <tag k='railway' v='rail' />\n" },
+{ TEXT ("railway station"), "  <tag k='railway' v='station' />\n" },
+{ TEXT ("mini roundabout"), "  <tag k='highway' v='mini_roundabout' />\n" },
+{ TEXT ("traffic signals"), "  <tag k='highway' v='traffic_signals' />\n" },
+{ TEXT ("bus stop"),        "  <tag k='highway' v='bus_stop' />\n" },
+{ TEXT ("parking"),         "  <tag k='amenity' v='parking' />\n" },
+{ TEXT ("fuel"),            "  <tag k='amenity' v='fuel' />\n" },
+{ TEXT ("school"),          "  <tag k='amenity' v='school' />\n" },
+{ TEXT ("village"),         "  <tag k='place' v='village' />\n" },
+{ TEXT ("supermarket"),     "  <tag k='shop' v='supermarket' />\n" },
+{ TEXT ("church"),          "  <tag k='amenity' v='place_of_worship' />\n"
+                            "  <tag k='religion' v='christian' />\n" },
+{ TEXT ("pub"),             "  <tag k='amenity' v='pub' />\n" },
+{ TEXT ("restaurant"),      "  <tag k='amenity' v='restaurant' />\n" },
+{ TEXT ("building"),        "  <tag k='building' v='yes' />\n" },
+{ TEXT ("power tower"),     "  <tag k='power' v='tower' />\n" },
+{ TEXT ("forest"),          "  <tag k='landuse' v='forest' />\n" },
+{ TEXT ("park"),            "  <tag k='leisure' v='park' />\n" },
+{ TEXT ("stream"),          "  <tag k='waterway' v='stream' />\n" },
+};
+
+int newWayCnt = 0, newWayCoordCnt = 0;
+
+BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
+  LPARAM lParam)
+{
+  if (Msg == WM_INITDIALOG) {
+    HWND klist = GetDlgItem (hwnd, IDC_CLASS);
+    for (int i = 0; i < sizeof (klasTable) / sizeof (klasTable[0]); i++) {
+      SendMessage (klist, LB_ADDSTRING, 0, (LPARAM) klasTable[i].desc);
+    }
+    SipShowIM (SIPF_ON);
+  }
+  if (Msg == WM_COMMAND && wParam == IDOK) {
+    HWND edit = GetDlgItem (hwnd, IDC_NAME);
+    wchar_t name[40];
+    int wstrlen = Edit_GetLine (edit, 0, name, sizeof (name));
+    WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, name, wstrlen,
+      newWays[newWayCnt].name, sizeof (newWays[0].name), NULL, NULL);
+    newWays[newWayCnt].cnt = newWayCoordCnt;
+    newWays[newWayCnt].oneway = IsDlgButtonChecked (hwnd, IDC_ONEWAY);
+    newWays[newWayCnt].bridge = IsDlgButtonChecked (hwnd, IDC_BRIDGE);
+    newWays[newWayCnt++].klas = SendMessage (GetDlgItem (hwnd, IDC_CLASS),
+                                  LB_GETCURSEL, 0, 0);
+    newWayCoordCnt = 0;
+  }
+  
+  if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
+    SipShowIM (SIPF_OFF);
+    EndDialog (hwnd, 0);
+    return TRUE;
+  }
+  return FALSE;
+}
+
 #endif // _WIN32_WCE
 
 void HitButton (int b)
 {
+  #ifdef _WIN32_WCE
+  if (AddWayOrNode && b == 0) {
+    if (newWayCoordCnt) DialogBox (hInst, MAKEINTRESOURCE (IDD_SETTAGS), NULL,
+      (DLGPROC) DlgSetTagsProc);
+    AddWayOrNode = 0;
+    return;
+  }
+  #endif
     if (b == 0) option = (option + 1) % (numberOfOptions + 1);
     else if (option == StartRouteNum) {
       flon = clon;
@@ -1001,6 +1089,12 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       SetLocation (clon + lrint ((event->x - w / 2) * perpixel),
         clat - lrint ((event->y - draw->allocation.height / 2) * perpixel));
 
+      #ifdef _WIN32_WCE
+      if (AddWayOrNode && newWayCoordCnt < NEWWAY_MAX_COORD) {
+        newWays[newWayCnt].coord[newWayCoordCnt][0] = clon;
+        newWays[newWayCnt].coord[newWayCoordCnt++][1] = clat;
+      }
+      #endif
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
       FollowGPSr = 0;
     }
@@ -1367,7 +1461,7 @@ gint Expose (void)
         }
         #endif
       } /* for each visible tile */
-    }
+    } // For each layer
   //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
   //  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
@@ -1429,6 +1523,15 @@ gint Expose (void)
         clip.height / 2 - (routeHeap[i]->nd->lat - clat) / perpixel,
         (routeHeap[i]->nd->lon - clon) / perpixel + clip.width / 2 + 2,
         clip.height / 2 - (routeHeap[i]->nd->lat - clat) / perpixel);
+    }
+    #else
+    SelectObject (mygc, pen[0]);
+    for (int i = 0; i < newWayCoordCnt - 1; i++) {
+      gdk_draw_line (draw->window, mygc,
+        (newWays[newWayCnt].coord[i][0] - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (newWays[newWayCnt].coord[i][1] - clat) / perpixel,
+        (newWays[newWayCnt].coord[i + 1][0] - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (newWays[newWayCnt].coord[i + 1][1] - clat) / perpixel);
     }
     #endif
   } // Not in the menu
@@ -2920,14 +3023,16 @@ int WINAPI WinMain(
   wcscpy (argv0 + wcslen (argv0) - 3, TEXT ("opt")); // _arm.exe to ore.pak
   FILE *optFile = _wfopen (argv0, TEXT ("r"));
   
-  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "r");
+  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "rb");
   IconSet = 1;
   DetailLevel = 3;
   ButtonSize = 4;
+  int newWayFileNr = 0;
   if (optFile) {
     #define o(en,de,es,fr,it,nl,min,max) fread (&en, sizeof (en), 1, optFile);
     OPTIONS
     #undef o
+    fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
     fclose (optFile);
     option = numberOfOptions;
   }
@@ -2959,13 +3064,56 @@ int WINAPI WinMain(
     DispatchMessage (&msg);
   }
   guiDone = TRUE;
+
+  if (newWayCnt > 0) {
+    char newWayFileName[40];
+    sprintf (newWayFileName, "\\My Documents\\gosmore%d.osm", newWayFileNr++);
+    FILE *newWayFile = fopen (newWayFileName, "w");
+    if (newWayFile) {
+      fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
+                           "<osm version='0.5' generator='gosmore'>\n");
+      for (int j, id = -1, i = 0; i < newWayCnt; i++) {
+        for (j = 0; j < newWays[i].cnt; j++) {
+          fprintf (newWayFile, "<node id='%d' visible='true' lat='%.5lf' "
+            "lon='%.5lf' %s>\n", id - j, LatInverse (newWays[i].coord[j][1]),
+            LonInverse (newWays[i].coord[j][0]),
+            newWays[i].cnt <= 1 ? "" : "/");
+        }
+        if (newWays[i].cnt > 1) {
+          fprintf (newWayFile, "<way id='%d' action='modify' "
+            "visible='true'>\n", id - newWays[i].cnt);
+          for (j = 0; j < newWays[i].cnt; j++) {
+            fprintf (newWayFile, "  <nd ref='%d'/>\n", id--);
+          }
+        }
+        id--;
+        if (newWays[i].oneway) fprintf (newWayFile,
+          "  <tag k='oneway' v='yes'/>\n");
+        if (newWays[i].bridge) fprintf (newWayFile,
+          "  <tag k='bridge' v='yes'/>\n");
+        if (newWays[i].klas >= 0) fprintf (newWayFile, "%s",
+          klasTable[newWays[i].klas].tags);
+        fprintf (newWayFile, "  <tag k='name' v='");
+        for (j = 0; newWays[i].name[j]; j++) {
+          if (newWays[i].name[j] == '\'') fprintf (newWayFile, "&apos;");
+          else fputc (newWays[i].name[j], newWayFile);
+        }
+        fprintf (newWayFile, "' />\n</%s>\n", newWays[i].cnt <= 1 ? "node" : "way");
+      }
+      fprintf (newWayFile, "</osm>\n");
+      fclose (newWayFile);
+    }
+  }
+
   while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
+
   optFile = _wfopen (argv0, TEXT ("r+"));
-  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "w");
+  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "wb");
   if (optFile) {
     #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
     OPTIONS
     #undef o
+    fwrite (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
     fclose (optFile);
   }
   FlushGpx ();

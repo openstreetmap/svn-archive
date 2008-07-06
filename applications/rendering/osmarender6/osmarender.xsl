@@ -427,10 +427,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- If the instruction has a mask class -->
     <xsl:if test='$instruction/@mask-class'>
       <mask id="{$maskId}" maskUnits="userSpaceOnUse">
-        <use xlink:href="#{$pathId}" class="{$instruction/@mask-class} osmarender-mask-black" />
+        <use xlink:href="#{$pathId}" class="{$instruction/@mask-class} osmarender-stroke-linecap-round osmarender-mask-black" />
         <!-- Required for Inkscape bug -->
         <use xlink:href="#{$pathId}" class="{$instruction/@class} osmarender-mask-white" />
-        <use xlink:href="#{$pathId}" class="{$instruction/@mask-class} osmarender-mask-black" />
+        <use xlink:href="#{$pathId}" class="{$instruction/@mask-class} osmarender-stroke-linecap-round osmarender-mask-black" />
       </mask>
     </xsl:if>
   </xsl:template>

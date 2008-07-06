@@ -412,9 +412,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       </xsl:attribute>
       <!-- If there is a mask class then include the mask attribute -->
       <xsl:if test='$instruction/@mask-class'>
-        <xsl:attribute name="mask">
-          url(#<xsl:value-of select="$maskId"/>)
-        </xsl:attribute>
+        <xsl:attribute name="mask">url(#<xsl:value-of select="$maskId"/>)</xsl:attribute>
       </xsl:if>
       <xsl:call-template name="getSvgAttributesFromOsmTags"/>
     </use>

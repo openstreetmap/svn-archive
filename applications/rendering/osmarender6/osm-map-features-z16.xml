@@ -437,7 +437,7 @@
                                     <area class="highway-casing highway-track-casing highway-track-grade5-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
                                 </rule>
                                 <else>
-                                  <area class="highway-casing highway-track-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
+                                    <area class="highway-casing highway-track-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
                                 </else>
                             </else>
                         </else>
@@ -1616,51 +1616,51 @@
 
 
             .gate-locked {
-				fill: none;
-				stroke: red;
-				stroke-width: 2px;
-				stroke-opacity: 0;
+                fill: none;
+                stroke: red;
+                stroke-width: 2px;
+                stroke-opacity: 0;
                 marker-mid: url(#marker-gate-locked);
             }
 
             .gate-closed {
-				fill: none;
-				stroke: red;
-				stroke-width: 2px;
-				stroke-opacity: 0;
+                fill: none;
+                stroke: red;
+                stroke-width: 2px;
+                stroke-opacity: 0;
                 marker-mid: url(#marker-gate-closed);
             }
 
             .gate-open {
-				fill: none;
-				stroke: red;
-				stroke-width: 2px;
-				stroke-opacity: 0;
+                fill: none;
+                stroke: red;
+                stroke-width: 2px;
+                stroke-opacity: 0;
                 marker-mid: url(#marker-gate-open);
             }
-            
-            .bollard { 
-                fill: #777777; 
-                stroke: none; 
-            }    
-                                                                   
+
+            .bollard {
+                fill: #777777;
+                stroke: none;
+            }
+
             /* Railways - generic styles */
             .railway-casing {
-				stroke-linecap: butt;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
 
-			.railway-core {
+            .railway-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
-			}				
+            }
 
 
             /* Highways - generic styles */
             .highway-casing {
-				stroke-linecap: square;
+                stroke-linecap: square;
                 stroke-linejoin: round;
                 fill: none;
             }
@@ -1676,7 +1676,7 @@
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
-				text-anchor: middle;
+                text-anchor: middle;
             }
 
             .highway-name {
@@ -1684,7 +1684,7 @@
                 font-family: "DejaVu Sans";
                 font-weight: normal;
                 stroke: white;
-				text-anchor: middle;
+                text-anchor: middle;
              }
 
 
@@ -1693,7 +1693,7 @@
                 stroke: #4D5D73;
                 stroke-width: 1.5px;
             }
-            
+
             .highway-motorway-junction-caption {
                 fill: black;
                 stroke: black;
@@ -1712,16 +1712,16 @@
                 marker-start: url(#bridge-casing-start);
                 marker-end: url(#bridge-casing-end);
             }
-			
-			.bridge-core {
+
+            .bridge-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #f8f8f8;
                 fill: none;
-			}
+            }
 
             .tunnel-casing {
-				stroke-linecap: butt;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
@@ -1732,7 +1732,7 @@
                 fill: none;
             }
 
-			.tunnel { stroke-dasharray: 0.8, 0.8; }
+            .tunnel { stroke-dasharray: 0.8, 0.8; }
 
 
             .railway-rail-bridge-casing             { stroke-width: 5.5px; }
@@ -1765,7 +1765,7 @@
             .railway-preserved-bridge-core          { stroke-width: 3.7px; }
             .railway-preserved-casing               { stroke-width: 2.2px; stroke: #666666; }
             .railway-preserved-core                 { stroke-width: 1.8px; stroke: #666666; }
-      
+
             .railway-monorail-bridge-casing         { stroke-width: 4.5px; }
             .railway-monorail-bridge-core           { stroke-width: 3.5px; }
             .railway-monorail-casing                { stroke-width: 2.0px; stroke: #666666; }
@@ -1773,10 +1773,10 @@
 
             .highway-motorway-bridge-casing         { stroke-width: 4.6px; }
             .highway-motorway-bridge-core           { stroke-width: 4.2px; }
-            .highway-motorway-casing				{ stroke-width: 3.8px;  stroke: #777777; }
-            .highway-motorway-area-casing				{ stroke-width: 0.4px; }
-            .highway-motorway-core					{ stroke-width: 3.4px;  stroke: #809BC0; }
-            .highway-motorway-area					{ fill: #809BC0; }
+            .highway-motorway-casing                { stroke-width: 3.8px;  stroke: #777777; }
+            .highway-motorway-area-casing               { stroke-width: 0.4px; }
+            .highway-motorway-core                  { stroke-width: 3.4px;  stroke: #809BC0; }
+            .highway-motorway-area                  { fill: #809BC0; }
             .highway-motorway-name                  { stroke-width: 0px;     font-size: 3px; }
             .highway-motorway-ref                   { stroke-width: 0px;     font-size: 4px; }
 
@@ -1796,7 +1796,7 @@
             .highway-primary-core                   { stroke-width: 3px;  stroke: #e46d71; }
             .highway-primary-area                   { fill: #e46d71; }
             .highway-primary-name                   { stroke-width: 0px;     font-size: 3px; }
-            .highway-primary-ref					{ stroke-width: 0px;     font-size: 4px; }
+            .highway-primary-ref                    { stroke-width: 0px;     font-size: 4px; }
 
             .highway-motorway-link-bridge-casing    { stroke-width: 4.6px; }
             .highway-motorway-link-bridge-core      { stroke-width: 4.2px; }
@@ -1827,7 +1827,7 @@
 
             .highway-secondary-bridge-casing        { stroke-width: 4.6px; }
             .highway-secondary-bridge-core          { stroke-width: 4.2px; }
-            .highway-secondary-casing				{ stroke-width: 3.4px;	 stroke: #777777; }
+            .highway-secondary-casing               { stroke-width: 3.4px;   stroke: #777777; }
             .highway-secondary-area-casing          { stroke-width: 0.4px; }
             .highway-secondary-core                 { stroke-width: 3px;  stroke: #FDBF6F; }
             .highway-secondary-area                 { fill: #FDBF6F; }
@@ -1836,12 +1836,12 @@
 
             .highway-tertiary-bridge-casing         { stroke-width: 4.6px; }
             .highway-tertiary-bridge-core           { stroke-width: 4.2px; }
-			.highway-tertiary-casing                { stroke-width: 3.4px;  stroke: #777777; }
+            .highway-tertiary-casing                { stroke-width: 3.4px;  stroke: #777777; }
             .highway-tertiary-area-casing           { stroke-width: 0.4px; }
-			.highway-tertiary-core                  { stroke-width: 3px;   stroke: #f7f496; }
-			.highway-tertiary-area                  { fill: #f7f496; }
+            .highway-tertiary-core                  { stroke-width: 3px;   stroke: #f7f496; }
+            .highway-tertiary-area                  { fill: #f7f496; }
             .highway-tertiary-name                  { stroke-width: 0px;     font-size: 2.5px; }
-            .highway-tertiary-ref					{ stroke-width: 0px;     font-size: 3px; }
+            .highway-tertiary-ref                   { stroke-width: 0px;     font-size: 3px; }
 
             .highway-unclassified-bridge-casing     { stroke-width: 3.1px; }
             .highway-unclassified-bridge-core       { stroke-width: 2.9px; }
@@ -1952,7 +1952,7 @@
 
             .highway-scramble-core                  { stroke-width: 0.3px;   stroke: #777777; stroke-dasharray: 1.6, 0.4; stroke-linecap: butt;}
             .highway-scramble-name                  { stroke-width: 1.0px;   fill: black;  font-size: 2.5px; }
-			
+
             /* Aeroways */
             .aeroway-apron {
                 stroke-width: 0.6px;
@@ -2012,14 +2012,14 @@
 
 
             /* Waterways */
-			.waterway-name-casing { 
-				stroke: #333333; 
-				fill: white; 
-				font-family: "DejaVu Sans"; 
-				font-weight: bold; 
-				text-anchor: middle; 
-				stroke-miterlimit: 1.5;
-			}
+            .waterway-name-casing {
+                stroke: #333333;
+                fill: white;
+                font-family: "DejaVu Sans";
+                font-weight: bold;
+                text-anchor: middle;
+                stroke-miterlimit: 1.5;
+            }
 
             .waterway-name-core {
                 stroke: green;
@@ -2053,27 +2053,27 @@
 
             .waterway-river-casing                  { stroke-width: 2px; }
             .waterway-river-core                    { stroke-width: 1.7px; }
-			.waterway-river-name-casing             { font-size: 2px; stroke-width: 0.1px;}
-			.waterway-river-name-core               { font-size: 2px; }
+            .waterway-river-name-casing             { font-size: 2px; stroke-width: 0.1px;}
+            .waterway-river-name-core               { font-size: 2px; }
 
             .waterway-stream-casing                 { stroke-width: 1px; }
             .waterway-stream-core                   { stroke-width: 0.8px; }
-			.waterway-stream-name-casing            { font-size: 3px; stroke-width: 0.2px;}
-			.waterway-stream-name-core              { font-size: 3px; }
+            .waterway-stream-name-casing            { font-size: 3px; stroke-width: 0.2px;}
+            .waterway-stream-name-core              { font-size: 3px; }
 
             .waterway-canal-casing                  { stroke-width: 4px; }
             .waterway-canal-core                    { stroke-width: 2px; }
-			.waterway-canal-name-casing             { font-size: 3px; stroke-width: 0.2px;}
-			.waterway-canal-name-core               { font-size: 3px; }
+            .waterway-canal-name-casing             { font-size: 3px; stroke-width: 0.2px;}
+            .waterway-canal-name-core               { font-size: 3px; }
 
             .waterway-drain-casing                  { stroke-width: 2px; }
             .waterway-drain-core                    { stroke-width: 1px; }
-			.waterway-drain-name-casing             { font-size: 3px; stroke-width: 0.2px;}
-			.waterway-drain-name-core               { font-size: 3px; }
+            .waterway-drain-name-casing             { font-size: 3px; stroke-width: 0.2px;}
+            .waterway-drain-name-core               { font-size: 3px; }
 
 
-			/* Generic under-construction style - makes any way dashed */
-			.under-construction { stroke-dasharray: 8, 10; }
+            /* Generic under-construction style - makes any way dashed */
+            .under-construction { stroke-dasharray: 8, 10; }
 
 
             /* Ferry */
@@ -2088,17 +2088,17 @@
 
 
             /* Place names */
-			/* General style for captions */
-			.place-caption {
-				fill: black;
-				stroke: none;
+            /* General style for captions */
+            .place-caption {
+                fill: black;
+                stroke: none;
                 font-family: "DejaVu Sans";
                 font-weight: bold;
-				text-anchor: middle;
-			}
+                text-anchor: middle;
+            }
 
             .caption-casing {
-				fill: white;
+                fill: white;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: bold;
@@ -2115,12 +2115,12 @@
                 stroke-miterlimit: 1.5;
             }
 
-			.peak-caption           { font-size: 4px; }
+            .peak-caption           { font-size: 4px; }
             .islet-caption          { font-size: 6px; }
             .village-caption        { font-size: 6px; }
             .suburb-caption         { font-size: 6px; }
             .hamlet-caption         { font-size: 4px; }
-            .locality-caption       { font-size: 4px; }            
+            .locality-caption       { font-size: 4px; }
             .farm-caption           { font-size: 3px; }
 
 
@@ -2237,42 +2237,42 @@
                 stroke-width: 0.2px;
             }
 
-			.landuse-runway {
-			  stroke-width: 0.6px;
-			  stroke: #808080;
-			  fill: #d4dcbd;
-			  }
+            .landuse-runway {
+              stroke-width: 0.6px;
+              stroke: #808080;
+              fill: #d4dcbd;
+              }
 
-			.landuse-runway-disused {
-			  stroke-width: 0.6px;
-			  stroke: #808080;
-			  fill: #d4dcbd;
-			  stroke-dasharray: 2, 2;
-			  }
+            .landuse-runway-disused {
+              stroke-width: 0.6px;
+              stroke: #808080;
+              fill: #d4dcbd;
+              stroke-dasharray: 2, 2;
+              }
 
-			.landuse-runway-dismantled {
-			  stroke-width: 0.6px;
-			  stroke: #808080;
-			  fill: #fcffef;
-			  stroke-dasharray: 0.6, 3.4;
-			  opacity: 0.5;
-			  }
+            .landuse-runway-dismantled {
+              stroke-width: 0.6px;
+              stroke: #808080;
+              fill: #fcffef;
+              stroke-dasharray: 0.6, 3.4;
+              opacity: 0.5;
+              }
 
-			.artificial-pier-core {
-			  stroke-width: 0.6px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round; 
-			  stroke: #eeeeee;
-			  fill: none;
-			  }
+            .artificial-pier-core {
+              stroke-width: 0.6px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              stroke: #eeeeee;
+              fill: none;
+              }
 
-			.artificial-pier-casing {
-			  stroke-width: 0.8px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round; 
-			  stroke: #cccccc;
-			  fill: none;
-			  }
+            .artificial-pier-casing {
+              stroke-width: 0.8px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              stroke: #cccccc;
+              fill: none;
+              }
 
 
 
@@ -2318,7 +2318,7 @@
                 stroke: #B36C4C;
                 stroke-width: 0.2px;
             }
-            
+
             .amenity-parking {
                 fill: #f7efb7;
                 stroke: #e9dd72;
@@ -2332,144 +2332,144 @@
             }
 
 
-			/* Non-physical boundaries */
+            /* Non-physical boundaries */
             .boundary {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
 
-			.boundary-administrative-state-casing {
-				stroke-width: 5px; 
-				stroke: #ffff00;
-				opacity: 0.5;
-			}
+            .boundary-administrative-state-casing {
+                stroke-width: 5px;
+                stroke: #ffff00;
+                opacity: 0.5;
+            }
 
-			.boundary-administrative-state-core {
-				stroke-width: 0.5px; 
-				stroke: #f9574b;
-				stroke-dasharray: 5, 1, 1, 1;
-			}
+            .boundary-administrative-state-core {
+                stroke-width: 0.5px;
+                stroke: #f9574b;
+                stroke-dasharray: 5, 1, 1, 1;
+            }
 
-			.boundary-administrative-district-core {
-				stroke-width: 0.5px; 
-				stroke: #f9574b;
-				stroke-dasharray: 3, 1, 1, 1;
-			}
+            .boundary-administrative-district-core {
+                stroke-width: 0.5px;
+                stroke: #f9574b;
+                stroke-dasharray: 3, 1, 1, 1;
+            }
 
-			.boundary-administrative-parish-core {
-				stroke-width: 0.5px; 
-				stroke: #f9574b;
-				stroke-dasharray: 1, 1, 1, 1;
-			}
+            .boundary-administrative-parish-core {
+                stroke-width: 0.5px;
+                stroke: #f9574b;
+                stroke-dasharray: 1, 1, 1, 1;
+            }
 
 
-			/* Racetracks */
-			.highway-racetrack-core {
-			  stroke-width: 1.5 px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  fill: none;
-			  stroke: #f0f0f0;
-			}
+            /* Racetracks */
+            .highway-racetrack-core {
+              stroke-width: 1.5 px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #f0f0f0;
+            }
 
-			.highway-racetrack-casing-red {
-			  stroke-width: 1.7 px;
-			  stroke-dasharray: 0.2, 0.2;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  fill: none;
-			  stroke: #ff0000;
-			}
+            .highway-racetrack-casing-red {
+              stroke-width: 1.7 px;
+              stroke-dasharray: 0.2, 0.2;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #ff0000;
+            }
 
-			.highway-racetrack-casing-white {
-			  stroke-width: 1.7 px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  fill: none;
-			  stroke: #ffffff;
-			}
+            .highway-racetrack-casing-white {
+              stroke-width: 1.7 px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #ffffff;
+            }
 
-			.highway-raceway-casing {
-			  stroke-width: 4px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #101010;
-			  }
+            .highway-raceway-casing {
+              stroke-width: 4px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #101010;
+              }
 
-			.highway-raceway-casing-disused {
-			  stroke-width: 4px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #808080;
-			  stroke-dasharray: 2, 2;
-			  }
+            .highway-raceway-casing-disused {
+              stroke-width: 4px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #808080;
+              stroke-dasharray: 2, 2;
+              }
 
-			.highway-raceway-casing-dismantled {
-			  stroke-width: 4px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #808080;
-			  stroke-dasharray: 0.6, 3.4;
-			  opacity: 0.5;
-			  }
+            .highway-raceway-casing-dismantled {
+              stroke-width: 4px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #808080;
+              stroke-dasharray: 0.6, 3.4;
+              opacity: 0.5;
+              }
 
-			.highway-raceway-core {
-			  stroke-width: 3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #f0f0f0;
-			  }
+            .highway-raceway-core {
+              stroke-width: 3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #f0f0f0;
+              }
 
-			.highway-raceway-core-disused {
-			  stroke-width: 3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke-dasharray: 2, 2;
-			  stroke: #f7f7f7;
-			  }
+            .highway-raceway-core-disused {
+              stroke-width: 3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke-dasharray: 2, 2;
+              stroke: #f7f7f7;
+              }
 
-			.highway-raceway-core-dismantled {
-			  stroke-width: 3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #fbfbfb;
-			  stroke-dasharray: 0.6, 3.4;
-			  opacity: 0.5;
-			  }
-			  
-			.landuse-raceway {
-			  stroke-width: 0.6px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #f0f0f0;
-			  stroke: #101010;
-			  }
+            .highway-raceway-core-dismantled {
+              stroke-width: 3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #fbfbfb;
+              stroke-dasharray: 0.6, 3.4;
+              opacity: 0.5;
+              }
 
-			.landuse-raceway-disused {
-			  stroke-width: 0.6px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #f7f7f7;
-			  stroke: #808080;
-			  stroke-dasharray: 2, 2;
-			  }
+            .landuse-raceway {
+              stroke-width: 0.6px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #f0f0f0;
+              stroke: #101010;
+              }
 
-			.landuse-raceway-dismantled {
-			  stroke-width: 0.6px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #fbfbfb;
-			  stroke: #808080;
-			  stroke-dasharray: 0.6, 3.4;
-			  opacity: 0.5;
-			  }
+            .landuse-raceway-disused {
+              stroke-width: 0.6px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #f7f7f7;
+              stroke: #808080;
+              stroke-dasharray: 2, 2;
+              }
+
+            .landuse-raceway-dismantled {
+              stroke-width: 0.6px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #fbfbfb;
+              stroke: #808080;
+              stroke-dasharray: 0.6, 3.4;
+              opacity: 0.5;
+              }
 
 
             .railway-station                        { fill: #ec2d2d;        stroke: #666666; stroke-width: 0.5px; }
@@ -2578,7 +2578,7 @@
                 font-weight: normal;
                 font-size: 4px;
                 stroke: none;
-				text-anchor: middle;
+                text-anchor: middle;
             }
 
             .aerialway-elevation-text {
@@ -2586,13 +2586,13 @@
                 font-family: "DejaVu Sans";
                 font-weight: normal;
                 font-size: 3px;
-				text-anchor: middle;
+                text-anchor: middle;
             }
 
             .military-area {
                fill: url(#military-pattern);
                stroke: #eeeeee;
-               stroke-width: 0.2px;                                          
+               stroke-width: 0.2px;
             }
 
             /* surface lifts */
@@ -2615,60 +2615,60 @@
                 stroke-width: 0.8px;
             }
 
-		/* Piste maps */
-		.piste-core {
-			fill: none;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-			stroke-width: 5px;
-			opacity: 0.8;
-		}
+        /* Piste maps */
+        .piste-core {
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 5px;
+            opacity: 0.8;
+        }
 
-		.piste-difficulty-novice       { stroke: #31ff31; }
-		.piste-difficulty-easy         { stroke: #3131ff; }
-		.piste-difficulty-intermediate { stroke: #ff3131; }
-		.piste-difficulty-advanced     { stroke: #060606; }
-		.piste-difficulty-expert       { stroke: #f6800a; }
-		.piste-difficulty-freeride     { stroke: #f6dd0a; }
-		.piste-difficulty-other        { stroke: #505050; }
+        .piste-difficulty-novice       { stroke: #31ff31; }
+        .piste-difficulty-easy         { stroke: #3131ff; }
+        .piste-difficulty-intermediate { stroke: #ff3131; }
+        .piste-difficulty-advanced     { stroke: #060606; }
+        .piste-difficulty-expert       { stroke: #f6800a; }
+        .piste-difficulty-freeride     { stroke: #f6dd0a; }
+        .piste-difficulty-other        { stroke: #505050; }
 
-		.piste-type-sled {
-			fill: none;
-			/* stroke: #8040a0; */
-			stroke: #cdabde;
-			stroke-width: 2.5px;
-			marker-start:url(#marker-piste-type-sled);
-		}
+        .piste-type-sled {
+            fill: none;
+            /* stroke: #8040a0; */
+            stroke: #cdabde;
+            stroke-width: 2.5px;
+            marker-start:url(#marker-piste-type-sled);
+        }
 
-		.piste-type-nordic {
-			fill: none;
-			stroke: #c00000;
-			stroke-width: 1px;
-			stroke-dasharray: 3,0.5;
-			marker-start:url(#marker-piste-type-nordic);
-		}
+        .piste-type-nordic {
+            fill: none;
+            stroke: #c00000;
+            stroke-width: 1px;
+            stroke-dasharray: 3,0.5;
+            marker-start:url(#marker-piste-type-nordic);
+        }
 
-		.piste-downhill-name {
-			fill: #ffffff;
-			font-family: "DejaVu Sans";
-			font-weight: normal;
-			font-size: 5px;
-			text-anchor: middle;
-		}
+        .piste-downhill-name {
+            fill: #ffffff;
+            font-family: "DejaVu Sans";
+            font-weight: normal;
+            font-size: 5px;
+            text-anchor: middle;
+        }
 
-		.piste-downhill-ref {
-			fill: #000000;
-			font-family: "DejaVu Sans";
-			font-weight: normal;
-			font-size: 5px;
-			text-anchor: middle;
-		}
+        .piste-downhill-ref {
+            fill: #000000;
+            font-family: "DejaVu Sans";
+            font-weight: normal;
+            font-size: 5px;
+            text-anchor: middle;
+        }
 
-		.man-made-piste-halfpipe {
-			fill: #a0f0ff;
-			stroke: #00bcdf;
-			stroke-width: 0.4px;
-		}
+        .man-made-piste-halfpipe {
+            fill: #a0f0ff;
+            stroke: #00bcdf;
+            stroke-width: 0.4px;
+        }
 
             /* Power line */
             .power-line {
@@ -2681,7 +2681,7 @@
             }
 
 
-			/* Area captions */
+            /* Area captions */
             .park-name {
                 fill: #444444;
                 font-family: "DejaVu Sans";
@@ -2703,181 +2703,181 @@
 
             /* Oneway */
             .oneway-casing {
-				fill: none;
-				stroke-linecap: butt;
-				stroke: #777777;
+                fill: none;
+                stroke-linecap: butt;
+                stroke: #777777;
             }
 
             .oneway-core {
-				fill: none;
-				stroke-linecap: butt;
-				stroke: #ffffff;
+                fill: none;
+                stroke-linecap: butt;
+                stroke: #ffffff;
             }
-            
+
             .oneway-casing-1 {
-				stroke-width: 0.4px;
-				stroke-dasharray: 4.2,55.8;
-				stroke-dashoffset: 46.2;
+                stroke-width: 0.4px;
+                stroke-dasharray: 4.2,55.8;
+                stroke-dashoffset: 46.2;
             }
 
             .oneway-casing-2 {
-				stroke-width: 0.95px;
-				stroke-dasharray: 0.6,59.4;
-				stroke-dashoffset: 43.4;
+                stroke-width: 0.95px;
+                stroke-dasharray: 0.6,59.4;
+                stroke-dashoffset: 43.4;
             }
 
             .oneway-casing-3 {
-				stroke-width: 0.8px;
-				stroke-dasharray: 0.6,59.4;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.8px;
+                stroke-dasharray: 0.6,59.4;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-casing-4 {
-				stroke-width: 0.65px;
-				stroke-dasharray: 0.8,59.2;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.65px;
+                stroke-dasharray: 0.8,59.2;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-casing-5 {
-				stroke-width: 0.5px;
-				stroke-dasharray: 1.0,59;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.5px;
+                stroke-dasharray: 1.0,59;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-casing-6 {
-				stroke-width: 0.35px;
-				stroke-dasharray: 1.2,58.8;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.35px;
+                stroke-dasharray: 1.2,58.8;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-casing-7 {
-				stroke-width: 0.2px;
-				stroke-dasharray: 1.4,58.6;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.2px;
+                stroke-dasharray: 1.4,58.6;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-casing-8 {
-				stroke-width: 0.1px;
-				stroke-dasharray: 1.6,58.4;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.1px;
+                stroke-dasharray: 1.6,58.4;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-core-1 {
-				stroke-width: 0.2px;
-				stroke-dasharray: 4,56;
-				stroke-dashoffset: 46;
+                stroke-width: 0.2px;
+                stroke-dasharray: 4,56;
+                stroke-dashoffset: 46;
             }
 
             .oneway-core-2 {
-				stroke-width: 0.85px;
-				stroke-dasharray: 0.4,59.6;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.85px;
+                stroke-dasharray: 0.4,59.6;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-core-3 {
-				stroke-width: 0.7px;
-				stroke-dasharray: 0.6,59.4;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.7px;
+                stroke-dasharray: 0.6,59.4;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-core-4 {
-				stroke-width: 0.55px;
-				stroke-dasharray: 0.8,59.2;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.55px;
+                stroke-dasharray: 0.8,59.2;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-core-5 {
-				stroke-width: 0.4px;
-				stroke-dasharray: 1.0,59;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.4px;
+                stroke-dasharray: 1.0,59;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-core-6 {
-				stroke-width: 0.25px;
-				stroke-dasharray: 1.2,58.8;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.25px;
+                stroke-dasharray: 1.2,58.8;
+                stroke-dashoffset: 43.2;
             }
 
             .oneway-core-7 {
-				stroke-width: 0.1px;
-				stroke-dasharray: 1.4,58.6;
-				stroke-dashoffset: 43.2;
+                stroke-width: 0.1px;
+                stroke-dasharray: 1.4,58.6;
+                stroke-dashoffset: 43.2;
             }
 
             .otherway {
-				fill: none;
-				stroke: red;
-				stroke-width: 2px;
-				stroke-opacity: 0;
+                fill: none;
+                stroke: red;
+                stroke-width: 2px;
+                stroke-opacity: 0;
                 /* marker-start: url(#marker-otherway-start); */
                 marker-end: url(#marker-otherway-end);
             }
 
 
-	    /* Access restrictions */
-	    .access-private-line {
-		fill: none;
-		stroke: url(#access-private-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-private-area {
-		fill: url(#access-private-pattern);
-		stroke: url(#access-private-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-private-small-area {
-		fill: url(#access-private-pattern);
-		stroke: url(#access-private-pattern);
-		stroke-width: 1px;
-	    }
-
-	    .access-permissive-line {
-		fill: none;
-		stroke: url(#access-permissive-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-permissive-area {
-		fill: url(#access-permissive-pattern);
-		stroke: url(#access-permissive-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-permissive-small-area {
-		fill: url(#access-permissive-pattern);
-		stroke: url(#access-permissive-pattern);
-		stroke-width: 1px;
-	    }
-
-	    .access-destination-line {
-		fill: none;
-		stroke: url(#access-destination-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-destination-area {
-		fill: url(#access-destination-pattern);
-		stroke: url(#access-destination-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-destination-small-area {
-		fill: url(#access-destination-pattern);
-		stroke: url(#access-destination-pattern);
-		stroke-width: 1px;
-	    }
-
-	    .access-no-line {
-		fill: none;
-		stroke: url(#access-no-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-no-area {
-		fill: url(#access-no-pattern);
-		stroke: url(#access-no-pattern);
-		stroke-width: 2px;
-	    }
-	    .access-no-small-area {
-		fill: url(#access-no-pattern);
-		stroke: url(#access-no-pattern);
-		stroke-width: 1px;
-	    }
+            /* Access restrictions */
+            .access-private-line {
+                fill: none;
+                stroke: url(#access-private-pattern);
+                stroke-width: 2px;
+            }
+            .access-private-area {
+                fill: url(#access-private-pattern);
+                stroke: url(#access-private-pattern);
+                stroke-width: 2px;
+            }
+            .access-private-small-area {
+                fill: url(#access-private-pattern);
+                stroke: url(#access-private-pattern);
+                stroke-width: 1px;
+            }
+           
+            .access-permissive-line {
+                fill: none;
+                stroke: url(#access-permissive-pattern);
+                stroke-width: 2px;
+            }
+            .access-permissive-area {
+                fill: url(#access-permissive-pattern);
+                stroke: url(#access-permissive-pattern);
+                stroke-width: 2px;
+            }
+            .access-permissive-small-area {
+                fill: url(#access-permissive-pattern);
+                stroke: url(#access-permissive-pattern);
+                stroke-width: 1px;
+            }
+           
+            .access-destination-line {
+                fill: none;
+                stroke: url(#access-destination-pattern);
+                stroke-width: 2px;
+            }
+            .access-destination-area {
+                fill: url(#access-destination-pattern);
+                stroke: url(#access-destination-pattern);
+                stroke-width: 2px;
+            }
+            .access-destination-small-area {
+                fill: url(#access-destination-pattern);
+                stroke: url(#access-destination-pattern);
+                stroke-width: 1px;
+            }
+           
+            .access-no-line {
+                fill: none;
+                stroke: url(#access-no-pattern);
+                stroke-width: 2px;
+            }
+            .access-no-area {
+                fill: url(#access-no-pattern);
+                stroke: url(#access-no-pattern);
+                stroke-width: 2px;
+            }
+            .access-no-small-area {
+                fill: url(#access-no-pattern);
+                stroke: url(#access-no-pattern);
+                stroke-width: 1px;
+            }
 
             /* Map decoration */
             .map-grid-line {
@@ -2956,20 +2956,20 @@
                 fill: white;
             }
 
-			.highway-tunnel-ends {
-				stroke-opacity: 0;
-				fill: none;
-				marker-start: url(#marker-tunnel-start);
-				marker-end: url(#marker-tunnel-end);
-			 }
+            .highway-tunnel-ends {
+                stroke-opacity: 0;
+                fill: none;
+                marker-start: url(#marker-tunnel-start);
+                marker-end: url(#marker-tunnel-end);
+             }
 
-			/* Osmarender built-in styles - do not remove */
-			.osmarender-stroke-linecap-round { stroke-linecap: round; }
-			.osmarender-stroke-linecap-butt { stroke-linecap: butt; }
-			.osmarender-mask-black { stroke: black; }
-			.osmarender-mask-white { stroke: white; }
-			.osmarender-no-marker-start { marker-start: none; }
-			.osmarender-no-marker-end { marker-end: none; }
+            /* Osmarender built-in styles - do not remove */
+            .osmarender-stroke-linecap-round { stroke-linecap: round; }
+            .osmarender-stroke-linecap-butt { stroke-linecap: butt; }
+            .osmarender-mask-black { stroke: black; }
+            .osmarender-mask-white { stroke: white; }
+            .osmarender-no-marker-start { marker-start: none; }
+            .osmarender-no-marker-end { marker-end: none; }
 
         </style>
 

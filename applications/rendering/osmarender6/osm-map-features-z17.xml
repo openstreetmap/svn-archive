@@ -1913,18 +1913,18 @@
             <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
         </rule>
         <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
-	     <areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
-	     <areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
+             <areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
+             <areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
         </rule>
-        
+
         <rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
             <rule e="way" k="building" v="*" layer="5">
                  <!-- same goes if one of the following is set -->
-	         <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
-	         </rule>
+                 <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
+                 </rule>
                  <else>
-   		    <areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
-		    <areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
+                    <areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
+                    <areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
                  </else>
             </rule>
         </rule>
@@ -2051,12 +2051,12 @@
                 stroke-opacity: 0;
                 marker-mid: url(#marker-gate-open);
             }
-            
+
             .bollard {
-         	fill: #777777;
-         	stroke: none;
-            }   
-         
+                fill: #777777;
+                stroke: none;
+            }
+
             /* Railways - generic styles */
             .railway-casing {
                 stroke-linecap: butt;
@@ -2068,7 +2068,7 @@
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
-            }                
+            }
 
             /* RelationRoute - generic styles */
             .relationroute-way {
@@ -2150,7 +2150,7 @@
                 text-anchor: middle;
             }
 
-            .highway-user { 
+            .highway-user {
                 stroke-width: 0px;
                 font-size: 1.0px; fill: #bbbbbb;
             }
@@ -2463,12 +2463,12 @@
 
 
             /* Waterways */
-            .waterway-name-casing { 
-                stroke: #333333; 
-                fill: white; 
-                font-family: "DejaVu Sans"; 
-                font-weight: bold; 
-                text-anchor: middle; 
+            .waterway-name-casing {
+                stroke: #333333;
+                fill: white;
+                font-family: "DejaVu Sans";
+                font-weight: bold;
+                text-anchor: middle;
                 stroke-miterlimit: 1.5;
             }
 
@@ -2742,7 +2742,7 @@
             .artificial-pier-core {
               stroke-width: 0.3px;
               stroke-linecap: butt;
-              stroke-linejoin: round; 
+              stroke-linejoin: round;
               stroke: #eeeeee;
               fill: none;
             }
@@ -2750,7 +2750,7 @@
             .artificial-pier-casing {
               stroke-width: 0.4px;
               stroke-linecap: butt;
-              stroke-linejoin: round; 
+              stroke-linejoin: round;
               stroke: #cccccc;
               fill: none;
             }
@@ -2819,25 +2819,25 @@
             }
 
             .boundary-administrative-state-casing {
-                stroke-width: 2.5px; 
+                stroke-width: 2.5px;
                 stroke: #ffff00;
                 opacity: 0.5;
             }
 
             .boundary-administrative-state-core {
-                stroke-width: 0.25px; 
+                stroke-width: 0.25px;
                 stroke: #f9574b;
                 stroke-dasharray: 2.5, 0.5, 0.5, 0.5;
             }
 
             .boundary-administrative-district-core {
-                stroke-width: 0.25px; 
+                stroke-width: 0.25px;
                 stroke: #f9574b;
                 stroke-dasharray: 1.5, 0.5, 1.5, 0.5;
             }
 
             .boundary-administrative-parish-core {
-                stroke-width: 0.25px; 
+                stroke-width: 0.25px;
                 stroke: #f9574b;
                 stroke-dasharray: 0.5, 0.5, 0.5, 0.5;
             }
@@ -2870,26 +2870,26 @@
             }
 
             .highway-raceway-casing {
-              stroke-width: 2px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 2px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: none;
               stroke: #101010;
               }
 
             .highway-raceway-casing-disused {
-              stroke-width: 2px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 2px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: none;
               stroke: #808080;
               stroke-dasharray: 1, 1;
               }
 
             .highway-raceway-casing-dismantled {
-              stroke-width: 2px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 2px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: none;
               stroke: #808080;
               stroke-dasharray: 0.3, 1.7;
@@ -2897,26 +2897,26 @@
               }
 
             .highway-raceway-core {
-              stroke-width: 1.5px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: none;
               stroke: #f0f0f0;
             }
 
             .highway-raceway-core-disused {
-              stroke-width: 1.5px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: none;
               stroke-dasharray: 1, 1;
               stroke: #f7f7f7;
             }
 
             .highway-raceway-core-dismantled {
-              stroke-width: 1.5px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: none;
               stroke: #fbfbfb;
               stroke-dasharray: 0.3, 1.7;
@@ -2924,26 +2924,26 @@
             }
 
             .landuse-raceway {
-              stroke-width: 0.3px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: #f0f0f0;
               stroke: #101010;
             }
 
             .landuse-raceway-disused {
-              stroke-width: 0.3px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: #f7f7f7;
               stroke: #808080;
               stroke-dasharray: 1, 1;
             }
 
             .landuse-raceway-dismantled {
-              stroke-width: 0.3px; 
-              stroke-linecap: butt; 
-              stroke-linejoin: round; 
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
               fill: #fbfbfb;
               stroke: #808080;
               stroke-dasharray: 0.3, 1.7;
@@ -2970,7 +2970,7 @@
                 fill: #c7f1a3;
                 stroke: #6fc18e;
                 stroke-width: 0.2px;
-            }            
+            }
             .tourism-attraction-caption {
                 fill: #f124cb;
                 stroke: white;
@@ -3080,7 +3080,7 @@
             .military-area {
                fill: url(#military-pattern);
                stroke: #eeeeee;
-               stroke-width: 0.2px;                                          
+               stroke-width: 0.2px;
             }
 
             /* surface lifts */
@@ -3427,7 +3427,7 @@
 
             <!-- map background must be the same for all zooms or else empty tile detection will fail -->
             .map-background {
-                fill: #f8f8f8; 
+                fill: #f8f8f8;
                 stroke: none;
             }
 

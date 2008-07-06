@@ -64,6 +64,22 @@ BEGIN
     PUSHBUTTON      "Cancel",IDC_BUTTON1,65,97,36,14
 END
 
+IDD_SETTAGS DIALOG DISCARDABLE  0, 0, 109, 118
+STYLE DS_MODALFRAME | WS_POPUP
+FONT 8, "System"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,97,40,14
+    PUSHBUTTON      "Cancel",IDCANCEL,58,97,44,14
+    LTEXT           "Name",IDC_STATIC,7,7,19,13,SS_CENTERIMAGE
+    EDITTEXT        IDC_NAME,33,7,69,14,ES_AUTOHSCROLL
+    LISTBOX         IDC_CLASS,7,27,95,49,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    CONTROL         "Oneway",IDC_ONEWAY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,81,43,10
+    CONTROL         "Bridge",IDC_BRIDGE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,60,82,36,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -78,6 +94,14 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 101
         TOPMARGIN, 7
+    END
+
+    IDD_SETTAGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 102
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 111
     END
 END
 #endif    // APSTUDIO_INVOKED

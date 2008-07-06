@@ -20,7 +20,12 @@
 from base_module import ranaModule
 
 import sys
-sys.path.append('modules/pyroutelib2')
+
+if(__name__ == '__main__'):
+  sys.path.append('pyroutelib2')
+else:
+  sys.path.append('modules/pyroutelib2')
+
 from loadOsm import *
 from route import Router
 
@@ -50,7 +55,7 @@ class route(ranaModule):
 
   def doRoute(self, from_lat, from_lon, to_lat, to_lon):
     """Route from one point to another, and set that as the active route"""
-    data = LoadOsm("cycle")
+    data = LoadOsm(self.get('transport', 'cycle'))
 
     node1 = data.findNode(from_lat, from_lon)
     node2 = data.findNode(to_lat, to_lon)
@@ -95,8 +100,9 @@ class route(ranaModule):
     cr.stroke()
     
 if(__name__ == '__main__'):
-  d = {'selected_pos':"51.678935,-0.826256"}
+  d = {'transport':'car'}
   a = route({},d)
-  a.update()
-  print d.get('nearest_road')
+  a.doRoute(51.51565, 0.06036, 51.65299, -0.19974) # Beckton -> Barnet
+  print a.route
+  
   

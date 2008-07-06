@@ -233,7 +233,7 @@
             stroke: #4D5D73;
             stroke-width: 3px;
             }
-            
+
             .highway-motorway-junction-caption {
             fill: black;
             stroke: blue;
@@ -243,8 +243,8 @@
             font-weight: bold;
             display: none;
             }
-            
-	     /* Highways - street specific style */
+
+         /* Highways - street specific style */
 
             .highway-motorway-core {
                 stroke-width: 66px;
@@ -474,43 +474,43 @@
             }
 
 
-			/* Non-physical boundaries */
+            /* Non-physical boundaries */
             .boundary {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
 
-			.boundary-administrative-state-casing {
-				stroke-width: 80px; 
-				stroke: #ffff00;
-				opacity: 0.5;
-	        }
+            .boundary-administrative-state-casing {
+                stroke-width: 80px;
+                stroke: #ffff00;
+                opacity: 0.5;
+            }
 
-			.boundary-administrative-state-core {
-				stroke-width: 16px; 
-				stroke: #f9574b;
-				stroke-dasharray: 80, 16, 16, 16;
-			}
+            .boundary-administrative-state-core {
+                stroke-width: 16px;
+                stroke: #f9574b;
+                stroke-dasharray: 80, 16, 16, 16;
+            }
 
 
 
-			/* Racetracks */
-			.highway-raceway-core {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #f0f0f0;
-			  }
+            /* Racetracks */
+            .highway-raceway-core {
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #f0f0f0;
+              }
 
-			.landuse-raceway {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #f0f0f0;
-			  stroke: #101010;
-			  }
+            .landuse-raceway {
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #f0f0f0;
+              stroke: #101010;
+              }
 
 
             /* Tourism */

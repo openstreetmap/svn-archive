@@ -239,82 +239,82 @@
         <!-- Bridge casings -->
         <rule e="way" k="bridge" v="yes|true">
             <rule e="way" k="railway" v="rail">
-                <line class="bridge-casing railway-rail-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-rail-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="abandoned">
-                <line class="bridge-casing railway-rail-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-rail-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="light_rail|incline">
-                <line class="bridge-casing railway-light-rail-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-light-rail-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="subway">
-                <line class="bridge-casing railway-subway-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-subway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="tram">
-                <line class="bridge-casing railway-tram-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-tram-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="narrow_gauge">
-                <line class="bridge-casing railway-narrow-gauge-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-narrow-gauge-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="preserved">
-                <line class="bridge-casing railway-preserved-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-preserved-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="railway" v="monorail">
-                <line class="bridge-casing railway-monorail-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing railway-monorail-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="motorway">
-                <line class="bridge-casing highway-motorway-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-motorway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="trunk">
-                <line class="bridge-casing highway-trunk-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-trunk-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="primary">
-                <line class="bridge-casing highway-primary-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-primary-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="motorway_link">
-                <line class="bridge-casing highway-motorway-link-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-motorway-link-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="trunk_link">
-                <line class="bridge-casing highway-trunk-link-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-trunk-link-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="primary_link">
-                <line class="bridge-casing highway-primary-link-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-primary-link-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="secondary">
-                <line class="bridge-casing highway-secondary-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-secondary-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="tertiary">
-                <line class="bridge-casing highway-tertiary-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-tertiary-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
-                <line class="bridge-casing highway-unclassified-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-unclassified-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="service">
-                <line class="bridge-casing highway-service-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-service-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
-                <line class="bridge-casing highway-unsurfaced-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-unsurfaced-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="track">
-                <line class="bridge-casing highway-track-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-track-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="byway">
-                <line class="bridge-casing highway-byway-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-byway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="bridleway">
-                <line class="bridge-casing highway-bridleway-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-bridleway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="cycleway">
-                <line class="bridge-casing highway-cycleway-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-cycleway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="pedestrian">
-                <line class="bridge-casing highway-pedestrian-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-pedestrian-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="footway|footpath">
-                <line class="bridge-casing highway-footway-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-footway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
             <rule e="way" k="highway" v="steps">
-                <line class="bridge-casing highway-steps-bridge-casing" smart-linecap="no"/>
+                <line class="bridge-casing highway-steps-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
         </rule>
 
@@ -809,107 +809,107 @@
         <rule e="way" k="tunnel" v="true|yes">
             <rule e="way" k="highway" v="steps">
                 <line class="tunnel-casing highway-steps-casing tunnel" mask-class="tunnel-core highway-steps-core"/>
-                <line class="highway-steps-casing highway-tunnel-ends"/>
+                <line class="highway-steps-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="footway|footpath">
                 <line class="tunnel-casing highway-footway-casing tunnel" mask-class="tunnel-core highway-footway-core"/>
-                <line class="highway-footway-casing highway-tunnel-ends"/>
+                <line class="highway-footway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="pedestrian">
                 <line class="tunnel-casing highway-pedestrian-casing tunnel" mask-class="tunnel-core highway-pedestrian-core"/>
-                <line class="highway-pedestrian-casing highway-tunnel-ends"/>
+                <line class="highway-pedestrian-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="cycleway">
                 <line class="tunnel-casing highway-cycleway-casing tunnel" mask-class="tunnel-core highway-cycleway-core"/>
-                <line class="highway-cycleway-casing highway-tunnel-ends"/>
+                <line class="highway-cycleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="bridleway">
                 <line class="tunnel-casing highway-bridleway-casing tunnel" mask-class="tunnel-core highway-bridleway-core"/>
-                <line class="highway-bridleway-casing highway-tunnel-ends"/>
+                <line class="highway-bridleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="byway">
                 <line class="tunnel-casing highway-byway-1-casing tunnel" mask-class="tunnel-core highway-byway-1-core"/>
-                <line class="highway-byway-1-casing highway-tunnel-ends"/>
+                <line class="highway-byway-1-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="track">
                 <line class="tunnel-casing highway-track-casing tunnel" mask-class="tunnel-core highway-track-core"/>
-                <line class="highway-track-casing highway-tunnel-ends"/>
+                <line class="highway-track-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
                 <line class="tunnel-casing highway-unsurfaced-casing tunnel" mask-class="tunnel-core highway-unsurfaced-core"/>
-                <line class="highway-unsurfaced-casing highway-tunnel-ends"/>
+                <line class="highway-unsurfaced-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="service">
                 <line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
-                <line class="highway-service-casing highway-tunnel-ends"/>
+                <line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="unclassified|residential|minor|tertiary|living_street">
                 <line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-unclassified-core"/>
-                <line class="highway-unclassified-casing highway-tunnel-ends"/>
+                <line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="road">
                 <line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-road-core"/>
-                <line class="highway-unclassified-casing highway-tunnel-ends"/>
+                <line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="tertiary">
                 <line class="tunnel-casing highway-tertiary-casing tunnel" mask-class="tunnel-core highway-tertiary-core"/>
-                <line class="highway-tertiary-casing highway-tunnel-ends"/>
+                <line class="highway-tertiary-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="secondary">
                 <line class="tunnel-casing highway-secondary-casing tunnel" mask-class="tunnel-core highway-secondary-core"/>
-                <line class="highway-secondary-casing highway-tunnel-ends"/>
+                <line class="highway-secondary-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="primary_link">
                 <line class="tunnel-casing highway-primary-link-casing tunnel" mask-class="tunnel-core highway-primary-link-core"/>
-                <line class="highway-primary-link-casing highway-tunnel-ends"/>
+                <line class="highway-primary-link-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="trunk_link">
                 <line class="tunnel-casing highway-trunk-link-casing tunnel" mask-class="tunnel-core highway-trunk-link-core"/>
-                <line class="highway-trunk-link-casing highway-tunnel-ends"/>
+                <line class="highway-trunk-link-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="motorway_link">
                 <line class="tunnel-casing highway-motorway-link-casing tunnel" mask-class="tunnel-core highway-motorway-link-core"/>
-                <line class="highway-motorway-link-casing highway-tunnel-ends"/>
+                <line class="highway-motorway-link-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="primary">
                 <line class="tunnel-casing highway-primary-casing tunnel" mask-class="tunnel-core highway-primary-core"/>
-                <line class="highway-primary-casing highway-tunnel-ends"/>
+                <line class="highway-primary-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="trunk">
                 <line class="tunnel-casing highway-trunk-casing tunnel" mask-class="tunnel-core highway-trunk-core"/>
-                <line class="highway-trunk-casing highway-tunnel-ends"/>
+                <line class="highway-trunk-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="motorway">
                 <line class="tunnel-casing highway-motorway-casing tunnel" mask-class="tunnel-core highway-motorway-core"/>
-                <line class="highway-motorway-casing highway-tunnel-ends"/>
+                <line class="highway-motorway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="monorail">
                 <line class="tunnel-casing railway-monorail-casing tunnel" mask-class="tunnel-core railway-monorail-core"/>
-                <line class="railway-monorail-casing highway-tunnel-ends"/>
+                <line class="railway-monorail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="preserved">
                 <line class="tunnel-casing railway-preserved-casing tunnel" mask-class="tunnel-core railway-preserved-core"/>
-                <line class="railway-preserved-casing highway-tunnel-ends"/>
+                <line class="railway-preserved-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="narrow_gauge">
                 <line class="tunnel-casing railway-narrow-gauge-casing tunnel" mask-class="tunnel-core railway-narrow-gauge-core"/>
-                <line class="railway-narrow-gauge-casing highway-tunnel-ends"/>
+                <line class="railway-narrow-gauge-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="tram">
                 <line class="tunnel-casing railway-tram-casing tunnel" mask-class="tunnel-core railway-tram-core"/>
-                <line class="railway-tram-casing highway-tunnel-ends"/>
+                <line class="railway-tram-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="subway">
                 <line class="tunnel-casing railway-subway-casing tunnel" mask-class="tunnel-core railway-subway-core"/>
-                <line class="railway-subway-casing highway-tunnel-ends"/>
+                <line class="railway-subway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="light_rail|incline">
                 <line class="tunnel-casing railway-light-rail-casing tunnel" mask-class="tunnel-core railway-light-rail-core"/>
-                <line class="railway-light-rail-casing highway-tunnel-ends"/>
+                <line class="railway-light-rail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="railway" v="rail">
                 <line class="tunnel-casing railway-rail-casing tunnel" mask-class="tunnel-core railway-rail-1-core"/>
-                <line class="railway-rail-casing highway-tunnel-ends"/>
+                <line class="railway-rail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
         </rule>
 
@@ -3111,11 +3111,34 @@
             </svg:g>
         </svg:pattern>
 
-        <svg:marker id="bridge-casing-start" fill="none" stroke-width="0.1px" stroke="#777777" markerWidth="1px" markerHeight="1px" orient="auto">
-            <svg:path d="M-0.25,0.75 L0.5,0 L-0.25,-0.75"/>
+        <svg:marker
+            id="bridge-casing-end"
+            markerUnits="strokeWidth"
+            fill='none'
+            stroke-width='0.045px'
+            viewBox='-1 -1 2 2'
+            refX='1'
+            refY='1'
+            markerWidth='2'
+            markerHeight='2'
+            stroke='#777777'
+            orient="auto">
+            <svg:path d="M -0.05,0.45 L 0.3,0.8 M -0.05,-0.45 L 0.3,-0.8" />
         </svg:marker>
-        <svg:marker id="bridge-casing-end" fill="none" stroke-width="0.1px" stroke="#777777" markerWidth="1px" markerHeight="1px" orient="auto">
-            <svg:path d="M0.25,0.75 L-0.5,0 L0.25,-0.75"/>
+
+        <svg:marker
+            id="bridge-casing-start"
+            markerUnits="strokeWidth"
+            fill='none'
+            stroke-width='0.045px'
+            viewBox='-1 -1 2 2'
+            refX='1'
+            refY='1'
+            markerWidth='2'
+            markerHeight='2'
+            stroke='#777777'
+            orient="auto">
+            <svg:path d="M 0.05,0.45 L -0.3,0.8 M 0.05,-0.45 L -0.3,-0.8" />
         </svg:marker>
 
         <svg:marker id="marker-tunnel-start" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="strokeWidth" fill="none" stroke-width="0.5px" stroke="#777777" markerWidth="2px" markerHeight="2px" orient="auto">

@@ -47,7 +47,7 @@ typedef int intptr_t;
   o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 1) \
   o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 1) \
   o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
-  o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 2) \
+  o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
   o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2) \
   o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
 #else
@@ -1438,7 +1438,7 @@ gint Expose (void)
                 clip.height / 2 - (y0 - clat) / perpixel -
                 int (len * 3 * sin (hoek)), 0, NULL,
                 wcTmp, len, NULL);
-          SelectObject (mygc, customFont);
+          SelectObject (mygc, oldf);
           DeleteObject (customFont);
         }
         #endif
@@ -1584,10 +1584,16 @@ gint Expose (void)
   }
 
   wchar_t coord[21];
-  if (ShowCoordinates) {
+  if (ShowCoordinates == 1) {
     wsprintf (coord, TEXT ("%9.5lf %10.5lf"), LatInverse (clat),
       LonInverse (clon));
     ExtTextOut (mygc, 0, 0, 0, NULL, coord, 20, NULL);
+  }
+  else if (ShowCoordinates == 2) {
+    MEMORYSTATUS memStat;
+    GlobalMemoryStatus (&memStat);
+    wsprintf (coord, TEXT ("%9d"), memStat.dwAvailPhys );
+    ExtTextOut (mygc, 0, 0, 0, NULL, coord, 9, NULL);
   }
   #endif
   #ifdef CAIRO_VERSION
@@ -3093,12 +3099,15 @@ int WINAPI WinMain(
           "  <tag k='bridge' v='yes'/>\n");
         if (newWays[i].klas >= 0) fprintf (newWayFile, "%s",
           klasTable[newWays[i].klas].tags);
-        fprintf (newWayFile, "  <tag k='name' v='");
-        for (j = 0; newWays[i].name[j]; j++) {
-          if (newWays[i].name[j] == '\'') fprintf (newWayFile, "&apos;");
-          else fputc (newWays[i].name[j], newWayFile);
+        if (newWays[i].name[0] != '\0') {
+          fprintf (newWayFile, "  <tag k='name' v='");
+          for (j = 0; newWays[i].name[j]; j++) {
+            if (newWays[i].name[j] == '\'') fprintf (newWayFile, "&apos;");
+            else fputc (newWays[i].name[j], newWayFile);
+          }
+          fprintf (newWayFile, "' />\n");
         }
-        fprintf (newWayFile, "' />\n</%s>\n", newWays[i].cnt <= 1 ? "node" : "way");
+        fprintf (newWayFile, "</%s>\n", newWays[i].cnt <= 1 ? "node" : "way");
       }
       fprintf (newWayFile, "</osm>\n");
       fclose (newWayFile);

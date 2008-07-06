@@ -7,12 +7,29 @@
 PROGRAM_NAME="osmarender_frontend";
 XHTML_NS="http://www.w3.org/1999/xhtml";
 var rulesfile;
-var server;
+var rulesfilename;
+var elements;
+var osmfilename;
+var osmfile;
 var updateProgressBar;
+
+//Min and Max LatLon
+var bounds = {
+	lat : {
+		min: 0.0,
+		max: 0.0
+	},
+	lon : {
+		min: 0.0,
+		max: 0.0
+	}
+};
+
 // Models for faceting features
-CMYK = function(rulesfilename,progressData,progressBar,callBackFunc) {
+CMYK = function(rulesfilenamePar,osmfilenamePar,progressData,progressBar,callBackFunc) {
+	rulesfilename=rulesfilenamePar;
+	osmfilename=osmfilenamePar;
 	updateProgressBar=progressBar;
-	var rulesfilename=rulesfilename;
 	
 	function elementTypes() {
 		// if the object that calls the function is not already an instance return a new object. This example provide a rough overloading implementation of object constructors
@@ -467,20 +484,22 @@ for (var object in osmafeats) {
 // Load the rule file
 
 rulesfile = function () {
-	var scripts = document.getElementsByTagName("script");
-
-	for (script in scripts) {
-		if (typeof(scripts[script])=="object" && scripts[script].getAttribute("cmyk_server")!=null && scripts[script].getAttribute("cmyk_server")!=undefined) {
-			server = scripts[script].getAttribute("cmyk_server");
-		}
-	}
-
 	var xmlhttp = new XMLHttpRequest();  
-	xmlhttp.open("GET", server+rulesfilename, false);  
+	xmlhttp.open("GET", rulesfilename, false);  
 	xmlhttp.send('');
 	rulesfile=xmlhttp.responseXML;
 	return rulesfile;
 }();
+
+osmfile = function () {
+	var xmlhttp = new XMLHttpRequest();  
+	xmlhttp.open("GET", osmfilename, false);  
+	xmlhttp.send('');
+	osmfile=xmlhttp.responseXML;
+	return osmfile;
+}();
+
+setOsmFile(osmfilename);
 
 function getDefs(rulefile) {
 	if (!(rulefile instanceof XMLDocument)) throw new Error("argument must be an XMLDocument");
@@ -519,6 +538,7 @@ this.symbols = rulesfile.getElementsByTagName("symbol");
 
 function RuleFile() {
 	this.baseAttributes = new Object();
+	this.bounds = new Object();
 	this.childrenRules = new Array();
 };
 
@@ -529,6 +549,8 @@ with (rulesfile.getElementsByTagName("rules")[0]) {
 		eval("rulemodel[\"baseAttributes\"][\""+attributes[index].name+"\"]=\""+attributes[index].value+"\"");
 	}
 }
+
+// TODO: Check if there are bounds tag already
 
 function SingleRule() {
 	this.parent;
@@ -542,25 +564,39 @@ function SingleRule() {
 
 var toprogress=0,progressMax=0;
 createRuleModel(rulesfile.getElementsByTagName("rules")[0],rulemodel);
-var id = setInterval(checkOk,10);
+var id = setInterval(checkOkRule,10);
 
-function checkOk() {
+function checkOkRule() {
+	if (progressMax!=0 && toprogress==progressMax) {
+		clearInterval(id);
+		toprogress=0;
+		progressMax=0;
+		parseKeyValuePairs(osmfile);
+		id=setInterval(checkOkKeyValue,10);
+	}
+}
+
+function checkOkKeyValue() {
 	if (progressMax!=0 && toprogress==progressMax) {
 		clearInterval(id);
 		callBackFunc();
 	}
 }
+function setOsmFile(osmfilename) {
+	tags = rulesfile.getElementsByTagName("rules");
+	tags[0].setAttribute("data",osmfilename);
+}
 
 function createRuleModel(dom,model) {
-// Thanks to http://jsninja.com/Timers
 	progressData.step.maximum=(progressMax+=dom.childNodes.length);
-	progressData.step.message="Processing node "+toprogress+" of "+progressMax;
+	progressData.step.message="Processing rule file element "+toprogress+" of "+progressMax;
 	updateProgressBar();
 	var i=0;
+// Thanks to http://jsninja.com/Timers
 	setTimeout(function() {
 	for (var index = i; index<dom.childNodes.length; index++) {
 		progressData.step.progress=(++toprogress);
-		progressData.step.message="Processing node "+toprogress+" of "+progressMax;
+		progressData.step.message="Processing rule file element "+toprogress+" of "+progressMax;
 		updateProgressBar();
 		if (dom.childNodes[index].nodeName=="rule") {
 			var temp = new SingleRule();
@@ -615,7 +651,52 @@ function createRuleModel(dom,model) {
 this.rulemodelresult=rulemodel;
 //console.debug(this.rulemodelresult);
 
+function parseKeyValuePairs(osmfile) {
+	elements["nodes"] = new Array();
+	elements["ways"] = new Array();
 
+	nodes = osmfile.documentElement.selectNodes("//node");
+	ways = osmfile.documentElement.selectNodes("//way");
+	progressData.total.progress++;
+	progressData.total.message="Processing Osm File";
+	progressData.step.maximum=(progressMax+=nodes.length);
+	progressData.step.message="Progressing osm file node "+toprogress+" of "+progressMax;
+	updateProgressBar();
+	
+	var i=0;
+	setTimeout(function() {
+		for (var nodes_counter = i; nodes_counter < nodes.length; nodes_counter++) {
+			// first iteration set max/min lat/lon
+			if (nodes_counter==0) {
+				bounds.lat.max = bounds.lat.min = parseFloat(nodes[nodes_counter].getAttribute("lat"));
+				bounds.lon.max = bounds.lon.min = parseFloat(nodes[nodes_counter].getAttribute("lon"));
+			}
+			with (nodes[nodes_counter]) {
+				var thisLat = parseFloat(getAttribute("lat"));
+				var thisLon = parseFloat(getAttribute("lon"));
+				if (thisLat>bounds.lat.max) bounds.lat.max=thisLat;
+				if (thisLat<bounds.lat.min) bounds.lat.min=thisLat;
+				if (thisLon>bounds.lon.max) bounds.lon.max=thisLon;
+				if (thisLon<bounds.lon.min) bounds.lon.min=thisLon;
+			}
+			progressData.step.progress=(++toprogress);
+			progressData.step.message="Processing osm file node "+toprogress+" of "+progressMax;
+			updateProgressBar();
+			var nodetags = nodes[nodes_counter].selectNodes("tag");
+			var addmetags = elements["nodes"][nodes[nodes_counter].getAttribute("id")]=new Array();
+			for (var nodetag_counter = 0; nodetag_counter < nodetags.length; nodetag_counter++) {
+				addmetags[nodetags[nodetag_counter].getAttribute("k")] = nodetags[nodetag_counter].getAttribute("v");
+			}i++;
+		}if (i<nodes.length) setTimeout(arguments.callee,0);},0);
+
+	for (var ways_counter = 0; ways_counter < ways.length; ways_counter++) {
+		var waytags = ways[ways_counter].selectNodes("tag");
+		var addmetags = elements["ways"][ways[ways_counter].getAttribute("id")]=new Array();
+		for (var waytag_counter = 0; waytag_counter < waytags.length; waytag_counter++) {
+			addmetags[waytags[waytag_counter].getAttribute("k")] = waytags[waytag_counter].getAttribute("v");
+		}
+	}
+}
 // Utility functions
 
 /**
@@ -668,10 +749,6 @@ CMYK.prototype.getSymbols = function() {
 	return this.symbols;
 }
 
-CMYK.prototype.setOsmFile = function(osmfilename) {
-	tags = rulesfile.getElementsByTagName("rules");
-	tags[0].setAttribute("data",osmfilename);
-}
 
 CMYK.prototype.getRulesFile = function() {
 	return rulesfile;
@@ -834,4 +911,39 @@ CMYK.prototype.deleteSingleStyle = function(class,property) {
 		}
 	}
 	this.setStyle();
+}
+
+CMYK.prototype.getOsmFileName = function() {
+	return osmfilename.substring(osmfilename.lastIndexOf("/"));
+}
+
+CMYK.prototype.getKeyValuePairs = function() {
+	return elements;
+}
+
+CMYK.prototype.getBounds = function() {
+	return bounds;
+}
+
+CMYK.prototype.setBounds = function(north,south,east,west) {
+	bounds.lon.min=east;
+	bounds.lon.max=west;
+	bounds.lat.max=north;
+	bounds.lat.min=south;
+	with (rulesfile.getElementsByTagName("rules")[0]) {
+		var bounds_tag;
+		if (rulesfile.getElementsByTagName("bounds").length!=0) {
+			bounds_tag = rulesfile.getElementsByTagName("bounds")[0];
+		}
+		else {
+			XHTML_NS="";
+			bounds_tag = createElementCB("bounds");
+			XHTML_NS="http://www.w3.org/1999/xhtml";
+		}
+		bounds_tag.setAttribute("minlon",bounds.lon.min);
+		bounds_tag.setAttribute("maxlon",bounds.lon.max);
+		bounds_tag.setAttribute("maxlat",bounds.lat.max);
+		bounds_tag.setAttribute("minlat",bounds.lat.min);
+		appendChild(bounds_tag);
+	}
 }

@@ -27,8 +27,8 @@
 		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa.js"></script>
 		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa_ieemu_xpath.js"></script>
 		<!--TODO: automatically retrieve server name-->
-		<script type="text/javascript" src="cmyk.js" cmyk_server=""></script>
-		<script type="text/javascript" src="osmarender_frontend.js" of_server=""></script>
+		<script type="text/javascript" src="cmyk.js"></script>
+		<script type="text/javascript" src="osmarender_frontend.js"></script>
 		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true,isDebug:true"></script>
 		<script type="text/javascript">
 			dojo.require("dojo.dnd.move");
@@ -56,11 +56,13 @@
 		</script>
 	</head>
 	<body class="tundra">
-	<div id ="osm3" dojoType="dijit.layout.BorderContainer">
+	<div id ="osm3" dojoType="dijit.layout.BorderContainer" design="headline">
 		<div id="topcontainer" dojoType="dijit.layout.ContentPane" region="top">
 			<div id="moveMe" dojoType="dijit.layout.ContentPane">
 				Osmarender Frontend
 			</div>
+		</div>
+		<div id="main_content" dojoType="dijit.layout.ContentPane" region="center">
 			<div id="menu" dojoType="dijit.layout.ContentPane">
 				<div dojoType="dijit.Toolbar" id="toolbar" layoutAlign="center">
 					<button id="transform" dojoType="dijit.form.Button">Render Map
@@ -146,7 +148,7 @@
 					
 					<button id="panel_rules" dojoType="dijit.form.Button">Rules Panel
 						<script type="dojo/method" event="onClick">
-							listKeys();
+							displayKeyValue();
 						</script>
 					</button>
 					<span id="help_panel_rules" class="help">?</span>
@@ -164,6 +166,16 @@
     						Display Symbols
 					</div>
 
+					<button id="panel_settings" dojoType="dijit.form.Button">Settings Panel
+						<script type="dojo/method" event="onClick">
+							displaySettings();
+						</script>
+					</button>
+					<span id="help_panel_settings" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_settings">
+    						Display Global Map Settings
+					</div>
+
 					<div dojoType="dijit.ToolbarSeparator"></div>
 
 					<button id="panel_load" dojoType="dijit.form.Button">Load Panel
@@ -177,12 +189,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id="main_content" dojoType="dijit.layout.ContentPane">
 			<div id="load_file" dojoType="dijit.layout.BorderContainer">
-				<div id="load_file_tab" dojoType="dijit.layout.TabContainer">
+				<div id="load_file_tab" dojoType="dijit.layout.TabContainer" region="top">
 					<div id="load_preset" dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true">
-						<h1>Load a preset file</h1><br />
+						<br />
 						Data File: 
 						<select 	dojoType="dijit.form.FilteringSelect"
       								id="osm_file_name_selected"
@@ -215,7 +225,7 @@
 						</script>
 					</div>
 					<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">
-						<h1>Load a custom file</h1><br />
+						<br />
 						Data File: 
 						<input id="data_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
 						<br />
@@ -267,6 +277,7 @@
 			<div id="result_process_rules" dojoType="dijit.layout.ContentPane"></div>
 			<div id="result_process_key" dojoType="dijit.layout.ContentPane"></div>
 			<div id="result_symbols" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_settings" dojoType="dijit.layout.ContentPane"></div>
 			<br /><br />
 		</div>
 		<div id="resizePane" dojoType="dijit.layout.ContentPane" region="bottom">

@@ -446,11 +446,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- The current way element if applicable -->
     <xsl:param name="layer"/>
 
+    <xsl:variable name="extraClasses">
+      <xsl:if test="$instruction/@suppress-markers-tag != ''">
+        <xsl:variable name="suppressMarkersTag" select="$instruction/@suppress-markers-tag" />
+        <xsl:variable name="firstNode" select="key('nodeById',$way/nd[1]/@ref)"/>
+        <xsl:variable name="firstNodeMarkerGroupConnectionCount"
+                      select="count(key('wayByNode',$firstNode/@id)/tag[@k=$suppressMarkersTag and ( @v = 'yes' or @v = 'true' )])" />
+        <xsl:variable name="lastNode" select="key('nodeById',$way/nd[last()]/@ref)"/>
+        <xsl:variable name="lastNodeMarkerGroupConnectionCount"
+                      select="count(key('wayByNode',$lastNode/@id)/tag[@k=$suppressMarkersTag and ( @v = 'yes' or @v = 'true' )])" />
+       
+        <xsl:if test="$firstNodeMarkerGroupConnectionCount > 1">osmarender-no-marker-start</xsl:if>
+        <xsl:if test="$lastNodeMarkerGroupConnectionCount > 1"> osmarender-no-marker-end</xsl:if>
+      </xsl:if>
+    </xsl:variable>
+
     <xsl:choose>
       <xsl:when test="$instruction/@smart-linecap='no'">
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_normal_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
+          <xsl:with-param name="extraClasses" select='$extraClasses'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -458,6 +474,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name="instruction" select="$instruction"/>
           <xsl:with-param name="way" select="$way"/>
           <xsl:with-param name="layer" select="$layer"/>
+          <xsl:with-param name="extraClasses" select='$extraClasses'/>
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -469,6 +486,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="way"/>
     <!-- The current way element if applicable -->
     <xsl:param name="layer"/>
+    <xsl:param name="extraClasses"/>
 
     <!-- The first half of the first segment and the last half of the last segment are treated differently from the main
 			part of the way path.  The main part is always rendered with a butt line-cap.  Each end fragment is rendered with
@@ -505,21 +523,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
-          <xsl:with-param name="extraClasses">osmarender-no-marker-end</xsl:with-param>
+          <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-no-marker-end</xsl:with-param>
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$firstNodeLowerLayerConnectionCount>0">
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
-          <xsl:with-param name="extraClasses">osmarender-stroke-linecap-butt osmarender-no-marker-end</xsl:with-param>
+          <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-butt osmarender-no-marker-end</xsl:with-param>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
-          <xsl:with-param name="extraClasses">osmarender-stroke-linecap-round osmarender-no-marker-end</xsl:with-param>
+          <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/>  osmarender-stroke-linecap-round osmarender-no-marker-end</xsl:with-param>
         </xsl:call-template>
       </xsl:otherwise>
 
@@ -532,6 +550,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- Count the number of segments connecting to the last node. If there is only one (the current segment) then draw
 		     a default line.  -->
     <xsl:variable name="lastNodeConnectionCount" select="count(key('wayByNode',$lastNode/@id))" />
+
     <!-- Count the number of connectors at a layer lower than the current layer -->
     <xsl:variable name="lastNodeLowerLayerConnectionCount" select="
 			count(key('wayByNode',$lastNode/@id)/tag[@k='layer' and @v &lt; $layer]) +
@@ -544,21 +563,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
-          <xsl:with-param name="extraClasses">osmarender-no-marker-start</xsl:with-param>
+          <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-no-marker-start</xsl:with-param>
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$lastNodeLowerLayerConnectionCount>0">
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
-          <xsl:with-param name="extraClasses">osmarender-stroke-linecap-butt osmarender-no-marker-start</xsl:with-param>
+          <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-butt osmarender-no-marker-start</xsl:with-param>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
-          <xsl:with-param name="extraClasses">osmarender-stroke-linecap-round osmarender-no-marker-start</xsl:with-param>
+          <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-round osmarender-no-marker-start</xsl:with-param>
         </xsl:call-template>
       </xsl:otherwise>
 

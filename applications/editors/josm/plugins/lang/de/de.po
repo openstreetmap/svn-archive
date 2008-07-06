@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-04 22:49+0200\n"
-"PO-Revision-Date: 2008-07-04 22:56+0200\n"
+"POT-Creation-Date: 2008-07-06 10:54+0200\n"
+"PO-Revision-Date: 2008-07-06 10:57+0200\n"
 "Last-Translator: Dirk Stöcker <lang@dstoecker.de>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -156,6 +156,8 @@ msgid "Click Reload to refresh list"
 msgstr "Auf \"Neu Laden\" klicken um die Liste zu aktualisieren"
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:86
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:86
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:111
 msgid "Reload"
 msgstr "Neu Laden"
 
@@ -440,6 +442,8 @@ msgstr "Relation wählen"
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:71
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
 #: ../../core/src/org/openstreetmap/josm/gui/MainMenu.java:115
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:85
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:105
 #: ../grid/src/grid/GridPlugin.java:43 ../grid/src/grid/GridPlugin.java:49
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/SpellCheck.java:401
 msgid "Edit"
@@ -1221,32 +1225,32 @@ msgstr "Kann Lesezeichen nicht lesen."
 msgid "Could not write bookmark."
 msgstr "Kann Lesezeichen nicht schreiben."
 
-#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:366
+#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:373
 msgid "Unknown type"
 msgstr "Unbekannter Typ"
 
-#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:407
+#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:414
 msgid "Error parsing presets.xml: "
 msgstr "Fehler beim Parsen von presets.xml: "
 
-#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:426
+#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:433
 #, java-format
 msgid "Could not read tagging preset source: {0}"
 msgstr "Kann die Tagging Preset Quelle nicht lesen: {0}"
 
-#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:429
+#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:436
 #, java-format
 msgid "Error parsing {0}: "
 msgstr "Fehler beim Parsen {0}:"
 
-#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:462
+#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:469
 #, java-format
 msgid "Change {0} object"
 msgid_plural "Change {0} objects"
 msgstr[0] "Ändere {0} Objekt"
 msgstr[1] "Ändere {0} Objekte"
 
-#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:492
+#: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:499
 msgid "Change Properties"
 msgstr "Einstellungen ändern"
 
@@ -2023,10 +2027,6 @@ msgstr "Die Länge des neu zu zeichnenden Wegabschnittes."
 msgid "(no object)"
 msgstr "(kein Objekt)"
 
-#: ../../core/src/org/openstreetmap/josm/gui/MapStatus.java:336
-msgid "Statusline"
-msgstr "Statuszeile"
-
 #: ../../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:86
 msgid "false: the property is explicitly switched off"
 msgstr "falsch: Diese Eigenschaft wurde explicit ausgeschaltet"
@@ -2744,9 +2744,23 @@ msgstr ""
 "Wählt alle nicht gelöschten Objekte der Daten-Ebene. Dies wählt auch "
 "unvöllständige Objekte aus."
 
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:48
+msgid "JOSM Online Help"
+msgstr "JOSM-Onlinhilfe"
+
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:84
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:103
+msgid "Open in Browser"
+msgstr "Im Browser öffnen"
+
 #: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:107
 msgid "Can only edit help pages from JOSM Online Help"
 msgstr "Kann nur die Hilfe Seiten der JOSM Online Hilfe bearbeiten."
+
+#: ../../core/src/org/openstreetmap/josm/actions/HelpAction.java:168
+#, java-format
+msgid "Error while loading page {0}"
+msgstr "Fehler beim laden der Seite {0}"
 
 #: ../../core/src/org/openstreetmap/josm/actions/DownloadAction.java:33
 msgid "Download from OSM ..."
@@ -3181,7 +3195,7 @@ msgid "Duplicate selection by copy and immediate paste."
 msgstr "Verdoppelt die Selektion durch Kopieren und sofortiges Einfügen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:54
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:138
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:139
 msgid "Merge Nodes"
 msgstr "Knotenpunkte vereinigen"
 
@@ -5804,7 +5818,7 @@ msgstr "Erholungsgebiet bearbeiten"
 
 #: ../lang/presets.java:1771
 msgid "Natural/Water"
-msgstr "Natur/Wasserf"
+msgstr "Natur/Wasser"
 
 #: ../lang/presets.java:1772
 msgid "Edit Water"
@@ -6836,7 +6850,7 @@ msgstr "Dieser Test überprüft auf doppelte Knoten an der selben Stelle."
 msgid "Duplicated nodes"
 msgstr "Doppelte Knoten"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:109
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:110
 msgid "Nodes have conflicting key: "
 msgstr "Knoten haben unverreinbare Schlüssel: "
 
@@ -6884,6 +6898,18 @@ msgstr "Falsch geordnete Wege."
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:33
 msgid "This test checks the direction of water, land and coastline ways."
 msgstr "Dieser Test überprüft die Richtung von Wasser, Land und Küsten."
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:63
+msgid "Clockwise coastline"
+msgstr "Küstenlinie im Uhrzeigersinn"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:65
+msgid "Clockwise water"
+msgstr "Wasser im Uhrzeigersinn"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:67
+msgid "Clockwise land"
+msgstr "Land im Uhrzeigersinn"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:34
 msgid "Crossing ways."
@@ -7025,6 +7051,10 @@ msgstr "Bitte mindestens einen Weg auswählen."
 #: ../duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:240
 msgid "Create duplicate way"
 msgstr "Weg duplizieren"
+
+#: ../openlayers/src/org/openstreetmap/josm/plugins/openLayers/OpenLayersPlugin.java:44
+msgid "OpenLayers"
+msgstr "OpenLayers"
 
 #: ../slippy_map_chooser/src/OsmMapControl.java:63
 msgid "left"

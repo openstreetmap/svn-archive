@@ -864,23 +864,23 @@
             }
 
 
-			/* Railways - generic styles */
+            /* Railways - generic styles */
             .railway-casing {
-				stroke-linecap: butt;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
 
-			.railway-core {
+            .railway-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
-			}				
+            }
 
 
             /* Highways - generic styles */
             .highway-casing {
-				stroke-linecap: square;
+                stroke-linecap: square;
                 stroke-linejoin: round;
                 fill: none;
             }
@@ -896,7 +896,7 @@
             stroke: #4D5D73;
             stroke-width: 2px;
             }
-            
+
             .highway-motorway-junction-caption {
             fill: black;
             stroke: blue;
@@ -906,13 +906,13 @@
             font-weight: bold;
             display: none;
             }
-            
+
             .highway-ref {
                 fill: #666666;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
-				text-anchor: middle;
+                text-anchor: middle;
             }
 
             .highway-name {
@@ -920,7 +920,7 @@
                 font-family: "DejaVu Sans";
                 font-weight: normal;
                 stroke: white;
-				text-anchor: middle;
+                text-anchor: middle;
              }
 
             .bridge-casing {
@@ -931,16 +931,16 @@
                 marker-start: url(#bridge-casing-start);
                 marker-end: url(#bridge-casing-end);
             }
-			
-			.bridge-core {
+
+            .bridge-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #f8f8f8;
                 fill: none;
-			}
+            }
 
             .tunnel-casing {
-				stroke-linecap: butt;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
@@ -951,7 +951,7 @@
                 fill: none;
             }
 
-			.tunnel { stroke-dasharray: 1.6, 1.6; }
+            .tunnel { stroke-dasharray: 1.6, 1.6; }
 
 
             .railway-rail-casing                    { stroke-width: 8.0px;  stroke: #aaaaaa; }
@@ -975,7 +975,7 @@
 
             .railway-preserved-casing               { stroke-width: 3.0px; stroke: #666666; }
             .railway-preserved-core                 { stroke-width: 2.5px; stroke: #666666; }
-      
+
             .railway-monorail-casing                { stroke-width: 3.0px; stroke: #666666; }
             .railway-monorail-core                  { stroke-width: 2.5px; stroke: #a65ca3; }
 
@@ -1017,7 +1017,7 @@
             .highway-tertiary-area-casing           { stroke-width: 0.5px; }
             .highway-tertiary-core                  { stroke-width: 5.5px;  stroke: #f7f496; }
             .highway-tertiary-area                  { fill: #f7f496; }
-              
+
             .highway-unclassified-casing            { stroke-width: 6px; stroke: #222222; }
             .highway-unclassified-area-casing       { stroke-width: 0.5px; }
             .highway-unclassified-core              { stroke-width: 5.5px; stroke: #ffffff; }
@@ -1252,17 +1252,17 @@
 
 
             /* Place names */
-			/* General style for place names */
-			.place-caption {
-				fill: black;
-				stroke: none;
+            /* General style for place names */
+            .place-caption {
+                fill: black;
+                stroke: none;
                 font-family: "DejaVu Sans";
                 font-weight: bold;
-				text-anchor: middle;
-			}
-			
+                text-anchor: middle;
+            }
+
             .caption-casing {
-				fill: white;
+                fill: white;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: bold;
@@ -1279,8 +1279,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-			.city-caption           { font-size: 50px; }
-			.town-caption           { font-size: 40px; }
+            .city-caption           { font-size: 50px; }
+            .town-caption           { font-size: 40px; }
             .island-caption         { font-size: 50px; }
             .islet-caption          { font-size: 20px; }
             .village-caption        { font-size: 20px; }
@@ -1372,26 +1372,26 @@
                 stroke-width: 0.2px;
             }
 
-			.landuse-runway {
-			  stroke-width: 0.3px;
-			  stroke: #808080;
-			  fill: #d4dcbd;
-			  }
+            .landuse-runway {
+              stroke-width: 0.3px;
+              stroke: #808080;
+              fill: #d4dcbd;
+              }
 
-			.landuse-runway-disused {
-			  stroke-width: 0.3px;
-			  stroke: #808080;
-			  fill: #d4dcbd;
-			  stroke-dasharray: 1, 1;
-			  }
+            .landuse-runway-disused {
+              stroke-width: 0.3px;
+              stroke: #808080;
+              fill: #d4dcbd;
+              stroke-dasharray: 1, 1;
+              }
 
-			.landuse-runway-dismantled {
-			  stroke-width: 0.3px;
-			  stroke: #808080;
-			  fill: #fcffef;
-			  stroke-dasharray: 0.3, 1.7;
-			  opacity: 0.5;
-			  }
+            .landuse-runway-dismantled {
+              stroke-width: 0.3px;
+              stroke: #808080;
+              fill: #fcffef;
+              stroke-dasharray: 0.3, 1.7;
+              opacity: 0.5;
+              }
 
 
             /* Leisure */
@@ -1436,7 +1436,7 @@
                 stroke: #B36C4C;
                 stroke-width: 0.2px;
             }
-            
+
             .amenity-parking {
                 fill: #f7efb7;
                 stroke: #e9dd72;
@@ -1452,124 +1452,124 @@
             .military-area {
                 fill: #969632;
                 stroke: #eeeeee;
-                stroke-width: 0.2px;                                          
+                stroke-width: 0.2px;
             }
-            
 
-			/* Non-physical boundaries */
+
+            /* Non-physical boundaries */
             .boundary {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
             }
 
-			.boundary-administrative-state-casing {
-				stroke-width: 40px; 
-				stroke: #ffff00;
-				opacity: 0.5;
-			}
+            .boundary-administrative-state-casing {
+                stroke-width: 40px;
+                stroke: #ffff00;
+                opacity: 0.5;
+            }
 
-			.boundary-administrative-state-core {
-				stroke-width: 4px; 
-				stroke: #f9574b;
-				stroke-dasharray: 40, 8, 8, 8;
-			}
-
-
-			.boundary-administrative-district-core {
-				stroke-width: 4px; 
-				stroke: #f9574b;
-				stroke-dasharray: 20, 8, 8, 8;
-			}
-
-			.boundary-administrative-parish-core {
-				stroke-width: 4px; 
-				stroke: #f9574b;
-				stroke-dasharray: 8, 8, 8, 8;
-			}
+            .boundary-administrative-state-core {
+                stroke-width: 4px;
+                stroke: #f9574b;
+                stroke-dasharray: 40, 8, 8, 8;
+            }
 
 
-			/* Racetracks */
-			.highway-raceway-casing {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #101010;
-			  }
+            .boundary-administrative-district-core {
+                stroke-width: 4px;
+                stroke: #f9574b;
+                stroke-dasharray: 20, 8, 8, 8;
+            }
 
-			.highway-raceway-casing-disused {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #808080;
-			  stroke-dasharray: 1, 1;
-			  }
+            .boundary-administrative-parish-core {
+                stroke-width: 4px;
+                stroke: #f9574b;
+                stroke-dasharray: 8, 8, 8, 8;
+            }
 
-			.highway-raceway-casing-dismantled {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #808080;
-			  stroke-dasharray: 0.3, 1.7;
-			  opacity: 0.5;
-			  }
 
-			.highway-raceway-core {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #f0f0f0;
-			  }
+            /* Racetracks */
+            .highway-raceway-casing {
+              stroke-width: 2px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #101010;
+              }
 
-			.highway-raceway-core-disused {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke-dasharray: 1, 1;
-			  stroke: #f7f7f7;
-			  }
+            .highway-raceway-casing-disused {
+              stroke-width: 2px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #808080;
+              stroke-dasharray: 1, 1;
+              }
 
-			.highway-raceway-core-dismantled {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: none;
-			  stroke: #fbfbfb;
-			  stroke-dasharray: 0.3, 1.7;
-			  opacity: 0.5;
-			  }
-			  
-			.landuse-raceway {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #f0f0f0;
-			  stroke: #101010;
-			  }
+            .highway-raceway-casing-dismantled {
+              stroke-width: 2px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #808080;
+              stroke-dasharray: 0.3, 1.7;
+              opacity: 0.5;
+              }
 
-			.landuse-raceway-disused {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #f7f7f7;
-			  stroke: #808080;
-			  stroke-dasharray: 1, 1;
-			  }
+            .highway-raceway-core {
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #f0f0f0;
+              }
 
-			.landuse-raceway-dismantled {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
-			  fill: #fbfbfb;
-			  stroke: #808080;
-			  stroke-dasharray: 0.3, 1.7;
-			  opacity: 0.5;
-			  }
+            .highway-raceway-core-disused {
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke-dasharray: 1, 1;
+              stroke: #f7f7f7;
+              }
+
+            .highway-raceway-core-dismantled {
+              stroke-width: 1.5px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: none;
+              stroke: #fbfbfb;
+              stroke-dasharray: 0.3, 1.7;
+              opacity: 0.5;
+              }
+
+            .landuse-raceway {
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #f0f0f0;
+              stroke: #101010;
+              }
+
+            .landuse-raceway-disused {
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #f7f7f7;
+              stroke: #808080;
+              stroke-dasharray: 1, 1;
+              }
+
+            .landuse-raceway-dismantled {
+              stroke-width: 0.3px;
+              stroke-linecap: butt;
+              stroke-linejoin: round;
+              fill: #fbfbfb;
+              stroke: #808080;
+              stroke-dasharray: 0.3, 1.7;
+              opacity: 0.5;
+              }
 
 
             /* Tourism */
@@ -1641,41 +1641,41 @@
                 font-weight: normal;
                 font-size: 5px;
                 stroke: none;
-				text-anchor: middle;
+                text-anchor: middle;
             }
 
-		/* Piste maps */
-		.piste-core {
-			fill: none;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-			stroke-width: 5px;
-			opacity: 0.8;
-		}
+        /* Piste maps */
+        .piste-core {
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 5px;
+            opacity: 0.8;
+        }
 
-		.piste-difficulty-novice       { stroke: #31ff31; }
-		.piste-difficulty-easy         { stroke: #3131ff; }
-		.piste-difficulty-intermediate { stroke: #ff3131; }
-		.piste-difficulty-advanced     { stroke: #060606; }
-		.piste-difficulty-expert       { stroke: #f6800a; }
-		.piste-difficulty-freeride     { stroke: #f6dd0a; }
-		.piste-difficulty-other        { stroke: #505050; }
+        .piste-difficulty-novice       { stroke: #31ff31; }
+        .piste-difficulty-easy         { stroke: #3131ff; }
+        .piste-difficulty-intermediate { stroke: #ff3131; }
+        .piste-difficulty-advanced     { stroke: #060606; }
+        .piste-difficulty-expert       { stroke: #f6800a; }
+        .piste-difficulty-freeride     { stroke: #f6dd0a; }
+        .piste-difficulty-other        { stroke: #505050; }
 
-		.piste-type-sled {
-			fill: none;
-			/* stroke: #8040a0; */
-			stroke: #cdabde;
-			stroke-width: 2.5px;
-			marker-start:url(#marker-piste-type-sled);
-		}
+        .piste-type-sled {
+            fill: none;
+            /* stroke: #8040a0; */
+            stroke: #cdabde;
+            stroke-width: 2.5px;
+            marker-start:url(#marker-piste-type-sled);
+        }
 
-		.piste-type-nordic {
-			fill: none;
-			stroke: #c00000;
-			stroke-width: 1px;
-			stroke-dasharray: 3,0.5;
-			marker-start:url(#marker-piste-type-nordic);
-		}
+        .piste-type-nordic {
+            fill: none;
+            stroke: #c00000;
+            stroke-width: 1px;
+            stroke-dasharray: 3,0.5;
+            marker-start:url(#marker-piste-type-nordic);
+        }
 
             /* Power line */
             .power-line {
@@ -1763,23 +1763,23 @@
             .map-marginalia-background {
                 fill: white;
             }
-            
-			.highway-tunnel-ends {
-				stroke-opacity: 0;
-				fill: none;
-				marker-start: url(#marker-tunnel-start);
-				marker-end: url(#marker-tunnel-end);
-			 }
 
-			/* Osmarender built-in styles - do not remove */
-			.osmarender-stroke-linecap-round { stroke-linecap: round; }
-			.osmarender-stroke-linecap-butt { stroke-linecap: butt; }
-			.osmarender-mask-black { stroke: black; }
-			.osmarender-mask-white { stroke: white; }
-			.osmarender-no-marker-start { marker-start: none; }
-			.osmarender-no-marker-end { marker-end: none; }
+            .highway-tunnel-ends {
+                stroke-opacity: 0;
+                fill: none;
+                marker-start: url(#marker-tunnel-start);
+                marker-end: url(#marker-tunnel-end);
+             }
 
-            
+            /* Osmarender built-in styles - do not remove */
+            .osmarender-stroke-linecap-round { stroke-linecap: round; }
+            .osmarender-stroke-linecap-butt { stroke-linecap: butt; }
+            .osmarender-mask-black { stroke: black; }
+            .osmarender-mask-white { stroke: white; }
+            .osmarender-no-marker-start { marker-start: none; }
+            .osmarender-no-marker-end { marker-end: none; }
+
+
         </style>
 
         <svg:marker id="bridge-casing-start" fill="none" stroke-width="0.1px" stroke="#777777" markerWidth="1px" markerHeight="1px" orient="auto">

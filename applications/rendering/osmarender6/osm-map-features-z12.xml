@@ -754,7 +754,7 @@
                 stroke: #e0e0e0;
                 stroke-dasharray: 0.5,0.5;
             }
-            
+
 			/* Railways - generic styles */
             .railway-casing {
 				stroke-linecap: butt;
@@ -787,7 +787,7 @@
             stroke: #4D5D73;
             stroke-width: 3px;
             }
-            
+
             .highway-motorway-junction-caption {
             fill: black;
             stroke: blue;
@@ -797,7 +797,7 @@
             font-weight: bold;
             display: none;
             }
-            
+
             .highway-ref {
                 fill: #666666;
                 stroke: white;
@@ -863,7 +863,7 @@
 
             .railway-preserved-casing               { stroke-width: 6.0px; stroke: #666666; }
             .railway-preserved-core                 { stroke-width: 5.5px; stroke: #666666; }
-      
+
             .railway-monorail-casing                { stroke-width: 6.0px; stroke: #666666; }
             .railway-monorail-core                  { stroke-width: 5.5px; stroke: #a65ca3; }
 
@@ -896,7 +896,7 @@
             .highway-tertiary-area-casing           { stroke-width: 0.25px; }
 			.highway-tertiary-core                  { stroke-width: 4.75px;  stroke: #f7f496; }
 			.highway-tertiary-area                  { fill: #f7f496; }
-              
+
             .highway-unclassified-casing            { stroke-width: 5px; stroke: #c0c0c0; }
             .highway-unclassified-area-casing       { stroke-width: 3.8px; }
             .highway-unclassified-core              { stroke-width: 1.2px; stroke: #ffffff; }
@@ -1291,25 +1291,25 @@
             }
 
 			.boundary-administrative-state-casing {
-				stroke-width: 80px; 
+				stroke-width: 80px;
 				stroke: #ffff00;
 				opacity: 0.5;
 			}
 
 			.boundary-administrative-state-core {
-				stroke-width: 8px; 
+				stroke-width: 8px;
 				stroke: #f9574b;
 				stroke-dasharray: 80, 16, 16, 16;
 			}
 
 			.boundary-administrative-district-core {
-				stroke-width: 8px; 
+				stroke-width: 8px;
 				stroke: #f9574b;
 				stroke-dasharray: 40, 16, 16, 16;
 			}
 
 			.boundary-administrative-parish-core {
-				stroke-width: 8px; 
+				stroke-width: 8px;
 				stroke: #f9574b;
 				stroke-dasharray: 16, 16, 16, 16;
 			}
@@ -1318,26 +1318,26 @@
 
 			/* Racetracks */
 			.highway-raceway-casing {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 2px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: none;
 			  stroke: #101010;
 			  }
 
 			.highway-raceway-casing-disused {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 2px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: none;
 			  stroke: #808080;
 			  stroke-dasharray: 1, 1;
 			  }
 
 			.highway-raceway-casing-dismantled {
-			  stroke-width: 2px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 2px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: none;
 			  stroke: #808080;
 			  stroke-dasharray: 0.3, 1.7;
@@ -1345,53 +1345,53 @@
 			  }
 
 			.highway-raceway-core {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 1.5px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: none;
 			  stroke: #f0f0f0;
 			  }
 
 			.highway-raceway-core-disused {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 1.5px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: none;
 			  stroke-dasharray: 1, 1;
 			  stroke: #f7f7f7;
 			  }
 
 			.highway-raceway-core-dismantled {
-			  stroke-width: 1.5px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 1.5px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: none;
 			  stroke: #fbfbfb;
 			  stroke-dasharray: 0.3, 1.7;
 			  opacity: 0.5;
 			  }
-			  
+			
 			.landuse-raceway {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 0.3px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: #f0f0f0;
 			  stroke: #101010;
 			  }
 
 			.landuse-raceway-disused {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 0.3px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: #f7f7f7;
 			  stroke: #808080;
 			  stroke-dasharray: 1, 1;
 			  }
 
 			.landuse-raceway-dismantled {
-			  stroke-width: 0.3px; 
-			  stroke-linecap: butt; 
-			  stroke-linejoin: round; 
+			  stroke-width: 0.3px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
 			  fill: #fbfbfb;
 			  stroke: #808080;
 			  stroke-dasharray: 0.3, 1.7;
@@ -1414,7 +1414,7 @@
                 stroke: #eeeeee;
                 stroke-width: 0.2px;
             }
-                                                      
+
             /* Building */
             .building {
                 fill: #dddddd;

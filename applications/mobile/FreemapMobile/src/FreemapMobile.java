@@ -238,6 +238,7 @@ public class FreemapMobile extends MIDlet implements CommandListener,Parent
                 freemapStore.addCategory("hazard");
                 freemapStore.addCategory("info");
                 freemapStore.addCategory("directions");
+                freemapStore.addCategory("photo");
             }   
         }
         

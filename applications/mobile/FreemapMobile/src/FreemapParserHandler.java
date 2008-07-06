@@ -85,7 +85,9 @@ public class FreemapParserHandler extends LandmarkSourceParserHandler
 			}
 			catch(Exception e)
 			{
-				System.out.println("WARNING - could not create landmark : " + e);
+				app.showAlert("Couldn't create landmark",
+							"WARNING - could not create landmark : " + e,
+							AlertType.ERROR);
 			}
 		}
 		else if (qName.equals("description"))

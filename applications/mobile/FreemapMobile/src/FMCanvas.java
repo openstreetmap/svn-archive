@@ -21,7 +21,7 @@ public class FMCanvas extends Canvas
     int nTileRows, nTileCols;
     int state;
     int source;    
-    Image clock;
+    Image hourglass;
     FreemapMobile app;
     TileSource tileSource;
     boolean doShowPOIs;
@@ -60,7 +60,7 @@ public class FMCanvas extends Canvas
 
         try
         {
-        clock=Image.createImage("/hourglass.png");
+        hourglass=Image.createImage("/hourglass.png");
         
         }
         catch(IOException e)
@@ -111,12 +111,11 @@ public class FMCanvas extends Canvas
                 
             
             
-            g.setColor(0xff0000);
             g.fillArc(anX-topLeftX, anY-topLeftY, 10,10,0,360);
             }
         if (state==UPDATING)    
         {
-        Image im=clock;
+        Image im=hourglass;
         g.drawImage 
         (im,getWidth()/2-im.getWidth()/2,
         getHeight()/2-im.getHeight()/2,
@@ -124,6 +123,7 @@ public class FMCanvas extends Canvas
             }
             else
             {
+            	g.setColor(0xff0000);
                 g.drawLine(getWidth()/2-10,getHeight()/2-10,getWidth()/2+10,
                         getHeight()/2+10);
                 g.drawLine(getWidth()/2-10,getHeight()/2+10,

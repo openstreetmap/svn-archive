@@ -194,7 +194,7 @@ public class AnnotationManager implements CommandListener
             }
           }
         }
-        new AnnotationSendThread(annotation,type).run();
+        new AnnotationSendThread(annotation,type).start();
     }
 
 	public void commandAction(Command c, Displayable s)
@@ -223,7 +223,7 @@ public class AnnotationManager implements CommandListener
 			try
 			{
 		
-        Display.getDisplay(app).setCurrent(cameraTestCanvas);
+        	Display.getDisplay(app).setCurrent(cameraTestCanvas);
    				player.start();
    		}
    		catch(MediaException e)
@@ -241,62 +241,76 @@ public class AnnotationManager implements CommandListener
     		}
     		else
     		{
-      			try
-      			{
-      				byte[] imgBytes = videoControl.getSnapshot("encoding=jpeg");
-					String encoded=new String(Base64Coder.encode(imgBytes));
-					String url= "http://www.free-map.org.uk/freemap/"+
-									"uploadphoto.php";
-					int byteno=0,count=0;
-					int cs=2000;
-					System.out.println(encoded.length());
-					while(byteno<encoded.length())	
-					{
-						System.out.println(byteno);
-						String data="n="+(count++)+"&id="+id+"&d=";
-						String ext=encoded.substring(byteno,	
-										Math.min(byteno+(cs-data.length()),
-										encoded.length()));	
-						String send=data+ext;
-						HttpConnection conn=
-										(HttpConnection)Connector.open(url);
-						conn.setRequestMethod(HttpConnection.POST);
-						conn.setRequestProperty("Content-Type",
-									"application/x-www-form-urlencoded");
-						conn.setRequestProperty("Content-Length",
-											String.valueOf(send.length()));
-						OutputStream os= conn.openOutputStream();
-						os.write(send.getBytes());
-						os.close();	
-						byteno+=(cs-data.length());
-					}
-					// Instruct server to reassemble chunks
-					String send="action=reassemble&id="+id+"&n="+count;
-					HttpConnection conn= (HttpConnection)Connector.open(url); 
-					conn.setRequestMethod(HttpConnection.POST);
-					conn.setRequestProperty("Content-Type",
-									"application/x-www-form-urlencoded");
-					conn.setRequestProperty("Content-Length",
-											String.valueOf(send.length()));
-					OutputStream os= conn.openOutputStream();
-					os.write(send.getBytes());
-					os.close();	
-      			}
-				catch(MediaException e)
-				{ 
-					app.showAlert("Error capturing photo",e.toString(),	
-								AlertType.ERROR);
-				}
-				catch(IOException e)
-				{ 
-					app.showAlert("Error uploading photo",e.toString(),	
-								AlertType.ERROR);
-				}
-				catch(Exception e)
+				new Thread()
 				{
-				  app.showAlert("Other exception",e.toString(),
+					public void run()
+					{	
+      					try
+      					{
+							// TESTED: we can successfully upload a photo 
+							// (loaded in from a file) in chunks and 
+							// reassemble it on the server.
+      						byte[] imgBytes=videoControl.getSnapshot
+									("encoding=jpeg");
+							String encoded=new String
+								(Base64Coder.encode(imgBytes));
+							String url= "http://www.free-map.org.uk/freemap/"+
+									"uploadphoto.php";
+							int byteno=0,count=0;
+							int chunkSize=2000; 
+							System.out.println(encoded.length());
+							String data,ext,send;
+							while(byteno<encoded.length())	
+							{
+								System.out.println(byteno);
+								data="n="+(count++)+"&id="+id+"&d=";
+								ext=encoded.substring(byteno,	
+										Math.min
+										(byteno+(chunkSize-data.length()),
+										encoded.length()));	
+								send=data+ext;
+								HttpConnection conn=
+										(HttpConnection)Connector.open(url);
+								conn.setRequestMethod(HttpConnection.POST);
+								conn.setRequestProperty("Content-Type",
+									"application/x-www-form-urlencoded");
+								conn.setRequestProperty("Content-Length",
+											String.valueOf(send.length()));
+								OutputStream os= conn.openOutputStream();
+								os.write(send.getBytes());
+								os.close();	
+								byteno+=(chunkSize-data.length());
+							}
+							// Instruct server to reassemble chunks
+							send="action=reassemble&id="+id+"&n="+count;
+							HttpConnection conn= 
+								(HttpConnection)Connector.open(url); 
+							conn.setRequestMethod(HttpConnection.POST);
+							conn.setRequestProperty("Content-Type",
+									"application/x-www-form-urlencoded");
+							conn.setRequestProperty("Content-Length",
+											String.valueOf(send.length()));
+							OutputStream os= conn.openOutputStream();
+							os.write(send.getBytes());
+							os.close();	
+						}
+						catch(MediaException e)
+						{ 
+							app.showAlert("Error capturing photo",e.toString(),	
+								AlertType.ERROR);
+						}
+						catch(IOException e)
+						{ 
+							app.showAlert("Error uploading photo",e.toString(),	
+								AlertType.ERROR);
+						}
+						catch(Exception e)
+						{
+				  			app.showAlert("Other exception",e.toString(),
 							AlertType.ERROR);
-        		}
+        				}
+					}
+				}.start();
     		}
 	   	}
     }

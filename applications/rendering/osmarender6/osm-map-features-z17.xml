@@ -855,7 +855,7 @@
                     <line class="railway-core railway-rail-2-core" smart-linecap="no"/>
                 </rule>
                 <rule e="way" k="railway" v="abandoned">
-                    <rule w="way" k="bridge" v="yes|true">
+                    <rule e="way" k="bridge" v="yes|true">
                         <line class="railway-core railway-rail-1-core"/>
                     </rule>
                 </rule>

@@ -62,7 +62,10 @@ dd {
 	radius:8pt;
 	-moz-border-radius:8pt 8pt;
 }
-
+#topcontainer {
+	width:100%;
+	position:relative;
+}
 #moveMe {
 	font-size:15px;
 	text-align:center;
@@ -75,24 +78,27 @@ dd {
 }
 
 #menu {
+	height:auto;
 	width:100%;
 	overflow:hidden;
 	display:none;
 }
 
 #menu_views {
+	height:auto;
 	width:100%;
 	overflow:hidden;
 	display:none;
 }
 
 #toolbar {
-	height:25px;
+	height:auto;
 	width:100%;
 	overflow:hidden;
 }
 
 #toolbar_views {
+	height:auto;
 	width:100%;
 	overflow:hidden;
 }
@@ -104,15 +110,13 @@ dd {
 }
 
 #main_content {
-	top:65px;
-	padding:10px;
 	overflow:auto;
-	position:relative;
-	height:80%;
 	width:100%;
 }
 
 #svgfile {
+	height:100%;
+	width:100%;
 	overflow:auto;
 	position:absolute;
 }
@@ -172,7 +176,6 @@ dd {
 	}
 
 #result_symbols {
-	top:25px;
 	height:100%;
 	width:100%;
 	position:relative;
@@ -180,7 +183,6 @@ dd {
 }
 
 #result_process_rules {
-	top:25px;
 	height:100%;
 	width:100%;
 	position:relative;
@@ -188,7 +190,13 @@ dd {
 }
 
 #result_process_key {
-	top:25px;
+	height:100%;
+	width:100%;
+	position:relative;
+	display:none;
+}
+
+#result_settings {
 	height:100%;
 	width:100%;
 	position:relative;

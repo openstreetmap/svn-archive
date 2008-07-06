@@ -8,7 +8,7 @@ var cmyk;
 
 var classesAndProperties = new Array();
 
-var server;
+var OSMARENDER_LOCATION="";
 
 var dojowidgets = new Array();
 
@@ -407,11 +407,13 @@ function updateProgressBar() {
 }
 
 var onLoadTransform;
-var osmfilename;
-loadOsmAndRules = function(rulesfilename,osmfilenameOut,ProgressBarTotal,ProgressBarStep,TransformonLoad) {
 
+loadOsmAndRules = function(rulesfilename,osmfilename,ProgressBarTotal,ProgressBarStep,TransformonLoad) {
+
+	rulesfilename = location.href.substring(0,location.href.lastIndexOf("/")+1)+rulesfilename;
+	osmfilename = location.href.substring(0,location.href.lastIndexOf("/")+1)+osmfilename;
+	OSMARENDER_LOCATION = location.href.substring(0,location.href.lastIndexOf("/")+1);
 	onLoadTransform=TransformonLoad;
-	osmfilename=osmfilenameOut;
 
 	with (progressData) {
 		with(total) {
@@ -431,17 +433,25 @@ loadOsmAndRules = function(rulesfilename,osmfilenameOut,ProgressBarTotal,Progres
 	with (progressData) {
 		with(total) {
 			progress++;
-			message = "Getting rules file nodes";
+			message = "Getting rules file elements";
 		}
 	}
 	updateProgressBar();
 
-	cmyk = new CMYK(rulesfilename,progressData,updateProgressBar,AfterCMYKLoad);
+	cmyk = new CMYK(rulesfilename,osmfilename,progressData,updateProgressBar,AfterCMYKLoad);
 	
 }
 
 AfterCMYKLoad = function() {
-	cmyk.setOsmFile(osmfilename);
+
+	with (progressData) {
+		with(total) {
+			progress++;
+			message = "Drawing key/value pairs";
+		}
+	}
+	updateProgressBar();
+	listKeys();
 
 	with (progressData) {
 		with(total) {
@@ -456,11 +466,22 @@ AfterCMYKLoad = function() {
 	with (progressData) {
 		with(total) {
 			progress++;
-			message = "Drawing interface";
+			message = "Getting symbols";
+		}
+	}
+
+	updateProgressBar();
+
+	with (progressData) {
+		with(total) {
+			progress++;
+			message = "Creating Settings interface";
 		}
 	}
 	updateProgressBar();
 
+	SettingsResults();
+	
 
 	var div_result = document.getElementById("result_process_rules");
 
@@ -561,9 +582,7 @@ AfterCMYKLoad = function() {
 	document.getElementById("menu").style.display="block";
 	document.getElementById("menu_views").style.display="block";
 	div_result.style.display="block";
-	
 	if (onLoadTransform) Osmatransform();
-
 }
 
 SymbolsResult = function() {
@@ -620,6 +639,13 @@ SymbolsResult = function() {
 	div_symbol.setAttribute("id","div_viewSymbol");
 	div_result.appendChild(div_symbol);
 }
+
+SettingsResults = function() {
+	div_results = dojo.byId("result_settings");
+	div_results.innerHTML = '<div id="settings_bounds" style="border: 1px solid black;"><h1>Set bounds</h1>Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value='+cmyk.getBounds().lat.max+' smallDelta=0.001 style="width:10em;height:1.1em;"/><br />Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value='+cmyk.getBounds().lat.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value='+cmyk.getBounds().lon.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value='+cmyk.getBounds().lon.max+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br /><input id="transform_on_set" dojoType="dijit.form.CheckBox">Render on Set Bounds<br /><button id="button_set_bounds" dojoType="dijit.form.Button">Set Bounds<script type="dojo/method" event="onClick">setBounds(dojo.byId("BoundsNorth").value,dojo.byId("BoundsSouth").value,dojo.byId("BoundsEast").value,dojo.byId("BoundsWest").value);if(dojo.byId("transform_on_set").checked) Osmatransform();</script></button></div>';
+	dojo.parser.parse(div_results);
+}
+
 
 viewSymbol = function(svg_url) {
 	if (cmyk.getRulesFile().getElementById(svg_url)) {
@@ -703,20 +729,40 @@ viewSymbol = function(svg_url) {
 
 displayLoad = function() {
 	document.getElementById("result_process_rules").style.display="none";
+	document.getElementById("result_settings").style.display="none";
 	document.getElementById("result_process_key").style.display="none";
 	document.getElementById("result_symbols").style.display="none";
 	document.getElementById("load_file").style.display="block";
 	//if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
 }
 
+displaySettings = function() {
+	document.getElementById("result_process_rules").style.display="none";
+	document.getElementById("result_settings").style.display="block";
+	document.getElementById("result_process_key").style.display="none";
+	document.getElementById("result_symbols").style.display="none";
+	document.getElementById("load_file").style.display="none";
+	//if (cmyk!=undefined) document.getElementById("return_to_rules").style.display="block";
+}
+
 displayRules = function() {
 	document.getElementById("load_file").style.display="none";
+	document.getElementById("result_settings").style.display="none";
 	document.getElementById("result_symbols").style.display="none";
 	document.getElementById("result_process_key").style.display="none";
 	document.getElementById("result_process_rules").style.display="block";
 }
 
+displayKeyValue = function() {
+	document.getElementById("load_file").style.display="none";
+	document.getElementById("result_settings").style.display="none";
+	document.getElementById("result_symbols").style.display="none";
+	document.getElementById("result_process_key").style.display="block";
+	document.getElementById("result_process_rules").style.display="none";
+}
+
 displaySymbols = function() {
+	document.getElementById("result_settings").style.display="none";
 	document.getElementById("load_file").style.display="none";
 	document.getElementById("result_symbols").style.display="block";
 	document.getElementById("result_process_key").style.display="none";
@@ -738,44 +784,8 @@ refreshProperties = function() {
 	return sorted_list_of_unique_classes.sort();
 }
 
-// This section will be ported into cmyk.js file, to divide it into logical MVC sections
-var elements = new Array("nodes","ways");
-
 listKeys = function() {
-	elements["nodes"] = new Array();
-	elements["ways"] = new Array();
-
-	var scripts = document.getElementsByTagName("script");
-
-	for (script in scripts) {
-		if (typeof(scripts[script])=="object" && scripts[script].getAttribute("of_server")!=null && scripts[script].getAttribute("of_server")!=undefined) {
-			server = scripts[script].getAttribute("of_server");
-		}
-	}
-
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("GET", server+osmfilename, false);  
-	xmlhttp.send('');
-	osmfile=xmlhttp.responseXML;
-
-	nodes = osmfile.documentElement.selectNodes("//node");
-	ways = osmfile.documentElement.selectNodes("//way");
-
-	for (var nodes_counter = 0; nodes_counter < nodes.length; nodes_counter++) {
-		var nodetags = nodes[nodes_counter].selectNodes("tag");
-		var addmetags = elements["nodes"][nodes[nodes_counter].getAttribute("id")]=new Array();
-		for (var nodetag_counter = 0; nodetag_counter < nodetags.length; nodetag_counter++) {
-			addmetags[nodetags[nodetag_counter].getAttribute("k")] = nodetags[nodetag_counter].getAttribute("v");
-		}
-	}
-
-	for (var ways_counter = 0; ways_counter < ways.length; ways_counter++) {
-		var waytags = ways[ways_counter].selectNodes("tag");
-		var addmetags = elements["ways"][ways[ways_counter].getAttribute("id")]=new Array();
-		for (var waytag_counter = 0; waytag_counter < waytags.length; waytag_counter++) {
-			addmetags[waytags[waytag_counter].getAttribute("k")] = waytags[waytag_counter].getAttribute("v");
-		}
-	}
+	var elements = cmyk.getKeyValuePairs();
 
 	var sorted_list_of_unique_keys = new Array();
 	
@@ -792,10 +802,6 @@ listKeys = function() {
 	}
 
 	sorted_list_of_unique_keys = RemoveDuplicates(sorted_list_of_unique_keys.sort());
-	
-	document.getElementById("result_process_rules").style.display="none";
-	document.getElementById("result_symbols").style.display="none";
-	document.getElementById("load_file").style.display="none";
 	
 	var div_result = document.getElementById("result_process_key");
 	while (div_result.hasChildNodes()) {
@@ -819,22 +825,6 @@ listKeys = function() {
 	select_ways_key.setAttribute("id","select_feature_way");
 	select_ways_key.setAttribute("onchange","javascript:viewValuesFromKey(this.value);");
 	
-/*	var sorted_list_of_unique_keys = new Array();
-	
-	for (var dettaglio in elements.ways) {
-		for (var tag in elements.ways[dettaglio]) {
-			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
-		}
-	}
-	
-	for (var dettaglio in elements.nodes) {
-		for (var tag in elements.nodes[dettaglio]) {
-			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
-		}
-	}
-
-	sorted_list_of_unique_keys = RemoveDuplicates(sorted_list_of_unique_keys.sort());*/
-	
 	var new_option_null = createElementCB("option");
 	new_option_null.setAttribute("value","osmarender_frontend:null");
 	var new_option_null_text = document.createTextNode("Select a feature");
@@ -855,6 +845,8 @@ listKeys = function() {
 }
 
 function viewValuesFromKey(key) {
+	var elements = cmyk.getKeyValuePairs();
+
 	if (key=="osmarender_frontend:null") return false;
 	
 	var div_result = document.getElementById("result_process_key");
@@ -1026,16 +1018,8 @@ function RemoveDuplicates(arr) {
 //End section to port
 
 function Osmatransform () {
-	var scripts = document.getElementsByTagName("script");
-
-	for (script in scripts) {
-		if (typeof(scripts[script])=="object" && scripts[script].getAttribute("of_server")!=null && scripts[script].getAttribute("of_server")!=undefined) {
-			server = scripts[script].getAttribute("of_server");
-		}
-	}
-
 	var xmlhttp = new XMLHttpRequest();  
-	xmlhttp.open("GET", server+"osmarender.xsl", false);  
+	xmlhttp.open("GET", OSMARENDER_LOCATION+"osmarender.xsl", false);  
 	xmlhttp.send('');  
 	xslfile=xmlhttp.responseXML;
 	
@@ -1048,7 +1032,7 @@ function Osmatransform () {
 				document.getElementById("svgfile").removeChild(document.getElementById("svgfile").firstChild);
 			}
 			var title_container = createElementCB("h1");
-			var title = document.createTextNode("data file: "+osmfilename);
+			var title = document.createTextNode("data file: "+cmyk.getOsmFileName());
 			title_container.appendChild(title);
 			document.getElementById("svgfile").appendChild(title_container);
 			document.getElementById("svgfile").appendChild(svgfile.documentElement);
@@ -1155,3 +1139,7 @@ clearSVG = function() {
 		}
 		return false;
 	}
+
+setBounds = function(north,south,east,west) {
+	cmyk.setBounds(north,south,east,west);
+}

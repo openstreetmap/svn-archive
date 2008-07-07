@@ -32,11 +32,20 @@
     <copy todir="build/images">
       <fileset dir="images"/>
     </copy>
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="UtilsPlugin.UtilsPlugin"/>
 	<attribute name="Plugin-Description" value="Useful JOSM utilities"/>
-	<attribute name="Plugin-Version" value="0.5"/>
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 	<attribute name="Author"
 		   value="(originally) Martijn van Oosterhout &gt;kleptog@svana.org&gt;"/>
       </manifest>

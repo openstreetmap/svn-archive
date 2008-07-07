@@ -42,6 +42,8 @@ class messageModule(ranaModule):
           if(value == str(i)):
             value = i
         self.set(key, value)
+        if(key == "menu"):
+          self.set("needRedraw", True)
       elif(module == 'toggle'):
         self.set(text, not self.get(text,0))
       elif(module == "*"):

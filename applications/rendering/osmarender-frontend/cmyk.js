@@ -742,6 +742,15 @@ function parseKeyValuePairs(osmfile) {
 			return temp;
 		}
 	}
+//TODO: To port into the data model
+	setGlobalBooleanAttribute = function(attribute,show) {
+		with (rulesfile.getElementsByTagName("rules")[0]) {
+			if (show)
+				setAttribute(attribute,"yes");
+			else
+				setAttribute(attribute,"no");
+		}
+	}
 	
 };
 
@@ -925,6 +934,8 @@ CMYK.prototype.getBounds = function() {
 	return bounds;
 }
 
+//TODO: The following functions must be ported to a data model
+
 CMYK.prototype.setBounds = function(north,south,east,west) {
 	bounds.lon.min=east;
 	bounds.lon.max=west;
@@ -947,3 +958,30 @@ CMYK.prototype.setBounds = function(north,south,east,west) {
 		appendChild(bounds_tag);
 	}
 }
+
+
+CMYK.prototype.setShowScale = function(show) {
+	if (typeof(show)!="boolean") throw new Error("not a boolean");
+	setGlobalBooleanAttribute("showScale",show);
+}
+
+CMYK.prototype.setShowGrid = function(show) {
+	if (typeof(show)!="boolean") throw new Error("not a boolean");
+	setGlobalBooleanAttribute("showGrid",show);
+}
+
+CMYK.prototype.setShowBorder = function(show) {
+	if (typeof(show)!="boolean") throw new Error("not a boolean");
+	setGlobalBooleanAttribute("showBorder",show);
+}
+
+CMYK.prototype.setShowLicense = function(show) {
+	if (typeof(show)!="boolean") throw new Error("not a boolean");
+	setGlobalBooleanAttribute("showLicense",show);
+}
+
+CMYK.prototype.setShowInteractive = function(show) {
+	if (typeof(show)!="boolean") throw new Error("not a boolean");
+	setGlobalBooleanAttribute("interactive",show);
+}
+

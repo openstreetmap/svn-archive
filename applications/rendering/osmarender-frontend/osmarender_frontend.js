@@ -642,7 +642,10 @@ SymbolsResult = function() {
 
 SettingsResults = function() {
 	div_results = dojo.byId("result_settings");
-	div_results.innerHTML = '<div id="settings_bounds" style="border: 1px solid black;"><h1>Set bounds</h1>Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value='+cmyk.getBounds().lat.max+' smallDelta=0.001 style="width:10em;height:1.1em;"/><br />Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value='+cmyk.getBounds().lat.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value='+cmyk.getBounds().lon.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value='+cmyk.getBounds().lon.max+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br /><input id="transform_on_set" dojoType="dijit.form.CheckBox">Render on Set Bounds<br /><button id="button_set_bounds" dojoType="dijit.form.Button">Set Bounds<script type="dojo/method" event="onClick">setBounds(dojo.byId("BoundsNorth").value,dojo.byId("BoundsSouth").value,dojo.byId("BoundsEast").value,dojo.byId("BoundsWest").value);if(dojo.byId("transform_on_set").checked) Osmatransform();</script></button></div>';
+
+	if (dijit.byId("settings_container")) dijit.byId("settings_container").destroyRecursive();
+	
+	div_results.innerHTML = '<div id="settings_container" dojoType="dijit.layout.ContentPane"><div id="settings_bounds" dojoType="dijit.layout.ContentPane"><input id="transform_on_set_bounds" dojoType="dijit.form.CheckBox" />Render on Set Bounds<h1>Set bounds</h1><br />Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value='+cmyk.getBounds().lat.max+' smallDelta=0.001 style="width:10em;height:1.1em;"/><br />Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value='+cmyk.getBounds().lat.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value='+cmyk.getBounds().lon.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value='+cmyk.getBounds().lon.max+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br /><button id="button_set_bounds" dojoType="dijit.form.Button">Set Bounds<script type="dojo/method" event="onClick">setBounds(dojo.byId("BoundsNorth").value,dojo.byId("BoundsSouth").value,dojo.byId("BoundsEast").value,dojo.byId("BoundsWest").value);if(dojo.byId("transform_on_set_bounds").checked) Osmatransform();</script></button></div><div id="settings_show" dojoType="dijit.layout.ContentPane"><input id="transform_on_set_show" dojoType="dijit.form.CheckBox" />Render on Set Show<h1>Show:</h1><br /><input id="show_scale" dojoType="dijit.form.CheckBox" onClick="setShowScale(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show Scale<ul><li><a href="javascript:loadCSS(\'map-scale-casing\');">Change scale casing</a></li><li><a href="javascript:loadCSS(\'map-scale-core\');">Change scale core</a></li><li><a href="javascript:loadCSS(\'map-scale-bookend\');">Change scale bookend</a></li><li><a href="javascript:loadCSS(\'map-scale-caption\');">Change scale caption</a></li></ul><input id="showGrid" dojoType="dijit.form.CheckBox" onClick="setShowGrid(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show Grid<ul><li><a href="javascript:loadCSS(\'map-grid-line\');">Change grid color</a></li></ul><input id="show_border" dojoType="dijit.form.CheckBox" onClick="setShowBorder(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show Border<ul><li><a href="javascript:loadCSS(\'map-border-casing\');">Change border casing</a></li><li><a href="javascript:loadCSS(\'map-border-core\');">Change border core</a></li></ul><input id="show_license" dojoType="dijit.form.CheckBox" onClick="setShowLicense(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show License<br /><input id="show_interactive" dojoType="dijit.form.CheckBox" onClick="setShowInteractive(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Interactive Mode<br /></div></div>';
 	dojo.parser.parse(div_results);
 }
 
@@ -1142,4 +1145,29 @@ clearSVG = function() {
 
 setBounds = function(north,south,east,west) {
 	cmyk.setBounds(north,south,east,west);
+}
+
+setShowScale = function(show,transform) {
+	cmyk.setShowScale(show);
+	if (transform) Osmatransform();
+}
+
+setShowGrid = function(show,transform) {
+	cmyk.setShowGrid(show);
+	if (transform) Osmatransform();
+}
+
+setShowBorder = function(show,transform) {
+	cmyk.setShowBorder(show);
+	if (transform) Osmatransform();
+}
+
+setShowLicense = function(show,transform) {
+	cmyk.setShowLicense(show);
+	if (transform) Osmatransform();
+}
+
+setShowInteractive = function(show,transform) {
+	cmyk.setShowInteractive(show);
+	if (transform) Osmatransform();
 }

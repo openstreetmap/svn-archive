@@ -66,7 +66,7 @@ class placenames(poiModule):
       dist = dx * dx + dy * dy
       if(dist < nearestDist):
         nearestDist = dist
-        nearest = name
+        nearest =  place['name']
     if(0):
       if(nearest != None):
         print "Found %s at %1.4f km" % (nearest, math.sqrt(nearestDist) / kmToDeg)
@@ -90,7 +90,9 @@ class placenames(poiModule):
       pos = self.get('pos', None)
       if(pos != None):
         if(pos != self.lastpos):
-          self.set('nearest_place', self.lookup(pos['lat'], pos['lon']))
+          place = self.lookup(pos[0], pos[1])
+          if(place):
+            self.set('nearest_place', place)
           self.lastpos = pos
 
   def handleMessage(self, message):

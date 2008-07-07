@@ -1381,43 +1381,49 @@ gint Expose (void)
           #else
           SelectObject (mygc, pen[StyleNr (w) + 1]);
           #endif
+          int oldx = (nd->lon - clon) / perpixel + clip.width / 2;
+          int oldy = clip.height / 2 - (nd->lat - clat) / perpixel;
           do {
             ndType *next = ndBase + nd->other[1];
             if (next->lat == INT_MIN) break; // Node excluded from build
-            gdk_draw_line (draw->window, mygc,
-              (nd->lon - clon) / perpixel + clip.width / 2,
-              clip.height / 2 - (nd->lat - clat) / perpixel,
-              (next->lon - clon) / perpixel + clip.width / 2,
-              clip.height / 2 - (next->lat - clat) / perpixel);
-            #ifdef _WIN32_WCE
-            int newb = nd->lon > next->lon
-              ? nd->lon - next->lon : next->lon - nd->lon;
-            if (newb < nd->lat - next->lat) newb = nd->lat - next->lat;
-            if (newb < next->lat - nd->lat) newb = next->lat - nd->lat;
-            if (best < newb) {
-              best = newb;
-              bestW = (next->lon > nd->lon ? -1 : 1) * (next->lon - nd->lon);
-              bestH = (next->lon > nd->lon ? -1 : 1) * (next->lat - nd->lat);
-              x0 = next->lon / 2 + nd->lon / 2;
-              y0 = next->lat / 2 + nd->lat / 2;
+            int x = (next->lon - clon) / perpixel + clip.width / 2;
+            int y = clip.height / 2 - (next->lat - clat) / perpixel;
+            if ((x <= clip.width || oldx <= clip.width) &&
+                (x >= 0 || oldx >= 0) && (y >= 0 || oldy >= 0) &&
+                (y <= clip.height || oldy <= clip.height)) {
+              gdk_draw_line (draw->window, mygc, oldx, oldy, x, y);
+              #ifdef _WIN32_WCE
+              int newb = nd->lon > next->lon
+                ? nd->lon - next->lon : next->lon - nd->lon;
+              if (newb < nd->lat - next->lat) newb = nd->lat - next->lat;
+              if (newb < next->lat - nd->lat) newb = next->lat - nd->lat;
+              if (best < newb) {
+                best = newb;
+                bestW = (next->lon > nd->lon ? -1 : 1) * (next->lon - nd->lon);
+                bestH = (next->lon > nd->lon ? -1 : 1) * (next->lat - nd->lat);
+                x0 = next->lon / 2 + nd->lon / 2;
+                y0 = next->lat / 2 + nd->lat / 2;
+              }
+              #endif
+              #ifdef CAIRO_VERSION
+              __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
+                                 (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
+              if (lenSqr > maxLenSqr) {
+                maxLenSqr = lenSqr;
+                mat.yy = mat.xx = 12 * fabs (nd->lon - next->lon) / sqrt (lenSqr);
+                mat.xy = (nd->lon > next->lon ? 12.0 : -12.0) *
+                                            (nd->lat - next->lat) / sqrt (lenSqr);
+                mat.yx = -mat.xy;
+                x0 = clip.width / 2 + (nd->lon / 2 + next->lon / 2 - clon) /
+                  perpixel + mat.yx * f->descent / 12.0 - mat.xx / 12.0 * 3 * len;
+                y0 = clip.height / 2 - (nd->lat / 2 + next->lat / 2 - clat) /
+                  perpixel - mat.xx * f->descent / 12.0 - mat.yx / 12.0 * 3 * len;
+              }
+              #endif
             }
-            #endif
-            #ifdef CAIRO_VERSION
-            __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
-                               (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
-            if (lenSqr > maxLenSqr) {
-              maxLenSqr = lenSqr;
-              mat.yy = mat.xx = 12 * fabs (nd->lon - next->lon) / sqrt (lenSqr);
-              mat.xy = (nd->lon > next->lon ? 12.0 : -12.0) *
-                                          (nd->lat - next->lat) / sqrt (lenSqr);
-              mat.yx = -mat.xy;
-              x0 = clip.width / 2 + (nd->lon / 2 + next->lon / 2 - clon) /
-                perpixel + mat.yx * f->descent / 12.0 - mat.xx / 12.0 * 3 * len;
-              y0 = clip.height / 2 - (nd->lat / 2 + next->lat / 2 - clat) /
-                perpixel - mat.xx * f->descent / 12.0 - mat.yx / 12.0 * 3 * len;
-            }
-            #endif
             nd = next;
+            oldx = x;
+            oldy = y;
           } while (itr.left <= nd->lon && nd->lon < itr.right &&
                    itr.top  <= nd->lat && nd->lat < itr.bottom &&
                    nd->other[1] >= 0);
@@ -1679,6 +1685,7 @@ int IncrementalSearch (void)
       }
       else distm[dir] = big;
     }
+    if (count == c) break; // Something's wrong. idx[count + l] not found !
     if (c >= numIncWays) {
       c = count; // Redo the adding
       for (bits = 0; bits < 16 && dista[numIncWays - 1] >> (bits * 2 + 32);
@@ -1688,7 +1695,7 @@ int IncrementalSearch (void)
         for (int i = 0; i < 32; i++) printf ("%d%s",
           (ZEnc ((unsigned) incrementalWay[j]->clat >> 16,
                  (unsigned) incrementalWay[j]->clon >> 16) >> (31 - i)) & 1,
-          i == 31 ? " x\n" : i % 2 ? " " : "");
+          i == 31 ? " y\n" : i % 2 ? " " : "");
       } */
 /* Print centre, up, down, right and left to see if they're in the square
       for (int i = 0; i < 32; i++) printf ("%d%s", (cz >> (31 - i)) & 1,
@@ -1736,9 +1743,9 @@ int IncrementalSearch (void)
                cz ^ (mask & swap)) >> (2 + (bits << 1))) break;
           __int64 d = Sqr ((__int64)(w->clat - clat)) +
                       Sqr ((__int64)(w->clon - clon));
-          if (count == c || d < dista[c - 1]) {
-            if (c < numIncWays) c++;
-            for (ipos = c - 1; ipos > count && d < dista[ipos - 1]; ipos--) {
+          if (count < numIncWays || d < dista[count - 1]) {
+            if (count < numIncWays) count++;
+            for (ipos = count - 1; ipos > c && d < dista[ipos - 1]; ipos--) {
               dista[ipos] = dista[ipos - 1];
               incrementalWay[ipos] = incrementalWay[ipos - 1];
               taga[ipos] = taga[ipos - 1];
@@ -1749,6 +1756,7 @@ int IncrementalSearch (void)
           }
         } // For each entry in the square
       } // For each of the 4 squares
+      break; // count < numIncWays implies a bug. Don't loop infinitely.
     } // If the search list is filled by tags with this text
     count = c;
   } // For each
@@ -2429,7 +2437,7 @@ int main (int argc, char *argv[])
             if (srec[StyleNr (&w)].scaleMax > 10000000 &&
                                                   (!wayFseek || *wayFseek)) {
               for (int i = 0; i < lowzListCnt; i++) {
-                if (i % 4 && i < lowzListCnt - 1) continue; // Skip some
+                if (i % 20 && i < lowzListCnt - 1) continue; // Skip some
                 if (s[0].lat) { // Flush s
                   fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
                 }

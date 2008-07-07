@@ -377,28 +377,28 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="waterway" v="canal"/>
         <line width="2" colour="#0000ff" width_bg="2" colour_bg="#00001f"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>40000</scale_max>
 	</rule>
 
     <rule>
         <condition k="waterway" v="stream"/>
         <line width="1" colour="#6600cc" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>35000</scale_max>
     </rule>
     
     <rule>
         <condition k="waterway" v="drain"/>
         <line width="1" colour="#0000ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
     </rule>
 
     <rule>
         <condition k="waterway" v="dock"/>
         <line width="1" colour="#0000cf"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>40000</scale_max>
     </rule>
 
 	<rule>
@@ -754,7 +754,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <line width="2" colour="#660000" />
 		<icon annotate="true" src="misc/landmark/pier.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 
 	<rule>
@@ -1740,7 +1740,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon src="misc/no_icon.png" />
 		<area colour="#0000ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>60000</scale_max>
 	</rule>
 	
     <rule>

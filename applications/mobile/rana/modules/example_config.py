@@ -28,14 +28,9 @@ class config(ranaModule):
     ranaModule.__init__(self, m, d)
     self.firstTime = True
 
-  def firstTimeInit(self):
+  def firstTime(self)
     # Example: load a GPX replay
     m = self.m.get('replayGpx', None)
     if(m != None):
       m.load('C:/home/OSM/Waddington/2007_05_07_bedfordshire_footpaths.gpx')
 
-  
-  def update(self):
-    if(self.firstTime):
-      self.firstTimeInit()
-    self.firstTime = False

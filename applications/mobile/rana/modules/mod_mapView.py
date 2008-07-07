@@ -57,7 +57,11 @@ class mapView(ranaModule):
           self.setCentre(pos)
           self.set('needRedraw', True)
           self.set('neverBeenCentred', False)
-
+    
+    request = self.get("centreOn", None)
+    if(request):
+      self.setCentre([float(a) for a in request.split(",")])
+      
   def setCentre(self,pos):
     proj = self.m.get('projection', None)
     if(proj == None):
@@ -76,3 +80,4 @@ class mapView(ranaModule):
     proj.setView(sx,sy,sw,sh)
     proj.recentre(lat,lon,z)
     proj.setZoom(z)
+    self.set("needRedraw", True)

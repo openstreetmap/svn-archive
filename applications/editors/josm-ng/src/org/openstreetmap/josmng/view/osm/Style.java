@@ -51,6 +51,7 @@ import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.view.MapView;
+import org.openstreetmap.josmng.view.ViewCoords;
 
 /**
  * A "style" info for rendering an OSMPrimitive.
@@ -197,10 +198,7 @@ abstract class Style<V extends View> {
 
         private void paintIcon(Drawer drawer, MapView parent, ViewWay vn) {
             if (icon != null) {
-                Point p = new Point((int)vn.bbox.getCenterX(), (int)vn.bbox.getCenterY());
-                p.x -= icon.getIconWidth()/2;
-                p.y -= icon.getIconHeight()/2;
-                
+                Point p = parent.getPoint(new ViewCoords((int)vn.bbox.getCenterX(), (int)vn.bbox.getCenterY()));
                 drawer.put(128, new IconPart(p, icon, null));
             }
         }

@@ -203,6 +203,20 @@ dd {
 	display:none;
 }
 
+	#settings_bounds {
+		border: 1px solid black;
+		padding: 3px;
+		float:left;
+		width:48%;
+	}
+
+	#settings_show {
+		border: 1px solid black;
+		padding:3px;
+		float:right;
+		width:48%;
+	}
+
 #return_to_rules {
 	display:none;
 }

@@ -127,14 +127,9 @@ public class MapView extends JComponent {
     }
     
     public Point getPoint(ViewCoords c) {
-        int x = getWidth()/2 + (c.getIntLon() - center.getIntLon()) / factor;
-        int y = getHeight()/2 - (c.getIntLat() - center.getIntLat()) / factor;
+        int x = getWidth()/2 + (int)(((long)c.getIntLon() - center.getIntLon()) / factor);
+        int y = getHeight()/2 - (int)(((long)c.getIntLat() - center.getIntLat()) / factor);
         return new Point(x, y);
-    }
-
-    public ViewCoords getPoint(Point p) {
-        Point view = screenToView(p);
-        return new ViewCoords(view.x, view.y);
     }
     
     void setCenter(ViewCoords newCenter) {
@@ -167,13 +162,15 @@ public class MapView extends JComponent {
      * 
      * @param p a point in screen-space coordinates, that is,
      * based on current zoom factor and center point
-     * @return point representing the same placein absolute, view-space
+     * @return point representing the same location in absolute, view-space
      * coordinates.
      */
-    private Point screenToView(Point p) {
-        int x = factor * (p.x - getWidth()/2) + center.getIntLon();
-        int y = factor * (getHeight()/2 - p.y) + center.getIntLat();
-        return new Point(x,y);
+    public ViewCoords getPoint(Point p) {
+        long x = factor * ((long)p.x - getWidth()/2) + center.getIntLon();
+        long y = factor * (getHeight()/2 - p.y) + center.getIntLat();
+        x = Math.max(Integer.MIN_VALUE, Math.min(x, Integer.MAX_VALUE));
+        y = Math.max(Integer.MIN_VALUE, Math.min(y, Integer.MAX_VALUE));
+        return new ViewCoords((int)x, (int)y);
     }
     
     /**
@@ -182,14 +179,14 @@ public class MapView extends JComponent {
      * 
      * @param r a rectangle in screen-space coordinates, that is,
      * based on current zoom factor and center point
-     * @return rectangle representing the same area in absolute, view-space
+     * @return bbox representing the same area in absolute, view-space
      * coordinates.
      */
-    public Rectangle screenToView(Rectangle r) {
-        Rectangle view = new Rectangle(screenToView(r.getLocation()));
-        Point br = new Point(r.x + r.width, r.y + r.height);
-        view.add(screenToView(br));
-        return view;
+    public BBox screenToView(Rectangle r) {
+        BBox bbox = new BBox();
+        bbox.addPoint(getPoint(r.getLocation()));
+        bbox.addPoint(getPoint(new Point(r.x + r.width, r.y + r.height)));
+        return bbox;
     }
 
     private boolean inPaint = false;

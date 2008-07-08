@@ -20,8 +20,6 @@
 
 package org.openstreetmap.josmng.view.osm;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.*;
 
 import org.openstreetmap.josmng.view.*;
@@ -132,28 +130,12 @@ class ViewData {
         ways.add(ww);
     }
 
-    private Rectangle getBBox(ViewNode[] vns) {
-        Rectangle r = null;
+    private BBox getBBox(ViewNode[] vns) {
+        BBox r = new BBox();
         for (ViewNode vn : vns) {
-            Point p = new Point(vn.getIntLon(), vn.getIntLat());
-            if (r == null) {
-                r = new Rectangle(p);
-            } else {
-                r.add(p);
-            }
+            r.addPoint(vn.getIntLon(), vn.getIntLat());
         }
-        if (r == null) return new Rectangle();
-        r.height++;
-        r.width++;
         return r;
-    }
-
-    private ViewCoords getTopLeft(Rectangle viewSpace) {
-        return new ViewCoords(viewSpace.x, viewSpace.y);
-    }
-
-    private ViewCoords getBottomRight(Rectangle viewSpace) {
-        return new ViewCoords(viewSpace.x+viewSpace.width, viewSpace.y+viewSpace.height);
     }
 
     /**
@@ -161,7 +143,7 @@ class ViewData {
      * @param hint
      * @return a collection of at least all nodes inside given rectangle.
      */
-    private Collection<? extends ViewCoords> getTaggedNodes(Rectangle viewSpaceHint) {
+    private Collection<? extends ViewCoords> getTaggedNodes(BBox viewSpaceHint) {
         // XXX filtering
         return taggedNodes;
     }
@@ -170,13 +152,13 @@ class ViewData {
      * @param hint
      * @return a collection of at least all nodes inside given rectangle.
      */
-    private Collection<? extends ViewCoords> getNodes(Rectangle viewSpaceHint) {
-        Collection<ViewCoords> nd = nodes.subSet(getTopLeft(viewSpaceHint),
-                getBottomRight(viewSpaceHint));
+    private Collection<? extends ViewCoords> getNodes(BBox viewSpaceHint) {
+        Collection<ViewCoords> nd = nodes.subSet(viewSpaceHint.getTopLeft(),
+                viewSpaceHint.getBottomRight());
         return nd;
     }
     
-    public Collection<? extends View> getViews(Rectangle viewSpaceHint, int zoom) {
+    public Collection<? extends View> getViews(BBox viewSpaceHint, int zoom) {
         update(); // reindex moved nodes and affected ways
         Collection<View> matching = new ArrayList();
         
@@ -205,23 +187,16 @@ class ViewData {
     private void update() {
         if (toUpdate.isEmpty()) return;
 
-        Rectangle r = null;
+        BBox r = null;
         for (Node n : toUpdate) {
             ViewNode vn = getViewForNode(n);
-            if (r == null) {
-                r = new Rectangle(vn.getIntLon(), vn.getIntLat(), 0, 0);
-            } else {
-                r.add(vn.getIntLon(), vn.getIntLat());
-            }
+            r.addPoint(vn.getIntLon(), vn.getIntLat());
 
             // update the coords index
             nodes.remove(vn);
             vn.updatePosition(projCache.coordToView(n));
             nodes.add(vn);
         }
-        
-        r.width++;
-        r.height++;
         
         // should use more effective update, but as long as the dataset
         // fits in memory, this is fast enough - few ms for hundreds

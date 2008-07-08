@@ -68,11 +68,11 @@ public class OsmLayer extends EditableLayer {
 
     public @Override void paint(Graphics g) {
         mapData.checkProjection();
-        Rectangle viewR = parent.screenToView(g.getClipBounds());
+        BBox viewBox = parent.screenToView(g.getClipBounds());
         Collection<OsmPrimitive> sel = getSelection();
 
         Drawer drawer = new Drawer();
-        for (View v : mapData.getViews(viewR, parent.getScaleFactor())) {
+        for (View v : mapData.getViews(viewBox, parent.getScaleFactor())) {
               v.collect(drawer, parent, sel.contains(v.getPrimitive()));
         }
 
@@ -86,7 +86,8 @@ public class OsmLayer extends EditableLayer {
 
     public Collection<OsmPrimitive> getPrimitivesInRect(Rectangle r, boolean contained) {
         Set<OsmPrimitive> s = new HashSet();
-        Rectangle viewR = parent.screenToView(r);
+        BBox viewR = parent.screenToView(r);
+        Rectangle r2 = viewR.toRectangle();
 
         Collection<? extends View> near = mapData.getViews(viewR, 1);
         for (View v : near) {
@@ -105,7 +106,8 @@ public class OsmLayer extends EditableLayer {
                     ViewNode last = null;
                     for (ViewNode act : vw.getNodes()) {
                         if (last != null) {
-                            if (viewR.intersectsLine(last.getIntLon(), last.getIntLat(), act.getIntLon(), act.getIntLat())) {
+                            // XXX intersectsLine algorithm missing in bbox yet
+                            if (r2.intersectsLine(last.getIntLon(), last.getIntLat(), act.getIntLon(), act.getIntLat())) {
                                 s.add(prim);
                                 break;
                             }
@@ -148,7 +150,7 @@ public class OsmLayer extends EditableLayer {
     public OsmPrimitive getNearestPrimitive(Point p, int[] idx) {
         Rectangle r = new Rectangle(p);
         r.grow(10, 10);
-        Rectangle viewR = parent.screenToView(r);
+        BBox viewR = parent.screenToView(r);
         
         double minDistanceSq = 100;
         OsmPrimitive minPrimitive = null;

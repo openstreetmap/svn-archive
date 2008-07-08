@@ -198,7 +198,7 @@ abstract class Style<V extends View> {
 
         private void paintIcon(Drawer drawer, MapView parent, ViewWay vn) {
             if (icon != null) {
-                Point p = parent.getPoint(new ViewCoords((int)vn.bbox.getCenterX(), (int)vn.bbox.getCenterY()));
+                Point p = parent.getPoint(vn.bbox.getCenter());
                 drawer.put(128, new IconPart(p, icon, null));
             }
         }

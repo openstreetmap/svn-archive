@@ -20,12 +20,9 @@
 
 package org.openstreetmap.josmng.view.osm;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.view.*;
 
@@ -37,12 +34,12 @@ import org.openstreetmap.josmng.view.*;
  */
 class ViewWay implements View<Way> {
     Way way;
-    Rectangle bbox;
+    BBox bbox;
     ViewNode[] nodes;
 
     Style style;
     
-    public ViewWay(Way way, Rectangle bbox, ViewNode[] nodes) {
+    public ViewWay(Way way, BBox bbox, ViewNode[] nodes) {
         this.way = way;
         this.bbox = bbox;
         this.nodes = nodes;
@@ -57,7 +54,7 @@ class ViewWay implements View<Way> {
     }
     
     public int getSize() {
-        return bbox.width + bbox.height;
+        return (int)Math.min(bbox.getWidth() + bbox.getHeight(), Integer.MAX_VALUE);
     }
 
     public void resetStyle() {

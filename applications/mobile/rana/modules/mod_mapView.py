@@ -46,17 +46,15 @@ class mapView(ranaModule):
 
   def update(self):
     # Run scheduledUpdate every second
-    if(self.get("centred",True) or self.get('neverBeenCentred', True)):
+    if(self.get("centred",True) or self.get('centreOnce', False)):
       t = time()
       dt = t - self.updateTime
       if(dt > 2):
         self.updateTime = t
         pos = self.get('pos', None)
         if(pos != None):
-          self.set('map_centre', pos)
-          self.setCentre(pos)
-          self.set('needRedraw', True)
-          self.set('neverBeenCentred', False)
+          if(self.setCentre(pos)):
+            self.set('centreOnce', False)
     
     request = self.get("centreOn", None)
     if(request):
@@ -65,19 +63,21 @@ class mapView(ranaModule):
   def setCentre(self,pos):
     proj = self.m.get('projection', None)
     if(proj == None):
-      return;
+      return(False)
     if(pos == None):
-      return
+      return(False)
     
     (lat,lon) = pos
+    self.set('map_centre', pos)
 
     z = int(self.get('z', 15))
     x,y = latlon2xy(lat,lon,z)
 
     if(not self.d.has_key('viewport')):
-      return
+      return(False)
     (sx,sy,sw,sh) = self.get('viewport')
     proj.setView(sx,sy,sw,sh)
     proj.recentre(lat,lon,z)
     proj.setZoom(z)
     self.set("needRedraw", True)
+    return(True)

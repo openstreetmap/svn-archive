@@ -205,12 +205,12 @@ class menus(ranaModule):
     
   def setupDataSubMenu(self):
     self.clearMenu('data2', "set:menu:data")
-    self.addItem('data2', '5 km', 'generic', 'set:downloadSize:4|mapData:download|set:menu:none')
-    self.addItem('data2', '10 km', 'generic', 'set:downloadSize:8|mapData:download|set:menu:none')
-    self.addItem('data2', '20 km', 'generic', 'set:downloadSize:16|mapData:download|set:menu:none')
-    self.addItem('data2', '40 km', 'generic', 'set:downloadSize:32|mapData:download|set:menu:none')
-    self.addItem('data2', '80 km', 'generic', 'set:downloadSize:64|mapData:download|set:menu:none')
-    self.addItem('data2', 'Fill disk', 'generic', 'set:downloadSize:0|mapData:download|set:menu:none')
+    self.addItem('data2', '5 km', 'generic', 'set:downloadSize:4|mapData:download|set:menu:None')
+    self.addItem('data2', '10 km', 'generic', 'set:downloadSize:8|mapData:download|set:menu:None')
+    self.addItem('data2', '20 km', 'generic', 'set:downloadSize:16|mapData:download|set:menu:None')
+    self.addItem('data2', '40 km', 'generic', 'set:downloadSize:32|mapData:download|set:menu:None')
+    self.addItem('data2', '80 km', 'generic', 'set:downloadSize:64|mapData:download|set:menu:None')
+    self.addItem('data2', 'Fill disk', 'generic', 'set:downloadSize:0|mapData:download|set:menu:None')
     
   def setupDataMenu(self):
     self.clearMenu('data', "set:menu:Main")

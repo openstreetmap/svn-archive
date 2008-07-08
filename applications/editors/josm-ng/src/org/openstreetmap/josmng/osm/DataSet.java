@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.UndoableEditListener;
@@ -307,6 +308,18 @@ public abstract class DataSet {
             checkIfOurs(prim);
             ds.getClass(); // null check
             prim.setTags(pairs);
+        }
+
+        public void putTag(OsmPrimitive prim, String key, String val) {
+            checkIfOurs(prim);
+            ds.getClass(); // null check
+            prim.putTagImpl(key, val);
+        }
+
+        public void setNodes(Way prim, List<Node> nodes) {
+            checkIfOurs(prim);
+            ds.getClass(); // null check
+            prim.setNodesImpl(nodes.toArray(new Node[nodes.size()]));
         }
         
         public void setFlags(OsmPrimitive prim, boolean modified, boolean deleted) {

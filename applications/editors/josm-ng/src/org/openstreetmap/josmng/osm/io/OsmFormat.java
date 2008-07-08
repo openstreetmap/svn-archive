@@ -128,7 +128,7 @@ public class OsmFormat {
                 if (n != null) wayNodes.add(n);
             } else if (qName.equals("tag")) {
     //            assert current != null;
-                if (current != null) current.putTag(getString(atts, "k"), getString(atts, "v"));
+                if (current != null) factory.putTag(current, getString(atts, "k"), getString(atts, "v"));
             } else if (qName.equals("relation")) {
                 // TODO: relation parsing 
             } else if (qName.equals("member")) {
@@ -157,7 +157,7 @@ public class OsmFormat {
             if (qName.equals("tag")) return;
             if (qName.equals("way")) {
                 assert current instanceof Way;
-                ((Way)current).setNodes(wayNodes);
+                factory.setNodes((Way)current, wayNodes);
                 wayNodes.clear();
             }
             if (qName.equals("node") || qName.equals("way") || qName.equals("relation")) {

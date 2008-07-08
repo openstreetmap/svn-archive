@@ -533,6 +533,14 @@ void Route (int recalculate)
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
     // Allocate one piece of memory for both route and routeHeap, so that
     // we can easily retry if it fails on a small device
+    #ifdef _WIN32_WCE
+    MEMORYSTATUS memStat;
+    GlobalMemoryStatus (&memStat);
+    int lim = (memStat.dwAvailPhys - 1400000) / // Leave 1.4 MB free
+                 (sizeof (*route) + sizeof (*routeHeap));
+    if (dhashSize > lim) dhashSize = lim;
+    #endif
+
     while (dhashSize > 0 && !(route = (routeNodeType*)
         malloc ((sizeof (*route) + sizeof (*routeHeap)) * dhashSize))) {
       dhashSize = dhashSize / 4 * 3;
@@ -892,6 +900,7 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
     Route (FALSE);
     #if 0 // No verbal instructions to driver yet !
     if (shortest) {
+      PlaySound (TEXT ("\\sdmmc\\aa\\uturn.wav"), NULL, SND_FILENAME | SND_NODEFAULT);
       __int64 dlon = plon - clon, dlat = plat - clat;
       if (!shortest->shortest && dlon * (tlon - clon) > dlat * (clat - tlat)
                              && dlon * (tlon - plon) < dlat * (plat - tlat)) {
@@ -1016,10 +1025,10 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
     newWays[newWayCnt].bridge = IsDlgButtonChecked (hwnd, IDC_BRIDGE);
     newWays[newWayCnt++].klas = SendMessage (GetDlgItem (hwnd, IDC_CLASS),
                                   LB_GETCURSEL, 0, 0);
-    newWayCoordCnt = 0;
   }
   
   if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
+    newWayCoordCnt = 0;
     SipShowIM (SIPF_OFF);
     EndDialog (hwnd, 0);
     return TRUE;

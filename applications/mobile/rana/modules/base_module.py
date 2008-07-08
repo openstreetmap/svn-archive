@@ -35,7 +35,7 @@ class ranaModule:
   def set(self, name, value):
     """Set an item of data"""
     if(self.module_exists('watchlist')):
-      self.m['watchlist'].notify(name, value)
+      self.m['watchlist'].notify(name, value, self.d.get(name, None))
     self.d[name] = value
     
   def getStatus(self):

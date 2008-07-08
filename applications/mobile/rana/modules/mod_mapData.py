@@ -39,7 +39,13 @@ class mapData(ranaModule):
       if(not tiles.has_key(tile)):
         tiles[tile] = True
     return(tiles.keys())
-  
+  def handleMessage(self, message):
+    if(message == "download"):
+      size = int(self.get("downloadSize", 4))
+      type = self.get("downloadType") # should be "data"
+      location = self.get("downloadArea", "here") # here or route
+      print "TODO: download %d data tiles" % size
+
   def expand(self, tileset, amount=1):
     """Given a list of tiles, expand the coverage around those tiles"""
     tiles = {}

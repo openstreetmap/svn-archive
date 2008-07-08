@@ -74,7 +74,6 @@ public class OsmFormat {
     }
         
     private static class OsmStreamReader extends DefaultHandler {
-        private OsmPrimitive current;
         private DataSet.Factory factory = DataSet.factory(1000);
         private List<Node> wayNodes = new ArrayList<Node>();
     
@@ -106,8 +105,7 @@ public class OsmFormat {
                 Node n = factory.node(id < 0 ? 0 : id, lat, lon, time, user, vis);
                 if (id < 0) newNodes.put(id, n);
 
-                updateFlags(n, getString(atts, "action"));
-                current = n;
+                updateFlags(getString(atts, "action"));
             } else if (qName.equals("way")) {
                 // common attribs
                 long id = getLong(atts, "id");
@@ -118,17 +116,14 @@ public class OsmFormat {
                 Way w = factory.way(id < 0 ? 0 : id, time, user, vis, null);
                 if (id < 0) newWays.put(id, w);
 
-                updateFlags(w, getString(atts, "action"));
-                current = w;
+                updateFlags(getString(atts, "action"));
             } else if (qName.equals("nd")) {
-                assert current instanceof Way;
                 long nid = getLong(atts, "ref");
                 Node n = getNode(nid);
                 //assert n != null;
                 if (n != null) wayNodes.add(n);
             } else if (qName.equals("tag")) {
-    //            assert current != null;
-                if (current != null) factory.putTag(current, getString(atts, "k"), getString(atts, "v"));
+                factory.putTag(getString(atts, "k"), getString(atts, "v"));
             } else if (qName.equals("relation")) {
                 // TODO: relation parsing 
             } else if (qName.equals("member")) {
@@ -136,11 +131,11 @@ public class OsmFormat {
             }
         }
 
-        private void updateFlags(OsmPrimitive prim, String action) {
+        private void updateFlags(String action) {
             if ("delete".equals(action)) {
-                factory.setFlags(prim, false, true);
+                factory.setFlags(false, true);
             } else if ("modify".equals(action)) {
-                factory.setFlags(prim, true, false);
+                factory.setFlags(true, false);
             }
         }
         
@@ -156,12 +151,8 @@ public class OsmFormat {
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (qName.equals("tag")) return;
             if (qName.equals("way")) {
-                assert current instanceof Way;
-                factory.setNodes((Way)current, wayNodes);
+                factory.setNodes(wayNodes);
                 wayNodes.clear();
-            }
-            if (qName.equals("node") || qName.equals("way") || qName.equals("relation")) {
-                current = null;
             }
         }
     

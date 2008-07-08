@@ -272,6 +272,7 @@ public abstract class DataSet {
     
     public static final class Factory {
         private DataSet ds;
+        private OsmPrimitive lastPrimitive;
 
         private Factory(int capa) {
             ds = new DataSetMemoryImpl(capa);
@@ -290,6 +291,7 @@ public abstract class DataSet {
             ds.getClass(); // null check
             Node n = new Node(ds, id, lat, lon, time, user, visible);
             ds.addPrimitive(n);
+            lastPrimitive = n;
             return n;
         }
 
@@ -301,35 +303,45 @@ public abstract class DataSet {
             ds.getClass(); // null check
             Way w = new Way(ds, id, time, user, visible, nodes); // XXX vis
             ds.addPrimitive(w);
+            lastPrimitive = w;
             return w;
         }
         
-        public void setTags(OsmPrimitive prim, String[] pairs) {
-            checkIfOurs(prim);
+        /**
+         * Replace the tags of the last created primitive.
+         * @param pairs
+         */
+        public void setTags(String[] pairs) {
             ds.getClass(); // null check
-            prim.setTags(pairs);
+            lastPrimitive.setTags(pairs);
         }
 
-        public void putTag(OsmPrimitive prim, String key, String val) {
-            checkIfOurs(prim);
+        /**
+         * Set a tag on the last created primitive.
+         * @param pairs
+         */
+        public void putTag(String key, String val) {
             ds.getClass(); // null check
-            prim.putTagImpl(key, val);
+            lastPrimitive.putTagImpl(key, val);
         }
 
-        public void setNodes(Way prim, List<Node> nodes) {
-            checkIfOurs(prim);
+        /**
+         * Set nodes of the last created primitive.
+         * @param pairs
+         */
+        public void setNodes(List<Node> nodes) {
             ds.getClass(); // null check
-            prim.setNodesImpl(nodes.toArray(new Node[nodes.size()]));
+            ((Way)lastPrimitive).setNodesImpl(nodes.toArray(new Node[nodes.size()]));
         }
         
-        public void setFlags(OsmPrimitive prim, boolean modified, boolean deleted) {
-            checkIfOurs(prim);
-            prim.setModified(modified);
-            prim.setDeletedImpl(deleted);
-        }
-        
-        private void checkIfOurs(OsmPrimitive prim) {
-            if (prim.getOwner() != ds) throw new IllegalArgumentException();
+        /**
+         * Adjust the flags of the last created primitive.
+         * @param pairs
+         */
+        public void setFlags(boolean modified, boolean deleted) {
+            ds.getClass(); // null check
+            lastPrimitive.setModified(modified);
+            lastPrimitive.setDeletedImpl(deleted);
         }
     }
 }

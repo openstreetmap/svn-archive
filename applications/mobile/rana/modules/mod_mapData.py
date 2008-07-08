@@ -20,6 +20,14 @@
 from base_module import ranaModule
 from tilenames import *
 
+import sys
+if(__name__ == '__main__'):
+  sys.path.append('pyroutelib2')
+else:
+  sys.path.append('modules/pyroutelib2')
+
+import tiledata
+
 def getModule(m,d):
   return(mapData(m,d))
 
@@ -39,12 +47,36 @@ class mapData(ranaModule):
       if(not tiles.has_key(tile)):
         tiles[tile] = True
     return(tiles.keys())
+
+  def addToQueue(self, tilesToDownload):
+    for tile in tilesToDownload:
+      (x,y,z) = tile
+      # for now, just get them without updating screen
+      tiledata.GetOsmTileData(z,x,y)
+
   def handleMessage(self, message):
     if(message == "download"):
       size = int(self.get("downloadSize", 4))
-      type = self.get("downloadType") # should be "data"
+
+      type = self.get("downloadType")
+      if(type != "data"):
+        print "Error: mod_mapData can't download %s" % type
+        return
+      
       location = self.get("downloadArea", "here") # here or route
-      print "TODO: download %d data tiles" % size
+
+      # Which zoom level are map tiles stored at
+      z = tiledata.DownloadLevel()
+
+      if(location == "here"):
+        
+        # Find which tile we're on
+        pos = self.get("pos",None)
+        if(pos != None):
+          (lat,lon) = pos
+          (x,y) = latlon2xy(lat,lon,z)
+
+          self.addToQueue(self.spiral(x,y,z,size))
 
   def expand(self, tileset, amount=1):
     """Given a list of tiles, expand the coverage around those tiles"""
@@ -57,24 +89,25 @@ class mapData(ranaModule):
           tiles["%d,%d" % (x+dx,y+dy)] = True
     return(tiles.keys())
 
-  def spiral(self, x, y, distance):
+  def spiral(self, x, y, z, distance):
     class spiraller:
-      def __init__(self,x,y):
+      def __init__(self,x,y,z):
         self.x = x
         self.y = y
-        self.tiles = [(x,y)]
+        self.z = z
+        self.tiles = [(x,y,z)]
       def moveX(self,dx, direction):
         for i in range(dx):
           self.x += direction
-          self.touch(self.x, self.y)
+          self.touch(self.x, self.y, self.z)
       def moveY(self,dy, direction):
         for i in range(dy):
           self.y += direction
-          self.touch(self.x, self.y)
-      def touch(self,x,y):
-        self.tiles.append((x,y))
+          self.touch(self.x, self.y, self.z)
+      def touch(self,x,y,z):
+        self.tiles.append((x,y,z))
         
-    s =spiraller(x,y)
+    s =spiraller(x,y,z)
     for d in range(1,distance+1):
       s.moveX(1, 1) # 1 right
       s.moveY(d*2-1, -1) # d*2-1 up

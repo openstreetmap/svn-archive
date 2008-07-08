@@ -187,7 +187,7 @@ class ViewData {
     private void update() {
         if (toUpdate.isEmpty()) return;
 
-        BBox r = null;
+        BBox r = new BBox();
         for (Node n : toUpdate) {
             ViewNode vn = getViewForNode(n);
             r.addPoint(vn.getIntLon(), vn.getIntLat());

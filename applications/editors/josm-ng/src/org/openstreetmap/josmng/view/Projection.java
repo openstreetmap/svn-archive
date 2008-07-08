@@ -22,14 +22,14 @@ package org.openstreetmap.josmng.view;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
-import org.openstreetmap.josmng.view.projection.Mercator;
-import org.openstreetmap.josmng.view.projection.Epsg4326;
+import java.util.Collections;
+import java.util.List;
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
-import org.openstreetmap.josmng.view.projection.Sinusoidal;
+import org.openstreetmap.josmng.utils.ServiceLoader;
 
 /**
  * TODO: pluggable projections by means of ServiceLoader
@@ -50,11 +50,17 @@ public final class Projection {
         new CoordinateImpl(-MAX_LAT, MAX_LON),
     };
 
-    public static final Projection MERCATOR = create(new Mercator());
-    public static final Projection EPSG4326 = create(new Epsg4326());
-    public static final Projection SINUSOIDAL = create(new Sinusoidal());
-    
-           
+    private static final Collection<Projection> projections;
+
+    static {
+        ServiceLoader<Impl> loader = ServiceLoader.load(Impl.class);
+        List<Projection> projs = new ArrayList();
+        for (Impl impl : loader) {
+            projs.add(create(impl));
+        }
+        projections = Collections.unmodifiableCollection(projs);
+    }
+               
     private Impl impl;
     private double factor;
 
@@ -64,9 +70,7 @@ public final class Projection {
     }
 
     public static Collection<Projection> getAvailableProjections() {
-        return Arrays.asList(new Projection[] {
-            MERCATOR, EPSG4326, SINUSOIDAL
-        });
+        return projections;
     }
 
     public static Projection create(Impl impl) {

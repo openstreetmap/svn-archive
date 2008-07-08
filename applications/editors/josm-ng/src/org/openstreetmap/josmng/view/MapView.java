@@ -52,9 +52,9 @@ import org.openstreetmap.josmng.osm.Node;
  */
 public class MapView extends JComponent {
     private int factor = 260;
-    // Loc: 50°8'8.637"N, 14°9'54.05" - Hrebec
-    Projection proj = Projection.MERCATOR; //EPSG4326;
+    Projection proj = Projection.getAvailableProjections().iterator().next();
     
+    // Loc: 50°8'8.637"N, 14°9'54.05" - Hrebec
     private ViewCoords center = proj.coordToView(new CoordinateImpl(50.135732, 14.165013));
     
     private EditMode currentMode;

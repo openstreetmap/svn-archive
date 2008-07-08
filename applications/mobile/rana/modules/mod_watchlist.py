@@ -27,20 +27,14 @@ class watchlist(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
 
-    # store the last value of some things, so we can detect changes
-    # (todo: why not just send it as param to notify)
-    self.watching = ['pos']  
-    self.last = {}
-    
-  def notify(self,name, value):
+
+  def notify(self,name, value, oldValue=None):
 
     # Position seen for first time, centering
-    if(name == "pos" and not self.last.has_key("pos")):
+    if(name == "pos" and oldValue == None):
       self.set("centreOnce", True)
     
     # Menu changed, so redraw
     if(name == "menu"):
       self.set("needRedraw", True)
 
-    if(name in self.watching):
-      self.last[name] = value

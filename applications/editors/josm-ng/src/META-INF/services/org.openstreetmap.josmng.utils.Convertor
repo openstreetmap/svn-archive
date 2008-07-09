@@ -1,0 +1,5 @@
+org.openstreetmap.josmng.osm.io.FileStreamProvider
+org.openstreetmap.josmng.osm.io.GzipStreamProvider
+org.openstreetmap.josmng.osm.io.OsmFormat
+org.openstreetmap.josmng.view.osm.OsmLayerProvider
+org.openstreetmap.josmng.gpx.GpxLayerProvider

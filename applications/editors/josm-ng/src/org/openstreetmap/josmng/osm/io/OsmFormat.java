@@ -38,9 +38,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
-import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Relation;
 import org.openstreetmap.josmng.osm.Way;
+import org.openstreetmap.josmng.utils.Convertor;
 import org.openstreetmap.josmng.utils.Storage;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -48,8 +48,24 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 
-public class OsmFormat {
-    
+public class OsmFormat extends Convertor<NamedStream,DataSet> {
+
+    public OsmFormat() {
+        super(NamedStream.class, DataSet.class);
+    }
+
+    public @Override boolean accept(NamedStream source) {
+        return source.getName().endsWith(".osm");
+    }
+
+    public @Override DataSet convert(NamedStream from) {
+        try {
+            return read(from.openStream());
+        } catch (IOException ex) {
+            return null;
+        }
+    }
+
     public static void write(OutputStream os, DataSet ds) throws IOException {
     }
 

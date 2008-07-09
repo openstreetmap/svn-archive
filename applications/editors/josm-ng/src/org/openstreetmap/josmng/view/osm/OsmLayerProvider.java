@@ -18,43 +18,29 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-package org.openstreetmap.josmng.ui.actions;
+package org.openstreetmap.josmng.view.osm;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-
+import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.utils.Convertor;
 import org.openstreetmap.josmng.ui.Main;
-import org.openstreetmap.josmng.view.Layer;
+import org.openstreetmap.josmng.view.EditableLayer;
 
 /**
- *
+ * A Layer provider for visualizing/editing a DataSet.
+ * 
  * @author nenik
  */
-public class OpenAction extends AbstractAction {
-
-    public OpenAction() {
-        super("Open File...");
-        
+public class OsmLayerProvider extends Convertor<DataSet,EditableLayer> {
+    public OsmLayerProvider() {
+        super(DataSet.class, EditableLayer.class);
+    }
+    
+    public @Override boolean accept(DataSet source) {
+        return true;
     }
 
-    public void actionPerformed(ActionEvent e) {
-        JFileChooser jfc = new JFileChooser();
-        int returnVal = jfc.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            open(jfc.getSelectedFile());
-        }
-    }
-
-    public static void open(String fName) {
-        open(new File(fName));
-    }
-
-    public static void open(File file) {
-        Layer layer = Convertor.<File,Layer>convert(file, Layer.class);
-        if (layer != null) Main.main.getMapView().addLayer(layer);
+    public @Override EditableLayer convert(DataSet from) {
+        return new OsmLayer(Main.main.getMapView(), "XXX", from);
     }
 
 }

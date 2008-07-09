@@ -18,43 +18,34 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-package org.openstreetmap.josmng.ui.actions;
+package org.openstreetmap.josmng.gpx;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-
+import java.io.IOException;
+import org.openstreetmap.josmng.osm.io.NamedStream;
 import org.openstreetmap.josmng.utils.Convertor;
 import org.openstreetmap.josmng.ui.Main;
 import org.openstreetmap.josmng.view.Layer;
 
 /**
- *
+ * A convertor providing GPX layer from .gpx files.
+ * 
  * @author nenik
  */
-public class OpenAction extends AbstractAction {
-
-    public OpenAction() {
-        super("Open File...");
-        
+public class GpxLayerProvider extends Convertor<NamedStream,Layer> {
+    public GpxLayerProvider() {
+        super(NamedStream.class, Layer.class);
+    }
+    
+    public @Override boolean accept(NamedStream source) {
+        return source.getName().endsWith(".gpx");
     }
 
-    public void actionPerformed(ActionEvent e) {
-        JFileChooser jfc = new JFileChooser();
-        int returnVal = jfc.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            open(jfc.getSelectedFile());
+    public @Override Layer convert(NamedStream from) {
+        try {
+            return new GpxLayer(Main.main.getMapView(), from.getName(), from.openStream());
+        } catch (IOException ex) {
+            return null;
         }
-    }
-
-    public static void open(String fName) {
-        open(new File(fName));
-    }
-
-    public static void open(File file) {
-        Layer layer = Convertor.<File,Layer>convert(file, Layer.class);
-        if (layer != null) Main.main.getMapView().addLayer(layer);
     }
 
 }

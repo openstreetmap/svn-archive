@@ -1,5 +1,5 @@
 import sys,os
-sys.path.insert(0, "/usr/local/share/")
+sys.path.insert(0, "/var/www/")
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from time import clock, time
 from tah.tah_intern.Tileset import Tileset
@@ -26,11 +26,9 @@ class LegacyTileset(Tileset):
       b = int(os.popen(cmd).read())
     except ValueError: 
       #Nothing found here, try one level higher
-      tile.z -= 1
-      tile.x //= 2
-      tile.y //= 2
-      print "Get_blank recurse upwards (%d,%d,%d)" % (tile.z,tile.x,tile.y)
-      b = self.get_blank(tile)
+      up_tile = Tile(tile.layer,tile.z-1,tile.x // 2, tile.y // 2)
+      #print "Get_blank recurse upwards (%d,%d,%d)" % (up_tile.z,up_tile.x,up_tile.y)
+      b = self.get_blank(up_tile)
     #print "get_blank (%d,%d,%d) returns %d" % (tile.z,tile.x,tile.y,b)
     return b
 
@@ -53,18 +51,21 @@ class LegacyTileset(Tileset):
           fname = os.path.join(self.leg_basetiledir,layer.name,"%02d"%(z),"%03d"%(x//1000),"%.3d"%(x),"%03d"%(y//1000),"%.3d.png"%(y))
           t = Tile(layer,z,x,y)
           if os.path.isfile(fname): 
-            #print "%d %d %d %s" % (z,x,y,fname)
+            #print "add %d %d %d %s" % (z,x,y,fname)
             self.add_tile(t,fname)
             files += 1
-          else: 
-            if layer_transparent: 
-              b = 3
-            else:
-              b = self.get_blank(t)
-            #print "%d %d %d must be blank (%d)" % (z,x,y,b)
+          else:
             blanks += 1
-            t.set_blank(b)
-            self.add_tile(t,None)
+            if not self.tiles.has_key(x) or not self.tiles[x].has_key(y):
+              #the tile does not exist yet (not created by subtile blanking)
+              if layer_transparent: 
+                b = 3
+              else:
+                b = self.get_blank(t)
+              t.set_blank(b)
+              #print "add blank (%d) %d %d %d (basetile %s %s %s)" % (b,t.z,t.x,t.y,self.base_z,self.x,self.y)
+              self.add_tile(t,None)
+              self.set_subtiles_blank(t)
 
     savetime = time()
     print "Found %d files and %d blanks (%.1f sec.)." % (files,blanks,savetime-starttime[0])

@@ -15,6 +15,11 @@
 #   return(-2,"message")		<-- also asks the user to e-mail me
 # to log:
 #   RAILS_DEFAULT_LOGGER.error("Args: #{args[0]}, #{args[1]}, #{args[2]}, #{args[3]}")
+
+
+# ** Need to compare against current amf_controller - there have been some
+#    recent fixes not included here
+
 class AmfController < ApplicationController
   require 'stringio'
 
@@ -177,14 +182,9 @@ class AmfController < ApplicationController
     points = []
 
     way.nodes.each do |node|
-      projected_longitude = node.lon # do projection for potlatch
-      projected_latitude = node.lat
-      id = node.id
-      tags_hash = node.tags_as_hash
-
-      points << [projected_longitude, projected_latitude, id, nil, tags_hash]
-      long_array << projected_longitude
-      lat_array << projected_latitude
+      points << [node.lon, node.lat, node.id, nil, node.tags_as_hash]
+      long_array << node.lon
+      lat_array << node.lat
     end
 
     [wayid,points,way.tags,long_array.min,long_array.max,lat_array.min,lat_array.max]
@@ -228,8 +228,6 @@ class AmfController < ApplicationController
     }
 
     # get tags from this version
-    
-
     attributes={}
     attrlist=ActiveRecord::Base.connection.select_all "SELECT k,v FROM way_tags WHERE id=#{wayid} AND version=#{version}"
     attrlist.each {|a| attributes[a['k'].gsub(':','|')]=a['v'] }

@@ -103,6 +103,8 @@ def upload_request(request):
     UploadFormClass.base_fields['priority'].required = False
     UploadFormClass.base_fields['layer'].required = False
     UploadFormClass.base_fields['file'].required = False
+    UploadFormClass.base_fields['is_locked'].required = False
+    UploadFormClass.base_fields['is_locked'].widget = widgets.HiddenInput()
     UploadFormClass.base_fields['user_id'].required = False
     UploadFormClass.base_fields['user_id'].widget = widgets.HiddenInput()
     form = UploadFormClass()
@@ -136,6 +138,7 @@ def upload_request(request):
               newUpload.ipaddress = request.META['REMOTE_ADDR']
               # low priority upload by default
               if not newUpload.priority: newUpload.priority = 3
+              newUpload.is_locked = False
               newUpload.save_file_file(file['filename'],file['content'])
               newUpload.save()
 	      html="OK|4|"

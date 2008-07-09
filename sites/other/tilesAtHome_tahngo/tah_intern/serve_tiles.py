@@ -27,7 +27,7 @@ def serve_tile(layername,z,x,y):
     (layer, base_z,base_x,base_y) = t.basetileset() 
     # basetileset returns (None,None,None,None) if invalid!
     # basetilepath could be take from the Settings, hardcode for efficiency
-    basetilepath='/mnt/agami/openstreetmap/tah/tahngo/Tiles'
+    basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
     tilesetfile = os.path.join(basetilepath,layername+'_'+str(base_z),str(base_x)+'_'+str(base_y))
     try:
       f = open(tilesetfile,'rb')

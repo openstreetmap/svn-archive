@@ -92,6 +92,7 @@ public class Storage<T> extends AbstractSet<T> {
     private int mask;
     private int size;
     private transient volatile int modCount = 0;
+    private float loadFactor = 0.6f;
     
     public Storage() {
         this(Storage.<T>defaultHash());
@@ -107,7 +108,7 @@ public class Storage<T> extends AbstractSet<T> {
 
     public Storage(Hash<? super T, ? super T> ha, int capacity) {
         this.hash = ha;
-        int cap = 1 << (int)(Math.ceil(Math.log(2*capacity) / Math.log(2)));
+        int cap = 1 << (int)(Math.ceil(Math.log(capacity/loadFactor) / Math.log(2)));
         data = new Object[cap];
         mask = data.length - 1;
     }
@@ -261,7 +262,7 @@ public class Storage<T> extends AbstractSet<T> {
     
     
     private void ensureSpace() {
-        if (size > data.length/2) { // rehash
+        if (size > data.length*loadFactor) { // rehash
             Object[] big = new Object[data.length * 2];
             int nMask = big.length - 1;
 

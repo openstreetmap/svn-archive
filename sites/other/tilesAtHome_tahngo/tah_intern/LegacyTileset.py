@@ -1,5 +1,5 @@
 import sys,os
-sys.path.insert(0, "/home/spaetz")
+sys.path.insert(0, "/usr/local/share/")
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from time import clock, time
 from tah.tah_intern.Tileset import Tileset
@@ -34,15 +34,13 @@ class LegacyTileset(Tileset):
     #print "get_blank (%d,%d,%d) returns %d" % (tile.z,tile.x,tile.y,b)
     return b
 
-  def convert (self,layername,base_z,base_x,base_y,base_tile_path):
+  def convert (self,layer,base_z,base_x,base_y,base_tile_path):
     """
 	  Take all tile files from the old one file-per-tile system
 	  that belong to a tileset and save it in the new format.
     """
     if not base_z in [0,6,12]: return (0,"Invalid base zoom level.")
     starttime = (time(),clock())    
-    layer = Layer.objects.get(name=layername)
-    if not layer: return (0,"Unknown layer.")
     # cache if the layer is transparent
     layer_transparent = layer.transparent
     print "Layer transparency is: %s" % layer_transparent
@@ -79,7 +77,10 @@ class LegacyTileset(Tileset):
 
 if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
-  #layer = Layer.objects.get(name='maplint')
-  #if not layer: sys.exit("Unknown layer.")
-  lt = LegacyTileset()
-  print str(lt.convert('tile',0,0,0,base_tile_path))
+  for layer in Layer.objects.exclude(name='lowzoom'):
+    #if not layer: sys.exit("Unknown layer.")
+    for x = range (0,4096):
+      for y in range (0,4096):
+        lt = LegacyTileset()
+        print "Converting: %s (12,%d,%d)" % (layer.name,x,y)
+        print str(lt.convert(layer,12,x,y,base_tile_path))

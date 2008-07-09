@@ -200,3 +200,15 @@ def request_changedTiles(request):
     xml_dom.unlink()
     
     return HttpResponse(str((z,x,y)),mimetype='text/plain')
+
+def stats_munin_active(request):
+    reply=''
+    activereqs = Request.objects.filter(status=1)
+    for val, state in enumerate(['low','medium','high']):
+      c = activereqs.filter(priority=c+1).count()
+      reply += "%s.value %d\n" % (state,c)
+    return HttpResponse(reply),mimetype='text/plain')
+
+def stats_munin_pending(request):
+    reply=''
+    return HttpResponse(reply),mimetype='text/plain')

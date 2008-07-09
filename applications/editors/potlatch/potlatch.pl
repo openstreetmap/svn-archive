@@ -80,10 +80,10 @@ EOF
 	while ($actionscript=~/#include '(.+?)'/g) {
 		$fn=$1;
 		unless (exists($ENV{'DOCUMENT_ROOT'})) {
-			print "Reading $fn              \r";
+			print "Reading $fn               \r";
 		}
 		local $/;
-		open TEXT,$fn or die "Can't open file $fn: $!\n";
+		open TEXT,$fn or die "Can't open $fn: $!\n";
 		$text=<TEXT>;
 		close TEXT;
 		$actionscript=~s/#include '$fn'/$text/;
@@ -91,7 +91,7 @@ EOF
 
 	if ($debug) { $actionscript=~s!false;//#debug!true;!g; }
 	$m->add(new SWF::Action($actionscript));
-
+	
 	# -----	Output file
 
 	$m->nextFrame();

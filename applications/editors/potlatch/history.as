@@ -9,9 +9,9 @@
 		historyresponder = function() { };
 		historyresponder.onResult = function(result) {
 			_root.windows.attachMovie("modal","history",++windowdepth);
-			_root.windows.history.init(275,90,new Array('Revert','Cancel'),handleRevert);
+			_root.windows.history.init(275,90,new Array(iText('Revert','revert'),iText('Cancel','cancel')),handleRevert);
 			_root.windows.history.box.createTextField("prompt",2,7,9,250,100);
-			writeText(_root.windows.history.box.prompt,"Revert to an earlier saved version:");
+			writeText(_root.windows.history.box.prompt,iText("Revert to an earlier saved version:",'prompt_revertversion'));
 
 			var versionlist=new Array();
 			_root.versionnums=new Array();
@@ -21,14 +21,14 @@
 			}
 			_root.windows.history.box.attachMovie("menu","version",6);
 			_root.windows.history.box.version.init(9,32,0,versionlist,
-				'Choose the version to revert to',
+				iText('Choose the version to revert to','tip_revertversion'),
 				function(n) { _root.revertversion=versionnums[n]; },0);
 			_root.revertversion=versionnums[0];
 		};
 		remote.call('getway_history',historyresponder,Math.floor(_root.wayselected));
 	};
 	function handleRevert(choice) {
-		if (choice=='Cancel') { return; }
+		if (choice==iText('Cancel','cancel')) { return; }
 		_root.ws.loadFromDeleted(_root.revertversion);
 	};
 	function getDeleted() {
@@ -44,5 +44,5 @@
 				}
 			}
 		};
-		remote.call('whichways_deleted',whichdelresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t,baselong,basey,masterscale);
+		remote.call('whichways_deleted',whichdelresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
 	};

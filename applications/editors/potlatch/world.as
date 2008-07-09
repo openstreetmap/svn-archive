@@ -59,8 +59,9 @@
 		_root.panel.i_newrel._x=120+getPanelColumns()*190;
 		// resize other stuff
 		_root.waysloading._x=
-		_root.tooltip._x=Stage.width-120;
-		_root.practice._x=Stage.width-97; _root.practice._y=Stage.height-panelheight-22;
+		_root.tooltip._x=Stage.width-220;
+		_root.status._x=Stage.width-_root.status.btext.textWidth-9;
+		_root.status._y=Stage.height-panelheight-22;
 		for (var w in _root.windows) {
 			if (typeof(_root.windows[w])=='movieclip') { _root.windows[w].drawAreas(); }
 		}

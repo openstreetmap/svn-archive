@@ -5,20 +5,15 @@
 	// ----	Initialise
 	
 	function OSMWay() {
-		this.path=new Array();
-		// path is an array of points
-		// each point is an array: (x,y,node_id,0 move|1 draw,tag array,segment id)
-		this.attr=new Array();
+		this.path=new Array();			// list of nodes
+		this.attr=new Array();			// hash of tags
 		this.clean=true;				// altered since last upload?
 		this.uploading=false;			// currently uploading?
 		this.locked=false;				// locked against upload?
 		this.oldversion=0;				// is this an undeleted, not-uploaded way?
 		this.mergedways=new Array();	// list of ways merged into this
 		this.checkconnections=false;	// check shared nodes on reload
-		this.xmin=0;
-		this.xmax=0;
-		this.ymin=0;
-		this.ymax=0;
+		this.resetBBox();
 	};
 	OSMWay.prototype=new MovieClip();
 
@@ -31,54 +26,71 @@
 			var w=result[0];
 			if (length(result[1])==0) { removeMovieClip(_root.map.ways[w]); 
 										removeMovieClip(_root.map.areas[w]); return; }
-			var i,id;
+			var i,id,x,y,prepoint;
 			_root.map.ways[w].clean=true;
 			_root.map.ways[w].locked=false;
 			_root.map.ways[w].oldversion=0;
-			_root.map.ways[w].path=result[1];
-			_root.map.ways[w].attr=result[2];
-			_root.map.ways[w].xmin=coord2long(result[3]);
-			_root.map.ways[w].xmax=coord2long(result[4]);
-			_root.map.ways[w].ymin=coord2lat(result[5]);
-			_root.map.ways[w].ymax=coord2lat(result[6]);
-			_root.map.ways[w].redraw();
-			_root.map.ways[w].clearPOIs();
-			if (_root.map.ways[w].checkconnections) {	// move nodes in other ways
-				for (i=0;  i<_root.map.ways[w].path.length; i++) {
-					moveNode(_root.map.ways[w].path[i][2],
-							 _root.map.ways[w].path[i][0],
-							 _root.map.ways[w].path[i][1],w);
+			_root.map.ways[w].path=[];
+			_root.map.ways[w].resetBBox();
+			for (i=0; i<result[1].length; i++) {
+				x =result[1][i][0];
+				y =result[1][i][1];
+				id=result[1][i][2];
+				_root.map.ways[w].updateBBox(x,y);
+				x=long2coord(x); y=lat2coord(y);
+				_root.map.ways[w].path.push(id);
+				if (nodes[id]) {
+					// already exists: move node in other ways if required
+					// ** maybe we should take out 'w'? not sure
+					if (_root.map.ways[w].checkconnections) { nodes[id].moveTo(x,y,w); }
+				} else {
+					// doesn't exist, so create new node
+					_root.nodes[id]=new Node(id,x,y,result[1][i][4]);
+					if (id==prenode) { prepoint=i; }
 				}
-				this.checkconnections=false;
 			}
+			_root.map.ways[w].attr=result[2];
+			_root.map.ways[w].redraw();
+			if (w==preway) { _root.map.ways[w].select(); preway=undefined; }
+			if (prepoint)  { _root.map.ways[w].select(); 
+							 _root.map.anchors[prepoint].select();
+							 prenode=prepoint=undefined; }
+			_root.map.ways[w].clearPOIs();
+			_root.map.ways[w].checkconnections=false;
 		};
-		remote.call('getway',responder,Math.floor(this._name),baselong,basey,masterscale);
+		remote.call('getway',responder,Math.floor(this._name));
 	};
 
 	OSMWay.prototype.loadFromDeleted=function(version) {
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
-			var i,z;
+			var i,id;
 			var w=result[0];
 			_root.map.ways[w].clean=false;
 			_root.map.ways[w].oldversion=result[7];
-			z=result[1]; // assign negative IDs to anything moved
-			for (i in z) {
-				if (result[1][i][2]<0) { _root.newnodeid--; result[1][i][2]=newnodeid; }
+			_root.map.ways[w].path=[];
+			_root.map.ways[w].resetBBox();
+			for (i=0; i<result[1].length; i++) {
+				x =result[1][i][0];
+				y =result[1][i][1];
+				id=result[1][i][2]; if (id<0) { id=--_root.newnodeid; }	// assign negative IDs to anything moved
+				_root.map.ways[w].updateBBox(x,y);
+				x=long2coord(x); y=lat2coord(y);
+				_root.map.ways[w].path.push(id);
+				if (nodes[id]) {
+					nodes[id].moveTo(x,y,w);
+				} else {
+					_root.nodes[id]=new Node(id,x,y,result[1][i][4]);
+				}
 			}
-			_root.map.ways[w].path=result[1];
 			_root.map.ways[w].attr=result[2];
-			_root.map.ways[w].xmin=result[3];
-			_root.map.ways[w].xmax=result[4];
-			_root.map.ways[w].ymin=result[5];
-			_root.map.ways[w].ymax=result[6];
 			if (w==wayselected) { _root.map.ways[w].select(); markClean(false); }
 						   else { _root.map.ways[w].locked=true; }
 			_root.map.ways[w].redraw();
 			_root.map.ways[w].clearPOIs();
 		};
-		remote.call('getway_old',delresponder,Math.floor(this._name),Math.floor(version),baselong,basey,masterscale);
+		remote.call('getway_old',delresponder,Math.floor(this._name),Math.floor(version));
 	};
 
 	OSMWay.prototype.clearPOIs=function() {
@@ -86,7 +98,7 @@
 		var i,z;
 		z=this.path;
 		for (i in z) {
-			if (_root.map.pois[this.path[i][2]]) { removeMovieClip(_root.map.pois[this.path[i][2]]); }
+			if (_root.map.pois[this.path[i]]) { removeMovieClip(_root.map.pois[this.path[i]]); }
 		}
 	};
 
@@ -94,8 +106,12 @@
 
 	OSMWay.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
+		this.createEmptyMovieClip("taggednodes",2);				// POIs in way
 		var linealpha=100; // -50*(this.locked==true);
-		
+		var taggedscale;
+		if (preferences.data.thinlines) { taggedscale=100/Math.pow(2,_root.scale-13); }
+								   else { taggedscale=Math.max(100/Math.pow(2,_root.scale-13),6.25); }
+
 		// Set stroke
 
 		if		(this.locked)					 { this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); }
@@ -116,11 +132,11 @@
 			with (_root.map.areas[this._name]) {
 				clear();
 				enabled=false;
-				moveTo(this.path[0][0],this.path[0][1]); 
+				moveTo(nodes[this.path[0]].x,nodes[this.path[0]].y); 
 				if (f>-1) { beginFill(f,20); }
 					 else { lineStyle(linewidth*1.5,0,100,false,"none"); }
 				for (var i=1; i<this.path.length; i+=1) {
-					lineTo(this.path[i][0],this.path[i][1]);
+					lineTo(nodes[this.path[i]].x,nodes[this.path[i]].y);
 				}
 				if (f>-1) { endFill(); }
 			};
@@ -128,21 +144,24 @@
 			removeMovieClip(_root.map.areas[this._name]);
 		}
 
-		// Draw line
+		// Draw line and tagged nodes
 
-		this.line.moveTo(this.path[0][0],this.path[0][1]); 
+		this.line.moveTo(nodes[this.path[0]].x,nodes[this.path[0]].y);
 		for (var i=1; i<this.path.length; i+=1) {
-			this.line.lineTo(this.path[i][0],this.path[i][1]);
+			this.line.lineTo(nodes[this.path[i]].x,nodes[this.path[i]].y);
+			if (nodes[this.path[i]].tagged) {
+				this.taggednodes.attachMovie("poiinway",i,i);
+				this.taggednodes[i]._x=nodes[this.path[i]].x;
+				this.taggednodes[i]._y=nodes[this.path[i]].y;
+				this.taggednodes[i]._xscale=this.taggednodes[i]._yscale=taggedscale;
+			}
 		}
-
 		redrawRelationsForMember('way', this._name);
 	};
 
 	OSMWay.prototype.getFill=function() {
 		var f=-1; 
-		if (this.path[this.path.length-1][0]==this.path[0][0] &&
-			this.path[this.path.length-1][1]==this.path[0][1] &&
-			this.path.length>2) {
+		if (this.path[this.path.length-1]==this.path[0] && this.path.length>2) {
 			if (this.attr['area']) { f='0x777777'; }
 			var z=this.attr;
 			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
@@ -159,8 +178,8 @@
 			_root.panel.i_direction._visible=true;
 			_root.panel.i_direction._alpha=50;
 		} else {
-			var dx=this.path[this.path.length-1][0]-this.path[0][0];
-			var dy=this.path[this.path.length-1][1]-this.path[0][1];
+			var dx=nodes[this.path[this.path.length-1]].x-nodes[this.path[0]].x;
+			var dy=nodes[this.path[this.path.length-1]].y-nodes[this.path[0]].y;
 			if (dx!=0 || dy!=0) {
 				// Non-circular
 				_root.panel.i_direction._rotation=180-Math.atan2(dx,dy)*(180/Math.PI)-45;
@@ -176,9 +195,9 @@
 				var lowest=0;
 				var xmax=-999999; var ymin=-999999;
 				for (var i=0; i<this.path.length; i++) {
-					if      (this.path[i][1]> ymin) { lowest=i; xmin=this.path[i][0]; ymin=this.path[i][1]; }
-					else if (this.path[i][1]==ymin
-						  && this.path[i][0]> xmax) { lowest=i; xmin=this.path[i][0]; ymin=this.path[i][1]; }
+					if      (nodes[this.path[i]].y> ymin) { lowest=i; xmin=nodes[this.path[i]].x; ymin=nodes[this.path[i]].y; }
+					else if (nodes[this.path[i]].y==ymin
+						  && nodes[this.path[i]].x> xmax) { lowest=i; xmin=nodes[this.path[i]].x; ymin=nodes[this.path[i]].y; }
 				}
 				var clockwise=(this.onLeft(lowest)>0);
 				_root.panel.i_clockwise._visible=clockwise;
@@ -190,8 +209,8 @@
 	OSMWay.prototype.onLeft=function(j) {
 		var i=j-1; if (i==-1) { i=this.path.length-1; }
 		var k=j+1; if (k==this.path.length) { k=0; }
-		return ((this.path[j][0]-this.path[i][0]) * (this.path[k][1]-this.path[i][1]) -
-			    (this.path[k][0]-this.path[i][0]) * (this.path[j][1]-this.path[i][1]));
+		return ((nodes[this.path[j]].x-nodes[this.path[i]].x) * (nodes[this.path[k]].y-nodes[this.path[i]].y) -
+			    (nodes[this.path[k]].x-nodes[this.path[i]].x) * (nodes[this.path[j]].y-nodes[this.path[i]].y));
 	};
 	
 
@@ -224,22 +243,19 @@
 		var c=true;
 		var z=this.path;
 		for (var i in z) {
-			var y=this.path[i][4];
-			for (var j in y) {
-				if (j!='created_by' && y[j]!='' && j!='source' && j.indexOf('tiger:')!=0) { c=false; }
-			}
+			if (nodes[this.path[i]].tagged) { c=false; }
 		}
 		if (c) {
-			_root.ws.saveUndo("deleting");
+			_root.ws.saveUndo(iText("deleting",'deleting'));
 			this.remove();
 		} else {
 			_root.windows.attachMovie("modal","confirm",++windowdepth);
-			_root.windows.confirm.init(275,80,new Array('Cancel','Delete'),
+			_root.windows.confirm.init(275,80,new Array(iText('Cancel','cancel'),iText('Delete','delete')),
 				function(choice) {
-					if (choice=='Delete') { _root.ws.saveUndo("deleting"); _root.ws.remove(); }
+					if (choice==iText('Delete','delete')) { _root.ws.saveUndo(iText("deleting",'deleting')); _root.ws.remove(); }
 				});
 			_root.windows.confirm.box.createTextField("prompt",2,7,9,250,100);
-			writeText(_root.windows.confirm.box.prompt,"Some of the points on this way are tagged. Really delete?");
+			writeText(_root.windows.confirm.box.prompt,iText("Some of the points on this way are tagged. Really delete?",'prompt_taggedpoints'));
 		}
 	};
 
@@ -250,41 +266,40 @@
 		putresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,r,z,nw,qway,qs;
-			nw=result[1];	// new way ID
-			if (result[0]!=nw) {
+			nw=result[1];			// new way ID
+			if (result[0]!=nw) {	// renumber way?
 				_root.map.ways[result[0]]._name=nw;
 				renumberMemberOfRelation('way', result[0], nw);
 				if (_root.map.areas[result[0]]) { _root.map.areas[result[0]]._name=nw; }
 				if (_root.panel.t_details.text==result[0]) { _root.panel.t_details.text=nw; _root.panel.t_details.setTextFormat(plainText); }
 				if (wayselected==result[0]) { selectWay(nw); }
 			}
-			_root.map.ways[nw].xmin=result[3];
-			_root.map.ways[nw].xmax=result[4];
-			_root.map.ways[nw].ymin=result[5];
-			_root.map.ways[nw].ymax=result[6];
+			// ** used to have bbox code here, but don't think we need it
 			_root.map.ways[nw].uploading=false;
 			_root.map.ways[nw].oldversion=0;
 
-			// check if renumbered nodes occur in any other ways
-			for (qway in _root.map.ways) {
-				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-					if (result[2][_root.map.ways[qway].path[qs][2]]) {
-						_root.map.ways[qway].path[qs][2]=result[2][_root.map.ways[qway].path[qs][2]];
-					}
-				}
-			}
-			// check if renumbered nodes are part of relations
-			for ( var oid in result[2] ) {
+			z=result[2];
+			// renumber nodes (and any relations/ways they're in)
+			for (var oid in z) {
 				var nid = result[2][oid];
+				nodes[oid].renumberTo(nid);
 				renumberMemberOfRelation('node', oid, nid);
 			}
 			_root.map.ways[nw].clearPOIs();
 			_root.map.ways[nw].deleteMergedWays();
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
+			// Assemble 'sendpath' and upload it
 			this.attr['created_by']=_root.signature;
 			this.uploading=true;
-			remote.call('putway',putresponder,_root.usertoken,Math.floor(this._name),this.path,this.attr,this.oldversion,baselong,basey,masterscale);
+			var sendpath=new Array();
+			for (i=0; i<this.path.length; i++) {
+				sendpath.push(new Array(coord2long(nodes[this.path[i]].x),
+										coord2lat (nodes[this.path[i]].y),
+										this.path[i],null,
+										deepCopy  (nodes[this.path[i]].attr)));
+			}
+			remote.call('putway',putresponder,_root.usertoken,Number(this._name),sendpath,this.attr);
 			this.clean=true;
 		}
 	};
@@ -319,7 +334,7 @@
 		_root.undo.append(UndoStack.prototype.undo_deleteway,
 						  new Array(this._name,this._x,this._y,
 									deepCopy(this.attr),
-									deepCopy(this.path)),str+" a way");
+									deepCopy(this.path)),iText("$1 a way",'a_way',str));
 	};
 
 
@@ -340,29 +355,22 @@
 	};
 	
 	OSMWay.prototype.onPress=function() {
+		removeWelcome(true);
 		if (Key.isDown(Key.SHIFT) && this._name==_root.wayselected && _root.drawpoint==-1) {
 			// shift-click current way: insert point
-			_root.newnodeid--;
-			_root.pointselected=this.insertAnchorPoint(_root.newnodeid);
-			var waylist=new Array(); waylist.push(this);
-			var poslist=new Array(); poslist.push(_root.pointselected);
-			for (qway in _root.map.ways) {
-				if (_root.map.ways[qway].hitTest(_root._xmouse,_root._ymouse,true) && qway!=this._name) {
-					poslist.push(_root.map.ways[qway].insertAnchorPoint(_root.newnodeid));
-					waylist.push(_root.map.ways[qway]);
-				}
-			}
-			_root.undo.append(UndoStack.prototype.undo_addpoint,
-							  new Array(waylist,poslist), "adding a node into a way");
-			this.highlightPoints(5000,"anchor");
-			_root.map.anchors[pointselected].beginDrag();
+			this.insertAnchorPointAtMouse();
 		} else if (Key.isDown(Key.SHIFT) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1) {
-			// shift-click other way: merge two ways
-			this.mergeAtCommonPoint(_root.ws);
-			_root.ws.redraw();
-			_root.ws.select();
-//			_root.ws.upload();
-//			_root.map.ways[this._name ].remove(wayselected);
+			if (_root.ws.hitTest(_root._xmouse,_root._ymouse,true)) {
+				// shift-click other way (at intersection with current): make intersection
+				this.insertAnchorPointAtMouse();
+			} else {
+				// shift-click other way: merge two ways
+				this.mergeAtCommonPoint(_root.ws);
+				_root.ws.redraw();
+				_root.ws.select();
+//				_root.ws.upload();
+//				_root.map.ways[this._name ].remove(wayselected);
+			}
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
 			if (this.oldversion==0) {
@@ -372,7 +380,7 @@
 				_root.newnodeid--;
 				this.insertAnchorPoint(_root.newnodeid);
 				this.highlightPoints(5001,"anchorhint");
-				addEndPoint(_root.adjustedxmouse,_root.adjustedymouse,newnodeid);
+				addEndPoint(newnodeid);
 			}
 			_root.junction=true;
 			restartElastic();
@@ -382,7 +390,14 @@
 			this.select();
 			clearTooltip();
 			_root.clicktime=new Date();
-			this.beginDrag();
+			// was the click on a tagged node? if so, select directly
+			var n;
+			for (var i=0; i<this.path.length; i+=1) {
+				if (this.taggednodes[i].hitTest(_root._xmouse,_root._ymouse,true)) { n=i; }
+			}
+			if (n) { _root.map.anchors[n].beginDrag();
+					 _root.map.anchors[n].select(); }
+			  else { this.beginDrag(); }
 		}
 	};
 
@@ -428,13 +443,14 @@
 			_root.undo.append(UndoStack.prototype.undo_movenodes,
 							  new Array(this,_root.map._xmouse-_root.firstxmouse,
 								  			 _root.map._ymouse-_root.firstymouse),
-							  "moving a way");
+							  iText("moving a way",'action_moveway'));
 		}
 	};
 	
 	// ----	Select/highlight
 	
 	OSMWay.prototype.select=function() {
+		_root.panel.properties.tidy();
 		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
 //		_root.panel.properties.saveAttributes();
 		selectWay(this._name);
@@ -443,7 +459,7 @@
 		this.highlightPoints(5000,"anchor");
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
-		setTypeText("Way",this._name);
+		setTypeText(iText("Way",'way'),this._name);
 		_root.panel.properties.init('way',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
@@ -457,9 +473,9 @@
 		} else {
 			var linecolour=0xFFFF00; if (this.locked) { var linecolour=0x00FFFF; }
 			_root.map.highlight.lineStyle(linewidth*1.5+8,linecolour,80,false,"none");
-			_root.map.highlight.moveTo(this.path[0][0],this.path[0][1]);
+			_root.map.highlight.moveTo(nodes[this.path[0]].x,nodes[this.path[0]].y);
 			for (var i=1; i<this.path.length; i+=1) {
-				_root.map.highlight.lineTo(this.path[i][0],this.path[i][1]);
+				_root.map.highlight.lineTo(nodes[this.path[i]].x,nodes[this.path[i]].y);
 			}
 		}
 		this.direction();
@@ -482,12 +498,17 @@
 		_root.map.createEmptyMovieClip(group,d);
 		for (var i=0; i<this.path.length; i+=1) {
 			_root.map[group].attachMovie(atype,i,i);
-			_root.map[group][i]._x=this.path[i][0];
-			_root.map[group][i]._y=this.path[i][1];
+			_root.map[group][i]._x=nodes[this.path[i]].x;
+			_root.map[group][i]._y=nodes[this.path[i]].y;
 			_root.map[group][i]._xscale=anchorsize;
 			_root.map[group][i]._yscale=anchorsize;
-			_root.map[group][i].node=this.path[i][2];
-			_root.map[group][i].way=this._name;
+			_root.map[group][i].node=this.path[i];
+			_root.map[group][i].way=this;
+			if (nodes[this.path[i]].tagged) {
+				// anchor point should be black if it has tags
+				_root.map[group][i].blacken=new Color(_root.map[group][i]);
+				_root.map[group][i].blacken.setTransform(to_black);
+			}
 		}
 	};
 
@@ -522,12 +543,11 @@
 			uploadDirtyRelations();
 			_root.undo.append(UndoStack.prototype.undo_splitway,
 							  new Array(this,_root.map.ways[newwayid]),
-							  "splitting a way");
+							  iText("splitting a way",'action_splitway'));
 		};
 	};
 
 	//		Merge (start/end of this way,other way object,start/end of other way)
-	// ** needs to not add duplicate points
 
 	OSMWay.prototype.mergeWay=function(topos,otherway,frompos) {
 		var i,z;
@@ -536,7 +556,7 @@
 		var mergepoint=this.path.length;
 		_root.undo.append(UndoStack.prototype.undo_mergeways,
 						  new Array(this,deepCopy(this.attr),deepCopy(otherway.attr),topos),
-						  "merging two ways");
+						  iText("merging two ways",'action_mergeways'));
 		if (frompos==0) { for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); } }
 				   else { for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); } }
 
@@ -572,23 +592,19 @@
 	};
 
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
-		if (topos==0) { if (this.path[0					][2]==otherway.path[srcpt][2]) { return; } }	// don't add duplicate points
-				 else { if (this.path[this.path.length-1][2]==otherway.path[srcpt][2]) { return; } }	//  |
-		var newpoint=new Array(otherway.path[srcpt][0],
-							   otherway.path[srcpt][1],
-							   otherway.path[srcpt][2],null,
-							   otherway.path[srcpt][4]);
-		if (topos==0) { this.path.unshift(newpoint); }
-			     else { this.path.push(newpoint); }
+		if (topos==0) { if (nodes[this.path[0				  ]]==nodes[otherway.path[srcpt]]) { return; } }	// don't add duplicate points
+				 else { if (nodes[this.path[this.path.length-1]]==nodes[otherway.path[srcpt]]) { return; } }	//  |
+		if (topos==0) { this.path.unshift(otherway.path[srcpt]); }
+			     else { this.path.push(otherway.path[srcpt]); }
 	};
 
 	OSMWay.prototype.mergeAtCommonPoint=function(sel) {
-		var selstart =sel.path[0][2];
+		var selstart =sel.path[0];
 		var sellen   =sel.path.length-1;
-		var selend   =sel.path[sellen][2];
-		var thisstart=this.path[0][2];
+		var selend   =sel.path[sellen];
+		var thisstart=this.path[0];
 		var thislen  =this.path.length-1;
-		var thisend  =this.path[thislen][2];
+		var thisend  =this.path[thislen];
 		if      (selstart==thisstart) { sel.mergeWay(0,this,0);			   return true; }
 		else if (selstart==thisend  ) { sel.mergeWay(0,this,thislen);	   return true; }
 		else if (selend  ==thisstart) { sel.mergeWay(sellen,this,0);	   return true; }
@@ -607,23 +623,24 @@
 		this.select();
 		this.clean=false;
 		markClean(false);
-		_root.undo.append(UndoStack.prototype.undo_reverse,new Array(this),"reversing a way");
+		_root.undo.append(UndoStack.prototype.undo_reverse,new Array(this),iText("reversing a way",'action_reverseway'));
 	};
 
 	// ----	Move all nodes within a way
 	
 	OSMWay.prototype.moveNodes=function(xdiff,ydiff) {
+		var i,n;
 		var movedalready=new Array();
 		this.clean=false;
 		markClean(false);
-		for (var i=0; i<this.path.length; i+=1) {
-			if (movedalready[this.path[i][2]]) {
+		for (i=0; i<this.path.length; i+=1) {
+			n=this.path[i];
+			if (movedalready[n]) {
 			} else {
-				moveNode(this.path[i][2],
-						 this.path[i][0]+xdiff,
-						 this.path[i][1]+ydiff,
-						 this._name);
-				movedalready[this.path[i][2]]=true;
+				nodes[n].moveTo(nodes[n].x+xdiff,
+								nodes[n].y+ydiff,
+								this._name);
+				movedalready[n]=true;
 			}
 		}
 	};
@@ -634,7 +651,7 @@
 		var z=this.path; var ch=false;
 		for (var i in z) {
 			if (i>0) {
-				if (this.path[i][2]==this.path[i-1][2]) { this.path.splice(i,1); ch=true; }
+				if (this.path[i]==this.path[i-1]) { this.path.splice(i,1); ch=true; }
 			}
 		}
 		return ch;
@@ -645,35 +662,57 @@
 	//		for algorithm to find nearest point on a line
 	
 	OSMWay.prototype.insertAnchorPoint=function(nodeid) {
-		var nx,ny,tx,ty,u,closest,closei,i,x1,y1,x2,y2,direct,via,newpoint;
+		var nx,ny,tx,ty,u,closest,closei,i,a,b,direct,via,newpoint;
 		nx=_root.map._xmouse;	// where we're inserting it
 		ny=_root.map._ymouse;	//	|
 		closest=0.05; closei=0;
 		for (i=0; i<(this.path.length)-1; i+=1) {
-			x1=this.path[i][0];
-			y1=this.path[i][1];
-			x2=this.path[i+1][0];
-			y2=this.path[i+1][1];
-			direct=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-			via   =Math.sqrt((nx-x1)*(nx-x1)+(ny-y1)*(ny-y1));
-			via  +=Math.sqrt((nx-x2)*(nx-x2)+(ny-y2)*(ny-y2));
+			a=nodes[this.path[i  ]];
+			b=nodes[this.path[i+1]];
+			direct=Math.sqrt((b.x-a.x)*(b.x-a.x)+(b.y-a.y)*(b.y-a.y));
+			via   =Math.sqrt((nx -a.x)*(nx -a.x)+(ny -a.y)*(ny -a.y));
+			via  +=Math.sqrt((nx -b.x)*(nx -b.x)+(ny -b.y)*(ny -b.y));
 			if (Math.abs(via/direct-1)<closest) {
 				closei=i+1;
 				closest=Math.abs(via/direct-1);
-				u=((nx-x1)*(x2-x1)+(ny-y1)*(y2-y1))/(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-				tx=x1+u*(x2-x1);
-				ty=y1+u*(y2-y1);
+				u=((nx-a.x)*(b.x-a.x)+
+				   (ny-a.y)*(b.y-a.y))/
+				   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
+				tx=a.x+u*(b.x-a.x);
+				ty=a.y+u*(b.y-a.y);
 			}
 		}
 		// Insert
-		newpoint=new Array(tx,ty,nodeid,1,new Array(),0);
-		this.path.splice(closei,0,newpoint);
+		this.path.splice(closei,0,nodeid);
+		_root.nodes[nodeid]=new Node(nodeid,tx,ty,new Array());
 		this.clean=false;
 		this.redraw();
 		markClean(false);
-		_root.adjustedxmouse=tx;	// in case we're adding extra points...
-		_root.adjustedymouse=ty;	// should probably return an array or an object **
+//		_root.adjustedxmouse=tx;	// in case we're adding extra points...
+//		_root.adjustedymouse=ty;	// should probably return an array or an object **
 		return closei;
+	};
+
+	//		Wrapper around the above to:
+	//		- insert at mouse position
+	//		- add to undo stack
+	//		- add intersection at any crossing ways
+
+	OSMWay.prototype.insertAnchorPointAtMouse=function() {
+		_root.newnodeid--;
+		_root.pointselected=this.insertAnchorPoint(_root.newnodeid);
+		var waylist=new Array(); waylist.push(this);
+		var poslist=new Array(); poslist.push(_root.pointselected);
+		for (qway in _root.map.ways) {
+			if (_root.map.ways[qway].hitTest(_root._xmouse,_root._ymouse,true) && qway!=this._name) {
+				poslist.push(_root.map.ways[qway].insertAnchorPoint(_root.newnodeid));
+				waylist.push(_root.map.ways[qway]);
+			}
+		}
+		_root.undo.append(UndoStack.prototype.undo_addpoint,
+						  new Array(waylist,poslist), iText("adding a node into a way",'action_insertnode'));
+		_root.ws.highlightPoints(5000,"anchor");
+		_root.map.anchors[pointselected].beginDrag();
 	};
 
 	// ----	Remove point from this way (only)
@@ -681,17 +720,28 @@
 	OSMWay.prototype.removeAnchorPoint=function(point) {
 		// ** if length<2, then mark as way removal
 		_root.undo.append(UndoStack.prototype.undo_deletepoint,
-						  new Array(this.path[point][2],
-						  			this.path[point][0],
-						  			this.path[point][1],
-						  			this.path[point][4],
+						  new Array(deepCopy(nodes[this.path[point]]),
 						  			new Array(this._name),
 						  			new Array(point)),
-						  "deleting a point");
+						  iText("deleting a point",'action_deletepoint'));
 		this.path.splice(point,1);
 		this.removeDuplicates();
 		if (this.path.length<2) { this.remove(); }
 						   else { this.redraw(); this.clean=false; }
+	};
+
+	// ----	Bounding box utility functions
+
+	OSMWay.prototype.resetBBox=function() {
+		this.xmin=this.ymin= 999;
+		this.xmax=this.ymax=-999;
+	};
+	
+	OSMWay.prototype.updateBBox=function(long,lat) {
+		this.xmin=Math.min(long,this.xmin);
+		this.xmax=Math.max(long,this.xmax);
+		this.ymin=Math.min(lat ,this.ymin);
+		this.ymax=Math.max(lat ,this.ymax);
 	};
 
 	Object.registerClass("way",OSMWay);
@@ -700,68 +750,35 @@
 	// =====================================================================================
 	// Drawing support functions
 
-	// removeNodeFromWays - remove node from all ways
+	// removeNodeFromWays - now see Node.removeFromAllWays
 
-	function removeNodeFromWays(id) {
-		var qway,qs,x,y,attr;
-		var waylist=new Array(); var poslist=new Array();
-		for (qway in _root.map.ways) {
-			var qdirty=false;
-			for (qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
-				if (_root.map.ways[qway].path[qs][2]==id) {
-					x=_root.map.ways[qway].path[qs][0];		// save for undo
-					y=_root.map.ways[qway].path[qs][1];		//  |
-					attr=_root.map.ways[qway].path[qs][4];	//  |
-					waylist.push(qway); poslist.push(qs);	//  |
-					_root.map.ways[qway].path.splice(qs,1);
-					qdirty=true;
-				}
-			}
-			if (qdirty) { _root.map.ways[qway].removeDuplicates(); }
-			if (qdirty && _root.map.ways[qway]["path"].length<2) {
-				_root.map.ways[qway].remove();
-			} else if (qdirty) {
-				_root.map.ways[qway].redraw();
-				_root.map.ways[qway].clean=false;
-			}
-		}
-		if (_root.wayselected) { _root.ws.select(); }
-		_root.undo.append(UndoStack.prototype.undo_deletepoint,
-						  new Array(id,x,y,attr,waylist,poslist),
-						  "deleting a point");
-	}
+	// startNewWay		  - create new way from first node
 
-	// startNewWay		  - create new way with first point x,y,node
-
-	function startNewWay(x,y,node) {
+	function startNewWay(node) {
 		uploadSelected();
 		_root.newwayid--;
-		newpoint=new Array(x,y,node,0,new Array(),0);
 		selectWay(newwayid);
 		_root.poiselected=0;
 		_root.map.ways.attachMovie("way",newwayid,++waydepth);
-		_root.map.ways[newwayid].path[0]=newpoint;
+		_root.map.ways[newwayid].path[0]=node;
 		_root.map.ways[newwayid].redraw();
 		_root.map.ways[newwayid].select();
 		_root.map.ways[newwayid].clean=false;
 		_root.map.anchors[0].startElastic();
 		_root.drawpoint=0;
 		markClean(false);
-		setTooltip("click to add point\ndouble-click/Return\nto end line",0);
+		setTooltip(iText("click to add point\ndouble-click/Return\nto end line",'hint_drawmode'),0);
 	}
 
 	// addEndPoint - add point to start/end of line
 
-	function addEndPoint(x,y,node,tags) {
-		if (tags) {} else { tags=new Array(); }
-		newpoint=new Array(x,y,node,0,tags,0);
-		x1=_root.ws.path[_root.drawpoint][0];
-		y1=_root.ws.path[_root.drawpoint][1];
+	function addEndPoint(node) {
+		var drawnode=nodes[_root.ws.path[_root.drawpoint]];
 		if (_root.drawpoint==_root.ws.path.length-1) {
-			_root.ws.path.push(newpoint);
+			_root.ws.path.push(node);
 			_root.drawpoint=_root.ws.path.length-1;
 		} else {
-			_root.ws.path.unshift(newpoint);	// drawpoint=0, add to start
+			_root.ws.path.unshift(node);	// drawpoint=0, add to start
 		}
 	
 		// Redraw line (if possible, just extend it to save time)
@@ -771,14 +788,14 @@
 			_root.ws.redraw();
 			_root.ws.select();
 		} else {
-			_root.ws.line.moveTo(x1,y1);
-			_root.ws.line.lineTo(x,y);
+			_root.ws.line.moveTo(drawnode.x,drawnode.y);
+			_root.ws.line.lineTo(nodes[node].x,nodes[node].y);
 			if (casing[_root.ws.attr['highway']]) {
-				_root.map.areas[wayselected].moveTo(x1,y1);
-				_root.map.areas[wayselected].lineTo(x,y);
+				_root.map.areas[wayselected].moveTo(drawnode.x,drawnode.y);
+				_root.map.areas[wayselected].lineTo(nodes[node].x,nodes[node].y);
 			}
-			_root.map.highlight.moveTo(x1,y1);
-			_root.map.highlight.lineTo(x,y);
+			_root.map.highlight.moveTo(drawnode.x,drawnode.y);
+			_root.map.highlight.lineTo(nodes[node].x,nodes[node].y);
 			_root.ws.direction();
 			_root.ws.highlightPoints(5000,"anchor");
 			removeMovieClip(_root.map.anchorhints);
@@ -791,7 +808,7 @@
 		var poslist=new Array(); poslist.push(_root.drawpoint);
 		_root.undo.append(UndoStack.prototype.undo_addpoint,
 						  new Array(new Array(_root.ws),poslist),
-						  "adding a node to the end of a way");
+						  iText("adding a node to the end of a way",'action_addpoint'));
 	}
 
 	function stopDrawing() {
@@ -811,12 +828,12 @@
 
 	function cycleStacked() {
 		if (_root.pointselected>-2) {
-			var id=_root.ws.path[_root.pointselected][2];
+			var id=_root.ws.path[_root.pointselected];
 			var firstfound=0; var nextfound=0;
 			for (qway in _root.map.ways) {
 				if (qway!=_root.wayselected) {
-					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-						if (_root.map.ways[qway].path[qs][2]==id) {
+					for (qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
+						if (_root.map.ways[qway].path[qs]==id) {
 							var qw=Math.floor(qway);
 							if (firstfound==0 || qw<firstfound) { firstfound=qw; }
 							if ((nextfound==0 || qw<nextfound) && qw>wayselected) { nextfound=qw; }
@@ -868,12 +885,14 @@
 					point=pointlist[i][0];									//  |
 					if (!_root["map"]["pois"][point]) {						//  |
 						_root.map.pois.attachMovie("poi",point,++poidepth);	//  |
-						_root.map.pois[point]._x=pointlist[i][1];			//  |
-						_root.map.pois[point]._y=pointlist[i][2];			//  |
+						_root.map.pois[point]._x=long2coord(pointlist[i][1]);// |
+						_root.map.pois[point]._y=lat2coord (pointlist[i][2]);// |
 						_root.map.pois[point]._xscale=
 						_root.map.pois[point]._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
 						_root.map.pois[point].attr=pointlist[i][3];			//  |
 						_root.poicount+=1;									//  |
+						if (point==prenode) { deselectAll(); prenode=undefined;
+											  _root.map.pois[point].select(); }
 					}
 				}
 
@@ -887,7 +906,7 @@
 					}
                 }
 			};
-			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t,baselong,basey,masterscale);
+			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
 			_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
 			_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 			_root.whichrequested+=1;

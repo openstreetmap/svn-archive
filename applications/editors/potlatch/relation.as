@@ -136,25 +136,15 @@
 			if ( ms[m][0] == 'way' && _root.map.ways[ms[m][1]] ) {
 				var way = _root.map.ways[ms[m][1]];
 		
-				this.line.moveTo(way.path[0][0],way.path[0][1]);
+				this.line.moveTo(nodes[way.path[0]].x,nodes[way.path[0]].y);
 				for (var i=1; i<way.path.length; i+=1) {
-					this.line.lineTo(way.path[i][0],way.path[i][1]);
+					this.line.lineTo(nodes[way.path[i]].x,nodes[way.path[i]].y);
 				}
 			} else if ( ms[m][0] == 'node' && _root.map.pois[ms[m][1]] ) {
 				var poi = _root.map.pois[ms[m][1]];
 				this.drawPoint(poi._x, poi._y);
 			} else if ( ms[m][0] == 'node' ) {
-				var pid = ms[m][1];
-				var done = false;
-				var qway = wayselected;// {
-					for (qs=0; qs<_root.map.ways[qway].path.length && !done; qs+=1) {
-						var poi = _root.map.ways[qway].path[qs];
-						if ( poi[2] == pid ) {
-							this.drawPoint(poi[0], poi[1]);
-							done = true;
-						}
-					}
-				//}
+				this.drawPoint(nodes[ms[m][1]].x,nodes[ms[m][1]].y);
 			}
 		}
 	};
@@ -313,7 +303,7 @@
 			_x = 400-16; _y = 18;
 		}
 		box.newattr.onRelease =function() { box.properties.enterNewAttribute(); };
-		box.newattr.onRollOver=function() { setFloater("Add a new tag"); };
+		box.newattr.onRollOver=function() { setFloater(iText("Add a new tag",'tip_addtag')); };
 		box.newattr.onRollOut =function() { clearFloater(); };
 	};
 
@@ -389,7 +379,7 @@
 		var type, id;
 		switch (proptype) {
 			case 'way':		type='way' ; id=wayselected; break;
-			case 'point':	type='node'; id=_root.ws.path[_root.pointselected][2]; break;
+			case 'point':	type='node'; id=_root.ws.path[_root.pointselected]; break;
 			case 'POI':		type='node'; id=poiselected; break;
 		}
 		if ( type == undefined || id == undefined ) return;
@@ -422,12 +412,12 @@
 		};
 
 		_root.windows.attachMovie("modal","relation",++windowdepth);
-		_root.windows.relation.init(300, 140, ["Cancel", "Add"], completeAdd);
+		_root.windows.relation.init(300, 140, [iText("Cancel",'cancel'), iText("Add",'add')], completeAdd);
 		var z = 5;
 		var box = _root.windows.relation.box;
 		
 		box.createTextField("title",z++,7,7,300-14,20);
-		box.title.text = "Add "+proptype+" to a relation";
+		box.title.text = iText("Add $1 to a relation",'prompt_addtorelation',proptype);
 		with (box.title) {
 			wordWrap=true;
 			setTextFormat(boldText);
@@ -435,9 +425,9 @@
 		}
 		
 		box.createTextField("instr",z++,7,30,300-14,40);
-		writeText(box.instr, "Select an existing relation to add to, or create a new relation.");
+		writeText(box.instr, iText("Select an existing relation to add to, or create a new relation.",'prompt_selectrelation'));
 
-		var relations = new Array("Create a new relation");
+		var relations = new Array(iText("Create a new relation",'createrelation'));
 		var rs = _root.map.relations;
 		for ( var r in rs ) {
 			relations.push(rs[r].verboseText());
@@ -445,5 +435,5 @@
 		// a normal, scrollable list may be better than a menu
 		box.attachMovie("menu", "addroute_menu", z++);
 		box.addroute_menu.init(7, 75, 0, relations,
-					'Add to the chosen route', null, null, 300-14);
+					iText('Add to the chosen route','tip_selectrelation'),null, null, 300-14);
 	}

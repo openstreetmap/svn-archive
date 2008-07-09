@@ -30,7 +30,7 @@ class LegacyTileset(Tileset):
       tile.x //= 2
       tile.y //= 2
       print "Get_blank recurse upwards (%d,%d,%d)" % (tile.z,tile.x,tile.y)
-      self.get_blank(tile)
+      b = self.get_blank(tile)
     #print "get_blank (%d,%d,%d) returns %d" % (tile.z,tile.x,tile.y,b)
     return b
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   for layer in Layer.objects.exclude(name='lowzoom'):
     #if not layer: sys.exit("Unknown layer.")
-    for x = range (0,4096):
+    for x in range (0,4096):
       for y in range (0,4096):
         lt = LegacyTileset()
         print "Converting: %s (12,%d,%d)" % (layer.name,x,y)

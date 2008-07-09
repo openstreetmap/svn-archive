@@ -20,13 +20,17 @@
 
 package org.openstreetmap.josmng.ui;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
@@ -34,10 +38,11 @@ import javax.swing.border.Border;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
 import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
-import org.openstreetmap.josmng.ui.actions.ReverseWayAction;
 import org.openstreetmap.josmng.ui.actions.SetProjectionAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
 import org.openstreetmap.josmng.ui.mode.TheOnlyMode;
+import org.openstreetmap.josmng.utils.MenuPosition;
+import org.openstreetmap.josmng.utils.ServiceLoader;
 import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
 import org.openstreetmap.josmng.view.Projection;
@@ -57,6 +62,7 @@ public class Main extends javax.swing.JFrame {
         main = this;
         initComponents();
         initProjections();
+        initActions();
         modesBar.add(createModeButton(new TheOnlyMode(mapView1)));
         
         addStatusComponent(new Position(mapView1));
@@ -119,8 +125,6 @@ public class Main extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        toolsMenu = new javax.swing.JMenu();
-        reverse = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(mapView1, java.awt.BorderLayout.CENTER);
@@ -166,13 +170,6 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(editMenu);
 
-        toolsMenu.setText("Tools");
-
-        reverse.setAction(new ReverseWayAction());
-        toolsMenu.add(reverse);
-
-        jMenuBar1.add(toolsMenu);
-
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -211,10 +208,8 @@ public class Main extends javax.swing.JFrame {
     private org.openstreetmap.josmng.view.MapView mapView1;
     private javax.swing.JToolBar modesBar;
     private javax.swing.JMenu projection;
-    private javax.swing.JMenuItem reverse;
     private javax.swing.JPanel statusBar;
     private javax.swing.JToolBar toolBar;
-    private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
@@ -227,6 +222,36 @@ public class Main extends javax.swing.JFrame {
             if (proj.equals(mapView1.getProjection())) jrb.setSelected(true);
             projection.add(jrb);
         }
+    }
+
+    private void initActions() {
+        for (Action a : ServiceLoader.load(Action.class)) {
+            MenuPosition pos = a.getClass().getAnnotation(MenuPosition.class);
+            JMenu menu = findMenu(jMenuBar1, pos.value());
+            menu.add(new JMenuItem(a));
+            if (pos.inToolbar()) toolBar.add(a);
+        }
+    }
+    
+    private JMenu findMenu(Container container, String name) {
+        int slash = name.indexOf('/');
+        String lName = slash > 0 ? name.substring(0, slash) : name;
+        JMenu target = null;
+        for (Component c : container.getComponents()) {
+            if (lName.equals(c.getName())) {
+                target = (JMenu)c;
+                break;
+            }
+        }
+        
+        if (target == null) {
+            target = new JMenu(lName);
+            target.setName(lName);
+            container.add(target);
+        }
+        
+        if (slash > 0) return findMenu(target, name.substring(slash+1));
+        return target;
     }
     
 }

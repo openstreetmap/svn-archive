@@ -30,6 +30,7 @@ import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.Visitor;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.ui.Main;
+import org.openstreetmap.josmng.utils.MenuPosition;
 import org.openstreetmap.josmng.view.EditableLayer;
 import org.openstreetmap.josmng.view.osm.OsmLayer;
 
@@ -37,6 +38,7 @@ import org.openstreetmap.josmng.view.osm.OsmLayer;
  *
  * @author nenik
  */
+@MenuPosition("Tools")
 public class ReverseWayAction extends AbstractAction {
     public ReverseWayAction() {
         super("Reverse way");

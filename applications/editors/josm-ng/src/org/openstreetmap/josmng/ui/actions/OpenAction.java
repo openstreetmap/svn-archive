@@ -27,12 +27,14 @@ import javax.swing.JFileChooser;
 
 import org.openstreetmap.josmng.utils.Convertor;
 import org.openstreetmap.josmng.ui.Main;
+import org.openstreetmap.josmng.utils.MenuPosition;
 import org.openstreetmap.josmng.view.Layer;
 
 /**
  *
  * @author nenik
  */
+@MenuPosition("File") 
 public class OpenAction extends AbstractAction {
 
     public OpenAction() {

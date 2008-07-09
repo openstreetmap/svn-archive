@@ -118,8 +118,6 @@ public class Main extends javax.swing.JFrame {
         statusBar = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         projection = new javax.swing.JMenu();
         editMenu = new javax.swing.JMenu();
@@ -142,14 +140,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(statusBar, java.awt.BorderLayout.PAGE_END);
 
         fileMenu.setText("File");
-
-        jMenuItem1.setAction(new OpenAction());
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        fileMenu.add(jMenuItem1);
-
-        jMenuItem4.setAction(new OpenGpxAction());
-        fileMenu.add(jMenuItem4);
-
+        fileMenu.setName("File"); // NOI18N
         jMenuBar1.add(fileMenu);
 
         viewMenu.setText("View");
@@ -201,10 +192,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private org.openstreetmap.josmng.view.MapView mapView1;
     private javax.swing.JToolBar modesBar;
     private javax.swing.JMenu projection;

@@ -1,0 +1,38 @@
+body {  background-image: url(http://tah.openstreetmap.org/~spaetz/media/bg_gradient.png);
+	background-repeat: repeat-x;
+	background-color:#FFFFFF;}
+div#header{text-align:center;}
+div#breadcrumb  a{
+	color:#9999FF;
+	background-color:#210199;
+	text-decoration:none;}
+div#footer{text-align:center;}
+
+#browsetable {border-spacing: 0px;}
+.browsetable{
+	margin: 0px;
+	padding: 0px;
+	border-width:0px;
+	border-spacing: 0px;
+}
+
+td.browsetable{
+	margin: 0px;
+	padding: 0px;
+	border-width:0px;
+	border-spacing: 0px;
+}
+
+.browseimg {border:none;}
+
+#log{
+	padding: 2px;
+	overflow:hidden;
+	font-size:1em;
+	line-height:1em;
+	vertical-align:text-bottom;
+	white-space: pre;
+        height:11em;
+	color: green;
+	background-color: black;
+}

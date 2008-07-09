@@ -3,6 +3,7 @@ syntax: glob
 *.pyc
 *~
 *.log
+.svn
 
 #ignore the database and the hgweb cgi
 tah.db

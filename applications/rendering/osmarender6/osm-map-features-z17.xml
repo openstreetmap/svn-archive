@@ -1146,11 +1146,11 @@
         <!-- Mini-roundabouts -->
         <rule e="node" k="highway" v="mini_roundabout">
             <rule e="node" k="direction" v="clockwise">
-                <symbol xlink:href="#symbol-roundabout_left" width="2px" height="2px" transform="translate(0,0)"/>
+                <symbol xlink:href="#symbol-roundabout_left" width="2px" height="2px" transform="translate(-1,-1)"/>
             </rule>
             <else>
                 <!-- Default is anti-clockwise -->
-                <symbol xlink:href="#symbol-roundabout_right" width="2px" height="2px" transform="translate(0,0)"/>
+                <symbol xlink:href="#symbol-roundabout_right" width="2px" height="2px" transform="translate(-1,-1)"/>
             </else>
         </rule>
 
@@ -1267,7 +1267,7 @@
         </rule>
         <rule e="way" k="man_made" v="piste:halfpipe">
             <area class="man-made-piste-halfpipe"/>
-            <areaSymbol xlink:href="#symbol-man-made-halfpipe" width="7px" height="7px" transform="translate(-3.5,-3.5)"/>
+            <areaSymbol xlink:href="#symbol-man-made-halfpipe" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
         </rule>
 
         <!-- Surface lifts (render over pistes) -->
@@ -1333,7 +1333,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-            <symbol xlink:href="#symbol-peak" width="2px" height="2px" transform="translate(-1,-1)"/>
+            <symbol xlink:href="#symbol-peak" width="2px" height="2px" transform="translate(-1,-1.2)"/>
         </rule>
 
         <!-- Draw marine features -->
@@ -1362,10 +1362,10 @@
             <symbol xlink:href="#hotel" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="tourism" v="hostel">
-            <symbol xlink:href="#hostel" width="3px" height="2px" transform="translate(-1.5,-1)"/>
+            <symbol xlink:href="#hostel" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
         </rule>
         <rule e="node" k="tourism" v="camp_site">
-            <symbol xlink:href="#campSite" width="2px" height="2px" transform="translate(-1,-1)"/>
+            <symbol xlink:href="#campSite" width="2px" height="2px" transform="translate(-1,-1.3)"/>
         </rule>
         <rule e="node" k="tourism" v="information">
             <symbol xlink:href="#information" width="2px" height="2px" transform="translate(-1,-1)"/>
@@ -1427,7 +1427,7 @@
 
         <!-- Bus stops -->
         <rule e="node" k="highway" v="bus_stop">
-            <symbol xlink:href="#symbol-bus" width="3px" height="1px" transform="translate(-1.5,-0.5)"/>
+            <symbol xlink:href="#symbol-bus" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
         </rule>
 
         <!-- highway motorway_junctions -->
@@ -1457,7 +1457,7 @@
             <symbol xlink:href="#postbox" width="1.5px" height="1.5px" transform="translate(-0.75,-0.75)"/>
         </rule>
         <rule e="node" k="amenity" v="speed_trap">
-            <symbol xlink:href="#speed_trap" width="2px" height="1px" transform="translate(-1,-0.5)"/>
+            <symbol xlink:href="#speed_trap" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="amenity" v="pub">
             <symbol xlink:href="#pub" width="1.5px" height="1.5px" transform="translate(-0.75,-0.75)"/>
@@ -1466,10 +1466,10 @@
             <symbol xlink:href="#symbol-restaurant" width="1.5px" height="1.5px" transform="translate(-0.75,-0.75)"/>
         </rule>
         <rule e="node" k="amenity" v="cinema">
-            <symbol xlink:href="#cinema" width="1.75px" height="2.5px" transform="translate(-0.9,-1.25)"/>
+            <symbol xlink:href="#cinema" width="2.5px" height="2.5px" transform="translate(-1.25,-1.25)"/>
         </rule>
         <rule e="node" k="amenity" v="theatre">
-            <symbol xlink:href="#theatre" width="1.75px" height="2.5px" transform="translate(-0.9,-1.25)"/>
+            <symbol xlink:href="#theatre" width="2.5px" height="2.5px" transform="translate(-1.25,-1.25)"/>
         </rule>
         <rule e="node" k="man_made" v="windmill">
             <symbol xlink:href="#symbol-windmill" width="2px" height="2px" transform="translate(-1,-1)"/>
@@ -1484,14 +1484,14 @@
                 </rule>
                 <else>
                     <rule e="node" k="denomination|religion" v="christian">
-                        <symbol xlink:href="#church" width="1px" height="2px" transform="translate(-1,-1)"/>
+                        <symbol xlink:href="#church" width="2px" height="2px" transform="translate(-1,-1.2)"/>
                     </rule>
                     <else>
                         <rule e="node" k="denomination|religion" v="sikhism|sikh">
-                            <symbol xlink:href="#khanda" width="1.8px" height="2.4px" transform="translate(-0.9, -1.2)"/>
+                            <symbol xlink:href="#khanda" width="2.4px" height="2.4px" transform="translate(-1.2, -1.2)"/>
                         </rule>
                         <else>
-                            <symbol xlink:href="#symbol-peak" width="2px" height="2px" transform="translate(-0.5,-1)"/>
+                            <symbol xlink:href="#symbol-peak" width="2px" height="2px" transform="translate(-1,-1.2)"/>
                         </else>
                     </else>
                 </else>
@@ -1506,25 +1506,25 @@
             </rule>
         </rule>
         <rule e="node" k="highway" v="traffic_signals">
-            <symbol xlink:href="#symbol-traffic_signal" width="2px" height="2px" transform="translate(0,0)"/>
+            <symbol xlink:href="#symbol-traffic_signal" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="amenity" v="school">
-            <symbol xlink:href="#symbol-school" width="2px" height="2px" transform="translate(-1,-1)"/>
+            <symbol xlink:href="#symbol-school" width='2px' height='2px' transform='translate(-1,-1)'/>
         </rule>
         <rule e="way" k="amenity" v="school">
-            <areaSymbol xlink:href="#symbol-school" width='2px' height='2px' transform='translate(-1,-1)' />
+            <areaSymbol xlink:href="#symbol-school" width='2px' height='2px' transform='translate(-1,-1)'/>
         </rule>
         <rule e="node" k="amenity" v="university|college">
             <symbol xlink:href="#symbol-university" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="way" k="amenity" v="university|college">
-            <areaSymbol xlink:href="#symbol-university" width='2px' height='2px' transform='translate(-1,-1)' />
+            <areaSymbol xlink:href="#symbol-university" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="amenity|shop" v="supermarket">
-            <symbol xlink:href="#symbol-supermarket" width="2px" height="2px" transform="translate(0,0)"/>
+            <symbol xlink:href="#symbol-supermarket" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="way" k="amenity|shop" v="supermarket">
-            <areaSymbol xlink:href="#symbol-supermarket" width='2px' height='2px' transform='translate(0,0)' />
+            <areaSymbol xlink:href="#symbol-supermarket" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="amenity" v="shelter">
             <rule e="node" k="fireplace" v="yes">
@@ -1535,7 +1535,7 @@
             </else>
         </rule>
         <rule e="node" k="amenity" v="library">
-            <symbol xlink:href="#symbol-library" width="2px" height="2px" transform="translate(0,0)"/>
+            <symbol xlink:href="#symbol-library" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="amenity" v="fuel">
             <symbol xlink:href="#petrolStation" width="2px" height="2px" transform="translate(-1,-1)"/>
@@ -1550,7 +1550,7 @@
             <symbol xlink:href="#drinking_water" width="2px" height="2px" transform="translate(-1,-1)"/>
         </rule>
         <rule e="node" k="amenity" v="bank">
-            <symbol xlink:href="#bank" width="2px" height="2px" transform="translate(-1,-1)"/>
+            <symbol xlink:href="#bank" width="2px" height="2px" transform="translate(-1,-1.2)"/>
         </rule>
 
         <!-- Leisure symbols -->
@@ -1558,7 +1558,7 @@
             <symbol xlink:href="#golfCourse" width="5px" height="5px" transform="translate(-2.5,-2.5)"/>
         </rule>
         <rule e="node" k="leisure" v="slipway">
-            <symbol xlink:href="#slipway" width="4px" height="4px" transform="translate(-2,-2)"/>
+            <symbol xlink:href="#slipway" width="4px" height="4px" transform="translate(-2,-2.7)"/>
         </rule>
 
         <!-- Sport symbols -->
@@ -1575,7 +1575,7 @@
             <areaSymbol xlink:href="#symbol-tennis-borderless" width="5px" height="5px" transform="translate(-2.5, -2.5)"/>
         </rule>
         <rule e="node" k="sport" v="swimming">
-            <symbol xlink:href="#symbol-swimming" width="4px" height="4px" transform="translate(-2.5, -2.5)"/>
+            <symbol xlink:href="#symbol-swimming" width="4px" height="4px" transform="translate(-2, -2)"/>
         </rule>
         <rule e="way" k="sport" v="swimming">
             <areaSymbol xlink:href="#symbol-swimming-borderless" width="5px" height="5px" transform="translate(-2.5, -2.5)"/>
@@ -1584,7 +1584,7 @@
         <!-- Historic symbols -->
         <rule e="node" k="historic" v="*">
             <rule e="node" k="historic" v="museum">
-                <symbol xlink:href="#symbol-museum" width="2px" height="2px" transform="translate(0,0)"/>
+                <symbol xlink:href="#symbol-museum" width="2px" height="2px" transform="translate(-1,-1.3)"/>
             </rule>
             <else>
                 <circle r="0.4" class="generic-poi"/>
@@ -1877,7 +1877,7 @@
 
         <!-- House numbers -->
         <rule e="way" k="addr:housenumber" v="*" layer="5">
-            <areaSymbol xlink:href="#symbol-housenumber" width="1px" height="1px" transform="translate(0,0)"/>
+            <areaSymbol xlink:href="#symbol-housenumber" width="2px" height="2px" transform="translate(-1,-1)"/>
             <areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px"/>
         </rule>
         <rule e="node" k="addr:housenumber" v="*" layer="5">
@@ -3658,21 +3658,25 @@
             <svg:path d="M 10,4 L 4,4 L 4,2 L 0,5 L 4,8 L 4,6 L 10,6 z"/>
         </svg:marker>
 
-        <svg:symbol id="church" viewBox="0 0 5 10" fill="#000000">
+        <svg:symbol id="church" viewBox="0 0 10 10" fill="#000000">
+          <svg:g transform="translate (2.5,0)">
             <svg:path d="M 0 10 L 0 5 L 5 5 L 5 10 z M 0 2 L 5 2 L 5 3 L 0 3 z M 2 0 L 2 5 L 3 5 L 3 0 z"/>
+          </svg:g>
         </svg:symbol>
         <svg:symbol id="mosque" viewBox="0 0 120 120" fill="#00ab00">
             <svg:path d="M 4,60 C 11,75 60,107 84,73 C 103,40 76,22 50,7 C 76,6 130,35 103,84 C 72,124 8,97 4,60 z M 35,52 C 35,52 20,55 20,55 L 30,43 C 30,43 21,30 21,30 L 35,35 L 45,23 L 45,38 L 60,45 L 45,50 L 45,65 L 35,52 z"/>
         </svg:symbol>
-        <svg:symbol id="synagogue" viewBox="0 0 20 20" stroke="#0000d0" fill="none" stroke-width="1.5px" stroke-linecap="butt" stroke-linejoin="miter">
-            <svg:path d="M 10,0 L 20,15 L 0,15 L 10,0 z M 10,20 L 0,5 L 20,5 L 10,20 z"/>
+        <svg:symbol id="synagogue" viewBox="0 0 22 22" stroke="#0000d0" fill="none" stroke-width="1.5px" stroke-linecap="butt" stroke-linejoin="miter">
+            <svg:path d="M 11,1 L 19,15 L 3,15 L 11,1 z M 11,20 L 3,6 L 19,6 L 11,20 z"/>
         </svg:symbol>
-        <svg:symbol id="khanda" viewBox="0 0 600 800">
+        <svg:symbol id="khanda" viewBox="0 0 800 800">
+          <svg:g transform="translate(100,0)">
             <svg:path id="path1317" style="fill:#000000" d="M 286.03178,798.44826 C 274.47686,795.1959 263.17182,785.6738 257.90389,774.7565 C 252.29932,763.14127 252.36888,747.04142 258.07461,735.21664 C 260.5981,729.98693 269.51042,720.03068 274.5261,716.8382 L 277.07851,715.21364 L 276.76949,675.53951 L 276.46034,635.86538 L 253.24066,651.77989 L 230.02096,667.69436 L 232.4758,672.32314 C 234.44224,676.03096 234.93332,678.8551 234.9441,686.51734 C 234.9561,695.01629 234.58908,696.75012 231.65258,702.06831 C 227.9575,708.76054 223.18242,713.40624 216.13794,717.16251 C 212.30051,719.20884 209.59295,719.68801 201.86754,719.68801 C 194.1421,719.68801 191.43455,719.20884 187.5971,717.16251 C 176.24401,711.10866 169.44392,701.24622 168.51299,689.48412 C 167.82042,680.73371 169.38643,674.96231 174.61433,666.99802 C 178.35155,661.30468 183.14155,657.56444 222.73106,629.42653 C 246.9125,612.23974 266.48801,597.83269 266.23205,597.41087 C 265.97618,596.98903 260.44958,592.85755 253.9507,588.22983 L 242.13473,579.81577 L 208.53318,604.47029 C 190.05229,618.03027 174.68262,629.12479 174.37835,629.12479 C 174.07408,629.12479 172.95881,616.20877 168.69736,609.43128 C 164.546,602.82887 149.56374,586.07399 111.53631,548.10002 C 69.396819,506.01978 57.592167,492.99258 44.090693,473.66939 C 20.774574,440.29955 6.6120613,403.50731 1.126918,362.05548 C -0.3756399,350.70054 -0.3756399,315.61806 1.126918,304.26311 C 7.337956,257.32562 24.583085,216.61804 53.523135,180.58044 C 69.431809,160.77015 80.676009,152.23236 105.25771,141.298 C 122.62658,133.57202 156.11806,122.5857 157.64172,124.11432 C 157.85197,124.32525 153.37683,127.51604 147.69699,131.20496 C 133.52067,140.41211 108.34195,165.54821 98.759684,180.05939 C 85.566883,200.03829 76.853504,220.64866 71.54464,244.43298 C 69.248935,254.71802 68.94644,259.02112 68.94644,281.39347 C 68.94644,311.30842 70.078051,317.8443 80.711788,349.34715 C 93.570705,387.44222 107.26937,409.01541 144.14125,449.23843 C 178.2262,486.42123 193.32553,499.46384 245.18911,536.5223 L 277.02119,559.26755 L 277.02119,538.02075 L 277.02119,516.77395 L 272.81484,514.19456 C 270.50133,512.77591 264.06559,508.03191 258.51319,503.65237 C 252.96079,499.27283 243.37029,492.4623 237.20095,488.51784 C 231.03161,484.57339 225.84096,481.24105 225.6661,481.11265 C 225.49121,480.98424 226.8717,473.10672 228.73382,463.60703 C 230.59595,454.10736 231.7485,446.02843 231.29511,445.65386 C 230.84171,445.2793 227.08672,443.56864 222.95047,441.85242 C 204.67956,434.27125 185.22141,421.09346 168.9346,405.27082 C 142.46582,379.55638 125.76996,349.66515 117.028,312.34043 C 114.03024,299.54119 113.86515,297.4559 113.86515,272.39071 C 113.86515,247.32552 114.03024,245.24024 117.028,232.44101 C 125.76996,195.11628 142.46582,165.22505 168.9346,139.51062 C 185.3309,123.58162 205.36952,110.05651 223.44434,102.71917 C 228.73651,100.57088 231.00817,99.05611 231.01782,97.669121 C 231.02544,96.579426 230.01177,91.094405 228.76534,85.480173 L 226.49895,75.272474 L 229.40471,71.80799 C 231.00278,69.902516 242.24421,58.613021 254.38547,46.720212 C 266.52659,34.827407 281.49239,19.450119 287.64254,12.548463 L 298.82474,-1.578948e-007 L 335.96762,37.251274 L 373.11058,74.502537 L 370.36714,86.292121 C 368.85834,92.776384 367.80731,98.203637 368.03166,98.352658 C 368.25599,98.501689 375.25392,102.01749 383.58252,106.1655 C 391.91112,110.31354 403.51194,117.12784 409.36205,121.30836 C 423.04361,131.0852 442.64886,150.77682 452.24206,164.3772 C 498.10623,229.39939 498.10623,315.38204 452.24206,380.40424 C 442.64459,394.01067 423.03744,413.70196 409.36205,423.46831 C 399.26308,430.68053 371.50656,445.69371 368.27158,445.69371 C 366.23941,445.69371 366.36571,447.1322 369.98128,465.16303 L 373.09555,480.69367 L 364.03741,486.66249 C 359.05538,489.94532 348.81823,497.38909 341.28815,503.20416 C 333.7581,509.01923 326.31283,514.68688 324.74312,515.79891 L 321.88919,517.8208 L 321.88919,538.02447 C 321.88919,549.13648 322.10165,558.22811 322.36131,558.22811 C 323.07651,558.22811 384.85094,514.03483 388.06931,511.22076 C 389.61167,509.87218 395.16406,505.37407 400.40798,501.22492 C 416.05084,488.8479 432.27058,473.28491 450.65911,453.00844 C 460.20151,442.48648 468.59932,433.37119 469.32102,432.75225 C 470.04272,432.13331 474.70539,426.30966 479.68247,419.8108 C 499.57745,393.83312 508.68192,376.73911 518.66683,346.61646 C 528.37253,317.33627 529.8487,308.72583 529.8487,281.39347 C 529.8487,261.6814 529.47999,256.60422 527.31522,246.5078 C 516.74312,197.1994 489.7958,157.40616 448.70008,130.41627 C 442.2548,126.18329 437.75209,122.71994 438.69398,122.71994 C 441.96507,122.71994 468.33022,130.44062 478.75808,134.45218 C 512.30624,147.35805 528.16289,158.30041 546.49826,181.19828 C 601.53063,249.92465 615.17282,341.9247 582.46514,423.74951 C 575.77601,440.48357 568.05033,454.75628 556.57649,471.57662 C 541.12758,494.22444 535.94949,500.01311 485.10464,551.47606 C 458.50415,578.39991 442.74913,593.68551 434.58351,604.64856 C 426.41791,615.6116 424.52448,629.89631 424.52448,629.89631 L 393.11695,606.93959 C 375.84282,594.31341 360.65706,583.07503 359.37092,581.96538 C 357.07974,579.98874 356.77723,580.12983 344.43183,588.92974 C 337.50153,593.86978 332.24425,598.30113 332.74913,598.77723 C 333.25389,599.25331 352.34327,612.90979 375.16981,629.12501 C 397.99633,645.34019 418.07562,659.93204 419.79047,661.5513 C 421.50531,663.17056 424.40771,667.50563 426.24022,671.18474 C 430.68786,680.11424 430.95079,691.99371 426.89091,700.58414 C 423.65695,707.42702 417.27797,713.74507 410.50326,716.81534 C 403.09367,720.17327 390.4822,720.01132 383.02169,716.46244 C 376.20097,713.21808 369.90332,706.81828 366.84299,700.02148 C 363.70606,693.05433 363.69394,679.99893 366.81811,673.08997 C 368.64568,669.04838 368.80058,667.84338 367.63481,666.73518 C 365.66701,664.86468 323.27201,635.87687 322.50411,635.87687 C 322.16592,635.87687 321.88919,653.81111 321.88919,675.73073 L 321.88919,715.58455 L 327.24058,719.52573 C 346.00108,733.34204 350.2199,762.23368 336.31366,781.66083 C 326.04777,796.00221 303.76839,803.44051 286.03178,798.44826 z M 383.58252,398.63546 C 389.11978,394.97722 398.30986,387.1266 405.50374,379.90937 C 423.59369,361.76059 434.60943,344.03382 442.4852,320.39804 C 447.88515,304.19225 449.76266,291.80749 449.76266,272.39071 C 449.76266,239.89652 442.0372,214.07926 424.17035,186.86456 C 416.01911,174.44865 395.99523,154.35179 383.58252,146.12872 C 373.7199,139.59506 361.56463,133.15981 360.74051,134.03572 C 358.96913,135.91849 352.88033,189.74496 350.9545,220.54628 C 349.21924,248.30043 350.25523,329.6087 352.65453,353.97817 C 354.52193,372.94452 358.57609,405.1389 359.62869,409.36108 L 360.24989,411.85282 L 367.14899,408.39365 C 370.94348,406.49111 378.3386,402.09991 383.58252,398.63546 z M 239.91904,402.08663 C 249.59514,337.58176 251.51975,256.97754 244.9908,189.67792 C 243.37051,172.97559 239.39051,141.40174 238.28753,136.50065 L 237.71671,133.96385 L 230.72864,137.50164 C 198.17949,153.98009 170.51275,185.76004 157.79447,221.27895 C 151.74051,238.18619 149.70984,251.02416 149.70984,272.39071 C 149.70984,288.91611 150.13061,293.9704 152.32546,303.80896 C 161.03307,342.8415 182.83702,375.62062 214.767,397.68099 C 221.13993,402.084 236.3875,410.71466 237.90593,410.77843 C 238.29359,410.79472 239.19959,406.8834 239.91904,402.08663 z "/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-housenumber" viewBox="0 0 1 1" fill="#a0a0a0">
-            <svg:circle r="0.8px" class="housenumber-node"/>
+        <svg:symbol id="symbol-housenumber" viewBox="0 0 2 2" fill="#a0a0a0">
+            <svg:circle cx="1" cy="1" r="0.8px" class="housenumber-node"/>
         </svg:symbol>
 
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
@@ -3692,9 +3696,11 @@
             <svg:path d="M 16.8725 9.81954 L 96.3004 9.81954 L 59.4774 46.3164 L 59.4774 94.9796 C 59.575 94.9796 57.9896 100.587 84.2324 102.6 L 84.2324 103.99 L 31.0262 103.99 L 31.0275 102.6 C 56.4414 100.587 54.9906 94.9796 54.9906 94.9796 L 54.9906 46.3164 L 16.8725 9.81954 z "/>
         </svg:symbol>
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
-        <svg:symbol id="symbol-restaurant" viewBox="0 0 100 100" fill="black" stroke="none">
+        <svg:symbol id="symbol-restaurant" viewBox="0 0 115 115" fill="black" stroke="none">
+          <svg:g transform="translate(2.5,0)">
             <svg:path d="M 94,4 C 90,0 74,18 67,26 C 65,28 62,32 68,38 C 15,89 5,96 12,103 C 19,110 26,100 76,46 C 82,52 87,49 89,47 C 97,40 114,24 110,20 C 106,16 91,40 87,37 C 83,24 106,16 102,12 C 98,8 81,33 77,29 C 73,25 98,8 94,4 z"/>
             <svg:path d="M 35,33 C 79,81 98,96 90,103 C 81,111 70,91 26,42 C 6,57 -9,16 1,6 C 11,-6 55,13 35,33 z"/>
+          </svg:g>
         </svg:symbol>
 
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
@@ -3707,11 +3713,13 @@
             <svg:path d="M 61.6421 25.2514 C 61.6421 25.2514 48.7712 34.4528 48.1727 38.766 C 47.574 43.0787 56.5537 48.8295 56.8529 52.2802 C 57.1522 55.7303 56.5537 87.3594 56.5537 87.3594 C 56.5537 87.3594 37.3978 104.036 36.7993 105.474 C 36.2006 106.912 41.5878 117.55 43.9826 117.263 C 46.3769 116.975 43.3841 109.787 44.2819 108.349 C 45.1798 106.912 64.0363 92.5353 65.2335 90.5221 C 65.5327 91.0979 65.8321 76.7208 65.5327 76.7208 L 66.7305 76.7208 L 66.1319 91.0979 C 66.1319 91.0979 59.2473 108.349 60.1451 113.237 C 60.1451 115.824 70.6212 122.15 72.1176 121 C 73.6145 119.85 68.5261 115.536 68.8254 112.375 C 67.6283 109.212 73.016 97.4233 73.3153 94.2605 C 73.6145 91.0979 73.9138 56.3053 72.7167 51.9927 C 72.7161 48.542 69.424 42.5037 67.9276 40.2035 C 67.6283 37.9029 65.8326 31.2897 65.8326 31.2897 C 65.8326 31.2897 59.547 39.341 59.5465 39.341 C 58.0501 37.9035 68.2268 28.702 68.2268 25.8268 C 68.2268 22.9513 49.9689 9.72452 49.9689 9.72452 C 49.9689 9.72452 25.126 63.2064 25.4254 65.5065 C 25.7246 67.8065 29.9146 72.9824 32.908 70.6823 C 35.9009 68.3822 27.8197 62.9194 27.8197 62.9194 L 49.3703 14.6122 L 52.6624 18.3506 L 58.3494 18.638 L 58.0501 19.5005 C 58.0501 19.5005 51.7645 18.9255 50.5675 19.788 C 49.3703 20.6506 47.574 22.0887 47.574 25.5388 C 47.574 28.9896 52.0638 30.4271 53.5603 30.7146 L 60.8936 24.6764 L 61.6421 25.2514 z "/>
         </svg:symbol>
 
-        <svg:symbol id="slipway" viewBox="0 0 50 45" fill="#0087ff" stroke="none" fill-opacity="0.7">
+        <svg:symbol id="slipway" viewBox="0 0 50 50" fill="#0087ff" stroke="none" fill-opacity="0.7">
+          <svg:g transform="translate(0,2.5)">
             <svg:path d="M 45,33 L 45,45 L 2,45 C 2,45 45,33 45,33 z M 0,35 L 43,22 L 43,26 C 43,26 37,32 26,36 C 15,40 0,35 0,35 z M 3,32 C 3,32 13,0 13,0 L 22,26 L 3,32 z M 16,0 L 42,20 L 25,25 L 16,0 z "/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="pub" width="204.57mm" height="205.01mm" viewBox="0 0 579.88 581.14">
+        <svg:symbol id="pub" viewBox="0 0 580 580">
             <svg:g style="fill-rule: nonzero;stroke-linecap:butt;">
                 <svg:path style="fill:#7777777;stroke:none;stroke-width:0.28;stroke-linejoin:bevel" d="M 67.775772,2.6625614 C 26.556032,2.6625614 3.3361722,24.082427 3.1561722,67.642152 L 3.1561722,517.81932 C 3.3361722,558.67906 24.216042,580.09892 65.435782,580.09892 L 517.23294,580.09892 C 558.63267,580.09892 579.51254,559.75905 579.51254,517.81932 L 579.51254,67.642152 C 579.51254,25.16242 558.63267,2.6625614 515.97294,2.6625614 C 515.97294,2.6625614 67.775772,2.4825625 67.775772,2.6625614 z "/>
                 <svg:path style="fill:none;stroke:#7777777;stroke-width:3.41997862;stroke-linejoin:miter" d="M 67.775772,2.6625614 C 26.556032,2.6625614 3.3361722,24.082427 3.1561722,67.642152 L 3.1561722,517.81932 C 3.3361722,558.67906 24.216042,580.09892 65.435782,580.09892 L 517.23294,580.09892 C 558.63267,580.09892 579.51254,559.75905 579.51254,517.81932 L 579.51254,67.642152 C 579.51254,25.16242 558.63267,2.6625614 515.97294,2.6625614 C 515.97294,2.6625614 67.775772,2.4825625 67.775772,2.6625614"/>
@@ -3719,7 +3727,7 @@
                 <svg:path style="fill:#7777777;stroke:none;stroke-width:3.42000008;stroke-linejoin:bevel" d="M 316.5342,241.88105 C 332.1941,241.88105 344.79402,229.28113 344.61402,213.80123 C 344.79402,198.32133 332.1941,185.72141 316.5342,185.54141 C 301.0543,185.72141 288.45438,198.32133 288.45438,213.80123 C 288.45438,229.28113 301.0543,241.88105 316.5342,241.88105 z "/>
             </svg:g>
         </svg:symbol>
-        <svg:symbol id="pubx" width="211.87mm" height="210.79mm" viewBox="0 0 600.58 597.52">
+        <svg:symbol id="pubx" viewBox="0 0 600 600">
             <svg:g style="fill-rule: nonzero;">
                 <svg:path style="fill:#ffffff; stroke:#000000; stroke-width:50; stroke-linecap:butt; stroke-linejoin:miter" d="M 598.46 512.06 C 598.46 557.96 561.20 595.40 515.30 595.40 L 88.70 595.40       C 42.62 595.40 5.36 557.96 5.36 512.06 L 5.36 85.46 C 5.36 39.38 42.62 2.12 88.70 2.12       L 515.30 2.12 C 561.20 2.12 598.46 39.38 598.46 85.46 L 598.46 512.06"/>
                 <svg:path style="fill:#FFFFFF; stroke:none;" d="M 311.00 565.88 C 344.84 567.68 384.26 575.96 413.60 589.28 L 190.40 589.46       C 221.00 574.88 256.28 567.68 291.92 566.06 L 291.92 377.24 C 224.60 371.48 169.70 318.38 170.24 245.48       C 170.60 191.66 198.86 133.88 198.86 133.88 L 407.30 133.88 C 407.30 133.88 433.76 181.22 433.76 245.48       C 433.76 309.74 379.94 372.74 311.00 376.88 L 311.00 565.88 Z"/>
@@ -3731,25 +3739,27 @@
             </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="cinema" viewBox="150.3 200 320 420">
-            <svg:path fill="black" d="M123.7,393.2l-35.9,9L0,50.9l35.9-9L123.7,393.2z"/>
-            <svg:path fill="black" d="M291.5,351.2l-35.9,9L167.8,9l35.9-9L291.5,351.2z"/>
-            <svg:path fill="black" d="M201.9,27.8l9,35.9L19.8,111.5l-9-35.9L201.9,27.8z"/>
-            <svg:path fill="black" d="M234.8,159.2l9,35.9L52.6,242.9l-9-35.9L234.8,159.2z"/>
-            <svg:path fill="black" d="M267.7,290.7l9,35.9L85.5,374.4l-9-35.9L267.7,290.7z"/>
-            <svg:path fill="#FFFFFF" d="M40.5,97.5l-21.3,5.3l-5.3-21.3l21.3-5.3L40.5,97.5z"/>
-            <svg:path fill="#FFFFFF" d="M56.9,163l-21.3,5.3L30.2,147l21.3-5.3L56.9,163z"/>
-            <svg:path fill="#FFFFFF" d="M73.3,228.5l-21.3,5.3l-5.3-21.3l21.3-5.3L73.3,228.5z"/>
-            <svg:path fill="#FFFFFF" d="M89.6,294l-21.3,5.3L63,278l21.3-5.3L89.6,294z"/>
-            <svg:path fill="#FFFFFF" d="M106,359.4l-21.3,5.3l-5.3-21.3l21.3-5.3L106,359.4z"/>
-            <svg:path fill="#FFFFFF" d="M209.1,54.3l-21.3,5.3l-5.3-21.3l21.3-5.3L209.1,54.3z"/>
-            <svg:path fill="#FFFFFF" d="M225.4,119.8l-21.3,5.3l-5.3-21.3l21.3-5.3L225.4,119.8z"/>
-            <svg:path fill="#FFFFFF" d="M241.8,185.3l-21.3,5.3l-5.3-21.3l21.3-5.3L241.8,185.3z"/>
-            <svg:path fill="#FFFFFF" d="M258.2,250.8l-21.3,5.3l-5.3-21.3l21.3-5.3L258.2,250.8z"/>
-            <svg:path fill="#FFFFFF" d="M274.6,316.3l-21.3,5.3l-5.3-21.3l21.3-5.3L274.6,316.3z"/>
+        <svg:symbol id="cinema" viewBox="0 0 420 420">
+            <svg:g transform="translate(50,0)">
+              <svg:path fill="black" d="M123.7,393.2l-35.9,9L0,50.9l35.9-9L123.7,393.2z"/>
+              <svg:path fill="black" d="M291.5,351.2l-35.9,9L167.8,9l35.9-9L291.5,351.2z"/>
+              <svg:path fill="black" d="M201.9,27.8l9,35.9L19.8,111.5l-9-35.9L201.9,27.8z"/>
+              <svg:path fill="black" d="M234.8,159.2l9,35.9L52.6,242.9l-9-35.9L234.8,159.2z"/>
+              <svg:path fill="black" d="M267.7,290.7l9,35.9L85.5,374.4l-9-35.9L267.7,290.7z"/>
+              <svg:path fill="#FFFFFF" d="M40.5,97.5l-21.3,5.3l-5.3-21.3l21.3-5.3L40.5,97.5z"/>
+              <svg:path fill="#FFFFFF" d="M56.9,163l-21.3,5.3L30.2,147l21.3-5.3L56.9,163z"/>
+              <svg:path fill="#FFFFFF" d="M73.3,228.5l-21.3,5.3l-5.3-21.3l21.3-5.3L73.3,228.5z"/>
+              <svg:path fill="#FFFFFF" d="M89.6,294l-21.3,5.3L63,278l21.3-5.3L89.6,294z"/>
+              <svg:path fill="#FFFFFF" d="M106,359.4l-21.3,5.3l-5.3-21.3l21.3-5.3L106,359.4z"/>
+              <svg:path fill="#FFFFFF" d="M209.1,54.3l-21.3,5.3l-5.3-21.3l21.3-5.3L209.1,54.3z"/>
+              <svg:path fill="#FFFFFF" d="M225.4,119.8l-21.3,5.3l-5.3-21.3l21.3-5.3L225.4,119.8z"/>
+              <svg:path fill="#FFFFFF" d="M241.8,185.3l-21.3,5.3l-5.3-21.3l21.3-5.3L241.8,185.3z"/>
+              <svg:path fill="#FFFFFF" d="M258.2,250.8l-21.3,5.3l-5.3-21.3l21.3-5.3L258.2,250.8z"/>
+              <svg:path fill="#FFFFFF" d="M274.6,316.3l-21.3,5.3l-5.3-21.3l21.3-5.3L274.6,316.3z"/>
+            </svg:g>
         </svg:symbol>
-        <svg:symbol id="theatre" viewBox="220 207 440 550">
-            <svg:g stroke="none" fill-opacity="1" fill-rule="nonzero">
+        <svg:symbol id="theatre" viewBox="0 0 550 550">
+            <svg:g stroke="none" transform="translate(55,0)" fill-opacity="1" fill-rule="nonzero">
                 <svg:path d="M192.4,22c0,0,50,26,112,20s94-39,98-42s17,32,17,32l4,33l-3,29l5,24l7,39l-5,32l-6,32l-19,55l-25,49l-59,21l-30-14l-22-22l-29-47l4-40l-20-28l-18-24l1-34l2-54l-8-35L192.4,22z"/>
                 <svg:path fill="none" stroke="#FFFFFF" stroke-width="10" d="M210.4,44.5c0,0,43.8,22.8,98,17.5s82.3-34.1,85.8-36.8s14.9,28,14.9,28l3.5,28.9l-2.6,25.4l4.4,21l6.1,34.1l-4.4,28l-5.3,28l-16.6,48.1l-21.9,42.9L320.6,328l-26.3-12.3l-19.3-19.3l-25.4-41.1l3.5-35l-17.5-24.5l-15.8-21l0.9-29.8l1.8-47.3l-7-30.6L210.4,44.5z"/>
                 <svg:path fill="#FFFFFF" d="M293.4,152c0,8.3-11.4,15-25.5,15s-25.5-6.7-25.5-15s11.4-15,25.5-15S293.4,143.7,293.4,152z"/>
@@ -3768,10 +3778,12 @@
             </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-windmill" viewBox="158 240 315.9 480.2">
+        <svg:symbol id="symbol-windmill" viewBox="0 0 480 480">
+          <svg:g transform="translate(82,0)">
             <svg:path fill="#000000" d="M106.7,148.2l104-1l61,333l-231-1"/>
             <svg:path fill="none" stroke="#000000" stroke-width="24" d="M6.7,201 l284-191"/>
             <svg:path fill="none" stroke="#000000" stroke-width="24" d="M19.7,17.5 l290,176"/>
+          </svg:g>
         </svg:symbol>
 
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
@@ -3779,11 +3791,11 @@
             <svg:path d="M 0,60 C 0,65 10,65 10,60 L 10,50 L 35,70 L 35,85 C 35,90 45,90 45,85 L 45,70 L 75,70 L 75,85 C 75,90 85,90 85,85 L 85,60 L 40,60 L 5,30 C 9,20 45,20 50,25 L 50,10 C 50,5 40,5 40,10 L 40,15 L 10,15 L 10,10 C 10,5 0,5 0,10 C 0,10 0,60 0,60 z M 10,35 C 15,25 45,25 55,35 L 85,60 C 75,50 40,50 40,60 L 10,35 z "/>
         </svg:symbol>
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
-        <svg:symbol id="hostel" viewBox="0 0 12.5 8" fill="#286a9d" fill-opacity="1" fill-rule="nonzero" stroke="none">
+        <svg:symbol id="hostel" viewBox="0 0 12.5 12.5" fill="#286a9d" fill-opacity="1" fill-rule="nonzero" stroke="none">
             <svg:path d="M 5.5,4 L 9,0 L 12.5,4 L 11.5,4 L 11.5,8 L 10,8 L 10,5 L 8,5 L 8,8 L 6.5,8 L 6.5,4 L 5.5,4 z M 0.5,3.5 C 2,2.5 2.3,1 2.5,0 C 2.7,1 3,2.5 4.5,3.5 L 3.3,3.5 C 3.3,4 4,5 5,6 L 3,6 L 3,8 L 2,8 L 2,6 L 0,6 C 1,5 1.7,4 1.7,3.5 L 0.5,3.5 z M 0,8 L 0,7.5 L 12.5,7.5 L 12.5,8 L 0,8 z "/>
         </svg:symbol>
 
-        <svg:symbol id="recycling" viewBox="0 0 100 100" stroke="none" fill="#00ba00">
+        <svg:symbol id="recycling" viewBox="0 0 80 80" stroke="none" fill="#00ba00">
             <svg:path d="M 55.0,37.3 L 72.1,27.0 L 79.8,41.9 C 81.6,50.0 71.5,52.9 63.3,52.4 L 55.0,37.3 z"/>
             <svg:path d="M 51.1,47.9 L 42.1,63.8 L 51.1,80.0 L 51.3,73.5 L 59.5,73.5 C 62.5,73.8 66.4,71.8 67.9,69.0 L 78.4,49.5 C 75.0,53.0 70.5,53.9 65.3,53.9 L 51.4,53.9 L 51.1,47.9 z "/>
             <svg:path d="M 31.0,28.2 L 13.7,18.2 L 22.9,4.2 C 29.0,-1.3 36.6,6.1 40.1,13.5 L 30.9,28.2 z "/>
@@ -3796,11 +3808,11 @@
             <svg:path d="M 12.5,7.5 L 2.5,7.5 L 2.5,7.5 L 12.5,7.5 z M 7.5,2.3 L 7.5,12.5 L 7.5,12.5"/>
             <svg:path stroke-width="1px" d="M 14.5 7.5 A 7 7 0 1 1 0.5,7.5 A 7 7 0 1 1 14.5 7.5 z"/>
         </svg:symbol>
-        <svg:symbol id="symbol-doctor" viewBox="18 18 36 36">
+        <svg:symbol id="symbol-doctor" viewBox="0 0 36 36">
             <svg:ellipse fill="#00cc00" cx="18" cy="18" rx="18" ry="18"/>
             <svg:path fill="#ffffff" d="M32 21.44 A16 16 -180 1 0 0 21.44 A16 16 -180 1 0 32 21.44 Z M10 6.94 L22 6.94 L22 15.44 L30.5 15.44 L30.5 27.44 L22 27.44 L22 35.94 L10 35.94 L10 27.44 L1.5 27.44 L1.5 15.44 L10 15.44 L 10 6.94 Z" transform="translate(2,-3.44)"/>
         </svg:symbol>
-        <svg:symbol id="symbol-pharmacy" viewBox="18 18 36 36">
+        <svg:symbol id="symbol-pharmacy" viewBox="0 0 36 36">
             <svg:rect style="fill:#00cc00" x="0" y="0" width="36" height="36" rx="2" ry="2"/>
             <svg:path style="fill:#ffffff" d="M20.14 17.3 L20.14 9.44 L11.86 9.44 L11.86 17.3 L4 17.3              L4 25.58 L11.86 25.58 L11.86 33.44 L20.14 33.44 L20.14 25.58 L28 25.58 L28 17.3 L20.14 17.3 Z             M0.5 37.44 L31.5 37.44 a0.5 0.5 -180 0 0 0.5 -0.5 L32 5.94 a0.5 0.5 -180 0 0 -0.5 -0.5              L0.5 5.44 a0.5 0.5 -180 0 0 -0.5 0.5 L0 36.94 a0.5 0.5 -180 0 0 0.5 0.5 Z M2 35.44 L2             7.44 L30 7.44 L30 35.44 L2 35.44 Z" transform="translate(2,-3.44)"/>
         </svg:symbol>
@@ -3815,26 +3827,31 @@
             <svg:path style="fill:#ff0000" d="M26 25.44 L26 35.44 L2 35.44 L2 25.44 L14 31.44 L26 25.44 Z M2 23.44 L26 23.44 L14 29.44 L2 23.44 Z M0 37.44 L28 37.44 L28 21.44 L0 21.44 L0 37.44 Z" transform="translate(4,-11.44)"/>
         </svg:symbol>
 
-        <svg:symbol id="parking" viewBox="0 -10 20 20" stroke="none" fill-opacity="1" fill-rule="nonzero">
+        <svg:symbol id="parking" viewBox="0 0 20 20" stroke="none" fill-opacity="1" fill-rule="nonzero">
+          <svg:g transform="translate(0,10)">
             <svg:rect fill="#0087ff" width="20" height="20" x="0" y="-10" rx="4" ry="4"/>
             <svg:path fill="white" d="M 5,8 L 5,-7 L 12,-7 C 14,-7 15.5,-5.3 16,-4 C 16.5,-2.77 16.5,-1.23 16,0 C 15.41,1.42 14,3 12,3 L 8,3 L 8,8 L 5,8 z M 8,-4 L 8,0 C 9.3,0 11,0 12.32,-0.31 C 13.6,-0.76 13.5,-2.8 12.5,-3.48 C 11.5,-4.1 8.6,-4 8,-4 z "/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="drinking_water" viewBox="0 -10 20 20" stroke="none" fill-opacity="1" fill-rule="nonzero">
+        <svg:symbol id="drinking_water" viewBox="0 0 20 20" stroke="none" fill-opacity="1" fill-rule="nonzero">
             <svg:rect fill="white" width="20" height="20" x="0" y="0" rx="4" ry="4"/>
             <svg:path fill="#0087ff" d="M 9.598,0 L 2.402,0 C 1.072,0 0,1.078 0,2.402 L 0,9.597 C 0,10.922 1.072,12 2.402,12 L 9.597,12 C 10.928,12 12,10.922 12,9.598 L 12,2.402 C 12,1.078 10.928,0 9.598,0 z M 7.879,6.777 C 8.161,6.621 8.286,6.606 8.295,6.662 L 8.417,6.771 C 8.541,6.896 8.716,6.847 8.894,6.669 L 8.224,10.512 L 6.067,10.512 L 5.381,6.771 C 5.505,6.896 5.735,6.882 5.858,6.777 C 6.13,6.543 6.099,6.496 6.274,6.662 L 6.395,6.771 C 6.443,6.819 6.513,6.831 6.581,6.842 L 6.565,6.189 L 6.815,6.183 L 6.83,6.792 C 6.842,6.784 6.862,6.787 6.873,6.776 C 7.13,6.527 7.161,6.574 7.29,6.662 L 7.401,6.771 C 7.526,6.896 7.737,6.855 7.879,6.777 z M 6.536,4.958 L 6.786,4.952 L 6.805,5.685 L 6.555,5.691 L 6.536,4.958 z M 7.211,5.543 L 7.23,6.277 L 6.98,6.283 L 6.961,5.549 L 7.211,5.543 z M 6.961,4.383 L 7.211,4.377 L 7.23,5.111 L 6.98,5.117 L 6.961,4.383 z M 1.354,2.887 L 1.354,1.186 L 4.777,1.619 C 5.803,1.794 7.523,2.088 7.523,4.127 L 6.347,4.127 C 6.347,3.376 5.785,3.212 4.548,3.119 L 1.354,2.887 z M 8.979,11.393 L 5.319,11.393 L 4.249,5.504 L 4.741,5.415 C 4.741,5.415 5.666,10.512 5.736,10.893 L 8.558,10.893 C 8.625,10.508 9.5,5.443 9.5,5.443 L 9.993,5.528 L 8.979,11.393 z " transform="scale(1.67,1.67)"/>
         </svg:symbol>
 
-        <svg:symbol id="symbol-traffic_signal" viewBox="106 278.6 557.3 557.3">
-            <svg:path d="M212.1,105c0,58-47.5,105-106,105c-58.6,0-106-47-106-105 C0,47,47.5,0,106,0C164.6,0,212.1,47,212.1,105z"/>
-            <svg:path d="M212.1,452.3c0,58-47.5,105-106,105c-58.6,0-106-47-106-105 c0-58,47.5-105,106-105C164.6,347.3,212.1,394.3,212.1,452.3z"/>
-            <svg:path d="M211.3,458.9H0V106.7h211.3V458.9z"/>
-            <svg:path fill="#F90000" d="M190,103c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84s37.6-84,84-84C152.4,19,190,56.6,190,103z"/>
-            <svg:path fill="#00D305" d="M190,455c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84c0-46.4,37.6-84,84-84C152.4,371.1,190,408.7,190,455z"/>
-            <svg:path fill="#F9FF00" d="M190,279c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84c0-46.4,37.6-84,84-84C152.4,195,190,232.6,190,279z"/>
+        <svg:symbol id="symbol-traffic_signal" viewBox="0 0 550 550">
+            <svg:g transform="translate(167,0)">
+                <svg:path d="M212.1,105c0,58-47.5,105-106,105c-58.6,0-106-47-106-105 C0,47,47.5,0,106,0C164.6,0,212.1,47,212.1,105z"/>
+                <svg:path d="M212.1,452.3c0,58-47.5,105-106,105c-58.6,0-106-47-106-105 c0-58,47.5-105,106-105C164.6,347.3,212.1,394.3,212.1,452.3z"/>
+                <svg:path d="M211.3,458.9H0V106.7h211.3V458.9z"/>
+                <svg:path fill="#F90000" d="M190,103c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84s37.6-84,84-84C152.4,19,190,56.6,190,103z"/>
+                <svg:path fill="#00D305" d="M190,455c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84c0-46.4,37.6-84,84-84C152.4,371.1,190,408.7,190,455z"/>
+                <svg:path fill="#F9FF00" d="M190,279c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84c0-46.4,37.6-84,84-84C152.4,195,190,232.6,190,279z"/>
+            </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-school" viewBox="160 216 320.8 432.5">
+        <svg:symbol id="symbol-school" viewBox="0 0 440 440">
+          <svg:g transform="translate(60,4)">
             <svg:path fill="#AF7519" d="M93,284.7c0,11-9,20-20,20s-20-9-20-20s9-20,20-20S93,273.7,93,284.7z"/>
             <svg:path fill="#AF7519" d="M237,328.7c0,11-9,20-20,20s-20-9-20-20s9-20,20-20S237,317.7,237,328.7z"/>
             <svg:path fill="none" stroke="#AF7519" stroke-width="20" d="M163,4.7l-116,361"/>
@@ -3846,12 +3863,16 @@
             <svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M136,101.7c-11.6,26.2-2.8,64-5,92.9 c-1.2,16.3,0.7,40.2-2,54.1"/>
             <svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M131,176.7c10.8-4.2,18.3-17.9,32.8-10 c11.5,6.3,13.7,23.1,14.2,34.9c0.7,15.6-3.3,26.4-18.8,31.8c-7.6,2.7-25.5,5.8-24.2-7.7"/>
             <svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M261,196.7c-4.1-11.8-20.9-19.9-33.1-16.8 c-16.3,4.2-23.3,25-21.9,40.1c2.3,25.4,29.8,56.5,52,31.7"/>
+          </svg:g>
         </svg:symbol>
-        <svg:symbol id="symbol-university" viewBox="0 0 128 64">
+        <svg:symbol id="symbol-university" viewBox="0 0 128 128">
+          <svg:g transform="translate(0,32)">
             <svg:path fill="#000000" d="M 65,1 C 57.6,1.4 51.7,3.6 52,6 C 51.7,6.4 52,6.4 51,6.4 L 0,6 L 14,10 C 13.1,12 12.4,14 12,17 C 11.1,20.7 11.4,23.4 12,25 L 21,50 L 15,58 L 20,61 L 23,56 L 26,62 L 30,60 L 22,17 L 35,44 C 35.2,43.8 40.7,18.7 62,19 C 84.2,18.7 95,46.5 95,46.5 L 106,12 L 128,7 L 78,7 C 78.2,6.5 78.2,6.4 78.2,6.3 C 78.2,3.6 72.3,1.4 65,1.4 L 65,1 L 65,1 z"/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-supermarket" viewBox="14.5 13.5 29 27">
+        <svg:symbol id="symbol-supermarket" viewBox="0 0 30 30">
+          <svg:g transform="translate(0.5,1.5)">
             <svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.158;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9801324" d="M 13.711,19.263 C 13.711,19.754 13.319,20.153 12.836,20.153 C 12.353,20.153 11.962,19.754 11.962,19.263 C 11.962,18.771793 12.353,18.373 12.836,18.373 C 13.319,18.373 13.711,18.771 13.711,19.263 z"/>
             <svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 1.496,6.889 L 16.443,2.987 L 25.387,6.367 L 7.7960,10.054 L 1.496,6.889 z"/>
             <svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 1.540,16.974 L 7.7331,20.521 L 22.605,17.745 L 14.549,13.961 L 1.540,16.974 z"/>
@@ -3865,9 +3886,11 @@
             <svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.159;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.980" d="M 5.601,21.945 C 5.601,22.437 5.209,22.834 4.727,22.835 C 4.244,22.835 3.853,22.437 3.853,21.945 C 3.853,21.454 4.244,21.056 4.727,21.056 C 5.2095,21.056 5.601,21.454 5.601,21.945 z"/>
             <svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.159;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.980" d="M 11.254,25.962 C 11.254,26.453 10.863,26.852 10.380,26.852 C 9.898,26.852 9.506,26.453 9.506,25.962 C 9.506,25.471 9.898,25.072 10.380,25.072 C 10.863,25.072 11.254,25.471 11.254,25.962 z"/>
             <svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.159;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.980" d="M 21.926,23.143 C 21.926,23.635 21.535,24.033 21.052,24.033 C 20.569,24.033 20.177,23.632 20.177,23.143 C 20.177,22.652 20.569,22.253 21.052,22.253 C 21.535,22.253 21.926,22.652 21.926,23.143 z"/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-library" viewBox="160 310 319.3 621.3">
+        <svg:symbol id="symbol-library" viewBox="0 0 640 640">
+          <svg:g transform="translate(160,10)">
             <svg:path fill="#FFFFFF" stroke="#000000" stroke-width="32.0585" d="M136,165.5l5.1,414l162.2-163.5V46.6 L136,165.5z"/>
             <svg:path fill="#FFFFFF" stroke="#000000" stroke-width="32.1739" d="M20.2,136.7l-3.9,422.1c0,0-6.4,45,43.8,46.3 c56.6,1.5,68.2-10.3,68.2-10.3l2.6-426c0,0-18,14.2-57.9,12.9C22.8,180.1,20.2,136.7,20.2,136.7z"/>
             <svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M175.9,229.4l79.8-48.9"/>
@@ -3875,19 +3898,22 @@
             <svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M184.9,351.6l75.9-48.9"/>
             <svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M13.7,147L191.3,10.6 c-18.3,17.1,13.9,32.3,37.3,33.5c51.5,2.6,81.1-7.7,81.1-7.7"/>
             <svg:path fill="#FFFFFF" stroke="#000000" d="M36.7,143.9l144-116c0,0-7,18,26,25s59,1,59,1l-149,107c0,0-27,16-59,1 S36.7,143.9,36.7,143.9z"/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="speed_trap" viewBox="0 0 72 36">
+        <svg:symbol id="speed_trap" viewBox="0 0 36 36">
             <svg:rect style="fill:#ffff00" x="0" y="0" width="36" height="36" rx="2" ry="2"/>
             <svg:path style="fill:#000000" d="M0.5 37.44 L31.5 37.44 a0.5 0.5 -180 0 0 0.5 -0.5 L32 5.94 a0.5 0.5 -180 0 0 -0.5 -0.5 L0.5 5.44 a0.5 0.5 -180    0 0 -0.5 0.5 L0 36.94 a0.5 0.5 -180 0 0 0.5 0.5 Z M2 35.44 L2 7.44 L30 7.44 L30 35.44 L2 35.44 Z M8 30.44    L16 30.44 A3 3 -180 0 0 19 27.44 L19 15.44 A3 3 -180 0 0 16 12.44 L8 12.44 A3 3 -180 0 0 5 15.44 L5 27.44    A3 3 -180 0 0 8 30.44 Z M14 24.94 A3.5 3.5 0 1 1 7 24.94 A3.5 3.5 0 1 1 14 24.94 Z M13 24.94 A2.5 2.5 -180    1 0 8 24.94 A2.5 2.5 -180 1 0 13 24.94 Z M17 15.44 A2 2 0 1 1 13 15.44 A2 2 0 1 1 17 15.44 Z M16 15.44 a1    1 -180 1 0 -2 7.10543E-015 a1 1 -180 1 0 2 -7.10543E-015 Z M20 25.94 L21 25.94 L21 15.44 L20 15.44 L20 25.94    Z M22 25.94 L23 25.94 L23 16.44 L22 16.44 L22 25.94 Z M20 26.94 L20 27.94 L25 27.94 L25 24.94 L27 24.94    L27 19.44 L25 19.44 L25 17.44 L24 17.44 L24 26.94 L20 26.94 Z" transform="translate(2,-3.44)"/>
         </svg:symbol>
 
-        <svg:symbol id="symbol-railway-crossing" viewBox="-50 -150 600 600">
+        <svg:symbol id="symbol-railway-crossing" viewBox="0 0 600 600">
+          <svg:g transform="translate(50,150)">
             <svg:path fill="#C60936" d="M1.5,4.5l66,1.5l190,91.4L456,0l63,4.5l-15,48    l-184.5,87l175.5,81l15,51l-58.5,6l-193.5-99c0,0-189,96-193.5,99S0,279,0,279l6-51l172.5-85.5L12,63L1.5,4.5z"/>
             <svg:path fill="#FFFFFF" d="M49.5,21L33,49.5L219,141L36,237l16.5,25.5    L258,156l196.5,105l21-33l-189-91.5l189-87l-21-30l-196.7,96.7L49.5,21z"/>
+          </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-museum" viewBox="94 140 156 180">
+        <svg:symbol id="symbol-museum" viewBox="0 0 200 220">
             <svg:g fill="#f2f2f2" stroke-width="3" stroke="#000000">
                 <svg:path d="M 38.2,92.9 L 60.6,92.9 L 60.6,215.6 L 38.2,215.6 L 38.2,92.9 z "/>
                 <svg:path d="M 85,92.9 L 107.4,92.8 L 107.4,215.6 L 85,215.6 L 85,92.9 z "/>
@@ -3897,22 +3923,23 @@
             </svg:g>
         </svg:symbol>
 
-        <svg:symbol id="symbol-roundabout_right" viewBox="-253.5 253.5 507 507">
-            <svg:g transform="scale(-1,1)">
+        <svg:symbol id="symbol-roundabout_right" viewBox="0 0 507 507">
+            <svg:g transform="translate(507,0) scale(-1,1)">
                 <svg:path fill="#4161D8" d="M507,253.5c0,140-113.5,253.5-253.5,253.5 S0,393.5,0,253.5S113.5,0,253.5,0S507,113.5,507,253.5z"/>
                 <svg:path fill="#FFFFFF" d="M97.6,113.6l40.8-47.7c0,0,91.7,3.1,90.6,2.1 c-1.1-1,2.3,89.2,2.3,89.2l-49.8,33.2l-1.1-48.8c0,0-27.2,27-30.6,27c-3.4,0-27.2,61.2-27.2,61.2l-3.4,79.9L67,312.8v-73.6 l10.6-50.5l18.8-34.5l38.5-40.5"/>
                 <svg:path fill="#FFFFFF" d="M459.6,190.5l19.7,59.6 c0,0-50.2,76.9-48.7,76.4c1.5-0.4-77.5-44.3-77.5-44.3l-2.6-59.8l42.3,24.3c0,0-9-37.2-7.2-40.1c1.8-2.9-38.3-54.9-38.3-54.9 l-66.6-44.3l24.3-46.2l63,38.1l37.7,35.3l19.8,34l14.7,53.9"/>
                 <svg:path fill="#FFFFFF" d="M209.2,466.6l-60.7-16.1 c0,0-36.9-84-37.4-82.6c-0.4,1.5,79.4-40.7,79.4-40.7l51.5,30.6l-43.5,22.1c0,0,36.1,12.8,37.6,15.9c1.5,3.1,66.9-2,66.9-2 l73.5-31.5l25.4,45.6l-66.4,31.9l-50.2,12.3l-39.3-2L193,432.9"/>
             </svg:g>
         </svg:symbol>
-        <svg:symbol id="symbol-roundabout_left" viewBox="253.5 253.5 507 507">
+        <svg:symbol id="symbol-roundabout_left" viewBox="0 0 507 507">
             <svg:path fill="#4161D8" d="M507,253.5c0,140-113.5,253.5-253.5,253.5 S0,393.5,0,253.5S113.5,0,253.5,0S507,113.5,507,253.5z"/>
             <svg:path fill="#FFFFFF" d="M97.6,113.6l40.8-47.7c0,0,91.7,3.1,90.6,2.1 c-1.1-1,2.3,89.2,2.3,89.2l-49.8,33.2l-1.1-48.8c0,0-27.2,27-30.6,27c-3.4,0-27.2,61.2-27.2,61.2l-3.4,79.9L67,312.8v-73.6 l10.6-50.5l18.8-34.5l38.5-40.5"/>
             <svg:path fill="#FFFFFF" d="M459.6,190.5l19.7,59.6 c0,0-50.2,76.9-48.7,76.4c1.5-0.4-77.5-44.3-77.5-44.3l-2.6-59.8l42.3,24.3c0,0-9-37.2-7.2-40.1c1.8-2.9-38.3-54.9-38.3-54.9 l-66.6-44.3l24.3-46.2l63,38.1l37.7,35.3l19.8,34l14.7,53.9"/>
             <svg:path fill="#FFFFFF" d="M209.2,466.6l-60.7-16.1 c0,0-36.9-84-37.4-82.6c-0.4,1.5,79.4-40.7,79.4-40.7l51.5,30.6l-43.5,22.1c0,0,36.1,12.8,37.6,15.9c1.5,3.1,66.9-2,66.9-2 l73.5-31.5l25.4,45.6l-66.4,31.9l-50.2,12.3l-39.3-2L193,432.9"/>
         </svg:symbol>
 
-        <svg:symbol id="symbol-helipad" viewBox="0 0 689.25 581.14">
+        <svg:symbol id="symbol-helipad" viewBox="0 0 700 700">
+          <svg:g transform="translate(5,210)">
             <svg:path style="fill:#000000;  fill-rule:nonzero; stroke:none; stroke-width:0.28; stroke-linecap:butt; stroke-linejoin:bevel" d="M 66.47 1.85 C 25.07 2.03 1.85 23.27 1.85 67.01 L 1.85 517.01       C 1.85 558.05 22.73 579.29 64.13 579.29 L 515.93 579.29 C 557.33 579.29 578.21 559.13 578.21 517.01       L 578.21 67.01 C 578.21 24.35 557.33 2.03 514.67 1.85 C 514.67 1.85 66.29 1.85 66.47 1.85 Z"/>
             <svg:path style="fill:none;  fill-rule:nonzero; stroke:#000000; stroke-width:3.42; stroke-linecap:butt; stroke-linejoin:miter" d="M 66.47 1.85 C 25.07 2.03 1.85 23.27 1.85 67.01 L 1.85 517.01       C 1.85 558.05 22.73 579.29 64.13 579.29 L 515.93 579.29 C 557.33 579.29 578.21 559.13 578.21 517.01       L 578.21 67.01 C 578.21 24.35 557.33 2.03 514.67 1.85 C 514.67 1.85 66.29 1.85 66.47 1.85"/>
             <svg:path style="fill:#FFFFFF;  fill-rule:nonzero; stroke:none; stroke-width:3.42; stroke-linecap:butt; stroke-linejoin:bevel" d="M 85.91 282.11 C 114.89 282.29 138.29 258.89 138.11 230.09 C 138.29 201.29 114.89 177.89 85.91 177.89       C 57.29 177.89 33.89 201.29 33.71 230.09 C 33.89 258.89 57.29 282.29 85.91 282.11 Z"/>
@@ -3926,14 +3953,15 @@
             <svg:polygon style="fill:#000000;  fill-rule:nonzero; stroke:none; stroke-width:3.42; stroke-linecap:butt; stroke-linejoin:bevel" points="357.89,289.13 357.89,232.07 322.25,232.07 322.25,289.13      357.89,289.13 "/>
             <svg:polygon style="fill:#000000;  fill-rule:nonzero; stroke:none; stroke-width:3.42; stroke-linecap:butt; stroke-linejoin:bevel" points="414.23,232.07 414.23,289.13 378.95,289.13 378.95,232.07      414.23,232.07 "/>
             <svg:path style="fill:#000000;  fill-rule:nonzero; stroke:none; stroke-width:3.42; stroke-linecap:butt; stroke-linejoin:bevel" d="M 435.83 234.41 C 446.81 237.11 457.79 247.01 464.99 263.21 L 476.33 289.31       L 435.83 289.31 L 435.83 234.41 Z"/>
+          </svg:g>
         </svg:symbol>
 
         <svg:symbol id="symbol-peak" viewBox="0 0 100 100">
             <svg:path fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
         </svg:symbol>
 
-        <svg:symbol id="symbol-bus" viewBox="0 0 60 20">
-            <svg:g transform="translate(5.7695052,2.8188799e-2)">
+        <svg:symbol id="symbol-bus" viewBox="0 0 60 60">
+            <svg:g transform="translate(6,20)">
                 <svg:path style="fill:#0000ff;stroke:#000000;stroke-width:0.33102515" d="M 2.2521668,0.37432812 C 16.5855,0.37432812 30.918834,0.37432812 45.252168,0.37432812 C 46.355969,1.6734629 46.462793,3.586312 46.948398,5.196193 C 47.576853,8.2837404 48.414233,11.387465 48.252167,14.563593 C 48.236441,15.635583 48.542361,17.557849 46.939414,17.374328 C 32.043665,17.374328 17.147916,17.374328 2.2521668,17.374328 C 0.65875368,17.30455 0.27106428,15.753005 0.2698071,14.227706 C 0.29303084,10.212217 0.1028761,6.2414586 0.23632812,2.1693926 C 0.39484947,1.3347273 1.358163,0.37476685 2.2521668,0.37432812 z "/>
                 <svg:path style="fill:#0000ff;stroke:#ffffff;stroke-width:0.75587374" d="M 38.812165,16.734328 C 38.920431,18.865451 36.087926,20.19296 34.514352,18.757021 C 32.815686,17.495237 33.558848,14.486315 35.653279,14.167433 C 37.225591,13.803144 38.854105,15.116219 38.812165,16.734328 z "/>
                 <svg:path style="fill:#0000ff;stroke:#ffffff;stroke-width:0.75587374" d="M 15.912166,16.734328 C 16.020431,18.865452 13.187925,20.19296 11.614351,18.757021 C 9.9156863,17.495236 10.658848,14.486315 12.753279,14.167433 C 14.325591,13.803145 15.954103,15.116219 15.912166,16.734328 z "/>
@@ -4051,6 +4079,9 @@
         <svg:symbol id="bank" viewBox="0 0 125 125">
             <svg:path style="fill:#000000; stroke:none;" d="M 65,0.2965772 L 0,50 L 15,50 L 15,125 L 110,125 L 110,50 L 125,50 L 65,0.2965772 z"/>
             <svg:path style="fill:#ffffff; stroke:none" d="M 62,102 C 57,102 43,100 44,91 C 45,82 55,87 62,88 L 62,75 C 54,73 44,67 44,56 C 44,45 54,38 62,38 C 62,32 62,30 65,30 C 68,30 68,32 68,38 C 74,38 88,40 85,47 C 82,54 73,51 68,50 L 68,63 C 77,65 87,71 87,82 C 87,93 78,102 68,102 C 68,108 68,110 65,110 C 62,110 62,108 62,102 z M 62,61 L 62,50 C 55,51 55,60 62,61 z M 68,77 L 68,88 C 75,87 75,78 68,77 z"/>
+        </svg:symbol>
+        <svg:symbol id="symbol-man-made-halfpipe" viewBox="0 0 48 48">
+            <svg:path fill="#000000" d="M 0,0 L 0,48 L 48,48 L 48,0 L 0,0 z M 1,1 L 47,1 L 47,47 L 1,47 L 1,1 z M 46,20 L 42,20 C 42,38 35,40 25,40 C 15,40 7,38 7,20 L 2,20 L 2,46 L 46,46 L 46,20 z"/>
         </svg:symbol>
     </defs>
 </rules>

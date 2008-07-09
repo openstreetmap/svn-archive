@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os, sys, logging, zipfile, random, re, stat
-sys.path.insert(0, "/home/spaetz")
+sys.path.insert(0, "/var/www/")
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from datetime import datetime
 from time import sleep,clock,time

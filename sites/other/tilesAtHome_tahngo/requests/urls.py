@@ -11,5 +11,5 @@ urlpatterns = patterns('',
     (r'^upload/$',upload_request),
     (r'^upload/go_nogo',upload_gonogo),
     (r'^stats/munin/active',stats_munin_active),
-    (r'^stats/munin_pending',stats_munin_pending),
+    (r'^stats/munin/pending',stats_munin_pending),
 )

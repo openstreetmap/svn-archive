@@ -50,6 +50,7 @@ public class AnnotationViewer implements CommandListener
       Landmark current=null;
       nearestAnnotation=null;
       double lowestDist=thresholdDistance;
+	  ld.deleteAll();
       try
       {
         Enumeration en = store.getLandmarks();

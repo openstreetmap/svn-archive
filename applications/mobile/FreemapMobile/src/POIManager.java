@@ -248,4 +248,5 @@ class LandmarkDisplay  extends Form implements MenuAction,CommandListener
 			 parent.handleBackCommand();
 		  }
     }
+
 }

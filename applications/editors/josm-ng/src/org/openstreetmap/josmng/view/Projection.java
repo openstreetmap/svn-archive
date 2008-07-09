@@ -30,6 +30,7 @@ import java.util.List;
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
 import org.openstreetmap.josmng.utils.ServiceLoader;
+import org.openstreetmap.josmng.view.projection.Epsg4326;
 
 /**
  * TODO: pluggable projections by means of ServiceLoader
@@ -58,6 +59,7 @@ public final class Projection {
         for (Impl impl : loader) {
             projs.add(create(impl));
         }
+        if (projs.isEmpty()) projs.add(create(new Epsg4326()));
         projections = Collections.unmodifiableCollection(projs);
     }
                

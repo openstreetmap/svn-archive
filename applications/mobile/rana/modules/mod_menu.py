@@ -30,6 +30,7 @@ class menus(ranaModule):
     ranaModule.__init__(self, m, d)
     self.menus = {}
     self.lists = {}
+    self.listOffset = 0
     self.setupGeneralMenus()
     
   def drawText(self,cr,text,x,y,w,h,border=0):
@@ -78,6 +79,19 @@ class menus(ranaModule):
       if(m != None):
         m.registerXYWH(x1,y1,w,h, action)
 
+  def resetMenu(self, menu=None):
+    print "Menu knows menu changed"
+    self.listOffset = 0
+
+  def dragEvent(self,startX,startY,dx,dy,x,y):
+    menuName = self.get('menu', None)
+    if(menuName == None):
+      return
+    list = self.lists.get(menuName, None)
+    if(list != None):
+      self.listOffset += dy
+      print "Drag in menu + %f = %f" % (dy,self.listOffset)
+    
   def drawMenu(self, cr):
     """Draw menus"""
     menuName = self.get('menu', None)
@@ -93,7 +107,7 @@ class menus(ranaModule):
     if(list != None):
       m = self.m.get(list, None)
       if(m != None):
-        listHelper = listable_menu(cr,x1,y1,w,h, self.m.get('clickHandler', None))
+        listHelper = listable_menu(cr,x1,y1,w,h, self.m.get('clickHandler', None), self.listOffset)
         m.drawList(cr, menuName, listHelper)
       return
     

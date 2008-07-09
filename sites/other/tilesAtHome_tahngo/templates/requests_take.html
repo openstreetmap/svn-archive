@@ -1,0 +1,14 @@
+{% extends "base_requests.html" %}
+{% block title %}t@h Create Request{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.requests.views.create %}">&raquo;Take</a> {% endblock %}
+
+{% block heading %}t@h Take Request{% endblock %}
+{% block content %}
+<p>You could take a request manually here. You will almost certainly never need to do that but rather have your t@h client take render requests for you at this location.</p>
+<form action="." method="POST">
+ <table border="0">
+   {{ clientauthform.as_table }}
+ </table>
+   <input type="submit" value="take"/>
+</form>
+{% endblock %}

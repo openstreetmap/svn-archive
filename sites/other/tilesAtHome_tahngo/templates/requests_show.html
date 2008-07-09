@@ -1,0 +1,22 @@
+{% extends "base_requests.html" %}
+{% block title %}t@h Show Requests{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.requests.views.show_requests %}">&raquo;Show</a> {% endblock %}
+
+{% block heading %}t@h Show Requests{% endblock %}
+{% block content %}
+<h3>Unhandled ({{new_reqs_list|length}} total)</h3>
+{% if is_paginated %}<br/>Showing {{results_per_page}} results on page {{ page }} (out of {{ pages }}){% endif %}
+<table border="1" align="center">
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Layer</td></tr>
+  {% for req in new_reqs_list %}
+  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.layers_str }}</td></tr>
+  {% endfor %}
+</table>
+
+<h3>In progress (latest 30)</h3>
+<table border="1" align="center">
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Layer</td><td>Requested since</td><td>Last client contact</td><td>Renderer</td></tr>
+  {% for req in active_reqs_list %}
+  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.layers_str }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{req.client}}</td></tr>
+  {% endfor %}
+</table>{% endblock %}

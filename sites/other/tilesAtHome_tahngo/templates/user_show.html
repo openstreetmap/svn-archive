@@ -1,0 +1,12 @@
+{% extends "base_user.html" %}
+{% block title %}t@h Show Requests{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.user.views.show_user %}">&raquo;Show</a> {% endblock %}
+
+{% block heading %}t@h Show Users{% endblock %}
+{% block content %}Show requests here.
+<table border="1">
+  <tr><td>User</td><td>Rendered Tiles</td><td>Uploaded KB</td></tr>
+  {% for u in user %}
+  <tr><td>{{ u.username }}</td><td>{{ u.get_profile.renderedTiles|stringformat:"g" }}</td><td>{{ u.get_profile.kb_upload|stringformat:"g" }}</td></tr>
+  {% endfor %}
+</table>{% endblock %}

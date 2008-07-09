@@ -1,0 +1,183 @@
+<html>
+<head>
+    <title>OpenStreetMap</title>
+    <script src="http://openlayers.org/api/OpenLayers.js"></script>
+
+    <!-- bring in the OpenStreetMap OpenLayers layers.
+         Using this hosted file will make sure we are kept up
+         to date with any necessary changes -->
+    <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+
+    <script type="text/javascript">
+      function getUrlParam( name )
+      {
+      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+      var regexS = "[\\?&]"+name+"=([^&#]*)";
+      var regex = new RegExp( regexS );
+      var results = regex.exec( window.location.href );
+      if( results == null )
+      return "";
+      else
+      return results[1];
+      }
+
+      // Default map position if not overridden by URL parameters
+      var lon = getUrlParam("lon");
+      var lat = getUrlParam("lat");
+      var zoom = getUrlParam("zoom");
+      if (lon=="") lon=0.07  //-0.11768
+      if (lat=="") lat=51.12 //51.50869
+      if (zoom=="") zoom=12
+        
+      var map; //complex object of type OpenLayers.Map
+
+        function get_osm_url (bounds) {
+          var res = this.map.getResolution();
+          var x = Math.round ((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+          var y = Math.round ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+          var z = this.map.getZoom();
+          var limit = Math.pow(2, z);
+
+          if (y < 0 || y >= limit)
+          {return null;}
+   else
+   {
+     x = ((x % limit) + limit) % limit;
+
+        var path = z + "/" + x + "/" + y + "." + this.type; 
+        var url = this.url;
+        if (url instanceof Array) {
+            url = this.selectUrl(path, url);
+        }
+        return url + path;
+        }
+    }
+
+//Initialise the 'map' object
+function init() {
+
+            map = new OpenLayers.Map ("map", {
+                controls:[
+                    new OpenLayers.Control.Navigation(),
+                    new OpenLayers.Control.PanZoomBar(),
+		    new OpenLayers.Control.LayerSwitcher(),
+		    new OpenLayers.Control.Permalink(),
+                    new OpenLayers.Control.Attribution()],
+                maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                maxResolution: 156543.0399,
+                units: 'm',
+                projection: new OpenLayers.Projection("EPSG:900913"),
+                displayProjection: new OpenLayers.Projection("EPSG:4326")
+            } );
+
+            layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+            layerTilesAtHome2 = layerMapnik = new OpenLayers.Layer.TMS( 
+	    "tiles at home",
+	    "http://tah.openstreetmap.org/~spaetz/Tiles/tile/",
+	    {type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true }, {'buffer':1,'attribution': 'Click on a tile in zoom level 12 to request its render.<br/>Data by by <a href="http://openstreetmap.org/">OpenStreetMap</a>'} );
+
+            map.addLayers([layerTilesAtHome2,layerTilesAtHome]);
+
+            var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
+            OpenLayers.Event.observe(window,"keypress",fnKeypress);
+
+            map.setCenter (lonLat, zoom);
+
+	    map.events.register ("click", map, function(e) { 
+	    var target
+
+	    if (!e) var e = window.event
+	    if (!e.ctrlKey) return;
+	    if (e.target) target=e.target
+	    else target=e.srcElement
+
+	    var zoom=map.getZoom()
+	    if (zoom==12) renderTile(target,12)
+	    });
+
+	    map.events.register ("mouseover", map, function(e) {
+	    var target  
+
+	    if (!e) var e = window.event
+	    if (e.target) target=e.target
+	    else target=e.srcElement
+
+	    if (target.className!="olTileImage") return
+	    var zoom=map.getZoom()
+	    if (zoom==12) { tileHighlightOn(target.parentNode) ; goTarget=target }
+	    });
+
+
+	    map.events.register ("mouseout", map, function(e) { 
+	    var target
+
+	    if (!e) var e = window.event
+	    if (e.target) target=e.target
+	    else target=e.srcElement
+
+	    if (target.className!="olTileImage") return
+	    var zoom=map.getZoom()
+	    if (zoom==12) { tileHighlightOff(target.parentNode) ; goTarget=target }
+	    });
+
+}
+
+function fnKeypress(e) {
+var zoom=map.getZoom()
+var keyCode = String.fromCharCode(e.charCode ? e.charCode : e.keyCode)
+if (keyCode == 'r') renderTile(goTarget,zoom)
+//if (keyCode == 'i') tileInfo(goTarget)
+}
+
+	    function renderTile(tile,z) {
+	    //tileHighlightOn(tile.parentNode)
+	    var url=tile.src
+	    var urls=url.split("/")
+	    var x=urls[urls.length-2]
+	    var y=urls[urls.length-1].split(".")[0]
+	    
+	    document.getElementById("request").src="{% url tah.requests.views.create %}?x="+x+"&y="+y+"&priority=1&min_z=12"
+	    //tileHighlightOff(tile.parentNode)
+
+	    }
+
+	    function tileHighlightOn(tile) {
+	    tile.style.zIndex=101
+	    tile.style.border='1px dashed red'
+	    tile.style.left = parseInt(tile.style.left)-1
+	    tile.style.top = parseInt(tile.style.top)-1
+	    tile.focus()
+	    }
+
+
+	    function tileHighlightOff(tile) {
+	    if (tile.style.zIndex==0) return
+	    tile.style.zIndex=0
+	    tile.style.border='0px'
+	    tile.style.left = parseInt(tile.style.left)+1
+	    tile.style.top = parseInt(tile.style.top)+1
+	    }
+
+    </script>
+</head>
+
+<!-- body.onload is called once the page is loaded (call the 'init' function) -->
+<body onload="init();">
+
+    <!-- define a DIV into which the map will appear. Make it take up the whole window -->
+    <div style="width:100%; height:100%" id="map"></div>
+<iframe id="request"
+src =""
+width="300px"
+height="100px"
+allowtransparency="true"
+frameBorder="false"
+style=" position: absolute; overflow: hidden; top: 0px; left: 50px; z-index: 1001; border: 0px; margin: 0px; filter: chroma(color='#FFFFFF');">
+</iframe>
+<div style="position:absolute; bottom:10px;width:700px;z-index: 1001;">
+  <span style="font-family: arial; font-size: 8pt; color:gray;">
+  At zoom 12: ctrl-click on a tile to render it or press 'r'.
+  </span>
+</div>
+</body>
+</html>

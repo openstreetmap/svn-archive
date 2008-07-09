@@ -1,0 +1,15 @@
+{% load browse_filter %}
+{% extends "base_browse.html" %}
+{% block title %}t@h Tile Details{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.browse.views.index %}">&raquo;Browse</a> {% endblock %}
+
+{% block heading %}t@h Tile Details{% endblock %}
+{% block content %}
+
+<table class="browsetable">
+<tr>
+  <td><h3>Tile</h3>Layer: {{tile.layer}}<br/>Zoom,x,y: ({{tile.z}},{{tile.x}},{{tile.y}})<br/><h3>Base Tileset</h3>Zoom,x,y: {{tile.basetileset|slice:"1:"}}<br/>File size: {{basetile_fsize|filesizeformat}}<br/>Last modified: {{basetile_mtime}}<br/>Uploaded by: {{user}}</td>
+  <td><a href="{% url tah.browse.views.index %}?layer={{tile.layer}}&z={{tile.z}}&x={{tile.x}}&y={{tile.y}}"><img src="http://tah.openstreetmap.org/~spaetz/Tiles/{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}.png" width="256" height="256" class="browseimg"/></a></td>
+</tr>
+</table>
+{% endblock %}

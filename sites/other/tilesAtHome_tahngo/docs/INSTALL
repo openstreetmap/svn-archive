@@ -1,0 +1,43 @@
+PREREQUISITES
+-------------
+python (2.4 works) and django (0.96 works) need to be installed on the host. Depending on the database chosen, a python-mysql or python-sqlite module might be necessary too.
+
+INSTALLATION
+------------
+- Download the main directory and put it in a location of your choice, eg. /usr/local/share. 
+- The "Tiles" directory should be moved to the place where you want to store all the tileset files. The setting "base_tile_path" should point to this directory as it will save tileset files here and expect the stock images (blank sea/land/error) here.
+- Adapt the settings in tah.settings to your configuration (database choice, url handler, etc)
+- Run "python manage.py syncdb" to create the database
+- Open the /admin interface and add the settings "base_tile_path", "unzipPath","logFile" to the table Settings.
+  In the case of tah.osm.org these settings are "/mnt/agami/openstreetmap/tah/Tiles", "/tmp", and "tah.log" respectively.
+- in tah_intern/serve_tiles.py the base_tile_path is hardcoded for efficiency reasons. Open that file and adapt the path there too.
+
+APACHE CONFIGURATION
+--------------------
+The following snippet was sufficient in the apache vhost configuration to make it work. If the main apache config cannot be modified it worked to have the stuff in a .htaccess file in the corresponding directories too.
+	<Location />
+		SetHandler python-program
+		PythonHandler django.core.handlers.modpython
+		SetEnv DJANGO_SETTINGS_MODULE tah.settings
+                #adapt next line to whatever your install base directory is
+		PythonPath "['/usr/local/share/'] + sys.path"
+		#PythonAutoReload Off
+		PythonDebug Off
+	</Location>
+	<Location /media>
+		SetHandler None
+	</Location>
+	<Location /Tiles>
+		SetHandler python-program
+                #adapt next line to whatever your install base directory is
+		PythonPath "['/usr/local/share/'] + sys.path"
+		PythonHandler  tah.tah_intern.serve_tiles
+		#PythonAutoReload Off
+		PythonDebug Off
+	</Location>
+
+USAGE
+-----
+t@h clients can connect to the server without explicitely creating an account. If clients are configured with their
+OpenStreetMap account email (display user name will not work for account creation, but should work as username afterwards, although there is no reason to prefer that to the email) and regular OSM password, the account will be automatically created.
+Passwords are cached in a hashed form on the t@h server, so subsequent OpenStreetMap Email or Password changes will not be automatically propagate to the t@h server. In case of a wrong password, the server tries to refetch the password from OpenStreetMap, so password changes (should theoretically) be possible.

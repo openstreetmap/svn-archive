@@ -29,6 +29,7 @@ class Tileset:
       if not self.tiles.has_key(t.z): self.tiles[t.z] = {} 
       if not self.tiles[t.z].has_key(t.x): self.tiles[t.z][t.x] = {} 
       self.tiles[t.z][t.x][t.y] = (t,tilefile)
+      return 1
     else: return 0
 
   # checks whether a tile belongs in this tileset or not

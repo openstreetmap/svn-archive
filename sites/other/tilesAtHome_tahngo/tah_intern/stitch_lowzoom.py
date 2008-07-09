@@ -88,14 +88,14 @@ class Lowzoom(Tileset):
     self.add_tile(t,pngfilepath)
 
 if __name__ == '__main__':
-  now = time()
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
-  for x in range(0,32):
-    for y in range(0,32):
+  for x in range(8,64):
+    for y in range(0,64):
+       now = time()
        print "do 6 %d %d" % (x,y)
        lz.create(layer,6,x,y,base_tile_path)
+       print "Took %.1f sec." % (time()-now)
   print "do 0 0 0"
   lz.create(layer,0,0,0,base_tile_path)
-  print "Took %.1f sec." % (time()-now)

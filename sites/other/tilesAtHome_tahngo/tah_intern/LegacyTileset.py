@@ -41,7 +41,6 @@ class LegacyTileset(Tileset):
     starttime = (time(),clock())    
     # cache if the layer is transparent
     layer_transparent = layer.transparent
-    print "Layer transparency is: %s" % layer_transparent
     files  = 0
     blanks = 0
 

@@ -40,6 +40,8 @@ class Upload(models.Model):
   upload_time = models.DateTimeField(auto_now_add=True)
   # priority: 1=urgent 3=slow bulk
   priority = models.PositiveSmallIntegerField(default=3)
+  # if we need to do multi-threaded processing this shows locked uploads
+  is_locked = models.BooleanField(default=False)
 
   def __str__(self):
     return str(self.layer)+","+str(self.file)

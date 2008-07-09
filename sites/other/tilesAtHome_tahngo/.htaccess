@@ -1,6 +1,0 @@
-SetHandler None
-DirectoryIndex hgweb.cgi
-<Files tah.db>
- order allow,deny
- deny from all
-</Files>

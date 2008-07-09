@@ -211,4 +211,8 @@ def stats_munin_active(request):
 
 def stats_munin_pending(request):
     reply=''
+    activereqs = Request.objects.filter(status=0)
+    for val, state in enumerate(['low','medium','high']):
+      c = activereqs.filter(priority=val+1).count()
+      reply += "%s.value %d\n" % (state,c)
     return HttpResponse(reply,mimetype='text/plain')

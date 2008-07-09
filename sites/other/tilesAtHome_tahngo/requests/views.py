@@ -41,7 +41,7 @@ def saveCreateRequestForm(request, form):
     if not newRequest.min_z in ['0','6','12']: newRequest.min_z = 12
     if not newRequest.max_z: newRequest.max_z = {0:5,6:11,12:17}[newRequest.min_z]
     newRequest.status = 0
-    newRequest.clientping_time = ''
+    newRequest.clientping_time = datetime.now()
     newRequest.request_time=datetime.now()
     if not request_exists(newRequest):
       newRequest.save()

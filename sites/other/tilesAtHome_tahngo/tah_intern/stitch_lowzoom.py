@@ -51,9 +51,8 @@ class Lowzoom(Tileset):
 
 
   def create(self,layer,z,x,y,base_tile_dir):
-    if not self.init:
-      self.__init__(layer, z, x, y)
-      self.tmpdir=tempfile.mkdtemp()
+    self.__init__(layer, z, x, y)
+    self.tmpdir=tempfile.mkdtemp()
     self.stitch(layer,z,x,y)
     self.save(base_tile_dir)
     shutil.rmtree(self.tmpdir)
@@ -76,7 +75,6 @@ class Lowzoom(Tileset):
         if z == self.base_z+5: imagefile = StringIO.StringIO(self.serve_tile(layer.name,z+1,2*x+i,2*y+j))
         else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
         try:
-          print "use "+str(imagefile)
           image = cairo.ImageSurface.create_from_png(imagefile)
         except IOError, e:
           print "IOError %s at %d %d" % (e,2*x+i,2*y+j)
@@ -94,5 +92,10 @@ if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
+  for x in range(0,32):
+    for y in range(0,32):
+       print "do 6 %d %d" % (x,y)
+       lz.create(layer,6,x,y,base_tile_path)
+  print "do 0 0 0"
   lz.create(layer,0,0,0,base_tile_path)
   print "Took %.1f sec." % (time()-now)

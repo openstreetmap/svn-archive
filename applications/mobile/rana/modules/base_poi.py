@@ -52,7 +52,10 @@ class poiModule(ranaModule):
     self.needUpdate = False
     
   def drawList(self, cr, menuName, listHelper):
-    
+    m = self.m.get("clickHandler", None)
+    if(m):
+      m.registerDraggableEntireScreen("menu")
+      
     if(menuName[0:4] == "poi:"):
       type = menuName[4:]
       
@@ -62,8 +65,9 @@ class poiModule(ranaModule):
     else:
       items = [{'name':a} for a in self.poi.keys()]
       submenu = True
-    
-    for i in range(0, min(listHelper.numItems, len(items))):
+
+    #for i in range(max(0,listHelper.first), min(listHelper.last+1, len(items))):
+    for i in range(0, len(items)):
       item = items[i]
       listHelper.write(i, "%d: %s"% (i,item['name']))
       if(submenu):

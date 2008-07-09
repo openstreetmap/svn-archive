@@ -28,12 +28,13 @@ class clickHandler(ranaModule):
   """handle mouse clicks"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-    self.areas = []
+    self.beforeDraw()
     self.cycle = 0
 
   def beforeDraw(self):
     self.areas = []
     self.dragareas = []
+    self.dragscreen = None
 
   def register(self, rect, action):
     self.areas.append([rect, action])
@@ -60,17 +61,26 @@ class clickHandler(ranaModule):
           
   def registerDraggable(self, x1,y1,x2,y2, module):
     self.dragareas.append((rect(x1,y1,x2-x1,y2-y1), module))
-          
+
+  def registerDraggableEntireScreen(self, module):
+    print "Entire screen is draggable for %s " % module
+    self.dragscreen = module
+
   def handleDrag(self,startX,startY,dx,dy,x,y):
-    for area in self.dragareas:
-      (rect, module) = area
-      if(rect.contains(startX,startY)):
-        m = self.m.get(module, None)
-        if(m != None):
-          m.dragEvent(startX,startY,dx,dy,x,y)
-        else:
-          print "Drag registered to nonexistant module %s" % module
-  
+    if(self.dragscreen):
+      m = self.m.get(self.dragscreen, None)
+      if(m != None):
+        m.dragEvent(startX,startY,dx,dy,x,y)
+    else:
+	    for area in self.dragareas:
+	      (rect, module) = area
+	      if(rect.contains(startX,startY)):
+	        m = self.m.get(module, None)
+	        if(m != None):
+	          m.dragEvent(startX,startY,dx,dy,x,y)
+	        else:
+	          print "Drag registered to nonexistant module %s" % module
+	  
   def update(self):
     self.cycle += 1
 

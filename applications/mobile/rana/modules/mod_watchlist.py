@@ -36,5 +36,8 @@ class watchlist(ranaModule):
     
     # Menu changed, so redraw
     if(name == "menu"):
+      m = self.m.get("menu", None)
+      if(m):
+        m.resetMenu(value)
       self.set("needRedraw", True)
 

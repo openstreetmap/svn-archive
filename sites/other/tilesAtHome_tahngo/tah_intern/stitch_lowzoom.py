@@ -1,5 +1,5 @@
 import os,sys, cairo, tempfile, shutil, StringIO, struct
-sys.path.insert(0, "/home/spaetz")
+sys.path.insert(0, "/var/www/")
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from time import time
 from tah.tah_intern.Tileset import Tileset
@@ -15,7 +15,7 @@ class Lowzoom(Tileset):
     (layer, base_z,base_x,base_y) = t.basetileset() 
     # basetileset returns (None,None,None,None) if invalid!
     # basetilepath could be take from the Settings, hardcode for efficiency
-    basetilepath='/mnt/agami/openstreetmap/tah/tahngo/Tiles'
+    basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
     tilesetfile = os.path.join(basetilepath,layername+'_'+str(base_z),str(base_x)+'_'+str(base_y))
     try:
       f = open(tilesetfile,'rb')

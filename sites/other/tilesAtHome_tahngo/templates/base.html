@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>{% block title %}t@h{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{% url django.views.generic.simple.direct_to_template template="homepage.html" %}/media/style.css">
+{% block head %}{% endblock %}
+</head>
+<body>
+  <div id="breadcrumb">{% block breadcrumb %}<a href="{% url django.views.generic.simple.direct_to_template template=homepage.html %}">&raquo;Home</a> {% endblock %}</div>
+  <div id="header">{% block header %}<img src="{% url django.views.generic.simple.direct_to_template template=homepage.html %}/media/header_logo.png" alt="t@h logo" width="600" height="109"/>{% endblock %}</div>
+  <h2>{% block heading %}t@h{% endblock %}</h2>
+
+  <div id="content">{% block content %}{% endblock %}</div>
+
+  <div id="footer">{% block footer %}<hr/>Part of <a href="http://openstreetmap.org">OpenStreetMap</a>. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" width="80px" height="15px" align="middle" /></a>. Local server time: {% now "Y-m-d h:m" %}{% endblock %}</div>
+</body>
+</html>

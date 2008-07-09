@@ -1,0 +1,15 @@
+{% extends "base_requests.html" %}
+{% block title %}t@h Create Request{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.requests.views.create %}">&raquo;Upload</a> {% endblock %}
+
+{% block heading %}t@h Upload Request{% endblock %}
+{% block content %}
+<p>Upload requests with HTTP POST or through this web interface (normally this should be done by your t@h client through HTTP POST).<p/>
+<form action="." enctype="multipart/form-data" method="POST">
+ <table border="0">
+   {{ uploadform.as_table }}
+   {{ authform.as_table }}
+ </table>
+   <input type="submit" value="upload"/>
+</form>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}t@h Requests{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.user.views.index %}">&raquo;User</a> {% endblock %}
+
+{% block heading %}t@h User{% endblock %}
+{% block content %}This is the user manager. You can
+<ul><li> see the list of <a href="{% url tah.user.views.show_user %}">current users</a></li>
+<li><a href="{% url tah.user.views.login %}">login (NOT IMPLEMENTED YET)</a></li>
+</ul>{% endblock %}

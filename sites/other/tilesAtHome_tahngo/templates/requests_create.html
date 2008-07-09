@@ -1,0 +1,14 @@
+{% extends "base_requests.html" %}
+{% block title %}t@h Create Request{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.requests.views.create %}">&raquo;Create</a> {% endblock %}
+
+{% block heading %}t@h Create Request{% endblock %}
+{% block content %}
+<p>Create requests either with HTTP POST or through HTTP GET (by calling URLs like <i>http://{{host}}{% url tah.requests.views.create %}?x=1&y=2&min_z=12&layer=1&priority=3</i>).<p/>
+<form action="." method="POST">
+ <table border="0">
+   {{ createform.as_table }}
+ </table>
+   <input type="submit" value="create"/>
+</form>
+{% endblock %}

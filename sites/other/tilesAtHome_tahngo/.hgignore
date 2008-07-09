@@ -1,0 +1,9 @@
+syntax: glob
+\#*\#
+*.pyc
+*~
+*.log
+
+#ignore the database and the hgweb cgi
+tah.db
+hgweb.cgi

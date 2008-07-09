@@ -1,0 +1,21 @@
+{% load browse_filter %}
+{% extends "base.html" %}
+{% block title %}t@h Browse map{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.browse.views.index %}">&raquo;Browse</a> {% endblock %}
+
+{% block heading %}t@h Browse map{% endblock %}
+{% block content %}
+<table id="browsetable" class="browsetable">
+{% comment %}first navigation line starts here{% endcomment %}
+<tr class="browsetable"><td  class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z|add:"-1" }}&x={{ x|div:2 }}&y={{ y|div:2 }}">Zoom Out</a></td>{% for cur_x in x_range %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z }}&x={{cur_x}}&y={{ y_range|first|add:"-1" }}">up</a></td>{% endfor %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z|add:"1" }}&x={{ x|add:x }}&y={{ y|add:y }} ">Zoom In</a><td/></tr>
+
+{% comment %}main image table starts here{% endcomment %}
+{% for cur_y in y_range %}
+<tr><td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z }}&x={{ x_range|first|add:"-1" }}&y={{ cur_y }}">left</a></td>{% for cur_x in x_range %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{z}}&x={{cur_x}}&y={{cur_y}}"><img src="http://tah.openstreetmap.org/~spaetz/Tiles/{{layer}}/{{z}}/{{cur_x}}/{{cur_y}}.png" width="256" height="256" class="browseimg"/></a></td>
+{% endfor%}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z }}&x={{ x_range|slice:"-1:"|first|add:1 }}&y={{ cur_y }}">right</a></td></tr>{% endfor%}
+{% comment %}last navigation line starts here{% endcomment %}
+
+<tr><td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z|add:"-1" }}&x={{ x|div:2 }}&y={{ y|div:2 }}">Zoom Out</a></td>{% for cur_x in x_range %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z }}&x={{cur_x}}&y={{ y_range|slice:"-1:"|first|add:1 }}">down</a></td>{% endfor %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z|add:"1" }}&x={{ x|add:x }}&y={{ y|add:y }} ">Zoom In</a><td/></tr>
+</table>
+<a href="{% url tah.browse.views.tiledetails layer,z,x,y %}">Show Tile detail</a>
+{% endblock %}

@@ -1,0 +1,17 @@
+t@h server
+==========
+ - User statistics
+ - Discard incomplete tileset uploads (mail user?)
+ - Prevent duplicate requests
+ - Enable multi-layer requests
+ - Make request handler smarter (use priorities etc)
+ - Make upload processor smarter (use upload priorities)
+ - Make use of client feedback (re-render on error)
+ - Make use of complexity that client can handle
+ - Save tilesets first to tmp file and move only after a successful complete save.?
+
+t@h client
+==========
+ - Ditch the token stuff, it's unused
+ - implement "I'm still on it" pinging
+ - implement other feedback "error reasons"

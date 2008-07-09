@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}t@h Home{% endblock %}
+{% block heading %}t@h Homepage{% endblock %}
+{% block content %}
+<p>This is a rewrite of the original t@h server which has become unmaintainable over time. You can retrieve the current code base via mercurial with <tt>hg&nbsp;clone&nbsp;<a href="http://tah.openstreetmap.org/~spaetz/hg">http://tah.openstreetmap.org/~spaetz/hg</a></tt>. Just visiting the same URL gives you the changelog etc...</p>
+See: <ul>
+<li><a href="{% url tah.requests.views.index %}">Render Requests</a> (create, see, upload render requests)</li>
+<li><a href="{% url tah.browse.views.index %}">Browse Statically</a> (Browse the map in a non-javascript viewer)</li>
+<li><a href="{% url tah.browse.views.slippymap %}">Browse dynamically</a> (Browse the map as slippy map and request renderings with a mouseclick)</li>
+<li><a href="{% url tah.user.views.index %}">User</a> (manage user accounts, see user statistics)</li></ul>
+
+<b>What's currently going on?</b><br/>
+<div id="log">Loading Log file...</div>
+
+ <script type="text/javascript">
+ var page = "{% url tah.tah_intern.views.show_log %}";
+ function ajax(url,target) {
+   // native XMLHttpRequest object
+   //document.getElementById(target).innerHTML = 'Loading...';
+   if (window.XMLHttpRequest) {
+     req = new XMLHttpRequest();
+     req.onreadystatechange = function() {ajaxDone(target);};
+     req.open("GET", url, true);
+     req.send(null);
+     // IE/Windows ActiveX version
+   } else if (window.ActiveXObject) {
+     req = new ActiveXObject("Microsoft.XMLDOM");
+     if (req) {
+       req.onreadystatechange = function() {ajaxDone(target);};
+       req.open("GET", url, true);
+       req.send(null);
+     }
+   }
+   setTimeout("ajax(page,'log')", 15000);
+ }
+ 
+ function ajaxDone(target) {
+   // only if req is "loaded"
+   if (req.readyState == 4) {
+     // only if "OK"
+     if (req.status == 200 || req.status == 304) {
+       results = req.responseText;
+       document.getElementById(target).innerHTML = results;
+     } else {
+       document.getElementById(target).innerHTML="ajax error:\n" +
+       req.statusText;
+     }
+   }
+ }
+
+ ajax(page,'log')
+ </script>
+
+{% endblock %}

@@ -37,7 +37,6 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.ui.actions.OpenAction;
-import org.openstreetmap.josmng.ui.actions.OpenGpxAction;
 import org.openstreetmap.josmng.ui.actions.SetProjectionAction;
 import org.openstreetmap.josmng.ui.actions.UndoAction;
 import org.openstreetmap.josmng.ui.mode.TheOnlyMode;

@@ -20,7 +20,7 @@
 				if (poiselected==result[0]) { deselectAll(); }
 				removeMovieClip(_root.map.pois[result[0]]);
 			};
-			remote.call('putpoi',poidelresponder,_root.usertoken,Math.floor(this._name),this._x,this._y,this.attr,0,baselong,basey,masterscale);
+			remote.call('putpoi',poidelresponder,_root.usertoken,Math.floor(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
 		} else {
 			if (this._name==poiselected) { deselectAll(); }
 			removeMovieClip(this);
@@ -29,8 +29,8 @@
 	POI.prototype.reload=function() {
 		poirelresponder=function() {};
 		poirelresponder.onResult=function(result) {
-			_root.map.pois[result[0]]._x  =result[1];
-			_root.map.pois[result[0]]._y  =result[2];
+			_root.map.pois[result[0]]._x  =long2coord(result[1]);
+			_root.map.pois[result[0]]._y  =lat2coord (result[2]);
 			_root.map.pois[result[0]].attr=result[3];
 			_root.panel.properties.init('POI',getPanelColumns(),4);
 			_root.panel.presets.init(_root.panel.properties);
@@ -38,7 +38,7 @@
 			updateScissors(false);
 			redrawRelationsForMember('node', result[0]);
 		};
-		remote.call('getpoi',poirelresponder,Math.floor(this._name),baselong,basey,masterscale);
+		remote.call('getpoi',poirelresponder,Math.floor(this._name));
 	};
 	POI.prototype.upload=function() {
 		poiresponder=function() { };
@@ -57,8 +57,7 @@
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox) {
 			this.attr['created_by']=_root.signature;
-			this.uploading=true;
-			remote.call('putpoi',poiresponder,_root.usertoken,this._name,this._x,this._y,this.attr,1,baselong,basey,masterscale);
+			remote.call('putpoi',poiresponder,_root.usertoken,this._name,coord2long(this._x),coord2lat(this._y),this.attr,1);
 			this.clean=true;
 		}
 	};
@@ -66,9 +65,11 @@
 		setPointer('');
 	};
 	POI.prototype.onPress=function() {
+		removeWelcome(true);
 		if (_root.drawpoint>-1) {
 			// add POI to way
-			addEndPoint(this._x,this._y,this._name,this.attr);
+			_root.nodes[this._name]=new Node(this._name,this._x,this._y,this.attr);
+			addEndPoint(this._name);
 			_root.junction=true; restartElastic();
 			removeMovieClip(this);
 		} else {
@@ -108,13 +109,14 @@
 			markClean(false);
 			_root.undo.append(UndoStack.prototype.undo_movepoi,
 							  new Array(this,this.originalx,this.originaly),
-							  "moving a POI");
+							  iText("moving a POI",'action_movepoi'));
 		}
 	};
 	POI.prototype.select=function() {
+		_root.panel.properties.tidy();
 		_root.panel.properties.saveAttributes();
 		_root.poiselected=this._name;
-		setTypeText("Point",this._name);
+		setTypeText(iText("Point",'point'),this._name);
 		_root.panel.properties.init('POI',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
@@ -126,9 +128,10 @@
 	// ** above will recolour as red/green depending on whether locked
 	
 	POI.prototype.saveUndo=function(str) {
+		// ** localisation not done
 		_root.undo.append(UndoStack.prototype.undo_deletepoi,
 						  new Array(this._name,this._x,this._y,
-									deepCopy(this.attr)),str+" a POI");
+									deepCopy(this.attr)),iText("$1 a POI",'a_poi',str));
 	};
 
 	Object.registerClass("poi",POI);

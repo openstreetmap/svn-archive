@@ -26,6 +26,24 @@
 	$ch->setRightFill(0   ,0   ,0   ); $ch->setLine(20,0,0,0); $ch->drawCircle(4);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_on");
 
+	#		Whirling 'in progress' animation
+	
+	$a=3.1415926/6;
+	$ec=new SWF::MovieClip();
+	for ($i=0; $i<12; $i++) {
+		$ch=new SWF::Shape();
+		for ($j=0; $j<12; $j++) {
+			$t=$i-$j; if ($t<0) { $t+=12; }
+			$t=$t*15.5; $ch->setLine(50,$t,$t,$t);
+			$ch->movePenTo(cos($j*$a)*5,sin($j*$a)*5);
+			$ch->drawLineTo(cos($j*$a)*10,sin($j*$a)*10);
+		}
+		$ec->add($ch);
+		$ec->nextFrame(); $ec->nextFrame();
+		$ec->nextFrame(); $ec->nextFrame();
+	}
+	$m->addExport($ec,"whirl");
+
 	#		POI
 	
 	$ec=new SWF::MovieClip();
@@ -41,11 +59,10 @@
 	
 	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
-	$ch->setRightFill(0,195,0);
+	$ch->setRightFill(0,0,0);
 	$ch->setLine(20,0,0,0);
-	$ch->drawCircle(4);
-	$ec->add($ch);
-	$ec->nextFrame();
+	$ch->drawCircle(3);
+	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"poiinway");
 
 	#		Anchor (selected)

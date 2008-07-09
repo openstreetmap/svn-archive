@@ -16,6 +16,12 @@
 	//			will need to be a higher stacking level than modal
 	// -- scrollbar background/clicking?
 
+	// properties is cleared/inited on:
+	// - anchorpoint.select
+	// - POI.reload and POI.select
+	// - potlatch.as: mapClickEnd, deselectAll
+	// - (relations, not a problem as yet)
+	// - Way.select
 	
 	// =====================================================================================
 	// Preset menu
@@ -24,15 +30,16 @@
 	PresetMenu.prototype=new MovieClip();
 
 	PresetMenu.prototype.init=function(pw) {
-		this.pw=pw;			// reference to property window
-		pw.presetmenu=this;	// and back again!
-		this.group='road';	// what group of tags? (e.g. 'road')
-		this.setIcon(this.group);
-		this.reflect();
-		this._visible=true;
-	};
-	PresetMenu.prototype.hide=function() {
-		this._visible=false;
+		if (pw) {
+			this.pw=pw;			// reference to property window
+			pw.presetmenu=this;	// and back again!
+			this.group='road';	// what group of tags? (e.g. 'road')
+			this.setIcon(this.group);
+			this.reflect();
+		} else {
+			this.dropdown.removeMovieClip();
+			this.icon.removeMovieClip();
+		}
 	};
 	PresetMenu.prototype.initMenu=function(value) {
 		this.attachMovie("menu","dropdown",1);
@@ -57,7 +64,7 @@
 		this.attachMovie("preset_"+this.group,"icon",2);
 		with (this.icon) { _x=10; _y=15; }
 		this.icon.onPress   =function() { this._parent.cycleIcon(); };
-		this.icon.onRollOver=function() { setFloater("Choose what type of presets are offered in the menu."); };
+		this.icon.onRollOver=function() { setFloater(iText("Choose what type of presets are offered in the menu.",'tip_presettype')); };
 		this.icon.onRollOut =function() { clearFloater(); };
 	};
 	PresetMenu.prototype.cycleIcon=function() {
@@ -81,7 +88,7 @@
 		}
 		this.pw.reinit();
 		this.pw.saveAttributes();
-		if (this.pw.proptype=='way') { _root.ws.redraw(); }
+		if (this.pw.proptype!='POI') { _root.ws.redraw(); }
 	};
 
 	Object.registerClass("presetmenu",PresetMenu);
@@ -263,13 +270,12 @@
 		this.tagcount=0;
 		this.savedundo=false;
 		if (proptype=='') { return; }
-		removeMovieClip(_root.panel.welcome);
 
 		this.relarr = [];
 		switch (proptype) {
 			case 'point':
-				this.proparr=_root.ws.path[_root.pointselected][4];
-				this.relarr=getRelationsForNode(_root.ws.path[_root.pointselected][2]);
+				this.proparr=nodes[_root.ws.path[_root.pointselected]].attr;
+				this.relarr=getRelationsForNode(_root.ws.path[_root.pointselected]);
 				break;
 			case 'POI':
 				this.proparr=_root.map.pois[poiselected].attr;
@@ -343,13 +349,13 @@
 		switch (this.proptype) {
 			case 'way':		_root.undo.append(UndoStack.prototype.undo_waytags,
 											  new Array(_root.ws,deepCopy(this.proparr)),
-											  "setting tags on a way"); break;
+											  iText("setting tags on a way",'action_waytags')); break;
 			case 'point':	_root.undo.append(UndoStack.prototype.undo_pointtags,
 											  new Array(_root.ws,_root.pointselected,deepCopy(this.proparr)),
-											  "setting tags on a point"); break;
+											  iText("setting tags on a point",'action_pointtags')); break;
 			case 'POI':		_root.undo.append(UndoStack.prototype.undo_poitags,
 											  new Array(_root.map.pois[poiselected],deepCopy(this.proparr)),
-											  "setting tags on a POI"); break;
+											  iText("setting tags on a POI",'action_poitags')); break;
 		};
 	};
 
@@ -436,8 +442,8 @@
 		var i,proparr,relarr;
 		this.saveUndo();
 		switch (this.proptype) {
-			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']][4]; 
-							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']][2]);
+			case 'point':	proparr=nodes[_root.savedpointway.path[_root.saved['point']]].attr; 
+							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']]);
 							break;
 			case 'POI':		proparr=_root.saved['POI'].attr;
 							relarr=getRelationsForNode(_root.saved['POI']._name);
@@ -454,7 +460,7 @@
 					// ignore name and ref if SHIFT pressed
 				} else {
 					switch (this.proptype) {
-						case 'point':	j=_root.savedpointway.path[_root.saved['point']][4][i]; break;
+						case 'point':	j=nodes[_root.savedpointway.path[_root.saved['point']]].attr[i]; break;
 						case 'POI':		j=_root.saved['POI'].attr[i]; break;
 						case 'way':		j=_root.saved['way'].attr[i]; break;
 					}
@@ -467,12 +473,12 @@
 		for (i in relarr) {
 			var r=_root.map.relations[relarr[i]];	// reference to this relation
 			switch (this.proptype) {
-				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected][2],r.getNodeRole(_root.savedpointway.path[_root.saved['point']][2])); break;
+				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected],r.getNodeRole(_root.savedpointway.path[_root.saved['point']])); break;
 				case 'POI':		r.setNodeRole(poiselected,r.getNodeRole(_root.saved['POI']._name)); break;
 				case 'way':		r.setWayRole (wayselected,r.getWayRole (_root.saved['way']._name)); break;
 			}
 		}
-		if (this.proptype=='way') { _root.ws.redraw(); }
+		if (this.proptype!='POI') { _root.ws.redraw(); }
 		this.reflect();
 		this.reinit();
 	};
@@ -507,6 +513,15 @@
 
 	PropertyWindow.prototype.reflect=function() {
 		if (this.presetmenu) { this.presetmenu.reflect(); }
+	};
+	
+	// Remove any '(type...' or blank keys before uploading
+
+	PropertyWindow.prototype.tidy=function() {
+		var proparr=this.proparr;
+		for (var el in proparr) {
+			if (proparr[el]=='' || proparr[el].substr(0,6)=='(type ') { delete this.proparr[el]; }
+		}
 	};
 
 	Object.registerClass("propwindow",PropertyWindow);
@@ -581,10 +596,7 @@
 					_root.redopropertywindow=this._parent._parent._parent; 
 				}
 			}
-			switch (this._parent._parent._parent.proptype) {
-				case 'way':		 	_root.ws.redraw(); break;
-				case 'relation':	_root.ws.redraw(); break;
-			}
+			if (this._parent._parent._parent.proptype!='POI') { _root.ws.redraw(); }
 			_root.auto.remove();
 			this._parent._parent._parent.reflect();
 			this._parent.lastvalue=this.text;
@@ -625,10 +637,7 @@
 			setValueFromTextfield(this._parent.value);
 			_root.auto.remove();
 			this._parent._parent._parent.reflect();
-			switch (this._parent._parent._parent.proptype) {
-				case 'way':		 	_root.ws.redraw(); break;
-				case 'relation':	_root.ws.redraw(); break;
-			}
+			if (this._parent._parent._parent.proptype!='POI') { _root.ws.redraw(); }
 			_root.redopropertywindow=this._parent._parent._parent;
 		};
 	};
@@ -639,7 +648,7 @@
 	KeyValue.prototype.getValueFromObject=function(k) {
 		var v;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=_root.ws.path[_root.pointselected][4][k]; break;
+			case 'point':	v=nodes[_root.ws.path[_root.pointselected]].attr[k]; break;
 			case 'POI':		v=_root.map.pois[poiselected].attr[k]; break;
 			case 'way':		v=_root.ws.attr[k]; break;
 			case 'relation':v=_root.editingrelation.attr[k]; break;
@@ -687,7 +696,9 @@
 	
 	function setValueInObject(proptype,k,v) {
 		switch (proptype) {
-			case 'point':	_root.ws.path[_root.pointselected][4][k]=v; 
+			case 'point':	var id=_root.ws.path[_root.pointselected];
+							nodes[id].attr[k]=v; 
+							nodes[id].tagged=hasTags(nodes[id].attr);
 							_root.ws.clean=false; break;
 			case 'POI':		_root.map.pois[poiselected].attr[k]=v;
 							_root.map.pois[poiselected].clean=false; break;
@@ -705,11 +716,13 @@
 		tf._parent._parent._parent.saveUndo();
 		if (k!=tf._parent.lastkey) {
 			// field has been renamed, so delete old one and set new one
-			// (we have to set it to '' sometimes because of Ming delete bug)
+			// (temporary references used to get around Ming delete bug)
 			switch (tf._parent._parent._parent.proptype) {
-				case 'point':	_root.ws.path[_root.pointselected][4][tf._parent.lastkey]=''; 
+				case 'point':	var noderef=nodes[_root.ws.path[_root.pointselected]];
+								delete noderef.attr[tf._parent.lastkey];
 								_root.ws.clean=false; break;
-				case 'POI':		_root.map.pois[poiselected].attr[tf._parent.lastkey]='';
+				case 'POI':		var poiref=_root.map.pois[poiselected];
+								delete poiref.attr[tf._parent.lastkey];
 								_root.map.pois[poiselected].clean=false; break;
 				case 'way':		delete _root.ws.attr[tf._parent.lastkey];
 								_root.ws.clean=false; break;
@@ -782,7 +795,7 @@
 	RelMember.prototype.getRole=function() {
 		var v;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=this.rel.getNodeRole(_root.ws.path[_root.pointselected][2]); break;
+			case 'point':	v=this.rel.getNodeRole(_root.ws.path[_root.pointselected]); break;
 			case 'POI':		v=this.rel.getNodeRole(poiselected); break;
 			case 'way':		v=this.rel.getWayRole(wayselected); break;
 		}
@@ -793,7 +806,7 @@
 	RelMember.prototype.setRole=function(tf) {
 		var role = tf.text;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=this.rel.setNodeRole(_root.ws.path[_root.pointselected][2], role); break;
+			case 'point':	v=this.rel.setNodeRole(_root.ws.path[_root.pointselected], role); break;
 			case 'POI':		v=this.rel.setNodeRole(poiselected, role); break;
 			case 'way':		v=this.rel.setWayRole(wayselected, role); break;
 		}
@@ -801,7 +814,7 @@
 
 	RelMember.prototype.removeRelation=function() {
 		switch (this._parent._parent.proptype) {
-			case 'point': this.rel.removeNode(_root.ws.path[_root.pointselected][2]); break;
+			case 'point': this.rel.removeNode(_root.ws.path[_root.pointselected]); break;
 			case 'POI': this.rel.removeNode(poiselected); break;
 			case 'way': this.rel.removeWay(wayselected); break;
 		}

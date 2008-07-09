@@ -31,10 +31,10 @@
 
 	UndoStack.prototype.setTooltip=function(str) {
 		if (str=='') {
-			_root.panel.i_undo.onRollOver=function() { setFloater("Nothing to undo"); };
+			_root.panel.i_undo.onRollOver=function() { setFloater(iText("Nothing to undo",'tip_noundo')); };
 			_root.panel.i_undo._alpha=50;
 		} else {
-			_root.panel.i_undo.onRollOver=function() { setFloater("Undo "+str+" (Z)"); };
+			_root.panel.i_undo.onRollOver=function() { setFloater(iText("Undo $1 (Z)",'tip_undo',str)); };
 			_root.panel.i_undo._alpha=100;
 		}
 	};
@@ -59,7 +59,8 @@
 	//		Moved node
 	
 	UndoStack.prototype.undo_movenode=function(params) {
-		var w=moveNode(params[0],params[1],params[2],undefined);
+		var nodecopy=params[0];
+		var w=_root.nodes[nodecopy.id].moveTo(nodecopy.x,nodecopy.y,null);
 		if (w) { 
 			_root.map.ways[w].clean=false;
 			_root.map.ways[w].select();
@@ -74,7 +75,7 @@
 			way.attr=params[1];
 			way.splitWay(params[3],params[2]);
 		} else {
-			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
 			this.clear();
 		}
 	};
@@ -86,7 +87,7 @@
 		if (way1.mergeAtCommonPoint(way2)) {
 			way2.redraw(); way2.select();
 		} else {
-			handleError(-1,new Array("Ways "+way1+" and "+way2+" don't share a common point any more, so I can't undo the split."));
+			handleError(-1,new Array(iText("Ways $1 and $2 don't share a common point any more, so I can't undo the split.",'error_nosharedpoint',way1,way2)));
 			this.clear();
 		}
 	};
@@ -96,7 +97,7 @@
 	
 	UndoStack.prototype.undo_waytags=function(params) {
 		var way=params[0]; if (!way) {
-			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
 			this.clear(); return;
 		} else {
 			way.attr=params[1];
@@ -107,7 +108,7 @@
 	};
 	UndoStack.prototype.undo_pointtags=function(params) {
 		var way=params[0]; var point=params[1]; if (!way) {
-			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
 			this.clear(); return;
 		} else {
 			way.path[point][4]=params[2];
@@ -117,7 +118,7 @@
 	};
 	UndoStack.prototype.undo_poitags=function(params) {
 		var poi=params[0]; if (!poi) {
-			handleError(-1,new Array("The POI cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("The POI cannot be found (perhaps you've panned away?) so I can't undo.",'error_nopoi')));
 			this.clear(); return;
 		} else {
 			poi.attr=params[1];
@@ -129,27 +130,18 @@
 	//		Removed point from way(s) (at x,y,tags if it no longer exists)
 
 	UndoStack.prototype.undo_deletepoint=function(params) {
-		var paramid=params[0]; var x=params[1]; var y=params[2]; var attr=params[3];
-		var id=undefined;
-		var qway,last;
-		// look if node is used in any other ways, take it from there if so
-		for (qway in _root.map.ways) {
-			for (qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
-				if (_root.map.ways[qway].path[qs][2]==paramid) {
-					id=paramid;
-					x=_root.map.ways[qway].path[qs][0];
-					y=_root.map.ways[qway].path[qs][1];
-					attr=_root.map.ways[qway].path[qs][4];
-				}
-			}
-		}
-		if (!id) { _root.newnodeid--; id=newnodeid; }
+		var last;
+		var nodecopy=params[0]; var id=nodecopy.id;
+		var waylist=params[1];
+		var poslist=params[2];
+
+		// create node if no longer in existence
+		if (_root.nodes(id)) { }
+						else { _root.nodes[id]=new Node(id,nodecopy.x,nodecopy.y,nodecopy.attr); }
+
 		// reinstate at each place
-		var waylist=params[4];
-		var poslist=params[5];
-		var newpoint=new Array(x,y,id,1,attr,0);
 		for (qway in waylist) {
-			_root.map.ways[waylist[qway]].path.splice(poslist[qway],0,newpoint);
+			_root.map.ways[waylist[qway]].path.splice(poslist[qway],0,id);
 			_root.map.ways[waylist[qway]].clean=false;
 			_root.map.ways[waylist[qway]].redraw();
 			last=waylist[qway];	// select last one
@@ -162,7 +154,7 @@
 
 	UndoStack.prototype.undo_movepoi=function(params) {
 		var poi=params[0]; if (!poi) {
-			handleError(-1,new Array("The POI cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("The POI cannot be found (perhaps you've panned away?) so I can't undo.",'error_nopoi')));
 			this.clear(); return;
 		} else {
 			poi._x=params[1]; poi._y=params[2];
@@ -174,7 +166,7 @@
 
 	UndoStack.prototype.undo_movenodes=function(params) {
 		var way=params[0]; if (!way) {
-			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
 			this.clear(); return;
 		} else {
 			way.moveNodes(-params[1],-params[2]);
@@ -187,7 +179,7 @@
 
 	UndoStack.prototype.undo_reverse=function(params) {
 		var way=params[0]; if (!way) {
-			handleError(-1,new Array("Way "+way+" cannot be found (perhaps you've panned away?) so I can't undo."));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
 			this.clear(); return;
 		} else {
 			way.reverseWay();

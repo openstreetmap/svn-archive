@@ -38,6 +38,10 @@
 									// (for Landsat, 5120)
 	updateCoords();					// get radius, scale
 	
+	// Preselected way/node (from query string)
+	var preway=Number(way);
+	var prenode=Number(node);
+
 	// Preferences
 	preferences=SharedObject.getLocal("preferences");
 	var usertoken=token;
@@ -99,6 +103,7 @@
 	var newwayid=-1;				// new way ID		(for those not yet saved)
 	var newnodeid=-2;				// new node ID		(for those not yet saved)
 	var newpoiid=-1;				// new POI ID		(for those not yet saved)
+	var nodes=new Array();			// array of nodes
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
 	var redopropertywindow=null;	// need to redraw property window after deletion?
@@ -110,7 +115,8 @@
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.9c";	// current version
+	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
+	var signature="Potlatch 0.10";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
@@ -136,25 +142,25 @@
 	_root.panel.attachMovie("scissors","i_scissors",32);
 	with (_root.panel.i_scissors) { _x=15; _y=63; };
 	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(_root.pointselected); };
-	_root.panel.i_scissors.onRollOver=function() { setFloater("Split way at selected point (X)"); };
+	_root.panel.i_scissors.onRollOver=function() { setFloater(iText("Split way at selected point (X)",'tip_splitway')); };
 	_root.panel.i_scissors.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("rotation","i_direction",39);
 	with (_root.panel.i_direction) { _x=40; _y=63; _rotation=-45; _visible=true; _alpha=50; };
 	_root.panel.i_direction.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
+	_root.panel.i_direction.onRollOver=function() { setFloater(iText("Direction of way - click to reverse",'tip_direction')); };
 	_root.panel.i_direction.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("clockwise","i_clockwise",40);
 	with (_root.panel.i_clockwise) { _x=40; _y=63; _visible=false; };
 	_root.panel.i_clockwise.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_clockwise.onRollOver=function() { setFloater("Clockwise circular way - click to reverse"); };
+	_root.panel.i_clockwise.onRollOver=function() { setFloater(iText("Clockwise circular way - click to reverse",'tip_clockwise')); };
 	_root.panel.i_clockwise.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("anticlockwise","i_anticlockwise",42);
 	with (_root.panel.i_anticlockwise) { _x=40; _y=63; _visible=false; };
 	_root.panel.i_anticlockwise.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_anticlockwise.onRollOver=function() { setFloater("Anti-clockwise circular way - click to reverse"); };
+	_root.panel.i_anticlockwise.onRollOver=function() { setFloater(iText("Anti-clockwise circular way - click to reverse",'tip_anticlockwise')); };
 	_root.panel.i_anticlockwise.onRollOut =function() { clearFloater(); };
 
 	// General tools
@@ -165,50 +171,44 @@
 	_root.panel.attachMovie("undo","i_undo",38);
 	with (_root.panel.i_undo) { _x=15; _y=93; _alpha=50; };
 	_root.panel.i_undo.onPress   =function() { _root.undo.rollback(); };
-	_root.panel.i_undo.onRollOver=function() { setFloater("Nothing to undo"); };
+	_root.panel.i_undo.onRollOver=function() { setFloater(iText("Nothing to undo",'tip_noundo')); };
 	_root.panel.i_undo.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("gps","i_gps",36);
 	with (_root.panel.i_gps) { _x=40; _y=93; };
 	_root.panel.i_gps.onPress   =function() { loadGPS(); };
-	_root.panel.i_gps.onRollOver=function() { setFloater("Show GPS tracks (G)"); };
+	_root.panel.i_gps.onRollOver=function() { setFloater(iText("Show GPS tracks (G)",'tip_gps')); };
 	_root.panel.i_gps.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("prefs","i_prefs",37);
 	with (_root.panel.i_prefs) { _x=65; _y=93; };
 	_root.panel.i_prefs.onPress   =function() { openOptionsWindow(); };
-	_root.panel.i_prefs.onRollOver=function() { setFloater("Set options (choose the map background)"); };
+	_root.panel.i_prefs.onRollOver=function() { setFloater(iText("Set options (choose the map background)",'tip_options')); };
 	_root.panel.i_prefs.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("newattr","i_newattr",33);
 	with (_root.panel.i_newattr) { _x=690; _y=95; };
 	_root.panel.i_newattr.onRelease =function() { _root.panel.properties.enterNewAttribute(); };
-	_root.panel.i_newattr.onRollOver=function() { setFloater("Add a new tag"); };
+	_root.panel.i_newattr.onRollOver=function() { setFloater(iText("Add a new tag",'tip_addtag')); };
 	_root.panel.i_newattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("newrel","i_newrel",44);
 	with (_root.panel.i_newrel) { _x=690; _y=75; backgroundColor=0xDDBBBB; background=true;};
 	_root.panel.i_newrel.onRelease =function() { if (Key.isDown(Key.SHIFT)) { _root.panel.properties.repeatAttributes(false);
 												} else { addToRelation(); } };
-	_root.panel.i_newrel.onRollOver=function() { setFloater("Add to a relation"); };
+	_root.panel.i_newrel.onRollOver=function() { setFloater(iText("Add to a relation",'tip_addrelation')); };
 	_root.panel.i_newrel.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("repeatattr","i_repeatattr",34);
 	with (_root.panel.i_repeatattr) { _x=690; _y=55; };
 	_root.panel.i_repeatattr.onPress   =function() { _root.panel.properties.repeatAttributes(true); };
-	_root.panel.i_repeatattr.onRollOver=function() { setFloater("Repeat tags from the previously selected way (R)"); };
+	_root.panel.i_repeatattr.onRollOver=function() { setFloater(iText("Repeat tags from the previously selected way (R)",'tip_repeattag')); };
 	_root.panel.i_repeatattr.onRollOut =function() { clearFloater(); };
-
-//	_root.panel.attachMovie("nextattr","i_nextattr",42);
-//	with (_root.panel.i_nextattr) { _x=690; _y=25; };
-//	_root.panel.i_nextattr.onRelease =function() { advancePropertyWindow(); };
-//	_root.panel.i_nextattr.onRollOver=function() { setFloater("Next page of tags"); };
-//	_root.panel.i_nextattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("exclamation","i_warning",35);
 	with (_root.panel.i_warning) { _x=58; _y=50; _visible=false; };
 	_root.panel.i_warning.onPress=function() { handleWarning(); };
-	_root.panel.i_warning.onRollOver=function() { setFloater("An error occurred - click for details"); };
+	_root.panel.i_warning.onRollOver=function() { setFloater(iText("An error occurred - click for details",'tip_alert')); };
 	_root.panel.i_warning.onRollOut =function() { clearFloater(); };
 	wflashid=setInterval(function() { _root.panel.i_warning._alpha=150-_root.panel.i_warning._alpha; }, 750);
 
@@ -217,7 +217,7 @@
 	_root.panel.padlock.onPress=function() {
 		if (_root.wayselected) {
 			if (_root.ws.path.length>200 && _root.ws.oldversion==0) {
-				setTooltip("too long to unlock:\nplease split into\nshorter ways");
+				setTooltip(iText("too long to unlock:\nplease split into\nshorter ways",'hint_toolong'));
 			} else {
 				_root.ws.locked=false;
 				_root.ws.clean=false;
@@ -283,6 +283,7 @@
 	
 	plainText =new TextFormat(); plainText.color =0x000000; plainText.size =14; plainText.font ="_sans";
 	plainSmall=new TextFormat(); plainSmall.color=0x000000;	plainSmall.size=12; plainSmall.font="_sans";
+	plainRight=new TextFormat(); plainRight.color=0x000000;	plainRight.size=12; plainRight.font="_sans"; plainRight.align="right";
 	plainTiny =new TextFormat(); plainTiny.color =0x000000;	plainTiny.size =11; plainTiny.font ="_sans";
 	plainWhite=new TextFormat(); plainWhite.color=0xFFFFFF; plainWhite.size=12; plainWhite.font="_sans";
 	greySmall =new TextFormat(); greySmall.color =0x888888;	greySmall.size =12; greySmall.font ="_sans";
@@ -294,15 +295,17 @@
 	auto_on	  =new TextFormat(); auto_on.color   =0x0000FF; auto_on.size   =12; auto_on.font   ="_sans"; auto_on.bold  =true;
 	auto_off  =new TextFormat(); auto_off.color  =0xFFFFFF; auto_off.size  =12; auto_off.font  ="_sans"; auto_off.bold =true;
 
+	// Colour transform
+	
+	to_black  =new Object(); to_black.ra=to_black.ga=to_black.ba=-100;
+
 	// Text fields
 
-//	populatePropertyWindow('');	
+	_root.createEmptyMovieClip('waysloading',22);
+	_root.waysloading._visible=false;
 
-	_root.createTextField('waysloading',22,580,5,150,20);
-	with (_root.waysloading) { text="loading ways"; setTextFormat(plainSmall); type='dynamic'; _visible=false; };
-
-	_root.createTextField('tooltip',46,580,25,150,100);
-	with (_root.tooltip  ) { text=""; setTextFormat(plainSmall); selectable=false; type='dynamic'; };
+	_root.createTextField('tooltip',46,480,30,215,100);
+	with (_root.tooltip  ) { text=""; setTextFormat(plainRight); selectable=false; type='dynamic'; };
 
 	_root.panel.createTextField('t_type',23,5,5,220,20);
 	with (_root.panel.t_type	 ) { text=signature; setTextFormat(boldText); };
@@ -310,10 +313,6 @@
 	_root.panel.createTextField('t_details',24,5,23,220,20);
 	with (_root.panel.t_details) { text=""; setTextFormat(plainText); };
 	
-//	// TextField listener
-//	textfieldListener=new Object();
-//	textfieldListener.onChanged=function() { textChanged(); };
-
 	// MovieClip loader
 	var tileLoader=new MovieClipLoader();
 	tileListener=new Object();
@@ -328,23 +327,7 @@
 		_root.panel.i_warning._visible=true;
 	};
 
-	preresponder = function() { };
-	preresponder.onResult = function(result) {
-		_root.presets=result[0];
-		_root.presetmenus=result[1];
-		_root.presetnames=result[2];
-		_root.colours=result[3];
-		_root.casing=result[4];
-		_root.areas=result[5];
-		_root.autotags=result[6];
-		_root.relcolours=result[7];
-		_root.relalphas=result[8];
-		_root.relwidths=result[9];
-//		_root.presetselected='road'; setPresetIcon(presetselected);
-		_root.panel.i_preset._visible=false;
-	};
-	remote.call('getpresets',preresponder);
-
+	#include 'node.as'
 	#include 'anchorpoint.as'
 	#include 'poi.as'
 	#include 'relation.as'
@@ -356,6 +339,7 @@
 	#include 'tiles.as'
 	#include 'gps.as'
 	#include 'undo.as'
+	#include 'start.as'
 
 
 	// =====================================================================================
@@ -364,110 +348,20 @@
 	var undo=new UndoStack();
 
 	_root.panel.attachMovie("propwindow","properties",50);
-	with (_root.panel.properties) { _x=110; _y=25; };
+	with (_root.panel.properties) { _x=110; _y=25; _visible=false; };
 
 	_root.panel.attachMovie("presetmenu","presets",60);
-	with (_root.panel.presets) { _x=110; _y=1; };
+	with (_root.panel.presets) { _x=110; _y=1; _visible=false; };
 
 	updateButtons();
 	updateScissors();
 	resizeWindow();
+	loadPresets();
 
-	if (lat) { startPotlatch(); }			// Parse GPX if supplied
-	if (gpx) { parseGPX(gpx); }				//  |
-	if (lat) {} else { lat=0; long=51.5; startPotlatch(); } // London if none!
-	
-	// Splash screen
-	
-	if (!preferences.data.nosplash) {
-		_root.windows.attachMovie("modal","splashscreen",++windowdepth);
-		_root.windows.splashscreen.init(400,225,[],null,true);
 
-		_root.windows.splashscreen.box.createTextField("title",1,7,7,400-14,20);
-		with (_root.windows.splashscreen.box.title) {
-			type='dynamic';
-			text="Welcome to OpenStreetMap!"; setTextFormat(boldText);
-		}
 
-		// Light grey background
-		_root.windows.splashscreen.box.createEmptyMovieClip('lightgrey',2);
-		with (_root.windows.splashscreen.box.lightgrey) {
-			beginFill(0xF3F3F3,100);
-			moveTo(10,30); lineTo(392,30);
-			lineTo(392,195); lineTo(10,195);
-			lineTo(10,30); endFill();
-		};
-		
-		_root.windows.splashscreen.box.createTextField("prompt",3,15,35,400-30,180);
-		writeText(_root.windows.splashscreen.box.prompt,
-			"Choose a button below to get editing. If you click 'Start', "+
-			"you'll be editing the main map directly - changes usually show "+
-			"up every Thursday. If you click 'Play', your changes won't be "+
-			"saved, so you can practise editing.\n\n"+
-			"Remember the golden rules of OpenStreetMap:\n\n"+
-			chr(0x278A)+"  Don't copy from other maps\n"+
-			chr(0x278B)+"  Accuracy is important - only map places you've been\n"+
-			chr(0x278C)+"  And have fun!\n");
 
-		_root.windows.splashscreen.box.attachMovie("checkbox","nosplash",5);
-		_root.windows.splashscreen.box.nosplash.init(12,205,"Don't show this message again",preferences.data.nosplash,function(n) { preferences.data.nosplash=n; });
 
-	}
-
-	// Welcome buttons
-
-	_root.panel.createEmptyMovieClip("welcome",61);
-
-	_root.panel.welcome.createEmptyMovieClip("start",1);
-	drawButton(_root.panel.welcome.start,150,7,"Start","Start mapping with OpenStreetMap.");
-	_root.panel.welcome.start.onPress=function() { removeMovieClip(_root.panel.welcome); _root.windows.splashscreen.remove(); };
-
-	_root.panel.welcome.createEmptyMovieClip("play",2);
-	drawButton(_root.panel.welcome.play,150,29,"Play","Practice mapping - your changes won't be saved.");
-	_root.panel.welcome.play.onPress=function() {
-		_root.windows.splashscreen.remove();
-		_root.sandbox=true; removeMovieClip(_root.panel.welcome);
-		_root.createEmptyMovieClip("practice",62);
-		with (_root.practice) {
-			_x=Stage.width-97; _y=Stage.height-panelheight-22; beginFill(0xFF0000,100);
-			moveTo(0,0); lineTo(90,0); lineTo(90,17);
-			lineTo(0,17); lineTo(0,0); endFill();
-		};
-		_root.practice.createTextField("btext",1,0,0,90,20);
-		with (_root.practice.btext) {
-			text="Practice mode";
-			setTextFormat(boldWhite);
-			selectable=false; type='dynamic';
-		};
-	};
-
-	_root.panel.welcome.createEmptyMovieClip("help",3);
-	drawButton(_root.panel.welcome.help,150,51,"Help","Find out how to use Potlatch, this map editor.");
-	_root.panel.welcome.help.onPress=function() { getUrl("http://wiki.openstreetmap.org/index.php/Potlatch","_blank"); };
-
-	if (gpx) {
-		_root.panel.welcome.createEmptyMovieClip("convert",4);
-		drawButton(_root.panel.welcome.convert,150,73,"Track","Convert your GPS track to (locked) ways for editing.");
-		_root.panel.welcome.convert.onPress=function() { removeMovieClip(_root.panel.welcome); _root.windows.splashscreen.remove(); gpxToWays(); };
-	}
-
-	// =====================================================================
-	// Main start function
-
-	function startPotlatch() {
-		_root.urllat  =Number(lat);		// LL from query string
-		_root.urllong =Number(long);	//  |
-		_root.baselong=urllong-xradius/masterscale/bscale;
-		_root.basey   =lat2y(urllat)+yradius/masterscale/bscale;
-		_root.baselat =y2lat(basey);
-		_root.ylat=baselat;	 _root.lastylat=ylat;		// current Yahoo state
-		_root.ylon=baselong; _root.lastylon=ylon;		//  |
-		updateCoords(0,0);
-		updateLinks();
-		setBackground(preferences.data.baselayer);
-		whichWays();
-		_root.onEnterFrame=function() { everyFrame(); };
-	}
 
 	// =====================================================================
 	// Map support functions
@@ -574,19 +468,22 @@
 	// mapClickEnd - end of click within map area
 
 	function mapClickEnd() {
+		removeWelcome(true);
 		if (!mapDragged()) {
 		// Clicked on map without dragging
 			_root.dragmap=false;
 			// Adding a point to the way being drawn
 			if (_root.drawpoint>-1) {
 				_root.newnodeid--;
+				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array());
 				if (_root.pointselected>-2) {
-					setTypeText("Way",_root.wayselected);
+					setTypeText(iText("Way",'way'),_root.wayselected);
+					_root.panel.properties.tidy();
 					_root.panel.properties.init('way',getPanelColumns(),4);
 					updateButtons();
 					updateScissors(false);
 				}
-				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
+				addEndPoint(newnodeid);
 				restartElastic();
 
 			// Deselecting a way
@@ -599,7 +496,9 @@
 
 			// Starting a new way
 			} else {
-				_root.newnodeid--; startNewWay(_root.map._xmouse,_root.map._ymouse,_root.newnodeid);
+				_root.newnodeid--; 
+				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array());
+				startNewWay(newnodeid);
 			}
 		}
 	}
@@ -611,11 +510,16 @@
 
 	function setTooltip(txt,delay) {
 		_root.tooltip.text=txt;
-		_root.tooltip.setTextFormat(plainSmall);
-		_root.createEmptyMovieClip('ttbackground',45,580,25,150,100);
-		// draw a white box at the relevant size, _alpha=50
-		// _root.ttbackground.color=0xFFFFFF;
-		// _root.ttbackground._alpha=50;
+		_root.tooltip.setTextFormat(plainRight);
+		_root.createEmptyMovieClip('ttbackground',45);
+		with (_root.ttbackground) {
+			_x=Stage.width-5; _y=30;
+			beginFill(0xFFFFFF,75);
+			moveTo(0,0); lineTo(-_root.tooltip.textWidth-10,0);
+			lineTo(-_root.tooltip.textWidth-10,_root.tooltip.textHeight+5);
+			lineTo(0,_root.tooltip.textHeight+5); lineTo(0,0);
+			endFill();
+		}
 	}
 
 	function clearTooltip() {
@@ -678,6 +582,8 @@
 
 	function keyPressed() {
 		var k=Key.getCode();
+		var c=Key.getAscii(); if (c>=97 && c<=122) { c=c-32; }
+		var s=String.fromCharCode(c);
 		_root.lastkeypressed=k;
 
 		if (keytarget=='keyname' || keytarget=='value') {
@@ -691,9 +597,9 @@
 			return;
 		} else if (keytarget!='') { return; }
 
-		if (k>48 && k<58 && (wayselected!=0 || poiselected!=0)) {
-			if (presetnames[_root.panel.properties.proptype][_root.panel.presets.group][k-48]!=null) {
-				_root.panel.presets.setAttributes(k-48);
+		if (c>48 && c<58 && (wayselected!=0 || poiselected!=0)) {
+			if (presetnames[_root.panel.properties.proptype][_root.panel.presets.group][c-48]!=null) {
+				_root.panel.presets.setAttributes(c-48);
 				_root.panel.presets.reflect();
 				if (_root.panel.properties.proptype=='way') { _root.ws.redraw(); }
 			}
@@ -711,26 +617,28 @@
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		_root.junction=false; stopDrawing(); break;			// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
-			case 71:		loadGPS(); break;									// G - load GPS
-			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
-			case 82:		_root.panel.properties.repeatAttributes(true);break;//  |
-			case 85:		getDeleted(); break;								// U - undelete
-			case 88:		_root.ws.splitWay(_root.pointselected); break;		// X - split way
-			case 90:		_root.undo.rollback(); break;						// Z - undo
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
 			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
 			case Key.RIGHT: moveMap(-140,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
-			case Key.CAPSLOCK: dimMap(); break;										// CAPS LOCK - dim map
-			case 192:		;													// '`' - cycle presets
-			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' -  |
-			case 107:		;													// '+' - add new attribute
-			case 187:		_root.panel.properties.enterNewAttribute(); break;	//  |
-			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
-			case 191:		cycleStacked(); break;								// '/' - cycle between stacked ways
-			case 76:		showPosition(); break;								// L - show latitude/longitude
+			case Key.CAPSLOCK: dimMap(); break;									// CAPS LOCK - dim map
+			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' - cycle presets
+		}
+		
+		switch (s) {
+			case 'G':		loadGPS(); break;									// G - load GPS
+			case 'H':		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
+			case 'L':		showPosition(); break;								// L - show latitude/longitude
+			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
+			case 'U':		getDeleted(); break;								// U - undelete
+			case 'X':		_root.ws.splitWay(_root.pointselected); break;		// X - split way
+			case 'Z':		_root.undo.rollback(); break;						// Z - undo
+			case '`':		_root.panel.presets.cycleIcon(); break;				// '`' - cycle presets
+			case '+':		_root.panel.properties.enterNewAttribute(); break;	// '+' - add new attribute (107/187)
+			case '-':		keyDelete(0); break;								// '-' - delete node from this way only (189)
+			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
 //			default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}
@@ -744,17 +652,14 @@
 	function keyDelete(doall) {
 		if (_root.poiselected) {
 			// delete POI
-			_root.map.pois[poiselected].saveUndo("deleting");
+			_root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
 			_root.map.pois[poiselected].remove();
 		} else if (_root.drawpoint>-1) {
 			// 'backspace' most recently drawn point
 			_root.undo.append(UndoStack.prototype.undo_deletepoint,
-							  new Array(_root.ws.path[drawpoint][2],
-										_root.ws.path[drawpoint][0],
-										_root.ws.path[drawpoint][1],
-										_root.ws.path[drawpoint][4],
+							  new Array(deepCopy(nodes[_root.ws.path[drawpoint]]),
 										[wayselected],[drawpoint]),
-							  "deleting a point");
+							  iText("deleting a point",'action_deletepoint'));
 			if (_root.drawpoint==0) { _root.ws.path.shift(); }
 							   else { _root.ws.path.pop(); _root.drawpoint-=1; }
 			if (_root.ws.path.length) {
@@ -771,7 +676,7 @@
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
-			if (doall==1) { removeNodeFromWays(_root.ws.path[_root.pointselected][2]); }
+			if (doall==1) { nodes[_root.ws.path[_root.pointselected]].removeFromAllWays(); }
 					 else { _root.ws.removeAnchorPoint(pointselected); }
 			_root.pointselected=-2;
 			_root.drawpoint=-1;
@@ -783,16 +688,16 @@
 	};
 
 	function keyRevert() {
-		if		(_root.wayselected<0) { _root.ws.saveUndo("deleting");
+		if		(_root.wayselected<0) { _root.ws.saveUndo(iText("deleting",'deleting'));
 										stopDrawing();
 										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.ws); }
-		else if	(_root.wayselected>0) {	_root.ws.saveUndo("cancelling changes to");
+		else if	(_root.wayselected>0) {	_root.ws.saveUndo(iText("cancelling changes to",'action_cancelchanges'));
 										stopDrawing();
 										_root.ws.reload(); }
-		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo("cancelling changes to");
+		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo(iText("cancelling changes to",'action_cancelchanges'));
 										_root.map.pois[poiselected].reload(); }
-		else if (_root.poiselected<0) { _root.map.pois[poiselected].saveUndo("deleting");
+		else if (_root.poiselected<0) { _root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
 										removeMovieClip(_root.map.pois[poiselected]); }
 		revertDirtyRelations();
 		deselectAll();
@@ -814,7 +719,7 @@
 	function handleError(code,result) {
 		var h=100;
 		if (code==-1) { error=result[0]; }
-				 else { error=result[0]+"\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time."; h+=50; }
+				 else { error=result[0]+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'); h+=50; }
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(275,h,new Array('Ok'),null);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,h-30);
@@ -825,7 +730,7 @@
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(275,130,new Array('Retry','Cancel'),handleWarningAction);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
-		writeText(_root.windows.error.box.prompt,"Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?");
+		writeText(_root.windows.error.box.prompt,iText("Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?",'error_connectionfailed'));
 	};
 
 	function handleWarningAction(choice) {
@@ -847,6 +752,28 @@
 		}
 	};
 
+
+	// =====================================================================
+	// Internationalisation functions
+	
+	function iText(en,id,key1,key2) {
+		var t=en;
+		if (l!='en' && _root.i18n[id][_root.lang]) {
+			t=_root.i18n[id][_root.lang];
+		}
+		t=replaceStr(t,'$1',key1);
+		t=replaceStr(t,'$2',key2);
+		t=replaceStr(t,'\\n',"\n");
+		return t;
+	}
+
+	function replaceStr(s,a,b) {
+		while (s.indexOf(a)>-1) {
+			var n=s.indexOf(a);
+			s=s.substr(0,n)+b+s.substr(n+a.length);
+		}
+		return s;
+	}
 
 
 	// =====================================================================
@@ -929,7 +856,7 @@
 		_root.windows.attachMovie("modal","options",++windowdepth);
 		_root.windows.options.init(290,130,new Array('Ok'),function() { preferences.flush(); } );
 		_root.windows.options.box.createTextField("prompt1",2,7,9,80,20);
-		writeText(_root.windows.options.box.prompt1,"Background:");
+		writeText(_root.windows.options.box.prompt1,iText("Background:",'option_background'));
 
 		_root.windows.options.box.attachMovie("menu","background",10);
 		_root.windows.options.box.background.init(87,10,preferences.data.baselayer,
@@ -937,13 +864,13 @@
 			'Choose the background to display',setBackground,null,0);
 
 		_root.windows.options.box.attachMovie("checkbox","fadepref",5);
-		_root.windows.options.box.fadepref.init(10,40,"Fade background",preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+		_root.windows.options.box.fadepref.init(10,40,iText("Fade background",'option_fadebackground'),preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
 
 		_root.windows.options.box.attachMovie("checkbox","linepref",8);
-		_root.windows.options.box.linepref.init(10,60,"Use thin lines at all scales",preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
+		_root.windows.options.box.linepref.init(10,60,iText("Use thin lines at all scales",'option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
 
 		_root.windows.options.box.attachMovie("checkbox","pointer",4);
-		_root.windows.options.box.pointer.init(10,80,"Use pen and hand pointers",preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		_root.windows.options.box.pointer.init(10,80,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 	}
 	
 	// markClean - set JavaScript variable for alert when leaving page
@@ -969,8 +896,9 @@
 		setTypeText("","");
 		_root.panel.padlock._visible=false;
 
+		_root.panel.properties.tidy();
 		_root.panel.properties.init('');
-		_root.panel.presets.hide();
+		_root.panel.presets.init();
 		updateButtons();
 		updateScissors(false);
 		poiselected=0;
@@ -982,6 +910,7 @@
 	// uploadSelected
 	
 	function uploadSelected() {
+		_root.panel.properties.tidy();
 		if (_root.wayselected!=0 && !_root.ws.clean) {
 			for (qway in _root.map.ways) {
 				if (!_root.map.ways[qway].clean) {

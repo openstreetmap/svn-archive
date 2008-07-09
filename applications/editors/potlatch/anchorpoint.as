@@ -6,13 +6,14 @@
 	// - click (not drag) start/end point: go into draw mode extend line
 	
 	function AnchorPoint() {
-		this.way=0;
+		this.way=null;
 		this.node=0;
 	};
 	AnchorPoint.prototype=new MovieClip();
 	AnchorPoint.prototype.onPress=function() {
+		removeWelcome(true);
 		var t=new Date();
-		if (this._name==0 && _root.map.ways[this.way].path.length==1) {
+		if (this._name==0 && this.way.path.length==1) {
 			// solo double-click - create new POI
 			stopDrawing();
 			_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
@@ -22,12 +23,11 @@
 			_root.map.pois[newpoiid].clean=false;
 			markClean(false);
 			_root.undo.append(UndoStack.prototype.undo_createpoi,
-							  [_root.map.pois[newpoiid]],"creating a POI");
+							  [_root.map.pois[newpoiid]],iText("creating a POI",'action_createpoi'));
 
-		} else if (Key.isDown(Key.SHIFT) && _root.map.ways[this.way].oldversion==0) {
+		} else if (Key.isDown(Key.SHIFT) && this.way.oldversion==0) {
 			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
-			startNewWay(_root.map.ways[this.way].path[this._name][0],
-						_root.map.ways[this.way].path[this._name][1],this.node);
+			startNewWay(this.node);
 		} else if (this._name==_root.drawpoint ||
 				  (this._name==_root.lastpoint && (t.getTime()-_root.lastpointtime)<700)) {
 			// double-click at end of route
@@ -44,15 +44,16 @@
 	};
 
 	AnchorPoint.prototype.select=function() {
+		_root.panel.properties.tidy();
 		_root.panel.properties.saveAttributes();
 		_root.pointselected=this._name;
-		_root.map.ways[this.way].highlight();
-		setTypeText("Point",this.node);
+		this.way.highlight();
+		setTypeText(iText("Point",'point'),this.node);
 		_root.panel.properties.init('point',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
 		updateScissors(true);
-		setTooltip("point selected\n(shift-click point to\nstart new line)",0);
+		setTooltip(iText("point selected\n(shift-click point to\nstart new line)",'hint_pointselected'),0);
 	};
 
 	AnchorPoint.prototype.beginDrag=function() {
@@ -81,32 +82,29 @@
 		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			// ====	Move existing point
 			_root.undo.append(UndoStack.prototype.undo_movenode,
-							  new Array(_root.ws.path[this._name][2],
-							  			_root.ws.path[this._name][0],
-							  			_root.ws.path[this._name][1]),
-							  "moving a point");
-			moveNode(_root.ws.path[this._name][2],newx,newy,undefined);
+							  new Array(deepCopy(nodes[_root.ws.path[this._name]])),
+							  iText("moving a point",'action_movepoint'));
+			_root.nodes[_root.ws.path[this._name]].moveTo(newx,newy,undefined);
 			_root.ws.highlightPoints(5000,"anchor");
 			_root.ws.highlight();
+			_root.ws.redraw();
 			_root.ws.clean=false;
 			markClean(false);
 
 		} else {
-			this._x=_root.ws.path[this._name][0];	// Return point to original position
-			this._y=_root.ws.path[this._name][1];	//  | (in case dragged slightly)
+			this._x=nodes[_root.ws.path[this._name]].x;	// Return point to original position
+			this._y=nodes[_root.ws.path[this._name]].y;	//  | (in case dragged slightly)
 			if ((this._name==0 || this._name==_root.ws.path.length-1) && !Key.isDown(17)) {
 				// ===== Clicked at start or end of line
 				if (_root.drawpoint==0 || _root.drawpoint==_root.ws.path.length-1) {
 					// - Join looping path
-					addEndPoint(_root.ws.path[this._name][0],
-								_root.ws.path[this._name][1],
-								_root.ws.path[this._name][2]);
+					addEndPoint(_root.ws.path[this._name]);
 					_root.lastpoint=_root.drawpoint;	// trap triple-click
 					_root.lastpointtime=new Date();		//  |
 					stopDrawing();
 				} else if (_root.drawpoint==-1) {
 					// - Start elastic line for adding new point
-					setTooltip("click to add point\ndouble-click/Return\nto end line",0);
+					setTooltip(iText("click to add point\ndouble-click/Return\nto end line",'hint_drawmode'),0);
 					_root.drawpoint=this._name;
 					this.startElastic();
 				}
@@ -114,9 +112,7 @@
 			} else {
 				// ===== Clicked elsewhere in line
 				if (_root.drawpoint>-1) {
-					addEndPoint(_root.ws.path[this._name][0],
-								_root.ws.path[this._name][1],
-								_root.ws.path[this._name][2]);
+					addEndPoint(_root.ws.path[this._name]);
 					_root.junction=true; restartElastic();
 				}
 			}
@@ -150,7 +146,7 @@
 
 	AnchorPoint.prototype.onRollOver=function() {
 		if (_root.drawpoint>-1) {
-			if (this._name==0 || this._name==_root.map.ways[this.way].path.length-1) {
+			if (this._name==0 || this._name==this.way.path.length-1) {
 				setPointer('penso');
 			} else {
 				setPointer('penx');
@@ -168,16 +164,16 @@
 	// OOP classes - AnchorHint
 
 	function AnchorHint() {
-		this.way=0;
+		this.way=null;
 		this.node=0;
 	};
 	AnchorHint.prototype=new MovieClip();
 	AnchorHint.prototype.onRollOver=function() {
-		if (this._name==0 || this._name==_root.map.ways[this.way].path.length-1) {
-			setTooltip("over endpoint\nclick to join\nshift-click to merge");
+		if (this._name==0 || this._name==this.way.path.length-1) {
+			setTooltip(iText("over endpoint\nclick to join\nshift-click to merge",'hint_overendpoint'));
 			setPointer('peno');
 		} else {
-			setTooltip("over point\nclick to join");
+			setTooltip(iText("over point\nclick to join",'hint_overpoint'));
 			setPointer('penx');
 		}
 	};
@@ -186,49 +182,29 @@
 	};
 
 	AnchorHint.prototype.onPress=function() {
-		if (_root.map.ways[this.way].oldversion>0) {
+		if (this.way.oldversion>0) {
 			_root.junction=true;
 			restartElastic(); return;	// can't merge/join to historic ways
 		}
 		var i,z;
 		if (Key.isDown(Key.SHIFT)) {
 			// Merge ways
-			if (this._name==0 || this._name==_root.map.ways[this.way].path.length-1) {
-				_root.ws.mergeWay(_root.drawpoint,_root.map.ways[this.way],this._name);
+			if (this._name==0 || this._name==this.way.path.length-1) {
+				_root.ws.mergeWay(_root.drawpoint,this.way,this._name);
 				_root.drawpoint=-1;
 				_root.ws.redraw();
 //				_root.ws.upload();
-//				_root.map.ways[this.way].remove(wayselected);
+//				this.way.remove(wayselected);
 				clearTooltip();
 				_root.map.elastic.clear();
 				_root.ws.select();	// removes anchorhints, so must be last
 			}
 		} else { 
 			// Join ways (i.e. junction)
-			addEndPoint(this._x,this._y,this.node);
+			addEndPoint(this.node);
 			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
 			restartElastic();
 		}
 	};
 	Object.registerClass("anchorhint",AnchorHint);
 
-
-
-	// =====================================================================================
-	// Support functions
-
-	function moveNode(id,newx,newy,ignoreway) {
-		var qchanged;
-		for (var qway in _root.map.ways) {
-			var qdirty=0;
-			for (var qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-				if (_root.map.ways[qway].path[qs][2]==id) {
-					_root.map.ways[qway].path[qs][0]=newx;
-					_root.map.ways[qway].path[qs][1]=newy;
-					qdirty=1;
-				}
-			}
-			if (qdirty && qway!=ignoreway) { _root.map.ways[qway].redraw(); qchanged=qway; }
-		}
-		return qchanged;	// return ID of last changed way
-	}

@@ -310,7 +310,9 @@
 		}
 		if (ltext!="") {
 			buttonobject.createTextField("explain",2,54,-1,300,20);
+			buttonobject.explain.autoSize=true;
 			writeText(buttonobject.explain,ltext);
+			buttonobject.explain.wordWrap=false;
 		}
 	}
 

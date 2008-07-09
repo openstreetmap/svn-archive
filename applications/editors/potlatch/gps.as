@@ -14,10 +14,7 @@
 	// parsePoint
 	
 	function parseGPX(gpxname) {
-		_root.windows.attachMovie("modal","pleasewait",++windowdepth);
-		_root.windows.pleasewait.init(295,35,new Array(),null);
-		_root.windows.pleasewait.box.createTextField("prompt",2,7,9,280,20);
-		writeText(_root.windows.pleasewait.box.prompt,"Please wait while the GPX track is processed.");
+		writeText(_root.windows.pleasewait.box.prompt,iText("Please wait while the GPX track is processed.",'gpxpleasewait'));
 
 		_root.tracks=new Array();
 		_root.curtrack=0; _root.tracks[curtrack]=new Array();
@@ -128,7 +125,9 @@
 			_root.map.ways[newwayid].ymin= 999999;
 			_root.map.ways[newwayid].ymax=-999999;
 			for (var j=0; j<_root.tracks[i].length; j+=1) {
-				_root.map.ways[newwayid].path.push(new Array(_root.tracks[i][j][0],_root.tracks[i][j][1],--newnodeid,Math.min(j,1),new Array(),0));
+				_root.newnodeid--;
+				_root.nodes[newnodeid]=new Node(newnodeid,_root.tracks[i][j][0],_root.tracks[i][j][1],new Array());
+				_root.map.ways[newwayid].path.push(newnodeid);
 				_root.map.ways[newwayid].xmin=Math.min(_root.tracks[i][j][0],_root.map.ways[newwayid].xmin);
 				_root.map.ways[newwayid].xmax=Math.max(_root.tracks[i][j][0],_root.map.ways[newwayid].xmax);
 				_root.map.ways[newwayid].ymin=Math.min(_root.tracks[i][j][1],_root.map.ways[newwayid].ymin);

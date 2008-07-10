@@ -33,7 +33,7 @@ class Request(models.Model):
 #-----------------------------------------------------
 class Upload(models.Model):
   file = models.FileField(upload_to='Incoming')
-  layer = models.ForeignKey(Layer)
+  layer = models.ForeignKey(Layer,blank=True,null=True)
   ipaddress = models.IPAddressField(blank=True,default="")
   user_id = models.ForeignKey(User)
   #clientping contains the upload it indicates the upload time

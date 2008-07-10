@@ -3,8 +3,8 @@ from stat import *
 from datetime import datetime
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
-#from tah.tah_intern.serve_tiles import serve_tile
 from tah.tah_intern.Tile import Tile
+from tah.tah_intern.models import Settings
 
 def index(request):
   layer =  request.GET.get("layer","tile")
@@ -29,10 +29,10 @@ def tiledetails(request,layername,z,x,y):
   t=Tile(layername,z,x,y)
   (layer, base_z,base_x,base_y) = t.basetileset()
   # basetileset returns (None,None,None,None) if invalid!
-  basetilepath='/home/spaetz/public_html/Tiles/'
-  tilepath = basetilepath+layername+'_'+str(base_z)
+  basetilepath = Settings().getSetting(name='base_tile_path')
+  tilefile = os.path.join(basetilepath,layername+"_%s" % base_z,"%s_%s"%(base_x,base_y))
 
-  fstat = os.stat(os.path.join(tilepath,"%s_%s"%(base_x,base_y)))
+  fstat = os.stat(tilefile)
   (basetile_fsize,basetile_mtime) = (fstat[6], datetime.fromtimestamp(fstat[8]))
   return render_to_response('tile_details.html',{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime})
 

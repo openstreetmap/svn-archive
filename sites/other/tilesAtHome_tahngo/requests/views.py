@@ -1,11 +1,11 @@
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
 import django.views.generic.list_detail
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from tah.requests.models import Request,Upload
 from tah.requests.forms import CreateForm,UploadForm,ClientAuthForm
 from django.newforms import form_for_model,widgets
-from datetime import datetime
+from datetime import datetime, timedelta
 import urllib
 import xml.dom.minidom
 from django.contrib.auth import authenticate
@@ -201,18 +201,19 @@ def request_changedTiles(request):
     
     return HttpResponse(str((z,x,y)),mimetype='text/plain')
 
-def stats_munin_active(request):
+def stats_munin_requests(request,status):
     reply=''
-    activereqs = Request.objects.filter(status=1)
-    for val, state in enumerate(['low','medium','high']):
-      c = activereqs.filter(priority=val+1).count()
-      reply += "%s.value %d\n" % (state,c)
-    return HttpResponse(reply,mimetype='text/plain')
-
-def stats_munin_pending(request):
-    reply=''
-    activereqs = Request.objects.filter(status=0)
-    for val, state in enumerate(['low','medium','high']):
-      c = activereqs.filter(priority=val+1).count()
-      reply += "%s.value %d\n" % (state,c)
+    states={'pending':0,'active':1,'done':2}
+    if states.has_key(status): state = states[status]
+    else: return HttpResponseNotFound('Unknown request state')
+    reqs = Request.objects.filter(status=state)
+    if state < 2:
+      #output low/medium/high requests for unfinished ones
+      for val, state in enumerate(['low','medium','high']):
+        c = reqs.filter(priority=val+1).count()
+        reply += "%s.value %d\n" % (state,c)
+    else:
+      #output requests finished per last hour and 48 moving avg
+      reply += "_req_processed_last_hour.value %d\n" %  reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,1)).count()
+      reply += 'done.value %d' % (reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,48)).count() // 48)
     return HttpResponse(reply,mimetype='text/plain')

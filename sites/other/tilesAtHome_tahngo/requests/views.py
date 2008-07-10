@@ -200,13 +200,26 @@ def take(request):
     return HttpResponse(html)
 
 def request_changedTiles(request):
+    html="Requested tiles:\n"
     xml_dom = xml.dom.minidom.parse(urllib.urlopen('http://www.openstreetmap.org/api/0.5/changes?hours=1'))
     tiles = xml_dom.getElementsByTagName("tile")
     for tile in tiles:
       (z,x,y) = tile.getAttribute('z'),tile.getAttribute('x'),tile.getAttribute('y')
+      CreateFormClass = CreateForm
+      CreateFormClass.base_fields['max_z'].required = False 
+      CreateFormClass.base_fields['layers'].required = False 
+      CreateFormClass.base_fields['status'].required = False 
+      form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2})
+      if form.is_valid():
+        req = saveCreateRequestForm(request, form)
+        if req:
+          html += "Render '%s' (%s,%s,%s)\n" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        else: html +="Renderrequest failed (%s,%s,%s)\n" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+      else:
+        html+="form is not valid. %s\n" % form.errors
     xml_dom.unlink()
     
-    return HttpResponse(str((z,x,y)),mimetype='text/plain')
+    return HttpResponse(html,mimetype='text/plain')
 
 def stats_munin_requests(request,status):
     reply=''

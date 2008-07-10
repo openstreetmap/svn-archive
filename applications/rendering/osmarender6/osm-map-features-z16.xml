@@ -1331,6 +1331,17 @@
                 </rule>
             </else>
         </rule>
+        <!-- If tagged explicitly -->
+        <else>
+            <rule e="node" k="railway" v="level_crossing">
+                <rule e="node" s="way" k="railway" v="rail">
+                    <symbol xlink:href="#symbol-railway-crossing" width="7px" height="7px" transform="translate(-3.5,-3.5)"/>
+                </rule>
+                <else>
+                    <symbol xlink:href="#symbol-railway-crossing" width="6px" height="6px" transform="translate(-3,-3)"/>
+                </else>
+            </rule>
+        </else>
 
         <!-- Gates -->
         <rule e="node" k="highway" v="gate">

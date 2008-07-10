@@ -1,3 +1,5 @@
+import struct,os.path
+
 class Tile:
   x=None
   y=None
@@ -46,3 +48,59 @@ class Tile:
     base_x = self.x // pow(2,(self.z-base_z))
     base_y = self.y // pow(2,(self.z-base_z))
     return (self.layer, base_z, base_x, base_y)
+
+
+  def serve_tile(self, layername):
+    """ Return the PNG data of a tile """
+    (layer, base_z,base_x,base_y) = self.basetileset() 
+    # basetileset returns (None,None,None,None) if invalid!
+    # basetilepath could be take from the Settings, hardcode for efficiency
+    basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
+    tilesetfile = os.path.join(basetilepath,layername+'_'+str(base_z),str(base_x)+'_'+str(base_y))
+    try:
+      f = open(tilesetfile,'rb')
+      #calculate file offset
+      offset = 8 # skip the header data
+      i_step = 4 # bytes per index entry
+      z_pow = pow(2, self.z - base_z) # cache pow^1 of how many z levels away from base_z 
+      #skip (1,4,16,...) tiles foe next zoom levels
+      for cur_z in range (0, self.z-base_z): offset += i_step * pow(4,cur_z)
+      #skip to corresponding y-row
+      offset += i_step * (self.y - base_y*z_pow) * z_pow
+      #skip to corresponding x tile
+      offset += i_step * (self.x - base_x*z_pow)
+      f.seek(offset)
+      data = f.read(8)
+      (d_offset,d_offset_next) = struct.unpack('II',data)
+      #return  "(%d,%d,%d) as %d offset1 %d  offset2 %d " % (self.z,self.x,self.y,offset,d_offset,d_offset_next)
+    except IOError:
+      d_offset = 0
+      #next 2 lines are temporary fallback to legacy tiles
+      data = self.serve_legacy_tile(layername)
+      if data: return data
+    if d_offset > 3:
+      f.seek(d_offset)
+      data = f.read(d_offset_next-d_offset)
+    else:
+      # return blankness value
+      blankpng = ['unknown.png','sea.png','land.png','transparent.png']
+      f_png = open(os.path.join(basetilepath,blankpng[d_offset]),'rb')
+      data = f_png.read()
+      f_png.close()
+    try: f.close()
+    except: pass
+    return data
+
+
+  def serve_legacy_tile(self,layername):
+    """ Return the PNG data of a legacy tile """
+    leg_basetiledir='/mnt/agami/openstreetmap/tah/Tiles'
+    fname = os.path.join(leg_basetiledir,layername,"%02d"%(self.z),"%03d"%(self.x//1000),"%03d"%(self.x%1000),"%03d"%(self.y//1000),"%03d.png"%(self.y%1000))
+    try:
+      f = open(fname,'rb')
+      data = f.read()
+      f.close()
+      return data
+    except:
+      return None
+ 

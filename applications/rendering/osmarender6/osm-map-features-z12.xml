@@ -882,10 +882,19 @@
             .highway-trunk-core                     { stroke-width: 16px; stroke: #7fc97f; }
             .highway-trunk-area                     { fill: #7fc97f; }
 
+            .highway-trunk-link-casing              { stroke-width: 10px; stroke: #222222; }
+            .highway-trunk-link-core                { stroke-width: 8px; stroke: #7FC97F; }
+            .highway-trunk-link-area                { fill: #7FC97F; }
+
             .highway-primary-casing                 { stroke-width: 14px; stroke: #222222; }
             .highway-primary-area-casing            { stroke-width: 1px; }
             .highway-primary-core                   { stroke-width: 13px; stroke: #e46d71; }
             .highway-primary-area                   { fill: #e46d71; }
+
+            .highway-primary-link-casing            { stroke-width: 6px; stroke: #222222; }
+            .highway-primary-link-area-casing       { stroke-width: 0.5px; }
+            .highway-primary-link-core              { stroke-width: 5.5px; stroke: #e46d71; }
+            .highway-primary-link-area              { fill: #e46d71; }
 
             .highway-secondary-casing               { stroke-width: 12px; stroke: #222222; }
             .highway-secondary-area-casing          { stroke-width: 1px; }

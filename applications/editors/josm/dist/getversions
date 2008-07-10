@@ -1,0 +1,1 @@
+for i in *jar; do echo $i@ `unzip -c $i META-INF/MANIFEST.MF|grep Plugin-Date|cut "-d " -f2`@`unzip -c $i META-INF/MANIFEST.MF|grep Plugin-Version|cut -d: -f2`; done |perl -ne 'chomp;s/\r//; printf "%30s %28s %s\n",split "@"'

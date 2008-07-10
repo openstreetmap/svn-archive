@@ -101,7 +101,6 @@ def upload_request(request):
     UploadFormClass.base_fields['ipaddress'].required = False
     UploadFormClass.base_fields['ipaddress'].widget = widgets.HiddenInput()
     UploadFormClass.base_fields['priority'].required = False
-    UploadFormClass.base_fields['layer'].required = False
     UploadFormClass.base_fields['file'].required = False
     UploadFormClass.base_fields['is_locked'].required = False
     UploadFormClass.base_fields['is_locked'].widget = widgets.HiddenInput()
@@ -121,10 +120,11 @@ def upload_request(request):
           formdata['user_id'] = user.id # set the user to the correct value
           #t@h client send layername, rather than layer number,
           #find the right one if that is the case
-          try: int(formdata['layer'])
-          except ValueError:
-            # look up the layer id
-            formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
+          if formdata.has_key('layer'):
+            try: int(formdata['layer'])
+            except ValueError:
+              # look up the layer id
+              formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
           # due to a django verification bug, set a filename if a file was attached.
           if 'file' in request.FILES:  
             formdata['file']='dummy'

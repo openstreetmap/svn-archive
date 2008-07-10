@@ -164,13 +164,14 @@ public class PlaceSelection implements DownloadSelection {
 				{
 					component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					component.repaint();
-					URL url = new URL("http://gazetteer.openstreetmap.org/namefinder/?find="+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
+					URL url = new URL("http://gazetteer.openstreetmap.org/namefinder/search.xml?find="
+					+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
 					HttpURLConnection activeConnection = (HttpURLConnection)url.openConnection();
-					System.out.println("got return: "+activeConnection.getResponseCode());
+					//System.out.println("got return: "+activeConnection.getResponseCode());
 					activeConnection.setConnectTimeout(15000);
 					InputStream inputStream = activeConnection.getInputStream();
 					InputSource inputSource = new InputSource(new InputStreamReader(inputStream, "UTF-8"));
-			        SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new Parser());
+					SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new Parser());
 				}
 				catch (Exception x) 
 				{
@@ -223,16 +224,16 @@ public class PlaceSelection implements DownloadSelection {
 			}
 		});
 	
-		searchResults.addColumn("name");
-		searchResults.addColumn("type");
-		searchResults.addColumn("near");
-		searchResults.addColumn("zoom");
+		searchResults.addColumn(tr("name"));
+		searchResults.addColumn(tr("type"));
+		searchResults.addColumn(tr("near"));
+		searchResults.addColumn(tr("zoom"));
 		
 		// TODO - this is probably not the coolest way to set relative sizes?
-		searchResultDisplay.getColumn("name").setPreferredWidth(200);
-		searchResultDisplay.getColumn("type").setPreferredWidth(100);
-		searchResultDisplay.getColumn("near").setPreferredWidth(100);
-		searchResultDisplay.getColumn("zoom").setPreferredWidth(50);
+		searchResultDisplay.getColumn(tr("name")).setPreferredWidth(200);
+		searchResultDisplay.getColumn(tr("type")).setPreferredWidth(100);
+		searchResultDisplay.getColumn(tr("near")).setPreferredWidth(100);
+		searchResultDisplay.getColumn(tr("zoom")).setPreferredWidth(50);
 		searchResultDisplay.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		// display search results in a table. for simplicity, the table contains

@@ -37,26 +37,27 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
     
     /** The list of errors per layer*/
     Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
-    
-    /** 
-     * All available tests 
-     * TODO: is there any way to find out automagically all available tests? 
-     */
-    public static Class[] allAvailableTests = new Class[]
-    { 
-    	DuplicateNode.class, 
-    	OverlappingWays.class, 
-        UntaggedNode.class, 
-        UntaggedWay.class,
-        SelfIntersectingWay.class,
-    	SpellCheck.class,
-        DuplicatedWayNodes.class, 
-        CrossingWays.class,
-        SimilarNamedWays.class,
+
+	/**
+	 * All available tests
+	 * TODO: is there any way to find out automagically all available tests?
+	 */
+	public static Class[] allAvailableTests = new Class[]
+	{
+		DuplicateNode.class,
+		OverlappingWays.class,
+		UntaggedNode.class,
+		UntaggedWay.class,
+		SelfIntersectingWay.class,
+		SpellCheck.class,
+		DuplicatedWayNodes.class,
+		CrossingWays.class,
+		SimilarNamedWays.class,
 		NodesWithSameName.class,
-        Coastlines.class,
-        WronglyOrderedWays.class,
-    };
+		Coastlines.class,
+		WronglyOrderedWays.class,
+		UnclosedWays.class,
+	};
 
 	/**
 	 * Creates the plugin, and starts the HTTP server
@@ -64,15 +65,15 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	public OSMValidatorPlugin()
 	{
 		PreferenceEditor.importOldPreferences();
-        initializeTests( getTests() );
+		initializeTests( getTests() );
 	}
-	
-    @Override
+
+	@Override
 	public PreferenceSetting getPreferenceSetting() 
 	{
 		return new PreferenceEditor(this);
 	}
-	
+
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) 
 	{

@@ -27,7 +27,7 @@ public class UnclosedWays extends Test  {
 	public UnclosedWays()
 	{
 		super(tr("Unclosed Ways."),
-			  tr("This test if ways which should be areas are closed."));
+			  tr("This test if ways which should be circular are closed."));
 	}
 
 	@Override

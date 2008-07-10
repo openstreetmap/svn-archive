@@ -21,6 +21,7 @@ td.browsetable{
 	padding: 0px;
 	border-width:0px;
 	border-spacing: 0px;
+	line-height: 0px;
 }
 
 .browseimg {border:none;}

@@ -36,5 +36,8 @@ def tiledetails(request,layername,z,x,y):
   (basetile_fsize,basetile_mtime) = (fstat[6], datetime.fromtimestamp(fstat[8]))
   return render_to_response('tile_details.html',{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime})
 
+def show_map_of(request):
+  return HttpResponse("not implemented",mimetype="text/plain")
+
 def serve(request,layername,z,x,y):
   return HttpResponse(serve_tile(layername,z,x,y),mimetype="image/png")

@@ -32,7 +32,8 @@ class Tile:
     else: self.blankness=2
 
   def is_valid(self):
-    if self.layer == None: return 0
+    #allow 'None' layers for valid tiles. Tile serving tiles don't have one.
+    #if self.layer == None: return 0
     if self.z < 0 or self.z > 17: return 0
     if self.x < 0 or self.y < 0: return 0
     if self.x >= pow(2,self.z) or self.y >= pow(2,self.z): return 0 

@@ -11,6 +11,7 @@ import xml.dom.minidom
 from django.contrib.auth import authenticate
 #from tah.user.auth import OSMBackend
 from tah.tah_intern.models import Layer
+from tah.tah_intern.Tile import Tile
 from django.views.decorators.cache import cache_control
 
 
@@ -38,8 +39,10 @@ def saveCreateRequestForm(request, form):
     newRequest = form.save(commit=False)   # Create the item
     newRequest.ipaddress = request.META['REMOTE_ADDR']
     if not newRequest.priority: newRequest.priority = 3
-    if not newRequest.min_z in ['0','6','12']: newRequest.min_z = 12
+    if not newRequest.min_z in ['6','12']: newRequest.min_z = 12
     if not newRequest.max_z: newRequest.max_z = {0:5,6:11,12:17}[newRequest.min_z]
+    # catch invalid x,y
+    if not Tile(None,newRequest.min_z,newRequest.x,newRequest.y).is_valid(): return None
     newRequest.status = 0
     newRequest.clientping_time = datetime.now()
     newRequest.request_time=datetime.now()
@@ -80,7 +83,9 @@ def create(request):
       form = CreateForm(request.POST)
       if form.is_valid():
         req = saveCreateRequestForm(request, form)
-	html = "Render '%s' (%s,%s,%s)" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        if req:
+          html = "Render '%s' (%s,%s,%s)" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        else: html="Renderrequest failed (%s,%s,%s)" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
       else:
         html="form is not valid. "+str(form.errors)
     else:
@@ -88,7 +93,9 @@ def create(request):
       form = CreateForm(request.GET)
       if form.is_valid():
         req = saveCreateRequestForm(request, form)
-	html = "Render '%s' (%s,%s,%s)" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+	if req:
+          html = "Render '%s' (%s,%s,%s)" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        else: html="Renderrequest failed (%s,%s,%s)" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
       else:
         # view the plain form webpage with default values filled in
         return render_to_response('requests_create.html',{'createform': form, 'host':request.META['HTTP_HOST']})

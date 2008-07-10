@@ -11,7 +11,7 @@ INSTALLATION
 - Run "python manage.py syncdb" to create the database
 - Open the /admin interface and add the settings "base_tile_path", "unzipPath","logFile" to the table Settings.
   In the case of tah.osm.org these settings are "/mnt/agami/openstreetmap/tah/Tiles", "/tmp", and "tah.log" respectively.
-- in tah_intern/serve_tiles.py the base_tile_path is hardcoded for efficiency reasons. Open that file and adapt the path there too.
+- in tah_intern/Tile.py the base_tile_path is hardcoded for efficiency reasons. Open that file and adapt the path there too.
 - tah_intern/views.py currently contains a hardcoded path to the log file location. Adapt the line:   f = open('/home/spaetz/tah/tah_intern/tah.log', 'rU')
 APACHE CONFIGURATION
 --------------------

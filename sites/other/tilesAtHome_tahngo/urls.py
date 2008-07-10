@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     (r'^Browse/', include('tah.browse.urls')),
     (r'^admin/', include('django.contrib.admin.urls')),
     (r'^Log/$', show_log),
+    (r'^MapOf/index.php$',redirect_to, {'url': '/~spaetz/Browse/MapOf/'}),
     #(r'/accounts/profile/$', 'redirect_to', {'url': '/user/'}),
 )

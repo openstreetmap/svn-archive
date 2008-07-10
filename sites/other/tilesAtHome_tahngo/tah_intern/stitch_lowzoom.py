@@ -1,5 +1,6 @@
 import os,sys, cairo, tempfile, shutil, StringIO, struct
-sys.path.insert(0, "/var/www/")
+# we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
+sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from time import time
 from tah.tah_intern.Tileset import Tileset

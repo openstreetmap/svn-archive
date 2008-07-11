@@ -64,6 +64,7 @@ function init() {
 		    new OpenLayers.Control.Permalink(),
                     new OpenLayers.Control.Attribution()],
                 maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+		numZoomLevels:18,
                 maxResolution: 156543.0399,
                 units: 'm',
                 projection: new OpenLayers.Projection("EPSG:900913"),
@@ -72,9 +73,9 @@ function init() {
 
             layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
             layerTilesAtHome2 = layerMapnik = new OpenLayers.Layer.TMS( 
-	    "tiles at home",
-	    "http://tah.openstreetmap.org/~spaetz/Tiles/tile/",
-	    {type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true }, {'buffer':1,'attribution': 'Click on a tile in zoom level 12 to request its render.<br/>Data by by <a href="http://openstreetmap.org/">OpenStreetMap</a>'} );
+	    "t@hngo",
+	    ["http://a.tah.openstreetmap.org/Tiles2/tile/","http://b.tah.openstreetmap.org/Tiles2/tile/","http://c.tah.openstreetmap.org/Tiles2/tile/"],
+	    {type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true,attribution: 'Data by by <a href="http://openstreetmap.org/">OpenStreetMap</a>' }, {'buffer':1} );
 
             map.addLayers([layerTilesAtHome2,layerTilesAtHome]);
 

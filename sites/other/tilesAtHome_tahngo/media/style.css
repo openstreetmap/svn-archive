@@ -8,23 +8,24 @@ div#breadcrumb  a{
 	text-decoration:none;}
 div#footer{text-align:center;}
 
-#browsetable {border-spacing: 0px;}
+#browsetable {
+	border-spacing: 0px;
+	line-height:0px;
+}
+
 .browsetable{
 	margin: 0px;
 	padding: 0px;
 	border-width:0px;
-	border-spacing: 0px;
 }
 
 td.browsetable{
 	margin: 0px;
 	padding: 0px;
-	border-width:0px;
-	border-spacing: 0px;
-	line-height: 0px;
 }
 
-.browseimg {border:none;}
+.browseimg {border:none}
+
 
 #log{
 	padding: 2px;

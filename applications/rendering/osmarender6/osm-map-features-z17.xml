@@ -1777,11 +1777,11 @@
                             <text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px"/>
                         </rule>
                         <rule e="way" k="highway" v="path" layer="5">
-                            <rule e="way" k="bicyle" v="designated">
+                            <rule e="way" k="bicyle" v="designated" layer="5">
                                 <text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px"/>
 	                    </rule>
                             <else>
-                                <rule e="way" k="horse" v="designated">
+                                <rule e="way" k="horse" v="designated" layer="5">
                                     <text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px"/>
          	            </rule>
                             <else>
@@ -1881,12 +1881,12 @@
                         <text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
                     </rule>
                     <rule e="way" k="highway" v="path" layer="5">
-                        <rule e="way" k="bicyle" v="designated">
+                        <rule e="way" k="bicyle" v="designated" layer="5">
                             <text k="ref" startOffset="30%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
                             <text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
     	                </rule>
                         <else>
-                            <rule e="way" k="horse" v="designated">
+                            <rule e="way" k="horse" v="designated" layer="5">
                                 <text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px"/>
 	                    </rule>
                         <else>

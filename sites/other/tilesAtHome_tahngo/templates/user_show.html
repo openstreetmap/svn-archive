@@ -5,8 +5,8 @@
 {% block heading %}t@h Show Users{% endblock %}
 {% block content %}Show requests here.
 <table border="1">
-  <tr><td>User</td><td>Rendered Tiles</td><td>Uploaded KB</td></tr>
+  <tr><td>User</td><td>Rendered Tiles</td><td>Uploaded KB</td><td>Last activity</td></tr>
   {% for u in user %}
-  <tr><td>{{ u.username }}</td><td>{{ u.get_profile.renderedTiles|stringformat:"g" }}</td><td>{{ u.get_profile.kb_upload|stringformat:"g" }}</td></tr>
+  <tr><td>{{ u.user.username }}</td><td>{{ u.renderedTiles|stringformat:"g" }}</td><td>{{ u.kb_upload|stringformat:"g" }}</td><td>{{ u.last_activity|timesince }}</td></tr>
   {% endfor %}
 </table>{% endblock %}

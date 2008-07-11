@@ -6,8 +6,8 @@ def index(request):
 
 def show_user(request):
     from django.contrib.auth.models import User
-    #u = User.objects.filter(is_superuser=False) # Get the first user in the system
-    u = User.objects.filter(is_active=True) # Get the first user in the system
+    from tah.user.models import TahUser
+    u = TahUser.objects.filter(user__is_active=True) # Get the first user in the system
     return render_to_response("user_show.html",{'user':u});
 
 #u=User.objects.create_user(username, email, password)

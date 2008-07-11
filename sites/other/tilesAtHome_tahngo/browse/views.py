@@ -32,8 +32,12 @@ def tiledetails(request,layername,z,x,y):
   basetilepath = Settings().getSetting(name='base_tile_path')
   tilefile = os.path.join(basetilepath,layername+"_%s" % base_z,"%s_%s"%(base_x,base_y))
 
-  fstat = os.stat(tilefile)
-  (basetile_fsize,basetile_mtime) = (fstat[6], datetime.fromtimestamp(fstat[8]))
+  try: 
+    fstat = os.stat(tilefile)
+    (basetile_fsize,basetile_mtime) = (fstat[6], datetime.fromtimestamp(fstat[8]))
+  except OSError: 
+    (basetile_fsize,basetile_mtime) = None, None
+
   return render_to_response('tile_details.html',{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime})
 
 def show_map_of(request):

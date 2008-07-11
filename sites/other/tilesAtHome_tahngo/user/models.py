@@ -7,6 +7,9 @@ class TahUser(models.Model):
     user = models.ForeignKey(User, unique=True)
     last_activity = models.DateTimeField(auto_now=True)
 
+    class Meta:
+      ordering = ['-last_activity']
+
     def __str__(self):
       return str(self.user)
 

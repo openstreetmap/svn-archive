@@ -76,6 +76,8 @@ class ApplicationController < ActionController::Base
     response.headers['Error'] = message
   end
 
+  self.languages = {:english => 'en-US', :italian => 'it-IT', :bengali => 'bn-IN'}
+
 private 
 
   # extract authorisation credentials from headers, returns user = nil if none

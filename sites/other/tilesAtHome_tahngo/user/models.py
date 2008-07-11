@@ -5,6 +5,7 @@ class TahUser(models.Model):
     renderedTiles = models.PositiveIntegerField(default=0)
     kb_upload = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User, unique=True)
+    last_activity = models.DateTimeField(auto_now=True)
 
     def __str__(self):
       return str(self.user)

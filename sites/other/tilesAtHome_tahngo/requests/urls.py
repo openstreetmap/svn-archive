@@ -12,4 +12,5 @@ urlpatterns = patterns('',
     (r'^upload/go_nogo',upload_gonogo),
     (r'^expireTiles',expire_tiles),
     (r'^stats/munin/(?P<status>\w+)/$',stats_munin_requests),
+    (r'^latestClient',show_latest_client_version),
 )

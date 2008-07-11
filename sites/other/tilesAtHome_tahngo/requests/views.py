@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate
 from tah.tah_intern.models import Layer
 from tah.tah_intern.Tile import Tile
 from django.views.decorators.cache import cache_control
+from tah.tah_intern.models import Settings
 
 
 def index(request):
@@ -270,3 +271,7 @@ def stats_munin_requests(request,status):
       reply += "_req_processed_last_hour.value %d\n" %  reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,1)).count()
       reply += 'done.value %d' % (reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,48)).count() // 48)
     return HttpResponse(reply,mimetype='text/plain')
+
+def show_latest_client_version(request):
+    html = Settings().getSetting(name='latest_client_version')
+    return HttpResponse(html,mimetype='text/plain')

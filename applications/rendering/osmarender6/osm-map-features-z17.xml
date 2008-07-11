@@ -59,7 +59,6 @@
         <rule e="way" k="landuse" v="vineyard">
             <area class="landuse-vineyard"/>
         </rule>
-
         <!-- Natural features -->
         <rule e="way" k="natural" v="coastline">
             <area class="natural-coastline"/>
@@ -361,6 +360,18 @@
             <rule e="way" k="highway" v="cycleway">
                 <line class="bridge-casing highway-cycleway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
+            <rule e="way" k="highway" v="path">
+                <rule e="way" k="bicyle" v="designated">
+                    <line class="bridge-casing highway-cycleway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <line class="bridge-casing highway-bridleway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+	            </rule>
+                <else>
+                    <line class="bridge-casing highway-footway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+                </else></else>
+            </rule>
             <rule e="way" k="highway" v="pedestrian">
                 <line class="bridge-casing highway-pedestrian-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
             </rule>
@@ -440,6 +451,18 @@
             <rule e="way" k="highway" v="cycleway">
                 <line class="bridge-core highway-cycleway-bridge-core" smart-linecap="no"/>
             </rule>
+            <rule e="way" k="highway" v="path">
+	        <rule e="way" k="bicyle" v="designated">
+                    <line class="bridge-core highway-cycleway-bridge-core" smart-linecap="no"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <line class="bridge-core highway-bridleway-bridge-core" smart-linecap="no"/>
+	            </rule>
+                <else>
+                    <line class="bridge-core highway-footway-bridge-core" smart-linecap="no"/>
+                </else></else>
+            </rule>
             <rule e="way" k="highway" v="pedestrian">
                 <line class="bridge-core highway-pedestrian-bridge-core" smart-linecap="no"/>
             </rule>
@@ -461,6 +484,18 @@
             </rule>
             <rule e="way" k="highway" v="cycleway">
                 <area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
+            </rule>
+            <rule e="way" k="highway" v="path">
+                <rule e="way" k="bicyle" v="designated">
+                    <area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <area class="highway-casing highway-bridleway-casing highway-bridleway-area-casing no-bezier" smart-linecap="no"/>
+	            </rule>
+                <else>
+                    <area class="highway-casing highway-footway-casing highway-footway-area-casing no-bezier" smart-linecap="no"/>
+                </else></else>
             </rule>
             <rule e="way" k="highway" v="bridleway">
                 <area class="highway-casing highway-bridleway-casing highway-bridleway-area-casing no-bezier" smart-linecap="no"/>
@@ -561,6 +596,18 @@
                 </rule>
                 <rule e="way" k="highway" v="cycleway">
                     <line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
+                </rule>
+                <rule e="way" k="highway" v="path">
+                <rule e="way" k="bicyle" v="designated">
+                    <line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
+	            </rule>
+                <else>
+                    <line class="highway-casing highway-footway-casing" smart-linecap="no"/>
+                </else></else>
                 </rule>
                 <rule e="way" k="highway" v="bridleway">
                     <line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
@@ -680,6 +727,18 @@
             <rule e="way" k="highway" v="cycleway">
                 <area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
             </rule>
+            <rule e="way" k="highway" v="path">
+                <rule e="way" k="bicyle" v="designated">
+                    <area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
+	            </rule>
+                <else>
+                    <area class="highway-core highway-footway-area no-bezier" smart-linecap="no"/>
+                </else></else>
+            </rule>
             <rule e="way" k="highway" v="bridleway">
                 <area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
             </rule>
@@ -770,6 +829,22 @@
                 </rule>
                 <rule e="way" k="highway" v="cycleway">
                     <line class="highway-core highway-cycleway-core" smart-linecap="no"/>
+                </rule>
+                <rule e="way" k="highway" v="path">
+                    <rule e="way" k="bicyle" v="designated">
+                        <line class="highway-core highway-cycleway-core" smart-linecap="no"/>
+      	            </rule>
+                    <else>
+                        <rule e="way" k="horse" v="designated">
+                            <line class="highway-core highway-bridleway-core" smart-linecap="no"/>
+	                </rule>
+                    <else>
+                        <rule e="way" k="foot" v="designated">
+                            <line class="highway-core highway-footway-core" smart-linecap="no"/>
+                        </rule>
+                    <else>
+                            <line class="highway-core highway-path-core" smart-linecap="no"/>
+                    </else></else></else>
                 </rule>
                 <rule e="way" k="highway" v="bridleway">
                     <line class="highway-core highway-bridleway-core" smart-linecap="no"/>
@@ -886,6 +961,21 @@
                 <line class="tunnel-casing highway-cycleway-casing tunnel" mask-class="tunnel-core highway-cycleway-core"/>
                 <line class="highway-cycleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
+            <rule e="way" k="highway" v="path">
+               <rule e="way" k="bicyle" v="designated">
+                   <line class="tunnel-casing highway-cycleway-casing tunnel" mask-class="tunnel-core highway-cycleway-core"/>
+                   <line class="highway-cycleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <line class="tunnel-casing highway-bridleway-casing tunnel" mask-class="tunnel-core highway-bridleway-core"/>
+                        <line class="highway-bridleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+	            </rule>
+                <else>
+                    <line class="tunnel-casing highway-footway-casing tunnel" mask-class="tunnel-core highway-footway-core"/>
+                    <line class="highway-footway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+                </else></else>
+            </rule>
             <rule e="way" k="highway" v="bridleway">
                 <line class="tunnel-casing highway-bridleway-casing tunnel" mask-class="tunnel-core highway-bridleway-core"/>
                 <line class="highway-bridleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
@@ -990,6 +1080,18 @@
             <rule e="way" k="construction" v="cycleway">
                 <line class="highway-core highway-cycleway-core under-construction"/>
             </rule>
+            <rule e="way" k="construction" v="path">
+                <rule e="way" k="bicyle" v="designated">
+                    <line class="highway-core highway-cycleway-core under-construction"/>
+	        </rule>
+                <else>
+                    <rule e="way" k="horse" v="designated">
+                        <line class="highway-core highway-bridleway-core under-construction"/>
+	            </rule>
+                <else>
+                    <line class="highway-core highway-footway-core under-construction"/>
+                </else></else>
+            </rule>
             <rule e="way" k="construction" v="bridleway">
                 <line class="highway-core highway-bridleway-core under-construction"/>
             </rule>
@@ -1080,7 +1182,7 @@
                 </rule>
             </rule>
             <else>
-                <rule e="way" k="highway" v="footway|footpath|cycleway|bridleway|byway|unsurfaced">
+                <rule e="way" k="highway" v="footway|footpath|cycleway|path|bridleway|byway|unsurfaced">
                     <rule e="way" k="access" v="private">
                         <line class="access-private-line" smart-linecap="no"/>
                     </rule>
@@ -1393,12 +1495,12 @@
         <!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
             <rule e="node" s="way" k="railway" v="rail">
-                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|footway">
+                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
                     <symbol xlink:href="#symbol-railway-crossing" width="3.5px" height="3.5px" transform="translate(-1.75,-1.75)"/>
                 </rule>
             </rule>
             <else>
-                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|footway">
+                <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
                     <symbol xlink:href="#symbol-railway-crossing" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
                 </rule>
             </else>
@@ -1674,6 +1776,18 @@
                         <rule e="way" k="highway" v="cycleway" layer="5">
                             <text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px"/>
                         </rule>
+                        <rule e="way" k="highway" v="path" layer="5">
+                            <rule e="way" k="bicyle" v="designated">
+                                <text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px"/>
+	                    </rule>
+                            <else>
+                                <rule e="way" k="horse" v="designated">
+                                    <text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px"/>
+         	            </rule>
+                            <else>
+                                <text k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.35px"/>
+                            </else></else>
+                        </rule>
                         <rule e="way" k="highway" v="bridleway" layer="5">
                             <text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px"/>
                         </rule>
@@ -1765,6 +1879,19 @@
                     <rule e="way" k="highway" v="cycleway" layer="5">
                         <text k="ref" startOffset="30%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
                         <text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
+                    </rule>
+                    <rule e="way" k="highway" v="path" layer="5">
+                        <rule e="way" k="bicyle" v="designated">
+                            <text k="ref" startOffset="30%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
+                            <text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
+    	                </rule>
+                        <else>
+                            <rule e="way" k="horse" v="designated">
+                                <text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px"/>
+	                    </rule>
+                        <else>
+                            <text k="ref" startOffset="30%" class="highway-ref highway-footway-ref" dy="-0.5px"/>
+                        </else></else>
                     </rule>
                     <rule e="way" k="highway" v="bridleway" layer="5">
                         <text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px"/>
@@ -2403,6 +2530,9 @@
             .highway-footway-area                   { fill: #efeaa0; }
             .highway-footway-name                   { stroke-width: 0px;     font-size: 1.25px; }
             .highway-footway-ref                    { stroke-width: 0px;     font-size: 1.25px; }
+
+            /* render unmarked paths in the same color as highway=road */
+            .highway-path-core                      { stroke-width: 0.5px;   stroke: #d0d0d0; }
 
             .highway-steps-bridge-casing            { stroke-width: 1.2px; }
             .highway-steps-bridge-core              { stroke-width: 1.0px; }

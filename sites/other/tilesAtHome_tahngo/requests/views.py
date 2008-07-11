@@ -1,3 +1,4 @@
+from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
 import django.views.generic.list_detail
@@ -35,28 +36,45 @@ def request_exists(request):
     """
     return 0
 
+
 def saveCreateRequestForm(request, form):
-    newRequest = form.save(commit=False)   # Create the item
-    newRequest.ipaddress = request.META['REMOTE_ADDR']
-    if not newRequest.priority: newRequest.priority = 3
-    if not newRequest.min_z in ['6','12']: newRequest.min_z = 12
-    if not newRequest.max_z: newRequest.max_z = {0:5,6:11,12:17}[newRequest.min_z]
+    """ Returns (Request, reason), with Request being 'None' on failure and 
+        the saved request object on success. 
+        Reason is a string that describes the error in case of failure.
+    """
+    formdata = form.cleaned_data.copy()
+    # delete entries that are not needed as default value or won't work
+    del formdata['layers']
+    del formdata['status']
+    if not formdata['min_z'] in ['6','12']: formdata['min_z'] = 12
+    if not formdata['max_z']: formdata['max_z'] = {0:5,6:11,12:17}[formdata['min_z']]
+    if not formdata['priority'] or \
+      formdata['priority']>3 or formdata['priority']<1: 
+        formdata['priority'] = 3
+    formdata['clientping_time'] = force_unicode(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
     # catch invalid x,y
-    if not Tile(None,newRequest.min_z,newRequest.x,newRequest.y).is_valid(): return None
-    newRequest.status = 0
-    newRequest.clientping_time = datetime.now()
-    newRequest.request_time=datetime.now()
-    if not request_exists(newRequest):
-      newRequest.save()
-      if form.data.has_key('layers'):
-        # save the chosen layers
-        form.save_m2m()
-      else:
-        # no layers selected -> save default layers
-        layers = Layer.objects.filter(default=True)
-        for l in layers: newRequest.layers.add(l)
-    else: return None
-    return newRequest
+    if not Tile(None,formdata['min_z'],formdata['x'],formdata['y']).is_valid():
+      return (None, 'Invalid tile coordinates')
+    # Create a new request, or get the existing one
+    newRequest, created_new = Request.objects.get_or_create(status=0, min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
+
+    newRequest.ipaddress = request.META['REMOTE_ADDR']
+    if not created_new:
+      #update existing request with new request data
+      newRequest.max_z = max(formdata['max_z'],newRequest.max_z)
+      newRequest.priority = min(formdata['priority'],newRequest.priority)
+
+    # finally save the updated request
+    newRequest.save()
+    if form.data.has_key('layers'):
+      # save the chosen layers
+      layers = Layer.objects.filter(pk__in=form['layers'].data)
+    else:
+      # no layers selected -> save default layers
+      layers = Layer.objects.filter(default=True)
+    for l in layers: newRequest.layers.add(l)
+    return (newRequest,'')
 
 def create(request):
     html="XX|unknown error"
@@ -76,29 +94,27 @@ def create(request):
     CreateFormClass.base_fields['clientping_time'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['client'].required = False
     CreateFormClass.base_fields['client'].widget = widgets.HiddenInput()
-    CreateFormClass.base_fields['request_time'].widget = widgets.HiddenInput()
     form = CreateFormClass()
 
     if request.method == 'POST':
       form = CreateForm(request.POST)
       if form.is_valid():
-        req = saveCreateRequestForm(request, form)
-        if req:
-          html = "Render '%s' (%s,%s,%s)" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
-        else: html="Renderrequest failed (%s,%s,%s)" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        req, reason = saveCreateRequestForm(request, form)
       else:
         html="form is not valid. "+str(form.errors)
     else:
       #Create request using GET"
       form = CreateForm(request.GET)
       if form.is_valid():
-        req = saveCreateRequestForm(request, form)
-	if req:
-          html = "Render '%s' (%s,%s,%s)" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
-        else: html="Renderrequest failed (%s,%s,%s)" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        req, reason = saveCreateRequestForm(request, form)
       else:
-        # view the plain form webpage with default values filled in
-        return render_to_response('requests_create.html',{'createform': form, 'host':request.META['HTTP_HOST']})
+         # view the plain form webpage with default values filled in
+         return render_to_response('requests_create.html', \
+                {'createform': form, 'host':request.META['HTTP_HOST']})
+    if req: html = "Render '%s' (%s,%s,%s)" % \
+                    (req.layers_str,req.min_z,req.x,req.y)
+    else:   html = "Request failed '%s' (%s,%s,%s): %s" % \
+                    (req.layers_str,req.min_z,req.x,req.y,reason)
     return HttpResponse(html)
 
 

@@ -14,7 +14,7 @@ class Request(models.Model):
   # priority: 1=urgent 3=slow bulk
   priority = models.PositiveSmallIntegerField(default=3)
   ipaddress = models.IPAddressField(blank=True,default="")
-  request_time = models.DateTimeField(blank=True)
+  request_time = models.DateTimeField(auto_now_add=True)
   #clientping contains the last "I am still working on it" when active, on upload it indicates the upload time
   clientping_time = models.DateTimeField(blank=True,default="")
   #client_id = models.PositiveIntegerField(blank=True,default=0)

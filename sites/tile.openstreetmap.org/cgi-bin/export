@@ -7,6 +7,11 @@ import os
 import shutil
 import sys
 import tempfile
+import resource
+
+# Limit maximum CPU time
+# The Postscript output format can sometimes take hours
+resource.setrlimit(resource.RLIMIT_CPU,(300,300))
 
 # Routine to output HTTP headers
 def output_headers(content_type, filename = "", length = 0):

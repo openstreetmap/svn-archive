@@ -113,8 +113,8 @@ def create(request):
                 {'createform': form, 'host':request.META['HTTP_HOST']})
     if req: html = "Render '%s' (%s,%s,%s)" % \
                     (req.layers_str,req.min_z,req.x,req.y)
-    else:   html = "Request failed '%s' (%s,%s,%s): %s" % \
-                    (req.layers_str,req.min_z,req.x,req.y,reason)
+    else:   html = "Request failed (%s,%s,%s): %s" \
+                    % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'],reason)
     return HttpResponse(html)
 
 
@@ -227,10 +227,10 @@ def request_changedTiles(request):
       CreateFormClass.base_fields['status'].required = False 
       form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2})
       if form.is_valid():
-        req = saveCreateRequestForm(request, form)
+        req, reason = saveCreateRequestForm(request, form)
         if req:
-          html += "Render '%s' (%s,%s,%s)\n" % (','.join([ l['name'] for l in req.layers.all().values()]),form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
-        else: html +="Renderrequest failed (%s,%s,%s)\n" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+          html += "Render '%s' (%s,%s,%s)\n" % (req.layers_str,form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
+        else: html +="Renderrequest failed (%s,%s,%s): %s\n" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'], reason)
       else:
         html+="form is not valid. %s\n" % form.errors
     xml_dom.unlink()

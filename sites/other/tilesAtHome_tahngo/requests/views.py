@@ -237,6 +237,23 @@ def request_changedTiles(request):
     
     return HttpResponse(html,mimetype='text/plain')
 
+def expire_tiles(request):
+    """ Rerequest old active request that haven't been pinged by the client
+        for a while. Also delete old finished requests that we don't need 
+        anymore.
+    """
+    rerequested = Request.objects.filter(status=1,clientping_time__lt=datetime.now()-timedelta(0,0,0,0,0,6))
+    for r in rerequested:
+      #next django version will be able to just update() this
+      r.status=0
+      r.save()
+
+    expired = Request.objects.filter(status=2, clientping_time__lt=datetime.now()-timedelta(2,0,0,0,0,0))
+    expired.delete()
+
+    html="Reset %d requests to unfinished status.\nExpired %d old finished requests." % (len(rerequested),len(expired))
+    return HttpResponse(html,mimetype='text/plain')
+
 def stats_munin_requests(request,status):
     reply=''
     states={'pending':0,'active':1,'done':2}

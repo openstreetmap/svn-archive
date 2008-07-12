@@ -56,12 +56,15 @@ class OSMBackend:
         #<user display_name="spaetz" account_created="2007-03-19T19:00:56+00:00">
 
         p = re.compile('<user display_name="(\w+)"')
-	m = p.search(data).group(1)
+	m = p.search(data)
 
 	if (m):
-            return m
+            return m.group(1)
         else:
-            return None
+            # Authentication was OK, but we did not find a valid username.
+            # weird!!! construct username from email
+            p = re.compile('\W+')
+            return p.sub('_', username)
 
 
     def insertOSMuser(self, usernick, email, password):

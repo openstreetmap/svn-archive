@@ -1,6 +1,6 @@
 <% content_for :greeting do %>
 <% if @user and !@user.home_lon.nil? and !@user.home_lat.nil? %>
-<%= link_to_function 'home', "setPosition(#{@user.home_lat}, #{@user.home_lon}, 10)" %> |
+<%= link_to_function "home".t, "setPosition(#{@user.home_lat}, #{@user.home_lon}, 10)" %> |
 <% end %>
 <% end %>
 
@@ -10,14 +10,14 @@
 
 <noscript>
   <div id="noscript">
-    <p>You are either using a browser that doesn't support javascript, or you have disabled javascript.</p>
-    <p>OpenStreetMap uses javascript for its slippy map.</p>
-    <p>You may want to try the <a href="http://tah.openstreetmap.org/Browse/">Tiles@Home static tile browser</a> if you are unable to enable javascript.</p>
+    <p><%= "You are either using a browser that doesn't support javascript, or you have disabled javascript.".t -%></p>
+    <p><%= "OpenStreetMap uses javascript for its slippy map.".t -%></p>
+    <p><%= "You may want to try the".t -%> <a href="http://tah.openstreetmap.org/Browse/"><%= "Tiles@Home static tile browser".t -%></a> <%= "if you are unable to enable javascript.".t -%></p>
   </div>
 </noscript>
 
 <div id="map">
-<div id="permalink"><a href="/" id="permalinkanchor">Permalink</a></div>
+<div id="permalink"><a href="/" id="permalinkanchor"><%= "Permalink".t -%></a></div>
 </div> 
 
 <div id="attribution">
@@ -28,8 +28,8 @@
 </tr>
 <tr>
 <td colspan="2" align="center">
-Licensed under the Creative Commons Attribution-Share Alike 2.0 license
-by the OpenStreetMap project and its contributors.
+<%= "Licensed under the Creative Commons Attribution-Share Alike 2.0 license
+by the OpenStreetMap project and its contributors.".t -%>
 </td>
 </table>
 </div>

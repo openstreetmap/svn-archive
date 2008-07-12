@@ -31,8 +31,8 @@
 
 <% content_for "optionals" do %>
   <div class="optionalbox">
-    <span class="oboxheader">Search</span>
-    <span class="whereami"><a href="javascript:describeLocation()">Where am I?</a></span>
+    <span class="oboxheader"><%= "Search".t -%></span>
+    <span class="whereami"><a href="javascript:describeLocation()"><%= "Where am I?".t -%></a></span>
     <div class="search_form">
     <span id="search_field">
     <% form_remote_tag(:loading => "startSearch()",
@@ -42,12 +42,12 @@
       <%= submit_tag "Go" %>
     <% end %>
     </span>
-    <p id="search_active">Searching...</p>
+    <p id="search_active"><%= "Searching...".t -%></p>
     </div>
     <p class="search_help">
-      examples: 'Alkmaar', 'Regent Street, Cambridge', 'CB2 5AQ',
-      or 'post offices near Lünen'
-      <a href="http://wiki.openstreetmap.org/index.php/Search">more examples...</a>
+      <%= "examples: 'Alkmaar', 'Regent Street, Cambridge', 'CB2 5AQ',
+      or 'post offices near Lünen'".t -%>
+      <a href="http://wiki.openstreetmap.org/index.php/Search"><%= "more examples...".t -%></a>
     </p>
   </div>
 <% end %>

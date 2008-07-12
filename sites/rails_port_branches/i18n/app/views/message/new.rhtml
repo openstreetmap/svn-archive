@@ -1,11 +1,11 @@
 <% user_id = params[:user_id] || @user_id %>
 <% display_name = User.find_by_id(user_id).display_name %>
 
-<h2>Send a new message to <%= h(display_name) %></h2>
+<h2><%= "Send a new message to %s".t(nil,h(display_name)) %></h2>
 
 <% if params[:display_name] %>
 <p>Writing a new message to <%= h(params[:display_name]) %></p>  
-<p>TODO: drop down box of your friends</p>
+<p><%= "ODO: drop down box of your friends".t -%>T</p>
 <%end%>
 
 <%= error_messages_for 'message' %>
@@ -13,20 +13,20 @@
 <% form_for :message, :url => { :action => "new", :user_id => user_id } do |f| %>
   <table>
     <tr valign="top">
-      <th>Subject</th>
+      <th><%= "Subject".t -%></th>
       <td><%= f.text_field :title, :size => 60, :value => @title %></td>
     </tr>
     <tr valign="top">
-      <th>Body</th>
+      <th><%= "Body".t -%></th>
       <td><%= f.text_area :body, :cols => 80, :value => @body %></td>
     </tr>
     <tr>
       <th></th>
-      <td><%= submit_tag 'Send' %></td>
+      <td><%= submit_tag "Send".t %></td>
     </tr>
   </table>
 <% end %>
 
 <br />
 
-<%= link_to 'Back to inbox', :controller => 'message', :action => 'inbox', :display_name => @user.display_name %>
+<%= link_to "Back to inbox".t, :controller => 'message', :action => 'inbox', :display_name => @user.display_name %>

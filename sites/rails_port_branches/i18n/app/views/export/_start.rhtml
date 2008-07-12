@@ -1,6 +1,6 @@
 <% form_tag :action => "finish" do %>
 
-  <p class="export_heading">Area to Export</p>
+  <p class="export_heading"><%= "Area to Export".t -%></p>
 
   <div class="export_bounds">
     <%= text_field_tag('maxlat', nil, :size => 10, :class => "export_bound") %>
@@ -10,65 +10,65 @@
     <br/>
     <%= text_field_tag('minlat', nil, :size => 10, :class => "export_bound") %>
     <p class="export_hint">
-      <a id='drag_box' href="#" onclick="return startBox();">Manually select a different area</a>  
+      <a id='drag_box' href="#" onclick="return startBox();"><%= "".t -%>Manually select a different area</a>  
     </p>
   </div>
 
-  <p class="export_heading">Format to Export</p>
+  <p class="export_heading"><%= "Format to Export".t -%></p>
 
   <div class="export_details">
     <p>
-      <%= radio_button_tag("format", "osm") %> OpenStreetMap XML Data
+      <%= radio_button_tag("format", "osm") %> <%= "OpenStreetMap XML Data".t -%>
       <br/>
-      <%= radio_button_tag("format", "mapnik") %> Mapnik Image
+      <%= radio_button_tag("format", "mapnik") %> <%= "Mapnik Image".t -%>
       <br/>
-      <%= radio_button_tag("format", "osmarender") %> Osmarender Image
+      <%= radio_button_tag("format", "osmarender") %> <%= "Osmarender Image".t -%>
       <br/>
-      <%= radio_button_tag("format", "html") %> Embeddable HTML
+      <%= radio_button_tag("format", "html") %> <%= "Embeddable HTML".t -%>
     </p>
   </div>
 
   <div id="export_osm">
-    <p class="export_heading">Licence</p>
+    <p class="export_heading"><%= "Licence".t -%></p>
 
     <div class="export_details">
-      <p>OpenStreetMap data is licensed under the <a href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0 license</a>.</p>
+      <p><%= "OpenStreetMap data is licensed under the".t -%> <a href="http://creativecommons.org/licenses/by-sa/2.0/"><%= "Creative Commons Attribution-ShareAlike 2.0 license".t -%></a>.</p>
     </div>
   </div>
 
   <div id="export_mapnik">
-    <p class="export_heading">Options</p>
+    <p class="export_heading"><%= "Options".t -%></p>
 
     <div class="export_details">
-      <p>Format <%= select_tag("mapnik_format", options_for_select([["PNG", "png"], ["JPEG", "jpeg"], ["SVG", "svg"], ["PDF", "pdf"], ["Postscript", "ps"]], "png")) %></p>
-      <p>Scale 1 : <%= text_field_tag("mapnik_scale", nil, :size => 8) %> <span class="export_hint">(max 1 : <span id="mapnik_max_scale"></span>)</span></p>
-      <p>Image Size <span id="mapnik_image_width"></span> x <span id="mapnik_image_height"></span></p>
+      <p><%= "Format".t -%> <%= select_tag("mapnik_format", options_for_select([["PNG", "png"], ["JPEG", "jpeg"], ["SVG", "svg"], ["PDF", "pdf"], ["Postscript", "ps"]], "png")) %></p>
+      <p><%= "Scale 1 :".t -%> <%= text_field_tag("mapnik_scale", nil, :size => 8) %> <span class="export_hint">(<%= "max 1 :".t -%> <span id="mapnik_max_scale"></span>)</span></p>
+      <p><%= "Image Size".t -%> <span id="mapnik_image_width"></span> x <span id="mapnik_image_height"></span></p>
     </div>
   </div>
 
   <div id="export_osmarender">
-    <p class="export_heading">Options</p>
+    <p class="export_heading"><%= "Options".t -%></p>
 
     <div class="export_details">
-      <p>Format <%= select_tag("osmarender_format", options_for_select([["PNG", "png"], ["JPEG", "jpeg"]], "png")) %></p>
-      <p>Zoom <%= select_tag("osmarender_zoom", options_for_select([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])) %></p>
+      <p><%= "Format".t -%> <%= select_tag("osmarender_format", options_for_select([["PNG", "png"], ["JPEG", "jpeg"]], "png")) %></p>
+      <p><%= "Zoom".t -%> <%= select_tag("osmarender_zoom", options_for_select([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])) %></p>
     </div>
   </div>
   
   <div id="export_html">
-    <p class="export_heading">Options</p>
+    <p class="export_heading"><%= "Options".t -%></p>
     <div class="export_details">
-      <p><a id="add_marker" href="#">Add a marker to the map</a></p>
+      <p><a id="add_marker" href="#"><%= "Add a marker to the map".t -%></a></p>
       <p id="marker_inputs" style="display:none">
-        Lat: <input type="text" id="marker_lat" size="9" />
-        Lon: <input type="text" id="marker_lon" size="9" />
+        <%= "Lat:".t -%> <input type="text" id="marker_lat" size="9" />
+        <%= "Lon:".t -%> <input type="text" id="marker_lon" size="9" />
       </p>
     </div>
 
-    <p class="export_heading">Output</p>
+    <p class="export_heading"><%= "Output".t -%></p>
     <div class="export_details">
       <p><input type="text" id="export_html_text" style="width:95%" /></p>
-      <p>Paste HTML to embed in website</p>
+      <p><%= "Paste HTML to embed in website".t -%></p>
     </div>
   </div>
 

@@ -1,6 +1,6 @@
-<h2>My inbox/<%= link_to "outbox", url_for(:controller => "user", :action => "outbox", :id => @user.display_name) %></h2>
+<h2><%= "".t -%>My inbox/<%= link_to "outbox".t, url_for(:controller => "user", :action => "outbox", :id => @user.display_name) %></h2>
 
-<p>You have <%= @user.new_messages.size %> new messages and <%= @user.messages.size -  @user.new_messages.size %> old messages</p> 
+<p><%= "You have %s new messages and %s old messages".t(nil,@user.new_messages.size,@user.messages.size - @user.new_messages.size) -%></p> 
 
 <% if @user.messages.size > 0 %>
   <div id="messages">
@@ -16,5 +16,5 @@
     </table>
   </div>
 <% else %>
-	  <div id="messages">You have no messages yet. Why not get in touch with some of the <%= link_to 'people mapping nearby', :controller => 'user', :action => 'view', :display_name => @user.display_name %>?</div>
+	  <div id="messages"><%= "You have no messages yet. Why not get in touch with some of the".t -%> <%= link_to "people mapping nearby".t, :controller => 'user', :action => 'view', :display_name => @user.display_name %>?</div>
 <% end %>

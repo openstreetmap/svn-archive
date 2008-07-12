@@ -8,7 +8,7 @@
 
 <% if @user %>
 
-<h4 id="newcomment">Leave a comment</h4>
+<h4 id="newcomment"><%= "Leave a comment".t -%></h4>
 <%= error_messages_for 'diary_comment' %>
 <% form_for :diary_comment, @diary_comment, :url => { :action => 'comment' } do |f| %>
 <%= f.text_area :body, :cols => 80, :rows => 5 %>
@@ -19,6 +19,6 @@
 
 <% else %>
 
-<h4 id="newcomment"><%= link_to "Login", :controller => 'user', :action => 'login', :referer => request.request_uri %> to leave a comment</h4>
+<h4 id="newcomment"><%= link_to "Login".t, :controller => 'user', :action => 'login', :referer => request.request_uri %> to <%= "leave a comment".t -%></h4>
 
 <% end %>

@@ -3,18 +3,18 @@
 <% form_for :diary_entry do |f| %>
   <table>
     <tr valign="top">
-      <th>Subject</th>
+      <th><%= "Subject".t -%></th>
       <td><%= f.text_field :title, :size => 60 %></td>
     </tr>
     <tr valign="top">
-      <th>Body</th>
+      <th><%= "Body".t -%></th>
       <td><%= f.text_area :body, :cols => 80 %></td>
     </tr>
     <tr valign="top">
-      <th>Location</th>
+      <th><%= "Location".t -%></th>
       <td>
         <div id="map" style="border: 1px solid black; position: relative; width : 90%; height : 400px; display: none;"></div>
-        <span class="location">Latitude: <%= f.text_field :latitude, :size => 20, :id => "latitude" %> Longitude: <%= f.text_field :longitude, :size => 20, :id => "longitude" %></span>
+        <span class="location"><%= "Latitude:".t -%> <%= f.text_field :latitude, :size => 20, :id => "latitude" %> <%= "Longitude:".t -%> <%= f.text_field :longitude, :size => 20, :id => "longitude" %></span>
         <a href="javascript:openMap()" id="usemap">use map</a>
       </td>
     </tr>

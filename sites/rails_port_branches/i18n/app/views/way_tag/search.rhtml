@@ -1,5 +1,5 @@
-<h2>Search results</h5>
-fixme postcodes and geonames
+<h2><%= "Search results".t -%></h5>
+<%= "fixme postcodes and geonames".t -%>
 
 <% form_tag :controller => 'way_tag', :action => 'search' do %>
 <%= text_field 'query', 'query'%>
@@ -13,9 +13,9 @@ fixme postcodes and geonames
     <td>
       <%= link_to tag.v, :controller => 'site', :action => 'goto_way', :id => tag.id %> (k:<%= tag.k %>)<br>
       <font size="-2" color="green">
-        Way <%= tag.id %> (<%= tag.way.timestamp %>)
-        <%= link_to 'Map', :controller => 'site', :action => 'goto_way', :id => tag.id %> - 
-        <%= link_to 'API', :controller => 'way', :action => 'rest', :id => tag.id %>
+        <%= "Way".t -%> <%= tag.id %> (<%= tag.way.timestamp %>)
+        <%= link_to "Map".t, :controller => 'site', :action => 'goto_way', :id => tag.id %> - 
+        <%= link_to "API".t, :controller => 'way', :action => 'rest', :id => tag.id %>
         <br /><br/ >
       </font>
     </td>

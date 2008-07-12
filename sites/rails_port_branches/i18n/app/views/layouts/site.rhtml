@@ -23,11 +23,11 @@
         Welcome, <%= link_to h(@user.display_name), {:controller => 'user', :action => 'view', :display_name => @user.display_name}%> | 
         <% @inbox_weight = 'bold' if @user.new_messages.size > 0 %>
         <%= yield :greeting %>
-        <%= link_to "inbox (#{@user.new_messages.size})", {:controller => 'message', :action => 'inbox', :display_name => @user.display_name}, {:style => "font-weight: #{@inbox_weight};" } %> |
-        <%= link_to 'logout', {:controller => 'user', :action => 'logout', :referer => request.request_uri}, {:id => 'logoutanchor'}%>
+        <%= link_to "inbox (%s)".t(nil,@user.new_messages.size), {:controller => 'message', :action => 'inbox', :display_name => @user.display_name}, {:style => "font-weight: #{@inbox_weight};" } %> |
+        <%= link_to "logout".t, {:controller => 'user', :action => 'logout', :referer => request.request_uri}, {:id => 'logoutanchor'}%>
       <% else %>
-        <%= link_to 'log in', {:controller => 'user', :action => 'login', :referer => request.request_uri}, {:id => 'loginanchor'}%> |
-        <%= link_to 'sign up', {:controller => 'user', :action => 'new'}, {:id => 'registeranchor'} %>
+        <%= link_to "log in".t, {:controller => 'user', :action => 'login', :referer => request.request_uri}, {:id => 'loginanchor'}%> |
+        <%= link_to "sign up".t, {:controller => 'user', :action => 'new'}, {:id => 'registeranchor'} %>
       <% end %>
     </span>
 
@@ -44,15 +44,15 @@
         traceclass = 'active' if params['controller'] == 'trace'
         diaryclass = 'active' if params['controller'] == 'diary_entry'
         %>
-        <li><%= link_to 'View', {:controller => 'site', :action => 'index'}, {:id => 'viewanchor', :title => 'view maps', :class => viewclass} %></li>
-        <li><%= link_to 'Edit', {:controller => 'site', :action => 'edit'}, {:id => 'editanchor', :title => 'edit maps', :class => editclass} %></li>
+        <li><%= link_to "View".t, {:controller => 'site', :action => 'index'}, {:id => 'viewanchor', :title => 'view maps', :class => viewclass} %></li>
+        <li><%= link_to "Edit".t, {:controller => 'site', :action => 'edit'}, {:id => 'editanchor', :title => 'edit maps', :class => editclass} %></li>
         <% if params['controller'] == 'site' and (params['action'] == 'index' or params['action'] == 'export') %>
-        <li><%= link_to_remote 'Export', {:url => {:controller => 'export', :action => 'start'}}, {:id => 'exportanchor', :title => 'export map data', :class => exportclass, :href => url_for(:controller => 'site', :action => 'export')} %></li>
+        <li><%= link_to_remote "Export".t, {:url => {:controller => 'export', :action => 'start'}}, {:id => 'exportanchor', :title => 'export map data', :class => exportclass, :href => url_for(:controller => 'site', :action => 'export')} %></li>
         <% else %>
-        <li><%= link_to 'Export', {:controller => 'site', :action => 'export'}, {:id => 'exportanchor', :title => 'export map data', :class => exportclass} %></li>
+        <li><%= link_to "Export".t, {:controller => 'site', :action => 'export'}, {:id => 'exportanchor', :title => 'export map data', :class => exportclass} %></li>
         <% end %>
-        <li><%= link_to 'GPS Traces', {:controller => 'trace', :action => 'list'}, {:id => 'traceanchor', :title => 'manage traces', :class => traceclass} %></li>
-        <li><%= link_to 'User Diaries', {:controller => 'diary_entry', :action => 'list', :display_name => nil}, {:id => 'diaryanchor', :title => 'view user diaries', :class => diaryclass} %></li>
+        <li><%= link_to "GPS Traces".t, {:controller => 'trace', :action => 'list'}, {:id => 'traceanchor', :title => 'manage traces', :class => traceclass} %></li>
+        <li><%= link_to "User Diaries".t, {:controller => 'diary_entry', :action => 'list', :display_name => nil}, {:id => 'diaryanchor', :title => 'view user diaries', :class => diaryclass} %></li>
       </ul>
     </div>
 
@@ -60,44 +60,44 @@
 
       <div id="logo">
         <center>
-          <h1>OpenStreetMap</h1>
+          <h1><%= "OpenStreetMap".t -%></h1>
           <%= link_to(image_tag("osm_logo.png", :size => "120x120", :border => 0), :controller => 'site', :action => 'index') %><br/>
-          <h2 class="nowrap">The Free Wiki World Map</h2>
+          <h2 class="nowrap"><%= "The Free Wiki World Map".t -%></h2>
         </center>
       </div>
 
       <% unless @user %>
       <div id="intro">
-        OpenStreetMap is a free editable map of the whole world. It is made by people like you.
+        <%= "OpenStreetMap is a free editable map of the whole world. It is made by people like you.".t -%>
         <p/>
-        OpenStreetMap allows you to view, edit and use geographical data in a collaborative way from anywhere on Earth.
+        <%= "OpenStreetMap allows you to view, edit and use geographical data in a collaborative way from anywhere on Earth.".t -%>
         <p/>
-        OpenStreetMap's hosting is kindly supported by the <a href="http://www.vr.ucl.ac.uk">UCL VR Centre</a> and <a href="http://www.bytemark.co.uk">bytemark</a>.
+        <%= "OpenStreetMap's hosting is kindly supported by the".t -%> <a href="http://www.vr.ucl.ac.uk"><%= "UCL VR Centre".t -%></a> <%= "and".t -%> <a href="http://www.bytemark.co.uk"><%= "bytemark".t -%></a>.
       </div>
       <% end %>
 
       <% if OSM_STATUS == :database_offline or OSM_STATUS == :api_offline %>
       <div id="alert">
-        The OpenStreetMap database is currently offline while
-        essential database maintenance work is carried out.
+        <%= "The OpenStreetMap database is currently offline while
+        essential database maintenance work is carried out.".t -%>
       </div>
       <% elsif OSM_STATUS == :api_readonly %>
       <div id="alert">
-        The OpenStreetMap database is currently in read-only mode while
-        essential database maintenance work is carried out.
+        <%= "The OpenStreetMap database is currently in read-only mode while
+        essential database maintenance work is carried out.".t -%>
       </div>
       <% end %>
 
       <div id="left_menu" class="left_menu">
-        <a href="http://wiki.openstreetmap.org">Help &amp; Wiki</a><br />
-        <a href="http://www.opengeodata.org/">News blog</a><br />
-        <a href="http://wiki.openstreetmap.org/index.php/Merchandise">Shop</a><br />
+        <a href="http://wiki.openstreetmap.org"><%= "Help".t -%> &amp; Wiki</a><br />
+        <a href="http://www.opengeodata.org/"><%= "News blog".t -%></a><br />
+        <a href="http://wiki.openstreetmap.org/index.php/Merchandise"><%= "Shop".t -%></a><br />
         <%= yield :left_menu %>
       </div>
 
       <div id="sotm" class="left_menu">
         <div id="sotminfo">
-        Come to the second OpenStreetMap Conference, <a href="http://www.stateofthemap.org">The State of the Map</a>: 12th-13th July 2008, Limerick, Ireland.
+        <%= "Come to the second OpenStreetMap Conference,".t -%> <a href="http://www.stateofthemap.org"><%= "The State of the Map".t -%></a><%= ": 12th-13th July 2008, Limerick, Ireland.".t -%>
         </div>
       </div>
 

@@ -5,9 +5,9 @@
   <td class="inbox-subject" bgcolor='<%= this_colour %>'><%= link_to h(message_summary.title), :controller => 'message', :action => 'read', :message_id => message_summary.id  %></td>
   <td class="inbox-sent" bgcolor='<%= this_colour %>'><%= message_summary.sent_on %></td>
   <% if message_summary.message_read? %>
-    <td><%= button_to 'Mark as unread', :controller => 'message', :action => 'mark', :message_id => message_summary.id, :mark => 'unread' %></td>
+    <td><%= button_to "Mark as unread".t, :controller => 'message', :action => 'mark', :message_id => message_summary.id, :mark => 'unread' %></td>
   <% else %>
-    <td><%= button_to 'Mark as read', :controller => 'message', :action => 'mark', :message_id => message_summary.id, :mark => 'read' %></td>
+    <td><%= button_to "Mark as read".t, :controller => 'message', :action => 'mark', :message_id => message_summary.id, :mark => 'read' %></td>
   <% end %>
-  <td><%= button_to 'Reply', :controller => 'message', :action => 'reply', :message_id => message_summary.id %></td>
+  <td><%= button_to "Reply".t, :controller => 'message', :action => 'reply', :message_id => message_summary.id %></td>
 </tr>

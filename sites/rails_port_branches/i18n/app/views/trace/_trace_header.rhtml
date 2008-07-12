@@ -5,20 +5,20 @@
 <p>
   <%= rss_link_to :action => 'georss', :display_name => @display_name, :tag => @tag %>
   <% if @user.nil? or @display_name.nil? or @user.display_name != @display_name %>
-    | <%= link_to 'See just your traces, or upload a trace', :action => 'mine' %>
+    | <%= link_to "See just your traces, or upload a trace".t, :action => 'mine' %>
   <% end %>
   <% if @tag or @display_name %>
-    | <%= link_to 'See all traces', :controller => 'trace', :action => 'list' %>
+    | <%= link_to "See all traces".t, :controller => 'trace', :action => 'list' %>
   <% end %>
   <% if @tag and @user and @user.display_name == @display_name %>
-    | <%= link_to 'See all your traces', :controller => 'trace', :action => 'mine' %>
+    | <%= link_to "See all your traces".t, :controller => 'trace', :action => 'mine' %>
   <% end %>
 </p>
 
 <% if @user and @user.traces.count(:conditions => "inserted=0") > 4 %>
   <p>
-    You have <%= @user.traces.count(:conditions => "inserted=0") %> traces 
+    <%= "You have %s traces 
     waiting for upload. Please consider waiting for these to finish before 
-    uploading any more, so as not to block the queue for other users.
+    uploading any more, so as not to block the queue for other users.".t / @user.traces.count(:conditions => "inserted=0") %>
   </p>
 <% end %>

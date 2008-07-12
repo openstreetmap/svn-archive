@@ -33,9 +33,11 @@ public class SimplifyWayAction extends JosmAction {
 
 	public void actionPerformed(ActionEvent e) {
 		Collection<OsmPrimitive> selection = Main.ds.getSelected();
-
-		if (selection.size() == 1 && selection.iterator().next() instanceof Way) {
-			simplifyWay((Way) selection.iterator().next());
+		
+		for (OsmPrimitive prim : selection) {
+			if (prim instanceof Way) {
+				simplifyWay((Way) prim);
+			}
 		}
 	}
 

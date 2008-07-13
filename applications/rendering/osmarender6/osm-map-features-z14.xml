@@ -39,7 +39,7 @@
         <rule e="way" k="landuse" v="commercial">
             <area class="landuse-commercial"/>
         </rule>
-        <rule e="way" k="landuse" v="quarry">
+        <rule e="way" k="landuse" v="landfill|quarry">
             <area class="landuse-quarry"/>
         </rule>
         <rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">

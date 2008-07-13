@@ -1,0 +1,10 @@
+package altitudeprofile;
+
+message Route {
+  message PointType {
+    required float lat = 1;
+    required float lon = 2;
+  }
+
+  repeated PointType point = 1;
+}

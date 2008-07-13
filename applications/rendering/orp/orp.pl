@@ -28,7 +28,6 @@
 # - something with symbols being copied from some directory. didn't understand
 #   what it does so couldn't implement it. Search for "symbolsDir".
 # - "s" attribute on rules is unsupported in some esoteric cases
-# - addclass is not supported properly
 #
 # Possible optimisations:
 # - generate more concise SVG output by naming things differently
@@ -140,6 +139,7 @@ our $node_storage = {};
 our $way_storage = {};
 our $relation_storage = {};
 our $text_index = {};
+our $meter2pixel = {};
 
 my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage);
 my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
@@ -263,6 +263,9 @@ my $showBorder = get_variable("showBorder", "no");
 my $showScale = get_variable("showScale", "no");
 my $showLicense = get_variable("showLicense", "no");
 our $textAttenuation = get_variable("textAttenuation");
+
+# the following conversion factor is required to support width tags in meters
+$meter2pixel = get_variable("meter2pixel", "0.1375");
 
 # extra height for marginalia
 my $marginaliaTopHeight = ($title ne "") ? 40 : 
@@ -426,7 +429,7 @@ else
             'inkscape:groupmode' => 'layer',
             'id' => "layer$layer",
             'inkscape:label' => "Layer $layer");
-        process_rule($_, 0, undef, $layer) foreach ($rulelist->get_nodelist());
+        process_rule($_, 0, $layer) foreach ($rulelist->get_nodelist());
         $writer->endTag('g');
     }
 }
@@ -682,7 +685,7 @@ sub draw_marginalia
 sub process_layer
 {
 
-    my ($layernode, $depth, $addclass, $layer) = @_;
+    my ($layernode, $depth, $layer) = @_;
 
 
     my $lname = $layernode->getAttribute("name");
@@ -699,13 +702,13 @@ sub process_layer
     {
         my $name = $_->getName() || "";
 
-        if ($name eq "rule")
+        if($name eq "rule")
         {
-            process_rule($_, $depth+1, $addclass, $layer);
+            process_rule($_, $depth+1, $layer);
         }
         elsif ($name ne "")
         {
-            debug("'$name' not allowed at top level in layer '$lname'; ignored");
+            debug("'$name' id not allowed layer instruction '$lname' ignored");
         }
     }
     $writer->endTag("g");
@@ -723,7 +726,6 @@ sub process_layer
 # Parameters:
 # $rulenode - the XML::XPath node for the <rule> or <else> element
 #   being processed.
-# $addclass - an array reference containing accumulated <addclass> contents
 # $depth -    the recursion depth.
 # $layer -    the OSM layer being processed (undef for no layer restriction)
 # $previous - the XML::XPath node for the previous <rule> of the 
@@ -731,7 +733,7 @@ sub process_layer
 # -------------------------------------------------------------------
 sub process_rule
 {
-    my ($rulenode, $depth, $addclass, $layer, $previous) = @_;
+    my ($rulenode, $depth, $layer, $previous) = @_;
 
     # normally, we pass on the given layer attribute unchanged, and it
     # will the be honoured in the various drawing instruction handlers.
@@ -782,12 +784,6 @@ sub process_rule
                 '" matches '.$selection->[$depth+1]->size().' elements');
         }
     }
-    elsif ($rulenode->getName() eq "addclass")
-    {
-        # this is a dirty workaround; addclass is ignored but child elements
-        # are processed.
-        $selection->[$depth+1] = $selection->[$depth];
-    }
     else 
     {
         die("internal error, process_rule must not be called with '".
@@ -817,10 +813,10 @@ sub process_rule
         {
               process_layer($_, $depth+1, $layer);
         }
-        elsif ($name eq "rule" || $name eq "addclass")
+        elsif ($name eq "rule")
         {
             # a nested rule; make recursive call.
-            process_rule($_, $depth+1, $addclass, $layer);
+            process_rule($_, $depth+1, $layer);
         }
         elsif ($name eq "else")
         {
@@ -832,7 +828,7 @@ sub process_rule
             else
             {
                 # make recursive call
-                process_rule($_, $depth+1, $addclass, $layer, $previous_child);
+                process_rule($_, $depth+1, $layer, $previous_child);
             }
         }
         elsif ($name eq "line")

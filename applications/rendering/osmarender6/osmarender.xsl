@@ -71,6 +71,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   <xsl:param name="showRelationRoute" select="/rules/@showRelationRoute"/>
 
+  <xsl:param name="meter2pixelFactor" select="/rules/@meter2pixel"/>
+
+
   <xsl:key name="nodeById" match="/osm/node" use="@id"/>
   <xsl:key name="wayById" match="/osm/way" use="@id"/>
   <xsl:key name="wayByNode" match="/osm/way" use="nd/@ref"/>
@@ -392,6 +395,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name='instruction' />
     <xsl:param name='pathId'/>
     <xsl:param name='extraClasses'/>
+    <xsl:param name='extraStyles'/>
 
     <xsl:variable name="maskId" select="concat('mask_',$pathId)"/>
 
@@ -415,6 +419,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:attribute name="mask">url(#<xsl:value-of select="$maskId"/>)</xsl:attribute>
       </xsl:if>
       <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+      <!-- Add additional style definitions if set -->
+      <xsl:if test="string($extraStyles) != ''">
+        <xsl:attribute name="style">
+          <xsl:value-of select="$extraStyles"/>
+        </xsl:attribute> 
+      </xsl:if>
     </use>
   </xsl:template>
 
@@ -459,12 +469,86 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       </xsl:if>
     </xsl:variable>
 
+    <xsl:variable name='extraStyles'>
+      <!-- honor-width feature
+           
+           If current instruction has 'honor-width' set to 'yes', make use of the
+           way's 'width' tag by adding an extra 'style' attribute to current way
+           (setting stroke-width to a new value).
+      -->
+
+      <xsl:if test="$instruction/@honor-width = 'yes'">
+        <!-- Get minimum width, use default of '0.1' if not set -->
+        <xsl:variable name='minimumWayWidth'>
+          <xsl:choose>
+            <xsl:when test='$instruction/@minimum-width'><xsl:value-of select='$instruction/@minimum-width'/></xsl:when>
+            <xsl:otherwise>0.1</xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <!-- Get maximum width, use default of '100' if not set -->
+        <xsl:variable name='maximumWayWidth'>
+          <xsl:choose>
+            <xsl:when test='$instruction/@maximum-width'><xsl:value-of select='$instruction/@maximum-width'/></xsl:when>
+            <xsl:otherwise>100</xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:variable name='givenWidth'>
+          <xsl:variable name='width'>
+            <xsl:choose>
+              <xsl:when test="contains($way/tag[@k = 'width']/@v, ' m')">
+                  <xsl:value-of select="substring-before($way/tag[@k = 'width']/@v, ' m')" />
+              </xsl:when>
+              <xsl:when test="contains($way/tag[@k = 'width']/@v, 'm')">
+                  <xsl:value-of select="substring-before($way/tag[@k = 'width']/@v, 'm')" />
+              </xsl:when>
+              <xsl:otherwise><xsl:value-of select="$way/tag[@k = 'width']/@v"/></xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <xsl:choose>
+            <xsl:when test='$width &lt; $minimumWayWidth'><xsl:value-of select='$minimumWayWidth'/></xsl:when>
+            <xsl:when test='$width &gt; $maximumWayWidth'><xsl:value-of select='$maximumWayWidth'/></xsl:when>
+            <xsl:otherwise><xsl:value-of select='$width'/></xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:if test="number($givenWidth) &gt; 0">
+
+          <!-- Get scaling factor, use default of '1' (no scaling) if not set -->
+          <xsl:variable name='ScaleFactor'>
+            <xsl:choose>
+              <xsl:when test="$instruction/@width-scale-factor != ''">
+                <xsl:value-of select='$instruction/@width-scale-factor'/>
+              </xsl:when>
+              <xsl:otherwise>1</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <!-- Set extraStyles' value -->
+          <xsl:if test="number($givenWidth) &gt; 0">
+            <xsl:choose>
+              <xsl:when test="number($meter2pixelFactor)">
+                <xsl:value-of select="concat('stroke-width:', ($ScaleFactor * $givenWidth * $meter2pixelFactor), 'px')"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="concat('stroke-width:', ($ScaleFactor * $givenWidth * 0.1375), 'px')"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:if>
+
+        </xsl:if>
+      </xsl:if>
+    </xsl:variable>
+
     <xsl:choose>
       <xsl:when test="$instruction/@smart-linecap='no'">
         <xsl:call-template name='drawPath'>
           <xsl:with-param name='pathId' select="concat('way_normal_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses" select='$extraClasses'/>
+          <xsl:with-param name="extraStyles" select='$extraStyles'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -473,6 +557,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name="way" select="$way"/>
           <xsl:with-param name="layer" select="$layer"/>
           <xsl:with-param name="extraClasses" select='$extraClasses'/>
+          <xsl:with-param name="extraStyles" select='$extraStyles'/>
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -485,6 +570,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- The current way element if applicable -->
     <xsl:param name="layer"/>
     <xsl:param name="extraClasses"/>
+    <xsl:param name="extraStyles"/>
 
     <!-- The first half of the first segment and the last half of the last segment are treated differently from the main
 			part of the way path.  The main part is always rendered with a butt line-cap.  Each end fragment is rendered with
@@ -498,6 +584,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:with-param name='pathId' select="concat('way_mid_',$way/@id)"/>
         <xsl:with-param name='instruction' select='$instruction'/>
         <xsl:with-param name='extraClasses'>osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end</xsl:with-param>
+        <xsl:with-param name='extraStyles' select='$extraStyles'/>
       </xsl:call-template>
     </xsl:if>
 
@@ -522,6 +609,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-no-marker-end</xsl:with-param>
+          <xsl:with-param name='extraStyles' select='$extraStyles'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$firstNodeLowerLayerConnectionCount>0">
@@ -529,6 +617,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-butt osmarender-no-marker-end</xsl:with-param>
+          <xsl:with-param name='extraStyles' select='$extraStyles'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -536,6 +625,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/>  osmarender-stroke-linecap-round osmarender-no-marker-end</xsl:with-param>
+          <xsl:with-param name='extraStyles' select='$extraStyles'/>
         </xsl:call-template>
       </xsl:otherwise>
 
@@ -562,6 +652,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-no-marker-start</xsl:with-param>
+          <xsl:with-param name='extraStyles' select='$extraStyles'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$lastNodeLowerLayerConnectionCount>0">
@@ -569,6 +660,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-butt osmarender-no-marker-start</xsl:with-param>
+          <xsl:with-param name='extraStyles' select='$extraStyles'/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -576,6 +668,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
           <xsl:with-param name='instruction' select='$instruction'/>
           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-round osmarender-no-marker-start</xsl:with-param>
+          <xsl:with-param name='extraStyles' select='$extraStyles'/>
         </xsl:call-template>
       </xsl:otherwise>
 
@@ -2488,7 +2581,7 @@ against infinite loops -->
   </xsl:template>
 
   <!-- Some attribute shouldn't be copied -->
-  <xsl:template match="@type|@ref|@scale|@smart-linecap" mode="copyAttributes" />
+  <xsl:template match="@type|@ref|@scale|@smart-linecap|@honor-width" mode="copyAttributes" />
 
   <!-- Copy all other attributes  -->
   <xsl:template match="@*" mode="copyAttributes">

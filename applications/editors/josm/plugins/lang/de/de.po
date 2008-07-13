@@ -5922,11 +5922,11 @@ msgstr "Bauland bearbeiten"
 
 #: ../lang/presets.java:1736
 msgid "Landuse/Railway"
-msgstr "Landnutzung/Eisenbahn"
+msgstr "Landnutzung/Eisenbahngelände"
 
 #: ../lang/presets.java:1737
 msgid "Edit Railway Landuse"
-msgstr "Eisenbahnfläche bearbeiten"
+msgstr "Eisenbahngelände bearbeiten"
 
 #: ../lang/presets.java:1743
 msgid "Landuse/Construction"

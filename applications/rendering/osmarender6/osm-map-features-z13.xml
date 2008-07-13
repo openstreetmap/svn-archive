@@ -1520,7 +1520,7 @@
             }
 
             .military-area {
-                fill: #969632;
+                fill: #a6a642;
                 stroke: #eeeeee;
                 stroke-width: 0.2px;
             }

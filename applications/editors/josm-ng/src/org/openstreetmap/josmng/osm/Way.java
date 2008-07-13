@@ -48,6 +48,10 @@ public class Way extends OsmPrimitive {
         setNodesImpl(n.toArray(new Node[n.size()]));
         source.postEdit(ch);
     }
+
+    @Override void visit(Visitor v) {
+        v.visit(this);
+    }
     
     void setNodesImpl(Node[] n) {
         nodes = n;

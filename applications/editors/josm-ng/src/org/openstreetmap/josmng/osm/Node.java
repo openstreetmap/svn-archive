@@ -50,6 +50,10 @@ public final class Node extends OsmPrimitive implements Coordinate {
         setCoordinateImpl(coor.getLatitude(), coor.getLongitude());
         source.postEdit(edit);
     }
+
+    @Override void visit(Visitor v) {
+        v.visit(this);
+    }
     
     private void setCoordinateImpl(double lat, double lon) {
         this.lat = lat;

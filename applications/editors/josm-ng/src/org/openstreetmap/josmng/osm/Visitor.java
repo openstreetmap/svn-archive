@@ -33,15 +33,6 @@ public abstract class Visitor {
     protected void visit(Relation r) {}
     
     public void visitCollection(Iterable<? extends OsmPrimitive> collection) {
-        for (OsmPrimitive prim : collection) {
-            if (prim instanceof Node) {
-                visit(((Node)prim));
-            } else if (prim instanceof Way) {
-                visit((Way)prim);
-            } else if (prim instanceof Relation) {
-                visit((Relation)prim);
-            }
-        }
-        
+        for (OsmPrimitive prim : collection) prim.visit(this);
     }
 }

@@ -4082,7 +4082,7 @@ msgstr "Gebirgspass"
 
 #: ../lang/presets.java:490
 msgid "Ways/Track"
-msgstr "Wege/feldweg"
+msgstr "Wege/Feldweg"
 
 #: ../lang/presets.java:491
 msgid "Edit a Track"

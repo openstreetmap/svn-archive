@@ -103,6 +103,8 @@ public abstract class OsmPrimitive {
         }
     }
 
+    abstract void visit(Visitor v);
+    
     void setDeletedImpl(boolean deleted) {
         if (deleted) {
             flags |= FLAG_DELETED;

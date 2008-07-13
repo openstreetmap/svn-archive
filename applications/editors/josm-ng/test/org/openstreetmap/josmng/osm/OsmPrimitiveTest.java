@@ -148,5 +148,9 @@ public class OsmPrimitiveTest {
         public Prim() {
             super(testing, 1, -1, "", true);
         }        
+
+        @Override void visit(Visitor v) {
+            throw new UnsupportedOperationException("Not in test");
+        }
     }
 }

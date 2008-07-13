@@ -14,7 +14,7 @@ use strict;
 use warnings;
 require "orp-bbox-area-center.pm";
 
-our ($writer, $projection, $symbolScale, $textAttenuation, $debug);
+our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel);
 
 
 # -------------------------------------------------------------------
@@ -42,22 +42,61 @@ sub draw_lines
     my $class = $linenode->getAttribute("class");
     my $mask_class = $linenode->getAttribute("mask-class") || '';
     my $group_started = 0;
+    my $honor_width = ($linenode->getAttribute("honor-width") eq "yes");
+
+    # explicit way specific style
+    my $style="";
 
     foreach ($selected->members)
     {
         next unless (ref $_  eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
+
+	# this is a special case for ways (e.g. rivers) where we honor a
+	# width=something tag.
+	# It is used to generate rivers of different width, depending on the
+	# value of the width tag.
+	# This is done by an explicit specification of a
+	# style="stroke-width:..px" tag in the generated SVG output
+	$style="";
+	if ($honor_width) {
+	  if (defined($_->{"tags"}->{"width"})) {
+	    my $maxwidth = $linenode->getAttribute("maximum-width");
+	    if ($maxwidth eq "") {$maxwidth = 100}
+	    my $minwidth = $linenode->getAttribute("minimum-width");
+	    if ($minwidth eq "") {$minwidth = 0.1}
+	    my $scale = $linenode->getAttribute("width-scale-factor");
+	    if ($scale eq "") {$scale = 1}
+
+	    my $width = $_->{"tags"}->{"width"};
+	    $width =~ s/m$//;
+	    my $w;
+	    # make sure, that width is a numeric value
+	    { no warnings; $w = $meter2pixel*$width if 0+$width;}
+
+	    if (defined($w)) {
+	      # make sure that width is inside the desired range
+	      my $maxw = $meter2pixel*$maxwidth;
+	      my $minw = $meter2pixel*$minwidth;
+	      if ($w > $maxw) {$w = $maxw;}
+	      if ($w < $minw) {$w = $minw;}
+	      $w *= $scale;
+	      $style = "stroke-width:${w}px";
+	    }
+	  }
+	}
+
         $writer->startTag("g", 
             "class" => $class,
             ($mask_class ne "") ? ("mask-class", $mask_class) : ()) unless $group_started;
         $group_started = 1;
         if ($smart_linecaps)
         {
-            draw_way_with_smart_linecaps($linenode, $layer, $_, $class);
+            draw_way_with_smart_linecaps($linenode, $layer, $_, $class, $style);
         }
         else
         {
-            draw_path($linenode, "way_normal_".$_->{"id"});
+            draw_path($linenode, "way_normal_".$_->{"id"}, $style);
         }
     }
     $writer->endTag("g") if ($group_started);
@@ -76,7 +115,7 @@ sub draw_lines
 
 sub draw_way_with_smart_linecaps
 {
-    my ($linenode, $layer, $way, $class) = @_;
+    my ($linenode, $layer, $way, $class, $style) = @_;
 
     # convenience variables
     my $id = $way->{"id"};
@@ -86,7 +125,7 @@ sub draw_way_with_smart_linecaps
 
     # first draw middle segment if we have more than 2 nodes
     draw_path($linenode, "way_mid_$id", 
-        "osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end") 
+        "osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end", $style) 
         if (scalar(@$nodes)>2);
 
     # count connectors on first and last node
@@ -116,32 +155,32 @@ sub draw_way_with_smart_linecaps
 
     if ($first_node_connection_count == 1)
     {
-        draw_path($linenode, "way_start_$id", "osmarender-no-marker-end");
+        draw_path($linenode, "way_start_$id", "osmarender-no-marker-end", $style);
     } 
     elsif ($first_node_lower_layer_connection_count > 0)
     {
         draw_path($linenode, "way_start_$id", 
-            "osmarender-stroke-linecap-butt osmarender-no-marker-end");
+            "osmarender-stroke-linecap-butt osmarender-no-marker-end", $style);
     }
     else
     {
         draw_path($linenode, "way_start_$id",
-            "osmarender-stroke-linecap-round osmarender-no-marker-end");
+            "osmarender-stroke-linecap-round osmarender-no-marker-end", $style);
     }
 
     if ($last_node_connection_count == 1)
     {
-        draw_path($linenode, "way_end_$id", "osmarender-no-marker-start");
+        draw_path($linenode, "way_end_$id", "osmarender-no-marker-start", $style);
     } 
     elsif ($last_node_lower_layer_connection_count > 0)
     {
         draw_path($linenode, "way_end_$id", 
-            "osmarender-stroke-linecap-butt osmarender-no-marker-start");
+            "osmarender-stroke-linecap-butt osmarender-no-marker-start", $style);
     }
     else
     {
         draw_path($linenode, "way_end_$id", 
-            "osmarender-stroke-linecap-round osmarender-no-marker-start");
+            "osmarender-stroke-linecap-round osmarender-no-marker-start", $style);
     }
 }
 
@@ -719,17 +758,18 @@ sub draw_way_markers
 }
 
 # -------------------------------------------------------------------
-# sub draw_path($rulenode, $path_id, $class)
+# sub draw_path($rulenode, $path_id, $class, $style)
 #
 # draws an SVG path with the given path reference and style.
 # -------------------------------------------------------------------
 sub draw_path
 {
-    my ($rulenode, $path_id, $addclass) = @_;
+    my ($rulenode, $path_id, $addclass, $style) = @_;
 
     my $mask_class = $rulenode->getAttribute("mask-class");
     my $class = $rulenode->getAttribute("class");
     my $extra_attr = [];
+
     if ($mask_class ne "")
     {
         my $mask_id = "mask_".$path_id;
@@ -752,11 +792,17 @@ sub draw_path
         $writer->endTag("mask");
         $extra_attr = [ "mask" => "url(#".$mask_id.")" ];
     }
-
-    $writer->emptyTag("use", 
-        "xlink:href" => "#$path_id",
-        @$extra_attr,
-        "class" => defined($addclass) ? "$class $addclass" : $class);
+    if (defined($style) and $style ne "") {
+      $writer->emptyTag("use", 
+			"xlink:href" => "#$path_id", "style" => "$style",
+			@$extra_attr,
+			"class" => defined($addclass) ? "$class $addclass" : $class);
+    } else {
+      $writer->emptyTag("use", 
+			"xlink:href" => "#$path_id",
+			@$extra_attr,
+			"class" => defined($addclass) ? "$class $addclass" : $class);
+    }
 }
 
 1;

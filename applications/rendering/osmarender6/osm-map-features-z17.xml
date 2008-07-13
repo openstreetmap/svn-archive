@@ -21,7 +21,8 @@
     showBorder="no"
     showLicense="no"
     interactive="no"
-    showRelationRoute="no">
+    showRelationRoute="no"
+    meter2pixel="0.1375">
 
     <!--bounds_mkr1-->
     <!--bounds_mkr2-->
@@ -253,28 +254,28 @@
             <area class="waterway-riverbank"/>
         </rule>
         <rule e="way" k="waterway" v="river">
-            <line class="waterway-casing waterway-river-casing"/>
+            <line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
         </rule>
         <rule e="way" k="waterway" v="stream">
-            <line class="waterway-casing waterway-stream-casing"/>
+            <line class="waterway-casing waterway-stream-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="2"/>
         </rule>
         <rule e="way" k="waterway" v="canal">
-            <line class="waterway-casing waterway-canal-casing"/>
+            <line class="waterway-casing waterway-canal-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
         </rule>
         <rule e="way" k="waterway" v="drain">
-            <line class="waterway-casing waterway-drain-casing"/>
+            <line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
         </rule>
         <rule e="way" k="waterway" v="river">
-            <line class="waterway-core waterway-river-core"/>
+            <line class="waterway-core waterway-river-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
         </rule>
         <rule e="way" k="waterway" v="stream">
-            <line class="waterway-core waterway-stream-core"/>
+            <line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="2"/>
         </rule>
         <rule e="way" k="waterway" v="canal">
-            <line class="waterway-core waterway-canal-core"/>
+            <line class="waterway-core waterway-canal-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
         </rule>
         <rule e="way" k="waterway" v="drain">
-            <line class="waterway-core waterway-drain-core"/>
+            <line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
         </rule>
         <rule e="way" k="waterway" v="dock">
             <area class="natural-water"/>

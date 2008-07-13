@@ -1,0 +1,42 @@
+application: osm-route-altitude-profile
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /
+  script: altitude.py
+
+- url: /profile/.*
+  script: altitude.py
+
+- url: /load
+  script: myloader.py
+  login: admin
+
+- url: /truncate
+  script: truncate.py
+  login: admin
+
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
+
+skip_files: |
+ ^(.*/)?(
+ (app\.yaml)|
+ (app\.yml)|
+ (index\.yaml)|
+ (index\.yml)|
+ (.*\.csv)|
+ (data/.*)|
+ (test/.*)|
+ (src/import-google-apps-engine\.sh)
+ (src/import-google-apps-engine\.py)
+ (#.*#)|
+ (.*~)|
+ (.*\.py[co])|
+ (.*/RCS/.*)|
+ (\..*)|
+ )$
+

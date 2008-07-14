@@ -31,10 +31,13 @@ def tiledetails(request,layername,z,x,y):
   userid=None
   t=Tile(layername,z,x,y)
   (layer, base_z,base_x,base_y) = t.basetileset()
-  # basetileset returns (None,None,None,None) if invalid!
-  basetilepath = Settings().getSetting(name='base_tile_path')
-  tilefile = os.path.join(basetilepath,"%s_%s_%d" % (layername,base_z,base_x//1000),"%s_%s"%(base_x,base_y))
-
+  if base_z == None:
+    # basetileset returns (None,None,None,None) if invalid
+    tilefile = ''
+  else:
+   basetilepath = Settings().getSetting(name='base_tile_path')
+   tilefile = os.path.join(basetilepath,"%s_%s_%d" % (layername,base_z,base_x//1000),"%s_%s"%(base_x,base_y))
+ 
   try: 
     fstat = os.stat(tilefile)
     (basetile_fsize,basetile_mtime) = (fstat[6], datetime.fromtimestamp(fstat[8]))

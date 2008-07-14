@@ -33,7 +33,7 @@ def tiledetails(request,layername,z,x,y):
   (layer, base_z,base_x,base_y) = t.basetileset()
   # basetileset returns (None,None,None,None) if invalid!
   basetilepath = Settings().getSetting(name='base_tile_path')
-  tilefile = os.path.join(basetilepath,layername+"_%s" % base_z,"%s_%s"%(base_x,base_y))
+  tilefile = os.path.join(basetilepath,"%s_%s_%d" % (layername,base_z,base_x//1000),"%s_%s"%(base_x,base_y))
 
   try: 
     fstat = os.stat(tilefile)

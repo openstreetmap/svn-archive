@@ -54,10 +54,13 @@ class Tile:
   def serve_tile(self, layername):
     """ Return the PNG data of a tile """
     (layer, base_z,base_x,base_y) = self.basetileset() 
-    # basetileset returns (None,None,None,None) if invalid!
-    # basetilepath could be take from the Settings, hardcode for efficiency
+    # basetilepath could be take from the Settings, hardcode for efficiency 
     basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
-    tilesetfile = os.path.join(basetilepath,"%s_%s_%d"%(layername,base_z,base_x//1000),str(base_x)+'_'+str(base_y))
+    if base_z == None:
+      # basetileset returns (None,None,None,None) if invalid
+      tilesetfile = ''
+    else:
+      tilesetfile = os.path.join(basetilepath,"%s_%s_%d"%(layername,base_z,base_x//1000),str(base_x)+'_'+str(base_y))
     try:
       f = open(tilesetfile,'rb')
       #calculate file offset
@@ -76,10 +79,10 @@ class Tile:
       #return  "(%d,%d,%d) as %d offset1 %d  offset2 %d " % (self.z,self.x,self.y,offset,d_offset,d_offset_next)
     except IOError:
       d_offset = 0
-      #next 2 lines are temporary fallback to legacy tiles
+      #next 3 lines are temporary fallback to legacy tiles
       data = self.serve_legacy_tile(layername)
-      if data > 3 or data == None: return data # we found a tile or found nothing at all
-      else: d_offset = data    # found a blank tile, use blankness value
+      if data > 3: return data        # we found a tile
+      else: d_offset = max(data,0)    # return blankness value or 0 if it is None
     if d_offset > 3:
       f.seek(d_offset)
       data = f.read(d_offset_next-d_offset)

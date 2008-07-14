@@ -31,13 +31,13 @@ class Lowzoom(Tileset):
     ctx.scale(0.5, 0.5)
     for i in range(0,2):
       for j in range(0,2):
-        if z == self.base_z+5: imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile(layer.name))
+        if z == self.base_z+5: imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
         else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
         try:
           image = cairo.ImageSurface.create_from_png(imagefile)
         except IOError, e:
           print "IOError %s at %d %d" % (e,2*x+i,2*y+j)
-          image = cairo.ImageSurface.create_from_png(StringIO.StringIO(Tile(None,100,0,0).serve_tile('tile')))
+          image = cairo.ImageSurface.create_from_png(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
         ctx.set_source_surface(image,256*i,256*j)
 	#ctx.set_operator(cairo.CAIRO_OPERATOR_SOURCE)
         ctx.paint()

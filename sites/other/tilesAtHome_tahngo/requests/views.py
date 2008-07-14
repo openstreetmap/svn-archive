@@ -197,7 +197,7 @@ def take(request):
         if user is not None:
             #"You provided a correct username and password!"
             try:
- 	        req = Request.objects.filter(status=0)[0]
+ 	        req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
  	        req.status=1
  	        req.client = user
  	        req.clientping_time=datetime.now()

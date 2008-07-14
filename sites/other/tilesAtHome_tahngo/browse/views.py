@@ -44,7 +44,9 @@ def tiledetails(request,layername,z,x,y):
   except OSError: 
     (basetile_fsize,basetile_mtime) = None, None
 
-  if userid != None: user = User.objects.get(pk=userid)
+  if userid != None: 
+    try: user = User.objects.get(pk=userid)
+    except User.DoesNotExist: user = "Nonexistent User ID %d" % userid
   else: user='Unknown'
 
   return render_to_response('tile_details.html',{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user})

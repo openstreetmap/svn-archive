@@ -49,16 +49,31 @@ class Lowzoom(Tileset):
 def find_old_lowzooms(base_tile_path):
   m = re.compile("\D+")
   old_lowzooms = {} # return a dict with (z,x,y) tuples that need an update
+  lz_path = os.path.join(base_tile_path,'tile_6_0')
   now = time()
   for i in range (0,5):
     path= os.path.join(base_tile_path,'tile_12_%d' % i)
     for f in os.listdir(path):
-      age = now - os.stat(os.path.join(path,f)).st_mtime
+      mtime = os.stat(os.path.join(path,f)).st_mtime
+      age = now - mtime
       #if newer than 2 days
       if age < 87846:
         [x,y] = tuple(m.split(f))
         x,y = int(x)>>6,int(y)>>6
-        old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
+        try: 
+          lz_file = os.path.join(lz_path,"%d_%d" % (x,y))
+          lz_mtime = os.stat(os.path.join(lz_path,lz_file)).st_mtime
+        except:
+          #lowzoom file didn't exist yet. create.
+          old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
+
+        if mtime > lz_mtime:
+          #print "New tiles in old lowzoom (%d %d ) found" % (x,y)
+          old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
+        else: 
+          #print "New tiles in new lowzoom (%d %d ) found" % (x,y)
+
+
   #finally always dd (0,0,0)
   old_lowzooms['0_0_0']=(0,0,0)
   return old_lowzooms

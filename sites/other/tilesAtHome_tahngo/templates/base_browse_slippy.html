@@ -136,7 +136,7 @@ var urls=url.split("/")
 var x=urls[urls.length-2]
 var y=urls[urls.length-1].split(".")[0]
 var z=urls[urls.length-3]
-window.open("/tahngo/Browse/details/tile/"+z+"/"+x+"/"+y)
+window.open("{% url tah.browse.views.tiledetails %}tile/"+z+"/"+x+"/"+y)
 }
 
 	    function renderTile(tile,z) {

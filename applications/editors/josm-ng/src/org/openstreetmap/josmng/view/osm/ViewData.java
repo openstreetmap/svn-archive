@@ -296,5 +296,8 @@ class ViewData {
             updateWay(getViewForWay(way));
             fireChange();
         }
+
+        public void relationMembersChanged(Relation r) {
+        }
     }
 }

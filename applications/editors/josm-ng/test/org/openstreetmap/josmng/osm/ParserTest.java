@@ -67,6 +67,14 @@ public class ParserTest {
         }
         return ways;
     }
+
+    private Collection<Relation> getRelations() {
+        Collection<Relation> rels = new ArrayList<Relation>();
+        for (OsmPrimitive prim : data.getPrimitives(Bounds.WORLD)) {
+            if (prim instanceof Relation) rels.add((Relation)prim);
+        }
+        return rels;
+    }
     
     public @Test void testIndividualEdits() {
         assertEquals(4, getNodes().size());
@@ -94,6 +102,18 @@ public class ParserTest {
         assertEquals("Nenik", w314.getUser());
         
         checkFlags(data.getWay(315), true, false, true);
+        
+        zeros = 0;
+        for (Relation r : getRelations()) {
+            assertFalse(r.getId() < 0);
+            if (r.getId() == 0) zeros++;
+        }
+        assertEquals(1, zeros);
+
+        Relation r315 = data.getRelation(315);
+        checkFlags(r315, true, false, false);
+        assertEquals("route", r315.getTag("type"));
+        assertEquals("", r315.getMembers().get(w314));
     }
 
 }

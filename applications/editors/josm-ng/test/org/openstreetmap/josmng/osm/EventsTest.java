@@ -23,6 +23,7 @@ package org.openstreetmap.josmng.osm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.undo.UndoManager;
 import org.junit.Test;
@@ -42,6 +43,8 @@ public class EventsTest {
     private Node n3 = data.createNode(30, 31); 
     private Way w1 = data.createWay(n1, n2, n3);
     private Way w2 = data.createWay(n3, n1);
+    private Relation r1 = data.createRelation(Collections.singletonMap((OsmPrimitive)n1, "n"));
+    private Relation r2 = data.createRelation(Collections.singletonMap((OsmPrimitive)w1, "w"));
     UndoManager undo = new UndoManager();
     Listener l = new Listener();
     
@@ -55,25 +58,46 @@ public class EventsTest {
 
     public @Test void testAdd() {
         data.createNode(1, 1);
-        l.check(1, 0, 0, 0, 0);
+        l.check(1, 0, 0, 0, 0, 0);
         
         undo.undo();
-        l.check(1, 1, 0, 0, 0);
+        l.check(1, 1, 0, 0, 0, 0);
 
         undo.redo();
-        l.check(2, 1, 0, 0, 0);
+        l.check(2, 1, 0, 0, 0, 0);
     }
     
     public @Test void testRemove() {
         w2.delete();
-        l.check(0, 1, 0, 0, 0);
+        l.check(0, 1, 0, 0, 0, 0);
         
         undo.undo();
-        l.check(1, 1, 0, 0, 0);
+        l.check(1, 1, 0, 0, 0, 0);
 
         undo.redo();
-        l.check(1, 2, 0, 0, 0);
+        l.check(1, 2, 0, 0, 0, 0);
     }
+    
+    public @Test void testMembers() {
+        r1.removeMember(n1);
+        l.check(0, 0, 0, 0, 0, 1);
+        
+        undo.undo();
+        l.check(0, 0, 0, 0, 0, 2);
+
+        undo.redo();
+        l.check(0, 0, 0, 0, 0, 3);
+        
+        r2.addMember(w2, "w");
+        l.check(0, 0, 0, 0, 0, 4);
+        
+        undo.undo();
+        l.check(0, 0, 0, 0, 0, 5);
+
+        undo.redo();
+        l.check(0, 0, 0, 0, 0, 6);
+    }
+    
 
     private class Listener implements DataSetListener {
         List<OsmPrimitive> added = new ArrayList<OsmPrimitive>();
@@ -81,6 +105,7 @@ public class EventsTest {
         List<OsmPrimitive> changed = new ArrayList<OsmPrimitive>();
         List<Node> movedNodes = new ArrayList<Node>();
         List<Way> waysChanged = new ArrayList<Way>();
+        List<Relation> relationsChanged = new ArrayList<Relation>();
 
         public void primtivesAdded(Collection<? extends OsmPrimitive> add) {
             added.addAll(add);
@@ -101,13 +126,18 @@ public class EventsTest {
         public void wayNodesChanged(Way way) {
             waysChanged.add(way);
         }
-        
-        void check(int add, int rem, int change, int nodes, int ways) {
+
+        public void relationMembersChanged(Relation r) {
+            relationsChanged.add(r);
+        }
+
+        void check(int add, int rem, int change, int nodes, int ways, int relations) {
             assertEquals(add, added.size());
             assertEquals(rem, removed.size());
             assertEquals(change, changed.size());
             assertEquals(nodes, movedNodes.size());
             assertEquals(ways, waysChanged.size());
+            assertEquals(relations, relationsChanged.size());
         }
     }
     

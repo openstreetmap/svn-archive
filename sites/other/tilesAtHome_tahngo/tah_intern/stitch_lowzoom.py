@@ -1,4 +1,4 @@
-import os,sys, cairo, tempfile, shutil, StringIO, struct
+import os,sys, cairo, tempfile, shutil, StringIO, re
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
@@ -46,15 +46,29 @@ class Lowzoom(Tileset):
     t= Tile(layer,z,x,y)
     self.add_tile(t,pngfilepath)
 
+def find_old_lowzooms(base_tile_path):
+  m = re.compile("\D+")
+  old_lowzooms = {} # return a dict with (z,x,y) tuples that need an update
+  now = time()
+  for i in range (0,5):
+    path= os.path.join(base_tile_path,'tile_12_%d' % i)
+    for f in os.listdir(path):
+      age = now - os.stat(os.path.join(path,f)).st_mtime
+      #if newer than 2 days
+      if age < 87846:
+        [x,y] = tuple(m.split(f))
+        x,y = int(x)>>6,int(y)>>6
+        old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
+  #finally always dd (0,0,0)
+  old_lowzooms['0_0_0']=(0,0,0)
+  return old_lowzooms
+
 if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
-  for x in range(0,64):
-    for y in range(0,64):
-       now = time()
-       print "do 6 %d %d" % (x,y)
-       lz.create(layer,6,x,y,base_tile_path)
-       print "Took %.1f sec." % (time()-now)
-  print "do 0 0 0"
-  lz.create(layer,0,0,0,base_tile_path)
+  for (z,x,y) in find_old_lowzooms(base_tile_path).values():
+    now = time()
+    print "do %d %d %d" % (z,x,y)
+    lz.create(layer,6,x,y,base_tile_path)
+    print "Took %.1f sec." % (time()-now)

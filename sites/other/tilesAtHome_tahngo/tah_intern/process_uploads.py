@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import os, sys, logging, zipfile, random, re, stat
-sys.path.insert(0, "/var/www/")
+# we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
+sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from datetime import datetime
 from time import sleep,clock,time
@@ -49,8 +50,8 @@ class TileUpload:
           tset = self.movetiles()
           #finally save the tileset at it's place
           time_save = [time()]
-          logging.debug("Saving tileset at (%s,%d,%d,%d)" % (tset.layer,tset.base_z,tset.x,tset.y))
-          (retval,unknown_tiles) = tset.save(self.base_tilepath)
+          logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s" % (tset.layer,tset.base_z,tset.x,tset.y,upload.user_id))
+          (retval,unknown_tiles) = tset.save(self.base_tilepath, upload.user_id.id)
           time_save.append(time())
           if retval:
             # everything went fine. Add to user statistics

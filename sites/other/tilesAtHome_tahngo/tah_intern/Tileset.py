@@ -69,11 +69,12 @@ class Tileset:
         self.add_tile(subt,None)
         self.set_subtiles_blank(subt)
 
-  def save(self,base_tile_path):
+  def save(self,base_tile_path, userid = 0):
     """
 	Returns a tuple: (1,unknown_tiles) (1 being success, unknown_tiles being 
         the number of tiles with unknown blankness, which should always be 0 if 
         the tileset was complete.
+        It will be saved under user id 'userid'
     """
     assert (base_tile_path > '')
     tilepath    = os.path.join(base_tile_path,self.layer.name+'_'+str(self.base_z))
@@ -83,7 +84,6 @@ class Tileset:
     f = os.fdopen(tmp_fd, 'w+b')
     unknown_tiles=0
     FILEVER=1
-    userid=1
     d_offset = 5472 #PNG data starts here
 
     #write the file type version and the user id

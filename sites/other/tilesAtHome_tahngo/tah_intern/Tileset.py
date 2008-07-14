@@ -1,7 +1,7 @@
 from tah.tah_intern.models import Layer
 from tah.tah_intern.Tile import Tile
 from django.core.exceptions import ObjectDoesNotExist
-from struct import pack,unpack
+from struct import pack
 import os,stat
 from shutil import move
 from tempfile import mkstemp
@@ -77,7 +77,7 @@ class Tileset:
         It will be saved under user id 'userid'
     """
     assert (base_tile_path > '')
-    tilepath    = os.path.join(base_tile_path,self.layer.name+'_'+str(self.base_z))
+    tilepath    = os.path.join(base_tile_path,"%s_%s_%d" % (self.layer.name,self.base_z,self.x//1000))
     tilesetfile = os.path.join(tilepath,str(self.x)+'_'+str(self.y))
     #f = open(os.path.join(tilepath,str(self.x)+'_'+str(self.y)),'wb')
     (tmp_fd,tmpfile) = mkstemp()

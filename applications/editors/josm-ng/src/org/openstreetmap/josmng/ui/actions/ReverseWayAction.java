@@ -24,14 +24,12 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.AbstractAction;
 
+import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.Visitor;
 import org.openstreetmap.josmng.osm.Way;
-import org.openstreetmap.josmng.ui.Main;
 import org.openstreetmap.josmng.utils.MenuPosition;
-import org.openstreetmap.josmng.view.EditableLayer;
 import org.openstreetmap.josmng.view.osm.OsmLayer;
 
 /**
@@ -39,25 +37,20 @@ import org.openstreetmap.josmng.view.osm.OsmLayer;
  * @author nenik
  */
 @MenuPosition("Tools")
-public class ReverseWayAction extends AbstractAction {
+public class ReverseWayAction extends AtomicDataSetAction {
     public ReverseWayAction() {
         super("Reverse way");
     }
 
-    public void actionPerformed(ActionEvent e) {
-        final EditableLayer layer = Main.main.getMapView().getCurrentEditLayer();
-        if (layer instanceof OsmLayer) {
-            ((OsmLayer)layer).getDataSet().atomicEdit(new Runnable() {
-                public void run() {
-                    new Visitor() {
-                        protected @Override void visit(Way w) {
-                            List<Node> nodes = new ArrayList<Node>(w.getNodes());
-                            Collections.reverse(nodes);
-                            w.setNodes(nodes);
-                        }
-                    }.visitCollection(layer.getSelection());
-                }
-            }, null);
-        }
+    public @Override void perform(OsmLayer layer, DataSet ds, ActionEvent ae) {
+        new Visitor() {
+            protected @Override void visit(Way w) {
+                List<Node> nodes = new ArrayList<Node>(w.getNodes());
+                Collections.reverse(nodes);
+                w.setNodes(nodes);
+            }
+        }.visitCollection(layer.getSelection());
     }
+
+    
 }

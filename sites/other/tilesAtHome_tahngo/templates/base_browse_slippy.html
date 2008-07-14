@@ -127,7 +127,16 @@ function fnKeypress(e) {
 var zoom=map.getZoom()
 var keyCode = String.fromCharCode(e.charCode ? e.charCode : e.keyCode)
 if (keyCode == 'r') renderTile(goTarget,zoom)
-//if (keyCode == 'i') tileInfo(goTarget)
+if (keyCode == 'i') tileInfo(goTarget)
+}
+
+function tileInfo(tile) {
+var url=tile.src
+var urls=url.split("/")
+var x=urls[urls.length-2]
+var y=urls[urls.length-1].split(".")[0]
+var z=urls[urls.length-3]
+window.open("/tahngo/Browse/details/tile/"+z+"/"+x+"/"+y)
 }
 
 	    function renderTile(tile,z) {
@@ -177,7 +186,8 @@ style=" position: absolute; overflow: hidden; top: 0px; left: 50px; z-index: 100
 </iframe>
 <div style="position:absolute; bottom:10px;width:700px;z-index: 1001;">
   <span style="font-family: arial; font-size: 8pt; color:gray;">
-  At zoom 12: ctrl-click on a tile to render it or press 'r'.
+  At zoom 12:<br/>'r' or ctrl-click renders a tile<br/>
+  'i' shows tile details in a popup.
   </span>
 </div>
 </body>

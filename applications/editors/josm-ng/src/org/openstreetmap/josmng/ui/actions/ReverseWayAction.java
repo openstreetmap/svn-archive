@@ -36,7 +36,7 @@ import org.openstreetmap.josmng.view.osm.OsmLayer;
  *
  * @author nenik
  */
-@MenuPosition("Tools")
+@MenuPosition(value="Tools",shortcut="R")
 public class ReverseWayAction extends AtomicDataSetAction {
     public ReverseWayAction() {
         super("Reverse way");

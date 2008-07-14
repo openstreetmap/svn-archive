@@ -33,6 +33,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import org.openstreetmap.josmng.osm.DataSet;
@@ -215,8 +216,18 @@ public class Main extends javax.swing.JFrame {
     private void initActions() {
         for (Action a : ServiceLoader.load(Action.class)) {
             MenuPosition pos = a.getClass().getAnnotation(MenuPosition.class);
+            if (pos == null) { //skip the action
+                // XXX: warn
+                continue;
+            }
+            
+            JMenuItem item = new JMenuItem(a);
+            KeyStroke key = KeyStroke.getKeyStroke(pos.shortcut());
+            if (key != null) item.setAccelerator(key);
+
             JMenu menu = findMenu(jMenuBar1, pos.value());
-            menu.add(new JMenuItem(a));
+            menu.add(item);
+            
             if (pos.inToolbar()) toolBar.add(a);
         }
     }

@@ -42,5 +42,11 @@ public @interface MenuPosition {
      */
     String value();
     
-    boolean inToolbar() default false; 
+    boolean inToolbar() default false;
+    
+    /**
+     * Assigns a global shortcut to the referenced action
+     * @return a String in the {@link javax.swing.KeyStroke#getKeyStroke(String)} format.
+     */
+    String shortcut() default "";
 }

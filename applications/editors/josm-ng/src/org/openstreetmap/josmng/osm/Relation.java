@@ -20,20 +20,66 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * A representation of an OSM relation. TODO: everything
- * NOT YET MODELED!
+ * A representation of an OSM relation.
  * 
  * @author nenik
  */
 public class Relation extends OsmPrimitive {
+    private final Map<OsmPrimitive,String> members = new HashMap<OsmPrimitive, String>();
 
-    public Relation(DataSet source, long id, int stamp, String user, boolean vis) {
+    Relation(DataSet source, long id, int stamp, String user, boolean vis, Map<OsmPrimitive,String> members) {
         super(source, id, stamp, user, vis);
+        if (members != null) this.members.putAll(members);
     }
 
     @Override void visit(Visitor v) {
         v.visit(this);
     }
     
+    public Map<OsmPrimitive, String> getMembers() {
+        return Collections.unmodifiableMap(members);
+    }
+    
+    public void addMember(OsmPrimitive member, String role) {
+        ChangeMembersEdit ch = new ChangeMembersEdit(member);
+        setMemberRoleImpl(member, role);
+        source.postEdit(ch);
+    }
+
+    public void removeMember(OsmPrimitive member) {
+        ChangeMembersEdit ch = new ChangeMembersEdit(member);
+        setMemberRoleImpl(member, null);
+        source.postEdit(ch);
+    }
+    
+    void setMemberRoleImpl(OsmPrimitive prim, String role) {
+        if (role == null) {
+            members.remove(prim);
+        } else {
+            members.put(prim, role);
+        }
+        source.fireRelationMembersChanged(this);
+    }
+    
+    private class ChangeMembersEdit extends PrimitiveToggleEdit {
+        OsmPrimitive member;
+        String role; // or null if deleted
+
+        public ChangeMembersEdit(OsmPrimitive member) {
+            super ("change members");
+            this.member = member;
+            this.role = members.get(member); // or null if not present
+        }
+        
+        protected void toggle() {
+            String origRole = members.get(member);
+            setMemberRoleImpl(member, role);
+            role = origRole;
+        }
+    }
 }

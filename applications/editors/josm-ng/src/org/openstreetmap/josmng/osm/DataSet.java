@@ -112,6 +112,12 @@ public abstract class DataSet {
         }
     }
 
+    void fireRelationMembersChanged(Relation r) {
+        for (DataSetListener dsl : listeners.getListeners(DataSetListener.class)) {
+            dsl.relationMembersChanged(r);
+        }
+    }
+
     void addRemovePrimitive(OsmPrimitive prim, boolean add) {
         UndoableEdit edit = new AddRemovePrimitiveEdit(prim, add);
         addRemovePrimitiveImpl(prim, add);
@@ -138,6 +144,12 @@ public abstract class DataSet {
         Way way = new Way(this, 0, -1, null, true, nodes);
         addRemovePrimitive(way, true);
         return way;
+    }
+
+    public Relation createRelation(Map<OsmPrimitive,String>members) {
+        Relation r = new Relation(this, 0, -1, null, true, members);
+        addRemovePrimitive(r, true);
+        return r;
     }
 
     // The minimal interface to the backing store implementation.
@@ -307,6 +319,18 @@ public abstract class DataSet {
             return w;
         }
         
+        public Relation getRelation(long id) {
+            return ds.getRelation(id);
+        }
+                
+        public Relation relation(long id, int time, String user, boolean visible, Map<OsmPrimitive,String> members) {
+            ds.getClass(); // null check
+            Relation r = new Relation(ds, id, time, user, visible, members); // XXX vis
+            ds.addPrimitive(r);
+            lastPrimitive = r;
+            return r;
+        }
+        
         /**
          * Replace the tags of the last created primitive.
          * @param pairs
@@ -332,6 +356,15 @@ public abstract class DataSet {
         public void setNodes(List<Node> nodes) {
             ds.getClass(); // null check
             ((Way)lastPrimitive).setNodesImpl(nodes.toArray(new Node[nodes.size()]));
+        }
+        
+        /**
+         * Add a member to the last relation
+         * @param pairs
+         */
+        public void addMember(OsmPrimitive member, String role) {
+            ds.getClass(); // null check
+            ((Relation)lastPrimitive).setMemberRoleImpl(member, role);
         }
         
         /**

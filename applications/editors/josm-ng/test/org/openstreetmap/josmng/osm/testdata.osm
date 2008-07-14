@@ -43,4 +43,16 @@
     <nd ref='43' />
     <tag k='highway' v='residential' />
   </way>
+
+  <relation id='315' timestamp='2007-11-03T12:36:14+00:00' user='Nenik' visible='true'>
+    <member type='way' ref='314' role=''/>
+    <member type='way' ref='-4' role=''/>
+    <tag k='type' v='route' />
+  </relation>
+
+  <relation id='-1' timestamp='2007-11-03T12:36:14+00:00' user='Nenik' visible='true'>
+    <member type='way' ref='314' role='one'/>
+    <member type='way' ref='315' role='two'/>
+    <tag k='type' v='bs' />
+  </relation>
 </osm>

@@ -65,4 +65,12 @@ public interface DataSetListener extends EventListener {
      * @param way The way that was modified.
      */
     public void wayNodesChanged(Way way);
+
+    /**
+     * A relation's members have changed.
+     * @param relation The relation that was modified.
+     */
+    public void relationMembersChanged(Relation r);
+    
+    
 }

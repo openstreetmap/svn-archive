@@ -38,6 +38,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Relation;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.utils.Convertor;
@@ -141,9 +142,33 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
             } else if (qName.equals("tag")) {
                 factory.putTag(getString(atts, "k"), getString(atts, "v"));
             } else if (qName.equals("relation")) {
-                // TODO: relation parsing 
+                //   <relation id="560" timestamp="2008-03-10T17:41:30Z" user="robx">
+                //    <member type="way" ref="4439126" role="inner"/>
+                //    <member type="way" ref="8145371" role="outer"/>
+                //    <tag k="type" v="multipolygon"/>
+                //  </relation>
+                // common attribs
+                long id = getLong(atts, "id");
+                int time = getDate(atts, "timestamp");
+                String user = atts.getValue("user");
+                boolean vis = getBoolean(atts, "visible", true);
+
+                Relation r = factory.relation(id < 0 ? 0 : id, time, user, vis, null);
+                if (id < 0) newRels.put(id, r);
+
             } else if (qName.equals("member")) {
-                // TODO
+                String type = atts.getValue("type");
+                long id = getLong(atts, "ref");
+                String role = atts.getValue("role");
+                OsmPrimitive member = null;
+                if ("node".equals(type)) {
+                    member = getNode(id);
+                } else if ("way".equals(type)) {
+                    member = getWay(id);
+                } else if ("relation".equals(type)) {
+                    member = getRelation(id);
+                }
+                factory.addMember(member, role);
             }
         }
 
@@ -160,6 +185,22 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
                 return newNodes.get(id);
             } else {
                 return factory.getNode(id);
+            }
+        }
+
+        private Way getWay(long id) {
+            if (id < 0) {
+                return newWays.get(id);
+            } else {
+                return factory.getWay(id);
+            }
+        }
+
+        private Relation getRelation(long id) {
+            if (id < 0) {
+                return newRels.get(id);
+            } else {
+                return factory.getRelation(id);
             }
         }
         

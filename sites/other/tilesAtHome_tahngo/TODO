@@ -2,15 +2,11 @@ t@h server
 ==========
  - Nicer User statistics
  - Discard incomplete tileset uploads (mail user?)
- - Prevent duplicate requests
- - Make request handler smarter (use priorities etc)
  - Make upload processor smarter (use upload priorities)
- - Implement dead-simple re-requester on failure first. Then move on to next item.
  - Make use of client feedback (re-render on error)
  - Make use of complexity that client can handle
  - Reimplement MapOf or try to integrate the existing PHP version at the current location.
- - Actually save the user id who uploaded a tileset in the tileset file
- - Make the lowzoom tile stitcher automatically run on updated tilesets. Right now a complete run  takes 2 days.
+ - Send a "Last-Modified" header back with the Tile files
 
 
 t@h client

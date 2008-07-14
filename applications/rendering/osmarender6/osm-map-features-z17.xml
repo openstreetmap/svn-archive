@@ -1519,7 +1519,7 @@
         </else>
 
         <!-- Gates -->
-        <rule e="node" k="highway" v="gate">
+        <rule e="node" k="barrier|highway" v="gate">
             <rule e="node" k="status" v="open">
                 <wayMarker k="highway" class="gate-open"/>
             </rule>

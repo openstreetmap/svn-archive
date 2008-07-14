@@ -22,6 +22,7 @@ package org.openstreetmap.josmng.osm;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -36,7 +37,10 @@ public class Way extends OsmPrimitive {
 
     Way(DataSet constructed, long id, int time, String user, boolean vis, Node[] nodes) {
         super(constructed, id, time, user, vis);
-        if (nodes != null) this.nodes = nodes.clone();
+        if (nodes != null) {
+            for (Node n : new HashSet<Node>(Arrays.asList(nodes))) n.addReferrer(this);
+            this.nodes = nodes.clone();
+        }
     }
     
     public List<Node> getNodes() {
@@ -54,8 +58,22 @@ public class Way extends OsmPrimitive {
     }
     
     void setNodesImpl(Node[] n) {
+        // TODO: compute minimal reference change
+        for(Node act : new HashSet<Node>(Arrays.asList(nodes))) act.removeReferrer(this);
         nodes = n;
+        for(Node act : new HashSet<Node>(Arrays.asList(nodes))) act.addReferrer(this);
+        
         source.fireWayNodesChanged(this);
+    }
+
+    
+    @Override void setDeletedImpl(boolean deleted) {
+        if (deleted) {
+            for(Node act : new HashSet<Node>(Arrays.asList(nodes))) act.removeReferrer(this);
+        } else {
+            for(Node act : new HashSet<Node>(Arrays.asList(nodes))) act.addReferrer(this);
+        }
+        super.setDeletedImpl(deleted);
     }
 
     private class ChangeNodesEdit extends PrimitiveToggleEdit {

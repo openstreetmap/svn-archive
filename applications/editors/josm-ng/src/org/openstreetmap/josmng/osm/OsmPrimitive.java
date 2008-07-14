@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import javax.swing.undo.UndoableEdit;
@@ -66,6 +68,16 @@ public abstract class OsmPrimitive {
      * and also for event notification.
      */
     protected final DataSet source;
+    
+    /**
+     * A field listing the primitives referencing this primitive.
+     * The value can be:<ul>
+     * <li>null - no references
+     * <li>OsmPrimitive[] - a list of all incomming references
+     * <li>OsmPrimitive - the only incomming reference
+     * </ul>
+     */
+    private Object referrers;
         
     OsmPrimitive(DataSet source, long id, int timestamp, String user, boolean vis) {
         this.source = source;
@@ -95,16 +107,81 @@ public abstract class OsmPrimitive {
      */
     public void delete() {
         if (id == 0) { // locally created, really delete
-            source.addRemovePrimitive(this, false);
-        } else {
-            UndoableEdit edit = new DeleteEdit();
-            setDeletedImpl(true);
-            source.postEdit(edit);
+            source.removePrimitive(this);
         }
+        UndoableEdit edit = new DeleteEdit();
+        setDeletedImpl(true);
+        source.postEdit(edit);
     }
 
     abstract void visit(Visitor v);
+ 
+    /**
+     * Referes should make sure not to call if they are already registered
+     * @param referrer
+     */
+    protected void addReferrer(OsmPrimitive referrer) {
+        assert referrer != null;
+        
+        if (referrers == null) {
+            referrers = referrer;
+        } else if (referrers instanceof OsmPrimitive) {
+            assert referrers != referrer;
+            referrers = new OsmPrimitive[] { (OsmPrimitive)referrers, referrer };
+        } else {
+            assert referrers instanceof OsmPrimitive[];
+            assert !Arrays.asList((OsmPrimitive[])referrers).contains(referrer);
+
+            OsmPrimitive[] orig = (OsmPrimitive[])referrers;
+            OsmPrimitive[] bigger = new OsmPrimitive[orig.length+1];
+            System.arraycopy(orig, 0, bigger, 0, orig.length);
+            bigger[orig.length] = referrer;
+            referrers = bigger;
+        }
+    }
     
+    /**
+     * Referes should make sure not to call if they are not registered
+     * @param referrer
+     */
+    protected void removeReferrer(OsmPrimitive referrer) {
+        assert referrer != null;
+
+        if (referrers == null) {
+            assert false; // violating not-registered precondition
+        } else if (referrers instanceof OsmPrimitive) {
+            assert referrers == referrer;
+            referrers = null;
+        } else {
+            assert referrers instanceof OsmPrimitive[];
+            
+            OsmPrimitive[] orig = (OsmPrimitive[])referrers;
+            int idx = Arrays.asList(orig).indexOf(referrer);
+            
+            assert idx != -1;
+            
+            if (orig.length == 2) {
+                referrers = orig[1-idx]; // idx is either 0 or 1, take the other
+            } else { // downsize the array
+                OsmPrimitive[] smaller = new OsmPrimitive[orig.length-1];
+                System.arraycopy(orig, 0, smaller, 0, idx);
+                System.arraycopy(orig, idx+1, smaller, idx, smaller.length-idx);
+                referrers = smaller;
+            }
+        }
+    }
+    /**
+     * Find all primitives that reference this primitive.
+     * 
+     * @return a colection of all primitives that reference this primitive.
+     */
+
+    public final Collection<OsmPrimitive> getReferrers() {
+        if (referrers == null) return Collections.emptyList();
+        if (referrers instanceof OsmPrimitive) return Collections.singleton((OsmPrimitive)referrers);
+        return Arrays.asList((OsmPrimitive[])referrers);
+    }
+
     void setDeletedImpl(boolean deleted) {
         if (deleted) {
             flags |= FLAG_DELETED;
@@ -343,6 +420,13 @@ public abstract class OsmPrimitive {
             boolean origVal = isDeleted();
             setDeletedImpl(wasDeleted);
             wasDeleted = origVal;
+            if (id == 0) {
+                if (wasDeleted) {
+                    source.addPrimitive(OsmPrimitive.this);
+                } else {
+                    source.removePrimitive(OsmPrimitive.this);
+                }
+            }
         }
     }
 

@@ -20,6 +20,7 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,10 @@ public class Relation extends OsmPrimitive {
 
     Relation(DataSet source, long id, int stamp, String user, boolean vis, Map<OsmPrimitive,String> members) {
         super(source, id, stamp, user, vis);
-        if (members != null) this.members.putAll(members);
+        if (members != null) {
+            this.members.putAll(members);
+            for (OsmPrimitive member : members.keySet()) member.addReferrer(this);
+        }
     }
 
     @Override void visit(Visitor v) {
@@ -58,14 +62,28 @@ public class Relation extends OsmPrimitive {
     }
     
     void setMemberRoleImpl(OsmPrimitive prim, String role) {
+        if (prim == null) {
+            System.err.println("null member in rel#" + getId());
+        }
         if (role == null) {
             members.remove(prim);
+            prim.removeReferrer(this);
         } else {
-            members.put(prim, role);
+            String oldRole = members.put(prim, role);
+            if (oldRole == null) prim.addReferrer(this);
         }
         source.fireRelationMembersChanged(this);
     }
-    
+
+    @Override void setDeletedImpl(boolean deleted) {
+        if (deleted) {
+            for(OsmPrimitive member : members.keySet()) member.removeReferrer(this);
+        } else {
+            for(OsmPrimitive member : members.keySet()) member.addReferrer(this);                    
+        }
+        super.setDeletedImpl(deleted);
+    }
+
     private class ChangeMembersEdit extends PrimitiveToggleEdit {
         OsmPrimitive member;
         String role; // or null if deleted

@@ -70,8 +70,6 @@ def find_old_lowzooms(base_tile_path):
         if mtime > lz_mtime:
           #print "New tiles in old lowzoom (%d %d ) found" % (x,y)
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
-        else: 
-          #print "New tiles in new lowzoom (%d %d ) found" % (x,y)
 
 
   #finally always dd (0,0,0)

@@ -12,32 +12,37 @@ class LegacyTileset(Tileset):
 
 
   def get_blank(self,tile):
+    if self.blankness != None: return self.blankness
     #Legacy layer numbers in blank db:
     legacy_layer_num={'tile':1,'maplint':3, 'lowzoom':4, 'captionless':6, 'caption':7}
     if not legacy_layer_num.has_key(tile.layer.name):
       print "Unknown layer %s!" % tile.layer.name
       return 0;
-    layer_num = legacy_layer_num[tile.layer.name]
-    if tile.z == 0:
-      # recursion abortion here, return unknown
+    if tile.z < 12:
+      # Don't handle low zoom blanks
       return 0
     try:
-      cmd = "mysql -utahro tah -BN -e 'SELECT type FROM tiles_blank WHERE layer=%d and z=%d and x=%d and y=%d;'" % (layer_num,tile.z,tile.x,tile.y)
-      #print cmd
-      b = int(os.popen(cmd).read())
-    except ValueError: 
-      #Nothing found here, try one level higher
-      up_tile = Tile(tile.layer,tile.z-1,tile.x // 2, tile.y // 2)
-      #print "Get_blank recurse upwards (%d,%d,%d)" % (up_tile.z,up_tile.x,up_tile.y)
-      b = self.get_blank(up_tile)
-    #print "get_blank (%d,%d,%d) returns %d" % (tile.z,tile.x,tile.y,b)
-    return b
+          #Lookup in the oceans tile
+          #For z12 and above the file will tell us directly what type it is
+          (layern, base_z,base_x,base_y) = tile.basetileset()
+          f_oceant = open(os.path.join('/mnt/agami/openstreetmap/tah/Tiles',"oceantiles_12.dat"),'rb')
+          f_oceant.seek((4096*base_y + base_x) >> 2)
+          data = ord(f_oceant.read(1));
+          #take 2 bits of the char
+          bit_off = 3 - (base_x % 4);
+          type = (data >> 2*bit_off) & 3
+          # map tile type to blankness type used in the server
+          blank = [0,2,1,0]
+          self.blankness = blank[type]
+    except: self.blankness= 0
+    return self.blankness
 
   def convert (self,layer,base_z,base_x,base_y,base_tile_path):
     """
 	  Take all tile files from the old one file-per-tile system
 	  that belong to a tileset and save it in the new format.
     """
+    self.blankness = None
     if not base_z in [0,6,12]: return (0,"Invalid base zoom level.")
     starttime = (time(),clock())    
     # cache if the layer is transparent
@@ -65,7 +70,6 @@ class LegacyTileset(Tileset):
               t.set_blank(b)
               #print "add blank (%d) %d %d %d (basetile %s %s %s)" % (b,t.z,t.x,t.y,self.base_z,self.x,self.y)
               self.add_tile(t,None)
-              self.set_subtiles_blank(t)
 
     savetime = time()
     print "Found %d files and %d blanks (%.1f sec.)." % (files,blanks,savetime-starttime[0])

@@ -22,6 +22,7 @@ package org.openstreetmap.josmng.osm;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -140,16 +141,30 @@ public abstract class DataSet {
         return n;
     }
         
-    public Way createWay(Node ... nodes) {
-        Way way = new Way(this, 0, -1, null, true, nodes);
-        addRemovePrimitive(way, true);
-        return way;
+    public Way createWay(final Node ... nodes) {
+        final Way[] w = new Way[1];
+        atomicEdit(new Runnable() {
+            public void run() {
+                w[0] = new Way(DataSet.this, 0, -1, null, true, null);
+                addRemovePrimitive(w[0], true);
+                w[0].setNodes(Arrays.asList(nodes));
+            }
+        }, null);
+        return w[0];
     }
 
-    public Relation createRelation(Map<OsmPrimitive,String>members) {
-        Relation r = new Relation(this, 0, -1, null, true, members);
-        addRemovePrimitive(r, true);
-        return r;
+    public Relation createRelation(final Map<OsmPrimitive,String>members) {
+        final Relation[] r = new Relation[1];
+        atomicEdit(new Runnable() {
+            public void run() {
+                r[0] = new Relation(DataSet.this, 0, -1, null, true, null);
+                addRemovePrimitive(r[0], true);
+                for (Map.Entry<OsmPrimitive, String> entry : members.entrySet()) {
+                    r[0].addMember(entry.getKey(), entry.getValue());
+                }
+            }
+        }, null);
+        return r[0];
     }
 
     // The minimal interface to the backing store implementation.

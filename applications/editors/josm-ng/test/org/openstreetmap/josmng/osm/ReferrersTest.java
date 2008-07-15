@@ -143,6 +143,30 @@ public class ReferrersTest {
         commonCheck();
     }
 
+    public @Test void testUndoCreateWayWithNodes() {
+        data = DataSet.empty();
+        data.addUndoableEditListener (undo);
+
+        n1 = data.createNode(10, 10);
+        n4 = data.createNode(20, 10);
+        floor = data.createWay(n1, n4);
+        undo.undo();
+
+        checkReferrers(n1);
+        checkReferrers(n4);
+    }
+    
+    public @Test void testCreateRelationWithMembers() {
+        data = DataSet.empty();
+        data.addUndoableEditListener (undo);
+
+        n1 = data.createNode(10, 10);
+        r1 = data.createRelation(Collections.singletonMap((OsmPrimitive)n1, "member"));
+        undo.undo();
+
+        checkReferrers(n1);
+    }
+    
     private void checkReferrers(OsmPrimitive prim, OsmPrimitive ... refs) {
         Collection<OsmPrimitive> r = prim.getReferrers();
         assertEquals(refs.length, r.size());

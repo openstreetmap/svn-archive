@@ -28,6 +28,8 @@ td.browsetable{
 
 
 #log{
+	font-family:monospace;
+        font-weight: normal;
 	padding: 2px;
 	overflow:hidden;
 	font-size:1em;

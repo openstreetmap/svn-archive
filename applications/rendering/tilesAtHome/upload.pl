@@ -249,7 +249,6 @@ sub upload
         $ua->env_proxy();
         push @{ $ua->requests_redirectable }, 'POST';
         
-        my $Password = join("|", ($Config->get("UploadUsername"), $Config->get("UploadPassword")));
         my $URL = $Config->get("UploadURL");
         
         my ($UploadToken,$Load) = UploadOkOrNot();
@@ -260,7 +259,8 @@ sub upload
             my $res = $ua->post($URL,
               Content_Type => 'form-data',
               Content => [ file => [$File],
-              mp => $Password,
+              user => $Config->get("UploadUsername"),
+              passwd => $Config->get("UploadPassword"),
               version => $Config->get("ClientVersion"),
               single_tileset => $SingleTileset,
               token => $UploadToken,

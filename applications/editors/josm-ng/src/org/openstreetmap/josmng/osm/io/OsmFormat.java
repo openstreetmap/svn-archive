@@ -147,6 +147,7 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
                 boolean vis = getBoolean(atts, "visible", true);
 
                 factory.relation(id, time, user, vis, null);
+                updateFlags(getString(atts, "action"));
             } else if (qName.equals("member")) {
                 String type = atts.getValue("type");
                 long id = getLong(atts, "ref");
@@ -159,7 +160,8 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
                 } else if ("relation".equals(type)) {
                     member = factory.getRelation(id);
                 }
-                factory.addMember(member, role);
+                // XXX - create incomplete instance
+                if (member != null) factory.addMember(member, role);
             }
         }
 

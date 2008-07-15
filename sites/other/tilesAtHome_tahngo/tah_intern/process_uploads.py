@@ -29,13 +29,14 @@ class TileUpload:
       sys.exit("Failed to get required settings.")
 
   def process(self):
+   try:
     while True:
       #find the oldest unlocked upload file
       upload = None
       while not upload:
         # repeat fetching until there is one
         try:
-          upload = Upload.objects.latest('upload_time')
+          upload = Upload.objects.filter(is_locked=False).latest('upload_time')
         except ObjectDoesNotExist:
           #logging.debug('No uploaded request. Sleeping 5 sec.')
           #print("No uploaded request. Sleeping 5 sec.")
@@ -69,13 +70,15 @@ class TileUpload:
           else:
             # saving the tileset went wrong
             logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles))
-        self.cleanup(upload)
+        self.cleanup(upload,True)
 
       else:
         logging.info('uploaded file not found, deleting upload.')
-        print 'uploaded file did not exist. Deleting this upload.'
 	upload.delete()
-
+   except KeyboardInterrupt:
+     if upload: self.cleanup(upload, False)
+     logging.info('Ctrl-C pressed. Shutdown gracefully.')
+     sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % upload)
   #-----------------------------------------------------------------
   def unzip(self):
     now = clock()
@@ -166,16 +169,21 @@ class TileUpload:
     os.rmdir(dir)
 
   #-----------------------------------------------------------------
-  def cleanup(self, upload):
+  def cleanup(self, upload, del_upload = True):
+    """ Removes all temporary files and removes the upload object 
+        (and the uploaded file if 'del_upload' is True.
+    """
     # Delete the unzipped files directory
     self.rm_dir(self.temptiledir)
-    # delete the uploaded file itself
-    os.unlink(upload.get_file_filename())
-    # delete the upload db entry
-    upload.delete()
     self.uid=None
     self.fname=None
     self.temptiledir=None
+    if del_upload:
+      # delete the uploaded file itself
+      os.unlink(upload.get_file_filename())
+      # delete the upload db entry
+      upload.delete()
+
 #---------------------------------------------------------------------
 
 if __name__ == '__main__':

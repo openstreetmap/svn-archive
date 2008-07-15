@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}t@h Home{% endblock %}
-{% block heading %}t@h Homepage{% endblock %}
+{% block heading %}TilesAtHome server{% endblock %}
 {% block content %}
-<p>This is a rewrite of the original t@h server which has become unmaintainable over time. You can retrieve the current code base from Openstreetmap SVN at <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo">http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo</a>. You need to use an up-to-date (from SVN) t@h client. In authentication.conf you should enter your OSM-email and OSM password.</p>
-See: <ul>
+<h4>About</h4>
+<p>This is a rewrite of the original t@h server which has become unmaintainable over time. You can retrieve the current code base from <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo">svn</a>. You need to use an up-to-date t@h client. In authentication.conf you should enter your OSM-email and OSM password. For planned changes and improvements read the <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo/TODO">TODO</a> and let me know if your favorite feature is broken or not implemented yet.</p>
+<h4>Sitemap</h4><ul>
 <li><a href="{% url tah.requests.views.index %}">Render Requests</a> (create, see, upload render requests)</li>
 <li><a href="{% url tah.browse.views.index %}">Browse Statically</a> (Browse the map in a non-javascript viewer)</li>
 <li><a href="{% url tah.browse.views.slippymap %}">Browse dynamically</a> (Browse the map as slippy map and request renderings with a mouseclick)</li>
 <li><a href="{% url tah.user.views.index %}">User</a> (manage user accounts, see user statistics)</li></ul>
-
-<b>What's currently going on?</b><br/>
+<h4>What's currently going on? (updated every 15 sec.)</h4>
 <div id="log">Loading Log file...</div>
 
  <script type="text/javascript">

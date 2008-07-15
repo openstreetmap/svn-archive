@@ -95,9 +95,6 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
         private List<Node> wayNodes = new ArrayList<Node>();
     
         private Storage<String> strings = new Storage<String>();
-        private Map<Long,Node> newNodes = new HashMap<Long, Node>();
-        private Map<Long,Way> newWays = new HashMap<Long, Way>();
-        private Map<Long,Relation> newRels = new HashMap<Long, Relation>();
         
     
         public @Override void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
@@ -118,10 +115,8 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
 
                 double lat = getDouble(atts, "lat");
                 double lon = getDouble(atts, "lon");
-                
-                Node n = factory.node(id < 0 ? 0 : id, lat, lon, time, user, vis);
-                if (id < 0) newNodes.put(id, n);
 
+                factory.node(id, lat, lon, time, user, vis);
                 updateFlags(getString(atts, "action"));
             } else if (qName.equals("way")) {
                 // common attribs
@@ -130,13 +125,11 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
                 String user = atts.getValue("user");
                 boolean vis = getBoolean(atts, "visible", true);
 
-                Way w = factory.way(id < 0 ? 0 : id, time, user, vis, null);
-                if (id < 0) newWays.put(id, w);
-
+                factory.way(id, time, user, vis, null);
                 updateFlags(getString(atts, "action"));
             } else if (qName.equals("nd")) {
                 long nid = getLong(atts, "ref");
-                Node n = getNode(nid);
+                Node n = factory.getNode(nid);
                 //assert n != null;
                 if (n != null) wayNodes.add(n);
             } else if (qName.equals("tag")) {
@@ -153,20 +146,18 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
                 String user = atts.getValue("user");
                 boolean vis = getBoolean(atts, "visible", true);
 
-                Relation r = factory.relation(id < 0 ? 0 : id, time, user, vis, null);
-                if (id < 0) newRels.put(id, r);
-
+                factory.relation(id, time, user, vis, null);
             } else if (qName.equals("member")) {
                 String type = atts.getValue("type");
                 long id = getLong(atts, "ref");
                 String role = atts.getValue("role");
                 OsmPrimitive member = null;
                 if ("node".equals(type)) {
-                    member = getNode(id);
+                    member = factory.getNode(id);
                 } else if ("way".equals(type)) {
-                    member = getWay(id);
+                    member = factory.getWay(id);
                 } else if ("relation".equals(type)) {
-                    member = getRelation(id);
+                    member = factory.getRelation(id);
                 }
                 factory.addMember(member, role);
             }
@@ -179,31 +170,7 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
                 factory.setFlags(true, false);
             }
         }
-        
-        private Node getNode(long id) {
-            if (id < 0) {
-                return newNodes.get(id);
-            } else {
-                return factory.getNode(id);
-            }
-        }
-
-        private Way getWay(long id) {
-            if (id < 0) {
-                return newWays.get(id);
-            } else {
-                return factory.getWay(id);
-            }
-        }
-
-        private Relation getRelation(long id) {
-            if (id < 0) {
-                return newRels.get(id);
-            } else {
-                return factory.getRelation(id);
-            }
-        }
-        
+                
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (qName.equals("tag")) return;

@@ -19,8 +19,8 @@ def export_MapOf(request):
   if form.is_valid():
     form = form.cleaned_data
     x,y = latlon2xy(form['lat'],form['long'],form['z'])
-    h = ceil(form['h'] // 256) #number of tiles in height
-    w = ceil(form['w'] // 256) #number of tiles to left and right
+    h = ceil(form['h'] / 256.0) #number of tiles in height
+    w = ceil(form['w'] / 256.0) #number of tiles to left and right
 
     pngfile = StringIO.StringIO()
     im = cairo.ImageSurface(cairo.FORMAT_ARGB32, 256*w,256*h)

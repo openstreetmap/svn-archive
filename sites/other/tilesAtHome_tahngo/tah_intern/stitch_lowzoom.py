@@ -2,10 +2,12 @@ import os,sys, cairo, tempfile, shutil, StringIO, re
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
-from time import time
+import time
+from datetime import datetime, timedelta
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
 from tah.tah_intern.models import Settings,Layer
+from tah.requests.models import Request
 
 class Lowzoom(Tileset):
 
@@ -47,27 +49,22 @@ class Lowzoom(Tileset):
     self.add_tile(t,pngfilepath)
 
 def find_old_lowzooms(base_tile_path):
-  m = re.compile("\D+")
   old_lowzooms = {} # return a dict with (z,x,y) tuples that need an update
   lz_path = os.path.join(base_tile_path,'tile_6_0')
-  now = time()
-  for i in range (0,5):
-    path= os.path.join(base_tile_path,'tile_12_%d' % i)
-    for f in os.listdir(path):
-      mtime = os.stat(os.path.join(path,f)).st_mtime
-      age = now - mtime
-      #if newer than 2 days
-      if age < 87846:
-        [x,y] = tuple(m.split(f))
-        x,y = int(x)>>6,int(y)>>6
-        try: 
+  reqs = Request.objects.filter(status=2,min_z=12)
+  now = datetime.now()
+  for r in reqs:
+    #should all be newer than 2 days
+    if r.clientping_time + timedelta(2) >= now:
+      x,y = r.x>>6, r.y>>6
+      try: 
           lz_file = os.path.join(lz_path,"%d_%d" % (x,y))
           lz_mtime = os.stat(os.path.join(lz_path,lz_file)).st_mtime
-        except:
+      except:
           #lowzoom file didn't exist yet. create.
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
-        if mtime > lz_mtime:
+      if r.clientping_time > datetime.fromtimestamp(lz_mtime):
           #print "New tiles in old lowzoom (%d %d ) found" % (x,y)
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
@@ -81,7 +78,7 @@ if __name__ == '__main__':
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
   for (z,x,y) in find_old_lowzooms(base_tile_path).values():
-    now = time()
+    now = time.time()
     print "do %d %d %d" % (z,x,y)
     lz.create(layer,6,x,y,base_tile_path)
-    print "Took %.1f sec." % (time()-now)
+    print "Took %.1f sec." % (time.time()-now)

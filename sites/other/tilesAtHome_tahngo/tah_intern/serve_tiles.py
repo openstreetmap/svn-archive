@@ -5,10 +5,10 @@ from mod_python import apache #needed for mod_python tile serving
 
 #mod_python handler for serving tiles
 def handler(req):
-  r = re.compile('/(\w+)/(\d+)/(\d+)/(\d+)(\.png)?$')
+  r = re.compile('/(\w+)(\.php)?/(\d+)/(\d+)/(\d+)(\.png)?$')
   m = r.search(req.uri)
   if m:
-    (layername,z,x,y,ext) = m.groups()
+    (layername,php,z,x,y,ext) = m.groups()
     t = Tile(None,z,x,y)
     data = t.serve_tile(layername)
     if data: 

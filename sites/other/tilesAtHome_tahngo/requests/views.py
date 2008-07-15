@@ -218,7 +218,7 @@ def take(request):
 
 def request_changedTiles(request):
     html="Requested tiles:\n"
-    xml_dom = xml.dom.minidom.parse(urllib.urlopen('http://www.openstreetmap.org/api/0.5/changes?hours=1'))
+    xml_dom = xml.dom.minidom.parse(urllib.urlopen('http://www.openstreetmap.org/api/0.5/changes?hours=2'))
     tiles = xml_dom.getElementsByTagName("tile")
     for tile in tiles:
       (z,x,y) = tile.getAttribute('z'),tile.getAttribute('x'),tile.getAttribute('y')

@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from tah.tah_intern.models import Blank, Layer
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.cache import cache_control
 
+@cache_control(no_cache=True)
 def show_log(request):
   read_size=1024
   #TODO use a setting for the log file location?

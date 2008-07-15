@@ -3,7 +3,7 @@
 {% block title %}t@h Home{% endblock %}
 {% block heading %}t@h Homepage{% endblock %}
 {% block content %}
-<p>This is a rewrite of the original t@h server which has become unmaintainable over time. You can retrieve the current code base from Openstreetmap SVN at <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo">http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo</a>. A patch to the client is required to make it work with the new server. This patch is <a href="http://tah.openstreetmap.org/~spaetz/media/tahclient.diff">here</a>.</p>
+<p>This is a rewrite of the original t@h server which has become unmaintainable over time. You can retrieve the current code base from Openstreetmap SVN at <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo">http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo</a>. You need to use an up-to-date (from SVN) t@h client. In authentication.conf you should enter your OSM-email and OSM password.</p>
 See: <ul>
 <li><a href="{% url tah.requests.views.index %}">Render Requests</a> (create, see, upload render requests)</li>
 <li><a href="{% url tah.browse.views.index %}">Browse Statically</a> (Browse the map in a non-javascript viewer)</li>

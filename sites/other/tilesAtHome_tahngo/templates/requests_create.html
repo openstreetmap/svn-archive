@@ -4,7 +4,7 @@
 
 {% block heading %}t@h Create Request{% endblock %}
 {% block content %}
-<p>Create requests either with HTTP POST or through HTTP GET (by calling URLs like <i>http://{{host}}{% url tah.requests.views.create %}?x=1&y=2&min_z=12&layer=1&priority=3</i>).<p/>
+<p>Create requests either with HTTP POST or through HTTP GET (by calling URLs like <i>http://{{host}}{% url tah.requests.views.create %}?x=1&y=2</i>). Also with the URL scheme you can additionally use the priority= parameter (default 3), or request a specific layer by calling e.g. "&layer=1&layer=2" which would request only layers 'tile' and 'maplint' (see the layer selection box for possible values).<p/>
 <form action="." method="POST">
  <table border="0">
    {{ createform.as_table }}

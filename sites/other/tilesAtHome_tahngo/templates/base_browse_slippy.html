@@ -74,7 +74,7 @@ function init() {
             layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
             layerTilesAtHome2 = layerMapnik = new OpenLayers.Layer.TMS( 
 	    "t@hngo",
-	    ["http://a.tah.openstreetmap.org/Tiles2/tile/","http://b.tah.openstreetmap.org/Tiles2/tile/","http://c.tah.openstreetmap.org/Tiles2/tile/"],
+	    ["http://a.tah.openstreetmap.org/Tiles/tile/","http://b.tah.openstreetmap.org/Tiles/tile/","http://c.tah.openstreetmap.org/Tiles/tile/"],
 	    {type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true,attribution: 'Data by by <a href="http://openstreetmap.org/">OpenStreetMap</a>' }, {'buffer':1} );
 
             map.addLayers([layerTilesAtHome2,layerTilesAtHome]);

@@ -1263,6 +1263,28 @@
             </rule>
         </rule>
 
+        <!-- SAC scale for paths and footways -->
+        <rule e="way" k="highway" v="path|footway">
+            <rule e="way" k="sac_scale" v="hiking|t1|T1">
+                <line class="sac-scale-t1" smart-linecap="no"/>
+            </rule>
+            <rule e="way" k="sac_scale" v="mountain_hiking|t2|T2">
+                <line class="sac-scale-t2" smart-linecap="no"/>
+            </rule>
+            <rule e="way" k="sac_scale" v="demanding_mountain_hiking|t3|T3">
+                <line class="sac-scale-t3" smart-linecap="no"/>
+            </rule>
+            <rule e="way" k="sac_scale" v="alpine_hiking|t4|T4">
+                <line class="sac-scale-t4" smart-linecap="no"/>
+            </rule>
+            <rule e="way" k="sac_scale" v="demanding_alpine_hiking|t5|T5">
+                <line class="sac-scale-t5" smart-linecap="no"/>
+            </rule>
+            <rule e="way" k="sac_scale" v="difficult_alpine_hiking|t6|T6">
+                <line class="sac-scale-t6" smart-linecap="no"/>
+            </rule>            
+        </rule>
+
         <!-- Piste maps -->
         <rule e="way" k="piste:type" v="downhill">
             <rule e="way" k="piste:difficulty" v="novice">
@@ -2955,6 +2977,51 @@
                 marker-end: url(#marker-otherway-end);
             }
 
+            /* SAC scales for paths and footways
+               colors taken from:
+               http://www.sac-cas.ch/uploads/media/SAC_Wanderskala_Vergleich_01.pdf
+            */
+            .sac-scale-t1 {
+              stroke: red;
+              stroke-width: 0.3px;
+              fill: none;
+            }
+
+            .sac-scale-t2 {
+              stroke-dasharray: "0.5%, 0.5%";
+              stroke: red;
+              stroke-width: 0.3px;
+              fill: none;
+            }
+
+            .sac-scale-t3 {
+              stroke-dasharray: "0.04%, 0.6%";
+              stroke-linecap: round;
+              stroke: red;
+              stroke-width: 0.3px;
+              fill: none;
+            }
+
+            .sac-scale-t4 {
+              stroke: blue;
+              stroke-width: 0.3px;
+              fill: none;
+            }
+
+            .sac-scale-t5 {
+              stroke-dasharray: "0.5%, 0.5%";
+              stroke: blue;
+              stroke-width: 0.3px;
+              fill: none;
+            }
+
+            .sac-scale-t6 {
+              stroke-dasharray: "0.04%, 0.6%";
+              stroke-linecap: round;
+              stroke: blue;
+              stroke-width: 0.3px;
+              fill: none;
+            }
 
             /* Access restrictions */
             .access-private-line {

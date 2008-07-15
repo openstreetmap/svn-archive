@@ -18,9 +18,9 @@ def export_MapOf(request):
   form = MapOfForm(request.GET)
   if form.is_valid():
     form = form.cleaned_data
-    x,y = latlon2xy(form['lat'],form['lon'],form['z'])
-    h = form['h'] // 256 #number of tiles in height
-    w = form['w'] // 256 #number of tiles to left and right
+    x,y = latlon2xy(form['lat'],form['long'],form['z'])
+    h = ceil(form['h'] // 256) #number of tiles in height
+    w = ceil(form['w'] // 256) #number of tiles to left and right
 
     pngfile = StringIO.StringIO()
     im = cairo.ImageSurface(cairo.FORMAT_ARGB32, 256*w,256*h)
@@ -39,7 +39,7 @@ def export_MapOf(request):
   
 class MapOfForm(forms.Form):
     lat = forms.FloatField()
-    lon = forms.FloatField()
+    long = forms.FloatField()
     z = forms.FloatField(initial=12)
     w = forms.FloatField(initial=1024)
     h = forms.FloatField(initial=1024)

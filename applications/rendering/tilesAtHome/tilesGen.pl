@@ -648,7 +648,7 @@ sub GetRequestFromServer
         my $res = $ua->post($URL,
           Content_Type => 'form-data',
           Content => [ user => $Config->get("UploadUsername"),
-          pass => $Config->get("UploadPassword"),
+          passwd => $Config->get("UploadPassword"),
           version => $Config->get("ClientVersion"),
           layers => $Layers,
           layerspossible => $Config->get("LayersCapability") ]);
@@ -692,7 +692,7 @@ sub PutRequestBackToServer
     
     killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
-    my $RequestUrlString = $Config->get("ReRequestURL") . "?x=" . $X . "&y=" . $Y . "&z=" . $Z . "&priority=" . $Prio . "&src=" . $Config->get("UploadUsername"). ":tahCltReReq:" . $Cause;
+    my $RequestUrlString = $Config->get("ReRequestURL") . "?x=" . $X . "&y=" . $Y . "&min_z=" . $Z . "&priority=" . $Prio . "&src=" . $Config->get("UploadUsername"). ":tahCltReReq:" . $Cause;
     
     statusMessage("Putting Job ".$X.",".$Y." back to server", $currentSubTask, $progressJobs, $progressPercent,1);
     DownloadFile(

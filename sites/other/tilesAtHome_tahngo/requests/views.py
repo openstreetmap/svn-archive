@@ -174,7 +174,7 @@ def upload_request(request):
             html="XX|4|form is not valid. "+str(form.errors)
         else:
           # authentication failed here, or authform failed to validate.
-          html="XX|4|Invalid Username. Your username and password were incorrect or the user has been disabled."
+          html="XX|4|Invalid username. Your username and password were incorrect or the user has been disabled."
     else:
       # request.method==GET here. View the plain form webpage with default values filled in
       authform = ClientAuthForm()

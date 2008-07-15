@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     (r'^admin/', include('django.contrib.admin.urls')),
     (r'^Log/$', show_log),
     (r'^MapOf/', export_MapOf),
+    (r'Requests/Version\.php$', redirect_to, {'url': '/tahngo/Request/latestClientVersion/'}), #temporary redirect
     #(r'/accounts/profile/$', 'redirect_to', {'url': '/user/'}),
 )

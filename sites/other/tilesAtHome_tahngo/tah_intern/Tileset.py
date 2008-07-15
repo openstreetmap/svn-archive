@@ -51,7 +51,7 @@ class Tileset:
   # recursively set sub-tiles to blankness of t if they are not existing yet.
   def set_subtiles_blank(self,t):
     #abort if at lowest level
-    if t.z < self.base_z+6: return
+    if t.z == self.base_z+6: return
 
     for x in range(2*t.x, 2*t.x+2):
       for y in range(2*t.y, 2*t.y+2):

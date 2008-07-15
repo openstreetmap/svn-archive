@@ -28,6 +28,7 @@ use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
 use File::Temp qw(tempfile);
+use IO::Socket;
 use FindBin qw($Bin);
 use tahconfig;
 use tahlib;
@@ -35,6 +36,7 @@ use tahproject;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use AppConfig qw(:argcount);
+
 #---------------------------------
 
 # Read the config file
@@ -120,6 +122,9 @@ my $JobTime;
 
 # Handle the command-line
 my $Mode = shift();
+
+# If batik agent was started automatically, turn it off at exit
+our $StartedBatikAgent = 0;
 
 
 # Check the on disk image tiles havn't been corrupted.
@@ -210,6 +215,13 @@ elsif ($Mode eq "loop")
     # ----------------------------------
     # Continuously process requests from server
     # ----------------------------------
+
+    # Start batik agent if it's not runnig
+    if ($Config->get("Batik") == "3" && !getBatikStatus())
+    {
+        startBatikAgent();
+        $StartedBatikAgent = 1;
+    }
 
     # if this is a re-exec, we want to capture some of our status
     # information from the command line. this feature allows setting
@@ -382,8 +394,15 @@ elsif ($Mode eq "")
     }
     statusMessage("if you want to run this program continuously, use loop mode", $currentSubTask, $progressJobs, $progressPercent,1);
 }
-else
+elsif ($Mode eq "startBatik")
 {
+    startBatikAgent();
+}
+elsif ($Mode eq "stopBatik")
+{
+    stopBatikAgent();
+}
+else {
     # ----------------------------------
     # "help" (or any other non understood parameter) as first argument tells how to use the program
     # ----------------------------------
@@ -395,6 +414,8 @@ else
     print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
     print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
+    print "  $0 startBatik - start batik agent\n";
+    print "  $0 stopBatik - stop batik agent\n";
     print "  $0 version - prints out version string and exits\n";
     print "\nGNU General Public license, version 2 or later\n$Bar\n";
 }
@@ -1502,6 +1523,17 @@ sub svg2png
         $svgFile,
         $stdOut);
     }
+    elsif ($Config->get("Batik") == "3") # agent
+    {
+        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s%s\nlog=%s\n\n", 
+        $SizeX,
+        $SizeY,
+        $Left,$Top,$Width,$Height,
+        $TempFile,
+        $Config->get("WorkingDirectory"),
+        $svgFile,
+        $stdOut);
+    }
     else
     {
         $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
@@ -1520,9 +1552,16 @@ sub svg2png
     # stop rendering the current job when inkscape fails
     statusMessage("Rendering", $currentSubTask, $progressJobs, $progressPercent,0);
     print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
-    if (not runCommand($Cmd,$PID) or ! -e $TempFile )
+
+
+    my $commandResult = $Config->get("Batik") == "3"?sendCommandToBatik($Cmd) eq "OK":runCommand($Cmd,$PID);
+    if (!$commandResult or ! -e $TempFile )
     {
         statusMessage("$Cmd failed", $currentSubTask, $progressJobs, $progressPercent, 1);
+	if ($Config->get("Batik") == "3" && !getBatikStatus())
+        {
+            statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n", $currentSubTask, $progressJobs, $progressPercent, 1);
+        }
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
         addFault("inkscape",1);
@@ -1842,4 +1881,64 @@ sub reExecIfRequired
             "idleFor=" . getIdle(0), 
             "progstart=$progstart" or die;
     }
+}
+
+sub startBatikAgent
+{
+    if (getBatikStatus()) {
+        statusMessage("BatikAgent is already running\n", $currentSubTask, $progressJobs, $progressPercent,0);
+        return;
+    }
+
+    statusMessage("Starting BatikAgent\n", $currentSubTask, $progressJobs, $progressPercent,0);
+    my $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
+    $Config->get("i18n") ? "LC_ALL=C " : "",
+    $Config->get("Niceness"),
+    $Config->get("BatikJVMSize"),
+    $Config->get("BatikClasspath"),
+    $Config->get("BatikPort")
+    );
+    system($Cmd);
+
+    for (my $i = 0; $i < 10; $i++) {
+        sleep(1);
+        if (getBatikStatus()) {
+            statusMessage("BatikAgent started succesfully");
+            return;
+        }
+    }
+    print STDERR "Unable to start BatikAgent with this command:\n";
+    print STDERR "$Cmd\n";
+}
+
+sub stopBatikAgent
+{
+    if (!getBatikStatus()) {
+        statusMessage("BatikAgent is not running\n", $currentSubTask, $progressJobs, $progressPercent,0);
+        return;
+    }
+
+    sendCommandToBatik("stop\n\n");
+    statusMessage("Send stop command to BatikAgent\n", $currentSubTask, $progressJobs, $progressPercent,0);
+}
+
+sub sendCommandToBatik
+{
+    (my $command) = @_;
+
+    my $sock = new IO::Socket::INET( PeerAddr => 'localhost', PeerPort => $Config->get("BatikPort"), Proto => 'tcp');
+    return "ERROR" unless $sock;    
+
+    print $sock $command;
+    flush $sock;
+    my $reply = <$sock>;
+    $reply =~ s/\n//;
+    close($sock);
+
+    return $reply;
+}
+
+sub getBatikStatus
+{
+    return sendCommandToBatik("status\n\n") eq "OK";
 }

@@ -71,9 +71,9 @@ def find_old_lowzooms(base_tile_path):
           #print "New tiles in old lowzoom (%d %d ) found" % (x,y)
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
-
   #finally always dd (0,0,0)
   old_lowzooms['0_0_0']=(0,0,0)
+  print "requesting %d lowzooms." % len(old_lowzooms)
   return old_lowzooms
 
 if __name__ == '__main__':

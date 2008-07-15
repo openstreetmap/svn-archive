@@ -54,12 +54,51 @@ public class UnclosedWays extends Test  {
 		test = w.get("natural");
 		if(test != null)
 		{
+			if(!"coastline".equals(test))
+				force = true;
 			type = tr("natural type {0}", tr(test));
 		}
 		test = w.get("landuse");
 		if(test != null)
 		{
+			force = true;
 			type = tr("landuse type {0}", tr(test));
+		}
+		test = w.get("amenities");
+		if(test != null)
+		{
+			force = true;
+			type = tr("amenities type {0}", tr(test));
+		}
+		test = w.get("sport");
+		if(test != null)
+		{
+			force = true;
+			type = tr("sport type {0}", tr(test));
+		}
+		test = w.get("tourism");
+		if(test != null)
+		{
+			force = true;
+			type = tr("tourism type {0}", tr(test));
+		}
+		test = w.get("shop");
+		if(test != null)
+		{
+			force = true;
+			type = tr("shop type {0}", tr(test));
+		}
+		test = w.get("leisure");
+		if(test != null)
+		{
+			force = true;
+			type = tr("leisure type {0}", tr(test));
+		}
+		test = w.get("waterway");
+		if(test != null && test.equals("riverbank"))
+		{
+			force = true;
+			type = tr("waterway type {0}", tr(test));
 		}
 		test = w.get("junction");
 		if(test != null && test.equals("roundabout"))

@@ -263,7 +263,7 @@ def stats_munin_requests(request,status):
     reqs = Request.objects.filter(status=state)
     if state < 2:
       #output low/medium/high requests for unfinished ones
-      for val, state in enumerate(['low','medium','high']):
+      for val, state in enumerate(['high','medium','low']):
         c = reqs.filter(priority=val+1).count()
         reply += "%s.value %d\n" % (state,c)
     else:

@@ -18,7 +18,7 @@
     Could not find base tileset on disk.<br/> Displaying fallback legacy tile.
     {%endif%}
   </td>
-  <td><a href="{% url tah.browse.views.index %}?layer={{tile.layer}}&z={{tile.z}}&x={{tile.x}}&y={{tile.y}}"><img src="http://tah.openstreetmap.org/Tiles2/{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}.png" width="256" height="256" class="browseimg"/></a></td>
+  <td><a href="{% url tah.browse.views.index %}?layer={{tile.layer}}&z={{tile.z}}&x={{tile.x}}&y={{tile.y}}"><img src="http://tah.openstreetmap.org/Tiles/{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}.png" width="256" height="256" class="browseimg"/></a></td>
 </tr>
 </table>
 {% endblock %}

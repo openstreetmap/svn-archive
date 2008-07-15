@@ -34,6 +34,7 @@ typedef int intptr_t;
   o (Search,          "?", "?", "?", "?", "?", 0, 1) \
   o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
   o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
+  o (OrientNorthwards,"?", "?", "?", "?", "?", 0, 2) \
   o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
   o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
   o (English,         "Deutsch", "Español", "Français", "Italiano", \
@@ -43,6 +44,7 @@ typedef int intptr_t;
   o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
   o (CommPort,        "?", "?", "?", "?", "?", 0, 13) \
   o (BaudRate,        "?", "?", "?", "?", "?", 0, 6) \
+  o (QuickOptions,    "?", "?", "?", "?", "?", 0, 2) \
   o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
   o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 1) \
   o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 1) \
@@ -63,6 +65,7 @@ using namespace std;
   o (Search,          "?", "?", "?", "?", "?", 0, 1) \
   o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
   o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
+  o (OrientNorthwards,"?", "?", "?", "?", "?", 0, 2) \
   o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
   o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
   o (English,         "Deutsch", "EspaÃ±ol", "FranÃ§ais", "Italiano", \
@@ -128,7 +131,7 @@ BOOL CALLBACK DlgSearchProc (
 	WPARAM wParam, 
 	LPARAM lParam);
 #else
-const char *FindResource (char *fname)
+const char *FindResource (const char *fname)
 {
   static string s;
   struct stat dummy;
@@ -458,9 +461,14 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
   return n;
 }
 
-void Route (int recalculate)
-{ /* Recalculate is faster but only valid if 'to', 'car' and 'fastest' did not
-     change */
+inline int IsOneway (wayType *w)
+{
+  return Vehicle != footR && Vehicle != bicycleR && (w->bits & (1<<onewayR));
+}
+
+void Route (int recalculate, int plon, int plat)
+{ /* Recalculate is faster but only valid if 'to', 'Vehicle' and
+     'FastestRoute' did not change */
 /* We start by finding the segment that is closest to 'from' and 'to' */
   static ndType *endNd[2] = { NULL, NULL}, from;
   static int toEndNd[2][2];
@@ -494,8 +502,20 @@ void Route (int recalculate)
       __int64 d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
         dlon * lon1 <= - dlat * lat1 ? Sqr (lon1) + Sqr (lat1) :
         Sqr ((dlon * lat1 - dlat * lon1) / segLen);
+      
+      wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
+      if (i) { // For 'from' we take motion into account
+        __int64 motion = (dlon * plon + dlat * plat) / segLen;
+        // What is the most appropriate multiplier for motion ?
+        if (motion > 0 && IsOneway (w)) d += Sqr (motion);
+        else d -= Sqr (motion);
+        // Is it better to say :
+        // d = lrint (sqrt ((double) d));
+        // if (motion < 0 || IsOneway (w)) d += motion;
+        // else d -= motion; 
+      }
+      
       if (d < bestd) {
-        wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
         bestd = d;
         double invSpeed = !FastestRoute ? 1.0 : Style (w)->invSpeed[Vehicle];
         //printf ("%d %lf\n", i, invSpeed);
@@ -506,10 +526,8 @@ void Route (int recalculate)
         if (dlon * lon1 <= -dlat * lat1) toEndNd[i][1] += toEndNd[i][0] * 9;
         if (dlon * lon0 >= -dlat * lat0) toEndNd[i][0] += toEndNd[i][1] * 9;
 
-        if (w->bits & (1 << onewayR)) toEndNd[i][1] = 200000000;
-        /* It's possible to go up a oneway at the end, but at a huge penalty*/
-        /* It's also possible to go up a 1 segment of a footway with a car
-           without penalty. */
+        if (IsOneway (w)) toEndNd[i][1 - i] = 200000000;
+        /*  It's possible to go up a oneway at the end, but at a huge penalty*/
         endNd[i] = itr.nd[0];
         /* The router only stops after it has traversed endHs[1], so if we
            want 'limit' to be accurate, we must subtract it's length
@@ -538,7 +556,7 @@ void Route (int recalculate)
     GlobalMemoryStatus (&memStat);
     int lim = (memStat.dwAvailPhys - 1400000) / // Leave 1.4 MB free
                  (sizeof (*route) + sizeof (*routeHeap));
-    if (dhashSize > lim) dhashSize = lim;
+    if (dhashSize > lim && lim > 0) dhashSize = lim;
     #endif
 
     while (dhashSize > 0 && !(route = (routeNodeType*)
@@ -607,7 +625,7 @@ void Route (int recalculate)
         
         other = ndBase + nd->other[dir];
         wayType *w = (wayType *)(data + nd->wayPtr);
-        if ((w->bits & (1<<Vehicle)) && (dir || !(w->bits & (1 << onewayR)))) {
+        if ((w->bits & (1 << Vehicle)) && (dir || !IsOneway (w))) {
           int d = lrint (sqrt ((double)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
@@ -630,6 +648,7 @@ GtkWidget *draw, *location, *followGPSr;
 GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE;
 /* zoom is the amount that fits into the window (regardless of window size) */
+double cosAzimuth = 1.0, sinAzimuth = 0.0;
 
 inline void SetLocation (int nlon, int nlat)
 {
@@ -733,10 +752,13 @@ xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com
 <trk>\n\
 <trkseg>\n");
   for (; first; first = first->dptr) { // Iterate the linked list
-    fprintf (gpx, "<trkpt lat=\"%12.9lf\" lon=\"%12.9lf\">\n\
-<time>20%.2s-%.2s-%.2sT%.2s:%.2s:%.2sZ</time>\n\
-</trkpt>\n", first->fix.latitude, first->fix.longitude, first->fix.date + 4,
-      first->fix.date + 2, first->fix.date,
+    fprintf (gpx, "<trkpt lat=\"%12.9lf\" lon=\"%12.9lf\">\n",
+      first->fix.latitude, first->fix.longitude);
+    if (first->fix.ele < 1e+8) {
+      fprintf (gpx, "<ele>%.3lf</ele>\n", first->fix.ele);
+    }
+    fprintf (gpx, "<time>20%.2s-%.2s-%.2sT%.2s:%.2s:%.2sZ</time>\n</trkpt>\n",
+      first->fix.date + 4, first->fix.date + 2, first->fix.date,
       first->fix.tm, first->fix.tm + 2, first->fix.tm + 4);
     
 //    if (first->next && ) fprintf (gpx, "</trkseg>\n</trk>\n<trk>\n<trkseg>\n");
@@ -785,9 +807,13 @@ int ProcessNmea (char *rx, unsigned *got)
           dataReady = TRUE; // Notify only when parsing is complete
           gpsNew->fix.latitude = nLat;
           gpsNew->fix.longitude = nLon;
+          gpsNew->fix.ele = 1e+9;
         }
+      } // If the timestamp wasn't seen before
+      if (col == 2) {
+        gpsNew->fix.hdop = atof (rx + fStart[8]);
+        gpsNew->fix.ele = atof (rx + fStart[9]); // Check height of geoid ??
       }
-      if (col == 2) gpsNew->fix.hdop = atof (rx + fStart[8]);
       if (col == 3 && fLen[7] > 0 && fLen[8] > 0 && fLen[9] >= 6) {
         memcpy (gpsNew->fix.date, rx + fStart[9], 6);
         gpsNew->fix.speed = atof (rx + fStart[7]);
@@ -897,7 +923,7 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
     
     flon = clon;
     flat = clat;
-    Route (FALSE);
+    Route (FALSE, plon - clon, plat - clat);
     #if 0 // No verbal instructions to driver yet !
     if (shortest) {
       PlaySound (TEXT ("\\sdmmc\\aa\\uturn.wav"), NULL, SND_FILENAME | SND_NODEFAULT);
@@ -1007,19 +1033,31 @@ int newWayCnt = 0, newWayCoordCnt = 0;
 BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
   LPARAM lParam)
 {
-  if (Msg == WM_INITDIALOG) {
-    HWND klist = GetDlgItem (hwnd, IDC_CLASS);
-    for (int i = 0; i < sizeof (klasTable) / sizeof (klasTable[0]); i++) {
-      SendMessage (klist, LB_ADDSTRING, 0, (LPARAM) klasTable[i].desc);
-    }
-    SipShowIM (SIPF_ON);
-  }
   if (Msg == WM_COMMAND && wParam == IDOK) {
     HWND edit = GetDlgItem (hwnd, IDC_NAME);
     wchar_t name[40];
     int wstrlen = Edit_GetLine (edit, 0, name, sizeof (name));
     WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, name, wstrlen,
       newWays[newWayCnt].name, sizeof (newWays[0].name), NULL, NULL);
+  }
+  if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
+    SipShowIM (SIPF_OFF);
+    EndDialog (hwnd, wParam == IDOK);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+BOOL CALLBACK DlgSetTags2Proc (HWND hwnd, UINT Msg, WPARAM wParam,
+  LPARAM lParam)
+{
+  if (Msg == WM_INITDIALOG) {
+    HWND klist = GetDlgItem (hwnd, IDC_CLASS);
+    for (int i = 0; i < sizeof (klasTable) / sizeof (klasTable[0]); i++) {
+      SendMessage (klist, LB_ADDSTRING, 0, (LPARAM) klasTable[i].desc);
+    }
+  }
+  if (Msg == WM_COMMAND && wParam == IDOK) {
     newWays[newWayCnt].cnt = newWayCoordCnt;
     newWays[newWayCnt].oneway = IsDlgButtonChecked (hwnd, IDC_ONEWAY);
     newWays[newWayCnt].bridge = IsDlgButtonChecked (hwnd, IDC_BRIDGE);
@@ -1028,24 +1066,58 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
   }
   
   if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
-    newWayCoordCnt = 0;
-    SipShowIM (SIPF_OFF);
-    EndDialog (hwnd, 0);
+    EndDialog (hwnd, wParam == IDOK);
     return TRUE;
   }
   return FALSE;
 }
 
+BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
+  LPARAM lParam)
+{
+  if (Msg == WM_INITDIALOG) {
+    HWND klist = GetDlgItem (hwnd, IDC_LISTO);
+    for (int i = 0; i < numberOfOptions; i++) {
+      SendMessage (klist, LB_ADDSTRING, 0,
+        (LPARAM) optionNameTable[i][English]);
+    }
+  }
+  
+  if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
+    EndDialog (hwnd, wParam == IDOK ? SendMessage (
+      GetDlgItem (hwnd, IDC_LISTO), LB_GETCURSEL, 0, 0) : -1);
+    return TRUE;
+  }
+  return FALSE;
+}
 #endif // _WIN32_WCE
 
 void HitButton (int b)
 {
+  int returnToMap = b > 0 && option <= FastestRouteNum;
   #ifdef _WIN32_WCE
   if (AddWayOrNode && b == 0) {
-    if (newWayCoordCnt) DialogBox (hInst, MAKEINTRESOURCE (IDD_SETTAGS), NULL,
-      (DLGPROC) DlgSetTagsProc);
+    if (newWayCoordCnt) {
+      SipShowIM (SIPF_ON);
+      if (DialogBox (hInst, MAKEINTRESOURCE (IDD_SETTAGS), NULL,
+          (DLGPROC) DlgSetTagsProc)) DialogBox (hInst,
+          MAKEINTRESOURCE (IDD_SETTAGS2), NULL, (DLGPROC) DlgSetTags2Proc);
+      newWayCoordCnt = 0;
+    }
     AddWayOrNode = 0;
-    return;
+  }
+  if (QuickOptions && b == 0) {
+    option = DialogBox (hInst, MAKEINTRESOURCE (IDD_CHOOSEO), NULL,
+      (DLGPROC) DlgChooseOProc);
+    if (option == -1) option = numberOfOptions;
+    
+    #define o(en,de,es,fr,it,nl,min,max) \
+      if (option == en ## Num && min == 0 && max == 2) b = 1;
+    OPTIONS
+    #undef o
+    if (b == 0) return;
+    returnToMap = TRUE;
+    // If it's a binary option, fall through to toggle it
   }
   #endif
     if (b == 0) option = (option + 1) % (numberOfOptions + 1);
@@ -1056,7 +1128,7 @@ void HitButton (int b)
     else if (option == EndRouteNum) {
       tlon = clon;
       tlat = clat;
-      Route (TRUE);
+      Route (TRUE, 0, 0);
     }
     #ifdef _WIN32_WCE
     else if (option == SearchNum) {
@@ -1077,12 +1149,16 @@ void HitButton (int b)
       if (b == 1) zoom = zoom / 3 * 4;
       if (b > 0) SetLocation (clon, clat);
     }
-    if (b > 0 && option <= FastestRouteNum) option = numberOfOptions;
+    if (option == OrientNorthwardsNum && OrientNorthwards) {
+      cosAzimuth = 1.0;
+      sinAzimuth = 0.0;
+    }
+    if (returnToMap) option = numberOfOptions;
 }
 
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
-  int w = draw->allocation.width;
+  int w = draw->allocation.width, h = draw->allocation.height;
   #ifdef ROUTE_TEST
   if (event->state) {
     return RouteTest (NULL /*widget*/, event, NULL /*para*/);
@@ -1094,9 +1170,12 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       (HideZoomButtons && option == numberOfOptions ? 1 : 3)) HitButton (b);
   else {
     int perpixel = zoom / w;
+    int lon = clon + lrint (cosAzimuth * perpixel * (event->x - w / 2) -
+                            sinAzimuth * perpixel * (h / 2 - event->y));
+    int lat = clat + lrint (cosAzimuth * perpixel * (h / 2 - event->y) +
+                            sinAzimuth * perpixel * (event->x - w / 2));
     if (event->button == 1) {
-      SetLocation (clon + lrint ((event->x - w / 2) * perpixel),
-        clat - lrint ((event->y - draw->allocation.height / 2) * perpixel));
+      SetLocation (lon, lat);
 
       #ifdef _WIN32_WCE
       if (AddWayOrNode && newWayCoordCnt < NEWWAY_MAX_COORD) {
@@ -1108,16 +1187,15 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       FollowGPSr = 0;
     }
     else if (event->button == 2) {
-      flon = clon + lrint ((event->x - w / 2) * perpixel);
-      flat = clat - lrint ((event->y - draw->allocation.height/2) * perpixel);
+      flon = lon;
+      flat = lat;
     }
     else {
-      tlon = clon + lrint ((event->x - w / 2) * perpixel);
-      tlat = clat -
-        lrint ((event->y - draw->allocation.height / 2) * perpixel);
+      tlon = lon;
+      tlat = lat;
       //car = !gtk_combo_box_get_active (carBtn) ? motorcarR : bicycleR;
       //fastest = !gtk_combo_box_get_active (fastestBtn);
-      Route (TRUE);
+      Route (TRUE, 0, 0);
     }
   }
   gtk_widget_queue_clear (draw);
@@ -1204,7 +1282,6 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
   LOGFONT logFont;
   GetObject (sysFont, sizeof (logFont), &logFont);
   WCHAR wcTmp[70];
-  int detail = 2;
 
 #define gtk_combo_box_get_active(x) 1
 #define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
@@ -1263,7 +1340,6 @@ gint Expose (void)
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
   
   GdkFont *f = gtk_style_get_font (draw->style);
-  int detail = DetailLevel; //4 - gtk_combo_box_get_active (detailBtn);
   GdkRectangle clip;
   clip.x = 0;
   clip.y = 0;
@@ -1273,7 +1349,7 @@ gint Expose (void)
   if (ButtonSize <= 0) ButtonSize = 4;
   #ifdef CAIRO_VERSION
   cairo_t *cai = gdk_cairo_create (draw->window);
-  if (detail < 4) {
+  if (DetailLevel < 4) {
     cairo_font_options_t *caiFontOptions = cairo_font_options_create ();
     cairo_get_font_options (cai, caiFontOptions);
     cairo_font_options_set_antialias (caiFontOptions, CAIRO_ANTIALIAS_NONE);
@@ -1284,24 +1360,38 @@ gint Expose (void)
   #endif
   if (option == numberOfOptions) {
     if (zoom < 0) zoom = 2012345678;
-    if (zoom / clip.width == 0) zoom += 4000;
-    int perpixel = zoom / clip.width;
+    if (zoom / clip.width <= 1) zoom += 4000;
+    int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
+    int sina = lrint (4294967296.0 * sinAzimuth * clip.width / zoom);
+    int xadj = clip.width / 2 -
+                 ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
+    int yadj = clip.height / 2 -
+                 ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
+    #define X(lon,lat) (xadj + \
+                 (((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
+    #define Y(lon,lat) (yadj + \
+                 (((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
+
+    int lonRadius = lrint (fabs (cosAzimuth) * zoom +
+          fabs (sinAzimuth) * zoom / clip.width * clip.height) / 2 + 1000;
+    int latRadius = lrint (fabs (cosAzimuth) * zoom / clip.width *
+          clip.height + fabs (sinAzimuth) * zoom) / 2 + 10000;
+//    int perpixel = zoom / clip.width;
     int doAreas = TRUE;
   //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
     for (int thisLayer = -5, nextLayer; thisLayer < 6;
          thisLayer = nextLayer, doAreas = !doAreas) {
-      OsmItr itr (clon - perpixel * clip.width / 2 - 10000,
-        clat - perpixel * clip.height / 2 - 10000,
-        clon + perpixel * clip.width / 2 + 10000,
-        clat + perpixel * clip.height / 2 + 10000);
+      OsmItr itr (clon - lonRadius, clat - latRadius,
+                  clon + lonRadius, clat + latRadius);
       // Widen this a bit so that we render nodes that are just a bit offscreen ?
       nextLayer = 6;
       
       while (Next (itr)) {
         wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
-        if (Style (w)->scaleMax < perpixel * 175 / (detail + 4)) continue;
+        if (Style (w)->scaleMax <
+                  zoom / clip.width * 175 / (DetailLevel + 4)) continue;
         
-        if (detail < 4 && Style (w)->areaColour) {
+        if (DetailLevel < 4 && Style (w)->areaColour) {
           if (thisLayer > -5) continue;  // Draw all areas with layer -5
         }
         else if (zoom < 100000*100) {
@@ -1309,7 +1399,7 @@ gint Expose (void)
           if (thisLayer < Layer (w) && Layer (w) < nextLayer) {
             nextLayer = Layer (w);
           }
-          if (detail == 4) {
+          if (DetailLevel == 4) {
             if (doAreas) nextLayer = thisLayer;
             if (Style (w)->areaColour ? !doAreas : doAreas) continue;
           }
@@ -1333,8 +1423,8 @@ gint Expose (void)
         int len = strcspn ((char *)(w + 1) + 1, "\n");
         
         if (nd->other[0] < 0 && nd->other[1] < 0) {
-          int x = clip.width / 2 + (nd->lon - clon) / perpixel;
-          int y = clip.height / 2 - (nd->lat - clat) / perpixel;
+          int x = X (nd->lon, nd->lat);
+          int y = Y (nd->lon, nd->lat);
           int *icon = Style (w)->x + 4 * IconSet;
           if (icons && icon[2] != 0) {
             gdk_draw_drawable (draw->window, mygc, icons,
@@ -1368,8 +1458,8 @@ gint Expose (void)
           for (pts = 0; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] >= 0;
                nd = ndBase + nd->other[1]) {
             if (nd->lat != INT_MIN) {
-              pt[pts].x = (nd->lon - clon) / perpixel + clip.width / 2;
-              pt[pts++].y = clip.height / 2 - (nd->lat - clat) / perpixel;
+              pt[pts].x = X (nd->lon, nd->lat);
+              pt[pts++].y = Y (nd->lon, nd->lat);
             }
           }
           gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
@@ -1390,26 +1480,25 @@ gint Expose (void)
           #else
           SelectObject (mygc, pen[StyleNr (w) + 1]);
           #endif
-          int oldx = (nd->lon - clon) / perpixel + clip.width / 2;
-          int oldy = clip.height / 2 - (nd->lat - clat) / perpixel;
+          int oldx = X (nd->lon, nd->lat);
+          int oldy = Y (nd->lon, nd->lat);
           do {
             ndType *next = ndBase + nd->other[1];
             if (next->lat == INT_MIN) break; // Node excluded from build
-            int x = (next->lon - clon) / perpixel + clip.width / 2;
-            int y = clip.height / 2 - (next->lat - clat) / perpixel;
+            int x = X (next->lon, next->lat);
+            int y = Y (next->lon, next->lat);
             if ((x <= clip.width || oldx <= clip.width) &&
                 (x >= 0 || oldx >= 0) && (y >= 0 || oldy >= 0) &&
                 (y <= clip.height || oldy <= clip.height)) {
               gdk_draw_line (draw->window, mygc, oldx, oldy, x, y);
               #ifdef _WIN32_WCE
-              int newb = nd->lon > next->lon
-                ? nd->lon - next->lon : next->lon - nd->lon;
-              if (newb < nd->lat - next->lat) newb = nd->lat - next->lat;
-              if (newb < next->lat - nd->lat) newb = next->lat - nd->lat;
+              int newb = oldx > x ? oldx - x : x - oldx;
+              if (newb < oldy - y) newb = oldy - y;
+              if (newb < y - oldy) newb = y - oldy;
               if (best < newb) {
                 best = newb;
-                bestW = (next->lon > nd->lon ? -1 : 1) * (next->lon - nd->lon);
-                bestH = (next->lon > nd->lon ? -1 : 1) * (next->lat - nd->lat);
+                bestW = (x > oldx ? -1 : 1) * (x - oldx);
+                bestH = (x > oldx ? -1 : 1) * (oldy - y);
                 x0 = next->lon / 2 + nd->lon / 2;
                 y0 = next->lat / 2 + nd->lat / 2;
               }
@@ -1419,14 +1508,19 @@ gint Expose (void)
                                  (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
               if (lenSqr > maxLenSqr) {
                 maxLenSqr = lenSqr;
-                mat.yy = mat.xx = 12 * fabs (nd->lon - next->lon) / sqrt (lenSqr);
-                mat.xy = (nd->lon > next->lon ? 12.0 : -12.0) *
-                                            (nd->lat - next->lat) / sqrt (lenSqr);
+                double lonDiff = (nd->lon - next->lon) * cosAzimuth +
+                                 (nd->lat - next->lat) * sinAzimuth;
+                mat.yy = mat.xx = 12 * fabs (lonDiff) / sqrt (lenSqr);
+                mat.xy = (lonDiff > 0 ? 12.0 : -12.0) *
+                         ((nd->lat - next->lat) * cosAzimuth -
+                          (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
                 mat.yx = -mat.xy;
-                x0 = clip.width / 2 + (nd->lon / 2 + next->lon / 2 - clon) /
-                  perpixel + mat.yx * f->descent / 12.0 - mat.xx / 12.0 * 3 * len;
-                y0 = clip.height / 2 - (nd->lat / 2 + next->lat / 2 - clat) /
-                  perpixel - mat.xx * f->descent / 12.0 - mat.yx / 12.0 * 3 * len;
+                x0 = X (nd->lon / 2 + next->lon / 2,
+                        nd->lat / 2 + next->lat / 2) +
+                  mat.yx * f->descent / 12.0 - mat.xx / 12.0 * 3 * len;
+                y0 = Y (nd->lon / 2 + next->lon / 2,
+                        nd->lat / 2 + next->lat / 2) +
+                  mat.xx * f->descent / 12.0 - mat.yx / 12.0 * 3 * len;
               }
               #endif
             }
@@ -1439,7 +1533,7 @@ gint Expose (void)
         } /* If it has one or more segments */
 
         #ifdef _WIN32_WCE
-        if (best > perpixel * len * 4) {
+        if (best > len * 4) {
           double hoek = atan2 (bestH, bestW);
           logFont.lfEscapement = logFont.lfOrientation =
             1800 + int ((1800 / M_PI) * hoek);
@@ -1448,18 +1542,16 @@ gint Expose (void)
           HGDIOBJ oldf = SelectObject (mygc, customFont);
           MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, (char *)(w + 1) + 1,
             len, wcTmp, sizeof (wcTmp));
-          ExtTextOut (mygc, (x0 - clon) / perpixel + clip.width / 2 +
-                int (len * 3 * cos (hoek)),
-                clip.height / 2 - (y0 - clat) / perpixel -
-                int (len * 3 * sin (hoek)), 0, NULL,
+          ExtTextOut (mygc, X (x0, y0) + int (len * 3 * cos (hoek)),
+                Y (x0, y0) - int (len * 3 * sin (hoek)), 0, NULL,
                 wcTmp, len, NULL);
           SelectObject (mygc, oldf);
           DeleteObject (customFont);
         }
         #endif
         #ifdef CAIRO_VERSION
-        if (maxLenSqr * detail > perpixel * (__int64) perpixel *
-            len * len * 100 && len > 0) {
+        if (maxLenSqr * DetailLevel > (zoom / clip.width) *
+              (__int64) (zoom / clip.width) * len * len * 100 && len > 0) {
           for (char *txt = (char *)(w + 1) + 1; *txt != '\0';) {
             cairo_set_font_matrix (cai, &mat);
             char *line = (char *) malloc (strcspn (txt, "\n") + 1);
@@ -1468,7 +1560,7 @@ gint Expose (void)
             cairo_move_to (cai, x0, y0);
             cairo_show_text (cai, line);
             free (line);
-            if (perpixel > 10) break;
+            if (zoom / clip.width > 30) break;
             y0 += mat.xx * (f->ascent + f->descent) / 12;
             x0 += mat.xy * (f->ascent + f->descent) / 12;
             while (*txt != '\0' && *txt++ != '\n') {}
@@ -1493,30 +1585,23 @@ gint Expose (void)
       SelectObject (mygc, pen[0]);
       #endif
       if (routeHeapSize > 1) {
-        gdk_draw_line (draw->window, mygc,
-          (flon - clon) / perpixel + clip.width / 2,
-          clip.height / 2 - (flat - clat) / perpixel,
-          (x->nd->lon - clon) / perpixel + clip.width / 2,
-          clip.height / 2 - (x->nd->lat - clat) / perpixel);
+        gdk_draw_line (draw->window, mygc, X (flon, flat), Y (flon, flat),
+          X (x->nd->lon, x->nd->lat), Y (x->nd->lon, x->nd->lat));
       }
       len = sqrt (Sqr ((double) (x->nd->lat - flat)) +
         Sqr ((double) (x->nd->lon - flon)));
       for (; x->shortest; x = x->shortest) {
-        gdk_draw_line (draw->window, mygc,
-          (x->nd->lon - clon) / perpixel + clip.width / 2,
-          clip.height / 2 - (x->nd->lat - clat) / perpixel,
-          (x->shortest->nd->lon - clon) / perpixel + clip.width / 2,
-          clip.height / 2 - (x->shortest->nd->lat - clat) / perpixel);
+        gdk_draw_line (draw->window, mygc, X (x->nd->lon, x->nd->lat),
+          Y (x->nd->lon, x->nd->lat),
+          X (x->shortest->nd->lon, x->shortest->nd->lat),
+          Y (x->shortest->nd->lon, x->shortest->nd->lat));
         len += sqrt (Sqr ((double) (x->nd->lat - x->shortest->nd->lat)) +
           Sqr ((double) (x->nd->lon - x->shortest->nd->lon)));
         sumLat += x->nd->lat;
         nodeCnt++;
       }
-      gdk_draw_line (draw->window, mygc,
-        (x->nd->lon - clon) / perpixel + clip.width / 2,
-        clip.height / 2 - (x->nd->lat - clat) / perpixel,
-        (tlon - clon) / perpixel + clip.width / 2,
-        clip.height / 2 - (tlat - clat) / perpixel);
+      gdk_draw_line (draw->window, mygc, X (x->nd->lon, x->nd->lat),
+        Y (x->nd->lon, x->nd->lat), X (tlon, tlat), Y (tlon, tlat));
       len += sqrt (Sqr ((double) (x->nd->lat - tlat)) +
         Sqr ((double) (x->nd->lon - tlon)));
       wchar_t distStr[13];
@@ -1534,19 +1619,19 @@ gint Expose (void)
     #ifndef _WIN32_WCE
     for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
-        (routeHeap[i]->nd->lon - clon) / perpixel + clip.width / 2 - 2,
-        clip.height / 2 - (routeHeap[i]->nd->lat - clat) / perpixel,
-        (routeHeap[i]->nd->lon - clon) / perpixel + clip.width / 2 + 2,
-        clip.height / 2 - (routeHeap[i]->nd->lat - clat) / perpixel);
+        X (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat) - 2,
+        Y (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat),
+        X (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat) + 2,
+        Y (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat));
     }
     #else
     SelectObject (mygc, pen[0]);
     for (int i = 0; i < newWayCoordCnt - 1; i++) {
       gdk_draw_line (draw->window, mygc,
-        (newWays[newWayCnt].coord[i][0] - clon) / perpixel + clip.width / 2,
-        clip.height / 2 - (newWays[newWayCnt].coord[i][1] - clat) / perpixel,
-        (newWays[newWayCnt].coord[i + 1][0] - clon) / perpixel + clip.width / 2,
-        clip.height / 2 - (newWays[newWayCnt].coord[i + 1][1] - clat) / perpixel);
+      X (newWays[newWayCnt].coord[i][0], newWays[newWayCnt].coord[i][1]),
+      Y (newWays[newWayCnt].coord[i][0], newWays[newWayCnt].coord[i][1]),
+      X (newWays[newWayCnt].coord[i+1][0], newWays[newWayCnt].coord[i+1][1]),
+      Y (newWays[newWayCnt].coord[i+1][0], newWays[newWayCnt].coord[i+1][1]));
     }
     #endif
   } // Not in the menu
@@ -1863,7 +1948,7 @@ int UserInterface (int argc, char *argv[])
     #define M(v) if (strcmp (vehicle, #v) == 0) Vehicle = v ## R;
     RESTRICTIONS
     #undef M
-    Route (TRUE);
+    Route (TRUE, 0, 0);
     printf ("Content-Type: text/plain\n\r\n\r");
     if (!shortest) printf ("No route found\n\r");
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
@@ -1958,7 +2043,7 @@ int UserInterface (int argc, char *argv[])
   
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
   
-  #ifndef WIN32  
+  #if !defined (WIN32) && !defined (ROUTE_TEST)
   struct sockaddr_in sa;
   int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
   sa.sin_family = AF_INET;
@@ -2134,8 +2219,7 @@ int main (int argc, char *argv[])
     char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS];
     int defaultRestrict[2 << STYLE_BITS];
     memset (defaultRestrict, 0, sizeof (defaultRestrict));
-    FILE *icons_csv = fopen ("icons.csv", "r");
-    if (!icons_csv) icons_csv = fopen (FindResource ("icons.csv"), "r");
+    FILE *icons_csv = fopen (FindResource ("icons.csv"), "r");
     xmlTextReaderPtr sXml = xmlNewTextReaderFilename (
       FindResource ("elemstyles.xml"));
     if (!sXml || !icons_csv) {
@@ -2846,11 +2930,18 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         gpsNew.fix.latitude, gpsNew.fix.longitude, gpsNew.fix.ele,
 	gpsNew.fix.hdop); */
       if (FollowGPSr) {
-        SetLocation (Longitude (((gpsNewStruct*)lParam)->fix.longitude),
-          Latitude (((gpsNewStruct*)lParam)->fix.latitude));
+        gpsNewStruct *f = (gpsNewStruct*)lParam;
+        SetLocation (Longitude (f->fix.longitude),
+          Latitude (f->fix.latitude));
+        int plon = clon - flon, plat = clat - flat;
         flat = clat;
         flon = clon;
-        Route (FALSE);
+        Route (FALSE, plon, plat);
+        double dist = sqrt (Sqr ((double) plon) + Sqr ((double) plat));
+        if (!OrientNorthwards && dist > 100.0) {
+          cosAzimuth = plat / dist;
+          sinAzimuth = -plon / dist;
+        }
         InvalidateRect (hWnd, NULL, FALSE);
       }
       break;

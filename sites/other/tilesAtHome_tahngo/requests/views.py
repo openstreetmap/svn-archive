@@ -207,7 +207,7 @@ def take(request):
             except IndexError:
                 html ="XX|4|No requests in queue"
         else:
-            html="XX|4|Invalid Username. Your username and password were incorrect or the user has been disabled."
+            html="XX|4|Invalid username. Your username and password were incorrect or the user has been disabled."
       else: #form was not valid
         html = "XX|4|Form invalid. "+str(form.errors)
       return HttpResponse(html);

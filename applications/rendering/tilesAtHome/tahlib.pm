@@ -413,6 +413,10 @@ sub cleanUpAndDie
     
     return 0 if ($Mode eq "loop");
     print STDERR "\n$Reason\n" if (! $Config->get("Verbose")); #print error only once, and only if fatal.
+    if ($main::StartedBatikAgent)
+    {
+        main::stopBatikAgent();
+    }
     exit($Severity);
 }
 

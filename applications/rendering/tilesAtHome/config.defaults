@@ -36,6 +36,7 @@ Inkscape=inkscape
 BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
 BatikJVMSize = 1536M
 Batik = 0
+BatikPort = 18123
 
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000

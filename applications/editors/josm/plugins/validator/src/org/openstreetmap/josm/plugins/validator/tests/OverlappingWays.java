@@ -73,7 +73,8 @@ public class OverlappingWays extends Test
 					ar = ws.way.get("area");
 					if (ar != null && ("true".equalsIgnoreCase(ar) || "yes".equalsIgnoreCase(ar) || "1".equals(ar)))
 						area++;
-					if (ws.way.get("landuse") != null)
+					if (ws.way.get("landuse") != null || ws.way.get("natural") != null
+					|| ws.way.get("amenity") != null || ws.way.get("leisure") != null)
 					{
 						area++; ways--;
 					}
@@ -91,7 +92,9 @@ public class OverlappingWays extends Test
 
 					if(area > 0)
 					{
-						if (highway == ways)
+						if (ways == 0 || duplicated.size() == area)
+							errortype = tr("Overlapping areas");
+						else if (highway == ways)
 							errortype = tr("Overlapping highways (with area)");
 						else if (railway == ways)
 							errortype = tr("Overlapping railways (with area)");

@@ -6,7 +6,7 @@
 
 ### Authentication:
 ## Upload
-# this is handed out by Ojw/almien only. OSM or Wiki account will NOT work.
+# Enter your normal OSM username and password here.
 UploadUsername=CHANGEME
 UploadPassword=CHANGEME
 

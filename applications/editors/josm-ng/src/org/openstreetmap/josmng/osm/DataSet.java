@@ -285,6 +285,9 @@ public abstract class DataSet {
     public static final class Factory {
         private DataSet ds;
         private OsmPrimitive lastPrimitive;
+        private Map<Long,Node> newNodes = new HashMap<Long, Node>();
+        private Map<Long,Way> newWays = new HashMap<Long, Way>();
+        private Map<Long,Relation> newRels = new HashMap<Long, Relation>();
 
         private Factory(int capa) {
             ds = new DataSetMemoryImpl(capa);
@@ -296,38 +299,41 @@ public abstract class DataSet {
             return ret;
         }
         public Node getNode(long id) {
-            return ds.getNode(id);
+            return id < 0 ? newNodes.get(id) : ds.getNode(id);
         }
                 
         public Node node(long id, double lat, double lon, int time, String user, boolean visible) {
             ds.getClass(); // null check
-            Node n = new Node(ds, id, lat, lon, time, user, visible);
+            Node n = new Node(ds, id < 0 ? 0 : id, lat, lon, time, user, visible);
             ds.addPrimitive(n);
             lastPrimitive = n;
+            if (id < 0) newNodes.put(id, n);
             return n;
         }
 
         public Way getWay(long id) {
-            return ds.getWay(id);
+            return id < 0 ? newWays.get(id) : ds.getWay(id);
         }
 
         public Way way(long id, int time, String user, boolean visible, Node[] nodes) {
             ds.getClass(); // null check
-            Way w = new Way(ds, id, time, user, visible, nodes); // XXX vis
+            Way w = new Way(ds, id < 0 ? 0 : id, time, user, visible, nodes); // XXX vis
             ds.addPrimitive(w);
             lastPrimitive = w;
+            if (id < 0) newWays.put(id, w);
             return w;
         }
         
         public Relation getRelation(long id) {
-            return ds.getRelation(id);
+            return id < 0 ? newRels.get(id) : ds.getRelation(id);
         }
                 
         public Relation relation(long id, int time, String user, boolean visible, Map<OsmPrimitive,String> members) {
             ds.getClass(); // null check
-            Relation r = new Relation(ds, id, time, user, visible, members); // XXX vis
+            Relation r = new Relation(ds, id < 0 ? 0 : id, time, user, visible, members); // XXX vis
             ds.addPrimitive(r);
             lastPrimitive = r;
+            if (id < 0) newRels.put(id, r);
             return r;
         }
         

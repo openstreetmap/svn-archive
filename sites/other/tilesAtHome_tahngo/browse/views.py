@@ -2,12 +2,14 @@ import os
 from stat import *
 from struct import unpack, calcsize
 from datetime import datetime
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from tah.requests.models import Request
 from tah.tah_intern.Tile import Tile
 from tah.tah_intern.models import Settings
-from django.contrib.auth.models import User
+
 
 def index(request):
   layer =  request.GET.get("layer","tile")
@@ -56,8 +58,9 @@ def tiledetails(request,layername,z,x,y):
     except User.DoesNotExist: user = "Nonexistent User ID %d" % userid
   else: user='Unknown'
 
-  reqs = Request.objects.filter(min_z=base_z,x=base_x,y=base_y)
-
+  reqs = Request.objects.filter(min_z=base_z,x=base_x,y=base_y).order_by('status','-request_time')
+  #reqs = Request.objects.filter(Q(min_z=base_z,x=base_x,y=base_y),Q(status__lt=2,layers__name__contains =layername)|Q(status=2)).order_by('status')
+  #reqs = reqs.exclude()
   return render_to_response('tile_details.html',{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user, 'reqs':reqs})
 
 def show_map_of(request):

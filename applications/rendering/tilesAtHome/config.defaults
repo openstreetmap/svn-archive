@@ -14,24 +14,24 @@ UploadPassword = none
 
 ### defaults for user settings:
 
-Debug=0
-Verbose=0
+Debug = 0
+Verbose = 0
 
-ProcessLog=0
-ProcessLogFile=/tmp/tah.log
+ProcessLog = 0
+ProcessLogFile = /tmp/tah.log
 
 WorkingDirectory = tmp/
-Niceness=nice -n10
+Niceness = nice -n10
 
 DownloadTimeout = 1800
-KeepDataFile=0
+KeepDataFile = 0
 FallBackToXAPI = 1
 
 i18n=1
 
 Osmarender = XSLT
 
-Inkscape=inkscape
+Inkscape = inkscape
 
 BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
 BatikJVMSize = 1536M
@@ -48,8 +48,8 @@ PngOptimizer = pngcrush
 Subversion = svn
 SubversionUpdateCmd = up
 
-Zip=zip
-7zipWin=0
+Zip = zip
+7zipWin = 0
 
 UseHostnameInZipname = 0
 UploadChunkSize = 9

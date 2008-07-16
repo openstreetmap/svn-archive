@@ -603,7 +603,8 @@ sub ProcessRequestsFromServer
         if ($Request =~ /Invalid username/)
         {
             die "ERROR: Authentication failed - please check your username "
-                    . "and password in 'authentication.conf'.";
+                    . "and password in 'authentication.conf'.\n\n"
+                    . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
         }
         else
         {

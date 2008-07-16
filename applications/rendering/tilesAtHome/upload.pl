@@ -157,6 +157,7 @@ sub processOldZips
                 {
                     $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($FailureMode/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
                     $Reason = "queue full";
+                    $sleepdelay = int($sleepdelay) + 1; 
                 }
                 elsif ($FailureMode == 1) ## success
                 {
@@ -167,9 +168,10 @@ sub processOldZips
                 }
                 elsif ($FailureMode == 0) ## hard fail
                 {
+                    $sleepdelay = int($sleepdelay) + 1; 
                     last;
                 }
-                $sleepdelay = int($sleepdelay) + 1; 
+
                 if ($sleepdelay > $MaxDelay)
                 {
                     $sleepdelay = $MaxDelay;

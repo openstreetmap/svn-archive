@@ -326,9 +326,7 @@ sub UploadOkOrNot
     DownloadFile($Config->get("GoNogoURL"), $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file
-    my $Token = <$fp>; ##read another line from file
     chomp $Load;
-    chomp $Token;
     close $fp;
     killafile($LocalFilename);
     $Load=1-$Load;

@@ -37,6 +37,7 @@ BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
 BatikJVMSize = 1536M
 Batik = 0
 BatikPort = 18123
+BatikClasspath = /usr/share/batik-1.6/lib/batik-rasterizer.jar:/usr/share/xerces-2/lib/xercesImpl.jar:batik-agent.jar
 
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000

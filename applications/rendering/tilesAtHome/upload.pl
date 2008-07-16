@@ -208,22 +208,6 @@ sub upload
         return 0;
     }
 
-    if($ZipSize > $Config->get("ZipHardLimit") * 1000 * 1000) 
-    {
-        statusMessage("zip is larger than ".$Config->get("ZipHardLimit")." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,1);
-        runCommand("unzip -qj $File -d ".$Config->get("WorkingDirectory") ,$PID);
-
-        if($Config->get("DeleteZipFilesAfterUpload"))
-        {
-            unlink($File);
-        }
-        else
-        {
-            rename($File, $File."_oversized"); 
-        }
-
-        return 0;
-    }
     my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
     my $Layer;

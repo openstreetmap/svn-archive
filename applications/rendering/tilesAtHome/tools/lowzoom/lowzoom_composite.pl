@@ -49,7 +49,7 @@ die "can't find upload directory \"$uploadDir\"" unless (-d $uploadDir);
 my $X = shift();
 my $Y = shift();
 my $Z = shift();
-my $MaxZ = shift() || 8;
+my $MaxZ = shift() || 12;
 my $OutputLayer = shift() || "tile";
 my $BaseLayer = shift() || "tile";
 my $CaptionLayer;
@@ -57,7 +57,7 @@ $CaptionLayer = shift() if ($BaseLayer eq "captionless"); #only check for captio
 my $Options = shift();
 
 # Check the command-line arguments, and display usage information
-my $Usage = "Usage: lowzoom.pl x y z baseZoom outputLayer [baseLayer] [captionLayer] [keep]\n  x,y,z - the tile at the top of the tileset to be generated\n  baseZoom - the zoom level to download tiles from\n  outputLayer - which layer to produce lowzoom tiles for (tile (default) or maplint)\n  baseLayer - which layer to use as a base layer (tile (default) or base) \n  captionLayer - layer to composite over base layer (none (default) or captions)\n  'keep' - don't move tiles to an upload area afterwards\n\nOther options (URLs, upload staging area) are part of the script - change them in source code\n\nNote: For zoom level 8-12 use lowzoom.pl x y z 12 tile captionless caption\n      For zoom level 0-7 use lowzoom.pl x y z 8 tile tile\n";
+my $Usage = "Usage: lowzoom.pl x y z baseZoom outputLayer [baseLayer] [captionLayer] [keep]\n  x,y,z - the tile at the top of the tileset to be generated\n  baseZoom - the zoom level to download tiles from\n  outputLayer - which layer to produce lowzoom tiles for (tile (default) or maplint)\n  baseLayer - which layer to use as a base layer (tile (default) or base) \n  captionLayer - layer to composite over base layer (none (default) or captions)\n  'keep' - don't move tiles to an upload area afterwards\n\nOther options (URLs, upload staging area) are part of the script - change them in source code\n\nNote: For zoom level 6-11 use lowzoom.pl x y z 12 tile captionless caption\n      For zoom level 0-5 use lowzoom.pl x y z 5 tile tile\n";
 if(($MaxZ > 12)
   || ($MaxZ <= $Z)
   || ($Z < 0) || (!defined($Z))

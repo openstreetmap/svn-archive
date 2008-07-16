@@ -1,0 +1,16 @@
+{% extends "base_requests.html" %}
+{% block title %}t@h Show Requests{% endblock %}
+{% block breadcrumb %}{{ block.super }} <a href="{% url tah.requests.views.show_uploads_page %}">&raquo;Show uploads</a> {% endblock %}
+
+{% block heading %}t@h Uploads{% endblock %}
+{% block content %}
+<h3>30 most recent uploads</h3>
+<table border="1" align="center">
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Uploaded</td><td>Renderer</td></tr>
+  {% for req in reqs_list %}
+  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{ req.client }}</td></tr>
+  {% endfor %}
+</table>
+<div style="text-align:center">{% if is_paginated %}Page {{ page }} of {{ pages }} ({% if has_previous %}<a href="{% url tah.requests.views.show_requests 1 %}">First</a> {%ifnotequal previous "1" %}... {%endifnotequal%}<a href="{% url tah.requests.views.show_requests previous %}">{{previous}}</a> {%endif%}{{page}}  {% if has_next %}<a href="{% url tah.requests.views.show_requests next %}">{{next}}</a> {% ifnotequal next pages %}... {%endifnotequal%}<a href="{% url tah.requests.views.show_requests pages %}">Last</a>{%endif%}){% endif %}</div>
+
+{% endblock %}

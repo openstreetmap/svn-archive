@@ -27,6 +27,10 @@ class Request(models.Model):
   def layers_str(self):
     return  ','.join([a['name'] for a in self.layers.values()])
 
+  @property
+  def status_str(self):
+    return  ['unhandled','active','finished'][self.status]
+
   class Admin:
     pass
 

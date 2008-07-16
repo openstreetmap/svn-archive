@@ -106,9 +106,9 @@ public class SimplifyWayAction extends JosmAction {
 		for (int i = from+1; i < to; i++) {
 			Node n = wnew.nodes.get(i);
 			double xte = Math.abs(EARTH_RAD * xtd(
-				fromN.coor.lat(), fromN.coor.lon(),
-				toN.coor.lat(), toN.coor.lon(),
-				n.coor.lat(), n.coor.lon()));
+				fromN.coor.lat() * Math.PI/180, fromN.coor.lon() * Math.PI/180,
+				toN.coor.lat() * Math.PI/180, toN.coor.lon() * Math.PI/180,
+				n.coor.lat() * Math.PI/180, n.coor.lon() * Math.PI/180));
 			if (xte > xtemax) {
 				xtemax = xte;
 				imax = i;

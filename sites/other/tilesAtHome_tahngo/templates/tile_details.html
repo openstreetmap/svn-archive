@@ -18,7 +18,7 @@
     Could not find base tileset on disk.<br/> Displaying fallback legacy tile.
     {%endif%}
     <h3>Current Request status</h3>
-    {% if reqs %}{% for r in reqs %}{{r.status_str|capfirst}} request at priority {{r.priority}} has been requested {{r.request_time|timesince}} ago.<br/>Renderer: {{r.client}}{% endfor %}
+    {% if reqs %}{% for r in reqs %}<p>{{r.status_str|capfirst}} request at priority {{r.priority}} has been requested {{r.request_time|timesince}} ago.<br/>Renderer: {{r.client}}</p>{% endfor %}
     {%else%}No request found{%endif%}
   </td>
   <td><a href="{% url tah.browse.views.index %}?layer={{tile.layer}}&z={{tile.z}}&x={{tile.x}}&y={{tile.y}}"><img src="http://tah.openstreetmap.org/Tiles/{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}.png" width="256" height="256" class="browseimg"/></a></td>

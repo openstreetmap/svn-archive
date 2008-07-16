@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.AbstractUndoableEdit;
@@ -262,13 +263,19 @@ public abstract class DataSet {
     
     private class SlidingCompoundEdit extends CompoundEdit {
         private Token token;
+        private Stack<Token> allTokens = new Stack<Token>();
 
         public SlidingCompoundEdit(Token token) {
             this.token = token != null ? token : new Token();
+            allTokens.push(this.token);
         }
 
         public @Override boolean addEdit(UndoableEdit anEdit) {
             assert anEdit instanceof BaseToggleEdit;
+
+            Token curr = currentToken.get();
+            if (curr != null && curr != allTokens.peek()) allTokens.push(curr);
+            
             if (super.addEdit(anEdit)) return true; // in progress: collected
             
             // already closed edit, check if the comming edit is about
@@ -285,7 +292,7 @@ public abstract class DataSet {
 
         public @Override void undo() throws CannotUndoException {
             super.undo();
-            token.onUndone();
+            while (!allTokens.empty()) allTokens.pop().onUndone();
         }
         
         public @Override String getPresentationName() {

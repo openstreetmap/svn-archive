@@ -287,6 +287,69 @@ public class DataSetTest {
         assertFalse(contains(n2));
     }
 
+    int onUndoneCounter;
+    
+    private class CountingToken extends Token {
+        public CountingToken(String name) {
+            super(name);
+        }
+        protected @Override void onUndone() {
+            onUndoneCounter++;
+        }
+    }
+    
+    public @Test void testTokenOnUndone() {
+        data.atomicEdit(new Runnable() {public void run() {
+            w1.delete();
+        }}, new CountingToken("w1"));
+        
+        assertTrue("Name set", undo.getUndoPresentationName().contains("w1"));
+        assertEquals(0, onUndoneCounter);
+        
+        undo.undo();
+        assertEquals(1, onUndoneCounter);
+    }
+
+    public @Test void testNestedOnUndone() {
+        data.atomicEdit(new Runnable() {public void run() {
+            w1.delete();
+            data.atomicEdit(new Runnable() {public void run() {
+                n1.delete();
+            }}, new CountingToken("n1"));
+        }}, new CountingToken("w1"));
+        
+        assertTrue("Name set", undo.getUndoPresentationName().contains("w1"));
+        assertEquals(0, onUndoneCounter);
+        
+        undo.undo();
+        assertEquals(2, onUndoneCounter);
+    }
+
+    public @Test void testNestedComposition() {
+        data.atomicEdit(new Runnable() {public void run() {
+            Token token = new CountingToken("n1");
+            data.atomicEdit(new Runnable() {public void run() {
+                n1.setCoordinate(new CoordinateImpl(15, 16));
+            }}, token);
+        
+            data.atomicEdit(new Runnable() {public void run() {
+                n1.setCoordinate(new CoordinateImpl(17, 18));
+            }}, token);
+        }}, null);
+        
+        // check the final state
+        checkPrimitives(true, 17, 18);
+        assertTrue(undo.canUndo());
+        assertFalse(undo.canRedo());
+
+        // undo and verify the very original state
+        undo.undo();
+        checkPrimitives(false, 10, 11);
+        
+        // check whether onUndone was called only once
+        assertEquals(1, onUndoneCounter);
+    }
+
     private boolean contains(OsmPrimitive prim) {
         for (OsmPrimitive curr : data.getPrimitives(Bounds.WORLD)) {
             if (prim == curr) return true;

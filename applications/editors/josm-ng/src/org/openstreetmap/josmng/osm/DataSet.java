@@ -53,10 +53,10 @@ public abstract class DataSet {
     private final Map<Integer,String> users = new HashMap<Integer, String>();
     private final Map<String,Integer> usersBack = new HashMap<String, Integer>();
     
-    private final ThreadLocal<Object> currentToken = new  ThreadLocal<Object>();
+    private final ThreadLocal<Token> currentToken = new  ThreadLocal<Token>();
     
-    public void atomicEdit(Runnable r, Object token) {
-        Object oldToken = currentToken.get();
+    public void atomicEdit(Runnable r, Token token) {
+        Token oldToken = currentToken.get();
         currentToken.set(token);
         undoSupport.beginUpdate();
         try {
@@ -256,16 +256,15 @@ public abstract class DataSet {
         }
         
         protected @Override CompoundEdit createCompoundEdit() {
-            Object token = currentToken.get();
-            return new SlidingCompoundEdit(token);
+            return new SlidingCompoundEdit(currentToken.get());
         }
     }
     
     private class SlidingCompoundEdit extends CompoundEdit {
-        private Object token;
+        private Token token;
 
-        public SlidingCompoundEdit(Object token) {
-            this.token = token != null ? token : new Object();
+        public SlidingCompoundEdit(Token token) {
+            this.token = token != null ? token : new Token();
         }
 
         public @Override boolean addEdit(UndoableEdit anEdit) {
@@ -283,6 +282,27 @@ public abstract class DataSet {
             }
             return false;
         }
+
+        public @Override void undo() throws CannotUndoException {
+            super.undo();
+            token.onUndone();
+        }
+        
+        public @Override String getPresentationName() {
+            String tokenName = token.name();
+            return tokenName == null ? super.getPresentationName() : tokenName;
+        }
+
+        public @Override String getUndoPresentationName() {
+            String tokenName = token.name();
+            return tokenName == null ? super.getUndoPresentationName() : "Undo " + tokenName;
+        }
+
+        public @Override String getRedoPresentationName() {
+            String tokenName = token.name();
+            return tokenName == null ? super.getRedoPresentationName() : "Redo " + tokenName;
+        }
+        
     }
 
     public static DataSet empty() {

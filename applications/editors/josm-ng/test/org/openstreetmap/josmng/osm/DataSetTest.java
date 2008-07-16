@@ -97,7 +97,7 @@ public class DataSetTest {
         assertFalse(n1.isModified());
         
         //perform two back-to-back edits
-        Object token = new Object();
+        Token token = new Token();
         data.atomicEdit(new Runnable() {public void run() {
             n1.setCoordinate(new CoordinateImpl(15, 16));
         }}, token);
@@ -160,7 +160,7 @@ public class DataSetTest {
         assertFalse(undo.canUndo());
         assertFalse(undo.canRedo());
         checkPrimitives(false, 10, 11, 20, 21, 30, 31);
-        Object token = new Object();
+        Token token = new Token();
         
         // two back-to-back multiedits
         data.atomicEdit(new Runnable() {public void run() {

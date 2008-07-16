@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="Compile and build java classes plus jar archives">
+
+	<target name="all" depends="clean,build,pack,create_run_jar" />
+
+	<target name="clean">
+		<delete>
+			<fileset dir="bin">
+				<include name="**" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="build">
+		<javac srcdir="src" destdir="bin" target="1.5" />
+		<copy todir="bin">
+			<fileset dir="src">
+				<include name="**/*.png" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="pack">
+		<delete file="JMapViewer.jar" />
+		<delete file="JMapViewer_src.jar" />
+		<jar destfile="JMapViewer.jar" filesetmanifest="mergewithoutmain">
+			<fileset dir="bin" includes="**/jmapviewer/**" />
+		</jar>
+		<jar destfile="JMapViewer_src.jar" filesetmanifest="mergewithoutmain">
+			<fileset dir="src" includes="**/jmapviewer/**" />
+		</jar>
+	</target>
+
+	<target name="create_run_jar">
+		<delete file="JMapViewer_Demo.jar" />
+		<jar destfile="JMapViewer_Demo.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="org.openstreetmap.gui.jmapviewer.Demo" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin" includes="**/jmapviewer/**" />
+			<fileset dir="src" includes="**/jmapviewer/**/*.java" />
+		</jar>
+	</target>
+</project>

@@ -32,7 +32,9 @@ def export_MapOf(request):
         ctx.paint()
     im.write_to_png(pngfile)
     pngfile.seek(0)
-    return HttpResponse(pngfile.read(), mimetype='image/png')
+    response = HttpResponse(pngfile.read(), mimetype='image/png')
+    response['Content-Disposition'] = 'attachment; filename=map.png'
+    return response
   else: return HttpResponse("<form ACTION=\"\" METHOD=\"GET\">%s<input type=\"submit\"></form>"%(form.as_p()))
 
 

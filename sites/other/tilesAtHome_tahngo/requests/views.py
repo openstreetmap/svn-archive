@@ -35,13 +35,6 @@ def show_requests(request,page):
 def show_uploads_page(request):
   return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time')[:30],template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
 
-def request_exists(request):
-    """ Gets handed a CreateForm bound to form data. Returns the 'Request' element if the request exists 
-        already and 0 if not.
-        TODO: NOT IMPLEMEMENTED YET.
-    """
-    return 0
-
 
 def saveCreateRequestForm(request, form):
     """ Returns (Request, reason), with Request being 'None' on failure and 
@@ -51,7 +44,7 @@ def saveCreateRequestForm(request, form):
     formdata = form.cleaned_data.copy()
     # delete entries that are not needed as default value or won't work
     del formdata['layers']
-    del formdata['status']
+    formdata['status']=0
     if not formdata['min_z'] in ['6','12']: formdata['min_z'] = 12
     if not formdata['max_z']: formdata['max_z'] = {0:5,6:11,12:17}[formdata['min_z']]
     if not formdata['priority'] or \
@@ -63,7 +56,9 @@ def saveCreateRequestForm(request, form):
     if not Tile(None,formdata['min_z'],formdata['x'],formdata['y']).is_valid():
       return (None, 'Invalid tile coordinates')
     # Create a new request, or get the existing one
-    newRequest, created_new = Request.objects.get_or_create(status=0, min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
+    #TODO We simply grab an status=0 or status=1 request and add the layers.
+    #TODO This will not work for status=1 as the request is already out to the client.
+    newRequest, created_new = Request.objects.filter(status__lt=2).get_or_create(min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
 
     newRequest.ipaddress = request.META['REMOTE_ADDR']
     if not created_new:

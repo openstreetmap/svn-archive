@@ -153,11 +153,11 @@ sub processOldZips
             {
                 $FailureMode = upload("$ZipDir/$File");
 
-                if ($FailureMode >= 10)
+                if ($FailureMode >= 10) # 10 is 1% of 1000, which is the minimum resolution of the server return value
                 {
+                    $sleepdelay = 4  if ($sleepdelay < 4);
                     $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($FailureMode/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
                     $Reason = "queue full";
-                    $sleepdelay = int($sleepdelay) + 1; 
                 }
                 elsif ($FailureMode == 1) ## success
                 {
@@ -177,8 +177,8 @@ sub processOldZips
                     $sleepdelay = $MaxDelay;
                 }
 
-                statusMessage($Reason.", sleeping for " . $sleepdelay . " seconds", $currentSubTask, $progressJobs, $progressPercent,0);
-                sleep ($sleepdelay);
+                statusMessage($Reason.", sleeping for " . int($sleepdelay) . " seconds", $currentSubTask, $progressJobs, $progressPercent,0);
+                sleep (int($sleepdelay));
             }
 
         }
@@ -239,7 +239,7 @@ sub upload
         
         my $Load = UploadOkOrNot();
         
-        if ($Load < 0.9) 
+        if ($Load < 900) 
         {
             statusMessage("Uploading $File", $currentSubTask, $progressJobs, $progressPercent,0);
             my $res = $ua->post($URL,
@@ -287,12 +287,12 @@ sub upload
             return 0;
         }
         my $QueueLength = scalar(@QueueFiles);
-        my $Load = $QueueLength/$MaxQueue;
-        if ($Load > 0.7)
+        my $Load = 1000 * $QueueLength/$MaxQueue;
+        if ($Load > 900) # 95% or 100% with MaxQueue=20
         {
             statusMessage("Not uploading, upload directory full", $currentSubTask, $progressJobs, $progressPercent,0);
             sleep(1);
-            return $Load * 1000;
+            return $Load;
         }
         else
         {
@@ -332,5 +332,5 @@ sub UploadOkOrNot
     close $fp;
     killafile($LocalFilename);
     $Load=1-$Load;
-    return ($Load);
+    return ($Load*1000);
 }

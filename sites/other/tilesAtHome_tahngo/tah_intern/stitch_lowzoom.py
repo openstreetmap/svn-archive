@@ -33,17 +33,22 @@ class Lowzoom(Tileset):
     ctx.scale(0.5, 0.5)
     for i in range(0,2):
       for j in range(0,2):
-        if z == self.base_z+5: imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
-        else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
-        try:
-          image = cairo.ImageSurface.create_from_png(imagefile)
-        except IOError, e:
-          print "IOError %s at %d %d" % (e,2*x+i,2*y+j)
-          image = cairo.ImageSurface.create_from_png(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
+        retries, error = 0,True
+        while error and retries < 3:
+          if z == self.base_z+5: 
+            imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
+          else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
+          try:
+            image = cairo.ImageSurface.create_from_png(imagefile)
+            error = False
+          except IOError, e:
+            retries += 1
+            print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
+            image = cairo.ImageSurface.create_from_png(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
         ctx.set_source_surface(image,256*i,256*j)
-	#ctx.set_operator(cairo.CAIRO_OPERATOR_SOURCE)
         ctx.paint()
-        #image.destroy()
+        del (image)
+	del (imagefile)
     im.write_to_png(pngfilepath)
     t= Tile(layer,z,x,y)
     self.add_tile(t,pngfilepath)
@@ -60,13 +65,13 @@ def find_old_lowzooms(base_tile_path):
       try: 
           lz_file = os.path.join(lz_path,"%d_%d" % (x,y))
           lz_mtime = os.stat(os.path.join(lz_path,lz_file)).st_mtime
+          if r.clientping_time > datetime.fromtimestamp(lz_mtime):
+            #print "New tiles in old lowzoom (%d %d ) found" % (x,y)
+            old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
       except:
           #lowzoom file didn't exist yet. create.
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
-      if r.clientping_time > datetime.fromtimestamp(lz_mtime):
-          #print "New tiles in old lowzoom (%d %d ) found" % (x,y)
-          old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
   #finally always dd (0,0,0)
   old_lowzooms['0_0_0']=(0,0,0)

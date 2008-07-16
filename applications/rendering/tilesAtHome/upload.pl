@@ -237,9 +237,9 @@ sub upload
         
         my $URL = $Config->get("UploadURL");
         
-        my ($UploadToken,$Load) = UploadOkOrNot();
+        my $Load = UploadOkOrNot();
         
-        if ($UploadToken) 
+        if ($Load < 0.9) 
         {
             statusMessage("Uploading $File", $currentSubTask, $progressJobs, $progressPercent,0);
             my $res = $ua->post($URL,
@@ -249,7 +249,6 @@ sub upload
               passwd => $Config->get("UploadPassword"),
               version => $Config->get("ClientVersion"),
               single_tileset => $SingleTileset,
-              token => $UploadToken,
               layer => $Layer ]);
              
             if(!$res->is_success())
@@ -267,6 +266,8 @@ sub upload
         }
         else
         {
+            statusMessage("Not uploading, server queue full", $currentSubTask, $progressJobs, $progressPercent,0);
+            sleep(1);
             return $Load; #soft fail
         }
     }
@@ -331,17 +332,5 @@ sub UploadOkOrNot
     close $fp;
     killafile($LocalFilename);
     $Load=1-$Load;
-    ##DEBUG print STDERR "\nLoad: $Load \n";
-    # $Token=1 if (! $Token);
-    if ($Load > 0.8) 
-    {
-        statusMessage("Not uploading, server queue full", $currentSubTask, $progressJobs, $progressPercent,0);
-        sleep(1);
-        return (0,$Load*1000);
-    }
-    else
-    {
-        #DEBUG: print STDERR "\n $Token\n";
-        return ($Token,$Load*1000);
-    }
+    return ($Load);
 }

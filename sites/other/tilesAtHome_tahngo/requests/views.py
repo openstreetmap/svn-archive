@@ -55,7 +55,7 @@ def saveCreateRequestForm(request, form):
     if not formdata['min_z'] in ['6','12']: formdata['min_z'] = 12
     if not formdata['max_z']: formdata['max_z'] = {0:5,6:11,12:17}[formdata['min_z']]
     if not formdata['priority'] or \
-      formdata['priority']>3 or formdata['priority']<1: 
+      formdata['priority']>4 or formdata['priority']<1: 
         formdata['priority'] = 3
     formdata['clientping_time'] = force_unicode(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 

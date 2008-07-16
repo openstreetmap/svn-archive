@@ -30,6 +30,7 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Token;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.view.EditMode;
 import org.openstreetmap.josmng.view.MapView;
@@ -42,7 +43,7 @@ public class SelectMode extends EditMode {
     Point pressPoint;
     boolean pressed;
     Collection<Node> dragged;
-    Object moveToken;
+    Token moveToken;
 
     public SelectMode(MapView view) {
         super("Select", view);
@@ -80,7 +81,7 @@ public class SelectMode extends EditMode {
             dragged = new HashSet(((Way)prim).getNodes());
         }
         getLayer().setSelection(Collections.singleton(prim));
-        moveToken = new Object();
+        moveToken = new Token("Move");
     }
     
     public @Override void mouseReleased(MouseEvent e) {

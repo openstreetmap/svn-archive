@@ -40,9 +40,12 @@ import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Token;
 import org.openstreetmap.josmng.osm.Way;
+import org.openstreetmap.josmng.osm.visitors.CollectVisitor;
 import org.openstreetmap.josmng.ui.StatusBar;
 import org.openstreetmap.josmng.view.EditMode;
+import org.openstreetmap.josmng.view.EditableLayer;
 import org.openstreetmap.josmng.view.MapView;
 
 /**
@@ -53,7 +56,7 @@ import org.openstreetmap.josmng.view.MapView;
  */
 public class TheOnlyMode extends EditMode {
     private Point pressPoint;
-    private Object moveToken;
+    private Token moveToken;
 
     private OsmPrimitive clicked;
     
@@ -74,8 +77,27 @@ public class TheOnlyMode extends EditMode {
         StatusBar.getDefault().setText(" ");
     }
 
+    private String getLabelForSelection() {
+        CollectVisitor cv = new CollectVisitor();
+        cv.visitCollection(getLayer().getSelection());
+        if (cv.getWays().isEmpty() && !cv.getNodes().isEmpty()) {
+            return cv.getNodes().size() > 1 ? "Nodes" : "Node";
+        } else if (!cv.getWays().isEmpty() && cv.getNodes().isEmpty()) {
+            return cv.getWays().size() > 1 ? "Ways" : "Way";
+        } else {
+            return "Selection";
+        }
+    }
+    
     public @Override void mousePressed(MouseEvent e) {
-        moveToken = new Object();
+        moveToken = new Token() {
+            EditableLayer layer = getLayer();
+            Collection<OsmPrimitive> sel = new ArrayList<OsmPrimitive>(layer.getSelection());
+            protected @Override void onUndone() {
+                layer.setSelection(sel);
+            }
+            
+        };
         mode = Mode.NONE;
         clicked = null;
         
@@ -89,6 +111,7 @@ public class TheOnlyMode extends EditMode {
             } else {
                 mode = Mode.SELECT;
             }
+            moveToken.setName("Move " + getLabelForSelection());
         } else if (modMask(e, 0)) { // no modifiers
             OsmPrimitive prim = getNearestPrimitive(pressPoint, null);
             clicked = prim;
@@ -100,6 +123,7 @@ public class TheOnlyMode extends EditMode {
                 if (!getLayer().getSelection().contains(prim)) 
                     getLayer().setSelection(Collections.<OsmPrimitive>singleton(prim));
             }
+            moveToken.setName("Move " + getLabelForSelection());
         } else if (modMask(e, ALT_DOWN_MASK)) {
             mode = Mode.NODE;
             final DataSet ds = getData(); ds.atomicEdit(new Runnable() { public void run() {
@@ -108,21 +132,20 @@ public class TheOnlyMode extends EditMode {
             OsmPrimitive prim = getNearestPrimitive(pressPoint, idx);
 
             if (prim instanceof Node) {
-System.err.println("Preexisting node:");
                 clicked = prim;
                 extendWay(ds, (Node)clicked);
                 ((Node)clicked).setCoordinate((Coordinate)clicked); // post fake edit to save initial coords
             } else if (prim instanceof Way) { // add a node into a way
-System.err.println("Preexisting way:");
                 Coordinate c = viewToCoord(pointToView(pressPoint));
                 clicked = ds.createNode(c.getLatitude(), c.getLongitude());
                 insertNodeInto((Way)prim, idx[0], (Node)clicked);
+                moveToken.setName("Insert Node");
                 extendWay(ds, (Node)clicked);
             } else {
                 assert prim == null;
-System.err.println("Adding new node:");
                 Coordinate c = viewToCoord(pointToView(pressPoint));
                 clicked = ds.createNode(c.getLatitude(), c.getLongitude());
+                moveToken.setName("Create Node");
                 extendWay(ds, (Node)clicked);
             }
             
@@ -237,10 +260,12 @@ System.err.println("Adding new node:");
             if (et.node == n) return;
             doAddNode(et.way, n, et.way.getNodes().get(0) == et.node);
             getLayer().setSelection(Collections.<OsmPrimitive>singleton(et.way));
+            moveToken.setName("Extend Way");
         } else if (et.node != null) { // selected node only, create way
             if (et.node == n) return; // don't self-append
             Way way = ds.createWay(et.node, n);
             getLayer().setSelection(Collections.<OsmPrimitive>singleton(way));
+            moveToken.setName("Create Way");
             last = n;
         } else {
             getLayer().setSelection(Collections.<OsmPrimitive>singleton(n));

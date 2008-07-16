@@ -3,9 +3,13 @@
 {% block breadcrumb %}{{ block.super }} <a href="{% url tah.requests.views.index %}">&raquo;Requests</a> {% endblock %}
 
 {% block heading %}t@h Requests{% endblock %}
-{% block content %}This is the request manager. You can <ul><li>see the list of <a href="{% url tah.requests.views.show_first_page %}">current requests</a>.</li>
+{% block content %}<p>This is the request manager. <a href="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap.html#T@H">Graphical statistics</a> are shown through munin. Here you can: </p><ul><li>see the list of <a href="{% url tah.requests.views.show_first_page %}">current requests</a>.</li>
+<li>see the list of <a href="{% url tah.requests.views.show_uploads_page %}">recently uploaded requests</a>.<br/><br/></li>
+
 <li><a href="{% url tah.requests.views.create %}">create</a> a new request</li>
 <li><a href="{% url tah.requests.views.take %}">take</a> an existing request for processing</li>
-<li><a href="{% url tah.requests.views.upload_request %}">upload</a> a finished request.</li>
+<li><a href="{% url tah.requests.views.upload_request %}">upload</a> a finished request.<br/><br/></li>
+
 <li><a href="{% url tah.requests.views.show_latest_client_version %}">Show latest t@h client version</a>.</li>
-</ul>{% endblock %}
+</ul>
+{% endblock %}

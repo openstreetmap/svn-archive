@@ -28,11 +28,12 @@ def show_first_page(request):
 def show_requests(request,page):
   if page: pagination=30 
   else: pagination=0
-  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=0).order_by('-request_time'),template_name='requests_show.html',allow_empty=True,paginate_by=pagination,page=page,template_object_name='reqs',extra_context={});
+  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=0).order_by('-request_time'),template_name='requests_show.html',allow_empty=True,paginate_by=pagination,page=page,template_object_name='new_reqs',extra_context={'active_reqs_list':Request.objects.filter(status=1).order_by('-clientping_time')[:30]});
+
 
 @cache_control(must_revalidate=True, max_age=30)
 def show_uploads_page(request):
-  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-request_time'),template_name='requests_show.html',allow_empty=True,paginate_by=pagination,page=page,template_object_name='new_reqs',extra_context={'active_reqs_list':Request.objects.filter(status=1).order_by('-clientping_time')[:30]});
+  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time')[:30],template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
 
 def request_exists(request):
     """ Gets handed a CreateForm bound to form data. Returns the 'Request' element if the request exists 

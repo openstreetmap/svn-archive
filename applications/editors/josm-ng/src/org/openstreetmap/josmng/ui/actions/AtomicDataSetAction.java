@@ -21,10 +21,14 @@
 package org.openstreetmap.josmng.ui.actions;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.AbstractAction;
 
 import javax.swing.Icon;
 import org.openstreetmap.josmng.osm.DataSet;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Token;
 import org.openstreetmap.josmng.ui.Main;
 import org.openstreetmap.josmng.view.EditableLayer;
 import org.openstreetmap.josmng.view.osm.OsmLayer;
@@ -34,26 +38,38 @@ import org.openstreetmap.josmng.view.osm.OsmLayer;
  * automatically run inside DataSet.atomicEdit. This, togehter with providing
  * current layer and its DataSet allows removing most of the boilerplate code.
  * 
+ * It also takes care of naming the undo queue edit by the action's name
+ * and resetting the selection in case the action is undone.
+ * 
  * @author nenik
  */
 public abstract class AtomicDataSetAction extends AbstractAction {
+    String label;
+    
     protected AtomicDataSetAction(String label) {
         super(label);
+        this.label = label;
     }
     
     protected AtomicDataSetAction(String label, Icon icon) {
         super(label, icon);
+        this.label = label;
     }
 
     public void actionPerformed(final ActionEvent e) {
         final EditableLayer layer = Main.main.getMapView().getCurrentEditLayer();
+        final Collection<OsmPrimitive> sel = new ArrayList(layer.getSelection());
         if (layer instanceof OsmLayer) {
             final DataSet ds = ((OsmLayer)layer).getDataSet();
             ds.atomicEdit(new Runnable() {
                 public void run() {
                     perform((OsmLayer)layer, ds, e);
                 }
-            }, null);
+            }, new Token(label) {
+                protected @Override void onUndone() {
+                    layer.setSelection(sel);
+                }
+            });
         }
     }
     

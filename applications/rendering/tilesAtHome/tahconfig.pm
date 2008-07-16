@@ -207,10 +207,6 @@ sub CheckConfig
             die("Check your upload password\n");
         }
 
-        if( ($Config->get("UploadChunkSize")*1024*1024) > ($Config->get("ZipHardLimit")*1000*1000)){
-            die("! Upload chunks may be too large for server\n");
-        }
-
         if($Config->get("UploadChunkSize") < 0.2){
             $Config->get("UploadChunkSize") = 2;
             print "! Using default upload chunk size of 2.0 MB\n";

@@ -297,22 +297,5 @@ sub compress
         }
     }
     
-    my $ZipSize += -s $Filename; ## Add the 10 MB check here.
-    if($ZipSize > $Config->get("ZipHardLimit") * 1000 * 1000) 
-    {
-        statusMessage($Filename." is larger than ".$Config->get("ZipHardLimit")." MB, retrying as split tileset.", $currentSubTask, $progressJobs, $progressPercent,0);
-        runCommand("unzip -qj $Filename -d ".$Config->get("WorkingDirectory"),$PID);
-
-        if($Config->get("DeleteZipFilesAfterUpload"))
-        {
-            unlink($Filename);
-        }
-        else
-        {
-            rename($Filename, $Filename."_oversized"); 
-        }
-
-    }
-
     return 1;
 }

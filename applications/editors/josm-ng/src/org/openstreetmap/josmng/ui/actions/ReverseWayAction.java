@@ -43,13 +43,13 @@ public class ReverseWayAction extends AtomicDataSetAction {
     }
 
     public @Override void perform(OsmLayer layer, DataSet ds, ActionEvent ae) {
-        new Visitor() {
+        layer.visitSelection(new Visitor() {
             protected @Override void visit(Way w) {
                 List<Node> nodes = new ArrayList<Node>(w.getNodes());
                 Collections.reverse(nodes);
                 w.setNodes(nodes);
             }
-        }.visitCollection(layer.getSelection());
+        });
     }
 
     

@@ -48,8 +48,7 @@ public class SplitWayAction extends AtomicDataSetAction {
 
     public @Override void perform(OsmLayer layer, DataSet ds, ActionEvent ae) {
         // collect the selection
-        CollectVisitor cv = new CollectVisitor();
-        cv.visitCollection(layer.getSelection());
+        CollectVisitor cv = layer.visitSelection(new CollectVisitor());
         
         // verify usable elements are selected
         if (cv.getRelations().size() > 0) return;

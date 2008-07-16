@@ -58,7 +58,7 @@ public abstract class AtomicDataSetAction extends AbstractAction {
 
     public void actionPerformed(final ActionEvent e) {
         final EditableLayer layer = Main.main.getMapView().getCurrentEditLayer();
-        final Collection<OsmPrimitive> sel = new ArrayList(layer.getSelection());
+        final Collection<OsmPrimitive> sel = layer.getSelection();
         if (layer instanceof OsmLayer) {
             final DataSet ds = ((OsmLayer)layer).getDataSet();
             ds.atomicEdit(new Runnable() {

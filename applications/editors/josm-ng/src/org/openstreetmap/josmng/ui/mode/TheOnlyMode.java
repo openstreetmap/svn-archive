@@ -41,6 +41,7 @@ import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Token;
+import org.openstreetmap.josmng.osm.Visitor;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.osm.visitors.CollectVisitor;
 import org.openstreetmap.josmng.ui.StatusBar;
@@ -78,8 +79,8 @@ public class TheOnlyMode extends EditMode {
     }
 
     private String getLabelForSelection() {
-        CollectVisitor cv = new CollectVisitor();
-        cv.visitCollection(getLayer().getSelection());
+        CollectVisitor cv = getLayer().visitSelection(new CollectVisitor());
+
         if (cv.getWays().isEmpty() && !cv.getNodes().isEmpty()) {
             return cv.getNodes().size() > 1 ? "Nodes" : "Node";
         } else if (!cv.getWays().isEmpty() && cv.getNodes().isEmpty()) {
@@ -92,7 +93,7 @@ public class TheOnlyMode extends EditMode {
     public @Override void mousePressed(MouseEvent e) {
         moveToken = new Token() {
             EditableLayer layer = getLayer();
-            Collection<OsmPrimitive> sel = new ArrayList<OsmPrimitive>(layer.getSelection());
+            Collection<OsmPrimitive> sel = layer.getSelection();
             protected @Override void onUndone() {
                 layer.setSelection(sel);
             }
@@ -213,14 +214,15 @@ public class TheOnlyMode extends EditMode {
     }
     
     private void moveSelectionTo(Point p) {
-        Set<Node> s = new HashSet<Node>();
-        for (OsmPrimitive prim : getLayer().getSelection()) {
-            if (prim instanceof Node) {
-                s.add((Node)prim);
-            } else {
-                s.addAll(((Way)prim).getNodes());
+        final Set<Node> s = new HashSet<Node>();
+        getLayer().visitSelection(new Visitor() {
+            protected @Override void visit(Node n) {
+                s.add(n);
             }
-        }
+            protected @Override void visit(Way w) {
+                s.addAll(w.getNodes());
+            }
+        });
         moveNodesTo(s, p);
     }
 
@@ -253,7 +255,6 @@ public class TheOnlyMode extends EditMode {
      * @param n
      */
     private void extendWay(DataSet ds, Node n) {
-        Collection<OsmPrimitive> sel = getLayer().getSelection();
         ExtensionTuple et = getFromSelection();
         if (et.way != null) { // selected way, extend
             if (et.node == null) et.node = closerEnd(et.way, n);
@@ -291,25 +292,21 @@ public class TheOnlyMode extends EditMode {
             
     private ExtensionTuple getFromSelection() {
         ExtensionTuple tuple = new ExtensionTuple();
-        List<OsmPrimitive> sel = new ArrayList<OsmPrimitive>(getLayer().getSelection());
-        if (sel.size() == 1) {
-            OsmPrimitive prim = sel.get(0);
-            if (prim instanceof Way) {
-                tuple.way = (Way)prim;
-                if (isEndpoint(tuple.way, last)) tuple.node = last;
-            } else if (prim instanceof Node) {
-                tuple.node = (Node)prim;
+        CollectVisitor cv = getLayer().visitSelection(new CollectVisitor());
+        if (cv.getNodes().size() == 1) {
+            Node n = cv.getNodes().iterator().next();
+            if (cv.getWays().isEmpty()) {
+                tuple.node = n;
+            } else if (cv.getWays().size() == 1) {
+                Way w = cv.getWays().iterator().next();
+                if (isEndpoint(w, n)) {
+                    tuple.node = n;
+                    tuple.way = w;
+                }
             }
-        } else if (sel.size() == 2) {
-            OsmPrimitive prim1 = sel.get(0);
-            OsmPrimitive prim2 = sel.get(1);
-            if (prim1 instanceof Way && prim2 instanceof Node && isEndpoint((Way)prim1, (Node)prim2)) {
-                tuple.way = (Way)prim1;
-                tuple.node = (Node)prim2;
-            } else if (prim2 instanceof Way && prim1 instanceof Node && isEndpoint((Way)prim2, (Node)prim1)) {
-                tuple.way = (Way)prim2;
-                tuple.node = (Node)prim1;
-            }
+        } else if (cv.getNodes().isEmpty() && cv.getWays().size() == 1) {
+            tuple.way = cv.getWays().iterator().next();
+            if (isEndpoint(tuple.way, last)) tuple.node = last;
         }
         return tuple;
     }

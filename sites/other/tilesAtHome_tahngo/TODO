@@ -1,16 +1,15 @@
 t@h server
 ==========
- - Nicer User statistics
  - Discard incomplete tileset uploads (mail user?)
  - Make upload processor smarter (use upload priorities)
  - Make the clients 'put job back to server' actually work. Right now, it's
    just not possible to rerequest a job where the server thinks it is still in
    progress.
  - Make use of client feedback (re-render on error)
- - Make use of complexity that client can handle
- - Reimplement MapOf or try to integrate the existing PHP version at the current location.
+ - Make use of complexity that client can handle and only hand out to clients that can.
  - Send a "Last-Modified" header back with the Tile files. (Expires, Last Modified, Etag HTTP headers)
-
+ - Fixup lowzoom stitching to look good, so we can do that server side again.
+ - Nicer User statistics
 
 t@h client (will not be implemented by spaetz)
 ==========

@@ -23,12 +23,12 @@ package org.openstreetmap.josmng.osm;
 /**
  * An undo queue token allowing atomic actions having additional limited
  * interaction with the queue. The Token is to be used for
- * {@link DataSet#atomicEdit(java.lang.Runnable, org.openstreetmap.josmng.osm.Token) .
+ * {@link DataSet#atomicEdit(java.lang.Runnable, org.openstreetmap.josmng.osm.Token) DataSet.atomicEdit}.
 
  * It has three purposes:<ul>
  * <li>Allow replacing older edit with newer one.</li>
  * <li>Allow naming the whole edit for the purpose of the Undo action name.</li>
- * <li>Allow performing some additional action once the atomic edit is undone.<li>
+ * <li>Allow performing some additional {@link #onUndone() action} once the atomic edit is undone.</li>
  * </ul>
  * @author nenik
  */
@@ -43,13 +43,23 @@ public class Token {
         this.name = name;
     }
     
-    // a callback that is called whenever is given edit undone.
+    /**
+     * A callback that is called whenever is given edit undone. The callback
+     * can be used e.g. to reset the selection. Specifically, the callback
+     * must not modify the {@link DataSet}.
+     */
     protected void onUndone() {}
 
     protected String name() {
         return name;
     }
     
+    /**
+     * Change the label associated with this edit. This call has to be made
+     * before leaving the {@link DataSet#atomicEdit(java.lang.Runnable, org.openstreetmap.josmng.osm.Token) atomicEdit},
+     * the label change might be ignored otherwise.
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }

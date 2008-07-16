@@ -26,8 +26,10 @@ import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Visitor;
 import org.openstreetmap.josmng.utils.UndoHelper;
 
 /**
@@ -53,8 +55,21 @@ public abstract class EditableLayer extends Layer {
 
     public abstract Collection<OsmPrimitive> getPrimitivesInRect(Rectangle screenRect, boolean contained);
     
-    public Collection<OsmPrimitive> getSelection() {
-        return Collections.unmodifiableCollection(selection);
+    /**
+     * Get current selection. The returned set is a copy, so it can be freely
+     * modified without affecting the actual selection. It can also be safely
+     * iterated while changing the real selection.
+     * The returned set keeps the order of adding primitives into the selection.
+     * 
+     * @return A snapshot of the current selection. 
+     */
+    public Set<OsmPrimitive> getSelection() {
+        return new LinkedHashSet<OsmPrimitive>(selection);
+    }
+    
+    public <V extends Visitor> V visitSelection(V visitor) {
+        visitor.visitCollection(selection);
+        return visitor;
     }
     
     public void setSelection(Collection<OsmPrimitive> newSelection) {

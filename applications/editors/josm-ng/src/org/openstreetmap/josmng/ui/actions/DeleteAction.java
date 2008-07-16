@@ -61,7 +61,7 @@ public class DeleteAction extends AtomicDataSetAction {
         Set<Node> deletedWaysNodes = new HashSet<Node>();
         // delete the primitives and their back references
         // while collecting way nodes for further cleanup
-        for (OsmPrimitive prim : new ArrayList<OsmPrimitive>(layer.getSelection())) {
+        for (OsmPrimitive prim : layer.getSelection()) {
             Collection<OsmPrimitive> uses = prim.getReferrers();
             if (uses != null) {
                 new CleanerVisitor(prim).visitCollection(uses);

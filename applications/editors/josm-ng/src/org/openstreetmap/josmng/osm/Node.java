@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josmng.osm;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import javax.swing.undo.*;
 
 /**
@@ -59,6 +61,11 @@ public final class Node extends OsmPrimitive implements Coordinate {
         this.lat = lat;
         this.lon = lon;
         source.fireNodeMoved(this);
+    }
+
+    public @Override String toString() {
+        NumberFormat format = new DecimalFormat("#.####");
+        return super.toString() + '[' + format.format(lon) + ";" + format.format(lat) + "]";
     }
 
     private class ChangeCoordinatesEdit extends PrimitiveToggleEdit {

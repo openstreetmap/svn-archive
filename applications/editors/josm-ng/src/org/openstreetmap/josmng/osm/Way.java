@@ -76,6 +76,10 @@ public class Way extends OsmPrimitive {
         super.setDeletedImpl(deleted);
     }
 
+    public @Override String toString() {
+        return super.toString() + '[' + nodes.length + "]";
+    }
+
     private class ChangeNodesEdit extends PrimitiveToggleEdit {
         Node[] savedNodes;
 

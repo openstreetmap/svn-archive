@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title>OpenStreetMap Tagwatch</title>
+  <meta name="OpenStreetMap Tagwatch" content="Tagwatch Statistics for OpenStreetMap">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<p align="center"><img src="images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0">
+<span class="logo">Tagwatch</span></p>
+<p align="center">This webseite shows extended information about the tags <em><small>(Key - value pairs)</small></em> which are used within the Map.<br>
+This includes the general description as well as some statistics about their usage.</p>
+<p align="center">A <a href="toplist.htm">toplist</a> comparing the <TMPL_VAR NAME="countrycount"> different countries with each other is available <a href="toplist.htm">here</a>.</p>
+
+<table width="200" align="center">
+  <thead>
+    <tr>
+      <th>Area</th>
+      <th nowrap>OSM data from</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="indexlist">
+    <tr>
+      <td><a href="<TMPL_VAR NAME="country">/En/index.htm"><TMPL_VAR NAME="country"></a></td>
+      <td align="right" nowrap><TMPL_VAR NAME="date"></td>
+    </tr>
+</TMPL_LOOP>
+
+
+  </tbody>
+</table>
+
+<p class="note">Site is generated with the planet.osm excerpt data from <a href="http://download.geofabrik.de/osm/" target="_blank">geofabrik.de</a>.<br>
+See the <a href="http://wiki.openstreetmap.org/index.php/Tagwatch" target="_blank">OSMwiki page</a> for more information about the <b>Tagwatch</b> script.</p>
+</body>
+</html>

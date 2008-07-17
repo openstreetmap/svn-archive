@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title><TMPL_VAR NAME="interlang_headertitel"> :: Relation:<TMPL_VAR NAME="type"> <TMPL_VAR NAME="interlang_stats"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../../style.css">
+</head>
+<body>
+<div class="header"><img src="../../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch <TMPL_VAR NAME="country"></span> :: <TMPL_VAR NAME="interlang_headertext"><hr>
+<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="relationslist.htm"><TMPL_VAR NAME="interlang_uprelations"></a></div>
+
+<h2>Relation:<TMPL_VAR NAME="type"> <TMPL_VAR NAME="interlang_stats"></h2>
+<p><TMPL_VAR NAME="interlang_wikidiscussion"></p>
+
+<table cellspacing="0" border="0" cellpadding="5">
+    <tr>
+      <td valign="top">
+	<table width="700px" height="200px">
+	  <thead>
+	    <tr>
+	      <th colspan="3"><TMPL_VAR NAME="interlang_tablerelationinfo"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td rowspan="3" width="200px">-image-</td>
+	      <td width="100"><b><TMPL_VAR NAME="interlang_group"></b></td>
+	      <td><TMPL_VAR NAME="relationgroup"></td>
+	    </tr>
+	    <tr>
+	      <td width="100"><b><TMPL_VAR NAME="interlang_member"></b></td>
+	      <td nowrap><ul>
+	        <TMPL_LOOP NAME="wikimembers"><li><TMPL_VAR NAME="icon">&nbsp;-&nbsp;<TMPL_VAR NAME="name"></li></TMPL_LOOP>
+              </ul></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><TMPL_VAR NAME="relationdescription"></td>
+	    </tr>
+	  </tbody>
+	</table>
+      </td>
+      <td valign="top">
+	<table width="300px" height="200">
+	  <thead>
+	    <tr>
+	      <th colspan="2"><TMPL_VAR NAME="interlang_generalstats"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_usedintotal"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_total"></td>
+	    </tr>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_diffmembers"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_members_diff"></td>
+	    </tr>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_difftags"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_tags_diff"></td>
+	    </tr>
+	  </tbody>
+        </table>
+      </td>
+    </tr>
+</table>
+
+<hr>
+<h3><TMPL_VAR NAME="interlang_listofmember"></h3>
+<table>
+  <thead>
+    <tr>
+      <th><TMPL_VAR NAME="interlang_role"></th>
+      <th><TMPL_VAR NAME="interlang_type"></th>
+      <th><TMPL_VAR NAME="interlang_usage"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="memberlist">
+    <tr>
+      <td><TMPL_VAR NAME="memberrole"></td>
+      <td align="center"><img src="../../images/Mf_<TMPL_VAR NAME="membertype">.png" alt="<TMPL_VAR NAME="membertype">" width="20" height="20" border="0"></td>
+      <td><TMPL_VAR NAME="memberused"></td>
+    </tr>
+</TMPL_LOOP>
+
+  </tbody>
+</table>
+
+<br>
+
+<h3><TMPL_VAR NAME="interlang_listoftags"></h3>
+<table width="1000">
+  <thead>
+    <tr>
+      <th><TMPL_VAR NAME="interlang_tag"></th>
+      <th><TMPL_VAR NAME="interlang_desc"></th>
+      <th><TMPL_VAR NAME="interlang_wikidesc"></th>
+      <th><TMPL_VAR NAME="interlang_usage"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="taglist">
+    <tr>
+      <td><TMPL_VAR NAME="tagname"></td>
+      <td><TMPL_VAR NAME="tagdescription"></td>
+      <td nowrap>
+	<TMPL_LOOP NAME="desclist"><span class="<TMPL_VAR NAME="wikidesc">">&nbsp;<TMPL_VAR NAME="language">&nbsp;</span></TMPL_LOOP>
+      </td>
+      <td><TMPL_VAR NAME="tagused"></td>
+    </tr>
+</TMPL_LOOP>
+
+  </tbody>
+</table>
+
+<div class="footer"><hr>
+<TMPL_VAR NAME="interlang_credits">.</div>
+</body>
+</html>

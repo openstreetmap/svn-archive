@@ -35,5 +35,10 @@ thead  {	background-color:#E0E0E0;
 
 .wiki_green { 	background-color:#00FF00; }
 
+.mark_space { 	background-color:#FF0000; }
+
 .keydesc { 	font-size:small;
         	font-style:italic; }
+
+.tagtemplate { 	background-color:e0e0f0;
+		font-size:80%; }

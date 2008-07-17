@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title><TMPL_VAR NAME="interlang_headertitel"> :: <TMPL_VAR NAME="interlang_relationslist"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../../style.css">
+</head>
+<body>
+<div class="header"><img src="../../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch <TMPL_VAR NAME="country"></span> :: <TMPL_VAR NAME="interlang_headertext"><hr>
+<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="index.htm"><TMPL_VAR NAME="interlang_upmain"></a></div>
+
+<h2><TMPL_VAR NAME="interlang_relationslist"></h2>
+
+<p><TMPL_VAR NAME="interlang_rlisttext1"></p>
+
+<ul>
+<li><TMPL_VAR NAME="interlang_mflisttext3"></li>
+<li><TMPL_VAR NAME="interlang_mflisttext4"></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th align="left"><TMPL_VAR NAME="interlang_type"></th>
+      <th align="left"><TMPL_VAR NAME="interlang_desc"></th>
+      <th align="left"><TMPL_VAR NAME="interlang_wikidesc"></th>
+      <th align="left"><TMPL_VAR NAME="interlang_usage"></th>
+      <th align="left"><TMPL_VAR NAME="interlang_details"></th>
+    </tr>
+  </thead>
+
+<TMPL_LOOP NAME="grouplist">
+  <thead>
+    <tr>
+      <th colspan="5" align="left"><TMPL_VAR NAME="group"></th>
+    </tr>
+  </thead>
+
+<TMPL_LOOP NAME="relationslist">
+  <tbody>
+    <tr>
+      <td><TMPL_VAR NAME="name"></td>
+      <td width="500"><span class="keydesc"><TMPL_VAR NAME="desc"></span></td>
+      <td nowrap>
+	<TMPL_LOOP NAME="desclist"><span class="<TMPL_VAR NAME="wikidesc">">&nbsp;<TMPL_VAR NAME="language">&nbsp;</span></TMPL_LOOP>
+      </td>
+      <td><TMPL_VAR NAME="usage"></td>
+      <td><a href="relationstats_<TMPL_VAR NAME="nameESC">.htm"><TMPL_VAR NAME="interlang_stats"></a></td>
+    </tr>
+  </tbody>
+</TMPL_LOOP>
+
+</TMPL_LOOP>
+</table>
+
+<div class="footer"><hr>
+<TMPL_VAR NAME="interlang_credits">.</div>
+</body>
+</html>

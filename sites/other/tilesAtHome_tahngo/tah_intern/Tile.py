@@ -79,7 +79,7 @@ class Tile:
       data = f.read(8)
       (d_offset,d_offset_next) = struct.unpack('II',data)
       #return  "(%d,%d,%d) as %d offset1 %d  offset2 %d " % (self.z,self.x,self.y,offset,d_offset,d_offset_next)
-    except IOError:
+    except OSError, IOError:
       d_offset = 0
       #next 3 lines are temporary fallback to legacy tiles
       data = self.serve_legacy_tile(layername)

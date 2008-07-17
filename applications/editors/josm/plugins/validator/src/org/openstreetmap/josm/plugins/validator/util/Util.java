@@ -43,13 +43,13 @@ public class Util
 	 * @param action The action performed when clicking the button
 	 * @return The created button
 	 */
-    public static JButton createButton(String name, String icon, String tooltip, ActionListener action) 
+    public static JButton createButton(String name, String actionname, String icon, String tooltip, ActionListener action)
     {
-		JButton button = new JButton(tr(name), ImageProvider.get(icon));
-		button.setActionCommand(name);
+		JButton button = new JButton(name, ImageProvider.get(icon));
+		button.setActionCommand(actionname);
 		button.addActionListener(action);
 		button.setToolTipText(tr(tooltip));
-		button.putClientProperty("help", "Dialog/SelectionList/" + name);
+		button.putClientProperty("help", "Dialog/SelectionList/" + actionname);
 		return button;
 	}
     

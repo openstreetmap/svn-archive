@@ -133,6 +133,18 @@ public class TestError
 	}
 
 	/**
+	 * Sets the ignore state for this error
+	 */
+	public void getIgnoreState()
+	{
+		System.out.println("Ignore " + message);
+		for (OsmPrimitive o : primitives)
+		{
+			System.out.println(o.id + " - " + o.getClass());
+		}
+	}
+
+	/**
 	 * Gets the tester that raised this error 
 	 * @return the tester that raised this error
 	 */

@@ -57,6 +57,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		Coastlines.class,
 		WronglyOrderedWays.class,
 		UnclosedWays.class,
+		TagChecker.class,
 	};
 
 	/**

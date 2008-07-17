@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <title><TMPL_VAR NAME="interlang_headertitel"> :: Key:<TMPL_VAR NAME="key"> <TMPL_VAR NAME="interlang_stats"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../../style.css">
+</head>
+<body>
+<div class="header"><img src="../../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch <TMPL_VAR NAME="country"></span> :: <TMPL_VAR NAME="interlang_headertext"><hr>
+<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="grouplist.htm"><TMPL_VAR NAME="interlang_upkeylist"></a></div>
+
+<h2>Key:<TMPL_VAR NAME="key"> <TMPL_VAR NAME="interlang_stats"></h2>
+<p><TMPL_VAR NAME="interlang_wikidiscussion"></p>
+
+<table cellspacing="0" border="0" cellpadding="5">
+    <tr>
+      <td>
+	<table width="700px" height="200px">
+	  <thead>
+	    <tr>
+	      <th colspan="3"><TMPL_VAR NAME="interlang_tablekeyinfo"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td rowspan="3" width="200px"><TMPL_VAR NAME="imagelink"></td>
+	      <td width="100"><b><TMPL_VAR NAME="interlang_group"></b></td>
+	      <td><TMPL_VAR NAME="keygroup"></td>
+	    </tr>
+	    <tr>
+	      <td width="100"><b><TMPL_VAR NAME="interlang_elements"></b></td>
+	      <td><TMPL_VAR NAME="keyelements"></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><TMPL_VAR NAME="keydescription"></td>
+	    </tr>
+	  </tbody>
+	</table>
+      </td>
+      <td>
+	<table width="300px" height="200">
+	  <thead>
+	    <tr>
+	      <th colspan="2"><TMPL_VAR NAME="interlang_generalstats"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_diffvalues"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_diff"></td>
+	    </tr>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_usedintotal"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_total"></td>
+	    </tr>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_usedonnodes"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_node"> (<TMPL_VAR NAME="count_node_p">%)</td>
+	    </tr>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_usedonways"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_way"> (<TMPL_VAR NAME="count_way_p">%)</td>
+	    </tr>
+	    <tr>
+	      <td nowrap><b><TMPL_VAR NAME="interlang_usedinrelations"></b></td>
+	      <td nowrap><TMPL_VAR NAME="count_relation"> (<TMPL_VAR NAME="count_relation_p">%)</td>
+	    </tr>
+	  </tbody>
+        </table>
+      </td>
+    </tr>
+</table>
+
+<hr>
+
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2"><TMPL_VAR NAME="interlang_value"></th>
+      <th colspan="4"><TMPL_VAR NAME="interlang_usage"></th>
+      <th rowspan="2"><TMPL_VAR NAME="interlang_wikidesc"></th>
+      <th rowspan="2"><TMPL_VAR NAME="interlang_details"></th>
+      <th rowspan="2">osmxapi</th>
+    </tr>
+    <tr>
+      <th>Total</th>
+      <th>Node</th>
+      <th>Way</th>
+      <th>Relation</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<TMPL_LOOP NAME="statlist">
+    <tr>
+      <td><TMPL_VAR NAME="value"></td>
+      <td><TMPL_VAR NAME="total"></td>
+      <td><TMPL_VAR NAME="node"></td>
+      <td><TMPL_VAR NAME="way"></td>
+      <td><TMPL_VAR NAME="relation"></td>
+      <td nowrap>
+	<TMPL_LOOP NAME="desclist"><span class="<TMPL_VAR NAME="wikidesc">">&nbsp;<TMPL_VAR NAME="language">&nbsp;</span></TMPL_LOOP>
+      </td>
+      <td><a href="tagstats_<TMPL_VAR NAME="TagESC">.htm"><TMPL_VAR NAME="value"> <TMPL_VAR NAME="interlang_details"></a></td>
+      <td><a href="http://www.informationfreeway.org/api/0.5/*[<TMPL_VAR NAME="tagESC">]" target="_blank">data.osm</a></td>
+    </tr>
+</TMPL_LOOP>
+
+  </tbody>
+</table>
+
+<div class="footer"><hr>
+<TMPL_VAR NAME="interlang_credits">.</div>
+</body>
+</html>

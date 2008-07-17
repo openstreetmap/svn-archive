@@ -1,31 +1,46 @@
-Constructs an index of the tags used in OpenStreetMap data
 
 
-+---+----------------+-------------------------------------------------+
-| 1 | get photos     | Downloads sample photos of each tag, resizes
-|   |                | them, and stores them with a special filename
-+---+----------------+-------------------------------------------------+
-| 2 |edit conf file  | add all countrys/plant.osm file names to the
-|   |                | tagwatch.conf.
-|   |                | 
-+---+----------------+-------------------------------------------------+
-| 3 | construct html | Parse the osm files and generates HTML files 
-|   |                | listing all the tags used,displaying photos,
-|   |                |  descriptions, and sample renderings
-+---+----------------+-------------------------------------------------+
-| 4 | make samples   | Takes a list of requests (from construct.pl) 
-|   |                | for sample renderings, and generates them 
-|   |                | using osmarender
-+---+----------------+-------------------------------------------------+
-| 5 | publish        | Just copy the html directory to a webserver
-+---+----------------+-------------------------------------------------+
+The Tagwatch script creates a statistical website that show the usage
+of all Keys/Tags/Relations of the given osm files.
 
+
+Dependencies:
+ + Perl
+ + LWP::Simple
+ + MediaWiki-1.13
+ + HTML-Template-2.9
+ + Math::Round
+ + GD
+ + Inkscape
+ + xsltproc
+
++---+----------------+-----------------------------------------------------+
+| 1 | edit conf file |
+|   |                |
++---+----------------+-----------------------------------------------------+
+| 2 | run the script | perl run.pl everything else should work on its own
+|   |                |
+|   |                | Additionally all options can be pased in commandline
+|   |                |  run.pl option1=val option2=val ...
+|   |                | The option config_file can be used to choose another
+|   |                | configuration file.
+|   |                |
++---+----------------+-----------------------------------------------------+
+| 3 | publish        | Just copy the html directory to a webserver
++---+----------------+-----------------------------------------------------+
 
 Deciding what data to publish:
 
   Most decisions (e.g. what tags to track in detail, what photos to use,
   the descriptions, etc.) come from pages on the OpenStreetmap wiki.
   This lets people change the output in a wiki-like fashion.
-  
+
   See http://wiki.openstreetmap.org/index.php/Tagwatch
-  
+
+ToDo List:
+ + osmxapi Bounding box
+ + more interface translations in the osmwiki
+ + osmarender sample images for some combinations
+   based either on the documentation in the wiki
+   or the top usage tags
+ + ...

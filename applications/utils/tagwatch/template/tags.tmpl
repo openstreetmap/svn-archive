@@ -2,27 +2,29 @@
 <html>
 
 <head>
-  <title>OpenStreetMap Tagwatch for <TMPL_VAR NAME="country"></title>
+  <title><TMPL_VAR NAME="interlang_headertitel"> :: <TMPL_VAR NAME="interlang_indextags"></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" type="text/css" href="../style.css">
+  <link rel="stylesheet" type="text/css" href="../../style.css">
 </head>
 <body>
-<div class="header"><img src="../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch</span> :: <TMPL_VAR NAME="interlang_header"><hr>
-<a href="index_en.htm"><TMPL_VAR NAME="interlang_up"></a></div>
+<div class="header"><img src="../../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch <TMPL_VAR NAME="country"></span> :: <TMPL_VAR NAME="interlang_headertext"><hr>
+<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="index.htm"><TMPL_VAR NAME="interlang_upmain"></a></div>
 <br>
+
+<p><TMPL_VAR NAME="interlang_allkeys"></p>
 
 <table>
   <thead>
     <tr>
-      <th>Key</th>
-      <th>Example values</th>
+      <th><TMPL_VAR NAME="interlang_key"></th>
+      <th><TMPL_VAR NAME="interlang_examplevalues"></th>
     </tr>
   </thead>
   <tbody>
 
 <TMPL_LOOP NAME="taglist">
     <tr>
-      <td><TMPL_VAR NAME="key"></td>
+      <td><a href="http://www.informationfreeway.org/api/0.5/*[<TMPL_VAR NAME="keyname">=*]" target="_blank"><TMPL_VAR NAME="key"></a></td>
       <td><TMPL_VAR NAME="values"></td>
     </tr>
 </TMPL_LOOP>

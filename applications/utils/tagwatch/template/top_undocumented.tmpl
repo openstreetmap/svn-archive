@@ -2,21 +2,21 @@
 <html>
 
 <head>
-  <title>OpenStreetMap Tagwatch for  <TMPL_VAR NAME="country"></title>
+  <title><TMPL_VAR NAME="interlang_headertitel"> :: <TMPL_VAR NAME="interlang_topundocumented"></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" type="text/css" href="../style.css">
+  <link rel="stylesheet" type="text/css" href="../../style.css">
 </head>
 <body>
-<div class="header"><img src="../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch</span> :: <TMPL_VAR NAME="interlang_header"><hr>
-<TMPL_VAR NAME="interlang_interlang"> :: <a href="en_stats_<TMPL_VAR NAME="key">.htm">en</a>, <a href="fr_stats_<TMPL_VAR NAME="key">.htm">fr</a>, <a href="de_stats_<TMPL_VAR NAME="key">.htm">de</a>, <a href="nl_stats_<TMPL_VAR NAME="key">.htm">nl</a>, <a href="sl_stats_<TMPL_VAR NAME="key">.htm">sl</a>, <a href="tr_stats_<TMPL_VAR NAME="key">.htm">tr</a> :: <a href="index_<TMPL_VAR NAME="lang">.htm"><TMPL_VAR NAME="interlang_up"></a></div>
+<div class="header"><img src="../../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch <TMPL_VAR NAME="country"></span> :: <TMPL_VAR NAME="interlang_headertext"><hr>
+<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="index.htm"><TMPL_VAR NAME="interlang_upmain"></a></div>
 
-<h2>Top 150 undocumented Tags</h2>
+<h2><TMPL_VAR NAME="interlang_topundocumented"></h2>
 
 <table width="300px">
   <thead>
     <tr>
-      <th>Tag</th>
-      <th>used count</th>
+      <th><TMPL_VAR NAME="interlang_tag"></th>
+      <th nowrap><TMPL_VAR NAME="interlang_usage"></th>
     </tr>
   </thead>
   <tbody>

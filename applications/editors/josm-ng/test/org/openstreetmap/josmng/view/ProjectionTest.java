@@ -34,7 +34,7 @@ public class ProjectionTest {
 
     Projection instance = Projection.getAvailableProjections().iterator().next();
     Coordinate zero = new CoordinateImpl(0, 0);
-    ViewCoords vc_zero = new ViewCoords(0, 0);
+    ViewCoords vc_zero = new ViewCoords.Impl(0, 0);
 
     public ProjectionTest() {}
 

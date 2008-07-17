@@ -90,7 +90,7 @@ public final class Projection {
     
     public ViewCoords coordToView(Coordinate coords) {
         Point2D p = impl.lonLatToPoint(coords.getLongitude(), coords.getLatitude());
-        return new ViewCoords((int)(factor * p.getX()), (int)(factor * p.getY()));
+        return new ViewCoords.Impl((int)(factor * p.getX()), (int)(factor * p.getY()));
     }
     
     public Coordinate viewToCoord(ViewCoords view) {

@@ -91,17 +91,17 @@ public class BBox {
     }
 
     public ViewCoords getTopLeft() {
-        return new ViewCoords(x1, y1);
+        return new ViewCoords.Impl(x1, y1);
     }
 
     public ViewCoords getBottomRight() {
-        return new ViewCoords(x2, y2);
+        return new ViewCoords.Impl(x2, y2);
     }
     
     public ViewCoords getCenter() {
         int x = (int)(((long)x1 + x2)/2);
         int y = (int)(((long)y1 + y2)/2);
-        return new ViewCoords(x, y);
+        return new ViewCoords.Impl(x, y);
     }
     
     public Rectangle toRectangle() {

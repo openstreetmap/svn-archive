@@ -56,12 +56,14 @@ class Tile:
     (layer, base_z,base_x,base_y) = self.basetileset() 
     # basetilepath could be take from the Settings, hardcode for efficiency 
     basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
+    self.mtime = 0
     if base_z == None:
       # basetileset returns (None,None,None,None) if invalid
       tilesetfile = ''
     else:
       tilesetfile = os.path.join(basetilepath,"%s_%s_%d"%(layername,base_z,base_x//1000),str(base_x)+'_'+str(base_y))
     try:
+      self.mtime = os.stat(tilesetfile)[8]
       f = open(tilesetfile,'rb')
       #calculate file offset
       offset = 8 # skip the header data

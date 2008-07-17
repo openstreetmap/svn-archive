@@ -15,7 +15,8 @@ def handler(req):
     if data: 
       #req.content_type = 'text/plain'
       req.content_type = 'image/png'
-      req.headers_out['Expires']=(datetime.utcnow()+timedelta(0,0,0,0,0,3)).strftime("%d %b %Y %H:%M:%S GMT")
+      req.headers_out['Expires']=(datetime.utcnow()+timedelta(0,0,0,0,0,3)).strftime("%a, %d %b %Y %H:%M:%S GMT")
+      req.headers_out['Last-Modified']=datetime.utcfromtimestamp(t.mtime).strftime("%a, %d %b %Y %H:%M:%S GMT")
       req.write(data)
       return apache.OK
     else: return apache.HTTP_NOT_FOUND

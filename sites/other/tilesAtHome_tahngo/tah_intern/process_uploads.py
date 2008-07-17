@@ -159,7 +159,8 @@ class TileUpload:
   def add_user_stats(self, upload, uploaded_tiles):
     """ Update the tah user statistics after a successfull upload """
     tahuser = upload.user_id.tahuser_set.get()
-    tahuser.kb_upload += os.stat(upload.get_file_filename())[stat.ST_SIZE] // 1024
+    try: tahuser.kb_upload += os.stat(upload.get_file_filename())[stat.ST_SIZE] // 1024
+    except OSError: pass
     tahuser.renderedTiles += uploaded_tiles
     tahuser.save()
 

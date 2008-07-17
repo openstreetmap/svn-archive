@@ -408,6 +408,20 @@ public abstract class OsmPrimitive {
         return false; 
     }
 
+    public @Override String toString() {
+        StringBuilder name = new StringBuilder();
+        name.append(getClass().getSimpleName());
+        name.append('#');
+        name.append(id);
+        if (isDeleted()) {
+            name.append('x');
+        } else if (isModified()) {
+            name.append('*');
+        }
+        
+        return name.toString();
+    }
+
     private class DeleteEdit extends DataSet.BaseToggleEdit {
         boolean wasDeleted;
 

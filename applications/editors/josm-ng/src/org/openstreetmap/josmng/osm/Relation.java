@@ -84,6 +84,10 @@ public class Relation extends OsmPrimitive {
         super.setDeletedImpl(deleted);
     }
 
+    public @Override String toString() {
+        return super.toString() + '[' + members.size() + "]";
+    }
+
     private class ChangeMembersEdit extends PrimitiveToggleEdit {
         OsmPrimitive member;
         String role; // or null if deleted

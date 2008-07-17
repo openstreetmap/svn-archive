@@ -27,7 +27,7 @@ public class UnclosedWays extends Test  {
 	public UnclosedWays()
 	{
 		super(tr("Unclosed Ways."),
-			  tr("This test if ways which should be circular are closed."));
+			  tr("This tests if ways which should be circular are closed."));
 	}
 
 	@Override
@@ -100,12 +100,12 @@ public class UnclosedWays extends Test  {
 			force = true;
 			type = tr("waterway type {0}", tr(test));
 		}
-		test = w.get("junction");
+		/*test = w.get("junction");
 		if(test != null && test.equals("roundabout"))
 		{
 			force = true;
 			type = tr("junction type {0}", tr(test));
-		}
+		}*/
 		test = w.get("building");
 		if (test != null && ("true".equalsIgnoreCase(test) || "yes".equalsIgnoreCase(test) || "1".equals(test)))
 		{

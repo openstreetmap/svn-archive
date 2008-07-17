@@ -170,7 +170,7 @@ public class MapView extends JComponent {
         long y = factor * (getHeight()/2 - p.y) + center.getIntLat();
         x = Math.max(Integer.MIN_VALUE, Math.min(x, Integer.MAX_VALUE));
         y = Math.max(Integer.MIN_VALUE, Math.min(y, Integer.MAX_VALUE));
-        return new ViewCoords((int)x, (int)y);
+        return new ViewCoords.Impl((int)x, (int)y);
     }
     
     /**

@@ -41,41 +41,39 @@ package org.openstreetmap.josmng.view;
  * 
  * @author nenik
  */
-public class ViewCoords {
-    private int x;
-    private int y;
-    
-    ViewCoords() {
-    }   
-    
-    public ViewCoords(int lon, int lat) {
-        this.x = lon;
-        this.y = lat;
-    }
+public interface ViewCoords {
+    public int getIntLon();
+    public int getIntLat();
+    public ViewCoords movedByDelta(ViewCoords from, ViewCoords to);
 
-    protected void setCoordinates(ViewCoords from) {
-        x = from.x;
-        y = from.y;
-    }
-    
-    public int getIntLon() {
-        return x;
-    }
+    public static final class Impl implements ViewCoords {
+        private int x;
+        private int y;
 
-    public int getIntLat() {
-        return y;
-    }
+        public Impl(int lon, int lat) {
+            this.x = lon;
+            this.y = lat;
+        }
 
-    /**
-     * Computes a ViewCoords shifted by the difference between from
-     * and to.
-     * @param from First reference point
-     * @param to Second reference point
-     * @return a ViewCoords that is shifted from this ViewCoords the same way
-     * as point <code>to</code> is from point <code>from</code>.
-     */
-    public final ViewCoords movedByDelta(ViewCoords from, ViewCoords to) {
-        return new ViewCoords(getIntLon() + from.getIntLon() - to.getIntLon(),
-                    getIntLat() + from.getIntLat() - to.getIntLat());
+        public int getIntLon() {
+            return x;
+        }
+
+        public int getIntLat() {
+            return y;
+        }
+
+        /**
+         * Computes a ViewCoords shifted by the difference between from
+         * and to.
+         * @param from First reference point
+         * @param to Second reference point
+         * @return a ViewCoords that is shifted from this ViewCoords the same way
+         * as point <code>to</code> is from point <code>from</code>.
+         */
+        public final ViewCoords movedByDelta(ViewCoords from, ViewCoords to) {
+            return new Impl(getIntLon() + from.getIntLon() - to.getIntLon(),
+                        getIntLat() + from.getIntLat() - to.getIntLat());
+        }
     }
 }

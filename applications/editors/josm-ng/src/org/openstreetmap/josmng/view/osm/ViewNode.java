@@ -20,14 +20,12 @@
 
 package org.openstreetmap.josmng.view.osm;
 
-import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.openstreetmap.josmng.view.*;
 import org.openstreetmap.josmng.osm.Node;
-import org.openstreetmap.josmng.osm.OsmPrimitive;
 
 /**
  * View for a Node.
@@ -35,15 +33,31 @@ import org.openstreetmap.josmng.osm.OsmPrimitive;
  * 
  * @author nenik
  */
-final class ViewNode extends ViewCoords implements View<Node> {
+final class ViewNode implements ViewCoords, View<Node> {
+    private int x;
+    private int y;
     Node node;
     Style current;
 
     ViewNode(Node node, ViewCoords position) {
-        super(position.getIntLon(), position.getIntLat());
+        x = position.getIntLon();
+        y = position.getIntLat();
         this.node = node;
     }
     
+    public int getIntLon() {
+        return x;
+    }
+
+    public int getIntLat() {
+        return y;
+    }
+
+    public final ViewCoords movedByDelta(ViewCoords from, ViewCoords to) {
+        return new ViewCoords.Impl(getIntLon() + from.getIntLon() - to.getIntLon(),
+                    getIntLat() + from.getIntLat() - to.getIntLat());
+    }
+
     public Node getPrimitive() {
         return node;
     }
@@ -53,7 +67,8 @@ final class ViewNode extends ViewCoords implements View<Node> {
     }
 
     void updatePosition(ViewCoords newPos) {
-        setCoordinates(newPos);
+        x = newPos.getIntLon();
+        y = newPos.getIntLat();
     }
     
     private static Collection<String> UNINTERESTING = new HashSet<String>(

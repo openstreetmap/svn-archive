@@ -1,4 +1,5 @@
-import os,sys, cairo, tempfile, shutil, StringIO, re
+import os,sys, tempfile, shutil, StringIO, re
+import Image, ImageEnhance, ImageChops
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
@@ -28,9 +29,8 @@ class Lowzoom(Tileset):
     #print "tile %s %d %d %d " % (layer,z,x,y)
     pngfilepath = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z,x,y))
     #print "write to %s" % pngfilepath
-    im = cairo.ImageSurface(cairo.FORMAT_ARGB32, 256,256)
-    ctx = cairo.Context(im)
-    ctx.scale(0.5, 0.5)
+    im = Image.new('RGBA', (256,256))
+
     for i in range(0,2):
       for j in range(0,2):
         retries, error = 0,True
@@ -39,17 +39,23 @@ class Lowzoom(Tileset):
             imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
           else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
           try:
-            image = cairo.ImageSurface.create_from_png(imagefile)
+            image = Image.open(imagefile)
             error = False
           except IOError, e:
             retries += 1
             print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
-            image = cairo.ImageSurface.create_from_png(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
-        ctx.set_source_surface(image,256*i,256*j)
-        ctx.paint()
+            image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
+
+        #enh = ImageEnhance.Contrast(image)
+        #image = enh.enhance(0.5)
+        image = ImageChops.multiply(image, image)
+        image = image.resize((128, 128))
+        im.paste(image, (128*i,128*j,128*(i+1),128*(j+1)))
+
         del (image)
 	del (imagefile)
-    im.write_to_png(pngfilepath)
+
+    im.save(pngfilepath, "PNG")
     t= Tile(layer,z,x,y)
     self.add_tile(t,pngfilepath)
 
@@ -74,7 +80,7 @@ def find_old_lowzooms(base_tile_path):
 
 
   #finally always dd (0,0,0)
-  old_lowzooms['0_0_0']=(0,0,0)
+  #old_lowzooms['0_0_0']=(0,0,0)
   print "requesting %d lowzooms." % len(old_lowzooms)
   return old_lowzooms
 
@@ -82,7 +88,7 @@ if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
-  for (z,x,y) in find_old_lowzooms(base_tile_path).values():
+  for (z,x,y) in [(6,5,18)]: #find_old_lowzooms(base_tile_path).values():
     now = time.time()
     print "do %d %d %d" % (z,x,y)
     lz.create(layer,6,x,y,base_tile_path)

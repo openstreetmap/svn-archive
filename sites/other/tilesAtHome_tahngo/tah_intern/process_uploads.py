@@ -82,24 +82,28 @@ class TileUpload:
   #-----------------------------------------------------------------
   def unzip(self):
     now = clock()
+    outfile = None
     self.temptiledir = dir = os.path.join(self.unzip_path,self.uid)
     os.mkdir(dir, 0777)
     try:
       zfobj = zipfile.ZipFile(self.fname)
+
+      for name in zfobj.namelist():
+        if name.endswith('/'):
+          os.mkdir(os.path.join(dir, name))
+        else:
+          outfile = open(os.path.join(dir, name), 'wb')
+          outfile.write(zfobj.read(name))
+          outfile.close()
     except zipfile.BadZipfile:
       logging.info('found bad zip file ('+self.uid+')')
+      if outfile: outfile.close()
       return 0
     except:
       logging.info('unknown zip file error')
+      if outfile: outfile.close()
+      return(0)
 
-    for name in zfobj.namelist():
-      if name.endswith('/'):
-        os.mkdir(os.path.join(dir, name))
-      else:
-        outfile = open(os.path.join(dir, name), 'wb')
-        outfile.write(zfobj.read(name))
-        outfile.close()
-    
     logging.debug('Unzipped tileset in %.1f sec.' % ((clock()-now)))
     return(1)
 

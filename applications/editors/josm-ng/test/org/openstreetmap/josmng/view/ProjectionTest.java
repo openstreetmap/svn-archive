@@ -76,7 +76,7 @@ public class ProjectionTest {
     }
 
     private void compareVC(String message, ViewCoords expected, ViewCoords val) {
-        assertEquals(message, expected.getLon(), val.getLon(), EPSILON);
-        assertEquals(message, expected.getLat(), val.getLat(), EPSILON);
+        assertEquals(message, expected.getIntLon(), val.getIntLon());
+        assertEquals(message, expected.getIntLat(), val.getIntLat());
     }
 }

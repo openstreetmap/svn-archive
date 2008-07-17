@@ -81,19 +81,20 @@ public final class Projection {
             world.add(impl.lonLatToPoint(probe.getLongitude(), probe.getLatitude()));
         }
 
+        double intSpan = 2.0 * 0x7FFFFFFF;
         assert world.getCenterX() < 1e-12 && world.getCenterY() < 1e-12;
-        double factor = Math.min(2/world.getWidth(), 2/world.getHeight());
+        double factor = Math.min(intSpan/world.getWidth(), intSpan/world.getHeight());
         factor /= 1.000001;
         return new Projection(impl, factor);
     }
     
     public ViewCoords coordToView(Coordinate coords) {
         Point2D p = impl.lonLatToPoint(coords.getLongitude(), coords.getLatitude());
-        return new ViewCoords(factor * p.getX(), factor * p.getY());
+        return new ViewCoords((int)(factor * p.getX()), (int)(factor * p.getY()));
     }
     
     public Coordinate viewToCoord(ViewCoords view) {
-        Point2D p = impl.pointToLonLat(view.getLon()/factor, view.getLat()/factor);
+        Point2D p = impl.pointToLonLat(view.getIntLon()/factor, view.getIntLat()/factor);
         return new CoordinateImpl(p.getY(), p.getX());
     }
 

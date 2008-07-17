@@ -42,38 +42,21 @@ package org.openstreetmap.josmng.view;
  * @author nenik
  */
 public class ViewCoords {
-    public static final int SCALE = 0x7FFFFFFF;
     private int x;
     private int y;
     
     ViewCoords() {
     }   
     
-    public ViewCoords(double lon, double lat) {
-        setCoordinates(lon, lat);
-    }
-    
     public ViewCoords(int lon, int lat) {
-        setCoordinates(lon, lat);
-    }
-
-    protected final void setCoordinates(double lon, double lat) {
-        setCoordinates((int)(lon*SCALE), (int)(lat*SCALE));
-        
-    }
-
-    public void setCoordinates(ViewCoords from) {
-        x = from.x;
-        y = from.y;
-    }
-    
-    private void setCoordinates(int lon, int lat) {
-        assert lon <= (1 * SCALE) && lon >= (-1 * SCALE);
-        assert lat <= (1 * SCALE) && lat >= (-1 * SCALE);
         this.x = lon;
         this.y = lat;
     }
 
+    protected void setCoordinates(ViewCoords from) {
+        x = from.x;
+        y = from.y;
+    }
     
     public int getIntLon() {
         return x;
@@ -81,14 +64,6 @@ public class ViewCoords {
 
     public int getIntLat() {
         return y;
-    }
-
-    public double getLon() {
-        return ((double) getIntLon()) / SCALE;
-    }
-
-    public double getLat() {
-        return ((double) getIntLat()) / SCALE;
     }
 
     /**
@@ -102,9 +77,5 @@ public class ViewCoords {
     public final ViewCoords movedByDelta(ViewCoords from, ViewCoords to) {
         return new ViewCoords(getIntLon() + from.getIntLon() - to.getIntLon(),
                     getIntLat() + from.getIntLat() - to.getIntLat());
-    }
-
-    public @Override String toString() {
-        return "[" + getLat() +"," + getLon() + "]";
     }
 }

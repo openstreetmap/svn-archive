@@ -1,0 +1,59 @@
+#!/bin/sh
+# This starts/stops/queries the T@H uploaded tile processor.
+# It works on Debian at least. You will need to adapt path files here.
+#Shamelessly ripped from /etc/init.d/ntpd in Debian.
+#Therefore licensed under the GPL, I guess
+
+. /lib/lsb/init-functions
+DAEMON=/var/www/tah/tah_intern/process_uploads.py
+PIDFILE=/var/www/tah/var/tahngo.pid
+
+test -x $DAEMON || exit 5
+
+#if [ -r /etc/default/$NAME ]; then
+#	. /etc/default/$NAME
+#fi
+
+#if [ -e /etc/ntp.conf.dhcp ]; then
+#	NTPD_OPTS="$NTPD_OPTS -c /etc/ntp.conf.dhcp"
+#fi
+
+
+case $1 in
+	start)
+		echo "Starting T@HNGO server"
+  		/sbin/start-stop-daemon --start --background --make-pidfile --oknodo --pidfile $PIDFILE --startas $DAEMON -- $TAH_OPTS
+  		;;
+	stop)
+		echo "Stopping T@HNGO server"
+  		/sbin/start-stop-daemon --stop --oknodo --pidfile $PIDFILE
+		rm -f $PIDFILE
+  		;;
+	restart|force-reload)
+		$0 stop && sleep 2 && $0 start
+  		;;
+	try-restart)
+		if $0 status >/dev/null; then
+			$0 restart
+		else
+			exit 0
+		fi
+		;;
+	reload)
+		exit 3
+		;;
+	status)
+		pidofproc -p $PIDFILE $DAEMON >/dev/null
+		status=$?
+		if [ $status -eq 0 ]; then
+			echo "T@H server is running."
+		else
+			echo "T@H server is not running."
+		fi
+		exit $status
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|try-restart|force-reload|status}"
+		exit 2
+		;;
+esac

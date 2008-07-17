@@ -10,6 +10,7 @@ t@h server
  - Send a "Last-Modified" header back with the Tile files. (Expires, Last Modified, Etag HTTP headers)
  - Fixup lowzoom stitching to look good, so we can do that server side again.
  - Nicer User statistics
+ - Make the directories be created with group write permissions in process_uploads.py
 
 t@h client (will not be implemented by spaetz)
 ==========

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, logging, zipfile, random, re, stat
+import os, sys, logging, zipfile, random, re, stat, signal
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
@@ -83,7 +83,7 @@ class TileUpload:
   def unzip(self):
     now = clock()
     outfile = None
-    self.temptiledir = dir = os.path.join(self.unzip_path,self.uid)
+    self.tmptiledir = dir = os.path.join(self.unzip_path,self.uid)
     os.mkdir(dir, 0777)
     try:
       zfobj = zipfile.ZipFile(self.fname)
@@ -115,9 +115,9 @@ class TileUpload:
     r = re.compile('^([a-zA-Z]+)_(\d+)_(\d+)_(\d+).png$')
     tset = Tileset()
 
-    for f in os.listdir(self.temptiledir):
+    for f in os.listdir(self.tmptiledir):
       ignore_file = False
-      full_filename = os.path.join(self.temptiledir,f)
+      full_filename = os.path.join(self.tmptiledir,f)
       m = r.match(f)
       if not m:
         logging.debug('found weird file '+f+' in zip. Ignoring.')
@@ -165,12 +165,20 @@ class TileUpload:
 
   #-----------------------------------------------------------------
   def rm_dir(self,dir):
-    for path in (os.path.join(dir,f) for f in os.listdir(dir)):
-      if os.path.isdir(path):
-        rm_rf(path)
-      else:
-        os.unlink(path)
-    os.rmdir(dir)
+    if dir:
+      for path in (os.path.join(dir,f) for f in os.listdir(dir)):
+        if os.path.isdir(path):
+          rm_rf(path)
+        else:
+          os.unlink(path)
+      os.rmdir(dir)
+
+  #-----------------------------------------------------------------
+  def sigterm(self, signum, frame):
+    """ This is called when a SIGTERM signal is issued """
+    print "Received SIGTERM signal. Shutdown gracefully."
+    self.cleanup(None, False)
+    sys.exit(0)
 
   #-----------------------------------------------------------------
   def cleanup(self, upload, del_upload = True):
@@ -178,10 +186,10 @@ class TileUpload:
         (and the uploaded file if 'del_upload' is True.
     """
     # Delete the unzipped files directory
-    self.rm_dir(self.temptiledir)
+    self.rm_dir(self.tmptiledir)
     self.uid=None
     self.fname=None
-    self.temptiledir=None
+    self.tmptiledir=None
     if del_upload:
       # delete the uploaded file itself
       os.unlink(upload.get_file_filename())
@@ -199,8 +207,9 @@ if __name__ == '__main__':
                     filemode='w') 
 
   logging.info('Starting tile upload processor')
-  u = TileUpload(settings).process()
-  if not u:
+  u = TileUpload(settings)
+  signal.signal(signal.SIGTERM,u.sigterm)
+  if not u.process():
       logging.critical('Upload handling returned with error. Aborting.')
       sys.stderr.write('Upload handling returned with error')
       sys.exit(1)

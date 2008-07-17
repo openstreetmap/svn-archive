@@ -162,16 +162,24 @@ public class PlaceSelection implements DownloadSelection {
 			public void run() {
 				try
 				{
-					component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					component.repaint();
-					URL url = new URL("http://gazetteer.openstreetmap.org/namefinder/search.xml?find="
-					+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
-					HttpURLConnection activeConnection = (HttpURLConnection)url.openConnection();
-					//System.out.println("got return: "+activeConnection.getResponseCode());
-					activeConnection.setConnectTimeout(15000);
-					InputStream inputStream = activeConnection.getInputStream();
-					InputSource inputSource = new InputSource(new InputStreamReader(inputStream, "UTF-8"));
-					SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new Parser());
+					String searchtext = searchTerm.getText();
+					if(searchtext.isEmpty())
+					{
+						JOptionPane.showMessageDialog(Main.parent,tr("Please enter a search string"));
+					}
+					else
+					{
+						component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						component.repaint();
+						URL url = new URL("http://gazetteer.openstreetmap.org/namefinder/search.xml?find="
+						+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
+						HttpURLConnection activeConnection = (HttpURLConnection)url.openConnection();
+						//System.out.println("got return: "+activeConnection.getResponseCode());
+						activeConnection.setConnectTimeout(15000);
+						InputStream inputStream = activeConnection.getInputStream();
+						InputSource inputSource = new InputSource(new InputStreamReader(inputStream, "UTF-8"));
+						SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new Parser());
+					}
 				}
 				catch (Exception x) 
 				{

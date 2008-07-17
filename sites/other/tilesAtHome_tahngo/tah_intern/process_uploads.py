@@ -193,7 +193,8 @@ class TileUpload:
     self.tmptiledir=None
     if del_upload:
       # delete the uploaded file itself
-      os.unlink(upload.get_file_filename())
+      try: os.unlink(upload.get_file_filename())
+      except: pass
       # delete the upload db entry
       upload.delete()
 

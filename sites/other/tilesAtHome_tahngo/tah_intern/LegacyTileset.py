@@ -44,7 +44,7 @@ class LegacyTileset(Tileset):
     """
     self.blankness = None
     if not base_z in [0,6,12]: return (0,"Invalid base zoom level.")
-    starttime = (time(),clock())    
+    starttime = time()   
     # cache if the layer is transparent
     layer_transparent = layer.transparent
     files  = 0
@@ -72,20 +72,18 @@ class LegacyTileset(Tileset):
               self.add_tile(t,None)
 
     savetime = time()
-    print "Found %d files and %d blanks (%.1f sec.)." % (files,blanks,savetime-starttime[0])
     if self.save(base_tile_path):
-      now=(time(),clock())
-      print "Saving took %.1f sec. Total time %.1f sec (CPU: %.1f sec)" % (now[0]-savetime,now[0]-starttime[0],now[1]-starttime[1])
+      now=time()
+      if base_y%50 == 0:print "%d blanks %d tiles. Saving %.1f sec. Total %.1f sec" % (files,blanks,now-savetime,now-starttime)
       return (1,'OK')
     else:
       return (0,'Unknown error while saving tileset.')
 
 if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
-  for layer in Layer.objects.exclude(name='lowzoom'):
-    #if not layer: sys.exit("Unknown layer.")
-    for x in range (0,4096):
+  layer=Layer.objects.get(name='tile')
+  for x in range (0,4096):
       for y in range (0,4096):
         lt = LegacyTileset()
-        print "Converting: %s (12,%d,%d)" % (layer.name,x,y)
-        print str(lt.convert(layer,12,x,y,base_tile_path))
+        if y%50==0: print "Converting: %s (12,%d,%d)" % (layer.name,x,y)
+        lt.convert(layer,12,x,y,base_tile_path)

@@ -55,7 +55,18 @@ $Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authenticat
 $Config->args();              # overwrite config options with command line options
 $Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
 ApplyConfigLogic($Config);
-my %EnvironmentInfo = CheckConfig($Config);
+
+# Handle the command-line
+my $Mode = shift();
+
+if (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop"))
+{
+    my %EnvironmentInfo = CheckBasicConfig($Config);
+}
+else
+{
+    my %EnvironmentInfo = CheckConfig($Config);
+}
 
 my $Layers = $Config->get("Layers");
 
@@ -119,9 +130,6 @@ my $dirent;
 
 # keep track of the server time for current job
 my $JobTime;
-
-# Handle the command-line
-my $Mode = shift();
 
 # If batik agent was started automatically, turn it off at exit
 our $StartedBatikAgent = 0;
@@ -350,6 +358,64 @@ elsif ($Mode eq "upload_conditional")
     statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     uploadIfEnoughTiles();
 }
+elsif ($Mode eq "upload_loop")
+{
+    statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
+    my $startTime = time();
+    my $elapsedTime;
+    $progressJobs = 1;
+    while(1) 
+    {
+        ## before we start (another) round of rendering we first check if something bad happened in the past.
+        if (getFault("fatal") > 0)
+        {
+            cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
+        }
+        elsif (getFault("upload") > 5) 
+        {
+            cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        }
+        
+        my $sleepdelay = 1;
+        # look for stopfile and exit if found
+        if (-e "stopfile.txt")
+        {
+            cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
+        }
+
+        # Add a basic auto-updating mechanism. 
+        if (NewClientVersion()) 
+        {
+            UpdateClient();
+            $dirent = "0/0/0"; # force reexec after update
+        }
+
+        reExecIfRequired(-1); ## check for new version of tilesGen.pl and reExec if true
+
+        if (countZips() > 0)
+        {
+            $upload_result = upload(1); # only uploading ZIP files here
+            
+            if ($upload_result)  # we got an error in the upload process
+            {
+                addFault("upload",1); # we only track errors that occur multple times in a row
+            }
+            else
+            {
+                resetFault("upload"); #reset fault counter for uploads if once without error
+                statusMessage("upload finished", $currentSubTask, $progressJobs, $progressPercent,1);
+                $progressJobs++;
+            }
+            $startTime = time();
+        }
+        else
+        {
+            $elapsedTime = time() - $startTime;
+            statusMessage(sprintf("waiting for new ZIP files to upload   %d:%02d", $elapsedTime/60, $elapsedTime%60), $currentSubTask, $progressJobs, $progressPercent,0);
+            sleep(1);
+        }
+    }
+}
 elsif ($Mode eq "version") 
 {
     exit(1);
@@ -414,16 +480,34 @@ else {
     print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
     print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
+    print "  $0 upload_loop - uploads tiles in loop mode\n";
     print "  $0 startBatik - start batik agent\n";
     print "  $0 stopBatik - stop batik agent\n";
     print "  $0 version - prints out version string and exits\n";
     print "\nGNU General Public license, version 2 or later\n$Bar\n";
 }
 
+sub countZips
+{
+    my $ZipCount = 0;
+    if (opendir(my $dp, $Config->get("WorkingDirectory")."uploadable"))
+    {
+        while(my $File = readdir($dp))
+        {
+            $ZipCount++ if ($File =~ /\.zip$/);
+        }
+        closedir($dp);
+    }
+    else 
+    {
+        mkdir $Config->get("WorkingDirectory")."uploadable";
+    }
+    return $ZipCount;
+}
+
 sub uploadIfEnoughTiles
 {
     my $Count = 0;
-    my $ZipCount = 0;
 
     # compile a list of the "Prefix" values of all configured layers,
     # separated by |
@@ -444,18 +528,7 @@ sub uploadIfEnoughTiles
         mkdir $Config->get("WorkingDirectory");
     }
 
-    if (opendir(my $dp, $Config->get("WorkingDirectory")."uploadable"))
-    {
-        while(my $File = readdir($dp))
-        {
-            $ZipCount++ if ($File =~ /\.zip$/);
-        }
-        closedir($dp);
-    }
-    else 
-    {
-        mkdir $Config->get("WorkingDirectory")."uploadable";
-    }
+    my $ZipCount = countZips();
 
     if (($Count >= 200) or ($ZipCount >= 1))
     {
@@ -1876,7 +1949,7 @@ sub reExecIfRequired
             statusMessage("Waiting for child process", $currentSubTask, $progressJobs, $progressPercent,0);
             waitpid($child_pid, 0);
         }
-        exec "perl", $0, "loop", "reexec", 
+        exec "perl", $0, $Mode, "reexec", 
             "progressJobs=$progressJobs", 
             "idleSeconds=" . getIdle(1), 
             "idleFor=" . getIdle(0), 

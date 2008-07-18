@@ -61,9 +61,9 @@ sub ApplyConfigLogic
 }
 
 #--------------------------------------------------------------------------
-# Checks a tiles@home configuration
+# Checks a tiles@home basic configuration
 #--------------------------------------------------------------------------
-sub CheckConfig
+sub CheckBasicConfig
 {
     my $Config = shift();
     my %EnvironmentInfo;
@@ -83,6 +83,99 @@ sub CheckConfig
     {
         die ("! no subversion command set");
     }
+
+    # LocalSplippymap
+    if ($Config->get("LocalSlippymap"))
+    {
+        print "- Writing LOCAL slippy map directory hierarchy, no uploading\n";
+    }
+    else
+    {
+        # Upload URL, username
+        printf "- Uploading with username \"".$Config->get("UploadUsername")."\"\n", ;
+        my $pw = $Config->get("UploadPassword");
+        if($pw =~ /\W/){
+            die("Check your upload password\n");
+        }
+
+        if($Config->get("UploadChunkSize") < 0.2){
+            $Config->get("UploadChunkSize") = 2;
+            print "! Using default upload chunk size of 2.0 MB\n";
+        }
+
+        if($Config->get("DeleteZipFilesAfterUpload")){
+            print "- Deleting ZIP files after upload\n";
+        }
+    }
+
+    if ($Config->get("UploadToDirectory"))
+    {
+        if (! $Config->get("UseHostnameInZipname")) 
+        {
+            print " * UseHostnameInZipname should be set when using UploadToDirectory\n";
+        }
+    }
+
+    # layers
+    foreach my $layer(split(/,/, $Config->get("Layers")))
+    {
+        print "- Configured Layer: $layer\n";
+
+        if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20) 
+        {
+            print "Check $layer._MaxZoom\n";
+        }
+
+        for(my $zoom=12; $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
+        {
+            if (!defined($Config->get($layer."_Rules.$zoom")))
+            {
+                die "config option $layer._Rules.$zoom is not set";
+            }
+            if (!-f $Config->get($layer."_Rules.$zoom"))
+            {
+                die "rules file ".$Config->get($layer."_Rules.$zoom").
+                    " referenced by config option $layer._Rules.$zoom ".
+                    "is not present";
+            }
+        }
+
+        if (!defined($Config->get($layer."_Prefix")))
+        {
+            die "config option $layer._Prefix is not set";
+        }
+
+        # any combination of comma-separated preprocessor names is allowed
+        die "config option $layer._Preprocessor has invalid value" 
+            if (grep { $_ !~ /frollo|maplint|close-areas|mercator|attribution|autocut/} split(/,/, $Config->get($layer."_Preprocessor")));
+
+        foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
+        {
+            die "file $reqfile required for layer $layer as per config option ".
+                $layer."_RequiredFiles not found" unless (-f $reqfile);
+        }
+
+    }
+    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers\n" unless defined($Config->get("UploadConfiguredLayersOnly"));
+
+    # Zip version
+    $cmd=$Config->get("Zip");
+    my $ZipV = `\"$cmd\" -v`;
+    $EnvironmentInfo{Zip}=$ZipV;
+
+    return %EnvironmentInfo;
+
+}
+
+#--------------------------------------------------------------------------
+# Checks a tiles@home configuration
+#--------------------------------------------------------------------------
+sub CheckConfig
+{
+    my $Config = shift();
+    my $cmd;
+
+    my %EnvironmentInfo = CheckBasicConfig($Config);
 
     if ($Config->get("Batik"))
     {
@@ -144,11 +237,6 @@ sub CheckConfig
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
     }
 
-    # Zip version
-    $cmd=$Config->get("Zip");
-    my $ZipV = `\"$cmd\" -v`;
-    $EnvironmentInfo{Zip}=$ZipV;
-
     if ($ZipV eq "") 
     {
         die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");
@@ -183,45 +271,13 @@ sub CheckConfig
 
     if ( $Config->get("PngOptimizer") eq "optipng" ) 
     {
-	if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) 
-	{
-	    die("! Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n");
-	}
-	else
-	{
-	    print "- OptiPNG version $1\n";
-	}
-    }
-
-    # LocalSplippymap
-    if ($Config->get("LocalSlippymap"))
-    {
-        print "- Writing LOCAL slippy map directory hierarchy, no uploading\n";
-    }
-    else
-    {
-        # Upload URL, username
-        printf "- Uploading with username \"".$Config->get("UploadUsername")."\"\n", ;
-        my $pw = $Config->get("UploadPassword");
-        if($pw =~ /\W/){
-            die("Check your upload password\n");
-        }
-
-        if($Config->get("UploadChunkSize") < 0.2){
-            $Config->get("UploadChunkSize") = 2;
-            print "! Using default upload chunk size of 2.0 MB\n";
-        }
-
-        if($Config->get("DeleteZipFilesAfterUpload")){
-            print "- Deleting ZIP files after upload\n";
-        }
-    }
-
-    if ($Config->get("UploadToDirectory"))
-    {
-        if (! $Config->get("UseHostnameInZipname")) 
+        if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) 
         {
-            print " * UseHostnameInZipname should be set when using UploadToDirectory\n";
+            die("! Can't find OptiPNG (using \"".$Config->get("Optipng")."\")\n");
+        }
+        else
+        {
+            print "- OptiPNG version $1\n";
         }
     }
 
@@ -241,47 +297,6 @@ sub CheckConfig
     #    print "Check MaxZoom\n";
     #}
 
-    # layers
-    foreach my $layer(split(/,/, $Config->get("Layers")))
-    {
-        print "- Configured Layer: $layer\n";
-
-        if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20) 
-        {
-            print "Check $layer._MaxZoom\n";
-        }
-
-        for(my $zoom=12; $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
-        {
-            if (!defined($Config->get($layer."_Rules.$zoom")))
-            {
-                die "config option $layer._Rules.$zoom is not set";
-            }
-            if (!-f $Config->get($layer."_Rules.$zoom"))
-            {
-                die "rules file ".$Config->get($layer."_Rules.$zoom").
-                    " referenced by config option $layer._Rules.$zoom ".
-                    "is not present";
-            }
-        }
-
-        if (!defined($Config->get($layer."_Prefix")))
-        {
-            die "config option $layer._Prefix is not set";
-        }
-
-        # any combination of comma-separated preprocessor names is allowed
-        die "config option $layer._Preprocessor has invalid value" 
-            if (grep { $_ !~ /frollo|maplint|close-areas|mercator|attribution|autocut/} split(/,/, $Config->get($layer."_Preprocessor")));
-
-        foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
-        {
-            die "file $reqfile required for layer $layer as per config option ".
-                $layer."_RequiredFiles not found" unless (-f $reqfile);
-        }
-
-    }
-    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers\n" unless defined($Config->get("UploadConfiguredLayersOnly"));
     return %EnvironmentInfo;
 
 }

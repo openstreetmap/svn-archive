@@ -68,6 +68,7 @@ def demo(req, route, input, output, server):
     f.close()
     
     req.content_type = 'text/html'
+
     req.write('<html>')
     req.write('<head></head>')
     req.write('<body>')

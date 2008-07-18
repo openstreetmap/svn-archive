@@ -208,7 +208,7 @@ sub processXML {
 			push @tags, \@tag;
 		}
 		elsif($line =~ /^\s*\<nd /) {
-			my ($ref) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/);
+			my ($ref) = ($line =~ /^\s*\<nd ref=[\'\"](-?\d+)[\'\"]/);
 			unless($main_type eq "way") { warn "Got nd when in $main_type\n"; next; }
 			unless($ref) { warn "Invalid line '$line'"; next; }
 			push @nodes, $ref;
@@ -234,7 +234,7 @@ sub processXML {
 
 		# Do the decisions when closing tags - can be self closing
 		elsif($line =~ /^\s*<\/?node/) {
-			my ($id,$lat,$long) = ($main_line =~ /^\s*<node id=['"](\d+)['"].* lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+			my ($id,$lat,$long) = ($main_line =~ /^\s*<node.*id=['"](-?\d+)['"].*lat=['"]?(\-?[\d\.]+)['"]?.*lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
 
 			unless($id) { warn "Invalid node line '$main_line'"; next; }
 			unless($main_type eq "node") { warn "$main_type ended with $line"; next; }
@@ -243,7 +243,7 @@ sub processXML {
 			}
 		}
 		elsif($line =~ /^\s*\<\/?way/) {
-			my ($id) = ($main_line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
+			my ($id) = ($main_line =~ /^\s*\<way id=[\'\"](-?\d+)[\'\"]/);
 
 			unless($id) { warn "Invalid way line '$main_line'"; next; }
 			unless($main_type eq "way") { warn "$main_type ended with $line"; next; }
@@ -401,7 +401,7 @@ B<planetosm-excerpt-tags.pl>
 B<Common usages:>
 
 
-B<planertosm-excerpt-tags.pl> <planet.osm.xml> > excerpt.osm
+B<planertosm-excerpt-tags.pl> planet.osm.xml> > excerpt.osm
 
 parse an excerpted planet.osm file, and output the parts that match certain
 tags.

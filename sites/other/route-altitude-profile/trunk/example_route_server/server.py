@@ -30,70 +30,15 @@ route1 = [\
 
 routes = [route1]
 
-<<<<<<< HEAD:example_route_server/server.py
-# ULR of altitude server:
-#url_server_root = 'http://localhost:8080/';
-url_server_root = 'http://altitude.sprovoost.nl/';
-
-# HTTP server to serve the example routes
-class MyHandler(BaseHTTPRequestHandler):
-  def do_GET(self):
-    if self.path == "/index.html":
-      # Show all the options to the user
-
-      f = open(curdir + sep + "www" + sep + "index.html") 
-
-      self.send_response(200)
-      self.send_header('Content-type',	'text/html')
-      self.end_headers()
-      self.wfile.write(f.read())
-      f.close()
-      return
-   
-    else: 
-      # Determine route number (substract 1 because arrays start 
-      # at 0): 
-      route_number = int(self.path[-1]) - 1
-      
-      input_type = inputTypeFromUrl(self.path)
-      output_type = outputTypeFromUrl(self.path)
-      
-      if input_type == "" or output_type == "":
-        exit()
-
-      f = fetchResult(input_type, routes[route_number], output_type)      
-
-      if output_type == "xml":
-        self.send_response(200)
-        self.send_header('Content-type',	'text/xml')
-        self.end_headers()
-      
-        s = f.read()
-        f.close()
-
-        self.wfile.write(s)
-      
-      elif output_type == "gchart":
-        self.send_response(200)
-        self.send_header('Content-type',	'text/html')
-        self.end_headers()
-      
-        s = f.read()
-        f.close()
-        
-        self.wfile.write('<html>')
-        self.wfile.write('<head></head>')
-        self.wfile.write('<body>')
-        self.wfile.write('<img src="' + s +  '" alt="Altitude profile"/>')
-
-
-def inputTypeFromUrl(url):
-  if "input=protobuf" in url:
-    return "protobuf"
-  elif "input=xml" in url:  
-    return "xml"
+def demo(req, route, input, output, server):
+  # ULR of altitude server:
+  if server == "pg":
+    #url_server_root = 'http://altitude-pg/';
+    url_server_root = 'http://altitude-pg.sprovoost.nl/';
+  elif server == "app":
+    #url_server_root = 'http://localhost:8080/';
+    url_server_root = 'http://altitude.sprovoost.nl/';
   else:
-    return ""
     exit()
 
   # Determine route number (substract 1 because arrays start 
@@ -123,20 +68,14 @@ def inputTypeFromUrl(url):
     f.close()
     
     req.content_type = 'text/html'
->>>>>>> master:example_route_server/server.py
+    req.write('<html>')
+    req.write('<head></head>')
+    req.write('<body>')
+    req.write('<img src="' + s +  '" alt="Altitude profile"/>')
+  
+  #return apache.OK
 
-<<<<<<< HEAD:example_route_server/server.py
-def outputTypeFromUrl(url):
-  if "output=protobuf" in url:
-    return "protobuf"
-  elif "output=xml" in url:  
-    return "xml"
-  elif "output=gchart" in url:  
-    return "gchart"
-  else:
-    return ""
-
-def fetchResult(input_type, route, output_type):
+def fetchResult(url_server_root, input_type, route, output_type):
   if input_type == "protobuf":  
     # Prepare route for transmission (Protocol Buffer)
     route_pb = altitudeprofile_pb2.Route()

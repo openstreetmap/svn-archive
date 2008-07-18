@@ -37,8 +37,8 @@
 			this.setIcon(this.group);
 			this.reflect();
 		} else {
-			this.dropdown.removeMovieClip();
-			this.icon.removeMovieClip();
+			removeMovieClip(this.dropdown);
+			removeMovieClip(this.icon);
 		}
 	};
 	PresetMenu.prototype.initMenu=function(value) {

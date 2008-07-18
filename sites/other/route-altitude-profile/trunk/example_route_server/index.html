@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Route altitude profile demo</title>
+  </head>
+  <body>
+    <p>Hi there. Pick a route to see its altitude profile. You can also view the route in Google Maps.</p>
+    <p>There are two servers. One is my home computer running Ubuntu Linux, a PostgreSQL database and apache with modpython. The other is the Google App Engine. Although my home computer covers a much larger land area, it is not able to handle any serious load, so please be nice to it. 
+    <h2>Google App Engine server</h2>
+    <h3>Route 1</h2>
+    <p>Downtown Heidelberg. Car route on <a href="http://maps.google.com/maps?f=d&hl=en&geocode=17786583812122914276,49.414740,8.693260&saddr=49.40779,8.681002&daddr=Bergstra%C3%9Fe+%4049.414740,+8.693260&mra=mi&mrsp=0,1&sz=15&sll=49.411029,8.689027&sspn=0.014128,0.037594&ie=UTF8&ll=49.410052,8.692503&spn=0.014129,0.037594&z=15">Google maps</a>. </p>
+    <table border=1>
+      <tr><td>Input protocol</td><td>Output</td></tr>
+      <tr>
+        <td>XML</td>
+        <td><a href="server.py/demo?route=1&input=xml&output=xml&server=app">xml</a></td> 
+        <td><a href="server.py/demo?route=1&input=xml&output=gchart&server=app">Google Chart</a></td>
+      </tr>
+      <tr>
+        <td>Protocol Buffers</td><td>Coming soon</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>HTTP/GET</td><td>Coming soon</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+    <h2>Postgres</h2>
+    <h3>Route 1</h2>
+    <p>Downtown Heidelberg. Car route on <a href="http://maps.google.com/maps?f=d&hl=en&geocode=17786583812122914276,49.414740,8.693260&saddr=49.40779,8.681002&daddr=Bergstra%C3%9Fe+%4049.414740,+8.693260&mra=mi&mrsp=0,1&sz=15&sll=49.411029,8.689027&sspn=0.014128,0.037594&ie=UTF8&ll=49.410052,8.692503&spn=0.014129,0.037594&z=15">Google maps</a>. </p>
+    <table border=1>
+      <tr><td>Input protocol</td><td>Output</td></tr>
+      <tr>
+        <td>XML</td>
+        <td><a href="server.py/demo?route=1&input=xml&output=xml&server=pg">xml</a></td> 
+        <td><a href="server.py/demo?route=1&input=xml&output=gchart&server=pg">Google Chart</a></td>
+      </tr>
+      <tr>
+        <td>Protocol Buffers</td><td>Coming soon</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>HTTP/GET</td><td>Coming soon</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <p>More information <a href="http://wiki.openstreetmap.org/index.php/Route_altitude_profiles_SRTM">here</a>.</p>
+  </body>
+</html>

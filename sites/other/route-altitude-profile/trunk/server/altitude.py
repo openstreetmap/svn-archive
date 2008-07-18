@@ -7,83 +7,60 @@ from geopy import distance, util
 # http://pygooglechart.slowchop.com/
 from pygooglechart import XYLineChart, Axis
 
-# Google app engine ingredients:
-
-import cgi
-import wsgiref.handlers
-
-from google.appengine.ext import db
-from google.appengine.ext import webapp
 from xml.dom import minidom
 
-#import altitudeprofile_pb2  # Protocol buffers don't work yet in App Engine
-
-##### Database #####
-class Altitude(db.Model):
-  #pos = db.IntegerProperty()
-  alt = db.IntegerProperty()
-
 ##### Pages ######
-class MainPage(webapp.RequestHandler):
-  def get(self):
-    self.response.out.write("""
-      <html>
-        <body>""")
-    self.response.out.write("<p>Welcome.</p>")
-    self.response.out.write("""       </body>
-      </html>""")
+def page_main_get():
+  return '<p>Welcome! Go to <a href="http://sprovoost.nl/category/gsoc/">my blog</a> to learn more.</p>'
   
-class Profile(webapp.RequestHandler):
-  def post(self, output_format, input_format):
-    # Extract the route:
+def page_profile_post(db, postdata, output_format, input_format):
+  # Extract the route:
+  route = []
+  if input_format == "protobuf":
+    # Doesn't work in app egine yet and completely untested
+    route_pb = altitudeprofile_pb2.Route()
+    route_pb.ParseFromString(postdata)
+
+    for i in range(1, len(route_pb.point) + 1):
+      point = route_pb.point[i-1]
+      route += {'id' : i, 'lat' : point.lat, 'lon' : point.lon} 
+
+  elif input_format == "xml":
+    dom = minidom.parseString(postdata)
+    points = dom.getElementsByTagName('gml:pos') 
+
+    for i in range(1, len(points) + 1):
+      point = util.parse_geo(points[i-1].firstChild.data)
+      route.append({'id' : i, 'lat' : point[1], 'lon' : point[0]})
+
+  else:
+    # Some sort of error; we're under attack! :-)
     route = []
-    if input_format == "protobuf":
-      # Doesn't work in app egine yet and completely untested
-      route_pb = altitudeprofile_pb2.Route()
-      route_pb.ParseFromString(self.request.body)
+
+  # Find out what the desired output is
+  if output_format == "gchart":
+    url = altitude_profile_gchart(db, route)
+    return ['text/html', url]
   
-      for i in range(1, len(route_pb.point) + 1):
-        point = route_pb.point[i-1]
-        route += {'id' : i, 'lat' : point.lat, 'lon' : point.lon} 
+  elif output_format == "xml":
+    profile = altitude_profile(db, route)
+    # Now return a 'nice' XML document with the result
+    xml = '<?xml version="1.0" encoding="UTF-8"?>'
+    xml += '<xls:XLS xmlns:xls="http://www.opengis.net/xls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" version="1.1" xsi:schemaLocation="http://www.opengis.net/xls http://schemas.opengis.net/ols/1.1.0/RouteService.xsd">'
+    xml += '  <xls:RouteGeometry>'
+    xml += '    <gml:LineString srsName="EPSG:4326">'
+    for point in route:
+      xml += '      <gml:pos>' + str(point['lon']) + " " + str(point['lat']) + " " + str(point['alt']) + '</gml:pos>'
 
-    elif input_format == "xml":
-      dom = minidom.parseString(self.request.body)
-      points = dom.getElementsByTagName('gml:pos') 
+    xml += '    </gml:LineString>'
+    xml += '  </xls:RouteGeometry>'
+    xml += '</xls:XLS>'
 
-      for i in range(1, len(points) + 1):
-        point = util.parse_geo(points[i-1].firstChild.data)
-        route.append({'id' : i, 'lat' : point[1], 'lon' : point[0]})
+    return ['text/xml', xml]
 
-    else:
-      # Some sort of error; we're under attack! :-)
-      route = []
-      
-
-    # Find out what the desired output is
-    if output_format == "gchart":
-      url = altitude_profile_gchart(route)
-      self.response.out.write(url)
-    
-    elif output_format == "xml":
-      profile = altitude_profile(route)
-      # Now return a 'nice' XML document with the result
-      xml = '<?xml version="1.0" encoding="UTF-8"?>'
-      xml += '<xls:XLS xmlns:xls="http://www.opengis.net/xls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" version="1.1" xsi:schemaLocation="http://www.opengis.net/xls http://schemas.opengis.net/ols/1.1.0/RouteService.xsd">'
-      xml += '  <xls:RouteGeometry>'
-      xml += '    <gml:LineString srsName="EPSG:4326">'
-      for point in route:
-        xml += '      <gml:pos>' + str(point['lon']) + " " + str(point['lat']) + " " + str(point['alt']) + '</gml:pos>'
-
-      xml += '    </gml:LineString>'
-      xml += '  </xls:RouteGeometry>'
-      xml += '</xls:XLS>'
-
-      self.response.out.write(xml)
-      
-
-def altitude_profile_gchart(route):
+def altitude_profile_gchart(db, route):
     # First calculate the altitude profile
-    profile = altitude_profile(route)
+    profile = altitude_profile(db, route)
     
     # Create gchart
     # http://code.google.com/apis/chart/#line_charts
@@ -124,19 +101,19 @@ def altitude_profile_gchart(route):
     # Return gchart url:
     return chart.get_url()
     
-def altitude_profile(route):
+def altitude_profile(db, route):
   answer = []
   interpolateRoute(route, 100)
   for point in route:
-    point['alt'] = getAltitude(point['lat'], point['lon'])
+    point['alt'] = getAltitude(db, point['lat'], point['lon'])
     answer.append(point)
   return answer
     
 ##### Database functions #####
 
-def getAltitude(lat,lon):
+def getAltitude(db, lat,lon):
   pos = posFromLatLon(lat,lon)
-  return fetchAltitudeFromDatastore(pos)
+  return db.fetchAltitude(pos)
 
 ##### Helper functions ######
 
@@ -226,25 +203,6 @@ def interpolateRoute(route, n):
 
     i = i + len(pair) - 1 
 
-#### Database ####
-def fetchAltitudeFromDatastore(pos):
-  return Altitude.get_by_key_name("P" + str(pos)).alt
-
-def fetchAltitudeFromPostgres(pos):
-  sql = db.query("SELECT alt FROM altitude WHERE pos = " + str(pos))
-  res = sql.getresult()
-  return res[0][0]
-
-#### Main program ####
-
-def main():
-  application = webapp.WSGIApplication(
-                                       [
-                                        ('/', MainPage),
-                                        (r'/profile/(.*)/(.*)/', Profile)
-                                       ],
-                                       debug=True)
-  wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == '__main__':
   main() 

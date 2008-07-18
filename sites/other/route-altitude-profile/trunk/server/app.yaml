@@ -5,10 +5,10 @@ api_version: 1
 
 handlers:
 - url: /
-  script: altitude.py
+  script: app_engine.py
 
 - url: /profile/.*
-  script: altitude.py
+  script: app_engine.py
 
 - url: /load
   script: myloader.py
@@ -31,8 +31,10 @@ skip_files: |
  (.*\.csv)|
  (data/.*)|
  (test/.*)|
- (src/import-google-apps-engine\.sh)
- (src/import-google-apps-engine\.py)
+ (web/.*)|
+ (database_pg*)|
+ (import-google-apps-engine\.sh)
+ (import-google-apps-engine\.py)
  (#.*#)|
  (.*~)|
  (.*\.py[co])|

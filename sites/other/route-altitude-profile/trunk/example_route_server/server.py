@@ -3,6 +3,8 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urllib
 import altitudeprofile_pb2
 
+from mod_python import apache
+
 # Define example routes.
 # See http://wiki.openstreetmap.org/index.php/Route_Altitude_Profile_Example_Routes
 # Convert with:
@@ -28,6 +30,7 @@ route1 = [\
 
 routes = [route1]
 
+<<<<<<< HEAD:example_route_server/server.py
 # ULR of altitude server:
 #url_server_root = 'http://localhost:8080/';
 url_server_root = 'http://altitude.sprovoost.nl/';
@@ -91,7 +94,38 @@ def inputTypeFromUrl(url):
     return "xml"
   else:
     return ""
+    exit()
 
+  # Determine route number (substract 1 because arrays start 
+  # at 0): 
+  route_number = int(route) - 1
+
+  input_type = input
+  output_type = output
+  
+  if input_type == "" or output_type == "":
+    exit()
+
+  f = fetchResult(url_server_root, input_type, routes[route_number], output_type)      
+  
+  if output_type == "xml":
+  
+    s = f.read()
+    f.close()
+
+    req.content_type = 'text/xml'
+
+    req.write(s)
+  
+  elif output_type == "gchart":
+  
+    s = f.read()
+    f.close()
+    
+    req.content_type = 'text/html'
+>>>>>>> master:example_route_server/server.py
+
+<<<<<<< HEAD:example_route_server/server.py
 def outputTypeFromUrl(url):
   if "output=protobuf" in url:
     return "protobuf"
@@ -138,11 +172,4 @@ def fetchResult(input_type, route, output_type):
     return urllib.urlopen(url_server_root + "profile/" + output_type + "/xml/", route_xml)
 
 if __name__ == '__main__':
-    try:
-        httpserver = HTTPServer(('', 80), MyHandler)
-        print 'started httpserver...'
-        httpserver.serve_forever()
-    except KeyboardInterrupt:
-        print '^C received, shutting down server'
-        httpserver.socket.close()
-   
+  None 

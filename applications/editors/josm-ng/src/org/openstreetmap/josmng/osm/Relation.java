@@ -41,7 +41,7 @@ public class Relation extends OsmPrimitive {
         }
     }
 
-    @Override void visit(Visitor v) {
+    @Override public void visit(Visitor v) {
         v.visit(this);
     }
     

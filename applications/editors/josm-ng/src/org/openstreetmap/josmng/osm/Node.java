@@ -53,7 +53,7 @@ public final class Node extends OsmPrimitive implements Coordinate {
         source.postEdit(edit);
     }
 
-    @Override void visit(Visitor v) {
+    @Override public void visit(Visitor v) {
         v.visit(this);
     }
     

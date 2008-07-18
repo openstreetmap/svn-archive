@@ -114,7 +114,7 @@ public abstract class OsmPrimitive {
         source.postEdit(edit);
     }
 
-    abstract void visit(Visitor v);
+    public abstract void visit(Visitor v);
  
     /**
      * Referes should make sure not to call if they are already registered

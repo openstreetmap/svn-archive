@@ -53,7 +53,7 @@ public class Way extends OsmPrimitive {
         source.postEdit(ch);
     }
 
-    @Override void visit(Visitor v) {
+    @Override public void visit(Visitor v) {
         v.visit(this);
     }
     

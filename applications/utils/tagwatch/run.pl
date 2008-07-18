@@ -48,20 +48,20 @@ foreach my $arg (@ARGV)
   $Config{$1} = $2 if($arg =~ /^(.+)=(.+)$/);
 }
 
-my @files;
+my @urls;
 foreach my $key (sort keys %Config)
 {
-	push(@files, $Config{$key}) if $key =~ /^osmDownloadUrl/ && $Config{$key};
+	push(@urls, $Config{$key}) if $key =~ /^osmDownloadUrl/ && $Config{$key};
 }
 print "\n++++++++++++++++++++++++++++++++++++++++++++\n";
-if(!@files)
+if(!@urls)
 {
 	print "+ use previous downloaded osm files ...\n";
 }
 else
 {
 	print "+ download osm files ...\n";
-	getOSMFiles($Config{'osmfile_folder'}, @files);
+	getOSMFiles($Config{'osmfile_folder'}, @urls);
 }
 
 print "\n++++++++++++++++++++++++++++++++++++++++++++\n";
@@ -182,9 +182,15 @@ sub getOSMFiles
 {
 	my ($Folder, @Urls) = @_;
 
+	my %usefiles;
+	foreach my $key (sort keys %Config)
+	{
+		$usefiles{$Config{$key}} = 1 if $key =~ /^osmDownloadFile/ && $Config{$key};
+	}
+
 	mkdir $Folder if ! -d $Folder;
 
-        my %files;
+	my %files;
 	if(open(FILELIST,"<","$Folder/filelist.txt"))
 	{
 		while(my $line = <FILELIST>)
@@ -207,6 +213,7 @@ sub getOSMFiles
 				my $Date = $4;
 				my $FileName = $3;
 				my $usename = $FileName;
+				next if %usefiles && !$usefiles{$usename};
 
 				$usename =~ s/.bz2// if($Config{'extract_OsmFiles'} eq "yes");
 

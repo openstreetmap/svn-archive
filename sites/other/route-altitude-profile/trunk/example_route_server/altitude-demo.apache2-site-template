@@ -1,0 +1,23 @@
+<VirtualHost *>
+        ServerName  altitude-demo
+        ServerAlias *.altitude-demo
+        ServerAdmin sjors@sprovoost.nl
+
+        DocumentRoot /home/sjors/osm/route-profile/example_route_server
+        <Directory /home/sjors/osm/route-profile/example_route_server/>
+            Options -Indexes FollowSymLinks MultiViews
+            AddHandler mod_python .py
+            PythonHandler mod_python.publisher 
+            PythonDebug Off
+        </Directory>
+
+        ErrorLog /home/sjors/osm/route-profile/example_route_server/logs/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel debug
+
+        CustomLog /home/sjors/osm/route-profile/example_route_server/logs/access.log combined
+        ServerSignature Off
+</VirtualHost>
+

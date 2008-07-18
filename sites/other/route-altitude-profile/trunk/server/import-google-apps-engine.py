@@ -89,7 +89,7 @@ if __name__ == '__main__':
       writeTileCsvFile(tile, lat, lon, row_top, row_bottom, col_left, col_right)
 
       # To insert, you need to do something like this:
-      # /path/to/app-engine-sdk/bulkload_client.py --filename ../data/tile.csv --kind Altitude --url http://something.appspot.com/load --batch_size 100"
+      # /path/to/app-engine-sdk/bulkload_client.py --filename data/tile.csv --kind Altitude --url http://something.appspot.com/load --batch_size 100"
       
       # You also need to add a --cookie argument: just surf to http://something.appspot.com/load
       # to see how.

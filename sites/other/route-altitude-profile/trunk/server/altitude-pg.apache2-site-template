@@ -1,0 +1,23 @@
+<VirtualHost *>
+        ServerName  altitude-pg
+        ServerAlias *.altitude-pg
+        ServerAdmin sjors@sprovoost.nl
+        WSGIScriptAlias / /home/sjors/osm/route-profile/server/apache.py
+
+        DocumentRoot /home/sjors/osm/route-profile/server
+        <Directory /home/sjors/osm/route-profile/server/>
+            Options -Indexes FollowSymLinks MultiViews
+            Order deny,allow
+            Allow from all
+        </Directory>
+
+        ErrorLog /home/sjors/osm/route-profile/server/logs/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel debug
+
+        CustomLog /home/sjors/osm/route-profile/server/logs/access.log combined
+        ServerSignature Off
+</VirtualHost>
+

@@ -12,7 +12,7 @@
 <span class="logo">Tagwatch</span></p>
 <p align="center">This webseite shows extended information about the tags <em><small>(Key - value pairs)</small></em> which are used within the Map.<br>
 This includes the general description as well as some statistics about their usage.</p>
-<p align="center">A <a href="toplist.htm">toplist</a> comparing the <TMPL_VAR NAME="countrycount"> different countries with each other is available <a href="toplist.htm">here</a>.</p>
+<p align="center">A <a href="<TMPL_VAR NAME="toplistfile">">toplist</a> comparing the <TMPL_VAR NAME="countrycount"> different countries with each other is available <a href="<TMPL_VAR NAME="toplistfile">">here</a>.</p>
 
 <table width="200" align="center">
   <thead>
@@ -25,7 +25,7 @@ This includes the general description as well as some statistics about their usa
 
 <TMPL_LOOP NAME="indexlist">
     <tr>
-      <td><a href="<TMPL_VAR NAME="country">/En/index.htm"><TMPL_VAR NAME="country"></a></td>
+      <td><a href="<TMPL_VAR NAME="country">/En/<TMPL_VAR NAME="indexfile">"><TMPL_VAR NAME="country"></a></td>
       <td align="right" nowrap><TMPL_VAR NAME="date"></td>
     </tr>
 </TMPL_LOOP>

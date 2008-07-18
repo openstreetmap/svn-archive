@@ -2,13 +2,13 @@
 <html>
 
 <head>
-  <title><TMPL_VAR NAME="interlang_headertitel"> :: Key:<TMPL_VAR NAME="key"> <TMPL_VAR NAME="interlang_stats"></title>
+  <title><TMPL_VAR NAME="interlang_headertitle"> :: Key:<TMPL_VAR NAME="key"> <TMPL_VAR NAME="interlang_stats"></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link rel="stylesheet" type="text/css" href="../../style.css">
 </head>
 <body>
 <div class="header"><img src="../../images/osm_button.png" alt="OpenStreetMap Tagwatch" width="138" height="48" border="0"><span class="logo">Tagwatch <TMPL_VAR NAME="country"></span> :: <TMPL_VAR NAME="interlang_headertext"><hr>
-<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="grouplist.htm"><TMPL_VAR NAME="interlang_upkeylist"></a></div>
+<TMPL_VAR NAME="interlang_interlang"> :: <TMPL_VAR NAME="lang_links"> :: <a href="grouplist<TMPL_VAR NAME="ext">"><TMPL_VAR NAME="interlang_upkeylist"></a></div>
 
 <h2>Key:<TMPL_VAR NAME="key"> <TMPL_VAR NAME="interlang_stats"></h2>
 <p><TMPL_VAR NAME="interlang_wikidiscussion"></p>
@@ -102,8 +102,8 @@
       <td nowrap>
 	<TMPL_LOOP NAME="desclist"><span class="<TMPL_VAR NAME="wikidesc">">&nbsp;<TMPL_VAR NAME="language">&nbsp;</span></TMPL_LOOP>
       </td>
-      <td><a href="tagstats_<TMPL_VAR NAME="TagESC">.htm"><TMPL_VAR NAME="value"> <TMPL_VAR NAME="interlang_details"></a></td>
-      <td><a href="http://www.informationfreeway.org/api/0.5/*[<TMPL_VAR NAME="tagESC">]" target="_blank">data.osm</a></td>
+      <td><a href="tagstats_<TMPL_VAR NAME="tagESC">"><TMPL_VAR NAME="value"> <TMPL_VAR NAME="interlang_details"></a></td>
+      <td><a href="<TMPL_VAR NAME="tagAPI">" target="_blank">data.osm</a></td>
     </tr>
 </TMPL_LOOP>
 

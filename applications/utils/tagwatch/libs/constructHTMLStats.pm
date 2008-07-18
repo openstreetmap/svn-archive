@@ -81,7 +81,7 @@ sub constructHTML
 	foreach my $Language(@Languages)
 	{
 		$Language = ucfirst($Language);
-		push(@templist,"<a href=\"../$Language/%s.htm\">$Language</a>");
+		push(@templist,"<a href=\"../$Language/%s\">$Language</a>");
 	}
 	$lang_links  = join(", ",@templist);
 
@@ -97,6 +97,7 @@ sub constructHTML
 		my $OSMfile = $FileDetails[0];
 
 		my %row = ("country" => $Country,
+			   "indexfile" => $Config{indexname},
 			   "date"    => $Date);
 		push(@tmpl_file_loop, \%row);
 		$CountryCount++;
@@ -186,7 +187,8 @@ sub buildCountryIndex
 
 	$template->param(indexlist    => \@tmpl_file_loop);
 	$template->param(countrycount => $CountryCount);
-	
+	$template->param(toplistfile  => $Config{indexname_toplist});
+
 	open(TOP, ">$Config{'output_folder'}/$Config{'indexname_countries'}");
 	print TOP $template->output;
   	close TOP;
@@ -372,6 +374,7 @@ sub buildCountryTopList
 	#++++++++++++++++++++++++++++
 	my $template = HTML::Template->new(filename => 'template/countrytoplist.tmpl');
 
+	$template->param(indexfile                => $Config{indexname_countries});
 	$template->param(topnodes                 => \@tmpl_TopNodes);
 	$template->param(topways                  => \@tmpl_TopWays);
 	$template->param(toprelations             => \@tmpl_TopRelations);
@@ -381,8 +384,14 @@ sub buildCountryTopList
 	$template->param(topundocumentedkeys      => \@tmpl_TopUndocumentedKeys);
 	$template->param(topundocumentedtags      => \@tmpl_TopUndocumentedTags);
 	$template->param(topundocumentedrelations => \@tmpl_TopUndocumentedRelations);
-	
-	open(TOP, ">$Config{'output_folder'}/toplist.htm");
+
+	my $Language="En";
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
+	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
+	$template->param(interlang_countrytoplist  => sprintf($Interface{'countrytoplist'}->{$Language}, $Country, $Date));
+	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
+
+	open(TOP, ">$Config{'output_folder'}/$Config{indexname_toplist}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -407,7 +416,7 @@ sub buildAllKeyList
 		# go through all tags for this particular key
 		foreach my $Value(sort {$TagList{$b}->{'t'} <=> $TagList{$a}->{'t'}} keys %TagList)
 		{
-			my $Text = sprintf("<b><a href=\"http://www.informationfreeway.org/api/0.5/*[$Key=$Value]\" target=\"_blank\">".markSpaceCharakter($Value)."</a></b> (%d)", $TagList{$Value}->{'t'}) if($TagList{$Value}->{'t'} > 0);
+			my $Text = sprintf("<b><a href=\"".$Config{osmxapi_url}."[$Key=$Value]\" target=\"_blank\">".markSpaceCharacter($Value)."</a></b> (%d)", $TagList{$Value}->{'t'}) if($TagList{$Value}->{'t'} > 0);
 
 			push(@ExampleTags, $Text) if($ValueCount++ < $Config{'example_tags'} && $Text);
 
@@ -430,8 +439,8 @@ sub buildAllKeyList
 			}
 		}
 		
-		my %row = ("key"     => markSpaceCharakter($Key),
-			   "keyname" => $Key,
+		my %row = ("key"     => markSpaceCharacter($Key),
+			   "keyAPI"  => $Config{osmxapi_url}."[$Key=*]",
                		   "values"  => join(", ", @ExampleTags));
 		push(@tmplLoop, \%row);
 
@@ -459,18 +468,19 @@ sub buildAllKeyList
 	my $template = HTML::Template->new(filename => 'template/tags.tmpl');
 
 	# header informations
-	$template->param(country => $Country);
+	$template->param(country   => $Country);
+	$template->param(indexfile => $Config{indexname});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/tags/g;
+	$linklist  =~ s/%s/tags$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information
 	$template->param(taglist  => \@tmplLoop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -480,7 +490,7 @@ sub buildAllKeyList
 	$template->param(interlang_examplevalues => $Interface{'examplevalues'}->{$Language});
 	$template->param(interlang_allkeys       => sprintf($Interface{'allkeys'}->{$Language},$Statistics{$Country}->{'used_unique_keys'} ,$Country));
 	
-	open(OUT, ">$curOutputDir/tags.htm");
+	open(OUT, ">$curOutputDir/tags$Config{html_file_extension}");
 	print OUT $template->output;
   	close OUT;
 }
@@ -499,7 +509,7 @@ sub buildTopUndocumentedKeys
 	# go through the list of all undocumented tags found by the allKeyList routine
 	foreach my $Key(sort {$UsedUndocumentedKeys{$Language}->{$b} <=> $UsedUndocumentedKeys{$Language}->{$a}} keys %{$UsedUndocumentedKeys{$Language}})
 	{
-		my %row = ("tag"   => markSpaceCharakter($Key),
+		my %row = ("tag"   => markSpaceCharacter($Key),
                		   "count" => $UsedUndocumentedKeys{$Language}->{$Key});
 
 		# only list as many tags as mentioned in the config file
@@ -517,18 +527,19 @@ sub buildTopUndocumentedKeys
 	my $template = HTML::Template->new(filename => 'template/top_undocumented.tmpl');
 
 	# header informations
-	$template->param(country => $Country);
+	$template->param(country   => $Country);
+	$template->param(indexfile => $Config{indexname});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/top_undocumented_keys/g;
+	$linklist  =~ s/%s/top_undocumented_keys$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information
 	$template->param(toplist  => \@tmplLoop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -538,7 +549,7 @@ sub buildTopUndocumentedKeys
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_keys'}->{$Language}, $Config{'undocumented_list'}));
 
-	open(TOP, ">$curOutputDir/top_undocumented_keys.htm");
+	open(TOP, ">$curOutputDir/top_undocumented_keys$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -556,7 +567,7 @@ sub buildTopUndocumentedTags
 	# go through the list of all undocumented tags found by the allKeyList routine
 	foreach my $Tag(sort {$UsedUndocumentedTags{$Language}->{$b} <=> $UsedUndocumentedTags{$Language}->{$a}} keys %{$UsedUndocumentedTags{$Language}})
 	{
-		my %row = ("tag"   => markSpaceCharakter($Tag),
+		my %row = ("tag"   => markSpaceCharacter($Tag),
                		   "count" => $UsedUndocumentedTags{$Language}->{$Tag});
 
 		# only list as many tags as mentioned in the config file
@@ -578,14 +589,14 @@ sub buildTopUndocumentedTags
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/top_undocumented_tags/g;
+	$linklist  =~ s/%s/top_undocumented_tags$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information
 	$template->param(toplist  => \@tmplLoop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -595,7 +606,7 @@ sub buildTopUndocumentedTags
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_tags'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">$curOutputDir/top_undocumented_tags.htm");
+	open(TOP, ">$curOutputDir/top_undocumented_tags$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -613,7 +624,7 @@ sub buildTopUndocumentedRelations
 	# go through the list of all undocumented tags found by the allKeyList routine
 	foreach my $Relation(sort {$UsedUndocumentedRelations{$Language}->{$b} <=> $UsedUndocumentedRelations{$Language}->{$a}} keys %{$UsedUndocumentedRelations{$Language}})
 	{
-		my %row = ("tag"   => markSpaceCharakter($Relation),
+		my %row = ("tag"   => markSpaceCharacter($Relation),
                		   "count" => $UsedUndocumentedRelations{$Language}->{$Relation});
 
 		# only list as many tags as mentioned in the config file
@@ -634,14 +645,14 @@ sub buildTopUndocumentedRelations
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/top_undocumented_relations/g;
+	$linklist  =~ s/%s/top_undocumented_relations$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information
 	$template->param(toplist  => \@tmplLoop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -651,7 +662,7 @@ sub buildTopUndocumentedRelations
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_relations'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">$curOutputDir/top_undocumented_relations.htm");
+	open(TOP, ">$curOutputDir/top_undocumented_relations$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -685,6 +696,7 @@ sub buildTopUsedEditors
 	foreach my $Editor(sort {$editorlist{$b} <=> $editorlist{$a}} keys %editorlist)
 	{
 		my %row = ("tag"    => $Editor,
+			   "tagAPI" => $Config{osmxapi_url}."[created_by=$Editor]",
                		   "count"  => $editorlist{$Editor});
 
 		# only list as many tags as mentioned in the config file
@@ -725,18 +737,19 @@ sub buildTopUsedEditors
 	my $template = HTML::Template->new(filename => 'template/top_editors.tmpl');
 
 	# header informations
-	$template->param(country => $Country);
+	$template->param(country   => $Country);
+	$template->param(indexfile => $Config{indexname});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/top_used_editors/g;
+	$linklist  =~ s/%s/top_used_editors$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information
 	$template->param(toplist  => \@tmplLoop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -746,7 +759,7 @@ sub buildTopUsedEditors
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'top_used_editors'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">$curOutputDir/top_used_editors.htm");
+	open(TOP, ">$curOutputDir/top_used_editors$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -792,7 +805,7 @@ sub buildIndexWatchlist
 		my @tmpl_wikiloop = getWikiDescriptionList($WikiDescription{'Key'}->{$WatchedKey});
 
 		my %row = ("name"     => $WatchedKey,
-			   "nameESC"  => name_encode($WatchedKey),
+			   "nameESC"  => name_encode($WatchedKey).$Config{html_file_extension},
 			   "desc"     => $keydesc,
 			   "desclist" => \@tmpl_wikiloop,
 			   "usage"    => $OsmKeyUsage{$WatchedKey},
@@ -822,18 +835,19 @@ sub buildIndexWatchlist
 	my $template = HTML::Template->new(filename => 'template/watchlist.tmpl');
 
 	# header informations
-	$template->param(country => $Country);
+	$template->param(country   => $Country);
+	$template->param(indexfile => $Config{indexname});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/watchlist/g;
+	$linklist  =~ s/%s/watchlist$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information		
 	$template->param(watchlist    => \@tmpl_loop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -850,7 +864,7 @@ sub buildIndexWatchlist
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
-	open(INDEXWL, ">$curOutputDir/watchlist.htm"); 
+	open(INDEXWL, ">$curOutputDir/watchlist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -903,7 +917,7 @@ sub buildIndexGroupList
 			my @tmpl_wikiloop = getWikiDescriptionList($WikiDescription{'Key'}->{$KeyName});			
 
 			my %row_inner = ("name"     => $KeyName,
-				         "nameESC"  => name_encode($KeyName),
+				         "nameESC"  => name_encode($KeyName).$Config{html_file_extension},
 				         "desc"     => $keydesc,
 				         "desclist" => \@tmpl_wikiloop,
 				         "usage"    => $OsmKeyUsage{$KeyName},
@@ -937,18 +951,19 @@ sub buildIndexGroupList
 	my $template = HTML::Template->new(filename => 'template/grouplist.tmpl');
 
 	# header informations
-	$template->param(country => $Country);
+	$template->param(country   => $Country);
+	$template->param(indexfile => $Config{indexname});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/grouplist/g;
+	$linklist  =~ s/%s/grouplist$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	# add statistical information		
 	$template->param(grouplist => \@tmpl_loop_outer);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -965,7 +980,7 @@ sub buildIndexGroupList
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 	
-	open(INDEXWL, ">$curOutputDir/grouplist.htm"); 
+	open(INDEXWL, ">$curOutputDir/grouplist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -1037,8 +1052,8 @@ sub buildIndexRelationList
 			# iterate through all interresting languages for the documentation
 			my @tmpl_wikiloop = getWikiDescriptionList($WikiDescription{'Relation'}->{$RelationName});			
 
-			my %row_inner = ("name"     => markSpaceCharakter($RelationName),
-				         "nameESC"  => name_encode($RelationName),
+			my %row_inner = ("name"     => markSpaceCharacter($RelationName),
+				         "nameESC"  => name_encode($RelationName).$Config{html_file_extension},
 				         "desc"     => $RelationDesc,
 				         "desclist" => \@tmpl_wikiloop,
 				         "usage"    => $OsmRelationUsage{$RelationName},
@@ -1073,16 +1088,17 @@ sub buildIndexRelationList
 
 	# header informations
 	$template->param(country => $Country);
+	$template->param(indexfile => $Config{indexname});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/relationslist/g;
+	$linklist  =~ s/%s/relationslist$Config{html_file_extension}/g;
 	$template->param(lang_links => $linklist);
 
 	$template->param(grouplist    => \@tmpl_loop_outer);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
@@ -1099,7 +1115,7 @@ sub buildIndexRelationList
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
-	open(INDEXWL, ">$curOutputDir/relationslist.htm"); 
+	open(INDEXWL, ">$curOutputDir/relationslist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -1130,7 +1146,7 @@ sub buildRelationPages
 			my @MemberInfo = split(/=/, $Member);
 
 			# add member statistics of this relation
-			my %row = ("memberrole" => markSpaceCharakter($MemberInfo[1]),
+			my %row = ("memberrole" => markSpaceCharacter($MemberInfo[1]),
 			   	   "membertype" => $MemberInfo[0],
 			   	   "memberused" => $RelationCount{'member'}->{$Member});
 
@@ -1166,7 +1182,7 @@ sub buildRelationPages
 				$TagDesc = $WikiDescription{'Tag'}->{$TagInfo[0]}->{$TagInfo[1]}->{'description'}->{'En'};
 			}
 			# add member statistics of this relation
-			my %row = ("tagname"        => markSpaceCharakter($Tag),
+			my %row = ("tagname"        => markSpaceCharacter($Tag),
 			   	   "tagdescription" => parseWikiSyntax($TagDesc,$Language),
 			   	   "desclist"       => \@tmpl_wikiloop,
 			   	   "tagused"        => $RelationCount{'tag'}->{$Tag});
@@ -1203,11 +1219,12 @@ sub buildRelationPages
 	
 		# header informations
 		$template->param(country => $Country);
+		$template->param(ext => $Config{html_file_extension});
 
 		# create translation navigationlist
 		my $linklist = $lang_links;
 		
-		my $esclink = name_encode("relationstats_$RelationName");
+		my $esclink = name_encode("relationstats_$RelationName$Config{html_file_extension}");
 		$linklist  =~ s/%s/$esclink/g;
 		$template->param(lang_links => $linklist);
 
@@ -1226,7 +1243,7 @@ sub buildRelationPages
 		$template->param(count_total        => $OsmRelationUsage{$RelationName});
 
 		# parse translated interface sections
-		$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+		$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 		$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 		$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 		$template->param(interlang_uprelations => $Interface{'uprelations'}->{$Language});
@@ -1254,7 +1271,7 @@ sub buildRelationPages
 		$template->param(interlang_usage    => $Interface{'usage'}->{$Language});
 
 		my $filename = name_encode($RelationName);
-		open(OUT, ">$curOutputDir/relationstats_".$filename.".htm");
+		open(OUT, ">$curOutputDir/relationstats_".$filename.$Config{html_file_extension});
 		print OUT $template->output;
 		close OUT;
 	}
@@ -1297,8 +1314,9 @@ sub buildKeyPages
 			}
 
 			# add general statistics of this tag
-			my %row = ("value"    => markSpaceCharakter($Value),
-			   	   "tagESC"   => "$KeyName=$Value",
+			my %row = ("value"    => markSpaceCharacter($Value),
+			   	   "tagESC"   => name_encode("$KeyName=$Value$Config{html_file_extension}"),
+			   	   "tagAPI"   => $Config{osmxapi_url}."[$KeyName=$Value]",
 			   	   "total"    => $TagCount{$Value}->{'t'},
 			   	   "node"     => $TagCount{$Value}->{'n'},
 			   	   "way"      => $TagCount{$Value}->{'w'},
@@ -1343,19 +1361,19 @@ sub buildKeyPages
 
 		# check if photo description of this Key exist and copy it to the output folder
 		my $ImageLink;
-		if(-e $Config{'cache_folder'}."/photos/".$KeyName.".jpg")
+		foreach my $ext (".jpg", ".png")
 		{
-			if(!(-e $Config{'output_folder'}."/photos/".$KeyName.".jpg"))
+			if(-e "$Config{cache_folder}/photos/$KeyName$ext")
 			{
-				my $cmd = "cp -R -u ".$Config{'cache_folder'}."/photos/".$KeyName.".jpg ".$Config{'output_folder'}."/photos/".$KeyName.".jpg";
-				system ( $cmd );
+				if(!(-e "$Config{output_folder}/photos/$KeyName$ext"))
+				{
+					system "cp -R -u $Config{cache_folder}/photos/$KeyName$ext "
+					. "$Config{output_folder}/photos/$KeyName$ext";
+				}
+				$ImageLink = "<img src=\"../../photos/$KeyName$ext\" alt=\"Key:$KeyName\" border=\"0\">";
 			}
-			$ImageLink = "<img src=\"../../photos/$KeyName.jpg\" alt=\"Key:$KeyName\" border=\"0\">";
 		}
-		else
-		{
-			$ImageLink = "-#-";
-		}
+		$ImageLink = "-#-" if !$ImageLink;
 
 		#++++++++++++++++++++++++++++
 		# fill template
@@ -1364,10 +1382,11 @@ sub buildKeyPages
 	
 		# header informations
 		$template->param(country => $Country);
+		$template->param(ext => $Config{html_file_extension});
 
 		# create translation navigationlist
 		my $linklist = $lang_links;
-		my $esclink = name_encode("keystats_$KeyName");
+		my $esclink = name_encode("keystats_$KeyName$Config{html_file_extension}");
 		$linklist  =~ s/%s/$esclink/g;
 		$template->param(lang_links => $linklist);
 
@@ -1390,7 +1409,7 @@ sub buildKeyPages
 		$template->param(count_relation_p => $crp);
 
 		# parse translated interface sections
-		$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+		$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 		$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 		$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 		$template->param(interlang_upkeylist   => $Interface{'upkeylist'}->{$Language});
@@ -1414,7 +1433,7 @@ sub buildKeyPages
 		$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
 		my $filename = name_encode($KeyName);
-		open(OUT, ">$curOutputDir/keystats_".$filename.".htm");
+		open(OUT, ">","$curOutputDir/keystats_$filename$Config{html_file_extension}");
 		print OUT $template->output;
 		close OUT;
 	}
@@ -1435,7 +1454,7 @@ sub buildTagPages
 	# go through all known combinations of this tag
 	foreach my $Comb(sort {$Combis->{$b} <=> $Combis->{$a}} keys %{$Combis})
 	{
-		my %row = ("combi_tag" => markSpaceCharakter($Comb),
+		my %row = ("combi_tag" => markSpaceCharacter($Comb),
                            "tag_count" => $Combis->{$Comb});
 
 		push(@tmpl_loop, \%row);
@@ -1502,7 +1521,7 @@ sub buildTagPages
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	my $esclink = name_encode("tagstats_$KeyName=$Value");
+	my $esclink = name_encode("tagstats_$KeyName=$Value$Config{html_file_extension}");
 	$linklist  =~ s/%s/$esclink/g;
 	$template->param(lang_links => $linklist);
 
@@ -1516,7 +1535,7 @@ sub buildTagPages
 	# general statistics
 	$template->param(combilist        => \@tmpl_loop);
 	$template->param(tag              => "$KeyName=$Value");
-	$template->param(key              => $KeyName);
+	$template->param(keyESC           => name_encode($KeyName).$Config{html_file_extension});
 	$template->param(count_diff       => $CountDiffValues);
 	$template->param(count_total      => $CountTagUsage_t);
 	$template->param(count_node       => $CountTagUsage_n);
@@ -1527,7 +1546,7 @@ sub buildTagPages
 	$template->param(count_relation_p => $crp);
 	
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_uptag       => $Interface{'uptag'}->{$Language});
@@ -1551,7 +1570,7 @@ sub buildTagPages
 	$template->param(interlang_othertags   => $Interface{'othertags'}->{$Language});
 
 	my $filename = name_encode("$KeyName=$Value");
-	open(TAGCOMBI, ">$curOutputDir/tagstats_".$filename.".htm");
+	open(TAGCOMBI, ">","$curOutputDir/tagstats_$filename$Config{html_file_extension}");
 	print TAGCOMBI $template->output;
   	close TAGCOMBI;
 }
@@ -1593,10 +1612,12 @@ sub buildIndexGeneral
 	# header informations
 	$template->param(country => $Country);
 	$template->param(language => $Language);
+	$template->param(mainindexfile => $Config{indexname_countries});
+	$template->param(ext => $Config{html_file_extension});
 
 	# create translation navigationlist
 	my $linklist = $lang_links;
-	$linklist  =~ s/%s/index/g;
+	$linklist  =~ s/%s/$Config{indexname}/g;
 	$template->param(lang_links => $linklist);
 
 	# general statistics
@@ -1623,7 +1644,7 @@ sub buildIndexGeneral
 	$template->param(editorlist             => \@tmplLoop);
 
 	# parse translated interface sections
-	$template->param(interlang_headertitel => sprintf($Interface{'headertitel'}->{$Language}, $Country));
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
 	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
 	$template->param(interlang_upover      => $Interface{'upover'}->{$Language});
@@ -1653,7 +1674,7 @@ sub buildIndexGeneral
 	$template->param(interlang_trans       => $Interface{'trans'}->{$Language});
 	$template->param(interlang_mentioned   => $Interface{'mentioned'}->{$Language});
 
-	open(INDEXGENERAL, ">$curOutputDir/index.htm"); 
+	open(INDEXGENERAL, ">","$curOutputDir/$Config{indexname}"); 
 	print INDEXGENERAL $template->output;
 	close INDEXGENERAL;
 }
@@ -2074,71 +2095,22 @@ sub parseWikiSyntax
 		$all_replaced = 1;
 
 		#replace {{Tag|<key>|<value>}}
-		if($Text =~ m{(.*)\{\{Tag\|(\w*)\|(\w*)\}\}(.*)})
-		{
-			my $a = $2;
-			my $b = $3;
-			$Text =~ s/\{\{Tag\|$a\|$b\}\}/<span class=\"tagtemplate\"><a href=\"..\/$Language\/keystats_$a.htm\">$a<\/a>=<a href=\"..\/$Language\/tagstats_$a=$b.htm\">$b<\/a><\/span>/g;
-			$all_replaced = 0;
-		}
-		#replace {{Tag|<key>||<value>}}
-		if($Text =~ m{(.*)\{\{Tag\|(\w*)\|\|(\w*)\}\}(.*)})
-		{
-			my $a = $2;
-			my $b = $3;
-			$Text =~ s/\{\{Tag\|$a\|\|$b\}\}/<span class=\"tagtemplate\"><a href=\"..\/$Language\/keystats_$a.htm\">$a<\/a>=$b<\/span>/g;
-			$all_replaced = 0;
-		}
-		#replace {{Tag|<key>||<value>}}
-		if($Text =~ m{(.*)\{\{Tag\|(\w*)\}\}(.*)})
-		{
-			my $a = $2;
-			$Text =~ s/\{\{Tag\|$a\}\}/<span class=\"tagtemplate\"><a href=\"..\/$Language\/keystats_$a.htm\">$a<\/a>=*<\/span>/g;
-			$all_replaced = 0;
-		}
-		#replace [[wikilink|description]]
-		if($Text =~ m{(.*)\[\[(.*)\|(.*)\]\](.*)})
-		{
-			my $a = $2;
-			my $b = $3;
-			$a =~ s/\(/\\\(/g;
-			$a =~ s/\)/\\\)/g;
-			$a =~ s/\?/\\\?/g;
-			$Text =~ s/\[\[$a\|$b\]\]/<a href=\"http:\/\/wiki.openstreetmap.org\/index.php\/$a\">$b<\/a>/g;
-			$Text =~ s/\\\(/\(/g;
-			$Text =~ s/\\\)/\)/g;
-			$a =~ s/\\\?/\?/g;
-			$all_replaced = 0;
-		}
-		#replace [http .... ]
-		if($Text =~ m{(.*)\[{1}(\S*)\s{1}(.*)\]{1}(.*)})
-		{
-			my $a = $2;
-			my $b = $3;
-			$a =~ s/\(/\\\(/g;
-			$a =~ s/\)/\\\)/g;
-			$a =~ s/\?/\\\?/g;
-			$b =~ s/\(/\\\(/g;
-			$b =~ s/\)/\\\)/g;
-			$b =~ s/\?/\\\?/g;
-			$Text =~ s/\[$a $b\]/<a href=\"$a\">$b<\/a>/g;
-			$Text =~ s/\\\(/\(/g;
-			$Text =~ s/\\\)/\)/g;
-			$a =~ s/\\\?/\?/g;
-			$b =~ s/\\\?/\?/g;
-			
-			$all_replaced = 0;
-		}
-		# replace icons for ways
-		if($Text =~ m{(.*)\{\{Icon(.*)\}\}(.*)})
-		{
-			my $a = $2;
-			my $b = lc($a);
-			$Text =~ s/\{\{Icon$a\}\}/<IMG src=\"..\/..\/images\/Mf_$b.png\" width=\"20\" height=\"20\" border=\"0\">/g;
-			
-			$all_replaced = 0;
-		}
+		$all_replaced = 0 if $Text =~ s/\{\{Tag\|(.*?)\|(.*?)\}\}/<span class=\"tagtemplate\"><a href=\"..\/$Language\/keystats_$1$Config{html_file_extension}\">$1<\/a>=<a href=\"..\/$Language\/tagstats_$1=$2$Config{html_file_extension}\">$2<\/a><\/span>/g;
 
+		#replace {{Tag|<key>||<value>}}
+		$all_replaced = 0 if $Text =~ s/\{\{Tag\|(.*?)\|\|(.*?)\}\}/<span class=\"tagtemplate\"><a href=\"..\/$Language\/keystats_$1$Config{html_file_extension}\">$1<\/a>=$2<\/span>/g;
+
+		#replace {{Tag|<key>}}
+		$all_replaced = 0 if $Text =~ s/\{\{Tag\|(.*?)\}\}/<span class=\"tagtemplate\"><a href=\"..\/$Language\/keystats_$1$Config{html_file_extension}\">$1<\/a>=*<\/span>/g;
+
+		#replace [[wikilink|description]]
+		$all_replaced = 0 if $Text =~ s/\[\[(.*?)\|(.*?)\]\]/<a href=\"http:\/\/wiki.openstreetmap.org\/index.php\/$1\">$2<\/a>/g;
+
+		#replace [http .... ]
+		$all_replaced = 0 if $Text =~ s/\[{1}(\S*)\s{1}(.*)\]{1}/<a href=\"$1\">$2<\/a>/g;
+
+		# replace icons for ways
+		$all_replaced = 0 if $Text =~ s/\{\{Icon(.*?)\}\}/"<IMG src=\"..\/..\/images\/Mf_".lc($1).".png\" width=\"20\" height=\"20\" border=\"0\">"/ge;
 	}
 
 	return $Text;
@@ -2176,7 +2148,7 @@ sub parseElementIcons
 # when it starts or end with one. output will be a red block to indicate
 # that this is a mistake
 #--------------------------------------------------------------------------
-sub markSpaceCharakter
+sub markSpaceCharacter
 {
 	my ($Name) = @_;
 

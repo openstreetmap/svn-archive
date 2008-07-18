@@ -110,6 +110,11 @@ sub processOSMFiles
 
 				if($Value ne '')
 				{
+					# get some more statistics about the used editors
+					if($Key eq 'created_by')
+					{
+						$Editors{$Value}++;
+					}
 					if(!$IgnoreTags{$Key})      # Ignored tags
 					{
 						$Keys{$Key}++;
@@ -156,11 +161,6 @@ sub processOSMFiles
 						$Tags{$Key}++;
 						$Values{$Key}->{$Value}++;
 						$Usage{$Key}->{$Value}->{$Tagtype}++;
-					}
-					# get some more statistics about the used editors
-					if($Key eq 'created_by')
-					{
-						$Editors{$Value}++;
 					}
 				}
 			}

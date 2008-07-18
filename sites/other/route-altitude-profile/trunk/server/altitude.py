@@ -204,5 +204,3 @@ def interpolateRoute(route, n):
     i = i + len(pair) - 1 
 
 
-if __name__ == '__main__':
-  main() 

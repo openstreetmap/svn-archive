@@ -15,13 +15,16 @@ def handler(req):
     if data: 
       #req.content_type = 'text/plain'
       req.content_type = 'image/png'
+      #req.mtime = t.mtime
+      #req.set_last_modified() #This can be used in newer mod_python versions. Does not work in 3.2.1
+      req.set_content_length(len(data))
       req.headers_out['Expires']=(datetime.utcnow()+timedelta(0,0,0,0,0,3)).strftime("%a, %d %b %Y %H:%M:%S GMT")
       req.headers_out['Last-Modified']=datetime.utcfromtimestamp(t.mtime).strftime("%a, %d %b %Y %H:%M:%S GMT")
-      req.write(data)
-      return apache.OK
+      status = req.meets_conditions()
+      if status == apache.OK:
+        req.write(data)
+      return status
+
     else: return apache.HTTP_NOT_FOUND
   return apache.HTTP_BAD_REQUEST
-  #TODO use sendfile(  	path[, offset, len])
-
-if __name__ == '__main__':
-  serve_tile('maplint',12,3813,1204)
+  #TODO use sendfile(  	path[, offset, len])?

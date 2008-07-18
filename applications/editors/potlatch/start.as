@@ -31,6 +31,7 @@
 			_root.waysloading.createTextField('prompt',2,0,0,195,20);
 			with (_root.waysloading.prompt) {
 				text=iText("loading ways",'hint_loading'); setTextFormat(plainRight);
+				selectable=false;
 			}
 			_root.waysloading.createEmptyMovieClip('bg',1);
 			with (_root.waysloading.bg) {
@@ -159,10 +160,18 @@
 			setTextFormat(boldWhite);
 			selectable=false; type='dynamic';
 		};
+		setStatusPosition();
 		var tw=_root.status.btext.textWidth+5;
 		with (_root.status) {
-			_x=Stage.width-tw-4; _y=Stage.height-panelheight-22; beginFill(0xFF0000,100);
+			if (preferences.data.baselayer==2) { _y-=32; }
+			beginFill(0xFF0000,100);
 			moveTo(0,0); lineTo(tw,0); lineTo(tw,17);
 			lineTo(0,17); lineTo(0,0); endFill();
 		};
+	};
+
+	function setStatusPosition() {
+		_root.status._x=Stage.width-_root.status.btext.textWidth-9;
+		_root.status._y=Stage.height-panelheight-22;
+		if (preferences.data.baselayer==2) { _root.status._y-=32; }
 	};

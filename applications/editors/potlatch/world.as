@@ -60,8 +60,7 @@
 		// resize other stuff
 		_root.waysloading._x=
 		_root.tooltip._x=Stage.width-220;
-		_root.status._x=Stage.width-_root.status.btext.textWidth-9;
-		_root.status._y=Stage.height-panelheight-22;
+		setStatusPosition();
 		for (var w in _root.windows) {
 			if (typeof(_root.windows[w])=='movieclip') { _root.windows[w].drawAreas(); }
 		}
@@ -147,6 +146,7 @@
 		preferences.data.baselayer=n;
 		preferences.flush();
 		_root.bgxoffset=0; _root.bgyoffset=0;
+		setStatusPosition();
 		redrawBackground(); 
 	}
 

@@ -237,7 +237,7 @@ sub CheckConfig
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
     }
 
-    if ($ZipV eq "") 
+    if ($EnvironmentInfo{Zip} eq "") 
     {
         die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");
     }

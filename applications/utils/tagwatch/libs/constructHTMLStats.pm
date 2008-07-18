@@ -158,7 +158,7 @@ sub constructHTML
 	my $iconDir = sprintf("%s/images", $Config{'output_folder'});
 	mkdir $iconDir if ! -d $iconDir;
 
-	system("cp -R -v -u template/images $Config{'output_folder'}");
+	system("cp -v -u template/images/*.* $iconDir");
 
 	#generate sample output request file
 	print "\tgenerate sample_request.txt.\n";
@@ -722,7 +722,7 @@ sub buildTopUsedEditors
 	#++++++++++++++++++++++++++++
 	# fill template
 	#++++++++++++++++++++++++++++
-	my $template = HTML::Template->new(filename => 'template/top_undocumented.tmpl');
+	my $template = HTML::Template->new(filename => 'template/top_editors.tmpl');
 
 	# header informations
 	$template->param(country => $Country);

@@ -187,7 +187,7 @@ sub buildCountryIndex
 	$template->param(indexlist    => \@tmpl_file_loop);
 	$template->param(countrycount => $CountryCount);
 	
-	open(TOP, ">$Config{'output_folder'}/index.htm");
+	open(TOP, ">$Config{'output_folder'}/$Config{'indexname_countries'}");
 	print TOP $template->output;
   	close TOP;
 }

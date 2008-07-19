@@ -111,6 +111,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::MapAndGuide;
 use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
@@ -241,6 +242,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::MapAndGuide;
 use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
@@ -352,6 +354,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::MapAndGuide;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -1198,6 +1201,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::MapAndGuide;
 use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
@@ -1261,6 +1265,7 @@ sub convert_Data(){
 	    
 	}
 
+
 	my ( $extention ) = ( $filename =~ m/\.([^\.]+)(\.gz|\.bz2)?$/ );
 	printf STDERR "$filename has extention '$extention'\n" if $DEBUG>1;
 	if ( $filename eq '-' ) {
@@ -1282,6 +1287,8 @@ sub convert_Data(){
 	    $new_tracks = read_track_NMEA($filename);
 	} elsif ( $extention eq "trk" ) {
 	    $new_tracks = read_track_TRK($filename); # Aldi Tevion Navigation Unit
+	} elsif ( $extention eq "LOG" ) { # to be done File::Magic like (later ;-)
+	    $new_tracks = read_track_MapAndGuide($filename); # Map And Guide
 	} elsif ( $extention eq "TXT" ) { # This is the NAVI-GPS extention
 	    $new_tracks = read_track_NMEA($filename);
 	} elsif ( $extention eq "sav" ) {
@@ -1749,6 +1756,7 @@ Default is on.
    - Netstumbler Files *.ns1
    - NMEA              *.nmea
    - Tevion Tracks     *.trk
+   - Map And Guide     *.LOG
    - Netmonitor Tracks *.log
    - via gpsbabel gpsbabel:<type>:*
 

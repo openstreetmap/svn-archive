@@ -1,3 +1,505 @@
+openstreetmap-utils (9173) unstable; urgency=low
+
+   * Add Simple Map And Guide Support
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Sat, 19 Jul 2008 22:06:17 +0200
+
+openstreetmap-utils (9166) unstable; urgency=low
+
+   * fixed editor link
+
+ -- stoecker <stoecker@gpsdrive.de>  Sat, 19 Jul 2008 13:11:26 +0200
+
+openstreetmap-utils (9164) unstable; urgency=low
+
+   * lots of minor fixes to get stuff right
+
+ -- stoecker <stoecker@gpsdrive.de>  Sat, 19 Jul 2008 00:39:38 +0200
+
+openstreetmap-utils (9152) unstable; urgency=low
+
+   * some minor fixes
+
+ -- stoecker <stoecker@gpsdrive.de>  Fri, 18 Jul 2008 14:52:44 +0200
+
+openstreetmap-utils (9140) unstable; urgency=low
+
+   * some minor optimizations for cronjob
+
+ -- stoecker <stoecker@gpsdrive.de>  Fri, 18 Jul 2008 09:31:35 +0200
+
+openstreetmap-utils (9137) unstable; urgency=low
+
+   * support negative ids, fix usage instructions
+
+ -- Frederik Ramm <Frederik Ramm@gpsdrive.de>  Fri, 18 Jul 2008 02:48:59 +0200
+
+openstreetmap-utils (9115) unstable; urgency=low
+
+   * import updated tagwatch script from J?\195?\182rg, some minor modifications by me
+
+ -- stoecker <stoecker@gpsdrive.de>  Thu, 17 Jul 2008 13:39:30 +0200
+
+openstreetmap-utils (9108) unstable; urgency=low
+
+   * And more conflicts...
+
+ -- sjors <sjors@gpsdrive.de>  Thu, 17 Jul 2008 02:53:55 +0200
+
+openstreetmap-utils (9107) unstable; urgency=low
+
+   * Solved more conflicts
+
+ -- sjors <sjors@gpsdrive.de>  Thu, 17 Jul 2008 02:53:06 +0200
+
+openstreetmap-utils (9106) unstable; urgency=low
+
+   * Solved some conflicts
+
+ -- sjors <sjors@gpsdrive.de>  Thu, 17 Jul 2008 02:52:06 +0200
+
+openstreetmap-utils (9098) unstable; urgency=low
+
+   * mod_tile: Fix negative expiry times. Closes #1040
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Wed, 16 Jul 2008 23:19:32 +0200
+
+openstreetmap-utils (9082) unstable; urgency=low
+
+   * Added a contrib SQL script for adding a way geometry table to the pgsql "simple" schema.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Wed, 16 Jul 2008 13:21:45 +0200
+
+openstreetmap-utils (9039) unstable; urgency=low
+
+   * Test
+
+ -- sjors <sjors@gpsdrive.de>  Tue, 15 Jul 2008 16:01:42 +0200
+
+openstreetmap-utils (9038) unstable; urgency=low
+
+   * Conflicts
+
+ -- sjors <sjors@gpsdrive.de>  Tue, 15 Jul 2008 16:00:00 +0200
+
+openstreetmap-utils (9013) unstable; urgency=low
+
+   * osm2pgsql: Re-order arithmetic expression to avoid overflow at --cache 2048. Fix compile warning
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Mon, 14 Jul 2008 22:41:18 +0200
+
+openstreetmap-utils (8972) unstable; urgency=low
+
+   * mod_tile: update algorithm used to calculate expiry time. Now next planet dump + random(0..3 hours).
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Sun, 13 Jul 2008 14:59:40 +0200
+
+openstreetmap-utils (8969) unstable; urgency=low
+
+   * mod_tile: Switch to using a md5 etag to improve caching of unchanging tiles
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Sun, 13 Jul 2008 13:33:26 +0200
+
+openstreetmap-utils (8968) unstable; urgency=low
+
+   * mod_tile: Convert tile buffers to unsigned chars
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Sun, 13 Jul 2008 13:30:56 +0200
+
+openstreetmap-utils (8964) unstable; urgency=low
+
+   * bla
+
+ -- sjors <sjors@gpsdrive.de>  Sun, 13 Jul 2008 09:34:28 +0200
+
+openstreetmap-utils (8961) unstable; urgency=low
+
+   * mod_tile: Switch over to using apr_stat and apr_time_t. Add Last-Modified and ETags headers. Obey conditional gets (If-Modified-Since etc). Fixes bug 1024. Remove redundant output_hook for adding expiry.
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Sun, 13 Jul 2008 01:42:12 +0200
+
+openstreetmap-utils (8944) unstable; urgency=low
+
+   * Commit all the necessary changes to make saving and restoring of relations
+   * work. This means that when a way that is part of a relation changes the
+   * relation will be properly reconstructed.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Fri, 11 Jul 2008 15:50:26 +0200
+
+openstreetmap-utils (8907) unstable; urgency=low
+
+   * We can't prepare the statement until the table is created, which makes the
+   * program break on a clean database. Hopefully it really does work now...
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Thu, 10 Jul 2008 11:51:08 +0200
+
+openstreetmap-utils (8900) unstable; urgency=low
+
+   * Added command line checks to ensure all task and option arguments are recognised, any misspelt arguments will now raise an error.
+   * Removed all static methods from the task registrar and task manager factory classes to avoid global data and simplify testing.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Thu, 10 Jul 2008 01:47:36 +0200
+
+openstreetmap-utils (8887) unstable; urgency=low
+
+   * Clearly you can't even prepare statements relying on intarray if you don't
+   * have it. Change code so it all works without properly, as long as you don't
+   * try to apply patches.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Wed, 09 Jul 2008 20:01:32 +0200
+
+openstreetmap-utils (8886) unstable; urgency=low
+
+   * When a prepared statement fails, log the parameters for debugging purposes.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Wed, 09 Jul 2008 17:28:11 +0200
+
+openstreetmap-utils (8885) unstable; urgency=low
+
+   * Finally, add the code to process modifies and deletes from patches. Almost
+   * everything should work, except if a member of a relation is changed, the
+   * relation isn't updated. If the relation is updated though, it will pick up
+   * the new members so it could in principle be worked around by reloading all
+   * the relations afterwards.
+   * In addition there were the following changes:
+   * * Fixing escaping bugs since forever when output-pgsql uses prepared
+   *   statement mode.
+   * * The ways table gets a partial index on pending, for performance.
+   * * Only bother with the intarray stuff if we're creating tables.
+   * Hope nothing else got borked.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Wed, 09 Jul 2008 17:27:45 +0200
+
+openstreetmap-utils (8871) unstable; urgency=low
+
+   * Add the necessary infrastructure to build the GIST indexes for finding ways
+   * that need updating when a node moved and things like that. It tests for the
+   * intarray module and warns if it doesn't find it. It's not an error to run
+   * without since the user may be using slim mode to save memory. Perhaps in
+   * time we should look into a seperating the slim and the patching mode more
+   * clearly.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Wed, 09 Jul 2008 14:01:15 +0200
+
+openstreetmap-utils (8867) unstable; urgency=low
+
+   * Add support for process delete commands for ways and nodes. This is the easy
+   * part since we don't need to search for objects depending on them (the diff
+   * should contains modifications for them anyway). Relations not done because
+   * the whole save/restore for them does not exist at all at the moment.
+   * In the process output-pgsql needed to be taught how to handle jumping in and
+   * out of COPY mode.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Wed, 09 Jul 2008 13:02:03 +0200
+
+openstreetmap-utils (8863) unstable; urgency=low
+
+   * Commit parser changes to support the loading of diffs. Supports both
+   * osmChange and JOSM though it doesn't support placeholders (it's not clear
+   * that's useful in this context). Anything other than creating still results
+   * in an error so far, so it doesn't change anything from a practical point of
+   * view yet.
+   * In passing, fix a bug where the append option didn't work in slim mode.
+
+ -- Martijn van Oosterhout <Martijn van Oosterhout@gpsdrive.de>  Wed, 09 Jul 2008 11:34:47 +0200
+
+openstreetmap-utils (8734) unstable; urgency=low
+
+   * Updated to version 0.29.1.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Fri, 04 Jul 2008 16:56:43 +0200
+
+openstreetmap-utils (8733) unstable; urgency=low
+
+   * Updated to version 0.29.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Fri, 04 Jul 2008 16:53:39 +0200
+
+openstreetmap-utils (8732) unstable; urgency=low
+
+   * Updated the TaskRegistrarTest implementation so that the plugin loader class doesn't get recognised as a test by the junit ant task.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Fri, 04 Jul 2008 15:38:07 +0200
+
+openstreetmap-utils (8731) unstable; urgency=low
+
+   * Added plugin support to allow external tasks to be invoked that aren't part of the core distribution.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Fri, 04 Jul 2008 15:10:41 +0200
+
+openstreetmap-utils (8647) unstable; urgency=low
+
+   * Add script which is used to run the bulk re-rendering of tiles each week
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Wed, 02 Jul 2008 00:21:10 +0200
+
+openstreetmap-utils (8646) unstable; urgency=low
+
+   * Add update script which is used to pull in the weekly planet and restart the rendering
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Wed, 02 Jul 2008 00:19:44 +0200
+
+openstreetmap-utils (8604) unstable; urgency=low
+
+   * Fixed Polygon in Area Gut Moor
+
+ -- Sven Anders <Sven Anders@gpsdrive.de>  Mon, 30 Jun 2008 15:29:09 +0200
+
+openstreetmap-utils (8601) unstable; urgency=low
+
+   * Removed "simple" from the names of the simple pgsql tasks.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 30 Jun 2008 12:37:33 +0200
+
+openstreetmap-utils (8600) unstable; urgency=low
+
+   * Renamed the pdb package to pgsql now that the pgsql package name is no longer taken.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 30 Jun 2008 12:30:06 +0200
+
+openstreetmap-utils (8598) unstable; urgency=low
+
+   * Removed the final remnants of the old pgsql package.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 30 Jun 2008 11:45:27 +0200
+
+openstreetmap-utils (8597) unstable; urgency=low
+
+   * Removed the incomplete pgsql tasks that are not likely to be used in the near future.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 30 Jun 2008 11:40:08 +0200
+
+openstreetmap-utils (8586) unstable; urgency=low
+
+   * Updated the pgsql simple tasks to use the new database schema which is more similar to the one used in the central MySQL
+
+ -- Jochen Topf <Jochen Topf@gpsdrive.de>  Sun, 29 Jun 2008 21:41:09 +0200
+
+openstreetmap-utils (8577) unstable; urgency=low
+
+   * this was already changed in the V0.5 code and is not in v06: Ignore ways with a single node because they can't be loaded into postgis.
+
+ -- Jochen Topf <Jochen Topf@gpsdrive.de>  Sun, 29 Jun 2008 18:11:21 +0200
+
+openstreetmap-utils (8537) unstable; urgency=low
+
+   * updated josm, removed viking (now newer version in sci-geosciences/viking::gentoo)
+
+ -- dennis_de <dennis_de@gpsdrive.de>  Sat, 28 Jun 2008 11:50:36 +0200
+
+openstreetmap-utils (8519) unstable; urgency=low
+
+   * New version of not-in-map_features that handles the new template format, closes #816. Also ignores openGeoDB:* tags, fixes #992
+
+ -- Knut Arne Bjørndal <Knut Arne Bjørndal@gpsdrive.de>  Fri, 27 Jun 2008 15:58:52 +0200
+
+openstreetmap-utils (8484) unstable; urgency=low
+
+   * Andy Allan's noname rendering script used at downloads.cloudmade.com
+
+ -- Nick Black <Nick Black@gpsdrive.de>  Thu, 26 Jun 2008 16:56:36 +0200
+
+openstreetmap-utils (8430) unstable; urgency=low
+
+   * mod_tile: Remove the map_lock. If this causes corrupted map tiles then you need to upgrade to a newer version of Mapnik (or set NUM_THREADS to 1).
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Tue, 24 Jun 2008 01:05:31 +0200
+
+openstreetmap-utils (8427) unstable; urgency=low
+
+   * mod_tile: fix typo
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Tue, 24 Jun 2008 00:16:45 +0200
+
+openstreetmap-utils (8425) unstable; urgency=low
+
+   * mod_tile: Move map style & font location into render_config.h. Fix up operation with non-metatile rendering. Several utilities are not implemented for non-metatile (render_list, render_old, speedtest).
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Mon, 23 Jun 2008 23:55:47 +0200
+
+openstreetmap-utils (8375) unstable; urgency=low
+
+   * Fixed the change downloader task so that the option for limiting the number of files downloaded in one invocation is utilised.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Sun, 22 Jun 2008 08:52:14 +0200
+
+openstreetmap-utils (8345) unstable; urgency=low
+
+   * Added a simple shell script for fixing source code line endings and setting the native line endings subversion property.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Sat, 21 Jun 2008 15:37:53 +0200
+
+openstreetmap-utils (8343) unstable; urgency=low
+
+   * Cleaned up some invalid javadoc method parameter descriptions.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Sat, 21 Jun 2008 14:43:48 +0200
+
+openstreetmap-utils (8342) unstable; urgency=low
+
+   * Enhanced the Entity class to allow dates to be represented as strings to avoid parsing overhead.  Updated xml tasks to utilise this feature.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Sat, 21 Jun 2008 14:36:45 +0200
+
+openstreetmap-utils (8341) unstable; urgency=low
+
+   * Enhanced the Entity class to allow dates to be represented as strings to avoid parsing overhead.  Updated xml tasks to utilise this feature.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Sat, 21 Jun 2008 14:36:02 +0200
+
+openstreetmap-utils (8331) unstable; urgency=low
+
+   * Osmosis: Add svn:executable to some script files.
+
+ -- newmka <newmka@gpsdrive.de>  Fri, 20 Jun 2008 02:33:54 +0200
+
+openstreetmap-utils (8320) unstable; urgency=low
+
+   * osm2pgsql: Up-rev to 0.55 for the new default projection change
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Wed, 18 Jun 2008 23:01:33 +0200
+
+openstreetmap-utils (8319) unstable; urgency=low
+
+   * osm2pgsql: Make spherical mercator the default, old format is now -M|--oldmerc
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Wed, 18 Jun 2008 23:00:39 +0200
+
+openstreetmap-utils (8291) unstable; urgency=low
+
+   * remove hack which adds poi to default.style
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Wed, 18 Jun 2008 00:11:24 +0200
+
+openstreetmap-utils (8289) unstable; urgency=low
+
+   * reactivate cpiling of osm2pgsql
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Tue, 17 Jun 2008 23:40:49 +0200
+
+openstreetmap-utils (8288) unstable; urgency=low
+
+   * Revert wrong header change. We need the C(not C++) Header to determine the Version Number of geos
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Tue, 17 Jun 2008 23:38:55 +0200
+
+openstreetmap-utils (8287) unstable; urgency=low
+
+   * Add tracktype which is required by latest osm.xml
+
+ -- Jon Burgess <Jon Burgess@gpsdrive.de>  Tue, 17 Jun 2008 23:34:04 +0200
+
+openstreetmap-utils (8248) unstable; urgency=low
+
+   * Resume support
+
+ -- sjors <sjors@gpsdrive.de>  Mon, 16 Jun 2008 10:03:25 +0200
+
+openstreetmap-utils (8247) unstable; urgency=low
+
+   * Test for special value -32768. Resume function (not tested)
+
+ -- sjors <sjors@gpsdrive.de>  Mon, 16 Jun 2008 10:00:17 +0200
+
+openstreetmap-utils (8246) unstable; urgency=low
+
+   * Fixed bug in verification.
+
+ -- sjors <sjors@gpsdrive.de>  Mon, 16 Jun 2008 09:56:54 +0200
+
+openstreetmap-utils (8245) unstable; urgency=low
+
+   * Supports whole continent or part of it
+
+ -- sjors <sjors@gpsdrive.de>  Mon, 16 Jun 2008 09:54:51 +0200
+
+openstreetmap-utils (8244) unstable; urgency=low
+
+   * Added some tests to be on the safe side. Changed index. Changed insert.
+   *  * Replaced 360 by -360 in the index; file coordintes represent the
+   *    lower left coordinate, not the upper left coordinate.
+   *  * Although file name represents lower left coordinate, the first item
+   *    in the file is actually the top left coordinate. For this reason
+   *    I drop the overlapping top row and right column in stead of bottom
+   *    row and left column.
+
+ -- sjors <sjors@gpsdrive.de>  Mon, 16 Jun 2008 09:54:24 +0200
+
+openstreetmap-utils (8242) unstable; urgency=low
+
+   * Updated build script to include a tar file distribution preserving launch script execute permissions.  Patch provided by Jochen Topf.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 16 Jun 2008 08:48:15 +0200
+
+openstreetmap-utils (8241) unstable; urgency=low
+
+   * Added Jochen Topf to contributors list.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 16 Jun 2008 08:42:56 +0200
+
+openstreetmap-utils (8240) unstable; urgency=low
+
+   * Updated the pgsql simple bounding box code to use an SRID of 4326.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Mon, 16 Jun 2008 08:32:59 +0200
+
+openstreetmap-utils (8206) unstable; urgency=low
+
+   * mp2osm_catmp.py: Bug fix (add trailing comma to single item sequences) and a few enhancements (eliminate conversion to string for typecode comparison; add support for "RGN" type headers; remove ~[...] code flags from labels; convert labels to title case)
+
+ -- newmka <newmka@gpsdrive.de>  Fri, 13 Jun 2008 07:04:02 +0200
+
+openstreetmap-utils (8188) unstable; urgency=low
+
+   * Fixed the launch scripts as per a patch by Jochen Topf.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Thu, 12 Jun 2008 13:18:58 +0200
+
+openstreetmap-utils (8187) unstable; urgency=low
+
+   * Modified the pgsql simple dump writer code and database writer code to use the correct SRID and to ignore ways with a single node.
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Thu, 12 Jun 2008 13:16:16 +0200
+
+openstreetmap-utils (8186) unstable; urgency=low
+
+   * - adding poi key
+
+ -- Guenter Maier <Guenter Maier@gpsdrive.de>  Thu, 12 Jun 2008 12:30:58 +0200
+
+openstreetmap-utils (8170) unstable; urgency=low
+
+   * mp2osm_catmp.py: Fixed bug: Clear out routing node mappings after processing an entity to prevent polygons from reusing nodes from previously parsed routable polylines.
+
+ -- newmka <newmka@gpsdrive.de>  Wed, 11 Jun 2008 17:06:43 +0200
+
+openstreetmap-utils (8163) unstable; urgency=low
+
+   * Fixed the --write-pgsql-simple-dump task to properly escape '\' characters. 
+
+ -- Brett Henderson <Brett Henderson@gpsdrive.de>  Wed, 11 Jun 2008 09:46:55 +0200
+
+openstreetmap-utils (8162) unstable; urgency=low
+
+   * Fixed bug where 'oneway' tag would overwrite 'attrib' and be applied to all following 
+   * nodes/ways
+
+ -- mungewell <mungewell@gpsdrive.de>  Wed, 11 Jun 2008 08:52:19 +0200
+
+openstreetmap-utils (8161) unstable; urgency=low
+
+   * Fixed 'footway' bug
+   * Removed attribution and RoadID from nodes within a way as this was 
+   * making cleaning up of ways difficult (couldn't see which nodes were important).
+
+ -- mungewell <mungewell@gpsdrive.de>  Wed, 11 Jun 2008 07:05:35 +0200
+
+openstreetmap-utils (8159) unstable; urgency=low
+
+   * use 0 instead of 0{@{}}, since it is deprecated in newer perl
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Wed, 11 Jun 2008 01:18:16 +0200
+
 openstreetmap-utils (8158) unstable; urgency=low
 
    * use 0 instead of 0{@{}}, since it is deprecated in newer perl

@@ -831,71 +831,238 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\ConvertUTF.c
+
+!IF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII_FP) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII_FP) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH4) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH4) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH3) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH3) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE emulator) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE emulator) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4I) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4I) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV_FP) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV_FP) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPS16) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPS16) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4T) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4T) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE x86) Release"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE x86) Debug"
+
+DEP_CPP_CONVE=\
+	".\ConvertUTF.h"\
+	
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\gosmore.cpp
 
 !IF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII_FP) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII_FP) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSII) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH4) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH4) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH3) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE SH3) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE emulator) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	{$(INCLUDE)}"winuserm.h"\
 	
@@ -903,6 +1070,8 @@ DEP_CPP_GOSMO=\
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE emulator) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	{$(INCLUDE)}"winuserm.h"\
 	
@@ -910,30 +1079,40 @@ DEP_CPP_GOSMO=\
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4I) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4I) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV_FP) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPSIV_FP) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	{$(INCLUDE)}"winuserm.h"\
 	
@@ -941,36 +1120,48 @@ DEP_CPP_GOSMO=\
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPS16) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE MIPS16) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4T) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4T) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE x86) Release"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
 !ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE x86) Debug"
 
 DEP_CPP_GOSMO=\
+	".\ConvertUTF.h"\
+	".\icons.xpm"\
 	{$(INCLUDE)}"sipapi.h"\
 	
 
@@ -981,6 +1172,10 @@ DEP_CPP_GOSMO=\
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\ConvertUTF.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\resource.h

@@ -22,6 +22,7 @@
 #include <windowsx.h>
 #include <winuserm.h>
 #include <sipapi.h>
+#include "ConvertUTF.h"
 #include "resource.h"
 typedef int intptr_t;
 #define DOC_PREFIX "\\My Documents\\"
@@ -37,7 +38,7 @@ typedef int intptr_t;
   o (OrientNorthwards,"?", "?", "?", "?", "?", 0, 2) \
   o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
   o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
-  o (English,         "Deutsch", "Español", "Français", "Italiano", \
+  o (English,         "Deutsch", "EspaÃ±ol", "FranÃ§ais", "Italiano", \
                       "Nederlands", 0, 6) \
   o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
   o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
@@ -46,11 +47,10 @@ typedef int intptr_t;
   o (BaudRate,        "?", "?", "?", "?", "?", 0, 6) \
   o (QuickOptions,    "?", "?", "?", "?", "?", 0, 2) \
   o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
-  o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 1) \
-  o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 1) \
+  o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 3) \
+  o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 3) \
   o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
   o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
-  o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2) \
   o (ShowTrace,       "?", "?", "?", "?", "?", 0, 2) \
   o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
 #else
@@ -102,10 +102,15 @@ typedef long long __int64;
 HWND hwndList;
 wchar_t appendTmp[50];
 char searchStr[50];
+
 #define gtk_clist_append(x,str) { \
-   MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, *str, \
-     strlen (*str) + 1, appendTmp, sizeof (appendTmp)); \
-   SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) appendTmp); \
+    const unsigned char *sStart = (const unsigned char*) *str; \
+    wchar_t *tStart = appendTmp; \
+    if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (*str) + 1, \
+        &tStart, appendTmp + sizeof (appendTmp) / sizeof (appendTmp[0]), \
+        lenientConversion) == conversionOK) { \
+      SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) appendTmp); \
+    } \
   }
 #define gtk_entry_get_text(x) searchStr
 #define gtk_clist_freeze(x)
@@ -367,8 +372,9 @@ enum { OPTIONS numberOfOptions };
 #undef o
 
 #define o(en,de,es,fr,it,nl,min,max) { \
-  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
-wchar_t *optionNameTable[][numberOfLang] = { OPTIONS };
+  #en, de, es, fr, it, nl },
+//  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
+char *optionNameTable[][numberOfLang] = { OPTIONS };
 #undef o
 
 #define o(en,de,es,fr,it,nl,min,max) int en = min;
@@ -1038,10 +1044,11 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
 {
   if (Msg == WM_COMMAND && wParam == IDOK) {
     HWND edit = GetDlgItem (hwnd, IDC_NAME);
-    wchar_t name[40];
+    wchar_t name[40], *sStart = name;
     int wstrlen = Edit_GetLine (edit, 0, name, sizeof (name));
-    WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, name, wstrlen,
-      newWays[newWayCnt].name, sizeof (newWays[0].name), NULL, NULL);
+    unsigned char *tStart = (unsigned char*) newWays[newWayCnt].name;
+    ConvertUTF16toUTF8 ((const wchar_t **)&sStart,  sStart + wstrlen,
+        &tStart, tStart + sizeof (newWays[0].name), lenientConversion);
   }
   if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
     SipShowIM (SIPF_OFF);
@@ -1081,8 +1088,14 @@ BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
   if (Msg == WM_INITDIALOG) {
     HWND klist = GetDlgItem (hwnd, IDC_LISTO);
     for (int i = 0; i < numberOfOptions; i++) {
-      SendMessage (klist, LB_ADDSTRING, 0,
-        (LPARAM) optionNameTable[i][English]);
+      const unsigned char *sStart = (const unsigned char*)
+        optionNameTable[i][English];
+      wchar_t wcTmp[30], *tStart = wcTmp;
+      if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen ((char*) sStart) + 1,
+            &tStart, wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]),
+            lenientConversion) == conversionOK) {
+        SendMessage (klist, LB_ADDSTRING, 0, (LPARAM) wcTmp);
+      }
     }
   }
   
@@ -1439,10 +1452,14 @@ gint Expose (void)
           
           #ifdef _WIN32_WCE
           SelectObject (mygc, sysFont);
-          MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, (char *)(w + 1) + 1,
-            len, wcTmp, sizeof (wcTmp));
-          ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
-                wcTmp, len, NULL);	
+          const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
+          wchar_t *tStart = wcTmp;
+          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart,
+                wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+              == conversionOK) {
+            ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
+                wcTmp, tStart - wcTmp, NULL);
+          }
           #endif
           #ifdef CAIRO_VERSION
           //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
@@ -1545,11 +1562,15 @@ gint Expose (void)
           
           HFONT customFont = CreateFontIndirect (&logFont);
           HGDIOBJ oldf = SelectObject (mygc, customFont);
-          MultiByteToWideChar (AnsiCodePage ? CP_ACP : CP_UTF8, 0, (char *)(w + 1) + 1,
-            len, wcTmp, sizeof (wcTmp));
-          ExtTextOut (mygc, X (x0, y0) + int (len * 3 * cos (hoek)),
-                Y (x0, y0) - int (len * 3 * sin (hoek)), 0, NULL,
-                wcTmp, len, NULL);
+          const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
+          wchar_t *tStart = wcTmp;
+          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart,
+                wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+              == conversionOK) {
+            ExtTextOut (mygc, X (x0, y0) + int (len * 3 * cos (hoek)),
+                  Y (x0, y0) - int (len * 3 * sin (hoek)), 0, NULL,
+                  wcTmp, tStart - wcTmp, NULL);
+          }
           SelectObject (mygc, oldf);
           DeleteObject (customFont);
         }
@@ -1646,14 +1667,14 @@ gint Expose (void)
     #endif
   } // Not in the menu
   else {
-    wchar_t optStr[30];
+    char optStr[30];
     if (option == VehicleNum) {
-      #define M(v) Vehicle == v ## R ? TEXT (#v) :
-      wsprintf (optStr, TEXT ("%s : %s"), optionNameTable[option][English],
+      #define M(v) Vehicle == v ## R ? #v :
+      sprintf (optStr, "%s : %s", optionNameTable[option][English],
         RESTRICTIONS NULL);
       #undef M
     }
-    else wsprintf (optStr, TEXT ("%s : %d"), optionNameTable[option][English],
+    else sprintf (optStr, "%s : %d", optionNameTable[option][English],
     #define o(en,de,es,fr,it,nl,min,max) option == en ## Num ? en :
     OPTIONS
     #undef o
@@ -1663,10 +1684,14 @@ gint Expose (void)
     cairo_show_text (cai, optStr);
     #else
     SelectObject (mygc, sysFont);
-//    MultiByteToWideChar (CP_UTF8, 0 /* MB_ERR_INVALID_CHARS*/, optStr,
-//       strlen (optStr), wcTmp, sizeof (wcTmp));
-    ExtTextOut (mygc, 50, draw->allocation.height / 2, 0, NULL,
-       optStr, wcslen (optStr), NULL);	
+    const unsigned char *sStart = (const unsigned char*) optStr;
+    wchar_t *tStart = wcTmp;
+    if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
+             wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+        == conversionOK) {
+      ExtTextOut (mygc, 50, draw->allocation.height / 2, 0, NULL,
+         wcTmp, tStart - wcTmp, NULL);
+    }
     #endif
   }
   #ifndef _WIN32_WCE
@@ -2802,12 +2827,15 @@ BOOL CALLBACK DlgSearchProc (
         HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
         memset (appendTmp, 0, sizeof (appendTmp));
         int wstrlen = Edit_GetLine (edit, 0, appendTmp, sizeof (appendTmp));
-        //wstr[wstrlen] = 0;
-        WideCharToMultiByte (AnsiCodePage ? CP_ACP : CP_UTF8, 0, appendTmp,
-          wstrlen, searchStr, sizeof (searchStr), NULL, NULL);
-        hwndList = GetDlgItem (hwnd, IDC_LIST1);
-        SendMessage (hwndList, LB_RESETCONTENT, 0, 0);
-        IncrementalSearch ();
+        unsigned char *tStart = (unsigned char*) searchStr;
+        const wchar_t *sStart = (const wchar_t *) appendTmp;
+        if (ConvertUTF16toUTF8 (&sStart,  sStart + wstrlen,
+              &tStart, tStart + sizeof (searchStr), lenientConversion)
+            == conversionOK) {
+          hwndList = GetDlgItem (hwnd, IDC_LIST1);
+          SendMessage (hwndList, LB_RESETCONTENT, 0, 0);
+          IncrementalSearch ();
+        }
 	return TRUE;
       }
       else if (wParam == IDC_SEARCHGO
@@ -3221,6 +3249,7 @@ int WINAPI WinMain(
           fprintf (newWayFile, "  <tag k='name' v='");
           for (j = 0; newWays[i].name[j]; j++) {
             if (newWays[i].name[j] == '\'') fprintf (newWayFile, "&apos;");
+            else if (newWays[i].name[j] == '&') fprintf (newWayFile, "&amp;");
             else fputc (newWays[i].name[j], newWayFile);
           }
           fprintf (newWayFile, "' />\n");

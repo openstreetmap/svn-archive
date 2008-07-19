@@ -77,6 +77,13 @@ public class BBox {
         y1 = Math.min(y1, y);
         y2 = Math.max(y2, y);
     }
+  
+    public void add(BBox bbox) {
+        x1 = Math.min(x1, bbox.x1);
+        x2 = Math.max(x2, bbox.x2);
+        y1 = Math.min(y1, bbox.y1);
+        y2 = Math.max(y2, bbox.y2);
+    }
     
     public boolean contains(int x, int y) {
         return x >= x1 && x <= x2 && y >= y1 && y <= y2;

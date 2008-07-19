@@ -20,52 +20,45 @@
 
 package org.openstreetmap.josmng.view.osm;
 
-import java.util.Arrays;
-import java.util.List;
 
-import org.openstreetmap.josmng.osm.Node;
-import org.openstreetmap.josmng.osm.Way;
+import java.util.HashMap;
+import java.util.Map;
+import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.osm.Relation;
 import org.openstreetmap.josmng.view.*;
 
 /**
- * View for a Way.
- * Caches a bbox of the way, translated nodes and the current style.
+ * View for a Relation.
+ * Relation might have specific rendering and suppress rendering some of its
+ * members.
+ * Caches a bbox that covers all the members.
  * 
  * @author nenik
  */
-class ViewWay extends View<Way> {
+class ViewRelation extends View<Relation> {
     BBox bbox;
-    ViewNode[] nodes;
-    
-    public ViewWay(Way way, ViewData parent) {
-        super(way);
+    Map<View, String> translatedMembers = new HashMap<View, String>();
+
+    public ViewRelation(Relation relation, ViewData parent) {
+        super(relation);
         update(parent, true);
         resetStyle();
     }
 
-    // fake ctor for virtual relation-based ways
-    ViewWay(Way way, BBox bbox, ViewNode[] nodes) {
-        super(way);
-        this.bbox = bbox;
-        this.nodes = nodes;
-    }
-    
-    public List<ViewNode> getNodes() {
-        return Arrays.asList(nodes);
-    }
-
     void update(ViewData parent, boolean members) {
         if (members) {
-            List<Node> wNodes = getPrimitive().getNodes();
-            nodes = new ViewNode[wNodes.size()];
-            int i = 0;
-            for (Node n : wNodes) nodes[i++] = (ViewNode)parent.add(n);
+            translatedMembers.clear();
+            for (Map.Entry<OsmPrimitive, String> e : getPrimitive().getMembers().entrySet()) {
+                View v = parent.add(e.getKey());
+                if (v == null) continue;
+                translatedMembers.put(v, e.getValue());
+            }
         }
-
+        
         bbox = new BBox();
-        for (ViewNode vn : nodes) bbox.addPoint(vn);
-    }
-    
+        for (View view : translatedMembers.keySet()) bbox.add(view.getBounds());
+    }        
+
     public int getSize() {
         return (int)Math.min(bbox.getWidth() + bbox.getHeight(), Integer.MAX_VALUE);
     }
@@ -74,7 +67,7 @@ class ViewWay extends View<Way> {
         return Math.min(super.getMaxScale(), getSize() / 3);
     }
 
-    public @Override BBox getBounds() {
+    public BBox getBounds() {
         return bbox;
-    }    
+    }
 }

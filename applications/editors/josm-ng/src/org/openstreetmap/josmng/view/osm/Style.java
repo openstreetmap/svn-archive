@@ -51,7 +51,6 @@ import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.view.MapView;
-import org.openstreetmap.josmng.view.ViewCoords;
 
 /**
  * A "style" info for rendering an OSMPrimitive.
@@ -59,7 +58,17 @@ import org.openstreetmap.josmng.view.ViewCoords;
  * @author nenik
  */
 abstract class Style<V extends View> {    
+    int maxScale;
+    
     public abstract void collect(Drawer drawer, MapView parent, V view, boolean selected);
+    
+    public final int getMaxScale() {
+        return maxScale;
+    }
+
+    public Style(int maxScale) {
+        this.maxScale = maxScale;
+    }
     
     private static Map<String,Style> rules;
     
@@ -78,7 +87,7 @@ abstract class Style<V extends View> {
     public static <V extends View> Style get(V v) {
         getRules();
         OsmPrimitive prim = v.getPrimitive();
-        String suffix = prim instanceof Node ? "node" : "way";
+        String suffix = prim instanceof Node ? "node" : prim instanceof Way ? "way" : "relation";
 
         for (String k : prim.getTags()) {
             String val = prim.getTag(k);
@@ -88,11 +97,12 @@ abstract class Style<V extends View> {
             if (s != null) return s;
         }
         
-        return prim instanceof Node ? WF_BIG : WIRE;
+        return prim instanceof Node ? WF_BIG : prim instanceof Way ? WIRE : NOPAINT;
     }
 
-    private static Style WF_BIG = new GenericNodeStyle(20000, false, null);
+    private static Style WF_BIG = new GenericNodeStyle(4000, false, null);
     private static Style WIRE = new GenericRoadStyle(Integer.MAX_VALUE, Color.BLUE, 1, 0, false);
+    private static Style NOPAINT = new NoPaintRelStyle();
 
     private static class LazyPoly {
         private final ViewWay vw;
@@ -120,14 +130,13 @@ abstract class Style<V extends View> {
     }
     
     private static class GenericRoadStyle extends Style<ViewWay> {
-        private final int maxScale;
         private final Color color;
         private final boolean dashed;
         private final int width;
         private final int realWidth;
 
         public GenericRoadStyle(int scale, Color color, int w, int realWidth, boolean dashed) {
-            this.maxScale = scale;  
+            super(scale);
             this.color = color;
             this.dashed = dashed;
             this.width = w;
@@ -150,8 +159,8 @@ abstract class Style<V extends View> {
 
             LazyPoly poly = new LazyPoly(w, parent);
 
-            int z = 60+10*getWayLayer(w.way);
-            int j = getWayType(w.way);
+            int z = 60+10*getWayLayer(w.getPrimitive());
+            int j = getWayType(w.getPrimitive());
             if (scale > 5000 || strokeWidth == 1) {
                 drawer.put(z+j, new PolyPart(poly, selected ? Color.RED : color, getStroke(1, false)));
                 if (selected) drawer.put(z+1, new PathPart(dirArrows(parent, w, 10), Color.RED, getStroke(1, false)));
@@ -189,6 +198,7 @@ abstract class Style<V extends View> {
         Icon icon;
 
         public AreaStyle(int scale, Color color, Icon icon) {
+            super(scale);
             this.outline = color.darker();
             this.color = color;
             this.icon = icon;
@@ -216,16 +226,24 @@ abstract class Style<V extends View> {
         }
     }
 
+    private static class NoPaintRelStyle extends Style<ViewRelation> {
+        NoPaintRelStyle() {
+            super(0);
+        }
+
+        public @Override void collect(Drawer drawer, MapView parent, ViewRelation view, boolean selected) {}
+
+    }
+    
     private static class GenericNodeStyle extends Style<ViewNode> {
-        private final int maxScale;
         private final boolean annotate;
         private final Icon icon;
 
         public GenericNodeStyle(int maxScale, boolean annotate, Icon icon) {
-            this.maxScale = maxScale;
+            super(maxScale);
             this.annotate = annotate;
             this.icon = icon;
-        }
+        } 
         
         private void paintName(Drawer drawer, MapView parent, ViewNode vn, boolean selected) {
             int scale = parent.getScaleFactor();

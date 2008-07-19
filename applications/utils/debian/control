@@ -33,6 +33,9 @@ Recommends:
 	mapnik
 Suggests:
 	java
+Conflicts:
+	gpsdrive-scripts
+	osm2pgsql
 Description: OpenStreetmap Utils
  This Package contains some of the most usefull Utils
  for working with OpenStreetMap

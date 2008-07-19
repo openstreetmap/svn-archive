@@ -10,7 +10,14 @@ Package: openstreetmap-josm
 Architecture: all
 Depends: sun-java6-re|sun-java6-jdk|sun-java6-jre|sun-java5-re|sun-java5-jdk|sun-java5-jre, menu
 Recommends: openstreetmap-utils
-Suggests: openstreetmap-map-icons, openstreetmap-map-icons-restricted, openstreetmap-mapnik-data, gpsdrive, mapnik
+Suggests:
+	openstreetmap-map-icons
+	openstreetmap-map-icons-restricted
+	openstreetmap-mapnik-data
+	gpsdrive
+	mapnik
+Conflicts:
+	josm
 Description: OpenStreetmap Editor Josm
  This Package contains the Openstreetmap Editor Josm
  this Editor can be used for working with OpenStreetMap Data

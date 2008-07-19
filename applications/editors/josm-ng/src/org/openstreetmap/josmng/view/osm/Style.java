@@ -112,9 +112,7 @@ abstract class Style<V extends View> {
                 poly.addPoint(lastP.x, lastP.y);
                 while(it.hasNext()) {
                     Point p = parent.getPoint(it.next());
-                    if (!it.hasNext() || lastP.distanceSq(p) > 25) {
-                        poly.addPoint(p.x, p.y);
-                    }
+                    poly.addPoint(p.x, p.y);
                 }
             }
             return poly;

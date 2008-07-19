@@ -169,7 +169,7 @@ public class OsmLayer extends EditableLayer {
                     minDistanceSq = dist;
                     minPrimitive = prim;
                 }
-            } else if (!(minPrimitive instanceof Node)) {
+            } else if (v instanceof ViewWay && !(minPrimitive instanceof Node)) {
                 ViewWay vw = (ViewWay)v;
                 
                 for (int i=0; i<vw.nodes.length-1; i++) {

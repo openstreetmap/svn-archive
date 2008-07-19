@@ -21,6 +21,7 @@
 package org.openstreetmap.josmng.view.osm;
 
 import org.openstreetmap.josmng.osm.OsmPrimitive;
+import org.openstreetmap.josmng.view.BBox;
 import org.openstreetmap.josmng.view.MapView;
 
 /**
@@ -31,8 +32,43 @@ import org.openstreetmap.josmng.view.MapView;
  * 
  * @author nenik
  */
-interface View<T extends OsmPrimitive> {
-     public void resetStyle();
-     public void collect(Drawer drawer, MapView parent, boolean selected);
-     public T getPrimitive();
+abstract class View<T extends OsmPrimitive> {
+    private final T prim;
+    private Style style;
+
+    public View(T prim) {
+        this.prim = prim;
+    }
+    
+    public final T getPrimitive() {
+        return prim;
+    }
+
+    public void resetStyle() {
+        style = Style.get(this);
+    }
+    
+    public void collect(Drawer drawer, MapView parent, boolean selected) {
+        style.collect(drawer, parent, this, selected);
+    }
+
+    public int getMaxScale() {
+        return style.getMaxScale();
+    }
+    
+    public abstract BBox getBounds();
+    
+    public boolean intersects(BBox box) {
+        return getBounds().intersects(box);
+    }
+
+    /**
+     * Callback to tell the View to recalculate its bounds and,
+     * if {@code members=true} also check its members (or {@link Way}'s
+     * {@link Node}s) for a change.
+     * 
+     * @param parent the container used as a memeber and coordinate translator.
+     * @param members
+     */
+    abstract void update(ViewData parent, boolean members);
 }

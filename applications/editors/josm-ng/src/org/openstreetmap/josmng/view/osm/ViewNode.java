@@ -33,16 +33,20 @@ import org.openstreetmap.josmng.osm.Node;
  * 
  * @author nenik
  */
-final class ViewNode implements ViewCoords, View<Node> {
+final class ViewNode extends View<Node> implements ViewCoords {
     private int x;
     private int y;
-    Node node;
-    Style current;
 
-    ViewNode(Node node, ViewCoords position) {
-        x = position.getIntLon();
-        y = position.getIntLat();
-        this.node = node;
+    ViewNode(Node node, ViewData parent) {
+        super(node);
+        update(parent, true);
+        resetStyle();
+    }
+    
+    void update(ViewData parent, boolean members) {
+        ViewCoords pos = parent.projCache.coordToView(getPrimitive());
+        x = pos.getIntLon();
+        y = pos.getIntLat();        
     }
     
     public int getIntLon() {
@@ -57,18 +61,9 @@ final class ViewNode implements ViewCoords, View<Node> {
         return new ViewCoords.Impl(getIntLon() + from.getIntLon() - to.getIntLon(),
                     getIntLat() + from.getIntLat() - to.getIntLat());
     }
-
-    public Node getPrimitive() {
-        return node;
-    }
     
     public boolean isTagged() {
-        return resolveTagged(node);
-    }
-
-    void updatePosition(ViewCoords newPos) {
-        x = newPos.getIntLon();
-        y = newPos.getIntLat();
+        return resolveTagged(getPrimitive());
     }
     
     private static Collection<String> UNINTERESTING = new HashSet<String>(
@@ -80,13 +75,12 @@ final class ViewNode implements ViewCoords, View<Node> {
         }
         return false;
     }
-    
-    public void resetStyle() {
-        current = null;
+
+    public @Override BBox getBounds() {
+         return new BBox(x, y, x, y);
     }
 
-    public void collect(Drawer drawer, MapView parent, boolean selected) {
-        if (current == null) current = Style.get(this);
-        current.collect(drawer, parent, this, selected);
+    public @Override boolean intersects(BBox box) {
+        return box.contains(x, y);
     }
-}
+ }

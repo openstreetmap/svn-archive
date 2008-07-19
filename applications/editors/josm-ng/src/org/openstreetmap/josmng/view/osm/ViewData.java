@@ -36,42 +36,27 @@ class ViewData {
     private final DataSet source;
     OsmLayer view;
     Projection projCache;
-    Listener l = new Listener();
+    final Listener l = new Listener();
     
-    private Hash<ViewNode, ViewNode> hash = new Hash<ViewNode, ViewNode>() {
-        public int getHashCode(ViewNode k) {
-            return k.getPrimitive().hashCode();
-        }
-
-        public boolean equals(ViewNode k, ViewNode t) {
-            return k.getPrimitive().equals(t.getPrimitive());
-        }
+    private static final Hash<View,View> idHash = new Hash<View,View>() {
+        public int getHashCode(View v) {return v.getPrimitive().hashCode();}
+        public boolean equals(View k, View t) {return k.getPrimitive() == t.getPrimitive();}
     };
     
-    private SortedSet<ViewCoords> nodes = new TreeSet<ViewCoords>(new ViewCoordsComparator());
-    private Storage<ViewNode> taggedNodes = new Storage<ViewNode>(hash);
-    private Storage<ViewNode> nodesId = new Storage<ViewNode>(hash);
+    private static final Hash<OsmPrimitive,View> foreignHash = new Hash<OsmPrimitive,View>() {
+        public int getHashCode(OsmPrimitive k) { return k.hashCode();}
+        public boolean equals(OsmPrimitive k, View t) {return k == t.getPrimitive();}
+    };
     
-    private Map<Node,ViewNode> nodeToView = nodesId.foreignKey(new Hash<Node,ViewNode>() {
+    private Storage<View> viewsId;
+    private Map<OsmPrimitive,View> primToView;
 
-        public int getHashCode(Node k) {
-            return k.hashCode();
-        }
-
-        public boolean equals(Node k, ViewNode t) {
-            return k.equals(t.getPrimitive());
-        }
-    });
-
-    
-    
-    
-    
-    private Collection<ViewWay> ways = new ArrayList<ViewWay>();
 
     public ViewData(OsmLayer view, DataSet source) {
         this.view = view;
         this.source = source;
+        viewsId = new Storage<View>(idHash, 1000000);
+        primToView = viewsId.foreignKey(foreignHash);
         source.addDataSetListener(l);
         recreate();
     }
@@ -81,223 +66,218 @@ class ViewData {
     }
     
     private void recreate() {
-        nodes.clear();
-        taggedNodes.clear();
-        nodesId.clear();
-        ways.clear();
+        qCreate();
+        viewsId.clear();
         projCache = view.parent.getProjection();
-        new AddVisitor().visitCollection(source.getPrimitives(Bounds.WORLD));
+        for (OsmPrimitive p : source.getPrimitives(Bounds.WORLD)) if (valid(p)) add(p);
+        qTrim();
+    }
+
+    private int[] sizes = new int[] {100000, 40000, 4000, -1};
+    private QTree views[] = new QTree[sizes.length];
+    
+    private void qCreate() {
+        for (int i = 0; i < views.length; i++) views[i] = new QTree();
+    }
+
+    private void qTrim() {
+        for (QTree tree : views) tree.trim();
     }
     
+
+    private void qAdd(View v) {
+        int scale = v.getMaxScale();
+        for (int i = 0; i<sizes.length; i++) {
+            if (scale > sizes[i]) {
+                views[i].add(v);
+                break;
+            }
+        }
+    }
+
+    private Collection<View> qGet(BBox bbox, int zoom) {
+        Set<View> ret = new HashSet<View>();
+        for (int i = 0; i<sizes.length; i++) {
+            views[i].gather(ret, bbox);
+            if (zoom > sizes[i]) break;
+        }
+        return ret;
+    }
+    
+    private void qRemove(View v) {
+        for (QTree tree : views) tree.remove(v);
+    }
+
+    private void qUpdate(View v, boolean members) {
+        qRemove(v);
+        v.update(this, members);
+        qAdd(v);
+    }
+
     private static boolean valid(OsmPrimitive prim) {
         return !prim.isDeleted() && prim.isVisible();
     }
 
-    private void addNode(Node n) {
-        if (nodeToView.containsKey(n)) return;
-        ViewNode vn = new ViewNode(n, projCache.coordToView(n));
-        nodes.add(vn);
-        nodesId.add(vn);
-        if (vn.isTagged()) taggedNodes.add(vn);
-    }
+    <T extends OsmPrimitive> View<T> add(T prim) {
+        View v = primToView.get(prim);
+        if (v == null) {
+            v = new Convertor().convert(prim);
 
-    private ViewNode getViewForNode(Node n) {
-        addNode(n);
-        return nodeToView.get(n);
-    }
-
-    private ViewWay getViewForWay(Way w) {
-        // XXX
-        for (ViewWay vw : ways) {
-            if (vw.getPrimitive() == w) return vw;
+            viewsId.add(v);
+            qAdd(v);
         }
- 
-        return null; // should not be called this way.
-    }
-    
-    private View getViewForPrimitive(OsmPrimitive osm) {
-        return osm instanceof Node ? getViewForNode((Node)osm) :
-            osm instanceof Way ? getViewForWay((Way)osm) : null;
-    }
-    
-    private void addWay(Way way) {
-        List<Node> wNodes = way.getNodes();
-        ViewNode[] wvNodes = new ViewNode[wNodes.size()];
-        for (int i=0; i<wvNodes.length; i++) {
-            wvNodes[i] = getViewForNode(wNodes.get(i));
-        }
-        ViewWay ww = new ViewWay(way, getBBox(wvNodes), wvNodes);
-        ways.add(ww);
+        return v;
     }
 
-    private BBox getBBox(ViewNode[] vns) {
-        BBox r = new BBox();
-        for (ViewNode vn : vns) {
-            r.addPoint(vn.getIntLon(), vn.getIntLat());
-        }
-        return r;
-    }
-
-    /**
-     * Get nodes inside given rectangle
-     * @param hint
-     * @return a collection of at least all nodes inside given rectangle.
-     */
-    private Collection<? extends ViewCoords> getTaggedNodes(BBox viewSpaceHint) {
-        // XXX filtering
-        return taggedNodes;
-    }
-    /**
-     * Get nodes inside given rectangle
-     * @param hint
-     * @return a collection of at least all nodes inside given rectangle.
-     */
-    private Collection<? extends ViewCoords> getNodes(BBox viewSpaceHint) {
-        Collection<ViewCoords> nd = nodes.subSet(viewSpaceHint.getTopLeft(),
-                viewSpaceHint.getBottomRight());
-        return nd;
+    <T extends OsmPrimitive> View<T> getViewForPrimitive(T prim) {
+        return primToView.get(prim);
     }
     
     public Collection<? extends View> getViews(BBox viewSpaceHint, int zoom) {
         update(); // reindex moved nodes and affected ways
-        Collection<View> matching = new ArrayList();
-        
-        for (ViewWay way : ways) {
-            if (viewSpaceHint.intersects(way.bbox)) {
-                matching.add(way);
-            }
-        }
 
-        Collection<? extends ViewCoords> inView = zoom > 1000 ? getTaggedNodes(viewSpaceHint) : getNodes(viewSpaceHint);
-        for (ViewCoords vc : inView) {
-            ViewNode vn = (ViewNode)vc;
-            if (viewSpaceHint.contains(vc.getIntLon(), vc.getIntLat()))
-                matching.add(vn);
+        Collection<View> guess = qGet(viewSpaceHint, zoom);
+        for (Iterator<View> it = guess.iterator(); it.hasNext();) {
+            if (!it.next().intersects(viewSpaceHint)) it.remove();
         }
-        
-        return matching;
+        return guess;
     }
 
     private void fireChange() {
         view.callRepaint();
     }
 
-    private Set<Node> toUpdate = new Storage<Node>();
+    private QueueVisitor toUpdate = new QueueVisitor();
 
+    // delayed update after node positional changes
+    // it is delayed to speed up way movement, where many subsequent events
+    // would affect a single way
     private void update() {
-        if (toUpdate.isEmpty()) return;
-
-        BBox r = new BBox();
-        for (Node n : toUpdate) {
-            ViewNode vn = getViewForNode(n);
-            r.addPoint(vn.getIntLon(), vn.getIntLat());
-
-            // update the coords index
-            nodes.remove(vn);
-            vn.updatePosition(projCache.coordToView(n));
-            nodes.add(vn);
-        }
-        
-        // should use more effective update, but as long as the dataset
-        // fits in memory, this is fast enough - few ms for hundreds
-        // of thousands of nodes
-        for (ViewWay w : ways) {
-            if (! r.intersects(w.bbox)) continue;
-            for (ViewNode t : w.nodes) {
-                if (toUpdate.contains(t.getPrimitive())) {
-                    w.bbox = getBBox(w.nodes);
-                    break;
-                }
-            }
-        }
-
-        toUpdate.clear();
-    }
-    
-    private void updateWay(ViewWay w) {
-        List<Node> wNodes = w.getPrimitive().getNodes();
-        ViewNode[] wvNodes = new ViewNode[wNodes.size()];
-        for (int i=0; i<wvNodes.length; i++) {
-            wvNodes[i] = getViewForNode(wNodes.get(i));
-        }
-        w.nodes = wvNodes;
-        w.bbox = getBBox(wvNodes);
-    }
-
-    // o1 < o2 iff compare(o1,o2) < 0
-    private class ViewCoordsComparator implements Comparator<ViewCoords> {
-        public int compare(ViewCoords o1, ViewCoords o2) {
-            int diff = o1.getIntLon() - o2.getIntLon();
-            if (diff == 0) diff = o1.getIntLat() - o2.getIntLat();
-            // XXX: might overflow
-            if (diff == 0) {
-                if (o1 instanceof ViewNode) {
-                    if (o2 instanceof ViewNode) {
-                        diff = (int)(((ViewNode)o1).node.getId() - ((ViewNode)o2).node.getId());
-                    } else {
-                        diff = 1;
-                    }
-                } else {
-                    if (o2 instanceof ViewNode) {
-                        diff = -1;
-                    } // else diff = 0;
-                }
-            }
-            return diff;
+        for (OsmPrimitive prim : toUpdate) {
+            // while processing the direct affectees, keep collecting the deps.
+            toUpdate.visitCollection(prim.getReferrers());
+            View v = add(prim);
+            qUpdate(v, false);
         }
     }
 
-    private class AddVisitor extends Visitor {
-        protected @Override void visit(Node n) {
-            if (valid(n)) addNode(n);
-        }
-        protected @Override void visit(Way w) {
-            if (valid(w)) addWay(w);
-        }
-    }
-    
     private class Listener implements DataSetListener {
 
         public void primtivesAdded(Collection<? extends OsmPrimitive> added) {
-            new AddVisitor().visitCollection(added);
+            for (OsmPrimitive p : added) if (valid(p)) add(p);
             fireChange();
         }
 
         public void primtivesRemoved(Collection<? extends OsmPrimitive> removed) {
-            final Set<OsmPrimitive> sel = new LinkedHashSet<OsmPrimitive>(view.getSelection());
-            
-            new Visitor() {
-                protected @Override void visit(Node n) {
-                    sel.remove(n);
-                    nodes.remove(getViewForNode(n));
+            final Set<OsmPrimitive> sel = view.getSelection();
+            for (OsmPrimitive rem : removed) {
+                sel.remove(rem);
+                View v = getViewForPrimitive(rem);
+                if (v != null) {
+                    qRemove(v);
+                    viewsId.remove(v);
                 }
-                protected @Override void visit(Way w) {
-                    sel.remove(w);
-                    ways.remove(getViewForWay(w));
-                }
-            }.visitCollection(removed);
+            }
 
             view.setSelection(sel);
             fireChange();
         }
 
         public void tagsChanged(OsmPrimitive prim) {
+            // tag change might influence the detail level
             View view = getViewForPrimitive(prim);
-            if (view != null) view.resetStyle();
+            if (view != null) {
+                int maxScale = view.getMaxScale();
+                view.resetStyle();
+                if (maxScale != view.getMaxScale()) {
+                    qRemove(view);
+                    qAdd(view);
+                }
+            }
             fireChange();
         }
 
         public void nodeMoved(Node node) {
-            toUpdate.add(node);
+            toUpdate.visit(node);
             fireChange();
         }
 
         public void wayNodesChanged(Way way) {
-            updateWay(getViewForWay(way));
+            qUpdate(getViewForPrimitive(way), true);
             fireChange();
         }
 
         public void relationMembersChanged(Relation r) {
+            qUpdate(getViewForPrimitive(r), true); // with nodes
+            fireChange();
+        }
+    }
+
+    
+    
+    private class Convertor extends Visitor {
+        View conv;
+
+        protected @Override void visit(Node n) {
+            conv = new ViewNode(n, ViewData.this);
+        }
+
+        protected @Override void visit(Way w) {
+            conv = new ViewWay(w, ViewData.this);
+        }
+
+        protected @Override void visit(Relation r) {
+            conv = new ViewRelation(r, ViewData.this);
+        }
+
+        public View convert(OsmPrimitive prim) {
+            prim.visit(this);
+            return conv;
+        }
+    }
+    
+    /**
+     * A visitor that puts all the visited elements to a queue,
+     * which can be concurrently iterated.
+     * 
+     * When iterated, all available Nodes are processed first, then ways,
+     * relations last.
+     */
+    private class QueueVisitor extends Visitor implements Iterable<OsmPrimitive>, Iterator<OsmPrimitive> {
+        private Set<OsmPrimitive> inQueue = new HashSet<OsmPrimitive>();
+        private Queue<OsmPrimitive> nodes = new LinkedList<OsmPrimitive>();
+        private Queue<OsmPrimitive> ways = new LinkedList<OsmPrimitive>();
+        private Queue<OsmPrimitive> relations = new LinkedList<OsmPrimitive>();
+
+        public Iterator<OsmPrimitive> iterator() {
+            return this;
+        }
+
+        public boolean hasNext() {
+            return !nodes.isEmpty() || !ways.isEmpty() || !relations.isEmpty();
+        }
+
+        public OsmPrimitive next() {
+            OsmPrimitive ret = (nodes.isEmpty() ? ways.isEmpty() ?
+                    relations : ways : nodes).remove(); // or throw NSEE
+            inQueue.remove(ret);
+            return ret;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        protected @Override void visit(Node n) {
+            if (inQueue.add(n)) nodes.add(n);
+        }
+
+        protected @Override void visit(Way w) {
+            if (inQueue.add(w)) ways.add(w);
+        }
+
+        protected @Override void visit(Relation r) {
+            if (inQueue.add(r)) relations.add(r);
         }
     }
 }

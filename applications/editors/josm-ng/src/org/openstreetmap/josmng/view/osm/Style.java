@@ -194,10 +194,10 @@ abstract class Style<V extends View> {
             this.icon = icon;
         }
 
-        private void paintIcon(Drawer drawer, MapView parent, ViewWay vn) {
+        private void paintIcon(Drawer drawer, MapView parent, ViewWay vn, boolean selected) {
             if (icon != null) {
                 Point p = parent.getPoint(vn.bbox.getCenter());
-                drawer.put(128, new IconPart(p, icon, null));
+                drawer.put(128, new IconPart(p, icon, selected ? Color.RED : null));
             }
         }
 
@@ -207,9 +207,12 @@ abstract class Style<V extends View> {
             if (size < 2*scale) return;
 
             LazyPoly poly = new LazyPoly(w, parent);
-            drawer.put(0, new AreaPart(poly, color, selected ? Color.RED : null));
-            if (selected) drawer.put(1, new PathPart(dirArrows(parent, w, 10), Color.RED, getStroke(1, false)));
-            paintIcon(drawer, parent, w);
+            drawer.put(0, new AreaPart(poly, color));
+            if (selected) {
+                drawer.put(1, new PolyPart(poly, Color.RED, getStroke(1, false)));
+                drawer.put(1, new PathPart(dirArrows(parent, w, 10), Color.RED, getStroke(1, false)));
+            }
+            paintIcon(drawer, parent, w, selected);
         }
     }
 
@@ -224,7 +227,7 @@ abstract class Style<V extends View> {
             this.icon = icon;
         }
         
-        private void paintName(Drawer drawer, MapView parent, ViewNode vn) {
+        private void paintName(Drawer drawer, MapView parent, ViewNode vn, boolean selected) {
             int scale = parent.getScaleFactor();
             // font size algorithm:
             // maxScale - 0.5max    7pt
@@ -235,7 +238,7 @@ abstract class Style<V extends View> {
             String txt = vn.getPrimitive().getTag("name");
             if (txt == null) return;
             
-            drawer.put(129, new TextPart(size, p, txt));
+            drawer.put(129, new TextPart(size, p, txt, selected ? Color.RED : Color.BLACK));
         }
 
         private void paintIcon(Drawer drawer, MapView parent, ViewNode vn, boolean selected) {
@@ -266,7 +269,7 @@ abstract class Style<V extends View> {
             } else {
                 paintMark(drawer, parent, vn, selected);
             }
-            if (annotate) paintName(drawer, parent, vn);
+            if (annotate) paintName(drawer, parent, vn, selected);
         }
  
     }
@@ -438,21 +441,15 @@ abstract class Style<V extends View> {
     private static final class AreaPart implements Part {
         private LazyPoly poly;
         private final Color color;
-        private final Color outline;
 
-        public AreaPart(LazyPoly poly, Color color, Color outline) {
+        public AreaPart(LazyPoly poly, Color color) {
             this.poly = poly;
             this.color = color;
-            this.outline = outline;
         }
         public void paint(Graphics2D g) {
             Polygon p = poly.getPoly();
             g.setColor(color);            
             g.fillPolygon(p);
-            if (outline != null) {
-                g.setColor(outline);
-                g.drawPolyline(p.xpoints, p.ypoints, p.npoints);
-            }
             poly = null;
         }
     }
@@ -502,12 +499,13 @@ abstract class Style<V extends View> {
         private final Point point;
         private final String text;
         private final int size;
-        private final Color color = Color.BLACK;
+        private final Color color;
 
-        public TextPart(int size, Point point, String text) {
+        public TextPart(int size, Point point, String text, Color color) {
             this.size = size;
             this.point = point;
             this.text = text;
+            this.color = color;
         }
 
         public void paint(Graphics2D g) {

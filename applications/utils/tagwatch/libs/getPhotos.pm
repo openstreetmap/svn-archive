@@ -71,7 +71,13 @@ sub getPhotos
 					close(IMAGE);
 					$x = $image->Read(filename=>"$CacheDir/tmp.$ext") and die $x;
 					unlink "$CacheDir/tmp.$ext";
-					$x = $image->Resize("width" => 200) and die $x;
+					# Calcuate image size
+					my ($W, $H, $scale) = getsize($image->Get('width', 'height'));
+
+					if($scale)
+					{
+						$x = $image->Resize("width" => $W, "height" => $H) and die $x;
+					}
 					$x = $image->Write("$CacheDir/$Filename.png") and die $x;
 				};
 				print "Could not handle $Filename: $@" if $@;
@@ -80,18 +86,20 @@ sub getPhotos
 			{
 				my $Image = GD::Image->newFromJpegData($Data);
 				# Calculate image size
-				my $WO = $Image->width;
-				my $W = 200;
-				my $Ratio = $W / $WO;
-				my $HO = $Image->height;
-				my $H = $HO * $Ratio;
+				my ($W, $H, $scale, $WO, $HO) = getsize($Image->width, $Image->height);
 	
+				open(IMOUT, ">:raw","$CacheDir/$Filename.jpg") || die;
 				# Make a resized copy, and save that
-				my $NewImage = new GD::Image($W,$H);
-				$NewImage->copyResampled($Image,0,0,0,0,$W,$H,$WO,$HO);
-				open(IMOUT, ">$CacheDir/$Filename.jpg") || die;
-				binmode IMOUT;
-				print IMOUT $NewImage->jpeg();
+				if($scale)
+				{
+					my $NewImage = new GD::Image($W,$H);
+					$NewImage->copyResampled($Image,0,0,0,0,$W,$H,$WO,$HO);
+					print IMOUT $NewImage->jpeg();
+				}
+				else
+				{
+					print IMOUT $Image->jpeg();
+				}
 				close IMOUT;
 			}
 		}
@@ -101,6 +109,23 @@ sub getPhotos
 		}
 	}
 
+}
+
+sub getsize
+{
+	my $max = 200;
+	my ($WO, $HO) = @_;
+	my ($W, $H) = @_;
+	if($WO > $HO)
+	{
+		($W, $H) = ($max, int($HO * ($max / $WO))) if($WO > $max);
+	}
+	elsif($HO > $max)
+	{
+		$H = $max;
+		$W = int($WO * ($max / $HO));
+	}
+	return $W, $H, ($WO != $W), $WO, $HO;
 }
 
 sub getImageList

@@ -163,7 +163,7 @@ sub constructHTML
 
 	#generate sample output request file
 	print "\tgenerate sample_request.txt.\n";
-	open(SAMPLE_REQUESTS, ">$Config{'main_folder'}/sample_requests.txt");
+	open(SAMPLE_REQUESTS, ">","$Config{'main_folder'}/sample_requests.txt");
 	
 	foreach my $request(keys %SampleRequest)
 	{
@@ -189,7 +189,7 @@ sub buildCountryIndex
 	$template->param(countrycount => $CountryCount);
 	$template->param(toplistfile  => $Config{indexname_toplist});
 
-	open(TOP, ">$Config{'output_folder'}/$Config{'indexname_countries'}");
+	open(TOP, ">","$Config{'output_folder'}/$Config{'indexname_countries'}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -391,7 +391,7 @@ sub buildCountryTopList
 	$template->param(interlang_countrytoplist  => sprintf($Interface{'countrytoplist'}->{$Language}, $Country, $Date));
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
 
-	open(TOP, ">$Config{'output_folder'}/$Config{indexname_toplist}");
+	open(TOP, ">","$Config{'output_folder'}/$Config{indexname_toplist}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -416,7 +416,11 @@ sub buildAllKeyList
 		# go through all tags for this particular key
 		foreach my $Value(sort {$TagList{$b}->{'t'} <=> $TagList{$a}->{'t'}} keys %TagList)
 		{
-			my $Text = sprintf("<b><a href=\"".$Config{osmxapi_url}."[$Key=$Value]\" target=\"_blank\">".markSpaceCharacter($Value)."</a></b> (%d)", $TagList{$Value}->{'t'}) if($TagList{$Value}->{'t'} > 0);
+			my $Text = sprintf("<b><a href=\"%s\" target=\"_blank\">%s</a></b> (%d)", api_link($Key,$Value), markSpaceCharacter($Value), $TagList{$Value}->{'t'}) if($TagList{$Value}->{'t'} > 0);
+			if($Value eq '*' && buildAutoIgnoredList($Language, $Key))
+			{
+				$Text .= sprintf " (<a href=\"ignored_".name_encode($Key)."$Config{html_file_extension}\">$Interface{ignoreentries}->{$Language}</a>)",$Config{max_volatile_count};
+			}
 
 			push(@ExampleTags, $Text) if($ValueCount++ < $Config{'example_tags'} && $Text);
 
@@ -440,7 +444,7 @@ sub buildAllKeyList
 		}
 		
 		my %row = ("key"     => markSpaceCharacter($Key),
-			   "keyAPI"  => $Config{osmxapi_url}."[$Key=*]",
+			   "keyAPI"  => api_link($Key,"*"),
                		   "values"  => join(", ", @ExampleTags));
 		push(@tmplLoop, \%row);
 
@@ -490,11 +494,64 @@ sub buildAllKeyList
 	$template->param(interlang_examplevalues => $Interface{'examplevalues'}->{$Language});
 	$template->param(interlang_allkeys       => sprintf($Interface{'allkeys'}->{$Language},$Statistics{$Country}->{'used_unique_keys'} ,$Country));
 	
-	open(OUT, ">$curOutputDir/tags$Config{html_file_extension}");
+	open(OUT, ">","$curOutputDir/tags$Config{html_file_extension}");
 	print OUT $template->output;
   	close OUT;
 }
 
+
+#--------------------------------------------------------------------------
+# builds a page for the auto ignored keys and their partial data set
+#--------------------------------------------------------------------------
+sub buildAutoIgnoredList
+{
+	my ($Language, $Key) = @_;
+	my @tmplLoop;
+	my $Ignored = GetAutoIgnored($Key);
+
+	return if !$Ignored;
+
+	foreach my $Value (sort keys %{$Ignored})
+	{
+		my %row = ("keyAPI"  => api_link($Key,$Value),
+			   "key"     => $Value,
+			   "values"  => $Ignored->{$Value});
+		push(@tmplLoop, \%row);
+	}
+
+	#++++++++++++++++++++++++++++
+	# fill template
+	#++++++++++++++++++++++++++++
+	my $template = HTML::Template->new(filename => 'template/tags.tmpl');
+
+	# header informations
+	$template->param(country   => $Country);
+	$template->param(indexfile => $Config{indexname});
+
+	# create translation navigationlist
+	my $linklist = $lang_links;
+	$linklist  =~ s/%s/tags$Config{html_file_extension}/g;
+	$template->param(lang_links => $linklist);
+
+	# add statistical information
+	$template->param(taglist  => \@tmplLoop);
+
+	# parse translated interface sections
+	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
+	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
+	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
+	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
+	$template->param(interlang_credits     => sprintf($Interface{'credits'}->{$Language}, "<a href=\"http://wiki.openstreetmap.org/index.php/Tagwatch\" target=\"_blank\">Tagwatch</a>"));
+
+	$template->param(interlang_key           => $Interface{'ignorekey'}->{$Language});
+	$template->param(interlang_examplevalues => $Interface{'ignorecount'}->{$Language});
+	$template->param(interlang_allkeys       => sprintf($Interface{'ignorelist'}->{$Language},$Key,$Config{max_volatile_count}));
+	
+	open(OUT, ">","$curOutputDir/ignored_".name_encode($Key)."$Config{html_file_extension}");
+	print OUT $template->output;
+	close OUT;
+	return 1;
+}
 
 #--------------------------------------------------------------------------
 # create list with all tags that are not documented in the wiki
@@ -549,7 +606,7 @@ sub buildTopUndocumentedKeys
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_keys'}->{$Language}, $Config{'undocumented_list'}));
 
-	open(TOP, ">$curOutputDir/top_undocumented_keys$Config{html_file_extension}");
+	open(TOP, ">","$curOutputDir/top_undocumented_keys$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -606,7 +663,7 @@ sub buildTopUndocumentedTags
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_tags'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">$curOutputDir/top_undocumented_tags$Config{html_file_extension}");
+	open(TOP, ">","$curOutputDir/top_undocumented_tags$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -662,7 +719,7 @@ sub buildTopUndocumentedRelations
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_relations'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">$curOutputDir/top_undocumented_relations$Config{html_file_extension}");
+	open(TOP, ">","$curOutputDir/top_undocumented_relations$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -678,7 +735,7 @@ sub buildTopUsedEditors
 	my %editorlist;
 
 	# read in the list og the used editors
-	open(EDITORLIST, "<$curDataDir/editorlist.txt") || return "";
+	open(EDITORLIST, "<","$curDataDir/editorlist.txt") || return "";
 		
 	while(my $Line = <EDITORLIST>)
 	{
@@ -696,7 +753,7 @@ sub buildTopUsedEditors
 	foreach my $Editor(sort {$editorlist{$b} <=> $editorlist{$a}} keys %editorlist)
 	{
 		my %row = ("tag"    => $Editor,
-			   "tagAPI" => $Config{osmxapi_url}."[created_by=$Editor]",
+			   "tagAPI" => api_link("created_by",$Editor),
                		   "count"  => $editorlist{$Editor});
 
 		# only list as many tags as mentioned in the config file
@@ -759,7 +816,7 @@ sub buildTopUsedEditors
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'top_used_editors'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">$curOutputDir/top_used_editors$Config{html_file_extension}");
+	open(TOP, ">","$curOutputDir/top_used_editors$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -864,7 +921,7 @@ sub buildIndexWatchlist
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
-	open(INDEXWL, ">$curOutputDir/watchlist$Config{html_file_extension}"); 
+	open(INDEXWL, ">","$curOutputDir/watchlist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -980,7 +1037,7 @@ sub buildIndexGroupList
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 	
-	open(INDEXWL, ">$curOutputDir/grouplist$Config{html_file_extension}"); 
+	open(INDEXWL, ">","$curOutputDir/grouplist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -1115,7 +1172,7 @@ sub buildIndexRelationList
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
-	open(INDEXWL, ">$curOutputDir/relationslist$Config{html_file_extension}"); 
+	open(INDEXWL, ">","$curOutputDir/relationslist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -1271,7 +1328,7 @@ sub buildRelationPages
 		$template->param(interlang_usage    => $Interface{'usage'}->{$Language});
 
 		my $filename = name_encode($RelationName);
-		open(OUT, ">$curOutputDir/relationstats_".$filename.$Config{html_file_extension});
+		open(OUT, ">","$curOutputDir/relationstats_".$filename.$Config{html_file_extension});
 		print OUT $template->output;
 		close OUT;
 	}
@@ -1316,7 +1373,7 @@ sub buildKeyPages
 			# add general statistics of this tag
 			my %row = ("value"    => markSpaceCharacter($Value),
 			   	   "tagESC"   => name_encode("$KeyName=$Value$Config{html_file_extension}"),
-			   	   "tagAPI"   => $Config{osmxapi_url}."[$KeyName=$Value]",
+			   	   "tagAPI"   => api_link($KeyName,$Value),
 			   	   "total"    => $TagCount{$Value}->{'t'},
 			   	   "node"     => $TagCount{$Value}->{'n'},
 			   	   "way"      => $TagCount{$Value}->{'w'},
@@ -1583,7 +1640,7 @@ sub buildIndexGeneral
 	my ($Language) = @_;
 
 	# get some general stats
-	open(STATS, "<$curDataDir/stats.txt") || return;
+	open(STATS, "<","$curDataDir/stats.txt") || return;
 	while(my $Line = <STATS> )
 	{
 		if($Line =~ m{(\d+) (.*)})
@@ -1694,7 +1751,7 @@ sub loadWikiInformation
 
 	my $GroupName = "";
 
-	open(WIKIGROUP, "<$CacheFolder/wiki_desc/group_list.txt") || die("Could not find group_list for all keys.");
+	open(WIKIGROUP, "<","$CacheFolder/wiki_desc/group_list.txt") || die("Could not find group_list for all keys.");
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $GroupLine = <WIKIGROUP>)
@@ -1714,7 +1771,7 @@ sub loadWikiInformation
 			#add key to grouplist
 			push(@{$WikiDescription{'KeyByGroup'}->{$GroupName}},$Key);
 			
-			open(WIKIKEY, "<$CacheFolder/wiki_desc/Key:$Key.txt") || next;
+			open(WIKIKEY, "<","$CacheFolder/wiki_desc/Key:$Key.txt") || next;
 
 			# parse all Key informations
 			while(my $KeyLine = <WIKIKEY>)
@@ -1731,7 +1788,7 @@ sub loadWikiInformation
 				{
 					my $TagValue = $1;
 	
-					open(WIKITAG, "<$CacheFolder/wiki_desc/Tag:$Key=$TagValue.txt") || next;
+					open(WIKITAG, "<","$CacheFolder/wiki_desc/Tag:$Key=$TagValue.txt") || next;
 
 					# parse all tag informations
 					while(my $TagLine = <WIKITAG>)
@@ -1762,7 +1819,7 @@ sub loadWikiInformation
 	close WIKIGROUP;
 
 	#Go through the Relations list to get all relation informations
-	open(RELATIONLIST, "<$CacheFolder/wiki_desc/relation_list.txt") || die("Could not find relation_list for all relations.");
+	open(RELATIONLIST, "<","$CacheFolder/wiki_desc/relation_list.txt") || die("Could not find relation_list for all relations.");
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $RelationListLine = <RELATIONLIST>)
@@ -1770,7 +1827,7 @@ sub loadWikiInformation
 		$RelationListLine  =~ s/\n//g;
 
 		# open relation description file
-		open(RELATIONDESC, "<$CacheFolder/wiki_desc/Relation:$RelationListLine.txt") || next;
+		open(RELATIONDESC, "<","$CacheFolder/wiki_desc/Relation:$RelationListLine.txt") || next;
 
 		# parse all relation informations
 		while(my $RelationLine = <RELATIONDESC>)
@@ -1805,7 +1862,7 @@ sub loadWikiInformation
 
 	# Go through tthe file with all keys where the values will be ignored for the description
 	# these are tags with numbers/names etc as values
-	open(GROUPEDKEYLIST, "<$CacheFolder/wiki_desc/grouped_keys.txt") || next;
+	open(GROUPEDKEYLIST, "<","$CacheFolder/wiki_desc/grouped_keys.txt") || next;
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $Line = <GROUPEDKEYLIST>)
@@ -1829,7 +1886,7 @@ sub getOsmFileList
 	my ($FileFolder) = @_;
 	my @FileList;
 
-	open(FILELIST, "<$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
+	open(FILELIST, "<","$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
 
 	while(my $Line = <FILELIST>)
 	{
@@ -1847,7 +1904,7 @@ sub LoadKeyUsage
 {
 	my ($curDataDir) = @_;
 
-	open(IN, "<$curDataDir/tags.txt") || return;
+	open(IN, "<","$curDataDir/tags.txt") || return;
 	my %Keys;
 	while(my $Line = <IN>)
 	{
@@ -1869,7 +1926,7 @@ sub LoadRelationUsage
 {
 	my ($curDataDir) = @_;
 
-	open(IN, "<$curDataDir/relations.txt") || return;
+	open(IN, "<","$curDataDir/relations.txt") || return;
 	my %Relations;
 	while(my $Line = <IN>)
 	{
@@ -1889,7 +1946,7 @@ sub LoadRelationUsage
 #--------------------------------------------------------------------------
 sub GetKeyCount
 {
-	open(IN, "<$curDataDir/keylist.txt") || return;
+	open(IN, "<","$curDataDir/keylist.txt") || return;
 
 	my %KeyList;
 	while(my $Line = <IN>)
@@ -1909,7 +1966,7 @@ sub GetKeyCount
 sub GetTagCount
 {
 	my ($Key) = @_;
-	open(IN, "<$curDataDir/tag_$Key.txt") || return;
+	open(IN, "<","$curDataDir/tag_$Key.txt") || return;
 
 	my %TagList;
 	while(my $Line = <IN>)
@@ -1932,7 +1989,7 @@ sub GetTagCount
 sub GetRelationCount
 {
 	my ($Type) = @_;
-	open(IN, "<$curDataDir/relation_$Type.txt") || return;
+	open(IN, "<","$curDataDir/relation_$Type.txt") || return;
 
 	my %RelationList;
 	while(my $Line = <IN>)
@@ -1953,7 +2010,7 @@ sub GetRelationCount
 sub GetCombinations
 {
 	my ($Tag) = @_;
-	open(IN, "<$curDataDir/combi_$Tag.txt") || return;
+	open(IN, "<","$curDataDir/combi_$Tag.txt") || return;
 	my %Combis;
 	while(my $Line = <IN> )
 	{
@@ -1967,6 +2024,25 @@ sub GetCombinations
 }
 
 #--------------------------------------------------------------------------
+# reads in the ignored header for this key
+#--------------------------------------------------------------------------
+sub GetAutoIgnored
+{
+	my ($Key) = @_;
+	open(IN, "<","$curDataDir/ignored_$Key.txt") || return;
+	my %Ignored;
+	while(my $Line = <IN> )
+	{
+		if($Line =~ m{(\d+) (.*)})
+		{
+			$Ignored{$2} = $1 if($1 && $2);
+		}
+	}
+	close IN;
+	return \%Ignored;
+}
+
+#--------------------------------------------------------------------------
 # Create a list of all tags that should be looked into in deeper detail
 #--------------------------------------------------------------------------
 sub buildWatchedKeyList
@@ -1974,7 +2050,7 @@ sub buildWatchedKeyList
 	my %WatchedKeys = getWatchedKeys("$Config{'cache_folder'}/wiki_settings");
 
 	# read in all keys that have a description on the wiki
-	open(KEYLIST, "<$Config{'cache_folder'}/wiki_desc/key_list.txt") || return "";
+	open(KEYLIST, "<","$Config{'cache_folder'}/wiki_desc/key_list.txt") || return "";
 	
 	while(my $Line = <KEYLIST>)
 	{
@@ -2006,7 +2082,7 @@ sub buildWatchedRelationsList
 		}
 	}
 	# read in all keys that have a description on the wiki
-	open(KEYLIST, "<$Config{'cache_folder'}/wiki_desc/relation_list.txt") || return "";
+	open(KEYLIST, "<","$Config{'cache_folder'}/wiki_desc/relation_list.txt") || return "";
 		
 	while(my $Line = <KEYLIST>)
 	{
@@ -2181,19 +2257,21 @@ sub getOSMRlink
 }
 
 #--------------------------------------------------------------------------
-# i simply hate it ...
+# clear the filename, so no dangerous things may happen
 #--------------------------------------------------------------------------
 sub name_encode
 {
-	my ($string) = @_;
-	
-	#utf8::encode($string);
-	#$string = uri_escape($string);
-	#$string = encode_entities($string);
-	# convmv -f iso-8859-15 -t utf-8 -r
-
-	return $string;
+	my $name = shift;
+	$name =~ s/[^a-zA-Z0-9._-]/_/g;
+	return $name;
 }
 
+sub api_link
+{
+	my ($key, $value) = @_;
+	$key =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
+	$value =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
+	return $Config{osmxapi_url} . "[$key=$value]";
+}
 
 1;

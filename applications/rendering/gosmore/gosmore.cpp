@@ -51,6 +51,7 @@ typedef int intptr_t;
   o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
   o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
   o (AnsiCodePage,    "?", "?", "?", "?", "?", 0, 2) \
+  o (ShowTrace,       "?", "?", "?", "?", "?", 0, 2) \
   o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
 #else
 #include <unistd.h>
@@ -505,7 +506,7 @@ void Route (int recalculate, int plon, int plat)
       
       wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
       if (i) { // For 'from' we take motion into account
-        __int64 motion = (dlon * plon + dlat * plat) / segLen;
+        __int64 motion = 3 * (dlon * plon + dlat * plat) / segLen;
         // What is the most appropriate multiplier for motion ?
         if (motion > 0 && IsOneway (w)) d += Sqr (motion);
         else d -= Sqr (motion);
@@ -714,8 +715,8 @@ struct gpsNewStruct {
   struct {
     double latitude, longitude, track, speed, hdop, ele;
     char date[6], tm[6];
-    int mode;
   } fix;
+  int lat, lon; // Mercator
   unsigned dropped;
   struct gpsNewStruct *dptr;
 } gpsTrack[18000], *gpsNew = gpsTrack;
@@ -807,6 +808,8 @@ int ProcessNmea (char *rx, unsigned *got)
           dataReady = TRUE; // Notify only when parsing is complete
           gpsNew->fix.latitude = nLat;
           gpsNew->fix.longitude = nLon;
+          gpsNew->lat = Latitude (nLat);
+          gpsNew->lon = Longitude (nLon);
           gpsNew->fix.ele = 1e+9;
         }
       } // If the timestamp wasn't seen before
@@ -1105,6 +1108,8 @@ void HitButton (int b)
       newWayCoordCnt = 0;
     }
     AddWayOrNode = 0;
+    option = numberOfOptions;
+    return;
   }
   if (QuickOptions && b == 0) {
     option = DialogBox (hInst, MAKEINTRESOURCE (IDD_CHOOSEO), NULL,
@@ -1112,7 +1117,7 @@ void HitButton (int b)
     if (option == -1) option = numberOfOptions;
     
     #define o(en,de,es,fr,it,nl,min,max) \
-      if (option == en ## Num && min == 0 && max == 2) b = 1;
+      if (option == en ## Num && min == 0 && max <= 2) b = 1;
     OPTIONS
     #undef o
     if (b == 0) return;
@@ -1619,10 +1624,10 @@ gint Expose (void)
     #ifndef _WIN32_WCE
     for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
-        X (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat) - 2,
-        Y (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat),
-        X (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat) + 2,
-        Y (routeHeap[i]->nd->lat, routeHeap[i]->nd->lat));
+        X (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat) - 2,
+        Y (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat),
+        X (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat) + 2,
+        Y (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat));
     }
     #else
     SelectObject (mygc, pen[0]);
@@ -1632,6 +1637,11 @@ gint Expose (void)
       Y (newWays[newWayCnt].coord[i][0], newWays[newWayCnt].coord[i][1]),
       X (newWays[newWayCnt].coord[i+1][0], newWays[newWayCnt].coord[i+1][1]),
       Y (newWays[newWayCnt].coord[i+1][0], newWays[newWayCnt].coord[i+1][1]));
+    }
+    if (ShowTrace) {
+      for (gpsNewStruct *ptr = gpsTrack; ptr < gpsNew; ptr++) {
+        SetPixel (mygc, X (ptr->lon, ptr->lat), Y (ptr->lon, ptr->lat), 0);
+      }
     }
     #endif
   } // Not in the menu

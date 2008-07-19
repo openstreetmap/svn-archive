@@ -1664,7 +1664,7 @@ sub buildIndexGeneral
 	$template->param(interlang_generalstats2 => sprintf($Interface{'generalstats2'}->{$Language}, $Statistics{$Country}->{'user'}));
 
 	$template->param(interlang_editorstats  => $Interface{'editorstats'}->{$Language});
-	$template->param(interlang_editorstats1 => $Interface{'editorstats1'}->{$Language});
+	$template->param(interlang_editorstats1 => sprintf($Interface{'editorstats1'}->{$Language},"<a href=\"top_used_editors$Config{html_file_extension}\">$Interface{editorstats2}->{$Language}</a>"));
 	$template->param(interlang_editors      => $Interface{'editors'}->{$Language});
 	$template->param(interlang_usage        => $Interface{'usage'}->{$Language});
 

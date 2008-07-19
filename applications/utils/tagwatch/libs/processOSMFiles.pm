@@ -72,6 +72,7 @@ sub processOSMFiles
 		my %Keys;
 		my %Tags;
 		my %Values;
+		my %IgnoredValues;
 		my %Usage;
 		my %User;
 		my %Editors;
@@ -122,9 +123,10 @@ sub processOSMFiles
 						my $TempTagName;
 						if($IgnoreCount)
 						{
+							my $OrigValue = $Value;
 							my $num = 0;
-							$num = scalar(keys %{$Values{$Key}}) if defined($Values{$Key});
-							if($num == 1 && defined($Values{$Key}->{"*"}))
+							$num = scalar(keys %{$Values{$Key}}) if exists($Values{$Key});
+							if($num == 1 && exists($Values{$Key}->{"*"}))
 							{
 								$Value = "*";
 							}
@@ -132,11 +134,28 @@ sub processOSMFiles
 							{
 								my $count = 0;
 								foreach my $n (values %{$Values{$Key}})
-								{ $count += $n; }
+								{
+									my $old = "$Key=$Value";
+									my $new = "$Key=*";
+									if(exists($Combinations{$old}))
+									{
+										foreach my $c (keys %{$Combinations{$old}})
+										{
+											$Combinations{$c}{$new} += $Combinations{$c}{$old};
+											delete $Combinations{$c}{$old};
+											$Combinations{$new}{$c} += $Combinations{$old}{$c};
+											delete $Combinations{$old}{$c};
+										}
+										delete $Combinations{$old};
+									}
+									$count += $n;
+								}
+								$IgnoredValues{$Key} = $Values{$Key};
 								$Values{$Key} = {"*" => $count };
 								$Value = "*";
 								print "\tAutoIgnoring key $Key - reached $IgnoreCount entries\n";
 							}
+							$IgnoredValues{$Key}{$OrigValue}++ if($Value eq "*" && exists($IgnoredValues{$Key}{$OrigValue}));
 
 							$TempTagName = "$Key=$Value";
 						}
@@ -255,34 +274,49 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down key combination pages
 		#+++++++++++++++++++++++++++++++++++
-		foreach my $c1(keys %Combinations)
+		foreach my $c1 (keys %Combinations)
 		{
 			# build combipages only for keys that are on the watchlist
-			my @split = split(/=/, $c1);
+			my ($Key,$Value) = split(/=/, $c1);
 			
-			if(($WatchedKeys{$split[0]} eq 1) || ($Config{'full_key_details'} eq "yes"))
+			if(($WatchedKeys{$Key} eq 1) || ($Config{'full_key_details'} eq "yes"))
 			{
-				open(COMBI, ">$OutputDir/combi_$c1.txt");
+				open(COMBI, ">","$OutputDir/combi_$c1.txt");
 		
 				foreach my $TagName(sort {$Combinations{$c1}->{$b} <=> $Combinations{$c1}->{$b}} keys(%{$Combinations{$c1}}))
 				{
 					printf COMBI "%d %s\n", $Combinations{$c1}->{$TagName},  $TagName;
 				}
-			
+
 				close COMBI; 
 			}
+		}
+
+		#+++++++++++++++++++++++++++++++++++
+		# Write down ignored stuff
+		#+++++++++++++++++++++++++++++++++++
+		foreach my $ign (keys %IgnoredValues)
+		{
+			open(IGN, ">","$OutputDir/ignored_$ign.txt");
+
+			foreach my $Val (sort keys (%{$IgnoredValues{$ign}}))
+			{
+				printf IGN "%d %s\n", $IgnoredValues{$ign}{$Val},  $Val;
+			}
+
+			close IGN;
 		}
 		
 		#+++++++++++++++++++++++++++++++++++
 		# Write down all tag pages
 		#+++++++++++++++++++++++++++++++++++
-		open(OUT, ">$OutputDir/tags.txt");
+		open(OUT, ">","$OutputDir/tags.txt");
 		foreach my $Tag(keys %Tags)
 		{
 			printf OUT "%d %s\n", $Tags{$Tag}, $Tag;
 			$Stats{"keys"}++;
 		
-			open(TAG, ">$OutputDir/tag_$Tag.txt");
+			open(TAG, ">","$OutputDir/tag_$Tag.txt");
 		
 			foreach my $Value(sort {$Values{$b} <=> $Values{$a}} keys(%{$Values{$Tag}}))
 			{
@@ -297,7 +331,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down relation pages
 		#+++++++++++++++++++++++++++++++++++
-		open(OUT, ">$OutputDir/relations.txt");
+		open(OUT, ">","$OutputDir/relations.txt");
 		foreach my $Relationtype(keys (%Relations))
 		{
 			# uhm yeah badly hacked but the keys function does not what i expected -.-
@@ -305,7 +339,7 @@ sub processOSMFiles
 			printf OUT "%d %s\n", $Relations{$Relationtype}->{'count'}, $Relationtype;
 			$Stats{"relation"}++;
 		
-			open(RELATION, ">$OutputDir/relation_$Relationtype.txt");
+			open(RELATION, ">","$OutputDir/relation_$Relationtype.txt");
 
 			foreach my $Member(sort {$Values{$b} <=> $Values{$a}} keys(%{$Relations{$Relationtype}->{'members'}}))
 			{
@@ -323,7 +357,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down key usage list
 		#+++++++++++++++++++++++++++++++++++
-		open(KEYUSAGE, ">$OutputDir/keylist.txt");
+		open(KEYUSAGE, ">","$OutputDir/keylist.txt");
 
 		foreach my $KeyName(sort {$Keys{$b} <=> $Keys{$a}} keys %Keys) 
 		{
@@ -334,7 +368,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down editor usage stats
 		#+++++++++++++++++++++++++++++++++++
-		open(EDITORUSAGE, ">$OutputDir/editorlist.txt");
+		open(EDITORUSAGE, ">","$OutputDir/editorlist.txt");
 
 		foreach my $EditorName(sort {$Editors{$b} <=> $Editors{$a}} keys %Editors) 
 		{
@@ -345,7 +379,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down the user statistics page
 		#+++++++++++++++++++++++++++++++++++
-		open(USER, ">$OutputDir/user.txt");
+		open(USER, ">","$OutputDir/user.txt");
 
 		foreach my $Name(sort {$User{$b} <=> $User{$a}} keys %User) 
 		{
@@ -357,7 +391,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down the general statistic page
 		#+++++++++++++++++++++++++++++++++++		
-		open(STATS, ">$OutputDir/stats.txt");
+		open(STATS, ">","$OutputDir/stats.txt");
 
 			printf STATS "%d user\n",	$Stats{"user"};
 			printf STATS "%d keys\n",	$Stats{"keys"};	
@@ -380,7 +414,7 @@ sub buildCombiPageList
 	my %WatchedKeys = getWatchedKeys("$CacheFolder/wiki_settings");
 
 	# read in all keys that have a description on the wiki
-	open(KEYLIST, "<$CacheFolder/wiki_desc/key_list.txt") || return "";
+	open(KEYLIST, "<","$CacheFolder/wiki_desc/key_list.txt") || return "";
 	
 	while(my $Line = <KEYLIST>)
 	{
@@ -399,7 +433,7 @@ sub getOsmFileList
 	my ($FileFolder) = @_;
 	my @FileList;
 
-	open(FILELIST, "<$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
+	open(FILELIST, "<","$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
 
 	while(my $Line = <FILELIST>)
 	{

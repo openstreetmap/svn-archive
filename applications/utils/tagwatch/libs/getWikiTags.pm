@@ -135,11 +135,11 @@ sub parseEnMapFeatures
 			{
 				$TempIdentifier = $1;
 				$TempValue = $3;
-				$TempValue =~ s/ /_/g;
-				$TempValue =~ s/\'//g;
-
-				if($TempKey ne 'Key')
+				if(!($TempValue =~ /^{{{/) && $TempKey ne 'Key')
 				{
+					$TempValue =~ s/ /_/g;
+					$TempValue =~ s/\'//g;
+
 					$LookupKeyInGroup{$Group}->{$TempIdentifier} = $TempKey;
 					push (@{$LookupKeyInGroup{$Group}->{'keylist'}},$TempKey);
 					$LookupValueInGroup{$Group}->{$TempIdentifier} = $TempValue;

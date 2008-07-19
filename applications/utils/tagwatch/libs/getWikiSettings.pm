@@ -125,7 +125,7 @@ sub parseInterface
 	{
 		foreach my $Line(split(/\n/, $c->text("Tagwatch/Interface/".ucfirst($Language))))
 		{
-			if($Line =~ m{^* (.*) = (.*)})
+			if($Line =~ m{^\* (.*?) *= *(.*?)$})
 			{
 				print INTERFACE ucfirst($Language).":$1 = $2\n";
 			}

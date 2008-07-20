@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------------------
-from module_base import ranaModule
+from base_module import ranaModule
 
 def getModule(m,d):
   return(config(m,d))
@@ -26,11 +26,24 @@ class config(ranaModule):
   """Handle configuration, options, and setup"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-    self.firstTime = True
 
-  def firstTime(self)
-    # Example: load a GPX replay
-    m = self.m.get('replayGpx', None)
-    if(m != None):
-      m.load('C:/home/OSM/Waddington/2007_05_07_bedfordshire_footpaths.gpx')
+  def firstTime(self):
+    # Option: load a GPX replay
+    # m = self.m.get('replayGpx', None)
+    # if(m != None):
+    #   m.load('C:/home/OSM/Waddington/2007_05_07_bedfordshire_footpaths.gpx')
+      
+    # Option: set your start position
+    # self.set("pos", (59.9441, 10.9403))
+    # self.set("pos_source", "default")
 
+    # Option: set the initial view
+    # self.set("centreOn", "51.3,-0.5")
+    
+    # Option: set the map tiles
+    # self.set('layer','pyrender') # osma, mapnik, etc - see mod_mapTiles for list
+
+    # Option: whether to centre on your position
+    # self.set('centred', False)
+
+    pass

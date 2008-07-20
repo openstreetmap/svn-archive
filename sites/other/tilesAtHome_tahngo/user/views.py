@@ -1,17 +1,18 @@
 from django.shortcuts import render_to_response
 import django.contrib.auth.views
+from django.contrib.auth.models import User
+from tah.user.models import TahUser
 
 def index(request):
     return render_to_response("base_user.html");
 
 def show_user(request):
-    from django.contrib.auth.models import User
-    from tah.user.models import TahUser
-    u = TahUser.objects.filter(user__is_active=True) # Get the first user in the system
+    order = request.GET.get('order')
+    if order == 'tiles': sortorder='-renderedTiles'
+    elif order == 'upload':  sortorder='-kb_upload'
+    else:                sortorder='-last_activity'
+    u = TahUser.objects.filter(user__is_active=True).order_by(sortorder) # Get the first user in the system
     return render_to_response("user_show.html",{'user':u});
-
-#u=User.objects.create_user(username, email, password)
-#u.save()
 
 #from django.contrib.auth import authenticate
 #user = authenticate(username='john', password='secret')

@@ -2,8 +2,8 @@ class UserController < ApplicationController
   layout 'site'
 
   before_filter :authorize, :only => [:api_details, :api_gpx_files]
-  before_filter :authorize_web, :only => [:account, :go_public, :view, :diary, :make_friend, :remove_friend, :upload_image]
-  before_filter :require_user, :only => [:set_home, :account, :go_public, :make_friend, :remove_friend, :upload_image]
+  before_filter :authorize_web, :only => [:account, :go_public, :view, :diary, :make_friend, :remove_friend, :upload_image, :delete_image]
+  before_filter :require_user, :only => [:set_home, :account, :go_public, :make_friend, :remove_friend, :upload_image, :delete_image]
   before_filter :check_database_availability, :except => [:api_details, :api_gpx_files]
   before_filter :check_read_availability, :only => [:api_details, :api_gpx_files]
 
@@ -14,7 +14,8 @@ class UserController < ApplicationController
     @user = User.new(params[:user])
 
     @user.data_public = true
-      
+    @user.description = "" if @user.description.nil?
+
     if @user.save
       token = @user.tokens.create
       flash[:notice] = "User was successfully created. Check your email for a confirmation note, and you\'ll be mapping in no time :-)<br>Please note that you won't be able to login until you've received and confirmed your email address."
@@ -24,10 +25,12 @@ class UserController < ApplicationController
       render :action => 'new'
     end
   end
+   
+  ## Changes made in account for accomodating @user.locale  
 
   def account
     @title = 'edit account'
-    if params[:user] and params[:user][:display_name] and params[:user][:description]
+    if params[:user] and params[:user][:display_name] and params[:user][:description] and params[:user][:locale]
       home_lat =  params[:user][:home_lat]
       home_lon =  params[:user][:home_lon]
 
@@ -39,6 +42,7 @@ class UserController < ApplicationController
       @user.description = params[:user][:description]
       @user.home_lat = home_lat
       @user.home_lon = home_lon
+      @user.locale = params[:user][:locale]   
       if @user.save
         flash[:notice] = "User information updated successfully."
       else
@@ -163,6 +167,12 @@ class UserController < ApplicationController
 
   def upload_image
     @user.image = params[:user][:image]
+    @user.save!
+    redirect_to :controller => 'user', :action => 'view', :display_name => @user.display_name
+  end
+
+  def delete_image
+    @user.image = nil
     @user.save!
     redirect_to :controller => 'user', :action => 'view', :display_name => @user.display_name
   end

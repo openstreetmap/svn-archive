@@ -214,7 +214,8 @@ class GuiBase:
     dx = event.x - self.dragstartx
     dy = event.y - self.dragstarty
     distSq = dx * dx + dy * dy
-    if distSq < 4:
+    # Adjust this to the length^2 of a gerfingerpoken on your touchscreen (1024 is for Freerunner, since it's very high resolution)
+    if distSq < 1024:
       self.mapWidget.click(event.x, event.y)
 
 

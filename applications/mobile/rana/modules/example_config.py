@@ -1,6 +1,8 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------------
-# User configuration
+# Configuration options
+#
+# Rename this file to mod_config.py to use it
 #----------------------------------------------------------------------------
 # Copyright 2007-2008, Oliver White
 #

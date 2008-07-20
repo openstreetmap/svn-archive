@@ -5,7 +5,7 @@ package Geo::Tracks::Kismet;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_kismet_file );
+@EXPORT = qw( read_kismet_file is_format_Kismet);
 
 use strict;
 use warnings;
@@ -19,6 +19,26 @@ use Geo::Geometry;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
+
+# -----------------------------------------------------------------------------
+# Check, if input file is really from Kismet
+sub is_format_Kismet($) {
+	my $filename = shift;
+	my $fh = data_open($filename);
+	return undef if (!$fh);
+
+	my $line = $fh->getline();
+	$fh->close();
+	# Format for Kismet:
+	# File must start with:
+	# <?xml version="1.0" encoding="ISO-8859-1"?>
+	# <!DOCTYPE detection-run SYSTEM "http://kismetwireless.net/kismet-3.1.0.dtd">
+    	if ( $line =~ m/^<\?xml.*\?>$/ ) {
+		$line = $fh->getline();
+		return $line =~ m/ detection-run .*kismet/;
+	}
+	return 0;
+}
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from Kismet File

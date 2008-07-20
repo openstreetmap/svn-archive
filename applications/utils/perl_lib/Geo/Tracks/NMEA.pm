@@ -5,7 +5,7 @@ package Geo::Tracks::NMEA;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_track_NMEA );
+@EXPORT = qw( read_track_NMEA is_format_NMEA );
 
 use strict;
 use warnings;
@@ -20,6 +20,25 @@ use Geo::Geometry;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
+
+# -----------------------------------------------------------------------------
+# Check, if input file is really NMEA
+sub is_format_NMEA($) {
+	my $filename = shift;
+	my $fh = data_open($filename);
+	return undef if (!$fh);
+
+	my $line = $fh->getline();
+	$fh->close();
+	# Format for NMEA
+	# $GPGGA,135507.91,4811.612176,N,01154.024299,E,1,09,3.0,569.0,M,-0.626000,M,-5.4020515,0130*41
+	return 1 if $line =~ m/^\$\w{2}.*(?:\d|\.|,|[NSWE])+.*\*\d+$/;
+	# Grosser Reiseplaner
+	return 1 if $line =~ m/Logfile for travel center/;
+	# Destinator
+	return 1 if $line =~ m/^\d+\.\d+,A,\d+\.\d+,[NS],\d+\.\d+,[EW],\d+\.\d+,\d+\.\d+,\d+,\d+\.\d+,(\S+)$/;
+	return 0;
+}
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from NMEA - File

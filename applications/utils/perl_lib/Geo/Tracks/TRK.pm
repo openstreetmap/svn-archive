@@ -5,7 +5,7 @@ package Geo::Tracks::TRK;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_track_TRK );
+@EXPORT = qw( read_track_TRK is_format_TRK);
 
 use strict;
 use warnings;
@@ -18,6 +18,21 @@ use Utils::Math;
 use Date::Manip;
 use Date::Parse;
 use Time::Local;
+
+# -----------------------------------------------------------------------------
+# Check, if input file is really TRK
+sub is_format_TRK($) {
+	my $filename = shift;
+	my $fh = data_open($filename);
+	return undef if (!$fh);
+
+	my $line = $fh->getline();
+	$fh->close();
+	# Format for TRK
+	# dummy1,time,lon,lat,heading,speed,test1,test2,test3
+	# 106290, 100744, 8.644805, 53.524435, 0, 0, 2, 1.300000, 7
+    	return $line =~ m/^\d+,\d+,\d+\.\d+,\d+\.\d+,\d+,\d+,\d+,\d+\.\d+,\d+$/;
+}
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from TRK - File

@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from math import *
-import cairo, StringIO
+import StringIO
+from PIL import Image
 from tah.tah_intern.Tile import Tile
 from django import newforms as forms
 
@@ -12,28 +13,30 @@ def latlon2relativeXY(lat,lon):
 def latlon2xy(lat,lon,z):
   n = pow(2,z)
   x,y = latlon2relativeXY(lat,lon)
-  return(floor(n*x), floor(n*y))
+  return(n*x, n*y)
 
 def export_MapOf(request):
   form = MapOfForm(request.GET)
   if form.is_valid():
     form = form.cleaned_data
     x,y = latlon2xy(form['lat'],form['long'],form['z'])
-    h = ceil(form['h'] / 256.0) #number of tiles in height
-    w = ceil(form['w'] / 256.0) #number of tiles to left and right
+    h = ceil(form['h'] / 256.0)  # tiles in height
+    if h % 2 == 0: h += 1   # (next higher odd number)
+    w = ceil(form['w'] / 256.0)  # tiles in width
+    if w % 2 == 0: w += 1   # (next higher odd number)
 
     pngfile = StringIO.StringIO()
-    im = cairo.ImageSurface(cairo.FORMAT_ARGB32, 256*w,256*h)
-    ctx = cairo.Context(im)
-    for i in range(0, w+1):
-      for j in range(0, h+1):
-        image = cairo.ImageSurface.create_from_png(StringIO.StringIO(Tile(None,form['z'],x-w/2+i,y-h/2+j).serve_tile('tile')))
-        ctx.set_source_surface(image,256*i,256*j)
-        ctx.paint()
-    im.write_to_png(pngfile)
+    im = Image.new('RGBA', (256*w,256*h))
+    for i in range(0, w):
+      for j in range(0, h):
+        image =  Image.open(StringIO.StringIO(Tile(None,form['z'],floor(x)-w//2+i,floor(y)-h//2+j).serve_tile('tile')))
+        im.paste(image,(256*i,256*j))
+    marg_w, marg_h = int((256*w-form['w'])/2 + (256 * x % 1.0)), int((256*h-form['h'])/2 - (265 * y% 1.0))
+    im = im.crop((marg_w,marg_h,marg_w+form['w'],marg_h+form['h']))
+    im.save(pngfile,form['format'])
     pngfile.seek(0)
-    response = HttpResponse(pngfile.read(), mimetype='image/png')
-    response['Content-Disposition'] = 'attachment; filename=map.png'
+    response = HttpResponse(pngfile.read(), mimetype= 'image/'+str(form['format']))
+    response['Content-Disposition'] = 'attachment; filename=map.'+form['format']
     return response
   else: return HttpResponse("<form ACTION=\"\" METHOD=\"GET\">%s<input type=\"submit\"></form>"%(form.as_p()))
 
@@ -45,3 +48,4 @@ class MapOfForm(forms.Form):
     z = forms.FloatField(initial=12)
     w = forms.FloatField(initial=1024)
     h = forms.FloatField(initial=1024)
+    format = forms.ChoiceField(choices=[('png','png'),('jpeg','jpeg')])

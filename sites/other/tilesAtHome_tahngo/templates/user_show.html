@@ -7,6 +7,6 @@
 <table border="1">
   <tr><td>#</td><td>User</td><td><a href="?order=tiles">Rendered Tiles</a></td><td><a href="?order=upload">Uploaded KB</a></td><td><a href="?order=last">Last activity</a></td></tr>
   {% for u in user %}
-  <tr><td>{{forloop.counter}}</td><td>{{ u.user.username }}</td><td>{{ u.renderedTiles|stringformat:"g" }}</td><td>{{ u.kb_upload|stringformat:"g" }}</td><td>{{ u.last_activity|timesince }}</td></tr>
+  <tr><td>{{forloop.counter}}</td><td>{{ u.user.username }}</td><td>{{ u.renderedTiles }}</td><td>{{ u.kb_upload }}</td><td>{{ u.last_activity|timesince }}</td></tr>
   {% endfor %}
 </table>{% endblock %}

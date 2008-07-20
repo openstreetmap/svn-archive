@@ -5,7 +5,7 @@ package Geo::Tracks::Netmonitor;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_track_Netmonitor);
+@EXPORT = qw( read_track_Netmonitor is_format_NetMonitor );
 
 use strict;
 use warnings;
@@ -18,6 +18,21 @@ use Utils::Math;
 use Date::Manip;
 use Date::Parse;
 use Time::Local;
+
+# -----------------------------------------------------------------------------
+# Check, if input file is really from NetMonitor
+sub is_format_NetMonitor($) {
+	my $filename = shift;
+	my $fh = data_open($filename);
+	return undef if (!$fh);
+
+	my $line = $fh->getline();
+	$fh->close();
+	# Format for NetMonitor
+	# time,networkstate,lon,lat,dummy1,dummy2,dummy3
+	# 20060114200855  1       E10,88750       N49,50525       41802   37892   26201   47      0       99      99
+    	return $line =~ m/^\d{14}\s+\d+\s+\w\d+,\d+\s+\w\d+,\d+(?:\s+\d+){7}$/;
+}
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from Netmonitor - File (www.nobbi.com)

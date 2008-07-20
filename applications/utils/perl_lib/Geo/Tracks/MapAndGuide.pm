@@ -5,7 +5,7 @@ package Geo::Tracks::MapAndGuide;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_track_MapAndGuide );
+@EXPORT = qw( read_track_MapAndGuide is_format_MapAndGuide );
 
 use strict;
 use warnings;
@@ -18,6 +18,23 @@ use Utils::Math;
 use Date::Manip;
 use Date::Parse;
 use Time::Local;
+
+# -----------------------------------------------------------------------------
+# Check, if input file is really from Map and Guide
+sub is_format_MapAndGuide($) {
+	my $filename = shift;
+	my $fh = data_open($filename);
+	return undef if (!$fh);
+
+	my $line = $fh->getline();
+	$fh->close();
+	$line =~ s/\r?\n//;
+
+	# Line must look like
+	# lon, lat, head, dummy, speed
+	# 952155,4725147,1,1,0
+	return ( $line =~ /^(?:\d+,){4}\d+$/ );
+}
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from MapAndGuide - File
@@ -43,7 +60,7 @@ sub read_track_MapAndGuide($) {
     my $new_track=[];
     
     while ( my $line = $fh->getline() ) {
-	chomp $line;
+	$line =~ s/\r?\n//;
 
 	print "$line\n" if $DEBUG>10;
 

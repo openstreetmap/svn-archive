@@ -1266,37 +1266,57 @@ sub convert_Data(){
 	}
 
 
-	my ( $extention ) = ( $filename =~ m/\.([^\.]+)(\.gz|\.bz2)?$/ );
-	printf STDERR "$filename has extention '$extention'\n" if $DEBUG>1;
+	my ( $extension ) = ( $filename =~ m/\.([^\.]+)(\.gz|\.bz2)?$/ );
+	printf STDERR "$filename has extension '$extension'\n" if $DEBUG>1;
+	$extension = lc($extension);
 	if ( $filename eq '-' ) {
 	    $new_tracks = read_gpx_file($filename);
 	} elsif ( $filename =~ m/^gpsbabel:(\S+):(\S+)$/ ) {
 	    my ($type,$name) = ($1,$2);
 	    $new_tracks = read_track_GpsBabel($name,$type);    
-	} elsif ( $extention eq "gps" ) {
-	    $new_tracks = read_kismet_file($filename);
-	} elsif ( $extention eq "gpx" ) {
+	} elsif ( $extension eq "gps" ) {
+	    if ( is_format_Kismet($filename) ) {
+		$new_tracks = read_kismet_file($filename);
+	    } else {
+		warn "$filename: !!! Skipping because of invalid Kismet format!";
+		next;
+	    }
+	} elsif ( $extension eq "gpx" ) {
 	    $new_tracks = read_gpx_file($filename);
-	} elsif ( $extention eq "mps" ) {
+	} elsif ( $extension eq "mps" ) {
 	    $new_tracks = read_track_GpsBabel($filename,"mapsource");
-	} elsif ( $extention eq "gdb" ) {
+	} elsif ( $extension eq "gdb" ) {
 	    $new_tracks = read_track_GpsBabel($filename,"gdb");
-	} elsif ( $extention eq "ns1" ) {
+	} elsif ( $extension eq "ns1" ) {
 	    $new_tracks = read_track_GpsBabel($filename,"netstumbler");
-	} elsif ( $extention eq "nmea" ) {
-	    $new_tracks = read_track_NMEA($filename);
-	} elsif ( $extention eq "trk" ) {
-	    $new_tracks = read_track_TRK($filename); # Aldi Tevion Navigation Unit
-	} elsif ( $extention eq "LOG" ) { # to be done File::Magic like (later ;-)
-	    $new_tracks = read_track_MapAndGuide($filename); # Map And Guide
-	} elsif ( $extention eq "TXT" ) { # This is the NAVI-GPS extention
-	    $new_tracks = read_track_NMEA($filename);
-	} elsif ( $extention eq "sav" ) {
+	} elsif ( $extension eq "trk" ) {
+	    if ( is_format_TRK($filename) ) {
+		$new_tracks = read_track_TRK($filename); # Aldi Tevion Navigation Unit
+	    } else {
+		warn "$filename: !!! Skipping because of invalid TRK format!";
+		next;
+	    }
+	} elsif ( $extension eq "nmea" or
+	          $extension eq "txt" ) { # NAVI-GPS uses txt as extension
+	    if ( is_format_NMEA($filename) ) {
+	    	$new_tracks = read_track_NMEA($filename);
+	    } else {
+		warn "$filename: !!! Skipping because of invalid NMEA format!";
+		next;
+	    }
+	} elsif ( $extension eq "sav" ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
-	} elsif ( $extention eq "log" ) {
-	    $new_tracks = read_track_Netmonitor($filename); # "Netmonitor" www.nobbi.com
+	} elsif ( $extension eq "log" ) { # For .log we have two formats
+	    if ( is_format_NetMonitor($filename) ) {
+		$new_tracks = read_track_Netmonitor($filename); # "Netmonitor" www.nobbi.com
+	    } elsif ( is_format_MapAndGuide($filename) ) {
+		$new_tracks = read_track_MapAndGuide($filename); # Map And Guide
+	    } else {
+		warn "$filename: !!! Skipping because neither NetMonitor nor MapAndGuide";
+		next;
+	    }
 	} else {
-	    warn "$filename: !!! Skipping because of unknown Filetype ($extention) for reading\n";
+	    warn "$filename: !!! Skipping because of unknown Filetype ($extension) for reading\n";
 	    next;
 	}
 	my ($track_read_count,$point_read_count) =   count_data($new_tracks);

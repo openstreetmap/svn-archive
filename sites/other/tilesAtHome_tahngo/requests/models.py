@@ -4,8 +4,8 @@ from tah.tah_intern.models import Layer, Blank
 
 #-----------------------------------------------------
 class Request(models.Model):
-  x = models.PositiveIntegerField(max_length=4)
-  y = models.PositiveIntegerField(max_length=4)
+  x = models.PositiveSmallIntegerField()
+  y = models.PositiveSmallIntegerField()
   min_z = models.PositiveSmallIntegerField(default=12)
   max_z = models.PositiveSmallIntegerField(default=17)
   layers = models.ManyToManyField(Layer,null=True)

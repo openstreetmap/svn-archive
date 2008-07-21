@@ -23,7 +23,7 @@
         Welcome, <%= link_to h(@user.display_name), {:controller => 'user', :action => 'view', :display_name => @user.display_name}%> | 
         <% @inbox_weight = 'bold' if @user.new_messages.size > 0 %>
         <%= yield :greeting %>
-        <%= link_to "inbox (%s)".t(nil,@user.new_messages.size), {:controller => 'message', :action => 'inbox', :display_name => @user.display_name}, {:style => "font-weight: #{@inbox_weight};" } %> |
+        <%= link_to "inbox (%s)".t(nil,@user.new_messages.size.to_s), {:controller => 'message', :action => 'inbox', :display_name => @user.display_name}, {:style => "font-weight: #{@inbox_weight};" } %> |
         <%= link_to "logout".t, {:controller => 'user', :action => 'logout', :referer => request.request_uri}, {:id => 'logoutanchor'}%>
       <% else %>
         <%= link_to "log in".t, {:controller => 'user', :action => 'login', :referer => request.request_uri}, {:id => 'loginanchor'}%> |

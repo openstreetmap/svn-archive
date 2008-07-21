@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
     response.headers['Error'] = message
   end
 
-  #Uncomment when click-to-globalize plugin is working
+  #TO be uncommented when click to globalize is used
   #self.languages = {:english => 'en-US', :italian => 'it-IT', :bengali => 'bn-IN'}
 
 private 

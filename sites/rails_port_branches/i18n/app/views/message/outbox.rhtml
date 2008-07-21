@@ -1,6 +1,6 @@
 <h2><%= "My".t -%> <%= link_to "inbox".t, url_for(:controller => "user", :action => "inbox", :id => @user.display_name) %>/<%= "outbox".t -%></h2>
 
-<p><%= "You have %s sent messages".t(nil,@user.sent_messages.size) %>
+<p><%= "You have %s sent messages".t(nil,@user.sent_messages.size.to_s) %>
 
 <% if @user.sent_messages.size > 0 %>
   <div id="messages">
@@ -14,5 +14,5 @@
     </table>
   </div>
 <% else %>
-	  <div id="messages"><%= "You have no sent messages yet. Why not get in touch with some of the".t -%> <%= link_to "people mapping nearby".t, :controller => 'user', :action => 'view', :display_name => @user.display_name %>?</div>
+	  <div id="messages"><%= "You have no sent messages yet. Why not get in touch with some of the".t -%> <%= link_to "people mapping nearby".t, :controller => 'user', :action => 'view', :display_name => @user.display_name %><%= "?".t -%></div>
 <% end %>

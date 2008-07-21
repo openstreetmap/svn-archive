@@ -12,6 +12,12 @@ bindir = $(prefix)/bin
 CFLAGS=-O2
 WARNFLAGS= -W -Wall
 
+#------------------------ Compiling with cegcc : ---------------------------
+# tar xzf -C / cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz
+# export PATH="$PATH":/opt/mingw32ce/bin/
+ARCH=		arm-wince-mingw32ce
+WINDRES=	${ARCH}-windres
+
 # enable this to test the experimental route support
 #CFLAGS += -DROUTE_TEST
 
@@ -33,6 +39,16 @@ gosmore:	gosmore.cpp
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
 		  -D RES_DIR='"$(prefix)/usr/share/"' \
                   gosmore.cpp -o gosmore ${EXTRA}
+
+gosm_arm.exe:	gosmore.cpp ConvertUTF.c ConvertUTF.h gosmore.rsc resource.h
+		${ARCH}-g++ ${CFLAGS} -c gosmore.cpp
+		${ARCH}-gcc ${CFLAGS} -c ConvertUTF.c
+		${ARCH}-gcc ${CFLAGS} -o $@ \
+		  gosmore.o ConvertUTF.o gosmore.rsc
+
+gosmore.rsc:	gosmore.rc
+		${WINDRES} $? $@
+		
 
 #elemstyles.xml:
 #		wget http://josm.openstreetmap.de/svn/trunk/styles/standard/elemstyles.xml

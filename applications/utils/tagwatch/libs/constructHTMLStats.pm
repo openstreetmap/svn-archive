@@ -2271,7 +2271,7 @@ sub api_link
 	my ($key, $value) = @_;
 	$key =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
 	$value =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
-	return $Config{osmxapi_url} . "[$key=$value]";
+	return $Config{osmxapi_url} . "*[$key=$value]";
 }
 
 1;

@@ -51,9 +51,9 @@ class Tile:
     return (self.layer, base_z, base_x, base_y)
 
 
-  def serve_tile_data(self, layername):
+  def serve_tile(self, layername):
     """ Return the PNG data of a tile """
-    (tilesetfile, offset, datalength) = serve_tile_sendfile(layername)
+    (tilesetfile, offset, datalength) = self.serve_tile_sendfile(layername)
     f = open(tilesetfile,'rb')
     f.seek(offset)
     data = f.read(datalength)

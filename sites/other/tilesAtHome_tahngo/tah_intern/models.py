@@ -94,7 +94,8 @@ class Settings(models.Model):
     return self.name
   
   def getSetting(self, name):
-    s = Settings.objects.get(name__iexact=name)
+    try: s = Settings.objects.get(name__iexact=name)
+    except Settings.DoesNotExist: return None
     return s.value
 
   def setSetting(self, name, value):

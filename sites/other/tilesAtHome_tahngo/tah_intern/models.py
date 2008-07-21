@@ -97,6 +97,9 @@ class Settings(models.Model):
     s = Settings.objects.get(name__iexact=name)
     return s.value
 
+  def setSetting(name, value)
+    return Settings.objects.create(name= name, value= value)
+
   class Admin:
     # we want to edit in the adin interface
     pass

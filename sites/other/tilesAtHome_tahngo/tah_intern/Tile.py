@@ -95,7 +95,8 @@ class Tile:
       #next 3 lines are temporary fallback to legacy tiles
       tilesetfile = self.serve_legacy_tile(layername)
       if isinstance(tilesetfile,str):
-        return (tilesetfile,0,-1)       # we found a tile, send entire file
+        d_length = os.stat(tilesetfile)[6] # tile length
+        return (tilesetfile,0, d_length)       # we found a tile, send entire file
       else: d_offset = tilesetfile      # use returned blankness value
     if d_offset > 3:
       # we got a regular tilesetfile here
@@ -104,7 +105,8 @@ class Tile:
       # return complete blankness tile
       blankpng = ['unknown.png','sea.png','land.png','transparent.png']
       tilesetfile = os.path.join(basetilepath,blankpng[d_offset])
-      return (tilesetfile, 0, -1)
+      d_length = os.stat(tilesetfile)[6] # tile length
+      return (tilesetfile, 0, d_length)
 
 
   def serve_legacy_tile(self,layername):

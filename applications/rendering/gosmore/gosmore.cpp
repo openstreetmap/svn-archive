@@ -3148,6 +3148,22 @@ int WINAPI WinMain(
   wchar_t argv0[80];
   GetModuleFileName (NULL, argv0, sizeof (argv0));
   wcscpy (argv0 + wcslen (argv0) - 8, TEXT ("ore.pak")); // _arm.exe to ore.pak
+  HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
+    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  if (gmap == INVALID_HANDLE_VALUE) {
+    MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
+    return 1;
+  }
+  pakSize = GetFileSize(gmap, NULL);
+  gmap = CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
+  data = (char*) MapViewOfFile (gmap, FILE_MAP_READ, 0, 0, 0);
+  if (!data) {
+    MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
+      TEXT (""), MB_APPLMODAL|MB_OK);
+    return 1;
+  }
+
+  #if 0
   FILE *gmap = _wfopen (/*"./gosmore.pak"*/ argv0, TEXT ("rb"));
 
   if (!gmap) {
@@ -3163,6 +3179,7 @@ int WINAPI WinMain(
     return 1; // This may mean memory is available, but fragmented.
   } // Splitting the 5 parts may help.
   fread (data, pakSize, 1, gmap);
+  #endif
   style = (struct styleStruct *)(data + 4);
   hashTable = (int *) (data + pakSize);
   ndBase = (ndType *)(data + hashTable[-1]);

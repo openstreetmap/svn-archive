@@ -1,7 +1,7 @@
 from tah.tah_intern.Tile import Tile
 import re
 from time import time
-from rfc822 import formatdate
+from email.Utils import formatdate
 from mod_python import apache
 
 #mod_python handler for serving tiles

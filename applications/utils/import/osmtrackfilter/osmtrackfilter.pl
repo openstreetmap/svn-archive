@@ -112,6 +112,7 @@ use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
 use Geo::Tracks::MapAndGuide;
+use Geo::Tracks::OziExplorer;
 use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
@@ -243,6 +244,7 @@ use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
 use Geo::Tracks::MapAndGuide;
+use Geo::Tracks::OziExplorer;
 use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
@@ -355,6 +357,7 @@ use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
 use Geo::Tracks::MapAndGuide;
+use Geo::Tracks::OziExplorer;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -969,7 +972,8 @@ sub filter_dup_trace_segments($$){
     my $track_points_done=0;
 
     my $segment_list=[];
-    for my $track_no ( 0 .. $#$tracks->{tracks} ) {
+    my $track_array = $tracks->{tracks};
+    for my $track_no ( 0 .. $#$track_array ) {
 	my $track = $tracks->{tracks}->[$track_no];
 	next if !$track;
 	my $sliding_track_pos=0;
@@ -1202,6 +1206,7 @@ use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
 use Geo::Tracks::MapAndGuide;
+use Geo::Tracks::OziExplorer;
 use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
@@ -1313,6 +1318,13 @@ sub convert_Data(){
 		$new_tracks = read_track_MapAndGuide($filename); # Map And Guide
 	    } else {
 		warn "$filename: !!! Skipping because neither NetMonitor nor MapAndGuide";
+		next;
+	    }
+	} elsif ( $extension eq 'plt' ) {
+	    if ( is_format_OziExplorer($filename) ) {
+		$new_tracks = read_track_OziExplorer($filename); # OziExplorer
+	    } else {
+		warn "$filename: !!! Skipping because invalid OziExplorer format!";
 		next;
 	    }
 	} else {

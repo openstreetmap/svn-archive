@@ -59,7 +59,7 @@ sub read_track_MapAndGuide($) {
     return $new_tracks unless $fh;
     my $new_track=[];
     
-    my $time = time();
+    my $time = $fn_mtime;
     while ( my $line = $fh->getline() ) {
 	$line =~ s/\r?\n//;
 
@@ -84,7 +84,6 @@ sub read_track_MapAndGuide($) {
 		"is larger than 360 degrees\n";
 	    print STDERR "Line: $line\n";
 	}
-	my ($msg_anz,$msg_no,$rest);
 
 	unless ( defined( $lat) && ($lat ne "" )&& defined( $lon) && ($lon ne "")) {
 	    print "ERROR in Line: $line\n";
@@ -92,9 +91,10 @@ sub read_track_MapAndGuide($) {
 	};
 
 	my $elem ={};
-	$elem->{time} = $time++; # Fake timestamps as Map and Guide don't log any...
-	$elem->{lat} = $lat;
-	$elem->{lon} = $lon;
+	$elem->{time}  = $time++; # Fake timestamps as Map and Guide don't log any...
+	$elem->{lat}   = $lat;
+	$elem->{lon}   = $lon;
+	$elem->{ele}   = 0;
 	$elem->{speed} = $speed;
 
     	if ( defined $elem->{lat} &&

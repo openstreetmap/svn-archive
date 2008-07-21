@@ -97,7 +97,7 @@ class Settings(models.Model):
     s = Settings.objects.get(name__iexact=name)
     return s.value
 
-  def setSetting(name, value)
+  def setSetting(self, name, value)
     return Settings.objects.create(name= name, value= value)
 
   class Admin:

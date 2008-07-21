@@ -1,3 +1,4 @@
 /.hg
 /.htaccess
 /*.pyc
+/settings.py

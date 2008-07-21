@@ -43,9 +43,9 @@ def export_MapOf(request):
 
   
 class MapOfForm(forms.Form):
-    lat = forms.FloatField()
-    long = forms.FloatField()
-    z = forms.FloatField(initial=12)
-    w = forms.FloatField(initial=1024)
-    h = forms.FloatField(initial=1024)
+    lat = forms.CharField()
+    long = forms.CharField()
+    z = forms.CharField(initial=12)
+    w = forms.CharField(initial=1024)
+    h = forms.CharField(initial=1024)
     format = forms.ChoiceField(choices=[('png','png'),('jpeg','jpeg')])

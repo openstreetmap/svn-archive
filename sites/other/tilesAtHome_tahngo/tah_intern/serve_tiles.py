@@ -11,21 +11,21 @@ def handler(req):
   if m:
     (layername,php,z,x,y,ext) = m.groups()
     t = Tile(None,z,x,y)
-    data = t.serve_tile(layername)
-    if data: 
+    (tilefile, offset, datalength) = t.serve_tile_sendfile(layername)
+    if tilefile: 
       #req.content_type = 'text/plain'
       req.content_type = 'image/png'
       #req.update_mtime(t.mtime)
       #req.set_last_modified() #This can be used in newer mod_python versions. Does not work in 3.2.1
-      req.set_content_length(len(data))
+      if datalength > 0: req.set_content_length(datalength)
       req.headers_out['Expires']=(datetime.utcnow()+timedelta(0,0,0,0,0,3)).strftime("%a, %d %b %Y %H:%M:%S GMT")
       req.headers_out['Last-Modified']=datetime.utcfromtimestamp(t.mtime).strftime("%a, %d %b %Y %H:%M:%S GMT")
       status = req.meets_conditions()
       if status != apache.OK:
         return status
-      req.write(data)
+      req.sendfile(tilefile, offset, datalength)
       return apache.OK
 
     else: return apache.HTTP_NOT_FOUND
   return apache.HTTP_BAD_REQUEST
-  #TODO use sendfile(  	path[, offset, len])?
+

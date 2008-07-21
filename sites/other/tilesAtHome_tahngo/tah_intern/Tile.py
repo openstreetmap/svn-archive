@@ -113,7 +113,7 @@ class Tile:
     fname = os.path.join(leg_basetiledir,layername,"%02d"%(self.z),"%03d"%(self.x//1000),"%03d"%(self.x%1000),"%03d"%(self.y//1000),"%03d.png"%(self.y%1000))
     if os.path.isfile(fname):
       return fname
-    except:
+    else:
       #There is no legacy tile either, fall back to blanktile database
       #Return transparent for hardcoded transparent layers
       if layername in ['maplint','caption']: return 3

@@ -20,7 +20,7 @@
 #endif
 #ifdef _WIN32_WCE
 #include <windowsx.h>
-#include <winuserm.h>
+//#include <winuserm.h> // For playing a sound ??
 #include <sipapi.h>
 #include "ConvertUTF.h"
 #include "resource.h"
@@ -100,12 +100,12 @@ typedef long long __int64;
 #ifdef _WIN32_WCE
 #define gtk_widget_queue_clear(x) // After Click() returns we Invalidate
 HWND hwndList;
-wchar_t appendTmp[50];
+UTF16 appendTmp[50];
 char searchStr[50];
 
 #define gtk_clist_append(x,str) { \
     const unsigned char *sStart = (const unsigned char*) *str; \
-    wchar_t *tStart = appendTmp; \
+    UTF16 *tStart = appendTmp; \
     if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (*str) + 1, \
         &tStart, appendTmp + sizeof (appendTmp) / sizeof (appendTmp[0]), \
         lenientConversion) == conversionOK) { \
@@ -151,7 +151,7 @@ const char *FindResource (const char *fname)
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)
 #ifndef INT_MIN
-#define INT_MIN -2147483648
+#define INT_MIN 0x80000000 // -2147483648
 #endif
 
 #define RESTRICTIONS M (access) M (motorcar) M (bicycle) M (foot) M (goods) \
@@ -994,12 +994,12 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
 }
 #else
 #define NEWWAY_MAX_COORD 10
-struct {
+struct newWaysStruct {
   int coord[NEWWAY_MAX_COORD][2], klas, cnt, oneway, bridge;
   char name[40];
 } newWays[500];
 
-struct {
+struct klasTableStruct {
   wchar_t *desc;
   char *tags;
 } klasTable[] = { // See http://etricceline.de/osm/Europe/En/tags.htm
@@ -1044,10 +1044,10 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
 {
   if (Msg == WM_COMMAND && wParam == IDOK) {
     HWND edit = GetDlgItem (hwnd, IDC_NAME);
-    wchar_t name[40], *sStart = name;
+    UTF16 name[40], *sStart = name;
     int wstrlen = Edit_GetLine (edit, 0, name, sizeof (name));
     unsigned char *tStart = (unsigned char*) newWays[newWayCnt].name;
-    ConvertUTF16toUTF8 ((const wchar_t **)&sStart,  sStart + wstrlen,
+    ConvertUTF16toUTF8 ((const UTF16 **)&sStart,  sStart + wstrlen,
         &tStart, tStart + sizeof (newWays[0].name), lenientConversion);
   }
   if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
@@ -1090,7 +1090,7 @@ BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
     for (int i = 0; i < numberOfOptions; i++) {
       const unsigned char *sStart = (const unsigned char*)
         optionNameTable[i][English];
-      wchar_t wcTmp[30], *tStart = wcTmp;
+      UTF16 wcTmp[30], *tStart = wcTmp;
       if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen ((char*) sStart) + 1,
             &tStart, wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]),
             lenientConversion) == conversionOK) {
@@ -1453,12 +1453,12 @@ gint Expose (void)
           #ifdef _WIN32_WCE
           SelectObject (mygc, sysFont);
           const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
-          wchar_t *tStart = wcTmp;
-          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart,
-                wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+          UTF16 *tStart = (UTF16 *) wcTmp;
+          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
+                sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
               == conversionOK) {
             ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
-                wcTmp, tStart - wcTmp, NULL);
+                wcTmp, (wchar_t *) tStart - wcTmp, NULL);
           }
           #endif
           #ifdef CAIRO_VERSION
@@ -1563,13 +1563,13 @@ gint Expose (void)
           HFONT customFont = CreateFontIndirect (&logFont);
           HGDIOBJ oldf = SelectObject (mygc, customFont);
           const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
-          wchar_t *tStart = wcTmp;
-          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart,
-                wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+          UTF16 *tStart = (UTF16 *) wcTmp;
+          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
+                sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
               == conversionOK) {
             ExtTextOut (mygc, X (x0, y0) + int (len * 3 * cos (hoek)),
                   Y (x0, y0) - int (len * 3 * sin (hoek)), 0, NULL,
-                  wcTmp, tStart - wcTmp, NULL);
+                  wcTmp, (wchar_t *) tStart - wcTmp, NULL);
           }
           SelectObject (mygc, oldf);
           DeleteObject (customFont);
@@ -1685,12 +1685,12 @@ gint Expose (void)
     #else
     SelectObject (mygc, sysFont);
     const unsigned char *sStart = (const unsigned char*) optStr;
-    wchar_t *tStart = wcTmp;
+    UTF16 *tStart = (UTF16 *) wcTmp;
     if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
-             wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+             tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
         == conversionOK) {
       ExtTextOut (mygc, 50, draw->allocation.height / 2, 0, NULL,
-         wcTmp, tStart - wcTmp, NULL);
+         wcTmp, (wchar_t*) tStart - wcTmp, NULL);
     }
     #endif
   }
@@ -2828,7 +2828,7 @@ BOOL CALLBACK DlgSearchProc (
         memset (appendTmp, 0, sizeof (appendTmp));
         int wstrlen = Edit_GetLine (edit, 0, appendTmp, sizeof (appendTmp));
         unsigned char *tStart = (unsigned char*) searchStr;
-        const wchar_t *sStart = (const wchar_t *) appendTmp;
+        const UTF16 *sStart = (const UTF16 *) appendTmp;
         if (ConvertUTF16toUTF8 (&sStart,  sStart + wstrlen,
               &tStart, tStart + sizeof (searchStr), lenientConversion)
             == conversionOK) {
@@ -3009,7 +3009,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
     default:
       return(DefWindowProc(hWnd,message,wParam,lParam));
   }
-  return(NULL);
+  return FALSE;
 }
 
 BOOL InitApplication (void)

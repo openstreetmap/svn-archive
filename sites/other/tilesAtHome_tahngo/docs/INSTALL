@@ -10,7 +10,7 @@ The Tahngo server, as currently tested, requires the following software:
 
 Django needs a database module to store its data in.  If you don't have a preference, sqlite is the simplest to use.  You will need a python module for your database, such as python-mysql or python-sqlite (python-sqlite2 2.3.3 works).
 
-If you get Django errors that max_length is invalid, try a newer version from Django svn.
+If you get Django errors that max_length is invalid, try a newer version from Django svn. (Should be fixed by not using max_length now)
 
 INSTALLATION
 ------------

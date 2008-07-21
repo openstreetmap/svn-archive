@@ -17,7 +17,7 @@ INSTALLATION
 - Download the main directory from the OpenStreetMap svn server.  Put it in a location of your choice, eg. /usr/local/share/tah.  The base directory name must be "tah".  The svn download will give you a directory named "tileAtHome_tahngo" by default; change it to "tah".
 - The "Tiles" directory should be moved to the place where you want to store all the tileset files. The setting "base_tile_path" should point to this directory as it will save tileset files here and expect the stock images (blank sea/land/error) here.
 - The "media" directory contains files that should be accessible through the web server and should be moved to a place where the files can be served through apache. I think the setting MEDIA_URL in tah.settings needs to point to one directory below "media".
-- Adapt the settings in tah.settings to your configuration (database choice, url handler, etc)
+- Move settings.py.example to settings.py and adapt the settings in tah.settings to your configuration (database choice, url handler, etc)
 - Run "python manage.py syncdb" to create the database
 - Configure your web server for the new paths.  See "Apache Configuration" below.
 - In a web browser, go to the /admin interface and add the settings "base_tile_path", "unzipPath","logFile" to the table Settings.

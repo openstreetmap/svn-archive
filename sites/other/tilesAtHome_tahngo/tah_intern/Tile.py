@@ -96,7 +96,7 @@ class Tile:
       tilesetfile = self.serve_legacy_tile(layername)
       if isinstance(tilesetfile,str):
         return (tilesetfile,0,-1)       # we found a tile, send entire file
-      else: d_offset = 0    # return blankness value
+      else: d_offset = tilesetfile      # use returned blankness value
     if d_offset > 3:
       # we got a regular tilesetfile here
       return (tilesetfile,d_offset,d_offset_next-d_offset)

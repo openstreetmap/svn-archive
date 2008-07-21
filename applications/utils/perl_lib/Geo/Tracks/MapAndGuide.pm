@@ -59,6 +59,7 @@ sub read_track_MapAndGuide($) {
     return $new_tracks unless $fh;
     my $new_track=[];
     
+    my $time = time();
     while ( my $line = $fh->getline() ) {
 	$line =~ s/\r?\n//;
 
@@ -91,10 +92,10 @@ sub read_track_MapAndGuide($) {
 	};
 
 	my $elem ={};
+	$elem->{time} = $time++; # Fake timestamps as Map and Guide don't log any...
 	$elem->{lat} = $lat;
 	$elem->{lon} = $lon;
 	$elem->{speed} = $speed;
-	my $time ||=0;
 
     	if ( defined $elem->{lat} &&
 	     defined $elem->{lon} ) { 

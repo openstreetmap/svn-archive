@@ -2,7 +2,7 @@ from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
 import django.views.generic.list_detail
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from tah.requests.models import Request,Upload
 from tah.requests.forms import CreateForm,UploadForm,ClientAuthForm
 from django.newforms import form_for_model,widgets
@@ -220,8 +220,18 @@ def take(request):
     return HttpResponse(html)
 
 def request_changedTiles(request):
+    setting = Settings()
+    #check if we access this page from the whitelisted ip address
+    allowed_ip = setting.getSetting('changed_tiles_allowed_IP')
+    if not allowed_ip: allowed_ip = setting.setSetting('changed_tiles_allowed_IP',request.META['REMOTE_ADDR'])
+    if allowed_ip != request.META['REMOTE_ADDR']:
+      return HttpResponseForbidden('Access not allowed from this IP address.')
+    #fetch the url that is called to retrieve the changed tiles
+    url = setting.getSetting('changed_tiles_api_url')
+    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=4')
+
     html="Requested tiles:\n"
-    xml_dom = xml.dom.minidom.parse(urllib.urlopen('http://www.openstreetmap.org/api/0.5/changes?hours=4'))
+    xml_dom = xml.dom.minidom.parse(urllib.urlopen(url))
     tiles = xml_dom.getElementsByTagName("tile")
     for tile in tiles:
       (z,x,y) = tile.getAttribute('z'),tile.getAttribute('x'),tile.getAttribute('y')

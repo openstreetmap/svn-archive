@@ -99,7 +99,8 @@ class Settings(models.Model):
     return s.value
 
   def setSetting(self, name, value):
-    return Settings.objects.create(name= name, value= value)
+    s, created = Settings.objects.get_or_create(name= name, value= value)
+    return s.value
 
   class Admin:
     # we want to edit in the adin interface

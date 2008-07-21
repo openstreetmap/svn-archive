@@ -211,9 +211,7 @@ sub write_gpx_file($$) { # Write an gpx File
 		next;
 	    };
 	    print $fh "     <trkpt lat=\"$lat\" lon=\"$lon\">\n";
-	    if( defined $elem->{ele} ) {
-		print $fh "       <ele>$elem->{ele}</ele>\n";
-	    };
+
 	    # --- time
 	    if ( defined ( $elem->{time} ) ) {
 		#print Dumper(\$elem);

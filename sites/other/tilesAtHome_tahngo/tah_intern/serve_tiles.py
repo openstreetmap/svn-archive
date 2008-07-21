@@ -13,10 +13,11 @@ def handler(req):
     t = Tile(None,z,x,y)
     (tilefile, offset, datalength) = t.serve_tile_sendfile(layername)
     if tilefile: 
-      #req.content_type = 'text/plain'
       req.content_type = 'image/png'
       #req.update_mtime(t.mtime)
-      #req.set_last_modified() #This can be used in newer mod_python versions. Does not work in 3.2.1
+      #req.set_last_modified() #This can be used in newer mod_python versions. Does not work in 3.2.1 
+      #maybe need to work around with req.finfo... req.finfo = apache.stat(req.filename, apache.APR_FINFO_MIN)
+      req.finfo = apache.stat(tilefile, apache.APR_FINFO_MIN)
       if datalength > 0: req.set_content_length(datalength)
       req.headers_out['Expires']=(datetime.utcnow()+timedelta(0,0,0,0,0,3)).strftime("%a, %d %b %Y %H:%M:%S GMT")
       req.headers_out['Last-Modified']=datetime.utcfromtimestamp(t.mtime).strftime("%a, %d %b %Y %H:%M:%S GMT")

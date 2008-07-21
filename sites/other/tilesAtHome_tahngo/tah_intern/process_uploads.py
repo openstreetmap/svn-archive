@@ -12,7 +12,6 @@ from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
 from django.contrib.auth.models import User
 from tah.requests.models import Request,Upload
-from django.core.exceptions import ObjectDoesNotExist
 
 ### TileUpload returns 0 on success and >0 otherwise
 class TileUpload:
@@ -37,7 +36,7 @@ class TileUpload:
         # repeat fetching until there is one
         try:
           upload = Upload.objects.filter(is_locked=False).latest('upload_time')
-        except ObjectDoesNotExist:
+        except Upload.DoesNotExist:
           #logging.debug('No uploaded request. Sleeping 5 sec.')
           #print("No uploaded request. Sleeping 5 sec.")
           sleep(10)
@@ -127,7 +126,7 @@ class TileUpload:
         # get the layer if it's any different
         if not (layer and layer.name == m.group(1)):
           try: layer = Layer.objects.get(name=m.group(1))
-          except ObjectDoesNotExist:
+          except Layer.DoesNotExist:
             logging.info('unknown layer ('+m.group(1)+')')
             return 0
         t = Tile(layer=layer,z=m.group(2),x=m.group(3),y=m.group(4))

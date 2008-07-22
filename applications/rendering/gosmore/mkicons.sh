@@ -15,11 +15,11 @@ do
 done
 # These make nice POIs, but are not needed to render OSM maps :
 rm -f *geocach* {classic,square}.{big,small}_{people,waypoint,wlan}* \
-  {svg_tn,japan_tn}_{people,waypoint,wlan}* svg_*
+  {svg_tn,japan_tn}_{people,waypoint,wlan}* svg_* *_misc_no_icon.png
 
 echo Creating the montage and removing the temporary directory
 ulimit -n 2048
 ../../netpbm-10.26.46/editor/pnmmontage -data ../icons.csv *.pnm>../icons.pnm
-rm -rf osmpnms
 cd ..
+rm -rf osmpnms
 ppmtobmp icons.pnm >icons.bmp

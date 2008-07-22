@@ -1142,6 +1142,9 @@ void HitButton (int b)
     else if (option == StartRouteNum) {
       flon = clon;
       flat = clat;
+      free (route);
+      route = NULL;
+      shortest = NULL;
     }
     else if (option == EndRouteNum) {
       tlon = clon;
@@ -1207,12 +1210,13 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else if (event->button == 2) {
       flon = lon;
       flat = lat;
+      free (route);
+      route = NULL;
+      shortest = NULL;
     }
     else {
       tlon = lon;
       tlat = lat;
-      //car = !gtk_combo_box_get_active (carBtn) ? motorcarR : bicycleR;
-      //fastest = !gtk_combo_box_get_active (fastestBtn);
       Route (TRUE, 0, 0);
     }
   }
@@ -2393,7 +2397,7 @@ int main (int argc, char *argv[])
     halfSegType s[2];
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
     int yesMask = 0, noMask = 0, *wayFseek = NULL;
-    int lowzList[1000], lowzListCnt = 0;
+    int lowzList[1000], lowzListCnt = 0, wStyle = -1;
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;
     s[1].other = -1;
@@ -2402,7 +2406,7 @@ int main (int argc, char *argv[])
     w.clon = 0;
     w.dlat = INT_MIN;
     w.dlon = INT_MIN;
-    w.bits = styleCnt;
+    w.bits = 0;
     
     if (argc >= 6) {
       masterWayType *masterWay = (masterWayType *) malloc (
@@ -2471,8 +2475,8 @@ int main (int argc, char *argv[])
             if (defaultRestrict[newStyle] & (1 << modifierR)) {
               yesMask |= defaultRestrict[newStyle];
             }
-            else if (newStyle < styleCnt) {
-              w.bits = (w.bits & ~((2<<STYLE_BITS) - 1)) + newStyle;
+            else if (wStyle < newStyle && newStyle < styleCnt) {
+              wStyle = newStyle;
             }
 
             if (K_IS ("name")) {
@@ -2545,7 +2549,8 @@ int main (int argc, char *argv[])
       if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
         int nameIsNode = stricmp (name, "node") == 0;
         if (stricmp (name, "way") == 0 || nameIsNode) {
-          if (!nameIsNode || (strlen (tags) > 8 || StyleNr (&w)!=styleCnt)) {
+          w.bits += wStyle >= 0 ? wStyle : styleCnt;
+          if (!nameIsNode || (strlen (tags) > 8 || wStyle >= 0)) {
             if (nameIsNode && (!wayFseek || *wayFseek)) {
               if (s[0].lat) { // Flush s
                 fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
@@ -2565,7 +2570,7 @@ int main (int argc, char *argv[])
             if (srec[StyleNr (&w)].scaleMax > 10000000 &&
                                                   (!wayFseek || *wayFseek)) {
               for (int i = 0; i < lowzListCnt; i++) {
-                if (i % 20 && i < lowzListCnt - 1) continue; // Skip some
+                if (i % 10 && i < lowzListCnt - 1) continue; // Skip some
                 if (s[0].lat) { // Flush s
                   fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
                 }
@@ -2616,7 +2621,8 @@ int main (int argc, char *argv[])
           }
           tags[0] = '\0'; // Erase nodes with short names
           yesMask = noMask = 0;
-          w.bits = styleCnt;
+          w.bits = 0;
+          wStyle = -1;
         }
       } // if it was </...>
       xmlFree (name);

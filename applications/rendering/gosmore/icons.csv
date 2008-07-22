@@ -47,7 +47,7 @@ classic.big_misc_landmark_trees.pnm:196:64:32:32
 classic.big_misc_landmark_water_tower.pnm:64:199:32:32
 classic.big_misc_landmark_windmill.pnm:0:206:32:32
 classic.big_misc_landmark_works.pnm:96:213:32:32
-classic.big_misc_no_icon.pnm:128:213:32:32
+classic.big_misc_no_iconIsVeryUGLY.pnm:128:213:32:32
 classic.big_misc_no_smoking.pnm:160:224:32:32
 classic.big_misc.pnm:192:224:32:32
 classic.big_misc_tap_drinking.pnm:224:0:32:32
@@ -218,7 +218,7 @@ square.big_misc_landmark_windmill.pnm:448:384:32:32
 square.big_misc_landmark_works.pnm:448:416:32:32
 square.big_misc_lock_closed.pnm:448:448:32:32
 square.big_misc_lock_open.pnm:32:452:32:32
-square.big_misc_no_icon.pnm:452:32:32:32
+square.big_misc_no_iconIsVeryUGLY.pnm:452:32:32:32
 square.big_misc_no_smoking.pnm:452:64:32:32
 square.big_misc.pnm:64:455:32:32
 square.big_misc_tag_.pnm:0:462:32:32
@@ -563,7 +563,7 @@ classic.small_misc_landmark_power_tower.pnm:688:487:16:16
 classic.small_misc_landmark_trees.pnm:688:503:16:16
 classic.small_misc_lock_closed.pnm:688:519:16:16
 classic.small_misc_lock_open.pnm:688:535:16:16
-classic.small_misc_no_icon.pnm:688:551:16:16
+classic.small_misc_no_iconIsVeryUGLY.pnm:688:551:16:16
 classic.small_misc_no_smoking.pnm:688:567:16:16
 classic.small_misc.pnm:688:583:16:16
 classic.small_misc_tag_.pnm:688:599:16:16
@@ -699,7 +699,7 @@ square.small_misc_landmark_windmill.pnm:48:718:16:16
 square.small_misc_landmark_works.pnm:64:718:16:16
 square.small_misc_lock_closed.pnm:160:718:16:16
 square.small_misc_lock_open.pnm:384:718:16:16
-square.small_misc_no_icon.pnm:400:718:16:16
+square.small_misc_no_iconIsVeryUGLY.pnm:400:718:16:16
 square.small_misc_no_smoking.pnm:718:16:16:16
 square.small_misc.pnm:718:233:16:16
 square.small_misc_tag_.pnm:445:720:16:16

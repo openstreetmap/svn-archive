@@ -17,6 +17,7 @@ def handler(req):
       #req.update_mtime(t.mtime)
       #req.set_last_modified() #This can be used in newer mod_python versions. Does not work in 3.2.1 
       if datalength > 0: req.set_content_length(datalength)
+      req.headers_out['Cache-Control']='max-age=10800, must-revalidate'
       req.headers_out['Expires']=formatdate(time()+10800,usegmt=True) #expire in 3 hours
       req.headers_out['Last-Modified']=formatdate(t.mtime,usegmt=True)
 

@@ -1863,6 +1863,7 @@ sub splitImageX
                 $Redirect = "";
             }
 
+            statusMessage("ColorQuantizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
             if ($Config->get("PngQuantizer") eq "pngnq" and $EnvironmentInfo{"pngnq"})
             {
                 $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n64 %s %s",

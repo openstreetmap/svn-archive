@@ -1,5 +1,5 @@
 import os,sys, tempfile, shutil, StringIO, re
-import Image, ImageEnhance, ImageChops
+import Image, ImageEnhance, ImageFilter, ImageChops
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
@@ -16,6 +16,7 @@ class Lowzoom(Tileset):
     self.__init__(layer, z, x, y)
     self.tmpdir=tempfile.mkdtemp()
     self.stitch(layer,z,x,y)
+    print "saving to %s" % base_tile_dir
     self.save(base_tile_dir)
     shutil.rmtree(self.tmpdir)
 
@@ -39,16 +40,19 @@ class Lowzoom(Tileset):
             imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
           else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
           try:
-            image = Image.open(imagefile)
+            image = Image.open(imagefile).convert('RGB')
             error = False
           except IOError, e:
             retries += 1
             print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
             image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
 
-        #enh = ImageEnhance.Contrast(image)
-        #image = enh.enhance(0.5)
-        image = ImageChops.multiply(image, image)
+        if z==self.base_z+5:
+          enh = ImageEnhance.Contrast(image)
+          image = enh.enhance(1.4)
+        enh = ImageEnhance.Sharpness(image)
+        image = enh.enhance(0.3)
+        ##image2 = image.convert('RGBA').filter(ImageFilter.BLUR)
         image = image.resize((128, 128))
         im.paste(image, (128*i,128*j,128*(i+1),128*(j+1)))
 
@@ -79,8 +83,6 @@ def find_old_lowzooms(base_tile_path):
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
 
-  #finally always dd (0,0,0)
-  #old_lowzooms['0_0_0']=(0,0,0)
   print "requesting %d lowzooms." % len(old_lowzooms)
   return old_lowzooms
 
@@ -88,8 +90,9 @@ if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
-  for (z,x,y) in [(6,5,18)]: #find_old_lowzooms(base_tile_path).values():
+  for (z,x,y) in find_old_lowzooms(base_tile_path)+[(0,0,0)]:
+    print "sleep 10 seconds then do %d %d %d" % (z,x,y)
+    time.sleep(10)
     now = time.time()
-    print "do %d %d %d" % (z,x,y)
     lz.create(layer,6,x,y,base_tile_path)
     print "Took %.1f sec." % (time.time()-now)

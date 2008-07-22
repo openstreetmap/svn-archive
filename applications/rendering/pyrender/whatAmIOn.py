@@ -31,6 +31,10 @@ def distancePointToLine(x,y,x1,y1,x2,y2):
   
   dot = A * C + B * D
   len_sq = C * C + D * D
+  if len_sq==0:
+     dist= A*A +B*B
+     return(dist)
+
   param = dot / len_sq
 
   if(param < 0):

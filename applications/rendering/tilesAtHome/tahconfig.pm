@@ -188,6 +188,10 @@ sub CheckConfig
         {
             print " in wrapper mode";
         }
+        if ($Config->get("Batik") == 3)
+        {
+            print " in agent mode";
+        }
         print "\n";
     }
     else
@@ -237,6 +241,7 @@ sub CheckConfig
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
     }
 
+    # Zip version
     if ($EnvironmentInfo{Zip} eq "") 
     {
         die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");

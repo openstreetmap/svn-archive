@@ -249,7 +249,7 @@ sub CheckConfig
     print "- zip is present\n";
 
     # check a correct pngoptimizer is set
-    if ( ! (($Config->get("PngOptimizer") eq "pngcrush") or ($Config->get("PngOptimizer") eq "optipng")))
+    if ( ! (($Config->get("PngOptimizer") eq "pngcrush") or ($Config->get("PngOptimizer") eq "optipng") or ($Config->get("PngOptimizer") eq "pngnq")))
     {
         die("! Can't find valid PngOptimizer setting, check config");
     }

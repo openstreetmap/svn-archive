@@ -1885,7 +1885,7 @@ sub splitImageX
             }
             else
             {
-                statusMessage("ColorQuantizing $Basename with \"".$Config->get("PngQuantizer")."\" failed", $currentSubTask, $progressJobs, $progressPercent,1);
+                statusMessage("ColorQuantizing $Basename with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?", $currentSubTask, $progressJobs, $progressPercent,1);
                 rename($Filename, $Filename2);
             }
 

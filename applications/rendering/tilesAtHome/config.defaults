@@ -46,6 +46,9 @@ Pngcrush = pngcrush
 Optipng = optipng
 PngOptimizer = pngcrush
 
+PNGnq = pngnq
+PngQuantizer = pngnq
+
 Subversion = svn
 SubversionUpdateCmd = up
 

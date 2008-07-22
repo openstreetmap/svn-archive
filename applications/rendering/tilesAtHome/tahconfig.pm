@@ -286,6 +286,21 @@ sub CheckConfig
         }
     }
 
+    if ( $Config->get("PngQuantizer") eq "pngnq" )
+    {
+        $cmd=$Config->get("pngnq");
+        my $PngnqV=`\"$cmd\" -V 2>&1`;
+        if ($PngnqV !~ /pngnq.+(\d+\.\d+)/)
+        {
+            print "! Can't find pngnq (using \"".$Config->get("pngnq")."\")\n";
+        }
+        else
+        {
+            $EnvironmentInfo{"pngnq"}=$PngnqV;
+            print "- pngnq version $1\n";
+        }
+    }
+
     if($Config->get("RequestUrl")){
         print "- Using ".$Config->get("RequestUrl")." for Requests\n";
     }

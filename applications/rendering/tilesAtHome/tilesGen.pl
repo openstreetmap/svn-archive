@@ -58,14 +58,15 @@ ApplyConfigLogic($Config);
 
 # Handle the command-line
 my $Mode = shift();
+my %EnvironmentInfo;
 
 if (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop"))
 {
-    my %EnvironmentInfo = CheckBasicConfig($Config);
+    %EnvironmentInfo = CheckBasicConfig($Config);
 }
 else
 {
-    my %EnvironmentInfo = CheckConfig($Config);
+    %EnvironmentInfo = CheckConfig($Config);
 }
 
 my $Layers = $Config->get("Layers");
@@ -1425,12 +1426,17 @@ sub NewClientVersion
         $currentVersion = <versionfile>;
         chomp $runningVersion;
         close versionfile;
+        if ($currentVersion eq "")
+        {
+            print "\n! WARNNG: Could not get version info from server!\n";
+            return 0;
+        }
         rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
     }
 
     if ($runningVersion > $currentVersion)
     {
-        print "\n! WARNNG: you can't have a more current client than the server: $runningVersion > $currentVersion\n";
+        print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
         return 0;
     }
     elsif ($runningVersion == $currentVersion)
@@ -1788,7 +1794,8 @@ sub splitImageX
         MagicMkdir($Filename) if ($Config->get("LocalSlippymap"));
    
         # Temporary filename
-        my $Filename2 = "$Filename.cut";
+        my $Filename2_suffix = ".cut";
+        my $Filename2 = $Filename.$Filename2_suffix;
         my $Basename = $Filename;   # used for statusMessage()
         $Basename =~ s|.*/||;
 
@@ -1845,7 +1852,7 @@ sub splitImageX
 
             # Store the tile
             statusMessage(" -> $Basename", $currentSubTask, $progressJobs, $progressPercent,0) if ($Config->get("Verbose"));
-            WriteImage($SubImage,$Filename2);
+            WriteImage($SubImage,$Filename);
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
@@ -1855,6 +1862,32 @@ sub splitImageX
             {
                 $Redirect = "";
             }
+
+            if ($Config->get("PngQuantizer") eq "pngnq" and $EnvironmentInfo{"pngnq"})
+            {
+                $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n64 %s %s",
+                  $Config->get("Niceness"),
+                  $Config->get("pngnq"),
+                  $Filename2_suffix,
+                  $Filename,
+                  $Redirect);
+
+                if(runCommand($Cmd,$PID))
+                {
+                    unlink($Filename);
+                }
+                else
+                {
+                    statusMessage("ColorQuantizing $Basename with ".$Config->get("PngQuantizer")." failed", $currentSubTask, $progressJobs, $progressPercent,1);
+                    rename($Filename, $Filename2);
+                }
+            }
+            else
+            {
+                statusMessage("ColorQuantizing $Basename with \"".$Config->get("PngQuantizer")."\" failed", $currentSubTask, $progressJobs, $progressPercent,1);
+                rename($Filename, $Filename2);
+            }
+
 
             if ($Config->get("PngOptimizer") eq "pngcrush")
             {

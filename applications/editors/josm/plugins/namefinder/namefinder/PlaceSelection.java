@@ -163,7 +163,7 @@ public class PlaceSelection implements DownloadSelection {
 				try
 				{
 					String searchtext = searchTerm.getText();
-					if(searchtext.isEmpty())
+					if(searchtext.length()==0)
 					{
 						JOptionPane.showMessageDialog(Main.parent,tr("Please enter a search string"));
 					}

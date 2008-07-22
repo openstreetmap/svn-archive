@@ -14,31 +14,30 @@
   <target name="dist" depends="compile">
     <mkdir dir="../dist"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
-    <!--ant	dir="duplicateway"	antfile="build.xml"	target="dist"/ code still uses API 0.4 -->
     <ant	dir="duplicateway"	antfile="build.xml"	target="dist"/>
     <ant	dir="lang"		antfile="build.xml"	target="dist"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="dist"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="dist"/>
-    <!-- ant	dir="openvisible"	antfile="build.xml"    target="dist"/ code doesn't compile here -->
+    <ant	dir="openvisible"	antfile="build.xml"     target="dist"/>
     <ant	dir="osmarender"	antfile="build.xml"	target="dist"/>
     <ant	dir="plastic_laf"	antfile="build.xml"	target="dist"/>
     <ant	dir="slippymap"		antfile="build.xml"	target="dist"/>
-    <!-- ant	dir="tagging-preset-tester"	antfile="build.xml"	target="dist"/ code doesn't compile here -->
     <ant	dir="utilsplugin"	antfile="build.xml"	target="dist"/>
     <ant	dir="validator"		antfile="build.xml"	target="dist"/>
     <ant	dir="wmsplugin"		antfile="build.xml"	target="dist"/>
     <ant	dir="ywms"		antfile="build.xml"	target="dist"/>
 
     <ant	dir="livegps"		antfile="build.xml"	target="dist"/>
-    <!-- ant	dir="surveyor"		antfile="build.xml"     target="dist"/ -->
   </target>
 
   <target name="build_defect" depends="compile">
     <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
     <ant	dir="navigator"		antfile="build.xml"	target="dist"/>
     <ant	dir="pluginmanager"	antfile="build.xml"	target="dist"/> 
+    <ant	dir="tagging-preset-tester"	antfile="build.xml"	target="dist"/>
     <ant	dir="waypoints"		antfile="build.xml"	target="dist"/>
     <ant	dir="grid"		antfile="build.xml"	target="dist"/>
+    <ant	dir="surveyor"		antfile="build.xml"     target="dist"/>
   </target>
 
   <target name="clean">

@@ -151,7 +151,8 @@ def upload_request(request):
             try: int(formdata['layer'])
             except ValueError:
               # look up the layer id
-              formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
+              try: formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
+              except Layer.DoesNotExist: del formdata['layer']
           # due to a django verification bug, set a filename if a file was attached.
           if 'file' in request.FILES:  
             formdata['file']='dummy'

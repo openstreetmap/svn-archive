@@ -18,7 +18,7 @@
   <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
 
   <property name="josm" location="../../core/dist/josm-custom.jar" />
-  <property name="rendering" location="../../../../rendering" />
+  <property name="rendering" location="./osmarender" />
 
   <property name="ant.build.javac.target" value="1.5"/>
 
@@ -32,10 +32,9 @@
   </target>
 
   <target name="dist"  depends="compile">
-    <copy todir="${plugin.build.dir}" file="${rendering}/osmarender6/osmarender.xsl"/>
+    <copy todir="${plugin.build.dir}" file="${rendering}/osmarender.xsl"/>
     <copy tofile="${plugin.build.dir}/osm-map-features.xml"
-	  file="${rendering}/osmarender6/osm-map-features-z17.xml"/>
-	  <!--file="${rendering}/osmarender5/osm-map-features-z17.xml"/>-->
+	  file="${rendering}/osm-map-features-z17.xml"/>
     <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
       <env key="LANG" value="C"/>
       <arg value="info"/>

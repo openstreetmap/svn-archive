@@ -1863,7 +1863,6 @@ sub splitImageX
                 $Redirect = "";
             }
 
-            statusMessage("ColorQuantizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
             if ($Config->get($layer."_Transparent"))
             {
                 rename($Filename, $Filename2);
@@ -1877,6 +1876,7 @@ sub splitImageX
                   $Filename,
                   $Redirect);
 
+                statusMessage("ColorQuantizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
                 if(runCommand($Cmd,$PID))
                 {
                     unlink($Filename);

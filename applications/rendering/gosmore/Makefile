@@ -43,6 +43,7 @@ gosmore:	gosmore.cpp
 gosm_arm.exe:	gosmore.cpp ConvertUTF.c ConvertUTF.h gosmore.rsc resource.h
 		${ARCH}-g++ ${CFLAGS} -c gosmore.cpp
 		${ARCH}-gcc ${CFLAGS} -c ConvertUTF.c
+		${ARCH}-gcc ${CFLAGS} -c ceglue.c
 		${ARCH}-gcc ${CFLAGS} -o $@ \
 		  gosmore.o ConvertUTF.o gosmore.rsc
 

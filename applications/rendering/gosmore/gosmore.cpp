@@ -22,6 +22,8 @@
 #include <windowsx.h>
 //#include <winuserm.h> // For playing a sound ??
 #include <sipapi.h>
+#include <aygshell.h>
+#include "ceglue.h"
 #include "ConvertUTF.h"
 #include "resource.h"
 typedef int intptr_t;
@@ -53,6 +55,8 @@ typedef int intptr_t;
   o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
   o (ShowTrace,       "?", "?", "?", "?", "?", 0, 2) \
   o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
+#define VerbalCommand(x) PlaySound (TEXT ("\\sdmmc\\aa\\" x ".wav"), \
+  NULL, SND_FILENAME | SND_NODEFAULT);
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -77,6 +81,7 @@ using namespace std;
   o (ShowActiveRouteNodes,     "?", "?", "?", "?", "?", 0, 2)
 
 #define HideZoomButtons 0
+#define VerbalCommand(x) printf (x "\n")
 #endif
 #ifndef TRUE
 #define TRUE 1
@@ -932,63 +937,65 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
     
     flon = clon;
     flat = clat;
-    Route (FALSE, plon - clon, plat - clat);
-    #if 0 // No verbal instructions to driver yet !
+    Route (FALSE, 0, 0); //plon - clon, plat - clat);
+
     if (shortest) {
-      PlaySound (TEXT ("\\sdmmc\\aa\\uturn.wav"), NULL, SND_FILENAME | SND_NODEFAULT);
+      routeNodeType *x = shortest->shortest;
       __int64 dlon = plon - clon, dlat = plat - clat;
-      if (!shortest->shortest && dlon * (tlon - clon) > dlat * (clat - tlat)
-                             && dlon * (tlon - plon) < dlat * (plat - tlat)) {
+      if (!x && dlon * (tlon - clon) > dlat * (clat - tlat)
+             && dlon * (tlon - plon) < dlat * (plat - tlat)) {
         // Only stop once both C and P are acute angles in CPT, according to
         // Pythagoras.
-        fprintf (flitePipe, "%ld Stop\n", (long)time (NULL));
+        VerbalCommand ("stop");
       }
-      char *oldName = NULL;
-      for (routeNodeType *ahead = shortest; ahead;
-           ahead = ahead->shortest) {
-        __int64 alon = ((halfSegType *)(ahead->hs->other + data))->lon -
-          ahead->hs->lon;
-        __int64 alat = ((halfSegType *)(ahead->hs->other + data))->lat -
-          ahead->hs->lat;
-        __int64 divisor = dlon * alat - dlat * alon;
-        __int64 dividend = dlon * alon + dlat * alat;
-        __int64 slon = ahead->hs->lon - clon;
-        __int64 slat = ahead->hs->lat - clat;
-        if (ahead == shortest && ahead->shortest && dividend < 0 &&
-            dividend < divisor && divisor < -dividend &&
-            Sqr (slon + alon) + Sqr (slat + alat) > 64000000) {
-          fprintf (flitePipe, "%ld U turn\n", (long)time (NULL));
-          break; // Only when first node is far behind us.
-        }
-        __int64 dintercept = divisor == 0 ? 9223372036854775807LL :
-            dividend * (dlon * slat - dlat * slon) /
-            divisor + dlon * slon + dlat * slat;
-        char *name = data + ((wayType *)(data +
-          (ahead->hs->wayPtr == TO_HALFSEG ? (halfSegType*)
-                  (ahead->hs->other + data) : ahead->hs)->wayPtr))->name;
-        if (dividend < 0 || divisor > dividend || divisor < -dividend) {
-          // If segment goes "back" or makes a 45 degree angle with the
-          // motion vector.
-          //flite_text_to_speech ("U turn", fliteV, "play");
-          if (dintercept < dlon * dlon + dlat * dlat) {
-            // Found a turn that should be made in the next 10 seconds.
-            fprintf (flitePipe, "%ld %s in %s\n", (long)time (NULL),
-              divisor > 0 ? "Left" : "Right", name);
-          }
-          break;
-        }
-        if (name[0] != '\0') {
-          if (oldName && stricmp (oldName, name)) {
-            if (dintercept < dlon * dlon + dlat * dlat) {
-              fprintf (flitePipe, "%ld %s\n", (long)time (NULL), name);
+      if (x && Sqr (dlon) + Sqr (dlon) > 10000 /* faster than ~3 km/h */ &&
+          dlon * (x->nd->lon - clon) + dlat * (x->nd->lat - clat) < 0) {
+        VerbalCommand ("uturn");
+      }
+      else if (x) {
+        int nextJunction = TRUE;
+        double dist = sqrt (Sqr ((double) (x->nd->lat - flat)) +
+                            Sqr ((double) (x->nd->lon - flon)));
+        for (x = shortest; x->shortest &&
+             dist < 40000 /* roughly 300m */; x = x->shortest) {
+          ndType *n0 = x->nd, *n1 = x->shortest->nd, *nd = n1;
+          int n2lat =
+            x->shortest->shortest ? x->shortest->shortest->nd->lat : tlat;
+          int n2lon =
+            x->shortest->shortest ? x->shortest->shortest->nd->lon : tlon;
+          while (nd > ndBase && nd[-1].lon == nd->lon &&
+            nd[-1].lat == nd->lat) nd--;
+          int segCnt = 0; // Count number of segments at x->shortest
+          do {
+            // TODO : Only count segment traversable by 'Vehicle'
+            // Except for the case where a cyclist crosses a motorway.
+            if (nd->other[0] >= 0) segCnt++;
+            if (nd->other[1] >= 0) segCnt++;
+          } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+                   nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
+          if (segCnt > 2) {
+            __int64 straight =
+              (n2lat - n1->lat) * (__int64) (n1->lat - n0->lat) +
+              (n2lon - n1->lon) * (__int64) (n1->lon - n0->lon), left =
+              (n2lat - n1->lat) * (__int64) (n1->lon - n0->lon) -
+              (n2lon - n1->lon) * (__int64) (n1->lat - n0->lat);
+            if (straight < left) {
+              if (nextJunction) VerbalCommand ("turnleft");
+              else VerbalCommand ("keepleft");
+              break;
             }
-            break;
+            if (straight < -left) {
+              if (nextJunction) VerbalCommand ("turnright");
+              else VerbalCommand ("keepright");
+              break;
+            }
+            nextJunction = FALSE;
           }
-          oldName = name;
-        }
-      } // While looking for a turn ahead.
+          dist += sqrt (Sqr ((double) (n2lat - n1->lat)) +
+                        Sqr ((double) (n2lon - n1->lon)));
+        } // While looking ahead to the next turn.
+      } // If not on final segment
     } // If the routing was successful
-    #endif
     gtk_widget_queue_clear (draw);
   } // If following the GPSr and it has a fix.
 }
@@ -3195,7 +3202,20 @@ int WINAPI WinMain(
   if(!InitApplication ()) return(FALSE);
   if (!InitInstance (nCmdShow)) return(FALSE);
 
-  wcscpy (argv0 + wcslen (argv0) - 3, TEXT ("opt")); // _arm.exe to ore.pak
+  GtkWidget dumdraw;
+  dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
+  dumdraw.allocation.height = GetSystemMetrics(SM_CYSCREEN);
+  draw = &dumdraw;
+
+  InitCeGlue ();
+  if (SHFullScreenPtr) {
+    (*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
+      SHFS_HIDESTARTICON | SHFS_HIDESIPBUTTON);
+    MoveWindow (mWnd, 0, 0, dumdraw.allocation.width,
+      dumdraw.allocation.height, FALSE);
+  }
+
+  wcscpy (argv0 + wcslen (argv0) - 3, TEXT ("opt")); // _arm.exe to ore.opt
   FILE *optFile = _wfopen (argv0, TEXT ("r"));
   
   if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "rb");
@@ -3214,11 +3234,6 @@ int WINAPI WinMain(
   Exit = 0;
   IncrementalSearch ();
   InitializeOptions ();
-
-  GtkWidget dumdraw;
-  dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
-  dumdraw.allocation.height = GetSystemMetrics(SM_CYSCREEN);
-  draw = &dumdraw;
 
   dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
     NULL, (DLGPROC)DlgSearchProc); // Just in case user goes modeless

@@ -303,25 +303,16 @@ public class JMapViewer extends JPanel {
 			for (int y = -off_y; y < getHeight(); y += Tile.HEIGHT) {
 				Tile tile = getTile(tilex, tiley_tmp, zoom);
 				if (tile != null) {
-					if (!tile.isLoaded()) {
-						// Paint stretched preview from the next lower zoom
-						// level (if already loaded)
-						Tile parent = tile.getParentTile(tileCache);
-						if (parent != null && parent.isLoaded()) {
-							int parentx = tile.getXtile() % 2;
-							int parenty = tile.getYtile() % 2;
-							parent.parentPaint(g, x, y, parentx, parenty);
-						} else
-							tile.paint(g, x, y);
-					} else
-						tile.paint(g, x, y);
+					tile.paint(g, x, y);
+					if (tileGridVisible)
+						g.drawRect(x, y, Tile.WIDTH, Tile.HEIGHT);
 				}
-				if (tileGridVisible)
-					g.drawRect(x, y, Tile.WIDTH, Tile.HEIGHT);
 				tiley_tmp++;
 			}
 			tilex++;
 		}
+		g.fillOval(getWidth()/2 - 5, getHeight()/2 - 5, 10, 10);
+		g.drawString("Test", 50, 10);
 		if (!mapMarkersVisible || mapMarkerList == null)
 			return;
 		for (MapMarker marker : mapMarkerList) {
@@ -399,6 +390,7 @@ public class JMapViewer extends JPanel {
 		if (tile == null) {
 			tile = new Tile(tilex, tiley, zoom, loadingImage);
 			tileCache.addTile(tile);
+			tile.loadPlaceholderFromCache(tileCache);
 		}
 		if (!tile.isLoaded()) {
 			jobDispatcher.addJob(new Runnable() {
@@ -408,7 +400,7 @@ public class JMapViewer extends JPanel {
 					if (tile.isLoaded())
 						return;
 					try {
-						// Thread.sleep(500);
+						Thread.sleep(500);
 						tile.loadTileImage();
 						repaint();
 					} catch (Exception e) {
@@ -467,6 +459,10 @@ public class JMapViewer extends JPanel {
 
 	public boolean getZoomContolsVisible() {
 		return zoomSlider.isVisible();
+	}
+
+	public TileCache getTileCache() {
+		return tileCache;
 	}
 
 }

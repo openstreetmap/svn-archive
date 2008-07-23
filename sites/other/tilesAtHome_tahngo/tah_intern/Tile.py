@@ -100,6 +100,10 @@ class Tile:
       else: d_offset = tilesetfile      # use returned blankness value
     if d_offset > 3:
       # we got a regular tilesetfile here
+      #make sure that the second offset really points to data end and is not blank either
+      while (d_offset_next <= 3):
+        data = f.read(4)
+        d_offset_next = struct.unpack('I',data)
       return (tilesetfile,d_offset,d_offset_next-d_offset)
     else:
       # return complete blankness tile

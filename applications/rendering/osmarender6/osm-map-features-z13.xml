@@ -27,18 +27,6 @@
     <rule e="node|way" k="osmarender:render" v="~|yes">
 
         <!-- Landuse -->
-        <rule e="way" k="landuse" v="residential|farmyard">
-            <area class="landuse-residential"/>
-        </rule>
-        <rule e="way" k="landuse" v="retail">
-            <area class="landuse-retail"/>
-        </rule>
-        <rule e="way" k="landuse" v="industrial|brownfield">
-            <area class="landuse-industrial"/>
-        </rule>
-        <rule e="way" k="landuse" v="commercial">
-            <area class="landuse-commercial"/>
-        </rule>
         <rule e="way" k="landuse" v="landfill|quarry">
             <area class="landuse-quarry"/>
         </rule>
@@ -66,9 +54,6 @@
         <!-- Artificial landuse -->
         <rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
             <area class="landuse-field"/>
-        </rule>
-        <rule e="way" k="amenity" v="school|college|university">
-            <area class="amenity-school"/>
         </rule>
         <rule e="way" k="leisure" v="park|playground|playing_fields|garden|pitch|golf_course|common|green">
             <area class="leisure-park"/>
@@ -138,14 +123,6 @@
         </rule>
         <rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
             <area class="tourism-green-area"/>
-        </rule>
-        <rule e="way" k="military" v="*">
-            <area class="military-area"/>
-        </rule>
-        <rule e="way" k="landuse" v="military">
-            <rule e="way" k="military" v="~">
-                <area class="military-area"/>
-            </rule>
         </rule>
 
         <!-- Airfields and airports -->
@@ -865,6 +842,39 @@
         </rule>
         <rule e="node" k="aeroway" v="airport">
             <symbol xlink:href="#airport" width="30px" height="30px" transform="translate(-15,-15)"/>
+        </rule>
+    </rule>
+
+    <!-- ==================================== Layer -5 ======================================== -->
+    <rule e="node|way" k="osmarender:render" v="~|yes" layer="-5">
+
+        <!-- Landuse -->
+        <rule e="way" k="landuse" v="residential|farmyard" layer="-5">
+            <area class="landuse-residential"/>
+        </rule>
+        <rule e="way" k="landuse" v="retail" layer="-5">
+            <area class="landuse-retail"/>
+        </rule>
+        <rule e="way" k="landuse" v="industrial|brownfield" layer="-5">
+            <area class="landuse-industrial"/>
+        </rule>
+        <rule e="way" k="landuse" v="commercial" layer="-5">
+            <area class="landuse-commercial"/>
+        </rule>
+
+        <!-- Artificial landuse -->
+        <rule e="way" k="amenity" v="school|college|university" layer="-5">
+            <area class="amenity-school"/>
+        </rule>
+
+        <!-- Man-made areas -->
+        <rule e="way" k="landuse" v="military" layer="-5">
+            <rule e="way" k="military" v="~" layer="-5">
+                <area class="military-area"/>
+            </rule>
+        </rule>
+        <rule e="way" k="military" v="*" layer="-5">
+            <area class="military-area"/>
         </rule>
     </rule>
 

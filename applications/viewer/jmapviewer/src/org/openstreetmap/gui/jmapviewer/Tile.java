@@ -3,6 +3,8 @@ package org.openstreetmap.gui.jmapviewer;
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -52,6 +54,62 @@ public class Tile {
 	}
 
 	/**
+	 * Tries to get tiles of a lower or higher zoom level (one or two level
+	 * difference) from cache and use it as a placeholder until the tile has
+	 * been loaded.
+	 */
+	public void loadPlaceholderFromCache(TileCache cache) {
+		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = (Graphics2D) tmpImage.getGraphics();
+		// g.drawImage(image, 0, 0, null);
+		for (int zoomDiff = 1; zoomDiff < 3; zoomDiff++) {
+			// first we check if there are already the 2^x tiles
+			// of a higher detail level
+			int zoom_high = zoom + zoomDiff;
+			if (zoom_high <= JMapViewer.MAX_ZOOM) {
+				int factor = 1 << zoomDiff;
+				int xtile_high = xtile << zoomDiff;
+				int ytile_high = ytile << zoomDiff;
+				double scale = 1.0 / factor;
+				g.setTransform(AffineTransform.getScaleInstance(scale, scale));
+				int paintedTileCount = 0;
+				for (int x = 0; x < factor; x++) {
+					for (int y = 0; y < factor; y++) {
+						Tile tile = cache.getTile(xtile_high + x, ytile_high + y, zoom_high);
+						if (tile != null && tile.isLoaded()) {
+							paintedTileCount++;
+							tile.paint(g, x * WIDTH, y * HEIGHT);
+						}
+					}
+				}
+				if (paintedTileCount == factor * factor) {
+					image = tmpImage;
+					return;
+				}
+			}
+
+			int zoom_low = zoom - zoomDiff;
+			if (zoom_low >= JMapViewer.MIN_ZOOM) {
+				int xtile_low = xtile >> zoomDiff;
+				int ytile_low = ytile >> zoomDiff;
+				int factor = (1 << zoomDiff);
+				double scale = (double) factor;
+				AffineTransform at = new AffineTransform();
+				int translate_x = (xtile % factor) * WIDTH;
+				int translate_y = (ytile % factor) * HEIGHT;
+				at.setTransform(scale, 0, 0, scale, -translate_x, -translate_y);
+				g.setTransform(at);
+				Tile tile = cache.getTile(xtile_low, ytile_low, zoom_low);
+				if (tile != null && tile.isLoaded()) {
+					tile.paint(g, 0, 0);
+					image = tmpImage;
+					return;
+				}
+			}
+		}
+	}
+
+	/**
 	 * @return tile number on the x axis of this tile
 	 */
 	public int getXtile() {
@@ -87,21 +145,6 @@ public class Tile {
 		return loaded;
 	}
 
-	/**
-	 * Retrieves the "parent tile" from the specified tile cache. A parent tile
-	 * is the tile of a lower zoom level (coarser resolution) at the same
-	 * position of the map. Parent tiles are used for a preview until the tile
-	 * has been loaded.
-	 * 
-	 * @param tileCache
-	 * @return
-	 */
-	public Tile getParentTile(TileCache tileCache) {
-		if (zoom < 1)
-			return null;
-		return tileCache.getTile(xtile / 2, ytile / 2, zoom - 1);
-	}
-
 	public synchronized void loadTileImage() throws IOException {
 		if (loaded)
 			return;
@@ -131,45 +174,7 @@ public class Tile {
 	public void paint(Graphics g, int x, int y) {
 		if (image == null)
 			return;
-		/*
-		 * if (image.getHeight() < OSMMap.TILE_HEIGHT || image.getWidth() <
-		 * OSMMap.TILE_WIDTH) { x += (OSMMap.TILE_WIDTH - image.getWidth()) / 2;
-		 * y += (OSMMap.TILE_HEIGHT - image.getHeight()) / 2; }
-		 */
 		g.drawImage(image, x, y, null);
-	}
-
-	public void paint(Graphics g, int x, int y, int stretch) {
-		if (image == null)
-			return;
-		int tx = x * stretch;
-		int ty = y = stretch;
-		g.drawImage(image, x, y, tx, ty, 0, 0, image.getWidth(), image.getHeight(), null);
-	}
-
-	/**
-	 * Paints one-fourth of the tile image {@link Graphics} <code>g</code> at
-	 * the position <code>x</code>/<code>y</code>.
-	 * 
-	 * @param g
-	 * @param x
-	 * @param y
-	 * @param partx
-	 *            (0 or 1) selects if the left or right part of tile should be
-	 *            painted
-	 * @param party
-	 *            (0 or 1) selects if the upper or lower part of tile should be
-	 *            painted
-	 */
-	public void parentPaint(Graphics g, int x, int y, int partx, int party) {
-		int sx = 0;
-		int sy = 0;
-		if (partx == 1)
-			sx = WIDTH_HALF;
-		if (party == 1)
-			sy = HEIGHT_HALF;
-		g.drawImage(image, x, y, x + WIDTH, y + HEIGHT, sx, sy, sx + WIDTH_HALF, sy + HEIGHT_HALF,
-				null);
 	}
 
 	@Override

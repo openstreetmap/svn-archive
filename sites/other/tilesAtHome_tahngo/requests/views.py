@@ -185,10 +185,11 @@ def upload_request(request):
       return render_to_response('requests_upload.html',{'uploadform': form, 'authform': authform, 'host':request.META['HTTP_HOST']})
     return HttpResponse(html);
 
+@cache_control(max_age=30)
 def upload_gonogo(request):
     # dummy, always return 1 for full speed ahead
     load = 1 - Upload.objects.all().count()/600.0
-    return HttpResponse(str(load)+"\ndummytoken\n");
+    return HttpResponse(str(load));
 
 def take(request):
     html='XX|4|unknown error'
@@ -220,6 +221,7 @@ def take(request):
       return render_to_response('requests_take.html',{'clientauthform': form})
     return HttpResponse(html)
 
+@cache_control(no_cache=True)
 def request_changedTiles(request):
     setting = Settings()
     #check if we access this page from the whitelisted ip address
@@ -252,6 +254,7 @@ def request_changedTiles(request):
     
     return HttpResponse(html,mimetype='text/plain')
 
+@cache_control(no_cache=True)
 def expire_tiles(request):
     """ Rerequest old active request that haven't been pinged by the client
         for a while. Also delete old finished requests that we don't need 
@@ -269,6 +272,7 @@ def expire_tiles(request):
     html="Reset %d requests to unfinished status.\nExpired %d old finished requests." % (len(rerequested),len(expired))
     return HttpResponse(html,mimetype='text/plain')
 
+@cache_control(no_cache=True)
 def stats_munin_requests(request,status):
     reply=''
     states={'pending':0,'active':1,'done':2}
@@ -282,10 +286,11 @@ def stats_munin_requests(request,status):
         reply += "%s.value %d\n" % (state,c)
     else:
       #output requests finished per last hour and 48 moving avg
-      reply += "_req_processed_last_hour.value %d\n" %  reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,1)).count()
+      reply += "_req_processed_last_hour.value %d\n" %  (reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,1)).count())
       reply += 'done.value %d' % (reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,48)).count() // 48)
     return HttpResponse(reply,mimetype='text/plain')
 
+@cache_control(must_revalidate=True, max_age=3600)
 def show_latest_client_version(request):
     html = Settings().getSetting(name='latest_client_version')
     return HttpResponse(html,mimetype='text/plain')

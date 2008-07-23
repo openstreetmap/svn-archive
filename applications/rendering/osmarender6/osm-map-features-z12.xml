@@ -31,18 +31,9 @@
             <area class="natural-land"/>
         </rule>
 
-        <!-- Landuse -->
-        <!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychedelic -->
-        <rule e="way" k="landuse" v="residential|farmyard|retail|industrial|brownfield|commercial|cemetery|quarry">
-            <area class="landuse-all"/>
-        </rule>
-
         <!-- Natural features -->
         <rule e="way" k="natural" v="coastline">
             <area class="natural-coastline"/>
-        </rule>
-        <rule e="way" k="natural" v="land">
-            <area class="natural-land"/>
         </rule>
         <rule e="way" k="landuse|natural" v="forest|wood|scrub">
             <area class="landuse-wood"/>
@@ -54,9 +45,6 @@
         <!-- Artificial landuse -->
         <rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow">
             <area class="landuse-field"/>
-        </rule>
-        <rule e="way" k="amenity" v="school|college|university">
-            <area class="landuse-all"/>
         </rule>
         <rule e="way" k="leisure" v="park|playground|playing_fields|garden|pitch|golf_course|common|green">
             <area class="leisure-park"/>
@@ -104,19 +92,8 @@
         <rule e="way" k="amenity" v="parking">
             <area class="amenity-parking"/>
         </rule>
-        <rule e="way" k="tourism" v="attraction">
-            <area class="tourism-attraction"/>
-        </rule>
         <rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
             <area class="tourism-green-area"/>
-        </rule>
-        <rule e="way" k="military" v="*">
-            <area class="military-area"/>
-        </rule>
-        <rule e="way" k="landuse" v="military">
-            <rule e="way" k="military" v="~">
-                <area class="military-area"/>
-            </rule>
         </rule>
 
         <!-- Airfields and airports -->
@@ -766,6 +743,34 @@
         <!-- Airfields and airports -->
         <rule e="node" k="aeroway" v="airport">
             <symbol xlink:href="#airport" width="40px" height="40px" transform="translate(-20,-20)"/>
+        </rule>
+    </rule>
+
+    <!-- ==================================== Layer -5 ======================================== -->
+    <rule e="node|way" k="osmarender:render" v="~|yes" layer="-5">
+
+        <!-- Landuse -->
+        <!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychedelic -->
+        <rule e="way" k="landuse" v="residential|farmyard|retail|industrial|brownfield|commercial|cemetery|quarry" layer="-5">
+            <area class="landuse-all"/>
+        </rule>
+
+        <!-- Artificial landuse -->
+        <rule e="way" k="amenity" v="school|college|university" layer="-5">
+            <area class="landuse-all"/>
+        </rule>
+
+        <!-- Man-made areas -->
+        <rule e="way" k="landuse" v="military" layer="-5">
+            <rule e="way" k="military" v="~" layer="-5">
+                <area class="military-area"/>
+            </rule>
+        </rule>
+        <rule e="way" k="military" v="*" layer="-5">
+            <area class="military-area"/>
+        </rule>
+        <rule e="way" k="tourism" v="attraction" layer="-5">
+            <area class="tourism-attraction"/>
         </rule>
     </rule>
 

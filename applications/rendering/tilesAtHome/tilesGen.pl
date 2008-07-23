@@ -1864,7 +1864,11 @@ sub splitImageX
             }
 
             statusMessage("ColorQuantizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
-            if ($Config->get("PngQuantizer") eq "pngnq" and $EnvironmentInfo{"pngnq"})
+            if ($Config->get($layer."_Transparent"))
+            {
+                rename($Filename, $Filename2);
+            }
+            elsif ($Config->get("PngQuantizer") eq "pngnq" and $EnvironmentInfo{"pngnq"})
             {
                 $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n64 %s %s",
                   $Config->get("Niceness"),

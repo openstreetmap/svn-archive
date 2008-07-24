@@ -15,7 +15,9 @@
     <mkdir dir="../dist"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
     <ant	dir="duplicateway"	antfile="build.xml"	target="dist"/>
+    <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
     <ant	dir="lang"		antfile="build.xml"	target="dist"/>
+    <ant	dir="livegps"		antfile="build.xml"	target="dist"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="dist"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="dist"/>
     <ant	dir="openvisible"	antfile="build.xml"     target="dist"/>
@@ -26,18 +28,15 @@
     <ant	dir="validator"		antfile="build.xml"	target="dist"/>
     <ant	dir="wmsplugin"		antfile="build.xml"	target="dist"/>
     <ant	dir="ywms"		antfile="build.xml"	target="dist"/>
-
-    <ant	dir="livegps"		antfile="build.xml"	target="dist"/>
   </target>
 
   <target name="build_defect" depends="compile">
-    <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
+    <ant	dir="grid"		antfile="build.xml"	target="dist"/>
     <ant	dir="navigator"		antfile="build.xml"	target="dist"/>
     <ant	dir="pluginmanager"	antfile="build.xml"	target="dist"/> 
+    <ant	dir="surveyor"		antfile="build.xml"     target="dist"/>
     <ant	dir="tagging-preset-tester"	antfile="build.xml"	target="dist"/>
     <ant	dir="waypoints"		antfile="build.xml"	target="dist"/>
-    <ant	dir="grid"		antfile="build.xml"	target="dist"/>
-    <ant	dir="surveyor"		antfile="build.xml"     target="dist"/>
   </target>
 
   <target name="clean">
@@ -46,6 +45,7 @@
     <ant	dir="grid"		antfile="build.xml"	target="clean"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="clean"/>
     <ant	dir="lang"		antfile="build.xml"	target="clean"/>
+    <ant	dir="livegps"		antfile="build.xml"	target="clean"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="clean"/>
     <ant	dir="navigator"		antfile="build.xml"	target="clean"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="clean"/>
@@ -54,15 +54,13 @@
     <ant	dir="plastic_laf"	antfile="build.xml"	target="clean"/>
     <ant	dir="pluginmanager"	antfile="build.xml"	target="clean"/>
     <ant	dir="slippymap"		antfile="build.xml"	target="clean"/>
+    <ant	dir="surveyor"		antfile="build.xml"	target="clean"/>
     <ant	dir="tagging-preset-tester"	antfile="build.xml"	target="clean"/>
     <ant	dir="utilsplugin"	antfile="build.xml"	target="clean"/>
     <ant	dir="validator"		antfile="build.xml"	target="clean"/>
     <ant	dir="waypoints"		antfile="build.xml"	target="clean"/>
     <ant	dir="wmsplugin"		antfile="build.xml"	target="clean"/>
     <ant	dir="ywms"		antfile="build.xml"	target="clean"/>
-
-    <ant	dir="surveyor"		antfile="build.xml"	target="clean"/>
-    <ant	dir="livegps"		antfile="build.xml"	target="clean"/>
   </target>
 
   <target name="clean_install">

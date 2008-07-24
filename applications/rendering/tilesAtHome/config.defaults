@@ -25,7 +25,7 @@ Niceness = nice -n10
 
 DownloadTimeout = 1800
 KeepDataFile = 0
-FallBackToXAPI = 1
+FallBackToXAPI = 0
 
 i18n=1
 

@@ -89,15 +89,12 @@ public class TagChecker extends Test
 	/** The delete button */
 	protected JButton deleteSrcButton;
 
-	/** Empty values error */
-	protected static int EMPTY_VALUES = 0;
-	/** Invalid key error */
-	protected static int INVALID_KEY = 1;
-	/** Invalid value error */
-	protected static int INVALID_VALUE = 2;
-	/** fixme error */
-	protected static int FIXME = 3;
-	
+	protected static int EMPTY_VALUES = 0; /** Empty values error */
+	protected static int INVALID_KEY = 1; /** Invalid key error */
+	protected static int INVALID_VALUE = 2; /** Invalid value error */
+	protected static int FIXME = 3; /** fixme error */
+	protected static int INVALID_SPACE = 3; /** space in value (start/end) */
+
 	/** List of sources for spellcheck data */
 	protected JList Sources;
 
@@ -137,13 +134,13 @@ public class TagChecker extends Test
 	{
 		spellCheckKeyData = new HashMap<String, String>();
 		String sources = Main.pref.get( PREF_SOURCES );
-//		if(Main.pref.getBoolean(PREF_USE_DATA_FILE))
-//		{
-//			if( sources == null || sources.length() == 0)
-//				sources = DATA_FILE;
-//			else
-//				sources = DATA_FILE + ";" + sources;
-//		}
+		if(Main.pref.getBoolean(PREF_USE_DATA_FILE))
+		{
+			if( sources == null || sources.length() == 0)
+				sources = DATA_FILE;
+			else
+				sources = DATA_FILE + ";" + sources;
+		}
 		if(Main.pref.getBoolean(PREF_USE_SPELL_FILE))
 		{
 			if( sources == null || sources.length() == 0)
@@ -261,7 +258,7 @@ public class TagChecker extends Test
 			}
 			if( checkValues && value != null && (value.startsWith(" ") || value.endsWith(" ")) && !withErrors.contains(p, "SPACE"))
 			{
-				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"), p, INVALID_VALUE) );
+				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"), p, INVALID_SPACE) );
 				withErrors.add(p, "SPACE");
 			}
 			if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
@@ -508,7 +505,7 @@ public class TagChecker extends Test
 		prefUseDataFile.setToolTipText(tr("Use the default data file (recommended)."));
 		testPanel.add(prefUseDataFile, GBC.eol().insets(20,0,0,0));
 
-		boolean useSpellFile = Main.pref.getBoolean(PREF_USE_DATA_FILE, true);
+		boolean useSpellFile = Main.pref.getBoolean(PREF_USE_SPELL_FILE, true);
 		JCheckBox prefUseSpellFile = new JCheckBox(tr("Use default spellcheck file."), checkValues);
 		prefUseSpellFile.setToolTipText(tr("Use the default spellcheck file (recommended)."));
 		testPanel.add(prefUseSpellFile, GBC.eol().insets(20,0,0,0));
@@ -526,6 +523,8 @@ public class TagChecker extends Test
 		Main.pref.put(PREF_CHECK_VALUES_BEFORE_UPLOAD, prefCheckValuesBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_KEYS_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_FIXMES_BEFORE_UPLOAD, prefCheckFixmesBeforeUpload.isSelected());
+		Main.pref.put(PREF_USE_DATA_FILE, prefCheckFixmesBeforeUpload.isSelected());
+		Main.pref.put(PREF_USE_SPELL_FILE, prefCheckFixmesBeforeUpload.isSelected());
 		String sources = "";
 		if( Sources.getModel().getSize() > 0 )
 		{
@@ -557,11 +556,13 @@ public class TagChecker extends Test
 				String value = prop.getValue();
 				if( value == null || value.trim().length() == 0 )
 					commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, null) );
+				else if(value.startsWith(" ") || value.endsWith(" "))
+					commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, value.trim()) );
 				else
 				{
 					String replacementKey = spellCheckKeyData.get(key);
 					if( replacementKey != null )
-						commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)), key, replacementKey) );	
+						commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)), key, replacementKey) );
 				}
 			}
 		}
@@ -580,7 +581,7 @@ public class TagChecker extends Test
 		if( testError.getTester() instanceof TagChecker)
 		{
 			int code = testError.getInternalCode();
-			return code == INVALID_KEY || code == EMPTY_VALUES;
+			return code == INVALID_KEY || code == EMPTY_VALUES || code == INVALID_SPACE;
 		}
 
 		return false;

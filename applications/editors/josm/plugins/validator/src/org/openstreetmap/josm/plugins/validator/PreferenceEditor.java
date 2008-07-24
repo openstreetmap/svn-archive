@@ -34,8 +34,13 @@ public class PreferenceEditor implements PreferenceSetting
 	/** The preferences key for enabled tests */
 	public static final String PREF_TESTS = PREFIX + ".tests";
 
+	/** The preferences key for enabled tests */
+	public static final String PREF_USE_IGNORE = PREFIX + ".ignore";
+
 	/** The preferences key for enabled tests before upload*/
 	public static final String PREF_TESTS_BEFORE_UPLOAD = PREFIX + ".testsBeforeUpload";
+
+	private JCheckBox prefUseIgnore;
 
 	/** The list of all tests */
 	private Collection<Test> allTests;
@@ -44,20 +49,26 @@ public class PreferenceEditor implements PreferenceSetting
 		this.plugin = plugin;
 	}
 
-    public void addGui(PreferenceDialog gui)
-    {
+	public void addGui(PreferenceDialog gui)
+	{
 		JPanel testPanel = new JPanel(new GridBagLayout());
 		testPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		
-        testPanel.add( new JLabel(), GBC.std() );
-        testPanel.add( new JLabel("On upload"), GBC.eop() );
+
+		prefUseIgnore = new JCheckBox(tr("Use ignore list."), Main.pref.getBoolean(PREF_USE_IGNORE, true));
+		prefUseIgnore.setToolTipText(tr("Use the use ignore list to suppress warnings."));
+		testPanel.add(prefUseIgnore, GBC.eol());
+
+		GBC a = GBC.eol().insets(-5,0,0,0);
+		a.anchor = GBC.EAST;
+		testPanel.add( new JLabel(tr("On demand")), GBC.std() );
+		testPanel.add( new JLabel(tr("On upload")), a );
 
 		allTests = OSMValidatorPlugin.getTests();
-		for(Test test: allTests) 
+		for(Test test: allTests)
 		{
-            test.addGui(testPanel);
+			test.addGui(testPanel);
 		}
-		
+
 		JScrollPane testPane = new JScrollPane(testPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		testPane.setBorder(null);
 
@@ -65,16 +76,16 @@ public class PreferenceEditor implements PreferenceSetting
 		String description = tr("A OSM data validator that checks for common errors made by users and editor programs.");
 		if( ver != null )
 			description += "<br><br>" + tr("Version: {0}<br>Last change at {1}", ver.revision, ver.time);
-    	JPanel tab = gui.createPreferenceTab("validator", tr("Data validator"), description);
+		JPanel tab = gui.createPreferenceTab("validator", tr("Data validator"), description);
 		tab.add(testPane, GBC.eol().fill(GBC.BOTH));
-		tab.add(GBC.glue(0,10), GBC.eol());
-    }
+		tab.add(GBC.glue(0,10), a);
+	}
 
-	public void ok() 
+	public void ok()
 	{
 		StringBuilder tests = new StringBuilder();
 		StringBuilder testsBeforeUpload = new StringBuilder();
-		
+
 		for (Test test : allTests)
 		{
 			test.ok();
@@ -82,14 +93,15 @@ public class PreferenceEditor implements PreferenceSetting
 			tests.append( ',' ).append( name ).append( '=' ).append( test.enabled );
 			testsBeforeUpload.append( ',' ).append( name ).append( '=' ).append( test.testBeforeUpload );
 		}
-		
+
 		if (tests.length() > 0 ) tests = tests.deleteCharAt(0);
 		if (testsBeforeUpload.length() > 0 ) testsBeforeUpload = testsBeforeUpload.deleteCharAt(0);
-		
+
 		plugin.initializeTests( allTests );
-		
+
 		Main.pref.put( PREF_TESTS, tests.toString());
 		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());
+		Main.pref.put( PREF_USE_IGNORE, prefUseIgnore.isSelected());
 	}
 	
 	/**

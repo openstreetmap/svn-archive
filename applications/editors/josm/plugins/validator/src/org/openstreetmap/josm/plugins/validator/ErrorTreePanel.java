@@ -159,26 +159,40 @@ public class ErrorTreePanel extends JTree
         	buildTree();
     }
 
-    /**
-     * Clears the current error list and adds thiese errors to it
-     * @param errors The validation errors
-     */
-    public void setErrors(List<TestError> errors)
-    {
-    	this.errors.clear();
-    	this.errors.addAll(errors);
-        if( isVisible() )
-        	buildTree();
-    }
+	/**
+	 * Clears the current error list and adds these errors to it
+	 * @param errors The validation errors
+	 */
+	public void setErrors(List<TestError> newerrors)
+	{
+		errors.clear();
+		for(TestError error : newerrors)
+		{
+			if(!error.getIgnored())
+				errors.add(error);
+		}
+		if( isVisible() )
+			buildTree();
+	}
 
-    /**
-     * Returns the errors of the tree
-     * @return  the errors of the tree
-     */
-    public List<TestError> getErrors()
-    {
-        return errors != null ? errors : Collections.<TestError>emptyList();
-    }
+	/**
+	 * Returns the errors of the tree
+	 * @return  the errors of the tree
+	 */
+	public List<TestError> getErrors()
+	{
+		return errors != null ? errors : Collections.<TestError>emptyList();
+	}
+
+	/**
+	 * Updates the current errors list
+	 * @param errors The validation errors
+	 */
+	public void resetErrors()
+	{
+		List<TestError> e = new ArrayList<TestError>(errors);
+		setErrors(e);
+	}
 
     /**
      * Expands all tree

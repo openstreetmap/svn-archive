@@ -141,11 +141,13 @@ public class Test implements Visitor
 	{
 		checkEnabled = new JCheckBox(name, enabled);
 		checkEnabled.setToolTipText(description);
-		testPanel.add(checkEnabled, GBC.std().insets(20,0,0,0));
-		
-        checkBeforeUpload = new JCheckBox();
-        checkBeforeUpload.setSelected(testBeforeUpload);
-        testPanel.add(checkBeforeUpload, GBC.eop().insets(20,0,0,0));
+		testPanel.add(checkEnabled, GBC.std());
+
+		GBC a = GBC.eol();
+		a.anchor = GBC.EAST;
+		checkBeforeUpload = new JCheckBox();
+		checkBeforeUpload.setSelected(testBeforeUpload);
+		testPanel.add(checkBeforeUpload, a);
 	}
 
 	/**

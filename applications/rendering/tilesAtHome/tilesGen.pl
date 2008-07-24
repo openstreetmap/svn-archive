@@ -1869,7 +1869,7 @@ sub splitImageX
             }
             elsif ($Config->get("PngQuantizer") eq "pngnq" and $EnvironmentInfo{"pngnq"})
             {
-                $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n64 %s %s",
+                $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
                   $Config->get("Niceness"),
                   $Config->get("pngnq"),
                   $Filename2_suffix,

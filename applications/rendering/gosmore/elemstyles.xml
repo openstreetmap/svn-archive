@@ -12,7 +12,7 @@ a little help:
 		- icon path to icon , relative from where this file is
 6. routing attributes
 		- any of the keys under 'Map_Features#Restrictions' together
-		  with an integer for the km/h. 'modifier' is special.
+		  with an integer for the km/h. 'roundabout' is special.
 
 Using both area and line attributes for the same key/value pair doesn't work!
 -->
@@ -668,7 +668,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" /> 
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-        <routing oneway="1" modifier="1"/>
+        <routing oneway="1" roundabout="1"/>
 	</rule>
 	
 <!-- cycleway tags -->

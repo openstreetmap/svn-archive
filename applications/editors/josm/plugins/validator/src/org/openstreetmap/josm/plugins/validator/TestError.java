@@ -145,6 +145,9 @@ public class TestError
 		String ignorestring = message;
 		for (OsmPrimitive o : primitives)
 		{
+			// ignore data not yet uploaded
+			if(o.id == 0)
+				return null;
 			String type = "u";
 			if (o instanceof Way) type = "w";
 			else if (o instanceof Relation) type = "r";

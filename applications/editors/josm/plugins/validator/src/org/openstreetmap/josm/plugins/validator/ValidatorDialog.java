@@ -214,7 +214,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 				{
 					TestError error = (TestError)nodeInfo;
 					String state = error.getIgnoreState();
-					ignoredErrors.add(state);
+					if(state != null)
+						ignoredErrors.add(state);
 					changed = true;
 					error.setIgnored(true);
 				}

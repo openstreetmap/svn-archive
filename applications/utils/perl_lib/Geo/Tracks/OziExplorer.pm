@@ -148,7 +148,7 @@ sub read_track_OziExplorer($) {
 
 	my ( $lat, $lon, $track_brk, $altitude, $date, $date_string,
 	    $time_string ) = split( /\s*,\s*/, $line );
-	$altitude = 0 if $altitude = -777;
+	$altitude = 0 if $altitude == -777;
 	$altitude *= 0.3048;    # Convert to meters
 
 	# $date are the days since 12/30/1899, so we have to convert

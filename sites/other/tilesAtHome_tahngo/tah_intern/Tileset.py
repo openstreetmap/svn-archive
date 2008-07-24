@@ -77,7 +77,7 @@ class Tileset:
         It will be saved under user id 'userid'
     """
     assert (base_tile_path > '')
-    tilepath    = os.path.join(base_tile_path,"%s_%s_%d" % (self.layer.name,self.base_z,self.x//1000))
+    tilepath    = os.path.join(base_tile_path,"%s_%d" % (self.layer.name,self.base_z),"%04d"%(self.x))
     tilesetfile = os.path.join(tilepath,str(self.x)+'_'+str(self.y))
     #f = open(os.path.join(tilepath,str(self.x)+'_'+str(self.y)),'wb')
     (tmp_fd,tmpfile) = mkstemp()
@@ -123,7 +123,7 @@ class Tileset:
       f.write(pack('I',d_offset))
       f.close()
     # finally create path if necessary and move the tmp file to its final location
-    if not os.path.isdir(tilepath): os.mkdir(tilepath, 0775)
+    if not os.path.isdir(tilepath): os.mkdirs(tilepath, 0775)
     os.chmod(tmpfile,0664)
     move(tmpfile, tilesetfile)
     return (1,unknown_tiles)

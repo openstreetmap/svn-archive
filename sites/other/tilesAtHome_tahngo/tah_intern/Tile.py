@@ -72,7 +72,7 @@ class Tile:
       # basetileset returns (None,None,None,None) if invalid
       tilesetfile = ''
     else:
-      tilesetfile = os.path.join(basetilepath,"%s_%s_%d"%(layername,base_z,base_x//1000),str(base_x)+'_'+str(base_y))
+      tilesetfile = os.path.join(basetilepath,"%s_%d"%(layername,base_z),"%04d"%(base_x),str(base_x)+'_'+str(base_y))
     try:
       self.mtime = os.stat(tilesetfile)[8] #set mtime to be used by 'Last-Modified' header
       f = open(tilesetfile,'rb')

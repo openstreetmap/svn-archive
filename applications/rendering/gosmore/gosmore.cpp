@@ -158,7 +158,7 @@ const char *FindResource (const char *fname)
 
 #define RESTRICTIONS M (access) M (motorcar) M (bicycle) M (foot) M (goods) \
   M (hgv) M (horse) M (motorcycle) M (psv) M (motorboat) M (boat) \
-  M (oneway) M (modifier)
+  M (oneway) M (roundabout)
 
 #define M(field) field ## R,
 enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
@@ -916,23 +916,17 @@ void DoFollowThing (gpsNewStruct *gps)
   flat = clat;
   Route (FALSE, dlon, dlat);
 
-  static ndType *oldDecide[3] = { NULL, NULL, NULL };
-  ndType *decide = NULL;
-  static const wchar_t *oldCommand[3] = { NULL, NULL, NULL };
-  const wchar_t *command = NULL;
+  static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
+  static const wchar_t *command[3] = { NULL, NULL, NULL }, *oldCommand = NULL;
+  decide[0] = NULL;
+  command[0] = NULL;
   if (shortest) {
     routeNodeType *x = shortest->shortest;
-    if (!x && dlon * (tlon - clon) > dlat * (clat - tlat) &&
-        dlon * (tlon - clon - dlon * 9) < dlat * (clon + dlon * 9 - tlat)) {
-      // Only stop once both C and P are acute angles in CPT, according to
-      // Pythagoras.
-      command = TEXT ("stop");
-      decide = NULL;
-    }
+    if (!x) command[0] = TEXT ("stop");
     if (x && Sqr (dlon) + Sqr (dlon) > 10000 /* faster than ~3 km/h */ &&
         dlon * (x->nd->lon - clon) + dlat * (x->nd->lat - clat) < 0) {
-      command = TEXT ("uturn");
-      decide = NULL;
+      command[0] = TEXT ("uturn");
+      decide[0] = NULL;
     }
     else if (x) {
       int nextJunction = TRUE;
@@ -940,6 +934,33 @@ void DoFollowThing (gpsNewStruct *gps)
                           Sqr ((double) (x->nd->lon - flon)));
       for (x = shortest; x->shortest &&
            dist < 40000 /* roughly 300m */; x = x->shortest) {
+        int roundExit = 0;
+        while (x->shortest && ((1 << roundaboutR) &
+                       ((wayType*)(x->shortest->nd->wayPtr + data))->bits)) {
+          ndType *nd = x->shortest->nd;
+          while (nd > ndBase && nd[-1].lon == nd->lon &&
+            nd[-1].lat == nd->lat) nd--;
+          int segCnt = 0; // Count number of segments at x->shortest
+          do {
+            // TODO : Only count segment traversable by 'Vehicle'
+            // Except for the case where a cyclist crosses a motorway.
+            // TODO : Don't count oneways entering the roundabout
+            if (nd->other[0] >= 0) segCnt++;
+            if (nd->other[1] >= 0) segCnt++;
+          } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+                   nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
+          if (segCnt > 2) roundExit++;
+          x = x->shortest;
+        }
+        if (!x->shortest || roundExit) {
+          decide[0] = x->nd;
+          static wchar_t *rtxt[] = { NULL, TEXT ("round1"), TEXT ("round2"),
+            TEXT ("round3"), TEXT ("round4"), TEXT ("round5"),
+            TEXT ("round6"), TEXT ("round7"), TEXT ("round8") };
+          command[0] = rtxt[roundExit];
+          break;
+        }
+        
         ndType *n0 = x->nd, *n1 = x->shortest->nd, *nd = n1;
         int n2lat =
           x->shortest->shortest ? x->shortest->shortest->nd->lat : tlat;
@@ -961,13 +982,14 @@ void DoFollowThing (gpsNewStruct *gps)
             (n2lon - n1->lon) * (__int64) (n1->lon - n0->lon), left =
             (n2lat - n1->lat) * (__int64) (n1->lon - n0->lon) -
             (n2lon - n1->lon) * (__int64) (n1->lat - n0->lat);
-          decide = n1;
+          decide[0] = n1;
           if (straight < left) {
-            command = nextJunction ? TEXT ("turnleft") : TEXT ("keepleft");
+            command[0] = nextJunction ? TEXT ("turnleft") : TEXT ("keepleft");
             break;
           }
           if (straight < -left) {
-            command = nextJunction ? TEXT ("turnright"): TEXT ("keepright");
+            command[0] = nextJunction
+                             ? TEXT ("turnright"): TEXT ("keepright");
             break;
           }
           nextJunction = FALSE;
@@ -975,28 +997,30 @@ void DoFollowThing (gpsNewStruct *gps)
         dist += sqrt (Sqr ((double) (n2lat - n1->lat)) +
                       Sqr ((double) (n2lon - n1->lon)));
       } // While looking ahead to the next turn.
+      if (!x->shortest && dist < 6000) {
+        command[0] = TEXT ("stop");
+        decide[0] = NULL;
+      }
     } // If not on final segment
   } // If the routing was successful
 
-  if (command && command == oldCommand[0] && command == oldCommand[1] &&
-      decide == oldDecide[0] && decide == oldDecide[1] &&
-      (command != oldCommand[2] || decide != oldDecide[2])) {
+  if (command[0] && (oldCommand != command[0] || oldDecide != decide[0]) &&
+      command[0] == command[1] && command[1] == command[2] &&
+      decide[0] == decide[1] && decide[1] == decide[2]) {
+    oldCommand = command[0];
+    oldDecide = decide[0];
 #ifdef _WIN32_WCE
     wchar_t argv0[80];
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-    wcscpy (argv0 + wcslen (argv0) - 12, command); // gosm_arm.exe to 'uturn'
+    wcscpy (argv0 + wcslen (argv0) - 12, command[0]); // gosm_arm.exe to a.wav
     wcscpy (argv0 + wcslen (argv0), TEXT (".wav"));
     PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT);
 #else
-    printf ("%s\n", command);
+    printf ("%s\n", command[0]);
 #endif
   }
-  memmove (oldCommand + 1, oldCommand,
-    sizeof (oldCommand) - sizeof (oldCommand[0]));
-  memmove (oldDecide + 1, oldDecide,
-    sizeof (oldDecide) - sizeof (oldDecide[0]));
-  oldCommand[0] = command;
-  oldDecide[0] = decide;
+  memmove (command + 1, command, sizeof (command) - sizeof (command[0]));
+  memmove (decide + 1, decide, sizeof (decide) - sizeof (decide[0]));
 
   double dist = sqrt (Sqr ((double) dlon) + Sqr ((double) dlat));
   if (!OrientNorthwards && dist > 100.0) {
@@ -2527,7 +2551,7 @@ int main (int argc, char *argv[])
             int newStyle = 0;
             for (; newStyle < styleCnt && !(K_IS (style_k[newStyle])
                              && V_IS (style_v[newStyle])); newStyle++) {}
-            if (defaultRestrict[newStyle] & (1 << modifierR)) {
+            if (defaultRestrict[newStyle] & (1 << roundaboutR)) {
               yesMask |= defaultRestrict[newStyle];
             }
             else if (wStyle < newStyle && newStyle < styleCnt) {

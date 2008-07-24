@@ -43,11 +43,11 @@ public class LakewalkerApp {
 	    
 	    System.out.println(nodelist.size()+" nodes generated");
 	    
-	    nodelist = lw.vertex_reduce(nodelist, dp);
+	    nodelist = lw.vertexReduce(nodelist, dp);
 	    
 	    System.out.println("After vertex reduction, "+nodelist.size()+" nodes remain.");
 	    
-	    nodelist = lw.douglas_peucker(nodelist, dp);
+	    nodelist = lw.douglasPeucker(nodelist, dp);
 	    
 	    System.out.println("After dp approximation, "+nodelist.size()+" nodes remain.");
 	 

@@ -55,8 +55,6 @@ typedef int intptr_t;
   o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
   o (ShowTrace,       "?", "?", "?", "?", "?", 0, 2) \
   o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
-#define VerbalCommand(x) PlaySound (TEXT ("\\sdmmc\\aa\\" x ".wav"), \
-  NULL, SND_FILENAME | SND_NODEFAULT);
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -81,7 +79,6 @@ using namespace std;
   o (ShowActiveRouteNodes,     "?", "?", "?", "?", "?", 0, 2)
 
 #define HideZoomButtons 0
-#define VerbalCommand(x) printf (x "\n")
 #endif
 #ifndef TRUE
 #define TRUE 1
@@ -656,7 +653,7 @@ void Route (int recalculate, int plon, int plat)
 #ifndef HEADLESS
 #define STATUS_BAR    0
 
-GtkWidget *draw, *location, *followGPSr;
+GtkWidget *draw, *location, *followGPSr, *orientNorthwards;
 GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE;
 /* zoom is the amount that fits into the window (regardless of window size) */
@@ -700,6 +697,12 @@ int ChangeOption (void)
   Vehicle = gtk_combo_box_get_active (carBtn) + motorcarR;
   DetailLevel = 4 - gtk_combo_box_get_active (detailBtn);
   FollowGPSr = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr));
+  OrientNorthwards =
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (orientNorthwards));
+  if (OrientNorthwards) {
+    cosAzimuth = 1.0;
+    sinAzimuth = 0.0;
+  }
   FastestRoute = !gtk_combo_box_get_active (fastestBtn);
   gtk_widget_queue_clear (draw);
   return FALSE;
@@ -895,20 +898,133 @@ int ProcessNmea (char *rx, unsigned *got)
   return dataReady;
 }
 
+void DoFollowThing (gpsNewStruct *gps)
+{
+  if (!/*gps->fix.mode >= MODE_2D &&*/ FollowGPSr) return;
+  SetLocation (Longitude (gps->fix.longitude), Latitude (gps->fix.latitude));
+/*    int plon = Longitude (gps->fix.longitude + gps->fix.speed * 3600.0 /
+      40000000.0 / cos (gps->fix.latitude * (M_PI / 180.0)) *
+      sin (gps->fix.track * (M_PI / 180.0)));
+    int plat = Latitude (gps->fix.latitude + gps->fix.speed * 3600.0 /
+      40000000.0 * cos (gps->fix.track * (M_PI / 180.0))); */
+    // Predict the vector that will be traveled in the next 10seconds
+//    printf ("%5.1lf m/s Heading %3.0lf\n", gps->fix.speed, gps->fix.track);
+//    printf ("%lf %lf\n", gps->fix.latitude, gps->fix.longitude);
+    
+  __int64 dlon = clon - flon, dlat = clat - flat;
+  flon = clon;
+  flat = clat;
+  Route (FALSE, dlon, dlat);
+
+  static ndType *oldDecide[3] = { NULL, NULL, NULL };
+  ndType *decide = NULL;
+  static const wchar_t *oldCommand[3] = { NULL, NULL, NULL };
+  const wchar_t *command = NULL;
+  if (shortest) {
+    routeNodeType *x = shortest->shortest;
+    if (!x && dlon * (tlon - clon) > dlat * (clat - tlat) &&
+        dlon * (tlon - clon - dlon * 9) < dlat * (clon + dlon * 9 - tlat)) {
+      // Only stop once both C and P are acute angles in CPT, according to
+      // Pythagoras.
+      command = TEXT ("stop");
+      decide = NULL;
+    }
+    if (x && Sqr (dlon) + Sqr (dlon) > 10000 /* faster than ~3 km/h */ &&
+        dlon * (x->nd->lon - clon) + dlat * (x->nd->lat - clat) < 0) {
+      command = TEXT ("uturn");
+      decide = NULL;
+    }
+    else if (x) {
+      int nextJunction = TRUE;
+      double dist = sqrt (Sqr ((double) (x->nd->lat - flat)) +
+                          Sqr ((double) (x->nd->lon - flon)));
+      for (x = shortest; x->shortest &&
+           dist < 40000 /* roughly 300m */; x = x->shortest) {
+        ndType *n0 = x->nd, *n1 = x->shortest->nd, *nd = n1;
+        int n2lat =
+          x->shortest->shortest ? x->shortest->shortest->nd->lat : tlat;
+        int n2lon =
+          x->shortest->shortest ? x->shortest->shortest->nd->lon : tlon;
+        while (nd > ndBase && nd[-1].lon == nd->lon &&
+          nd[-1].lat == nd->lat) nd--;
+        int segCnt = 0; // Count number of segments at x->shortest
+        do {
+          // TODO : Only count segment traversable by 'Vehicle'
+          // Except for the case where a cyclist crosses a motorway.
+          if (nd->other[0] >= 0) segCnt++;
+          if (nd->other[1] >= 0) segCnt++;
+        } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+                 nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
+        if (segCnt > 2) {
+          __int64 straight =
+            (n2lat - n1->lat) * (__int64) (n1->lat - n0->lat) +
+            (n2lon - n1->lon) * (__int64) (n1->lon - n0->lon), left =
+            (n2lat - n1->lat) * (__int64) (n1->lon - n0->lon) -
+            (n2lon - n1->lon) * (__int64) (n1->lat - n0->lat);
+          decide = n1;
+          if (straight < left) {
+            command = nextJunction ? TEXT ("turnleft") : TEXT ("keepleft");
+            break;
+          }
+          if (straight < -left) {
+            command = nextJunction ? TEXT ("turnright"): TEXT ("keepright");
+            break;
+          }
+          nextJunction = FALSE;
+        }
+        dist += sqrt (Sqr ((double) (n2lat - n1->lat)) +
+                      Sqr ((double) (n2lon - n1->lon)));
+      } // While looking ahead to the next turn.
+    } // If not on final segment
+  } // If the routing was successful
+
+  if (command && command == oldCommand[0] && command == oldCommand[1] &&
+      decide == oldDecide[0] && decide == oldDecide[1] &&
+      (command != oldCommand[2] || decide != oldDecide[2])) {
+#ifdef _WIN32_WCE
+    wchar_t argv0[80];
+    GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
+    wcscpy (argv0 + wcslen (argv0) - 12, command); // gosm_arm.exe to 'uturn'
+    wcscpy (argv0 + wcslen (argv0), TEXT (".wav"));
+    PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT);
+#else
+    printf ("%s\n", command);
+#endif
+  }
+  memmove (oldCommand + 1, oldCommand,
+    sizeof (oldCommand) - sizeof (oldCommand[0]));
+  memmove (oldDecide + 1, oldDecide,
+    sizeof (oldDecide) - sizeof (oldDecide[0]));
+  oldCommand[0] = command;
+  oldDecide[0] = decide;
+
+  double dist = sqrt (Sqr ((double) dlon) + Sqr ((double) dlat));
+  if (!OrientNorthwards && dist > 100.0) {
+    cosAzimuth = dlat / dist;
+    sinAzimuth = -dlon / dist;
+  }                                            
+  gtk_widget_queue_clear (draw);
+} // If following the GPSr and it has a fix.
+
 #ifndef _WIN32_WCE
 #ifdef ROUTE_TEST
 gint RouteTest (GtkWidget * /*widget*/, GdkEventButton *event, void *)
 {
   static int ptime = 0;
-  if (TRUE) {
-    ptime = time (NULL);
-    int w = draw->allocation.width;
-    int perpixel = zoom / w;
-    clon += lrint ((event->x - w / 2) * perpixel);
-    clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
-    int plon = clon + lrint ((event->x - w / 2) * perpixel);
+  ptime = time (NULL);
+  int w = draw->allocation.width;
+  int perpixel = zoom / w;
+  clon += lrint ((event->x - w / 2) * perpixel);
+  clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
+/*    int plon = clon + lrint ((event->x - w / 2) * perpixel);
     int plat = clat -
-      lrint ((event->y - draw->allocation.height / 2) * perpixel);
+      lrint ((event->y - draw->allocation.height / 2) * perpixel); */
+  FollowGPSr = TRUE;
+  gpsNewStruct gNew;
+  gNew.fix.latitude = LatInverse (clat);
+  gNew.fix.longitude = LonInverse (clon);
+  DoFollowThing (&gNew);
+}
 #else
 // void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
 void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
@@ -921,85 +1037,11 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
     return;
   }
   got += cnt;
-  gpsNewStruct *gps = gpsNew;
   
-  if (ProcessNmea (rx, &got) && /*gps->fix.mode >= MODE_2D &&*/ FollowGPSr) {
-    SetLocation (Longitude (gps->fix.longitude),Latitude (gps->fix.latitude));
-    int plon = Longitude (gps->fix.longitude + gps->fix.speed * 3600.0 /
-      40000000.0 / cos (gps->fix.latitude * (M_PI / 180.0)) *
-      sin (gps->fix.track * (M_PI / 180.0)));
-    int plat = Latitude (gps->fix.latitude + gps->fix.speed * 3600.0 /
-      40000000.0 * cos (gps->fix.track * (M_PI / 180.0)));
-    // Predict the vector that will be traveled in the next 10seconds
-//    printf ("%5.1lf m/s Heading %3.0lf\n", gps->fix.speed, gps->fix.track);
-//    printf ("%lf %lf\n", gps->fix.latitude, gps->fix.longitude);
-#endif
-    
-    flon = clon;
-    flat = clat;
-    Route (FALSE, 0, 0); //plon - clon, plat - clat);
-
-    if (shortest) {
-      routeNodeType *x = shortest->shortest;
-      __int64 dlon = plon - clon, dlat = plat - clat;
-      if (!x && dlon * (tlon - clon) > dlat * (clat - tlat)
-             && dlon * (tlon - plon) < dlat * (plat - tlat)) {
-        // Only stop once both C and P are acute angles in CPT, according to
-        // Pythagoras.
-        VerbalCommand ("stop");
-      }
-      if (x && Sqr (dlon) + Sqr (dlon) > 10000 /* faster than ~3 km/h */ &&
-          dlon * (x->nd->lon - clon) + dlat * (x->nd->lat - clat) < 0) {
-        VerbalCommand ("uturn");
-      }
-      else if (x) {
-        int nextJunction = TRUE;
-        double dist = sqrt (Sqr ((double) (x->nd->lat - flat)) +
-                            Sqr ((double) (x->nd->lon - flon)));
-        for (x = shortest; x->shortest &&
-             dist < 40000 /* roughly 300m */; x = x->shortest) {
-          ndType *n0 = x->nd, *n1 = x->shortest->nd, *nd = n1;
-          int n2lat =
-            x->shortest->shortest ? x->shortest->shortest->nd->lat : tlat;
-          int n2lon =
-            x->shortest->shortest ? x->shortest->shortest->nd->lon : tlon;
-          while (nd > ndBase && nd[-1].lon == nd->lon &&
-            nd[-1].lat == nd->lat) nd--;
-          int segCnt = 0; // Count number of segments at x->shortest
-          do {
-            // TODO : Only count segment traversable by 'Vehicle'
-            // Except for the case where a cyclist crosses a motorway.
-            if (nd->other[0] >= 0) segCnt++;
-            if (nd->other[1] >= 0) segCnt++;
-          } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
-                   nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
-          if (segCnt > 2) {
-            __int64 straight =
-              (n2lat - n1->lat) * (__int64) (n1->lat - n0->lat) +
-              (n2lon - n1->lon) * (__int64) (n1->lon - n0->lon), left =
-              (n2lat - n1->lat) * (__int64) (n1->lon - n0->lon) -
-              (n2lon - n1->lon) * (__int64) (n1->lat - n0->lat);
-            if (straight < left) {
-              if (nextJunction) VerbalCommand ("turnleft");
-              else VerbalCommand ("keepleft");
-              break;
-            }
-            if (straight < -left) {
-              if (nextJunction) VerbalCommand ("turnright");
-              else VerbalCommand ("keepright");
-              break;
-            }
-            nextJunction = FALSE;
-          }
-          dist += sqrt (Sqr ((double) (n2lat - n1->lat)) +
-                        Sqr ((double) (n2lon - n1->lon)));
-        } // While looking ahead to the next turn.
-      } // If not on final segment
-    } // If the routing was successful
-    gtk_widget_queue_clear (draw);
-  } // If following the GPSr and it has a fix.
+  if (ProcessNmea (rx, &got)) DoFollowThing (gpsNew);
 }
-#else
+#endif // !ROUTE_TEST
+#else // _WIN32_WCE
 #define NEWWAY_MAX_COORD 10
 struct newWaysStruct {
   int coord[NEWWAY_MAX_COORD][2], klas, cnt, oneway, bridge;
@@ -2087,6 +2129,12 @@ int UserInterface (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (location), "changed",
     GTK_SIGNAL_FUNC (ChangeLocation), NULL);
   
+  orientNorthwards = gtk_check_button_new_with_label ("OrientNorthwards");
+  gtk_box_pack_start (GTK_BOX (vbox), orientNorthwards, FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (orientNorthwards), "clicked",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
+  gtk_widget_show (orientNorthwards);
+
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
   
   #if !defined (WIN32) && !defined (ROUTE_TEST)
@@ -2980,21 +3028,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         gpsNew.fix.tm[4], gpsNew.fix.tm[5],
         gpsNew.fix.latitude, gpsNew.fix.longitude, gpsNew.fix.ele,
 	gpsNew.fix.hdop); */
-      if (FollowGPSr) {
-        gpsNewStruct *f = (gpsNewStruct*)lParam;
-        SetLocation (Longitude (f->fix.longitude),
-          Latitude (f->fix.latitude));
-        int plon = clon - flon, plat = clat - flat;
-        flat = clat;
-        flon = clon;
-        Route (FALSE, plon, plat);
-        double dist = sqrt (Sqr ((double) plon) + Sqr ((double) plat));
-        if (!OrientNorthwards && dist > 100.0) {
-          cosAzimuth = plat / dist;
-          sinAzimuth = -plon / dist;
-        }
-        InvalidateRect (hWnd, NULL, FALSE);
-      }
+      DoFollowThing ((gpsNewStruct*)lParam);
+      if (FollowGPSr) InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_LBUTTONDOWN:
       //MoveTo (LOWORD(lParam), HIWORD(lParam));
@@ -3159,7 +3194,7 @@ int WINAPI WinMain(
   if(hPrevInstance) return(FALSE);
   hInst = hInstance;
   wchar_t argv0[80];
-  GetModuleFileName (NULL, argv0, sizeof (argv0));
+  GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
   wcscpy (argv0 + wcslen (argv0) - 8, TEXT ("ore.pak")); // _arm.exe to ore.pak
   HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

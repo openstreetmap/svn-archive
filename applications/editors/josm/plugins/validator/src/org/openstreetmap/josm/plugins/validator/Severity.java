@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.validator;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 
 import org.openstreetmap.josm.data.Preferences;
@@ -7,11 +9,11 @@ import org.openstreetmap.josm.data.Preferences;
 /** The error severity */
 public enum Severity {
 	/** Error messages */
-	ERROR("Errors", "error.gif",       Preferences.getPreferencesColor("validation error", Color.RED)),
+	ERROR(tr("Errors"), "error.gif",       Preferences.getPreferencesColor("validation error", Color.RED)),
 	/** Warning messages */ 
-	WARNING("Warnings", "warning.gif", Preferences.getPreferencesColor("validation warning", Color.YELLOW)), 
+	WARNING(tr("Warnings"), "warning.gif", Preferences.getPreferencesColor("validation warning", Color.YELLOW)), 
 	/** Other messages */ 
-	OTHER("Other", "other.gif",        Preferences.getPreferencesColor("validation other", Color.CYAN)); 
+	OTHER(tr("Other"), "other.gif",        Preferences.getPreferencesColor("validation other", Color.CYAN)); 
 	
 	/** Description of the severity code */
 	private final String message;

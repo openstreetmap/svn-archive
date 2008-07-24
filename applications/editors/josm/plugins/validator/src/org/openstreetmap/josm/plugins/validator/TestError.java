@@ -1,8 +1,10 @@
 package org.openstreetmap.josm.plugins.validator;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.*;
@@ -15,6 +17,8 @@ import org.openstreetmap.josm.gui.MapView;
  */
 public class TestError
 {
+	/** is this error on the ignore list */
+	private Boolean ignored = false;
 	/** Severity */
 	private Severity severity;
 	/** The error message */
@@ -27,8 +31,8 @@ public class TestError
 	private Test tester;
 	/** Internal code used by testers to classify errors */
 	private int internalCode = -1;
-    /** If this error is selected */
-    private boolean selected;
+	/** If this error is selected */
+	private boolean selected;
 	
 	public TestError(Test tester, Severity severity, String message,
 			List<? extends OsmPrimitive> primitives, List<?> highlighted) {
@@ -135,20 +139,40 @@ public class TestError
 	/**
 	 * Sets the ignore state for this error
 	 */
-	public void getIgnoreState()
+	public String getIgnoreState()
 	{
-		System.out.println("Ignore " + message);
+		Collection<String> strings = new TreeSet<String>();
+		String ignorestring = message;
 		for (OsmPrimitive o : primitives)
 		{
-			System.out.println(o.id + " - " + o.getClass());
+			String type = "u";
+			if (o instanceof Way) type = "w";
+			else if (o instanceof Relation) type = "r";
+			else if (o instanceof Node) type = "n";
+			strings.add(type + "_" + o.id);
 		}
+		for (String o : strings)
+		{
+			ignorestring += ":" + o;
+		}
+		return ignorestring;
+	}
+
+	public void setIgnored(boolean state)
+	{
+		ignored = state;
+	}
+
+	public Boolean getIgnored()
+	{
+		return ignored;
 	}
 
 	/**
-	 * Gets the tester that raised this error 
+	 * Gets the tester that raised this error
 	 * @return the tester that raised this error
 	 */
-	public Test getTester() 
+	public Test getTester()
 	{
 		return tester;
 	}
@@ -157,12 +181,11 @@ public class TestError
 	 * Gets the internal code
 	 * @return the internal code
 	 */
-	public int getInternalCode() 
+	public int getInternalCode()
 	{
 		return internalCode;
 	}
 
-	
 	/**
 	 * Sets the internal code
 	 * @param internalCode The internal code
@@ -174,45 +197,47 @@ public class TestError
 	
 	/**
 	 * Returns true if the error can be fixed automatically
-	 * 
+	 *
 	 * @return true if the error can be fixed
 	 */
 	public boolean isFixable()
 	{
 		return tester != null && tester.isFixable(this);
 	}
-	
+
 	/**
 	 * Fixes the error with the appropiate command
-	 * 
+	 *
 	 * @return The command to fix the error
 	 */
 	public Command getFix()
 	{
 		if( tester == null )
 			return null;
-		
+
 		return tester.fixError(this);
 	}
 
-    /**
-     * Paints the error on affected primitives
-     * 
-     * @param g The graphics
-     * @param mv The MapView
-     */
-    public void paint(Graphics g, MapView mv)
-    {
-        PaintVisitor v = new PaintVisitor(g, mv);
-        for (Object o : highlighted) {
-			if (o instanceof OsmPrimitive) {
-				v.visit((OsmPrimitive) o);
-			} else if (o instanceof WaySegment) {
-				v.visit((WaySegment) o);
+	/**
+	 * Paints the error on affected primitives
+	 *
+	 * @param g The graphics
+	 * @param mv The MapView
+	 */
+	public void paint(Graphics g, MapView mv)
+	{
+		if(!ignored)
+		{
+			PaintVisitor v = new PaintVisitor(g, mv);
+			for (Object o : highlighted) {
+				if (o instanceof OsmPrimitive)
+					v.visit((OsmPrimitive) o);
+				else if (o instanceof WaySegment)
+					v.visit((WaySegment) o);
 			}
-        }
-    }	
-    
+		}
+	}
+
     /**
      * Visitor that highlights the primitives affected by this error
      * @author frsantos

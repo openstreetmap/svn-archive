@@ -5,6 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -38,6 +44,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
 	/** The display tree */
 	protected ErrorTreePanel tree;
+
+	public Collection<String> ignoredErrors = new TreeSet<String>();
 
 	/** The fix button */
 	private JButton fixButton;
@@ -75,75 +83,66 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		fixButton = Util.createButton(tr("Fix"), "fix", "dialogs/fix", tr("Fix the selected errors."), this);
 		fixButton.setEnabled(false);
 		buttonPanel.add(fixButton);
-		ignoreButton = Util.createButton(tr("Ignore"), "ignore", "dialogs/delete", tr("Ignore the selected errors next time."), this);
-		ignoreButton.setEnabled(false);
-		buttonPanel.add(ignoreButton);
+		if(Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true))
+		{
+			ignoreButton = Util.createButton(tr("Ignore"), "ignore", "dialogs/delete", tr("Ignore the selected errors next time."), this);
+			ignoreButton.setEnabled(false);
+			buttonPanel.add(ignoreButton);
+		}
+		else
+		{
+			ignoreButton = null;
+		}
 		add(buttonPanel, BorderLayout.SOUTH);
+		loadIgnoredErrors();
 	}
 
-    @Override 
-    public void setVisible(boolean v) 
-    {
-        if( tree != null )
-            tree.setVisible(v);
+	private void loadIgnoredErrors() {
+		ignoredErrors.clear();
+		if(Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true))
+		{
+			try {
+				final BufferedReader in = new BufferedReader(new FileReader(Util.getPluginDir() + "ignorederrors"));
+				for (String line = in.readLine(); line != null; line = in.readLine()) {
+					ignoredErrors.add(line);
+				}
+			}
+			catch (final FileNotFoundException e) {}
+			catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void saveIgnoredErrors() {
+		try {
+			final PrintWriter out = new PrintWriter(new FileWriter(Util.getPluginDir() + "ignorederrors"), false);
+			for (String e : ignoredErrors)
+				out.println(e);
+			out.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void setVisible(boolean v)
+	{
+		if( tree != null )
+			tree.setVisible(v);
 		if( action != null && action.button != null )
 			action.button.setSelected(v);
 		super.setVisible(v);
 		Main.map.repaint();
 	}
-    
-    
-	/**
-	 * Fix selected errors
-	 * @param e 
-	 */
-	@SuppressWarnings("unchecked")
-	private void fixErrors(ActionEvent e) 
-	{
-        TreePath[] selectionPaths = tree.getSelectionPaths();
-        if( selectionPaths == null )
-            return;
-        
-        Set<DefaultMutableTreeNode> processedNodes = new HashSet<DefaultMutableTreeNode>();
-        for( TreePath path : selectionPaths )
-        {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-        	if( node == null )
-        		continue;
-            
-    		Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
-    		while( children.hasMoreElements() )
-    		{
-        		DefaultMutableTreeNode childNode = children.nextElement();
-                if( processedNodes.contains(childNode) )
-                    continue;
-                
-                processedNodes.add(childNode);
-        		Object nodeInfo = childNode.getUserObject();
-        		if( nodeInfo instanceof TestError)
-        		{
-        			TestError error = (TestError)nodeInfo;
-        			Command fixCommand = error.getFix();
-        			if( fixCommand != null )
-        			{
-        				Main.main.undoRedo.add(fixCommand);
-        			}
-        		}
-    		}
-        }
-		
-		Main.map.repaint();
-		DataSet.fireSelectionChanged(Main.ds.getSelected());
-		       
-    	plugin.validateAction.doValidate(e, false);
-	}	
+
 
 	/**
-	 * Set selected errors to ignore state
+	 * Fix selected errors
 	 * @param e
 	 */
 	@SuppressWarnings("unchecked")
-	private void ignoreErrors(ActionEvent e)
+	private void fixErrors(ActionEvent e)
 	{
 		TreePath[] selectionPaths = tree.getSelectionPaths();
 		if( selectionPaths == null )
@@ -168,16 +167,65 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 				if( nodeInfo instanceof TestError)
 				{
 					TestError error = (TestError)nodeInfo;
-					String error.getIgnoreState();
-/* ignore */
+					Command fixCommand = error.getFix();
+					if( fixCommand != null )
+					{
+						Main.main.undoRedo.add(fixCommand);
+						error.setIgnored(true);
+					}
 				}
 			}
 		}
 
 		Main.map.repaint();
+		tree.resetErrors();
 		DataSet.fireSelectionChanged(Main.ds.getSelected());
+	}
 
-		plugin.validateAction.doValidate(e, false);
+	/**
+	 * Set selected errors to ignore state
+	 * @param e
+	 */
+	@SuppressWarnings("unchecked")
+	private void ignoreErrors(ActionEvent e)
+	{
+		boolean changed = false;
+		TreePath[] selectionPaths = tree.getSelectionPaths();
+		if( selectionPaths == null )
+			return;
+
+		Set<DefaultMutableTreeNode> processedNodes = new HashSet<DefaultMutableTreeNode>();
+		for( TreePath path : selectionPaths )
+		{
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+			if( node == null )
+				continue;
+
+			Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
+			while( children.hasMoreElements() )
+			{
+				DefaultMutableTreeNode childNode = children.nextElement();
+				if( processedNodes.contains(childNode) )
+					continue;
+
+				processedNodes.add(childNode);
+				Object nodeInfo = childNode.getUserObject();
+				if( nodeInfo instanceof TestError)
+				{
+					TestError error = (TestError)nodeInfo;
+					String state = error.getIgnoreState();
+					ignoredErrors.add(state);
+					changed = true;
+					error.setIgnored(true);
+				}
+			}
+		}
+		if(changed)
+		{
+			tree.resetErrors();
+			saveIgnoredErrors();
+			Main.map.repaint();
+		}
 	}
 
     /**
@@ -276,7 +324,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 			}
 		}
 		selectButton.setEnabled(true);
-		ignoreButton.setEnabled(true);
+		if(ignoreButton != null)
+			ignoreButton.setEnabled(true);
 		
 		return hasFixes;
 	}
@@ -290,7 +339,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		public void mouseClicked(MouseEvent e)
 		{
 			fixButton.setEnabled(false);
-			ignoreButton.setEnabled(false);
+			if(ignoreButton != null)
+				ignoreButton.setEnabled(false);
 			selectButton.setEnabled(false);
 
 			boolean isDblClick = e.getClickCount() > 1;
@@ -315,7 +365,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		public void valueChanged(TreeSelectionEvent e)
 		{
 			fixButton.setEnabled(false);
-			ignoreButton.setEnabled(false);
+			if(ignoreButton != null)
+				ignoreButton.setEnabled(false);
 			selectButton.setEnabled(false);
 
 			if(e.getSource() instanceof JScrollPane)

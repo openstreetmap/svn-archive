@@ -162,6 +162,11 @@ sub CheckBasicConfig
     $cmd=$Config->get("Zip");
     my $ZipV = `\"$cmd\" -v`;
     $EnvironmentInfo{Zip}=$ZipV;
+    if ($EnvironmentInfo{Zip} eq "") 
+    {
+        die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");
+    }
+    print "- zip is present\n";
 
     return %EnvironmentInfo;
 
@@ -240,13 +245,6 @@ sub CheckConfig
     {
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
     }
-
-    # Zip version
-    if ($EnvironmentInfo{Zip} eq "") 
-    {
-        die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");
-    }
-    print "- zip is present\n";
 
     # check a correct pngoptimizer is set
     if ( ! (($Config->get("PngOptimizer") eq "pngcrush") or ($Config->get("PngOptimizer") eq "optipng")))

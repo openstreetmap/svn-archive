@@ -294,9 +294,18 @@ sub CheckConfig
         }
         else
         {
-            $EnvironmentInfo{"pngnq"}=$PngnqV;
-            print "- pngnq version $1\n";
+            my $minVersion = "0.5";
+            if (CompareVersions($1, $minVersion)) {
+                print "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
+                print "! disabling pngnq\n";
+                $Config->set("PngQuantizer", "");
+            } else {
+                $EnvironmentInfo{"pngnq"}=$PngnqV;
+                print "- pngnq version $1\n";
+            }
         }
+    } else {
+        print "! no valid PngQuantizer specified\n";
     }
 
     if($Config->get("RequestUrl")){
@@ -317,6 +326,24 @@ sub CheckConfig
 
     return %EnvironmentInfo;
 
+}
+
+# Compare two version numbers
+# works only for dotted numerical numbers like 'x.yy.zz'
+# returns -1 when first is lower, 0 when equal and 1 when first is higher
+sub CompareVersions {
+    my ($version1, $version2) = @_;
+    my @v1 = split(/\./, $version1);
+    my @v2 = split(/\./, $version2);
+    for (my $i = 0; ($i <= scalar @v1 - 1) or ($i <= scalar @v2 - 1); $i++) {
+        if ($v1[$i] < $v2[$i]) {
+            return -1;
+        }
+        if ($v1[$i] > $v2[$i]) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 1;

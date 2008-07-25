@@ -6,12 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.imageio.ImageIO;
 
 /**
  * Holds one map tile. Additionally the code for loading the tile image and
@@ -29,8 +23,6 @@ public class Tile {
 	protected boolean loaded = false;
 	public static final int WIDTH = 256;
 	public static final int HEIGHT = 256;
-	public static final int WIDTH_HALF = 128;
-	public static final int HEIGHT_HALF = 128;
 
 	/**
 	 * Creates a tile with empty image.
@@ -62,11 +54,11 @@ public class Tile {
 		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) tmpImage.getGraphics();
 		// g.drawImage(image, 0, 0, null);
-		for (int zoomDiff = 1; zoomDiff < 3; zoomDiff++) {
+		for (int zoomDiff = 1; zoomDiff < 5; zoomDiff++) {
 			// first we check if there are already the 2^x tiles
 			// of a higher detail level
 			int zoom_high = zoom + zoomDiff;
-			if (zoom_high <= JMapViewer.MAX_ZOOM) {
+			if (zoomDiff < 3 && zoom_high <= JMapViewer.MAX_ZOOM) {
 				int factor = 1 << zoomDiff;
 				int xtile_high = xtile << zoomDiff;
 				int ytile_high = ytile << zoomDiff;
@@ -134,6 +126,10 @@ public class Tile {
 		return image;
 	}
 
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
+
 	/**
 	 * @return key that identifies a tile
 	 */
@@ -145,20 +141,8 @@ public class Tile {
 		return loaded;
 	}
 
-	public synchronized void loadTileImage() throws IOException {
-		if (loaded)
-			return;
-		URL url;
-		URLConnection urlConn;
-		DataInputStream input;
-		url = new URL("http://tile.openstreetmap.org/" + zoom + "/" + xtile + "/" + ytile + ".png");
-		// System.out.println(url);
-		urlConn = url.openConnection();
-		// urlConn.setUseCaches(false);
-		input = new DataInputStream(urlConn.getInputStream());
-		image = ImageIO.read(input);
-		input.close();
-		loaded = true;
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
 	}
 
 	/**
@@ -175,6 +159,11 @@ public class Tile {
 		if (image == null)
 			return;
 		g.drawImage(image, x, y, null);
+	}
+
+	@Override
+	public String toString() {
+		return "Tile " + getTileKey(xtile, ytile, zoom);
 	}
 
 	@Override

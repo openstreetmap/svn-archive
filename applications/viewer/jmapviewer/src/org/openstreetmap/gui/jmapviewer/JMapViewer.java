@@ -12,6 +12,9 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +39,12 @@ import org.openstreetmap.gui.jmapviewer.JobDispatcher.JobThread;
 public class JMapViewer extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Vectors for clock-wise tile painting
+	 */
+	protected static final Point[] move =
+			{ new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
 
 	public static final int MAX_ZOOM = 18;
 	public static final int MIN_ZOOM = 0;
@@ -187,10 +196,6 @@ public class JMapViewer extends JPanel {
 		if (zoom > MAX_ZOOM || zoom < MIN_ZOOM)
 			return;
 
-		// Substract the calculated values so that we get the x/y index of the
-		// upper left tile again including fraction where in the tile is our
-		// map origin point (0,0)
-
 		// Get the plain tile number
 		Point p = new Point();
 		p.x = x - mapPoint.x + getWidth() / 2;
@@ -278,41 +283,69 @@ public class JMapViewer extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		// Optimization for loading the centered tile in a lower zoom first
-		if (zoom > MIN_ZOOM) {
-			int center_tx = center.x / Tile.WIDTH;
-			int center_ty = center.y / Tile.HEIGHT;
-			Tile centerTile = tileCache.getTile(center_tx, center_ty, zoom);
-			if (centerTile == null || !centerTile.isLoaded()) {
-				// tile in the center of the screen is not loaded, for faster
-				// displaying anything in the center we first load a tile of a
-				// lower zoom level
-				getTile(center_tx / 2, center_ty / 2, zoom - 1);
-			}
-		}
-		// Regular tile painting
-		int left = center.x - getWidth() / 2;
-		int top = center.y - getHeight() / 2;
+		int iMove = 0;
 
-		int tilex = left / Tile.WIDTH;
-		int tiley = top / Tile.HEIGHT;
-		int off_x = left % Tile.WIDTH;
-		int off_y = top % Tile.HEIGHT;
-		for (int x = -off_x; x < getWidth(); x += Tile.WIDTH) {
-			int tiley_tmp = tiley;
-			for (int y = -off_y; y < getHeight(); y += Tile.HEIGHT) {
-				Tile tile = getTile(tilex, tiley_tmp, zoom);
-				if (tile != null) {
-					tile.paint(g, x, y);
-					if (tileGridVisible)
-						g.drawRect(x, y, Tile.WIDTH, Tile.HEIGHT);
+		int tilex = center.x / Tile.WIDTH;
+		int tiley = center.y / Tile.HEIGHT;
+		int off_x = (center.x % Tile.WIDTH);
+		int off_y = (center.y % Tile.HEIGHT);
+
+		int posx = getWidth() / 2 - off_x;
+		int posy = getHeight() / 2 - off_y;
+
+		int diff_left = off_x;
+		int diff_right = Tile.WIDTH - off_x;
+		int diff_top = off_y;
+		int diff_bottom = Tile.HEIGHT - off_y;
+
+		boolean start_left = diff_left < diff_right;
+		boolean start_top = diff_top < diff_bottom;
+
+		if (start_top) {
+			if (start_left)
+				iMove = 2;
+			else
+				iMove = 3;
+		} else {
+			if (start_left)
+				iMove = 1;
+			else
+				iMove = 0;
+		} // calculate the visibility borders
+		int x_min = -Tile.WIDTH;
+		int y_min = -Tile.HEIGHT;
+		int x_max = getWidth();
+		int y_max = getHeight();
+
+		boolean painted = true;
+		int x = 0;
+		while (painted) {
+			painted = false;
+			for (int y = 0; y < 4; y++) {
+				if (y % 2 == 0)
+					x++;
+				for (int z = 0; z < x; z++) {
+					if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) { // tile
+						// is
+						// visible
+						Tile tile = getTile(tilex, tiley, zoom);
+						if (tile != null) {
+							painted = true;
+							tile.paint(g, posx, posy);
+							if (tileGridVisible)
+								g.drawRect(posx, posy, Tile.WIDTH, Tile.HEIGHT);
+						}
+					}
+					Point p = move[iMove];
+					posx += p.x * Tile.WIDTH;
+					posy += p.y * Tile.HEIGHT;
+					tilex += p.x;
+					tiley += p.y;
 				}
-				tiley_tmp++;
+				iMove = (iMove + 1) % move.length;
 			}
-			tilex++;
 		}
-		g.fillOval(getWidth()/2 - 5, getHeight()/2 - 5, 10, 10);
-		g.drawString("Test", 50, 10);
+		g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 		if (!mapMarkersVisible || mapMarkerList == null)
 			return;
 		for (MapMarker marker : mapMarkerList) {
@@ -393,19 +426,43 @@ public class JMapViewer extends JPanel {
 			tile.loadPlaceholderFromCache(tileCache);
 		}
 		if (!tile.isLoaded()) {
-			jobDispatcher.addJob(new Runnable() {
+			jobDispatcher.addJob(new Job() {
+
+				InputStream input = null;
 
 				public void run() {
 					Tile tile = tileCache.getTile(tilex, tiley, zoom);
-					if (tile.isLoaded())
+					if (tile == null || tile.isLoaded())
 						return;
 					try {
-						Thread.sleep(500);
-						tile.loadTileImage();
+						//Thread.sleep(500);
+						URL url;
+						url = new URL("http://tile.openstreetmap.org/" + tile.getKey() + ".png");
+						HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+						urlConn.setReadTimeout(30000); // 30 seconds read
+														// timeout
+						input = urlConn.getInputStream();
+						tile.setImage(ImageIO.read(input));
+						tile.setLoaded(true);
 						repaint();
+						input.close();
+						input = null;
 					} catch (Exception e) {
-						System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley
-								+ " " + e.getMessage());
+						if (input == null /* || !input.isStopped() */)
+							System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley
+									+ " " + e.getMessage());
+					}
+				}
+
+				/**
+				 * Terminating all transfers that are currently in progress
+				 */
+				public void stop() {
+
+					try {
+						// if (input != null)
+						// input.stop();
+					} catch (Exception e) {
 					}
 				}
 			});

@@ -15,24 +15,26 @@ public class JobDispatcher {
 
 	protected BlockingQueue<Runnable> jobQueue = new LinkedBlockingQueue<Runnable>();
 
-	Thread[] threads;
+	JobThread[] threads;
 
 	public JobDispatcher(int threadCound) {
-		threads = new Thread[threadCound];
+		threads = new JobThread[threadCound];
 		for (int i = 0; i < threadCound; i++) {
 			threads[i] = new JobThread(i + 1);
 		}
 	}
 
 	/**
-	 * Removes all jobs from the queue that are currently not being processed.
+	 * Removes all jobs from the queue that are currently not being processed
+	 * and stops those currently being processed.
 	 */
 	public void cancelOutstandingJobs() {
 		jobQueue.clear();
 		for (int i = 0; i < threads.length; i++) {
 			try {
-				threads[i].interrupt();
-				threads[i] = new JobThread(i + 1);
+				Runnable job = threads[i].getJob();
+				if ((job != null) && (job instanceof Job))
+					((Job) job).stop();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -48,15 +50,17 @@ public class JobDispatcher {
 
 	protected class JobThread extends Thread {
 
+		Runnable job;
+
 		public JobThread(int threadId) {
 			super("OSMJobThread " + threadId);
+			job = null;
 			start();
 		}
 
 		@Override
 		public void run() {
 			while (!isInterrupted()) {
-				Runnable job;
 				try {
 					job = jobQueue.take();
 				} catch (InterruptedException e1) {
@@ -64,11 +68,21 @@ public class JobDispatcher {
 				}
 				try {
 					job.run();
+					job = null;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
+
+		/**
+		 * @return the job being executed at the moment or <code>null</code> if
+		 *         the thread is idle.
+		 */
+		public Runnable getJob() {
+			return job;
+		}
+
 	}
 
 }

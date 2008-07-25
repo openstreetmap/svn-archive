@@ -33,4 +33,9 @@ public interface TileCache {
 	 * @param tile
 	 */
 	public void addTile(Tile tile);
+
+	/**
+	 * @return the number of tiles hold by the cache
+	 */
+	public int getTileCount();
 }

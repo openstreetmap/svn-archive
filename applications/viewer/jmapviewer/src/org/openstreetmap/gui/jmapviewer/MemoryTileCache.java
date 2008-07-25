@@ -2,45 +2,42 @@ package org.openstreetmap.gui.jmapviewer;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
-import java.util.Comparator;
 import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 /**
+ * {@link TileCache} implementation that stores all {@link Tile} objects in
+ * memory up to a certain limit ({@link #getCacheSize()}). If the limit is
+ * exceeded the least recently used {@link Tile} objects will be deleted.
  * 
  * @author Jan Peter Stotz
  */
 public class MemoryTileCache implements TileCache {
 
-	private static final Logger log = Logger.getLogger(MemoryTileCache.class
-			.getName());
-
-	protected int cacheSizeMax = 200;
+	private static final Logger log = Logger.getLogger(MemoryTileCache.class.getName());
 
 	/**
-	 * Number of tiles after a cache cleanup via {@link #removeOldTiles()};
+	 * Default cache size
 	 */
-	protected int cacheSizeDefault = 100;
+	protected int cacheSize = 200;
 
 	protected Hashtable<String, CacheEntry> hashtable;
 
 	/**
-	 * A logical clock that "ticks" every time a tile is retrieved from the
-	 * cache
+	 * List of all tiles in their last recently used order
 	 */
-	protected int currentAccessTime = 0;
+	protected CacheLinkedListElement lruTiles;
 
 	public MemoryTileCache() {
-		hashtable = new Hashtable<String, CacheEntry>(200);
+		hashtable = new Hashtable<String, CacheEntry>(cacheSize);
+		lruTiles = new CacheLinkedListElement();
 	}
 
-	public synchronized void addTile(Tile tile) {
-		hashtable.put(tile.getKey(), new CacheEntry(tile, currentAccessTime));
-		if (hashtable.size() > cacheSizeMax)
+	public void addTile(Tile tile) {
+		CacheEntry entry = new CacheEntry(tile);
+		hashtable.put(tile.getKey(), entry);
+		lruTiles.addFirst(entry);
+		if (hashtable.size() > cacheSize)
 			removeOldTiles();
 	}
 
@@ -48,84 +45,139 @@ public class MemoryTileCache implements TileCache {
 		CacheEntry entry = hashtable.get(Tile.getTileKey(x, y, z));
 		if (entry == null)
 			return null;
-		currentAccessTime++;
-		entry.lastAccess = currentAccessTime;
-		// We are right before an integer overflow!!
-		if (currentAccessTime == Integer.MAX_VALUE)
-			removeOldTiles();
+		// We don't care about placeholder tiles and hourglass image tiles, the
+		// important tiles are the loaded ones
+		if (entry.tile.isLoaded())
+			lruTiles.moveElementToFirstPos(entry);
 		return entry.tile;
 	}
 
 	/**
-	 * Removes the least recently used tiles and rewrites the
-	 * {@link CacheEntry#lastAccess} of all remaining entries (-n to 0).
-	 * 
-	 * WARNING: While this method is running modifying the {@link #hashtable} is
-	 * forbidden! Therefore this method and {@link #addTile(Tile)} are declared
-	 * as synchronized.
+	 * Removes the least recently used tiles
 	 */
-	protected synchronized void removeOldTiles() {
-		try {
-			Set<Map.Entry<String, CacheEntry>> entries = hashtable.entrySet();
-			TreeSet<Map.Entry<String, CacheEntry>> sortedEntries;
-			// Sort the entries according to their access time
-			sortedEntries = new TreeSet<Map.Entry<String, CacheEntry>>(
-					new MEComparator());
-			sortedEntries.addAll(entries);
-			// System.out.println("Tiles in Cache: " + hashtable.size() +
-			// " lru=" + currentAccessTime);
-			int tilecount = 0;
-			for (Map.Entry<String, CacheEntry> entry : sortedEntries) {
-				tilecount++;
-				if (tilecount < cacheSizeDefault) {
-					entry.getValue().lastAccess = -tilecount;
-				} else {
-					// System.out.println("removing entry :"
-					// + entry.getValue().lastAccess);
-					entries.remove(entry);
+	protected void removeOldTiles() {
+		synchronized (lruTiles) {
+			try {
+				while (lruTiles.getElementCount() > cacheSize) {
+					CacheEntry entry = lruTiles.getLastElement();
+					hashtable.remove(entry.tile.getKey());
+					lruTiles.removeEntry(entry);
 				}
+			} catch (Exception e) {
+				log.warning(e.getMessage());
 			}
-			// We can now safely reset the the logical clock
-			currentAccessTime = 1;
-			// System.out.println("Tiles in Cache: " + hashtable.size() +
-			// " lru=" + currentAccessTime);
-		} catch (Exception e) {
-			log.severe(e.toString());
 		}
 	}
 
-	public int getCacheSizeMax() {
-		return cacheSizeMax;
+	public int getTileCount() {
+		return hashtable.size();
 	}
 
-	public void setCacheSizeMax(int cacheSizeMax) {
-		this.cacheSizeMax = cacheSizeMax;
-		this.cacheSizeDefault = cacheSizeMax / 2;
+	public int getCacheSize() {
+		return cacheSize;
 	}
 
-	protected static class CacheEntry implements Comparable<CacheEntry> {
-		int lastAccess;
+	/**
+	 * Changes the maximum number of {@link Tile} objects that this cache holds.
+	 * 
+	 * @param cacheSize
+	 *            new maximum number of tiles
+	 */
+	public void setCacheSize(int cacheSize) {
+		this.cacheSize = cacheSize;
+		if (hashtable.size() > cacheSize)
+			removeOldTiles();
+	}
+
+	/**
+	 * Linked list element holding the {@link Tile} and links to the
+	 * {@link #next} and {@link #prev} item in the list.
+	 */
+	protected static class CacheEntry {
 		Tile tile;
 
-		protected CacheEntry(Tile tile, int currentAccessTime) {
+		CacheEntry next;
+		CacheEntry prev;
+
+		protected CacheEntry(Tile tile) {
 			this.tile = tile;
-			lastAccess = currentAccessTime;
 		}
 
-		public int compareTo(CacheEntry o) {
-			if (lastAccess > o.lastAccess)
-				return -1;
-			else
-				return 1;
-		}
 	}
 
-	protected static class MEComparator implements
-			Comparator<Map.Entry<String, CacheEntry>> {
+	/**
+	 * Special implementation of a double linked list for {@link CacheEntry}
+	 * elements. It supports element removal in constant time - in difference to
+	 * the Java implementation which needs O(n).
+	 * 
+	 * @author Jan Peter Stotz
+	 */
+	protected static class CacheLinkedListElement {
+		protected CacheEntry firstElement = null;
+		protected CacheEntry lastElement;
+		protected int elementCount;
 
-		public int compare(Entry<String, CacheEntry> o1,
-				Entry<String, CacheEntry> o2) {
-			return o1.getValue().compareTo(o2.getValue());
+		public CacheLinkedListElement() {
+			elementCount = 0;
+			firstElement = null;
+			lastElement = null;
+		}
+
+		/**
+		 * Add the element to the head of the list.
+		 * 
+		 * @param new element to be added
+		 */
+		public synchronized void addFirst(CacheEntry element) {
+			if (elementCount == 0) {
+				firstElement = element;
+				lastElement = element;
+				element.prev = null;
+				element.next = null;
+			} else {
+				element.next = firstElement;
+				firstElement.prev = element;
+				element.prev = null;
+				firstElement = element;
+			}
+			elementCount++;
+		}
+
+		/**
+		 * Removes the specified elemntent form the list.
+		 * 
+		 * @param element
+		 *            to be removed
+		 */
+		public synchronized void removeEntry(CacheEntry element) {
+			if (element.next != null) {
+				element.next.prev = element.prev;
+			}
+			if (element.prev != null) {
+				element.prev.next = element.next;
+			}
+			if (element == firstElement)
+				firstElement = element.next;
+			if (element == lastElement)
+				lastElement = element.prev;
+			element.next = null;
+			element.prev = null;
+			elementCount--;
+		}
+
+		public synchronized void moveElementToFirstPos(CacheEntry entry) {
+			if (firstElement == entry)
+				return;
+			removeEntry(entry);
+			addFirst(entry);
+		}
+
+		public int getElementCount() {
+			return elementCount;
+		}
+
+		public CacheEntry getLastElement() {
+			return lastElement;
 		}
 	}
 }

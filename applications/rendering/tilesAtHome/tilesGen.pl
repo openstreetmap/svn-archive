@@ -1867,32 +1867,37 @@ sub splitImageX
             {
                 rename($Filename, $Filename2);
             }
-            elsif ($Config->get("PngQuantizer") eq "pngnq" and $EnvironmentInfo{"pngnq"})
-            {
-                $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
-                  $Config->get("Niceness"),
-                  $Config->get("pngnq"),
-                  $Filename2_suffix,
-                  $Filename,
-                  $Redirect);
-
-                statusMessage("ColorQuantizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
-                if(runCommand($Cmd,$PID))
+            elsif ($Config->get("PngQuantizer") eq "pngnq") {
+                if ($EnvironmentInfo{"pngnq"})
                 {
-                    unlink($Filename);
+                    $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
+                                   $Config->get("Niceness"),
+                                   $Config->get("pngnq"),
+                                   $Filename2_suffix,
+                                   $Filename,
+                                   $Redirect);
+
+                    statusMessage("ColorQuantizing $Basename", $currentSubTask, $progressJobs, $progressPercent,0);
+                    if(runCommand($Cmd,$PID))
+                    {
+                        unlink($Filename);
+                    }
+                    else
+                    {
+                        statusMessage("ColorQuantizing $Basename with ".$Config->get("PngQuantizer")." failed",
+                                      $currentSubTask, $progressJobs, $progressPercent,1);
+                        rename($Filename, $Filename2);
+                    }
                 }
                 else
                 {
-                    statusMessage("ColorQuantizing $Basename with ".$Config->get("PngQuantizer")." failed", $currentSubTask, $progressJobs, $progressPercent,1);
+                    statusMessage("ColorQuantizing $Basename with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",
+                                  $currentSubTask, $progressJobs, $progressPercent,1);
                     rename($Filename, $Filename2);
                 }
-            }
-            else
-            {
-                statusMessage("ColorQuantizing $Basename with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?", $currentSubTask, $progressJobs, $progressPercent,1);
+            } else {
                 rename($Filename, $Filename2);
             }
-
 
             if ($Config->get("PngOptimizer") eq "pngcrush")
             {

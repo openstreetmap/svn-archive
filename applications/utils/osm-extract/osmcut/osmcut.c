@@ -70,6 +70,11 @@
  * 8. The program does not use proper XML parsing. I have a version with 
  *    libxml2 support but that is painfully slow.
  *
+ * 9. Nodes are first copied to the output tile they are on. In a second 
+ *    pass, nodes will also be copied to up to three other tiles if they 
+ *    happened to be on a way that touched these tiles. These "additional 
+ *    nodes" will appear BEHIND the ways in the tile output files.
+ *
  * Written by Frederik Ramm <frederik@remote.org>, public domain.
  */
 #include <stdio.h>
@@ -86,10 +91,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <fcntl.h>
-
-#ifndef USE_ARRAY
 #include <glib.h>
-#endif
 
 #ifdef USE_ARRAY
 #define NODE_STORAGE_INCREMENT (1<<20)
@@ -102,6 +104,12 @@ int way_storage_size;
 GHashTable *node_storage;
 GHashTable *way_storage;
 #endif
+
+// node_additional_tiles holds information for nodes used by ways
+// that cross a tile border. the key is the node id, and the value
+// is 3 times sizeof(unsigned short int), containing up to three
+// tile indexes to which the node still has to be written.
+GHashTable *node_additional_tiles;
 
 double tile_size=2.5;
 int max_tile;
@@ -131,13 +139,14 @@ void warn(const char *fmt, ...)
     free(cpy);
 }
 
-void process_node(const char *start, const char **fileptr)
+void process_node(const char *start, const char **fileptr, gboolean pass2)
 {
     const char *end = strchr(start, '>');
     double lat;
     double lon;
     int id;
     int properties = 0;
+    int i;
 
     // step 1 - parse opening <node> tag
 
@@ -196,58 +205,89 @@ void process_node(const char *start, const char **fileptr)
         end += 6;
     }
 
-    // step 3 - find tile for this node and store
-
-    unsigned short int tile_id = (int) ((lat + 90) / tile_size) + (int) ((lon + 180) / tile_size) * (int)(180 / tile_size) + 1;
-    if (tile_id >= max_tile)
-    {
-        warn("node %d yields tile_id of %d when max expected was %d", 
-            id, tile_id, max_tile-1);
-#ifdef USE_ARRAY
-        *(node_storage + id) = 0;
-#endif
-        return;
-    }
-#ifdef USE_ARRAY
-    // grow array if required, store node in array.
-    if (id >= node_storage_size)
-    {
-        int new_size = (id / NODE_STORAGE_INCREMENT + 1) * NODE_STORAGE_INCREMENT;
-        unsigned short int *new_ptr = (unsigned short int *) realloc(node_storage, new_size * sizeof(unsigned short int));
-        if (new_ptr == 0) die ("cannot allocate %d bytes of memory", new_size * sizeof(unsigned short int));
-        node_storage = new_ptr;
-        node_storage_size = new_size;
-    }
-    *(node_storage + id) = tile_id;
-#else
-    // stuff copies of key/value into hash table.
-    int *idcopy = (int *) malloc(sizeof(int));
-    *idcopy = id;
-    unsigned short int *tid = (unsigned short int *) malloc(sizeof(unsigned short int));
-    *tid = tile_id;
-    g_hash_table_insert(node_storage, idcopy, tid);
-#endif
-
-    // step 4 - copy node to proper out file (create out file if required)
-    
-    if (tiles[tile_id] == 0)
-    {
-        char *opentag = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            "<osm generator=\"osmcut.c\" version=\"0.5\">\n";
-        char outfile[255];
-        int fd;
-        snprintf(outfile, sizeof(outfile), "%s/%d", outdir, tile_id + 63240000);
-        fd = open(outfile, O_CREAT|O_TRUNC|O_WRONLY, 0644);
-        if (fd < 0)
-        {
-            die("cannot open %s: %s", outfile, strerror(errno));
-        }
-        tiles[tile_id] = fd;
-        write(fd, opentag, strlen(opentag));
-    }
-
     do { start--; } while(isspace(*start));
-    write(tiles[tile_id], start+1, end-start);
+
+    // step 3 - find tile(s) for this node and store.
+    
+    // in pass 1, we only ever find one tile, computed from lat/lon.
+    // in pass 2, we find up to 3 extra tiles.
+    unsigned short int dummy[3] = { 0, 0, 0 }; // only first slot used in pass 1.
+    unsigned short int *tile_ids = dummy;
+
+    if (!pass2)
+    {
+        *tile_ids = (int) ((lat + 90) / tile_size) + 
+            (int) ((lon + 180) / tile_size) * (int)(180 / tile_size) + 1;
+        if (*tile_ids >= max_tile)
+        {
+            warn("node %d yields tile_id of %d when max expected was %d", 
+                id, *tile_ids, max_tile-1);
+#ifdef USE_ARRAY
+            *(node_storage + id) = 0;
+#endif
+            return;
+        }
+        if (*tile_ids == 0)
+        {
+            warn("node %d yields tile_id 0 which cannot be processed by this implementation", 
+                id);
+#ifdef USE_ARRAY
+            *(node_storage + id) = 0;
+#endif
+            return;
+        }
+
+#ifdef USE_ARRAY
+        // grow array if required, store node in array.
+        if (id >= node_storage_size)
+        {
+            int new_size = (id / NODE_STORAGE_INCREMENT + 1) * NODE_STORAGE_INCREMENT;
+            unsigned short int *new_ptr = (unsigned short int *) realloc(node_storage, new_size * sizeof(unsigned short int));
+            if (new_ptr == 0) die ("cannot allocate %d bytes of memory", new_size * sizeof(unsigned short int));
+            node_storage = new_ptr;
+            node_storage_size = new_size;
+        }
+        *(node_storage + id) = *tile_ids;
+#else
+        // stuff copies of key/value into hash table.
+        int *idcopy = (int *) malloc(sizeof(int));
+        *idcopy = id;
+        unsigned short int *tid = (unsigned short int *) malloc(sizeof(unsigned short int));
+        *tid = *tile_ids;
+        g_hash_table_insert(node_storage, idcopy, tid);
+#endif
+    }
+    else
+    // step 3 (for pass 2) - find extra tiles for this node
+    {
+        tile_ids = g_hash_table_lookup(node_additional_tiles, &id);
+    }
+
+    // step 4 - copy node to proper out file(s) (create out file if required)
+    
+    if (tile_ids) 
+    for (i=0; i<3; i++)
+    {
+        unsigned short int tile_id = *(tile_ids+i);
+        if (tile_id == 0) break;
+        if (tiles[tile_id] == 0)
+        {
+            char *opentag = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                "<osm generator=\"osmcut.c\" version=\"0.5\">\n";
+            char outfile[255];
+            int fd;
+            snprintf(outfile, sizeof(outfile), "%s/%d", outdir, tile_id + 63240000);
+            fd = open(outfile, O_CREAT|O_TRUNC|O_WRONLY, 0644);
+            if (fd < 0)
+            {
+                die("cannot open %s: %s", outfile, strerror(errno));
+            }
+            tiles[tile_id] = fd;
+            write(fd, opentag, strlen(opentag));
+        }
+
+        write(tiles[tile_id], start+1, end-start);
+    }
     *fileptr = end+1;
 }
 
@@ -281,6 +321,7 @@ int get_way_id(const char *start, const char *end)
 
 void process_way(const char *start, const char **fileptr)
 {
+    const char *begin = *fileptr;
     const char *end = strchr(start, '>');
     int properties = 0;
     int tiles_used = 0;
@@ -342,7 +383,7 @@ void process_way(const char *start, const char **fileptr)
             {
                 if (tiles_used > 3) 
                 {
-                    warn("way %d uses more than 16 tiles, not fully processed", get_way_id(start, end));
+                    warn("way %d uses more than 4 tiles, not fully processed", get_way_id(start, end));
                     continue;
                 }
                 tile[tiles_used++] = *tmp_tile;
@@ -353,8 +394,6 @@ void process_way(const char *start, const char **fileptr)
             *fileptr = nd+1;
         }
     }
-
-    end += 5;
 
 #if 0
     // step 3 - store tiles used for later relation processing
@@ -386,8 +425,74 @@ void process_way(const char *start, const char **fileptr)
     do { start--; } while(isspace(*start));
     for (i=0; i<tiles_used; i++)
     {
-        write(tiles[tile[i]], start+1, end-start);
+        write(tiles[tile[i]], start+1, end-start+5);
     }
+
+    // step 5 - if this way covered more than one tile, re-read the nodes
+    // and remember their ID so we can later copy them 
+    if (tiles_used > 1)
+    {
+        while (1) 
+        {
+            char *nd = strchr(begin, '<');
+            if (!nd) die ("XML parse error, cannot find <nd> inside way #%d", get_way_id(start, end));
+            if (nd == end) break;
+            if (!strncmp(nd+1, "nd ref=", 7))
+            {
+                begin = nd + 8;
+                char delim = *begin;
+                char *last = strchr(begin + 1, delim);
+                if (!last) die("XML parse error");
+                int id = strtol(begin + 1, NULL, 10);
+                begin = last;
+#ifdef USE_ARRAY
+                unsigned short int *tmp_tile = node_storage + id;
+#else
+                unsigned short int *tmp_tile = (unsigned short int *) g_hash_table_lookup(node_storage, &id);
+#endif
+                for (j=0; j<tiles_used; j++)
+                {
+                    if (tile[j] != *tmp_tile)
+                    {
+                        // might have to add this to the list 
+                        unsigned short int *at = (unsigned short int *) g_hash_table_lookup(node_additional_tiles, &id);
+                        if (!at)
+                        {
+                            // this node does not yet have extra tiles added.
+                            unsigned short int *threevalues = (unsigned short int *) malloc(3 * sizeof (unsigned short int));
+                            memset(threevalues, 0, 3 * sizeof (unsigned short int));
+                            int *idcopy = (int *) malloc(sizeof(int));
+                            *idcopy = id;
+                            *threevalues = tile[j];
+                            g_hash_table_insert(node_additional_tiles, idcopy, threevalues);
+                        }
+                        else
+                        {
+                            for (i = 0; i<3; i++)
+                            {
+                                if (*(at+i) == tile[j]) 
+                                {
+                                    // extra tile is already stored for this node.
+                                    break;
+                                }
+                                else if (*(at+i) == 0)
+                                {
+                                    // store extra tile in first empty slot.
+                                    *(at+i) = tile[j];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                begin = nd+1;
+            }
+        }
+    }
+    end += 5;
     *fileptr = end+1;
 }
 
@@ -411,7 +516,7 @@ int streamFile(char *filename)
         if (!tag_open) break;
         if (!strncmp(tag_open + 1, "node ", 5))
         {
-            process_node(tag_open, &current_file_ptr);
+            process_node(tag_open, &current_file_ptr, FALSE);
         }
         else if (!strncmp(tag_open + 1, "way ", 4))
         {
@@ -427,15 +532,35 @@ int streamFile(char *filename)
             current_file_ptr = tag_open + 1;
         }
     }
+
+    // second run, this time adding some nodes to extra tiles.
+    current_file_ptr = filedata;
+
+    while(1) 
+    {
+        const char *tag_open = strchr(current_file_ptr, '<');
+        if (!tag_open) break;
+        if (!strncmp(tag_open + 1, "node ", 5))
+        {
+            process_node(tag_open, &current_file_ptr, TRUE);
+        }
+        else if (!strncmp(tag_open + 1, "way ", 4))
+        {
+            break;
+        }
+        else
+        {
+            current_file_ptr = tag_open + 1;
+        }
+    }
+
     munmap(filedata, buf.st_size);
 }
 
-#ifndef USE_ARRAY
 gboolean sint_equal(gconstpointer a, gconstpointer b)
 {
     return !memcmp(a, b, sizeof(unsigned short int));
 }
-#endif
 
 void usage()
 {
@@ -537,6 +662,7 @@ int main(int argc, char *argv[])
     node_storage = g_hash_table_new(g_int_hash, sint_equal);
     way_storage = g_hash_table_new(g_int_hash, sint_equal);
 #endif
+    node_additional_tiles = g_hash_table_new(g_int_hash, sint_equal);
     tiles = (int *) malloc(max_tile * sizeof(int));
     for (i=0; i< max_tile; i++) tiles[i] = 0;
 

@@ -345,7 +345,7 @@ public class JMapViewer extends JPanel {
 				iMove = (iMove + 1) % move.length;
 			}
 		}
-		g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
+		//g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 		if (!mapMarkersVisible || mapMarkerList == null)
 			return;
 		for (MapMarker marker : mapMarkerList) {

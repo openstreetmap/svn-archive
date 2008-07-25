@@ -78,7 +78,7 @@ public class Demo extends JFrame {
 		map.addMapMarker(new MapMarkerDot(48.71, -1));
 		map.addMapMarker(new MapMarkerDot(49.807, 8.644));
 
-		map.setDisplayPositionByLatLon(49.807, 8.6, 11);
+		//map.setDisplayPositionByLatLon(49.807, 8.6, 11);
 		//map.setTileGridVisible(true);
 	}
 

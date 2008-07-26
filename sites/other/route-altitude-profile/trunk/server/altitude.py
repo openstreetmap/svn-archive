@@ -106,14 +106,14 @@ def altitude_profile_gchart(db, route):
     chart.add_data(y_coordinates)
     
     chart.set_axis_labels(Axis.BOTTOM, ['0', str(max(x_coordinates))[0:4] + " km"])
-    chart.set_axis_labels(Axis.LEFT, [str(min(y_coordinates)) + " m", str(max(y_coordinates)) + " m"])
+    chart.set_axis_labels(Axis.LEFT, [str(int(min(y_coordinates))) + " m", str(int(max(y_coordinates))) + " m"])
 
     # Return gchart url:
     return chart.get_url()
     
 def altitude_profile(db, route):
   answer = []
-  interpolateRoute(route, 100)
+  interpolateRoute(route, 200)
   for point in route:
     point['alt'] = getAltitude(db, point['lat'], point['lon'])
     answer.append(point)
@@ -122,12 +122,23 @@ def altitude_profile(db, route):
 ##### Database functions #####
 
 def getAltitude(db, lat,lon):
-  pos = posFromLatLon(lat,lon)
-  return db.fetchAltitude(pos)
+  res = posFromLatLon(lat,lon)
+  tl = db.fetchAltitude(res[0])
+  tr = db.fetchAltitude(res[1])
+  bl = db.fetchAltitude(res[2])
+  br = db.fetchAltitude(res[3])
+  a = res[4]
+  b = res[5]  
+
+  return bilinearInterpolation(tl, tr, bl, br, a, b)
 
 ##### Helper functions ######
 
 def posFromLatLon(lat,lon):
+  # Returns the four positions closest to (lat, lon) and the distance
+  # from them along the x and y axis. The output can be used to apply
+  # bilinear interpolation.
+
   # The file name of an srtm tile corresponds to the coordinate
   # of its bottom left element. However, the files start at top left. 
 
@@ -148,13 +159,39 @@ def posFromLatLon(lat,lon):
   # We then round lat_pos and lon_pos in case the coordinate was somewhere
   # between the grid points.
 
-  lat_pos = round(lat_pos / 1200) * 1200
-  lon_pos = round(lon_pos)
+  lat_pos_top = floor(lat_pos / 1200) * 1200
+  lat_pos_bottom = ceil(lat_pos / 1200) * 1200
+  lon_pos_left = floor(lon_pos)
+  lon_pos_right = ceil(lon_pos)
 
-  # Add them up to get the position:
-  pos = pos0 + lat_pos + lon_pos 
+  # Calculate horizontal (a) and vertical (b) relative position:
+  a = (lat_pos - lat_pos_top) / 1200
+  b = (lon_pos - lon_pos_left)
 
-  return int(pos) 
+  # Add them up to get the positions:
+  tl = int(pos0 + lat_pos_top + lon_pos_left)
+  tr = int(pos0 + lat_pos_top + lon_pos_right)
+  bl = int(pos0 + lat_pos_bottom + lon_pos_left)
+  br = int(pos0 + lat_pos_bottom + lon_pos_right)
+
+  return [tl, tr, bl, br, a, b] 
+
+def bilinearInterpolation(tl, tr, bl, br, a, b):
+  # In the likely case that the coordinate is somewhere between
+  # grid points, we will apply bilinear interpolation.
+
+  # http://en.wikipedia.org/wiki/Bilinear_interpolation
+
+  # We will use the simplest formula.
+
+  # return (1.0 - a) * (1.0 - b) * tl + a * (1.0 - b) * tr + (1.0 -a) * b * bl + a * b * br
+
+  b1 = tl
+  b2 = bl - tl
+  b3 = tr - tl
+  b4 = tl - bl - tr + br
+
+  return b1 + b2 * a + b3 * b + b4 * a * b
 
 def addPointsToPair(points, n):
   # Adds n points between a pair of points (a and b).

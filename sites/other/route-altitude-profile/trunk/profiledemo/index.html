@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Demo of altitude profiles</title>
+
+        <!-- this is important for correct drawing of polygons in IE -->    
+        <style type="text/css">
+            v\:* {
+                behavior:url(#default#VML);
+            }
+            div#map{
+                float: left;
+                height: 500px;
+                width: 600px;
+            }
+            ul {
+                margin: 0px 150px;
+            }
+            div#main{
+                width: 800px;
+                margin: 0px 0px 0px 150px;
+            }
+            #loading_info{
+                color : red;
+                margin: 0px 0px 0px 50px;
+            }
+            iframe{
+                margin: 0px 0px 0px 20px;
+            }
+            table#buttons{
+                width: 600px;
+            }
+        </style>
+
+        <!--  the code for API can be obtained here: http://code.google.com/apis/maps/signup.html -->
+        <!--  it is available for localhost too! -->
+        <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAwaGAdBqc0C3COmyw-rm7oBRxfdZP2I4bguT0R9iVKPAMWklrjBQyLatiDGPIlgpjc1Nu8h9RlKThNQ" type="text/javascript"></script>
+        <script type="text/javascript">
+        //<![CDATA[
+        // the begining of map script    
+        // based on 
+        // http://code.google.com/articles/support/ezdigitizer.htm
+        // discussed in details here:
+        // http://code.google.com/support/bin/answer.py?answer=65620&topic=11364#clickhandler
+
+        var map;
+        var polyShape;
+        var polyPoints = Array();
+        var marker;
+        var border_exist = 0;
+
+        var fillColor = "#0000FF"; // fill color - blue (rrggbb) - not relevant because transparent
+        var lineColor = "#FF9900"; // line color - orange 
+        var fillOpacity = "0.0";
+        var lineOpacity = "1.0";
+        var lineWeight = "3";
+
+        function load() {
+            if (GBrowserIsCompatible()) {
+
+                map = new GMap2(document.getElementById("map"), {mapTypes:[G_PHYSICAL_MAP,G_NORMAL_MAP]});
+                  
+                map.addControl(new GMapTypeControl());
+
+                // initial center of the map and zoom
+                var lat = 49.414740;
+                var lng = 8.693260;
+                var zoom = 14;
+
+                map.setCenter( new GLatLng( lat,lng ), zoom );
+                map.addControl(new GLargeMapControl());      
+                map.setMapType(G_PHYSICAL_MAP); 
+
+                GEvent.addListener(map, 'click', mapClick);
+            }
+        }
+
+        // mapClick - for event when a user clicks on the map 
+        // ads new side of the polygon 
+        function mapClick(marker, clickedPoint) {
+
+            var mapNormalProj = G_NORMAL_MAP.getProjection();
+            var mapZoom = map.getZoom();
+
+            // get new pixel 
+            // Push to existing points 
+            var clickedPixel = mapNormalProj.fromLatLngToPixel(clickedPoint, mapZoom);
+            var polyPixel = new GPoint(clickedPixel.x,clickedPixel.y);
+            var polyPoint = mapNormalProj.fromPixelToLatLng(polyPixel,mapZoom);
+            polyPoints.push(polyPoint);
+            drawCoordinates();
+            border_exist = 1;
+
+        }
+
+        // clear map 
+        function clearMap(){
+            map.clearOverlays();
+            polyPoints = Array();
+            border_exist = 0;
+        }
+
+        // deletes last point and redraws the map
+        function deleteLastPoint(){
+            map.removeOverlay(polyShape);
+            // pop last point 
+            polyPoints.pop();
+            if (polyPoints.length<1){
+                border_exist = 0;
+                map.clearOverlays();
+            } else {
+                drawCoordinates();
+            }
+        }
+
+        // draws 
+        function drawCoordinates(){
+
+            polyShape = new GPolygon(polyPoints,lineColor,lineWeight,lineOpacity,fillColor,fillOpacity,{clickable: false});
+            map.clearOverlays();
+
+            // marker is added to the last point of the polygon 
+            marker = new GMarker(polyPoints[polyPoints.length -1],{ clickable: false });
+            map.addOverlay(marker);
+            map.addOverlay(polyShape);
+            logCoordinates();
+
+        }
+
+        // gets all the coordinates in xml formal
+        function logCoordinates(){
+
+            var header = '<?xml version="1.0" encoding="UTF-8"?> <xls:XLS xmlns:xls="http://www.opengis.net/xls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" version="1.1" xsi:schemaLocation="http://www.opengis.net/xls http://schemas.opengis.net/ols/1.1.0/RouteService.xsd"> <xls:RouteGeometry> <gml:LineString srsName="EPSG:4326">';
+
+            var footer = "</gml:LineString> </xls:RouteGeometry> </xls:XLS>";
+
+            // set header 
+            document.getElementById("points_xml").value =  header;
+
+            // loop in points 
+            for (var i = 0; i<(polyPoints.length); i++) {
+                var lat = polyPoints[i].y;
+                var longi = polyPoints[i].x;
+                document.getElementById("points_xml").value += '<gml:pos>' + longi + ' ' + lat + '</gml:pos>';
+            }
+
+            document.getElementById("points_xml").value +=  footer;
+        }
+
+        // the end of the map script 
+
+        // ajax post call
+        // http://www.captain.at/howto-ajax-form-post-request.php
+        var http_request = false;
+
+        function makePOSTRequest(url, parameters) {
+            http_request = false;
+            if (window.XMLHttpRequest) { // Mozilla, Safari,...
+                http_request = new XMLHttpRequest();
+                if (http_request.overrideMimeType) {
+                // set type accordingly to anticipated content type
+                //http_request.overrideMimeType('text/xml');
+                    http_request.overrideMimeType('text/html');
+                }
+            } else if (window.ActiveXObject) { // IE
+                try {
+                    http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                    } catch (e) {
+                try {
+                    http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {}
+                }
+            }
+            if (!http_request) {
+                alert('Cannot create XMLHTTP instance');
+                return false;
+            }
+
+            http_request.onreadystatechange = updatePlot;
+            http_request.open('POST', url, true);
+            http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            http_request.setRequestHeader("Content-length", parameters.length);
+            http_request.setRequestHeader("Connection", "close");
+            http_request.send(parameters);
+
+        }
+
+        function updatePlot() {
+            if (http_request.readyState == 4) {
+                if (http_request.status == 200) {
+                    result = http_request.responseText;
+                    document.getElementById("PlotFrame").src=result;
+                    document.getElementById("PlotFrame").src=document.getElementById("PlotFrame").src
+                    document.getElementById('loading_info').innerHTML = '';            
+                } else {
+                    alert('There was a problem with the request.');
+                }
+            }
+        }
+   
+        function get_new_map() {
+
+            document.getElementById('loading_info').innerHTML = 'Loading ...';            
+            var xml_str = document.getElementById("points_xml").value;
+            var poststr = "xml_str=" + encodeURI( xml_str );
+            makePOSTRequest('request_profile.php', poststr);
+
+        }
+
+        //]]>
+        </script>
+
+</head>
+<body onload="load()" onunload="GUnload()">
+
+    <div id="main">
+    <br>
+    <h3>Demo of altitude profiles</h3>
+
+    <p>Click on the map to draw a route. When finished--press 'Submit' button.</p>
+
+    <table id="buttons">
+        <tr>
+            <td>
+                <input type="button" onclick="deleteLastPoint();" value="Delete last point"/>
+                <input type="button" onclick="clearMap();" value="Clear map"/>
+            </td>
+            <td align="right">
+                <!-- make AJAX request -->
+                <span name="points_xml" type="hidden" id="points_xml" value="" />
+                <input style="font: bold; color: red" align="right" type="button" name="button" value="Submit" onclick="get_new_map();">
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr valign="top">
+
+            <td><div id="map" style="width: 600px; height: 500px"></div></td>
+
+            <td><div id="status" style="width:500px; height: 60px;">
+                <iframe id="PlotFrame" src="" width="350" height="250" frameborder="0">
+                    Place for maps. 
+                </iframe>
+                <br>
+                <span name="loading_info" id="loading_info"></span>
+                </div>
+            </td>
+
+        </tr>
+    </table>
+
+    <p>This is a demo of the Google Summer of Code project "Route altitude profile based on NASA SRTM data" by <a href="http://sprovoost.nl/">Sjors Provoost</a>. Some mentoring and this Google Maps interface is provided by  <a href="http://dudarev.com/">Artem Dudarev</a> of <a href="http://geovodi.com/">Geovodi</a>.
+    </p>
+
+    <p>More information can be found here <a href="http://wiki.openstreetmap.org/index.php/Route_altitude_profiles_SRTM">here</a>.</p>
+
+    <small>In this demo the following services from Google were used: 
+    <a href="http://code.google.com/apis/maps/">Google Maps</a>,
+    <a href="http://code.google.com/apis/chart/">Google Charts</a>,
+    <a href="http://code.google.com/appengine/">Google App Engine</a>.
+    </small>
+
+    </div>
+
+</body>
+</html>

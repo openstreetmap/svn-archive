@@ -1,5 +1,4 @@
 from os import curdir, sep
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urllib
 import altitudeprofile_pb2
 
@@ -65,12 +64,21 @@ def demo(req, route, input, output, server):
     s = f.read()
     f.close()
     
+    req.content_type = 'image/png'
+
+    req.write(s)
+  
+  elif output_type == "gchart_url":
+  
+    s = f.read()
+    f.close()
+    
     req.content_type = 'text/html'
 
     req.write('<html>')
     req.write('<head></head>')
     req.write('<body>')
-    req.write('<img src="' + s +  '" alt="Altitude profile"/>')
+    req.write('<p>' + s +  '</p>')
   
   #return apache.OK
 

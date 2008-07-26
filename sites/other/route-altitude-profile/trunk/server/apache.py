@@ -13,6 +13,8 @@ import altitude
 import database_pg
 import pg
 
+from urllib import urlopen
+
 class Database:
   def __init__(self):
     self.db = pg.DB(dbname=database_pg.db,host='localhost', user=database_pg.db_user, passwd=database_pg.db_pass)
@@ -22,7 +24,15 @@ class Database:
     res = sql.getresult()
     return res[0][0]
 
+class Utils:
+  def fetchUrl(self, url):
+   f = urlopen(url)
+   res = f.read()
+   f.close()
+   return res
+
 db = Database()
+utils = Utils()
 
 urls = (
   '/', 'main_page',
@@ -39,7 +49,7 @@ class profile_page:
   def POST(self, output_format, input_format):
     # This assumes XML input
     postdata = '<?xml version=' + web.input()['<?xml version']
-    res = altitude.page_profile(db, postdata, output_format, input_format)
+    res = altitude.page_profile(db, utils, postdata, output_format, input_format)
     header = res[0]
     body = res[1]
     web.header('Content-Type', header)
@@ -50,7 +60,7 @@ class profile_page:
     lats = data.lats.split(",")
     lons = data.lons.split(",")
     
-    res = altitude.page_profile(db, [lats,lons], output_format, "get")
+    res = altitude.page_profile(db, utils, [lats,lons], output_format, "get")
     header = res[0]
     body = res[1]
     web.header('Content-Type', header)

@@ -26,7 +26,8 @@ db = Database()
 
 urls = (
   '/', 'main_page',
-  '/profile/(.*)/(.*)/', 'profile_page'
+  '/profile/(.*)/(.*)/', 'profile_page',
+  '/profile/(.*)', 'profile_page'
 )
 
 class main_page:  
@@ -36,8 +37,20 @@ class main_page:
 
 class profile_page:  
   def POST(self, output_format, input_format):
+    # This assumes XML input
     postdata = '<?xml version=' + web.input()['<?xml version']
-    res = altitude.page_profile_post(db, postdata, output_format, input_format)
+    res = altitude.page_profile(db, postdata, output_format, input_format)
+    header = res[0]
+    body = res[1]
+    web.header('Content-Type', header)
+    web.output(body)
+  
+  def GET(self, output_format):
+    data = web.input()
+    lats = data.lats.split(",")
+    lons = data.lons.split(",")
+    
+    res = altitude.page_profile(db, [lats,lons], output_format, "get")
     header = res[0]
     body = res[1]
     web.header('Content-Type', header)

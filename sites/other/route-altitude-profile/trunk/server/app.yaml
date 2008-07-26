@@ -35,6 +35,8 @@ skip_files: |
  (database_pg*)|
  (import-google-apps-engine\.sh)
  (import-google-apps-engine\.py)
+ (altitude\.datastore)
+ (apache.py)
  (#.*#)|
  (.*~)|
  (.*\.py[co])|

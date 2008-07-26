@@ -21,21 +21,21 @@ def page_profile(db, data, output_format, input_format):
     route_pb = altitudeprofile_pb2.Route()
     route_pb.ParseFromString(data)
 
-    for i in range(1, len(route_pb.point) + 1):
-      point = route_pb.point[i-1]
-      route += {'id' : i, 'lat' : point.lat, 'lon' : point.lon} 
+    for point in route_pb.point:
+      route += {'lat' : point.lat, 'lon' : point.lon} 
 
   elif input_format == "xml":
     dom = minidom.parseString(data)
     points = dom.getElementsByTagName('gml:pos') 
 
-    for i in range(1, len(points) + 1):
-      point = util.parse_geo(points[i-1].firstChild.data)
-      route.append({'id' : i, 'lat' : point[1], 'lon' : point[0]})
+    for p in points:
+      point = util.parse_geo(p.firstChild.data)
+      route.append({'lat' : point[1], 'lon' : point[0]})
   
   elif input_format == "get":
-    for i in range(1, len(data[0]) + 1):
-      route.append({'id' : i, 'lat' : float(data[0][i-1]), 'lon' : float(data[1][i-1])})
+    # Transpose would be more elegant here
+    for i in range(len(data[0])):
+      route.append({'lat' : float(data[0][i]), 'lon' : float(data[1][i])})
 
   else:
     # Some sort of error; we're under attack! :-)
@@ -154,13 +154,8 @@ def addPointsToPair(points, n):
   # Adds n points between a pair of points (a and b).
   [a,b] = points
 
-  # id fields must be corrected:
-  id_start = a['id']
-  b['id'] = a['id'] + n + 1
-
   for i in range(n):
     points.insert(-1,{\
-      'id' : id_start + i + 1,
       'lat' : a['lat'] + (b['lat'] - a['lat']) / (n + 1) * (i + 1),
       'lon' : a['lon'] + (b['lon'] - a['lon']) / (n + 1) * (i + 1)
     })

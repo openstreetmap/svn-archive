@@ -127,17 +127,29 @@
 
         <!-- Linear casings -->
         <rule e="way" k="tunnel" v="~|no|false">
-			<rule e="way" k="highway" v="raceway">
-				<rule e="way" k="use_status" v="~">
-					<line class='highway-raceway-casing' />
-				</rule>
-				<rule e="way" k="use_status" v="disused">
-					<line class='highway-raceway-casing-disused' />
-				</rule>
-				<rule e="way" k="use_status" v="dismantled">
-					<line class='highway-raceway-casing-dismantled' />
-				</rule>
-			</rule>
+            <rule e="way" k="railway" v="monorail">
+                <line class='railway-casing railway-monorail-casing' />
+            </rule>
+            <rule e="way" k="railway" v="preserved">
+                <line class='railway-casing railway-preserved-casing' />
+            </rule>
+            <rule e="way" k="railway" v="narrow_gauge">
+                <line class='railway-casing railway-narrow-gauge-casing' />
+            </rule>
+            <rule e="way" k="railway" v="rail">
+                <line class='railway-casing railway-rail-casing' />
+            </rule>
+			      <rule e="way" k="highway" v="raceway">
+				        <rule e="way" k="use_status" v="~">
+					          <line class='highway-raceway-casing' />
+				        </rule>
+				        <rule e="way" k="use_status" v="disused">
+					          <line class='highway-raceway-casing-disused' />
+				        </rule>
+				        <rule e="way" k="use_status" v="dismantled">
+					          <line class='highway-raceway-casing-dismantled' />
+				        </rule>
+			      </rule>
             <rule e="way" k="highway" v="steps">
                 <line class='highway-casing highway-steps-casing' />
             </rule>
@@ -194,15 +206,6 @@
             <rule e="way" k="highway" v="motorway">
                 <line class='highway-casing highway-motorway-casing' />
             </rule>
-            <rule e="way" k="railway" v="monorail">
-                <line class='railway-casing railway-monorail-casing' />
-            </rule>
-            <rule e="way" k="railway" v="preserved">
-                <line class='railway-casing railway-preserved-casing' />
-            </rule>
-            <rule e="way" k="railway" v="narrow_gauge">
-                <line class='railway-casing railway-narrow-gauge-casing' />
-            </rule>
             <rule e="way" k="railway" v="tram">
                 <line class='railway-casing railway-tram-casing' />
             </rule>
@@ -212,14 +215,24 @@
             <rule e="way" k="railway" v="light_rail">
                 <line class='railway-casing railway-light-rail-casing' />
             </rule>
-            <rule e="way" k="railway" v="rail">
-                <line class='railway-casing railway-rail-casing' />
-            </rule>
         </rule>
 
 
         <!-- Linear cores -->
         <rule e="way" k="tunnel" v="~|false|no">
+            <rule e="way" k="railway" v="monorail">
+                <line class='railway-core railway-monorail-core' />
+            </rule>
+            <rule e="way" k="railway" v="preserved">
+                <line class='railway-core railway-preserved-core' />
+            </rule>
+            <rule e="way" k="railway" v="narrow_gauge">
+                <line class='railway-core railway-narrow-gauge-core' />
+            </rule>
+            <rule e="way" k="railway" v="rail">
+                <line class='railway-core railway-rail-1-core' />
+                <line class='railway-core railway-rail-2-core' smart-linecap='no'/>
+            </rule>
 			<rule e="way" k="highway" v="raceway">
 				<rule e="way" k="use_status" v="~">
 					<line class='highway-raceway-core' />
@@ -290,15 +303,6 @@
 			<rule e="way" k="highway" v="motorway">
 				<line class='highway-core highway-motorway-core' />
 			</rule>
-            <rule e="way" k="railway" v="monorail">
-                <line class='railway-core railway-monorail-core' />
-            </rule>
-            <rule e="way" k="railway" v="preserved">
-                <line class='railway-core railway-preserved-core' />
-            </rule>
-            <rule e="way" k="railway" v="narrow_gauge">
-                <line class='railway-core railway-narrow-gauge-core' />
-            </rule>
             <rule e="way" k="railway" v="tram">
                 <line class='railway-core railway-tram-core' />
             </rule>
@@ -307,10 +311,6 @@
             </rule>
             <rule e="way" k="railway" v="light_rail">
                 <line class='railway-core railway-light-rail-core' />
-            </rule>
-            <rule e="way" k="railway" v="rail">
-                <line class='railway-core railway-rail-1-core' />
-                <line class='railway-core railway-rail-2-core' smart-linecap='no'/>
             </rule>
 			<rule e="way" k="aeroway" v="runway">
 			    <line class='aeroway-runway-core'/>

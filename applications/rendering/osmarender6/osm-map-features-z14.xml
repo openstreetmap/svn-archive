@@ -209,7 +209,7 @@
                 <area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-area="no"/>
             </rule>
             <rule e="way" k="highway" v="path">
-                <rule e="way" k="bicyle" v="yes|designated">
+                <rule e="way" k="bicycle" v="yes|designated">
                     <area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
 	        </rule>
                 <else>
@@ -333,7 +333,7 @@
                     <line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
                 </rule>
                 <rule e="way" k="highway" v="path">
-                    <rule e="way" k="bicyle" v="yes|designated">
+                    <rule e="way" k="bicycle" v="yes|designated">
                         <line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
 	            </rule>
                     <else>
@@ -437,7 +437,7 @@
                 <area class="highway-core highway-cycleway-area no-bezier"/>
             </rule>
             <rule e="way" k="highway" v="path">
-                <rule e="way" k="bicyle" v="yes|designated">
+                <rule e="way" k="bicycle" v="yes|designated">
                     <area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
 	        </rule>
                 <else>
@@ -549,7 +549,7 @@
                     <line class="highway-core highway-cycleway-core" smart-linecap="no"/>
                 </rule>
                 <rule e="way" k="highway" v="path">
-                    <rule e="way" k="bicyle" v="yes|designated">
+                    <rule e="way" k="bicycle" v="yes|designated">
                         <line class="highway-core highway-cycleway-core" smart-linecap="no"/>
       	            </rule>
                     <else>
@@ -678,7 +678,7 @@
                 <line class="highway-cycleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
             </rule>
             <rule e="way" k="highway" v="path">
-               <rule e="way" k="bicyle" v="yes|designated">
+               <rule e="way" k="bicycle" v="yes|designated">
                    <line class="tunnel-casing highway-cycleway-casing tunnel" mask-class="tunnel-core highway-cycleway-core"/>
                    <line class="highway-cycleway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 	        </rule>
@@ -801,7 +801,7 @@
                 <line class="highway-core highway-cycleway-core under-construction"/>
             </rule>
             <rule e="way" k="construction" v="path">
-                <rule e="way" k="bicyle" v="yes|designated">
+                <rule e="way" k="bicycle" v="yes|designated">
                     <line class="highway-core highway-cycleway-core under-construction"/>
 	        </rule>
                 <else>

@@ -13,11 +13,15 @@ planetdump | gzip -9 > .${cur_planet}.gz.new
 planetdump --relations | gzip -9 > .${cur_relation}.gz.new
 mv .${cur_planet}.gz.new ${cur_planet}.gz
 mv .${cur_relation}.gz.new ${cur_relation}.gz
+md5sum ${cur_planet}.gz > ${cur_planet}.gz.md5
+md5sum ${cur_relation}.gz > ${cur_relation}.gz.md5
 
 gzip -dc ${cur_planet}.gz | bzip2 -2 > .${cur_planet}.bz2.new
 gzip -dc ${cur_relation}.gz | bzip2 -2 > .${cur_relation}.bz2.new
 mv .${cur_planet}.bz2.new  ${cur_planet}.bz2
 mv .${cur_relation}.bz2.new  ${cur_relation}.bz2
+md5sum ${cur_planet}.bz2 > ${cur_planet}.bz2.md5
+md5sum ${cur_relation}.bz2 > ${cur_relation}.bz2.md5
 
 #7zr a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on  planet-`date +%y%m%d.osm`.7z  ${cur_planet}
 #chmod a+r ${cur_planet}.7z
@@ -27,6 +31,10 @@ mv .${cur_relation}.bz2.new  ${cur_relation}.bz2
 #link planet latest to the new file
 ln -fs ${cur_planet}.bz2 planet-latest.osm.bz2
 ln -fs ${cur_relation}.bz2 relations-latest.osm.bz2
+# mangle md5 files for 'latest' ones
+rm -f planet-latest.osm.bz2.md5 relations-latest.osm.bz2.md5
+sed -e "s/${cur_planet}.bz2/planet-latest.osm.bz2/" ${cur_planet}.bz2.md5 > planet-latest.osm.bz2.md5
+sed -e "s/${cur_relation}.bz2/relations-latest.osm.bz2/" ${cur_relation}.bz2.md5 > relations-latest.osm.bz2.md5
 
 #next, create the planet diff from last week to this week
 
@@ -41,3 +49,5 @@ mv ${TMPFILE} ${planet_dir}/planet-${PREVPLANETDATE}-${CURPLANETDATE}.diff.xml.b
 
 rm ${cur_planet}.gz
 rm ${cur_relation}.gz
+rm ${cur_planet}.gz.md5
+rm ${cur_relation}.gz.md5

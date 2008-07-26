@@ -13,7 +13,7 @@ from xml.dom import minidom
 def page_main_get():
   return '<p>Welcome! Go to <a href="http://sprovoost.nl/category/gsoc/">my blog</a> to learn more.</p>'
   
-def page_profile(db, data, output_format, input_format):
+def page_profile(db, utils, data, output_format, input_format):
   # Extract the route:
   route = []
   if input_format == "protobuf":
@@ -43,6 +43,12 @@ def page_profile(db, data, output_format, input_format):
 
   # Find out what the desired output is
   if output_format == "gchart":
+    url = altitude_profile_gchart(db, route)
+    fig = utils.fetchUrl(url)
+
+    return ['image/png', fig]
+
+  elif output_format == "gchart_url":
     url = altitude_profile_gchart(db, route)
     return ['text/html', url]
   

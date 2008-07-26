@@ -5,6 +5,7 @@ import wsgiref.handlers
 
 from google.appengine.ext import db
 from google.appengine.ext import webapp
+from google.appengine.api import urlfetch
 
 ##### Database #####
 class Altitude(db.Model):
@@ -15,7 +16,14 @@ class Database:
   def fetchAltitude(self, pos):
     return Altitude.get_by_key_name("P" + str(pos)).alt
 
+class Utils:
+  def fetchUrl(self, url):
+    res = urlfetch.fetch(url)
+    if res.status_code == 200:
+      return res.content
+
 db = Database()
+utils = Utils()
 
 ##### Pages #####
 class MainPage(webapp.RequestHandler):
@@ -34,15 +42,16 @@ class Profile(webapp.RequestHandler):
     lats = lats_str.split(",")
     lons = lons_str.split(",")
 
-    self.out(altitude.page_profile(db, [lats, lons], output_format, "get"))
+    self.out(altitude.page_profile(db, utils, [lats, lons], output_format, "get"))
     
   def post(self, output_format, input_format):
-    self.out(altitude.page_profile(db, self.request.body, output_format, input_format))
+    self.out(altitude.page_profile(db, utils, self.request.body, output_format, input_format))
 
   def out(self,res):
     header = res[0]
     body = res[1]
-    
+
+    self.response.headers["Content-Type"] = header
     self.response.out.write(body)
 
 

@@ -13,25 +13,29 @@ from xml.dom import minidom
 def page_main_get():
   return '<p>Welcome! Go to <a href="http://sprovoost.nl/category/gsoc/">my blog</a> to learn more.</p>'
   
-def page_profile_post(db, postdata, output_format, input_format):
+def page_profile(db, data, output_format, input_format):
   # Extract the route:
   route = []
   if input_format == "protobuf":
     # Doesn't work in app egine yet and completely untested
     route_pb = altitudeprofile_pb2.Route()
-    route_pb.ParseFromString(postdata)
+    route_pb.ParseFromString(data)
 
     for i in range(1, len(route_pb.point) + 1):
       point = route_pb.point[i-1]
       route += {'id' : i, 'lat' : point.lat, 'lon' : point.lon} 
 
   elif input_format == "xml":
-    dom = minidom.parseString(postdata)
+    dom = minidom.parseString(data)
     points = dom.getElementsByTagName('gml:pos') 
 
     for i in range(1, len(points) + 1):
       point = util.parse_geo(points[i-1].firstChild.data)
       route.append({'id' : i, 'lat' : point[1], 'lon' : point[0]})
+  
+  elif input_format == "get":
+    for i in range(1, len(data[0]) + 1):
+      route.append({'id' : i, 'lat' : float(data[0][i-1]), 'lon' : float(data[1][i-1])})
 
   else:
     # Some sort of error; we're under attack! :-)

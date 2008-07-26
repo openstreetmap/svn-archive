@@ -28,18 +28,30 @@ class MainPage(webapp.RequestHandler):
       </html>""")
 
 class Profile(webapp.RequestHandler):
+  def get(self, output_format):
+    lats_str = self.request.get("lats")
+    lons_str = self.request.get("lons")
+    lats = lats_str.split(",")
+    lons = lons_str.split(",")
+
+    self.out(altitude.page_profile(db, [lats, lons], output_format, "get"))
+    
   def post(self, output_format, input_format):
-    res = altitude.page_profile_post(db, self.request.body, output_format, input_format)
+    self.out(altitude.page_profile(db, self.request.body, output_format, input_format))
+
+  def out(self,res):
     header = res[0]
     body = res[1]
     
     self.response.out.write(body)
 
+
 def main():
   application = webapp.WSGIApplication(
                                        [
                                         ('/', MainPage),
-                                        (r'/profile/(.*)/(.*)/', Profile)
+                                        (r'/profile/(.*)/(.*)/', Profile),
+                                        ('/profile/(.*)', Profile)
                                        ],
                                        debug=True)
   wsgiref.handlers.CGIHandler().run(application)

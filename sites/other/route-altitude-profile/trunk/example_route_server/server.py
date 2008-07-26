@@ -5,6 +5,10 @@ import altitudeprofile_pb2
 
 from mod_python import apache
 
+import sys
+import os
+sys.path += [os.path.dirname(__file__)]
+
 # Define example routes.
 # See http://wiki.openstreetmap.org/index.php/Route_Altitude_Profile_Example_Routes
 # Convert with:
@@ -32,14 +36,8 @@ routes = [route1]
 
 def demo(req, route, input, output, server):
   # ULR of altitude server:
-  if server == "pg":
-    #url_server_root = 'http://altitude-pg/';
-    url_server_root = 'http://altitude-pg.sprovoost.nl/';
-  elif server == "app":
-    #url_server_root = 'http://localhost:8080/';
-    url_server_root = 'http://altitude.sprovoost.nl/';
-  else:
-    exit()
+  import servers_urls
+  url_server_root = servers_urls.set_url_server_root(server)
 
   # Determine route number (substract 1 because arrays start 
   # at 0): 
@@ -110,6 +108,32 @@ def fetchResult(url_server_root, input_type, route, output_type):
     route_xml += "</xls:XLS>"
 
     return urllib.urlopen(url_server_root + "profile/" + output_type + "/xml/", route_xml)
+  
+  elif input_type == "get":
+    route_get = url_server_root + "profile/" + output_type + "?"
+    # Add list of latitudes
+    route_get += "lats="
+    first = True
+    for point in route:
+      if first == False:
+        route_get += ","
+      else:
+        first = False
+
+      route_get += str(point['lat'])
+
+    # Add list of longitudes
+    route_get += "&lons="
+    first = True
+    for point in route:
+      if first == False:
+        route_get += ","
+      else:
+        first = False
+
+      route_get += str(point['lon'])
+    
+    return urllib.urlopen(route_get)
 
 if __name__ == '__main__':
   None 

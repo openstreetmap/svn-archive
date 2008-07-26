@@ -47,6 +47,7 @@ BEGIN {
     $dir =~s,/utils.*$,/utils/perl_lib,;
     unshift(@INC,"$dir");
     unshift(@INC,"../../perl_lib");
+    unshift(@INC,$ENV{"HOME"}."/svn.openstreetmap.org/applications/utils/perl_lib");
 }
 
 

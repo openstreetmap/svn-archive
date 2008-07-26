@@ -30,13 +30,17 @@ sub is_format_NMEA($) {
 
 	my $line = $fh->getline();
 	$fh->close();
+	print "Check for NMEA in Line: $line"
+	    if $DEBUG>2;
+	
 	# Format for NMEA
 	# $GPGGA,135507.91,4811.612176,N,01154.024299,E,1,09,3.0,569.0,M,-0.626000,M,-5.4020515,0130*41
-	return 1 if $line =~ m/^\$\w{2}.*(?:\d|\.|,|[NSWE])+.*\*\d+$/;
+	return 1 if $line =~ m/^\$\w{2}.*(?:\d|\.|,|[NSWE])+.*\*[ABCDEF\d]+[\n\r]*$/;
 	# Grosser Reiseplaner
 	return 1 if $line =~ m/Logfile for travel center/;
 	# Destinator
-	return 1 if $line =~ m/^\d+\.\d+,A,\d+\.\d+,[NS],\d+\.\d+,[EW],\d+\.\d+,\d+\.\d+,\d+,\d+\.\d+,(\S+)$/;
+	return 1 if $line =~ m/^\d+\.\d+,A,\d+\.\d+,[NS],\d+\.\d+,[EW],\d+\.\d+,\d+\.\d+,\d+,\d+\.\d+,(\S+)[\n\r]*$/;
+	print "Invalid: $line";
 	return 0;
 }
 

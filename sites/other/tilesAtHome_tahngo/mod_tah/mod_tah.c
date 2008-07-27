@@ -1,3 +1,13 @@
+/*                                                                         */
+/*         Apache module to serve tiles@home tiles from tilesets           */
+/*                                                                         */
+/* Update basetilepath, statictilepath and OCEANS_DB_FILE                  */
+/* Compile and install with apxs2 -ci mod_tah.c                            */
+/* echo  LoadModule tilesAtHome_module /usr/lib/apache2/modules/mod_tah.so */
+/*   >/etc/apache2/mods-available/mod_tah.load                             */
+/* cd /etc/apache2/mods-enabled ; ln -s ../mods-available/mod_tah.load     */
+/* In apache <Location /Tiles> use  SetHandler tah_handler                 */
+
 #define USE_SENDFILE
 
 #include "httpd.h"
@@ -17,6 +27,11 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 
 #define FILEVERSION 1
 #define MIN_VALID_OFFSET 4
+
+static char * basetilepath = "/usr/local/tah/Tiles";
+static char * statictilepath = "/usr/local/tah/Tiles";
+#define OCEANS_DB_FILE "/usr/local/tah/Tiles/oceantiles_12.dat"
+
 
 const char land[] =
   "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52"
@@ -64,9 +79,6 @@ const char transparent[] =
   "\x00\x00\x00\x00\x00\x00\x00\x00\x78\x03\x01\x3c\x00\x01\xd8\x29"
   "\x43\x04\x00\x00\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82";
 
-static char * basetilepath = "/usr/local/tah/Tiles";
-static char * statictilepath = "/usr/local/tah/Tiles";
-#define OCEANS_DB_FILE "/usr/local/tah/Tiles/oceantiles_12.dat"
 
 typedef struct dir_data_t dir_data_t;
 struct dir_data_t {
@@ -88,7 +100,7 @@ struct request_data {
 /* Convert x y z triple to tileset file name. */
 static void basexyz_to_tilesetname(apr_pool_t *p, char ** tilesetName, char * layer, int x, int y, int z) {
   char * fileName;
-  fileName = apr_psprintf(p, "%s/%s_%02d_%i/%i_%i", basetilepath, layer, z, x/1000, x, y);
+  fileName = apr_psprintf(p, "%s/%s_%02d/%i/%i_%i", basetilepath, layer, z, x, x, y);
   *tilesetName = fileName;
 };
 

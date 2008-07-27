@@ -94,14 +94,14 @@ static void basexyz_to_tilesetname(apr_pool_t *p, char ** tilesetName, char * la
 
 
 /* Find the composite tileset containing a given tile. */
-static void xyz_to_basexyz( request_data* d )
-{ if (d->z < 6)
-  { d->baseZ = 0;
+static void xyz_to_basexyz( request_data* d ) {
+  if (d->z < 6) {
+    d->baseZ = 0;
   } else
-    if (d->z > 11)
-    { d->baseZ = 12;
-    } else
-    { d->baseZ = 6;
+    if (d->z > 11) {
+      d->baseZ = 12;
+    } else {
+      d->baseZ = 6;
     }
   d->baseX = d->x >> (d->z - d->baseZ);
   d->baseY = d->y >> (d->z - d->baseZ);	

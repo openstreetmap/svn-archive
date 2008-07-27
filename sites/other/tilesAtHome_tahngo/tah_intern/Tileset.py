@@ -123,7 +123,7 @@ class Tileset:
       f.write(pack('I',d_offset))
       f.close()
     # finally create path if necessary and move the tmp file to its final location
-    if not os.path.isdir(tilepath): os.mkdirs(tilepath, 0775)
+    if not os.path.isdir(tilepath): os.makedirs(tilepath, 0775)
     os.chmod(tmpfile,0664)
     move(tmpfile, tilesetfile)
     return (1,unknown_tiles)

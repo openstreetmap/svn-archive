@@ -139,7 +139,6 @@ static void xyz_to_legacytile(request_rec *r, char ** tilesetName, char * layer,
 
 static int xyz_to_blankdbtile(request_rec *r, char ** tileName, char * layer, int x, int y, int z, int baseX, int baseY) {
   char * fileName;
-  apr_file_t * oceandb;
   apr_status_t res;
   apr_size_t len;
   apr_off_t offset;
@@ -181,7 +180,6 @@ static int xyz_to_blankdbtile(request_rec *r, char ** tileName, char * layer, in
       case 3 :  { return HTTP_NOT_FOUND;
 		}			
     } 
-    apr_file_close(oceandb);
   }
   return HTTP_NOT_FOUND;
 }
@@ -304,7 +302,7 @@ static int tah_handler(request_rec *r)
       case 0: { return HTTP_NOT_FOUND;	
        	      }
       case 1: {	ap_set_content_length(r, sizeof(sea));
-		ap_rwrite(land,sizeof(sea),r);
+		ap_rwrite(sea,sizeof(sea),r);
 		return OK;
 	      }
       case 2: { ap_set_content_length(r, sizeof(land));
@@ -312,7 +310,7 @@ static int tah_handler(request_rec *r)
 		return OK;
 	      }
       case 3: { ap_set_content_length(r, sizeof(transparent));   /* TRANSPARENT */
-		ap_rwrite(land,sizeof(transparent),r);
+		ap_rwrite(transparent,sizeof(transparent),r);
 		return OK;
 	      }
       default:{	/* ERROR_TILE */

@@ -301,7 +301,7 @@ static int serve_legacytile(request_rec* r, request_data* d) {
   struct apr_finfo_t finfo;
   apr_status_t res;
   if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME | APR_FINFO_SIZE, r->pool)) != APR_SUCCESS) {
-    return DECLINED;
+    return HTTP_NOT_FOUND;
   }
   ap_update_mtime(r, finfo.mtime);
   ap_set_last_modified(r);
@@ -309,7 +309,7 @@ static int serve_legacytile(request_rec* r, request_data* d) {
 
   if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "Could not open legacy tile: %s", tilesetName);
-    return DECLINED;
+    return HTTP_NOT_FOUND;
   }
 
   ap_set_content_length(r, finfo.size);
@@ -396,9 +396,10 @@ static int tah_handler(request_rec *r)
 
   xyz_to_basexyz( d );    /* search for the tileset. */
 
-  if( serve_tileset(r, d) == OK ) { return OK; }
+  int code;
+  if( (code = serve_tileset(r, d)) != HTTP_NOT_FOUND ) { return code; }
   /* tileset not found. fall back to legacy tile format. */
-  if( serve_legacytile(r, d) == OK ) { return OK; }
+  if( (code = serve_legacytile(r, d)) != HTTP_NOT_FOUND ) { return code; }
   /* not found, too. look into the OceanDB. Fail if problem */
   return serve_oceantile(r, d);
 } /* tah_handler */

@@ -324,7 +324,7 @@ class datafactory
 			$w->writeAttribute('id',$id);
 			$w->writeAttribute('lat',$x*$factor);
 			$w->writeAttribute('lon',$y*$factor);
-			if (is_array($ts)
+			if (is_array($ts))
 			foreach($ts as $tag)
 			{
 				$w->startElement('tag');

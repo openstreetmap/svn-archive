@@ -143,45 +143,6 @@ static void xyz_to_legacytile(request_rec *r, char ** tilesetName, char * layer,
 }
 
 
-static int parse_tileset(request_rec *r, request_data *d, char* tilesetName) {
-  int limit;
-  int tileOffset, tileSize;
-  int buf[32];
-  apr_off_t offset;
-
-  /* open the tileset file */
-  apr_status_t res;
-  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "ERROR: failed to open tilesetfile");
-    //this shouldn't happen, as we checked the file before;
-    return HTTP_NOT_FOUND;
-  };
-	
-  /* read the header */
-  apr_size_t len = 2*sizeof(int);
-  if (((res = apr_file_read(d->tileset, buf, &len)) != APR_SUCCESS) || ((*((int *)(&buf[0]))) != FILEVERSION)) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
-    return HTTP_NOT_FOUND;
-  }
-    
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "baseX %i baseY %i, int: %i", baseX, baseY, sizeof(int));
-  int tileNo = xyz_to_n(d);
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tile number %i", tileNo);
-
-  offset = 2*sizeof(int) + tileNo*sizeof(int);
-  if (apr_file_seek(d->tileset, APR_SET, &offset) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT, ", tilesetName);
-    return HTTP_NOT_FOUND;
-  }
-   
-  len = sizeof(int);
-  if ((res = apr_file_read(d->tileset, buf, &len)) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT could not read offset, ", tilesetName);
-  }
-  d->tileOffset = buf[0];
-} /* parse_tileset */
-
-
 static int serve_tileset(request_rec* r, request_data* d) {
   char * tilesetName;
   basexyz_to_tilesetname(r->pool, &tilesetName, d->layer, d->baseX, d->baseY, d->baseZ);
@@ -198,7 +159,39 @@ static int serve_tileset(request_rec* r, request_data* d) {
 
   if ((res = ap_meets_conditions(r)) != OK) return res;
 
-  parse_tileset( r, d, tilesetName );    /* parse the tileset file. */
+  /* open the tileset file */
+  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "ERROR: failed to open tilesetfile");
+    //this shouldn't happen, as we checked the file before;
+    return HTTP_NOT_FOUND;
+  };
+	
+  /* read the header */
+  apr_size_t len = 2*sizeof(int);
+  int buf[32];
+  if (((res = apr_file_read(d->tileset, buf, &len)) != APR_SUCCESS) || ((*((int *)(&buf[0]))) != FILEVERSION)) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
+    return HTTP_NOT_FOUND;
+  }
+    
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "baseX %i baseY %i, int: %i", baseX, baseY, sizeof(int));
+  int tileNo = xyz_to_n(d);
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tile number %i", tileNo);
+
+  apr_off_t offset = 2*sizeof(int) + tileNo*sizeof(int);
+  if (apr_file_seek(d->tileset, APR_SET, &offset) != APR_SUCCESS) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT, ", r->filename);
+	return HTTP_NOT_FOUND;
+  }
+
+  len = 32*sizeof(int);
+  int buf2[64];
+  if ((res = apr_file_read(d->tileset, buf2, &len)) != APR_SUCCESS) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT could not read offset, ", r->filename);
+  }
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "buf2  %i %i %i %i", buf2[0], buf2[1], buf2[2], buf2[3]);
+    
+  d->tileOffset = buf2[0];
 
   if (d->tileOffset < 0) {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT! Negative offset ", tilesetName);
@@ -206,7 +199,9 @@ static int serve_tileset(request_rec* r, request_data* d) {
   }
   if (d->tileOffset < MIN_VALID_OFFSET) {
     switch (d->tileOffset) {
-      case 0: { return HTTP_NOT_FOUND;	}
+      case 0: {
+		  return HTTP_NOT_FOUND;
+		}
       case 1: {
         ap_set_content_length(r, sizeof(sea));
         ap_rwrite(sea,sizeof(sea),r);
@@ -229,37 +224,6 @@ static int serve_tileset(request_rec* r, request_data* d) {
   } /* if */
 
   /* >= MIN_VALID_OFFSET */
-  r->filename = apr_pstrdup(r->pool, tilesetName);
-  ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
-
-  int limit, oob;
-  int buf2[64];
-  apr_size_t len;
-  apr_off_t offset;
-  char layer[32];
-
-//  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",
-//    r->handler, r->uri, r->filename, r->path_info);
-
-  int tileNo = xyz_to_n(d);
-
-  offset = 2*sizeof(int) + tileNo*sizeof(int);
-  if (apr_file_seek(d->tileset, APR_SET, &offset) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT, ", r->filename);
-	return HTTP_NOT_FOUND;
-  }
-	
-  len = 32*sizeof(int);
-  if ((res = apr_file_read(d->tileset, buf2, &len)) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT could not read offset, ", r->filename);
-  }
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "buf2  %i %i %i %i", buf2[0], buf2[1], buf2[2], buf2[3]);
-    
-  d->tileOffset = buf2[0];
-  if (d->tileOffset < MIN_VALID_OFFSET) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "Got a negative tile offset in handler");
-    return HTTP_NOT_FOUND;
-  }
   int i = 1;
   d->tileLength = buf2[i];
   while (d->tileLength < MIN_VALID_OFFSET) {

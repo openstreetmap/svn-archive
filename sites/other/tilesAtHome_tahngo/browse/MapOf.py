@@ -54,12 +54,12 @@ class MapOfForm(forms.Form):
 
     def clean_h(self):
       h = self.cleaned_data['h']
-      if h > 1024:
-          raise forms.ValidationError('Image height needs to be <= 1024 pixels.')
+      if h > 2000:
+          raise forms.ValidationError('Image height needs to be <= 2000 pixels.')
       else: return h
 
     def clean_w(self):
       w = self.cleaned_data['w']
-      if w > 1024:
-          raise forms.ValidationError('Image width needs to be <= 1024 pixels.')
+      if w > 2000:
+          raise forms.ValidationError('Image width needs to be <= 2000 pixels.')
       else: return w

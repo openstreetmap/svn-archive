@@ -8,12 +8,12 @@
 /* cd /etc/apache2/mods-enabled ; ln -s ../mods-available/mod_tah.load     */
 /* In apache <Location /Tiles> use  SetHandler tah_handler                 */
 
-#include "httpd.h"
-#include "http_config.h"
-#include "http_protocol.h"
-#include "http_log.h"
-#include "ap_config.h"
-#include "apr_strings.h"
+#include <httpd.h>
+#include <http_config.h>
+#include <http_protocol.h>
+#include <http_log.h>
+#include <ap_config.h>
+#include <apr_strings.h>
 #include <apr_file_info.h>
 #include <apr_file_io.h>
 

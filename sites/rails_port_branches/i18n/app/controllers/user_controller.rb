@@ -21,6 +21,8 @@ class UserController < ApplicationController
       token = @user.tokens.create
       flash[:notice] = "User was successfully created. Check your email for a confirmation note, and you\'ll be mapping in no time :-)<br>Please note that you won't be able to login until you've received and confirmed your email address."
       Notifier::deliver_signup_confirm(@user, token)
+      #redirect_to :controller => 'user', :action => 'set_locale'
+      #render :action => 'set_locale'
       redirect_to :action => 'login'
     else
       render :action => 'new'
@@ -43,6 +45,8 @@ class UserController < ApplicationController
       @user.home_lon = home_lon
       @user.locale = params[:user][:locale]   
       if @user.save
+        session[:locale] = params[:user][:locale]
+        Locale.set session[:locale]
         flash[:notice] = "User information updated successfully."
       else
         flash.delete(:notice)
@@ -117,6 +121,8 @@ class UserController < ApplicationController
       user = User.authenticate(:username => email_or_display_name, :password => pass)
       if user
         session[:user] = user.id
+        session[:locale] = user.locale
+        Locale.set session[:locale]
         if params[:referer]
           redirect_to params[:referer]
         else
@@ -140,6 +146,8 @@ class UserController < ApplicationController
       session[:token] = nil
     end
     session[:user] = nil
+    session[:locale] = 'en-US'
+    Locale.set session[:locale]
     if params[:referer]
       redirect_to params[:referer]
     else

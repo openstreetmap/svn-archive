@@ -10,7 +10,7 @@
 
   <tr><td valign="top"><%= "Description".t -%></td><td><%= f.text_area :description, :class => "editDescription" %></td></tr>
 
-  <tr><td>Language</td><td><%= select ("user", "locale", { "English(US)" => "en-US", "Bengali(IN)" => "bn-IN", "Hindi(IN)" => "hn-IN", "Spanish" => "es-ES" }) %></td></tr>
+  <tr><td>Language</td><td><%= select("user", "locale", {"English(US)" => "en-US", "Bengali(IN)" => "bn-IN", "Hindi(IN)" => "hn-IN", "Spanish" => "es-ES"}) %></td></tr>
 
   <tr id="homerow" <% unless @user.home_lat and @user.home_lon %> class="nohome" <%end%> ><td><%= "Your home".t -%></td><td><em class="message"><%= "You have not entered your home location.".t -%></em><span class="location"><%= "Latitude:".t -%> <%= f.text_field :home_lat, :size => 20, :id => "home_lat" %> <%= "Longitude:".t -%> <%= f.text_field :home_lon, :size => 20, :id => "home_lon" %></span></td></tr>
 

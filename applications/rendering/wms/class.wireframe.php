@@ -1,10 +1,10 @@
 <?php
 
-/// @author Iván Sánchez Ortega <ivan@sanchezortega.es>
+/// @author IvÃ¡n SÃ¡nchez Ortega <ivan@sanchezortega.es>
 
 /**
     OSM WMS ("OpenStreetMap Web Map Service")
-    Copyright (C) 2008, Iván Sánchez Ortega
+    Copyright (C) 2008, IvÃ¡n SÃ¡nchez Ortega
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -57,14 +57,16 @@ return "
       <Layer queryable='0' opaque='0'>
         <Name>wireframe</Name>
         <Title>OSM Wireframe</Title>
-	<BoundingBox SRS='EPSG:4326' minx='-180' miny='-90' maxx='180' maxy='90' />
-	<BoundingBox SRS='EPSG:32630' minx='-1050000' miny='3000000' maxx='1150000' maxy='5000000' />
 	<Style>
           <Name>Default</Name>
           <Title>Default</Title>
         </Style>
       </Layer>
 ";
+
+
+// 	<BoundingBox SRS='EPSG:4326' minx='-180' miny='-90' maxx='180' maxy='90' />
+// 	<BoundingBox SRS='EPSG:32630' minx='-1050000' miny='3000000' maxx='1150000' maxy='5000000' />
 
 
 }
@@ -80,7 +82,7 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 // 	$backend = new backend_osmxapi;
 // 	$backend->get_parsed_data($bbox,$nodes,$ways);
 
-	datafactory::get_parsed_data($bbox,$crs,$nodes,$ways);
+	datafactory::get_parsed_data($bbox,$crs,$nodes,$ways,$relations);
 	
 	/// Convert the node's coordinates into X-Y, related to (0,0) and the final image size
 	
@@ -88,7 +90,7 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 	
 	$x_factor = $width  / ($right - $left)  ;
 	$y_factor = $height / ($top   - $bottom);
-	
+
 	foreach($nodes as &$node)
 	{
 		// Lat
@@ -131,7 +133,7 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 	foreach($ways as $way)
 	{
 		$first = true;
-		foreach($way as $node_ref)
+		foreach($way['nodes'] as $node_ref)
 		{
 			list ($y,$x) = $nodes[$node_ref];
 			if ($first)
@@ -144,8 +146,14 @@ static public function GetMap($bbox,$crs,$height,$width,$format)
 	
 	foreach($nodes as $node)
 	{
-		list ($y,$x) = $node;
-		imagerectangle( $im , $x-1 , $y-1 , $x+1 , $y+1 , $nodecolor );
+		list ($y,$x,$ts) = $node;
+// 		if (!empty($ts))
+			imagerectangle( $im , $x-1 , $y-1 , $x+1 , $y+1 , $nodecolor );
+// 		else
+// 		{
+// 			imagerectangle( $im , $x-1 , $y-1 , $x+1 , $y+1 , $nodecolor );
+// 			imagerectangle( $im , $x-3 , $y-3 , $x+3 , $y+3 , $nodecolor );
+// 		}
 	}
 	
 	

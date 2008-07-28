@@ -1,10 +1,10 @@
 <?php
 
-/// @author Iván Sánchez Ortega <ivan@sanchezortega.es>
+/// @author IvÃ¡n SÃ¡nchez Ortega <ivan@sanchezortega.es>
 
 /**
     OSM WMS ("OpenStreetMap Web Map Service")
-    Copyright (C) 2008, Iván Sánchez Ortega
+    Copyright (C) 2008, IvÃ¡n SÃ¡nchez Ortega
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ class datafactory
 	static private $backend = 'backend_osmxapi';	/// Which backend to use. Valid values are "backend_api", "backend_osmxapi".
 	//static private $backend = 'backend_api';	/// Which backend to use. Valid values are "backend_api", "backend_osmxapi".
 	
+	static private $outerbounds = array();	/// This will store the max and min eastings and northings for the fetched data - that will surely not exactly fit the requested bbox.
 	
 	static public $available_crs = array('EPSG:4326' =>array(-180,-90,180,90)
 	,'CRS:84'    =>array(-180,-90,180,90)
@@ -162,6 +163,21 @@ class datafactory
 	// Universal Polar Stereographic (WGS 84)
 	,'EPSG:32661'=>array(-4000000,-4000000,4000000,-4000000)	// UPS north
 	,'EPSG:32761'=>array(-4500000,-4000000,4000000,-4000000)	// UPS south
+	
+	
+	// UTM north, European ETRS89
+	,'EPSG:25828'=>array(-1500000,0,1500000,10000000)	// UTM 28 N
+	,'EPSG:25829'=>array(-1500000,0,1500000,10000000)	// UTM 29 N
+	,'EPSG:25830'=>array(-1500000,0,1500000,10000000)	// UTM 30 N
+	,'EPSG:25831'=>array(-1500000,0,1500000,10000000)	// UTM 31 N
+	,'EPSG:25832'=>array(-1500000,0,1500000,10000000)	// UTM 32 N
+	,'EPSG:25833'=>array(-1500000,0,1500000,10000000)	// UTM 33 N
+	,'EPSG:25834'=>array(-1500000,0,1500000,10000000)	// UTM 34 N
+	,'EPSG:25835'=>array(-1500000,0,1500000,10000000)	// UTM 35 N
+	,'EPSG:25836'=>array(-1500000,0,1500000,10000000)	// UTM 36 N
+	,'EPSG:25837'=>array(-1500000,0,1500000,10000000)	// UTM 37 N
+	,'EPSG:25838'=>array(-1500000,0,1500000,10000000)	// UTM 38 N
+	
 );
 	
 	
@@ -175,7 +191,7 @@ class datafactory
 	 *
 	 * TODO: refactor the check for non-numeric bbox elements; the only entry point for the data requests is this datagactory method, so the backends shouldn't have to check for this.
 	 */
-	static function get_parsed_data($bbox,$crs,&$nodes,&$ways)
+	static function get_parsed_data($bbox,$crs,&$nodes,&$ways,&$relations)
 	{
 		$backend = new self::$backend;
 		
@@ -184,6 +200,178 @@ class datafactory
 		// If the CRS is not WPSG:4326 or CRS:84, then the bbox has to be reprojected in order for the backends to fetch the appropiate set of data.
 		if ($crs != 'EPSG:4326' && $crs != 'CRS:84')
 		{
+			$bbox = self::get_projected_bbox($bbox,$crs);
+			$backend->get_parsed_data($bbox,&$nodes,&$ways,&$relations);
+// 			print_r($nodes);
+// 			var_dump($bbox,$nodes);
+			// Now, convert back all nodes' coordinates to the requested CRS...
+			
+			self::cs2cs($nodes,'epsg:4326',strtolower($crs),true);
+			
+// 			var_dump($bbox,$nodes);
+		}
+		else
+		{
+			// Requested a CRS native to the backends, just get the data...
+			
+			$backend->get_parsed_data($bbox,&$nodes,&$ways,&$relations);
+// 			print_r($nodes);
+			
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+
+/*	function cs2cs($x,$y,$srs_in='epsg:4258',$srs_out='epsg:4326')
+	{
+		$r = shell_exec("echo \"$x $y\" | cs2cs -f %.20f +init=$srs_in +to +init=$srs_out");
+		sscanf($r,"%f %f",$x,$y);
+		return (array($x,$y));
+	}*/
+		
+	function cs2cs(& $points,$srs_in='epsg:4326',$srs_out='epsg:4326',$invert_input=false)
+	{
+		// Open some pipes to a "cs2cs" process, feed the points, parse the resulting points...
+	
+		$descriptorspec = array(
+			0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+			2 => array("file", "/tmp/error-output.txt", "a") // stderr is a file to write to
+		);
+		
+		$cwd = '/tmp';
+		$env = array();
+		
+		if ($invert_input)	$invert_flag = " -r -s"; else $invert_flag = '';
+		
+
+		/// FIXME: either check that the CRSs are valid CRSs supported by this class, or perform a shellescapearg on them!
+		$process = proc_open("cs2cs -f %.20f +init=$srs_in +to +init=$srs_out $invert_flag", $descriptorspec, $pipes, $cwd, $env);
+		
+// 		$result = array();
+		if (is_resource($process)) {
+			
+			foreach($points as $id=>$point)
+			{
+				list($x,$y) = $point;
+				fwrite($pipes[0], "$x $y\n");
+// 				echo "Point $id ($x,$y) passed to cs2cs\n"; ob_flush();
+			}
+			fclose($pipes[0]);
+			
+			$startedouterbounds = false;
+			foreach($points as $id=>$point)
+			{
+// 				echo "Recovering point $id\n"; ob_flush();
+				fscanf($pipes[1], "%f %f\n", $x2, $y2);
+				$points[$id] = array( $x2 , $y2 , $points[$id][2]);
+
+				// Fill up the static outer bounds array, so later processes can know the min and max eastings and northings for the data, which are not those of the requested bbox.
+					/// FIXME: lat and lon are swapped?
+				if ($startedouterbounds)
+				{
+					if ($y2 < $left)   $left   = $y2;
+					if ($y2 > $right)  $right  = $y2;
+					if ($x2 < $bottom) $bottom = $x2;
+					if ($x2 > $top)    $top    = $x2;
+				}
+				else
+				{
+					$left = $right = $y2;
+					$top  = $bottom = $x2;
+					$startedouterbounds = true;
+				}
+			}
+			
+			fclose($pipes[1]);
+			// left,bottom,right,top
+			self::$outerbounds = array($left,$bottom,$right,$top);
+		}
+	
+// 		return ($result);
+	}
+
+
+	/// @return a string with the contents of a .osm file, as if the coordinates of the nodes were already projected to the destination CRS.
+	/// The 'factor' parameter is a total hack, to make osmarender render things at a good scale when using UTM. Osmarender is used to work on degrees of longitude, whereas UTM uses meters. Set the factor to 1 when the CRS is similar to platee carree; set the factor to ~ 0.00001 when using UTM. YMMV.
+	static function get_data_as_projected_osm($bbox,$crs,$factor=1)
+	{
+		self::get_parsed_data($bbox,$crs,$nodes,$ways,$relations);
+
+
+		$w = new XMLWriter();
+		$w->openMemory();
+		$w->setIndent(true);
+		$w->startDocument('1.0','UTF-8');
+		$w->startElement('osm');
+			$w->writeAttribute('version','0.5');
+			$w->writeAttribute('generator','OSMWMS');
+		$w->startElement('bound');
+			$w->writeAttribute('bbox',$bbox);
+// 			$backend = new self::$backend;
+// 			$w->writeAttribute('origin',$backend->get_base_api_url());
+		$w->endElement();
+
+		foreach($nodes as $id=>$node)
+		{
+			list ($x,$y,$ts) = $node;
+			$w->startElement('node');
+			$w->writeAttribute('id',$id);
+			$w->writeAttribute('lat',$x*$factor);
+			$w->writeAttribute('lon',$y*$factor);
+			if (is_array($ts)
+			foreach($ts as $tag)
+			{
+				$w->startElement('tag');
+				$w->writeAttribute('k',$tag[0]);
+				$w->writeAttribute('v',$tag[1]);
+				$w->endElement();
+			}
+			$w->endElement();
+		}
+
+		foreach($ways as $id=>$way)
+		{
+			$w->startElement('way');
+			$w->writeAttribute('id',$id);
+			$w->writeAttribute('user',$way['user']);
+			$w->writeAttribute('timestamp',$way['timestamp']);
+			foreach($way['nodes'] as $nd)
+			{
+				$w->startElement('nd');
+				$w->writeAttribute('ref',$nd);
+				$w->endElement();
+			}
+			if (is_array($way['tags']))
+			foreach($way['tags'] as $tag)
+			{
+				$w->startElement('tag');
+				$w->writeAttribute('k',$tag[0]);
+				$w->writeAttribute('v',$tag[1]);
+				$w->endElement();
+			}
+			$w->endElement();
+		}
+
+
+
+		/// TODO: relations
+
+		$w->endElement(); // </osm>
+		$w->endDocument();
+		return($w->outputMemory());
+	}
+
+
+
+
+	private static function get_projected_bbox($bbox,$crs)
+	{
 			list($left,$bottom,$right,$top) = explode(',',$bbox);
 		
 			if ( !is_numeric($left) ||
@@ -222,82 +410,17 @@ class datafactory
 					if ($lat < $south) $south = $lat;
 				}
 			}
-			$bbox = "$east,$south,$west,$north";
-			
-			$backend->get_parsed_data($bbox,&$nodes,&$ways);
-			
-// 			var_dump($bbox,$nodes);
-			// Now, convert back all nodes' coordinates to the requested CRS...
-			
-			self::cs2cs($nodes,'epsg:4326',strtolower($crs),true);
-			
-// 			var_dump($bbox,$nodes);
-		}
-		else
-		{
-			// Requested a CRS native to the backends, just get the data...
-			
-			$backend->get_parsed_data($bbox,&$nodes,&$ways);
-			
-		}
-		
-		
+			return "$east,$south,$west,$north";
 		
 	}
-	
-	
-	
-	
 
-/*	function cs2cs($x,$y,$srs_in='epsg:4258',$srs_out='epsg:4326')
+
+	public static function get_outerbounds()
 	{
-		$r = shell_exec("echo \"$x $y\" | cs2cs -f %.20f +init=$srs_in +to +init=$srs_out");
-		sscanf($r,"%f %f",$x,$y);
-		return (array($x,$y));
-	}*/
-		
-	function cs2cs(& $points,$srs_in='epsg:4326',$srs_out='epsg:4326',$invert_input=false)
-	{
-		// Open some pipes to a "cs2cs" process, feed the points, parse the resulting points...
-	
-		$descriptorspec = array(
-			0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-			2 => array("file", "/tmp/error-output.txt", "a") // stderr is a file to write to
-		);
-		
-		$cwd = '/tmp';
-		$env = array();
-		
-		if ($invert_input)	$invert_flag = " -r -s"; else $invert_flag = '';
-		
-		$process = proc_open("cs2cs -f %.20f +init=$srs_in +to +init=$srs_out $invert_flag", $descriptorspec, $pipes, $cwd, $env);
-		
-// 		$result = array();
-		if (is_resource($process)) {
-			
-			foreach($points as $id=>$point)
-			{
-				list($x,$y) = $point;
-				fwrite($pipes[0], "$x $y\n");
-// 				echo "Point $id ($x,$y) passed to cs2cs\n"; ob_flush();
-			}
-			fclose($pipes[0]);
-			
-			foreach($points as $id=>$point)
-			{
-// 				echo "Recovering point $id\n"; ob_flush();
-				fscanf($pipes[1], "%f %f\n", $x2, $y2);
-				$points[$id] = array( $x2 , $y2 );
-			}
-			
-			fclose($pipes[1]);
-		}
-	
-// 		return ($result);
+		return self::$outerbounds;
 	}
 
-	
+
 }
 
 

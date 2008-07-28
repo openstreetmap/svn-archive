@@ -1803,5 +1803,6 @@
         <svg:symbol id="symbol-peak" viewBox="0 0 100 100">
             <svg:path fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
         </svg:symbol>
+
     </defs>
 </rules>

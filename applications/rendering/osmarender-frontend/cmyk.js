@@ -532,7 +532,7 @@ alert(stylestoprint);*/
 
 //Necessary change for firefox3... handles SVG as SVG not as XML/DOM
 //this.symbols = css.getElementsByTagName("symbol");
-this.symbols = rulesfile.getElementsByTagName("symbol");
+this.symbols = rulesfile.getElementsByTagName("svg:symbol");
 
 // Analysing rule file to model rules
 
@@ -934,6 +934,22 @@ CMYK.prototype.getBounds = function() {
 	return bounds;
 }
 
+CMYK.prototype.getScale = function() {
+	return this.getRuleModel().baseAttributes.scale;
+}
+
+CMYK.prototype.getTextAttenuation = function() {
+	return this.getRuleModel().baseAttributes.textAttenuation;
+}
+
+CMYK.prototype.setScale = function(scale) {
+	rulesfile.getElementsByTagName("rules")[0].setAttribute("scale",scale);
+}
+
+CMYK.prototype.setTextAttenuation = function(textAttenuation) {
+	rulesfile.getElementsByTagName("rules")[0].setAttribute("textAttenuation",textAttenuation);
+}
+
 //TODO: The following functions must be ported to a data model
 
 CMYK.prototype.setBounds = function(north,south,east,west) {
@@ -985,3 +1001,26 @@ CMYK.prototype.setShowInteractive = function(show) {
 	setGlobalBooleanAttribute("interactive",show);
 }
 
+CMYK.prototype.attachSymbol = function(symbol_id,feature_key,feature_value,symbol_width,symbol_height,symbol_layer) {
+	XHTML_NS="";
+	rule_tag = createElementCB("rule");
+//	XHTML_NS="http://www.w3.org/2000/svg";
+	symbol_tag = createElementCB("symbol");
+	XHTML_NS="http://www.w3.org/1999/xhtml";
+	rule_tag.setAttribute("e","node");
+	rule_tag.setAttribute("k",feature_key);
+	rule_tag.setAttribute("v",feature_value);
+	rule_tag.setAttribute("layer",symbol_layer);
+
+//	symbol_tag.setAttribute("xlink:href","#"+symbol_id);
+//	symbol_tag.setAttribute("xmlns:xlink","http://www.w3.org/1999/xlink");
+// Senza di questo non viene inserito l'xlink nell'use del risultante svg
+	symbol_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","#"+symbol_id);
+	symbol_tag.setAttribute("width",symbol_width+"px");
+	symbol_tag.setAttribute("height",symbol_height+"px");
+	//TODO: parametrize this
+	symbol_tag.setAttribute("transform","translate(-15,-15)");
+	
+	rule_tag.appendChild(symbol_tag);
+	rulesfile.getElementsByTagName("rules")[0].appendChild(rule_tag);
+}

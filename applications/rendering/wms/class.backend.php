@@ -1,10 +1,10 @@
 <?php
 
-/// @author Iván Sánchez Ortega <ivan@sanchezortega.es>
+/// @author IvÃ¡n SÃ¡nchez Ortega <ivan@sanchezortega.es>
 
 /**
     OSM WMS ("OpenStreetMap Web Map Service")
-    Copyright (C) 2008, Iván Sánchez Ortega
+    Copyright (C) 2008, IvÃ¡n SÃ¡nchez Ortega
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,11 +25,14 @@
 
 abstract class backend
 {
+
+	static $base_api_url='FIXME';
+
 	/// Returns two arrays, filled with the requested data
 	/// TODO: relations
-	function get_parsed_data($bbox,&$nodes,&$ways)
+	function get_parsed_data($bbox,&$nodes,&$ways,&$relations)
 	{
-		$nodes = $ways = array();
+		$nodes = $ways = $relations = array();
 		$xml = simplexml_load_string($this->get_data_as_osm($bbox));
 // 		$xml = simplexml_load_file("/tmp/osmxapi.xml");
 	
@@ -37,8 +40,14 @@ abstract class backend
 	
 		foreach($xml->node as $parsed_node)
 		{
-		// 	$attrs = $parsed_node->attributes();
-			$nodes[ (int)$parsed_node['id'] ] = array( (float)$parsed_node['lat'], (float)$parsed_node['lon'] );
+// 			$attrs = $parsed_node->attributes();
+			$tags =array();
+			foreach($parsed_node->tag as $tag)
+			{
+// print_r($tag);
+				$tags[] = array((string)$tag['k'],(string)$tag['v']);
+			}
+			$nodes[ (int)$parsed_node['id'] ] = array( (float)$parsed_node['lat'], (float)$parsed_node['lon'] , $tags);
 		}
 		
 		
@@ -47,14 +56,38 @@ abstract class backend
 			$way_id = (int)$parsed_way['id'];
 			foreach($parsed_way->nd as $nd)
 			{
-				$ways[ $way_id ][] = (int)$nd['ref'];
+				$ways[ $way_id ]['nodes'][] = (int)$nd['ref'];
 			}
 				
-		// 	$attrs = $parsed_node->attributes();
-		// 	$nodes[ $attrs['id'] ] = array( $attrs['lat'],$attrs['lon'] );
-		}	
+// 			$attrs = $parsed_way->attributes();
+			foreach($parsed_way->tag as $tag)
+			{
+				$ways[ $way_id ]['tags'][] = array($tag['k'],$tag['v']);
+			}
+			
+			$ways[ $way_id ]['user'] = $parsed_way['user'];
+			$ways[ $way_id ]['timestamp'] = $parsed_way['timestamp'];
+
+		}
+	
+// 	foreach($nodes as $id=>$node)
+// 	{
+// 		list($x,$y,$ts) = $node;
+// 		echo "$id : $x,$y";
+// 		if (!empty($ts))
+// 		{
+// 			echo " - ";
+// 			$r=array();
+// 			foreach($ts as $t)
+// 				$r[] = "{$t[0]}={$t[1]}";
+// 			echo implode(' ; ',$r);
+// 		}
+// 		echo "\n";
+// 	}
+
 	}
 	
+
 }
 
 

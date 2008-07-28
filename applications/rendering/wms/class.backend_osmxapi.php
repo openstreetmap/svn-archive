@@ -1,10 +1,10 @@
 <?php
 
-/// @author Iván Sánchez Ortega <ivan@sanchezortega.es>
+/// @author IvÃ¡n SÃ¡nchez Ortega <ivan@sanchezortega.es>
 
 /**
     OSM WMS ("OpenStreetMap Web Map Service")
-    Copyright (C) 2008, Iván Sánchez Ortega
+    Copyright (C) 2008, IvÃ¡n SÃ¡nchez Ortega
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ class backend_osmxapi extends backend_api
 	/// TODO: projection, projection, projection.
 	function data_url($bbox)
 	{
+
 		list($left,$bottom,$right,$top) = explode(',',$bbox);
 		
 		if ( !is_numeric($left) ||

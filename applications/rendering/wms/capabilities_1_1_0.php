@@ -61,8 +61,8 @@ $server_addr = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}";
       </GetCapabilities>
       <GetMap>
         <Format>image/png</Format>
-        <Format>image/gif</Format>
-        <Format>image/jpeg</Format>
+<!--         <Format>image/gif</Format> -->
+<!--         <Format>image/jpeg</Format> -->
         <DCPType>
           <HTTP>
             <Get>
@@ -104,6 +104,8 @@ $server_addr = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}";
      
      
      echo wireframe::getCapabilities();
+     echo osmarender::getCapabilities();
+
 ?>
     </Layer>
   </Capability>

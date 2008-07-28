@@ -1,10 +1,10 @@
 <?php
 
-/// @author Iván Sánchez Ortega <ivan@sanchezortega.es>
+/// @author IvÃ¡n SÃ¡nchez Ortega <ivan@sanchezortega.es>
     
 /**
     OSM WMS ("OpenStreetMap Web Map Service")
-    Copyright (C) 2008, Iván Sánchez Ortega
+    Copyright (C) 2008, IvÃ¡n SÃ¡nchez Ortega
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 
 require('error_handler.php');
 require_once('class.wireframe.php');
+require_once('class.osmarender.php');
 require_once('class.backend.php');
 require_once('class.backend_api.php');
 require_once('class.backend_osmxapi.php');
@@ -63,6 +64,10 @@ elseif ($_REQUEST['REQUEST'] == 'GetMap')
 	if ($_REQUEST['LAYERS']=='wireframe')
 	{
 		wireframe::getMap($bbox,$crs,$height,$width,$format);
+	}
+	elseif ($_REQUEST['LAYERS']=='osmarender')
+	{
+		osmarender::getMap($bbox,$crs,$height,$width,$format);
 	}
 	
 }

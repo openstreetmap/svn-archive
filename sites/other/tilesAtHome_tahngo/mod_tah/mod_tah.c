@@ -173,6 +173,7 @@ static int xyz_to_blankdbtile(request_rec *r, char ** tileName, char * layer, in
     apr_table_setn(r->headers_out, "Cache-Control","max-age=43200");  /* 12 hours */
     ap_set_content_type(r, "image/png");
 //  register_timeout ("send", r);
+//  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
     switch (type)
     {
       case 0: 	{ return HTTP_NOT_FOUND;
@@ -181,8 +182,8 @@ static int xyz_to_blankdbtile(request_rec *r, char ** tileName, char * layer, in
 		  ap_rwrite(land,sizeof(land),r);
 		  return OK;
 		}
-      case 2 :  { ap_set_content_length(r, sizeof(land));
-		  ap_rwrite(land,sizeof(land),r);
+      case 2 :  { ap_set_content_length(r, sizeof(sea));
+		  ap_rwrite(sea,sizeof(sea),r);
 		  return OK;
 		}
       case 3 :  { return HTTP_NOT_FOUND;

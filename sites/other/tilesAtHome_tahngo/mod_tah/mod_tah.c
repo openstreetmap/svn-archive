@@ -303,6 +303,8 @@ static int serve_legacytile(request_rec* r, request_data* d) {
   if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME | APR_FINFO_SIZE, r->pool)) != APR_SUCCESS) {
     return HTTP_NOT_FOUND;
   }
+  if( finfo.size == 0 ) return HTTP_NOT_FOUND;
+
   ap_update_mtime(r, finfo.mtime);
   ap_set_last_modified(r);
   if ((res = ap_meets_conditions(r)) != OK) return res;

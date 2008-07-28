@@ -42,7 +42,7 @@ def tiledetails(request,layername,z,x,y):
     tilefile = ''
   else:
    basetilepath = Settings().getSetting(name='base_tile_path')
-   tilefile = os.path.join(basetilepath,"%s_%s_%d" % (layername,base_z,base_x//1000),"%s_%s"%(base_x,base_y))
+   tilefile = os.path.join(basetilepath,"%s_%s/%d" % (layername,base_z,base_x),"%s_%s"%(base_x,base_y))
  
   try: 
     fstat = os.stat(tilefile)

@@ -4,6 +4,7 @@ import StringIO
 from PIL import Image
 from tah.tah_intern.Tile import Tile
 from django import newforms as forms
+from django.views.decorators.cache import cache_control
 
 def latlon2relativeXY(lat,lon):
   x = (lon + 180) / 360
@@ -15,6 +16,7 @@ def latlon2xy(lat,lon,z):
   x,y = latlon2relativeXY(lat,lon)
   return(n*x, n*y)
 
+@cache_control(max_age=864000) #cache for 10 days
 def export_MapOf(request):
   form = MapOfForm(request.GET)
   if form.is_valid():

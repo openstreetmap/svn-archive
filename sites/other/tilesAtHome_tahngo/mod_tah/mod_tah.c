@@ -117,21 +117,18 @@ static void xyz_to_basexyz( request_data* d ) {
 
 
 /* Find the (index) position of a tile in a tileset. */
-static int xyz_to_n(int x, int y, int z, int baseX, int baseY, int baseZ, request_rec * r) {
-  int offsetX;
-  int offsetY;
-  int tileNo = 0;
+static int xyz_to_n(request_data * d) {
   int i;
+  int tileNo = 0;
 
-  for (i = baseZ; i < z; i++) {
-    tileNo += 1 << (2*(i - baseZ));
+  for (i = d->baseZ; i < d->z; i++) {
+    tileNo += 1 << (2*(i - d->baseZ));
   }
-  offsetX = baseX << (z - baseZ);
-  offsetY = baseY << (z - baseZ);
-  tileNo += (y - offsetY) * (1 << (z - baseZ));
-  tileNo += (x - offsetX);
+  int offsetX = d->baseX << (d->z - d->baseZ);
+  int offsetY = d->baseY << (d->z - d->baseZ);
+  tileNo += (d->y - offsetY) * (1 << (d->z - d->baseZ));
+  tileNo += (d->x - offsetX);
 
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "baseZ %i OffsetX %i OffsetY %i tileNo %i", baseZ, offsetX, offsetY, tileNo);
   return tileNo;
 }
 
@@ -146,31 +143,29 @@ static void xyz_to_legacytile(request_rec *r, char ** tilesetName, char * layer,
 }
 
 
-static int parse_tileset(request_rec *r, request_data *d, char* tilesetName)
-{
+static int parse_tileset(request_rec *r, request_data *d, char* tilesetName) {
   int limit;
   int tileOffset, tileSize;
-  apr_status_t res;
-  apr_size_t len;
   int buf[32];
   apr_off_t offset;
 
   /* open the tileset file */
-  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS)
-  { ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "ERROR: failed to open tilesetfile");
+  apr_status_t res;
+  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "ERROR: failed to open tilesetfile");
     //this shouldn't happen, as we checked the file before;
     return HTTP_NOT_FOUND;
   };
 	
   /* read the header */
-  len = 2*sizeof(int);
-  if (((res = apr_file_read(d->tileset, buf, &len)) != APR_SUCCESS) || ((*((int *)(&buf[0]))) != FILEVERSION))
-  { ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
+  apr_size_t len = 2*sizeof(int);
+  if (((res = apr_file_read(d->tileset, buf, &len)) != APR_SUCCESS) || ((*((int *)(&buf[0]))) != FILEVERSION)) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
     return HTTP_NOT_FOUND;
   }
     
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "baseX %i baseY %i, int: %i", baseX, baseY, sizeof(int));
-  int tileNo = xyz_to_n(d->x, d->y, d->z, d->baseX, d->baseY, d->baseZ, r);
+  int tileNo = xyz_to_n(d);
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tile number %i", tileNo);
 
   offset = 2*sizeof(int) + tileNo*sizeof(int);
@@ -205,35 +200,37 @@ static int serve_tileset(request_rec* r, request_data* d) {
 
   parse_tileset( r, d, tilesetName );    /* parse the tileset file. */
 
-  if (d->tileOffset < 0)
-  { ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT! Negative offset ", tilesetName);
+  if (d->tileOffset < 0) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT! Negative offset ", tilesetName);
     return HTTP_NOT_FOUND;
   }
-  if (d->tileOffset < MIN_VALID_OFFSET)
-  { switch (d->tileOffset)
-    {
-      case 0: { return HTTP_NOT_FOUND;	
-       	      }
-      case 1: {	ap_set_content_length(r, sizeof(sea));
-		ap_rwrite(sea,sizeof(sea),r);
-		return OK;
-	      }
-      case 2: { ap_set_content_length(r, sizeof(land));
-		ap_rwrite(land,sizeof(land),r);
-		return OK;
-	      }
-      case 3: { ap_set_content_length(r, sizeof(transparent));   /* TRANSPARENT */
-		ap_rwrite(transparent,sizeof(transparent),r);
-		return OK;
-	      }
-      default:{	/* ERROR_TILE */
-		return HTTP_NOT_FOUND;
-	      }
+  if (d->tileOffset < MIN_VALID_OFFSET) {
+    switch (d->tileOffset) {
+      case 0: { return HTTP_NOT_FOUND;	}
+      case 1: {
+        ap_set_content_length(r, sizeof(sea));
+        ap_rwrite(sea,sizeof(sea),r);
+		  return OK;
+      }
+      case 2: {
+        ap_set_content_length(r, sizeof(land));
+        ap_rwrite(land,sizeof(land),r);
+        return OK;
+      }
+      case 3: {
+        ap_set_content_length(r, sizeof(transparent));   /* TRANSPARENT */
+        ap_rwrite(transparent,sizeof(transparent),r);
+        return OK;
+      }
+      default: { /* ERROR_TILE */
+        return HTTP_NOT_FOUND;
+      }
     }
-  } else
-  { r->filename = apr_pstrdup(r->pool, tilesetName);
-    ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
-  }
+  } /* if */
+
+  /* >= MIN_VALID_OFFSET */
+  r->filename = apr_pstrdup(r->pool, tilesetName);
+  ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
 
   int limit, oob;
   int buf2[64];
@@ -244,7 +241,7 @@ static int serve_tileset(request_rec* r, request_data* d) {
 //  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",
 //    r->handler, r->uri, r->filename, r->path_info);
 
-  int tileNo = xyz_to_n(d->x, d->y, d->z, d->baseX, d->baseY, d->baseZ, r);
+  int tileNo = xyz_to_n(d);
 
   offset = 2*sizeof(int) + tileNo*sizeof(int);
   if (apr_file_seek(d->tileset, APR_SET, &offset) != APR_SUCCESS) {
@@ -280,6 +277,7 @@ static int serve_tileset(request_rec* r, request_data* d) {
   d->tileLength -= d->tileOffset;
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile %s offset % i, length %i", r->filename, tileOffset, tileLength);
 
+  /* actually send the data */
   ap_set_content_length(r, d->tileLength);
   ap_set_content_type(r, "image/png");
 	
@@ -348,31 +346,28 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
     bit_off = 3 - (rd->baseX % 4);  	   /* extract the actual blankness data. */
     type = ((data >> (2*bit_off)) & 3);
 
-/*    ap_set_last_modified(r);
-      ap_set_content_length(r, finfo.size);
-      if ((res = ap_meets_conditions(r)) != OK) return res;
-      ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
-*/
     ap_set_content_type(r, "image/png");
 //  register_timeout ("send", r);
 //  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
-    switch (type)
-    {
-      case 0: 	{ return HTTP_NOT_FOUND;
-		}
-      case 1 :  { ap_set_content_length(r, sizeof(land));
-		  ap_rwrite(land,sizeof(land),r);
-		  return OK;
-		}
-      case 2 :  { ap_set_content_length(r, sizeof(sea));
-		  ap_rwrite(sea,sizeof(sea),r);
-		  return OK;
-		}
-      case 3 :  { return HTTP_NOT_FOUND;
-		}			
+    switch (type) {
+      case 0: {
+        return HTTP_NOT_FOUND;
+      }
+      case 1: {
+        ap_set_content_length(r, sizeof(land));
+        ap_rwrite(land,sizeof(land),r);
+        return OK;
+      }
+      case 2: {
+        ap_set_content_length(r, sizeof(sea));
+        ap_rwrite(sea,sizeof(sea),r);
+        return OK;
+      }
+      case 3: {
+        return HTTP_NOT_FOUND;
+      }			
     } 
   }
-  return HTTP_NOT_FOUND;
 } /* serve_oceantile */
 
 	
@@ -384,17 +379,16 @@ static int tah_handler(request_rec *r)
   }
   if (r->method_number != M_GET) return DECLINED;
 
-  int n;
   apr_status_t res;
   request_data* d = apr_palloc( r->pool, sizeof( request_data ) );
 
   d->layer[0] = '\0';
   /* URI = ...Tiles/[layer]/<z>/<x>/<y>.png   Safe?*/
-  n = sscanf(r->uri, "/Tiles/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
+  int n = sscanf(r->uri, "/Tiles/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
   if (n < 4) return DECLINED;  
 
-/* Servers SHOULD send the must-revalidate directive if and only if failure to revalidate a request on the entity
-   could result in incorrect operation, such as a silently unexecuted financial transaction. */
+  /* Servers SHOULD send the must-revalidate directive if and only if failure to revalidate a request on the entity
+     could result in incorrect operation, such as a silently unexecuted financial transaction. */
   apr_table_setn(r->headers_out, "Cache-Control","max-age=10800");
 
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",

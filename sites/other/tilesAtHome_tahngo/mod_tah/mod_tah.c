@@ -8,6 +8,8 @@
 /* cd /etc/apache2/mods-enabled ; ln -s ../mods-available/mod_tah.load     */
 /* In apache <Location /Tiles> use  SetHandler tah_handler                 */
 
+/* TODO: Do not use int! Need a four byte unsigned integer. */
+
 #include <httpd.h>
 #include <http_config.h>
 #include <http_protocol.h>
@@ -150,8 +152,12 @@ static int serve_tileset(request_rec* r, request_data* d) {
 	
   struct apr_finfo_t finfo;
   apr_status_t res;
-  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME, r->pool)) != APR_SUCCESS) { 
+  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME|APR_FINFO_SIZE, r->pool)) != APR_SUCCESS) { 
     return HTTP_NOT_FOUND; /* will go on */
+  }
+  if (finfo.size < 8 + 1366*4) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tileset %s too small, %i!", tilesetName, finfo.size );
+    return HTTP_NOT_FOUND;
   }
 
   ap_update_mtime(r, finfo.mtime);
@@ -165,38 +171,24 @@ static int serve_tileset(request_rec* r, request_data* d) {
     //this shouldn't happen, as we checked the file before;
     return HTTP_NOT_FOUND;
   };
+  apr_mmap_t* header;
+  if ((res = apr_mmap_create( &header, d->tileset, 0, 8+1366*4, APR_MMAP_READ, r->pool )) != APR_SUCCESS) {
+    char err[256];
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "mmap failed for %s header, %s", tilesetName, apr_strerror( res, err, 256 ));
+    return HTTP_NOT_FOUND;
+  } // if
 	
   /* read the header */
-  apr_size_t len = 2*sizeof(int);
-  int buf[32];
-  if (((res = apr_file_read(d->tileset, buf, &len)) != APR_SUCCESS) || ((*((int *)(&buf[0]))) != FILEVERSION)) {
+  int* version = header->mm;
+  if (*version != FILEVERSION) {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
     return HTTP_NOT_FOUND;
   }
     
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "baseX %i baseY %i, int: %i", baseX, baseY, sizeof(int));
+  unsigned* offset_table = header->mm + 8;
   int tileNo = xyz_to_n(d);
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tile number %i", tileNo);
+  d->tileOffset = offset_table[tileNo];
 
-  apr_off_t offset = 2*sizeof(int) + tileNo*sizeof(int);
-  if (apr_file_seek(d->tileset, APR_SET, &offset) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT, ", r->filename);
-	return HTTP_NOT_FOUND;
-  }
-
-  len = 32*sizeof(int);
-  int buf2[64];
-  if ((res = apr_file_read(d->tileset, buf2, &len)) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT could not read offset, ", r->filename);
-  }
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "buf2  %i %i %i %i", buf2[0], buf2[1], buf2[2], buf2[3]);
-    
-  d->tileOffset = buf2[0];
-
-  if (d->tileOffset < 0) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT! Negative offset ", tilesetName);
-    return HTTP_NOT_FOUND;
-  }
   if (d->tileOffset < MIN_VALID_OFFSET) {
     switch (d->tileOffset) {
       case 0: {
@@ -204,16 +196,19 @@ static int serve_tileset(request_rec* r, request_data* d) {
 		}
       case 1: {
         ap_set_content_length(r, sizeof(sea));
+        ap_set_content_type(r, "image/png");
         ap_rwrite(sea,sizeof(sea),r);
 		  return OK;
       }
       case 2: {
         ap_set_content_length(r, sizeof(land));
+        ap_set_content_type(r, "image/png");
         ap_rwrite(land,sizeof(land),r);
         return OK;
       }
       case 3: {
         ap_set_content_length(r, sizeof(transparent));   /* TRANSPARENT */
+        ap_set_content_type(r, "image/png");
         ap_rwrite(transparent,sizeof(transparent),r);
         return OK;
       }
@@ -224,22 +219,29 @@ static int serve_tileset(request_rec* r, request_data* d) {
   } /* if */
 
   /* >= MIN_VALID_OFFSET */
-  int i = 1;
-  d->tileLength = buf2[i];
-  while (d->tileLength < MIN_VALID_OFFSET) {
-    i++;
-    if (i > 31) {
-      len = 32*sizeof(int);
-      if ((res = apr_file_read(d->tileset, buf2, &len)) != APR_SUCCESS) {
-	ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT could not read offset, ", r->filename);
-      }					
-      i = 0;
-    }
-    d->tileLength = buf2[i];
+  d->tileLength = 0;
+  int tile;
+  /* look for the next non-land/sea/... tile */
+  for (tile = tileNo + 1; tile <= 1366; ++tile) {
+    if (offset_table[tile] > MIN_VALID_OFFSET) {
+	   d->tileLength = offset_table[tile] - d->tileOffset;
+		break;
+	 }
   }
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile %s offset % i, length %i, %i %i", r->filename, tileOffset, tileLength, i, sizeof(int));
-  d->tileLength -= d->tileOffset;
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile %s offset % i, length %i", r->filename, tileOffset, tileLength);
+  if (d->tileLength == 0)
+  {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "failed to get tile length. file %s, tile %i", r->filename, tileNo );
+	 return HTTP_NOT_FOUND;
+  }
+  apr_mmap_delete(header);
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tile %i, offset %i, length %i", tileNo, d->tileOffset, d->tileLength );
+
+  if (finfo.size < d->tileOffset + d->tileLength) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tileset %s too small, %i/%i!", tilesetName, (d->tileOffset + d->tileLength), finfo.size );
+    return HTTP_NOT_FOUND;
+  }
+
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile %s offset % i, length %i, %i %i", r->filename, tileOffset, tileLength, tile, sizeof(int));
 
   /* actually send the data */
   ap_set_content_length(r, d->tileLength);
@@ -315,6 +317,7 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
     ap_set_content_type(r, "image/png");
 //  register_timeout ("send", r);
 //  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
+
     switch (type) {
       case 0: {
         return HTTP_NOT_FOUND;
@@ -361,6 +364,7 @@ static int tah_handler(request_rec *r)
   //  r->handler, r->uri, r->filename, r->path_info);
 
   xyz_to_basexyz( d );    /* search for the tileset. */
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serving layer %s @ %i, x %i, y %i, baseZ %i, baseX %i, baseY %i", d->layer, d->z, d->x, d->y, d->baseZ, d->baseX, d->baseY );
 
   int code;
   if( (code = serve_tileset(r, d)) != HTTP_NOT_FOUND ) { return code; }

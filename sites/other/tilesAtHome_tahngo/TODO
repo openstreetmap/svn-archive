@@ -1,20 +1,27 @@
 t@h server
 ==========
+NOTE, spaetz will be gone Aug 1st-Aug 18th, so he won't be able to do something during that time!
+
+ - Convert server to use finer grained directory structure that is in SVN code but not deployed. We still have potentiall 4m tiles in 1 dir.
+ - Make the server use tah_mod for tile serving to ease RAM usage.
+ - Send a "Last-Modified" header back with the Tile files. (Expires, Last Modified, Etag HTTP headers) (currently done, check that it also works with mod_tag)
+ - upgrade django to SVN version to prevent uploads from being stored in RAM
+ - use LimitRequestBody 512000 in all tah Directories/Locations in the apache conf, to prevent clients from uploading massive amounts of data, e.g. when taking a new request.
+ - Remove usage of mod_python by forwarding all tah requests to lighttpd? (evaluate!)
+ - Check the "LayerCapabilities" of the client and only send appropriate requests.
  - Discard incomplete tileset uploads (mail user?)
  - Make upload processor smarter (use upload priorities)
  - Make the clients 'put job back to server' actually work. Right now, it's
    just not possible to rerequest a job where the server thinks it is still in
    progress.
- - Make use of client feedback (re-render on error)
+ - Make use of client feedback (re-render on error). Depends on implementation of feedback mechansism.
  - Make use of complexity that client can handle and only hand out to clients that can.
- - Send a "Last-Modified" header back with the Tile files. (Expires, Last Modified, Etag HTTP headers)
  - Fixup lowzoom stitching to look good, so we can do that server side again.
- - Nicer User statistics
- - Make the directories be created with group write permissions in process_uploads.py
+ - Fix MapOf to return the exact excerpt.
+ - Deploy maximum MapOf image size and cache-control header
 
 t@h client (will not be implemented by spaetz)
 ==========
- - Ditch the token stuff, it's unused
  - implement "I'm still on it" pinging
  - implement other feedback "error reasons"
- - ditch the sleep() after upload. It's not needed.
+ - Send the current client version as data (or other numeric) string that we can compare against. We don't want to maintain a list of city names in the server.

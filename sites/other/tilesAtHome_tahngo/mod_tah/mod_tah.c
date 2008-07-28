@@ -248,7 +248,7 @@ static int tah_handler(request_rec *r)
 
   d->layer[0] = '\0';
   /* URI = ...Tiles/[layer]/<z>/<x>/<y>.png   Safe?*/
-  n = sscanf(r->path_info, "/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
+  n = sscanf(r->uri, "/Tiles/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
   if (n < 4) return DECLINED;  
 
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",

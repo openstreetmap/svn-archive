@@ -8,8 +8,6 @@
 /* cd /etc/apache2/mods-enabled ; ln -s ../mods-available/mod_tah.load     */
 /* In apache <Location /Tiles> use  SetHandler tah_handler                 */
 
-#define USE_SENDFILE
-
 #include "httpd.h"
 #include "http_config.h"
 #include "http_protocol.h"
@@ -20,8 +18,6 @@
 #include <apr_file_io.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 
@@ -264,15 +260,36 @@ static int tah_handler(request_rec *r)
   basexyz_to_tilesetname(r->pool, &tilesetName, d->layer, d->baseX, d->baseY, d->baseZ);
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile: %s", tilesetName);
 	
+  apr_size_t bytes_sent = 0;
 
   if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME, r->pool)) != APR_SUCCESS)
   { /* tileset not found. fall back to legacy tile format. */
     xyz_to_legacytile(r, &tilesetName, d->layer, d->x, d->y, d->z);
     //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "No tilesetfile, trying legacy tile: %s", tilesetName);
 
-    /* If legacy tile found, just leave to serv it. Any url translation needed in httpd config */
-    /* Need to check and test before deployment */
-    if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME, r->pool)) == APR_SUCCESS) return DECLINED;
+    /* If legacy tile found, just serv it. */
+    if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME | APR_FINFO_SIZE, r->pool)) == APR_SUCCESS)
+	 {
+  		ap_update_mtime(r, finfo.mtime);
+  		ap_set_last_modified(r);
+      if ((res = ap_meets_conditions(r)) != OK) return res;
+
+      if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
+         ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "Could not open legacy tile: %s", tilesetName);
+			return DECLINED;
+		}
+
+      ap_set_content_length(r, finfo.size);
+      ap_set_content_type(r, "image/png");
+	
+      ap_send_fd(d->tileset, r, 0, finfo.size, &bytes_sent);
+      if (bytes_sent != finfo.size) {
+        /* no way to fix this. just remember it in the log. */
+        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "sendfile failed to deliver correct number of bytes, ", r->filename);
+      }
+      apr_file_close(d->tileset);
+      return OK;
+	 }
 
     /* not found, too. look into the blank DB. Fail if problem*/
     return(xyz_to_blankdbtile(r, &tilesetName, d->layer, d->x, d->y, d->z, d->baseX, d->baseY));
@@ -336,7 +353,6 @@ static int tah_handler(request_rec *r)
 
   int limit, oob;
   int buf2[64];
-  apr_size_t bytes_sent = 0;
   apr_size_t len;
   apr_off_t offset;
   char layer[32];
@@ -440,3 +456,4 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module = {
   mod_tah_cmds,                /* table of config file commands       */
   tah_register_hooks           /* register hooks                      */
 };
+

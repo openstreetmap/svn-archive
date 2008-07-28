@@ -93,14 +93,14 @@ struct request_data {
   int baseX, baseY,  baseZ;
   char layer[32];
   apr_file_t * tileset;
-  int tileOffset, tileLength;
+  unsigned int tileOffset, tileLength;
 };
 
 
 /* Convert x y z triple to tileset file name. */
 static void basexyz_to_tilesetname(apr_pool_t *p, char ** tilesetName, char * layer, int x, int y, int z) {
   char * fileName;
-  fileName = apr_psprintf(p, "%s/%s_%02d/%04i/%i_%i", basetilepath, layer, z, x, x, y);
+  fileName = apr_psprintf(p, "%s/%s_%d/%04i/%i_%i", basetilepath, layer, z, x, x, y);
   *tilesetName = fileName;
 };
 

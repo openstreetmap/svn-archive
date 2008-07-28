@@ -288,6 +288,10 @@ static int tah_handler(request_rec *r)
   n = sscanf(r->uri, "/Tiles/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
   if (n < 4) return DECLINED;  
 
+/* Servers SHOULD send the must-revalidate directive if and only if failure to revalidate a request on the entity
+   could result in incorrect operation, such as a silently unexecuted financial transaction. */
+  apr_table_setn(r->headers_out, "Cache-Control","max-age=10800");
+
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",
   //  r->handler, r->uri, r->filename, r->path_info);
 
@@ -307,27 +311,8 @@ static int tah_handler(request_rec *r)
     return serve_oceantile(r, d);
   }  
 
-/*
-   ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve2 handler(%s), uri(%s), filename(%s), path_info(%s)",
-     r->handler, r->uri, r->filename, r->path_info);
-   apr_bucket *e;
-   apr_bucket_brigade *in;
-   bb = apr_brigade_create(r->pool, r->connection->bucket_alloc);
-   e = apr_bucket_file_create(fd, m->msg_start, m->body_end - m->msg_start, r->pool,  r->connection->bucket_alloc);
-   apr_bucket_file_enable_mmap(e, 0);
-   APR_BRIGADE_INSERT_TAIL(bb, e);
-   return ap_pass_brigade(r->output_filters, bb);
-   e = apr_bucket_file_create(fd, 0, (apr_size_t)
-   finfo.size, r->pool, in->bucket_alloc );
-   e = apr_bucket_eos_create(in->bucket_alloc);
-   APR_BRIGADE_INSERT_TAIL(in, e); */
-
   ap_update_mtime(r, finfo.mtime);
   ap_set_last_modified(r);
-
-/* Servers SHOULD send the must-revalidate directive if and only if failure to revalidate a request on the entity
-   could result in incorrect operation, such as a silently unexecuted financial transaction. */
-  apr_table_setn(r->headers_out, "Cache-Control","max-age=10800");
 
   if ((res = ap_meets_conditions(r)) != OK) return res;
 

@@ -145,7 +145,7 @@ static void xyz_to_legacytile(request_rec *r, char ** tilesetName, char * layer,
   *tilesetName = fileName;
 }
 
-static int xyz_to_blankdbtile(request_rec *r, char ** tileName, char * layer, int x, int y, int z, int baseX, int baseY) {
+static int xyz_to_blankdbtile(request_rec *r, request_data* rd) {
   char * fileName;
   apr_status_t res;
   apr_size_t len;
@@ -154,15 +154,15 @@ static int xyz_to_blankdbtile(request_rec *r, char ** tileName, char * layer, in
   int bit_off;
   int type;
 
-  if (z < 12) {
+  if (rd->z < 12) {
     /* only available for zooms levels >= 12. */
     return HTTP_NOT_FOUND;
   } else {		
-    offset = (4096*baseY + baseX) >> 2;
+    offset = (4096*rd->baseY + rd->baseX) >> 2;
     dir_data_t* d = ap_get_module_config(r->per_dir_config, &tilesAtHome_module );
     unsigned char* data_start = d->oceanDB_mmap->mm;
     data = data_start[ offset ];
-    bit_off = 3 - (baseX % 4);  	   /* extract the actual blankness data. */
+    bit_off = 3 - (rd->baseX % 4);  	   /* extract the actual blankness data. */
     type = ((data >> (2*bit_off)) & 3);
 
 /*    ap_set_last_modified(r);
@@ -293,7 +293,7 @@ static int tah_handler(request_rec *r)
 	 }
 
     /* not found, too. look into the blank DB. Fail if problem*/
-    return(xyz_to_blankdbtile(r, &tilesetName, d->layer, d->x, d->y, d->z, d->baseX, d->baseY));
+    return xyz_to_blankdbtile(r, d);
   }  
 
 /*

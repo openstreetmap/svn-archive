@@ -146,88 +146,6 @@ static void xyz_to_legacytile(request_rec *r, char ** tilesetName, char * layer,
 }
 
 
-static int serve_legacytile(request_rec* r, request_data* d) {
-  apr_status_t res;
-  char* tilesetName;
-  struct apr_finfo_t finfo;
-
-  xyz_to_legacytile(r, &tilesetName, d->layer, d->x, d->y, d->z);
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "No tilesetfile, trying legacy tile: %s", tilesetName);
-
-  /* If legacy tile found, just serv it. */
-  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME | APR_FINFO_SIZE, r->pool)) != APR_SUCCESS) {
-    return DECLINED;
-  }
-  ap_update_mtime(r, finfo.mtime);
-  ap_set_last_modified(r);
-  if ((res = ap_meets_conditions(r)) != OK) return res;
-
-  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "Could not open legacy tile: %s", tilesetName);
-    return DECLINED;
-  }
-
-  ap_set_content_length(r, finfo.size);
-  ap_set_content_type(r, "image/png");
- 
-  apr_size_t bytes_sent = 0;
-  ap_send_fd(d->tileset, r, 0, finfo.size, &bytes_sent);
-  if (bytes_sent != finfo.size) {
-    /* no way to fix this. just remember it in the log. */
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "sendfile failed to deliver correct number of bytes, ", r->filename);
-  }
-  apr_file_close(d->tileset);
-  return OK;
-}
-
-
-static int serve_oceantile(request_rec *r, request_data* rd) {
-  char * fileName;
-  apr_status_t res;
-  apr_size_t len;
-  apr_off_t offset;
-  unsigned char data;
-  int bit_off;
-  int type;
-
-  if (rd->z < 12) {
-    /* only available for zooms levels >= 12. */
-    return HTTP_NOT_FOUND;
-  } else {		
-    offset = (4096*rd->baseY + rd->baseX) >> 2;
-    dir_data_t* d = ap_get_module_config(r->per_dir_config, &tilesAtHome_module );
-    unsigned char* data_start = d->oceanDB_mmap->mm;
-    data = data_start[ offset ];
-    bit_off = 3 - (rd->baseX % 4);  	   /* extract the actual blankness data. */
-    type = ((data >> (2*bit_off)) & 3);
-
-/*    ap_set_last_modified(r);
-      ap_set_content_length(r, finfo.size);
-      if ((res = ap_meets_conditions(r)) != OK) return res;
-      ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
-*/
-    ap_set_content_type(r, "image/png");
-//  register_timeout ("send", r);
-//  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
-    switch (type)
-    {
-      case 0: 	{ return HTTP_NOT_FOUND;
-		}
-      case 1 :  { ap_set_content_length(r, sizeof(land));
-		  ap_rwrite(land,sizeof(land),r);
-		  return OK;
-		}
-      case 2 :  { ap_set_content_length(r, sizeof(sea));
-		  ap_rwrite(sea,sizeof(sea),r);
-		  return OK;
-		}
-      case 3 :  { return HTTP_NOT_FOUND;
-		}			
-    } 
-  }
-  return HTTP_NOT_FOUND;
-}
-
 static int parse_tileset(request_rec *r, request_data *d, char* tilesetName)
 {
   int limit;
@@ -266,47 +184,19 @@ static int parse_tileset(request_rec *r, request_data *d, char* tilesetName)
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile index %s is CORRUPT could not read offset, ", tilesetName);
   }
   d->tileOffset = buf[0];
-}
-	
-static int tah_handler(request_rec *r)
-{ /* Only when its our turn. SetHandler tah_handler in <Location */
-  if (!r->handler || strcasecmp(r->handler, "tah_handler") != 0) {
-    /* r->handler wasn't us, so it's not our business */
-    return DECLINED;
-  }
-  if (r->method_number != M_GET) return DECLINED;
+} /* parse_tileset */
 
-  int n;
-  apr_status_t res;
-  request_data* d = apr_palloc( r->pool, sizeof( request_data ) );
-  struct apr_finfo_t finfo;
 
-  d->layer[0] = '\0';
-  /* URI = ...Tiles/[layer]/<z>/<x>/<y>.png   Safe?*/
-  n = sscanf(r->uri, "/Tiles/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
-  if (n < 4) return DECLINED;  
-
-/* Servers SHOULD send the must-revalidate directive if and only if failure to revalidate a request on the entity
-   could result in incorrect operation, such as a silently unexecuted financial transaction. */
-  apr_table_setn(r->headers_out, "Cache-Control","max-age=10800");
-
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",
-  //  r->handler, r->uri, r->filename, r->path_info);
-
-  xyz_to_basexyz( d );    /* search for the tileset. */
-  /* ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "handler:%s layer:%s z:%d x:%d y:%d baseX:%d baseY:%d", \
-    r->handler, d->layer, d->z, d->x, d->y, d->baseX, d->baseY); */
+static int serve_tileset(request_rec* r, request_data* d) {
   char * tilesetName;
   basexyz_to_tilesetname(r->pool, &tilesetName, d->layer, d->baseX, d->baseY, d->baseZ);
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile: %s", tilesetName);
 	
-  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME, r->pool)) != APR_SUCCESS)
-  { /* tileset not found. fall back to legacy tile format. */
-
-	 if( serve_legacytile(r, d) == OK ) { return OK; }
-    /* not found, too. look into the OceanDB. Fail if problem */
-    return serve_oceantile(r, d);
-  }  
+  struct apr_finfo_t finfo;
+  apr_status_t res;
+  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME, r->pool)) != APR_SUCCESS) { 
+    return HTTP_NOT_FOUND; /* will go on */
+  }
 
   ap_update_mtime(r, finfo.mtime);
   ap_set_last_modified(r);
@@ -401,7 +291,123 @@ static int tah_handler(request_rec *r)
   }
     apr_file_close(d->tileset);
     return OK;
-}
+} /* serve_tileset */
+
+
+static int serve_legacytile(request_rec* r, request_data* d) {
+  char* tilesetName;
+  xyz_to_legacytile(r, &tilesetName, d->layer, d->x, d->y, d->z);
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "No tilesetfile, trying legacy tile: %s", tilesetName);
+
+  /* If legacy tile found, just serv it. */
+  struct apr_finfo_t finfo;
+  apr_status_t res;
+  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME | APR_FINFO_SIZE, r->pool)) != APR_SUCCESS) {
+    return DECLINED;
+  }
+  ap_update_mtime(r, finfo.mtime);
+  ap_set_last_modified(r);
+  if ((res = ap_meets_conditions(r)) != OK) return res;
+
+  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "Could not open legacy tile: %s", tilesetName);
+    return DECLINED;
+  }
+
+  ap_set_content_length(r, finfo.size);
+  ap_set_content_type(r, "image/png");
+ 
+  apr_size_t bytes_sent = 0;
+  ap_send_fd(d->tileset, r, 0, finfo.size, &bytes_sent);
+  if (bytes_sent != finfo.size) {
+    /* no way to fix this. just remember it in the log. */
+    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "sendfile failed to deliver correct number of bytes, ", r->filename);
+  }
+  apr_file_close(d->tileset);
+  return OK;
+} /* serve_legacytile */
+
+
+static int serve_oceantile(request_rec *r, request_data* rd) {
+  char * fileName;
+  apr_status_t res;
+  apr_size_t len;
+  apr_off_t offset;
+  unsigned char data;
+  int bit_off;
+  int type;
+
+  if (rd->z < 12) {
+    /* only available for zooms levels >= 12. */
+    return HTTP_NOT_FOUND;
+  } else {		
+    offset = (4096*rd->baseY + rd->baseX) >> 2;
+    dir_data_t* d = ap_get_module_config(r->per_dir_config, &tilesAtHome_module );
+    unsigned char* data_start = d->oceanDB_mmap->mm;
+    data = data_start[ offset ];
+    bit_off = 3 - (rd->baseX % 4);  	   /* extract the actual blankness data. */
+    type = ((data >> (2*bit_off)) & 3);
+
+/*    ap_set_last_modified(r);
+      ap_set_content_length(r, finfo.size);
+      if ((res = ap_meets_conditions(r)) != OK) return res;
+      ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
+*/
+    ap_set_content_type(r, "image/png");
+//  register_timeout ("send", r);
+//  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
+    switch (type)
+    {
+      case 0: 	{ return HTTP_NOT_FOUND;
+		}
+      case 1 :  { ap_set_content_length(r, sizeof(land));
+		  ap_rwrite(land,sizeof(land),r);
+		  return OK;
+		}
+      case 2 :  { ap_set_content_length(r, sizeof(sea));
+		  ap_rwrite(sea,sizeof(sea),r);
+		  return OK;
+		}
+      case 3 :  { return HTTP_NOT_FOUND;
+		}			
+    } 
+  }
+  return HTTP_NOT_FOUND;
+} /* serve_oceantile */
+
+	
+static int tah_handler(request_rec *r)
+{ /* Only when its our turn. SetHandler tah_handler in <Location */
+  if (!r->handler || strcasecmp(r->handler, "tah_handler") != 0) {
+    /* r->handler wasn't us, so it's not our business */
+    return DECLINED;
+  }
+  if (r->method_number != M_GET) return DECLINED;
+
+  int n;
+  apr_status_t res;
+  request_data* d = apr_palloc( r->pool, sizeof( request_data ) );
+
+  d->layer[0] = '\0';
+  /* URI = ...Tiles/[layer]/<z>/<x>/<y>.png   Safe?*/
+  n = sscanf(r->uri, "/Tiles/%31[a-z]/%d/%d/%d.png", d->layer, &d->z, &d->x, &d->y);
+  if (n < 4) return DECLINED;  
+
+/* Servers SHOULD send the must-revalidate directive if and only if failure to revalidate a request on the entity
+   could result in incorrect operation, such as a silently unexecuted financial transaction. */
+  apr_table_setn(r->headers_out, "Cache-Control","max-age=10800");
+
+  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "serve handler(%s), uri(%s), filename(%s), path_info(%s)",
+  //  r->handler, r->uri, r->filename, r->path_info);
+
+  xyz_to_basexyz( d );    /* search for the tileset. */
+
+  if( serve_tileset(r, d) == OK ) { return OK; }
+  /* tileset not found. fall back to legacy tile format. */
+  if( serve_legacytile(r, d) == OK ) { return OK; }
+  /* not found, too. look into the OceanDB. Fail if problem */
+  return serve_oceantile(r, d);
+} /* tah_handler */
 
 
 static void* tah_create_dir_conf( apr_pool_t* pool, char* x )

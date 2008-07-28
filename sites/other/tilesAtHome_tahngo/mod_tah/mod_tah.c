@@ -206,7 +206,6 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
       if ((res = ap_meets_conditions(r)) != OK) return res;
       ap_set_module_config(r->request_config, &tilesAtHome_module, d) ;
 */
-    apr_table_setn(r->headers_out, "Cache-Control","max-age=43200");  /* 12 hours */
     ap_set_content_type(r, "image/png");
 //  register_timeout ("send", r);
 //  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
@@ -279,7 +278,6 @@ static int tah_handler(request_rec *r)
 
   int n;
   apr_status_t res;
-  char * tilesetName;
   request_data* d = apr_palloc( r->pool, sizeof( request_data ) );
   struct apr_finfo_t finfo;
 
@@ -298,11 +296,10 @@ static int tah_handler(request_rec *r)
   xyz_to_basexyz( d );    /* search for the tileset. */
   /* ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "handler:%s layer:%s z:%d x:%d y:%d baseX:%d baseY:%d", \
     r->handler, d->layer, d->z, d->x, d->y, d->baseX, d->baseY); */
+  char * tilesetName;
   basexyz_to_tilesetname(r->pool, &tilesetName, d->layer, d->baseX, d->baseY, d->baseZ);
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile: %s", tilesetName);
 	
-  apr_size_t bytes_sent = 0;
-
   if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME, r->pool)) != APR_SUCCESS)
   { /* tileset not found. fall back to legacy tile format. */
 
@@ -396,6 +393,7 @@ static int tah_handler(request_rec *r)
   ap_set_content_length(r, d->tileLength);
   ap_set_content_type(r, "image/png");
 	
+  apr_size_t bytes_sent = 0;
   ap_send_fd(d->tileset, r, d->tileOffset, d->tileLength, &bytes_sent);
   if (bytes_sent != d->tileLength) {
     /* no way to fix this. just remember it in the log. */

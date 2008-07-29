@@ -84,6 +84,8 @@ if __name__ == '__main__':
   layer=Layer.objects.get(name='tile')
   for x in range (0,4096):
       for y in range (0,4096):
-        lt = LegacyTileset()
         if y%50==0: print "Converting: %s (12,%d,%d)" % (layer.name,x,y)
-        lt.convert(layer,12,x,y,base_tile_path)
+        tilesetfile = os.path.join(base_tile_path,"%s_%d" % (layer.name,12),"%04d" % x, str(x)+'_'+str(y))
+        if not os.path.isfile(tilesetfile):
+            lt = LegacyTileset()
+            lt.convert(layer,12,x,y,base_tile_path)

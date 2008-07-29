@@ -97,8 +97,7 @@ if __name__ == '__main__':
   lz = Lowzoom()
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
-  #for i,(z,x,y) in enumerate(old_lowzooms.values()):
-  for i,(z,x,y) in enumerate([(6,34,18)]):
+  for i,(z,x,y) in enumerate(old_lowzooms.values()):
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
     time.sleep(10)
     now = time.time()

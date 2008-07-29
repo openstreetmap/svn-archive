@@ -28,21 +28,25 @@ class Lowzoom(Tileset):
         self.stitch(layer,z+1,rec_x,rec_y)
 
     # temporarily insert sleeps to no stress the NFS disk so much
-    if ((x+y) % 10 == 0): time.sleep(5)
+    #if ((x+y) % 10 == 0): time.sleep(5)
     #print "tile %s %d %d %d " % (layer,z,x,y)
     pngfilepath = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z,x,y))
     im = Image.new('RGBA', (256,256))
+
+    img_caption_file = StringIO.StringIO(Tile(None,z,x,y).serve_tile('caption'))
+    img_caption = Image.open(img_caption_file).convert('RGBA')
 
     for i in range(0,2):
       for j in range(0,2):
         if z == self.base_z+5: 
           imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
-        else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z+1,2*x+i,2*y+j))
+        else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png_nocaptions" % (z+1,2*x+i,2*y+j))
         try:
           image = Image.open(imagefile).convert('RGB')
         except IOError, e:
           print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
           image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
+
 
         if z==self.base_z+5:
           enh = ImageEnhance.Contrast(image)
@@ -56,6 +60,10 @@ class Lowzoom(Tileset):
         del (image)
 	del (imagefile)
 
+    im.save(pngfilepath+'_nocaptions', "PNG")
+    im = ImageChops.multiply(im, img_caption)
+    del (img_caption)
+    del (img_caption_file)
     im.save(pngfilepath, "PNG")
     t= Tile(layer,z,x,y)
     self.add_tile(t,pngfilepath)
@@ -80,19 +88,22 @@ def find_old_lowzooms(base_tile_path):
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
 
-  print "requesting %d lowzooms." % len(old_lowzooms)
+  #print "requesting %d lowzooms." % len(old_lowzooms)
   return old_lowzooms
 
 if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
   lz = Lowzoom()
-  for i,(z,x,y) in enumerate(find_old_lowzooms(base_tile_path).values()):
-    print "%i) sleep 10 seconds then do %d %d %d" % (i, z,x,y)
+  old_lowzooms = find_old_lowzooms(base_tile_path)
+  n = len(old_lowzooms)
+  #for i,(z,x,y) in enumerate(old_lowzooms.values()):
+  for i,(z,x,y) in enumerate([(6,34,18)]):
+    print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
     time.sleep(10)
     now = time.time()
     lz.create(layer,z,x,y,base_tile_path)
-    print "(%d,%d,%d)Took %.1f sec." % (z,x,ytime.time()-now)
+    print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
   #Finally d
   now = time.time()
   lz.create(layer,z,x,y,base_tile_path)

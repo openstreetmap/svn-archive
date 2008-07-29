@@ -3,8 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class Layer(models.Model):
   #name describes layer and names the directory in which they are
-  name = models.CharField(maxlength=30)
-  decription = models.CharField(maxlength=250)
+  name = models.CharField(max_length=30)
+  decription = models.CharField(max_length=250)
   transparent = models.BooleanField(default=False)
   max_z = models.PositiveSmallIntegerField(default=17)
   min_z = models.PositiveSmallIntegerField(default=12)
@@ -87,8 +87,8 @@ class Blank(Tile):
 #-----------------------------------------------------------------------------
 class Settings(models.Model):
   #name describes layer and names the directory in which they are
-  name = models.CharField(maxlength=30,unique=True)
-  value = models.CharField(maxlength=255)
+  name = models.CharField(max_length=30,unique=True)
+  value = models.CharField(max_length=255)
 
   def __str__(self):
     return self.name

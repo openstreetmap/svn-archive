@@ -43,7 +43,7 @@ public class SimplifyWayAction extends JosmAction {
 
 	public void simplifyWay(Way w) {
 		double threshold = Double.parseDouble(
-			Main.pref.get("simplify-way.max-error", "50"));
+			Main.pref.get("simplify-way.max-error", "3"));
 
 		Way wnew = new Way(w);
 

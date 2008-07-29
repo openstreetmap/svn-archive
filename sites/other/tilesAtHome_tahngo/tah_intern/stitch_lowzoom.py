@@ -42,7 +42,7 @@ class Lowzoom(Tileset):
           imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
         else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png_nocaptions" % (z+1,2*x+i,2*y+j))
         try:
-          image = Image.open(imagefile).convert('RGB')
+          image = Image.open(imagefile).convert('RGBA')
         except IOError, e:
           print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
           image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
@@ -61,7 +61,11 @@ class Lowzoom(Tileset):
 	del (imagefile)
 
     im.save(pngfilepath+'_nocaptions', "PNG")
-    im = ImageChops.multiply(im, img_caption)
+    #im = ImageChops.multiply(im, img_caption)
+    #(r,g,b,a) = img_caption.split()
+    img_mask = img_caption.convert('1')
+    #img_mask = ImageChops.invert(Image.merge('RGB',(r,g,b)).convert('L'))
+    #im = ImageChops.composite(img_caption, im, img_mask)
     del (img_caption)
     del (img_caption_file)
     im.save(pngfilepath, "PNG")
@@ -98,12 +102,13 @@ if __name__ == '__main__':
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
   for i,(z,x,y) in enumerate(old_lowzooms.values()):
+  #for i,(z,x,y) in enumerate([(6,2,1),(5,34,18)]):
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
-    time.sleep(10)
+    #time.sleep(10)
     now = time.time()
     lz.create(layer,z,x,y,base_tile_path)
     print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
   #Finally d
-  now = time.time()
-  lz.create(layer,z,x,y,base_tile_path)
-  print "(0,0,0) took %.1f sec." % (time.time()-now)
+  #now = time.time()
+  #lz.create(layer,z,x,y,base_tile_path)
+  #print "(0,0,0) took %.1f sec." % (time.time()-now)

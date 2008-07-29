@@ -224,9 +224,6 @@ foreach my $seg(keys(%$segments))
     }
 }
 
-# we do not need the nodes any longer. they have been printed already.
-undef $nodes;
-
 # if no coastline segments are present, switch over to 
 # special handler to decide whether to draw a blue tile.
 
@@ -557,6 +554,8 @@ sub make_node
     my ($lat, $lon) = @_;
     my $id = --$nodecount;
     print "<node id='$id' lat='$lat' lon='$lon' />\n";
+    # save node in array for later processing 
+    $nodes->{$id}={"lat"=>$lat, "lon"=>$lon};
     return $id;
 }
 
@@ -593,19 +592,56 @@ sub make_multipolygon
 {
     my ($seglistlist) = @_;
     return unless scalar(@$seglistlist);
-    my $waylist = [];
-    foreach (@$seglistlist) 
+
+    # we will create a list of multipolygons. each multipolygon is a list of
+    # ways, with the first being the "outer" polygon. 
+    my $multipolygons = [];
+        
+    # first create all the ways.
+    my $way_ids = [];
+    for (my $i=0; $i<scalar(@$seglistlist); $i++)
     {
-        push(@$waylist, make_way($_));
+        $way_ids->[$i] = make_way($seglistlist->[$i]);
     }
-    my $id = --$relcount;
-    print "<relation id='$id'>\n";
-    print "  <tag k='type' v='multipolygon' />\n";
-    foreach (@$waylist) 
+
+    # now find out which way is contained in which. since our polygons do not
+    # intersect, we simply take one node of a way and check whether this node
+    # is contained in any of the other ways; if yes, the whole way is contained.
+    my $contained_in = [];
+    my $children = [];
+    for (my $i=0; $i<scalar(@$seglistlist); $i++)
     {
-        print "  <member type='way' ref='$_' role='' />\n";
+        my $pt = $nodes->{$segments->{$seglistlist->[$i]->[0]}->{"from"}};
+        for (my $j = 0; $j < scalar(@$seglistlist); $j++) # fixme really need to check all?
+        {
+            next if ($j==$i);
+            if (polygon_contains_point($seglistlist->[$j], $pt))
+            {
+                $contained_in->[$i] = $j; 
+                $children->[$j]++;
+                last;
+            }
+        }
     }
-    print "</relation>\n";
+
+    # now write multipolygons
+    for (my $i=0; $i<scalar(@$seglistlist); $i++)
+    {
+        # ways that don't have children do not trigger a relation
+        next unless $children->[$i];
+        my $id = --$relcount;
+        print "<relation id='$id'>\n";
+        print "  <tag k='type' v='multipolygon' />\n";
+        printf "  <member type='way' ref='%s' role='outer' />\n", $way_ids->[$i];
+        for (my $j = 0; $j < scalar(@$seglistlist); $j++) 
+        {
+            if ($contained_in->[$j] == $i)
+            {
+                printf "  <member type='way' ref='%s' role='inner' />\n", $way_ids->[$j];
+            }
+        }
+        print "</relation>\n";
+    }
 }
 
 # index lookup by Martijn van Oosterhout
@@ -772,6 +808,39 @@ sub compute_bbox_intersections
     #print Dumper($result);
 
     return $result;
+}
+
+# expects point as lat/lon hash, and polygon as a list of segment ids
+# which will be looked up in global $segments to get from/to node ids
+# which will in turn be looked up in $nodes to get lat/lon
+sub polygon_contains_point
+{
+    my ($seglist, $point) = @_;
+    my $p1 =  $nodes->{$segments->{$seglist->[0]}->{"from"}};
+    my $counter = 0;
+    foreach my $seg(@$seglist)
+    {
+        my $p2 = $nodes->{$segments->{$seg}->{"to"}};
+        if ($point->{"lat"} > $p1->{"lat"} || $point->{"lat"} > $p2->{"lat"})
+        {
+            if ($point->{"lat"} < $p1->{"lat"} || $point->{"lat"} < $p2->{"lat"})
+            {
+                if ($point->{"lon"} < $p1->{"lon"} || $point->{"lon"} < $p2->{"lon"})
+                {
+                    if ($p1->{"lat"} != $p2->{"lat"})
+                    {
+                        my $xint = ($point->{"lat"}-$p1->{"lat"})*($p2->{"lon"}-$p1->{"lon"})/($p2->{"lat"}-$p1->{"lat"})+$p1->{"lon"};
+                        if ($p1->{"lon"} == $p2->{"lon"} || $point->{"lon"} <= $xint)
+                        {
+                            $counter++;
+                        }
+                    }
+                }
+            }
+        }
+        $p1 = $p2;
+    }
+    return ($counter%2);
 }
 
 sub node_is_inside

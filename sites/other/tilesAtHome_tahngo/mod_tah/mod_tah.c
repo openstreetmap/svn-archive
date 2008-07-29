@@ -25,11 +25,11 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 
 #define FILEVERSION 1
 #define MIN_VALID_OFFSET 4
+#define OCEANS_DB_FILE "/usr/local/tah/Tiles/oceantiles_12.dat"
 
 static char * basetilepath = "/usr/local/tah/Tiles";
 static char * statictilepath = "/usr/local/tah/Tiles";
-#define OCEANS_DB_FILE "/usr/local/tah/Tiles/oceantiles_12.dat"
-
+const char * const content_imagepng = "image/png";
 
 const char land[] =
   "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52"
@@ -175,6 +175,7 @@ static int serve_tileset(request_rec* r, request_data* d) {
   if ((res = apr_mmap_create( &header, d->tileset, 0, 8+1366*4, APR_MMAP_READ, r->pool )) != APR_SUCCESS) {
     char err[256];
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "mmap failed for %s header, %s", tilesetName, apr_strerror( res, err, 256 ));
+    apr_file_close(d->tileset);
     return HTTP_NOT_FOUND;
   } // if
 	
@@ -182,6 +183,8 @@ static int serve_tileset(request_rec* r, request_data* d) {
   int* version = header->mm;
   if (*version != FILEVERSION) {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
+    apr_mmap_delete(header);
+    apr_file_close(d->tileset);
     return HTTP_NOT_FOUND;
   }
     
@@ -192,27 +195,37 @@ static int serve_tileset(request_rec* r, request_data* d) {
   if (d->tileOffset < MIN_VALID_OFFSET) {
     switch (d->tileOffset) {
       case 0: {
-		  return HTTP_NOT_FOUND;
-		}
+        apr_mmap_delete(header);
+        apr_file_close(d->tileset);
+        return HTTP_NOT_FOUND;
+      }
       case 1: {
         ap_set_content_length(r, sizeof(sea));
-        ap_set_content_type(r, "image/png");
+        ap_set_content_type(r, content_imagepng);
         ap_rwrite(sea,sizeof(sea),r);
-		  return OK;
+        apr_mmap_delete(header);
+        apr_file_close(d->tileset);
+        return OK;
       }
       case 2: {
         ap_set_content_length(r, sizeof(land));
-        ap_set_content_type(r, "image/png");
+        ap_set_content_type(r, content_imagepng);
         ap_rwrite(land,sizeof(land),r);
+        apr_mmap_delete(header);
+        apr_file_close(d->tileset);
         return OK;
       }
       case 3: {
         ap_set_content_length(r, sizeof(transparent));   /* TRANSPARENT */
-        ap_set_content_type(r, "image/png");
+        ap_set_content_type(r, content_imagepng);
         ap_rwrite(transparent,sizeof(transparent),r);
+        apr_mmap_delete(header);
+        apr_file_close(d->tileset);
         return OK;
       }
       default: { /* ERROR_TILE */
+        apr_mmap_delete(header);
+        apr_file_close(d->tileset);
         return HTTP_NOT_FOUND;
       }
     }
@@ -224,20 +237,23 @@ static int serve_tileset(request_rec* r, request_data* d) {
   /* look for the next non-land/sea/... tile */
   for (tile = tileNo + 1; tile <= 1366; ++tile) {
     if (offset_table[tile] > MIN_VALID_OFFSET) {
-	   d->tileLength = offset_table[tile] - d->tileOffset;
-		break;
-	 }
+      d->tileLength = offset_table[tile] - d->tileOffset;
+      break;
+    }
   }
   if (d->tileLength == 0)
   {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "failed to get tile length. file %s, tile %i", r->filename, tileNo );
-	 return HTTP_NOT_FOUND;
+    apr_mmap_delete(header);
+    apr_file_close(d->tileset);
+    return HTTP_NOT_FOUND;
   }
   apr_mmap_delete(header);
   //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tile %i, offset %i, length %i", tileNo, d->tileOffset, d->tileLength );
 
   if (finfo.size < d->tileOffset + d->tileLength) {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tileset %s too small, %i/%i!", tilesetName, (d->tileOffset + d->tileLength), finfo.size );
+    apr_file_close(d->tileset);
     return HTTP_NOT_FOUND;
   }
 
@@ -245,7 +261,7 @@ static int serve_tileset(request_rec* r, request_data* d) {
 
   /* actually send the data */
   ap_set_content_length(r, d->tileLength);
-  ap_set_content_type(r, "image/png");
+  ap_set_content_type(r, content_imagepng);
 	
   apr_size_t bytes_sent = 0;
   ap_send_fd(d->tileset, r, d->tileOffset, d->tileLength, &bytes_sent);
@@ -281,7 +297,7 @@ static int serve_legacytile(request_rec* r, request_data* d) {
   }
 
   ap_set_content_length(r, finfo.size);
-  ap_set_content_type(r, "image/png");
+  ap_set_content_type(r, content_imagepng);
  
   apr_size_t bytes_sent = 0;
   ap_send_fd(d->tileset, r, 0, finfo.size, &bytes_sent);
@@ -314,7 +330,6 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
     bit_off = 3 - (rd->baseX % 4);  	   /* extract the actual blankness data. */
     type = ((data >> (2*bit_off)) & 3);
 
-    ap_set_content_type(r, "image/png");
 //  register_timeout ("send", r);
 //  ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "blank lookup %d %d %d type %d", x, y, z, type );
 
@@ -323,11 +338,13 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
         return HTTP_NOT_FOUND;
       }
       case 1: {
+        ap_set_content_type(r, content_imagepng);
         ap_set_content_length(r, sizeof(land));
         ap_rwrite(land,sizeof(land),r);
         return OK;
       }
       case 2: {
+        ap_set_content_type(r, content_imagepng);
         ap_set_content_length(r, sizeof(sea));
         ap_rwrite(sea,sizeof(sea),r);
         return OK;
@@ -422,4 +439,3 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module = {
   mod_tah_cmds,                /* table of config file commands       */
   tah_register_hooks           /* register hooks                      */
 };
-

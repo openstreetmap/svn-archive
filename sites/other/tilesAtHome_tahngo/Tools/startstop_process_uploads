@@ -6,7 +6,7 @@
 
 . /lib/lsb/init-functions
 DAEMON=/var/www/tah/tah_intern/process_uploads.py
-PIDFILE=/var/www/tah/var/tahngo.pid
+PIDFILE=/var/www/tah/var/tahngo_uploads.pid
 
 test -x $DAEMON || exit 5
 

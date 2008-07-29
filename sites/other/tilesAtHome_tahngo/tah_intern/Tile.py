@@ -67,6 +67,7 @@ class Tile:
     (layer, base_z,base_x,base_y) = self.basetileset() 
     # basetilepath could be taken from the Settings, hardcode for efficiency 
     basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
+    blanktilepath='/var/www/tah/Tiles'
     self.mtime = 0
     if base_z == None:
       # basetileset returns (None,None,None,None) if invalid
@@ -108,7 +109,7 @@ class Tile:
     else:
       # return complete blankness tile
       blankpng = ['unknown.png','sea.png','land.png','transparent.png']
-      tilesetfile = os.path.join(basetilepath,blankpng[d_offset])
+      tilesetfile = os.path.join(blanktilepath,blankpng[d_offset])
       d_length = os.stat(tilesetfile)[6] # tile length
       return (tilesetfile, 0, d_length)
 

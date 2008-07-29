@@ -48,27 +48,31 @@ class TileUpload:
         self.uid = str(random.randint(0,9999999999999999999))
         if self.unzip():
           tset = self.movetiles()
-          #finally save the tileset at it's place
-          time_save = [time()]
-          logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s" % (tset.layer,tset.base_z,tset.x,tset.y,upload.user_id))
-          (retval,unknown_tiles) = tset.save(self.base_tilepath, upload.user_id.id)
-          time_save.append(time())
-          if retval:
-            # everything went fine. Add to user statistics
-            self.add_user_stats(upload, 1365-unknown_tiles)
-            # now match up the upload with a request and mark the request as finished
-            reqs = Request.objects.filter(min_z = tset.base_z, x = tset.x ,y = tset.y, status__lt=2)
-            for req in reqs:
-              # remove corresponding layer from request and set it to status=2 when all layers are done
-              req.layers.remove(tset.layer)
-              if req.layers.count() == 0:
-                req.status=2
-                req.clientping_time=datetime.now()
-                req.save()
-            logging.debug('Finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+          if tset.layer and tset.base_z and tset.x and tset.y:
+          #It's a valid tileset. Save the tileset at it's place
+            time_save = [time()]
+            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s" % (tset.layer,tset.base_z,tset.x,tset.y,upload.user_id))
+            (retval,unknown_tiles) = tset.save(self.base_tilepath, upload.user_id.id)
+            time_save.append(time())
+            if retval:
+              # everything went fine. Add to user statistics
+              self.add_user_stats(upload, 1365-unknown_tiles)
+              # now match up the upload with a request and mark the request as finished
+              reqs = Request.objects.filter(min_z = tset.base_z, x = tset.x ,y = tset.y, status__lt=2)
+              for req in reqs:
+                # remove corresponding layer from request and set it to status=2 when all layers are done
+                req.layers.remove(tset.layer)
+                if req.layers.count() == 0:
+                  req.status=2
+                  req.clientping_time=datetime.now()
+                  req.save()
+              logging.debug('Finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+            else:
+              # saving the tileset went wrong
+              logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles))
           else:
-            # saving the tileset went wrong
-            logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles))
+            # movetiles did not return a valid tileset
+            logging.error('Unzipped file was no valid tileset. Took %.1f sec (CPU %.1f).' % (time()-starttime[0],clock()-starttime[1]))
         self.cleanup(upload,True)
 
       else:

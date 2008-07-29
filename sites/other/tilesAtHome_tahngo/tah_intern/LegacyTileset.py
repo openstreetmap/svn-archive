@@ -8,7 +8,7 @@ from tah.tah_intern.Tile import Tile
 from tah.tah_intern.models import Settings,Layer
 
 class LegacyTileset(Tileset):
-  leg_basetiledir='/var/www/osm/Tiles/'
+  leg_basetiledir='/mnt/agami/openstreetmap/tah/Tiles/'
 
 
   def get_blank(self,tile):
@@ -25,7 +25,7 @@ class LegacyTileset(Tileset):
           #Lookup in the oceans tile
           #For z12 and above the file will tell us directly what type it is
           (layern, base_z,base_x,base_y) = tile.basetileset()
-          f_oceant = open(os.path.join('/mnt/agami/openstreetmap/tah/Tiles',"oceantiles_12.dat"),'rb')
+          f_oceant = open(os.path.join('/var/www/tah/Tiles',"oceantiles_12.dat"),'rb')
           f_oceant.seek((4096*base_y + base_x) >> 2)
           data = ord(f_oceant.read(1));
           #take 2 bits of the char

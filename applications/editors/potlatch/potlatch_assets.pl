@@ -18,12 +18,12 @@
 	#		Radio buttons
 	
 	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
-	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
+	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->movePenTo(5,5); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_off");
 
 	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
-	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
-	$ch->setRightFill(0   ,0   ,0   ); $ch->setLine(20,0,0,0); $ch->drawCircle(4);
+	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->movePenTo(5,5); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
+	$ch->setRightFill(0   ,0   ,0   ); $ch->movePenTo(5,5); $ch->setLine(20,0,0,0); $ch->drawCircle(3);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_on");
 
 	#		Whirling 'in progress' animation

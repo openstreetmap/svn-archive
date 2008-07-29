@@ -17,22 +17,25 @@
 	};
 	UIRadio.prototype=new MovieClip();
 	UIRadio.prototype.addButton=function(x,y,prompttext) {
-		this.buttons++;
-		this.xpos[this.buttons]=x;
-		this.ypos[this.buttons]=y;
-		createHitRegion(this,prompttext,this.buttons+10,this.buttons+20);
+		var i=++this.buttons;
+		this.createEmptyMovieClip(i,i);
+		this[i].attachMovie('radio_off','radio',1);
+		this[i]._x=this.xpos[i]=x;
+		this[i]._y=this.ypos[i]=y;
+		createHitRegion(this[i],prompttext,2,3);
+		this[i].onPress=function() { if (this._alpha>60) { this._parent.select(this._name); } };
 	};
 	UIRadio.prototype.select=function(n) {
 		var i,s;
 		for (i=1; i<=this.buttons; i++) {
 			if (i==n) { s='radio_on'; } else { s='radio_off'; }
-			this.attachMovie(s,i,i);
-			this[i]._x=this.xpos[i];
-			this[i]._y=this.ypos[i];
+			this[i].attachMovie(s,'radio',1);
 		}
 		this.selected=n;
 		if (this.doOnChange!=null) { this.doOnChange(n); }
 	};
+	UIRadio.prototype.enable =function(i) { this[i]._alpha=100; this[i].prompt.setTextFormat(plainSmall); };
+	UIRadio.prototype.disable=function(i) { this[i]._alpha= 50; this[i].prompt.setTextFormat(plainDim);   };
 	Object.registerClass("radio",UIRadio);
 
 	// Checkboxes
@@ -323,6 +326,7 @@
 		obj.createTextField('prompt',promptdepth,13,-5,200,19);
 		obj.prompt.text=prompttext;
 		obj.prompt.setTextFormat(plainSmall);
+		obj.prompt.selectable=false;
 		tw=obj.prompt._width=obj.prompt.textWidth+5;
 
 		obj.createEmptyMovieClip('hitregion',hitdepth);

@@ -116,7 +116,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10";	// current version
+	var signature="Potlatch 0.10a";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
@@ -283,6 +283,7 @@
 	
 	plainText =new TextFormat(); plainText.color =0x000000; plainText.size =14; plainText.font ="_sans";
 	plainSmall=new TextFormat(); plainSmall.color=0x000000;	plainSmall.size=12; plainSmall.font="_sans";
+	plainDim  =new TextFormat(); plainDim.color  =0x777777;	plainDim.size  =12; plainDim.font  ="_sans";
 	plainRight=new TextFormat(); plainRight.color=0x000000;	plainRight.size=12; plainRight.font="_sans"; plainRight.align="right";
 	plainTiny =new TextFormat(); plainTiny.color =0x000000;	plainTiny.size =11; plainTiny.font ="_sans";
 	plainWhite=new TextFormat(); plainWhite.color=0xFFFFFF; plainWhite.size=12; plainWhite.font="_sans";

@@ -44,8 +44,15 @@ class Lowzoom(Tileset):
         try:
           image = Image.open(imagefile).convert('RGBA')
         except IOError, e:
-          print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
-          image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
+          #fall back to tile image
+          print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)          
+          image = Image.open(StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('tile')))
+          try:
+            image = Image.open(imagefile).convert('RGBA')
+          except IOError, e:
+            #fall back to unknown image
+            print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
+            image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
 
 
         if z==self.base_z+5:

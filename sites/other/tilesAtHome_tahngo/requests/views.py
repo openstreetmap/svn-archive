@@ -153,10 +153,7 @@ def upload_request(request):
               # look up the layer id
               try: formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
               except Layer.DoesNotExist: del formdata['layer']
-          # due to a django verification bug, set a filename if a file was attached.
-          if 'file' in request.FILES:  
-            formdata['file']='dummy'
-          form = UploadFormClass(formdata)
+          form = UploadFormClass(formdata, request.FILES)
 
           if form.is_valid():
             file = request.FILES['file']
@@ -167,7 +164,7 @@ def upload_request(request):
               # low priority upload by default
               if not newUpload.priority: newUpload.priority = 3
               newUpload.is_locked = False
-              newUpload.save_file_file(file['filename'],file['content'])
+              #newUpload.save_file_file(file['filename'],file['content'])
               newUpload.save()
 	      html="OK|4|"
             except:

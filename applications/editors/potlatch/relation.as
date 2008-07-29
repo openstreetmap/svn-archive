@@ -70,7 +70,6 @@
 			var i,id;
 			_root.map.relations[w].clean=true;
 			_root.map.relations[w].locked=false;
-			_root.map.relations[w].oldversion=0;
 			_root.map.relations[w].attr=result[1];
 			_root.map.relations[w].members=result[2];
 			_root.map.relations[w].redraw();
@@ -385,34 +384,62 @@
 		if ( type == undefined || id == undefined ) return;
 
 		var completeAdd = function(button) {
-			if ( button != 'Add' ) return false;
 
-			var box = _root.windows.relation.box;
+			if ( button != iText("Ok",'ok') ) return false;
 
-			var selected = box.addroute_menu.selected;
+			var box=_root.windows.relation.box;
+			var radio=box.reloption.selected;
 			var keepDialog = false;
-			if ( selected > 0 ) {
-				var rs = _root.map.relations;
-				for ( var r in rs ) {
-					selected -= 1;
-					if ( selected == 0 )
-						rs[r].setRole(type, id, '');
-				}
-			} else if ( selected == 0 ) {
-				var nid = newrelid--;
-				_root.map.relations.attachMovie("relation",nid,++reldepth);
-				_root.map.relations[nid].setRole(type, id, '');
-				_root.map.relations[nid].attr['type'] = undefined;
-				_root.windows.relation.remove(); keepDialog = true;
-				_root.map.relations[nid].editRelation();
+
+			switch (radio) {
+				case 1:	// Add to an existing relation
+						var selected=box.addroute_menu.selected;
+						var rs=_root.map.relations;
+						var i=0;
+						for (var r in rs) {
+							if (selected==i) { 
+							rs[r].setRole(type, id, ''); }
+							i++;
+						}
+						break;
+				case 2:	// Create a new relation
+						var nid = newrelid--;
+						_root.map.relations.attachMovie("relation",nid,++reldepth);
+						_root.map.relations[nid].setRole(type, id, '');
+						_root.map.relations[nid].attr['type'] = undefined;
+						_root.windows.relation.remove(); keepDialog = true;
+						_root.map.relations[nid].editRelation();
+						break;
+				case 3:	// Find a relation
+						keepDialog=true;
+						if (box.search.text=='') { break; }
+						findresponder=function() {};
+						findresponder.onResult=function(rellist) {
+							for (r in rellist) {
+								var w=rellist[r][0];
+								if (!_root.map.relations[w]) {
+									_root.map.relations.attachMovie("relation",w,++reldepth);
+									_root.map.relations[w].attr=rellist[r][1];
+									_root.map.relations[w].members=rellist[r][2];
+									_root.relcount++;
+								}
+							}
+							createRelationMenu(_root.windows.relation.box,20);
+							_root.windows.relation.box.search.text='';
+						};
+						remote.call('findrelations',findresponder,box.search.text);
+						break;
 			}
 			_root.panel.properties.reinit();
 			if (keepDialog) { _root.panel.properties.enableTabs(false); }
 			return keepDialog;
 		};
 
+		// Create dialogue
+
+		_root.panel.properties.enableTabs(false);
 		_root.windows.attachMovie("modal","relation",++windowdepth);
-		_root.windows.relation.init(300, 140, [iText("Cancel",'cancel'), iText("Add",'add')], completeAdd);
+		_root.windows.relation.init(300, 150, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeAdd);
 		var z = 5;
 		var box = _root.windows.relation.box;
 		
@@ -425,15 +452,43 @@
 		}
 		
 		box.createTextField("instr",z++,7,30,300-14,40);
-		writeText(box.instr, iText("Select an existing relation to add to, or create a new relation.",'prompt_selectrelation'));
 
-		var relations = new Array(iText("Create a new relation",'createrelation'));
+		// Create radio buttons and menu
+
+		box.attachMovie("radio","reloption",z++);
+		box.reloption.addButton(10,35,iText("Add to an existing relation",'existingrelation'));
+		box.reloption.addButton(10,75,iText("Create a new relation",'createrelation'));
+		box.reloption.addButton(10,95,iText("Find a relation containing",'findrelation'));
+
+		createRelationMenu(box,20);
+
+		var w=box.reloption[3].prompt._width+25;
+		box.createTextField("search",z++,w,90,290-w,17);
+		box.search.setNewTextFormat(plainSmall);
+		box.search.type='input';
+		box.search.backgroundColor=0xDDDDDD;
+		box.search.background=true;
+		box.search.border=true;
+		box.search.borderColor=0xFFFFFF;
+		box.search.onSetFocus=function() { this._parent.reloption.select(3); };
+	}
+
+	function createRelationMenu(box,z) {
+		var relations=new Array();
 		var rs = _root.map.relations;
 		for ( var r in rs ) {
 			relations.push(rs[r].verboseText());
 		}
-		// a normal, scrollable list may be better than a menu
-		box.attachMovie("menu", "addroute_menu", z++);
-		box.addroute_menu.init(7, 75, 0, relations,
-					iText('Add to the chosen route','tip_selectrelation'),null, null, 300-14);
+
+		if (relations.length==0) {
+			relations.push(iText("No relations in current area",'norelations'));
+			box.reloption.disable(1);
+			box.reloption.select(2);
+		} else {
+			box.reloption.enable(1);
+			box.reloption.select(1);
+		}
+		box.attachMovie("menu", "addroute_menu", z);
+		box.addroute_menu.init(25, 50, 0, relations,
+					iText('Add to the chosen route','tip_selectrelation'),null, null, 268);
 	}

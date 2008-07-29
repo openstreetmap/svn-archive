@@ -1,0 +1,29 @@
+#! /bin/bash
+
+WD=/var/www/tah
+PIDFILE=${WD}/var/tahngo.pid
+PYTHON=/usr/bin/python
+PYTH_PATH=/home/spaetz/django-trunk
+SOCKET=/var/www/tah/var/tahngo.sock
+#maxrequests=5000
+case "$1" in
+        start)
+                export PYTHONPATH=$PYTH_PATH
+                $WD/manage.py runfcgi socket=$SOCKET daemonize=true method=prefork pidfile=$PIDFILE
+                sleep 3
+                chmod a+rwx $SOCKET
+                ;;
+
+        stop)
+                kill `cat $PIDFILE`
+                ;;
+
+        restart)
+                $0 stop && $0 start
+                ;;
+
+        *)
+                echo "Usage: $0 {start|stop|restart}"
+                ;;
+esac
+exit 0

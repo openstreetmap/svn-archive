@@ -48,17 +48,11 @@ class Lowzoom(Tileset):
           #fall back to tile image
           print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)          
           image = Image.open(StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('tile')))
-          try:
-            image = Image.open(imagefile)
-          except IOError, e:
-            #fall back to unknown image
-            print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
-            image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
+          image = Image.open(imagefile)
 
-        if z==self.base_z+5:
-          #image = image.point(lambda p: p * 0.8)
+        if (z-self.base_z+5)%2 == 0:
           enh = ImageEnhance.Contrast(image)
-          image = enh.enhance(1.45)
+          image = enh.enhance(1.4)
         enh = ImageEnhance.Sharpness(image)
         image = enh.enhance(0)
         im.paste(image, (256*i,256*j))

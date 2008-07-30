@@ -31,8 +31,6 @@ class Request(models.Model):
   def status_str(self):
     return  ['unhandled','active','finished'][self.status]
 
-  class Admin:
-    pass
 
 #-----------------------------------------------------
 class Upload(models.Model):
@@ -49,6 +47,3 @@ class Upload(models.Model):
 
   def __str__(self):
     return str(self.layer)+","+str(self.file)
-
-  class Admin:
-    pass

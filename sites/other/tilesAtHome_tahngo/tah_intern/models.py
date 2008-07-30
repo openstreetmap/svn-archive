@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 
 class Layer(models.Model):
   #name describes layer and names the directory in which they are
@@ -13,10 +12,6 @@ class Layer(models.Model):
   def __str__(self):
     #string representation of a layer
     return self.name
-
-  class Admin:
-    # we want to edit in the adin interface
-    pass
 
 class Tile(models.Model):
   layer = models.ForeignKey(Layer)
@@ -36,6 +31,7 @@ class Tile(models.Model):
     if self.z <  self.layer.min_z or self.z >  self.layer.max_z: return False
     # this is a valid tile
     return True
+
 #-----------------------------------------------------------------------------
 class Blank(Tile):
   #on saving a new blank tile, we calculate its quadtile number
@@ -52,37 +48,6 @@ class Blank(Tile):
 	if (y & 0x8000): self.quadtile =  self.quadtile | 1
 	y<<=1;
     super(Blank, self).save() # Call the "real" save() method.
-
-  def __str__(self):
-    #string representation of a blank tile
-    b = int(self)
-    if b ==1: return 'land'
-    elif b==2: return 'sea'
-    else: return 'unknown'
-
-  def __int__(self):
-    #int representation of a blank tile, search up reciprocally
-    try:
-      b = Blank.objects.get(layer=self.layer,z=self.z,x=self.x,y=self.y)
-      return b.blankness
-    except ObjectDoesNotExist:
-      # stop looking below zoom level 2
-      if self.z == 1: return 0
-      else: 
-	b = Blank(layer=self.layer)
-        b.z = int(self.z)-1
-        b.x = int(self.x) / 2
-        b.y = int(self.y) / 2
-        return int(b)
-    
-  def set_blank(self,blanktype):
-    #if the blanktype is already ok, then do nothing
-    if int(self) == blanktype: return 0
-    Blank.objects.create(layer=self.layer, z=self.z, x=self.x, y=self.y,blankness=blanktype)
-
-  class Admin:
-    # we want to edit in the adin interface
-    pass
 
 #-----------------------------------------------------------------------------
 class Settings(models.Model):
@@ -101,7 +66,3 @@ class Settings(models.Model):
   def setSetting(self, name, value):
     s, created = Settings.objects.get_or_create(name= name, value= value)
     return s.value
-
-  class Admin:
-    # we want to edit in the adin interface
-    pass

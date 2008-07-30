@@ -18,23 +18,27 @@ def latlon2xy(lat,lon,z):
 
 @cache_control(max_age=864000) #cache for 10 days
 def export_MapOf(request):
+  x_range = []
+  y_range= []
   form = MapOfForm(request.GET)
   if form.is_valid():
     form = form.cleaned_data
     x,y = latlon2xy(form['lat'],form['long'],form['z'])
-    h = ceil(form['h'] / 256.0)  # tiles in height
-    if h % 2 == 0: h += 1   # (next higher odd number)
-    w = ceil(form['w'] / 256.0)  # tiles in width
-    if w % 2 == 0: w += 1   # (next higher odd number)
-
+    x_range.append(int(x - form['w'] / 512.0))  # minimum x tile
+    x_range.append(int(x + form['w'] / 512.0))  # maximum x tile
+    y_range.append(int(y - form['h'] / 512.0))  # minimum y tile
+    y_range.append(int(y + form['h'] / 512.0))  # maximum y tile
     pngfile = StringIO.StringIO()
-    im = Image.new('RGBA', (256*w,256*h))
-    for i in range(0, w):
-      for j in range(0, h):
-        image =  Image.open(StringIO.StringIO(Tile(None,form['z'],floor(x)-w//2+i,floor(y)-h//2+j).serve_tile('tile')))
-        im.paste(image,(256*i,256*j))
-    marg_w, marg_h = int((256*w-form['w'])/2 + (256 * x % 1.0)), int((256*h-form['h'])/2 - (265 * y% 1.0))
+    im = Image.new('RGBA', (256*(x_range[1]-x_range[0]+1),256*(y_range[1]-y_range[0]+1)))
+
+    for i in range(x_range[0], x_range[1]+1):
+      for j in range(y_range[0], y_range[1]+1):
+        image =  Image.open(StringIO.StringIO(Tile(None,form['z'],i,j).serve_tile('tile')))
+        im.paste(image,(256*(i-x_range[0]),256*(j-y_range[0])))
+    marg_w = int(256*(x-x_range[0]-form['w']/512.0))
+    marg_h  = int(256*(1-(y-y_range[0]-form['h']/512.0)))
     im = im.crop((marg_w,marg_h,marg_w+form['w'],marg_h+form['h']))
+    #return HttpResponse(str(marg_w)+" "+str(marg_h)+" " +str(x) + str(x_range) + str(y)+str(y_range))
     im.save(pngfile,form['format'])
     pngfile.seek(0)
     response = HttpResponse(pngfile.read(), mimetype= 'image/'+str(form['format']))

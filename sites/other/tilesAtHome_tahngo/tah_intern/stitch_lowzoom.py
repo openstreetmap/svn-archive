@@ -32,7 +32,7 @@ class Lowzoom(Tileset):
     #if ((x+y) % 10 == 0): time.sleep(5)
     #print "tile %s %d %d %d " % (layer,z,x,y)
     pngfilepath = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z,x,y))
-    im = Image.new('RGBA', (256,256))
+    im = Image.new('RGB', (512,512))
 
     img_caption_file = StringIO.StringIO(Tile(None,z,x,y).serve_tile('caption'))
     img_caption = Image.open(img_caption_file)
@@ -43,18 +43,17 @@ class Lowzoom(Tileset):
           imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
         else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png_nocaptions" % (z+1,2*x+i,2*y+j))
         try:
-          image = Image.open(imagefile).convert('RGBA')
+          image = Image.open(imagefile).convert('RGB')
         except IOError, e:
           #fall back to tile image
           print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)          
           image = Image.open(StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('tile')))
           try:
-            image = Image.open(imagefile).convert('RGBA')
+            image = Image.open(imagefile)
           except IOError, e:
             #fall back to unknown image
             print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)
             image = Image.open(StringIO.StringIO(Tile(None,0,0,1).serve_tile('tile')))
-
 
         if z==self.base_z+5:
           #image = image.point(lambda p: p * 0.8)
@@ -62,17 +61,13 @@ class Lowzoom(Tileset):
           image = enh.enhance(1.45)
         enh = ImageEnhance.Sharpness(image)
         image = enh.enhance(0)
-        ##image2 = image.convert('RGBA').filter(ImageFilter.BLUR)
-        image = image.resize((128, 128))
-        im.paste(image, (128*i,128*j,128*(i+1),128*(j+1)))
+        im.paste(image, (256*i,256*j))
 
         del (image)
 	del (imagefile)
 
+    im = im.resize((256, 256),Image.BILINEAR)
     im.save(pngfilepath+'_nocaptions', "PNG")
-    #img_mask = Image.eval(img_caption, lambda p: 255 * (int(p != 0)))
-    #img_mask =  ImageChops.subtract(img_caption.convert('L'),Image.merge('L',(a,)))
-    #im = ImageChops.composite(im, img_caption, img_mask)
 
     if img_caption.mode == 'RGB':
       #if for some strange reasons the caption is not recognized as RGBA, make anything transparent that has some color.
@@ -90,7 +85,7 @@ class Lowzoom(Tileset):
     im.paste(img_caption,(0,0),a)
     del (img_caption)
     del (img_caption_file)
-    im.save(pngfilepath, "PNG")
+    im.convert('RGB').save(pngfilepath, "PNG")
     t= Tile(layer,z,x,y)
     self.add_tile(t,pngfilepath)
 
@@ -124,7 +119,7 @@ if __name__ == '__main__':
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
   for i,(z,x,y) in enumerate(old_lowzooms.values()):
-  #for i,(z,x,y) in enumerate([(6,34,18),(6,2,1)]):
+  #for i,(z,x,y) in enumerate([(6,34,18)]):
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
     #time.sleep(10)
     now = time.time()

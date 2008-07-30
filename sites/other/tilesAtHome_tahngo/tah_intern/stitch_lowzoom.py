@@ -1,3 +1,4 @@
+
 import os,sys, tempfile, shutil, StringIO, re
 import Image, ImageEnhance, ImageFilter, ImageChops
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
@@ -34,7 +35,7 @@ class Lowzoom(Tileset):
     im = Image.new('RGBA', (256,256))
 
     img_caption_file = StringIO.StringIO(Tile(None,z,x,y).serve_tile('caption'))
-    img_caption = Image.open(img_caption_file).convert('RGBA')
+    img_caption = Image.open(img_caption_file)
 
     for i in range(0,2):
       for j in range(0,2):
@@ -56,10 +57,11 @@ class Lowzoom(Tileset):
 
 
         if z==self.base_z+5:
+          #image = image.point(lambda p: p * 0.8)
           enh = ImageEnhance.Contrast(image)
-          image = enh.enhance(1.4)
+          image = enh.enhance(1.45)
         enh = ImageEnhance.Sharpness(image)
-        image = enh.enhance(0.2)
+        image = enh.enhance(0)
         ##image2 = image.convert('RGBA').filter(ImageFilter.BLUR)
         image = image.resize((128, 128))
         im.paste(image, (128*i,128*j,128*(i+1),128*(j+1)))
@@ -68,11 +70,24 @@ class Lowzoom(Tileset):
 	del (imagefile)
 
     im.save(pngfilepath+'_nocaptions', "PNG")
-    #im = ImageChops.multiply(im, img_caption)
-    #(r,g,b,a) = img_caption.split()
-    img_mask = img_caption.convert('1')
-    #img_mask = ImageChops.invert(Image.merge('RGB',(r,g,b)).convert('L'))
-    #im = ImageChops.composite(img_caption, im, img_mask)
+    #img_mask = Image.eval(img_caption, lambda p: 255 * (int(p != 0)))
+    #img_mask =  ImageChops.subtract(img_caption.convert('L'),Image.merge('L',(a,)))
+    #im = ImageChops.composite(im, img_caption, img_mask)
+
+    if img_caption.mode == 'RGB':
+      #if for some strange reasons the caption is not recognized as RGBA, make anything transparent that has some color.
+      cb = img_caption.split()
+      a, = img_caption.convert('L').split()
+      a = a.point(lambda p: 255 * int(p < 220))
+      img_caption = Image.merge('RGBA',cb+(a,))
+    elif img_caption.mode == 'RGBA':
+      (r,g,b,a) = img_caption.split()
+    elif img_caption.mode == 'L':
+      img_caption.load() #<--- workaround for bug in PIL 1.1.5
+      a = img_caption.point(lambda p: 255 * int(p < 220))
+    else:
+      sys.exit("unknown image mode %s at (%d,%d,%d)" %(img_caption.mode,z,x,y))
+    im.paste(img_caption,(0,0),a)
     del (img_caption)
     del (img_caption_file)
     im.save(pngfilepath, "PNG")
@@ -109,7 +124,7 @@ if __name__ == '__main__':
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
   for i,(z,x,y) in enumerate(old_lowzooms.values()):
-  #for i,(z,x,y) in enumerate([(6,2,1),(5,34,18)]):
+  #for i,(z,x,y) in enumerate([(6,34,18),(6,2,1)]):
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
     #time.sleep(10)
     now = time.time()

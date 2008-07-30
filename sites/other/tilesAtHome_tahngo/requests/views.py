@@ -199,13 +199,16 @@ def take(request):
         if user is not None:
             #"You provided a correct username and password!"
             try:
- 	        req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
- 	        req.status=1
- 	        req.client = user
- 	        req.clientping_time=datetime.now()
-                req.save()
-	        html="OK|4|"+str(req)
-                #req.delete()
+ 	        active_reqs = Request.objects.filter(status=1).count()
+                if active_reqs < 100:
+                  req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
+ 	          req.status=1
+ 	          req.client = user
+ 	          req.clientping_time=datetime.now()
+                  req.save()
+	          html="OK|4|"+str(req)
+                else:
+                  html ="XX|4|Too many active requests kill the API"
             except IndexError:
                 html ="XX|4|No requests in queue"
         else:

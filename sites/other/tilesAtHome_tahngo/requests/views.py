@@ -200,7 +200,7 @@ def take(request):
             #"You provided a correct username and password!"
             try:
  	        active_reqs = Request.objects.filter(status=1).count()
-                if active_reqs < 100:
+                if active_reqs < 400:
                   req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
  	          req.status=1
  	          req.client = user
@@ -208,7 +208,7 @@ def take(request):
                   req.save()
 	          html="OK|4|"+str(req)
                 else:
-                  html ="XX|4|Too many active requests kill the API"
+                  html ="XX|4|Too many active requests would overload the API"
             except IndexError:
                 html ="XX|4|No requests in queue"
         else:

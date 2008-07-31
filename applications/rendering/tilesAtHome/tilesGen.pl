@@ -767,7 +767,7 @@ sub PutRequestBackToServer
     
     killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
-    my $RequestUrlString = $Config->get("ReRequestURL") . "?x=" . $X . "&y=" . $Y . "&min_z=" . $Z . "&priority=" . $Prio . "&src=" . $Config->get("UploadUsername"). ":tahCltReReq:" . $Cause;
+    my $RequestUrlString = $Config->get("ReRequestURL") . "?x=" . $X . "&y=" . $Y . "&min_z=" . $Z . "&priority=" . $Prio . "&user=" . $Config->get("UploadUsername"). "&cause=" . $Cause;
     
     statusMessage("Putting Job ".$X.",".$Y." back to server", $currentSubTask, $progressJobs, $progressPercent,1);
     DownloadFile(

@@ -3,7 +3,7 @@ from math import *
 import StringIO
 from PIL import Image
 from tah.tah_intern.Tile import Tile
-from django import newforms as forms
+from django import forms
 from django.views.decorators.cache import cache_control
 
 def latlon2relativeXY(lat,lon):

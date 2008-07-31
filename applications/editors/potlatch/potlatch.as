@@ -116,7 +116,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10a";	// current version
+	var signature="Potlatch 0.10b";	// current version
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
@@ -309,10 +309,10 @@
 	with (_root.tooltip  ) { text=""; setTextFormat(plainRight); selectable=false; type='dynamic'; };
 
 	_root.panel.createTextField('t_type',23,5,5,220,20);
-	with (_root.panel.t_type	 ) { text=signature; setTextFormat(boldText); };
+	with (_root.panel.t_type	 ) { text=signature; setTextFormat(boldText); selectable=false; };
 	
 	_root.panel.createTextField('t_details',24,5,23,220,20);
-	with (_root.panel.t_details) { text=""; setTextFormat(plainText); };
+	with (_root.panel.t_details) { text=""; setTextFormat(plainText); selectable=false; };
 	
 	// MovieClip loader
 	var tileLoader=new MovieClipLoader();
@@ -630,7 +630,7 @@
 		
 		switch (s) {
 			case 'G':		loadGPS(); break;									// G - load GPS
-			case 'H':		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
+			case 'H':		getHistory(); break;								// H - history
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
 			case 'U':		getDeleted(); break;								// U - undelete

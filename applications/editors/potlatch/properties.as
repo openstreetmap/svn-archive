@@ -843,6 +843,15 @@
 		} else {
 			_root.panel.padlock._visible=false;
 		}
+		_root.panel.createEmptyMovieClip('historylink',25);
+		with (_root.panel.historylink) {
+			beginFill(0,0); moveTo(5,23);
+			lineTo(7+_root.panel.t_details.textWidth,23);
+			lineTo(7+_root.panel.t_details.textWidth,23+_root.panel.t_details.textHeight);
+			lineTo(5,23+_root.panel.t_details.textHeight); lineTo(5,23);
+		};
+		_root.panel.historylink.onPress=getHistory;
+		_root.panel.historylink.useHandCursor=true;
 	}
 
 	// getPanelColumns - how many columns can fit into the panel?

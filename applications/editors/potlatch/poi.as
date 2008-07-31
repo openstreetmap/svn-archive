@@ -26,19 +26,16 @@
 			removeMovieClip(this);
 		}
 	};
-	POI.prototype.reload=function() {
+	POI.prototype.reload=function(timestamp) {
 		poirelresponder=function() {};
 		poirelresponder.onResult=function(result) {
 			_root.map.pois[result[0]]._x  =long2coord(result[1]);
 			_root.map.pois[result[0]]._y  =lat2coord (result[2]);
 			_root.map.pois[result[0]].attr=result[3];
-			_root.panel.properties.init('POI',getPanelColumns(),4);
-			_root.panel.presets.init(_root.panel.properties);
-			updateButtons();
-			updateScissors(false);
-			redrawRelationsForMember('node', result[0]);
+			_root.map.pois[result[0]].select();
 		};
-		remote.call('getpoi',poirelresponder,Math.floor(this._name));
+		if (!timestamp) { timestamp=0; }
+		remote.call('getpoi',poirelresponder,Math.floor(this._name),timestamp);
 	};
 	POI.prototype.upload=function() {
 		poiresponder=function() { };

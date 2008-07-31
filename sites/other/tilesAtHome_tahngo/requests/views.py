@@ -199,8 +199,10 @@ def take(request):
         if user is not None:
             #"You provided a correct username and password!"
             try:
- 	        active_reqs = Request.objects.filter(status=1).count()
-                if active_reqs < 400:
+                #next 2 lines are for limiting max #of active requests. disabled.
+                #active_reqs = Request.objects.filter(status=1).count()
+                #if active_reqs <= 1000:
+                if 1:
                   req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
  	          req.status=1
  	          req.client = user

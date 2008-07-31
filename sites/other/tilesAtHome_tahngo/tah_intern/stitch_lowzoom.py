@@ -110,8 +110,8 @@ if __name__ == '__main__':
   lz = Lowzoom()
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
-  #for i,(z,x,y) in enumerate(old_lowzooms.values()):
-  for i,(z,x,y) in enumerate([(6,34,18)]):   #for doing one test tileset
+  for i,(z,x,y) in enumerate(old_lowzooms.values()):
+  #for i,(z,x,y) in enumerate([(6,34,18)]):   #for doing one test tileset
   #i,z =0,6   #for doing the whole world...
   #for x in range(0,64):
   # for y in range(0,64):

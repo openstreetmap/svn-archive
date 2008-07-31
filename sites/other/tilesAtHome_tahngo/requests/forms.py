@@ -1,4 +1,4 @@
-from django import newforms as forms
+from django import forms
 from tah.requests.models import Request,Upload
 
 CreateForm = forms.form_for_model(Request)

@@ -5,7 +5,7 @@ import django.views.generic.list_detail
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from tah.requests.models import Request,Upload
 from tah.requests.forms import CreateForm,UploadForm,ClientAuthForm
-from django.newforms import form_for_model,widgets
+from django.forms import form_for_model,widgets
 from datetime import datetime, timedelta
 import urllib
 import xml.dom.minidom
@@ -121,6 +121,37 @@ def create(request):
                     % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'],reason)
     return HttpResponse(html)
 
+def feedback(request):
+    html="XX|unknown error"
+    CreateFormClass = CreateForm
+    CreateFormClass.base_fields['ipaddress'].required = False
+    CreateFormClass.base_fields['ipaddress'].widget = widgets.HiddenInput()
+    CreateFormClass.base_fields['priority'].required = False
+    CreateFormClass.base_fields['status'].required = False 
+    CreateFormClass.base_fields['status'].widget = widgets.HiddenInput()
+    CreateFormClass.base_fields['max_z'].required = False 
+    CreateFormClass.base_fields['max_z'].widget = widgets.HiddenInput()
+    CreateFormClass.base_fields['layers'].widget = widgets.CheckboxSelectMultiple(  
+         choices=CreateFormClass.base_fields['layers'].choices)
+    CreateFormClass.base_fields['layers'].required = False
+    CreateFormClass.base_fields['clientping_time'].required = False
+    CreateFormClass.base_fields['clientping_time'].widget = widgets.HiddenInput()
+    CreateFormClass.base_fields['client'].required = False
+    CreateFormClass.base_fields['client'].widget = widgets.HiddenInput()
+    form = CreateFormClass()
+    if request.method == 'POST':
+      form = CreateForm(request.POST)
+    elif request.method == 'GET':
+      form = CreateForm(request.GET)
+
+    if form.is_valid():
+       formdata = form.cleaned_data
+       Request.objects.filter(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z']).update(status=0)
+       html = "Reset tileset to pending (%d,%d,%d)" % \
+                    (formdata['min_z'],formdata['x'],formdata['y'])
+    else:
+       html="form is not valid. "+str(form.errors)
+    return HttpResponse(html)
 
 def upload_request(request):
     html='XX|Unknown error.'

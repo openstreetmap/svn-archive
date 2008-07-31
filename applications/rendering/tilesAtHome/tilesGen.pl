@@ -761,36 +761,30 @@ sub PutRequestBackToServer
     ## do not do this if called in xy mode!
     return if($Mode eq "xy");
     
-    my $Prio = $Config->get("ReRequestPrio");
-    
-    my $LocalFilename = $Config->get("WorkingDirectory") . "requesting-" . $PID . ".txt";
-    
-    killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
-    
-    my $RequestUrlString = $Config->get("ReRequestURL") . "?x=" . $X . "&y=" . $Y . "&min_z=" . $Z . "&priority=" . $Prio . "&user=" . $Config->get("UploadUsername"). "&cause=" . $Cause;
-    
-    statusMessage("Putting Job ".$X.",".$Y." back to server", $currentSubTask, $progressJobs, $progressPercent,1);
-    DownloadFile(
-        $RequestUrlString, 
-        $LocalFilename, 
-        0);
-    
-    if(! -f $LocalFilename) ## should check returncode from DownloadFile
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
+
+    $ua->protocols_allowed( ['http'] );
+    $ua->agent("tilesAtHomeZip");
+    $ua->env_proxy();
+    push @{ $ua->requests_redirectable }, 'POST';
+
+    statusMessage("Putting Job ".$X." ".$Y." ".$Z." back to server", $currentSubTask, $progressJobs, $progressPercent,1);
+    my $res = $ua->post($Config->get("ReRequestURL"),
+              Content_Type => 'form-data',
+              x => $X,
+              y => $Y,
+              min_z => $Z,
+              user => $Config->get("UploadUsername"),
+              passwd => $Config->get("UploadPassword"),
+              version => $Config->get("ClientVersion"),
+              cause => $Cause ]);
+
+    if(!$res->is_success())
     {
         return (0, "Error reading response from server");
     }
     
-    # Read into memory
-    open(my $fp, "<", $LocalFilename) || return;
-    my $Request = <$fp>;
-    chomp $Request;
-    close $fp;
-    
-    ## TODO: Check response for "OK" or "Duplicate Entry" (which would be OK, too)
-    
-    killafile($LocalFilename); # don't leave old files laying around
-
-    talkInSleep("Waiting before new tile is requested", 15);
+    talkInSleep("Waiting before new tile is requested", 10);
 }
 
 #-----------------------------------------------------------------------------

@@ -113,7 +113,7 @@ def altitude_profile_gchart(db, route):
     
 def altitude_profile(db, route):
   answer = []
-  interpolateRoute(route, 200)
+  interpolateRoute(route, 100)
   for point in route:
     point['alt'] = getAltitude(db, point['lat'], point['lon'])
     answer.append(point)

@@ -50,30 +50,28 @@ class Lowzoom(Tileset):
           image = Image.open(StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('tile')))
           image = Image.open(imagefile)
 
-        if (z-self.base_z+5)%2 == 0:
-          enh = ImageEnhance.Contrast(image)
-          image = enh.enhance(1.4)
-        enh = ImageEnhance.Sharpness(image)
-        image = enh.enhance(0)
         im.paste(image, (256*i,256*j))
-
         del (image)
 	del (imagefile)
+        #end of loop
 
-    im = im.resize((256, 256),Image.BILINEAR)
+    if (z-self.base_z) in [4,2]:
+      im = im.filter(ImageFilter.MinFilter(3))
+
+    im = im.resize((256, 256),Image.ANTIALIAS)
     im.save(pngfilepath+'_nocaptions', "PNG")
 
     if img_caption.mode == 'RGB':
       #if for some strange reasons the caption is not recognized as RGBA, make anything transparent that has some color.
       cb = img_caption.split()
       a, = img_caption.convert('L').split()
-      a = a.point(lambda p: 255 * int(p < 220))
+      a = a.point(lambda p: 255 * int(p < 230))
       img_caption = Image.merge('RGBA',cb+(a,))
     elif img_caption.mode == 'RGBA':
       (r,g,b,a) = img_caption.split()
     elif img_caption.mode == 'L':
       img_caption.load() #<--- workaround for bug in PIL 1.1.5
-      a = img_caption.point(lambda p: 255 * int(p < 220))
+      a = img_caption.point(lambda p: 255 * int(p < 230))
     else:
       sys.exit("unknown image mode %s at (%d,%d,%d)" %(img_caption.mode,z,x,y))
     im.paste(img_caption,(0,0),a)
@@ -113,7 +111,11 @@ if __name__ == '__main__':
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
   for i,(z,x,y) in enumerate(old_lowzooms.values()):
-  #for i,(z,x,y) in enumerate([(6,34,18)]):
+  #for i,(z,x,y) in enumerate([(6,34,18)]):   #for doing one test tileset
+  #i,z =0,6   #for doing the whole world...
+  #for x in range(0,64):
+  # for y in range(0,64):
+  #  i += 1
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
     #time.sleep(10)
     now = time.time()

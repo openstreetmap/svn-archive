@@ -777,7 +777,7 @@ sub PutRequestBackToServer
               user => $Config->get("UploadUsername"),
               passwd => $Config->get("UploadPassword"),
               version => $Config->get("ClientVersion"),
-              cause => $Cause ]);
+              cause => $Cause );
 
     if(!$res->is_success())
     {

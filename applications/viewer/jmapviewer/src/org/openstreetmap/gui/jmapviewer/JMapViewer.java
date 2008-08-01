@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -100,8 +99,10 @@ public class JMapViewer extends JPanel {
 		setMinimumSize(new Dimension(Tile.WIDTH, Tile.HEIGHT));
 		setPreferredSize(new Dimension(400, 400));
 		try {
-			loadingImage = ImageIO.read(getClass().getResourceAsStream("images/hourglass.png"));
-		} catch (IOException e1) {
+			loadingImage =
+					ImageIO.read(JMapViewer.class.getResourceAsStream("images/hourglass.png"));
+		} catch (Exception e1) {
+			loadingImage = null;
 		}
 		setDisplayPositionByLatLon(50, 9, 3);
 	}
@@ -345,7 +346,7 @@ public class JMapViewer extends JPanel {
 				iMove = (iMove + 1) % move.length;
 			}
 		}
-		//g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
+		// g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 		if (!mapMarkersVisible || mapMarkerList == null)
 			return;
 		for (MapMarker marker : mapMarkerList) {
@@ -364,7 +365,7 @@ public class JMapViewer extends JPanel {
 	 * @param y
 	 *            vertical movement in pixel
 	 */
-	public void move(int x, int y) {
+	public void moveMap(int x, int y) {
 		center.x += x;
 		center.y += y;
 		repaint();
@@ -385,10 +386,24 @@ public class JMapViewer extends JPanel {
 	}
 
 	/**
+	 * Increases the current zoom level by one
+	 */
+	public void zoomIn(Point mapPoint) {
+		setZoom(zoom + 1, mapPoint);
+	}
+
+	/**
 	 * Decreases the current zoom level by one
 	 */
 	public void zoomOut() {
 		setZoom(zoom - 1);
+	}
+
+	/**
+	 * Decreases the current zoom level by one
+	 */
+	public void zoomOut(Point mapPoint) {
+		setZoom(zoom - 1, mapPoint);
 	}
 
 	public void setZoom(int zoom, Point mapPoint) {
@@ -435,12 +450,12 @@ public class JMapViewer extends JPanel {
 					if (tile == null || tile.isLoaded())
 						return;
 					try {
-						//Thread.sleep(500);
+						// Thread.sleep(500);
 						URL url;
 						url = new URL("http://tile.openstreetmap.org/" + tile.getKey() + ".png");
 						HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 						urlConn.setReadTimeout(30000); // 30 seconds read
-														// timeout
+						// timeout
 						input = urlConn.getInputStream();
 						tile.setImage(ImageIO.read(input));
 						tile.setLoaded(true);

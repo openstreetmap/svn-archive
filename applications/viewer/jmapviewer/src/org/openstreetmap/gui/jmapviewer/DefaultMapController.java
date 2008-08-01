@@ -41,7 +41,7 @@ public class DefaultMapController extends JMapController implements MouseListene
 			Point p = e.getPoint();
 			int diffx = lastDragPoint.x - p.x;
 			int diffy = lastDragPoint.y - p.y;
-			map.move(diffx, diffy);
+			map.moveMap(diffx, diffy);
 		}
 		lastDragPoint = e.getPoint();
 	}
@@ -51,7 +51,7 @@ public class DefaultMapController extends JMapController implements MouseListene
 
 	public void mouseClicked(MouseEvent e) {
 		if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
-			map.setZoom(map.getZoom() + 1, e.getPoint());
+			map.zoomIn(e.getPoint());
 	}
 
 	public void mouseEntered(MouseEvent e) {

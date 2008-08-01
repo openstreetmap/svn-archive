@@ -1,0 +1,2 @@
+A plugin for JOSM that listens for commands on a TCP port. It can be used to 
+tell JOSM to zoom to an area and download data.

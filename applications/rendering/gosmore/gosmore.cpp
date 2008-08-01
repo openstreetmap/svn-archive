@@ -1929,7 +1929,7 @@ int IncrementalSearch (void)
         (unsigned) (clon + (clon & (1 << (bits + 16))) * 4 -
                                               (2 << (bits + 16))) >> 16);
       // Now we search through the 4 squares around (clat, clon)
-      for (int mask = 0; (mask & 7) != 4; mask += 0x55555555) {
+      for (int mask = 0, maskI = 0; maskI < 4; mask += 0x55555555, maskI++) {
         int s = IdxSearch (idx, hashTable - idx, data + idx[count + l],
           (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1));
 /* Print the square

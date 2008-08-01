@@ -492,7 +492,7 @@ sub localfile {
 # Option: URL for downloading tiles
 sub remotefile {
   my ($X,$Y,$Z,$Layer) = @_;
-  return sprintf("http://tah.openstreetmap.org/Tiles/%s.php/%d/%d/%d.png", $Layer,$Z,$X,$Y);
+  return sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png", $Layer,$Z,$X,$Y);
 }
 # Option: what to use as temporary storage for tiles
 sub tempdir {

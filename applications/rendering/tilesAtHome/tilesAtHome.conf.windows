@@ -19,8 +19,13 @@ Subversion=c:\program files\subversion\svn.exe
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 
-## Workaround for inkscape internationalisation problems. Default off (0) for windows
+## Linux workaround for inkscape internationalisation problems. 
+# Default is off (0) for windows
 i18n=0
+
+## Uncomment this for Windows installations in environments
+# with "," as decimal separator
+# InkscapeLocale = german
 
 # Set the timeout when downloading files (on tenths of a second)
 DownloadTimeout=1800

@@ -4,6 +4,7 @@ import os
 sys.path += [os.path.dirname(__file__)]
 
 import web
+from os import environ
 
 sys.stdout = sys.stderr 
 
@@ -47,8 +48,13 @@ class main_page:
 
 class profile_page:  
   def POST(self, output_format, input_format):
-    # This assumes XML input
-    postdata = '<?xml version=' + web.input()['<?xml version']
+    # Determine whether the post request is a protocol buffer or
+    # an XML document. (I am sure there is a more elegant way)
+    try: 
+      postdata =  web.input()['protobuf']
+    except:
+      postdata = '<?xml version=' + web.input()['<?xml version']
+          
     res = altitude.page_profile(db, utils, postdata, output_format, input_format)
     header = res[0]
     body = res[1]

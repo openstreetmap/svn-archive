@@ -4,6 +4,7 @@ message Route {
   message PointType {
     required float lat = 1;
     required float lon = 2;
+    optional float alt = 3;
   }
 
   repeated PointType point = 1;

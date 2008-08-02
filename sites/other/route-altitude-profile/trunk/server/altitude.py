@@ -1,5 +1,8 @@
 # from numpy import ones
 from math import floor, ceil
+import sys
+
+
 
 # Geopy: http://exogen.case.edu/projects/geopy/
 from geopy import distance, util
@@ -9,6 +12,8 @@ from pygooglechart import XYLineChart, Axis
 
 from xml.dom import minidom
 
+import altitudeprofile_pb2
+
 ##### Pages ######
 def page_main_get():
   return '<p>Welcome! Go to <a href="http://sprovoost.nl/category/gsoc/">my blog</a> to learn more.</p>'
@@ -17,12 +22,12 @@ def page_profile(db, utils, data, output_format, input_format):
   # Extract the route:
   route = []
   if input_format == "protobuf":
-    # Doesn't work in app egine yet and completely untested
+    # Doesn't work in app egine yet, only with Apache
     route_pb = altitudeprofile_pb2.Route()
     route_pb.ParseFromString(data)
 
     for point in route_pb.point:
-      route += {'lat' : point.lat, 'lon' : point.lon} 
+      route.append({'lat' : point.lat, 'lon' : point.lon})
 
   elif input_format == "xml":
     dom = minidom.parseString(data)
@@ -67,6 +72,21 @@ def page_profile(db, utils, data, output_format, input_format):
     xml += '</xls:XLS>'
 
     return ['text/xml', xml]
+
+  elif output_format == "protobuf":
+    profile = altitude_profile(db, route)
+
+    profile_pb = altitudeprofile_pb2.Route()
+
+    for p in profile:
+      point = profile_pb.point.add()
+      point.lat = p['lat']
+      point.lon = p['lon']
+      point.alt = p['alt']
+
+    profile_pb_string = route_pb.SerializeToString()
+
+    return ['text/html', profile_pb_string]
 
 def altitude_profile_gchart(db, route):
     # First calculate the altitude profile

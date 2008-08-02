@@ -79,6 +79,28 @@ def demo(req, route, input, output, server):
     req.write('<head></head>')
     req.write('<body>')
     req.write('<p>' + s +  '</p>')
+
+  elif output_type == "protobuf":
+    s = f.read()
+    f.close()
+    
+    req.content_type = 'text/html'
+    req.write('<html>')
+    req.write('<head></head>')
+    req.write('<body>')
+    req.write('<p>Extracting protocol buffer:</p>')
+    req.write('<p>' + s + '</p>')
+    
+    req.write('<ul>')
+    
+    route_res = altitudeprofile_pb2.Route()
+    route_res.ParseFromString(s)
+    
+    for point in route_res.point:
+      req.write('<li>lat=' + str(point.lat) + ' lon=' + str(point.lon) + ' alt=' + str(point.alt) + '</li>')
+
+    req.write('</ul>')
+    
   
   #return apache.OK
 
@@ -97,7 +119,7 @@ def fetchResult(url_server_root, input_type, route, output_type):
     # Get route altitude profile:
                 
 
-    return urllib.urlopen(url_server_root + "profile/xml/protobuf/", route_pb_string)
+    return urllib.urlopen(url_server_root + "profile/" + output_type + "/protobuf/", "protobuf=" + route_pb_string)
     
   elif input_type == "xml":
     # Let's make an xlsRouteGeometry object...

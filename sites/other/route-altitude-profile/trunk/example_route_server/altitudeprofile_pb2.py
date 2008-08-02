@@ -30,6 +30,13 @@ _ROUTE_POINTTYPE = descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    descriptor.FieldDescriptor(
+      name='alt', full_name='altitudeprofile.Route.PointType.alt', index=2,
+      number=3, type=2, cpp_type=6, label=1,
+      default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],

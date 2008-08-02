@@ -36,6 +36,8 @@ use tahproject;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use AppConfig qw(:argcount);
+use locale;
+use POSIX qw(locale_h);
 
 #---------------------------------
 
@@ -1603,6 +1605,12 @@ sub svg2png
     }
     else
     {
+        my $locale = $Config->get("IncscapeLocale");
+        my $oldLocale;
+        if ($locale ne "0") {
+                $oldLocale=setlocale(LC_ALL, $locale);
+        } 
+
         $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Niceness"),
@@ -1614,6 +1622,10 @@ sub svg2png
         $Config->get("WorkingDirectory"),
         $svgFile,
         $stdOut);
+
+        if ($locale ne "0") {
+                setlocale(LC_ALL, $oldLocale);
+        } 
     }
     
     # stop rendering the current job when inkscape fails

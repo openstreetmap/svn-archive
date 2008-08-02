@@ -1404,36 +1404,35 @@ sub NewClientVersion
 
     my $curVerFile = $Config->get("WorkingDirectory") . "/newversion.txt";
     my $currentVersion;
-
+   
     DownloadFile($Config->get("VersionCheckURL"), $curVerFile ,0);
     if (open(versionfile, "<", $curVerFile))
     {
         $currentVersion = <versionfile>;
         chomp $runningVersion;
         close versionfile;
-        if ($currentVersion eq "")
-        {
-            print "\n! WARNNG: Could not get version info from server!\n";
-            return 0;
-        }
         rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
-        if ($runningVersion > $currentVersion)
-        {
-            print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
-            return 0;
-        }
-        elsif ($runningVersion == $currentVersion)
-        {
-            return 0; # no new version
-        }
-        else
-        {
-            return 1; # version on server is newer
-        }
+    }
+    if ($currentVersion)
+    {
+	if ($runningVersion > $currentVersion)
+	{
+	    print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
+	    return 0;
+	}
+	elsif ($runningVersion == $currentVersion)
+	{
+	    return 0; # no new version
+	}
+	else
+	{
+	    return 1; # version on server is newer
+	}
     }
     else
     {
-        return 0;
+	print "\n! WARNING: Could not get version info from server!\n";
+	return 0;
     }
 }
 

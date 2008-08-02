@@ -1605,7 +1605,7 @@ sub svg2png
     }
     else
     {
-        my $locale = $Config->get("IncscapeLocale");
+        my $locale = $Config->get("InkscapeLocale");
         my $oldLocale;
         if ($locale ne "0") {
                 $oldLocale=setlocale(LC_ALL, $locale);

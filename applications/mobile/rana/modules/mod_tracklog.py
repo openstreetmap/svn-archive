@@ -30,6 +30,7 @@ class tracklog(ranaModule):
     ranaModule.__init__(self, m, d)
     self.nodes = []
     self.updateTime = 0
+    self.startupTimestamp = strftime("%Y%m%dT%H%M%S")
 
   def saveMinimal(self, filename):
     try:
@@ -60,7 +61,7 @@ class tracklog(ranaModule):
       self.nodes.append(pos)
       #(lat,lon) = pos
       #print "Logging %f, %f" % (lat,lon)
-    self.saveMinimal("data/tracklogs/latest.txt");
+    self.saveMinimal("data/tracklogs/%s.txt" % self.startupTimestamp);
 
   def drawMapOverlay(self, cr):
     # Where is the map?

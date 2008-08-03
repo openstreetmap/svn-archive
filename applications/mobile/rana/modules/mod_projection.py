@@ -116,6 +116,12 @@ class Projection(ranaModule):
     # Mark the meta-info as valid
     self.needsEdgeFind = False
   
+  def screenPos(self,px,py):
+    """Given a position on screen (where 0,0 is top-left and 1,1 is bottom right) get the coordinates"""
+    x = self.xc + ((px - 1) * self.w)
+    y = self.yc + ((py - 1) * self.h)
+    return(x,y)
+  
   def pxpy2xy(self,px,py):
     """Convert projection units to display units"""
     x = self.w * (px - self.px1) / self.pdx

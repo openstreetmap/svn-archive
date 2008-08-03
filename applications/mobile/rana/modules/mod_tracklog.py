@@ -31,6 +31,15 @@ class tracklog(ranaModule):
     self.nodes = []
     self.updateTime = 0
 
+  def saveMinimal(self, filename):
+    try:
+      f = open(filename, "w")
+      for n in self.nodes:
+        f.write("%f,%f\n"%n)
+      f.close();
+    except IOError:
+      print "Error saving tracklog" # TODO: error reporting
+    
   def load(self, filename):
     # TODO: share this with replayGpx
     self.nodes = []
@@ -44,10 +53,6 @@ class tracklog(ranaModule):
           lon = float(matches.group(2))
           self.nodes.append([lat,lon])
       file.close()
-      self.numNodes = len(self.nodes)
-      self.set("centreOnce", True)
-    else:
-      print "No file"
 
   def scheduledUpdate(self):
     pos = self.get('pos', None)
@@ -55,7 +60,7 @@ class tracklog(ranaModule):
       self.nodes.append(pos)
       #(lat,lon) = pos
       #print "Logging %f, %f" % (lat,lon)
-    
+    self.saveMinimal("data/tracklogs/latest.txt");
 
   def drawMapOverlay(self, cr):
     # Where is the map?
@@ -67,16 +72,16 @@ class tracklog(ranaModule):
 
     # Draw all trackpoints as lines (TODO: optimisation)
     cr.set_source_rgb(0,0,0.5)
-    count = 0
     for n in self.nodes:
       (lat,lon) = n
       (x,y) = proj.ll2xy(lat,lon)
-      if(count == 0):
-        cr.move_to(x,y)
-      else:
-        cr.line_to(x,y)
-      count += 1
-    cr.stroke()
+      if(proj.onscreen(x,y)):
+        self.point(cr, x,y)
+    cr.fill()
+    
+  def point(self, cr, x, y):
+    s = 2
+    cr.rectangle(x-s,y-s,2*s,2*s)
   
   def update(self):
     # Run scheduledUpdate every second

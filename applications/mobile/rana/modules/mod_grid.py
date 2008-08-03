@@ -21,6 +21,7 @@ from base_module import ranaModule
 import cairo
 import os
 import sys
+import geo
 
 def getModule(m,d):
   return(grid(m,d))
@@ -37,7 +38,27 @@ class grid(ranaModule):
       return
     if(not proj.isValid()):
       return
+    self.drawCorners(cr, proj)
+    self.drawScalebar(cr, proj)
 
+  def drawScalebar(self, cr, proj):
+    (x1,y1) = proj.screenPos(0.05, 0.85)
+    (x2,y2) = proj.screenPos(0.25, 0.85)
+    
+    (lat1,lon1) = proj.xy2ll(x1,y1)
+    (lat2,lon2) = proj.xy2ll(x2,y2)
+
+    dist = geo.distance(lat1,lon1,lat2,lon2)
+    text = "%1.1f km" % dist
+
+    cr.set_source_rgb(0,0,0)
+    cr.move_to(x1,y1)
+    cr.line_to(x2,y2)
+    cr.stroke()
+    
+    self.boxedText(cr, x1, y1-4, text, 12, 1)
+    
+  def drawCorners(self, cr, proj):
     (x1,y1) = proj.screenPos(0.25, 0.2)
     (x2,y2) = proj.screenPos(0.95, 0.85)
 

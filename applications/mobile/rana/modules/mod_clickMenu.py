@@ -29,17 +29,16 @@ class clickMenu(ranaModule):
   """Overlay info on the map"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
-    self.counter = 0
+    self.lastWaypoint = "(none)"
     self.lastWaypointAddTime = 0
     self.messageLingerTime = 2
 
-  def addWaypoint(self):
-    self.lastWaypointAddTime = time()
-    self.counter += 1
-
   def handleMessage(self, message):
     if(message == "addWaypoint"):
-      self.addWaypoint()
+      m = self.m.get("waypoints", None)
+      if(m != None):
+        self.lastWaypoint = m.newWaypoint()
+        self.lastWaypointAddTime = time()
     
   def drawMapOverlay(self, cr):
     """Draw an overlay on top of the map, showing various information
@@ -55,7 +54,7 @@ class clickMenu(ranaModule):
 	      m.registerXYWH(x+0.25*w,y+0.25*h,w*0.5,h*0.5, "clickMenu:addWaypoint")
 
   def drawNewWaypoint(self, cr, x,y,size):
-    text = "%d" % self.counter
+    text = self.lastWaypoint
     cr.set_font_size(200)
     extents = cr.text_extents(text)
     (w,h) = (extents[2], extents[3])
@@ -72,10 +71,3 @@ class clickMenu(ranaModule):
     cr.move_to(x1,y1)
     cr.show_text(text)
     cr.fill()
-    
-    cr.set_font_size(33)
-    cr.set_source_rgb(1,0,0)
-    cr.move_to(10, y)
-    cr.show_text("Note: doesn't yet store waypoints")
-    cr.fill()
-    

@@ -4,6 +4,7 @@ import os, sys, logging, zipfile, random, re, stat, signal
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
+import shutil
 from datetime import datetime
 from time import sleep,clock,time
 from django.conf import settings as djangosettings
@@ -168,16 +169,6 @@ class TileUpload:
     tahuser.save()
 
   #-----------------------------------------------------------------
-  def rm_dir(self,dir):
-    if dir:
-      for path in (os.path.join(dir,f) for f in os.listdir(dir)):
-        if os.path.isdir(path):
-          rm_rf(path)
-        else:
-          os.unlink(path)
-      os.rmdir(dir)
-
-  #-----------------------------------------------------------------
   def sigterm(self, signum, frame):
     """ This is called when a SIGTERM signal is issued """
     print "Received SIGTERM signal. Shutdown gracefully."
@@ -190,7 +181,7 @@ class TileUpload:
         (and the uploaded file if 'del_upload' is True.
     """
     # Delete the unzipped files directory
-    self.rm_dir(self.tmptiledir)
+    shutil.rmtree(self.tmptiledir, True)
     self.uid=None
     self.fname=None
     self.tmptiledir=None

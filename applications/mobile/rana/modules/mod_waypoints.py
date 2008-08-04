@@ -31,7 +31,7 @@ class waypoints(poiModule):
     poiModule.__init__(self, m, d)
     self.poi = {'default':[]}
     self.load("data/waypoints.txt")
-    self.counter = 0
+    self.counter = self.nextWaypoint()
 
   def firstTime(self):
     #m = self.m.get('menu', None)
@@ -60,7 +60,6 @@ class waypoints(poiModule):
       return
         
   def newWaypoint(self):
-    self.counter = self.counter + 1
     pos = self.get('pos', None)
     if(pos == None):
       return("ERR:No position")
@@ -68,7 +67,17 @@ class waypoints(poiModule):
     name = "%d" % self.counter
     self.addItem("default", name, lat, lon)
     self.save(self.filename)
+    self.counter = self.nextWaypoint()
     return(name)
+
+  def nextWaypoint(self):
+    used = {}
+    for p in self.poi['default']:
+      used[p['name']] = True
+    for i in range(1, 100000):
+      if(not used.has_key("%d"%i)):
+        return(i)
+    return("ERR:No number")
     
 
       

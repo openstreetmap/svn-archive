@@ -200,7 +200,7 @@ if __name__ == '__main__':
                     format='%(asctime)s %(levelname)s %(message)s',
                     datefmt = "%y-%m-%d-%H:%M:%S", 
                     filename=settings.getSetting(name='logFile'),
-                    filemode='w') 
+                    ) 
 
   logging.info('Starting tile upload processor')
   u = TileUpload(settings)

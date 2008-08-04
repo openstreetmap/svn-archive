@@ -10,6 +10,8 @@
 #   (use size = 2 for Glopus, otherwise use 5)
 #   (size 5 needs ~275MB, size 6 needs ~1.5GB RAM)
 # - optimzed PWconv.bat to have all tiles in one file, with error check
+# - Added Parameter coord2 instead of neighbormaps it is now possible to load a 
+#   area between 2 Points.
 #-----------------------------------------------------------------------------
 #
 # This program is free software; you can redistribute it and/or
@@ -39,10 +41,11 @@ use GD;
 #-----------------------------------------------------------------------------
 our $help=0;
 my $coord; 
+my $coord2; 
 my $tilename;
-my $tilesource = "http://tah.openstreetmap.org/Tiles/tile";
-my $tilesource_fallback1 = "http://tile.openstreetmap.org";
-my $tilesource_fallback2 = "http://dev.openstreetmap.org/~ojw/Tiles/tile.php";
+my $tilesource = "http://c.tah.openstreetmap.org/Tiles/tile";
+my $tilesource_fallback1 = "http://b.tah.openstreetmap.org/Tiles/tile/12/2175/1394.png";
+my $tilesource_fallback2 = "http://a.tah.openstreetmap.org/Tiles/tile/12/2175/1394.png";
 my $proxyname; 
 my $extension = "png";
 my $size=2;
@@ -55,6 +58,7 @@ GetOptions (
 
 	     'tilesource:s'	=> \$tilesource,
 	     'coord:s'		=> \$coord,
+	     'coord2:s'		=> \$coord2,
 	     'tilename:s'	=> \$tilename,
 	     'proxy:s'		=> \$proxyname,
 	     'ext:s'		=> \$extension,
@@ -84,13 +88,31 @@ Ini_batch_PWMapConvert("$PWconvBatchname");
 
 #-----------------------------------------------------------------------------
 # get the tile x and y coordinates
-my ($Z,$xtile, $ytile);
+my ($Z,$xtile, $ytile,$xtile2, $ytile2);
+$xtile2=-1;
 if ($tilename)
 {
   ($Z,$xtile,$ytile) = split(/,/, $tilename);
 }else{
   ($Z,my $lat,my $lon) = split(/,/, $coord);
   ($xtile, $ytile) = getTileNumber($lat,$lon) ;
+  if ($coord2)
+  {
+    (my $lat_2,my $lon_2) = split(/,/, $coord2);
+    ($xtile2, $ytile2) = getTileNumber($lat_2,$lon_2) ;
+    if($xtile2<$xtile)
+    { 
+      my $tmp=$xtile2;
+      $xtile2=$xtile;
+      $xtile=$tmp;
+    }
+    if($ytile2<$ytile)
+    { 
+      my $tmp=$ytile2;
+      $ytile2=$ytile;
+      $ytile=$tmp;
+   }
+  }
 }
 #-----------------------------------------------------------------------------
 usage(1) if ($Z<0);
@@ -108,12 +130,24 @@ my $Z2 = $Z+$size;
 my $Width = $tilesize * 2**($Z2-$Z);
 my $file ;
 
-for (my $xloop = $xtile - $neighbormaps;$xloop <= $xtile + $neighbormaps;$xloop++) {
-  for (my $yloop = $ytile - $neighbormaps;$yloop <= $ytile + $neighbormaps;$yloop++) {
-    $file = "OSM_z${Z}_y${yloop}_x${xloop}_p${Width}" ;
-    print "########## start generating $file \n";
-    MakeMapTile ($xloop,$yloop,$Z,$Z2,$extension);
-    MakeMapCal  ($xloop,$yloop,$Z,$Z2,$extension);
+if($xtile2>-1) {
+  for (my $xloop = $xtile ;$xloop <= $xtile2;$xloop++) {
+    for (my $yloop = $ytile;$yloop <= $ytile2;$yloop++) {
+      $file = "OSM_z${Z}_y${yloop}_x${xloop}_p${Width}" ;
+      print "########## start generating $file \n";
+      MakeMapTile ($xloop,$yloop,$Z,$Z2,$extension);
+      MakeMapCal  ($xloop,$yloop,$Z,$Z2,$extension);
+    }
+  }
+}else{
+
+  for (my $xloop = $xtile - $neighbormaps;$xloop <= $xtile + $neighbormaps;$xloop++) {
+    for (my $yloop = $ytile - $neighbormaps;$yloop <= $ytile + $neighbormaps;$yloop++) {
+      $file = "OSM_z${Z}_y${yloop}_x${xloop}_p${Width}" ;
+      print "########## start generating $file \n";
+      MakeMapTile ($xloop,$yloop,$Z,$Z2,$extension);
+      MakeMapCal  ($xloop,$yloop,$Z,$Z2,$extension);
+    }
   }
 }
 
@@ -613,7 +647,7 @@ sub Ini_batch_PWMapConvert{
 # usage, help
 ##############################################################################
 sub usage {
-  print "usage: $0 [-tilename=Z,x,y] [-coord=Z,lat,lon] [-tilesource=source] [-proxy=proxyname] [-size=size] [-neighbormaps=neighbormaps] [-cache=cache]\n";
+  print "usage: $0 [-tilename=Z,x,y] [-coord=Z,lat,lon] [-coord2=lat2,lon2] [-tilesource=source] [-proxy=proxyname] [-size=size] [-neighbormaps=neighbormaps] [-cache=cache]\n";
   print "This script downloads the tiles from the openstreetmap server and glue them together,\n";
   print "after that, it generates calibration files for Ozi, TTQV, Pathaway, Fugawi and Glopus.\n";
   print "\n";
@@ -626,7 +660,8 @@ sub usage {
   print "      - http://tile.openstreetmap.org \n\n";
   print "proxyname:\nproxy and port number\n\n";
   print "size:\nthis parameter gives the count of glowed tiles. The parameter itself is the exponent to the basis of 2. eg size=2 mean a map of4x4 tiles, size of 5 means a map of 32x32 tiles. The default is 2.\n\n";
-  print "neighbormaps:\nis the recursion count, it count the also generated maps in x and y direction. eg. neighbortiles=2 is in sum 5x5 maps (5=1+2x2), neighbortiles=4 is in sum 9x9 maps (9=1+2x4)). The default is 0. This parameter can cause extrem traffic. PLEASE USE THIS PARAMETER WITH CARE.\n\n";
+  print "neighbormaps:\nis the recursion count, it count the also generated maps in x and y direction. eg. neighbortiles=2 is in sum 5x5 maps (5=1+2x2), neighbortiles=4 is in sum 9x9 maps (9=1+2x4)). The default is 0. This parameter can cause extrem traffic. PLEASE USE THIS PARAMETER WITH CARE. Do not use araund 180 deg longitude!\n\n";
+  print "lat2,lon2:\nalternative to neighbormaps. The whole area between lat,lat2, lon, lon2 will be downloaded. This parameter can cause extrem traffic. PLEASE USE THIS PARAMETER WITH CARE. Do not use araund 180 deg longitude!\n\n";
   print "cache:\nthis parameter control the usage of the local cache, the default is 1\n\n";
   print " ------------------------------------------------------------------------------\n";
   print " GNU General Public license, version 2 or later\n";
@@ -637,6 +672,7 @@ sub usage {
   print "example 3, Pathaway        : $0 -coord=\"14,49.58,11.00\" -size=2 -neighbormaps=3\n";  
   print "example 4, Munich          : $0 -coord=\"11,48.15,11.58\" -tilesource=\"http://dev.openstreetmap.org/~ojw/Tiles/tile.php\" \n";
   print "example 5, Sao Paulo       : $0 -coord=\"11,-23.6681,-46.7520\" -tilesource=\"http://dev.openstreetmap.org/~ojw/Tiles/tile.php\" \n";
+  print "example 6, Aachen          : $0 -coord=\"13,50.8,6.02\" -coord2=\"50.73,6.17\"\n";  
   print "\n";
   print "for more help please refer to http://wiki.openstreetmap.org/index.php/Oziexplorer\n\n\n";
   exit;

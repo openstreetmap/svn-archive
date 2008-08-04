@@ -14,6 +14,10 @@ def show_user(request):
     u = TahUser.objects.filter(user__is_active=True).order_by(sortorder) # Get the first user in the system
     return render_to_response("user_show.html",{'user':u});
 
+def show_single_user(request, username):
+    u = TahUser.objects.get(user__is_active=True,user__username=username) # Get the user in the system
+    return render_to_response("user_show_specific.html",{'user':u});
+
 #from django.contrib.auth import authenticate
 #user = authenticate(username='john', password='secret')
 #if user is not None:

@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.validator.util;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.io.*;
@@ -49,6 +50,8 @@ public class Util
 		button.setActionCommand(actionname);
 		button.addActionListener(action);
 		button.setToolTipText(tr(tooltip));
+		button.setMargin(new Insets(1,1,1,1));
+		button.setIconTextGap(2);
 		button.putClientProperty("help", "Dialog/SelectionList/" + actionname);
 		return button;
 	}

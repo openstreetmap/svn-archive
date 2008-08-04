@@ -73,7 +73,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
-		JPanel buttonPanel = new JPanel(new GridLayout(1,2));
+		JPanel buttonPanel = new JPanel(new GridLayout(1,3));
 
 		selectButton = Util.createButton(tr("Select"), "select", "mapmode/selection/select",
 		tr("Set the selected elements on the map to the selected items in the list above."), this);

@@ -64,10 +64,18 @@ def saveCreateRequestForm(request, form):
     newRequest, created_new = Request.objects.get_or_create(status=0,min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
 
     newRequest.ipaddress = request.META['REMOTE_ADDR']
+
     if not created_new:
       #update existing request with new request data
       newRequest.max_z = max(formdata['max_z'],newRequest.max_z)
       newRequest.priority = min(formdata['priority'],newRequest.priority)
+
+    ##check if the IP has already lot's of high priority requests going and auto-bump down
+    #disabled until apache passes on the right IP address
+    #if formdata['priority'] == 1:
+    #  ip_requested = Request.objects.filter(status__lt= 2, ipaddress= request.META['REMOTE_ADDR']).count()
+    #  if ip_requested > 50:
+    #    newRequest.priority = max(2,newRequest.priority)
 
     # finally save the updated request
     newRequest.save()
@@ -115,8 +123,8 @@ def create(request):
          # view the plain form webpage with default values filled in
          return render_to_response('requests_create.html', \
                 {'createform': form, 'host':request.META['HTTP_HOST']})
-    if req: html = "Render '%s' (%s,%s,%s)" % \
-                    (req.layers_str,req.min_z,req.x,req.y)
+    if req: html = "Render '%s' (%s,%s,%s) at priority %d" % \
+                    (req.layers_str,req.min_z,req.x,req.y,req.priority)
     else:   html = "Request failed (%s,%s,%s): %s" \
                     % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'],reason)
     return HttpResponse(html)

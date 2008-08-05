@@ -7,12 +7,14 @@ import java.net.SocketException;
 import java.net.InetAddress;
 
 /**
- * Simple HTTP server that spawns a {@link RequestProcessor} for every connection.
- * 
- * @author frsantos
-  */
-public class HttpServer extends Thread 
-{
+ * Simple HTTP server that spawns a {@link RequestProcessor} for every 
+ * connection.
+ *
+ * Taken from YWMS plugin by frsantos.
+ */
+
+public class HttpServer extends Thread {
+
     /** Default port for the HTTP server */
 	public static final int DEFAULT_PORT = 8111;
 	

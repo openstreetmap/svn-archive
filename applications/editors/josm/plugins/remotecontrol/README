@@ -1,2 +1,9 @@
-A plugin for JOSM that listens for commands on a TCP port. It can be used to 
-tell JOSM to zoom to an area and download data.
+A plugin for JOSM that listens for commands on a TCP port (8111). 
+It can be used to tell JOSM to zoom to an area and download data. 
+Details are found on the Wiki page, 
+
+http://wiki.openstreetmap.org/index.php/JOSM/Plugins/RemoteControl
+
+Initially written by Frederik Ramm <frederik@remote.org>. License:
+GPL V2 or later. Incorporates code taken from YWMS plugin by frsantos.
+

@@ -1,7 +1,9 @@
+from django.http import Http404
 from django.shortcuts import render_to_response
 import django.contrib.auth.views
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from tah.user.models import TahUser
+from tah.requests.models import Request
 
 def index(request):
     return render_to_response("base_user.html");
@@ -14,9 +16,24 @@ def show_user(request):
     u = TahUser.objects.filter(user__is_active=True).order_by(sortorder) # Get the first user in the system
     return render_to_response("user_show.html",{'user':u});
 
-def show_single_user(request, username):
-    u = TahUser.objects.get(user__is_active=True,user__username=username) # Get the user in the system
-    return render_to_response("user_show_specific.html",{'user':u});
+def show_single_user(request, searchstring, by):
+    """ display detail page on a single user. 'by' can be 'pk' (primary key)
+        and 'username' and specifies whether we
+        look for a username or id number.
+    """
+    if by == 'pk':
+      try: u = TahUser.objects.get(user__pk=searchstring) # Get the user in the system
+      except TahUser.DoesNotExist: 
+        raise Http404
+    else: 
+      try: u = TahUser.objects.get(user__username=searchstring) # Get the user in the system
+      except TahUser.DoesNotExist:
+        raise Http404
+
+    active = Request.objects.filter(status=1, client= u.pk)
+    finished = Request.objects.filter(status=2, client= u.pk)[:20]
+
+    return render_to_response("user_show_specific.html",{'user':u, 'active_reqs': active, 'finished_reqs': finished});
 
 #from django.contrib.auth import authenticate
 #user = authenticate(username='john', password='secret')

@@ -73,7 +73,7 @@ def saveCreateRequestForm(request, form):
     ##check if the IP has already lot's of high priority requests going and auto-bump down
     if formdata['priority'] == 1:
       ip_requested = Request.objects.filter(status__lt= 2, ipaddress= request.META['REMOTE_ADDR']).count()
-      if ip_requested > 50:
+      if ip_requested > 15:
         newRequest.priority = max(2,newRequest.priority)
 
     # finally save the updated request

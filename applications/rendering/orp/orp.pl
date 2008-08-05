@@ -23,8 +23,6 @@
 #   "center of bbox" algorithm for the time being.
 #
 # Osmarender features not yet supported:
-# - extended text formatting with tag substitution
-# - proximity filtering
 # - something with symbols being copied from some directory. didn't understand
 #   what it does so couldn't implement it. Search for "symbolsDir".
 # - "s" attribute on rules is unsupported in some esoteric cases
@@ -920,6 +918,8 @@ sub make_selection
             unless($_ eq "way" or $_ eq "node");
     }
 
+    my $interim;
+
     if ($k eq '*' or !defined($k))
     {
         # rules that apply to any key. these don't occur often
@@ -929,13 +929,13 @@ sub make_selection
         {
             # k=* v=~ means elements without tags.
             # FIXME "s"
-           return select_elements_without_tags($oldsel, $e);
+           $interim = select_elements_without_tags($oldsel, $e);
         }
         elsif ($v eq "*")
         {
             # k=* v=* means elements with any tag.
             # FIXME "s"
-            return select_elements_with_any_tag($oldsel, $e);
+            $interim = select_elements_with_any_tag($oldsel, $e);
         }
         else
         {
@@ -944,7 +944,7 @@ sub make_selection
             # list of values. The "~" symbol is not supported in the
             # list.
             # FIXME "s"
-            return select_elements_with_given_tag_value($oldsel, $e, $v);
+            $interim = select_elements_with_given_tag_value($oldsel, $e, $v);
         }
     }
     else
@@ -956,37 +956,61 @@ sub make_selection
         {
             # objects that have the given key(s), with any value.
             # FIXME "s"
-            return select_elements_with_given_tag_key($oldsel, $e, $k);
+            $interim = select_elements_with_given_tag_key($oldsel, $e, $k);
         }
         elsif ($v eq "~")
         {
             # objects that don't have the key(s)
             # FIXME "s"
-            return select_elements_without_given_tag_key($oldsel, $e, $k);
+            $interim = select_elements_without_given_tag_key($oldsel, $e, $k);
         }
         elsif ($s eq "" and index($v, '~') == -1)
         {
             # objects that have the given keys and values, where none of the
             # values is "~"
-            return select_elements_with_given_tag_key_and_value_fast($oldsel, $e, $k, $v);
+            $interim = select_elements_with_given_tag_key_and_value_fast($oldsel, $e, $k, $v);
         }
         elsif ($s eq "way" and index($v, '~') == -1)
         {
             # nodes that belong to a way that has the given keys and values,
             # where none of the values is "~"
-            return select_nodes_with_given_tag_key_and_value_for_way_fast($oldsel, $k, $v);
+            $interim = select_nodes_with_given_tag_key_and_value_for_way_fast($oldsel, $k, $v);
         }
         else
         {
             # the code that can handle "~" in values (i.e. rules like "the 
             # 'highway' tag must be 'bridleway' or not present at all)
             # is slower since it cannot use indexes.
-            return select_elements_with_given_tag_key_and_value_slow($oldsel, $e, $k, $v, $s);
+            $interim = select_elements_with_given_tag_key_and_value_slow($oldsel, $e, $k, $v, $s);
         }
     }
 
-    # never get here, make assertion to help programmers who break the above
-    die ("something is wrong");
+    # make assertion to help programmers who break the above
+    die ("something is wrong") unless defined($interim);
+
+    # post-process the selection according to proximity filter, if set.
+
+    # the following control the proximity filter. horizontal and vertical proximity
+    # control the size of the imaginary box drawn around the point where the label is
+    # placed. proximityClass is a storage class; if it is shared by multiple rules,
+    # then all these rules compete for the same space. If no class is set then the
+    # filter only works on objects selected by this rule.
+    # FIXME: proximity filtering does not take text length into account, and boxes
+    # are currently based on lat/lon values to remain compatible to Osmarender,
+    # yielding reduced spacings the closer you get to the poles.
+
+    my $hp = $rulenode->getAttribute("horizontalProximity");
+    my $vp = $rulenode->getAttribute("verticalProximity");
+    my $pc = $rulenode->getAttribute("proximityClass");
+    if (defined($hp) && defined($vp))
+    {
+        debug("activating proximity filter for rule");
+        return select_proximity($interim, $hp, $vp, $pc);
+    }
+    else
+    {
+        return $interim;
+    }
 }
 
 # -------------------------------------------------------------------

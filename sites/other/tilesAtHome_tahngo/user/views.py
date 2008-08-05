@@ -30,8 +30,9 @@ def show_single_user(request, searchstring, by):
       except TahUser.DoesNotExist:
         raise Http404
 
-    active = Request.objects.filter(status=1, client= u.pk)
-    finished = Request.objects.filter(status=2, client= u.pk)[:20]
+    # if we want the user id, need to look at TahUser.user.pk, not TahUser.pk as we use this for ident
+    active = Request.objects.filter(status=1, client= u.user.pk)
+    finished = Request.objects.filter(status=2, client= u.user.pk)[:20]
 
     return render_to_response("user_show_specific.html",{'user':u, 'active_reqs': active, 'finished_reqs': finished});
 

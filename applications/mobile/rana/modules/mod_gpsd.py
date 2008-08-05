@@ -65,7 +65,7 @@ class gpsd(ranaModule):
     lat,lon = [float(ll) for ll in text.split(' ')]
     self.status = "OK"
     self.set('pos', (lat,lon))
-    self.set('pos_source', 'file')
+    self.set('pos_source', 'GPSD')
   
 if __name__ == "__main__":
   d = {'pos_filename':'pos.txt'}

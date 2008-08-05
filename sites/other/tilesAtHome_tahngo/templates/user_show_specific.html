@@ -4,9 +4,16 @@
 
 {% block heading %}t@h Show Users{% endblock %}
 {% block content %}
-<table border="1">
-  <tr><td>#</td><td>User</td><td><a href="?order=tiles">Rendered Tiles</a></td><td><a href="?order=upload">Uploaded KB</a></td><td><a href="?order=last">Last activity</a></td></tr>
-  {% for u in user %}
-  <tr><td>{{forloop.counter}}</td><td>{{ u.user.username }}</td><td>{{ u.renderedTiles }}</td><td>{{ u.kb_upload }}</td><td>{{ u.last_activity|timesince }}</td></tr>
+<table border="1" align="center">
+  <tr><td>id</td><td>User</td><td>Rendered Tiles</td><td>Uploaded KB</td><td>Last activity</td></tr>
+  <tr><td>{{ user.user.pk }}</td><td>{{ user.user.username }}</td><td>{{ user.renderedTiles }}</td><td>{{ user.kb_upload }}</td><td>{{ user.last_activity|timesince }}</td></tr>
+</table>
+
+<h3>Current active requests</h3>
+<table border="1" align="center">
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Last client activity</td><td>Layer</td></tr>
+  {% for req in active_reqs %}
+  <tr><td><a href="{% url tah.browse.views.tiledetails "tile",req.min_z,req.x,req.y %}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{ req.layers_str }}</td></tr>
   {% endfor %}
-</table>{% endblock %}
+</table>
+{% endblock %}

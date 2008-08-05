@@ -5,7 +5,7 @@ urlpatterns = patterns('tah.requests',
     (r'^$', index),
     (r'^show/$', show_user),
     (r'^show/byname/(.+)/$', show_single_user, {'by': 'username'}),
-    (r'^show/byid/(.+)/$', show_single_user, {'by': 'pk'}),
+    (r'^show/byid/(.+)/$', show_single_user, {'by': 'pk'}, "single_user_byid"),
     #(r'^login/$', login),
 )
 

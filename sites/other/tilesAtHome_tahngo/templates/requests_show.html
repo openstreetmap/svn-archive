@@ -18,6 +18,6 @@
 <table border="1" align="center">
   <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Layer</td><td>Requested since</td><td>Last client contact</td><td>Renderer</td></tr>
   {% for req in active_reqs_list %}
-  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.layers_str }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{req.client}}</td></tr>
+  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.layers_str }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td><a href="{% url single_user_byid req.client.pk %}">{{req.client}}</a></td></tr>
   {% endfor %}
 </table>{% endblock %}

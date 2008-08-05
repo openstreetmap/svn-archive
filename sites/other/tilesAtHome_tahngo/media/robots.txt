@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /Browse/
+
+User-agent: *
+Disallow: /Request/create/
+
+User-agent: *
+Disallow: /Request/take/
+
+User-agent: *
+Disallow: /Request/upload/
+

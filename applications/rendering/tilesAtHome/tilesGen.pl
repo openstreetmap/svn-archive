@@ -197,7 +197,7 @@ killafile("stopfile.txt") if $Config->get("AutoResetStopfile");
 
 ## Start processing
 
-if($Mode eq "xy")
+if ($Mode eq "xy")
 {
     # ----------------------------------
     # "xy" as first argument means you want to specify a tileset to render
@@ -211,10 +211,15 @@ if($Mode eq "xy")
 
     my $X = shift();
     my $Y = shift();
-    if( not defined $X or not defined $Y )
-    { die "Must specify tile coordinates\n" }
+    if (not defined $X or not defined $Y)
+    { 
+        print STDERR "Usage: $0 xy <X> <Y> [<ZOOM>]\n";
+        print STDERR "where <X> and <Y> are the tile coordinates and \n";
+        print STDERR "<ZOOM> is an optional zoom level (defaults to 12).\n";
+        exit;
+    }
     my $Zoom = shift();
-    if(not defined $Zoom)
+    if (not defined $Zoom)
     {
        $Zoom = 12;
        statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", "warning", $progressJobs, $progressPercent,1);

@@ -71,11 +71,10 @@ def saveCreateRequestForm(request, form):
       newRequest.priority = min(formdata['priority'],newRequest.priority)
 
     ##check if the IP has already lot's of high priority requests going and auto-bump down
-    #disabled until apache passes on the right IP address
-    #if formdata['priority'] == 1:
-    #  ip_requested = Request.objects.filter(status__lt= 2, ipaddress= request.META['REMOTE_ADDR']).count()
-    #  if ip_requested > 50:
-    #    newRequest.priority = max(2,newRequest.priority)
+    if formdata['priority'] == 1:
+      ip_requested = Request.objects.filter(status__lt= 2, ipaddress= request.META['REMOTE_ADDR']).count()
+      if ip_requested > 50:
+        newRequest.priority = max(2,newRequest.priority)
 
     # finally save the updated request
     newRequest.save()

@@ -1,5 +1,9 @@
 package org.openstreetmap.josm.plugins.remotecontrol;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
@@ -7,12 +11,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.download.DownloadDialog.DownloadTask;
 
 /**
@@ -22,6 +32,10 @@ public class RequestProcessor extends Thread
 {
 	/** The socket this processor listens on */
 	private Socket request;
+	
+	private class AlreadyLoadedException extends Exception {};
+	private class DeniedException extends Exception {};
+	private class LoadDeniedException extends Exception {};
   
 	/**
 	 * Constructor
@@ -72,8 +86,7 @@ public class RequestProcessor extends Thread
 	        String method = st.nextToken();
 	        String url = st.nextToken();
 
-	        if( !method.equals("GET") )
-	        {
+	        if(!method.equals("GET")) {
 	        	sendNotImplemented(out);
 	        	return;
 	        }
@@ -84,41 +97,70 @@ public class RequestProcessor extends Thread
             while (st.hasMoreTokens())
             {
                 String param = st.nextToken();
-                if (command == null) 
-                {
+                if (command == null) {
                     command = param;
-                } 
-                else
-                {
+                } else {
                     int eq = param.indexOf("=");
-                    if (eq>-1)
-                    	args.put(param.substring(0,eq), param.substring(eq+1));
+                    if (eq>-1) args.put(param.substring(0,eq), param.substring(eq+1));
                 }
             }
             
             if (command.equals("/load_and_zoom")) {
-				DownloadTask osmTask = new DownloadOsmTask();
+            	if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
+            		if (JOptionPane.showConfirmDialog(Main.parent,
+            			tr("Remote Control has been asked to load data from the API. Request details: {0}. Do you want to allow this?", url),
+            			tr("Confirm Remote Control action"),
+            			JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+            				sendForbidden(out);
+            				return;
+            		}
+            	}
+            	DownloadTask osmTask = new DownloadOsmTask();
 				if (!(args.containsKey("bottom") && args.containsKey("top") && 
 					args.containsKey("left") && args.containsKey("right"))) {
-					sendError(out);
+					sendBadRequest(out);
 					System.out.println("load_and_zoom remote control request must have bottom,top,left,right parameters");
 					return;	
 				}
+				double minlat = 0;
+				double maxlat = 0;
+				double minlon = 0;
+				double maxlon = 0;
 				try {
-					double minlat = Double.parseDouble(args.get("bottom"));
-					double maxlat = Double.parseDouble(args.get("top"));
-					double minlon = Double.parseDouble(args.get("left"));
-					double maxlon = Double.parseDouble(args.get("right"));
-					osmTask.download(Main.main.menu.download, minlat,minlon,maxlat,maxlon);
-				}
-				catch (Exception ex)
-				{
+					minlat = Double.parseDouble(args.get("bottom"));
+					maxlat = Double.parseDouble(args.get("top"));
+					minlon = Double.parseDouble(args.get("left"));
+					maxlon = Double.parseDouble(args.get("right"));
+					
+					if (!Main.pref.getBoolean("remotecontrol.permission.load-data", true))
+						throw new LoadDeniedException();
+					
+					// find out whether some data has already been downloaded
+					Area present = Main.ds.getDataSourceArea();
+					if (present != null && !present.isEmpty()) {
+						Area toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
+						toDownload.subtract(present);
+						if (toDownload.isEmpty()) throw new AlreadyLoadedException();
+						// the result might not be a rectangle (L shaped etc)
+						Rectangle2D downloadBounds = toDownload.getBounds2D();
+						minlat = downloadBounds.getMinY();
+						minlon = downloadBounds.getMinX();
+						maxlat = downloadBounds.getMaxY();
+						maxlon = downloadBounds.getMaxX();
+					}
+					osmTask.download(null, minlat,minlon,maxlat,maxlon);
+				} catch (AlreadyLoadedException ex) {
+					System.out.println("RemoteControl: no download necessary");
+				} catch (LoadDeniedException ex) {
+					System.out.println("RemoteControl: download forbidden by preferences");
+				} catch (Exception ex) {
 					sendError(out);
 					System.out.println("RemoteControl: Error parsing load_and_zoom remote control request:");
 					ex.printStackTrace();
 					return;
 				}
-				if (args.containsKey("select")) {
+				if (args.containsKey("select") && Main.pref.getBoolean("remotecontrol.permission.change-selection", true)) {
+					// select objects after downloading, zoom to selection.
 					final String selection = args.get("select");
 					Main.worker.execute(new Runnable() {
 						public void run() {
@@ -141,9 +183,24 @@ public class RequestProcessor extends Thread
 							for (Node n : Main.ds.nodes) if (nodes.contains(n.id)) newSel.add(n);
 							for (Relation r : Main.ds.relations) if (relations.contains(r.id)) newSel.add(r);	
 							Main.ds.setSelected(newSel);
+							if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true))
+								new AutoScaleAction("selection").actionPerformed(null);
 						}
 					});
-				};
+				} else if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true)) {
+					// after downloading, zoom to downloaded area.
+					final LatLon min = new LatLon(minlat, minlon);
+					final LatLon max = new LatLon(maxlat, maxlon);
+					
+					Main.worker.execute(new Runnable() {
+						public void run() {
+							BoundingXYVisitor bbox = new BoundingXYVisitor();
+							bbox.min = Main.proj.latlon2eastNorth(min);
+							bbox.max = Main.proj.latlon2eastNorth(max);
+							Main.map.mapView.recalculateCenterScale(bbox);
+						}
+					});
+				}
             }
 			sendHeader(out, "200 OK", "text/plain", false);
             out.write("Content-length: 4\r\n");
@@ -152,22 +209,15 @@ public class RequestProcessor extends Thread
             out.flush();
 		}
 		catch (IOException ioe) { }
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
-			try 
-			{
+			try {
 				sendError(out);
-			} 
-			catch (IOException e1) { }
-		}
-		finally 
-		{
-	        try 
-	        {
+			} catch (IOException e1) { }
+		} finally {
+	        try {
 	        	request.close();        
-	        }
-	        catch (IOException e) {} 
+	        } catch (IOException e) {} 
 		}
 	}
 
@@ -201,6 +251,39 @@ public class RequestProcessor extends Thread
 		out.write("</HEAD>\r\n");
 		out.write("<BODY>");
 		out.write("<H1>HTTP Error 501: Not Implemented</h2>\r\n");
+		out.write("</BODY></HTML>\r\n");
+		out.flush();
+	}
+
+	/**
+	 * Sends a 403 error: forbidden
+	 * @param out The writer where the error is written
+	 * @throws IOException If the error can not be written
+	 */
+	private void sendForbidden(Writer out) throws IOException
+	{
+		sendHeader(out, "403 Forbidden", "text/html", true);
+		out.write("<HTML>\r\n");
+		out.write("<HEAD><TITLE>Forbidden</TITLE>\r\n");
+		out.write("</HEAD>\r\n");
+		out.write("<BODY>");
+		out.write("<H1>HTTP Error 403: Forbidden</h2>\r\n");
+		out.write("</BODY></HTML>\r\n");
+		out.flush();
+	}
+	/**
+	 * Sends a 403 error: forbidden
+	 * @param out The writer where the error is written
+	 * @throws IOException If the error can not be written
+	 */
+	private void sendBadRequest(Writer out) throws IOException
+	{
+		sendHeader(out, "400 Bad Request", "text/html", true);
+		out.write("<HTML>\r\n");
+		out.write("<HEAD><TITLE>Bad Request</TITLE>\r\n");
+		out.write("</HEAD>\r\n");
+		out.write("<BODY>");
+		out.write("<H1>HTTP Error 400: Bad Request</h2>\r\n");
 		out.write("</BODY></HTML>\r\n");
 		out.flush();
 	}

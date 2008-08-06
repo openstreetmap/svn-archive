@@ -7,6 +7,18 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
+#------------------------------------------------
+#a little ugly place for setting up the logging perhaps.
+import logging
+if not getattr(logging, "set_up_done", None):
+    logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt = "%y-%m-%d-%H:%M:%S", 
+                    filename='/var/www/tah/server.log',
+                   )
+    logging.set_up_done=True
+#------------------------------------------------
+
 MANAGERS = ADMINS
 AUTH_PROFILE_MODULE="user.TahUser"
 AUTHENTICATION_BACKENDS=('django.contrib.auth.backends.ModelBackend','tah.user.auth.OSMBackend')

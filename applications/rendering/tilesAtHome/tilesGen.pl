@@ -331,6 +331,8 @@ elsif ($Mode eq "loop")
 
         reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
 
+        ## start processing here:
+
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
 
         $upload_result = uploadIfEnoughTiles(); # upload if enough work done
@@ -1386,7 +1388,7 @@ sub RenderTile
 
 
 #-----------------------------------------------------------------------------
-# Gets latest copy of osmarender from repository
+# Gets latest copy of client from svn repository
 #-----------------------------------------------------------------------------
 sub UpdateClient # 
 {
@@ -1405,6 +1407,9 @@ sub UpdateClient #
         "status -q --ignore-externals");
 
     my $svn_status = `$Cmd`;
+
+    chomp $svn_status;
+
     if ($svn_status eq '')
     {
         my $versionfile = $Config->get("WorkingDirectory") . "/version.txt";
@@ -1414,7 +1419,7 @@ sub UpdateClient #
     {
         statusMessage("svn status did not come back clean, check your installation",$currentSubTask, $progressJobs, $progressPercent,1);
         print STDERR $svn_status;
-        addFault("fatal",1);
+        cleanUpAndDie("Auto-update failed","EXIT",1,$PID);
     }
 }
 

@@ -7,6 +7,8 @@ from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 
+from google.appengine.api import memcache
+
 ##### Database #####
 class Altitude(db.Model):
   alt = db.IntegerProperty()
@@ -14,7 +16,14 @@ class Altitude(db.Model):
 import altitude
 class Database:
   def fetchAltitude(self, pos):
-    return Altitude.get_by_key_name("P" + str(pos)).alt
+    key = "P" + str(pos)
+    data = memcache.get(key)
+    if data is not None:
+      return data.alt
+    else:
+      data = Altitude.get_by_key_name(key)
+      memcache.add(key, data, 30)
+      return data.alt
 
 class Utils:
   def fetchUrl(self, url):

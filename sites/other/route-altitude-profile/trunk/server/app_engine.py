@@ -28,12 +28,7 @@ utils = Utils()
 ##### Pages #####
 class MainPage(webapp.RequestHandler):
   def get(self):
-    self.response.out.write("""
-      <html>
-        <body>""")
-    self.response.out.write(altitude.page_main_get())
-    self.response.out.write("""       </body>
-      </html>""")
+    self.redirect("http://wiki.openstreetmap.org/index.php/Route_altitude_profiles_SRTM")
 
 class Profile(webapp.RequestHandler):
   def get(self, output_format):

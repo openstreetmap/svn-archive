@@ -7,5 +7,9 @@ UploadForm = forms.form_for_model(Upload)
 class ClientAuthForm(forms.Form):
      user = forms.CharField()
      passwd = forms.CharField()
-     #capability = forms.CharField(required=False,widget=forms.HiddenInput)
+
+class TakeRequestForm(forms.Form):
+     version = forms.CharField(required=False)
+     layers = forms.CharField(required=False)
+     layerspossible = forms.CharField(required=False)
 

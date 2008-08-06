@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 import django.views.generic.list_detail
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from tah.requests.models import Request,Upload
-from tah.requests.forms import CreateForm,UploadForm,ClientAuthForm
+from tah.requests.forms import *
 from django.forms import form_for_model,widgets
 from datetime import datetime, timedelta
 import urllib
@@ -245,14 +245,17 @@ def upload_gonogo(request):
 def take(request):
     html='XX|4|unknown error'
     if request.method == 'POST':
-      form = ClientAuthForm(request.POST)
-      if form.is_valid():
-        name     = form.cleaned_data['user']
-	passwd   = form.cleaned_data['passwd']
+      authform = ClientAuthForm(request.POST)
+      form     = TakeRequestForm(request.POST)
+      form.is_valid() #clean data
+      if authform.is_valid():
+        name     = authform.cleaned_data['user']
+	passwd   = authform.cleaned_data['passwd']
         user = authenticate(username=name, password=passwd)
         if user is not None:
-            #"You provided a correct username and password!"
+          #"You provided a correct username and password!"
             try:
+                logging.debug("client %s from %s takes request." %(form.cleaned_data['version'],user))
                 #next 2 lines are for limiting max #of active requests per usr
                 active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
                 if active_user_reqs <= 50:

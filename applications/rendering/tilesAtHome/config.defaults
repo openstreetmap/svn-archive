@@ -64,7 +64,7 @@ UploadTargetDirectory = /set/this/to/your/upload/directory
 UploadConfiguredLayersOnly = 0
 LayerUpload = 0
 GatherBlankTiles = 0
-DeleteZipFilesAfterUpload = 0
+DeleteZipFilesAfterUpload = 1
 
 Fork = 0
 ForkForUpload = 1

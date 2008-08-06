@@ -45,7 +45,7 @@ UploadChunkSize=9   # Megabyte, hard limit 9.5 MiB (10 MB)
 UploadChunkCount=13650  # default: 10 tilesets (will never be reached in practise)
 
 # if set to 0 the zip files will get renamed to zip_uploaded after upload.
-DeleteZipFilesAfterUpload=0
+DeleteZipFilesAfterUpload=1
 
 # set UploadToDirectory to 1 to enable uploading to a common upload 
 # directory from which one central client can handle all the uploading

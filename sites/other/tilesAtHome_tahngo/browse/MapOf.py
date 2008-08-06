@@ -36,7 +36,7 @@ def export_MapOf(request):
         image =  Image.open(StringIO.StringIO(Tile(None,form['z'],i,j).serve_tile('tile')))
         im.paste(image,(256*(i-x_range[0]),256*(j-y_range[0])))
     marg_w = int(256*(x-x_range[0]-form['w']/512.0))
-    marg_h  = int(256*(1-(y-y_range[0]-form['h']/512.0)))
+    marg_h  = int(256*(y-y_range[0]-form['h']/512.0))
     im = im.crop((marg_w,marg_h,marg_w+form['w'],marg_h+form['h']))
     #return HttpResponse(str(marg_w)+" "+str(marg_h)+" " +str(x) + str(x_range) + str(y)+str(y_range))
     im.save(pngfile,form['format'])

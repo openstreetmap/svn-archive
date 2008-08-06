@@ -12,8 +12,6 @@ from pygooglechart import XYLineChart, Axis
 
 from xml.dom import minidom
 
-import altitudeprofile_pb2
-
 ##### Pages ######
 def page_main_get():
   return '<p>Welcome! Go to <a href="http://sprovoost.nl/category/gsoc/">my blog</a> to learn more.</p>'
@@ -23,6 +21,8 @@ def page_profile(db, utils, data, output_format, input_format):
   route = []
   if input_format == "protobuf":
     # Doesn't work in app egine yet, only with Apache
+    import altitudeprofile_pb2
+
     route_pb = altitudeprofile_pb2.Route()
     route_pb.ParseFromString(data)
 
@@ -84,7 +84,7 @@ def page_profile(db, utils, data, output_format, input_format):
       point.lon = p['lon']
       point.alt = p['alt']
 
-    profile_pb_string = route_pb.SerializeToString()
+    profile_pb_string = profile_pb.SerializeToString()
 
     return ['text/html', profile_pb_string]
 

@@ -691,7 +691,7 @@ sub process_layer
 
     debug("layer: $lname") if ($debug->{'rules'});
     
-    $writer->startTag("g", "name" => "Layer-$lname", "opacity" => $opacity );
+    $writer->startTag("g", "name" => "Layer-$lname", $opacity eq ""?"":"opacity" => $opacity );
 
     $selection->[$depth+1] = $selection->[$depth];
 

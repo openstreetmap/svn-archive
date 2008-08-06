@@ -147,17 +147,31 @@ def feedback(request):
     CreateFormClass.base_fields['client'].widget = widgets.HiddenInput()
     form = CreateFormClass()
     if request.method == 'POST':
-      form = CreateForm(request.POST)
-    elif request.method == 'GET':
-      form = CreateForm(request.GET)
+      authform = ClientAuthForm(request.POST)
+      if authform.is_valid():
+        name     = authform.cleaned_data['user']
+	passwd   = authform.cleaned_data['passwd']
+        user = authenticate(username=name, password=passwd)
+        if user is not None:
+          #"You provided a correct username and password!"
 
-    if form.is_valid():
-       formdata = form.cleaned_data
-       Request.objects.filter(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z']).update(status=0)
-       html = "Reset tileset to pending (%d,%d,%d)" % \
-                    (formdata['min_z'],formdata['x'],formdata['y'])
-    else:
-       html="form is not valid. "+str(form.errors)
+          form = CreateForm(request.POST)
+          if form.is_valid():
+            formdata = form.cleaned_data
+            reqs = Request.objects.filter(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z'])
+            num = reqs.count()
+            reqs.update(status=0)
+            html = "Reset %d tileset to pending (%d,%d,%d)" % \
+                      (num,formdata['min_z'],formdata['x'],formdata['y'])
+      	  else:
+            html="XX|4|form is not valid. "+str(form.errors)
+      else:
+        # authentication failed here, or authform failed to validate
+        html="XX|4|Invalid username. Your username and password were incorrect or the user has been disabled."
+    elif request.method == 'GET':
+         # view the plain form webpage with default values filled in
+         return render_to_response('requests_create.html', \
+                {'createform': form, 'host':request.META['HTTP_HOST']})
     return HttpResponse(html)
 
 def upload_request(request):

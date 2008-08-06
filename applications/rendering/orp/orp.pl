@@ -1002,7 +1002,7 @@ sub make_selection
     my $hp = $rulenode->getAttribute("horizontalProximity");
     my $vp = $rulenode->getAttribute("verticalProximity");
     my $pc = $rulenode->getAttribute("proximityClass");
-    if (defined($hp) && defined($vp))
+    if ($hp ne "" && $vp ne "")
     {
         #debug("activating proximity filter for rule");
         return select_proximity($interim, $hp, $vp, $pc);

@@ -778,13 +778,13 @@ sub PutRequestBackToServer
     statusMessage("Putting Job ".$X." ".$Y." ".$Z." back to server", $currentSubTask, $progressJobs, $progressPercent,1);
     my $res = $ua->post($Config->get("ReRequestURL"),
               Content_Type => 'form-data',
-              x => $X,
+              Content => [ x => $X,
               y => $Y,
               min_z => $Z,
               user => $Config->get("UploadUsername"),
               passwd => $Config->get("UploadPassword"),
               version => $Config->get("ClientVersion"),
-              cause => $Cause );
+              cause => $Cause ]);
 
     if(!$res->is_success())
     {

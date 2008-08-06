@@ -1004,7 +1004,7 @@ sub make_selection
     my $pc = $rulenode->getAttribute("proximityClass");
     if (defined($hp) && defined($vp))
     {
-        debug("activating proximity filter for rule");
+        #debug("activating proximity filter for rule");
         return select_proximity($interim, $hp, $vp, $pc);
     }
     else

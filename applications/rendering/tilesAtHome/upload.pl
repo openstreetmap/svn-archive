@@ -245,11 +245,12 @@ sub upload
             my $res = $ua->post($URL,
               Content_Type => 'form-data',
               Content => [ file => [$File],
-              user => $Config->get("UploadUsername"),
-              passwd => $Config->get("UploadPassword"),
-              version => $Config->get("ClientVersion"),
-              single_tileset => $SingleTileset,
-              layer => $Layer ]);
+                           user => $Config->get("UploadUsername"),
+                           passwd => $Config->get("UploadPassword"),
+                           version => $Config->get("ClientVersion"),
+                           single_tileset => $SingleTileset,
+                           layer => $Layer,
+                           client_id => GetClientId() ]);
              
             if(!$res->is_success())
             {

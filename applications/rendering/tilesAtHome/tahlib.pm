@@ -1,4 +1,5 @@
 use strict;
+use tahconfig;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
@@ -374,10 +375,11 @@ sub mergeOsmFiles
 
 sub keepLog
 {
-    my $Config = $main::Config;
-    if ($Config->get("ProcessLog")) {
+#    if ($Config->get("ProcessLog")) {
         my ($Pid,$Process,$Action,$Message) = @_;
+        my $Config = $main::Config;
         my $logFile = $Config->get("ProcessLogFile");
+        my $log = $Config->get("ProcessLog");
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
         $year += 1900;
         
@@ -386,7 +388,7 @@ sub keepLog
             print $fpLog sprintf("%04d-%02d-%02d %02d:%02d:%02d [%s] %s %s %s %s\n", $year, $mon+1, $mday, $hour, $min, $sec, $Config->get("ClientVersion"), $Pid, $Process, $Action, $Message);
             close $fpLog;
         }
-    }
+#    }
 }
 
 #-----------------------------------------------------------------------------
@@ -423,6 +425,35 @@ sub cleanUpAndDie
     }
     exit($Severity);
 }
+
+
+#-------------------------------------------------------------
+# Get client ID from file or create one if file doesn't exist.
+#-------------------------------------------------------------
+sub GetClientId
+{
+    my $Config = $main::Config;
+    my $idfile = $Config->get("WorkingDirectory") . "/client-id.txt";
+    my $clientId;
+    if (open(idfile, "<", $idfile))
+    {
+        $clientId = <idfile>;
+        chomp $clientId;
+        close idfile;
+    }
+    elsif (open(idfile, ">", $idfile))
+    {
+        $clientId = int(rand(2147483648)); 
+        print idfile $clientId;
+        close idfile;
+    }
+    else
+    {
+        die("can't open $idfile");
+    }
+    return $clientId;
+}
+
 
 1;
 

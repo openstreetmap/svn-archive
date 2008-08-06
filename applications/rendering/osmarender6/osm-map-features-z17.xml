@@ -3490,14 +3490,14 @@
 	    }
 
 	    .sac-scale-t2 {
-	      stroke-dasharray: "0.5%, 0.5%";
+	      stroke-dasharray: 0.5, 0.5;
 	      stroke: red;
    	      stroke-width: 0.1px;
    	      fill: none;
 	    }
 
 	    .sac-scale-t3 {
-	      stroke-dasharray: "0.01%, 0.15%";
+	      stroke-dasharray: 0.01, 0.15;
 	      stroke-linecap: round;
 	      stroke: red;
    	      stroke-width: 0.1px;
@@ -3511,14 +3511,14 @@
 	    }
 
 	    .sac-scale-t5 {
-	      stroke-dasharray: "0.5%, 0.5%";
+	      stroke-dasharray: 0.5, 0.5;
 	      stroke: blue;
    	      stroke-width: 0.1px;
    	      fill: none;
 	    }
 
 	    .sac-scale-t6 {
-	      stroke-dasharray: "0.01%, 0.15%";
+	      stroke-dasharray: 0.01, 0.15;
 	      stroke-linecap: round;
 	      stroke: blue;
    	      stroke-width: 0.1px;

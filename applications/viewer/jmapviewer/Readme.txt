@@ -2,6 +2,8 @@ JMapViewer
 
 (c) 2008 Jan Peter Stotz
 
+This work bases partly on the JOSM plugin "Slippy Map Chooser" by Tim Haussmann
+
 License: GPL
 
 FAQ:

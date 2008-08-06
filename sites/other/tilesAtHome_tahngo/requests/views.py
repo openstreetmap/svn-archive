@@ -164,6 +164,7 @@ def feedback(request):
             reqs.update(status=0)
             html = "Reset %d tileset to pending (%d,%d,%d)" % \
                       (num,formdata['min_z'],formdata['x'],formdata['y'])
+            logging.info("%s by user %s. Cause: %s" %(html,user,request.POST['cause']))
       	  else:
             html="XX|4|form is not valid. "+str(form.errors)
       else:

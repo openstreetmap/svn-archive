@@ -117,6 +117,8 @@ class Tile:
   def serve_legacy_tile(self,layername):
     """ Returns: a blanktile value (0,..,3) as 'int' or the file name of the tile file as 'str'. """
     leg_basetiledir='/mnt/agami/openstreetmap/tah/Tiles'
+    oceantilesdat_path ='/var/www/tah/Tiles/oceantiles_12.dat'
+
     fname = os.path.join(leg_basetiledir,layername,"%02d"%(self.z),"%03d"%(self.x//1000),"%03d"%(self.x%1000),"%03d"%(self.y//1000),"%03d.png"%(self.y%1000))
     if os.path.isfile(fname):
       return fname
@@ -132,7 +134,7 @@ class Tile:
         #For z12 and above the file will tell us directly what type it is
         try:
           (layern, base_z,base_x,base_y) = self.basetileset()
-          f_oceant = open(os.path.join(leg_basetiledir,"oceantiles_12.dat"),'rb')
+          f_oceant = open(oceantilesdat_path,'rb')
           f_oceant.seek((4096*base_y + base_x) >> 2)
           data = ord(f_oceant.read(1));
           #take 2 bits of the char

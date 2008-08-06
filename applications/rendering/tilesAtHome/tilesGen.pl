@@ -742,10 +742,10 @@ sub GetRequestFromServer
         my $res = $ua->post($URL,
           Content_Type => 'form-data',
           Content => [ user => $Config->get("UploadUsername"),
-          passwd => $Config->get("UploadPassword"),
-          version => $Config->get("ClientVersion"),
-          layers => $Layers,
-          layerspossible => $Config->get("LayersCapability") ]);
+            passwd => $Config->get("UploadPassword"),
+            version => $Config->get("ClientVersion"),
+            layers => $Layers,
+            layerspossible => $Config->get("LayersCapability") ]);
       
         if(!$res->is_success())
         {
@@ -791,12 +791,12 @@ sub PutRequestBackToServer
     my $res = $ua->post($Config->get("ReRequestURL"),
               Content_Type => 'form-data',
               Content => [ x => $X,
-              y => $Y,
-              min_z => $Z,
-              user => $Config->get("UploadUsername"),
-              passwd => $Config->get("UploadPassword"),
-              version => $Config->get("ClientVersion"),
-              cause => $Cause ]);
+                y => $Y,
+                min_z => $Z,
+                user => $Config->get("UploadUsername"),
+                passwd => $Config->get("UploadPassword"),
+                version => $Config->get("ClientVersion"),
+                cause => $Cause ]);
 
     if(!$res->is_success())
     {
@@ -871,8 +871,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         
         # Get the predicates for lowzoom, and build the URLS for them
         my $predicates = $Config->get($Layers."_Predicates");
-	# strip spaces in predicates because that is the separator used below
-	$predicates =~ s/\s+//g;
+        # strip spaces in predicates because that is the separator used below
+        $predicates =~ s/\s+//g;
         $URLS="";
         foreach my $predicate (split(/,/,$predicates)) {
             $URLS = $URLS . sprintf("%s%s/%s[bbox=%s] ",
@@ -1397,6 +1397,22 @@ sub UpdateClient #
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
     ## FIXME TODO: Implement and check output from svn status, too.
 
+    $Cmd = sprintf("%s\"%s\" %s",
+        $Config->get("i18n") ? "LC_ALL=C " : "",
+        $Config->get("Subversion"),
+        "status -q --ignore-externals");
+
+    my $svn_status = `$Cmd`;
+    if ($svn_status eq '')
+    {
+        my $versionfile = $Config->get("WorkingDirectory") . "/version.txt";
+        DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
+    }
+    else
+    {
+        statusMessage("svn status did not come back clean, check your installation",$currentSubTask, $progressJobs, $progressPercent,1);
+        print STDERR $svn_status;
+    }
 }
 
 sub NewClientVersion 
@@ -1423,35 +1439,35 @@ sub NewClientVersion
 
     my $curVerFile = $Config->get("WorkingDirectory") . "/newversion.txt";
     my $currentVersion;
-   
+    
     DownloadFile($Config->get("VersionCheckURL"), $curVerFile ,0);
     if (open(versionfile, "<", $curVerFile))
     {
         $currentVersion = <versionfile>;
         chomp $runningVersion;
         close versionfile;
-        rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
+        # rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
     }
     if ($currentVersion)
     {
-	if ($runningVersion > $currentVersion)
-	{
-	    print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
-	    return 0;
-	}
-	elsif ($runningVersion == $currentVersion)
-	{
-	    return 0; # no new version
-	}
-	else
-	{
-	    return 1; # version on server is newer
-	}
+        if ($runningVersion > $currentVersion)
+        {
+            print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
+            return 0;
+        }
+        elsif ($runningVersion == $currentVersion)
+        {
+            return 0; # no new version
+        }
+        else
+        {
+            return 1; # version on server is newer
+        }
     }
     else
     {
-	print "\n! WARNING: Could not get version info from server!\n";
-	return 0;
+        print "\n! WARNING: Could not get version info from server!\n";
+        return 0;
     }
 }
 
@@ -1654,7 +1670,7 @@ sub svg2png
     if (!$commandResult or ! -e $TempFile )
     {
         statusMessage("$Cmd failed", $currentSubTask, $progressJobs, $progressPercent, 1);
-	if ($Config->get("Batik") == "3" && !getBatikStatus())
+        if ($Config->get("Batik") == "3" && !getBatikStatus())
         {
             statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n", $currentSubTask, $progressJobs, $progressPercent, 1);
         }

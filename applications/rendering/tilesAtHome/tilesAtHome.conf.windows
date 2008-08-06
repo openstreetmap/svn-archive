@@ -2,6 +2,11 @@
 # Configuration file for TilesAtHome
 #
 
+## Edit and save as tilesAtHome.conf. 
+##
+## do NOT save modifications to this file
+##
+
 ## Path strings are later quoted by t@h, do not use quotes here
 ## File Locations
 WorkingDirectory=c:\temp

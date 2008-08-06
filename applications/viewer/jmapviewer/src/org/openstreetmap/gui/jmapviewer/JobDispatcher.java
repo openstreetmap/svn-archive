@@ -5,6 +5,8 @@ package org.openstreetmap.gui.jmapviewer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.Job;
+
 /**
  * A generic class that processes a list of {@link Runnable} one-by-one using
  * one or more {@link Thread}-instances.
@@ -54,6 +56,7 @@ public class JobDispatcher {
 
 		public JobThread(int threadId) {
 			super("OSMJobThread " + threadId);
+			setDaemon(true);
 			job = null;
 			start();
 		}

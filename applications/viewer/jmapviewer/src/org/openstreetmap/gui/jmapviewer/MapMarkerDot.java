@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+
 /**
  * A simple implementation of the {@link MapMarker} interface. Each map marker
  * is painted as a circle with a black border line and filled with a specified

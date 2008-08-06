@@ -46,18 +46,9 @@ public class DefaultMapController extends JMapController implements MouseListene
 		lastDragPoint = e.getPoint();
 	}
 
-	public void mouseMoved(MouseEvent e) {
-	}
-
 	public void mouseClicked(MouseEvent e) {
 		if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
 			map.zoomIn(e.getPoint());
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseExited(MouseEvent e) {
 	}
 
 	public void mousePressed(MouseEvent e) {

@@ -5,6 +5,8 @@ package org.openstreetmap.gui.jmapviewer;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+
 /**
  * {@link TileCache} implementation that stores all {@link Tile} objects in
  * memory up to a certain limit ({@link #getCacheSize()}). If the limit is
@@ -14,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class MemoryTileCache implements TileCache {
 
-	private static final Logger log = Logger.getLogger(MemoryTileCache.class.getName());
+	protected static final Logger log = Logger.getLogger(MemoryTileCache.class.getName());
 
 	/**
 	 * Default cache size
@@ -34,11 +36,11 @@ public class MemoryTileCache implements TileCache {
 	}
 
 	public void addTile(Tile tile) {
-		CacheEntry entry = new CacheEntry(tile);
+		CacheEntry entry = createCacheEntry(tile);
 		hashtable.put(tile.getKey(), entry);
 		lruTiles.addFirst(entry);
 		if (hashtable.size() > cacheSize)
-			removeOldTiles();
+			removeOldEntries();
 	}
 
 	public Tile getTile(int x, int y, int z) {
@@ -55,18 +57,25 @@ public class MemoryTileCache implements TileCache {
 	/**
 	 * Removes the least recently used tiles
 	 */
-	protected void removeOldTiles() {
+	protected void removeOldEntries() {
 		synchronized (lruTiles) {
 			try {
 				while (lruTiles.getElementCount() > cacheSize) {
-					CacheEntry entry = lruTiles.getLastElement();
-					hashtable.remove(entry.tile.getKey());
-					lruTiles.removeEntry(entry);
+					removeEntry(lruTiles.getLastElement());
 				}
 			} catch (Exception e) {
 				log.warning(e.getMessage());
 			}
 		}
+	}
+
+	protected void removeEntry(CacheEntry entry) {
+		hashtable.remove(entry.tile.getKey());
+		lruTiles.removeEntry(entry);
+	}
+
+	protected CacheEntry createCacheEntry(Tile tile) {
+		return new CacheEntry(tile);
 	}
 
 	public int getTileCount() {
@@ -86,7 +95,7 @@ public class MemoryTileCache implements TileCache {
 	public void setCacheSize(int cacheSize) {
 		this.cacheSize = cacheSize;
 		if (hashtable.size() > cacheSize)
-			removeOldTiles();
+			removeOldEntries();
 	}
 
 	/**

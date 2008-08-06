@@ -1,4 +1,7 @@
-package org.openstreetmap.gui.jmapviewer;
+package org.openstreetmap.gui.jmapviewer.interfaces;
+
+import org.openstreetmap.gui.jmapviewer.JMapViewer;
+import org.openstreetmap.gui.jmapviewer.Tile;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 

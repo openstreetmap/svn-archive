@@ -11,9 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +23,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.gui.jmapviewer.JobDispatcher.JobThread;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
 /**
  * 
@@ -48,6 +48,7 @@ public class JMapViewer extends JPanel {
 	public static final int MAX_ZOOM = 18;
 	public static final int MIN_ZOOM = 0;
 
+	protected TileLoader tileLoader;
 	protected TileCache tileCache;
 	protected List<MapMarker> mapMarkerList;
 	protected boolean mapMarkersVisible;
@@ -89,6 +90,7 @@ public class JMapViewer extends JPanel {
 
 	public JMapViewer(TileCache tileCache, int downloadThreadCount) {
 		super();
+		tileLoader = new OsmTileLoader(this);
 		this.tileCache = tileCache;
 		jobDispatcher = new JobDispatcher(downloadThreadCount);
 		mapMarkerList = new LinkedList<MapMarker>();
@@ -441,46 +443,7 @@ public class JMapViewer extends JPanel {
 			tile.loadPlaceholderFromCache(tileCache);
 		}
 		if (!tile.isLoaded()) {
-			jobDispatcher.addJob(new Job() {
-
-				InputStream input = null;
-
-				public void run() {
-					Tile tile = tileCache.getTile(tilex, tiley, zoom);
-					if (tile == null || tile.isLoaded())
-						return;
-					try {
-						// Thread.sleep(500);
-						URL url;
-						url = new URL("http://tile.openstreetmap.org/" + tile.getKey() + ".png");
-						HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-						urlConn.setReadTimeout(30000); // 30 seconds read
-						// timeout
-						input = urlConn.getInputStream();
-						tile.setImage(ImageIO.read(input));
-						tile.setLoaded(true);
-						repaint();
-						input.close();
-						input = null;
-					} catch (Exception e) {
-						if (input == null /* || !input.isStopped() */)
-							System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley
-									+ " " + e.getMessage());
-					}
-				}
-
-				/**
-				 * Terminating all transfers that are currently in progress
-				 */
-				public void stop() {
-
-					try {
-						// if (input != null)
-						// input.stop();
-					} catch (Exception e) {
-					}
-				}
-			});
+			tileLoader.addLoadRequest(tilex, tiley, zoom);
 		}
 		return tile;
 	}
@@ -535,6 +498,14 @@ public class JMapViewer extends JPanel {
 
 	public TileCache getTileCache() {
 		return tileCache;
+	}
+
+	public TileLoader getTileLoader() {
+		return tileLoader;
+	}
+
+	public void setTileLoader(TileLoader tileLoader) {
+		this.tileLoader = tileLoader;
 	}
 
 }

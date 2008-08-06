@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+
 /**
  * Holds one map tile. Additionally the code for loading the tile image and
  * painting it is also included in this class.
@@ -21,6 +23,7 @@ public class Tile {
 	protected BufferedImage image;
 	protected String key;
 	protected boolean loaded = false;
+	protected boolean loading = false;
 	public static final int WIDTH = 256;
 	public static final int HEIGHT = 256;
 

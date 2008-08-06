@@ -25,9 +25,9 @@ public abstract class JMapController extends MouseAdapter {
 
 	public JMapController(JMapViewer map) {
 		this.map = map;
-		map.addMouseListener((MouseListener) this);
-		map.addMouseWheelListener((MouseWheelListener) this);
-		map.addMouseMotionListener((MouseMotionListener) this);
+		map.addMouseListener(this);
+		map.addMouseWheelListener(this);
+		map.addMouseMotionListener(this);
 	}
 
 }

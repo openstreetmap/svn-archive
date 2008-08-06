@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 /**
  * 
  * Demonstrates the usage of {@link JMapViewer}
@@ -25,6 +26,9 @@ public class Demo extends JFrame {
 		super("JMapViewer Demo");
 		setSize(400, 400);
 		final JMapViewer map = new JMapViewer();
+//		final JMapViewer map = new JMapViewer(new MemoryTileCache(),4);
+//		map.setTileLoader(new OsmFileCacheTileLoader(map,OsmTileLoader.MAP_MAPNIK));
+		new DefaultMapController(map);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -86,6 +90,9 @@ public class Demo extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+//		Properties systemProperties = System.getProperties();
+//		systemProperties.setProperty("http.proxyHost","localhost");
+//		systemProperties.setProperty("http.proxyPort","8008");
 		new Demo().setVisible(true);
 	}
 

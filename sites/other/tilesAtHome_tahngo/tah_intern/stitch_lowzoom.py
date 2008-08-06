@@ -16,10 +16,13 @@ class Lowzoom(Tileset):
   def create(self,layer,z,x,y,base_tile_dir):
     self.__init__(layer, z, x, y)
     self.tmpdir=tempfile.mkdtemp()
-    self.stitch(layer,z,x,y)
-    print "saving to %s" % base_tile_dir
-    self.save(base_tile_dir)
-    shutil.rmtree(self.tmpdir)
+    try:
+      self.stitch(layer,z,x,y)
+      print "saving to %s" % base_tile_dir
+      self.save(base_tile_dir)
+    finally:
+      # even do cleanup when pressing CTRL-C (KeyboardInterrupt)
+      shutil.rmtree(self.tmpdir)
 
   def stitch(self,layer,z,x,y):
     #recurse to all tiles of tileset
@@ -109,11 +112,11 @@ if __name__ == '__main__':
   layer=Layer.objects.get(name='tile')
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
-  for i,(z,x,y) in enumerate(old_lowzooms.values()):
+  #for i,(z,x,y) in enumerate(old_lowzooms.values()):
   #for i,(z,x,y) in enumerate([(6,34,18)]):   #for doing one test tileset
-  #i,z =0,6   #for doing the whole world...
-  #for x in range(0,64):
-  # for y in range(0,64):
+  i,z =0,6   #for doing the whole world...
+  for x in range(1,64):
+   for y in range(0,64):
     i += 1
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
     time.sleep(10)

@@ -141,7 +141,7 @@ class Tile:
           bit_off = 3 - (base_x % 4);
           type = (data >> 2*bit_off) & 3
           # map tile type to blankness type used in the server
-          blank = [0,2,1,2]
+          blank = [0,2,1,1]
           return blank[type]
 	except:
           # return 0 if we don't find oceantiles.dat

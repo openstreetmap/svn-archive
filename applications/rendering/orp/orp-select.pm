@@ -269,7 +269,7 @@ sub select_proximity
             {
                 # intersection detected; skip this object.
                 $intersect = 1;
-                debug("object skipped due to collision in class '$pc'");
+                # debug("object skipped due to collision in class '$pc'");
                 last;
             }
         }

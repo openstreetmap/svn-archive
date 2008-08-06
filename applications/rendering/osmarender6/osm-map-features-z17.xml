@@ -168,46 +168,6 @@
             </rule>
         </rule>
 
-        <!-- ============================ Usernames on most regular roads ========================== -->
-        <rule e="way" k="osmarender:renderUser" v="~|yes">
-            <rule e="way" k="tunnel" v="~|no|false"> <!-- no names in tunnels -->
-                <rule e="way" k="junction" v="~"> <!-- no names on or along junctions -->
-                    <rule e="way" k="area" v="~|no|false"> <!-- no names on highway areas -->
-                        <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
-                            <text startOffset="50%" class="highway-name highway-user" dy="1.7px">
-                                <tag k="osm:user" default="© OpenStreetMap"/>
-                            </text>
-                        </rule>
-                        <rule e="way" k="highway" v="tertiary">
-                            <text startOffset="50%" class="highway-name highway-user" dy="1.9px">
-                                <tag k="osm:user" default="© OpenStreetMap"/>
-                            </text>
-                        </rule>
-                        <rule e="way" k="highway" v="secondary">
-                            <text startOffset="50%" class="highway-name highway-user" dy="1.9px">
-                                <tag k="osm:user" default="© OpenStreetMap"/>
-                            </text>
-                        </rule>
-                        <rule e="way" k="highway" v="primary">
-                            <text startOffset="50%" class="highway-name highway-user" dy="1.9px">
-                                <tag k="osm:user" default="© OpenStreetMap"/>
-                            </text>
-                        </rule>
-                        <rule e="way" k="highway" v="trunk">
-                            <text startOffset="50%" class="highway-name highway-user" dy="1.9px">
-                                <tag k="osm:user" default="© OpenStreetMap"/>
-                            </text>
-                        </rule>
-                        <rule e="way" k="highway" v="motorway">
-                            <text startOffset="50%" class="highway-name highway-user" dy="1.9px">
-                                <tag k="osm:user" default="© OpenStreetMap"/>
-                            </text>
-                        </rule>
-                    </rule>
-                </rule>
-            </rule>
-        </rule>
-
         <!-- house number interpolation lines -->
         <rule e="way" k="addr:interpolation" v="odd">
             <line class="housenumber-interpolation housenumber-interpolation-odd"/>

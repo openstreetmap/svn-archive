@@ -107,7 +107,6 @@ def find_old_lowzooms(base_tile_path):
 if __name__ == '__main__':
   base_tile_path = Settings().getSetting(name='base_tile_path')
   layer=Layer.objects.get(name='tile')
-  lz = Lowzoom()
   old_lowzooms = find_old_lowzooms(base_tile_path)
   n = len(old_lowzooms)
   for i,(z,x,y) in enumerate(old_lowzooms.values()):
@@ -115,10 +114,11 @@ if __name__ == '__main__':
   #i,z =0,6   #for doing the whole world...
   #for x in range(0,64):
   # for y in range(0,64):
-  #  i += 1
+    i += 1
     print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
-    #time.sleep(10)
+    time.sleep(10)
     now = time.time()
+    lz = Lowzoom()
     lz.create(layer,z,x,y,base_tile_path)
     print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
   #Finally d

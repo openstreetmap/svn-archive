@@ -1412,6 +1412,7 @@ sub UpdateClient #
     {
         statusMessage("svn status did not come back clean, check your installation",$currentSubTask, $progressJobs, $progressPercent,1);
         print STDERR $svn_status;
+        addFault("fatal",1);
     }
 }
 

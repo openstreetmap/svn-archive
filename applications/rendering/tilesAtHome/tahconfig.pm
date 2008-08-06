@@ -288,14 +288,14 @@ sub CheckConfig
     {
         $cmd=$Config->get("pngnq");
         my $PngnqV=`\"$cmd\" -V 2>&1`;
-        if ($PngnqV !~ /pngnq.+(\d+\.\d+)/)
+        if ($PngnqV !~ /pngnq.+(\d+(\.\d+)+)/)
         {
             print "! Can't find pngnq (using \"".$Config->get("pngnq")."\")\n";
         }
         else
         {
             my $minVersion = "0.5";
-            if (CompareVersions($1, $minVersion)) {
+            if (CompareVersions($1, $minVersion) == -1) {
                 print "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
                 print "! disabling pngnq\n";
                 $Config->set("PngQuantizer", "");

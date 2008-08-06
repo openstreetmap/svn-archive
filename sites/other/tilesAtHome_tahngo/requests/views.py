@@ -1,3 +1,4 @@
+import logging
 from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
@@ -304,7 +305,7 @@ def request_changedTiles(request):
       else:
         html+="form is not valid. %s\n" % form.errors
     xml_dom.unlink()
-    
+    logging.info("Requested %d changes Tilesets." % len(tiles))
     return HttpResponse(html,mimetype='text/plain')
 
 @cache_control(no_cache=True)
@@ -322,7 +323,8 @@ def expire_tiles(request):
     expired = Request.objects.filter(status=2, clientping_time__lt=datetime.now()-timedelta(2,0,0,0,0,0))
     expired.delete()
 
-    html="Reset %d requests to unfinished status.\nExpired %d old finished requests." % (len(rerequested),len(expired))
+    html="Reset %d requests to unfinished status. Expired %d old finished requests." % (len(rerequested),len(expired))
+    logging.debug(html)
     return HttpResponse(html,mimetype='text/plain')
 
 @cache_control(no_cache=True)

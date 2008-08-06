@@ -275,7 +275,7 @@ sub select_proximity
         }
         next if ($intersect);
         $newsel->insert($_);
-        debug("object added in class '$pc'");
+        #debug("object added in class '$pc'");
         push(@{$used_boxes->{$pc}}, [ $bottom, $left, $top, $right ]);
     }
     delete $used_boxes->{$pc} if ($pc eq "default");

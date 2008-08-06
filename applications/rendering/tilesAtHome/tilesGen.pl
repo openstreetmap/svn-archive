@@ -356,12 +356,24 @@ elsif ($Mode eq "loop")
 }
 elsif ($Mode eq "upload") 
 {
+    # Add a basic auto-updating mechanism. 
+    if (NewClientVersion()) 
+    {
+        UpdateClient();
+    }
+
     $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     compressAndUpload();
 }
 elsif ($Mode eq "upload_conditional") 
 {
+    # Add a basic auto-updating mechanism. 
+    if (NewClientVersion()) 
+    {
+        UpdateClient();
+    }
+
     $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     uploadIfEnoughTiles();

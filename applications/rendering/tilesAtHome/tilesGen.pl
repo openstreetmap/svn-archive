@@ -73,11 +73,14 @@ else
 
 my $Layers = $Config->get("Layers");
 
+# Create the working directory if necessary
+mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
+
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
-printf STDERR "This is version %d (%s) of tilesgen running on %s\n", 
-    $Version, $Config->get("ClientVersion"), $^O;
+printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n", 
+    $Version, $Config->get("ClientVersion"), $^O, GetClientId();
 
 # check GD
 eval GD::Image->trueColor(1);
@@ -178,9 +181,6 @@ if( $Mode eq "loop" and -e "/dev/null" )
         cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4,$PID);
     }
 }
-
-# Create the working directory if necessary
-mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
 
 ## set all fault counters to 0;
 resetFault("fatal");
@@ -742,10 +742,11 @@ sub GetRequestFromServer
         my $res = $ua->post($URL,
           Content_Type => 'form-data',
           Content => [ user => $Config->get("UploadUsername"),
-            passwd => $Config->get("UploadPassword"),
-            version => $Config->get("ClientVersion"),
-            layers => $Layers,
-            layerspossible => $Config->get("LayersCapability") ]);
+                       passwd => $Config->get("UploadPassword"),
+                       version => $Config->get("ClientVersion"),
+                       layers => $Layers,
+                       layerspossible => $Config->get("LayersCapability"),
+                       client_id => GetClientId() ]);
       
         if(!$res->is_success())
         {
@@ -791,12 +792,13 @@ sub PutRequestBackToServer
     my $res = $ua->post($Config->get("ReRequestURL"),
               Content_Type => 'form-data',
               Content => [ x => $X,
-                y => $Y,
-                min_z => $Z,
-                user => $Config->get("UploadUsername"),
-                passwd => $Config->get("UploadPassword"),
-                version => $Config->get("ClientVersion"),
-                cause => $Cause ]);
+                           y => $Y,
+                           min_z => $Z,
+                           user => $Config->get("UploadUsername"),
+                           passwd => $Config->get("UploadPassword"),
+                           version => $Config->get("ClientVersion"),
+                           cause => $Cause,
+                           client_id => GetClientId() ]);
 
     if(!$res->is_success())
     {

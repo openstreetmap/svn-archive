@@ -6453,11 +6453,11 @@ msgstr "Vermessungspunkt bearbeiten"
 
 #: ../lang/presets.java:2082
 msgid "Man Made/Surveillance"
-msgstr "Zivilisationsbauten/Geschwindigkeitskontrolle"
+msgstr "Zivilisationsbauten/Überwachungskamera"
 
 #: ../lang/presets.java:2083
 msgid "Edit Surveillance Camera"
-msgstr "Kamera zur Geschwindigkeitskontrolle bearbeiten"
+msgstr "Überwachungskamera bearbeiten"
 
 #: ../wmsplugin/src/wmsplugin/DownloadWMSTask.java:22
 #, java-format

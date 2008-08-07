@@ -62,6 +62,8 @@ GatherBlankTiles=0
 KeepDataFile=0
 
 # If set to 1, then Batik will be used for rendering instead of Inkscape
+# If set to 3, then Batik in agent mode will be used. The renderning is faster 
+# than other modes or inkscape, but it require BatikClasspath to be set correctly
 Batik=0
 
 # Set to the maximum JVM size to pass to the -Xmx parameter when running the rasterizer. The
@@ -71,6 +73,10 @@ BatikJVMSize=1350M
 # Set to the location of the batik rasterizer jar. The Batik libraries should reside in the same folder,
 #   or in a sub-folder named lib
 BatikPath=c:\tilesAtHome\batik\batik-rasterizer.jar
+
+# Path to jars required by Batik in agent mode
+#BatikClasspath=batik-rasterizer.jar:xercesImpl.jar:batik-agent.jar
+
 
 # If set to 1 or greater, it will enable forking to render tiles, might not work for windows, currently.
 # Fork = 0   -> 1 process (normal behaviour)

@@ -30,8 +30,7 @@ use AppConfig qw(:argcount);
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
-
-if (not $ARGV[0]) 
+if ($#ARGV < 0) 
 {
    die "please call \"tilesGen.pl upload\" instead";
 }
@@ -70,8 +69,8 @@ my @sorted;
 # when called from tilesGen, use these for nice display
 my $progress = 0;
 my $progressPercent = 0;
-my $progressJobs = $ARGV[1];
-my $currentSubTask;
+my $progressJobs = $ARGV[0];
+my $currentSubTask = "upload";
  
 my $lastmsglen;
 
@@ -100,7 +99,7 @@ else
 ### don't compress, this is handled from tilesGen.pl now
 
 # Upload any ZIP files which are still waiting to go
-processOldZips($ARGV[0]); # ARGV[0] is there or we would have exited in init (on or about line 32)
+processOldZips();
 
 ## update the failFile with current failure count from processOldZips
 
@@ -115,11 +114,9 @@ if (open(FAILFILE, ">", $failFile))
 sub processOldZips
 {
     my $MaxDelay;
-    my ($runNumber) = @_;
     my @zipfiles;
     if(opendir(ZIPDIR, $ZipDir))
     {
-        $currentSubTask = "upload" . $runNumber;
         $progress = 0;
         $progressPercent = 0;
         @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);

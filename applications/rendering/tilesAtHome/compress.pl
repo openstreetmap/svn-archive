@@ -61,11 +61,9 @@ my @sorted;
 # when called from tilesGen, use these for nice display
 my $progress = 0;
 my $progressPercent = 0;
-my $progressJobs = $ARGV[1] or 1;
-my $currentSubTask = "ziprun" . $ARGV[0] or " ";
+my $progressJobs = $ARGV[0] or 1;
+my $currentSubTask = "zipping";
 
-
-my $lastmsglen;
 
 ### TODO: implement locking, this is one of the things that make compress.pl not multithread-safe.
 

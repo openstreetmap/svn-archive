@@ -1130,6 +1130,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             if ($error) 
             {
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+                PutRequestBackToServer($X,$Y,$Zoom,"RenderFailure");
+                addFault("renderer",1);
                 return 0;
             }
         }
@@ -1140,6 +1142,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
                 {
                     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+                    PutRequestBackToServer($X,$Y,$Zoom,"RenderFailure");
+                    addFault("renderer",1);
                     return 0;
                 }
             }
@@ -1455,6 +1459,7 @@ sub xml2svg
         $TSVG = "$SVG-temp.svg";
     }
 
+    my $success = 0;
     if ($Config->get("Osmarender") eq "XSLT")
     {
         my $XslFile;
@@ -1470,7 +1475,7 @@ sub xml2svg
           $TSVG);
 
         statusMessage("Transforming zoom level $zoom with XSLT", $currentSubTask, $progressJobs, $progressPercent,0);
-        runCommand($Cmd,$PID);
+        $success = runCommand($Cmd,$PID);
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
@@ -1481,12 +1486,17 @@ sub xml2svg
           $TSVG);
 
         statusMessage("Transforming zoom level $zoom with or/p", $currentSubTask, $progressJobs, $progressPercent,0);
-        runCommand($Cmd,$PID);
+        $success = runCommand($Cmd,$PID);
         chdir "..";
     }
     else
     {
         die "invalid Osmarender setting in config";
+    }
+    if (!$success) {
+        statusMessage(sprintf("%s produced an error, aborting render.", $Config->get("Osmarender")), 
+                      $currentSubTask, $progressJobs, $progressPercent, 1);
+        return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
     }
 
     # look at temporary svg wether it really is a svg or just the 

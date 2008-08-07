@@ -330,7 +330,7 @@ elsif ($Mode eq "loop")
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
 
-        $upload_result = uploadIfEnoughTiles(); # upload if enough work done
+        $upload_result = compressAndUploadTilesets(); # upload if enough work done
 
         if ($upload_result)  # we got an error in the upload process
         {
@@ -509,65 +509,40 @@ sub countZips
     return $ZipCount;
 }
 
-sub uploadIfEnoughTiles
+#-----------------------------------------------------------------------------
+# forks to a new process when it makes sense,
+# compresses all existing tileset dirs, uploads the resulting zip.
+# returns 0 on success, >0 otherwisse and dies if it could not fork
+#-----------------------------------------------------------------------------
+sub compressAndUploadTilesets
 {
-    my $Count = 0;
-
-    # compile a list of the "Prefix" values of all configured layers,
-    # separated by |
-    my $allowedPrefixes = join("|", 
-        map($Config->get($_."_Prefix"), split(/,/,$Layers)));
-
-    if (opendir(my $dp, $Config->get("WorkingDirectory")))
+    if ($Config->get("ForkForUpload") and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
     {
-        while(my $File = readdir($dp))
+        # Upload is handled by another process, so that we can generate another tile at the same time.
+        # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
+        if ($upload_pid != -1)
         {
-            $Count++ if ($File =~ /($allowedPrefixes)_.*\.png/);
-            $Count += 200 if ($File =~ /($allowedPrefixes)_.*\.dir/);
+            statusMessage("Waiting for previous upload process to finish", $currentSubTask, $progressJobs, $progressPercent,0);
+            waitpid($upload_pid, 0);
+            $upload_result = $? >> 8;
         }
-        closedir($dp);
-    } 
-    else
-    {
-        mkdir $Config->get("WorkingDirectory");
-    }
-
-    my $ZipCount = countZips();
-
-    if (($Count >= 200) or ($ZipCount >= 1))
-    {
-        if ($Config->get("ForkForUpload") and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
+        compress(); #compress before fork so we don't get temp files mangled. Workaround for batik support.
+        $upload_pid = fork();
+        if ((not defined $upload_pid) or ($upload_pid == -1))
         {
-            # Upload is handled by another process, so that we can generate another tile at the same time.
-            # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
-            if ($upload_pid != -1)
-            {
-                statusMessage("Waiting for previous upload process to finish", $currentSubTask, $progressJobs, $progressPercent,0);
-                waitpid($upload_pid, 0);
-                $upload_result = $? >> 8;
-            }
-            compress(); #compress before fork so we don't get temp files mangled. Workaround for batik support.
-            $upload_pid = fork();
-            if ((not defined $upload_pid) or ($upload_pid == -1))
-            {
-                cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
-            }
-            elsif ($upload_pid == 0)
-            {
-                ## we are the child, so we run the upload
-                my $res = upload(); # upload if enough work done
-                exit($res);
-            }
+            cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
         }
-        else
+        elsif ($upload_pid == 0)
         {
-            ## no forking going on
-            return compressAndUpload();
+            ## we are the child, so we run the upload
+            my $res = upload(); # upload if enough work done
+            exit($res);
         }
     }
     else
     {
-        print "Not uploading yet, only $Count tiles\n"  if ($Config->get("Verbose"));
+        ## no forking going on
+        return compressAndUpload();
     }
     return 0; # no error, just nothing to upload
 }

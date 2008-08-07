@@ -254,8 +254,9 @@ def take(request):
         user = authenticate(username=name, password=passwd)
         if user is not None:
           #"You provided a correct username and password!"
-            try:
-                logging.debug("client %s from %s takes request." %(form.cleaned_data['version'],user))
+          # next, check for a valid client version
+          if form.cleaned_data['version'] in ['Quickborn', 'Rapperswil']:
+            try:  
                 #next 2 lines are for limiting max #of active requests per usr
                 active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
                 if active_user_reqs <= 50:
@@ -269,7 +270,12 @@ def take(request):
                   html ="XX|4|You have more than 50 active requests. Check your client."
             except IndexError:
                 html ="XX|4|No requests in queue"
+          else:
+            # client version no in whitelist
+            logging.info("User %s connects with disallowed client '%s'." %(user,form.cleaned_data['version']))
+            html="XX|4|Invalid client version."
         else:
+            # user is None, auth failed
             html="XX|4|Invalid username. Your username and password were incorrect or the user has been disabled."
       else: #form was not valid
         html = "XX|4|Form invalid. "+str(form.errors)

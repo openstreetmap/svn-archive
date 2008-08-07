@@ -182,11 +182,6 @@ sub processTileBatch
     my ($TileDir, $TempDir, $OutputDir, $allowedPrefixes) = @_;
     my ($Size,$Count) = (0,0);
     my $MB = 1024*1024;
-    my $SizeLimit = $Config->get("UploadChunkSize") * $MB;
-    my $CountLimit = $Config->get("UploadChunkCount");
-
-    #prevent too small zips, 683=half a tileset
-    $CountLimit = 683 if ($CountLimit < 100);
 
     mkdir $TempDir if ! -d $TempDir;
     mkdir $OutputDir if ! -d $OutputDir;
@@ -194,7 +189,7 @@ sub processTileBatch
     $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
     statusMessage(scalar(@tiles)." tiles to process for ".$allowedPrefixes, $currentSubTask, $progressJobs, $progressPercent,0);
 
-    while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles))
+    while(my $file = shift @tiles)
     {
         my $Filename1 = "$TileDir/$file";
         my $Filename2 = "$TempDir/$file";

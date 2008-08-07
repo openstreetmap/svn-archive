@@ -675,7 +675,10 @@ sub ProcessRequestsFromServer
         # If you get this message, please do check for a new version, rather than
         # commenting-out the test - it means the field order has changed and this
         # program no longer makes sense!
-        if (($Version < 3) or ($Version > 4))
+
+        ## it is also important that we check the field that we *think* has the version first, before attempting anything else. 
+
+        if ($Version != 4)
         {
             print STDERR "\n";
             print STDERR "Server is speaking a different version of the protocol to us.\n";
@@ -683,9 +686,7 @@ sub ProcessRequestsFromServer
             cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
             ## No need to return, we exit the program at this point
         }
-        
-        # Parse the request
-        if ($Version == 4)
+        elsif ($Version == 4) # this seems redundant, but will be necessary if the client supports more than one version again.
         {
             ($ValidFlag,$Version,$X,$Y,$Z,$Layers) = split(/\|/, $Request);
         }

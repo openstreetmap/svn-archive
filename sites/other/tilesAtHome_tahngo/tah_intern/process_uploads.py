@@ -156,7 +156,7 @@ class TileUpload:
           #png has regular filesize
           tset.add_tile(t,full_filename)
 
-    if smalltiles: logging.debug('Ignored %d too small png files' % smalltiles)
+    #if smalltiles: logging.debug('Ignored %d too small png files' % smalltiles)
     return tset
 
   #-----------------------------------------------------------------

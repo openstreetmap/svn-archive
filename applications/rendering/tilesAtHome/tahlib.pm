@@ -68,7 +68,9 @@ sub doneMessage
 #-----------------------------------------------------------------------------
 sub talkInSleep
 {
+    my $Config = $main::Config;
     my ($message, $duration,$progstart,$Verbose) = @_;
+    $Verbose = $Config->get("Verbose") unless $Verbose; # don't overwrite verbose with "false" when it was in fact set true via parameter.
     if ($Verbose)
     {
         print STDERR "$message: sleeping $duration seconds\n";
@@ -79,7 +81,7 @@ sub talkInSleep
     for (my $i = 0; $i< $duration; $i++)
     {
         my $totalseconds = time() - $progstart;
-        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ", 
+        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ($duration-$i)", 
                 $message,
                 $idleFor/60, $idleFor%60,
                 $totalseconds ? $idleSeconds * 100 / $totalseconds : 100));

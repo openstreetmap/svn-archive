@@ -99,6 +99,11 @@ if ($@ ne '') {
 # neighboring tiles with different map features as the "optimal" 
 # palette is chosen differently for different tiles.
 
+# Keep track of unrenderable tiles. 
+# This should not be saved, as they may render later. 
+# there also might be false positives due to mangled inkscape preference file.
+my %unrenderable;
+
 # create a comparison blank image
 my $EmptyLandImage = new GD::Image(256,256);
 my $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
@@ -190,7 +195,7 @@ resetFault("nodataXAPI");
 resetFault("renderer");
 resetFault("utf8");
 resetFault("upload");
-
+resetFault("requestUnrenderable");
 
 killafile("stopfile.txt") if $Config->get("AutoResetStopfile");
 
@@ -658,6 +663,7 @@ sub ProcessRequestsFromServer
     # such as the list of fields that it's sending out in requests
     # ----------------------------------
 
+    for (;;) {
     my $Request = GetRequestFromServer($Config->get("RequestMethod"));
 
     return (0, "Error reading request from server") unless ($Request);
@@ -698,22 +704,29 @@ sub ProcessRequestsFromServer
         }
         elsif ($Request =~ /Invalid client version/)
         {
-            die "ERROR: This client version (".$Config->get("ClientVersion").") was not accepted by the server.";
+            die "ERROR: This client version (".$Config->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
         }
-        else
+        elsif ($ValidFlag ne "OK")
         {
-            # unspecified error
-            return (0, "Server has no work for us"); 
+            return (0, "Unknown server response");
         }
+
     }
-    elsif ($ValidFlag ne "OK")
-    {
-        return (0, "Server dysfunctional");
+    last unless ($unrenderable{"$X $Y $Z"});
+    $unrenderable{"$X $Y $Z"}++; 
+
+    # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
+    my $UnrenderableBackoff = addFault("requestUnrenderable",1); 
+    $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);
+    $UnrenderableBackoff = 300 if ($UnrenderableBackoff > 300);
+    talkInSleep("Ignoring unrenderable tile $X $Y $Z",$UnrenderableBackoff);
     }
     
     # Information text to say what's happening
     statusMessage("Got work from the server", $currentSubTask, $progressJobs, $progressPercent,0);
     
+    resetFault("requestUnrenderable"); #reset if we actually start trying to render a tileset.
+
     # Create the tileset requested
     GenerateTileset($X, $Y, $Z);
     return (1, "");
@@ -1680,6 +1693,7 @@ sub svg2png
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
         addFault("inkscape",1);
+        $unrenderable{"$X $Y $ZOrig"}++;
         cleanUpAndDie("svg2png failed",$Mode,3,$PID);
         return (0,0);
     }

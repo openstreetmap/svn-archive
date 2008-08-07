@@ -714,8 +714,10 @@ sub ProcessRequestsFromServer
         
         }
         last unless ($unrenderable{"$X $Y $Z"});
-        $unrenderable{"$X $Y $Z"}++; 
-        
+        $unrenderable{"$X $Y $Z"}++;
+
+        PutRequestBackToServer($X,$Y,$Z,"Unrenderable");
+
         # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
         my $UnrenderableBackoff = addFault("requestUnrenderable",1); 
         $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);

@@ -1087,15 +1087,6 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 statusMessage("Running close-areas", $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
-            elsif ($preprocessor eq "mercator")
-            {
-                my $Cmd = sprintf("%s perl mercatorize.pl %s > %s",
-                        $Config->get("Niceness"),
-                        "$inputFile",
-                        "$outputFile");
-                statusMessage("Running Mercatorization", $currentSubTask, $progressJobs, $progressPercent,0);
-                runCommand($Cmd,$PID);
-            }
             else
             {
                 die "Invalid preprocessing step '$preprocessor'";

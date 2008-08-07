@@ -65,11 +65,6 @@ UploadConfiguredLayersOnly=0
 ## Beziercurve hinting
 NoBezier=0  # Set to 1 if beziercurvehinting causes errors.
 
-#Upload layers when they are done? default: 0
-# set to 1, if you want to upload layers as they are done, instead of waiting for all
-# layers in the tileset to be rendered.
-LayerUpload=0
-
 #if a set is empty and RenderFullTileset = 0 only one tile is created
 # set to 1 if the tile should be stored in workdir, so you can upload a bunch of them
 # if set to 0 this tile will be uploaded as a set

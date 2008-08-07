@@ -57,12 +57,10 @@ Zip = zip
 7zipWin = 0
 
 UseHostnameInZipname = 0
-UploadChunkSize = 9
 
 UploadToDirectory = 0
 UploadTargetDirectory = /set/this/to/your/upload/directory
 UploadConfiguredLayersOnly = 0
-LayerUpload = 0
 GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
 

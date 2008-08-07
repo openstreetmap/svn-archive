@@ -26,17 +26,13 @@
     <!--bounds_mkr1-->
     <!--bounds_mkr2-->
 
-    <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
-    <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-    <rule e="node|segment|waysegment|way" k="osmarender:render" v="~|yes">
+    <!-- Select all nodes and ways (unless they have an osmarender:render=no tag) -->
+    <rule e="node|way" k="osmarender:render" v="~|yes">
 
         <layer name="Maplint">
             <rule e="way" k="maplint:notice" v="*">
                 <line class="maplint-way-notice-casing"/>
                 <line class="maplint-way-notice-core"/>
-            </rule>
-            <rule e="segment" k="maplint:notice" v="*">
-                <line class="maplint-segment-notice"/>
             </rule>
             <rule e="node" k="maplint:notice" v="*">
                 <circle r="4" class="maplint-node-notice"/>
@@ -46,9 +42,6 @@
                 <line class="maplint-way-warning-casing"/>
                 <line class="maplint-way-warning-core"/>
             </rule>
-            <rule e="segment" k="maplint:warning" v="*">
-                <line class="maplint-segment-warning"/>
-            </rule>
             <rule e="node" k="maplint:warning" v="*">
                 <circle r="4" class="maplint-node-warning"/>
             </rule>
@@ -56,9 +49,6 @@
             <rule e="way" k="maplint:error" v="*">
                 <line class="maplint-way-error-casing"/>
                 <line class="maplint-way-error-core"/>
-            </rule>
-            <rule e="segment" k="maplint:error" v="*">
-                <line class="maplint-segment-error"/>
             </rule>
             <rule e="node" k="maplint:error" v="*">
                 <circle r="4" class="maplint-node-error"/>
@@ -72,13 +62,13 @@
         </layer>
 
         <layer name="Maplint text">
-            <rule e="segment|way" k="maplint:notice" v="*">
+            <rule e="way" k="maplint:notice" v="*">
                 <text k="maplint:notice" startOffset="50%" class='maplint-text'/>
             </rule>
-            <rule e="segment|way" k="maplint:warning" v="*">
+            <rule e="way" k="maplint:warning" v="*">
                 <text k="maplint:warning" startOffset="50%" class='maplint-text'/>
             </rule>
-            <rule e="segment|way" k="maplint:error" v="*">
+            <rule e="way" k="maplint:error" v="*">
                 <text k="maplint:error" startOffset="50%" class='maplint-text'/>
             </rule>
 
@@ -272,16 +262,6 @@
             }
 
 
-            /* JOSM Debugging */
-            .josm-segment {
-                stroke-width: 0.2px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #008000;
-                fill: none;
-                marker-end: url(#segment-direction);
-            }
-
 
             /* Power line */
             .power-line {
@@ -309,24 +289,6 @@
 
             .maplint-node-dot {
                 fill: black;
-            }
-
-            .maplint-segment-error {
-                fill: none;
-                stroke: #e74444;
-                stroke-width: 5px;
-            }
-
-            .maplint-segment-warning {
-                fill: none;
-                stroke: #f89559;
-                stroke-width: 5px;
-            }
-
-            .maplint-segment-notice {
-                fill: none;
-                stroke: #e2f91d;
-                stroke-width: 5px;
             }
 
             .maplint-way-error-casing {
@@ -459,20 +421,6 @@
                 fill: white;
             }
         </style>
-
-        <svg:marker
-            id="segment-direction"
-            viewBox="0 0 10 10"
-            refX="10px" refY="5px"
-            markerUnits="userSpaceOnUse"
-            fill='none'
-            stroke-width='1px'
-            stroke='#008000'
-            markerWidth="1px"
-            markerHeight="1px"
-            orient="auto">
-            <svg:path d="M 0,2 L 10,5 L 0,8" />
-        </svg:marker>
 
     </defs>
 

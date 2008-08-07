@@ -663,63 +663,64 @@ sub ProcessRequestsFromServer
     # such as the list of fields that it's sending out in requests
     # ----------------------------------
 
-    for (;;) {
-    my $Request = GetRequestFromServer($Config->get("RequestMethod"));
+    for (;;) 
+    {
+        my $Request = GetRequestFromServer($Config->get("RequestMethod"));
 
-    return (0, "Error reading request from server") unless ($Request);
-
-    ($ValidFlag,$Version) = split(/\|/, $Request);
-
-    # Check what format the results were in
-    # If you get this message, please do check for a new version, rather than
-    # commenting-out the test - it means the field order has changed and this
-    # program no longer makes sense!
-    if (($Version < 3) or ($Version > 4))
-    {
-        print STDERR "\n";
-        print STDERR "Server is speaking a different version of the protocol to us.\n";
-        print STDERR "Check to see whether a new version of this program was released!\n";
-        cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
-        ## No need to return, we exit the program at this point
-    }
-    
-    # Parse the request
-    if ($Version == 4)
-    {
-        ($ValidFlag,$Version,$X,$Y,$Z,$Layers) = split(/\|/, $Request);
-    }
-    else
-    {
-        die "Version is \"".$Version."\". This should not have happened.";
-    }
-    
-    # First field is always "OK" if the server has actually sent a request
-    if ($ValidFlag eq "XX")
-    {
-        if ($Request =~ /Invalid username/)
+        return (0, "Error reading request from server") unless ($Request);
+        
+        ($ValidFlag,$Version) = split(/\|/, $Request);
+        
+        # Check what format the results were in
+        # If you get this message, please do check for a new version, rather than
+        # commenting-out the test - it means the field order has changed and this
+        # program no longer makes sense!
+        if (($Version < 3) or ($Version > 4))
         {
-            die "ERROR: Authentication failed - please check your username "
-                    . "and password in 'authentication.conf'.\n\n"
-                    . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
+            print STDERR "\n";
+            print STDERR "Server is speaking a different version of the protocol to us.\n";
+            print STDERR "Check to see whether a new version of this program was released!\n";
+            cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
+            ## No need to return, we exit the program at this point
         }
-        elsif ($Request =~ /Invalid client version/)
+        
+        # Parse the request
+        if ($Version == 4)
         {
-            die "ERROR: This client version (".$Config->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
+            ($ValidFlag,$Version,$X,$Y,$Z,$Layers) = split(/\|/, $Request);
         }
-        elsif ($ValidFlag ne "OK")
+        else
         {
-            return (0, "Unknown server response");
+            die "Version is \"".$Version."\". This should not have happened.";
         }
-
-    }
-    last unless ($unrenderable{"$X $Y $Z"});
-    $unrenderable{"$X $Y $Z"}++; 
-
-    # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
-    my $UnrenderableBackoff = addFault("requestUnrenderable",1); 
-    $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);
-    $UnrenderableBackoff = 300 if ($UnrenderableBackoff > 300);
-    talkInSleep("Ignoring unrenderable tile $X $Y $Z",$UnrenderableBackoff);
+        
+        # First field is always "OK" if the server has actually sent a request
+        if ($ValidFlag eq "XX")
+        {
+            if ($Request =~ /Invalid username/)
+            {
+                die "ERROR: Authentication failed - please check your username "
+                        . "and password in 'authentication.conf'.\n\n"
+                        . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
+            }
+            elsif ($Request =~ /Invalid client version/)
+            {
+                die "ERROR: This client version (".$Config->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
+            }
+            elsif ($ValidFlag ne "OK")
+            {
+                return (0, "Unknown server response");
+            }
+        
+        }
+        last unless ($unrenderable{"$X $Y $Z"});
+        $unrenderable{"$X $Y $Z"}++; 
+        
+        # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
+        my $UnrenderableBackoff = addFault("requestUnrenderable",1); 
+        $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);
+        $UnrenderableBackoff = 300 if ($UnrenderableBackoff > 300);
+        talkInSleep("Ignoring unrenderable tile $X $Y $Z",$UnrenderableBackoff);
     }
     
     # Information text to say what's happening

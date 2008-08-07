@@ -421,7 +421,7 @@ elsif ($Mode eq "upload_loop")
 
         if (countZips() > 0)
         {
-            $upload_result = upload(1); # only uploading ZIP files here
+            $upload_result = upload(); # only uploading ZIP files here
             
             if ($upload_result)  # we got an error in the upload process
             {
@@ -569,7 +569,7 @@ sub uploadIfEnoughTiles
                 waitpid($upload_pid, 0);
                 $upload_result = $? >> 8;
             }
-            compress(1); #compress before fork so we don't get temp files mangled. Workaround for batik support.
+            compress(); #compress before fork so we don't get temp files mangled. Workaround for batik support.
             $upload_pid = fork();
             if ((not defined $upload_pid) or ($upload_pid == -1))
             {
@@ -578,7 +578,7 @@ sub uploadIfEnoughTiles
             elsif ($upload_pid == 0)
             {
                 ## we are the child, so we run the upload
-                my $res = upload(1); # upload if enough work done
+                my $res = upload(); # upload if enough work done
                 exit($res);
             }
         }
@@ -598,7 +598,7 @@ sub uploadIfEnoughTiles
 sub compressAndUpload
 {
   my $error=0;
-  $error=compress(1) + 2 * upload(1) + 4 * compress(2) + 8 * upload(2);
+  $error=compress() + 2 * upload();
   return $error;
 }
 
@@ -607,11 +607,9 @@ sub compress
     ## Run compress directly because it uses same messaging as tilesGen.pl and upload.pl
     ## no need to hide output at all.
 
-    my ($runNumber) = @_;
+    keepLog($PID,"compress","start","$progressJobs");
 
-    keepLog($PID,"compress","start","$runNumber $progressJobs");
-
-    my $CompressScript = "perl $Bin/compress.pl $runNumber $progressJobs";
+    my $CompressScript = "perl $Bin/compress.pl $progressJobs";
     my $retval = system($CompressScript);
 
     keepLog($PID,"compress","stop","return=$retval");
@@ -624,11 +622,9 @@ sub upload
     ## Run upload directly because it uses same messaging as tilesGen.pl, 
     ## no need to hide output at all.
 
-    my ($runNumber) = @_;
+    keepLog($PID,"upload","start","$progressJobs");
 
-    keepLog($PID,"upload","start","$runNumber $progressJobs");
-
-    my $UploadScript = "perl $Bin/upload.pl $runNumber $progressJobs";
+    my $UploadScript = "perl $Bin/upload.pl $progressJobs";
     my $retval = system($UploadScript);
 
     keepLog($PID,"upload","stop","return=$retval");

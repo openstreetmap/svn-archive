@@ -51,6 +51,7 @@ typedef int intptr_t;
   o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
   o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 3) \
   o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 3) \
+  o (MenuKey,         "?", "?", "?", "?", "?", 0, 3) \
   o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
   o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
   o (ShowTrace,       "?", "?", "?", "?", "?", 0, 2) \
@@ -79,6 +80,7 @@ using namespace std;
   o (ShowActiveRouteNodes,     "?", "?", "?", "?", "?", 0, 2)
 
 #define HideZoomButtons 0
+#define MenuKey 0
 #endif
 #ifndef TRUE
 #define TRUE 1
@@ -250,8 +252,8 @@ int TagCmp (char *a, char *b)
   // meaningless words like "the", "street" and "north". We (should) also map
   // deprecated words to their new words, like petrol to fuel
   // TODO : We should consider an algorithm like double metasound.
-  static char *omit[] = { /* "the", in the middle ?? */ "ave", "avenue", 
-    "blvd", "boulevard", "byp", "bypass",
+  static const char *omit[] = { /* "the", in the middle of a name ?? */
+    "ave", "avenue", "blvd", "boulevard", "byp", "bypass",
     "cir", "circle", "close", "cres", "crescent", "ct", "court", "ctr",
       "center",
     "dr", "drive", "hwy", "highway", "ln", "lane", "loop",
@@ -260,11 +262,11 @@ int TagCmp (char *a, char *b)
     "ter", "terrace", "tpke", "turnpike", /*trce, trace, trl, trail */
     "walk",  "way"
   };
-  static char *words[] = { "", "first", "second", "third", "fourth", "fifth",
-    "sixth", "seventh", "eighth", "nineth", "tenth", "eleventh", "twelth",
-    "thirteenth", "fourteenth", "fifthteenth", "sixteenth", "seventeenth",
-    "eighteenth", "nineteenth", "twentieth" };
-  static char *teens[] = { "", "", "twenty ", "thirty ", "fourty ",
+  static const char *words[] = { "", "first", "second", "third", "fourth",
+    "fifth", "sixth", "seventh", "eighth", "nineth", "tenth", "eleventh",
+    "twelth", "thirteenth", "fourteenth", "fifthteenth", "sixteenth",
+    "seventeenth", "eighteenth", "nineteenth", "twentieth" };
+  static const char *teens[] = { "", "", "twenty ", "thirty ", "fourty ",
     "fifty ", "sixty ", "seventy ", "eighty ", "ninety " };
   
   if (stricmp (a, "the ") == 0) a += 4;
@@ -376,7 +378,7 @@ enum { OPTIONS numberOfOptions };
 #define o(en,de,es,fr,it,nl,min,max) { \
   #en, de, es, fr, it, nl },
 //  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
-char *optionNameTable[][numberOfLang] = { OPTIONS };
+const char *optionNameTable[][numberOfLang] = { OPTIONS };
 #undef o
 
 #define o(en,de,es,fr,it,nl,min,max) int en = min;
@@ -812,6 +814,8 @@ int ProcessNmea (char *rx, unsigned *got)
         double nLon = ((rx[fStart[col + 2]] - '0') * 10 +
           rx[fStart[col + 2] + 1] - '0') * 10 + rx[fStart[col + 2] + 2]
           - '0' + atof (rx + fStart[col + 2] + 3) / 60;
+        if (nLat > 90) nLat = nLat - 180;
+        if (nLon > 180) nLon = nLon - 360; // Mungewell's Sirf Star 3
         if (tolower (rx[fStart[col + 1]]) == 's') nLat = -nLat;
         if (tolower (rx[fStart[col + 3]]) == 'w') nLon = -nLon;
         if (fabs (nLat) < 90 && fabs (nLon) < 180) {
@@ -954,7 +958,8 @@ void DoFollowThing (gpsNewStruct *gps)
         }
         if (!x->shortest || roundExit) {
           decide[0] = x->nd;
-          static wchar_t *rtxt[] = { NULL, TEXT ("round1"), TEXT ("round2"),
+          static const wchar_t *rtxt[] = { NULL, TEXT ("round1"),
+            TEXT ("round2"),
             TEXT ("round3"), TEXT ("round4"), TEXT ("round5"),
             TEXT ("round6"), TEXT ("round7"), TEXT ("round8") };
           command[0] = rtxt[roundExit];
@@ -1261,7 +1266,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   if (ButtonSize <= 0) ButtonSize = 4;
   int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
   if (event->x > w - ButtonSize * 20 && b <
-      (HideZoomButtons && option == numberOfOptions ? 1 : 3)) HitButton (b);
+      (!HideZoomButtons || option != numberOfOptions ? 3 : 
+      MenuKey != 0 ? 0 : 1)) HitButton (b);
   else {
     int perpixel = zoom / w;
     int lon = clon + lrint (cosAzimuth * perpixel * (event->x - w / 2) -
@@ -1422,7 +1428,7 @@ gint Expose (void)
       FindResource ("icons.xpm"));
     #else
     icons = gdk_pixmap_create_from_xpm_d (draw->window, NULL, NULL,
-      icons_xpm);
+      (gchar**) icons_xpm);
     #endif
   }  
 
@@ -1511,7 +1517,7 @@ gint Expose (void)
 
         #ifndef _WIN32_WCE
         __int64 maxLenSqr = 0;
-        double x0, y0;
+        double x0 = 0.0, y0 = 0.0; /* shut up gcc */
         #else
         int best = 0, bestW, bestH, x0, y0;
         #endif
@@ -1781,7 +1787,8 @@ gint Expose (void)
       / 2 - ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
   }
   #else
-  int i = (HideZoomButtons && option == numberOfOptions ? 1 : 3);
+  int i = !HideZoomButtons || option != numberOfOptions ? 3 :
+                                                MenuKey != 0 ? 0 : 1;
   RECT r;
   r.left = clip.width - ButtonSize * 20;
   r.top = clip.height - ButtonSize * 20 * i;
@@ -2143,7 +2150,7 @@ int UserInterface (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (iconSet), "changed",
     GTK_SIGNAL_FUNC (ChangeOption), NULL);
 
-  GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
+//  GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
 /*  gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
     GTK_SIGNAL_FUNC (GetDirections), NULL);
@@ -2166,7 +2173,7 @@ int UserInterface (int argc, char *argv[])
   int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
   sa.sin_family = AF_INET;
   sa.sin_port = htons (2947);
-  sa.sin_addr.s_addr = htonl (0x7f000001); //(204<<24)|(17<<16)|(205<<8)|18); 
+  sa.sin_addr.s_addr = htonl (0x7f000001); // (204<<24)|(17<<16)|(205<<8)|18);
   if (gpsSock != -1 &&
       connect (gpsSock, (struct sockaddr *)&sa, sizeof (sa)) == 0) {
     send (gpsSock, "R\n", 2, 0);
@@ -2389,7 +2396,7 @@ int main (int argc, char *argv[])
                 v[strcspn ((char *) v, "/ ")] = '_';
               }
               char line[80];
-              static char *set[] = { "classic.big_", "classic.small_",
+              static const char *set[] = { "classic.big_", "classic.small_",
                 "square.big_", "square.small_" };
               for (int i = 0; i < 4; i++) {
                 int slen = strlen (set[i]), vlen = strlen (v);
@@ -3016,7 +3023,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       // 195=0xC3=V+, 196=0xC4=V- which is VK_APP1 to VK_APP6
       // and WM_CHAR:VK_BACK
       InvalidateRect (hWnd, NULL, FALSE);
-      if (wParam == '0') HitButton (0);
+      if (wParam == '0' || wParam == MenuKey) HitButton (0);
       if (wParam == '8') HitButton (1);
       if (wParam == '9') HitButton (2);
       if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
@@ -3026,15 +3033,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         #undef o
         break;
       }
-      if (wParam == 198) {
-        SipShowIM (SIPF_ON);
-        if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
-        else DialogBox(hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
-	  NULL, (DLGPROC)DlgSearchProc);
-      }
       if (wParam == (DWORD) ZoomInKey) zoom = zoom * 3 / 4;
       if (wParam == (DWORD) ZoomOutKey) zoom = zoom * 4 / 3;
-      if (wParam == 197) FollowGPSr = !FollowGPSr;
 
       do { // Keep compiler happy
         int oldCsum = clat + clon;

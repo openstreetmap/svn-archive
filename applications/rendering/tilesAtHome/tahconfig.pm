@@ -98,10 +98,6 @@ sub CheckBasicConfig
             die("Check your upload password\n");
         }
 
-        if($Config->get("UploadChunkSize") < 0.2){
-            $Config->get("UploadChunkSize") = 2;
-            print "! Using default upload chunk size of 2.0 MB\n";
-        }
 
         if($Config->get("DeleteZipFilesAfterUpload")){
             print "- Deleting ZIP files after upload\n";

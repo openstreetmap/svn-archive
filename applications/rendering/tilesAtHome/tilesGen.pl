@@ -361,7 +361,7 @@ elsif ($Mode eq "loop")
         }
     }
 }
-elsif ($Mode eq "upload") 
+elsif ($Mode eq "upload" or $Mode eq "upload_conditional") 
 {
     # Add a basic auto-updating mechanism. 
     if (NewClientVersion()) 
@@ -372,18 +372,6 @@ elsif ($Mode eq "upload")
     $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     compressAndUpload();
-}
-elsif ($Mode eq "upload_conditional") 
-{
-    # Add a basic auto-updating mechanism. 
-    if (NewClientVersion()) 
-    {
-        UpdateClient();
-    }
-
-    $currentSubTask = "warning";
-    statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
-    uploadIfEnoughTiles();
 }
 elsif ($Mode eq "upload_loop")
 {
@@ -506,7 +494,6 @@ else {
     print "Other modes:\n";
     print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
-    print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
     print "  $0 upload_loop - uploads tiles in loop mode\n";
     print "  $0 startBatik - start batik agent\n";
     print "  $0 stopBatik - stop batik agent\n";

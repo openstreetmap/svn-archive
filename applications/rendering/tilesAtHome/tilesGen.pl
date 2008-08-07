@@ -649,7 +649,6 @@ sub ProcessRequestsFromServer
     my $X;
     my $Y;
     my $Z;
-    my $ModuleName;
     
     # ----------------------------------
     # Download the request, and check it
@@ -679,13 +678,9 @@ sub ProcessRequestsFromServer
     }
     
     # Parse the request
-    if ($Version == 3)
+    if ($Version == 4)
     {
-        ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
-    }
-    elsif ($Version == 4)
-    {
-        ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$ModuleName) = split(/\|/, $Request);
+        ($ValidFlag,$Version,$X,$Y,$Z,$Layers) = split(/\|/, $Request);
     }
     else
     {
@@ -701,10 +696,14 @@ sub ProcessRequestsFromServer
                     . "and password in 'authentication.conf'.\n\n"
                     . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
         }
+        elsif ($Request =~ /Invalid client version/)
+        {
+            die "ERROR: This client version (".$Config->get("ClientVersion").") was not accepted by the server.";
+        }
         else
         {
             # unspecified error
-            return (0, "Server has no work for us: ".$ModuleName); 
+            return (0, "Server has no work for us"); 
         }
     }
     elsif ($ValidFlag ne "OK")
@@ -713,7 +712,7 @@ sub ProcessRequestsFromServer
     }
     
     # Information text to say what's happening
-    statusMessage("Got work from the \"$ModuleName\" server module", $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Got work from the server", $currentSubTask, $progressJobs, $progressPercent,0);
     
     # Create the tileset requested
     GenerateTileset($X, $Y, $Z);

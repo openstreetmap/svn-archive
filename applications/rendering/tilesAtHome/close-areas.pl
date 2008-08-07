@@ -635,7 +635,7 @@ sub make_multipolygon
         printf "  <member type='way' ref='%s' role='outer' />\n", $way_ids->[$i];
         for (my $j = 0; $j < scalar(@$seglistlist); $j++) 
         {
-            if ($contained_in->[$j] == $i)
+            if (defined($contained_in->[$j]) && $contained_in->[$j] == $i)
             {
                 printf "  <member type='way' ref='%s' role='inner' />\n", $way_ids->[$j];
             }

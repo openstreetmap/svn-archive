@@ -2,7 +2,6 @@ package org.openstreetmap.gui.jmapviewer;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
@@ -19,15 +18,18 @@ import java.awt.event.MouseWheelListener;
  * 
  * @author Jan Peter Stotz
  */
-public abstract class JMapController extends MouseAdapter {
+public abstract class JMapController {
 
 	JMapViewer map;
 
 	public JMapController(JMapViewer map) {
 		this.map = map;
-		map.addMouseListener(this);
-		map.addMouseWheelListener(this);
-		map.addMouseMotionListener(this);
+		if (this instanceof MouseListener)
+			map.addMouseListener((MouseListener) this);
+		if (this instanceof MouseWheelListener)
+			map.addMouseWheelListener((MouseWheelListener) this);
+		if (this instanceof MouseMotionListener)
+			map.addMouseMotionListener((MouseMotionListener) this);
 	}
 
 }

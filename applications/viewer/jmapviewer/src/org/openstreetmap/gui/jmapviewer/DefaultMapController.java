@@ -118,4 +118,13 @@ public class DefaultMapController extends JMapController implements MouseListene
 		this.doubleClickZoomEnabled = doubleClickZoomEnabled;
 	}
 
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+
+	public void mouseMoved(MouseEvent e) {
+	}
+
 }

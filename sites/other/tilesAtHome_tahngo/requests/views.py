@@ -295,7 +295,7 @@ def request_changedTiles(request):
       return HttpResponseForbidden('Access not allowed from this IP address.')
     #fetch the url that is called to retrieve the changed tiles
     url = setting.getSetting('changed_tiles_api_url')
-    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=4')
+    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=6')
 
     html="Requested tiles:\n"
     xml_dom = xml.dom.minidom.parse(urllib.urlopen(url))

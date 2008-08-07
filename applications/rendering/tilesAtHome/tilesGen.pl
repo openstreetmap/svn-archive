@@ -89,16 +89,6 @@ if ($@ ne '') {
     cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
 }
 
-# Setup GD options
-# currently unused (GD 2 truecolor mode)
-#
-#   my $numcolors = 256; # 256 is maximum for paletted output and should be used
-#   my $dither = 0; # dithering on or off.
-#
-# dithering off should try to find a good palette, looks ugly on 
-# neighboring tiles with different map features as the "optimal" 
-# palette is chosen differently for different tiles.
-
 # Keep track of unrenderable tiles. 
 # This should not be saved, as they may render later. 
 # there also might be false positives due to mangled inkscape preference file.
@@ -1873,9 +1863,6 @@ sub splitImageX
             {
                 $SubImage->transparent(-1);
             }
-
-            # convert Tile to paletted file This *will* break stuff if different libGD versions are used
-            # $SubImage->trueColorToPalette($dither,$numcolors);
 
             # Store the tile
             statusMessage(" -> $Basename", $currentSubTask, $progressJobs, $progressPercent,0) if ($Config->get("Verbose"));

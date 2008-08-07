@@ -12,11 +12,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.gui.jmapviewer.interfaces.Job;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
@@ -36,9 +34,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 
 	protected String tileCacheDir;
 
-	protected long maxFileAge = 0;// FILE_AGE_ONE_DAY;//
-
-	// FILE_AGE_ONE_WEEK;
+	protected long maxFileAge = FILE_AGE_ONE_WEEK;
 
 	public OsmFileCacheTileLoader(JMapViewer map, String baseUrl) {
 		super(map, baseUrl);
@@ -65,7 +61,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		map.jobDispatcher.addJob(new FileLoadJob(tilex, tiley, zoom));
 	}
 
-	protected class FileLoadJob implements Job {
+	protected class FileLoadJob implements Runnable {
 		InputStream input = null;
 
 		int tilex, tiley, zoom;
@@ -103,8 +99,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 						map.repaint();
 						return;
 					}
-					System.out.println("Cache hit for " + tile + " but file age is high: "
-							+ new Date(fileAge));
+					// System.out.println("Cache hit for " + tile +
+					// " but file age is high: "
+					// + new Date(fileAge));
 					map.repaint();
 					// if (!isOsmTileNewer(tile, fileAge)) {
 					// tile.setLoaded(true);
@@ -120,16 +117,16 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 					}
 				}
 				// Thread.sleep(500);
-				System.out.println("Loading tile from OSM: " + tile);
+				// System.out.println("Loading tile from OSM: " + tile);
 				HttpURLConnection urlConn = loadTileFromOsm(tile);
-				if (fileAge > 0)
-					urlConn.setIfModifiedSince(fileAge);
-
-				if (urlConn.getResponseCode() == 304) {
-					System.out.println("Local version is up to date");
-					tile.setLoaded(true);
-					return;
-				}
+				// if (fileAge > 0)
+				// urlConn.setIfModifiedSince(fileAge);
+				//
+				// if (urlConn.getResponseCode() == 304) {
+				// System.out.println("Local version is up to date");
+				// tile.setLoaded(true);
+				// return;
+				// }
 				byte[] buffer = loadTileInBuffer(urlConn);
 				tile.setImage(ImageIO.read(new ByteArrayInputStream(buffer)));
 				tile.setLoaded(true);
@@ -160,14 +157,32 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 			return bout.toByteArray();
 		}
 
+		/**
+		 * Performs a <code>HEAD</code> request for retrieving the
+		 * <code>LastModified</code> header value.
+		 * 
+		 * Note: This does only work with servers providing the
+		 * <code>LastModified</code> header:
+		 * <ul>
+		 * <li>{@link OsmTileLoader#MAP_OSMA} - supported</li>
+		 * <li>{@link OsmTileLoader#MAP_MAPNIK} - not supported</li>
+		 * </ul>
+		 * 
+		 * @param tile
+		 * @param fileAge
+		 * @return <code>true</code> if the tile on the server is newer than the
+		 *         file
+		 * @throws IOException
+		 */
 		protected boolean isOsmTileNewer(Tile tile, long fileAge) throws IOException {
 			URL url;
 			url = new URL(baseUrl + "/" + tile.getKey() + ".png");
 			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 			urlConn.setRequestMethod("HEAD");
 			urlConn.setReadTimeout(30000); // 30 seconds read
-			System.out.println("Tile age: " + new Date(urlConn.getLastModified()) + " / "
-					+ new Date(fileAge));
+			// System.out.println("Tile age: " + new
+			// Date(urlConn.getLastModified()) + " / "
+			// + new Date(fileAge));
 			long lastModified = urlConn.getLastModified();
 			if (lastModified == 0)
 				return true;
@@ -191,18 +206,31 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				System.err.println("Failed to save tile content: " + e.getLocalizedMessage());
 			}
 		}
-
-		/**
-		 * Terminating all transfers that are currently in progress
-		 */
-		public void stop() {
-
-			try {
-				// if (input != null)
-				// input.stop();
-			} catch (Exception e) {
-			}
-		}
 	}
 
+	public long getMaxFileAge() {
+		return maxFileAge;
+	}
+
+	/**
+	 * Sets the maximum age of the local cached tile in the file system.
+	 * 
+	 * @param maxFileAge
+	 *            maximum age in milliseconds
+	 * @see #FILE_AGE_ONE_DAY
+	 * @see #FILE_AGE_ONE_WEEK
+	 */
+	public void setMaxFileAge(long maxFileAge) {
+		this.maxFileAge = maxFileAge;
+	}
+
+	public String getTileCacheDir() {
+		return tileCacheDir;
+	}
+
+	public void setTileCacheDir(String tileCacheDir) {
+		this.tileCacheDir = tileCacheDir;
+	}
+
+	
 }

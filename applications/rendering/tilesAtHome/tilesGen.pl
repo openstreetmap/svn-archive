@@ -1217,10 +1217,6 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             rename $JobDirectory, $Dir;
         }
 
-        if ($Config->get("LayerUpload")) 
-        {
-            uploadIfEnoughTiles();
-        }
     }
 
     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }

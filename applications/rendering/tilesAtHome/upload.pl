@@ -210,8 +210,6 @@ sub upload
         return 0;
     }
 
-    my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
-    
     my $Layer;
     if ($Config->get("UploadConfiguredLayersOnly") == 1)
     {
@@ -248,7 +246,6 @@ sub upload
                            user => $Config->get("UploadUsername"),
                            passwd => $Config->get("UploadPassword"),
                            version => $Config->get("ClientVersion"),
-                           single_tileset => $SingleTileset,
                            layer => $Layer,
                            client_id => GetClientId() ]);
              

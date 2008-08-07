@@ -572,18 +572,24 @@ sub uploadIfEnoughTiles
     return 0; # no error, just nothing to upload
 }
 
+#-----------------------------------------------------------------------------
+# compressAndUpload() is just a shorthand for calling compress() and
+# upload(). It returns 0 on success and >0 otherwise.
+#-----------------------------------------------------------------------------
 sub compressAndUpload
 {
-  my $error=0;
-  $error=compress() + 2 * upload();
+  my $error = 0;
+  $error += compress();
+  $error += upload();
   return $error;
 }
 
+#-----------------------------------------------------------------------------
+# compress() calls the external compress.pl which zips up all existing
+# tileset directories. It returns 0 on success and >0 otherwise.
+#-----------------------------------------------------------------------------
 sub compress
 {
-    ## Run compress directly because it uses same messaging as tilesGen.pl and upload.pl
-    ## no need to hide output at all.
-
     keepLog($PID,"compress","start","$progressJobs");
 
     my $CompressScript = "perl $Bin/compress.pl $progressJobs";
@@ -594,6 +600,10 @@ sub compress
     return $retval;
 }
 
+#-----------------------------------------------------------------------------
+# upload() calls the external upload.pl which uploads all previously
+# zipped up tilesets. It returns 0 on success and >0 otherwise.
+#-----------------------------------------------------------------------------
 sub upload
 {
     ## Run upload directly because it uses same messaging as tilesGen.pl, 

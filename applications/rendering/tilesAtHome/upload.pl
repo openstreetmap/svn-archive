@@ -72,8 +72,6 @@ my $progressPercent = 0;
 my $progressJobs = $ARGV[0];
 my $currentSubTask = "upload";
  
-my $lastmsglen;
-
 ### TODO: implement locking, this is one of the things that make upload not multithread-safe.
 my $sleepdelay;
 my $failFile = $Config->get("WorkingDirectory") . "/failurecount.txt";

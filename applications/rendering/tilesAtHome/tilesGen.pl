@@ -590,6 +590,8 @@ sub ProcessRequestsFromServer
     
     my $ValidFlag;
     my $Version;
+    my $TilesetLastModified; # Unix timestamp of tileset on server
+    my $TilesetComplexity;   # tileset complexity. still unused.
     my $X;
     my $Y;
     my $Z;
@@ -617,7 +619,7 @@ sub ProcessRequestsFromServer
 
         ## it is also important that we check the field that we *think* has the version first, before attempting anything else. 
 
-        if ($Version != 4)
+        if ($Version < 4 or $Version > 5)
         {
             print STDERR "\n";
             print STDERR "Server is speaking a different version of the protocol to us.\n";
@@ -625,9 +627,13 @@ sub ProcessRequestsFromServer
             cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
             ## No need to return, we exit the program at this point
         }
-        elsif ($Version == 4) # this seems redundant, but will be necessary if the client supports more than one version again.
+        elsif ($Version == 4)
         {
             ($ValidFlag,$Version,$X,$Y,$Z,$Layers) = split(/\|/, $Request);
+        }
+        elsif ($Version == 5)
+        {
+            ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$TilesetLastModified,$TilesetComplexity) = split(/\|/, $Request);
         }
         else
         {

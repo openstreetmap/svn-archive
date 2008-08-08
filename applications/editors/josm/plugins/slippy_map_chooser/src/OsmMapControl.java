@@ -68,7 +68,6 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 		}
 	}
 
-	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (iStartSelectionPoint != null) {
 			iEndSelectionPoint = e.getPoint();
@@ -96,6 +95,11 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 				}
 			}
 		}
+	}
+
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

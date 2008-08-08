@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.validator;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -24,6 +25,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.Util;
@@ -47,14 +49,9 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
 	public Collection<String> ignoredErrors = new TreeSet<String>();
 
-	/** The fix button */
-	private JButton fixButton;
-
-	/** The ignore button */
-	private JButton ignoreButton;
-
-	/** The select button */
-	private JButton selectButton;
+	private SideButton fixButton; /** The fix button */
+	private SideButton ignoreButton; /** The ignore button */
+	private SideButton selectButton; /** The select button */
 
 	/** Last selected element */
 	private DefaultMutableTreeNode lastSelectedNode = null;
@@ -75,17 +72,17 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
 		JPanel buttonPanel = new JPanel(new GridLayout(1,3));
 
-		selectButton = Util.createButton(tr("Select"), "select", "mapmode/selection/select",
+		selectButton = new SideButton(marktr("Select"), "select", "Validator",
 		tr("Set the selected elements on the map to the selected items in the list above."), this);
 		selectButton.setEnabled(false);
 		buttonPanel.add(selectButton);
-		buttonPanel.add(Util.createButton(tr("Validate"), "validate", "dialogs/refresh", tr("Validate the data."), this));
-		fixButton = Util.createButton(tr("Fix"), "fix", "dialogs/fix", tr("Fix the selected errors."), this);
+		buttonPanel.add(new SideButton(marktr("Validate"), "refresh", "Validator", tr("Validate the data."), this));
+		fixButton = new SideButton(marktr("Fix"), "fix", "Validator", tr("Fix the selected errors."), this);
 		fixButton.setEnabled(false);
 		buttonPanel.add(fixButton);
 		if(Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true))
 		{
-			ignoreButton = Util.createButton(tr("Ignore"), "ignore", "dialogs/delete", tr("Ignore the selected errors next time."), this);
+			ignoreButton = new SideButton(marktr("Ignore"), "delete", "Validator", tr("Ignore the selected errors next time."), this);
 			ignoreButton.setEnabled(false);
 			buttonPanel.add(ignoreButton);
 		}

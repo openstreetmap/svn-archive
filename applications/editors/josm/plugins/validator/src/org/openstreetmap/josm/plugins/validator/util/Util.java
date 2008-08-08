@@ -37,27 +37,6 @@ public class Util
 	}
 
 	/**
-	 * Utility method for creating buttons
-	 * @param name The name of the button
-	 * @param icon Icon of the button
-	 * @param tooltip Tooltip
-	 * @param action The action performed when clicking the button
-	 * @return The created button
-	 */
-    public static JButton createButton(String name, String actionname, String icon, String tooltip, ActionListener action)
-    {
-		JButton button = new JButton(name, ImageProvider.get(icon));
-		button.setActionCommand(actionname);
-		button.addActionListener(action);
-		button.setToolTipText(tr(tooltip));
-		button.setMargin(new Insets(1,1,1,1));
-		button.setIconTextGap(2);
-		button.putClientProperty("help", "Dialog/SelectionList/" + actionname);
-		return button;
-	}
-    
-    
-	/**
 	 * Returns the version
 	 * @return The version of the application
 	 */

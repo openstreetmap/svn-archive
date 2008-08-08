@@ -1,3 +1,5 @@
+v0.11.1
+	* FIX : 412 when uploading joined/splitted roads (closes #948)
 v0.11
 	* FIX : updated Czech translation file
 	* ADD : Export to KML

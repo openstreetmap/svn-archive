@@ -1217,10 +1217,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="instruction"/>
 
     <xsl:variable name='center'>
-      <xsl:call-template name="areaCenter">
+      <xsl:call-template name="areaCenterWrapper">
 	<xsl:with-param name="element" select="." />
       </xsl:call-template>
     </xsl:variable>
+
+    <xsl:message>
+      areaCenter: <xsl:value-of select="$center" />
+    </xsl:message>
 
     <xsl:variable name="centerLon" select="substring-before($center, ',')" />
     <xsl:variable name="centerLat" select="substring-after($center, ',')" />
@@ -1276,7 +1280,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="instruction"/>
 
     <xsl:variable name='center'>
-      <xsl:call-template name="areaCenter">
+      <xsl:call-template name="areaCenterWrapper">
 	<xsl:with-param name="element" select="." />
       </xsl:call-template>
     </xsl:variable>
@@ -1305,6 +1309,70 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:template>
 
   <!--
+      areaCenterWrapper: Call either areaCenter or areaBBOXCenter depending on how many nodes the polygon has.
+      areaCenter performance is something like O(n^2) and running it on a 2GHz Intel Core Duo it took approx
+      half a minute for a hundred-node polygon while a 200-node polygon took almost 5 minutes.
+  -->
+  <xsl:template name="areaCenterWrapper">
+    <xsl:param name="element" />
+
+    <xsl:choose>
+      <xsl:when test="count($element/nd) &lt; 150">
+        <xsl:call-template name="areaCenter">
+          <xsl:with-param name="element" select="$element" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="areaBBOXCenter">
+          <xsl:with-param name="element" select="$element" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!--
+      areaBBOXCenter: Simple and computationally cheap way to get a center point of a polygon
+  -->
+  <xsl:template name="areaBBOXCenter">
+    <xsl:param name="element" />
+
+    <xsl:variable name="maxLat">
+      <xsl:for-each select="$data/osm/node[@id=$element/nd/@ref]/@lat">
+        <xsl:sort data-type="number" order="descending"/>
+        <xsl:if test="position()=1">
+          <xsl:value-of select="."/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="minLat">
+      <xsl:for-each select="$data/osm/node[@id=$element/nd/@ref]/@lat">
+        <xsl:sort data-type="number" order="ascending"/>
+        <xsl:if test="position()=1">
+          <xsl:value-of select="."/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="maxLon">
+      <xsl:for-each select="$data/osm/node[@id=$element/nd/@ref]/@lon">
+        <xsl:sort data-type="number" order="descending"/>
+        <xsl:if test="position()=1">
+          <xsl:value-of select="."/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="minLon">
+      <xsl:for-each select="$data/osm/node[@id=$element/nd/@ref]/@lon">
+        <xsl:sort data-type="number" order="ascending"/>
+        <xsl:if test="position()=1">
+          <xsl:value-of select="."/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:value-of select="$minLon + (($maxLon - $minLon) div 2)" />,<xsl:value-of select="$minLat + (($maxLat - $minLat) div 2)" />
+  </xsl:template>
+
+  <!--
       areaCenter: Find a good center point for label/icon placement inside of polygon.
       Algorithm is described at http://bob.cakebox.net/poly-center.php
   -->
@@ -1312,60 +1380,60 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="element" />
 
     <!-- Get multipolygon relation for areas with holes -->
-    <xsl:variable name='holerelation' select="key('relationByWay',$element/@id)[tag[@k='type' and @v='multipolygon']]"/>
+    <xsl:variable name='holeRelation' select="key('relationByWay',$element/@id)[tag[@k='type' and @v='multipolygon']]"/>
 
     <!-- A semicolon-separated list of x,y coordinate pairs of points lying halfway into the polygon at angles to the vertex -->
     <xsl:variable name="points">
       <xsl:call-template name="areacenterPointsInside">
-	<xsl:with-param name="element" select="$element" />
-	<xsl:with-param name="holerelation" select="$holerelation" />
+        <xsl:with-param name="element" select="$element" />
+        <xsl:with-param name="holeRelation" select="$holeRelation" />
       </xsl:call-template>
     </xsl:variable>
-
+    
     <!-- x,y calculated by a simple average over all x/y's in points -->
     <xsl:variable name="mediumpoint">
       <xsl:call-template name="areacenterMediumOfPoints">
-	<xsl:with-param name="points" select="$points" />
+        <xsl:with-param name="points" select="$points" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="mediumpoint_x" select="substring-before($mediumpoint, ',')" />
     <xsl:variable name="mediumpoint_y" select="substring-before(substring-after($mediumpoint, ','), ',')" />
     <xsl:variable name="medium_dist" select="substring-after(substring-after($mediumpoint, ','), ',')" />
-
+    
     <!-- Find out if mediumpoint is inside or outside the polygon -->
     <xsl:variable name="intersection">
       <xsl:call-template name="areacenterNearestIntersectionInside">
-	<xsl:with-param name="x" select="$mediumpoint_x" />
-	<xsl:with-param name="y" select="$mediumpoint_y" />
-	<xsl:with-param name="edgestart" select="$element/nd[1]" />
-	<xsl:with-param name="linepoint_x" select="$mediumpoint_x" />
-	<xsl:with-param name="linepoint_y" select="$mediumpoint_y + 1" />
-	<xsl:with-param name="holerelation" select="$holerelation" />
+        <xsl:with-param name="x" select="$mediumpoint_x" />
+        <xsl:with-param name="y" select="$mediumpoint_y" />
+        <xsl:with-param name="edgestart" select="$element/nd[1]" />
+        <xsl:with-param name="linepoint_x" select="$mediumpoint_x" />
+        <xsl:with-param name="linepoint_y" select="$mediumpoint_y + 1" />
+        <xsl:with-param name="holeRelation" select="$holeRelation" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="intersection_count" select="substring-before($intersection, ';')" />
-
+    
     <xsl:variable name="nearestEdge">
       <xsl:call-template name="areacenterNearestEdge">
-	<xsl:with-param name="x" select="$mediumpoint_x" />
-	<xsl:with-param name="y" select="$mediumpoint_y" />
-	<xsl:with-param name="edgestart" select="$element/nd[1]" />
-	<xsl:with-param name="holerelation" select="$holerelation" />
+        <xsl:with-param name="x" select="$mediumpoint_x" />
+        <xsl:with-param name="y" select="$mediumpoint_y" />
+        <xsl:with-param name="edgestart" select="$element/nd[1]" />
+        <xsl:with-param name="holeRelation" select="$holeRelation" />
       </xsl:call-template>
     </xsl:variable>
-
+    
     <xsl:choose>
       <xsl:when test="$intersection_count mod 2 = 0 or $nearestEdge div 2 * 1.20 &gt; $medium_dist">
-	<!-- Find the best point in $points to use -->
-	<xsl:call-template name="areacenterBestPoint">
-	  <xsl:with-param name="points" select="$points" />
-	  <xsl:with-param name="x" select="$mediumpoint_x" />
-	  <xsl:with-param name="y" select="$mediumpoint_y" />
-	  <xsl:with-param name="medium_dist" select="$medium_dist" />
-	</xsl:call-template>
+        <!-- Find the best point in $points to use -->
+        <xsl:call-template name="areacenterBestPoint">
+          <xsl:with-param name="points" select="$points" />
+          <xsl:with-param name="x" select="$mediumpoint_x" />
+          <xsl:with-param name="y" select="$mediumpoint_y" />
+          <xsl:with-param name="medium_dist" select="$medium_dist" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:value-of select="$mediumpoint_x"/>,<xsl:value-of select="$mediumpoint_y"/>
+        <xsl:value-of select="$mediumpoint_x"/>,<xsl:value-of select="$mediumpoint_y"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1373,7 +1441,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Returns a semicolon-separated list of x,y pairs -->
   <xsl:template name="areacenterPointsInside">
     <xsl:param name="element" />
-    <xsl:param name="holerelation" />
+    <xsl:param name="holeRelation" />
 
     <!-- iterate over every vertex except the first one, which is also the last -->
     <xsl:for-each select="$element/nd[position() &gt; 1]">
@@ -1394,16 +1462,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <!-- Angle at between $prev and $next in $vertex -->
       <xsl:variable name="angle">
 	<xsl:call-template name="angleThroughPoints">
-	  <xsl:with-param name="from" select="key('nodeById', $prev/@ref)" />
-	  <xsl:with-param name="through" select="key('nodeById', $vertex/@ref)" />
-	  <xsl:with-param name="to" select="key('nodeById', $next/@ref)" />
+	  <xsl:with-param name="from" select="$data/osm/node[@id=$prev/@ref]" />
+	  <xsl:with-param name="through" select="$data/osm/node[@id=$vertex/@ref]" />
+	  <xsl:with-param name="to" select="$data/osm/node[@id=$next/@ref]" />
 	</xsl:call-template>
       </xsl:variable>
 
       <!-- Calculate a point on the line going through $vertex at $angle -->
       <xsl:variable name="linepoint">
 	<xsl:call-template name="areacenterLinepoint">
-	  <xsl:with-param name="point" select="key('nodeById', $vertex/@ref)" />
+	  <xsl:with-param name="point" select="$data/osm/node[@id=$vertex/@ref]" />
 	  <xsl:with-param name="angle" select="$angle" />
 	</xsl:call-template>
       </xsl:variable>
@@ -1413,12 +1481,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <!-- Find the nearest intersection between the line vertex-linepoint and the nearest edge inwards into the polygon -->
       <xsl:variable name="intersection">
 	<xsl:call-template name="areacenterNearestIntersectionInside">
-	  <xsl:with-param name="x" select="key('nodeById', $vertex/@ref)/@lon" />
-	  <xsl:with-param name="y" select="key('nodeById', $vertex/@ref)/@lat" />
+	  <xsl:with-param name="x" select="$data/osm/node[@id=$vertex/@ref]/@lon" />
+	  <xsl:with-param name="y" select="$data/osm/node[@id=$vertex/@ref]/@lat" />
 	  <xsl:with-param name="edgestart" select="../nd[1]" />
 	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
-	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="holeRelation" select="$holeRelation" />
 	</xsl:call-template>
       </xsl:variable>
       <xsl:variable name="intersection_count" select="substring-before($intersection, ';')" />
@@ -1436,8 +1504,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <xsl:variable name="intersection_y" select="substring-before(substring-after($intersection_data, ','), ',')" />
       <xsl:variable name="intersection_dist" select="substring-before(substring-after(substring-after($intersection_data, ','), ','), ',')" />
 
-      <xsl:variable name="point_x" select="key('nodeById', $vertex/@ref)/@lon + ( $intersection_x - key('nodeById', $vertex/@ref)/@lon ) div 2" />
-      <xsl:variable name="point_y" select="key('nodeById', $vertex/@ref)/@lat + ( $intersection_y - key('nodeById', $vertex/@ref)/@lat ) div 2" />
+      <xsl:variable name="point_x" select="$data/osm/node[@id=$vertex/@ref]/@lon + ( $intersection_x - $data/osm/node[@id=$vertex/@ref]/@lon ) div 2" />
+      <xsl:variable name="point_y" select="$data/osm/node[@id=$vertex/@ref]/@lat + ( $intersection_y - $data/osm/node[@id=$vertex/@ref]/@lat ) div 2" />
       
       <xsl:if test="($point_x &lt;= 0 or $point_x &gt; 0)  and ($point_y &lt;= 0 or $point_y &gt; 0)"> <!-- Only return anything if we actually have a result -->
 	<!-- Note: this will produce trailing semicolon, which is nice as it simplifies looping over this later -->
@@ -1682,7 +1750,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="edgestart" />
     <xsl:param name="linepoint_x" />
     <xsl:param name="linepoint_y" />
-    <xsl:param name="holerelation" />
+    <xsl:param name="holeRelation" />
     <xsl:param name="intersectioncount_on" select="0" /><!-- Number of intersections. Only counts those on segment (x,y)-linepoint -->
     <xsl:param name="nearest_on_x" />
     <xsl:param name="nearest_on_y" />
@@ -1698,8 +1766,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<!-- Get the intersection point between the line ($x,$y)-$linepoint and $edgestart-$edgeend -->
 	<xsl:variable name="intersection">
 	  <xsl:choose>
-	    <xsl:when test="( $x = key('nodeById', $edgestart/@ref)/@lon and $y = key('nodeById', $edgestart/@ref)/@lat ) or
-			    ( $x = key('nodeById', $edgeend/@ref)/@lon and $y = key('nodeById', $edgeend/@ref)/@lat )">
+	    <xsl:when test="( $x = $data/osm/node[@id=$edgestart/@ref]/@lon and $y = $data/osm/node[@id=$edgestart/@ref]/@lat ) or
+			    ( $x = $data/osm/node[@id=$edgeend/@ref]/@lon and $y = $data/osm/node[@id=$edgeend/@ref]/@lat )">
 	      <!-- (x,y) is one of the points in edge, skip -->
 	      NoIntersection
 	    </xsl:when>
@@ -1709,10 +1777,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		<xsl:with-param name="y1" select="$y" />
 		<xsl:with-param name="x2" select="$linepoint_x" />
 		<xsl:with-param name="y2" select="$linepoint_y" />
-		<xsl:with-param name="x3" select="key('nodeById', $edgestart/@ref)/@lon" />
-		<xsl:with-param name="y3" select="key('nodeById', $edgestart/@ref)/@lat" />
-		<xsl:with-param name="x4" select="key('nodeById', $edgeend/@ref)/@lon" />
-		<xsl:with-param name="y4" select="key('nodeById', $edgeend/@ref)/@lat" />
+		<xsl:with-param name="x3" select="$data/osm/node[@id=$edgestart/@ref]/@lon" />
+		<xsl:with-param name="y3" select="$data/osm/node[@id=$edgestart/@ref]/@lat" />
+		<xsl:with-param name="x4" select="$data/osm/node[@id=$edgeend/@ref]/@lon" />
+		<xsl:with-param name="y4" select="$data/osm/node[@id=$edgeend/@ref]/@lat" />
 	      </xsl:call-template>
 	    </xsl:otherwise>
 	  </xsl:choose>
@@ -1755,7 +1823,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	      <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	      <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	      <xsl:with-param name="edgestart" select="$edgeend" />
-	      <xsl:with-param name="holerelation" select="$holerelation" />
+	      <xsl:with-param name="holeRelation" select="$holeRelation" />
 	      <xsl:with-param name="intersectioncount_on" select="$intersectioncount_on + number(boolean($isOnSegment = 'Yes'))" />
 	      <xsl:with-param name="nearest_on_dist"> <xsl:choose>
 		<xsl:when test="$isNewNearestOn = 'Yes'"> <xsl:value-of select="$distance" /> </xsl:when>
@@ -1791,7 +1859,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	      <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	      <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	      <xsl:with-param name="edgestart" select="$edgeend" />
-	      <xsl:with-param name="holerelation" select="$holerelation" />
+	      <xsl:with-param name="holeRelation" select="$holeRelation" />
 	      <xsl:with-param name="intersectioncount_on" select="$intersectioncount_on" />
 	      <xsl:with-param name="nearest_on_dist" select="$nearest_on_dist" />
 	      <xsl:with-param name="nearest_on_x" select="$nearest_on_x" />
@@ -1804,16 +1872,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	</xsl:choose>
       </xsl:when>
       <!-- Is there a hole in the polygon, and were we working on the outer one? Then we start edge detection against the hole. -->
-      <xsl:when test="$holerelation and
-		      $holerelation/member[@ref = $edgestart/../@id][@role='outer']">
-	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@type='way'][@role='inner'][1]/@ref)/nd[1]"/>
+      <xsl:when test="$holeRelation and
+		      $holeRelation/member[@ref = $edgestart/../@id][@role='outer']">
+	<xsl:variable name="nextnode" select="$data/osm/way[@id=$holeRelation/member[@type='way'][@role='inner'][1]/@ref]/nd[1]"/>
 	<xsl:call-template name="areacenterNearestIntersectionInside">
 	  <xsl:with-param name="x" select="$x" />
 	  <xsl:with-param name="y" select="$y" />
 	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	  <xsl:with-param name="edgestart" select="$nextnode" />
-	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="holeRelation" select="$holeRelation" />
 	  <xsl:with-param name="intersectioncount_on" select="$intersectioncount_on" />
 	  <xsl:with-param name="nearest_on_dist" select="$nearest_on_dist" />
 	  <xsl:with-param name="nearest_on_x" select="$nearest_on_x" />
@@ -1824,16 +1892,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	</xsl:call-template>
       </xsl:when>
       <!-- Is there a hole in the polygon, and were we working working on one of the inner ones? Then go to the next hole, if there is one -->
-      <xsl:when test="$holerelation and
-		      $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']">
-	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']/@ref)/nd[1]"/>
+      <xsl:when test="$holeRelation and
+		      $holeRelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']">
+	<xsl:variable name="nextnode" select="$data/osm/way[@id=$holeRelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']/@ref]/nd[1]"/>
 	<xsl:call-template name="areacenterNearestIntersectionInside">
 	  <xsl:with-param name="x" select="$x" />
 	  <xsl:with-param name="y" select="$y" />
 	  <xsl:with-param name="linepoint_x" select="$linepoint_x" />
 	  <xsl:with-param name="linepoint_y" select="$linepoint_y" />
 	  <xsl:with-param name="edgestart" select="$nextnode" />
-	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="holeRelation" select="$holeRelation" />
 	  <xsl:with-param name="intersectioncount_on" select="$intersectioncount_on" />
 	  <xsl:with-param name="nearest_on_dist" select="$nearest_on_dist" />
 	  <xsl:with-param name="nearest_on_x" select="$nearest_on_x" />
@@ -1857,7 +1925,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="x" />
     <xsl:param name="y" />
     <xsl:param name="edgestart" />
-    <xsl:param name="holerelation" />
+    <xsl:param name="holeRelation" />
     <xsl:param name="nearest_dist" select="'NaN'" />
 
     <xsl:choose>
@@ -1869,10 +1937,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	  <xsl:call-template name="areacenterDistancePointSegment">
 	    <xsl:with-param name="x" select="$x" />
 	    <xsl:with-param name="y" select="$y" />
-	    <xsl:with-param name="x1" select="key('nodeById', $edgestart/@ref)/@lon" />
-	    <xsl:with-param name="y1" select="key('nodeById', $edgestart/@ref)/@lat" />
-	    <xsl:with-param name="x2" select="key('nodeById', $edgeend/@ref)/@lon" />
-	    <xsl:with-param name="y2" select="key('nodeById', $edgeend/@ref)/@lat" />
+	    <xsl:with-param name="x1" select="$data/osm/node[@id=$edgestart/@ref]/@lon" />
+	    <xsl:with-param name="y1" select="$data/osm/node[@id=$edgestart/@ref]/@lat" />
+	    <xsl:with-param name="x2" select="$data/osm/node[@id=$edgeend/@ref]/@lon" />
+	    <xsl:with-param name="y2" select="$data/osm/node[@id=$edgeend/@ref]/@lat" />
 	  </xsl:call-template>
 	</xsl:variable>
 
@@ -1884,7 +1952,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	      <xsl:with-param name="x" select="$x" />
 	      <xsl:with-param name="y" select="$y" />
 	      <xsl:with-param name="edgestart" select="$edgeend" />
-	      <xsl:with-param name="holerelation" select="$holerelation" />
+	      <xsl:with-param name="holeRelation" select="$holeRelation" />
 	      <xsl:with-param name="nearest_dist"> <xsl:choose>
 		<xsl:when test="$nearest_dist = 'NaN' or $distance &lt; $nearest_dist"> <xsl:value-of select="$distance" /> </xsl:when>
 		<xsl:otherwise> <xsl:value-of select="$nearest_dist" /> </xsl:otherwise>
@@ -1897,33 +1965,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	      <xsl:with-param name="x" select="$x" />
 	      <xsl:with-param name="y" select="$y" />
 	      <xsl:with-param name="edgestart" select="$edgeend" />
-	      <xsl:with-param name="holerelation" select="$holerelation" />
+	      <xsl:with-param name="holeRelation" select="$holeRelation" />
 	      <xsl:with-param name="nearest_dist" select="$nearest_dist" />
 	    </xsl:call-template>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
       <!-- Is there a hole in the polygon, and were we working on the outer one? Then we start edge detection against the hole. -->
-      <xsl:when test="$holerelation and
-		      $holerelation/member[@ref = $edgestart/../@id][@role='outer']">
-	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@type='way'][@role='inner'][1]/@ref)/nd[1]"/>
+      <xsl:when test="$holeRelation and
+		      $holeRelation/member[@ref = $edgestart/../@id][@role='outer']">
+	<xsl:variable name="nextnode" select="$data/osm/way[@id=$holeRelation/member[@type='way'][@role='inner'][1]/@ref]/nd[1]"/>
 	<xsl:call-template name="areacenterNearestEdge">
 	  <xsl:with-param name="x" select="$x" />
 	  <xsl:with-param name="y" select="$y" />
 	  <xsl:with-param name="edgestart" select="$nextnode" />
-	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="holeRelation" select="$holeRelation" />
 	  <xsl:with-param name="nearest_dist" select="$nearest_dist" />
 	</xsl:call-template>
       </xsl:when>
       <!-- Is there a hole in the polygon, and were we working working on one of the inner ones? Then go to the next hole, if there is one -->
-      <xsl:when test="$holerelation and
-		      $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']">
-	<xsl:variable name="nextnode" select="key('wayById', $holerelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']/@ref)/nd[1]"/>
+      <xsl:when test="$holeRelation and
+		      $holeRelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']">
+	<xsl:variable name="nextnode" select="$data/osm/way[@id=$holeRelation/member[@ref = $edgestart/../@id][@type='way'][@role='inner']/following-sibling::member[@role='inner']/@ref]/nd[1]"/>
 	<xsl:call-template name="areacenterNearestEdge">
 	  <xsl:with-param name="x" select="$x" />
 	  <xsl:with-param name="y" select="$y" />
 	  <xsl:with-param name="edgestart" select="$nextnode" />
-	  <xsl:with-param name="holerelation" select="$holerelation" />
+	  <xsl:with-param name="holeRelation" select="$holeRelation" />
 	  <xsl:with-param name="nearest_dist" select="$nearest_dist" />
 	</xsl:call-template>
       </xsl:when>
@@ -3124,75 +3192,48 @@ against infinite loops -->
     <xsl:param name="layer"/>
     <xsl:param name="elements"/>
     <xsl:param name="rule"/>
-
+    <xsl:param name="filterIterator" select="0"/>
 
     <xsl:if test="$elements">
   
       <!-- elementCount is the number of elements we started with (just used for the progress message) -->
       <xsl:variable name="elementCount" select="count($elements)"/>
-      <!-- If there's a proximity attribute on the rule then filter elements based on proximity -->
+
       <xsl:choose>
-        <xsl:when test='$rule/@verticalProximity'>
-          <xsl:variable name='nearbyElements1'>
-            <xsl:call-template name="proximityFilter">
-              <xsl:with-param name="elements" select="$elements"/>
-              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 32"/>
-              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 32"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name='nearbyElements2'>
-            <xsl:call-template name="proximityFilter">
-              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements1)/*"/>
-              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 16"/>
-              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 16"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name='nearbyElements3'>
-            <xsl:call-template name="proximityFilter">
-              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements2)/*"/>
-              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 8"/>
-              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 8"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name='nearbyElements4'>
-            <xsl:call-template name="proximityFilter">
-              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements3)/*"/>
-              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 4"/>
-              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 4"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name='nearbyElements5'>
-            <xsl:call-template name="proximityFilter">
-              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements4)/*"/>
-              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 2"/>
-              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 2"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name='nearbyElementsRtf'>
-            <xsl:call-template name="proximityFilter">
-              <xsl:with-param name="elements" select="exslt:node-set($nearbyElements5)/*"/>
-              <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity"/>
-              <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity"/>
-            </xsl:call-template>
-          </xsl:variable>
-
-          <!-- Convert nearbyElements rtf to a node-set -->
-          <xsl:variable name="nearbyElements" select="exslt:node-set($nearbyElementsRtf)/*"/>
-
-          <xsl:message>
-            Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"
-                        horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;
-            Matched by <xsl:value-of select="count($nearbyElements)"/> out of <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
-          </xsl:message>
-
-          <xsl:apply-templates select="*">
+        <xsl:when test='$rule/@verticalProximity and $rule/@horizontalProximity and $filterIterator &lt; 1'>
+          <xsl:call-template name="filterProximity">
+            <xsl:with-param name="eBare" select="$eBare"/>
+            <xsl:with-param name="kBare" select="$kBare"/>
+            <xsl:with-param name="vBare" select="$vBare"/>
             <xsl:with-param name="layer" select="$layer"/>
-            <xsl:with-param name="elements" select="$nearbyElements"/>
+            <xsl:with-param name="elements" select="$elements"/>
             <xsl:with-param name="rule" select="$rule"/>
-          </xsl:apply-templates>
+            <xsl:with-param name="filterIterator" select="1"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test='$rule/@notConnectedSameTag and $filterIterator &lt; 2'>
+          <xsl:call-template name="filterConnected">
+            <xsl:with-param name="eBare" select="$eBare"/>
+            <xsl:with-param name="kBare" select="$kBare"/>
+            <xsl:with-param name="vBare" select="$vBare"/>
+            <xsl:with-param name="layer" select="$layer"/>
+            <xsl:with-param name="elements" select="$elements"/>
+            <xsl:with-param name="rule" select="$rule"/>
+            <xsl:with-param name="filterIterator" select="2"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test='$rule/@minSize and $filterIterator &lt; 3'>
+          <xsl:call-template name="filterMinSize">
+            <xsl:with-param name="eBare" select="$eBare"/>
+            <xsl:with-param name="kBare" select="$kBare"/>
+            <xsl:with-param name="vBare" select="$vBare"/>
+            <xsl:with-param name="layer" select="$layer"/>
+            <xsl:with-param name="elements" select="$elements"/>
+            <xsl:with-param name="rule" select="$rule"/>
+            <xsl:with-param name="filterIterator" select="3"/>
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-
           <xsl:message>
             Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt;
             Matched by <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
@@ -3208,6 +3249,77 @@ against infinite loops -->
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="filterProximity">
+    <xsl:param name="eBare"/>
+    <xsl:param name="kBare"/>
+    <xsl:param name="vBare"/>
+    <xsl:param name="layer"/>
+    <xsl:param name="elements"/>
+    <xsl:param name="rule"/>
+    <xsl:param name="filterIterator"/>
+    
+    <xsl:variable name='nearbyElements1'>
+      <xsl:call-template name="proximityFilter">
+        <xsl:with-param name="elements" select="$elements"/>
+        <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 32"/>
+        <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 32"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name='nearbyElements2'>
+      <xsl:call-template name="proximityFilter">
+        <xsl:with-param name="elements" select="exslt:node-set($nearbyElements1)/*"/>
+        <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 16"/>
+        <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 16"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name='nearbyElements3'>
+      <xsl:call-template name="proximityFilter">
+        <xsl:with-param name="elements" select="exslt:node-set($nearbyElements2)/*"/>
+        <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 8"/>
+        <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 8"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name='nearbyElements4'>
+      <xsl:call-template name="proximityFilter">
+        <xsl:with-param name="elements" select="exslt:node-set($nearbyElements3)/*"/>
+        <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 4"/>
+        <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 4"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name='nearbyElements5'>
+      <xsl:call-template name="proximityFilter">
+        <xsl:with-param name="elements" select="exslt:node-set($nearbyElements4)/*"/>
+        <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity div 2"/>
+        <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity div 2"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name='nearbyElementsRtf'>
+      <xsl:call-template name="proximityFilter">
+        <xsl:with-param name="elements" select="exslt:node-set($nearbyElements5)/*"/>
+        <xsl:with-param name="horizontalProximity" select="$rule/@horizontalProximity"/>
+        <xsl:with-param name="verticalProximity" select="$rule/@verticalProximity"/>
+      </xsl:call-template>
+    </xsl:variable>
+    
+    <!-- Convert nearbyElements rtf to a node-set -->
+    <xsl:variable name="nearbyElements" select="exslt:node-set($nearbyElementsRtf)/*"/>
+    
+    <xsl:message>
+      Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"
+      horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;
+      Matched by <xsl:value-of select="count($nearbyElements)"/> out of <xsl:value-of select="count($filteredElements)"/> elements for layer <xsl:value-of select="$layer"/>.
+    </xsl:message>
+
+    <xsl:call-template name="processElements">
+      <xsl:with-param name="eBare" select="$eBare"/>
+      <xsl:with-param name="kBare" select="$kBare"/>
+      <xsl:with-param name="vBare" select="$vBare"/>
+      <xsl:with-param name="layer" select="$layer"/>
+      <xsl:with-param name="elements" select="$nearbyElements"/>
+      <xsl:with-param name="rule" select="$rule"/>
+      <xsl:with-param name="filterIterator" select="$filterIterator"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <!-- Select elements that are not within the specified distance from any other element -->
   <xsl:template name="proximityFilter">
@@ -3243,6 +3355,110 @@ against infinite loops -->
     </xsl:for-each>
   </xsl:template>
 
+  <xsl:template name="filterConnected">
+    <xsl:param name="eBare"/>
+    <xsl:param name="kBare"/>
+    <xsl:param name="vBare"/>
+    <xsl:param name="layer"/>
+    <xsl:param name="elements"/>
+    <xsl:param name="rule"/>
+    <xsl:param name="filterIterator"/>
+
+    <xsl:variable name="filteredElementsRTF">
+      <xsl:for-each select="$elements">
+        <xsl:variable name="id" select="@id" />
+        <xsl:variable name="value" select="tag[@k=$rule/@notConnectedSameTag]/@v" />
+        <xsl:if test="nd/@ref = /osm/way[@id != $id][tag[@k=$rule/@notConnectedSameTag and @v!=$value]]/nd/@ref">
+          <xsl:copy-of select="." />
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="filteredElements" select="exslt:node-set($filteredElementsRTF)/*" />
+
+    <xsl:call-template name="processElements">
+      <xsl:with-param name="eBare" select="$eBare"/>
+      <xsl:with-param name="kBare" select="$kBare"/>
+      <xsl:with-param name="vBare" select="$vBare"/>
+      <xsl:with-param name="layer" select="$layer"/>
+      <xsl:with-param name="elements" select="$filteredElements"/>
+      <xsl:with-param name="rule" select="$rule"/>
+      <xsl:with-param name="filterIterator" select="$filterIterator"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="filterMinSize">
+    <xsl:param name="eBare"/>
+    <xsl:param name="kBare"/>
+    <xsl:param name="vBare"/>
+    <xsl:param name="layer"/>
+    <xsl:param name="elements"/>
+    <xsl:param name="rule"/>
+    <xsl:param name="filterIterator"/>
+
+    <xsl:variable name="filteredElementsRTF">
+      <xsl:for-each select="$elements">
+        <xsl:variable name="maxLat">
+          <xsl:for-each select="$data/osm/node[@id=current()/nd/@ref]/@lat">
+            <xsl:sort data-type="number" order="descending"/>
+            <xsl:if test="position()=1">
+              <xsl:value-of select="."/>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="minLat">
+          <xsl:for-each select="$data/osm/node[@id=current()/nd/@ref]/@lat">
+            <xsl:sort data-type="number" order="ascending"/>
+            <xsl:if test="position()=1">
+              <xsl:value-of select="."/>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="maxLon">
+          <xsl:for-each select="$data/osm/node[@id=current()/nd/@ref]/@lon">
+            <xsl:sort data-type="number" order="descending"/>
+            <xsl:if test="position()=1">
+              <xsl:value-of select="."/>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="minLon">
+          <xsl:for-each select="$data/osm/node[@id=current()/nd/@ref]/@lon">
+            <xsl:sort data-type="number" order="ascending"/>
+            <xsl:if test="position()=1">
+              <xsl:value-of select="."/>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="latDiff" select="$maxLat - $minLat" />
+        <xsl:variable name="lonDiff" select="$maxLon - $minLon" />
+
+        <!--
+            cirfer = T + (N * [1.05 - ([t - 5] / 90)])
+            
+            T Latitude difference N Longitude difference t absolute Latitude The formula interpolates a cosine function with +10% error at the poles/equator and -10% error in the north Italy. 
+        -->
+        <xsl:variable name="size" select="$latDiff + ($lonDiff * (1.05 - (($maxLat - 5) div 90)))" />
+        <xsl:message>
+          <xsl:value-of select="@id" /> size = <xsl:value-of select="$size" />
+        </xsl:message>
+
+        <xsl:if test="$size &gt; $rule/@minSize">
+          <xsl:copy-of select="." />
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="filteredElements" select="exslt:node-set($filteredElementsRTF)/*" />
+
+    <xsl:call-template name="processElements">
+      <xsl:with-param name="eBare" select="$eBare"/>
+      <xsl:with-param name="kBare" select="$kBare"/>
+      <xsl:with-param name="vBare" select="$vBare"/>
+      <xsl:with-param name="layer" select="$layer"/>
+      <xsl:with-param name="elements" select="$filteredElements"/>
+      <xsl:with-param name="rule" select="$rule"/>
+      <xsl:with-param name="filterIterator" select="$filterIterator"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <!-- Draw SVG layers -->
   <xsl:template match="layer">

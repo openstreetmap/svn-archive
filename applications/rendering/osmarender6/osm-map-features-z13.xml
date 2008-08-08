@@ -926,6 +926,12 @@
                 <text k="name" class="aeroway-airport-caption" dy="-15px"/>
             </rule>
         </rule>
+
+        <!-- Names for large natural features -->
+        <rule e="way" k="natural" v="*" minSize="0.032" layer="5">
+            <areaText k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
+            <areaText k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
+        </rule>
     </rule>
 
     <!-- SVG Definitions - markers, symbols etc go here -->
@@ -1366,6 +1372,8 @@
             .village-caption        { font-size: 20px; }
             .suburb-caption         { font-size: 20px; }
 
+            .largefeature-caption-casing        { stroke-width: 10px; font-size: 20px; }
+            .largefeature-caption-core          { fill: #2e3ae6;      font-size: 20px; }
 
             /* Natural */
             .natural-water {

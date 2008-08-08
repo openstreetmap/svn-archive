@@ -1217,6 +1217,11 @@
                         </rule>
                     </rule>
                 </rule>
+
+                <rule e="way" k="natural" v="*" minSize="0.016" layer="5">
+                    <areaText k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
+                    <areaText k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
+                </rule>
             </rule>
 
             <!-- Road numbers for all highways -->
@@ -2146,6 +2151,8 @@
                 text-anchor: middle;
             }
 
+            .largefeature-caption-casing         { stroke-width: 2px;   font-size: 4px; }
+            .largefeature-caption-core           { fill: #2e3ae6;       font-size: 4px; }
 
             .generic-caption-casing              { stroke-width: 1px;   font-size: 2px; }
             .generic-caption-core                { fill: #2e3ae6;        font-size: 2px; }

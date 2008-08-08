@@ -166,6 +166,49 @@ const char *FindResource (const char *fname)
 enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
 #undef M
 
+// Below is a list of the tags that the user may add. It should also include
+// any tags that gosmore.cpp may test for directly, e.g.
+// StyleNr(w) == highway_traffic_signals .
+// See http://etricceline.de/osm/Europe/En/tags.htm for the most popular tags
+// The fields are k, v, short name and the additional tags.
+#define STYLES \
+ s (highway, residential,     "residential"     , "") \
+ s (highway, unclassified,    "unclassified"    , "") \
+ s (highway, tertiary,        "tertiary"        , "") \
+ s (highway, secondary,       "secondary"       , "") \
+ s (highway, primary,         "primary"         , "") \
+ s (highway, trunk,           "trunk"           , "") \
+ s (highway, footway,         "footway"         , "") \
+ s (highway, service,         "service"         , "") \
+ s (highway, track,           "track"           , "") \
+ s (highway, cycleway,        "cycleway"        , "") \
+ s (highway, pedestrian,      "pedestrian"      , "") \
+ s (highway, steps,           "steps"           , "") \
+ s (highway, bridleway,       "bridleway"       , "") \
+ s (railway, rail,            "railway"         , "") \
+ s (railway, station,         "railway station" , "") \
+ s (highway, mini_roundabout, "mini roundabout" , "") \
+ s (highway, traffic_signals, "traffic signals" , "") \
+ s (highway, bus_stop,        "bus stop"        , "") \
+ s (amenity, parking,         "parking"         , "") \
+ s (amenity, fuel,            "fuel"            , "") \
+ s (amenity, school,          "school"          , "") \
+ s (place,   village,         "village"         , "") \
+ s (shop,    supermarket,     "supermarket"     , "") \
+ s (religion, christian,      "church"          , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (amenity, pub,             "pub"             , "") \
+ s (amenity, restaurant,      "restaurant"      , "") \
+ s (building, yes,            "building"        , "") \
+ s (power,   tower,           "power tower"     , "") \
+ s (landuse, forest,          "forest"          , "") \
+ s (leisure, park,            "park"            , "") \
+ s (waterway, stream,         "stream"          , "")
+
+#define s(k,v,shortname,extraTags) k ## _ ## v,
+enum { STYLES firstElemStyle }; // highway_residential, ...
+#undef s
+
 struct styleStruct {
   int  x[16], lineWidth, lineRWidth, lineColour, lineColourBg, dashed;
   int  scaleMax, areaColour, dummy /* pad to 8 for 64 bit compatibility */;
@@ -550,7 +593,7 @@ void Route (int recalculate, int plon, int plat)
     } /* For each candidate segment */
     if (bestd == ((__int64) 1 << 62) || !endNd[0]) {
       endNd[i] = NULL;
-      fprintf (stderr, "No segment nearby\n");
+      //fprintf (stderr, "No segment nearby\n");
       return;
     }
   } /* For 'from' and 'to', find segment that passes nearby */
@@ -902,6 +945,29 @@ int ProcessNmea (char *rx, unsigned *got)
   return dataReady;
 }
 
+int JunctionType (ndType *nd)
+{
+  int ret = 'j';
+  while (nd > ndBase && nd[-1].lon == nd->lon &&
+    nd[-1].lat == nd->lat) nd--;
+  int segCnt = 0; // Count number of segments at x->shortest
+  do {
+    // TODO : Only count segment traversable by 'Vehicle'
+    // Except for the case where a cyclist passes a motorway_link.
+    // TODO : Don't count oneways entering the roundabout
+    if (nd->other[0] >= 0) segCnt++;
+    if (nd->other[1] >= 0) segCnt++;
+    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_traffic_signals) {
+      ret = 't';
+    }
+    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_mini_roundabout) {
+      ret = 'm';
+    }   
+  } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+           nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
+  return segCnt > 2 ? toupper (ret) : ret;
+}
+
 void DoFollowThing (gpsNewStruct *gps)
 {
   if (!/*gps->fix.mode >= MODE_2D &&*/ FollowGPSr) return;
@@ -941,19 +1007,7 @@ void DoFollowThing (gpsNewStruct *gps)
         int roundExit = 0;
         while (x->shortest && ((1 << roundaboutR) &
                        ((wayType*)(x->shortest->nd->wayPtr + data))->bits)) {
-          ndType *nd = x->shortest->nd;
-          while (nd > ndBase && nd[-1].lon == nd->lon &&
-            nd[-1].lat == nd->lat) nd--;
-          int segCnt = 0; // Count number of segments at x->shortest
-          do {
-            // TODO : Only count segment traversable by 'Vehicle'
-            // Except for the case where a cyclist crosses a motorway.
-            // TODO : Don't count oneways entering the roundabout
-            if (nd->other[0] >= 0) segCnt++;
-            if (nd->other[1] >= 0) segCnt++;
-          } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
-                   nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
-          if (segCnt > 2) roundExit++;
+          if (isupper (JunctionType (x->shortest->nd))) roundExit++;
           x = x->shortest;
         }
         if (!x->shortest || roundExit) {
@@ -1077,44 +1131,6 @@ struct newWaysStruct {
   char name[40];
 } newWays[500];
 
-// Below is a list of the tags that the user may add. It should also include
-// any tags that gosmore.cpp may test for directly, e.g.
-// StyleNr(w) == highway_traffic_signals .
-// See http://etricceline.de/osm/Europe/En/tags.htm for the most popular tags
-// The fields are k, v, short name and the additional tags.
-#define STYLES \
- s (highway, residential,     "residential"     , "") \
- s (highway, unclassified,    "unclassified"    , "") \
- s (highway, tertiary,        "tertiary"        , "") \
- s (highway, secondary,       "secondary"       , "") \
- s (highway, primary,         "primary"         , "") \
- s (highway, trunk,           "trunk"           , "") \
- s (highway, footway,         "footway"         , "") \
- s (highway, service,         "service"         , "") \
- s (highway, track,           "track"           , "") \
- s (highway, cycleway,        "cycleway"        , "") \
- s (highway, pedestrian,      "pedestrian"      , "") \
- s (highway, steps,           "steps"           , "") \
- s (highway, bridleway,       "bridleway"       , "") \
- s (railway, rail,            "railway"         , "") \
- s (railway, station,         "railway station" , "") \
- s (highway, mini_roundabout, "mini roundabout" , "") \
- s (highway, traffic_signals, "traffic signals" , "") \
- s (highway, bus_stop,        "bus stop"        , "") \
- s (amenity, parking,         "parking"         , "") \
- s (amenity, fuel,            "fuel"            , "") \
- s (amenity, school,          "school"          , "") \
- s (place,   village,         "village"         , "") \
- s (shop,    supermarket,     "supermarket"     , "") \
- s (religion, christian,      "church"          , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (amenity, pub,             "pub"             , "") \
- s (amenity, restaurant,      "restaurant"      , "") \
- s (building, yes,            "building"        , "") \
- s (power,   tower,           "power tower"     , "") \
- s (landuse, forest,          "forest"          , "") \
- s (leisure, park,            "park"            , "") \
- s (waterway, stream,         "stream"          , "")
 
 struct klasTableStruct {
   wchar_t *desc;
@@ -1125,10 +1141,6 @@ struct klasTableStruct {
 STYLES
 #undef s
 };
-
-#define s(k,v,shortname,extraTags) k ## _ ## v,
-enum { STYLES, firstElemStyle };
-#undef s
 
 int newWayCnt = 0, newWayCoordCnt = 0;
 
@@ -1424,7 +1436,7 @@ gint Expose (void)
     for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
       for (int j = 0; j < 2; j++) {
         int c = !j ? style[i].areaColour 
-          : style[i].lineColour ? style[i].lineColour
+          : style[i].lineColour != -1 ? style[i].lineColour
           : (style[i].areaColour >> 1) & 0xefefef; // Dark border
         styleColour[i][j].red =    (c >> 16)        * 0x101;
         styleColour[i][j].green = ((c >> 8) & 0xff) * 0x101;
@@ -1507,7 +1519,7 @@ gint Expose (void)
         if (Style (w)->scaleMax <
                   zoom / clip.width * 175 / (DetailLevel + 4)) continue;
         
-        if (DetailLevel < 4 && Style (w)->areaColour) {
+        if (DetailLevel < 4 && Style (w)->areaColour != -1) {
           if (thisLayer > -5) continue;  // Draw all areas with layer -5
         }
         else if (zoom < 100000*100) {
@@ -1517,7 +1529,7 @@ gint Expose (void)
           }
           if (DetailLevel == 4) {
             if (doAreas) nextLayer = thisLayer;
-            if (Style (w)->areaColour ? !doAreas : doAreas) continue;
+            if (Style (w)->areaColour != -1 ? !doAreas : doAreas) continue;
           }
           if (Layer (w) != thisLayer) continue;
         }
@@ -1570,7 +1582,7 @@ gint Expose (void)
           //}
           #endif
         }
-        else if (Style (w)->areaColour) {
+        else if (Style (w)->areaColour != -1) {
           #ifndef _WIN32_WCE
           while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
           static GdkPoint pt[1000];
@@ -2088,8 +2100,9 @@ int UserInterface (int argc, char *argv[])
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
     for (; shortest; shortest = shortest->shortest) {
       char *name = (char*)((wayType*)(shortest->nd->wayPtr + data) + 1) + 1;
-      printf ("%lf,%lf,%.*s\n\r", LatInverse (shortest->nd->lat),
-        LonInverse (shortest->nd->lon), strcspn (name, "\n"), name);
+      printf ("%lf,%lf,%c,%.*s\n\r", LatInverse (shortest->nd->lat),
+        LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
+        strcspn (name, "\n"), name);
     }
     return 0;
   }
@@ -2333,7 +2346,7 @@ int main (int argc, char *argv[])
       return 1;
     }
     FILE *pak, *masterf;
-    int styleCnt = 0, ndStart;
+    int styleCnt = firstElemStyle, ndStart;
     int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
     wayType *master = /* shutup gcc */ NULL;
     if (argc == 6) {
@@ -2357,8 +2370,8 @@ int main (int argc, char *argv[])
     fwrite (&pakHead, sizeof (pakHead), 1, pak);
     
     //------------------------- elemstyle.xml : --------------------------
-    char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS];
-    int defaultRestrict[2 << STYLE_BITS];
+    char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS], ruleCnt = 0;
+    int defaultRestrict[2 << STYLE_BITS], ruleNr[2 << STYLE_BITS];
     memset (defaultRestrict, 0, sizeof (defaultRestrict));
     FILE *icons_csv = fopen (FindResource ("icons.csv"), "r");
     xmlTextReaderPtr sXml = xmlNewTextReaderFilename (
@@ -2369,6 +2382,10 @@ int main (int argc, char *argv[])
     }
     styleStruct srec[2 << STYLE_BITS];
     memset (&srec, 0, sizeof (srec));
+    for (int i = 0; i < sizeof (srec) / sizeof (srec[0]); i++) {
+      srec[i].lineColour = -1;
+      srec[i].areaColour = -1;
+    }
     while (xmlTextReaderRead (sXml)) {
       char *name = (char*) xmlTextReaderName (sXml);
       //xmlChar *val = xmlTextReaderValue (sXml);
@@ -2444,7 +2461,22 @@ int main (int argc, char *argv[])
       }
       else if (xmlTextReaderNodeType (sXml) == XML_READER_TYPE_END_ELEMENT
                   && strcasecmp ((char *) name, "rule") == 0) {
-        if (styleCnt < (2 << STYLE_BITS) - 1) styleCnt++;
+        int ipos = styleCnt;
+        #define s(k,v,shortname,extraTags) \
+          if (strcmp (#k, style_k[styleCnt]) == 0 && \
+              strcmp (#v, style_v[styleCnt]) == 0) ipos = k ## _ ## v;
+        STYLES
+        #undef s
+        ruleNr[ipos] = ruleCnt++;
+        if (ipos != styleCnt) {
+          memcpy (&srec[ipos], &srec[styleCnt], sizeof (srec[ipos]));
+          memcpy (&srec[styleCnt], &srec[styleCnt + 1], sizeof (srec[0]));
+          defaultRestrict[ipos] = defaultRestrict[styleCnt];
+          defaultRestrict[styleCnt] = 0;
+          style_k[ipos] = style_k[styleCnt];
+          style_v[ipos] = style_v[styleCnt];
+        }
+        else if (styleCnt < (2 << STYLE_BITS) - 2) styleCnt++;
         else fprintf (stderr, "Too many rules. Increase STYLE_BITS\n");
       }
       xmlFree (name);
@@ -2499,7 +2531,7 @@ int main (int argc, char *argv[])
     halfSegType s[2];
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
     int yesMask = 0, noMask = 0, *wayFseek = NULL;
-    int lowzList[1000], lowzListCnt = 0, wStyle = -1;
+    int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt;
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;
     s[1].other = -1;
@@ -2518,7 +2550,8 @@ int main (int argc, char *argv[])
       wayType *m = (wayType *)(((char *)master) + offset);
       for (wcnt = 0; (char*) m < (char*) master + ndStart; wcnt++) {
         if (bbox[0] <= m->clat + m->dlat && bbox[1] <= m->clon + m->dlon &&
-            m->clat - m->dlat <= bbox[2] && m->clon - m->dlon <= bbox[3]) {
+            m->clat - m->dlat <= bbox[2] && m->clon - m->dlon <= bbox[3] &&
+            StyleNr (m) < styleCnt) {
           masterWay[i].idx = wcnt;
           masterWay[i++].w = m;
         }
@@ -2573,14 +2606,20 @@ int main (int argc, char *argv[])
           #define V_IS(x) (stricmp (avalue, x) == 0)
           if (stricmp (aname, "v") == 0) {
             int newStyle = 0;
-            for (; newStyle < styleCnt && !(K_IS (style_k[newStyle])
-                             && V_IS (style_v[newStyle])); newStyle++) {}
+            for (; newStyle < styleCnt && !(K_IS (style_k[newStyle]) &&
+              V_IS (style_v[newStyle]) && (isNode ? srec[newStyle].x[2] :
+                srec[newStyle].lineColour != -1 ||
+                srec[newStyle].areaColour != -1)); newStyle++) {}
+            // elemstyles rules are from most important to least important
+            // Ulf has placed rules at the beginning that will highlight
+            // errors, like oneway=true -> icon=deprecated. So they must only
+            // match nodes when no line or area colour was given and only
+            // match ways when no icon was given.
             if (defaultRestrict[newStyle] & (1 << roundaboutR)) {
               yesMask |= defaultRestrict[newStyle];
             }
-            else if (wStyle < newStyle && newStyle < styleCnt) {
-              wStyle = newStyle;
-            }
+            else if (newStyle < styleCnt && (wStyle == styleCnt ||
+                     ruleNr[wStyle] > ruleNr[newStyle])) wStyle = newStyle;
 
             if (K_IS ("name")) {
               nameTag = avalue;
@@ -2656,7 +2695,7 @@ int main (int argc, char *argv[])
       if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
         int nameIsNode = stricmp (name, "node") == 0;
         if (stricmp (name, "way") == 0 || nameIsNode) {
-          w.bits += wStyle >= 0 ? wStyle : styleCnt;
+          w.bits += wStyle;
           if (nameTag) {
             char *oldTags = tags;
             tags = (char *) xmlStrdup (BAD_CAST "\n");
@@ -2666,7 +2705,7 @@ int main (int argc, char *argv[])
             xmlFree (nameTag);
             nameTag = NULL;
           }
-          if (!nameIsNode || strlen (tags) > 8 || wStyle >= 0) {
+          if (!nameIsNode || strlen (tags) > 8 || wStyle != styleCnt) {
             if (nameIsNode && (!wayFseek || *wayFseek)) {
               if (s[0].lat) { // Flush s
                 fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
@@ -2738,7 +2777,7 @@ int main (int argc, char *argv[])
           tags[0] = '\0'; // Erase nodes with short names
           yesMask = noMask = 0;
           w.bits = 0;
-          wStyle = -1;
+          wStyle = styleCnt;
         }
       } // if it was </...>
       xmlFree (name);

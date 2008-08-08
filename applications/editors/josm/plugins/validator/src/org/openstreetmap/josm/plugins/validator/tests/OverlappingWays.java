@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.Node;
@@ -64,14 +65,11 @@ public class OverlappingWays extends Test
 
 				for (WaySegment ws : duplicated) 
 				{
-					String ar;
-
 					if (ws.way.get("highway") != null)
 						highway++;
 					else if (ws.way.get("railway") != null)
 						railway++;
-					ar = ws.way.get("area");
-					if (ar != null && ("true".equalsIgnoreCase(ar) || "yes".equalsIgnoreCase(ar) || "1".equals(ar)))
+					if (OsmUtils.getOsmBoolean(ws.way.get("area")))
 						area++;
 					if (ws.way.get("landuse") != null || ws.way.get("natural") != null
 					|| ws.way.get("amenity") != null || ws.way.get("leisure") != null)

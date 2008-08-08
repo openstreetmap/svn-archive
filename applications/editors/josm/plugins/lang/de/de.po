@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-07 10:17+0200\n"
-"PO-Revision-Date: 2008-08-07 10:35+0200\n"
+"POT-Creation-Date: 2008-08-08 09:46+0200\n"
+"PO-Revision-Date: 2008-08-08 10:22+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -550,7 +550,7 @@ msgstr "Löse {0} Konflikte in {1} Objekten"
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:565
 #: ../colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:79
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:55
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:404
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:457
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -1403,7 +1403,7 @@ msgstr "Im Browser öffnen"
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:86
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:566
 #: ../grid/src/grid/GridPlugin.java:43 ../grid/src/grid/GridPlugin.java:49
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:414
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:467
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -1434,7 +1434,7 @@ msgstr "Fehler beim laden der Seite {0}"
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:567
 #: ../colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:93
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:75
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:445
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:498
 msgid "Delete"
 msgstr "Löschen"
 
@@ -1482,7 +1482,7 @@ msgstr ""
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:79
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:247
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:65
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:78
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:75
 msgid "Select"
 msgstr "Auswahl"
 
@@ -2845,7 +2845,7 @@ msgstr "Voreinstellungs-Quelle"
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:65
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:116
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:552
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:433
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:486
 msgid "Please select the row to edit."
 msgstr "Bitte wählen sie eine Zeile zum Bearbeiten."
 
@@ -2853,7 +2853,7 @@ msgstr "Bitte wählen sie eine Zeile zum Bearbeiten."
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:84
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:557
 #: ../wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:80
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:449
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:502
 msgid "Please select the row to delete."
 msgstr "Bitte wählen Sie die zu löschende Zeile."
 
@@ -2870,7 +2870,7 @@ msgid "Add a new tagging preset source to the list."
 msgstr "Eine neue Voreinstellungsquelle zu der Liste hinzufügen."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:91
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:460
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:513
 msgid "Delete the selected source from the list."
 msgstr "Ausgewählte Quelle löschen."
 
@@ -3173,7 +3173,7 @@ msgstr "Öffnet ein Dialog-Fenster mit den gewählten Objekten aus der obigen Li
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:74
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:66
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:79
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:76
 msgid "Set the selected elements on the map to the selected items in the list above."
 msgstr ""
 "Setze die gewählten Elemente auf der Karte auf die obige Liste der "
@@ -7107,19 +7107,15 @@ msgid ""
 "port is not variable because it is referenced by external applications "
 "talking to the plugin."
 msgstr ""
-"Das Fernbedienungsplugin lauscht am Port 8111 des lokalen Rechners (localhost). "
-"Dieser Port ist nicht konfigurierbar, weil er von externen Anwendungen adressiert "
-"werden muss, welche das Plugin nutzen."
+"Das Fernbedienungsplugin lauscht am Port 8111 des lokalen Rechners "
+"(localhost). Dieser Port ist nicht konfigurierbar, weil er von externen "
+"Anwendungen adressiert werden muss, welche das Plugin nutzen."
 
 #: ../remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:42
 msgid "Permitted actions"
 msgstr "Erlaubte Aktionen"
 
-#: ../slippy_map_chooser/src/OsmMapControl.java:63
-msgid "left"
-msgstr "links"
-
-#: ../slippy_map_chooser/src/SlippyMapChooser.java:83
+#: ../slippy_map_chooser/src/SlippyMapChooser.java:63
 msgid ""
 "Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and "
 "move mouse.   Select: Click."
@@ -7127,7 +7123,7 @@ msgstr ""
 "Zoom: Mausrad oder Doppelklick.   Karte bewegen: Rechte Maustaste halten und "
 "Maus bewegen.   Auswahl: Klick."
 
-#: ../slippy_map_chooser/src/SlippyMapChooser.java:84
+#: ../slippy_map_chooser/src/SlippyMapChooser.java:66
 msgid "Slippy map"
 msgstr "Schnelle Karte"
 
@@ -7151,37 +7147,37 @@ msgstr "Rasterebene"
 msgid "Grid layer:"
 msgstr "Raster Ebene:"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:66
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:63
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:36
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:101
 msgid "Validation errors"
 msgstr "Ergebnisse der Datenprüfung"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:66
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:63
 msgid "Open the validation window."
 msgstr "Fenster mit dem Ergebnis der Prüfung öffnen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:82
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:79
 msgid "Validate"
 msgstr "Prüfen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:82
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:79
 msgid "Validate the data."
 msgstr "Überprüfe die Daten."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:83
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:80
 msgid "Fix"
 msgstr "Repariere"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:83
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:80
 msgid "Fix the selected errors."
 msgstr "Korrigiere die Fehler in den Daten."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:88
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:85
 msgid "Ignore"
 msgstr "Ignoriere"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:88
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:85
 msgid "Ignore the selected errors next time."
 msgstr "Ignoriere die Fehler beim nächsten Mal."
 
@@ -7339,15 +7335,15 @@ msgstr "Dieser Test prüft auf ungetaggte Knoten, die nicht Teil eines Weges sin
 msgid "Untagged and unconnected nodes"
 msgstr "Knoten ohne Zusatzinformation oder ohne Verbindung"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:113
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:129
 msgid "Properties checker :"
 msgstr "Eigenschaftsprüfer:"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:114
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:130
 msgid "This plugin checks for errors in property keys and values."
 msgstr "Dieses Plugin prüft auf Fehler in Schlüsseln und Werten"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:192
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:221
 #, java-format
 msgid ""
 "Could not download data file(s):\n"
@@ -7356,47 +7352,59 @@ msgstr ""
 "Kann die Datendatei(en) nicht herunterladen:\n"
 "{0}"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:246
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:274
+msgid "Illegal tag/value combinations"
+msgstr "Ungültige Schlüssel/Wert-Kombinationen"
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:288
 msgid "Tags with empty values"
 msgstr "Tags mit leerem Wert"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:251
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:293
 #, java-format
 msgid "Invalid property key ''{0}''"
 msgstr "Ungültiger Schlüssel \"{0}\""
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:256
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:298
 #, java-format
 msgid "Invalid white space in property key ''{0}''"
 msgstr "Ungültiger Leerraum in Schlüssel \"{0}\""
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:261
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:303
 msgid "Property values start or end with white space"
 msgstr "Werte beginnen oder enden mit Leerraum"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:269
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:311
 msgid "Unknown property values"
 msgstr "Unbekannter Werte"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:278
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:320
 msgid "FIXMES"
 msgstr "FIXMEs"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:389
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:434
 msgid "Check property keys."
 msgstr "Schlüssel prüfen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:390
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:435
 msgid "Validate that property keys are valid checking against list of words."
 msgstr "Überprüft Schlüssel auf Gültigkeit durch Abgleich mit einer Liste."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:407
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:427
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:437
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:442
+msgid "Use complex property checker."
+msgstr "Nutze komplexen Eigenschaftsprüfer."
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:443
+msgid "Validate property values and tags using complex rules."
+msgstr "Prüft die Gültigkeit von Werten und Schlüsseln anhand von komplexen Regeln."
+
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:460
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:480
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:490
 msgid "TagChecker source"
 msgstr "Schlüsselprüferdatenquellen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:457
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:510
 msgid ""
 "The sources (url or filename) of spell check (see http://wiki.openstreetmap."
 "org/index.php/User:JLS/speller) or tag checking data files."
@@ -7404,53 +7412,53 @@ msgstr ""
 "Die Datenquellen (URL oder Dateiname) für die Schreib- (siehe http://wiki."
 "openstreetmap.org/index.php/User:JLS/speller) oder Schlüsselprüfung."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:458
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:511
 msgid "Add a new source to the list."
 msgstr "Eine neue Quelle zur Liste hinzufügen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:459
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:512
 msgid "Edit the selected source."
 msgstr "Ausgewählte Quelle bearbeiten."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:462
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:515
 msgid "Data sources"
 msgstr "Datenquellen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:486
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:535
 msgid "Check property values."
 msgstr "Werte überprüfen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:487
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:536
 msgid "Validate that property values are valid checking against presets."
 msgstr "Prüft die Gültigkeit von Werten anhand von Presets."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:495
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:543
 msgid "Check for FIXMES."
 msgstr "Prüfe auf FIXMEs"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:496
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:544
 msgid "Looks for nodes or ways with FIXME in any property value."
 msgstr ""
 "Sucht nach Knoten oder Wegen, die im Wert eines Schlüssels FIXME stehen "
 "haben."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:504
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:551
 msgid "Use default data file."
 msgstr "Standarddatendatei nutzen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:505
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:552
 msgid "Use the default data file (recommended)."
 msgstr "Nutzung der Standarddatendatei (empfohlen)."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:509
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:555
 msgid "Use default spellcheck file."
 msgstr "Standarddatei für Schreibprüfung nutzen."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:510
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:556
 msgid "Use the default spellcheck file (recommended)."
 msgstr "Nutzung der Standarddatei für die Schreibfehlerprüfung (empfohlen)."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:575
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:633
 msgid "Fix properties"
 msgstr "Eigenschaften korrigieren"
 
@@ -7474,11 +7482,11 @@ msgstr "Verdrehtes Wasser: Land nicht auf der linken Seite"
 msgid "Reversed land: land not on left side"
 msgstr "Verdrehtes Land: Land nicht auf der linken Seite"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:33
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:34
 msgid "Overlapping ways."
 msgstr "Wege überlappen sich."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:34
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:35
 msgid ""
 "This test checks that a connection between two nodes is not used by more "
 "than one way."
@@ -7486,31 +7494,31 @@ msgstr ""
 "Dieser Test prüft dass eine Verbindung zwischen zwei Knoten nicht von mehr "
 "als einem Weg verwendet wird."
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:96
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:94
 msgid "Overlapping areas"
 msgstr "Überlappende Flächen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:98
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:96
 msgid "Overlapping highways (with area)"
 msgstr "Überlappende Straßen (mit Fläche)"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:100
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:98
 msgid "Overlapping railways (with area)"
 msgstr "Überlappende Schienen (mit Fläche)"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:102
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:100
 msgid "Overlapping ways (with area)"
 msgstr "Überlappende Wege (mit Fläche)"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:105
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:103
 msgid "Overlapping highways"
 msgstr "Überlappende Straßen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:107
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:105
 msgid "Overlapping railways"
 msgstr "Überlappende Schienen"
 
-#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:109
+#: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:107
 msgid "Overlapping ways"
 msgstr "Überlappende Wege"
 

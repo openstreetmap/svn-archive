@@ -2,23 +2,52 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.awt.GridBagLayout;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset.*;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
-import org.openstreetmap.josm.plugins.validator.*;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
+import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
+import org.openstreetmap.josm.plugins.validator.Severity;
+import org.openstreetmap.josm.plugins.validator.Test;
+import org.openstreetmap.josm.plugins.validator.TestError;
+import org.openstreetmap.josm.plugins.validator.tests.ChangePropertyKeyCommand;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.Util;
 import org.openstreetmap.josm.tools.GBC;
@@ -40,70 +69,57 @@ public class TagChecker extends Test
 	protected static Map<String, String> spellCheckKeyData;
 	/** The spell check preset values */
 	protected static Bag<String, String> presetsValueData;
+	/** The TagChecker data */
+	protected static List<CheckerData> checkerData = new ArrayList<CheckerData>();
 
 	/** The preferences prefix */
 	protected static final String PREFIX = PreferenceEditor.PREFIX + "." + TagChecker.class.getSimpleName();
 
-	/** Preference name for checking values */
 	public static final String PREF_CHECK_VALUES = PREFIX + ".checkValues";
-	/** Preference name for checking values */
 	public static final String PREF_CHECK_KEYS = PREFIX + ".checkKeys";
-	/** Preference name for checking FIXMES */
+	public static final String PREF_CHECK_COMPLEX = PREFIX + ".checkComplex";
 	public static final String PREF_CHECK_FIXMES = PREFIX + ".checkFixmes";
-	/** Preference name for sources */
+
 	public static final String PREF_SOURCES = PREFIX + ".sources";
-	/** Preference name for sources */
 	public static final String PREF_USE_DATA_FILE = PREFIX + ".usedatafile";
-	/** Preference name for sources */
 	public static final String PREF_USE_SPELL_FILE = PREFIX + ".usespellfile";
-	/** Preference name for keys upload check */
+
 	public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD = PREFIX + ".checkKeysBeforeUpload";
-	/** Preference name for values upload check */
 	public static final String PREF_CHECK_VALUES_BEFORE_UPLOAD = PREFIX + ".checkValuesBeforeUpload";
-	/** Preference name for fixmes upload check */
+	public static final String PREF_CHECK_COMPLEX_BEFORE_UPLOAD = PREFIX + ".checkComplexBeforeUpload";
 	public static final String PREF_CHECK_FIXMES_BEFORE_UPLOAD = PREFIX + ".checkFixmesBeforeUpload";
 
-	/** Whether to check keys */
 	protected boolean checkKeys = false;
-	/** Whether to check values */
 	protected boolean checkValues = false;
-	/** Whether to check for fixmes in values */
+	protected boolean checkComplex = false;
 	protected boolean checkFixmes = false;
 
-	/** Preferences checkbox for keys */
 	protected JCheckBox prefCheckKeys;
-	/** Preferences checkbox for values */
 	protected JCheckBox prefCheckValues;
-	/** Preferences checkbox for FIXMES */
+	protected JCheckBox prefCheckComplex;
 	protected JCheckBox prefCheckFixmes;
-	/** The preferences checkbox for validation of keys on upload */
+
 	protected JCheckBox prefCheckKeysBeforeUpload;
-	/** The preferences checkbox for validation of values on upload */
 	protected JCheckBox prefCheckValuesBeforeUpload;
-	/** The preferences checkbox for validation of fixmes on upload */
+	protected JCheckBox prefCheckComplexBeforeUpload;
 	protected JCheckBox prefCheckFixmesBeforeUpload;
-	/** The add button */
+
+	protected JCheckBox prefUseDataFile;
+	protected JCheckBox prefUseSpellFile;
+
 	protected JButton addSrcButton;
-	/** The edit button */
 	protected JButton editSrcButton;
-	/** The delete button */
 	protected JButton deleteSrcButton;
 
-	protected static int EMPTY_VALUES = 0; /** Empty values error */
-	protected static int INVALID_KEY = 1; /** Invalid key error */
-	protected static int INVALID_VALUE = 2; /** Invalid value error */
-	protected static int FIXME = 3; /** fixme error */
-	protected static int INVALID_SPACE = 3; /** space in value (start/end) */
+	protected static int EMPTY_VALUES = 0;
+	protected static int INVALID_KEY = 1;
+	protected static int INVALID_VALUE = 2;
+	protected static int FIXME = 3;
+	protected static int INVALID_SPACE = 3;
+	protected static int TAG_CHECK = 4;
 
 	/** List of sources for spellcheck data */
 	protected JList Sources;
-
-	/** Whether this test must check the keys before upload. Used by peferences */
-	protected boolean testKeysBeforeUpload;
-	/** Whether this test must check the values before upload. Used by peferences */
-	protected boolean testValuesBeforeUpload;
-	/** Whether this test must check form fixmes in values before upload. Used by peferences */
-	protected boolean testFixmesBeforeUpload;
 
 	/**
 	 * Constructor
@@ -164,15 +180,28 @@ public class TagChecker extends Test
 			BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
 
 			String okValue = null;
+			Boolean tagcheckerfile = false;
 			do
 			{
 				String line = reader.readLine();
-				if( line == null || line.length() == 0 )
+				if( line == null || (!tagcheckerfile && line.length() == 0) )
 					break;
 				if( line.startsWith("#") )
-					continue;
-	
-				if( line.charAt(0) == '+' )
+				{
+					if(line.startsWith("# JOSM TagChecker"))
+						tagcheckerfile = true;
+				}
+				else if(tagcheckerfile)
+				{
+					CheckerData d = new CheckerData();
+					String err = d.getData(line);
+
+					if(err == null)
+						checkerData.add(d);
+					else
+						System.err.println("Invalid tagchecker line - "+err+":" + line);
+				}
+				else if( line.charAt(0) == '+' )
 				{
 					okValue = line.substring(1);
 				}
@@ -235,6 +264,19 @@ public class TagChecker extends Test
 	{
 		// Just a collection to know if a primitive has been already marked with error
 		Bag<OsmPrimitive, String> withErrors = new Bag<OsmPrimitive, String>();
+
+		if(checkComplex)
+		{
+			for(CheckerData d : checkerData)
+			{
+				if(d.match(p))
+				{
+					errors.add( new TestError(this, Severity.WARNING, tr("Illegal tag/value combinations"), p, TAG_CHECK) );
+					withErrors.add(p, "TC");
+					break;
+				}
+			}
+		}
 
 		Map<String, String> props = (p.keys == null) ? Collections.<String, String>emptyMap() : p.keys;
 		for(Entry<String, String> prop: props.entrySet() )
@@ -303,18 +345,18 @@ public class TagChecker extends Test
 		
 		XmlObjectParser parser = new XmlObjectParser();
 		parser.mapOnStart("item", TaggingPreset.class);
-		parser.map("text", Text.class);
-		parser.map("check", Check.class);
-		parser.map("combo", Combo.class);
-		parser.map("label", Label.class);
-		parser.map("key", Key.class);
+		parser.map("text", TaggingPreset.Text.class);
+		parser.map("check", TaggingPreset.Check.class);
+		parser.map("combo", TaggingPreset.Combo.class);
+		parser.map("label", TaggingPreset.Label.class);
+		parser.map("key", TaggingPreset.Key.class);
 		parser.start(in);
 		
 		while(parser.hasNext())
 		{
 			Object obj = parser.next();
-			if (obj instanceof Combo) {
-				Combo combo = (Combo)obj;
+			if (obj instanceof TaggingPreset.Combo) {
+				TaggingPreset.Combo combo = (TaggingPreset.Combo)obj;
 				for(String value : combo.values.split(",") )
 					presetsValueData.add(combo.key, value);
 			}
@@ -365,6 +407,10 @@ public class TagChecker extends Test
 		if( isBeforeUpload )
 			checkValues = checkValues && Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD, true);
 
+		checkComplex = Main.pref.getBoolean(PREF_CHECK_COMPLEX);
+		if( isBeforeUpload )
+			checkComplex = checkValues && Main.pref.getBoolean(PREF_CHECK_COMPLEX_BEFORE_UPLOAD, true);
+
 		checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES);
 		if( isBeforeUpload )
 			checkFixmes = checkFixmes && Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true);
@@ -373,7 +419,7 @@ public class TagChecker extends Test
 	@Override
 	public void visit(Collection<OsmPrimitive> selection)
 	{
-		if( checkKeys || checkValues)
+		if( checkKeys || checkValues || checkComplex)
 			super.visit(selection);
 	}
 	
@@ -384,15 +430,22 @@ public class TagChecker extends Test
 		a.anchor = GBC.EAST;
 
 		testPanel.add( new JLabel(name), GBC.eol().insets(3,0,0,0) );
-		
-		boolean checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS, true);
-		prefCheckKeys = new JCheckBox(tr("Check property keys."), checkKeys);
+
+		prefCheckKeys = new JCheckBox(tr("Check property keys."), Main.pref.getBoolean(PREF_CHECK_KEYS, true));
 		prefCheckKeys.setToolTipText(tr("Validate that property keys are valid checking against list of words."));
 		testPanel.add(prefCheckKeys, GBC.std().insets(20,0,0,0));
 
 		prefCheckKeysBeforeUpload = new JCheckBox();
 		prefCheckKeysBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD, true));
 		testPanel.add(prefCheckKeysBeforeUpload, a);
+
+		prefCheckComplex = new JCheckBox(tr("Use complex property checker."), Main.pref.getBoolean(PREF_CHECK_COMPLEX, true));
+		prefCheckComplex.setToolTipText(tr("Validate property values and tags using complex rules."));
+		testPanel.add(prefCheckComplex, GBC.std().insets(20,0,0,0));
+
+		prefCheckComplexBeforeUpload = new JCheckBox();
+		prefCheckComplexBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_COMPLEX_BEFORE_UPLOAD, true));
+		testPanel.add(prefCheckComplexBeforeUpload, a);
 
 		Sources = new JList(new DefaultListModel());
 
@@ -467,23 +520,19 @@ public class TagChecker extends Test
 		buttonPanel.add(editSrcButton, GBC.std().insets(5,5,5,0));
 		buttonPanel.add(deleteSrcButton, GBC.std().insets(0,5,0,0));
 
-		ActionListener disableCheckKeysActionListener = new ActionListener(){
+		ActionListener disableCheckActionListener = new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				boolean selected = prefCheckKeys.isSelected() || prefCheckKeysBeforeUpload.isSelected();
-				Sources.setEnabled( selected );
-				addSrcButton.setEnabled(selected);
-				editSrcButton.setEnabled(selected);
-				deleteSrcButton.setEnabled(selected);
+				handlePrefEnable();
 			}
 		};
-		prefCheckKeys.addActionListener(disableCheckKeysActionListener);
-		prefCheckKeysBeforeUpload.addActionListener(disableCheckKeysActionListener);
+		prefCheckKeys.addActionListener(disableCheckActionListener);
+		prefCheckKeysBeforeUpload.addActionListener(disableCheckActionListener);
+		prefCheckComplex.addActionListener(disableCheckActionListener);
+		prefCheckComplexBeforeUpload.addActionListener(disableCheckActionListener);
 
-		Sources.setEnabled( checkKeys );
-		buttonPanel.setEnabled( checkKeys );
+		handlePrefEnable();
 
-		boolean checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES, true);
-		prefCheckValues = new JCheckBox(tr("Check property values."), checkValues);
+		prefCheckValues = new JCheckBox(tr("Check property values."), Main.pref.getBoolean(PREF_CHECK_VALUES, true));
 		prefCheckValues.setToolTipText(tr("Validate that property values are valid checking against presets."));
 		testPanel.add(prefCheckValues, GBC.std().insets(20,0,0,0));
 
@@ -491,8 +540,7 @@ public class TagChecker extends Test
 		prefCheckValuesBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD, true));
 		testPanel.add(prefCheckValuesBeforeUpload, a);
 
-		boolean checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES, true);
-		prefCheckFixmes = new JCheckBox(tr("Check for FIXMES."), checkFixmes);
+		prefCheckFixmes = new JCheckBox(tr("Check for FIXMES."), Main.pref.getBoolean(PREF_CHECK_FIXMES, true));
 		prefCheckFixmes.setToolTipText(tr("Looks for nodes or ways with FIXME in any property value."));
 		testPanel.add(prefCheckFixmes, GBC.std().insets(20,0,0,0));
 
@@ -500,31 +548,41 @@ public class TagChecker extends Test
 		prefCheckFixmesBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true));
 		testPanel.add(prefCheckFixmesBeforeUpload, a);
 
-		boolean useDataFile = Main.pref.getBoolean(PREF_USE_DATA_FILE, true);
-		JCheckBox prefUseDataFile = new JCheckBox(tr("Use default data file."), checkValues);
+		prefUseDataFile = new JCheckBox(tr("Use default data file."), Main.pref.getBoolean(PREF_USE_DATA_FILE, true));
 		prefUseDataFile.setToolTipText(tr("Use the default data file (recommended)."));
 		testPanel.add(prefUseDataFile, GBC.eol().insets(20,0,0,0));
 
-		boolean useSpellFile = Main.pref.getBoolean(PREF_USE_SPELL_FILE, true);
-		JCheckBox prefUseSpellFile = new JCheckBox(tr("Use default spellcheck file."), checkValues);
+		prefUseSpellFile = new JCheckBox(tr("Use default spellcheck file."), Main.pref.getBoolean(PREF_USE_SPELL_FILE, true));
 		prefUseSpellFile.setToolTipText(tr("Use the default spellcheck file (recommended)."));
 		testPanel.add(prefUseSpellFile, GBC.eol().insets(20,0,0,0));
+	}
+
+	public void handlePrefEnable()
+	{
+		boolean selected = prefCheckKeys.isSelected() || prefCheckKeysBeforeUpload.isSelected()
+		|| prefCheckComplex.isSelected() || prefCheckComplexBeforeUpload.isSelected();
+		Sources.setEnabled( selected );
+		addSrcButton.setEnabled(selected);
+		editSrcButton.setEnabled(selected);
+		deleteSrcButton.setEnabled(selected);
 	}
 
 	@Override
 	public void ok()
 	{
-		enabled = prefCheckKeys.isSelected() || prefCheckValues.isSelected() || prefCheckFixmes.isSelected();
-		testBeforeUpload = prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected() || prefCheckFixmesBeforeUpload.isSelected();
+		enabled = prefCheckKeys.isSelected() || prefCheckValues.isSelected() || prefCheckComplex.isSelected() || prefCheckFixmes.isSelected();
+		testBeforeUpload = prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected() || prefCheckFixmesBeforeUpload.isSelected() || prefCheckComplexBeforeUpload.isSelected();
 
 		Main.pref.put(PREF_CHECK_VALUES, prefCheckValues.isSelected());
+		Main.pref.put(PREF_CHECK_COMPLEX, prefCheckComplex.isSelected());
 		Main.pref.put(PREF_CHECK_KEYS, prefCheckKeys.isSelected());
 		Main.pref.put(PREF_CHECK_FIXMES, prefCheckFixmes.isSelected());
 		Main.pref.put(PREF_CHECK_VALUES_BEFORE_UPLOAD, prefCheckValuesBeforeUpload.isSelected());
+		Main.pref.put(PREF_CHECK_COMPLEX_BEFORE_UPLOAD, prefCheckComplexBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_KEYS_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_FIXMES_BEFORE_UPLOAD, prefCheckFixmesBeforeUpload.isSelected());
-		Main.pref.put(PREF_USE_DATA_FILE, prefCheckFixmesBeforeUpload.isSelected());
-		Main.pref.put(PREF_USE_SPELL_FILE, prefCheckFixmesBeforeUpload.isSelected());
+		Main.pref.put(PREF_USE_DATA_FILE, prefUseDataFile.isSelected());
+		Main.pref.put(PREF_USE_SPELL_FILE, prefUseSpellFile.isSelected());
 		String sources = "";
 		if( Sources.getModel().getSize() > 0 )
 		{
@@ -585,5 +643,17 @@ public class TagChecker extends Test
 		}
 
 		return false;
+	}
+
+	private static class CheckerData {
+		public String getData(String data)
+		{
+System.out.println(data);
+			return "not implemented yet";
+		}
+		public Boolean match(OsmPrimitive osm)
+		{
+			return false;
+		}
 	}
 }

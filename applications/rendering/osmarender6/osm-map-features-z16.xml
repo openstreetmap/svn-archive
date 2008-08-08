@@ -641,6 +641,13 @@
             </rule>
         </rule>
 
+        <!-- Turning circles -->
+        <rule e="node" k="highway" v="turning_circle">
+            <rule e="node" s="way" k="highway" v="unclassified|residential|minor|road">
+                <circle r="1.75" class="highway-unclassified-turningcircle"/>
+            </rule>
+        </rule>
+
         <!-- Highway area cores -->
         <rule e="way" k="area" v="yes|true">
             <rule e="way" k="highway" v="footway|footpath">
@@ -2029,6 +2036,7 @@
             .highway-unclassified-area              { fill: #ffffff; }
             .highway-unclassified-name              { stroke-width: 0px;     font-size: 2.5px; }
             .highway-unclassified-ref               { stroke-width: 0px;     font-size: 3px; }
+            .highway-unclassified-turningcircle     { fill: #ffffff; stroke-width: 0.125px; stroke: #777777; }
             .highway-road-core                      { stroke-width: 2.25px;   stroke: #d0d0d0; }
             .highway-road-area                      { fill: #d0d0d0; }
 

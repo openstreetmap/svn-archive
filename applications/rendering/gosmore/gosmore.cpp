@@ -1077,43 +1077,58 @@ struct newWaysStruct {
   char name[40];
 } newWays[500];
 
+// Below is a list of the tags that the user may add. It should also include
+// any tags that gosmore.cpp may test for directly, e.g.
+// StyleNr(w) == highway_traffic_signals .
+// See http://etricceline.de/osm/Europe/En/tags.htm for the most popular tags
+// The fields are k, v, short name and the additional tags.
+#define STYLES \
+ s (highway, residential,     "residential"     , "") \
+ s (highway, unclassified,    "unclassified"    , "") \
+ s (highway, tertiary,        "tertiary"        , "") \
+ s (highway, secondary,       "secondary"       , "") \
+ s (highway, primary,         "primary"         , "") \
+ s (highway, trunk,           "trunk"           , "") \
+ s (highway, footway,         "footway"         , "") \
+ s (highway, service,         "service"         , "") \
+ s (highway, track,           "track"           , "") \
+ s (highway, cycleway,        "cycleway"        , "") \
+ s (highway, pedestrian,      "pedestrian"      , "") \
+ s (highway, steps,           "steps"           , "") \
+ s (highway, bridleway,       "bridleway"       , "") \
+ s (railway, rail,            "railway"         , "") \
+ s (railway, station,         "railway station" , "") \
+ s (highway, mini_roundabout, "mini roundabout" , "") \
+ s (highway, traffic_signals, "traffic signals" , "") \
+ s (highway, bus_stop,        "bus stop"        , "") \
+ s (amenity, parking,         "parking"         , "") \
+ s (amenity, fuel,            "fuel"            , "") \
+ s (amenity, school,          "school"          , "") \
+ s (place,   village,         "village"         , "") \
+ s (shop,    supermarket,     "supermarket"     , "") \
+ s (religion, christian,      "church"          , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (amenity, pub,             "pub"             , "") \
+ s (amenity, restaurant,      "restaurant"      , "") \
+ s (building, yes,            "building"        , "") \
+ s (power,   tower,           "power tower"     , "") \
+ s (landuse, forest,          "forest"          , "") \
+ s (leisure, park,            "park"            , "") \
+ s (waterway, stream,         "stream"          , "")
+
 struct klasTableStruct {
   wchar_t *desc;
   char *tags;
-} klasTable[] = { // See http://etricceline.de/osm/Europe/En/tags.htm
-{ TEXT ("residential"),     "  <tag k='highway' v='residential' />\n" },
-{ TEXT ("unclassified"),    "  <tag k='highway' v='unclassified' />\n" },
-{ TEXT ("tertiary"),        "  <tag k='highway' v='tertiary' />\n" },
-{ TEXT ("secondary"),       "  <tag k='highway' v='secondary' />\n" },
-{ TEXT ("primary"),         "  <tag k='highway' v='primary' />\n" },
-{ TEXT ("trunk"),           "  <tag k='highway' v='trunk' />\n" },
-{ TEXT ("footway"),         "  <tag k='highway' v='footway' />\n" },
-{ TEXT ("service"),         "  <tag k='highway' v='service' />\n" },
-{ TEXT ("track"),           "  <tag k='highway' v='track' />\n" },
-{ TEXT ("cycleway"),        "  <tag k='highway' v='cycleway' />\n" },
-{ TEXT ("pedestrian"),      "  <tag k='highway' v='pedestrian' />\n" },
-{ TEXT ("steps"),           "  <tag k='highway' v='steps' />\n" },
-{ TEXT ("bridleway"),       "  <tag k='highway' v='bridleway' />\n" },
-{ TEXT ("railway rail"),    "  <tag k='railway' v='rail' />\n" },
-{ TEXT ("railway station"), "  <tag k='railway' v='station' />\n" },
-{ TEXT ("mini roundabout"), "  <tag k='highway' v='mini_roundabout' />\n" },
-{ TEXT ("traffic signals"), "  <tag k='highway' v='traffic_signals' />\n" },
-{ TEXT ("bus stop"),        "  <tag k='highway' v='bus_stop' />\n" },
-{ TEXT ("parking"),         "  <tag k='amenity' v='parking' />\n" },
-{ TEXT ("fuel"),            "  <tag k='amenity' v='fuel' />\n" },
-{ TEXT ("school"),          "  <tag k='amenity' v='school' />\n" },
-{ TEXT ("village"),         "  <tag k='place' v='village' />\n" },
-{ TEXT ("supermarket"),     "  <tag k='shop' v='supermarket' />\n" },
-{ TEXT ("church"),          "  <tag k='amenity' v='place_of_worship' />\n"
-                            "  <tag k='religion' v='christian' />\n" },
-{ TEXT ("pub"),             "  <tag k='amenity' v='pub' />\n" },
-{ TEXT ("restaurant"),      "  <tag k='amenity' v='restaurant' />\n" },
-{ TEXT ("building"),        "  <tag k='building' v='yes' />\n" },
-{ TEXT ("power tower"),     "  <tag k='power' v='tower' />\n" },
-{ TEXT ("forest"),          "  <tag k='landuse' v='forest' />\n" },
-{ TEXT ("park"),            "  <tag k='leisure' v='park' />\n" },
-{ TEXT ("stream"),          "  <tag k='waterway' v='stream' />\n" },
+} klasTable[] = {
+#define s(k,v,shortname,extraTags) \
+  { shortname, "  <tag k='" #k "' v='" #v "' />\n" extraTags },
+STYLES
+#undef s
 };
+
+#define s(k,v,shortname,extraTags) k ## _ ## v,
+enum { STYLES, firstElemStyle };
+#undef s
 
 int newWayCnt = 0, newWayCoordCnt = 0;
 
@@ -2072,8 +2087,9 @@ int UserInterface (int argc, char *argv[])
     if (!shortest) printf ("No route found\n\r");
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
     for (; shortest; shortest = shortest->shortest) {
-      printf ("%lf,%lf\n\r", LatInverse (shortest->nd->lat),
-        LonInverse (shortest->nd->lon));
+      char *name = (char*)((wayType*)(shortest->nd->wayPtr + data) + 1) + 1;
+      printf ("%lf,%lf,%.*s\n\r", LatInverse (shortest->nd->lat),
+        LonInverse (shortest->nd->lon), strcspn (name, "\n"), name);
     }
     return 0;
   }
@@ -2525,6 +2541,7 @@ int main (int argc, char *argv[])
     }
     
     char *tag_k = NULL, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
+    char *nameTag = NULL;
     REBUILDWATCH (while (xmlTextReaderRead (xml))) {
       char *name = (char *) BAD_CAST xmlTextReaderName (xml);
       //xmlChar *value = xmlTextReaderValue (xml); // always empty
@@ -2566,6 +2583,10 @@ int main (int argc, char *argv[])
             }
 
             if (K_IS ("name")) {
+              nameTag = avalue;
+              avalue = (char*) xmlStrdup (BAD_CAST "");
+            }
+            else if (K_IS ("ref")) {
               xmlChar *tmp = xmlStrdup (BAD_CAST "\n");
               tmp = xmlStrcat (BAD_CAST tmp, BAD_CAST avalue);
               avalue = tags; // Old 'tags' will be freed
@@ -2636,7 +2657,16 @@ int main (int argc, char *argv[])
         int nameIsNode = stricmp (name, "node") == 0;
         if (stricmp (name, "way") == 0 || nameIsNode) {
           w.bits += wStyle >= 0 ? wStyle : styleCnt;
-          if (!nameIsNode || (strlen (tags) > 8 || wStyle >= 0)) {
+          if (nameTag) {
+            char *oldTags = tags;
+            tags = (char *) xmlStrdup (BAD_CAST "\n");
+            tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST nameTag);
+            tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST oldTags);
+            xmlFree (oldTags);
+            xmlFree (nameTag);
+            nameTag = NULL;
+          }
+          if (!nameIsNode || strlen (tags) > 8 || wStyle >= 0) {
             if (nameIsNode && (!wayFseek || *wayFseek)) {
               if (s[0].lat) { // Flush s
                 fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);

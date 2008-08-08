@@ -81,10 +81,11 @@ sub talkInSleep
     for (my $i = 0; $i< $duration; $i++)
     {
         my $totalseconds = time() - $progstart;
-        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ($duration-$i)", 
+        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) (%d)", 
                 $message,
                 $idleFor/60, $idleFor%60,
-                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100));
+                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100,
+                $duration - $i));
         sleep 1;
         $idleFor++;
         $idleSeconds++;

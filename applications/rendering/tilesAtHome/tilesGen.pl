@@ -60,9 +60,12 @@ ApplyConfigLogic($Config);
 
 # Handle the command-line
 my $Mode = shift();
+my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
+my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
+my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
 
-if (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop"))
+if ($UploadMode)
 {
     %EnvironmentInfo = CheckBasicConfig($Config);
 }
@@ -71,10 +74,22 @@ else
     %EnvironmentInfo = CheckConfig($Config);
 }
 
-my $Layers = $Config->get("Layers");
-
 # Create the working directory if necessary
 mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
+
+if ($UploadMode or $RenderMode) {
+    if (NewClientVersion()) {
+        UpdateClient();
+        if ($LoopMode) {
+            reExec(-1);
+        } else {
+            print STDERR "tilesGen.pl has changed. Please restart new version.";
+            exit;
+        }
+    }
+}
+
+my $Layers = $Config->get("Layers");
 
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
@@ -82,38 +97,50 @@ $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n", 
     $Version, $Config->get("ClientVersion"), $^O, GetClientId();
 
-# check GD
-eval GD::Image->trueColor(1);
-if ($@ ne '') {
-    print STDERR "please update your libgd to version 2 for TrueColor support";
-    cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
-}
-
 # Keep track of unrenderable tiles. 
 # This should not be saved, as they may render later. 
 # there also might be false positives due to mangled inkscape preference file.
 my %unrenderable;
-
-# create a comparison blank image
-my $EmptyLandImage = new GD::Image(256,256);
-my $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
-$EmptyLandImage->fill(127,127,$MapLandBackground);
-
-my $EmptySeaImage = new GD::Image(256,256);
-my $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
-$EmptySeaImage->fill(127,127,$MapSeaBackground);
-
-# Some broken versions of Inkscape occasionally produce totally black
-# output. We detect this case and throw an error when that happens.
-my $BlackTileImage = new GD::Image(256,256);
-my $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
-$BlackTileImage->fill(127,127,$BlackTileBackground);
 
 # set the progress indicator variables
 my $currentSubTask;
 my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
+
+my ($EmptyLandImage, $EmptySeaImage, $BlackTileImage);
+my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
+
+if ($RenderMode) {
+    # check GD
+    eval GD::Image->trueColor(1);
+    if ($@ ne '') {
+        print STDERR "please update your libgd to version 2 for TrueColor support";
+        cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
+    }
+
+    # Check the on disk image tiles havn't been corrupted.
+    # these are flagfiles that tell the server certain metainfo through their filesize.
+    if((-s "emptyland.png" != 67) or (-s "emptysea.png" != 69)) {
+        statusMessage("Corruption detected in empty land/sea tile", $currentSubTask, $progressJobs, $progressPercent,1);
+        UpdateClient();
+    }
+
+    # create a comparison blank image
+    $EmptyLandImage = new GD::Image(256,256);
+    $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
+    $EmptyLandImage->fill(127,127,$MapLandBackground);
+
+    $EmptySeaImage = new GD::Image(256,256);
+    $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
+    $EmptySeaImage->fill(127,127,$MapSeaBackground);
+
+    # Some broken versions of Inkscape occasionally produce totally black
+    # output. We detect this case and throw an error when that happens.
+    $BlackTileImage = new GD::Image(256,256);
+    $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
+    $BlackTileImage->fill(127,127,$BlackTileBackground);
+}
 
 # We need to keep parent PID so that child get the correct files after fork()
 my $parent_pid = $PID;
@@ -135,38 +162,10 @@ my $JobTime;
 # If batik agent was started automatically, turn it off at exit
 our $StartedBatikAgent = 0;
 
-
-# Check the on disk image tiles havn't been corrupted.
-# these are flagfiles that tell the server certain metainfo through their filesize.
-if( -s "emptyland.png" != 67 )
-{
-    print STDERR "Corruption detected in emptyland.png. Trying to redownload from svn automatically.\n";
-    statusMessage("Downloading: emptyland.png", $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile(
-      "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptyland.png", # TODO: should be svn update, instead of http get... 
-      "emptyland.png",
-      0); ## 0=delete old file from disk first
-}
-if( -s "emptysea.png" != 69 )
-{
-    print STDERR "Corruption detected in emptysea.png. Trying to redownload from svn automatically.\n";
-    statusMessage("Downloading: emptysea.png", $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile(
-      "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptysea.png", # TODO: should be svn update, instead of http get... 
-      "emptysea.png",
-      0); ## 0=delete old file from disk first
-}
-# Check the on disk image tiles are now in order
-if( -s "emptyland.png" != 67 or
-    -s "emptysea.png" != 69 )
-{
-    print STDERR "\nAutomatic fix failed. Exiting.\n";
-    cleanUpAndDie("init:emptytile_template_check repair failed, exiting","EXIT",4,$PID);
-}
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
 
-if( $Mode eq "loop" and -e "/dev/null" )
+if( $RenderMode and -e "/dev/null" )
 {
     my $svn = $Config->get("Subversion");
     if( qx($svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
@@ -197,12 +196,6 @@ if ($Mode eq "xy")
     # ----------------------------------
     # "xy" as first argument means you want to specify a tileset to render
     # ----------------------------------
-
-    # Add a basic auto-updating mechanism. 
-    if (NewClientVersion()) 
-    {
-        UpdateClient();
-    }
 
     my $X = shift();
     my $Y = shift();
@@ -353,12 +346,6 @@ elsif ($Mode eq "loop")
 }
 elsif ($Mode eq "upload" or $Mode eq "upload_conditional") 
 {
-    # Add a basic auto-updating mechanism. 
-    if (NewClientVersion()) 
-    {
-        UpdateClient();
-    }
-
     $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     compressAndUpload();
@@ -449,12 +436,6 @@ elsif ($Mode eq "")
     # ----------------------------------
     # Normal mode downloads request from server
     # ----------------------------------
-
-    # Add a basic auto-updating mechanism. 
-    if (NewClientVersion()) 
-    {
-        UpdateClient();
-    }
 
     my ($did_something, $message) = ProcessRequestsFromServer();
     
@@ -1980,10 +1961,6 @@ sub WriteImage
 sub reExecIfRequired
 {
     my $child_pid = shift();## FIXME: make more general
-    # until proven to work with other systems, only attempt a re-exec
-    # on linux. 
-    return unless ($^O eq "linux" || $^O eq "cygwin");
-
 
     my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
         $ctime,$blksize,$blocks) = stat($0);
@@ -1995,19 +1972,35 @@ sub reExecIfRequired
     }
     elsif ($dirent ne $de)
     {
-        statusMessage("tilesGen.pl has changed, re-start new version", $currentSubTask, $progressJobs, $progressPercent, 1);
-        if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general
-        {
-            statusMessage("Waiting for child process", $currentSubTask, $progressJobs, $progressPercent,0);
-            waitpid($child_pid, 0);
-        }
-        exec "perl", $0, $Mode, "reexec", 
-            "progressJobs=$progressJobs", 
-            "idleSeconds=" . getIdle(1), 
-            "idleFor=" . getIdle(0), 
-            "progstart=$progstart" or die;
+        reExec($child_pid);
     }
 }
+
+#-----------------------------------------------------------------------------
+# A function to re-execute the program.  
+#
+# This function restarts the program uncoditionally.
+#-----------------------------------------------------------------------------
+sub reExec
+{
+    my $child_pid = shift();## FIXME: make more general
+    # until proven to work with other systems, only attempt a re-exec
+    # on linux. 
+    return unless ($^O eq "linux" || $^O eq "cygwin");
+
+    statusMessage("tilesGen.pl has changed, re-start new version", $currentSubTask, $progressJobs, $progressPercent, 1);
+    if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general
+    {
+        statusMessage("Waiting for child process", $currentSubTask, $progressJobs, $progressPercent,0);
+        waitpid($child_pid, 0);
+    }
+    exec "perl", $0, $Mode, "reexec", 
+        "progressJobs=$progressJobs", 
+        "idleSeconds=" . getIdle(1), 
+        "idleFor=" . getIdle(0), 
+        "progstart=$progstart" or die;
+}
+
 
 sub startBatikAgent
 {

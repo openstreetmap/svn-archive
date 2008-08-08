@@ -1827,7 +1827,7 @@
                         </rule>
                     </rule>
 
-                    <rule e="way" k="junction" v="*" layer="5"> <!-- Roundabouts, motorway exits etc -->
+                    <rule e="way" k="junction" v="*" layer="5" notConnectedSameTag="name"> <!-- Roundabouts, motorway exits etc -->
                         <rule e="way" k="highway" v="unsurfaced|track" layer="5">
                             <areaText k="name" startOffset="50%" class="highway-name highway-unsurfaced-name" dy="0.75px"/>
                         </rule>
@@ -1854,6 +1854,12 @@
                         </rule>
                     </rule>
                 </rule>
+                <else> <!-- area!=yes -->
+                    <rule e="way" k="highway" v="*" notConnectedSameTag="name" layer="5">
+                        <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
+                        <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+                    </rule>
+                </else>
             </rule>
         </rule>
 
@@ -2064,13 +2070,6 @@
         <rule e="way" k="tourism" v="tourism-attraction|zoo|picnic_site|caravan_site|camp_site" layer="5">
             <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
             <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
-        </rule>
-
-        <rule e="way" k="highway" v="*" layer="5">
-            <rule k="area" v="yes|true" layer="5">
-                <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-                <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
-            </rule>
         </rule>
     </rule>
 

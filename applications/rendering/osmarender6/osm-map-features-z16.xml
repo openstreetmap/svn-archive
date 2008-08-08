@@ -1635,7 +1635,7 @@
                         </rule>
                     </rule>
 
-                    <rule e="way" k="junction" v="*" layer="5"> <!-- Roundabouts, motorway exits etc -->
+                    <rule e="way" k="junction" v="*" notConnectedSameTag="name" layer="5"> <!-- Roundabouts, motorway exits etc -->
                         <rule e="way" k="highway" v="secondary" layer="5">
                             <areaText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="2px"/>
                         </rule>
@@ -1650,14 +1650,19 @@
                         </rule>
                     </rule>
                 </rule>
-                <else>
-                    <!-- highway="*" area="yes" -->
-                    <rule e="way" k="highway" v="*" layer="5">
+                <else> <!-- area!=yes -->
+                    <rule e="way" k="highway" v="*" notConnectedSameTag="name" layer="5">
                         <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
                         <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
                     </rule>
                 </else>
             </rule>
+
+            <rule e="way" k="natural" v="*" layer="5" minSize="0.008">
+                <areaText k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
+                <areaText k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
+            </rule>
+
         </rule>
 
         <!-- Road numbers for all highways -->
@@ -2678,6 +2683,8 @@
                 text-anchor: middle;
             }
 
+            .largefeature-caption-casing         { stroke-width: 1px;   font-size: 2px; }
+            .largefeature-caption-core           { fill: #2e3ae6;       font-size: 2px; }
 
             .generic-caption-casing              { stroke-width: 1px;   font-size: 2px; }
             .generic-caption-core                { fill: #2e3ae6;        font-size: 2px; }

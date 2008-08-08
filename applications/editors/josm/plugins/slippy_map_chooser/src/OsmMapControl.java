@@ -69,9 +69,11 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		if (iStartSelectionPoint != null) {
-			iEndSelectionPoint = e.getPoint();
-			iSlippyMapChooser.setSelection(iStartSelectionPoint, iEndSelectionPoint);
+		if ((e.getModifiersEx() | MouseEvent.BUTTON1_DOWN_MASK) != 0) {
+			if (iStartSelectionPoint != null) {
+				iEndSelectionPoint = e.getPoint();
+				iSlippyMapChooser.setSelection(iStartSelectionPoint, iEndSelectionPoint);
+			}
 		}
 	}
 
@@ -98,8 +100,6 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

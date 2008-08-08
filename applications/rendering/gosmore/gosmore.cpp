@@ -209,6 +209,16 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
 enum { STYLES firstElemStyle }; // highway_residential, ...
 #undef s
 
+struct klasTableStruct {
+  const wchar_t *desc;
+  const char *tags;
+} klasTable[] = {
+#define s(k,v,shortname,extraTags) \
+  { shortname, "  <tag k='" #k "' v='" #v "' />\n" extraTags },
+STYLES
+#undef s
+};
+
 struct styleStruct {
   int  x[16], lineWidth, lineRWidth, lineColour, lineColourBg, dashed;
   int  scaleMax, areaColour, dummy /* pad to 8 for 64 bit compatibility */;
@@ -1131,16 +1141,6 @@ struct newWaysStruct {
   char name[40];
 } newWays[500];
 
-
-struct klasTableStruct {
-  wchar_t *desc;
-  char *tags;
-} klasTable[] = {
-#define s(k,v,shortname,extraTags) \
-  { shortname, "  <tag k='" #k "' v='" #v "' />\n" extraTags },
-STYLES
-#undef s
-};
 
 int newWayCnt = 0, newWayCoordCnt = 0;
 
@@ -2099,10 +2099,11 @@ int UserInterface (int argc, char *argv[])
     if (!shortest) printf ("No route found\n\r");
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
     for (; shortest; shortest = shortest->shortest) {
-      char *name = (char*)((wayType*)(shortest->nd->wayPtr + data) + 1) + 1;
-      printf ("%lf,%lf,%c,%.*s\n\r", LatInverse (shortest->nd->lat),
+      wayType *w = (wayType*)(shortest->nd->wayPtr + data);
+      char *name = (char*)(w + 1) + 1;
+      printf ("%lf,%lf,%c,%s,%.*s\n\r", LatInverse (shortest->nd->lat),
         LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
-        strcspn (name, "\n"), name);
+        klasTable[StyleNr (w)].desc, strcspn (name, "\n"), name);
     }
     return 0;
   }

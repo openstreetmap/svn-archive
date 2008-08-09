@@ -108,6 +108,29 @@ my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
 
+# keep track of time running
+my $progstart = time();
+my $dirent; 
+
+if ($LoopMode) {
+    # if this is a re-exec, we want to capture some of our status
+    # information from the command line. this feature allows setting
+    # any numeric variable by specifying "variablename=value" on the
+    # command line after the keyword "reexec". Currently unsuitable 
+    # for alphanumeric variables.
+    
+    if (shift() eq "reexec") {
+        my $idleSeconds; my $idleFor;
+        while(my $evalstr = shift()) {
+            die unless $evalstr =~ /^[A-Za-z]+=\d+/;
+            eval('$'.$evalstr);
+            print STDERR "$evalstr\n" if ($Config->get("Verbose"));
+        }
+        setIdle($idleSeconds, 1);
+        setIdle($idleFor, 0);
+    }
+}
+
 my ($EmptyLandImage, $EmptySeaImage, $BlackTileImage);
 my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
 
@@ -151,10 +174,6 @@ my $upload_result = 0;
 # Subdirectory for the current job (layer & z12 tileset),
 # as used in sub GenerateTileset() and tileFilename()
 my $JobDirectory;
-
-# keep track of time running
-my $progstart = time();
-my $dirent; 
 
 # keep track of the server time for current job
 my $JobTime;
@@ -225,25 +244,6 @@ elsif ($Mode eq "loop")
     {
         startBatikAgent();
         $StartedBatikAgent = 1;
-    }
-
-    # if this is a re-exec, we want to capture some of our status
-    # information from the command line. this feature allows setting
-    # any numeric variable by specifying "variablename=value" on the
-    # command line after the keyword "reexec". Currently unsuitable 
-    # for alphanumeric variables.
-    
-    if (shift() eq "reexec")
-    {
-        my $idleSeconds; my $idleFor;
-        while(my $evalstr = shift())
-        {
-            die unless $evalstr =~ /^[A-Za-z]+=\d+/;
-            eval('$'.$evalstr);
-            print STDERR "$evalstr\n" if ($Config->get("Verbose"));
-        }
-        setIdle($idleSeconds, 1);
-        setIdle($idleFor, 0);
     }
 
     # this is the actual processing loop
@@ -355,7 +355,6 @@ elsif ($Mode eq "upload_loop")
     statusMessage("don't run this parallel to another tilesGen.pl instance", $currentSubTask, $progressJobs, $progressPercent,1);
     my $startTime = time();
     my $elapsedTime;
-    $progressJobs = 1;
     while(1) 
     {
         ## before we start (another) round of rendering we first check if something bad happened in the past.

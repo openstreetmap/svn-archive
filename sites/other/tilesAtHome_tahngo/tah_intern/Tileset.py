@@ -8,13 +8,14 @@ from tempfile import mkstemp
 from sys import exit
 
 class Tileset:
-  x=None
-  y=None
-  base_z=None
-  layer=None
-  init=False
-  #tiles[z][x][y] points to a tuple (<Tile>,<fullfilename>)
-  tiles={}
+  #instance variables:
+  #x=None
+  #y=None
+  #base_z=None
+  #layer=None
+  #init=False
+  ##tiles[z][x][y] points to a tuple (<Tile>,<fullfilename>)
+  #tiles={}
 
   def __init__(self, layer=None, base_z=None, x=None, y=None):
     self.layer = layer
@@ -69,6 +70,19 @@ class Tileset:
         self.add_tile(subt,None)
         self.set_subtiles_blank(subt)
 
+
+  def get_filename(self, base_tile_path):
+    """
+       Returns a tuple (path, filename) of a tilesetfile. base_tile_path is the base location of tiles.
+       Doesn't check that the file actually exists. 
+       Returns (None, None) if the tileset was not inited yet.
+    """
+    assert (base_tile_path > '')
+    if not self.init: return (None, None)
+    path = os.path.join(base_tile_path,"%s_%d" % (self.layer.name,self.base_z),"%04d"%(self.x))
+    file = "%s_%s" % (self.x, self.y)
+    return (path, file)
+
   def save(self,base_tile_path, userid = 0):
     """
 	Returns a tuple: (1,unknown_tiles) (1 being success, unknown_tiles being 
@@ -76,9 +90,7 @@ class Tileset:
         the tileset was complete.
         It will be saved under user id 'userid'
     """
-    assert (base_tile_path > '')
-    tilepath    = os.path.join(base_tile_path,"%s_%d" % (self.layer.name,self.base_z),"%04d"%(self.x))
-    tilesetfile = os.path.join(tilepath,str(self.x)+'_'+str(self.y))
+    tilepath, tilesetfile = self.get_filename(base_tile_path)
     #f = open(os.path.join(tilepath,str(self.x)+'_'+str(self.y)),'wb')
     (tmp_fd,tmpfile) = mkstemp()
     f = os.fdopen(tmp_fd, 'w+b')
@@ -125,5 +137,5 @@ class Tileset:
     # finally create path if necessary and move the tmp file to its final location
     if not os.path.isdir(tilepath): os.makedirs(tilepath, 0775)
     os.chmod(tmpfile,0664)
-    move(tmpfile, tilesetfile)
+    move(tmpfile, os.path.join(tilepath,tilesetfile))
     return (1,unknown_tiles)

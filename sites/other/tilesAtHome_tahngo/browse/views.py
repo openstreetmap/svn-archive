@@ -4,11 +4,13 @@ from struct import unpack, calcsize
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.conf import settings
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from tah.requests.models import Request
 from tah.tah_intern.Tile import Tile
-from tah.tah_intern.models import Settings
+from tah.tah_intern.Tileset import Tileset
+from tah.tah_intern.models import Layer
 
 
 def index(request):
@@ -35,15 +37,12 @@ def tiledetails(request,layername,z,x,y):
   x=int(x)
   y=int(y)
   userid=None
-  t=Tile(layername,z,x,y)
+  layer = Layer.objects.get(name=layername)
+  t=Tile(layer,z,x,y)
   (layer, base_z,base_x,base_y) = t.basetileset()
-  if base_z == None:
-    # basetileset returns (None,None,None,None) if invalid
-    tilefile = ''
-  else:
-   basetilepath = Settings().getSetting(name='base_tile_path')
-   tilefile = os.path.join(basetilepath,"%s_%s/%04d" % (layername,base_z,base_x),"%s_%s"%(base_x,base_y))
- 
+  # basetileset returns (None,None,None,None) if invalid
+  (tilepath, tilefile) = Tileset(layer, base_z, base_x, base_y).get_filename(settings.TILES_ROOT)
+  tilefile = os.path.join(tilepath, tilefile)
   try: 
     fstat = os.stat(tilefile)
     (basetile_fsize,basetile_mtime) = (fstat[6], datetime.fromtimestamp(fstat[8]))

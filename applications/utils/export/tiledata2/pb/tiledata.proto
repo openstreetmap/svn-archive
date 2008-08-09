@@ -1,0 +1,29 @@
+package tiledata;
+
+message Tag {
+  required string k = 1;
+  required string v = 2;
+}
+message Node {
+  optional int64 id = 1;
+  optional float lat = 2;
+  optional float lon = 3;
+  optional int32 x = 4;
+  optional int32 y = 5;
+
+  repeated Tag tag = 6;
+}
+
+message Way
+{
+  optional int64 id = 1;
+  repeated Node node = 2;
+  repeated Tag tag = 3;
+}
+
+message Osm
+{
+  repeated Node poi = 1;
+  repeated Way way = 2;
+  optional int64 timestamp = 3;
+}

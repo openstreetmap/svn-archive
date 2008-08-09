@@ -128,7 +128,7 @@ public class UnclosedWays extends Test  {
 			{
 				List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
 				primitives.add(w);
-				errors.add(new TestError(this, Severity.WARNING, tr("Unclosed way: {0}",type), primitives));
+				errors.add(new TestError(this, Severity.WARNING, tr("Unclosed way"), type, primitives));
 				_errorWays.add(w,w);
 			}
 		}

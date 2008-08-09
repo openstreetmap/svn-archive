@@ -193,13 +193,16 @@ public class TagChecker extends Test
 				}
 				else if(tagcheckerfile)
 				{
-					CheckerData d = new CheckerData();
-					String err = d.getData(line);
+					if(line.length() > 0)
+					{
+						CheckerData d = new CheckerData();
+						String err = d.getData(line);
 
-					if(err == null)
-						checkerData.add(d);
-					else
-						System.err.println("Invalid tagchecker line - "+err+":" + line);
+						if(err == null)
+							checkerData.add(d);
+						else
+							System.err.println("Invalid tagchecker line - "+err+":" + line);
+					}
 				}
 				else if( line.charAt(0) == '+' )
 				{
@@ -285,22 +288,22 @@ public class TagChecker extends Test
 			String value = prop.getValue();
 			if( checkValues && (value==null || value.trim().length() == 0) && !withErrors.contains(p, "EV"))
 			{
-				errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"), p, EMPTY_VALUES) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"), tr("Key ''{0}'' invalid.", key), p, EMPTY_VALUES) );
 				withErrors.add(p, "EV");
 			}
 			if( checkKeys && spellCheckKeyData.containsKey(key) && !withErrors.contains(p, "IPK"))
 			{
-				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property key ''{0}''", key), p, INVALID_KEY) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property key"), tr("Key ''{0}'' invalid.", key), p, INVALID_KEY) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkKeys && key.indexOf(" ") >= 0 && !withErrors.contains(p, "IPK"))
 			{
-				errors.add( new TestError(this, Severity.WARNING, tr("Invalid white space in property key ''{0}''", key), p, INVALID_KEY) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Invalid white space in property key"), tr("Key ''{0}'' invalid.", key), p, INVALID_KEY) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkValues && value != null && (value.startsWith(" ") || value.endsWith(" ")) && !withErrors.contains(p, "SPACE"))
 			{
-				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"), p, INVALID_SPACE) );
+				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"), tr("Key ''{0}'' invalid.", key), p, INVALID_SPACE) );
 				withErrors.add(p, "SPACE");
 			}
 			if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
@@ -308,7 +311,7 @@ public class TagChecker extends Test
 				List<String> values = presetsValueData.get(key);
 				if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
 				{
-					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"), p, INVALID_VALUE) );
+					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"), tr("Key ''{0}'' invalid.", key), p, INVALID_VALUE) );
 					withErrors.add(p, "UPV");
 				}
 			}

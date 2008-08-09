@@ -33,6 +33,7 @@ public class MultipleNameVisitor extends NameVisitor
 	public void visit(Collection<? extends OsmPrimitive> data) 
 	{
 		String multipleName = null;
+		String multiplePluralClassname = null;
 		String firstName = null;
 		boolean initializedname = false;
 		size = data.size();
@@ -55,27 +56,33 @@ public class MultipleNameVisitor extends NameVisitor
 				firstName = name;
 			osm.visit(this);
 			if (multipleClassname == null)
+			{
 				multipleClassname = className;
+				multiplePluralClassname = classNamePlural;
+			}
 			else if (!multipleClassname.equals(className))
+			{
 				multipleClassname = "object";
+				multiplePluralClassname = trn("object", "objects", 2);
+			}
 		}
-		
+
 		if( size == 1 )
 			displayName = name;
 		else if(multipleName != null)
-			displayName = size + " " + trn(multipleClassname, multipleClassname + "s", size) + ": " + multipleName;
+			displayName = size + " " + trn(multipleClassname, multiplePluralClassname, size) + ": " + multipleName;
 		else if(firstName != null)
-			displayName = size + " " + trn(multipleClassname, multipleClassname + "s", size) + ": " + tr("{0}, ...", firstName);
+			displayName = size + " " + trn(multipleClassname, multiplePluralClassname, size) + ": " + tr("{0}, ...", firstName);
 		else
-			displayName = size + " " + trn(multipleClassname, multipleClassname + "s", size);
+			displayName = size + " " + trn(multipleClassname, multiplePluralClassname, size);
 	}
 
 	@Override
-	public JLabel toLabel() 
+	public JLabel toLabel()
 	{
 		return new JLabel(getText(), getIcon(), JLabel.HORIZONTAL);
 	}
-	
+
 	/**
 	 * Gets the name of the items
 	 * @return the name of the items

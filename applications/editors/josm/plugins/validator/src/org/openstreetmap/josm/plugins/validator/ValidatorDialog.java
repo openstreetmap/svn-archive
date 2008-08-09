@@ -260,16 +260,16 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         Main.ds.setSelected(sel);
     }
 
-	public void actionPerformed(ActionEvent e) 
+	public void actionPerformed(ActionEvent e)
 	{
 		String actionCommand = e.getActionCommand();
-		if( actionCommand.equals("select"))
+		if( actionCommand.equals("Select"))
 			setSelectedItems();
-		else if( actionCommand.equals("validate"))
+		else if( actionCommand.equals("Validate"))
 			plugin.validateAction.actionPerformed(e);
-		else if( actionCommand.equals("fix"))
+		else if( actionCommand.equals("Fix"))
 			fixErrors(e);
-		else if( actionCommand.equals("ignore"))
+		else if( actionCommand.equals("Ignore"))
 			ignoreErrors(e);
 	}
 

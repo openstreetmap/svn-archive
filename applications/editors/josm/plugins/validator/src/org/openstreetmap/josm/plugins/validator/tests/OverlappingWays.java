@@ -69,7 +69,8 @@ public class OverlappingWays extends Test
 						highway++;
 					else if (ws.way.get("railway") != null)
 						railway++;
-					if (OsmUtils.getOsmBoolean(ws.way.get("area")))
+					Boolean ar = OsmUtils.getOsmBoolean(ws.way.get("area"));
+					if (ar != null && ar)
 						area++;
 					if (ws.way.get("landuse") != null || ws.way.get("natural") != null
 					|| ws.way.get("amenity") != null || ws.way.get("leisure") != null)

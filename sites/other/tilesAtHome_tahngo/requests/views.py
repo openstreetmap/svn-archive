@@ -1,4 +1,4 @@
-import logging
+import logging, os
 from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
@@ -6,6 +6,7 @@ import django.views.generic.list_detail
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from tah.requests.models import Request,Upload
 from tah.requests.forms import *
+from django.conf import settings
 from django.forms import form_for_model,widgets
 from datetime import datetime, timedelta
 import urllib
@@ -14,6 +15,7 @@ from django.contrib.auth import authenticate
 #from tah.user.auth import OSMBackend
 from tah.tah_intern.models import Layer
 from tah.tah_intern.Tile import Tile
+from tah.tah_intern.Tileset import Tileset
 from django.views.decorators.cache import cache_control
 from tah.tah_intern.models import Settings
 
@@ -243,7 +245,7 @@ def upload_gonogo(request):
     return HttpResponse(str(load));
 
 def take(request):
-    html='XX|4|unknown error'
+    html='XX|5|unknown error'
     if request.method == 'POST':
       authform = ClientAuthForm(request.POST)
       form     = TakeRequestForm(request.POST)
@@ -265,24 +267,34 @@ def take(request):
  	          req.client = user
  	          req.clientping_time=datetime.now()
                   req.save()
-	          html="OK|4|"+str(req)
+                  # find out tileset filesize and age
+                  # (always 'tile' layer for now. need to find something better)
+                  tilelayer = Layer.objects.get(name='tile')
+                  (tilepath, tilefile) = Tileset(tilelayer, req.min_z, req.x, req.y).get_filename(settings.TILES_ROOT)
+                  tilefile = os.path.join(tilepath, tilefile)
+                  try: 
+                    fstat = os.stat(tilefile)
+                    (fsize,mtime) = (fstat[6], fstat[8])
+                  except OSError: 
+                    (fsize,mtime) = 0,0
+	          html="OK|5|%s|%d|%d" % (req,fsize,mtime)
                 else:
-                  html ="XX|4|You have more than 50 active requests. Check your client."
+                  html ="XX|5|You have more than 50 active requests. Check your client."
             except IndexError:
-                html ="XX|4|No requests in queue"
+                html ="XX|5|No requests in queue"
           else:
             # client version no in whitelist
             logging.info("User %s connects with disallowed client '%s'." %(user,form.cleaned_data['version']))
-            html="XX|4|Invalid client version."
+            html="XX|5|Invalid client version."
         else:
             # user is None, auth failed
-            html="XX|4|Invalid username. Your username and password were incorrect or the user has been disabled."
+            html="XX|5|Invalid username. Your username and password were incorrect or the user has been disabled."
       else: #form was not valid
-        html = "XX|4|Form invalid. "+str(form.errors)
+        html = "XX|5|Form invalid. "+str(form.errors)
       return HttpResponse(html);
     else: #request.method != POST, show the web form
-      form = ClientAuthForm()
-      return render_to_response('requests_take.html',{'clientauthform': form})
+      authform, form = ClientAuthForm(), TakeRequestForm()
+      return render_to_response('requests_take.html',{'clientauthform': authform, 'takeform': form})
     return HttpResponse(html)
 
 @cache_control(no_cache=True)

@@ -59,7 +59,13 @@ def tiledetails(request,layername,z,x,y):
 
   reqs = Request.objects.filter(Q(status__lt=2,layers__id__exact=1)|Q(status=2),min_z=base_z,x=base_x,y=base_y).distinct().order_by('status','-request_time')
 
-  return render_to_response('tile_details.html',{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user, 'reqs':reqs})
+  #Use regular HTML template, or short machine readable version?
+  if request.GET.get('format','') == 'short':
+    template = 'tile_details_machine.html'
+  else:
+    template = 'tile_details.html'
+
+  return render_to_response(template,{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user, 'reqs':reqs})
 
 def show_map_of(request):
   return HttpResponse("not implemented",mimetype="text/plain")

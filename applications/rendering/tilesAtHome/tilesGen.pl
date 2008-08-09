@@ -77,6 +77,7 @@ else
 # Create the working directory if necessary
 mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
 
+my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
 if ($UploadMode or $RenderMode) {
     if (NewClientVersion()) {
         UpdateClient();
@@ -251,54 +252,11 @@ elsif ($Mode eq "loop")
     while(1) 
     {
         ## before we start (another) round of rendering we first check if something bad happened in the past.
-        if (getFault("fatal") > 0)
-        {
-            cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
-        }
-        elsif (getFault("inkscape") > 5)
-        {
-            cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
-        }
-        elsif (getFault("renderer") > 10)
-        {
-            cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1,$PID);
-        }
-        elsif (getFault("upload") > 5) 
-        {
-            cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
-        }
+        checkFaults();
 
-        my $sleepdelay = 1;
         ## note: Timeouts are cumulative so if there are X timeouts from api and Y timeouts from XAPI then we wait for each timeout, one after the other
-        if (getFault("nodata") > 0) # check every network condition regardless of the other network outcomes
-        {
-            my $numfaults=getFault("nodata");
-            if ($numfaults > 5)
-            {
-                cleanUpAndDie("More than five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
-            }
-            else
-            {
-                $sleepdelay=16*(4**$numfaults); # wait 64, 256, 1024, 4096, 16384 seconds. for a total of about 6 hours
-                $sleepdelay=int($sleepdelay)+1;
-                talkInSleep($numfaults." times no data", $sleepdelay);
-            }
-        }
-        if (getFault("nodataXAPI") > 0)
-        {
-            my $numfaults=getFault("nodataXAPI");
-            if ($numfaults >= 20)
-            {
-                cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID); # allow XAPI more leeway
-            }
-            else
-            {
-                $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192, 14400, 14400, 14400... seconds.
-                $sleepdelay=int($sleepdelay)+1;
-                $sleepdelay=14400 if ($sleepdelay > 14400);
-                talkInSleep($numfaults." times no XAPI data", $sleepdelay);
-            }
-        }
+        checkDataFaults();
+
         # look for stopfile and exit if found
         if (-e "stopfile.txt")
         {
@@ -314,7 +272,7 @@ elsif ($Mode eq "loop")
         if (NewClientVersion()) 
         {
             UpdateClient();
-            $dirent = "0/0/0"; # force reexec after update
+            reExec($upload_pid);
         }
 
         reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
@@ -357,16 +315,9 @@ elsif ($Mode eq "upload_loop")
     my $elapsedTime;
     while(1) 
     {
-        ## before we start (another) round of rendering we first check if something bad happened in the past.
-        if (getFault("fatal") > 0)
-        {
-            cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
-        }
-        elsif (getFault("upload") > 5) 
-        {
-            cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
-        }
-        
+        ## before we start (another) round of uploads we first check if something bad happened in the past.
+        checkFaults();
+
         my $sleepdelay = 1;
         # look for stopfile and exit if found
         if (-e "stopfile.txt")
@@ -378,7 +329,7 @@ elsif ($Mode eq "upload_loop")
         if (NewClientVersion()) 
         {
             UpdateClient();
-            $dirent = "0/0/0"; # force reexec after update
+            reExec(-1);
         }
 
         reExecIfRequired(-1); ## check for new version of tilesGen.pl and reExec if true
@@ -1376,6 +1327,7 @@ sub UpdateClient #
 
 sub NewClientVersion 
 {
+    return 0 if (time() - $LastTimeVersionChecked < 600);
     my $versionfile = $Config->get("WorkingDirectory") . "/version.txt";
     my $runningVersion;
     if (open(versionfile, "<", $versionfile))
@@ -1409,6 +1361,7 @@ sub NewClientVersion
     }
     if ($currentVersion)
     {
+        $LastTimeVersionChecked = time();
         if ($runningVersion > $currentVersion)
         {
             print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
@@ -2065,4 +2018,56 @@ sub sendCommandToBatik
 sub getBatikStatus
 {
     return sendCommandToBatik("status\n\n") eq "OK";
+}
+
+
+#------------------------------------------------------------
+# check for faults and die when too many have occured
+#------------------------------------------------------------
+sub checkFaults
+{
+    if (getFault("fatal") > 0) {
+        cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
+    }
+    elsif (getFault("inkscape") > 5) {
+        cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
+    }
+    elsif (getFault("renderer") > 10) {
+        cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1,$PID);
+    }
+    elsif (getFault("upload") > 5) {
+        cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+    }
+}
+
+
+#--------------------------------------------------------------------------------------
+# check for faults with data downloads and add delays or die when too many have occured
+#--------------------------------------------------------------------------------------
+sub checkDataFaults
+{
+    my $sleepdelay = 1;
+    if (getFault("nodata") > 0) { # check every network condition regardless of the other network outcomes
+        my $numfaults=getFault("nodata");
+        if ($numfaults > 5) {
+            cleanUpAndDie("More than five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        }
+        else {
+            $sleepdelay=16*(4**$numfaults); # wait 64, 256, 1024, 4096, 16384 seconds. for a total of about 6 hours
+            $sleepdelay=int($sleepdelay)+1;
+            talkInSleep($numfaults." times no data", $sleepdelay);
+        }
+    }
+    if (getFault("nodataXAPI") > 0) {
+        my $numfaults=getFault("nodataXAPI");
+        if ($numfaults >= 20) {
+            cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID); # allow XAPI more leeway
+        }
+        else {
+            $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192, 14400, 14400, 14400... seconds.
+            $sleepdelay=int($sleepdelay)+1;
+            $sleepdelay=14400 if ($sleepdelay > 14400);
+            talkInSleep($numfaults." times no XAPI data", $sleepdelay);
+        }
+    }
 }

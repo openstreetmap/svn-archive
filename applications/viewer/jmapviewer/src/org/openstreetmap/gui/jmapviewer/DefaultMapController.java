@@ -16,8 +16,11 @@ import java.awt.event.MouseWheelListener;
  * @author Jan Peter Stotz
  * 
  */
-public class DefaultMapController extends JMapController implements MouseListener,
-		MouseMotionListener, MouseWheelListener {
+public class DefaultMapController extends JMapController implements
+		MouseListener, MouseMotionListener, MouseWheelListener {
+
+	private static final int MOUSE_BUTTONS_MASK = MouseEvent.BUTTON3_DOWN_MASK
+			| MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK;
 
 	public DefaultMapController(JMapViewer map) {
 		super(map);
@@ -37,17 +40,22 @@ public class DefaultMapController extends JMapController implements MouseListene
 	public void mouseDragged(MouseEvent e) {
 		if (!movementEnabled || !isMoving)
 			return;
-		if (lastDragPoint != null) {
-			Point p = e.getPoint();
-			int diffx = lastDragPoint.x - p.x;
-			int diffy = lastDragPoint.y - p.y;
-			map.moveMap(diffx, diffy);
+		// Is only right mouse button presed?
+		if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == MouseEvent.BUTTON3_DOWN_MASK) {
+
+			if (lastDragPoint != null) {
+				Point p = e.getPoint();
+				int diffx = lastDragPoint.x - p.x;
+				int diffy = lastDragPoint.y - p.y;
+				map.moveMap(diffx, diffy);
+			}
+			lastDragPoint = e.getPoint();
 		}
-		lastDragPoint = e.getPoint();
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+		if (doubleClickZoomEnabled && e.getClickCount() == 2
+				&& e.getButton() == MouseEvent.BUTTON1)
 			map.zoomIn(e.getPoint());
 	}
 

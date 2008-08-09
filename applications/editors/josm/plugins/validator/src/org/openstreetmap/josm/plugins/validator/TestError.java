@@ -23,6 +23,8 @@ public class TestError
 	private Severity severity;
 	/** The error message */
 	private String message;
+	/** Deeper error description */
+	private String description;
 	/** The affected primitives */
 	private List<? extends OsmPrimitive> primitives;
 	/** The primitives to be highlighted */
@@ -34,62 +36,73 @@ public class TestError
 	/** If this error is selected */
 	private boolean selected;
 	
-	public TestError(Test tester, Severity severity, String message,
+	/**
+	 * Constructors
+	 * @param tester The tester
+	 * @param severity The severity of this error
+	 * @param message The error message
+	 * @param primitive The affected primitive
+	 * @param primitives The affected primitives
+	 * @param internalCode The internal code
+	 */
+	public TestError(Test tester, Severity severity, String message, String description,
 			List<? extends OsmPrimitive> primitives, List<?> highlighted) {
 		this.tester = tester;
 		this.severity = severity;
 		this.message = message;
+		this.description = description;
 		this.primitives = primitives;
 		this.highlighted = highlighted;
 	}
-
-	/**
-	 * Constructor
-	 * @param tester The tester
-	 * @param severity The severity of this error
-	 * @param message The error message
-	 * @param primitives The affected primitives
-	 */
+	public TestError(Test tester, Severity severity, String message, List<? extends OsmPrimitive> primitives, List<?> highlighted)
+	{
+		this(tester, severity, message, null, primitives, highlighted);
+	}
+	public TestError(Test tester, Severity severity, String message, String description, List<? extends OsmPrimitive> primitives)
+	{
+		this(tester, severity, message, description, primitives, primitives);
+	}
 	public TestError(Test tester, Severity severity, String message, List<? extends OsmPrimitive> primitives)
 	{
-		this(tester, severity, message, primitives, primitives);
+		this(tester, severity, message, null, primitives, primitives);
 	}
-	
-	/**
-	 * Constructor
-	 * @param tester The tester
-	 * @param severity The severity of this error
-	 * @param message The error message
-	 * @param primitive The affected primitive
-	 */
 	public TestError(Test tester, Severity severity, String message, OsmPrimitive primitive)
 	{
-		this(tester, severity, message, Collections.singletonList(primitive));
+		this(tester, severity, message, null, Collections.singletonList(primitive), Collections.singletonList(primitive));
 	}
-	
-	/**
-	 * Constructor
-	 * @param tester The tester
-	 * @param severity The severity of this error
-	 * @param message The error message
-	 * @param primitive The affected primitive
-	 * @param internalCode The internal code
-	 */
+	public TestError(Test tester, Severity severity, String message, String description, OsmPrimitive primitive)
+	{
+		this(tester, severity, message, description, Collections.singletonList(primitive));
+	}
 	public TestError(Test tester, Severity severity, String message, OsmPrimitive primitive, int internalCode)
 	{
-		this(tester, severity, message, primitive);
+		this(tester, severity, message, null, primitive);
 		this.internalCode = internalCode;
 	}
-	
+	public TestError(Test tester, Severity severity, String message, String description, OsmPrimitive primitive, int internalCode)
+	{
+		this(tester, severity, message, description, primitive);
+		this.internalCode = internalCode;
+	}
+
 	/**
 	 * Gets the error message
 	 * @return the error message
 	 */
-	public String getMessage() 
+	public String getMessage()
 	{
 		return message;
 	}
-	
+
+	/**
+	 * Gets the error message
+	 * @return the error description
+	 */
+	public String getDescription()
+	{
+		return description;
+	}
+
 	/**
 	 * Sets the error message
 	 * @param message The error message

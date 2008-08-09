@@ -75,7 +75,7 @@ BatikJVMSize=1350M
 BatikPath=c:\tilesAtHome\batik\batik-rasterizer.jar
 
 # Path to jars required by Batik in agent mode
-#BatikClasspath=batik-rasterizer.jar:xercesImpl.jar:batik-agent.jar
+#BatikClasspath=batik-rasterizer.jar;xercesImpl.jar;batik-agent.jar
 
 
 # If set to 1 or greater, it will enable forking to render tiles, might not work for windows, currently.

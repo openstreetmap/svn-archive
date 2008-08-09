@@ -78,7 +78,7 @@ Batik=0
 BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar
 
 # Path to jars required by Batik in agent mode
-#BatikClasspath=batik-rasterizer.jar;xercesImpl.jar;batik-agent.jar
+#BatikClasspath=batik-rasterizer.jar:xercesImpl.jar:batik-agent.jar
 
 # Set to the maximum JVM size to pass to the -Xmx parameter when running the
 # rasterizer. The maximum size depends on the OS and the available memory.

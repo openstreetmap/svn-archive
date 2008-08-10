@@ -27,7 +27,6 @@
 #include "ConvertUTF.h"
 #include "resource.h"
 typedef int intptr_t;
-#define DOC_PREFIX "\\My Documents\\"
 
 // Unfortunately eMbedded Visual C++ TEXT() function does not use UTF8
 // So we have to repeat the OPTIONS table
@@ -63,7 +62,6 @@ typedef int intptr_t;
 using namespace std;
 #define wchar_t char
 #define wsprintf sprintf
-#define DOC_PREFIX ""
 #define OPTIONS \
   o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
   o (Search,          "?", "?", "?", "?", "?", 0, 1) \
@@ -82,6 +80,7 @@ using namespace std;
 #define HideZoomButtons 0
 #define MenuKey 0
 #endif
+char docPrefix[80] = "";
 #ifndef TRUE
 #define TRUE 1
 #define FALSE 0
@@ -338,7 +337,7 @@ struct klasTableStruct {
   const char *tags;
 } klasTable[] = {
 #define s(k,v,shortname,extraTags) \
-  { shortname, "  <tag k='" #k "' v='" #v "' />\n" extraTags },
+  { TEXT (shortname), "  <tag k='" #k "' v='" #v "' />\n" extraTags },
 STYLES
 #undef s
 };
@@ -532,7 +531,6 @@ int Next (OsmItr &itr) /* Friend of osmItr */
 enum { langEn, langDe, langEs, langFr, langIt, langNl, numberOfLang };
 
 #define notImplemented \
-  o (OrientNorthward, "?", "?", "?", "?", "?") \
   o (ShowCompass,     "?", "?", "?", "?", "?") \
   o (ShowPrecision,   "?", "?", "?", "?", "?") \
   o (ShowSpeed,       "?", "?", "?", "?", "?") \
@@ -540,16 +538,9 @@ enum { langEn, langDe, langEs, langFr, langIt, langNl, numberOfLang };
   o (ShowElevation,   "?", "?", "?", "?", "?") \
   o (ShowDate,        "?", "?", "?", "?", "?") \
   o (ShowTime,        "?", "?", "?", "?", "?") \
-  o (ShowSearchButton,"?", "?", "?", "?", "?") \
-  o (ShowCreatePoint, "?", "?", "?", "?", "?") \
-  o (ConfigureKey,    "?", "?", "?", "?", "?") \
-  o (HideConfButton,  "?", "?", "?", "?", "?") \
-  o (SmallIcons,      "?", "?", "?", "?", "?") \
-  o (SquareIcons,     "?", "?", "?", "?", "?") \
-  o (PedestrianRoute, "?", "?", "?", "?", "?")
 
 #define o(en,de,es,fr,it,nl,min,max) en ## Num,
-enum { OPTIONS numberOfOptions };
+enum { OPTIONS numberOfOptions, chooseObjectToAdd };
 #undef o
 
 #define o(en,de,es,fr,it,nl,min,max) { \
@@ -914,12 +905,12 @@ struct gpsNewStruct {
   struct gpsNewStruct *dptr;
 } gpsTrack[18000], *gpsNew = gpsTrack;
 
-void FlushGpx (void)
+gpsNewStruct *FlushGpx (void)
 {
   struct gpsNewStruct *a, *best, *first = NULL;
   for (best = gpsNew; gpsTrack <= best && best->dropped == 0; best--) {}
   gpsNew = gpsTrack;
-  if (best <= gpsTrack) return; // No observations
+  if (best <= gpsTrack) return NULL; // No observations
   for (a = best - 1; gpsTrack <= a && best < a + best->dropped; a--) {
     if (best->dropped > best - a + a->dropped) best = a;
   }
@@ -931,11 +922,11 @@ void FlushGpx (void)
     first = best;
     best = a;
   }
-  char fname[18];
-  sprintf (fname, DOC_PREFIX "%.2s%.2s%.2s-%.6s.gpx", first->fix.date + 4,
+  char fname[80];
+  sprintf (fname, "%s%.2s%.2s%.2s-%.6s.gpx", docPrefix, first->fix.date + 4,
     first->fix.date + 2, first->fix.date, first->fix.tm);
   FILE *gpx = fopen (fname, "wb");
-  if (!gpx) return;
+  if (!gpx) return first;
   fprintf (gpx, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <gpx\n\
  version=\"1.0\"\n\
@@ -945,21 +936,22 @@ xmlns=\"http://www.topografix.com/GPX/1/0\"\n\
 xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\n\">\n\
 <trk>\n\
 <trkseg>\n");
-  for (; first; first = first->dptr) { // Iterate the linked list
+  for (best = first; best; best = best->dptr) { // Iterate the linked list
     fprintf (gpx, "<trkpt lat=\"%12.9lf\" lon=\"%12.9lf\">\n",
-      first->fix.latitude, first->fix.longitude);
-    if (first->fix.ele < 1e+8) {
-      fprintf (gpx, "<ele>%.3lf</ele>\n", first->fix.ele);
+      best->fix.latitude, best->fix.longitude);
+    if (best->fix.ele < 1e+8) {
+      fprintf (gpx, "<ele>%.3lf</ele>\n", best->fix.ele);
     }
     fprintf (gpx, "<time>20%.2s-%.2s-%.2sT%.2s:%.2s:%.2sZ</time>\n</trkpt>\n",
-      first->fix.date + 4, first->fix.date + 2, first->fix.date,
-      first->fix.tm, first->fix.tm + 2, first->fix.tm + 4);
+      best->fix.date + 4, best->fix.date + 2, best->fix.date,
+      best->fix.tm, best->fix.tm + 2, best->fix.tm + 4);
     
-//    if (first->next && ) fprintf (gpx, "</trkseg>\n</trk>\n<trk>\n<trkseg>\n");
+//    if (best->next && ) fprintf (gpx, "</trkseg>\n</trk>\n<trk>\n<trkseg>\n");
   }
   fprintf (gpx, "</trkseg>\n\
 </trk>\n\
 </gpx>\n");
+  return first;
 }
 
 int ProcessNmea (char *rx, unsigned *got)
@@ -1272,31 +1264,53 @@ gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 #define NEWWAY_MAX_COORD 10
 struct newWaysStruct {
   int coord[NEWWAY_MAX_COORD][2], klas, cnt, oneway, bridge;
-  char name[40];
+  char name[40], note[40];
 } newWays[500];
 
 
-int newWayCnt = 0, newWayCoordCnt = 0;
+int newWayCnt = 0;
 
 BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
   LPARAM lParam)
 {
-  if (Msg == WM_COMMAND && wParam == IDOK) {
-    HWND edit = GetDlgItem (hwnd, IDC_NAME);
+  if (Msg != WM_COMMAND) return FALSE;
+  HWND edit = GetDlgItem (hwnd, IDC_NAME);
+  if (wParam == IDC_RD1 || wParam == IDC_RD2) {
+    Edit_ReplaceSel (edit, TEXT (" Road"));
+  }
+  if (wParam == IDC_ST1 || wParam == IDC_ST2) {
+    Edit_ReplaceSel (edit, TEXT (" Street"));
+  }
+  if (wParam == IDC_AVE1 || wParam == IDC_AVE2) {
+    Edit_ReplaceSel (edit, TEXT (" Avenue"));
+  }
+  if (wParam == IDC_DR1 || wParam == IDC_DR2) {
+    Edit_ReplaceSel (edit, TEXT (" Drive"));
+  }
+  if (wParam == IDOK) {
     UTF16 name[40], *sStart = name;
     int wstrlen = Edit_GetLine (edit, 0, name, sizeof (name));
     unsigned char *tStart = (unsigned char*) newWays[newWayCnt].name;
     ConvertUTF16toUTF8 ((const UTF16 **)&sStart,  sStart + wstrlen,
         &tStart, tStart + sizeof (newWays[0].name), lenientConversion);
+
+    wstrlen = Edit_GetLine (GetDlgItem (hwnd, IDC_NOTE), 0,
+      name, sizeof (name));
+    tStart = (unsigned char*) newWays[newWayCnt].note;
+    ConvertUTF16toUTF8 ((const UTF16 **)&sStart,  sStart + wstrlen,
+        &tStart, tStart + sizeof (newWays[0].note), lenientConversion);
+
+    newWays[newWayCnt].oneway = IsDlgButtonChecked (hwnd, IDC_ONEWAY2);
+    newWays[newWayCnt++].bridge = IsDlgButtonChecked (hwnd, IDC_BRIDGE2);
   }
-  if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
+  if (wParam == IDCANCEL || wParam == IDOK) {
     SipShowIM (SIPF_OFF);
     EndDialog (hwnd, wParam == IDOK);
     return TRUE;
   }
   return FALSE;
 }
-
+/*
 BOOL CALLBACK DlgSetTags2Proc (HWND hwnd, UINT Msg, WPARAM wParam,
   LPARAM lParam)
 {
@@ -1319,7 +1333,7 @@ BOOL CALLBACK DlgSetTags2Proc (HWND hwnd, UINT Msg, WPARAM wParam,
     return TRUE;
   }
   return FALSE;
-}
+}*/
 
 BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
   LPARAM lParam)
@@ -1347,20 +1361,17 @@ BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
 }
 #endif // _WIN32_WCE
 
+int objectAddRow = -1;
+#define ADD_HEIGHT 32
+#define ADD_WIDTH 64
 void HitButton (int b)
 {
   int returnToMap = b > 0 && option <= FastestRouteNum;
   #ifdef _WIN32_WCE
   if (AddWayOrNode && b == 0) {
-    if (newWayCoordCnt) {
-      SipShowIM (SIPF_ON);
-      if (DialogBox (hInst, MAKEINTRESOURCE (IDD_SETTAGS), NULL,
-          (DLGPROC) DlgSetTagsProc)) DialogBox (hInst,
-          MAKEINTRESOURCE (IDD_SETTAGS2), NULL, (DLGPROC) DlgSetTags2Proc);
-      newWayCoordCnt = 0;
-    }
     AddWayOrNode = 0;
     option = numberOfOptions;
+    if (newWays[newWayCnt].cnt) objectAddRow = 0;
     return;
   }
   if (QuickOptions && b == 0) {
@@ -1426,7 +1437,24 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   #endif
   if (ButtonSize <= 0) ButtonSize = 4;
   int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
-  if (event->x > w - ButtonSize * 20 && b <
+  if (objectAddRow >= 0) {
+    int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
+    if (event->x < w - ButtonSize * 20) {
+      #ifdef _WIN32_WCE
+      newWays[newWayCnt].klas = objectAddRow + event->x / ADD_WIDTH +
+                                event->y / ADD_HEIGHT * perRow;
+      SipShowIM (SIPF_ON);
+      if (DialogBox (hInst, MAKEINTRESOURCE (IDD_SETTAGS), NULL,
+          (DLGPROC) DlgSetTagsProc)) {} //DialogBox (hInst,
+          //MAKEINTRESOURCE (IDD_SETTAGS2), NULL, (DLGPROC) DlgSetTags2Proc);
+      newWays[newWayCnt].cnt = 0;
+      #endif
+      objectAddRow = -1;
+    }
+    else objectAddRow = event->y * (firstElemStyle / perRow + 2) /
+                            draw->allocation.height * perRow;
+  }
+  else if (event->x > w - ButtonSize * 20 && b <
       (!HideZoomButtons || option != numberOfOptions ? 3 : 
       MenuKey != 0 ? 0 : 1)) HitButton (b);
   else {
@@ -1439,9 +1467,9 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       SetLocation (lon, lat);
 
       #ifdef _WIN32_WCE
-      if (AddWayOrNode && newWayCoordCnt < NEWWAY_MAX_COORD) {
-        newWays[newWayCnt].coord[newWayCoordCnt][0] = clon;
-        newWays[newWayCnt].coord[newWayCoordCnt++][1] = clat;
+      if (AddWayOrNode && newWays[newWayCnt].cnt < NEWWAY_MAX_COORD) {
+        newWays[newWayCnt].coord[newWays[newWayCnt].cnt][0] = clon;
+        newWays[newWayCnt].coord[newWays[newWayCnt].cnt++][1] = clat;
       }
       #endif
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
@@ -1550,6 +1578,33 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
   BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCCOPY)
 #define gdk_draw_line(win,gc,sx,sy,dx,dy) \
   MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
+
+  if (objectAddRow >= 0) {
+    SelectObject (mygc, sysFont);
+    SelectObject (mygc, GetStockObject (BLACK_PEN));
+    for (int y = 0, i = objectAddRow; y < draw->allocation.height;
+              y += ADD_HEIGHT) {
+      //gdk_draw_line (draw->window, mygc, 0, y, draw->allocation.width, y);
+      gdk_draw_line (draw->window, mygc, draw->allocation.width - ButtonSize * 20,
+        draw->allocation.height * i / firstElemStyle, draw->allocation.width,
+        draw->allocation.height * i / firstElemStyle);
+      RECT klip;
+      klip.bottom = y + ADD_HEIGHT;
+      klip.top = y;
+      for (int x = 0, xi = 1; x < draw->allocation.width - ButtonSize * 20 -
+          ADD_WIDTH && i < firstElemStyle; x += ADD_WIDTH, i++ /*, xi ^= 1*/) {
+        int *icon = style[i].x + 4 * IconSet;
+        gdk_draw_drawable (draw->window, mygc, icons, icon[0], icon[1],
+          x - icon[2] / 2 + ADD_WIDTH / 2, y +
+          (xi ? 0 : ADD_HEIGHT - icon[3]), icon[2], icon[3]);
+        klip.left = x + 8;
+        klip.right = x + ADD_WIDTH - 8;
+        ExtTextOut (mygc, x + 8, y + (xi ? ADD_HEIGHT - 16 : 0), ETO_CLIPPED,
+          &klip, klasTable[i].desc, wcslen (klasTable[i].desc), NULL);
+      }
+    }
+    return FALSE;
+  } // if displaying the klas / style / rule selection screen
 #else
 gint Expose (void)
 {
@@ -1890,13 +1945,23 @@ gint Expose (void)
         Y (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat));
     }
     #else
-    SelectObject (mygc, pen[0]);
-    for (int i = 0; i < newWayCoordCnt - 1; i++) {
-      gdk_draw_line (draw->window, mygc,
-      X (newWays[newWayCnt].coord[i][0], newWays[newWayCnt].coord[i][1]),
-      Y (newWays[newWayCnt].coord[i][0], newWays[newWayCnt].coord[i][1]),
-      X (newWays[newWayCnt].coord[i+1][0], newWays[newWayCnt].coord[i+1][1]),
-      Y (newWays[newWayCnt].coord[i+1][0], newWays[newWayCnt].coord[i+1][1]));
+    for (int j = 0; j <= newWayCnt; j++) {
+      int x = X (newWays[j].coord[0][0], newWays[j].coord[0][1]);
+      int y = Y (newWays[j].coord[0][0], newWays[j].coord[0][1]);
+      if (newWays[j].cnt == 1) {
+        int *icon = style[j < newWayCnt ? newWays[j].klas : place_village].x
+          + 4 * IconSet;
+        gdk_draw_drawable (draw->window, mygc, icons, icon[0], icon[1],
+          x - icon[2] / 2, y - icon[3] / 2, icon[2], icon[3]);
+      }
+      else {
+        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas + 1 : 0]);
+        MoveToEx (mygc, x, y, NULL);
+        for (int i = 1; i < newWays[j].cnt; i++) {
+          LineTo (mygc, X (newWays[j].coord[i][0], newWays[j].coord[i][1]),
+                        Y (newWays[j].coord[i][0], newWays[j].coord[i][1]));
+        }
+      }
     }
     if (ShowTrace) {
       for (gpsNewStruct *ptr = gpsTrack; ptr < gpsNew; ptr++) {
@@ -3412,6 +3477,19 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
   return 0;
 }
 
+void XmlOut (FILE *newWayFile, char *v, char *k)
+{
+  if (*v != '\0') {
+    fprintf (newWayFile, "  <tag k='%s' v='", k);
+    for (; *v != '\0'; v++) {
+      if (*v == '\'') fprintf (newWayFile, "&apos;");
+      else if (*v == '&') fprintf (newWayFile, "&amp;");
+      else fputc (*v, newWayFile);
+    }
+    fprintf (newWayFile, "' />\n");
+  }
+}
+
 int WINAPI WinMain(
     HINSTANCE  hInstance,	  // handle of current instance
     HINSTANCE  hPrevInstance,	  // handle of previous instance
@@ -3422,7 +3500,23 @@ int WINAPI WinMain(
   hInst = hInstance;
   wchar_t argv0[80];
   GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-  wcscpy (argv0 + wcslen (argv0) - 8, TEXT ("ore.pak")); // _arm.exe to ore.pak
+
+  wcscpy (argv0 + wcslen (argv0) - 8, TEXT ("ore.opt")); // _arm.exe to ore.opt
+  FILE *optFile = _wfopen (argv0, TEXT ("r"));
+  
+  if (!optFile) {
+    strcpy (docPrefix, "\\My Documents\\");
+    optFile = fopen ("\\My Documents\\gosmore.opt", "rb");
+  }
+  else {
+    UTF16 *sStart = argv0;
+    unsigned char *tStart = (unsigned char *) docPrefix;
+    ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0) - 11,
+      &tStart, tStart + sizeof (docPrefix), lenientConversion);
+    *tStart = '\0';
+  }
+
+  wcscpy (argv0 + wcslen (argv0) - 7, TEXT ("ore.pak")); // _arm.exe to ore.pak
   HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
   if (gmap == INVALID_HANDLE_VALUE) {
@@ -3477,10 +3571,7 @@ int WINAPI WinMain(
       dumdraw.allocation.height, FALSE);
   }
 
-  wcscpy (argv0 + wcslen (argv0) - 3, TEXT ("opt")); // _arm.exe to ore.opt
-  FILE *optFile = _wfopen (argv0, TEXT ("r"));
-  
-  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "rb");
+  newWays[0].cnt = 0;
   IconSet = 1;
   DetailLevel = 3;
   ButtonSize = 4;
@@ -3517,9 +3608,24 @@ int WINAPI WinMain(
   }
   guiDone = TRUE;
 
+  while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
+
+  optFile = _wfopen (argv0, TEXT ("r+"));
+  if (!optFile) optFile = fopen ("\\My Documents\\gosmore.opt", "wb");
+  if (optFile) {
+    #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
+    OPTIONS
+    #undef o
+    fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
+    fclose (optFile);
+  }
+  gpsNewStruct *first = FlushGpx ();
   if (newWayCnt > 0) {
     char newWayFileName[40];
-    sprintf (newWayFileName, "\\My Documents\\gosmore%d.osm", newWayFileNr++);
+    if (first) sprintf (newWayFileName, "%s%.2s%.2s%.2s-%.6s.osm", docPrefix,
+      first->fix.date + 4, first->fix.date + 2, first->fix.date,
+      first->fix.tm);
+    else sprintf (newWayFileName, "%sgosmore%d.osm", newWayFileNr);
     FILE *newWayFile = fopen (newWayFileName, "w");
     if (newWayFile) {
       fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
@@ -3539,21 +3645,12 @@ int WINAPI WinMain(
           }
         }
         id--;
-        if (newWays[i].oneway) fprintf (newWayFile,
-          "  <tag k='oneway' v='yes'/>\n");
-        if (newWays[i].bridge) fprintf (newWayFile,
-          "  <tag k='bridge' v='yes'/>\n");
+        if (newWays[i].oneway) XmlOut (newWayFile, "oneway", "yes");
+        if (newWays[i].bridge) XmlOut (newWayFile, "bridge", "yes");
         if (newWays[i].klas >= 0) fprintf (newWayFile, "%s",
           klasTable[newWays[i].klas].tags);
-        if (newWays[i].name[0] != '\0') {
-          fprintf (newWayFile, "  <tag k='name' v='");
-          for (j = 0; newWays[i].name[j]; j++) {
-            if (newWays[i].name[j] == '\'') fprintf (newWayFile, "&apos;");
-            else if (newWays[i].name[j] == '&') fprintf (newWayFile, "&amp;");
-            else fputc (newWays[i].name[j], newWayFile);
-          }
-          fprintf (newWayFile, "' />\n");
-        }
+        XmlOut (newWayFile, "name", newWays[i].name);
+        XmlOut (newWayFile, "note", newWays[i].note);
         fprintf (newWayFile, "</%s>\n", newWays[i].cnt <= 1 ? "node" : "way");
       }
       fprintf (newWayFile, "</osm>\n");
@@ -3561,18 +3658,6 @@ int WINAPI WinMain(
     }
   }
 
-  while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
-
-  optFile = _wfopen (argv0, TEXT ("r+"));
-  if (!optFile) optFile = fopen (DOC_PREFIX "gosmore.opt", "wb");
-  if (optFile) {
-    #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
-    OPTIONS
-    #undef o
-    fwrite (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
-    fclose (optFile);
-  }
-  FlushGpx ();
   return 0;
 }
 #endif

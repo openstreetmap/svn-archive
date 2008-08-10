@@ -13,8 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.imageio.ImageIO;
-
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
@@ -89,7 +87,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				try {
 					f = getTileFile(tile);
 					fin = new FileInputStream(f);
-					tile.setImage(ImageIO.read(fin));
+					tile.loadImage(fin);
 					fin.close();
 					fileAge = f.lastModified();
 					boolean oldTile = System.currentTimeMillis() - fileAge > maxFileAge;
@@ -128,23 +126,25 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				// return;
 				// }
 				byte[] buffer = loadTileInBuffer(urlConn);
-				tile.setImage(ImageIO.read(new ByteArrayInputStream(buffer)));
+				tile.loadImage(new ByteArrayInputStream(buffer));
 				tile.setLoaded(true);
 				map.repaint();
 				input = null;
 				saveTileToFile(tile, buffer);
 			} catch (Exception e) {
 				if (input == null /* || !input.isStopped() */)
-					System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " "
-							+ e.getMessage());
+					System.err.println("failed loading " + zoom + "/" + tilex
+							+ "/" + tiley + " " + e.getMessage());
 			} finally {
 				tile.loading = false;
 			}
 		}
 
-		protected byte[] loadTileInBuffer(URLConnection urlConn) throws IOException {
+		protected byte[] loadTileInBuffer(URLConnection urlConn)
+				throws IOException {
 			input = urlConn.getInputStream();
-			ByteArrayOutputStream bout = new ByteArrayOutputStream(input.available());
+			ByteArrayOutputStream bout = new ByteArrayOutputStream(input
+					.available());
 			byte[] buffer = new byte[2048];
 			boolean finished = false;
 			do {
@@ -174,10 +174,12 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		 *         file
 		 * @throws IOException
 		 */
-		protected boolean isOsmTileNewer(Tile tile, long fileAge) throws IOException {
+		protected boolean isOsmTileNewer(Tile tile, long fileAge)
+				throws IOException {
 			URL url;
 			url = new URL(baseUrl + "/" + tile.getKey() + ".png");
-			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			HttpURLConnection urlConn = (HttpURLConnection) url
+					.openConnection();
 			urlConn.setRequestMethod("HEAD");
 			urlConn.setReadTimeout(30000); // 30 seconds read
 			// System.out.println("Tile age: " + new
@@ -190,20 +192,21 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		}
 
 		protected File getTileFile(Tile tile) throws IOException {
-			return new File(tileCacheDir + "/" + tile.getZoom() + "_" + tile.getXtile() + "_"
-					+ tile.getYtile() + FILE_EXT);
+			return new File(tileCacheDir + "/" + tile.getZoom() + "_"
+					+ tile.getXtile() + "_" + tile.getYtile() + FILE_EXT);
 		}
 
 		protected void saveTileToFile(Tile tile, byte[] rawData) {
 			try {
-				FileOutputStream f =
-						new FileOutputStream(tileCacheDir + "/" + tile.getZoom() + "_"
-								+ tile.getXtile() + "_" + tile.getYtile() + FILE_EXT);
+				FileOutputStream f = new FileOutputStream(tileCacheDir + "/"
+						+ tile.getZoom() + "_" + tile.getXtile() + "_"
+						+ tile.getYtile() + FILE_EXT);
 				f.write(rawData);
 				f.close();
 				// System.out.println("Saved tile to file: " + tile);
 			} catch (Exception e) {
-				System.err.println("Failed to save tile content: " + e.getLocalizedMessage());
+				System.err.println("Failed to save tile content: "
+						+ e.getLocalizedMessage());
 			}
 		}
 	}
@@ -229,8 +232,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 	}
 
 	public void setTileCacheDir(String tileCacheDir) {
-		this.tileCacheDir = tileCacheDir;
+		File dir = new File(tileCacheDir);
+		dir.mkdirs();
+		this.tileCacheDir = dir.getAbsolutePath();
 	}
 
-	
 }

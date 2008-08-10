@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 /**
  * 
  * Demonstrates the usage of {@link JMapViewer}
@@ -22,21 +21,23 @@ import javax.swing.JPanel;
  */
 public class Demo extends JFrame {
 
+	private static final long serialVersionUID = 1L;
+
 	public Demo() {
 		super("JMapViewer Demo");
 		setSize(400, 400);
 		final JMapViewer map = new JMapViewer();
-//		final JMapViewer map = new JMapViewer(new MemoryTileCache(),4);
-//		map.setTileLoader(new OsmFileCacheTileLoader(map,OsmTileLoader.MAP_MAPNIK));
+		// final JMapViewer map = new JMapViewer(new MemoryTileCache(),4);
+		// map.setTileLoader(new
+		// OsmFileCacheTileLoader(map,OsmTileLoader.MAP_MAPNIK));
 		new DefaultMapController(map);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
-		JLabel label =
-				new JLabel(
-						"Use right mouse button to move,\n left double click or mouse wheel to zoom.");
+		JLabel label = new JLabel(
+				"Use right mouse button to move,\n left double click or mouse wheel to zoom.");
 		panel.add(label);
 		JButton button = new JButton("setDisplayToFitMapMarkers");
 		button.addActionListener(new ActionListener() {
@@ -82,17 +83,17 @@ public class Demo extends JFrame {
 		map.addMapMarker(new MapMarkerDot(48.71, -1));
 		map.addMapMarker(new MapMarkerDot(49.807, 8.644));
 
-		//map.setDisplayPositionByLatLon(49.807, 8.6, 11);
-		//map.setTileGridVisible(true);
+		// map.setDisplayPositionByLatLon(49.807, 8.6, 11);
+		// map.setTileGridVisible(true);
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		Properties systemProperties = System.getProperties();
-//		systemProperties.setProperty("http.proxyHost","localhost");
-//		systemProperties.setProperty("http.proxyPort","8008");
+		// Properties systemProperties = System.getProperties();
+		// systemProperties.setProperty("http.proxyHost","localhost");
+		// systemProperties.setProperty("http.proxyPort","8008");
 		new Demo().setVisible(true);
 	}
 

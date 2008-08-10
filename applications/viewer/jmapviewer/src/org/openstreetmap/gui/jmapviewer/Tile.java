@@ -6,6 +6,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 
@@ -54,7 +58,8 @@ public class Tile {
 	 * been loaded.
 	 */
 	public void loadPlaceholderFromCache(TileCache cache) {
-		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT,
+				BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) tmpImage.getGraphics();
 		// g.drawImage(image, 0, 0, null);
 		for (int zoomDiff = 1; zoomDiff < 5; zoomDiff++) {
@@ -70,7 +75,8 @@ public class Tile {
 				int paintedTileCount = 0;
 				for (int x = 0; x < factor; x++) {
 					for (int y = 0; y < factor; y++) {
-						Tile tile = cache.getTile(xtile_high + x, ytile_high + y, zoom_high);
+						Tile tile = cache.getTile(xtile_high + x, ytile_high
+								+ y, zoom_high);
 						if (tile != null && tile.isLoaded()) {
 							paintedTileCount++;
 							tile.paint(g, x * WIDTH, y * HEIGHT);
@@ -133,6 +139,10 @@ public class Tile {
 		this.image = image;
 	}
 
+	public void loadImage(InputStream input) throws IOException {
+		image = ImageIO.read(input);
+	}
+
 	/**
 	 * @return key that identifies a tile
 	 */
@@ -174,7 +184,8 @@ public class Tile {
 		if (!(obj instanceof Tile))
 			return false;
 		Tile tile = (Tile) obj;
-		return (xtile == tile.xtile) && (ytile == tile.ytile) && (zoom == tile.zoom);
+		return (xtile == tile.xtile) && (ytile == tile.ytile)
+				&& (zoom == tile.zoom);
 	}
 
 	public static String getTileKey(int xtile, int ytile, int zoom) {

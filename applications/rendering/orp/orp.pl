@@ -356,15 +356,15 @@ $writer->endTag("defs");
 my $symbolsDir = get_variable("symbolsDir");
 if (defined($symbolsDir))
 {
+    $symbolsDir = '../osmarender/' . $symbolsDir;
     $writer->startTag("defs", "id" => "defs-symbols");
-    my $refs = $rules->find('//rules//symbol/@ref');
+    my $refs = $rules->find('/rules//symbol/@ref');
     foreach my $node ($refs->get_nodelist) 
     {
-        my $file = XML::XPath::XMLParser::as_string($node);
-        #FIXME <xsl:copy-of select="document(concat($symbolsDir,'/', ., '.svg'))/svg:svg/svg:defs/svg:symbol"/>
-        open(SYM, $symbolsDir . "/" . $file);
-        while(<SYM>) { $writer->raw($_); }
-        close(SYM);
+	my $file = $node->getNodeValue;
+	my $symbolFile = XML::XPath->new(filename => $symbolsDir . "/" . $file . ".svg"); 
+	my $symbol = $symbolFile->find('/svg:svg/svg:defs/svg:symbol');
+	$writer->raw($symbol->get_node(1)->toString);
     }
     $writer->endTag("defs");
 }

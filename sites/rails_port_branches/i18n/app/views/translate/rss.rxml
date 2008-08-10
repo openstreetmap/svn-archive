@@ -1,0 +1,29 @@
+xml.instruct!
+
+xml.rss("version" => "2.0", 
+        "xmlns:geo" => "http://www.w3.org/2003/01/geo/wgs84_pos#",
+        "xmlns:georss" => "http://www.georss.org/georss") do
+  xml.channel do
+    xml.title @title
+    xml.description @description
+    xml.link url_for(:action => params[:id], :locale => params[:locale], :only_path => false)
+    xml.image do
+      xml.url "http://www.openstreetmap.org/images/mag_map-rss2.0.png"
+      xml.title "OpenStreetMap"
+      xml.width "100"
+      xml.height "100"
+      xml.link url_for(:action => params[:id], :locale => params[:locale], :only_path => false)
+    end
+
+    for entry in @entries
+      xml.item do
+        xml.title "String #"+h(entry.id)
+        xml.link url_for(:action => "view", :id => entry.id, :only_path => false)
+        xml.guid url_for(:action => "view", :id => entry.id, :only_path => false)
+        xml.description "<p>"+htmlize(entry.tr_key)+"</p><p>"+htmlize(entry.text)+"</p>"
+        xml.author "l10n admin"
+        xml.pubDate "Sun, 10 Aug 2008 12:00:00 +0000".to_s(:rfc822)
+      end
+    end
+  end
+end

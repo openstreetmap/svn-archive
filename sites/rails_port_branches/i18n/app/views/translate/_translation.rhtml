@@ -1,0 +1,21 @@
+<tr>
+<td width=150><b><%= link_to "String #"+h(translation.id)+":", :action => 'view', :id => translation.id -%></b></td>
+<% if params[:action] == 'pending' %>
+  <td><%= htmlize(translation.tr_key)-%></td>
+<% else if params[:action] == 'complete' %>
+  <td><p><div><%= "String: "+h(translation.tr_key) %></div>
+  <div><%= "Translation: "+h(translation.text) %></div></p></td>
+<% else if params[:id]%>
+  <br />
+  <p><b>String:</b> <%= h(translation.tr_key) %></p>
+  <p><b>Translation:</b> 
+  <% if translation.text %>
+    <%= h(translation.text) %></p>
+  <% else %>
+    Net available! You can contribute.
+  <% end %>
+<% end %>
+<% end %>
+<% end %>
+</tr>
+

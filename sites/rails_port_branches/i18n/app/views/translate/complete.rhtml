@@ -1,0 +1,33 @@
+<h2><%= h(@title) %></h2>
+
+<%= link_to "pending strings", :action => 'pending', :locale => @user.locale -%> | complete translations | <%= link_to "statistics", :action => 'stat' -%> 
+
+<% unless params[:locale] == "en-US" %>
+  <br />
+  <h3><%= Locale.language -%>
+  <%= " ("+Locale.country.english_name+")" if Locale.country.english_name? %>'s complete translations:</h3>
+  <hr />
+
+  <table style="width : 100%">
+  <%= render :partial => 'translation', :collection => @entries %>
+  </table>
+
+  <hr />
+  <%= link_to "Older Strings".t, { :page => @entry_pages.current.next } if @entry_pages.current.next %>
+  <% if @entry_pages.current.next and @entry_pages.current.previous %>
+  |
+  <% end %>
+  <%= link_to "Newer Strings".t, { :page => @entry_pages.current.previous } if @entry_pages.current.previous %>
+
+<% else %>
+
+  <hr />
+  <p>English(US) is the default language for this website. So no translation required.n this locale. To see translation update for other languages, <%= link_to "select the prefered one in your settings", :controller => 'user', :action => 'account', :display_name => @user.display_name %>. Also check l10n status in <%= link_to "statistics", :action => 'stat' -%>.</p>
+
+<% end %>
+
+<br />
+
+<p><%= rss_link_to :action => 'rss', :locale => params[:locale], :id => 'complete' %></p>
+<%= auto_discovery_link_tag :atom, :action => 'pending_rss' %>
+

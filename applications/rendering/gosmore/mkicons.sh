@@ -1,21 +1,24 @@
-#!/bin/sh
+#!/bin/bash
 echo Creating temporary directory '"osmpnms/"' and converting icons to pnm
 mkdir osmpnms
 cd osmpnms
 # Create dummy to force GCD to (1,1)
-echo 'P3
+echo 'P6
 1 1
-255
-255'>fix.pnm
-for n in `find /usr/share/map-icons/ -iname "*.png"`
+255 
+0 0 0
+'>fix.pnm
+for n in `find /usr/share/icons/openstreetmap -iname "*.png"`
 do 
   A=${n%%.png}
   B=${A//\//_}
-  pngtopnm -background \#11EE22 $n |pnmdepth 255 >"${B:21}.pnm"
+  pngtopnm -background \#11EE22 $n |pnmdepth 255 >"${B:31}.pnm"
 done
 # These make nice POIs, but are not needed to render OSM maps :
-rm -f *geocach* {classic,square}.{big,small}_{people,waypoint,wlan}* \
-  {svg_tn,japan_tn}_{people,waypoint,wlan}* svg_* *_misc_no_icon.png
+rm -f *geocach* \
+  {classic,square}.{big,small}_{people,waypoint,wlan,rendering}* \
+
+#  {classic,square}.big_*
 
 echo Creating the montage and removing the temporary directory
 ulimit -n 2048
@@ -23,3 +26,12 @@ ulimit -n 2048
 cd ..
 rm -rf osmpnms
 ppmtobmp icons.pnm >icons.bmp
+# Suppress the icons Ulf is using to highlight errors
+echo 'classic.big_misc_deprecated.pnm:1:1:1:1
+square.big_misc_deprecated.pnm:1:1:1:1
+classic.small_misc_deprecated.pnm:1:1:1:1
+square.small_misc_deprecated.pnm:1:1:1:1
+classic.big_misc_no_icon.pnm:1:1:1:1
+square.big_misc_no_icon.pnm:1:1:1:1
+classic.small_misc_no_icon.pnm:1:1:1:1
+square.small_misc_no_icon.pnm:1:1:1:1' >>icons.csv

@@ -197,13 +197,137 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (shop,    supermarket,     "supermarket"     , "") \
  s (religion, christian,      "church"          , \
                "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, jewish,         "synagogue"       , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, muslim,         "mosque"          , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
  s (amenity, pub,             "pub"             , "") \
  s (amenity, restaurant,      "restaurant"      , "") \
- s (building, yes,            "building"        , "") \
  s (power,   tower,           "power tower"     , "") \
- s (landuse, forest,          "forest"          , "") \
  s (leisure, park,            "park"            , "") \
- s (waterway, stream,         "stream"          , "")
+ s (waterway, stream,         "stream"          , "") \
+ s (amenity, grave_yard,      "grave yard"      , "") \
+ s (amenity, crematorium,     "crematorium"     , "") \
+ s (amenity, shelter,         "shelter"         , "") \
+ s (tourism, picnic_site,     "picnic site"     , "") \
+ s (leisure, common,          "common area"     , "") \
+ s (amenity, park_bench,      "park bench"      , "") \
+ s (tourism, viewpoint,       "viewpoint"       , "") \
+ s (tourism, artwork,         "artwork"         , "") \
+ s (tourism, museum,          "museum"          , "") \
+ s (tourism, theme_park,      "theme park"      , "") \
+ s (tourism, zoo,             "zoo"             , "") \
+ s (leisure, swimming_pool,   "swimming pool"   , "") \
+ s (leisure, miniature_golf,  "miniature golf"  , "") \
+ s (shop,    bakery,          "bakery"          , "") \
+ s (shop,    butcher,         "butcher"         , "") \
+ s (shop,    florist,         "florist"         , "") \
+ s (shop,    groceries,       "groceries"       , "") \
+ s (shop,    clothes,         "clothing shop"   , "") \
+ s (shop,    shoes,           "shoe shop"       , "") \
+ s (shop,    jewelry,         "jewelry store"   , "") \
+ s (shop,    books,           "bookshop"        , "") \
+ s (shop,    newsagent,       "newsagent"       , "") \
+ s (shop,    furniture,       "furniture store" , "") \
+ s (shop,    hifi,            "Hi-Fi store"     , "") \
+ s (shop,    electronics,     "electronics store" , "") \
+ s (shop,    computer,        "computer shop"   , "") \
+ s (shop,    video,           "video rental"    , "") \
+ s (shop,    toys,            "toy shop"        , "") \
+ s (shop,    motorcycle,      "motorcycle"      , "") \
+ s (shop,    car_repair,      "car repair"      , "") \
+ s (shop,    doityourself,    "doityourself"    , "") \
+ s (shop,    garden_centre,   "garden centre"   , "") \
+ s (shop,    outdoor,         "outdoor"         , "") \
+ s (shop,    bicycle,         "bicycle shop"    , "") \
+ s (shop,    dry_cleaning,    "dry cleaning"    , "") \
+ s (shop,    laundry,         "laundry"         , "") \
+ s (shop,    hairdresser,     "hairdresser"     , "") \
+ s (shop,    travel_agency,   "travel_agency"   , "") \
+ s (shop,    convenience,     "convenience"     , "") \
+ s (shop,    mall,            "mall"            , "") \
+ s (shop,    department_store, "department store" , "") \
+ s (amenity, biergarten,      "biergarten"      , "") \
+ s (amenity, nightclub,       "nightclub"       , "") \
+ s (amenity, bar,             "bar"             , "") \
+ s (amenity, cafe,            "cafe"            , "") \
+ s (amenity, fast_food,       "fast_food"       , "") \
+ s (amenity, ice_cream,       "icecream"        , "") \
+ s (amenity, bicycle_rental,  "bicycle rental"  , "") \
+ s (amenity, car_rental,      "car rental"      , "") \
+ s (amenity, car_sharing,     "car sharing"     , "") \
+ s (amenity, car_wash,        "car wash"        , "") \
+ s (amenity, taxi,            "taxi"            , "") \
+ s (amenity, telephone,       "telephone"       , "") \
+ s (amenity, post_office,     "post office"     , "") \
+ s (amenity, post_box,        "post box"        , "") \
+ s (tourism, information,     "tourist info"    , "") \
+ s (amenity, toilets,         "toilets"         , "") \
+ s (amenity, recycling,       "recycling"       , "") \
+ s (amenity, fire_station,    "fire_station"    , "") \
+ s (amenity, police,          "police"          , "") \
+ s (amenity, courthouse,      "courthouse"      , "") \
+ s (amenity, prison,          "prison"          , "") \
+ s (amenity, public_building, "public building" , "") \
+ s (amenity, townhall,        "townhall"        , "") \
+ s (amenity, cinema,          "cinema"          , "") \
+ s (amenity, arts_centre,     "arts centre"     , "") \
+ s (amenity, theatre,         "theatre"         , "") \
+ s (tourism, hotel,           "hotel"           , "") \
+ s (tourism, motel,           "motel"           , "") \
+ s (tourism, guest_house,     "guest house"     , "") \
+ s (tourism, hostel,          "hostel"          , "") \
+ s (tourism, chalet,          "chalet"          , "") \
+ s (tourism, camp_site,       "camp site"       , "") \
+ s (tourism, caravan_site,    "caravan site"    , "") \
+ s (amenity, pharmacy,        "pharmacy"        , "") \
+ s (amenity, dentist,         "dentist"         , "") \
+ s (amenity, hospital,        "hospital"        , "") \
+ s (amenity, bank,            "bank"            , "") \
+ s (amenity, bureau_de_change, "bureau de change" , "") \
+ s (amenity, atm,             "atm"            , "") \
+ s (amenity, drinking_water,  "drinking water"  , "") \
+ s (amenity, fountain,        "fountain"        , "") \
+ s (natural, spring,          "spring"          , "") \
+ s (amenity, university,      "university"      , "") \
+ s (amenity, college,         "college"         , "") \
+ s (amenity, kindergarten,    "kindergarten"    , "") \
+ s (highway, living_street,   "living street"   , "") \
+ s (highway, motorway,        "motorway"        , "") \
+ s (highway, motorway_link,   "motorway_link"   , "") \
+ s (highway, trunk_link,      "trunk_link"      , "") \
+ s (highway, primary_link,    "primary_link"    , "") \
+ s (building, yes,            "building"        , "") \
+ s (landuse, forest,          "forest"          , "") \
+ s (landuse, residential,     "residential area", "") \
+ s (landuse, industrial,      "industrial area" , "") \
+ s (landuse, retail,          "retail area"     , "") \
+ s (landuse, commercial,      "commercial area" , "") \
+ s (landuse, construction,    "construction area" , "") \
+ s (landuse, reservoir,       "reservoir"       , "") \
+ s (natural, water,           "lake / dam"      , "") \
+ s (landuse, basin,           "basin"           , "") \
+ s (landuse, landfill,        "landfill"        , "") \
+ s (landuse, quarry,          "quarry"          , "") \
+ s (landuse, cemetery,        "cemetery"        , "") \
+ s (landuse, allotments,      "allotments"      , "") \
+ s (landuse, farm,            "farmland"        , "") \
+ s (landuse, farmyard,        "farmyard"        , "") \
+ s (landuse, military,        "military area"   , "") \
+ s (religion, bahai,          "bahai"           , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, buddhist,       "buddhist"        , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, hindu,          "hindu"           , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, jain,           "jainism"         , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, sikh,           "sikhism"         , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, shinto,         "shinto"          , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
+ s (religion, taoist,         "taoism"          , \
+               "  <tag k='amenity' v='place_of_worship' />\n") \
 
 #define s(k,v,shortname,extraTags) k ## _ ## v,
 enum { STYLES firstElemStyle }; // highway_residential, ...
@@ -1134,6 +1258,16 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
   if (ProcessNmea (rx, &got)) DoFollowThing (gpsNew);
 }
 #endif // !ROUTE_TEST
+
+gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
+{
+  if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
+  if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
+  SetLocation (clon, clat);
+  gtk_widget_queue_clear (draw);
+  return FALSE;
+}
+
 #else // _WIN32_WCE
 #define NEWWAY_MAX_COORD 10
 struct newWaysStruct {
@@ -1417,15 +1551,6 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
 #define gdk_draw_line(win,gc,sx,sy,dx,dy) \
   MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
 #else
-gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
-{
-  if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
-  if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
-  SetLocation (clon, clat);
-  gtk_widget_queue_clear (draw);
-  return FALSE;
-}
-
 gint Expose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2], routeColour;
@@ -1477,7 +1602,7 @@ gint Expose (void)
   if (ButtonSize <= 0) ButtonSize = 4;
   #ifdef CAIRO_VERSION
   cairo_t *cai = gdk_cairo_create (draw->window);
-  if (DetailLevel < 4) {
+  if (DetailLevel < 2) {
     cairo_font_options_t *caiFontOptions = cairo_font_options_create ();
     cairo_get_font_options (cai, caiFontOptions);
     cairo_font_options_set_antialias (caiFontOptions, CAIRO_ANTIALIAS_NONE);
@@ -1505,7 +1630,8 @@ gint Expose (void)
     int latRadius = lrint (fabs (cosAzimuth) * zoom / clip.width *
           clip.height + fabs (sinAzimuth) * zoom) / 2 + 10000;
 //    int perpixel = zoom / clip.width;
-    int doAreas = TRUE;
+    int doAreas = TRUE, blockIcon[2 * 128];
+    memset (blockIcon, 0, sizeof (blockIcon)); // One bit per 16 x 16 area
   //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
     for (int thisLayer = -5, nextLayer; thisLayer < 6;
          thisLayer = nextLayer, doAreas = !doAreas) {
@@ -1515,26 +1641,25 @@ gint Expose (void)
       nextLayer = 6;
       
       while (Next (itr)) {
-        wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
+        ndType *nd = itr.nd[0];
+        wayType *w = (wayType *)(data + nd->wayPtr);
         if (Style (w)->scaleMax <
-                  zoom / clip.width * 175 / (DetailLevel + 4)) continue;
+                  zoom / clip.width * 175 / (DetailLevel + 6)) continue;
         
-        if (DetailLevel < 4 && Style (w)->areaColour != -1) {
+        int wLayer = nd->other[0] < 0 && nd->other[1] < 0 ? 5 : Layer (w);
+        if (DetailLevel < 2 && Style (w)->areaColour != -1) {
           if (thisLayer > -5) continue;  // Draw all areas with layer -5
         }
         else if (zoom < 100000*100) {
         // Under low-zoom we draw everything on layer -5 (faster)
-          if (thisLayer < Layer (w) && Layer (w) < nextLayer) {
-            nextLayer = Layer (w);
-          }
-          if (DetailLevel == 4) {
+          if (thisLayer < wLayer && wLayer < nextLayer) nextLayer = wLayer;
+          if (DetailLevel > 1) {
             if (doAreas) nextLayer = thisLayer;
             if (Style (w)->areaColour != -1 ? !doAreas : doAreas) continue;
           }
-          if (Layer (w) != thisLayer) continue;
+          if (wLayer != thisLayer) continue;
         }
-        ndType *nd = itr.nd[0];
-        if (itr.nd[0]->other[0] >= 0) {
+        if (nd->other[0] >= 0) {
           nd = ndBase + itr.nd[0]->other[0];
           if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build
           else if (itr.left <= nd->lon && nd->lon < itr.right &&
@@ -1551,36 +1676,40 @@ gint Expose (void)
         int len = strcspn ((char *)(w + 1) + 1, "\n");
         
         if (nd->other[0] < 0 && nd->other[1] < 0) {
-          int x = X (nd->lon, nd->lat);
-          int y = Y (nd->lon, nd->lat);
-          int *icon = Style (w)->x + 4 * IconSet;
-          if (icons && icon[2] != 0) {
-            gdk_draw_drawable (draw->window, mygc, icons,
-              icon[0], icon[1], x - icon[2] / 2, y - icon[3] / 2,
-              icon[2], icon[3]);
+          int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
+          int *b = blockIcon + (x / (48 * 32) + y / 22 * 1) %
+                      (sizeof (blockIcon) / sizeof (blockIcon[0]));
+          if (!(*b & (1 << (x / 48 % 32)))) {
+            *b |= 1 << (x / 48 % 32);
+            int *icon = Style (w)->x + 4 * IconSet;
+            if (icons && icon[2] != 0) {
+              gdk_draw_drawable (draw->window, mygc, icons,
+                icon[0], icon[1], x - icon[2] / 2, y - icon[3] / 2,
+                icon[2], icon[3]);
+            }
+            
+            #ifdef _WIN32_WCE
+            SelectObject (mygc, sysFont);
+            const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
+            UTF16 *tStart = (UTF16 *) wcTmp;
+            if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
+                  sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+                == conversionOK) {
+              ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
+                  wcTmp, (wchar_t *) tStart - wcTmp, NULL);
+            }
+            #endif
+            #ifdef CAIRO_VERSION
+            //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
+              mat.xx = mat.yy = 12.0;
+              mat.xy = mat.yx = 0;
+              x0 = x - mat.xx / 12.0 * 3 * len; /* Render the name of the node */
+              y0 = y + mat.xx * f->ascent / 12.0 + icon[3] / 2;
+              maxLenSqr = Sqr ((__int64) Style (w)->scaleMax);
+              //4000000000000LL; // Without scaleMax, use 400000000
+            //}
+            #endif
           }
-          
-          #ifdef _WIN32_WCE
-          SelectObject (mygc, sysFont);
-          const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
-          UTF16 *tStart = (UTF16 *) wcTmp;
-          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
-                sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
-              == conversionOK) {
-            ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
-                wcTmp, (wchar_t *) tStart - wcTmp, NULL);
-          }
-          #endif
-          #ifdef CAIRO_VERSION
-          //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
-            mat.xx = mat.yy = 12.0;
-            mat.xy = mat.yx = 0;
-            x0 = x - mat.xx / 12.0 * 3 * len; /* Render the name of the node */
-            y0 = y + mat.xx * f->ascent / 12.0 + icon[3] / 2;
-            maxLenSqr = Sqr ((__int64) Style (w)->scaleMax);
-            //4000000000000LL; // Without scaleMax, use 400000000
-          //}
-          #endif
         }
         else if (Style (w)->areaColour != -1) {
           #ifndef _WIN32_WCE
@@ -2371,8 +2500,9 @@ int main (int argc, char *argv[])
     fwrite (&pakHead, sizeof (pakHead), 1, pak);
     
     //------------------------- elemstyle.xml : --------------------------
-    char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS], ruleCnt = 0;
-    int defaultRestrict[2 << STYLE_BITS], ruleNr[2 << STYLE_BITS];
+    const char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS];
+    int ruleCnt = 0, ruleNr[2 << STYLE_BITS];
+    int defaultRestrict[2 << STYLE_BITS];
     memset (defaultRestrict, 0, sizeof (defaultRestrict));
     FILE *icons_csv = fopen (FindResource ("icons.csv"), "r");
     xmlTextReaderPtr sXml = xmlNewTextReaderFilename (
@@ -2383,9 +2513,10 @@ int main (int argc, char *argv[])
     }
     styleStruct srec[2 << STYLE_BITS];
     memset (&srec, 0, sizeof (srec));
-    for (int i = 0; i < sizeof (srec) / sizeof (srec[0]); i++) {
+    for (int i = 0; i < int (sizeof (srec) / sizeof (srec[0])); i++) {
       srec[i].lineColour = -1;
       srec[i].areaColour = -1;
+      style_k[i] = style_v[i] = "";
     }
     while (xmlTextReaderRead (sXml)) {
       char *name = (char*) xmlTextReaderName (sXml);
@@ -2433,6 +2564,8 @@ int main (int argc, char *argv[])
               static const char *set[] = { "classic.big_", "classic.small_",
                 "square.big_", "square.small_" };
               for (int i = 0; i < 4; i++) {
+                srec[styleCnt].x[i * 4 + 2] = srec[styleCnt].x[i * 4 + 3] = 1;
+              // Default to 1x1 dummys
                 int slen = strlen (set[i]), vlen = strlen (v);
                 rewind (icons_csv);
                 while (fgets (line, sizeof (line) - 1, icons_csv)) {

@@ -18,7 +18,9 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
+import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
+import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
@@ -39,6 +41,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 	Point iSelectionRectEnd;
 
 	private SizeButton iSizeButton = new SizeButton();
+	private SourceButton iSourceButton = new SourceButton();
 
 	// standard dimension
 	private Dimension iDownloadDialogDimension;
@@ -65,7 +68,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 				BorderLayout.SOUTH);
 		iGui.tabpane.add(temp, tr("Slippy map"));
 
-		new OsmMapControl(this, temp, iSizeButton);
+		new OsmMapControl(this, temp, iSizeButton, iSourceButton);
 		boundingBoxChanged(gui);
 	}
 
@@ -102,6 +105,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 			}
 
 			iSizeButton.paint(g);
+			iSourceButton.paint(g);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -198,6 +202,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 			int w = iScreenSize.width * 90 / 100;
 			int h = iScreenSize.height * 90 / 100;
 			co.setBounds((iScreenSize.width - w) / 2, (iScreenSize.height - h) / 2, w, h);
+			
 		}
 		// shrink
 		else {
@@ -206,6 +211,18 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 			int w = iDownloadDialogDimension.width;
 			int h = iDownloadDialogDimension.height;
 			co.setBounds((iScreenSize.width - w) / 2, (iScreenSize.height - h) / 2, w, h);
+			
+		}
+		
+		repaint();
+	}
+	
+	public void toggleMapSource(int mapSource){
+		this.tileCache = new MemoryTileCache();
+		if(mapSource == SourceButton.MAPNIK){
+			this.tileLoader = new OsmTileLoader(this,OsmTileLoader.MAP_MAPNIK);
+		}else{
+			this.tileLoader = new OsmTileLoader(this,OsmTileLoader.MAP_OSMA);
 		}
 		repaint();
 	}

@@ -1,13 +1,7 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------------
-# Library for handling OpenStreetMap data
+# Library for handling "simple-packed" OpenStreetMap vector data
 #
-# Optimised for use in the pyrender system
-#
-# Handles:
-#   * Interesting nodes, with tags (store as list)
-#   * Ways, with tags (store as list)
-#   * Position of all nodes (store as hash)
 #----------------------------------------------------------------------------
 # Copyright 2008, Oliver White
 #
@@ -32,21 +26,24 @@ import tilenames
 class vmapData:
   def __init__(self, filename=None):
     """Load an OSM XML file into memory"""
-    self.ways = []
+    self.ways = {}
     if(filename != None):
       self.load(filename)
 
   def load(self, filename):
     """Load an OSM XML file into memory"""
     if(not os.path.exists(filename)):
-      print "No such file"
-      return
+      return([])
     f = file(filename, "rb")
 
-    self.ways = []
+    fileID = struct.unpack("I", f.read(4))[0]
+    if(fileID != 1280):
+      print "File version not recognised"
+      return
     numWays = struct.unpack("I", f.read(4))[0]
     for w in range(numWays):
       way = {'n':[],'t':{}}
+      wayID = struct.unpack("I", f.read(4))[0]
       numNodes = struct.unpack("I", f.read(4))[0]
       for n in range(numNodes):
         (x,y,nid) = struct.unpack("III", f.read(3*4))
@@ -58,11 +55,9 @@ class vmapData:
         k = f.read(lenK)
         v = f.read(lenV)
         way['t'][k] = v
-      self.ways.append(way)
-    return(self.ways)
-    
+      self.ways[wayID] = way
 
 if(__name__ == "__main__"):
   a = vmapData()
-  b = a.load("../../TileData2/simple/128_84/16384_10877.dat")
-  print str(b)
+  a.load("../../TileData2/simple/128_84/16384_10877.dat")
+  print str(a.ways)

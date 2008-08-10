@@ -28,7 +28,6 @@ from vmap_load import vmapData
 def getModule(m,d):
   return(vmap(m,d))
 
-  
 class vmap(ranaModule):
   """Display map vectors"""
   def __init__(self, m, d):
@@ -63,6 +62,7 @@ class vmap(ranaModule):
     if(not proj.isValid()):
       return
 
+    self.waysDrawn = {}
     layer = self.get('layer','pyrender')
     
     # Cover the whole map view with tiles
@@ -114,18 +114,20 @@ class vmap(ranaModule):
     
   def drawTile(self,cr,tx,ty,proj):
     mapData = self.tiles["%05d_%05d" % (tx,ty)]
-    for way in mapData.ways:
-      if(self.style(way['t'], cr)):
-        count = 0
-        for node in way['n']:
-          (lat,lon,nid) = node
-          x,y = proj.ll2xy(lat,lon)
-          if(count == 0):    
-            cr.move_to(x,y)
-          else:
-            cr.line_to(x,y)
-          count += 1
-        cr.stroke()
+    for wayID, way in mapData.ways.items():
+      if(not self.waysDrawn.get(wayID, False)): # if not drawn already as part of another tile
+        if(self.style(way['t'], cr)): # setup cairo to draw the way. false means don't draw
+          count = 0
+          for node in way['n']:
+            (lat,lon,nid) = node
+            x,y = proj.ll2xy(lat,lon)
+            if(count == 0):    
+              cr.move_to(x,y)
+            else:
+              cr.line_to(x,y)
+            count += 1
+          cr.stroke()
+        self.waysDrawn[wayID] = True
 
   def update(self):
     pass

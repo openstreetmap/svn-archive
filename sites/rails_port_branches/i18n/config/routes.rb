@@ -124,7 +124,13 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/diary/rss', :controller => 'diary_entry', :action => 'rss'
   map.connect '/diary/:language', :controller => 'diary_entry', :action => 'list'
   map.connect '/diary/:language/rss', :controller => 'diary_entry', :action => 'rss'
-
+  
+  # translation
+  map.connect '/translate/:locale/pending', :controller => 'translate', :action => 'pending'
+  map.connect '/translate/:locale/complete', :controller => 'translate', :action => 'complete'
+  map.connect '/translate/:locale/:id/rss', :controller => 'translate', :action => 'rss'
+  map.connect '/translate/:locale/:id', :controller => 'translate', :action => 'view', :id => /\d+/
+  
   # test pages
   map.connect '/test/populate/:table/:from/:count', :controller => 'test', :action => 'populate'
   map.connect '/test/populate/:table/:count', :controller => 'test', :action => 'populate', :from => 1

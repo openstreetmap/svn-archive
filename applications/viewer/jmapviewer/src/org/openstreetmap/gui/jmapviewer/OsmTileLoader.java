@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
-
 import org.openstreetmap.gui.jmapviewer.interfaces.Job;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
@@ -53,15 +51,15 @@ public class OsmTileLoader implements TileLoader {
 				try {
 					// Thread.sleep(500);
 					input = loadTileFromOsm(tile).getInputStream();
-					tile.setImage(ImageIO.read(input));
+					tile.loadImage(input);
 					tile.setLoaded(true);
 					map.repaint();
 					input.close();
 					input = null;
 				} catch (Exception e) {
 					if (input == null /* || !input.isStopped() */)
-						System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley
-								+ " " + e.getMessage());
+						System.err.println("failed loading " + zoom + "/"
+								+ tilex + "/" + tiley + " " + e.getMessage());
 				} finally {
 					tile.loading = false;
 				}

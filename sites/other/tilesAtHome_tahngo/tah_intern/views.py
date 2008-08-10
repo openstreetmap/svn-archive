@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_control
 def show_log(request):
   read_size=1024
   #TODO use a setting for the log file location?
-  f = open('/var/www/tah/tah_intern/tah.log', 'rU')
+  f = open('/var/log/tah/tahngo.log', 'rU')
   offset = read_size
   f.seek(0, 2)
   file_size = f.tell()

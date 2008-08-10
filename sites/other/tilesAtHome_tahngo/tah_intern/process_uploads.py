@@ -7,7 +7,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 import shutil
 from datetime import datetime
 from time import sleep,clock,time
-from django.conf import settings as djangosettings
+from django.conf import settings
 from tah.tah_intern.models import Settings, Layer
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
@@ -22,9 +22,9 @@ class TileUpload:
   uid=None        #random unique id which is used for pathnames
   tmptiledir=None #usually unzip_path+uid contains the unzipped files
 
-  def __init__(self,settings):
-    self.unzip_path = settings.getSetting(name='unzipPath')
-    self.base_tilepath = settings.getSetting(name='base_tile_path')
+  def __init__(self,config):
+    self.unzip_path = config.getSetting(name='unzipPath')
+    self.base_tilepath = settings.TILES_ROOT
     if self.unzip_path == None or self.base_tilepath == None:
       sys.exit("Failed to get required settings.")
 
@@ -43,7 +43,7 @@ class TileUpload:
           sleep(10)
       starttime = (time(),clock()) # start timing tileset handling now
       self.fname = upload.get_file_filename()
-      #obsolete by above line: os.path.join(djangosettings.MEDIA_ROOT,upload.file)
+      #obsolete by above line: os.path.join(settings.MEDIA_ROOT,upload.file)
       if os.path.isfile(self.fname):
         logging.debug('Handling next tileset: ' + upload.file)
         self.uid = str(random.randint(0,9999999999999999999))
@@ -195,15 +195,15 @@ class TileUpload:
 #---------------------------------------------------------------------
 
 if __name__ == '__main__':
-  settings = Settings()
+  config = Settings()
   logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
                     datefmt = "%y-%m-%d-%H:%M:%S", 
-                    filename=settings.getSetting(name='logFile'),
+                    filename= config.getSetting(name='logFile'),
                     ) 
 
   logging.info('Starting tile upload processor')
-  u = TileUpload(settings)
+  u = TileUpload(config)
   signal.signal(signal.SIGTERM,u.sigterm)
   if not u.process():
       logging.critical('Upload handling returned with error. Aborting.')

@@ -1,6 +1,9 @@
-
+""" call this with arguments 'z x y' or with none to stitch 
+    all recently modified tilesets.
+"""
 import os,sys, tempfile, shutil, StringIO, re
 import Image, ImageEnhance, ImageFilter, ImageChops
+script_path = sys.path[0]
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
@@ -8,8 +11,9 @@ import time
 from datetime import datetime, timedelta
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
-from tah.tah_intern.models import Settings,Layer
+from tah.tah_intern.models import Layer
 from tah.requests.models import Request
+from django.db import settings
 
 class Lowzoom(Tileset):
 
@@ -108,23 +112,29 @@ def find_old_lowzooms(base_tile_path):
   return old_lowzooms
 
 if __name__ == '__main__':
-  base_tile_path = Settings().getSetting(name='base_tile_path')
-  layer=Layer.objects.get(name='tile')
-  old_lowzooms = find_old_lowzooms(base_tile_path)
-  n = len(old_lowzooms)
-  #for i,(z,x,y) in enumerate(old_lowzooms.values()):
-  #for i,(z,x,y) in enumerate([(6,34,18)]):   #for doing one test tileset
-  i,z =0,6   #for doing the whole world...
-  for x in range(1,64):
-   for y in range(0,64):
-    i += 1
-    print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
-    time.sleep(10)
-    now = time.time()
+  base_tile_path = settings.TILES_ROOT
+  if len(sys.argv) != 4:
+    # find all modified tilesets
+    old_lowzooms = find_old_lowzooms(base_tile_path)
+    n = len(old_lowzooms)
+    for i,(z,x,y) in enumerate(old_lowzooms.values()):
+    #i,z =0,6   #for doing the whole world...
+    #for x in range(0,64):
+    # for y in range(0,64):
+    #  i += 1
+      print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
+      #time.sleep(10)
+      now = time.time()
+      os.system("nice python %s/stitch_lowzoom.py %d %d %d" % (script_path,z,x,y))
+      print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
+    #Finally d
+    #now = time.time()
+    #lz.create(layer,z,x,y,base_tile_path)
+    #print "(0,0,0) took %.1f sec." % (time.time()-now)
+  else:
+    # called witz z x y parameters, stitch specific tileset
+    (z,x,y) = map(int, sys.argv[1:4])
+    layer=Layer.objects.get(name='tile')
+    print "Stitching (%d %d %d)" % (z,x,y)
     lz = Lowzoom()
     lz.create(layer,z,x,y,base_tile_path)
-    print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
-  #Finally d
-  #now = time.time()
-  #lz.create(layer,z,x,y,base_tile_path)
-  #print "(0,0,0) took %.1f sec." % (time.time()-now)

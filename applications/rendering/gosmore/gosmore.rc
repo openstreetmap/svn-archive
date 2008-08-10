@@ -7,7 +7,8 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include <windows.h>
+#include <aygshell.h>
+#include <winuserm.h>
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -63,14 +64,28 @@ BEGIN
     PUSHBUTTON      "Cancel",IDC_BUTTON1,65,97,36,14
 END
 
-IDD_SETTAGS DIALOG DISCARDABLE  0, 0, 166, 110
+IDD_SETTAGS DIALOG DISCARDABLE  0, 0, 183, 126
 STYLE DS_MODALFRAME | WS_POPUP
 FONT 8, "System"
 BEGIN
-    EDITTEXT        IDC_NAME,49,7,110,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "Next",IDOK,7,89,40,14
-    PUSHBUTTON      "Cancel",IDCANCEL,115,89,44,14
+    EDITTEXT        IDC_NAME,35,7,141,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,88,40,14
+    PUSHBUTTON      "Cancel",IDCANCEL,71,88,44,14
     LTEXT           "Name",IDC_STATIC,7,7,19,13,SS_CENTERIMAGE
+    EDITTEXT        IDC_NOTE,35,26,141,14,ES_AUTOHSCROLL
+    LTEXT           "Note",IDC_STATIC,7,28,16,8
+    CONTROL         "Oneway",IDC_ONEWAY2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,49,43,10
+    CONTROL         "Bridge",IDC_BRIDGE2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,71,36,10
+    PUSHBUTTON      "Rd",IDC_RD1,157,46,19,14
+    PUSHBUTTON      "St",IDC_ST1,157,63,19,14
+    PUSHBUTTON      "Ave",IDC_AVE1,157,81,19,14
+    PUSHBUTTON      "Rd",IDC_RD2,7,105,19,14
+    PUSHBUTTON      "St",IDC_ST2,35,105,19,14
+    PUSHBUTTON      "Ave",IDC_AVE2,60,105,19,14
+    PUSHBUTTON      "Dr",IDC_DR1,157,99,19,14
+    PUSHBUTTON      "Dr",IDC_DR2,88,105,19,14
 END
 
 IDD_SETTAGS2 DIALOG DISCARDABLE  0, 0, 173, 108
@@ -118,9 +133,9 @@ BEGIN
     IDD_SETTAGS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 159
+        RIGHTMARGIN, 176
         TOPMARGIN, 7
-        BOTTOMMARGIN, 103
+        BOTTOMMARGIN, 119
     END
 
     IDD_SETTAGS2, DIALOG

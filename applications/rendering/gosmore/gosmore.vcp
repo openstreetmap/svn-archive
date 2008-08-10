@@ -259,11 +259,11 @@ DEP_CPP_GOSMO=\
 	".\ceglue.h"\
 	".\ConvertUTF.h"\
 	".\icons.xpm"\
-	{$(INCLUDE)}"aygshell.h"\
-	{$(INCLUDE)}"sipapi.h"\
-	{$(INCLUDE)}"winuserm.h"\
 	
 NODEP_CPP_GOSMO=\
+	".\inuserm.h"\
+	".\ipapi.h"\
+	".\ygshell.h"\
 	"C:\Program Files\Windows CE Tools\wce420\POCKET PC 2003\Include\emulator\vibrate.h"\
 	
 
@@ -320,6 +320,10 @@ SOURCE=.\gosmore.rc
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons.bmp
 # End Source File
 # End Group
 # End Target

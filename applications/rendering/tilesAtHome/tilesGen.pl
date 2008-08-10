@@ -1314,7 +1314,7 @@ sub UpdateClient #
 
     if ($svn_status eq '')
     {
-        my $versionfile = $Config->get("WorkingDirectory") . "/version.txt";
+        my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
     }
     else
@@ -1328,7 +1328,7 @@ sub UpdateClient #
 sub NewClientVersion 
 {
     return 0 if (time() - $LastTimeVersionChecked < 600);
-    my $versionfile = $Config->get("WorkingDirectory") . "/version.txt";
+    my $versionfile = "version.txt";
     my $runningVersion;
     if (open(versionfile, "<", $versionfile))
     {
@@ -1348,7 +1348,7 @@ sub NewClientVersion
     }
     # return 0;
 
-    my $curVerFile = $Config->get("WorkingDirectory") . "/newversion.txt";
+    my $curVerFile = "newversion.txt";
     my $currentVersion;
     
     DownloadFile($Config->get("VersionCheckURL"), $curVerFile ,0);

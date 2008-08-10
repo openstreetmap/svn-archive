@@ -1197,7 +1197,8 @@ sub RenderTile
     # if a higher zoom tile would contain data that is not rendered at the 
     # current zoom level. 
     my ($success,$empty) = svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile);
-    if (!$success) {
+    if (!$success)
+    {
        return (0,$empty);
     }
     if ($empty and !$Config->get($layer."_RenderFullTileset")) 
@@ -1209,12 +1210,12 @@ sub RenderTile
     if($SkipEmpty == 1) 
     {
         # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
-        for (my $j = $Config->get($layer."_MaxZoom"); $j >= $Zoom ; $j--) 
+        for (my $j = $Config->get($layer."_MaxZoom"); $j >= $Zoom ; $j--)
         {
             $progress += 2 ** ($Config->get($layer."_MaxZoom")-$j);
         }
     }
-    else 
+    else
     {
         $progress += 1;
     }
@@ -1247,7 +1248,8 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    if ($Config->get("Fork") && $Zoom >= $ZOrig && $Zoom < ($ZOrig + $Config->get("Fork"))) {
+    if ($Config->get("Fork") && $Zoom >= $ZOrig && $Zoom < ($ZOrig + $Config->get("Fork")))
+    {
         my $pid = fork();
         if (not defined $pid) 
         {
@@ -1265,7 +1267,9 @@ sub RenderTile
             {
                 exit(1);
             }
-        } else {
+        }
+        else
+        {
             ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
             waitpid($pid,0);
             my $ChildExitValue = $?; # we don't want the details, only if it exited normally or not.
@@ -1274,11 +1278,14 @@ sub RenderTile
                 return (0,$SkipEmpty);
             }
         }
-        if ($Zoom == $ZOrig) {
+        if ($Zoom == $ZOrig)
+        {
             $progressPercent=100 if (! $Config->get("Debug")); # workaround for not correctly updating %age in fork, disable in debug mode
             statusMessage("Finished $X,$Y for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
         }
-    } else {
+    }
+    else
+    {
         ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
         return (0,$empty) if (!$success);
         ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
@@ -1291,6 +1298,7 @@ sub RenderTile
 
 #-----------------------------------------------------------------------------
 # Gets latest copy of client from svn repository
+# returns 1 on perceived success.
 #-----------------------------------------------------------------------------
 sub UpdateClient # 
 {
@@ -1316,12 +1324,13 @@ sub UpdateClient #
     {
         my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
+        return 1;
     }
     else
     {
         statusMessage("svn status did not come back clean, check your installation",$currentSubTask, $progressJobs, $progressPercent,1);
         print STDERR $svn_status;
-        cleanUpAndDie("Auto-update failed","EXIT",1,$PID);
+        return cleanUpAndDie("Auto-update failed","EXIT",1,$PID);
     }
 }
 

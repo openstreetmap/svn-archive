@@ -1,4 +1,5 @@
 /authentication.conf
 /tilesAtHome.conf
 /tmp
-/*.osm
+/*.osm 
+/*.txt

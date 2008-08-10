@@ -30,11 +30,12 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 	private final SlippyMapChooser iSlippyMapChooser;
 
 	private SizeButton iSizeButton = null;
+	private SourceButton iSourceButton = null;
 
 	/**
 	 * Create a new OsmMapControl
 	 */
-	public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane, SizeButton sizeButton) {
+	public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane, SizeButton sizeButton, SourceButton sourceButton) {
 		this.iSlippyMapChooser = navComp;
 		iSlippyMapChooser.addMouseListener(this);
 		iSlippyMapChooser.addMouseMotionListener(this);
@@ -52,6 +53,7 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 			}
 		}
 		iSizeButton = sizeButton;
+		iSourceButton = sourceButton;
 	}
 
 	/**
@@ -85,10 +87,21 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
+			
+			int sourceButton = iSourceButton.hit(e.getPoint());
+			
 			if (iSizeButton.hit(e.getPoint())) {
 				iSizeButton.toggle();
 				iSlippyMapChooser.resizeSlippyMap();
-			} else {
+			}
+			else if(sourceButton == SourceButton.HIDE_OR_SHOW) {
+				iSourceButton.toggle();
+				iSlippyMapChooser.repaint();
+				
+			}else if(sourceButton == SourceButton.MAPNIK || sourceButton == SourceButton.OSMARENDER) {
+				iSlippyMapChooser.toggleMapSource(sourceButton);
+			}
+			else {
 				if (e.getClickCount() == 1) {
 					iSlippyMapChooser.setSelection(iStartSelectionPoint, e.getPoint());
 
@@ -97,6 +110,7 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 					iStartSelectionPoint = null;
 				}
 			}
+			
 		}
 	}
 

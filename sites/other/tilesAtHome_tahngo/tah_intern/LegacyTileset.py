@@ -5,7 +5,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 from time import clock, time
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
-from tah.tah_intern.models import Settings,Layer
+from tah.tah_intern.models import Layer
+from django.conf import settings
 
 class LegacyTileset(Tileset):
   leg_basetiledir='/mnt/agami/openstreetmap/tah/Tiles/'
@@ -80,7 +81,7 @@ class LegacyTileset(Tileset):
       return (0,'Unknown error while saving tileset.')
 
 if __name__ == '__main__':
-  base_tile_path = Settings().getSetting(name='base_tile_path')
+  base_tile_path = settings.TILES_ROOT
   layer=Layer.objects.get(name='tile')
   for x in range (0,4096):
       for y in range (0,4096):

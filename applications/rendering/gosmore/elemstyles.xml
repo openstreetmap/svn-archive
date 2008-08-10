@@ -178,6 +178,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="sports/bicycle.png" />
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
+                <routing bicycle="20"/> <!-- Also see cycleway -->
 	</rule>
 
 	<rule>
@@ -192,6 +193,8 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/no_icon.png" />
 		<scale_min>1</scale_min>
 		<scale_max>10000</scale_max>
+                <routing bicycle="5" foot="5"/> <!-- Usually you can push
+                your bicycle on one of these. Also see footway -->
 	</rule>
 
 	<rule>
@@ -220,6 +223,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon src="sports/riding.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
+                <routing bicycle="20" foot="5" horse="10"/> <!-- Also see bridleway -->
 	</rule>
 
 	<rule>
@@ -463,7 +467,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="30" hgv="30" motorcar="30" psv="30"/>
+        <routing bicycle="20" foot="5" goods="10" hgv="10" motorcar="10" psv="10"/>
     </rule>
 
     <rule>
@@ -481,7 +485,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
-        <routing bicycle="20" foot="5" horse="10"/>
+        <routing bicycle="20" foot="5" horse="10"/> <!-- Also see horse=designated -->
 	</rule>
 
 	<rule>
@@ -490,7 +494,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-        <routing bicycle="20" foot="5"/>
+        <routing bicycle="20"/> <!-- Also see bicyle=designated -->
 	</rule>
 
 	<rule>
@@ -499,7 +503,8 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
-        <routing bicycle="20" foot="5"/>
+        <routing bicycle="5" foot="5"/> <!-- Usually you can push
+                your bicycle on one of these. Also see foot=designated -->
 	</rule>
 
 	<rule>

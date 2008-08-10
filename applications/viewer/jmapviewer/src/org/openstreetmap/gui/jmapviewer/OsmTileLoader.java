@@ -34,8 +34,9 @@ public class OsmTileLoader implements TileLoader {
 		this.baseUrl = baseUrl;
 	}
 
-	public void addLoadRequest(final int tilex, final int tiley, final int zoom) {
-		map.jobDispatcher.addJob(new Job() {
+	public Job createTileLoaderJob(final int tilex, final int tiley,
+			final int zoom) {
+		return new Job() {
 
 			InputStream input = null;
 
@@ -76,7 +77,7 @@ public class OsmTileLoader implements TileLoader {
 				} catch (Exception e) {
 				}
 			}
-		});
+		};
 	}
 
 	protected HttpURLConnection loadTileFromOsm(Tile tile) throws IOException {

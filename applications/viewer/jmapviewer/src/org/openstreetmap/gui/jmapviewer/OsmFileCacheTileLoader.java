@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.Job;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
@@ -55,11 +56,11 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		this(map, MAP_MAPNIK);
 	}
 
-	public void addLoadRequest(final int tilex, final int tiley, final int zoom) {
-		map.jobDispatcher.addJob(new FileLoadJob(tilex, tiley, zoom));
+	public Job createTileLoaderJob(final int tilex, final int tiley, final int zoom) {
+		return new FileLoadJob(tilex, tiley, zoom);
 	}
 
-	protected class FileLoadJob implements Runnable {
+	protected class FileLoadJob implements Job {
 		InputStream input = null;
 
 		int tilex, tiley, zoom;
@@ -208,6 +209,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				System.err.println("Failed to save tile content: "
 						+ e.getLocalizedMessage());
 			}
+		}
+
+		public void stop() {
 		}
 	}
 

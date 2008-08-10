@@ -24,6 +24,7 @@ class Tileset:
     self.y = y
     self.tiles = {} # empty set contains no tiles yet
     if layer and base_z!=None and x!=None and y!=None: self.init=True
+    else: self.init = False
 
   def add_tile(self,t,tilefile):
     if self.fits_tileset(t):

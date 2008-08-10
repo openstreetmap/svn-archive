@@ -17,6 +17,7 @@ Zip=c:\program files\zip\zip.exe
 Pngcrush=c:\program files\pngcrush\pngcrush.exe
 Optipng=c:\program files\optipng\optipng.exe
 Subversion=c:\program files\subversion\svn.exe
+PNGnq=c:\program files\pngnq\pngnq.exe
 
 ## If you want to use 7Zip set this to 1 and set "Zip" above to your 7zip.exe
 7zipWin=0

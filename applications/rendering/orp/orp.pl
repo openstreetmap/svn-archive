@@ -358,7 +358,7 @@ if (defined($symbolsDir))
 {
     $symbolsDir = '../osmarender/' . $symbolsDir;
     $writer->startTag("defs", "id" => "defs-symbols");
-    my $refs = $rules->find('/rules//symbol/@ref');
+    my $refs = $rules->find('/rules//symbol/@ref | /rules//areaSymbol/@ref');
     foreach my $node ($refs->get_nodelist) 
     {
 	my $file = $node->getNodeValue;

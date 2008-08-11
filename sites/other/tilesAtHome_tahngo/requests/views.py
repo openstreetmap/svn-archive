@@ -139,6 +139,8 @@ def feedback(request):
     CreateFormClass.base_fields['priority'].required = False
     CreateFormClass.base_fields['status'].required = False 
     CreateFormClass.base_fields['status'].widget = widgets.HiddenInput()
+    #CreateFormClass.base_fields['client_uuid'].required = False
+    #CreateFormClass.base_fields['client_uuid'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['max_z'].required = False 
     CreateFormClass.base_fields['max_z'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['layers'].widget = widgets.CheckboxSelectMultiple(  
@@ -164,9 +166,9 @@ def feedback(request):
             reqs = Request.objects.filter(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z'])
             num = reqs.count()
             reqs.update(status=0)
-            html = "Reset %d tileset to pending (%d,%d,%d)" % \
+            html = "Reset %d tileset (%d,%d,%d)" % \
                       (num,formdata['min_z'],formdata['x'],formdata['y'])
-            logging.info("%s by user %s. Cause: %s" %(html,user,request.POST['cause']))
+            logging.info("%s by user %s (uuid: %s). Cause: %s" %(html,user,request.POST.get('client_uuid','0'),request.POST.get('cause','unknown')))
       	  else:
             html="XX|4|form is not valid. "+str(form.errors)
       else:

@@ -186,6 +186,7 @@ def upload_request(request):
     UploadFormClass.base_fields['priority'].required = False
     UploadFormClass.base_fields['file'].required = False
     UploadFormClass.base_fields['client_uuid'].required = False
+    UploadFormClass.base_fields['client_uuid'].widget = widgets.HiddenInput()
     UploadFormClass.base_fields['is_locked'].required = False
     UploadFormClass.base_fields['is_locked'].widget = widgets.HiddenInput()
     UploadFormClass.base_fields['user_id'].required = False

@@ -57,9 +57,12 @@ class Lowzoom(Tileset):
           image = Image.open(imagefile).convert('RGB')
         except IOError, e:
           #fall back to tile image
-          print "Try %d: %s at (%d,%d,%d). " % (retries,e,z+1,2*x+i,2*y+j)          
+          print "Try: %s at (%d,%d,%d). " % (e,z+1,2*x+i,2*y+j)          
           image = Image.open(StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('tile')))
-          image = Image.open(imagefile)
+          try: image = Image.open(imagefile)
+          except IOError, e:
+            print "Try: %s at (%d,%d,%d). " % (e,z+1,2*x+i,2*y+j)          
+            image = Image.open(StringIO.StringIO(Tile(None,12,0,0).serve_tile('tile'))) #hacky way to get a sea tile
 
         im.paste(image, (256*i,256*j))
         del (image)

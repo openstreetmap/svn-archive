@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
+	
+	<svg:defs>
+		<svg:symbol id="symbol-church" viewBox="0 0 10 10" fill="#000000">
+			<svg:g transform="translate (2.5,0)">
+				<svg:path d="M 0 10 L 0 5 L 5 5 L 5 10 z M 0 2 L 5 2 L 5 3 L 0 3 z M 2 0 L 2 5 L 3 5 L 3 0 z"/>
+			</svg:g>
+		</svg:symbol>	
+	</svg:defs>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
+	
+	<svg:defs>
+		<svg:symbol id="symbol-windmill" viewBox="0 0 480 480">
+			<svg:g transform="translate(82,0)">
+				<svg:path fill="#000000" d="M106.7,148.2l104-1l61,333l-231-1"/>
+				<svg:path fill="none" stroke="#000000" stroke-width="24" d="M6.7,201 l284-191"/>
+				<svg:path fill="none" stroke="#000000" stroke-width="24" d="M19.7,17.5 l290,176"/>
+			</svg:g>
+		</svg:symbol>	
+	</svg:defs>
+</svg>

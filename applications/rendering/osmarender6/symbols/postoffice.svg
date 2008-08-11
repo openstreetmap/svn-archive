@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
+	
+	<svg:defs>
+		<svg:symbol id="symbol-postoffice" viewBox="0 0 36 36">
+			<svg:ellipse style="fill:#ff0000" cx="18" cy="18" rx="18" ry="18"/>
+			<svg:path style="fill:#ffffff" d="M26 25.44 L26 35.44 L2 35.44 L2 25.44 L14 31.44 L26 25.44 Z M2 23.44 L26 23.44 L14 29.44 L2 23.44 Z M0 37.44 L28 37.44 L28 21.44 L0 21.44 L0 37.44 Z" transform="translate(4,-11.44)"/>
+		</svg:symbol>	
+	</svg:defs>
+</svg>

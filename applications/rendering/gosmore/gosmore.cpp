@@ -1296,6 +1296,7 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
 
     wstrlen = Edit_GetLine (GetDlgItem (hwnd, IDC_NOTE), 0,
       name, sizeof (name));
+    sStart = name;
     tStart = (unsigned char*) newWays[newWayCnt].note;
     ConvertUTF16toUTF8 ((const UTF16 **)&sStart,  sStart + wstrlen,
         &tStart, tStart + sizeof (newWays[0].note), lenientConversion);
@@ -3477,7 +3478,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
   return 0;
 }
 
-void XmlOut (FILE *newWayFile, char *v, char *k)
+void XmlOut (FILE *newWayFile, char *k, char *v)
 {
   if (*v != '\0') {
     fprintf (newWayFile, "  <tag k='%s' v='", k);

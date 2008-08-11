@@ -75,20 +75,17 @@ class Projection(ranaModule):
     the 'allowed' zoom levels"""
     if(self.zoom < 6):
       self.zoom = 6
-    if(self.zoom > 17):
-      self.zoom = 17
-  
+
   def implementNewZoom(self, zoom):
     """Change the zoom level"""
     self.zoom = int(zoom)
-    # Check it's valid
     self.limitZoom()
-    # Update the projection
     self.findEdges()
+    self.set('needRedraw', True)
   
   def findEdges(self):
     """Update the projection meta-info based on its fundamental parameters"""
-    if(not self.xyValid):
+    if(not self.xyValid or not self.llValid):
       # If the display is not known yet, then we can't do anything, but we'll
       # mark it as something that needs doing as soon as the display 
       # becomes valid

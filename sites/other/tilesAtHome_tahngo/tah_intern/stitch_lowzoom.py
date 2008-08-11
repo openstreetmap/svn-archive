@@ -42,14 +42,16 @@ class Lowzoom(Tileset):
     #print "tile %s %d %d %d " % (layer,z,x,y)
     pngfilepath = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z,x,y))
     im = Image.new('RGB', (512,512))
-
     img_caption_file = StringIO.StringIO(Tile(None,z,x,y).serve_tile('caption'))
     img_caption = Image.open(img_caption_file)
 
     for i in range(0,2):
       for j in range(0,2):
         if z == self.base_z+5: 
-          imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
+          #stitch z0-5 from tiles layer until we have a propoer captionless layer at z6
+          if z==5: src_layer='tile'
+          else: src_layer='captionless'
+          imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile(src_layer))
         else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png_nocaptions" % (z+1,2*x+i,2*y+j))
         try:
           image = Image.open(imagefile).convert('RGB')

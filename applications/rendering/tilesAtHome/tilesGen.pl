@@ -711,7 +711,7 @@ sub PutRequestBackToServer
                            passwd => $Config->get("UploadPassword"),
                            version => $Config->get("ClientVersion"),
                            cause => $Cause,
-                           client_id => GetClientId() ]);
+                           client_uuid => GetClientId() ]);
 
     if(!$res->is_success())
     {

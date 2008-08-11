@@ -518,7 +518,8 @@ sub upload
 
     keepLog($PID,"upload","start","$progressJobs");
 
-    my $UploadScript = "perl $Bin/upload.pl $progressJobs";
+    my $UploadMode = ($Mode eq "upload_loop") ? "upload_loop" : "upload";
+    my $UploadScript = "perl $Bin/upload.pl $UploadMode $progressJobs";
     my $retval = system($UploadScript);
 
     keepLog($PID,"upload","stop","return=$retval");

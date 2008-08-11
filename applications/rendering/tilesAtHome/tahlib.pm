@@ -446,7 +446,7 @@ sub GetClientId
     }
     elsif (open(idfile, ">", $idfile))
     {
-        $clientId = int(rand(2147483648)); 
+        $clientId = int(rand(65535)); 
         print idfile $clientId;
         close idfile;
     }

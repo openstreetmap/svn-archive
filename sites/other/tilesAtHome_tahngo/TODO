@@ -1,18 +1,22 @@
 t@h server
 ==========
-NOTE, spaetz will be gone Aug 1st-Aug 18th, so he won't be able to do something during that time!
 
- - Enable logging in the server and log all kinds of client errors (no-data, ...)
- - make feedback URL use client authentication
- - check for client Version
+ - Examine the password situation. why are non-character passwords failing?
+ - Log more client and server errors (no-data, ...)
+ - Enable client to hand back requests as "oldData" (ie API data older than tileset on server) which would delete the request.
+ - Save the client_uuid in the request database with finished requests
+ - Show last uploaded tilesets for each user on their user page.
  - Check the "LayerCapabilities" of the client and only send appropriate requests.
- - Discard incomplete tileset uploads (mail user?)
- - Make use of complexity that client can handle and only hand out to clients that can.
- - Fixup lowzoom stitching to look good, so we can do that server side again. (nearly there)
- - Fix MapOf to return the exact excerpt.
+ - Discard incomplete tileset uploads (mail user?). Check for obvious failures? (better on client side)
+ - Make lowzoom stitching run in a good way (cron). Implement blacklisted areas for people wanting to upload their own lowzoom.
 
 t@h client (will not be implemented by spaetz)
 ==========
  - generally go through the code and remove superfluous code (e.g. non-tileset uploads)
  - implement "I'm still on it" pinging
  - Send the current client version as data (or other numeric) string that we can compare against. We don't want to maintain a list of city names in the server.
+ - assemble tilesets on the clientside already, don't upload zip files
+ - check last-modified age of tileset, compare with API age and skip request if the tileset on the server is younger already
+ - return a request if the tileset complexity is higher than what the client is willing to handle
+ - Fork the rendering in 2 threads, have one already downloading the next task, while the first is still rendering the tiles.
+   (downloading can take quite a while, but doesn't consume lots of resources - at least on the client side, so we could speed up rendering by doing this already) 

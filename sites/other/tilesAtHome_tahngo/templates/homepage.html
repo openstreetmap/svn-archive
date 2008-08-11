@@ -4,7 +4,7 @@
 {% block heading %}TilesAtHome server{% endblock %}
 {% block content %}
 <h4>About</h4>
-<p>This is a rewrite of the original t@h server which has become unmaintainable over time. You can retrieve the current code base from <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo">svn</a>. You need to use an up-to-date t@h client. In authentication.conf you should enter your OSM-email and OSM password. For planned changes and improvements read the <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo/TODO">TODO</a> and let me know if your favorite feature is broken or not implemented yet.</p>
+<p>This is the TilesAtHome (t@h) server which distributes render requests to t@h clients and makes the uploaded tile files available. <a href="http://wiki.openstreetmap.org/index.php/Tiles%40home/Install_Guide">Installation instructions</a> for t@h clients are in our wiki, as are <a href="http://wiki.openstreetmap.org/index.php/Tiles%40home">further information</a> on the server. Clients should enter their OSM-email and OSM password in authentication.conf. For planned changes and improvements read the <a href="http://svn.openstreetmap.org/sites/other/tilesAtHome_tahngo/TODO">TODO</a> and let me know if your favorite feature is broken or not implemented yet.</p>
 <h4>Sitemap</h4><ul>
 <li><a href="{% url tah.requests.views.index %}">Render Requests</a> (create, see, upload render requests)</li>
 <li><a href="{% url tah.browse.views.index %}">Browse Statically</a> (Browse the map in a non-javascript viewer)</li>

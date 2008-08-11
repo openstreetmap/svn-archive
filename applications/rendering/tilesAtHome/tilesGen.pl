@@ -65,6 +65,12 @@ my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
 
+# set the progress indicator variables
+my $currentSubTask;
+my $progress = 0;
+my $progressJobs = 0;
+my $progressPercent = 0;
+
 if ($UploadMode)
 {
     %EnvironmentInfo = CheckBasicConfig($Config);
@@ -102,12 +108,6 @@ printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n",
 # This should not be saved, as they may render later. 
 # there also might be false positives due to mangled inkscape preference file.
 my %unrenderable;
-
-# set the progress indicator variables
-my $currentSubTask;
-my $progress = 0;
-my $progressJobs = 0;
-my $progressPercent = 0;
 
 # keep track of time running
 my $progstart = time();

@@ -38,6 +38,7 @@ use GD qw(:DEFAULT :cmp);
 use AppConfig qw(:argcount);
 use locale;
 use POSIX qw(locale_h);
+use Encode;
 
 #---------------------------------
 
@@ -2116,7 +2117,8 @@ sub fileUTF8ErrCheck
     while (my $osmline = shift @toCheck)
     {
         $line++;
-        if (utf8::is_utf8($osmline)) # this requires perl 5.8.1+
+        eval { decode("utf8",$osmline, Encode::FB_CROAK) };
+        if ($@)
         {
             return $line; # returns the line the error occured on
         }

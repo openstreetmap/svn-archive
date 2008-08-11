@@ -39,8 +39,8 @@ class TranslateController < ApplicationController
   end
 
   def rss
+    Locale.set params[:locale]
     if params[:id] == 'pending'
-      Locale.set params[:locale]
       @entries = Translation.find(:all, :conditions => ['text IS NULL AND language_id = ?', Locale.language.id], :order => 'id DESC', :limit => 20)
       @title = "OpenStreetMap pending translations for #{Locale.language} (#{Locale.country.english_name})"
       @description = "Recent OpenStreetmap pending translation strings for #{Locale.language} (#{Locale.country.english_name})"

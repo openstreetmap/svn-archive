@@ -238,13 +238,13 @@ sub compress
         my $hostname = `hostname`;
         chomp $hostname;
         $hostname .= "XXXXX";
-        $Filename = sprintf("%s/%d_%s_%d_%d_%s%s.zip", $OutputDir, $epochtime,
-          substr($hostname,0,5), $$, $ZipFileCount++, $Layer, $SingleTileset);
+        $Filename = sprintf("%s/%d_%s_%d_%d_%d_%s%s.zip", $OutputDir, $epochtime,
+          substr($hostname,0,5), GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset);
     }
     else 
     {
-        $Filename = sprintf("%s/%d_%d_%d_%s%s.zip", $OutputDir,
-          $epochtime, $$, $ZipFileCount++, $Layer, $SingleTileset);
+        $Filename = sprintf("%s/%d_%d_%d_%d_%s%s.zip", $OutputDir,
+          $epochtime, GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset);
     }
     
     # ZIP all the tiles into a single file

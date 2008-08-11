@@ -30,8 +30,9 @@ class infoOverlay(ranaModule):
     ranaModule.__init__(self, m, d)
     self.lines = ['hello', 'world']
     self.oldlines = ['','']
-    self.mode = 0
-    self.modes = ['pos', 'road', 'speed', 'maxSpeed', 'bearing', 'time']
+    self.mode = 1
+    self.isGraphical = False
+    self.modes = ['pos', 'gps', 'road', 'speed', 'maxSpeed', 'bearing', 'time']
 
   def get_none(self):
     pass
@@ -44,6 +45,9 @@ class infoOverlay(ranaModule):
       self.lines.append('%1.4f, %1.4f' % pos)
       self.lines.append("Position from: %s" % self.get('pos_source', 'unknown'))
   
+  def get_gps(self):
+    self.isGraphical = "GPS"
+    
   def get_road(self):
     text = self.get('nearest_road', None)
     if(text != None):
@@ -73,12 +77,13 @@ class infoOverlay(ranaModule):
     # The get_xxx functions all fill-in the self.lines array with
     # text to display, where xxx is the selected mode
     self.lines = []
+    self.isGraphical = False
     fn = getattr(self, "get_%s" % self.modes[self.mode], self.get_none)
     fn()
     
     # Detect changes to the lines being displayed,
     # and ask for redraw if they change
-    if(len(self.lines) != len(self.oldlines)):
+    if(len(self.lines) != len(self.oldlines) or self.isGraphical):
       self.set('needRedraw', True)
     else:
       for i in range(len(self.lines)):
@@ -96,6 +101,49 @@ class infoOverlay(ranaModule):
       if(self.mode >= len(self.modes)):
         self.mode = 0
       self.onModeChange()
+      
+  def drawGPS(self, cr,x,y,w,h):
+    num = self.get("gps_num_sats", 0)
+    #print "%d sats" % num
+    if(num < 1):
+      return
+    
+    max = 1.0
+    sats = []
+    for i in range(num):
+      (db,used,id) = self.get("gps_sat_%d"%i, (0,0,0))
+
+      db = float(db)
+      sats.append((db, used, id))
+      if(db > max):
+        max = db
+
+    max *= 1.1
+
+    dx = w / float(num)
+    barWidth = dx * 0.7
+
+    for sat in sats:
+      (db,used,id) = sat
+      #print "%d: %f" % (i, db)
+      
+      # Signal strength meter
+      if(used):
+        cr.set_source_rgb(0,0.7,0.9)
+      else:
+        cr.set_source_rgb(0,0.3,0.5)
+      barHeight = h * (float(db) / max)
+      cr.rectangle(x,y,barWidth,barHeight)
+      cr.fill()
+
+      # Satellite ID atop the signal strength meter
+      cr.set_font_size(20.0 * 8.0 / float(num))
+      cr.set_source_rgb(1,1,0)
+      cr.move_to(x+6, y - 4)
+      cr.show_text("%02d" % id)
+      cr.stroke()
+      
+      x += dx
       
   def drawMapOverlay(self, cr):
     """Draw an overlay on top of the map, showing various information
@@ -118,6 +166,8 @@ class infoOverlay(ranaModule):
     cr.set_source_rgb(0,0,0)
     cr.rectangle(x1,y1,w,dy)
     cr.fill()
+    if(self.isGraphical == 'GPS'):
+      self.drawGPS(cr,x,y2,w,-dy)
 
     numlines = len(self.lines)
     if(numlines < 1):

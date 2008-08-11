@@ -904,20 +904,15 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
     statusMessage("Checking for UTF-8 errors in $DataFile", $currentSubTask, $progressJobs, $progressPercent, 0);
-    open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
-    my @toCheck = <OSMDATA>;
-    close(OSMDATA);
-    while (my $osmline = shift @toCheck)
+    if (fileUTF8ErrCheck($DataFile))
     {
-      if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
-      {
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $currentSubTask, $progressJobs, $progressPercent, 1);
         PutRequestBackToServer($X,$Y,$Zoom,"BadUTF8");
         addFault("utf8",1);
         return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
-      }
     }
     resetFault("utf8"); #reset to zero if no UTF8 errors found.
+
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -2104,3 +2099,27 @@ sub checkDataFaults
         }
     }
 }
+
+#--------------------------------------------------------------------------------------
+# check for utf-8 faults in file and return false if UTF-8 clean, otherwise return the 
+# number of the first line where an utf-8 error occured
+#--------------------------------------------------------------------------------------
+
+sub fileUTF8ErrCheck
+{
+    my $DataFile = shift();
+    open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
+    my @toCheck = <OSMDATA>;
+    close(OSMDATA);
+    my $line=0;
+    while (my $osmline = shift @toCheck)
+    {
+        $line++;
+        if (utf8::is_utf8($osmline)) # this requires perl 5.8.1+
+        {
+            return $line; # returns the line the error occured on
+        }
+    }
+    return 0;
+}
+

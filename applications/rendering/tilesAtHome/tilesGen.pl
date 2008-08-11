@@ -1946,7 +1946,7 @@ sub reExecIfRequired
 #-----------------------------------------------------------------------------
 # A function to re-execute the program.  
 #
-# This function restarts the program uncoditionally.
+# This function restarts the program unconditionally.
 #-----------------------------------------------------------------------------
 sub reExec
 {
@@ -1965,7 +1965,7 @@ sub reExec
         "progressJobs=$progressJobs", 
         "idleSeconds=" . getIdle(1), 
         "idleFor=" . getIdle(0), 
-        "progstart=$progstart" or die;
+        "progstart=$progstart" or die("could not reExec");
 }
 
 

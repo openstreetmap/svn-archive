@@ -8,7 +8,7 @@ import xml
 from tilenames import *
 import mobileEncoding
 
-z = 15
+z = 12
 
 class dbStore:
   def __init__(self, c):
@@ -62,6 +62,8 @@ class dbStore:
     data = sqlite3.Binary(mobileEncoding.storeWay(waynodes, tags))
     self.c['way'].execute("insert into ways values(?,?)", (wid,data))
     self.c['way_db'].commit()
+    if(self.countWays % 10000 == 0):
+      print "Done %dk ways" % (self.countWays / 1000)
     self.countWays += 1
 
   def storePoi(self,id,tags, latlon):
@@ -154,7 +156,7 @@ def insertNodes(c, nodes):
 if(__name__ == "__main__"):
 
   conn = {}
-  conn['meta_db'] = sqlite3.connect('data/db.dat')
+  conn['meta_db'] = sqlite3.connect('data/meta.dat')
   conn['poi_db'] = sqlite3.connect('data/poi.dat')
   conn['poi_db'].text_factory = str
   conn['way_db'] = sqlite3.connect('data/way.dat')

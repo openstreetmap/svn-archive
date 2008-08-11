@@ -35,6 +35,7 @@ if ($#ARGV < 0)
    die "please call \"tilesGen.pl upload\" instead";
 }
 
+
 # conf file, will contain username/password and environment info
 # Read the config file
 our $Config = AppConfig->new({
@@ -69,7 +70,7 @@ my @sorted;
 # when called from tilesGen, use these for nice display
 my $progress = 0;
 my $progressPercent = 0;
-my $progressJobs = $ARGV[0];
+my ($Mode, $progressJobs) = @ARGV;
 my $currentSubTask = "upload";
  
 ### TODO: implement locking, this is one of the things that make upload not multithread-safe.
@@ -219,6 +220,8 @@ sub upload
         $File=~m{_([^_]+)(_tileset)?\.zip}x;
         $Layer=$1;
     }
+    $File =~ m{_(\d+)_\d+_\d+_[^_]+(_tileset)?\.zip}x;
+    my $clientId = $1;
     if((! $Config->get("UploadToDirectory")) or (! -d $Config->get("UploadTargetDirectory")))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
@@ -242,7 +245,7 @@ sub upload
                            passwd => $Config->get("UploadPassword"),
                            version => $Config->get("ClientVersion"),
                            layer => $Layer,
-                           client_uuid => GetClientId() ]);
+                           client_uuid => ($Mode eq "upload_loop") ? $clientId : GetClientId() ]);
              
             if(!$res->is_success())
             {

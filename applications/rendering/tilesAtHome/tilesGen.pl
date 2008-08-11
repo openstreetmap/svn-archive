@@ -1962,7 +1962,7 @@ sub reExec
         waitpid($child_pid, 0);
     }
     exec "perl", $0, $Mode, "reexec", 
-        "progressJobs=$progressJobs", 
+        "progressJobs=" . $progressJobs, 
         "idleSeconds=" . getIdle(1), 
         "idleFor=" . getIdle(0), 
         "progstart=$progstart" or die("could not reExec");

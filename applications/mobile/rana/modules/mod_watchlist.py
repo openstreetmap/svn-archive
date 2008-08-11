@@ -33,7 +33,13 @@ class watchlist(ranaModule):
     # Position seen for first time, centering
     if(name == "pos" and oldValue == None):
       self.set("centreOnce", True)
-    
+
+    # zoom changed
+    if(name == "z"):
+      m = self.m.get("projection", None)
+      if(m):
+        m.setZoom(value)
+      
     # Menu changed, so redraw
     if(name == "menu"):
       m = self.m.get("menu", None)

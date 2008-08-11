@@ -2835,7 +2835,8 @@ int main (int argc, char *argv[])
             else if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
             
             #define M(field) else if (K_IS (#field)) { \
-                if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive")) { \
+                if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive") || \
+                    V_IS ("true")) { \
                   yesMask |= 1 << field ## R; \
                 } else if (V_IS ("no") || V_IS ("0") || V_IS ("private")) { \
                   noMask |= 1 << field ## R; \

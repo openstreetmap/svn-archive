@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.validators import email_re
 from django.contrib.auth.models import User, check_password
 from tah.user.models import TahUser
+import logging
 import urllib2
 import re
 
@@ -22,8 +23,10 @@ class OSMBackend:
                 #user not found locally. check OSM
                 usernick = self.checkOSMpasswd(username, password)
                 if usernick == None:
-                   #wrong OSM password too
+                   #Not locally known and wrong OSM password too
+                   logging.info("Authentication with unknown local username '%s' failed." % username)
                    return None
+                logging.info("Imported user '%s' from OpenStreetMap successfully" % username)
                 user = self.insertOSMuser(usernick, username, password)
                 t = TahUser(user = user)
                 t.save()
@@ -34,7 +37,24 @@ class OSMBackend:
             except User.DoesNotExist:
                 return None
 
-        if user.check_password(password) and user.is_active:
+        if user.check_password(password):
+           if user.is_active:
+             return user
+           else:
+             logging.info("Deactivated user '%s' tried to login" % username)
+             return None
+        else:
+          #user exists, but password was wrong. try to update from OSM
+          usernick = self.checkOSMpasswd(user.username, password)
+          if usernick == None:
+            # OSM auth failed too
+             logging.info("user '%s' failed to authenticate (even after checking OSM)" % username)
+             return None
+          else:
+            #OSM auth succeeded, user must have updated password
+            logging.info("user '%s' updated password from OSM successfully" % username)
+            user.set_password(password)
+            user.save()
             return user
     #-------------------------------------------------------------
 

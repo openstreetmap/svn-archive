@@ -684,7 +684,8 @@ void Route (int recalculate, int plon, int plat)
       
       wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
       if (i) { // For 'from' we take motion into account
-        __int64 motion = 3 * (dlon * plon + dlat * plat) / segLen;
+        __int64 motion = segLen ? 3 * (dlon * plon + dlat * plat) / segLen
+          : 0;
         // What is the most appropriate multiplier for motion ?
         if (motion > 0 && IsOneway (w)) d += Sqr (motion);
         else d -= Sqr (motion);

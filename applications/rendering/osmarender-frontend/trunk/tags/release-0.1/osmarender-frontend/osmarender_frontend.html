@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ @author Mario Ferraro <fadinlight@gmail.com>
+ http://osmarenderfrontend.wordpress.com
+ Released under GPL v2 or later
+-->
+<!--?xml-stylesheet type="text/xsl" href="demo.xsl"?-->
+<!DOCTYPE html 
+      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:svg="http://www.w3.org/2000/svg"
+		xml:lang="en">
+	<head>
+		<style type="text/css">
+			@import "dojotoolkit/dijit/themes/tundra/tundra.css";
+			@import "dojotoolkit/dojo/resources/dojo.css";
+			@import "dojotoolkit/dojox/widget/ColorPicker/ColorPicker.css";
+  			@import "dojotoolkit/dojox/layout/resources/ResizeHandle.css";
+			@import "osmarender_frontend.css";
+		</style>
+		<object id="AdobeSVG" classid="clsid:78156a80-c6a1-4bbf-8e6a-3cd390eeb4e2"></object>
+		<?import namespace="svg" urn="http://www.w3.org/2000/svg" implementation="#AdobeSVG"?>
+
+		<script type="text/javascript" src="CSS_parse.js"></script>
+		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa.js"></script>
+		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa_ieemu_xpath.js"></script>
+		<!--TODO: automatically retrieve server name-->
+		<script type="text/javascript" src="cmyk.js"></script>
+		<script type="text/javascript" src="osmarender_frontend.js"></script>
+		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true,isDebug:true"></script>
+		<script type="text/javascript">
+			dojo.require("dojo.dnd.move");
+			dojo.require("dojo.fx");
+			dojo.require("dijit.Menu");
+			dojo.require("dijit.form.Button");
+			dojo.require("dijit.form.CheckBox");
+			dojo.require("dijit.form.FilteringSelect");
+			dojo.require("dijit.form.TextBox");
+			dojo.require("dijit.ProgressBar");
+			dojo.require("dijit.Toolbar");
+			dojo.require("dijit.Tooltip");
+			dojo.require("dijit.layout.BorderContainer");
+			dojo.require("dijit.layout.ContentPane");
+			dojo.require("dijit.layout.TabContainer");
+			dojo.require("dojox.layout.ResizeHandle");
+			dojo.require("dijit.form.NumberSpinner");
+			dojo.require("dojox.widget.ColorPicker");
+			dojo.require("dojo.data.ItemFileReadStore");
+			dojo.require("dojo.parser");
+			var initDND = function() {
+				var osm3 = new dojo.dnd.Moveable("osm3",{handle:"moveMe"});
+			};
+			dojo.addOnLoad(initDND);
+		</script>
+	</head>
+	<body class="tundra">
+	<div id ="osm3" dojoType="dijit.layout.BorderContainer" design="headline">
+		<div id="topcontainer" dojoType="dijit.layout.ContentPane" region="top">
+			<div id="moveMe" dojoType="dijit.layout.ContentPane">
+				Osmarender Frontend
+			</div>
+		</div>
+		<div id="main_content" dojoType="dijit.layout.ContentPane" region="center">
+			<div id="menu" dojoType="dijit.layout.ContentPane">
+				<div dojoType="dijit.Toolbar" id="toolbar" layoutAlign="center">
+					<button id="transform" dojoType="dijit.form.Button">Render Map
+						<script type="dojo/method" event="onClick">
+							Osmatransform();
+						</script>
+					</button>
+					<span id="help_transform" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_transform">
+    						Renders your map
+					</div>
+					
+           				<button id="clear_svg" dojoType="dijit.form.Button">Clear Map
+						<script type="dojo/method" event="onClick">
+							clearSVG();
+						</script>
+					</button>
+					<span id="help_clear_svg" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_clear_svg">
+    						Clear rendered map if your browser become too slow
+					</div>
+
+					<div dojoType="dijit.ToolbarSeparator"></div>
+
+					<input dojoType="dijit.form.CheckBox" id="transform_on_style_add" />On Add
+					<span id="help_transform_add" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_transform_add">
+    						Re-render your map when adding styles
+					</div>
+					
+					<input dojoType="dijit.form.CheckBox" id="transform_on_style_set" />On Set
+					<span id="help_transform_set" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_transform_set">
+    						Re-render your map when setting styles
+					</div>
+					
+					<input dojoType="dijit.form.CheckBox" id="transform_on_style_delete" />On Del
+					<span id="help_transform_delete" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_transform_delete">
+    						Re-render your map when deleting styles
+					</div>
+					
+					<div dojoType="dijit.ToolbarSeparator"></div>
+					
+           				<button id="save_rule" dojoType="dijit.form.Button">Save Rules
+					<script type="dojo/method" event="onClick">
+						saveFile();
+					</script>
+					</button>
+					<span id="help_save_rule" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_save_rule">
+    						Save current rule file.<br />
+						Opens a <strong>new window</strong>,<br />
+						in which you've to select <strong><br />
+						"File->Save As"</strong> in your browser
+					</div>
+					
+           				<button id="save_svg" dojoType="dijit.form.Button">Save SVG
+						<script type="dojo/method" event="onClick">
+							saveSVGFile();
+						</script>
+					</button>
+					<span id="help_save_svg" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_save_svg">
+    						Save current map.<br />
+						Opens a <strong>new window</strong>,<br />
+						in which you've to select <strong><br />
+						"File->Save As"</strong> in your browser
+					</div>
+				</div>
+			</div>
+			<div id="menu_views" dojoType="dijit.layout.ContentPane">
+				<div dojoType="dijit.Toolbar" id="toolbar_views" layoutAlign="center">
+					<button id="panel_styles" dojoType="dijit.form.Button">Styles Panel
+						<script type="dojo/method" event="onClick">
+							displayRules();
+						</script>
+					</button>
+					<span id="help_panel_styles" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_styles">
+    						View and Modify Styles
+					</div>
+					
+					<button id="panel_rules" dojoType="dijit.form.Button">Rules Panel
+						<script type="dojo/method" event="onClick">
+							displayKeyValue();
+						</script>
+					</button>
+					<span id="help_panel_rules" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_rules">
+    						View Key/Value Pairs
+					</div>
+
+					<button id="panel_symbols" dojoType="dijit.form.Button">Symbols Panel
+						<script type="dojo/method" event="onClick">
+							displaySymbols();
+						</script>
+					</button>
+					<span id="help_panel_symbols" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_symbols">
+    						Display Symbols
+					</div>
+
+					<button id="panel_settings" dojoType="dijit.form.Button">Settings Panel
+						<script type="dojo/method" event="onClick">
+							displaySettings();
+						</script>
+					</button>
+					<span id="help_panel_settings" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_settings">
+    						Display Global Map Settings
+					</div>
+
+					<div dojoType="dijit.ToolbarSeparator"></div>
+
+					<button id="panel_load" dojoType="dijit.form.Button">Load Panel
+						<script type="dojo/method" event="onClick">
+							displayLoad();
+						</script>
+					</button>
+					<span id="help_panel_load" class="help">?</span>
+					<div dojoType="dijit.Tooltip" style="display:none" connectId="help_panel_load">
+    						Load other files
+					</div>
+				</div>
+			</div>
+			<div id="load_file" dojoType="dijit.layout.BorderContainer">
+				<div id="load_file_tab" dojoType="dijit.layout.TabContainer" region="top">
+					<div id="load_preset" dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true">
+						<br />
+						Data File: 
+						<select 	dojoType="dijit.form.FilteringSelect"
+      								id="osm_file_name_selected"
+      								autoComplete="false"
+								invalidMessage="Invalid OSM file name"
+      								onChange="handleLoadPreset(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value)"
+						>
+							<option value="blank"></option>
+							<option value="data.xml">data.xml</option>
+							<option value="somewhere_in_london.xml">somewhere_in_london.xml</option>
+							<option value="rome_centre.xml">rome_centre.xml</option>
+							<option value="zurich_google.xml">zurich_google.xml</option>
+						</select><br />
+						Rule File: 
+						<select 	dojoType="dijit.form.FilteringSelect"
+      								id="rules_file_name"
+      								autoComplete="false"
+								invalidMessage="Invalid rules file name"
+      								onChange="handleLoadPreset(dojo.byId('rules_file_name').value,dojo.byId('osm_file_name_selected').value)"
+						>
+							<option value="blank"></option>
+							<option value="osm-map-features-z12.xml">osm-map-features-z12.xml</option>
+							<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
+							<option value="osm-map-features-z14.xml">osm-map-features-z14.xml</option>
+							<option value="osm-map-features-z15.xml">osm-map-features-z15.xml</option>
+							<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
+							<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
+						</select><br /><br />
+						<script type="dojo/method" event="onShow">
+							handleLoadPreset(dojo.byId("rules_file_name").value,dojo.byId("osm_file_name_selected").value);
+						</script>
+					</div>
+					<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">
+						<br />
+						Data File: 
+						<input id="data_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
+						<br />
+						Rule File: 
+						<input id="rule_file_name_custom" type="text" dojoType="dijit.form.TextBox" onKeyup="handleLoadPreset(dojo.byId('rule_file_name_custom').value,dojo.byId('data_file_name_custom').value)" />
+						<br /><br />
+						<script type="dojo/method" event="onShow">
+							handleLoadPreset(dojo.byId("rule_file_name_custom").value,dojo.byId("data_file_name_custom").value);
+						</script>
+					</div>
+					<div id="load_url" title="Load URL" dojoType="dijit.layout.ContentPane">
+						<p>Feature not yet implemented</p>
+						<script type="dojo/method" event="onShow">
+							dojo.fadeOut({node:"load_preset_button_div"}).play();
+						</script>
+					</div>
+				</div>
+				<div id="load_button_progress" dojoType="dijit.layout.ContentPane" region="bottom">
+					<div id="load_preset_button_div">
+						<button id="load_preset_button" dojoType="dijit.form.Button">Load <span id="span_load_preset_data" class="bold"></span> data file<br />with <span id="span_load_preset_rule" class="bold"></span> rule file
+							<script type="dojo/method" event="onClick">
+								var fadeOutButton = dojo.fx.wipeOut({node:"load_preset_button_div"});
+								var fadeInProgressBar = dojo.fadeIn({node:"progressContainer"});
+								var Chain = dojo.fx.chain([fadeOutButton,fadeInProgressBar]);
+								dojo.connect(Chain,"onEnd",function() {
+									var rule_file_name="";
+									var osm_file_name="";
+									if (dijit.byId("load_file_tab").selectedChildWidget.id=="load_preset") {
+										rule_file_name=dojo.byId('rules_file_name').value;
+										osm_file_name=dojo.byId('osm_file_name_selected').value;
+									} else if(dijit.byId("load_file_tab").selectedChildWidget.id=="load_custom") {
+										rule_file_name=dojo.byId('rule_file_name_custom').value;
+										osm_file_name=dojo.byId('data_file_name_custom').value;
+									}
+									loadOsmAndRules(rule_file_name,osm_file_name,"progressTotal","progressStep",dojo.byId('transform_on_load').checked)
+								});
+								Chain.play();
+							</script>
+						</button><br />
+						<input dojoType="dijit.form.CheckBox" id="transform_on_load" />Render map after loading
+
+					</div>
+					<div style="opacity:0" id="progressContainer" dojoType="dijit.layout.ContentPane">
+						<div annotate="true" id="progressTotal" dojoType="dijit.ProgressBar" class="progressBarLoad"></div>
+						<div annotate="true" id="progressStep" dojoType="dijit.ProgressBar" class="progressBarLoad"></div>
+					</div>
+				</div>
+			</div>
+			<div id="result_process_rules" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_process_key" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_symbols" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_settings" dojoType="dijit.layout.ContentPane"></div>
+			<br /><br />
+		</div>
+		<div id="resizePane" dojoType="dijit.layout.ContentPane" region="bottom">
+			<div id="resizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="osm3" resizeAxis="xy" class="handle"></div>
+		</div>
+	</div>
+	<div id ="svgfile" dojoType="dijit.layout.ContentPane"></div>
+	</body>
+</html>
+
+
+

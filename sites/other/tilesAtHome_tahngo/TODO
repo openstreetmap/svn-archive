@@ -1,14 +1,16 @@
 t@h server
 ==========
 
- - Examine the password situation. why are non-character passwords failing?
- - Log more client and server errors (no-data, ...)
+ - Check MYSQL "FOR UPDATE locks". Small race conditions could enable handing out the same job twice?!
+ - Examine the password situation. why are non-character passwords failing? It works fine on the server side of things.
+ - Think about notifying users when their clients fail too often.
  - Enable client to hand back requests as "oldData" (ie API data older than tileset on server) which would delete the request.
  - Save the client_uuid in the request database with finished requests
  - Show last uploaded tilesets for each user on their user page.
  - Check the "LayerCapabilities" of the client and only send appropriate requests.
  - Discard incomplete tileset uploads (mail user?). Check for obvious failures? (better on client side)
  - Make lowzoom stitching run in a good way (cron). Implement blacklisted areas for people wanting to upload their own lowzoom.
+ - Improve "feedback" API. Make sure we reset only tilesets assigned to that one client. Make sure, we record the client_uuid in the feedback case.
 
 t@h client (will not be implemented by spaetz)
 ==========

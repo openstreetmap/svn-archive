@@ -10,7 +10,7 @@
     data="data.osm"
     svgBaseProfile="full"
     scale="1"
-    symbolScale="2"
+    symbolScale="1"
     textAttenuation="14"
     minimumMapWidth="1"
     minimumMapHeight="1"
@@ -1509,7 +1509,7 @@
 
         <!-- Bus stops -->
         <rule e="node" k="highway" v="bus_stop">
-            <symbol ref="bus" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
+            <symbol ref="bus" transform="translate(-1.5,-1.5)"/>
         </rule>
 
         <!-- highway motorway_junctions -->

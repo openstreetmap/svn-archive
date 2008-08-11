@@ -307,7 +307,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <xsl:if test="$symbolsDir != ''">
         <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
         <defs id="defs-symbols">
-          <xsl:for-each select="/rules//symbol/@ref">
+          <xsl:for-each select="/rules//symbol/@ref | /rules//areaSymbol/@ref">
             <xsl:copy-of select="document(concat($symbolsDir,'/', ., '.svg'))/svg:svg/svg:defs/svg:symbol"/>
           </xsl:for-each>
         </defs>

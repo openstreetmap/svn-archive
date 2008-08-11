@@ -18,6 +18,7 @@
     showGrid="no"
     showBorder="no"
     showLicense="no"
+    symbolsDir="symbols"
     interactive="no">
 
     <!--bounds_mkr1-->
@@ -732,7 +733,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-            <symbol xlink:href="#symbol-peak" width="24px" height="24px" transform="translate(-12,-12)"/>
+            <symbol ref="peak" width="24px" height="24px" transform="translate(-12,-12)"/>
         </rule>
 
         <!-- Non-physical routes -->
@@ -742,7 +743,7 @@
 
         <!-- Airfields and airports -->
         <rule e="node" k="aeroway" v="airport">
-            <symbol xlink:href="#airport" width="40px" height="40px" transform="translate(-20,-20)"/>
+            <symbol ref="airport" width="40px" height="40px" transform="translate(-20,-20)"/>
         </rule>
     </rule>
 
@@ -1649,14 +1650,5 @@
         <svg:marker id="marker-tunnel-end" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="strokeWidth" fill="none" stroke-width="0.5px" stroke="#777777" markerWidth="2px" markerHeight="2px" orient="auto">
             <svg:path d="M 6,1 A5,4.25 0 0,0 6,9"/>
         </svg:marker>
-
-        <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
-        <svg:symbol id="airport" viewBox="0 0 10 10" fill="black" fill-opacity="1" fill-rule="evenodd" stroke="none">
-            <svg:path d="M 9.2,5 C 9.2,4.5 9.8,3.2 10,3 L 9,3 L 8,4 L 5.5,4 L 8,0 L 6,0 L 3,4 C 2,4 1,4.2 0.5,4.5 C 0,5 0,5 0.5,5.5 C 1,5.8 2,6 3,6 L 6,10 L 8,10 L 5.5,6 L 7.8,6 L 9,7 L 10,7 C 9.8,6.8 9.2,5.5 9.2,5 z "/>
-        </svg:symbol>
-
-        <svg:symbol id="symbol-peak" viewBox="0 0 100 100">
-            <svg:path fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
-        </svg:symbol>
     </defs>
 </rules>

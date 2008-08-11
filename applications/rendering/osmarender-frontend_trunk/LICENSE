@@ -1,0 +1,33 @@
+LICENSE
+-------
+
+Written by Mario Ferraro <fadinlight@gmail.com>
+
+The code for Osmarender Frontend (demo.html, osmarender_frontend.css,
+osmarender_frontend.js files), CMYK library (cmyk.js) and Osmarender Frontend
+distribution files (distribute_offline.sh and distribute_online.sh)
+in this very directory and in osmarender_frontend.zip file are Copyright (C) 2008
+Mario Ferraro <fadinlight@gmail.com> and are released under GPL v2 or later
+
+osmarender.xsl and osm-map-features-zXX.xml files are
+Copyright (C) 2006-2008  Etienne Cherdlu, Jochen Topf
+and released under GPL v2 or later.
+
+data.osm, rome_centre.osm and somewhere_in_london.osm are
+OpenStreetMap sample data files, released under CC-BY-SA license
+
+CSS_parse.js is Copyright (C) Trevor McCauley. Original code can be
+found at the following link:
+http://www.senocular.com/index.php?id=1.289
+All modification done in that file follow the same license.
+
+Sarissa version 0.9.9.4, under /gr directory, is Copyright 2004-2008
+Emmanouil Batsis, mailto: mbatsis at users full stop sourceforge full stop net.
+Most recent version can be find at the following link:
+http://dev.abiss.gr/sarissa
+
+Dojotoolkit version 1.1.1, linked under /dojotoolkit directory in
+osmarender_frontend.zip files is Copyright (c) 2004-2008, The Dojo Foundation
+Licensed under the Academic Free License version 2.1 or above OR the
+modified BSD license. For more information on Dojo licensing, see:
+http://dojotoolkit.org/book/dojo-book-0-9/introduction/licensing

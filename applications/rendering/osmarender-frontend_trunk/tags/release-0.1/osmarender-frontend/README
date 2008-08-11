@@ -1,0 +1,10 @@
+To get Osmarender Frontend working, dojo toolkit version 1.1.1 must be copied under
+/dojotoolkit directory.
+
+You can get the latest Dojotoolkit version from
+http://www.dojotoolkit.org/downloads
+
+otherwise you can add this property in osmarender-frontend dir:
+
+key: "svn:externals"
+value: "dojotoolkit http://svn.dojotoolkit.org/src/tags/release-1.1.1/"

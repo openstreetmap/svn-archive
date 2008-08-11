@@ -1,6 +1,4 @@
-#!/usr/bin/python
-#---------------------------------------------------------------------------
-# Supplies position info from the GPS daemon
+# supplies position info from the GPS daemon
 #---------------------------------------------------------------------------
 # Copyright 2007-2008, Oliver White
 #
@@ -21,16 +19,17 @@ from base_module import ranaModule
 import sys
 import os
 import socket
-from time import sleep
+from time import *
 import re
 
 def getModule(m,d):
-  return(gpsd(m,d))
+  return(gpsd2(m,d))
 
-class gpsd(ranaModule):
+class gpsd2(ranaModule):
   """Supplies position info from GPSD"""
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
+    self.tt = 0
     self.position_regexp = re.compile('P=(.*?)\s*$')
     self.connected = False
     try:
@@ -42,35 +41,78 @@ class gpsd(ranaModule):
  
   def socket_cmd(self, cmd):
     self.s.send("%s\r\n" % cmd)
-    return self.s.recv(8192)
+    result = self.s.recv(8192)
+    #print "Reply: %s" % result
+    expect = 'GPSD,' + cmd.upper() + '='
+    if(result[0:len(expect)] != expect):
+      print "Fail: received %s after sending %s" % (result, cmd)
+      return(None)
+    remainder = result[len(expect):]
+    if(remainder[0:1] == '?'):
+      print "Fail: Unknown data in " + cmd
+      return(None)
+    return(remainder)
     
   def test_socket(self):
     for i in ('i','p','p','p','p'):
       print "%s = %s" % (i, self.socket_cmd(i))
       sleep(1)
+      
+  def gpsStatus(self):
+    return(self.socket_cmd("M"))
   
+  def satellites(self):
+    list = self.socket_cmd('y')
+    if(not list):
+      return
+    parts = list.split(':')
+    (spare1,spare2,count) = parts[0].split(' ')
+    count = int(count)
+    self.set("gps_num_sats", count)
+    for i in range(count):
+      (prn,el,az,db,used) = [int(a) for a in parts[i+1].split(' ')]
+      self.set("gps_sat_%d"%i, (db,used,prn))
+      #print "%d: %d, %d, %d, %d, %d" % (i,prn,el,az,db,used)
+
+  def quality(self):
+    result = self.socket_cmd('q')
+    if(result):
+      (count,dd,dx,dy) = result.split(' ')
+      count = int(count)
+      (dx,dy,dd) = [float(a) for a in (dx,dy,dd)]
+      print "%d sats, quality %f, %f, %f" % (count,dd,dx,dy)
+
   def update(self):
+    dt = time() - self.tt
+    if(dt < 2):
+      return
+    self.tt = time()
+
     if(not self.connected):
       self.status = "Not connected"
-      return
-    posString = self.socket_cmd("p")
-    match = self.position_regexp.search(posString)
-    if(match == None):
-      self.status = "Invalid message"
-      return
-    text = match.group(1)
-    if(text == '?'):
-      self.status = "GPS doesn't know position"
-      return
-    lat,lon = [float(ll) for ll in text.split(' ')]
-    self.status = "OK"
-    self.set('pos', (lat,lon))
-    self.set('pos_source', 'GPSD')
+    else:
+      result = self.socket_cmd("p")
+      if(not result):
+        self.status = "Unknown"
+      else:
+        lat,lon = [float(ll) for ll in result.split(' ')]
+        self.status = "OK"
+        self.set('pos', (lat,lon))
+        self.set('pos_source', 'GPSD')
+        self.set('needRedraw', True)
+        self.satellites()
+
   
 if __name__ == "__main__":
-  d = {'pos_filename':'pos.txt'}
-  a = gpsd({},d)
-  for i in range(5):
-    a.update()
-    print "%s: %s" %(a.getStatus(), d.get('pos', None))
-    sleep(3)
+  d = {}
+  a = gpsd2({},d)
+  print a.gpsStatus()
+  #print a.quality()
+  print a.satellites()
+
+  if(0):
+    for i in range(2):
+      a.update()
+      print "%s: %s" %(a.status, d.get('pos', None))
+      sleep(2)
+

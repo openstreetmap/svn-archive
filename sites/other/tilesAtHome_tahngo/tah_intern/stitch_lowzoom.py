@@ -21,12 +21,14 @@ class Lowzoom(Tileset):
     self.__init__(layer, z, x, y)
     self.tmpdir=tempfile.mkdtemp()
     try:
-      self.stitch(layer,z,x,y)
-      print "saving to %s" % base_tile_dir
-      self.save(base_tile_dir)
-    finally:
-      # even do cleanup when pressing CTRL-C (KeyboardInterrupt)
-      shutil.rmtree(self.tmpdir)
+      try:
+        self.stitch(layer,z,x,y)
+        self.save(base_tile_dir)
+      finally:
+        # even do cleanup when pressing CTRL-C (KeyboardInterrupt)
+        shutil.rmtree(self.tmpdir)
+    except KeyboardInterrupt:
+      sys.exit("Pressed CTRL-C. Exiting.")
 
   def stitch(self,layer,z,x,y):
     #recurse to all tiles of tileset
@@ -125,7 +127,8 @@ if __name__ == '__main__':
       print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
       #time.sleep(10)
       now = time.time()
-      os.system("nice python %s/stitch_lowzoom.py %d %d %d" % (script_path,z,x,y))
+      failed = os.system("nice python %s/stitch_lowzoom.py %d %d %d" % (script_path,z,x,y))
+      if failed: sys.exit("Child stitcher failed. Bailing out.")
       print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
     #Finally d
     #now = time.time()

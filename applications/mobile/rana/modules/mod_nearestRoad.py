@@ -38,6 +38,8 @@ class nearestRoad(ranaModule):
     """If requested, lookup the nearest road name"""
     if(not self.get('lookup_road', False)):
       return
+    if(self.get('noLookupRoads', False)):
+      return
     pos = self.get('pos', None)
     if(pos != None):
       if(pos != self.lastpos):

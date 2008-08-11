@@ -1981,7 +1981,7 @@ sub startBatikAgent
           $Config->get("BatikJVMSize"),
           $Config->get("BatikClasspath"),
           $Config->get("BatikPort")
-    );
+        );
     }
     elsif ($^O eq "MSWin32")
     {
@@ -1999,7 +1999,8 @@ sub startBatikAgent
           $Config->get("Niceness"),
           $Config->get("BatikJVMSize"),
           $Config->get("BatikClasspath"),
-          $Config->get("BatikPort")
+          $Config->get("BatikPort") 
+         );
         statusMessage("Could not determine Operating System ".$^O.", please report to tilesathome mailing list", $currentSubTask, $progressJobs, $progressPercent,1);
     }
     

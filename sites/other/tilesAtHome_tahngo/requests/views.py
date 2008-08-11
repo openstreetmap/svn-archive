@@ -185,6 +185,7 @@ def upload_request(request):
     UploadFormClass.base_fields['ipaddress'].widget = widgets.HiddenInput()
     UploadFormClass.base_fields['priority'].required = False
     UploadFormClass.base_fields['file'].required = False
+    UploadFormClass.base_fields['client_uuid'].required = False
     UploadFormClass.base_fields['is_locked'].required = False
     UploadFormClass.base_fields['is_locked'].widget = widgets.HiddenInput()
     UploadFormClass.base_fields['user_id'].required = False
@@ -201,6 +202,9 @@ def upload_request(request):
           #"You provided a correct username and password!"
           formdata = request.POST.copy()
           formdata['user_id'] = user.id # set the user to the correct value
+          # we had huge client_uuids in the beginnning, shorten if necessary
+          if formdata.has_key('client_uuid') and int(formdata['client_uuid']) > 65535:
+            formdata['client_uuid'] = formdata['client_uuid'][-4:]
           #t@h client send layername, rather than layer number,
           #find the right one if that is the case
           if formdata.has_key('layer'):
@@ -219,6 +223,7 @@ def upload_request(request):
               newUpload.ipaddress = request.META['REMOTE_ADDR']
               # low priority upload by default
               if not newUpload.priority: newUpload.priority = 3
+              if not newUpload.client_uuid: newUpload.client_uuid = 0
               newUpload.is_locked = False
               #newUpload.save_file_file(file['filename'],file['content'])
               newUpload.save()

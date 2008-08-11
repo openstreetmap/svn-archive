@@ -242,7 +242,7 @@ sub upload
                            passwd => $Config->get("UploadPassword"),
                            version => $Config->get("ClientVersion"),
                            layer => $Layer,
-                           client_id => GetClientId() ]);
+                           client_uuid => GetClientId() ]);
              
             if(!$res->is_success())
             {

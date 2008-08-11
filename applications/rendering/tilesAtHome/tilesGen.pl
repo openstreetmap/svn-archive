@@ -123,7 +123,7 @@ if ($LoopMode) {
     if (shift() eq "reexec") {
         my $idleSeconds; my $idleFor;
         while(my $evalstr = shift()) {
-            die unless $evalstr =~ /^[A-Za-z]+=\d+/;
+            die("$evalstr does not match option=value") unless $evalstr =~ /^[A-Za-z]+=\d+/;
             eval('$'.$evalstr);
             print STDERR "$evalstr\n" if ($Config->get("Verbose"));
         }

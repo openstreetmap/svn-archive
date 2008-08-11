@@ -83,7 +83,9 @@ class vmap(ranaModule):
   def style(self, tags):
     highway = self.highways.get(tags.get("highway", None), None)
     if(highway):
-      casing = ((0,0,0), highway[1]+4, {})
+      layer = int(tags.get('layer',0))
+      highway[2]['layer'] = layer
+      casing = ((0,0,0), highway[1]+4, {'layer':layer-0.1})
       styleList = [casing, highway]
       return(styleList)
 
@@ -101,6 +103,7 @@ class vmap(ranaModule):
           styleList = self.style(way['t'])
           if(styleList):
             for style in styleList:
+              cr = self.getCtx(style[2]['layer'])
               self.setStyle(style, cr)
               count = 0
               for node in way['n']:
@@ -122,6 +125,7 @@ class vmap(ranaModule):
     
     z = int(self.get('z', 15))
     layer = self.get('layer','pyrender')
+    self.layers = {}
     
     # Render each 'tile' in view
     self.waysDrawn = {}
@@ -129,6 +133,31 @@ class vmap(ranaModule):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
         self.drawTile(cr,x,y,z,proj)
    
+    layerIDs = self.layers.keys()
+    layerIDs.sort()
+    for num in layerIDs:
+      layer = self.layers[num]
+      cr.set_source_surface(layer[0], 0, 0)
+      cr.set_operator(cairo.OPERATOR_OVER)
+      cr.paint()
+    self.layers = {}
 
+
+  def getLayer(self, layernum):
+    layerid = str(layernum)
+    layer = self.layers.get(layerid, None)
+    if(not layer):
+      # Create the image
+      (sx,sy,sw,sh) = self.get('viewport')
+      im = cairo.ImageSurface(cairo.FORMAT_ARGB32, sw,sh)
+      ctx = cairo.Context(im)  # create a drawing context
+      layer = [im, ctx, layerid]
+      self.layers[layerid] = layer
+    return(layer)
+
+  def getCtx(self, layernum):
+    layer = self.getLayer(layernum)
+    return(layer[1])
+    
   def update(self):
     pass

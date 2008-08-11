@@ -22,21 +22,21 @@ import org.openstreetmap.josm.plugins.validator.tests.*;
 import org.openstreetmap.josm.plugins.validator.util.Util;
 
 /**
- * 
+ *
  * A OSM data validator
- * 
+ *
  * @author Francisco R. Santos <frsantos@gmail.com>
  */
 public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 {
-    /** The validate action */
-    ValidateAction validateAction = new ValidateAction(this);
-    
-    /** The validation dialog */
-    ValidatorDialog validationDialog;
-    
-    /** The list of errors per layer*/
-    Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
+	/** The validate action */
+	ValidateAction validateAction = new ValidateAction(this);
+
+	/** The validation dialog */
+	ValidatorDialog validationDialog;
+
+	/** The list of errors per layer*/
+	Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
 
 	/**
 	 * All available tests
@@ -44,19 +44,19 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	 */
 	public static Class[] allAvailableTests = new Class[]
 	{
-		DuplicateNode.class,
-		OverlappingWays.class,
-		UntaggedNode.class,
-		UntaggedWay.class,
-		SelfIntersectingWay.class,
-		DuplicatedWayNodes.class,
-		CrossingWays.class,
-		SimilarNamedWays.class,
-		NodesWithSameName.class,
-		Coastlines.class,
-		WronglyOrderedWays.class,
-		UnclosedWays.class,
-		TagChecker.class,
+		DuplicateNode.class,       // ID    1 ..   99
+		OverlappingWays.class,     // ID  101 ..  199
+		UntaggedNode.class,        // ID  201 ..  299
+		UntaggedWay.class,         // ID  301 ..  399
+		SelfIntersectingWay.class, // ID  401 ..  499
+		DuplicatedWayNodes.class,  // ID  501 ..  599
+		CrossingWays.class,        // ID  601 ..  699
+		SimilarNamedWays.class,    // ID  701 ..  799
+		NodesWithSameName.class,   // ID  801 ..  899
+		Coastlines.class,          // ID  901 ..  999
+		WronglyOrderedWays.class,  // ID 1001 .. 1099
+		UnclosedWays.class,        // ID 1101 .. 1199
+		TagChecker.class,          // ID 1201 .. 1299
 	};
 
 	/**
@@ -69,28 +69,28 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	}
 
 	@Override
-	public PreferenceSetting getPreferenceSetting() 
+	public PreferenceSetting getPreferenceSetting()
 	{
 		return new PreferenceEditor(this);
 	}
 
 	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) 
+	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
 	{
 		if (newFrame != null)
 		{
-		    validationDialog = new ValidatorDialog(this);
-	        newFrame.addToggleDialog(validationDialog);
-            Main.main.addLayer(new ErrorLayer(this));
-        	if( Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
-        		Main.main.addLayer(new GridLayer(tr("Grid")));
-            Layer.listeners.add(this); 
+			validationDialog = new ValidatorDialog(this);
+			newFrame.addToggleDialog(validationDialog);
+			Main.main.addLayer(new ErrorLayer(this));
+			if( Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
+				Main.main.addLayer(new GridLayer(tr("Grid")));
+			Layer.listeners.add(this);
 		}
 		else
-            Layer.listeners.remove(this); 
-        
+			Layer.listeners.remove(this);
+
 		LinkedList<UploadHook> hooks = ((UploadAction)Main.main.menu.upload).uploadHooks;
-		Iterator<UploadHook> hooksIt = hooks.iterator(); 
+		Iterator<UploadHook> hooksIt = hooks.iterator();
 		while( hooksIt.hasNext() )
 		{
 			if( hooksIt.next() instanceof ValidateUploadHook )
@@ -160,16 +160,16 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		return enabledTests;
 	}
 
-    /**
-     * Gets the list of all available test classes
-     * 
-     * @return An array of the test classes	        validationDialog.tree.setErrorList(errors);
-     */
-    public static Class[] getAllAvailableTests()
-    {
-        return allAvailableTests;
-    }
-    
+	/**
+	 * Gets the list of all available test classes
+	 *
+	 * @return An array of the test classes
+	 */
+	public static Class[] getAllAvailableTests()
+	{
+		return allAvailableTests;
+	}
+
 	/**
 	 * Initializes all tests
 	 * @param allTests The tests to initialize
@@ -184,31 +184,33 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 				{
 					test.getClass().getMethod("initialize", new Class[] { OSMValidatorPlugin.class} ).invoke(null, new Object[] {this});
 				}
-			} 
-            catch(InvocationTargetException ite) 
-            {
-                ite.getCause().printStackTrace();
-                JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}", test.getClass().getSimpleName(), ite.getCause().getMessage()));
-            }
-            catch(Exception e) 
-            {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}", test.getClass().getSimpleName(), e));
-            }
-		}
-	}
-	
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) 
-	{
-		if( newLayer instanceof OsmDataLayer )
-		{
-	        List<TestError> errors = layerErrors.get(newLayer);
-	        validationDialog.tree.setErrorList(errors);
-			Main.map.repaint();	        
+			}
+			catch(InvocationTargetException ite)
+			{
+				ite.getCause().printStackTrace();
+				JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}",
+				test.getClass().getSimpleName(), ite.getCause().getMessage()));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}",
+				test.getClass().getSimpleName(), e));
+			}
 		}
 	}
 
-	public void layerAdded(Layer newLayer) 
+	public void activeLayerChange(Layer oldLayer, Layer newLayer)
+	{
+		if( newLayer instanceof OsmDataLayer )
+		{
+			List<TestError> errors = layerErrors.get(newLayer);
+			validationDialog.tree.setErrorList(errors);
+			Main.map.repaint();
+		}
+	}
+
+	public void layerAdded(Layer newLayer)
 	{
 		if( newLayer instanceof OsmDataLayer )
 		{
@@ -216,7 +218,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		}
 	}
 
-	public void layerRemoved(Layer oldLayer) 
+	public void layerRemoved(Layer oldLayer)
 	{
 		layerErrors.remove(oldLayer);
 	}

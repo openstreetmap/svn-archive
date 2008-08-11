@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.validator.tests;
+
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
 import org.openstreetmap.josm.plugins.validator.Severity;
@@ -13,6 +15,8 @@ import java.util.Collections;
 import java.util.Arrays;
 
 public class DuplicatedWayNodes extends Test {
+	protected static int DUPLICATE_WAY_NODE = 501;
+
 	public DuplicatedWayNodes() {
 		super(tr("Duplicated way nodes."),
 			tr("Checks for ways with identical consecutive nodes."));
@@ -28,7 +32,7 @@ public class DuplicatedWayNodes extends Test {
 				continue;
 			}
 			if (lastN == n) {
-				errors.add(new TestError(this, Severity.ERROR, tr("Duplicated way nodes"),
+				errors.add(new TestError(this, Severity.ERROR, tr("Duplicated way nodes"), DUPLICATE_WAY_NODE,
 					Arrays.asList(w), Arrays.asList(n)));
 				break;
 			}

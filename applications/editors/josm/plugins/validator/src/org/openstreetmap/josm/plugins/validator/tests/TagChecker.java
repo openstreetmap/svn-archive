@@ -111,12 +111,13 @@ public class TagChecker extends Test
 	protected JButton editSrcButton;
 	protected JButton deleteSrcButton;
 
-	protected static int EMPTY_VALUES = 0;
-	protected static int INVALID_KEY = 1;
-	protected static int INVALID_VALUE = 2;
-	protected static int FIXME = 3;
-	protected static int INVALID_SPACE = 3;
-	protected static int TAG_CHECK = 4;
+	protected static int EMPTY_VALUES      = 1200;
+	protected static int INVALID_KEY       = 1201;
+	protected static int INVALID_VALUE     = 1202;
+	protected static int FIXME             = 1203;
+	protected static int INVALID_SPACE     = 1204;
+	protected static int INVALID_KEY_SPACE = 1205;
+	protected static int TAG_CHECK         = 1206;
 
 	/** List of sources for spellcheck data */
 	protected JList Sources;
@@ -164,7 +165,7 @@ public class TagChecker extends Test
 			else
 				sources = SPELL_FILE + ";" + sources;
 		}
-		
+
 		StringTokenizer st = new StringTokenizer(sources, ";");
 		StringBuilder errorSources = new StringBuilder();
 		while (st.hasMoreTokens())
@@ -223,7 +224,7 @@ public class TagChecker extends Test
 		if( errorSources.length() > 0 )
 			throw new IOException( tr("Could not download data file(s):\n{0}", errorSources) );
 	}
-	
+
 	/**
 	 * Reads the presets data.
 	 *
@@ -244,8 +245,8 @@ public class TagChecker extends Test
 		presetsValueData = new Bag<String, String>();
 		readPresetFromPreferences();
 	}
-	
-	
+
+
 	@Override
 	public void visit(Node n)
 	{
@@ -274,7 +275,8 @@ public class TagChecker extends Test
 			{
 				if(d.match(p))
 				{
-					errors.add( new TestError(this, Severity.WARNING, tr("Illegal tag/value combinations"), p, TAG_CHECK) );
+					errors.add( new TestError(this, Severity.WARNING, tr("Illegal tag/value combinations"),
+					tr(d.description()), TAG_CHECK, p) );
 					withErrors.add(p, "TC");
 					break;
 				}
@@ -288,22 +290,26 @@ public class TagChecker extends Test
 			String value = prop.getValue();
 			if( checkValues && (value==null || value.trim().length() == 0) && !withErrors.contains(p, "EV"))
 			{
-				errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"), tr("Key ''{0}'' invalid.", key), p, EMPTY_VALUES) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"),
+				tr("Key ''{0}'' invalid.", key), EMPTY_VALUES, p) );
 				withErrors.add(p, "EV");
 			}
 			if( checkKeys && spellCheckKeyData.containsKey(key) && !withErrors.contains(p, "IPK"))
 			{
-				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property key"), tr("Key ''{0}'' invalid.", key), p, INVALID_KEY) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property key"),
+				tr("Key ''{0}'' invalid.", key), INVALID_KEY, p) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkKeys && key.indexOf(" ") >= 0 && !withErrors.contains(p, "IPK"))
 			{
-				errors.add( new TestError(this, Severity.WARNING, tr("Invalid white space in property key"), tr("Key ''{0}'' invalid.", key), p, INVALID_KEY) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Invalid white space in property key"),
+				tr("Key ''{0}'' invalid.", key), INVALID_KEY_SPACE, p) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkValues && value != null && (value.startsWith(" ") || value.endsWith(" ")) && !withErrors.contains(p, "SPACE"))
 			{
-				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"), tr("Key ''{0}'' invalid.", key), p, INVALID_SPACE) );
+				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"),
+				tr("Key ''{0}'' invalid.", key), INVALID_SPACE, p) );
 				withErrors.add(p, "SPACE");
 			}
 			if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
@@ -311,7 +317,8 @@ public class TagChecker extends Test
 				List<String> values = presetsValueData.get(key);
 				if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
 				{
-					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"), tr("Key ''{0}'' invalid.", key), p, INVALID_VALUE) );
+					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"),
+					tr("Key ''{0}'' invalid.", key), INVALID_VALUE, p) );
 					withErrors.add(p, "UPV");
 				}
 			}
@@ -320,7 +327,7 @@ public class TagChecker extends Test
 				if( (value.contains("FIXME") || value.contains("check and delete") || key.contains("todo") || key.contains("fixme"))
 				&& !withErrors.contains(p, "FIXME"))
 				{
-					errors.add( new TestError(this, Severity.OTHER, tr("FIXMES"), p, FIXME) );
+					errors.add( new TestError(this, Severity.OTHER, tr("FIXMES"), FIXME, p) );
 					withErrors.add(p, "FIXME");
 				}
 			}
@@ -345,7 +352,7 @@ public class TagChecker extends Test
 			e.printStackTrace();
 			in = new BufferedReader(new InputStreamReader(inStream));
 		}
-		
+
 		XmlObjectParser parser = new XmlObjectParser();
 		parser.mapOnStart("item", TaggingPreset.class);
 		parser.map("text", TaggingPreset.Text.class);
@@ -354,7 +361,7 @@ public class TagChecker extends Test
 		parser.map("label", TaggingPreset.Label.class);
 		parser.map("key", TaggingPreset.Key.class);
 		parser.start(in);
-		
+
 		while(parser.hasNext())
 		{
 			Object obj = parser.next();
@@ -377,7 +384,7 @@ public class TagChecker extends Test
 		{
 			InputStream in = null;
 			String source = st.nextToken();
-			try 
+			try
 			{
 				if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
 					in = new URL(source).openStream();
@@ -387,11 +394,11 @@ public class TagChecker extends Test
 					in = new FileInputStream(source);
 				readPresets(in);
 				in.close();
-			} 
+			}
 			catch (IOException e)
 			{
 				// Error already reported by JOSM
-			} 
+			}
 			catch (SAXException e)
 			{
 				// Error already reported by JOSM
@@ -425,7 +432,7 @@ public class TagChecker extends Test
 		if( checkKeys || checkValues || checkComplex)
 			super.visit(selection);
 	}
-	
+
 	@Override
 	public void addGui(JPanel testPanel)
 	{
@@ -574,7 +581,8 @@ public class TagChecker extends Test
 	public void ok()
 	{
 		enabled = prefCheckKeys.isSelected() || prefCheckValues.isSelected() || prefCheckComplex.isSelected() || prefCheckFixmes.isSelected();
-		testBeforeUpload = prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected() || prefCheckFixmesBeforeUpload.isSelected() || prefCheckComplexBeforeUpload.isSelected();
+		testBeforeUpload = prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected()
+		|| prefCheckFixmesBeforeUpload.isSelected() || prefCheckComplexBeforeUpload.isSelected();
 
 		Main.pref.put(PREF_CHECK_VALUES, prefCheckValues.isSelected());
 		Main.pref.put(PREF_CHECK_COMPLEX, prefCheckComplex.isSelected());
@@ -619,6 +627,10 @@ public class TagChecker extends Test
 					commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, null) );
 				else if(value.startsWith(" ") || value.endsWith(" "))
 					commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, value.trim()) );
+				else if(key.startsWith(" ") || key.endsWith(" "))
+				{
+					commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)), key, key.trim()) );
+				}
 				else
 				{
 					String replacementKey = spellCheckKeyData.get(key);
@@ -641,8 +653,8 @@ public class TagChecker extends Test
 	{
 		if( testError.getTester() instanceof TagChecker)
 		{
-			int code = testError.getInternalCode();
-			return code == INVALID_KEY || code == EMPTY_VALUES || code == INVALID_SPACE;
+			int code = testError.getCode();
+			return code == INVALID_KEY || code == EMPTY_VALUES || code == INVALID_SPACE || code == INVALID_KEY_SPACE;
 		}
 
 		return false;
@@ -651,12 +663,15 @@ public class TagChecker extends Test
 	private static class CheckerData {
 		public String getData(String data)
 		{
-System.out.println(data);
 			return "not implemented yet";
 		}
 		public Boolean match(OsmPrimitive osm)
 		{
 			return false;
+		}
+		public String description()
+		{
+			return "not implemented yet";
 		}
 	}
 }

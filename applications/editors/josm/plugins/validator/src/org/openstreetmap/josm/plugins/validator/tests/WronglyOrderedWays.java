@@ -19,6 +19,10 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
  * @author jrreid
  */
 public class WronglyOrderedWays extends Test  {
+	protected static int WRONGLY_ORDERED_COAST = 1001;
+	protected static int WRONGLY_ORDERED_WATER = 1002;
+	protected static int WRONGLY_ORDERED_LAND  = 1003;
+
 	/** The already detected errors */
 	Bag<Way, Way> _errorWays;
 
@@ -42,25 +46,35 @@ public class WronglyOrderedWays extends Test  {
 	{
 		_errorWays = null;
 	}
-	
+
 	@Override
 	public void visit(Way w)
 	{
 		String errortype = "";
-		
+		int type;
+
 		if( w.deleted || w.incomplete )
 			return;
-		
+
 		String natural = w.get("natural");
 		if( natural == null)
 			return;
-		
+
 		if( natural.equals("coastline") )
+		{
 			errortype = tr("Reversed coastline: land not on left side");
+			type= WRONGLY_ORDERED_COAST;
+		}
 		else if(natural.equals("water") )
+		{
 			errortype = tr("Reversed water: land not on left side");
+			type= WRONGLY_ORDERED_WATER;
+		}
 		else if( natural.equals("land") )
+		{
 			errortype = tr("Reversed land: land not on left side");
+			type= WRONGLY_ORDERED_LAND;
+		}
 		else
 			return;
 
@@ -89,7 +103,7 @@ public class WronglyOrderedWays extends Test  {
 			{
 				List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
 				primitives.add(w);
-				errors.add( new TestError(this, Severity.WARNING, errortype, primitives) );
+				errors.add( new TestError(this, Severity.WARNING, errortype, type, primitives) );
 				_errorWays.add(w,w);
 			}
 		}

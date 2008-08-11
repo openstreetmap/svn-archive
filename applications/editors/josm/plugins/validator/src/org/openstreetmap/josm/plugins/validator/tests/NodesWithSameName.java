@@ -13,12 +13,13 @@ import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
 
 public class NodesWithSameName extends Test {
+	protected static int SAME_NAME = 801;
+
 	private Map<String, List<Node>> namesToNodes;
 
 	public NodesWithSameName() {
 		super(tr("Nodes with same name"),
-			tr("Find nodes that have the same name " +
-				"(might be duplicates due to e.g. the OpenGeoDB import)"));
+			tr("Find nodes that have the same name (might be duplicates)"));
 	}
 
 	@Override public void startTest() {
@@ -42,7 +43,7 @@ public class NodesWithSameName extends Test {
 		for (List<Node> nodes : namesToNodes.values()) {
 			if (nodes.size() > 1) {
 				errors.add(new TestError(this, Severity.WARNING,
-					tr("Nodes with same name"), nodes));
+					tr("Nodes with same name"), SAME_NAME, nodes));
 			}
 		}
 

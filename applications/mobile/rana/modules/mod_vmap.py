@@ -35,15 +35,18 @@ class vmap(ranaModule):
     self.tiles = {}
     self.setupStyles()
   
-  def checkLoaded(self,x,y,z):
-    if(z != 15):
+  def getTile(self,x,y,z):
+    if(z < 15):
       return(False)
+    while(z > 15):
+      x = int(x/2)
+      y = int(y/2)
+      z -= 1
     key = "%05d_%05d" % (x,y)
-    if(self.tiles.has_key(key)):
-      return(True)
-    self.tiles[key] = vmapData(self.getFilename(x,y))
-    return(True) #?
-
+    if(not self.tiles.has_key(key)):
+      self.tiles[key] = vmapData(self.getFilename(x,y))
+    return(self.tiles[key])
+  
   def getFilename(self,x,y):
     xdir = int(x / 128)
     ydir = int(y / 128)
@@ -53,26 +56,20 @@ class vmap(ranaModule):
     
   def drawMap(self, cr):
     (sx,sy,sw,sh) = self.get('viewport')
+    proj = self.m.get('projection', None)
+    if(not proj or not proj.isValid()):
+      return
     
     z = int(self.get('z', 15))
-
-    proj = self.m.get('projection', None)
-    if(proj == None):
-      return
-    if(not proj.isValid()):
-      return
-
-    self.waysDrawn = {}
     layer = self.get('layer','pyrender')
+
+    #print "%d, %d" % (z, proj.zoom)
     
-    # Cover the whole map view with tiles
+    # Render each 'tile' in view
+    self.waysDrawn = {}
     for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
-        
-        # Convert corner to screen coordinates
-        x1,y1 = proj.pxpy2xy(x,y)
-        if(self.checkLoaded(x,y,z)):
-          self.drawTile(cr,x,y,proj)
+        self.drawTile(cr,x,y,z,proj)
 
   def setupStyles(self):
     self.highways = {
@@ -112,22 +109,23 @@ class vmap(ranaModule):
     cr.set_source_rgb(r,g,b)
     cr.set_line_width(width)
     
-  def drawTile(self,cr,tx,ty,proj):
-    mapData = self.tiles["%05d_%05d" % (tx,ty)]
-    for wayID, way in mapData.ways.items():
-      if(not self.waysDrawn.get(wayID, False)): # if not drawn already as part of another tile
-        if(self.style(way['t'], cr)): # setup cairo to draw the way. false means don't draw
-          count = 0
-          for node in way['n']:
-            (lat,lon,nid) = node
-            x,y = proj.ll2xy(lat,lon)
-            if(count == 0):    
-              cr.move_to(x,y)
-            else:
-              cr.line_to(x,y)
-            count += 1
-          cr.stroke()
-        self.waysDrawn[wayID] = True
+  def drawTile(self,cr,tx,ty,tz,proj):
+    mapData = self.getTile(tx,ty,tz)
+    if(mapData):
+      for wayID, way in mapData.ways.items():
+        if(not self.waysDrawn.get(wayID, False)): # if not drawn already as part of another tile
+          if(self.style(way['t'], cr)): # setup cairo to draw the way. false means don't draw
+            count = 0
+            for node in way['n']:
+              (lat,lon,nid) = node
+              x,y = proj.ll2xy(lat,lon)
+              if(count == 0):    
+                cr.move_to(x,y)
+              else:
+                cr.line_to(x,y)
+              count += 1
+            cr.stroke()
+          self.waysDrawn[wayID] = True
 
   def update(self):
     pass

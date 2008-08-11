@@ -38,6 +38,7 @@ class Upload(models.Model):
   layer = models.ForeignKey(Layer,blank=True,null=True)
   ipaddress = models.IPAddressField(blank=True,default="")
   user_id = models.ForeignKey(User)
+  client_uuid = models.PositiveSmallIntegerField(blank=True, default=0)
   #clientping contains the upload it indicates the upload time
   upload_time = models.DateTimeField(auto_now_add=True)
   # priority: 1=urgent 3=slow bulk

@@ -45,14 +45,14 @@ class TileUpload:
       self.fname = upload.get_file_filename()
       #obsolete by above line: os.path.join(settings.MEDIA_ROOT,upload.file)
       if os.path.isfile(self.fname):
-        logging.debug('Handling next tileset: ' + upload.file)
+        #logging.debug('Handling next tileset: ' + upload.file)
         self.uid = str(random.randint(0,9999999999999999999))
         if self.unzip():
           tset = self.movetiles()
           if tset.layer and tset.base_z and tset.x and tset.y:
           #It's a valid tileset. Save the tileset at it's place
             time_save = [time()]
-            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s" % (tset.layer,tset.base_z,tset.x,tset.y,upload.user_id))
+            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (client id %d)" % (tset.layer,tset.base_z,tset.x,tset.y,upload.user_id,upload.client_uuid))
             (retval,unknown_tiles) = tset.save(self.base_tilepath, upload.user_id.id)
             time_save.append(time())
             if retval:

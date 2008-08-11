@@ -54,23 +54,6 @@ class vmap(ranaModule):
     filename = "%s/%d_%d/%d_%d.dat" % (base,xdir,ydir,x,y)
     return(filename)
     
-  def drawMap(self, cr):
-    (sx,sy,sw,sh) = self.get('viewport')
-    proj = self.m.get('projection', None)
-    if(not proj or not proj.isValid()):
-      return
-    
-    z = int(self.get('z', 15))
-    layer = self.get('layer','pyrender')
-
-    #print "%d, %d" % (z, proj.zoom)
-    
-    # Render each 'tile' in view
-    self.waysDrawn = {}
-    for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
-      for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
-        self.drawTile(cr,x,y,z,proj)
-
   def setupStyles(self):
     self.highways = {
       'motorway':     ((0.5, 0.5, 1.0), 6, {'shields':True}),
@@ -97,12 +80,13 @@ class vmap(ranaModule):
     for x in('motorway', 'trunk', 'primary'):
       self.highways[x+"_link"] = self.highways[x]
     
-  def style(self, tags, cr):
+  def style(self, tags):
     highway = self.highways.get(tags.get("highway", None), None)
     if(highway):
-      self.setStyle(highway, cr)
-      return(True)
-      
+      casing = ((0,0,0), highway[1]+4, {})
+      styleList = [casing, highway]
+      return(styleList)
+
   def setStyle(self, style, cr):
     (colour,width,options) = style
     (r,g,b) = colour
@@ -114,18 +98,37 @@ class vmap(ranaModule):
     if(mapData):
       for wayID, way in mapData.ways.items():
         if(not self.waysDrawn.get(wayID, False)): # if not drawn already as part of another tile
-          if(self.style(way['t'], cr)): # setup cairo to draw the way. false means don't draw
-            count = 0
-            for node in way['n']:
-              (lat,lon,nid) = node
-              x,y = proj.ll2xy(lat,lon)
-              if(count == 0):    
-                cr.move_to(x,y)
-              else:
-                cr.line_to(x,y)
-              count += 1
-            cr.stroke()
+          styleList = self.style(way['t'])
+          if(styleList):
+            for style in styleList:
+              self.setStyle(style, cr)
+              count = 0
+              for node in way['n']:
+                (lat,lon,nid) = node
+                x,y = proj.ll2xy(lat,lon)
+                if(count == 0):    
+                  cr.move_to(x,y)
+                else:
+                  cr.line_to(x,y)
+                count += 1
+              cr.stroke()
           self.waysDrawn[wayID] = True
+
+  def drawMap(self, cr):
+    (sx,sy,sw,sh) = self.get('viewport')
+    proj = self.m.get('projection', None)
+    if(not proj or not proj.isValid()):
+      return
+    
+    z = int(self.get('z', 15))
+    layer = self.get('layer','pyrender')
+    
+    # Render each 'tile' in view
+    self.waysDrawn = {}
+    for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
+      for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
+        self.drawTile(cr,x,y,z,proj)
+   
 
   def update(self):
     pass

@@ -1,0 +1,1262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.5" generator="OpenStreetMap server">
+  <bounds minlat="47.36268" minlon="8.52159" maxlat="47.36626" maxlon="8.52936"/>
+  <node id="258602796" lat="47.3627705" lon="8.5231372" user="lonvia" visible="true" timestamp="2008-04-19T18:13:11+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602807" lat="47.3627705" lon="8.5233395" user="lonvia" visible="true" timestamp="2008-04-19T18:13:13+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="4366175" lat="47.3627961" lon="8.5227049" user="pi1" visible="true" timestamp="2008-02-11T12:20:44+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851532" lat="47.3649065" lon="8.5233143" user="pi1" visible="true" timestamp="2008-02-11T12:19:45+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="34184556" lat="47.3640006" lon="8.5251809" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184557" lat="47.3641053" lon="8.5250693" user="rulli" visible="true" timestamp="2007-08-13T15:30:01+01:00"/>
+  <node id="34184558" lat="47.3638146" lon="8.5240136" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184559" lat="47.3645994" lon="8.5238247" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="81560208" lat="47.3654668" lon="8.5216566" user="bobo11" visible="true" timestamp="2007-10-29T15:36:25+00:00"/>
+  <node id="81563733" lat="47.3627966" lon="8.5223187" user="rulli" visible="true" timestamp="2007-10-20T18:45:42+01:00"/>
+  <node id="81967728" lat="47.364754" lon="8.5237809" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="81967729" lat="47.3639343" lon="8.5232745" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="81967731" lat="47.3630738" lon="8.5225191" user="pi1" visible="true" timestamp="2008-04-18T10:29:06+01:00"/>
+  <node id="81968383" lat="47.3651667" lon="8.5224762" user="pi1" visible="true" timestamp="2008-04-18T09:51:54+01:00"/>
+  <node id="81968384" lat="47.3642656" lon="8.5225106" user="pi1" visible="true" timestamp="2008-04-18T09:51:54+01:00"/>
+  <node id="81968385" lat="47.3636459" lon="8.5225148" user="bobo11" visible="true" timestamp="2007-10-21T01:30:37+01:00"/>
+  <node id="81968386" lat="47.362789" lon="8.5222273" user="pi1" visible="true" timestamp="2008-04-18T10:27:35+01:00"/>
+  <node id="91498052" lat="47.3649727" lon="8.5217939" user="bobo11" visible="true" timestamp="2007-10-29T15:36:25+00:00"/>
+  <node id="91500443" lat="47.3636976" lon="8.5219222" user="IDE" visible="true" timestamp="2008-05-28T22:31:34+01:00"/>
+  <node id="91500826" lat="47.363054" lon="8.5220501" user="IDE" visible="true" timestamp="2008-05-28T22:31:34+01:00"/>
+  <node id="107205965" lat="47.3642831" lon="8.5235234" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="107206476" lat="47.3641583" lon="8.5232846" user="bobo11" visible="true" timestamp="2007-11-11T11:13:44+00:00"/>
+  <node id="107206477" lat="47.3651349" lon="8.5238597" user="bobo11" visible="true" timestamp="2007-11-11T11:13:44+00:00"/>
+  <node id="247178790" lat="47.364081" lon="8.5230396" user="pi1" visible="true" timestamp="2008-02-11T12:19:45+00:00"/>
+  <node id="256337923" lat="47.3637622" lon="8.5253266" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337924" lat="47.3638355" lon="8.5252452" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337925" lat="47.3639006" lon="8.5250825" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337926" lat="47.363868" lon="8.5249848" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337927" lat="47.3637541" lon="8.5249686" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337928" lat="47.3636138" lon="8.5250773" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337929" lat="47.3634695" lon="8.5252434" user="lonvia" visible="true" timestamp="2008-04-07T23:25:07+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337930" lat="47.3633051" lon="8.5253179" user="lonvia" visible="true" timestamp="2008-04-19T18:13:14+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337932" lat="47.3631286" lon="8.5252238" user="lonvia" visible="true" timestamp="2008-04-19T18:13:14+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337934" lat="47.3630414" lon="8.5248461" user="rulli" visible="true" timestamp="2008-04-11T20:32:46+01:00"/>
+  <node id="256337935" lat="47.3630271" lon="8.5246807" user="rulli" visible="true" timestamp="2008-04-17T18:20:47+01:00"/>
+  <node id="256337936" lat="47.3630636" lon="8.5245072" user="lonvia" visible="true" timestamp="2008-04-07T23:25:07+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337937" lat="47.3631686" lon="8.524425" user="lonvia" visible="true" timestamp="2008-04-07T23:25:08+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337939" lat="47.3633421" lon="8.5243702" user="lonvia" visible="true" timestamp="2008-04-07T23:25:08+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337945" lat="47.3628472" lon="8.5237947" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337946" lat="47.3628353" lon="8.5244524" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337947" lat="47.3628627" lon="8.5246852" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337948" lat="47.3629221" lon="8.5248359" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337949" lat="47.3630134" lon="8.5251098" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337950" lat="47.3630727" lon="8.5253837" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256926702" lat="47.3641053" lon="8.5250264" user="rulli" visible="true" timestamp="2008-04-11T20:32:42+01:00"/>
+  <node id="258319293" lat="47.3655272" lon="8.5224762" user="pi1" visible="true" timestamp="2008-04-18T09:51:54+01:00"/>
+  <node id="258319294" lat="47.3633587" lon="8.5224505" user="pi1" visible="true" timestamp="2008-04-18T09:51:54+01:00"/>
+  <node id="258319295" lat="47.3631436" lon="8.5223732" user="pi1" visible="true" timestamp="2008-04-18T09:51:54+01:00"/>
+  <node id="258320286" lat="47.3651667" lon="8.5240383" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="258320288" lat="47.363475" lon="8.5228968" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="258325753" lat="47.3629052" lon="8.5222273" user="pi1" visible="true" timestamp="2008-04-18T10:28:10+01:00"/>
+  <node id="258325981" lat="47.3628064" lon="8.5221329" user="pi1" visible="true" timestamp="2008-04-18T10:29:15+01:00"/>
+  <node id="258325999" lat="47.3630331" lon="8.5223818" user="pi1" visible="true" timestamp="2008-04-18T10:29:26+01:00"/>
+  <node id="258326000" lat="47.363411" lon="8.5227766" user="pi1" visible="true" timestamp="2008-04-18T10:29:26+01:00"/>
+  <node id="258602795" lat="47.3634535" lon="8.5231203" user="lonvia" visible="true" timestamp="2008-04-19T18:13:11+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602809" lat="47.3628801" lon="8.5232552" user="lonvia" visible="true" timestamp="2008-04-19T18:13:13+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602810" lat="47.3629645" lon="8.5231203" user="lonvia" visible="true" timestamp="2008-04-19T18:13:13+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674975" lat="47.3640102" lon="8.5252753" user="lonvia" visible="true" timestamp="2008-04-29T21:49:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674977" lat="47.3640473" lon="8.525133" user="lonvia" visible="true" timestamp="2008-04-29T21:49:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674978" lat="47.3641587" lon="8.5250649" user="lonvia" visible="true" timestamp="2008-04-29T21:49:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674980" lat="47.3647465" lon="8.5248917" user="lonvia" visible="true" timestamp="2008-04-29T21:49:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674981" lat="47.3648703" lon="8.5247494" user="lonvia" visible="true" timestamp="2008-04-29T21:49:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674983" lat="47.3648517" lon="8.5245514" user="lonvia" visible="true" timestamp="2008-04-29T21:49:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674986" lat="47.3639483" lon="8.5253186" user="lonvia" visible="true" timestamp="2008-04-29T21:49:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674987" lat="47.3631872" lon="8.5254486" user="lonvia" visible="true" timestamp="2008-04-29T21:49:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260741048" lat="47.3651159" lon="8.5227195" user="pi1" visible="true" timestamp="2008-04-30T11:58:52+01:00"/>
+  <node id="260741050" lat="47.363087" lon="8.5226852" user="pi1" visible="true" timestamp="2008-04-30T11:58:52+01:00"/>
+  <node id="260742798" lat="47.3629475" lon="8.5229684" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742799" lat="47.3633544" lon="8.5230285" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742800" lat="47.3638893" lon="8.5231229" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742801" lat="47.3642672" lon="8.5232345" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742802" lat="47.3645927" lon="8.5233718" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742803" lat="47.3649473" lon="8.5235435" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742804" lat="47.3652787" lon="8.523655" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742805" lat="47.3655171" lon="8.5236379" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="261614813" lat="47.3644752" lon="8.5231399" user="pi1" visible="true" timestamp="2008-05-02T16:35:25+01:00"/>
+  <node id="261614879" lat="47.363295" lon="8.5228824" user="pi1" visible="true" timestamp="2008-05-02T16:36:03+01:00"/>
+  <node id="261614880" lat="47.3652542" lon="8.5235347" user="pi1" visible="true" timestamp="2008-05-02T16:36:03+01:00"/>
+  <node id="262178815" lat="47.3652624" lon="8.5230291" user="rulli" visible="true" timestamp="2008-05-04T18:39:30+01:00"/>
+  <node id="262178816" lat="47.3651868" lon="8.5229518" user="rulli" visible="true" timestamp="2008-05-04T18:39:30+01:00"/>
+  <node id="267013334" lat="47.3654649" lon="8.5219118" user="IDE" visible="true" timestamp="2008-05-30T08:48:54+01:00">
+    <tag k="created_by" v="Potlatch 0.9c"/>
+    <tag k="name" v="UBS AG"/>
+    <tag k="amenity" v="atm"/>
+  </node>
+  <node id="268129901" lat="47.3630343" lon="8.5222602" user="IDE" visible="true" timestamp="2008-06-02T22:18:41+01:00"/>
+  <node id="28851531" lat="47.3659693" lon="8.5241527" user="pi1" visible="true" timestamp="2008-05-02T16:36:03+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="34184560" lat="47.3656865" lon="8.52458" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="59916071" lat="47.3657711" lon="8.5246687" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="59916092" lat="47.3658874" lon="8.5244627" user="rulli" visible="true" timestamp="2007-09-26T19:54:32+01:00"/>
+  <node id="59917387" lat="47.36562" lon="8.5242309" user="rulli" visible="true" timestamp="2007-09-26T19:54:32+01:00"/>
+  <node id="81560707" lat="47.3662346" lon="8.5222944" user="mgeiser" visible="true" timestamp="2008-03-21T16:41:29+00:00"/>
+  <node id="81967727" lat="47.3659713" lon="8.5247635" user="bobo11" visible="true" timestamp="2007-10-21T01:29:25+01:00"/>
+  <node id="81968821" lat="47.366155" lon="8.5226565" user="pi1" visible="true" timestamp="2008-04-18T09:52:14+01:00"/>
+  <node id="81968823" lat="47.3658527" lon="8.5225363" user="pi1" visible="true" timestamp="2008-04-18T09:51:54+01:00"/>
+  <node id="91498701" lat="47.3659493" lon="8.5220428" user="bobo11" visible="true" timestamp="2007-10-29T15:34:16+00:00"/>
+  <node id="247178763" lat="47.3656857" lon="8.5227538" user="pi1" visible="true" timestamp="2008-04-30T11:58:52+01:00"/>
+  <node id="247178791" lat="47.3656099" lon="8.5238121" user="pi1" visible="true" timestamp="2008-02-11T12:19:45+00:00"/>
+  <node id="258320283" lat="47.3662538" lon="8.5250597" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="258320284" lat="47.3657132" lon="8.5244675" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="260741047" lat="47.3660868" lon="8.5228053" user="pi1" visible="true" timestamp="2008-04-30T11:58:52+01:00"/>
+  <node id="260742806" lat="47.3657205" lon="8.5235521" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742807" lat="47.3659589" lon="8.523389" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742808" lat="47.3662147" lon="8.5232173" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="262178814" lat="47.3660298" lon="8.5236127" user="rulli" visible="true" timestamp="2008-05-04T18:39:30+01:00"/>
+  <node id="29798723" lat="47.3639552" lon="8.5286172" user="rulli" visible="true" timestamp="2007-08-16T12:00:45+01:00"/>
+  <node id="29798724" lat="47.3635483" lon="8.5278104" user="ramack" visible="true" timestamp="2007-05-31T00:57:53+01:00"/>
+  <node id="34184413" lat="47.3649823" lon="8.526889" user="rulli" visible="true" timestamp="2008-05-18T17:06:01+01:00"/>
+  <node id="34184414" lat="47.3643661" lon="8.5274555" user="rulli" visible="true" timestamp="2008-05-18T17:06:01+01:00"/>
+  <node id="34184415" lat="47.3651219" lon="8.5291464" user="rulli" visible="true" timestamp="2008-05-18T17:06:01+01:00"/>
+  <node id="34184555" lat="47.3641925" lon="8.5263138" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184564" lat="47.3651285" lon="8.5262194" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184584" lat="47.3645994" lon="8.5263567" user="rulli" visible="true" timestamp="2007-08-13T15:31:47+01:00"/>
+  <node id="34184585" lat="47.365078" lon="8.5263435" user="rulli" visible="true" timestamp="2008-06-24T21:59:07+01:00"/>
+  <node id="34184697" lat="47.3634018" lon="8.5292578" user="rulli" visible="true" timestamp="2007-08-13T15:35:11+01:00"/>
+  <node id="34646048" lat="47.3641952" lon="8.526387" user="lonvia" visible="true" timestamp="2008-04-29T21:49:04+01:00"/>
+  <node id="34646050" lat="47.3642367" lon="8.5271979" user="rulli" visible="true" timestamp="2007-08-16T11:50:26+01:00"/>
+  <node id="34646053" lat="47.3654808" lon="8.5266143" user="rulli" visible="true" timestamp="2007-08-16T12:00:21+01:00"/>
+  <node id="34646056" lat="47.3654401" lon="8.5278245" user="rulli" visible="true" timestamp="2007-08-16T11:55:06+01:00"/>
+  <node id="34646057" lat="47.3652424" lon="8.5274039" user="rulli" visible="true" timestamp="2007-08-16T11:46:37+01:00"/>
+  <node id="34646408" lat="47.3641608" lon="8.5282306" user="rulli" visible="true" timestamp="2007-08-19T14:07:08+01:00"/>
+  <node id="34647597" lat="47.3633879" lon="8.5264598" user="rulli" visible="true" timestamp="2007-08-16T12:00:21+01:00"/>
+  <node id="34647860" lat="47.3633472" lon="8.5258504" user="rulli" visible="true" timestamp="2007-08-16T12:00:45+01:00"/>
+  <node id="146926029" lat="47.3649719" lon="8.5255583" user="mgeiser" visible="true" timestamp="2008-04-23T17:35:33+01:00">
+    <tag k="amenity" v="drinking_water"/>
+  </node>
+  <node id="256337922" lat="47.3634449" lon="8.5256439" user="lonvia" visible="true" timestamp="2008-04-07T23:25:06+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337951" lat="47.3630773" lon="8.5257078" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674984" lat="47.3641216" lon="8.5263891" user="lonvia" visible="true" timestamp="2008-04-29T21:49:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260674989" lat="47.3633614" lon="8.5257613" user="lonvia" visible="true" timestamp="2008-04-29T21:49:02+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="34184416" lat="47.3657439" lon="8.5285885" user="rulli" visible="true" timestamp="2008-05-18T17:06:01+01:00"/>
+  <node id="34646054" lat="47.3656145" lon="8.5270949" user="rulli" visible="true" timestamp="2007-08-16T11:46:37+01:00"/>
+  <node id="34646055" lat="47.3658234" lon="8.5274582" user="rulli" visible="true" timestamp="2007-09-12T18:40:33+01:00"/>
+  <node id="34646332" lat="47.3657846" lon="8.5285799" user="rulli" visible="true" timestamp="2008-05-18T17:10:05+01:00"/>
+  <node id="259505667" lat="47.3662439" lon="8.5292554" user="pi1" visible="true" timestamp="2008-04-23T20:37:11+01:00"/>
+  <node id="268181962" lat="47.3656035" lon="8.5255725" user="Marc Padellini" visible="true" timestamp="2008-06-03T08:26:10+01:00"/>
+  <node id="4366174" lat="47.366453" lon="8.5229083" user="pi1" visible="true" timestamp="2008-04-30T11:58:52+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="4366179" lat="47.3570752" lon="8.5242473" user="pi1" visible="true" timestamp="2008-04-30T11:59:48+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488649" lat="47.3524875" lon="8.5249683" user="pi1" visible="true" timestamp="2008-04-30T12:03:42+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488650" lat="47.3512663" lon="8.5249168" user="pi1" visible="true" timestamp="2008-04-30T12:03:42+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488651" lat="47.3509389" lon="8.5248021" user="bobo11" visible="true" timestamp="2007-12-18T14:14:45+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488686" lat="47.3507604" lon="8.5249339" user="pi1" visible="true" timestamp="2008-04-30T12:05:00+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488688" lat="47.3512024" lon="8.5251313" user="pi1" visible="true" timestamp="2008-04-30T12:05:49+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488689" lat="47.3520966" lon="8.5252427" user="pi1" visible="true" timestamp="2008-05-02T16:42:25+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488691" lat="47.3537073" lon="8.5249767" user="pi1" visible="true" timestamp="2008-05-02T17:22:59+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488692" lat="47.3549413" lon="8.524788" user="pi1" visible="true" timestamp="2008-04-30T12:06:11+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488733" lat="47.3593225" lon="8.5165207" user="IDE" visible="true" timestamp="2008-06-01T15:09:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488735" lat="47.3607327" lon="8.5169371" user="rulli" visible="true" timestamp="2007-10-20T18:34:38+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="27488739" lat="47.3627506" lon="8.5190833" user="IDE" visible="true" timestamp="2008-05-26T19:24:49+01:00"/>
+  <node id="28851527" lat="47.3726966" lon="8.5318066" user="bobo11" visible="true" timestamp="2007-12-08T10:19:51+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851528" lat="47.3706655" lon="8.5305963" user="ramack" visible="true" timestamp="2007-05-08T00:39:14+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851529" lat="47.3693737" lon="8.5290318" user="ramack" visible="true" timestamp="2007-05-08T00:39:14+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851530" lat="47.3681174" lon="8.5271474" user="ramack" visible="true" timestamp="2007-05-08T00:39:14+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851533" lat="47.3624424" lon="8.5228388" user="ramack" visible="true" timestamp="2007-05-08T00:39:15+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851534" lat="47.3597322" lon="8.5235374" user="pi1" visible="true" timestamp="2008-02-11T12:21:26+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851535" lat="47.3566971" lon="8.5244387" user="pi1" visible="true" timestamp="2008-02-11T12:21:26+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851537" lat="47.3527199" lon="8.5240438" user="pi1" visible="true" timestamp="2008-02-11T12:21:26+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="28851539" lat="47.3520512" lon="8.5223444" user="pi1" visible="true" timestamp="2008-02-11T12:22:00+00:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="29542834" lat="47.3714757" lon="8.5235391" user="pi1" visible="true" timestamp="2008-04-23T20:40:07+01:00"/>
+  <node id="29798700" lat="47.3696523" lon="8.5337756" user="ramack" visible="true" timestamp="2007-05-31T00:55:50+01:00"/>
+  <node id="29798725" lat="47.3620548" lon="8.5265151" user="rulli" visible="true" timestamp="2008-06-24T21:58:50+01:00"/>
+  <node id="29798726" lat="47.3613553" lon="8.5255413" user="rulli" visible="true" timestamp="2007-08-13T15:34:25+01:00"/>
+  <node id="30268707" lat="47.3652472" lon="8.53013" user="pi1" visible="true" timestamp="2008-04-23T20:27:51+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="30268708" lat="47.370022" lon="8.5253641" user="ramack" visible="true" timestamp="2007-06-12T23:43:38+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="30795608" lat="47.3700671" lon="8.5343246" user="rulli" visible="true" timestamp="2007-09-28T13:20:22+01:00"/>
+  <node id="34173322" lat="47.3603211" lon="8.5237239" user="lonvia" visible="true" timestamp="2008-04-19T18:13:14+01:00"/>
+  <node id="34179516" lat="47.3607583" lon="8.5292531" user="rulli" visible="true" timestamp="2008-06-24T21:58:08+01:00"/>
+  <node id="34184561" lat="47.3667504" lon="8.5258847" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184562" lat="47.3674887" lon="8.5277987" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184563" lat="47.3671748" lon="8.5281249" user="rulli" visible="true" timestamp="2007-09-28T12:33:29+01:00"/>
+  <node id="34184583" lat="47.3623804" lon="8.5265151" user="rulli" visible="true" timestamp="2008-06-24T21:58:56+01:00"/>
+  <node id="34184586" lat="47.3672329" lon="8.5282965" user="rulli" visible="true" timestamp="2007-08-13T15:31:47+01:00"/>
+  <node id="34184698" lat="47.3631169" lon="8.5293608" user="rulli" visible="true" timestamp="2007-08-13T15:35:11+01:00"/>
+  <node id="34403108" lat="47.3599998" lon="8.5229586" user="IDE" visible="true" timestamp="2008-06-02T22:31:35+01:00"/>
+  <node id="34436641" lat="47.367893" lon="8.5297456" user="rulli" visible="true" timestamp="2007-09-01T14:50:02+01:00"/>
+  <node id="34646339" lat="47.3654017" lon="8.5295582" user="rulli" visible="true" timestamp="2007-09-02T19:50:11+01:00"/>
+  <node id="34646405" lat="47.3647795" lon="8.5295958" user="rulli" visible="true" timestamp="2007-09-02T19:32:43+01:00"/>
+  <node id="34647861" lat="47.3614336" lon="8.5256566" user="lonvia" visible="true" timestamp="2008-05-05T22:01:49+01:00"/>
+  <node id="34669944" lat="47.3685266" lon="8.5307455" user="rulli" visible="true" timestamp="2007-08-16T15:51:30+01:00"/>
+  <node id="35132499" lat="47.3650561" lon="8.5297584" user="rulli" visible="true" timestamp="2007-08-19T14:08:40+01:00"/>
+  <node id="35132527" lat="47.3645034" lon="8.5302438" user="rulli" visible="true" timestamp="2007-09-06T20:22:50+01:00"/>
+  <node id="35132528" lat="47.3644685" lon="8.5301237" user="rulli" visible="true" timestamp="2007-09-06T20:22:50+01:00"/>
+  <node id="38439578" lat="47.3692354" lon="8.5325269" user="rulli" visible="true" timestamp="2007-09-06T21:25:32+01:00"/>
+  <node id="38439821" lat="47.3619632" lon="8.5264104" user="lonvia" visible="true" timestamp="2008-05-05T22:01:48+01:00"/>
+  <node id="49962052" lat="47.3669861" lon="8.5283079" user="rulli" visible="true" timestamp="2007-09-12T18:40:33+01:00"/>
+  <node id="49962053" lat="47.3672768" lon="8.5283937" user="rulli" visible="true" timestamp="2007-09-12T18:05:30+01:00"/>
+  <node id="59914040" lat="47.366399" lon="8.5250549" user="rulli" visible="true" timestamp="2007-09-26T19:54:32+01:00"/>
+  <node id="59917388" lat="47.3667129" lon="8.5255012" user="rulli" visible="true" timestamp="2007-09-26T19:54:32+01:00"/>
+  <node id="81543606" lat="47.3602152" lon="8.5167139" user="rulli" visible="true" timestamp="2007-10-20T18:34:38+01:00"/>
+  <node id="81560207" lat="47.3639464" lon="8.5204341" user="IDE" visible="true" timestamp="2008-05-28T00:16:44+01:00"/>
+  <node id="81561244" lat="47.3671742" lon="8.5213145" user="rulli" visible="true" timestamp="2007-10-20T18:43:49+01:00"/>
+  <node id="81561246" lat="47.3676858" lon="8.5208338" user="rulli" visible="true" timestamp="2007-10-20T18:43:49+01:00"/>
+  <node id="81561757" lat="47.3666859" lon="8.5218123" user="rulli" visible="true" timestamp="2007-10-20T18:43:49+01:00"/>
+  <node id="81561793" lat="47.3662731" lon="8.5210312" user="rulli" visible="true" timestamp="2007-10-20T18:44:59+01:00"/>
+  <node id="81561961" lat="47.3667208" lon="8.5205162" user="rulli" visible="true" timestamp="2007-10-20T18:44:59+01:00"/>
+  <node id="81562059" lat="47.3672207" lon="8.5200184" user="rulli" visible="true" timestamp="2007-10-20T18:44:59+01:00"/>
+  <node id="81562433" lat="47.365821" lon="8.5215376" user="IDE" visible="true" timestamp="2008-05-26T19:30:38+01:00"/>
+  <node id="81562434" lat="47.3677671" lon="8.5197781" user="rulli" visible="true" timestamp="2007-10-20T18:44:59+01:00"/>
+  <node id="81563098" lat="47.3670628" lon="8.5201304" user="IDE" visible="true" timestamp="2008-05-28T22:30:17+01:00"/>
+  <node id="81563190" lat="47.3656046" lon="8.5215891" user="mgeiser" visible="true" timestamp="2007-11-02T12:53:57+00:00"/>
+  <node id="81563317" lat="47.3650306" lon="8.5213856" user="IDE" visible="true" timestamp="2008-05-28T00:16:43+01:00"/>
+  <node id="81563734" lat="47.3619071" lon="8.5225161" user="rulli" visible="true" timestamp="2007-10-20T18:45:28+01:00"/>
+  <node id="81966435" lat="47.3624692" lon="8.5218411" user="pi1" visible="true" timestamp="2008-04-18T10:27:16+01:00">
+    <tag k="name" v="Giesshübel"/>
+    <tag k="railway" v="station"/>
+  </node>
+  <node id="81966437" lat="47.3614867" lon="8.520588" user="pi1" visible="true" timestamp="2008-04-18T10:26:52+01:00"/>
+  <node id="81966439" lat="47.3609692" lon="8.5201331" user="pi1" visible="true" timestamp="2008-04-18T10:23:20+01:00"/>
+  <node id="81966440" lat="47.360132" lon="8.520073" user="pi1" visible="true" timestamp="2008-04-18T10:23:20+01:00"/>
+  <node id="81966442" lat="47.3596517" lon="8.5203776" user="bobo11" visible="true" timestamp="2007-10-21T01:29:25+01:00"/>
+  <node id="81966443" lat="47.359225" lon="8.5209742" user="pi1" visible="true" timestamp="2008-04-18T10:23:20+01:00"/>
+  <node id="81966444" lat="47.3589924" lon="8.5212059" user="pi1" visible="true" timestamp="2008-04-18T10:23:20+01:00"/>
+  <node id="81967719" lat="47.3691547" lon="8.529686" user="pi1" visible="true" timestamp="2008-04-18T09:54:27+01:00"/>
+  <node id="81967721" lat="47.3682711" lon="8.5289736" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="81967723" lat="47.3676281" lon="8.5280423" user="bobo11" visible="true" timestamp="2007-10-21T01:29:25+01:00"/>
+  <node id="81967724" lat="47.3673084" lon="8.5269951" user="bobo11" visible="true" timestamp="2007-10-21T01:29:25+01:00"/>
+  <node id="81967725" lat="47.3669747" lon="8.5261584" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="81967726" lat="47.366512" lon="8.5253815" user="bobo11" visible="true" timestamp="2007-10-21T01:29:25+01:00"/>
+  <node id="81967732" lat="47.3626436" lon="8.5220642" user="pi1" visible="true" timestamp="2008-04-18T10:27:16+01:00"/>
+  <node id="81968173" lat="47.3621494" lon="8.5201245" user="pi1" visible="true" timestamp="2008-04-18T09:49:39+01:00"/>
+  <node id="81968174" lat="47.3621843" lon="8.5208969" user="pi1" visible="true" timestamp="2008-04-18T09:49:39+01:00"/>
+  <node id="81968175" lat="47.3622797" lon="8.5213217" user="bobo11" visible="true" timestamp="2007-10-21T01:29:51+01:00"/>
+  <node id="81968727" lat="47.3708014" lon="8.5244146" user="pi1" visible="true" timestamp="2008-04-23T20:37:30+01:00"/>
+  <node id="81969904" lat="47.3698847" lon="8.4700402" user="pi1" visible="true" timestamp="2008-04-17T15:51:43+01:00"/>
+  <node id="81969906" lat="47.3699999" lon="8.47051" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969907" lat="47.370094" lon="8.4710702" user="pi1" visible="true" timestamp="2008-04-17T15:51:43+01:00"/>
+  <node id="81969908" lat="47.370244" lon="8.4723553" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969910" lat="47.3702161" lon="8.474615" user="pi1" visible="true" timestamp="2008-04-17T15:51:43+01:00"/>
+  <node id="81969911" lat="47.370058" lon="8.4754023" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969913" lat="47.3698731" lon="8.4761771" user="pi1" visible="true" timestamp="2008-04-17T15:51:43+01:00"/>
+  <node id="81969914" lat="47.3698208" lon="8.4765634" user="pi1" visible="true" timestamp="2008-04-17T15:51:43+01:00"/>
+  <node id="81969915" lat="47.369779" lon="8.4770417" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969916" lat="47.3696918" lon="8.4776768" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969919" lat="47.3694662" lon="8.4788894" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="81969920" lat="47.3690244" lon="8.4801768" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="81969924" lat="47.3677164" lon="8.4828719" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="81969925" lat="47.3675362" lon="8.4837217" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="81969926" lat="47.3674886" lon="8.4841399" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969929" lat="47.3673258" lon="8.4863972" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969930" lat="47.367163" lon="8.4872298" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969932" lat="47.3668608" lon="8.4881482" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969933" lat="47.3665363" lon="8.4889659" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="81969936" lat="47.3660585" lon="8.4909634" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969937" lat="47.3659306" lon="8.4915127" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969939" lat="47.3657515" lon="8.4920987" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="81969940" lat="47.3653783" lon="8.4929118" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969941" lat="47.3650877" lon="8.4938559" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969943" lat="47.3649609" lon="8.4948539" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="81969944" lat="47.3649574" lon="8.4954052" user="pi1" visible="true" timestamp="2008-04-18T09:47:38+01:00">
+    <tag k="name" v="Triemli"/>
+    <tag k="railway" v="station"/>
+  </node>
+  <node id="81969945" lat="47.3649714" lon="8.4977612" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969946" lat="47.3649539" lon="8.5007653" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969947" lat="47.3649539" lon="8.5040698" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969948" lat="47.364974" lon="8.5050535" user="bobo11" visible="true" timestamp="2007-12-04T11:32:23+00:00"/>
+  <node id="81969949" lat="47.3649574" lon="8.5060997" user="pi1" visible="true" timestamp="2008-04-18T09:47:38+01:00"/>
+  <node id="81969950" lat="47.3648752" lon="8.5071821" user="bobo11" visible="true" timestamp="2007-12-04T11:32:23+00:00"/>
+  <node id="81969951" lat="47.3647541" lon="8.5081425" user="IDE" visible="true" timestamp="2008-05-27T00:31:29+01:00">
+    <tag k="railway" v="halt"/>
+    <tag k="name" v="Friesenberg"/>
+  </node>
+  <node id="81969956" lat="47.3635122" lon="8.516129" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969958" lat="47.3630354" lon="8.5175194" user="bobo11" visible="true" timestamp="2007-10-21T01:31:35+01:00"/>
+  <node id="81969959" lat="47.3627657" lon="8.5182362" user="IDE" visible="true" timestamp="2008-06-07T13:16:39+01:00">
+    <tag k="railway" v="station"/>
+    <tag k="name" v="Zürich Binz"/>
+  </node>
+  <node id="81969961" lat="47.3622125" lon="8.5197048" user="bobo11" visible="true" timestamp="2007-12-04T11:32:23+00:00"/>
+  <node id="81971661" lat="47.3641982" lon="8.4699349" user="bobo11" visible="true" timestamp="2007-10-21T01:33:24+01:00"/>
+  <node id="81971834" lat="47.3647795" lon="8.4675316" user="bobo11" visible="true" timestamp="2007-10-21T01:33:19+01:00"/>
+  <node id="81971835" lat="47.3660585" lon="8.4653" user="bobo11" visible="true" timestamp="2007-10-21T01:33:19+01:00"/>
+  <node id="81971836" lat="47.3673374" lon="8.4654717" user="bobo11" visible="true" timestamp="2007-10-21T01:33:19+01:00"/>
+  <node id="81971837" lat="47.3690814" lon="8.4675316" user="bobo11" visible="true" timestamp="2007-10-21T01:33:19+01:00"/>
+  <node id="84499050" lat="47.3649574" lon="8.5034373" user="Tric" visible="true" timestamp="2007-10-23T14:42:24+01:00">
+    <tag k="name" v="Schweighof"/>
+    <tag k="railway" v="station"/>
+  </node>
+  <node id="91498702" lat="47.3665423" lon="8.5225749" user="bobo11" visible="true" timestamp="2007-10-29T15:34:16+00:00"/>
+  <node id="91500439" lat="47.3635753" lon="8.5200037" user="IDE" visible="true" timestamp="2008-05-28T00:16:43+01:00"/>
+  <node id="91500441" lat="47.3633216" lon="8.5204893" user="bobo11" visible="true" timestamp="2007-10-29T15:36:34+00:00"/>
+  <node id="91500442" lat="47.3633146" lon="8.5206734" user="IDE" visible="true" timestamp="2008-05-26T19:24:50+01:00"/>
+  <node id="91500821" lat="47.3625891" lon="8.5197082" user="bobo11" visible="true" timestamp="2007-10-29T15:36:44+00:00"/>
+  <node id="91500822" lat="47.3626172" lon="8.52088" user="IDE" visible="true" timestamp="2008-05-28T00:16:43+01:00"/>
+  <node id="91501103" lat="47.3626447" lon="8.5210129" user="IDE" visible="true" timestamp="2008-05-28T00:16:44+01:00"/>
+  <node id="94719539" lat="47.3669705" lon="8.5229433" user="mgeiser" visible="true" timestamp="2007-11-02T13:10:11+00:00"/>
+  <node id="104328144" lat="47.3687332" lon="8.5284025" user="Tric" visible="true" timestamp="2007-11-09T18:08:18+00:00"/>
+  <node id="104334284" lat="47.3680588" lon="8.5299818" user="Andy Stricker" visible="true" timestamp="2007-11-09T23:07:00+00:00"/>
+  <node id="112026964" lat="47.3631841" lon="8.5171735" user="Tric" visible="true" timestamp="2007-11-13T18:10:25+00:00"/>
+  <node id="112029214" lat="47.3642001" lon="8.5118174" user="IDE" visible="true" timestamp="2008-06-01T11:35:37+01:00">
+    <tag k="railway" v="crossing"/>
+  </node>
+  <node id="141842311" lat="47.3615949" lon="8.5178181" user="rulli" visible="true" timestamp="2007-11-29T14:32:06+00:00"/>
+  <node id="147634650" lat="47.3583587" lon="8.5216265" user="pi1" visible="true" timestamp="2008-04-18T10:26:52+01:00"/>
+  <node id="171843417" lat="47.3702965" lon="8.53026" user="bobo11" visible="true" timestamp="2007-12-15T23:30:07+00:00"/>
+  <node id="171843418" lat="47.3709185" lon="8.5307922" user="bobo11" visible="true" timestamp="2007-12-15T23:30:07+00:00"/>
+  <node id="177007474" lat="47.3516152" lon="8.524994" user="pi1" visible="true" timestamp="2008-04-30T12:03:42+01:00"/>
+  <node id="177013164" lat="47.3531956" lon="8.5250711" user="pi1" visible="true" timestamp="2008-05-02T17:22:59+01:00"/>
+  <node id="177014340" lat="47.3540575" lon="8.5246936" user="pi1" visible="true" timestamp="2008-04-30T12:00:19+01:00"/>
+  <node id="247178762" lat="47.3668307" lon="8.5230482" user="pi1" visible="true" timestamp="2008-02-11T12:18:58+00:00"/>
+  <node id="247178831" lat="47.3615345" lon="8.522928" user="pi1" visible="true" timestamp="2008-02-11T12:20:44+00:00"/>
+  <node id="247178885" lat="47.3531967" lon="8.5248249" user="pi1" visible="true" timestamp="2008-02-11T12:21:26+00:00"/>
+  <node id="247178886" lat="47.3580809" lon="8.5241468" user="pi1" visible="true" timestamp="2008-02-11T12:21:26+00:00"/>
+  <node id="247178937" lat="47.3529467" lon="8.5245159" user="pi1" visible="true" timestamp="2008-02-11T12:22:00+00:00"/>
+  <node id="256337940" lat="47.3614749" lon="8.5255572" user="lonvia" visible="true" timestamp="2008-04-07T23:25:08+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337941" lat="47.3607536" lon="8.5243246" user="lonvia" visible="true" timestamp="2008-04-07T23:25:08+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337942" lat="47.3616119" lon="8.5238635" user="lonvia" visible="true" timestamp="2008-04-07T23:25:08+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337943" lat="47.361831" lon="8.5238042" user="lonvia" visible="true" timestamp="2008-04-07T23:25:08+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337944" lat="47.3620319" lon="8.5237768" user="lonvia" visible="true" timestamp="2008-04-07T23:25:09+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337959" lat="47.3623263" lon="8.523781" user="lonvia" visible="true" timestamp="2008-04-07T23:25:10+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256337974" lat="47.361637" lon="8.5256687" user="lonvia" visible="true" timestamp="2008-04-07T23:25:12+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="256438913" lat="47.3622623" lon="8.5293115" user="rulli" visible="true" timestamp="2008-04-08T17:39:33+01:00"/>
+  <node id="258075625" lat="47.367263" lon="8.4868201" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="258075626" lat="47.3663852" lon="8.4893951" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="258075628" lat="47.3662805" lon="8.4898242" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="258075630" lat="47.3652341" lon="8.4933347" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="258075631" lat="47.3649783" lon="8.4944419" user="pi1" visible="true" timestamp="2008-04-17T15:49:51+01:00"/>
+  <node id="258075874" lat="47.3693383" lon="8.4793615" user="pi1" visible="true" timestamp="2008-04-17T15:50:54+01:00"/>
+  <node id="258075875" lat="47.3691988" lon="8.4797992" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="258075876" lat="47.3678734" lon="8.4824857" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="258075877" lat="47.3676176" lon="8.4832582" user="pi1" visible="true" timestamp="2008-04-17T15:50:49+01:00"/>
+  <node id="258075950" lat="47.3702451" lon="8.474203" user="pi1" visible="true" timestamp="2008-04-17T15:51:43+01:00"/>
+  <node id="258317934" lat="47.3636029" lon="8.5156956" user="pi1" visible="true" timestamp="2008-04-18T09:49:39+01:00"/>
+  <node id="258317935" lat="47.3634168" lon="8.5164938" user="pi1" visible="true" timestamp="2008-04-18T09:49:39+01:00"/>
+  <node id="258317937" lat="47.362132" lon="8.5205279" user="pi1" visible="true" timestamp="2008-04-18T09:49:39+01:00"/>
+  <node id="258319376" lat="47.3664515" lon="8.522811" user="pi1" visible="true" timestamp="2008-04-18T09:52:06+01:00"/>
+  <node id="258320278" lat="47.3680327" lon="8.5287333" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="258320279" lat="47.3678234" lon="8.5284415" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="258320282" lat="47.3667422" lon="8.5257206" user="pi1" visible="true" timestamp="2008-04-18T09:54:18+01:00"/>
+  <node id="258325169" lat="47.3666899" lon="8.5250511" user="pi1" visible="true" timestamp="2008-04-18T10:22:12+01:00"/>
+  <node id="258325230" lat="47.3607076" lon="8.5200129" user="pi1" visible="true" timestamp="2008-04-18T10:23:20+01:00"/>
+  <node id="258325231" lat="47.3604227" lon="8.5199957" user="pi1" visible="true" timestamp="2008-04-18T10:29:47+01:00"/>
+  <node id="258325639" lat="47.361818" lon="8.5209828" user="pi1" visible="true" timestamp="2008-04-18T10:26:52+01:00"/>
+  <node id="258325640" lat="47.3598936" lon="8.520176" user="pi1" visible="true" timestamp="2008-04-18T10:26:52+01:00"/>
+  <node id="258325642" lat="47.3587133" lon="8.5214033" user="pi1" visible="true" timestamp="2008-04-18T10:26:52+01:00"/>
+  <node id="258325755" lat="47.3619808" lon="8.5210858" user="pi1" visible="true" timestamp="2008-04-18T10:28:10+01:00"/>
+  <node id="258325756" lat="47.3614867" lon="8.5203905" user="pi1" visible="true" timestamp="2008-04-18T10:28:10+01:00"/>
+  <node id="258325758" lat="47.3608355" lon="8.519558" user="pi1" visible="true" timestamp="2008-04-18T10:28:10+01:00"/>
+  <node id="258325760" lat="47.3596843" lon="8.5181504" user="pi1" visible="true" timestamp="2008-04-18T10:28:10+01:00"/>
+  <node id="258325916" lat="47.3623645" lon="8.5215321" user="pi1" visible="true" timestamp="2008-04-18T10:28:59+01:00"/>
+  <node id="258325917" lat="47.3625331" lon="8.5217982" user="pi1" visible="true" timestamp="2008-04-18T10:28:59+01:00"/>
+  <node id="258602797" lat="47.3621887" lon="8.5232046" user="lonvia" visible="true" timestamp="2008-04-19T18:13:12+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602798" lat="47.3615226" lon="8.5233395" user="lonvia" visible="true" timestamp="2008-04-19T18:13:12+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602799" lat="47.3624586" lon="8.523525" user="lonvia" visible="true" timestamp="2008-04-19T18:13:12+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602800" lat="47.362526" lon="8.5234323" user="lonvia" visible="true" timestamp="2008-04-19T18:13:12+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="258602811" lat="47.360682" lon="8.5235488" user="lonvia" visible="true" timestamp="2008-04-19T18:13:13+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="259505666" lat="47.3656684" lon="8.5297876" user="pi1" visible="true" timestamp="2008-04-23T20:37:11+01:00"/>
+  <node id="259699950" lat="47.369598" lon="8.5257665" user="pi1" visible="true" timestamp="2008-04-30T13:08:31+01:00"/>
+  <node id="260674973" lat="47.3679367" lon="8.529803" user="lonvia" visible="true" timestamp="2008-04-29T21:49:01+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="260741051" lat="47.3623719" lon="8.5227624" user="pi1" visible="true" timestamp="2008-04-30T11:58:52+01:00"/>
+  <node id="260741085" lat="47.3602905" lon="8.5232602" user="pi1" visible="true" timestamp="2008-04-30T11:59:48+01:00"/>
+  <node id="260741086" lat="47.3595812" lon="8.5234834" user="pi1" visible="true" timestamp="2008-04-30T11:59:48+01:00"/>
+  <node id="260741087" lat="47.3582788" lon="8.5239383" user="pi1" visible="true" timestamp="2008-04-30T11:59:48+01:00"/>
+  <node id="260741089" lat="47.3564589" lon="8.5243589" user="pi1" visible="true" timestamp="2008-04-30T11:59:48+01:00"/>
+  <node id="260741196" lat="47.3519758" lon="8.5250112" user="pi1" visible="true" timestamp="2008-04-30T12:03:42+01:00"/>
+  <node id="260742187" lat="47.3516152" lon="8.5252257" user="pi1" visible="true" timestamp="2008-04-30T12:05:49+01:00"/>
+  <node id="260742190" lat="47.3541156" lon="8.5248996" user="pi1" visible="true" timestamp="2008-04-30T12:06:11+01:00"/>
+  <node id="260742786" lat="47.355703" lon="8.524685" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742787" lat="47.3564763" lon="8.524582" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742788" lat="47.3571508" lon="8.5244619" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742789" lat="47.3577555" lon="8.5243245" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742790" lat="47.3583428" lon="8.5241443" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742791" lat="47.3590521" lon="8.5238954" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742792" lat="47.3596568" lon="8.5236808" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742793" lat="47.3601568" lon="8.5235263" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742794" lat="47.3606219" lon="8.523389" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742795" lat="47.3613603" lon="8.5232087" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742796" lat="47.3619765" lon="8.5230628" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742797" lat="47.362523" lon="8.5229856" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742809" lat="47.3664182" lon="8.5231486" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742810" lat="47.3666216" lon="8.5231572" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260742811" lat="47.366889" lon="8.5232602" user="pi1" visible="true" timestamp="2008-04-30T12:18:21+01:00"/>
+  <node id="260743091" lat="47.3674936" lon="8.5235091" user="pi1" visible="true" timestamp="2008-04-30T12:22:45+01:00"/>
+  <node id="260743092" lat="47.3671506" lon="8.5232516" user="pi1" visible="true" timestamp="2008-04-30T12:22:45+01:00"/>
+  <node id="260746431" lat="47.36879" lon="8.5284959" user="pi1" visible="true" timestamp="2008-04-30T12:59:25+01:00"/>
+  <node id="260746805" lat="47.3690574" lon="8.5279895" user="pi1" visible="true" timestamp="2008-04-30T13:01:54+01:00"/>
+  <node id="260747014" lat="47.3667611" lon="8.522771" user="pi1" visible="true" timestamp="2008-04-30T13:05:06+01:00"/>
+  <node id="260747017" lat="47.3670518" lon="8.5233289" user="pi1" visible="true" timestamp="2008-04-30T13:05:06+01:00"/>
+  <node id="260747053" lat="47.3672902" lon="8.5231658" user="pi1" visible="true" timestamp="2008-04-30T13:05:49+01:00"/>
+  <node id="260747056" lat="47.3674355" lon="8.5235692" user="pi1" visible="true" timestamp="2008-04-30T13:05:49+01:00"/>
+  <node id="260747063" lat="47.3672495" lon="8.5234491" user="pi1" visible="true" timestamp="2008-04-30T13:06:01+01:00"/>
+  <node id="260747066" lat="47.3683307" lon="8.5242644" user="pi1" visible="true" timestamp="2008-04-30T13:06:15+01:00"/>
+  <node id="261614878" lat="47.3535445" lon="8.5248908" user="pi1" visible="true" timestamp="2008-05-02T16:36:03+01:00"/>
+  <node id="261614881" lat="47.3663588" lon="8.5246076" user="pi1" visible="true" timestamp="2008-05-02T16:36:03+01:00"/>
+  <node id="261614884" lat="47.355382" lon="8.524496" user="pi1" visible="true" timestamp="2008-05-02T16:36:28+01:00"/>
+  <node id="261621545" lat="47.3526374" lon="8.5251741" user="pi1" visible="true" timestamp="2008-05-02T17:22:59+01:00"/>
+  <node id="261621554" lat="47.3541551" lon="8.5248994" user="pi1" visible="true" timestamp="2008-05-02T17:23:04+01:00"/>
+  <node id="261623502" lat="47.3507592" lon="8.5247106" user="pi1" visible="true" timestamp="2008-05-02T17:33:36+01:00"/>
+  <node id="262178812" lat="47.3670995" lon="8.5249688" user="rulli" visible="true" timestamp="2008-05-04T18:39:30+01:00"/>
+  <node id="262178813" lat="47.3667797" lon="8.5245397" user="rulli" visible="true" timestamp="2008-05-04T18:39:30+01:00"/>
+  <node id="262400818" lat="47.3645238" lon="8.5303138" user="lonvia" visible="true" timestamp="2008-05-05T22:01:46+01:00">
+    <tag k="created_by" v="JOSM"/>
+  </node>
+  <node id="267053279" lat="47.3625381" lon="8.5188446" user="IDE" visible="true" timestamp="2008-05-27T00:22:15+01:00">
+    <tag k="railway" v="level_crossing"/>
+  </node>
+  <node id="267053280" lat="47.3631118" lon="8.5173418" user="IDE" visible="true" timestamp="2008-05-27T00:22:16+01:00">
+    <tag k="railway" v="level_crossing"/>
+  </node>
+  <node id="267053941" lat="47.3647174" lon="8.5083792" user="IDE" visible="true" timestamp="2008-06-08T17:44:42+01:00">
+    <tag k="railway" v="level_crossing"/>
+  </node>
+  <node id="267184812" lat="47.3644103" lon="8.5209518" user="IDE" visible="true" timestamp="2008-05-28T00:16:41+01:00"/>
+  <node id="267276275" lat="47.3684019" lon="8.5197822" user="IDE" visible="true" timestamp="2008-05-29T18:44:32+01:00">
+    <tag k="highway" v="tertiary"/>
+    <tag k="name" v="Steinstrasse"/>
+  </node>
+  <node id="267276286" lat="47.3685903" lon="8.5199489" user="IDE" visible="true" timestamp="2008-05-28T22:17:36+01:00"/>
+  <node id="267279304" lat="47.3612711" lon="8.517473" user="IDE" visible="true" timestamp="2008-05-28T22:35:10+01:00"/>
+  <node id="268131746" lat="47.3613395" lon="8.5226436" user="IDE" visible="true" timestamp="2008-06-02T22:31:33+01:00"/>
+  <node id="268131747" lat="47.3604841" lon="8.5228421" user="IDE" visible="true" timestamp="2008-06-02T22:31:33+01:00"/>
+  <node id="268181961" lat="47.3664126" lon="8.5265773" user="Marc Padellini" visible="true" timestamp="2008-06-03T08:30:02+01:00"/>
+  <node id="268181972" lat="47.3664359" lon="8.5259508" user="Marc Padellini" visible="true" timestamp="2008-06-03T08:29:23+01:00"/>
+  <way id="4626867" visible="true" timestamp="2008-05-18T17:11:12+01:00" user="rulli">
+    <nd ref="28851539"/>
+    <nd ref="28851537"/>
+    <nd ref="247178937"/>
+    <nd ref="247178885"/>
+    <nd ref="261614878"/>
+    <nd ref="28851535"/>
+    <nd ref="247178886"/>
+    <nd ref="28851534"/>
+    <nd ref="28851533"/>
+    <nd ref="261614879"/>
+    <nd ref="247178790"/>
+    <nd ref="261614813"/>
+    <nd ref="28851532"/>
+    <nd ref="261614880"/>
+    <nd ref="247178791"/>
+    <nd ref="28851531"/>
+    <nd ref="261614881"/>
+    <nd ref="258325169"/>
+    <nd ref="28851530"/>
+    <nd ref="28851529"/>
+    <nd ref="171843417"/>
+    <nd ref="28851528"/>
+    <nd ref="171843418"/>
+    <nd ref="28851527"/>
+    <tag k="layer" v="-1"/>
+    <tag k="source" v="Landsat"/>
+    <tag k="waterway" v="river"/>
+    <tag k="created_by" v="Potlatch 0.8c"/>
+    <tag k="name" v="Sihl"/>
+  </way>
+  <way id="5068100" visible="true" timestamp="2008-05-18T17:06:01+01:00" user="rulli">
+    <nd ref="34184413"/>
+    <nd ref="34184414"/>
+    <nd ref="34184415"/>
+    <nd ref="34184416"/>
+    <nd ref="34184413"/>
+    <tag k="building" v="yes"/>
+    <tag k="amenity" v="school"/>
+    <tag k="history" v="Retrieved from v2"/>
+    <tag k="name" v="Kantonsschulen Freudenberg und Enge"/>
+    <tag k="created_by" v="Potlatch 0.9a"/>
+  </way>
+  <way id="5068104" visible="true" timestamp="2008-04-11T20:32:42+01:00" user="rulli">
+    <nd ref="34184555"/>
+    <nd ref="34184556"/>
+    <nd ref="34184557"/>
+    <nd ref="256926702"/>
+    <nd ref="34184558"/>
+    <nd ref="34184559"/>
+    <nd ref="34184560"/>
+    <nd ref="59916071"/>
+    <nd ref="34184561"/>
+    <nd ref="34184562"/>
+    <nd ref="34184563"/>
+    <nd ref="34184564"/>
+    <nd ref="34184555"/>
+    <tag k="landuse" v="residential"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="name" v="Hürlimann Areal"/>
+  </way>
+  <way id="5068112" visible="true" timestamp="2008-06-24T21:59:07+01:00" user="rulli">
+    <nd ref="29798725"/>
+    <nd ref="34184583"/>
+    <nd ref="34647597"/>
+    <nd ref="260674984"/>
+    <nd ref="34646048"/>
+    <nd ref="34184584"/>
+    <nd ref="34184585"/>
+    <nd ref="34646053"/>
+    <nd ref="34184586"/>
+    <nd ref="49962053"/>
+    <nd ref="34436641"/>
+    <nd ref="260674973"/>
+    <nd ref="104334284"/>
+    <nd ref="34669944"/>
+    <nd ref="38439578"/>
+    <nd ref="29798700"/>
+    <nd ref="30795608"/>
+    <tag k="layer" v="0"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="created_by" v="Potlatch 0.9c"/>
+    <tag k="name" v="Brandschenkestrasse"/>
+  </way>
+  <way id="5068121" visible="true" timestamp="2008-04-08T17:39:33+01:00" user="rulli">
+    <nd ref="29798723"/>
+    <nd ref="34184697"/>
+    <nd ref="34184698"/>
+    <nd ref="256438913"/>
+    <nd ref="34179516"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="highway" v="unclassified"/>
+  </way>
+  <way id="5086338" visible="true" timestamp="2008-04-29T21:49:05+01:00" user="lonvia">
+    <nd ref="260674983"/>
+    <nd ref="260674981"/>
+    <nd ref="260674980"/>
+    <nd ref="260674978"/>
+    <nd ref="260674977"/>
+    <nd ref="260674975"/>
+    <nd ref="34646048"/>
+    <tag k="highway" v="service"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="5086339" visible="true" timestamp="2007-09-02T19:54:35+01:00" user="rulli">
+    <nd ref="34646053"/>
+    <nd ref="34646054"/>
+    <nd ref="34646055"/>
+    <nd ref="34646056"/>
+    <nd ref="34646057"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="unclassified"/>
+  </way>
+  <way id="5086341" visible="true" timestamp="2008-05-18T17:10:05+01:00" user="rulli">
+    <nd ref="34646056"/>
+    <nd ref="34646332"/>
+    <nd ref="34646339"/>
+    <tag k="foot" v="yes"/>
+    <tag k="highway" v="footway"/>
+    <tag k="created_by" v="Potlatch 0.9a"/>
+  </way>
+  <way id="5086398" visible="true" timestamp="2008-04-19T18:13:15+01:00" user="lonvia">
+    <nd ref="34647597"/>
+    <nd ref="34647860"/>
+    <nd ref="256337974"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="name" v="Klopstock-Strasse"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="5112562" visible="true" timestamp="2007-09-02T19:32:43+01:00" user="rulli">
+    <nd ref="35132499"/>
+    <nd ref="34646405"/>
+    <nd ref="34646408"/>
+    <tag k="highway" v="cycleway"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+  </way>
+  <way id="6067830" visible="true" timestamp="2007-09-12T18:40:33+01:00" user="rulli">
+    <nd ref="34646055"/>
+    <nd ref="49962052"/>
+    <nd ref="49962053"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="unclassified"/>
+    <tag k="name" v="Brandschenkensteig"/>
+    <tag k="layer" v="0"/>
+  </way>
+  <way id="8008885" visible="true" timestamp="2007-09-26T19:50:35+01:00" user="rulli">
+    <nd ref="59916071"/>
+    <nd ref="59916092"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="name" v="Herterbrücke"/>
+    <tag k="layer" v="1"/>
+    <tag k="bridge" v="yes"/>
+    <tag k="foot" v="yes"/>
+    <tag k="highway" v="footway"/>
+  </way>
+  <way id="8008909" visible="true" timestamp="2008-04-19T18:13:15+01:00" user="lonvia">
+    <nd ref="34173322"/>
+    <nd ref="258602811"/>
+    <nd ref="258602798"/>
+    <nd ref="258602797"/>
+    <nd ref="258602796"/>
+    <nd ref="258602810"/>
+    <nd ref="258602795"/>
+    <tag k="foot" v="yes"/>
+    <tag k="highway" v="footway"/>
+    <tag k="created_by" v="Potlatch 0.5"/>
+    <tag k="bicycle" v="yes"/>
+    <tag k="name" v="Sihlpromenade"/>
+  </way>
+  <way id="9938158" visible="true" timestamp="2008-05-28T22:36:19+01:00" user="IDE">
+    <nd ref="27488733"/>
+    <nd ref="81543606"/>
+    <nd ref="27488735"/>
+    <nd ref="267279304"/>
+    <nd ref="141842311"/>
+    <nd ref="267053279"/>
+    <nd ref="27488739"/>
+    <nd ref="91500439"/>
+    <nd ref="81560207"/>
+    <nd ref="267184812"/>
+    <nd ref="81563317"/>
+    <nd ref="81560208"/>
+    <tag k="highway" v="tertiary"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="name" v="Uetlibergstrasse"/>
+  </way>
+  <way id="9938219" visible="true" timestamp="2008-05-28T22:17:45+01:00" user="IDE">
+    <nd ref="81560707"/>
+    <nd ref="81561757"/>
+    <nd ref="81561244"/>
+    <nd ref="81561246"/>
+    <nd ref="267276286"/>
+    <tag k="created_by" v="Potlatch 0.8b"/>
+    <tag k="name" v="Wuhrstrasse"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="9938283" visible="true" timestamp="2008-05-29T18:44:34+01:00" user="IDE">
+    <nd ref="81560208"/>
+    <nd ref="81563190"/>
+    <nd ref="81562433"/>
+    <nd ref="81561793"/>
+    <nd ref="81561961"/>
+    <nd ref="81563098"/>
+    <nd ref="81562059"/>
+    <nd ref="81562434"/>
+    <nd ref="267276275"/>
+    <tag k="created_by" v="Potlatch 0.8b"/>
+    <tag k="name" v="Steinstrasse"/>
+    <tag k="highway" v="tertiary"/>
+    <tag k="oneway" v="false"/>
+  </way>
+  <way id="9938373" visible="true" timestamp="2008-06-02T22:18:48+01:00" user="IDE">
+    <nd ref="81560208"/>
+    <nd ref="91498052"/>
+    <nd ref="268129901"/>
+    <tag k="created_by" v="Potlatch 0.7b"/>
+    <tag k="name" v="Manessestrasse"/>
+    <tag k="highway" v="primary"/>
+    <tag k="ref" v="4"/>
+  </way>
+  <way id="9979939" visible="true" timestamp="2008-06-08T17:44:46+01:00" user="IDE">
+    <nd ref="81971661"/>
+    <nd ref="81971834"/>
+    <nd ref="81971835"/>
+    <nd ref="81971836"/>
+    <nd ref="81971837"/>
+    <nd ref="81969904"/>
+    <nd ref="81969906"/>
+    <nd ref="81969907"/>
+    <nd ref="81969908"/>
+    <nd ref="258075950"/>
+    <nd ref="81969910"/>
+    <nd ref="81969911"/>
+    <nd ref="81969913"/>
+    <nd ref="81969914"/>
+    <nd ref="81969915"/>
+    <nd ref="81969916"/>
+    <nd ref="81969919"/>
+    <nd ref="258075874"/>
+    <nd ref="258075875"/>
+    <nd ref="81969920"/>
+    <nd ref="258075876"/>
+    <nd ref="81969924"/>
+    <nd ref="258075877"/>
+    <nd ref="81969925"/>
+    <nd ref="81969926"/>
+    <nd ref="81969929"/>
+    <nd ref="258075625"/>
+    <nd ref="81969930"/>
+    <nd ref="81969932"/>
+    <nd ref="81969933"/>
+    <nd ref="258075626"/>
+    <nd ref="258075628"/>
+    <nd ref="81969936"/>
+    <nd ref="81969937"/>
+    <nd ref="81969939"/>
+    <nd ref="81969940"/>
+    <nd ref="258075630"/>
+    <nd ref="81969941"/>
+    <nd ref="258075631"/>
+    <nd ref="81969943"/>
+    <nd ref="81969944"/>
+    <nd ref="81969945"/>
+    <nd ref="81969946"/>
+    <nd ref="84499050"/>
+    <nd ref="81969947"/>
+    <nd ref="81969948"/>
+    <nd ref="81969949"/>
+    <nd ref="81969950"/>
+    <nd ref="81969951"/>
+    <nd ref="267053941"/>
+    <nd ref="112029214"/>
+    <nd ref="258317934"/>
+    <nd ref="81969956"/>
+    <nd ref="258317935"/>
+    <nd ref="112026964"/>
+    <nd ref="267053280"/>
+    <nd ref="81969958"/>
+    <nd ref="81969959"/>
+    <nd ref="267053279"/>
+    <nd ref="81969961"/>
+    <nd ref="81968173"/>
+    <nd ref="258317937"/>
+    <nd ref="81968174"/>
+    <nd ref="81968175"/>
+    <nd ref="258325916"/>
+    <nd ref="258325917"/>
+    <nd ref="81968386"/>
+    <tag k="railway" v="light_rail"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+  </way>
+  <way id="10567987" visible="true" timestamp="2008-05-28T22:28:14+01:00" user="IDE">
+    <nd ref="81560208"/>
+    <nd ref="91498701"/>
+    <nd ref="81560707"/>
+    <nd ref="91498702"/>
+    <nd ref="260747014"/>
+    <nd ref="94719539"/>
+    <nd ref="260747053"/>
+    <tag k="highway" v="primary"/>
+    <tag k="created_by" v="Potlatch 0.8b"/>
+    <tag k="ref" v="4"/>
+    <tag k="name" v="Manessestrasse"/>
+  </way>
+  <way id="10568057" visible="true" timestamp="2008-05-26T19:24:52+01:00" user="IDE">
+    <nd ref="91500439"/>
+    <nd ref="91500441"/>
+    <nd ref="91500442"/>
+    <nd ref="91500443"/>
+    <tag k="highway" v="residential"/>
+    <tag k="created_by" v="Potlatch 0.4b"/>
+    <tag k="name" v="Eibenstrasse"/>
+  </way>
+  <way id="10568072" visible="true" timestamp="2008-05-26T19:24:50+01:00" user="IDE">
+    <nd ref="27488739"/>
+    <nd ref="91500821"/>
+    <nd ref="91500822"/>
+    <nd ref="91501103"/>
+    <nd ref="91500826"/>
+    <tag k="highway" v="residential"/>
+    <tag k="created_by" v="Potlatch 0.4b"/>
+    <tag k="name" v="Eichstrasse"/>
+  </way>
+  <way id="10690183" visible="true" timestamp="2008-05-18T17:13:46+01:00" user="rulli">
+    <nd ref="81968823"/>
+    <nd ref="258319293"/>
+    <nd ref="81968383"/>
+    <nd ref="81968384"/>
+    <nd ref="81968385"/>
+    <nd ref="258319294"/>
+    <nd ref="258319295"/>
+    <nd ref="258325753"/>
+    <nd ref="258325981"/>
+    <nd ref="258325917"/>
+    <nd ref="258325755"/>
+    <nd ref="258325756"/>
+    <nd ref="258325758"/>
+    <nd ref="258325760"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="railway" v="rail"/>
+  </way>
+  <way id="10750845" visible="true" timestamp="2008-05-27T16:49:41+01:00" user="IDE">
+    <nd ref="81967719"/>
+    <nd ref="81967721"/>
+    <nd ref="258320278"/>
+    <nd ref="258320279"/>
+    <nd ref="81967723"/>
+    <nd ref="81967724"/>
+    <nd ref="81967725"/>
+    <nd ref="258320282"/>
+    <nd ref="81967726"/>
+    <nd ref="258320283"/>
+    <nd ref="81967727"/>
+    <nd ref="258320284"/>
+    <nd ref="258320286"/>
+    <nd ref="81967728"/>
+    <nd ref="107205965"/>
+    <nd ref="81967729"/>
+    <nd ref="258320288"/>
+    <nd ref="81967731"/>
+    <nd ref="81968386"/>
+    <nd ref="81967732"/>
+    <nd ref="81966435"/>
+    <nd ref="258325639"/>
+    <nd ref="81966437"/>
+    <nd ref="81966439"/>
+    <nd ref="258325230"/>
+    <nd ref="258325231"/>
+    <nd ref="81966440"/>
+    <nd ref="258325640"/>
+    <nd ref="81966442"/>
+    <nd ref="81966443"/>
+    <nd ref="81966444"/>
+    <nd ref="258325642"/>
+    <nd ref="147634650"/>
+    <tag k="railway" v="light_rail"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+  </way>
+  <way id="17051430" visible="true" timestamp="2008-05-02T17:33:26+01:00" user="pi1">
+    <nd ref="27488686"/>
+    <nd ref="27488688"/>
+    <nd ref="260742187"/>
+    <nd ref="27488689"/>
+    <nd ref="261621545"/>
+    <nd ref="177013164"/>
+    <nd ref="27488691"/>
+    <nd ref="260742190"/>
+    <nd ref="261621554"/>
+    <nd ref="27488692"/>
+    <nd ref="260742786"/>
+    <nd ref="260742787"/>
+    <nd ref="260742788"/>
+    <nd ref="260742789"/>
+    <nd ref="260742790"/>
+    <nd ref="260742791"/>
+    <nd ref="260742792"/>
+    <nd ref="260742793"/>
+    <nd ref="260742794"/>
+    <nd ref="260742795"/>
+    <nd ref="260742796"/>
+    <nd ref="260742797"/>
+    <nd ref="260742798"/>
+    <nd ref="260742799"/>
+    <nd ref="260742800"/>
+    <nd ref="260742801"/>
+    <nd ref="260742802"/>
+    <nd ref="260742803"/>
+    <nd ref="260742804"/>
+    <nd ref="260742805"/>
+    <nd ref="260742806"/>
+    <nd ref="260742807"/>
+    <nd ref="260742808"/>
+    <nd ref="260742809"/>
+    <nd ref="260742810"/>
+    <nd ref="260742811"/>
+    <nd ref="260747017"/>
+    <nd ref="260747063"/>
+    <nd ref="260747056"/>
+    <tag k="layer" v="1"/>
+    <tag k="bridge" v="yes"/>
+    <tag k="oneway" v="yes"/>
+    <tag k="ref" v="A3"/>
+    <tag k="highway" v="motorway"/>
+    <tag k="created_by" v="Potlatch 0.8c"/>
+    <tag k="name" v="A3"/>
+  </way>
+  <way id="22944609" visible="true" timestamp="2008-05-18T17:11:04+01:00" user="rulli">
+    <nd ref="260747066"/>
+    <nd ref="260743091"/>
+    <nd ref="260743092"/>
+    <nd ref="247178762"/>
+    <nd ref="4366174"/>
+    <nd ref="260741047"/>
+    <nd ref="247178763"/>
+    <nd ref="260741048"/>
+    <nd ref="260741050"/>
+    <nd ref="4366175"/>
+    <nd ref="260741051"/>
+    <nd ref="247178831"/>
+    <nd ref="260741085"/>
+    <nd ref="260741086"/>
+    <nd ref="260741087"/>
+    <nd ref="4366179"/>
+    <nd ref="260741089"/>
+    <nd ref="261614884"/>
+    <nd ref="177014340"/>
+    <nd ref="27488649"/>
+    <nd ref="260741196"/>
+    <nd ref="177007474"/>
+    <nd ref="27488650"/>
+    <nd ref="27488651"/>
+    <nd ref="261623502"/>
+    <tag k="layer" v="1"/>
+    <tag k="ref" v="A3"/>
+    <tag k="created_by" v="Potlatch 0.8c"/>
+    <tag k="oneway" v="yes"/>
+    <tag k="bridge" v="yes"/>
+    <tag k="highway" v="motorway"/>
+    <tag k="name" v="A3"/>
+  </way>
+  <way id="23659635" visible="true" timestamp="2008-04-29T21:49:06+01:00" user="lonvia">
+    <nd ref="34647860"/>
+    <nd ref="260674989"/>
+    <nd ref="256337922"/>
+    <nd ref="256337923"/>
+    <nd ref="256337924"/>
+    <nd ref="256337925"/>
+    <nd ref="256337926"/>
+    <nd ref="256337927"/>
+    <nd ref="256337928"/>
+    <nd ref="256337929"/>
+    <nd ref="256337930"/>
+    <nd ref="256337932"/>
+    <nd ref="256337934"/>
+    <nd ref="256337935"/>
+    <nd ref="256337936"/>
+    <nd ref="256337937"/>
+    <nd ref="256337939"/>
+    <tag k="highway" v="residential"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="name" v="Sihlberg"/>
+  </way>
+  <way id="23659636" visible="true" timestamp="2008-04-07T23:25:13+01:00" user="lonvia">
+    <nd ref="256337940"/>
+    <nd ref="256337941"/>
+    <nd ref="256337942"/>
+    <nd ref="256337943"/>
+    <nd ref="256337944"/>
+    <nd ref="256337959"/>
+    <nd ref="256337945"/>
+    <nd ref="256337946"/>
+    <nd ref="256337947"/>
+    <nd ref="256337948"/>
+    <nd ref="256337949"/>
+    <nd ref="256337950"/>
+    <nd ref="256337951"/>
+    <nd ref="256337940"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="leisure" v="park"/>
+  </way>
+  <way id="23683747" visible="true" timestamp="2008-06-24T21:58:50+01:00" user="rulli">
+    <nd ref="29798726"/>
+    <nd ref="34647861"/>
+    <nd ref="38439821"/>
+    <nd ref="29798725"/>
+    <nd ref="29798724"/>
+    <nd ref="29798723"/>
+    <nd ref="35132528"/>
+    <nd ref="35132527"/>
+    <nd ref="262400818"/>
+    <tag k="created_by" v="Potlatch 0.9c"/>
+    <tag k="railway" v="tram"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="name" v="Bederstrasse"/>
+  </way>
+  <way id="23838300" visible="true" timestamp="2008-04-18T09:52:14+01:00" user="pi1">
+    <nd ref="258319376"/>
+    <nd ref="81968821"/>
+    <nd ref="81968823"/>
+    <tag k="railway" v="rail"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+  </way>
+  <way id="23838598" visible="true" timestamp="2008-04-18T10:29:26+01:00" user="pi1">
+    <nd ref="258325981"/>
+    <nd ref="258325999"/>
+    <nd ref="258326000"/>
+    <nd ref="81967729"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="railway" v="rail"/>
+  </way>
+  <way id="23860891" visible="true" timestamp="2008-04-19T18:13:13+01:00" user="lonvia">
+    <nd ref="258602795"/>
+    <nd ref="107206476"/>
+    <tag k="name" v="Sihlpromenade"/>
+    <tag k="bicycle" v="yes"/>
+    <tag k="created_by" v="Potlatch 0.5"/>
+    <tag k="highway" v="footway"/>
+    <tag k="foot" v="yes"/>
+    <tag k="tunnel" v="yes"/>
+    <tag k="layer" v="-1"/>
+  </way>
+  <way id="23860893" visible="true" timestamp="2008-04-30T12:59:25+01:00" user="pi1">
+    <nd ref="107206476"/>
+    <nd ref="107206477"/>
+    <nd ref="59917387"/>
+    <nd ref="59916092"/>
+    <nd ref="59914040"/>
+    <nd ref="59917388"/>
+    <nd ref="104328144"/>
+    <nd ref="260746431"/>
+    <tag k="created_by" v="Potlatch 0.8b"/>
+    <tag k="bicycle" v="yes"/>
+    <tag k="name" v="Sihlpromenade"/>
+    <tag k="highway" v="footway"/>
+    <tag k="foot" v="yes"/>
+  </way>
+  <way id="23860894" visible="true" timestamp="2008-04-19T18:13:14+01:00" user="lonvia">
+    <nd ref="256337959"/>
+    <nd ref="258602799"/>
+    <nd ref="258602800"/>
+    <nd ref="258602807"/>
+    <nd ref="258602809"/>
+    <nd ref="258602810"/>
+    <tag k="surface" v="unpaved"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="highway" v="steps"/>
+  </way>
+  <way id="24035650" visible="true" timestamp="2008-04-29T21:49:03+01:00" user="lonvia">
+    <nd ref="34646048"/>
+    <nd ref="34646050"/>
+    <nd ref="34646408"/>
+    <nd ref="29798723"/>
+    <tag k="name" v="Steinentischstrasse"/>
+    <tag k="created_by" v="Potlatch alpha"/>
+    <tag k="highway" v="residential"/>
+  </way>
+  <way id="24035651" visible="true" timestamp="2008-04-29T21:49:03+01:00" user="lonvia">
+    <nd ref="260674984"/>
+    <nd ref="260674986"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="highway" v="footway"/>
+  </way>
+  <way id="24035652" visible="true" timestamp="2008-04-29T21:49:03+01:00" user="lonvia">
+    <nd ref="260674986"/>
+    <nd ref="256337925"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="highway" v="steps"/>
+  </way>
+  <way id="24035653" visible="true" timestamp="2008-04-29T21:49:03+01:00" user="lonvia">
+    <nd ref="256337932"/>
+    <nd ref="260674987"/>
+    <nd ref="260674989"/>
+    <tag k="created_by" v="JOSM"/>
+    <tag k="highway" v="steps"/>
+  </way>
+  <way id="24150530" visible="true" timestamp="2008-05-29T14:06:34+01:00" user="cimnine">
+    <nd ref="30268707"/>
+    <nd ref="259505666"/>
+    <nd ref="259505667"/>
+    <nd ref="259699950"/>
+    <nd ref="30268708"/>
+    <nd ref="81968727"/>
+    <nd ref="29542834"/>
+    <tag k="railway" v="light_rail"/>
+    <tag k="created_by" v="Potlatch 0.9c"/>
+    <tag k="tunnel" v="yes"/>
+    <tag k="layer" v="-1"/>
+  </way>
+  <way id="24213938" visible="true" timestamp="2008-05-04T18:39:40+01:00" user="rulli">
+    <nd ref="260746805"/>
+    <nd ref="262178812"/>
+    <nd ref="262178813"/>
+    <nd ref="262178814"/>
+    <nd ref="262178815"/>
+    <nd ref="262178816"/>
+    <tag k="name" v="Sihlpromenade"/>
+    <tag k="highway" v="footway"/>
+    <tag k="created_by" v="Potlatch 0.8c"/>
+    <tag k="bicycle" v="yes"/>
+    <tag k="foot" v="yes"/>
+  </way>
+  <way id="24668899" visible="true" timestamp="2008-06-02T22:31:37+01:00" user="IDE">
+    <nd ref="81563733"/>
+    <nd ref="81563734"/>
+    <nd ref="268131746"/>
+    <nd ref="268131747"/>
+    <nd ref="34403108"/>
+    <tag k="highway" v="primary"/>
+    <tag k="created_by" v="Potlatch 0.7b"/>
+    <tag k="name" v="Manessestrasse"/>
+    <tag k="ref" v="4"/>
+  </way>
+  <way id="24668901" visible="true" timestamp="2008-06-02T22:18:42+01:00" user="IDE">
+    <nd ref="268129901"/>
+    <nd ref="81563733"/>
+    <tag k="name" v="Manessestrasse"/>
+    <tag k="created_by" v="Potlatch 0.7b"/>
+    <tag k="highway" v="primary"/>
+    <tag k="tunnel" v="yes"/>
+    <tag k="ref" v="4"/>
+  </way>
+  <way id="24673675" visible="true" timestamp="2008-06-03T08:29:23+01:00" user="Marc Padellini">
+    <nd ref="268181962"/>
+    <nd ref="268181972"/>
+    <tag k="created_by" v="Potlatch 0.9c"/>
+  </way>
+  <way id="24673696" visible="true" timestamp="2008-06-03T08:30:02+01:00" user="Marc Padellini">
+    <nd ref="268181972"/>
+    <nd ref="268181961"/>
+    <nd ref="268181962"/>
+    <tag k="created_by" v="Potlatch 0.9c"/>
+  </way>
+  <relation id="9743" visible="true" timestamp="2008-05-05T22:01:52+01:00" user="lonvia">
+    <member type="way" ref="5068074" role=""/>
+    <member type="way" ref="9938373" role=""/>
+    <member type="way" ref="11668362" role=""/>
+    <member type="way" ref="24234881" role=""/>
+    <member type="way" ref="24234882" role=""/>
+    <tag k="type" v="route"/>
+    <tag k="operator" v="VBZ"/>
+    <tag k="created_by" v="Potlatch 0.8a"/>
+    <tag k="route" v="bus"/>
+    <tag k="ref" v="33"/>
+  </relation>
+  <relation id="9032" visible="true" timestamp="2008-05-05T22:01:51+01:00" user="lonvia">
+    <member type="way" ref="4257845" role=""/>
+    <member type="way" ref="4394265" role=""/>
+    <member type="way" ref="4398888" role=""/>
+    <member type="way" ref="4399120" role=""/>
+    <member type="way" ref="4479823" role=""/>
+    <member type="way" ref="5075635" role=""/>
+    <member type="way" ref="5772333" role=""/>
+    <member type="way" ref="5772334" role=""/>
+    <member type="way" ref="5945431" role=""/>
+    <member type="way" ref="8147141" role=""/>
+    <member type="way" ref="9937900" role=""/>
+    <member type="way" ref="11668362" role=""/>
+    <member type="way" ref="11668420" role=""/>
+    <member type="way" ref="11943547" role=""/>
+    <member type="way" ref="12620039" role=""/>
+    <member type="way" ref="14945449" role=""/>
+    <member type="way" ref="15460021" role=""/>
+    <member type="way" ref="23385186" role=""/>
+    <member type="way" ref="23644733" role=""/>
+    <member type="way" ref="23683747" role=""/>
+    <member type="way" ref="23920557" role=""/>
+    <member type="way" ref="23920650" role=""/>
+    <member type="way" ref="24234881" role=""/>
+    <member type="way" ref="24234882" role=""/>
+    <member type="way" ref="24234883" role=""/>
+    <member type="way" ref="24234884" role=""/>
+    <tag k="ref" v="5"/>
+    <tag k="type" v="route"/>
+    <tag k="operator" v="VBZ"/>
+    <tag k="created_by" v="Potlatch 0.8c"/>
+    <tag k="route" v="tram"/>
+  </relation>
+</osm>

@@ -21,15 +21,21 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
  * 
  * @author frsantos
  */
-public class OverlappingWays extends Test 
+public class OverlappingWays extends Test
 {
 	/** Bag of all way segments */
 	Bag<Pair<Node,Node>, WaySegment> nodePairs;
-	
-	/**
-	 * Constructor
-	 */
-	public OverlappingWays() 
+
+	protected static int OVERLAPPING_HIGHWAY = 101;
+	protected static int OVERLAPPING_RAILWAY = 102;
+	protected static int OVERLAPPING_WAY = 103;
+	protected static int OVERLAPPING_HIGHWAY_AREA = 111;
+	protected static int OVERLAPPING_RAILWAY_AREA = 112;
+	protected static int OVERLAPPING_WAY_AREA = 113;
+	protected static int OVERLAPPING_AREA = 120;
+
+	/** Constructor */
+	public OverlappingWays()
 	{
 		super(tr("Overlapping ways."),
 			  tr("This test checks that a connection between two nodes "
@@ -45,10 +51,9 @@ public class OverlappingWays extends Test
 	}
 
 	@Override
-	public void endTest() 
+	public void endTest()
 	{
-		Map<List<Way>, List<WaySegment>> ways_seen = 
-                        new HashMap<List<Way>, List<WaySegment>>(500);
+		Map<List<Way>, List<WaySegment>> ways_seen = new HashMap<List<Way>, List<WaySegment>>(500);
 
 		for (List<WaySegment> duplicated : nodePairs.values())
 		{
@@ -83,31 +88,53 @@ public class OverlappingWays extends Test
 				}
 				/* These ways not seen before
 				 * If two or more of the overlapping ways are
- 				 * highways or railways mark a seperate error
-  				*/
+				 * highways or railways mark a seperate error
+				 */
 				if ((highlight = ways_seen.get(current_ways)) == null)
-                                {
+				{
 					String errortype;
+					int type;
 
 					if(area > 0)
 					{
 						if (ways == 0 || duplicated.size() == area)
+						{
 							errortype = tr("Overlapping areas");
+							type = OVERLAPPING_AREA;
+						}
 						else if (highway == ways)
+						{
 							errortype = tr("Overlapping highways (with area)");
+							type = OVERLAPPING_HIGHWAY_AREA;
+						}
 						else if (railway == ways)
+						{
 							errortype = tr("Overlapping railways (with area)");
+							type = OVERLAPPING_RAILWAY_AREA;
+						}
 						else
+						{
 							errortype = tr("Overlapping ways (with area)");
+							type = OVERLAPPING_WAY_AREA;
+						}
 					}
 					else if (highway == ways)
+					{
 						errortype = tr("Overlapping highways");
+						type = OVERLAPPING_HIGHWAY;
+					}
 					else if (railway == ways)
+					{
 						errortype = tr("Overlapping railways");
+						type = OVERLAPPING_RAILWAY;
+					}
 					else
+					{
 						errortype = tr("Overlapping ways");
+						type = OVERLAPPING_WAY;
+					}
 
-					errors.add(new TestError(this, Severity.OTHER, tr(errortype), prims, duplicated));
+					errors.add(new TestError(this, Severity.OTHER, tr(errortype), type, prims, duplicated));
 					ways_seen.put(current_ways, duplicated);
 				}
 				else	/* way seen, mark highlight layer only */
@@ -121,7 +148,7 @@ public class OverlappingWays extends Test
 	}
 
 	@Override
-	public void visit(Way w) 
+	public void visit(Way w)
 	{
 		Node lastN = null;
 		int i = -2;

@@ -5,8 +5,8 @@
 # Edit this file and save as "authentication.conf"
 
 ### Authentication:
-## Upload
-# Enter your normal OSM username and password here.
+
+# Enter your normal OSM e-mail address and password here.
 UploadUsername=CHANGEME
 UploadPassword=CHANGEME
 

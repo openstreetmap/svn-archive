@@ -72,6 +72,9 @@ my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
 
+# keep track of time running
+my $progstart = time();
+
 if ($UploadMode)
 {
     %EnvironmentInfo = CheckBasicConfig($Config);
@@ -110,8 +113,6 @@ printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n",
 # there also might be false positives due to mangled inkscape preference file.
 my %unrenderable;
 
-# keep track of time running
-my $progstart = time();
 my $dirent; 
 
 if ($LoopMode) {
@@ -396,6 +397,7 @@ elsif ($Mode eq "")
         talkInSleep($message, 60);
     }
     statusMessage("if you want to run this program continuously, use loop mode", $currentSubTask, $progressJobs, $progressPercent,1);
+    statusMessage("please run \"tilesGen.pl upload\" now", $currentSubTask, $progressJobs, $progressPercent,1);
 }
 elsif ($Mode eq "startBatik")
 {

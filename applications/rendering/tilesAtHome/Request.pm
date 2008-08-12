@@ -1,5 +1,11 @@
-# A Request encapsulates a render request.
+# A 'Request' encapsulates a render request.
+#
+# Copyright 2006, by Sebastian Spaeth
+# licensed under the GPL v2 or (at your option) any later version.
 package Request;
+
+use LWP::UserAgent;
+use tahlib;
 
 #""" Request can be instantiated with (Z,X,Y), alternatively set those with ->ZXY(z,x,y) later."""
 # my $r = new Request or my $r = Request->new()
@@ -53,5 +59,48 @@ sub Y
     return $self->{Y}
 }
 
+#-----------------------------------------------------------------------------
+# this is called when the client encounters errors in processing a tileset,
+# it tells the server the tileset will not be returned by the client.
+# $req: a 'Request' object containing z,x,y of the current request
+# $Cause: a string describing the failure reason
+# returns: (success,reason)
+# success=1 on success and 0 on failure,
+# reason is a string describing the error
+#-----------------------------------------------------------------------------
+sub putBackToServer 
+{
+    my ($self, $Cause) = @_;
+
+    # do not do this if called in xy mode!
+    return if($::Mode eq "xy");
+    
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
+
+    $ua->protocols_allowed( ['http'] );
+    $ua->agent("tilesAtHome");
+    $ua->env_proxy();
+    push @{ $ua->requests_redirectable }, 'POST';
+
+    ::statusMessage(sprintf("Putting job (%d,%d,%d) back due to '%s'",$self->{MIN_Z},$self->{X},$self->{Y},$Cause), $currentSubTask, $progressJobs, $progressPercent,1);
+    my $res = $ua->post($::Config->get("ReRequestURL"),
+              Content_Type => 'form-data',
+              Content => [ x => $self->{X},
+                           y => $self->{Y},
+                           min_z => $self->{MIN_Z},
+                           user => $::Config->get("UploadUsername"),
+                           passwd => $::Config->get("UploadPassword"),
+                           version => $::Config->get("ClientVersion"),
+                           cause => $Cause,
+                           client_uuid => ::GetClientId() ]);
+
+    if(!$res->is_success())
+    {
+        return (0, "Error reading response from server");
+    }
+    
+    ::talkInSleep("Waiting before new tile is requested", 10);
+    return (1,"OK")
+}
 
 true;

@@ -41,7 +41,7 @@ sub ApplyConfigLogic
     ## switch on verbose mode if Debug is set
     if ($Config->get("Debug"))
     {
-        $Config->set("Verbose",1);
+        $Config->set("Verbose",10);
     }
 
     if ($Config->get("WorkingDirectory"))

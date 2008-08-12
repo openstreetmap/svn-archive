@@ -82,7 +82,7 @@ sub putBackToServer
     $ua->env_proxy();
     push @{ $ua->requests_redirectable }, 'POST';
 
-    ::statusMessage(sprintf("Putting job (%d,%d,%d) back due to '%s'",$self->{MIN_Z},$self->{X},$self->{Y},$Cause), $currentSubTask, $progressJobs, $progressPercent,1);
+    ::statusMessage(sprintf("Putting job (%d,%d,%d) back due to '%s'",$self->{MIN_Z},$self->{X},$self->{Y},$Cause),1,0);
     my $res = $ua->post($::Config->get("ReRequestURL"),
               Content_Type => 'form-data',
               Content => [ x => $self->{X},

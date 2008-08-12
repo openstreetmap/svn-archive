@@ -60,9 +60,9 @@ my @sorted;
 
 # when called from tilesGen, use these for nice display
 my $progress = 0;
-my $progressPercent = 0;
-my $progressJobs = $ARGV[0] or 1;
-my $currentSubTask = "zipping";
+our $progressPercent = 0;
+our $progressJobs = $ARGV[0] or 1;
+our $currentSubTask = "zipping";
 
 
 ### TODO: implement locking, this is one of the things that make compress.pl not multithread-safe.
@@ -119,7 +119,7 @@ else
     my $TileDir = $Config->get("WorkingDirectory");
     
     # Group and upload the tiles
-    statusMessage("Searching for tiles in $TileDir", $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Searching for tiles in $TileDir",0,3);
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     
@@ -166,7 +166,7 @@ else
               $allowedPrefixes)) 
             {};
         }
-        statusMessage("done", $currentSubTask, $progressJobs, $progressPercent, 0); 
+        statusMessage("done",0,3); 
         ## TODO: fix progress display
     }
 } #done main/else.
@@ -185,7 +185,7 @@ sub processTileBatch
     mkdir $OutputDir if ! -d $OutputDir;
 
     $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
-    statusMessage(scalar(@tiles)." tiles to process for ".$allowedPrefixes, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage(scalar(@tiles)." tiles to process for ".$allowedPrefixes,0,3);
 
     while(my $file = shift @tiles)
     {
@@ -204,13 +204,13 @@ sub processTileBatch
     
     if($Count)
     {
-        statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size),0,3);
         return compress($TempDir, $OutputDir, 'no', $allowedPrefixes);
     }
     else
     {
 
-        statusMessage("compress finished", $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("compress finished",0,3);
         return 0;
     }
 }

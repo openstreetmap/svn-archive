@@ -100,3 +100,18 @@ AutoResetStopfile=0
 # Set this to 1 if you want to have som logs dump in ProcessLogFile
 ProcessLog=0
 ProcessLogFile="tah-process.log"
+
+
+## Verbosity: changing this makes the client report different actions more or
+## less verbosely.
+#
+# Verbose=0  almost like "quiet" on other programs, just output wether it's 
+#            getting a request, preprocessing, rendering or uploading, no 
+#            progress inside a tileset (%ages) or on uploading zips.
+# Verbose=3  show progress inside a tileset and on upload, but not the single
+#            steps while rendering
+# Verbose=6  show everything like it was before r9700, this is the default
+# Verbose=10 behaves like Verbose=1 before r9700, adding a newline after 
+#            each message, and printing even more output.
+Verbose=6
+

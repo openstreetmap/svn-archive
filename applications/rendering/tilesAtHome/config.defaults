@@ -15,7 +15,7 @@ UploadPassword = none
 ### defaults for user settings:
 
 Debug = 0
-Verbose = 0
+Verbose = 6
 
 ProcessLog = 0
 ProcessLogFile = /tmp/tah.log

@@ -11,7 +11,6 @@ from django.conf import settings
 from tah.tah_intern.models import Settings, Layer
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
-from django.contrib.auth.models import User
 from tah.requests.models import Request,Upload
 
 ### TileUpload returns 0 on success and >0 otherwise

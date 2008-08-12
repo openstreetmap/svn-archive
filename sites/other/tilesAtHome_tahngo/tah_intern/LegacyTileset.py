@@ -2,7 +2,7 @@ import sys,os
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
-from time import clock, time
+from time import time
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
 from tah.tah_intern.models import Layer

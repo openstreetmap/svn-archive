@@ -282,4 +282,44 @@ sub select_proximity
     return $newsel;
 }
 
+# this implements a minimum size selection. it selects all objects whose bounding
+# box circumference exceeds the specified number.
+#
+# formula taken from osmarender.xsl, where it states
+# <!--
+#    cirfer = T + (N * [1.05 - ([t - 5] / 90)])
+#    T Latitude difference N Longitude difference t absolute Latitude 
+#    The formula interpolates a cosine function with +10% error at the poles/equator and -10% error in the north Italy.
+# -->
+#
+# TODO: optionally replace with proper area computation? store computed area?
+
+sub select_minsize
+{
+    my ($oldsel,$minsize) = @_;
+    my $newsel = Set::Object->new();
+    foreach ($oldsel->members())
+    {
+        # minsize stuff currently only works for ways; copy others
+        if (ref($_) ne "way")
+        {
+            $newsel->insert($_);
+            next;
+        }
+
+        my ($minlat, $minlon, $maxlat, $maxlon);
+        foreach (@{$_->{"nodes"}})
+        {
+            $minlat = $_->{"lat"} if (!defined($minlat) or $_->{"lat"}<$minlat);
+            $minlon = $_->{"lon"} if (!defined($minlon) or $_->{"lon"}<$minlon);
+            $maxlat = $_->{"lat"} if (!defined($maxlat) or $_->{"lat"}>$maxlat);
+            $maxlon = $_->{"lon"} if (!defined($maxlon) or $_->{"lon"}>$maxlon);
+        }
+        next unless defined($minlat);
+        my $cirfer = ($maxlat-$minlat) + (($maxlon-$minlon) * (1.05-(($maxlat-5) / 90)));
+        $newsel->insert($_) if ($cirfer > $minsize);
+    }
+    return $newsel;
+}
+
 1;

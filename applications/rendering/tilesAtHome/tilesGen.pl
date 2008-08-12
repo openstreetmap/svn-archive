@@ -642,9 +642,6 @@ sub ProcessRequestsFromServer
 # actually get the request from the server
 sub GetRequestFromServer
 {
-    my $LocalFilename = $Config->get("WorkingDirectory") . "request-" . $PID . ".txt";
-    killafile($LocalFilename); ## make sure no old request file is laying around.
-
     my $Request;
 
     my $URL = $Config->get("RequestURL");

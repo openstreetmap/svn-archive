@@ -37,7 +37,7 @@ class TileUpload:
       while not self. upload:
         # repeat fetching until there is one
         try:
-          self.upload = Upload.objects.filter(is_locked=False).latest('upload_time')
+          self.upload = Upload.objects.filter(is_locked=False)[0]
         except Upload.DoesNotExist:
           #logging.debug('No uploaded request. Sleeping 10 sec.')
           sleep(10)

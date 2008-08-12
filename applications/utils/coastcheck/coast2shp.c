@@ -46,6 +46,12 @@
 #include "input.h"
 #include "rb.h"
 
+/* Mercator projection limits for a square map.
+ * Points at 90 degrees are off at infinity
+ */
+const double merc_lat_min = -85.0511;
+const double merc_lat_max = +85.0511;
+
 int MAX_VERTICES = 1024*1024;
 
 static int count_node,    max_node;
@@ -212,6 +218,12 @@ void EndElement(const xmlChar *name)
                 fprintf(stderr,"out of memory\n");
                 exit(1);
         }
+
+      if (node_lat < merc_lat_min)
+            node_lat = merc_lat_min;
+      else if (node_lat > merc_lat_max)
+            node_lat = merc_lat_max;
+
 	storenode->id = osm_id;
 	storenode->lat = node_lat * DEG_TO_RAD;
 	storenode->lon = node_lon * DEG_TO_RAD;

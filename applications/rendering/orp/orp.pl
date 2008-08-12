@@ -1005,12 +1005,18 @@ sub make_selection
     if ($hp ne "" && $vp ne "")
     {
         #debug("activating proximity filter for rule");
-        return select_proximity($interim, $hp, $vp, $pc);
+        $interim = select_proximity($interim, $hp, $vp, $pc);
     }
-    else
+
+
+    # post-process with minSize filter, if set
+    my $minsize = $rulenode->getAttribute("minSize");
+    if ($minsize ne "")
     {
-        return $interim;
+        $interim = select_minsize($interim, $minsize);
     }
+
+    return $interim;
 }
 
 # -------------------------------------------------------------------

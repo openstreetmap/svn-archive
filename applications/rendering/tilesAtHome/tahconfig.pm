@@ -93,11 +93,6 @@ sub CheckBasicConfig
     {
         # Upload URL, username
         printf "- Uploading with username \"".$Config->get("UploadUsername")."\"\n", ;
-        my $pw = $Config->get("UploadPassword");
-        if($pw =~ /\W/){
-            die("Check your upload password\n");
-        }
-
 
         if($Config->get("DeleteZipFilesAfterUpload")){
             print "- Deleting ZIP files after upload\n";

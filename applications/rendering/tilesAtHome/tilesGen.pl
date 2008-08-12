@@ -618,8 +618,7 @@ sub ProcessRequestsFromServer
         $unrenderable{"$X $Y $Z"}++;
 
 
-        PutRequestBackToServer(Request->new($Z,$X,$Y),"Unrenderable");
-
+        Request->new($Z,$X,$Y)->putBackToServer("Unrenderable");
         # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
         my $UnrenderableBackoff = addFault("requestUnrenderable",1); 
         $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);
@@ -685,47 +684,6 @@ sub GetRequestFromServer
         return 0;
     }
     return $Request;
-}
-
-#-----------------------------------------------------------------------------
-# this is called when the client encounters errors in processing a tileset,
-# it tells the server the tileset will not be returned by the client.
-# $req: a 'Request' object containing z,x,y of the current request
-# $Cause: a string describing the failure reason
-#-----------------------------------------------------------------------------
-sub PutRequestBackToServer 
-{
-    ## TODO: will not be called in some libGD abort situations
-    my ($req,$Cause) = @_;
-
-    ## do not do this if called in xy mode!
-    return if($Mode eq "xy");
-    
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
-
-    $ua->protocols_allowed( ['http'] );
-    $ua->agent("tilesAtHomeZip");
-    $ua->env_proxy();
-    push @{ $ua->requests_redirectable }, 'POST';
-
-    statusMessage(sprintf("Putting job (%d,%d,%d) back to server",$req->Z,$req->X,$req->Y), $currentSubTask, $progressJobs, $progressPercent,1);
-    my $res = $ua->post($Config->get("ReRequestURL"),
-              Content_Type => 'form-data',
-              Content => [ x => $req->X,
-                           y => $req->Y,
-                           min_z => $req->Z,
-                           user => $Config->get("UploadUsername"),
-                           passwd => $Config->get("UploadPassword"),
-                           version => $Config->get("ClientVersion"),
-                           cause => $Cause,
-                           client_uuid => GetClientId() ]);
-
-    if(!$res->is_success())
-    {
-        return (0, "Error reading response from server");
-    }
-    
-    talkInSleep("Waiting before new tile is requested", 10);
 }
 
 #-----------------------------------------------------------------------------
@@ -825,7 +783,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
-                PutRequestBackToServer($req,"NoData");
+                $req->putBackToServer("NoData");
                 foreach my $file(@tempfiles) { killafile($file); }
                 addFault("nodataXAPI",1);
                 return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
@@ -846,7 +804,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 if (! $res)
                 {
                     statusMessage("No data on OSMXAPI either...", $currentSubTask, $progressJobs, $progressPercent, 1);
-                    PutRequestBackToServer($req,"NoData");
+                    $req->putBackToServer("NoData");
                     foreach my $file(@tempfiles) { killafile($file); }
                     addFault("nodataXAPI",1);
                     return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$Mode,1,$PID);
@@ -874,7 +832,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     if (! $res)
                     {
                         statusMessage("No data here (sliced)...", $currentSubTask, $progressJobs, $progressPercent, 1);
-                        PutRequestBackToServer($req,"NoData");
+                        $req->putBackToServer("NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
                         return cleanUpAndDie("GenerateTileset: no data! (sliced).",$Mode,1,$PID);
@@ -916,7 +874,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     if (fileUTF8ErrCheck($DataFile))
     {
         statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->Z, $req->X, $req->Y), $currentSubTask, $progressJobs, $progressPercent, 1);
-        PutRequestBackToServer($req,"BadUTF8");
+        $req->putBackToServer("BadUTF8");
         addFault("utf8",1);
         return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
     }
@@ -1074,7 +1032,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             if ($error) 
             {
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
-                PutRequestBackToServer($req,"RenderFailure");
+                $req->putBackToServer("RenderFailure");
                 addFault("renderer",1);
                 return 0;
             }
@@ -1086,7 +1044,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E))
                 {
                     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
-                    PutRequestBackToServer($req,"RenderFailure");
+                    $req->putBackToServer("RenderFailure");
                     addFault("renderer",1);
                     return 0;
                 }
@@ -1608,7 +1566,7 @@ sub svg2png
         {
             statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n", $currentSubTask, $progressJobs, $progressPercent, 1);
         }
-        PutRequestBackToServer($req,"BadSVG");
+        $req->putBackToServer("BadSVG");
         addFault("inkscape",1);
         $unrenderable{$req->X.' '.$req->Y.' '.$req->Z}++;
         cleanUpAndDie("svg2png failed",$Mode,3,$PID);
@@ -1734,7 +1692,7 @@ sub splitImageX
     if( not defined $Image )
     {
         print STDERR "\nERROR: Failed to read in file $File\n";
-        PutRequestBackToServer($req,"MissingFile");
+        $req->putBackToServer("MissingFile");
         cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4,$PID);
     }
   
@@ -1767,7 +1725,7 @@ sub splitImageX
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-            PutRequestBackToServer($req,"BlackTile");
+            $req->putBackToServer("BlackTile");
             cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4,$PID);
         }
         # Detect empty tile here:

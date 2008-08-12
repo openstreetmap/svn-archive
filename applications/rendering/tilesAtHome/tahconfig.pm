@@ -114,7 +114,7 @@ sub CheckBasicConfig
 
         if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20) 
         {
-            print "Check $layer._MaxZoom\n";
+            print "- Check $layer._MaxZoom\n";
         }
 
         for(my $zoom=12; $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)

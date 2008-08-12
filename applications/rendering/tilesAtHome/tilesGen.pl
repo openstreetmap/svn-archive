@@ -563,7 +563,7 @@ sub ProcessRequestsFromServer
 
     for (;;) 
     {
-        my $Request = GetRequestFromServer($Config->get("RequestMethod"));
+        my $Request = GetRequestFromServer();
 
         return (0, "Error reading request from server") unless ($Request);
         
@@ -642,49 +642,41 @@ sub ProcessRequestsFromServer
 # actually get the request from the server
 sub GetRequestFromServer
 {
-    my $RequestMethod=shift();
     my $LocalFilename = $Config->get("WorkingDirectory") . "request-" . $PID . ".txt";
     killafile($LocalFilename); ## make sure no old request file is laying around.
 
     my $Request;
 
-    if ($RequestMethod eq "POST")
-    {
-        my $URL = $Config->get("RequestURL");
+    my $URL = $Config->get("RequestURL");
     
-        my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
-        $ua->protocols_allowed( ['http'] );
-        $ua->agent("tilesAtHome");
-        $ua->env_proxy();
-        push @{ $ua->requests_redirectable }, 'POST';
+    $ua->protocols_allowed( ['http'] );
+    $ua->agent("tilesAtHome");
+    $ua->env_proxy();
+    push @{ $ua->requests_redirectable }, 'POST';
 
-        my $res = $ua->post($URL,
-          Content_Type => 'form-data',
-          Content => [ user => $Config->get("UploadUsername"),
-                       passwd => $Config->get("UploadPassword"),
-                       version => $Config->get("ClientVersion"),
-                       layers => $Layers,
-                       layerspossible => $Config->get("LayersCapability"),
-                       client_id => GetClientId() ]);
+    my $res = $ua->post($URL,
+      Content_Type => 'form-data',
+      Content => [ user => $Config->get("UploadUsername"),
+                   passwd => $Config->get("UploadPassword"),
+                   version => $Config->get("ClientVersion"),
+                   layers => $Layers,
+                   layerspossible => $Config->get("LayersCapability"),
+                   client_id => GetClientId() ]);
       
-        if(!$res->is_success())
-        {
-            print $res->content if ($Config->get("Debug"));
-            return 0;
-        }
-        else
-        {
-            print $res->content if ($Config->get("Debug"));
-            $Request = $res->content;  ## FIXME: check single line returned. grep?
-            chomp $Request;
-        }
-
+    if(!$res->is_success())
+    {
+        print $res->content if ($Config->get("Debug"));
+        return 0;
     }
     else
     {
-        return 0;
+        print $res->content if ($Config->get("Debug"));
+        $Request = $res->content;  ## FIXME: check single line returned. grep?
+        chomp $Request;
     }
+
     return $Request;
 }
 

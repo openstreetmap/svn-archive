@@ -235,7 +235,7 @@ sub upload
         
         my $Load = UploadOkOrNot();
         
-        if ($Load < 900) 
+        if ($Load < 1000) # the server normalises to 1 (*1000) so 1000 means "queue is really full or even over-filled", so only do something if the load is less than that.
         {
             statusMessage("Uploading $File", $currentSubTask, $progressJobs, $progressPercent,0);
             my $res = $ua->post($URL,

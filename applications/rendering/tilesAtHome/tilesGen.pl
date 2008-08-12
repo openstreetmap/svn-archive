@@ -749,11 +749,11 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
       $Config->get("APIURL"),$Config->get("OSMVersion"),$bbox);
     if ($req->Z < 12) 
     {
-        # FIXME: zoom 12 hardcoded: assume lowzoom layer now!
+        # FIXME: zoom 12 hardcoded: assume lowzoom caption layer now!
         # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
-        $Layers="lowzoom" if ($Mode eq "xy");
+        $Layers="caption" if ($Mode eq "xy");
         
-        # Get the predicates for lowzoom, and build the URLS for them
+        # Get the predicates for lowzoom caption layer, and build the URLS for them
         my $predicates = $Config->get($Layers."_Predicates");
         # strip spaces in predicates because that is the separator used below
         $predicates =~ s/\s+//g;

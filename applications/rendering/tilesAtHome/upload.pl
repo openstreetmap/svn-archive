@@ -69,10 +69,14 @@ my @sorted;
 
 # when called from tilesGen, use these for nice display
 my $progress = 0;
-my $progressPercent = 0;
-my ($Mode, $progressJobs) = @ARGV;
-my $currentSubTask = "upload";
- 
+our $progressPercent = 0;
+our $progressJobs;
+our $currentSubTask = "upload";
+
+my $Mode;
+
+($Mode, $progressJobs) = @ARGV;
+
 ### TODO: implement locking, this is one of the things that make upload not multithread-safe.
 my $sleepdelay;
 my $failFile = $Config->get("WorkingDirectory") . "/failurecount.txt";
@@ -127,7 +131,7 @@ sub processOldZips
     }
     @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
     my $zipCount = scalar(@sorted);
-    statusMessage(scalar(@sorted)." zip files to upload", $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage(scalar(@sorted)." zip files to upload",0,0);
     my $Reason = "queue full";
     if(($Config->get("UploadToDirectory")) and (-d $Config->get("UploadTargetDirectory")))
     {
@@ -173,12 +177,11 @@ sub processOldZips
                     $sleepdelay = $MaxDelay;
                 }
 
-                statusMessage($Reason.", sleeping for " . int($sleepdelay) . " seconds", $currentSubTask, $progressJobs, $progressPercent,0);
-                sleep (int($sleepdelay));
+                talkInSleep($Reason, int($sleepdelay));
             }
 
         }
-        statusMessage(scalar(@sorted)." zip files left to upload", $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage(scalar(@sorted)." zip files left to upload",0,3);
         
     }
 }
@@ -237,7 +240,7 @@ sub upload
         
         if ($Load < 1000) # the server normalises to 1 (*1000) so 1000 means "queue is really full or even over-filled", so only do something if the load is less than that.
         {
-            statusMessage("Uploading $File", $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Uploading $File",0,3);
             my $res = $ua->post($URL,
               Content_Type => 'form-data',
               Content => [ file => [$File],
@@ -262,7 +265,7 @@ sub upload
         }
         else
         {
-            statusMessage("Not uploading, server queue full", $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Not uploading, server queue full",0,0);
             sleep(1);
             return $Load; #soft fail
         }
@@ -286,7 +289,7 @@ sub upload
         my $Load = 1000 * $QueueLength/$MaxQueue;
         if ($Load > 900) # 95% or 100% with MaxQueue=20
         {
-            statusMessage("Not uploading, upload directory full", $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
             return $Load;
         }
@@ -318,7 +321,7 @@ sub upload
 sub UploadOkOrNot
 {
     my $LocalFilename = $Config->get("WorkingDirectory") . "/go-nogo-".$PID.".tmp";
-    statusMessage("Checking server queue", $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Checking server queue",0,3);
     DownloadFile($Config->get("GoNogoURL"), $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file

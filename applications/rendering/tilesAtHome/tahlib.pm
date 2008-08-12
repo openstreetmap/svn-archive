@@ -22,16 +22,21 @@ my %madeDir;
 sub statusMessage 
 {
     my $Config = $main::Config;
+    my $currentSubTask = $main::currentSubTask;
+    my $progressJobs = $main::progressJobs;
+    my $progressPercent = $main::progressPercent;
 
-    my ($msg, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
+    my ($msg, $newline, $VerbosityTriggerLevel) = @_;
     
     my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
 
-    if ($Config->get("Verbose"))
+    if ($Config->get("Verbose") >= 10)
     {
         print STDERR "$toprint\n";
         return;
     }
+
+    return 1 if ($Config->get("Verbose") < $VerbosityTriggerLevel); # don't print anything if we set verbosity below triggerlevel
 
     my $curmsglen = length($toprint);
     print STDERR "\r$toprint";
@@ -53,10 +58,12 @@ sub statusMessage
 #-----------------------------------------------------------------------------
 sub doneMessage
 {
-    my ($msg,$Verbose) = @_;
+    my $Config = $main::Config;
+    my $msg = @_;
+    
     $msg = "done" if ($msg eq "");
-
-    if ($Verbose)
+    
+    if ($Config->get("Verbose") >= 10)
     {
         print STDERR "$msg\n";
         return;
@@ -69,9 +76,10 @@ sub doneMessage
 sub talkInSleep
 {
     my $Config = $main::Config;
-    my ($message, $duration,$progstart,$Verbose) = @_;
-    $Verbose = $Config->get("Verbose") unless $Verbose; # don't overwrite verbose with "false" when it was in fact set true via parameter.
-    if ($Verbose)
+    my $progstart = $main::progstart;
+    my ($message, $duration) = @_;
+    
+    if ($Config->get("Verbose") >= 10)
     {
         print STDERR "$message: sleeping $duration seconds\n";
         sleep $duration;
@@ -85,7 +93,7 @@ sub talkInSleep
                 $message,
                 $idleFor/60, $idleFor%60,
                 $totalseconds ? $idleSeconds * 100 / $totalseconds : 100,
-                $duration - $i));
+                $duration - $i),0,0);
         sleep 1;
         $idleFor++;
         $idleSeconds++;
@@ -154,7 +162,7 @@ sub runCommand
     my $Config = $main::Config;
     my ($cmd,$mainPID) = @_;
 
-    if ($Config->get("Verbose"))
+    if ($Config->get("Verbose") >= 10)
     {
         my $retval = system($cmd);
         return $retval == 0;
@@ -401,7 +409,7 @@ sub cleanUpAndDie
 
     ## TODO: clean up *.tempdir too
 
-    print STDERR "\n$Reason\n" if ($Config->get("Verbose"));
+    print STDERR "\n$Reason\n" if ($Config->get("Verbose") >= 10);
 
     if (! $Config->get("Debug")) 
     {
@@ -410,14 +418,14 @@ sub cleanUpAndDie
         closedir (TEMPDIR);
         while (my $file = shift @files)
         {
-             print STDERR "deleting ".$Config->get("WorkingDirectory")."/".$file."\n" if ($Config->get("Verbose"));
+             print STDERR "deleting ".$Config->get("WorkingDirectory")."/".$file."\n" if ($Config->get("Verbose") >= 10);
              killafile($Config->get("WorkingDirectory")."/".$file);
         }
         
     }
     
     return 0 if ($Mode eq "loop");
-    print STDERR "\n$Reason\n" if (! $Config->get("Verbose")); #print error only once, and only if fatal.
+    print STDERR "\n$Reason\n" if (! $Config->get("Verbose") >= 10); #print error only once, and only if fatal.
     if ($main::StartedBatikAgent)
     {
         main::stopBatikAgent();

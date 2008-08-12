@@ -973,6 +973,10 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 statusMessage("Running close-areas",0,3);
                 runCommand($Cmd,$PID);
             }
+            elsif ($preprocessor eq "noop")
+            {
+                copy($inputFile,$outputFile);
+            }
             else
             {
                 die "Invalid preprocessing step '$preprocessor'";

@@ -5,6 +5,7 @@
   <property name="josm.presets"		value="../../core/presets/presets.xml"/>
   <property name="josm.home.dir"	value="${user.home}/.josm"/>
   <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="validator.tagfile"	value="../validator/tagchecker.cfg"/>
   <property name="plugin.build.dir"	value="build"/>
   <property name="plugin.dist.dir"	value="../../dist"/>
   <property name="plugin.name"		value="${ant.project.name}"/>
@@ -66,6 +67,9 @@
     <exec executable="perl" output="presets.java">
       <arg line="convpreset.pl ${josm.presets}"/>
     </exec>
+    <exec executable="perl" output="validator.java">
+      <arg line="convvalidator.pl ${validator.tagfile}"/>
+    </exec>
 
     <exec executable="find" output="alljava.txt">
       <arg line="${josm.build.dir}/src .. -name '*.java'"/>
@@ -89,6 +93,7 @@
     <delete dir="${language}/build"/>
     <delete file="keys.pot"/>
     <delete file="presets.java"/>
+    <delete file="validator.java"/>
   </target>
 
 </project>

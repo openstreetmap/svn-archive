@@ -50,4 +50,4 @@ class Upload(models.Model):
     return str(self.layer)+","+str(self.file)
 
   class Meta:
-    ordering = ['-upload_time']
+    ordering = ['upload_time']

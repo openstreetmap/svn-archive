@@ -1197,7 +1197,7 @@ sub RenderTile
     # svg2png returns true if all tiles extracted were empty. this might break 
     # if a higher zoom tile would contain data that is not rendered at the 
     # current zoom level. 
-    my ($success,$empty) = svg2png($Zoom, $req->Z, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$req->X,$req->Y,$Ytile);
+    my ($success,$empty) = svg2png($layer, $req, $Ytile, $Zoom, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
     if (!$success)
     {
        return (0,$empty);
@@ -1498,7 +1498,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
 sub svg2png
 {
-    my($Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
+    my($layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
     
     my $TempFile;
     my $stdOut;
@@ -1602,17 +1602,16 @@ sub svg2png
         {
             statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n", $currentSubTask, $progressJobs, $progressPercent, 1);
         }
-        ## TODO: check this actually gets the correct coords 
-        PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
+        PutRequestBackToServer($req->X,$req->Y,$req->Z,"BadSVG");
         addFault("inkscape",1);
-        $unrenderable{"$X $Y $ZOrig"}++;
+        $unrenderable{$req->X.' '.$req->Y.' '.$req->Z}++;
         cleanUpAndDie("svg2png failed",$Mode,3,$PID);
         return (0,0);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     killafile($stdOut) if (not $Config->get("Debug"));
     
-    my $ReturnValue = splitImageX($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
+    my $ReturnValue = splitImageX($TempFile, $layer, $req->Z, $req->X, $req->Y, $Zoom, $Ytile); # returns true if tiles were all empty
     
     killafile($TempFile) if (not $Config->get("Debug"));
     rmdir ($TempDir);

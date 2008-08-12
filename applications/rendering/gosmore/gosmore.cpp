@@ -31,30 +31,30 @@ typedef int intptr_t;
 // Unfortunately eMbedded Visual C++ TEXT() function does not use UTF8
 // So we have to repeat the OPTIONS table
 #define OPTIONS \
-  o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
-  o (AddWayOrNode,    "?", "?", "?", "?", "?", 0, 2) \
-  o (Search,          "?", "?", "?", "?", "?", 0, 1) \
-  o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
-  o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
-  o (OrientNorthwards,"?", "?", "?", "?", "?", 0, 2) \
-  o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
-  o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
-  o (English,         "Deutsch", "Español", "Français", "Italiano", \
-                      "Nederlands", 0, 6) \
-  o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
-  o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
-  o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
-  o (CommPort,        "?", "?", "?", "?", "?", 0, 13) \
-  o (BaudRate,        "?", "?", "?", "?", "?", 0, 6) \
-  o (QuickOptions,    "?", "?", "?", "?", "?", 0, 2) \
-  o (Exit,            "?", "?", "?", "?", "?", 0, 2) \
-  o (ZoomInKey,       "?", "?", "?", "?", "?", 0, 3) \
-  o (ZoomOutKey,      "?", "?", "?", "?", "?", 0, 3) \
-  o (MenuKey,         "?", "?", "?", "?", "?", 0, 3) \
-  o (HideZoomButtons, "?", "?", "?", "?", "?", 0, 2) \
-  o (ShowCoordinates, "?", "?", "?", "?", "?", 0, 3) \
-  o (ShowTrace,       "?", "?", "?", "?", "?", 0, 2) \
-  o (ModelessDialog,  "?", "?", "?", "?", "?", 0, 2)
+  o (FollowGPSr,      0, 2) \
+  o (AddWayOrNode,    0, 2) \
+  o (Search,          0, 1) \
+  o (StartRoute,      0, 1) \
+  o (EndRoute,        0, 1) \
+  o (OrientNorthwards,0, 2) \
+  o (FastestRoute,    0, 2) \
+  o (Vehicle,         motorcarR, onewayR) \
+  o (English,         0, \
+            sizeof (optionNameTable) / sizeof (optionNameTable[0])) \
+  o (ButtonSize,      1, 5) \
+  o (IconSet,         0, 4) \
+  o (DetailLevel,     0, 5) \
+  o (CommPort,        0, 13) \
+  o (BaudRate,        0, 6) \
+  o (QuickOptions,    0, 2) \
+  o (Exit,            0, 2) \
+  o (ZoomInKey,       0, 3) \
+  o (ZoomOutKey,      0, 3) \
+  o (MenuKey,         0, 3) \
+  o (HideZoomButtons, 0, 2) \
+  o (ShowCoordinates, 0, 3) \
+  o (ShowTrace,       0, 2) \
+  o (ModelessDialog,  0, 2)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -63,19 +63,19 @@ using namespace std;
 #define wchar_t char
 #define wsprintf sprintf
 #define OPTIONS \
-  o (FollowGPSr,      "?", "?", "?", "?", "?", 0, 2) \
-  o (Search,          "?", "?", "?", "?", "?", 0, 1) \
-  o (StartRoute,      "?", "?", "?", "?", "?", 0, 1) \
-  o (EndRoute,        "?", "?", "?", "?", "?", 0, 1) \
-  o (OrientNorthwards,"?", "?", "?", "?", "?", 0, 2) \
-  o (FastestRoute,    "?", "?", "?", "?", "?", 0, 2) \
-  o (Vehicle,         "?", "?", "?", "?", "?", motorcarR, onewayR) \
-  o (English,         "Deutsch", "Español", "Français", "Italiano", \
-                      "Nederlands", 0, 6) \
-  o (ButtonSize,      "?", "?", "?", "?", "?", 1, 5) \
-  o (IconSet,         "?", "?", "?", "?", "?", 0, 4) \
-  o (DetailLevel,     "?", "?", "?", "?", "?", 0, 5) \
-  o (ShowActiveRouteNodes,     "?", "?", "?", "?", "?", 0, 2)
+  o (FollowGPSr,      0, 2) \
+  o (Search,          0, 1) \
+  o (StartRoute,      0, 1) \
+  o (EndRoute,        0, 1) \
+  o (OrientNorthwards,0, 2) \
+  o (FastestRoute,    0, 2) \
+  o (Vehicle,         motorcarR, onewayR) \
+  o (English,         0, \
+                 sizeof (optionNameTable) / sizeof (optionNameTable[0])) \
+  o (ButtonSize,      1, 5) \
+  o (IconSet,         0, 4) \
+  o (DetailLevel,     0, 5) \
+  o (ShowActiveRouteNodes, 0, 2)
 
 #define HideZoomButtons 0
 #define MenuKey 0
@@ -528,28 +528,31 @@ int Next (OsmItr &itr) /* Friend of osmItr */
   return TRUE;
 }
 
-enum { langEn, langDe, langEs, langFr, langIt, langNl, numberOfLang };
-
 #define notImplemented \
-  o (ShowCompass,     "?", "?", "?", "?", "?") \
-  o (ShowPrecision,   "?", "?", "?", "?", "?") \
-  o (ShowSpeed,       "?", "?", "?", "?", "?") \
-  o (ShowHeading,     "?", "?", "?", "?", "?") \
-  o (ShowElevation,   "?", "?", "?", "?", "?") \
-  o (ShowDate,        "?", "?", "?", "?", "?") \
-  o (ShowTime,        "?", "?", "?", "?", "?") \
+  o (ShowCompass,     ) \
+  o (ShowPrecision,   ) \
+  o (ShowSpeed,       ) \
+  o (ShowHeading,     ) \
+  o (ShowElevation,   ) \
+  o (ShowDate,        ) \
+  o (ShowTime,        ) \
 
-#define o(en,de,es,fr,it,nl,min,max) en ## Num,
+#define o(en,min,max) en ## Num,
 enum { OPTIONS numberOfOptions, chooseObjectToAdd };
 #undef o
 
-#define o(en,de,es,fr,it,nl,min,max) { \
-  #en, de, es, fr, it, nl },
 //  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
-const char *optionNameTable[][numberOfLang] = { OPTIONS };
+const char *optionNameTable[][numberOfOptions] = {
+#define o(en,min,max) #en,
+  { OPTIONS }, // English is same as variable names
 #undef o
 
-#define o(en,de,es,fr,it,nl,min,max) int en = min;
+#ifdef _WIN32_WCE
+#include "translations.c"
+#endif
+};
+
+#define o(en,min,max) int en = min;
 OPTIONS
 #undef o
 
@@ -703,8 +706,8 @@ void Route (int recalculate, int plon, int plat)
           lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
         toEndNd[i][1] =
           lrint (sqrt ((double)(Sqr (lon1) + Sqr (lat1))) * invSpeed);
-        if (dlon * lon1 <= -dlat * lat1) toEndNd[i][1] += toEndNd[i][0] * 9;
-        if (dlon * lon0 >= -dlat * lat0) toEndNd[i][0] += toEndNd[i][1] * 9;
+//        if (dlon * lon1 <= -dlat * lat1) toEndNd[i][1] += toEndNd[i][0] * 9;
+//        if (dlon * lon0 >= -dlat * lat0) toEndNd[i][0] += toEndNd[i][1] * 9;
 
         if (IsOneway (w)) toEndNd[i][1 - i] = 200000000;
         /*  It's possible to go up a oneway at the end, but at a huge penalty*/
@@ -1344,7 +1347,7 @@ BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
     HWND klist = GetDlgItem (hwnd, IDC_LISTO);
     for (int i = 0; i < numberOfOptions; i++) {
       const unsigned char *sStart = (const unsigned char*)
-        optionNameTable[i][English];
+        optionNameTable[English][i];
       UTF16 wcTmp[30], *tStart = wcTmp;
       if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen ((char*) sStart) + 1,
             &tStart, wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]),
@@ -1381,7 +1384,7 @@ void HitButton (int b)
       (DLGPROC) DlgChooseOProc);
     if (option == -1) option = numberOfOptions;
     
-    #define o(en,de,es,fr,it,nl,min,max) \
+    #define o(en,min,max) \
       if (option == en ## Num && min == 0 && max <= 2) b = 1;
     OPTIONS
     #undef o
@@ -1412,7 +1415,7 @@ void HitButton (int b)
     }
     else if (option == BaudRateNum) BaudRate += b * 4800 - 7200;
     #endif
-    #define o(en,de,es,fr,it,nl,min,max) else if (option == en ## Num) \
+    #define o(en,min,max) else if (option == en ## Num) \
       en = (en - (min) + (b == 2 ? 1 : (max) - (min) - 1)) % \
         ((max) - (min)) + (min);
     OPTIONS
@@ -1976,12 +1979,12 @@ gint Expose (void)
     char optStr[30];
     if (option == VehicleNum) {
       #define M(v) Vehicle == v ## R ? #v :
-      sprintf (optStr, "%s : %s", optionNameTable[option][English],
+      sprintf (optStr, "%s : %s", optionNameTable[English][option],
         RESTRICTIONS NULL);
       #undef M
     }
-    else sprintf (optStr, "%s : %d", optionNameTable[option][English],
-    #define o(en,de,es,fr,it,nl,min,max) option == en ## Num ? en :
+    else sprintf (optStr, "%s : %d", optionNameTable[English][option],
+    #define o(en,min,max) option == en ## Num ? en :
     OPTIONS
     #undef o
       0);
@@ -3299,7 +3302,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (wParam == '9') HitButton (2);
       if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
       if (ZoomInKeyNum <= option && option < HideZoomButtonsNum) {
-        #define o(en,de,es,fr,it,nl,min,max) if (option == en ## Num) en = wParam;
+        #define o(en,min,max) if (option == en ## Num) en = wParam;
         OPTIONS
         #undef o
         break;
@@ -3512,7 +3515,7 @@ int WINAPI WinMain(
     optFile = fopen ("\\My Documents\\gosmore.opt", "rb");
   }
   else {
-    UTF16 *sStart = argv0;
+    UTF16 *sStart = (UTF16*) argv0;
     unsigned char *tStart = (unsigned char *) docPrefix;
     ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0) - 11,
       &tStart, tStart + sizeof (docPrefix), lenientConversion);
@@ -3580,7 +3583,7 @@ int WINAPI WinMain(
   ButtonSize = 4;
   int newWayFileNr = 0;
   if (optFile) {
-    #define o(en,de,es,fr,it,nl,min,max) fread (&en, sizeof (en), 1, optFile);
+    #define o(en,min,max) fread (&en, sizeof (en), 1, optFile);
     OPTIONS
     #undef o
     fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
@@ -3616,7 +3619,7 @@ int WINAPI WinMain(
   optFile = _wfopen (argv0, TEXT ("r+"));
   if (!optFile) optFile = fopen ("\\My Documents\\gosmore.opt", "wb");
   if (optFile) {
-    #define o(en,de,es,fr,it,nl,min,max) fwrite (&en, sizeof (en),1, optFile);
+    #define o(en,min,max) fwrite (&en, sizeof (en),1, optFile);
     OPTIONS
     #undef o
     fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);

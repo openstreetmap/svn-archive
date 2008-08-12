@@ -33,6 +33,7 @@ use FindBin qw($Bin);
 use tahconfig;
 use tahlib;
 use tahproject;
+use Request;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use AppConfig qw(:argcount);
@@ -88,17 +89,17 @@ else
 mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
-if ($UploadMode or $RenderMode) {
-    if (NewClientVersion()) {
-        UpdateClient();
-        if ($LoopMode) {
-            reExec(-1);
-        } else {
-            print STDERR "tilesGen.pl has changed. Please restart new version.";
-            exit;
-        }
-    }
-}
+#if ($UploadMode or $RenderMode) {
+#    if (NewClientVersion()) {
+#        UpdateClient();
+#        if ($LoopMode) {
+#            reExec(-1);
+#        } else {
+#            print STDERR "tilesGen.pl has changed. Please restart new version.";
+#            exit;
+#        }
+#    }
+#}
 
 my $Layers = $Config->get("Layers");
 
@@ -1089,7 +1090,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory")."output-$parent_pid-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
-        my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my $req = new Request($Zoom, $X, $Y);
+        my ($success,$empty) = RenderTile($layer, $req, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
         if (!$success)
         {
             addFault("renderer",1);
@@ -1180,7 +1182,7 @@ sub GenerateSVG
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
-    my ($layer, $X, $Y, $Ytile, $Zoom, $ZOrig, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
+    my ($layer, $req, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
 
     return (1,1) if($Zoom > $Config->get($layer."_MaxZoom"));
     
@@ -1188,14 +1190,14 @@ sub RenderTile
     return (1,$SkipEmpty) if($SkipEmpty == 1);
 
     # Render it to PNG
-    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$X,$Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
-    my $Width = 256 * (2 ** ($Zoom - $ZOrig));  # Pixel size of tiles  
+    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
+    my $Width = 256 * (2 ** ($Zoom - $req->Z));  # Pixel size of tiles  
     my $Height = 256; # Pixel height of tile
 
     # svg2png returns true if all tiles extracted were empty. this might break 
     # if a higher zoom tile would contain data that is not rendered at the 
     # current zoom level. 
-    my ($success,$empty) = svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile);
+    my ($success,$empty) = svg2png($Zoom, $req->Z, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$req->X,$req->Y,$Ytile);
     if (!$success)
     {
        return (0,$empty);
@@ -1219,9 +1221,9 @@ sub RenderTile
         $progress += 1;
     }
 
-    if (($progressPercent=$progress*100/(2**($Config->get($layer."_MaxZoom")-$ZOrig+1)-1)) == 100)
+    if (($progressPercent=$progress*100/(2**($Config->get($layer."_MaxZoom")-$req->Z+1)-1)) == 100)
     {
-        statusMessage("Finished $X,$Y for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
+        statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
     }
     else
     {
@@ -1247,7 +1249,7 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    if ($Config->get("Fork") && $Zoom >= $ZOrig && $Zoom < ($ZOrig + $Config->get("Fork")))
+    if ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork")))
     {
         my $pid = fork();
         if (not defined $pid) 
@@ -1257,7 +1259,7 @@ sub RenderTile
         elsif ($pid == 0) 
         {
             # we are the child process and can't talk to our parent other than through exit codes
-            ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+            ($success,$empty) = RenderTile($layer, $req, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
             if ($success)
             {
                 exit(0);
@@ -1269,7 +1271,7 @@ sub RenderTile
         }
         else
         {
-            ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+            ($success,$empty) = RenderTile($layer, $req, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
             waitpid($pid,0);
             my $ChildExitValue = $?; # we don't want the details, only if it exited normally or not.
             if ($ChildExitValue or !$success)
@@ -1277,17 +1279,17 @@ sub RenderTile
                 return (0,$SkipEmpty);
             }
         }
-        if ($Zoom == $ZOrig)
+        if ($Zoom == $req->Z)
         {
             $progressPercent=100 if (! $Config->get("Debug")); # workaround for not correctly updating %age in fork, disable in debug mode
-            statusMessage("Finished $X,$Y for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
+            statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer", $currentSubTask, $progressJobs, $progressPercent, 1);
         }
     }
     else
     {
-        ($success,$empty) = RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+        ($success,$empty) = RenderTile($layer, $req, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
         return (0,$empty) if (!$success);
-        ($success,$empty) = RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+        ($success,$empty) = RenderTile($layer, $req, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
         return (0,$empty) if (!$success);
     }
 

@@ -186,7 +186,7 @@ sub MarkPoint
   print "P$type $x $y\n";
 }
 
-my $wanted_nodes = Bit::Vector->new( 250 * 1000 * 1000 );
+my $wanted_nodes = Bit::Vector->new( 300 * 1000 * 1000 );
 my(%nodes,%ways);
 my $totalways = 0;
 my $closed = 0;
@@ -263,7 +263,7 @@ for my $pass (2..4)
     { print STDERR "Inserted into r-tree: id $way ($coords[0],$coords[1])\n" }
   }
 
-  my $ways_used = new Bit::Vector( 250_000_000 );
+  my $ways_used = new Bit::Vector( 300_000_000 );
   print STDERR "Pass ${pass}b: Joining ways\n";
   WAY: for my $way (keys %ways)
   {

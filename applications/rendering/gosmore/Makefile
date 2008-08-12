@@ -35,20 +35,27 @@ endif
 
 all: gosmore
 
-gosmore:	gosmore.cpp
+gosmore:	gosmore.cpp ceglue.c ceglue.h translations.c
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
 		  -D RES_DIR='"$(prefix)/usr/share/"' \
                   gosmore.cpp -o gosmore ${EXTRA}
 
-gosm_arm.exe:	gosmore.cpp ConvertUTF.c ConvertUTF.h gosmore.rsc resource.h
+gosm_arm.exe:	gosmore.cpp gosmore.rsc resource.h translations.c
 		${ARCH}-g++ ${CFLAGS} -c gosmore.cpp
 		${ARCH}-gcc ${CFLAGS} -c ConvertUTF.c
 		${ARCH}-gcc ${CFLAGS} -c ceglue.c
 		${ARCH}-gcc ${CFLAGS} -o $@ \
-		  gosmore.o ConvertUTF.o gosmore.rsc
+		  gosmore.o ceglue.o ConvertUTF.o gosmore.rsc
 
 gosmore.rsc:	gosmore.rc
 		${WINDRES} $? $@
+		
+WIKIPAGE=http://wiki.openstreetmap.org/index.php/Special:Export/Gosmore
+translations.c: extract
+		wget -O - ${WIKIPAGE}/Translations |./extract >translations.c
+
+extract:	extract.c
+		${CC} ${CFLAGS} ${XMLFLAGS} extract.c -o extract
 
 voices:
 		echo '(voice_rab_diphone)' >/tmp/voice_rab_diphone
@@ -111,4 +118,4 @@ dist:
 
 clean:
 	$(RM) gosmore *.tmp *~ gosmore.zip gosmore.exe \
-	  gosmore.aps gosmore.vcl gosmore.vcw
+	  gosmore.aps gosmore.vcl gosmore.vcw extract *.o gosm_arm.exe

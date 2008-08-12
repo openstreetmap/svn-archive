@@ -193,6 +193,8 @@ public class ErrorTreePanel extends JTree
 	 */
 	public void setErrors(List<TestError> newerrors)
 	{
+		if(errors == null)
+			return;
 		errors.clear();
 		for(TestError error : newerrors)
 		{

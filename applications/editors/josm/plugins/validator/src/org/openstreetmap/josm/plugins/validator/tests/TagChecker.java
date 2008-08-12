@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.IllegalStateException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -139,7 +142,6 @@ public class TagChecker extends Test
 
 	/**
 	 * Reads the spellcheck file into a HashMap.
-	 * <p>
 	 * The data file is a list of words, beginning with +/-. If it starts with +,
 	 * the word is valid, but if it starts with -, the word should be replaced
 	 * by the nearest + word before this.
@@ -166,15 +168,13 @@ public class TagChecker extends Test
 				sources = SPELL_FILE + ";" + sources;
 		}
 
-		StringTokenizer st = new StringTokenizer(sources, ";");
-		StringBuilder errorSources = new StringBuilder();
-		while (st.hasMoreTokens())
+		String errorSources = "";
+		for(String source: sources.split(";"))
 		{
-			String source = st.nextToken();
 			File sourceFile = Util.mirror(new URL(source), Util.getPluginDir(), -1);
 			if( sourceFile == null || !sourceFile.exists() )
 			{
-				errorSources.append(source).append("\n");
+				errorSources += source + "\n";
 				continue;
 			}
 
@@ -202,7 +202,7 @@ public class TagChecker extends Test
 						if(err == null)
 							checkerData.add(d);
 						else
-							System.err.println("Invalid tagchecker line - "+err+":" + line);
+							System.err.println(tr("Invalid tagchecker line - {0}: {1}", err, line));
 					}
 				}
 				else if( line.charAt(0) == '+' )
@@ -215,7 +215,7 @@ public class TagChecker extends Test
 				}
 				else
 				{
-					System.err.println("Invalid spellcheck line:" + line);
+					System.err.println(tr("Invalid spellcheck line: {0}", line));
 				}
 			}
 			while( true );
@@ -276,7 +276,7 @@ public class TagChecker extends Test
 				if(d.match(p))
 				{
 					errors.add( new TestError(this, Severity.WARNING, tr("Illegal tag/value combinations"),
-					tr(d.description()), TAG_CHECK, p) );
+					d.getDescription(), TAG_CHECK, p) );
 					withErrors.add(p, "TC");
 					break;
 				}
@@ -379,11 +379,9 @@ public class TagChecker extends Test
 	public static void readPresetFromPreferences()
 	{
 		String allAnnotations = Main.pref.get("taggingpreset.sources");
-		StringTokenizer st = new StringTokenizer(allAnnotations, ";");
-		while (st.hasMoreTokens())
+		for(String source : allAnnotations.split(";"))
 		{
 			InputStream in = null;
-			String source = st.nextToken();
 			try
 			{
 				if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
@@ -460,9 +458,8 @@ public class TagChecker extends Test
 		Sources = new JList(new DefaultListModel());
 
 		String sources = Main.pref.get( PREF_SOURCES );
-		StringTokenizer st = new StringTokenizer(sources, ";");
-		while (st.hasMoreTokens())
-			((DefaultListModel)Sources.getModel()).addElement(st.nextToken());
+		for(String source : sources.split(";"))
+			((DefaultListModel)Sources.getModel()).addElement(source);
 
 		addSrcButton = new JButton(tr("Add"));
 		addSrcButton.addActionListener(new ActionListener(){
@@ -597,9 +594,9 @@ public class TagChecker extends Test
 		String sources = "";
 		if( Sources.getModel().getSize() > 0 )
 		{
-			StringBuilder sb = new StringBuilder();
+			String sb = "";
 			for (int i = 0; i < Sources.getModel().getSize(); ++i)
-				sb.append(";"+Sources.getModel().getElementAt(i));
+				sb += ";"+Sources.getModel().getElementAt(i);
 			sources = sb.substring(1);
 		}
 		Main.pref.put(PREF_SOURCES, sources );
@@ -661,17 +658,112 @@ public class TagChecker extends Test
 	}
 
 	private static class CheckerData {
-		public String getData(String data)
+		private String description;
+		private List<CheckerElement> data = new ArrayList<CheckerElement>();
+		private Integer type = 0;
+		protected static int NODE = 1;
+		protected static int WAY = 2;
+		protected static int ALL = 3;
+
+		private class CheckerElement {
+			public Object tag;
+			public Object value;
+			public Boolean noMatch;
+			public Boolean tagAll = false;
+			public Boolean valueAll = false;
+			private Pattern getPattern(String str) throws IllegalStateException, PatternSyntaxException
+			{
+				if(str.endsWith("/i"))
+					return Pattern.compile(str.substring(1,str.length()-2), Pattern.CASE_INSENSITIVE);
+				else if(str.endsWith("/"))
+					return Pattern.compile(str.substring(1,str.length()-1));
+				throw new IllegalStateException();
+			}
+			public CheckerElement(String exp) throws IllegalStateException, PatternSyntaxException
+			{
+				Matcher m = Pattern.compile("(.+)([!=]=)(.+)").matcher(exp);
+				m.matches();
+
+				String n = m.group(1).trim();
+				if(n.equals("*"))
+					tagAll = true;
+				else
+					tag = n.startsWith("/") ? getPattern(n) : n;
+				noMatch = m.group(2).equals("!=");
+				n = m.group(3).trim();
+				if(n.equals("*"))
+					valueAll = true;
+				else
+					value = n.startsWith("/") ? getPattern(n) : n;
+			}
+			public Boolean match(String key, String val)
+			{
+				Boolean tagtrue = tagAll || (tag instanceof Pattern ? ((Pattern)tag).matcher(key).matches() : key.equals(tag));
+				Boolean valtrue = valueAll || (value instanceof Pattern ? ((Pattern)value).matcher(val).matches() : val.equals(value));
+				return tagtrue && (noMatch ? !valtrue : valtrue);
+			}
+		};
+
+		public String getData(String str)
 		{
-			return "not implemented yet";
+			Matcher m = Pattern.compile(" *# *([^#]+) *$").matcher(str);
+			str = m.replaceFirst("").trim();
+			try
+			{
+				description = m.group(1);
+				if(description != null && description.length() == 0)
+					description = null;
+			}
+			catch (IllegalStateException e)
+			{
+				description = null;
+			}
+			String[] n = str.split(" *: *", 2);
+			if(n[0].equals("way"))
+				type = WAY;
+			else if(n[0].equals("node"))
+				type = NODE;
+			else if(n[0].equals("*"))
+				type = ALL;
+			if(type == 0 || n.length != 2)
+				return tr("Could not find element type");
+			for(String exp: n[1].split(" *&& *"))
+			{
+				try
+				{
+					data.add(new CheckerElement(exp));
+				}
+				catch(IllegalStateException e)
+				{
+					return tr("Illegal expression ''{0}''", exp);
+				}
+				catch(PatternSyntaxException e)
+				{
+					return tr("Illegal regular expression ''{0}''", exp);
+				}
+			}
+			return null;
 		}
 		public Boolean match(OsmPrimitive osm)
 		{
-			return false;
+			if(osm.keys == null)
+				return false;
+			for(CheckerElement ce : data)
+			{
+				Boolean result = false;
+				for(Entry<String, String> prop: osm.keys.entrySet())
+				{
+					if(result = ce.match(prop.getKey(), prop.getValue()))
+						break;
+				}
+				if(!result)
+					return false;
+			}
+			return true;
 		}
-		public String description()
+		public String getDescription()
 		{
-			return "not implemented yet";
+			return tr(description);
 		}
 	}
 }

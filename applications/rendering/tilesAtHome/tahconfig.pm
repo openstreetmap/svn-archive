@@ -114,26 +114,26 @@ sub CheckBasicConfig
 
         if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20) 
         {
-            print "- Check $layer._MaxZoom\n";
+            print " * Check MaxZoom for section [".$layer."]\n";
         }
 
         for(my $zoom=12; $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
         {
             if (!defined($Config->get($layer."_Rules.$zoom")))
             {
-                die "config option $layer._Rules.$zoom is not set";
+                die " ! config option Rules.".$zoom." is not set for layer".$layer;
             }
-            if (!-f $Config->get($layer."_Rules.$zoom"))
+            if (!-f $Config->get($layer."_Rules.".$zoom))
             {
-                die "rules file ".$Config->get($layer."_Rules.$zoom").
-                    " referenced by config option $layer._Rules.$zoom ".
+                die " ! rules file ".$Config->get($layer."_Rules.".$zoom).
+                    " referenced by config option Rules.".$zoom." in section [".$layer."]".
                     "is not present";
             }
         }
 
         if (!defined($Config->get($layer."_Prefix")))
         {
-            die "config option $layer._Prefix is not set";
+            die " ! config option \"Prefix\" is not set for layer ".$layer;
         }
 
         # any combination of comma-separated preprocessor names is allowed
@@ -142,8 +142,8 @@ sub CheckBasicConfig
 
         foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
         {
-            die "file $reqfile required for layer $layer as per config option ".
-                $layer."_RequiredFiles not found" unless (-f $reqfile);
+            die " ! file $reqfile required for layer $layer as per config option ".
+                "RequiredFiles in section [".$layer."] not found" unless (-f $reqfile);
         }
 
     }

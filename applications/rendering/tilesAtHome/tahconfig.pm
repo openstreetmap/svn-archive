@@ -112,12 +112,12 @@ sub CheckBasicConfig
     {
         print "- Configured Layer: $layer\n";
 
-        if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20) 
-        {
-            print " * Check MaxZoom for section [".$layer."]\n";
-        }
+#        if ($Config->get($layer."_MaxZoom") < 12 || $Config->get($layer."_MaxZoom") > 20)  #server controlled layers.conf should make this obsolete
+#        {
+#            print " * Check MaxZoom for section [".$layer."]\n";
+#        } 
 
-        for(my $zoom=12; $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
+        for(my $zoom=$Config->get($layer."_MinZoom"); $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
         {
             if (!defined($Config->get($layer."_Rules.$zoom")))
             {

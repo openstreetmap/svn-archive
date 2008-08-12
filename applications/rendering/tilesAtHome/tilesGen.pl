@@ -89,17 +89,17 @@ else
 mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
-#if ($UploadMode or $RenderMode) {
-#    if (NewClientVersion()) {
-#        UpdateClient();
-#        if ($LoopMode) {
-#            reExec(-1);
-#        } else {
-#            print STDERR "tilesGen.pl has changed. Please restart new version.";
-#            exit;
-#        }
-#    }
-#}
+if ($UploadMode or $RenderMode) {
+    if (NewClientVersion()) {
+        UpdateClient();
+        if ($LoopMode) {
+            reExec(-1);
+        } else {
+            print STDERR "tilesGen.pl has changed. Please restart new version.";
+            exit;
+        }
+    }
+}
 
 my $Layers = $Config->get("Layers");
 
@@ -1611,7 +1611,7 @@ sub svg2png
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     killafile($stdOut) if (not $Config->get("Debug"));
     
-    my $ReturnValue = splitImageX($TempFile, $layer, $req->Z, $req->X, $req->Y, $Zoom, $Ytile); # returns true if tiles were all empty
+    my $ReturnValue = splitImageX($layer, $req, $Zoom, $Ytile, $TempFile); # returns true if tiles were all empty
     
     killafile($TempFile) if (not $Config->get("Debug"));
     rmdir ($TempDir);
@@ -1706,20 +1706,18 @@ sub tileFilename
         $Y));
 }
 
-## sub mergeOsmFiles moved to tahlib.pm
-
 #-----------------------------------------------------------------------------
 # Split a tileset image into tiles
 #-----------------------------------------------------------------------------
 sub splitImageX 
 {
-    my ($File, $layer, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
+    my ($layer, $req, $Z, $Ytile, $File) = @_;
   
     # Size of tiles
     my $Pixels = 256;
   
     # Number of tiles
-    my $Size = 2 ** ($Z - $ZOrig);
+    my $Size = 2 ** ($Z - $req->Z);
 
     # Assume the tileset is empty by default
     my $allempty=1;
@@ -1730,7 +1728,7 @@ sub splitImageX
     if( not defined $Image )
     {
         print STDERR "\nERROR: Failed to read in file $File\n";
-        PutRequestBackToServer($X,$Y,$ZOrig,"MissingFile");
+        PutRequestBackToServer($req->X,$req->Y,$req->Z,"MissingFile");
         cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4,$PID);
     }
   
@@ -1750,7 +1748,7 @@ sub splitImageX
           $Pixels);            # Copy height
 
         # Decide what the tile should be called
-        my $Filename = tileFilename($layer, $X * $Size + $xi, $Ytile, $Z);
+        my $Filename = tileFilename($layer, $req->X * $Size + $xi, $Ytile, $Z);
         MagicMkdir($Filename) if ($Config->get("LocalSlippymap"));
    
         # Temporary filename
@@ -1763,35 +1761,25 @@ sub splitImageX
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-            PutRequestBackToServer($X,$Y,$ZOrig,"BlackTile");
+            PutRequestBackToServer($req->X,$req->Y,$req->Z,"BlackTile");
             cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4,$PID);
         }
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
         {
-            copy("emptyland.png", $Filename);
-            # Change the tile to a zero-length file if it's as blank as the parent
-            # We keep the ones at level 15 so the server fallback never has to go more than 3 levels.
-            if( $Z > 12 and $Z != 15 and not $Config->get("LocalSlippymap") )
-            {
-                my $upfile = tileFilename($layer, ($X * $Size + $xi)>>1, $Ytile>>1, $Z-1);
-                my $upsize = -e $upfile ? -s $upfile : -1;
-                if( $upsize == 0 or $upsize == -s "emptyland.png" )
-                { open my $fh, ">$Filename" }
+            # We keep the one at tileset base level, so we return at least one
+            if( $Z == $req->Z or $Config->get("LocalSlippymap") )
+	    {
+		copy("emptyland.png", $Filename);
             }
         }
         elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
         {
-            copy("emptysea.png",$Filename);
-            # Change the tile to a zero-length file if it's as blank as the parent
-            if( $Z > 12 and $Z != 15 and not $Config->get("LocalSlippymap") )
-            {
-                my $upfile = tileFilename($layer, ($X * $Size + $xi)>>1, $Ytile>>1, $Z-1);
-                my $upsize = -e $upfile ? -s $upfile : -1;
-                if( $upsize == 0 or $upsize == -s "emptysea.png" )
-                { open my $fh, ">$Filename" }
+            # We keep the one at tileset base level, so we return at least one
+            if( $Z == $req->Z or $Config->get("LocalSlippymap") )
+	    {
+		copy("emptysea.png",$Filename);
             }
-#            $allempty = 0; # TODO: enable this line if/when serverside empty tile methods is implemented. Used to make sure we                                     generate all blank seatiles in a tileset.
         }
         else
         {

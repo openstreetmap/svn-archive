@@ -1,21 +1,21 @@
 t@h server
 ==========
 
- - Check MYSQL "FOR UPDATE locks". Small race conditions could enable handing out the same job twice?!
- - Examine the password situation. why are non-character passwords failing? It works fine on the server side of things.
+ - Investigate switch to Postgresql as this one runs on the box anyway
+ - "Render this tile" button on the tile detail page
+ - Check MYSQL "FOR UPDATE locks". Small race conditions could enable handing out the same job twice?! Seems fine though.
  - Think about notifying users when their clients fail too often.
  - Enable client to hand back requests as "oldData" (ie API data older than tileset on server) which would delete the request.
  - Save the client_uuid in the request database with finished requests
- - Show last uploaded tilesets for each user on their user page.
  - Check the "LayerCapabilities" of the client and only send appropriate requests.
  - Discard incomplete tileset uploads (mail user?). Check for obvious failures? (better on client side)
  - Make lowzoom stitching run in a good way (cron). Implement blacklisted areas for people wanting to upload their own lowzoom.
  - Improve "feedback" API. Make sure we reset only tilesets assigned to that one client. Make sure, we record the client_uuid in the feedback case.
+ - Examine the password situation. why are non-character passwords failing? It works fine on the server side of things. Put on hold for now.
 
 t@h client (will not be implemented by spaetz)
 ==========
  - generally go through the code and remove superfluous code (e.g. non-tileset uploads)
- - implement "I'm still on it" pinging
  - Send the current client version as data (or other numeric) string that we can compare against. We don't want to maintain a list of city names in the server.
  - assemble tilesets on the clientside already, don't upload zip files
  - check last-modified age of tileset, compare with API age and skip request if the tileset on the server is younger already

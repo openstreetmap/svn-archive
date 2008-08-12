@@ -48,3 +48,6 @@ class Upload(models.Model):
 
   def __str__(self):
     return str(self.layer)+","+str(self.file)
+
+  class Meta:
+    ordering = ['-upload_time']

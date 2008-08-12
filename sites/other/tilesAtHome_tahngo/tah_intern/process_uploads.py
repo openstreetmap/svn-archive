@@ -20,6 +20,7 @@ class TileUpload:
   base_tilepath=None # base tile directory
   fname=None      #complete path of uploaded tileset file
   uid=None        #random unique id which is used for pathnames
+  upload=None     #current handled upload object
   tmptiledir=None #usually unzip_path+uid contains the unzipped files
 
   def __init__(self,config):
@@ -32,32 +33,30 @@ class TileUpload:
    try:
     while True:
       #find the oldest unlocked upload file
-      upload = None
-      while not upload:
+      self.upload = None
+      while not self. upload:
         # repeat fetching until there is one
         try:
-          upload = Upload.objects.filter(is_locked=False).latest('upload_time')
+          self.upload = Upload.objects.filter(is_locked=False).latest('upload_time')
         except Upload.DoesNotExist:
-          #logging.debug('No uploaded request. Sleeping 5 sec.')
-          #print("No uploaded request. Sleeping 5 sec.")
+          #logging.debug('No uploaded request. Sleeping 10 sec.')
           sleep(10)
       starttime = (time(),clock()) # start timing tileset handling now
-      self.fname = upload.get_file_filename()
-      #obsolete by above line: os.path.join(settings.MEDIA_ROOT,upload.file)
+      self.fname = self.upload.get_file_filename()
       if os.path.isfile(self.fname):
-        #logging.debug('Handling next tileset: ' + upload.file)
+        #logging.debug('Handling next tileset: ' + self.upload.file)
         self.uid = str(random.randint(0,9999999999999999999))
         if self.unzip():
           tset = self.movetiles()
           if tset.layer and tset.base_z and tset.x and tset.y:
           #It's a valid tileset. Save the tileset at it's place
             time_save = [time()]
-            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (client id %d)" % (tset.layer,tset.base_z,tset.x,tset.y,upload.user_id,upload.client_uuid))
-            (retval,unknown_tiles) = tset.save(self.base_tilepath, upload.user_id.id)
+            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (client id %d)" % (tset.layer,tset.base_z,tset.x,tset.y,self.upload.user_id,self.upload.client_uuid))
+            (retval,unknown_tiles) = tset.save(self.base_tilepath, self.upload.user_id.id)
             time_save.append(time())
             if retval:
               # everything went fine. Add to user statistics
-              self.add_user_stats(upload, 1365-unknown_tiles)
+              self.add_user_stats(1365-unknown_tiles)
               # now match up the upload with a request and mark the request as finished
               reqs = Request.objects.filter(min_z = tset.base_z, x = tset.x ,y = tset.y, status__lt=2)
               for req in reqs:
@@ -74,15 +73,15 @@ class TileUpload:
           else:
             # movetiles did not return a valid tileset
             logging.error('Unzipped file was no valid tileset. Took %.1f sec (CPU %.1f).' % (time()-starttime[0],clock()-starttime[1]))
-        self.cleanup(upload,True)
+        self.cleanup(True)
 
       else:
         logging.info('uploaded file not found, deleting upload.')
-	upload.delete()
+	self.upload.delete()
    except KeyboardInterrupt:
-     if upload: self.cleanup(upload, False)
+     if self.upload: self.cleanup(False)
      logging.info('Ctrl-C pressed. Shutdown gracefully.')
-     sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % upload)
+     sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
   #-----------------------------------------------------------------
   def unzip(self):
     now = clock()
@@ -100,11 +99,11 @@ class TileUpload:
           outfile.write(zfobj.read(name))
           outfile.close()
     except zipfile.BadZipfile:
-      logging.info('found bad zip file ('+self.uid+')')
+      logging.warning('found bad zip file %s uploaded by user %s', (self.uid, self.upload.user_id))
       if outfile: outfile.close()
       return 0
     except:
-      logging.info('unknown zip file error')
+      logging.warning('unknown zip file error in file uploaded by user %s' % self.upload.user_id)
       if outfile: outfile.close()
       return(0)
 
@@ -124,7 +123,7 @@ class TileUpload:
       full_filename = os.path.join(self.tmptiledir,f)
       m = r.match(f)
       if not m:
-        logging.debug('found weird file '+f+' in zip. Ignoring.')
+        logging.info('found weird file '+f+' in zip from user %s. Ignoring.' % self.upload.user_id)
         ignore_file = True
 
       if not ignore_file:
@@ -132,7 +131,7 @@ class TileUpload:
         if not (layer and layer.name == m.group(1)):
           try: layer = Layer.objects.get(name=m.group(1))
           except Layer.DoesNotExist:
-            logging.info('unknown layer ('+m.group(1)+')')
+            logging.info("unknown layer '%s' in upload by user %s" % (m.group(1), self.upload.user_id))
             return 0
         t = Tile(layer=layer,z=m.group(2),x=m.group(3),y=m.group(4))
         #print "found layer:"+m.group(1)+'z: '+m.group(2)+'x: '+m.group(3)+'y: '+m.group(4)
@@ -156,14 +155,14 @@ class TileUpload:
           #png has regular filesize
           tset.add_tile(t,full_filename)
 
-    #if smalltiles: logging.debug('Ignored %d too small png files' % smalltiles)
+    if smalltiles: logging.debug('Ignored %d too small png files' % smalltiles)
     return tset
 
   #-----------------------------------------------------------------
-  def add_user_stats(self, upload, uploaded_tiles):
+  def add_user_stats(self, uploaded_tiles):
     """ Update the tah user statistics after a successfull upload """
-    tahuser = upload.user_id.tahuser_set.get()
-    try: tahuser.kb_upload += os.stat(upload.get_file_filename())[stat.ST_SIZE] // 1024
+    tahuser = self.upload.user_id.tahuser_set.get()
+    try: tahuser.kb_upload += os.stat(self.upload.get_file_filename())[stat.ST_SIZE] // 1024
     except OSError: pass
     tahuser.renderedTiles += uploaded_tiles
     tahuser.save()
@@ -176,7 +175,7 @@ class TileUpload:
     sys.exit(0)
 
   #-----------------------------------------------------------------
-  def cleanup(self, upload, del_upload = True):
+  def cleanup(self, del_upload = True):
     """ Removes all temporary files and removes the upload object 
         (and the uploaded file if 'del_upload' is True.
     """
@@ -187,10 +186,10 @@ class TileUpload:
     self.tmptiledir=None
     if del_upload:
       # delete the uploaded file itself
-      try: os.unlink(upload.get_file_filename())
+      try: os.unlink(self.upload.get_file_filename())
       except: pass
       # delete the upload db entry
-      upload.delete()
+      self.upload.delete()
 
 #---------------------------------------------------------------------
 

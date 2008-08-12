@@ -114,7 +114,7 @@ sub CheckBasicConfig
 
         if ($Config->get($layer."_MaxZoom") < $Config->get($layer."_MinZoom"))
         {
-            print " * Check MinZoom and MaxZoom for section [".$layer."]\n";
+            die " ! Check MinZoom and MaxZoom for section [".$layer."]\n";
         } 
 
         for(my $zoom=$Config->get($layer."_MinZoom"); $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)

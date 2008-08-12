@@ -93,7 +93,7 @@ sub talkInSleep
                 $message,
                 $idleFor/60, $idleFor%60,
                 $totalseconds ? $idleSeconds * 100 / $totalseconds : 100,
-                $duration - $i),0,0);
+                $duration - $i),0,3);
         sleep 1;
         $idleFor++;
         $idleSeconds++;

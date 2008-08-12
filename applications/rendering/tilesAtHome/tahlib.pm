@@ -154,10 +154,6 @@ sub runCommand
     my $Config = $main::Config;
     my ($cmd,$mainPID) = @_;
 
-    # $message is deprecated, issue statusmessage prior to exec.
-    # statusMessage($message, $Config->get("Verbose"), $currentSubTask, $progressJobs, $progressPercent,0);
-
-
     if ($Config->get("Verbose"))
     {
         my $retval = system($cmd);

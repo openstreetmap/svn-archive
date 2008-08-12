@@ -358,7 +358,7 @@ elsif ($Mode eq "upload_loop")
         {
             $elapsedTime = time() - $startTime;
             statusMessage(sprintf("waiting for new ZIP files to upload   %d:%02d", $elapsedTime/60, $elapsedTime%60),0,0);
-            sleep(1);
+            sleep(30); # no reason to do this *every second* since we won't fall into this case as long as there are zips to upload anyway.
         }
     }
 }
@@ -373,12 +373,12 @@ elsif ($Mode eq "stop")
         close F;
         statusMessage("stop signal was sent to the currently running tilesGen.pl",1,0);
         statusMessage("please note that it may take quite a while for it to exit",1,0);
+        exit(0);
     }
     else
     {
         statusMessage("stop signal was NOT sent to the currently running tilesGen.pl - stopfile.txt could NOT be created",1,0);
     }
- #   talkInSleep("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line", 60);
     exit(1);
 }
 elsif ($Mode eq "update") 

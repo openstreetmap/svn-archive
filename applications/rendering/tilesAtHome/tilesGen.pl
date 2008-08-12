@@ -751,8 +751,15 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     {
         # FIXME: zoom 12 hardcoded: assume lowzoom caption layer now!
         # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
-        $Layers="caption" if ($Mode eq "xy");
-        
+        if ($Mode eq "xy") 
+        {
+            $Layers="caption";
+            statusMessage("Warning: lowzoom zoom detected, autoswitching to ".$Layers." layer",1,0);
+        }
+        else
+        {
+            statusMessage("Warning: lowzoom zoom detected, but ".$Layers." configured",1,0);
+        }
         # Get the predicates for lowzoom caption layer, and build the URLS for them
         my $predicates = $Config->get($Layers."_Predicates");
         # strip spaces in predicates because that is the separator used below

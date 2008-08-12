@@ -16,4 +16,13 @@
   <tr><td><a href="{% url tah.browse.views.tiledetails "tile",req.min_z,req.x,req.y %}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{ req.layers_str }}</td></tr>
   {% endfor %}
 </table>
+
+<h3>Recently finished requests</h3>
+<table border="1" align="center">
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Uploaded</td></tr>
+  {% for req in finished_reqs %}
+  <tr><td><a href="{% url tah.browse.views.tiledetails "tile",req.min_z,req.x,req.y %}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td></tr>
+  {% endfor %}
+</table>
+
 {% endblock %}

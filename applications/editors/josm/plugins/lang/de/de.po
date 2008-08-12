@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-11 22:57+0200\n"
-"PO-Revision-Date: 2008-08-11 23:00+0200\n"
+"POT-Creation-Date: 2008-08-12 18:22+0200\n"
+"PO-Revision-Date: 2008-08-12 18:26+0200\n"
 "Last-Translator: Dirk Stöcker <lang@dstoecker.de>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2311,7 +2311,7 @@ msgstr "Nicht noch einmal zeigen"
 msgid "Information"
 msgstr "Information"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:65
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:64
 #, java-format
 msgid "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
@@ -2323,15 +2323,15 @@ msgstr ""
 msgid "According to the information within the plugin, the author is {0}."
 msgstr "Laut den Informationen des Plugins ist der Autor des Plugins {0}."
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:67
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:68
 msgid "Should the plugin be disabled?"
 msgstr "Soll das Plugin abgeschaltet werden?"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:68
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:69
 msgid "Disable plugin"
 msgstr "Plugin abschalten"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:80
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:82
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
@@ -2339,7 +2339,7 @@ msgstr ""
 "Das Plugin wurde aus der Konfiguration gelöscht. Bitte starten Sie JOSM neu "
 "um das Plugin zu entfernen."
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:82
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:85
 msgid ""
 "The plugin could not be removed. Please tell the people you got JOSM from "
 "about the problem."
@@ -2347,15 +2347,15 @@ msgstr ""
 "Das Plugin konnte nicht entfernt werden. Bitte melden Sie diese Problem den "
 "Verwaltern Ihres JOSM Pakets."
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:88
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:91
 msgid "Do nothing"
 msgstr "Nichts tun"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:88
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:91
 msgid "Report Bug"
 msgstr "Fehler melden"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:89
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:92
 msgid ""
 "An unexpected exception occurred.\n"
 "\n"
@@ -2368,22 +2368,22 @@ msgstr ""
 "Version von JOSM einsetzen, seine Sie bitte so gut und melden \n"
 "uns den Fehler als \"Bug Report\"."
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:92
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:95
 msgid "Unexpected Exception"
 msgstr "Unerwarter Fehler"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:123
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:126
+#, java-format
 msgid ""
-"Please report a ticket at http://josm.openstreetmap.de/newticket, including "
-"your steps to get to\n"
-"the error and be sure to include the following information"
+"<html>Please report a ticket at {0}<br>Include your steps to get to the "
+"error (as detailed as possible)!<br>Be sure to include the following "
+"information:</html>"
 msgstr ""
-"Bitte melden Sie einen Fehler unter: http://josm.openstreetmap.de/newticket, "
-"möglichst mit einer \n"
-"Beschreibung der Schritte um ihn zu reproduzieren. Fügen Sie folgende "
-"Informationen hinzu:"
+"<html>Bitte melden Sie einen Fehler unter: {0}<br> "
+"Fügen Sie eine (möglichst ausführliche) Beschreibung der zum Reproduzieren notwendigen Schritte bei.<br> "
+"Stellen Sie sicher, dass folgende Informationen enthalten sind:</html>"
 
-#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:129
+#: ../../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:133
 msgid "The text has already been copied to your clipboard."
 msgstr "Der Text wurde bereits in Ihre Zwischenablage kopiert."
 
@@ -2623,13 +2623,13 @@ msgstr "Weg am gewählten Knotenpunkt aufspalten."
 msgid "The current selection cannot be used for splitting."
 msgstr "Die aktuelle Auswahl kann nicht zum Aufspalten genutzt werden."
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:109
-msgid "The selected node is not part of any way."
-msgid_plural "The selected nodes are not part of any way."
-msgstr[0] "Der gewählte Knotenpunkt ist nicht Teil eines Weges."
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:113
+msgid "The selected node is no inner part of any way."
+msgid_plural "The selected nodes are no inner part of any way."
+msgstr[0] "Der gewählte Knotenpunkt ist kein innenliegender Teil eines Weges."
 msgstr[1] "Die gewählten Knotenpunkte sind nicht Teil eines Weges."
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:117
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:121
 msgid ""
 "There is more than one way using the node(s) you selected. Please select the "
 "way also."
@@ -2637,23 +2637,24 @@ msgstr ""
 "Mindestens ein gewählter Knotenpunkt wird von mehreren Wegen benutzt. Bitte "
 "auch den Weg auswählen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:125
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:129
 msgid "The selected nodes do not share the same way."
 msgstr "Die gewählten Punkte gehören nicht zum selben Weg. "
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:138
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:142
 msgid "The selected way does not contain the selected node."
 msgid_plural "The selected way does not contain all the selected nodes."
 msgstr[0] "Der gewählte Weg enthält nicht den gewählten Punkt."
 msgstr[1] "Der gewählte Weg enthält nicht alle gewählten Punkte."
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:205
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:209
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:220
 msgid "You must select two or more nodes to split a circular way."
 msgstr ""
 "Sie müssen zwei oder mehr Knoten auswählen, um einen kreisförmigen Weg "
 "trennen zu können."
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:215
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:222
 msgid ""
 "The way cannot be split at the selected nodes. (Hint: Select nodes in the "
 "middle of the way.)"
@@ -2661,7 +2662,7 @@ msgstr ""
 "Der Weg kann nicht an dieser Stelle geteilt werden. (Es hilft Punkte in der "
 "Mitte des Weges zu wählen)"
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:269
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:276
 msgid ""
 "A role based relation membership was copied to both new ways.\n"
 "You should verify this and correct it when necessary."
@@ -2670,7 +2671,7 @@ msgstr ""
 "kopiert.\n"
 "Sie sollten dies überprüfen und falls nötig korrigieren."
 
-#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:275
+#: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:282
 #, java-format
 msgid "Split way {0} into {1} parts"
 msgstr "Teile Weg {0} in {1} Teile"
@@ -3588,6 +3589,18 @@ msgstr "Rasterebene"
 #: ../grid/src/grid/GridLayer.java:222
 msgid "Grid layer:"
 msgstr "Raster Ebene:"
+
+#: ../lang/validator.java:28
+msgid "oneway tag on a node"
+msgstr "Einbahnschlüssel auf einem Knoten"
+
+#: ../lang/validator.java:29 ../lang/validator.java:30
+msgid "wrong highway tag on a node"
+msgstr "Falscher Straßenschlüssel auf einem Knoten"
+
+#: ../lang/validator.java:31 ../lang/validator.java:32
+msgid "highway without a reference"
+msgstr "Straße ohne Referenznummer"
 
 #: ../lang/presets.java:11
 msgid "Streets/Motorway"

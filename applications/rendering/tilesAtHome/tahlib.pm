@@ -36,7 +36,7 @@ sub statusMessage
         return;
     }
 
-    return 1 if ($Config->get("Verbose") < $VerbosityTriggerLevel); # don't print anything if we set verbosity below triggerlevel
+    return if ($Config->get("Verbose") < $VerbosityTriggerLevel); # don't print anything if we set verbosity below triggerlevel
 
     my $curmsglen = length($toprint);
     print STDERR "\r$toprint";

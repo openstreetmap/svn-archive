@@ -16,11 +16,12 @@ import java.awt.event.MouseWheelListener;
  * @author Jan Peter Stotz
  * 
  */
-public class DefaultMapController extends JMapController implements
-		MouseListener, MouseMotionListener, MouseWheelListener {
+public class DefaultMapController extends JMapController implements MouseListener,
+		MouseMotionListener, MouseWheelListener {
 
-	private static final int MOUSE_BUTTONS_MASK = MouseEvent.BUTTON3_DOWN_MASK
-			| MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK;
+	private static final int MOUSE_BUTTONS_MASK =
+			MouseEvent.BUTTON3_DOWN_MASK | MouseEvent.BUTTON1_DOWN_MASK
+					| MouseEvent.BUTTON2_DOWN_MASK;
 
 	public DefaultMapController(JMapViewer map) {
 		super(map);
@@ -33,6 +34,7 @@ public class DefaultMapController extends JMapController implements
 	private boolean movementEnabled = true;
 
 	private int movementMouseButton = MouseEvent.BUTTON3;
+	private int movementMouseButtonMask = MouseEvent.BUTTON3_DOWN_MASK;
 
 	private boolean wheelZoomEnabled = true;
 	private boolean doubleClickZoomEnabled = true;
@@ -40,22 +42,20 @@ public class DefaultMapController extends JMapController implements
 	public void mouseDragged(MouseEvent e) {
 		if (!movementEnabled || !isMoving)
 			return;
-		// Is only right mouse button presed?
-		if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == MouseEvent.BUTTON3_DOWN_MASK) {
-
+		// Is only the selected mouse button pressed?
+		if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == movementMouseButtonMask) {
+			Point p = e.getPoint();
 			if (lastDragPoint != null) {
-				Point p = e.getPoint();
 				int diffx = lastDragPoint.x - p.x;
 				int diffy = lastDragPoint.y - p.y;
 				map.moveMap(diffx, diffy);
 			}
-			lastDragPoint = e.getPoint();
+			lastDragPoint = p;
 		}
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (doubleClickZoomEnabled && e.getClickCount() == 2
-				&& e.getButton() == MouseEvent.BUTTON1)
+		if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
 			map.zoomIn(e.getPoint());
 	}
 
@@ -108,6 +108,19 @@ public class DefaultMapController extends JMapController implements
 	 */
 	public void setMovementMouseButton(int movementMouseButton) {
 		this.movementMouseButton = movementMouseButton;
+		switch (movementMouseButton) {
+		case MouseEvent.BUTTON1:
+			movementMouseButtonMask = MouseEvent.BUTTON1_DOWN_MASK;
+			break;
+		case MouseEvent.BUTTON2:
+			movementMouseButtonMask = MouseEvent.BUTTON2_DOWN_MASK;
+			break;
+		case MouseEvent.BUTTON3:
+			movementMouseButtonMask = MouseEvent.BUTTON3_DOWN_MASK;
+			break;
+		default:
+			throw new RuntimeException("Unsupported button");
+		}
 	}
 
 	public boolean isWheelZoomEnabled() {

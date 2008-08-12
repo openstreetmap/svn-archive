@@ -28,16 +28,17 @@ public class Demo extends JFrame {
 		setSize(400, 400);
 		final JMapViewer map = new JMapViewer();
 		// final JMapViewer map = new JMapViewer(new MemoryTileCache(),4);
-		// map.setTileLoader(new
-		// OsmFileCacheTileLoader(map,OsmTileLoader.MAP_MAPNIK));
-		new DefaultMapController(map);
+		// map.setTileLoader(new OsmFileCacheTileLoader(map,
+		// OsmTileLoader.MAP_MAPNIK));
+		// new DefaultMapController(map);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
-		JLabel label = new JLabel(
-				"Use right mouse button to move,\n left double click or mouse wheel to zoom.");
+		JLabel label =
+				new JLabel("Use right mouse button to move,\n "
+						+ "left double click or mouse wheel to zoom.");
 		panel.add(label);
 		JButton button = new JButton("setDisplayToFitMapMarkers");
 		button.addActionListener(new ActionListener() {

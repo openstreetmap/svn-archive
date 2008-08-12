@@ -42,8 +42,8 @@ public class JMapViewer extends JPanel {
 	/**
 	 * Vectors for clock-wise tile painting
 	 */
-	protected static final Point[] move = { new Point(1, 0), new Point(0, 1),
-			new Point(-1, 0), new Point(0, -1) };
+	protected static final Point[] move =
+			{ new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
 
 	public static final int MAX_ZOOM = 18;
 	public static final int MIN_ZOOM = 0;
@@ -101,8 +101,8 @@ public class JMapViewer extends JPanel {
 		setMinimumSize(new Dimension(Tile.WIDTH, Tile.HEIGHT));
 		setPreferredSize(new Dimension(400, 400));
 		try {
-			loadingImage = ImageIO.read(JMapViewer.class
-					.getResourceAsStream("images/hourglass.png"));
+			loadingImage =
+					ImageIO.read(JMapViewer.class.getResourceAsStream("images/hourglass.png"));
 		} catch (Exception e1) {
 			loadingImage = null;
 		}
@@ -122,8 +122,7 @@ public class JMapViewer extends JPanel {
 		add(zoomSlider);
 		int size = 18;
 		try {
-			ImageIcon icon = new ImageIcon(getClass().getResource(
-					"images/plus.png"));
+			ImageIcon icon = new ImageIcon(getClass().getResource("images/plus.png"));
 			zoomInButton = new JButton(icon);
 		} catch (Exception e) {
 			zoomInButton = new JButton("+");
@@ -139,8 +138,7 @@ public class JMapViewer extends JPanel {
 		});
 		add(zoomInButton);
 		try {
-			ImageIcon icon = new ImageIcon(getClass().getResource(
-					"images/minus.png"));
+			ImageIcon icon = new ImageIcon(getClass().getResource("images/minus.png"));
 			zoomOutButton = new JButton(icon);
 		} catch (Exception e) {
 			zoomOutButton = new JButton("-");
@@ -169,8 +167,7 @@ public class JMapViewer extends JPanel {
 	 *            {@link #MIN_ZOOM} <= zoom level <= {@link #MAX_ZOOM}
 	 */
 	public void setDisplayPositionByLatLon(double lat, double lon, int zoom) {
-		setDisplayPositionByLatLon(new Point(getWidth() / 2, getHeight() / 2),
-				lat, lon, zoom);
+		setDisplayPositionByLatLon(new Point(getWidth() / 2, getHeight() / 2), lat, lon, zoom);
 	}
 
 	/**
@@ -188,16 +185,14 @@ public class JMapViewer extends JPanel {
 	 * @param zoom
 	 *            {@link #MIN_ZOOM} <= zoom level <= {@link #MAX_ZOOM}
 	 */
-	public void setDisplayPositionByLatLon(Point mapPoint, double lat,
-			double lon, int zoom) {
+	public void setDisplayPositionByLatLon(Point mapPoint, double lat, double lon, int zoom) {
 		int x = OsmMercator.LonToX(lon, zoom);
 		int y = OsmMercator.LatToY(lat, zoom);
 		setDisplayPosition(mapPoint, x, y, zoom);
 	}
 
 	public void setDisplayPosition(int x, int y, int zoom) {
-		setDisplayPosition(new Point(getWidth() / 2, getHeight() / 2), x, y,
-				zoom);
+		setDisplayPosition(new Point(getWidth() / 2, getHeight() / 2), x, y, zoom);
 	}
 
 	public void setDisplayPosition(Point mapPoint, int x, int y, int zoom) {
@@ -209,10 +204,18 @@ public class JMapViewer extends JPanel {
 		p.x = x - mapPoint.x + getWidth() / 2;
 		p.y = y - mapPoint.y + getHeight() / 2;
 		center = p;
-		this.zoom = zoom;
-		if (zoomSlider.getValue() != zoom)
-			zoomSlider.setValue(zoom);
-		repaint();
+		setIgnoreRepaint(true);
+		try {
+			int oldZoom = this.zoom;
+			this.zoom = zoom;
+			if (oldZoom != zoom)
+				zoomChanged(oldZoom);
+			if (zoomSlider.getValue() != zoom)
+				zoomSlider.setValue(zoom);
+		} finally {
+			setIgnoreRepaint(false);
+			repaint();
+		}
 	}
 
 	/**
@@ -239,21 +242,21 @@ public class JMapViewer extends JPanel {
 		// System.out.println(x_min + " < x < " + x_max);
 		// System.out.println(y_min + " < y < " + y_max);
 		// System.out.println("tiles: " + width + " " + height);
-		int zoom = MAX_ZOOM;
+		int newZoom = MAX_ZOOM;
 		int x = x_max - x_min;
 		int y = y_max - y_min;
 		while (x > width || y > height) {
 			// System.out.println("zoom: " + zoom + " -> " + x + " " + y);
-			zoom--;
+			newZoom--;
 			x >>= 1;
 			y >>= 1;
 		}
 		x = x_min + (x_max - x_min) / 2;
 		y = y_min + (y_max - y_min) / 2;
-		int z = 1 << (MAX_ZOOM - zoom);
+		int z = 1 << (MAX_ZOOM - newZoom);
 		x /= z;
 		y /= z;
-		setDisplayPosition(x, y, zoom);
+		setDisplayPosition(x, y, newZoom);
 	}
 
 	public Point2D.Double getPosition() {
@@ -333,8 +336,7 @@ public class JMapViewer extends JPanel {
 				if (y % 2 == 0)
 					x++;
 				for (int z = 0; z < x; z++) {
-					if (x_min <= posx && posx <= x_max && y_min <= posy
-							&& posy <= y_max) { // tile
+					if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) { // tile
 						// is
 						// visible
 						Tile tile = getTile(tilex, tiley, zoom);
@@ -418,7 +420,6 @@ public class JMapViewer extends JPanel {
 		if (zoom > MAX_ZOOM || zoom == this.zoom)
 			return;
 		Point2D.Double zoomPos = getPosition(mapPoint);
-		// addMapMarker(new MapMarkerDot(Color.RED, zoomPos.x, zoomPos.y));
 		jobDispatcher.cancelOutstandingJobs(); // Clearing outstanding load
 		// requests
 		setDisplayPositionByLatLon(mapPoint, zoomPos.x, zoomPos.y, zoom);
@@ -449,10 +450,20 @@ public class JMapViewer extends JPanel {
 			tile.loadPlaceholderFromCache(tileCache);
 		}
 		if (!tile.isLoaded()) {
-			jobDispatcher.addJob(tileLoader.createTileLoaderJob(tilex, tiley,
-					zoom));
+			jobDispatcher.addJob(tileLoader.createTileLoaderJob(tilex, tiley, zoom));
 		}
 		return tile;
+	}
+
+	/**
+	 * Every time the zoom level changes this method is called. Override it in
+	 * derived implementations for adapting zoom dependent values. The new zoom
+	 * level can be obtained via {@link #getZoom()}.
+	 * 
+	 * @param oldZoom
+	 *            the previous zoom level
+	 */
+	protected void zoomChanged(int oldZoom) {
 	}
 
 	public boolean isTileGridVisible() {

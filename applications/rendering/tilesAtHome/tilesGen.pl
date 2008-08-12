@@ -356,6 +356,7 @@ elsif ($Mode eq "upload_loop")
         }
         else
         {
+            $currentSubTask="uploadloop";
             $elapsedTime = time() - $startTime;
             statusMessage(sprintf("waiting for new ZIP files to upload   %d:%02d", $elapsedTime/60, $elapsedTime%60),0,0);
             sleep(30); # no reason to do this *every second* since we won't fall into this case as long as there are zips to upload anyway.
@@ -1339,7 +1340,7 @@ sub NewClientVersion
         $LastTimeVersionChecked = time();
         if ($runningVersion > $currentVersion)
         {
-            print "\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion\n";
+            statusMessage("\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion",1,0);
             return 0;
         }
         elsif ($runningVersion == $currentVersion)
@@ -1353,7 +1354,7 @@ sub NewClientVersion
     }
     else
     {
-        print "\n! WARNING: Could not get version info from server!\n";
+        statusMessage(" ! WARNING: Could not get version info from server!",1,0);
         return 0;
     }
 }

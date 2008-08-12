@@ -252,9 +252,9 @@ sub upload
              
             if(!$res->is_success())
             {
-                print STDERR "ERROR\n";
-                print STDERR "  Error uploading $File to $URL:\n";
-                print STDERR "  ".$res->status_line."\n";
+                statusMessage("ERROR",1,0);
+                statusMessage("  Error uploading $File to $URL:",1,0);
+                statusMessage("  ".$res->status_line,1,0);
                 return 0; # hard fail
             }
             else

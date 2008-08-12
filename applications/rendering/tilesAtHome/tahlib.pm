@@ -59,7 +59,7 @@ sub statusMessage
 sub doneMessage
 {
     my $Config = $main::Config;
-    my $msg = @_;
+    my $msg = shift;
     
     $msg = "done" if ($msg eq "");
     

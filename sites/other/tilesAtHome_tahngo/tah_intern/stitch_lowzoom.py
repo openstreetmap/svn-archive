@@ -87,8 +87,8 @@ class Lowzoom(Tileset):
       img_caption.load() #<--- workaround for bug in PIL 1.1.5
       a = img_caption.point(lambda p: 255 * int(p < 230))
     elif img_caption.mode == 'P':
-      #pallettized PNGs can be transparent, so don't do anything
-      pass
+      #pallettized PNGs can be transparent, use that...
+      (r,g,b,a) = img_caption.convert('RGBA').split()
     else:
       sys.exit("unknown image mode %s at (%d,%d,%d)" %(img_caption.mode,z,x,y))
     im.paste(img_caption,(0,0),a)

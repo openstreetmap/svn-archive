@@ -1,13 +1,12 @@
 import logging, os
 from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
-from django.contrib.auth.models import User
 import django.views.generic.list_detail
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from tah.requests.models import Request,Upload
 from tah.requests.forms import *
 from django.conf import settings
-from django.forms import form_for_model,widgets
+from django.forms import widgets
 from datetime import datetime, timedelta
 import urllib
 import xml.dom.minidom

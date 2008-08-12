@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from tah.tah_intern.models import Layer, Blank
+from tah.tah_intern.models import Layer
 
 #-----------------------------------------------------
 class Request(models.Model):

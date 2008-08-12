@@ -1941,7 +1941,7 @@ sub startBatikAgent
     }
     elsif ($^O eq "MSWin32")
     {
-        $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
+        $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d&", 
            "start /B /LOW",
            $Config->get("BatikJVMSize"),
            $Config->get("BatikClasspath"),

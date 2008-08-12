@@ -235,7 +235,7 @@ if ($Mode eq "xy")
        $Zoom = 12;
        statusMessage(" *** No zoomlevel specified! Assuming z12 *** ", "warning", $progressJobs, $progressPercent,1);
     }
-    GenerateTileset($X, $Y, $Zoom);
+    GenerateTileset(Request->new($Zoom, $X, $Y));
 }
 elsif ($Mode eq "loop") 
 {
@@ -632,7 +632,7 @@ sub ProcessRequestsFromServer
     resetFault("requestUnrenderable"); #reset if we actually start trying to render a tileset.
 
     # Create the tileset requested
-    GenerateTileset($X, $Y, $Z);
+    GenerateTileset(Request->new($Z, $X, $Y));
     return (1, "");
 }
 
@@ -731,23 +731,25 @@ sub PutRequestBackToServer
 #-----------------------------------------------------------------------------
 sub GenerateTileset ## TODO: split some subprocesses to own subs
 {
-    my ($X, $Y, $Zoom) = @_;
+    # $req is a 'Request' object
+    my $req = shift;
     
-    keepLog($PID,"GenerateTileset","start","x=$X,y=$Y,z=$Zoom for layers $Layers");
+    keepLog($PID,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers $Layers");
     
-    my ($N, $S) = Project($Y, $Zoom);
-    my ($W, $E) = ProjectL($X, $Zoom);
+    my ($N, $S) = Project($req->Y, $req->Z);
+    my ($W, $E) = ProjectL($req->X, $req->Z);
     
     $progress = 0;
     $progressPercent = 0;
     $progressJobs++;
     $currentSubTask = "jobinit";
     
-    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $currentSubTask, $progressJobs, $progressPercent, 1);
+    statusMessage(sprintf("Doing tileset (%d,%d,%d) (area around %f,%f)", $req->Z, $req->X, $req->Y, ($N+$S)/2, ($W+$E)/2), $currentSubTask, $progressJobs, $progressPercent, 1);
     
-    my $maxCoords = (2 ** $Zoom - 1);
+    my $maxCoords = (2 ** $req->Z - 1);
     
-    if ( ($X < 0) or ($X > $maxCoords) or ($Y < 0) or ($Y > $maxCoords) )
+    if ( ($req->X < 0) or ($req->X > $maxCoords) 
+      or ($req->Y < 0) or ($req->Y > $maxCoords) )
     {
         #maybe do something else here
         die("\n Coordinates out of bounds (0..$maxCoords)\n");
@@ -783,7 +785,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     killafile($DataFile);
     my $URLS = sprintf("%s%s/map?bbox=%s",
       $Config->get("APIURL"),$Config->get("OSMVersion"),$bbox);
-    if ($Zoom < 12) 
+    if ($req->Z < 12) 
     {
         # FIXME: zoom 12 hardcoded: assume lowzoom layer now!
         # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
@@ -815,13 +817,13 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
         if (! $res)
         {
-            if ($Zoom < 12)
+            if ($req->Z < 12)
             {
                 statusMessage("No data here...", $currentSubTask, $progressJobs, $progressPercent, 1);
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
-                PutRequestBackToServer($X,$Y,$Zoom,"NoData");
+                PutRequestBackToServer($req->X,$req->Y,$req->Zoom,"NoData");
                 foreach my $file(@tempfiles) { killafile($file); }
                 addFault("nodataXAPI",1);
                 return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
@@ -842,7 +844,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 if (! $res)
                 {
                     statusMessage("No data on OSMXAPI either...", $currentSubTask, $progressJobs, $progressPercent, 1);
-                    PutRequestBackToServer($X,$Y,$Zoom,"NoData");
+                    PutRequestBackToServer($req->X,$req->Y,$req->Z,"NoData");
                     foreach my $file(@tempfiles) { killafile($file); }
                     addFault("nodataXAPI",1);
                     return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$Mode,1,$PID);
@@ -870,7 +872,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     if (! $res)
                     {
                         statusMessage("No data here (sliced)...", $currentSubTask, $progressJobs, $progressPercent, 1);
-                        PutRequestBackToServer($X,$Y,$Zoom,"NoData");
+                        PutRequestBackToServer($req->X,$req->Y,$req->Z,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
                         return cleanUpAndDie("GenerateTileset: no data! (sliced).",$Mode,1,$PID);
@@ -885,7 +887,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         }
         else
         {
-            if ($Zoom < 12) ## FIXME: hardcoded zoom
+            if ($req->Z < 12) ## FIXME: hardcoded zoom
             {
                 resetFault("nodataXAPI"); #reset to zero if data downloaded
             }
@@ -911,8 +913,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     statusMessage("Checking for UTF-8 errors in $DataFile", $currentSubTask, $progressJobs, $progressPercent, 0);
     if (fileUTF8ErrCheck($DataFile))
     {
-        statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $currentSubTask, $progressJobs, $progressPercent, 1);
-        PutRequestBackToServer($X,$Y,$Zoom,"BadUTF8");
+        statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->Z, $req->X, $req->Y), $currentSubTask, $progressJobs, $progressPercent, 1);
+        PutRequestBackToServer($req->X,$req->Y,$req->Z,"BadUTF8");
         addFault("utf8",1);
         return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
     }
@@ -932,20 +934,20 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         $JobDirectory = sprintf("%s%s_%d_%d_%d.tmpdir",
                                 $Config->get("WorkingDirectory"),
                                 $Config->get($layer."_Prefix"),
-                                $Zoom, $X, $Y);
+                                $req->Z, $req->X, $req->Y);
         mkdir $JobDirectory unless -d $JobDirectory;
 
         my $maxzoom = $Config->get($layer."_MaxZoom");
         my $layerDataFile;
 
         # Faff around
-        for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
+        for (my $i = $req->Z ; $i <= $maxzoom ; $i++) 
         {
             killafile($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg");
         }
         
-        my $Margin = " " x ($Zoom - 8);
-        printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E if ($Config->get("Debug"));
+        my $Margin = " " x ($req->Z - 8);
+        printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $req->Z, $Margin, $req->X, $req->Y, $S,$N, $W,$E if ($Config->get("Debug"));
         
         
         #------------------------------------------------------
@@ -992,8 +994,11 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             }
             elsif ($preprocessor eq "close-areas")
             {
-                my $Cmd = sprintf("%s perl close-areas.pl $X $Y $Zoom < %s > %s",
+                my $Cmd = sprintf("%s perl close-areas.pl %d %d %d < %s > %s",
                         $Config->get("Niceness"),
+                        $req->X,
+                        $req->Y,
+                        $req->Z,
                         "$inputFile",
                         "$outputFile");
                 statusMessage("Running close-areas", $currentSubTask, $progressJobs, $progressPercent,0);
@@ -1023,7 +1028,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # then transform it to SVG
         if ($Config->get("Fork")) 
         {
-            my $minimum_zoom = $Zoom;
+            my $minimum_zoom = $req->Z;
             my $increment = 2 * $Config->get("Fork");
             my @children_pid;
             my $error = 0;
@@ -1038,7 +1043,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 {
                     for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
                     {
-                        if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E)) # if true then error occured
+                        if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E)) # if true then error occured
                         {
                              exit(1);
                         }
@@ -1053,7 +1058,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             }
             for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
             {
-                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
+                if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E))
                 {
                     $error = 1;
                     last;
@@ -1067,19 +1072,19 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             if ($error) 
             {
                 foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
-                PutRequestBackToServer($X,$Y,$Zoom,"RenderFailure");
+                PutRequestBackToServer($req->X,$req->Y,$req->Z,"RenderFailure");
                 addFault("renderer",1);
                 return 0;
             }
         }
         else
         {
-            for (my $i = $Zoom ; $i <= $maxzoom; $i++)
+            for (my $i = $req->Z ; $i <= $maxzoom; $i++)
             {
-                if (GenerateSVG($layerDataFile, $layer, $X, $Y, $i, $N, $S, $W, $E))
+                if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E))
                 {
                     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
-                    PutRequestBackToServer($X,$Y,$Zoom,"RenderFailure");
+                    PutRequestBackToServer($req->X,$req->Y,$req->Z,"RenderFailure");
                     addFault("renderer",1);
                     return 0;
                 }
@@ -1090,8 +1095,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory")."output-$parent_pid-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
-        my $req = new Request($Zoom, $X, $Y);
-        my ($success,$empty) = RenderTile($layer, $req, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my ($success,$empty) = RenderTile($layer, $req, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
         if (!$success)
         {
             addFault("renderer",1);
@@ -1102,7 +1106,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             resetFault("renderer");
         }
         # Clean-up the SVG files
-        for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
+        for (my $i = $req->Z ; $i <= $maxzoom; $i++) 
         {
             killafile($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg") if (!$Config->get("Debug"));
         }
@@ -1110,7 +1114,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
         if ($empty == 1 && $Config->get("GatherBlankTiles")) 
         {
-            my $Filename=sprintf("%s_%s_%s_%s.png",$Config->get($layer."_Prefix"), $Zoom, $X, $Y);
+            my $Filename=sprintf("%s_%s_%s_%s.png",$Config->get($layer."_Prefix"), $req->Z, $req->X, $req->Y);
             my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 
             my $newFilename = sprintf("%s%s",$Config->get("WorkingDirectory"),$Filename);
             rename($oldFilename, $newFilename);
@@ -1129,7 +1133,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
     foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
 
-    keepLog($PID,"GenerateTileset","stop","x=$X,y=$Y,z=$Zoom for layers $Layers");
+    keepLog($PID,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers $Layers");
 
     return 1;
 }

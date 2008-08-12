@@ -41,6 +41,7 @@ Rails::Initializer.run do |config|
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
+  config.plugins = [:all, 'click-to-globalize'.to_sym]
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
@@ -75,6 +76,7 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
+# Thes are for i18n of rails port, for using the globalize plugin
 include Globalize
 Locale.set_base_language('en-US')
 LOCALES = { "English(US)" => "en-US", 

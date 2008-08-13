@@ -123,7 +123,7 @@ else
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     
-    foreach my $UploadLayer (split(/,/, $Config->get("Layers")))
+    foreach my $UploadLayer (split(/,/, $Config->get("LayersCapability")))
     {
         $allowedPrefixes = $Config->get($UploadLayer."_Prefix"); #just select the current layer for compressing
         ## DEBUG print "\n.$allowedPrefixes.\n";

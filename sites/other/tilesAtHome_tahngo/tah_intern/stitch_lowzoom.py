@@ -101,7 +101,7 @@ class Lowzoom(Tileset):
 def find_old_lowzooms(base_tile_path):
   old_lowzooms = {} # return a dict with (z,x,y) tuples that need an update
   lz_path = os.path.join(base_tile_path,'tile_6')
-  reqs = Request.objects.filter(status=2,min_z=12)
+  reqs = Request.objects.filter(status=2,min_z=12).iterator()
   now = datetime.now()
   for r in reqs:
     #should all be newer than 2 days

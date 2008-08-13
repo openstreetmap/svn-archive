@@ -2,16 +2,34 @@
 # -*- coding: UTF-8 -*-
 import sys
 import os
-import tilenames
 import struct
 import enums
+import tilenames
 
 class converter:
   def __init__(self):
     self.ways = []
     self.layers = {}
     self.enums = enums.makeEnums()
+    self.generateEnums('enum.txt')
+    self.generateStyles('styles.js')
       
+  def generateEnums(self, filename):
+    count = 1
+    f = open(filename,'w')
+    for name in sorted(self.enums.enums.keys()):
+      f.write("%d: %s\n" % (count, name))
+      count += 1
+    f.close()
+  
+  def generateStyles(self, filename):
+    f = open(filename,'w')
+    f.write("// Copy this to a stylesheet file, edit the colours, etc., and use viewStyles.html to view it\n")
+    f.write("// name, width, r,g,b, edged, dashed\n")
+    for name in sorted(self.enums.enums.keys()):
+      f.write("showStyle('%s', 4, 192, 192, 192, 0, 0);\n" % (name,))
+    f.close()
+    
   def storeWay2(self, way, style):
     layer = int(way['t'].get('layer', 0))
     if(not self.layers.has_key(layer)):
@@ -57,5 +75,5 @@ class converter:
 
 if(__name__ == "__main__"):
   a = converter()
-  a.loadPacked("simple/255_170/2046_1361.dat")
+  a.loadPacked("../simple/255_170/2046_1361.dat")
   print a.layers.keys()

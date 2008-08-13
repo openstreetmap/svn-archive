@@ -47,8 +47,8 @@ class TileUpload:
         self.uid = str(random.randint(0,9999999999999999999))
         if self.unzip():
           tset = self.movetiles()
-          if tset.layer and tset.base_z and tset.x and tset.y:
-          #It's a valid tileset. Save the tileset at it's place
+          if tset.layer and tset.base_z != None and tset.x != None and tset.y !=None:
+            #It's a valid tileset. Save the tileset at it's place
             time_save = [time()]
             logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (uuid %d)" % (tset.layer,tset.base_z,tset.x,tset.y,self.upload.user_id,self.upload.client_uuid))
             (retval,unknown_tiles) = tset.save(self.base_tilepath, self.upload.user_id.id)

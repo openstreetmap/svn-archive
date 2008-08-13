@@ -335,6 +335,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (restriction, only_right_turn, ""            , "") \
  s (restriction, only_left_turn, ""             , "") \
  s (restriction, only_straight_on, ""           , "") \
+ /* restriction_only_straight_on must be the last restriction */
 
 #define s(k,v,shortname,extraTags) k ## _ ## v,
 enum { STYLES firstElemStyle }; // highway_residential, ...
@@ -818,7 +819,8 @@ void Route (int recalculate, int plon, int plat)
           for (restrictItr = firstNd; restrictItr->other[0] < 0 &&
                           restrictItr->other[1] < 0; restrictItr++) {
             wayType *w  = (wayType *)(data + restrictItr->wayPtr);
-            if (StyleNr (w) < restriction_no_right_turn) continue;
+            if (StyleNr (w) < restriction_no_right_turn ||
+                StyleNr (w) > restriction_only_straight_on) continue;
   //          printf ("aa\n");
             if (atoi ((char*)(w + 1) + 1) == nd->wayPtr &&
                 atoi (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr) {
@@ -1646,11 +1648,10 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
           ADD_WIDTH && i < restriction_no_right_turn; x += ADD_WIDTH, i++) {
         int *icon = style[i].x + 4 * IconSet;
         gdk_draw_drawable (draw->window, mygc, icons, icon[0], icon[1],
-          x - icon[2] / 2 + ADD_WIDTH / 2, y +
-          (xi ? 0 : ADD_HEIGHT - icon[3]), icon[2], icon[3]);
+          x - icon[2] / 2 + ADD_WIDTH / 2, y, icon[2], icon[3]);
         klip.left = x + 8;
         klip.right = x + ADD_WIDTH - 8;
-        ExtTextOut (mygc, x + 8, y + (xi ? ADD_HEIGHT - 16 : 0), ETO_CLIPPED,
+        ExtTextOut (mygc, x + 8, y + ADD_HEIGHT - 16, ETO_CLIPPED,
           &klip, klasTable[i].desc, wcslen (klasTable[i].desc), NULL);
       }
     }
@@ -2799,7 +2800,7 @@ int main (int argc, char *argv[])
     halfSegType s[2];
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
     int yesMask = 0, noMask = 0, *wayFseek = NULL;
-    int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt, ref, role;
+    int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt, ref = 0, role = 0;
     int member[2], *wayId = (int*) malloc (40000000 * 2 * 4), wayIdCnt = 0;
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;

@@ -1,5 +1,5 @@
 PACKAGE:=coast2shp
-VERSION:=0.10
+VERSION:=0.11
 SVN:=$(shell date +%Y%m%d)
 
 CC=gcc

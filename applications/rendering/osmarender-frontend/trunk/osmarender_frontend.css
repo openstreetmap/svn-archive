@@ -182,6 +182,19 @@ dd {
 	display:none;
 }
 
+#div_viewSymbol {
+	text-align:center;
+}
+
+	#div_symbolDetails {
+	}
+
+		#symbol_layer {
+			width:10em;
+			height:1.1em;
+		}
+
+
 #result_process_rules {
 	height:100%;
 	width:100%;

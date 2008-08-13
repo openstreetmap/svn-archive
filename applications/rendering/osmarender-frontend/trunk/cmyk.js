@@ -1,4 +1,4 @@
-/**
+  /**
  * @author Mario Ferraro <fadinlight@gmail.com>
  * http://osmarenderfrontend.wordpress.com
  * Released under GPL v2 or later
@@ -8,10 +8,11 @@ PROGRAM_NAME="osmarender_frontend";
 XHTML_NS="http://www.w3.org/1999/xhtml";
 var rulesfile;
 var rulesfilename;
-var elements;
+var elements=new Array();
 var osmfilename;
 var osmfile;
 var updateProgressBar;
+var storemodel;
 
 //Min and Max LatLon
 var bounds = {
@@ -25,461 +26,10 @@ var bounds = {
 	}
 };
 
-// Models for faceting features
 CMYK = function(rulesfilenamePar,osmfilenamePar,progressData,progressBar,callBackFunc) {
 	rulesfilename=rulesfilenamePar;
 	osmfilename=osmfilenamePar;
 	updateProgressBar=progressBar;
-	
-	function elementTypes() {
-		// if the object that calls the function is not already an instance return a new object. This example provide a rough overloading implementation of object constructors
-		if (!(this instanceof arguments.callee)) {
-			// if the function is not called with an argument (e.g. elements.WAY) then only a reference to the internal representation is wanted
-			if (arguments.length==0) return new elementTypes();
-			if (arguments.length==1) {
-				// if the function is called with an argument, which is an array of types (e.g. [elements.WAY,elements.NODE]), then an object that should be included in a Feature object is wanted. The object returned will call itself the section "if (arguments.length==1)" below
-				if (!(arguments[0] instanceof Array)) throw new Error("not an array");
-				return new elementTypes(arguments[0]);
-			}
-			throw new Error("usage");
-		}
-	
-		node_encoded = {
-			uuid: 0,
-			string: "NODE"
-		}
-		way_encoded = {
-			uuid: 1,
-			string: "WAY"
-		}
-		area_encoded = {
-			uuid: 2,
-			string: "AREA"
-		};
-	
-		// Public variables that references names of functions that returns the integers
-		this.NODE = function() {
-			return node_encoded;
-		}();
-		this.WAY = function() {
-			return way_encoded;
-		}();
-		this.AREA = function() {
-			return area_encoded;
-		}();
-		
-		// Private variable that will store the types compatible with the feature
-	
-		// If this is an object that should be included in a feature
-		if (arguments.length==1) {
-			if (!(arguments[0] instanceof Array)) throw new Error("not an array");
-			// Unnullify the _mytype private variable, it will be an array of types (for example highway=pedestrian can be applied to ways and areas as well)
-			var _mytype=new Array();
-	
-			// Iterate the array passed as the argument of the function
-			for (type_defined in arguments[0]) {
-				// Create a new object in the array
-				_mytype[_mytype.length] = {
-					// Assign the value of the object. This is achieved by eval() the type in the argument and adding "()" to call the desired function
-					value: arguments[0][type_defined].uuid,
-					// Create a value that remember the type requested
-					string: arguments[0][type_defined].string,
-					toString: function(){
-						return this.string;
-					}
-				}
-			}
-		// This is a public function that returns the types associated to the feature
-			this.getTypes = function() {
-				//returning a clone object to avoid accidental overwriting
-				return clone(_mytype);
-			}
-		}
-	}
-	elements = elementTypes();
-
-	function Features_Facet(name) {
-		// If I'm not an already instantiated function, return a new instantiated object
-		if (!(this instanceof arguments.callee)) {
-			return new Features_Facet(name);
-		}
-		// Set my name, this would be a private variable, so it's not declared as this.name
-		var _name = name;
-		var _categories = new Array();
-		
-	
-		// Public function to retrieve facet's name
-		this.getName = function() {
-			return _name;
-		}
-		
-		this.addCategory = function(category) {
-			if (!(category instanceof Features_Category)) throw new Error("This param should be an instance of Features_Category");
-			_categories[_categories.length]=category;
-		}
-		
-		// Some private function, for later use
-		function getName2() {
-			return this._name;
-		}
-	};
-
-	function Features_Category(name,facet,category) {
-		if (!(facet instanceof Features_Facet)) throw new Error("Second argument must be an instance of Features_Facet");
-		if (!(this instanceof arguments.callee)) {
-			return new Features_Category(name,facet,category);
-		}
-		var _name = name;
-		var _facet = facet;
-		var _features = new Array();
-		var _supercategory;
-		var _subcategories = new Array();
-	
-		this.getName = function() {
-			return clone(_name);
-		}
-	
-		facet.addCategory(this);
-	
-		if (category!=undefined) {
-			_supercategory=category;
-			category.addSubCategory(this);
-		}
-		
-		this.getSuperCategory = function() {
-			if (!!_supercategory) {
-				return clone(_supercategory);
-			}
-		}
-	
-		this.addSubCategory = function(category) {
-			if (!(category instanceof Features_Category)) throw new Error("Argument must be an instance of Features_Category");
-			_subcategories[_subcategories.length]=category;
-		}
-	
-		this.addFeature = function(feature) {
-			if (!(feature instanceof Features_Feature)) throw new Error("Argument must be an instance of Features_Feature");
-			_features[_features.length]=feature;
-		}
-	}
-
-	function Features_Feature(name,value,category) {
-		if (!(this instanceof arguments.callee)) {
-			return new Features_Feature(name,value,category);
-		}
-		
-		var _name = name;
-		var _value = value;
-		
-		this.getName = function() {
-			return _name;
-		}
-		
-		this.getValue = function() {
-			return _value;
-		}
-
-		category.addFeature(this);
-	}
-
-/* 	Define a structure that includes all well-known key/value rendered by
-	Osmarender. The structure will store key/value pairs and type
-*/
-
-	function osmarenderFeature(key,value,type,category) {
-		if (!(type instanceof elementTypes)) throw new Error("errore di tipo elemento");
-		if (!(this instanceof arguments.callee)) {
-			return new osmarenderFeature(key,value,type);
-		}
-	
-		var _key=key;
-		var _value=value;
-		var _type=type;
-		var _category=category
-		
-		this.getTypeElement = function() {
-			return _type.getTypes();
-		}
-	
-		this.getTypeObject = function() {
-			return clone(_type);
-		}
-		
-		this.getKey = function() {
-			return clone(_key);
-		}
-	
-		this.getValue = function() {
-			return clone(_value);
-		}
-	
-		this.getCategoryName = function() {
-			return category.getName();
-		}
-	
-		this.getCategoryObject = function() {
-			return clone(_category);
-		}
-	}
-
-/* 	We define a structure for category store: this is a sort of associative array
-	The array is structured as: Category Name => tag[array(value1,value2,...)]
-*/
-
-//var osmafeat = new osmarenderFeature("highway","motorway",elementTypes([elements.WAY,elements.NODE]),category_highway);
-
-//TODO: Iterazione per creazione oggetti; documentazione,debug,debug message,
-//test,package, blog, documentazione api su wiki
-
-// this contains heredoc javascript syntax, thanks to http://www.scribd.com/doc/1026312/Javascript-Shorthand-QuickReference
-var wiki_facet = Features_Facet("Wiki");
-var wiki_facet_physical = Features_Category("Physical",wiki_facet);
-var wiki_facet_physical_highway = Features_Category("Highway Tag",wiki_facet,wiki_facet_physical);
-var wiki_facet_physical_cycleway = Features_Category("Cycleway Tag",wiki_facet,wiki_facet_physical);
-var wiki_facet_physical_tracktype = Features_Category("Tracktype Tag",wiki_facet,wiki_facet_physical);
-
-//aggiungere la gestione di sopra e sottocategorie: Physical=>highway, Non Physical=>route
-//aggiungere relazioni
-
-var features_classification = {
-	"highway" : {
-		description: "",
-		tags : {
-			"motorway": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway],
-				description: (<r><![CDATA[A restricted access major divided highway, normally with 2 or more running lanes plus emergency hard shoulder. Equivalent to the Freeway, Autobahn etc..]]></r>).toString(),
-				wiki_page: "http://wiki.openstreetmap.org/index.php/Tag:highway%3Dmotorway"
-			},
-			"motorway_link" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"trunk" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"trunk_link" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"primary" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"primary_link" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"secondary" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"tertiary" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"unclassified" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"track" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"residential" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"living_street" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"service" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"bridleway" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"cycleway" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"footway" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"pedestrian" : {
-				types: [elements.WAY,elements.AREA],
-				categories: [wiki_facet_physical_highway]
-			},
-			"steps" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"bus_guideway" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-			"mini_roundabout" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"stop" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"traffic_signals" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"crossing" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"gate" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"stile" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"cattle_grid" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"toll_booth" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"incline" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"viaduct" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"motorway_junction" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"services" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"ford" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"bus_stop" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"turning_circle" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"stop" : {
-				types: [elements.NODE],
-				categories: [wiki_facet_physical_highway]
-			},
-			"construction" : {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			}
-
-		}
-	},
-	"junction" : {
-		description: "",
-		tags : {
-			"roundabout": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_highway]
-			},
-		}
-	},
-	"cycleway" : {
-		description: "",
-		tags : {
-			"lane": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_cycleway]
-			},
-			"track": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_cycleway]
-			},
-			"opposite_lane": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_cycleway]
-			},
-			"opposite_track": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_cycleway]
-			},
-			"opposite": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_cycleway]
-			}
-		}
-	},
-	"tracktype" : {
-		description: "",
-		tags : {
-			"grade1": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_tracktype]
-			},
-			"grade2": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_tracktype]
-			},
-			"grade3": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_tracktype]
-			},
-			"grade4": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_tracktype]
-			},
-			"grade5": {
-				types: [elements.WAY],
-				categories: [wiki_facet_physical_tracktype]
-			}
-		}
-	}
-}
-
-
-//Construct a variable that would contains all the tree for facets
-var osmafeats = new Array();
-for (var key in features_classification) {
-	var tags = features_classification[key].tags;
-	for (var value in tags) {
-		osmafeats[osmafeats.length]=new osmarenderFeature(key,value,elementTypes(tags[value].types),tags[value].categories[0]);
-	}
-}
-
-
-
-//This could be a future test case
-/*var stringtoprint="";
-for (var object in osmafeats) {
-	supercategoryparsed = osmafeats[object].getCategoryObject().getSuperCategory().getName();
-	if (supercategoryparsed) {
-		stringtoprint+="macrocategory: "+supercategoryparsed+",";
-	}
-	else {
-		stringtoprint+="macrocategory: no one,";
-	}
-	stringtoprint+=" category: "+osmafeats[object].getCategoryName()+" key: "+osmafeats[object].getKey()+" value: "+osmafeats[object].getValue()+"\r\n";
-}*/
-//alert(stringtoprint);
 
 // Load the rule file
 
@@ -563,8 +113,15 @@ function SingleRule() {
 }
 
 var toprogress=0,progressMax=0;
-createRuleModel(rulesfile.getElementsByTagName("rules")[0],rulemodel);
+var global_tree_uuid=0;
+store_model={
+	label: "label",
+	identifier: "id",
+		items: [{id: ""+global_tree_uuid, top:true, label: "Rule Tree",children: []}]
+};
+createRuleModel(rulesfile.getElementsByTagName("rules")[0],rulemodel,store_model.items[0].children);
 var id = setInterval(checkOkRule,10);
+
 
 function checkOkRule() {
 	if (progressMax!=0 && toprogress==progressMax) {
@@ -587,7 +144,8 @@ function setOsmFile(osmfilename) {
 	tags[0].setAttribute("data",osmfilename);
 }
 
-function createRuleModel(dom,model) {
+
+function createRuleModel(dom,model,store) {
 	progressData.step.maximum=(progressMax+=dom.childNodes.length);
 	progressData.step.message="Processing rule file element "+toprogress+" of "+progressMax;
 	updateProgressBar();
@@ -599,6 +157,8 @@ function createRuleModel(dom,model) {
 		progressData.step.message="Processing rule file element "+toprogress+" of "+progressMax;
 		updateProgressBar();
 		if (dom.childNodes[index].nodeName=="rule") {
+			store[store.length] = {id: ""+(++global_tree_uuid), type: "rule", label:"keys: "+dom.childNodes[index].getAttribute("k")+" values: "+dom.childNodes[index].getAttribute("v")};
+			if (dom.childNodes[index].hasChildNodes()) store[store.length-1].children = new Array();
 			var temp = new SingleRule();
 			for (var a=0; a<dom.childNodes[index].attributes.length; a++) {
 				with (dom.childNodes[index].attributes[a]) {
@@ -618,15 +178,18 @@ function createRuleModel(dom,model) {
 				}
 			}
 			model.childrenRules[model.childrenRules.length] = temp;
-			createRuleModel(dom.childNodes[index],temp);
+			createRuleModel(dom.childNodes[index],temp,store[store.length-1].children);
 		}
 		else if (dom.childNodes[index].nodeName=="else") {
+			store[store.length]={id: ""+(++global_tree_uuid), type: "else", label: "else"};
+			if (dom.childNodes[index].hasChildNodes()) store[store.length-1].children = new Array();
 			var temp = new SingleRule();
 			temp.type = "else";
 			model.childrenRules[model.childrenRules.length] = temp;
-			createRuleModel(dom.childNodes[index],temp);
+			createRuleModel(dom.childNodes[index],temp,store[store.length-1].children);
 		}
 		else if (dom.childNodes[index].nodeType!=Node.TEXT_NODE && dom.childNodes[index].nodeType!=Node.COMMENT_NODE && dom.childNodes[index].nodeName!="defs") {
+			store[store.length]={id: ""+(++global_tree_uuid), type: dom.childNodes[index].nodeName, label:dom.childNodes[index].nodeName+" class: "+dom.childNodes[index].getAttribute("class")};
 			newIndex = model.render.length;
 			model.render[newIndex]=new Object();
 			model.render[newIndex].type=dom.childNodes[index].nodeName;
@@ -1023,4 +586,8 @@ CMYK.prototype.attachSymbol = function(symbol_id,feature_key,feature_value,symbo
 	
 	rule_tag.appendChild(symbol_tag);
 	rulesfile.getElementsByTagName("rules")[0].appendChild(rule_tag);
+}
+
+CMYK.prototype.getRuleTree = function() {
+	return store_model;
 }

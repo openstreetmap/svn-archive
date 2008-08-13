@@ -29,7 +29,7 @@
 		<!--TODO: automatically retrieve server name-->
 		<script type="text/javascript" src="cmyk.js"></script>
 		<script type="text/javascript" src="osmarender_frontend.js"></script>
-		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true,isDebug:true"></script>
+		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug:true"></script>
 		<script type="text/javascript">
 			dojo.require("dojo.dnd.move");
 			dojo.require("dojo.fx");
@@ -41,6 +41,7 @@
 			dojo.require("dijit.ProgressBar");
 			dojo.require("dijit.Toolbar");
 			dojo.require("dijit.Tooltip");
+			dojo.require("dijit.Tree");
 			dojo.require("dijit.layout.BorderContainer");
 			dojo.require("dijit.layout.ContentPane");
 			dojo.require("dijit.layout.TabContainer");
@@ -276,7 +277,13 @@
 				</div>
 			</div>
 			<div id="result_process_rules" dojoType="dijit.layout.ContentPane"></div>
-			<div id="result_process_key" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_process_key" dojoType="dijit.layout.ContentPane">
+				<div id="div_select_key" dojoType="dijit.layout.ContentPane"></div>
+				<div id="div_select_value" dojoType="dijit.layout.ContentPane"></div>
+				<div id="list_css" dojoType="dijit.layout.ContentPane"></div>
+				<div id="list_symbols" dojoType="dijit.layout.ContentPane"></div>
+				<div id="div_tree" dojoType="dijit.layout.ContentPane"></div>
+			</div>
 			<div id="result_symbols" dojoType="dijit.layout.ContentPane"></div>
 			<div id="result_settings" dojoType="dijit.layout.ContentPane"></div>
 			<br /><br />

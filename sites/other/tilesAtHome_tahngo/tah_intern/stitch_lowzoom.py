@@ -2,7 +2,7 @@
     all recently modified tilesets.
 """
 import os,sys, tempfile, shutil, StringIO, re
-import Image, ImageEnhance, ImageFilter, ImageChops
+import Image, ImageFilter, ImageChops
 script_path = sys.path[0]
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
@@ -20,10 +20,17 @@ class Lowzoom(Tileset):
   def create(self,layer,z,x,y,base_tile_dir):
     self.__init__(layer, z, x, y)
     self.tmpdir=tempfile.mkdtemp()
+    # set variables for captionless tileset
+    self.layer_cless = Layer.objects.get(name='captionless')
+    self.tset_cless=Tileset()
+
     try:
       try:
         self.stitch(layer,z,x,y)
+        # save main layer (usually 'tile')
         self.save(base_tile_dir)
+        # and save 'captionless' layer too
+        self.tset_cless.save(base_tile_dir)
       finally:
         # even do cleanup when pressing CTRL-C (KeyboardInterrupt)
         shutil.rmtree(self.tmpdir)
@@ -48,10 +55,7 @@ class Lowzoom(Tileset):
     for i in range(0,2):
       for j in range(0,2):
         if z == self.base_z+5: 
-          #stitch z0-5 from tiles layer until we have a propoer captionless layer at z6
-          if z==5: src_layer='tile'
-          else: src_layer='captionless'
-          imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile(src_layer))
+          imagefile = StringIO.StringIO(Tile(None,z+1,2*x+i,2*y+j).serve_tile('captionless'))
         else: imagefile = os.path.join(self.tmpdir,"%d_%d_%d.png_nocaptions" % (z+1,2*x+i,2*y+j))
         try:
           image = Image.open(imagefile).convert('RGB')
@@ -75,12 +79,20 @@ class Lowzoom(Tileset):
     im = im.resize((256, 256),Image.ANTIALIAS)
     im.save(pngfilepath+'_nocaptions', "PNG")
 
+    #If we are at base zoom, do save the captionless image 
+    #to have it for further stitching
+    if z == self.base_z:
+      t= Tile(self.layer_cless,z,x,y)
+      self.tset_cless.add_tile(t,pngfilepath+'_nocaptions')
+
     if img_caption.mode == 'RGB':
       #if for some strange reasons the caption is not recognized as RGBA, make anything transparent that has some color.
-      cb = img_caption.split()
-      a, = img_caption.convert('L').split()
-      a = a.point(lambda p: 255 * int(p < 230))
-      img_caption = Image.merge('RGBA',cb+(a,))
+      # PYTHON PIL seems to insert (248,248,248= for transparency for some reason, so replace that with transparency.
+      a = ImageChops.invert(img_caption.point(lambda p: 255 * int(p == 248)).convert('L'))
+      #cb = img_caption.split()
+      #a, = img_caption.convert('L').split()
+      #a = a.point(lambda p: 255 * int(p < 230))
+      #img_caption = Image.merge('RGBA',cb+(a,))
     elif img_caption.mode == 'RGBA':
       (r,g,b,a) = img_caption.split()
     elif img_caption.mode == 'L':

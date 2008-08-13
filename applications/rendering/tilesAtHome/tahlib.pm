@@ -18,6 +18,7 @@ my %madeDir;
 #-----------------------------------------------------------------------------
 # Prints status message without newline, overwrites previous message
 # (if $newline set, starts new line after message)
+# only prints something if $VerbosityTriggerLevel is >= Verbosity
 #-----------------------------------------------------------------------------
 sub statusMessage 
 {
@@ -425,7 +426,7 @@ sub cleanUpAndDie
     }
     
     return 0 if ($Mode eq "loop");
-    print STDERR "\n$Reason\n" if (! $Config->get("Verbose") >= 10); #print error only once, and only if fatal.
+    print STDERR "\n$Reason\n" if ($Config->get("Verbose") < 10); #print error only once, and only if fatal.
     if ($main::StartedBatikAgent)
     {
         main::stopBatikAgent();

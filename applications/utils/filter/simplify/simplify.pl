@@ -62,17 +62,11 @@ BEGIN {
 use strict;
 use warnings;
 
-use File::Basename;
-use File::Copy;
-use File::Path;
 use Getopt::Long;
-use HTTP::Request;
 use IO::File;
 use Pod::Usage;
-use Geo::OSM::Planet;
 use Geo::OSM::Write;
 use Utils::Debug;
-use Utils::LWP::Utils;
 use Utils::File;
 use Data::Dumper;
 use XML::Parser;
@@ -187,12 +181,6 @@ sub way {
 	warn "way $id has extra attrs: ".Dumper(\%attrs);
     }
 
-    if (!$count_way_all ) {
-	# Free memory used for processing nodes, not needed for way processing
-	$node_unique = undef;
-	delete_duplicate_nodes_data();
-    }
-
     print "\n" if !$count_way_all && ($VERBOSE || $DEBUG);
     $count_way_all++;
     printf("way %d(%d) - %dMB\r",$count_way,$count_way_all, mem_usage('vsz')) 
@@ -295,9 +283,6 @@ GetOptions (
 	     'man'                 => \$man, 
 	     'h|help|x'            => \$help, 
 
-	     'no-mirror'           => \$Utils::LWP::Utils::NO_MIRROR,
-	     'proxy=s'             => \$Utils::LWP::Utils::PROXY,
-
 	     'osm-file=s'          => \$osm_file,
 	     'simplify=s'          => \$simplify_degree,
 	     'out=s'               => \$output,
@@ -309,10 +294,6 @@ pod2usage(-verbose=>2) if $man;
 
 die "Must specify minimum feature size in degrees with --simplify=N\n"
 	unless defined($simplify_degree);
-
-if ( ! -s $osm_file ) {
-    $osm_file = mirror_planet();
-};
 
 die "No existing osm File $osm_file\n" 
     unless -s $osm_file;
@@ -379,15 +360,6 @@ simplify.pl [-d] [-v] [-h] --simplify=<Degrees> [--osm-file=planet.osm] [--out=<
 =item B<--man> Complete documentation
 
 Complete documentation
-
-=item B<--no-mirror>
-
-Do not try mirroring the files from the original Server. Only use
-files found on local Filesystem.
-
-=item B<--proxy>
-
-use proxy for download
 
 =item B<--osm-file=path/planet.osm>
 

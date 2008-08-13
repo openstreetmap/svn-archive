@@ -61,7 +61,7 @@ $Config->file("general.conf");  # overwrite with hardcoded values that must not 
 ApplyConfigLogic($Config);
 
 # Handle the command-line
-my $Mode = shift();
+our $Mode = shift();
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
 my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop")) ? 1 : 0;

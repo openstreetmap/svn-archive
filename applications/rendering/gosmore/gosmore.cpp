@@ -327,6 +327,14 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
                "  <tag k='amenity' v='place_of_worship' />\n") \
  s (religion, taoist,         "taoism"          , \
                "  <tag k='amenity' v='place_of_worship' />\n") \
+ /* relations must be last and restriction_no_right_turn must be first */ \
+ s (restriction, no_right_turn, ""              , "") \
+ s (restriction, no_left_turn, ""               , "") \
+ s (restriction, no_u_turn, ""                  , "") \
+ s (restriction, no_straight_on, ""             , "") \
+ s (restriction, only_right_turn, ""            , "") \
+ s (restriction, only_left_turn, ""             , "") \
+ s (restriction, only_straight_on, ""           , "") \
 
 #define s(k,v,shortname,extraTags) k ## _ ## v,
 enum { STYLES firstElemStyle }; // highway_residential, ...
@@ -793,18 +801,54 @@ void Route (int recalculate, int plon, int plat)
     if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
       AddNd (&from, 0, toEndNd[1][1 - root->dir], root);
     }
-    ndType *nd = root->nd, *other;
+    ndType *nd = root->nd, *other, *firstNd, *restrictItr;
     while (nd > ndBase && nd[-1].lon == nd->lon &&
       nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
-
+    firstNd = nd; // Save it for checking restrictions
     /* Now work through the segments connected to root. */
     do {
+//          if (StyleNr ((wayType *)(data + nd->wayPtr)) >= restriction_no_right_turn) printf ("%d\n", nd - firstNd);
       for (int dir = 0; dir < 2; dir++) {
         if (nd == root->nd && dir == root->dir) continue;
         /* Don't consider an immediate U-turn to reach root->hs->other.
            This doesn't exclude 179.99 degree turns though. */
         
-        if (nd->other[dir] < 0) continue; // Named node
+        if (nd->other[dir] < 0) continue;
+        if (Vehicle != footR && Vehicle != bicycleR) {
+          for (restrictItr = firstNd; restrictItr->other[0] < 0 &&
+                          restrictItr->other[1] < 0; restrictItr++) {
+            wayType *w  = (wayType *)(data + restrictItr->wayPtr);
+            if (StyleNr (w) < restriction_no_right_turn) continue;
+  //          printf ("aa\n");
+            if (atoi ((char*)(w + 1) + 1) == nd->wayPtr &&
+                atoi (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr) {
+               ndType *n2 = ndBase + root->nd->other[root->dir];
+               ndType *n0 = ndBase + nd->other[dir];
+               __int64 straight =
+                 (n2->lat - nd->lat) * (__int64)(nd->lat - n0->lat) +
+                 (n2->lon - nd->lon) * (__int64)(nd->lon - n0->lon), left =
+                 (n2->lat - nd->lat) * (__int64)(nd->lon - n0->lon) -
+                 (n2->lon - nd->lon) * (__int64)(nd->lat - n0->lat);
+               int azi = straight < left ? (straight < -left ? 3 : 0) :
+                 straight < -left ? 2 : 1;
+//               printf ("%d %9d %9d %d %d\n", azi, n2->lon - nd->lon, n0->lon - nd->lon, straight < left, straight < -left);
+//               printf ("%d %9d %9d\n", azi, n2->lat - nd->lat, n0->lat - nd->lat);
+               static const int no[] = { restriction_no_left_turn,
+                 restriction_no_straight_on, restriction_no_right_turn,
+                 restriction_no_u_turn },
+                 only[] = { restriction_only_left_turn,
+                 restriction_only_straight_on, restriction_only_right_turn,
+                 -1 /*  restriction_only_u_turn */ };
+               if (StyleNr (w) == only[azi ^ 1] ||
+                   StyleNr (w) == only[azi ^ 2] || StyleNr (w) == only[azi ^ 3]
+                   || StyleNr (w) == no[azi]) break;
+//               printf ("%d %d %d\n", azi, n2->lon, n0->lon);
+            }
+          }
+          if (restrictItr->other[0] < 0 &&
+              restrictItr->other[1] < 0) continue;
+        }
+        // Tagged node, start or end of way or restriction.
         
         other = ndBase + nd->other[dir];
         wayType *w = (wayType *)(data + nd->wayPtr);
@@ -1456,7 +1500,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       #endif
       objectAddRow = -1;
     }
-    else objectAddRow = event->y * (firstElemStyle / perRow + 2) /
+    else objectAddRow = event->y * (restriction_no_right_turn / perRow + 2) /
                             draw->allocation.height * perRow;
   }
   else if (event->x > w - ButtonSize * 20 && b <
@@ -1590,14 +1634,16 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
     for (int y = 0, i = objectAddRow; y < draw->allocation.height;
               y += ADD_HEIGHT) {
       //gdk_draw_line (draw->window, mygc, 0, y, draw->allocation.width, y);
-      gdk_draw_line (draw->window, mygc, draw->allocation.width - ButtonSize * 20,
-        draw->allocation.height * i / firstElemStyle, draw->allocation.width,
-        draw->allocation.height * i / firstElemStyle);
+      gdk_draw_line (draw->window, mygc,
+        draw->allocation.width - ButtonSize * 20,
+        draw->allocation.height * i / restriction_no_right_turn,
+        draw->allocation.width,
+        draw->allocation.height * i / restriction_no_right_turn);
       RECT klip;
       klip.bottom = y + ADD_HEIGHT;
       klip.top = y;
-      for (int x = 0, xi = 1; x < draw->allocation.width - ButtonSize * 20 -
-          ADD_WIDTH && i < firstElemStyle; x += ADD_WIDTH, i++ /*, xi ^= 1*/) {
+      for (int x = 0; x < draw->allocation.width - ButtonSize * 20 -
+          ADD_WIDTH && i < restriction_no_right_turn; x += ADD_WIDTH, i++) {
         int *icon = style[i].x + 4 * IconSet;
         gdk_draw_drawable (draw->window, mygc, icons, icon[0], icon[1],
           x - icon[2] / 2 + ADD_WIDTH / 2, y +
@@ -2490,8 +2536,11 @@ int HalfSegCmp (const halfSegType *a, const halfSegType *b)
   int lowz = a->other < -2 || FIRST_LOWZ_OTHER <= a->other;
   int hasha = Hash (a->lon, a->lat, lowz), hashb = Hash (b->lon, b->lat, lowz);
   return hasha != hashb ? hasha - hashb : a->lon != b->lon ? a->lon - b->lon :
-    a->lat - b->lat;
-}
+    a->lat != b->lat ? a->lat - b->lat :
+    a->other < 0 && a[1].other < 0 ? -1 : 1;
+} // First sort by hash bucket, then by lon, then by lat.
+// If they are all the same, the nodes goes in the front where so that it's
+// easy to iterate through the turn restrictions.
 
 int IdxCmp (const void *aptr, const void *bptr)
 {
@@ -2588,6 +2637,21 @@ int main (int argc, char *argv[])
       srec[i].areaColour = -1;
       style_k[i] = style_v[i] = "";
     }
+    /* If elemstyles contain these, we can delete these assignments : */
+    for (int i = restriction_no_right_turn;
+            i <= restriction_only_straight_on; i++) {
+      style_k[i] = "restriction";
+      srec[i].scaleMax = 1;
+      srec[i].lineColour = 0; // Make it match.
+    }
+    style_v[restriction_no_right_turn] = "no_right_turn";
+    style_v[restriction_no_left_turn] = "no_left_turn";
+    style_v[restriction_no_u_turn] = "no_u_turn";
+    style_v[restriction_no_straight_on] = "no_straight_on";
+    style_v[restriction_only_right_turn] = "only_right_turn";
+    style_v[restriction_only_left_turn] = "only_left_turn";
+    style_v[restriction_only_straight_on] = "only_straight_on";
+    
     while (xmlTextReaderRead (sXml)) {
       char *name = (char*) xmlTextReaderName (sXml);
       //xmlChar *val = xmlTextReaderValue (sXml);
@@ -2735,7 +2799,8 @@ int main (int argc, char *argv[])
     halfSegType s[2];
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
     int yesMask = 0, noMask = 0, *wayFseek = NULL;
-    int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt;
+    int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt, ref, role;
+    int member[2], *wayId = (int*) malloc (40000000 * 2 * 4), wayIdCnt = 0;
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;
     s[1].other = -1;
@@ -2783,8 +2848,8 @@ int main (int argc, char *argv[])
       char *name = (char *) BAD_CAST xmlTextReaderName (xml);
       //xmlChar *value = xmlTextReaderValue (xml); // always empty
       if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
-        isNode = stricmp (name, "way") != 0 && 
-                 (stricmp (name, "node") == 0 || isNode);
+        isNode = stricmp (name, "way") != 0 && stricmp (name, "relation") != 0
+                 && (stricmp (name, "node") == 0 || isNode);
         while (xmlTextReaderMoveToNextAttribute (xml)) {
           char *aname = (char *) BAD_CAST xmlTextReaderName (xml);
           char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
@@ -2792,20 +2857,8 @@ int main (int argc, char *argv[])
           if (stricmp (aname, "id") == 0) nd.id = atoi (avalue);
           if (stricmp (aname, "lat") == 0) nd.lat = Latitude (atof (avalue));
           if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
-          if (stricmp (name, "nd") == 0 && stricmp (aname, "ref") == 0
-              && (!wayFseek || *wayFseek)) {
-            if (s[0].lat) {
-              fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
-            }
-            s[0].wayPtr = ftell (pak);
-            s[1].wayPtr = TO_HALFSEG;
-            s[1].other = s[0].other + 1;
-            s[0].other = nOther++ * 2;
-            s[0].lat = atoi (avalue);
-            if (lowzListCnt >=
-                int (sizeof (lowzList) / sizeof (lowzList[0]))) lowzListCnt--;
-            lowzList[lowzListCnt++] = atoi (avalue);
-          }
+          if (stricmp (aname, "ref") == 0) ref = atoi (avalue);
+          if (stricmp (aname, "role") == 0) role = avalue[0];
           #define K_IS(x) (stricmp (tag_k, x) == 0)
           #define V_IS(x) (stricmp (avalue, x) == 0)
           if (stricmp (aname, "v") == 0) {
@@ -2892,6 +2945,27 @@ int main (int argc, char *argv[])
           else xmlFree (avalue);
           xmlFree (aname);
         } /* While it's an attribute */
+        if (!wayFseek || *wayFseek) {
+          if (stricmp (name, "member") == 0 && role != 'v') {
+            for (int i = 0; i < wayIdCnt; i += 2) {
+              if (ref == wayId[i]) member[role == 'f' ? 0 : 1] = wayId[i + 1];
+            }
+          }
+          else if (stricmp (name, "nd") == 0 ||
+                   stricmp (name, "member") == 0) {
+            if (s[0].lat) {
+              fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+            }
+            s[0].wayPtr = ftell (pak);
+            s[1].wayPtr = TO_HALFSEG;
+            s[1].other = s[0].other + 1;
+            s[0].other = nOther++ * 2;
+            s[0].lat = ref;
+            if (lowzListCnt >=
+                int (sizeof (lowzList) / sizeof (lowzList[0]))) lowzListCnt--;
+            lowzList[lowzListCnt++] = ref;
+          }
+        }
         if (stricmp (name, "node") == 0 && bbox[0] <= nd.lat &&
             bbox[1] <= nd.lon && nd.lat <= bbox[2] && nd.lon <= bbox[3]) {
           fwrite (&nd, sizeof (nd), 1, groupf[NGROUP (nd.id)]);
@@ -2899,8 +2973,19 @@ int main (int argc, char *argv[])
       }
       if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
         int nameIsNode = stricmp (name, "node") == 0;
-        if (stricmp (name, "way") == 0 || nameIsNode) {
+        int nameIsRelation = stricmp (name, "relation") == 0;
+        if (stricmp (name, "way") == 0 || nameIsNode || nameIsRelation) {
           w.bits += wStyle;
+          if (!nameIsRelation && !nameIsNode) {
+            wayId[wayIdCnt++] = nd.id;
+            wayId[wayIdCnt++] = ftell (pak);
+          }
+          if (nameIsRelation) {
+            xmlFree (nameTag);
+            char str[21];
+            sprintf (str, "%d %d", member[0], member[1]);
+            nameTag = (char *) xmlStrdup (BAD_CAST str);
+          }
           if (nameTag) {
             char *oldTags = tags;
             tags = (char *) xmlStrdup (BAD_CAST "\n");

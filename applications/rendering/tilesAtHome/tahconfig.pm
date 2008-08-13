@@ -137,7 +137,7 @@ sub CheckBasicConfig
         }
 
         # any combination of comma-separated preprocessor names is allowed
-        die "config option $layer._Preprocessor has invalid value" 
+        die "config option Preprocessor has invalid value in section [".$layer."]" 
             if (grep { $_ !~ /maplint|close-areas|autocut|noop/} split(/,/, $Config->get($layer."_Preprocessor")));
 
         foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))

@@ -36,7 +36,7 @@
 #define DIVISIONS 400
 #define MERC_BLOCK (2*MERC_MAX/DIVISIONS)
 /* Number of mercator metres the tiles overlap, so the antialising doesn't cause wierd effects */
-#define TILE_OVERLAP  150
+#define TILE_OVERLAP  10000
 #define MAX_NODES 500000
 #define MAX_SEGS  100
 int MAX_SUBAREAS;   /* Was a define, not anymore. Auto grown array, starting at... */
@@ -102,7 +102,7 @@ struct state
 };
 
 void OutputSegs( struct state *state );
-void Process( struct state *state, SHPHandle shp, DBFHandle dbf, SHPTree *shx, int polygon );
+void Process( struct state *state, SHPHandle shp, DBFHandle dbf, SHPTree *shx, int polygon , SHPObject **objects);
 static double CalcArea( const SHPObject *obj );
 static void SplitCoastlines( SHPHandle shp_poly, DBFHandle dbf_poly, SHPHandle shp_arc, DBFHandle dbf_arc, char *out_filename );
 static int contains( double x, double y, double *v_x, double *v_y, int vertices );
@@ -204,11 +204,29 @@ int main( int argc, char *argv[] )
       return 1;
     }
   }
-  
+
+  // Cache poly & arc shapefiles
+  int i;
+  SHPObject **poly_objs = malloc(sizeof(SHPObject *) * poly_count);
+  if (!poly_objs) {
+      fprintf(stderr, "malloc for %d poly objects failed\n", poly_count);
+      exit(1);
+  }
+   for (i=0; i<poly_count; i++)
+      poly_objs[i] = SHPReadObject(shp_poly, i);
+
+  SHPObject **arc_objs = malloc(sizeof(SHPObject *) * arc_count);
+  if (!arc_objs) {
+      fprintf(stderr, "malloc for %d arc objects failed\n", arc_count);
+      exit(1);
+  }
+  for (i=0; i<arc_count; i++)
+      arc_objs[i] = SHPReadObject(shp_arc, i);
+
   /* Build indexes on files, we need them... */
-  SHPTree *shx_poly = SHPCreateTree( shp_poly, 2, 10, NULL, NULL );
-  SHPTree *shx_arc  = SHPCreateTree( shp_arc, 2, 10, NULL, NULL );
-  if( !poly_file || !arc_file )
+  SHPTree *shx_poly = SHPCreateTree( shp_poly, 2, 0, NULL, NULL );
+  SHPTree *shx_arc  = SHPCreateTree( shp_arc, 2, 0, NULL, NULL );
+  if( !shx_poly || !shx_arc )
   {
     fprintf( stderr, "Couldn't open shape indexes\n" );
     return 1;
@@ -269,8 +287,8 @@ int main( int argc, char *argv[] )
       state.subarea_nodecount = 0;
       state.enclosed = 0;
       
-      Process( &state, shp_poly, dbf_poly, shx_poly, 1 );
-      Process( &state, shp_arc,  dbf_arc,  shx_arc,  0 );
+      Process( &state, shp_poly, dbf_poly, shx_poly, 1 , poly_objs);
+      Process( &state, shp_arc,  dbf_arc,  shx_arc,  0 , arc_objs);
       
       OutputSegs( &state );
     }
@@ -517,12 +535,12 @@ static int seg_compare( const void *a, const void *b )
 }
 
 /* We currently don't use anything from the source DBF file, but the cabability is there */
-void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree *shx, int polygon )
+void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree *shx, int polygon, SHPObject **objects)
 {
   int count;
   int *list = SHPTreeFindLikelyShapes( shx, state->lb, state->rt, &count );
   int poly_start;
-  
+
   for( int poly = 0; poly < count; poly++ )
   {
     /* Here we track parts that have gone across the box */
@@ -535,8 +553,11 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
       continue;
 
     /* Now we have a candidate object, we need to process it */
-    SHPObject *obj = SHPReadObject( shp, id );
-    
+//    SHPObject *obj = SHPReadObject( shp, id );
+    SHPObject *obj = objects[id];
+   if (!obj)
+      continue;
+
     /* If it's got less than 4 vertices it's not a real object */
     /* No need to mark it as error here, done in SplitCoastlines */
     if( obj->nVertices < 4 )
@@ -551,9 +572,18 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
         DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_Y, state->y );
       }
     #endif
-      SHPDestroyObject( obj );
+      //SHPDestroyObject( obj );
       continue;
     }
+
+    // check for being outside (search results include false positives)
+        if (!SHPCheckBoundsOverlap( state->lb, state->rt, &(obj->dfXMin), &(obj->dfXMax), 2))
+        {
+            //printf( "Shape %d: not in area of interest, but fetched.\n",  id);
+            //SHPDestroyObject( obj );
+            continue;
+        }
+
 
     if( polygon &&
         state->lb[0] < obj->dfXMin && obj->dfXMax < state->rt[0] &&
@@ -572,7 +602,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
 
       state->subarea_count++;
       state->subarea_nodecount += obj->nVertices;
-      SHPDestroyObject( obj );
+      //SHPDestroyObject( obj );
       continue;
     }
   
@@ -589,7 +619,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
       if( polygon )
         fprintf( stderr, "Object %d did not leave box (%d vertices, polygon:%d) (%.2f,%.2f-%.2f,%.2f)\n", id, 
                 obj->nVertices, polygon, obj->dfXMin, obj->dfYMin, obj->dfXMax, obj->dfYMax );
-      SHPDestroyObject( obj );
+      //SHPDestroyObject( obj );
       continue;
     }
     /* We need to mark this point, so when we loop back we know where to stop */
@@ -818,7 +848,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
       }
     }
     
-    SHPDestroyObject(obj);
+    //SHPDestroyObject(obj);
   }
   free(list);
 //  printf( "segcount: %d\n", state->seg_count );

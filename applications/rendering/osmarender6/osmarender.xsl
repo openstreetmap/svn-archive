@@ -3307,7 +3307,7 @@ against infinite loops -->
     <xsl:message>
       Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"
       horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;
-      Matched by <xsl:value-of select="count($nearbyElements)"/> out of <xsl:value-of select="count($filteredElements)"/> elements for layer <xsl:value-of select="$layer"/>.
+      Matched by <xsl:value-of select="count($nearbyElements)"/> out of <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
     </xsl:message>
 
     <xsl:call-template name="processElements">

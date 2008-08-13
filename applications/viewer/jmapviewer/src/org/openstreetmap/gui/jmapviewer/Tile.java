@@ -30,8 +30,7 @@ public class Tile {
 	protected String key;
 	protected boolean loaded = false;
 	protected boolean loading = false;
-	public static final int WIDTH = 256;
-	public static final int HEIGHT = 256;
+	public static final int SIZE = 256;
 
 	/**
 	 * Creates a tile with empty image.
@@ -62,7 +61,7 @@ public class Tile {
 	 * been loaded.
 	 */
 	public void loadPlaceholderFromCache(TileCache cache) {
-		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		BufferedImage tmpImage = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) tmpImage.getGraphics();
 		// g.drawImage(image, 0, 0, null);
 		for (int zoomDiff = 1; zoomDiff < 5; zoomDiff++) {
@@ -82,7 +81,7 @@ public class Tile {
 								cache.getTile(source, xtile_high + x, ytile_high + y, zoom_high);
 						if (tile != null && tile.isLoaded()) {
 							paintedTileCount++;
-							tile.paint(g, x * WIDTH, y * HEIGHT);
+							tile.paint(g, x * SIZE, y * SIZE);
 						}
 					}
 				}
@@ -99,8 +98,8 @@ public class Tile {
 				int factor = (1 << zoomDiff);
 				double scale = (double) factor;
 				AffineTransform at = new AffineTransform();
-				int translate_x = (xtile % factor) * WIDTH;
-				int translate_y = (ytile % factor) * HEIGHT;
+				int translate_x = (xtile % factor) * SIZE;
+				int translate_y = (ytile % factor) * SIZE;
 				at.setTransform(scale, 0, 0, scale, -translate_x, -translate_y);
 				g.setTransform(at);
 				Tile tile = cache.getTile(source, xtile_low, ytile_low, zoom_low);

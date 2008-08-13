@@ -102,7 +102,7 @@ public class JMapViewer extends JPanel {
 		tileGridVisible = false;
 		setLayout(null);
 		initializeZoomSlider();
-		setMinimumSize(new Dimension(Tile.WIDTH, Tile.HEIGHT));
+		setMinimumSize(new Dimension(Tile.SIZE, Tile.SIZE));
 		setPreferredSize(new Dimension(400, 400));
 		try {
 			loadingImage =
@@ -301,18 +301,20 @@ public class JMapViewer extends JPanel {
 
 		int iMove = 0;
 
-		int tilex = center.x / Tile.WIDTH;
-		int tiley = center.y / Tile.HEIGHT;
-		int off_x = (center.x % Tile.WIDTH);
-		int off_y = (center.y % Tile.HEIGHT);
+		int tilex = center.x / Tile.SIZE;
+		int tiley = center.y / Tile.SIZE;
+		int off_x = (center.x % Tile.SIZE);
+		int off_y = (center.y % Tile.SIZE);
 
-		int posx = getWidth() / 2 - off_x;
-		int posy = getHeight() / 2 - off_y;
+		int w2 = getWidth() / 2;
+		int h2 = getHeight() / 2;
+		int posx = w2 - off_x;
+		int posy = h2 - off_y;
 
 		int diff_left = off_x;
-		int diff_right = Tile.WIDTH - off_x;
+		int diff_right = Tile.SIZE - off_x;
 		int diff_top = off_y;
-		int diff_bottom = Tile.HEIGHT - off_y;
+		int diff_bottom = Tile.SIZE - off_y;
 
 		boolean start_left = diff_left < diff_right;
 		boolean start_top = diff_top < diff_bottom;
@@ -328,8 +330,8 @@ public class JMapViewer extends JPanel {
 			else
 				iMove = 0;
 		} // calculate the visibility borders
-		int x_min = -Tile.WIDTH;
-		int y_min = -Tile.HEIGHT;
+		int x_min = -Tile.SIZE;
+		int y_min = -Tile.SIZE;
 		int x_max = getWidth();
 		int y_max = getHeight();
 
@@ -349,12 +351,12 @@ public class JMapViewer extends JPanel {
 							painted = true;
 							tile.paint(g, posx, posy);
 							if (tileGridVisible)
-								g.drawRect(posx, posy, Tile.WIDTH, Tile.HEIGHT);
+								g.drawRect(posx, posy, Tile.SIZE, Tile.SIZE);
 						}
 					}
 					Point p = move[iMove];
-					posx += p.x * Tile.WIDTH;
-					posy += p.y * Tile.HEIGHT;
+					posx += p.x * Tile.SIZE;
+					posy += p.y * Tile.SIZE;
 					tilex += p.x;
 					tiley += p.y;
 				}
@@ -370,6 +372,9 @@ public class JMapViewer extends JPanel {
 			if (p != null)
 				marker.paint(g, p);
 		}
+		// outer border of the map
+		int mapSize = Tile.SIZE << zoom;
+		g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
 	}
 
 	/**
@@ -444,7 +449,7 @@ public class JMapViewer extends JPanel {
 	 * @return specified tile from the cache or <code>null</code> if the tile
 	 *         was not found in the cache.
 	 */
-	protected Tile getTile(final int tilex, final int tiley, final int zoom) {
+	protected Tile getTile(int tilex, int tiley, int zoom) {
 		int max = (1 << zoom);
 		if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
 			return null;

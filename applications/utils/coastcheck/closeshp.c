@@ -46,7 +46,8 @@ int MAX_SUBAREAS;   /* Was a define, not anymore. Auto grown array, starting at.
 static double *v_x, *v_y, *v_z;
 static int *Parts, *Parttypes;
 
-static char *small_poly_list;
+static char used_bitmap[DIVISIONS * DIVISIONS];
+
 static SHPHandle shp_out;
 static DBFHandle dbf_out;
 
@@ -103,12 +104,22 @@ struct state
 
 void OutputSegs( struct state *state );
 void Process( struct state *state, SHPHandle shp, DBFHandle dbf, SHPTree *shx, int polygon );
+static void InitBitmap( SHPHandle shp, SHPHandle temp );
 static double CalcArea( const SHPObject *obj );
 static void SplitCoastlines( SHPHandle shp_poly, DBFHandle dbf_poly, SHPHandle shp_arc, DBFHandle dbf_arc, char *out_filename );
 static int contains( double x, double y, double *v_x, double *v_y, int vertices );
 static int CopyShapeToArray( SHPHandle shp, int index, int snode, int enode, int node_count );
 static void ResizeSubareas( struct state *state, int count );
 void ProcessSubareas(struct state *state, int *pc, int *nc);
+
+static inline void mark_tile( int x, int y )
+{
+  used_bitmap[ x + y * DIVISIONS ] = 1;
+}
+static inline int check_tile( int x, int y )
+{
+  return used_bitmap[ x + y * DIVISIONS ];
+}
 
 int main( int argc, char *argv[] )
 {
@@ -214,15 +225,6 @@ int main( int argc, char *argv[] )
     return 1;
   }
   
-  /* The poly tells us which polygons are big enough to need splitting */
-  small_poly_list = malloc( (poly_count>>3) + 1 );
-  if( !small_poly_list )
-  {
-    fprintf( stderr, "Couldn't allocate poly list\n" );
-    return 1;
-  }
-  memset( small_poly_list, 0, (poly_count>>3) + 1 );
-  
   v_x = malloc( MAX_NODES * sizeof(double) );
   v_y = malloc( MAX_NODES * sizeof(double) );
   v_z = malloc( MAX_NODES * sizeof(double) );
@@ -236,13 +238,45 @@ int main( int argc, char *argv[] )
   struct state state;
   memset( &state, 0, sizeof(state) );
   ResizeSubareas(&state, INIT_MAX_SUBAREAS);
+  
+  SHPHandle shp_tempfile;   // Temporary file for simplified shapes
+  SHPTree *shx_tempfile;
+  {
+      // Make the file and open it
+      char filename[32];
+      sprintf( filename, "tmp_coastline_%d", getpid() );
+      shp_tempfile = SHPCreate( filename, SHPT_ARC );
+      if( !shp_tempfile )
+      {
+          fprintf( stderr, "Couldn't open temporary shapefile: %s\n", strerror(errno) );
+          return 1;
+      }
+      // And now unlink them so they're cleaned up when we die
+      int len = strlen( filename );
+      strcpy( filename+len, ".shp" );
+      unlink(filename);
+      strcpy( filename+len, ".shx" );
+      unlink(filename);
+      
+      // Setup the bitmap while creating the simplified polygons
+      InitBitmap( shp_arc, shp_tempfile );
+      InitBitmap( shp_poly, shp_tempfile );
+      
+      // And index the simplified polygons
+      shx_tempfile = SHPCreateTree( shp_tempfile, 2, 10, NULL, NULL );
+      if( !shx_tempfile )
+      {
+          fprintf( stderr, "Couldn't build temporary shapetree\n" );
+          return 1;
+      }
+  }
 
 #if !TEST  
   for( int i=0; i<DIVISIONS; i++ )
     for( int j=0; j<DIVISIONS; j++ )  //Divide the world into mercator blocks approx 100km x 100km
 #else
-  for( int i=307; i<=307; i++ )
-    for( int j=203; j<=203; j++ )  //Divide the world into mercator blocks approx 100km x 100km
+  for( int i=114; i<=114; i++ )
+    for( int j=120; j<=200; j++ )  //Divide the world into mercator blocks approx 100km x 100km
 #endif
     {
       state.x = i;
@@ -269,9 +303,16 @@ int main( int argc, char *argv[] )
       state.subarea_nodecount = 0;
       state.enclosed = 0;
       
-      Process( &state, shp_poly, dbf_poly, shx_poly, 1 );
-      Process( &state, shp_arc,  dbf_arc,  shx_arc,  0 );
-      
+      // Optimisation: if we have determined nothing enters the tile, we can used the simplified tiles
+      // Basically, we only need to test for enclosure
+      if( check_tile( state.x, state.y ) )
+      {
+        Process( &state, shp_poly, dbf_poly, shx_poly, 1 );
+        Process( &state, shp_arc,  dbf_arc,  shx_arc,  0 );
+      }
+      else
+        Process( &state, shp_tempfile, NULL, shx_tempfile, 0 );
+
       OutputSegs( &state );
     }
     
@@ -380,6 +421,72 @@ static void SplitCoastlines( SHPHandle shp_poly UNUSED, DBFHandle dbf_poly UNUSE
   
   SHPClose( shp_arc_out );
   DBFClose( dbf_arc_out );
+}
+
+static void InitBitmap( SHPHandle shp, SHPHandle temp )
+{
+  int count, res_count = 0;
+  SHPGetInfo( shp, &count, NULL, NULL, NULL );
+  for( int i=0; i<count; i++ )
+  {
+    SHPObject *obj = SHPReadObject( shp, i );
+    
+    int old_x = -1, old_y = -1;
+    int k = 0;
+
+    if( obj->nVertices < 4 )
+      continue;
+    for( int j=0; j<obj->nVertices; j++ )
+    {
+      int new_x = floor( (obj->padfX[j] / MERC_BLOCK) + 200.0 );
+      int new_y = floor( (obj->padfY[j] / MERC_BLOCK) + 200.0 );
+      
+      if( new_x < 0 ) new_x = 0;
+      if( new_x >= DIVISIONS ) new_x = DIVISIONS-1;
+      if( new_y < 0 ) new_y = 0;
+      if( new_y >= DIVISIONS ) new_y = DIVISIONS-1;
+      
+      if( new_x == old_x && new_y == old_y )
+          continue;
+          
+      if( new_x == 0 && new_y == 308 )
+          printf( "At pos (%d,%d) point (%f,%f)\n", new_x, new_y, obj->padfX[j], obj->padfY[j] );
+      
+      mark_tile( new_x, new_y );
+      
+      v_x[k] = obj->padfX[j];
+      v_y[k] = obj->padfY[j];
+      k++;
+      
+      if( k > MAX_NODES-5 )
+      {
+          fprintf( stderr, "Overflow in simplification: %d > %d\n", k, MAX_NODES-5 );
+          exit(1);
+      }
+      
+      old_x = new_x;
+      old_y = new_y;
+    }
+    if( k > 4 )
+    {
+      v_x[k] = obj->padfX[obj->nVertices-1];
+      v_y[k] = obj->padfY[obj->nVertices-1];
+      k++;
+      
+      SHPObject *new_obj = SHPCreateSimpleObject( SHPT_ARC, k, v_x, v_y, v_z );
+      
+//      fprintf( stderr, "Compressed %d nodes to %d\n", obj->nVertices, k );
+      int new_id = SHPWriteObject( temp, -1, new_obj );
+      if( new_id < 0 ) { fprintf( stderr, "Temp output failure: %m\n"); exit(1); }
+      
+      SHPDestroyObject( new_obj );
+      
+      res_count++;
+    }
+    SHPDestroyObject(obj);
+  }
+  
+  fprintf( stderr, "Found %d large objects out of %d\n", res_count, count );
 }
 
 static double CalcArea( const SHPObject *obj )
@@ -530,9 +637,6 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
     int intersected = 0;
     
     int id = list[poly];
-    /* If this is a small polygon, it's been printed, so skip it */
-    if( polygon && small_poly_list[ id>>3 ] & (1<<(id&7)) )
-      continue;
 
     /* Now we have a candidate object, we need to process it */
     SHPObject *obj = SHPReadObject( shp, id );
@@ -677,9 +781,6 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
                       obj->padfX[vertex-1], obj->padfY[vertex-1],
                       obj->padfX[vertex],   obj->padfY[vertex],
                       state->lb[0], state->lb[1], state->rt[0], state->rt[1] );
-#if TEST
-        continue;
-#endif
       }
       /* Another possibility is that we went from positive to positive with
        * only one intersection. Not good. Have not yet thought of a

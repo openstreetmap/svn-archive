@@ -26,10 +26,7 @@ sub ZXY
 {
     my $self = shift;
     my ($new_z, $new_x, $new_y) = @_;
-    if (defined($new_z)) {$self->{MIN_Z} = $new_z;}
-    if (defined($new_x)) {$self->{X} = $new_x;}
-    if (defined($new_y)) {$self->{Y} = $new_y;}
-    return ($self->{MIN_Z},$self->{X},$self->{Y})
+    return ($self->Z(MIN_Z),$self->X(X),$self->(Y))
 }
 
 # set and/or retrieve the z of a request

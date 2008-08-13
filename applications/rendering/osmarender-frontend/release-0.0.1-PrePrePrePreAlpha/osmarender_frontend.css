@@ -1,0 +1,93 @@
+body {
+	font-size: 14px;
+}
+/*dl {
+	clear:both;
+}
+dt {
+	clear:both;
+	width:40%;
+	float:left;
+	text-align:left;
+	position:relative;
+}
+dd {
+	float:right;
+	position:relative;
+	left:40%;
+	width:40%;
+	margin:0 0 0.5em 0.25em;
+}*/
+
+/* Thanks to http://archivist.incutio.com/viewlist/css-discuss/25510 */
+
+dl {
+	display: block;
+}
+
+dt {
+	clear: left;
+	display: block;
+	font-weight: bold;
+	float: left;
+	width: 125px;
+}
+
+dd {
+	clear: right;
+	display: block;
+	white-space: nowrap;
+}
+
+/* DIVs */
+
+#left-side {
+	float:left;
+	width:50%;
+	height:68%;
+	max-height:68%;
+	overflow:auto;
+	position:absolute;
+}
+
+#svgfile {
+	float:right;
+	left:50%;
+	width:50%;
+	height:68%;
+	max-height:68%;
+	overflow:auto;
+	position:absolute;
+}
+
+#commands {
+	border: 1px solid black;
+	bottom:0;
+	height: 28%;
+	width:100%;
+	position:absolute;
+	overflow:auto;
+	clear:both;
+}
+
+/* LINKS */
+#result_symbols {
+	display:none;
+}
+
+#result_process_rules {
+	display:none;
+}
+
+#result_process_key {
+	display:none;
+}
+
+#return_to_rules {
+	display:none;
+}
+
+/* INPUTS */
+#rules_file_name_written {
+	width:15em;
+}

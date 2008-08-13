@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ @author Mario Ferraro <fadinlight@gmail.com>
+ http://osmarenderfrontend.wordpress.com
+ Released under GPL v2 or later
+-->
+<!--?xml-stylesheet type="text/xsl" href="demo.xsl"?-->
+<!DOCTYPE html 
+      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:svg="http://www.w3.org/2000/svg"
+		xml:lang="en">
+	<head>
+		<style type="text/css">
+			@import "dojotoolkit/dijit/themes/tundra/tundra.css";
+			@import "dojotoolkit/dojo/resources/dojo.css";
+			@import "dojotoolkit/dojox/widget/ColorPicker/ColorPicker.css";
+			@import "osmarender_frontend.css";
+		</style>
+		<object id="AdobeSVG" classid="clsid:78156a80-c6a1-4bbf-8e6a-3cd390eeb4e2"></object>
+		<?import namespace="svg" urn="http://www.w3.org/2000/svg" implementation="#AdobeSVG"?>
+
+		<script type="text/javascript" src="CSS_parse.js"></script>
+		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa.js"></script>
+		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa_ieemu_xpath.js"></script>
+		<!--TODO: automatically retrieve server name-->
+		<script type="text/javascript" src="cmyk.js" cmyk_server=""></script>
+		<script type="text/javascript" src="osmarender_frontend.js" of_server=""></script>
+		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+		<script type="text/javascript">
+			dojo.require("dijit.form.NumberSpinner");
+			dojo.require("dojox.widget.ColorPicker");
+  			dojo.require("dojo.parser");
+  		</script>
+	</head>
+	<body class="tundra">
+	<div id="left-side">
+		<div id="load_file">
+			<label id="label_select_osm_file" for="osm_file_name_selected">Select an OSM data file name or..:</label>
+			<select id="osm_file_name_selected">
+				<option value="">No one, I'm writing my file name</option>
+				<option value="data.osm">data.osm</option>
+				<option value="somewhere_in_london.osm">somewhere_in_london.osm</option>
+				<option value="rome_centre.osm">rome_centre.osm</option>
+			</select>
+
+			<br /><br />
+
+			<label id="label_write_osm_file" for="osm_file_name_written">..write an OSM data file name:</label>
+			<input id="osm_file_name_written" type="text" value="data.osm" /><br />
+			
+			<br /><br />
+
+			<label id="label_rules_file_name" for="rules_file_name">Select a rules file name or..:</label>
+			<select id="rules_file_name">
+				<option value="">No one, I'm writing my file name</option>
+				<option value="osm-map-features-z12.xml">osm-map-features-z12.xml</option>
+				<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
+				<option value="osm-map-features-z14.xml">osm-map-features-z14.xml</option>
+				<option value="osm-map-features-z15.xml">osm-map-features-z15.xml</option>
+				<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
+				<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
+			</select>
+			<br /><br />
+
+			<label id="label_rules_file_name_written" for="rules_file_name_written">..write a rules file name:</label>
+			<input id="rules_file_name_written" type="text" value="osm-map-features-z13.xml" /><br />
+
+			<a id="link_load" href="javascript:loadOsmAndRules()">Load OSM file and Rule File</a><br />
+			<a id="return_to_rules" href="javascript:displayRules()">Return to styles without loading</a>
+		</div>
+		<div id="result_process_rules"></div>
+		<div id="result_process_key"></div>
+		<div id="result_symbols"></div>
+
+		<br /><br />
+	</div>
+	<div id ="svgfile"></div>
+	<div id="commands">
+		<a href="javascript:setStyle()">Set Style</a><br />
+		<input type="checkbox" id="transform_on_style_add" />Transform when Adding Styles<br />
+		<input type="checkbox" id="transform_on_style_set" />Transform when Setting Styles<br />
+		<input type="checkbox" id="transform_on_style_delete" />Transform when Deleting Styles<br />
+		<a href="javascript:Osmatransform()">Transform</a><br />
+		<a href="javascript:saveFile()">Save actual rule file</a><br />
+		<a href="javascript:clearSVG()">Clear SVG canvas</a><br />
+	</div>
+	</body>
+</html>
+
+
+

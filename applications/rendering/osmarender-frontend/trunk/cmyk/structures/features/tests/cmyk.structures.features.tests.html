@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>CMYK library structures.features Tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="../../../../jsunit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../../../../dojotoolkit/dojo/dojo.js"></script>
+<script type="text/javascript">
+
+function setUpPage() {
+	dojo.registerModulePath("cmyk","../../cmyk");
+	dojo.require("cmyk.structures.features.Feature");
+	dojo.require("cmyk.structures.features.Facet");
+	var wiki_facet;
+	var wiki_facet_physical;
+	var wiki_facet_physical_highway;
+	var other_facet;
+	var other_facet_category;
+	var other_facet_subcategory;
+	setUpPageStatus="complete";
+}
+
+function testDojo() {
+	assertNotUndefined("Dojo need to be defined",dojo);
+}
+
+function testFacet() {
+	info("Testing facet");
+	
+	var error=false;
+	
+	try {
+		wiki_facet = new cmyk.structures.features.Facet(2);
+		error=true;
+	}
+	catch (e) {
+		debug(e);
+	}
+	
+	if (error) fail ("Facet should have thrown an error");
+
+	wiki_facet = new cmyk.structures.features.Facet("wiki");
+	assertTrue("wiki_facet must be an instance of cmyk.structures.features.Facet", wiki_facet instanceof cmyk.structures.features.Facet);
+	other_facet = new cmyk.structures.features.Facet("other");
+	assertTrue("other_facet must be an instance of cmyk.structures.features.Facet", other_facet instanceof cmyk.structures.features.Facet);
+	assertTrue("first facet must be named 'wiki'", wiki_facet.getName()=="wiki");
+	assertTrue("second facet must be named 'other'", other_facet.getName()=="other");
+}
+
+function testCategory() {
+	info("Testing category");
+	
+	wiki_facet = new cmyk.structures.features.Facet("wiki");	
+
+	var category_parameters = new Array(new Array(2,null),new Array(null,2),new Array(2,3),new Array("category",5),new Array(2,wiki_facet));
+	var error=false;
+	var error_in_number;
+	for (var i in category_parameters) {
+		try {
+			wiki_facet_physical = new cmyk.structures.features.Category(category_parameters[i][0],category_parameters[i][1]);
+			error=true;
+		}
+		catch (e) {
+			debug(e);
+		}
+	}
+	if (error) fail ("Category should have thrown an error for parameter number "+error_in_number);
+	
+	info("Creating a category without a supercategory");
+	
+	var wiki_facet_physical = new cmyk.structures.features.Category("physical",wiki_facet);
+	assertTrue("wiki_facet_physical should be an instance of cmyk.structures.features.Category",wiki_facet_physical instanceof cmyk.structures.features.Category);
+	assertTrue("wiki_facet_physical name should be 'physical'",wiki_facet_physical.getName()=="physical");
+	assertUndefined("wiki_facet_physical supercategory should be undefined",wiki_facet_physical.getSuperCategory());
+	assertObjectEquals("Facet retrieved should be the same as the original",wiki_facet_physical.getFacet(),wiki_facet);
+	assertTrue("Facet name for wiki_facet_physical should be 'wiki'",wiki_facet_physical.getFacet().getName()=="wiki");
+	
+	info("Creating a category with a supercategory");
+	
+	var category_parameters = new Array("undefined",wiki_facet,2)
+	var error=false;
+	var error_in_number;
+	for (var i in category_parameters) {
+		try {
+			wiki_facet_physical_highway = new cmyk.structures.features.Category("physical",wiki_facet,category_parameters[i]);
+			error=true;
+			error_in_number=i;
+		}
+		catch (e) {
+			debug(e);
+		}
+	}
+
+	if (error) fail ("Category should have thrown an error for parameter number "+error_in_number);
+	
+	var wiki_facet_physical_highway = new cmyk.structures.features.Category("highway",wiki_facet,wiki_facet_physical);
+	assertTrue("wiki_facet_physical_highway should be an instance of cmyk.structures.features.Category",wiki_facet_physical_highway instanceof cmyk.structures.features.Category);
+	assertTrue("wiki_facet_physical_highway name should be 'highway'",wiki_facet_physical_highway.getName()=="highway");
+	assertTrue("wiki_facet_physical_highway supercategory should be an instance of cmyk.structures.features.Category",wiki_facet_physical_highway.getSuperCategory() instanceof cmyk.structures.features.Category);
+	assertObjectEquals("Supercategory should be the same as the original",wiki_facet_physical_highway.getSuperCategory(),wiki_facet_physical);
+	assertObjectEquals("Facet retrieved should be the same as the original",wiki_facet_physical_highway.getFacet(),wiki_facet);
+	assertTrue("Supercategory name should be 'physical'",wiki_facet_physical_highway.getSuperCategory().getName()=="physical");
+	assertTrue("Facet name should be 'wiki'",wiki_facet_physical_highway.getFacet().getName()=="wiki");
+}
+
+//TODO: Test for Features and adding categories/facets, this will be done when the templates section will be completed
+
+</script>
+</head>
+
+<body>
+<h1>CMYK library structures.base Tests</h1>
+
+<p>This page contains tests for the structures.base CMYK functions. To see them, take a look at the source.</p>
+</body>
+</html>
+ 

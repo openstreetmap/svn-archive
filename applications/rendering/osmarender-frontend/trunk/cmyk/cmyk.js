@@ -1,0 +1,4 @@
+/**
+	@name cmyk
+	@namespace
+*/ 

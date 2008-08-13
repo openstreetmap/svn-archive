@@ -1,0 +1,13 @@
+<br />
+<br />
+<label id="label_symbols" for="select_symbols">Select a Symbol ID: </label>
+<select id="select_symbols" dojoType="dijit.form.FilteringSelect" autoComplete="false" invalidMessage="Invalid Feature">
+	<script type="dojo/method" event="onChange">
+		if (this.value!=undefined) {
+			viewSymbol(this.value);
+		};
+	</script>
+</select>
+<div id="div_viewSymbol" dojoType="dijit.layout.ContentPane"></div>
+<div id="div_appliesTo" dojoType="dijit.layout.ContentPane"></div>
+<div id="div_symbolDetails" dojoType="dijit.layout.ContentPane"></div>

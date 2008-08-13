@@ -8,7 +8,7 @@ var cmyk;
 
 var classesAndProperties = new Array();
 
-var OSMARENDER_LOCATION="";
+var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1);
 
 var dojowidgets = new Array();
 
@@ -348,33 +348,6 @@ deleteSingleProp = function (button) {
 	}
 }
 
-/*
- * Utility to clone objects
- * Thanks to http://keithdevens.com/weblog/archive/2007/Jun/07/javascript.clone
- */
-
-	function clone(arr) {
-		var i, _i, temp;
-		if( typeof arr !== 'object' ) {
-			return arr;
-		}
-		else {
-			if (arr.concat) {
-				temp = [];
-				for (i = 0, _i = arr.length; i < _i; i++) {
-					temp[i] = arguments.callee(arr[i]);
-				}
-			}
-			else {
-				temp = {};
-				for (i in arr) {
-					temp[i] = arguments.callee(arr[i]);
-				}
-			}       
-			return temp;
-		}
-	}
-
 var MAX_TOTAL_STEPS=3;
 	
 var progressData = {
@@ -412,7 +385,7 @@ loadOsmAndRules = function(rulesfilename,osmfilename,ProgressBarTotal,ProgressBa
 
 	rulesfilename = location.href.substring(0,location.href.lastIndexOf("/")+1)+rulesfilename;
 	osmfilename = location.href.substring(0,location.href.lastIndexOf("/")+1)+osmfilename;
-	OSMARENDER_LOCATION = location.href.substring(0,location.href.lastIndexOf("/")+1);
+
 	onLoadTransform=TransformonLoad;
 
 	with (progressData) {
@@ -498,23 +471,8 @@ AfterCMYKLoad = function() {
 	label_container.appendChild(label);
 	div_result.appendChild(label_container);
 
-
-
-/*	var select_css_classes = createElementCB("select");
-	select_css_classes.setAttribute("id","select_class");
-	select_css_classes.setAttribute("dojoType","dijit.form.FilteringSelect");
-	select_css_classes.setAttribute("autoComplete","false");
-	select_css_classes.setAttribute("invalidMessage","Select a Valid CSS class!");
-	select_css_classes.setAttribute("onchange","javascript:viewPropertiesFromClass(this.value);");*/
-
 	var sorted_list_of_unique_classes = refreshProperties() 
 	
-	/*var new_option_null = createElementCB("option");
-	new_option_null.setAttribute("value","osmarender_frontend:null");
-	var new_option_null_text = document.createTextNode("Select a CSS class");
-	new_option_null.appendChild(new_option_null_text);
-	select_css_classes.appendChild(new_option_null);*/
-
 	var store_classes = {
 		identifier: "name",
 		items : []
@@ -553,16 +511,10 @@ AfterCMYKLoad = function() {
 			searchAttr: "name"
 			}, div_to_insert
 		);
-/*	for (var key_name in sorted_list_of_unique_classes) {
-			var new_option = createElementCB("option");
-			new_option.setAttribute("value",sorted_list_of_unique_classes[key_name]);
-			var new_option_text = document.createTextNode(sorted_list_of_unique_classes[key_name]);
-			new_option.appendChild(new_option_text);
-			select_css_classes.appendChild(new_option);
-	}*/
-	//div_result.appendChild(select_css_classes);
+
 	select_css_classes.startup();
 	document.getElementById("load_file").style.display="none";
+
 	// Reset progress Bars and fade out them
 	with (progressData) {
 		with(total) {
@@ -586,33 +538,12 @@ AfterCMYKLoad = function() {
 }
 
 SymbolsResult = function() {
-	var div_result = document.getElementById("result_symbols");
+	var div_result = dijit.byId("result_symbols");
 
-	while (div_result.hasChildNodes()) {
-		div_result.removeChild(div_result.firstChild);
-	}
-
-	div_result.appendChild(createElementCB("br"));
-	div_result.appendChild(createElementCB("br"));
-
-	var label_select_symbol = createElementCB("label");
-	label_select_symbol.setAttribute("id","label_symbols");
-	label_select_symbol.setAttribute("for","select_symbols");
-	label_select_symbol.appendChild(document.createTextNode("Select a Symbol ID: "));
-	
-	div_result.appendChild(label_select_symbol);
+	clearContentPanes([div_result]);
+	loadIntoNodeAndParse("osmarender_frontend/panels/symbols/select_symbol.xml",div_result.domNode);
 
 	var symbols_section = cmyk.getSymbols();
-
-	var select_symbols = createElementCB("select");
-	select_symbols.setAttribute("id","select_symbols");
-	select_symbols.setAttribute("onchange","javascript:viewSymbol(this.value);");
-
-	var new_option_null = createElementCB("option");
-	new_option_null.setAttribute("value","osmarender_frontend:null");
-	var new_option_null_text = document.createTextNode("Select a Symbol ID");
-	new_option_null.appendChild(new_option_null_text);
-	select_symbols.appendChild(new_option_null);
 
 	var symbols_array=new Array();
 
@@ -628,35 +559,37 @@ SymbolsResult = function() {
 	//TODO: I have to delete this... why is it parsing multiple ids?
 	symbols_array = RemoveDuplicates(symbols_array.sort());
 	
-	for (single_symbol in symbols_array) {
-		var new_option = createElementCB("option");
-		new_option.setAttribute("value",symbols_array[single_symbol]);
-		var new_option_text = document.createTextNode(symbols_array[single_symbol]);
-		new_option.appendChild(new_option_text);
-		select_symbols.appendChild(new_option);
+	var store_symbols = {
+		identifier: "name",
+		items : []
+	};
+	
+	for (var symbol_name in symbols_array) {
+			store_symbols.items[store_symbols.items.length]= {name: ""+symbols_array[symbol_name]};
 	}
-	div_result.appendChild(select_symbols);
-	
-	div_symbol = createElementCB("div");
-	div_symbol.setAttribute("id","div_viewSymbol");
-	div_result.appendChild(div_symbol);
-	
+
+	store_symbols_data_store = new dojo.data.ItemFileReadStore({data:store_symbols});
+	dijit.byId("select_symbols").store=store_symbols_data_store;
 }
 
+//thanks to http://dojocampus.org/content/2008/03/14/functional-ajax-with-dojo/
 SettingsResults = function() {
 	div_results = dojo.byId("result_settings");
-
 	if (dijit.byId("settings_container")) dijit.byId("settings_container").destroyRecursive();
-	
-	div_results.innerHTML = '<div id="settings_container" dojoType="dijit.layout.ContentPane"><div id="settings_bounds" dojoType="dijit.layout.ContentPane"><input id="transform_on_set_bounds" dojoType="dijit.form.CheckBox" />Render on Set Bounds<h1>Set bounds</h1><br />Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value='+cmyk.getBounds().lat.max+' smallDelta=0.001 style="width:10em;height:1.1em;"/><br />Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value='+cmyk.getBounds().lat.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value='+cmyk.getBounds().lon.min+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br />Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value='+cmyk.getBounds().lon.max+' smallDelta=0.001 style="width:10em;height:1.1em;" /><br /><button id="button_set_bounds" dojoType="dijit.form.Button">Set Bounds<script type="dojo/method" event="onClick">setBounds(dojo.byId("BoundsNorth").value,dojo.byId("BoundsSouth").value,dojo.byId("BoundsEast").value,dojo.byId("BoundsWest").value);if(dojo.byId("transform_on_set_bounds").checked) Osmatransform();</script></button></div><div id="settings_show" dojoType="dijit.layout.ContentPane"><input id="transform_on_set_show" dojoType="dijit.form.CheckBox" />Render on Set Show<h1>Show:</h1><br /><input id="show_scale" dojoType="dijit.form.CheckBox" onClick="setShowScale(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show Scale<ul><li><a href="javascript:loadCSS(\'map-scale-casing\');">Change scale casing</a></li><li><a href="javascript:loadCSS(\'map-scale-core\');">Change scale core</a></li><li><a href="javascript:loadCSS(\'map-scale-bookend\');">Change scale bookend</a></li><li><a href="javascript:loadCSS(\'map-scale-caption\');">Change scale caption</a></li></ul><input id="showGrid" dojoType="dijit.form.CheckBox" onClick="setShowGrid(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show Grid<ul><li><a href="javascript:loadCSS(\'map-grid-line\');">Change grid color</a></li></ul><input id="show_border" dojoType="dijit.form.CheckBox" onClick="setShowBorder(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show Border<ul><li><a href="javascript:loadCSS(\'map-border-casing\');">Change border casing</a></li><li><a href="javascript:loadCSS(\'map-border-core\');">Change border core</a></li></ul><input id="show_license" dojoType="dijit.form.CheckBox" onClick="setShowLicense(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Show License<br /><input id="show_interactive" dojoType="dijit.form.CheckBox" onClick="setShowInteractive(this.checked,dojo.byId(\'transform_on_set_show\').checked);" />Interactive Mode<br /></div><div id="settings_others"><h1>Others</h1><br />Set Scale<input dojoType="dijit.form.NumberSpinner" id="Scale" value='+cmyk.getScale()+' smallDelta=0.1 style="width:10em;height:1.1em;"/><br />Set Text Attenuation<input dojoType="dijit.form.NumberSpinner" id="TextAttenuation" value='+cmyk.getTextAttenuation()+' smallDelta=0.1 style="width:10em;height:1.1em;"/><br /><button id="button_set_others" dojoType="dijit.form.Button">Set Others<script type="dojo/method" event="onClick">setScale(dojo.byId("Scale").value);setTextAttenuation(dojo.byId("TextAttenuation").value);</script></button></div></div>';
-	dojo.parser.parse(div_results);
+	loadIntoNodeAndParse("osmarender_frontend/panels/settings/settings.xml",div_results);
+
+	dojo.byId("BoundsNorth").value=cmyk.getBounds().lat.max;
+	dojo.byId("BoundsSouth").value=cmyk.getBounds().lat.min;
+	dojo.byId("BoundsEast").value=cmyk.getBounds().lon.min;
+	dojo.byId("BoundsWest").value=cmyk.getBounds().lon.max;
+	dojo.byId("Scale").value=cmyk.getScale();
+	dojo.byId("TextAttenuation").value=cmyk.getTextAttenuation();
 }
 
 
 viewSymbol = function(svg_url) {
 	if (cmyk.getRulesFile().getElementById(svg_url)) {
-		div_result = document.getElementById("div_viewSymbol");
-		div_result.setAttribute("style","align:center;");
+		div_result = dijit.byId("div_viewSymbol");
 		var svg_symbol = cmyk.getRulesFile().getElementById(svg_url);
 		var svg_container;
 		if (typeof document.createElementNS != 'undefined') {
@@ -684,63 +617,50 @@ viewSymbol = function(svg_url) {
 				svg_container.appendChild(svg_symbol.childNodes[a].cloneNode(true));
 			}
 		}
-		while (div_result.hasChildNodes()) {
-			div_result.removeChild(div_result.firstChild);
-		}
-		div_result.appendChild(svg_container);
+
+		clearContentPanes([div_result,dijit.byId("div_appliesTo"),dijit.byId("div_symbolDetails")]);
+		div_result.domNode.appendChild(svg_container);
 		
 		// Get key/value pairs applied
 		//Search rules in which this symbol is used
 		var array_da_aggiornare = new Array();
 		cmyk.getRuleFromSymbol(cmyk.getRuleModel(),svg_url,array_da_aggiornare);
 
-		if (array_da_aggiornare.length) {
+		div_appliesTo = dijit.byId("div_appliesTo");
 
-			div_result.appendChild(createElementCB("br"));
-			div_result.appendChild(document.createTextNode("Applies to: "));
-	
-			var rules_list = createElementCB("ol");
-			div_result.appendChild(rules_list);
+		if (array_da_aggiornare.length) {
+			div_appliesTo.domNode.innerHTML='<br />Applies to:<ol>';
 
 			for (single_rule in array_da_aggiornare) {
 				for (single_key_value in array_da_aggiornare[single_rule].keys) {
-					var li_rule = createElementCB("li");
-					var li_rule_strong_1 = createElementCB("strong");
-					li_rule_strong_1.appendChild(document.createTextNode("key: "));
-					li_rule.appendChild(li_rule_strong_1);
-					li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].keys[single_key_value]));
-					var li_rule_strong_2 = createElementCB("strong");
-					li_rule_strong_2.appendChild(document.createTextNode(", values: "));
-					li_rule.appendChild(li_rule_strong_2);
+					div_appliesTo.domNode.innerHTML+='<li><strong>key:</strong> '+array_da_aggiornare[single_rule].keys[single_key_value]+',<strong> values:</strong>';
 					first_value_found=false;
 					for (single_value_value in array_da_aggiornare[single_rule].values) {
 						if (first_value_found) {
-							li_rule.appendChild(document.createTextNode(", "));
+							div_appliesTo.domNode.innerHTML+=',';
 						}
-						li_rule.appendChild(document.createTextNode(array_da_aggiornare[single_rule].values[single_value_value]));
+						div_appliesTo.domNode.innerHTML+=(' '+array_da_aggiornare[single_rule].values[single_value_value]);
 						first_value_found=true;
 					}
-					rules_list.appendChild(li_rule);
-				//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
+					div_appliesTo.domNode.innerHTML+='</li>';
 				}
 			}
+			div_appliesTo.domNode.innerHTML+='</ol>';
 		} else {
-			var bold_string = createElementCB("strong");
-			bold_string.appendChild(document.createTextNode("Attention! "));
-			div_result.appendChild(bold_string);
-			div_result.appendChild(document.createTextNode("Selected symbol is not associated to any rule!"));
+			div_appliesTo.domNode.innerHTML='<strong>Attention! </strong>Selected symbol is not associated to any rule!';
 		}
-		if (document.getElementById("select_feature_way").value!="osmarender_frontend:null") {
-			if (dijit.byId("attach_symbols_container")) dijit.byId("attach_symbols_container").destroyRecursive();
-			var key_chosen = document.getElementById("select_feature_way").value;
-			var value_chosen = document.getElementById("select_feature_value").value;
 
-			div_attach_symbols = createElementCB("div");
-			div_attach_symbols.setAttribute("id","attach_symbols");
-			div_attach_symbols.setAttribute("dojoType","dijit.layout.ContentPane");
-			div_result.appendChild(div_attach_symbols);
-			div_attach_symbols.innerHTML='<div id="attach_symbols_container" dojoType="dijit.layout.ContentPane"><br />Width: <input id="symbol_width" dojoType="dijit.form.TextBox" type="text" value="'+viewBox_array[2]+'"/><br />Height: <input id="symbol_height" dojoType="dijit.form.TextBox" type="text" value="'+viewBox_array[3]+'"/><br />Layer: <input dojoType="dijit.form.NumberSpinner" id="symbol_layer" value=5 smallDelta=1 style="width:10em;height:1.1em;" /><br /><a href="javascript:attachSymbol(\''+svg_url+'\',\''+key_chosen+'\',\''+value_chosen+'\',dojo.byId(\'symbol_width\').value,dojo.byId(\'symbol_height\').value,dojo.byId(\'symbol_layer\').value);">Attach this symbol to '+key_chosen+', '+value_chosen+'</a></div>';
-			dojo.parser.parse(div_result);
+		if ((dijit.byId("select_feature_way") && dijit.byId("select_feature_value")) && (dijit.byId("select_feature_way").value!=undefined && dijit.byId("select_feature_value").value!=undefined)) {
+			var key_chosen = dijit.byId("select_feature_way").value;
+			var value_chosen = dijit.byId("select_feature_value").value;
+
+			loadIntoNodeAndParse("osmarender_frontend/panels/symbols/symbol_details.xml",dojo.byId("div_symbolDetails"));
+
+			dijit.byId("symbol_width").setValue(viewBox_array[2]);
+			dijit.byId("symbol_height").setValue(viewBox_array[3]);
+
+			dojo.byId("dest_attach_symbol").href='javascript:attachSymbol(\''+svg_url+'\',\''+key_chosen+'\',\''+value_chosen+'\',dojo.byId(\'symbol_width\').value,dojo.byId(\'symbol_height\').value,dojo.byId(\'symbol_layer\').value);';
+			dojo.byId("dest_attach_symbol").innerHTML='Attach this symbol to '+key_chosen+', '+value_chosen+'';
 		}
 	}
 }
@@ -802,11 +722,36 @@ refreshProperties = function() {
 	return sorted_list_of_unique_classes.sort();
 }
 
+// This function clear an array of contentPanes, deleting any dijit widget from the register and resetting the HTML content
+function clearContentPanes(contentPanes) {
+	if (!(contentPanes instanceof Array)) throw new Error ("divs must be an array of dijit's contentPanes");
+	for (var i in contentPanes) {
+		if(contentPanes[i]) {
+			contentPanes[i].destroyDescendants();
+			contentPanes[i].setContent();
+		}
+	}
+}
+
+// This function load an XML file into a node's innerHTML, and the dojo-parse it
+function loadIntoNodeAndParse(my_url,node) {
+	dojo.xhrGet({
+		url: my_url,
+		sync: true,
+		load: function(data){
+			node.innerHTML = data;
+		}
+	});
+	dojo.parser.parse(node);
+}
+
+
 listKeys = function() {
 	var elements = cmyk.getKeyValuePairs();
 
 	var sorted_list_of_unique_keys = new Array();
 	
+	//TODO: change this calling into corresponding classes as soon as modeling is finished
 	for (var dettaglio in elements.ways) {
 		for (var tag in elements.ways[dettaglio]) {
 			sorted_list_of_unique_keys[sorted_list_of_unique_keys.length]=tag;
@@ -821,72 +766,56 @@ listKeys = function() {
 
 	sorted_list_of_unique_keys = RemoveDuplicates(sorted_list_of_unique_keys.sort());
 	
-	var div_result = document.getElementById("result_process_key");
-	while (div_result.hasChildNodes()) {
-		div_result.removeChild(div_result.firstChild);
+	var div_result = dijit.byId("div_select_key");
+
+	clearContentPanes([div_result,dijit.byId("div_select_value"),dijit.byId("list_css"),dijit.byId("list_symbols"),dijit.byId("div_tree")]);
+	loadIntoNodeAndParse("osmarender_frontend/panels/rules/select_key.xml",div_result.domNode);
+
+	var rulesStore = new dojo.data.ItemFileReadStore({data:cmyk.getRuleTree()});
+	var printError = function (error,request) {
+		alert(error);
 	}
+	rulesStore.fetch({
+		onError: printError
+	});
 
-	//div_result.style.display="block";
-	
-	div_result.appendChild(createElementCB("br"));
-	div_result.appendChild(createElementCB("br"));
-	
-	// View Part of MVC
-	
-	var label_container = createElementCB("label");
-	label_container.setAttribute("for","select_feature_way");
-	var label = document.createTextNode("Select feature: ");
-	label_container.appendChild(label);
-	div_result.appendChild(label_container);
-	
-	var select_ways_key = createElementCB("select");
-	select_ways_key.setAttribute("id","select_feature_way");
-	select_ways_key.setAttribute("onchange","javascript:viewValuesFromKey(this.value);");
-	
-	var new_option_null = createElementCB("option");
-	new_option_null.setAttribute("value","osmarender_frontend:null");
-	var new_option_null_text = document.createTextNode("Select a feature");
-	new_option_null.appendChild(new_option_null_text);
-	select_ways_key.appendChild(new_option_null);
+// See http://dojotoolkit.org/2008/02/24/dijit-tree-and-dojo-data-dojo-1-1-model
+	var myModel = new dijit.tree.TreeStoreModel({
+		store: rulesStore,
+		query: {top:true},
+		rootId: "0",
+		rootLabel: "rules",
+		childrenAttrs: ["children"],
+	});
 
+	loadIntoNodeAndParse("osmarender_frontend/panels/rules/tree.xml",dojo.byId("div_tree"));
+//TODO: Lazy loading the tree, see http://www.ibm.com/developerworks/websphere/techjournal/0805_col_johnson/0805_col_johnson.html
+	var treerules = new dijit.Tree({model:myModel});
+
+	dojo.byId("div_tree").appendChild(treerules.domNode);
+
+	var store_keys = {
+		identifier: "name",
+		items : []
+	};
+	
 	for (var key_name in sorted_list_of_unique_keys) {
-			var new_option = createElementCB("option");
-			new_option.setAttribute("value",sorted_list_of_unique_keys[key_name]);
-			var new_option_text = document.createTextNode(sorted_list_of_unique_keys[key_name]);
-			new_option.appendChild(new_option_text);
-			select_ways_key.appendChild(new_option);
+			store_keys.items[store_keys.items.length]= {name: ""+sorted_list_of_unique_keys[key_name]};
 	}
-	
-	div_result.appendChild(select_ways_key);
-	
 
+	store_keys_data_store = new dojo.data.ItemFileReadStore({data:store_keys});
+	dijit.byId("select_feature_way").store=store_keys_data_store;
 }
 
 function viewValuesFromKey(key) {
 	var elements = cmyk.getKeyValuePairs();
 
-	if (key=="osmarender_frontend:null") return false;
-	
-	var div_result = document.getElementById("result_process_key");
+	var div_result = dijit.byId("div_select_value");
 
-	if (document.getElementById("label_feature_value")) {
-		div_result.removeChild(document.getElementById("list_css"));
-		div_result.removeChild(document.getElementById("label_feature_value"));
-		div_result.removeChild(document.getElementById("select_feature_value"));
-	}
+	clearContentPanes([div_result,dijit.byId("list_css"),dijit.byId("list_symbols")]);
 
-	var label_container = createElementCB("label");
-	label_container.setAttribute("id","label_feature_value");
-	label_container.setAttribute("for","select_feature_value");
-	var label = document.createTextNode("Select value: ");
-	label_container.appendChild(label);
-	div_result.appendChild(label_container);
-	
-	var select_ways_value = createElementCB("select");
-	select_ways_value.setAttribute("id","select_feature_value");
-	select_ways_value.setAttribute("onchange","javascript:searchCSSfromKeyValue();");
-	
 	var sorted_list_of_unique_values = new Array();
+	sorted_list_of_unique_values[0]="~";
 	
 	for (var dettaglio in elements.ways) {
 		for (var tag in elements.ways[dettaglio]) {
@@ -906,109 +835,76 @@ function viewValuesFromKey(key) {
 
 	sorted_list_of_unique_values = RemoveDuplicates(sorted_list_of_unique_values.sort());
 	
-	//List undefined value, ~
+	loadIntoNodeAndParse("osmarender_frontend/panels/rules/select_value.xml",div_result.domNode);
+
+	var store_values = {
+		identifier: "name",
+		items : []
+	};
 	
-	var new_option = createElementCB("option");
-	new_option.setAttribute("value","~");
-	var new_option_text = document.createTextNode("~");
-	new_option.appendChild(new_option_text);
-	select_ways_value.appendChild(new_option);
-
-	//List all other values
-
 	for (var value_name in sorted_list_of_unique_values) {
-			var new_option = createElementCB("option");
-			new_option.setAttribute("value",sorted_list_of_unique_values[value_name]);
-			var new_option_text = document.createTextNode(sorted_list_of_unique_values[value_name]);
-			new_option.appendChild(new_option_text);
-			select_ways_value.appendChild(new_option);
+			store_values.items[store_values.items.length]= {name: ""+sorted_list_of_unique_values[value_name]};
 	}
-	
-	div_result.appendChild(select_ways_value);
 
-	div_list_css = createElementCB("div");
-	div_list_css.setAttribute("id","list_css");
-	
-	div_result.appendChild(div_list_css);
-	
-	searchCSSfromKeyValue();
+	store_values_data_store = new dojo.data.ItemFileReadStore({data:store_values});
+	dijit.byId("select_feature_value").store=store_values_data_store;
 
 }
 
-searchCSSfromKeyValue = function() {
+searchCSSfromKeyValue = function(key,value) {
+	var my_key = key;
+	var my_value = value;
 
-	var my_key = document.getElementById("select_feature_way").value
-	var my_value = document.getElementById("select_feature_value").value
+	div_list_css = dijit.byId("list_css");
 
-	div_list_css = document.getElementById("list_css");
-
-	while (div_list_css.hasChildNodes()) {
-		div_list_css.removeChild(div_list_css.firstChild);
-	}
+	clearContentPanes([div_list_css,dijit.byId("list_symbols")]);
 
 	//Search classes that applies this key/value pair
 	var array_da_aggiornare = new Array();
 	cmyk.getClassFromRule(cmyk.getRuleModel(),my_key,my_value,array_da_aggiornare);
 
 	if (array_da_aggiornare.length) {
-		var strong_section = createElementCB("strong");
-		strong_section.appendChild(document.createTextNode("CSS classes associated:"));
-		div_list_css.appendChild(strong_section);
-		div_list_css.appendChild(createElementCB("br"));
-	}
+		loadIntoNodeAndParse("osmarender_frontend/panels/rules/list_css.xml",div_list_css.domNode);
 
-	var temp_CSS_list = new Array();
+		var temp_CSS_list = new Array();
 
-	for (CSSclass in array_da_aggiornare) {
-		// no-bezier is actually not a class
-		if (array_da_aggiornare[CSSclass] != "no-bezier") {
-			temp_CSS_list[temp_CSS_list.length] = array_da_aggiornare[CSSclass];
+		for (CSSclass in array_da_aggiornare) {
+			// no-bezier is actually not a class
+			if (array_da_aggiornare[CSSclass] != "no-bezier") {
+				temp_CSS_list[temp_CSS_list.length] = array_da_aggiornare[CSSclass];
+			}
+		}
+
+		temp_CSS_list = RemoveDuplicates(temp_CSS_list.sort());
+
+		for (CSSname in temp_CSS_list) {
+			dojo.byId("select_css_class").innerHTML+='<option value="'+temp_CSS_list[CSSname]+'">'+temp_CSS_list[CSSname]+'</option>';
 		}
 	}
-	
-	temp_CSS_list = RemoveDuplicates(temp_CSS_list.sort());
-	
-	for (CSSname in temp_CSS_list) {
-		a_list_css = createElementCB("a");
-		a_list_css.setAttribute("href","javascript:loadCSS(\""+temp_CSS_list[CSSname]+"\")");
-		a_list_css.appendChild(document.createTextNode(temp_CSS_list[CSSname]));
-		div_list_css.appendChild(a_list_css);
-		div_list_css.appendChild(createElementCB("br"));
-	}
-	
+
 	// Search symbols that applies this key/value pair
+
+	div_list_symbols=dijit.byId("list_symbols");
 
 	var array_da_aggiornare = new Array();
 	cmyk.getSymbolFromRule(cmyk.getRuleModel(),my_key,my_value,array_da_aggiornare);
 
 	if (array_da_aggiornare.length) {
-		div_list_css.appendChild(createElementCB("br"));
-		var strong_section = createElementCB("strong");
-		strong_section.appendChild(document.createTextNode("Symbols associated:"));
-		div_list_css.appendChild(strong_section);
-		div_list_css.appendChild(createElementCB("br"));
-	}
+		loadIntoNodeAndParse("osmarender_frontend/panels/rules/list_symbols.xml",div_list_symbols.domNode);
 
-	for (symbols in array_da_aggiornare) {
-		a_list_symbol = createElementCB("a");
-		a_list_symbol.setAttribute("href","javascript:loadSymbol(\""+array_da_aggiornare[symbols]+"\")");
-		a_list_symbol.appendChild(document.createTextNode(array_da_aggiornare[symbols]));
-		div_list_css.appendChild(a_list_symbol);
-		div_list_css.appendChild(createElementCB("br"));
-	}
+		for (symbols in array_da_aggiornare) {
+			dojo.byId("select_symbols").innerHTML+='<option value="'+array_da_aggiornare[symbols]+'">'+array_da_aggiornare[symbols]+'</option>';
+		}
 
+	}
 }
 
 loadSymbol = function(symbolname) {
 	displaySymbols();
-	selectSymbols = document.getElementById("select_symbols");
-	for (item in selectSymbols.options) {
-		if (selectSymbols.options[item].value==symbolname) {
-			selectSymbols.selectedIndex=item;
-			break;
-		}
+	with (dijit.byId("select_symbols")) {
+		setValue(symbolname);
+		onChange();
 	}
-	selectSymbols.onchange();
 }
 
 loadCSS = function(cssname) {
@@ -1042,7 +938,7 @@ function Osmatransform () {
 	xslfile=xmlhttp.responseXML;
 	
 	var rulesfile=cmyk.getRulesFile();
-console.debug((new XMLSerializer).serializeToString(rulesfile));
+//console.debug((new XMLSerializer).serializeToString(rulesfile));
 	try{
 			var processor = new XSLTProcessor();
 			processor.importStylesheet(xslfile);
@@ -1097,13 +993,6 @@ saveFile = function() {
 	var string = new XMLSerializer().serializeToString(cmyk.getRulesFile().documentElement);
 	var newWindow = window.open("","xml");
 	newWindow.location="data:text/xml;charset=utf8,"+encodeURIComponent(string);
-	//var newWindow = window.open("","xml");
-	//newWindow.document.open();
-	//newWindow.document.write(<p>pippo</p>);
-	//newWindow.document.documentElement.appendChild(cmyk.getRulesFile().documentElement);
-	//newWindow.document.close();
-	
-//	<a href="javascript: window.location='data:text/csv;charset=utf8,' + encodeURIComponent('a,b,c,d');">dowload CSV</a>
 }
 
 handleLoadPreset = function (rule_file_name,osm_file_name) {
@@ -1128,17 +1017,9 @@ handleLoadPreset = function (rule_file_name,osm_file_name) {
 saveSVGFile = function() {
 	if (document.getElementById("svgfile").childNodes.length>1) {
 		var string = new XMLSerializer().serializeToString(document.getElementById("svgfile").childNodes[1]);
-		console.debug(string);
 		var newWindow = window.open("","xml");
 		newWindow.location="data:text/xml;charset=utf8,"+encodeURIComponent(string);
 	}
-	//var newWindow = window.open("","xml");
-	//newWindow.document.open();
-	//newWindow.document.write(<p>pippo</p>);
-	//newWindow.document.documentElement.appendChild(cmyk.getRulesFile().documentElement);
-	//newWindow.document.close();
-	
-//	<a href="javascript: window.location='data:text/csv;charset=utf8,' + encodeURIComponent('a,b,c,d');">dowload CSV</a>
 }
 
 clearSVG = function() {

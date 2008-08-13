@@ -50,7 +50,7 @@ class TileUpload:
           if tset.layer and tset.base_z and tset.x and tset.y:
           #It's a valid tileset. Save the tileset at it's place
             time_save = [time()]
-            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (client id %d)" % (tset.layer,tset.base_z,tset.x,tset.y,self.upload.user_id,self.upload.client_uuid))
+            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (uuid %d)" % (tset.layer,tset.base_z,tset.x,tset.y,self.upload.user_id,self.upload.client_uuid))
             (retval,unknown_tiles) = tset.save(self.base_tilepath, self.upload.user_id.id)
             time_save.append(time())
             if retval:
@@ -68,14 +68,14 @@ class TileUpload:
               logging.debug('Finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
             else:
               # saving the tileset went wrong
-              logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles))
+              logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles, self.upload.user_id,self.upload.client_uuid))
           else:
             # movetiles did not return a valid tileset
-            logging.error('Unzipped file was no valid tileset. Took %.1f sec (CPU %.1f).' % (time()-starttime[0],clock()-starttime[1]))
+            logging.error('Unzipped file from user %s (uuid %d) was no valid tileset. Took %.1f sec (CPU %.1f).' % (self.upload.user_id,self.upload.client_uuid,time()-starttime[0],clock()-starttime[1]))
         self.cleanup(True)
 
       else:
-        logging.info('uploaded file not found, deleting upload.')
+        logging.info("uploaded file not found, deleting upload from user %s (uuid %d)." % (self.upload.user_id,self.upload.client_uuid))
 	self.upload.delete()
    except KeyboardInterrupt:
      if self.upload: self.cleanup(False)

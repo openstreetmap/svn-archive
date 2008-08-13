@@ -5,12 +5,17 @@ package org.openstreetmap.gui.jmapviewer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * 
@@ -28,18 +33,19 @@ public class Demo extends JFrame {
 		setSize(400, 400);
 		final JMapViewer map = new JMapViewer();
 		// final JMapViewer map = new JMapViewer(new MemoryTileCache(),4);
-		// map.setTileLoader(new OsmFileCacheTileLoader(map,
-		// OsmTileLoader.MAP_MAPNIK));
+		map.setTileLoader(new OsmFileCacheTileLoader(map));
 		// new DefaultMapController(map);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		JPanel panel = new JPanel();
+		JPanel helpPanel = new JPanel();
 		add(panel, BorderLayout.NORTH);
-		JLabel label =
+		add(helpPanel, BorderLayout.SOUTH);
+		JLabel helpLabel =
 				new JLabel("Use right mouse button to move,\n "
 						+ "left double click or mouse wheel to zoom.");
-		panel.add(label);
+		helpPanel.add(helpLabel);
 		JButton button = new JButton("setDisplayToFitMapMarkers");
 		button.addActionListener(new ActionListener() {
 
@@ -47,7 +53,15 @@ public class Demo extends JFrame {
 				map.setDisplayToFitMapMarkers();
 			}
 		});
-		panel.add(button);
+		JComboBox tileSourceSelector =
+				new JComboBox(new Object[] { new OsmTileSource.Mapnik(),
+						new OsmTileSource.TilesAtHome(), new OsmTileSource.CycleMap() });
+		tileSourceSelector.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				map.setTileSource((TileSource) e.getItem());
+			}
+		});
+		panel.add(tileSourceSelector);
 		final JCheckBox showMapMarker = new JCheckBox("Map markers visible");
 		showMapMarker.setSelected(map.getMapMarkersVisible());
 		showMapMarker.addActionListener(new ActionListener() {
@@ -75,6 +89,7 @@ public class Demo extends JFrame {
 			}
 		});
 		panel.add(showZoomControls);
+		panel.add(button);
 		add(map, BorderLayout.CENTER);
 
 		//

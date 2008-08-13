@@ -15,11 +15,12 @@ public interface TileLoader {
 	 * should create and return a new {@link Job} instance that performs the
 	 * load action.
 	 * 
+	 * @param tileLayerSource
 	 * @param tilex
 	 * @param tiley
 	 * @param zoom
 	 * @returns {@link Job} implementation that performs the desired load
 	 *          action.
 	 */
-	public Job createTileLoaderJob(int tilex, int tiley, int zoom);
+	public Job createTileLoaderJob(TileSource tileLayerSource, int tilex, int tiley, int zoom);
 }

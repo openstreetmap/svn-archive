@@ -15,6 +15,7 @@ import java.net.URLConnection;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.Job;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
 /**
@@ -31,42 +32,41 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 	public static final long FILE_AGE_ONE_DAY = 1000 * 60 * 60 * 24;
 	public static final long FILE_AGE_ONE_WEEK = FILE_AGE_ONE_DAY * 7;
 
-	protected String tileCacheDir;
+	protected String cacheDirBase;
 
 	protected long maxFileAge = FILE_AGE_ONE_WEEK;
 
-	public OsmFileCacheTileLoader(JMapViewer map, String baseUrl) {
-		super(map, baseUrl);
+	public OsmFileCacheTileLoader(JMapViewer map) {
+		super(map);
 		String tempDir = System.getProperty("java.io.tmpdir");
 		try {
 			if (tempDir == null)
 				throw new IOException();
 			File cacheDir = new File(tempDir, "JMapViewerTiles");
-			cacheDir = new File(cacheDir, Integer.toString(baseUrl.hashCode()));
 			// System.out.println(cacheDir);
 			if (!cacheDir.exists() && !cacheDir.mkdirs())
 				throw new IOException();
-			tileCacheDir = cacheDir.getAbsolutePath();
+			cacheDirBase = cacheDir.getAbsolutePath();
 		} catch (Exception e) {
-			tileCacheDir = "tiles";
+			cacheDirBase = "tiles";
 		}
 	}
 
-	public OsmFileCacheTileLoader(JMapViewer map) {
-		this(map, MAP_MAPNIK);
-	}
-
-	public Job createTileLoaderJob(final int tilex, final int tiley, final int zoom) {
-		return new FileLoadJob(tilex, tiley, zoom);
+	public Job createTileLoaderJob(final TileSource source, final int tilex, final int tiley,
+			final int zoom) {
+		return new FileLoadJob(source, tilex, tiley, zoom);
 	}
 
 	protected class FileLoadJob implements Job {
 		InputStream input = null;
 
 		int tilex, tiley, zoom;
+		TileSource source;
+		File tileCacheDir;
 
-		public FileLoadJob(int tilex, int tiley, int zoom) {
+		public FileLoadJob(TileSource source, int tilex, int tiley, int zoom) {
 			super();
+			this.source = source;
 			this.tilex = tilex;
 			this.tiley = tiley;
 			this.zoom = zoom;
@@ -76,11 +76,14 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 			TileCache cache = map.getTileCache();
 			Tile tile;
 			synchronized (cache) {
-				tile = cache.getTile(tilex, tiley, zoom);
+				tile = cache.getTile(source, tilex, tiley, zoom);
 				if (tile == null || tile.isLoaded() || tile.loading)
 					return;
 				tile.loading = true;
 			}
+			tileCacheDir = new File(cacheDirBase, source.getName());
+			if (!tileCacheDir.exists())
+				tileCacheDir.mkdirs();
 			try {
 				long fileAge = 0;
 				FileInputStream fin = null;
@@ -134,18 +137,16 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				saveTileToFile(tile, buffer);
 			} catch (Exception e) {
 				if (input == null /* || !input.isStopped() */)
-					System.err.println("failed loading " + zoom + "/" + tilex
-							+ "/" + tiley + " " + e.getMessage());
+					System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " "
+							+ e.getMessage());
 			} finally {
 				tile.loading = false;
 			}
 		}
 
-		protected byte[] loadTileInBuffer(URLConnection urlConn)
-				throws IOException {
+		protected byte[] loadTileInBuffer(URLConnection urlConn) throws IOException {
 			input = urlConn.getInputStream();
-			ByteArrayOutputStream bout = new ByteArrayOutputStream(input
-					.available());
+			ByteArrayOutputStream bout = new ByteArrayOutputStream(input.available());
 			byte[] buffer = new byte[2048];
 			boolean finished = false;
 			do {
@@ -175,12 +176,10 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		 *         file
 		 * @throws IOException
 		 */
-		protected boolean isOsmTileNewer(Tile tile, long fileAge)
-				throws IOException {
+		protected boolean isOsmTileNewer(Tile tile, long fileAge) throws IOException {
 			URL url;
-			url = new URL(baseUrl + "/" + tile.getKey() + ".png");
-			HttpURLConnection urlConn = (HttpURLConnection) url
-					.openConnection();
+			url = new URL(tile.getUrl());
+			HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 			urlConn.setRequestMethod("HEAD");
 			urlConn.setReadTimeout(30000); // 30 seconds read
 			// System.out.println("Tile age: " + new
@@ -193,21 +192,20 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		}
 
 		protected File getTileFile(Tile tile) throws IOException {
-			return new File(tileCacheDir + "/" + tile.getZoom() + "_"
-					+ tile.getXtile() + "_" + tile.getYtile() + FILE_EXT);
+			return new File(tileCacheDir + "/" + tile.getZoom() + "_" + tile.getXtile() + "_"
+					+ tile.getYtile() + FILE_EXT);
 		}
 
 		protected void saveTileToFile(Tile tile, byte[] rawData) {
 			try {
-				FileOutputStream f = new FileOutputStream(tileCacheDir + "/"
-						+ tile.getZoom() + "_" + tile.getXtile() + "_"
-						+ tile.getYtile() + FILE_EXT);
+				FileOutputStream f =
+						new FileOutputStream(tileCacheDir + "/" + tile.getZoom() + "_"
+								+ tile.getXtile() + "_" + tile.getYtile() + FILE_EXT);
 				f.write(rawData);
 				f.close();
 				// System.out.println("Saved tile to file: " + tile);
 			} catch (Exception e) {
-				System.err.println("Failed to save tile content: "
-						+ e.getLocalizedMessage());
+				System.err.println("Failed to save tile content: " + e.getLocalizedMessage());
 			}
 		}
 
@@ -231,14 +229,14 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 		this.maxFileAge = maxFileAge;
 	}
 
-	public String getTileCacheDir() {
-		return tileCacheDir;
+	public String getCacheDirBase() {
+		return cacheDirBase;
 	}
 
 	public void setTileCacheDir(String tileCacheDir) {
 		File dir = new File(tileCacheDir);
 		dir.mkdirs();
-		this.tileCacheDir = dir.getAbsolutePath();
+		this.cacheDirBase = dir.getAbsolutePath();
 	}
 
 }

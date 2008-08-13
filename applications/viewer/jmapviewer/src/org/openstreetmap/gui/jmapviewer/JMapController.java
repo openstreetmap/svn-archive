@@ -20,7 +20,7 @@ import java.awt.event.MouseWheelListener;
  */
 public abstract class JMapController {
 
-	JMapViewer map;
+	protected JMapViewer map;
 
 	public JMapController(JMapViewer map) {
 		this.map = map;

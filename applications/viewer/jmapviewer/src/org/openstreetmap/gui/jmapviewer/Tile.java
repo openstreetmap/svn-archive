@@ -12,6 +12,7 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * Holds one map tile. Additionally the code for loading the tile image and
@@ -21,6 +22,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
  */
 public class Tile {
 
+	protected TileSource source;
 	protected int xtile;
 	protected int ytile;
 	protected int zoom;
@@ -34,21 +36,23 @@ public class Tile {
 	/**
 	 * Creates a tile with empty image.
 	 * 
+	 * @param source
 	 * @param xtile
 	 * @param ytile
 	 * @param zoom
 	 */
-	public Tile(int xtile, int ytile, int zoom) {
+	public Tile(TileSource source, int xtile, int ytile, int zoom) {
 		super();
+		this.source = source;
 		this.xtile = xtile;
 		this.ytile = ytile;
 		this.zoom = zoom;
 		this.image = null;
-		this.key = getTileKey(xtile, ytile, zoom);
+		this.key = getTileKey(source, xtile, ytile, zoom);
 	}
 
-	public Tile(int xtile, int ytile, int zoom, BufferedImage image) {
-		this(xtile, ytile, zoom);
+	public Tile(TileSource source, int xtile, int ytile, int zoom, BufferedImage image) {
+		this(source, xtile, ytile, zoom);
 		this.image = image;
 	}
 
@@ -58,8 +62,7 @@ public class Tile {
 	 * been loaded.
 	 */
 	public void loadPlaceholderFromCache(TileCache cache) {
-		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT,
-				BufferedImage.TYPE_INT_RGB);
+		BufferedImage tmpImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) tmpImage.getGraphics();
 		// g.drawImage(image, 0, 0, null);
 		for (int zoomDiff = 1; zoomDiff < 5; zoomDiff++) {
@@ -75,8 +78,8 @@ public class Tile {
 				int paintedTileCount = 0;
 				for (int x = 0; x < factor; x++) {
 					for (int y = 0; y < factor; y++) {
-						Tile tile = cache.getTile(xtile_high + x, ytile_high
-								+ y, zoom_high);
+						Tile tile =
+								cache.getTile(source, xtile_high + x, ytile_high + y, zoom_high);
 						if (tile != null && tile.isLoaded()) {
 							paintedTileCount++;
 							tile.paint(g, x * WIDTH, y * HEIGHT);
@@ -100,7 +103,7 @@ public class Tile {
 				int translate_y = (ytile % factor) * HEIGHT;
 				at.setTransform(scale, 0, 0, scale, -translate_x, -translate_y);
 				g.setTransform(at);
-				Tile tile = cache.getTile(xtile_low, ytile_low, zoom_low);
+				Tile tile = cache.getTile(source, xtile_low, ytile_low, zoom_low);
 				if (tile != null && tile.isLoaded()) {
 					tile.paint(g, 0, 0);
 					image = tmpImage;
@@ -108,6 +111,10 @@ public class Tile {
 				}
 			}
 		}
+	}
+
+	public TileSource getSource() {
+		return source;
 	}
 
 	/**
@@ -158,6 +165,10 @@ public class Tile {
 		this.loaded = loaded;
 	}
 
+	public String getUrl() {
+		return source.getTileUrl(zoom, xtile, ytile);
+	}
+
 	/**
 	 * Paints the tile-image on the {@link Graphics} <code>g</code> at the
 	 * position <code>x</code>/<code>y</code>.
@@ -176,7 +187,7 @@ public class Tile {
 
 	@Override
 	public String toString() {
-		return "Tile " + getTileKey(xtile, ytile, zoom);
+		return "Tile " + key;
 	}
 
 	@Override
@@ -184,12 +195,11 @@ public class Tile {
 		if (!(obj instanceof Tile))
 			return false;
 		Tile tile = (Tile) obj;
-		return (xtile == tile.xtile) && (ytile == tile.ytile)
-				&& (zoom == tile.zoom);
+		return (xtile == tile.xtile) && (ytile == tile.ytile) && (zoom == tile.zoom);
 	}
 
-	public static String getTileKey(int xtile, int ytile, int zoom) {
-		return zoom + "/" + xtile + "/" + ytile;
+	public static String getTileKey(TileSource source, int xtile, int ytile, int zoom) {
+		return zoom + "/" + xtile + "/" + ytile + "@" + source.getName();
 	}
 
 }

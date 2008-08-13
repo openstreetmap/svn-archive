@@ -17,6 +17,7 @@ public interface TileCache {
 	 * Retrieves a tile from the cache if present, otherwise <code>null</code>
 	 * will be returned.
 	 * 
+	 * @param source
 	 * @param x
 	 *            tile number on the x axis of the tile to be retrieved
 	 * @param y
@@ -26,7 +27,7 @@ public interface TileCache {
 	 * @return the requested tile or <code>null</code> if the tile is not
 	 *         present in the cache
 	 */
-	public Tile getTile(int x, int y, int z);
+	public Tile getTile(TileSource source, int x, int y, int z);
 
 	/**
 	 * Adds a tile to the cache. How long after adding a tile can be retrieved

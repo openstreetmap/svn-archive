@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * {@link TileCache} implementation that stores all {@link Tile} objects in
@@ -43,8 +44,8 @@ public class MemoryTileCache implements TileCache {
 			removeOldEntries();
 	}
 
-	public Tile getTile(int x, int y, int z) {
-		CacheEntry entry = hashtable.get(Tile.getTileKey(x, y, z));
+	public Tile getTile(TileSource source, int x, int y, int z) {
+		CacheEntry entry = hashtable.get(Tile.getTileKey(source, x, y, z));
 		if (entry == null)
 			return null;
 		// We don't care about placeholder tiles and hourglass image tiles, the

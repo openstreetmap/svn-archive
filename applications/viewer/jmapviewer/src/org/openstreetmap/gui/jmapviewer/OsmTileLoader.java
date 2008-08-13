@@ -9,6 +9,7 @@ import java.net.URL;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.Job;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
 /**
@@ -18,23 +19,13 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
  */
 public class OsmTileLoader implements TileLoader {
 
-	public static final String MAP_MAPNIK = "http://tile.openstreetmap.org";
-	public static final String MAP_OSMA = "http://tah.openstreetmap.org/Tiles/tile";
-
-	protected String baseUrl;
-
 	protected JMapViewer map;
 
 	public OsmTileLoader(JMapViewer map) {
-		this(map, MAP_MAPNIK);
-	}
-
-	public OsmTileLoader(JMapViewer map, String baseUrl) {
 		this.map = map;
-		this.baseUrl = baseUrl;
 	}
 
-	public Job createTileLoaderJob(final int tilex, final int tiley,
+	public Job createTileLoaderJob(final TileSource source, final int tilex, final int tiley,
 			final int zoom) {
 		return new Job() {
 
@@ -44,7 +35,7 @@ public class OsmTileLoader implements TileLoader {
 				TileCache cache = map.getTileCache();
 				Tile tile;
 				synchronized (cache) {
-					tile = cache.getTile(tilex, tiley, zoom);
+					tile = cache.getTile(source, tilex, tiley, zoom);
 					if (tile == null || tile.isLoaded() || tile.loading)
 						return;
 					tile.loading = true;
@@ -82,7 +73,7 @@ public class OsmTileLoader implements TileLoader {
 
 	protected HttpURLConnection loadTileFromOsm(Tile tile) throws IOException {
 		URL url;
-		url = new URL(baseUrl + "/" + tile.getKey() + ".png");
+		url = new URL(tile.getUrl());
 		HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
 		urlConn.setReadTimeout(30000); // 30 seconds read
 		// timeout

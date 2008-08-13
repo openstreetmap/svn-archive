@@ -25,6 +25,7 @@ import javax.swing.event.ChangeListener;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher.JobThread;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 
 /**
@@ -50,6 +51,8 @@ public class JMapViewer extends JPanel {
 
 	protected TileLoader tileLoader;
 	protected TileCache tileCache;
+	protected TileSource tileSource;
+
 	protected List<MapMarker> mapMarkerList;
 	protected boolean mapMarkersVisible;
 	protected boolean tileGridVisible;
@@ -90,6 +93,7 @@ public class JMapViewer extends JPanel {
 
 	public JMapViewer(TileCache tileCache, int downloadThreadCount) {
 		super();
+		tileSource = new OsmTileSource.Mapnik();
 		tileLoader = new OsmTileLoader(this);
 		this.tileCache = tileCache;
 		jobDispatcher = new JobDispatcher(downloadThreadCount);
@@ -110,7 +114,7 @@ public class JMapViewer extends JPanel {
 	}
 
 	protected void initializeZoomSlider() {
-		zoomSlider = new JSlider(MIN_ZOOM, MAX_ZOOM);
+		zoomSlider = new JSlider(MIN_ZOOM, tileSource.getMaxZoom());
 		zoomSlider.setOrientation(JSlider.VERTICAL);
 		zoomSlider.setBounds(10, 10, 30, 150);
 		zoomSlider.setOpaque(false);
@@ -183,7 +187,8 @@ public class JMapViewer extends JPanel {
 	 * @param lon
 	 *            longitude of the specified coordinate
 	 * @param zoom
-	 *            {@link #MIN_ZOOM} <= zoom level <= {@link #MAX_ZOOM}
+	 *            {@link #MIN_ZOOM} <= zoom level <=
+	 *            {@link TileSource#getMaxZoom()}
 	 */
 	public void setDisplayPositionByLatLon(Point mapPoint, double lat, double lon, int zoom) {
 		int x = OsmMercator.LonToX(lon, zoom);
@@ -196,7 +201,7 @@ public class JMapViewer extends JPanel {
 	}
 
 	public void setDisplayPosition(Point mapPoint, int x, int y, int zoom) {
-		if (zoom > MAX_ZOOM || zoom < MIN_ZOOM)
+		if (zoom > tileSource.getMaxZoom() || zoom < MIN_ZOOM)
 			return;
 
 		// Get the plain tile number
@@ -328,17 +333,17 @@ public class JMapViewer extends JPanel {
 		int x_max = getWidth();
 		int y_max = getHeight();
 
+		// paint the tiles in a spiral, starting from center of the map
 		boolean painted = true;
 		int x = 0;
 		while (painted) {
 			painted = false;
-			for (int y = 0; y < 4; y++) {
-				if (y % 2 == 0)
+			for (int i = 0; i < 4; i++) {
+				if (i % 2 == 0)
 					x++;
-				for (int z = 0; z < x; z++) {
-					if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) { // tile
-						// is
-						// visible
+				for (int j = 0; j < x; j++) {
+					if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) {
+						// tile is visible
 						Tile tile = getTile(tilex, tiley, zoom);
 						if (tile != null) {
 							painted = true;
@@ -417,7 +422,7 @@ public class JMapViewer extends JPanel {
 	}
 
 	public void setZoom(int zoom, Point mapPoint) {
-		if (zoom > MAX_ZOOM || zoom == this.zoom)
+		if (zoom > tileSource.getMaxZoom() || zoom == this.zoom)
 			return;
 		Point2D.Double zoomPos = getPosition(mapPoint);
 		jobDispatcher.cancelOutstandingJobs(); // Clearing outstanding load
@@ -443,14 +448,14 @@ public class JMapViewer extends JPanel {
 		int max = (1 << zoom);
 		if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
 			return null;
-		Tile tile = tileCache.getTile(tilex, tiley, zoom);
+		Tile tile = tileCache.getTile(tileSource, tilex, tiley, zoom);
 		if (tile == null) {
-			tile = new Tile(tilex, tiley, zoom, loadingImage);
+			tile = new Tile(tileSource, tilex, tiley, zoom, loadingImage);
 			tileCache.addTile(tile);
 			tile.loadPlaceholderFromCache(tileCache);
 		}
 		if (!tile.isLoaded()) {
-			jobDispatcher.addJob(tileLoader.createTileLoaderJob(tilex, tiley, zoom));
+			jobDispatcher.addJob(tileLoader.createTileLoaderJob(tileSource, tilex, tiley, zoom));
 		}
 		return tile;
 	}
@@ -524,6 +529,19 @@ public class JMapViewer extends JPanel {
 
 	public void setTileLoader(TileLoader tileLoader) {
 		this.tileLoader = tileLoader;
+	}
+
+	public TileSource getTileLayerSource() {
+		return tileSource;
+	}
+
+	public void setTileSource(TileSource tileSource) {
+		this.tileSource = tileSource;
+		zoomSlider.setMaximum(tileSource.getMaxZoom());
+		jobDispatcher.cancelOutstandingJobs();
+		if (zoom > tileSource.getMaxZoom())
+			setZoom(tileSource.getMaxZoom());
+		repaint();
 	}
 
 }

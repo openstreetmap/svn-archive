@@ -870,6 +870,29 @@ void Route (int recalculate, int plon, int plat)
 //  printf ("%lf km\n", limit / 100000.0);
 }
 
+int JunctionType (ndType *nd)
+{
+  int ret = 'j';
+  while (nd > ndBase && nd[-1].lon == nd->lon &&
+    nd[-1].lat == nd->lat) nd--;
+  int segCnt = 0; // Count number of segments at x->shortest
+  do {
+    // TODO : Only count segment traversable by 'Vehicle'
+    // Except for the case where a cyclist passes a motorway_link.
+    // TODO : Don't count oneways entering the roundabout
+    if (nd->other[0] >= 0) segCnt++;
+    if (nd->other[1] >= 0) segCnt++;
+    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_traffic_signals) {
+      ret = 't';
+    }
+    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_mini_roundabout) {
+      ret = 'm';
+    }   
+  } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
+           nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
+  return segCnt > 2 ? toupper (ret) : ret;
+}
+
 #ifndef HEADLESS
 #define STATUS_BAR    0
 
@@ -1119,29 +1142,6 @@ int ProcessNmea (char *rx, unsigned *got)
     *got -= i;
   } /* If we know the sentence type */
   return dataReady;
-}
-
-int JunctionType (ndType *nd)
-{
-  int ret = 'j';
-  while (nd > ndBase && nd[-1].lon == nd->lon &&
-    nd[-1].lat == nd->lat) nd--;
-  int segCnt = 0; // Count number of segments at x->shortest
-  do {
-    // TODO : Only count segment traversable by 'Vehicle'
-    // Except for the case where a cyclist passes a motorway_link.
-    // TODO : Don't count oneways entering the roundabout
-    if (nd->other[0] >= 0) segCnt++;
-    if (nd->other[1] >= 0) segCnt++;
-    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_traffic_signals) {
-      ret = 't';
-    }
-    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_mini_roundabout) {
-      ret = 'm';
-    }   
-  } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
-           nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
-  return segCnt > 2 ? toupper (ret) : ret;
 }
 
 void DoFollowThing (gpsNewStruct *gps)

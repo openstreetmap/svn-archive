@@ -117,16 +117,14 @@ def find_old_lowzooms(base_tile_path):
           #lowzoom file didn't exist yet. create.
           old_lowzooms["6_%d_%d"%(x,y)]=(6,x,y)        
 
+  return (len(old_lowzooms), old_lowzooms)
 
-  #print "requesting %d lowzooms." % len(old_lowzooms)
-  return old_lowzooms
 
 if __name__ == '__main__':
   base_tile_path = settings.TILES_ROOT
   if len(sys.argv) != 4:
     # find all modified tilesets
-    old_lowzooms = find_old_lowzooms(base_tile_path)
-    n = len(old_lowzooms)
+    n, old_lowzooms = find_old_lowzooms(base_tile_path)
     for i,(z,x,y) in enumerate(old_lowzooms.values()):
     #i,z =0,6   #for doing the whole world...
     #for x in range(0,64):

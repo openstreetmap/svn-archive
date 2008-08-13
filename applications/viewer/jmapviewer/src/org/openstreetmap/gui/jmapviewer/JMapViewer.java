@@ -363,6 +363,10 @@ public class JMapViewer extends JPanel {
 				iMove = (iMove + 1) % move.length;
 			}
 		}
+		// outer border of the map
+		int mapSize = Tile.SIZE << zoom;
+		g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
+		
 		// g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 		if (!mapMarkersVisible || mapMarkerList == null)
 			return;
@@ -372,9 +376,6 @@ public class JMapViewer extends JPanel {
 			if (p != null)
 				marker.paint(g, p);
 		}
-		// outer border of the map
-		int mapSize = Tile.SIZE << zoom;
-		g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
 	}
 
 	/**

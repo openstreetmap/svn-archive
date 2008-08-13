@@ -241,7 +241,10 @@ void EndElement(const xmlChar *name)
         }
 	storeway->id = osm_id;
 	for( i=0, p = popItem(&nds); p; i++, p = popItem(&nds) )
+	{
 		storeway->nds[i] = strtol(p->value, NULL, 10);
+		freeItem(p);
+        }
         storeway->nds[i] = 0;
         if( i == 1 )
           fprintf(stderr, "Wierd: way %d only has %d nodes\n", osm_id, i);

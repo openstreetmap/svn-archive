@@ -124,10 +124,10 @@ function init() {
 }
 
 function fnKeypress(e) {
-var zoom=map.getZoom()
-var keyCode = String.fromCharCode(e.charCode ? e.charCode : e.keyCode)
-if (keyCode == 'r') renderTile(goTarget,zoom)
-if (keyCode == 'i') tileInfo(goTarget)
+  var zoom=map.getZoom()
+  var keyCode = String.fromCharCode(e.charCode ? e.charCode : e.keyCode)
+  if (zoom==12 && keyCode == 'r') renderTile(goTarget,zoom)
+  if (keyCode == 'i') tileInfo(goTarget)
 }
 
 function tileInfo(tile) {

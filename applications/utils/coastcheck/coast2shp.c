@@ -95,7 +95,7 @@ static void project_exit(void)
 static void printStatus(void)
 {
     if( isatty(STDERR_FILENO) )
-      fprintf(stderr, "\rProcessing: Node(%dk) Way(%dk) Relation(%dk)",
+      fprintf(stderr, "\rProcessing: Node(%dk) Way(%dk) Relation(%dk)    ",
               count_node/1000, count_way/1000, count_rel/1000);
 }
 
@@ -408,24 +408,10 @@ static int processList(char *filename, char *output_prefix)
       double z = 0;
       fscanf( in, "%d %lf %lf\n", &t, &y, &x );
 
-      // Coordinates very close to +/-180 sometimes get wrapped to the wrong side. Hack to fix...
-//      double sign = (fabs(x)>179.9) ? copysign( 1, x ) : 0;
-//      if( sign != 0 )
-//        fprintf( stderr, "Processing point (%f,%f)\n", x,y );
       x *= DEG_TO_RAD;
       y *= DEG_TO_RAD;
 //      printf( "Before transform (%f,%f)\n", x, y );
       pj_transform(pj_ll, pj_merc, 1, 1, &x, &y, &z);
-//      if( sign != 0 )
-//        fprintf( stderr, "Projected to (%f,%f)\n", x, y );
-//      if( sign < 0 && x > 0 )
-//        sign -= 2*20037508.34;
-//      if( sign > 0 && x < 0 )
-//        sign += 2*20037508.34;
-      
-//      if( sign != 0 )
-//        fprintf( stderr, "Corrected to (%f,%f)\n", x, y );
-      
 //      printf( "After transform (%f,%f)\n", x, y );
       
 //      if( x > 0.0 && y > 5527259.12027 && x < 78271.516964 && y < 5605266.15512 )
@@ -485,13 +471,10 @@ static int processList(char *filename, char *output_prefix)
           first_match = node_match;
         if( last_match == node_match )
           continue;
-        if( last_match && fabs( last_match->lat - node_match->lat ) < 3e-6*DEG_TO_RAD
-                       && fabs( last_match->lon - node_match->lon ) < 3e-6*DEG_TO_RAD )
+        if( last_match && fabs( last_match->lat - node_match->lat ) < 1e-6
+                       && fabs( last_match->lon - node_match->lon ) < 1e-6 )
         {
-#if 0
-          if( way_id == 22650041 )
-            fprintf(stderr, "Skipped (too close) {%.6f,%.6f} ", node_match->lat, node_match->lon );
-#endif
+//          printf( "{%.6f,%.6f} ", node_match->lat, node_match->lon );
           continue;
         }
         /* Extend array as necessary */
@@ -590,9 +573,9 @@ static int processList(char *filename, char *output_prefix)
       if( (tmp->dfXMax - tmp->dfXMin) > 30000000 )
       {
         fprintf( stderr, "Still Oversize: way_id=%d\n", way_id );
-        for( int y=0; y<vertex_count; y++)
-          fprintf( stderr, "(%f,%f), ", v_x[y], v_y[y] );
-        fprintf(stderr, "\n");
+//        for( int y=0; y<vertex_count; y++)
+//          fprintf( stderr, "(%f,%f), ", v_x[y], v_y[y] );
+//        fprintf(stderr, "\n");
       }
     }
 #if 0
@@ -650,9 +633,6 @@ static int processList(char *filename, char *output_prefix)
   fprintf( stderr, "Polygons: %d, Arcs: %d\n", shp_poly_count, shp_arc_count );
   if( max_vertex_count >= MAX_VERTICES )
     fprintf( stderr, "objects cropped to %d vertices\n", MAX_VERTICES );
-  SHPCreateTree( shp_poly, 2, 10, NULL, NULL );
-  SHPCreateTree( shp_arc, 2, 10, NULL, NULL );
-  SHPCreateTree( shp_point, 2, 10, NULL, NULL );
   SHPClose( shp_poly );
   SHPClose( shp_arc );
   SHPClose( shp_point );

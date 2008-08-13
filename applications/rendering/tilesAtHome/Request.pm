@@ -26,9 +26,9 @@ sub ZXY
 {
     my $self = shift;
     my ($new_z, $new_x, $new_y) = @_;
-    if ($new_z) {$self->{MIN_Z} = $new_z;}
-    if ($new_x) {$self->{X} = $new_x;}
-    if ($new_y) {$self->{Y} = $new_y;}
+    if (defined($new_z)) {$self->{MIN_Z} = $new_z;}
+    if (defined($new_x)) {$self->{X} = $new_x;}
+    if (defined($new_y)) {$self->{Y} = $new_y;}
     return ($self->{MIN_Z},$self->{X},$self->{Y})
 }
 
@@ -37,7 +37,7 @@ sub Z
 {
     my $self = shift;
     my $new_z = shift;
-    if ($new_z) {$self->{MIN_Z} = $new_z;}
+    if (defined($new_z)) {$self->{MIN_Z} = $new_z;}
     return $self->{MIN_Z}
 }
 
@@ -46,7 +46,7 @@ sub X
 {
     my $self = shift;
     my $new_x = shift;
-    if ($new_x) {$self->{X} = $new_x;}
+    if (defined($new_x)) {$self->{X} = $new_x;}
     return $self->{X}
 }
 
@@ -55,7 +55,7 @@ sub Y
 {
     my $self = shift;
     my $new_y = shift;
-    if ($new_y) {$self->{Y} = $new_y;}
+    if (defined($new_y)) {$self->{Y} = $new_y;}
     return $self->{Y}
 }
 

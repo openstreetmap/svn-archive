@@ -13,11 +13,12 @@ sub new
 {
     my $class = shift;
     my $self = {
-        MIN_Z => shift,
-        X => shift,
-        Y  => shift,
+        MIN_Z => undef,
+        X => undef,
+        Y  => undef,
     };
     bless $self, $class;
+    $self->ZXY(@_);
     return $self;
 }
 
@@ -26,7 +27,7 @@ sub ZXY
 {
     my $self = shift;
     my ($new_z, $new_x, $new_y) = @_;
-    return ($self->Z($new_z),$self->X($new_x),$self->($new_y))
+    return ($self->Z($new_z),$self->X($new_x),$self->Y($new_y))
 }
 
 # set and/or retrieve the z of a request

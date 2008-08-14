@@ -20,8 +20,9 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
-import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
+import org.openstreetmap.gui.jmapviewer.OsmTileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 
@@ -47,6 +48,8 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 	private Dimension iDownloadDialogDimension;
 	// screen size
 	private Dimension iScreenSize;
+
+	private TileSource[] sources = { new OsmTileSource.Mapnik(), new OsmTileSource.TilesAtHome() };
 
 	/**
 	 * Create the chooser component.
@@ -202,7 +205,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 			int w = iScreenSize.width * 90 / 100;
 			int h = iScreenSize.height * 90 / 100;
 			co.setBounds((iScreenSize.width - w) / 2, (iScreenSize.height - h) / 2, w, h);
-			
+
 		}
 		// shrink
 		else {
@@ -211,20 +214,19 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 			int w = iDownloadDialogDimension.width;
 			int h = iDownloadDialogDimension.height;
 			co.setBounds((iScreenSize.width - w) / 2, (iScreenSize.height - h) / 2, w, h);
-			
+
 		}
-		
+
 		repaint();
 	}
-	
-	public void toggleMapSource(int mapSource){
+
+	public void toggleMapSource(int mapSource) {
 		this.tileCache = new MemoryTileCache();
-		if(mapSource == SourceButton.MAPNIK){
-			this.tileLoader = new OsmTileLoader(this,OsmTileLoader.MAP_MAPNIK);
-		}else{
-			this.tileLoader = new OsmTileLoader(this,OsmTileLoader.MAP_OSMA);
+		if (mapSource == SourceButton.MAPNIK) {
+			this.setTileSource(sources[0]);
+		} else {
+			this.setTileSource(sources[1]);
 		}
-		repaint();
 	}
 
 }

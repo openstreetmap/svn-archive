@@ -20,8 +20,8 @@
     <h3>Current Request status</h3>
     {% if reqs %}{% for r in reqs %}<p>{{r.status_str|capfirst}} request at priority {{r.priority}} has been requested {{r.request_time|timesince}} ago.<br/>Renderer: {{r.client}}, Layers left to render: {{r.layers_str}}</p>{% endfor %}
     {%else%}No request found{%endif%}
-    {% ifequal base_z 12 %}<br/>
-    <form action="{% url tah.requests.views.create %}" method="post">
+
+    {% ifequal base_z 12 %}<form action="{% url tah.requests.views.create %}" method="post">
       Request a <div style="display:none">{{ RequestForm.as_p }}</div>
       <input type="submit" value="rerender"/> of this tileset.
     </form>{%endifequal%}

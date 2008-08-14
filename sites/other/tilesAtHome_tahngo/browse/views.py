@@ -61,7 +61,8 @@ def tiledetails(request,layername,z,x,y):
     except User.DoesNotExist: user = "Nonexistent User ID %d" % userid
   else: user='Unknown'
 
-  reqs = Request.objects.filter(Q(status__lt=2,layers__id__exact=1)|Q(status=2),min_z=base_z,x=base_x,y=base_y).distinct().order_by('status','-request_time')
+  #reqs = Request.objects.filter((Q(status__lt=2,layers__id__exact=1)|Q(status=2)),min_z=base_z,x=base_x,y=base_y).distinct().order_by('status','-request_time')
+  reqs = Request.objects.filter(min_z=base_z,x=base_x,y=base_y).order_by('status','-request_time')
 
   #Use regular HTML template, or short machine readable version?
   if request.GET.get('format','') == 'short':

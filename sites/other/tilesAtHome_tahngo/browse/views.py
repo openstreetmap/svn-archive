@@ -39,6 +39,9 @@ def tiledetails(request,layername,z,x,y):
   userid=None
   layer = Layer.objects.get(name=layername)
   t=Tile(layer,z,x,y)
+  # bail out if the tile coordinates were not valid.
+  if not t.is_valid():
+    return render_to_response('base_errormessage.html',{'header': 'Tile detail view','reason':'The tile coordinates were invalid. Please check zoom, x, and y values.'})
   (layer, base_z,base_x,base_y) = t.basetileset()
   # basetileset returns (None,None,None,None) if invalid
   (tilepath, tilefile) = Tileset(layer, base_z, base_x, base_y).get_filename(settings.TILES_ROOT)

@@ -173,8 +173,6 @@ if ($RenderMode) {
 my $parent_pid = $PID;
 my $upload_pid = -1;
 
-my $upload_result = 0;
-
 # Subdirectory for the current job (layer & z12 tileset),
 # as used in sub GenerateTileset() and tileFilename()
 my $JobDirectory;
@@ -285,7 +283,7 @@ elsif ($Mode eq "loop")
         # Render stuff if we get a job from server
         my ($did_something, $message) = ProcessRequestsFromServer();
         # compress and upload results
-        $upload_result = compressAndUploadTilesets();
+        my $upload_result = compressAndUploadTilesets();
 
         if ($upload_result)
         {     # we got an error in the upload process
@@ -340,7 +338,7 @@ elsif ($Mode eq "upload_loop")
 
         if (countZips() > 0)
         {
-            $upload_result = upload(); # only uploading ZIP files here
+            my $upload_result = upload(); # only uploading ZIP files here
             
             if ($upload_result)  # we got an error in the upload process
             {
@@ -396,7 +394,7 @@ elsif ($Mode eq "")
     
     if (! $did_something)
     {
-        statusMessage("you may safely press Ctrl-C now if you ran this as \"tilesGen.pl\" from the command line.",1,0);
+        statusMessage("you may safely press Ctrl-C now if you want to exit tilesGen.pl",1,0);
         talkInSleep($message, 60);
     }
     statusMessage("if you want to run this program continuously, use loop mode",1,0);
@@ -461,7 +459,8 @@ sub compressAndUploadTilesets
         {
             statusMessage("Waiting for previous upload process to finish",0,3);
             waitpid($upload_pid, 0);
-            $upload_result = $? >> 8;
+            #FIXME: $upload_result is apparently never returned?! skip?
+            #$upload_result = $? >> 8;
         }
         # compress before fork so we don't get temp files mangled.
         # Workaround for batik support.

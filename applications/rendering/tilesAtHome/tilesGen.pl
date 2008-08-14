@@ -1732,19 +1732,11 @@ sub splitImageX
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
         {
-            # We keep the one at tileset base level, so we return at least one
-            if( $Z == $req->Z or $Config->get("LocalSlippymap") )
-	    {
-		copy("emptyland.png", $Filename);
-            }
+            copy("emptyland.png", $Filename);
         }
         elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
         {
-            # We keep the one at tileset base level, so we return at least one
-            if( $Z == $req->Z or $Config->get("LocalSlippymap") )
-	    {
-		copy("emptysea.png",$Filename);
-            }
+	    copy("emptysea.png", $Filename);
         }
         else
         {

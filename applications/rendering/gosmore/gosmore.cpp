@@ -2500,7 +2500,7 @@ int UserInterface (int argc, char *argv[])
 #define NGROUP(x)  ((x) / 9000000 % NGROUPS + IDXGROUPS)
 #define S1GROUPS NGROUPS
 #define S1GROUP(x) ((x) / 9000000 % NGROUPS + IDXGROUPS + NGROUPS)
-#define S2GROUPS 33 // Last group is reserved for lowzoom halfSegs
+#define S2GROUPS 65 // Last group is reserved for lowzoom halfSegs
 #define S2GROUP(x) ((x) / (MAX_BUCKETS / (S2GROUPS - 1)) + IDXGROUPS + NGROUPS * 2)
 #define PAIRS (16 * 1024 * 1024)
 #define PAIRGROUPS 100

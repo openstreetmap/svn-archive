@@ -281,19 +281,19 @@ elsif ($Mode eq "loop")
 
         reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
 
-        ## start processing here:
+        ### start processing here:
+        # Render stuff if we get a job from server
+        my ($did_something, $message) = ProcessRequestsFromServer();
+        # compress and upload results
+        $upload_result = compressAndUploadTilesets();
 
-        my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
-
-        $upload_result = compressAndUploadTilesets(); # upload if enough work done
-
-        if ($upload_result)  # we got an error in the upload process
-        {
-              addFault("upload",1); # we only track errors that occur multple times in a row
+        if ($upload_result)
+        {     # we got an error in the upload process
+              addFault("upload",1);
         }
         else
-        {
-              resetFault("upload"); #reset fault counter for uploads if once without error
+        {     #reset fault counter if we uploaded successfully
+              resetFault("upload");
         }
 
         if ($did_something == 0) 
@@ -301,13 +301,13 @@ elsif ($Mode eq "loop")
             talkInSleep($message, 60);
         }
         else
-        {
+        {   # Rendered tileset, don't idle in next round
             setIdle(0,0);
         }
     }
 }
 elsif ($Mode eq "upload" or $Mode eq "upload_conditional") 
-{
+{   # Upload modes. Note:"upload_conditional" is deprecated and will be removed
     $currentSubTask = "warning";
     statusMessage("don't run this parallel to another tilesGen.pl instance",1,0);
     compressAndUpload();
@@ -389,7 +389,7 @@ elsif ($Mode eq "update")
 elsif ($Mode eq "") 
 {
     # ----------------------------------
-    # Normal mode downloads request from server
+    # Normal mode renders a single request from server and exits
     # ----------------------------------
 
     my ($did_something, $message) = ProcessRequestsFromServer();
@@ -463,25 +463,26 @@ sub compressAndUploadTilesets
             waitpid($upload_pid, 0);
             $upload_result = $? >> 8;
         }
-        compress(); #compress before fork so we don't get temp files mangled. Workaround for batik support.
+        # compress before fork so we don't get temp files mangled.
+        # Workaround for batik support.
+        # FIXME: spaetz asks "FOR WHAT REASON?" Let's fix this the right way
+        compress();
         $upload_pid = fork();
         if ((not defined $upload_pid) or ($upload_pid == -1))
-        {
-            cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
+        {   # exit if asked to fork but unable to
+            cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID);
         }
         elsif ($upload_pid == 0)
-        {
-            ## we are the child, so we run the upload
-            my $res = upload(); # upload if enough work done
-            exit($res);
+        {   # we are the child, so we run the upload and exit the thread
+            exit (upload());
         }
     }
     else
-    {
-        ## no forking going on
+    {   ## no forking going on
         return compressAndUpload();
     }
-    return 0; # no error, just nothing to upload
+    # no error, just nothing to upload
+    return 0;
 }
 
 #-----------------------------------------------------------------------------

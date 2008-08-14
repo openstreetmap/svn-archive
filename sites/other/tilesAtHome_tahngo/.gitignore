@@ -2,3 +2,6 @@
 /.htaccess
 /*.pyc
 /settings.py
+/admin_media
+/Incoming
+/var

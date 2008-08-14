@@ -3073,6 +3073,7 @@ int main (int argc, char *argv[])
       } // if it was </...>
       xmlFree (name);
     } // While reading xml
+    free (wayId);
     if (s[0].lat && (!wayFseek || *wayFseek)) {
       fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
     }

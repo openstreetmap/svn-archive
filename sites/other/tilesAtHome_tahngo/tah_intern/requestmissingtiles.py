@@ -21,15 +21,16 @@ CreateFormClass.base_fields['max_z'].required = False
 CreateFormClass.base_fields['layers'].required = False 
 CreateFormClass.base_fields['status'].required = False 
 
-for x in range(909,1000):
+for x in range(0,4096):
  print "x=%d" % x 
- for y in range(1000,2000):
+ for y in range(0,4096):
     tilepath, tilefile = Tileset(layer,12,x,y).get_filename(base_tile_path)
     tilesetfile = os.path.join(tilepath, tilefile)
     if not os.path.isfile(tilesetfile):
       form = CreateFormClass({'min_z': 12, 'x': x, 'y': y, 'priority': 4, 'layer':[1]})
       if form.is_valid():
         saveCreateRequestForm(r, form)
+        print "x=%d,y=%d" % (x,y) 
       else:
         print "form is not valid. %s\n" % form.errors
       del form

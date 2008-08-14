@@ -8,8 +8,6 @@
 /* cd /etc/apache2/mods-enabled ; ln -s ../mods-available/mod_tah.load     */
 /* In apache <Location /Tiles> use  SetHandler tah_handler                 */
 
-/* TODO: Do not use int! Need a four byte unsigned integer. */
-
 #include <httpd.h>
 #include <http_config.h>
 #include <http_protocol.h>
@@ -25,11 +23,12 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 
 #define FILEVERSION 1
 #define MIN_VALID_OFFSET 4
-#define OCEANS_DB_FILE "/usr/local/tah/Tiles/oceantiles_12.dat"
-
-static char * basetilepath = "/usr/local/tah/Tiles";
-static char * statictilepath = "/usr/local/tah/Tiles";
 const char * const content_imagepng = "image/png";
+
+static char * basetilepath = "/mnt/agami/openstreetmap/tah/Tiles/";
+static char * statictilepath = "/mnt/agami/openstreetmap/tah/Tiles/";
+#define OCEANS_DB_FILE "/var/www/tah/Tiles/oceantiles_12.dat"
+
 
 const char land[] =
   "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52"

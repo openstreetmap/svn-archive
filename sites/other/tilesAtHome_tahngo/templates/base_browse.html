@@ -18,4 +18,9 @@
 <tr><td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z|add:"-1" }}&x={{ x|div:2 }}&y={{ y|div:2 }}"><img src="{% url django.views.generic.simple.direct_to_template template="homepage.html" %}media/browsetable_out.png" class="browseimg"/></a></td>{% for cur_x in x_range %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z }}&x={{cur_x}}&y={{ y_range|slice:"-1:"|first|add:1 }}"><img src="{% url django.views.generic.simple.direct_to_template template="homepage.html" %}media/browsetable_S.png" class="browseimg"/></a></td>{% endfor %}<td class="browsetable"><a href="{% url tah.browse.views.index %}?layer={{layer}}&z={{ z|add:"1" }}&x={{ x|add:x }}&y={{ y|add:y }} "><img src="{% url django.views.generic.simple.direct_to_template template="homepage.html" %}media/browsetable_in.png" class="browseimg"/></a><td/></tr>
 </table>
 <a href="{% url tah.browse.views.tiledetails layer,z,x,y %}">Show Tile detail</a>
+
+{% ifequal base_z 12 %}<form action="{% url tah.requests.views.create %}" method="post">
+      Request a <div style="display:none">{{ RequestForm.as_p }}</div>
+      <input type="submit" value="rerender"/> of this tileset.
+</form>{%endifequal%}
 {% endblock %}

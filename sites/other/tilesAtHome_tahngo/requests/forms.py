@@ -2,6 +2,10 @@ from django import forms
 from tah.requests.models import Request,Upload
 
 CreateForm = forms.form_for_model(Request)
+#Delete some fields unrequired fields
+del CreateForm.base_fields['client']
+del CreateForm.base_fields['ipaddress']
+
 UploadForm = forms.form_for_model(Upload)
 
 class ClientAuthForm(forms.Form):

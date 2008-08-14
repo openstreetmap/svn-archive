@@ -1,5 +1,4 @@
 import os
-from stat import *
 from struct import unpack, calcsize
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -8,6 +7,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from tah.requests.models import Request
+from tah.requests.forms import CreateForm
 from tah.tah_intern.Tile import Tile
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.models import Layer
@@ -30,7 +30,7 @@ def slippymap(request):
   return render_to_response('base_browse_slippy.html',{'layer': layer,'z':z, 'x':x, 'y':y})
 
 def tiledetails_base(request):
- return tiledetails('tile',0,0,0)
+ return tiledetails('tile',2,1,1)
 
 def tiledetails(request,layername,z,x,y):
   z=int(z)
@@ -42,6 +42,7 @@ def tiledetails(request,layername,z,x,y):
   # bail out if the tile coordinates were not valid.
   if not t.is_valid():
     return render_to_response('base_errormessage.html',{'header': 'Tile detail view','reason':'The tile coordinates were invalid. Please check zoom, x, and y values.'})
+
   (layer, base_z,base_x,base_y) = t.basetileset()
   # basetileset returns (None,None,None,None) if invalid
   (tilepath, tilefile) = Tileset(layer, base_z, base_x, base_y).get_filename(settings.TILES_ROOT)
@@ -65,10 +66,11 @@ def tiledetails(request,layername,z,x,y):
   #Use regular HTML template, or short machine readable version?
   if request.GET.get('format','') == 'short':
     template = 'tile_details_machine.html'
+    RequestForm = None
   else:
     template = 'tile_details.html'
-
-  return render_to_response(template,{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user, 'reqs':reqs})
+    RequestForm = CreateForm({'min_z': base_z, 'x': base_x, 'y': base_y, 'priority': 1})
+  return render_to_response(template,{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user, 'reqs':reqs, 'RequestForm': RequestForm, 'base_z': base_z})
 
 def show_map_of(request):
   return HttpResponse("not implemented",mimetype="text/plain")

@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use File::Copy;
+use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
@@ -53,7 +54,6 @@ if ($Config->get("LocalSlippymap"))
 
 my $ZipFileCount = 0;
 
-## FIXME: this is one of the things that make upload.pl not multithread safe
 my $ZipDir = $Config->get("WorkingDirectory") . "/uploadable";
 
 my @sorted;
@@ -64,8 +64,6 @@ our $progressPercent = 0;
 our $progressJobs = $ARGV[0] or 1;
 our $currentSubTask = "zipping";
 
-
-### TODO: implement locking, this is one of the things that make compress.pl not multithread-safe.
 
 my $tileCount;
 
@@ -133,19 +131,28 @@ else
         my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
         closedir($dp);
         
-        foreach (@tilesets)        # not split into chunks
-        {
-            my $set = "$TileDir/$_";
-            $set =~ s|\.dir$||;
-            if (rename "$set.dir", "$set.upload") 
-            {
-                compress("$set.upload", $ZipDir, 'yes', $allowedPrefixes);
-                rmdir "$set.upload";    # should be empty now
+        foreach my $File(@tilesets)
+        {   # go through all complete tilesets ie "*.dir" firectories
+            my $FullTileDirPath = "$TileDir/$File";
+
+            # get a file handle, then try to lock the file exclusively.
+            # if open fails (file has been uploaded and removed by other process)
+            # the subsequent flock will also fail and skip the file.
+            # if just flock fails it is being handled by a different upload process
+            open (ZIPDIR, $FullTileDirPath);
+            if (flock(ZIPDIR, LOCK_EX|LOCK_NB))
+            {   # got exclusive lock, now compress
+                compress($FullTileDirPath, $ZipDir, 'yes', $allowedPrefixes);
+                # TODO: We always kill the tileset.dir independent of success and never return a success value!
+                rmdir $FullTileDirPath;    # should be empty now
             }
             else
-            {
-                print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
+            {   # could not get exclusive lock, this is being handled elsewhere now
+                statusMessage("$File compressed by different process. skipping",0,3);
             }
+            # finally unlock zipfile and release handle
+            flock (ZIPDIR, LOCK_UN);
+            close (ZIPDIR);
         }
 
         ## look again in the workdir, there might be new files from split tilesets:

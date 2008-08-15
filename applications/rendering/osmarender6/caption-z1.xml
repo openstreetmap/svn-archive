@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- Render just captions for z4 -->
+<!-- Render just captions for z1 -->
 
 <rules
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -29,11 +29,6 @@
       <rule e="node" k="place" v="continent">
         <text k="name" class='caption-casing continent-caption-casing' />
         <text k="name" class='caption-core continent-caption' />
-      </rule>
-
-      <rule e="node" k="place" v="country" horizontalProximity="1.6" verticalProximity="1.2">
-        <text k="name" class='caption-casing country-caption-casing' />
-        <text k="name" class='caption-core country-caption' />
       </rule>
 
     </rule> <!-- k="osmarender:renderName" v="~|yes" -->
@@ -71,11 +66,11 @@
                 stroke-miterlimit: 1.5;
             }
 
-           .continent-caption-casing { font-size: 120000px; stroke-width: 32000px; }
-           .continent-caption        { font-size: 120000px; }
+           .continent-caption-casing { font-size: 70000px; stroke-width: 10000px; }
+           .continent-caption        { font-size: 70000px; }
 
-           .country-caption-casing { font-size: 120000px; stroke-width: 32000px; }
-           .country-caption        { font-size: 120000px; }
+           .country-caption-casing { font-size: 40000px; stroke-width: 6000px; }
+           .country-caption        { font-size: 40000px; }
 
 
 

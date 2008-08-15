@@ -29,7 +29,7 @@
 #include <shapefil.h>
 
 #define VERBOSE 0
-#define TEST 0
+#define TEST 1
 #define UNUSED __attribute__((unused))
 
 #define MERC_MAX (20037508.34f)
@@ -50,6 +50,7 @@ static char used_bitmap[DIVISIONS * DIVISIONS];
 
 static SHPHandle shp_out;
 static DBFHandle dbf_out;
+struct source;
 
 /* Column of error flag */
 #define DBF_OUT_ERROR   0
@@ -57,7 +58,7 @@ static DBFHandle dbf_out;
 #define DBF_OUT_TILE_Y   2
 struct segment
 {
-  SHPHandle shp;   /* Shapefile of this segment */
+  struct source *src;   /* Shapefile of this segment */
   int index;       /* Index of object in shapefile */
   double sx, sy;   /* Where the segment enters the box */
   double ex, ey;   /* Where the segment leaves the box */
@@ -74,7 +75,7 @@ struct segment
  * error. */
 struct subarea
 {
-  SHPHandle shp;   /* Shapefile of this segment */
+  struct source *src;   /* Shapefile of this segment */
   int index;       /* Index of this object in shapefile */
   double x, y;     /* representative point on shape */
   double areasize; /* Positive area is land, negative is lake */
@@ -108,10 +109,8 @@ struct source
   DBFHandle dbf;
   SHPTree *shx;
   int shape_count;
-#ifdef SHAPES_IN_MEMORY
+  int in_memory;
   SHPObject **shapes;
-  SHPObject **simple_shapes;
-#endif
 };
 
 void OutputSegs( struct state *state );
@@ -120,7 +119,7 @@ static void InitBitmap( struct source *src, SHPHandle temp );
 static double CalcArea( const SHPObject *obj );
 static void SplitCoastlines( struct source *poly, struct source *arc, char *out_filename );
 static int contains( double x, double y, double *v_x, double *v_y, int vertices );
-static int CopyShapeToArray( SHPHandle shp, int index, int snode, int enode, int node_count );
+static int CopyShapeToArray( struct source *src, int index, int snode, int enode, int node_count );
 static void ResizeSubareas( struct state *state, int count );
 void ProcessSubareas(struct state *state, int *pc, int *nc);
 
@@ -131,6 +130,23 @@ static inline void mark_tile( int x, int y )
 static inline int check_tile( int x, int y )
 {
   return used_bitmap[ x + y * DIVISIONS ];
+}
+
+static inline SHPObject *source_get_shape( struct source *src, int i )
+{
+  if( src->in_memory )
+  {
+    if( !src->shapes[i] )
+      src->shapes[i] = SHPReadObject( src->shp, i );
+    return src->shapes[i];
+  }
+  return SHPReadObject( src->shp, i );
+}
+
+static inline void source_release_shape( struct source *src, SHPObject *obj )
+{
+  if( !src->in_memory )
+    SHPDestroyObject(obj);
 }
 
 int main( int argc, char *argv[] )
@@ -147,6 +163,7 @@ int main( int argc, char *argv[] )
   char *out_file = argv[3];
 
   struct source poly, arc, simplified;
+  poly.in_memory = arc.in_memory = simplified.in_memory = 0;
 
   /* open shapefiles and dbf files */
   poly.shp = SHPOpen( poly_file, "rb" );
@@ -187,6 +204,23 @@ int main( int argc, char *argv[] )
     return 1;
   }
 
+  /* Check shapefiles are the right type and initialise length */
+  {
+    int type;
+    SHPGetInfo( poly.shp, &poly.shape_count, &type, NULL, NULL );
+    if( type != SHPT_POLYGON )
+    {
+      fprintf( stderr, "'%s' is not a POLYGON shapefile\n", poly_file );
+      return 1;
+    }
+    SHPGetInfo( arc.shp, &arc.shape_count, &type, NULL, NULL );
+    if( type != SHPT_ARC )
+    {
+      fprintf( stderr, "'%s' is not a ARC shapefile\n", arc_file );
+      return 1;
+    }
+  }
+  
   /* Split coastlines into arc no longer than MAX_NODES_PER_ARC long */
   sprintf( out_filename, "%s_i", out_file );
   SplitCoastlines( &poly, &arc, out_filename );
@@ -211,23 +245,6 @@ int main( int argc, char *argv[] )
   DBFAddField( dbf_out, "tile_x", FTInteger, 4, 0 );
   DBFAddField( dbf_out, "tile_y", FTInteger, 4, 0 );
 
-  /* Check shapefiles are the right type */
-  {
-    int type;
-    SHPGetInfo( poly.shp, &poly.shape_count, &type, NULL, NULL );
-    if( type != SHPT_POLYGON )
-    {
-      fprintf( stderr, "'%s' is not a POLYGON shapefile\n", poly_file );
-      return 1;
-    }
-    SHPGetInfo( arc.shp, &arc.shape_count, &type, NULL, NULL );
-    if( type != SHPT_ARC )
-    {
-      fprintf( stderr, "'%s' is not a ARC shapefile\n", arc_file );
-      return 1;
-    }
-  }
-  
   /* Build indexes on files, we need them... */
   poly.shx = SHPCreateTree( poly.shp, 2, 10, NULL, NULL );
   arc.shx  = SHPCreateTree( arc.shp, 2, 10, NULL, NULL );
@@ -327,13 +344,16 @@ int main( int argc, char *argv[] )
       OutputSegs( &state );
     }
     
+  free( state.sub_areas );
   SHPDestroyTree( poly.shx );
   SHPDestroyTree( arc.shx );
+  SHPDestroyTree( simplified.shx );
   DBFClose( poly.dbf );
   DBFClose( arc.dbf );
   DBFClose( dbf_out );
   SHPClose( poly.shp );
   SHPClose( arc.shp );
+  SHPClose( simplified.shp );
   SHPClose( shp_out );
   
   printf("\n");
@@ -372,7 +392,7 @@ static void SplitCoastlines2( int show, struct source *arc, SHPHandle shp_arc_ou
   int count = arc->shape_count;
   for( int i=0; i<count; i++ )
   {
-    SHPObject *obj = SHPReadObject( arc->shp, i );
+    SHPObject *obj = source_get_shape( arc, i );
     int way_id = DBFReadIntegerAttribute( arc->dbf, i, 2 );
     
     if( obj->nVertices <= MAX_NODES_PER_ARC )
@@ -382,7 +402,7 @@ static void SplitCoastlines2( int show, struct source *arc, SHPHandle shp_arc_ou
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 0, way_id );
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 1, show );
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 2, obj->nVertices < 4 );  /* Flag not real objects */
-      SHPDestroyObject(obj);
+      source_release_shape(arc, obj);
       continue;
     }
     int arcs = (obj->nVertices / MAX_NODES_PER_ARC) + 1;
@@ -401,7 +421,7 @@ static void SplitCoastlines2( int show, struct source *arc, SHPHandle shp_arc_ou
       DBFWriteIntegerAttribute( dbf_arc_out, new_id, 2, 0 );
       SHPDestroyObject(new_obj);
     }
-    SHPDestroyObject(obj);
+    source_release_shape(arc, obj);
   }
 }
 
@@ -438,13 +458,16 @@ static void InitBitmap( struct source *src, SHPHandle temp )
   int count = src->shape_count, res_count = 0;
   for( int i=0; i<count; i++ )
   {
-    SHPObject *obj = SHPReadObject( src->shp, i );
+    SHPObject *obj = source_get_shape( src, i );
     
     int old_x = -1, old_y = -1;
     int k = 0;
 
     if( obj->nVertices < 4 )
+    {
+      source_release_shape(src, obj);
       continue;
+    }
     for( int j=0; j<obj->nVertices; j++ )
     {
       int new_x = floor( (obj->padfX[j] / MERC_BLOCK) + 200.0 );
@@ -458,9 +481,6 @@ static void InitBitmap( struct source *src, SHPHandle temp )
       if( new_x == old_x && new_y == old_y )
           continue;
           
-      if( new_x == 0 && new_y == 308 )
-          printf( "At pos (%d,%d) point (%f,%f)\n", new_x, new_y, obj->padfX[j], obj->padfY[j] );
-      
       mark_tile( new_x, new_y );
       
       v_x[k] = obj->padfX[j];
@@ -492,7 +512,7 @@ static void InitBitmap( struct source *src, SHPHandle temp )
       
       res_count++;
     }
-    SHPDestroyObject(obj);
+    source_release_shape(src, obj);
   }
   
   fprintf( stderr, "Found %d large objects out of %d\n", res_count, count );
@@ -648,23 +668,13 @@ void Process( struct state *state, struct source *src, int polygon )
     int id = list[poly];
 
     /* Now we have a candidate object, we need to process it */
-    SHPObject *obj = SHPReadObject( src->shp, id );
+    SHPObject *obj = source_get_shape( src, id );
     
     /* If it's got less than 4 vertices it's not a real object */
     /* No need to mark it as error here, done in SplitCoastlines */
     if( obj->nVertices < 4 )
     {
-    #if 0
-      if( polygon )
-      {
-        int new_id = SHPWriteObject( shp_out, -1, obj );
-        if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
-        DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, 1 );
-        DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );
-        DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_Y, state->y );
-      }
-    #endif
-      SHPDestroyObject( obj );
+      source_release_shape(src, obj );
       continue;
     }
 
@@ -676,7 +686,7 @@ void Process( struct state *state, struct source *src, int polygon )
       if( sa > MAX_SUBAREAS-5 )
         ResizeSubareas( state, 2*MAX_SUBAREAS );
 
-      state->sub_areas[sa].shp = src->shp;
+      state->sub_areas[sa].src = src;
       state->sub_areas[sa].index = id;
       state->sub_areas[sa].x = obj->padfX[0];
       state->sub_areas[sa].y = obj->padfY[0];
@@ -685,7 +695,7 @@ void Process( struct state *state, struct source *src, int polygon )
 
       state->subarea_count++;
       state->subarea_nodecount += obj->nVertices;
-      SHPDestroyObject( obj );
+      source_release_shape(src, obj );
       continue;
     }
   
@@ -702,7 +712,7 @@ void Process( struct state *state, struct source *src, int polygon )
       if( polygon )
         fprintf( stderr, "Object %d did not leave box (%d vertices, polygon:%d) (%.2f,%.2f-%.2f,%.2f)\n", id, 
                 obj->nVertices, polygon, obj->dfXMin, obj->dfYMin, obj->dfXMax, obj->dfYMax );
-      SHPDestroyObject( obj );
+      source_release_shape(src, obj );
       continue;
     }
     /* We need to mark this point, so when we loop back we know where to stop */
@@ -846,7 +856,7 @@ void Process( struct state *state, struct source *src, int polygon )
         if( curr_sect != -1 )
         {
           /* Going in... */
-          seg_ptr->shp = src->shp;
+          seg_ptr->src = src;
           seg_ptr->index = id;
           seg_ptr->sx = intersections[0].x;
           seg_ptr->sy = intersections[0].y;
@@ -869,7 +879,7 @@ void Process( struct state *state, struct source *src, int polygon )
         intersected = 1;
         
         /* Going in and out in one go... */
-        seg_ptr->shp = NULL;
+        seg_ptr->src = NULL;
         seg_ptr->index = -2;
         seg_ptr->sx = intersections[0].x;
         seg_ptr->sy = intersections[0].y;
@@ -934,7 +944,7 @@ void Process( struct state *state, struct source *src, int polygon )
       }
     }
     
-    SHPDestroyObject(obj);
+    source_release_shape(src, obj);
   }
   free(list);
 //  printf( "segcount: %d\n", state->seg_count );
@@ -1037,7 +1047,7 @@ void OutputSegs( struct state *state )
 
         if( seg_list[curr].snode >= 0 )
         {
-          node_count = CopyShapeToArray( seg_list[curr].shp, seg_list[curr].index, seg_list[curr].snode, seg_list[curr].enode, node_count );
+          node_count = CopyShapeToArray( seg_list[curr].src, seg_list[curr].index, seg_list[curr].snode, seg_list[curr].enode, node_count );
           v_x[node_count] = seg_list[curr].ex;
           v_y[node_count] = seg_list[curr].ey;
           node_count++;
@@ -1094,7 +1104,7 @@ void OutputSegs( struct state *state )
         continue;
         
       if(VERBOSE) printf( "Remaining subarea %d (area=%f)\n", k, sub_area->areasize );
-      int node_count = CopyShapeToArray( sub_area->shp, sub_area->index, 0, -1, 0 );
+      int node_count = CopyShapeToArray( sub_area->src, sub_area->index, 0, -1, 0 );
       int part_count = 1;
       Parttypes[0] = SHPP_RING;
       
@@ -1102,7 +1112,7 @@ void OutputSegs( struct state *state )
 
       ProcessSubareas( state, &part_count, &node_count );
       
-//      SHPObject *obj = SHPReadObject( sub_area->shp, sub_area->index );
+//      SHPObject *obj = SHPReadObject( sub_area->src, sub_area->index );
       SHPObject *obj = SHPCreateObject( SHPT_POLYGON, -1, 
                                         part_count, Parts, Parttypes, 
                                         node_count, v_x, v_y, v_z, NULL );
@@ -1186,9 +1196,9 @@ static int contains( double x, double y, double *v_x, double *v_y, int vertices 
 #endif
 }
 
-static int CopyShapeToArray( SHPHandle shp, int index, int snode, int enode, int node_count )
+static int CopyShapeToArray( struct source *src, int index, int snode, int enode, int node_count )
 {
-  SHPObject *obj = SHPReadObject( shp, index );
+  SHPObject *obj = source_get_shape( src, index );
   int k;
   
   if( enode == -1 )   /* This mean to copy the whole object */
@@ -1222,7 +1232,7 @@ static int CopyShapeToArray( SHPHandle shp, int index, int snode, int enode, int
   v_x[node_count] = obj->padfX[k];
   v_y[node_count] = obj->padfY[k];
   node_count++;
-  SHPDestroyObject(obj);
+  source_release_shape(src, obj);
   
   return node_count;
 }
@@ -1275,7 +1285,7 @@ void ProcessSubareas(struct state *state, int *pc, int *nc)
       {
         Parttypes[part_count] = SHPP_INNERRING;
         Parts[part_count] = node_count;
-        node_count = CopyShapeToArray( sub_area->shp, sub_area->index, 0, -1, node_count );
+        node_count = CopyShapeToArray( sub_area->src, sub_area->index, 0, -1, node_count );
         Parts[part_count+1] = node_count;
       }
       
@@ -1284,11 +1294,11 @@ void ProcessSubareas(struct state *state, int *pc, int *nc)
     else
     {
       // Error, copy object
-      SHPObject *obj = SHPReadObject( sub_area->shp, sub_area->index );
+      SHPObject *obj = source_get_shape( sub_area->src, sub_area->index );
       if(VERBOSE) printf( "Outputting error shape (x,y)=(%f,%f), n=%d\n", obj->padfX[0], obj->padfY[0], obj->nVertices );
       int new_id = SHPWriteObject( shp_out, -1, obj );
       if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
-      SHPDestroyObject( obj );
+      source_release_shape(sub_area->src, obj );
       
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, 1 );
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );

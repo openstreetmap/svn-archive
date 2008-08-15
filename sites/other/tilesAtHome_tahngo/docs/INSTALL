@@ -15,18 +15,33 @@ If you get Django errors that max_length is invalid, try a newer version from Dj
 INSTALLATION
 ------------
 - Download the main directory from the OpenStreetMap svn server.  Put it in a location of your choice, eg. /usr/local/share/tah.  The base directory name must be "tah".  The svn download will give you a directory named "tileAtHome_tahngo" by default; change it to "tah".
-- The "Tiles" directory should be moved to the place where you want to store all the tileset files. The setting "base_tile_path" should point to this directory as it will save tileset files here and expect the stock images (blank sea/land/error) here.
-- The "media" directory contains files that should be accessible through the web server and should be moved to a place where the files can be served through apache. I think the setting MEDIA_URL in tah.settings needs to point to one directory below "media".
-- Move settings.py.example to settings.py and adapt the settings in tah.settings to your configuration (database choice, url handler, etc)
-- Run "python manage.py syncdb" to create the database
-- Configure your web server for the new paths.  See "Apache Configuration" below.
-- In a web browser, go to the /admin interface and add the settings "base_tile_path", "unzipPath","logFile" to the table Settings.
-  In the case of tah.osm.org these settings are "/mnt/agami/openstreetmap/tah/Tiles", "/tmp", and "tah.log" respectively.
-- in tah_intern/Tile.py the base_tile_path is hardcoded for efficiency reasons. Open that file and adapt the path there too.
-- tah_intern/views.py currently contains a hardcoded path to the log file location. Adapt the line:   f = open('/home/spaetz/tah/tah_intern/tah.log', 'rU')
-- tah_intern/LegacyTileset.py contains hardcoded paths to your oceantiles.dat file and your fallback legacy tile directories.
 
-- Configure the html templates for the URL to your tile server.  In the templates directory, the files base_browse.html, base_browse_slippy.html, and tile_details.html refer to tah.openstreetmap.org/Tile.  For a test installation, change this to the URL for your "/Tile" location in your Apache configuration below.
+- The "Tiles" directory should be moved to the place where you want to store all the tileset files. The setting "TILES_ROOT" in settings.py should point to this directory as it will save tileset files here and expect the stock images (blank sea/land/error) here.
+
+- The "media" directory contains files that should be accessible through the web server and should be moved to a place where the files can be served through apache. I think the setting MEDIA_URL in tah.settings needs to point to one directory below "media".
+
+- Move settings.py.example to settings.py and adapt the settings in tah.settings to your configuration (database choice, url handler, etc)
+
+- Run "python manage.py syncdb" to create the database
+
+- Configure your web server for the new paths.  See "Apache Configuration" below.
+
+- In a web browser, go to the /admin interface and add the settings "latest_client_version", "unzipPath","logFile" to the table Settings.
+  In the case of tah.osm.org these settings are "2008070500" (just a random string that is parsed by clients), "/tmp", and "/var/log/tah/tahngo.log" respectively.
+
+- in tah_intern/Tile.py some paths are still hardcoded for efficiency reasons. Open that file and adapt the path there too. There is
+    basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
+    blanktilepath='/var/www/tah/Tiles'
+and
+    leg_basetiledir='/mnt/agami/openstreetmap/tah/Tiles'
+    oceantilesdat_path ='/var/www/tah/Tiles/oceantiles_12.dat'
+which needs adapting.
+
+- tah_intern/views.py currently contains a hardcoded path to the log file location. Adapt the line:   f = open('/home/spaetz/tah/tah_intern/tah.log', 'rU')
+
+- tah_intern/LegacyTileset.py contains hardcoded paths to your oceantiles.dat file and your fallback legacy tile directories. You shouldn't need this, as Legacy tiles are only on the tah server.
+
+- Configure the html templates for the URL to your tile server.  In the templates directory, base_browse_slippy.html might need adaptation to your tile location. The CSS and image directory is currently hardcoded to /media in base.html and needs to be adapted if this is different for your installation.
 
 APACHE CONFIGURATION
 --------------------
@@ -66,3 +81,25 @@ Passwords are cached in a hashed form on the t@h server, so subsequent OpenStree
 In the web admin interface, you will need to add some "layers" for your maps. In t@h these are currently: tile (the default layer from z0-17), captionless (from z0-17; part of the default layers), maplint(transparent; from z12-17; part of the default layers), and caption (transparent; from z0-17).
 
 Processing uploaded tilesets will not happen automatically by the django server this is done in a separate thread. In the directory tah_intern, you need to call "./process_uploads" to unzip the uploads and put the resulting tilesetfiles to their final location. To start and stop this process more conveniently there is Tools/startstop_process_uploads which is a variant of a Debian like /etc/init.d/ script. You need to adapt some paths in here (and create the directory where the .pid file will be saved) and you can then use ./startstop_process_ploads start|stop|restart to start the tile processing. If it already runs, it will not be started again, so I run the startstop script with option "start" every half hour in a cron script to restart it after a reboot (or an unlikely crash).
+
+CRON
+----
+These are the calls I do via cron:
+
+# m h  dom mon dow   command
+
+#THIS ONE IS IMPORTANT. Reset unfinished tiles and remove finished tiles after 48h
+#THIS IS THE ONLY WAY REQUESTS GET DELETED FROM THE REQUEST DB
+5 * * * * wget -q -O- http://tah.openstreetmap.org:81/Request/expireTiles/ > /dev/null
+
+# auto-request changed tiles every 6 hours
+0 */6 * * * wget -q -O- http://tah.openstreetmap.org:81/Request/create/changedTiles/ > /dev/null
+
+#could restart the processor from time to time, in case something went wrong
+#19 */1 * * * /var/www/tah/Tools/startstop_process_uploads restart > /dev/null
+
+#download new oceantiles.dat from time to time
+22 22 * * 0 cd /var/www/tah/Tiles;wget http://svn.openstreetmap.org/applications/rendering/tilesAtHome/oceantiles_12.dat -O oceantiles_12.dat.tmp;mv oceantiles_12.dat.tmp oceantiles_12.dat
+
+#auto-stitch lowzoom tiles
+30 0 * * * cd /var/www/tah/tah_intern/;TMPDIR=/tmp/ramdisk python stitch_lowzoom.py

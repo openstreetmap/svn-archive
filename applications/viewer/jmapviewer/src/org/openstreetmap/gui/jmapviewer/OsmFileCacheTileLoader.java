@@ -142,8 +142,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 							case ETag:
 								if (hasOsmTileETag(fileETag)) {
 									tile.setLoaded(true);
-									tileFile.setLastModified(System.currentTimeMillis() - maxCacheFileAge
-											+ recheckAfter);
+									tileFile.setLastModified(System.currentTimeMillis()
+											- maxCacheFileAge + recheckAfter);
 									return;
 								}
 							}
@@ -195,6 +195,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				// System.out.println("Loaded from file: " + tile);
 				if (!oldTile) {
 					tile.setLoaded(true);
+					listener.repaint();
+					fileTilePainted = true;
+					return true;
 				}
 				listener.repaint();
 				fileTilePainted = true;

@@ -47,7 +47,6 @@ def saveCreateRequestForm(request, form):
     # delete entries that are not needed as default value or won't work
     del formdata['layers']
     if not formdata['min_z'] in ['6','12']: formdata['min_z'] = 12
-    if not formdata['max_z']: formdata['max_z'] = {0:5,6:11,12:17}[formdata['min_z']]
     if not formdata['priority'] or \
       formdata['priority']>4 or formdata['priority']<1: 
         formdata['priority'] = 3
@@ -65,10 +64,10 @@ def saveCreateRequestForm(request, form):
     newRequest, created_new = Request.objects.get_or_create(status=0,min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
 
     newRequest.ipaddress = request.META['REMOTE_ADDR']
+    newRequest.max_z = {0:5,6:11,12:17}[formdata['min_z']]
 
     if not created_new:
       #update existing request with new request data
-      newRequest.max_z = max(formdata['max_z'],newRequest.max_z)
       newRequest.priority = min(formdata['priority'],newRequest.priority)
 
     ##check if the IP has already lot's of high priority requests going and auto-bump down

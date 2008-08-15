@@ -86,13 +86,13 @@ class Lowzoom(Tileset):
       self.tset_cless.add_tile(t,pngfilepath+'_nocaptions')
 
     if img_caption.mode == 'RGB':
-      #if for some strange reasons the caption is not recognized as RGBA, make anything transparent that has some color.
-      # PYTHON PIL seems to insert (248,248,248= for transparency for some reason, so replace that with transparency.
+      # if for some strange reasons the caption is not recognized as RGBA, 
+      # make it transparent.
+      # our tiles have color (248,248,248) for transparency..
+      # after talking with the PIL devs, this is a shortcoming of PIL
+      # future versions >1.1.6 might return the transparent color like that:
+      # im.info['transparency'] = (248, 248, 248)
       a = ImageChops.invert(img_caption.point(lambda p: 255 * int(p == 248)).convert('L'))
-      #cb = img_caption.split()
-      #a, = img_caption.convert('L').split()
-      #a = a.point(lambda p: 255 * int(p < 230))
-      #img_caption = Image.merge('RGBA',cb+(a,))
     elif img_caption.mode == 'RGBA':
       (r,g,b,a) = img_caption.split()
     elif img_caption.mode == 'L':

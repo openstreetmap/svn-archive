@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use File::Copy;
+use File::Path;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahconfig;
@@ -144,7 +145,7 @@ else
             {   # got exclusive lock, now compress
                 compress($FullTileDirPath, $ZipDir, 'yes', $allowedPrefixes);
                 # TODO: We always kill the tileset.dir independent of success and never return a success value!
-                rmdir $FullTileDirPath;    # should be empty now
+                rmtree $FullTileDirPath;    # should be empty now
             }
             else
             {   # could not get exclusive lock, this is being handled elsewhere now
@@ -155,24 +156,19 @@ else
             close (ZIPDIR);
         }
 
-        ## look again in the workdir, there might be new files from split tilesets:
-        
-        opendir($dp, $TileDir) or die("Can't open directory $TileDir\n");
-        @dir = readdir($dp);
-        @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
-        closedir($dp);
-        
-        $tileCount = scalar(@tiles);
-        
-        if ($tileCount) 
-        {
-            while (processTileBatch(
-              $TileDir, 
-              $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
-              $ZipDir, 
-              $allowedPrefixes)) 
-            {};
-        }
+        ### NOTE: The following code block deals with single tiles in the TileDir(=WorkingDir)
+        ### as we don't produce single tiles currently, this is commented out for now.
+        #$tileCount = scalar(@tiles);        
+        #if ($tileCount) 
+        #{
+        #    while (processTileBatch(
+        #      $TileDir, 
+        #      $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
+        #      $ZipDir, 
+        #      $allowedPrefixes)) 
+        #    {};
+        #}
+
         statusMessage("done",0,3); 
         ## TODO: fix progress display
     }
@@ -212,18 +208,27 @@ sub processTileBatch
     if($Count)
     {
         statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size),0,3);
-        return compress($TempDir, $OutputDir, 'no', $allowedPrefixes);
+        my $zip_result = compress($TempDir, $OutputDir, 'no', $allowedPrefixes);
+        rmtree $TempDir;
+        return $zip_result;
     }
     else
-    {
-
+    {   # No tiles in directory, leave with success
         statusMessage("compress finished",0,3);
         return 0;
     }
 }
 
 #-----------------------------------------------------------------------------
-# Compress all PNG files from one directory, creating 
+# Compress all PNG files from one directory, creating a .zip file.
+# Parameters:  Dir, OutputDir, SingleTileset, Layer
+# Dir: directory where the *.png files reside in.
+# OutputDir: directory where the resulting .zip file will be stored
+# SingleTileset: 'yes'/'no' whether it's a single tileset, affects .zip file name
+# Layer: layer name will be incorporated in .zip file name
+# It will never delete the source files, so the caller has to delete them after success
+# (usually by removing the temporary direcory they reside in)
+# returns 1, if the zip command succeeded and 0 otherwise
 #-----------------------------------------------------------------------------
 sub compress
 {
@@ -274,28 +279,24 @@ sub compress
           $stdOut);
     }
     
-    ## FIXME: this is one of the things that make compress.pl not multithread safe
-    # Delete files in the gather directory
-    opendir (GATHERDIR, $Dir);
-    my @zippedFiles = grep { /.png$/ } readdir(GATHERDIR);
-    closedir (GATHERDIR);
-    
-    # Run the two commands
-    if (runCommand($Command1,$PID)) 
+    # Run the zip command
+    my $zip_result = runCommand($Command1,$PID);
+
+    # stdOut is currently never used, so delete it unconditionally    
+    killafile($stdOut);
+
+    # if collecting single tiles (incomplete tileset and zipping failed,
+    # move all the .png back into $WorkingDirectory
+    if ($SingleTileset eq '' and $zip_result == 0)
     {
-        killafile($stdOut);
-        while(my $File = shift @zippedFiles)
-        {
-            killafile ($Dir . "/" . $File);
-        }
-    }
-    else
-    {
+        opendir (GATHERDIR, $Dir);
+        my @zippedFiles = grep { /.png$/ } readdir(GATHERDIR);
+        closedir (GATHERDIR);
         while(my $File = shift @zippedFiles)
         {
             rename($Dir . "/" . $File, $Config->get("WorkingDirectory") . $File);
         }
     }
     
-    return 1;
+    return $zip_result;
 }

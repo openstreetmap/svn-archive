@@ -131,8 +131,6 @@ def create(request):
 def feedback(request):
     html="XX|unknown error"
     CreateFormClass = CreateForm
-    CreateFormClass.base_fields['ipaddress'].required = False
-    CreateFormClass.base_fields['ipaddress'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['priority'].required = False
     CreateFormClass.base_fields['status'].required = False 
     CreateFormClass.base_fields['status'].widget = widgets.HiddenInput()
@@ -145,8 +143,6 @@ def feedback(request):
     CreateFormClass.base_fields['layers'].required = False
     CreateFormClass.base_fields['clientping_time'].required = False
     CreateFormClass.base_fields['clientping_time'].widget = widgets.HiddenInput()
-    CreateFormClass.base_fields['client'].required = False
-    CreateFormClass.base_fields['client'].widget = widgets.HiddenInput()
     form = CreateFormClass()
     if request.method == 'POST':
       authform = ClientAuthForm(request.POST)

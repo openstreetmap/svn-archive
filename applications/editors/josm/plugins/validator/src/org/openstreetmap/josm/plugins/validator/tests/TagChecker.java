@@ -41,6 +41,8 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmUtils;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
@@ -120,7 +122,7 @@ public class TagChecker extends Test
 	protected static int FIXME             = 1203;
 	protected static int INVALID_SPACE     = 1204;
 	protected static int INVALID_KEY_SPACE = 1205;
-	protected static int TAG_CHECK         = 1206;
+	/** 1250 and up is used by tagcheck */
 
 	/** List of sources for spellcheck data */
 	protected JList Sources;
@@ -275,8 +277,8 @@ public class TagChecker extends Test
 			{
 				if(d.match(p))
 				{
-					errors.add( new TestError(this, Severity.WARNING, tr("Illegal tag/value combinations"),
-					d.getDescription(), TAG_CHECK, p) );
+					errors.add( new TestError(this, d.getSeverity(), tr("Illegal tag/value combinations"),
+					d.getDescription(), d.getCode(), p) );
 					withErrors.add(p, "TC");
 					break;
 				}
@@ -661,9 +663,15 @@ public class TagChecker extends Test
 		private String description;
 		private List<CheckerElement> data = new ArrayList<CheckerElement>();
 		private Integer type = 0;
+		private Integer code;
+		protected Severity severity;
 		protected static int NODE = 1;
 		protected static int WAY = 2;
-		protected static int ALL = 3;
+		protected static int RELATION = 3;
+		protected static int ALL = 4;
+		protected static int TAG_CHECK_ERROR  = 1250;
+		protected static int TAG_CHECK_WARN   = 1260;
+		protected static int TAG_CHECK_INFO   = 1270;
 
 		private class CheckerElement {
 			public Object tag;
@@ -671,6 +679,7 @@ public class TagChecker extends Test
 			public Boolean noMatch;
 			public Boolean tagAll = false;
 			public Boolean valueAll = false;
+			public Boolean valueBool = false;
 			private Pattern getPattern(String str) throws IllegalStateException, PatternSyntaxException
 			{
 				if(str.endsWith("/i"))
@@ -693,14 +702,30 @@ public class TagChecker extends Test
 				n = m.group(3).trim();
 				if(n.equals("*"))
 					valueAll = true;
+				else if(n.equals("BOOLEAN_TRUE"))
+				{
+					valueBool = true;
+					value = OsmUtils.trueval;
+				}
+				else if(n.equals("BOOLEAN_FALSE"))
+				{
+					valueBool = true;
+					value = OsmUtils.falseval;
+				}
 				else
 					value = n.startsWith("/") ? getPattern(n) : n;
 			}
-			public Boolean match(String key, String val)
+			public Boolean match(OsmPrimitive osm)
 			{
-				Boolean tagtrue = tagAll || (tag instanceof Pattern ? ((Pattern)tag).matcher(key).matches() : key.equals(tag));
-				Boolean valtrue = valueAll || (value instanceof Pattern ? ((Pattern)value).matcher(val).matches() : val.equals(value));
-				return tagtrue && (noMatch ? !valtrue : valtrue);
+				for(Entry<String, String> prop: osm.keys.entrySet())
+				{
+					String key = prop.getKey();
+					String val = valueBool ? OsmUtils.getNamedOsmBoolean(prop.getValue()) : prop.getValue();
+					if((tagAll || (tag instanceof Pattern ? ((Pattern)tag).matcher(key).matches() : key.equals(tag)))
+					&& (valueAll || (value instanceof Pattern ? ((Pattern)value).matcher(val).matches() : val.equals(value))))
+						return !noMatch;
+				}
+				return noMatch;
 			}
 		};
 
@@ -718,16 +743,35 @@ public class TagChecker extends Test
 			{
 				description = null;
 			}
-			String[] n = str.split(" *: *", 2);
+			String[] n = str.split(" *: *", 3);
 			if(n[0].equals("way"))
 				type = WAY;
 			else if(n[0].equals("node"))
 				type = NODE;
+			else if(n[0].equals("relation"))
+				type = RELATION;
 			else if(n[0].equals("*"))
 				type = ALL;
-			if(type == 0 || n.length != 2)
+			if(type == 0 || n.length != 3)
 				return tr("Could not find element type");
-			for(String exp: n[1].split(" *&& *"))
+			if(n[1].equals("W"))
+			{
+				severity = Severity.WARNING;
+				code = TAG_CHECK_WARN;
+			}
+			else if(n[1].equals("E"))
+			{
+				severity = Severity.ERROR;
+				code = TAG_CHECK_ERROR;
+			}
+			else if(n[1].equals("I"))
+			{
+				severity = Severity.OTHER;
+				code = TAG_CHECK_INFO;
+			}
+			else
+				return tr("Could not find warning level");
+			for(String exp: n[2].split(" *&& *"))
 			{
 				try
 				{
@@ -746,17 +790,12 @@ public class TagChecker extends Test
 		}
 		public Boolean match(OsmPrimitive osm)
 		{
-			if(osm.keys == null)
+			if(osm.keys == null || (type == NODE && !(osm instanceof Node))
+			|| (type == RELATION && !(osm instanceof Relation)) || (type == WAY && !(osm instanceof Way)))
 				return false;
 			for(CheckerElement ce : data)
 			{
-				Boolean result = false;
-				for(Entry<String, String> prop: osm.keys.entrySet())
-				{
-					if(result = ce.match(prop.getKey(), prop.getValue()))
-						break;
-				}
-				if(!result)
+				if(!ce.match(osm))
 					return false;
 			}
 			return true;
@@ -764,6 +803,14 @@ public class TagChecker extends Test
 		public String getDescription()
 		{
 			return tr(description);
+		}
+		public Severity getSeverity()
+		{
+			return severity;
+		}
+		public int getCode()
+		{
+			return code + type;
 		}
 	}
 }

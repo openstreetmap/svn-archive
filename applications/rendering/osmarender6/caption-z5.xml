@@ -26,15 +26,16 @@
   <rule e="node|way" k="osmarender:render" v="~|yes">
 		<rule e="node|way" k="osmarender:renderName" v="~|yes">
 
-      <rule e="node" k="place" v="country|city" horizontalProximity="0.025" verticalProximity="0.019">
-      <rule e="node" k="place" v="country|city" horizontalProximity="1.6" verticalProximity="1.2">
+      <rule e="node" k="place" v="country" horizontalProximity="1.6" verticalProximity="1.2">
         <text k="name" class='caption-casing country-caption-casing' />
         <text k="name" class='caption-core country-caption' />
+      </rule>
 
+      <rule e="node" k="place" v="city" horizontalProximity="1.6" verticalProximity="1.2">
         <text k="name" class='caption-casing city-caption-casing' />
         <text k="name" class='caption-core city-caption' />
       </rule>
-      </rule>
+
 
     </rule> <!-- k="osmarender:renderName" v="~|yes" -->
 	</rule> <!-- k="osmarender:render" v="~|yes" -->
@@ -71,11 +72,11 @@
                 stroke-miterlimit: 1.5;
             }
 
-			.country-caption-casing { font-size: 6000px; stroke-width: 1600px; }
-			.country-caption        { font-size: 6000px; }
+            .country-caption-casing { font-size: 6000px; stroke-width: 1000px; }
+            .country-caption        { font-size: 6000px; }
 
-			.city-caption-casing    { font-size: 6000px; stroke-width: 1600px; }
-			.city-caption           { font-size: 6000px; }
+            .city-caption-casing    { font-size: 3000px; stroke-width: 800px; }
+            .city-caption           { font-size: 3000px; }
 
 
             /* Map decoration */

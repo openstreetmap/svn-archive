@@ -1,0 +1,8 @@
+#!/bin/bash
+GRINDERPATH=(full path to grinder install directory)
+GRINDERPROPERTIES=(full path to grinder.properties)/grinder.properties
+CLASSPATH=$GRINDERPATH/lib/grinder.jar:$CLASSPATH
+JAVA_HOME=(full path to java install directory)
+PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH PATH GRINDERPROPERTIES
+

@@ -53,8 +53,14 @@ class profile_page:
     try: 
       postdata =  web.input()['protobuf']
     except:
-      postdata = '<?xml version=' + web.input()['<?xml version']
-          
+      try:
+        postdata = '<?xml version=' + web.input()['<?xml version']
+      except:
+        web.header('Content-Type', 'html/txt')
+        web.output("Wrong input format")
+        #web.internalerror() 
+        return
+        
     res = altitude.page_profile(db, utils, postdata, output_format, input_format)
     header = res[0]
     body = res[1]

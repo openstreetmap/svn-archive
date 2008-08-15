@@ -1,0 +1,25 @@
+Read all about the Grinder:
+http://grinder.sourceforge.net/
+
+Download The Grinder.
+
+Copy the .example files, e.g.
+cp setGrinderEnv.sh.example setGrinderEnv.sh
+
+Edit them to reflect your system configuration. 
+You probably only have to edit setGrinderEnv.sh to reflect the grinder and java installation paths.
+
+Make the scripts writable:
+chmod +x *.sh
+
+cp grinder.properties.example grinder.properties
+
+You can edit grinder.properties if you like/must:
+http://grinder.sourceforge.net/g3/properties.html
+
+Now start the console:
+./startConsole.sh
+
+Start an agent (in another terminal session):
+./startAgent.sh
+

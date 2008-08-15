@@ -1,0 +1,2 @@
+grinder.jvm.arguments: -Dpython.home=/usr/share/jython -Dpython.cachedir=/tmp 
+grinder.threads: 2

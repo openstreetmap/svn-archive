@@ -128,6 +128,7 @@ ActionController::Routing::Routes.draw do |map|
   # translation
   map.connect '/translate/:locale/pending', :controller => 'translate', :action => 'pending'
   map.connect '/translate/:locale/complete', :controller => 'translate', :action => 'complete'
+  map.connect '/translate/stats/:sort', :controller => 'translate', :action => 'stats', :sort => /percentage|done/ 
   map.connect '/translate/:locale/:id/rss', :controller => 'translate', :action => 'rss'
   map.connect '/translate/:locale/:id', :controller => 'translate', :action => 'view', :id => /\d+/
   

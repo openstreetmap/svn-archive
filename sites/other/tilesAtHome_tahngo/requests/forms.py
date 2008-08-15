@@ -5,6 +5,9 @@ CreateForm = forms.form_for_model(Request)
 #Delete some fields unrequired fields
 del CreateForm.base_fields['client']
 del CreateForm.base_fields['ipaddress']
+del CreateForm.base_fields['status']
+del CreateForm.base_fields['clientping_time']
+del CreateForm.base_fields['max_z']
 
 UploadForm = forms.form_for_model(Upload)
 

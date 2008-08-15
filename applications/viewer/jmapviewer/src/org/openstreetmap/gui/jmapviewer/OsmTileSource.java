@@ -35,6 +35,10 @@ public class OsmTileSource {
 			return MAP_MAPNIK + super.getTileUrl(zoom, tilex, tiley);
 		}
 
+		public TileUpdate getTileUpdate() {
+			return TileUpdate.IfNoneMatch;
+		}
+
 	}
 
 	public static class CycleMap extends AbstractOsmTileSource {
@@ -47,6 +51,11 @@ public class OsmTileSource {
 		public String getTileUrl(int zoom, int tilex, int tiley) {
 			return MAP_CYCLE + super.getTileUrl(zoom, tilex, tiley);
 		}
+
+		public TileUpdate getTileUpdate() {
+			return TileUpdate.LastModified;
+		}
+
 	}
 
 	public static class TilesAtHome extends AbstractOsmTileSource {
@@ -64,5 +73,8 @@ public class OsmTileSource {
 			return MAP_OSMA + super.getTileUrl(zoom, tilex, tiley);
 		}
 
+		public TileUpdate getTileUpdate() {
+			return TileUpdate.IfModifiedSince;
+		}
 	}
 }

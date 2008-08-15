@@ -27,11 +27,13 @@ public interface TileSource {
 	 * <li>{@link #LastModified} Server provides Last-Modified header entry for
 	 * all tiles but <b>does not support</b> conditional download via
 	 * <code>If-Modified-Since</code> header entry.</li>
+	 * <li>{@link #None} The server does not support any of the listed
+	 * mechanisms.</li>
 	 * </ul>
 	 * 
 	 */
-	public enum TileUpdateDetection {
-		IfNoneMatch, ETag, IfModifiedSince, LastModified
+	public enum TileUpdate {
+		IfNoneMatch, ETag, IfModifiedSince, LastModified, None
 	};
 
 	/**
@@ -42,6 +44,12 @@ public interface TileSource {
 	 *         {@link JMapViewer#MAX_ZOOM}
 	 */
 	public int getMaxZoom();
+
+	/**
+	 * @return The supported tile update mechanism
+	 * @see TileUpdate
+	 */
+	public TileUpdate getTileUpdate();
 
 	/**
 	 * A tile layer name has to be unique and has to consist only of characters

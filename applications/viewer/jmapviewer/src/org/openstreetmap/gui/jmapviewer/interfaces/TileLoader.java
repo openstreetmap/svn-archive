@@ -19,8 +19,8 @@ public interface TileLoader {
 	 * @param tilex
 	 * @param tiley
 	 * @param zoom
-	 * @returns {@link Job} implementation that performs the desired load
+	 * @returns {@link Runnable} implementation that performs the desired load
 	 *          action.
 	 */
-	public Job createTileLoaderJob(TileSource tileLayerSource, int tilex, int tiley, int zoom);
+	public Runnable createTileLoaderJob(TileSource tileLayerSource, int tilex, int tiley, int zoom);
 }

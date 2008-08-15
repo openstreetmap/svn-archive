@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.openstreetmap.gui.jmapviewer.interfaces.Job;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * A {@link TileLoader} implementation that loads tiles from OSM via HTTP.
@@ -19,20 +19,20 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
  */
 public class OsmTileLoader implements TileLoader {
 
-	protected JMapViewer map;
+	protected TileLoaderListener listener;
 
-	public OsmTileLoader(JMapViewer map) {
-		this.map = map;
+	public OsmTileLoader(TileLoaderListener listener) {
+		this.listener = listener;
 	}
 
-	public Job createTileLoaderJob(final TileSource source, final int tilex, final int tiley,
+	public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley,
 			final int zoom) {
-		return new Job() {
+		return new Runnable() {
 
 			InputStream input = null;
 
 			public void run() {
-				TileCache cache = map.getTileCache();
+				TileCache cache = listener.getTileCache();
 				Tile tile;
 				synchronized (cache) {
 					tile = cache.getTile(source, tilex, tiley, zoom);
@@ -45,29 +45,18 @@ public class OsmTileLoader implements TileLoader {
 					input = loadTileFromOsm(tile).getInputStream();
 					tile.loadImage(input);
 					tile.setLoaded(true);
-					map.repaint();
+					listener.repaint();
 					input.close();
 					input = null;
 				} catch (Exception e) {
 					if (input == null /* || !input.isStopped() */)
-						System.err.println("failed loading " + zoom + "/"
-								+ tilex + "/" + tiley + " " + e.getMessage());
+						System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley
+								+ " " + e.getMessage());
 				} finally {
 					tile.loading = false;
 				}
 			}
 
-			/**
-			 * Terminating all transfers that are currently in progress
-			 */
-			public void stop() {
-
-				try {
-					// if (input != null)
-					// input.stop();
-				} catch (Exception e) {
-				}
-			}
 		};
 	}
 
@@ -79,4 +68,10 @@ public class OsmTileLoader implements TileLoader {
 		// timeout
 		return urlConn;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
+	}
+	
 }

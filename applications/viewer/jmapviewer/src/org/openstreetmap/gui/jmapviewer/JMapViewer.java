@@ -25,8 +25,9 @@ import javax.swing.event.ChangeListener;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher.JobThread;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * 
@@ -36,7 +37,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
  * @author Jan Peter Stotz
  * 
  */
-public class JMapViewer extends JPanel {
+public class JMapViewer extends JPanel implements TileLoaderListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -96,7 +97,7 @@ public class JMapViewer extends JPanel {
 		tileSource = new OsmTileSource.Mapnik();
 		tileLoader = new OsmTileLoader(this);
 		this.tileCache = tileCache;
-		jobDispatcher = new JobDispatcher(downloadThreadCount);
+		jobDispatcher = JobDispatcher.getInstance();
 		mapMarkerList = new LinkedList<MapMarker>();
 		mapMarkersVisible = true;
 		tileGridVisible = false;
@@ -366,7 +367,7 @@ public class JMapViewer extends JPanel {
 		// outer border of the map
 		int mapSize = Tile.SIZE << zoom;
 		g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
-		
+
 		// g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 		if (!mapMarkersVisible || mapMarkerList == null)
 			return;

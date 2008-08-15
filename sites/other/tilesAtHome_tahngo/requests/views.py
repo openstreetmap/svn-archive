@@ -94,8 +94,6 @@ def create(request):
     CreateFormClass = CreateForm
     CreateFormClass.base_fields['priority'].required = False
     CreateFormClass.base_fields['min_z'].required = False 
-    CreateFormClass.base_fields['max_z'].required = False 
-    CreateFormClass.base_fields['max_z'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['layers'].widget = widgets.CheckboxSelectMultiple(  
          choices=CreateFormClass.base_fields['layers'].choices)
     CreateFormClass.base_fields['layers'].required = False
@@ -127,10 +125,6 @@ def feedback(request):
     html="XX|unknown error"
     CreateFormClass = CreateForm
     CreateFormClass.base_fields['priority'].required = False
-    #CreateFormClass.base_fields['client_uuid'].required = False
-    #CreateFormClass.base_fields['client_uuid'].widget = widgets.HiddenInput()
-    CreateFormClass.base_fields['max_z'].required = False 
-    CreateFormClass.base_fields['max_z'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['layers'].widget = widgets.CheckboxSelectMultiple(  
          choices=CreateFormClass.base_fields['layers'].choices)
     CreateFormClass.base_fields['layers'].required = False
@@ -307,7 +301,6 @@ def request_changedTiles(request):
     for tile in tiles:
       (z,x,y) = tile.getAttribute('z'),tile.getAttribute('x'),tile.getAttribute('y')
       CreateFormClass = CreateForm
-      CreateFormClass.base_fields['max_z'].required = False 
       CreateFormClass.base_fields['layers'].required = False 
       form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2})
       if form.is_valid():

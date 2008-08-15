@@ -46,7 +46,6 @@ def saveCreateRequestForm(request, form):
     formdata = form.cleaned_data.copy()
     # delete entries that are not needed as default value or won't work
     del formdata['layers']
-    del formdata['status']
     if not formdata['min_z'] in ['6','12']: formdata['min_z'] = 12
     if not formdata['max_z']: formdata['max_z'] = {0:5,6:11,12:17}[formdata['min_z']]
     if not formdata['priority'] or \
@@ -94,16 +93,12 @@ def create(request):
     req = None
     CreateFormClass = CreateForm
     CreateFormClass.base_fields['priority'].required = False
-    CreateFormClass.base_fields['status'].required = False 
-    CreateFormClass.base_fields['status'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['min_z'].required = False 
     CreateFormClass.base_fields['max_z'].required = False 
     CreateFormClass.base_fields['max_z'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['layers'].widget = widgets.CheckboxSelectMultiple(  
          choices=CreateFormClass.base_fields['layers'].choices)
     CreateFormClass.base_fields['layers'].required = False
-    CreateFormClass.base_fields['clientping_time'].required = False
-    CreateFormClass.base_fields['clientping_time'].widget = widgets.HiddenInput()
     form = CreateFormClass()
 
     if request.method == 'POST':
@@ -132,8 +127,6 @@ def feedback(request):
     html="XX|unknown error"
     CreateFormClass = CreateForm
     CreateFormClass.base_fields['priority'].required = False
-    CreateFormClass.base_fields['status'].required = False 
-    CreateFormClass.base_fields['status'].widget = widgets.HiddenInput()
     #CreateFormClass.base_fields['client_uuid'].required = False
     #CreateFormClass.base_fields['client_uuid'].widget = widgets.HiddenInput()
     CreateFormClass.base_fields['max_z'].required = False 
@@ -141,8 +134,6 @@ def feedback(request):
     CreateFormClass.base_fields['layers'].widget = widgets.CheckboxSelectMultiple(  
          choices=CreateFormClass.base_fields['layers'].choices)
     CreateFormClass.base_fields['layers'].required = False
-    CreateFormClass.base_fields['clientping_time'].required = False
-    CreateFormClass.base_fields['clientping_time'].widget = widgets.HiddenInput()
     form = CreateFormClass()
     if request.method == 'POST':
       authform = ClientAuthForm(request.POST)
@@ -318,7 +309,6 @@ def request_changedTiles(request):
       CreateFormClass = CreateForm
       CreateFormClass.base_fields['max_z'].required = False 
       CreateFormClass.base_fields['layers'].required = False 
-      CreateFormClass.base_fields['status'].required = False 
       form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2})
       if form.is_valid():
         req, reason = saveCreateRequestForm(request, form)

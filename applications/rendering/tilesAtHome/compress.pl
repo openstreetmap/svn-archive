@@ -78,9 +78,9 @@ if($Config->get("MultipleClients")) #Trigger the _other_ codepath...
 # then rename the folder to timestamp_hostname
 {
     $currentSubTask = "ERROR";
-    statusMessage("###########################################################################",0,0);
-    statusMessage("MultipleClients config option is deprecated, use UploadToDirectory instead.",0,0);
-    statusMessage("###########################################################################",0,0);
+    statusMessage("###########################################################################",1,0);
+    statusMessage("MultipleClients config option is deprecated, use UploadToDirectory instead.",1,0);
+    statusMessage("###########################################################################",1,0);
     exit(1);
 }
 else

@@ -27,22 +27,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class Util
 {
-	/** Tags without informational contents */
-	private static final String[] noDataTags = new String[] { "created_by", "converted_by", "source" };
-	public static int countDataTags(OsmPrimitive osm)
-	{
-		int numTags = 0;
-		Map<String, String> tags = osm.keys;
-		if(tags != null)
-		{
-			numTags = tags.size();
-			for(String tag : noDataTags)
-				if(tags.containsKey(tag))
-					--numTags;
-		}
-		return numTags;
-	}
-
 	/**
 	 * Returns the plugin's directory of the plugin
 	 *

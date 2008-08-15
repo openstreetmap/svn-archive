@@ -12,7 +12,6 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
-import org.openstreetmap.josm.plugins.validator.util.Util;
 
 /**
  * Checks for untagged ways
@@ -79,7 +78,7 @@ public class UntaggedWay extends Test
 			}
 		}
 
-		if(Util.countDataTags(w) == 0)
+		if(!w.tagged)
 		{
 			errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), UNTAGGED_WAY, w) );
 		}

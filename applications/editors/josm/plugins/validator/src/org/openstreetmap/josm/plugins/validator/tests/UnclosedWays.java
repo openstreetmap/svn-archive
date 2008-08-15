@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -109,15 +110,15 @@ public class UnclosedWays extends Test	{
 			type = tr("waterway type {0}", tr(test));
 			mode = 1108;
 		}
-		test = w.get("building");
-		if (test != null && ("true".equalsIgnoreCase(test) || "yes".equalsIgnoreCase(test) || "1".equals(test)))
+		Boolean btest = OsmUtils.getOsmBoolean(w.get("building"));
+		if (btest != null && btest)
 		{
 			force = true;
 			type = tr("building");
 			mode = 1120;
 		}
-		test = w.get("area");
-		if (test != null && ("true".equalsIgnoreCase(test) || "yes".equalsIgnoreCase(test) || "1".equals(test)))
+		btest = OsmUtils.getOsmBoolean(w.get("area"));
+		if (btest != null && btest)
 		{
 			force = true;
 			type = tr("area");

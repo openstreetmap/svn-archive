@@ -19,9 +19,12 @@ import javax.swing.JPanel;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
+import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
+import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmTileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
@@ -50,15 +53,32 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 	private Dimension iScreenSize;
 
 	private TileSource[] sources = { new OsmTileSource.Mapnik(), new OsmTileSource.TilesAtHome() };
+	TileLoader cachedLoader;
+	TileLoader uncachedLoader;
 
 	/**
 	 * Create the chooser component.
 	 */
 	public SlippyMapChooser() {
 		super();
+		cachedLoader = new OsmFileCacheTileLoader(this);
+		uncachedLoader = new OsmTileLoader(this);
 		setZoomContolsVisible(false);
 		setMapMarkerVisible(false);
 		setMinimumSize(new Dimension(350, 350 / 2));
+		setFileCacheEnabled(SlippyMapChooserPlugin.ENABLE_FILE_CACHE);
+		setMaxTilesInmemory(SlippyMapChooserPlugin.MAX_TILES_IN_MEMORY);
+	}
+
+	public void setMaxTilesInmemory(int tiles) {
+		((MemoryTileCache) getTileCache()).setCacheSize(tiles);
+	}
+
+	public void setFileCacheEnabled(boolean enabled) {
+		if (enabled)
+			setTileLoader(cachedLoader);
+		else
+			setTileLoader(uncachedLoader);
 	}
 
 	public void addGui(final DownloadDialog gui) {

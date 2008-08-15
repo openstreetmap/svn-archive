@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
@@ -33,7 +34,7 @@ public class Demo extends JFrame {
 		setSize(400, 400);
 		final JMapViewer map = new JMapViewer();
 		// final JMapViewer map = new JMapViewer(new MemoryTileCache(),4);
-		map.setTileLoader(new OsmFileCacheTileLoader(map));
+		// map.setTileLoader(new OsmFileCacheTileLoader(map));
 		// new DefaultMapController(map);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,14 +55,24 @@ public class Demo extends JFrame {
 			}
 		});
 		JComboBox tileSourceSelector =
-				new JComboBox(new Object[] { new OsmTileSource.Mapnik(),
+				new JComboBox(new TileSource[] { new OsmTileSource.Mapnik(),
 						new OsmTileSource.TilesAtHome(), new OsmTileSource.CycleMap() });
 		tileSourceSelector.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				map.setTileSource((TileSource) e.getItem());
 			}
 		});
+		JComboBox tileLoaderSelector =
+				new JComboBox(new TileLoader[] { new OsmFileCacheTileLoader(map),
+						new OsmTileLoader(map) });
+		tileLoaderSelector.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				map.setTileLoader((TileLoader) e.getItem());
+			}
+		});
+		map.setTileLoader((TileLoader) tileLoaderSelector.getSelectedItem());
 		panel.add(tileSourceSelector);
+		panel.add(tileLoaderSelector);
 		final JCheckBox showMapMarker = new JCheckBox("Map markers visible");
 		showMapMarker.setSelected(map.getMapMarkersVisible());
 		showMapMarker.addActionListener(new ActionListener() {
@@ -107,9 +118,9 @@ public class Demo extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// Properties systemProperties = System.getProperties();
-		// systemProperties.setProperty("http.proxyHost","localhost");
-		// systemProperties.setProperty("http.proxyPort","8008");
+		// java.util.Properties systemProperties = System.getProperties();
+		// systemProperties.setProperty("http.proxyHost", "localhost");
+		// systemProperties.setProperty("http.proxyPort", "8008");
 		new Demo().setVisible(true);
 	}
 

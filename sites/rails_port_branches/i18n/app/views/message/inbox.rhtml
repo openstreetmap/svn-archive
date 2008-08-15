@@ -1,4 +1,4 @@
-<h2><%= "".t -%>My inbox/<%= link_to "outbox".t, url_for(:controller => "user", :action => "outbox", :id => @user.display_name) %></h2>
+<h2><%= "My inbox".t -%>/<%= link_to "outbox".t, url_for(:controller => "user", :action => "outbox", :id => @user.display_name) %></h2>
 
 <p><%= "You have %s new messages and".t(nil,@user.new_messages.size.to_s) + " %s old messages".t(nil,(@user.messages.size - @user.new_messages.size).to_s) -%></p> 
 

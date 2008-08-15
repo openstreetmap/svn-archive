@@ -11,6 +11,10 @@
       <td><%= f.text_area :body, :cols => 80 %></td>
     </tr>
     <tr valign="top">
+      <th><%= "Language".t -%></th>
+      <td><%= f.select :language, LOCALES, :selected => @user.locale %></td>
+    </tr>
+    <tr valign="top">
       <th><%= "Location".t -%></th>
       <td>
         <div id="map" style="border: 1px solid black; position: relative; width : 90%; height : 400px; display: none;"></div>

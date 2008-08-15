@@ -1,6 +1,6 @@
 <h2><%= h(@title) %></h2>
  
-<%= link_to "pending strings", :action => 'pending', :locale => @user.locale -%> | <%= link_to "completed strings", :action => 'complete', :locale => @user.locale -%> | <%= link_to "statistics", :action => 'stat' -%>
+<%= link_to "pending strings", :action => 'pending', :locale => @user.locale -%> | <%= link_to "completed strings", :action => 'complete', :locale => @user.locale -%> | <%= link_to "statistics", :action => 'stats', :sort => 'percentage' -%>
 
 <hr />
 

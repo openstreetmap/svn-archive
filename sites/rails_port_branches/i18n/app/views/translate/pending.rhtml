@@ -1,6 +1,6 @@
 <h2><%= h(@title) %></h2>
 
-pending strings | <%= link_to "completed strings", :action => 'complete', :locale => @user.locale -%> | <%= link_to "statistics", :action => 'stat' -%> 
+pending strings | <%= link_to "completed strings", :action => 'complete', :locale => @user.locale -%> | <%= link_to "statistics", :action => 'stats', :sort => 'percentage' -%> 
 
 <% unless params[:locale] == "en-US" %>
   <br />
@@ -31,3 +31,4 @@ pending strings | <%= link_to "completed strings", :action => 'complete', :local
 <p><%= rss_link_to :action => 'rss', :locale => params[:locale], :id => 'pending' %></p>
 <%= auto_discovery_link_tag :atom, :action => 'pending_rss' %>
 
+<% Locale.set  @user.locale %>

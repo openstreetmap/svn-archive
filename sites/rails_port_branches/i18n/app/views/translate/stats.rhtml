@@ -1,0 +1,32 @@
+<h2><%= @title -%></h2>
+
+<p>
+<%= link_to "pending strings", :action => 'pending', :locale => @user.locale -%> | <%= link_to "completed strings", :action => 'complete', :locale => @user.locale -%> | statistics
+</p>
+
+<div id="stats">
+  <table class="stats">
+    <tr>
+      <th width = 150>Language</th>
+      <th width = 100>Pending</th>
+      <th width = 100><%= link_to "Completed", :action => 'stats', :sort => 'done' -%></th>
+      <th width = 100><%= link_to "Percentage", :action => 'stats', :sort => 'percentage' -%></th>
+    </tr>
+    <% this_colour = cycle('lightgrey', 'white') %>
+    <% for entry in @stat_entries %>
+      <tr>
+        <td bgcolor='<%= this_colour %>'><%= entry.language %><%= " ("+entry.country+")" unless entry.country.nil? %>
+        </td>
+        <% unless @user.tr_status == 0 %>
+          <td bgcolor='<%= this_colour %>'><%= link_to (entry.tr_total - entry.tr_complete), :action => 'pending', :locale => entry.locale %></td>
+          <td bgcolor='<%= this_colour %>'><%= link_to entry.tr_complete, :action => 'complete', :locale => entry.locale %></td>
+        <% else %>
+          <td bgcolor='<%= this_colour %>'><%= entry.tr_total - entry.tr_complete %></td>
+          <td bgcolor='<%= this_colour %>'><%= entry.tr_complete %></td>
+        <% end %>
+        <td bgcolor='<%= this_colour %>'><%= entry.tr_percentage.to_s+" %" %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+

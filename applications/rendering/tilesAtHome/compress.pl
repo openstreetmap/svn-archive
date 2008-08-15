@@ -77,42 +77,14 @@ if($Config->get("MultipleClients")) #Trigger the _other_ codepath...
 # First name the folder timestamp_hostname_inprogress
 # then rename the folder to timestamp_hostname
 {
-    print "MultipleClients config option is deprecated, use UploadToDirectory instead.\n\n";
-    my $epochtime = time;
-    my $hostname = `hostname`;
-    chomp $hostname;
-    $hostname.="XXXXXXXX";
-    my $UploadDir = $Config->get("UploadDirectory");
-    my $WorkDir = $Config->get("WorkingDirectory");
-    my $folder = sprintf("%s/%s_%s_%d", $UploadDir, $epochtime, substr($hostname,0,8),$$);
-    while(-e $folder)  # avoid the improbable... the folder exists.
-    {
-        $folder .= "x";
-    }
-    my $inprogress = $folder."_inprogress";
-    print "Making dir\n";
-    mkdir($inprogress);
-    print "Moving to progress\n";
-    for my $tilefile ( glob "$WorkDir/*" ) 
-    {
-         next if -d $tilefile; # skip folders
-         print "Moving $tilefile to $inprogress\n";
-         move($tilefile,$inprogress) or die "$!\n";
-    }  
-    print "Rename progress dir\n";
-    move("$folder"."_inprogress",$folder) or die "$!\n"; 
-  
-    # the files should be on the upload computer now!!!
+    $currentSubTask = "ERROR";
+    statusMessage("###########################################################################",0,0);
+    statusMessage("MultipleClients config option is deprecated, use UploadToDirectory instead.",0,0);
+    statusMessage("###########################################################################",0,0);
+    exit(1);
 }
 else
 {
-
-   
-    # We calculate % differently this time so we don't need "progress"
-    # $progress = 0;
-    
-    $progressPercent = 0;
-    
     my $allowedPrefixes;
     
     my $TileDir = $Config->get("WorkingDirectory");

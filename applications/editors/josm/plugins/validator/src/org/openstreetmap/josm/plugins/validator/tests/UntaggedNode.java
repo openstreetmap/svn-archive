@@ -12,7 +12,6 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
-import org.openstreetmap.josm.plugins.validator.util.Util;
 import org.openstreetmap.josm.plugins.validator.TestError;
 
 /**
@@ -69,7 +68,7 @@ public class UntaggedNode extends Test
 	@Override
 	public void visit(Node n)
 	{
-		if(!n.incomplete && !n.deleted && Util.countDataTags(n) == 0)
+		if(!n.incomplete && !n.deleted && !n.tagged)
 			emptyNodes.add(n);
 	}
 

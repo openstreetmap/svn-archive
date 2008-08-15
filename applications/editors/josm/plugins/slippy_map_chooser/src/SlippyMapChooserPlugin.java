@@ -11,68 +11,62 @@ import org.openstreetmap.josm.plugins.Plugin;
 /**
  * @author Tim Haussmann
  */
-public class SlippyMapChooserPlugin extends Plugin implements PreferenceChangedListener{
-	
+public class SlippyMapChooserPlugin extends Plugin implements PreferenceChangedListener {
+
 	static String iPluginFolder = "";
-	
-	private static final String KEY_MAX_TILES_IN_DB = "slippy_map_chooser.max_tiles";
-	private static final String KEY_MAX_TILES_REDUCE_BY = "slippy_map_chooser.max_tiles_reduce_by";
-	public static boolean DEBUG_MODE = false;
-	
-	
-	static int MAX_TILES_IN_DB = 200;
-	static int MAX_TILES_REDUCE_BY = 40;
-	
-	public SlippyMapChooserPlugin(){
-		// create the plugin folder 
-//		iPluginFolder = getPluginDir();
-//		File pluginFolder = new File(iPluginFolder);
-//		if(!pluginFolder.exists())
-//			pluginFolder.mkdir();
-//		
-//		//init the logger
-//		Logger.setLogFile(iPluginFolder+"\\slippy_map_chooser.log");
-		
-		//Add this plugin to the preference changed listener list
+
+	private static final String KEY_MAX_TILES_IN_MEMORY = "slippy_map_chooser.max_tiles";
+	private static final String KEY_ENABLE_FILE_CACHE = "slippy_map_chooser.file_cache";
+
+	static int MAX_TILES_IN_MEMORY = 200;
+	static boolean ENABLE_FILE_CACHE = true;
+
+	public SlippyMapChooserPlugin() {
+		// create the plugin folder
+		// iPluginFolder = getPluginDir();
+		// File pluginFolder = new File(iPluginFolder);
+		// if(!pluginFolder.exists())
+		// pluginFolder.mkdir();
+		//		
+		// //init the logger
+		// Logger.setLogFile(iPluginFolder+"\\slippy_map_chooser.log");
+
+		// Add this plugin to the preference changed listener list
 		Main.pref.listener.add(this);
-		
-		//load prefs
-		String maxTiles = Main.pref.get(KEY_MAX_TILES_IN_DB);
-		if(!maxTiles.equals("")){
-			preferenceChanged(KEY_MAX_TILES_IN_DB, maxTiles);
-		}else{
-			Main.pref.put(KEY_MAX_TILES_IN_DB, String.valueOf(MAX_TILES_IN_DB));
+
+		// load prefs
+		String maxTiles = Main.pref.get(KEY_MAX_TILES_IN_MEMORY);
+		if (!maxTiles.equals("")) {
+			preferenceChanged(KEY_MAX_TILES_IN_MEMORY, maxTiles);
+		} else {
+			Main.pref.put(KEY_MAX_TILES_IN_MEMORY, Integer.toString(MAX_TILES_IN_MEMORY));
 		}
-		
-		String maxTilesReduce = Main.pref.get(KEY_MAX_TILES_REDUCE_BY);
-		if(!maxTilesReduce.equals("")){
-			preferenceChanged(KEY_MAX_TILES_REDUCE_BY, maxTilesReduce);
-		}else{
-			Main.pref.put(KEY_MAX_TILES_REDUCE_BY, String.valueOf(MAX_TILES_REDUCE_BY));
+		String enableFileCache = Main.pref.get(KEY_ENABLE_FILE_CACHE);
+		if (!enableFileCache.equals("")) {
+			preferenceChanged(KEY_ENABLE_FILE_CACHE, enableFileCache);
+		} else {
+			Main.pref.put(KEY_ENABLE_FILE_CACHE, Boolean.toString(ENABLE_FILE_CACHE));
 		}
-	}
-	
-	
-	public void addDownloadSelection(List<DownloadSelection> list){	
-		list.add(new SlippyMapChooser());		
 	}
 
+	public void addDownloadSelection(List<DownloadSelection> list) {
+		list.add(new SlippyMapChooser());
+	}
 
 	public void preferenceChanged(String key, String newValue) {
-		if(key.equals(KEY_MAX_TILES_IN_DB)){
-			try{
-				MAX_TILES_IN_DB = Integer.parseInt(newValue);
-			}catch(Exception e){
-				MAX_TILES_IN_DB = 1000;
+		if (KEY_MAX_TILES_IN_MEMORY.equals(key)) {
+			try {
+				MAX_TILES_IN_MEMORY = Integer.parseInt(newValue);
+			} catch (Exception e) {
+				MAX_TILES_IN_MEMORY = 1000;
 			}
-			
-		}else if(key.equals(KEY_MAX_TILES_REDUCE_BY)){
-			try{
-				MAX_TILES_REDUCE_BY = Integer.parseInt(newValue);
-			}catch(Exception e){
-				MAX_TILES_REDUCE_BY = 100;
+		} else if (KEY_ENABLE_FILE_CACHE.equals(key)) {
+			try {
+				ENABLE_FILE_CACHE = Boolean.parseBoolean(newValue);
+			} catch (Exception e) {
+				MAX_TILES_IN_MEMORY = 1000;
 			}
 		}
 	}
-	
+
 }

@@ -140,10 +140,10 @@ else
         #      $allowedPrefixes)) 
         #    {};
         #}
-
-        statusMessage("done",0,3); 
         ## TODO: fix progress display
     }
+    statusMessage("done",0,3); 
+
 } #done main/else.
 
 #-----------------------------------------------------------------------------

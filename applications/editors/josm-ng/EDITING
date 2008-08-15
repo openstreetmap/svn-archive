@@ -35,7 +35,7 @@ UI mapping:
 *    Click on node to select it, then as 4b
 * 4d. extend way with node reuse:
 *   Alt-click on existing node
-  5.  Deletion handled as action, not mode:
+ 5.  Deletion handled as action, not mode:
     Select objects to delete, invoke the action
 
 
@@ -44,3 +44,6 @@ UI mapping:
    does nothing (allows drag)
  - trying to extend the way by a node that is next-to-the-last does nothing
    but reverts the last-used-node to the originally last node
+
+
+

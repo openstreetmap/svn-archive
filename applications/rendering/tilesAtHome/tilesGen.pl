@@ -306,13 +306,10 @@ elsif ($Mode eq "loop")
 }
 elsif ($Mode eq "upload" or $Mode eq "upload_conditional") 
 {   # Upload modes. Note:"upload_conditional" is deprecated and will be removed
-    $currentSubTask = "warning";
-    statusMessage("don't run this parallel to another tilesGen.pl instance",1,0);
     compressAndUpload();
 }
 elsif ($Mode eq "upload_loop")
 {
-    statusMessage("don't run this parallel to another tilesGen.pl instance",1,0);
     my $startTime = time();
     my $elapsedTime;
     while(1) 

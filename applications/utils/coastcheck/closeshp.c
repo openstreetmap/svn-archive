@@ -871,6 +871,12 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
         
         (state->seg_count)++;
       }
+      // We need 6 spare for possible enclosure test later
+      if( state->seg_count > (MAX_SEGS-6) )
+      {
+          fprintf( stderr, "MAX_SEGS overflow!!!, aborting\n" );
+          exit(1);
+      }
       curr_sect = sect;
     }
     /* Generally, if we have a high winding number we consider ourselves

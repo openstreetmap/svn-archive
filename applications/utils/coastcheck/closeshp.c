@@ -102,11 +102,23 @@ struct state
   int enclosed;
 };
 
+struct source
+{
+  SHPHandle shp;
+  DBFHandle dbf;
+  SHPTree *shx;
+  int shape_count;
+#ifdef SHAPES_IN_MEMORY
+  SHPObject **shapes;
+  SHPObject **simple_shapes;
+#endif
+};
+
 void OutputSegs( struct state *state );
-void Process( struct state *state, SHPHandle shp, DBFHandle dbf, SHPTree *shx, int polygon );
-static void InitBitmap( SHPHandle shp, SHPHandle temp );
+void Process( struct state *state, struct source *src, int polygon );
+static void InitBitmap( struct source *src, SHPHandle temp );
 static double CalcArea( const SHPObject *obj );
-static void SplitCoastlines( SHPHandle shp_poly, DBFHandle dbf_poly, SHPHandle shp_arc, DBFHandle dbf_arc, char *out_filename );
+static void SplitCoastlines( struct source *poly, struct source *arc, char *out_filename );
 static int contains( double x, double y, double *v_x, double *v_y, int vertices );
 static int CopyShapeToArray( SHPHandle shp, int index, int snode, int enode, int node_count );
 static void ResizeSubareas( struct state *state, int count );
@@ -134,42 +146,42 @@ int main( int argc, char *argv[] )
   char *arc_file = argv[2];
   char *out_file = argv[3];
 
-  int poly_count, arc_count;
+  struct source poly, arc, simplified;
 
   /* open shapefiles and dbf files */
-  SHPHandle shp_poly = SHPOpen( poly_file, "rb" );
-  if( !shp_poly )
+  poly.shp = SHPOpen( poly_file, "rb" );
+  if( !poly.shp )
   {
     fprintf( stderr, "Couldn't open '%s': %s\n", poly_file, strerror(errno));
     return 1;
   }
 
-  SHPHandle shp_arc = SHPOpen( arc_file, "rb" );
-  if( !shp_arc )
+  arc.shp = SHPOpen( arc_file, "rb" );
+  if( !arc.shp )
   {
     fprintf( stderr, "Couldn't open '%s': %s\n", arc_file, strerror(errno));
     return 1;
   }
   
-  DBFHandle dbf_poly = DBFOpen( poly_file, "rb" );
-  if( !dbf_poly )
+  poly.dbf = DBFOpen( poly_file, "rb" );
+  if( !poly.dbf )
   {
     fprintf( stderr, "Couldn't open DBF file for '%s'\n", poly_file );
     return 1;
   }
-  if( DBFGetFieldIndex( dbf_poly, "way_id" ) != 2 )
+  if( DBFGetFieldIndex( poly.dbf, "way_id" ) != 2 )
   {
     fprintf( stderr, "Unexpected format DBF file '%s'\n", poly_file );
     return 1;
   }
 
-  DBFHandle dbf_arc = DBFOpen( arc_file, "rb" );
-  if( !dbf_arc )
+  arc.dbf = DBFOpen( arc_file, "rb" );
+  if( !arc.dbf )
   {
     fprintf( stderr, "Couldn't open DBF file for '%s'\n", arc_file );
     return 1;
   }
-  if( DBFGetFieldIndex( dbf_arc, "way_id" ) != 2 )
+  if( DBFGetFieldIndex( arc.dbf, "way_id" ) != 2 )
   {
     fprintf( stderr, "Unexpected format DBF file '%s'\n", arc_file );
     return 1;
@@ -177,7 +189,7 @@ int main( int argc, char *argv[] )
 
   /* Split coastlines into arc no longer than MAX_NODES_PER_ARC long */
   sprintf( out_filename, "%s_i", out_file );
-  SplitCoastlines( shp_poly, dbf_poly, shp_arc, dbf_arc, out_filename );
+  SplitCoastlines( &poly, &arc, out_filename );
   
   sprintf( out_filename, "%s_p", out_file );
   shp_out = SHPCreate( out_filename, SHPT_POLYGON );
@@ -202,13 +214,13 @@ int main( int argc, char *argv[] )
   /* Check shapefiles are the right type */
   {
     int type;
-    SHPGetInfo( shp_poly, &poly_count, &type, NULL, NULL );
+    SHPGetInfo( poly.shp, &poly.shape_count, &type, NULL, NULL );
     if( type != SHPT_POLYGON )
     {
       fprintf( stderr, "'%s' is not a POLYGON shapefile\n", poly_file );
       return 1;
     }
-    SHPGetInfo( shp_arc, &arc_count, &type, NULL, NULL );
+    SHPGetInfo( arc.shp, &arc.shape_count, &type, NULL, NULL );
     if( type != SHPT_ARC )
     {
       fprintf( stderr, "'%s' is not a ARC shapefile\n", arc_file );
@@ -217,9 +229,9 @@ int main( int argc, char *argv[] )
   }
   
   /* Build indexes on files, we need them... */
-  SHPTree *shx_poly = SHPCreateTree( shp_poly, 2, 10, NULL, NULL );
-  SHPTree *shx_arc  = SHPCreateTree( shp_arc, 2, 10, NULL, NULL );
-  if( !poly_file || !arc_file )
+  poly.shx = SHPCreateTree( poly.shp, 2, 10, NULL, NULL );
+  arc.shx  = SHPCreateTree( arc.shp, 2, 10, NULL, NULL );
+  if( !poly.shx || !arc.shx )
   {
     fprintf( stderr, "Couldn't open shape indexes\n" );
     return 1;
@@ -239,14 +251,13 @@ int main( int argc, char *argv[] )
   memset( &state, 0, sizeof(state) );
   ResizeSubareas(&state, INIT_MAX_SUBAREAS);
   
-  SHPHandle shp_tempfile;   // Temporary file for simplified shapes
-  SHPTree *shx_tempfile;
+  // Temporary file for simplified shapes
   {
       // Make the file and open it
       char filename[32];
       sprintf( filename, "tmp_coastline_%d", getpid() );
-      shp_tempfile = SHPCreate( filename, SHPT_ARC );
-      if( !shp_tempfile )
+      simplified.shp = SHPCreate( filename, SHPT_ARC );
+      if( !simplified.shp )
       {
           fprintf( stderr, "Couldn't open temporary shapefile: %s\n", strerror(errno) );
           return 1;
@@ -259,12 +270,12 @@ int main( int argc, char *argv[] )
       unlink(filename);
       
       // Setup the bitmap while creating the simplified polygons
-      InitBitmap( shp_arc, shp_tempfile );
-      InitBitmap( shp_poly, shp_tempfile );
+      InitBitmap( &arc, simplified.shp );
+      InitBitmap( &poly, simplified.shp );
       
       // And index the simplified polygons
-      shx_tempfile = SHPCreateTree( shp_tempfile, 2, 10, NULL, NULL );
-      if( !shx_tempfile )
+      simplified.shx = SHPCreateTree( simplified.shp, 2, 10, NULL, NULL );
+      if( !simplified.shx )
       {
           fprintf( stderr, "Couldn't build temporary shapetree\n" );
           return 1;
@@ -307,22 +318,22 @@ int main( int argc, char *argv[] )
       // Basically, we only need to test for enclosure
       if( check_tile( state.x, state.y ) )
       {
-        Process( &state, shp_poly, dbf_poly, shx_poly, 1 );
-        Process( &state, shp_arc,  dbf_arc,  shx_arc,  0 );
+        Process( &state, &poly, 1 );
+        Process( &state, &arc,  0 );
       }
       else
-        Process( &state, shp_tempfile, NULL, shx_tempfile, 0 );
+        Process( &state, &simplified, 0 );
 
       OutputSegs( &state );
     }
     
-  SHPDestroyTree( shx_poly );
-  SHPDestroyTree( shx_arc );
-  DBFClose( dbf_poly );
-  DBFClose( dbf_arc );
+  SHPDestroyTree( poly.shx );
+  SHPDestroyTree( arc.shx );
+  DBFClose( poly.dbf );
+  DBFClose( arc.dbf );
   DBFClose( dbf_out );
-  SHPClose( shp_poly );
-  SHPClose( shp_arc );
+  SHPClose( poly.shp );
+  SHPClose( arc.shp );
   SHPClose( shp_out );
   
   printf("\n");
@@ -356,14 +367,13 @@ static void ResizeSubareas( struct state *state, int count )
   Parttypes = Parts + MAX_SUBAREAS;
 }
 
-static void SplitCoastlines2( int show, SHPHandle shp, DBFHandle dbf, SHPHandle shp_arc_out, DBFHandle dbf_arc_out )
+static void SplitCoastlines2( int show, struct source *arc, SHPHandle shp_arc_out, DBFHandle dbf_arc_out )
 {
-  int count;
-  SHPGetInfo( shp, &count, NULL, NULL, NULL );
+  int count = arc->shape_count;
   for( int i=0; i<count; i++ )
   {
-    SHPObject *obj = SHPReadObject( shp, i );
-    int way_id = DBFReadIntegerAttribute( dbf, i, 2 );
+    SHPObject *obj = SHPReadObject( arc->shp, i );
+    int way_id = DBFReadIntegerAttribute( arc->dbf, i, 2 );
     
     if( obj->nVertices <= MAX_NODES_PER_ARC )
     {
@@ -395,9 +405,9 @@ static void SplitCoastlines2( int show, SHPHandle shp, DBFHandle dbf, SHPHandle 
   }
 }
 
-/* The first two params are currently unused, but if people ever want to get
+/* The first param is currently unused, but if people ever want to get
  * access to the completed bits of coastline, this is where to change it */
-static void SplitCoastlines( SHPHandle shp_poly UNUSED, DBFHandle dbf_poly UNUSED, SHPHandle shp_arc, DBFHandle dbf_arc, char *out_filename )
+static void SplitCoastlines( struct source *poly UNUSED, struct source *arc, char *out_filename )
 {
   SHPHandle shp_arc_out = SHPCreate( out_filename, SHPT_ARC );
   if( !shp_arc_out )
@@ -417,19 +427,18 @@ static void SplitCoastlines( SHPHandle shp_poly UNUSED, DBFHandle dbf_poly UNUSE
   DBFAddField( dbf_arc_out, "error",    FTInteger, 11, 0 );
 
 //  SplitCoastlines2( shp_poly, dbf_poly, shp_arc_out, dbf_arc_out );
-  SplitCoastlines2( 0, shp_arc,  dbf_arc,  shp_arc_out, dbf_arc_out );
+  SplitCoastlines2( 0, arc, shp_arc_out, dbf_arc_out );
   
   SHPClose( shp_arc_out );
   DBFClose( dbf_arc_out );
 }
 
-static void InitBitmap( SHPHandle shp, SHPHandle temp )
+static void InitBitmap( struct source *src, SHPHandle temp )
 {
-  int count, res_count = 0;
-  SHPGetInfo( shp, &count, NULL, NULL, NULL );
+  int count = src->shape_count, res_count = 0;
   for( int i=0; i<count; i++ )
   {
-    SHPObject *obj = SHPReadObject( shp, i );
+    SHPObject *obj = SHPReadObject( src->shp, i );
     
     int old_x = -1, old_y = -1;
     int k = 0;
@@ -624,10 +633,10 @@ static int seg_compare( const void *a, const void *b )
 }
 
 /* We currently don't use anything from the source DBF file, but the cabability is there */
-void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree *shx, int polygon )
+void Process( struct state *state, struct source *src, int polygon )
 {
   int count;
-  int *list = SHPTreeFindLikelyShapes( shx, state->lb, state->rt, &count );
+  int *list = SHPTreeFindLikelyShapes( src->shx, state->lb, state->rt, &count );
   int poly_start;
   
   for( int poly = 0; poly < count; poly++ )
@@ -639,7 +648,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
     int id = list[poly];
 
     /* Now we have a candidate object, we need to process it */
-    SHPObject *obj = SHPReadObject( shp, id );
+    SHPObject *obj = SHPReadObject( src->shp, id );
     
     /* If it's got less than 4 vertices it's not a real object */
     /* No need to mark it as error here, done in SplitCoastlines */
@@ -667,7 +676,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
       if( sa > MAX_SUBAREAS-5 )
         ResizeSubareas( state, 2*MAX_SUBAREAS );
 
-      state->sub_areas[sa].shp = shp;
+      state->sub_areas[sa].shp = src->shp;
       state->sub_areas[sa].index = id;
       state->sub_areas[sa].x = obj->padfX[0];
       state->sub_areas[sa].y = obj->padfY[0];
@@ -837,7 +846,7 @@ void Process( struct state *state, SHPHandle shp, DBFHandle dbf UNUSED, SHPTree 
         if( curr_sect != -1 )
         {
           /* Going in... */
-          seg_ptr->shp = shp;
+          seg_ptr->shp = src->shp;
           seg_ptr->index = id;
           seg_ptr->sx = intersections[0].x;
           seg_ptr->sy = intersections[0].y;

@@ -1,4 +1,4 @@
-<project name="Lakewalker" default="dist" basedir=".">
+<project name="lakewalker" default="dist" basedir=".">
 
   <!-- josm "user home" directory depends on the platform used (windows has a different place than unix/linux) -->
   <property environment="env"/>
@@ -45,13 +45,22 @@
   </target>
 
   <target name="dist" depends="compile">
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
         <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerPlugin" />
         <attribute name="Plugin-Description" value="Interface to Lakewalker module" />
-        <attribute name="Plugin-Version" value="0.2"/>
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
         <attribute name="Author" value="Brent Easton &lt;b.easton@uws.edu.au>, Jason Reid &lt;jrreid@ucalgary.ca>"/>
-		<attribute name="Main-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerApp"/>
+        <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerApp"/>
       </manifest>
     </jar>
   </target>

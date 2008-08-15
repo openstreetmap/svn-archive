@@ -24,7 +24,9 @@
 		<delete file="JMapViewer.jar" />
 		<delete file="JMapViewer_src.jar" />
 		<jar destfile="JMapViewer.jar" filesetmanifest="mergewithoutmain">
-			<fileset dir="bin" includes="**/jmapviewer/**" />
+			<fileset dir="bin" includes="**/jmapviewer/**" >
+				<exclude name="**/Demo*"/>
+			</fileset>
 		</jar>
 		<jar destfile="JMapViewer_src.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="src" includes="**/jmapviewer/**" />

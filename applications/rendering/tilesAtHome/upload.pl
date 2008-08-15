@@ -3,6 +3,7 @@ use strict;
 use FindBin qw($Bin);
 use LWP::UserAgent;
 use File::Copy;
+use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
@@ -31,7 +32,7 @@ use AppConfig qw(:argcount);
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 if ($#ARGV < 0) 
-{
+{  # no command line option supplied, we require ($Mode, $progressJobs)
    die "please call \"tilesGen.pl upload\" instead";
 }
 
@@ -77,7 +78,6 @@ my $Mode;
 
 ($Mode, $progressJobs) = @ARGV;
 
-### TODO: implement locking, this is one of the things that make upload not multithread-safe.
 my $sleepdelay;
 my $failFile = $Config->get("WorkingDirectory") . "/failurecount.txt";
 if (open(FAILFILE, "<", $failFile))
@@ -98,10 +98,7 @@ else
 
 }
 
-
-### don't compress, this is handled from tilesGen.pl now
-
-# Upload any ZIP files which are still waiting to go
+# Upload any ZIP files which are still waiting to go. This is the main part.
 processOldZips();
 
 ## update the failFile with current failure count from processOldZips
@@ -112,7 +109,8 @@ if (open(FAILFILE, ">", $failFile))
     close FAILFILE;
 }
 
-## end main
+### end main
+###-------------------------------------------------------------------------
 
 sub processOldZips
 {
@@ -143,13 +141,19 @@ sub processOldZips
     }
     while(my $File = shift @sorted)
     {
-        if($File =~ /\.zip$/i)
-        {
-            
+        # get a file handle, then try to lock the file exclusively.
+        # if open fails (file has been uploaded and removed by other process)
+        # the subsequent flock will also fail and skip the file.
+        # if just flock fails it is being handled by a different upload process
+        open (ZIPFILE, "$ZipDir/$File");
+        if (flock(ZIPFILE, LOCK_EX|LOCK_NB))
+        {   # got exclusive lock, now upload
+
             my $FailureMode = 0; # 0 ->hard failure (i.e. Err503 on upload), 
                                  # 1 ->no failure,
                                  # 10..1000 ->soft failure (with load% * 10)
-            while ($FailureMode != 1) # while not upload success or complete failure
+            # while not upload success or complete failure
+            while ($FailureMode != 1)
             {
                 $FailureMode = upload("$ZipDir/$File");
 
@@ -181,6 +185,13 @@ sub processOldZips
             }
 
         }
+        else
+        {   # could not get exclusive lock, this is being handled elsewhere now
+            statusMessage("$File uploaded by different process. skipping",0,3);
+        }
+        # finally unlock zipfile and release handle
+        flock (ZIPFILE, LOCK_UN);
+        close (ZIPFILE);
         statusMessage(scalar(@sorted)." zip files left to upload",0,3);
         
     }

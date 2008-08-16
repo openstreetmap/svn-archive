@@ -29,15 +29,17 @@
 #include <shapefil.h>
 
 #define VERBOSE 0
-#define TEST 1
+#define TEST 0
 #define UNUSED __attribute__((unused))
 
 #define MERC_MAX (20037508.34f)
 #define DIVISIONS 400
 #define MERC_BLOCK (2*MERC_MAX/DIVISIONS)
+#define RESOLUTION  0
 /* Number of mercator metres the tiles overlap, so the antialising doesn't cause wierd effects */
 #define TILE_OVERLAP  150
-#define MAX_NODES 500000
+#define INIT_MAX_NODES (1<<19)
+int MAX_NODES = INIT_MAX_NODES;
 #define MAX_SEGS  100
 int MAX_SUBAREAS;   /* Was a define, not anymore. Auto grown array, starting at... */
 #define INIT_MAX_SUBAREAS 1024
@@ -115,7 +117,7 @@ struct source
 
 void OutputSegs( struct state *state );
 void Process( struct state *state, struct source *src, int polygon );
-static void InitBitmap( struct source *src, SHPHandle temp );
+static void InitBitmap( struct source *src, struct source *temp );
 static double CalcArea( const SHPObject *obj );
 static void SplitCoastlines( struct source *poly, struct source *arc, char *out_filename );
 static int contains( double x, double y, double *v_x, double *v_y, int vertices );
@@ -163,7 +165,11 @@ int main( int argc, char *argv[] )
   char *out_file = argv[3];
 
   struct source poly, arc, simplified;
-  poly.in_memory = arc.in_memory = simplified.in_memory = 0;
+  memset( &poly, 0, sizeof(poly) );
+  memset( &arc, 0, sizeof(arc) );
+  memset( &simplified, 0, sizeof(simplified) );
+  poly.in_memory = arc.in_memory = 0;
+  simplified.in_memory = 1;
 
   /* open shapefiles and dbf files */
   poly.shp = SHPOpen( poly_file, "rb" );
@@ -285,8 +291,8 @@ int main( int argc, char *argv[] )
       unlink(filename);
       
       // Setup the bitmap while creating the simplified polygons
-      InitBitmap( &arc, simplified.shp );
-      InitBitmap( &poly, simplified.shp );
+      InitBitmap( &arc, &simplified );
+      InitBitmap( &poly, &simplified );
       
       // And index the simplified polygons
       simplified.shx = SHPCreateTree( simplified.shp, 2, 10, NULL, NULL );
@@ -295,14 +301,16 @@ int main( int argc, char *argv[] )
           fprintf( stderr, "Couldn't build temporary shapetree\n" );
           return 1;
       }
+      SHPGetInfo( simplified.shp, &simplified.shape_count, NULL, NULL, NULL );
+      simplified.shapes = calloc( simplified.shape_count, sizeof(SHPObject*) );
   }
 
 #if !TEST  
   for( int i=0; i<DIVISIONS; i++ )
     for( int j=0; j<DIVISIONS; j++ )  //Divide the world into mercator blocks approx 100km x 100km
 #else
-  for( int i=114; i<=114; i++ )
-    for( int j=120; j<=200; j++ )  //Divide the world into mercator blocks approx 100km x 100km
+  for( int i=0; i<=10; i++ )
+    for( int j=0; j<=DIVISIONS; j++ )  //Divide the world into mercator blocks approx 100km x 100km
 #endif
     {
       state.x = i;
@@ -343,6 +351,7 @@ int main( int argc, char *argv[] )
     }
     
   free( state.sub_areas );
+  free( simplified.shapes );
   SHPDestroyTree( poly.shx );
   SHPDestroyTree( arc.shx );
   SHPDestroyTree( simplified.shx );
@@ -451,13 +460,92 @@ static void SplitCoastlines( struct source *poly UNUSED, struct source *arc, cha
   DBFClose( dbf_arc_out );
 }
 
-static void InitBitmap( struct source *src, SHPHandle temp )
+static void InitBitmap( struct source *src, struct source *temp )
 {
   int count = src->shape_count, res_count = 0;
+  int type1 = 0, type2 = 0;
+  
+  if( RESOLUTION )
+    src->shapes = calloc( count, sizeof( SHPObject* ) );
+  
   for( int i=0; i<count; i++ )
   {
     SHPObject *obj = source_get_shape( src, i );
     
+    int orig = 1;  /* Does obj refer to the original shape */
+#if RESOLUTION != 0
+    /* The first loop: This one takes into account the resolution to simplify the shape */
+    if( RESOLUTION )
+    {
+      int k = 0;
+      for( int j=0; j<obj->nVertices; j++ )
+      {
+        /* If this is not the first or the last node, check that it moved a
+         * significant distance before we accept it. There is an extra
+         * buffer here to avoid lines walking an edge switching between two
+         * cells continuously */
+        if( k > 0 && j != (obj->nVertices-1) )
+        {
+          if( ( abs( v_x[k-1] - obj->padfX[j] ) < 0.75*RESOLUTION ) &&
+              ( abs( v_y[k-1] - obj->padfY[j] ) < 0.75*RESOLUTION ) )
+          {
+            type1++;  /* Type 1 optimisation */
+            continue;
+          }
+        }
+        
+        /* Calculate the position of this node */
+        double new_x = ( floor( obj->padfX[j] / RESOLUTION ) + 0.5 ) * RESOLUTION;
+        double new_y = ( floor( obj->padfY[j] / RESOLUTION ) + 0.5 ) * RESOLUTION;
+        
+        /* This optimisation is: if the step first the last node to this one
+         * is the same direction as from the last node to the one before, we
+         * can coalesce them into one step. */
+        if( k > 2 )
+        {
+          double x1 = new_x - v_x[k-1];
+          double y1 = new_y - v_y[k-1];
+          double x2 = v_x[k-1] - v_x[k-2];
+          double y2 = v_y[k-1] - v_y[k-2];
+          
+          double t1 = x1*y2;
+          double t2 = x2*y1;
+          
+          /* Check they point the same direction. The first two tests are
+           * needed other opposite directions would also match */
+          if( (x1*x2) >= 0.0f && (y1*y2) >= 0.0f && fabs(t1-t2) < 1e-6 )
+          {
+            v_x[k-1] = new_x;  /* Overwrite last node */
+            v_y[k-1] = new_y;
+            type2++;           /* Type 2 optimisation */
+            continue;
+          }
+        }
+        v_x[k] = new_x;
+        v_y[k] = new_y;
+        k++;
+        
+        if( k >= MAX_NODES-2 )
+        {
+          MAX_NODES = MAX_NODES*2;
+          v_x = realloc( v_x, MAX_NODES * sizeof(v_x[0]) );
+          v_y = realloc( v_y, MAX_NODES * sizeof(v_y[0]) );
+          fprintf( stderr, "MAX_NODES raised to %d\n", MAX_NODES );
+        }
+      }
+      /* If we didn't move far enough then we get skipped altogether (think small islands, low zoom) */
+      if( k > 3 )
+      {
+        /* Note we switch obj to using the simplfied shape */
+        SHPObject *new_obj = SHPCreateSimpleObject( obj->nSHPType, k, v_x, v_y, NULL );
+        src->shapes[i] = new_obj;
+        source_release_shape(src, obj);
+        obj = new_obj;
+        orig = 0;   /* So we don't accedently free this shape at the end of the loop */
+      }
+    }
+#endif
+    /* The second loop: sets up the bitmap and makes the super simplified shapes that are only used for enclosure testing */
     int old_x = -1, old_y = -1;
     int k = 0;
 
@@ -468,6 +556,7 @@ static void InitBitmap( struct source *src, SHPHandle temp )
     }
     for( int j=0; j<obj->nVertices; j++ )
     {
+      /* Calculate the tile we're in */
       int new_x = floor( (obj->padfX[j] / MERC_BLOCK) + 200.0 );
       int new_y = floor( (obj->padfY[j] / MERC_BLOCK) + 200.0 );
       
@@ -503,17 +592,21 @@ static void InitBitmap( struct source *src, SHPHandle temp )
       SHPObject *new_obj = SHPCreateSimpleObject( SHPT_ARC, k, v_x, v_y, NULL );
       
 //      fprintf( stderr, "Compressed %d nodes to %d\n", obj->nVertices, k );
-      int new_id = SHPWriteObject( temp, -1, new_obj );
+      int new_id = SHPWriteObject( temp->shp, -1, new_obj );
       if( new_id < 0 ) { fprintf( stderr, "Temp output failure: %m\n"); exit(1); }
       
       SHPDestroyObject( new_obj );
       
       res_count++;
     }
-    source_release_shape(src, obj);
+    if( orig )
+      source_release_shape(src, obj);
   }
   
-  fprintf( stderr, "Found %d large objects out of %d\n", res_count, count );
+  if( RESOLUTION )
+    src->in_memory = 1;
+  
+  fprintf( stderr, "Found %d large objects out of %d, removed %d+%d nodes\n", res_count, count, type1, type2 );
 }
 
 static double CalcArea( const SHPObject *obj )
@@ -669,6 +762,8 @@ void Process( struct state *state, struct source *src, int polygon )
 
     /* Now we have a candidate object, we need to process it */
     SHPObject *obj = source_get_shape( src, id );
+    if( !obj ) /* May be NULL if this object was simplfied away */
+      continue;
     
     /* If it's got less than 4 vertices it's not a real object */
     /* No need to mark it as error here, done in SplitCoastlines */

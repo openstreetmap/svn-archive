@@ -41,8 +41,8 @@ sub get_type
 
   my($r,$g,$b) = $image->rgb( $image->getPixel( $x,$y ) );
   
-  return TILETYPE_LAND if $r == 0 && $g == 255 && $b == 0;
   return TILETYPE_SEA if $r == 0 && $g == 0   && $b == 255;
+  return TILETYPE_LAND if $r == 0 && $g == 255 && $b == 0;
   return TILETYPE_TILE if $r == 255 && $g == 255 && $b == 255;
   return TILETYPE_UNKNOWN if $r == 0 && $g == 0 && $b == 0;
   

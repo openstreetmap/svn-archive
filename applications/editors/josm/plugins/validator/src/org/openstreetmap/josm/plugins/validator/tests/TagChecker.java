@@ -154,15 +154,15 @@ public class TagChecker extends Test
 	private static void initializeData() throws FileNotFoundException, IOException
 	{
 		spellCheckKeyData = new HashMap<String, String>();
-		String sources = Main.pref.get( PREF_SOURCES );
-		if(Main.pref.getBoolean(PREF_USE_DATA_FILE))
+		String sources = Main.pref.get( PREF_SOURCES, "");
+		if(Main.pref.getBoolean(PREF_USE_DATA_FILE, true))
 		{
 			if( sources == null || sources.length() == 0)
 				sources = DATA_FILE;
 			else
 				sources = DATA_FILE + ";" + sources;
 		}
-		if(Main.pref.getBoolean(PREF_USE_SPELL_FILE))
+		if(Main.pref.getBoolean(PREF_USE_SPELL_FILE, true))
 		{
 			if( sources == null || sources.length() == 0)
 				sources = SPELL_FILE;
@@ -171,6 +171,8 @@ public class TagChecker extends Test
 		}
 
 		String errorSources = "";
+		if(sources.length() == 0)
+			return;
 		for(String source: sources.split(";"))
 		{
 			File sourceFile = Util.mirror(new URL(source), Util.getPluginDir(), -1);
@@ -234,7 +236,7 @@ public class TagChecker extends Test
 	 */
 	public static void initializePresets() throws Exception
 	{
-		if( !Main.pref.getBoolean(PREF_CHECK_VALUES) )
+		if( !Main.pref.getBoolean(PREF_CHECK_VALUES, true) )
 			return;
 
 		Collection<TaggingPreset> presets = TaggingPresetPreference.taggingPresets;
@@ -381,6 +383,8 @@ public class TagChecker extends Test
 	public static void readPresetFromPreferences()
 	{
 		String allAnnotations = Main.pref.get("taggingpreset.sources");
+		if(allAnnotations == null | allAnnotations.length() == 0)
+			return;
 		for(String source : allAnnotations.split(";"))
 		{
 			InputStream in = null;
@@ -409,19 +413,19 @@ public class TagChecker extends Test
 	@Override
 	public void startTest()
 	{
-		checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS);
+		checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS, true);
 		if( isBeforeUpload )
 			checkKeys = checkKeys && Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD, true);
 
-		checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES);
+		checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES, true);
 		if( isBeforeUpload )
 			checkValues = checkValues && Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD, true);
 
-		checkComplex = Main.pref.getBoolean(PREF_CHECK_COMPLEX);
+		checkComplex = Main.pref.getBoolean(PREF_CHECK_COMPLEX, true);
 		if( isBeforeUpload )
 			checkComplex = checkValues && Main.pref.getBoolean(PREF_CHECK_COMPLEX_BEFORE_UPLOAD, true);
 
-		checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES);
+		checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES, true);
 		if( isBeforeUpload )
 			checkFixmes = checkFixmes && Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true);
 	}

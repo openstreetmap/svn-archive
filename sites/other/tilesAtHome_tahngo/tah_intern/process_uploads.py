@@ -98,11 +98,11 @@ class TileUpload:
           outfile.write(zfobj.read(name))
           outfile.close()
     except zipfile.BadZipfile:
-      logging.warning('found bad zip file %s uploaded by user %s', (self.uid, self.upload.user_id))
+      logging.warning('found bad zip file %s uploaded by user %s' % (self.upload.file, self.upload.user_id))
       if outfile: outfile.close()
       return 0
     except:
-      logging.warning('unknown zip file error in file uploaded by user %s' % self.upload.user_id)
+      logging.warning('unknown zip file error in file %s uploaded by user %s' % (self.upload.file, self.upload.user_id))
       if outfile: outfile.close()
       return(0)
 

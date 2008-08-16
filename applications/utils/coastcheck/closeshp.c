@@ -43,7 +43,7 @@ int MAX_SUBAREAS;   /* Was a define, not anymore. Auto grown array, starting at.
 #define INIT_MAX_SUBAREAS 1024
 #define MAX_NODES_PER_ARC 10000
 
-static double *v_x, *v_y, *v_z;
+static double *v_x, *v_y;
 static int *Parts, *Parttypes;
 
 static char used_bitmap[DIVISIONS * DIVISIONS];
@@ -256,14 +256,12 @@ int main( int argc, char *argv[] )
   
   v_x = malloc( MAX_NODES * sizeof(double) );
   v_y = malloc( MAX_NODES * sizeof(double) );
-  v_z = malloc( MAX_NODES * sizeof(double) );
   
-  if( !v_x || !v_y || !v_z)
+  if( !v_x || !v_y )
   {
     fprintf( stderr, "Couldn't allocate memory for nodes\n" );
     return 1;
   }
-  memset( v_z, 0, MAX_NODES * sizeof(double) );
   struct state state;
   memset( &state, 0, sizeof(state) );
   ResizeSubareas(&state, INIT_MAX_SUBAREAS);
@@ -502,7 +500,7 @@ static void InitBitmap( struct source *src, SHPHandle temp )
       v_y[k] = obj->padfY[obj->nVertices-1];
       k++;
       
-      SHPObject *new_obj = SHPCreateSimpleObject( SHPT_ARC, k, v_x, v_y, v_z );
+      SHPObject *new_obj = SHPCreateSimpleObject( SHPT_ARC, k, v_x, v_y, NULL );
       
 //      fprintf( stderr, "Compressed %d nodes to %d\n", obj->nVertices, k );
       int new_id = SHPWriteObject( temp, -1, new_obj );
@@ -631,12 +629,14 @@ static int CalculateIntersections( double x1, double y1, double x2, double y2,
       intersections[0] = i;
     }
   }
+#if 0
   if(count == 0)
   {
     printf( "\nCalculate intersections: (%.2f,%.2f)-(%.2f,%.2f) hit %d\n", x1, y1, x2, y2, count );
     for( int i=0; i<count; i++ )
       printf( "   (%.2f,%.2f) t=%.6f\n", intersections[i].x, intersections[i].y, intersections[i].t );
   }  
+#endif
   return count;
 }
 
@@ -1079,10 +1079,10 @@ void OutputSegs( struct state *state )
       if( node_count > MAX_NODES - 100 )
         fprintf( stderr, "(%d,%d) Node overflow: %d > %d\n", state->x, state->y, node_count, MAX_NODES - 100 );
 //        fprintf( stderr, "Created object: %d verticies\n", node_count );
-//      SHPObject *shape = SHPCreateSimpleObject( SHPT_POLYGON, node_count, v_x, v_y, v_z );
+//      SHPObject *shape = SHPCreateSimpleObject( SHPT_POLYGON, node_count, v_x, v_y, NULL );
       SHPObject *shape = SHPCreateObject( SHPT_POLYGON, -1, 
                                             part_count, Parts, Parttypes, 
-                                            node_count, v_x, v_y, v_z, NULL );
+                                            node_count, v_x, v_y, NULL, NULL );
       // If a wrongly oriented shape crosses a boundary, sometimes we can see that...
       // Must do this prior to rewinding object
       int inverted = (CalcArea( shape ) < 0);
@@ -1115,7 +1115,7 @@ void OutputSegs( struct state *state )
 //      SHPObject *obj = SHPReadObject( sub_area->src, sub_area->index );
       SHPObject *obj = SHPCreateObject( SHPT_POLYGON, -1, 
                                         part_count, Parts, Parttypes, 
-                                        node_count, v_x, v_y, v_z, NULL );
+                                        node_count, v_x, v_y, NULL, NULL );
       int new_id = SHPWriteObject( shp_out, -1, obj );
       if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
       SHPDestroyObject( obj );

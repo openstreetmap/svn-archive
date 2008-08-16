@@ -26,10 +26,10 @@
 		<script type="text/javascript" src="CSS_parse.js"></script>
 		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa.js"></script>
 		<script type="text/javascript" src="gr/abiss/js/sarissa/sarissa_ieemu_xpath.js"></script>
-		<!--TODO: automatically retrieve server name-->
 		<script type="text/javascript" src="cmyk.js"></script>
 		<script type="text/javascript" src="osmarender_frontend.js"></script>
-		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug:true"></script>
+		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+		<!--script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true, isDebug:true"></script-->
 		<script type="text/javascript">
 			dojo.require("dojo.dnd.move");
 			dojo.require("dojo.fx");
@@ -49,8 +49,13 @@
 			dojo.require("dijit.form.NumberSpinner");
 			dojo.require("dojox.widget.ColorPicker");
 			dojo.require("dojo.data.ItemFileReadStore");
+			dojo.require("dojox.dtl.Context");
+			dojo.require("dojo.i18n");
 			dojo.require("dojo.parser");
 			var initDND = function() {
+				dojo.registerModulePath("osmarender_frontend","../../osmarender_frontend");
+				dojo.require("osmarender_frontend.panels.css.css_rules");
+				dojo.require("osmarender_frontend.widgets.css_editor.css_editor");
 				var osm3 = new dojo.dnd.Moveable("osm3",{handle:"moveMe"});
 			};
 			dojo.addOnLoad(initDND);
@@ -276,7 +281,10 @@
 					</div>
 				</div>
 			</div>
-			<div id="result_process_rules" dojoType="dijit.layout.ContentPane"></div>
+			<div id="result_process_rules" dojoType="dijit.layout.ContentPane">
+				<div id="div_select_class" dojoType="dijit.layout.ContentPane"></div>
+				<div id="result_process_css_key" dojoType="dijit.layout.ContentPane"></div>
+			</div>
 			<div id="result_process_key" dojoType="dijit.layout.ContentPane">
 				<div id="div_select_key" dojoType="dijit.layout.ContentPane"></div>
 				<div id="div_select_value" dojoType="dijit.layout.ContentPane"></div>

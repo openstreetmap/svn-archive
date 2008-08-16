@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#TODO: See also http://trac.dojotoolkit.org/browser/util/trunk/buildscripts/build_mini.sh
 echo "*** OSMARENDER FRONTEND *** Distributing Osmarender Frontend"
 
 cd dojotoolkit/util/buildscripts
@@ -22,7 +23,7 @@ mv osmarenderfrontend_dojo osmadistribute/
 
 echo "*** OSMARENDER FRONTEND *** Copying files to distribute"
 
-cp -r gr cmyk.js CSS_parse.js data.osm LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.osm somewhere_in_london.osm osmadistribute/
+cp -r cmyk osmarender_frontend gr cmyk.js CSS_parse.js data.xml LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.xml somewhere_in_london.xml zurich_google.xml osmadistribute/
 
 cd osmadistribute
 

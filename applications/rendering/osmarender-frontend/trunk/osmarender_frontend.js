@@ -29,29 +29,20 @@ viewPropertiesFromClass = function(key) {
 	cmyk.getRuleFromClass(cmyk.getRuleModel(),key,array_da_aggiornare);
 	
 	//console.debug(array_da_aggiornare);
-	
-	var div_result = document.getElementById("result_process_rules");
 
-	var todelete = document.getElementById("result_process_css_key");
-	if (todelete) div_result.removeChild(document.getElementById("result_process_css_key"));
+	var div_result = dijit.byId("result_process_css_key");
 
-	var div_properties = createElementCB("div");
-	div_properties.setAttribute("id","result_process_css_key");
-	div_result.appendChild(div_properties);
+	clearContentPanes([div_result]);
 
 	refreshProperties();
 
 	propertiesToPrint = classesAndProperties[key];
 
+
 	if (array_da_aggiornare.length) {
-
-		div_properties.appendChild(document.createTextNode("Applies to: "));
-	
-		var rules_list = createElementCB("ol");
-		div_properties.appendChild(rules_list);
-
 		var array_without_duplicates = new Array();
-		
+
+
 		for (single_rule in array_da_aggiornare) {
 			for (single_key_value in array_da_aggiornare[single_rule].keys) {
 				for (single_value_value in array_da_aggiornare[single_rule].values) {
@@ -66,58 +57,58 @@ viewPropertiesFromClass = function(key) {
 			}
 		}
 
+//TODO: Activate this if a new release of Dojo is out: now dtl (Django) doesn't work with {% for key, value in store %} tag for me
+//		loadIntoNodeTemplate("osmarender_frontend/panels/css/css_rules.xml",div_result.domNode,{store:array_without_duplicates});
+
+		div_result.domNode.innerHTML+='<ol>';
 		for (single_key in array_without_duplicates) {
-			var li_rule = createElementCB("li");
-			var li_rule_strong_1 = createElementCB("strong");
-			li_rule_strong_1.appendChild(document.createTextNode("key: "));
-			li_rule.appendChild(li_rule_strong_1);
-			li_rule.appendChild(document.createTextNode(single_key));
-			var li_rule_strong_2 = createElementCB("strong");
-			li_rule_strong_2.appendChild(document.createTextNode(", values: "));
-			li_rule.appendChild(li_rule_strong_2);
+			div_result.domNode.innerHTML+='<li><strong>key: </strong>'+single_key+'<strong>, values: </strong>';
 			first_value_found=false;
 			for (single_value in array_without_duplicates[single_key]) {
 				if (first_value_found) {
-					li_rule.appendChild(document.createTextNode(", "));
+					div_result.domNode.innerHTML+=", ";
 				}
-				li_rule.appendChild(document.createTextNode(single_value+" ("+array_without_duplicates[single_key][single_value]+")"));
+				div_result.domNode.innerHTML+=single_value+'('+array_without_duplicates[single_key][single_value]+')';
 				first_value_found=true;
 			}
-			rules_list.appendChild(li_rule);
-			//rules_list.appendChild(createElementCB("li").appendChild(document.createTextNode("key: "+array_da_aggiornare[single_rule].keys[single_key_value]+" value: "+array_da_aggiornare[single_rule].values[single_key_value])))
+			div_result.domNode.innerHTML+='</li>';
 		}
+		div_result.domNode.innerHTML+='</ol>';
 
 //TODO: add type of checking everywhere, look for safeRef() method at http://blog.stchur.com/2006/07/08/safely-referencing-objects-in-javascript-understanding-null-and-undefined/2/
 
 //TODO: add removing duplicates also in symbols list
 	} else {
-		var bold_string = createElementCB("strong");
-		bold_string.appendChild(document.createTextNode("Attention! "));
-		div_properties.appendChild(bold_string);
-		div_properties.appendChild(document.createTextNode("Selected class is not associated to any rule!"));
+		div_result.domNode.innerHTML+='<strong>Attention! </strong>Selected class is not associated to any rule!';
 	}
 
-	var dl_container = createElementCB("dl");
-	div_properties.appendChild(dl_container);
+//NEW
+
+/*var pippo = new osmarender_frontend.widgets.css_editor.css_editor({id:"css_editor"});
+div_result.domNode.appendChild(pippo.domNode);*/
+
+
+ 	var dl_container = createElementCB("dl");
+ 	div_result.domNode.appendChild(dl_container);
 	
 	// Insert button for adding new properties:
 
-	var div_container_button = createElementCB("div");
-	div_container_button.setAttribute("style","display:table-cell;");
-	dl_container.appendChild(div_container_button);
+ 	var div_container_button = createElementCB("div");
+ 	div_container_button.setAttribute("style","display:table-cell;");
+ 	dl_container.appendChild(div_container_button);
 
-	dl_container.appendChild(createElementCB("dt"));
-	dd_container_button = createElementCB("dd");
-	dd_container_button.appendChild(addCSSPropertyButton());
-	
-	button_set_style=createElementCB("button");
-	button_set_style.setAttribute("onclick","javascript:setStyle();");
-	button_set_style.appendChild(document.createTextNode("Set Style"));
-	dd_container_button.appendChild(button_set_style);
+ 	dl_container.appendChild(createElementCB("dt"));
+ 	dd_container_button = createElementCB("dd");
+ 	dd_container_button.appendChild(addCSSPropertyButton());
 
-	div_container_button.appendChild(dd_container_button);
-	div_container_button.appendChild(createElementCB("br"));
-	
+ 	button_set_style=createElementCB("button");
+ 	button_set_style.setAttribute("onclick","javascript:setStyle();");
+ 	button_set_style.appendChild(document.createTextNode("Set Style"));
+ 	dd_container_button.appendChild(button_set_style);
+
+ 	div_container_button.appendChild(dd_container_button);
+ 	div_container_button.appendChild(createElementCB("br"));
+//Fin qui tutto ok	
 	for(single_property in propertiesToPrint) {
 		dl_container.appendChild(createElementCB("br"));
 		var div_container = createElementCB("div");
@@ -255,6 +246,16 @@ viewPropertiesFromClass = function(key) {
 	}
 }
 
+addCSSPropertyButton = function () {
+	var button_add = createElementCB("button");
+	button_add.setAttribute("id","add_property_button");
+	button_add.setAttribute("onclick","javascript:addCSSProperty(this);");
+	var button_text = document.createTextNode("Add a CSS Property");
+	button_add.appendChild(button_text);
+	return button_add;
+}
+
+
 viewColorPicker = function(button) {
 	var div = createElementCB("div");
 	div.setAttribute("id","div_color_picker["+button.getAttribute("osmarender_frontend_button_property")+"]");
@@ -290,14 +291,6 @@ changeInputBackground = function(dom) {
 	document.getElementById("viewColor["+dom.id+"]").setAttribute("style","float:left;display:table-cell;display:inline-block;border: medium dotted grey;height:20px;width:20px;background-color: "+dom.value+";");
 }
 
-addCSSPropertyButton = function () {
-	var button_add = createElementCB("button");
-	button_add.setAttribute("id","add_property_button");
-	button_add.setAttribute("onclick","javascript:addCSSProperty(this);");
-	var button_text = document.createTextNode("Add a CSS Property");
-	button_add.appendChild(button_text);
-	return button_add;
-}
 
 addCSSProperty = function (dom_here) {
 	var container = dom_here.parentNode;
@@ -454,24 +447,38 @@ AfterCMYKLoad = function() {
 	updateProgressBar();
 
 	SettingsResults();
-	
 
-	var div_result = document.getElementById("result_process_rules");
+	CSSResults();
 
-	while (div_result.hasChildNodes()) {
-		div_result.removeChild(div_result.firstChild);
+	// Reset progress Bars and fade out them
+	with (progressData) {
+		with(total) {
+			progress=0;
+			maximum=0;
+			message = "";
+		}
+		with(step) {
+			progress=0;
+			maximum=0;
+			message = "";
+		}
 	}
+	updateProgressBar();
+	dojo.fadeOut({node:"progressContainer"}).play();
+	document.getElementById("load_preset_button_div").style.display="block";
+	document.getElementById("menu").style.display="block";
+	document.getElementById("menu_views").style.display="block";
+	document.getElementById("result_process_rules").style.display="block";
+	if (onLoadTransform) Osmatransform();
+}
 
-	div_result.appendChild(createElementCB("br"));
+CSSResults = function() {
+	var div_result = dijit.byId("div_select_class");
 
-	var label_container = createElementCB("label");
-	label_container.setAttribute("id","select_class_label");
-	label_container.setAttribute("for","select_class");
-	var label = document.createTextNode("Select a CSS class: ");
-	label_container.appendChild(label);
-	div_result.appendChild(label_container);
+	clearContentPanes([div_result]);
+	loadIntoNodeAndParse("osmarender_frontend/panels/css/css.xml",div_result.domNode);
 
-	var sorted_list_of_unique_classes = refreshProperties() 
+	var sorted_list_of_unique_classes = refreshProperties();
 	
 	var store_classes = {
 		identifier: "name",
@@ -494,47 +501,9 @@ AfterCMYKLoad = function() {
 		onError: printError
 	});
 
-	var div_to_insert = createElementCB("div");
-	div_result.appendChild(div_to_insert);
-	if (dijit.byId("select_class")) dijit.byId("select_class").destroy();
-	var select_css_classes = new dijit.form.FilteringSelect(
-			{
-			id:"select_class",
-			autoComplete:"false",
-			invalidMessage:"Select a Valid CSS class!",
-			onChange:	function (value) {
-						if (value!=undefined) {
-							viewPropertiesFromClass(value);
-						}
-					},
-			store:store_classes_data_store,
-			searchAttr: "name"
-			}, div_to_insert
-		);
+	dijit.byId("select_class").store=store_classes_data_store;
 
-	select_css_classes.startup();
 	document.getElementById("load_file").style.display="none";
-
-	// Reset progress Bars and fade out them
-	with (progressData) {
-		with(total) {
-			progress=0;
-			maximum=0;
-			message = "";
-		}
-		with(step) {
-			progress=0;
-			maximum=0;
-			message = "";
-		}
-	}
-	updateProgressBar();
-	dojo.fadeOut({node:"progressContainer"}).play();
-	document.getElementById("load_preset_button_div").style.display="block";
-	document.getElementById("menu").style.display="block";
-	document.getElementById("menu_views").style.display="block";
-	div_result.style.display="block";
-	if (onLoadTransform) Osmatransform();
 }
 
 SymbolsResult = function() {
@@ -574,6 +543,8 @@ SymbolsResult = function() {
 
 //thanks to http://dojocampus.org/content/2008/03/14/functional-ajax-with-dojo/
 SettingsResults = function() {
+
+//TODO:This could be enhanced by using dojox.dtl Django templating system
 	div_results = dojo.byId("result_settings");
 	if (dijit.byId("settings_container")) dijit.byId("settings_container").destroyRecursive();
 	loadIntoNodeAndParse("osmarender_frontend/panels/settings/settings.xml",div_results);
@@ -744,6 +715,20 @@ function loadIntoNodeAndParse(my_url,node) {
 	});
 	dojo.parser.parse(node);
 }
+
+function loadIntoNodeTemplate (template,dom,context) {
+	var template_text;
+	dojo.xhrGet({
+		url: template,
+		sync: true,
+		load: function(data){
+			template_text = data;
+		}
+	});
+	template = new dojox.dtl.Template(template_text);
+	dom.innerHTML+=template.render(new dojox.dtl.Context(context));
+}
+
 
 
 listKeys = function() {

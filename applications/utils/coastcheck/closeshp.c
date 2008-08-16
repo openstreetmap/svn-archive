@@ -33,11 +33,25 @@
 #define UNUSED __attribute__((unused))
 
 #define MERC_MAX (20037508.34f)
+/* UserParam: DIVISIONS: Indicates how many blocks to divide the world into,
+ * in each direction. The default is 400x400, which works out to be 100
+ * mercator km */
 #define DIVISIONS 400
 #define MERC_BLOCK (2*MERC_MAX/DIVISIONS)
+/* UserParam: RESOLUTION: The simplification level. Essentially, any nodes
+ * closer to each other than this many units will be simplified away. When
+ * generating files for lower zooms, setting this produces simplified shapes.
+ * A good rule of thumb is 40,000,000/(2^(max_zoom+8)). In other words, 1 is
+ * good for upto zoom 17. Zero disables this simplification.
+ * Side Effect: Non-zero causes all shapes to be loaded in memory */
 #define RESOLUTION  0
-/* Number of mercator metres the tiles overlap, so the antialising doesn't cause wierd effects */
+/* UserParam: TILE_OVERLAP: Number of mercator metres the tiles overlap, so
+ * the antialising doesn't cause wierd effects. As a rule of thumb
+ * RESOLUTION*2^num_levels where num_levels is the number of zoom levels you
+ * want the shapes to be good for. */
 #define TILE_OVERLAP  150
+
+/* No further user edittable parameters */
 #define INIT_MAX_NODES (1<<19)
 int MAX_NODES = INIT_MAX_NODES;
 #define MAX_SEGS  100
@@ -464,6 +478,7 @@ static void InitBitmap( struct source *src, struct source *temp )
 {
   int count = src->shape_count, res_count = 0;
   int type1 = 0, type2 = 0;
+  size_t bytes_used = 0;
   
   if( RESOLUTION )
     src->shapes = calloc( count, sizeof( SHPObject* ) );
@@ -530,7 +545,7 @@ static void InitBitmap( struct source *src, struct source *temp )
           MAX_NODES = MAX_NODES*2;
           v_x = realloc( v_x, MAX_NODES * sizeof(v_x[0]) );
           v_y = realloc( v_y, MAX_NODES * sizeof(v_y[0]) );
-          fprintf( stderr, "MAX_NODES raised to %d\n", MAX_NODES );
+          fprintf( stderr, "MAX_NODES raised to %d (%ldMB)\n", MAX_NODES, ((long)MAX_NODES*2*sizeof(v_x[0]))>>20 );
         }
       }
       /* If we didn't move far enough then we get skipped altogether (think small islands, low zoom) */
@@ -538,6 +553,7 @@ static void InitBitmap( struct source *src, struct source *temp )
       {
         /* Note we switch obj to using the simplfied shape */
         SHPObject *new_obj = SHPCreateSimpleObject( obj->nSHPType, k, v_x, v_y, NULL );
+        bytes_used += sizeof(SHPObject) + k*sizeof(v_x[0])*2;
         src->shapes[i] = new_obj;
         source_release_shape(src, obj);
         obj = new_obj;
@@ -590,6 +606,7 @@ static void InitBitmap( struct source *src, struct source *temp )
       k++;
       
       SHPObject *new_obj = SHPCreateSimpleObject( SHPT_ARC, k, v_x, v_y, NULL );
+      bytes_used += sizeof(SHPObject) + k*sizeof(v_x[0])*2; /* Note: memory not used now, but later */
       
 //      fprintf( stderr, "Compressed %d nodes to %d\n", obj->nVertices, k );
       int new_id = SHPWriteObject( temp->shp, -1, new_obj );
@@ -606,7 +623,7 @@ static void InitBitmap( struct source *src, struct source *temp )
   if( RESOLUTION )
     src->in_memory = 1;
   
-  fprintf( stderr, "Found %d large objects out of %d, removed %d+%d nodes\n", res_count, count, type1, type2 );
+  fprintf( stderr, "%s: Found %d large objects out of %d, removed %d+%d nodes, approx memory %.1fMB\n", SHPTypeName(src->shp->nShapeType), res_count, count, type1, type2, bytes_used/(1024.0*1024.0) );
 }
 
 static double CalcArea( const SHPObject *obj )

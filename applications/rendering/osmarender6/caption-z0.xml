@@ -23,17 +23,12 @@
     <!--bounds_mkr1-->
     <!--bounds_mkr2-->
 
-  <rule e="node|way" k="osmarender:render" v="~|yes">
-		<rule e="node|way" k="osmarender:renderName" v="~|yes">
-
+    <!-- Don't do anything on z0
       <rule e="node" k="place" v="continent">
         <text k="name" class='caption-casing continent-caption-casing' />
         <text k="name" class='caption-core continent-caption' />
       </rule>
-
-    </rule> <!-- k="osmarender:renderName" v="~|yes" -->
-	</rule> <!-- k="osmarender:render" v="~|yes" -->
-
+    -->
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>
@@ -66,8 +61,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-           .continent-caption-casing { font-size: 120000px; stroke-width: 32000px; }
-           .continent-caption        { font-size: 120000px; }
+           .continent-caption-casing { font-size: 100000px; stroke-width: 25000px; }
+           .continent-caption        { font-size: 100000px; }
 
 
 

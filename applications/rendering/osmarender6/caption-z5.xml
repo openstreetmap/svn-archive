@@ -72,11 +72,11 @@
                 stroke-miterlimit: 1.5;
             }
 
-            .country-caption-casing { font-size: 6000px; stroke-width: 1000px; }
-            .country-caption        { font-size: 6000px; }
+            .country-caption-casing { font-size: 3000px; stroke-width: 800px; }
+            .country-caption        { font-size: 3000px; }
 
-            .city-caption-casing    { font-size: 3000px; stroke-width: 800px; }
-            .city-caption           { font-size: 3000px; }
+            .city-caption-casing    { font-size: 2000px; stroke-width: 600px; }
+            .city-caption           { font-size: 2000px; }
 
 
             /* Map decoration */

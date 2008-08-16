@@ -66,8 +66,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-           .continent-caption-casing { font-size: 70000px; stroke-width: 10000px; }
-           .continent-caption        { font-size: 70000px; }
+           .continent-caption-casing { font-size: 50000px; stroke-width: 10000px; }
+           .continent-caption        { font-size: 50000px; }
 
            .country-caption-casing { font-size: 40000px; stroke-width: 6000px; }
            .country-caption        { font-size: 40000px; }

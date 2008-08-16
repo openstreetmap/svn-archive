@@ -259,6 +259,39 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:variable name="width" select="($documentWidth div 2) + ($dataWidth div 2)"/>
   <xsl:variable name="height" select="($documentHeight div 2) + ($dataHeight div 2)"/>
 
+  <xsl:variable name="symbols">
+    <xsl:if test="$symbolsDir != ''">
+      <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
+      <xsl:for-each select="/rules//symbol/@ref | /rules//areaSymbol/@ref">
+          <xsl:variable name="symbolName" select="."/>
+          <xsl:variable name="file" select="document(concat($symbolsDir,'/', $symbolName, '.svg'))"/>
+          <xsl:choose>
+            <xsl:when test="$file/svg:svg/svg:defs/svg:symbol">
+              <symbol>
+                <xsl:copy-of select="$file/svg:svg/svg:defs/svg:symbol/@*"/>
+                <xsl:copy-of select="$file/svg:svg/svg:defs/svg:symbol/*"/>
+              </symbol>
+            </xsl:when>
+            <xsl:otherwise>
+              <symbol>
+                <xsl:copy-of select="$file/svg:svg/@*"/>
+                <xsl:attribute name="id">
+                  <xsl:value-of select="concat('symbol-', $symbolName)"/>
+                </xsl:attribute>
+                <xsl:copy-of select="$file/svg:svg/*"/>
+              </symbol>
+            </xsl:otherwise>
+          </xsl:choose>
+      </xsl:for-each>
+    </xsl:if>
+    <xsl:for-each select="/rules/defs/svg:svg">
+      <symbol>
+        <xsl:copy-of select="@*"/>
+        <xsl:copy-of select="*"/>
+      </symbol>
+    </xsl:for-each>
+    <xsl:copy-of select="/rules/defs/svg:symbol"/>
+  </xsl:variable>
 
 
   <!-- Main template -->
@@ -300,18 +333,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
       <defs id="defs-rulefile">
         <!-- Get any <defs> and styles from the rules file -->
-        <xsl:copy-of select="defs/*"/>
+        <xsl:copy-of select="defs/*[local-name() != 'svg' and local-name() != 'symbol']"/>
       </defs>
-
-
-      <xsl:if test="$symbolsDir != ''">
-        <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
-        <defs id="defs-symbols">
-          <xsl:for-each select="/rules//symbol/@ref | /rules//areaSymbol/@ref">
-            <xsl:copy-of select="document(concat($symbolsDir,'/', ., '.svg'))/svg:svg/svg:defs/svg:symbol"/>
-          </xsl:for-each>
-        </defs>
-      </xsl:if>
+      <!-- Symbols -->
+      <defs id="defs-symbols">
+        <xsl:copy-of select="$symbols"/>
+      </defs>
 
       <!-- Pre-generate named path definitions for all ways -->
       <xsl:variable name="allWays" select="$data/osm/way"/>
@@ -699,16 +726,39 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
     <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
 
-    <g transform="translate({$x},{$y}) scale({$symbolScale})">
+    <xsl:variable name="symbol" select="exslt:node-set($symbols)/svg:symbol[@id=concat('symbol-',$instruction/@ref)]"/>
+
+    <xsl:variable name="useElement">
       <use>
         <xsl:if test="$instruction/@ref">
           <xsl:attribute name="xlink:href">
             <xsl:value-of select="concat('#symbol-', $instruction/@ref)"/>
           </xsl:attribute>
         </xsl:if>
+
+        <!-- Use symbol size by default  -->
+        <xsl:attribute name="width">
+          <xsl:value-of select="$symbol/@width"/>
+        </xsl:attribute>
+
+        <xsl:attribute name="height">
+          <xsl:value-of select="$symbol/@height"/>
+        </xsl:attribute>
+
         <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
-	<!-- Copy all the attributes from the <symbol> instruction -->
+	<!-- Copy all the attributes from the <symbol> instruction. Overwrite width and heigth if specified -->
       </use>
+    </xsl:variable>
+
+    <!-- Move symbol based on position attribute -->
+    <xsl:variable name="symbolShift">
+      <xsl:if test="$instruction[@position='center']">
+        <xsl:value-of select="concat('translate(', -number(exslt:node-set($useElement)/svg:use/@width) div 2.0, ',', - number(exslt:node-set($useElement)/svg:use/@height) div 2.0, ')')"/>
+      </xsl:if>
+    </xsl:variable>
+
+    <g transform="translate({$x},{$y}) scale({$symbolScale}) {$symbolShift}">
+	<xsl:copy-of select="$useElement"/>
     </g>
   </xsl:template>
 
@@ -1295,17 +1345,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="x" select="($width)-((($topRightLongitude)-($centerLon))*10000*$scale)"/>
     <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($centerLat))*10000*$scale*$projection)"/>
 
-    <g transform="translate({$x},{$y}) scale({$symbolScale})">
+    <xsl:variable name="symbol" select="exslt:node-set($symbols)/svg:symbol[@id=concat('symbol-',$instruction/@ref)]"/>
+
+    <xsl:variable name="useElement">
       <use>
         <xsl:if test="$instruction/@ref">
           <xsl:attribute name="xlink:href">
             <xsl:value-of select="concat('#symbol-', $instruction/@ref)"/>
           </xsl:attribute>
         </xsl:if>
+
+        <!-- Use symbol size by default  -->
+        <xsl:attribute name="width">
+          <xsl:value-of select="$symbol/@width"/>
+        </xsl:attribute>
+
+        <xsl:attribute name="height">
+          <xsl:value-of select="$symbol/@height"/>
+        </xsl:attribute>
+
         <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
-        <!-- Copy all the attributes from the <symbol> instruction -->
+	<!-- Copy all the attributes from the <symbol> instruction. Overwrite width and heigth if specified -->
       </use>
+    </xsl:variable>
+
+    <!-- Move symbol based on position attribute -->
+    <xsl:variable name="symbolShift">
+      <xsl:if test="$instruction[@position='center']">
+        <xsl:value-of select="concat('translate(', -number(exslt:node-set($useElement)/svg:use/@width) div 2.0, ',', - number(exslt:node-set($useElement)/svg:use/@height) div 2.0, ')')"/>
+      </xsl:if>
+    </xsl:variable>
+
+    <g transform="translate({$x},{$y}) scale({$symbolScale}) {$symbolShift}">
+	<xsl:copy-of select="$useElement"/>
     </g>
+
   </xsl:template>
 
   <!--
@@ -2649,7 +2723,7 @@ against infinite loops -->
   </xsl:template>
 
   <!-- Some attribute shouldn't be copied -->
-  <xsl:template match="@type|@ref|@scale|@smart-linecap|@honor-width" mode="copyAttributes" />
+  <xsl:template match="@type|@ref|@scale|@smart-linecap|@honor-width|@position" mode="copyAttributes" />
 
   <!-- Copy all other attributes  -->
   <xsl:template match="@*" mode="copyAttributes">

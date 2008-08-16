@@ -138,6 +138,7 @@ static int contains( double x, double y, double *v_x, double *v_y, int vertices 
 static int CopyShapeToArray( struct source *src, int index, int snode, int enode, int node_count );
 static void ResizeSubareas( struct state *state, int count );
 void ProcessSubareas(struct state *state, int *pc, int *nc);
+static int SourceOpen( struct source *src, char *filename, int shapetype );
 
 static inline void mark_tile( int x, int y )
 {
@@ -186,65 +187,11 @@ int main( int argc, char *argv[] )
   simplified.in_memory = 1;
 
   /* open shapefiles and dbf files */
-  poly.shp = SHPOpen( poly_file, "rb" );
-  if( !poly.shp )
-  {
-    fprintf( stderr, "Couldn't open '%s': %s\n", poly_file, strerror(errno));
+  if( SourceOpen( &poly, poly_file, SHPT_POLYGON ) )
     return 1;
-  }
+  if( SourceOpen( &arc, arc_file, SHPT_ARC ) )
+    return 1;
 
-  arc.shp = SHPOpen( arc_file, "rb" );
-  if( !arc.shp )
-  {
-    fprintf( stderr, "Couldn't open '%s': %s\n", arc_file, strerror(errno));
-    return 1;
-  }
-  
-  poly.dbf = DBFOpen( poly_file, "rb" );
-  if( !poly.dbf )
-  {
-    fprintf( stderr, "Couldn't open DBF file for '%s'\n", poly_file );
-    return 1;
-  }
-  if( DBFGetFieldIndex( poly.dbf, "way_id" ) != 2 )
-  {
-    fprintf( stderr, "Unexpected format DBF file '%s'\n", poly_file );
-    return 1;
-  }
-
-  arc.dbf = DBFOpen( arc_file, "rb" );
-  if( !arc.dbf )
-  {
-    fprintf( stderr, "Couldn't open DBF file for '%s'\n", arc_file );
-    return 1;
-  }
-  if( DBFGetFieldIndex( arc.dbf, "way_id" ) != 2 )
-  {
-    fprintf( stderr, "Unexpected format DBF file '%s'\n", arc_file );
-    return 1;
-  }
-
-  /* Check shapefiles are the right type and initialise length */
-  {
-    int type;
-    SHPGetInfo( poly.shp, &poly.shape_count, &type, NULL, NULL );
-    if( type != SHPT_POLYGON )
-    {
-      fprintf( stderr, "'%s' is not a POLYGON shapefile\n", poly_file );
-      return 1;
-    }
-    SHPGetInfo( arc.shp, &arc.shape_count, &type, NULL, NULL );
-    if( type != SHPT_ARC )
-    {
-      fprintf( stderr, "'%s' is not a ARC shapefile\n", arc_file );
-      return 1;
-    }
-  }
-  
-  /* Split coastlines into arc no longer than MAX_NODES_PER_ARC long */
-  sprintf( out_filename, "%s_i", out_file );
-  SplitCoastlines( &poly, &arc, out_filename );
-  
   sprintf( out_filename, "%s_p", out_file );
   shp_out = SHPCreate( out_filename, SHPT_POLYGON );
   if( !shp_out )
@@ -265,15 +212,7 @@ int main( int argc, char *argv[] )
   DBFAddField( dbf_out, "tile_x", FTInteger, 4, 0 );
   DBFAddField( dbf_out, "tile_y", FTInteger, 4, 0 );
 
-  /* Build indexes on files, we need them... */
-  poly.shx = SHPCreateTree( poly.shp, 2, 10, NULL, NULL );
-  arc.shx  = SHPCreateTree( arc.shp, 2, 10, NULL, NULL );
-  if( !poly.shx || !arc.shx )
-  {
-    fprintf( stderr, "Couldn't open shape indexes\n" );
-    return 1;
-  }
-  
+  /* Initialise node arrays */
   v_x = malloc( MAX_NODES * sizeof(double) );
   v_y = malloc( MAX_NODES * sizeof(double) );
   
@@ -282,6 +221,7 @@ int main( int argc, char *argv[] )
     fprintf( stderr, "Couldn't allocate memory for nodes\n" );
     return 1;
   }
+  /* Setup state */
   struct state state;
   memset( &state, 0, sizeof(state) );
   ResizeSubareas(&state, INIT_MAX_SUBAREAS);
@@ -318,6 +258,9 @@ int main( int argc, char *argv[] )
       SHPGetInfo( simplified.shp, &simplified.shape_count, NULL, NULL, NULL );
       simplified.shapes = calloc( simplified.shape_count, sizeof(SHPObject*) );
   }
+  /* Split coastlines into arcs no longer than MAX_NODES_PER_ARC long */
+  sprintf( out_filename, "%s_i", out_file );
+  SplitCoastlines( &poly, &arc, out_filename );
 
 #if !TEST  
   for( int i=0; i<DIVISIONS; i++ )
@@ -1422,4 +1365,43 @@ void ProcessSubareas(struct state *state, int *pc, int *nc)
   
   *nc = node_count;
   *pc = part_count;
+}
+
+static int SourceOpen( struct source *src, char *filename, int shapetype )
+{
+  src->shp = SHPOpen( filename, "rb" );
+  if( !src->shp )
+  {
+    fprintf( stderr, "Couldn't open '%s': %s\n", filename, strerror(errno));
+    return 1;
+  }
+
+  src->dbf = DBFOpen( filename, "rb" );
+  if( !src->dbf )
+  {
+    fprintf( stderr, "Couldn't open DBF file for '%s'\n", filename );
+    return 1;
+  }
+  if( DBFGetFieldIndex( src->dbf, "way_id" ) != 2 )
+  {
+    fprintf( stderr, "Unexpected format DBF file '%s'\n", filename );
+    return 1;
+  }
+
+  /* Check shapefiles are the right type and initialise length */
+  int type;
+  SHPGetInfo( src->shp, &src->shape_count, &type, NULL, NULL );
+  if( type != shapetype )
+  {
+    fprintf( stderr, "'%s' is not a %s shapefile\n", filename, SHPTypeName(shapetype) );
+    return 1;
+  }
+  /* Build indexes on files, we need them... */
+  src->shx = SHPCreateTree( src->shp, 2, 10, NULL, NULL );
+  if( !src->shx )
+  {
+    fprintf( stderr, "Couldn't create shape indexes\n" );
+    return 1;
+  }
+  return 0;
 }

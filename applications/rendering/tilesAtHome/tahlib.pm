@@ -163,19 +163,6 @@ sub runCommand
     my $Config = $main::Config;
     my ($cmd,$mainPID) = @_;
 
-    my $inkscapecfg = glob("~/.inkscape/preferences.xml");
-    my $inkscapebak = "$inkscapecfg.bak";
-    my $inkscapecorrupt = 0;
-
-    if ($Config->get("AutoResetInkscapePrefs") == 1 && $cmd =~ /inkscape/)
-    {
-        if(-f $inkscapecfg)
-        {
-            unlink $inkscapebak if(-f $inkscapebak);
-            rename $inkscapecfg, $inkscapebak;
-        }
-    }
-
     if ($Config->get("Verbose") >= 10)
     {
         my $retval = system($cmd);
@@ -183,8 +170,6 @@ sub runCommand
     }
 
     my $ErrorFile = $Config->get("WorkingDirectory")."/".$mainPID.".stderr";
-    local %ENV;
-    delete $ENV{DISPLAY};
     my $retval = system("$cmd 2> $ErrorFile");
     my $ok = 0;
     my $ExtraInfo = "\nAdditional info about the Error(s):\n";
@@ -203,7 +188,7 @@ sub runCommand
         # at that we will miss the situations where the program died due to
         # a signal. In that case $retval will be the signal that killed it.
         # So any non-zero value is an error.
-
+        
         if ($retval)
         {
             print STDERR "ERROR\n";
@@ -216,11 +201,15 @@ sub runCommand
                 print STDERR "  | $_";
                 if (grep(/preferences.xml/,$_))
                 {
-                    $inkscapecorrupt = 1;
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
                     if ($Config->get("AutoResetInkscapePrefs") == 1)
                     {
                         $ExtraInfo=$ExtraInfo."\n   AutoResetInkscapePrefs set, trying to reset ~/.inkscape/preferences.xml";
+                        unlink (glob("~/.inkscape/preferences.xml")) or addFault("fatal",1);
+                    }
+                    else
+                    {
+                        addFault("fatal",1); ## this error is fatal because it needs human intervention before processing can continue
                     }
                 }
                 elsif (grep(/infinite template recursion/,$_))
@@ -236,22 +225,7 @@ sub runCommand
             $ok = 1;
         }
     }
-
-    if ($Config->get("AutoResetInkscapePrefs") == 1 && $cmd =~ /inkscape/)
-    {
-        if(-f $inkscapebak)
-        {
-            unlink $inkscapecfg if(-f $inkscapecfg);
-            $inkscapecorrupt = 0 if(rename $inkscapebak, $inkscapecfg);
-        }
-    }
-
-    if($inkscapecorrupt)
-    {
-        ## this error is fatal because it needs human intervention before processing can continue
-        addFault("fatal",1);
-    }
-
+    
     killafile($ErrorFile);
     return $ok;
 }

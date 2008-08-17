@@ -1,0 +1,14 @@
+<div>
+	<style type="text/css">
+	</style>
+	<div class="property">
+		<dt>
+			<label>${_property}</label>
+		</dt>
+		<dd>
+			<select dojoAttachPoint="editorSelect" dojoAttachEvent="onchange: _onChange"></select>
+			<button onclick="javascript:dojo.publish('osmarender_frontend.widgets.css_editor.propertyEditorWidget.deleteStyles',['${_property}'])">Delete</button>
+			<div class="SVGViewer" dojoAttachPoint="SVGViewer"></div>
+		</dd>
+	</div>
+</div>

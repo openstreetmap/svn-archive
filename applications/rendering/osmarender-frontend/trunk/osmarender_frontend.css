@@ -242,3 +242,21 @@ dd {
 .bold {
 	font-weight:bold;
 }
+
+/* TODO: search for icons for every type */
+
+.iconrule {
+/*	background-color:red;*/
+/*	background: url(osmarender_frontend/resources/Mf_area.png) no-repeat center*/
+}
+
+.iconelse {
+}
+
+.iconline {
+	background: url(osmarender_frontend/resources/Mf_way.png) no-repeat center
+}
+
+.iconarea {
+	background: url(osmarender_frontend/resources/Mf_area.png) no-repeat center
+}

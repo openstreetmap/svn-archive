@@ -22,6 +22,10 @@ while(my $line = <>)
   {
     print "/* empty item */\n";
   }
+  elsif($line =~ /<item\s+name=" ".*\/>/)
+  {
+    print "/* empty item */\n";
+  }
   elsif($line =~ /<item\s+name=(".*?")/)
   {
     $item = $1;

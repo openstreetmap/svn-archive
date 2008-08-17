@@ -5,16 +5,16 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 
-import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.Main;
 
 /** The error severity */
 public enum Severity {
 	/** Error messages */
-	ERROR(tr("Errors"), "error.gif",       Preferences.getPreferencesColor(marktr("validation error"), Color.RED)),
+	ERROR(tr("Errors"), "error.gif",       Main.pref.getColor(marktr("validation error"), Color.RED)),
 	/** Warning messages */ 
-	WARNING(tr("Warnings"), "warning.gif", Preferences.getPreferencesColor(marktr("validation warning"), Color.YELLOW)), 
+	WARNING(tr("Warnings"), "warning.gif", Main.pref.getColor(marktr("validation warning"), Color.YELLOW)), 
 	/** Other messages */ 
-	OTHER(tr("Other"), "other.gif",        Preferences.getPreferencesColor(marktr("validation other"), Color.CYAN)); 
+	OTHER(tr("Other"), "other.gif",        Main.pref.getColor(marktr("validation other"), Color.CYAN)); 
 	
 	/** Description of the severity code */
 	private final String message;

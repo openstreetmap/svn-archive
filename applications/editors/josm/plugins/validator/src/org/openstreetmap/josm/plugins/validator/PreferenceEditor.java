@@ -75,7 +75,7 @@ public class PreferenceEditor implements PreferenceSetting
 		Version ver = Util.getVersion();
 		String description = tr("A OSM data validator that checks for common errors made by users and editor programs.");
 		if( ver != null )
-			description += "<br><br>" + tr("Version: {0}<br>Last change at {1}", ver.revision, ver.time);
+			description += "<br>" + tr("Version {0} - Last change at {1}", ver.revision, ver.time);
 		JPanel tab = gui.createPreferenceTab("validator", tr("Data validator"), description);
 		tab.add(testPane, GBC.eol().fill(GBC.BOTH));
 		tab.add(GBC.glue(0,10), a);

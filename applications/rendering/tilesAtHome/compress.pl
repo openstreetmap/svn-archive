@@ -70,21 +70,6 @@ my $tileCount;
 
 my @tiles;
 
-## TODO: re-implement MultipleClients so it shoves the completed zips onto the upload computer instead of the single tiles.
-
-if($Config->get("MultipleClients")) #Trigger the _other_ codepath...
-# move the finished tiles to a subfolder of UploadDirectory
-# First name the folder timestamp_hostname_inprogress
-# then rename the folder to timestamp_hostname
-{
-    $currentSubTask = "ERROR";
-    statusMessage("###########################################################################",1,0);
-    statusMessage("MultipleClients config option is deprecated, use UploadToDirectory instead.",1,0);
-    statusMessage("###########################################################################",1,0);
-    exit(1);
-}
-else
-{
     my $allowedPrefixes;
     
     my $TileDir = $Config->get("WorkingDirectory");
@@ -144,7 +129,7 @@ else
     }
     statusMessage("done",0,3); 
 
-} #done main/else.
+## end of main
 
 #-----------------------------------------------------------------------------
 # Moves tiles into a "gather" directory until a certain size is reached,

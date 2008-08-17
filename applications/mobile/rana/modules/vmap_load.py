@@ -33,31 +33,56 @@ class vmapData:
   def load(self, filename):
     """Load an OSM XML file into memory"""
     if(not os.path.exists(filename)):
+      #print "File doesn't exist"
       return([])
     f = file(filename, "rb")
 
-    fileID = struct.unpack("I", f.read(4))[0]
-    if(fileID != 1280):
-      print "File version not recognised"
-      return
-    numWays = struct.unpack("I", f.read(4))[0]
-    for w in range(numWays):
-      way = {'n':[],'t':{}}
+    size = os.path.getsize(filename)
+    while(f.tell() < size):
+      way = {'n':[]};
+      
       wayID = struct.unpack("I", f.read(4))[0]
+            
       numNodes = struct.unpack("I", f.read(4))[0]
       for n in range(numNodes):
         (x,y,nid) = struct.unpack("III", f.read(3*4))
         (lat,lon) = tilenames.xy2latlon(x,y,31)
         way['n'].append((lat,lon,nid))
-      numTags = struct.unpack("I", f.read(4))[0]
-      for t in range(numTags):
-        (lenK,lenV) = struct.unpack("HH", f.read(2*2))
-        k = f.read(lenK)
-        v = f.read(lenV)
-        way['t'][k] = v
+      way['style'] = struct.unpack("I", f.read(4))[0]
+      way['layer'] = struct.unpack("b", f.read(1))[0]
+
+      tagSize = struct.unpack("H", f.read(2))[0]
+
+      c = 0
+      while(c < tagSize):
+        k = f.read(1)
+        s = struct.unpack("H", f.read(2))[0]
+        v = f.read(s)
+        way[k] = v
+        #print " - %s = %s" % (k, v)
+        c += 3 + s
+        
+        
+      #name = self.lookForField(f, 'N')
+      #ref = self.lookForField(f, 'r')
+
+      #print "%d: Way %d: style %d, %d nodes." % (f.tell(), wayID, way['style'], numNodes)
       self.ways[wayID] = way
 
+  def lookForField(self, file, tag):
+    char = file.read(1)
+    if(char != tag):
+      file.seek(-1, os.SEEK_CUR)
+      return(None)
+    len = struct.unpack("H", file.read(2))[0]
+    string = file.read(len)
+    return(string)
+    
+    
 if(__name__ == "__main__"):
+
   a = vmapData()
-  a.load("../../TileData2/simple/128_84/16384_10877.dat")
+  filename = "../../tiledata3/output//127_85/8185_5447.bin"
+  #print "Loading %d bytes" % os.path.getsize(filename)
+  a.load(filename)
   print str(a.ways)

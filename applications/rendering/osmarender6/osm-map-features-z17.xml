@@ -1486,7 +1486,7 @@
             </rule>
         </else>
 
-        <!-- Gates -->
+        <!-- Barriers -->
         <rule e="node" k="barrier|highway" v="gate">
             <rule e="node" k="status" v="open">
                 <wayMarker k="highway" class="gate-open"/>
@@ -1505,6 +1505,9 @@
         </rule>
         <rule e="node" k="highway|barrier" v="bollard">
             <circle r='0.2px' class='bollard' />
+        </rule>
+        <rule e="node" k="barrier" v="cycle_barrier">
+            <wayMarker k="highway" class="cycle-barrier"/>
         </rule>
 
         <!-- Bus stops -->
@@ -2195,6 +2198,14 @@
             .bollard {
                 fill: #777777;
                 stroke: none;
+            }
+
+            .cycle-barrier {
+                fill: none;
+                stroke: red;
+                stroke-width: 2px;
+                stroke-opacity: 0;
+                marker-mid: url(#marker-cycle-barrier);
             }
 
             /* Railways - generic styles */
@@ -3834,6 +3845,9 @@
         </svg:marker>
         <svg:marker id="marker-gate-open" viewBox="0 0 11 11" refX="1px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.4px" stroke="#777777" markerWidth="3px" markerHeight="3px" orient="auto">
             <svg:path d="M1,0 L1,1 M1,2 L1,3 M1,4 L1,5 M1,6 L1,7 M1,8 L1,9 M1,10 L1,11"/>
+        </svg:marker>
+        <svg:marker id="marker-cycle-barrier" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.4px" stroke="#777777" markerWidth="3px" markerHeight="3px" orient="auto">
+            <svg:path d="M4,0 L4,5 M6,5 L6,10"/>
         </svg:marker>
 
         <svg:marker id="marker-stile" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.5px" stroke="#777777" markerWidth="2px" markerHeight="2px" orient="auto">

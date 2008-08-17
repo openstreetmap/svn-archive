@@ -42,12 +42,12 @@ class TranslateController < ApplicationController
   def stats
     @title = "l10n statistics".t
     unless @user.nil? && @user.locale == "en-US"
-      stat = Statistics.find(:first, :conditions => ['locale = ?', @user.locale])
+      stat = Statistic.find(:first, :conditions => ['locale = ?', @user.locale])
       if stat.nil?
-        stat = Statistics.new(:locale => @user.locale, :language => Locale.language.to_s, :country => Locale.country.english_name, :timestamp => Time.now )
+        stat = Statistic.new(:locale => @user.locale, :language => Locale.language.to_s, :country => Locale.country.english_name, :timestamp => Time.now )
         stat.save
       end
-      temp = Statistics.find(:first, :conditions => ['locale = ?', @user.locale])
+      temp = Statistic.find(:first, :conditions => ['locale = ?', @user.locale])
       stat.tr_complete = Translation.count(:conditions => ['text IS NOT NULL AND language_id = ?', Locale.language.id])
       stat.tr_total = Translation.count(:conditions => ['language_id = ?', Locale.language.id])
       stat.tr_percentage = (stat.tr_complete * 100 / stat.tr_total) 
@@ -57,9 +57,9 @@ class TranslateController < ApplicationController
       stat.save
     end
     if params[:sort] == 'percentage'
-      @stat_entries = Statistics.find(:all, :order => 'tr_percentage DESC')
+      @stat_entries = Statistic.find(:all, :order => 'tr_percentage DESC')
     elsif params[:sort] == 'done'
-      @stat_entries = Statistics.find(:all, :order => 'tr_complete DESC')
+      @stat_entries = Statistic.find(:all, :order => 'tr_complete DESC')
     end
   end
 

@@ -386,7 +386,6 @@ elsif ($Mode eq "")
     # ----------------------------------
     # Normal mode renders a single request from server and exits
     # ----------------------------------
-
     my ($did_something, $message) = ProcessRequestsFromServer();
     
     if (! $did_something)
@@ -541,137 +540,18 @@ sub ProcessRequestsFromServer
         print "queue and never upload the results. Program aborted.\n";
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1,$PID);
     }
-    
-    my $ValidFlag;
-    my $Version;
-    my $TilesetLastModified; # Unix timestamp of tileset on server
-    my $TilesetComplexity;   # tileset complexity. still unused.
-    my $X;
-    my $Y;
-    my $Z;
-    
-    # ----------------------------------
-    # Download the request, and check it
-    # Note: to find out exactly what this server is telling you, 
-    # add ?help to the end of the URL and view it in a browser.
-    # It will give you details of other help pages available,
-    # such as the list of fields that it's sending out in requests
-    # ----------------------------------
+    my ($success, $reason);
+    my $req = new Request;
+    ($success, $reason) = $req->fetchFromServer();
 
-    for (;;) 
+    #TODO make all places use Request->layerstr directly rather than relying on global vars
+    $Layers =$req->{'layerstr'};
+
+    if ($success)
     {
-        my $Request = GetRequestFromServer();
-
-        return (0, "Error reading request from server") unless ($Request);
-        
-        ($ValidFlag,$Version) = split(/\|/, $Request);
-        
-        # Check what format the results were in
-        # If you get this message, please do check for a new version, rather than
-        # commenting-out the test - it means the field order has changed and this
-        # program no longer makes sense!
-
-        ## it is also important that we check the field that we *think* has the version first, before attempting anything else. 
-
-        if ($Version < 4 or $Version > 5)
-        {
-            print STDERR "\n";
-            print STDERR "Server is speaking a different version of the protocol to us.\n";
-            print STDERR "Check to see whether a new version of this program was released!\n";
-            cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
-            ## No need to return, we exit the program at this point
-        }
-        elsif ($Version == 4)
-        {
-            ($ValidFlag,$Version,$X,$Y,$Z,$Layers) = split(/\|/, $Request);
-        }
-        elsif ($Version == 5)
-        {
-            ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$TilesetLastModified,$TilesetComplexity) = split(/\|/, $Request);
-        }
-        else
-        {
-            die "Version is \"".$Version."\". This should not have happened.";
-        }
-        
-        # First field is always "OK" if the server has actually sent a request
-        if ($ValidFlag eq "XX")
-        {
-            if ($Request =~ /Invalid username/)
-            {
-                die "ERROR: Authentication failed - please check your username "
-                        . "and password in 'authentication.conf'.\n\n"
-                        . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
-            }
-            elsif ($Request =~ /Invalid client version/)
-            {
-                die "ERROR: This client version (".$Config->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
-            }
-            elsif ($ValidFlag ne "OK")
-            {
-                return (0, "Unknown server response");
-            }
-        
-        }
-        last unless ($unrenderable{"$X $Y $Z"});
-        $unrenderable{"$X $Y $Z"}++;
-
-
-        Request->new($Z,$X,$Y)->putBackToServer("Unrenderable");
-        # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
-        my $UnrenderableBackoff = addFault("requestUnrenderable",1); 
-        $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);
-        $UnrenderableBackoff = 300 if ($UnrenderableBackoff > 300);
-        talkInSleep("Ignoring unrenderable tile $X $Y $Z",$UnrenderableBackoff);
+        GenerateTileset($req);
     }
-    
-    # Information text to say what's happening
-    statusMessage("Got work from the server",0,6);
-    
-    resetFault("requestUnrenderable"); #reset if we actually start trying to render a tileset.
-
-    # Create the tileset requested
-    GenerateTileset(Request->new($Z, $X, $Y));
-    return (1, "");
-}
-
-
-# actually get the request from the server
-sub GetRequestFromServer
-{
-    my $Request;
-
-    my $URL = $Config->get("RequestURL");
-    
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
-
-    $ua->protocols_allowed( ['http'] );
-    $ua->agent("tilesAtHome");
-    $ua->env_proxy();
-    push @{ $ua->requests_redirectable }, 'POST';
-
-    my $res = $ua->post($URL,
-      Content_Type => 'form-data',
-      Content => [ user => $Config->get("UploadUsername"),
-                   passwd => $Config->get("UploadPassword"),
-                   version => $Config->get("ClientVersion"),
-                   layers => $Layers,
-                   layerspossible => $Config->get("LayersCapability"),
-                   client_id => GetClientId() ]);
-      
-    if(!$res->is_success())
-    {
-        print $res->content if ($Config->get("Debug"));
-        return 0;
-    }
-    else
-    {
-        print $res->content if ($Config->get("Debug"));
-        $Request = $res->content;  ## FIXME: check single line returned. grep?
-        chomp $Request;
-    }
-
-    return $Request;
+    return ($success, $reason);
 }
 
 #-----------------------------------------------------------------------------

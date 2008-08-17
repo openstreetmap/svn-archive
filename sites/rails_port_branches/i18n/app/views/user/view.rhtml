@@ -6,7 +6,7 @@
 | <%= link_to 'new diary post', :controller => 'diary_entry', :action => 'new', :display_name => @user.display_name %>
 | <%= link_to 'my traces', :controller => 'trace', :action=>'mine' %>
 | <%= link_to 'my settings', :controller => 'user', :action => 'account', :display_name => @user.display_name %>
-| <%= link_to 'l10n', :controller => 'translate', :action => 'pending', :locale => @user.locale %>
+| <%= link_to 'l10n', :controller => 'translate', :action => 'stats', :sort => 'percentage' %>
 <% else %>
 <%= link_to 'send message', :controller => 'message', :action => 'new', :user_id => @this_user.id %>
 | <%= link_to 'diary', :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name %>

@@ -109,11 +109,6 @@ $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n", 
     $Version, $Config->get("ClientVersion"), $^O, GetClientId();
 
-# Keep track of unrenderable tiles. 
-# This should not be saved, as they may render later. 
-# there also might be false positives due to mangled inkscape preference file.
-my %unrenderable;
-
 my $dirent; 
 
 if ($LoopMode) {
@@ -205,7 +200,6 @@ resetFault("nodataXAPI");
 resetFault("renderer");
 resetFault("utf8");
 resetFault("upload");
-resetFault("requestUnrenderable");
 
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
 
@@ -1446,7 +1440,7 @@ sub svg2png
         }
         $req->putBackToServer("BadSVG");
         addFault("inkscape",1);
-        $unrenderable{$req->X.' '.$req->Y.' '.$req->Z}++;
+        $req->is_unrenderable(1);
         cleanUpAndDie("svg2png failed",$Mode,3,$PID);
         return (0,0);
     }

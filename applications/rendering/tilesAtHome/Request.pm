@@ -15,7 +15,7 @@
 package Request;
 
 use strict;
-###use LWP::UserAgent;
+use LWP::UserAgent;
 use tahlib;
 
 #unrenderable is class global hash that keeps unrenderable tilesets as ['z x y']=1

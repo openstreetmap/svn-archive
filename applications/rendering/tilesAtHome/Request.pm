@@ -5,9 +5,11 @@
 
 ## TODO: use proper perldoc format here
 ## public API:
+
 ## CREATION & COORDINATES:
 ## ->new(Z,X,Y) (set); ->ZXY(z,x,y) (set or get); ->X(x) (set or get)
 ## ->Y(y) (set or get), ->Z(z) (set or get)
+
 ## RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
 ## ->putBackToServer("cause")
 ## ->fetchFromServer()
@@ -18,12 +20,12 @@ use strict;
 use LWP::UserAgent;
 use tahlib;
 
-#unrenderable is class global hash that keeps unrenderable tilesets as ['z x y']=1
+#unrenderable is a class global hash that keeps unrenderable tilesets as ['z x y']=1
 our %unrenderable = ();
 
 #-----------------------------------------------------------------------------
-#""" Request can be instantiated with (Z,X,Y), alternatively set those with ->ZXY(z,x,y) later."""
-# my $r = new Request or my $r = Request->new()
+# Request can be instantiated with ->new(Z,X,Y), alternatively set those with ->ZXY(z,x,y) later.
+# e.g. my $r = new Request or my $r = Request->new()
 #-----------------------------------------------------------------------------
 sub new 
 {
@@ -131,6 +133,7 @@ sub fetchFromServer
         # First check that we understand the server protocol
         if ($Version < 4 or $Version > 5)
         {
+            #TODO use statusMessage here
             print STDERR "\n";
             print STDERR "Server is speaking a different version of the protocol to us.\n";
             print STDERR "Check to see whether a new version of this program was released!\n";
@@ -173,7 +176,7 @@ sub fetchFromServer
         }
         else
         {   # ValidFlag was neither 'OK' nor 'XX'. This should NEVER happen.
-              return (0, "Unknown server response, ValidFlag neith 'OK' nor 'XX'");
+              return (0, "Unknown server response, ValidFlag neither 'OK' nor 'XX'");
 	}
 
         if ($self->is_unrenderable())

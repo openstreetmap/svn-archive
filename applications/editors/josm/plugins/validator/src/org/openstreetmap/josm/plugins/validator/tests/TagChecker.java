@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.io.BufferedReader;
 import java.io.File;
@@ -175,11 +176,20 @@ public class TagChecker extends Test
 			return;
 		for(String source: sources.split(";"))
 		{
-			File sourceFile = Util.mirror(new URL(source), Util.getPluginDir(), -1);
+			File sourceFile = null;
+			try
+			{
+				sourceFile = Util.mirror(new URL(source), Util.getPluginDir(), -1);
+			}
+			catch(java.net.MalformedURLException e) {}
 			if( sourceFile == null || !sourceFile.exists() )
 			{
-				errorSources += source + "\n";
-				continue;
+				sourceFile = new File(source);
+				if( sourceFile == null || !sourceFile.exists() )
+				{
+					errorSources += source + "\n";
+					continue;
+				}
 			}
 
 			BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
@@ -464,8 +474,11 @@ public class TagChecker extends Test
 		Sources = new JList(new DefaultListModel());
 
 		String sources = Main.pref.get( PREF_SOURCES );
-		for(String source : sources.split(";"))
-			((DefaultListModel)Sources.getModel()).addElement(source);
+		if(sources != null && sources.length() > 0)
+		{
+			for(String source : sources.split(";"))
+				((DefaultListModel)Sources.getModel()).addElement(source);
+		}
 
 		addSrcButton = new JButton(tr("Add"));
 		addSrcButton.addActionListener(new ActionListener(){
@@ -518,6 +531,7 @@ public class TagChecker extends Test
 				}
 			}
 		});
+		Sources.setMinimumSize(new Dimension(300,50));
 		Sources.setVisibleRowCount(3);
 
 		Sources.setToolTipText(tr("The sources (url or filename) of spell check (see http://wiki.openstreetmap.org/index.php/User:JLS/speller) or tag checking data files."));

@@ -591,3 +591,29 @@ CMYK.prototype.attachSymbol = function(symbol_id,feature_key,feature_value,symbo
 CMYK.prototype.getRuleTree = function() {
 	return store_model;
 }
+
+CMYK.prototype.getObjects = function() {
+	var objects = {
+		patterns: new Array(),
+		markers: new Array(),
+		symbols: new Array()
+	}
+
+	defs = rulesfile.getElementsByTagName("defs")[0];
+	dojo.forEach(defs.getElementsByTagName("svg:pattern"),
+		function(pattern,index,array) {
+			objects.patterns.push(pattern);
+		}
+	);
+	dojo.forEach(defs.getElementsByTagName("svg:marker"),
+		function(marker,index,array) {
+			objects.markers.push(marker);
+		}
+	);
+	dojo.forEach(defs.getElementsByTagName("svg:symbol"),
+		function(symbol,index,array) {
+			objects.symbols.push(symbol);
+		}
+	);
+	return objects;
+}

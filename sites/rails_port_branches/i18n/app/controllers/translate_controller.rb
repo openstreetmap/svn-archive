@@ -61,7 +61,6 @@ class TranslateController < ApplicationController
     elsif params[:sort] == 'done'
       @stat_entries = Statistics.find(:all, :order => 'tr_complete DESC')
     end
-    end
   end
 
   def rss
@@ -71,12 +70,11 @@ class TranslateController < ApplicationController
       @title = "OpenStreetMap pending translations for #{Locale.language} (#{Locale.country.english_name})"
       @description = "Recent OpenStreetmap pending translation strings for #{Locale.language} (#{Locale.country.english_name})"
       @link = "http://www.openstreetmap.org/translate/#{params[:locale]}/#{params[:id]}"
-    else if params[:id] == 'complete'
+    elsif params[:id] == 'complete'
       @entries = Translation.find(:all, :conditions => ['text IS NOT NULL AND language_id = ?', Locale.language.id], :order => 'id DESC', :limit => 20)
       @tiitle = "OpenStreetMap complete translations for #{Locale.language} (#{Locale.country.english_name})"
       @description = "Recent OpenStreetmap complete translation strings for #{Locale.language} (#{Locale.country.english_name})"
       @link = "http://www.openstreetmap.org/translate/#{params[:locale]}/#{params[:id]}"
-    end
     end
   
     render :content_type => Mime::RSS

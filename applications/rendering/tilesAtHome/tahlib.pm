@@ -226,16 +226,8 @@ sub runCommand
         }
     }
     
-    killafile($ErrorFile);
+    unlink($ErrorFile);
     return $ok;
-}
-
-#-----------------------------------------------------------------------------
-# Delete a file if it exists
-#-----------------------------------------------------------------------------
-sub killafile($){
-  my $file = shift();
-  unlink $file if(-f $file);
 }
 
 #-----------------------------------------------------------------------------
@@ -282,7 +274,7 @@ sub DownloadFile
 
     if(!$UseExisting) 
     {
-        killafile($File);
+        unlink($File);
     }
     # Note: mirror sets the time on the file to match the server time. This
     # is important for the handling of JobTime later.
@@ -295,7 +287,7 @@ sub DownloadFile
     }
     else
     {
-        killafile($File) if (! $UseExisting);
+        unlink($File) if (! $UseExisting);
         doneMessage("failed");
         return 0;
     }
@@ -319,7 +311,7 @@ sub mergeOsmFiles
     if( scalar(@$sourceFiles) == 1 )
     {
       copy $sourceFiles->[0], $destFile;
-      killafile ($sourceFiles->[0]) if (!$Config->get("Debug"));
+      unlink($sourceFiles->[0]) if (!$Config->get("Debug"));
       return;
     }
     
@@ -370,7 +362,7 @@ sub mergeOsmFiles
             print DEST;
         }
         close(SOURCE);
-        killafile ($sourceFile) if (!$Config->get("Debug"));
+        unlink ($sourceFile) if (!$Config->get("Debug"));
     }
     print DEST "</osm>\n";
     close(DEST);
@@ -420,7 +412,7 @@ sub cleanUpAndDie
         while (my $file = shift @files)
         {
              print STDERR "deleting ".$Config->get("WorkingDirectory")."/".$file."\n" if ($Config->get("Verbose") >= 10);
-             killafile($Config->get("WorkingDirectory")."/".$file);
+             unlink($Config->get("WorkingDirectory")."/".$file);
         }
         
     }

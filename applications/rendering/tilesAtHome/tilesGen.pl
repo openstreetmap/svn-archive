@@ -207,7 +207,7 @@ resetFault("utf8");
 resetFault("upload");
 resetFault("requestUnrenderable");
 
-killafile("stopfile.txt") if $Config->get("AutoResetStopfile");
+unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
 
 
 ## Start processing
@@ -730,7 +730,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     #------------------------------------------------------
     my $DataFile = $Config->get("WorkingDirectory")."data-$PID.osm";
     
-    killafile($DataFile);
+    unlink($DataFile);
     my $URLS = sprintf("%s%s/map?bbox=%s",
       $Config->get("APIURL"),$Config->get("OSMVersion"),$bbox);
     if ($req->Z < 12) 
@@ -779,7 +779,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
                 $req->putBackToServer("NoData");
-                foreach my $file(@tempfiles) { killafile($file); }
+                unlink (@tempfiles);
                 addFault("nodataXAPI",1);
                 return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
             }
@@ -800,7 +800,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 {
                     statusMessage("No data on OSMXAPI either...",1,0);
                     $req->putBackToServer("NoData");
-                    foreach my $file(@tempfiles) { killafile($file); }
+                    unlink(@tempfiles);
                     addFault("nodataXAPI",1);
                     return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$Mode,1,$PID);
                 }
@@ -828,7 +828,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     {
                         statusMessage("No data here (sliced)...",1,0);
                         $req->putBackToServer("NoData");
-                        foreach my $file(@tempfiles) { killafile($file); }
+                        unlink(@tempfiles);
                         addFault("nodata",1);
                         return cleanUpAndDie("GenerateTileset: no data! (sliced).",$Mode,1,$PID);
                     }
@@ -898,7 +898,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Faff around
         for (my $i = $req->Z ; $i <= $maxzoom ; $i++) 
         {
-            killafile($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg");
+            unlink($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg");
         }
         
         my $Margin = " " x ($req->Z - 8);
@@ -945,7 +945,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         "$outputFile");
                 statusMessage("Creating tags from maplint",0,3);
                 runCommand($Cmd,$PID);
-                killafile("tmp.$PID");
+                unlink("tmp.$PID");
             }
             elsif ($preprocessor eq "close-areas")
             {
@@ -1030,7 +1030,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             }
             if ($error) 
             {
-                foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+                unlink(@tempfiles) if (!$Config->get("Debug"));
                 $req->putBackToServer("RenderFailure");
                 addFault("renderer",1);
                 return 0;
@@ -1042,7 +1042,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             {
                 if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E))
                 {
-                    foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+                    unlink(@tempfiles)if (!$Config->get("Debug"));
                     $req->putBackToServer("RenderFailure");
                     addFault("renderer",1);
                     return 0;
@@ -1067,7 +1067,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Clean-up the SVG files
         for (my $i = $req->Z ; $i <= $maxzoom; $i++) 
         {
-            killafile($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg") if (!$Config->get("Debug"));
+            unlink($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg") if (!$Config->get("Debug"));
         }
 
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
@@ -1090,7 +1090,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
     }
 
-    foreach my $file(@tempfiles) { killafile($file) if (!$Config->get("Debug")); }
+    unlink(@tempfiles) if (!$Config->get("Debug"));
 
     keepLog($PID,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers $Layers");
 
@@ -1129,7 +1129,7 @@ sub GenerateSVG
         $error = 1;
     }
     # Delete temporary rules file
-    killafile($TempFeatures) if (! $Config->get("Debug"));
+    unlink($TempFeatures) if (! $Config->get("Debug"));
     return $error;
 }
 
@@ -1442,7 +1442,7 @@ sub xml2svg
             copy($TSVG,$SVG);
             statusMessage("Error on Bezier Curve hinting, rendering without bezier curves",1,0);
         }
-        killafile($TSVG) if (!$Config->get("Debug"));
+        unlink($TSVG) if (!$Config->get("Debug"));
     }
     else
     {   # don't do bezier curve hinting
@@ -1571,11 +1571,11 @@ sub svg2png
         return (0,0);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
-    killafile($stdOut) if (not $Config->get("Debug"));
+    unlink($stdOut) if (not $Config->get("Debug"));
     
     my $ReturnValue = splitImageX($layer, $req, $Zoom, $Ytile, $TempFile); # returns true if tiles were all empty
     
-    killafile($TempFile) if (not $Config->get("Debug"));
+    unlink($TempFile) if (not $Config->get("Debug"));
     rmdir ($TempDir);
     return (1,$ReturnValue); #return true if empty
 }

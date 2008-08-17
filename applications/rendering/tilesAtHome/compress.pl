@@ -255,7 +255,7 @@ sub compress
     my $zip_result = runCommand($Command1,$PID);
 
     # stdOut is currently never used, so delete it unconditionally    
-    killafile($stdOut);
+    unlink($stdOut);
 
     # if collecting single tiles (incomplete tileset and zipping failed,
     # move all the .png back into $WorkingDirectory

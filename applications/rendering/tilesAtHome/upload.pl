@@ -338,7 +338,7 @@ sub UploadOkOrNot
     my $Load = <$fp>; ##read first line from file
     chomp $Load;
     close $fp;
-    killafile($LocalFilename);
+    unlink($LocalFilename);
     $Load=1-$Load;
     return ($Load*1000);
 }

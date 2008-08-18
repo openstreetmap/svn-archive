@@ -329,16 +329,25 @@ sub upload
 }
 
 
+#-----------------------------------------------------------
+# check the go_nogo URL and retrieve the server upload queue
+# returns the status between [0,1000] (0:empty, 1000:full)
+# returns 1000 if an error occured while fetching the load
+#-----------------------------------------------------------
 sub UploadOkOrNot
 {
-    my $LocalFilename = $Config->get("WorkingDirectory") . "/go-nogo-".$PID.".tmp";
     statusMessage("Checking server queue",0,3);
-    DownloadFile($Config->get("GoNogoURL"), $LocalFilename, 1);
-    open(my $fp, "<", $LocalFilename) || return;
-    my $Load = <$fp>; ##read first line from file
+    my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
+    my $res = $ua->get($Config->get("GoNogoURL"));
+
+    if (! $res->is_success)
+    {    # Failed to retrieve server load
+         # $res->status_line; contains result here.
+         statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
+         return 1000;
+   }
+    my $Load = $res->content;
     chomp $Load;
-    close $fp;
-    unlink($LocalFilename);
     $Load=1-$Load;
     return ($Load*1000);
 }

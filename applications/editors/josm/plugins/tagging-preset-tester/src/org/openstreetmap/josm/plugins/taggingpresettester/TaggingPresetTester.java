@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -18,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.tagging.TaggingCellRenderer;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.xml.sax.SAXException;
@@ -63,7 +66,8 @@ public class TaggingPresetTester extends JFrame {
 		TaggingPreset preset = (TaggingPreset)taggingPresets.getSelectedItem();
 		if (preset == null)
 			return;
-		JPanel p = preset.createPanel();
+		Collection<OsmPrimitive> x = Collections.emptySet();
+		JPanel p = preset.createPanel(x);
 		p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		if (p != null)
 			taggingPresetPanel.add(p, BorderLayout.NORTH);

@@ -12,7 +12,12 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.openstreetmap.josm.plugins.PluginInformation;
+
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -87,14 +92,17 @@ public class SiteDescription {
 //            varHelper.add("josm.user.dir", "${user.home}/.josm");
 //            parser.setVariableHelper(varHelper);
             parser.setVariableHelper(PluginHelper.getInstance().getVariableHelper());
-            parser.parse(in);
+            SAXParserFactory.newInstance().newSAXParser().parse(new InputSource(in), parser);
             //System.out.println("site describes plugins: " + plugins);
         } catch (SAXException e) {
             e.printStackTrace();
-        } finally {        
+        } catch (ParserConfigurationException e1) {
+            e1.printStackTrace(); // broken SAXException chaining
+        }
+        finally {
             in.close();
         }
-        
+
         // check if the plugins are already installed:
         PluginHelper helper = PluginHelper.getInstance();
         PluginInformation info;

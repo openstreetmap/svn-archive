@@ -31,8 +31,8 @@ public class PluginHelper {
         registerMenu("view", Main.main.menu.viewMenu);
         registerMenu("edit", Main.main.menu.editMenu);
         registerMenu("tools", Main.main.menu.toolsMenu);
-        registerMenu("connection", Main.main.menu.connectionMenu);
-        registerMenu("layer", Main.main.menu.layerMenu);
+//        registerMenu("connection", Main.main.menu.connectionMenu);
+//        registerMenu("layer", Main.main.menu.layerMenu);
         registerMenu("help", Main.main.menu.helpMenu);
         
         variableHelper = new VariableHelper();

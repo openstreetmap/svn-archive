@@ -15,7 +15,7 @@ var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")
 dojo.subscribe("osmarender_frontend.widgets.css_editor.deleteStyle",null,deleteStyle);
 
 function deleteStyle(args) {
-	cmyk.deleteSingleStyle(args.class,args.style);
+	cmyk.deleteSingleStyle(args.CSSclass,args.style);
 	dijit.byId("select_class").onChange();
 	if (dojo.byId("transform_on_style_delete").checked) {
 		Osmatransform();
@@ -28,7 +28,7 @@ dojo.subscribe("osmarender_frontend.widgets.css_editor.setStyle",null,setStyle);
 function setStyle(args) {
 	dojo.forEach(args,
 		function(element,index,array) {
-			cmyk.setSingleStyle(element.class,element.property,element.editValue);
+			cmyk.setSingleStyle(element.CSSclass,element.property,element.editValue);
 		}
 	);
 	cmyk.setStyle();
@@ -110,7 +110,7 @@ viewPropertiesFromClass = function(key) {
 	//NEW
 	var css_editor = new osmarender_frontend.widgets.css_editor.css_editor({
 		id:"css_editor",
-		class:key,
+		_myclass:key,
 		CSSproperties: propertiesToPrint,
 		images:cmyk.getObjects(),
 	});

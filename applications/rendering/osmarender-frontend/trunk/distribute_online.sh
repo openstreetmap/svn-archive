@@ -22,7 +22,7 @@ mv osmarenderfrontend_dojo osmadistribute/
 
 echo "*** OSMARENDER FRONTEND *** Copying files to distribute"
 
-cp -r gr cmyk.js CSS_parse.js data.osm LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.osm somewhere_in_london.osm osmadistribute/
+cp -r gr cmyk.js CSS_parse.js data.xml LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.xml somewhere_in_london.xml zurich_google.xml osmadistribute/
 
 cd osmadistribute
 
@@ -36,38 +36,13 @@ sed -i "s/dojotoolkit\//osmarenderfrontend_dojo\//g" osmarender_frontend.html
 
 sed -i "s/osmarenderfrontend_dojo\/dojo\/dojo.js/osmarenderfrontend_dojo\/dojo\/dojo.js/g" osmarender_frontend.html
 
-echo "*** OSMARENDER FRONTEND *** Setting HTML file for server distribution"
+sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/osmafrontend.js"><\/script>' osmarender_frontend.html
 
-sed -i "s/of_server=\"\"/of_server=\"http:\/\/dev.openstreetmap.org\/~Merio\/osmarender_frontend\/\"/g" osmarender_frontend.html
+#sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/my_dojo.js"><\/script>' osmarender_frontend.html
 
-sed -i "s/cmyk_server=\"\"/cmyk_server=\"http:\/\/dev.openstreetmap.org\/~Merio\/osmarender_frontend\/\"/g" osmarender_frontend.html
+echo "*** OSMARENDER FRONTEND *** Setting HTML file for online version"
 
-echo "*** OSMARENDER FRONTEND *** Setting HTML file to not display input fields for custom files"
-
-sed -i "s/<option value=\"\">No one, I'm writing my file name<\/option>//g" osmarender_frontend.html
-
-sed -i "s/<label id=\"label_write_osm_file\" for=\"osm_file_name_written\">/<label id=\"label_write_osm_file\" for=\"osm_file_name_written\" style=\"display:none;\">/g" osmarender_frontend.html
-
-sed -i "s/<input id=\"osm_file_name_written\" type=\"text\" value=\"data.osm\" \/>/<input id=\"osm_file_name_written\" type=\"text\" value=\"data.osm\"  style=\"display:none;\"\/>/g" osmarender_frontend.html
-
-sed -i "s/<label id=\"label_rules_file_name_written\" for=\"rules_file_name_written\">/<label id=\"label_rules_file_name_written\" for=\"rules_file_name_written\" style=\"display:none;\">/g" osmarender_frontend.html
-
-sed -i "s/<input id=\"rules_file_name_written\" type=\"text\" value=\"osm-map-features-z13.xml\" \/>/<input id=\"rules_file_name_written\" type=\"text\" value=\"osm-map-features-z13.xml\" style=\"display:none;\" \/>/g" osmarender_frontend.html
-
-###
-echo "*** OSMARENDER FRONTEND *** Setting HTML file for OSM file to become XML file"
-#otherwise document.load() doesn't work in online version
-#TODO: find automatically local osm files
-
-sed -i "s/data.osm/data.xml/g" osmarender_frontend.html
-sed -i "s/somewhere_in_london.osm/somewhere_in_london.xml/g" osmarender_frontend.html
-sed -i "s/rome_centre.osm/rome_centre.xml/g" osmarender_frontend.html
-
-echo "*** OSMARENDER FRONTEND *** Changing .OSM file names to .XML"
-mv data.osm data.xml
-mv somewhere_in_london.osm somewhere_in_london.xml
-mv rome_centre.osm rome_centre.xml
-####
+sed -i 's/<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">/<div id="load_custom" title="Load a custom file" style="display:none;">/g' osmarender_frontend.html
 
 echo "*** OSMARENDER FRONTEND *** Changing all permissions"
 #Thanks to http://erlug.linux.it/pipermail/erlug/2005-12/msg00081.html
@@ -93,6 +68,62 @@ set."
         echo " Ignoring '$file', probably a link."
     fi
 done
+
+echo "*** OSMARENDER FRONTEND *** Deleting unnecessary dojo files"
+#TODO: seems that, once packed, only these files are needed. Need to verify in the future
+# for "dojo" dir
+# dojo.js
+# osmafrontend.js
+# /resources
+# /nls
+#
+# for "dijit" dir
+# /themes
+# /nls
+#
+# for "dojox" dir, probably only strictly needed resources.
+
+#Thanks to http://trac.dojotoolkit.org/browser/util/trunk/buildscripts/build_mini.sh
+
+cd osmarenderfrontend_dojo
+
+echo "*** OSMARENDER FRONTEND *** Deleting dojo and dojox tests and demos"
+for i in dojo/dojox/*
+do
+	if [ -d $i ]; then
+		rm -rf $i/tests/
+		rm -rf $i/demos/
+	fi
+done
+
+echo "*** OSMARENDER FRONTEND *** Deleting unnecessary dojo tests, dijit files and util"
+rm -rf dijit/tests
+rm -rf dijit/demos
+rm -rf dijit/bench
+rm -rf dojo/tests
+rm -rf dojo/tests.js
+rm -rf util
+
+echo "*** OSMARENDER FRONTEND *** Removing dijit templates"
+
+rm -rf dijit/templates
+rm -rf dijit/form/templates
+rm -rf dijit/layout/templates
+
+echo "*** OSMARENDER FRONTEND *** Removing uncompressed files"
+
+find . -name *.uncompressed.js -exec rm '{}' ';'
+
+echo "*** OSMARENDER FRONTEND *** Moving compressed files to the outside directory"
+
+mv cmyk ..
+mv osmarender_frontend ..
+
+cd ..
+
+#cd osmarender_frontend
+#rm -rf widgets
+#cd ..
 
 echo "*** OSMARENDER FRONTEND *** Zipping OsmarenderFrontend"
 

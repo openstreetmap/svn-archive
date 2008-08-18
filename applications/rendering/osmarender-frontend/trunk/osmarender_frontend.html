@@ -55,7 +55,9 @@
 			var initDND = function() {
 				dojo.registerModulePath("osmarender_frontend","../../osmarender_frontend");
 				dojo.require("osmarender_frontend.panels.css.css_rules");
-				dojo.require("osmarender_frontend.widgets.css_editor.css_editor");
+
+				dojo.registerModulePath("juice","../../juice");
+				dojo.require("juice.juice");
 				var osm3 = new dojo.dnd.Moveable("osm3",{handle:"moveMe"});
 			};
 			dojo.addOnLoad(initDND);

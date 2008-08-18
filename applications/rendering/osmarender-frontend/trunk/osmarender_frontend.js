@@ -11,8 +11,8 @@ var classesAndProperties = new Array();
 var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1);
 
 //Subscribe to some events
-//Subscribe to deletedStyle (from css editor);
-dojo.subscribe("osmarender_frontend.widgets.css_editor.deleteStyle",null,deleteStyle);
+//Subscribe to deletedStyle (from juice);
+dojo.subscribe("juice.deleteStyle",null,deleteStyle);
 
 function deleteStyle(args) {
 	cmyk.deleteSingleStyle(args.CSSclass,args.style);
@@ -23,7 +23,7 @@ function deleteStyle(args) {
 }
 
 //Subscribe to setStyle (from css editor);
-dojo.subscribe("osmarender_frontend.widgets.css_editor.setStyle",null,setStyle);
+dojo.subscribe("juice.setStyle",null,setStyle);
 
 function setStyle(args) {
 	dojo.forEach(args,
@@ -37,7 +37,7 @@ function setStyle(args) {
 	}
 }
 
-dojo.subscribe("osmarender_frontend.widgets.css_editor.addStyle",null,addStyle);
+dojo.subscribe("juice.addStyle",null,addStyle);
 
 function addStyle(args) {
 	cmyk.addSingleStyle(args.CSSclass,args.CSSname,args.CSSvalue);
@@ -108,11 +108,11 @@ viewPropertiesFromClass = function(key) {
 	}
 
 	//NEW
-	var css_editor = new osmarender_frontend.widgets.css_editor.css_editor({
+	var css_editor = new juice.juice({
 		id:"css_editor",
 		_myclass:key,
 		CSSproperties: propertiesToPrint,
-		images:cmyk.getObjects(),
+		images:cmyk.getObjects()
 	});
 	div_result.domNode.appendChild(css_editor.domNode);
 

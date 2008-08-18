@@ -14,4 +14,7 @@ java -jar jsdoctoolkit/jsrun.jar jsdoctoolkit/app/run.js osmarender_frontend.js 
 echo "*** OSMARENDER FRONTEND *** Generating documentation for new Osmarender Frontend code"
 java -jar jsdoctoolkit/jsrun.jar jsdoctoolkit/app/run.js osmarender_frontend -r -p -a -t=jsdoctoolkit/templates/jsdoc -d=documentation/private/osmarender_frontend_new
 
+echo "*** OSMARENDER FRONTEND *** Generating documentation for JUICE widget"
+java -jar jsdoctoolkit/jsrun.jar jsdoctoolkit/app/run.js juice -r -p -a -t=jsdoctoolkit/templates/jsdoc -d=documentation/private/juice
+
 echo "*** OSMARENDER FRONTEND *** documentation generated and can be found in /documentation directory"

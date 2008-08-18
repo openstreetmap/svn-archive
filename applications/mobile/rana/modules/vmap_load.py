@@ -33,7 +33,7 @@ class vmapData:
   def load(self, filename):
     """Load an OSM XML file into memory"""
     if(not os.path.exists(filename)):
-      #print "File doesn't exist"
+      print "File doesn't exist: '%s'" % filename
       return([])
     f = file(filename, "rb")
 

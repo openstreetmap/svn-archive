@@ -33,89 +33,89 @@ class vmap(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.tiles = {}
+    self.loadEnums()
     self.setupStyles()
-  
+
   def getTile(self,x,y,z):
-    if(z < 15):
+    ourZ = 14
+    if(z < ourZ):
       return(False)
-    while(z > 15):
+    while(z > ourZ):
       x = int(x/2)
       y = int(y/2)
       z -= 1
     key = "%05d_%05d" % (x,y)
     if(not self.tiles.has_key(key)):
       self.tiles[key] = vmapData(self.getFilename(x,y))
+      print "Loading %s" % (self.getFilename(x,y),)
     return(self.tiles[key])
-  
-  def getFilename(self,x,y):
-    xdir = int(x / 128)
-    ydir = int(y / 128)
-    base = self.get("vmapTileDir", "../TileData2/simple")
-    filename = "%s/%d_%d/%d_%d.dat" % (base,xdir,ydir,x,y)
-    return(filename)
+
+  def getBaseDir(self):
+    return(self.get("vmapTileDir", "../tiledata3/output"))
     
+  def getFilename(self,x,y):
+    if(1):
+      xdir = int(x / 64)
+      ydir = int(y / 64)
+      filename = "%s/%d_%d/%d_%d.bin" % (self.getBaseDir(),xdir,ydir,x,y)
+    else:
+      filename = "%s/%d_%d.bin" % (self.getBaseDir(),x,y)
+    return(filename)
+
   def setupStyles(self):
     self.highways = {
       'motorway':     ((0.5, 0.5, 1.0), 6, {'shields':True}),
-      'trunk':        ((0.0, 1.0, 0.0), 6, {'shields':True}),
+      'trunk':        ((0.0, 0.8, 0.0), 6, {'shields':True}),
       'primary':      ((0.8, 0.0, 0.0), 6, {'shields':True}),
       'secondary':    ((0.8, 0.8, 0.0), 6, {'shields':True}),
       'tertiary':     ((0.8, 0.8, 0.0), 6, {}),
       'unclassified': ((0.5, 0.5, 0.5), 4, {}),
       'service':      ((0.5, 0.5, 0.5), 2, {}),
-      
       'footway':      ((1.0, 0.5, 0.5), 2, {'dashed':True}),
       'cycleway':     ((0.5, 1.0, 0.5), 2, {'dashed':True}),
       }
-    
-    equivalences = {
-      'residential':'unclassified',
-      'bridleway':'cycleway',
-      'byway':'cycleway',
-      'footpath':'footway',
-      }
-    for n1,n2 in equivalences.items():
-      self.highways[n1] = self.highways[n2]
-      
-    for x in('motorway', 'trunk', 'primary'):
-      self.highways[x+"_link"] = self.highways[x]
-    
-  def style(self, tags):
-    highway = self.highways.get(tags.get("highway", None), None)
-    if(highway):
-      layer = int(tags.get('layer',0))
-      highway[2]['layer'] = layer
-      casing = ((0,0,0), highway[1]+4, {'layer':layer-0.1})
-      styleList = [casing, highway]
-      return(styleList)
 
+  def loadEnums(self):
+    filename = "%s/enums.txt" % self.getBaseDir()
+    f = open(filename, "r")
+    self.enums = {}
+    for line in f:
+      k,v = line.rstrip().split("\t")
+      k = int(k)
+      print "%d = '%s'" % (k,v)
+      self.enums[k] = v
+    
   def setStyle(self, style, cr):
-    (colour,width,options) = style
+    styleDef = self.highways.get(style, None)
+    if(not styleDef):
+      return(False)
+    (colour,width,options) = styleDef
     (r,g,b) = colour
     cr.set_source_rgb(r,g,b)
     cr.set_line_width(width)
+    return(True)
     
   def drawTile(self,cr,tx,ty,tz,proj):
     mapData = self.getTile(tx,ty,tz)
     if(mapData):
+      #print mapData.ways
       for wayID, way in mapData.ways.items():
         if(not self.waysDrawn.get(wayID, False)): # if not drawn already as part of another tile
-          styleList = self.style(way['t'])
-          if(styleList):
-            for style in styleList:
-              cr = self.getCtx(style[2]['layer'])
-              self.setStyle(style, cr)
-              count = 0
-              for node in way['n']:
-                (lat,lon,nid) = node
-                x,y = proj.ll2xy(lat,lon)
-                if(count == 0):    
-                  cr.move_to(x,y)
-                else:
-                  cr.line_to(x,y)
-                count += 1
-              cr.stroke()
+          if(self.setStyle(self.enums[way['style']], cr)):
+            count = 0
+            for node in way['n']:
+              (lat,lon,nid) = node
+              x,y = proj.ll2xy(lat,lon)
+              if(count == 0):
+                cr.move_to(x,y)
+              else:
+                cr.line_to(x,y)
+              count += 1
+            cr.stroke()
+          # Note: way['N'] and way['r'] are name and ref respectively
           self.waysDrawn[wayID] = True
+    else:
+      print "No map data"
 
   def drawMap(self, cr):
     (sx,sy,sw,sh) = self.get('viewport')
@@ -124,40 +124,16 @@ class vmap(ranaModule):
       return
     
     z = int(self.get('z', 15))
-    layer = self.get('layer','pyrender')
-    self.layers = {}
-    
+
     # Render each 'tile' in view
     self.waysDrawn = {}
     for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
         self.drawTile(cr,x,y,z,proj)
    
-    layerIDs = self.layers.keys()
-    layerIDs.sort()
-    for num in layerIDs:
-      layer = self.layers[num]
-      cr.set_source_surface(layer[0], 0, 0)
-      cr.set_operator(cairo.OPERATOR_OVER)
-      cr.paint()
-    self.layers = {}
-
-
-  def getLayer(self, layernum):
-    layerid = str(layernum)
-    layer = self.layers.get(layerid, None)
-    if(not layer):
-      # Create the image
-      (sx,sy,sw,sh) = self.get('viewport')
-      im = cairo.ImageSurface(cairo.FORMAT_ARGB32, sw,sh)
-      ctx = cairo.Context(im)  # create a drawing context
-      layer = [im, ctx, layerid]
-      self.layers[layerid] = layer
-    return(layer)
-
-  def getCtx(self, layernum):
-    layer = self.getLayer(layernum)
-    return(layer[1])
-    
   def update(self):
     pass
+
+if(__name__ == "__main__"):
+  a = vmap({},{"vmapTileDir":"../../tiledata3/output"})
+  a.loadEnums()

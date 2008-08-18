@@ -25,9 +25,11 @@
     <ant	dir="plastic_laf"	antfile="build.xml"	target="dist"/>
     <ant	dir="pluginmanager"	antfile="build.xml"	target="dist"/> 
     <ant	dir="slippymap"		antfile="build.xml"	target="dist"/>
+    <ant	dir="surveyor"		antfile="build.xml"     target="dist"/>
     <ant	dir="tagging-preset-tester"	antfile="build.xml"	target="dist"/>
     <ant	dir="utilsplugin"	antfile="build.xml"	target="dist"/>
     <ant	dir="validator"		antfile="build.xml"	target="dist"/>
+    <ant	dir="waypoints"		antfile="build.xml"	target="dist"/>
     <ant	dir="wmsplugin"		antfile="build.xml"	target="dist"/>
     <ant	dir="ywms"		antfile="build.xml"	target="dist"/>
   </target>
@@ -35,8 +37,6 @@
   <target name="build_defect" depends="compile">
     <ant	dir="grid"		antfile="build.xml"	target="dist"/>
     <ant	dir="navigator"		antfile="build.xml"	target="dist"/>
-    <ant	dir="surveyor"		antfile="build.xml"     target="dist"/>
-    <ant	dir="waypoints"		antfile="build.xml"	target="dist"/>
   </target>
 
   <target name="clean">

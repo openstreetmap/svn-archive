@@ -92,7 +92,7 @@ sub start_element
     }
     elsif ($element->{Name} eq 'way')
     {
-        undef $self->{curr};
+        undef $self->{current};
         return if defined $element->{'Attributes'}{'action'}
                && $element->{'Attributes'}{'action'} eq 'delete';
                

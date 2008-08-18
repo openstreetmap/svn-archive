@@ -7,3 +7,15 @@
 <%= render :partial => 'translation', :collection => @entry %>
 
 <hr />
+
+<% if @user.tr_status == 0 %>
+
+<h4 id="update_translation">Add/Update Translation:</h4>
+<% form_for :translation, @update_entry, :method => :put, :url => { :action => 'update' } do |f| %>
+<%= f.text_area :text, :cols => 80, :rows => 5 %>
+<br />
+<br />
+<%= submit_tag 'Save' %>
+<% end %>
+
+<% end %>

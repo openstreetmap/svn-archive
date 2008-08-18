@@ -29,40 +29,76 @@ class DiaryEntryController < ApplicationController
   end
   
   def list
-    if params[:display_name]
-      @this_user = User.find_by_display_name(params[:display_name])
-      if @this_user
-        @title = @this_user.display_name + "'s diary"
+    if @user && params[:locale] == @user.locale
+      if params[:display_name]
+        @this_user = User.find_by_display_name(params[:display_name])
+        if @this_user
+          @title = @this_user.display_name + "'s diary" + " (" + params[:locale] + ")"
+          @entry_pages, @entries = paginate(:diary_entries,
+                                            :conditions => ['user_id = ? AND language = ?', @this_user.id, params[:locale]],
+                                            :order => 'created_at DESC',
+                                            :per_page => 20)
+        else
+          @not_found_user = params[:display_name]
+          render :action => 'no_such_user', :status => :not_found
+        end
+      else
+        @title = "Users' diaries" + " (" + params[:locale] + ")"
         @entry_pages, @entries = paginate(:diary_entries,
-                                          :conditions => ['user_id = ?', @this_user.id],
+                                          :conditions => ['language = ?', params[:locale]],
                                           :order => 'created_at DESC',
                                           :per_page => 20)
-      else
-        @not_found_user = params[:display_name]
-        render :action => 'no_such_user', :status => :not_found
       end
     else
-      @title = "Users' diaries"
-      @entry_pages, @entries = paginate(:diary_entries,
-                                        :order => 'created_at DESC',
-                                        :per_page => 20)
+      if params[:display_name]
+        @this_user = User.find_by_display_name(params[:display_name])
+        if @this_user
+          @title = @this_user.display_name + "'s diary"
+          @entry_pages, @entries = paginate(:diary_entries,
+                                            :conditions => ['user_id = ?', @this_user.id],
+                                            :order => 'created_at DESC',
+                                            :per_page => 20)
+        else
+          @not_found_user = params[:display_name]
+          render :action => 'no_such_user', :status => :not_found
+        end
+      else
+        @title = "Users' diaries"
+        @entry_pages, @entries = paginate(:diary_entries,
+                                          :order => 'created_at DESC',
+                                          :per_page => 20)
+      end
     end
   end
 
   def rss
-    if params[:display_name]
-      user = User.find_by_display_name(params[:display_name])
-      @entries = DiaryEntry.find(:all, :conditions => ['user_id = ?', user.id], :order => 'created_at DESC', :limit => 20)
-      @title = "OpenStreetMap diary entries for #{user.display_name}"
-      @description = "Recent OpenStreetmap diary entries from #{user.display_name}"
-      @link = "http://www.openstreetmap.org/user/#{user.display_name}/diary"
+    if params[:locale]
+      if params[:display_name]
+        user = User.find_by_display_name(params[:display_name])
+        @entries = DiaryEntry.find(:all, :conditions => ['user_id = ? AND language = ?', user.id, params[:locale]], :order => 'created_at DESC', :limit => 20)   
+        @title = "OpenStreetMap diary entries for #{user.display_name} (#{params[:locale]})"
+        @description = "Recent OpenStreetmap diary entries from #{user.display_name} (#{params[:locale]})"
+        @link = "http://www.openstreetmap.org/user/#{user.display_name}/diary/#{params[:locale]}"
+      else
+        @entries = DiaryEntry.find(:all, :conditions => ['language = ?', params[:locale]], :order => 'created_at DESC', :limit => 20)
+        @title = "OpenStreetMap diary entries (#{params[:locale]})"
+        @description = "Recent diary entries from users of OpenStreetMap (#{params[:locale]})"
+        @link = "http://www.openstreetmap.org/diary/#{params[:locale]}"
+      end
     else
-      @entries = DiaryEntry.find(:all, :order => 'created_at DESC', :limit => 20)
-      @title = "OpenStreetMap diary entries"
-      @description = "Recent diary entries from users of OpenStreetMap"
-      @link = "http://www.openstreetmap.org/diary"
+      if params[:display_name]
+        user = User.find_by_display_name(params[:display_name])
+        @entries = DiaryEntry.find(:all, :conditions => ['user_id = ?', user.id], :order => 'created_at DESC', :limit => 20)
+        @title = "OpenStreetMap diary entries for #{user.display_name}"
+        @description = "Recent OpenStreetmap diary entries from #{user.display_name}"
+        @link = "http://www.openstreetmap.org/user/#{user.display_name}/diary"
+      else
+        @entries = DiaryEntry.find(:all, :order => 'created_at DESC', :limit => 20)
+        @title = "OpenStreetMap diary entries"
+        @description = "Recent diary entries from users of OpenStreetMap"
+        @link = "http://www.openstreetmap.org/diary"
+      end
     end
-
     render :content_type => Mime::RSS
   end
 

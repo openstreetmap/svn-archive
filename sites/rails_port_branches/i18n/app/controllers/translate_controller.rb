@@ -4,6 +4,7 @@ class TranslateController < ApplicationController
   before_filter :authorize_web
   before_filter :require_user, :except => [:rss]
   before_filter :check_database_availability
+  before_filter :translator, :except => [:stats, :rss]
 
 
   def pending
@@ -37,6 +38,16 @@ class TranslateController < ApplicationController
   def view
     @title = "view a string".t
     @entry = Translation.find(:all, :conditions => ['id = ?', params[:id]])
+  end
+
+  def update
+    @update_entry = Translation.find(:first, :conditions => ['id = ?', params[:id]])
+    if params[:translation][:text]
+      @update_entry.text=params[:translation][:text]
+    end
+    if @update_entry.save
+      redirect_to :controller => 'translate', :action => 'view', :id => @update_entry.id
+    end
   end
 
   def stats

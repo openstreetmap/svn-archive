@@ -1,8 +1,12 @@
 <h2><%= @title -%></h2>
 
+<% unless @user.tr_status == 0%>
+
 <p>
 <%= link_to "pending strings", :action => 'pending', :locale => @user.locale -%> | <%= link_to "completed strings", :action => 'complete', :locale => @user.locale -%> | statistics
 </p>
+
+<% end %>
 
 <div id="stats">
   <table class="stats">

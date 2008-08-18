@@ -22,6 +22,12 @@ class ApplicationController < ActionController::Base
     redirect_to :controller => 'user', :action => 'login', :referer => request.request_uri unless @user
   end
 
+  def translator
+    if @user.tr_status == 0
+      redirect_to :controller => 'translate', :action => 'stats', :sort => 'percentage'
+    end
+  end
+
   def authorize(realm='Web Password', errormessage="Couldn't authenticate you") 
     username, passwd = get_auth_data # parse from headers
     # authenticate per-scheme
@@ -76,8 +82,8 @@ class ApplicationController < ActionController::Base
     response.headers['Error'] = message
   end
 
-  #TO be uncommented when click to globalize is used
-  #self.languages = {:english => 'en-US', :italian => 'it-IT', :bengali => 'bn-IN'}
+  # TO be uncommented when click to globalize language option is used
+  # self.languages = {:english => 'en-US', :italian => 'it-IT', :bengali => 'bn-IN'}
 
 private 
 

@@ -16,7 +16,16 @@
   <% end %>
 <% end %>
 
-<h3>Recent diary entries:</h3>
+<h3><%= "Recent diary entries:".t %></h3>
+
+<% if @user %>
+  <% if params[:locale] == @user.locale %>
+    <%= link_to "show all", :controller => 'diary_entry', :action => 'list' %> | filter by my language 
+  <% else %>
+    show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :locale => @user.locale %>
+  <% end %>
+<hr />
+<% end %>
 
 <%= render :partial => 'diary_entry', :collection => @entries %>
 
@@ -28,5 +37,11 @@
 
 <br />
 
+<% unless params[:locale]%>
 <%= rss_link_to :action => 'rss' %>
 <%= auto_discovery_link_tag :atom, :action => 'rss' %>
+<% else %>
+<%= rss_link_to :action => 'rss', :locale => params[:locale] %>
+<%= auto_discovery_link_tag :atom, :action => 'rss', :locale => params[:locale] %>
+<% end %>
+

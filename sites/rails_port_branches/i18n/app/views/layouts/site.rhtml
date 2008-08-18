@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
+    <%= javascript_include_tag :defaults %>
     <%= javascript_include_tag 'prototype' %>
     <%= javascript_include_tag 'site' %>
     <!--[if lt IE 7]><%= javascript_include_tag 'pngfix' %><![endif]--> <!-- thanks, microsoft! -->
@@ -89,7 +90,7 @@
       <% end %>
 
       <div id="left_menu" class="left_menu">
-        <a href="http://wiki.openstreetmap.org"><%= "Help".t -%> &amp; Wiki</a><br />
+        <a href="http://wiki.openstreetmap.org"><%= "Help &amp; Wiki".t -%></a><br />
         <a href="http://www.opengeodata.org/"><%= "News blog".t -%></a><br />
         <a href="http://wiki.openstreetmap.org/index.php/Merchandise"><%= "Shop".t -%></a><br />
         <%= yield :left_menu %>

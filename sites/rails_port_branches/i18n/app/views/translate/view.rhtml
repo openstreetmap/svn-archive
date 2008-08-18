@@ -8,7 +8,7 @@
 
 <hr />
 
-<% if @user.tr_status == 0 %>
+<% unless @user.tr_status == 0 %>
 
 <h4 id="update_translation">Add/Update Translation:</h4>
 <% form_for :translation, @update_entry, :method => :put, :url => { :action => 'update' } do |f| %>

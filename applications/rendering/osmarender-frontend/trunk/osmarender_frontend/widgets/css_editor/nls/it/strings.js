@@ -1,4 +1,0 @@
-({
-	i18n: "Internazionalizzazione"
-}) 
- 

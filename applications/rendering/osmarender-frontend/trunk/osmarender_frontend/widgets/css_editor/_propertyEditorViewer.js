@@ -1,13 +1,13 @@
-dojo.provide("osmarender_frontend.widgets.css_editor._propertyEditorViewer");
+dojo.provide("juice._propertyEditorViewer");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
-dojo.require("osmarender_frontend.widgets.css_editor._propertyEditorWidget");
+dojo.require("juice._propertyEditorWidget");
 
 //TODO: Zoom for markers/patterns
-dojo.declare("osmarender_frontend.widgets.css_editor._propertyEditorViewer",[dijit._Widget,dijit._Templated,osmarender_frontend.widgets.css_editor._propertyEditorWidget],{
-	templatePath: dojo.moduleUrl("osmarender_frontend.widgets.css_editor","_propertyEditorViewer.html"),
+dojo.declare("juice._propertyEditorViewer",[dijit._Widget,dijit._Templated,juice._propertyEditorWidget],{
+	templatePath: dojo.moduleUrl("juice","_propertyEditorViewer.html"),
 	imagesSelectable: new Array(),
 	SVGReadable: new Array(),
 	exists: false,

@@ -1,14 +1,14 @@
-dojo.provide("osmarender_frontend.widgets.css_editor._propertyEditorColorPicker");
+dojo.provide("juice._propertyEditorColorPicker");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
 dojo.require("dijit.Dialog");
 dojo.require("dojox.widget.ColorPicker");
-dojo.require("osmarender_frontend.widgets.css_editor._propertyEditorWidget");
+dojo.require("juice._propertyEditorWidget");
 
-dojo.declare("osmarender_frontend.widgets.css_editor._propertyEditorColorPicker",[dijit._Widget,dijit._Templated,osmarender_frontend.widgets.css_editor._propertyEditorWidget],{
-	templatePath: dojo.moduleUrl("osmarender_frontend.widgets.css_editor","_propertyEditorColorPicker.html"),
+dojo.declare("juice._propertyEditorColorPicker",[dijit._Widget,dijit._Templated,juice._propertyEditorWidget],{
+	templatePath: dojo.moduleUrl("juice","_propertyEditorColorPicker.html"),
 	widgetsInTemplate: true,
 
 	getCSSWidgetValue: function() {

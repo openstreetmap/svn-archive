@@ -2,3 +2,4 @@ org.openstreetmap.josmng.ui.actions.ReverseWayAction
 org.openstreetmap.josmng.ui.actions.OpenAction
 org.openstreetmap.josmng.ui.actions.SplitWayAction
 org.openstreetmap.josmng.ui.actions.DeleteAction
+org.openstreetmap.josmng.ui.actions.UnglueAction

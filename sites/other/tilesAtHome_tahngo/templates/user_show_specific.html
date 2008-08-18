@@ -11,9 +11,9 @@
 
 <h3>Current active requests</h3>
 <table border="1" align="center">
-  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Last client activity</td><td>Layer</td></tr>
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Client uuid</td><td>Last client activity</td><td>Layer</td></tr>
   {% for req in active_reqs %}
-  <tr><td><a href="{% url tah.browse.views.tiledetails "tile",req.min_z,req.x,req.y %}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{ req.layers_str }}</td></tr>
+  <tr><td><a href="{% url tah.browse.views.tiledetails "tile",req.min_z,req.x,req.y %}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.client_uuid }}</td><td>{{ req.clientping_time|timesince }}</td><td>{{ req.layers_str }}</td></tr>
   {% endfor %}
 </table>
 

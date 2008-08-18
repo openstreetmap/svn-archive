@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -35,7 +37,7 @@ public class WaypointOpenAction extends DiskAccessAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		JFileChooser fc = createAndOpenFileChooser(true, true);
+		JFileChooser fc = createAndOpenFileChooser(true, true, null);
 		if (fc == null)
 			return;
 		File[] files = fc.getSelectedFiles();
@@ -55,6 +57,10 @@ public class WaypointOpenAction extends DiskAccessAction {
 										file));
 		} catch (SAXException x) {
 			x.printStackTrace();
+			JOptionPane.showMessageDialog(Main.parent, 
+					tr("Error while parsing {0}",fn)+": "+x.getMessage());
+		} catch (ParserConfigurationException x) {
+			x.printStackTrace(); // broken SAXException chaining
 			JOptionPane.showMessageDialog(Main.parent, 
 					tr("Error while parsing {0}",fn)+": "+x.getMessage());
 		} catch (IOException x) {

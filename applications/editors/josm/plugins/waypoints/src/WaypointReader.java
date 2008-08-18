@@ -6,21 +6,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet; // NW
 import org.openstreetmap.josm.data.osm.Node; // NW
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import uk.co.wilson.xml.MinML2;
-
+import org.xml.sax.InputSource;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Read waypoints from a GPX file and convert to nodes.
  */
 public class WaypointReader {
 
-	private static class Parser extends MinML2 {
+	private static class Parser extends DefaultHandler {
 		/**
 		 * Current track to be read. The last entry is the current trkpt.
 		 * If in wpt-mode, it contain only one GpsPoint.
@@ -98,9 +100,9 @@ public class WaypointReader {
 	 * Parse and return the read data
 	 */
 	public static DataSet parse(InputStream source) 
-			throws SAXException, IOException{
+			throws SAXException, IOException, ParserConfigurationException {
 		Parser parser = new Parser();
-		parser.parse(new InputStreamReader(source, "UTF-8"));
+		SAXParserFactory.newInstance().newSAXParser().parse(new InputSource(new InputStreamReader(source, "UTF-8")), parser);
 		return parser.dataSet;
 	}
 }

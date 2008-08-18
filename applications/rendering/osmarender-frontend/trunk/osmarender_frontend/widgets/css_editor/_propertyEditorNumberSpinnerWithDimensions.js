@@ -1,13 +1,13 @@
-dojo.provide("osmarender_frontend.widgets.css_editor._propertyEditorNumberSpinnerWithDimensions");
+dojo.provide("juice._propertyEditorNumberSpinnerWithDimensions");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
 dojo.require("dijit.form.NumberSpinner");
-dojo.require("osmarender_frontend.widgets.css_editor._propertyEditorWidget");
+dojo.require("juice._propertyEditorWidget");
 
-dojo.declare("osmarender_frontend.widgets.css_editor._propertyEditorNumberSpinnerWithDimensions",[dijit._Widget,dijit._Templated,osmarender_frontend.widgets.css_editor._propertyEditorWidget],{
-	templatePath: dojo.moduleUrl("osmarender_frontend.widgets.css_editor","_propertyEditorNumberSpinnerWithDimensions.html"),
+dojo.declare("juice._propertyEditorNumberSpinnerWithDimensions",[dijit._Widget,dijit._Templated,juice._propertyEditorWidget],{
+	templatePath: dojo.moduleUrl("juice","_propertyEditorNumberSpinnerWithDimensions.html"),
 	_delta_for_editing: null,
 	_numbervalue: null,
 	_dimensionvalue: null,

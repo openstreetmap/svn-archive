@@ -1,12 +1,12 @@
-dojo.provide("osmarender_frontend.widgets.css_editor._propertyEditorSelect");
+dojo.provide("juice._propertyEditorSelect");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
-dojo.require("osmarender_frontend.widgets.css_editor._propertyEditorWidget");
+dojo.require("juice._propertyEditorWidget");
 
-dojo.declare("osmarender_frontend.widgets.css_editor._propertyEditorSelect",[dijit._Widget,dijit._Templated,osmarender_frontend.widgets.css_editor._propertyEditorWidget],{
-	templatePath: dojo.moduleUrl("osmarender_frontend.widgets.css_editor","_propertyEditorSelect.html"),
+dojo.declare("juice._propertyEditorSelect",[dijit._Widget,dijit._Templated,juice._propertyEditorWidget],{
+	templatePath: dojo.moduleUrl("juice","_propertyEditorSelect.html"),
 	_types_of_strokes : {
 		"stroke-linecap": ["butt","round","square","inherit"],
 		"stroke-linejoin": ["miter","round","bevel","inherit"],

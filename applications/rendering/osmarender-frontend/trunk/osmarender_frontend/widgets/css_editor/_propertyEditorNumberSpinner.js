@@ -1,13 +1,13 @@
-dojo.provide("osmarender_frontend.widgets.css_editor._propertyEditorNumberSpinner");
+dojo.provide("juice._propertyEditorNumberSpinner");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
 dojo.require("dijit.form.NumberSpinner");
-dojo.require("osmarender_frontend.widgets.css_editor._propertyEditorWidget");
+dojo.require("juice._propertyEditorWidget");
 
-dojo.declare("osmarender_frontend.widgets.css_editor._propertyEditorNumberSpinner",[dijit._Widget,dijit._Templated,osmarender_frontend.widgets.css_editor._propertyEditorWidget],{
-	templatePath: dojo.moduleUrl("osmarender_frontend.widgets.css_editor","_propertyEditorNumberSpinner.html"),
+dojo.declare("juice._propertyEditorNumberSpinner",[dijit._Widget,dijit._Templated,juice._propertyEditorWidget],{
+	templatePath: dojo.moduleUrl("juice","_propertyEditorNumberSpinner.html"),
 	_delta_for_editing: null,
 	_constraints: null,
 	widgetsInTemplate: true,

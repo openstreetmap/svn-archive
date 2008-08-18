@@ -11,7 +11,7 @@
 		</dt>
 		<dd>
 			<div dojoType="dijit.form.NumberSpinner" dojoAttachPoint="editorNumberSpinner" value="${_numbervalue}" smallDelta="${_delta_for_editing}" class="propertyNumberSpinner" dojoAttachEvent="onChange: _onChange"></div>${_dimensionvalue}
-			<button onclick="javascript:dojo.publish('osmarender_frontend.widgets.css_editor.propertyEditorWidget.deleteStyles',['${_property}'])">Delete</button>
+			<button onclick="javascript:dojo.publish('juice.propertyEditorWidget.deleteStyles',['${_property}'])">${_mainmessages.buttonDelete}</button>
 		</dd>
 	</div>
 </div>

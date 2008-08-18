@@ -17,13 +17,13 @@
 		<dd>
 			<div class="backgroundViewer" dojoAttachPoint="backgroundViewer"></div>
 			<input type="text" value="${_value}" dojoAttachPoint="colorText" dojoAttachEvent="onkeyup: _refreshBackgroundViewer">
-			<button dojoAttachPoint="pickColorButton" dojoAttachEvent="onclick: _viewColorPicker">Pick Color</button>
-			<button onclick="javascript:dojo.publish('osmarender_frontend.widgets.css_editor.propertyEditorWidget.deleteStyles',['${_property}'])">Delete</button>
+			<button dojoAttachPoint="pickColorButton" dojoAttachEvent="onclick: _viewColorPicker">${_mainmessages.colorPickerPick}</button>
+			<button onclick="javascript:dojo.publish('juice.propertyEditorWidget.deleteStyles',['${_property}'])">${_mainmessages.buttonDelete}</button>
 		</dd>
 	</div>
-	<div dojoType="dijit.Dialog" dojoAttachPoint="dialogColorPicker" title="Please choose a Color">
+	<div dojoType="dijit.Dialog" dojoAttachPoint="dialogColorPicker" title="${_mainmessages.colorPickerPleaseChoose}">
 		<div dojoType="dojox.widget.ColorPicker" dojoAttachPoint="colorPicker"></div>
-		<button dojoAttachEvent="onclick: _saveColor">Close And Save</button>
-		<button dojoAttachEvent="onclick: _closeColorPicker">Close And Discard</button>
+		<button dojoAttachEvent="onclick: _saveColor">${_mainmessages.save}</button>
+		<button dojoAttachEvent="onclick: _closeColorPicker">${_mainmessages.cancel}</button>
 	</div>
 </div>

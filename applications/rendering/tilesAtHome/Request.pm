@@ -184,16 +184,12 @@ sub fetchFromServer
             $success = 0;   # we need to loop yet again
             $self->putBackToServer("Unrenderable");
             # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
-            my $UnrenderableBackoff = ::addFault("requestUnrenderable",1); 
-            $UnrenderableBackoff = int(1.8 ** $UnrenderableBackoff);
-            $UnrenderableBackoff = 300 if ($UnrenderableBackoff > 300);
-            ::talkInSleep("Ignoring unrenderable tile (".$self->Z.', '.$self->X.', '.$self->Y.')',$UnrenderableBackoff);
+            ::talkInSleep("Ignoring unrenderable tile (".$self->Z.', '.$self->X.', '.$self->Y.')',20);
         }
     } while (!$success);
 
     # Information text to say what's happening
     ::statusMessage("Got work from the server", 0, 6);
-    ::resetFault("requestUnrenderable"); #reset if we actually start trying to render a tileset.
     return (1, "");
 }
 

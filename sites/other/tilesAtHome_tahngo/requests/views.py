@@ -307,7 +307,7 @@ def request_changedTiles(request):
       (z,x,y) = tile.getAttribute('z'),tile.getAttribute('x'),tile.getAttribute('y')
       CreateFormClass = CreateForm
       CreateFormClass.base_fields['layers'].required = False 
-      form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2})
+      form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2, 'src':'ChangedTileAutoRequest'})
       if form.is_valid():
         req, reason = saveCreateRequestForm(request, form)
         if req:

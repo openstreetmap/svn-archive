@@ -11,14 +11,13 @@ import java.net.URL;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import uk.co.wilson.xml.MinML2;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author cdaller
  *
  */
-public class SiteDescriptionParser extends MinML2 {
+public class SiteDescriptionParser extends DefaultHandler {
     private SiteDescription siteDescription;
     private PluginDescription pluginDescription;
     private StringBuilder characters;

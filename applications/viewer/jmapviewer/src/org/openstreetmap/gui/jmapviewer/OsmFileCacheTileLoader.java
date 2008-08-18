@@ -301,7 +301,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				FileOutputStream f =
 						new FileOutputStream(tileCacheDir + "/" + tile.getZoom() + "_"
 								+ tile.getXtile() + "_" + tile.getYtile() + ETAG_FILE_EXT);
-				f.write(eTag.getBytes(ETAG_CHARSET));
+				f.write(eTag.getBytes(ETAG_CHARSET.name()));
 				f.close();
 			} catch (Exception e) {
 				System.err.println("Failed to save ETag: " + e.getLocalizedMessage());
@@ -316,7 +316,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
 				byte[] buf = new byte[f.available()];
 				f.read(buf);
 				f.close();
-				return new String(buf, ETAG_CHARSET);
+				return new String(buf, ETAG_CHARSET.name());
 			} catch (Exception e) {
 				return null;
 			}

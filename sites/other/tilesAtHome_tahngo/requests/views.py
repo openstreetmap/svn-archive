@@ -51,6 +51,7 @@ def saveCreateRequestForm(request, form):
       formdata['priority']>4 or formdata['priority']<1: 
         formdata['priority'] = 3
     formdata['clientping_time'] = force_unicode(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    if not formdata['src']: formdata['src'] = '' # requester did not supply a 'src' string
 
     # catch invalid x,y
     if not Tile(None,formdata['min_z'],formdata['x'],formdata['y']).is_valid():
@@ -232,6 +233,10 @@ def upload_gonogo(request):
 def take(request):
     html='XX|5|unknown error'
     if request.method == 'POST':
+      # cleanup, we had huge client_uuids in the beginnning, shorten if necessary
+      if request.POST.has_key('client_uuid') and int(request.POST['client_uuid']) > 65535:
+        request.POST['client_uuid'] = request.POST['client_uuid'][-4:]
+
       authform = ClientAuthForm(request.POST)
       form     = TakeRequestForm(request.POST)
       form.is_valid() #clean data
@@ -250,6 +255,7 @@ def take(request):
                   req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
  	          req.status=1
  	          req.client = user
+ 	          req.client_uuid = form.cleaned_data.get('client_uuid', 0)
  	          req.clientping_time=datetime.now()
                   req.save()
                   # find out tileset filesize and age

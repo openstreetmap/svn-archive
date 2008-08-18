@@ -7,9 +7,9 @@
 <a href="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap.html#T@H">Grapical statistics</a> are shown through munin.
 <h3>Unhandled (total {{hits}})</h3>
 <table border="1" align="center">
-  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Layer</td></tr>
+  <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Requested since</td><td>Layer</td><td>Requested by</td></tr>
   {% for req in new_reqs_list %}
-  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.layers_str }}</td></tr>
+  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.layers_str }}</td><td>{{req.src}}</td></tr>
   {% endfor %}
 </table>
 <div style="text-align:center">{% if is_paginated %}Page {{ page }} of {{ pages }} ({% if has_previous %}<a href="{% url tah.requests.views.show_requests 1 %}">First</a> {%ifnotequal previous "1" %}... {%endifnotequal%}<a href="{% url tah.requests.views.show_requests previous %}">{{previous}}</a> {%endif%}{{page}}  {% if has_next %}<a href="{% url tah.requests.views.show_requests next %}">{{next}}</a> {% ifnotequal next pages %}... {%endifnotequal%}<a href="{% url tah.requests.views.show_requests pages %}">Last</a>{%endif%}){% endif %}</div>
@@ -18,6 +18,6 @@
 <table border="1" align="center">
   <tr><td>x,y</td><td>zoom</td><td>Priority</td><td>Layer</td><td>Requested since</td><td>Last client contact</td><td>Renderer</td></tr>
   {% for req in active_reqs_list %}
-  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.layers_str }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td><a href="{% url single_user_byid req.client.pk %}">{{req.client}}</a></td></tr>
+  <tr><td><a href="{% url tah.browse.views.index %}?layer=tile&z={{ req.min_z }}&x={{ req.x }}&y={{ req.y }}">{{ req.x }},{{ req.y }}</a></td><td>{{ req.min_z }}-{{ req.max_z }}</td><td>{{ req.priority }}</td><td>{{ req.layers_str }}</td><td>{{ req.request_time|timesince }}</td><td>{{ req.clientping_time|timesince }}</td><td><a href="{% url single_user_byid req.client.pk %}">{{req.client}} ({{req.client_uuid}})</a></td></tr>
   {% endfor %}
 </table>{% endblock %}

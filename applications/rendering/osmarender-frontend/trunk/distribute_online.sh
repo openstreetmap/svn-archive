@@ -38,6 +38,8 @@ sed -i "s/osmarenderfrontend_dojo\/dojo\/dojo.js/osmarenderfrontend_dojo\/dojo\/
 
 sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/osmafrontend.js"><\/script>' osmarender_frontend.html
 
+sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/juice.js"><\/script>' osmarender_frontend.html
+
 #sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/my_dojo.js"><\/script>' osmarender_frontend.html
 
 echo "*** OSMARENDER FRONTEND *** Setting HTML file for online version"
@@ -118,6 +120,7 @@ echo "*** OSMARENDER FRONTEND *** Moving compressed files to the outside directo
 
 mv cmyk ..
 mv osmarender_frontend ..
+mv juice ..
 
 cd ..
 

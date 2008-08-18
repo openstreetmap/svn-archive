@@ -24,8 +24,14 @@ dependencies ={
 		"dojox.dtl.Context",
 		"dojo.i18n",
 		"dojo.parser",
-		"osmarender_frontend.panels.css.css_rules",
-		"osmarender_frontend.widgets.css_editor.css_editor"
+		"osmarender_frontend.panels.css.css_rules"
+        ]
+        },
+        {
+        name: "juice.js",
+        dependencies: [
+		"dojo.18n",
+		"juice.juice"
         ]
         }
     ],
@@ -33,6 +39,7 @@ dependencies ={
         [ "dijit", "../dijit" ],
         [ "dojox", "../dojox" ],
         [ "cmyk", "../../cmyk" ],
+        [ "juice", "../../juice" ],
         [ "osmarender_frontend", "../../osmarender_frontend" ]
     ]
 };

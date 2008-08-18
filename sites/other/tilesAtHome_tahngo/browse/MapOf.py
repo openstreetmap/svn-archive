@@ -1,9 +1,11 @@
 from django.http import HttpResponse
+import os
 from math import *
 import StringIO
-from PIL import Image
+from PIL import Image, ImageDraw
 from tah.tah_intern.Tile import Tile
 from django import forms
+from django.conf import settings
 from django.views.decorators.cache import cache_control
 
 def latlon2relativeXY(lat,lon):
@@ -39,6 +41,13 @@ def export_MapOf(request):
     marg_h  = int(256*(y-y_range[0]-form['h']/512.0))
     im = im.crop((marg_w,marg_h,marg_w+form['w'],marg_h+form['h']))
     #return HttpResponse(str(marg_w)+" "+str(marg_h)+" " +str(x) + str(x_range) + str(y)+str(y_range))
+    #add attribution if necessary
+    if not form.get('skip_attr', False):
+      im_attr = Image.open(os.path.join(settings.MEDIA_ROOT,'media/CCBYSA30.png'))
+      draw = ImageDraw.Draw(im)
+      draw.text((2,form['h']-12), (u'\xa9 OpenStreetMap & contributors').encode("latin-1"), fill='#000000')
+      del draw
+      im.paste(im_attr,(1,form['h']-26))
     im.save(pngfile,form['format'])
     pngfile.seek(0)
     response = HttpResponse(pngfile.read(), mimetype= 'image/'+str(form['format']))
@@ -54,6 +63,7 @@ class MapOfForm(forms.Form):
     z = forms.IntegerField(initial=12)
     w = forms.IntegerField(initial=1024)
     h = forms.IntegerField(initial=1024)
+    skip_attr = forms.BooleanField(required=False, label='Do not include OSM attribution')
     format = forms.ChoiceField(choices=[('png','png'),('jpeg','jpeg')])
 
     def clean_h(self):

@@ -357,6 +357,9 @@ void Road::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature,
 
 bool Road::deleteChildren(MapDocument* theDocument, CommandList* theList)
 {
+	if (lastUpdated() == MapFeature::OSMServerConflict)
+		return true;
+
 	QMessageBox::StandardButton resp = QMessageBox::question(NULL, MainWindow::tr("Delete Children"),
 								 MainWindow::tr("Do you want to delete the children nodes also?"),
 								 QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Yes);
@@ -409,6 +412,7 @@ bool Road::toXML(QDomElement xParent)
 	e.setAttribute("id", xmlId());
 	e.setAttribute("timestamp", time().toString(Qt::ISODate)+"Z");
 	e.setAttribute("user", user());
+	e.setAttribute("actor", (int)lastUpdated());
 
 	for (unsigned int i=0; i<size(); ++i) {
 		QDomElement n = xParent.ownerDocument().createElement("nd");
@@ -429,14 +433,24 @@ Road * Road::fromXML(MapDocument* d, MapLayer * L, const QDomElement e)
 		id = "way_" + id;
 	QDateTime time = QDateTime::fromString(e.attribute("timestamp").left(19), "yyyy-MM-ddTHH:mm:ss");
 	QString user = e.attribute("user");
+	MapFeature::ActorType A;
+	if (e.hasAttribute("actor"))
+		A = (MapFeature::ActorType)(e.attribute("actor", "2").toInt());
+	else
+		if (L = d->getDirtyLayer())
+			A = MapFeature::User;
+		else
+			A = MapFeature::OSMServer;
 
 	Road* R = dynamic_cast<Road*>(d->getFeature(id));
 
 	if (!R) {
 		R = new Road();
 		R->setId(id);
-		R->setLastUpdated(MapFeature::OSMServer);
+		R->setLastUpdated(A);
 	} else {
+		if (R->lastUpdated() == MapFeature::NotYetDownloaded)
+			R->setLastUpdated(A);
 		R->layer()->remove(R);
 	}
 	R->setTime(time);

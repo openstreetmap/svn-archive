@@ -1,6 +1,5 @@
 #!/bin/sh
 
-#TODO: See also http://trac.dojotoolkit.org/browser/util/trunk/buildscripts/build_mini.sh
 echo "*** OSMARENDER FRONTEND *** Distributing Osmarender Frontend"
 
 cd dojotoolkit/util/buildscripts
@@ -23,7 +22,7 @@ mv osmarenderfrontend_dojo osmadistribute/
 
 echo "*** OSMARENDER FRONTEND *** Copying files to distribute"
 
-cp -r cmyk osmarender_frontend gr cmyk.js CSS_parse.js data.xml LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.xml somewhere_in_london.xml zurich_google.xml osmadistribute/
+cp -r gr cmyk.js CSS_parse.js data.xml LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.xml somewhere_in_london.xml zurich_google.xml osmadistribute/
 
 cd osmadistribute
 
@@ -36,6 +35,10 @@ echo "*** OSMARENDER FRONTEND *** Setting HTML file for Dojo"
 sed -i "s/dojotoolkit\//osmarenderfrontend_dojo\//g" osmarender_frontend.html
 
 sed -i "s/osmarenderfrontend_dojo\/dojo\/dojo.js/osmarenderfrontend_dojo\/dojo\/dojo.js/g" osmarender_frontend.html
+
+sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/osmafrontend.js"><\/script>' osmarender_frontend.html
+
+#sed -i '/<script type="text\/javascript" src="osmarenderfrontend_dojo\/dojo\/dojo.js/ a\ \t\t<script type="text\/javascript" src="osmarenderfrontend_dojo/dojo/my_dojo.js"><\/script>' osmarender_frontend.html
 
 echo "*** OSMARENDER FRONTEND *** Changing all permissions"
 #Thanks to http://erlug.linux.it/pipermail/erlug/2005-12/msg00081.html
@@ -61,6 +64,62 @@ set."
         echo " Ignoring '$file', probably a link."
     fi
 done
+
+echo "*** OSMARENDER FRONTEND *** Deleting unnecessary dojo files"
+#TODO: seems that, once packed, only these files are needed. Need to verify in the future
+# for "dojo" dir
+# dojo.js
+# osmafrontend.js
+# /resources
+# /nls
+#
+# for "dijit" dir
+# /themes
+# /nls
+#
+# for "dojox" dir, probably only strictly needed resources.
+
+#Thanks to http://trac.dojotoolkit.org/browser/util/trunk/buildscripts/build_mini.sh
+
+cd osmarenderfrontend_dojo
+
+echo "*** OSMARENDER FRONTEND *** Deleting dojo and dojox tests and demos"
+for i in dojo/dojox/*
+do
+	if [ -d $i ]; then
+		rm -rf $i/tests/
+		rm -rf $i/demos/
+	fi
+done
+
+echo "*** OSMARENDER FRONTEND *** Deleting unnecessary dojo tests, dijit files and util"
+rm -rf dijit/tests
+rm -rf dijit/demos
+rm -rf dijit/bench
+rm -rf dojo/tests
+rm -rf dojo/tests.js
+rm -rf util
+
+echo "*** OSMARENDER FRONTEND *** Removing dijit templates"
+
+rm -rf dijit/templates
+rm -rf dijit/form/templates
+rm -rf dijit/layout/templates
+
+echo "*** OSMARENDER FRONTEND *** Removing uncompressed files"
+
+find . -name *.uncompressed.js -exec rm '{}' ';'
+
+echo "*** OSMARENDER FRONTEND *** Moving compressed files to the outside directory"
+
+mv cmyk ..
+mv osmarender_frontend ..
+
+cd ..
+
+#cd osmarender_frontend
+#rm -rf widgets
+#cd ..
 
 echo "*** OSMARENDER FRONTEND *** Zipping OsmarenderFrontend"
 

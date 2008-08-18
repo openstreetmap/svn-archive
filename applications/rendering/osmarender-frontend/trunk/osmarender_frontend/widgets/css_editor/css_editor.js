@@ -14,7 +14,7 @@ dojo.declare("osmarender_frontend.widgets.css_editor.css_editor", [dijit._Widget
 	_messages:null,
 	CSSproperties: null,
 	images: null,
-	class: null,
+	_myclass: null,
 	_mywidgets: new Array(),
 	_this: null,
 	subscribedHandle: null,
@@ -39,7 +39,7 @@ dojo.declare("osmarender_frontend.widgets.css_editor.css_editor", [dijit._Widget
 	_addCSSProperty: function(args) {
 		this.dialogAddCSSProperty.hide();
 		var objectToPublish = {
-			CSSclass: this.class,
+			CSSclass: this._myclass,
 			CSSname: this.addCSSPropertyName.value,
 			CSSvalue: this.addCSSPropertyValue.value
 		}
@@ -51,7 +51,7 @@ dojo.declare("osmarender_frontend.widgets.css_editor.css_editor", [dijit._Widget
 		dojo.forEach(this._mywidgets,
 			function(widget,index,array) {
 				objectToPublish.push({
-					class: _this.class,
+					CSSclass: _this._myclass,
 					property: widget.getCSSWidgetProperty(),
 					editValue: widget.getCSSWidgetValue()
 				});
@@ -65,7 +65,7 @@ dojo.declare("osmarender_frontend.widgets.css_editor.css_editor", [dijit._Widget
 		// Unsubscribe handle... always needed otherwise it remains in memory even if this object no longer exists
 		dojo.unsubscribe(_this.subscribedHandle);
 		// Need to transfer an object, an array doesn't work
-		dojo.publish("osmarender_frontend.widgets.css_editor.deleteStyle",[{class: _this.class, style: styleName}]);
+		dojo.publish("osmarender_frontend.widgets.css_editor.deleteStyle",[{CSSclass: _this._myclass, style: styleName}]);
 	},
 
 	_viewCSSPropertyDialog: function() {

@@ -1,7 +1,7 @@
 dependencies ={
     layers:  [
         {
-        name: "my_dojo.js",
+        name: "osmafrontend.js",
         dependencies: [
 		"dojo.dnd.move",
 		"dojo.fx",
@@ -23,17 +23,11 @@ dependencies ={
 		"dojo.data.ItemFileReadStore",
 		"dojox.dtl.Context",
 		"dojo.i18n",
-		"dojo.parser"
-        ]
-        },
-        {
-        name: "osmafrontend.js",
-        dependencies: [
+		"dojo.parser",
 		"osmarender_frontend.panels.css.css_rules",
 		"osmarender_frontend.widgets.css_editor.css_editor"
         ]
         }
-
     ],
     prefixes: [
         [ "dijit", "../dijit" ],

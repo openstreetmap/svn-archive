@@ -91,9 +91,6 @@ sub CheckBasicConfig
     }
     else
     {
-        # Upload URL, username
-        printf "- Uploading with username \"".$Config->get("UploadUsername")."\"\n", ;
-
         if($Config->get("DeleteZipFilesAfterUpload")){
             print "- Deleting ZIP files after upload\n";
         }

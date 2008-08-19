@@ -21,6 +21,7 @@ package Request;
 use strict;
 use LWP::UserAgent;
 use tahlib;
+use lib::TahConf;
 
 #unrenderable is a class global hash that keeps unrenderable tilesets as ['z x y']=1
 our %unrenderable = ();
@@ -39,6 +40,7 @@ sub new
         lastModified => 0,  #unix timestamp of file on server
         complexity => 0,    #byte size of file on server
         layers => [],
+        Config => TahConf->getConfig(),
     };
     bless $self, $class;
     $self->ZXY(@_);
@@ -193,9 +195,9 @@ sub fetchFromServer
                 $self->{'complexity'} = $complexity;
                 $success = 1;  # set to 1, so we could end the loop
                 # got request, now check that it's not too complex
-                if ($::Config->get('MaxTilesetComplexity'))
+                if ($self->{Config}->get('MaxTilesetComplexity'))
                 {   #the setting is enabled
-                    if ($complexity > $::Config->get('MaxTilesetComplexity'))
+                    if ($complexity > $self->{Config}->get('MaxTilesetComplexity'))
                     {   # too complex!
                         $success = 0;  # set to 0, need another loop
                         ::statusMessage("Ignoring too complex tile (".$self->ZXY_str.')',1,3);
@@ -217,7 +219,7 @@ sub fetchFromServer
             }
             elsif ($reason =~ /Invalid client version/)
             {
-                die "ERROR: This client version (".$::Config->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
+                die "ERROR: This client version (".$self->{Config}->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
             }
             else
             {
@@ -250,20 +252,21 @@ sub fetchFromServer
 #-----------------------------------------------------------------------------
 sub getRequestStringFromServer
 {
+    my $self = shift();
     my $Request;
-    my $URL = $::Config->get("RequestURL");
+    my $URL = $self->{Config}->get("RequestURL");
     
     my $ua = LWP::UserAgent->new(timeout => 360, protocols_allowed => ['http'], agent =>"tilesAtHome");
     $ua->env_proxy();
     push @{ $ua->requests_redirectable }, 'POST';
     my $res = $ua->post($URL, Content_Type => 'form-data',
-      Content => [ user => $::Config->get("UploadUsername"),
-                   passwd => $::Config->get("UploadPassword"),
-                   version => $::Config->get("ClientVersion"),
-                   layerspossible => $::Config->get("LayersCapability"),
+      Content => [ user => $self->{Config}->get("UploadUsername"),
+                   passwd => $self->{Config}->get("UploadPassword"),
+                   version => $self->{Config}->get("ClientVersion"),
+                   layerspossible => $self->{Config}->get("LayersCapability"),
                    client_uuid => ::GetClientId() ]);
 
-    (print "Request string from server: ", $res->content) if ($::Config->get("Debug"));      
+    (print "Request string from server: ", $res->content) if ($self->{Config}->get("Debug"));      
 
     if(!$res->is_success())
     {   # getting request string from server failed here
@@ -302,14 +305,14 @@ sub putBackToServer
     push @{ $ua->requests_redirectable }, 'POST';
 
     ::statusMessage(sprintf("Putting job (%d,%d,%d) back due to '%s'",$self->{MIN_Z},$self->{X},$self->{Y},$Cause),1,0);
-    my $res = $ua->post($::Config->get("ReRequestURL"),
+    my $res = $ua->post($self->{Config}->get("ReRequestURL"),
               Content_Type => 'form-data',
               Content => [ x => $self->{X},
                            y => $self->{Y},
                            min_z => $self->{MIN_Z},
-                           user => $::Config->get("UploadUsername"),
-                           passwd => $::Config->get("UploadPassword"),
-                           version => $::Config->get("ClientVersion"),
+                           user => $self->{Config}->get("UploadUsername"),
+                           passwd => $self->{Config}->get("UploadPassword"),
+                           version => $self->{Config}->get("ClientVersion"),
                            cause => $Cause,
                            client_uuid => ::GetClientId() ]);
 

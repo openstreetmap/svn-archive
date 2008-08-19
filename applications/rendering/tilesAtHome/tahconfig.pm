@@ -223,7 +223,7 @@ sub CheckConfig
         $EnvironmentInfo{Xml}=$XmlV;
 
         if($XmlV !~ /(\d+\.\d+\.\d+)/) {
-            die("Can't find xmlstarlet (using \"".$Config->{"XmlStarlet"}."\")\n");
+            die("Can't find xmlstarlet (using \"" . $Config->get("XmlStarlet") . "\")\n");
         }
         print "- xmlstarlet version $1\n";
     }

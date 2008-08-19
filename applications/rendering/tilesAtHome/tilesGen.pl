@@ -195,6 +195,7 @@ if ($Mode eq "xy")
 
     my $X = shift();
     my $Y = shift();
+    my $req = new Request
     if (not defined $X or not defined $Y)
     { 
         print STDERR "Usage: $0 xy <X> <Y> [<ZOOM>]\n";
@@ -209,7 +210,10 @@ if ($Mode eq "xy")
        $currentSubTask = "warning";
        statusMessage(" *** No zoomlevel specified! Assuming z12 *** ",1,0);
     }
-    GenerateTileset(Request->new($Zoom, $X, $Y));
+
+    $req->ZXY($Zoom, $X, $Y)
+    $req->layers($Config->get("Layers"));
+    GenerateTileset($req);
 }
 elsif ($Mode eq "loop") 
 {
@@ -520,7 +524,7 @@ sub ProcessRequestsFromServer
     ($success, $reason) = $req->fetchFromServer();
 
     #TODO make all places use Request->layerstr directly rather than relying on global vars
-    $Layers =$req->{'layerstr'};
+    $Layers = $req->layers_str;
 
     if ($success)
     {

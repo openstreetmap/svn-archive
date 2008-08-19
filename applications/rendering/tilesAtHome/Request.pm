@@ -8,7 +8,9 @@
 
 ## CREATION & COORDINATES:
 ## ->new(Z,X,Y) (set); ->ZXY(z,x,y) (set or get); ->X(x) (set or get)
-## ->Y(y) (set or get), ->Z(z) (set or get)
+## ->Y(y) (set or get), ->Z(z) (set or get), ->ZXY_str (read-only)
+## ->layers('comma-separated-layerstring') (get or set) (get returns array)
+## ->layers_str() (read only, returns comma-separated layer string)
 
 ## RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
 ## ->putBackToServer("cause")
@@ -34,10 +36,11 @@ sub new
         MIN_Z => undef,
         X => undef,
         Y  => undef,
-        layerstr => undef, #comma seperated string of requested layers
         lastModified => 0,  #unix timestamp of file on server
         complexity => 0,    #byte size of file on server
+        layers => [],
     };
+    #my $self->{layers} => (),      #array if required layers
     bless $self, $class;
     $self->ZXY(@_);
     return $self;
@@ -51,6 +54,15 @@ sub ZXY
     my $self = shift;
     my ($new_z, $new_x, $new_y) = @_;
     return ($self->Z($new_z),$self->X($new_x),$self->Y($new_y))
+}
+
+#-----------------------------------------------------------------------------
+# retrieve (read-only) the z,x,y as string in form 'z,x,y'
+#-----------------------------------------------------------------------------
+sub ZXY_str
+{
+    my $self = shift;
+    return $self->Z.','.$self->X.','.$self->Y;
 }
 
 #-----------------------------------------------------------------------------
@@ -84,6 +96,34 @@ sub Y
     my $new_y = shift;
     if (defined($new_y)) {$self->{Y} = $new_y;}
     return $self->{Y}
+}
+
+#-----------------------------------------------------------------------------
+# set and/or retrieve the required layers of a request
+# it's handed a comma separated string of layers when setting, eg. 
+# $r->layers('tile,maplint')
+# returns an array of layernames when reading (empty array if unset)
+#-----------------------------------------------------------------------------
+sub layers
+{
+    my $self = shift;
+    my $layers_str = shift;
+    if (defined $layers_str) { @{$self->{layers}} =  split(/,/,$layers_str);}
+    return @{$self->{layers}};
+}
+
+
+#-----------------------------------------------------------------------------
+# retrieve (read-only) the required layers of a request
+# usage, e.g. $r->layers_str
+# returns comma separated string of layers , eg. 'tile,maplint'
+# returns empty string '' if unset.
+#-----------------------------------------------------------------------------
+sub layers_str
+{
+    my $self = shift;
+    my $layers_str = join(",", @{$self->{layers}});
+    return $layers_str;
 }
 
 

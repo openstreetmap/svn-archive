@@ -236,7 +236,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (sport,   baseball,        "baseball"        , "") \
  s (sport,   basketball,      "basketball"      , "") \
  s (sport,   cricket,         "cricket"         , "") \
- s (sport,   cricket_nets,    "cricket_nets"    , "") \
+ s (sport,   cricket_nets,    "cricket nets"    , "") \
  s (sport,   croquet,         "croquet"         , "") \
  s (sport,   dog_racing,      "dog racing"      , "") \
  s (sport,   equestrian,      "equestrian"      , "") \
@@ -350,6 +350,18 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (highway, motorway_link,   "mway link"       , "") \
  s (highway, trunk_link,      "trunk link"      , "") \
  s (highway, primary_link,    "primary_link"    , "") \
+ s (man_made, beacon,         "beacon"          , "" ) \
+ s (man_made, survey_point,   "survey point"    , "" ) \
+ s (man_made, tower,          "tower"           , "" ) \
+ s (man_made, water_tower,    "water tower"     , "" ) \
+ s (man_made, gasometer,      "gasometer"       , "" ) \
+ s (man_made, reservoir_covered, "covered reservoir", "" ) \
+ s (man_made, lighthouse,     "lighthouse"      , "" ) \
+ s (man_made, windmill,       "windmill"        , "" ) \
+ s (man_made, pier,           "pier"            , "" ) \
+ s (man_made, pipeline,       "pipeline"        , "" ) \
+ s (man_made, wastewater_plant, "wastewater plant" , "" ) \
+ s (man_made, crane,          "crane"           , "" ) \
  s (building, yes,            "building"        , "") \
  s (landuse, forest,          "forest"          , "") \
  s (landuse, residential,     "residential area", "") \
@@ -3549,20 +3561,20 @@ volatile int guiDone = FALSE;
 DWORD WINAPI NmeaReader (LPVOID lParam)
 {
  // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
-  DWORD nBytes;
-//  COMMTIMEOUTS commTiming;
-  char rx[1200];
+  DWORD nBytes, got = 0;
+  COMMTIMEOUTS commTiming;
+  char rx[300];
 
   //ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
 //  Sleep (1000);
   /* It seems as the CreateFile before returns the action has been completed, causing
   the subsequent change of baudrate to fail. This read / sleep ensures that the port is open
   before continuing. */
-    #if 0
+    #if 1
     GetCommTimeouts (port, &commTiming);
-    commTiming.ReadIntervalTimeout=20; /* Blocking reads */
-    commTiming.ReadTotalTimeoutMultiplier=0;
-    commTiming.ReadTotalTimeoutConstant=0;
+    commTiming.ReadIntervalTimeout = 20;
+    commTiming.ReadTotalTimeoutMultiplier = 0;
+    commTiming.ReadTotalTimeoutConstant = 200; /* Bailout when nothing on the port */
 
     commTiming.WriteTotalTimeoutMultiplier=5; /* No writing */
     commTiming.WriteTotalTimeoutConstant=5;
@@ -3576,22 +3588,22 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
         return(1);
       }
       portState.BaudRate = BaudRate;
-      portState.Parity=0;
-      portState.StopBits=ONESTOPBIT;
-      portState.ByteSize=8;
-      portState.fBinary=1;
-      portState.fParity=0;
-      portState.fOutxCtsFlow=0;
-      portState.fOutxDsrFlow=0;
-      portState.fDtrControl=DTR_CONTROL_ENABLE;
-      portState.fDsrSensitivity=0;
-      portState.fTXContinueOnXoff=1;
-      portState.fOutX=0;
-      portState.fInX=0;
-      portState.fErrorChar=0;
-      portState.fNull=0;
-      portState.fRtsControl=RTS_CONTROL_ENABLE;
-      portState.fAbortOnError=1;
+      //portState.Parity=0;
+      //portState.StopBits=ONESTOPBIT;
+      //portState.ByteSize=8;
+      //portState.fBinary=1;
+      //portState.fParity=0;
+      //portState.fOutxCtsFlow=0;
+      //portState.fOutxDsrFlow=0;
+      //portState.fDtrControl=DTR_CONTROL_ENABLE;
+      //portState.fDsrSensitivity=0;
+      //portState.fTXContinueOnXoff=1;
+      //portState.fOutX=0;
+      //portState.fInX=0;
+      //portState.fErrorChar=0;
+      //portState.fNull=0;
+      //portState.fRtsControl=RTS_CONTROL_ENABLE;
+      //portState.fAbortOnError=1;
 
       if(!SetCommState(port, &portState)) {
         MessageBox (NULL, TEXT ("SetCommState Error"), TEXT (""),
@@ -3599,6 +3611,21 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
         return(1);
       }
     }
+    /* Idea for Windows Mobile 5
+    #include <gpsapi.h>
+  if (WM5) {
+    GPS_POSITION pos;
+    HANDLE hand = GPSOpenDevice (NULL, NULL, NULL, 0);
+    while (!guiDone && hand != NULL) {
+      if (GPSGetPosition (hand, &pos, 500, 0) == ERROR_SUCCESS &&
+        (pos.dwValidFields & GPS_VALID_LATITUDE)) {
+        Sleep (800);
+        pos.dblLatitude, pos.dblLongitude;
+      }
+      else Sleep (100);
+    }
+    if (hand) GPSCloseDevice (hand);
+  } */
 
   #if 0
   PurgeComm (port, PURGE_RXCLEAR); /* Baud rate wouldn't change without this ! */
@@ -3614,20 +3641,26 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
     }
   ReadFile(port, rx2, 600, &nBytes2, NULL);
   #endif
-  //FILE *log = fopen ("\\My Documents\\log.nmea", "a");
+  //char logName[80];
+  //sprintf (logName, "%slog.nmea", docPrefix);
+  //FILE *log = fopen (logName, "wb");
   while (!guiDone) {
     //nBytes = sizeof (rx) - got;
     //got = 0;
-    if (!ReadFile(port, rx, sizeof(rx), &nBytes, NULL) || nBytes <= 0) {
+    if (!ReadFile(port, rx + got, sizeof(rx) - got, &nBytes, NULL) ||
+        nBytes <= 0) {
+      //fprintf (log, "%d -\n", nBytes);
       continue;
     }
+    //fprintf (log, "%d\n", nBytes);
+    got += nBytes;
     //if (log) fwrite (rx, nBytes, 1, log);
 
     //wndStr[0]='\0';
     //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
     //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
     
-    if (ProcessNmea (rx, (unsigned*)&nBytes)) {
+    if (ProcessNmea (rx, (unsigned*)&got)) {
       PostMessage (mWnd, WM_USER + 1, 0, (intptr_t) gpsNew);
     }
   }
@@ -3660,23 +3693,22 @@ int WINAPI WinMain(
   hInst = hInstance;
   wchar_t argv0[80];
   GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
+  UTF16 *sStart = (UTF16*) argv0, *rchr = wcsrchr (argv0, '\\');
+  wcscpy (rchr ? rchr + 1 : argv0, TEXT (""));
+  unsigned char *tStart = (unsigned char *) docPrefix;
+  ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0),
+    &tStart, tStart + sizeof (docPrefix), lenientConversion);
+  *tStart = '\0';
 
-  wcscpy (argv0 + wcslen (argv0) - 8, TEXT ("ore.opt")); // _arm.exe to ore.opt
-  FILE *optFile = _wfopen (argv0, TEXT ("r"));
-  
+  char optFileName[sizeof(docPrefix) + 13];
+  sprintf (optFileName, "%s\\gosmore.opt", docPrefix);
+  FILE *optFile = fopen (optFileName, "r");  
   if (!optFile) {
     strcpy (docPrefix, "\\My Documents\\");
     optFile = fopen ("\\My Documents\\gosmore.opt", "rb");
   }
-  else {
-    UTF16 *sStart = (UTF16*) argv0;
-    unsigned char *tStart = (unsigned char *) docPrefix;
-    ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0) - 11,
-      &tStart, tStart + sizeof (docPrefix), lenientConversion);
-    *tStart = '\0';
-  }
 
-  wcscpy (argv0 + wcslen (argv0) - 7, TEXT ("ore.pak")); // _arm.exe to ore.pak
+  wcscat (argv0, TEXT ("gosmore.pak")); // _arm.exe to ore.pak
   HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
   if (gmap == INVALID_HANDLE_VALUE) {
@@ -3741,7 +3773,6 @@ int WINAPI WinMain(
     OPTIONS
     #undef o
     fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
-    fclose (optFile);
     option = numberOfOptions;
   }
   Exit = 0;
@@ -3770,18 +3801,18 @@ int WINAPI WinMain(
 
   while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
 
-  optFile = _wfopen (argv0, TEXT ("r+"));
+  optFile = fopen (optFileName, "r+b");
   if (!optFile) optFile = fopen ("\\My Documents\\gosmore.opt", "wb");
   if (optFile) {
     #define o(en,min,max) fwrite (&en, sizeof (en),1, optFile);
     OPTIONS
     #undef o
-    fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
+    fwrite (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
     fclose (optFile);
   }
   gpsNewStruct *first = FlushGpx ();
   if (newWayCnt > 0) {
-    char newWayFileName[40];
+    char newWayFileName[80];
     if (first) sprintf (newWayFileName, "%s%.2s%.2s%.2s-%.6s.osm", docPrefix,
       first->fix.date + 4, first->fix.date + 2, first->fix.date,
       first->fix.tm);

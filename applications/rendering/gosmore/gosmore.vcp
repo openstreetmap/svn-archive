@@ -273,6 +273,7 @@ DEP_CPP_GOSMO=\
 	".\ceglue.h"\
 	".\ConvertUTF.h"\
 	".\icons.xpm"\
+	".\translations.c"\
 	{$(INCLUDE)}"aygshell.h"\
 	{$(INCLUDE)}"sipapi.h"\
 	{$(INCLUDE)}"winuserm.h"\

@@ -56,10 +56,6 @@ DeleteZipFilesAfterUpload=1
 UploadToDirectory=0
 UploadTargetDirectory=Z:\set\this\to\your\upload\directory
 
-# Upload configured layers only (used to be default behaviour of the client pre-r6978)
-# new default is 0 to upload all zips from "uploadable"
-UploadConfiguredLayersOnly=0
-
 #if a set is empty and RenderFullTileset = 0 only one tile is created
 # set to 1 if the tile should be stored in workdir, so you can upload a bunch of them
 # if set to 0 this tile will be uploaded as a set

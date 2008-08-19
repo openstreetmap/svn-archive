@@ -22,9 +22,11 @@ mv osmarenderfrontend_dojo osmadistribute/
 
 echo "*** OSMARENDER FRONTEND *** Copying files to distribute"
 
-cp -r gr cmyk.js CSS_parse.js data.xml LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml rome_centre.xml somewhere_in_london.xml zurich_google.xml osmadistribute/
+cp -r gr cmyk.js CSS_parse.js data.xml LICENSE osmarender_frontend.css osmarender_frontend.js osmarender_frontend.html osmarender.xsl osm-map-features-z12.xml osm-map-features-z13.xml osm-map-features-z14.xml osm-map-features-z15.xml osm-map-features-z16.xml osm-map-features-z17.xml README_OFFLINE rome_centre.xml somewhere_in_london.xml zurich_google.xml osmadistribute/
 
 cd osmadistribute
+
+mv README_OFFLINE README
 
 echo "*** OSMARENDER FRONTEND *** Removing .svn hidden files, if any"
 

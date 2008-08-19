@@ -189,7 +189,7 @@ sub fetchFromServer
                 ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$lastModified,$complexity) = split(/\|/, $Requeststring);
                 $self->ZXY($Z,$X,$Y);
                 # TODO implement getter/setter methods for layerstr, lastmodified and complexity
-                $self->{'layerstr'} = $Layers;
+                $self->layers($Layers);
                 $self->{'lastModified'} = $lastModified;
                 $self->{'complexity'} = $complexity;
                 $success = 1;  # set to 1, so we could end the loop
@@ -229,7 +229,7 @@ sub fetchFromServer
     } while (!$success);
 
     # Information text to say what's happening
-    ::statusMessage("Got work from the server", 0, 6);
+    ::statusMessage("Got work from the server: ".$self->layers_str.' ('.$self->ZXY_str.')', 0, 6);
     return (1, "");
 }
 

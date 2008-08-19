@@ -195,7 +195,7 @@ if ($Mode eq "xy")
 
     my $X = shift();
     my $Y = shift();
-    my $req = new Request
+    my $req = new Request;
     if (not defined $X or not defined $Y)
     { 
         print STDERR "Usage: $0 xy <X> <Y> [<ZOOM>]\n";

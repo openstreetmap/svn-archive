@@ -7,7 +7,7 @@ use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
-use TahConf;
+use lib::TahConf;
 
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, upload module

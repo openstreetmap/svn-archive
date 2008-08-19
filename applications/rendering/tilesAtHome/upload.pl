@@ -127,9 +127,8 @@ sub processOldZips
     {
         return 0;
     }
-    @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
-    my $zipCount = scalar(@sorted);
-    statusMessage(scalar(@sorted)." zip files to upload",0,0);
+    my $zipCount = scalar(@zipfiles);
+    statusMessage($zipCount." zip files to upload",0,0);
     my $Reason = "queue full";
     if(($Config->get("UploadToDirectory")) and (-d $Config->get("UploadTargetDirectory")))
     {
@@ -139,7 +138,7 @@ sub processOldZips
     {
         $MaxDelay = 600;
     }
-    while(my $File = shift @sorted)
+    while(my $File = shift @zipfiles)
     {
         # get a file handle, then try to lock the file exclusively.
         # if open fails (file has been uploaded and removed by other process)
@@ -192,8 +191,8 @@ sub processOldZips
         # finally unlock zipfile and release handle
         flock (ZIPFILE, LOCK_UN);
         close (ZIPFILE);
-        statusMessage(scalar(@sorted)." zip files left to upload",0,3);
-        
+        statusMessage(scalar(@zipfiles)." zip files left to upload",0,3);
+
     }
 }
 

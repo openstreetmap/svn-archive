@@ -52,7 +52,7 @@ class TranslateController < ApplicationController
 
   def stats
     @title = "l10n statistics".t
-    unless @user.nil? && @user.locale == "en-US"
+    unless @user.nil? || @user.locale == "en-US"
       stat = Statistic.find(:first, :conditions => ['locale = ?', @user.locale])
       if stat.nil?
         stat = Statistic.new(:locale => @user.locale, :language => Locale.language.to_s, :country => Locale.country.english_name, :timestamp => Time.now )

@@ -19,10 +19,22 @@
 <h3><%= "Recent diary entries:".t %></h3>
 
 <% if @user %>
-  <% if params[:locale] == @user.locale %>
-    <%= link_to "show all", :controller => 'diary_entry', :action => 'list' %> | filter by my language 
+  <% if params[:display_name] %>
+
+    <% if params[:locale] == @user.locale %>
+      <%= link_to "show all", :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name %> | filter by my language 
+    <% else %>
+      show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name , :locale => @user.locale %>
+    <% end %>
+
   <% else %>
-    show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :locale => @user.locale %>
+    
+    <% if params[:locale] == @user.locale %>
+      <%= link_to "show all", :controller => 'diary_entry', :action => 'list' %> | filter by my language 
+    <% else %>
+      show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :locale => @user.locale %>
+    <% end %>
+
   <% end %>
 <hr />
 <% end %>

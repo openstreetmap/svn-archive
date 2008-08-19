@@ -219,22 +219,10 @@ sub upload
         return 0;
     }
 
-    my $Layer;
-    if ($Config->get("UploadConfiguredLayersOnly") == 1)
-    {
-        foreach my $layer(split(/,/, $Config->get("Layers")))
-        {
-            $Layer=$Config->get($layer."_Prefix") if ($File =~ /$Config->get($layer."_Prefix")/);
-            print "\n.$Layer.\n.$layer.\n" if $Config->get("Debug");
-        }
-    }
-    else
-    {
-        $File=~m{_([^_]+)(_tileset)?\.zip}x;
-        $Layer=$1;
-    }
-    $File =~ m{_(\d+)_\d+_\d+_[^_]+(_tileset)?\.zip}x;
+    $File =~ m{_(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
     my $clientId = $1;
+    my $Layer=$2;
+
     if((! $Config->get("UploadToDirectory")) or (! -d $Config->get("UploadTargetDirectory")))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);

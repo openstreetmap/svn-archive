@@ -60,7 +60,6 @@ UseHostnameInZipname = 0
 
 UploadToDirectory = 0
 UploadTargetDirectory = /set/this/to/your/upload/directory
-UploadConfiguredLayersOnly = 0
 GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
 

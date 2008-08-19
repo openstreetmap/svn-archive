@@ -123,8 +123,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/user/:display_name/account', :controller => 'user', :action => 'account'
   map.connect '/user/:display_name/set_home', :controller => 'user', :action => 'set_home'
   map.connect '/diary', :controller => 'diary_entry', :action => 'list'
-  map.connect '/diary/:locale', :controller => 'diary_entry', :action => 'list'
   map.connect '/diary/rss', :controller => 'diary_entry', :action => 'rss'
+  map.connect '/diary/:locale', :controller => 'diary_entry', :action => 'list'
   map.connect '/diary/:locale/rss', :controller => 'diary_entry', :action => 'rss'
   
   # translation

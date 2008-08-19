@@ -10,7 +10,7 @@
 			<label>${_property}</label>
 		</dt>
 		<dd>
-			<div dojoType="dijit.form.NumberSpinner" dojoAttachPoint="editorNumberSpinner" value="${_value}" smallDelta="${_delta_for_editing}" constraints="${_constraints}" class="propertyNumberSpinner" dojoAttachEvent="onChange: _onChange"></div>
+			<div dojoType="dijit.form.NumberSpinner" dojoAttachPoint="editorNumberSpinner" value="${_value}" locale="en-us" smallDelta="${_delta_for_editing}" constraints="${_constraints}" class="propertyNumberSpinner" dojoAttachEvent="onChange: _onChange"></div>
 			<button onclick="javascript:dojo.publish('juice.propertyEditorWidget.deleteStyles',['${_property}'])">${_mainmessages.buttonDelete}</button>
 		</dd>
 	</div>

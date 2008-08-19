@@ -2,10 +2,11 @@
 	<div id="settings_bounds" dojoType="dijit.layout.ContentPane">
 		<input id="transform_on_set_bounds" dojoType="dijit.form.CheckBox" />Render on Set Bounds
 		<h1>Set bounds</h1><br />
-		Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value="" smallDelta="0.001" style="width:10em;height:1.1em;"/><br />
-		Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value="" smallDelta="0.001" style="width:10em;height:1.1em;" /><br />
-		Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value="" smallDelta="0.001" style="width:10em;height:1.1em;" /><br />
-		Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value="" smallDelta="0.001" style="width:10em;height:1.1em;" /><br />
+		<!-- TODO: Need to find something better for pattern -->
+		Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value="" constraints="{pattern:'#.########'}" smallDelta="0.0001" style="width:10em;height:1.1em;"/><br />
+		Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value="" constraints="{pattern:'#.########'}" smallDelta="0.0001" style="width:10em;height:1.1em;" /><br />
+		Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value="" constraints="{pattern:'#.########'}" smallDelta="0.0001" style="width:10em;height:1.1em;" /><br />
+		Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value="" constraints="{pattern:'#.########'}" smallDelta="0.0001" style="width:10em;height:1.1em;" /><br />
 		<button id="button_set_bounds" dojoType="dijit.form.Button">Set Bounds
 			<script type="dojo/method" event="onClick">
 				setBounds(dojo.byId("BoundsNorth").value,dojo.byId("BoundsSouth").value,dojo.byId("BoundsEast").value,dojo.byId("BoundsWest").value);

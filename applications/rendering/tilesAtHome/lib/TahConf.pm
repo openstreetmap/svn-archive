@@ -7,7 +7,6 @@ package TahConf;
 
 use strict;
 use AppConfig qw(:argcount);
-use tahlib;
 
 my $instance = undef; # Singleton instance of Config class
 

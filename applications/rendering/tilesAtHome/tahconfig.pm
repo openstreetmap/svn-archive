@@ -1,4 +1,5 @@
 use strict;
+use lib::TahConf;
 
 #--------------------------------------------------------------------------
 # Any application-specific knowledge regarding config file options
@@ -6,7 +7,7 @@ use strict;
 #--------------------------------------------------------------------------
 sub ApplyConfigLogic
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
 
     if (!defined($Config->get("Layers")))
     {
@@ -65,7 +66,7 @@ sub ApplyConfigLogic
 #--------------------------------------------------------------------------
 sub CheckBasicConfig
 {
-    my $Config = shift();
+    my $Config = TahConf->getConfig();
     my %EnvironmentInfo;
     my $cmd;
     printf "- Using working directory %s\n", $Config->get("WorkingDirectory");
@@ -165,10 +166,10 @@ sub CheckBasicConfig
 #--------------------------------------------------------------------------
 sub CheckConfig
 {
-    my $Config = shift();
+    my $Config = TahConf->getConfig();
     my $cmd;
 
-    my %EnvironmentInfo = CheckBasicConfig($Config);
+    my %EnvironmentInfo = CheckBasicConfig();
 
     if ($Config->get("Batik"))
     {

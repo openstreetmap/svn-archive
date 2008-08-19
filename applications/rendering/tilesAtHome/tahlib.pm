@@ -12,8 +12,6 @@ my $idleSeconds = 0;
 
 my %faults; #variable to track non transient errors
 
-# hash for MagicMkdir
-my %madeDir;
 
 #-----------------------------------------------------------------------------
 # Prints status message without newline, overwrites previous message
@@ -257,36 +255,6 @@ sub runCommand
 
     unlink($ErrorFile);
     return $ok;
-}
-
-#-----------------------------------------------------------------------------
-# Create a directory and all its parent directories
-# (equivalent to a "mkdir -p" on Unix, but stores already-created dirs
-# in a hash to avoid unnecessary system calls)
-#-----------------------------------------------------------------------------
-sub MagicMkdir
-{
-    my $file = shift;
-    my @paths = split("/", $file);
-    pop(@paths);
-    my $dir = (substr($file,0,1) eq "/") ? "/" : "";
-    foreach my $path(@paths)
-    {
-        if ($dir eq "")
-        {
-            $dir .= $path; # how are paths with leading "/" handled now?
-        }
-        else
-        {
-            $dir .= "/".$path;
-        }
-
-        if (!defined($madeDir{$dir}))
-        {
-            mkdir $dir;
-            $madeDir{$dir}=1;
-        }
-    }
 }
 
 #-----------------------------------------------------------------------------

@@ -27,6 +27,7 @@ use strict;
 use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
+use File::Path;
 use File::Temp qw(tempfile);
 use IO::Socket;
 use FindBin qw($Bin);
@@ -1572,7 +1573,7 @@ sub splitImageX
 
         # Decide what the tile should be called
         my $Filename = tileFilename($layer, $req->X * $Size + $xi, $Ytile, $Z);
-        MagicMkdir($Filename) if ($Config->get("LocalSlippymap"));
+        mkpath($Filename) if ($Config->get("LocalSlippymap"));
    
         # Temporary filename
         my $Filename2_suffix = ".cut";
@@ -1716,7 +1717,6 @@ sub WriteImage
     close $fp;
 }
 
-# sub MagicMkdir moved to tahlib.pm
 
 #-----------------------------------------------------------------------------
 # A function to re-execute the program.  

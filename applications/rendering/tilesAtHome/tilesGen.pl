@@ -121,8 +121,8 @@ if ($LoopMode) {
     }
 }
 
+# global test images, used for comparing to render results
 my ($EmptyLandImage, $EmptySeaImage, $BlackTileImage);
-my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
 
 if ($RenderMode) {
     # check GD
@@ -131,6 +131,8 @@ if ($RenderMode) {
         print STDERR "please update your libgd to version 2 for TrueColor support";
         cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
     }
+
+    my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
 
     # create a comparison blank image
     $EmptyLandImage = new GD::Image(256,256);
@@ -522,12 +524,12 @@ sub ProcessRequestsFromServer
         print "queue and never upload the results. Program aborted.\n";
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1,$PID);
     }
-    my ($success, $reason);
     my $req = new Request;
-    ($success, $reason) = $req->fetchFromServer();
+    my ($success, $reason) = $req->fetchFromServer();
 
     if ($success)
     {
+        #TODO: return result of GenerateTileset?
         GenerateTileset($req);
     }
     return ($success, $reason);

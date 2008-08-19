@@ -268,7 +268,7 @@ def take(request):
                     (fsize,mtime) = (fstat[6], fstat[8])
                   except OSError: 
                     (fsize,mtime) = 0,0
-	          html="OK|5|%s|%d|%d" % (req,fsize,mtime)
+	          html="OK|5|%s|%d|%d" % (req,mtime,fsize)
                 else:
                   html ="XX|5|You have more than 50 active requests. Check your client."
             except IndexError:
@@ -290,6 +290,9 @@ def take(request):
 
 @cache_control(no_cache=True)
 def request_changedTiles(request):
+    #http://www.openstreetmap.org/api/0.5/changes?start=2008-08-18-18:40&end=now
+    #<osm version="0.5" generator="OpenStreetMap server">
+    #<changes starttime="2008-08-18T18:40:00+01:00" endtime="2008-08-18T20:50:29+01:00">
     setting = Settings()
     #check if we access this page from the whitelisted ip address
     allowed_ip = setting.getSetting('changed_tiles_allowed_IP')

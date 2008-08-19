@@ -95,7 +95,12 @@ $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n", 
     $Version, $Config->get("ClientVersion"), $^O, GetClientId();
 
-my $dirent; 
+# filestat: Used by reExecIfRequired.
+# This gets set to filesize/mtime/ctime of this script, and reExecIfRequired
+# checks to see if those parameters have changed since the last time it ran
+# to decide if it should reExec
+my $filestat;
+reExecIfRequired(-1); # This will never actually reExec, only set $filestat
 
 if ($LoopMode) {
     # if this is a re-exec, we want to capture some of our status
@@ -1726,12 +1731,12 @@ sub reExecIfRequired
     my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
         $ctime,$blksize,$blocks) = stat($0);
     my $de = "$size/$mtime/$ctime";
-    if (!defined($dirent))
+    if (!defined($filestat))
     {
-        $dirent = $de; 
+        $filestat = $de; 
         return;
     }
-    elsif ($dirent ne $de)
+    elsif ($filestat ne $de)
     {
         reExec($child_pid);
     }

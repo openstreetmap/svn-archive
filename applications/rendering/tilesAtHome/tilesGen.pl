@@ -211,7 +211,7 @@ if ($Mode eq "xy")
        statusMessage(" *** No zoomlevel specified! Assuming z12 *** ",1,0);
     }
 
-    $req->ZXY($Zoom, $X, $Y)
+    $req->ZXY($Zoom, $X, $Y);
     $req->layers($Config->get("Layers"));
     GenerateTileset($req);
 }

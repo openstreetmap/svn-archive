@@ -38,7 +38,6 @@ use lib::TahConf;
 use Request;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
-use AppConfig qw(:argcount);
 use locale;
 use POSIX qw(locale_h);
 use Encode;
@@ -46,7 +45,7 @@ use Encode;
 #---------------------------------
 
 # Read the config file
-our $Config = TahConf->getConfig();
+my $Config = TahConf->getConfig();
 ApplyConfigLogic($Config);
 
 # Handle the command-line
@@ -67,11 +66,11 @@ our $progstart = time();
 
 if ($UploadMode)
 {
-    %EnvironmentInfo = CheckBasicConfig($Config);
+    %EnvironmentInfo = CheckBasicConfig();
 }
 else
 {
-    %EnvironmentInfo = CheckConfig($Config);
+    %EnvironmentInfo = CheckConfig();
 }
 
 # Create the working directory if necessary
@@ -409,6 +408,7 @@ else {
 
 sub countZips
 {
+    my $Config = TahConf->getConfig();
     my $ZipCount = 0;
     if (opendir(my $dp, $Config->get("WorkingDirectory")."uploadable"))
     {
@@ -432,6 +432,7 @@ sub countZips
 #-----------------------------------------------------------------------------
 sub compressAndUploadTilesets
 {
+    my $Config = TahConf->getConfig();
     if ($Config->get("ForkForUpload") and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
     {
         # Upload is handled by another process, so that we can generate another tile at the same time.
@@ -518,6 +519,7 @@ sub upload
 #-----------------------------------------------------------------------------
 sub ProcessRequestsFromServer 
 {
+    my $Config = TahConf->getConfig();
     if ($Config->get("LocalSlippymap"))
     {
         print "Config option LocalSlippymap is set. Downloading requests\n";
@@ -544,6 +546,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     # $req is a 'Request' object
     my $req = shift;
     
+    my $Config = TahConf->getConfig();
     keepLog($PID,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     
     my ($N, $S) = Project($req->Y, $req->Z);
@@ -969,6 +972,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 sub GenerateSVG 
 {
     my ($layerDataFile, $layer, $X, $Y, $Zoom, $N, $S, $W, $E) = @_;
+    my $Config = TahConf->getConfig();
     # Create a new copy of rules file to allow background update
     # don't need layer in name of file as we'll
     # process one layer after the other
@@ -1008,6 +1012,7 @@ sub GenerateSVG
 sub RenderTile 
 {
     my ($layer, $req, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
+    my $Config = TahConf->getConfig();
 
     return (1,1) if($Zoom > $Config->get($layer."_MaxZoom"));
     
@@ -1128,6 +1133,7 @@ sub RenderTile
 #-----------------------------------------------------------------------------
 sub UpdateClient # 
 {
+    my $Config = TahConf->getConfig();
     my $Cmd = sprintf("%s\"%s\" %s",
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Subversion"),
@@ -1162,6 +1168,7 @@ sub UpdateClient #
 
 sub NewClientVersion 
 {
+    my $Config = TahConf->getConfig();
     return 0 if (time() - $LastTimeVersionChecked < 600);
     my $versionfile = "version.txt";
     my $runningVersion;
@@ -1224,6 +1231,7 @@ sub NewClientVersion
 #-----------------------------------------------------------------------------
 sub xml2svg 
 {
+    my $Config = TahConf->getConfig();
     my($MapFeatures, $SVG, $zoom) = @_;
     my $TSVG = "$SVG";
     my $NoBezier = $Config->get("NoBezier") || $zoom <= 11;
@@ -1323,6 +1331,7 @@ sub xml2svg
 sub svg2png
 {
     my($layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
+    my $Config = TahConf->getConfig();
     
     my $TempFile;
     my $stdOut;
@@ -1522,6 +1531,7 @@ sub getSize($)
 sub tileFilename 
 {
     my($layer,$X,$Y,$Zoom) = @_;
+    my $Config = TahConf->getConfig();
     return(sprintf($Config->get("LocalSlippymap") ? "%s/%s/%d/%d/%d.png" : "%s/%s_%d_%d_%d.png",
         $Config->get("LocalSlippymap") ? $Config->get("LocalSlippymap") : $JobDirectory,
         $Config->get($layer."_Prefix"),
@@ -1536,6 +1546,7 @@ sub tileFilename
 sub splitImageX 
 {
     my ($layer, $req, $Z, $Ytile, $File) = @_;
+    my $Config = TahConf->getConfig();
   
     # Size of tiles
     my $Pixels = 256;
@@ -1752,6 +1763,7 @@ sub reExecIfRequired
 sub reExec
 {
     my $child_pid = shift();## FIXME: make more general
+    my $Config = TahConf->getConfig();
     # until proven to work with other systems, only attempt a re-exec
     # on linux. 
     return unless ($^O eq "linux" || $^O eq "cygwin");
@@ -1772,6 +1784,7 @@ sub reExec
 
 sub startBatikAgent
 {
+    my $Config = TahConf->getConfig();
     if (getBatikStatus()) {
         statusMessage("BatikAgent is already running\n",0,0);
         return;
@@ -1837,6 +1850,7 @@ sub stopBatikAgent
 sub sendCommandToBatik
 {
     (my $command) = @_;
+    my $Config = TahConf->getConfig();
 
     my $sock = new IO::Socket::INET( PeerAddr => 'localhost', PeerPort => $Config->get("BatikPort"), Proto => 'tcp');
     return "ERROR" unless $sock;    

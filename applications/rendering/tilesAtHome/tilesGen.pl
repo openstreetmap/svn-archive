@@ -129,13 +129,6 @@ if ($RenderMode) {
         cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
     }
 
-    # Check the on disk image tiles havn't been corrupted.
-    # these are flagfiles that tell the server certain metainfo through their filesize.
-    if((-s "emptyland.png" != 67) or (-s "emptysea.png" != 69)) {
-        statusMessage("Corruption detected in empty land/sea tile",1,0);
-        UpdateClient();
-    }
-
     # create a comparison blank image
     $EmptyLandImage = new GD::Image(256,256);
     $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);

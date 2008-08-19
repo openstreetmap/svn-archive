@@ -101,7 +101,7 @@ if (open(FAILFILE, ">", $failFile))
 
 sub processOldZips
 {
-    my $Config = TahConf-getConfig();
+    my $Config = TahConf->getConfig();
     my $MaxDelay;
     my @zipfiles;
     if(opendir(ZIPDIR, $ZipDir))
@@ -190,7 +190,7 @@ sub processOldZips
 sub upload
 {
     my ($File) = @_;
-    my $Config = TahConf-getConfig();
+    my $Config = TahConf->getConfig();
     my $ZipSize += -s $File;
     my $ZipAge = -M $File;   # days since last modified
 
@@ -312,7 +312,7 @@ sub upload
 #-----------------------------------------------------------
 sub UploadOkOrNot
 {
-    my $Config = TahConf-getConfig();
+    my $Config = TahConf->getConfig();
     statusMessage("Checking server queue",0,3);
     my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
     my $res = $ua->get($Config->get("GoNogoURL"));

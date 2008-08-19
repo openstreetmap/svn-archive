@@ -1,10 +1,10 @@
 use strict;
 use tahconfig;
+use lib::TahConf;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
 # =====================================================================
-#my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 my $lastmsglen = 0;
 
 my $idleFor = 0;
@@ -22,7 +22,7 @@ my %madeDir;
 #-----------------------------------------------------------------------------
 sub statusMessage 
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my $currentSubTask = $main::currentSubTask;
     my $progressJobs = $main::progressJobs;
     my $progressPercent = $main::progressPercent;
@@ -59,7 +59,7 @@ sub statusMessage
 #-----------------------------------------------------------------------------
 sub doneMessage
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my $msg = shift;
     
     $msg = "done" if ($msg eq "");
@@ -76,7 +76,7 @@ sub doneMessage
 #-----------------------------------------------------------------------------
 sub talkInSleep
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my $progstart = $main::progstart;
     my ($message, $duration) = @_;
     
@@ -160,7 +160,7 @@ sub resetFault
 #-----------------------------------------------------------------------------
 sub runCommand
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my ($cmd,$mainPID) = @_;
 
     my $inkscapecfg;
@@ -294,7 +294,7 @@ sub MagicMkdir
 #-----------------------------------------------------------------------------
 sub DownloadFile 
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my ($URL, $File, $UseExisting) = @_;
 
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => $Config->get("DownloadTimeout"));
@@ -332,7 +332,7 @@ sub DownloadFile
 #-----------------------------------------------------------------------------
 sub mergeOsmFiles
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my ($destFile, $sourceFiles) = @_;
     my $existing = {};
 
@@ -406,7 +406,7 @@ sub keepLog
 {
 #    if ($Config->get("ProcessLog")) {
         my ($Pid,$Process,$Action,$Message) = @_;
-        my $Config = $main::Config;
+        my $Config = TahConf->getConfig();
         my $logFile = $Config->get("ProcessLogFile");
         my $log = $Config->get("ProcessLog");
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
@@ -426,7 +426,7 @@ sub keepLog
 #-----------------------------------------------------------------------------
 sub cleanUpAndDie
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my ($Reason,$Mode,$Severity,$mainPID) = @_;
 
     ## TODO: clean up *.tempdir too
@@ -461,7 +461,7 @@ sub cleanUpAndDie
 #-------------------------------------------------------------
 sub GetClientId
 {
-    my $Config = $main::Config;
+    my $Config = TahConf->getConfig();
     my $idfile = $Config->get("WorkingDirectory") . "/client-id.txt";
     my $clientId;
     if (open(idfile, "<", $idfile))

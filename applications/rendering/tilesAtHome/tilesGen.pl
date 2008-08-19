@@ -89,8 +89,6 @@ if ($UploadMode or $RenderMode) {
     }
 }
 
-my $Layers = $Config->get("Layers");
-
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
@@ -523,9 +521,6 @@ sub ProcessRequestsFromServer
     my $req = new Request;
     ($success, $reason) = $req->fetchFromServer();
 
-    #TODO make all places use Request->layerstr directly rather than relying on global vars
-    $Layers = $req->layers_str;
-
     if ($success)
     {
         GenerateTileset($req);
@@ -541,7 +536,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     # $req is a 'Request' object
     my $req = shift;
     
-    keepLog($PID,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers $Layers");
+    keepLog($PID,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     
     my ($N, $S) = Project($req->Y, $req->Z);
     my ($W, $E) = ProjectL($req->X, $req->Z);
@@ -598,15 +593,15 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
         if ($Mode eq "xy") 
         {
-            $Layers="caption";
-            statusMessage("Warning: lowzoom zoom detected, autoswitching to ".$Layers." layer",1,0);
+            $req->layers("caption");
+            statusMessage("Warning: lowzoom zoom detected, autoswitching to ".$req->layers_str." layer",1,0);
         }
         else
         {
-            statusMessage("Warning: lowzoom zoom detected, but ".$Layers." configured",1,0);
+            statusMessage("Warning: lowzoom zoom detected, but ".$req->layers_str." configured",1,0);
         }
         # Get the predicates for lowzoom caption layer, and build the URLS for them
-        my $predicates = $Config->get($Layers."_Predicates");
+        my $predicates = $Config->get($req->layers_str."_Predicates");
         # strip spaces in predicates because that is the separator used below
         $predicates =~ s/\s+//g;
         $URLS="";
@@ -625,7 +620,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my $partialFile = $Config->get("WorkingDirectory")."data-$PID-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
-        statusMessage("Downloading: Map data for $Layers to $partialFile",0,3);
+        statusMessage("Downloading: Map data for ".$req->layers_str,0,3);
         print "Download\n$URL\n" if ($Config->get("Debug"));
         my $res = DownloadFile($URL, $partialFile, 0);
 
@@ -652,7 +647,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     $Config->get("OSMVersion"),
                     "*",
                     $bbox);
-                statusMessage("Downloading: Map data for $Layers to $partialFile",0,3);
+                statusMessage("Downloading: Map data for ".$req->layers_str." to $partialFile",0,3);
                 print "Download\n$URL\n" if ($Config->get("Debug"));
                 my $res = DownloadFile($URL, $partialFile, 0);
                 if (! $res)
@@ -738,7 +733,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     # Handle all layers, one after the other
     #------------------------------------------------------
 
-    foreach my $layer(split(/,/, $Layers))
+    foreach my $layer($req->layers)
     {
         #reset progress for each layer
         $progress=0;
@@ -951,7 +946,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
     unlink(@tempfiles) if (!$Config->get("Debug"));
 
-    keepLog($PID,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers $Layers");
+    keepLog($PID,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
     return 1;
 }

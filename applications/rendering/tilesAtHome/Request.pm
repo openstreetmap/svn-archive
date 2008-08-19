@@ -40,7 +40,6 @@ sub new
         complexity => 0,    #byte size of file on server
         layers => [],
     };
-    #my $self->{layers} => (),      #array if required layers
     bless $self, $class;
     $self->ZXY(@_);
     return $self;
@@ -184,15 +183,26 @@ sub fetchFromServer
         if ($ValidFlag eq "OK")
         {
             if ($Version == 5) # this may seem nonsensical, but we'll need this once we introduce a new version
-            {
+            {   # We got a valid request here!
+
                 my ($Z,$X,$Y,$Layers,$lastModified,$complexity);
                 ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$lastModified,$complexity) = split(/\|/, $Requeststring);
                 $self->ZXY($Z,$X,$Y);
-                # TODO implement getter/setter methods for layerstr, lastmodified and complexity
                 $self->layers($Layers);
                 $self->{'lastModified'} = $lastModified;
                 $self->{'complexity'} = $complexity;
                 $success = 1;  # set to 1, so we could end the loop
+                # got request, now check that it's not too complex
+                if ($::Config->get('MaxTilesetComplexity'))
+                {   #the setting is enabled
+                    if ($complexity > $::Config->get('MaxTilesetComplexity'))
+                    {   # too complex!
+                        $success = 0;  # set to 0, need another loop
+                        ::statusMessage("Ignoring too complex tile (".$self->ZXY_str.')',1,3);
+                        # putbackToServer waits 15 secs before continuing, so we don't get the same time back 
+                        $self->putBackToServer("TooComplex");
+                    }
+                }
             }
     
         }
@@ -222,9 +232,9 @@ sub fetchFromServer
         if ($self->is_unrenderable())
         {
             $success = 0;   # we need to loop yet again
+            ::statusMessage("Ignoring unrenderable tile (".$self->ZXY_str.')',1,3);
+            # putbackToServer waits 15 secs before continuing, so we don't get the same time back 
             $self->putBackToServer("Unrenderable");
-            # make sure we don't loop like crazy should we get another or the same unrenderable tile back over and over again
-            ::talkInSleep("Ignoring unrenderable tile (".$self->Z.', '.$self->X.', '.$self->Y.')',20);
         }
     } while (!$success);
 
@@ -308,7 +318,7 @@ sub putBackToServer
         return (0, "Error reading response from server");
     }
     
-    ::talkInSleep("Waiting before new tile is requested", 10);
+    ::talkInSleep("Waiting before new tile is requested", 15);
     return (1,"OK")
 }
 

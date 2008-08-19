@@ -40,6 +40,12 @@ DownloadTimeout=1800
 # assumes XAPI is current enough for rendering, and can take the load
 FallBackToXAPI = 0
 
+# Hand back render requests that have a tileset on a server bigger than
+# MaxTilesetComplexity. Useful if you do not have much RAM and inkscape
+# crashes. The biggest tileset is about 31000000, so playing with values
+# around 20000000 will help you. A setting of 0 disables the mechanism.
+MaxTilesetComplexity = 0
+
 ## Upload settings
 
 # if set to 0 the zip files will get renamed to zip_uploaded after upload.

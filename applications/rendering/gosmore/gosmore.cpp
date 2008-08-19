@@ -1,5 +1,6 @@
 /* This software is placed by in the public domain by its authors. */
-/* Written by Nic Roets with contribution(s) from Dave Hansen. */
+/* Written by Nic Roets with contribution(s) from Dave Hansen and
+   Ted Mielczarek. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,6 +90,10 @@ char docPrefix[80] = "";
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
 #include "icons.xpm"
+#endif
+
+#if __APPLE__ // Thanks to Ted Mielczarek
+#define fopen64(x,y) fopen(x,y)
 #endif
 
 #ifndef _WIN32
@@ -217,9 +222,56 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (tourism, zoo,             "zoo"             , "") \
  s (leisure, playground,      "playground"      , "") \
  s (leisure, park,            "park"            , "") \
- s (leisure, nature_reserve,  "nature_reserve"  , "") \
- s (leisure, swimming_pool,   "swimming pool"   , "") \
+ s (leisure, nature_reserve,  "nature reserve"  , "") \
  s (leisure, miniature_golf,  "miniature golf"  , "") \
+ s (leisure, golf_course,     "golf course"     , "") \
+ s (leisure, sports_centre,   "sports centre"   , "") \
+ s (leisure, stadium,         "stadium"         , "") \
+ s (leisure, pitch,           "pitch"           , "") \
+ s (leisure, track,           "track"           , "") \
+ s (sport,   athletics,       "athletics"       , "") \
+ s (sport,   10pin,           "10 pin"          , "") \
+ s (sport,   boules,          "boules"          , "") \
+ s (sport,   bowls,           "bowls"           , "") \
+ s (sport,   baseball,        "baseball"        , "") \
+ s (sport,   basketball,      "basketball"      , "") \
+ s (sport,   cricket,         "cricket"         , "") \
+ s (sport,   cricket_nets,    "cricket_nets"    , "") \
+ s (sport,   croquet,         "croquet"         , "") \
+ s (sport,   dog_racing,      "dog racing"      , "") \
+ s (sport,   equestrian,      "equestrian"      , "") \
+ s (sport,   football,        "football"        , "") \
+ s (sport,   soccer,          "soccer"          , "") \
+ s (sport,   climbing,        "climbing"        , "") \
+ s (sport,   gymnastics,      "gymnastics"      , "") \
+ s (sport,   hockey,          "hockey"          , "") \
+ s (sport,   horse_racing,    "horse racing"    , "") \
+ s (sport,   motor,           "motor sport"     , "") \
+ s (sport,   pelota,          "pelota"          , "") \
+ s (sport,   rugby,           "rugby"           , "") \
+ s (sport,   australian_football, "australian football" , "") \
+ s (sport,   skating,         "skating"         , "") \
+ s (sport,   skateboard,      "skateboard"      , "") \
+ s (sport,   handball,        "handball"        , "") \
+ s (sport,   table_tennis,    "table tennis"    , "") \
+ s (sport,   tennis,          "tennis"          , "") \
+ s (sport,   racquet,         "racquet"         , "") \
+ s (sport,   badminton,       "badminton"       , "") \
+ s (sport,   paintball,       "paintball"       , "") \
+ s (sport,   shooting,        "shooting"        , "") \
+ s (sport,   volleyball,      "volleyball"      , "") \
+ s (sport,   beachvolleyball, "beach volleyball" , "") \
+ s (sport,   archery,         "archery"         , "") \
+ s (sport,   skiing,          "skiing"          , "") \
+ s (sport,   rowing,          "rowing"          , "") \
+ s (sport,   sailing,         "sailing"         , "") \
+ s (sport,   diving,          "diving"          , "") \
+ s (sport,   swimming,        "swimming"        , "") \
+ s (leisure, swimming_pool,   "swimming pool"   , "") \
+ s (leisure, water_park,      "water park"      , "") \
+ s (leisure, marina,          "marina"          , "") \
+ s (leisure, slipway,         "slipway"         , "") \
+ s (leisure, fishing,         "fishing"         , "") \
  s (shop,    bakery,          "bakery"          , "") \
  s (shop,    butcher,         "butcher"         , "") \
  s (shop,    florist,         "florist"         , "") \
@@ -340,56 +392,9 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  /* restriction_only_straight_on must be the last restriction */
 
 #define XXXFSDFSF \
- s (leisure, golf_course,     "golf course"     , "") \
- s (sport,   gym,             "gym"             , "") \
- s (leisure, sports_centre,   "sports centre"   , "") \
- s (leisure, stadium,         "stadium"         , "") \
- s (leisure, pitch,           "pitch"           , "") \
- s (leisure, track,           "track"           , "") \
- s (sport,   athletics,       "athletics"       , "") \
  s (sport,   orienteering,    "orienteering"    , "") \
- s (sport,   10pin,           "10 pin"          , "") \
- s (sport,   boules,          "boules"          , "") \
- s (sport,   bowls,           "bowls"           , "") \
- s (sport,   baseball,        "baseball"        , "") \
- s (sport,   basketball,      "basketball"      , "") \
- s (sport,   cricket,         "cricket"         , "") \
- s (sport,   cricket_nets,    "cricket_nets"    , "") \
- s (sport,   croquet,         "croquet"         , "") \
- s (sport,   dog_racing,      "dog racing"      , "") \
- s (sport,   equestrian,      "equestrian"      , "") \
- s (sport,   football,        "football"        , "") \
- s (sport,   soccer,          "soccer"          , "") \
+ s (sport,   gym,             "gym"             , "") \
  /* sport=golf isn't a golf course, so what is it ? */ \
- s (sport,   climbing,        "climbing"        , "") \
- s (sport,   gymnastics,      "gymnastics"      , "") \
- s (sport,   hockey,          "hockey"          , "") \
- s (sport,   horse_racing,    "horse_racing"    , "") \
- s (sport,   motor,           "motor sport"     , "") \
- s (sport,   pelota,          "pelota"          , "") \
- s (sport,   rugby,           "rugby"           , "") \
- s (sport,   australian_football, "australian football" , "") \
- s (sport,   skating,         "skating"         , "") \
- s (sport,   skateboard,      "skateboard"      , "") \
- s (sport,   team_handball,   "team handball"   , "") \
- s (sport,   table_tennis,    "table tennis"    , "") \
- s (sport,   racquet,         "racquet"         , "") \
- s (sport,   tennis,          "tennis"          , "") \
- s (sport,   badminton,       "badminton"       , "") \
- s (sport,   paintball,       "paintball"       , "") \
- s (sport,   shooting,        "shooting"        , "") \
- s (sport,   volleyball,      "volleyball"      , "") \
- s (sport,   beachvolleyball, "beach volleyball" , "") \
- s (sport,   archery,         "archery"         , "") \
- s (sport,   skiing,          "skiing"          , "") \
- s (sport,   rowing,          "rowing"          , "") \
- s (sport,   sailing,         "sailing"         , "") \
- s (sport,   diving,          "diving"          , "") \
- s (sport,   swimming,        "swimming"        , "") \
- s (leisure, water_park,      "water park"      , "") \
- s (leisure, marina,          "marina"          , "") \
- s (leisure, slipway,         "slipway"         , "") \
- s (leisure, fishing,         "fishing"         , "") \
 
 #define s(k,v,shortname,extraTags) k ## _ ## v,
 enum { STYLES firstElemStyle }; // highway_residential, ...
@@ -2550,22 +2555,17 @@ int UserInterface (int argc, char *argv[])
 // These defines are only used during rebuild
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
-#define NGROUPS 30
-#ifndef WHOLE_PLANET
-#define S2GROUPS 65 // Last group is reserved for lowzoom halfSegs
+#define NGROUPS 60
 #define MAX_NODES 9000000 /* Max in a group */
-#else
-#define MAX_NODES 12000000 /* Max in a group */
 #define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
-#endif
 #define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
 #define S1GROUPS NGROUPS
 #define S1GROUP(x) ((x) / MAX_NODES % NGROUPS + IDXGROUPS + NGROUPS)
 #define S2GROUP(x) ((x) / (MAX_BUCKETS / (S2GROUPS - 1)) + IDXGROUPS + NGROUPS * 2)
 #define PAIRS (16 * 1024 * 1024)
-#define PAIRGROUPS 100
+#define PAIRGROUPS 120
 #define PAIRGROUP(x) ((x) / PAIRS + S2GROUP (0) + S2GROUPS)
-#define PAIRGROUPS2 100
+#define PAIRGROUPS2 120
 #define PAIRGROUP2(x) ((x) / PAIRS + PAIRGROUP (0) + PAIRGROUPS)
 #define FIRST_LOWZ_OTHER (PAIRS * (PAIRGROUPS - 1))
 
@@ -2839,7 +2839,7 @@ int main (int argc, char *argv[])
     for (int i = 0; i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
       sprintf (groupName[i], "%c%c%d.tmp", i / 26 % 26 + 'a', i % 26 + 'a',
         i / 26 / 26);
-      if (!(groupf[i] = fopen64 (groupName[i], "w+"))) {
+      if (i < S2GROUP (0) && !(groupf[i] = fopen64 (groupName[i], "w+"))) {
         fprintf (stderr, "Cannot create temporary file.\nPossibly too many"
           " open files, in which case you must run ulimit -n or recompile\n");
         return 9;
@@ -3145,6 +3145,11 @@ int main (int argc, char *argv[])
     bucketsMin1 |= bucketsMin1 >> 16;
     assert (bucketsMin1 < MAX_BUCKETS);
     
+    for (int i = 0; i < IDXGROUPS; i++) fclose (groupf[i]);
+    for (int i = S2GROUP (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
+      assert (groupf[i] = fopen64 (groupName[i], "w+"));
+    } // Avoid exceeding ulimit
+    
     nodeType *nodes = (nodeType *) malloc (sizeof (*nodes) * MAX_NODES);
     if (!nodes) {
       fprintf (stderr, "Out of memory. Reduce MAX_NODES and increase GRPs\n");
@@ -3292,6 +3297,8 @@ int main (int argc, char *argv[])
       }
     }
     REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
+      assert (groupf[i] = fopen64 (groupName[i], "r+"));
+      fseek (groupf[i], 0, SEEK_END);
       int fsize = ftell (groupf[i]);
       fflush (groupf[i]);
       unsigned *idx = (unsigned *) mmap (NULL, fsize,

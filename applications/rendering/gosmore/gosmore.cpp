@@ -203,7 +203,6 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (amenity, pub,             "pub"             , "") \
  s (amenity, restaurant,      "restaurant"      , "") \
  s (power,   tower,           "power tower"     , "") \
- s (leisure, park,            "park"            , "") \
  s (waterway, stream,         "stream"          , "") \
  s (amenity, grave_yard,      "grave yard"      , "") \
  s (amenity, crematorium,     "crematorium"     , "") \
@@ -216,6 +215,9 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (tourism, museum,          "museum"          , "") \
  s (tourism, theme_park,      "theme park"      , "") \
  s (tourism, zoo,             "zoo"             , "") \
+ s (leisure, playground,      "playground"      , "") \
+ s (leisure, park,            "park"            , "") \
+ s (leisure, nature_reserve,  "nature_reserve"  , "") \
  s (leisure, swimming_pool,   "swimming pool"   , "") \
  s (leisure, miniature_golf,  "miniature golf"  , "") \
  s (shop,    bakery,          "bakery"          , "") \
@@ -250,7 +252,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (amenity, nightclub,       "nightclub"       , "") \
  s (amenity, bar,             "bar"             , "") \
  s (amenity, cafe,            "cafe"            , "") \
- s (amenity, fast_food,       "fast_food"       , "") \
+ s (amenity, fast_food,       "fast food"       , "") \
  s (amenity, ice_cream,       "icecream"        , "") \
  s (amenity, bicycle_rental,  "bicycle rental"  , "") \
  s (amenity, car_rental,      "car rental"      , "") \
@@ -263,7 +265,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (tourism, information,     "tourist info"    , "") \
  s (amenity, toilets,         "toilets"         , "") \
  s (amenity, recycling,       "recycling"       , "") \
- s (amenity, fire_station,    "fire_station"    , "") \
+ s (amenity, fire_station,    "fire station"    , "") \
  s (amenity, police,          "police"          , "") \
  s (amenity, courthouse,      "courthouse"      , "") \
  s (amenity, prison,          "prison"          , "") \
@@ -293,8 +295,8 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (amenity, kindergarten,    "kindergarten"    , "") \
  s (highway, living_street,   "living street"   , "") \
  s (highway, motorway,        "motorway"        , "") \
- s (highway, motorway_link,   "motorway_link"   , "") \
- s (highway, trunk_link,      "trunk_link"      , "") \
+ s (highway, motorway_link,   "mway link"       , "") \
+ s (highway, trunk_link,      "trunk link"      , "") \
  s (highway, primary_link,    "primary_link"    , "") \
  s (building, yes,            "building"        , "") \
  s (landuse, forest,          "forest"          , "") \
@@ -336,6 +338,58 @@ enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
  s (restriction, only_left_turn, ""             , "") \
  s (restriction, only_straight_on, ""           , "") \
  /* restriction_only_straight_on must be the last restriction */
+
+#define XXXFSDFSF \
+ s (leisure, golf_course,     "golf course"     , "") \
+ s (sport,   gym,             "gym"             , "") \
+ s (leisure, sports_centre,   "sports centre"   , "") \
+ s (leisure, stadium,         "stadium"         , "") \
+ s (leisure, pitch,           "pitch"           , "") \
+ s (leisure, track,           "track"           , "") \
+ s (sport,   athletics,       "athletics"       , "") \
+ s (sport,   orienteering,    "orienteering"    , "") \
+ s (sport,   10pin,           "10 pin"          , "") \
+ s (sport,   boules,          "boules"          , "") \
+ s (sport,   bowls,           "bowls"           , "") \
+ s (sport,   baseball,        "baseball"        , "") \
+ s (sport,   basketball,      "basketball"      , "") \
+ s (sport,   cricket,         "cricket"         , "") \
+ s (sport,   cricket_nets,    "cricket_nets"    , "") \
+ s (sport,   croquet,         "croquet"         , "") \
+ s (sport,   dog_racing,      "dog racing"      , "") \
+ s (sport,   equestrian,      "equestrian"      , "") \
+ s (sport,   football,        "football"        , "") \
+ s (sport,   soccer,          "soccer"          , "") \
+ /* sport=golf isn't a golf course, so what is it ? */ \
+ s (sport,   climbing,        "climbing"        , "") \
+ s (sport,   gymnastics,      "gymnastics"      , "") \
+ s (sport,   hockey,          "hockey"          , "") \
+ s (sport,   horse_racing,    "horse_racing"    , "") \
+ s (sport,   motor,           "motor sport"     , "") \
+ s (sport,   pelota,          "pelota"          , "") \
+ s (sport,   rugby,           "rugby"           , "") \
+ s (sport,   australian_football, "australian football" , "") \
+ s (sport,   skating,         "skating"         , "") \
+ s (sport,   skateboard,      "skateboard"      , "") \
+ s (sport,   team_handball,   "team handball"   , "") \
+ s (sport,   table_tennis,    "table tennis"    , "") \
+ s (sport,   racquet,         "racquet"         , "") \
+ s (sport,   tennis,          "tennis"          , "") \
+ s (sport,   badminton,       "badminton"       , "") \
+ s (sport,   paintball,       "paintball"       , "") \
+ s (sport,   shooting,        "shooting"        , "") \
+ s (sport,   volleyball,      "volleyball"      , "") \
+ s (sport,   beachvolleyball, "beach volleyball" , "") \
+ s (sport,   archery,         "archery"         , "") \
+ s (sport,   skiing,          "skiing"          , "") \
+ s (sport,   rowing,          "rowing"          , "") \
+ s (sport,   sailing,         "sailing"         , "") \
+ s (sport,   diving,          "diving"          , "") \
+ s (sport,   swimming,        "swimming"        , "") \
+ s (leisure, water_park,      "water park"      , "") \
+ s (leisure, marina,          "marina"          , "") \
+ s (leisure, slipway,         "slipway"         , "") \
+ s (leisure, fishing,         "fishing"         , "") \
 
 #define s(k,v,shortname,extraTags) k ## _ ## v,
 enum { STYLES firstElemStyle }; // highway_residential, ...
@@ -1160,7 +1214,7 @@ void DoFollowThing (gpsNewStruct *gps)
   __int64 dlon = clon - flon, dlat = clat - flat;
   flon = clon;
   flat = clat;
-  Route (FALSE, dlon, dlat);
+  if (route) Route (FALSE, dlon, dlat);
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
   static const wchar_t *command[3] = { NULL, NULL, NULL }, *oldCommand = NULL;
@@ -2497,17 +2551,22 @@ int UserInterface (int argc, char *argv[])
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
 #define NGROUPS 30
-#define NGROUP(x)  ((x) / 9000000 % NGROUPS + IDXGROUPS)
-#define S1GROUPS NGROUPS
-#define S1GROUP(x) ((x) / 9000000 % NGROUPS + IDXGROUPS + NGROUPS)
+#ifndef WHOLE_PLANET
 #define S2GROUPS 65 // Last group is reserved for lowzoom halfSegs
+#define MAX_NODES 9000000 /* Max in a group */
+#else
+#define MAX_NODES 12000000 /* Max in a group */
+#define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
+#endif
+#define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
+#define S1GROUPS NGROUPS
+#define S1GROUP(x) ((x) / MAX_NODES % NGROUPS + IDXGROUPS + NGROUPS)
 #define S2GROUP(x) ((x) / (MAX_BUCKETS / (S2GROUPS - 1)) + IDXGROUPS + NGROUPS * 2)
 #define PAIRS (16 * 1024 * 1024)
 #define PAIRGROUPS 100
 #define PAIRGROUP(x) ((x) / PAIRS + S2GROUP (0) + S2GROUPS)
 #define PAIRGROUPS2 100
 #define PAIRGROUP2(x) ((x) / PAIRS + PAIRGROUP (0) + PAIRGROUPS)
-#define MAX_NODES 9000000 /* Max in a group */
 #define FIRST_LOWZ_OTHER (PAIRS * (PAIRGROUPS - 1))
 
 #define REBUILDWATCH(x) fprintf (stderr, "%3d %s\n", ++rebuildCnt, #x); x
@@ -2538,7 +2597,8 @@ int HalfSegCmp (const halfSegType *a, const halfSegType *b)
   int hasha = Hash (a->lon, a->lat, lowz), hashb = Hash (b->lon, b->lat, lowz);
   return hasha != hashb ? hasha - hashb : a->lon != b->lon ? a->lon - b->lon :
     a->lat != b->lat ? a->lat - b->lat :
-    a->other < 0 && a[1].other < 0 ? -1 : 1;
+    (b->other < 0 && b[1].other < 0 ? 1 : 0) -
+    (a->other < 0 && a[1].other < 0 ? 1 : 0);
 } // First sort by hash bucket, then by lon, then by lat.
 // If they are all the same, the nodes goes in the front where so that it's
 // easy to iterate through the turn restrictions.

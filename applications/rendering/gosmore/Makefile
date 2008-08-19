@@ -35,7 +35,7 @@ endif
 
 all: gosmore
 
-gosmore:	gosmore.cpp ceglue.c ceglue.h translations.c
+gosmore:	gosmore.cpp
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
 		  -D RES_DIR='"$(prefix)/usr/share/"' \
                   gosmore.cpp -o gosmore ${EXTRA}

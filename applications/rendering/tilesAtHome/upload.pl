@@ -7,7 +7,7 @@ use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
-use AppConfig qw(:argcount);
+use TahConf;
 
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, upload module
@@ -38,21 +38,8 @@ if ($#ARGV < 0)
 
 
 # conf file, will contain username/password and environment info
-# Read the config file
-our $Config = AppConfig->new({
-                CREATE => 1,                      # Autocreate unknown config variables
-                GLOBAL => {
-                  DEFAULT  => undef,    # Create undefined Variables by default
-                  ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
-                }
-              });
-
-$Config->define("help|usage!");
-$Config->define("nodownload=s");
-$Config->set("nodownload",0);
-$Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authentication.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
-$Config->args();              # overwrite config options with command line options
-$Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
+# Read the config files
+my $Config = TahConf->getConfig();
 
 if ($Config->get("LocalSlippymap"))
 {
@@ -114,6 +101,7 @@ if (open(FAILFILE, ">", $failFile))
 
 sub processOldZips
 {
+    my $Config = TahConf-getConfig();
     my $MaxDelay;
     my @zipfiles;
     if(opendir(ZIPDIR, $ZipDir))
@@ -202,6 +190,7 @@ sub processOldZips
 sub upload
 {
     my ($File) = @_;
+    my $Config = TahConf-getConfig();
     my $ZipSize += -s $File;
     my $ZipAge = -M $File;   # days since last modified
 
@@ -323,6 +312,7 @@ sub upload
 #-----------------------------------------------------------
 sub UploadOkOrNot
 {
+    my $Config = TahConf-getConfig();
     statusMessage("Checking server queue",0,3);
     my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
     my $res = $ua->get($Config->get("GoNogoURL"));

@@ -6,7 +6,7 @@ use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
-use AppConfig qw(:argcount);
+use TahConf;
 
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, compress module
@@ -32,20 +32,7 @@ use AppConfig qw(:argcount);
 #-----------------------------------------------------------------------------
 
 # conf file, will contain username/password and environment info
-our $Config = AppConfig->new({
-                CREATE => 1,                      # Autocreate unknown config variables
-                GLOBAL => {
-                  DEFAULT  => undef,    # Create undefined Variables by default
-                  ARGCOUNT => ARGCOUNT_ONE, # Simple Values (no arrays, no hashmaps)
-                }
-              });
-
-$Config->define("help|usage!");
-$Config->define("nodownload=s");
-$Config->set("nodownload",0);
-$Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authentication.conf"); #first read configs in order, each (possibly) overwriting settings from the previous
-$Config->args();              # overwrite config options with command line options
-$Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
+my $Config = TahConf->getConfig();
 
 if ($Config->get("LocalSlippymap"))
 {
@@ -189,6 +176,7 @@ sub processTileBatch
 #-----------------------------------------------------------------------------
 sub compress
 {
+    my $Config = TahConf->getConfig();
     my ($Dir, $OutputDir, $SingleTileset, $Layer) = @_;
     $SingleTileset = ($SingleTileset eq 'yes' ? '_tileset' : '');
   

@@ -145,7 +145,6 @@ sub CheckBasicConfig
         }
 
     }
-    print "* UploadConfiguredLayersOnly not set. \n  Defaulting to uploading all zipfiles found, not just configured layers\n" unless defined($Config->get("UploadConfiguredLayersOnly"));
 
     # Zip version
     $cmd=$Config->get("Zip");

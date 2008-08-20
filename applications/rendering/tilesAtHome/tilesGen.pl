@@ -100,7 +100,7 @@ printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n",
 # checks to see if those parameters have changed since the last time it ran
 # to decide if it should reExec
 my $filestat;
-reExecIfRequired(-1); # This will never actually reExec, only set $filestat
+reExecIfRequired(-1); # This will not actually reExec, only set $filestat
 
 if ($LoopMode) {
     # if this is a re-exec, we want to capture some of our status
@@ -540,6 +540,7 @@ sub ProcessRequestsFromServer
 
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
+# FIXME: put some of the code into own subs
 #-----------------------------------------------------------------------------
 sub GenerateTileset ## TODO: split some subprocesses to own subs
 {

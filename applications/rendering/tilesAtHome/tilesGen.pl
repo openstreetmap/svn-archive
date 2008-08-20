@@ -24,8 +24,6 @@
 
 #---------------------------------
 use strict;
-use LWP::UserAgent;
-use Math::Trig;
 use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);

@@ -56,7 +56,11 @@ class TranslateController < ApplicationController
     unless @user.nil? || @user.locale == "en-US"
       stat = Statistic.find(:first, :conditions => ['locale = ?', @user.locale])
       if stat.nil?
-        stat = Statistic.new(:locale => @user.locale, :language => Locale.language.to_s, :country => Locale.country.english_name, :timestamp => Time.now )
+        if Locale.country.nil?
+          stat = Statistic.new(:locale => @user.locale, :language => Locale.language.to_s, :timestamp => Time.now )
+        else
+          stat = Statistic.new(:locale => @user.locale, :language => Locale.language.to_s, :country => Locale.country.english_name, :timestamp => Time.now )
+        end
         stat.save
       end
       temp = Statistic.find(:first, :conditions => ['locale = ?', @user.locale])
@@ -77,16 +81,31 @@ class TranslateController < ApplicationController
 
   def rss
     Locale.set params[:locale]
+
     if params[:id] == 'pending'
+
       @entries = Translation.find(:all, :conditions => ['text IS NULL AND language_id = ?', Locale.language.id], :order => 'id DESC', :limit => 20)
-      @title = "OpenStreetMap pending translations for #{Locale.language} (#{Locale.country.english_name})"
-      @description = "Recent OpenStreetmap pending translation strings for #{Locale.language} (#{Locale.country.english_name})"
+      unless Locale.country.nil?
+        @title = "OpenStreetMap pending translations for #{Locale.language} (#{Locale.country.english_name})"
+        @description = "Recent OpenStreetmap pending translation strings for #{Locale.language} (#{Locale.country.english_name})"
+      else
+        @title = "OpenStreetMap pending translations for #{Locale.language}"
+        @description = "Recent OpenStreetmap pending translation strings for #{Locale.language}"
+      end
       @link = "http://www.openstreetmap.org/translate/#{params[:locale]}/#{params[:id]}"
+
     elsif params[:id] == 'complete'
+
       @entries = Translation.find(:all, :conditions => ['text IS NOT NULL AND language_id = ?', Locale.language.id], :order => 'id DESC', :limit => 20)
-      @tiitle = "OpenStreetMap complete translations for #{Locale.language} (#{Locale.country.english_name})"
-      @description = "Recent OpenStreetmap complete translation strings for #{Locale.language} (#{Locale.country.english_name})"
+      unless Locale.country.nil?
+        @tiitle = "OpenStreetMap complete translations for #{Locale.language} (#{Locale.country.english_name})"
+        @description = "Recent OpenStreetmap complete translation strings for #{Locale.language} (#{Locale.country.english_name})"
+      else
+        @tiitle = "OpenStreetMap complete translations for #{Locale.language}"
+        @description = "Recent OpenStreetmap complete translation strings for #{Locale.language}"
+      end
       @link = "http://www.openstreetmap.org/translate/#{params[:locale]}/#{params[:id]}"
+
     end
   
     render :content_type => Mime::RSS

@@ -4,8 +4,7 @@ pending strings | <%= link_to "completed strings", :action => 'complete', :local
 
 <% unless params[:locale] == "en-US" %>
   <br />
-  <h3><%= Locale.language -%>
-  <%= " ("+Locale.country.english_name+")" if Locale.country.english_name? %>'s pending translations:</h3>
+  <h3><%= Locale.language -%><%= " ("+Locale.country.english_name+")" unless Locale.country.nil? %>'s pending translations:</h3>
   <hr />
 
   <table style="width : 100%">
@@ -22,7 +21,7 @@ pending strings | <%= link_to "completed strings", :action => 'complete', :local
 <% else %>
 
   <hr />
-  <p>English(US) is the default language for this website. So no translation required.n this locale. To see translation update for other languages, <%= link_to "select the prefered one in your settings", :controller => 'user', :action => 'account', :display_name => @user.display_name %>. Also check l10n status in <%= link_to "statistics", :action => 'stat' -%>.</p>
+  <p>English(US) is the default language for this website. So no translation required in this locale. To see translation update for other languages, <%= link_to "select the prefered one in your settings", :controller => 'user', :action => 'account', :display_name => @user.display_name %>. Also check l10n status in <%= link_to "statistics", :action => 'stat' -%>.</p>
 
 <% end %>
 

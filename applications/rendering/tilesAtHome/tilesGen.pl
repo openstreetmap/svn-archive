@@ -566,7 +566,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
       or ($req->Y < 0) or ($req->Y > $maxCoords) )
     {
         #maybe do something else here
-        cleanUpAndDie("\n Coordinates out of bounds (0..$maxCoords)\n");
+        cleanUpAndDie("\n Coordinates out of bounds (0..$maxCoords)\n","EXIT",4,$PID);
     }
     
     $currentSubTask = "Preproc";

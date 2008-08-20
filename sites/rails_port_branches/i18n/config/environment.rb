@@ -83,7 +83,8 @@ LOCALES = { "English(US)" => "en-US",
             "Bengali(IN)" => "bn-IN", 
             "Hindi(IN)" => "hi-IN", 
             "Spanish" => "es-ES",
-	    "German" => "de-DE" }
+            "German" => "de-DE",
+            "Arabic" => "ar"}
 
 # This has to be after the above block for some reason (doesnt pull in /lib/osm.rb?)
 POTLATCH_PRESETS = Potlatch::Potlatch.get_presets()

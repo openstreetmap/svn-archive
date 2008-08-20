@@ -1,0 +1,13 @@
+<div>
+	<style type="text/css">
+	</style>
+	<div class="property">
+		<dt>
+			<label>${_property}</label>
+		</dt>
+		<dd>
+			<select dojoAttachPoint="editorSelect" dojoAttachEvent="onchange: _onChange"></select>
+			<button onclick="javascript:dojo.publish('juice.propertyEditorWidget.deleteStyles',['${_property}'])">${_mainmessages.buttonDelete}</button>
+		</dd>
+	</div>
+</div>

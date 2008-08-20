@@ -1,0 +1,9 @@
+<br />
+<label id="select_class_label" for="select_class">Select a CSS class: </label>
+<div dojoType="dijit.form.FilteringSelect" id="select_class" autoComplete="false" invalidMessage="Select a Valid CSS class!">
+	<script type="dojo/method" event="onChange">
+		if (this.value!=undefined) {
+			viewPropertiesFromClass(this.value);
+		}
+	</script>
+</div>

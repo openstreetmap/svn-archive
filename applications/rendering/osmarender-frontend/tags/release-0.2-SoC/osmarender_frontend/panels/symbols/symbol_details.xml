@@ -1,0 +1,5 @@
+<br />
+Width: <input id="symbol_width" dojoType="dijit.form.NumberSpinner" value="" smallDelta="1" /><br />
+Height: <input id="symbol_height" dojoType="dijit.form.NumberSpinner" value="" smallDelta="1" /><br />
+Layer: <input dojoType="dijit.form.NumberSpinner" id="symbol_layer" value="5" smallDelta="1" /><br />
+<a id="dest_attach_symbol"></a> 

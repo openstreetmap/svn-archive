@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>CMYK library structures.base Tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="../../../../jsunit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../../../../dojotoolkit/dojo/dojo.js"></script>
+<script type="text/javascript">
+
+function setUpPage() {
+	dojo.registerModulePath("cmyk","../../cmyk");
+	dojo.require("cmyk.structures.base.elementType");
+	dojo.require("cmyk.structures.base.elementTypeCollection");
+	setUpPageStatus="complete";
+}
+
+function testDojo() {
+	assertNotUndefined("Dojo need to be defined",dojo);
+	assertNotUndefined("Node need to be defined",cmyk.structures.base.Node);
+}
+
+function testElementCollection() {
+	
+	info("Creating node and way objects");
+	
+	var newNode = new cmyk.structures.base.Node();
+	var newWay = new cmyk.structures.base.Way();
+
+	info("Creating first object");
+	var myElementTypeCollection = new cmyk.structures.base.elementTypeCollection([newNode,newWay]);
+	assertUndefined("Types variable need to be undefined",myElementTypeCollection._myTypes);
+	var testTypes = myElementTypeCollection.getTypes();
+	assertTrue("First type from getTypes() method must be a Node", testTypes[0] instanceof cmyk.structures.base.Node);
+	assertTrue("Second type from getTypes() method must be a Way", testTypes[1] instanceof cmyk.structures.base.Way);
+
+	info("Check if there is no side effect from the original node and way variables");
+	
+	newNode = new cmyk.structures.base.Way();
+	assertTrue("newNode now contains a Way", newNode instanceof cmyk.structures.base.Way);
+	assertTrue("First type from getTypes() method must be a Node and not a Way", myElementTypeCollection.getTypes()[0] instanceof cmyk.structures.base.Node);
+
+	info("Check if there is no side effect");
+	testTypes[2]="mockupstring";
+	assertNotEquals("testTypes must be different than types already stored",testTypes,myElementTypeCollection.getTypes());
+
+	info("Creating second object, to see if the two structures are really different");
+
+	var myElementTypeCollection2 = new cmyk.structures.base.elementTypeCollection([new cmyk.structures.base.Area()]);
+	assertNotEquals("two structures must be different",myElementTypeCollection,myElementTypeCollection2);
+	assertTrue("The first type of the first object must be a Node", myElementTypeCollection.getTypes()[0] instanceof cmyk.structures.base.Node);
+	assertTrue("The second type of the first object must be a Way", myElementTypeCollection.getTypes()[1] instanceof cmyk.structures.base.Way);
+	assertTrue("The first type of the second object must be an Area", myElementTypeCollection2.getTypes()[0] instanceof cmyk.structures.base.Area);
+}
+
+</script>
+</head>
+
+<body>
+<h1>CMYK library structures.base Tests</h1>
+
+<p>This page contains tests for the structures.base CMYK functions. To see them, take a look at the source.</p>
+</body>
+</html>
+ 

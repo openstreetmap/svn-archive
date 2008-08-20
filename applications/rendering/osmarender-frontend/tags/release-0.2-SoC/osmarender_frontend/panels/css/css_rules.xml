@@ -1,0 +1,33 @@
+Applies to:
+<ol><li>pippo
+{% debug %}
+	<!--{% for key, value in store %}-->
+	key: {{ key }} value: {{ value }}
+	<!--{% endfor %}-->
+    {% for item in store %}
+	label {{item.getLabel}}
+	attributes {{item.getAttributes}}
+	identity {{item.getIdentity}}
+	name {{item.name}}
+	{% for key in item %}
+		item {{item}}
+		key {{key}}
+		item.key {{item.key}}
+		store.item {{store.item}}
+	{% endfor %}
+	pippirimerlo {{item}}
+	a {{store.forloop.counter0}}
+	abis {{store[forloop.counter0]}}
+	b {{store.key}}
+	c {{key}}
+	d {{value}}
+        <li><strong>Key: </strong>{{store.item}}, <strong>values: </strong>
+		<ol>
+			{% for values in item %}
+				<li>{{item.values}}</li>
+			{% endfor %}
+		</ol>
+	</li>
+    {% endfor %}
+</ol>
+

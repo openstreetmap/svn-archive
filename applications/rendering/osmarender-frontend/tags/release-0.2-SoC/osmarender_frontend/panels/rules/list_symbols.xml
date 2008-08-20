@@ -1,0 +1,3 @@
+<strong>Symbols associated:</strong><br />
+<select id="select_symbols" size="3" onClick="javascript:loadSymbol(this.value);">
+</select>

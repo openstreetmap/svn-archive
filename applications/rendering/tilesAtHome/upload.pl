@@ -38,7 +38,7 @@ if ($#ARGV < 0)
 
 
 # conf file, will contain username/password and environment info
-# Read the config files
+# Read the config
 my $Config = TahConf->getConfig();
 
 if ($Config->get("LocalSlippymap"))
@@ -99,6 +99,10 @@ if (open(FAILFILE, ">", $failFile))
 ### end main
 ###-------------------------------------------------------------------------
 
+## FIXME: All the load processing here (the 1000 factor) assumes the server
+## only ever returns load in full 1% steps, this breaks if it reports with
+## 0.1% "accuracy".
+
 sub processOldZips
 {
     my $Config = TahConf->getConfig();
@@ -136,28 +140,28 @@ sub processOldZips
         if (flock(ZIPFILE, LOCK_EX|LOCK_NB))
         {   # got exclusive lock, now upload
 
-            my $FailureMode = 0; # 0 ->hard failure (i.e. Err503 on upload), 
-                                 # 1 ->no failure,
-                                 # 10..1000 ->soft failure (with load% * 10)
+            my $Load;
+            my $UploadFailedHardOrDone=0;
             # while not upload success or complete failure
-            while ($FailureMode != 1)
+            while ($UploadFailedHardOrDone != 1)
             {
-                $FailureMode = upload("$ZipDir/$File");
+                ($UploadFailedHardOrDone,$Load) = upload("$ZipDir/$File");
 
-                if ($FailureMode >= 10) # 10 is 1% of 1000, which is the minimum resolution of the server return value
+                # 10 is 1% of 1000, which is the assumed minimum resolution of the server return value
+                if (($UploadFailedHardOrDone = 0) and ($Load > 10))
                 {
                     $sleepdelay = 4  if ($sleepdelay < 4);
-                    $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($FailureMode/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
+                    $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($Load/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
                     $Reason = "queue full";
                 }
-                elsif ($FailureMode == 1) ## success
+                elsif ($UploadFailedHardOrDone == 1) ## success
                 {
                     $sleepdelay = 0.75 * $sleepdelay; # reduce sleepdelay by 25%
                     $Reason = "uploaded ".$File;
                     $progress++;
                     $progressPercent = $progress * 100 / $zipCount;
                 }
-                elsif ($FailureMode == 0) ## hard fail
+                elsif ($UploadFailedHardOrDone == -1) ## hard fail
                 {
                     $sleepdelay = int($sleepdelay) + 1; 
                     last;
@@ -185,7 +189,7 @@ sub processOldZips
 }
 
 #-----------------------------------------------------------------------------
-# Upload a ZIP file
+# Upload a ZIP file, returns Status and Load
 #-----------------------------------------------------------------------------
 sub upload
 {
@@ -205,7 +209,7 @@ sub upload
             rename($File, $File."_overage"); 
         }
 
-        return 0;
+        return (-1,0);
     }
 
     $File =~ m{_(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
@@ -224,8 +228,11 @@ sub upload
         my $URL = $Config->get("UploadURL");
         
         my $Load = UploadOkOrNot();
-        
-        if ($Load < 1000) # the server normalises to 1 (*1000) so 1000 means "queue is really full or even over-filled", so only do something if the load is less than that.
+
+        # The server normalises to 1 (*1000) so 1000 means "queue is really 
+        # full or even over-filled", so only do something if the load is 
+        # less than that.
+        if ($Load < 1000) 
         {
             statusMessage("Uploading $File",0,3);
             my $res = $ua->post($URL,
@@ -242,7 +249,7 @@ sub upload
                 statusMessage("ERROR",1,0);
                 statusMessage("  Error uploading $File to $URL:",1,0);
                 statusMessage("  ".$res->status_line,1,0);
-                return 0; # hard fail
+                return (-1,$Load); # hard fail
             }
             else
             {
@@ -254,7 +261,7 @@ sub upload
         {
             statusMessage("Not uploading, server queue full",0,0);
             sleep(1);
-            return $Load; #soft fail
+            return (0,$Load); #soft fail
         }
     }
     else
@@ -270,7 +277,7 @@ sub upload
         }
         else 
         {
-            return 0;
+            return (-1,$Load);
         }
         my $QueueLength = scalar(@QueueFiles);
         my $Load = 1000 * $QueueLength/$MaxQueue;
@@ -278,7 +285,7 @@ sub upload
         {
             statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
-            return $Load;
+            return (0,$Load);
         }
         else
         {
@@ -301,7 +308,7 @@ sub upload
         rename($File, $File."_uploaded");
     }
 
-    return 1;
+    return (1,$Load);
 }
 
 

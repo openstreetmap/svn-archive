@@ -148,7 +148,7 @@ sub processOldZips
                 ($UploadFailedHardOrDone,$Load) = upload("$ZipDir/$File");
 
                 # 10 is 1% of 1000, which is the assumed minimum resolution of the server return value
-                if (($UploadFailedHardOrDone = 0) and ($Load > 10))
+                if (($UploadFailedHardOrDone == 0) and ($Load > 10))
                 {
                     $sleepdelay = 4  if ($sleepdelay < 4);
                     $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($Load/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.

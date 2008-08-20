@@ -64,17 +64,14 @@ our $progressPercent = 0;
 # keep track of time running
 our $progstart = time();
 
-if ($UploadMode)
-{
-    %EnvironmentInfo = CheckBasicConfig();
-}
-else
-{
+if ($RenderMode)
+{   # need to check that we can render and stuff
     %EnvironmentInfo = CheckConfig();
 }
-
-# Create the working directory if necessary
-mkdir $Config->get("WorkingDirectory") if(!-d $Config->get("WorkingDirectory"));
+else
+{   # for uploading we need only basic settings
+    %EnvironmentInfo = CheckBasicConfig();
+}
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
 if ($UploadMode or $RenderMode) {

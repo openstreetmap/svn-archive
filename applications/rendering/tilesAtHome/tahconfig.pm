@@ -1,4 +1,5 @@
 use strict;
+use File::Path;
 use lib::TahConf;
 
 #--------------------------------------------------------------------------
@@ -12,31 +13,6 @@ sub ApplyConfigLogic
     if (!defined($Config->get("Layers")))
     {
         die("no layers configured");
-    }
-
-    # check layer configuration and if not present, use sensible defaults
-    foreach my $layer(split(/,/, $Config->get("Layers")))
-    {
-
-        if (!defined($Config->get($layer."_Prefix")))
-        {
-            die($layer.": Prefix not configured");
-        }
-
-        if (!defined($Config->get($layer."_Preprocessor")))
-        {
-            die($layer.": Preprocessor not configured");
-        }
-
-        if (!defined($Config->get($layer."_Transparent")))
-        {
-            die($layer.": Transparent not configured");
-        }
-
-        if (!defined($Config->get($layer."_RenderFullTileset")))
-        {
-            die($layer.": RenderFullTileset not configured");
-        }
     }
 
     ## switch on verbose mode if Debug is set
@@ -62,14 +38,18 @@ sub ApplyConfigLogic
 }
 
 #--------------------------------------------------------------------------
-# Checks a tiles@home basic configuration
+# Checks a tiles@home basic configuration which is needed for uploading
 #--------------------------------------------------------------------------
 sub CheckBasicConfig
 {
     my $Config = TahConf->getConfig();
     my %EnvironmentInfo;
     my $cmd;
+
     printf "- Using working directory %s\n", $Config->get("WorkingDirectory");
+    # Create the working directory if necessary
+    mkpath $Config->get("WorkingDirectory");
+
 
     printf "- Using process log file %s\n", $Config->get("ProcessLogFile") if ($Config->get("ProcessLog"));
 
@@ -105,45 +85,6 @@ sub CheckBasicConfig
         }
     }
 
-    # check all layers we claim we are capable of rendering for sane values
-    foreach my $layer(split(/,/, $Config->get("LayersCapability")))
-    {
-        if ($Config->get($layer."_MaxZoom") < $Config->get($layer."_MinZoom"))
-        {
-            die " ! Check MinZoom and MaxZoom for section [".$layer."]\n";
-        } 
-
-        for(my $zoom=$Config->get($layer."_MinZoom"); $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
-        {
-            if (!defined($Config->get($layer."_Rules.$zoom")))
-            {
-                die " ! config option Rules.".$zoom." is not set for layer".$layer;
-            }
-            if (!-f $Config->get($layer."_Rules.".$zoom))
-            {
-                die " ! rules file ".$Config->get($layer."_Rules.".$zoom).
-                    " referenced by config option Rules.".$zoom." in section [".$layer."]".
-                    "is not present";
-            }
-        }
-
-        if (!defined($Config->get($layer."_Prefix")))
-        {
-            die " ! config option \"Prefix\" is not set for layer ".$layer;
-        }
-
-        # any combination of comma-separated preprocessor names is allowed
-        die "config option Preprocessor has invalid value in section [".$layer."]" 
-            if (grep { $_ !~ /maplint|close-areas|autocut|noop/} split(/,/, $Config->get($layer."_Preprocessor")));
-
-        foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
-        {
-            die " ! file $reqfile required for layer $layer as per config option ".
-                "RequiredFiles in section [".$layer."] not found" unless (-f $reqfile);
-        }
-
-    }
-
     # Zip version
     $cmd=$Config->get("Zip");
     my $ZipV = `\"$cmd\" -v`;
@@ -152,14 +93,13 @@ sub CheckBasicConfig
     {
         die("! Can't find zip (using \"".$Config->get("Zip")."\")\n");
     }
-    print "- zip is present\n";
 
     return %EnvironmentInfo;
 
 }
 
 #--------------------------------------------------------------------------
-# Checks a tiles@home configuration
+# Checks a tiles@home configuration which is needed for rendering
 #--------------------------------------------------------------------------
 sub CheckConfig
 {
@@ -292,6 +232,62 @@ sub CheckConfig
         }
     } else {
         print "! no valid PngQuantizer specified\n";
+    }
+
+    #-------------------------------------------------------------------
+    # check all layers for existing and sane values
+    #------------------------------------------------------------------
+    foreach my $layer(split(/,/, $Config->get("LayersCapability")))
+    {
+        if ($Config->get($layer."_MaxZoom") < $Config->get($layer."_MinZoom"))
+        {
+            die " ! Check MinZoom and MaxZoom for section [".$layer."]\n";
+        } 
+
+        for(my $zoom=$Config->get($layer."_MinZoom"); $zoom<=$Config->get($layer."_MaxZoom"); $zoom++)
+        {
+            if (!defined($Config->get($layer."_Rules.$zoom")))
+            {
+                die " ! config option Rules.".$zoom." is not set for layer".$layer;
+            }
+            if (!-f $Config->get($layer."_Rules.".$zoom))
+            {
+                die " ! rules file ".$Config->get($layer."_Rules.".$zoom).
+                    " referenced by config option Rules.".$zoom." in section [".$layer."]".
+                    "is not present";
+            }
+        }
+
+        if (!defined($Config->get($layer."_Prefix")))
+        {
+            die " ! config option \"Prefix\" is not set for layer ".$layer;
+        }
+
+        if (!defined($Config->get($layer."_Transparent")))
+        {
+            die($layer.": Transparent not configured");
+        }
+
+        if (!defined($Config->get($layer."_RenderFullTileset")))
+        {
+            die($layer.": RenderFullTileset not configured");
+        }
+
+        if (!defined($Config->get($layer."_Preprocessor")))
+        {
+            die(" ! config option \"Preprocessor\" is not set for layer ".$layer);
+        }
+
+        # any combination of comma-separated preprocessor names is allowed
+        die "config option Preprocessor has invalid value in section [".$layer."]" 
+            if (grep { $_ !~ /maplint|close-areas|autocut|noop/} split(/,/, $Config->get($layer."_Preprocessor")));
+
+        foreach my $reqfile(split(/,/, $Config->get($layer."_RequiredFiles")))
+        {
+            die " ! file $reqfile required for layer $layer as per config option ".
+                "RequiredFiles in section [".$layer."] not found" unless (-f $reqfile);
+        }
+
     }
 
     if($Config->get("RequestUrl")){

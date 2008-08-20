@@ -332,6 +332,8 @@ sub UploadOkOrNot
    }
     my $Load = $res->content;
     chomp $Load;
-    $Load=1-$Load;
+    # We don't get the load directly from the server, but the reverse, 
+    # so make it into a load value:
+    $Load = 1 - $Load;
     return ($Load*1000);
 }

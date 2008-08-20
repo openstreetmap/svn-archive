@@ -1312,7 +1312,7 @@ sub xml2svg
     }
     else
     {   # don't do bezier curve hinting
-        statusMessage("Bezier Curve hinting disabled.",1,0);
+        statusMessage("Bezier Curve hinting disabled.",0,3);
     }
     return 1;
 }

@@ -1,0 +1,34 @@
+<div>
+	<style type="text/css">
+		.tablecell {
+			display: table-cell;
+		}
+		.properties {
+			
+		}
+		.property {
+			display: table-cell;
+			border: 1px solid grey;
+			border-left: none;
+			border-right: none;
+		}
+	</style>
+	<dl>
+		<div class="tablecell">
+			<dt></dt>
+			<dd>
+				<button dojoAttachPoint="add_property_button" dojoAttachEvent="onclick:_viewCSSPropertyDialog">${_mainmessages.addCSSProperty}</button>
+				<button dojoAttachEvent="onclick:_saveStyle">${_mainmessages.setStyle}</button>
+			</dd>
+		</div>
+		<br />
+	</dl>
+	<div class="properties" dojoAttachPoint="div_properties">
+	</div>
+	<div dojoType="dijit.Dialog" dojoAttachPoint="dialogAddCSSProperty" title="${_mainmessages.addCSSPropertyDialogTitle}">
+		<input type="text" dojoAttachPoint="addCSSPropertyName">
+		<input type="text" dojoAttachPoint="addCSSPropertyValue"><br /><br />
+		<button dojoAttachEvent="onclick: _addCSSProperty">${_mainmessages.save}</button>
+		<button dojoAttachEvent="onclick: _closeCSSPropertyDialog">${_mainmessages.cancel}</button>
+	</div>
+</div>

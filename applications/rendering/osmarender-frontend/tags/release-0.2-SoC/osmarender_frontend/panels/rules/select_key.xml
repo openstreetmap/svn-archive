@@ -1,0 +1,10 @@
+<br />
+<br />
+<label for="select_feature_way">Select feature: </label>
+<select id="select_feature_way" dojoType="dijit.form.FilteringSelect" autoComplete="false" invalidMessage="Invalid Feature">
+	<script type="dojo/method" event="onChange">
+		if (this.value!=undefined) {
+			viewValuesFromKey(this.value);
+		};
+	</script>
+</select>

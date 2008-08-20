@@ -1,0 +1,262 @@
+body {
+	font-size: 14px;
+}
+/*dl {
+	clear:both;
+}
+dt {
+	clear:both;
+	width:40%;
+	float:left;
+	text-align:left;
+	position:relative;
+}
+dd {
+	float:right;
+	position:relative;
+	left:40%;
+	width:40%;
+	margin:0 0 0.5em 0.25em;
+}*/
+
+/* Thanks to http://archivist.incutio.com/viewlist/css-discuss/25510 */
+
+dl {
+	display: block;
+}
+
+dt {
+	clear: left;
+	display: block;
+	font-weight: bold;
+	float: left;
+	width: 125px;
+}
+
+dd {
+	clear: right;
+	display: block;
+	white-space: nowrap;
+}
+
+/* DIVs */
+
+/* Moveable div */
+#osm3 {
+	position: absolute;
+	background: #fff;
+	width:  60%;
+	height: 70%;
+	left: 20%;
+	top:  15%;
+	border: 2px solid grey;
+	radius:8pt;
+	-moz-border-radius:8pt 8pt;
+	z-index:99;
+} 
+
+#resizePane {
+	width: 100%;
+	height: 15px;
+	background-color: #666666;
+	radius:8pt;
+	-moz-border-radius:8pt 8pt;
+}
+#topcontainer {
+	width:100%;
+	position:relative;
+}
+#moveMe {
+	font-size:15px;
+	text-align:center;
+	font-style: italic;
+	font-weight: bold;
+	background-color: #b8c2e6;
+	cursor:move;
+	radius:8pt;
+	-moz-border-radius:8pt 8pt;
+}
+
+#menu {
+	height:auto;
+	width:100%;
+	overflow:hidden;
+	display:none;
+}
+
+#menu_views {
+	height:auto;
+	width:100%;
+	overflow:hidden;
+	display:none;
+}
+
+#toolbar {
+	height:auto;
+	width:100%;
+	overflow:hidden;
+}
+
+#toolbar_views {
+	height:auto;
+	width:100%;
+	overflow:hidden;
+}
+
+.handle {
+	bottom: 2px; 
+	right: 2px; 
+	position: absolute;
+}
+
+#main_content {
+	overflow:auto;
+	width:100%;
+}
+
+#svgfile {
+	height:100%;
+	width:100%;
+	overflow:auto;
+	position:absolute;
+}
+
+/* BUTTONS */
+#transform {
+	font-weight:bold;
+	background:#f7ca7c;
+	radius:8pt;
+	-moz-border-radius:8pt 8pt;
+}
+
+.help {
+	background:#8bbefc;
+	color:white;
+	font-weight:bold;
+	font-style:italic;
+	border:1px solid grey;
+	padding:1px;
+}
+
+/* PANELS */
+
+#load_file {
+	top:45px;
+	height:100%;
+	width:100%;
+	text-align:center;
+}
+#load_file_tab {
+	text-align:center;
+	height:50%;
+	position:relative;
+}
+#load_button_progress {
+	text-align:center;
+	height:50%;
+	position:absolute;
+	bottom: 2px;
+}
+
+	#load_preset {
+		text-align:center;
+	}
+
+	#load_preset_button_div {
+		opacity:0;
+	}
+
+	#progressContainer {
+		width:70%;
+		left:15%;
+		position:relative;
+	}
+	.progressBarLoad {
+		color:blue;
+	}
+
+#result_symbols {
+	height:100%;
+	width:100%;
+	position:relative;
+	display:none;
+}
+
+#div_viewSymbol {
+	text-align:center;
+}
+
+	#div_symbolDetails {
+	}
+
+		#symbol_layer {
+			width:10em;
+			height:1.1em;
+		}
+
+
+#result_process_rules {
+	height:100%;
+	width:100%;
+	position:relative;
+	display:none;
+}
+
+#result_process_key {
+	height:100%;
+	width:100%;
+	position:relative;
+	display:none;
+}
+
+#result_settings {
+	height:100%;
+	width:100%;
+	position:relative;
+	display:none;
+}
+
+	#settings_bounds {
+		border: 1px solid black;
+		padding: 3px;
+		float:left;
+		width:48%;
+	}
+
+	#settings_show {
+		border: 1px solid black;
+		padding:3px;
+		float:right;
+		width:48%;
+	}
+
+#return_to_rules {
+	display:none;
+}
+
+/* INPUTS */
+#rules_file_name_written {
+	width:15em;
+}
+
+.bold {
+	font-weight:bold;
+}
+
+/* TODO: search for icons for every type */
+
+.iconrule {
+/*	background-color:red;*/
+/*	background: url(osmarender_frontend/resources/Mf_area.png) no-repeat center*/
+}
+
+.iconelse {
+}
+
+.iconline {
+	background: url(osmarender_frontend/resources/Mf_way.png) no-repeat center
+}
+
+.iconarea {
+	background: url(osmarender_frontend/resources/Mf_area.png) no-repeat center
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>CMYK library structures.base Tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="../../../jsunit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../../../dojotoolkit/dojo/dojo.js"></script>
+<script type="text/javascript">
+
+function setUpPage() {
+	dojo.registerModulePath("cmyk","../../cmyk");
+	dojo.require("cmyk.css.CSSParser");
+	var xmlhttp = new XMLHttpRequest();  
+	xmlhttp.open("GET", "test_features.xml", false);  
+	xmlhttp.send('');
+	rulesfile=xmlhttp.responseXML;
+	defs_section = rulesfile.getElementsByTagName("defs")[0];
+	setUpPageStatus="complete";
+}
+
+function testCSSParsing() {
+	assertNotUndefined("defs_section must be defined",defs_section);
+	info("creating myParser object");
+	myParser = new CSSParser("styles",defs_section);
+	myStyles = myParser.getStyles();
+	stylestoprint="";
+	for (var stylesobject in myStyles) {
+		stylestoprint += myStyles[stylesobject].selectors[0].singleSelectors[0].classes.values+"\r\n";
+	}
+	//TODO: more interesting test cases to check if proper css classes are loaded
+	assertTrue("stylestoprint must not be a void string",(stylestoprint.length>0));
+	assertTrue("first class parsed must be untagged-segments",(myStyles[0].selectors[0].singleSelectors[0].classes.values=="untagged-segments"))
+	debug("stylestoprint content: "+stylestoprint);
+}
+
+</script>
+</head>
+
+<body>
+<h1>CMYK library css Tests</h1>
+
+<p>This page contains tests for the css CMYK functions. To see them, take a look at the source.</p>
+</body>
+</html>
+ 

@@ -1,0 +1,9 @@
+<br />
+<label id="label_feature_value" for="select_feature_value">Select value: </label>
+<select id="select_feature_value"  dojoType="dijit.form.FilteringSelect" autoComplete="false" invalidMessage="Invalid Value" label="Select value:">
+	<script type="dojo/method" event="onChange">
+		if (this.value!=undefined) {
+			searchCSSfromKeyValue(dijit.byId("select_feature_way").value,dijit.byId("select_feature_value").value);
+		};
+	</script>
+</select>

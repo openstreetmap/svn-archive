@@ -1,0 +1,29 @@
+<div>
+	<style type="text/css">
+		.backgroundViewer {
+			float: left;
+			display: table-cell;
+			display: inline-block;
+			border: medium-dotted grey;
+			height: 20px;
+			width: 20px;
+			background-color: ${_value};
+		}
+	</style>
+	<div class="property">
+		<dt>
+			<label>${_property}</label>
+		</dt>
+		<dd>
+			<div class="backgroundViewer" dojoAttachPoint="backgroundViewer"></div>
+			<input type="text" value="${_value}" dojoAttachPoint="colorText" dojoAttachEvent="onkeyup: _refreshBackgroundViewer">
+			<button dojoAttachPoint="pickColorButton" dojoAttachEvent="onclick: _viewColorPicker">${_mainmessages.colorPickerPick}</button>
+			<button onclick="javascript:dojo.publish('juice.propertyEditorWidget.deleteStyles',['${_property}'])">${_mainmessages.buttonDelete}</button>
+		</dd>
+	</div>
+	<div dojoType="dijit.Dialog" dojoAttachPoint="dialogColorPicker" title="${_mainmessages.colorPickerPleaseChoose}">
+		<div dojoType="dojox.widget.ColorPicker" dojoAttachPoint="colorPicker"></div>
+		<button dojoAttachEvent="onclick: _saveColor">${_mainmessages.save}</button>
+		<button dojoAttachEvent="onclick: _closeColorPicker">${_mainmessages.cancel}</button>
+	</div>
+</div>

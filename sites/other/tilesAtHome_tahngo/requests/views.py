@@ -226,8 +226,8 @@ def upload_request(request):
 
 @cache_control(max_age=30)
 def upload_gonogo(request):
-    # dummy, always return 1 for full speed ahead
-    load = 1 - Upload.objects.all().count()/1500.0
+    # return 'fullness' of the server queue between [0,1]
+    load = min(Upload.objects.all().count()/1500.0, 1)
     return HttpResponse(str(load));
 
 def take(request):

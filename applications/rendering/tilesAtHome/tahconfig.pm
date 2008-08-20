@@ -92,8 +92,8 @@ sub CheckBasicConfig
     }
     else
     {
-        if($Config->get("DeleteZipFilesAfterUpload")){
-            print "- Deleting ZIP files after upload\n";
+        if($Config->get("DeleteZipFilesAfterUpload") == 0){
+            print "- Keeping ZIP files after upload\n";
         }
     }
 
@@ -105,11 +105,9 @@ sub CheckBasicConfig
         }
     }
 
-    # layers
-    foreach my $layer(split(/,/, $Config->get("Layers")))
+    # check all layers we claim we are capable of rendering for sane values
+    foreach my $layer(split(/,/, $Config->get("LayersCapability")))
     {
-        print "- Configured Layer: $layer\n";
-
         if ($Config->get($layer."_MaxZoom") < $Config->get($layer."_MinZoom"))
         {
             die " ! Check MinZoom and MaxZoom for section [".$layer."]\n";

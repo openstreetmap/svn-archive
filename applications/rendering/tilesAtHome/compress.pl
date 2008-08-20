@@ -87,6 +87,7 @@ my @tiles;
             open (ZIPDIR, $FullTileDirPath);
             if (flock(ZIPDIR, LOCK_EX|LOCK_NB))
             {   # got exclusive lock, now compress
+                statusMessage("compressing $File",0,3);
                 compress($FullTileDirPath, $ZipDir, 'yes', $allowedPrefixes);
                 # TODO: We always kill the tileset.dir independent of success and never return a success value!
                 rmtree $FullTileDirPath;    # should be empty now

@@ -12,7 +12,7 @@ import sys
 import getopt
 import colorsys
 import urllib
-from xml.sax import saxutils
+from xml.sax import handler
 from xml.dom import minidom
 from UserDict import UserDict
 from time import *
@@ -46,15 +46,16 @@ class videoThingy:
     print "Outputting to %s at %d x %d" %( filename,width,height)
     self.fw= open(filename, 'wb' )
     self.e= vcodec.Encoder( params )
-  
-  def addFrame(self, surface, repeat = 1):
+
+  def addFrame(self,repeat =1):
+    #def addFrame(self, surface, repeat = 1):
     # surface = cairo.ImageSurface.create_from_png("map.png")
-    buf = surface.get_data_as_rgba()
-    w = surface.get_width()
-    h = surface.get_height()
+    #buf = surface.tostring()
+    #w = surface.get_width()
+    #h = surface.get_height()
     #s= pygame.image.load("map.png")
-    
-    s= pygame.image.frombuffer(buf, (self.width,self.height), "RGBA")
+    s = pygame.image.load("frame.png")
+    #s= pygame.image.fromstring(buf, (self.width,self.height), "RGBA")
     ss= pygame.image.tostring(s, "RGB")
 
     bmpFrame= vcodec.VFrame( vcodec.formats.PIX_FMT_RGB24, s.get_size(), (ss,None,None))
@@ -63,6 +64,7 @@ class videoThingy:
     for i in range(repeat):
       d= self.e.encode( yuvFrame )
       self.fw.write( d.data )
+      # self.fw.write( d )
       
   def finish(self):
     self.fw.close()
@@ -86,7 +88,7 @@ class Palette:
       self.h = 0.0
     return(colour)
 
-class CityPlotter(saxutils.DefaultHandler):
+class CityPlotter(handler.ContentHandler):
   def __init__(self,surface,extents):
     self.extents = extents
     self.surface = surface
@@ -161,7 +163,7 @@ class Projection:
     print " - Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
     print " - Ratio: %f" % self.ratio
     
-class TracklogInfo(saxutils.DefaultHandler):
+class TracklogInfo(handler.ContentHandler):
   def __init__(self):
     self.count = 0
     self.countPoints = 0
@@ -205,7 +207,11 @@ class TracklogInfo(saxutils.DefaultHandler):
     if(name == 'time' and self.inTime):
       self.inTime = 0
       # Parses <time>2006-10-28T10:06:03Z</time>
-      time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%SZ"))
+      time = None
+      if self.timeText.endswith("Z"):
+        time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%SZ"))
+      else: # not GMT
+        time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%S"))
       self.validTimes[time] = 1;
       self.points[self.currentFile].append((self.pLat,self.pLon,time));
       self.countPoints = self.countPoints + 1
@@ -288,7 +294,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     if(x > self.extents[2] or y > self.extents[3]):
       return(0)
     return(1)
-  def drawTracklogs(self):
+  def drawTracklogs(self, secondsPerFrame=60, closingFade=True):
     """Draw all tracklogs from memory onto the map"""
     
     # Get a list of timestamps in the GPX
@@ -301,7 +307,6 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.set_line_cap(cairo.LINE_CAP_ROUND)
     
     # Divide time into frames
-    secondsPerFrame = 60
     frameTimes = range(int(timeList[0]), int(timeList[-1]), secondsPerFrame)
     numFrames = len(frameTimes)
     lastT = 0
@@ -355,12 +360,15 @@ class TracklogInfo(saxutils.DefaultHandler):
           for name,pos in currentPositions.items():
             ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
             ctx2.fill()
-          self.video.addFrame(surface2)
+          surface2.write_to_png("frame.png")
+          self.video.addFrame()
+          #self.video.addFrame(surface2)
           print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       lastT = t
       count = count + 1
     self.pause(self.surface2, 50)
-    self.fadeToMapImage()
+    if closingFade:
+        self.fadeToMapImage()
 
   def drawCities(self, gazeteer):
     Cities = CityPlotter(self.surface, self.extents)
@@ -368,7 +376,9 @@ class TracklogInfo(saxutils.DefaultHandler):
   
   def pause(self, surface, frames):
     print "Pausing..."
-    self.video.addFrame(surface, frames)
+    surface.write_to_png("frame.png")
+    self.video.addFrame(frames)
+    #self.video.addFrame(surface, frames)
     
   def fadeToMapImage(self):
     URL =  "http://dev.openstreetmap.org/~ojw/bbox/?W=%f&S=%f&E=%f&N=%f&width=%d&height=%d" % (self.proj.W, self.proj.S, self.proj.E, self.proj.N, self.width, self.height)
@@ -399,22 +409,25 @@ class TracklogInfo(saxutils.DefaultHandler):
       # Overlay
       ctx2.set_source_surface(mapSurface, 0, 0);
       ctx2.paint_with_alpha(alpha)
-
-      self.video.addFrame(surface2, 3)
+      surface2.write_to_png("frame.png")
+      self.video.addFrame(3)
       
     self.pause(self.surface2, 200)
 
-  def drawTitle(self):
+  def drawTitle(self, title):
+    # infer the date from the first point in one of the files
+    date = strftime("%d %B %Y", localtime(self.points.values()[0][0][-1]))
     self.drawBorder()
     ctx = cairo.Context(self.surface)
     page = TitlePage(0.5 * self.width, self.height, ctx)
     page.text("OpenStreetMap", 55, 0.28)
-    page.text("Surrey Hills Mapping Party", 30, 0.46)
-    page.text("October 2006", 30, 0.52)
+    page.text(title, 30, 0.46)
+    page.text(date, 30, 0.52)
     page.text("Creative Commons CC-BY-SA 2.0", 25, 0.85)
     
     print "Title..."
-    self.video.addFrame(self.surface, 70)
+    self.surface.write_to_png("frame.png")
+    self.video.addFrame(70)
 
   def drawCredits(self):
     self.drawBorder()
@@ -423,7 +436,8 @@ class TracklogInfo(saxutils.DefaultHandler):
     page.text("www.OpenStreetMap.org", 30, 0.35)
     page.text("Creative Commons CC-BY-SA 2.0", 25, 0.85)
     print "Credits..."
-    self.video.addFrame(self.surface, 70)
+    surface.write_to_png("frame.png")
+    self.video.addFrame(70)
 
 class TitlePage:
   def __init__(self,xc,height,context):
@@ -446,18 +460,25 @@ class TitlePage:
     self.context.show_text(text)    
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","gazeteer=","pos="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:t:f:F",
+    ["help", "size=", "dir=", "radius=","gazeteer=","pos=","title=",
+     "seconds-per-frame=","no-fade"])
 # Defauts:
 directory = "./"
 size = 600
-radius = 10 # km
+radius = 5 # km
 pointsize = 1 # mm
 specifyCentre = 0
 gazeteer = "osmxapi" # can change to a filename
+title = "Mapping Party"
+fade = True
+secondsPerFrame = 60
 # Options:
 for o, a in opts:
   if o in ("-h", "--help"):
-    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km] -g [gazeteer file] --pos=[lat],[lon]"
+    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km]\n" \
+          "                 -g [gazeteer file] -t [title] --pos=[lat],[lon]\n" \
+          "                 -f [seconds per frame] --no-fade"
     sys.exit()
   if o in ("-d", "--dir"):
     directory = a
@@ -467,6 +488,12 @@ for o, a in opts:
     radius = float(a)
   if o in ("-g", "--gazeteer"):
     gazeteer = a
+  if o in ("-t", "--title"):
+    title = a
+  if o in ("-f", "--seconds-per-frame"):
+    secondsPerFrame = int(a)
+  if o in ("-F", "--no-fade"):
+    fade = False
   if o in ("--pos"):
     lat, lon = [float(x) for x in a.split(",")]
     specifyCentre = 1
@@ -496,13 +523,13 @@ surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
 surface2 = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
 TracklogPlotter.createImage(fullwidth, width, height, surface, surface2)
 
-TracklogPlotter.drawTitle()
+TracklogPlotter.drawTitle(title,)
 
 print "Plotting tracklogs"
 TracklogPlotter.drawBorder()
 TracklogPlotter.drawCities(gazeteer)
 
-TracklogPlotter.drawTracklogs()
+TracklogPlotter.drawTracklogs(secondsPerFrame, fade)
 
 TracklogPlotter.drawCredits()
 

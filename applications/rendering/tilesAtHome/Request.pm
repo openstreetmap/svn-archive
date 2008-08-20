@@ -266,7 +266,7 @@ sub getRequestStringFromServer
                    layerspossible => $self->{Config}->get("LayersCapability"),
                    client_uuid => ::GetClientId() ]);
 
-    (print "Request string from server: ", $res->content) if ($self->{Config}->get("Debug"));      
+    (print "Request string from server: ", $res->content,"\n") if ($self->{Config}->get("Debug"));      
 
     if(!$res->is_success())
     {   # getting request string from server failed here

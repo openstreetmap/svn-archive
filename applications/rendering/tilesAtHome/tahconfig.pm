@@ -290,6 +290,11 @@ sub CheckConfig
 
     }
 
+    if($Config->get("RequestUrl")){ 
+        ## put back Verbose output to make remote debugging a bit easier
+        print "- Using ".$Config->get("RequestUrl")." for Requests\n" if($Config->get("Verbose") >=10); 
+    }
+
     # Misc stuff
     foreach(qw(N S E W)){
         if($Config->get("Border".$_) > 0.5){

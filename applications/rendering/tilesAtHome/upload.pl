@@ -308,7 +308,7 @@ sub upload
         rename($File, $File."_uploaded");
     }
 
-    return (1,$Load);
+    return (1,0);
 }
 
 

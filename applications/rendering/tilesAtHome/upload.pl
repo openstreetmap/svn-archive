@@ -330,10 +330,8 @@ sub UploadOkOrNot
          statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
          return 1000;
    }
+    # Load is a float value between [0,1]
     my $Load = $res->content;
     chomp $Load;
-    # We don't get the load directly from the server, but the reverse, 
-    # so make it into a load value:
-    $Load = 1 - $Load;
     return ($Load*1000);
 }

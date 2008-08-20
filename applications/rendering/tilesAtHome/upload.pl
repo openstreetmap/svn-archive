@@ -277,7 +277,7 @@ sub upload
         }
         else 
         {
-            return (-1,$Load);
+            return (-1,1000);
         }
         my $QueueLength = scalar(@QueueFiles);
         my $Load = 1000 * $QueueLength/$MaxQueue;
@@ -285,7 +285,7 @@ sub upload
         {
             statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
-            return (0,$Load);
+            return (0,1000);
         }
         else
         {

@@ -292,6 +292,8 @@ sub upload
             my $FileName = $File;
             $FileName =~ s|.*/||;       # Get the source filename without path
             print "\n$File $FileName\n" if $Config->get("Debug");    #Debug info
+
+            ## FIXME: Don't necessarily die here
             copy($File,$Config->get("UploadTargetDirectory")."/".$FileName."_trans") or die "$!\n"; # copy the file over using a temporary name
             rename($Config->get("UploadTargetDirectory")."/".$FileName."_trans", $Config->get("UploadTargetDirectory")."/".$FileName) or die "$!\n"; 
             # rename so it can be picked up by central uploading client.

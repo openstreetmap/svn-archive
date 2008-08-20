@@ -290,21 +290,12 @@ sub CheckConfig
 
     }
 
-    if($Config->get("RequestUrl")){
-        print "- Using ".$Config->get("RequestUrl")." for Requests\n";
-    }
-
     # Misc stuff
     foreach(qw(N S E W)){
         if($Config->get("Border".$_) > 0.5){
             printf "Border".$_." looks abnormally large\n";
         }
     }
-
-    ## not used any longer, superseded by per-layer value
-    #if($Config->get("MaxZoom") < 12 || $Config->get("MaxZoom") > 20){
-    #    print "Check MaxZoom\n";
-    #}
 
     return %EnvironmentInfo;
 

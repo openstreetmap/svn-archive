@@ -285,7 +285,7 @@ sub upload
         {
             statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
-            return (0,1000);
+            return (0,$Load);
         }
         else
         {

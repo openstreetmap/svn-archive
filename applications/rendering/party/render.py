@@ -12,7 +12,7 @@ import sys
 import getopt
 import colorsys
 import urllib
-from xml.sax import saxutils
+from xml.sax import handler
 from xml.dom import minidom
 from UserDict import UserDict
 from xml.sax import make_parser
@@ -38,7 +38,7 @@ class Palette:
       self.h = 0.0
     return(colour)
 
-class CityPlotter(saxutils.DefaultHandler):
+class CityPlotter(handler.ContentHandler):
   def __init__(self,surface,extents):
     self.extents = extents
     self.surface = surface
@@ -113,7 +113,7 @@ class Projection:
     print " - Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
     print " - Ratio: %f" % self.ratio
     
-class TracklogInfo(saxutils.DefaultHandler):
+class TracklogInfo(handler.ContentHandler):
   def __init__(self):
     self.count = 0
     self.countPoints = 0

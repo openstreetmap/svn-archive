@@ -80,7 +80,7 @@ if ($UploadMode or $RenderMode) {
         if ($LoopMode) {
             reExec(-1);
         } else {
-            print STDERR "tilesGen.pl has changed. Please restart new version.";
+            print STDERR "tilesGen.pl has changed. Please restart new version.\n";
             exit;
         }
     }

@@ -46,6 +46,7 @@ class TranslateController < ApplicationController
       @update_entry.text=params[:translation][:text]
     end
     if @update_entry.save
+      flash[:notice] = "Translation was successfully updated."
       redirect_to :controller => 'translate', :action => 'view', :id => @update_entry.id
     end
   end

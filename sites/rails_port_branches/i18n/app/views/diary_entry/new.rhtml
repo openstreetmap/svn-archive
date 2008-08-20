@@ -12,7 +12,7 @@
     </tr>
     <tr valign="top">
       <th><%= "Language".t -%></th>
-      <td><%= f.select :language, LOCALES, :selected => @user.locale %></td>
+      <td><%= f.select :language, LOCALES.to_a.sort, :selected => @user.locale %></td>
     </tr>
     <tr valign="top">
       <th><%= "Location".t -%></th>

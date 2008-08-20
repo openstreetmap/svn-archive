@@ -21,18 +21,18 @@
 <% if @user %>
   <% if params[:display_name] %>
 
-    <% if params[:locale] == @user.locale %>
+    <% if params[:language] == @user.locale %>
       <%= link_to "show all", :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name %> | filter by my language 
     <% else %>
-      show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name , :locale => @user.locale %>
+      show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name , :language => @user.locale %>
     <% end %>
 
   <% else %>
     
-    <% if params[:locale] == @user.locale %>
+    <% if params[:language] == @user.locale %>
       <%= link_to "show all", :controller => 'diary_entry', :action => 'list' %> | filter by my language 
     <% else %>
-      show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :locale => @user.locale %>
+      show all | <%= link_to "filter by my language", :controller => 'diary_entry', :action => 'list', :language => @user.locale %>
     <% end %>
 
   <% end %>
@@ -49,11 +49,11 @@
 
 <br />
 
-<% unless params[:locale]%>
+<% unless params[:language]%>
 <%= rss_link_to :action => 'rss' %>
 <%= auto_discovery_link_tag :atom, :action => 'rss' %>
 <% else %>
-<%= rss_link_to :action => 'rss', :locale => params[:locale] %>
-<%= auto_discovery_link_tag :atom, :action => 'rss', :locale => params[:locale] %>
+<%= rss_link_to :action => 'rss', :language => params[:language] %>
+<%= auto_discovery_link_tag :atom, :action => 'rss', :language => params[:language] %>
 <% end %>
 

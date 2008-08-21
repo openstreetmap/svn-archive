@@ -100,9 +100,9 @@ zip:
 	w32/iconv.dll w32/intl.dll
 	zip gosmore.zip /etc/gtk-2.0/* /lib/gtk-2.0/2.10.0/loaders/*
 	zip -j gosm_arm.zip ARMV4Rel/gosm_arm.exe *.wav
-	scp gosm_arm.zip gosmore.zip \
-	  sabiepark@www.rational.co.za:www/gosmore/
-
+	scp -P 100 gosm_arm.zip gosmore.zip \
+	  nroets@nroets.openhost.dk:nroets.openhost.dk/htdocs/
+	  
 install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.

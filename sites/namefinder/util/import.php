@@ -237,6 +237,7 @@ function startelement($parser, $name, $attrs)
     $doing_modify = TRUE;
     break;
   case 'ADD':
+  case 'CREATE':
     $doing_delete = FALSE;
     $doing_modify = FALSE;
     break;

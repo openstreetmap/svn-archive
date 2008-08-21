@@ -4,13 +4,11 @@ PREREQUISITES
 The Tahngo server, as currently tested, requires the following software:
 
 - Python.  (2.4 works)
-- Django.  (0.96 works)
+- Django.  (>0.96. 1.0 beta works)
 - Apache.  (2.2 works)
 - mod_python.  (3.3 works)
 
 Django needs a database module to store its data in.  If you don't have a preference, sqlite is the simplest to use.  You will need a python module for your database, such as python-mysql or python-sqlite (python-sqlite2 2.3.3 works).
-
-If you get Django errors that max_length is invalid, try a newer version from Django svn. (Should be fixed by not using max_length now)
 
 INSTALLATION
 ------------
@@ -37,7 +35,7 @@ and
     oceantilesdat_path ='/var/www/tah/Tiles/oceantiles_12.dat'
 which needs adapting.
 
-- tah_intern/views.py currently contains a hardcoded path to the log file location. Adapt the line:   f = open('/home/spaetz/tah/tah_intern/tah.log', 'rU')
+- tah_intern/views.py currently contains a hardcoded path to the log file location. Adapt the line:   f = open('/var/log/tah/tahngo.log', 'rU')
 
 - tah_intern/LegacyTileset.py contains hardcoded paths to your oceantiles.dat file and your fallback legacy tile directories. You shouldn't need this, as Legacy tiles are only on the tah server.
 
@@ -45,7 +43,8 @@ which needs adapting.
 
 APACHE CONFIGURATION
 --------------------
-The following snippet was sufficient in the apache vhost configuration to make it work. If the main apache config cannot be modified it worked to have the stuff in a .htaccess file in the corresponding directories too.
+The following snippet was sufficient in the apache vhost configuration to make it work. If the main apache config cannot be modified it worked to have the stuff in a .htaccess file in the corresponding directories too (NOTE: works only if the config variable AllowOverride in   
+Apache is set to something sensible).
 
 	<Location />
 		SetHandler python-program
@@ -70,7 +69,10 @@ The following snippet was sufficient in the apache vhost configuration to make i
 
 You can also put these in a subdirectory of your web server by changing the path in the Location lines.
 
-(Note: Currently, the actual tile serving only works through Apache mod_python.  Much of the other parts of the server (admin and browse screens) can be run in a Django standalone server using "python manage.py runserver" for testing purposes.)
+If you have Django in a seperate location (eg. you had to download a new version) you can set the PythonPath to something like:
+PythonPath "['/usr/local/share', '/path/to/your/django/installation'] + sys.path" 
+
+(Note: Currently, the actual tile serving only through Apache mod_python or preferably with a compiled module for apache. See mod_tile.c in the directory mod_tah for more on that).  Much of the other parts of the server (admin and browse screens) can be run in a Django standalone server using "python manage.py runserver" for testing purposes.)
 
 USAGE
 -----

@@ -2945,8 +2945,8 @@ int main (int argc, char *argv[])
             // errors, like oneway=true -> icon=deprecated. So they must only
             // match nodes when no line or area colour was given and only
             // match ways when no icon was given.
-            if (defaultRestrict[newStyle] & (1 << roundaboutR)) {
-              yesMask |= defaultRestrict[newStyle];
+            if (K_IS ("junction") && V_IS ("roundabout")) {
+              yesMask |= (1 << onewayR) | (1 << roundaboutR);
             }
             else if (newStyle < styleCnt && (wStyle == styleCnt ||
                      ruleNr[wStyle] > ruleNr[newStyle])) wStyle = newStyle;
@@ -3113,7 +3113,7 @@ int main (int argc, char *argv[])
               tags = n; 
             }
             w.bits |= (defaultRestrict[StyleNr (&w)] | yesMask) &
-              ((noMask & accessR) ? 0 : ~noMask);
+              ((noMask & (1 << accessR)) ? 0 : ~noMask);
             char *compact = tags[0] == '\n' ? tags + 1 : tags;
             if (!wayFseek || *wayFseek) {
               fwrite (&w, sizeof (w), 1, pak);
@@ -3364,6 +3364,7 @@ BOOL CALLBACK DlgSearchProc (
         if (ConvertUTF16toUTF8 (&sStart,  sStart + wstrlen,
               &tStart, tStart + sizeof (searchStr), lenientConversion)
             == conversionOK) {
+          *tStart = '\0';
           hwndList = GetDlgItem (hwnd, IDC_LIST1);
           SendMessage (hwndList, LB_RESETCONTENT, 0, 0);
           IncrementalSearch ();

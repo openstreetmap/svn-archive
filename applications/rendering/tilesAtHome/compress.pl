@@ -4,7 +4,6 @@ use File::Copy;
 use File::Path;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
-use tahconfig;
 use tahlib;
 use lib::TahConf;
 

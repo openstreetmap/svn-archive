@@ -1,11 +1,9 @@
 #!/usr/bin/perl
 use strict;
-use FindBin qw($Bin);
 use LWP::UserAgent;
 use File::Copy;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
-use tahconfig;
 use tahlib;
 use lib::TahConf;
 

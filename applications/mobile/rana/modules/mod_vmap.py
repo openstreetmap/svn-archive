@@ -33,6 +33,8 @@ class vmap(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.tiles = {}
+
+  def firstTime(self):
     self.loadEnums()
     self.setupStyles()
 

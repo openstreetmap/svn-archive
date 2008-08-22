@@ -5543,11 +5543,11 @@ msgstr "Krankenhaus bearbeiten"
 
 #: ../lang/presets.java:1512
 msgid "Emergency Access Point"
-msgstr "Notrufsäule"
+msgstr "Notfallrettungspunkt"
 
 #: ../lang/presets.java:1513
 msgid "Edit Emergency Access Point"
-msgstr "Notrufsäule bearbeiten"
+msgstr "Notfallrettungspunkt bearbeiten"
 
 #: ../lang/presets.java:1516
 msgid "Point Number"

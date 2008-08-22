@@ -136,7 +136,9 @@ sub processOldZips
         # the subsequent flock will also fail and skip the file.
         # if just flock fails it is being handled by a different upload process
         open (ZIPFILE, File::Spec->join($ZipDir,$File));
-        if (flock(ZIPFILE, LOCK_EX|LOCK_NB))
+        my $flocked = !$Config->get('flock_available')
+                      || flock(ZIPFILE, LOCK_EX|LOCK_NB);
+        if ($flocked)
         {   # got exclusive lock, now upload
 
             my $Load;

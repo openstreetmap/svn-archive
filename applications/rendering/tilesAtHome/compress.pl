@@ -86,7 +86,9 @@ my @tiles;
             # the subsequent flock will also fail and skip the file.
             # if just flock fails it is being handled by a different upload process
             open (ZIPDIR, $FullTileDirPath);
-            if (flock(ZIPDIR, LOCK_EX|LOCK_NB))
+            my $flocked = !$Config->get('flock_available')
+                          || flock(ZIPDIR, LOCK_EX|LOCK_NB);
+            if ($flocked)
             {   # got exclusive lock, now compress
                 statusMessage("compressing $File",0,3);
                 compress($FullTileDirPath, $ZipDir, 'yes', $allowedPrefixes);
@@ -116,7 +118,7 @@ my @tiles;
         #}
         ## TODO: fix progress display
     }
-    statusMessage("done",0,3); 
+    statusMessage("done",1,3); 
 
 ## end of main
 

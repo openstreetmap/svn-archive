@@ -7,7 +7,7 @@ package TahConf;
 
 use strict;
 use AppConfig qw(:argcount);
-
+use Config; #needed to check flock availability
 
 my $instance = undef; # Singleton instance of Config class
 
@@ -144,6 +144,7 @@ sub CheckBasicConfig
         }
     }
 
+    #------
     # Zip version
     $cmd=$self->get("Zip");
     my $ZipV = `\"$cmd\" -v`;
@@ -152,7 +153,19 @@ sub CheckBasicConfig
     {
         die("! Can't find zip (using \"".$self->get("Zip")."\")\n");
     }
+    #------
+    # check if flock is available on this OS
+    if (($Config{'d_flock'} && $Config{'d_flock'} eq 'define') or
+       ($Config{'d_fcntl_can_lock'} && $Config{'d_fcntl_can_lock'} eq 'define'))
+    {
+	# it's a sane OS and flock is there
+        $self->set('flock_available',1);
+    } else {
+	print "! 'flock' not available. Do not run concurrent uploads\n";
+        $self->set('flock_available',0);
+    }
 
+    #------
     return %EnvironmentInfo;
 
 }

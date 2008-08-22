@@ -216,7 +216,7 @@ sub upload
         return (-1,0);
     }
 
-    $File =~ m{_(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
+    $File =~ m{(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
     my $clientId = $1;
     my $Layer=$2;
 

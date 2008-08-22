@@ -34,6 +34,7 @@ use tahlib;
 use tahproject;
 use lib::TahConf;
 use Request;
+use Upload;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use locale;
@@ -485,23 +486,20 @@ sub compress
 }
 
 #-----------------------------------------------------------------------------
-# upload() calls the external upload.pl which uploads all previously
-# zipped up tilesets. It returns 0 on success and >0 otherwise.
+# upload() uploads all previously
+# zipped up tilesets. It returns the number of uploaded files or 0 on error
 #-----------------------------------------------------------------------------
 sub upload
 {
-    ## Run upload directly because it uses same messaging as tilesGen.pl, 
-    ## no need to hide output at all.
-
+    #upload all existing zip files
     keepLog($PID,"upload","start","$progressJobs");
 
-    my $UploadMode = ($Mode eq "upload_loop") ? "upload_loop" : "upload";
-    my $UploadScript = "perl $Bin/upload.pl $UploadMode $progressJobs";
-    my $retval = system($UploadScript);
+    my $upload = new Upload;
+    my $retval = $upload->uploadAllZips();
 
     keepLog($PID,"upload","stop","return=$retval");
 
-    return $retval;
+    return ($retval > 0);
 }
 
 #-----------------------------------------------------------------------------

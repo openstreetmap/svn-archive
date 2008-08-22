@@ -1,4 +1,5 @@
-#!/usr/bin/perl
+package Upload;
+
 use strict;
 use LWP::UserAgent;
 use File::Copy;
@@ -14,7 +15,7 @@ use lib::TahConf;
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White, Dirk-Lueder Kreie
+# Copyright 2006, Oliver White, Dirk-Lueder Kreie, Sebastian Spaeth
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,112 +31,73 @@ use lib::TahConf;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
-if ($#ARGV < 0) 
-{  # no command line option supplied, we require ($Mode, $progressJobs)
-   die "please call \"tilesGen.pl upload\" instead";
+
+
+#-------------------------------------------------------------------
+# Create a new Upload instance
+#-------------------------------------------------------------------
+sub new
+{
+    my $class = shift;
+    my $self  = {};
+
+    $self = {
+        Config  => TahConf->getConfig(),
+    };
+    $self->{TileDir} = $self->{Config}->get("WorkingDirectory"),
+    $self->{ZipDir}  = File::Spec->catdir($self->{Config}->get("WorkingDirectory"), "/uploadable"),
+
+    bless ($self, $class);
+
+    $self->{sleepdelay} = ::getFault('upload') * 10;
+    # uploading to a local directory is less costly
+    $self->{MaxSleep} = $self->{Config}->get("UploadToDirectory") ? 30 : 600;
+
+    #set global progressbar task
+    $::currentSubTask ='upload';
+    return $self;
 }
 
 
-# conf file, will contain username/password and environment info
-# Read the config
-my $Config = TahConf->getConfig();
-$Config->CheckBasicConfig();
-
-if ($Config->get("LocalSlippymap"))
+#-------------------------------------------------------------------
+# Returns (success, reason) with
+# success being the number of uploaded zip files or 0 on error
+# and reason a string that explains an eventual error.
+#-------------------------------------------------------------------
+sub uploadAllZips
 {
-    print "No upload - LocalSlippymap set in config file\n";
-    exit 1;
-}
+    my $self = shift;
+    my $Config = $self->{Config};
+    my $uploaded = 0; # num handled files
 
 
-my $ZipFileCount = 0;
-
-## FIXME: this is one of the things that make upload.pl not multithread safe
-my $ZipDir = File::Spec->catdir($Config->get("WorkingDirectory"), "/uploadable");
-
-my @sorted;
-
-# when called from tilesGen, use these for nice display
-my $progress = 0;
-our $progressPercent = 0;
-our $progressJobs;
-our $currentSubTask = "upload";
-
-my $Mode;
-
-($Mode, $progressJobs) = @ARGV;
-
-my $sleepdelay;
-my $failFile = File::Spec->join($Config->get("WorkingDirectory"), "/failurecount.txt");
-if (open(FAILFILE, "<", $failFile))
-{
-    $sleepdelay = <FAILFILE>;
-    chomp $sleepdelay;
-    close FAILFILE;
-}
-elsif (open(FAILFILE, ">", $failFile))
-{
-    $sleepdelay = 0; 
-    print FAILFILE $sleepdelay;
-    close FAILFILE;
-}
-else
-{
-    die("can't open $failFile");
-
-}
-
-# Upload any ZIP files which are still waiting to go. This is the main part.
-processOldZips();
-
-## update the failFile with current failure count from processOldZips
-
-if (open(FAILFILE, ">", $failFile))
-{
-    print FAILFILE $sleepdelay;
-    close FAILFILE;
-}
-
-### end main
-###-------------------------------------------------------------------------
-
-## FIXME: All the load processing here (the 1000 factor) assumes the server
-## only ever returns load in full 1% steps, this breaks if it reports with
-## 0.1% "accuracy".
-
-sub processOldZips
-{
-    my $MaxDelay;
-    my @zipfiles;
-    if(opendir(ZIPDIR, $ZipDir))
+    if ($Config->get("LocalSlippymap"))
     {
-        $progress = 0;
-        $progressPercent = 0;
+        print STDERR "No upload - LocalSlippymap set in config file\n";
+        return(0, "No upload - LocalSlippymap set in config file");
+    }
+
+    # read in all the zip files in ZipDir
+    my @zipfiles;
+    if (opendir(ZIPDIR, $self->{ZipDir}))
+    {
         @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
         close ZIPDIR;
     }
     else 
     {
-        return 0;
+        return (0, "could not read $self->{ZipDir}");
     }
     my $zipCount = scalar(@zipfiles);
-    statusMessage($zipCount." zip files to upload",0,0);
-    my $Reason = "queue full";
-    if(($Config->get("UploadToDirectory")) and (-d $Config->get("UploadTargetDirectory")))
-    {
-        $MaxDelay = 30; ## uploading to a local directory is a lot less costly than checking the tileserver.
-    }
-    else
-    {
-        $MaxDelay = 600;
-    }
+
     while(my $File = shift @zipfiles)
     {
+        ::statusMessage($zipCount." zip files to upload",0,0);
         # get a file handle, then try to lock the file exclusively.
         # if open fails (file has been uploaded and removed by other process)
         # the subsequent flock will also fail and skip the file.
         # if just flock fails it is being handled by a different upload process
-        open (ZIPFILE, File::Spec->join($ZipDir,$File));
+        open (ZIPFILE, File::Spec->join($self->{ZipDir},$File));
         my $flocked = !$Config->get('flock_available')
                       || flock(ZIPFILE, LOCK_EX|LOCK_NB);
         if ($flocked)
@@ -146,62 +108,68 @@ sub processOldZips
             # while not upload success or complete failure
             while ($UploadFailedHardOrDone != 1)
             {
-                ($UploadFailedHardOrDone,$Load) = upload(File::Spec->join($ZipDir,$File));
+		my $res_str; #stores success or error msg for status line
+                ($UploadFailedHardOrDone,$Load) = $self->upload($File);
 
-                # 10 is 1% of 1000, which is the assumed minimum resolution of the server return value
-                if (($UploadFailedHardOrDone == 0) and ($Load > 10))
+                if ($UploadFailedHardOrDone == 0)
                 {
-                    $sleepdelay = 4  if ($sleepdelay < 4);
-                    $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($Load/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
-                    $Reason = "queue full";
+                    # try to keep the queue at 80% full,
+                    # if more increase sleepdelay
+                    $self->{sleepdelay} = $self->{sleepdelay} + ($Load - 800)/10;
+                    $self->{sleepdelay} = 4  if ($self->{sleepdelay} < 4);
+                    $res_str = "queue full";
                 }
                 elsif ($UploadFailedHardOrDone == 1) ## success
                 {
-                    $sleepdelay = 0.75 * $sleepdelay; # reduce sleepdelay by 25%
-                    $Reason = "uploaded ".$File;
-                    $progress++;
-                    $progressPercent = $progress * 100 / $zipCount;
+                    # reduce sleepdelay by 25 per cent
+                    $self->{sleepdelay} = 0.75 * $self->{sleepdelay};
+                    $res_str = "uploaded ".$File;
+                    $uploaded++;
+                    $::progressPercent = $uploaded * 100 / $zipCount;
                 }
                 elsif ($UploadFailedHardOrDone == -1) ## hard fail
                 {
-                    $sleepdelay = int($sleepdelay) + 1; 
                     last;
                 }
 
-                if ($sleepdelay > $MaxDelay)
+                # Finally wait sleepdelay seconds until next upload
+                if ($self->{sleepdelay} > $self->{MaxSleep})
                 {
-                    $sleepdelay = $MaxDelay;
+                    $self->{sleepdelay} = $self->{MaxSleep};
                 }
-
-                talkInSleep($Reason, int($sleepdelay));
+                ::talkInSleep($res_str, int($self->{sleepdelay}));
             }
 
         }
         else
         {   # could not get exclusive lock, this is being handled elsewhere now
-            statusMessage("$File uploaded by different process. skipping",0,3);
+            ::statusMessage("$File uploaded by different process. skipping",0,3);
         }
         # finally unlock zipfile and release handle
         flock (ZIPFILE, LOCK_UN);
         close (ZIPFILE);
-        statusMessage(scalar(@zipfiles)." zip files left to upload",0,3);
-
     }
+    ::statusMessage("uploaded $uploaded zip files",1,3);
+    return ($uploaded,"");
 }
 
 #-----------------------------------------------------------------------------
 # Upload a ZIP file
-# Parameter (file) is the full path to a .zip file
-# returns Status and Load
+# Parameter (filename) is the name of a .zip file in ZipDir
+# returns (Status, Load)
+# status: (-1=hard error, 0: soft failure (queue full) 1:success)
+# Load: Server queue 'fullness' between [0,1000]
 #-----------------------------------------------------------------------------
 sub upload
 {
-    my ($File) = @_;
-    my $Config = TahConf->getConfig();
-    my ($Vol, $FilePath, $FileName) = File::Spec->splitpath($File);
+    my $self = shift;
+    my $FileName = shift;
+    my $File     = File::Spec->join($self->{ZipDir},$FileName);
     my $ZipSize += -s $File;   # zip file size
     my $ZipAge   = -M $File;   # days since last modified
+    my $Config = $self->{Config};
 
+    # delete zips that are already older than 2 days.
     if($ZipAge > 2)
     {
         if($Config->get("DeleteZipFilesAfterUpload"))
@@ -216,11 +184,11 @@ sub upload
         return (-1,0);
     }
 
-    $File =~ m{(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
+    $File =~ m{_(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
     my $clientId = $1;
     my $Layer=$2;
 
-    if((! $Config->get("UploadToDirectory")) or (! -d $Config->get("UploadTargetDirectory")))
+    if(! $Config->get("UploadToDirectory"))
     {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
         
@@ -231,14 +199,14 @@ sub upload
         
         my $URL = $Config->get("UploadURL");
         
-        my $Load = UploadOkOrNot();
+        my $Load = $self->UploadOkOrNot();
 
         # The server normalises to 1 (*1000) so 1000 means "queue is really 
         # full or even over-filled", so only do something if the load is 
         # less than that.
         if ($Load < 1000) 
         {
-            statusMessage("Uploading $FileName",0,3);
+            ::statusMessage("Uploading $FileName",0,3);
             my $res = $ua->post($URL,
               Content_Type => 'form-data',
               Content => [ file => [$File],
@@ -246,24 +214,26 @@ sub upload
                            passwd => $Config->get("UploadPassword"),
                            version => $Config->get("ClientVersion"),
                            layer => $Layer,
-                           client_uuid => ($Mode eq "upload_loop") ? $clientId : GetClientId() ]);
+                           client_uuid => ($::Mode eq "upload_loop") ? $clientId : ::GetClientId() ]);
              
             if(!$res->is_success())
             {
-                statusMessage("ERROR",1,0);
-                statusMessage("  Error uploading $FileName to $URL:",1,0);
-                statusMessage("  ".$res->status_line,1,0);
+                ::statusMessage("ERROR",1,0);
+                ::statusMessage("  Error uploading $FileName to $URL:",1,0);
+                ::statusMessage("  ".$res->status_line,1,0);
+                ::addFault('upload');
                 return (-1,$Load); # hard fail
             }
             else
             {
                 print $res->content if ($Config->get("Debug"));
+                ::resetFault('upload');
             }
             
         }
         else
         {
-            statusMessage("Not uploading, server queue full",0,0);
+            ::statusMessage("Not uploading, server queue full",0,0);
             sleep(1);
             return (0,$Load); #soft fail
         }
@@ -287,13 +257,13 @@ sub upload
         my $Load = 1000 * $QueueLength/$MaxQueue;
         if ($Load > 900) # 95% or 100% with MaxQueue=20
         {
-            statusMessage("Not uploading, upload directory full",0,0);
+            ::statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
             return (0,$Load);
         }
         else
         {
-            my $tmpfile = File::Spec->join($Config->get("UploadTargetDirectory"),$FileName."_part");
+            my $tmpfile = File::Spec->join($self->{Config}->get("UploadTargetDirectory"),$FileName."_part");
 
             ## FIXME: Don't necessarily die here
             # copy the file over using a temporary name
@@ -326,15 +296,16 @@ sub upload
 #-----------------------------------------------------------
 sub UploadOkOrNot
 {
-    my $Config = TahConf->getConfig();
-    statusMessage("Checking server queue",0,3);
+    my $self = shift;
+    my $Config = $self->{Config};
+    ::statusMessage("Checking server queue",0,3);
     my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
     my $res = $ua->get($Config->get("GoNogoURL"));
 
     if (! $res->is_success)
     {    # Failed to retrieve server load
          # $res->status_line; contains result here.
-         statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
+         ::statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
          return 1000;
    }
     # Load is a float value between [0,1]
@@ -342,3 +313,5 @@ sub UploadOkOrNot
     chomp $Load;
     return ($Load*1000);
 }
+
+1;

@@ -30,7 +30,6 @@ use File::Temp qw(tempfile);
 use File::Spec;
 use IO::Socket;
 use FindBin qw($Bin);
-use tahconfig;
 use tahlib;
 use tahproject;
 use lib::TahConf;

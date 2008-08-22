@@ -495,7 +495,7 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    my $retval = $upload->uploadAllZips();
+    my ($retval, $reason) = $upload->uploadAllZips();
 
     keepLog($PID,"upload","stop","return=$retval");
 

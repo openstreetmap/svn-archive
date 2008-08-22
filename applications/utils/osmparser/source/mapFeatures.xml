@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MapFeatures>
+<entry osmKey="leisure" osmValue="playground" filename="playground.txt" name="Spielplatz" image="playground.png" imagesize="20,20" imageoffset="-8,-8" />
+</MapFeatures>

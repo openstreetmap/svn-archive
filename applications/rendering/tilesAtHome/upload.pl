@@ -2,6 +2,7 @@
 use strict;
 use LWP::UserAgent;
 use File::Copy;
+use File::Spec;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use tahlib;
@@ -38,6 +39,7 @@ if ($#ARGV < 0)
 # conf file, will contain username/password and environment info
 # Read the config
 my $Config = TahConf->getConfig();
+$Config->CheckBasicConfig();
 
 if ($Config->get("LocalSlippymap"))
 {
@@ -49,7 +51,7 @@ if ($Config->get("LocalSlippymap"))
 my $ZipFileCount = 0;
 
 ## FIXME: this is one of the things that make upload.pl not multithread safe
-my $ZipDir = $Config->get("WorkingDirectory") . "/uploadable";
+my $ZipDir = File::Spec->catdir($Config->get("WorkingDirectory"), "/uploadable");
 
 my @sorted;
 
@@ -64,7 +66,7 @@ my $Mode;
 ($Mode, $progressJobs) = @ARGV;
 
 my $sleepdelay;
-my $failFile = $Config->get("WorkingDirectory") . "/failurecount.txt";
+my $failFile = File::Spec->join($Config->get("WorkingDirectory"), "/failurecount.txt");
 if (open(FAILFILE, "<", $failFile))
 {
     $sleepdelay = <FAILFILE>;
@@ -103,7 +105,6 @@ if (open(FAILFILE, ">", $failFile))
 
 sub processOldZips
 {
-    my $Config = TahConf->getConfig();
     my $MaxDelay;
     my @zipfiles;
     if(opendir(ZIPDIR, $ZipDir))
@@ -134,7 +135,7 @@ sub processOldZips
         # if open fails (file has been uploaded and removed by other process)
         # the subsequent flock will also fail and skip the file.
         # if just flock fails it is being handled by a different upload process
-        open (ZIPFILE, "$ZipDir/$File");
+        open (ZIPFILE, File::Spec->join($ZipDir,$File));
         if (flock(ZIPFILE, LOCK_EX|LOCK_NB))
         {   # got exclusive lock, now upload
 
@@ -143,7 +144,7 @@ sub processOldZips
             # while not upload success or complete failure
             while ($UploadFailedHardOrDone != 1)
             {
-                ($UploadFailedHardOrDone,$Load) = upload("$ZipDir/$File");
+                ($UploadFailedHardOrDone,$Load) = upload(File::Spec->join($ZipDir,$File));
 
                 # 10 is 1% of 1000, which is the assumed minimum resolution of the server return value
                 if (($UploadFailedHardOrDone == 0) and ($Load > 10))
@@ -287,13 +288,12 @@ sub upload
         }
         else
         {
-            my $FileName = $File;
-            $FileName =~ s|.*/||;       # Get the source filename without path
+            my ($Vol, $FilePath, $FileName) = File::Spec->splitpath($File);
             print "\n$File $FileName\n" if $Config->get("Debug");    #Debug info
 
             ## FIXME: Don't necessarily die here
-            copy($File,$Config->get("UploadTargetDirectory")."/".$FileName."_trans") or die "$!\n"; # copy the file over using a temporary name
-            rename($Config->get("UploadTargetDirectory")."/".$FileName."_trans", $Config->get("UploadTargetDirectory")."/".$FileName) or die "$!\n"; 
+            copy($File,File::Spec->join($Config->get("UploadTargetDirectory"),$FileName."_trans")) or die "$!\n"; # copy the file over using a temporary name
+            rename(File::Spec->join($Config->get("UploadTargetDirectory"),$FileName."_trans"),File::Spec->join($Config->get("UploadTargetDirectory"), $FileName)) or die "$!\n"; 
             # rename so it can be picked up by central uploading client.
         }
     }

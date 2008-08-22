@@ -32,6 +32,8 @@ use lib::TahConf;
 
 # conf file, will contain username/password and environment info
 my $Config = TahConf->getConfig();
+# check for sane values (existing WorkingDirectory etc)
+$Config->CheckBasicConfig;
 
 if ($Config->get("LocalSlippymap"))
 {
@@ -41,7 +43,7 @@ if ($Config->get("LocalSlippymap"))
 
 my $ZipFileCount = 0;
 
-my $ZipDir = $Config->get("WorkingDirectory") . "/uploadable";
+my $ZipDir = File::Spec->catdir($Config->get("WorkingDirectory"), "/uploadable");
 
 my @sorted;
 
@@ -77,7 +79,7 @@ my @tiles;
         
         foreach my $File(@tilesets)
         {   # go through all complete tilesets ie "*.dir" firectories
-            my $FullTileDirPath = "$TileDir/$File";
+            my $FullTileDirPath = File::Spec->join($TileDir, $File);
 
             # get a file handle, then try to lock the file exclusively.
             # if open fails (file has been uploaded and removed by other process)
@@ -107,7 +109,7 @@ my @tiles;
         #{
         #    while (processTileBatch(
         #      $TileDir, 
-        #      $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
+        #      File::Spec->catdir($TileDir . "/gather"), ## FIXME: this is one of the things that make compress.pl not multithread safe
         #      $ZipDir, 
         #      $allowedPrefixes)) 
         #    {};
@@ -136,8 +138,8 @@ sub processTileBatch
 
     while(my $file = shift @tiles)
     {
-        my $Filename1 = "$TileDir/$file";
-        my $Filename2 = "$TempDir/$file";
+        my $Filename1 = File::Spec->join($TileDir,$file);
+        my $Filename2 = File::Spec->join($TempDir,$file);
         if($file =~ /($allowedPrefixes)_\d+_\d+_\d+\.png$/i)
         {
             $Size += -s $Filename1;
@@ -195,17 +197,19 @@ sub compress
         my $hostname = `hostname`;
         chomp $hostname;
         $hostname .= "XXXXX";
-        $Filename = sprintf("%s/%d_%s_%d_%d_%d_%s%s.zip", $OutputDir, $epochtime,
-          substr($hostname,0,5), GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset);
+        $Filename = File::Spec->join($OutputDir,
+                                     sprintf("%d_%s_%d_%d_%d_%s%s.zip", $epochtime,
+                                     substr($hostname,0,5), GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset));
     }
     else 
     {
-        $Filename = sprintf("%s/%d_%d_%d_%d_%s%s.zip", $OutputDir,
-          $epochtime, GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset);
+        $Filename = File::Spec->join($OutputDir,
+                                     sprintf("%d_%d_%d_%d_%s%s.zip", $epochtime,
+                                     GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset));
     }
     
     # ZIP all the tiles into a single file
-    my $stdOut = $Config->get("WorkingDirectory")."/".$PID.".stdout";
+    my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),$PID.".stdout");
     my $Command1;
     if ($Config->get("7zipWin"))
     {
@@ -213,7 +217,7 @@ sub compress
           $Config->get("Zip"),
           "a -tzip",
           $Filename,
-          "$Dir/*.png");
+          File::Spec->join($Dir,"*.png"));
     }
     else
     {
@@ -239,7 +243,7 @@ sub compress
         closedir (GATHERDIR);
         while(my $File = shift @zippedFiles)
         {
-            rename($Dir . "/" . $File, $Config->get("WorkingDirectory") . $File);
+            rename(File::Spec->join($Dir,$File), File::Spec->join($Config->get("WorkingDirectory"),$File));
         }
     }
     

@@ -362,7 +362,7 @@ sub CheckConfig
     }
 
     # Misc stuff
-    foreach(qw(N S E W)){
+    foreach(qw(NS WE)){
         if($self->get("Border".$_) > 0.5){
             printf "Border".$_." looks abnormally large\n";
         }

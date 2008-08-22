@@ -562,10 +562,10 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     $currentSubTask = "Preproc";
     
     # Adjust requested area to avoid boundary conditions
-    my $N1 = $N + ($N-$S)*$Config->get("BorderN");
-    my $S1 = $S - ($N-$S)*$Config->get("BorderS");
-    my $E1 = $E + ($E-$W)*$Config->get("BorderE");
-    my $W1 = $W - ($E-$W)*$Config->get("BorderW");
+    my $N1 = $N + ($N-$S)*$Config->get("BorderNS");
+    my $S1 = $S - ($N-$S)*$Config->get("BorderNS");
+    my $E1 = $E + ($E-$W)*$Config->get("BorderWE");
+    my $W1 = $W - ($E-$W)*$Config->get("BorderWE");
 
     # TODO: verify the current system cannot handle segments/ways crossing the 
     # 180/-180 deg meridian and implement proper handling of this case, until 

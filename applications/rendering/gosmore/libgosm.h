@@ -150,6 +150,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
  s (shop,    butcher,         "butcher"         , "") \
  s (shop,    florist,         "florist"         , "") \
  s (shop,    groceries,       "groceries"       , "") \
+ s (shop,    beverages,       "liquor / wine"   , "") \
  s (shop,    clothes,         "clothing shop"   , "") \
  s (shop,    shoes,           "shoe shop"       , "") \
  s (shop,    jewelry,         "jewelry store"   , "") \

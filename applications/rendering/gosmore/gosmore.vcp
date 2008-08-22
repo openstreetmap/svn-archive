@@ -273,6 +273,7 @@ DEP_CPP_GOSMO=\
 	".\ceglue.h"\
 	".\ConvertUTF.h"\
 	".\icons.xpm"\
+	".\libgosm.h"\
 	".\translations.c"\
 	{$(INCLUDE)}"aygshell.h"\
 	{$(INCLUDE)}"sipapi.h"\
@@ -295,6 +296,37 @@ NODEP_CPP_GOSMO=\
 !ENDIF 
 
 # End Source File
+# Begin Source File
+
+SOURCE=.\libgosm.cpp
+
+!IF  "$(CFG)" == "gosmore - Win32 (WCE emulator) Release"
+
+DEP_CPP_LIBGO=\
+	".\libgosm.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE emulator) Debug"
+
+DEP_CPP_LIBGO=\
+	".\libgosm.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4) Release"
+
+DEP_CPP_LIBGO=\
+	".\libgosm.h"\
+	
+
+!ELSEIF  "$(CFG)" == "gosmore - Win32 (WCE ARMV4) Debug"
+
+DEP_CPP_LIBGO=\
+	".\libgosm.h"\
+	
+
+!ENDIF 
+
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -302,6 +334,14 @@ NODEP_CPP_GOSMO=\
 # Begin Source File
 
 SOURCE=.\ceglue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ConvertUTF.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\libgosm.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

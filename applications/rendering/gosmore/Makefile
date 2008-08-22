@@ -35,17 +35,19 @@ endif
 
 all: gosmore
 
-gosmore:	gosmore.cpp
+gosmore:	gosmore.cpp libgosm.cpp
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
 		  -D RES_DIR='"$(prefix)/usr/share/"' \
-                  gosmore.cpp -o gosmore ${EXTRA}
+                  gosmore.cpp libgosm.cpp -o gosmore ${EXTRA}
 
-gosm_arm.exe:	gosmore.cpp gosmore.rsc resource.h translations.c
+gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \
+                    libgosm.h
 		${ARCH}-g++ ${CFLAGS} -c gosmore.cpp
+		${ARCH}-g++ ${CFLAGS} -c libgosm.cpp
 		${ARCH}-gcc ${CFLAGS} -c ConvertUTF.c
 		${ARCH}-gcc ${CFLAGS} -c ceglue.c
 		${ARCH}-gcc ${CFLAGS} -o $@ \
-		  gosmore.o ceglue.o ConvertUTF.o gosmore.rsc
+		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc
 
 gosmore.rsc:	gosmore.rc
 		${WINDRES} $? $@

@@ -138,6 +138,16 @@ sub CheckBasicConfig
     #------
     if ($self->get("UploadToDirectory"))
     {
+        if (! -d $self->get("UploadTargetDirectory")) {
+            # we chose to upload to directory, but it does not exist!
+            print "- Upload Directory does not exist. Trying to create ",
+                   $self->get("UploadTargetDirectory"),"\n";
+            File::Path::mkpath $self->get("UploadTargetDirectory");
+           if (! -d $self->get("UploadTargetDirectory")) {
+               die "! Failed to create Upload directory.";
+           }
+        }
+
         if (! $self->get("UseHostnameInZipname")) 
         {
             print " * UseHostnameInZipname should be set when using UploadToDirectory\n";

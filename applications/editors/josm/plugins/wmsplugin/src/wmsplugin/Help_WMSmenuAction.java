@@ -17,7 +17,7 @@ public class Help_WMSmenuAction extends JosmAction {
 
 	public Help_WMSmenuAction() {
 		//super("Help / About");
-		super(tr("help"), "help", tr("Help  / About"), 0, 0, false);
+		super(tr("help"), "help", tr("Help / About"), 0, 0, false);
 		
 	}
 	

@@ -1,12 +1,10 @@
+
 # translation of de.po to
-# # translation of de.po to
-#
 #
 # Sven Anders <s.anders@digitec.de>, 2006.
 # Sven Anders <sven@anders-hamburg.de>, 2006, 2007.
 # Matthias Merz <openstreetmap@merz.inka.de>, 2008.
 # Dirk Stöcker <openstreetmap@dstoecker.de>, 2008.
-# Dirk Stöcker <lang@dstoecker.de>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
@@ -4709,7 +4707,7 @@ msgstr "Bahnhof"
 
 #: ../lang/presets.java:846
 msgid "Edit Station"
-msgstr "Bahnhof bearbeiten bearbeiten"
+msgstr "Bahnhof bearbeiten"
 
 #: ../lang/presets.java:855
 msgid "Halt"
@@ -4717,7 +4715,7 @@ msgstr "Haltepunkt"
 
 #: ../lang/presets.java:856
 msgid "Edit Halt"
-msgstr "Hltepunkt bearbeiten"
+msgstr "Haltepunkt bearbeiten"
 
 #: ../lang/presets.java:865
 msgid "Tram Stop"

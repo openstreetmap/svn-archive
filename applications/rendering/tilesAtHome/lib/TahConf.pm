@@ -287,7 +287,7 @@ sub CheckConfig
         else
         {
             my $minVersion = "0.5";
-            if (self->CompareVersions($1, $minVersion) == -1) {
+            if ($self->CompareVersions($1, $minVersion) == -1) {
                 print "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
                 print "! disabling pngnq\n";
                 $self->set("PngQuantizer", "");

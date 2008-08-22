@@ -184,8 +184,6 @@ sub compress
   
     my $Filename;
 
-    my $epochtime = time;
-  
     # Create the output directory if it doesn't exist...
     if( ! -e $OutputDir )
     {
@@ -198,13 +196,13 @@ sub compress
         chomp $hostname;
         $hostname .= "XXXXX";
         $Filename = File::Spec->join($OutputDir,
-                                     sprintf("%d_%s_%d_%d_%d_%s%s.zip", $epochtime,
+                                     sprintf("%s_%d_%d_%d_%s%s.zip",
                                      substr($hostname,0,5), GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset));
     }
     else 
     {
         $Filename = File::Spec->join($OutputDir,
-                                     sprintf("%d_%d_%d_%d_%s%s.zip", $epochtime,
+                                     sprintf("%d_%d_%d_%s%s.zip",
                                      GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset));
     }
     

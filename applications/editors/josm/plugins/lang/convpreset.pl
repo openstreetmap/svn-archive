@@ -5,7 +5,8 @@
 
 use strict;
 
-my $item;
+my $item = "";
+my $group;
 my $comment = 0;
 
 # This is a simple conversion and in no way a complete XML parser
@@ -14,22 +15,16 @@ my $comment = 0;
 while(my $line = <>)
 {
   chomp($line);
-  if($line =~ /<item\s+name="(.*?)\/ ".*<\/item>/)
+  if($line =~ /<item\s+name=(".*?")/)
   {
-    print "tr(\"$1/ \") /* empty item \"$1\" */\n";
+    print "tr($1) /* item $item */\n";
+    $item = $group ? "$group$1" : $1;
+    $item =~ s/""/\//;
   }
-  elsif($line =~ /<item\s+name=" ".*<\/item>/)
+  elsif($line =~ /<group\s+name=(".*?")/)
   {
-    print "/* empty item */\n";
-  }
-  elsif($line =~ /<item\s+name=" ".*\/>/)
-  {
-    print "/* empty item */\n";
-  }
-  elsif($line =~ /<item\s+name=(".*?")/)
-  {
-    $item = $1;
-    print "tr($item) /* item $item */\n";
+    $group = $1;
+    print "tr($1) /* group $group */\n";
   }
   elsif($line =~ /<label\s+text=" "/)
   {
@@ -72,8 +67,18 @@ while(my $line = <>)
     }
     print "\n";
   }
+  elsif($line =~ /<\/group>/)
+  {
+    $group = 0;
+    print "\n";
+  }
+  elsif($line =~ /<\/item>/)
+  {
+    $item = "";
+    print "\n";
+  }
   elsif($line =~ /^\s*$/
-     || $line =~ /<\/item>/
+     || $line =~ /<seperator\/>/
      || $line =~ /<key/
      || $line =~ /annotations/
      || $line =~ /<!--/

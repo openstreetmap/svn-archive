@@ -1,4 +1,8 @@
 #!/bin/bash
+# svn co http://svn.openstreetmap.org/applications/share/map-icons/square.big
+# svn co http://svn.openstreetmap.org/applications/share/map-icons/classic.big
+# svn co http://svn.openstreetmap.org/applications/share/map-icons/square.small
+# svn co http://svn.openstreetmap.org/applications/share/map-icons/classic.small
 echo Creating temporary directory '"osmpnms/"' and converting icons to pnm
 mkdir osmpnms
 cd osmpnms
@@ -8,11 +12,11 @@ echo 'P6
 255 
 0 0 0
 '>fix.pnm
-for n in `find /usr/share/icons/openstreetmap -iname "*.png"`
+for n in `find ../ -iname "*.png"`
 do 
   A=${n%%.png}
   B=${A//\//_}
-  pngtopnm -background \#11EE22 $n |pnmdepth 255 >"${B:31}.pnm"
+  pngtopnm -background \#11EE22 $n |pnmdepth 255 >"${B:3}.pnm"
 done
 # These make nice POIs, but are not needed to render OSM maps :
 rm -f *geocach* \
@@ -22,7 +26,7 @@ rm -f *geocach* \
 
 echo Creating the montage and removing the temporary directory
 ulimit -n 2048
-../../netpbm-10.26.46/editor/pnmmontage -data ../icons.csv *.pnm>../icons.pnm
+../../../netpbm-10.26.46/editor/pnmmontage -data ../icons.csv *.pnm>../icons.pnm
 cd ..
 rm -rf osmpnms
 ppmtobmp icons.pnm >icons.bmp

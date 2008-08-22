@@ -15,51 +15,21 @@ a little help:
 		  with an integer for the km/h. 'roundabout' is special.
 
 Using both area and line attributes for the same key/value pair doesn't work!
+
+The colours can consist of the two components - name and hex code (e.g. water#0000ff).
+If both are given, the color name is introduced in preferences with that value. If only
+code is given (e.g. #0000ff), it is used directly. If only name is given, either user
+modified preferences or previous value is used.
+
+BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is unpredicted!
 -->
-<!-- Changes made by Nic Roets : Added routing tags. Not used by JOSM
-     Increased scale_max of highways that are more important than
-residential to its level. Ulf says JOSM does not use this tag  -->
+
 <rules>
 
 	<!-- mark some specials that should be fixed - they are already the default and therefore shouldn't be tagged -->
     <rule>
-       <condition k="oneway" v="yes"/>
+       <condition k="oneway"/>
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="oneway" v="1"/>
-	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="oneway" v="-1"/>
-	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="oneway" v="true"/>
-	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="oneway" v="no"/>
-       <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="oneway" v="false"/>
-       <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
        <icon annotate="true" src="misc/deprecated.png" />
        <scale_min>1</scale_min>
        <scale_max>40000</scale_max>
@@ -69,21 +39,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
        <icon annotate="true" src="vehicle/viaduct.png" />
        <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="bridge" v="true"/>
-	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="vehicle/viaduct.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="bridge" v="false"/>
-       <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
+       <scale_max>8000</scale_max>
      </rule>
     <rule>
        <condition k="bridge" v="no"/>
@@ -97,42 +53,28 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
        <icon annotate="true" src="vehicle/viaduct.png" />
        <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
+       <scale_max>8000</scale_max>
      </rule>
     <rule>
        <condition k="bridge" v="aqueduct"/>
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
        <icon annotate="true" src="nautical/aqueduct.png" />
        <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
+       <scale_max>8000</scale_max>
      </rule>
     <rule>
        <condition k="bridge" v="swing"/>
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="nautical/viaduct.png" />
+       <icon annotate="true" src="vehicle/viaduct.png" />
        <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
+       <scale_max>8000</scale_max>
      </rule>
     <rule>
        <condition k="tunnel" v="yes"/>
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
 		<icon annotate="true" src="vehicle/tunnel.png" />
        <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="tunnel" v="true"/>
-	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-		<icon annotate="true" src="vehicle/tunnel.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
-     </rule>
-    <rule>
-       <condition k="tunnel" v="false"/>
-       <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-       <icon annotate="true" src="misc/deprecated.png" />
-       <scale_min>1</scale_min>
-       <scale_max>40000</scale_max>
+       <scale_max>8000</scale_max>
      </rule>
     <rule>
        <condition k="tunnel" v="no"/>
@@ -161,36 +103,36 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="access" v="no" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/access.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="bicycle" v="no" />
-		<icon src="misc/no_icon.png" />
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+		<icon src="vehicle/restrictions/bicycle.png" />
+		<scale_min>1</scale_min>
+		<scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="bicycle" v="designated"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="sports/bicycle.png" />
+		<icon annotate="true" src="vehicle/restrictions/bicycle-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
-                <routing bicycle="20"/> <!-- Also see cycleway -->
+                <routing bicycle="23"/> <!-- Also see cycleway -->
 	</rule>
 
 	<rule>
 		<condition k="foot" v="no" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/foot.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="foot" v="designated"/>
 		<line width="1" realwidth="1" colour="#00ff00" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="vehicle/restrictions/foot-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>10000</scale_max>
                 <routing bicycle="5" foot="5"/> <!-- Usually you can push
@@ -199,28 +141,28 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="goods" v="no" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/goods.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="hgv" v="no" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/goods.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="horse" v="no" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/horse.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="horse" v="designated"/>
 		<line width="1" realwidth="2" colour="#c08000" />
-		<icon src="sports/riding.png" />
+		<icon src="vehicle/restrictions/horse-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
                 <routing bicycle="20" foot="5" horse="10"/> <!-- Also see bridleway -->
@@ -230,117 +172,117 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="motorcycle" v="no" />
 		<icon src="vehicle/restrictions/motorbike.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="motorcar" v="no" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/motorcar.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="psv" v="no" />
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="motorboat" v="no" />
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="boat" v="no" />
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="noexit" v="yes" />
 		<icon src="vehicle/restrictions/dead_end.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxweight" v="yes" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/maxweight.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxheight" v="yes" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/maxheight.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxwidth" v="yes" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/maxwidth.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxlength" v="yes" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/maxlength.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxspeed" v="yes" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/speed.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="minspeed" v="yes" />
-		<icon src="misc/no_icon.png" />
+		<icon src="vehicle/restrictions/minspeed.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxstay" v="yes" />
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="toll" v="yes" />
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="barrier" v="bollard" />
 		<icon annotate="true" src="vehicle/restrictions/bollard.png" />
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="barrier" v="gate" />
 		<icon annotate="true" src="vehicle/gate.png" />
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="barrier" v="speed_bump" />
 		<icon annotate="true" src="misc/no_icon.png" />
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>2000</scale_max>
 	</rule>
 
 <!-- highway tags -->
@@ -393,21 +335,30 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<condition k="highway" v="primary_link"/>
         <line width="3" colour="#fb805f"/>
 		<icon annotate="true" src="misc/deprecated.png" />
-        <scale_min>1</scale_min>
-        <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+                <scale_min>1</scale_min>
+                <scale_max>40000</scale_max>
+                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="secondary"/>
 		<line width="3" realwidth="6" colour="#fdbf6f"/>
 		<icon annotate="true" src="misc/deprecated.png" />
-        <scale_min>1</scale_min>
-        <scale_max>300000</scale_max>
-        <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
-    </rule>
+		<scale_min>1</scale_min>
+		<scale_max>300000</scale_max>
+                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+	</rule>
 
-    <rule>
+	<rule>
+		<condition k="highway" v="secondary_link"/>
+		<line width="3" realwidth="6" colour="#fdbf6f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+		<scale_min>1</scale_min>
+		<scale_max>300000</scale_max>
+                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+	</rule>
+
+        <rule>
         <condition k="highway" v="tertiary"/>
         <line width="2" realwidth="5" colour="#f7f496"/>
 		<icon annotate="true" src="misc/deprecated.png" />
@@ -434,9 +385,9 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <routing bicycle="20" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
     </rule>
 
-    <rule>
-        <condition k="highway" v="unsurfaced"/>
-        <line width="1" realwidth="3" colour="#c0c0c0"/>
+	<rule>
+		<condition k="highway" v="unsurfaced"/>
+		<line width="1" realwidth="3" colour="#c0c0c0"/>
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
@@ -452,18 +403,18 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <routing bicycle="20" foot="5" goods="20" hgv="20" motorcar="20" psv="20"/>
 	</rule>
 
-    <rule>
-    <condition k="highway" v="residential"/>
-	<line width="2" realwidth="5" colour="#c0c0c0"/> 
+	<rule>
+		<condition k="highway" v="residential"/>
+		<line width="2" realwidth="5" colour="#c0c0c0"/> 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="30" hgv="30" motorcar="30" psv="30"/>
     </rule>
 
-    <rule>
-    <condition k="highway" v="living_street"/>
-	<line width="1" realwidth="3" colour="#c0c0c0"/> 
+	<rule>
+		<condition k="highway" v="living_street"/>
+		<line width="1" realwidth="3" colour="#c0c0c0"/> 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
@@ -494,7 +445,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-        <routing bicycle="20"/> <!-- Also see bicyle=designated -->
+        <routing bicycle="23"/> <!-- Also see bicyle=designated -->
 	</rule>
 
 	<rule>
@@ -528,7 +479,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
     <rule>
         <condition k="highway" v="steps"/>
         <line width="1" realwidth="1" colour="#00ff00"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="transport/steps.png" />
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
         <routing foot="2"/>
@@ -648,40 +599,39 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <scale_max>50000</scale_max>
 	</rule>
 	
-       <rule>
-               <condition k="highway" v="turning_circle" />
-               <icon annotate="true" src="vehicle/turning_circle.png" />
+	<rule>
+		<condition k="highway" v="turning_circle" />
+		<icon annotate="true" src="vehicle/turning_circle.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-       </rule>
+	</rule>
 
-       <rule>
-               <condition k="highway" v="construction" />
-               <line width="2" realwidth="5" colour="#FFFF00" dashed="true"/>
+	<rule>
+		<condition k="highway" v="construction" />
+		<line width="2" realwidth="5" colour="#FFFF00" dashed="true"/>
 		<icon src="misc/construction.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-       </rule>
-
-<!-- junction tag -->
+	</rule>
+	
+<!-- junction tag --> 
 
 	<rule>
-		<condition k="junction" v="roundabout" />
+		<condition k="junction" v="roundabout" /> 
 		<!-- this overwrites the "underlying" highway tag, so comment it out until we have a better way to display this -->
 		<!--area width="1" colour="#eeeeee" /--> 
 		<!-- tagging a node makes no real sense, a roundabout should be tagged with several nodes, or a highway=mini_roundabout should probably be used -->
 		<icon annotate="true" src="misc/deprecated.png" /> 
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
-        <routing oneway="1" roundabout="1"/>
-	</rule>
-	
+		<scale_min>1</scale_min> 
+		<scale_max>50000</scale_max> 
+	</rule> 
+
 <!-- cycleway tags -->
 
 	<rule>
 		<condition k="cycleway" v="lane"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" /> 
+		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20"/>
@@ -690,7 +640,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="cycleway" v="track"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" /> 
+		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20"/>
@@ -699,7 +649,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="cycleway" v="opposite_lane"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" /> 
+		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20"/>
@@ -708,7 +658,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="cycleway" v="opposite_track"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" /> 
+		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20"/>
@@ -717,7 +667,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="cycleway" v="opposite"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" /> 
+		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20"/>
@@ -809,7 +759,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
     <rule>
         <condition k="waterway" v="dock"/>
         <line width="1" colour="#0000cf"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="nautical/boatyard.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
     </rule>
@@ -870,26 +820,26 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <line width="2" colour="#D8D8D8" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-       </rule>
+	</rule>
 
-       <rule>
-               <condition k="waterway" v="dam" />
+	<rule>
+		<condition k="waterway" v="dam" />
 		<icon annotate="true" src="misc/no_icon.png" />
         <line width="2" colour="#D8D8D8" />
-               <!-- it's not possible to have both line and area, line seems more likely -->
+		<!-- it's not possible to have both line and area, line seems more likely -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
-       <rule>
-               <condition k="waterway" v="waterfall" />
+	<rule>
+		<condition k="waterway" v="waterfall" />
 		<icon annotate="true" src="misc/no_icon.png" />
         <line width="2" colour="#D8D8D8" />
-               <!-- it's not possible to have both line and area, line seems more likely -->
+		<!-- it's not possible to have both line and area, line seems more likely -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
-
+	
 <!-- railway tags -->
 	<rule>
 		<condition k="railway" v="station" />
@@ -913,7 +863,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
-
+	
 	<rule>
 		<condition k="railway" v="tram_stop" />
 		<icon annotate="true" src="transport/railway_small.png" />
@@ -1801,7 +1751,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="amenity" v="kindergarten" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="education/kindergarten.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2035,7 +1985,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="beverages" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/beverages.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2075,7 +2025,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="chemist" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/chemist.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2083,7 +2033,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="clothes" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/clothes.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2091,7 +2041,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="computer" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/computer.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2115,7 +2065,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="electronics" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/electronics.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2123,7 +2073,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="furniture" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/furniture.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2131,7 +2081,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="florist" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/florist.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2147,7 +2097,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="garden_centre" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/garden_centre.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2163,7 +2113,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="hardware" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/diy_store.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2171,7 +2121,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="hifi" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/hifi.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2179,7 +2129,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="jewelry" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/jewelry.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2187,7 +2137,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="mall" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/mall.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2219,7 +2169,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="optician" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/optician.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2227,7 +2177,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="shoes" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/shoes.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2243,7 +2193,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="travel_agency" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="places/island.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2251,7 +2201,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="toys" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/toys.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2259,7 +2209,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 
 	<rule>
 		<condition k="shop" v="video" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/video.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2268,7 +2218,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<!-- duplicate of shopping_centre? -->
 	<rule>
 		<condition k="shop" v="shopping_center" />
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="shopping/mall.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2530,7 +2480,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<area colour="#f0f0f0"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>100000</scale_max>
+        <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
@@ -2952,7 +2902,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="sport" v="baseball" />
 		<area colour="#bde3cb"/>
-		<icon src="misc/no_icon.png" />
+		<icon src="sports/baseball.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2992,7 +2942,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="sport" v="cricket" />
 		<area colour="#bde3cb"/>
-		<icon src="misc/no_icon.png" />
+		<icon src="sports/cricket.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3160,7 +3110,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="sport" v="table_tennis" />
 		<area colour="#bde3cb"/>
-		<icon src="misc/no_icon.png" />
+		<icon src="sports/table_tennis.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3200,7 +3150,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="sport" v="volleyball" />
 		<area colour="#bde3cb"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="sports/volleyball.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3248,7 +3198,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="sport" v="diving" />
 		<area colour="#bde3cb"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="sports/diving.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3272,7 +3222,7 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 	<rule>
 		<condition k="sport" v="fishing" />
 		<area colour="#bde3cb"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+		<icon annotate="true" src="sports/fishing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3446,6 +3396,20 @@ residential to its level. Ulf says JOSM does not use this tag  -->
         <scale_max>50000</scale_max>
 	</rule>
 
+	<rule>
+		<condition k="openGeoDB:type" v="District" />
+		<icon annotate="true" src="places/settlement/town.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="openGeoDB:location" v="locality" />
+		<icon annotate="true" src="places/settlement/town.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
 <!--annotation tags -->
 
 <!--"work in progress" tags -->
@@ -3550,6 +3514,12 @@ residential to its level. Ulf says JOSM does not use this tag  -->
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
+	</rule>
+	<rule>
+		<condition k="addr:housenumber"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>3000</scale_max>
 	</rule>
 
 </rules>

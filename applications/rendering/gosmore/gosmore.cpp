@@ -2,8 +2,8 @@
 /* Written by Nic Roets with contribution(s) from Dave Hansen and
    Ted Mielczarek. 
    Thanks to
-   * Frederick Ramm and Johnny Rose Carlsen for hosting,
-   * Simon Wood, David Dean and many others for testing,
+   * Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
+   * Simon Wood, David Dean, Lambertus, TomH and many others for testing,
    * OSMF for partial funding. */
 
 #include <stdio.h>
@@ -1832,7 +1832,7 @@ int main (int argc, char *argv[])
               while (v[strcspn ((char *) v, "/ ")]) {
                 v[strcspn ((char *) v, "/ ")] = '_';
               }
-              char line[80];
+              char line[80], fnd = FALSE;
               static const char *set[] = { "classic.big_", "classic.small_",
                 "square.big_", "square.small_" };
               for (int i = 0; i < 4; i++) {
@@ -1847,9 +1847,11 @@ int main (int argc, char *argv[])
                       srec[styleCnt].x + i * 4, srec[styleCnt].x + i * 4 + 1,
                       srec[styleCnt].x + i * 4 + 2,
                       srec[styleCnt].x + i * 4 + 3);
+                    fnd = TRUE;
                   }
                 }
               }
+              if (!fnd) fprintf (stderr, "Icon %s not found\n", v);
             }
           }
           if (strcasecmp (name, "routing") == 0 && atoi (v) > 0) {
@@ -2002,7 +2004,8 @@ int main (int argc, char *argv[])
           if (stricmp (aname, "v") == 0) {
             int newStyle = 0;
             for (; newStyle < styleCnt && !(K_IS (style_k[newStyle]) &&
-              V_IS (style_v[newStyle]) && (isNode ? srec[newStyle].x[2] :
+              (style_v[newStyle][0] == '\0' || V_IS (style_v[newStyle])) &&
+              (isNode ? srec[newStyle].x[2] :
                 srec[newStyle].lineColour != -1 ||
                 srec[newStyle].areaColour != -1)); newStyle++) {}
             // elemstyles rules are from most important to least important

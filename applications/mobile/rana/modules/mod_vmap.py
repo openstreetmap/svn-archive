@@ -92,6 +92,10 @@ class vmap(ranaModule):
     if(not styleDef):
       return(False)
     (colour,width,options) = styleDef
+    width *= self.get("scaleLines", 2.0)
+    if(self.get("zoomLines", True) and self.z > 14):
+      width *= self.z - 14
+      
     (r,g,b) = colour
     cr.set_source_rgb(r,g,b)
     cr.set_line_width(width)
@@ -125,13 +129,13 @@ class vmap(ranaModule):
     if(not proj or not proj.isValid()):
       return
     
-    z = int(self.get('z', 15))
+    self.z = int(self.get('z', 15))
 
     # Render each 'tile' in view
     self.waysDrawn = {}
     for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
-        self.drawTile(cr,x,y,z,proj)
+        self.drawTile(cr,x,y,self.z,proj)
    
   def update(self):
     pass

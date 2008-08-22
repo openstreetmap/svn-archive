@@ -188,14 +188,17 @@ sub processOldZips
 }
 
 #-----------------------------------------------------------------------------
-# Upload a ZIP file, returns Status and Load
+# Upload a ZIP file
+# Parameter (file) is the full path to a .zip file
+# returns Status and Load
 #-----------------------------------------------------------------------------
 sub upload
 {
     my ($File) = @_;
     my $Config = TahConf->getConfig();
-    my $ZipSize += -s $File;
-    my $ZipAge = -M $File;   # days since last modified
+    my ($Vol, $FilePath, $FileName) = File::Spec->splitpath($File);
+    my $ZipSize += -s $File;   # zip file size
+    my $ZipAge   = -M $File;   # days since last modified
 
     if($ZipAge > 2)
     {
@@ -205,7 +208,7 @@ sub upload
         }
         else
         {
-            rename($File, $File."_overage"); 
+            move($File, $File."_overage"); 
         }
 
         return (-1,0);
@@ -233,7 +236,7 @@ sub upload
         # less than that.
         if ($Load < 1000) 
         {
-            statusMessage("Uploading $File",0,3);
+            statusMessage("Uploading $FileName",0,3);
             my $res = $ua->post($URL,
               Content_Type => 'form-data',
               Content => [ file => [$File],
@@ -246,7 +249,7 @@ sub upload
             if(!$res->is_success())
             {
                 statusMessage("ERROR",1,0);
-                statusMessage("  Error uploading $File to $URL:",1,0);
+                statusMessage("  Error uploading $FileName to $URL:",1,0);
                 statusMessage("  ".$res->status_line,1,0);
                 return (-1,$Load); # hard fail
             }
@@ -264,7 +267,7 @@ sub upload
         }
     }
     else
-    {
+    {   #Upload To Directory rather than server
         ## Check "queue" length
         my $RemoteZipFileCount = 0;
         my $MaxQueue = 20;
@@ -288,13 +291,15 @@ sub upload
         }
         else
         {
-            my ($Vol, $FilePath, $FileName) = File::Spec->splitpath($File);
-            print "\n$File $FileName\n" if $Config->get("Debug");    #Debug info
+            my $tmpfile = File::Spec->join($Config->get("UploadTargetDirectory"),$FileName."_part");
 
             ## FIXME: Don't necessarily die here
-            copy($File,File::Spec->join($Config->get("UploadTargetDirectory"),$FileName."_trans")) or die "$!\n"; # copy the file over using a temporary name
-            rename(File::Spec->join($Config->get("UploadTargetDirectory"),$FileName."_trans"),File::Spec->join($Config->get("UploadTargetDirectory"), $FileName)) or die "$!\n"; 
+            # copy the file over using a temporary name
+            copy($File,$tmpfile) 
+              or die "Failed to copy file to Upload Directory: $!\n";
             # rename so it can be picked up by central uploading client.
+            move($tmpfile, File::Spec->join($Config->get("UploadTargetDirectory"), $FileName)) 
+              or die "Failed to rename file in Upload Directory: $!\n";
         }
     }
 
@@ -305,7 +310,7 @@ sub upload
     }
     else
     {
-        rename($File, $File."_uploaded");
+        move($File, $File."_uploaded");
     }
 
     return (1,0);

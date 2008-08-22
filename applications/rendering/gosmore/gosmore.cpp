@@ -27,6 +27,7 @@
 //#include <winuserm.h> // For playing a sound ??
 #include <sipapi.h>
 #include <aygshell.h>
+#include "libgosm.h"
 #include "ceglue.h"
 #include "ConvertUTF.h"
 #include "resource.h"
@@ -62,6 +63,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string>
+#include "libgosm.h"
 using namespace std;
 #define wchar_t char
 #define wsprintf sprintf
@@ -129,7 +131,6 @@ const char *FindResource (const char *fname)
 }
 #endif
 
-#include "libgosm.h"
 
 struct klasTableStruct {
   const wchar_t *desc;
@@ -1869,14 +1870,16 @@ int main (int argc, char *argv[])
       }
       else if (xmlTextReaderNodeType (sXml) == XML_READER_TYPE_END_ELEMENT
                   && strcasecmp ((char *) name, "rule") == 0) {
-        int ipos = styleCnt;
-        #define s(k,v,shortname,extraTags) \
-          if (strcmp (#k, style_k[styleCnt]) == 0 && \
-              strcmp (#v, style_v[styleCnt]) == 0) ipos = k ## _ ## v;
-        STYLES
+        int ipos;
+        #define s(k,v,shortname,extraTags) { #k, #v },
+        static const char *stylet[][2] = { STYLES };
         #undef s
-        ruleNr[ipos] = ruleCnt++;
-        if (ipos != styleCnt) {
+        for (ipos = 0; ipos < firstElemStyle; ipos++) {
+          if (strcmp (stylet[ipos][0], style_k[styleCnt]) == 0 && 
+              strcmp (stylet[ipos][1], style_v[styleCnt]) == 0) break;
+        }
+        ruleNr[ipos < firstElemStyle ? ipos : styleCnt] = ruleCnt++;
+        if (ipos < firstElemStyle) {
           memcpy (&srec[ipos], &srec[styleCnt], sizeof (srec[ipos]));
           memcpy (&srec[styleCnt], &srec[styleCnt + 1], sizeof (srec[0]));
           defaultRestrict[ipos] = defaultRestrict[styleCnt];

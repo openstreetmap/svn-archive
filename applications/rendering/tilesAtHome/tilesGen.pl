@@ -27,6 +27,7 @@ use strict;
 use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);
+use File::Spec;
 use IO::Socket;
 use FindBin qw($Bin);
 use tahconfig;
@@ -44,7 +45,6 @@ use Encode;
 
 # Read the config file
 my $Config = TahConf->getConfig();
-ApplyConfigLogic($Config);
 
 # Handle the command-line
 our $Mode = shift();
@@ -52,6 +52,15 @@ my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
 my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
+
+if ($RenderMode)
+{   # need to check that we can render and stuff
+    %EnvironmentInfo = $Config->CheckConfig();
+}
+else
+{   # for uploading we need only basic settings
+    %EnvironmentInfo = $Config->CheckBasicConfig();
+}
 
 # set the progress indicator variables
 our $currentSubTask;
@@ -61,15 +70,6 @@ our $progressPercent = 0;
 
 # keep track of time running
 our $progstart = time();
-
-if ($RenderMode)
-{   # need to check that we can render and stuff
-    %EnvironmentInfo = CheckConfig();
-}
-else
-{   # for uploading we need only basic settings
-    %EnvironmentInfo = CheckBasicConfig();
-}
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
 if ($UploadMode or $RenderMode) {
@@ -405,17 +405,13 @@ sub countZips
 {
     my $Config = TahConf->getConfig();
     my $ZipCount = 0;
-    if (opendir(my $dp, $Config->get("WorkingDirectory")."uploadable"))
+    if (opendir(my $dp, File::Spec->join($Config->get("WorkingDirectory"),"uploadable")))
     {
         while(my $File = readdir($dp))
         {
             $ZipCount++ if ($File =~ /\.zip$/);
         }
         closedir($dp);
-    }
-    else 
-    {
-        mkdir $Config->get("WorkingDirectory")."uploadable";
     }
     return $ZipCount;
 }
@@ -589,7 +585,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     #------------------------------------------------------
     # Download data
     #------------------------------------------------------
-    my $DataFile = $Config->get("WorkingDirectory")."data-$PID.osm";
+    my $DataFile = File::Spec->join($Config->get("WorkingDirectory"), "data-$PID.osm");
     
     unlink($DataFile);
     my $URLS = sprintf("%s%s/map?bbox=%s",
@@ -624,7 +620,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     foreach my $URL (split(/ /,$URLS)) 
     {
         ++$i;
-        my $partialFile = $Config->get("WorkingDirectory")."data-$PID-$i.osm";
+        my $partialFile = File::Spec->join($Config->get("WorkingDirectory"),"data-$PID-$i.osm");
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data for ".$req->layers_str,0,3);
@@ -678,7 +674,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 {
                     $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
-                    $partialFile = $Config->get("WorkingDirectory")."data-$PID-$i-$j.osm";
+                    $partialFile = File::Spec->join($Config->get("WorkingDirectory"),"data-$PID-$i-$j.osm");
                     push(@{$filelist}, $partialFile);
                     push(@tempfiles, $partialFile);
                     statusMessage("Downloading: Map data to $partialFile (slice $j of 10)",0,3);
@@ -718,7 +714,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
     if ($Config->get("KeepDataFile"))
     {
-        copy($DataFile, $Config->get("WorkingDirectory") . "/" . "data.osm");
+        copy($DataFile, File::Spec->join($Config->get("WorkingDirectory"), "data.osm"));
     }
   
     # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
@@ -747,10 +743,10 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         $progressPercent=0;
         $currentSubTask = $layer;
         
-        $JobDirectory = sprintf("%s%s_%d_%d_%d.tmpdir",
-                                $Config->get("WorkingDirectory"),
+        $JobDirectory = File::Spec->join($Config->get("WorkingDirectory"),
+                                sprintf("%s_%d_%d_%d.tmpdir",
                                 $Config->get($layer."_Prefix"),
-                                $req->Z, $req->X, $req->Y);
+                                $req->Z, $req->X, $req->Y));
         mkdir $JobDirectory unless -d $JobDirectory;
 
         my $maxzoom = $Config->get($layer."_MaxZoom");
@@ -759,7 +755,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Faff around
         for (my $i = $req->Z ; $i <= $maxzoom ; $i++) 
         {
-            unlink($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg");
+            unlink(File::Spec->join($Config->get("WorkingDirectory"),"output-$parent_pid-z$i.svg"));
         }
         
         my $Margin = " " x ($req->Z - 8);
@@ -773,13 +769,11 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # config option may be empty, or a comma separated list of preprocessors
         foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
         {
-            my $inputFile = sprintf("%sdata-%s.osm", 
-                $Config->get("WorkingDirectory"),
-                join("-", @ppchain));
+            my $inputFile = File::Spec->join($Config->get("WorkingDirectory"),
+                                             sprintf("data-%s.osm", join("-", @ppchain)));
             push(@ppchain, $preprocessor);
-            my $outputFile = sprintf("%sdata-%s.osm", 
-                $Config->get("WorkingDirectory"),
-                join("-", @ppchain));
+            my $outputFile = File::Spec->join($Config->get("WorkingDirectory"),
+                                              sprintf("data-%s.osm", join("-", @ppchain)));
 
             if (-f $outputFile)
             {
@@ -840,7 +834,6 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Preprocessing finished, start rendering
         #------------------------------------------------------
 
-        #$layerDataFile = sprintf("%sdata-%s.osm", $Config->get("WorkingDirectory"), join("-", @ppchain));
         $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
         
         # Add bounding box to osmarender
@@ -912,7 +905,8 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         }
         
         # Find the size of the SVG file
-        my ($ImgH,$ImgW,$Valid) = getSize($Config->get("WorkingDirectory")."output-$parent_pid-z$maxzoom.svg");
+        my ($ImgH,$ImgW,$Valid) = getSize(File::Spec->join($Config->get("WorkingDirectory"),
+                                                       "output-$parent_pid-z$maxzoom.svg"));
 
         # Render it as loads of recursive tiles
         my ($success,$empty) = RenderTile($layer, $req, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
@@ -928,15 +922,15 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Clean-up the SVG files
         for (my $i = $req->Z ; $i <= $maxzoom; $i++) 
         {
-            unlink($Config->get("WorkingDirectory")."output-$parent_pid-z$i.svg") if (!$Config->get("Debug"));
+            unlink(File::Spec->join($Config->get("WorkingDirectory"),"output-$parent_pid-z$i.svg")) if (!$Config->get("Debug"));
         }
 
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
         if ($empty == 1 && $Config->get("GatherBlankTiles")) 
         {
             my $Filename=sprintf("%s_%s_%s_%s.png",$Config->get($layer."_Prefix"), $req->Z, $req->X, $req->Y);
-            my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 
-            my $newFilename = sprintf("%s%s",$Config->get("WorkingDirectory"),$Filename);
+            my $oldFilename = File::Spec->join($JobDirectory, $Filename); 
+            my $newFilename = File::Spec->join($Config->get("WorkingDirectory"),$Filename);
             rename($oldFilename, $newFilename);
             rmdir($JobDirectory);
         }
@@ -974,7 +968,7 @@ sub GenerateSVG
     # process one layer after the other
     my $error = 0;
     my $source = $Config->get($layer."_Rules.".$Zoom);
-    my $TempFeatures = $Config->get("WorkingDirectory")."map-features-$PID-z$Zoom.xml";
+    my $TempFeatures = File::Spec->join($Config->get("WorkingDirectory"), "map-features-$PID-z$Zoom.xml");
     copy($source, $TempFeatures)
         or die "Cannot make copy of $source";
 
@@ -985,7 +979,7 @@ sub GenerateSVG
     # Render the file
     if (! xml2svg(
             $TempFeatures,
-            $Config->get("WorkingDirectory")."output-$parent_pid-z$Zoom.svg",
+            File::Spec->join($Config->get("WorkingDirectory"), "output-$parent_pid-z$Zoom.svg"),
             $Zoom))
     {
         $error = 1;
@@ -1331,7 +1325,7 @@ sub svg2png
     
     my $TempFile;
     my $stdOut;
-    my $TempDir = $Config->get("WorkingDirectory") . $PID . "/"; # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
+    my $TempDir = File::Spec->catdir($Config->get("WorkingDirectory"),$PID); # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
     if (! -e $TempDir ) 
     {
         mkdir($TempDir) or cleanUpAndDie("cannot create working directory $TempDir","EXIT",3,$PID);
@@ -1355,7 +1349,7 @@ sub svg2png
 
     if ($Config->get("Batik") == "1") # batik as jar
     {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s", 
+        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Niceness"),
         $Config->get("BatikJVMSize"),
@@ -1364,13 +1358,13 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        $Config->get("WorkingDirectory"),
-        $svgFile,
+        File::Spec->join($Config->get("WorkingDirectory"),
+                         $svgFile),
         $stdOut);
     }
     elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
     {
-        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s",
+        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Niceness"),
         $Config->get("BatikPath"),
@@ -1378,19 +1372,19 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        $Config->get("WorkingDirectory"),
-        $svgFile,
+        File::Spec->join($Config->get("WorkingDirectory"),
+                         $svgFile),
         $stdOut);
     }
     elsif ($Config->get("Batik") == "3") # agent
     {
-        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s%s\nlog=%s\n\n", 
+        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
         $SizeX,
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        $Config->get("WorkingDirectory"),
-        $svgFile,
+        File::Spec->join($Config->get("WorkingDirectory"),
+                         $svgFile),
         $stdOut);
     }
     else
@@ -1401,7 +1395,7 @@ sub svg2png
                 $oldLocale=setlocale(LC_ALL, $locale);
         } 
 
-        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
+        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
         $Config->get("i18n") ? "LC_ALL=C " : "",
         $Config->get("Niceness"),
         $Config->get("Inkscape"),
@@ -1409,8 +1403,8 @@ sub svg2png
         $SizeY,
         $X1,$Y1,$X2,$Y2,
         $TempFile,
-        $Config->get("WorkingDirectory"),
-        $svgFile,
+        File::Spec->join($Config->get("WorkingDirectory"),
+                         $svgFile),
         $stdOut);
 
         if ($locale ne "0") {

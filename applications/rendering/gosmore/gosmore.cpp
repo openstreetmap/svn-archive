@@ -1,13 +1,17 @@
 /* This software is placed by in the public domain by its authors. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen and
-   Ted Mielczarek. */
+   Ted Mielczarek. 
+   Thanks to
+   * Frederick Ramm and Johnny Rose Carlsen for hosting,
+   * Simon Wood, David Dean and many others for testing,
+   * OSMF for partial funding. */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <ctype.h>
 #include <assert.h>
+#include <math.h>
 #ifndef _WIN32
 #include <sys/mman.h>
 #include <libxml/xmlreader.h>
@@ -17,7 +21,6 @@
 #define TEXT(x) x
 #else
 #include <windows.h>
-#define M_PI 3.14159265358979323846 // Not in math ??
 #endif
 #ifdef _WIN32_WCE
 #include <windowsx.h>
@@ -27,7 +30,6 @@
 #include "ceglue.h"
 #include "ConvertUTF.h"
 #include "resource.h"
-typedef int intptr_t;
 
 // Unfortunately eMbedded Visual C++ TEXT() function does not use UTF8
 // So we have to repeat the OPTIONS table
@@ -82,11 +84,6 @@ using namespace std;
 #define MenuKey 0
 #endif
 char docPrefix[80] = "";
-#ifndef TRUE
-#define TRUE 1
-#define FALSE 0
-#endif
-
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
 #include "icons.xpm"
@@ -96,34 +93,10 @@ char docPrefix[80] = "";
 #define fopen64(x,y) fopen(x,y)
 #endif
 
-#ifndef _WIN32
-#define stricmp strcasecmp
-typedef long long __int64;
-#else
-#define strncasecmp _strnicmp
-#define stricmp _stricmp
-#define lrint(x) int ((x) < 0 ? (x) - 0.5 : (x) + 0.5) 
 // We emulate just enough of gtk to make it work
-#endif
 #ifdef _WIN32_WCE
 #define gtk_widget_queue_clear(x) // After Click() returns we Invalidate
 HWND hwndList;
-UTF16 appendTmp[50];
-char searchStr[50];
-
-#define gtk_clist_append(x,str) { \
-    const unsigned char *sStart = (const unsigned char*) *str; \
-    UTF16 *tStart = appendTmp; \
-    if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (*str) + 1, \
-        &tStart, appendTmp + sizeof (appendTmp) / sizeof (appendTmp[0]), \
-        lenientConversion) == conversionOK) { \
-      SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) appendTmp); \
-    } \
-  }
-#define gtk_entry_get_text(x) searchStr
-#define gtk_clist_freeze(x)
-#define gtk_clist_clear(x)
-#define gtk_clist_thaw(x)
 #define gtk_toggle_button_set_active(x,y) // followGPRr
 struct GtkWidget { 
   struct {
@@ -156,261 +129,7 @@ const char *FindResource (const char *fname)
 }
 #endif
 
-#define TILEBITS (18)
-#define TILESIZE (1<<TILEBITS)
-#ifndef INT_MIN
-#define INT_MIN 0x80000000 // -2147483648
-#endif
-
-#define RESTRICTIONS M (access) M (motorcar) M (bicycle) M (foot) M (goods) \
-  M (hgv) M (horse) M (motorcycle) M (psv) M (motorboat) M (boat) \
-  M (oneway) M (roundabout)
-
-#define M(field) field ## R,
-enum { STYLE_BITS = 8, RESTRICTIONS l1,l2,l3 };
-#undef M
-
-// Below is a list of the tags that the user may add. It should also include
-// any tags that gosmore.cpp may test for directly, e.g.
-// StyleNr(w) == highway_traffic_signals .
-// See http://etricceline.de/osm/Europe/En/tags.htm for the most popular tags
-// The fields are k, v, short name and the additional tags.
-#define STYLES \
- s (highway, residential,     "residential"     , "") \
- s (highway, unclassified,    "unclassified"    , "") \
- s (highway, tertiary,        "tertiary"        , "") \
- s (highway, secondary,       "secondary"       , "") \
- s (highway, primary,         "primary"         , "") \
- s (highway, trunk,           "trunk"           , "") \
- s (highway, footway,         "footway"         , "") \
- s (highway, service,         "service"         , "") \
- s (highway, track,           "track"           , "") \
- s (highway, cycleway,        "cycleway"        , "") \
- s (highway, pedestrian,      "pedestrian"      , "") \
- s (highway, steps,           "steps"           , "") \
- s (highway, bridleway,       "bridleway"       , "") \
- s (railway, rail,            "railway"         , "") \
- s (railway, station,         "railway station" , "") \
- s (highway, mini_roundabout, "mini roundabout" , "") \
- s (highway, traffic_signals, "traffic signals" , "") \
- s (highway, bus_stop,        "bus stop"        , "") \
- s (amenity, parking,         "parking"         , "") \
- s (amenity, fuel,            "fuel"            , "") \
- s (amenity, school,          "school"          , "") \
- s (place,   village,         "village"         , "") \
- s (shop,    supermarket,     "supermarket"     , "") \
- s (religion, christian,      "church"          , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, jewish,         "synagogue"       , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, muslim,         "mosque"          , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (amenity, pub,             "pub"             , "") \
- s (amenity, restaurant,      "restaurant"      , "") \
- s (power,   tower,           "power tower"     , "") \
- s (waterway, stream,         "stream"          , "") \
- s (amenity, grave_yard,      "grave yard"      , "") \
- s (amenity, crematorium,     "crematorium"     , "") \
- s (amenity, shelter,         "shelter"         , "") \
- s (tourism, picnic_site,     "picnic site"     , "") \
- s (leisure, common,          "common area"     , "") \
- s (amenity, park_bench,      "park bench"      , "") \
- s (tourism, viewpoint,       "viewpoint"       , "") \
- s (tourism, artwork,         "artwork"         , "") \
- s (tourism, museum,          "museum"          , "") \
- s (tourism, theme_park,      "theme park"      , "") \
- s (tourism, zoo,             "zoo"             , "") \
- s (leisure, playground,      "playground"      , "") \
- s (leisure, park,            "park"            , "") \
- s (leisure, nature_reserve,  "nature reserve"  , "") \
- s (leisure, miniature_golf,  "miniature golf"  , "") \
- s (leisure, golf_course,     "golf course"     , "") \
- s (leisure, sports_centre,   "sports centre"   , "") \
- s (leisure, stadium,         "stadium"         , "") \
- s (leisure, pitch,           "pitch"           , "") \
- s (leisure, track,           "track"           , "") \
- s (sport,   athletics,       "athletics"       , "") \
- s (sport,   10pin,           "10 pin"          , "") \
- s (sport,   boules,          "boules"          , "") \
- s (sport,   bowls,           "bowls"           , "") \
- s (sport,   baseball,        "baseball"        , "") \
- s (sport,   basketball,      "basketball"      , "") \
- s (sport,   cricket,         "cricket"         , "") \
- s (sport,   cricket_nets,    "cricket nets"    , "") \
- s (sport,   croquet,         "croquet"         , "") \
- s (sport,   dog_racing,      "dog racing"      , "") \
- s (sport,   equestrian,      "equestrian"      , "") \
- s (sport,   football,        "football"        , "") \
- s (sport,   soccer,          "soccer"          , "") \
- s (sport,   climbing,        "climbing"        , "") \
- s (sport,   gymnastics,      "gymnastics"      , "") \
- s (sport,   hockey,          "hockey"          , "") \
- s (sport,   horse_racing,    "horse racing"    , "") \
- s (sport,   motor,           "motor sport"     , "") \
- s (sport,   pelota,          "pelota"          , "") \
- s (sport,   rugby,           "rugby"           , "") \
- s (sport,   australian_football, "australian football" , "") \
- s (sport,   skating,         "skating"         , "") \
- s (sport,   skateboard,      "skateboard"      , "") \
- s (sport,   handball,        "handball"        , "") \
- s (sport,   table_tennis,    "table tennis"    , "") \
- s (sport,   tennis,          "tennis"          , "") \
- s (sport,   racquet,         "racquet"         , "") \
- s (sport,   badminton,       "badminton"       , "") \
- s (sport,   paintball,       "paintball"       , "") \
- s (sport,   shooting,        "shooting"        , "") \
- s (sport,   volleyball,      "volleyball"      , "") \
- s (sport,   beachvolleyball, "beach volleyball" , "") \
- s (sport,   archery,         "archery"         , "") \
- s (sport,   skiing,          "skiing"          , "") \
- s (sport,   rowing,          "rowing"          , "") \
- s (sport,   sailing,         "sailing"         , "") \
- s (sport,   diving,          "diving"          , "") \
- s (sport,   swimming,        "swimming"        , "") \
- s (leisure, swimming_pool,   "swimming pool"   , "") \
- s (leisure, water_park,      "water park"      , "") \
- s (leisure, marina,          "marina"          , "") \
- s (leisure, slipway,         "slipway"         , "") \
- s (leisure, fishing,         "fishing"         , "") \
- s (shop,    bakery,          "bakery"          , "") \
- s (shop,    butcher,         "butcher"         , "") \
- s (shop,    florist,         "florist"         , "") \
- s (shop,    groceries,       "groceries"       , "") \
- s (shop,    clothes,         "clothing shop"   , "") \
- s (shop,    shoes,           "shoe shop"       , "") \
- s (shop,    jewelry,         "jewelry store"   , "") \
- s (shop,    books,           "bookshop"        , "") \
- s (shop,    newsagent,       "newsagent"       , "") \
- s (shop,    furniture,       "furniture store" , "") \
- s (shop,    hifi,            "Hi-Fi store"     , "") \
- s (shop,    electronics,     "electronics store" , "") \
- s (shop,    computer,        "computer shop"   , "") \
- s (shop,    video,           "video rental"    , "") \
- s (shop,    toys,            "toy shop"        , "") \
- s (shop,    motorcycle,      "motorcycle"      , "") \
- s (shop,    car_repair,      "car repair"      , "") \
- s (shop,    doityourself,    "doityourself"    , "") \
- s (shop,    garden_centre,   "garden centre"   , "") \
- s (shop,    outdoor,         "outdoor"         , "") \
- s (shop,    bicycle,         "bicycle shop"    , "") \
- s (shop,    dry_cleaning,    "dry cleaning"    , "") \
- s (shop,    laundry,         "laundry"         , "") \
- s (shop,    hairdresser,     "hairdresser"     , "") \
- s (shop,    travel_agency,   "travel_agency"   , "") \
- s (shop,    convenience,     "convenience"     , "") \
- s (shop,    mall,            "mall"            , "") \
- s (shop,    department_store, "department store" , "") \
- s (amenity, biergarten,      "biergarten"      , "") \
- s (amenity, nightclub,       "nightclub"       , "") \
- s (amenity, bar,             "bar"             , "") \
- s (amenity, cafe,            "cafe"            , "") \
- s (amenity, fast_food,       "fast food"       , "") \
- s (amenity, ice_cream,       "icecream"        , "") \
- s (amenity, bicycle_rental,  "bicycle rental"  , "") \
- s (amenity, car_rental,      "car rental"      , "") \
- s (amenity, car_sharing,     "car sharing"     , "") \
- s (amenity, car_wash,        "car wash"        , "") \
- s (amenity, taxi,            "taxi"            , "") \
- s (amenity, telephone,       "telephone"       , "") \
- s (amenity, post_office,     "post office"     , "") \
- s (amenity, post_box,        "post box"        , "") \
- s (tourism, information,     "tourist info"    , "") \
- s (amenity, toilets,         "toilets"         , "") \
- s (amenity, recycling,       "recycling"       , "") \
- s (amenity, fire_station,    "fire station"    , "") \
- s (amenity, police,          "police"          , "") \
- s (amenity, courthouse,      "courthouse"      , "") \
- s (amenity, prison,          "prison"          , "") \
- s (amenity, public_building, "public building" , "") \
- s (amenity, townhall,        "townhall"        , "") \
- s (amenity, cinema,          "cinema"          , "") \
- s (amenity, arts_centre,     "arts centre"     , "") \
- s (amenity, theatre,         "theatre"         , "") \
- s (tourism, hotel,           "hotel"           , "") \
- s (tourism, motel,           "motel"           , "") \
- s (tourism, guest_house,     "guest house"     , "") \
- s (tourism, hostel,          "hostel"          , "") \
- s (tourism, chalet,          "chalet"          , "") \
- s (tourism, camp_site,       "camp site"       , "") \
- s (tourism, caravan_site,    "caravan site"    , "") \
- s (amenity, pharmacy,        "pharmacy"        , "") \
- s (amenity, dentist,         "dentist"         , "") \
- s (amenity, hospital,        "hospital"        , "") \
- s (amenity, bank,            "bank"            , "") \
- s (amenity, bureau_de_change, "bureau de change" , "") \
- s (amenity, atm,             "atm"            , "") \
- s (amenity, drinking_water,  "drinking water"  , "") \
- s (amenity, fountain,        "fountain"        , "") \
- s (natural, spring,          "spring"          , "") \
- s (amenity, university,      "university"      , "") \
- s (amenity, college,         "college"         , "") \
- s (amenity, kindergarten,    "kindergarten"    , "") \
- s (highway, living_street,   "living street"   , "") \
- s (highway, motorway,        "motorway"        , "") \
- s (highway, motorway_link,   "mway link"       , "") \
- s (highway, trunk_link,      "trunk link"      , "") \
- s (highway, primary_link,    "primary_link"    , "") \
- s (man_made, beacon,         "beacon"          , "" ) \
- s (man_made, survey_point,   "survey point"    , "" ) \
- s (man_made, tower,          "tower"           , "" ) \
- s (man_made, water_tower,    "water tower"     , "" ) \
- s (man_made, gasometer,      "gasometer"       , "" ) \
- s (man_made, reservoir_covered, "covered reservoir", "" ) \
- s (man_made, lighthouse,     "lighthouse"      , "" ) \
- s (man_made, windmill,       "windmill"        , "" ) \
- s (man_made, pier,           "pier"            , "" ) \
- s (man_made, pipeline,       "pipeline"        , "" ) \
- s (man_made, wastewater_plant, "wastewater plant" , "" ) \
- s (man_made, crane,          "crane"           , "" ) \
- s (building, yes,            "building"        , "") \
- s (landuse, forest,          "forest"          , "") \
- s (landuse, residential,     "residential area", "") \
- s (landuse, industrial,      "industrial area" , "") \
- s (landuse, retail,          "retail area"     , "") \
- s (landuse, commercial,      "commercial area" , "") \
- s (landuse, construction,    "construction area" , "") \
- s (landuse, reservoir,       "reservoir"       , "") \
- s (natural, water,           "lake / dam"      , "") \
- s (landuse, basin,           "basin"           , "") \
- s (landuse, landfill,        "landfill"        , "") \
- s (landuse, quarry,          "quarry"          , "") \
- s (landuse, cemetery,        "cemetery"        , "") \
- s (landuse, allotments,      "allotments"      , "") \
- s (landuse, farm,            "farmland"        , "") \
- s (landuse, farmyard,        "farmyard"        , "") \
- s (landuse, military,        "military area"   , "") \
- s (religion, bahai,          "bahai"           , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, buddhist,       "buddhist"        , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, hindu,          "hindu"           , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, jain,           "jainism"         , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, sikh,           "sikhism"         , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, shinto,         "shinto"          , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- s (religion, taoist,         "taoism"          , \
-               "  <tag k='amenity' v='place_of_worship' />\n") \
- /* relations must be last and restriction_no_right_turn must be first */ \
- s (restriction, no_right_turn, ""              , "") \
- s (restriction, no_left_turn, ""               , "") \
- s (restriction, no_u_turn, ""                  , "") \
- s (restriction, no_straight_on, ""             , "") \
- s (restriction, only_right_turn, ""            , "") \
- s (restriction, only_left_turn, ""             , "") \
- s (restriction, only_straight_on, ""           , "") \
- /* restriction_only_straight_on must be the last restriction */
-
-#define XXXFSDFSF \
- s (sport,   orienteering,    "orienteering"    , "") \
- s (sport,   gym,             "gym"             , "") \
- /* sport=golf isn't a golf course, so what is it ? */ \
-
-#define s(k,v,shortname,extraTags) k ## _ ## v,
-enum { STYLES firstElemStyle }; // highway_residential, ...
-#undef s
+#include "libgosm.h"
 
 struct klasTableStruct {
   const wchar_t *desc;
@@ -421,192 +140,6 @@ struct klasTableStruct {
 STYLES
 #undef s
 };
-
-struct styleStruct {
-  int  x[16], lineWidth, lineRWidth, lineColour, lineColourBg, dashed;
-  int  scaleMax, areaColour, dummy /* pad to 8 for 64 bit compatibility */;
-  double aveSpeed[l1], invSpeed[l1];
-};
-
-struct ndType {
-  int wayPtr, lat, lon, other[2];
-};
-
-struct wayType {
-  int bits;
-  int clat, clon, dlat, dlon; /* Centre coordinates and (half)diameter */
-};
-
-inline int Layer (wayType *w) { return w->bits >> 29; }
-
-inline int Latitude (double lat)
-{ /* Mercator projection onto a square means we have to clip
-     everything beyond N85.05 and S85.05 */
-  return lat > 85.051128779 ? 2147483647 : lat < -85.051128779 ? -2147483647 :
-    lrint (log (tan (M_PI / 4 + lat * M_PI / 360)) / M_PI * 2147483648.0);
-}
-
-inline int Longitude (double lon)
-{
-  return lrint (lon / 180 * 2147483648.0);
-}
-
-inline double LatInverse (int lat)
-{
-  return (atan (exp (lat / 2147483648.0 * M_PI)) - M_PI / 4) / M_PI * 360;
-}
-
-inline double LonInverse (int lon)
-{
-  return lon / 2147483648.0 * 180;
-}
-
-/*---------- Global variables -----------*/
-int *hashTable, bucketsMin1, pakHead = 0xEB3A942;
-char *data;
-ndType *ndBase;
-styleStruct *style;
-
-inline int StyleNr (wayType *w) { return w->bits & ((2 << STYLE_BITS) - 1); }
-
-inline styleStruct *Style (wayType *w) { return &style[StyleNr (w)]; }
-
-unsigned inline ZEnc (int lon, int lat)
-{ // Input as bits : lon15,lon14,...lon0 and lat15,lat14,...,lat0
-  int t = (lon << 16) | lat;
-  t = (t & 0xff0000ff) | ((t & 0x00ff0000) >> 8) | ((t & 0x0000ff00) << 8);
-  t = (t & 0xf00ff00f) | ((t & 0x0f000f00) >> 4) | ((t & 0x00f000f0) << 4);
-  t = (t & 0xc3c3c3c3) | ((t & 0x30303030) >> 2) | ((t & 0x0c0c0c0c) << 2);
-  return (t & 0x99999999) | ((t & 0x44444444) >> 1) | ((t & 0x22222222) << 1);
-} // Output as bits : lon15,lat15,lon14,lat14,...,lon0,lat0
-
-inline int Hash (int lon, int lat, int lowz = 0)
-{ /* All the normal tiles (that make up a super tile) are mapped to sequential
-     buckets thereby improving caching and reducing the number of disk tracks
-     required to render / route through a super tile sized area. 
-     The map to sequential buckets is a 2-D Hilbert curve. */
-  if (lowz) {
-    lon >>= 7;
-    lat >>= 7;
-  }
-  
-  int t = ZEnc (lon >> TILEBITS, ((unsigned) lat) >> TILEBITS);
-  int s = ((((unsigned)t & 0xaaaaaaaa) >> 1) | ((t & 0x55555555) << 1)) ^ ~t;
-  // s=ZEnc(lon,lat)^ZEnc(lat,lon), so it can be used to swap lat and lon.
-  #define SUPERTILEBITS (TILEBITS + 8)
-  for (int lead = 1 << (SUPERTILEBITS * 2 - TILEBITS * 2); lead; lead >>= 2) {
-    if (!(t & lead)) t ^= ((t & (lead << 1)) ? s : ~s) & (lead - 1);
-  }
-
-  return (((((t & 0xaaaaaaaa) >> 1) ^ t) + (lon >> SUPERTILEBITS) * 0x00d20381
-    + (lat >> SUPERTILEBITS) * 0x75d087d9) &
-    (lowz ? bucketsMin1 >> 7 : bucketsMin1)) + (lowz ? bucketsMin1 + 1 : 0);
-}
-
-int TagCmp (char *a, char *b)
-{ // This works like the ordering of books in a library : We ignore
-  // meaningless words like "the", "street" and "north". We (should) also map
-  // deprecated words to their new words, like petrol to fuel
-  // TODO : We should consider an algorithm like double metasound.
-  static const char *omit[] = { /* "the", in the middle of a name ?? */
-    "ave", "avenue", "blvd", "boulevard", "byp", "bypass",
-    "cir", "circle", "close", "cres", "crescent", "ct", "court", "ctr",
-      "center",
-    "dr", "drive", "hwy", "highway", "ln", "lane", "loop",
-    "pass", "pky", "parkway", "pl", "place", "plz", "plaza",
-    /* "run" */ "rd", "road", "sq", "square", "st", "street",
-    "ter", "terrace", "tpke", "turnpike", /*trce, trace, trl, trail */
-    "walk",  "way"
-  };
-  static const char *words[] = { "", "first", "second", "third", "fourth",
-    "fifth", "sixth", "seventh", "eighth", "nineth", "tenth", "eleventh",
-    "twelth", "thirteenth", "fourteenth", "fifthteenth", "sixteenth",
-    "seventeenth", "eighteenth", "nineteenth", "twentieth" };
-  static const char *teens[] = { "", "", "twenty ", "thirty ", "fourty ",
-    "fifty ", "sixty ", "seventy ", "eighty ", "ninety " };
-  
-  if (stricmp (a, "the ") == 0) a += 4;
-  if (stricmp (b, "the ") == 0) b += 4;
-  if (strchr ("WEST", a[0]) && a[1] == ' ') a += 2; // e.g. N 21st St
-  if (strchr ("WEST", b[0]) && b[1] == ' ') b += 2;
-
-  for (;;) {
-    char n[2][30] = { "", "" }, *ptr[2];
-    int wl[2];
-    for (int i = 0; i < 2; i++) {
-      char **p = i ? &b : &a;
-      if ((*p)[0] == ' ') {
-        for (int i = 0; i < int (sizeof (omit) / sizeof (omit[0])); i++) {
-          if (strncasecmp (*p + 1, omit[i], strlen (omit[i])) == 0 &&
-              !isalpha ((*p)[1 + strlen (omit[i])])) {
-            (*p) += 1 + strlen (omit[i]);
-            break;
-          }
-        }
-      }
-      if (isdigit (**p) && (!isdigit((*p)[1]) || !isdigit ((*p)[2]))
-              /* && isalpha (*p + strcspn (*p, "0123456789"))*/) {
-        // while (atoi (*p) > 99) (*p)++; // Buggy
-        if (atoi (*p) > 20) strcpy (n[i], teens[atoi ((*p)++) / 10]);
-        strcat (n[i], words[atoi (*p)]);
-        while (isdigit (**p) /*|| isalpha (**p)*/) (*p)++;
-        ptr[i] = n[i];
-        wl[i] = strlen (n[i]);
-      }
-      else {
-        ptr[i] = *p;
-        wl[i] = **p == ' ' ? 1 : strcspn (*p , " \n");
-      }
-    }
-    int result = strncasecmp (ptr[0], ptr[1], wl[0] < wl[1] ? wl[1] : wl[0]);
-    if (result || *ptr[0] == '\0' || *ptr[0] == '\n') return result;
-    if (n[0][0] == '\0') a += wl[1]; // In case b was 21st
-    if (n[1][0] == '\0') b += wl[0]; // In case a was 32nd
-  }
-}
-
-struct OsmItr { // Iterate over all the objects in a square
-  ndType *nd[1]; /* Readonly. Either can be 'from' or 'to', but you */
-  /* can be guaranteed that nodes will be in hs[0] */
-  
-  int slat, slon, left, right, top, bottom, tsize; /* Private */
-  ndType *end;
-  
-  OsmItr (int l, int t, int r, int b)
-  {
-    tsize = r - l > 10000000 ? TILESIZE << 7 : TILESIZE;
-    left = l & (~(tsize - 1));
-    right = (r + tsize - 1) & (~(tsize-1));
-    top = t & (~(tsize - 1));
-    bottom = (b + tsize - 1) & (~(tsize-1));
-    
-    slat = top;
-    slon = left - tsize;
-    nd[0] = end = NULL;
-  }
-};
-
-int Next (OsmItr &itr) /* Friend of osmItr */
-{
-  do {
-    itr.nd[0]++;
-    while (itr.nd[0] >= itr.end) {
-      if ((itr.slon += itr.tsize) == itr.right) {
-        itr.slon = itr.left;  /* Here we wrap around from N85 to S85 ! */
-        if ((itr.slat += itr.tsize) == itr.bottom) return FALSE;
-      }
-      int bucket = Hash (itr.slon, itr.slat, itr.tsize != TILESIZE);
-      itr.nd[0] = ndBase + hashTable[bucket];
-      itr.end = ndBase + hashTable[bucket + 1];
-    }
-  } while (((itr.nd[0]->lon ^ itr.slon) & (~(itr.tsize - 1))) ||
-           ((itr.nd[0]->lat ^ itr.slat) & (~(itr.tsize - 1))));
-/*      ((itr.hs[1] = (halfSegType *) (data + itr.hs[0]->other)) > itr.hs[0] &&
-       itr.left <= itr.hs[1]->lon && itr.hs[1]->lon < itr.right &&
-       itr.top <= itr.hs[1]->lat && itr.hs[1]->lat < itr.bottom)); */
-/* while nd[0] is a hash collision, */ 
-  return TRUE;
-}
 
 #define notImplemented \
   o (ShowCompass,     ) \
@@ -635,334 +168,6 @@ const char *optionNameTable[][numberOfOptions] = {
 #define o(en,min,max) int en = min;
 OPTIONS
 #undef o
-
-#define Sqr(x) ((x)*(x))
-/* Routing starts at the 'to' point and moves to the 'from' point. This will
-   help when we do in car navigation because the 'from' point will change
-   often while the 'to' point stays fixed, so we can keep the array of nodes.
-   It also makes the generation of the directions easier.
-
-   We use "double hashing" to keep track of the shortest distance to each
-   node. So we guess an upper limit for the number of nodes that will be
-   considered and then multiply by a few so that there won't be too many
-   clashes. For short distances we allow for dense urban road networks,
-   but beyond a certain point there is bound to be farmland or seas.
-
-   We call nodes that rescently had their "best" increased "active". The
-   active nodes are stored in a heap so that we can quickly find the most
-   promissing one.
-   
-   OSM nodes are not our "graph-theor"etic nodes. Our "graph-theor"etic nodes
-   are "states", namely the ability to reach nd directly from nd->other[dir]
-*/
-struct routeNodeType {
-  ndType *nd;
-  routeNodeType *shortest;
-  int best, heapIdx, dir, remain; // Dir is 0 or 1
-} *route = NULL, *shortest = NULL, **routeHeap;
-int dhashSize, routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
-
-#ifdef ROUTE_CALIBRATE
-int routeAddCnt;
-#define ROUTE_SET_ADDND_COUNT(x) routeAddCnt = (x)
-#define ROUTE_SHOW_STATS printf ("%d / %d\n", routeAddCnt, dhashSize); \
-  fprintf (stderr, "flat=%lf&flon=%lf&tlat=%lf&tlon=%lf&fast=%d&v=motorcar\n", \
-    LatInverse (flat), LonInverse (flon), LatInverse (tlat), \
-    LonInverse (tlon), FastestRoute)
-// This ratio must be around 0.5. Close to 0 or 1 is bad
-#else
-#define ROUTE_SET_ADDND_COUNT(x)
-#define ROUTE_SHOW_STATS
-#endif
-
-routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
-{ /* This function is called when we find a valid route that consists of the
-     segments (hs, hs->other), (newshort->hs, newshort->hs->other),
-     (newshort->shortest->hs, newshort->shortest->hs->other), .., 'to'
-     with cost 'cost'.
-     
-     When cost is -1 this function just returns the entry for nd without
-     modifying anything. */
-  unsigned hash = (intptr_t) nd / 10 + dir, i = 0;
-  routeNodeType *n;
-  do {
-    if (i++ > 10) {
-      //fprintf (stderr, "Double hash bailout : Table full, hash function "
-      //  "bad or no route exists\n");
-      return NULL;
-    }
-    n = route + hash % dhashSize;
-    /* Linear congruential generator from wikipedia */
-    hash = (unsigned) (hash * (__int64) 1664525 + 1013904223);
-    if (n->nd == NULL) { /* First visit of this node */
-      if (cost < 0) return NULL;
-      n->nd = nd;
-      n->best = 0x7fffffff;
-      /* Will do later : routeHeap[routeHeapSize] = n; */
-      n->heapIdx = routeHeapSize++;
-      n->dir = dir;
-      n->remain = lrint (sqrt (Sqr ((__int64)(nd->lat - rlat)) +
-                               Sqr ((__int64)(nd->lon - rlon))));
-      if (!shortest || n->remain < shortest->remain) shortest = n;
-      ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
-    }
-  } while (n->nd != nd || n->dir != dir);
-
-  int diff = n->remain + (newshort ? newshort->best - newshort->remain : 0);
-  if (cost >= 0 && n->best > cost + diff) {
-    n->best = cost + diff;
-    n->shortest = newshort;
-    if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
-    for (; n->heapIdx > 1 &&
-         n->best < routeHeap[n->heapIdx / 2]->best; n->heapIdx /= 2) {
-      routeHeap[n->heapIdx] = routeHeap[n->heapIdx / 2];
-      routeHeap[n->heapIdx]->heapIdx = n->heapIdx;
-    }
-    routeHeap[n->heapIdx] = n;
-  }
-  return n;
-}
-
-inline int IsOneway (wayType *w)
-{
-  return Vehicle != footR && Vehicle != bicycleR && (w->bits & (1<<onewayR));
-}
-
-void Route (int recalculate, int plon, int plat)
-{ /* Recalculate is faster but only valid if 'to', 'Vehicle' and
-     'FastestRoute' did not change */
-/* We start by finding the segment that is closest to 'from' and 'to' */
-  static ndType *endNd[2] = { NULL, NULL}, from;
-  static int toEndNd[2][2];
-  
-  ROUTE_SET_ADDND_COUNT (0);
-  shortest = NULL;
-  for (int i = recalculate ? 0 : 1; i < 2; i++) {
-    int lon = i ? flon : tlon, lat = i ? flat : tlat;
-    __int64 bestd = (__int64) 1 << 62;
-    /* find min (Sqr (distance)). Use long long so we don't loose accuracy */
-    OsmItr itr (lon - 100000, lat - 100000, lon + 100000, lat + 100000);
-    /* Search 1km x 1km around 'from' for the nearest segment to it */
-    while (Next (itr)) {
-      // We don't do for (int dir = 0; dir < 1; dir++) {
-      // because if our search box is large enough, it will also give us
-      // the other node.
-      if (!(((wayType*)(data + itr.nd[0]->wayPtr))->bits & (1<<Vehicle))) {
-        continue;
-      }
-      if (itr.nd[0]->other[0] < 0) continue;
-      __int64 lon0 = lon - itr.nd[0]->lon, lat0 = lat - itr.nd[0]->lat,
-              lon1 = lon - (ndBase + itr.nd[0]->other[0])->lon,
-              lat1 = lat - (ndBase + itr.nd[0]->other[0])->lat,
-              dlon = lon1 - lon0, dlat = lat1 - lat0;
-      /* We use Pythagoras to test angles for being greater that 90 and
-         consequently if the point is behind hs[0] or hs[1].
-         If the point is "behind" hs[0], measure distance to hs[0] with
-         Pythagoras. If it's "behind" hs[1], use Pythagoras to hs[1]. If
-         neither, use perpendicular distance from a point to a line */
-      int segLen = lrint (sqrt ((double)(Sqr(dlon) + Sqr (dlat))));
-      __int64 d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
-        dlon * lon1 <= - dlat * lat1 ? Sqr (lon1) + Sqr (lat1) :
-        Sqr ((dlon * lat1 - dlat * lon1) / segLen);
-      
-      wayType *w = (wayType *)(data + itr.nd[0]->wayPtr);
-      if (i) { // For 'from' we take motion into account
-        __int64 motion = segLen ? 3 * (dlon * plon + dlat * plat) / segLen
-          : 0;
-        // What is the most appropriate multiplier for motion ?
-        if (motion > 0 && IsOneway (w)) d += Sqr (motion);
-        else d -= Sqr (motion);
-        // Is it better to say :
-        // d = lrint (sqrt ((double) d));
-        // if (motion < 0 || IsOneway (w)) d += motion;
-        // else d -= motion; 
-      }
-      
-      if (d < bestd) {
-        bestd = d;
-        double invSpeed = !FastestRoute ? 1.0 : Style (w)->invSpeed[Vehicle];
-        //printf ("%d %lf\n", i, invSpeed);
-        toEndNd[i][0] =
-          lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
-        toEndNd[i][1] =
-          lrint (sqrt ((double)(Sqr (lon1) + Sqr (lat1))) * invSpeed);
-//        if (dlon * lon1 <= -dlat * lat1) toEndNd[i][1] += toEndNd[i][0] * 9;
-//        if (dlon * lon0 >= -dlat * lat0) toEndNd[i][0] += toEndNd[i][1] * 9;
-
-        if (IsOneway (w)) toEndNd[i][1 - i] = 200000000;
-        /*  It's possible to go up a oneway at the end, but at a huge penalty*/
-        endNd[i] = itr.nd[0];
-        /* The router only stops after it has traversed endHs[1], so if we
-           want 'limit' to be accurate, we must subtract it's length
-        if (i) {
-          toEndHs[1][0] -= segLen; 
-          toEndHs[1][1] -= segLen;
-        } */
-      }
-    } /* For each candidate segment */
-    if (bestd == ((__int64) 1 << 62) || !endNd[0]) {
-      endNd[i] = NULL;
-      //fprintf (stderr, "No segment nearby\n");
-      return;
-    }
-  } /* For 'from' and 'to', find segment that passes nearby */
-  from.lat = flat;
-  from.lon = flon;
-  if (recalculate || !route) {
-    free (route);
-    dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
-    dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
-    // Allocate one piece of memory for both route and routeHeap, so that
-    // we can easily retry if it fails on a small device
-    #ifdef _WIN32_WCE
-    MEMORYSTATUS memStat;
-    GlobalMemoryStatus (&memStat);
-    int lim = (memStat.dwAvailPhys - 1400000) / // Leave 1.4 MB free
-                 (sizeof (*route) + sizeof (*routeHeap));
-    if (dhashSize > lim && lim > 0) dhashSize = lim;
-    #endif
-
-    while (dhashSize > 0 && !(route = (routeNodeType*)
-        malloc ((sizeof (*route) + sizeof (*routeHeap)) * dhashSize))) {
-      dhashSize = dhashSize / 4 * 3;
-    }
-    memset (route, 0, sizeof (dhashSize) * dhashSize);
-    routeHeapSize = 1; /* Leave position 0 open to simplify the math */
-    routeHeap = (routeNodeType**) (route + dhashSize) - 1;
-
-    rlat = flat;
-    rlon = flon;
-    AddNd (endNd[0], 0, toEndNd[0][0], NULL);
-    AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
-    AddNd (endNd[0], 1, toEndNd[0][0], NULL);
-    AddNd (ndBase + endNd[0]->other[0], 0, toEndNd[0][1], NULL);
-  }
-  else {
-    routeNodeType *frn = AddNd (&from, 0, -1, NULL);
-    if (frn) frn->best = 0x7fffffff;
-
-    routeNodeType *rn = AddNd (endNd[1], 0, -1, NULL);
-    if (rn) AddNd (&from, 0, toEndNd[1][1], rn);
-    routeNodeType *rno = AddNd (ndBase + endNd[1]->other[0], 1, -1, NULL);
-    if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
-  }
-  
-  while (routeHeapSize > 1) {
-    routeNodeType *root = routeHeap[1];
-    routeHeapSize--;
-    int beste = routeHeap[routeHeapSize]->best;
-    for (int i = 2; ; ) {
-      int besti = i < routeHeapSize ? routeHeap[i]->best : beste;
-      int bestipp = i + 1 < routeHeapSize ? routeHeap[i + 1]->best : beste;
-      if (besti > bestipp) i++;
-      else bestipp = besti;
-      if (beste <= bestipp) {
-        routeHeap[i / 2] = routeHeap[routeHeapSize];
-        routeHeap[i / 2]->heapIdx = i / 2;
-        break;
-      }
-      routeHeap[i / 2] = routeHeap[i];
-      routeHeap[i / 2]->heapIdx = i / 2;
-      i = i * 2;
-    }
-    root->heapIdx = -1; /* Root now removed from the heap */
-    if (root->nd == &from) { // Remove 'from' from the heap in case we
-      shortest = root->shortest; // get called with recalculate=0
-      break;
-    }
-    if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
-      AddNd (&from, 0, toEndNd[1][1 - root->dir], root);
-    }
-    ndType *nd = root->nd, *other, *firstNd, *restrictItr;
-    while (nd > ndBase && nd[-1].lon == nd->lon &&
-      nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
-    firstNd = nd; // Save it for checking restrictions
-    /* Now work through the segments connected to root. */
-    do {
-//          if (StyleNr ((wayType *)(data + nd->wayPtr)) >= restriction_no_right_turn) printf ("%d\n", nd - firstNd);
-      for (int dir = 0; dir < 2; dir++) {
-        if (nd == root->nd && dir == root->dir) continue;
-        /* Don't consider an immediate U-turn to reach root->hs->other.
-           This doesn't exclude 179.99 degree turns though. */
-        
-        if (nd->other[dir] < 0) continue;
-        if (Vehicle != footR && Vehicle != bicycleR) {
-          for (restrictItr = firstNd; restrictItr->other[0] < 0 &&
-                          restrictItr->other[1] < 0; restrictItr++) {
-            wayType *w  = (wayType *)(data + restrictItr->wayPtr);
-            if (StyleNr (w) < restriction_no_right_turn ||
-                StyleNr (w) > restriction_only_straight_on) continue;
-  //          printf ("aa\n");
-            if (atoi ((char*)(w + 1) + 1) == nd->wayPtr &&
-                atoi (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr) {
-               ndType *n2 = ndBase + root->nd->other[root->dir];
-               ndType *n0 = ndBase + nd->other[dir];
-               __int64 straight =
-                 (n2->lat - nd->lat) * (__int64)(nd->lat - n0->lat) +
-                 (n2->lon - nd->lon) * (__int64)(nd->lon - n0->lon), left =
-                 (n2->lat - nd->lat) * (__int64)(nd->lon - n0->lon) -
-                 (n2->lon - nd->lon) * (__int64)(nd->lat - n0->lat);
-               int azi = straight < left ? (straight < -left ? 3 : 0) :
-                 straight < -left ? 2 : 1;
-//               printf ("%d %9d %9d %d %d\n", azi, n2->lon - nd->lon, n0->lon - nd->lon, straight < left, straight < -left);
-//               printf ("%d %9d %9d\n", azi, n2->lat - nd->lat, n0->lat - nd->lat);
-               static const int no[] = { restriction_no_left_turn,
-                 restriction_no_straight_on, restriction_no_right_turn,
-                 restriction_no_u_turn },
-                 only[] = { restriction_only_left_turn,
-                 restriction_only_straight_on, restriction_only_right_turn,
-                 -1 /*  restriction_only_u_turn */ };
-               if (StyleNr (w) == only[azi ^ 1] ||
-                   StyleNr (w) == only[azi ^ 2] || StyleNr (w) == only[azi ^ 3]
-                   || StyleNr (w) == no[azi]) break;
-//               printf ("%d %d %d\n", azi, n2->lon, n0->lon);
-            }
-          }
-          if (restrictItr->other[0] < 0 &&
-              restrictItr->other[1] < 0) continue;
-        }
-        // Tagged node, start or end of way or restriction.
-        
-        other = ndBase + nd->other[dir];
-        wayType *w = (wayType *)(data + nd->wayPtr);
-        if ((w->bits & (1 << Vehicle)) && (dir || !IsOneway (w))) {
-          int d = lrint (sqrt ((double)
-            (Sqr ((__int64)(nd->lon - other->lon)) +
-             Sqr ((__int64)(nd->lat - other->lat)))) *
-                        (FastestRoute ? Style (w)->invSpeed[Vehicle] : 1.0));                  
-          AddNd (other, 1 - dir, d, root);
-        } // If we found a segment we may follow
-      }
-    } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
-             nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
-  } // While there are active nodes left
-  ROUTE_SHOW_STATS;
-//  if (fastest) printf ("%lf
-//  printf ("%lf km\n", limit / 100000.0);
-}
-
-int JunctionType (ndType *nd)
-{
-  int ret = 'j';
-  while (nd > ndBase && nd[-1].lon == nd->lon &&
-    nd[-1].lat == nd->lat) nd--;
-  int segCnt = 0; // Count number of segments at x->shortest
-  do {
-    // TODO : Only count segment traversable by 'Vehicle'
-    // Except for the case where a cyclist passes a motorway_link.
-    // TODO : Don't count oneways entering the roundabout
-    if (nd->other[0] >= 0) segCnt++;
-    if (nd->other[1] >= 0) segCnt++;
-    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_traffic_signals) {
-      ret = 't';
-    }
-    if (StyleNr ((wayType*)(nd->wayPtr + data)) == highway_mini_roundabout) {
-      ret = 'm';
-    }   
-  } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
-           nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
-  return segCnt > 2 ? toupper (ret) : ret;
-}
 
 #ifndef HEADLESS
 #define STATUS_BAR    0
@@ -1131,7 +336,8 @@ int ProcessNmea (char *rx, unsigned *got)
         if (nLon > 180) nLon = nLon - 360; // Mungewell's Sirf Star 3
         if (tolower (rx[fStart[col + 1]]) == 's') nLat = -nLat;
         if (tolower (rx[fStart[col + 3]]) == 'w') nLon = -nLon;
-        if (fabs (nLat) < 90 && fabs (nLon) < 180) {
+        if (fabs (nLat) < 90 && fabs (nLon) < 180 &&
+            (nLat != 0 || nLon != 0)) { // JNC when starting up
           if (gpsTrack + sizeof (gpsTrack) / sizeof (gpsTrack[0]) <=
             ++gpsNew) FlushGpx ();
           memcpy (gpsNew->fix.tm, rx + fStart[col == 1 ? 5 : 1], 6);
@@ -1231,7 +437,7 @@ void DoFollowThing (gpsNewStruct *gps)
   __int64 dlon = clon - flon, dlat = clat - flat;
   flon = clon;
   flat = clat;
-  if (route) Route (FALSE, dlon, dlat);
+  if (route) Route (FALSE, dlon, dlat, Vehicle, FastestRoute);
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
   static const wchar_t *command[3] = { NULL, NULL, NULL }, *oldCommand = NULL;
@@ -1253,7 +459,7 @@ void DoFollowThing (gpsNewStruct *gps)
            dist < 40000 /* roughly 300m */; x = x->shortest) {
         int roundExit = 0;
         while (x->shortest && ((1 << roundaboutR) &
-                       ((wayType*)(x->shortest->nd->wayPtr + data))->bits)) {
+                       (Way (x->shortest->nd))->bits)) {
           if (isupper (JunctionType (x->shortest->nd))) roundExit++;
           x = x->shortest;
         }
@@ -1521,7 +727,7 @@ void HitButton (int b)
     else if (option == EndRouteNum) {
       tlon = clon;
       tlat = clat;
-      Route (TRUE, 0, 0);
+      Route (TRUE, 0, 0, Vehicle, FastestRoute);
     }
     #ifdef _WIN32_WCE
     else if (option == SearchNum) {
@@ -1573,8 +779,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       #endif
       objectAddRow = -1;
     }
-    else objectAddRow = event->y * (restriction_no_right_turn / perRow + 2) /
-                            draw->allocation.height * perRow;
+    else objectAddRow = int (event->y) * (restriction_no_right_turn / perRow
+                                  + 2) / draw->allocation.height * perRow;
   }
   else if (event->x > w - ButtonSize * 20 && b <
       (!HideZoomButtons || option != numberOfOptions ? 3 : 
@@ -1607,7 +813,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else {
       tlon = lon;
       tlat = lat;
-      Route (TRUE, 0, 0);
+      Route (TRUE, 0, 0, Vehicle, FastestRoute);
     }
   }
   gtk_widget_queue_clear (draw);
@@ -1629,7 +835,7 @@ void GetDirections (GtkWidget *, gpointer)
       for (routeNodeType *x = shortest; x; x = x->shortest) {
         halfSegType *other = (halfSegType *)(data + x->hs->other);
         int forward = x->hs->wayPtr != TO_HALFSEG;
-        wayType *w = (wayType *)(data + (forward ? x->hs : other)->wayPtr);
+        wayType *w = Way (forward ? x->hs : other);
         
         // I think the formula below can be substantially simplified using
         // the method used in GpsMove
@@ -1820,7 +1026,7 @@ gint Expose (void)
       
       while (Next (itr)) {
         ndType *nd = itr.nd[0];
-        wayType *w = (wayType *)(data + nd->wayPtr);
+        wayType *w = Way (nd);
         if (Style (w)->scaleMax <
                   zoom / clip.width * 175 / (DetailLevel + 6)) continue;
         
@@ -2171,169 +1377,28 @@ gint Expose (void)
   return FALSE;
 }
 
+#ifndef _WIN32_WCE
 GtkWidget *searchW;
 GtkWidget *list;
-#define numIncWays 40
-wayType *incrementalWay[numIncWays];
 
-int IdxSearch (int *idx, int h, char *key, unsigned z)
-{
-  for (int l = 0; l < h;) {
-    char *tag = data + idx[(h + l) / 2];
-    int diff = TagCmp (tag, key);
-    while (*--tag) {}
-    if (diff > 0 || (diff == 0 &&
-      ZEnc ((unsigned)((wayType *)tag)[-1].clat >> 16, 
-            (unsigned)((wayType *)tag)[-1].clon >> 16) >= z)) h = (h + l) / 2;
-    else l = (h + l) / 2 + 1;
-  }
-  return h;
-}
-
-/* 1. Bsearch idx such that
-      ZEnc (way[idx]) < ZEnc (clon/lat) < ZEnc (way[idx+1])
-   2. Fill the list with ways around idx.
-   3. Now there's a circle with clon/clat as its centre and that runs through
-      the worst way just found. Let's say it's diameter is d. There exist
-      4 Z squares smaller that 2d by 2d that cover this circle. Find them
-      with binary search and search through them for the nearest ways.
-   The worst case is when the nearest nodes are far along a relatively
-   straight line.
-*/
 int IncrementalSearch (void)
 {
-  __int64 dista[numIncWays];
-  char *taga[numIncWays];
-  char *key = (char *) gtk_entry_get_text (GTK_ENTRY (searchW));
-  int *idx =
-    (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
-  int l = IdxSearch (idx, hashTable - idx, key, 0), count;
-//  char *lastName = data + idx[min (hashTable - idx), 
-//    int (sizeof (incrementalWay) / sizeof (incrementalWay[0]))) + l - 1];
-  int cz = ZEnc ((unsigned) clat >> 16, (unsigned) clon >> 16);
-  for (count = 0; count + l < hashTable - idx && count < numIncWays;) {
-    int m[2], c = count, ipos, dir, bits;
-    m[0] = IdxSearch (idx, hashTable - idx, data + idx[count + l], cz);
-    m[1] = m[0] - 1;
-    __int64 distm[2] = { -1, -1 }, big = ((unsigned __int64) 1 << 63) - 1;
-    while (c < numIncWays && (distm[0] < big || distm[1] < big)) {
-      dir = distm[0] < distm[1] ? 0 : 1;
-      if (distm[dir] != -1) {
-        for (ipos = c; count < ipos && distm[dir] < dista[ipos - 1]; ipos--) {
-          dista[ipos] = dista[ipos - 1];
-          incrementalWay[ipos] = incrementalWay[ipos - 1];
-          taga[ipos] = taga[ipos - 1];
-        }
-        char *tag = data + idx[m[dir]];
-        taga[ipos] = tag;
-        while (*--tag) {}
-        incrementalWay[ipos] = (wayType*)tag - 1;
-        dista[ipos] = distm[dir];
-        c++;
-      }
-      m[dir] += dir ? 1 : -1;
-
-      if (0 <= m[dir] && m[dir] < hashTable - idx &&
-        TagCmp (data + idx[m[dir]], data + idx[count + l]) == 0) {
-        char *tag = data + idx[m[dir]];
-        while (*--tag) {}
-        distm[dir] = Sqr ((__int64)(clon - ((wayType*)tag)[-1].clon)) +
-          Sqr ((__int64)(clat - ((wayType*)tag)[-1].clat));
-      }
-      else distm[dir] = big;
-    }
-    if (count == c) break; // Something's wrong. idx[count + l] not found !
-    if (c >= numIncWays) {
-      c = count; // Redo the adding
-      for (bits = 0; bits < 16 && dista[numIncWays - 1] >> (bits * 2 + 32);
-        bits++) {}
-/* Print Z's for first solution 
-      for (int j = c; j < numIncWays; j++) {
-        for (int i = 0; i < 32; i++) printf ("%d%s",
-          (ZEnc ((unsigned) incrementalWay[j]->clat >> 16,
-                 (unsigned) incrementalWay[j]->clon >> 16) >> (31 - i)) & 1,
-          i == 31 ? " y\n" : i % 2 ? " " : "");
-      } */
-/* Print centre, up, down, right and left to see if they're in the square
-      for (int i = 0; i < 32; i++) printf ("%d%s", (cz >> (31 - i)) & 1,
-        i == 31 ? " x\n" : i % 2 ? " " : "");
-      for (int i = 0; i < 32; i++) printf ("%d%s", (
-        ZEnc ((unsigned)(clat + (int) sqrt (dista[numIncWays - 1])) >> 16,
-              (unsigned)clon >> 16) >> (31 - i)) & 1,
-        i == 31 ? " x\n" : i % 2 ? " " : "");
-      for (int i = 0; i < 32; i++) printf ("%d%s", (
-        ZEnc ((unsigned)(clat - (int) sqrt (dista[numIncWays - 1])) >> 16,
-              (unsigned)clon >> 16) >> (31 - i)) & 1,
-        i == 31 ? " x\n" : i % 2 ? " " : "");
-      for (int i = 0; i < 32; i++) printf ("%d%s", (
-        ZEnc ((unsigned)clat >> 16,
-              (unsigned)(clon + (int) sqrt (dista[numIncWays - 1])) >> 16) >> (31 - i)) & 1,
-        i == 31 ? " x\n" : i % 2 ? " " : "");
-      for (int i = 0; i < 32; i++) printf ("%d%s", (
-        ZEnc ((unsigned)clat >> 16,
-              (unsigned)(clon - (int) sqrt (dista[numIncWays - 1])) >> 16) >> (31 - i)) & 1,
-        i == 31 ? " x\n" : i % 2 ? " " : "");
-*/      
-      int swap = cz ^ ZEnc (
-        (unsigned) (clat + (clat & (1 << (bits + 16))) * 4 -
-                                              (2 << (bits + 16))) >> 16,
-        (unsigned) (clon + (clon & (1 << (bits + 16))) * 4 -
-                                              (2 << (bits + 16))) >> 16);
-      // Now we search through the 4 squares around (clat, clon)
-      for (int mask = 0, maskI = 0; maskI < 4; mask += 0x55555555, maskI++) {
-        int s = IdxSearch (idx, hashTable - idx, data + idx[count + l],
-          (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1));
-/* Print the square
-        for (int i = 0; i < 32; i++) printf ("%d%s", 
-          (((cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1)) >> (31 - i)) & 1,
-          i == 31 ? "\n" : i % 2 ? " " : "");
-        for (int i = 0; i < 32; i++) printf ("%d%s", 
-          (((cz ^ (mask & swap)) | ((4 << (bits << 1)) - 1)) >> (31 - i)) & 1,
-          i == 31 ? "\n" : i % 2 ? " " : "");
-*/
-        for (;;) {
-          char *tag = data + idx[s++];
-          if (TagCmp (data + idx[count + l], tag) != 0) break;
-          while (*--tag) {}
-          wayType *w = (wayType*)tag - 1;
-          if ((ZEnc ((unsigned)w->clat >> 16, (unsigned) w->clon >> 16) ^
-               cz ^ (mask & swap)) >> (2 + (bits << 1))) break;
-          __int64 d = Sqr ((__int64)(w->clat - clat)) +
-                      Sqr ((__int64)(w->clon - clon));
-          if (count < numIncWays || d < dista[count - 1]) {
-            if (count < numIncWays) count++;
-            for (ipos = count - 1; ipos > c && d < dista[ipos - 1]; ipos--) {
-              dista[ipos] = dista[ipos - 1];
-              incrementalWay[ipos] = incrementalWay[ipos - 1];
-              taga[ipos] = taga[ipos - 1];
-            }
-            incrementalWay[ipos] = w;
-            dista[ipos] = d;
-            taga[ipos] = data + idx[s - 1];
-          }
-        } // For each entry in the square
-      } // For each of the 4 squares
-      break; // count < numIncWays implies a bug. Don't loop infinitely.
-    } // If the search list is filled by tags with this text
-    count = c;
-  } // For each
+  GosmSearch (clon, clat, (char *) gtk_entry_get_text (GTK_ENTRY (searchW)));
   gtk_clist_freeze (GTK_CLIST (list));
   gtk_clist_clear (GTK_CLIST (list));
-  for (int i = 0; i < count; i++) {
-    char *m = (char *) malloc (strcspn (taga[i], "\n") + 1);
-    sprintf (m, "%.*s", strcspn (taga[i], "\n"), taga[i]);
-    gtk_clist_append (GTK_CLIST (list), &m);
-    free (m);
+  for (int i = 0; i < searchCnt; i++) {
+    if (gosmSstr[i]) gtk_clist_append (GTK_CLIST (list), &gosmSstr[i]);
   }
   gtk_clist_thaw (GTK_CLIST (list));
   return FALSE;
 }
+#endif
 
 void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
   GdkEventButton * /*ev*/, void * /*data*/)
 {
-  SetLocation (incrementalWay[row]->clon, incrementalWay[row]->clat);
-  zoom = incrementalWay[row]->dlat + incrementalWay[row]->dlon + (1 << 15);
+  SetLocation (gosmSway[row]->clon, gosmSway[row]->clat);
+  zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
   FollowGPSr = FALSE;
   gtk_widget_queue_clear (draw);
@@ -2341,7 +1406,7 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
 
 void InitializeOptions (void)
 {
-  char *tag = data +
+  char *tag = gosmData +
     *(int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
   while (*--tag) {}
   SetLocation (((wayType*)tag)[-1].clon, ((wayType*)tag)[-1].clat);
@@ -2353,12 +1418,7 @@ void InitializeOptions (void)
 #ifndef _WIN32_WCE
 int UserInterface (int argc, char *argv[])
 {
-  #if defined (__linux__)
-  FILE *gmap = fopen64 ("gosmore.pak", "r");
-  #else
-  GMappedFile *gmap = g_mapped_file_new ("gosmore.pak", FALSE, NULL);
-  #endif
-  if (gmap) {
+/*  if (gmap) {
     #ifdef __linux__
     int ndCount[3];
     fseek (gmap, -sizeof (ndCount), SEEK_END);
@@ -2375,14 +1435,18 @@ int UserInterface (int argc, char *argv[])
     hashTable = (int *)((char *)ndBase + pakSize - ndCount[2]) - bucketsMin1
       - (bucketsMin1 >> 7) - 5;
     #else
-    data = (char*) g_mapped_file_get_contents (gmap);
-    bucketsMin1 = ((int *) (data + g_mapped_file_get_length (gmap)))[-2];
-    hashTable = (int *) (data + g_mapped_file_get_length (gmap)) -
-      bucketsMin1 - (bucketsMin1 >> 7) - 5;
-    ndBase = (ndType *)(data + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 4]);
     #endif
-  }
-  if (!gmap || !data || !ndBase || !hashTable || *(int*) data != pakHead) {
+  } */
+  #if defined (__linux__)
+  FILE *gmap = fopen64 ("gosmore.pak", "r");
+  if (!gmap || fseek (gmap, 0, SEEK_END) != 0 ||
+      !GosmInit (mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED,
+                fileno (gmap), 0), ftell (gmap))) {
+  #else
+  GMappedFile *gmap = g_mapped_file_new ("gosmore.pak", FALSE, NULL);
+  if (!gmap || !GosmInit (g_mapped_file_get_contents (gmap),
+      g_mapped_file_get_length (gmap))) {
+  #endif
     fprintf (stderr, "Cannot read gosmore.pak\nYou can (re)build it from\n"
       "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
       argv[0]);
@@ -2396,7 +1460,6 @@ int UserInterface (int argc, char *argv[])
     #endif
     return 8;
   }
-  style = (struct styleStruct *)(data + 4);
 
   if (getenv ("QUERY_STRING")) {
     double x0, y0, x1, y1;
@@ -2411,12 +1474,12 @@ int UserInterface (int argc, char *argv[])
     #define M(v) if (strcmp (vehicle, #v) == 0) Vehicle = v ## R;
     RESTRICTIONS
     #undef M
-    Route (TRUE, 0, 0);
+    Route (TRUE, 0, 0, Vehicle, FastestRoute);
     printf ("Content-Type: text/plain\n\r\n\r");
     if (!shortest) printf ("No route found\n\r");
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
     for (; shortest; shortest = shortest->shortest) {
-      wayType *w = (wayType*)(shortest->nd->wayPtr + data);
+      wayType *w = Way (shortest->nd);
       char *name = (char*)(w + 1) + 1;
       printf ("%lf,%lf,%c,%s,%.*s\n\r", LatInverse (shortest->nd->lat),
         LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
@@ -2593,6 +1656,8 @@ struct nodeType {
   int id, lon, lat;
 };
 
+char *data;
+
 inline nodeType *FindNode (nodeType *table, int id)
 {
   unsigned hash = id;
@@ -2658,7 +1723,7 @@ int MasterWayCmp (const void *a, const void *b)
 
 int main (int argc, char *argv[])
 {
-  assert (l3 < 32);
+  assert (layerBit3 < 32);
   #ifndef WIN32
   int rebuildCnt = 0;
   if (argc > 1) {
@@ -2823,14 +1888,14 @@ int main (int argc, char *argv[])
       xmlFree (name);
       //xmlFree (val);      
     }
-    for (int i = 0; i < l1; i++) {
+    for (int i = 0; i < layerBit1; i++) {
       double max = 0;
       for (int j = 0; j < styleCnt; j++) {
         if (srec[j].aveSpeed[i] > max) max = srec[j].aveSpeed[i];
       }
       for (int j = 0; j < styleCnt; j++) {
         if (srec[j].aveSpeed[i] == 0) { // e.g. highway=foot motorcar=yes
-          for (int k = 0; k < l1; k++) {
+          for (int k = 0; k < layerBit1; k++) {
             if (srec[j].aveSpeed[i] < srec[j].aveSpeed[k]) {
               srec[j].aveSpeed[i] = srec[j].aveSpeed[k];
             } // As fast as any other vehicle,
@@ -3357,17 +2422,29 @@ BOOL CALLBACK DlgSearchProc (
     case WM_COMMAND:
       if (LOWORD (wParam) == IDC_EDIT1) {
         HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
+        UTF16 appendTmp[50];
+        char editStr[50];
+
         memset (appendTmp, 0, sizeof (appendTmp));
         int wstrlen = Edit_GetLine (edit, 0, appendTmp, sizeof (appendTmp));
-        unsigned char *tStart = (unsigned char*) searchStr;
+        unsigned char *tStart = (unsigned char*) editStr;
         const UTF16 *sStart = (const UTF16 *) appendTmp;
         if (ConvertUTF16toUTF8 (&sStart,  sStart + wstrlen,
-              &tStart, tStart + sizeof (searchStr), lenientConversion)
+              &tStart, tStart + sizeof (gosmSstr), lenientConversion)
             == conversionOK) {
           *tStart = '\0';
           hwndList = GetDlgItem (hwnd, IDC_LIST1);
           SendMessage (hwndList, LB_RESETCONTENT, 0, 0);
-          IncrementalSearch ();
+          GosmSearch (clon, clat, editStr);
+          for (int i = 0; i < searchCnt && gosmSstr[i]; i++) {
+            const unsigned char *sStart = (const unsigned char*) gosmSstr[i];
+            UTF16 *tStart = appendTmp;
+            if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (gosmSstr[i]) + 1,
+              &tStart, appendTmp + sizeof (appendTmp) / sizeof (appendTmp[0]),
+              lenientConversion) == conversionOK) {
+              SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) appendTmp);
+            }
+          }
         }
 	return TRUE;
       }
@@ -3413,13 +2490,12 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       break;
     case WM_PAINT:
       do { // Keep compiler happy.
-      BeginPaint (hWnd, &ps);
+        BeginPaint (hWnd, &ps);
       //GetClientRect (hWnd, &r);
       //SetBkColor(ps.hdc,RGB(63,63,63));
       //SetTextColor(ps.hdc,(i==state)?RGB(0,128,0):RGB(0,0,0));
       //r.left = 50;
       // r.top = 50;
-      if (data) {
 	if (!done) {
           bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP1));
           memDc = CreateCompatibleDC (ps.hdc);
@@ -3444,14 +2520,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         Expose (bufDc, memDc, pen);
 	BitBlt (ps.hdc, 0, 0, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
 	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
-      }
-      else {
-        wsprintf (msg, TEXT ("Can't allocate %d bytes"), pakSize);
-//        wsprintf (msg, TEXT ("%x bytes"), *(int*)&w);
-        ExtTextOut (ps.hdc, 50, 50, 0, NULL, msg, wcslen (msg), NULL);
-      }
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,
-      EndPaint (hWnd, &ps);
+        EndPaint (hWnd, &ps);
       } while (0);
       break;
     case WM_CHAR:
@@ -3662,7 +2732,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
     //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
     
     if (ProcessNmea (rx, (unsigned*)&got)) {
-      PostMessage (mWnd, WM_USER + 1, 0, (intptr_t) gpsNew);
+      PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
     }
   }
   guiDone = FALSE;
@@ -3694,8 +2764,8 @@ int WINAPI WinMain(
   hInst = hInstance;
   wchar_t argv0[80];
   GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-  UTF16 *sStart = (UTF16*) argv0, *rchr = wcsrchr (argv0, '\\');
-  wcscpy (rchr ? rchr + 1 : argv0, TEXT (""));
+  UTF16 *sStart = (UTF16*) argv0, *rchr = (UTF16*) wcsrchr (argv0, '\\');
+  wcscpy (rchr ? (wchar_t *) rchr + 1 : argv0, TEXT (""));
   unsigned char *tStart = (unsigned char *) docPrefix;
   ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0),
     &tStart, tStart + sizeof (docPrefix), lenientConversion);
@@ -3718,8 +2788,7 @@ int WINAPI WinMain(
   }
   pakSize = GetFileSize(gmap, NULL);
   gmap = CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
-  data = (char*) MapViewOfFile (gmap, FILE_MAP_READ, 0, 0, 0);
-  if (!data) {
+  if (!GosmInit (MapViewOfFile (gmap, FILE_MAP_READ, 0, 0, 0), pakSize)) {
     MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
       TEXT (""), MB_APPLMODAL|MB_OK);
     return 1;
@@ -3742,12 +2811,12 @@ int WINAPI WinMain(
   } // Splitting the 5 parts may help.
   fread (data, pakSize, 1, gmap);
   #endif
-  style = (struct styleStruct *)(data + 4);
+/*  style = (struct styleStruct *)(data + 4);
   hashTable = (int *) (data + pakSize);
   ndBase = (ndType *)(data + hashTable[-1]);
   bucketsMin1 = hashTable[-2];
   hashTable -= bucketsMin1 + (bucketsMin1 >> 7) + 5;
-
+*/
   if(!InitApplication ()) return(FALSE);
   if (!InitInstance (nCmdShow)) return(FALSE);
 
@@ -3777,7 +2846,6 @@ int WINAPI WinMain(
     option = numberOfOptions;
   }
   Exit = 0;
-  IncrementalSearch ();
   InitializeOptions ();
 
   dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),

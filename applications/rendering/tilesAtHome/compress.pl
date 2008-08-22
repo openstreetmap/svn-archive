@@ -204,7 +204,7 @@ sub compress
     else 
     {
         $Filename = File::Spec->join($OutputDir,
-                                     sprintf("%d_%d_%d_%s%s.zip",
+                                     sprintf("_%d_%d_%d_%s%s.zip",
                                      GetClientId(), $$, $ZipFileCount++, $Layer, $SingleTileset));
     }
     

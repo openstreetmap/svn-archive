@@ -78,7 +78,8 @@ public class OverlappingWays extends Test
 					if (ar != null && ar)
 						area++;
 					if (ws.way.get("landuse") != null || ws.way.get("natural") != null
-					|| ws.way.get("amenity") != null || ws.way.get("leisure") != null)
+					|| ws.way.get("amenity") != null || ws.way.get("leisure") != null
+					|| ws.way.get("building") != null)
 					{
 						area++; ways--;
 					}

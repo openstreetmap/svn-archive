@@ -23,6 +23,27 @@ import os
 import struct
 import tilenames
 
+
+def getVmapBaseDir(options={}):
+  return(options.get("vmapTileDir", "data/tiledata"))
+
+def getVmapTileNum(x,y,z, options={}):
+  ourZ = 14
+  if(z < ourZ):
+    return(False)
+  while(z > ourZ):
+    x = int(x/2)
+    y = int(y/2)
+    z -= 1
+  return(x,y,z)
+
+def getVmapFilename(xi,yi,zi,options={}):
+  (x,y,z) = getVmapTileNum(xi,yi,zi,options)
+  xdir = int(x / 64)
+  ydir = int(y / 64)
+  filename = "%s/%d_%d/%d_%d.bin" % (getVmapBaseDir(options), xdir, ydir, x, y)
+  return(filename)
+
 class vmapData:
   def __init__(self, filename=None):
     """Load an OSM XML file into memory"""

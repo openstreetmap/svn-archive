@@ -92,11 +92,8 @@ class menus(ranaModule):
       self.listOffset += dy
       print "Drag in menu + %f = %f" % (dy,self.listOffset)
     
-  def drawMenu(self, cr):
+  def drawMenu(self, cr, menuName):
     """Draw menus"""
-    menuName = self.get('menu', None)
-    if(menuName == None):
-      return
 
     # Find the screen
     if not self.d.has_key('viewport'):
@@ -114,11 +111,11 @@ class menus(ranaModule):
     # Find the menu
     menu = self.menus.get(menuName, None)
     if(menu == None):
-      print "Menu %s doesn't exist, returning to main screen" % menuName
-      self.set('menu', None)
-      self.set('needRedraw', True)
+      if(0):
+        print "Menu %s doesn't exist, returning to main screen" % menuName
+        self.set('menu', None)
+        self.set('needRedraw', True)
       return
-
 
     # Decide how to layout the menu
     cols = 3
@@ -210,6 +207,7 @@ class menus(ranaModule):
           self.addItem(sectionID, name, name, '')
     f.close()
 
+    
   def setupPoiMenu(self):
     self.clearMenu('poi', "set:menu:None")
     self.addItem('poi', 'Route', 'generic', 'route:route')
@@ -247,6 +245,7 @@ class menus(ranaModule):
     self.setupMaplayerMenus()
     self.setupPoiMenu()
     self.setupDataMenu()
+    self.clearMenu('options', "set:menu:main") # will be filled by mod_options
     self.lists['places'] = 'placenames'
     
 if(__name__ == "__main__"):

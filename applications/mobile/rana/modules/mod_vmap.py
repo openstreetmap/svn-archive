@@ -22,8 +22,9 @@ import cairo
 import os
 import sys
 import urllib
-from tilenames import *
-from vmap_load import vmapData
+import tilenames
+import vmap_load
+from math import *
 
 def getModule(m,d):
   return(vmap(m,d))
@@ -39,30 +40,16 @@ class vmap(ranaModule):
     self.setupStyles()
 
   def getTile(self,x,y,z):
-    ourZ = 14
-    if(z < ourZ):
-      return(False)
-    while(z > ourZ):
-      x = int(x/2)
-      y = int(y/2)
-      z -= 1
-    key = "%05d_%05d" % (x,y)
-    if(not self.tiles.has_key(key)):
-      self.tiles[key] = vmapData(self.getFilename(x,y))
-      print "Loading %s" % (self.getFilename(x,y),)
-    return(self.tiles[key])
+    # Use filename as dictionary key, so that zooms which happen to
+    # use the dataset don't get loaded twice
+    filename = vmap_load.getVmapFilename(x,y,z,self.d)
 
-  def getBaseDir(self):
-    return(self.get("vmapTileDir", "../tiledata3/output"))
-    
-  def getFilename(self,x,y):
-    if(1):
-      xdir = int(x / 64)
-      ydir = int(y / 64)
-      filename = "%s/%d_%d/%d_%d.bin" % (self.getBaseDir(),xdir,ydir,x,y)
-    else:
-      filename = "%s/%d_%d.bin" % (self.getBaseDir(),x,y)
-    return(filename)
+    # If it doesn't already exist, then load it
+    if(not self.tiles.has_key(filename)):
+      print "Loading %s" % (filename)
+      self.tiles[filename] = vmap_load.vmapData(filename)
+      
+    return(self.tiles[filename])
 
   def setupStyles(self):
     self.highways = {
@@ -78,14 +65,17 @@ class vmap(ranaModule):
       }
 
   def loadEnums(self):
-    filename = "%s/enums.txt" % self.getBaseDir()
-    f = open(filename, "r")
-    self.enums = {}
-    for line in f:
-      k,v = line.rstrip().split("\t")
-      k = int(k)
-      print "%d = '%s'" % (k,v)
-      self.enums[k] = v
+    try:
+      filename = "%s/enums.txt" % vmap_load.getVmapBaseDir(self.d)
+      f = open(filename, "r")
+      self.enums = {}
+      for line in f:
+        k,v = line.rstrip().split("\t")
+        k = int(k)
+        #print "%d = '%s'" % (k,v)
+        self.enums[k] = v
+    except IOError:
+      print "Couldn't find vector map data"
     
   def setStyle(self, style, cr):
     styleDef = self.highways.get(style, None)

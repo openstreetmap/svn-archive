@@ -17,7 +17,7 @@
    sodipodi:docname="icons.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:docbase="/home/owhite/OpenStreetmap/rana/icons"
-   sodipodi:modified="TRUE">
+   sodipodi:modified="true">
   <sodipodi:namedview
      inkscape:window-height="917"
      inkscape:window-width="1206"
@@ -32,9 +32,9 @@
      id="base"
      showgrid="true"
      inkscape:grid-points="false"
-     inkscape:zoom="1.5045641"
-     inkscape:cx="-568.19512"
-     inkscape:cy="-239.42066"
+     inkscape:zoom="1.9532309"
+     inkscape:cx="-1158.9286"
+     inkscape:cy="-92.699284"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg2"
@@ -61,6 +61,17 @@
   </metadata>
   <defs
      id="defs11">
+    <linearGradient
+       id="linearGradient16059">
+      <stop
+         style="stop-color:#fcffac;stop-opacity:1;"
+         offset="0"
+         id="stop16061" />
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="1"
+         id="stop16063" />
+    </linearGradient>
     <linearGradient
        id="linearGradient12058">
       <stop
@@ -2803,7 +2814,57 @@
        y2="761.64374"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(-149.7574,-173.0724)" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient16059"
+       id="radialGradient16065"
+       cx="-1210.6016"
+       cy="716.14588"
+       fx="-1210.6016"
+       fy="716.14588"
+       r="4.40435"
+       gradientTransform="matrix(1,0,0,1.4112196,0,-294.49321)"
+       gradientUnits="userSpaceOnUse" />
   </defs>
+  <rect
+     id="rect14063"
+     x="-1096.3932"
+     y="722.56451"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/garage.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     transform="matrix(-1,0,0,1,-957.43769,704.36476)"
+     id="g14080"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/garage.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929">
+    <path
+       d="M 56.131425,53.651457 C 56.131425,57.680657 52.865114,60.946968 48.835914,60.946968 C 44.806714,60.946968 41.540404,57.680657 41.540404,53.651457 C 41.540404,49.622257 44.806714,46.355946 48.835914,46.355946 C 52.865114,46.355946 56.131425,49.622257 56.131425,53.651457 L 56.131425,53.651457 z "
+       id="path14082"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       d="M 73.75,25 C 72.93288,24.949715 72.5135,25.331477 72.125,25.78125 L 60.3125,37.59375 L 34.53125,41.90625 C 34.171863,42.219614 33.788797,42.505013 33.5,43.3125 L 33.5625,52.1875 C 34.121991,53.609899 34.514048,53.426929 34.9375,53.625 L 39.90625,53.625 C 39.90625,41.559523 57.875001,41.605642 57.875,53.625 L 103.6875,53.625 C 103.6875,41.534195 121.53125,41.558841 121.53125,53.625 L 125.59375,53.625 C 126.27782,53.562045 126.67397,52.957422 127,52.25 L 126.9375,39.90625 C 126.88839,39.641607 126.78731,39.346593 126.59375,38.9375 L 109.0625,25 L 73.75,25 z M 73.1875,28.71875 C 73.253662,28.701554 73.320116,28.705989 73.40625,28.71875 L 89.0625,28.71875 L 89.0625,39.34375 L 64.59375,39.34375 C 63.662884,38.97658 63.550208,38.427324 63.9375,37.75 L 72.71875,29.0625 C 72.867408,28.936167 72.989013,28.770339 73.1875,28.71875 z M 91.96875,28.71875 L 105.09375,28.71875 C 105.43828,28.667706 105.61429,28.894058 105.8125,29.0625 L 113.34375,36.65625 C 114.03843,37.702432 115.43559,39.132254 114.375,39.34375 L 91.96875,39.34375 L 91.96875,28.71875 z "
+       id="path14084"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 119.83648,53.648389 C 119.83648,57.677589 116.57017,60.9439 112.54097,60.9439 C 108.51177,60.9439 105.24546,57.677589 105.24546,53.648389 C 105.24546,49.619189 108.51177,46.352878 112.54097,46.352878 C 116.57017,46.352878 119.83648,49.619189 119.83648,53.648389 L 119.83648,53.648389 z "
+       id="path14086"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+  <path
+     style="fill:#b3b3b3;fill-opacity:1;stroke:#676767;stroke-width:1.2805531;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M -1035.4278,764.32332 L -1046.3286,764.32332 L -1049.7073,758.47116 L -1046.3286,752.619 L -1035.4278,752.619 L -1036.7856,748.76062 L -1053.1141,748.76062 L -1085.0166,775.1997 L -1080.7536,780.31479 L -1056.5034,760.98048 L -1048.7407,767.92322 L -1036.6708,767.92322 L -1035.4278,764.32332 z "
+     id="path14065"
+     sodipodi:nodetypes="ccccccccccccc"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/garage.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
   <rect
      id="rect10041"
      x="-660.35431"
@@ -2812,14 +2873,14 @@
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/rentpng"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/hire,png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <g
      transform="matrix(-0.7446192,0,0,0.7446192,-535.77775,578.37942)"
      id="g10051"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/rentpng"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/hire,png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929"
      style="fill:#008000">
@@ -2842,7 +2903,7 @@
      x="-655.31622"
      y="620.97119"
      id="text10061"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/rentpng"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/hire,png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929"><tspan
        sodipodi:role="line"
@@ -6813,21 +6874,13 @@
   <text
      xml:space="preserve"
      style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     x="-585.7804"
-     y="713.18964"
+     x="-945.35297"
+     y="538.38818"
      id="text10067"><tspan
        sodipodi:role="line"
-       id="tspan10069"
-       x="-585.7804"
-       y="713.18964">buy repair hire</tspan><tspan
-       sodipodi:role="line"
-       x="-585.7804"
-       y="750.68964"
-       id="tspan10071">help food park </tspan><tspan
-       sodipodi:role="line"
-       x="-585.7804"
-       y="788.18964"
-       id="tspan10073">sleep</tspan></text>
+       x="-945.35297"
+       y="538.38818"
+       id="tspan10073">buy repair hire help food park  sleep</tspan></text>
   <rect
      id="rect10065"
      x="-523.79749"
@@ -6989,8 +7042,8 @@
      inkscape:export-ydpi="92.212929" />
   <rect
      id="rect13050"
-     x="-1082.5012"
-     y="735.52057"
+     x="-657.12885"
+     y="903.67554"
      inkscape:export-xdpi="92.212929"
      width="111.12024"
      height="111.12024"
@@ -7001,13 +7054,13 @@
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <rect
      id="rect14031"
-     x="-909.30493"
-     y="724.22516"
+     x="-366.2905"
+     y="573.35089"
      inkscape:export-xdpi="92.212929"
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/eat.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/food.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -7020,22 +7073,22 @@
      sodipodi:rx="35.226151"
      sodipodi:ry="12.29592"
      d="M -809.53679 773.13983 A 35.226151 12.29592 0 1 1  -879.98909,773.13983 A 35.226151 12.29592 0 1 1  -809.53679 773.13983 z"
-     transform="matrix(1.1170667,0,0,1.2813261,95.90267,-240.43464)"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/eat.png"
+     transform="matrix(1.1170667,0,0,1.2813261,638.91709,-391.3089)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/food.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
      style="fill:#cccccc;fill-opacity:1;stroke:#666666;stroke-width:0.68753225;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
-     d="M -833.67889,737.9755 L -832.90367,740.63514 L -854.84985,746.84421 L -853.33227,752.05081 L -830.94922,747.34057 L -830.19043,749.94387 L -852.15303,756.09661 L -850.63544,761.30322 L -828.25239,756.59296 L -827.47717,759.2526 L -853.72013,765.71686 L -860.11906,761.59188 L -891.3209,769.15686 L -894.35607,758.74365 L -863.21992,750.95332 L -859.92184,744.43975 L -833.67889,737.9755 z "
+     d="M -290.66447,587.10124 L -289.88925,589.76088 L -311.83543,595.96995 L -310.31785,601.17655 L -287.9348,596.46631 L -287.17601,599.06961 L -309.13861,605.22235 L -307.62102,610.42896 L -285.23797,605.7187 L -284.46275,608.37834 L -310.70571,614.8426 L -317.10464,610.71762 L -348.30648,618.2826 L -351.34165,607.86939 L -320.2055,600.07906 L -316.90742,593.56549 L -290.66447,587.10124 z "
      id="rect14033"
      sodipodi:nodetypes="ccccccccccccccccc"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/eat.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/food.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <rect
      id="rect14038"
-     x="-740.1438"
-     y="745.82715"
+     x="-1264.5916"
+     y="552.45917"
      inkscape:export-xdpi="92.212929"
      width="111.12024"
      height="111.12024"
@@ -7046,7 +7099,7 @@
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <g
      id="g14046"
-     transform="matrix(0.758646,0,0,0.758646,-165.22702,181.94763)"
+     transform="matrix(0.758646,0,0,0.758646,-689.67471,-11.42033)"
      inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/help.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929">
@@ -7068,4 +7121,169 @@
          id="tspan14042"
          sodipodi:role="line">+</tspan></text>
   </g>
+  <rect
+     id="rect14067"
+     x="-1101.7102"
+     y="857.48737"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/bike_shop.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     transform="matrix(0.4969639,0,0,0.4969639,-1130.4223,816.65485)"
+     id="g14071"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/bike_shop.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929">
+    <circle
+       sodipodi:cx="215"
+       id="circle14073"
+       r="161"
+       sodipodi:cy="409"
+       transform="matrix(-0.1881081,0,0,0.1881081,273.9474,88.950201)"
+       cy="409"
+       cx="215"
+       style="fill:none;stroke:#000000;stroke-width:40px"
+       sodipodi:ry="161"
+       sodipodi:rx="161" />
+    <circle
+       sodipodi:cx="790"
+       id="circle14075"
+       r="161"
+       sodipodi:cy="406"
+       transform="matrix(-0.1881081,0,0,0.1881081,273.9474,88.950201)"
+       cy="406"
+       cx="790"
+       style="fill:none;stroke:#000000;stroke-width:40px"
+       sodipodi:ry="161"
+       sodipodi:rx="161" />
+    <path
+       d="M 193.15791,91.859691 C 218.09474,92.10274 213.86568,89.283372 227.28199,132.40027 C 238.21154,166.85063 237.02105,163.09369 237.07821,165.5102 C 237.11827,167.38756 235.60282,168.87604 233.69848,169.00345 C 229.73813,168.60301 231.40395,169.43177 217.67345,126.79394 C 167.50274,179.71921 186.32553,171.13688 159.32549,172.21169 C 123.84033,171.87142 120.95615,174.05887 120.53486,168.85762 C 120.58347,167.09146 121.40984,166.03825 145.76335,111.83832 L 143.43008,105.42183 L 135.40946,105.276 L 135.70112,98.567844 L 165.59615,98.567844 C 168.23728,102.18117 164.52673,102.16497 151.15904,105.13017 L 153.49231,111.69249 L 213.13654,111.83832 C 209.11813,97.80629 211.38659,98.681267 193.30374,98.713673 L 193.15791,91.859691 z M 214.85998,119.03059 L 156.49693,118.92711 L 173.36426,164.25161 L 214.85998,119.03059 z M 149.46025,121.72109 L 166.01714,165.18293 L 129.79894,165.28641 L 149.46025,121.72109 z "
+       id="path14078"
+       style="fill:#000000;fill-rule:evenodd;stroke:none" />
+  </g>
+  <path
+     style="fill:#b3b3b3;fill-opacity:1;stroke:#676767;stroke-width:1.2805531;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M -1040.7449,899.24616 L -1051.6457,899.24616 L -1055.0244,893.394 L -1051.6457,887.54184 L -1040.7449,887.54184 L -1042.1027,883.68346 L -1058.4312,883.68346 L -1090.3337,910.12254 L -1086.0707,915.23763 L -1061.8205,895.90332 L -1054.0578,902.84606 L -1041.9879,902.84606 L -1040.7449,899.24616 z "
+     id="path14069"
+     sodipodi:nodetypes="ccccccccccccc"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/bike_shop.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <text
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="-1495.4709"
+     y="679.35571"
+     id="text14088"><tspan
+       sodipodi:role="line"
+       id="tspan14090"
+       x="-1495.4709"
+       y="679.35571">hospital</tspan><tspan
+       sodipodi:role="line"
+       x="-1495.4709"
+       y="716.85571"
+       id="tspan14092">police</tspan><tspan
+       sodipodi:role="line"
+       x="-1495.4709"
+       y="754.35571"
+       id="tspan14094">pharmacy</tspan><tspan
+       sodipodi:role="line"
+       x="-1495.4709"
+       y="791.85571"
+       id="tspan14096">fire stn</tspan><tspan
+       sodipodi:role="line"
+       x="-1495.4709"
+       y="829.35571"
+       id="tspan14098">ranger</tspan></text>
+  <rect
+     id="rect14100"
+     x="-1265.3505"
+     y="695.98364"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/help.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <path
+     style="fill:url(#radialGradient16065);fill-opacity:1.0;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+     d="M -1213.6295,709.93037 L -1207.5737,709.93037 L -1206.1972,722.36138 L -1215.0059,722.36138 L -1213.6295,709.93037 z "
+     id="rect14118"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:none;fill-opacity:1;stroke:#373bcc;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path16067"
+     sodipodi:cx="-1365.174"
+     sodipodi:cy="619.96692"
+     sodipodi:rx="17.663042"
+     sodipodi:ry="22.014807"
+     d="M -1358.7754,599.4474 A 17.663042,22.014807 0 0 1 -1358.912,640.55179"
+     sodipodi:start="5.0830778"
+     sodipodi:end="7.4915755"
+     sodipodi:open="true"
+     transform="matrix(1.0441315,0,0,0.7279201,234.63967,266.25745)" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:none;fill-opacity:1;stroke:#373bcc;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path16069"
+     sodipodi:cx="-1365.174"
+     sodipodi:cy="619.96692"
+     sodipodi:rx="17.663042"
+     sodipodi:ry="22.014807"
+     d="M -1358.7754,599.4474 A 17.663042,22.014807 0 0 1 -1358.912,640.55179"
+     sodipodi:start="5.0830778"
+     sodipodi:end="7.4915755"
+     sodipodi:open="true"
+     transform="matrix(0.647278,0,0,-0.4512523,-311.08514,997.34388)" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:none;fill-opacity:1;stroke:#373bcc;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path16071"
+     sodipodi:cx="-1365.174"
+     sodipodi:cy="619.96692"
+     sodipodi:rx="17.663042"
+     sodipodi:ry="22.014807"
+     d="M -1358.7754,599.4474 A 17.663042,22.014807 0 0 1 -1358.912,640.55179"
+     sodipodi:start="5.0830778"
+     sodipodi:end="7.4915755"
+     sodipodi:open="true"
+     transform="matrix(0.5232614,0,0,-0.3647936,-489.69317,943.73956)" />
+  <g
+     transform="matrix(-1,0,0,1,-1129.0284,696.79717)"
+     id="g14110"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/garage.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929"
+     style="fill:#000080">
+    <path
+       d="M 56.131425,53.651457 C 56.131425,57.680657 52.865114,60.946968 48.835914,60.946968 C 44.806714,60.946968 41.540404,57.680657 41.540404,53.651457 C 41.540404,49.622257 44.806714,46.355946 48.835914,46.355946 C 52.865114,46.355946 56.131425,49.622257 56.131425,53.651457 L 56.131425,53.651457 z "
+       id="path14112"
+       style="fill:#000080;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       d="M 73.75,25 C 72.93288,24.949715 72.5135,25.331477 72.125,25.78125 L 60.3125,37.59375 L 34.53125,41.90625 C 34.171863,42.219614 33.788797,42.505013 33.5,43.3125 L 33.5625,52.1875 C 34.121991,53.609899 34.514048,53.426929 34.9375,53.625 L 39.90625,53.625 C 39.90625,41.559523 57.875001,41.605642 57.875,53.625 L 103.6875,53.625 C 103.6875,41.534195 121.53125,41.558841 121.53125,53.625 L 125.59375,53.625 C 126.27782,53.562045 126.67397,52.957422 127,52.25 L 126.9375,39.90625 C 126.88839,39.641607 126.78731,39.346593 126.59375,38.9375 L 109.0625,25 L 73.75,25 z M 73.1875,28.71875 C 73.253662,28.701554 73.320116,28.705989 73.40625,28.71875 L 89.0625,28.71875 L 89.0625,39.34375 L 64.59375,39.34375 C 63.662884,38.97658 63.550208,38.427324 63.9375,37.75 L 72.71875,29.0625 C 72.867408,28.936167 72.989013,28.770339 73.1875,28.71875 z M 91.96875,28.71875 L 105.09375,28.71875 C 105.43828,28.667706 105.61429,28.894058 105.8125,29.0625 L 113.34375,36.65625 C 114.03843,37.702432 115.43559,39.132254 114.375,39.34375 L 91.96875,39.34375 L 91.96875,28.71875 z "
+       id="path14114"
+       style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 119.83648,53.648389 C 119.83648,57.677589 116.57017,60.9439 112.54097,60.9439 C 108.51177,60.9439 105.24546,57.677589 105.24546,53.648389 C 105.24546,49.619189 108.51177,46.352878 112.54097,46.352878 C 116.57017,46.352878 119.83648,49.619189 119.83648,53.648389 L 119.83648,53.648389 z "
+       id="path14116"
+       style="fill:#000080;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="-1383.861"
+     y="609.21552"
+     id="text16073"><tspan
+       sodipodi:role="line"
+       id="tspan16075"
+       x="-1383.861"
+       y="609.21552">P</tspan></text>
 </svg>

@@ -59,6 +59,9 @@ translations.c: extract
 extract:	extract.c
 		${CC} ${CFLAGS} ${XMLFLAGS} extract.c -o extract
 
+osmunda:	osmunda.cpp libgosm.cpp libgosm.h
+		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
+		  osmunda.cpp libgosm.cpp -o osmunda
 voices:
 		echo '(voice_rab_diphone)' >/tmp/voice_rab_diphone
 		echo 'At the junction, turn left.' | festival_client \

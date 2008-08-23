@@ -204,7 +204,7 @@ class menus(ranaModule):
         details = line.strip()
         if(details and sectionID):
           (name,filter) = details.split('|')
-          self.addItem(sectionID, name, name, '')
+          self.addItem(sectionID, name, name.lower(), '')
     f.close()
 
     

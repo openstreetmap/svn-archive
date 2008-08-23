@@ -36,7 +36,7 @@ class sketch(ranaModule):
         m.clearMenu('sketch', "set:menu:None")
         self.set("menu", "sketch")
     
-  def drawMenu(self, cr):
+  def drawMenu(self, cr, menuName):
     if(self.get("menu", "") == "sketch"):
       (x,y,w,h) = self.get('viewport')
       

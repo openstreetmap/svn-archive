@@ -48,6 +48,7 @@ class replayGpx(ranaModule):
       file.close()
       self.numNodes = len(self.nodes)
       self.set("centreOnce", True)
+      self.pos = int(0.2 * self.numNodes)
     else:
       print "No file"
 
@@ -65,6 +66,7 @@ class replayGpx(ranaModule):
     (lat,lon) = self.nodes[self.pos]
     self.set('pos', (lat,lon))
     self.set('pos_source', 'replay')
+    self.set('needsRedraw', True)
   
   def update(self):
     # Run scheduledUpdate every second

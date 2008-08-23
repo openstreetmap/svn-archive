@@ -32,9 +32,9 @@
      id="base"
      showgrid="true"
      inkscape:grid-points="false"
-     inkscape:zoom="4.6199329"
-     inkscape:cx="-241.21689"
-     inkscape:cy="519.044"
+     inkscape:zoom="1.0623784"
+     inkscape:cx="-630.86096"
+     inkscape:cy="-279.208"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg2"
@@ -61,6 +61,29 @@
   </metadata>
   <defs
      id="defs11">
+    <linearGradient
+       id="linearGradient12058">
+      <stop
+         style="stop-color:#ab0000;stop-opacity:1;"
+         offset="0"
+         id="stop12060" />
+      <stop
+         style="stop-color:#7d0000;stop-opacity:1;"
+         offset="1"
+         id="stop12062" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient12042">
+      <stop
+         style="stop-color:#dbdbdb;stop-opacity:1;"
+         offset="0"
+         id="stop12044" />
+      <stop
+         style="stop-color:#dbdbdb;stop-opacity:0;"
+         offset="1"
+         id="stop12046" />
+    </linearGradient>
     <linearGradient
        inkscape:collect="always"
        id="linearGradient5017">
@@ -2743,16 +2766,6 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5017"
-       id="linearGradient5062"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.7082546,0,0,0.7082546,-40.389787,54.755305)"
-       x1="-332.06348"
-       y1="546.67456"
-       x2="-332.06348"
-       y2="501.35757" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient5017"
        id="linearGradient5070"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(0.7082546,0,0,0.7082546,-40.389787,54.755305)"
@@ -2770,7 +2783,72 @@
        y1="546.67456"
        x2="-332.06348"
        y2="501.35757" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient12042"
+       id="linearGradient12048"
+       x1="-749.23187"
+       y1="757.49164"
+       x2="-749.23181"
+       y2="755.0069"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-133.12904,-169.54336)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient12058"
+       id="linearGradient12064"
+       x1="-781.19684"
+       y1="783.24146"
+       x2="-781.01886"
+       y2="761.64374"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-149.7574,-173.0724)" />
   </defs>
+  <rect
+     id="rect10041"
+     x="-660.35431"
+     y="575.90002"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/rentpng"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     transform="matrix(-0.7446192,0,0,0.7446192,-535.77775,578.37942)"
+     id="g10051"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/rentpng"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929"
+     style="fill:#008000">
+    <path
+       d="M 56.131425,53.651457 C 56.131425,57.680657 52.865114,60.946968 48.835914,60.946968 C 44.806714,60.946968 41.540404,57.680657 41.540404,53.651457 C 41.540404,49.622257 44.806714,46.355946 48.835914,46.355946 C 52.865114,46.355946 56.131425,49.622257 56.131425,53.651457 L 56.131425,53.651457 z "
+       id="path10053"
+       style="fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       d="M 73.75,25 C 72.93288,24.949715 72.5135,25.331477 72.125,25.78125 L 60.3125,37.59375 L 34.53125,41.90625 C 34.171863,42.219614 33.788797,42.505013 33.5,43.3125 L 33.5625,52.1875 C 34.121991,53.609899 34.514048,53.426929 34.9375,53.625 L 39.90625,53.625 C 39.90625,41.559523 57.875001,41.605642 57.875,53.625 L 103.6875,53.625 C 103.6875,41.534195 121.53125,41.558841 121.53125,53.625 L 125.59375,53.625 C 126.27782,53.562045 126.67397,52.957422 127,52.25 L 126.9375,39.90625 C 126.88839,39.641607 126.78731,39.346593 126.59375,38.9375 L 109.0625,25 L 73.75,25 z M 73.1875,28.71875 C 73.253662,28.701554 73.320116,28.705989 73.40625,28.71875 L 89.0625,28.71875 L 89.0625,39.34375 L 64.59375,39.34375 C 63.662884,38.97658 63.550208,38.427324 63.9375,37.75 L 72.71875,29.0625 C 72.867408,28.936167 72.989013,28.770339 73.1875,28.71875 z M 91.96875,28.71875 L 105.09375,28.71875 C 105.43828,28.667706 105.61429,28.894058 105.8125,29.0625 L 113.34375,36.65625 C 114.03843,37.702432 115.43559,39.132254 114.375,39.34375 L 91.96875,39.34375 L 91.96875,28.71875 z "
+       id="path10055"
+       style="fill:#008000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 119.83648,53.648389 C 119.83648,57.677589 116.57017,60.9439 112.54097,60.9439 C 108.51177,60.9439 105.24546,57.677589 105.24546,53.648389 C 105.24546,49.619189 108.51177,46.352878 112.54097,46.352878 C 116.57017,46.352878 119.83648,49.619189 119.83648,53.648389 L 119.83648,53.648389 z "
+       id="path10057"
+       style="fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:51.87220764px;font-style:normal;font-weight:normal;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="-655.31622"
+     y="620.97119"
+     id="text10061"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/rentpng"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929"><tspan
+       sodipodi:role="line"
+       id="tspan10063"
+       x="-655.31622"
+       y="620.97119">$</tspan></text>
   <rect
      id="rect5157"
      x="-301.22498"
@@ -2779,7 +2857,7 @@
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -2793,7 +2871,7 @@
      sodipodi:ry="4.4479709"
      d="M -275.7742 84.377518 A 4.4479709 4.4479709 0 1 1  -284.67014,84.377518 A 4.4479709 4.4479709 0 1 1  -275.7742 84.377518 z"
      transform="translate(41.058194,-15.738974)"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2805,7 +2883,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2817,7 +2895,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2829,7 +2907,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2841,7 +2919,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2853,7 +2931,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2865,7 +2943,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <use
@@ -2877,7 +2955,7 @@
      width="1000"
      height="600"
      style="fill:#ffff00"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -2890,7 +2968,7 @@
      id="use5181"
      style="fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      sodipodi:type="arc"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
   <path
@@ -2899,7 +2977,7 @@
      inkscape:export-xdpi="92.212929"
      style="fill:#000000"
      inkscape:export-ydpi="92.212929"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/opt_tracklog.png" />
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/opt_logging.png" />
   <rect
      id="rect5863"
      x="-112.59692"
@@ -6269,33 +6347,20 @@
      xlink:href="/home/owhite/OpenStreetmap/pyroute/icons/source/openaerialmap.jpeg" />
   <rect
      id="rect2955"
-     x="65.936073"
-     y="974.9505"
+     x="-456.90198"
+     y="1120.6595"
      inkscape:export-xdpi="92.212929"
      width="111.12024"
      height="111.12024"
      ry="22"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/hint.png"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/hint.png"
      inkscape:export-ydpi="92.212929"
      rx="22"
-     style="fill:#c9d2ed;fill-opacity:1;stroke:#9195a6;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stroke-dashoffset:0;opacity:0.49818182" />
+     style="opacity:1;fill:#aa0000;fill-opacity:1;stroke:#101114;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   <path
      style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      d="M -74.61663,934.01685 L -74.61663,969.17652 L -65.240718,959.80061"
      id="path5872" />
-  <path
-     sodipodi:type="arc"
-     style="opacity:0.31272727;color:#000000;fill:#c9d2ed;fill-opacity:1;fill-rule:nonzero;stroke:#9195a6;stroke-width:2.29999995;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
-     id="path5868"
-     sodipodi:cx="108.01832"
-     sodipodi:cy="1014.2981"
-     sodipodi:rx="12.305884"
-     sodipodi:ry="12.305884"
-     d="M 120.3242 1014.2981 A 12.305884 12.305884 0 1 1  95.712434,1014.2981 A 12.305884 12.305884 0 1 1  120.3242 1014.2981 z"
-     transform="translate(13.477875,3.9066298)"
-     inkscape:export-filename="/home/owhite/OpenStreetmap/pyroute/icons/bitmap/hint.png"
-     inkscape:export-xdpi="92.212929"
-     inkscape:export-ydpi="92.212929" />
   <rect
      id="rect2960"
      x="222.59193"
@@ -6459,49 +6524,14 @@
      inkscape:export-ydpi="92.790405"
      rx="22"
      style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-  <rect
-     id="rect2975"
-     x="73.358665"
-     y="1124.9651"
-     inkscape:export-xdpi="92.212929"
-     width="111.12024"
-     height="111.12024"
-     ry="22"
-     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_in.png"
-     inkscape:export-ydpi="92.212929"
-     rx="22"
-     style="opacity:0.49818181;fill:#c9d2ed;fill-opacity:1;stroke:#9195a6;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   <path
-     style="opacity:1;color:#000000;fill:#565656;fill-opacity:0.35643568;fill-rule:nonzero;stroke:none;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-     d="M 128.76254,1137.9427 C 127.65454,1137.9427 126.76253,1138.8347 126.76254,1139.9427 L 126.76254,1158.4427 L 108.26254,1158.4427 C 107.15454,1158.4427 106.26254,1159.3347 106.26254,1160.4427 L 106.26254,1160.7552 C 106.26254,1161.8632 107.15454,1162.7553 108.26254,1162.7552 L 126.76254,1162.7552 L 126.76254,1181.2552 C 126.76254,1182.3632 127.65453,1183.2552 128.76254,1183.2552 L 129.04379,1183.2552 C 130.15179,1183.2552 131.04379,1182.3632 131.04379,1181.2552 L 131.04379,1162.7552 L 149.57504,1162.7552 C 150.68304,1162.7552 151.57504,1161.8633 151.57504,1160.7552 L 151.57504,1160.4427 C 151.57504,1159.3347 150.68304,1158.4427 149.57504,1158.4427 L 131.04379,1158.4427 L 131.04379,1139.9427 C 131.04379,1138.8347 130.15179,1137.9427 129.04379,1137.9427 L 128.76254,1137.9427 z "
-     id="rect3966"
-     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_in.png"
+     style="opacity:1;fill:#aa0000;fill-opacity:1;stroke:#101114;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
+     d="M -334.04932,1307.8268 C -336.38942,1325.9559 -389.60942,1396.947 -389.60942,1396.947 C -389.60942,1396.947 -445.14802,1328.2745 -445.16952,1307.8268 C -445.19102,1287.3733 -435.35752,1285.8268 -423.16952,1285.8268 L -356.04932,1285.8268 C -343.86132,1285.8268 -331.71602,1289.7508 -334.04932,1307.8268 z "
+     id="rect2975"
+     sodipodi:nodetypes="cczccz"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/zoom_in.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
-  <rect
-     style="opacity:1;color:#000000;fill:#565656;fill-opacity:0.35643568;fill-rule:nonzero;stroke:none;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-     id="rect3970"
-     width="45.316906"
-     height="4.2972927"
-     x="104.69768"
-     y="1287.3715"
-     rx="2"
-     ry="2"
-     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_out.png"
-     inkscape:export-xdpi="92.212929"
-     inkscape:export-ydpi="92.212929" />
-  <rect
-     id="rect3973"
-     x="71.796013"
-     y="1253.1025"
-     inkscape:export-xdpi="92.212929"
-     width="111.12024"
-     height="111.12024"
-     ry="22"
-     inkscape:export-filename="C:\home\OSM\pyroute\icons\bitmap\zoom_out.png"
-     inkscape:export-ydpi="92.212929"
-     rx="22"
-     style="opacity:0.49818181;fill:#c9d2ed;fill-opacity:1;stroke:#9195a6;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   <rect
      id="rect2979"
      x="-171.58702"
@@ -6744,4 +6774,217 @@
        id="rect5142"
        style="fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
+  <path
+     style="opacity:1;color:#000000;fill:#ffff00;fill-opacity:1;fill-rule:nonzero;stroke:#fcff15;stroke-width:5.65899992;stroke-linecap:square;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+     d="M -389.65253,1296.9511 C -390.98655,1296.9511 -392.06052,1298.025 -392.0605,1299.359 L -392.0605,1321.6328 L -414.33429,1321.6328 C -415.66831,1321.6328 -416.74227,1322.7068 -416.74227,1324.0408 L -416.74227,1324.4171 C -416.74227,1325.7511 -415.66831,1326.8252 -414.33429,1326.825 L -392.0605,1326.825 L -392.0605,1349.0988 C -392.0605,1350.4328 -390.98656,1351.5068 -389.65253,1351.5068 L -389.31391,1351.5068 C -387.97989,1351.5068 -386.90593,1350.4328 -386.90593,1349.0988 L -386.90593,1326.825 L -364.59452,1326.825 C -363.2605,1326.825 -362.18654,1325.7512 -362.18654,1324.4171 L -362.18654,1324.0408 C -362.18654,1322.7068 -363.2605,1321.6328 -364.59452,1321.6328 L -386.90593,1321.6328 L -386.90593,1299.359 C -386.90593,1298.025 -387.97989,1296.9511 -389.31391,1296.9511 L -389.65253,1296.9511 z "
+     id="rect3966"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/zoom_in.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     style="opacity:1;fill:#aa0000;fill-opacity:1;stroke:#101114;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
+     d="M -204.21133,1109.2665 C -184.69103,1109.7517 -115.09103,1164.8266 -115.09103,1164.8266 C -115.09103,1164.8266 -183.76353,1220.3652 -204.21133,1220.3867 C -224.66483,1220.4082 -226.21133,1210.5747 -226.21133,1198.3867 L -226.21133,1131.2665 C -226.21133,1119.0785 -223.74863,1108.7809 -204.21133,1109.2665 z "
+     id="path10032"
+     sodipodi:nodetypes="cczccz"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/zoom_out.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     style="opacity:1;color:#000000;fill:#ffff00;fill-opacity:1;fill-rule:nonzero;stroke:#fcff15;stroke-width:5.65899992;stroke-linecap:square;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+     d="M -155.43018,1164.649 C -155.43018,1163.315 -156.50408,1162.241 -157.83808,1162.2411 L -180.11188,1162.2411 L -185.30408,1162.2411 L -207.57788,1162.2411 C -208.91188,1162.2411 -209.98588,1163.315 -209.98588,1164.649 L -209.98588,1164.9876 C -209.98588,1166.3217 -208.91188,1167.3956 -207.57788,1167.3956 L -185.30408,1167.3956 L -180.11188,1167.3956 L -157.83808,1167.3956 C -156.50408,1167.3956 -155.43018,1166.3217 -155.43018,1164.9876 L -155.43018,1164.649 z "
+     id="path10034"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/zoom_out.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929"
+     sodipodi:nodetypes="ccccccccccccc" />
+  <text
+     xml:space="preserve"
+     style="font-size:42.45921707px;font-style:normal;font-weight:normal;fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Baekmuk Headline"
+     x="-451.05319"
+     y="1184.0573"
+     id="text10036"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/hint.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929"><tspan
+       sodipodi:role="line"
+       id="tspan10038"
+       x="-451.05319"
+       y="1184.0573">menu</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="-585.7804"
+     y="713.18964"
+     id="text10067"><tspan
+       sodipodi:role="line"
+       id="tspan10069"
+       x="-585.7804"
+       y="713.18964">buy repair hire</tspan><tspan
+       sodipodi:role="line"
+       x="-585.7804"
+       y="750.68964"
+       id="tspan10071">help food park </tspan><tspan
+       sodipodi:role="line"
+       x="-585.7804"
+       y="788.18964"
+       id="tspan10073">sleep</tspan></text>
+  <rect
+     id="rect10065"
+     x="-523.79749"
+     y="577.0907"
+     inkscape:export-xdpi="92.209999"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/park.png"
+     inkscape:export-ydpi="92.209999"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     id="g11056"
+     transform="translate(-0.3769932,0)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/park.png"
+     inkscape:export-xdpi="92.209999"
+     inkscape:export-ydpi="92.209999">
+    <rect
+       y="584.22943"
+       x="-491.51624"
+       height="47.96883"
+       width="47.311726"
+       id="rect10085"
+       style="opacity:1;fill:#0000ff;fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text10081"
+       y="625.90643"
+       x="-482.89526"
+       style="font-size:50.6224823px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Baekmuk Headline"
+       xml:space="preserve"><tspan
+         y="625.90643"
+         x="-482.89526"
+         id="tspan10083"
+         sodipodi:role="line">P</tspan></text>
+  </g>
+  <rect
+     id="rect11061"
+     x="-803.63861"
+     y="564.88428"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/buy.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <text
+     xml:space="preserve"
+     style="font-size:51.87220764px;font-style:normal;font-weight:normal;fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="-774.802"
+     y="611.24701"
+     id="text11063"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/buy.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929"><tspan
+       sodipodi:role="line"
+       id="tspan11065"
+       x="-774.802"
+       y="611.24701">$</tspan></text>
+  <rect
+     id="rect11067"
+     x="-967.33533"
+     y="569.22546"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     style="opacity:1;fill:url(#linearGradient12048);fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect11071"
+     width="20.25984"
+     height="8.4097452"
+     x="-892.49084"
+     y="585.46356"
+     ry="2.8669586"
+     rx="1.9113058"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     style="opacity:1;fill:#2b0000;fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect12050"
+     width="82.759537"
+     height="7.6452231"
+     x="-953.84369"
+     y="597.29993"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     style="opacity:1;fill:#2b0000;fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect12052"
+     width="4.587132"
+     height="19.877581"
+     x="-948.20538"
+     y="601.12256"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     style="opacity:1;fill:#2b0000;fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect12056"
+     width="4.587132"
+     height="19.877581"
+     x="-880.20538"
+     y="601.12256"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     style="opacity:1;fill:#0e00ab;fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect12066"
+     width="78.32119"
+     height="4.1938882"
+     x="-948.77039"
+     y="594.06622"
+     rx="3.3580894"
+     ry="2.9758279"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     style="opacity:1;fill:url(#linearGradient12064);fill-opacity:1;stroke:none;stroke-width:5.65899992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect11069"
+     width="67.838173"
+     height="24.161541"
+     x="-956.37457"
+     y="587.19391"
+     rx="3.3580892"
+     ry="2.9758279"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/sleep.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect12079"
+     x="-1102.2682"
+     y="567.0307"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/repair.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <path
+     style="fill:#b3b3b3;fill-opacity:1;stroke:#676767;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M -1011.0886,601.27659 L -1028.1137,601.27659 L -1033.3907,592.13654 L -1028.1137,582.99649 L -1011.0886,582.99649 L -1013.2093,576.97037 L -1038.7115,576.97037 L -1088.5377,618.26359 L -1081.8796,626.25248 L -1044.0051,596.05566 L -1031.881,606.89901 L -1013.0299,606.89901 L -1011.0886,601.27659 z "
+     id="path12072"
+     sodipodi:nodetypes="ccccccccccccc"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/repair.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
 </svg>

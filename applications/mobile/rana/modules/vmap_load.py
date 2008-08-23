@@ -27,8 +27,11 @@ import tilenames
 def getVmapBaseDir(options={}):
   return(options.get("vmapTileDir", "data/tiledata"))
 
+def getVmapBaseZoom(options={}):
+  return(14)
+
 def getVmapTileNum(x,y,z, options={}):
-  ourZ = 14
+  ourZ = getVmapBaseZoom(options)
   if(z < ourZ):
     return(False)
   while(z > ourZ):
@@ -43,6 +46,8 @@ def getVmapFilename(xi,yi,zi,options={}):
   ydir = int(y / 64)
   filename = "%s/%d_%d/%d_%d.bin" % (getVmapBaseDir(options), xdir, ydir, x, y)
   return(filename)
+
+
 
 class vmapData:
   def __init__(self, filename=None):

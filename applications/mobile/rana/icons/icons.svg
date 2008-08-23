@@ -32,9 +32,9 @@
      id="base"
      showgrid="true"
      inkscape:grid-points="false"
-     inkscape:zoom="1.0623784"
-     inkscape:cx="-630.86096"
-     inkscape:cy="-279.208"
+     inkscape:zoom="1.5045641"
+     inkscape:cx="-568.19512"
+     inkscape:cy="-239.42066"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg2"
@@ -6987,4 +6987,85 @@
      inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/repair.png"
      inkscape:export-xdpi="92.212929"
      inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect13050"
+     x="-1082.5012"
+     y="735.52057"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/buy.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect14031"
+     x="-909.30493"
+     y="724.22516"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/eat.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:#ffeeaa;fill-opacity:1;stroke:#666666;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path14036"
+     sodipodi:cx="-844.76294"
+     sodipodi:cy="773.13983"
+     sodipodi:rx="35.226151"
+     sodipodi:ry="12.29592"
+     d="M -809.53679 773.13983 A 35.226151 12.29592 0 1 1  -879.98909,773.13983 A 35.226151 12.29592 0 1 1  -809.53679 773.13983 z"
+     transform="matrix(1.1170667,0,0,1.2813261,95.90267,-240.43464)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/eat.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     style="fill:#cccccc;fill-opacity:1;stroke:#666666;stroke-width:0.68753225;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+     d="M -833.67889,737.9755 L -832.90367,740.63514 L -854.84985,746.84421 L -853.33227,752.05081 L -830.94922,747.34057 L -830.19043,749.94387 L -852.15303,756.09661 L -850.63544,761.30322 L -828.25239,756.59296 L -827.47717,759.2526 L -853.72013,765.71686 L -860.11906,761.59188 L -891.3209,769.15686 L -894.35607,758.74365 L -863.21992,750.95332 L -859.92184,744.43975 L -833.67889,737.9755 z "
+     id="rect14033"
+     sodipodi:nodetypes="ccccccccccccccccc"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/eat.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <rect
+     id="rect14038"
+     x="-740.1438"
+     y="745.82715"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/help.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     id="g14046"
+     transform="matrix(0.758646,0,0,0.758646,-165.22702,181.94763)"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/help.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929">
+    <rect
+       y="754.86212"
+       x="-717.15125"
+       height="55.830124"
+       width="65.135147"
+       id="rect14044"
+       style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke:#666666;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text14040"
+       y="807.13416"
+       x="-713.9054"
+       style="font-size:84.8674469px;font-style:normal;font-weight:normal;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Baekmuk Headline"
+       xml:space="preserve"><tspan
+         y="807.13416"
+         x="-713.9054"
+         id="tspan14042"
+         sodipodi:role="line">+</tspan></text>
+  </g>
 </svg>

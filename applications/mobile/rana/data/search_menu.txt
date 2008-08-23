@@ -13,8 +13,8 @@ Hotel|tourism=hotel
 Hostel|tourism=hostel
 
 == Help
-Police Stn|amenity=police
-Fire Stn|amenity=fire
+Police_Stn|amenity=police
+Fire_Stn|amenity=fire
 Hospital|amenity=hospital
 Ranger|amenity=ranger_station
 Pharmacy|amenity=pharmacy

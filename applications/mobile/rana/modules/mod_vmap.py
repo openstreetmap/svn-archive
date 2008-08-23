@@ -46,7 +46,7 @@ class vmap(ranaModule):
 
     # If it doesn't already exist, then load it
     if(not self.tiles.has_key(filename)):
-      print "Loading %s" % (filename)
+      #print "Loading %s" % (filename)
       self.tiles[filename] = vmap_load.vmapData(filename)
       
     return(self.tiles[filename])
@@ -62,6 +62,7 @@ class vmap(ranaModule):
       'service':      ((0.5, 0.5, 0.5), 2, {}),
       'footway':      ((1.0, 0.5, 0.5), 2, {'dashed':True}),
       'cycleway':     ((0.5, 1.0, 0.5), 2, {'dashed':True}),
+      'bridleway':    ((0.5, 1.0, 0.5), 2, {'dashed':True}),
       }
 
   def loadEnums(self):

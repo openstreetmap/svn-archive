@@ -35,7 +35,7 @@ def show_requests(request,page):
 
 @cache_control(must_revalidate=True, max_age=30)
 def show_uploads_page(request):
-  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time')[:30],template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
+  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time'),template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
 
 
 def saveCreateRequestForm(request, form):

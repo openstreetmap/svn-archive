@@ -23,7 +23,7 @@ def index(request):
   if not t.is_valid():
     return render_to_response('base_errormessage.html',{'header': 'Browse map','reason':'The tile coordinates were invalid. Please check zoom, x, and y values.'})
   (layer, base_z,base_x,base_y) = t.basetileset()
-  RequestForm = CreateForm({'min_z': base_z, 'x': base_x, 'y': base_y, 'priority': 1})
+  RequestForm = CreateForm({'min_z': base_z, 'x': base_x, 'y': base_y, 'priority': 1, 'src': 'browse map request'})
 
   return render_to_response('base_browse.html',{'layer': layer,'z':z, 'x':x, 'y':y, 'x_range': range(x-1,x+2), 'y_range': range(y-1,y+2), 'RequestForm': RequestForm, 'base_z': base_z})
 
@@ -77,7 +77,7 @@ def tiledetails(request,layername,z,x,y):
     RequestForm = None
   else:
     template = 'tile_details.html'
-    RequestForm = CreateForm({'min_z': base_z, 'x': base_x, 'y': base_y, 'priority': 1})
+    RequestForm = CreateForm({'min_z': base_z, 'x': base_x, 'y': base_y, 'priority': 1, 'src':'tiledetail page request'})
   return render_to_response(template,{'tile':t,'basetile_fsize':basetile_fsize,'basetile_mtime':basetile_mtime, 'user': user, 'reqs':reqs, 'RequestForm': RequestForm, 'base_z': base_z})
 
 def show_map_of(request):

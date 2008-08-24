@@ -18,7 +18,7 @@ import java.io.File;
  * 
  * */
 
-public class osmparse {
+public class osmparse implements ProcessbarAccess {
 
 public static void main(String[] args) throws Exception {
 	if ((args.length ==0)||(args[0].equals("--help"))){printHelp();
@@ -61,8 +61,8 @@ public static void main(String[] args) throws Exception {
 		else if ((mapFeatures==null)||(!(new File(mapFeatures).exists()))) System.out.println("bitte gib ein MapFeatures-File an");
 		else
 		{
-			osmparser proggi = new osmparser(mapFeatures,inputfile,outputfile,differentFiles);
-			proggi.parse();
+			osmparser proggi = new osmparser(mapFeatures,inputfile,outputfile,differentFiles,new osmparse());
+			proggi.run();
 		}
 	}
 }
@@ -87,6 +87,25 @@ private static void printHelp() {
 			"under certain conditions; look at the readme-file for details.\n");
 	
 
+}
+
+public void addvalue() {
+System.out.println("#");
+	
+}
+
+public void processAdd() {
+	System.out.println("#");
+	
+}
+
+public void processStart() {
+	System.out.println("|");	
+}
+
+public void processStop() {
+	System.out.println("|");	
+	
 }
 
 }

@@ -1,13 +1,13 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
-from django.views.generic.simple import direct_to_template,redirect_to
-from tah.tah_intern.views import show_log
+from django.views.generic.simple import redirect_to
+from tah.tah_intern.views import homepage, show_log
 from tah.browse.MapOf import export_MapOf
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', direct_to_template, {'template': 'homepage.html'}),
+    (r'^$', homepage),
     (r'^Request/', include('tah.requests.urls')),
     (r'^User/', include('tah.user.urls')),
     (r'^Browse/', include('tah.browse.urls')),

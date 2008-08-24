@@ -2,6 +2,10 @@ from django.http import HttpResponse
 from tah.tah_intern.models import Blank, Layer
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_control
+from django.views.generic.simple import direct_to_template
+
+def homepage(request):
+  return  direct_to_template(request, template= 'homepage.html');
 
 @cache_control(no_cache=True)
 def show_log(request):

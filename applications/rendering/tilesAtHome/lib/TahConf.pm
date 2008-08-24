@@ -165,8 +165,11 @@ sub CheckBasicConfig
     }
     #------
     # check if flock is available on this OS
-    if (($Config{'d_flock'} && $Config{'d_flock'} eq 'define') or
-       ($Config{'d_fcntl_can_lock'} && $Config{'d_fcntl_can_lock'} eq 'define'))
+    # Theoertically the next 2 lines are correct, but Winows seems to cannot lock directories
+    # even if flock exists. So bypass flock there completely
+    #if (($Config{'d_flock'} && $Config{'d_flock'} eq 'define') or
+    #   ($Config{'d_fcntl_can_lock'} && $Config{'d_fcntl_can_lock'} eq 'define'))
+    if ($^O ne "MSWin32")
     {
 	# it's a sane OS and flock is there
         $self->set('flock_available',1);

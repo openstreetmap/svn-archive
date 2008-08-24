@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-24 16:44+0200\n"
-"PO-Revision-Date: 2008-08-24 16:49+0200\n"
+"POT-Creation-Date: 2008-08-24 23:16+0200\n"
+"PO-Revision-Date: 2008-08-24 23:58+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team: Deutsch\n"
 "MIME-Version: 1.0\n"
@@ -791,7 +791,7 @@ msgstr "Entferne das Mitglied in der aktuellen Tabellenzeile von dieser Relation
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:65
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:79
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:73
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:84
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:85
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:75
 msgid "Select"
 msgstr "Auswahl"
@@ -1532,7 +1532,7 @@ msgstr "Die eingegebene Zeit ist nicht maschinenlesbar."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:160
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:157
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:89
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:90
 msgid "inactive"
 msgstr "Inaktiv"
 
@@ -1544,7 +1544,7 @@ msgstr "Heruntergeladener Bereich"
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:148
 #: ../../core/src/org/openstreetmap/josm/command/RotateCommand.java:135
 #: ../../core/src/org/openstreetmap/josm/command/MoveCommand.java:122
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:91
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:92
 #: ../../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:47
 msgid "node"
 msgid_plural "nodes"
@@ -1553,7 +1553,7 @@ msgstr[1] "Knotenpunkte"
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:187
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:149
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:92
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:93
 #: ../../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:59
 msgid "way"
 msgid_plural "ways"
@@ -1758,17 +1758,17 @@ msgid "Colors"
 msgstr "Farben"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:147
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:96
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:97
 msgid "background"
 msgstr "Hintergrund"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:150
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:95
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:96
 msgid "incomplete way"
 msgstr "Unvollständiger Weg"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:151
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:93
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:94
 #: ../../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:69
 #: ../../core/src/org/openstreetmap/josm/data/osm/Relation.java:83
 msgid "relation"
@@ -1777,7 +1777,7 @@ msgstr[0] "Relation"
 msgstr[1] "Relationen"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:152
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:90
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:91
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:86
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:84
 msgid "selected"
@@ -2530,16 +2530,37 @@ msgid "different"
 msgstr "verschieden"
 
 #: ../../core/src/org/openstreetmap/josm/data/projection/Lambert.java:110
+#, java-format
+msgid ""
+"The projection \"{0}\" is designed for\n"
+"latitudes between 46.1° and 57° only.\n"
+"Use another projection system if you are not using\n"
+"a french WMS server.\n"
+"Do not upload any data after this message."
+msgstr ""
+"Die Projektion \"{0}\" ist nur für\n"
+"Breiten zwischen 46.1° und 57 °.\n"
+"Nutzen Sie ein anderes Projektionssystem, falls\n"
+"Sie keinen französischen WMS-Server nutzen.\n"
+"Laden Sie nach dieser Nachricht keine Daten hoch."
+
+#: ../../core/src/org/openstreetmap/josm/data/projection/Lambert.java:126
 msgid ""
 "IMPORTANT : data positionned far away from\n"
 "the current Lambert zone limits.\n"
+"Do not upload any data after this message.\n"
 "Undo your last action, Save your work \n"
 "and Start a new layer on the new zone."
 msgstr ""
-"WICHTIG: Einige Daten sind sehr weit von der\n"
+"WICHTIG: Einige Daten sind sehr weit von den\n"
 "aktuellen Lambert-Zonengrenzen entfernt.\n"
+"Laden Sie nach dieser Nachricht keine Daten hoch.\n"
 "Machen Sie die letzte Aktion rückgängig, speichern Sie\n"
 "die Daten und starten Sie eine neue Ebene mit der neuen Zone."
+
+#: ../../core/src/org/openstreetmap/josm/data/projection/Lambert.java:158
+msgid "Lambert Zone (France)"
+msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/data/ServerSidePreferences.java:79
 #, java-format
@@ -2555,15 +2576,15 @@ msgstr "Kann keine Einstellungen zum Server laden. Grund: {0}"
 msgid "Could not load preferences from server."
 msgstr "Kann keine Einstellungen vom Server laden."
 
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:313
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:282
 msgid "untagged"
 msgstr "Ohne Schlüssel"
 
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:314
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:283
 msgid "text"
 msgstr "Text"
 
-#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:94
+#: ../../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:95
 msgid "untagged way"
 msgstr "Weg ohne Schlüssel"
 
@@ -3325,7 +3346,7 @@ msgid "Extrude Way"
 msgstr "Weg ausweiten"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:261
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:380
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:379
 msgid "Release the mouse button to select the objects in the rectangle."
 msgstr "Maustaste loslassen um Objekte im Rechteck auszuwählen."
 
@@ -3334,7 +3355,7 @@ msgid "Draw a rectangle of the desired size, then release the mouse button."
 msgstr "Ein Rechteck der gewünschten Größe zeichnen und dann den Mausknopf loslassen."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:265
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:384
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:383
 msgid "Release the mouse button to stop rotating."
 msgstr "Um das Drehen zu stoppen, Maustaste loslassen."
 
@@ -3397,26 +3418,26 @@ msgstr ""
 msgid "Click to insert a new node."
 msgstr "Klicken, um einen neuen Knotenpunkt zu erzeugen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:84
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:85
 msgid "Select, move and rotate objects"
 msgstr "Objekte auswählen, verschieben, und drehen"
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:178
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:179
 msgid "Add and move a virtual new node to way"
 msgstr "Virtuellen Knoten zu Weg hinzufügen und bewegen"
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:209
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:210
 #: ../../core/src/org/openstreetmap/josm/actions/MoveAction.java:82
 msgid "Cannot move objects outside of the world."
 msgstr "Kann Objekte nicht nach außerhalb der Welt verschieben."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:382
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:381
 msgid "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "Um die Bewegung zu stoppen, Maustaste loslassen. Strg: mit dem nächsten "
 "Punkt vereinigen."
 
-#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:386
+#: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:385
 msgid ""
 "Move objects by dragging; Shift to add to selection; Shift-Ctrl to rotate "
 "selected; or change selection"

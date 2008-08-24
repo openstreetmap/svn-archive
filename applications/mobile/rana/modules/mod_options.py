@@ -72,7 +72,11 @@ class options(ranaModule):
     self.menuModule = self.m.get("menu", None)
     if(self.menuModule):
       for i in self.options.keys():
-        self.menuModule.addItem('options', i, "opt_"+i, "set:menu:opt_"+i)
+        self.menuModule.addItem(
+          'options', # which menu to add to
+          i, # title
+          "opt_"+i, # icon name
+          "set:menu:opt_%s|options:reset_scroll"%i ) # action
 
   def handleMessage(self, message):
     if(message == "up"):
@@ -80,6 +84,8 @@ class options(ranaModule):
         self.scroll -= 1
     elif(message == "down"):
       self.scroll += 1
+    elif(message == "reset_scroll"):
+      self.scroll = 0
     
   def drawMenu(self, cr, menuName):
     """Draw menus"""

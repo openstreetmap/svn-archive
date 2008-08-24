@@ -30,11 +30,11 @@ class options(ranaModule):
     self.options = {}
     self.scroll = 0
   
-  def addBoolOption(self, title, variable, category='misc',default=0):
-    self.addOption(title,variable,(('off','off'),('on','on')),category,default)
+  def addBoolOption(self, title, variable, category='misc',default=None):
+    self.addOption(title,variable,((False,'OFF'),(True,'ON')),category,default)
 
   def addOption(self, title, variable, choices, category='misc', default=None):
-    newOption = (title,variable, choices,category)
+    newOption = (title,variable, choices,category,default)
     if self.options.has_key(category):
       self.options[category].append(newOption)
     else:
@@ -46,21 +46,23 @@ class options(ranaModule):
     function by calling addOption.  That would be best if your module is
     only occasionally used, this function is best if the option is likely
     to be needed in all installations"""
-    self.addBoolOption("Centre map", "centre", "view")
+    self.addBoolOption("Centre map", "centre", "view", True)
 
     self.addOption("Network", "network",
       [("off","No use of network"),
        ("minimal", "Only for important data"),
        ("full", "Unlimited use of network")],
-       "network")
+       "network",
+       "off")
 
-    self.addBoolOption("Logging enabled", "logging", "logging", 'yes')
+    self.addBoolOption("Logging", "logging", "logging", True)
     options = []
     for i in (1,2,5,10,20,40,60):
-      options.append(("%d sec" % i, i))
-    self.addOption("Frequency", "log_period", options, "logging")
+      options.append((i, "%d sec" % i))
+    print options
+    self.addOption("Frequency", "log_period", options, "logging", 2)
 
-    self.addBoolOption("Vector maps", "vmap", "map", 'yes')
+    self.addBoolOption("Vector maps", "vmap", "map", True)
 
     tiles = self.m.get("mapTiles", None)
     if(tiles):
@@ -68,8 +70,8 @@ class options(ranaModule):
       for name,layer in tiles.layers().items():
         tileOptions.append((name, layer.get('label',name)))
       self.addOption("Map images", "tiles", tileOptions, "map", None)
-    self.addBoolOption("Old tracklogs", "old_tracklogs", "map", 'no')
-    self.addBoolOption("Latest tracklog", "tracklog", "map", 'yes')
+    self.addBoolOption("Old tracklogs", "old_tracklogs", "map", False)
+    self.addBoolOption("Latest tracklog", "tracklog", "map", True)
 
     # Add all our categories to the "options" menu
     self.menuModule = self.m.get("menu", None)
@@ -80,6 +82,14 @@ class options(ranaModule):
           i, # title
           "opt_"+i, # icon name
           "set:menu:opt_%s|options:reset_scroll"%i ) # action
+
+    # Set all undefined options to default values
+    for category,options in self.options.items():
+      for option in options:
+        (title,variable,choices,category,default) = option
+        if(default != None):
+          if(not self.d.has_key(variable)):
+            self.set(variable, default)
 
   def handleMessage(self, message):
     if(message == "up"):
@@ -122,7 +132,7 @@ class options(ranaModule):
         index = self.scroll + row
         numItems = len(options)
         if(0 <= index < numItems):
-          (title,variable,choices,category) = options[index]
+          (title,variable,choices,category,default) = options[index]
           # What's it set to currently?
           value = self.get(variable, None)
 
@@ -138,7 +148,7 @@ class options(ranaModule):
             if(useNext):
               nextChoice = c
               useNext = False
-            if(value == cVal):
+            if(str(value) == str(cVal)):
               valueDescription = cName
               useNext = True
 
@@ -172,17 +182,18 @@ class options(ranaModule):
 
             
   def showText(self,cr,text,x,y,widthLimit=None,fontsize=40):
-    cr.set_font_size(fontsize)
-    stats = cr.text_extents(text)
-    (textwidth, textheight) = stats[2:4]
-
-    if(widthLimit and textwidth > widthLimit):
-      cr.set_font_size(fontsize * widthLimit / textwidth)
+    if(text):
+      cr.set_font_size(fontsize)
       stats = cr.text_extents(text)
       (textwidth, textheight) = stats[2:4]
 
-    cr.move_to(x, y+textheight)
-    cr.show_text(text)
+      if(widthLimit and textwidth > widthLimit):
+        cr.set_font_size(fontsize * widthLimit / textwidth)
+        stats = cr.text_extents(text)
+        (textwidth, textheight) = stats[2:4]
+
+      cr.move_to(x, y+textheight)
+      cr.show_text(text)
   
 if(__name__ == "__main__"):
   a = options({},{'viewport':(0,0,600,800)})

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.slippymap;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -66,11 +68,11 @@ public class SlippyMapTile
             URLConnection devc = dev.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(devc
                     .getInputStream()));
-            metadata = in.readLine();
+            metadata = tr(in.readLine());
         }
         catch (Exception ex)
         {
-            metadata = "error loading metadata";
+            metadata = tr("error loading metadata");
         }
 
     }
@@ -84,11 +86,11 @@ public class SlippyMapTile
             URLConnection devc = dev.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(devc
                     .getInputStream()));
-            metadata = "requested: " + in.readLine();
+            metadata = tr("requested: {0}", tr(in.readLine()));
         }
         catch (Exception ex)
         {
-            metadata = "error requesting update";
+            metadata = tr("error requesting update");
         }
     }
 

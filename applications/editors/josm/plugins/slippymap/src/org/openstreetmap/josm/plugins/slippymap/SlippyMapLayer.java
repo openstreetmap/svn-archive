@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.slippymap;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -53,12 +55,12 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     @SuppressWarnings("serial")
     public SlippyMapLayer()
     {
-        super("Slippy Map");
+        super(tr("Slippy Map"));
 
         clearTileStorage();
 
         tileOptionMenu = new JPopupMenu();
-        tileOptionMenu.add(new JMenuItem(new AbstractAction("Load Tile")
+        tileOptionMenu.add(new JMenuItem(new AbstractAction(tr("Load Tile"))
         {
             public void actionPerformed(ActionEvent ae)
             {
@@ -71,7 +73,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             }
         }));
 
-        tileOptionMenu.add(new JMenuItem(new AbstractAction("Show Tile Status")
+        tileOptionMenu.add(new JMenuItem(new AbstractAction(tr("Show Tile Status"))
         {
             public void actionPerformed(ActionEvent ae)
             {
@@ -84,7 +86,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             }
         }));
 
-        tileOptionMenu.add(new JMenuItem(new AbstractAction("Request Update")
+        tileOptionMenu.add(new JMenuItem(new AbstractAction(tr("Request Update"))
         {
             public void actionPerformed(ActionEvent ae)
             {
@@ -97,7 +99,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             }
         }));
 
-        tileOptionMenu.add(new JMenuItem(new AbstractAction("Load All Tiles")
+        tileOptionMenu.add(new JMenuItem(new AbstractAction(tr("Load All Tiles"))
         {
             public void actionPerformed(ActionEvent ae)
             {
@@ -124,8 +126,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                     }
                 });
 
-                Main.map.mapView
-                        .addLayerChangeListener(new MapView.LayerChangeListener()
+                listeners.add(new LayerChangeListener()
                         {
                             public void activeLayerChange(Layer oldLayer,
                                     Layer newLayer)
@@ -323,7 +324,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
                 if (tile.getImage() == null)
                 {
-                    g.drawString("image not loaded", p.x + 2, texty);
+                    g.drawString(tr("image not loaded"), p.x + 2, texty);
                     texty += 1 + fontHeight;
                 }
 
@@ -473,8 +474,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     {
         if (key.startsWith(SlippyMapPreferences.PREFERENCE_PREFIX))
         {
-            System.err.println(this + ".preferenceChanged('" + key + "', '"
-                    + newValue + "') called");
+//            System.err.println(this + ".preferenceChanged('" + key + "', '"
+//                    + newValue + "') called");
 
             clearTileStorage();
         }

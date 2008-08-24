@@ -39,8 +39,8 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting
 
         for (int i = 0; i < allMapUrls.length; i++)
         {
-            System.err.println("Comparing '" + source + "' to '"
-                    + allMapUrls[i]);
+//            System.err.println("Comparing '" + source + "' to '"
+//                   + allMapUrls[i]);
 
             if (source.equals(allMapUrls[i]))
             {

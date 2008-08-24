@@ -48,7 +48,9 @@
 
   <target name="compile" depends="init">
     <echo message="creating ${plugin.jar}"/>
-    <javac srcdir="src" classpath="../../core/dist/josm-custom.jar" destdir="build" />
+    <javac srcdir="src" classpath="../../core/dist/josm-custom.jar" destdir="build">
+      <compilerarg value="-Xlint:deprecation"/>
+    </javac>
   </target>
   
   <target name="init">

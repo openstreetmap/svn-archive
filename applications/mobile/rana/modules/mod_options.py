@@ -133,28 +133,50 @@ class options(ranaModule):
               valueDescription = cName
               useNext = True
 
-          # For now, just use one line of text for everything
-          text = "%d/%d: %s: %s" % (
-            index+1,
-            numItems,
-            title,
-            valueDescription)
-
           # What should happen if this option is clicked -
           # set the associated option to the next value in sequence
           onClick = "set:%s:%s" % (variable, str(nextChoice[0]))
+          onClick += "|set:needRedraw:1"
+
+          y = y1 + (row+1) * dy
           
-          # Draw the row
+          # Draw background and make clickable
           self.menuModule.drawButton(cr,
             x1,
-            y1 + (row+1) * dy,
+            y,
             w,
             dy,
-            text,
+            None,
             "3h", # background for a 3x1 icon
             onClick)
 
+          border = 20
+
+          # 1st line: option name
+          self.showText(cr, title+":", x1+border, y+border, w-2*border)
+
+          # 2nd line: current value
+          self.showText(cr, valueDescription, x1 + 0.15 * w, y + 0.6 * dy, w * 0.85 - border)
+
+          # in corner: row number
+          self.showText(cr, "%d/%d" % (index+1, numItems), x1+0.85*w, y+border, w * 0.15 - border, 20)
+
+            
+  def showText(self,cr,text,x,y,widthLimit=None,fontsize=40):
+    cr.set_font_size(fontsize)
+    stats = cr.text_extents(text)
+    (textwidth, textheight) = stats[2:4]
+
+    if(widthLimit and textwidth > widthLimit):
+      cr.set_font_size(fontsize * widthLimit / textwidth)
+      stats = cr.text_extents(text)
+      (textwidth, textheight) = stats[2:4]
+
+    cr.move_to(x, y+textheight)
+    cr.show_text(text)
+  
 if(__name__ == "__main__"):
   a = options({},{'viewport':(0,0,600,800)})
   a.firstTime()
+
   

@@ -52,7 +52,7 @@ public class OsmParserGUI extends Thread implements ProcessbarAccess{
 		final JFileChooser fileChooser = new JFileChooser();
 		frame = new JFrame("Client");
 
-		tf_osmfile = new JTextField("/home/josias/map3.osm",30);
+		tf_osmfile = new JTextField("",30);
 		tf_osmfile.setEditable(false);
 
 		btn_OsmFile = new JButton("open OSM-XML - File");
@@ -80,7 +80,7 @@ public class OsmParserGUI extends Thread implements ProcessbarAccess{
 		});
 		
 
-		tf_outputfile = new JTextField("/home/josias/test.txt",30);
+		tf_outputfile = new JTextField("",30);
 		tf_outputfile.setEditable(false);
 
 		btn_outputFile = new JButton("open output File");
@@ -114,7 +114,7 @@ public class OsmParserGUI extends Thread implements ProcessbarAccess{
 		});
 		
 
-		tf_MFfile = new JTextField("/home/josias/kinder.xml",30);
+		tf_MFfile = new JTextField("",30);
 		tf_MFfile.setEditable(false);
 
 		btn_MfFile = new JButton("open MapFeature-File");

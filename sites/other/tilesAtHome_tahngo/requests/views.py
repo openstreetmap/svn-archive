@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 import urllib
 import xml.dom.minidom
 from django.contrib.auth import authenticate
-#from tah.user.auth import OSMBackend
 from tah.tah_intern.models import Layer
 from tah.tah_intern.Tile import Tile
 from tah.tah_intern.Tileset import Tileset
@@ -35,7 +34,7 @@ def show_requests(request,page):
 
 @cache_control(must_revalidate=True, max_age=30)
 def show_uploads_page(request):
-  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time'),template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
+  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time')[:30],template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
 
 
 def saveCreateRequestForm(request, form):

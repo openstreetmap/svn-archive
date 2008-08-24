@@ -7,11 +7,11 @@
 </head>
 <body>
   <div id="breadcrumb">{% block breadcrumb %}<a href="{% url tah.tah_intern.views.homepage %}">&raquo;Home</a> {% endblock %}</div>
-  <div id="header">{% block header %}<img src="{% url django.views.generic.simple.direct_to_template template=homepage.html %}media/header_logo.png" alt="t@h logo" width="600" height="109"/>{% endblock %}</div>
+  <div id="header">{% block header %}<img src="{% url tah.tah_intern.views.homepage %}media/header_logo.png" alt="t@h logo" width="600" height="109"/>{% endblock %}</div>
   <h2>{% block heading %}t@h{% endblock %}</h2>
 
   <div id="content">{% block content %}{% endblock %}</div>
 
-  <div id="footer">{% block footer %}<hr/>Part of <a href="http://openstreetmap.org">OpenStreetMap</a>. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="{% url django.views.generic.simple.direct_to_template template="homepage.html" %}media/CCBYSA30.png" width="80px" height="15px" align="bottom" /></a>. Local server time: {% now "Y-m-d H:i" %}{% endblock %}</div>
+  <div id="footer">{% block footer %}<hr/>Part of <a href="http://openstreetmap.org">OpenStreetMap</a>. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="{% url tah.tah_intern.views.homepage %}media/CCBYSA30.png" width="80px" height="15px" align="bottom" /></a>. Local server time: {% now "Y-m-d H:i" %}{% endblock %}</div>
 </body>
 </html>

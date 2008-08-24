@@ -19,6 +19,7 @@
 #---------------------------------------------------------------------------
 from base_module import ranaModule
 import cairo
+import marshal
 
 def getModule(m,d):
   return(options(m,d))
@@ -29,6 +30,7 @@ class options(ranaModule):
     ranaModule.__init__(self, m, d)
     self.options = {}
     self.scroll = 0
+    self.load()
   
   def addBoolOption(self, title, variable, category='misc',default=None):
     self.addOption(title,variable,((False,'OFF'),(True,'ON')),category,default)
@@ -91,6 +93,27 @@ class options(ranaModule):
           if(not self.d.has_key(variable)):
             self.set(variable, default)
 
+  def save(self):
+    try:
+      f = open(self.optionsFilename(), "w")
+      marshal.dump(self.d, f)
+      f.close()
+    except IOError:
+      print "Can't save options"
+
+  def load(self):
+    try:
+      f = open(self.optionsFilename(), "r")
+      newData = marshal.load(f)
+      f.close()
+      for k,v in newData.items():
+        self.set(k,v)
+    except IOError:
+      pass
+      
+  def optionsFilename(self):
+    return("data/options.bin")
+  
   def handleMessage(self, message):
     if(message == "up"):
       if(self.scroll > 0):
@@ -99,6 +122,8 @@ class options(ranaModule):
       self.scroll += 1
     elif(message == "reset_scroll"):
       self.scroll = 0
+    elif(message == "save"):
+      self.save()
     
   def drawMenu(self, cr, menuName):
     """Draw menus"""
@@ -155,6 +180,7 @@ class options(ranaModule):
           # What should happen if this option is clicked -
           # set the associated option to the next value in sequence
           onClick = "set:%s:%s" % (variable, str(nextChoice[0]))
+          onClick += "|options:save"
           onClick += "|set:needRedraw:1"
 
           y = y1 + (row+1) * dy

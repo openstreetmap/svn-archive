@@ -92,7 +92,7 @@ sub uploadAllZips
 
     while(my $File = shift @zipfiles)
     {
-        ::statusMessage(scalar(@zipfiles)." zip files to upload",0,0);
+        ::statusMessage(scalar(@zipfiles)+1." zip files to upload",0,0);
         # get a file handle, then try to lock the file exclusively.
         # if open fails (file has been uploaded and removed by other process)
         # the subsequent flock will also fail and skip the file.

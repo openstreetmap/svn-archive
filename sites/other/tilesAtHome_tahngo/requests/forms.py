@@ -1,17 +1,20 @@
 from django import forms
+from django.db import models
 from tah.requests.models import Request,Upload
 
-CreateForm = forms.form_for_model(Request)
-#Delete some fields unrequired fields
-del CreateForm.base_fields['client']
-del CreateForm.base_fields['ipaddress']
-del CreateForm.base_fields['status']
-del CreateForm.base_fields['clientping_time']
-del CreateForm.base_fields['max_z']
-del CreateForm.base_fields['client_uuid']
-CreateForm.base_fields['src'].required = False
-UploadForm = forms.form_for_model(Upload)
+class CreateForm(forms.ModelForm):
+  src = models.CharField(max_length=64)
+  #, required=False)
 
+  class Meta:
+    model = Request
+    exclude = ('client','ipaddress','status','clientping_time','max_z','client_uuid')
+#-----------------------------------------------------------------
+class UploadForm(forms.ModelForm):
+  class Meta:
+    model = Upload
+
+#-----------------------------------------------------------------
 class ClientAuthForm(forms.Form):
      user = forms.CharField()
      passwd = forms.CharField()

@@ -21,13 +21,15 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
-public class osmparser {
+public class osmparser extends Thread{
 	
 	boolean differentFiles;
 	Document xmlbaum;
@@ -39,10 +41,10 @@ public class osmparser {
 	String Outputfile;
 
 	ArrayList<String[]> knowenTyes;
+	ProcessbarAccess processbarAccess;
 	
 	
-	
-	public osmparser(String mapFeaturesFile,String inputfile,String Outputfile,boolean differentFiles) {
+	public osmparser(String mapFeaturesFile,String inputfile,String Outputfile,boolean differentFiles,ProcessbarAccess processbarAccess) {
 		mapFeatures = new MapFeatures(mapFeaturesFile);
 		knowenTyes = mapFeatures.getKnowenTyes();
 		
@@ -63,29 +65,43 @@ public class osmparser {
 		this.inputfile=inputfile;
 		this.Outputfile=Outputfile;
 		this.differentFiles=differentFiles;
+		this.processbarAccess = processbarAccess;
 	}
 	
 	 
 
-	public void parse() throws Exception {
-		
+	public void run() {
+		processbarAccess.processStart();
+		processbarAccess.processAdd();
 		DocumentBuilderFactory fabrik = DocumentBuilderFactory.newInstance();
-		DocumentBuilder aufbau = fabrik.newDocumentBuilder();
-		xmlbaum = aufbau.parse(inputfile);
+		DocumentBuilder aufbau;
+		try {
+			aufbau = fabrik.newDocumentBuilder();
+			xmlbaum = aufbau.parse(inputfile);
+		} catch (ParserConfigurationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		NodeList tags = xmlbaum.getElementsByTagName("tag");
 		int anzahl = tags.getLength();
 		int oldpercent=0;
 
-		System.out.println("|                                                                                                    |");
-
-		System.out.print("|");
 		for (int i = 0; i < anzahl; i++) {
 			
 
 			if (oldpercent < (int)((double)i/anzahl*100)){
 				oldpercent = (int)((double)i/anzahl*100); 
-
-				System.out.print("#");
+				processbarAccess.processAdd();
+				try {
+					wait(10);
+				} catch (Exception e) {
+				}
 			}
 			Node tag = tags.item(i);
 			double[] latlon = {0.,0.};
@@ -138,7 +154,7 @@ public class osmparser {
 				writeFile(Outputfile, latlon[0], latlon[1], osmTag, osmValue, name);
 			}
 		}
-		System.out.println("#|");
+		processbarAccess.processStop();
 	}
 
 	private double[] getLatLon(Node knoten){

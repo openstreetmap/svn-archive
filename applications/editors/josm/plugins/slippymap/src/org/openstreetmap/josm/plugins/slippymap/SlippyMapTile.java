@@ -81,7 +81,7 @@ public class SlippyMapTile
     {
         try
         {
-            URL dev = new URL("http://tah.openstreetmap.org/NeedRender?x=" + x
+            URL dev = new URL("http://tah.openstreetmap.org/Request/create/?x=" + x
                     + "&y=" + y + "&priority=1&src=slippymap_plugin");
             URLConnection devc = dev.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(devc

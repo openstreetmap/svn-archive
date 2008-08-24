@@ -61,10 +61,13 @@ class options(ranaModule):
     self.addOption("Frequency", "log_period", options, "logging")
 
     self.addBoolOption("Vector maps", "vmap", "map", 'yes')
-    self.addOption("Map images", "tiles",
-      [("", "None"),
-       ("", "")],
-      "map", None)
+
+    tiles = self.m.get("mapTiles", None)
+    if(tiles):
+      tileOptions = [("","None")]
+      for name,layer in tiles.layers().items():
+        tileOptions.append((name, layer.get('label',name)))
+      self.addOption("Map images", "tiles", tileOptions, "map", None)
     self.addBoolOption("Old tracklogs", "old_tracklogs", "map", 'no')
     self.addBoolOption("Latest tracklog", "tracklog", "map", 'yes')
 

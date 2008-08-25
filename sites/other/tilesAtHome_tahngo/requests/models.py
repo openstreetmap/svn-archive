@@ -24,7 +24,7 @@ class Request(models.Model):
   # ipaddress, request time, and freeform "src" string of the requester
   ipaddress = models.IPAddressField(blank=True,default="")
   request_time = models.DateTimeField(auto_now_add=True)
-  src  = models.CharField(max_length=64)
+  src  = models.CharField(max_length=64, blank=True, default='unknown')
 
   # renderer/user (=client), client_uuid, and time of last client contact.
   #clientping contains the last "I am still working on it" when active, on upload it indicates the upload time

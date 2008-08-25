@@ -61,7 +61,6 @@ class options(ranaModule):
     options = []
     for i in (1,2,5,10,20,40,60):
       options.append((i, "%d sec" % i))
-    print options
     self.addOption("Frequency", "log_period", options, "logging", 2)
 
     self.addBoolOption("Vector maps", "vmap", "map", True)

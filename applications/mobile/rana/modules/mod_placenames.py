@@ -33,13 +33,6 @@ class placenames(poiModule):
     self.load("places.txt")
     self.lastpos = (None, None)
 
-  def firstTime(self):
-    m = self.m.get('menu', None)
-    if(m != None):
-      m.register("places", "list", self.moduleName)
-      for type in self.poi.keys():
-        m.register("poi:"+type, "list", self.moduleName)
-      
   def load(self, filename):
     file = open(filename,"r")
     types = {'v':'villages','c':'cities','t':'towns'}
@@ -86,8 +79,6 @@ class placenames(poiModule):
             self.set('nearest_place', place)
           self.lastpos = pos
 
-  def handleMessage(self, message):
-    pass
       
 if(__name__ == "__main__"):
   a = placenames({},{})

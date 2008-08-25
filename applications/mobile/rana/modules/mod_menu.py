@@ -226,11 +226,9 @@ class menus(ranaModule):
     
   def setupPoiMenu(self):
     self.clearMenu('poi', "set:menu:None")
-    self.addItem('poi', 'Route', 'generic', 'route:route')
-    #self.addItem('poi', 'Direct', 'generic', 'nav:direct_to')
-    #self.addItem('poi', 'Map', 'generic', '')
-    #self.addItem('poi', 'Waypoint', 'generic', '')
-    
+    for i in("Show map", "Go to", "Route to", "Delete"):
+      self.addItem('poi', i, i, '')
+
   def setupDataSubMenu(self):
     self.clearMenu('data2', "set:menu:data")
     self.addItem('data2', '5 km', 'generic', 'set:downloadSize:4|mapData:download|set:menu:None')
@@ -248,14 +246,15 @@ class menus(ranaModule):
 
   def setupGeneralMenus(self):
     self.clearMenu('main', "set:menu:None")
-    self.addItem('main', 'map', 'generic', 'set:menu:layers')
-    self.addItem('main', 'centre', 'centre', 'toggle:centred|set:menu:None')
-    self.addItem('main', 'places', 'generic', 'set:menu:places')
+    #self.addItem('main', 'map', 'generic', 'set:menu:layers')
+    self.addItem('main', 'places', 'places', 'set:menu:placenames_categories')
+    self.addItem('main', 'waypoints', 'waypoints', 'set:menu:waypoints_categories')
     self.addItem('main', 'search', 'business', 'set:menu:search')
-    self.addItem('main', 'view', 'view', 'set:menu:view')
+    #self.addItem('main', 'view', 'view', 'set:menu:view')
     self.addItem('main', 'options', 'options', 'set:menu:options')
     self.addItem('main', 'download', 'generic', 'set:menu:data')
     self.addItem('main', 'mode', 'transport', 'set:menu:transport')
+    self.addItem('main', 'centre', 'centre', 'toggle:centred|set:menu:None')
     self.setupTransportMenu()
     self.setupSearchMenus()
     self.setupMaplayerMenus()

@@ -150,7 +150,7 @@ sub generate
         # then set the data source
         # then transform it to SVG
         if ($Config->get("Fork")) 
-        {
+        {   #TODO put this bunch of code in a function of its own.
             my $minimum_zoom = $req->Z;
             my $increment = 2 * $Config->get("Fork");
             my @children_pid;
@@ -202,7 +202,7 @@ sub generate
             }
         }
         else
-        {
+        {   # Non-forking render
             for (my $i = $req->Z ; $i <= $maxzoom; $i++)
             {
                 if ($self->GenerateSVG($layerDataFile, $layer, $i))
@@ -220,40 +220,32 @@ sub generate
 
         # Render it as loads of recursive tiles
         my ($success,$empty) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+
+        #----------
         if (!$success)
         {
             ::addFault("renderer",1);
             return cleanUpAndDie("GenerateTileset: could not render tileset",$::Mode,1,$$);
         }
         else
-        {
+        {   # successfully rendered, so reset renderer faults
             ::resetFault("renderer");
         }
 
-        #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
-        if ($empty == 1 && $Config->get("GatherBlankTiles")) 
-        {
-            my $Filename=sprintf("%s_%s_%s_%s.png",$Config->get($layer."_Prefix"), $req->Z, $req->X, $req->Y);
-            my $oldFilename = File::Spec->join($JobDirectory, $Filename); 
-            my $newFilename = File::Spec->join($Config->get("WorkingDirectory"),$Filename);
-            rename($oldFilename, $newFilename);
-        }
-        else
-        {
-            # This directory is now ready for upload.
-            # move it up one folder, so it can be picked up
-            my $dircomp;
+        #----------
+        # This directory is now ready for upload.
+        # move it up one folder, so it can be picked up
+        my $dircomp;
 
-            my @dirs = File::Spec->splitdir($JobDirectory);
-            do { $dircomp = pop(@dirs); } until ($dircomp ne '');
-            # we have now split off the last nonempty directory path
-            # remove the next path component and add the dir name back.
-            pop(@dirs);
-            push(@dirs, $dircomp);
-            my $DestDir = File::Spec->catdir(@dirs);
-            rename $JobDirectory, $DestDir;
-        }
-
+        my @dirs = File::Spec->splitdir($JobDirectory);
+        do { $dircomp = pop(@dirs); } until ($dircomp ne '');
+        # we have now split off the last nonempty directory path
+        # remove the next path component and add the dir name back.
+        pop(@dirs);
+        push(@dirs, $dircomp);
+        my $DestDir = File::Spec->catdir(@dirs);
+        rename $JobDirectory, $DestDir;
+        # Finished moving directory one level up.
     }
 
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);

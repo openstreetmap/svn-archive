@@ -33,8 +33,8 @@
      showgrid="true"
      inkscape:grid-points="false"
      inkscape:zoom="1.9532309"
-     inkscape:cx="-1158.9286"
-     inkscape:cy="-92.699284"
+     inkscape:cx="-834.42845"
+     inkscape:cy="275.92073"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:current-layer="svg2"
@@ -61,6 +61,18 @@
   </metadata>
   <defs
      id="defs11">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4168">
+      <stop
+         style="stop-color:#000080;stop-opacity:1;"
+         offset="0"
+         id="stop4170" />
+      <stop
+         style="stop-color:#000080;stop-opacity:0;"
+         offset="1"
+         id="stop4172" />
+    </linearGradient>
     <linearGradient
        id="linearGradient16059">
       <stop
@@ -2825,6 +2837,16 @@
        r="4.40435"
        gradientTransform="matrix(1,0,0,1.4112196,0,-294.49321)"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4168"
+       id="linearGradient4174"
+       x1="-972.74719"
+       y1="194.51799"
+       x2="-972.74719"
+       y2="213.46097"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3541667,0,0,1,509.67901,100.85853)" />
   </defs>
   <rect
      id="rect14063"
@@ -7472,4 +7494,33 @@
        id="tspan17100"
        x="-1239.9266"
        y="1204.9475">+</tspan></text>
+  <rect
+     id="rect3125"
+     x="-856.79669"
+     y="255.68755"
+     inkscape:export-xdpi="92.212929"
+     width="111.12024"
+     height="111.12024"
+     ry="22"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/city.png"
+     inkscape:export-ydpi="92.212929"
+     rx="22"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     style="opacity:1;fill:url(#linearGradient4174);fill-opacity:1;stroke:none;stroke-width:0.60000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect3197"
+     width="99.834587"
+     height="18.942972"
+     x="-849.87384"
+     y="295.37653"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/city.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
+  <path
+     style="fill:#333333;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:0.26854792px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M -849.72767,292.73583 L -849.72767,292.73583 L -849.72767,289.02363 L -846.8404,289.02363 L -841.61582,289.02363 L -841.61582,292.59835 L -840.37841,292.59835 L -840.37841,289.02363 L -839.55349,286.8238 L -837.07868,286.8238 L -837.07868,279.81185 L -830.34171,278.98692 L -828.55435,279.94934 L -828.55435,287.92372 L -825.94206,288.74865 L -825.94206,286.27384 L -824.97964,284.07402 L -821.6799,284.07402 L -820.4425,286.41133 L -820.4425,289.16111 L -819.20509,289.16111 L -819.20509,293.56077 L -818.79263,293.42327 L -818.79263,278.84943 L -818.37342,278.96176 L -818.37342,276.09965 L -815.55827,273.2845 L -813.01809,275.82467 L -813.01809,279.67437 L -812.33064,279.67437 L -812.33064,282.42415 L -811.09324,282.42415 L -811.09324,280.4993 L -809.30588,280.4993 L -809.30588,282.56164 L -806.14364,282.56164 L -804.60856,283.44791 L -804.60856,288.47367 L -803.72623,287.59134 L -803.72623,280.91176 L -800.50658,280.91176 L -798.44425,282.97411 L -798.44425,289.57358 L -797.20684,289.57358 L -797.20684,277.74952 L -793.76962,277.74952 L -792.05594,278.73891 L -792.05594,280.4993 L -791.01984,280.4993 L -789.89722,281.14744 L -789.89722,277.88701 L -787.56591,276.54103 L -784.69533,276.54103 L -783.8719,277.96725 L -783.8719,286.27384 L -783.18296,280.08684 L -780.70815,280.08684 L -780.70815,288.88614 L -777.93141,287.28298 L -777.54591,287.28298 L -777.54591,280.77428 L -774.52115,280.77428 L -772.97012,281.66976 L -772.97012,291.08596 L -772.18383,291.08596 L -772.18383,288.61116 L -770.32345,287.53707 L -768.60911,287.53707 L -768.60911,278.57446 L -768.36176,278.14603 L -768.36176,268.95022 L -764.92278,268.02875 L -762.6158,268.64689 L -762.6158,274.1748 L -762.23533,274.8338 L -762.23533,291.9109 L -750.18557,291.9109 L -750.18557,295.6231 L -849.59019,295.6231 L -849.72767,292.73583 z "
+     id="path3195"
+     inkscape:export-filename="/home/owhite/OpenStreetmap/rana/icons/bitmap/city.png"
+     inkscape:export-xdpi="92.212929"
+     inkscape:export-ydpi="92.212929" />
 </svg>

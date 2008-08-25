@@ -32,7 +32,23 @@ class menus(ranaModule):
     self.lists = {}
     self.listOffset = 0
     self.setupGeneralMenus()
+
+  def drawMapOverlay(self, cr):
+    """Draw an overlay on top of the map, showing various information
+    about position etc."""
+    (x,y,w,h) = self.get('viewport')
+
+    dx = w / 5.0
+    dy = dx
     
+    self.drawButton(cr, x+dx, y, dx, dy, '', "zoom_out", "mapView:zoomOut")
+    self.drawButton(cr, x, y, dx, dy, '', "hint", "set:menu:main")
+    self.drawButton(cr, x, y+dy, dx, dy, '', "zoom_in", "mapView:zoomIn")
+
+    m = self.m.get('clickHandler', None)
+    if(m != None):
+      m.registerDraggable(x,y,x+w,y+h, "mapView")
+
   def drawText(self,cr,text,x,y,w,h,border=0):
     if(not text):
       return

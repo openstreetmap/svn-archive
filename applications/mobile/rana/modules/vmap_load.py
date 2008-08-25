@@ -1,7 +1,6 @@
 #!/usr/bin/python
 #----------------------------------------------------------------------------
 # Library for handling "simple-packed" OpenStreetMap vector data
-#
 #----------------------------------------------------------------------------
 # Copyright 2008, Oliver White
 #
@@ -32,22 +31,21 @@ def getVmapBaseZoom(options={}):
 
 def getVmapTileNum(x,y,z, options={}):
   ourZ = getVmapBaseZoom(options)
-  if(z < ourZ):
-    return(False)
-  while(z > ourZ):
-    x = int(x/2)
-    y = int(y/2)
-    z -= 1
-  return(x,y,z)
+  if(z >= ourZ):
+    while(z > ourZ):
+      x = int(x/2)
+      y = int(y/2)
+      z -= 1
+    return(x,y,z)
 
 def getVmapFilename(xi,yi,zi,options={}):
-  (x,y,z) = getVmapTileNum(xi,yi,zi,options)
-  xdir = int(x / 64)
-  ydir = int(y / 64)
-  filename = "%s/%d_%d/%d_%d.bin" % (getVmapBaseDir(options), xdir, ydir, x, y)
-  return(filename)
-
-
+  xyz = getVmapTileNum(xi,yi,zi,options)
+  if(xyz != None):
+    (x,y,z) = xyz
+    xdir = int(x / 64)
+    ydir = int(y / 64)
+    filename = "%s/%d_%d/%d_%d.bin" % (getVmapBaseDir(options), xdir, ydir, x, y)
+    return(filename)
 
 class vmapData:
   def __init__(self, filename=None):
@@ -56,7 +54,24 @@ class vmapData:
     if(filename != None):
       self.load(filename)
 
-  def load(self, filename):
+  def optimise(self):
+    for k,way in self.ways.items():
+      (x1,x2,y1,y2) = (None,None,None,None)
+      for n in way['n']:
+        (lat,lon,nid) = n
+        if(y1 == None or lat < y1):
+          y1 = lat
+        if(y2 == None or lat > y2):
+          y2 = lat
+        if(x1 == None or lon < x1):
+          x1 = lon
+        if(x2 == None or lon > x2):
+          x2 = lon
+      #print "%1.3f to %1.3f, %1.3f to %1.3f" % (x1,x2,y1,y2)
+      way['bounds'] = (x1,x2,y1,y2)
+
+    
+  def load(self, filename, optimise = True):
     """Load an OSM XML file into memory"""
     if(not os.path.exists(filename)):
       print "File doesn't exist: '%s'" % filename
@@ -85,26 +100,12 @@ class vmapData:
         s = struct.unpack("H", f.read(2))[0]
         v = f.read(s)
         way[k] = v
-        #print " - %s = %s" % (k, v)
         c += 3 + s
-        
-        
-      #name = self.lookForField(f, 'N')
-      #ref = self.lookForField(f, 'r')
-
-      #print "%d: Way %d: style %d, %d nodes." % (f.tell(), wayID, way['style'], numNodes)
       self.ways[wayID] = way
-
-  def lookForField(self, file, tag):
-    char = file.read(1)
-    if(char != tag):
-      file.seek(-1, os.SEEK_CUR)
-      return(None)
-    len = struct.unpack("H", file.read(2))[0]
-    string = file.read(len)
-    return(string)
-    
-    
+        
+    if(optimise):
+      self.optimise()
+      
 if(__name__ == "__main__"):
 
   a = vmapData()

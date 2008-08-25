@@ -263,6 +263,9 @@ class menus(ranaModule):
     self.setupDataMenu()
     self.clearMenu('options', "set:menu:main") # will be filled by mod_options
     self.lists['places'] = 'placenames'
+  
+  def firstTime(self):
+    self.set("menu",None)
     
 if(__name__ == "__main__"):
   a = menus({},{'viewport':(0,0,600,800)})

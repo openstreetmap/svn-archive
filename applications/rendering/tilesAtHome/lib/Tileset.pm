@@ -68,7 +68,7 @@ sub DESTROY
 sub generate
 {
     my $self = shift;
-    my $req = $self->{req};
+    my $req =  $self->{req};
     my $Config = $self->{Config};
     
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);

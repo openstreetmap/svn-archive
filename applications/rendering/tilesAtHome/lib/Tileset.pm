@@ -225,7 +225,7 @@ sub generate
         if (!$success)
         {
             ::addFault("renderer",1);
-            return cleanUpAndDie("GenerateTileset: could not render tileset",$::Mode,1,$$);
+            return ::cleanUpAndDie("GenerateTileset: could not render tileset",$::Mode,1,$$);
         }
         else
         {   # successfully rendered, so reset renderer faults
@@ -356,7 +356,7 @@ sub downloadData
                     ::statusMessage("No data on OSMXAPI either...",1,0);
                     $req->putBackToServer("NoData");
                     ::addFault("nodataXAPI",1);
-                    return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$::Mode,1,$$);
+                    return ::cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$::Mode,1,$$);
                 }
                 else
                 {
@@ -423,7 +423,7 @@ sub downloadData
         ::statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->ZXY),1,0);
         $req->putBackToServer("BadUTF8");
         ::addFault("utf8",1);
-        return cleanUpAndDie("GenerateTileset:UTF8 test failed",$::Mode,1,$$);
+        return ::cleanUpAndDie("GenerateTileset:UTF8 test failed",$::Mode,1,$$);
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
 }
@@ -635,7 +635,7 @@ sub RenderTile
         my $pid = fork();
         if (not defined $pid) 
         {
-            cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$$); # exit if asked to fork but unable to
+            ::cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$$); # exit if asked to fork but unable to
         }
         elsif ($pid == 0) 
         {

@@ -89,16 +89,22 @@ sub generate
     if ( ($req->X < 0) or ($req->X > $maxCoords) 
       or ($req->Y < 0) or ($req->Y > $maxCoords) )
     {
-        #maybe do something else here
-        ::cleanUpAndDie("\n Coordinates out of bounds (0..$maxCoords)\n","EXIT",4,$$);
+        my $reason = "Coordinates out of bounds (0..$maxCoords)";
+        ::statusMessage($reason, 1, 0);
+        return (0, $reason);
     }
 
     #------------------------------------------------------
     # Download data (returns full path to data.osm or 0)
     #------------------------------------------------------
 
-    $self->downloadData();
-    
+    my ($success, $reason) = $self->downloadData();
+    if (!$success)
+    {
+        ::statusMessage($reason, 1, 0);
+        return (0, $reason);
+    }
+
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -125,77 +131,21 @@ sub generate
         
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
+        # This puts preprocessed files like data-maplint-closeareas.osm in $self->{JobDir}
         #------------------------------------------------------
-        my @ppchain = ();
-        # config option may be empty, or a comma separated list of preprocessors
-        foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
-        {
-            my $inputFile = File::Spec->join($self->{JobDir},
-                                             sprintf("data%s.osm", join("-", @ppchain)));
-            push(@ppchain, $preprocessor);
-            my $outputFile = File::Spec->join($self->{JobDir},
-                                              sprintf("data%s.osm", join("-", @ppchain)));
 
-            if (-f $outputFile)
-            {
-                # no action; files for this preprocessing step seem to have been created 
-                # by another layer already!
-            }
-            elsif ($preprocessor eq "maplint")
-            {
-                # Pre-process the data file using maplint
-                # TODO may put this into a subroutine of its own
-                my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
-                        $Config->get("XmlStarlet"),
-                        "maplint/lib/run-tests.xsl",
-                        "$inputFile",
-                        "tmp.$$");
-                ::statusMessage("Running maplint",0,3);
-                ::runCommand($Cmd,$$);
-                $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
-                        $Config->get("XmlStarlet"),
-                        "maplint/lib/convert-to-tags.xsl",
-                        "tmp.$$",
-                        "$outputFile");
-                ::statusMessage("Creating tags from maplint",0,3);
-                ::runCommand($Cmd,$$);
-                unlink("tmp.$$");
-            }
-            elsif ($preprocessor eq "close-areas")
-            {
-                my $Cmd = sprintf("%s perl close-areas.pl %d %d %d < %s > %s",
-                        $Config->get("Niceness"),
-                        $req->X,
-                        $req->Y,
-                        $req->Z,
-                        "$inputFile",
-                        "$outputFile");
-                ::statusMessage("Running close-areas",0,3);
-                ::runCommand($Cmd,$$);
-            }
-            elsif ($preprocessor eq "noop")
-            {
-                copy($inputFile,$outputFile);
-            }
-            else
-            {
-                die "Invalid preprocessing step '$preprocessor'";
-            }
-## Uncomment to have the output files checked for validity
-#            if( $preprocessor ne "maplint" )
-#            {
-#              ::runCommand( qq(xmllint --dtdvalid http://dev.openstreetmap.org/~kleptog/tilesAtHome-0.3.dtd --noout $outputFile), $$ );
-#            }
+        ($layerDataFile, $reason) = $self->runPreprocessors($layer);
+        if (!$layerDataFile)
+        {
+            ::statusMessage($reason, 1, 0);
+            return (0, $reason);
         }
 
         #------------------------------------------------------
         # Preprocessing finished, start rendering
+        # $layerDataFile is just the filename
         #------------------------------------------------------
 
-        $layerDataFile = sprintf("data%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
-        
         # Add bounding box to osmarender
         # then set the data source
         # then transform it to SVG
@@ -209,14 +159,16 @@ sub generate
             {
                 my $pid = fork();
                 if (not defined $pid) 
-                {
-                    cleanUpAndDie("GenerateTileset: could not fork, exiting","EXIT",4,$$); # exit if asked to fork but unable to
+                {   # exit if asked to fork but unable to
+                    my $reason = "GenerateTileset: could not fork, exiting";
+                    ::statusMessage($reason, 1, 0);
+                    return (0, $reason)
                 }
                 elsif ($pid == 0) 
                 {
                     for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
                     {
-                        if (GenerateSVG($layerDataFile, $layer, $i)) # if true then error occured
+                        if ($self->GenerateSVG($layerDataFile, $layer, $i)) # if true then error occured
                         {
                              exit(1);
                         }
@@ -231,7 +183,7 @@ sub generate
             }
             for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
             {
-                if (GenerateSVG($layerDataFile, $layer, $i))
+                if ($self->GenerateSVG($layerDataFile, $layer, $i))
                 {
                     $error = 1;
                     last;
@@ -246,7 +198,7 @@ sub generate
             {
                 $req->putBackToServer("RenderFailure");
                 ::addFault("renderer",1);
-                return 0;
+                return (0, "render Failure");
             }
         }
         else
@@ -257,7 +209,7 @@ sub generate
                 {
                     $req->putBackToServer("RenderFailure");
                     ::addFault("renderer",1);
-                    return 0;
+                    return (0, "render failure");
                 }
             }
         }
@@ -307,7 +259,7 @@ sub generate
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
-    return 1;
+    return (1, "");
 }
 
 #------------------------------------------------------------------
@@ -394,9 +346,8 @@ sub downloadData
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
                 $req->putBackToServer("NoData");
-                unlink (@tempfiles);
                 ::addFault("nodataXAPI",1);
-                return cleanUpAndDie("GenerateTileset: no data!",$::Mode,1,$$);
+                return (0,"GenerateTileset: no data!")
             }
             elsif ($Config->get("FallBackToXAPI"))
             {
@@ -489,6 +440,87 @@ sub downloadData
         return cleanUpAndDie("GenerateTileset:UTF8 test failed",$::Mode,1,$$);
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
+}
+
+
+#------------------------------------------------------
+# Go through preprocessing steps for the current layer
+# expects $self->{JobDir}/data.osm as input and produces
+# $self->{JobDir}/dataList-of-preprocessors.osm
+# parameter: (layername)
+# returns:   (filename, reason)
+#            filename is 0 in case of failure or filename (without path)
+#-------------------------------------------------------------
+sub runPreprocessors
+{
+    my $self = shift;
+    my $layer= shift;
+    my $req = $self->{req};
+    my $Config = $self->{Config};
+
+    my @ppchain = ();
+    my $outputFile;
+
+    # config option may be empty, or a comma separated list of preprocessors
+    foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
+    {
+        my $inputFile = File::Spec->join($self->{JobDir},
+                                         sprintf("data%s.osm", join("-", @ppchain)));
+        push(@ppchain, $preprocessor);
+        $outputFile = File::Spec->join($self->{JobDir},
+                                          sprintf("data%s.osm", join("-", @ppchain)));
+
+        if (-f $outputFile)
+        {
+            # no action; files for this preprocessing step seem to have been created 
+                # by another layer already!
+        }
+        elsif ($preprocessor eq "maplint")
+        {
+            # Pre-process the data file using maplint
+            my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+                    $Config->get("Niceness"),
+                    $Config->get("XmlStarlet"),
+                    "maplint/lib/run-tests.xsl",
+                    "$inputFile",
+                    "tmp.$$");
+            ::statusMessage("Running maplint",0,3);
+            ::runCommand($Cmd,$$);
+            $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+                        $Config->get("Niceness"),
+                        $Config->get("XmlStarlet"),
+                        "maplint/lib/convert-to-tags.xsl",
+                        "tmp.$$",
+                        "$outputFile");
+            ::statusMessage("Creating tags from maplint",0,3);
+            ::runCommand($Cmd,$$);
+            unlink("tmp.$$");
+        }
+        elsif ($preprocessor eq "close-areas")
+        {
+            my $Cmd = sprintf("%s perl close-areas.pl %d %d %d < %s > %s",
+                        $Config->get("Niceness"),
+                        $req->X,
+                        $req->Y,
+                        $req->Z,
+                        "$inputFile",
+                        "$outputFile");
+            ::statusMessage("Running close-areas",0,3);
+            ::runCommand($Cmd,$$);
+        }
+        elsif ($preprocessor eq "noop")
+        {
+            copy($inputFile,$outputFile);
+        }
+        else
+        {
+            return (0, "Invalid preprocessing step '$preprocessor'");
+        }
+    }
+
+    # everything went fine. Get final filename and return it.
+    my ($Volume, $path, $OSMfile) = File::Spec->splitpath($outputFile);
+    return ($OSMfile, "");
 }
 
 

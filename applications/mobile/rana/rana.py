@@ -116,7 +116,7 @@ class MapWidget(gtk.Widget):
     for m in self.m.values():
       m.beforeDraw()
 
-    menuName = self.d.get('menu', None) 
+    menuName = self.d.get('menu', None)
     if(menuName != None):
       for m in self.m.values():
         m.drawMenu(cr, menuName)
@@ -158,6 +158,15 @@ class MapWidget(gtk.Widget):
     #  self.rect.y, 
     #  self.rect.width, 
     #  self.rect.height)
+    
+    if(1): # optional set clipping in cairo
+      cr.rectangle(
+        self.rect.x,
+        self.rect.y,
+        self.rect.width,
+        self.rect.height)
+      cr.clip()
+    
     self.draw(cr)
   def do_expose_event(self, event):
     self.chain(event)
@@ -166,13 +175,21 @@ class MapWidget(gtk.Widget):
 
 class GuiBase:
   """Wrapper class for a GUI interface"""
-  def __init__(self):
+  def __init__(self, device):
     # Create the window
     win = gtk.Window()
     win.set_title('Rana')
     win.connect('delete-event', gtk.main_quit)
-    win.resize(480,640)
-    win.move(gtk.gdk.screen_width() - 500, 50)
+
+    if(device == 'eee'): # test for use with asus eee
+      win.resize(800,600)
+      win.move(gtk.gdk.screen_width() - 900, 50)
+    elif(device == 'n95'): # test for use with nokia 95
+      win.resize(480,640)
+      win.move(gtk.gdk.screen_width() - 500, 50)
+    else: # test for use with neo freerunner
+      win.resize(480,640)
+      win.move(gtk.gdk.screen_width() - 500, 50)
     
     # Events
     event_box = gtk.EventBox()
@@ -223,6 +240,6 @@ class GuiBase:
 
 
 if __name__ == "__main__":
-  program = GuiBase()
+  program = GuiBase('neo')
 
  

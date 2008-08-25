@@ -247,7 +247,7 @@ class menus(ranaModule):
   def setupGeneralMenus(self):
     self.clearMenu('main', "set:menu:None")
     #self.addItem('main', 'map', 'generic', 'set:menu:layers')
-    self.addItem('main', 'places', 'places', 'set:menu:placenames_categories')
+    self.addItem('main', 'places', 'city', 'set:menu:placenames_categories')
     self.addItem('main', 'waypoints', 'waypoints', 'set:menu:waypoints_categories')
     self.addItem('main', 'search', 'business', 'set:menu:search')
     #self.addItem('main', 'view', 'view', 'set:menu:view')

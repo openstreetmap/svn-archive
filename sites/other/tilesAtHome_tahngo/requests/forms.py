@@ -3,9 +3,6 @@ from django.db import models
 from tah.requests.models import Request,Upload
 
 class CreateForm(forms.ModelForm):
-  src = models.CharField(max_length=64)
-  #, required=False)
-
   class Meta:
     model = Request
     exclude = ('client','ipaddress','status','clientping_time','max_z','client_uuid')

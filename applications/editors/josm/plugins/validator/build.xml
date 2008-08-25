@@ -43,7 +43,7 @@
 	<attribute name="Plugin-Description" value="A OSM data validator"/>
 	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 	<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-	<attribute name="Author" value="Francisco R. Santos &lt;frsantos@gmail.com>"/>
+	<attribute name="Author" value="Francisco R. Santos"/>
       </manifest>
     </jar>
   </target>

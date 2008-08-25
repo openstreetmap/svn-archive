@@ -22,7 +22,7 @@ class ranaModule:
     self.m = modules
     self.d = data
     self.status = ''
-    self.moduleName = '' # will be provided by gui.py
+    self.moduleName = '' # will be provided by rana.py
     
   def module_exists(self, module):
     """Test whether a named module is loaded"""

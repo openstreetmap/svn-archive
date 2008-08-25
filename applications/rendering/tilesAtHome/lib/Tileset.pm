@@ -323,8 +323,6 @@ sub downloadData
                 $Config->get("XAPIURL"),$Config->get("OSMVersion"),$predicate,$bbox);
         }
     }
-    my @tempfiles;
-    push(@tempfiles, $DataFile);
     my $filelist = [];
     my $i=0;
     foreach my $URL (split(/ /,$URLS)) 
@@ -332,7 +330,6 @@ sub downloadData
         ++$i;
         my $partialFile = File::Spec->join($self->{JobDir},"data-$i.osm");
         push(@{$filelist}, $partialFile);
-        push(@tempfiles, $partialFile);
         ::statusMessage("Downloading: Map data for ".$req->layers_str,0,3);
         print "Download\n$URL\n" if ($Config->get("Debug"));
         my $res = ::DownloadFile($URL, $partialFile, 0);
@@ -366,7 +363,6 @@ sub downloadData
                 {
                     ::statusMessage("No data on OSMXAPI either...",1,0);
                     $req->putBackToServer("NoData");
-                    unlink(@tempfiles);
                     ::addFault("nodataXAPI",1);
                     return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$::Mode,1,$$);
                 }
@@ -385,7 +381,6 @@ sub downloadData
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
                     $partialFile = File::Spec->join($self->{JobDir},"data-$i-$j.osm");
                     push(@{$filelist}, $partialFile);
-                    push(@tempfiles, $partialFile);
                     ::statusMessage("Downloading: Map data to $partialFile (slice $j of 10)",0,3);
                     print "Download\n$URL\n" if ($Config->get("Debug"));
                     $res = ::DownloadFile($URL, $partialFile, 0);
@@ -394,7 +389,6 @@ sub downloadData
                     {
                         ::statusMessage("No data here (sliced)...",1,0);
                         $req->putBackToServer("NoData");
-                        unlink(@tempfiles);
                         ::addFault("nodata",1);
                         return ::cleanUpAndDie("GenerateTileset: no data! (sliced).",$::Mode,1,$$);
                     }

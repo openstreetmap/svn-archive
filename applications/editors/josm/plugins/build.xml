@@ -13,6 +13,7 @@
 
   <target name="dist" depends="compile">
     <mkdir dir="../dist"/>
+    <ant	dir="agpifoj"		antfile="build.xml"	target="dist"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
     <ant	dir="duplicateway"	antfile="build.xml"	target="dist"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
@@ -40,6 +41,7 @@
   </target>
 
   <target name="clean">
+    <ant	dir="agpifoj"		antfile="build.xml"	target="clean"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="clean"/>
     <ant	dir="duplicateway"	antfile="build.xml"	target="clean"/>
     <ant	dir="grid"		antfile="build.xml"	target="clean"/>

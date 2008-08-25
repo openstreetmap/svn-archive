@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-24 23:16+0200\n"
-"PO-Revision-Date: 2008-08-24 23:58+0200\n"
+"POT-Creation-Date: 2008-08-25 12:14+0200\n"
+"PO-Revision-Date: 2008-08-25 12:57+0200\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team: Deutsch\n"
 "MIME-Version: 1.0\n"
@@ -547,6 +547,7 @@ msgid "Preset group ''{0}''"
 msgstr "Vorlagengruppe \"{0}\""
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainMenu.java:120
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:91
 msgid "File"
 msgstr "Datei"
 
@@ -1356,6 +1357,7 @@ msgstr "Bilder importieren"
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:221
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:416
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:54
 msgid "JPEG images (*.jpg)"
 msgstr "JPEG-Bilder (*.jpg)"
 
@@ -1457,11 +1459,13 @@ msgid "No images with readable timestamps found."
 msgstr "Keine Bilder mit lesbaren Zeitstempel gefunden."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:133
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:112
 #, java-format
 msgid "Reading {0}..."
 msgstr "Lese {0}..."
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:200
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:164
 msgid "Geotagged Images"
 msgstr "Bilder mit Ortsbezug"
 
@@ -1485,6 +1489,7 @@ msgid "timezone difference: "
 msgstr "Zeitzonen Unterschied: "
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:364
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:202
 msgid "image"
 msgid_plural "images"
 msgstr[0] "Bild"
@@ -2560,7 +2565,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/data/projection/Lambert.java:158
 msgid "Lambert Zone (France)"
-msgstr ""
+msgstr "Lambert-Zone (Frankreich)"
 
 #: ../../core/src/org/openstreetmap/josm/data/ServerSidePreferences.java:79
 #, java-format
@@ -3259,12 +3264,14 @@ msgstr "Datei öffnen."
 #: ../../core/src/org/openstreetmap/josm/actions/OpenAction.java:65
 #: ../waypoints/src/WaypointOpenAction.java:61
 #: ../waypoints/src/WaypointOpenAction.java:65
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:163
 #, java-format
 msgid "Error while parsing {0}"
 msgstr "Fehler beim parsen {0}"
 
 #: ../../core/src/org/openstreetmap/josm/actions/OpenAction.java:68
 #: ../waypoints/src/WaypointOpenAction.java:69
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:167
 #, java-format
 msgid "Could not read \"{0}\""
 msgstr "Kann \"{0}\" nicht lesen"
@@ -4821,6 +4828,234 @@ msgstr "Lösche unnötige Knotenpunkte eines Weges."
 #, java-format
 msgid "Simplify Way (remove {0} nodes)"
 msgstr "Vereinfache Weg (entferne {0} Knoten)"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:428
+msgid "No image"
+msgstr "Kein Bild"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:438
+#, java-format
+msgid "Loading {0}"
+msgstr "Lade {0} herunter"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:440
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:467
+#, java-format
+msgid "Error on file {0}"
+msgstr "Fehler bei Datei {0}"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:34
+msgid "Open images with AgPifoJ"
+msgstr "Öffne Bilder mit AgPifoJ"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:36
+msgid "Load set of images as a new layer."
+msgstr "Lade einen Satz Bilder als neue Ebene."
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:91
+msgid "Extracting GPS locations from EXIF"
+msgstr "Extrahiere GPS-Positionen aus EXIF-Daten"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:97
+msgid "Read photos..."
+msgstr "Lese Photos..."
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:184
+msgid "Correlate to GPX"
+msgstr "Korreliere mit GPX"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:203
+#, java-format
+msgid "{0} were found to be gps tagged."
+msgstr "{0} wurden als GPS-markiert erkannt."
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:40
+msgid "AgPifoJ - Geotagged pictures"
+msgstr "AgPifoJ - Georeferenzierte Bilder"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:40
+msgid "Display geotagged photos"
+msgstr "Zeige Georeferenzierte Bilder an"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:61
+msgid "Previous"
+msgstr "Vorheriges"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:68
+msgid "Remove photo from layer"
+msgstr "Entferne Photo aus Ebene"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:75
+msgid "Next"
+msgstr "Nächstes"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:82
+msgid "Center view"
+msgstr "Anzeige zentrieren"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:89
+msgid "Zoom best fit and 1:1"
+msgstr "Zoome passend und 1:1"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:158
+msgid ""
+"\n"
+"Altitude: "
+msgstr "\n Höhe: "
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:161
+msgid " km/h"
+msgstr "km/h"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:124
+msgid "GPX tracks (*.gpx, *.gpx.gz)"
+msgstr "GPX-Dateien (*.gpx, *.gpx.gz)"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:144
+#, java-format
+msgid "File {0} is loaded yet under the name \"{1}\""
+msgstr "Datei {0} ist unter dem Namen \"{1}\" schon geladen"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:203
+msgid ""
+"<html>Take a photo of your GPS receptor while it displays the time."
+"<br>Display that photo here.<br>And then, simply capture the time you read "
+"on the photo and select a timezone<hr></html>"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:221
+msgid "Photo time (from exif) :"
+msgstr "Photozeit (aus EXIF) :"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:236
+msgid "Gps time (read from the above photo) : "
+msgstr "GPS-Zeit (aus obigem Photo) : "
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:248
+msgid " [dd/mm/yyyy hh:mm:ss]"
+msgstr " [dd/mm/yyyy hh:mm:ss]"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:256
+msgid "I'm in the timezone of : "
+msgstr "Ich bin in der Zeitzone von : "
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:319
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:364
+msgid "No date"
+msgstr "Kein Datum"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:328
+msgid "Open an other photo"
+msgstr "Öffne ein anderes Photo"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:343
+msgid "Images (*.jpg)"
+msgstr "Bilder (*.jpg)"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:376
+msgid "Synchronize time from a photo of the GPS receptor"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:387
+msgid ""
+"Error while parsing the date.\n"
+"Please use the requested format"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:389
+msgid "Invalid date"
+msgstr "Ungültiges Datum"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:432
+#, fuzzy
+msgid "<No GPX track loaded yet>"
+msgstr "Keine Daten geladen"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:438
+#, fuzzy
+msgid "GPX track : "
+msgstr "{0} GPS-Spur, "
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:443
+msgid "Open an other GPXtrace"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:459
+#, fuzzy
+msgid "Timezone : "
+msgstr "Zeitspanne: "
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:481
+msgid "Offset :"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:493
+msgid "<html>I can take a picture of my GPS receptor.<br>Can this help ? </html>"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
+msgid "Update position for : "
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:519
+#, fuzzy
+msgid "All images"
+msgstr "Bild"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:529
+msgid "Images with no exif position"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:539
+#, fuzzy
+msgid "Not yet tagged images"
+msgstr "Bilder mit Ortsbezug"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:558
+msgid "Correlate images with GPX track"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:566
+msgid "You should select a GPX track"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:567
+msgid "No selected GPX track"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:574
+#, fuzzy, java-format
+msgid ""
+"Error while parsing timezone.\n"
+"Expected format : {0}"
+msgstr "Fehler beim parsen {0}"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:575
+#, fuzzy
+msgid "Invalid timezone"
+msgstr "Datenprüfung: Fehler"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:583
+#, fuzzy, java-format
+msgid ""
+"Error while parsing offset.\n"
+"Expected format : {0}"
+msgstr "Fehler beim parsen {0}"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:584
+#, fuzzy
+msgid "Invalid offset"
+msgstr "Ungültiger Schlüssel"
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:645
+#, java-format
+msgid "Found {0} matchs of {1} in GPX track {2}"
+msgstr ""
+
+#: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:646
+#, fuzzy
+msgid "GPX Track loaded"
+msgstr "Feldweg Grad 1 (asphaltiert)"
 
 #: ../colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:67
 msgid "Use"

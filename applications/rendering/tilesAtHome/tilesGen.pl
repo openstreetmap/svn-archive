@@ -31,8 +31,8 @@ use File::Spec;
 use IO::Socket;
 use FindBin qw($Bin);
 use tahlib;
-use tahproject;
 use lib::TahConf;
+use lib::Tileset;
 use Request;
 use Upload;
 use English '-no_match_vars';
@@ -62,7 +62,7 @@ else
     %EnvironmentInfo = $Config->CheckBasicConfig();
 }
 
-# set the progress indicator variables
+# set the progress indicatOr variables
 our $currentSubTask;
 my $progress = 0;
 our $progressJobs = 0;
@@ -149,10 +149,6 @@ if ($RenderMode) {
 my $parent_pid = $PID;
 my $upload_pid = -1;
 
-# Subdirectory for the current job (layer & z12 tileset),
-# as used in sub GenerateTileset() and tileFilename()
-my $JobDirectory;
-
 # keep track of the server time for current job
 my $JobTime;
 
@@ -213,8 +209,11 @@ if ($Mode eq "xy")
 
     $req->ZXY($Zoom, $X, $Y);
     $req->layers($Config->get("Layers"));
-    GenerateTileset($req);
+
+    my $tileset = Tileset->new($req);
+    $tileset->generate();
 }
+
 elsif ($Mode eq "loop") 
 {
     # ----------------------------------
@@ -521,598 +520,11 @@ sub ProcessRequestsFromServer
     if ($success)
     {
         #TODO: return result of GenerateTileset?
-        GenerateTileset($req);
+        my $tileset = Tileset->new($req);
+        $tileset->generate();
     }
     return ($success, $reason);
 }
-
-#-----------------------------------------------------------------------------
-# Render a tile (and all subtiles, down to a certain depth)
-# FIXME: put some of the code into own subs
-#-----------------------------------------------------------------------------
-sub GenerateTileset ## TODO: split some subprocesses to own subs
-{
-    # $req is a 'Request' object
-    my $req = shift;
-    
-    my $Config = TahConf->getConfig();
-    keepLog($PID,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
-    
-    my ($N, $S) = Project($req->Y, $req->Z);
-    my ($W, $E) = ProjectL($req->X, $req->Z);
-    
-    $progress = 0;
-    $progressPercent = 0;
-    $progressJobs++;
-    $currentSubTask = "jobinit";
-    
-    statusMessage(sprintf("Doing tileset (%d,%d,%d) (area around %f,%f)", $req->Z, $req->X, $req->Y, ($N+$S)/2, ($W+$E)/2),1,0);
-    
-    my $maxCoords = (2 ** $req->Z - 1);
-    
-    if ( ($req->X < 0) or ($req->X > $maxCoords) 
-      or ($req->Y < 0) or ($req->Y > $maxCoords) )
-    {
-        #maybe do something else here
-        cleanUpAndDie("\n Coordinates out of bounds (0..$maxCoords)\n","EXIT",4,$PID);
-    }
-    
-    $currentSubTask = "Preproc";
-    
-    # Adjust requested area to avoid boundary conditions
-    my $N1 = $N + ($N-$S)*$Config->get("BorderNS");
-    my $S1 = $S - ($N-$S)*$Config->get("BorderNS");
-    my $E1 = $E + ($E-$W)*$Config->get("BorderWE");
-    my $W1 = $W - ($E-$W)*$Config->get("BorderWE");
-
-    # TODO: verify the current system cannot handle segments/ways crossing the 
-    # 180/-180 deg meridian and implement proper handling of this case, until 
-    # then use this workaround: 
-
-    if($W1 <= -180) {
-      $W1 = -180; # api apparently can handle -180
-    }
-    if($E1 > 180) {
-      $E1 = 180;
-    }
-
-    my $bbox = sprintf("%f,%f,%f,%f",
-      $W1, $S1, $E1, $N1);
-
-    #------------------------------------------------------
-    # Download data
-    #------------------------------------------------------
-    my $DataFile = File::Spec->join($Config->get("WorkingDirectory"), "data-$PID.osm");
-    
-    unlink($DataFile);
-    my $URLS = sprintf("%s%s/map?bbox=%s",
-      $Config->get("APIURL"),$Config->get("OSMVersion"),$bbox);
-    if ($req->Z < 12) 
-    {
-        # FIXME: zoom 12 hardcoded: assume lowzoom caption layer now!
-        # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
-        if ($Mode eq "xy") 
-        {
-            $req->layers("caption");
-            statusMessage("Warning: lowzoom zoom detected, autoswitching to ".$req->layers_str." layer",1,0);
-        }
-        else
-        {
-            statusMessage("Warning: lowzoom zoom detected, but ".$req->layers_str." configured",1,0);
-        }
-        # Get the predicates for lowzoom caption layer, and build the URLS for them
-        my $predicates = $Config->get($req->layers_str."_Predicates");
-        # strip spaces in predicates because that is the separator used below
-        $predicates =~ s/\s+//g;
-        $URLS="";
-        foreach my $predicate (split(/,/,$predicates)) {
-            $URLS = $URLS . sprintf("%s%s/%s[bbox=%s] ",
-                $Config->get("XAPIURL"),$Config->get("OSMVersion"),$predicate,$bbox);
-        }
-    }
-    my @tempfiles;
-    push(@tempfiles, $DataFile);
-    my $filelist = [];
-    my $i=0;
-    foreach my $URL (split(/ /,$URLS)) 
-    {
-        ++$i;
-        my $partialFile = File::Spec->join($Config->get("WorkingDirectory"),"data-$PID-$i.osm");
-        push(@{$filelist}, $partialFile);
-        push(@tempfiles, $partialFile);
-        statusMessage("Downloading: Map data for ".$req->layers_str,0,3);
-        print "Download\n$URL\n" if ($Config->get("Debug"));
-        my $res = DownloadFile($URL, $partialFile, 0);
-
-        if (! $res)
-        {
-            if ($req->Z < 12)
-            {
-                statusMessage("No data here...",1,0);
-                # if loop was requested just return  or else exit with an error. 
-                # (to enable wrappers to better handle this situation 
-                # i.e. tell the server the job hasn't been done yet)
-                $req->putBackToServer("NoData");
-                unlink (@tempfiles);
-                addFault("nodataXAPI",1);
-                return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
-            }
-            elsif ($Config->get("FallBackToXAPI"))
-            {
-                statusMessage("No data here, trying OSMXAPI",1,0);
-                $bbox = $URL;
-                $bbox =~ s/.*bbox=//;
-                $URL=sprintf("%s%s/%s[bbox=%s] ",
-                    $Config->get("XAPIURL"),
-                    $Config->get("OSMVersion"),
-                    "*",
-                    $bbox);
-                statusMessage("Downloading: Map data for ".$req->layers_str." to $partialFile",0,3);
-                print "Download\n$URL\n" if ($Config->get("Debug"));
-                my $res = DownloadFile($URL, $partialFile, 0);
-                if (! $res)
-                {
-                    statusMessage("No data on OSMXAPI either...",1,0);
-                    $req->putBackToServer("NoData");
-                    unlink(@tempfiles);
-                    addFault("nodataXAPI",1);
-                    return cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$Mode,1,$PID);
-                }
-                else
-                {
-                    resetFault("nodataXAPI"); #reset to zero if data downloaded
-                }
-            }
-            else
-            {
-                statusMessage("No data here, trying smaller slices",1,0);
-                my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
-                for (my $j = 1 ; $j<=10 ; $j++)
-                {
-                    $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
-                      $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
-                    $partialFile = File::Spec->join($Config->get("WorkingDirectory"),"data-$PID-$i-$j.osm");
-                    push(@{$filelist}, $partialFile);
-                    push(@tempfiles, $partialFile);
-                    statusMessage("Downloading: Map data to $partialFile (slice $j of 10)",0,3);
-                    print "Download\n$URL\n" if ($Config->get("Debug"));
-                    $res = DownloadFile($URL, $partialFile, 0);
-
-                    if (! $res)
-                    {
-                        statusMessage("No data here (sliced)...",1,0);
-                        $req->putBackToServer("NoData");
-                        unlink(@tempfiles);
-                        addFault("nodata",1);
-                        return cleanUpAndDie("GenerateTileset: no data! (sliced).",$Mode,1,$PID);
-                    }
-                    else
-                    {
-                        resetFault("nodata"); #reset to zero if data downloaded
-                    }
-                }
-                print STDERR "\n";
-            }
-        }
-        else
-        {
-            if ($req->Z < 12) ## FIXME: hardcoded zoom
-            {
-                resetFault("nodataXAPI"); #reset to zero if data downloaded
-            }
-            else 
-            {
-                resetFault("nodata"); #reset to zero if data downloaded
-            }
-        }
-    }
-
-    mergeOsmFiles($DataFile, $filelist);
-
-    if ($Config->get("KeepDataFile"))
-    {
-        copy($DataFile, File::Spec->join($Config->get("WorkingDirectory"), "data.osm"));
-    }
-  
-    # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
-    $JobTime = [stat $DataFile]->[9];
-    
-    # Check for correct UTF8 (else inkscape will run amok later)
-    # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
-    statusMessage("Checking for UTF-8 errors in $DataFile",0,3);
-    if (fileUTF8ErrCheck($DataFile))
-    {
-        statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->Z, $req->X, $req->Y),1,0);
-        $req->putBackToServer("BadUTF8");
-        addFault("utf8",1);
-        return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
-    }
-    resetFault("utf8"); #reset to zero if no UTF8 errors found.
-
-    #------------------------------------------------------
-    # Handle all layers, one after the other
-    #------------------------------------------------------
-
-    foreach my $layer($req->layers)
-    {
-        #reset progress for each layer
-        $progress=0;
-        $progressPercent=0;
-        $currentSubTask = $layer;
-        
-        $JobDirectory = File::Spec->join($Config->get("WorkingDirectory"),
-                                sprintf("%s_%d_%d_%d.tmpdir",
-                                $Config->get($layer."_Prefix"),
-                                $req->Z, $req->X, $req->Y));
-        mkdir $JobDirectory unless -d $JobDirectory;
-
-        my $maxzoom = $Config->get($layer."_MaxZoom");
-        my $layerDataFile;
-
-        # Faff around
-        for (my $i = $req->Z ; $i <= $maxzoom ; $i++) 
-        {
-            unlink(File::Spec->join($Config->get("WorkingDirectory"),"output-$parent_pid-z$i.svg"));
-        }
-        
-        my $Margin = " " x ($req->Z - 8);
-        printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $req->Z, $Margin, $req->X, $req->Y, $S,$N, $W,$E if ($Config->get("Debug"));
-        
-        
-        #------------------------------------------------------
-        # Go through preprocessing steps for the current layer
-        #------------------------------------------------------
-        my @ppchain = ($PID);
-        # config option may be empty, or a comma separated list of preprocessors
-        foreach my $preprocessor(split /,/, $Config->get($layer."_Preprocessor"))
-        {
-            my $inputFile = File::Spec->join($Config->get("WorkingDirectory"),
-                                             sprintf("data-%s.osm", join("-", @ppchain)));
-            push(@ppchain, $preprocessor);
-            my $outputFile = File::Spec->join($Config->get("WorkingDirectory"),
-                                              sprintf("data-%s.osm", join("-", @ppchain)));
-
-            if (-f $outputFile)
-            {
-                # no action; files for this preprocessing step seem to have been created 
-                # by another layer already!
-            }
-            elsif ($preprocessor eq "maplint")
-            {
-                # Pre-process the data file using maplint
-                # TODO may put this into a subroutine of its own
-                my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
-                        $Config->get("XmlStarlet"),
-                        "maplint/lib/run-tests.xsl",
-                        "$inputFile",
-                        "tmp.$PID");
-                statusMessage("Running maplint",0,3);
-                runCommand($Cmd,$PID);
-                $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
-                        $Config->get("XmlStarlet"),
-                        "maplint/lib/convert-to-tags.xsl",
-                        "tmp.$PID",
-                        "$outputFile");
-                statusMessage("Creating tags from maplint",0,3);
-                runCommand($Cmd,$PID);
-                unlink("tmp.$PID");
-            }
-            elsif ($preprocessor eq "close-areas")
-            {
-                my $Cmd = sprintf("%s perl close-areas.pl %d %d %d < %s > %s",
-                        $Config->get("Niceness"),
-                        $req->X,
-                        $req->Y,
-                        $req->Z,
-                        "$inputFile",
-                        "$outputFile");
-                statusMessage("Running close-areas",0,3);
-                runCommand($Cmd,$PID);
-            }
-            elsif ($preprocessor eq "noop")
-            {
-                copy($inputFile,$outputFile);
-            }
-            else
-            {
-                die "Invalid preprocessing step '$preprocessor'";
-            }
-## Uncomment to have the output files checked for validity
-#            if( $preprocessor ne "maplint" )
-#            {
-#              runCommand( qq(xmllint --dtdvalid http://dev.openstreetmap.org/~kleptog/tilesAtHome-0.3.dtd --noout $outputFile), $PID );
-#            }
-            push(@tempfiles, $outputFile);
-        }
-
-        #------------------------------------------------------
-        # Preprocessing finished, start rendering
-        #------------------------------------------------------
-
-        $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain)); # Don't put working directory here, the path is relative to the rulesfile
-        
-        # Add bounding box to osmarender
-        # then set the data source
-        # then transform it to SVG
-        if ($Config->get("Fork")) 
-        {
-            my $minimum_zoom = $req->Z;
-            my $increment = 2 * $Config->get("Fork");
-            my @children_pid;
-            my $error = 0;
-            for (my $i = 0; $i < 2 * $Config->get("Fork") - 1; $i ++) 
-            {
-                my $pid = fork();
-                if (not defined $pid) 
-                {
-                    cleanUpAndDie("GenerateTileset: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
-                }
-                elsif ($pid == 0) 
-                {
-                    for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
-                    {
-                        if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E)) # if true then error occured
-                        {
-                             exit(1);
-                        }
-                    }
-                    exit(0);
-                }
-                else
-                {
-                    push(@children_pid, $pid);
-                    $minimum_zoom ++;
-                }
-            }
-            for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
-            {
-                if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E))
-                {
-                    $error = 1;
-                    last;
-                }
-            }
-            foreach (@children_pid) 
-            {
-                waitpid($_, 0);
-                $error |= $?;
-            }
-            if ($error) 
-            {
-                unlink(@tempfiles) if (!$Config->get("Debug"));
-                $req->putBackToServer("RenderFailure");
-                addFault("renderer",1);
-                return 0;
-            }
-        }
-        else
-        {
-            for (my $i = $req->Z ; $i <= $maxzoom; $i++)
-            {
-                if (GenerateSVG($layerDataFile, $layer, $req->X, $req->Y, $i, $N, $S, $W, $E))
-                {
-                    unlink(@tempfiles)if (!$Config->get("Debug"));
-                    $req->putBackToServer("RenderFailure");
-                    addFault("renderer",1);
-                    return 0;
-                }
-            }
-        }
-        
-        # Find the size of the SVG file
-        my ($ImgH,$ImgW,$Valid) = getSize(File::Spec->join($Config->get("WorkingDirectory"),
-                                                       "output-$parent_pid-z$maxzoom.svg"));
-
-        # Render it as loads of recursive tiles
-        my ($success,$empty) = RenderTile($layer, $req, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
-        if (!$success)
-        {
-            addFault("renderer",1);
-            return cleanUpAndDie("GenerateTileset: could not render tileset",$Mode,1,$PID);
-        }
-        else
-        {
-            resetFault("renderer");
-        }
-        # Clean-up the SVG files
-        for (my $i = $req->Z ; $i <= $maxzoom; $i++) 
-        {
-            unlink(File::Spec->join($Config->get("WorkingDirectory"),"output-$parent_pid-z$i.svg")) if (!$Config->get("Debug"));
-        }
-
-        #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
-        if ($empty == 1 && $Config->get("GatherBlankTiles")) 
-        {
-            my $Filename=sprintf("%s_%s_%s_%s.png",$Config->get($layer."_Prefix"), $req->Z, $req->X, $req->Y);
-            my $oldFilename = File::Spec->join($JobDirectory, $Filename); 
-            my $newFilename = File::Spec->join($Config->get("WorkingDirectory"),$Filename);
-            rename($oldFilename, $newFilename);
-            rmdir($JobDirectory);
-        }
-        else
-        {
-            # This directory is now ready for upload.
-            # How should errors in renaming be handled?
-            my $Dir = $JobDirectory;
-            $Dir =~ s|\.tmpdir|.dir|;
-            rename $JobDirectory, $Dir;
-        }
-
-    }
-
-    unlink(@tempfiles) if (!$Config->get("Debug"));
-
-    keepLog($PID,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
-
-    return 1;
-}
-
-#-----------------------------------------------------------------------------
-# Generate SVG for one zoom level
-#   $layerDataFile - name of the OSM data file
-#   $X, $Y - which tileset (Always the tilenumbers of the base zoom. i.e. z12)
-#   $Zoom - which zoom currently is processsed
-#   $N, $S, $W, $E - bounds of the tile
-#-----------------------------------------------------------------------------
-sub GenerateSVG 
-{
-    my ($layerDataFile, $layer, $X, $Y, $Zoom, $N, $S, $W, $E) = @_;
-    my $Config = TahConf->getConfig();
-    # Create a new copy of rules file to allow background update
-    # don't need layer in name of file as we'll
-    # process one layer after the other
-    my $error = 0;
-    my $source = $Config->get($layer."_Rules.".$Zoom);
-    my $TempFeatures = File::Spec->join($Config->get("WorkingDirectory"), "map-features-$PID-z$Zoom.xml");
-    copy($source, $TempFeatures)
-        or die "Cannot make copy of $source";
-
-    # Update the rules file  with details of what to do (where to get data, what bounds to use)
-    AddBounds($TempFeatures,$W,$S,$E,$N);
-    SetDataSource($layerDataFile, $TempFeatures);
-
-    # Render the file
-    if (! xml2svg(
-            $TempFeatures,
-            File::Spec->join($Config->get("WorkingDirectory"), "output-$parent_pid-z$Zoom.svg"),
-            $Zoom))
-    {
-        $error = 1;
-    }
-    # Delete temporary rules file
-    unlink($TempFeatures) if (! $Config->get("Debug"));
-    return $error;
-}
-
-#-----------------------------------------------------------------------------
-# Render a tile
-#   $X, $Y - which tileset (Always the tilenumbers at $ZOrig)
-#   $Ytile, $Zoom - which tilestripe
-#   $ZOrig, the lowest zoom level which called tileset generation (i.e. z12 for "normal" operation)
-#   $N, $S, $W, $E - bounds of the tile
-#   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
-#   $ImageHeight - Height of the entire SVG in SVG units
-#   $empty - put forward "empty" tilestripe information.
-#-----------------------------------------------------------------------------
-sub RenderTile 
-{
-    my ($layer, $req, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
-    my $Config = TahConf->getConfig();
-
-    return (1,1) if($Zoom > $Config->get($layer."_MaxZoom"));
-    
-    # no need to render subtiles if empty
-    return (1,$SkipEmpty) if($SkipEmpty == 1);
-
-    # Render it to PNG
-    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
-    my $Width = 256 * (2 ** ($Zoom - $req->Z));  # Pixel size of tiles  
-    my $Height = 256; # Pixel height of tile
-
-    # svg2png returns true if all tiles extracted were empty. this might break 
-    # if a higher zoom tile would contain data that is not rendered at the 
-    # current zoom level. 
-    my ($success,$empty) = svg2png($layer, $req, $Ytile, $Zoom, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
-    if (!$success)
-    {
-       return (0,$empty);
-    }
-    if ($empty and !$Config->get($layer."_RenderFullTileset")) 
-    {
-        $SkipEmpty=1;
-    }
-
-    # Get progress percentage 
-    if($SkipEmpty == 1) 
-    {
-        # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
-        for (my $j = $Config->get($layer."_MaxZoom"); $j >= $Zoom ; $j--)
-        {
-            $progress += 2 ** ($Config->get($layer."_MaxZoom")-$j);
-        }
-    }
-    else
-    {
-        $progress += 1;
-    }
-
-    if (($progressPercent=$progress*100/(2**($Config->get($layer."_MaxZoom")-$req->Z+1)-1)) == 100)
-    {
-        statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
-    }
-    else
-    {
-        if ($Config->get("Verbose") >= 10)
-        {
-            printf STDERR "Job No. %d %1.1f %% done.\n",$progressJobs, $progressPercent;
-        }
-        else
-        {
-            statusMessage("Working",0,3);
-        }
-    }
-    
-    # Sub-tiles
-    my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
-    my $MercY1 = ProjectF($S); # get mercator coordinates for South border of tile
-    my $MercYC = 0.5 * ($MercY1 + $MercY2); # get center of tile in mercator
-    my $LatC = ProjectMercToLat($MercYC); # reproject centerline to latlon
-
-    my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1); 
-    my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;       # find mercator coordinates for bottom/top of subtiles
-
-    my $YA = $Ytile * 2;
-    my $YB = $YA + 1;
-
-    if ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork")))
-    {
-        my $pid = fork();
-        if (not defined $pid) 
-        {
-            cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$PID); # exit if asked to fork but unable to
-        }
-        elsif ($pid == 0) 
-        {
-            # we are the child process and can't talk to our parent other than through exit codes
-            ($success,$empty) = RenderTile($layer, $req, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-            if ($success)
-            {
-                exit(0);
-            }
-            else
-            {
-                exit(1);
-            }
-        }
-        else
-        {
-            ($success,$empty) = RenderTile($layer, $req, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
-            waitpid($pid,0);
-            my $ChildExitValue = $?; # we don't want the details, only if it exited normally or not.
-            if ($ChildExitValue or !$success)
-            {
-                return (0,$SkipEmpty);
-            }
-        }
-        if ($Zoom == $req->Z)
-        {
-            $progressPercent=100 if (! $Config->get("Debug")); # workaround for not correctly updating %age in fork, disable in debug mode
-            statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
-        }
-    }
-    else
-    {
-        ($success,$empty) = RenderTile($layer, $req, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-        return (0,$empty) if (!$success);
-        ($success,$empty) = RenderTile($layer, $req, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
-        return (0,$empty) if (!$success);
-    }
-
-    return (1,$SkipEmpty); ## main call wants to know wether the entire tileset was empty so we return 1 for success and 1 if the tile was empty
-}
-
 
 #-----------------------------------------------------------------------------
 # Gets latest copy of client from svn repository
@@ -1311,29 +723,21 @@ sub xml2svg
 
 #-----------------------------------------------------------------------------
 # Render a SVG file
+# jobdir - dir in which the svg is stored, and temporary files can be put.
 # $ZOrig - the lowest zoom level of the tileset
 # $X, $Y - tilemnumbers of the tileset
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
 #-----------------------------------------------------------------------------
 sub svg2png
 {
-    my($layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
+    my($jobdir, $layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
     my $Config = TahConf->getConfig();
     
     my $TempFile;
     my $stdOut;
-    my $TempDir = File::Spec->catdir($Config->get("WorkingDirectory"),$PID); # avoid upload.pl looking at the wrong PNG (Regression caused by batik support)
-    if (! -e $TempDir ) 
-    {
-        mkdir($TempDir) or cleanUpAndDie("cannot create working directory $TempDir","EXIT",3,$PID);
-    }
-    elsif (! -d $TempDir )
-    {
-        cleanUpAndDie("could not use $TempDir: is not a directory","EXIT",3,$PID);
-    }
-    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $TempDir, SUFFIX => ".png", OPEN => 0);
-    (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config->get("WorkingDirectory"), SUFFIX => ".stdout", OPEN => 0);
 
+    (undef, $TempFile) = tempfile("part-XXXXXX", DIR => $jobdir, SUFFIX => ".png", OPEN => 0);
+    (undef, $stdOut) = tempfile("XXXXXX", DIR => $jobdir, SUFFIX => ".stdout", OPEN => 0);
     
     my $Cmd = "";
     
@@ -1342,7 +746,7 @@ sub svg2png
     my $Width = $X2 - $X1;
     my $Height = $Y2 - $Y1;
     
-    my $svgFile = "output-$parent_pid-z$Zoom.svg";
+    my $svgFile = File::Spec->join($jobdir,"output-z$Zoom.svg");
 
     if ($Config->get("Batik") == "1") # batik as jar
     {
@@ -1355,8 +759,7 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        File::Spec->join($Config->get("WorkingDirectory"),
-                         $svgFile),
+        $svgFile,
         $stdOut);
     }
     elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
@@ -1369,8 +772,7 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        File::Spec->join($Config->get("WorkingDirectory"),
-                         $svgFile),
+        $svgFile,
         $stdOut);
     }
     elsif ($Config->get("Batik") == "3") # agent
@@ -1380,8 +782,7 @@ sub svg2png
         $SizeY,
         $Left,$Top,$Width,$Height,
         $TempFile,
-        File::Spec->join($Config->get("WorkingDirectory"),
-                         $svgFile),
+        $svgFile,
         $stdOut);
     }
     else
@@ -1400,8 +801,7 @@ sub svg2png
         $SizeY,
         $X1,$Y1,$X2,$Y2,
         $TempFile,
-        File::Spec->join($Config->get("WorkingDirectory"),
-                         $svgFile),
+        $svgFile,
         $stdOut);
 
         if ($locale ne "0") {
@@ -1429,12 +829,9 @@ sub svg2png
         return (0,0);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
-    unlink($stdOut) if (not $Config->get("Debug"));
     
     my $ReturnValue = splitImageX($layer, $req, $Zoom, $Ytile, $TempFile); # returns true if tiles were all empty
     
-    unlink($TempFile) if (not $Config->get("Debug"));
-    rmdir ($TempDir);
     return (1,$ReturnValue); #return true if empty
 }
 
@@ -1513,28 +910,40 @@ sub getSize($)
 }
 
 #-----------------------------------------------------------------------------
-# Temporary filename to store a tile
+# Filename to store a tile.
+# returns a (path and a filename) component
 #-----------------------------------------------------------------------------
 sub tileFilename 
 {
-    my($layer,$X,$Y,$Zoom) = @_;
+    my($req, $layer, $X, $Y,$Zoom) = @_;
     my $Config = TahConf->getConfig();
-    return(sprintf($Config->get("LocalSlippymap") ? "%s/%s/%d/%d/%d.png" : "%s/%s_%d_%d_%d.png",
-        $Config->get("LocalSlippymap") ? $Config->get("LocalSlippymap") : $JobDirectory,
-        $Config->get($layer."_Prefix"),
-        $Zoom,
-        $X,
-        $Y));
+    my ($path, $name);
+    if ($Config->get("LocalSlippymap"))
+    {	
+        $path = File::Spec->catdir($Config->get($layer."_Prefix"),$Zoom,$X);
+        $name = $Y.'.png';
+    }
+    else
+    {
+         $path = sprintf("%s_%d_%d_%d.dir",
+				     $Config->get($layer."_Prefix"),$req->ZXY);
+         $name = sprintf("%s_%d_%d_%d.png",
+                  $Config->get($layer."_Prefix"),$Zoom,$X,$Y);
+    }
+
+    return ($path, $name);
 }
 
 #-----------------------------------------------------------------------------
 # Split a tileset image into tiles
+# $File points to a png with complete path
 #-----------------------------------------------------------------------------
-sub splitImageX 
+sub splitImageX
 {
     my ($layer, $req, $Z, $Ytile, $File) = @_;
     my $Config = TahConf->getConfig();
-  
+    my ($JobVolume, $JobDir, $BigPNGFileName) = File::Spec->splitpath($File);
+
     # Size of tiles
     my $Pixels = 256;
   
@@ -1545,11 +954,11 @@ sub splitImageX
     my $allempty=1;
   
     # Load the tileset image
-    statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size),0,3);
+    statusMessage(sprintf("Splitting %s (%d x 1)", $BigPNGFileName, $Size),0,3);
     my $Image = newFromPng GD::Image($File);
     if( not defined $Image )
     {
-        print STDERR "\nERROR: Failed to read in file $File\n";
+        print STDERR "\nERROR: Failed to read in file $BigPNGFileName\n";
         $req->putBackToServer("MissingFile");
         cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4,$PID);
     }
@@ -1570,14 +979,25 @@ sub splitImageX
           $Pixels);            # Copy height
 
         # Decide what the tile should be called
-        my $Filename = tileFilename($layer, $req->X * $Size + $xi, $Ytile, $Z);
-        mkpath($Filename) if ($Config->get("LocalSlippymap"));
-   
+        my ($PngDirPart, $PngFileName)  = tileFilename($req, $layer, $req->X * $Size + $xi, $Ytile, $Z);
+        my $PngFullFileName;
+
+        if ($Config->get("LocalSlippymap"))
+        {
+            my $PngFullDir = File::Spec->catdir($Config->get("LocalSlippymap"), $PngDirPart);
+            File::Path::mkpath($PngFullDir);
+            $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
+
+        } else
+        {   # Construct base png directory
+            my $PngFullDir = File::Spec->catpath($JobVolume, $JobDir, $PngDirPart);
+            File::Path::mkpath($PngFullDir);
+            $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
+	}
+
         # Temporary filename
         my $Filename2_suffix = ".cut";
-        my $Filename2 = $Filename.$Filename2_suffix;
-        my $Basename = $Filename;   # used for statusMessage()
-        $Basename =~ s|.*/||;
+        my $Filename2 = $PngFileName.$Filename2_suffix;
 
         # Check for black tile output
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
@@ -1589,11 +1009,11 @@ sub splitImageX
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
         {
-            copy("emptyland.png", $Filename);
+            copy("emptyland.png", $PngFullFileName);
         }
         elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
         {
-	    copy("emptysea.png", $Filename);
+	    copy("emptysea.png", $PngFullFileName);
         }
         else
         {
@@ -1610,8 +1030,9 @@ sub splitImageX
             }
 
             # Store the tile
-            statusMessage(" -> $Basename",0,10);
-            WriteImage($SubImage,$Filename);
+            statusMessage(" -> $PngFileName",0,10);
+            WriteImage($SubImage,$PngFullFileName);
+
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
@@ -1624,7 +1045,7 @@ sub splitImageX
 
             if ($Config->get($layer."_Transparent"))
             {
-                rename($Filename, $Filename2);
+                rename($PngFullFileName, $Filename2);
             }
             elsif ($Config->get("PngQuantizer") eq "pngnq") {
                 if ($EnvironmentInfo{"pngnq"})
@@ -1633,27 +1054,27 @@ sub splitImageX
                                    $Config->get("Niceness"),
                                    $Config->get("pngnq"),
                                    $Filename2_suffix,
-                                   $Filename,
+                                   $PngFullFileName,
                                    $Redirect);
 
-                    statusMessage("ColorQuantizing $Basename",0,6);
+                    statusMessage("ColorQuantizing $PngFileName",0,6);
                     if(runCommand($Cmd,$PID))
                     {
-                        unlink($Filename);
+                        unlink($PngFullFileName);
                     }
                     else
                     {
-                        statusMessage("ColorQuantizing $Basename with ".$Config->get("PngQuantizer")." failed",1,0);
-                        rename($Filename, $Filename2);
+                        statusMessage("ColorQuantizing $PngFileName with ".$Config->get("PngQuantizer")." failed",1,0);
+                        rename($PngFullFileName, $Filename2);
                     }
                 }
                 else
                 {
-                    statusMessage("ColorQuantizing $Basename with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",1,0);
-                    rename($Filename, $Filename2);
+                    statusMessage("ColorQuantizing $PngFileName with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",1,0);
+                    rename($PngFullFileName, $Filename2);
                 }
             } else {
-                rename($Filename, $Filename2);
+                rename($PngFullFileName, $Filename2);
             }
 
             if ($Config->get("PngOptimizer") eq "pngcrush")
@@ -1662,7 +1083,7 @@ sub splitImageX
                   $Config->get("Niceness"),
                   $Config->get("Pngcrush"),
                   $Filename2,
-                  $Filename,
+                  $PngFullFileName,
                   $Redirect);
             }
             elsif ($Config->get("PngOptimizer") eq "optipng")
@@ -1671,26 +1092,26 @@ sub splitImageX
                   $Config->get("Niceness"),
                   $Config->get("Optipng"),
                   $Filename2,
-                  $Filename,
+                  $PngFullFileName,
                   $Redirect);
             }
             else
             {
                 cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4,$PID);
             }
-            statusMessage("Optimizing $Basename",0,6);
+            statusMessage("Optimizing $PngFileName",0,6);
             if(runCommand($Cmd,$PID))
             {
                 unlink($Filename2);
             }
             else
             {
-                statusMessage("Optimizing $Basename with ".$Config->get("PngOptimizer")." failed",1,0);
-                rename($Filename2, $Filename);
+                statusMessage("Optimizing $PngFileName with ".$Config->get("PngOptimizer")." failed",1,0);
+                rename($Filename2, $PngFullFileName);
             }
         }
         # Assign the job time to this file
-        utime $JobTime, $JobTime, $Filename;
+        utime $JobTime, $JobTime, $PngFullFileName;
     }
     undef $SubImage;
     undef $Image;

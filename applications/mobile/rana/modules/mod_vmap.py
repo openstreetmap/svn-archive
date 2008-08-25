@@ -25,6 +25,7 @@ import urllib
 import tilenames
 import vmap_load
 from math import *
+from time import time
 
 def getModule(m,d):
   return(vmap(m,d))
@@ -34,6 +35,12 @@ class vmap(ranaModule):
   def __init__(self, m, d):
     ranaModule.__init__(self, m, d)
     self.tiles = {}
+    self.style_d = 0
+    self.style_c = 0
+    self.lastColour = (-1,-1,-1)
+    self.lastWidth = -1
+    self.line_d = 0
+    self.line_c = 0
 
   def firstTime(self):
     self.loadEnums()
@@ -43,6 +50,8 @@ class vmap(ranaModule):
     # Use filename as dictionary key, so that zooms which happen to
     # use the dataset don't get loaded twice
     filename = vmap_load.getVmapFilename(x,y,z,self.d)
+    if(not filename):
+      return(None)
 
     # If it doesn't already exist, then load it
     if(not self.tiles.has_key(filename)):
@@ -80,39 +89,83 @@ class vmap(ranaModule):
     
   def setStyle(self, style, cr):
     styleDef = self.highways.get(style, None)
+    start = time()
     if(not styleDef):
       return(False)
     (colour,width,options) = styleDef
-    width *= self.get("scaleLines", 2.0)
-    if(self.get("zoomLines", True) and self.z > 14):
-      width *= self.z - 14
+    width *= self.scale
+
+    if(colour != self.lastColour):
+      (r,g,b) = colour
+      cr.set_source_rgb(r,g,b)
+      self.lastColour = colour
+
+    if(width != self.lastWidth):
+      cr.set_line_width(width)
+      self.lastWidth = width
       
-    (r,g,b) = colour
-    cr.set_source_rgb(r,g,b)
-    cr.set_line_width(width)
+    duration = time() - start
+    self.style_d += duration
+    self.style_c += 1
     return(True)
     
-  def drawTile(self,cr,tx,ty,tz,proj):
+  def drawTile(self,cr,tx,ty,tz,proj,mapBounds):
+    start = time()
     mapData = self.getTile(tx,ty,tz)
+    #print " - Map data: %1.3fms" % ((time() - start) * 1000.0)
+
+    cways = 0
+    cdone = 0
+    cnodes = 0
+    coob = 0
+
+    (minlat,maxlat,minlon,maxlon) = mapBounds
+    #print " - Map: %1.3f to %1.3f, %1.3f to %1.3f"%(minlat,maxlat,minlon,maxlon)
+    
     if(mapData):
       #print mapData.ways
       for wayID, way in mapData.ways.items():
         if(not self.waysDrawn.get(wayID, False)): # if not drawn already as part of another tile
-          if(self.setStyle(self.enums[way['style']], cr)):
-            count = 0
-            for node in way['n']:
-              (lat,lon,nid) = node
-              x,y = proj.ll2xy(lat,lon)
-              if(count == 0):
-                cr.move_to(x,y)
-              else:
-                cr.line_to(x,y)
-              count += 1
-            cr.stroke()
+
+          (lon1,lon2,lat1,lat2) = way['bounds']
+
+          offMap = (lon2 < minlon
+            or lon1 > maxlon
+            or lat2 < minlat
+            or lat1 > maxlat)
+
+          #print "   - Way: %1.3f to %1.3f, %1.3f to   %1.3f - %s"%(lat1,lat2,lon1,lon2, text)
+
+          if(offMap):
+            coob += 1
+          else:
+            if(self.setStyle(self.enums[way['style']], cr)):
+              count = 0
+              cways += 1
+              line_start = time()
+              for node in way['n']:
+                cnodes += 1
+                (lat,lon,nid) = node
+                x,y = proj.ll2xy(lat,lon)
+                if(count == 0):
+                  cr.move_to(x,y)
+                else:
+                  cr.line_to(x,y)
+                count += 1
+              cr.stroke()
+              line_duration = time() - line_start
+              self.line_d += line_duration
+              self.line_c += 1
+              
           # Note: way['N'] and way['r'] are name and ref respectively
           self.waysDrawn[wayID] = True
+        else:
+          cdone += 1
     else:
       print "No map data"
+
+    #if(tx == 16342 and ty == 10803):
+    #print " - %d,%d,%d: %d ways, %d done, %d oob, %d nd, %1.3fms" % (tx,ty,tz, cways, cdone, coob, cnodes, 1000.0 * (time() - start))
 
   def drawMap(self, cr):
     (sx,sy,sw,sh) = self.get('viewport')
@@ -122,12 +175,37 @@ class vmap(ranaModule):
     
     self.z = int(self.get('z', 15))
 
+    start = time()
+    count = 0
+
+    self.scale = self.get("scaleLines", 1.0)
+    if(self.get("zoomLines", True) and self.z > 14):
+      self.scale *= self.z - 14
+
+    #x1,y1 = proj.pxpy2xy(proj.px1,proj.py2)
+    #y1,x1 = proj.xy2ll(x1,y1)
+    #x2,y2 = proj.pxpy2xy(proj.px2,proj.py1)
+    #y2,x2 = proj.xy2ll(x2,y2)
+    #print "%1.3f to %1.3f, %1.3f to %1.3f" % (x1,x2,y1,y2)
+    bounds = (proj.S,proj.N, proj.W,proj.E)
+    #print "%1.3f to %1.3f, %1.3f to %1.3f" % bounds
+    
     # Render each 'tile' in view
     self.waysDrawn = {}
     for x in range(int(floor(proj.px1)), int(ceil(proj.px2))):
       for y in range(int(floor(proj.py1)), int(ceil(proj.py2))):
-        self.drawTile(cr,x,y,self.z,proj)
-   
+        self.drawTile(cr,x,y,self.z,proj,bounds)
+        count += 1
+
+    duration = time() - start
+    #print "Z%d %d tiles, %f seconds" % (self.z, count, duration)
+    #print "%f - %f" % (proj.px1, proj.px2)
+
+    if(1):
+      print "Style: %1.3fms, line %1.3fms" % (
+        1000.0 * self.style_d / self.style_c,
+        1000.0 * self.line_d / self.line_c)
+    
   def update(self):
     pass
 

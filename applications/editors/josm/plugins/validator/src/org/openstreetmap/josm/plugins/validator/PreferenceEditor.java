@@ -31,6 +31,9 @@ public class PreferenceEditor implements PreferenceSetting
 	/** The preferences key for debug preferences */
 	public static final String PREF_DEBUG = PREFIX + ".debug";
 
+	/** The preferences key for debug preferences */
+	public static final String PREF_LAYER = PREFIX + ".layer";
+
 	/** The preferences key for enabled tests */
 	public static final String PREF_TESTS = PREFIX + ".tests";
 
@@ -41,6 +44,7 @@ public class PreferenceEditor implements PreferenceSetting
 	public static final String PREF_TESTS_BEFORE_UPLOAD = PREFIX + ".testsBeforeUpload";
 
 	private JCheckBox prefUseIgnore;
+	private JCheckBox prefUseLayer;
 
 	/** The list of all tests */
 	private Collection<Test> allTests;
@@ -57,6 +61,10 @@ public class PreferenceEditor implements PreferenceSetting
 		prefUseIgnore = new JCheckBox(tr("Use ignore list."), Main.pref.getBoolean(PREF_USE_IGNORE, true));
 		prefUseIgnore.setToolTipText(tr("Use the use ignore list to suppress warnings."));
 		testPanel.add(prefUseIgnore, GBC.eol());
+
+		prefUseLayer = new JCheckBox(tr("Use error layer."), Main.pref.getBoolean(PREF_LAYER, true));
+		prefUseLayer.setToolTipText(tr("Use the error layer to display problematic elements."));
+		testPanel.add(prefUseLayer, GBC.eol());
 
 		GBC a = GBC.eol().insets(-5,0,0,0);
 		a.anchor = GBC.EAST;
@@ -102,38 +110,6 @@ public class PreferenceEditor implements PreferenceSetting
 		Main.pref.put( PREF_TESTS, tests.toString());
 		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());
 		Main.pref.put( PREF_USE_IGNORE, prefUseIgnore.isSelected());
+		Main.pref.put( PREF_LAYER, prefUseLayer.isSelected());
 	}
-	
-	/**
-	 * Import old stored preferences
-	 */
-	public static void importOldPreferences()
-	{
-		if( !Main.pref.hasKey("tests") || !Pattern.matches("(\\w+=(true|false),?)*", Main.pref.get("tests")) )
-			return;
-		
-		String enabledTests = Main.pref.get("tests");
-		Main.pref.put(PREF_TESTS, enabledTests);
-		Main.pref.put("tests", null );
-		
-		StringBuilder testsBeforeUpload = new StringBuilder();
-		Map<String, String> oldPrefs = Main.pref.getAllPrefix("tests");
-		for( Map.Entry<String, String> pref : oldPrefs.entrySet() )
-		{
-			String key = pref.getKey();
-			String value = pref.getValue();
-			if( key.endsWith(".checkBeforeUpload") )
-			{
-				String testName = key.substring(6, key.length() - 18);
-				testsBeforeUpload.append( ',' ).append( testName ).append( '=' ).append( value );
-			}
-			else
-				Main.pref.put( PREFIX + key.substring(5), value );
-			Main.pref.put(key, null );
-		}
-		
-		if (testsBeforeUpload.length() > 0 ) testsBeforeUpload = testsBeforeUpload.deleteCharAt(0);
-		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());
-	}
-
 }

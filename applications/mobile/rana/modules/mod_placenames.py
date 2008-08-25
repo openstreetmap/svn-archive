@@ -51,37 +51,28 @@ class placenames(poiModule):
         self.addItem(type, name, lat, lon)
     self.needUpdate = True # Request update of meta-info
         
-  def lookupPlace(self, lat, lon, type, radiusKm):
-    kmToDeg = 360.0 / 40041.0
-    radius = radiusKm * kmToDeg
-    limitSq = radius * radius
-    nearest = None
-    nearestDist = limitSq
-    
-    for place in self.poi[type]:
-      plat = place['lat']
-      plon = place['lon']
-      dx = plon - lon
-      dy = plat - lat
-      dist = dx * dx + dy * dy
-      if(dist < nearestDist):
-        nearestDist = dist
-        nearest =  place['name']
-    if(0):
-      if(nearest != None):
-        print "Found %s at %1.4f km" % (nearest, math.sqrt(nearestDist) / kmToDeg)
-    return(nearest)
-  
   def lookup(self, lat, lon):
-    # Search small to large - i.e. if you're near a village,
-    # return that rather than the nearby city.
-    # Use limits, so we don't claim to be 'near' a town > 30km away
-    for lookup in (('villages',10.0), ('towns', 30.0), ('cities', 150.0)):
-      (type, rangefilter) = lookup
-      place = self.lookupPlace(lat,lon,type, rangefilter)
-      if(place != None):
-        return(place)
-    return(None)
+    limits = {'villages':10.0, 'towns': 30.0, 'cities': 150.0}
+    kmToDeg = 360.0 / 40041.0
+    
+    nearest = None
+    nearestDist = None
+
+    for type,places in self.poi.items():
+      limit = limits.get(type,0) *  kmToDeg
+      limit *= limit
+
+      for place in places:
+        plat = place['lat']
+        plon = place['lon']
+        dx = plon - lon
+        dy = plat - lat
+        dist = dx * dx + dy * dy
+        if(dist < limit):
+          if(nearestDist == None or dist < nearestDist):
+            nearestDist = dist
+            nearest = place['name']
+    return(nearest)
   
   def update(self):
     """If requested, lookup the nearest place name"""

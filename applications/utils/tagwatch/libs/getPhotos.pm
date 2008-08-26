@@ -18,7 +18,6 @@
 #---------------------------------------------------------------
 use strict;
 use MediaWiki;
-use GD;
 
 my $c = MediaWiki->new;
    $c->setup({'wiki' => {
@@ -48,7 +47,34 @@ sub getPhotos
 
 		if($Data ne "")
 		{
-			if($ImageList{$Filename} =~ m{(.*).(png|gif)$})
+			my $ok;
+			if($ImageList{$Filename} =~ /(.*).jpg$/i)
+			{
+				eval
+				{
+					use GD;
+					my $Image = GD::Image->newFromJpegData($Data);
+					# Calculate image size
+					my ($W, $H, $scale, $WO, $HO) = getsize($Image->width, $Image->height);
+	
+					open(IMOUT, ">:raw","$CacheDir/$Filename.jpg") || die;
+					# Make a resized copy, and save that
+					if($scale)
+					{
+						my $NewImage = new GD::Image($W,$H);
+						$NewImage->copyResampled($Image,0,0,0,0,$W,$H,$WO,$HO);
+						print IMOUT $NewImage->jpeg();
+					}
+					else
+					{
+						print IMOUT $Image->jpeg();
+					}
+					close IMOUT;
+					$ok = 1;
+				};
+				print "Could not handle $Filename: $@" if $@;
+			}
+			if(!$ok)
 			{
 				my ($name,$ext) = ($1,$2);
 				eval
@@ -81,26 +107,6 @@ sub getPhotos
 					$x = $image->Write("$CacheDir/$Filename.png") and die $x;
 				};
 				print "Could not handle $Filename: $@" if $@;
-			}
-			elsif($ImageList{$Filename} =~ m{(.*).[jpg|JPG|Jpg]$})
-			{
-				my $Image = GD::Image->newFromJpegData($Data);
-				# Calculate image size
-				my ($W, $H, $scale, $WO, $HO) = getsize($Image->width, $Image->height);
-	
-				open(IMOUT, ">:raw","$CacheDir/$Filename.jpg") || die;
-				# Make a resized copy, and save that
-				if($scale)
-				{
-					my $NewImage = new GD::Image($W,$H);
-					$NewImage->copyResampled($Image,0,0,0,0,$W,$H,$WO,$HO);
-					print IMOUT $NewImage->jpeg();
-				}
-				else
-				{
-					print IMOUT $Image->jpeg();
-				}
-				close IMOUT;
 			}
 		}
 		else

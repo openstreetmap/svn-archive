@@ -507,6 +507,8 @@ sub ProcessRequestsFromServer
         print "queue and never upload the results. Program aborted.\n";
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
+
+    statusMessage("Retrieving next job", 0, 3);
     my $req = new Request;
     my ($success, $reason) = $req->fetchFromServer();
 

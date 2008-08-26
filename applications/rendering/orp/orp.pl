@@ -23,8 +23,6 @@
 #   "center of bbox" algorithm for the time being.
 #
 # Osmarender features not yet supported:
-# - something with symbols being copied from some directory. didn't understand
-#   what it does so couldn't implement it. Search for "symbolsDir".
 # - "s" attribute on rules is unsupported in some esoteric cases
 #
 # Possible optimisations:
@@ -138,6 +136,7 @@ our $way_storage = {};
 our $relation_storage = {};
 our $text_index = {};
 our $meter2pixel = {};
+our %symbols = ();
 
 my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage);
 my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
@@ -349,25 +348,68 @@ $writer->startTag("svg",
 
 # copy definitions from rule file
 $writer->startTag("defs", "id" => "defs-rulefile");
-$writer->raw($rules->findnodes_as_string("//rules/defs/*"));
+$writer->raw($rules->findnodes_as_string("//rules/defs/*[local-name() != 'svg' and local-name() != 'symbol']"));
 $writer->endTag("defs");
 
-# copy symbols 
+# copy symbols
+sub registerSymbol
+{
+    (my $node, my $id, my $width, my $height) = @_;
+    $id = $node->getAttribute('id') unless defined $id;
+    $width = $node->getAttribute('width') unless defined $width;
+    $height = $node->getAttribute('height') unless defined $height;
+
+    $symbols{$id}{'width'} = $width ne ""?$width:0;
+    $symbols{$id}{'height'} = $height ne ""?$height:0;
+}
+
+$writer->startTag("defs", "id" => "defs-symbols");
+# ... from stylesheet, convert svg to symbol if necessary
+foreach my $node ($rules->find('//rules/defs/svg:symbol')->get_nodelist)
+{
+    $writer->raw($node->toString);
+    registerSymbol($node);
+}
+foreach my $node ($rules->find('//rules/defs/svg:svg')->get_nodelist)
+{
+    my $id = $node->getAttribute('id');
+    my %attributes = map {$_->getName => $_->getNodeValue} $node->getAttributes;
+    $writer->startTag("symbol", %attributes);
+    $writer->raw($rules->findnodes_as_string("//rules/defs/svg:svg[\@id='$id']/*"));
+    $writer->endTag("symbol");
+    registerSymbol($node);
+}
+# ... from symbols dir
 my $symbolsDir = get_variable("symbolsDir");
 if (defined($symbolsDir))
 {
     $symbolsDir = '../osmarender/' . $symbolsDir;
-    $writer->startTag("defs", "id" => "defs-symbols");
-    my $refs = $rules->find('/rules//symbol/@ref | /rules//areaSymbol/@ref');
-    foreach my $node ($refs->get_nodelist) 
+    # get refs, then convert to hash so we can get only unique values
+    my %refs = map {$_, 1} map {$_->getNodeValue} $rules->find('/rules//symbol/@ref | /rules//areaSymbol/@ref')->get_nodelist;
+    foreach my $file (keys %refs) 
     {
-	my $file = $node->getNodeValue;
-	my $symbolFile = XML::XPath->new(filename => $symbolsDir . "/" . $file . ".svg"); 
-	my $symbol = $symbolFile->find('/svg:svg/svg:defs/svg:symbol');
-	$writer->raw($symbol->get_node(1)->toString);
+        if (not exists $symbols{'symbol-'.$file})
+        {
+	    my $symbolFile = XML::XPath->new(filename => $symbolsDir . "/" . $file . ".svg"); 
+	    my $symbol = $symbolFile->find('/svg:svg/svg:defs/svg:symbol');
+            if ($symbol->size()==1)
+            {
+                $writer->raw($symbol->get_node(1)->toString);
+                registerSymbol($symbol->get_node(1));
+            } else
+            {
+                my %attributes = map {$_->getName => $_->getNodeValue} $symbolFile->find("/svg:svg/@*")->get_nodelist;
+                $attributes{'id'} = "symbol-".$file;
+                $writer->startTag("symbol", %attributes);
+                $writer->raw($symbolFile->findnodes_as_string("/svg:svg/*"));
+                $writer->endTag("symbol");
+                registerSymbol($symbolFile->find('/svg:svg')->get_node(1), $attributes{'id'});
+            }
+        }
     }
-    $writer->endTag("defs");
 }
+$writer->endTag("defs");
+
 
 # Pre-generate named path definitions for all ways
 

@@ -607,34 +607,57 @@ sub draw_circles
 
 # -------------------------------------------------------------------
 # sub draw_symbol($node, $coordinates)
+#
+# Draw one symbol
+#
+# Parameters:
+# symbolNode - the XML::XPath::Node object for <use> instruction
+# coordinates - array containing symbol coordinates
 # -------------------------------------------------------------------
 sub draw_symbol
 {
     (my $symbolnode, my $coordinates) = @_;
-    $writer->startTag("g", 
-        "transform" => sprintf("translate(%f,%f) scale(%f)", 
-            $coordinates->[0], $coordinates->[1], $symbolScale));
     my $ref = $symbolnode->getAttribute("ref");
 
     if ($ref ne "")
     {
         my $id = 'symbol-'.$ref;
+        my $width = $symbols{$id}->{'width'};
+        my $height = $symbols{$id}->{'height'};
+        $width = $symbolnode->getAttribute('width') unless $symbolnode->getAttribute('width') eq '';
+        $height = $symbolnode->getAttribute('height') unless $symbolnode->getAttribute('height') eq '';
+
+        if ($symbolnode->getAttribute('position') eq 'center')
+        {
+            $coordinates->[0] = $coordinates->[0] - $width / 2;
+            $coordinates->[1] = $coordinates->[1] - $height / 2;
+        }
+
+        $writer->startTag("g", 
+            "transform" => sprintf("translate(%f,%f) scale(%f)", 
+                $coordinates->[0], $coordinates->[1], $symbolScale));
+
         my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
-                [ "type", "ref", "scale", "smart-linecap" ]);
+                [ "type", "ref", "scale", "smart-linecap", 'position' ]);
         my %attributes = ((
             "xlink:href" => "#$id",
-            "width" => $symbols{$id}->{'width'},
-            "height" => $symbols{$id}->{'height'}            
+            "width" => $width,
+            "height" => $height,
         ), %copiedAttributes);
         $writer->emptyTag("use", %attributes);
+
+        $writer->endTag("g");
     }
     else
     {
+        $writer->startTag("g", 
+            "transform" => sprintf("translate(%f,%f) scale(%f)", 
+                $coordinates->[0], $coordinates->[1], $symbolScale));
         $writer->emptyTag("use", 
             copy_attributes_not_in_list($symbolnode, 
                 [ "type", "scale", "smart-linecap" ]));
+        $writer->endTag("g");
     }
-    $writer->endTag("g");
 }
 
 # -------------------------------------------------------------------

@@ -59,9 +59,10 @@ sub new
 }
 
 
+
 #-------------------------------------------------------------------
 # Returns (success, reason) with
-# success being the number of uploaded zip files or 0 on error
+# success being the number of uploaded zip files or -1 on error
 # and reason a string that explains an eventual error.
 #-------------------------------------------------------------------
 sub uploadAllZips
@@ -73,7 +74,7 @@ sub uploadAllZips
 
     if ($Config->get("LocalSlippymap"))
     {
-        print STDERR "No upload - LocalSlippymap set in config file\n";
+        ::statusMessage("No upload - LocalSlippymap set in config file",1,6);
         return(0, "No upload - LocalSlippymap set in config file");
     }
 
@@ -86,7 +87,7 @@ sub uploadAllZips
     }
     else 
     {
-        return (0, "could not read $self->{ZipDir}");
+        return (-1, "could not read $self->{ZipDir}");
     }
     my $zipCount = scalar(@zipfiles);
 
@@ -149,7 +150,7 @@ sub uploadAllZips
         flock (ZIPFILE, LOCK_UN);
         close (ZIPFILE);
     }
-    ::statusMessage("uploaded $uploaded zip files",1,3);
+    ::statusMessage("uploaded $uploaded zip files",1,3) unless $uploaded == 0;
     return ($uploaded,"");
 }
 
@@ -184,7 +185,7 @@ sub upload
         return (-1,0);
     }
 
-    $File =~ m{_(\d+)_\d+_\d+_([^_]+)(_tileset)?\.zip}x;
+    $File =~ m{_(\d+)_\d+_([^_]+)_tileset\.zip$}x;
     my $clientId = $1;
     my $Layer=$2;
 

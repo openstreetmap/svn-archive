@@ -632,7 +632,8 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    if ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork")))
+    # temporarily disable forking in inkscape until we get fork to work right.
+    if (0 || ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
     {
         my $pid = fork();
         if (not defined $pid) 

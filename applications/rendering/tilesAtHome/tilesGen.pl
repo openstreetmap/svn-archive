@@ -521,7 +521,12 @@ sub ProcessRequestsFromServer
     {
         #TODO: return result of GenerateTileset?
         my $tileset = Tileset->new($req);
-        $tileset->generate();
+        ($success, $reason) = $tileset->generate();
+        if (!$success)
+        {
+            statusMessage("Tileset failed: ".$reason, 1, 0);
+            $req->putBackToServer($reason) unless $Mode eq 'xy';
+        }
     }
     return ($success, $reason);
 }

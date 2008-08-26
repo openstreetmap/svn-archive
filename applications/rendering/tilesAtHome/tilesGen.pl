@@ -272,11 +272,7 @@ elsif ($Mode eq "loop")
               resetFault("upload");
         }
 
-        if ($did_something == 0) 
-        {
-            talkInSleep($message, 60);
-        }
-        else
+        if ($did_something == 1) 
         {   # Rendered tileset, don't idle in next round
             setIdle(0,0);
         }

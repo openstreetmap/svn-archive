@@ -35,6 +35,7 @@ use lib::TahConf;
 use lib::Tileset;
 use Request;
 use Upload;
+use Compress;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
@@ -475,12 +476,12 @@ sub compress
 {
     keepLog($PID,"compress","start","$progressJobs");
 
-    my $CompressScript = "perl $Bin/compress.pl $progressJobs";
-    my $retval = system($CompressScript);
+    my $compress = new Compress;
+    my ($retval, $reason) = $compress->compressAll();
 
     keepLog($PID,"compress","stop","return=$retval");
 
-    return $retval;
+    return ($retval >= 0);
 }
 
 #-----------------------------------------------------------------------------
@@ -497,7 +498,7 @@ sub upload
 
     keepLog($PID,"upload","stop","return=$retval");
 
-    return ($retval > 0);
+    return ($retval >= 0);
 }
 
 #-----------------------------------------------------------------------------

@@ -18,6 +18,7 @@
     showGrid="no"
     showBorder="no"
     showLicense="no"
+    symbolsDir="symbols"
     interactive="no">
 
     <!--bounds_mkr1-->
@@ -806,7 +807,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-            <symbol xlink:href="#symbol-peak" width="18px" height="18px" transform="translate(-9,-9)"/>
+            <symbol ref="peak" width="18px" height="18px" transform="translate(-9,-9)"/>
         </rule>
 
         <!-- Non-physical routes -->
@@ -833,15 +834,15 @@
 
         <!-- Amenities -->
         <rule e="node" k="amenity" v="hospital">
-            <symbol xlink:href="#hospital" width="15px" height="15px" transform="translate(-7.5,-7.5)"/>
+            <symbol ref="hospital" width="15px" height="15px" transform="translate(-7.5,-7.5)"/>
         </rule>
 
         <!-- Airfields and airports -->
         <rule e="node" k="aeroway" v="aerodrome">
-            <symbol xlink:href="#airport" width="15px" height="15px" transform="translate(-7.5,-7.5)"/>
+            <symbol ref="airport" width="15px" height="15px" transform="translate(-7.5,-7.5)"/>
         </rule>
         <rule e="node" k="aeroway" v="airport">
-            <symbol xlink:href="#airport" width="30px" height="30px" transform="translate(-15,-15)"/>
+            <symbol ref="airport" width="30px" height="30px" transform="translate(-15,-15)"/>
         </rule>
     </rule>
 
@@ -1892,19 +1893,5 @@
 	<svg:marker id="marker-piste-type-nordic" viewBox="0 0 10 10" refX="-1px" refY="10px" markerUnits="userSpaceOnUse" fill="#000000" stroke="none" markerWidth="7px" markerHeight="7px" orient="auto">
 		<svg:path d="M 0,0 L 0,10 L 10,10 L 10,0 L 0,0 z M 0.1,0.1 L 9.9,0.1 L 9.9,9.9 L 0.1,9.9 L 0.1,0.1 z M 7,1.1 C 6.6,1.1 6.3,1.4 6.3,1.7 C 6.3,2.1 6.6,2.4 7,2.4 C 7.3,2.4 7.6,2.1 7.6,1.7 C 7.6,1.4 7.3,1.1 7,1.1 z M 6,2.2 L 4.4,2.5 L 3.5,3.7 L 3.5,3.8 L 0.5,3.8 L 0.5,3.9 L 3.5,3.9 L 3.6,4 L 3.7,3.9 L 4.5,2.9 L 5.3,2.9 L 4.1,4.3 L 3,6.1 L 1,6.9 L 1.3,7.1 L 3.3,6.4 L 4.6,5.2 L 5.8,6.3 L 5.4,8.5 L 5.8,8.5 L 6.3,6.3 L 5.1,4.8 L 6.5,3.1 L 7.6,3.9 L 8.5,3.1 L 7.7,8.6 L 3.5,8.6 L 0.8,6.9 L 0.4,6.9 L 3.1,8.6 L 2.1,8.6 L 2.1,8.9 L 8.8,8.9 L 9.2,8.4 L 8.7,8.6 L 7.9,8.6 L 8.6,3 L 8.7,2.9 L 8.7,2.6 L 7.6,3.4 L 6.5,2.6 L 6,2.2 z"/>
 	</svg:marker>
-
-
-        <svg:symbol id="airport" viewBox="0 0 10 10" fill="black" fill-opacity="1" fill-rule="evenodd" stroke="none">
-            <svg:path d="M 9.2,5 C 9.2,4.5 9.8,3.2 10,3 L 9,3 L 8,4 L 5.5,4 L 8,0 L 6,0 L 3,4 C 2,4 1,4.2 0.5,4.5 C 0,5 0,5 0.5,5.5 C 1,5.8 2,6 3,6 L 6,10 L 8,10 L 5.5,6 L 7.8,6 L 9,7 L 10,7 C 9.8,6.8 9.2,5.5 9.2,5 z "/>
-        </svg:symbol>
-
-        <svg:symbol id="hospital" viewBox="0 0 15 15" stroke="red" stroke-width="2px" fill="none">
-            <svg:path d="M 12.5,7.5 L 2.5,7.5 L 2.5,7.5 L 12.5,7.5 z M 7.5,2.3 L 7.5,12.5 L 7.5,12.5"/>
-            <svg:path stroke-width="1px" d="M 14.5 7.5 A 7 7 0 1 1 0.5,7.5 A 7 7 0 1 1 14.5 7.5 z"/>
-        </svg:symbol>
-
-        <svg:symbol id="symbol-peak" viewBox="0 0 100 100">
-            <svg:path fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
-        </svg:symbol>
     </defs>
 </rules>

@@ -124,7 +124,7 @@ if ($RenderMode) {
     eval GD::Image->trueColor(1);
     if ($@ ne '') {
         print STDERR "please update your libgd to version 2 for TrueColor support";
-        cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
+        cleanUpAndDie("init:libGD check failed, exiting","EXIT",4);
     }
 
     my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
@@ -165,7 +165,7 @@ if( $RenderMode and -e "/dev/null" )
     {
         print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
         system($Config->get("Subversion")." status osmarender/*.x[ms]l");
-        cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4,$PID);
+        cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4);
     }
 }
 
@@ -245,7 +245,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process",0,0);
                 waitpid($upload_pid, 0);
             }
-            cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
+            cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 
         # Add a basic auto-updating mechanism. 
@@ -299,7 +299,7 @@ elsif ($Mode eq "upload_loop")
         # look for stopfile and exit if found
         if (-e "stopfile.txt")
         {
-            cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID); ## TODO: agree on an exit code scheme for different types of errors
+            cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 
         # Add a basic auto-updating mechanism. 
@@ -441,7 +441,7 @@ sub compressAndUploadTilesets
         $upload_pid = fork();
         if ((not defined $upload_pid) or ($upload_pid == -1))
         {   # exit if asked to fork but unable to
-            cleanUpAndDie("loop: could not fork, exiting","EXIT",4,$PID);
+            cleanUpAndDie("loop: could not fork, exiting","EXIT",4);
         }
         elsif ($upload_pid == 0)
         {   # we are the child, so we run the upload and exit the thread
@@ -512,7 +512,7 @@ sub ProcessRequestsFromServer
         print "Config option LocalSlippymap is set. Downloading requests\n";
         print "from the server in this mode would take them from the tiles\@home\n";
         print "queue and never upload the results. Program aborted.\n";
-        cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1,$PID);
+        cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
     my $req = new Request;
     my ($success, $reason) = $req->fetchFromServer();
@@ -561,7 +561,7 @@ sub UpdateClient #
     {
         statusMessage("svn status did not come back clean, check your installation",1,0);
         print STDERR $svn_status;
-        return cleanUpAndDie("Auto-update failed","EXIT",1,$PID);
+        return cleanUpAndDie("Auto-update failed","EXIT",1);
     }
 }
 
@@ -676,7 +676,7 @@ sub xml2svg
     }
     if (!$success) {
         statusMessage(sprintf("%s produced an error, aborting render.", $Config->get("Osmarender")),1,0);
-        return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
+        return cleanUpAndDie("xml2svg failed",$Mode,3);
     }
 
     # look at temporary svg wether it really is a svg or just the 
@@ -689,7 +689,7 @@ sub xml2svg
     if (grep(!/</, $TestLine))
     {
        statusMessage("File $TSVG doesn't look like svg, aborting render.",1,0);
-       return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
+       return cleanUpAndDie("xml2svg failed",$Mode,3);
     }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
@@ -825,7 +825,7 @@ sub svg2png
         $req->putBackToServer("BadSVG");
         addFault("inkscape",1);
         $req->is_unrenderable(1);
-        cleanUpAndDie("svg2png failed",$Mode,3,$PID);
+        cleanUpAndDie("svg2png failed",$Mode,3);
         return (0,0);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
@@ -960,7 +960,7 @@ sub splitImageX
     {
         print STDERR "\nERROR: Failed to read in file $BigPNGFileName\n";
         $req->putBackToServer("MissingFile");
-        cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4,$PID);
+        cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4);
     }
   
     # Use one subimage for everything, and keep copying data into it
@@ -1004,7 +1004,7 @@ sub splitImageX
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
             $req->putBackToServer("BlackTile");
-            cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4,$PID);
+            cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4);
         }
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
@@ -1097,7 +1097,7 @@ sub splitImageX
             }
             else
             {
-                cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4,$PID);
+                cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4);
             }
             statusMessage("Optimizing $PngFileName",0,6);
             if(runCommand($Cmd,$PID))
@@ -1130,7 +1130,7 @@ sub WriteImage
     my $png_data = $Image->png;
     
     # Store it
-    open (my $fp, ">$Filename") || cleanUpAndDie("WriteImage:could not open file for writing, exiting","EXIT",3,$PID);
+    open (my $fp, ">$Filename") || cleanUpAndDie("WriteImage:could not open file for writing, exiting","EXIT",3);
     binmode $fp;
     print $fp $png_data;
     close $fp;
@@ -1284,16 +1284,16 @@ sub getBatikStatus
 sub checkFaults
 {
     if (getFault("fatal") > 0) {
-        cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
+        cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1);
     }
     elsif (getFault("inkscape") > 5) {
-        cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
+        cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1);
     }
     elsif (getFault("renderer") > 10) {
-        cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1,$PID);
+        cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1);
     }
     elsif (getFault("upload") > 5) {
-        cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1);
     }
 }
 
@@ -1307,7 +1307,7 @@ sub checkDataFaults
     if (getFault("nodata") > 0) { # check every network condition regardless of the other network outcomes
         my $numfaults=getFault("nodata");
         if ($numfaults > 5) {
-            cleanUpAndDie("More than five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+            cleanUpAndDie("More than five times no data, perhaps the server doesn't like us, exiting","EXIT",1);
         }
         else {
             $sleepdelay=16*(4**$numfaults); # wait 64, 256, 1024, 4096, 16384 seconds. for a total of about 6 hours
@@ -1318,7 +1318,7 @@ sub checkDataFaults
     if (getFault("nodataXAPI") > 0) {
         my $numfaults=getFault("nodataXAPI");
         if ($numfaults >= 20) {
-            cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID); # allow XAPI more leeway
+            cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1); # allow XAPI more leeway
         }
         else {
             $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192, 14400, 14400, 14400... seconds.

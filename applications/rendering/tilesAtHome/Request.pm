@@ -178,7 +178,7 @@ sub fetchFromServer
             print STDERR "\n";
             print STDERR "Server is speaking a different version of the protocol to us.\n";
             print STDERR "Check to see whether a new version of this program was released!\n";
-            cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Requeststring,"EXIT",1,$$);
+            cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Requeststring,"EXIT",1);
             ## No need to return, we exit the program at this point
         }
 

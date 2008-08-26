@@ -395,25 +395,10 @@ sub keepLog
 sub cleanUpAndDie
 {
     my $Config = TahConf->getConfig();
-    my ($Reason,$Mode,$Severity,$mainPID) = @_;
-
-    ## TODO: clean up *.tempdir too
+    my ($Reason,$Mode,$Severity) = @_;
 
     print STDERR "\n$Reason\n" if ($Config->get("Verbose") >= 10);
 
-    if (! $Config->get("Debug")) 
-    {
-        opendir (TEMPDIR, $Config->get("WorkingDirectory"));
-        my @files = grep { /$mainPID/ } readdir(TEMPDIR); # FIXME: this will get files from other processes using the same Working Directory for low pids because the numbers will collide with tile coordinates
-        closedir (TEMPDIR);
-        while (my $file = shift @files)
-        {
-             print STDERR "deleting ".$Config->get("WorkingDirectory")."/".$file."\n" if ($Config->get("Verbose") >= 10);
-             unlink($Config->get("WorkingDirectory")."/".$file);
-        }
-        
-    }
-    
     return 0 if ($Mode eq "loop");
     print STDERR "\n$Reason\n" if ($Config->get("Verbose") < 10); #print error only once, and only if fatal.
     if ($main::StartedBatikAgent)

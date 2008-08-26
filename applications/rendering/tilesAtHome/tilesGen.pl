@@ -462,9 +462,10 @@ sub compressAndUploadTilesets
 #-----------------------------------------------------------------------------
 sub compressAndUpload
 {
-  my $error = compress();
-  $error = min($error, upload());
-  return $error;
+  my $retval  = compress();
+  my $retval2 = upload());
+  # return the smaller of both values for now
+  return ($retval > $retval2)? $retval2 : $retval;
 }
 
 #-----------------------------------------------------------------------------

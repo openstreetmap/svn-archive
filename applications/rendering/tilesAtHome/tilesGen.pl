@@ -835,13 +835,6 @@ sub svg2png
 }
 
 
-sub writeToFile 
-{
-    open(my $fp, ">", shift()) || return;
-    print $fp shift();
-    close $fp;
-}
-
 #-----------------------------------------------------------------------------
 # Add bounding-box information to an osm-map-features file
 #-----------------------------------------------------------------------------

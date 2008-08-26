@@ -1,9 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
-	
-	<svg:defs>
-		<!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
-		<svg:symbol id="symbol-hostel" viewBox="0 0 12.5 12.5" fill="#286a9d" fill-opacity="1" fill-rule="nonzero" stroke="none">
-			<svg:path d="M 5.5,4 L 9,0 L 12.5,4 L 11.5,4 L 11.5,8 L 10,8 L 10,5 L 8,5 L 8,8 L 6.5,8 L 6.5,4 L 5.5,4 z M 0.5,3.5 C 2,2.5 2.3,1 2.5,0 C 2.7,1 3,2.5 4.5,3.5 L 3.3,3.5 C 3.3,4 4,5 5,6 L 3,6 L 3,8 L 2,8 L 2,6 L 0,6 C 1,5 1.7,4 1.7,3.5 L 0.5,3.5 z M 0,8 L 0,7.5 L 12.5,7.5 L 12.5,8 L 0,8 z "/>
-		</svg:symbol>	
-	</svg:defs>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" width="89.9281369683458px" id="hostel" viewBox="0 0 12.5 12.5" fill="#286a9d" fill-opacity="1" fill-rule="nonzero" stroke="none">
+   <svg:path d="M 5.5,4 L 9,0 L 12.5,4 L 11.5,4 L 11.5,8 L 10,8 L 10,5 L 8,5 L 8,8 L 6.5,8 L 6.5,4 L 5.5,4 z M 0.5,3.5 C 2,2.5 2.3,1 2.5,0 C 2.7,1 3,2.5 4.5,3.5 L 3.3,3.5 C 3.3,4 4,5 5,6 L 3,6 L 3,8 L 2,8 L 2,6 L 0,6 C 1,5 1.7,4 1.7,3.5 L 0.5,3.5 z M 0,8 L 0,7.5 L 12.5,7.5 L 12.5,8 L 0,8 z "/>
 </svg>

@@ -943,6 +943,9 @@ sub splitImageX
     my $allempty=1;
   
     # Load the tileset image
+print STDERR "split $File\n\n";
+if (-e $File) {print STDERR "$BigPNGFileName exists\n\n"};
+
     statusMessage(sprintf("Splitting %s (%d x 1)", $BigPNGFileName, $Size),0,3);
     my $Image = newFromPng GD::Image($File);
     if( not defined $Image )

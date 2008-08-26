@@ -293,7 +293,11 @@ sub downloadData
         push(@{$filelist}, $partialFile);
         ::statusMessage("Downloading: Map data for ".$req->layers_str,0,3);
         print "Download\n$URL\n" if ($Config->get("Debug"));
-        my $res = ::DownloadFile($URL, $partialFile, 0);
+        
+        my $res = undef;
+        # download tile data in one piece *if* the tile is not too complex
+        if ($req->Z >= 12 && $req->{complexity} < 20000000)
+           {$res = ::DownloadFile($URL, $partialFile, 0)};
 
         if (! $res)
         {   # Download of data failed
@@ -306,7 +310,7 @@ sub downloadData
             elsif ($Config->get("FallBackToXAPI"))
             {
                 # fetching of regular tileset data failed. Try OSMXAPI fallback
-                ::statusMessage("No data here, trying OSMXAPI",1,0);
+                ::statusMessage("Trying OSMXAPI",1,0);
                 $bbox = $URL;
                 $bbox =~ s/.*bbox=//;
                 $URL=sprintf("%s%s/%s[bbox=%s] ",
@@ -330,7 +334,7 @@ sub downloadData
             }
             else
             {
-                ::statusMessage("No data here, trying smaller slices",1,0);
+                ::statusMessage("Trying smaller slices",1,0);
                 my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
                 for (my $j = 1 ; $j<=10 ; $j++)
                 {
@@ -644,7 +648,7 @@ sub RenderTile
     my $YB = $YA + 1;
 
     # temporarily disable forking in inkscape until we get fork to work right.
-    if (0 || ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
+    if (0 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
     {
         my $pid = fork();
         if (not defined $pid) 

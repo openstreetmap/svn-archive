@@ -552,18 +552,18 @@ sub UpdateClient #
 
     chomp $svn_status;
 
-#    if ($svn_status eq '')
-#    {
+    if ($svn_status eq '')
+    {
         my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
         return 1;
-#    }
-#    else
-#    {
-#        statusMessage("svn status did not come back clean, check your installation",1,0);
-#        print STDERR $svn_status;
-#        return cleanUpAndDie("Auto-update failed","EXIT",1);
-#    }
+    }
+    else
+    {
+        statusMessage("svn status did not come back clean, check your installation",1,0);
+        print STDERR $svn_status;
+        return cleanUpAndDie("Auto-update failed","EXIT",1);
+    }
 }
 
 sub NewClientVersion 

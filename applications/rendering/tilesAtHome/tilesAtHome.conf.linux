@@ -8,8 +8,9 @@
 ## do NOT save modifications to this file
 ##
 
-### Environment:
 ## FileLocations
+#
+# If WorkingDir is commented out, it will use the default system tmpdir location
 WorkingDirectory=/tmp/
 Inkscape=inkscape
 XmlStarlet=xmlstarlet
@@ -88,11 +89,9 @@ BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar
 # Only used for Batik jar
 BatikJVMSize=1536M
 
-# If set to 1 or greater, it will enable forking to render tiles
-# Fork = 0   -> 1 process (normal behaviour)
-# Fork = 1   -> 2 processes
-# Fork = 2   -> 4 processes
-# Fork = 3   -> 8 processes
+
+# If set to 1 or greater, it will enable forking to render several zoom levels to SVG simultanously
+# Fork = n  -> use 2*n parallel processes for rendering to svg
 Fork=0
 
 # make the client upload in the background if set to 1

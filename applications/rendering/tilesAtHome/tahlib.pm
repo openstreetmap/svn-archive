@@ -397,10 +397,10 @@ sub cleanUpAndDie
     my $Config = TahConf->getConfig();
     my ($Reason,$Mode,$Severity) = @_;
 
-    print STDERR "\n$Reason\n" if ($Config->get("Verbose") >= 10);
+    statusMessage ($Reason, 1,0);
 
     return 0 if ($Mode eq "loop");
-    print STDERR "\n$Reason\n" if ($Config->get("Verbose") < 10); #print error only once, and only if fatal.
+
     if ($main::StartedBatikAgent)
     {
         main::stopBatikAgent();

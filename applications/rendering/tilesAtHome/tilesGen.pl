@@ -1296,7 +1296,7 @@ sub checkFaults
     elsif (getFault("renderer") > 10) {
         cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1);
     }
-    elsif (getFault("upload") > 5) {
+    elsif (getFault("upload") > 50) {
         cleanUpAndDie("Five times the upload failed, perhaps the server doesn't like us, exiting","EXIT",1);
     }
 }

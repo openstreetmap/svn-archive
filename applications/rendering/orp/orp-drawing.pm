@@ -565,30 +565,8 @@ sub draw_area_symbols
         next unless (ref $_ eq 'way');
         my $center = find_area_center($_);
         my $projected = project($center);
-        $writer->startTag("g", 
-            "transform" => sprintf("translate(%f,%f) scale(%f)", 
-                $projected->[0], $projected->[1], $symbolScale));
-        my $ref = $symbolnode->getAttribute("ref");
 
-        if ($ref ne "")
-        {
-            my $id = 'symbol-'.$ref;
-            my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
-                    [ "type", "ref", "scale", "smart-linecap" ]);
-            my %attributes = ((
-                "xlink:href" => "#$id",
-                "width" => $symbols{$id}->{'width'},
-                "height" => $symbols{$id}->{'height'}
-                
-            ), %copiedAttributes);
-            $writer->emptyTag("use", %attributes);
-        }
-        else
-        {
-            $writer->emptyTag("use", 
-                copy_attributes_not_in_list($symbolnode, [ "type", "scale", "smart-linecap" ]));
-        }
-        $writer->endTag("g");
+        draw_symbol($symbolnode, $projected);
     }
 }
 
@@ -628,6 +606,38 @@ sub draw_circles
 }
 
 # -------------------------------------------------------------------
+# sub draw_symbol($node, $coordinates)
+# -------------------------------------------------------------------
+sub draw_symbol
+{
+    (my $symbolnode, my $coordinates) = @_;
+    $writer->startTag("g", 
+        "transform" => sprintf("translate(%f,%f) scale(%f)", 
+            $coordinates->[0], $coordinates->[1], $symbolScale));
+    my $ref = $symbolnode->getAttribute("ref");
+
+    if ($ref ne "")
+    {
+        my $id = 'symbol-'.$ref;
+        my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
+                [ "type", "ref", "scale", "smart-linecap" ]);
+        my %attributes = ((
+            "xlink:href" => "#$id",
+            "width" => $symbols{$id}->{'width'},
+            "height" => $symbols{$id}->{'height'}            
+        ), %copiedAttributes);
+        $writer->emptyTag("use", %attributes);
+    }
+    else
+    {
+        $writer->emptyTag("use", 
+            copy_attributes_not_in_list($symbolnode, 
+                [ "type", "scale", "smart-linecap" ]));
+    }
+    $writer->endTag("g");
+}
+
+# -------------------------------------------------------------------
 # sub draw_symbols($rulenode, $layer, $selection)
 #
 # for each selected object in $selection, draw a symbol based 
@@ -654,31 +664,7 @@ sub draw_symbols
         next if (ref $_ eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
         my $projected = project([$_->{'lat'}, $_->{'lon'}]);
-        $writer->startTag("g", 
-            "transform" => sprintf("translate(%f,%f) scale(%f)", 
-                $projected->[0], $projected->[1], $symbolScale));
-        my $ref = $symbolnode->getAttribute("ref");
-
-        if ($ref ne "")
-        {
-            my $id = 'symbol-'.$ref;
-            my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
-                    [ "type", "ref", "scale", "smart-linecap" ]);
-            my %attributes = ((
-                "xlink:href" => "#$id",
-                "width" => $symbols{$id}->{'width'},
-                "height" => $symbols{$id}->{'height'}
-                
-            ), %copiedAttributes);
-            $writer->emptyTag("use", %attributes);
-        }
-        else
-        {
-            $writer->emptyTag("use", 
-                copy_attributes_not_in_list($symbolnode, 
-                    [ "type", "scale", "smart-linecap" ]));
-        }
-        $writer->endTag("g");
+        draw_symbol($symbolnode, $projected);
     }
 }
 

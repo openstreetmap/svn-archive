@@ -969,11 +969,11 @@
         <!-- Mini-roundabouts -->
         <rule e="node" k="highway" v="mini_roundabout">
             <rule e="node" k="direction" v="clockwise">
-                <symbol ref="roundabout_left" width="4px" height="4px" transform="translate(-2,-2)"/>
+		    <symbol ref="roundabout_left" width="4" height="4" position="center"/>
             </rule>
             <else>
                 <!-- Default is anti-clockwise -->
-                <symbol ref="roundabout_right" width="4px" height="4px" transform="translate(-2,-2)"/>
+		<symbol ref="roundabout_right" width="4" height="4" position="center"/>
             </else>
         </rule>
 
@@ -1025,7 +1025,7 @@
         </rule>
         <rule e="way" k="man_made" v="piste:halfpipe">
             <area class="man-made-piste-halfpipe"/>
-            <areaSymbol ref="man-made-halfpipe" width="7px" height="7px" transform="translate(-3.5,-3.5)"/>
+	    <areaSymbol ref="man-made-halfpipe" width="7" height="7" position="center"/>
         </rule>
 
         <!-- Surface lifts (render over pistes) -->
@@ -1086,7 +1086,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-            <symbol ref="peak" width="6px" height="6px" transform="translate(-3,-3)"/>
+		<symbol ref="peak" width="6" height="6" position="center"/>
         </rule>
 
         <!-- Draw marine features -->
@@ -1121,7 +1121,7 @@
 
         <!-- Amenities -->
         <rule e="node" k="amenity" v="hospital">
-            <symbol ref="hospital" width="8px" height="8px" transform="translate(-4,-4)"/>
+		<symbol ref="hospital" width="8" height="8" position="center"/>
         </rule>
     </rule>
 

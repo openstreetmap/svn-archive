@@ -627,6 +627,7 @@ sub NewClientVersion
 
 #-----------------------------------------------------------------------------
 # Transform an OSM file (using osmarender) into SVG
+# returns 1 on success, 0 on failure
 #-----------------------------------------------------------------------------
 sub xml2svg 
 {

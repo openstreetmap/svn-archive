@@ -141,70 +141,24 @@ sub generate
         }
 
         #------------------------------------------------------
-        # Preprocessing finished, start rendering
+        # Preprocessing finished, start rendering to SVG
         # $layerDataFile is just the filename
         #------------------------------------------------------
 
-        # Add bounding box to osmarender
-        # then set the data source
-        # then transform it to SVG
         if ($Config->get("Fork")) 
-        {   #TODO put this bunch of code in a function of its own.
-            my $minimum_zoom = $req->Z;
-            my $increment = 2 * $Config->get("Fork");
-            my @children_pid;
-            my $error = 0;
-            for (my $i = 0; $i < 2 * $Config->get("Fork") - 1; $i ++) 
+        {   # Forking to render zoom levels in parallel
+            if (!$self->forkedRender($layer, $maxzoom, $layerDataFile))
             {
-                my $pid = fork();
-                if (not defined $pid) 
-                {   # exit if asked to fork but unable to
-                    my $reason = "GenerateTileset: could not fork, exiting";
-                    ::statusMessage($reason, 1, 0);
-                    return (0, $reason)
-                }
-                elsif ($pid == 0) 
-                {
-                    for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
-                    {
-                        if ($self->GenerateSVG($layerDataFile, $layer, $i)) # if true then error occured
-                        {
-                             exit(1);
-                        }
-                    }
-                    exit(0);
-                }
-                else
-                {
-                    push(@children_pid, $pid);
-                    $minimum_zoom ++;
-                }
-            }
-            for (my $i = $minimum_zoom ; $i <= $maxzoom; $i += $increment) 
-            {
-                if ($self->GenerateSVG($layerDataFile, $layer, $i))
-                {
-                    $error = 1;
-                    last;
-                }
-            }
-            foreach (@children_pid) 
-            {
-                waitpid($_, 0);
-                $error |= $?;
-            }
-            if ($error) 
-            {
-                $req->putBackToServer("RenderFailure");
-                ::addFault("renderer",1);
-                return (0, "render Failure");
-            }
+                    $req->putBackToServer("ForkedRenderFailure");
+                    ::addFault("renderer",1);
+                    return (0, "render failure");
+	    }
         }
         else
         {   # Non-forking render
-            for (my $i = $req->Z ; $i <= $maxzoom; $i++)
+            for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++)
             {
-                if ($self->GenerateSVG($layerDataFile, $layer, $i))
+                if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
                 {
                     $req->putBackToServer("RenderFailure");
                     ::addFault("renderer",1);
@@ -212,6 +166,10 @@ sub generate
                 }
             }
         }
+
+        #------------------------------------------------------
+        # Convert from SVG to PNG.
+        #------------------------------------------------------
         
         # Find the size of the SVG file
         my ($ImgH,$ImgW,$Valid) = ::getSize(File::Spec->join($self->{JobDir},
@@ -509,11 +467,69 @@ sub runPreprocessors
     return ($OSMfile, "");
 }
 
+#-------------------------------------------------------------------
+# renders the tiles, using threads
+# paramter: ($layer, $maxzoom)
+# returns: 1 on success, 0 on failure
+#-------------------------------------------------------------------
+sub forkedRender
+{
+    my $self = shift;
+    my ($layer, $maxzoom, $layerDataFile) = @_;
+    my $req = $self->{req};
+    my $Config = $self->{Config};
+    my $minimum_zoom = $req->Z;
+
+    my $numThreads = 2 * $Config->get("Fork");
+    my @children_pid;
+    my $success = 1;
+    for (my $thread = 0; $thread < $numThreads; $thread ++) 
+    {
+        # spawn $numThreads threads
+        my $pid = fork();
+        if (not defined $pid) 
+        {   # exit if asked to fork but unable to
+            my $reason = "GenerateTileset: could not fork, exiting";
+            ::statusMessage($reason, 1, 0);
+            return 0;
+        }
+        elsif ($pid == 0) 
+        {   # we are the child process
+            for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
+            {
+		::statusMessage("Thread $thread renders zoom $zoom now",0,6);
+                if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
+                {    # an error occurred while rendering. Thread exits and returns (255+)0 here
+                     exit(0);
+                }
+            }
+            # Rendering went fine, have thread return (255+)1
+            exit(1);
+        }
+        else
+        {   # we are the parent process, save child pid to list.
+            push(@children_pid, $pid);
+        }
+    }
+
+    # now wait that all child render processes exited and check their return value
+    # retvalue >> 8 is the real ret value
+    foreach (@children_pid) 
+    {
+        waitpid($_, 0);
+        $success &= ($? >> 8);
+        ::statusMessage("thread $_ returned with value $?, leaving success at $success",1,6);
+    }
+
+::statusMessage("exit forked renderer returning $success",1,6);
+    return $success;
+}
 
 #-----------------------------------------------------------------------------
 # Generate SVG for one zoom level
 #   $layerDataFile - name of the OSM data file (which is in the JobDir)
 #   $Zoom - which zoom currently is processsed
+#  returns: 1 on success, 0 on failure
 #-----------------------------------------------------------------------------
 sub GenerateSVG 
 {
@@ -524,7 +540,7 @@ sub GenerateSVG
     # Create a new copy of rules file to allow background update
     # don't need layer in name of file as we'll
     # process one layer after the other
-    my $error = 0;
+    my $success = 1;
     my $source = $Config->get($layer."_Rules.".$Zoom);
     my $TempFeatures = File::Spec->join($self->{JobDir}, "map-features-z$Zoom.xml");
     copy($source, $TempFeatures)
@@ -534,16 +550,16 @@ sub GenerateSVG
     ::AddBounds($TempFeatures, $self->{bbox}->W,$self->{bbox}->S,$self->{bbox}->E,$self->{bbox}->N);
     ::SetDataSource($layerDataFile, $TempFeatures);
 
-    # Render the file
+    # Render the file (returns 0 on failure)
     if (! ::xml2svg(
             $TempFeatures,
             File::Spec->join($self->{JobDir}, "output-z$Zoom.svg"),
             $Zoom))
     {
-        $error = 1;
+        $success = 0;
     }
 
-    return $error;
+    return $success;
 }
 
 

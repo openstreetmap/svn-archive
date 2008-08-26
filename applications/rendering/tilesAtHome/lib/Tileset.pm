@@ -98,8 +98,8 @@ sub generate
     # Download data (returns full path to data.osm or 0)
     #------------------------------------------------------
 
-    my ($success, $reason) = $self->downloadData();
-    if (!$success)
+    my ($FullDataFile, $reason) = $self->downloadData();
+    if (!$FullDataFile)
     {
         ::statusMessage($reason, 1, 0);
         return (0, $reason);
@@ -214,7 +214,9 @@ sub generate
 #------------------------------------------------------------------
 # Download the area for the tileset (whole or in stripes, as required)
 # into $self->{JobDir}
-# returns full filename of data.osm on success and 0 on failure (NOT IMPLEMENTED YET)
+# returns: (filename, reason)
+# filename: resulting data osm filename (without path) on success, 'undef' on failure
+# reason:   string describing the error
 #-------------------------------------------------------------------
 sub downloadData
 {
@@ -284,19 +286,16 @@ sub downloadData
         my $res = ::DownloadFile($URL, $partialFile, 0);
 
         if (! $res)
-        {
+        {   # Download of data failed
             if ($req->Z < 12)
             {
-                ::statusMessage("No data here...",1,0);
-                # if loop was requested just return  or else exit with an error. 
-                # (to enable wrappers to better handle this situation 
-                # i.e. tell the server the job hasn't been done yet)
-                $req->putBackToServer("NoData");
+                # Fetching of lowzoom data from OSMXAPI failed
                 ::addFault("nodataXAPI",1);
-                return (0,"GenerateTileset: no data!")
+                return (undef, "No data here! (OSMXAPI)")
             }
             elsif ($Config->get("FallBackToXAPI"))
             {
+                # fetching of regular tileset data failed. Try OSMXAPI fallback
                 ::statusMessage("No data here, trying OSMXAPI",1,0);
                 $bbox = $URL;
                 $bbox =~ s/.*bbox=//;
@@ -309,14 +308,13 @@ sub downloadData
                 print "Download\n$URL\n" if ($Config->get("Debug"));
                 my $res = ::DownloadFile($URL, $partialFile, 0);
                 if (! $res)
-                {
-                    ::statusMessage("No data on OSMXAPI either...",1,0);
-                    $req->putBackToServer("NoData");
+                {   # OSMXAPI fallback failed too
+                    my $reason = "no data here! (OSMXAPI)";
                     ::addFault("nodataXAPI",1);
-                    return ::cleanUpAndDie("GenerateTileset: no data! (OSMXAPI)",$::Mode,1);
+                    return (undef, $reason);
                 }
                 else
-                {
+                {   # OSMXAPI fallback succeeded
                     ::resetFault("nodataXAPI"); #reset to zero if data downloaded
                 }
             }
@@ -335,22 +333,21 @@ sub downloadData
                     $res = ::DownloadFile($URL, $partialFile, 0);
 
                     if (! $res)
-                    {
-                        ::statusMessage("No data here (sliced)...",1,0);
-                        $req->putBackToServer("NoData");
+                    {   # Sliced download failed too
+                        my $reason = "No data here (sliced)";
                         ::addFault("nodata",1);
-                        return ::cleanUpAndDie("GenerateTileset: no data! (sliced).",$::Mode,1);
+                        return (undef, $reason);
                     }
                     else
-                    {
-                        ::resetFault("nodata"); #reset to zero if data downloaded
+                    {   # Sliced download succeeded (at least one slice)
+                        ::resetFault("nodata");
                     }
                 }
-                print STDERR "\n";
             }
         }
         else
-        {
+        {   # Download of data succeeded in the first place
+
             if ($req->Z < 12) ## FIXME: hardcoded zoom
             {
                 ::resetFault("nodataXAPI"); #reset to zero if data downloaded
@@ -364,11 +361,6 @@ sub downloadData
 
     ::mergeOsmFiles($DataFile, $filelist);
 
-    if ($Config->get("KeepDataFile"))
-    {
-        copy($DataFile, File::Spec->join($Config->get("WorkingDirectory"), "data.osm"));
-    }
-  
     # Get the API date time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
     $self->{JobTime} = [stat $DataFile]->[9];
     
@@ -378,11 +370,12 @@ sub downloadData
     if (::fileUTF8ErrCheck($DataFile))
     {
         ::statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->ZXY),1,0);
-        $req->putBackToServer("BadUTF8");
+        my $reason= ("UTF8 test failed");
         ::addFault("utf8",1);
-        return ::cleanUpAndDie("GenerateTileset:UTF8 test failed",$::Mode,1);
+        return (undef, $reason);
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
+    return ($DataFile ,"");
 }
 
 

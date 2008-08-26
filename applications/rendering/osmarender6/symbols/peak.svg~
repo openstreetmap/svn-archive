@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
-	
-	<svg:defs>
-		<svg:symbol id="symbol-peak" viewBox="0 0 100 100">
-			<svg:path fill="#d1adc6" stroke="#1f151d" stroke-width="5" d="M 0,90 L 50,10 L 100,90 Z"/>
-		</svg:symbol>	
-	</svg:defs>
-</svg>

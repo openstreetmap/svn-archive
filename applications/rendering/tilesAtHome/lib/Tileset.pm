@@ -33,6 +33,7 @@ sub new
         JobTime => undef,     # API fetching time for the job as timestamp
         bbox => undef,        # bbox of required tileset
         marg_bbox => undef,   # bbox of required tileset including margins
+        childThread => 0,     # marks whether we are a parent or child thread
         };
 
     my $delTmpDir = 1-$Config->get('Debug');
@@ -54,7 +55,16 @@ sub new
 sub DESTROY
 {
     my $self = shift;
-    $self->cleanup();
+    if ($self->{childThread}) 
+    {   # For whatever unknown reasons this function gets called for exiting child threads.
+        # It really shouldn't but oh well. So protect us and only cleanup if we are the parent.
+        ;
+    } 
+    else
+    {
+        # only cleanup if we are the parent thread
+        $self->cleanup();
+    }
 }
 
 #-----------------------------------------------------------------------------
@@ -486,6 +496,7 @@ sub forkedRender
         }
         elsif ($pid == 0) 
         {   # we are the child process
+            $self->{childThread}=1;
             for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
             {
 		::statusMessage("Thread $thread renders zoom $zoom now",0,6);

@@ -725,6 +725,8 @@ sub xml2svg
 # $ZOrig - the lowest zoom level of the tileset
 # $X, $Y - tilemnumbers of the tileset
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
+# returns (success, reason), success is 0 or 1
+# reason is a string on failure or 0/1 indicating whether all tiles are empty
 #-----------------------------------------------------------------------------
 sub svg2png
 {
@@ -820,11 +822,10 @@ sub svg2png
         {
             statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
         }
-        $req->putBackToServer("BadSVG");
+        my $reason = "BadSVG (svg2png)";
         addFault("inkscape",1);
         $req->is_unrenderable(1);
-        cleanUpAndDie("svg2png failed",$Mode,3);
-        return (0,0);
+        return (0, $reason);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     

@@ -31,18 +31,18 @@ sub new
         req => $req,
         Config => $Config,
         JobTime => undef,     # API fetching time for the job as timestamp
-        bbox => undef,     # bbox of required tileset
-        marg_bbox => undef,     # bbox of required tileset including margins
+        bbox => undef,        # bbox of required tileset
+        marg_bbox => undef,   # bbox of required tileset including margins
         };
 
     my $delTmpDir = 1-$Config->get('Debug');
 
-    $self->{JobDir} = tempdir(
+    $self->{JobDir} = tempdir( 
          sprintf("%d_%d_%d_XXXXX",$self->{req}->ZXY),
          DIR      => $Config->get('WorkingDirectory'), 
 	 CLEANUP  => $delTmpDir,
          );
-    print STDERR "Created job directory  ",$self->{JobDir},"\n"; #TODO remove this debug print
+    print STDERR "\nCreated job directory  ",$self->{JobDir},"\n"; #TODO remove this debug print
 
     bless $self, $class;
     return $self;
@@ -116,22 +116,21 @@ sub generate
         $::progressPercent=0;
         $::currentSubTask = $layer;
         
+        # JobDirectory is the directory where all final .png files are stored.
+        # It is not used for temporary files.
         my $JobDirectory = File::Spec->join($self->{JobDir},
                                 sprintf("%s_%d_%d_%d.dir",
                                 $Config->get($layer."_Prefix"),
                                 $req->ZXY));
-        mkdir $JobDirectory unless -d $JobDirectory;
+        mkdir $JobDirectory;
 
         my $maxzoom = $Config->get($layer."_MaxZoom");
         my $layerDataFile;
 
-        my $Margin = " " x ($req->Z - 8);
-        printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $req->Z, $Margin, $req->X, $req->Y, $S,$N, $W,$E if ($Config->get("Debug"));
-        
-        
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
         # This puts preprocessed files like data-maplint-closeareas.osm in $self->{JobDir}
+        # and returns the file name of the resulting data file.
         #------------------------------------------------------
 
         ($layerDataFile, $reason) = $self->runPreprocessors($layer);
@@ -223,9 +222,10 @@ sub generate
 
         #----------
         if (!$success)
-        {
+        {   # Failed to render tiles
+            my $reason = "GenerateTileset: could not render tileset";
             ::addFault("renderer",1);
-            return ::cleanUpAndDie("GenerateTileset: could not render tileset",$::Mode,1);
+            ::statusMessage($reason, 1, 0);
         }
         else
         {   # successfully rendered, so reset renderer faults

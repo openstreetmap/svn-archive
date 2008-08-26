@@ -1074,7 +1074,7 @@ sub splitImageX
                 }
                 else
                 {
-                    statusMessage("ColorQuantizing $PngFileName with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",1,0);
+                    statusMessage("ColorQuantizing $PngFileName with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",0,6);
                     rename($PngFullFileName, $Filename2);
                 }
             } else {

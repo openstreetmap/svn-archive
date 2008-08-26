@@ -715,7 +715,6 @@ sub xml2svg
             copy($TSVG,$SVG);
             statusMessage("Error on Bezier Curve hinting, rendering without bezier curves",1,0);
         }
-        unlink($TSVG) if (!$Config->get("Debug"));
     }
     else
     {   # don't do bezier curve hinting

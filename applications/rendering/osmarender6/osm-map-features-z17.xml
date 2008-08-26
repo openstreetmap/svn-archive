@@ -1195,11 +1195,11 @@
         <!-- Mini-roundabouts -->
         <rule e="node" k="highway" v="mini_roundabout">
             <rule e="node" k="direction" v="clockwise">
-                <symbol ref="roundabout_left" width="2px" height="2px" transform="translate(-1,-1)"/>
+                <symbol ref="roundabout_left" width="2" height="2" position="center"/>
             </rule>
             <else>
                 <!-- Default is anti-clockwise -->
-                <symbol ref="roundabout_right" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="roundabout_right" width="2" height="2" position="center"/>
             </else>
         </rule>
 
@@ -1338,7 +1338,7 @@
         </rule>
         <rule e="way" k="man_made" v="piste:halfpipe">
             <area class="man-made-piste-halfpipe"/>
-            <areaSymbol ref="man-made-halfpipe" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
+	    <areaSymbol ref="man-made-halfpipe" width="3" height="3" position="center"/>
         </rule>
 
         <!-- Surface lifts (render over pistes) -->
@@ -1404,7 +1404,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-            <symbol ref="peak" width="2px" height="2px" transform="translate(-1,-1.2)"/>
+            <symbol ref="peak" width="2" height="2" transform="translate(-1,-1.2)"/>
         </rule>
 
         <!-- Draw marine features -->
@@ -1417,7 +1417,7 @@
 
         <!-- Power lines and pylons -->
         <rule e="node" k="power" v="tower">
-            <symbol ref="power-tower" width="1px" height="1px" transform="translate(-.5,-.5)"/>
+            <symbol ref="power-tower" width="1" height="1" position="center"/>
         </rule>
         <rule e="way" k="power" v="line">
             <line class="power-line no-bezier" smart-linecap="no"/>
@@ -1430,16 +1430,16 @@
 
         <!-- Tourist features -->
         <rule e="node" k="tourism" v="hotel">
-            <symbol ref="hotel" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="hotel" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="tourism" v="hostel">
-            <symbol ref="hostel" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
+		<symbol ref="hostel" width="3" height="3" position="center"/>
         </rule>
         <rule e="node" k="tourism" v="camp_site">
-            <symbol ref="campSite" width="2px" height="2px" transform="translate(-1,-1.3)"/>
+            <symbol ref="campSite" width="2" height="2" transform="translate(-1,-1.3)"/>
         </rule>
         <rule e="node" k="tourism" v="information">
-            <symbol ref="information" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="information" width="2" height="2" position="center"/>
         </rule>
 
         <!-- Railway stations -->
@@ -1465,12 +1465,12 @@
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
             <rule e="node" s="way" k="railway" v="rail">
                 <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
-                    <symbol ref="railway-crossing" width="3.5px" height="3.5px" transform="translate(-1.75,-1.75)"/>
+			<symbol ref="railway-crossing" width="3.5" height="3.5" position="center"/>
                 </rule>
             </rule>
             <else>
                 <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
-                    <symbol ref="railway-crossing" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
+			<symbol ref="railway-crossing" width="3" height="3" position="center"/>
                 </rule>
             </else>
         </rule>
@@ -1478,10 +1478,10 @@
         <else>
             <rule e="node" k="railway" v="level_crossing">
                 <rule e="node" s="way" k="railway" v="rail">
-                    <symbol ref="railway-crossing" width="3.5px" height="3.5px" transform="translate(-1.75,-1.75)"/>
+			<symbol ref="railway-crossing" width="3.5" height="3.5" position="center"/>
                 </rule>
                 <else>
-                    <symbol ref="railway-crossing" width="3px" height="3px" transform="translate(-1.5,-1.5)"/>
+			<symbol ref="railway-crossing" width="3" height="3" position="center"/>
                 </else>
             </rule>
         </else>
@@ -1512,7 +1512,7 @@
 
         <!-- Bus stops -->
         <rule e="node" k="highway" v="bus_stop">
-            <symbol ref="bus" transform="translate(-1.5,-1.5)" width="3px" height="3px"/>
+		<symbol ref="bus" width="3" height="3" position="center"/>
         </rule>
 
         <!-- highway motorway_junctions -->
@@ -1524,152 +1524,152 @@
 
         <!-- Amenities -->
         <rule e="node" k="aeroway" v="helipad">
-            <symbol ref="helipad" width="4px" height="4px" transform="translate(-2,-2)"/>
+		<symbol ref="helipad" width="4" height="4" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="hospital">
-            <symbol ref="hospital" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="hospital" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="doctors">
-            <symbol ref="doctor" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="doctor" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="pharmacy">
-            <symbol ref="pharmacy" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="pharmacy" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="post_office">
-            <symbol ref="postoffice" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="postoffice" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="post_box">
-            <symbol ref="postbox" width="1.5px" height="1.5px" transform="translate(-0.75,-0.75)"/>
+		<symbol ref="postbox" width="1.5" height="1.5" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="speed_trap">
-            <symbol ref="speed_trap" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="speed_trap" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="pub">
-            <symbol ref="pub" width="1.5px" height="1.5px" transform="translate(-0.75,-0.75)"/>
+		<symbol ref="pub" width="1.5" height="1.5" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="restaurant">
-            <symbol ref="restaurant" width="1.5px" height="1.5px" transform="translate(-0.75,-0.75)"/>
+		<symbol ref="restaurant" width="1.5" height="1.5" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="cinema">
-            <symbol ref="cinema" width="2.5px" height="2.5px" transform="translate(-1.25,-1.25)"/>
+		<symbol ref="cinema" width="2.5" height="2.5" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="theatre">
-            <symbol ref="theatre" width="2.5px" height="2.5px" transform="translate(-1.25,-1.25)"/>
+		<symbol ref="theatre" width="2.5" height="2.5" position="center"/>
         </rule>
         <rule e="node" k="man_made" v="windmill">
-            <symbol ref="windmill" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="windmill" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="place_of_worship">
             <rule e="node" k="denomination|religion" v="jewish">
-                <symbol ref="synagogue" width="2px" height="2px" transform="translate(-1,-1)"/>
+		    <symbol ref="synagogue" width="2" height="2" position="center"/>
             </rule>
             <else>
                 <rule e="node" k="denomination|religion" v="muslim|moslem">
-                    <symbol ref="mosque" width="2px" height="2px" transform="translate(-1,-1)"/>
+			<symbol ref="mosque" width="2" height="2" position="center"/>
                 </rule>
                 <else>
                     <rule e="node" k="denomination|religion" v="christian">
-                        <symbol ref="church" width="2px" height="2px" transform="translate(-1,-1.2)"/>
+                        <symbol ref="church" width="2" height="2" transform="translate(-1,-1.2)"/>
                     </rule>
                     <else>
                         <rule e="node" k="denomination|religion" v="sikhism|sikh">
-                            <symbol ref="khanda" width="2.4px" height="2.4px" transform="translate(-1.2, -1.2)"/>
+				<symbol ref="khanda" width="2.4" height="2.4" position="center"/>
                         </rule>
                         <else>
-                            <symbol ref="peak" width="2px" height="2px" transform="translate(-1,-1.2)"/>
+                            <symbol ref="peak" width="2" height="2" transform="translate(-1,-1.2)"/>
                         </else>
                     </else>
                 </else>
             </else>
         </rule>
         <rule e="node" k="amenity" v="parking">
-            <symbol ref="parking" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="parking" width="2" height="2" position="center"/>
         </rule>
         <rule e="way" k="amenity" v="parking">
             <rule e="way" k="access" v="~|yes|public">
-                <areaSymbol ref="parking" width="2px" height="2px" transform="translate(-1,-1)"/>
+		    <areaSymbol ref="parking" width="2" height="2" position="center"/>
             </rule>
         </rule>
         <rule e="node" k="highway" v="traffic_signals">
-            <symbol ref="traffic_signal" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="traffic_signal" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="school">
-            <symbol ref="school" width='2px' height='2px' transform='translate(-1,-1)'/>
+		<symbol ref="school" width='2' height='2' position="center"/>
         </rule>
         <rule e="way" k="amenity" v="school">
-            <areaSymbol ref="school" width='2px' height='2px' transform='translate(-1,-1)'/>
+		<areaSymbol ref="school" width='2' height='2' position="center"/>
         </rule>
         <rule e="node" k="amenity" v="university|college">
-            <symbol ref="university" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="university" width="2" height="2" position="center"/>
         </rule>
         <rule e="way" k="amenity" v="university|college">
-            <areaSymbol ref="university" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<areaSymbol ref="university" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity|shop" v="supermarket">
-            <symbol ref="supermarket" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="supermarket" width="2" height="2" position="center"/>
         </rule>
         <rule e="way" k="amenity|shop" v="supermarket">
-            <areaSymbol ref="supermarket" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<areaSymbol ref="supermarket" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="shelter">
             <rule e="node" k="fireplace" v="yes">
-                <symbol ref="shelter-fireplace" width="4px" height="4px" transform="translate(-2,-2.6)"/>
+                <symbol ref="shelter-fireplace" width="4" height="4" transform="translate(-2,-2.6)"/>
             </rule>
             <else>
-                <symbol ref="shelter" width="4px" height="4px" transform="translate(-2,-2.6)"/>
+                <symbol ref="shelter" width="4" height="4" transform="translate(-2,-2.6)"/>
             </else>
         </rule>
         <rule e="node" k="amenity" v="library">
-            <symbol ref="library" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="library" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="fuel">
-            <symbol ref="petrolStation" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="petrolStation" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="recycling">
-            <symbol ref="recycling" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="recycling" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="toilets">
-            <symbol ref="toilets" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="toilets" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="drinking_water">
-            <symbol ref="drinking_water" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<symbol ref="drinking_water" width="2" height="2" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="bank">
-            <symbol ref="bank" width="2px" height="2px" transform="translate(-1,-1.2)"/>
+            <symbol ref="bank" width="2" height="2" transform="translate(-1,-1.2)"/>
         </rule>
 
         <!-- Leisure symbols -->
         <rule e="node" k="leisure" v="golf_course">
-            <symbol ref="golfCourse" width="5px" height="5px" transform="translate(-2.5,-2.5)"/>
+		<symbol ref="golfCourse" width="5" height="5" position="center"/>
         </rule>
         <rule e="node" k="leisure" v="slipway">
-            <symbol ref="slipway" width="4px" height="4px" transform="translate(-2,-2.7)"/>
+            <symbol ref="slipway" width="4" height="4" transform="translate(-2,-2.7)"/>
         </rule>
 
         <!-- Sport symbols -->
         <rule e="node" k="sport" v="soccer">
-            <symbol ref="soccer" width="4px" height="4px" transform="translate(-2, -2)"/>
+		<symbol ref="soccer" width="4" height="4" position="center"/>
         </rule>
         <rule e="way" k="sport" v="soccer">
-            <areaSymbol ref="soccer-borderless" width="5px" height="5px" transform="translate(-2.5, -2.5)"/>
+		<areaSymbol ref="soccer-borderless" width="5" height="5" position="center"/>
         </rule>
         <rule e="node" k="sport" v="tennis">
-            <symbol ref="tennis" width="4px" height="4px" transform="translate(-2, -2)"/>
+		<symbol ref="tennis" width="4" height="4" position="center"/>
         </rule>
         <rule e="way" k="sport" v="tennis">
-            <areaSymbol ref="tennis-borderless" width="5px" height="5px" transform="translate(-2.5, -2.5)"/>
+		<areaSymbol ref="tennis-borderless" width="5" height="5" position="center"/>
         </rule>
         <rule e="node" k="sport" v="swimming">
-            <symbol ref="swimming" width="4px" height="4px" transform="translate(-2, -2)"/>
+		<symbol ref="swimming" width="4" height="4" position="center"/>
         </rule>
         <rule e="way" k="sport" v="swimming">
-            <areaSymbol ref="swimming-borderless" width="5px" height="5px" transform="translate(-2.5, -2.5)"/>
+		<areaSymbol ref="swimming-borderless" width="5" height="5" position="center"/>
         </rule>
 
         <!-- Historic symbols -->
         <rule e="node" k="historic" v="*">
             <rule e="node" k="historic" v="museum">
-                <symbol ref="museum" width="2px" height="2px" transform="translate(-1,-1.3)"/>
+                <symbol ref="museum" width="2" height="2" transform="translate(-1,-1.3)"/>
             </rule>
             <else>
                 <circle r="0.4" class="generic-poi"/>
@@ -2027,7 +2027,7 @@
 
         <!-- House numbers -->
         <rule e="way" k="addr:housenumber" v="*" layer="5">
-            <areaSymbol ref="housenumber" width="2px" height="2px" transform="translate(-1,-1)"/>
+		<areaSymbol ref="housenumber" width="2" height="2" position="center"/>
             <areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px"/>
         </rule>
         <rule e="node" k="addr:housenumber" v="*" layer="5">

@@ -807,7 +807,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-            <symbol ref="peak" width="18px" height="18px" transform="translate(-9,-9)"/>
+		<symbol ref="peak" width="18" height="18" position="center"/>
         </rule>
 
         <!-- Non-physical routes -->
@@ -834,15 +834,15 @@
 
         <!-- Amenities -->
         <rule e="node" k="amenity" v="hospital">
-            <symbol ref="hospital" width="15px" height="15px" transform="translate(-7.5,-7.5)"/>
+		<symbol ref="hospital" width="15" height="15" position="center"/>
         </rule>
 
         <!-- Airfields and airports -->
         <rule e="node" k="aeroway" v="aerodrome">
-            <symbol ref="airport" width="15px" height="15px" transform="translate(-7.5,-7.5)"/>
+		<symbol ref="airport" width="15" height="15" position="center"/>
         </rule>
         <rule e="node" k="aeroway" v="airport">
-            <symbol ref="airport" width="30px" height="30px" transform="translate(-15,-15)"/>
+		<symbol ref="airport" width="30" height="30" position="center"/>
         </rule>
     </rule>
 

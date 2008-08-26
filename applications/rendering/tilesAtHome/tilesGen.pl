@@ -661,15 +661,13 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        chdir "orp";
-        my $Cmd = sprintf("%s perl orp.pl -r %s -o %s",
+        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s",
           $Config->get("Niceness"),
           $MapFeatures,
           $TSVG);
 
         statusMessage("Transforming zoom level $zoom with or/p",0,3);
         $success = runCommand($Cmd,$PID);
-        chdir "..";
     }
     else
     {

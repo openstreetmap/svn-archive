@@ -1,11 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
-	
-	<svg:defs>
-		<svg:symbol id="symbol-parking" viewBox="0 0 20 20" stroke="none" fill-opacity="1" fill-rule="nonzero">
-			<svg:g transform="translate(0,10)">
-				<svg:rect fill="#0087ff" width="20" height="20" x="0" y="-10" rx="4" ry="4"/>
-				<svg:path fill="white" d="M 5,8 L 5,-7 L 12,-7 C 14,-7 15.5,-5.3 16,-4 C 16.5,-2.77 16.5,-1.23 16,0 C 15.41,1.42 14,3 12,3 L 8,3 L 8,8 L 5,8 z M 8,-4 L 8,0 C 9.3,0 11,0 12.32,-0.31 C 13.6,-0.76 13.5,-2.8 12.5,-3.48 C 11.5,-4.1 8.6,-4 8,-4 z "/>
-			</svg:g>
-		</svg:symbol>	
-	</svg:defs>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" width="89.9281369683458px" id="parking" viewBox="0 0 20 20" stroke="none" fill-opacity="1" fill-rule="nonzero">
+   <svg:g transform="translate(0,10)">
+            <svg:rect fill="#0087ff" width="20" height="20" x="0" y="-10" rx="4" ry="4"/>
+            <svg:path fill="white" d="M 5,8 L 5,-7 L 12,-7 C 14,-7 15.5,-5.3 16,-4 C 16.5,-2.77 16.5,-1.23 16,0 C 15.41,1.42 14,3 12,3 L 8,3 L 8,8 L 5,8 z M 8,-4 L 8,0 C 9.3,0 11,0 12.32,-0.31 C 13.6,-0.76 13.5,-2.8 12.5,-3.48 C 11.5,-4.1 8.6,-4 8,-4 z "/>
+          </svg:g>
 </svg>

@@ -1,9 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="main" version="1.1" baseProfile="full" width="89.9281369683458px" height="89.9281369683458px" preserveAspectRatio="none" viewBox="0 0 89.9281369683458 89.9281369683458">
-	
-	<svg:defs>
-		<svg:symbol id="symbol-hospital" viewBox="0 0 15 15" stroke="red" stroke-width="2px" fill="none">
-			<svg:path d="M 12.5,7.5 L 2.5,7.5 L 2.5,7.5 L 12.5,7.5 z M 7.5,2.3 L 7.5,12.5 L 7.5,12.5"/>
-			<svg:path stroke-width="1px" d="M 14.5 7.5 A 7 7 0 1 1 0.5,7.5 A 7 7 0 1 1 14.5 7.5 z"/>
-		</svg:symbol>	
-	</svg:defs>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" width="89.9281369683458px" id="hospital" viewBox="0 0 15 15" stroke="red" stroke-width="2px" fill="none">
+   <svg:path d="M 12.5,7.5 L 2.5,7.5 L 2.5,7.5 L 12.5,7.5 z M 7.5,2.3 L 7.5,12.5 L 7.5,12.5"/>
+   <svg:path stroke-width="1px" d="M 14.5 7.5 A 7 7 0 1 1 0.5,7.5 A 7 7 0 1 1 14.5 7.5 z"/>
 </svg>

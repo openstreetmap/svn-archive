@@ -481,7 +481,6 @@ sub forkedRender
     my $minimum_zoom = $req->Z;
 
     my $numThreads = 2 * $Config->get("Fork");
-    my @children_pid;
     my $success = 1;
     for (my $thread = 0; $thread < $numThreads; $thread ++) 
     {
@@ -506,22 +505,18 @@ sub forkedRender
             # Rendering went fine, have thread return (255+)1
             exit(1);
         }
-        else
-        {   # we are the parent process, save child pid to list.
-            push(@children_pid, $pid);
-        }
     }
 
     # now wait that all child render processes exited and check their return value
-    # retvalue >> 8 is the real ret value
-    foreach (@children_pid) 
+    # retvalue >> 8 is the real ret value. wait returns -1 if there are no child processes
+    while ((my $thr = wait) != -1)
     {
-        waitpid($_, 0);
         $success &= ($? >> 8);
-        ::statusMessage("thread $_ returned with value $?, leaving success at $success",1,6);
+        ::statusMessage("thread $thr returned with value $?, leaving success at $success",1,6);
     }
 
 ::statusMessage("exit forked renderer returning $success",1,6);
+exit;
     return $success;
 }
 

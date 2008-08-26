@@ -430,10 +430,7 @@ sub compressAndUploadTilesets
             #FIXME: $upload_result is apparently never returned?! skip?
             #$upload_result = $? >> 8;
         }
-        # compress before fork so we don't get temp files mangled.
-        # Workaround for batik support.
-        # FIXME: spaetz asks "FOR WHAT REASON?" Let's fix this the right way
-        compress();
+
         $upload_pid = fork();
         if ((not defined $upload_pid) or ($upload_pid == -1))
         {   # exit if asked to fork but unable to
@@ -441,7 +438,7 @@ sub compressAndUploadTilesets
         }
         elsif ($upload_pid == 0)
         {   # we are the child, so we run the upload and exit the thread
-            exit (upload());
+            exit compressAndUpload();
         }
     }
     else

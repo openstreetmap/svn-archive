@@ -279,13 +279,13 @@ sub DownloadFile
 
     if ($res->is_success()) 
     {
-        doneMessage(sprintf("done, %d bytes", -s $File));
+        doneMessage(sprintf("downloaded %d bytes", -s $File));
         return 1;
     }
     else
     {
         unlink($File) if (! $UseExisting);
-        doneMessage("failed");
+        doneMessage("failed with: ".$res->status_line);
         return 0;
     }
 }

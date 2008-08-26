@@ -117,7 +117,8 @@ use Set::Object ();
 use Getopt::Long qw(GetOptions);
 use XML::Writer ();
 use IO::File ();
-
+use FindBin qw($Bin);
+use lib $Bin;
 use SAXOsmHandler ();
 
 require "orp-select.pm";
@@ -383,7 +384,7 @@ foreach my $node ($rules->find('//rules/defs/svg:svg')->get_nodelist)
 my $symbolsDir = get_variable("symbolsDir");
 if (defined($symbolsDir))
 {
-    $symbolsDir = '../osmarender/' . $symbolsDir;
+    $symbolsDir = File::Spec->catdir($Bin, '../osmarender/', $symbolsDir);
     # get refs, then convert to hash so we can get only unique values
     my %refs = map {$_, 1} map {$_->getNodeValue} $rules->find('/rules//symbol/@ref | /rules//areaSymbol/@ref')->get_nodelist;
     foreach my $file (keys %refs) 

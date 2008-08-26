@@ -54,6 +54,9 @@ sub new
 sub DESTROY
 {
     my $self = shift;
+
+    if ($self->{childThread})
+    {print STDERR "\n child process calls destroy\n\n";exit} else {print STDERR "\nparent process calls detroy\n";exit;}
     $self->cleanup();
 }
 
@@ -474,6 +477,7 @@ sub forkedRender
 
     my $numThreads = 2 * $Config->get("Fork");
     my $success = 1;
+    my $self->{childThread} = 0;
     for (my $thread = 0; $thread < $numThreads; $thread ++) 
     {
         # spawn $numThreads threads
@@ -486,16 +490,17 @@ sub forkedRender
         }
         elsif ($pid == 0) 
         {   # we are the child process
+            my $self->{childThread} = 1;
             for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
             {
 		::statusMessage("Thread $thread renders zoom $zoom now",0,6);
                 if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
                 {    # an error occurred while rendering. Thread exits and returns (255+)0 here
-                     exit(0);
+                     return(0);
                 }
             }
             # Rendering went fine, have thread return (255+)1
-            exit(1);
+            return(1);
         }
     }
 

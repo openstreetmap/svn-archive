@@ -14,7 +14,7 @@ use strict;
 use warnings;
 require "orp-bbox-area-center.pm";
 
-our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel);
+our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, %symbols);
 
 
 # -------------------------------------------------------------------
@@ -572,9 +572,16 @@ sub draw_area_symbols
 
         if ($ref ne "")
         {
-            $writer->emptyTag("use", 
-                "xlink:href" => "#symbol-".$ref,
-                copy_attributes_not_in_list($symbolnode, [ "type", "ref", "scale", "smart-linecap" ]));
+            my $id = 'symbol-'.$ref;
+            my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
+                    [ "type", "ref", "scale", "smart-linecap" ]);
+            my %attributes = ((
+                "xlink:href" => "#$id",
+                "width" => $symbols{$id}->{'width'},
+                "height" => $symbols{$id}->{'height'}
+                
+            ), %copiedAttributes);
+            $writer->emptyTag("use", %attributes);
         }
         else
         {
@@ -654,10 +661,16 @@ sub draw_symbols
 
         if ($ref ne "")
         {
-            $writer->emptyTag("use", 
-                "xlink:href" => "#symbol-".$ref,
-                copy_attributes_not_in_list($symbolnode, 
-                    [ "type", "ref", "scale", "smart-linecap" ]));
+            my $id = 'symbol-'.$ref;
+            my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
+                    [ "type", "ref", "scale", "smart-linecap" ]);
+            my %attributes = ((
+                "xlink:href" => "#$id",
+                "width" => $symbols{$id}->{'width'},
+                "height" => $symbols{$id}->{'height'}
+                
+            ), %copiedAttributes);
+            $writer->emptyTag("use", %attributes);
         }
         else
         {

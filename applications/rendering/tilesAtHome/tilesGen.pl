@@ -463,7 +463,7 @@ sub compressAndUploadTilesets
 sub compressAndUpload
 {
   my $retval  = compress();
-  my $retval2 = upload());
+  my $retval2 = upload();
   # return the smaller of both values for now
   return ($retval > $retval2)? $retval2 : $retval;
 }

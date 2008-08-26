@@ -997,7 +997,7 @@ sub splitImageX
 
         # Temporary filename
         my $Filename2_suffix = ".cut";
-        my $Filename2 = $PngFileName.$Filename2_suffix;
+        my $Filename2 = $PngFullFileName.$Filename2_suffix;
 
         # Check for black tile output
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 

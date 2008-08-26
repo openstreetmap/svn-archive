@@ -149,9 +149,8 @@ sub generate
         {   # Forking to render zoom levels in parallel
             if (!$self->forkedRender($layer, $maxzoom, $layerDataFile))
             {
-                    $req->putBackToServer("ForkedRenderFailure");
                     ::addFault("renderer",1);
-                    return (0, "render failure");
+                    return (0, "Forked render failure");
 	    }
         }
         else
@@ -160,9 +159,8 @@ sub generate
             {
                 if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
                 {
-                    $req->putBackToServer("RenderFailure");
                     ::addFault("renderer",1);
-                    return (0, "render failure");
+                    return (0, "Render failure");
                 }
             }
         }
@@ -184,6 +182,7 @@ sub generate
             my $reason = "GenerateTileset: could not render tileset";
             ::addFault("renderer",1);
             ::statusMessage($reason, 1, 0);
+            return (0, "RenderTile failure");
         }
         else
         {   # successfully rendered, so reset renderer faults

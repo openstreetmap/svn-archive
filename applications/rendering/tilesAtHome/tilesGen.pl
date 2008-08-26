@@ -263,7 +263,7 @@ elsif ($Mode eq "loop")
         # compress and upload results
         my $upload_result = compressAndUploadTilesets();
 
-        if ($upload_result)
+        if ($upload_result == -1)
         {     # we got an error in the upload process
               addFault("upload",1);
         }
@@ -282,8 +282,8 @@ elsif ($Mode eq "loop")
         }
     }
 }
-elsif ($Mode eq "upload" or $Mode eq "upload_conditional") 
-{   # Upload modes. Note:"upload_conditional" is deprecated and will be removed
+elsif ($Mode eq "upload") 
+{   # Upload mode
     compressAndUpload();
 }
 elsif ($Mode eq "upload_loop")
@@ -418,7 +418,7 @@ sub countZips
 #-----------------------------------------------------------------------------
 # forks to a new process when it makes sense,
 # compresses all existing tileset dirs, uploads the resulting zip.
-# returns 0 on success, >0 otherwisse and dies if it could not fork
+# returns >=0 on success, -1 otherwise and dies if it could not fork
 #-----------------------------------------------------------------------------
 sub compressAndUploadTilesets
 {
@@ -458,19 +458,18 @@ sub compressAndUploadTilesets
 
 #-----------------------------------------------------------------------------
 # compressAndUpload() is just a shorthand for calling compress() and
-# upload(). It returns 0 on success and >0 otherwise.
+# upload(). It returns >=0 on success and -1 otherwise.
 #-----------------------------------------------------------------------------
 sub compressAndUpload
 {
-  my $error = 0;
-  $error += compress();
-  $error += upload();
+  my $error = compress();
+  $error = min($error, upload());
   return $error;
 }
 
 #-----------------------------------------------------------------------------
 # compress() calls the external compress.pl which zips up all existing
-# tileset directories. It returns 0 on success and >0 otherwise.
+# tileset directories. It returns # of compressed dirs or -1 on error.
 #-----------------------------------------------------------------------------
 sub compress
 {
@@ -481,12 +480,12 @@ sub compress
 
     keepLog($PID,"compress","stop","return=$retval");
 
-    return ($retval >= 0);
+    return $retval;
 }
 
 #-----------------------------------------------------------------------------
 # upload() uploads all previously
-# zipped up tilesets. It returns the number of uploaded files or 0 on error
+# zipped up tilesets. It returns the number of uploaded files or -1 on error
 #-----------------------------------------------------------------------------
 sub upload
 {
@@ -498,7 +497,7 @@ sub upload
 
     keepLog($PID,"upload","stop","return=$retval");
 
-    return ($retval >= 0);
+    return $retval;
 }
 
 #-----------------------------------------------------------------------------

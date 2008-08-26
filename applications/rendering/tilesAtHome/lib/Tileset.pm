@@ -515,8 +515,7 @@ sub forkedRender
         ::statusMessage("thread $thr returned with value $?, leaving success at $success",1,6);
     }
 
-::statusMessage("exit forked renderer returning $success",1,6);
-exit;
+    ::statusMessage("exit forked renderer returning $success",1,6);
     return $success;
 }
 

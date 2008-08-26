@@ -1297,12 +1297,12 @@ sub checkDataFaults
     my $sleepdelay = 1;
     if (getFault("nodata") > 0) { # check every network condition regardless of the other network outcomes
         my $numfaults=getFault("nodata");
-        if ($numfaults > 5) {
-            cleanUpAndDie("More than five times no data, perhaps the server doesn't like us, exiting","EXIT",1);
+        if ($numfaults > 25) {
+            cleanUpAndDie("More than 25 times no data, perhaps the server doesn't like us, exiting","EXIT",1);
         }
         else {
-            $sleepdelay=16*(4**$numfaults); # wait 64, 256, 1024, 4096, 16384 seconds. for a total of about 6 hours
-            $sleepdelay=int($sleepdelay)+1;
+            $sleepdelay=5*(2**$numfaults); # wait 10, 20, 40, 80, ... seconds. for a total of about 6 hours
+            $sleepdelay=600 if ($sleepdelay > 600);
             talkInSleep($numfaults." times no data", $sleepdelay);
         }
     }
@@ -1312,9 +1312,8 @@ sub checkDataFaults
             cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1); # allow XAPI more leeway
         }
         else {
-            $sleepdelay=16*(2**$numfaults); # wait 32, 64, 128, 256, 512, 1024, 4096, 8192, 14400, 14400, 14400... seconds.
-            $sleepdelay=int($sleepdelay)+1;
-            $sleepdelay=14400 if ($sleepdelay > 14400);
+            $sleepdelay=5*(2**$numfaults); # wait 10, 20, 49, 80 seconds
+            $sleepdelay=600 if ($sleepdelay > 600);
             talkInSleep($numfaults." times no XAPI data", $sleepdelay);
         }
     }

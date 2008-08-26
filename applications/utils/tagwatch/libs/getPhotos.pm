@@ -72,7 +72,7 @@ sub getPhotos
 					close IMOUT;
 					$ok = 1;
 				};
-				print "Could not handle $Filename: $@" if $@;
+				print "Could not handle $Filename with GD: $@" if $@;
 			}
 			if(!$ok)
 			{
@@ -106,7 +106,7 @@ sub getPhotos
 					}
 					$x = $image->Write("$CacheDir/$Filename.png") and die $x;
 				};
-				print "Could not handle $Filename: $@" if $@;
+				print "Could not handle $Filename with ImageMagick: $@" if $@;
 			}
 		}
 		else

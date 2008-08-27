@@ -301,6 +301,7 @@ sub UploadOkOrNot
     my $Config = $self->{Config};
     ::statusMessage("Checking server queue",0,3);
     my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
+    $ua->env_proxy();
     my $res = $ua->get($Config->get("GoNogoURL"));
 
     if (! $res->is_success)

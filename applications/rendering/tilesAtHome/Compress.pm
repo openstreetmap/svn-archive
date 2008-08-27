@@ -76,7 +76,7 @@ sub compressAll
 
     my (@prefixes,$allowedPrefixes);
     
-    ::statusMessage("Searching for tilesets in".$self->{TileDir},0,3);
+    ::statusMessage("Searching for tilesets in ".$self->{TileDir},0,3);
 
     # compile a list of the "Prefix" values of all configured layers,
     # separated by |
@@ -108,10 +108,12 @@ sub compressAll
                       || flock(ZIPDIR, LOCK_EX|LOCK_NB);
         if ($flocked)
         {   # got exclusive lock, now compress
-#disable optimizing tiles in the compressing phase for now
-#            ::statusMessage("optimizing PNG files",0,3);
-#            $self->optimizePNGs($FullTilesetPath, $layer);
-            ::statusMessage("compressing $File",0,3);
+            $::currentSubTask ='optimize';
+            ::statusMessage("optimizing PNG files",1,6);
+            $self->optimizePNGs($FullTilesetPath, $layer);
+            $::currentSubTask ='compress';
+            $::progressPercent = 0;
+            ::statusMessage("compressing $File",1,6);
             $self->compress($FullTilesetPath, $layer);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
@@ -139,7 +141,6 @@ sub compress
 {
     my $self = shift;
     my $Config = $self->{Config};
-    $::currentSubTask ='compress';
 
     my ($FullTilesetPathDir, $Layer) = @_;
   
@@ -204,7 +205,6 @@ sub optimizePNGs
     my $PNGDir = shift;
     my $layer  = shift;
 
-    $::currentSubTask ='optimize';
     $::progressPercent = 0;
     my $TmpFilename_suffix = ".cut";
     my $Redirect = ">/dev/null";
@@ -253,7 +253,7 @@ sub optimizePNGs
                                    $PngFullFileName,
                                    $Redirect);
 
-           ::statusMessage("ColorQuantizing $PngFileName",0,6);
+           ::statusMessage("ColorQuantizing $PngFileName",0,10);
            if(::runCommand($Cmd,$PID))
            {   # Color quantizing successful
                unlink($PngFullFileName);
@@ -296,7 +296,7 @@ sub optimizePNGs
            ::talkInSleep("Install a PNG optimizer and configure it.",15);
        }
 
-       ::statusMessage("Optimizing $PngFileName",0,6);
+       ::statusMessage("Optimizing $PngFileName",0,10);
        if(::runCommand($Cmd,$PID))
        {
            unlink($TmpFullFileName);

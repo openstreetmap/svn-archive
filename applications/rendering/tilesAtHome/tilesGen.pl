@@ -66,9 +66,6 @@ my $progress = 0;
 our $progressJobs = 0;
 our $progressPercent = 0;
 
-# keep track of time running
-our $progstart = time();
-
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
 if ($UploadMode or $RenderMode) {
     if (NewClientVersion()) {
@@ -240,7 +237,7 @@ elsif ($Mode eq "loop")
         {
             if ($Config->get("ForkForUpload") && $upload_pid != -1)
             {
-                statusMessage("Waiting for previous upload process",0,0);
+                statusMessage("Waiting for previous upload process (this can take while)",1,0);
                 waitpid($upload_pid, 0);
             }
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
@@ -417,7 +414,7 @@ sub compressAndUploadTilesets
         # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
         if ($upload_pid != -1)
         {
-            statusMessage("Waiting for previous upload process to finish",0,3);
+            statusMessage("Waiting for previous upload process to finish (this can take while)",1,3);
             waitpid($upload_pid, 0);
             #FIXME: $upload_result is apparently never returned?! skip?
             #$upload_result = $? >> 8;
@@ -511,7 +508,6 @@ sub ProcessRequestsFromServer
         ($success, $reason) = $tileset->generate();
         if (!$success)
         {
-            statusMessage("Tileset failed: ".$reason, 1, 0);
             $req->putBackToServer($reason) unless $Mode eq 'xy';
         }
     }
@@ -979,10 +975,6 @@ sub splitImageX
             $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
 	}
 
-        # Temporary filename
-        my $Filename2_suffix = ".cut";
-        my $Filename2 = $PngFullFileName.$Filename2_suffix;
-
         # Check for black tile output
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
@@ -1016,90 +1008,10 @@ sub splitImageX
             # Store the tile
             statusMessage(" -> $PngFileName",0,10);
             WriteImage($SubImage,$PngFullFileName);
-
-#-----------------------------------------------------------------------------
-# Run pngcrush on each split tile, then delete the temporary cut file
-#-----------------------------------------------------------------------------
-            my $Redirect = ">/dev/null";
-            my $Cmd;
-            if ($^O eq "MSWin32")
-            {
-                $Redirect = "";
-            }
-
-            if ($Config->get($layer."_Transparent"))
-            {
-                rename($PngFullFileName, $Filename2);
-            }
-            elsif ($Config->get("PngQuantizer") eq "pngnq") {
-                if ($EnvironmentInfo{"pngnq"})
-                {
-                    $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
-                                   $Config->get("Niceness"),
-                                   $Config->get("pngnq"),
-                                   $Filename2_suffix,
-                                   $PngFullFileName,
-                                   $Redirect);
-
-                    statusMessage("ColorQuantizing $PngFileName",0,6);
-                    if(runCommand($Cmd,$PID))
-                    {
-                        unlink($PngFullFileName);
-                    }
-                    else
-                    {
-                        statusMessage("ColorQuantizing $PngFileName with ".$Config->get("PngQuantizer")." failed",1,0);
-                        rename($PngFullFileName, $Filename2);
-                    }
-                }
-                else
-                {
-                    statusMessage("ColorQuantizing $PngFileName with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",0,6);
-                    rename($PngFullFileName, $Filename2);
-                }
-            } else {
-                rename($PngFullFileName, $Filename2);
-            }
-
-            if ($Config->get("PngOptimizer") eq "pngcrush")
-            {
-                $Cmd = sprintf("%s \"%s\" -q %s %s %s",
-                  $Config->get("Niceness"),
-                  $Config->get("Pngcrush"),
-                  $Filename2,
-                  $PngFullFileName,
-                  $Redirect);
-            }
-            elsif ($Config->get("PngOptimizer") eq "optipng")
-            {
-                $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
-                  $Config->get("Niceness"),
-                  $Config->get("Optipng"),
-                  $Filename2,
-                  $PngFullFileName,
-                  $Redirect);
-            }
-            else
-            {
-                cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4);
-            }
-            statusMessage("Optimizing $PngFileName",0,6);
-            if(runCommand($Cmd,$PID))
-            {
-                unlink($Filename2);
-            }
-            else
-            {
-                statusMessage("Optimizing $PngFileName with ".$Config->get("PngOptimizer")." failed",1,0);
-                rename($Filename2, $PngFullFileName);
-            }
         }
-        # Assign the job time to this file
-        utime $JobTime, $JobTime, $PngFullFileName;
     }
     undef $SubImage;
     undef $Image;
-    # tell the rendering queue wether the tiles are empty or not
     return $allempty;
 }
 
@@ -1163,14 +1075,13 @@ sub reExec
     statusMessage("tilesGen.pl has changed, re-start new version",1,0);
     if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general
     {
-        statusMessage("Waiting for child process",0,0);
+        statusMessage("Waiting for child process (this can take a while)",1,0);
         waitpid($child_pid, 0);
     }
     exec "perl", $0, $Mode, "reexec", 
         "progressJobs=" . $progressJobs, 
         "idleSeconds=" . getIdle(1), 
-        "idleFor=" . getIdle(0), 
-        "progstart=" . $progstart  or die("could not reExec");
+        "idleFor=" . getIdle(0) or die("could not reExec");
 }
 
 

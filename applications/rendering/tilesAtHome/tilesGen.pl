@@ -319,9 +319,7 @@ elsif ($Mode eq "upload_loop")
         }
         elsif ($files_uploaded == 0) # no error, but no files uploaded
         {
-            #TODO use talkInSleep here?
-            statusMessage("waiting 30 sec for new ZIP files to upload",0,0);
-            sleep(30);
+            talkInSleep("waiting for new ZIP files to upload",30);
         }
         else
         {   #reset fault counter for uploads if once without error

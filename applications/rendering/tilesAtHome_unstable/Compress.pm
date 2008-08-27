@@ -132,6 +132,7 @@ sub compressAll
 	}
     }
     return (1,"");
+}
 
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating a .zip file.

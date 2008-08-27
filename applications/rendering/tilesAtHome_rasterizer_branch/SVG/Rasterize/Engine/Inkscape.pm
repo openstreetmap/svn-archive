@@ -116,7 +116,7 @@ package SVG::Rasterize::Engine::Inkscape::Error;
 use base qw(SVG::Rasterize::Engine::Error);
 
 package SVG::Rasterize::Engine::Inkscape::Error::Runtime;
-use base qw(SVG::Rasterize::Engine::Inkscape::Error);
+use base qw(SVG::Rasterize::Engine::Inkscape::Error SVG::Rasterize::Engine::Error::Runtime);
 
 package SVG::Rasterize::Engine::Inkscape::Error::Prerequisite;
 use base qw(SVG::Rasterize::Engine::Inkscape::Error SVG::Rasterize::Engine::Error::Prerequisite);

@@ -138,7 +138,10 @@ sub convert {
 
 =head2 start_agent()
 
-Starts batik agent
+Starts batik agent.
+
+Returns true if it started sucessfully, 0 if it was already running and throws
+an exception if something failed.
 
 =cut
 
@@ -146,7 +149,7 @@ sub start_agent {
     my $self = shift;
 
     if( $self->get_status() ){
-        return;
+        return 0;
     }
 
     my @cmd;
@@ -252,7 +255,7 @@ package SVG::Rasterize::Engine::BatikAgent::Error;
 use base qw(SVG::Rasterize::Engine::Error);
 
 package SVG::Rasterize::Engine::BatikAgent::Error::Runtime;
-use base qw(SVG::Rasterize::Engine::BatikAgent::Error);
+use base qw(SVG::Rasterize::Engine::BatikAgent::Error SVG::Rasterize::Engine::Error::Runtime);
 
 package SVG::Rasterize::Engine::BatikAgent::Error::Runtime::IOError;
 use base qw(SVG::Rasterize::Engine::BatikAgent::Error::Runtime);

@@ -193,7 +193,7 @@ package SVG::Rasterize::Engine::Batik::Error;
 use base qw(SVG::Rasterize::Engine::Error);
 
 package SVG::Rasterize::Engine::Batik::Error::Runtime;
-use base qw(SVG::Rasterize::Engine::Batik::Error);
+use base qw(SVG::Rasterize::Engine::Batik::Error SVG::Rasterize::Engine::Error::Runtime);
 
 package SVG::Rasterize::Engine::Batik::Error::Prerequisite;
 use base qw(SVG::Rasterize::Engine::Batik::Error SVG::Rasterize::Engine::Error::Prerequisite);

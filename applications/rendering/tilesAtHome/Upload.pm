@@ -179,7 +179,7 @@ sub upload
         }
         else
         {
-            move($File, $File."_overage"); 
+            rename($File, $File."_overage"); 
         }
 
         return (-1,0);
@@ -283,7 +283,7 @@ sub upload
     }
     else
     {
-        move($File, $File."_uploaded");
+        rename($File, $File."_uploaded");
     }
 
     return (1,0);

@@ -101,13 +101,12 @@ sub compressAll
         my $FullTilesetPath = File::Spec->join($self->{TileDir}, $File);
 
         # get a file handle, then try to lock the file exclusively.
-        # if open fails (file has been uploaded and removed by other process)
-        # the subsequent flock will also fail and skip the file.
-        # if just flock fails it is being handled by a different upload process
+        # if flock fails it is being handled by a different upload process
+        # also check if the file still exists when we get to it
         open ($LOCKFILE, '>', $FullTilesetPath."lock");
         my $flocked = !$Config->get('flock_available')
                       || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
-        if ($flocked)
+        if ($flocked && -d $FullTilesetPath )
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
             ::statusMessage("optimizing PNG files",1,6);

@@ -103,9 +103,9 @@ sub compressAll
         # if open fails (file has been uploaded and removed by other process)
         # the subsequent flock will also fail and skip the file.
         # if just flock fails it is being handled by a different upload process
-        open (ZIPDIR, $FullTilesetPath);
+        open (LOCKFILE, '>', $FullTilesetPath."lock");
         my $flocked = !$Config->get('flock_available')
-                      || flock(ZIPDIR, LOCK_EX|LOCK_NB);
+                      || flock(LOCKFILE, LOCK_EX|LOCK_NB);
         if ($flocked)
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
@@ -123,11 +123,11 @@ sub compressAll
             ::statusMessage("$File compressed by different process. skipping",0,3);
         }
         # finally unlock zipfile and release handle
-        flock (ZIPDIR, LOCK_UN);
-        close (ZIPDIR);
+        flock (LOCKFILE, LOCK_UN);
+        close (LOCKFILE);
+        unlink($FullTilesetPath."lock");
     }
 
-    ::statusMessage("done",1,3); 
 }
 
 #-----------------------------------------------------------------------------

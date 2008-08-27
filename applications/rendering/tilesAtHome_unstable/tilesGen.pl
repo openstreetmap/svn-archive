@@ -979,10 +979,6 @@ sub splitImageX
             $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
 	}
 
-        # Temporary filename
-        my $Filename2_suffix = ".cut";
-        my $Filename2 = $PngFullFileName.$Filename2_suffix;
-
         # Check for black tile output
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
@@ -1016,90 +1012,10 @@ sub splitImageX
             # Store the tile
             statusMessage(" -> $PngFileName",0,10);
             WriteImage($SubImage,$PngFullFileName);
-
-#-----------------------------------------------------------------------------
-# Run pngcrush on each split tile, then delete the temporary cut file
-#-----------------------------------------------------------------------------
-            my $Redirect = ">/dev/null";
-            my $Cmd;
-            if ($^O eq "MSWin32")
-            {
-                $Redirect = "";
-            }
-
-            if ($Config->get($layer."_Transparent"))
-            {
-                rename($PngFullFileName, $Filename2);
-            }
-            elsif ($Config->get("PngQuantizer") eq "pngnq") {
-                if ($EnvironmentInfo{"pngnq"})
-                {
-                    $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
-                                   $Config->get("Niceness"),
-                                   $Config->get("pngnq"),
-                                   $Filename2_suffix,
-                                   $PngFullFileName,
-                                   $Redirect);
-
-                    statusMessage("ColorQuantizing $PngFileName",0,6);
-                    if(runCommand($Cmd,$PID))
-                    {
-                        unlink($PngFullFileName);
-                    }
-                    else
-                    {
-                        statusMessage("ColorQuantizing $PngFileName with ".$Config->get("PngQuantizer")." failed",1,0);
-                        rename($PngFullFileName, $Filename2);
-                    }
-                }
-                else
-                {
-                    statusMessage("ColorQuantizing $PngFileName with \"".$Config->get("PngQuantizer")."\" failed, pngnq not installed?",0,6);
-                    rename($PngFullFileName, $Filename2);
-                }
-            } else {
-                rename($PngFullFileName, $Filename2);
-            }
-
-            if ($Config->get("PngOptimizer") eq "pngcrush")
-            {
-                $Cmd = sprintf("%s \"%s\" -q %s %s %s",
-                  $Config->get("Niceness"),
-                  $Config->get("Pngcrush"),
-                  $Filename2,
-                  $PngFullFileName,
-                  $Redirect);
-            }
-            elsif ($Config->get("PngOptimizer") eq "optipng")
-            {
-                $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
-                  $Config->get("Niceness"),
-                  $Config->get("Optipng"),
-                  $Filename2,
-                  $PngFullFileName,
-                  $Redirect);
-            }
-            else
-            {
-                cleanUpAndDie("SplitImageX:PngOptimizer not configured, exiting (should not happen, update from svn, and check config file)","EXIT",4);
-            }
-            statusMessage("Optimizing $PngFileName",0,6);
-            if(runCommand($Cmd,$PID))
-            {
-                unlink($Filename2);
-            }
-            else
-            {
-                statusMessage("Optimizing $PngFileName with ".$Config->get("PngOptimizer")." failed",1,0);
-                rename($Filename2, $PngFullFileName);
-            }
         }
-        # Assign the job time to this file
-        utime $JobTime, $JobTime, $PngFullFileName;
     }
     undef $SubImage;
     undef $Image;
-    # tell the rendering queue wether the tiles are empty or not
     return $allempty;
 }
 

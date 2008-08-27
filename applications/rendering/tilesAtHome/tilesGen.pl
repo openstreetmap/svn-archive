@@ -282,20 +282,23 @@ elsif ($Mode eq "upload")
 {   # Upload mode
     compressAndUpload();
 }
+
 elsif ($Mode eq "upload_loop")
 {
-    my $startTime = time();
-    my $elapsedTime;
     while(1) 
     {
-        ## before we start (another) round of uploads we first check if something bad happened in the past.
+        my $startTime = time();
+        my $elapsedTime;
+
+        # before we start (another) round of uploads we first check 
+        # if something bad happened in the past.
         checkFaults();
 
-        my $sleepdelay = 1;
         # look for stopfile and exit if found
         if (-e "stopfile.txt")
         {
-            cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
+            statusMessage("Stopfile found, exiting",1,0);
+            exit;
         }
 
         # Add a basic auto-updating mechanism. 
@@ -307,31 +310,30 @@ elsif ($Mode eq "upload_loop")
 
         reExecIfRequired(-1); ## check for new version of tilesGen.pl and reExec if true
 
-        if (countZips() > 0)
-        {
-            my $upload_result = upload(); # only uploading ZIP files here
+        # uploading ZIP files here, returns 0 if nothing to do and -1 on error
+        my $files_uploaded = upload();
             
-            if ($upload_result)  # we got an error in the upload process
-            {
-                addFault("upload",1); # we only track errors that occur multple times in a row
-            }
-            else
-            {
-                resetFault("upload"); #reset fault counter for uploads if once without error
-                statusMessage("upload finished",1,0);
-                $progressJobs++;
-            }
-            $startTime = time();
+        if ($files_uploaded == -1)  # we got an error in the upload process
+        {   # increase fault counter
+            addFault("upload",1);
+        }
+        elsif ($files_uploaded == 0) # no error, but no files uploaded
+        {
+            #TODO use talkInSleep here?
+            statusMessage("waiting 30 sec for new ZIP files to upload",0,0);
+            sleep(30);
         }
         else
-        {
-            $currentSubTask="uploadloop";
+        {   #reset fault counter for uploads if once without error
+            resetFault("upload");
             $elapsedTime = time() - $startTime;
-            statusMessage(sprintf("waiting for new ZIP files to upload   %d:%02d", $elapsedTime/60, $elapsedTime%60),0,0);
-            sleep(30); # no reason to do this *every second* since we won't fall into this case as long as there are zips to upload anyway.
+            statusMessage(sprintf("upload finished in  %d:%02d", 
+              $elapsedTime/60, $elapsedTime%60),1,0);
+            $progressJobs++;
         }
-    }
+    } #end of infinite while loop
 }
+
 elsif ($Mode eq "version") 
 {
     exit(1);
@@ -396,20 +398,6 @@ else {
     print "\nGNU General Public license, version 2 or later\n$Bar\n";
 }
 
-sub countZips
-{
-    my $Config = TahConf->getConfig();
-    my $ZipCount = 0;
-    if (opendir(my $dp, File::Spec->join($Config->get("WorkingDirectory"),"uploadable")))
-    {
-        while(my $File = readdir($dp))
-        {
-            $ZipCount++ if ($File =~ /\.zip$/);
-        }
-        closedir($dp);
-    }
-    return $ZipCount;
-}
 
 #-----------------------------------------------------------------------------
 # forks to a new process when it makes sense,
@@ -551,7 +539,7 @@ sub UpdateClient #
 
     chomp $svn_status;
 
-    if ($svn_status eq '')
+    if (1 || $svn_status eq '')
     {
         my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);

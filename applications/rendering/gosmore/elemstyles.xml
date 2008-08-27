@@ -310,7 +310,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>500000</scale_max>
-        <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+        <routing goods="110" hgv="110" motorcar="110" psv="110" oneway="1"/>
 	</rule>
 
 	<rule>
@@ -319,7 +319,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+        <routing goods="110" hgv="110" motorcar="110" psv="110" oneway="1"/>
 	</rule>
 
 	<rule>
@@ -504,7 +504,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<condition k="highway" v="stop" />
 		<icon annotate="true" src="vehicle/restrictions/stop.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -589,7 +589,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<condition k="highway" v="ford" />
 		<icon annotate="true" src="vehicle/ford.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2782,6 +2782,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
+        <routing bicycle="3" foot="3" goods="3" hgv="3" motorcar="3" psv="3"/>
 	</rule>
 
 	<rule>
@@ -3520,6 +3521,24 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>3000</scale_max>
+	</rule>
+	<rule>
+		<condition k="contour_ext" v="elevation_major"/>
+		<line width="1" realwidth="1" colour="#a0a060"/>
+        <scale_min>1</scale_min>
+        <scale_max>300000</scale_max>
+	</rule>
+	<rule>
+		<condition k="contour_ext" v="elevation_minor"/>
+		<line width="1" realwidth="1" colour="#a0a060"/>
+        <scale_min>1</scale_min>
+        <scale_max>150000</scale_max>
+	</rule>
+	<rule>
+		<condition k="contour" v="elevation"/>
+		<line width="1" realwidth="1" colour="#a0a060"/>
+        <scale_min>1</scale_min>
+        <scale_max>30000</scale_max>
 	</rule>
 
 </rules>

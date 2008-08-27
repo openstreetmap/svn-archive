@@ -16,6 +16,10 @@ def show_user(request):
     u = TahUser.objects.filter(user__is_active=True).order_by(sortorder) # Get the first user in the system
     return render_to_response("user_show.html",{'user':u});
 
+
+def show_single_user_byname(request, searchstring, by):
+    return show_single_user(request, searchstring, by);
+
 def show_single_user(request, searchstring, by):
     """ display detail page on a single user. 'by' can be 'pk' (primary key)
         and 'username' and specifies whether we

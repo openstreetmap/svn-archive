@@ -64,6 +64,9 @@ use base qw(SVG::Rasterize::Error);
 package SVG::Rasterize::Engine::Error::Prerequisite;
 use base qw(SVG::Rasterize::Engine::Error);
 
+package SVG::Rasterize::Engine::Error::Runtime;
+use base qw(SVG::Rasterize::Engine::Error);
+
 1;
 
 __END__

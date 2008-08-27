@@ -70,7 +70,7 @@ sub uploadAllZips
     my $self = shift;
     my $Config = $self->{Config};
     my $uploaded = 0; # num handled files
-
+    $::progressPercent = 0;
 
     if ($Config->get("LocalSlippymap"))
     {

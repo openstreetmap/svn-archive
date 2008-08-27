@@ -108,8 +108,9 @@ sub compressAll
                       || flock(ZIPDIR, LOCK_EX|LOCK_NB);
         if ($flocked)
         {   # got exclusive lock, now compress
-            ::statusMessage("optimizing PNG files",0,3);
-            $self->optimizePNGs($FullTilesetPath, $layer);
+#disable optimizing tiles in the compressing phase for now
+#            ::statusMessage("optimizing PNG files",0,3);
+#            $self->optimizePNGs($FullTilesetPath, $layer);
             ::statusMessage("compressing $File",0,3);
             $self->compress($FullTilesetPath, $layer);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!

@@ -14,7 +14,7 @@
 WorkingDirectory=/tmp/
 Inkscape=inkscape
 XmlStarlet=xmlstarlet
-Niceness=nice -n10
+Niceness=10
 Pngcrush=pngcrush
 Optipng=optipng
 Subversion=svn

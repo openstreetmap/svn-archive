@@ -122,12 +122,9 @@ function map( $input ) {
 	} else {
 		//HTML for the openstreetmap image and link:
 		$output  = "";
-		$output .= "<div class=\"map\">";
-		$output .= "<a href=\"http://www.openstreetmap.org/?lat=".$lat."&lon=".$lon."&zoom=".$zoom."\" title=\"See this map on OpenStreetMap.org\" style=\"text-decoration:none\">";
+		$output .= "<a href=\"http://www.openstreetmap.org/?lat=".$lat."&lon=".$lon."&zoom=".$zoom."\" title=\"See this map on OpenStreetMap.org\">";
 		$output .= "<img src=\"".$wgMapOfServiceUrl."lat=".$lat."&long=".$lon."&z=".$zoom."&w=".$width."&h=".$height."&format=".$format."\" width=\"". $width."\" height=\"".$height."\" border=\"0\"><br/>";
-		$output .= "<span style=\"font-size:60%; background-color:white; position:relative; top:-15px; /*width:150px; margin-right:-150px;*/\">OpenStreetMap - CC-BY-SA-2.0</span>";
-		$output .= "</a>\n";
-		$output .= "</div>";
+		$output .= "</a>";
 	}
 	return $output;
 }

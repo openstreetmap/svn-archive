@@ -34,10 +34,12 @@ use lib::Tileset;
 use Request;
 use Upload;
 use Compress;
+use SVG::Rasterize;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
+use Error qw(:try);
 
 #---------------------------------
 
@@ -140,6 +142,21 @@ if ($RenderMode) {
     $BlackTileImage->fill(127,127,$BlackTileBackground);
 }
 
+# Setup SVG::Rasterize
+if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
+    $SVG::Rasterize::object = SVG::Rasterize->new();
+    if( $Config->get("Rasterizer") ){
+        $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
+
+        if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+            $SVG::Rasterize::object->engine()->heapsize = $Config->get("BatikJVMSize");
+            $SVG::Rasterize::object->engine()->classpath = $Config->get("BatikClasspath");
+            $SVG::Rasterize::object->engine()->host = 'localhost';
+            $SVG::Rasterize::object->engine()->port = $Config->get("BatikPort");
+        }
+    }
+}
+
 # We need to keep parent PID so that child get the correct files after fork()
 my $parent_pid = $PID;
 my $upload_pid = -1;
@@ -216,10 +233,8 @@ elsif ($Mode eq "loop")
     # ----------------------------------
 
     # Start batik agent if it's not runnig
-    if ($Config->get("Batik") == "3" && !getBatikStatus())
-    {
-        startBatikAgent();
-        $StartedBatikAgent = 1;
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+        $StartedBatikAgent = 1 if $SVG::Rasterize::object->engine()->start_agent();
     }
 
     # this is the actual processing loop
@@ -373,12 +388,12 @@ elsif ($Mode eq "")
 #---------------------------------
 elsif ($Mode eq "startBatik")
 {
-    startBatikAgent();
+    $SVG::Rasterize::object->engine()->start_agent();
 }
 #---------------------------------
 elsif ($Mode eq "stopBatik")
 {
-    stopBatikAgent();
+    $SVG::Rasterize::object->engine()->stop_agent();
 }
 #---------------------------------
 else {
@@ -718,7 +733,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
 sub svg2png
 {
-    my($jobdir, $layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
+    my($jobdir, $layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $left, $bottom, $right, $top, $ImageHeight) = @_;
     my $Config = TahConf->getConfig();
     
     my $TempFile;
@@ -727,96 +742,40 @@ sub svg2png
     (undef, $TempFile) = tempfile("part-XXXXXX", DIR => $jobdir, SUFFIX => ".png", OPEN => 0);
     (undef, $stdOut) = tempfile("XXXXXX", DIR => $jobdir, SUFFIX => ".stdout", OPEN => 0);
     
-    my $Cmd = "";
-    
-    my $Left = $X1;
-    my $Top = $ImageHeight - $Y2;
-    my $Width = $X2 - $X1;
-    my $Height = $Y2 - $Y1;
-    
     my $svgFile = File::Spec->join($jobdir,"output-z$Zoom.svg");
 
-    if ($Config->get("Batik") == "1") # batik as jar
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("BatikJVMSize"),
-        $Config->get("BatikPath"),
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $TempFile,
-        $svgFile,
-        $stdOut);
-    }
-    elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
-    {
-        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("BatikPath"),
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $TempFile,
-        $svgFile,
-        $stdOut);
-    }
-    elsif ($Config->get("Batik") == "3") # agent
-    {
-        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $TempFile,
-        $svgFile,
-        $stdOut);
-    }
-    else
-    {
-        my $locale = $Config->get("InkscapeLocale");
-        my $oldLocale;
-        if ($locale ne "0") {
-                $oldLocale=setlocale(LC_ALL, $locale);
-        } 
+    # Make a variable that points to the renderer to save lots of typing...
+    my $rasterize = $SVG::Rasterize::object;
+    my $engine = $rasterize->engine();
 
-        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("Inkscape"),
-        $SizeX,
-        $SizeY,
-        $X1,$Y1,$X2,$Y2,
-        $TempFile,
-        $svgFile,
-        $stdOut);
-
-        if ($locale ne "0") {
-                setlocale(LC_ALL, $oldLocale);
-        } 
-    }
-    
-    # stop rendering the current job when inkscape fails
     statusMessage("Rendering",0,3);
-    print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
 
+    try {
+        $rasterize->convert(
+            infile => $svgFile,
+            outfile => $TempFile,
+            width => $SizeX,
+            height => $SizeY,
+            left => $left,
+            right => $right,
+            top => $top,
+            bottom => $bottom
+            );
+    } catch SVG::Rasterize::Engine::Error::Prerequisite with {
+        # FIXME: handle this in some way, it means we can't find the actual rasterizer engine thingy
+    } catch SVG::Rasterize::Engine::Error::Runtime with {
+        my $e = shift;
+        statusMessage("Rasterizing failed with runtime exception: $e",1,0);
+        print "Rasterize engine STDOUT:".$e->{stdout} if $Config->get("Debug") && $e->{stdout};
+        print "Rasterize engine STDERR:".$e->{stderr} if $Config->get("Debug") && $e->{stderr};
 
-    my $commandResult = $Config->get("Batik") == "3"?sendCommandToBatik($Cmd) eq "OK":runCommand($Cmd,$PID);
-    if (!$commandResult or ! -e $TempFile )
-    {
-        statusMessage("$Cmd failed",1,0);
-        if ($Config->get("Batik") == "3" && !getBatikStatus())
-        {
-            statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
-        }
-        my $reason = "BadSVG (svg2png)";
         addFault("inkscape",1);
         $req->is_unrenderable(1);
-        return (0, $reason);
-    }
+        return(0, 'BadSVG (svg2png)');
+    }; #FIXME: catch SVG::Rasterize::Engine::Error::NoOutput
+
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
-    
+
     my $ReturnValue = splitImageX($layer, $req, $Zoom, $Ytile, $TempFile); # returns true if tiles were all empty
     
     return (1,$ReturnValue); #return true if empty
@@ -1083,95 +1042,6 @@ sub reExec
         "idleSeconds=" . getIdle(1), 
         "idleFor=" . getIdle(0) or die("could not reExec");
 }
-
-
-sub startBatikAgent
-{
-    my $Config = TahConf->getConfig();
-    if (getBatikStatus()) {
-        statusMessage("BatikAgent is already running\n",0,0);
-        return;
-    }
-
-    statusMessage("Starting BatikAgent\n",0,0);
-    my $Cmd;
-    if ($^O eq "linux" || $^O eq "cygwin") 
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
-          $Config->get("i18n") ? "LC_ALL=C " : "",
-          $Config->get("Niceness"),
-          $Config->get("BatikJVMSize"),
-          $Config->get("BatikClasspath"),
-          $Config->get("BatikPort")
-        );
-    }
-    elsif ($^O eq "MSWin32")
-    {
-        $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d", 
-           "start /B /LOW",
-           $Config->get("BatikJVMSize"),
-           $Config->get("BatikClasspath"),
-           $Config->get("BatikPort")
-         );
-    }
-    else ## just try the linux variant and hope for the best
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
-          $Config->get("i18n") ? "LC_ALL=C " : "",
-          $Config->get("Niceness"),
-          $Config->get("BatikJVMSize"),
-          $Config->get("BatikClasspath"),
-          $Config->get("BatikPort") 
-         );
-        statusMessage("Could not determine Operating System ".$^O.", please report to tilesathome mailing list",1,0);
-    }
-    
-    system($Cmd);
-
-    for (my $i = 0; $i < 10; $i++) {
-        sleep(1);
-        if (getBatikStatus()) {
-            statusMessage("BatikAgent started succesfully",0,0);
-            return;
-        }
-    }
-    print STDERR "Unable to start BatikAgent with this command:\n";
-    print STDERR "$Cmd\n";
-}
-
-sub stopBatikAgent
-{
-    if (!getBatikStatus()) {
-        statusMessage("BatikAgent is not running\n",0,0);
-        return;
-    }
-
-    sendCommandToBatik("stop\n\n");
-    statusMessage("Send stop command to BatikAgent\n",0,0);
-}
-
-sub sendCommandToBatik
-{
-    (my $command) = @_;
-    my $Config = TahConf->getConfig();
-
-    my $sock = new IO::Socket::INET( PeerAddr => 'localhost', PeerPort => $Config->get("BatikPort"), Proto => 'tcp');
-    return "ERROR" unless $sock;    
-
-    print $sock $command;
-    flush $sock;
-    my $reply = <$sock>;
-    $reply =~ s/\n//;
-    close($sock);
-
-    return $reply;
-}
-
-sub getBatikStatus
-{
-    return sendCommandToBatik("status\n\n") eq "OK";
-}
-
 
 #------------------------------------------------------------
 # check for faults and die when too many have occured

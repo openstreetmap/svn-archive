@@ -43,7 +43,6 @@ sub new
          DIR      => $Config->get('WorkingDirectory'), 
 	 CLEANUP  => $delTmpDir,
          );
-    print STDERR "\nCreated job directory  ",$self->{JobDir},"\n"; #TODO remove this debug print
 
     bless $self, $class;
     return $self;

@@ -179,6 +179,70 @@ sub CheckBasicConfig
     }
 
     #------
+    # check a correct pngoptimizer is set
+    if ( ! (($self->get("PngOptimizer") eq "pngcrush") or ($self->get("PngOptimizer") eq "optipng")))
+    {
+        die("! Can't find valid PngOptimizer setting, check config");
+    }
+    print "- going to use ".$self->get("PngOptimizer")."\n";
+    #------
+    # PNGCrush version
+    $cmd = $self->get("Pngcrush");
+    my $PngcrushV = `\"$cmd\" -version`;
+    $EnvironmentInfo{Pngcrush}=$PngcrushV;
+
+    if (($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($self->get("PngOptimizer") eq "pngcrush"))
+    {
+        print "! Can't find pngcrush (using \"".$self->get("Pngcrush")."\")\n";
+    }
+    else
+    {
+        print "- Pngcrush version $1\n";
+    }
+    #------
+    # Optipng version
+    $cmd = $self->get("Optipng");
+    my $OptipngV = `\"$cmd\" -v`;
+    $EnvironmentInfo{Optipng}=$OptipngV;
+
+    if ( $self->get("PngOptimizer") eq "optipng" ) 
+    {
+        if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) 
+        {
+            die("! Can't find OptiPNG (using \"".$self->get("Optipng")."\")\n");
+        }
+        else
+        {
+            print "- OptiPNG version $1\n";
+        }
+    }
+
+    if ( $self->get("PngQuantizer") eq "pngnq" )
+    {
+        $cmd = $self->get("pngnq");
+        my $PngnqV=`\"$cmd\" -V 2>&1`;
+        if ($PngnqV !~ /pngnq.+(\d+(\.\d+)+)/)
+        {
+            print "! Can't find pngnq (using \"".$self->get("pngnq")."\")\n";
+            print "! disabling pngnq\n";
+	    $self->set("PngQuantizer", undef);
+        }
+        else
+        {
+            my $minVersion = "0.5";
+            if ($self->CompareVersions($1, $minVersion) == -1) {
+                print "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
+                print "! disabling pngnq\n";
+                $self->set("PngQuantizer", undef);
+            } else {
+                print "- pngnq version $1\n";
+            }
+        }
+    } else {
+        print "! no valid PngQuantizer specified\n";
+    }
+    #------
+
     return %EnvironmentInfo;
 
 }
@@ -262,68 +326,6 @@ sub CheckConfig
     else
     {
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
-    }
-
-    # check a correct pngoptimizer is set
-    if ( ! (($self->get("PngOptimizer") eq "pngcrush") or ($self->get("PngOptimizer") eq "optipng")))
-    {
-        die("! Can't find valid PngOptimizer setting, check config");
-    }
-    print "- going to use ".$self->get("PngOptimizer")."\n";
-    
-    # PNGCrush version
-    $cmd = $self->get("Pngcrush");
-    my $PngcrushV = `\"$cmd\" -version`;
-    $EnvironmentInfo{Pngcrush}=$PngcrushV;
-
-    if (($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($self->get("PngOptimizer") eq "pngcrush"))
-    {
-        print "! Can't find pngcrush (using \"".$self->get("Pngcrush")."\")\n";
-    }
-    else
-    {
-        print "- Pngcrush version $1\n";
-    }
-
-    # Optipng version
-    $cmd = $self->get("Optipng");
-    my $OptipngV = `\"$cmd\" -v`;
-    $EnvironmentInfo{Optipng}=$OptipngV;
-
-    if ( $self->get("PngOptimizer") eq "optipng" ) 
-    {
-        if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) 
-        {
-            die("! Can't find OptiPNG (using \"".$self->get("Optipng")."\")\n");
-        }
-        else
-        {
-            print "- OptiPNG version $1\n";
-        }
-    }
-
-    if ( $self->get("PngQuantizer") eq "pngnq" )
-    {
-        $cmd = $self->get("pngnq");
-        my $PngnqV=`\"$cmd\" -V 2>&1`;
-        if ($PngnqV !~ /pngnq.+(\d+(\.\d+)+)/)
-        {
-            print "! Can't find pngnq (using \"".$self->get("pngnq")."\")\n";
-        }
-        else
-        {
-            my $minVersion = "0.5";
-            if ($self->CompareVersions($1, $minVersion) == -1) {
-                print "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
-                print "! disabling pngnq\n";
-                $self->set("PngQuantizer", "");
-            } else {
-                $EnvironmentInfo{"pngnq"}=$PngnqV;
-                print "- pngnq version $1\n";
-            }
-        }
-    } else {
-        print "! no valid PngQuantizer specified\n";
     }
 
     #-------------------------------------------------------------------

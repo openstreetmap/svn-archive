@@ -158,8 +158,10 @@ sub generate
         {   # Forking to render zoom levels in parallel
             if (!$self->forkedRender($layer, $maxzoom, $layerDataFile))
             {
-                    ::addFault("renderer",1);
-                    return (0, "Forked render failure");
+                 my $reason = "Forked render failure";
+                 ::addFault("renderer",1);
+                 ::statusMessage($reason, 1, 0);
+                 return (0, $reason);
 	    }
         }
         else
@@ -168,8 +170,10 @@ sub generate
             {
                 if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
                 {
+                    my $reason = "Render failure";
                     ::addFault("renderer",1);
-                    return (0, "Render failure");
+                    ::statusMessage($reason, 1, 0);
+                    return (0, $reason);
                 }
             }
         }

@@ -641,7 +641,7 @@ sub RenderTile
     my $YB = $YA + 1;
 
     #temporarily disable inkscape forking. it leads to missing .png tiles when splitting files
-    if (0 || ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
+    if (0 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
     {
         my $pid = fork();
         if (not defined $pid) 

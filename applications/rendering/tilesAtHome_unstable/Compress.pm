@@ -1,6 +1,6 @@
 package Compress;
 
-#!/usr/bin/perl
+use warnings;
 use strict;
 use File::Copy;
 use File::Path;

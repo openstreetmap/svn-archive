@@ -187,14 +187,14 @@ sub generate
                                                        "output-z$maxzoom.svg"));
 
         # Render it as loads of recursive tiles
-        my ($success, $emptyOrErrorReason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH);
 
         #----------
         if (!$success)
         {   # Failed to render tiles, $empty contains error reason
             ::addFault("renderer",1);
-            ::statusMessage($emptyOrErrorReason, 1, 0);
-            return (0, $emptyOrErrorReason);
+            ::statusMessage($reason, 1, 0);
+            return (0, $reason);
         }
         else
         {   # successfully rendered, so reset renderer faults
@@ -580,21 +580,19 @@ sub GenerateSVG
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #   $ImageHeight - Height of the entire SVG in SVG units
-#   $empty - put forward "empty" tilestripe information.
-#   returns: (success, allEmpty) (on failure allEmpty is a string describing the failure)
+#   returns: (success, allEmpty, reason)
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
     my $self = shift;
-    my ($layer, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
+    my ($layer, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight) = @_;
+    my $SkipEmpty = 0;
     my $Config = TahConf->getConfig();
+    my $maxzoom = $Config->get($layer."_MaxZoom");
     my $req = $self->{req};
 
     return (1,1) if($Zoom > $Config->get($layer."_MaxZoom"));
     
-    # no need to render subtiles if empty
-    return (1,$SkipEmpty) if($SkipEmpty == 1);
-
     # Render it to PNG
     printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
     my $Width = 256 * (2 ** ($Zoom - $req->Z));  # Pixel size of tiles  
@@ -606,20 +604,21 @@ sub RenderTile
     my ($success,$empty) = ::svg2png($self->{JobDir},$layer, $req, $Ytile, $Zoom, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
     if (!$success)
     {  # svg2png failed, so empty contains a string with the error reason
-       return (0, $empty);
+       return (0, 0, $empty);
     }
+
+    # Should we skip going further up the zoom level?
     if ($empty and !$Config->get($layer."_RenderFullTileset")) 
     {
         $SkipEmpty=1;
     }
 
-    # Get progress percentage 
+    # Get progress of tiles
     if($SkipEmpty == 1) 
-    {
-        # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
-        for (my $j = $Config->get($layer."_MaxZoom"); $j >= $Zoom ; $j--)
+    {   # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
+        for (my $j = $maxzoom; $j >= $Zoom ; $j--)
         {
-            $::progress += 2 ** ($Config->get($layer."_MaxZoom")-$j);
+            $::progress += 2 ** $maxzoom-$j;
         }
     }
     else
@@ -627,21 +626,14 @@ sub RenderTile
         $::progress += 1;
     }
 
-    if (($::progressPercent=$::progress*100/(2**($Config->get($layer."_MaxZoom")-$req->Z+1)-1)) == 100)
+    # calculate progress percentage
+    $::progressPercent = 100 * $::progress / (2**($maxzoom-$req->Z+1)-1);
+    if ($::progressPercent == 100)
     {
         ::statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
     }
-    else
-    {
-        if ($Config->get("Verbose") >= 10)
-        {
-            printf STDERR "Job No. %d %1.1f %% done.\n",$::progressJobs, $::progressPercent;
-        }
-        else
-        {
-            ::statusMessage("Working",0,3);
-        }
-    }
+    (printf STDERR "Job No. %d %1.1f %% done.\n",$::progressJobs, $::progressPercent)
+                    if ($Config->get("Verbose") >= 10);
     
     # Sub-tiles
     my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
@@ -656,7 +648,7 @@ sub RenderTile
     my $YB = $YA + 1;
 
     # temporarily disable forking in inkscape until we get fork to work right.
-    if (0 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
+    if ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork")))
     {
         my $pid = fork();
         if (not defined $pid) 
@@ -665,25 +657,20 @@ sub RenderTile
         }
         elsif ($pid == 0) 
         {
-            # we are the child process and can't talk to our parent other than through exit codes
-            ($success,$empty) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-            if ($success)
-            {
-                exit(0);
-            }
-            else
-            {
-                exit(1);
-            }
+            # we are the child process
+            $self->{childThread}=1;
+            my ($success, $empty, $reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+            # we can't talk to our parent other than through exit codes.
+            exit($success);
         }
         else
         {
-            ($success,$empty) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+            my ($parent_success,$empty, $reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
             waitpid($pid,0);
-            my $ChildExitValue = $?; # we don't want the details, only if it exited normally or not.
-            if ($ChildExitValue or !$success)
+            my $ChildExitValue = ($? >> 8);
+            if (! ($ChildExitValue && $parent_success))
             {
-                return (0, "Forked inkscape failed");
+                return (0, 0, "Forked inkscape failed");
             }
         }
         if ($Zoom == $req->Z)
@@ -694,13 +681,16 @@ sub RenderTile
     }
     else
     {
-        my ($success,$emptyOrReason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-        return (0, $emptyOrReason) if (!$success);
-        ($success,$emptyOrReason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
-        return (0, $emptyOrReason) if (!$success);
+        if (!$SkipEmpty)
+        {
+            my ($success,$empty,$reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+            return (0, $empty, $reason) if (!$success);
+            ($success,$empty,$reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+            return (0, $empty, $reason) if (!$success);
+        }
     }
 
-    return (1,$SkipEmpty); ## main call wants to know wether the entire tileset was empty so we return 1 for success and 1 if the tile was empty
+    return (1, $SkipEmpty, "");
 }
 
 

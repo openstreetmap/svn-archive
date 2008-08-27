@@ -910,6 +910,7 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
 
   if (objectAddRow >= 0) {
     SelectObject (mygc, sysFont);
+    SetBkMode (mygc, TRANSPARENT);
     SelectObject (mygc, GetStockObject (BLACK_PEN));
     for (int y = 0, i = objectAddRow; y < draw->allocation.height;
               y += ADD_HEIGHT) {
@@ -1075,6 +1076,7 @@ gint Expose (void)
             
             #ifdef _WIN32_WCE
             SelectObject (mygc, sysFont);
+	    SetBkMode (mygc, TRANSPARENT);
             const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
             UTF16 *tStart = (UTF16 *) wcTmp;
             if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
@@ -1186,6 +1188,7 @@ gint Expose (void)
           
           HFONT customFont = CreateFontIndirect (&logFont);
           HGDIOBJ oldf = SelectObject (mygc, customFont);
+	  SetBkMode (mygc, TRANSPARENT);
           const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
           UTF16 *tStart = (UTF16 *) wcTmp;
           if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
@@ -1262,6 +1265,7 @@ gint Expose (void)
         clip.width - 7 * strlen (distStr), 10, distStr);
       #else
       SelectObject (mygc, sysFont);
+      SetBkMode (mygc, TRANSPARENT);
       ExtTextOut (mygc, clip.width - 7 * wcslen (distStr), 0, 0, NULL,
         distStr, wcslen (distStr), NULL);
       #endif
@@ -1318,6 +1322,7 @@ gint Expose (void)
     cairo_show_text (cai, optStr);
     #else
     SelectObject (mygc, sysFont);
+    SetBkMode (mygc, TRANSPARENT);
     const unsigned char *sStart = (const unsigned char*) optStr;
     UTF16 *tStart = (UTF16 *) wcTmp;
     if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
@@ -1347,6 +1352,7 @@ gint Expose (void)
   r.bottom = clip.height;
   FillRect (mygc, &r, (HBRUSH) GetStockObject(LTGRAY_BRUSH));
   SelectObject (mygc, sysFont);
+  SetBkMode (mygc, TRANSPARENT);
   while (--i >= 0) {
     ExtTextOut (mygc, clip.width - ButtonSize * 10 - 5, clip.height - 5 -
         ButtonSize * (20 * i + 10), 0, NULL, i == 0 ? TEXT ("O") :
@@ -2424,11 +2430,11 @@ BOOL CALLBACK DlgSearchProc (
 	WPARAM wParam, 
 	LPARAM lParam)
 {
+    UTF16 appendTmp[50];
     switch (Msg) {
     case WM_COMMAND:
       if (LOWORD (wParam) == IDC_EDIT1) {
         HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
-        UTF16 appendTmp[50];
         char editStr[50];
 
         memset (appendTmp, 0, sizeof (appendTmp));
@@ -2642,6 +2648,16 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
   COMMTIMEOUTS commTiming;
   char rx[300];
 
+  // Attempt to reconnect to NMEA device every 1 second until connected
+  wchar_t portname[6];
+  wsprintf (portname, TEXT ("COM%d:"), CommPort);
+  while (!guiDone && 
+	 (port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
+			   NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
+    Sleep(1000);
+  }
+	  
+  if (port != INVALID_HANDLE_VALUE) {
   //ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
 //  Sleep (1000);
   /* It seems as the CreateFile before returns the action has been completed, causing
@@ -2704,46 +2720,47 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
     if (hand) GPSCloseDevice (hand);
   } */
 
-  #if 0
-  PurgeComm (port, PURGE_RXCLEAR); /* Baud rate wouldn't change without this ! */
-  DWORD nBytes2 = 0;
-  COMSTAT cStat;
-  ClearCommError (port, &nBytes, &cStat);
-  rx2 = (char*) malloc (600);
-  ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
+#if 0
+    PurgeComm (port, PURGE_RXCLEAR); /* Baud rate wouldn't change without this ! */
+    DWORD nBytes2 = 0;
+    COMSTAT cStat;
+    ClearCommError (port, &nBytes, &cStat);
+    rx2 = (char*) malloc (600);
+    ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
     if(!GetCommState(port, &portState)) {
       MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
-        MB_APPLMODAL|MB_OK);
+		  MB_APPLMODAL|MB_OK);
       return(1);
     }
-  ReadFile(port, rx2, 600, &nBytes2, NULL);
-  #endif
-  //char logName[80];
-  //sprintf (logName, "%slog.nmea", docPrefix);
-  //FILE *log = fopen (logName, "wb");
-  while (!guiDone) {
-    //nBytes = sizeof (rx) - got;
-    //got = 0;
-    if (!ReadFile(port, rx + got, sizeof(rx) - got, &nBytes, NULL) ||
-        nBytes <= 0) {
-      //fprintf (log, "%d -\n", nBytes);
-      continue;
+    ReadFile(port, rx2, 600, &nBytes2, NULL);
+#endif
+    //char logName[80];
+    //sprintf (logName, "%slog.nmea", docPrefix);
+    //FILE *log = fopen (logName, "wb");
+    while (!guiDone) {
+      //nBytes = sizeof (rx) - got;
+      //got = 0;
+      if (!ReadFile(port, rx + got, sizeof(rx) - got, &nBytes, NULL) ||
+	  nBytes <= 0) {
+	//fprintf (log, "%d -\n", nBytes);
+	continue;
+      }
+      //fprintf (log, "%d\n", nBytes);
+      got += nBytes;
+      //if (log) fwrite (rx, nBytes, 1, log);
+      
+      //wndStr[0]='\0';
+      //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
+      //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
+      
+      if (ProcessNmea (rx, (unsigned*)&got)) {
+	PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
+      }
     }
-    //fprintf (log, "%d\n", nBytes);
-    got += nBytes;
-    //if (log) fwrite (rx, nBytes, 1, log);
-
-    //wndStr[0]='\0';
-    //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
-    //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
-    
-    if (ProcessNmea (rx, (unsigned*)&got)) {
-      PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
-    }
+    guiDone = FALSE;
+    //if (log) fclose (log);
+    CloseHandle (port);
   }
-  guiDone = FALSE;
-  //if (log) fclose (log);
-  CloseHandle (port);
   return 0;
 }
 
@@ -2858,14 +2875,12 @@ int WINAPI WinMain(
     NULL, (DLGPROC)DlgSearchProc); // Just in case user goes modeless
 
   DWORD threadId;
-  wchar_t portname[6];
-  wsprintf (portname, TEXT ("COM%d:"), CommPort);
   if (CommPort == 0) {}
-  else if((port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
-          NULL, OPEN_EXISTING, 0, 0)) != INVALID_HANDLE_VALUE) {
+  else /* if((port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
+          NULL, OPEN_EXISTING, 0, 0)) != INVALID_HANDLE_VALUE) */ {
     CreateThread (NULL, 0, NmeaReader, NULL, 0, &threadId);
-  }
-  else MessageBox (NULL, TEXT ("No Port"), TEXT (""), MB_APPLMODAL|MB_OK);
+    }
+  /*   else MessageBox (NULL, TEXT ("No Port"), TEXT (""), MB_APPLMODAL|MB_OK); */
 
   MSG    msg;
   while (GetMessage (&msg, NULL, 0, 0)) {

@@ -709,7 +709,7 @@ sub cleanup
     my $Config = $self->{Config};
 
     # remove temporary job directory if 'Debug' is not set
-    print STDERR "removing job dir",$self->{JobDir},"\n\n" unless $Config->get('Debug');
+    print STDERR "removing job dir",$self->{JobDir},"\n\n" unless !$Config->get('Debug');
     rmtree $self->{JobDir} unless $Config->get('Debug');
 }
 

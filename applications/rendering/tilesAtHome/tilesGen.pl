@@ -22,14 +22,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
-#---------------------------------
 use strict;
 use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);
 use File::Spec;
 use IO::Socket;
-use FindBin qw($Bin);
 use tahlib;
 use lib::TahConf;
 use lib::Tileset;

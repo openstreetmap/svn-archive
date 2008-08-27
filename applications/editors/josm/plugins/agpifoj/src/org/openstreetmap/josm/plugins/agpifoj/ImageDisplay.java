@@ -479,8 +479,9 @@ public class ImageDisplay extends JComponent {
                 int pos = osdText.indexOf("\n");
                 int x = 3;
                 int y = 3;
+                String line;
                 while (pos > 0) {
-                    String line = osdText.substring(lastPos, pos);
+                    line = osdText.substring(lastPos, pos);
                     Rectangle2D lineSize = metrics.getStringBounds(line, g);
                     g.setColor(bkground);
                     g.fillRect(x, y, (int) lineSize.getWidth(), (int) lineSize.getHeight());
@@ -490,14 +491,13 @@ public class ImageDisplay extends JComponent {
                     lastPos = pos + 1;
                     pos = osdText.indexOf("\n", lastPos);
                 }
-                if (lastPos > 0) {
-                    String line = osdText.substring(lastPos);
-                    Rectangle2D lineSize = g.getFontMetrics(g.getFont()).getStringBounds(line, g);
-                    g.setColor(bkground);
-                    g.fillRect(x, y, (int) lineSize.getWidth(), (int) lineSize.getHeight());
-                    g.setColor(Color.black);
-                    g.drawString(line, x, y + ascent);
-                }
+
+                line = osdText.substring(lastPos);
+                Rectangle2D lineSize = g.getFontMetrics(g.getFont()).getStringBounds(line, g);
+                g.setColor(bkground);
+                g.fillRect(x, y, (int) lineSize.getWidth(), (int) lineSize.getHeight());
+                g.setColor(Color.black);
+                g.drawString(line, x, y + ascent);
             }
         }
     }

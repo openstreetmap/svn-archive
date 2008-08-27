@@ -457,12 +457,12 @@ sub compressAndUpload
 #-----------------------------------------------------------------------------
 sub compress
 {
-    keepLog($PID,"compress","start","$progressJobs");
+    keepLog($$,"compress","start","$progressJobs");
 
     my $compress = new Compress;
     my ($retval, $reason) = $compress->compressAll();
 
-    keepLog($PID,"compress","stop","return=$retval");
+    keepLog($$,"compress","stop","return=$retval");
 
     return $retval;
 }

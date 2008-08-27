@@ -94,9 +94,6 @@ BatikJVMSize=1536M
 # Fork = n  -> use 2*n parallel processes for rendering to svg
 Fork=0
 
-# make the client upload in the background if set to 1
-ForkForUpload=1
-
 # Maxdepth for xmlstarlet, reduce if you run into problems with memory,
 # increase if you get "tile too complex" errors.
 XmlStarletMaxDepth=20000

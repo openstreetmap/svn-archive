@@ -102,7 +102,7 @@ sub uploadAllZips
         # if just flock fails it is being handled by a different upload process
         open ($LOCKFILE, '>', File::Spec->join($self->{ZipDir},$File.".lock"));
         my $flocked = !$Config->get('flock_available')
-                      || ($LOCKFILE && flock(LOCKFILE, LOCK_EX|LOCK_NB));
+                      || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
         if ($flocked)
         {   # got exclusive lock, now upload
 
@@ -151,8 +151,8 @@ sub uploadAllZips
         # finally unlock zipfile and release handle
         if ($LOCKFILE)
         {
-            flock (LOCKFILE, LOCK_UN);
-            close (LOCKFILE);
+            flock ($LOCKFILE, LOCK_UN);
+            close ($LOCKFILE);
             unlink(File::Spec->join($self->{ZipDir},$File.".lock")) if $flocked;
         }
     }

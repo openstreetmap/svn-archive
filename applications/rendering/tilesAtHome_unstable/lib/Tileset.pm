@@ -7,6 +7,7 @@ package Tileset;
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 
+use warnings;
 use strict;
 use File::Temp qw/ tempfile tempdir /;
 use lib::TahConf;
@@ -586,7 +587,6 @@ sub RenderTile
 {
     my $self = shift;
     my ($layer, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight) = @_;
-    my $SkipEmpty = 0;
     my $Config = TahConf->getConfig();
     my $maxzoom = $Config->get($layer."_MaxZoom");
     my $req = $self->{req};
@@ -610,23 +610,16 @@ sub RenderTile
     # Should we skip going further up the zoom level?
     if ($empty and !$Config->get($layer."_RenderFullTileset")) 
     {
-        $SkipEmpty=1;
-    }
-
-    # Get progress of tiles
-    if($SkipEmpty == 1) 
-    {   # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
+        # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
         for (my $j = $maxzoom; $j >= $Zoom ; $j--)
         {
             $::progress += 2 ** $maxzoom-$j;
         }
-    }
-    else
-    {
-        $::progress += 1;
+	return (1, 1, "All tiles empty");
     }
 
-    # calculate progress percentage
+    # increase progress of tiles
+    $::progress += 1;
     $::progressPercent = 100 * $::progress / (2**($maxzoom-$req->Z+1)-1);
     if ($::progressPercent == 100)
     {
@@ -647,7 +640,6 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    # temporarily disable forking in inkscape until we get fork to work right.
     if ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork")))
     {
         my $pid = fork();
@@ -659,13 +651,13 @@ sub RenderTile
         {
             # we are the child process
             $self->{childThread}=1;
-            my ($success, $empty, $reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+            my ($success, $empty, $reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
             # we can't talk to our parent other than through exit codes.
             exit($success);
         }
         else
         {
-            my ($parent_success,$empty, $reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+            my ($parent_success,$empty, $reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
             waitpid($pid,0);
             my $ChildExitValue = ($? >> 8);
             if (! ($ChildExitValue && $parent_success))
@@ -673,24 +665,16 @@ sub RenderTile
                 return (0, 0, "Forked inkscape failed");
             }
         }
-        if ($Zoom == $req->Z)
-        {
-            $::progressPercent=100 if (! $Config->get("Debug")); # workaround for not correctly updating %age in fork, disable in debug mode
-            ::statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
-        }
     }
     else
     {
-        if (!$SkipEmpty)
-        {
-            my ($success,$empty,$reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
-            return (0, $empty, $reason) if (!$success);
-            ($success,$empty,$reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
-            return (0, $empty, $reason) if (!$success);
-        }
+        my ($success,$empty,$reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+        return (0, $empty, $reason) if (!$success);
+        ($success,$empty,$reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+        return (0, $empty, $reason) if (!$success);
     }
 
-    return (1, $SkipEmpty, "");
+    return (1, 0, "OK");
 }
 
 

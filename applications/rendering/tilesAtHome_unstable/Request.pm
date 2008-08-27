@@ -18,6 +18,7 @@
 
 package Request;
 
+use warnings;
 use strict;
 use LWP::UserAgent;
 use tahlib;

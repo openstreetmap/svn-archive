@@ -1,5 +1,6 @@
 package Upload;
 
+use warnings;
 use strict;
 use LWP::UserAgent;
 use File::Copy;

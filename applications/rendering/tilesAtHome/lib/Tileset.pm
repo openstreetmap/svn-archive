@@ -437,7 +437,7 @@ sub runPreprocessors
             $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
                         $Config->get("Niceness"),
                         $Config->get("XmlStarlet"),
-                        "maplint/lib/convert-to-tags.xsl",
+                        "maplint/lib/convert-to-tags2.xsl",
                         "tmp.$$",
                         "$outputFile");
             ::statusMessage("Creating tags from maplint",0,3);

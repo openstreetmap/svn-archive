@@ -25,23 +25,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
-import org.openstreetmap.josmng.osm.Relation;
-import org.openstreetmap.josmng.osm.Way;
 import org.openstreetmap.josmng.utils.Convertor;
+import org.openstreetmap.josmng.utils.DateUtils;
 import org.openstreetmap.josmng.utils.Storage;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -63,6 +55,7 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
         try {
             return read(from.openStream());
         } catch (IOException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -185,7 +178,7 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
         private int getDate(Attributes atts, String name) {
             String orig = atts.getValue(name);
             if (orig == null) return -1;
-            return (int)(getTimestamp(orig).getTime()/1000);
+            return (int)(DateUtils.fromString(orig).getTime()/1000);
         }
         
         private String getString(Attributes atts, String name) {
@@ -205,66 +198,5 @@ public class OsmFormat extends Convertor<NamedStream,DataSet> {
             String val = atts.getValue(name);
             return val == null ? def : Boolean.parseBoolean(val);
         }
-
-        // An instance reused throughout the lifetime of the parser.
-        private GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        { calendar.setTimeInMillis(0);}
-
-        private Date getTimestamp(String str) {
-            // "2007-07-25T09:26:24{Z|{+|-}01:00}"
-            if (checkLayout(str, "xxxx-xx-xxTxx:xx:xxZ") ||
-                    checkLayout(str, "xxxx-xx-xxTxx:xx:xx+xx:00") ||
-                    checkLayout(str, "xxxx-xx-xxTxx:xx:xx-xx:00")) {
-                calendar.set(
-                    parsePart(str, 0, 4),
-                    parsePart(str, 5, 2)-1,
-                    parsePart(str, 8, 2),
-                    parsePart(str, 11, 2),
-                    parsePart(str, 14,2),
-                    parsePart(str, 17, 2));
-                
-                if (str.length() == 25) {
-                    int plusHr = parsePart(str, 20, 2);
-                    int mul = str.charAt(19) == '+' ? -3600000 : 3600000;
-                    calendar.setTimeInMillis(calendar.getTimeInMillis()+plusHr*mul);
-                }
-                
-                return calendar.getTime();
-            }
-            
-            try {
-                return XML_DATE.newXMLGregorianCalendar((String)str).toGregorianCalendar().getTime();
-            } catch (Exception ex) {
-                return new Date();
-            }
-        }
-        
-        private boolean checkLayout(String text, String pattern) {
-            if (text.length() != pattern.length()) return false;
-            for (int i=0; i<pattern.length(); i++) {
-                if (pattern.charAt(i) == 'x') continue;
-                if (pattern.charAt(i) != text.charAt(i)) return false;
-            }
-            return true;
-        }
-
-    }
-    
-    private static final DatatypeFactory XML_DATE;
-
-    static {
-        DatatypeFactory fact = null;
-        try {
-            fact = DatatypeFactory.newInstance();
-        } catch(DatatypeConfigurationException ce) {
-            ce.printStackTrace();
-        }
-        XML_DATE = fact;
-    }
-
-
-    private static int parsePart(String str, int off, int len) {
-        return Integer.valueOf(str.substring(off, off+len));
-    }
-    
+    }    
 }

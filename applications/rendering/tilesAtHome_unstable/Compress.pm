@@ -109,11 +109,11 @@ sub compressAll
         if ($flocked)
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
-            ::statusMessage("optimizing PNG files",0,3);
+            ::statusMessage("optimizing PNG files",1,6);
             $self->optimizePNGs($FullTilesetPath, $layer);
             $::currentSubTask ='compress';
             $::progressPercent = 0;
-            ::statusMessage("compressing $File",0,3);
+            ::statusMessage("compressing $File",1,6);
             $self->compress($FullTilesetPath, $layer);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now

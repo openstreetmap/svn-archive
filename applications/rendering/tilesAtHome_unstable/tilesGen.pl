@@ -1079,7 +1079,7 @@ sub reExec
     statusMessage("tilesGen.pl has changed, re-start new version",1,0);
     if ($child_pid != -1)  ## FIXME: make more general
     {
-        statusMessage("Waiting for child process",0,0);
+        statusMessage("Waiting for child process (this can take a while)",0,0);
         waitpid($child_pid, 0);
     }
     exec "perl", $0, $Mode, "reexec", 

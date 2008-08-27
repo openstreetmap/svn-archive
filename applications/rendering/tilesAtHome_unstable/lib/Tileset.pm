@@ -320,7 +320,7 @@ sub downloadData
                     $Config->get("OSMVersion"),
                     "*",
                     $bbox);
-                ::statusMessage("Downloading: Map data for ".$req->layers_str." to $partialFile",0,3);
+                ::statusMessage("Downloading: Map data for from OSMXAPI for ".$req->layers_str,0,3);
                 print "Download\n$URL\n" if ($Config->get("Debug"));
                 my $res = ::DownloadFile($URL, $partialFile, 0);
                 if (! $res)
@@ -344,7 +344,7 @@ sub downloadData
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
                     $partialFile = File::Spec->join($self->{JobDir},"data-$i-$j.osm");
                     push(@{$filelist}, $partialFile);
-                    ::statusMessage("Downloading: Map data to $partialFile (slice $j of 10)",0,3);
+                    ::statusMessage("Downloading: Map data (slice $j of 10)",0,3);
                     print "Download\n$URL\n" if ($Config->get("Debug"));
                     $res = ::DownloadFile($URL, $partialFile, 0);
 
@@ -382,10 +382,10 @@ sub downloadData
     
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
-    ::statusMessage("Checking for UTF-8 errors in $DataFile",0,3);
-    if (::fileUTF8ErrCheck($DataFile))
+    ::statusMessage("Checking for UTF-8 errors",0,3);
+    if (my $line = ::fileUTF8ErrCheck($DataFile))
     {
-        ::statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->ZXY),1,0);
+        ::statusMessage(sprintf("found incorrect UTF-8 chars in line %d. job (%d,%d,%d)",$line, $req->ZXY),1,0);
         my $reason= ("UTF8 test failed");
         ::addFault("utf8",1);
         return (undef, $reason);

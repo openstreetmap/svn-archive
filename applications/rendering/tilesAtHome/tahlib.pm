@@ -75,7 +75,6 @@ sub doneMessage
 sub talkInSleep
 {
     my $Config = TahConf->getConfig();
-    my $progstart = $main::progstart;
     my ($message, $duration) = @_;
     
     if ($Config->get("Verbose") >= 10)
@@ -87,15 +86,13 @@ sub talkInSleep
 
     for (my $i = 0; $i< $duration; $i++)
     {
-        my $totalseconds = time() - $progstart;
-        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) (%d)", 
+         statusMessage(sprintf("%s. Idle for %d (Total %d:%02d)", 
                 $message,
+                $duration - $i,
                 $idleFor/60, $idleFor%60,
-                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100,
-                $duration - $i),0,3);
+                ),0,3);
         sleep 1;
         $idleFor++;
-        $idleSeconds++;
     }
 }
 

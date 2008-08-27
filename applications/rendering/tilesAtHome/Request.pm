@@ -210,7 +210,7 @@ sub fetchFromServer
         }
         elsif ($ValidFlag eq "XX")
         {
-            $ValidFlag, my $reason = split(/\|/, $Requeststring);
+            ($ValidFlag, $Version, my $reason) = split(/\|/, $Requeststring);
             if ($reason =~ /Invalid username/)
             {
                 die "ERROR: Authentication failed - please check your username "

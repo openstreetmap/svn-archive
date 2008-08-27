@@ -72,6 +72,7 @@ sub uploadAllZips
     my $Config = $self->{Config};
     my $uploaded = 0; # num handled files
     $::progressPercent = 0;
+    my $LOCKFILE;
 
     if ($Config->get("LocalSlippymap"))
     {
@@ -99,9 +100,9 @@ sub uploadAllZips
         # if open fails (file has been uploaded and removed by other process)
         # the subsequent flock will also fail and skip the file.
         # if just flock fails it is being handled by a different upload process
-        open (LOCKFILE, '>', File::Spec->join($self->{ZipDir},$File.".lock"));
+        open ($LOCKFILE, '>', File::Spec->join($self->{ZipDir},$File.".lock"));
         my $flocked = !$Config->get('flock_available')
-                      || flock(LOCKFILE, LOCK_EX|LOCK_NB);
+                      || ($LOCKFILE && flock(LOCKFILE, LOCK_EX|LOCK_NB));
         if ($flocked)
         {   # got exclusive lock, now upload
 
@@ -148,9 +149,12 @@ sub uploadAllZips
             ::statusMessage("$File uploaded by different process. skipping",0,3);
         }
         # finally unlock zipfile and release handle
-        flock (LOCKFILE, LOCK_UN);
-        close (LOCKFILE);
-        unlink(File::Spec->join($self->{ZipDir},$File.".lock"));
+        if ($LOCKFILE)
+        {
+            flock (LOCKFILE, LOCK_UN);
+            close (LOCKFILE);
+            unlink(File::Spec->join($self->{ZipDir},$File.".lock")) if $flocked;
+        }
     }
     ::statusMessage("uploaded $uploaded zip files",1,3) unless $uploaded == 0;
     return ($uploaded,"");

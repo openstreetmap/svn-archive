@@ -66,6 +66,7 @@ sub compressAll
     my $progress = 0;
     $::progressPercent = 0;
     $::currentSubTask = "compress";
+    my $LOCKFILE;
 
     if ($Config->get("LocalSlippymap"))
     {
@@ -103,9 +104,9 @@ sub compressAll
         # if open fails (file has been uploaded and removed by other process)
         # the subsequent flock will also fail and skip the file.
         # if just flock fails it is being handled by a different upload process
-        open (LOCKFILE, '>', $FullTilesetPath."lock");
+        open ($LOCKFILE, '>', $FullTilesetPath."lock");
         my $flocked = !$Config->get('flock_available')
-                      || flock(LOCKFILE, LOCK_EX|LOCK_NB);
+                      || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
         if ($flocked)
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
@@ -123,9 +124,12 @@ sub compressAll
             ::statusMessage("$File compressed by different process. skipping",0,3);
         }
         # finally unlock zipfile and release handle
-        flock (LOCKFILE, LOCK_UN);
-        close (LOCKFILE);
-        unlink($FullTilesetPath."lock");
+        if ($LOCKFILE)
+        {
+            flock ($LOCKFILE, LOCK_UN);
+            close ($LOCKFILE);
+            unlink($FullTilesetPath."lock") if $flocked;
+	}
     }
 
 }
@@ -167,7 +171,7 @@ sub compress
     # ZIP all the tiles into a single file
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
     my $Command1;
-    if ($Config->get("7zipWin"))
+    if (1 || $Config->get("7zipWin"))
     {
         $Command1 = sprintf("\"%s\" %s %s %s",
           $Config->get("Zip"),
@@ -183,7 +187,7 @@ sub compress
           "$FullTilesetPathDir",
           $stdOut);
     }
-    
+
     # Run the zip command
     my $zip_result = ::runCommand($Command1,$PID);
 

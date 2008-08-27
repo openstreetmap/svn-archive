@@ -46,7 +46,7 @@ use Encode;
 my $Config = TahConf->getConfig();
 
 # Handle the command-line
-our $Mode = shift();
+our $Mode = shift() || '';
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
 my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;

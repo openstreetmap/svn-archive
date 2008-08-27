@@ -64,9 +64,8 @@ sub compressAll
     my $Config = $self->{Config};
 
     my $progress = 0;
-    our $progressPercent = 0;
-    our $progressJobs;       #leave unmodified to whatever it was set
-    our $currentSubTask = "zipping";
+    $::progressPercent = 0;
+    $::currentSubTask = "compress";
 
     if ($Config->get("LocalSlippymap"))
     {
@@ -109,6 +108,8 @@ sub compressAll
                       || flock(ZIPDIR, LOCK_EX|LOCK_NB);
         if ($flocked)
         {   # got exclusive lock, now compress
+            ::statusMessage("optimizing PNG files",0,3);
+            $self->optimizePNGs($FullTilesetPath, $layer);
             ::statusMessage("compressing $File",0,3);
             $self->compress($FullTilesetPath, $layer);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
@@ -137,6 +138,7 @@ sub compress
 {
     my $self = shift;
     my $Config = $self->{Config};
+    $::currentSubTask ='compress';
 
     my ($FullTilesetPathDir, $Layer) = @_;
   
@@ -187,6 +189,128 @@ sub compress
     unlink($stdOut);
     
     return $zip_result;
+}
+
+#-----------------------------------------------------------------------------
+# Run pngcrush on each split tile, then delete the temporary cut file
+# parameter (FullPathToPNGDir, $layer)
+# returns (success, reason)
+#-----------------------------------------------------------------------------
+sub optimizePNGs
+{
+    my $self = shift;
+    my $Config = $self->{Config};
+    my $PNGDir = shift;
+    my $layer  = shift;
+
+    $::currentSubTask ='optimize';
+    $::progressPercent = 0;
+    my $TmpFilename_suffix = ".cut";
+    my $Redirect = ">/dev/null";
+    my $Cmd;
+
+    if ($^O eq "MSWin32")
+    {
+        $Redirect = "";
+    }
+
+    # read in all the PNG files in the Dir
+    my @pngfiles;
+    if (opendir(PNGDIR, $PNGDir))
+    {
+        @pngfiles = grep { /\.png$/ } readdir(PNGDIR);
+        close PNGDIR;
+    }
+    else 
+    {
+       return (-1, "could not read $PNGDir");
+    }
+
+    my $NumPNG = scalar(@pngfiles);
+    my $progress = 0;
+    ::statusMessage("Optimizing $NumPNG images", 0, 3);
+
+    foreach my $PngFileName(@pngfiles)
+    {  # go through all PNG files
+       $progress ++;
+       $::progressPercent = 100 * $progress / $NumPNG;
+
+       my $PngFullFileName = File::Spec->join($PNGDir, $PngFileName);
+       # Temporary filename between quantizing and optimizing
+       my $TmpFullFileName = $PngFullFileName.$TmpFilename_suffix;
+
+       if ($Config->get($layer."_Transparent"))
+       {    # Don't quantize if it's transparent
+            rename($PngFullFileName, $TmpFullFileName);
+       }
+       elsif ($Config->get("PngQuantizer") eq "pngnq") 
+       {
+           $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
+                                   $Config->get("Niceness"),
+                                   $Config->get("pngnq"),
+                                   $TmpFilename_suffix,
+                                   $PngFullFileName,
+                                   $Redirect);
+
+           ::statusMessage("ColorQuantizing $PngFileName",0,6);
+           if(::runCommand($Cmd,$PID))
+           {   # Color quantizing successful
+               unlink($PngFullFileName);
+           }
+           else
+           {   # Color quantizing failed
+               ::statusMessage("ColorQuantizing $PngFileName with ".$Config->get("PngQuantizer")." failed",1,0);
+               rename($PngFullFileName, $TmpFullFileName);
+            }
+       }
+       else
+       {
+           ::statusMessage("Not Color Quantizing $PngFileName, pngnq not installed?",0,6);
+           rename($PngFullFileName, $TmpFullFileName);
+       }
+
+       # Finished quantizing. The file is in TmpFullFileName now.
+
+       if ($Config->get("PngOptimizer") eq "pngcrush")
+       {
+           $Cmd = sprintf("%s \"%s\" -q %s %s %s",
+                  $Config->get("Niceness"),
+                  $Config->get("Pngcrush"),
+                  $TmpFullFileName,
+                  $PngFullFileName,
+                  $Redirect);
+       }
+       elsif ($Config->get("PngOptimizer") eq "optipng")
+       {
+           $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
+                  $Config->get("Niceness"),
+                  $Config->get("Optipng"),
+                  $TmpFullFileName,
+                  $PngFullFileName,
+                  $Redirect);
+       }
+       else
+       {
+           ::statusMessage("SplitImageX:PngOptimizer not configured (should not happen, update from svn, and check config file)",1,0);
+           ::talkInSleep("Install a PNG optimizer and configure it.",15);
+       }
+
+       ::statusMessage("Optimizing $PngFileName",0,6);
+       if(::runCommand($Cmd,$PID))
+       {
+           unlink($TmpFullFileName);
+       }
+       else
+       {
+           ::statusMessage("Optimizing $PngFileName with ".$Config->get("PngOptimizer")." failed",1,0);
+           rename($TmpFullFileName, $PngFullFileName);
+       }
+
+       # Assign the job time to this file
+       # TODO:
+       #utime $JobTime, $JobTime, $PngFullFileName;
+
+    } # foreach my $PngFileName
 }
 
 1;

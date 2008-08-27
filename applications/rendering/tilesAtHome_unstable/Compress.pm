@@ -171,13 +171,15 @@ sub compress
     # ZIP all the tiles into a single file
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
     my $Command1;
-    if (1 || $Config->get("7zipWin"))
+    if ($Config->get("7zipWin"))
     {
         $Command1 = sprintf("\"%s\" %s %s %s",
           $Config->get("Zip"),
           "a -tzip",
           $Filename,
           File::Spec->join($FullTilesetPathDir,"*.png"));
+
+        print STDERR "7zip: $Command1\n\n";
     }
     else
     {

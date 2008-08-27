@@ -66,9 +66,6 @@ my $progress = 0;
 our $progressJobs = 0;
 our $progressPercent = 0;
 
-# keep track of time running
-our $progstart = time();
-
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
 if ($UploadMode or $RenderMode) {
     if (NewClientVersion()) {
@@ -240,7 +237,7 @@ elsif ($Mode eq "loop")
         {
             if ($Config->get("ForkForUpload") && $upload_pid != -1)
             {
-                statusMessage("Waiting for previous upload process",0,0);
+                statusMessage("Waiting for previous upload process (this can take while)",0,0);
                 waitpid($upload_pid, 0);
             }
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
@@ -417,7 +414,7 @@ sub compressAndUploadTilesets
         # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
         if ($upload_pid != -1)
         {
-            statusMessage("Waiting for previous upload process to finish",0,3);
+            statusMessage("Waiting for previous upload process to finish (this can take while)",0,3);
             waitpid($upload_pid, 0);
             #FIXME: $upload_result is apparently never returned?! skip?
             #$upload_result = $? >> 8;
@@ -511,7 +508,6 @@ sub ProcessRequestsFromServer
         ($success, $reason) = $tileset->generate();
         if (!$success)
         {
-            statusMessage("Tileset failed: ".$reason, 1, 0);
             $req->putBackToServer($reason) unless $Mode eq 'xy';
         }
     }
@@ -1085,8 +1081,7 @@ sub reExec
     exec "perl", $0, $Mode, "reexec", 
         "progressJobs=" . $progressJobs, 
         "idleSeconds=" . getIdle(1), 
-        "idleFor=" . getIdle(0), 
-        "progstart=" . $progstart  or die("could not reExec");
+        "idleFor=" . getIdle(0) or die("could not reExec");
 }
 
 

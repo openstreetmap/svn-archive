@@ -50,7 +50,7 @@ my $Config = TahConf->getConfig();
 our $Mode = shift();
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
 my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
-my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_conditional") or ($Mode eq "upload_loop")) ? 1 : 0;
+my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
 
 if ($RenderMode)
@@ -180,7 +180,7 @@ resetFault("upload");
 
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
 
-
+#---------------------------------
 ## Start processing
 
 if ($Mode eq "xy")
@@ -213,7 +213,7 @@ if ($Mode eq "xy")
     my $tileset = Tileset->new($req);
     $tileset->generate();
 }
-
+#---------------------------------
 elsif ($Mode eq "loop") 
 {
     # ----------------------------------
@@ -278,11 +278,12 @@ elsif ($Mode eq "loop")
         }
     }
 }
+#---------------------------------
 elsif ($Mode eq "upload") 
 {   # Upload mode
     compressAndUpload();
 }
-
+#---------------------------------
 elsif ($Mode eq "upload_loop")
 {
     while(1) 
@@ -308,7 +309,8 @@ elsif ($Mode eq "upload_loop")
             reExec(-1);
         }
 
-        reExecIfRequired(-1); ## check for new version of tilesGen.pl and reExec if true
+        # check for new version of tilesGen.pl and reExec if true
+        reExecIfRequired(-1);
 
         # uploading ZIP files here, returns 0 if nothing to do and -1 on error
         my $files_uploaded = upload();
@@ -333,11 +335,12 @@ elsif ($Mode eq "upload_loop")
         }
     } #end of infinite while loop
 }
-
+#---------------------------------
 elsif ($Mode eq "version") 
 {
     exit(1);
 }
+#---------------------------------
 elsif ($Mode eq "stop")
 {
     if (open F, '>', "stopfile.txt") 
@@ -353,10 +356,12 @@ elsif ($Mode eq "stop")
     }
     exit(1);
 }
+#---------------------------------
 elsif ($Mode eq "update") 
 {
     UpdateClient();
 }
+#---------------------------------
 elsif ($Mode eq "") 
 {
     # ----------------------------------
@@ -372,14 +377,17 @@ elsif ($Mode eq "")
     statusMessage("if you want to run this program continuously, use loop mode",1,0);
     statusMessage("please run \"tilesGen.pl upload\" now",1,0);
 }
+#---------------------------------
 elsif ($Mode eq "startBatik")
 {
     startBatikAgent();
 }
+#---------------------------------
 elsif ($Mode eq "stopBatik")
 {
     stopBatikAgent();
 }
+#---------------------------------
 else {
     # ----------------------------------
     # "help" (or any other non understood parameter) as first argument tells how to use the program

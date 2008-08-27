@@ -256,7 +256,8 @@ sub getRequestStringFromServer
     my $Request;
     my $URL = $self->{Config}->get("RequestURL");
     
-    my $ua = LWP::UserAgent->new(timeout => 360, protocols_allowed => ['http'], agent =>"tilesAtHome");
+    my $ua = LWP::UserAgent->new(timeout => 240, protocols_allowed => ['http']);
+    $ua->agent("tilesAtHome ($^O)");
     $ua->env_proxy();
     push @{ $ua->requests_redirectable }, 'POST';
     my $res = $ua->post($URL, Content_Type => 'form-data',

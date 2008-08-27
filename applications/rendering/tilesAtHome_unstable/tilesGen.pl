@@ -560,17 +560,17 @@ sub NewClientVersion
     return 0 if (time() - $LastTimeVersionChecked < 600);
     my $versionfile = "version.txt";
     my $runningVersion;
-    if (open(versionfile, "<", $versionfile))
+    if (open(VERFILE, "<", $versionfile))
     {
-        $runningVersion = <versionfile>;
+        $runningVersion = <VERFILE>;
         chomp $runningVersion;
-        close versionfile;
+        close VERFILE;
     }
-    elsif (open(versionfile, ">", $versionfile))
+    elsif (open(VERFILE, ">", $versionfile))
     {
         $runningVersion = 0; 
-        print versionfile $runningVersion;
-        close versionfile;
+        print VERFILE $runningVersion;
+        close VERFILE;
     }
     else
     {
@@ -582,11 +582,11 @@ sub NewClientVersion
     my $currentVersion;
     
     DownloadFile($Config->get("VersionCheckURL"), $curVerFile ,0);
-    if (open(versionfile, "<", $curVerFile))
+    if (open(VERFILE, "<", $curVerFile))
     {
-        $currentVersion = <versionfile>;
+        $currentVersion = <VERFILE>;
         chomp $runningVersion;
-        close versionfile;
+        close VERFILE;
         # rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
     }
     if ($currentVersion)

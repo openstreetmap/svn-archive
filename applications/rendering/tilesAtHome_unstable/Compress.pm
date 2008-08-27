@@ -55,8 +55,8 @@ sub new
 
 #-------------------------------------------------------------------
 # main function. Compresses all tileset.dir's in $self->{WorkingDir}.
-# returns (success, reason), with success being the number of compressed 
-# directories or -1 on error. reason is a string explaining the error.
+# returns (success, reason), with success being 1
+# -1 on error. reason is a string explaining the error.
 #-------------------------------------------------------------------
 sub compressAll
 {
@@ -131,8 +131,7 @@ sub compressAll
             unlink($FullTilesetPath."lock") if $flocked;
 	}
     }
-
-}
+    return (1,"");
 
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating a .zip file.

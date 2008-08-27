@@ -97,13 +97,12 @@ sub uploadAllZips
     {
         ::statusMessage((scalar(@zipfiles)+1)." zip files to upload",0,0);
         # get a file handle, then try to lock the file exclusively.
-        # if open fails (file has been uploaded and removed by other process)
-        # the subsequent flock will also fail and skip the file.
-        # if just flock fails it is being handled by a different upload process
+        # if flock fails it is being handled by a different upload process
+        # also check if the file still exists when we get to it
         open ($LOCKFILE, '>', File::Spec->join($self->{ZipDir},$File.".lock"));
         my $flocked = !$Config->get('flock_available')
                       || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
-        if ($flocked)
+        if ($flocked && -e File::Spec->join($self->{ZipDir},$File))
         {   # got exclusive lock, now upload
 
             my $Load;

@@ -63,6 +63,7 @@ GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
 
 Fork = 0
+ForkForUpload = 1
 
 AutoResetInkscapePrefs = 0
 AutoResetStopfile = 0

@@ -238,7 +238,7 @@ elsif ($Mode eq "loop")
         # look for stopfile and exit if found
         if (-e "stopfile.txt")
         {
-            if ($upload_pid != -1)
+            if ($Config->get("ForkForUpload") && $upload_pid != -1)
             {
                 statusMessage("Waiting for previous upload process",0,0);
                 waitpid($upload_pid, 0);
@@ -411,7 +411,7 @@ else {
 sub compressAndUploadTilesets
 {
     my $Config = TahConf->getConfig();
-    if ($Mode eq "loop") # makes no sense to fork upload if not looping.
+    if ($Config->get("ForkForUpload") and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
     {
         # Upload is handled by another process, so that we can generate another tile at the same time.
         # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
@@ -1077,7 +1077,7 @@ sub reExec
     return unless ($^O eq "linux" || $^O eq "cygwin");
 
     statusMessage("tilesGen.pl has changed, re-start new version",1,0);
-    if ($child_pid != -1)  ## FIXME: make more general
+    if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general
     {
         statusMessage("Waiting for child process (this can take a while)",0,0);
         waitpid($child_pid, 0);

@@ -48,7 +48,7 @@ class replayGpx(ranaModule):
       file.close()
       self.numNodes = len(self.nodes)
       self.set("centreOnce", True)
-      self.pos = int(0.2 * self.numNodes)
+      self.pos = int(self.get("replayStart",0) * self.numNodes)
     else:
       print "No file"
 

@@ -161,8 +161,8 @@ sub compress
     }
 
     $Filename = File::Spec->join($self->{ZipDir},
-                                sprintf("%s_%d_%d_%s_tileset.zip",
-                                $hostname, ::GetClientId(), $$, $Layer));
+                                sprintf("%d_%s_%d_%d_%s_tileset.zip",
+                                time(), $hostname, ::GetClientId(), $$, $Layer));
     
     # ZIP all the tiles into a single file
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");

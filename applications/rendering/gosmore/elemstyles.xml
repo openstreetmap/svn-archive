@@ -310,7 +310,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>500000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110" oneway="1"/>
+        <routing goods="110" hgv="110" motorcar="110" psv="110"/>
 	</rule>
 
 	<rule>
@@ -319,7 +319,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110" oneway="1"/>
+        <routing goods="110" hgv="110" motorcar="110" psv="110"/>
 	</rule>
 
 	<rule>

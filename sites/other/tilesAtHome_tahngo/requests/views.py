@@ -63,7 +63,7 @@ def show_uploads_page(request):
 # not a public view, but a helper function that creates a new request based on data in
 # 'form' and performs sanity checks etc. The form must have been validated previously.
 
-def saveCreateRequestForm(form):
+def saveCreateRequestForm(request, form):
     """ Returns (Request, reason), with Request being 'None' on failure and 
         the saved request object on success. 
         Reason is a string that describes the error in case of failure.
@@ -144,7 +144,7 @@ def create(request):
     if request.method == 'POST':
       form = CreateForm(request.POST)
       if form.is_valid():
-        req, reason = saveCreateRequestForm(form)
+        req, reason = saveCreateRequestForm(request, form)
       else:
         html="form is not valid. "+str(form.errors)
         return HttpResponse(html)
@@ -152,7 +152,7 @@ def create(request):
       #Create request using GET"
       form = CreateForm(request.GET)
       if form.is_valid():
-        req, reason = saveCreateRequestForm(form)
+        req, reason = saveCreateRequestForm(request, form)
       else:
          # view the plain form webpage with default values filled in
          return render_to_response('requests_create.html', \
@@ -354,7 +354,7 @@ def request_changedTiles(request):
       CreateFormClass.base_fields['layers'].required = False 
       form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2, 'src':'ChangedTileAutoRequest'})
       if form.is_valid():
-        req, reason = saveCreateRequestForm(form)
+        req, reason = saveCreateRequestForm(request, form)
         if req:
           html += "Render '%s' (%s,%s,%s)\n" % (req.layers_str,form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
         else: html +="Renderrequest failed (%s,%s,%s): %s\n" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'], reason)

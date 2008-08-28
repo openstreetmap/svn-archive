@@ -986,7 +986,7 @@ gint Expose (void)
   clip.height = draw->allocation.height - STATUS_BAR;
   clip.width = draw->allocation.width;
   if (ButtonSize <= 0) ButtonSize = 4;
-  #ifdef CAIRO_VERSION
+/*  #ifdef CAIRO_VERSION
   cairo_t *cai = gdk_cairo_create (draw->window);
   if (DetailLevel < 2) {
     cairo_font_options_t *caiFontOptions = cairo_font_options_create ();
@@ -996,7 +996,12 @@ gint Expose (void)
   }
   cairo_matrix_t mat;
   cairo_matrix_init_identity (&mat);
-  #endif
+  #endif */
+  PangoMatrix mat;
+  PangoContext *pc = gdk_pango_context_get_for_screen (
+    gdk_screen_get_default ());
+  PangoLayout *pl = pango_layout_new (pc);
+  pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
   if (option == numberOfOptions) {
     if (zoom < 0) zoom = 2012345678;
     if (zoom / clip.width <= 1) zoom += 4000;
@@ -1088,10 +1093,10 @@ gint Expose (void)
             #endif
             #ifdef CAIRO_VERSION
             //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
-              mat.xx = mat.yy = 12.0;
+              mat.xx = mat.yy = 1.0;
               mat.xy = mat.yx = 0;
-              x0 = x - mat.xx / 12.0 * 3 * len; /* Render the name of the node */
-              y0 = y + mat.xx * f->ascent / 12.0 + icon[3] / 2;
+              x0 = x - mat.xx / 3 * len; /* Render the name of the node */
+              y0 = y + mat.xx * f->ascent + icon[3] / 2;
               maxLenSqr = Sqr ((__int64) Style (w)->scaleMax);
               //4000000000000LL; // Without scaleMax, use 400000000
             //}
@@ -1158,17 +1163,17 @@ gint Expose (void)
                 maxLenSqr = lenSqr;
                 double lonDiff = (nd->lon - next->lon) * cosAzimuth +
                                  (nd->lat - next->lat) * sinAzimuth;
-                mat.yy = mat.xx = 12 * fabs (lonDiff) / sqrt (lenSqr);
-                mat.xy = (lonDiff > 0 ? 12.0 : -12.0) *
+                mat.yy = mat.xx = 1.0 * fabs (lonDiff) / sqrt (lenSqr);
+                mat.xy = (lonDiff > 0 ? 1.0 : -1.0) *
                          ((nd->lat - next->lat) * cosAzimuth -
                           (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
                 mat.yx = -mat.xy;
                 x0 = X (nd->lon / 2 + next->lon / 2,
-                        nd->lat / 2 + next->lat / 2) +
-                  mat.yx * f->descent / 12.0 - mat.xx / 12.0 * 3 * len;
+                        nd->lat / 2 + next->lat / 2);// +
+//                  mat.yx * f->descent / 1.0 - mat.xx / 1.0 * 3 * len;
                 y0 = Y (nd->lon / 2 + next->lon / 2,
-                        nd->lat / 2 + next->lat / 2) +
-                  mat.xx * f->descent / 12.0 - mat.yx / 12.0 * 3 * len;
+                        nd->lat / 2 + next->lat / 2);// +
+//                  mat.xx * f->descent / 1.0 - mat.yx / 1.0 * 3 * len;
               }
               #endif
             }
@@ -1205,17 +1210,27 @@ gint Expose (void)
         #ifdef CAIRO_VERSION
         if (maxLenSqr * DetailLevel > (zoom / clip.width) *
               (__int64) (zoom / clip.width) * len * len * 100 && len > 0) {
+          double move = 0.6;
           for (char *txt = (char *)(w + 1) + 1; *txt != '\0';) {
-            cairo_set_font_matrix (cai, &mat);
+            //cairo_set_font_matrix (cai, &mat);
             char *line = (char *) malloc (strcspn (txt, "\n") + 1);
             memcpy (line, txt, strcspn (txt, "\n"));
             line[strcspn (txt, "\n")] = '\0';
-            cairo_move_to (cai, x0, y0);
-            cairo_show_text (cai, line);
+            //cairo_move_to (cai, x0, y0);
+            //cairo_show_text (cai, line);
+            pango_context_set_matrix (pc, &mat);
+            pango_layout_set_text (pl, line, -1);
+            PangoRectangle rect;
+            pango_layout_get_pixel_extents (pl, &rect, NULL);
+            y0 += mat.xx * (f->ascent + f->descent) * move;
+            x0 += mat.xy * (f->ascent + f->descent) * move;
+            move = 1.2;
+            gdk_draw_layout (GDK_DRAWABLE (draw->window),
+              draw->style->fg_gc[0],
+              x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,
+              y0 - (rect.height * mat.yy + rect.width * fabs (mat.xy)) / 2, pl);
             free (line);
             if (zoom / clip.width > 30) break;
-            y0 += mat.xx * (f->ascent + f->descent) / 12;
-            x0 += mat.xy * (f->ascent + f->descent) / 12;
             while (*txt != '\0' && *txt++ != '\n') {}
           }
         }
@@ -1318,8 +1333,9 @@ gint Expose (void)
     #undef o
       0);
     #ifndef _WIN32_WCE
-    cairo_move_to (cai, 50, draw->allocation.height / 2);
-    cairo_show_text (cai, optStr);
+    //---------FFFFFFFIIIIIIIIIIXXXXXXXXXX
+//    cairo_move_to (cai, 50, draw->allocation.height / 2);
+//    cairo_show_text (cai, optStr);
     #else
     SelectObject (mygc, sysFont);
     SetBkMode (mygc, TRANSPARENT);
@@ -1373,7 +1389,7 @@ gint Expose (void)
   }
   #endif
   #ifdef CAIRO_VERSION
-  cairo_destroy (cai);
+//  cairo_destroy (cai);
   #endif
 /*
   clip.height = draw->allocation.height;

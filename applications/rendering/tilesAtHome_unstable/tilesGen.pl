@@ -100,7 +100,7 @@ if ($LoopMode) {
     # command line after the keyword "reexec". Currently unsuitable 
     # for alphanumeric variables.
     
-    if (shift() eq "reexec") {
+    if ((shift||'') eq "reexec") {
         my $idleSeconds; my $idleFor;
         while(my $evalstr = shift()) {
             die("$evalstr does not match option=value") unless $evalstr =~ /^[A-Za-z]+=\d+/;

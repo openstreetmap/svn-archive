@@ -187,8 +187,11 @@ sub generate
         my ($ImgH,$ImgW,$Valid) = ::getSize(File::Spec->join($self->{JobDir},
                                                        "output-z$maxzoom.svg"));
 
-        # Render it as loads of recursive tiles
-        my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH);
+         # Render it as loads of recursive tiles
+         # temporary debug: measure time it takes to render:
+	 my $beforeRender = time();
+         my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
+         print STDERR "\nRendering of $layer in ".(time() - $beforeRender)." sec\n\n"; 
 
         #----------
         if (!$success)
@@ -508,9 +511,9 @@ sub forkedRender
             $self->{childThread}=1;
             for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
             {
-		::statusMessage("Thread $thread renders zoom $zoom now",0,6);
                 if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
-                {    # an error occurred while rendering. Thread exits and returns (255+)0 here
+                {    # an error occurred while rendering.
+                     # Thread exits and returns (255+)0 here
                      exit(0);
                 }
             }
@@ -528,10 +531,9 @@ sub forkedRender
     {
         waitpid($pid,0);
         $success &= ($? >> 8);
-        ::statusMessage("thread $pid returned with value $?, leaving success at $success",1,6);
     }
 
-    ::statusMessage("exit forked renderer returning $success",1,6);
+    ::statusMessage("exit forked renderer returning $success",0,6);
     return $success;
 }
 
@@ -650,7 +652,7 @@ sub RenderTile
     my $YB = $YA + 1;
 
     #temporarily disable inkscape forking. it leads to missing .png tiles when splitting files
-    if (0 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
+    if (1 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
     {
         my $pid = fork();
         if (not defined $pid) 

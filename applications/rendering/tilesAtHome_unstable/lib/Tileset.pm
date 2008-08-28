@@ -591,26 +591,35 @@ sub RenderTile
     my $maxzoom = $Config->get($layer."_MaxZoom");
     my $req = $self->{req};
 
-    return (1,1) if($Zoom > $Config->get($layer."_MaxZoom"));
+    return (1,1) if($Zoom > $maxzoom);
     
     # Render it to PNG
     printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
-    my $Width = 256 * (2 ** ($Zoom - $req->Z));  # Pixel size of tiles  
-    my $Height = 256; # Pixel height of tile
 
-    # svg2png returns true if all tiles extracted were empty. this might break 
-    # if a higher zoom tile would contain data that is not rendered at the 
-    # current zoom level. 
-    my ($success,$empty) = ::svg2png($self->{JobDir},$layer, $req, $Ytile, $Zoom, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
-    if (!$success)
-    {  # svg2png failed, so empty contains a string with the error reason
-       return (0, 0, $empty);
+    my ($FullBigPNGFileName, $reason) = 
+          ::svg2png($self->{JobDir}, $req, $Ytile, $Zoom,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
+
+    if (!$FullBigPNGFileName)
+    {  # svg2png failed
+       return (0, 0, $reason);
     }
 
-    # Should we skip going further up the zoom level?
+    # splitImageX returns true if all tiles extracted were empty.
+    # this might break if a higher zoom tile would contain data that is 
+    # not rendered at the current zoom level. 
+
+    (my $success,my $empty, $reason) = 
+           ::splitImageX($layer, $req, $Zoom, $Ytile, $FullBigPNGFileName);
+    if (!$success)
+    {  # splitimage failed
+       return (0, 0, $reason);
+    }
+
+    # If splitimage is empty Should we skip going further up the zoom level?
     if ($empty and !$Config->get($layer."_RenderFullTileset")) 
     {
-        # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
+        # leap forward because in progresscountingas this tile and 
+        # all higher zoom tiles of it are "done" (empty).
         for (my $j = $maxzoom; $j >= $Zoom ; $j--)
         {
             $::progress += 2 ** $maxzoom-$j;

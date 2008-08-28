@@ -67,8 +67,8 @@ class vmap(ranaModule):
       'primary':      ((0.8, 0.0, 0.0), 6, {'shields':True}),
       'secondary':    ((0.8, 0.8, 0.0), 6, {'shields':True}),
       'tertiary':     ((0.8, 0.8, 0.0), 6, {}),
-      'unclassified': ((0.5, 0.5, 0.5), 4, {}),
-      'service':      ((0.5, 0.5, 0.5), 2, {}),
+      'unclassified': ((1.0, 1.0, 1.0), 4, {}),
+      'service':      ((1.0, 1.0, 1.0), 2, {}),
       'footway':      ((1.0, 0.5, 0.5), 2, {'dashed':True}),
       'cycleway':     ((0.5, 1.0, 0.5), 2, {'dashed':True}),
       'bridleway':    ((0.5, 1.0, 0.5), 2, {'dashed':True}),
@@ -201,7 +201,7 @@ class vmap(ranaModule):
     #print "Z%d %d tiles, %f seconds" % (self.z, count, duration)
     #print "%f - %f" % (proj.px1, proj.px2)
 
-    if(1):
+    if(self.get("benchmarkLines")):
       print "Style: %1.3fms, line %1.3fms" % (
         1000.0 * self.style_d / self.style_c,
         1000.0 * self.line_d / self.line_c)

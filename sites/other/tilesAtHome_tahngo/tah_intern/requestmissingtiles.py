@@ -17,6 +17,7 @@ base_tile_path = settings.TILES_ROOT
 layer=Layer.objects.get(name='tile')
 CreateFormClass = CreateForm
 CreateFormClass.base_fields['layers'].required = False 
+r=request()
 
 for x in range(737,4096):
  print "x=%d" % x 
@@ -26,7 +27,7 @@ for x in range(737,4096):
     if not os.path.isfile(tilesetfile):
       form = CreateFormClass({'min_z': 12, 'x': x, 'y': y, 'priority': 4, 'layers':[1,3], 'src':'RequestMissingTiles'})
       if form.is_valid():
-        saveCreateRequestForm(form)
+        saveCreateRequestForm(r, form)
         print "x=%d,y=%d" % (x,y) 
       else:
         print "form is not valid. %s\n" % form.errors

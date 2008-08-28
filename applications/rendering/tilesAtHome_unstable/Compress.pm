@@ -77,7 +77,7 @@ sub compressAll
 
     my (@prefixes,$allowedPrefixes);
     
-    ::statusMessage("Searching for tilesets in ".$self->{TileDir},0,3);
+    ::statusMessage("Searching for tilesets to be compressed",0,3);
 
     # compile a list of the "Prefix" values of all configured layers,
     # separated by |

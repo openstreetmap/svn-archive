@@ -90,9 +90,9 @@ sub generate
     $::progress = 0;
     $::progressPercent = 0;
     $::progressJobs++;
-    $::currentSubTask = "jobinit";
+    $::currentSubTask = "Download";
     
-    ::statusMessage(sprintf("Doing tileset (%d,%d,%d) (area around %f,%f)", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
     
     my $maxCoords = (2 ** $req->Z - 1);
     
@@ -579,7 +579,7 @@ sub GenerateSVG
 #-----------------------------------------------------------------------------
 # Render a tile
 #   $Ytile, $Zoom - which tilestripe
-#   $ZOrig, the lowest zoom level which called tileset generation (i.e. z12 for "normal" operation)
+#   $Zoom - the cuurent zoom level that we render
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #   $ImageHeight - Height of the entire SVG in SVG units
@@ -592,11 +592,13 @@ sub RenderTile
     my $Config = TahConf->getConfig();
     my $maxzoom = $Config->get($layer."_MaxZoom");
     my $req = $self->{req};
+    my $forkval = $Config->get("Fork");
 
     return (1,1) if($Zoom > $maxzoom);
     
     # Render it to PNG
-    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
+    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", 
+            $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
 
     my ($FullBigPNGFileName, $reason) = 
           ::svg2png($self->{JobDir}, $req, $Ytile, $Zoom,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
@@ -631,7 +633,10 @@ sub RenderTile
 
     # increase progress of tiles
     $::progress += 1;
-    $::progressPercent = 100 * $::progress / (2**($maxzoom-$req->Z+1)-1);
+    $::progressPercent = int( 100 * $::progress / (2**($maxzoom-$req->Z+1)-1) );
+    # if forking, each thread does only 1/nth of tiles so multiply by numThreads
+    ($::progressPercent *= 2*$forkval) if $forkval;
+
     if ($::progressPercent == 100)
     {
         ::statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
@@ -651,8 +656,8 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    #temporarily disable inkscape forking. it leads to missing .png tiles when splitting files
-    if (1 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
+    # we create Fork*2 inkscape threads
+    if ($forkval && $Zoom < ($req->Z + $forkval))
     {
         my $pid = fork();
         if (not defined $pid) 

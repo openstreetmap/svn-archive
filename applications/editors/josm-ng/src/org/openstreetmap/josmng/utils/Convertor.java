@@ -62,6 +62,7 @@ public abstract class Convertor<F,T> {
             if (c.canAccept(from)) {
                 used.add(c);
                 Object intermediate = c.convert(from);
+                if (intermediate == null) continue;
                 T ret = convert(intermediate, to, used);
                 used.remove(c);
                 if (ret != null) return ret;

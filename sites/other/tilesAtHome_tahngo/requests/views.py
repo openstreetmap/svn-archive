@@ -17,75 +17,118 @@ from tah.tah_intern.Tileset import Tileset
 from django.views.decorators.cache import cache_control
 from tah.tah_intern.models import Settings
 
+###############################################
+# requests.views.py does all the action with regard to creating requests,
+# taking error feedback and receiving uploads
+###############################################
+
+#-------------------------------------------------------
+# Show the base request homepage
 
 def index(request):
   return render_to_response('base_requests.html');
 
-#shortcut view to see all requests
+#-------------------------------------------------------
+# shortcut to see the first page of the show_request page
+
 def show_first_page(request):
   return show_requests(request,1)
 
-@cache_control(must_revalidate=True, max_age=30)
+#-------------------------------------------------------
+# show the list of recently created requests and the list
+# of recently taken requests
+
+@cache_control(max_age=10)
 def show_requests(request,page):
   if page: pagination=30 
   else: pagination=0
-  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=0).order_by('-request_time'),template_name='requests_show.html',allow_empty=True,paginate_by=pagination,page=page,template_object_name='new_reqs',extra_context={'active_reqs_list':Request.objects.filter(status=1).order_by('-clientping_time')[:30]});
+  return django.views.generic.list_detail.object_list(request, \
+    queryset=Request.objects.filter(status=0).order_by('-request_time'), \
+    template_name='requests_show.html', allow_empty=True, paginate_by=pagination, \
+    page=page, template_object_name='new_reqs', extra_context = {
+    'active_reqs_list':Request.objects.filter(status=1).order_by('-clientping_time')[:30]
+    });
 
+#-------------------------------------------------------
+# Show a list of recently uploaded requests
 
-@cache_control(must_revalidate=True, max_age=30)
+@cache_control(max_age = 10)
 def show_uploads_page(request):
-  return django.views.generic.list_detail.object_list(request, queryset=Request.objects.filter(status=2).order_by('-clientping_time')[:30],template_name='requests_show_uploads.html',allow_empty=True,template_object_name='reqs');
+  return django.views.generic.list_detail.object_list(request, \
+        queryset=Request.objects.filter(status=2).order_by('-clientping_time')[:30], \
+        template_name='requests_show_uploads.html',allow_empty=True, \
+        template_object_name='reqs');
 
+#-------------------------------------------------------
+# not a public view, but a helper function that creates a new request based on data in
+# 'form' and performs sanity checks etc. The form must have been validated previously.
 
-def saveCreateRequestForm(request, form):
+def saveCreateRequestForm(form):
     """ Returns (Request, reason), with Request being 'None' on failure and 
         the saved request object on success. 
         Reason is a string that describes the error in case of failure.
     """
     formdata = form.cleaned_data.copy()
-    # delete entries that are not needed as default value or won't work
+
+    # delete layer here. We use the layers from ^'form' later.
     del formdata['layers']
+
+    #sanity changes and default values on some attributes
     if not formdata['min_z'] in ['6','12']: formdata['min_z'] = 12
     if not formdata['priority'] or \
-      formdata['priority']>4 or formdata['priority']<1: 
-        formdata['priority'] = 3
+      formdata['priority'] > 4 or formdata['priority'] < 1: 
+          formdata['priority'] = 3
     formdata['clientping_time'] = force_unicode(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     if not formdata['src']: formdata['src'] = '' # requester did not supply a 'src' string
 
-    # catch invalid x,y
+    # catch invalid x,y and return if found
     if not Tile(None,formdata['min_z'],formdata['x'],formdata['y']).is_valid():
-      return (None, 'Invalid tile coordinates')
+        return (None, 'Invalid tile coordinates')
 
     # Deny request if the same is already out rendering
-    if Request.objects.filter(status=1, min_z=formdata['min_z'], x=form.data['x'], y=form.data['y']).count():
-      return (None, 'Request currently rendering')
+    if Request.objects.filter(status=1, min_z=formdata['min_z'], x=form.data['x'], \
+      y=form.data['y']).count():
+          return (None, 'Request currently rendering')
 
     # Create a new request, or get the existing one
-    newRequest, created_new = Request.objects.get_or_create(status=0,min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
+    newRequest, created_new = Request.objects.get_or_create(status=0, \
+        min_z=formdata['min_z'], x=form.data['x'], y=form.data['y'],defaults=formdata)
 
+    # set more values in the new request item
     newRequest.ipaddress = request.META['REMOTE_ADDR']
     newRequest.max_z = {0:5,6:11,12:17}[formdata['min_z']]
 
     if not created_new:
-      #update existing request with new request data
-      newRequest.priority = min(formdata['priority'],newRequest.priority)
+        # increase priority if we update existing request (if needed)
+        newRequest.priority = min(formdata['priority'], newRequest.priority)
 
     ##check if the IP has already lot's of high priority requests going and auto-bump down
     if formdata['priority'] == 1:
-      ip_requested = Request.objects.filter(status__lt= 2, ipaddress= request.META['REMOTE_ADDR']).count()
-      if ip_requested > 15:
-        newRequest.priority = max(2,newRequest.priority)
+        ip_requested = Request.objects.filter(status__lt= 2, \
+          ipaddress= request.META['REMOTE_ADDR']).count()
 
-    # finally save the updated request
+        if ip_requested > 15:
+            # auto bump down to a minimum of 2
+            newRequest.priority = max(2,newRequest.priority)
+
+    # finally save the updated request, the required layers are still missing then.
     newRequest.save()
+
+    # add layers to the request
     if form.data.has_key('layers'):
-      # save the chosen layers
-      layers = Layer.objects.filter(pk__in=form['layers'].data)
+        # save the chosen layers
+        layers = Layer.objects.filter(pk__in=form['layers'].data)
     else:
-      # no layers selected -> save default layers
-      layers = Layer.objects.filter(default=True)
+        # no layers selected -> save default layers
+        layers = Layer.objects.filter(default=True)
     for l in layers: newRequest.layers.add(l)
+
+    # Finally return the request. Success!
     return (newRequest,'')
+
+
+#-------------------------------------------------------
+# view that creates a new request
 
 def create(request):
     html="XX|unknown error"
@@ -101,7 +144,7 @@ def create(request):
     if request.method == 'POST':
       form = CreateForm(request.POST)
       if form.is_valid():
-        req, reason = saveCreateRequestForm(request, form)
+        req, reason = saveCreateRequestForm(form)
       else:
         html="form is not valid. "+str(form.errors)
         return HttpResponse(html)
@@ -109,7 +152,7 @@ def create(request):
       #Create request using GET"
       form = CreateForm(request.GET)
       if form.is_valid():
-        req, reason = saveCreateRequestForm(request, form)
+        req, reason = saveCreateRequestForm(form)
       else:
          # view the plain form webpage with default values filled in
          return render_to_response('requests_create.html', \
@@ -311,7 +354,7 @@ def request_changedTiles(request):
       CreateFormClass.base_fields['layers'].required = False 
       form = CreateFormClass({'min_z': z, 'x': x, 'y': y, 'priority': 2, 'src':'ChangedTileAutoRequest'})
       if form.is_valid():
-        req, reason = saveCreateRequestForm(request, form)
+        req, reason = saveCreateRequestForm(form)
         if req:
           html += "Render '%s' (%s,%s,%s)\n" % (req.layers_str,form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'])
         else: html +="Renderrequest failed (%s,%s,%s): %s\n" % (form.cleaned_data['min_z'],form.cleaned_data['x'],form.cleaned_data['y'], reason)

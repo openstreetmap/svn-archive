@@ -19,10 +19,6 @@ Pngcrush=pngcrush
 Optipng=optipng
 Subversion=svn
 
-## the following parameter is mainly for windows compatibility. 
-## if you don't know what it does, keep at 0.
-7zipWin=0
-
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 

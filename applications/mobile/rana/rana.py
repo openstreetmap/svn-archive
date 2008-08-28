@@ -121,6 +121,11 @@ class MapWidget(gtk.Widget):
       for m in self.m.values():
         m.drawMenu(cr, menuName)
     else:
+      # map background
+      cr.set_source_rgb(0.2,0.2,0.2)
+      cr.rectangle(0,0,self.rect.width,self.rect.height)
+      cr.fill()
+      
       # Draw the base map, the map overlays, and the screen overlays
       for m in self.m.values():
         m.drawMap(cr)

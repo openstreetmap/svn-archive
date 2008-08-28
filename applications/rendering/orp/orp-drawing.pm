@@ -50,6 +50,7 @@ sub draw_lines
     foreach ($selected->members)
     {
         next unless (ref $_  eq 'way');
+        next if (scalar(@{$_->{"nodes"}}) < 2);
         next if defined($layer) and $_->{'layer'} != $layer;
 
 	# this is a special case for ways (e.g. rivers) where we honor a

@@ -237,6 +237,9 @@ sub optimizePNGs
        $::progressPercent = 100 * $progress / $NumPNG;
 
        my $PngFullFileName = File::Spec->join($PNGDir, $PngFileName);
+       # don't optimize empty sea or empty land tiles (file size 67 and 69)
+       next if ((-s $PngFullFileName) =~ /67|69/);
+
        # Temporary filename between quantizing and optimizing
        my $TmpFullFileName = $PngFullFileName.$TmpFilename_suffix;
 

@@ -59,7 +59,8 @@
   o (ShowCoordinates, 0, 3) \
   o (ShowTrace,       0, 2) \
   o (ModelessDialog,  0, 2) \
-  o (FullScreen,      0, 2)
+  o (FullScreen,      0, 2) \
+  o (ValidateMode,    0, 2)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -81,12 +82,14 @@ using namespace std;
   o (ButtonSize,      1, 5) \
   o (IconSet,         0, 4) \
   o (DetailLevel,     0, 5) \
-  o (ShowActiveRouteNodes, 0, 2)
+  o (ShowActiveRouteNodes, 0, 2) \
+  o (ValidateMode,    0, 2)
 
 #define HideZoomButtons 0
 #define MenuKey 0
 #endif
 char docPrefix[80] = "";
+
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
 #include "icons.xpm"
@@ -112,6 +115,10 @@ struct GdkEventButton {
   int x, y, button;
 };
 
+#define ROUTE_PEN 0
+#define VALIDATE_PEN 1
+#define RESERVED_PENS 2
+
 HINSTANCE hInst;
 HWND   mWnd, dlgWnd = NULL;
 
@@ -132,6 +139,17 @@ const char *FindResource (const char *fname)
 }
 #endif
 
+// used for showing logs to a file
+char logFileName[80] = "gosmore.log.txt";
+
+FILE * logFP(bool create = true) {
+  static FILE * f;
+  if (!f && create) {
+    f = fopen(logFileName,"at");
+    fprintf(f,"-----\n");
+  }
+  return f;
+}
 
 struct klasTableStruct {
   const wchar_t *desc;
@@ -174,7 +192,7 @@ OPTIONS
 #ifndef HEADLESS
 #define STATUS_BAR    0
 
-GtkWidget *draw, *location, *followGPSr, *orientNorthwards;
+GtkWidget *draw, *location, *followGPSr, *orientNorthwards, *validateMode;
 GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE;
 /* zoom is the amount that fits into the window (regardless of window size) */
@@ -220,6 +238,8 @@ int ChangeOption (void)
   FollowGPSr = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr));
   OrientNorthwards =
     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (orientNorthwards));
+  ValidateMode = 
+    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (validateMode));
   if (OrientNorthwards) {
     cosAzimuth = 1.0;
     sinAzimuth = 0.0;
@@ -940,7 +960,7 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
 #else
 gint Expose (void)
 {
-  static GdkColor styleColour[2 << STYLE_BITS][2], routeColour;
+  static GdkColor styleColour[2 << STYLE_BITS][2], routeColour, validateColour;
   static GdkPixmap *icons = NULL;
   static GdkGC *mygc = NULL;
   if (!mygc) {
@@ -961,6 +981,10 @@ gint Expose (void)
     routeColour.green = routeColour.blue = 0;
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &routeColour, FALSE, TRUE);
+    validateColour.red = 0xffff;
+    validateColour.green = validateColour.blue = 0x9999;
+    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
+      &validateColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
     #ifndef WIN32
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
@@ -1027,6 +1051,8 @@ gint Expose (void)
     int doAreas = TRUE, blockIcon[2 * 128];
     memset (blockIcon, 0, sizeof (blockIcon)); // One bit per 16 x 16 area
   //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
+
+    // render map
     for (int thisLayer = -5, nextLayer; thisLayer < 6;
          thisLayer = nextLayer, doAreas = !doAreas) {
       OsmItr itr (clon - lonRadius, clat - latRadius,
@@ -1069,6 +1095,7 @@ gint Expose (void)
         #endif
         int len = strcspn ((char *)(w + 1) + 1, "\n");
         
+	// single-point node
         if (nd->other[0] < 0 && nd->other[1] < 0) {
           int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
           int *b = blockIcon + (x / (48 * 32) + y / 22 * 1) %
@@ -1106,6 +1133,7 @@ gint Expose (void)
             #endif
           }
         }
+	// area
         else if (Style (w)->areaColour != -1) {
           #ifndef _WIN32_WCE
           while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
@@ -1127,67 +1155,97 @@ gint Expose (void)
           gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
           #endif
         }
+	// way
         else if (nd->other[1] >= 0) {
-          #ifndef _WIN32_WCE
-          gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
-          gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
-            Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
-            : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-          #else
-          SelectObject (mygc, pen[StyleNr (w) + 1]);
-          #endif
-          int oldx = X (nd->lon, nd->lat);
-          int oldy = Y (nd->lon, nd->lat);
-          do {
-            ndType *next = ndBase + nd->other[1];
-            if (next->lat == INT_MIN) break; // Node excluded from build
-            int x = X (next->lon, next->lat);
-            int y = Y (next->lon, next->lat);
-            if ((x <= clip.width || oldx <= clip.width) &&
-                (x >= 0 || oldx >= 0) && (y >= 0 || oldy >= 0) &&
-                (y <= clip.height || oldy <= clip.height)) {
-              gdk_draw_line (draw->window, mygc, oldx, oldy, x, y);
-              #ifdef _WIN32_WCE
-              int newb = oldx > x ? oldx - x : x - oldx;
-              if (newb < oldy - y) newb = oldy - y;
-              if (newb < y - oldy) newb = y - oldy;
-              if (best < newb) {
-                best = newb;
-                bestW = (x > oldx ? -1 : 1) * (x - oldx);
-                bestH = (x > oldx ? -1 : 1) * (oldy - y);
-                x0 = next->lon / 2 + nd->lon / 2;
-                y0 = next->lat / 2 + nd->lat / 2;
-              }
-              #endif
-              #ifdef CAIRO_VERSION
-              __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
-                                 (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
-              if (lenSqr > maxLenSqr) {
-                maxLenSqr = lenSqr;
-                double lonDiff = (nd->lon - next->lon) * cosAzimuth +
-                                 (nd->lat - next->lat) * sinAzimuth;
-                mat.yy = mat.xx = 1.0 * fabs (lonDiff) / sqrt (lenSqr);
-                mat.xy = (lonDiff > 0 ? 1.0 : -1.0) *
-                         ((nd->lat - next->lat) * cosAzimuth -
-                          (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
-                mat.yx = -mat.xy;
-                x0 = X (nd->lon / 2 + next->lon / 2,
-                        nd->lat / 2 + next->lat / 2);// +
-//                  mat.yx * f->descent / 1.0 - mat.xx / 1.0 * 3 * len;
-                y0 = Y (nd->lon / 2 + next->lon / 2,
-                        nd->lat / 2 + next->lat / 2);// +
-//                  mat.xx * f->descent / 1.0 - mat.yx / 1.0 * 3 * len;
-              }
-              #endif
-            }
-            nd = next;
-            oldx = x;
-            oldy = y;
-          } while (itr.left <= nd->lon && nd->lon < itr.right &&
-                   itr.top  <= nd->lat && nd->lat < itr.bottom &&
-                   nd->other[1] >= 0);
-        } /* If it has one or more segments */
+	  // perform validation
+	  bool valid;
+	  if (ValidateMode) {
+	    valid = (len > 0); // most ways should have labels
+	    // valid = valid && ... (add more validation here)
 
+	    // // LOG
+	    // fprintf(logFP(),"valid = (len > 0) = %d > 0 = %d (%s)\n",
+	    // 	    len,valid,(char *)(w + 1) + 1);
+
+	  } else {
+	    valid = true; 
+	  }
+	  // two stages -> validate (if needed) then normal rendering
+	  ndType *orig = nd;
+	  for (int stage = ( valid ? 1 : 0);stage<2;stage++) {
+	    nd = orig;
+	    if (stage==0) {
+            #ifndef _WIN32_WCE
+	      gdk_gc_set_foreground (mygc, &validateColour);
+	      gdk_gc_set_line_attributes (mygc, 10,
+		       GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+            #else
+	      SelectObject (mygc, pen[VALIDATE_PEN]);
+            #endif
+	    }
+	    else if (stage == 1) {
+              #ifndef _WIN32_WCE
+	      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
+	      gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
+		    Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
+		    : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+              #else
+	      SelectObject (mygc, pen[StyleNr (w) + RESERVED_PENS]);
+              #endif
+	    }
+	    int oldx = X (nd->lon, nd->lat);
+	    int oldy = Y (nd->lon, nd->lat);
+	    do {
+	      ndType *next = ndBase + nd->other[1];
+	      if (next->lat == INT_MIN) break; // Node excluded from build
+	      int x = X (next->lon, next->lat);
+	      int y = Y (next->lon, next->lat);
+	      if ((x <= clip.width || oldx <= clip.width) &&
+		  (x >= 0 || oldx >= 0) && (y >= 0 || oldy >= 0) &&
+		  (y <= clip.height || oldy <= clip.height)) {
+		gdk_draw_line (draw->window, mygc, oldx, oldy, x, y);
+                #ifdef _WIN32_WCE
+		int newb = oldx > x ? oldx - x : x - oldx;
+		if (newb < oldy - y) newb = oldy - y;
+		if (newb < y - oldy) newb = y - oldy;
+		if (best < newb) {
+		  best = newb;
+		  bestW = (x > oldx ? -1 : 1) * (x - oldx);
+		  bestH = (x > oldx ? -1 : 1) * (oldy - y);
+		  x0 = next->lon / 2 + nd->lon / 2;
+		  y0 = next->lat / 2 + nd->lat / 2;
+		}
+                #endif
+                #ifdef CAIRO_VERSION
+		__int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
+		  (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
+		if (lenSqr > maxLenSqr) {
+		  maxLenSqr = lenSqr;
+		  double lonDiff = (nd->lon - next->lon) * cosAzimuth +
+		    (nd->lat - next->lat) * sinAzimuth;
+		  mat.yy = mat.xx = 1.0 * fabs (lonDiff) / sqrt (lenSqr);
+		  mat.xy = (lonDiff > 0 ? 1.0 : -1.0) *
+		    ((nd->lat - next->lat) * cosAzimuth -
+		     (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
+		  mat.yx = -mat.xy;
+		  x0 = X (nd->lon / 2 + next->lon / 2,
+			  nd->lat / 2 + next->lat / 2);// +
+		  //                  mat.yx * f->descent / 1.0 - mat.xx / 1.0 * 3 * len;
+		  y0 = Y (nd->lon / 2 + next->lon / 2,
+			  nd->lat / 2 + next->lat / 2);// +
+		  //                  mat.xx * f->descent / 1.0 - mat.yx / 1.0 * 3 * len;
+		}
+#endif
+	      }
+	      nd = next;
+	      oldx = x;
+	      oldy = y;
+	    } while (itr.left <= nd->lon && nd->lon < itr.right &&
+		     itr.top  <= nd->lat && nd->lat < itr.bottom &&
+		     nd->other[1] >= 0);
+	  }
+	} /* If it has one or more segments */
+	  
         #ifdef _WIN32_WCE
         if (best > len * 4) {
           double hoek = atan2 (bestH, bestW);
@@ -1238,11 +1296,13 @@ gint Expose (void)
           }
         }
         #endif
-      } /* for each visible tile */
+      } /* for each OsmItr */
     } // For each layer
   //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
   //  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+
+    // render route
     routeNodeType *x;
     if (shortest && (x = shortest->shortest)) {
       double len;
@@ -1253,7 +1313,7 @@ gint Expose (void)
       gdk_gc_set_line_attributes (mygc, 5,
         GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
       #else
-      SelectObject (mygc, pen[0]);
+      SelectObject (mygc, pen[ROUTE_PEN]);
       #endif
       if (routeHeapSize > 1) {
         gdk_draw_line (draw->window, mygc, X (flon, flat), Y (flon, flat),
@@ -1307,7 +1367,7 @@ gint Expose (void)
           x - icon[2] / 2, y - icon[3] / 2, icon[2], icon[3]);
       }
       else {
-        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas + 1 : 0]);
+        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas: 0 + RESERVED_PENS]);
         MoveToEx (mygc, x, y, NULL);
         for (int i = 1; i < newWays[j].cnt; i++) {
           LineTo (mygc, X (newWays[j].coord[i][0], newWays[j].coord[i][1]),
@@ -1601,6 +1661,12 @@ int UserInterface (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (orientNorthwards), "clicked",
     GTK_SIGNAL_FUNC (ChangeOption), NULL);
   gtk_widget_show (orientNorthwards);
+
+  validateMode = gtk_check_button_new_with_label ("Validation Mode");
+  gtk_box_pack_start (GTK_BOX (vbox), validateMode, FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (validateMode), "clicked",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
+  gtk_widget_show (validateMode);
 
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
   
@@ -2433,6 +2499,9 @@ int main (int argc, char *argv[])
   } /* if rebuilding */
   #endif // WIN32
   return UserInterface (argc, argv);
+
+  // close the logfile if it has been opened
+  if (logFP(false)) fclose(logFP(false));
 }
 #else // _WIN32_WCE
 //----------------------------- _WIN32_WCE ------------------
@@ -2547,9 +2616,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
           bmp = CreateCompatibleBitmap (ps.hdc, GetSystemMetrics(SM_CXSCREEN),
             GetSystemMetrics(SM_CYSCREEN));
           SelectObject (bufDc, bmp);
-          pen[0] = CreatePen (PS_SOLID, 4, 0xff);
+          pen[ROUTE_PEN] = CreatePen (PS_SOLID, 4, 0xff);
+	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff);
           for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
-            pen[i + 1] = CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
+            pen[i + RESERVED_PENS] = CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
               style[i].lineWidth, (style[i].lineColour >> 16) |
                 (style[i].lineColour & 0xff00) |
                 ((style[i].lineColour & 0xff) << 16));
@@ -2843,6 +2913,9 @@ int WINAPI WinMain(
     optFile = fopen ("\\My Documents\\gosmore.opt", "rb");
   }
 
+  //store log file name
+  sprintf (logFileName, "%s\\gosmore.log.txt", docPrefix);
+
   wcscat (argv0, TEXT ("gosmore.pak")); // _arm.exe to ore.pak
   HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -2985,6 +3058,8 @@ int WINAPI WinMain(
       fclose (newWayFile);
     }
   }
+
+  if (logFP(false)) fclose(logFP(false));
 
   return 0;
 }

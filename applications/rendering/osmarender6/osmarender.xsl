@@ -339,6 +339,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <defs id="defs-symbols">
         <xsl:copy-of select="$symbols"/>
       </defs>
+      <!-- Included defs -->
+      <defs id="defs-included">
+        <xsl:for-each select="//include">
+          <xsl:copy-of select="document(@ref)/svg:svg/*"/>
+        </xsl:for-each>
+      </defs>
 
       <!-- Pre-generate named path definitions for all ways -->
       <xsl:variable name="allWays" select="$data/osm/way"/>

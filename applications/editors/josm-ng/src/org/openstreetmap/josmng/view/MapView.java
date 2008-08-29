@@ -42,9 +42,9 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 
 import javax.swing.KeyStroke;
+import org.openstreetmap.josmng.osm.Bounds;
 import org.openstreetmap.josmng.osm.Coordinate;
 import org.openstreetmap.josmng.osm.CoordinateImpl;
-import org.openstreetmap.josmng.osm.Node;
 
 /**
  *
@@ -146,6 +146,23 @@ public class MapView extends JComponent {
         repaint();
     }
 
+    public Bounds getViewBounds() {
+        BBox view = screenToView(new Rectangle(0, 0, getWidth(), getHeight()));
+        return Bounds.create(proj.viewToCoord(view.getTopLeft()), proj.viewToCoord(view.getBottomRight()));
+    }
+    
+    // i.e. zoomTo(Bounds)
+    public void setViewBounds(Bounds bounds) {
+        BBox toView = new BBox();
+        toView.addPoint(proj.coordToView(bounds.min));
+        toView.addPoint(proj.coordToView(bounds.max));
+
+        int newFactor = Math.max(6, (int)(toView.getWidth() / getWidth()));
+        setCenter(toView.getCenter());
+        setScaleFactor(newFactor);
+        // both calls wil schedule repaint, no explicit repaint necessary
+    }
+    
     /* A horizontal scale in m/px in the middle of the canvas.
      */
     private double getMeanScaleFactor() {

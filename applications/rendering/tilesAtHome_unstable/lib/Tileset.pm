@@ -324,7 +324,7 @@ sub downloadData
                     $Config->get("OSMVersion"),
                     "*",
                     $bbox);
-                ::statusMessage("Downloading: Map data for from OSMXAPI for ".$req->layers_str,0,3);
+                ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
                 print "Download\n$URL\n" if ($Config->get("Debug"));
                 my $res = ::DownloadFile($URL, $partialFile, 0);
                 if (! $res)

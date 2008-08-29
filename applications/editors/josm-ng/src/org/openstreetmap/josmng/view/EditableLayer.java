@@ -72,7 +72,7 @@ public abstract class EditableLayer extends Layer {
         return visitor;
     }
     
-    public void setSelection(Collection<OsmPrimitive> newSelection) {
+    public void setSelection(Collection<? extends OsmPrimitive> newSelection) {
         selection.clear();
         selection.addAll(newSelection);
         // XXX: notify the change

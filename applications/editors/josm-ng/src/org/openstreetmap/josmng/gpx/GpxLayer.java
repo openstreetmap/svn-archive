@@ -30,12 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import javax.xml.parsers.SAXParserFactory;
+import org.openstreetmap.josmng.osm.Bounds;
+import org.openstreetmap.josmng.osm.Coordinate;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import org.openstreetmap.josmng.osm.CoordinateImpl;
+import org.openstreetmap.josmng.osm.visitors.BoundsVisitor;
 import org.openstreetmap.josmng.view.*;
 
 /**
@@ -50,16 +53,22 @@ public class GpxLayer extends Layer {
     private Projection projCache;
     private String name;
     private ViewCoords[][] coords;
+    private final Bounds bounds;
 
     public GpxLayer(MapView parent, String name, InputStream src) throws IOException {
         super(parent);
         projCache = parent.getProjection();
         this.name = name;
-        coords = parse(projCache, src);
+        Parser parser = parse(projCache, src);
+        coords = parser.getData();
+        bounds = parser.getBounds();
+    }
+
+    public @Override Bounds getBounds() {
+        return bounds;
     }
     
-    @Override
-    public void paint(Graphics g) {
+    public @Override void paint(Graphics g) {
         checkProjection();
         final int ptSize = 3;
         g.setColor(Color.GRAY);
@@ -103,12 +112,12 @@ public class GpxLayer extends Layer {
         return name;
     }
 
-    private static ViewCoords[][] parse(Projection proj, InputStream src) throws IOException {
+    private static Parser parse(Projection proj, InputStream src) throws IOException {
         InputSource inputSource = new InputSource(new InputStreamReader(src, "UTF-8"));
         Parser parser = new Parser(proj);
         try {
             SAXParserFactory.newInstance().newSAXParser().parse(inputSource, parser);
-            return parser.getData();
+            return parser;
         } catch (Exception e) {
             e.printStackTrace(); // broken SAXException chaining
             throw (IOException)new IOException().initCause(e);
@@ -125,6 +134,11 @@ public class GpxLayer extends Layer {
         private List<ViewCoords[]> tracks = new ArrayList();
         private Stack<String> state = new Stack<String>();
         private final Projection proj;
+        private BoundsVisitor bounds = new BoundsVisitor(false);
+    
+        Bounds getBounds() {
+            return bounds.getBounds();
+        }
 
         public Parser(Projection proj) {
             this.proj = proj;
@@ -140,7 +154,10 @@ public class GpxLayer extends Layer {
             } else if(qName.equals("trkpt")) {
                 double lon = getDouble(atts,"lon");
                 double lat = getDouble(atts, "lat");
-                ViewCoords vc = proj.coordToView(new CoordinateImpl(lat, lon));
+                Coordinate coor = new CoordinateImpl(lat, lon);
+                bounds.visitCoordinate(coor);
+
+                ViewCoords vc = proj.coordToView(coor);
                 currTrack.add(vc);
             }
         }

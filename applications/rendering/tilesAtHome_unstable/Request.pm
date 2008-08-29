@@ -23,6 +23,7 @@ use strict;
 use LWP::UserAgent;
 use tahlib;
 use lib::TahConf;
+use lib::TahExceptions;
 
 #unrenderable is a class global hash that keeps unrenderable tilesets as ['z x y']=1
 our %unrenderable = ();
@@ -166,21 +167,18 @@ sub fetchFromServer
         $success=0;
         my $Requeststring = $self->getRequestStringFromServer();
 
-        return (0, "Error reading request from server") unless ($Requeststring);
+        die TahError->new("ServerError", "Error reading request from server") unless ($Requeststring);
         
         # $ValidFlag is 'OK' (got request) or 'XX' (error occurred, or no work for us)
         # $Version denotes the version of the request taking protocol the server speaks. It's currently at '5'
         ($ValidFlag,$Version) = split(/\|/, $Requeststring);
 
         # First check that we understand the server protocol
-        if ($Version < 4 or $Version > 5)
+        if ($Version < 5 or $Version > 5)
         {
-            #TODO use statusMessage here
-            print STDERR "\n";
-            print STDERR "Server is speaking a different version of the protocol to us.\n";
-            print STDERR "Check to see whether a new version of this program was released!\n";
-            cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Requeststring,"EXIT",1);
-            ## No need to return, we exit the program at this point
+            my $message = "Server is speaking a different version of the protocol to us ($Version).\n"
+                . "Check to see whether a new version of this program was released!";
+            die TahError->new("ServerError", $message);
         }
 
         if ($ValidFlag eq "OK")
@@ -214,22 +212,23 @@ sub fetchFromServer
             ($ValidFlag, $Version, my $reason) = split(/\|/, $Requeststring);
             if ($reason =~ /Invalid username/)
             {
-                die "ERROR: Authentication failed - please check your username "
-                        . "and password in 'authentication.conf'.\n\n"
-                        . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
+                die TahError->new("AuthenticationError",
+                                  "ERROR: Authentication failed - please check your username and password in 'authentication.conf'.\n\n"
+                                  . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.");
             }
             elsif ($reason =~ /Invalid client version/)
             {
-                die "ERROR: This client version (".$self->{Config}->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
+                die TahError->new("ClientVersionError", "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
+                                  . ") was not accepted by the server.");  ## this should never happen as long as auto-update works
             }
             else
             {
-                return (0, "Unknown server response");
+                die TahError->new("ServerError", "Unknown server response: $Requeststring");
             }
         }
         else
         {   # ValidFlag was neither 'OK' nor 'XX'. This should NEVER happen.
-              return (0, "Unknown server response, ValidFlag neither 'OK' nor 'XX'");
+              die TahError->new("ServerError", "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'");
 	}
 
         if ($self->is_unrenderable())
@@ -243,7 +242,6 @@ sub fetchFromServer
 
     # Information text to say what's happening
     ::statusMessage("Got work from the server: ".$self->layers_str.' ('.$self->ZXY_str.')', 0, 6);
-    return (1, "");
 }
 
 

@@ -28,9 +28,11 @@ use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);
 use File::Spec;
+use Scalar::Util qw(blessed);
 use IO::Socket;
 use tahlib;
 use lib::TahConf;
+use lib::TahExceptions;
 use lib::Tileset;
 use Request;
 use Upload;
@@ -500,17 +502,25 @@ sub ProcessRequestsFromServer
 
     statusMessage("Retrieving next job", 0, 3);
     my $req = new Request;
-    my ($success, $reason) = $req->fetchFromServer();
+    eval {
+        $req->fetchFromServer();
+    };
 
-    if ($success)
-    {
-        #TODO: return result of GenerateTileset?
-        my $tileset = Tileset->new($req);
-        ($success, $reason) = $tileset->generate();
-        if (!$success)
-        {
-            $req->putBackToServer($reason) unless $Mode eq 'xy';
+    if (my $error = $@) {
+        if (blessed($error) && $error->isa("TahError")) {
+            cleanUpAndDie($error->text(), "EXIT", 1);
         }
+        else {
+            die;
+        }
+    }
+
+    #TODO: return result of GenerateTileset?
+    my $tileset = Tileset->new($req);
+    my ($success, $reason) = $tileset->generate();
+    if (!$success)
+    {
+        $req->putBackToServer($reason) unless $Mode eq 'xy';
     }
     return ($success, $reason);
 }

@@ -1,0 +1,69 @@
+# default values for variables, may be overridden in any other config file
+
+### DO NOT EDIT ###
+### Every setting in here can be overridden in tilesAtHome.conf and authentication.conf so uses those to modify the config.###
+
+### defaults for command line options (not used, yet)
+
+nobezier = 0
+
+### defaults for authentication settings (in case someone forgot to create his authentication.conf
+
+UploadUsername = I_forgot_to_edit_authentication.conf
+UploadPassword = none
+
+### defaults for user settings:
+
+Debug = 0
+Verbose = 6
+
+ProcessLog = 0
+ProcessLogFile = /tmp/tah.log
+
+Niceness = nice -n10
+
+DownloadTimeout = 1800
+KeepDataFile = 0
+FallBackToXAPI = 0
+MaxTilesetComplexity = 0
+i18n=1
+
+Osmarender = orp
+
+Inkscape = inkscape
+InkscapeLocale = 0
+
+BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
+BatikJVMSize = 1536M
+Batik = 0
+BatikPort = 18123
+BatikClasspath = /usr/share/batik-1.6/lib/batik-rasterizer.jar:/usr/share/xerces-2/lib/xercesImpl.jar:batik-agent.jar
+
+XmlStarlet = xmlstarlet
+XmlStarletMaxDepth = 20000
+
+Pngcrush = pngcrush
+Optipng = optipng
+PngOptimizer = pngcrush
+
+PNGnq = pngnq
+PngQuantizer = pngnq
+
+Subversion = svn
+SubversionUpdateCmd = up
+
+Zip = zip
+7zipWin = 0
+
+UploadToDirectory = 0
+UploadTargetDirectory = /set/this/to/your/upload/directory
+GatherBlankTiles = 0
+DeleteZipFilesAfterUpload = 1
+
+Fork = 0
+ForkForUpload = 1
+
+AutoResetInkscapePrefs = 0
+AutoResetStopfile = 0
+
+LocalSlippymap = 0

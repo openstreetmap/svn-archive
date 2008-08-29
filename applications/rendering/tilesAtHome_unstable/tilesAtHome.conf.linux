@@ -1,0 +1,123 @@
+#
+# Config file for TilesAtHome 
+#
+
+## Edit and save as tilesAtHome.conf. 
+##
+## do NOT make a link to this file
+## do NOT save modifications to this file
+##
+
+## FileLocations
+#
+# If WorkingDir is commented out, it will use the default system tmpdir location
+WorkingDirectory=/tmp/
+Inkscape=inkscape
+XmlStarlet=xmlstarlet
+Niceness=nice -n10
+Pngcrush=pngcrush
+Optipng=optipng
+Subversion=svn
+
+## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
+PngOptimizer=pngcrush
+
+## Workaround for inkscape internationalisation problems. Should be safe to keep on.
+i18n=1
+
+# Set the timeout when downloading files (in seconds)
+DownloadTimeout=1800
+
+# Fall back to XAPI in case we get a "no data here" error.
+# assumes XAPI is current enough for rendering, and can take the load
+FallBackToXAPI = 0
+
+# Hand back render requests that have a tileset on a server bigger than
+# MaxTilesetComplexity. Useful if you do not have much RAM and inkscape
+# crashes. The biggest tileset is about 31000000, so playing with values
+# around 20000000 will help you. A setting of 0 disables the mechanism.
+MaxTilesetComplexity = 0
+
+
+## Upload settings
+
+# if set to 0 the zip files will get renamed to zip_uploaded after upload.
+DeleteZipFilesAfterUpload=1
+
+# set UploadToDirectory to 1 to enable uploading to a common upload 
+# directory from which one central client can handle all the uploading
+UploadToDirectory=0
+UploadTargetDirectory=/set/this/to/your/upload/directory
+
+## Beziercurve hinting
+NoBezier=0  # Set to 1 if beziercurvehinting causes errors.
+
+#if a set is empty and RenderFullTileset = 0 only one tile is created
+# set to 1 if the tile should be stored in workdir, so you can upload a bunch of them
+# if set to 0 this tile will be uploaded as a set
+GatherBlankTiles=0
+
+# If set to 1, make a copy of the data file for later debugging purposes
+KeepDataFile=0
+
+# If set to 1, then Batik will be used for rendering instead of Inkscape
+# If set to 2, then the Batik-wrapper will be used instead of Batik .jar file
+# (adjust the path below accordingly)
+# If set to 3, then Batik in agent mode will be used. The renderning is faster 
+# than other modes or inkscape, but it require BatikClasspath to be set correctly
+Batik=0
+
+# Set to the location of the batik rasterizer jar or the Batik wrapper (see
+# Batik config parameter above) The Batik libraries should reside in the same
+# folder, or in a sub-folder named lib.
+BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar
+
+# Path to jars required by Batik in agent mode
+#BatikClasspath=batik-rasterizer.jar:xercesImpl.jar:batik-agent.jar
+
+# Set to the maximum JVM size to pass to the -Xmx parameter when running the
+# rasterizer. The maximum size depends on the OS and the available memory.
+# For 32bit Systems it is 1536M (1.5GiB)
+# Only used for Batik jar
+BatikJVMSize=1536M
+
+
+# If set to 1 or greater, it will enable forking to render several zoom levels to SVG simultanously
+# Fork = n  -> use 2*n parallel processes for rendering to svg
+Fork=0
+
+# make the client upload in the background if set to 1
+ForkForUpload=1
+
+# Maxdepth for xmlstarlet, reduce if you run into problems with memory,
+# increase if you get "tile too complex" errors.
+XmlStarletMaxDepth=20000
+
+# This feature is experimental and currently linux only. Don't use if you are
+# using inkscape with the same username outside tiles@home. 
+# Set to 1 if you want to t@h to try and autobackup and -restore your inkscape
+# preferences file
+AutoResetInkscapePrefs=0
+
+# Set this to 1 if you want to clear the stopfile.txt on program start. 
+# may unintentionally clear stopfile.txt when (accidentally) running 2 instances
+AutoResetStopfile=0
+
+# Set this to 1 if you want to have som logs dump in ProcessLogFile
+ProcessLog=0
+ProcessLogFile="tah-process.log"
+
+
+## Verbosity: changing this makes the client report different actions more or
+## less verbosely.
+#
+# Verbose=0  almost like "quiet" on other programs, just output wether it's 
+#            getting a request, preprocessing, rendering or uploading, no 
+#            progress inside a tileset (%ages) or on uploading zips.
+# Verbose=3  show progress inside a tileset and on upload, but not the single
+#            steps while rendering
+# Verbose=6  show everything like it was before r9700, this is the default
+# Verbose=10 behaves like Verbose=1 before r9700, adding a newline after 
+#            each message
+Verbose=6
+

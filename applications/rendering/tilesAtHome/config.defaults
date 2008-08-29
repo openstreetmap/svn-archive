@@ -55,8 +55,6 @@ SubversionUpdateCmd = up
 Zip = zip
 7zipWin = 0
 
-UseHostnameInZipname = 0
-
 UploadToDirectory = 0
 UploadTargetDirectory = /set/this/to/your/upload/directory
 GatherBlankTiles = 0

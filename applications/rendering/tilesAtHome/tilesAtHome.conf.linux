@@ -19,10 +19,6 @@ Pngcrush=pngcrush
 Optipng=optipng
 Subversion=svn
 
-## the following parameter is mainly for windows compatibility. 
-## if you don't know what it does, keep at 0.
-7zipWin=0
-
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 
@@ -42,10 +38,6 @@ FallBackToXAPI = 0
 # around 20000000 will help you. A setting of 0 disables the mechanism.
 MaxTilesetComplexity = 0
 
-# set this to prepend zip file by three first letters of hostname
-# to allow identification of uploads from different machines in the 
-# upload log
-UseHostnameInZipname=0
 
 ## Upload settings
 

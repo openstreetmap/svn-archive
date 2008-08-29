@@ -184,29 +184,32 @@ sub CheckBasicConfig
     {
         die("! Can't find valid PngOptimizer setting, check config");
     }
-    print "- going to use ".$self->get("PngOptimizer")."\n";
-    #------
-    # PNGCrush version
-    $cmd = $self->get("Pngcrush");
-    my $PngcrushV = `\"$cmd\" -version`;
-    $EnvironmentInfo{Pngcrush}=$PngcrushV;
 
-    if (($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) and ($self->get("PngOptimizer") eq "pngcrush"))
+    #------
+    # Check pngcrush version
+    if ($self->get("PngOptimizer") eq "pngcrush")
     {
-        print "! Can't find pngcrush (using \"".$self->get("Pngcrush")."\")\n";
-    }
-    else
-    {
-        print "- Pngcrush version $1\n";
+        # PNGCrush version
+        $cmd = $self->get("Pngcrush");
+        my $PngcrushV = `\"$cmd\" -version`;
+
+        if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/)
+        {
+            print "! Can't find pngcrush (using \"".$self->get("Pngcrush")."\")\n";
+        }
+        else
+        {
+            print "- Pngcrush version $1\n";
+        }
     }
     #------
-    # Optipng version
-    $cmd = $self->get("Optipng");
-    my $OptipngV = `\"$cmd\" -v`;
-    $EnvironmentInfo{Optipng}=$OptipngV;
-
-    if ( $self->get("PngOptimizer") eq "optipng" ) 
+    # check optipng version
+    if ($self->get("PngOptimizer") eq "optipng")
     {
+        # Optipng version
+        $cmd = $self->get("Optipng");
+        my $OptipngV = `\"$cmd\" -v`;
+
         if ($OptipngV !~ /[Oo]pti[Pp][Nn][Gg]\s+(\d+\.\d+\.?\d*)/) 
         {
             die("! Can't find OptiPNG (using \"".$self->get("Optipng")."\")\n");
@@ -216,7 +219,8 @@ sub CheckBasicConfig
             print "- OptiPNG version $1\n";
         }
     }
-
+    #------
+    # check pngnq version
     if ( $self->get("PngQuantizer") eq "pngnq" )
     {
         $cmd = $self->get("pngnq");

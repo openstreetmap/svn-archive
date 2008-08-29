@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
+use warnings;
 use strict;
 use File::Copy;
 use File::Path;
@@ -45,7 +46,7 @@ use Encode;
 my $Config = TahConf->getConfig();
 
 # Handle the command-line
-our $Mode = shift();
+our $Mode = shift() || '';
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
 my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;
@@ -99,7 +100,7 @@ if ($LoopMode) {
     # command line after the keyword "reexec". Currently unsuitable 
     # for alphanumeric variables.
     
-    if (shift() eq "reexec") {
+    if ((shift||'') eq "reexec") {
         my $idleSeconds; my $idleFor;
         while(my $evalstr = shift()) {
             die("$evalstr does not match option=value") unless $evalstr =~ /^[A-Za-z]+=\d+/;
@@ -456,12 +457,12 @@ sub compressAndUpload
 #-----------------------------------------------------------------------------
 sub compress
 {
-    keepLog($PID,"compress","start","$progressJobs");
+    keepLog($$,"compress","start","$progressJobs");
 
     my $compress = new Compress;
     my ($retval, $reason) = $compress->compressAll();
 
-    keepLog($PID,"compress","stop","return=$retval");
+    keepLog($$,"compress","stop","return=$retval");
 
     return $retval;
 }
@@ -559,17 +560,17 @@ sub NewClientVersion
     return 0 if (time() - $LastTimeVersionChecked < 600);
     my $versionfile = "version.txt";
     my $runningVersion;
-    if (open(versionfile, "<", $versionfile))
+    if (open(VERFILE, "<", $versionfile))
     {
-        $runningVersion = <versionfile>;
+        $runningVersion = <VERFILE>;
         chomp $runningVersion;
-        close versionfile;
+        close VERFILE;
     }
-    elsif (open(versionfile, ">", $versionfile))
+    elsif (open(VERFILE, ">", $versionfile))
     {
         $runningVersion = 0; 
-        print versionfile $runningVersion;
-        close versionfile;
+        print VERFILE $runningVersion;
+        close VERFILE;
     }
     else
     {
@@ -581,11 +582,11 @@ sub NewClientVersion
     my $currentVersion;
     
     DownloadFile($Config->get("VersionCheckURL"), $curVerFile ,0);
-    if (open(versionfile, "<", $curVerFile))
+    if (open(VERFILE, "<", $curVerFile))
     {
-        $currentVersion = <versionfile>;
+        $currentVersion = <VERFILE>;
         chomp $runningVersion;
-        close versionfile;
+        close VERFILE;
         # rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
     }
     if ($currentVersion)
@@ -710,31 +711,34 @@ sub xml2svg
 #-----------------------------------------------------------------------------
 # Render a SVG file
 # jobdir - dir in which the svg is stored, and temporary files can be put.
-# $ZOrig - the lowest zoom level of the tileset
 # $X, $Y - tilemnumbers of the tileset
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
 # returns (success, reason), success is 0 or 1
-# reason is a string on failure or 0/1 indicating whether all tiles are empty
+# reason is a string on failure
 #-----------------------------------------------------------------------------
 sub svg2png
 {
-    my($jobdir, $layer, $req, $Ytile, $Zoom, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
+    my($jobdir, $req, $Ytile, $Zoom, $Left, $Y1, $Right, $Y2, $ImageHeight) = @_;
     my $Config = TahConf->getConfig();
     
-    my $TempFile;
-    my $stdOut;
+    # File locations
+    my $svgFile = File::Spec->join($jobdir,"output-z$Zoom.svg");
+    my $FullSplitPngFile = File::Spec->join($jobdir,"split-z$Zoom-$Ytile.png");
+    my $stdOut = File::Spec->join($jobdir,"split-z$Zoom-$Ytile.stdout");
 
-    (undef, $TempFile) = tempfile("part-XXXXXX", DIR => $jobdir, SUFFIX => ".png", OPEN => 0);
-    (undef, $stdOut) = tempfile("XXXXXX", DIR => $jobdir, SUFFIX => ".stdout", OPEN => 0);
     
     my $Cmd = "";
     
-    my $Left = $X1;
+    # SizeX, SizeY are height/width dimensions of resulting PNG file
+    my $SizeX = 256 * (2 ** ($Zoom - $req->Z));
+    my $SizeY = 256;
+
+    # SVG excerpt in SVG units
     my $Top = $ImageHeight - $Y2;
-    my $Width = $X2 - $X1;
+    my $Width = $Right - $Left;
     my $Height = $Y2 - $Y1;
     
-    my $svgFile = File::Spec->join($jobdir,"output-z$Zoom.svg");
+
 
     if ($Config->get("Batik") == "1") # batik as jar
     {
@@ -746,7 +750,7 @@ sub svg2png
         $SizeX,
         $SizeY,
         $Left,$Top,$Width,$Height,
-        $TempFile,
+        $FullSplitPngFile,
         $svgFile,
         $stdOut);
     }
@@ -759,7 +763,7 @@ sub svg2png
         $SizeX,
         $SizeY,
         $Left,$Top,$Width,$Height,
-        $TempFile,
+        $FullSplitPngFile,
         $svgFile,
         $stdOut);
     }
@@ -769,7 +773,7 @@ sub svg2png
         $SizeX,
         $SizeY,
         $Left,$Top,$Width,$Height,
-        $TempFile,
+        $FullSplitPngFile,
         $svgFile,
         $stdOut);
     }
@@ -787,8 +791,8 @@ sub svg2png
         $Config->get("Inkscape"),
         $SizeX,
         $SizeY,
-        $X1,$Y1,$X2,$Y2,
-        $TempFile,
+        $Left,$Y1,$Right,$Y2,
+        $FullSplitPngFile,
         $svgFile,
         $stdOut);
 
@@ -803,7 +807,7 @@ sub svg2png
 
 
     my $commandResult = $Config->get("Batik") == "3"?sendCommandToBatik($Cmd) eq "OK":runCommand($Cmd,$PID);
-    if (!$commandResult or ! -e $TempFile )
+    if (!$commandResult or ! -e $FullSplitPngFile )
     {
         statusMessage("$Cmd failed",1,0);
         if ($Config->get("Batik") == "3" && !getBatikStatus())
@@ -817,9 +821,7 @@ sub svg2png
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     
-    my $ReturnValue = splitImageX($layer, $req, $Zoom, $Ytile, $TempFile); # returns true if tiles were all empty
-    
-    return (1,$ReturnValue); #return true if empty
+     return ($FullSplitPngFile, ""); #return success
 }
 
 
@@ -917,6 +919,7 @@ sub tileFilename
 #-----------------------------------------------------------------------------
 # Split a tileset image into tiles
 # $File points to a png with complete path
+# returns (success, allempty, reason)
 #-----------------------------------------------------------------------------
 sub splitImageX
 {
@@ -941,6 +944,7 @@ sub splitImageX
         print STDERR "\nERROR: Failed to read in file $BigPNGFileName\n";
         $req->putBackToServer("MissingFile");
         cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4);
+	return (0, 0, "SplitImage: MissingFile encountered");
     }
   
     # Use one subimage for everything, and keep copying data into it
@@ -979,8 +983,8 @@ sub splitImageX
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-            $req->putBackToServer("BlackTile");
             cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4);
+            return (0, 0,"BlackTile");
         }
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
@@ -1012,7 +1016,7 @@ sub splitImageX
     }
     undef $SubImage;
     undef $Image;
-    return $allempty;
+    return (1, $allempty, "");
 }
 
 #-----------------------------------------------------------------------------

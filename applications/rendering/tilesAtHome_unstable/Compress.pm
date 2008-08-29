@@ -207,8 +207,8 @@ sub optimizePNGs
     my $Config = $self->{Config};
     my $PNGDir = shift;
     my $layer  = shift;
+    my $transparent_layer = int($Config->get($layer."_Transparent"));
 
-print STDERR "using layer $layer\n\n";
     $::progressPercent = 0;
     my $TmpFilename_suffix = ".cut";
     my $Redirect = ">/dev/null";
@@ -247,11 +247,11 @@ print STDERR "using layer $layer\n\n";
        # Temporary filename between quantizing and optimizing
        my $TmpFullFileName = $PngFullFileName.$TmpFilename_suffix;
 
-       if ($Config->get($layer."_Transparent"))
+       if ($transparent_layer)
        {    # Don't quantize if it's transparent
             rename($PngFullFileName, $TmpFullFileName);
        }
-       elsif ($Config->get("PngQuantizer") eq "pngnq") 
+       elsif (($Config->get("PngQuantizer")||'') eq "pngnq") 
        {
            $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
                                    $Config->get("Niceness"),

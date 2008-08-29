@@ -392,6 +392,7 @@ if (defined($symbolsDir))
         if (not exists $symbols{'symbol-'.$file})
         {
 	    my $symbolFile = XML::XPath->new(filename => $symbolsDir . "/" . $file . ".svg"); 
+            $symbolFile->set_namespace('svg', 'http://www.w3.org/2000/svg');
 	    my $symbol = $symbolFile->find('/svg:svg/svg:defs/svg:symbol');
             if ($symbol->size()==1)
             {
@@ -415,8 +416,8 @@ $writer->endTag("defs");
 $writer->startTag("defs", "id" => "defs-included");
 foreach my $include ($rules->find("/rules//include")->get_nodelist)
 {
-    my $symbolsDir = File::Spec->catdir($Bin, '../osmarender/', $symbolsDir);
     my $includeFile = XML::XPath->new(filename => File::Spec->catdir($Bin, '../osmarender/', $include->getAttribute("ref")));
+    $includeFile->set_namespace('svg', 'http://www.w3.org/2000/svg');
     $writer->raw($includeFile->findnodes_as_string("/svg:svg/*"));
 }
 $writer->endTag("defs");

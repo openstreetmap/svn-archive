@@ -78,7 +78,7 @@ while(my $line = <>)
     print "\n";
   }
   elsif($line =~ /^\s*$/
-     || $line =~ /<seperator\/>/
+     || $line =~ /<separator\/>/
      || $line =~ /<key/
      || $line =~ /annotations/
      || $line =~ /<!--/

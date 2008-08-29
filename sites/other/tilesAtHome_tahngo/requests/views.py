@@ -200,6 +200,10 @@ def feedback(request):
                 {'createform': form, 'host':request.META['HTTP_HOST']})
     return HttpResponse(html)
 
+
+#-------------------------------------------------------
+# Upload a finished tileset
+
 def upload_request(request):
     html='XX|Unknown error.'
     UploadFormClass = UploadForm
@@ -266,11 +270,17 @@ def upload_request(request):
       return render_to_response('requests_upload.html',{'uploadform': form, 'authform': authform, 'host':request.META['HTTP_HOST']})
     return HttpResponse(html);
 
-@cache_control(max_age=30)
+
+#-------------------------------------------------------
+# return upload queue load
+
 def upload_gonogo(request):
     # return 'fullness' of the server queue between [0,1]
     load = min(Upload.objects.all().count()/1500.0, 1)
     return HttpResponse(str(load));
+
+#-------------------------------------------------------
+# retrieve a new request from the server
 
 def take(request):
     html='XX|5|unknown error'
@@ -289,7 +299,7 @@ def take(request):
         if user is not None:
           #"You provided a correct username and password!"
           # next, check for a valid client version
-          if form.cleaned_data['version'] in ['Quickborn', 'Rapperswil']:
+          if form.cleaned_data['version'] in ['Rapperswil', 'Saurimo']:
             try:  
                 #next 2 lines are for limiting max #of active requests per usr
                 active_user_reqs = Request.objects.filter(status=1,client=user.id).count()

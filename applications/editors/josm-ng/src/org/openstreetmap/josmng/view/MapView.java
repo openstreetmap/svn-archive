@@ -323,9 +323,9 @@ public class MapView extends JComponent {
             } else if (ZOOM_OUT.equals(cmd)) {
                 zoomBy(1, null);                
             } else if (LEFT.equals(cmd)) {
-                moveBy(new Dimension(-20, 0));
-            } else if (RIGHT.equals(cmd)) {
                 moveBy(new Dimension(20, 0));
+            } else if (RIGHT.equals(cmd)) {
+                moveBy(new Dimension(-20, 0));
             } else if (UP.equals(cmd)) {
                 moveBy(new Dimension(0, 20));
             } else if (DOWN.equals(cmd)) {

@@ -58,7 +58,8 @@
   o (HideZoomButtons, 0, 2) \
   o (ShowCoordinates, 0, 3) \
   o (ShowTrace,       0, 2) \
-  o (ModelessDialog,  0, 2)
+  o (ModelessDialog,  0, 2) \
+  o (FullScreen,      0, 2)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -2439,6 +2440,7 @@ HBITMAP bmp;
 HDC memDc, bufDc;
 HPEN pen[2 << STYLE_BITS];
 int pakSize;
+UTF16 appendTmp[50];
 
 BOOL CALLBACK DlgSearchProc (
 	HWND hwnd, 
@@ -2446,7 +2448,6 @@ BOOL CALLBACK DlgSearchProc (
 	WPARAM wParam, 
 	LPARAM lParam)
 {
-    UTF16 appendTmp[50];
     switch (Msg) {
     case WM_COMMAND:
       if (LOWORD (wParam) == IDC_EDIT1) {
@@ -2643,16 +2644,26 @@ BOOL InitApplication (void)
 
 HWND InitInstance(int nCmdShow)
 {
-  mWnd = CreateWindow (TEXT ("GosmoreWClass"), TEXT ("gosmore"), WS_DLGFRAME,
-    0, 0, CW_USEDEFAULT/* 20 */,/* 240*/CW_USEDEFAULT,NULL,NULL, hInst,NULL);
-
-  if(!mWnd) return(FALSE);
-
-  ShowWindow (mWnd,nCmdShow);
-  //UpdateWindow (mWnd);
-
-
-  return mWnd;
+  HWND prev;
+  // check if gosmore is already running
+  prev = FindWindow(TEXT ("GosmoreWClass"), NULL);
+  if (prev != NULL) {
+    ShowWindow(prev, SW_RESTORE);
+    SetForegroundWindow(prev);
+    return FALSE;
+  } else {
+    
+    mWnd = CreateWindow (TEXT ("GosmoreWClass"), TEXT ("gosmore"), WS_DLGFRAME,
+			 0, 0, CW_USEDEFAULT/* 20 */,/* 240*/CW_USEDEFAULT,NULL,NULL, hInst,NULL);
+    
+    if(!mWnd) return(FALSE);
+    
+    ShowWindow (mWnd,nCmdShow);
+    //UpdateWindow (mWnd);
+    
+    
+    return mWnd;
+  }
 }
 
 volatile int guiDone = FALSE;
@@ -2859,19 +2870,6 @@ int WINAPI WinMain(
   if(!InitApplication ()) return(FALSE);
   if (!InitInstance (nCmdShow)) return(FALSE);
 
-  GtkWidget dumdraw;
-  dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
-  dumdraw.allocation.height = GetSystemMetrics(SM_CYSCREEN);
-  draw = &dumdraw;
-
-  InitCeGlue ();
-  if (SHFullScreenPtr) {
-    (*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
-      SHFS_HIDESTARTICON | SHFS_HIDESIPBUTTON);
-    MoveWindow (mWnd, 0, 0, dumdraw.allocation.width,
-      dumdraw.allocation.height, FALSE);
-  }
-
   newWays[0].cnt = 0;
   IconSet = 1;
   DetailLevel = 3;
@@ -2886,6 +2884,28 @@ int WINAPI WinMain(
   }
   Exit = 0;
   InitializeOptions ();
+
+  GtkWidget dumdraw;
+  if (FullScreen) {
+    dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
+    dumdraw.allocation.height = GetSystemMetrics(SM_CYSCREEN);
+
+    InitCeGlue ();
+    if (SHFullScreenPtr) {
+      (*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
+			 SHFS_HIDESTARTICON | SHFS_HIDESIPBUTTON);
+      MoveWindow (mWnd, 0, 0, dumdraw.allocation.width,
+		  dumdraw.allocation.height, FALSE);
+    }
+  } else {
+    ShowWindow(mWnd, SW_SHOWNORMAL);
+    InvalidateRect(mWnd, NULL, true);
+    RECT r;
+    GetClientRect(mWnd,&r);
+    dumdraw.allocation.width = r.right;
+    dumdraw.allocation.height = r.bottom;
+  }
+  draw = &dumdraw;
 
   dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
     NULL, (DLGPROC)DlgSearchProc); // Just in case user goes modeless

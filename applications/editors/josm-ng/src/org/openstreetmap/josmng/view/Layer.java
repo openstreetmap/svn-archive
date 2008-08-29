@@ -21,6 +21,7 @@
 package org.openstreetmap.josmng.view;
 
 import java.awt.Graphics;
+import org.openstreetmap.josmng.osm.Bounds;
 
 /**
  * A Layer is generic visualization of a single data source of some kind.
@@ -42,5 +43,13 @@ public abstract class Layer {
     public abstract void paint(Graphics g);
     
     public abstract String getName();
+    
+    /**
+     * Compute the minimal bounds covering all the entities featured by this
+     * layer. The call may take long time to return.
+     * 
+     * @return the computed Bounds of the layer.
+     */
+    public abstract Bounds getBounds();
 
 }

@@ -34,6 +34,7 @@ import org.openstreetmap.josmng.osm.DataSet;
 import org.openstreetmap.josmng.osm.Node;
 import org.openstreetmap.josmng.osm.OsmPrimitive;
 import org.openstreetmap.josmng.osm.Way;
+import org.openstreetmap.josmng.osm.visitors.BoundsVisitor;
 import org.openstreetmap.josmng.utils.UndoHelper;
 
 /**
@@ -52,6 +53,12 @@ public class OsmLayer extends EditableLayer {
         this.data = data;
         data.addUndoableEditListener(undo);
         mapData = new ViewData(this, data);
+    }
+
+    public @Override Bounds getBounds() {
+        BoundsVisitor bv = new BoundsVisitor(false);
+        bv.visitCollection(data.getPrimitives(Bounds.WORLD));
+        return bv.getBounds();
     }
 
     public @Override UndoHelper getUndoManager() {
@@ -73,7 +80,7 @@ public class OsmLayer extends EditableLayer {
 
         Drawer drawer = new Drawer();
         for (View v : mapData.getViews(viewBox, parent.getScaleFactor())) {
-              v.collect(drawer, parent, sel.contains(v.getPrimitive()));
+            v.collect(drawer, parent, sel.contains(v.getPrimitive()));
         }
 
         drawer.draw((Graphics2D)g);

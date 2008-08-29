@@ -114,7 +114,7 @@ sub compressAll
             $::currentSubTask ='compress';
             $::progressPercent = 0;
             ::statusMessage("compressing $File",1,6);
-            $self->compress($FullTilesetPath, $layer);
+            $self->compress($FullTilesetPath);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
         }
@@ -135,7 +135,7 @@ sub compressAll
 
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating a .zip file.
-# Parameters:  FullTilesetPath, layername
+# Parameters:  FullTilesetPath
 #
 # It will never delete the source files, so the caller has to delete them
 # returns 1, if the zip command succeeded and 0 otherwise
@@ -145,17 +145,12 @@ sub compress
     my $self = shift;
     my $Config = $self->{Config};
 
-    my ($FullTilesetPathDir, $Layer) = @_;
+    my ($FullTilesetPathDir) = @_;
   
     my $Filename;
 
-    my $hostname = '';
-    if ($Config->get('UseHostnameInZipname'))
-    {
-        $hostname = `hostname`;
-        chomp $hostname;
-        $hostname = substr($hostname,0,4);
-    }
+    $FullTilesetPathDir =~ m{([^_\/\\]+)_(\d+)_(\d+)_(\d+).dir$};
+    my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
 
     # Create the output directory if it doesn't exist...
     if( ! -d $self->{ZipDir} )
@@ -164,37 +159,40 @@ sub compress
     }
 
     $Filename = File::Spec->join($self->{ZipDir},
-                                sprintf("%d_%s_%d_%d_%s_tileset.zip",
-                                time(), $hostname, ::GetClientId(), $$, $Layer));
+                                sprintf("%s_%d_%d_%d_%d.zip",
+                                $layer, $Z, $X, $Y, ::GetClientId()%1000));
     
     # ZIP all the tiles into a single file
+    # First zip into "$Filename.part" and move to "$Filename" when finished
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
-    my $Command1;
+    my $zipCmd;
     if ($Config->get("7zipWin"))
     {
-        $Command1 = sprintf("\"%s\" %s %s %s",
+        $zipCmd = sprintf('"%s" %s "%s" "%s"',
           $Config->get("Zip"),
           "a -tzip",
-          $Filename,
+          $Filename.".part",
           File::Spec->join($FullTilesetPathDir,"*.png"));
-
-        print STDERR "7zip: $Command1\n\n";
     }
     else
     {
-        $Command1 = sprintf("\"%s\" -r -j %s %s > %s",
+        $zipCmd = sprintf('"%s" -r -j "%s" "%s" > "%s"',
           $Config->get("Zip"),
-          $Filename,
-          "$FullTilesetPathDir",
+          $Filename.".part",
+          $FullTilesetPathDir,
           $stdOut);
     }
 
+
     # Run the zip command
-    my $zip_result = ::runCommand($Command1,$PID);
+    my $zip_result = ::runCommand($zipCmd, $PID);
 
     # stdOut is currently never used, so delete it unconditionally    
     unlink($stdOut);
     
+    # rename to final name so any uploader could pick it up now
+    move ($Filename.".part", $Filename);
+
     return $zip_result;
 }
 

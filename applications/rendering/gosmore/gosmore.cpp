@@ -983,7 +983,14 @@ gint Expose (void)
   GdkRectangle clip;
   clip.x = 0;
   clip.y = 0;
+
+  PangoMatrix mat;
+  PangoContext *pc = gdk_pango_context_get_for_screen (
+    gdk_screen_get_default ());
+  PangoLayout *pl = pango_layout_new (pc);
+  pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
 #endif // !_WIN32_WCE
+
   clip.height = draw->allocation.height - STATUS_BAR;
   clip.width = draw->allocation.width;
   if (ButtonSize <= 0) ButtonSize = 4;
@@ -998,11 +1005,6 @@ gint Expose (void)
   cairo_matrix_t mat;
   cairo_matrix_init_identity (&mat);
   #endif */
-  PangoMatrix mat;
-  PangoContext *pc = gdk_pango_context_get_for_screen (
-    gdk_screen_get_default ());
-  PangoLayout *pl = pango_layout_new (pc);
-  pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
   if (option == numberOfOptions) {
     if (zoom < 0) zoom = 2012345678;
     if (zoom / clip.width <= 1) zoom += 4000;

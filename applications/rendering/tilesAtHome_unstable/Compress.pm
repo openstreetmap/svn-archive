@@ -160,7 +160,7 @@ sub compress
 
     $Filename = File::Spec->join($self->{ZipDir},
                                 sprintf("%s_%d_%d_%d_%d.zip",
-                                $layer, $Z, $X, $Y, ::GetClientId()%1000));
+                                $layer, $Z, $X, $Y, ::GetClientId()));
     
     # ZIP all the tiles into a single file
     # First zip into "$Filename.part" and move to "$Filename" when finished
@@ -208,6 +208,7 @@ sub optimizePNGs
     my $PNGDir = shift;
     my $layer  = shift;
 
+print STDERR "using layer $layer\n\n";
     $::progressPercent = 0;
     my $TmpFilename_suffix = ".cut";
     my $Redirect = ">/dev/null";

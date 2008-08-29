@@ -190,9 +190,9 @@ sub upload
         return (-1,0);
     }
 
-    $File =~ m{_(\d+)_\d+_([^_]+)_tileset\.zip$}x;
-    my $clientId = $1;
-    my $Layer=$2;
+    $FileName =~ m{^([^_]+)_\d+_\d+_\d+_(\d+)\.zip$};
+    my $Layer=$1;
+    my $clientId = $2;
 
     if(! $Config->get("UploadToDirectory"))
     {

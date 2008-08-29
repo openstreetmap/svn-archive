@@ -1,6 +1,6 @@
 /* This software is placed by in the public domain by its authors. */
-/* Written by Nic Roets with contribution(s) from Dave Hansen and
-   Ted Mielczarek. 
+/* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
+   David Dean and Dmitry.
    Thanks to
    * Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
    * Simon Wood, David Dean, Lambertus, TomH and many others for testing,
@@ -16,6 +16,7 @@
 #include <sys/mman.h>
 #include <libxml/xmlreader.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #define TEXT(x) x
@@ -95,7 +96,7 @@ char docPrefix[80] = "";
 #include "icons.xpm"
 #endif
 
-#if __APPLE__ // Thanks to Ted Mielczarek
+#if __FreeBSD__ || __APPLE__ // Thanks to Ted Mielczarek & Dmitry
 #define fopen64(x,y) fopen(x,y)
 #endif
 
@@ -986,7 +987,7 @@ gint Expose (void)
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &validateColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
-    #ifndef WIN32
+    #ifndef _WIN32
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
       FindResource ("icons.xpm"));
     #else
@@ -1121,12 +1122,12 @@ gint Expose (void)
                   wcTmp, (wchar_t *) tStart - wcTmp, NULL);
             }
             #endif
-            #ifdef CAIRO_VERSION
+            #ifdef PANGO_VERSION
             //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
               mat.xx = mat.yy = 1.0;
               mat.xy = mat.yx = 0;
-              x0 = x - mat.xx / 3 * len; /* Render the name of the node */
-              y0 = y + mat.xx * f->ascent + icon[3] / 2;
+              x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
+              y0 = y /* + mat.xx * f->ascent */ + icon[3] / 2;
               maxLenSqr = Sqr ((__int64) Style (w)->scaleMax);
               //4000000000000LL; // Without scaleMax, use 400000000
             //}
@@ -1216,26 +1217,26 @@ gint Expose (void)
 		  y0 = next->lat / 2 + nd->lat / 2;
 		}
                 #endif
-                #ifdef CAIRO_VERSION
-		__int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
-		  (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
-		if (lenSqr > maxLenSqr) {
-		  maxLenSqr = lenSqr;
-		  double lonDiff = (nd->lon - next->lon) * cosAzimuth +
-		    (nd->lat - next->lat) * sinAzimuth;
-		  mat.yy = mat.xx = 1.0 * fabs (lonDiff) / sqrt (lenSqr);
-		  mat.xy = (lonDiff > 0 ? 1.0 : -1.0) *
-		    ((nd->lat - next->lat) * cosAzimuth -
-		     (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
-		  mat.yx = -mat.xy;
-		  x0 = X (nd->lon / 2 + next->lon / 2,
-			  nd->lat / 2 + next->lat / 2);// +
-		  //                  mat.yx * f->descent / 1.0 - mat.xx / 1.0 * 3 * len;
-		  y0 = Y (nd->lon / 2 + next->lon / 2,
-			  nd->lat / 2 + next->lat / 2);// +
-		  //                  mat.xx * f->descent / 1.0 - mat.yx / 1.0 * 3 * len;
-		}
-#endif
+                #ifdef PANGO_VERSION
+                __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
+                    (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
+                if (lenSqr > maxLenSqr) {
+                  maxLenSqr = lenSqr;
+                  double lonDiff = (nd->lon - next->lon) * cosAzimuth +
+                                   (nd->lat - next->lat) * sinAzimuth;
+                  mat.yy = mat.xx = 1.0 * fabs (lonDiff) / sqrt (lenSqr);
+                  mat.xy = (lonDiff > 0 ? 1.0 : -1.0) *
+                           ((nd->lat - next->lat) * cosAzimuth -
+                            (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
+                  mat.yx = -mat.xy;
+                  x0 = X (nd->lon / 2 + next->lon / 2,
+                          nd->lat / 2 + next->lat / 2);// +
+  //                  mat.yx * f->descent / 1.0 - mat.xx / 1.0 * 3 * len;
+                  y0 = Y (nd->lon / 2 + next->lon / 2,
+                          nd->lat / 2 + next->lat / 2);// +
+  //                  mat.xx * f->descent / 1.0 - mat.yx / 1.0 * 3 * len;
+                 }
+                 #endif
 	      }
 	      nd = next;
 	      oldx = x;
@@ -1268,7 +1269,7 @@ gint Expose (void)
           DeleteObject (customFont);
         }
         #endif
-        #ifdef CAIRO_VERSION
+        #ifdef PANGO_VERSION
         if (maxLenSqr * DetailLevel > (zoom / clip.width) *
               (__int64) (zoom / clip.width) * len * len * 100 && len > 0) {
           double move = 0.6;
@@ -1396,9 +1397,12 @@ gint Expose (void)
     #undef o
       0);
     #ifndef _WIN32_WCE
-    //---------FFFFFFFIIIIIIIIIIXXXXXXXXXX
-//    cairo_move_to (cai, 50, draw->allocation.height / 2);
-//    cairo_show_text (cai, optStr);
+    mat.xx = mat.yy = 1.0;
+    mat.xy = mat.yx = 0.0;
+    pango_context_set_matrix (pc, &mat);
+    pango_layout_set_text (pl, optStr, -1);
+    gdk_draw_layout (GDK_DRAWABLE (draw->window),
+              draw->style->fg_gc[0], 50, draw->allocation.height / 2, pl);
     #else
     SelectObject (mygc, sysFont);
     SetBkMode (mygc, TRANSPARENT);
@@ -1670,7 +1674,7 @@ int UserInterface (int argc, char *argv[])
 
   followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
   
-  #if !defined (WIN32) && !defined (ROUTE_TEST)
+  #if !defined (_WIN32) && !defined (ROUTE_TEST)
   struct sockaddr_in sa;
   int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
   sa.sin_family = AF_INET;
@@ -1816,7 +1820,7 @@ int MasterWayCmp (const void *a, const void *b)
 int main (int argc, char *argv[])
 {
   assert (layerBit3 < 32);
-  #ifndef WIN32
+  #ifndef _WIN32
   int rebuildCnt = 0;
   if (argc > 1) {
     if ((argc != 6 && argc > 2) || stricmp (argv[1], "rebuild")) {
@@ -2489,7 +2493,7 @@ int main (int argc, char *argv[])
       unlink (groupName[i]);
     }
 //    printf ("ndCount=%d\n", ndCount);
-    munmap (pak, ndStart);
+    munmap (data, ndStart);
     fwrite (hashTable, sizeof (*hashTable),
       bucketsMin1 + (bucketsMin1 >> 7) + 3, pak);
     fwrite (&bucketsMin1, sizeof (bucketsMin1), 1, pak);
@@ -2497,7 +2501,7 @@ int main (int argc, char *argv[])
     fclose (pak);
     free (hashTable);
   } /* if rebuilding */
-  #endif // WIN32
+  #endif // _WIN32
   return UserInterface (argc, argv);
 
   // close the logfile if it has been opened

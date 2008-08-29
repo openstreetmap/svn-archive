@@ -411,6 +411,17 @@ if (defined($symbolsDir))
 }
 $writer->endTag("defs");
 
+#include referenced defs
+$writer->startTag("defs", "id" => "defs-included");
+foreach my $include ($rules->find("/rules//include")->get_nodelist)
+{
+    my $symbolsDir = File::Spec->catdir($Bin, '../osmarender/', $symbolsDir);
+    my $includeFile = XML::XPath->new(filename => File::Spec->catdir($Bin, '../osmarender/', $include->getAttribute("ref")));
+    $writer->raw($includeFile->findnodes_as_string("/svg:svg/*"));
+}
+$writer->endTag("defs");
+
+
 
 # Pre-generate named path definitions for all ways
 

@@ -25,10 +25,12 @@ import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
+import org.openstreetmap.josmng.osm.Bounds;
 import org.openstreetmap.josmng.utils.Convertor;
 import org.openstreetmap.josmng.ui.Main;
 import org.openstreetmap.josmng.utils.MenuPosition;
 import org.openstreetmap.josmng.view.Layer;
+import org.openstreetmap.josmng.view.MapView;
 
 /**
  *
@@ -56,7 +58,13 @@ public class OpenAction extends AbstractAction {
 
     public static void open(File file) {
         Layer layer = Convertor.<File,Layer>convert(file, Layer.class);
-        if (layer != null) Main.main.getMapView().addLayer(layer);
-    }
+        if (layer != null) {
+            MapView view = Main.main.getMapView();
+            Bounds bounds = layer.getBounds();
 
+            view.addLayer(layer);
+            view.setViewBounds(bounds);
+        }
+    }
+    
 }

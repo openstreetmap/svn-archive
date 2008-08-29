@@ -7,6 +7,7 @@ package Tileset;
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 
+use warnings;
 use strict;
 use File::Temp qw/ tempfile tempdir /;
 use lib::TahConf;
@@ -89,9 +90,9 @@ sub generate
     $::progress = 0;
     $::progressPercent = 0;
     $::progressJobs++;
-    $::currentSubTask = "jobinit";
+    $::currentSubTask = "Download";
     
-    ::statusMessage(sprintf("Doing tileset (%d,%d,%d) (area around %f,%f)", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
     
     my $maxCoords = (2 ** $req->Z - 1);
     
@@ -186,15 +187,18 @@ sub generate
         my ($ImgH,$ImgW,$Valid) = ::getSize(File::Spec->join($self->{JobDir},
                                                        "output-z$maxzoom.svg"));
 
-        # Render it as loads of recursive tiles
-        my ($success, $emptyOrErrorReason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+         # Render it as loads of recursive tiles
+         # temporary debug: measure time it takes to render:
+	 my $beforeRender = time();
+         my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
+         print STDERR "\nRendering of $layer in ".(time() - $beforeRender)." sec\n\n"; 
 
         #----------
         if (!$success)
         {   # Failed to render tiles, $empty contains error reason
             ::addFault("renderer",1);
-            ::statusMessage($emptyOrErrorReason, 1, 0);
-            return (0, $emptyOrErrorReason);
+            ::statusMessage($reason, 1, 0);
+            return (0, $reason);
         }
         else
         {   # successfully rendered, so reset renderer faults
@@ -320,7 +324,7 @@ sub downloadData
                     $Config->get("OSMVersion"),
                     "*",
                     $bbox);
-                ::statusMessage("Downloading: Map data for ".$req->layers_str." to $partialFile",0,3);
+                ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
                 print "Download\n$URL\n" if ($Config->get("Debug"));
                 my $res = ::DownloadFile($URL, $partialFile, 0);
                 if (! $res)
@@ -344,7 +348,7 @@ sub downloadData
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
                     $partialFile = File::Spec->join($self->{JobDir},"data-$i-$j.osm");
                     push(@{$filelist}, $partialFile);
-                    ::statusMessage("Downloading: Map data to $partialFile (slice $j of 10)",0,3);
+                    ::statusMessage("Downloading: Map data (slice $j of 10)",0,3);
                     print "Download\n$URL\n" if ($Config->get("Debug"));
                     $res = ::DownloadFile($URL, $partialFile, 0);
 
@@ -382,10 +386,10 @@ sub downloadData
     
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
-    ::statusMessage("Checking for UTF-8 errors in $DataFile",0,3);
-    if (::fileUTF8ErrCheck($DataFile))
+    ::statusMessage("Checking for UTF-8 errors",0,3);
+    if (my $line = ::fileUTF8ErrCheck($DataFile))
     {
-        ::statusMessage(sprintf("found incorrect UTF-8 chars in %s, job (%d,%d,%d)",$DataFile, $req->ZXY),1,0);
+        ::statusMessage(sprintf("found incorrect UTF-8 chars in line %d. job (%d,%d,%d)",$line, $req->ZXY),1,0);
         my $reason= ("UTF8 test failed");
         ::addFault("utf8",1);
         return (undef, $reason);
@@ -507,9 +511,9 @@ sub forkedRender
             $self->{childThread}=1;
             for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
             {
-		::statusMessage("Thread $thread renders zoom $zoom now",0,6);
                 if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
-                {    # an error occurred while rendering. Thread exits and returns (255+)0 here
+                {    # an error occurred while rendering.
+                     # Thread exits and returns (255+)0 here
                      exit(0);
                 }
             }
@@ -527,10 +531,9 @@ sub forkedRender
     {
         waitpid($pid,0);
         $success &= ($? >> 8);
-        ::statusMessage("thread $pid returned with value $?, leaving success at $success",1,6);
     }
 
-    ::statusMessage("exit forked renderer returning $success",1,6);
+    ::statusMessage("exit forked renderer returning $success",0,6);
     return $success;
 }
 
@@ -576,72 +579,70 @@ sub GenerateSVG
 #-----------------------------------------------------------------------------
 # Render a tile
 #   $Ytile, $Zoom - which tilestripe
-#   $ZOrig, the lowest zoom level which called tileset generation (i.e. z12 for "normal" operation)
+#   $Zoom - the cuurent zoom level that we render
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #   $ImageHeight - Height of the entire SVG in SVG units
-#   $empty - put forward "empty" tilestripe information.
-#   returns: (success, allEmpty) (on failure allEmpty is a string describing the failure)
+#   returns: (success, allEmpty, reason)
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
     my $self = shift;
-    my ($layer, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
+    my ($layer, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight) = @_;
     my $Config = TahConf->getConfig();
+    my $maxzoom = $Config->get($layer."_MaxZoom");
     my $req = $self->{req};
+    my $forkval = $Config->get("Fork");
 
-    return (1,1) if($Zoom > $Config->get($layer."_MaxZoom"));
+    return (1,1) if($Zoom > $maxzoom);
     
-    # no need to render subtiles if empty
-    return (1,$SkipEmpty) if($SkipEmpty == 1);
-
     # Render it to PNG
-    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
-    my $Width = 256 * (2 ** ($Zoom - $req->Z));  # Pixel size of tiles  
-    my $Height = 256; # Pixel height of tile
+    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", 
+            $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
 
-    # svg2png returns true if all tiles extracted were empty. this might break 
-    # if a higher zoom tile would contain data that is not rendered at the 
-    # current zoom level. 
-    my ($success,$empty) = ::svg2png($self->{JobDir},$layer, $req, $Ytile, $Zoom, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
-    if (!$success)
-    {  # svg2png failed, so empty contains a string with the error reason
-       return (0, $empty);
+    my ($FullBigPNGFileName, $reason) = 
+          ::svg2png($self->{JobDir}, $req, $Ytile, $Zoom,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
+
+    if (!$FullBigPNGFileName)
+    {  # svg2png failed
+       return (0, 0, $reason);
     }
+
+    # splitImageX returns true if all tiles extracted were empty.
+    # this might break if a higher zoom tile would contain data that is 
+    # not rendered at the current zoom level. 
+
+    (my $success,my $empty, $reason) = 
+           ::splitImageX($layer, $req, $Zoom, $Ytile, $FullBigPNGFileName);
+    if (!$success)
+    {  # splitimage failed
+       return (0, 0, $reason);
+    }
+
+    # If splitimage is empty Should we skip going further up the zoom level?
     if ($empty and !$Config->get($layer."_RenderFullTileset")) 
     {
-        $SkipEmpty=1;
-    }
-
-    # Get progress percentage 
-    if($SkipEmpty == 1) 
-    {
-        # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
-        for (my $j = $Config->get($layer."_MaxZoom"); $j >= $Zoom ; $j--)
+        # leap forward because in progresscountingas this tile and 
+        # all higher zoom tiles of it are "done" (empty).
+        for (my $j = $maxzoom; $j >= $Zoom ; $j--)
         {
-            $::progress += 2 ** ($Config->get($layer."_MaxZoom")-$j);
+            $::progress += 2 ** $maxzoom-$j;
         }
-    }
-    else
-    {
-        $::progress += 1;
+	return (1, 1, "All tiles empty");
     }
 
-    if (($::progressPercent=$::progress*100/(2**($Config->get($layer."_MaxZoom")-$req->Z+1)-1)) == 100)
+    # increase progress of tiles
+    $::progress += 1;
+    $::progressPercent = int( 100 * $::progress / (2**($maxzoom-$req->Z+1)-1) );
+    # if forking, each thread does only 1/nth of tiles so multiply by numThreads
+    ($::progressPercent *= 2*$forkval) if $forkval;
+
+    if ($::progressPercent == 100)
     {
         ::statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
     }
-    else
-    {
-        if ($Config->get("Verbose") >= 10)
-        {
-            printf STDERR "Job No. %d %1.1f %% done.\n",$::progressJobs, $::progressPercent;
-        }
-        else
-        {
-            ::statusMessage("Working",0,3);
-        }
-    }
+    (printf STDERR "Job No. %d %1.1f %% done.\n",$::progressJobs, $::progressPercent)
+                    if ($Config->get("Verbose") >= 10);
     
     # Sub-tiles
     my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
@@ -655,8 +656,8 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    # temporarily disable forking in inkscape until we get fork to work right.
-    if (0 && ($Config->get("Fork") && $Zoom >= $req->Z && $Zoom < ($req->Z + $Config->get("Fork"))))
+    # we create Fork*2 inkscape threads
+    if ($forkval && $Zoom < ($req->Z + $forkval))
     {
         my $pid = fork();
         if (not defined $pid) 
@@ -665,42 +666,32 @@ sub RenderTile
         }
         elsif ($pid == 0) 
         {
-            # we are the child process and can't talk to our parent other than through exit codes
-            ($success,$empty) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-            if ($success)
-            {
-                exit(0);
-            }
-            else
-            {
-                exit(1);
-            }
+            # we are the child process
+            $self->{childThread}=1;
+            my ($success, $empty, $reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+            # we can't talk to our parent other than through exit codes.
+            exit($success);
         }
         else
         {
-            ($success,$empty) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+            my ($parent_success,$empty, $reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
             waitpid($pid,0);
-            my $ChildExitValue = $?; # we don't want the details, only if it exited normally or not.
-            if ($ChildExitValue or !$success)
+            my $ChildExitValue = ($? >> 8);
+            if (! ($ChildExitValue && $parent_success))
             {
-                return (0, "Forked inkscape failed");
+                return (0, 0, "Forked inkscape failed");
             }
-        }
-        if ($Zoom == $req->Z)
-        {
-            $::progressPercent=100 if (! $Config->get("Debug")); # workaround for not correctly updating %age in fork, disable in debug mode
-            ::statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
         }
     }
     else
     {
-        my ($success,$emptyOrReason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-        return (0, $emptyOrReason) if (!$success);
-        ($success,$emptyOrReason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
-        return (0, $emptyOrReason) if (!$success);
+        my ($success,$empty,$reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+        return (0, $empty, $reason) if (!$success);
+        ($success,$empty,$reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+        return (0, $empty, $reason) if (!$success);
     }
 
-    return (1,$SkipEmpty); ## main call wants to know wether the entire tileset was empty so we return 1 for success and 1 if the tile was empty
+    return (1, 0, "OK");
 }
 
 
@@ -713,7 +704,7 @@ sub cleanup
     my $Config = $self->{Config};
 
     # remove temporary job directory if 'Debug' is not set
-    print STDERR "removing job dir",$self->{JobDir},"\n\n" if ($Config->get('Debug'));
+    print STDERR "removing job dir",$self->{JobDir},"\n\n" if $Config->get('Debug');
     rmtree $self->{JobDir} unless $Config->get('Debug');
 }
 

@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.Point2D;
 import java.util.Vector;
 
@@ -35,7 +37,7 @@ import org.openstreetmap.josm.gui.download.DownloadSelection;
  * @author Tim Haussmann
  * 
  */
-public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
+public class SlippyMapChooser extends JMapViewer implements DownloadSelection, ComponentListener {
 
 	private DownloadDialog iGui;
 
@@ -55,6 +57,8 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 	private TileSource[] sources = { new OsmTileSource.Mapnik(), new OsmTileSource.TilesAtHome() };
 	TileLoader cachedLoader;
 	TileLoader uncachedLoader;
+	JPanel slipyyMapTabPanel;
+	boolean firstShown = true;
 
 	/**
 	 * Create the chooser component.
@@ -68,6 +72,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 		setMinimumSize(new Dimension(350, 350 / 2));
 		setFileCacheEnabled(SlippyMapChooserPlugin.ENABLE_FILE_CACHE);
 		setMaxTilesInmemory(SlippyMapChooserPlugin.MAX_TILES_IN_MEMORY);
+		addComponentListener(this);
 	}
 
 	public void setMaxTilesInmemory(int tiles) {
@@ -83,16 +88,15 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 
 	public void addGui(final DownloadDialog gui) {
 		iGui = gui;
-		JPanel temp = new JPanel();
-		temp.setLayout(new BorderLayout());
-		temp.add(this, BorderLayout.CENTER);
-		temp.add(new JLabel((tr("Zoom: Mousewheel or double click.   "
+		slipyyMapTabPanel = new JPanel();
+		slipyyMapTabPanel.setLayout(new BorderLayout());
+		slipyyMapTabPanel.add(this, BorderLayout.CENTER);
+		slipyyMapTabPanel.add(new JLabel((tr("Zoom: Mousewheel or double click.   "
 				+ "Move map: Hold right mousebutton and move mouse.   Select: Click."))),
 				BorderLayout.SOUTH);
-		iGui.tabpane.add(temp, tr("Slippy map"));
-
-		new OsmMapControl(this, temp, iSizeButton, iSourceButton);
-		boundingBoxChanged(gui);
+		iGui.tabpane.add(slipyyMapTabPanel, tr("Slippy map"));
+		iGui.tabpane.addComponentListener(this);
+		new OsmMapControl(this, slipyyMapTabPanel, iSizeButton, iSourceButton);
 	}
 
 	protected Point getTopLeftCoordinates() {
@@ -247,6 +251,24 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection {
 		} else {
 			this.setTileSource(sources[1]);
 		}
+	}
+
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	public void componentMoved(ComponentEvent e) {
+	}
+
+	public void componentShown(ComponentEvent e) {
+	}
+
+	public void componentResized(ComponentEvent e) {
+		if (!this.equals(e.getSource()) || getHeight() == 0 || getWidth() == 0)
+			return;
+		firstShown = false;
+		// The bounding box has to be set after SlippyMapChooser's size has been
+		// finally set - otherwise the zoom level will be totally wrong (too wide)
+		boundingBoxChanged(iGui);
 	}
 
 }

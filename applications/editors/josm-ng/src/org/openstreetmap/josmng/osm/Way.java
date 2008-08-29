@@ -21,7 +21,7 @@
 package org.openstreetmap.josmng.osm;
 
 import java.util.Arrays;
-import java.util.Collections;
+import org.openstreetmap.josmng.utils.CopyList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -43,8 +43,15 @@ public class Way extends OsmPrimitive {
         }
     }
     
+    /**
+     * Get the Nodes composing this way. You can modify the returned List
+     * without influencing the way. To change the Way's nodes, call
+     * {@link Way#setNodes(java.util.List)}.
+     * 
+     * @return a List of way's nodes.
+     */
     public List<Node> getNodes() {
-        return Collections.unmodifiableList(Arrays.asList(nodes));
+        return new CopyList<Node>(nodes);
     }
     
     public void setNodes(List<Node> n) {
@@ -94,5 +101,5 @@ public class Way extends OsmPrimitive {
             savedNodes = orig;
         }
     }
-
+    
 }

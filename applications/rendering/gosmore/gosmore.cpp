@@ -2516,6 +2516,17 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       break;
     #endif
 
+    case WM_ACTIVATE:
+      // Ensure that unwanted wince elements are hidden
+      if (SHFullScreenPtr) {
+	if (FullScreen) {
+	  (*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
+			     SHFS_HIDESTARTICON | SHFS_HIDESIPBUTTON);
+	} else {
+	  (*SHFullScreenPtr)(mWnd, SHFS_HIDESIPBUTTON);
+	}
+      }
+      break;
     case WM_DESTROY:
       PostQuitMessage(0);
       break;
@@ -2656,7 +2667,8 @@ HWND InitInstance(int nCmdShow)
   } else {
     
     mWnd = CreateWindow (TEXT ("GosmoreWClass"), TEXT ("gosmore"), WS_DLGFRAME,
-			 0, 0, CW_USEDEFAULT/* 20 */,/* 240*/CW_USEDEFAULT,NULL,NULL, hInst,NULL);
+			 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+			 CW_USEDEFAULT,NULL,NULL, hInst,NULL);
     
     if(!mWnd) return(FALSE);
     
@@ -2887,26 +2899,23 @@ int WINAPI WinMain(
   Exit = 0;
   InitializeOptions ();
 
-  GtkWidget dumdraw;
-  if (FullScreen) {
-    dumdraw.allocation.width = GetSystemMetrics(SM_CXSCREEN);
-    dumdraw.allocation.height = GetSystemMetrics(SM_CYSCREEN);
-
-    InitCeGlue ();
-    if (SHFullScreenPtr) {
+  InitCeGlue();
+  if (SHFullScreenPtr) {
+    if (FullScreen) {
       (*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
 			 SHFS_HIDESTARTICON | SHFS_HIDESIPBUTTON);
-      MoveWindow (mWnd, 0, 0, dumdraw.allocation.width,
-		  dumdraw.allocation.height, FALSE);
-    }
-  } else {
-    ShowWindow(mWnd, SW_SHOWNORMAL);
-    InvalidateRect(mWnd, NULL, true);
-    RECT r;
-    GetClientRect(mWnd,&r);
-    dumdraw.allocation.width = r.right;
-    dumdraw.allocation.height = r.bottom;
+      MoveWindow (mWnd, 0, 0, GetSystemMetrics(SM_CXSCREEN),
+		  GetSystemMetrics(SM_CYSCREEN), FALSE);
+    } else {
+      (*SHFullScreenPtr)(mWnd, SHFS_HIDESIPBUTTON);
+    }  
   }
+
+  GtkWidget dumdraw;
+  RECT r;
+  GetClientRect(mWnd,&r);
+  dumdraw.allocation.width = r.right;
+  dumdraw.allocation.height = r.bottom;
   draw = &dumdraw;
 
   dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),

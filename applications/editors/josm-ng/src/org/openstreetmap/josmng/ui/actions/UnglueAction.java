@@ -72,7 +72,7 @@ public class UnglueAction extends AtomicDataSetAction {
             Way act = ways.next();
             Node copy = cloneNode(ds, splitPoint);
             newNodes.add(copy);
-            List<Node> nodes = new ArrayList<Node>(act.getNodes());
+            List<Node> nodes = act.getNodes();
             Collections.replaceAll(nodes, splitPoint, copy);
             act.setNodes(nodes);
         }
@@ -84,6 +84,10 @@ public class UnglueAction extends AtomicDataSetAction {
                 rel.addMember(n, role);
             }
         }
+
+	// select all the nodes
+	newNodes.add(splitPoint);
+	layer.setSelection(newNodes);
     }
 
     private Node cloneNode(DataSet ds, Node source) {

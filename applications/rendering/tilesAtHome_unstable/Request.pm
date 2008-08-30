@@ -201,7 +201,9 @@ sub fetchFromServer
                         $success = 0;  # set to 0, need another loop
                         ::statusMessage("Ignoring too complex tile (".$self->ZXY_str.')',1,3);
                         # putbackToServer waits 15 secs before continuing, so we don't get the same time back 
-                        $self->putBackToServer("TooComplex");
+                        eval {
+                            $self->putBackToServer("TooComplex");
+                        };
                     }
                 }
             }
@@ -270,7 +272,7 @@ sub getRequestStringFromServer
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        return 0;
+        die TahError->new("ServerError", "Unable to get request string from server");
     }
     else
     {   # got a server reply here
@@ -294,9 +296,6 @@ sub putBackToServer
 {
     my ($self, $Cause) = @_;
 
-    # do not do this if called in xy mode!
-    return if($::Mode eq "xy");
-    
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
     $ua->protocols_allowed( ['http'] );
@@ -318,11 +317,10 @@ sub putBackToServer
 
     if(!$res->is_success())
     {
-        return (0, "Error reading response from server");
+        die TahError->new("ServerError", "Error reading response from server");
     }
     
     ::talkInSleep("Waiting before new tile is requested", 15);
-    return (1,"OK")
 }
 
 1;

@@ -120,8 +120,8 @@ infile: input svg file
 outfile: output png file
 width: width of the output in pixels
 height: height of the output in pixels
-left/right/top/bottom: If all these are specified then only render
-part of the svg.
+area: a SVG::Rasterize::CoordinateBox describing the part of the svg
+  to render. Defaults to rendering the entire drawing if not given.
 
 This uses the engine accessor internally so it may also throw an
 exception.

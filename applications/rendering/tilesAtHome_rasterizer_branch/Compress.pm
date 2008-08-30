@@ -1,6 +1,6 @@
 package Compress;
 
-#!/usr/bin/perl
+use warnings;
 use strict;
 use File::Copy;
 use File::Path;
@@ -55,8 +55,8 @@ sub new
 
 #-------------------------------------------------------------------
 # main function. Compresses all tileset.dir's in $self->{WorkingDir}.
-# returns (success, reason), with success being the number of compressed 
-# directories or -1 on error. reason is a string explaining the error.
+# returns (success, reason), with success being 1
+# -1 on error. reason is a string explaining the error.
 #-------------------------------------------------------------------
 sub compressAll
 {
@@ -66,6 +66,7 @@ sub compressAll
     my $progress = 0;
     $::progressPercent = 0;
     $::currentSubTask = "compress";
+    my $LOCKFILE;
 
     if ($Config->get("LocalSlippymap"))
     {
@@ -76,7 +77,7 @@ sub compressAll
 
     my (@prefixes,$allowedPrefixes);
     
-    ::statusMessage("Searching for tilesets in ".$self->{TileDir},0,3);
+    ::statusMessage("Searching for tilesets to be compressed",0,3);
 
     # compile a list of the "Prefix" values of all configured layers,
     # separated by |
@@ -100,13 +101,12 @@ sub compressAll
         my $FullTilesetPath = File::Spec->join($self->{TileDir}, $File);
 
         # get a file handle, then try to lock the file exclusively.
-        # if open fails (file has been uploaded and removed by other process)
-        # the subsequent flock will also fail and skip the file.
-        # if just flock fails it is being handled by a different upload process
-        open (ZIPDIR, $FullTilesetPath);
+        # if flock fails it is being handled by a different upload process
+        # also check if the file still exists when we get to it
+        open ($LOCKFILE, '>', $FullTilesetPath."lock");
         my $flocked = !$Config->get('flock_available')
-                      || flock(ZIPDIR, LOCK_EX|LOCK_NB);
-        if ($flocked)
+                      || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
+        if ($flocked && -d $FullTilesetPath )
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
             ::statusMessage("optimizing PNG files",1,6);
@@ -114,7 +114,7 @@ sub compressAll
             $::currentSubTask ='compress';
             $::progressPercent = 0;
             ::statusMessage("compressing $File",1,6);
-            $self->compress($FullTilesetPath, $layer);
+            $self->compress($FullTilesetPath);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
         }
@@ -123,16 +123,19 @@ sub compressAll
             ::statusMessage("$File compressed by different process. skipping",0,3);
         }
         # finally unlock zipfile and release handle
-        flock (ZIPDIR, LOCK_UN);
-        close (ZIPDIR);
+        if ($LOCKFILE)
+        {
+            flock ($LOCKFILE, LOCK_UN);
+            close ($LOCKFILE);
+            unlink($FullTilesetPath."lock") if $flocked;
+	}
     }
-
-    ::statusMessage("done",1,3); 
+    return (1,"");
 }
 
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating a .zip file.
-# Parameters:  FullTilesetPath, layername
+# Parameters:  FullTilesetPath
 #
 # It will never delete the source files, so the caller has to delete them
 # returns 1, if the zip command succeeded and 0 otherwise
@@ -142,17 +145,12 @@ sub compress
     my $self = shift;
     my $Config = $self->{Config};
 
-    my ($FullTilesetPathDir, $Layer) = @_;
+    my ($FullTilesetPathDir) = @_;
   
     my $Filename;
 
-    my $hostname = '';
-    if ($Config->get('UseHostnameInZipname'))
-    {
-        $hostname = `hostname`;
-        chomp $hostname;
-        $hostname = substr($hostname,0,4);
-    }
+    $FullTilesetPathDir =~ m{([^_\/\\]+)_(\d+)_(\d+)_(\d+).dir$};
+    my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
 
     # Create the output directory if it doesn't exist...
     if( ! -d $self->{ZipDir} )
@@ -161,35 +159,40 @@ sub compress
     }
 
     $Filename = File::Spec->join($self->{ZipDir},
-                                sprintf("%s_%d_%d_%s_tileset.zip",
-                                $hostname, ::GetClientId(), $$, $Layer));
+                                sprintf("%s_%d_%d_%d_%d.zip",
+                                $layer, $Z, $X, $Y, ::GetClientId()));
     
     # ZIP all the tiles into a single file
+    # First zip into "$Filename.part" and move to "$Filename" when finished
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
-    my $Command1;
+    my $zipCmd;
     if ($Config->get("7zipWin"))
     {
-        $Command1 = sprintf("\"%s\" %s %s %s",
+        $zipCmd = sprintf('"%s" %s "%s" "%s"',
           $Config->get("Zip"),
           "a -tzip",
-          $Filename,
+          $Filename.".part",
           File::Spec->join($FullTilesetPathDir,"*.png"));
     }
     else
     {
-        $Command1 = sprintf("\"%s\" -r -j %s %s > %s",
+        $zipCmd = sprintf('"%s" -r -j "%s" "%s" > "%s"',
           $Config->get("Zip"),
-          $Filename,
-          "$FullTilesetPathDir",
+          $Filename.".part",
+          $FullTilesetPathDir,
           $stdOut);
     }
-    
+
+
     # Run the zip command
-    my $zip_result = ::runCommand($Command1,$PID);
+    my $zip_result = ::runCommand($zipCmd, $PID);
 
     # stdOut is currently never used, so delete it unconditionally    
     unlink($stdOut);
     
+    # rename to final name so any uploader could pick it up now
+    move ($Filename.".part", $Filename);
+
     return $zip_result;
 }
 
@@ -204,6 +207,7 @@ sub optimizePNGs
     my $Config = $self->{Config};
     my $PNGDir = shift;
     my $layer  = shift;
+    my $transparent_layer = int($Config->get($layer."_Transparent"));
 
     $::progressPercent = 0;
     my $TmpFilename_suffix = ".cut";
@@ -237,14 +241,17 @@ sub optimizePNGs
        $::progressPercent = 100 * $progress / $NumPNG;
 
        my $PngFullFileName = File::Spec->join($PNGDir, $PngFileName);
+       # don't optimize empty sea or empty land tiles (file size 67 and 69)
+       next if ((-s $PngFullFileName) =~ /67|69/);
+
        # Temporary filename between quantizing and optimizing
        my $TmpFullFileName = $PngFullFileName.$TmpFilename_suffix;
 
-       if ($Config->get($layer."_Transparent"))
+       if ($transparent_layer)
        {    # Don't quantize if it's transparent
             rename($PngFullFileName, $TmpFullFileName);
        }
-       elsif ($Config->get("PngQuantizer") eq "pngnq") 
+       elsif (($Config->get("PngQuantizer")||'') eq "pngnq") 
        {
            $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
                                    $Config->get("Niceness"),

@@ -41,7 +41,6 @@ use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
-setlocale(LC_NUMERIC, 'C');
 
 #---------------------------------
 
@@ -852,6 +851,7 @@ sub AddBounds
     die("no such $Filename") if(! -f $Filename);
     
     # Change some stuff
+    no locale;                # use dot as separator even for Germans!
     my $BoundsInfo = sprintf(
       "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
       $S, $W, $N, $E);

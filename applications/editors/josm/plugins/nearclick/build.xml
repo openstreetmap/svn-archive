@@ -52,6 +52,7 @@
 	<attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
 	<attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
 	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>
   </target>

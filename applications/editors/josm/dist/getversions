@@ -1,1 +1,34 @@
-for i in *jar; do echo $i@ `unzip -c $i META-INF/MANIFEST.MF|grep Plugin-Date|cut "-d " -f2`@`unzip -c $i META-INF/MANIFEST.MF|grep Plugin-Version|cut -d: -f2`; done |perl -ne 'chomp;s/\r//; printf "%30s %28s %s\n",split "@"'
+#! /usr/bin/perl -w
+
+my $maxlength = 0;
+my @names = glob "*.jar";
+
+foreach my $plugin (@names)
+{
+  my $l = length($plugin);
+  $maxlength = $l if $l > $maxlength;
+}
+
+foreach my $plugin (@names)
+{
+  my $date = "";
+  my $version = "";
+  my $manifest = `unzip -c $plugin META-INF/MANIFEST.MF`;
+  if($manifest)
+  {
+    $date = $1 if $manifest =~ /Plugin-Date: ([^\r\n]+)/;
+    $version = $1 if $manifest =~ /Plugin-Version: ([^\r\n]+)/;
+  }
+  printf "%-${maxlength}s %28s %6s", $plugin,$date,$version;
+  my $svnfile = ".svn/text-base/$plugin.svn-base";
+  if(-f $svnfile && ($manifest = `unzip -c $svnfile META-INF/MANIFEST.MF`))
+  {
+    my $svndate = "";
+    my $svnversion = "";
+    $svndate = $1 if $manifest =~ /Plugin-Date: ([^\r\n]+)/;
+    $svnversion = $1 if $manifest =~ /Plugin-Version: ([^\r\n]+)/;
+    printf " SVN: %28s %6s%s", $svndate,$svnversion,
+    ($svndate ne $date || $svnversion ne $version) ? " changed" : "";
+  }
+  printf "\n";
+}

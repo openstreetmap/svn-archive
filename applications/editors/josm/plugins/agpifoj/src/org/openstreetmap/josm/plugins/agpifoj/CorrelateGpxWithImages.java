@@ -180,7 +180,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         }
     }
     
-    /** This action listener is called when the user has a photo of the time of his GPS receptor. It 
+    /** This action listener is called when the user has a photo of the time of his GPS receiver. It 
      * displays the list of photos of the layer, and upon selection displays the selected photo.
      * From that photo, the user can key in the time of the GPS. 
      * Then values of timezone and delta are set. 
@@ -200,7 +200,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
             panel = new JPanel();
             panel.setLayout(new BorderLayout());
-            panel.add(new JLabel(tr("<html>Take a photo of your GPS receptor while it displays the time.<br>"
+            panel.add(new JLabel(tr("<html>Take a photo of your GPS receiver while it displays the time.<br>"
                                     + "Display that photo here.<br>"
                                     + "And then, simply capture the time you read on the photo and select a timezone<hr></html>")), 
                                     BorderLayout.NORTH);
@@ -218,7 +218,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             gc.weightx = gc.weighty = 0.0;
             gc.fill = GridBagConstraints.NONE;
             gc.anchor = GridBagConstraints.WEST;
-            panelTf.add(new JLabel(tr("Photo time (from exif) :")), gc);
+            panelTf.add(new JLabel(tr("Photo time (from exif):")), gc);
 
             lbExifTime = new JLabel();
             gc.gridx = 1;
@@ -233,7 +233,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             gc.weightx = gc.weighty = 0.0;
             gc.fill = GridBagConstraints.NONE;
             gc.anchor = GridBagConstraints.WEST;
-            panelTf.add(new JLabel(tr("Gps time (read from the above photo) : ")), gc);
+            panelTf.add(new JLabel(tr("Gps time (read from the above photo): ")), gc);
 
             tfGpsTime = new JTextField();
             tfGpsTime.setEnabled(false);
@@ -253,7 +253,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             gc.weightx = gc.weighty = 0.0;
             gc.fill = GridBagConstraints.NONE;
             gc.anchor = GridBagConstraints.WEST;
-            panelTf.add(new JLabel(tr("I'm in the timezone of : ")), gc);
+            panelTf.add(new JLabel(tr("I'm in the timezone of: ")), gc);
             
             Vector vtTimezones = new Vector<String>();
             String[] tmp = TimeZone.getAvailableIDs();
@@ -373,7 +373,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             
             boolean isOk = false;
             while (! isOk) {
-                int answer = JOptionPane.showConfirmDialog(Main.parent, panel, tr("Synchronize time from a photo of the GPS receptor"), JOptionPane.OK_CANCEL_OPTION);
+                int answer = JOptionPane.showConfirmDialog(Main.parent, panel, tr("Synchronize time from a photo of the GPS receiver"), JOptionPane.OK_CANCEL_OPTION);
                 if (answer == JOptionPane.CANCEL_OPTION) {
                     return;
                 }
@@ -435,7 +435,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         JPanel panelCb = new JPanel();
         panelCb.setLayout(new FlowLayout());
         
-        panelCb.add(new JLabel(tr("GPX track : ")));
+        panelCb.add(new JLabel(tr("GPX track: ")));
         
         cbGpx = new JComboBox(gpxLst);
         panelCb.add(cbGpx);
@@ -456,7 +456,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.gridwidth = gc.gridheight = 1;
         gc.fill = GridBagConstraints.NONE;
         gc.weightx = gc.weighty = 0.0;
-        panelTf.add(new JLabel(tr("Timezone : ")), gc);
+        panelTf.add(new JLabel(tr("Timezone: ")), gc);
 
         float gpstimezone = Float.parseFloat(Main.pref.get("tagimages.doublegpstimezone", "0.0"));
         if (gpstimezone == 0.0) {
@@ -478,7 +478,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.gridwidth = gc.gridheight = 1;
         gc.fill = GridBagConstraints.NONE;
         gc.weightx = gc.weighty = 0.0;
-        panelTf.add(new JLabel(tr("Offset :")), gc);
+        panelTf.add(new JLabel(tr("Offset:")), gc);
 
         long delta = Long.parseLong(Main.pref.get("tagimages.delta", "0")) / 1000;
         tfOffset = new JTextField();
@@ -490,8 +490,8 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.weighty = 0.0;
         panelTf.add(tfOffset, gc);
 
-        JButton buttonViewGpsPhoto = new JButton(tr("<html>I can take a picture of my GPS receptor.<br>" 
-                                                    + "Can this help ? </html>"));
+        JButton buttonViewGpsPhoto = new JButton(tr("<html>I can take a picture of my GPS receiver.<br>"
+                                                    + "Can this help?</html>"));
         buttonViewGpsPhoto.addActionListener(new SetOffsetActionListener());
         gc.gridx = 2;
         gc.gridy = 0;
@@ -507,7 +507,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         gc.gridwidth = gc.gridheight = 1;
         gc.fill = GridBagConstraints.NONE;
         gc.weightx = gc.weighty = 0.0;
-        panelTf.add(new JLabel(tr("Update position for : ")), gc);
+        panelTf.add(new JLabel(tr("Update position for: ")), gc);
         
         gc.gridx = 1;
         gc.gridy = 2;
@@ -571,7 +571,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
             Float timezoneValue = parseTimezone(tfTimezone.getText().trim());
             if (timezoneValue == null) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing timezone.\nExpected format : {0}", "+H:MM"), 
+                JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing timezone.\nExpected format: {0}", "+H:MM"), 
                         tr("Invalid timezone"), JOptionPane.ERROR_MESSAGE);
                 continue;
             }
@@ -580,7 +580,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             try {
                 delta = Long.parseLong(tfOffset.getText());
             } catch(NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format : {0}", "number"), 
+                JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format: {0}", "number"), 
                         tr("Invalid offset"), JOptionPane.ERROR_MESSAGE);
                 continue;
             }
@@ -642,7 +642,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         
         Main.main.map.repaint();
         
-        JOptionPane.showMessageDialog(Main.parent, tr("Found {0} matchs of {1} in GPX track {2}", matched, dateImgLst.size(), selectedGpx.name), 
+        JOptionPane.showMessageDialog(Main.parent, tr("Found {0} matchs of {1} in GPX track {2}", matched, dateImgLst.size(), selectedGpx.name),
                 tr("GPX Track loaded"), 
                 ((dateImgLst.size() > 0 && matched == 0) ? JOptionPane.WARNING_MESSAGE 
                                                          : JOptionPane.INFORMATION_MESSAGE));

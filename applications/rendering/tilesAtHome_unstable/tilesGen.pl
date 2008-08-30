@@ -520,7 +520,9 @@ sub ProcessRequestsFromServer
     my ($success, $reason) = $tileset->generate();
     if (!$success)
     {
-        $req->putBackToServer($reason) unless $Mode eq 'xy';
+        eval {
+            $req->putBackToServer($reason) unless $Mode eq 'xy';
+        };
     }
     return ($success, $reason);
 }

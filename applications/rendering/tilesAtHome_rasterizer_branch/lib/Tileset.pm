@@ -656,7 +656,7 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    # we create Fork*2 inkscape threads
+    # we create Fork*2 rasterizer threads
     if ($forkval && $Zoom < ($req->Z + $forkval))
     {
         my $pid = fork();
@@ -679,7 +679,7 @@ sub RenderTile
             my $ChildExitValue = ($? >> 8);
             if (! ($ChildExitValue && $parent_success))
             {
-                return (0, 0, "Forked inkscape failed");
+                return (0, 0, "Forked rasterizer failed");
             }
         }
     }

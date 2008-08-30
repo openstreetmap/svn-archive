@@ -1,5 +1,6 @@
 package Upload;
 
+use warnings;
 use strict;
 use LWP::UserAgent;
 use File::Copy;
@@ -71,6 +72,7 @@ sub uploadAllZips
     my $Config = $self->{Config};
     my $uploaded = 0; # num handled files
     $::progressPercent = 0;
+    my $LOCKFILE;
 
     if ($Config->get("LocalSlippymap"))
     {
@@ -95,13 +97,12 @@ sub uploadAllZips
     {
         ::statusMessage((scalar(@zipfiles)+1)." zip files to upload",0,0);
         # get a file handle, then try to lock the file exclusively.
-        # if open fails (file has been uploaded and removed by other process)
-        # the subsequent flock will also fail and skip the file.
-        # if just flock fails it is being handled by a different upload process
-        open (ZIPFILE, File::Spec->join($self->{ZipDir},$File));
+        # if flock fails it is being handled by a different upload process
+        # also check if the file still exists when we get to it
+        open ($LOCKFILE, '>', File::Spec->join($self->{ZipDir},$File.".lock"));
         my $flocked = !$Config->get('flock_available')
-                      || flock(ZIPFILE, LOCK_EX|LOCK_NB);
-        if ($flocked)
+                      || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
+        if ($flocked && -e File::Spec->join($self->{ZipDir},$File))
         {   # got exclusive lock, now upload
 
             my $Load;
@@ -147,8 +148,12 @@ sub uploadAllZips
             ::statusMessage("$File uploaded by different process. skipping",0,3);
         }
         # finally unlock zipfile and release handle
-        flock (ZIPFILE, LOCK_UN);
-        close (ZIPFILE);
+        if ($LOCKFILE)
+        {
+            flock ($LOCKFILE, LOCK_UN);
+            close ($LOCKFILE);
+            unlink(File::Spec->join($self->{ZipDir},$File.".lock")) if $flocked;
+        }
     }
     ::statusMessage("uploaded $uploaded zip files",1,3) unless $uploaded == 0;
     return ($uploaded,"");
@@ -185,9 +190,9 @@ sub upload
         return (-1,0);
     }
 
-    $File =~ m{_(\d+)_\d+_([^_]+)_tileset\.zip$}x;
-    my $clientId = $1;
-    my $Layer=$2;
+    $FileName =~ m{^([^_]+)_\d+_\d+_\d+_(\d+)\.zip$};
+    my $Layer=$1;
+    my $clientId = $2;
 
     if(! $Config->get("UploadToDirectory"))
     {

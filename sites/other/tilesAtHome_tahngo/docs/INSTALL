@@ -35,11 +35,9 @@ and
     oceantilesdat_path ='/var/www/tah/Tiles/oceantiles_12.dat'
 which needs adapting.
 
-- tah_intern/views.py currently contains a hardcoded path to the log file location. Adapt the line:   f = open('/var/log/tah/tahngo.log', 'rU')
-
 - tah_intern/LegacyTileset.py contains hardcoded paths to your oceantiles.dat file and your fallback legacy tile directories. You shouldn't need this, as Legacy tiles are only on the tah server.
 
-- Configure the html templates for the URL to your tile server.  In the templates directory, base_browse_slippy.html might need adaptation to your tile location. The CSS and image directory is currently hardcoded to /media in base.html and needs to be adapted if this is different for your installation.
+- Configure the html templates for the URL to your tile server.  In the templates directory, base_browse_slippy.html might need adaptation to your tile location.
 
 APACHE CONFIGURATION
 --------------------

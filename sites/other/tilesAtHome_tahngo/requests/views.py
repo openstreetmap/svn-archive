@@ -29,6 +29,12 @@ def index(request):
   return render_to_response('base_requests.html');
 
 #-------------------------------------------------------
+# Show the recent uploads in flashy ajax
+
+def show_ajax(request):
+  return render_to_response('requests_show_ajax.html');
+
+#-------------------------------------------------------
 # shortcut to see the first page of the show_request page
 
 def show_first_page(request):

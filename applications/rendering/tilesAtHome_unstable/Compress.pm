@@ -224,7 +224,7 @@ sub optimizePNGs
     if (opendir(PNGDIR, $PNGDir))
     {
         @pngfiles = grep { /\.png$/ } readdir(PNGDIR);
-        close PNGDIR;
+        closedir PNGDIR;
     }
     else 
     {

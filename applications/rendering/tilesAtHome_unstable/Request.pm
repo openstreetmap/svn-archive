@@ -1,20 +1,67 @@
 # A 'Request' encapsulates a render request.
-#
-# Copyright 2008, by Sebastian Spaeth
-# licensed under the GPL v2 or (at your option) any later version.
+=pod
 
-## TODO: use proper perldoc format here
-## public API:
+=head1 Request for a t@h render
 
-## CREATION & COORDINATES:
-## ->new(Z,X,Y) (set); ->ZXY(z,x,y) (set or get); ->X(x) (set or get)
-## ->Y(y) (set or get), ->Z(z) (set or get), ->ZXY_str (read-only)
-## ->layers('comma-separated-layerstring') (get or set) (get returns array)
-## ->layers_str() (read only, returns comma-separated layer string)
+=head2 License and authors
 
-## RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
-## ->putBackToServer("cause")
-## ->fetchFromServer()
+ # Copyright 2008, by Sebastian Spaeth
+ # licensed under the GPL v2 or (at your option) any later version.
+
+=head2 Overview
+
+The <i>Request</i> object encapsulates a render request from the t@h server. It is used to fetch a request from the server and contains all the contect information of the request that we have. It is then handed a render method that processes it. <i>Request</i> can also return the request back to the server in case of an error. It encapsulates all the request-related communication with the server (but for uploading the resulting files).
+
+=head2 Public methods
+
+=head3 CREATION & COORDINATES:
+
+=over
+
+=item C<-E<gt>new(Z,X,Y)> (set)
+
+A Request can be instantiated with ->new(Z,X,Y). Alternatively those coordinates can be set with ->ZXY(z,x,y) later. Of course you don't need to set those coordinates if you plan to retrieve a request from the server.
+
+e.g. my $r = new Request or my $r = Request->new()
+
+=item ->ZXY(z,x,y) (set or get)
+
+=item ->ZXY_str (read-only) returns 'z,x,y' as string
+
+=item ->X(x) (set or get)
+
+=item ->Y(y) (set or get)
+
+=item ->Z(z) (set or get)
+
+
+=item ->layers('comma-separated-layerstring') (get or set) 
+
+(get returns array of layernames)
+
+=item ->layers_str() (read only) returns comma-separated layer string)
+
+=item ->{lastModified} (read-only attribute)
+
+is set to the unix timestamp of the tileset file on server. The server responds with  0 if it doesn't have the tileset yet. Although nothing prevents you technically from setting this attribute it only makes sense to use it for reading.
+
+=item ->{complexity} (read-only attribute)
+
+is set to the byte size of the tileset file onthe server. It will be set to 0 if the server does not have the tileset yet.
+
+=back
+
+=head3 RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
+
+=over
+
+=item ->putBackToServer("cause")
+
+=item ->fetchFromServer()
+
+=back
+
+=cut
 
 package Request;
 

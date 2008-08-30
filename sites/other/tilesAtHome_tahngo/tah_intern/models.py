@@ -33,23 +33,6 @@ class Tile(models.Model):
     return True
 
 #-----------------------------------------------------------------------------
-class Blank(Tile):
-  #on saving a new blank tile, we calculate its quadtile number
-  def save(self):
-    #quadtile from x,y
-    x=self.x
-    y=self.y
-    self.quadtile=0;
-    for i in range(0,15):
-        self.quadtile <<= 1;
-	if (x & 0x8000): self.quadtile =  self.quadtile | 1
-	x<<=1;
-        self.quadtile <<= 1;
-	if (y & 0x8000): self.quadtile =  self.quadtile | 1
-	y<<=1;
-    super(Blank, self).save() # Call the "real" save() method.
-
-#-----------------------------------------------------------------------------
 class Settings(models.Model):
   #name describes layer and names the directory in which they are
   name = models.CharField(max_length=30,unique=True)

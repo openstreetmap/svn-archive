@@ -9,12 +9,13 @@ ADMINS = (
 
 #------------------------------------------------
 #a little ugly place for setting up the logging perhaps.
+LOGFILE = '/var/log/tah/tahngo.log'
 import logging
 if not getattr(logging, "set_up_done", None):
     logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
                     datefmt = "%y-%m-%d-%H:%M:%S", 
-                    filename='/var/www/tah/server.log',
+                    filename= LOGFILE,
                    )
     logging.set_up_done=True
 #------------------------------------------------

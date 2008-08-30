@@ -85,7 +85,7 @@ sub uploadAllZips
     if (opendir(ZIPDIR, $self->{ZipDir}))
     {
         @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
-        close ZIPDIR;
+        closedir ZIPDIR;
     }
     else 
     {
@@ -253,7 +253,7 @@ sub upload
         if(opendir(UPDIR, $Config->get("UploadTargetDirectory")))
         {
             @QueueFiles = grep { /\.zip$/ } readdir(UPDIR);
-            close UPDIR;
+            closedir UPDIR;
         }
         else 
         {

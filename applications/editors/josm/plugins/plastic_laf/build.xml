@@ -34,6 +34,7 @@
 	<attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel" />
 	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 	<attribute name="Plugin-Early" value="true" />
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>
   </target>

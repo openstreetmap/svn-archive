@@ -41,6 +41,7 @@ use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
 use Error qw(:try);
+setlocale(LC_NUMERIC, 'C');
 
 #---------------------------------
 

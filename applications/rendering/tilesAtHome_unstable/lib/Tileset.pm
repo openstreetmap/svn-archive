@@ -1,11 +1,22 @@
 package Tileset;
 
-# Copyright 2006-20088, Dirk-Lueder Kreie, Sebastian Spaeth,
-# Matthias Julius and others
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+=pod
+
+=head1 Tileset package
+
+=head2 Copyright and Authors
+
+Copyright 2006-2008, Dirk-Lueder Kreie, Sebastian Spaeth,
+Matthias Julius and others
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+=head2 Description of functions 
+
+=cut
 
 use warnings;
 use strict;
@@ -228,11 +239,21 @@ sub generate
 }
 
 #------------------------------------------------------------------
-# Download the area for the tileset (whole or in stripes, as required)
-# into $self->{JobDir}
-# returns: (filename, reason)
-# filename: resulting data osm filename (without path) on success, 'undef' on failure
-# reason:   string describing the error
+
+=pod 
+
+=head3 downloadData
+
+Download the area for the tileset (whole or in stripes, as required)
+into $self->{JobDir}
+
+B<parameter>: none
+
+B<returns>: (filename, reason) 
+I<filename>: resulting data osm filename (without path) on success, 'undef' on failure.
+I<reason>: string describing the error.
+
+=cut
 #-------------------------------------------------------------------
 sub downloadData
 {

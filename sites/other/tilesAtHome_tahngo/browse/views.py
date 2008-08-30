@@ -37,7 +37,7 @@ def slippymap(request):
   return render_to_response('base_browse_slippy.html',{'layer': layer,'z':z, 'x':x, 'y':y})
 
 def tiledetails_base(request):
- return tiledetails('tile',2,1,1)
+ return tiledetails(request,'tile',2,1,1)
 
 def tiledetails(request,layername,z,x,y):
   z=int(z)

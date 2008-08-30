@@ -185,7 +185,7 @@ if( $RenderMode and -e "/dev/null" )
 
 ## set all fault counters to 0;
 resetFault("fatal");
-resetFault("inkscape");
+resetFault("rasterizer");
 resetFault("nodata");
 resetFault("nodataXAPI");
 resetFault("renderer");
@@ -779,12 +779,12 @@ sub svg2png
         print "Rasterize engine STDOUT:".$e->{stdout} if $Config->get("Debug") && $e->{stdout};
         print "Rasterize engine STDERR:".$e->{stderr} if $Config->get("Debug") && $e->{stderr};
 
-        addFault("inkscape",1);
+        addFault("rasterizer",1);
         $req->is_unrenderable(1);
         return(0, 'BadSVG (svg2png)');
     }; #FIXME: catch SVG::Rasterize::Engine::Error::NoOutput
 
-    resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
+    resetFault("rasterizer"); # reset to zero if the rasterizer succeeds at least once
 
      return ($FullSplitPngFile, ""); #return success
 }
@@ -947,7 +947,7 @@ sub splitImageX
         # Check for black tile output
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
-            print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
+            print STDERR "\nERROR: Your rasterizer has just produced a totally black tile. This often indicates a broken Inkscape, please upgrade.\n";
             cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4);
             return (0, 0,"BlackTile");
         }
@@ -1061,8 +1061,8 @@ sub checkFaults
     if (getFault("fatal") > 0) {
         cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1);
     }
-    elsif (getFault("inkscape") > 5) {
-        cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1);
+    elsif (getFault("rasterizer") > 5) {
+        cleanUpAndDie("Five times rasterizer failed, exiting","EXIT",1);
     }
     elsif (getFault("renderer") > 10) {
         cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1);

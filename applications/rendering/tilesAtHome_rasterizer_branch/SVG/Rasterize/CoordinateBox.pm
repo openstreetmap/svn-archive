@@ -34,6 +34,28 @@ This class represents a box in a given coordinate system. The reason for it's
 existence is that different renderers want different origins, and to do a flip
 transform we need to know the full extent of the canvas.
 
+=begin testing SETUP 1
+
+use SVG::Rasterize::CoordinateBox;
+my %params = (
+    box => {
+        left => 5,
+        right => 10,
+        top => 10,
+        bottom => 5
+    },
+    space => {
+        left => 0,
+        right => 20,
+        top => 20,
+        bottom => 0
+    }
+);
+my $box = SVG::Rasterize::CoordinateBox->new(\%params);
+isa_ok( $box, 'SVG::Rasterize::CoordinateBox' );
+
+=end testing
+
 =head1 METHODS
 
 =cut
@@ -53,25 +75,8 @@ See the example for details.
 
 Returns: new instance of this class.
 
-=begin testing new 2
+=begin testing new 1
 
-use SVG::Rasterize::CoordinateBox;
-my $params = my %params = (
-    box => {
-        left => 5,
-        right => 10,
-        top => 10,
-        bottom => 5
-    },
-    space => {
-        left => 0,
-        right => 20,
-        top => 20,
-        bottom => 0
-    }
-);
-my $box = SVG::Rasterize::CoordinateBox->new(\%params);
-isa_ok( $box, 'SVG::Rasterize::CoordinateBox' );
 $params{box}{left} = 6;
 is($box->{box}{left}, 5, "we can't rip the data out underneath it's feet");
 
@@ -86,8 +91,8 @@ sub new {
 
     # Copy the data so we don't end up having them changed underneath
     # our feet
-    $self->{box} = [ %{ $params->{box} } ];
-    $self->{space} = [ %{ $params->{space} } ];
+    $self->{box} = { %{ $params->{box} } };
+    $self->{space} = { %{ $params->{space} } };
 
     $self->{space}{height} = abs($self->{space}{top} - $self->{space}{bottom});
 
@@ -144,7 +149,7 @@ sub get_box_upperleft {
     my $self = shift;
 
     my %box = %{ $self->{box} };
-    if( $self->{space}{top} < $self->{space}{bottom} ){
+    if( $self->{space}{top} > $self->{space}{bottom} ){
         $box{top} = $self->{space}{height} - $self->{box}{top};
         $box{bottom} = $self->{space}{height} - $self->{box}{bottom};
     }

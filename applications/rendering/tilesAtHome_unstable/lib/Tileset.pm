@@ -218,18 +218,22 @@ sub generate
 
         #----------
         # This directory is now ready for upload.
-        # move it up one folder, so it can be picked up
-        my $dircomp;
+        # move it up one folder, so it can be picked up.
+        # Unless we have moved everything to the local slippymap already
+        if (!$Config->get("LocalSlippymap"))
+        {
+            my $dircomp;
 
-        my @dirs = File::Spec->splitdir($JobDirectory);
-        do { $dircomp = pop(@dirs); } until ($dircomp ne '');
-        # we have now split off the last nonempty directory path
-        # remove the next path component and add the dir name back.
-        pop(@dirs);
-        push(@dirs, $dircomp);
-        my $DestDir = File::Spec->catdir(@dirs);
-        rename $JobDirectory, $DestDir;
-        # Finished moving directory one level up.
+            my @dirs = File::Spec->splitdir($JobDirectory);
+            do { $dircomp = pop(@dirs); } until ($dircomp ne '');
+            # we have now split off the last nonempty directory path
+            # remove the next path component and add the dir name back.
+            pop(@dirs);
+            push(@dirs, $dircomp);
+            my $DestDir = File::Spec->catdir(@dirs);
+            rename $JobDirectory, $DestDir;
+            # Finished moving directory one level up.
+        }
     }
 
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);

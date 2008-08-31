@@ -1,4 +1,5 @@
 import logging, os
+from django.db import transaction
 from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
 import django.views.generic.list_detail
@@ -40,7 +41,9 @@ def show_ajax(request):
 def show_first_page(request):
   return show_requests(request,1)
 
+
 #-------------------------------------------------------
+#### show_requests (request,page) ####
 # show the list of recently created requests and the list
 # of recently taken requests
 
@@ -285,15 +288,20 @@ def upload_gonogo(request):
     load = min(Upload.objects.all().count()/1500.0, 1)
     return HttpResponse(str(load));
 
-#-------------------------------------------------------
-# retrieve a new request from the server
 
+#-------------------------------------------------------
+#### take(request) ####
+# retrieve a new request from the server
+# TODO, quite large by now. Split?
+
+@transaction.commit_on_success
 def take(request):
     html='XX|5|unknown error'
     if request.method == 'POST':
-      # cleanup, we had huge client_uuids in the beginnning, shorten if necessary
-      if request.POST.has_key('client_uuid') and int(request.POST['client_uuid']) > 65535:
-        request.POST['client_uuid'] = request.POST['client_uuid'][-4:]
+      # we had huge client_uuids in the beginnning, shorten if necessary
+      if request.POST.has_key('client_uuid') and \
+          int(request.POST['client_uuid']) > 65535:
+             request.POST['client_uuid'] = request.POST['client_uuid'][-4:]
 
       authform = ClientAuthForm(request.POST)
       form     = TakeRequestForm(request.POST)
@@ -311,7 +319,6 @@ def take(request):
             if active_user_reqs <= 50:
               try:  
                   # get the next request from the queue
-                  #req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
                   req = Request.objects.get_next_and_lock()
  	          req.status=1
  	          req.client = user
@@ -353,10 +360,16 @@ def take(request):
       else: #form was not valid
         html = "XX|5|Form invalid. "+str(form.errors)
       return HttpResponse(html);
+
     else: #request.method != POST, show the web form
-      authform, form = ClientAuthForm(), TakeRequestForm()
-      return render_to_response('requests_take.html',{'clientauthform': authform, 'takeform': form})
+        authform, form = ClientAuthForm(), TakeRequestForm()
+        return render_to_response('requests_take.html', \
+                              {'clientauthform': authform, 'takeform': form})
     return HttpResponse(html)
+
+
+
+#-------------------------------------------------------
 
 @cache_control(no_cache=True)
 def request_changedTiles(request):

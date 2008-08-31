@@ -306,33 +306,45 @@ def take(request):
           #"You provided a correct username and password!"
           # next, check for a valid client version
           if form.cleaned_data['version'] in ['Rapperswil', 'Saurimo']:
-            try:  
-                #next 2 lines are for limiting max #of active requests per usr
-                active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
-                if active_user_reqs <= 50:
-                  req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
+            #next 2 lines are for limiting max #of active requests per usr
+            active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
+            if active_user_reqs <= 50:
+              try:  
+                  # get the next request from the queue
+                  #req = Request.objects.filter(status=0).order_by('priority','request_time')[0]
+                  req = Request.objects.get_next_and_lock()
  	          req.status=1
  	          req.client = user
  	          req.client_uuid = form.cleaned_data.get('client_uuid', 0)
  	          req.clientping_time=datetime.now()
                   req.save()
+
                   # find out tileset filesize and age
-                  # (always 'tile' layer for now. need to find something better)
+                  # always hardcode 'tile' layer for now.
+                  # need to find something better, like layerid=1 for default
                   tilelayer = Layer.objects.get(name='tile')
-                  (tilepath, tilefile) = Tileset(tilelayer, req.min_z, req.x, req.y).get_filename(settings.TILES_ROOT)
+                  (tilepath, tilefile) = Tileset(tilelayer, req.min_z, \
+                              req.x, req.y).get_filename(settings.TILES_ROOT)
                   tilefile = os.path.join(tilepath, tilefile)
                   try: 
                     fstat = os.stat(tilefile)
                     (fsize,mtime) = (fstat[6], fstat[8])
                   except OSError: 
                     (fsize,mtime) = 0,0
+
+                  # next line is actually the successful request string!
 	          html="OK|5|%s|%d|%d" % (req,mtime,fsize)
-                else:
-                  html ="XX|5|You have more than 50 active requests. Check your client."
-            except IndexError:
-                html ="XX|5|No requests in queue"
+
+              except Request.DoesNotExist:
+                  # could not get_next_and_lock, queue empty
+                  html ="XX|5|No requests in queue"
+            else:
+                  #  active_user_reqs > 50
+                  html ='XX|5|You have more than 50 active requests. '\
+                        'Check your client.'
+
           else:
-            # client version no in whitelist
+            # client version not in whitelist
             logging.info("User %s connects with disallowed client '%s'." %(user,form.cleaned_data['version']))
             html="XX|5|Invalid client version."
         else:

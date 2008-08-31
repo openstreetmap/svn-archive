@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from tah.tah_intern.models import Layer
-
+from tah.requests.manager import RequestManager
 #-----------------------------------------------------
 class Request(models.Model):
   # x,y are the coordinates of the request tileset
@@ -32,6 +32,9 @@ class Request(models.Model):
   client = models.ForeignKey(User,blank=True,null=True)
   client_uuid = models.PositiveSmallIntegerField(blank=True, default=0)
   #---- end of model definition ----
+
+  # use RequestManager that allows to e.g. select a request "FOR UPDATE"
+  objects = RequestManager()
 
   def __str__(self):
     return "%s|%s|%s|%s" % (self.x,self.y,self.min_z,self.layers_str)

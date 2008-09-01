@@ -24,11 +24,12 @@ public class JobDispatcher {
 	 */
 	public static JobDispatcher getInstance() {
 		if (instance == null)
-			instance = new JobDispatcher();
+			new JobDispatcher();
 		return instance;
 	}
 
 	private JobDispatcher() {
+		instance = this;
 		addWorkerThread().firstThread = true;
 	}
 

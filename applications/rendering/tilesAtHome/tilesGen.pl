@@ -239,7 +239,7 @@ elsif ($Mode eq "loop")
         {
             if ($Config->get("ForkForUpload") && $upload_pid != -1)
             {
-                statusMessage("Waiting for previous upload process (this can take while)",1,0);
+                statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
@@ -416,7 +416,7 @@ sub compressAndUploadTilesets
         # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
         if ($upload_pid != -1)
         {
-            statusMessage("Waiting for previous upload process to finish (this can take while)",1,3);
+            statusMessage("Waiting for previous upload process to finish (this can take a while)",1,3);
             waitpid($upload_pid, 0);
             #FIXME: $upload_result is apparently never returned?! skip?
             #$upload_result = $? >> 8;

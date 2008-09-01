@@ -1,0 +1,52 @@
+<project name="globalsat" default="build" basedir=".">
+
+	<!-- point to your JOSM directory -->
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
+	<property name="RXTX" location="./libs/RXTXcomm.jar" />
+
+	<path id="classpath">
+		<fileset id="RXTX" file="${RXTX}"/>
+		<fileset file="${josm}"/>
+	</path>
+
+	<target name="init">
+		<mkdir dir="build"></mkdir>
+		<mkdir dir="dist"></mkdir>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpathref="classpath" debug="true" destdir="build" target="1.5"> 
+		<!-- <javac srcdir="src" classpathref="classpath" debug="true" destdir="build" target="1.5"> -->
+<!--		<javac srcdir="src" classpath="${RXTX}" debug="true" destdir="build" target="1.5"> -->
+
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
+		<unjar dest="build">
+			<fileset refid="RXTX" />
+		</unjar>
+		<copy todir="build/images" >
+			<fileset dir="images" />
+		</copy>
+		<jar destfile="dist/globalsat.jar" basedir="build">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.globalsat.GlobalsatPlugin" />
+				<attribute name="Plugin-Description" value="Provide a dialog to read stored tracks from a Globalsat DG100 datalogger into a GPX-layer. Depends on installed rxtx library." />
+				<attribute name="Plugin-Author" value="ramack@raphael-mack.de" />
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="install" depends="build">
+		<copy file="dist/globalsat.jar" todir="${user.home}/.josm/plugins"/>
+	</target>
+</project>

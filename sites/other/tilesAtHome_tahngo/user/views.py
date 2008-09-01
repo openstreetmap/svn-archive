@@ -1,19 +1,28 @@
 from django.http import Http404
 from django.shortcuts import render_to_response
+from django.views.decorators.cache import cache_control,  cache_page
 import django.contrib.auth.views
 #from django.contrib.auth.models import User
 from tah.user.models import TahUser
 from tah.requests.models import Request
 
+#--------------------------------------------------------------
+# simply show the base user page linking to all options
 def index(request):
     return render_to_response("base_user.html");
 
+
+#--------------------------------------------------------------
+# Show a list of all users sort by activity (or whatever)
+@cache_control(max_age=30)
+@cache_page(30)
 def show_user(request):
     order = request.GET.get('order')
     if order == 'tiles': sortorder='-renderedTiles'
     elif order == 'upload':  sortorder='-kb_upload'
     else:                sortorder='-last_activity'
-    u = TahUser.objects.filter(user__is_active=True).order_by(sortorder) # Get the first user in the system
+    # Get the first user in the system
+    u = TahUser.objects.filter(user__is_active=True).order_by(sortorder)
     return render_to_response("user_show.html",{'user':u});
 
 

@@ -1,5 +1,5 @@
 import logging, os
-from django.db import transaction
+from django.db import transaction, connection
 from django.utils.encoding import force_unicode
 from django.shortcuts import render_to_response
 import django.views.generic.list_detail
@@ -15,7 +15,7 @@ from django.contrib.auth import authenticate
 from tah.tah_intern.models import Layer
 from tah.tah_intern.Tile import Tile
 from tah.tah_intern.Tileset import Tileset
-from django.views.decorators.cache import cache_control
+from django.views.decorators.cache import cache_control,  cache_page
 from tah.tah_intern.models import Settings
 
 ###############################################
@@ -352,20 +352,23 @@ def take(request):
 
           else:
             # client version not in whitelist
-            logging.info("User %s connects with disallowed client '%s'." %(user,form.cleaned_data['version']))
+            logging.info("User %s connects with disallowed client '%s'." %\
+                         (user,form.cleaned_data['version']))
             html="XX|5|Invalid client version."
         else:
             # user is None, auth failed
-            html="XX|5|Invalid username. Your username and password were incorrect or the user has been disabled."
+            html='XX|5|Invalid username. Your username and password were '\
+                 'incorrect or the user has been disabled.'
       else: #form was not valid
         html = "XX|5|Form invalid. "+str(form.errors)
-      return HttpResponse(html);
 
     else: #request.method != POST, show the web form
         authform, form = ClientAuthForm(), TakeRequestForm()
         return render_to_response('requests_take.html', \
                               {'clientauthform': authform, 'takeform': form})
-    return HttpResponse(html)
+
+    # Finally return html
+    return HttpResponse(html) #+"\n"+str(connection.queries))
 
 
 
@@ -442,7 +445,10 @@ def stats_munin_requests(request,status):
       reply += 'done.value %d' % (reqs.filter(clientping_time__gt=datetime.now()-timedelta(0,0,0,0,0,48)).count() // 48)
     return HttpResponse(reply,mimetype='text/plain')
 
-@cache_control(must_revalidate=True, max_age=3600)
+
+#----------------------------------------------------------------------
+# Simply return the latest client version (cached for 15 Minutes)
+@cache_page(60*15)
 def show_latest_client_version(request):
     html = Settings().getSetting(name='latest_client_version')
     return HttpResponse(html,mimetype='text/plain')

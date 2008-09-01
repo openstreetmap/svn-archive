@@ -7,6 +7,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 import shutil
 from datetime import datetime
 from time import sleep,clock,time
+#from django.db import transaction
 from django.conf import settings
 from tah.tah_intern.models import Settings, Layer
 from tah.tah_intern.Tileset import Tileset
@@ -36,7 +37,10 @@ class TileUpload:
       while not self. upload:
         # repeat fetching until there is one
         try:
+          # Fetch next row (small race condition in case of multiple upload processors)
           self.upload = Upload.objects.filter(is_locked=False)[0]
+          self.upload.is_locked = True
+          self.upload.save()
         except IndexError:
           #logging.debug('No uploaded request. Sleeping 10 sec.')
           sleep(10)

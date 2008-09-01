@@ -1,0 +1,22 @@
+The contents of this folder deal with daily updates.
+
+Change the name of the mail recipient in the mail command in
+update.sh! Also change the mail recipient and database locations and
+passwords at the top of daily.php.
+
+This simple script will run the php program daily.php which will
+analyze what new update files are available. New files will be
+downloaded and unprocessed but already downloaded files will be
+processed. daily.php generates another script update-daily.sh to
+process the determined files, using the utilities import.php and
+update.php in the main part of the system (in the utils folder).
+
+Completed files are flagged with .done suffixes. For that reason, once
+primed from a complete planet file, any available updates already
+included in the planet file should be prevented from updating by
+adding (empty) files of the form
+"daily-20080801-20080802.osc.bz2.done" to the folder.
+
+Create a folder "donelog" for the script to store log files.
+
+Then update.sh should be run daily from cron. 

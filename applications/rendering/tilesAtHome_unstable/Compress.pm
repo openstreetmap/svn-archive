@@ -148,6 +148,7 @@ sub compress
     my ($FullTilesetPathDir) = @_;
   
     my $Filename;
+    my $Tempfile;
 
     $FullTilesetPathDir =~ m{([^_\/\\]+)_(\d+)_(\d+)_(\d+).dir$};
     my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
@@ -162,6 +163,9 @@ sub compress
                                 sprintf("%s_%d_%d_%d_%d.zip",
                                 $layer, $Z, $X, $Y, ::GetClientId()));
     
+    $Tempfile = File::Spec->join($Config->get("WorkingDirectory"),
+                                sprintf("%s_%d_%d_%d_%d.zip",
+                                $layer, $Z, $X, $Y, ::GetClientId()));
     # ZIP all the tiles into a single file
     # First zip into "$Filename.part" and move to "$Filename" when finished
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
@@ -171,14 +175,14 @@ sub compress
         $zipCmd = sprintf('"%s" %s "%s" "%s"',
           $Config->get("Zip"),
           "a -tzip",
-          $Filename.".part",
+          $Tempfile,
           File::Spec->join($FullTilesetPathDir,"*.png"));
     }
     else
     {
         $zipCmd = sprintf('"%s" -r -j "%s" "%s" > "%s"',
           $Config->get("Zip"),
-          $Filename.".part",
+          $Tempfile,
           $FullTilesetPathDir,
           $stdOut);
     }
@@ -191,7 +195,7 @@ sub compress
     unlink($stdOut);
     
     # rename to final name so any uploader could pick it up now
-    move ($Filename.".part", $Filename);
+    move ($Tempfile, $Filename);
 
     return $zip_result;
 }

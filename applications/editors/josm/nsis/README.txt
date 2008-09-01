@@ -36,7 +36,7 @@ build the installer
 -------------------
 1.) You will need to download and install the following on your machine:
 - cygwin bash and wget
-- launch4j - http://launch4j.sourceforge.net/ (currently 3.0.0-pre2, older 2.x will NOT work!)
+- launch4j - http://launch4j.sourceforge.net/ (currently 3.0.1, older 2.x will NOT work!)
 - NSIS - http://nsis.sourceforge.net/ (any recent version should do)
 
 2.) Edit the two absolute paths in the file josm-setup.sh (in the calls 

@@ -1,0 +1,42 @@
+<project name="measurement" default="build" basedir=".">
+
+	<!-- point to your JOSM directory -->
+	<property name="josm" location="../../../core/dist/josm-custom.jar" />
+
+
+	<target name="init">
+		<mkdir dir="build"></mkdir>
+		<mkdir dir="dist"></mkdir>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpath="${josm}" debug="true" destdir="build" target="1.5">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
+		<copy todir="build/images" >
+			<fileset dir="images" />
+		</copy>
+		<jar destfile="dist/measurement.jar" basedir="build">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.measurement.MeasurementPlugin" />
+				<attribute name="Plugin-Description" value="Provide a measurement dialog and a layer to measure length and angle of segments (there are no segments anymore, I know. Any idea how the angle should be measures now?) and create measurement paths (which also can be imported from a gps layer)" />
+				<attribute name="Plugin-Author" value="mail@raphael-mack.de" />
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="install" depends="build">
+		<copy file="dist/measurement.jar" todir="${user.home}/.josm/plugins"/>
+	</target>
+	
+</project>

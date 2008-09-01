@@ -14,9 +14,10 @@ if (! empty($_SERVER['REQUEST_URI'])) {
 /* get the url query parameters */
 $find = isset($_GET['find']) ? $_GET['find'] : '';
 $max = (int)(isset($_GET['max']) ? $_GET['max'] : $config['limit']);
+$anyoccurenceifnotlocal = isset($_GET['any']);
 
 /* do the deed */
 header("Content-type: text/xml; charset=UTF-8");
-echo search::xmlise($find, $max);
+echo search::xmlise($find, $max, $anyoccurenceifnotlocal);
 
 ?>

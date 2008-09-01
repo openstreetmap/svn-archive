@@ -7,7 +7,7 @@ class search {
   /* The common point of call for doing searches. Call search::xmlise(). */
 
   // --------------------------------------------------
-  /* static */ function xmlise($find, $maxresults) {
+  /* static */ function xmlise($find, $maxresults, $anyoccurenceifnotlocal) {
     /* Given a search string, returns a string of complete xml describing 
        the matches found for that string 
 
@@ -74,7 +74,7 @@ class search {
       $thisfind = search::explodeterms($finds[$i]);
       
       /* the heart of the search - see below */
-      $nameds = search::find($thisfind, $maxresults, $isapostcode);
+      $nameds = search::find($thisfind, $maxresults, $isapostcode, $anyoccurenceifnotlocal);
 
       /* reflect the original search data back in the xml */
       $ks = count($finds) > 1 ? $i+1 : '';
@@ -93,7 +93,7 @@ class search {
       if (is_string($nameds) && ! $isapostcode) {
         if (count($thisfind) == 2) {
           $thisfind = array_merge(array($thisfind[0]), $thisfind);
-          $nameds = search::find($thisfind, $maxresults, FALSE);
+          $nameds = search::find($thisfind, $maxresults, FALSE, $anyoccurenceifnotlocal);
         }
       } 
 
@@ -170,7 +170,7 @@ class search {
   }
 
   // --------------------------------------------------
-  /* static */ function find(&$terms, $maxresults, $doingpostcode) {
+  /* static */ function find(&$terms, $maxresults, $doingpostcode, $anyoccurenceifnotlocal=FALSE) {
     /* Given a search string, returns an array of named's which are the matches 
        for the given search string. Usually this will be called from xmlise rather 
        than directly.
@@ -341,6 +341,7 @@ class search {
        Hinton Road becomes Hinton Rd as well, and so on */
 
     $canonterms = canonical::canonical_basic($terms[0]);
+    if (count($canonterms) > 4) { array_splice($canonterms, 4); }
 
     if (count($places) > 0) {
       /* There are qualifying places. 
@@ -397,10 +398,13 @@ class search {
       }
     }
 
-    if (count($nameds) == 0 && empty($doinglatlonqualifier) && empty($doingpostcode)) {
-      /* Either no qualifying place, or no name found near given place. If there was a
+    if (count($nameds) == 0 && (count($places) == 0 || $anyoccurenceifnotlocal) && 
+        empty($doinglatlonqualifier) && empty($doingpostcode)) 
+    {
+      /* Either no qualifying place, or no name found near given place
+         (and we asked to search more widely). If there was a
          qualifying place try general search for name anyway: "but I
-         did find one near..." 
+         did find one near..."
 
          In this case we have no place to order by distance from, so
          instead do a partial ordering so that exact matches on the
@@ -408,10 +412,16 @@ class search {
          partial matches. For example, "Fulbourn" would come before
          "Fulbourn Post Office" when searching for "Fulbourn". We do
          this by going round the loop twice, relaxing the exactness
-         condition on the second time round */
+         condition on the second time round 
+
+         ... Well, that's what I used to do. In the interests of
+         eifficiency, however, for now just do inexact matches. We'll
+         still get places first, but a search for Bury will include
+         Bury St Edmunds whereas before that would have been well down
+         the list, after all the other Burys */
       $limit = $maxresults;
-      $exact = TRUE;
-      for ($i = 0; $i < 2 && $limit > 0; $i++) {
+      $exact = FALSE; // TRUE;
+      for ($i = 0; $i < 1 /* 2 */ && $limit > 0; $i++) {
         $q = $db->query();
         $q->where(word::whereword($joiners, $canonterms, $exact));
         $q->limit($limit);

@@ -1,3 +1,4 @@
+
 from django.conf.urls.defaults import *
 from tah.requests.views import *
 from tah.requests.feeds import LatestRequests, LatestRequestsByCategory
@@ -15,7 +16,7 @@ urlpatterns = patterns('',
     (r'^show/page(?P<page>[0-9]+)/$', show_requests),
     (r'^show/ajax$', show_ajax),
     # an RSS feed for the latest requests
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': request_feeds}),
+    #(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': request_feeds}),
     (r'^create/$', create),
     (r'^create/changedTiles/$', request_changedTiles),
     (r'^take/$', take),

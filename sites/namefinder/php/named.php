@@ -341,6 +341,7 @@ class named {
     }
     $canonterms = canonical::canonical_basic($name);
     if (empty($canonterms)) { return $places; /* empty array */ }
+    if (count($canonterms) > 4) { array_splice($canonterms, 4); }
     $ands[] = word::whereword($joiners, $canonterms, $exact);
     $ands[] = y_op::gt('rank',0);
     $q->where(y_op::aand($ands));

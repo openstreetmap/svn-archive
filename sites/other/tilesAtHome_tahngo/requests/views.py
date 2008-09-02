@@ -196,6 +196,7 @@ def feedback(request):
                 req = Request.objects.get(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z'], client=user)
                 req.status=0
                 req.request_time = req.request_time + timedelta(hours=2)
+                req.save()
                 html = "Reset tileset (%d,%d,%d)" % \
                         (formdata['min_z'],formdata['x'],formdata['y'])
                 logging.info("%s by %s (uuid: %s). Cause: %s" %(html,user,request.POST.get('client_uuid','0'),request.POST.get('cause','unknown')))

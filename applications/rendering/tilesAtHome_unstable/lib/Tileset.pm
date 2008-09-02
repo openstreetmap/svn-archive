@@ -83,9 +83,6 @@ sub DESTROY
 # generate does everything that is needed to end up with a finished tileset
 # that just needs compressing and uploading. It outputs status messages, and
 # hands back the job to the server in case of critical errors.
-# Returns (status, reason)
-# status: 1=success, 0= failure
-# reason: a string describing the error
 #-----------------------------------------------------------------------------
 sub generate
 {
@@ -218,9 +215,8 @@ into $self->{JobDir}
 
 B<parameter>: none
 
-B<returns>: (filename, reason) 
-I<filename>: resulting data osm filename (without path) on success, 'undef' on failure.
-I<reason>: string describing the error.
+B<returns>: filename
+I<filename>: resulting data osm filename (without path).
 
 =cut
 #-------------------------------------------------------------------
@@ -425,8 +421,7 @@ sub downloadData
 # expects $self->{JobDir}/data.osm as input and produces
 # $self->{JobDir}/dataList-of-preprocessors.osm
 # parameter: (layername)
-# returns:   (filename, reason)
-#            filename is 0 in case of failure or filename (without path)
+# returns:   filename (without path)
 #-------------------------------------------------------------
 sub runPreprocessors
 {
@@ -503,7 +498,6 @@ sub runPreprocessors
 #-------------------------------------------------------------------
 # renders the tiles, using threads
 # paramter: ($layer, $maxzoom)
-# returns: 1 on success, 0 on failure
 #-------------------------------------------------------------------
 sub forkedRender
 {
@@ -565,7 +559,6 @@ sub forkedRender
 # Generate SVG for one zoom level
 #   $layerDataFile - name of the OSM data file (which is in the JobDir)
 #   $Zoom - which zoom currently is processsed
-#  returns: 1 on success, 0 on failure
 #-----------------------------------------------------------------------------
 sub GenerateSVG 
 {

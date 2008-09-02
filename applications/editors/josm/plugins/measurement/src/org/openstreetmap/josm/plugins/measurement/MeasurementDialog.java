@@ -89,14 +89,14 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
 
         valuePanel.add(new JLabel("Selection Area"));
         
-        selectAreaLabel = new JLabel("0 m²");
+        selectAreaLabel = new JLabel("0 mÂ²");
         valuePanel.add(selectAreaLabel);
         
         JLabel angle = new JLabel("Angle");
         angle.setToolTipText(tr("Angle between two selected Nodes"));
         valuePanel.add(angle);
         
-        segAngleLabel = new JLabel("- °");
+        segAngleLabel = new JLabel("- Â°");
         valuePanel.add(segAngleLabel);
         
         add(valuePanel, BorderLayout.CENTER);
@@ -143,8 +143,8 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
 				}
 				dlg.selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
 
-				dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " °");		
- 				dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m²");
+				dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " Â°");		
+ 				dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " mÂ²");
 
 			}
         	

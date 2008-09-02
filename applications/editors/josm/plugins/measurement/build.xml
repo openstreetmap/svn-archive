@@ -1,7 +1,7 @@
-<project name="measurement" default="build" basedir=".">
+<project name="measurement" default="dist" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="../../../core/dist/josm-custom.jar" />
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
 
 
 	<target name="init">
@@ -15,7 +15,7 @@
 		</javac>
 	</target>
 
-	<target name="build" depends="compile">
+	<target name="dist" depends="compile">
 		<copy todir="build/images" >
 			<fileset dir="images" />
 		</copy>
@@ -35,7 +35,7 @@
 		<delete dir="dist" />
 	</target>
 
-	<target name="install" depends="build">
+	<target name="install" depends="dist">
 		<copy file="dist/measurement.jar" todir="${user.home}/.josm/plugins"/>
 	</target>
 	

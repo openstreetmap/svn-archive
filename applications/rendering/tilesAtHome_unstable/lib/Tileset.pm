@@ -119,13 +119,14 @@ sub generate
     # Download data (returns full path to data.osm or 0)
     #------------------------------------------------------
 
+    my $beforeDownload = time();
     my ($FullDataFile, $reason) = $self->downloadData();
     if (!$FullDataFile)
     {
         ::statusMessage($reason, 1, 0);
         return (0, $reason);
     }
-
+    ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -200,9 +201,7 @@ sub generate
 
          # Render it as loads of recursive tiles
          # temporary debug: measure time it takes to render:
-	 my $beforeRender = time();
          my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
-         print STDERR "\nRendering of $layer in ".(time() - $beforeRender)." sec\n\n"; 
 
         #----------
         if (!$success)

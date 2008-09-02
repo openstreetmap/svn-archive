@@ -41,6 +41,7 @@ use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
 use Error qw(:try);
+use POSIX;
 setlocale(LC_NUMERIC, 'C');
 
 #---------------------------------
@@ -193,6 +194,14 @@ resetFault("utf8");
 resetFault("upload");
 
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
+
+# Be nice. Reduce program priority
+if ($Config->get("Niceness")) {
+    my $success=POSIX::nice($Config->get("Niceness"));
+    if ($success==undef) {
+        printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
+    }
+}
 
 #---------------------------------
 ## Start processing
@@ -653,8 +662,7 @@ sub xml2svg
 
         $XslFile = "osmarender/osmarender.xsl";
 
-        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("\"%s\" tr --maxdepth %s %s %s > \"%s\"",
           $Config->get("XmlStarlet"),
           $Config->get("XmlStarletMaxDepth"),
           $XslFile,
@@ -666,8 +674,7 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("perl orp/orp.pl -r %s -o %s",
           $MapFeatures,
           $TSVG);
 
@@ -700,8 +707,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
     if (!$NoBezier) 
     {   # do bezier curve hinting
-        my $Cmd = sprintf("%s perl ./lines2curves.pl %s > %s",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("perl ./lines2curves.pl %s > %s",
           $TSVG,
           $SVG);
         statusMessage("Beziercurvehinting zoom level $zoom",0,3);
@@ -751,11 +757,11 @@ sub svg2png
     my $SizeY = 256;
 
     # Create an object describing what area of the svg we want
-    my $box = SVG::Rasterize::CoordinateBox(
-        { space => { top => $ImageHeight, bottom => 0 },
-          box => { left => $Left, right => $Right, top => $Y2, bottom => $1 }
-        }
-        );
+    my $box = SVG::Rasterize::CoordinateBox
+        ({
+            space => { top => $ImageHeight, bottom => 0 },
+            box => { left => $Left, right => $Right, top => $Y2, bottom => $1 }
+        });
     
     # Make a variable that points to the renderer to save lots of typing...
     my $rasterize = $SVG::Rasterize::object;
@@ -766,13 +772,14 @@ sub svg2png
     try {
         $rasterize->convert(
             infile => $svgFile,
-            outfile => $TempFile,
+            outfile => $FullSplitPngFile,
             width => $SizeX,
             height => $SizeY,
             area => $box,
             );
     } catch SVG::Rasterize::Engine::Error::Prerequisite with {
-        # FIXME: handle this in some way, it means we can't find the actual rasterizer engine thingy
+        # Apparently exit code 0 here should tell the parent process that something went wrong
+        exit 0;
     } catch SVG::Rasterize::Engine::Error::Runtime with {
         my $e = shift;
         statusMessage("Rasterizing failed with runtime exception: $e",1,0);
@@ -782,11 +789,20 @@ sub svg2png
         addFault("rasterizer",1);
         $req->is_unrenderable(1);
         return(0, 'BadSVG (svg2png)');
-    }; #FIXME: catch SVG::Rasterize::Engine::Error::NoOutput
+    } catch SVG::Rasterize::Engine::Error::NoOutput with {
+        my $e = shift;
+        statusMessage("Rasterizing failed to create output: $e",1,0);
+        print "Rasterize engine STDOUT:".$e->{stdout} if $Config->get("Debug") && $e->{stdout};
+        print "Rasterize engine STDERR:".$e->{stderr} if $Config->get("Debug") && $e->{stderr};
+
+        addFault("rasterizer",1);
+        $req->is_unrenderable(1);
+        return(0, 'BadSVG (svg2png)');
+    };
 
     resetFault("rasterizer"); # reset to zero if the rasterizer succeeds at least once
 
-     return ($FullSplitPngFile, ""); #return success
+    return ($FullSplitPngFile, ""); #return success
 }
 
 

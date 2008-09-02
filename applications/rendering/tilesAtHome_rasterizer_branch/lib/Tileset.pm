@@ -434,16 +434,14 @@ sub runPreprocessors
         elsif ($preprocessor eq "maplint")
         {
             # Pre-process the data file using maplint
-            my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                    $Config->get("Niceness"),
+            my $Cmd = sprintf("\"%s\" tr %s %s > \"%s\"",
                     $Config->get("XmlStarlet"),
                     "maplint/lib/run-tests.xsl",
                     "$inputFile",
                     "tmp.$$");
             ::statusMessage("Running maplint",0,3);
             ::runCommand($Cmd,$$);
-            $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
+            $Cmd = sprintf("\"%s\" tr %s %s > \"%s\"",
                         $Config->get("XmlStarlet"),
                         "maplint/lib/convert-to-tags2.xsl",
                         "tmp.$$",
@@ -454,8 +452,7 @@ sub runPreprocessors
         }
         elsif ($preprocessor eq "close-areas")
         {
-            my $Cmd = sprintf("%s perl close-areas.pl %d %d %d < %s > %s",
-                        $Config->get("Niceness"),
+            my $Cmd = sprintf("perl close-areas.pl %d %d %d < %s > %s",
                         $req->X,
                         $req->Y,
                         $req->Z,

@@ -29,12 +29,33 @@ class TileUpload:
     if self.unzip_path == None or self.base_tilepath == None:
       sys.exit("Failed to get required settings.")
 
+  def processloop(self):
+     try:
+         try:
+             while True:
+                 transaction.enter_transaction_management()
+                 transaction.managed(True)
+
+                 self.process()
+
+                 # finally, at very end. commit the changes
+                 transaction.commit()
+                 transaction.leave_transaction_management()
+
+         except KeyboardInterrupt:
+             # user pressed CTRL-C
+             if self.upload: self.cleanup(False)
+             transaction.commit()
+             logging.info('Ctrl-C pressed. Shutdown gracefully.')
+             sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
+
+     finally:
+         # make sure we leave transactions when quitting
+         transaction.leave_transaction_management()
+
+
+ #--------------------------------------------------------------------
   def process(self):
-   #transaction.enter_transaction_management()
-   try:
-    #transaction.managed(True)
-    try:
-     while True:
       #find the oldest unlocked upload file
       self.upload = None
       while not self. upload:
@@ -46,7 +67,7 @@ class TileUpload:
           except IndexError:
               #logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
-              #transaction.commit()
+              transaction.commit()
               sleep(10)
 
       # start timing tileset handling now
@@ -101,20 +122,8 @@ class TileUpload:
           logging.info("uploaded file not found, deleting upload from user %s (uuid %d)." % (self.upload.user_id,self.upload.client_uuid))
 	  self.upload.delete()
 
-     # finally, at very end. commit the changes
-     #transaction.commit()
-
-    except KeyboardInterrupt:
-        # user pressed CTRL-C
-        if self.upload: self.cleanup(False)
-        #transaction.commit()
-        logging.info('Ctrl-C pressed. Shutdown gracefully.')
-        sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
-
-   finally:
-    #transaction.leave_transaction_management()
-    pass
   #-----------------------------------------------------------------
+
   def unzip(self):
     now = clock()
     outfile = None
@@ -236,7 +245,7 @@ if __name__ == '__main__':
   logging.info('Starting tile upload processor')
   u = TileUpload(config)
   signal.signal(signal.SIGTERM,u.sigterm)
-  if not u.process():
+  if not u.processloop():
       logging.critical('Upload handling returned with error. Aborting.')
       sys.stderr.write('Upload handling returned with error')
       sys.exit(1)

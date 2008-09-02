@@ -67,7 +67,7 @@ else
     %EnvironmentInfo = $Config->CheckBasicConfig();
 }
 
-# set the progress indicatOr variables
+# set the progress indicator variables
 our $currentSubTask;
 my $progress = 0;
 our $progressJobs = 0;
@@ -1069,7 +1069,7 @@ sub reExec
     my $Config = TahConf->getConfig();
     # until proven to work with other systems, only attempt a re-exec
     # on linux. 
-    return unless ($^O eq "linux" || $^O eq "cygwin");
+    return unless ($^O eq "linux" || $^O eq "cygwin" ||  $^O eq "darwin");
 
     statusMessage("tilesGen.pl has changed, re-start new version",1,0);
     if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general

@@ -7,10 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -47,6 +43,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
@@ -152,7 +149,7 @@ public class TagChecker extends Test
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void initializeData() throws FileNotFoundException, IOException
+	private static void initializeData() throws IOException
 	{
 		spellCheckKeyData = new HashMap<String, String>();
 		String sources = Main.pref.get( PREF_SOURCES, "");
@@ -176,67 +173,65 @@ public class TagChecker extends Test
 			return;
 		for(String source: sources.split(";"))
 		{
-			File sourceFile = null;
 			try
 			{
-				sourceFile = Util.mirror(new URL(source), Util.getPluginDir(), -1);
-			}
-			catch(java.net.MalformedURLException e) {}
-			if( sourceFile == null || !sourceFile.exists() )
-			{
-				sourceFile = new File(source);
-				if( sourceFile == null || !sourceFile.exists() )
+				MirroredInputStream s = new MirroredInputStream(source, Util.getPluginDir(), -1);
+				InputStreamReader r;
+				try
 				{
-					errorSources += source + "\n";
-					continue;
+					r = new InputStreamReader(s, "UTF-8");
 				}
-			}
-
-			BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
-
-			String okValue = null;
-			Boolean tagcheckerfile = false;
-			do
-			{
-				String line = reader.readLine();
-				if( line == null || (!tagcheckerfile && line.length() == 0) )
-					break;
-				if( line.startsWith("#") )
+				catch (UnsupportedEncodingException e)
 				{
-					if(line.startsWith("# JOSM TagChecker"))
-						tagcheckerfile = true;
+					r = new InputStreamReader(s);
 				}
-				else if(tagcheckerfile)
+				BufferedReader reader = new BufferedReader(r);
+
+				String okValue = null;
+				Boolean tagcheckerfile = false;
+				String line;
+				while((line = reader.readLine()) != null && (tagcheckerfile || line.length() != 0))
 				{
-					if(line.length() > 0)
+					if(line.startsWith("#"))
 					{
-						CheckerData d = new CheckerData();
-						String err = d.getData(line);
+						if(line.startsWith("# JOSM TagChecker"))
+							tagcheckerfile = true;
+					}
+					else if(tagcheckerfile)
+					{
+						if(line.length() > 0)
+						{
+							CheckerData d = new CheckerData();
+							String err = d.getData(line);
 
-						if(err == null)
-							checkerData.add(d);
-						else
-							System.err.println(tr("Invalid tagchecker line - {0}: {1}", err, line));
+							if(err == null)
+								checkerData.add(d);
+							else
+								System.err.println(tr("Invalid tagchecker line - {0}: {1}", err, line));
+						}
+					}
+					else if(line.charAt(0) == '+')
+					{
+						okValue = line.substring(1);
+					}
+					else if(line.charAt(0) == '-' && okValue != null)
+					{
+						spellCheckKeyData.put(line.substring(1), okValue);
+					}
+					else
+					{
+						System.err.println(tr("Invalid spellcheck line: {0}", line));
 					}
 				}
-				else if( line.charAt(0) == '+' )
-				{
-					okValue = line.substring(1);
-				}
-				else if( line.charAt(0) == '-' && okValue != null )
-				{
-					spellCheckKeyData.put(line.substring(1), okValue);
-				}
-				else
-				{
-					System.err.println(tr("Invalid spellcheck line: {0}", line));
-				}
 			}
-			while( true );
+			catch (IOException e)
+			{
+				errorSources += source + "\n";
+			}
 		}
 
 		if( errorSources.length() > 0 )
-			throw new IOException( tr("Could not download data file(s):\n{0}", errorSources) );
+			throw new IOException( tr("Could not access data file(s):\n{0}", errorSources) );
 	}
 
 	/**
@@ -250,16 +245,28 @@ public class TagChecker extends Test
 			return;
 
 		Collection<TaggingPreset> presets = TaggingPresetPreference.taggingPresets;
-		if( presets == null || presets.isEmpty() )
+		if(presets != null)
 		{
-			// Skip re-reading presets if there are none available
-			return;
+			presetsValueData = new Bag<String, String>();
+			for(TaggingPreset p : presets)
+			{
+				for(TaggingPreset.Item i : p.data)
+				{
+					if(i instanceof TaggingPreset.Combo)
+					{
+						TaggingPreset.Combo combo = (TaggingPreset.Combo) i;
+						for(String value : combo.values.split(","))
+							presetsValueData.add(combo.key, value);
+					}
+					else if(i instanceof TaggingPreset.Key)
+					{
+						TaggingPreset.Key k = (TaggingPreset.Key) i;
+						presetsValueData.add(k.key, k.value);
+					}
+				}
+			}
 		}
-
-		presetsValueData = new Bag<String, String>();
-		readPresetFromPreferences();
 	}
-
 
 	@Override
 	public void visit(Node n)
@@ -344,78 +351,6 @@ public class TagChecker extends Test
 					errors.add( new TestError(this, Severity.OTHER, tr("FIXMES"), FIXME, p) );
 					withErrors.add(p, "FIXME");
 				}
-			}
-		}
-	}
-
-	/**
-	 * Parse an anotation preset from a stream
-	 *
-	 * @param inStream The stream of the anotstion preset
-	 * @throws SAXException
-	 */
-	public static void readPresets(InputStream inStream) throws SAXException
-	{
-		BufferedReader in = null;
-		try
-		{
-			in = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			e.printStackTrace();
-			in = new BufferedReader(new InputStreamReader(inStream));
-		}
-
-		XmlObjectParser parser = new XmlObjectParser();
-		parser.mapOnStart("item", TaggingPreset.class);
-		parser.map("text", TaggingPreset.Text.class);
-		parser.map("check", TaggingPreset.Check.class);
-		parser.map("combo", TaggingPreset.Combo.class);
-		parser.map("label", TaggingPreset.Label.class);
-		parser.map("key", TaggingPreset.Key.class);
-		parser.start(in);
-
-		while(parser.hasNext())
-		{
-			Object obj = parser.next();
-			if (obj instanceof TaggingPreset.Combo) {
-				TaggingPreset.Combo combo = (TaggingPreset.Combo)obj;
-				for(String value : combo.values.split(",") )
-					presetsValueData.add(combo.key, value);
-			}
-		}
-	}
-
-	/**
-	 * Reads the tagging presets
-	 */
-	public static void readPresetFromPreferences()
-	{
-		String allAnnotations = Main.pref.get("taggingpreset.sources");
-		if(allAnnotations == null | allAnnotations.length() == 0)
-			return;
-		for(String source : allAnnotations.split(";"))
-		{
-			InputStream in = null;
-			try
-			{
-				if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
-					in = new URL(source).openStream();
-				else if (source.startsWith("resource://"))
-					in = Main.class.getResourceAsStream(source.substring("resource:/".length()));
-				else
-					in = new FileInputStream(source);
-				readPresets(in);
-				in.close();
-			}
-			catch (IOException e)
-			{
-				// Error already reported by JOSM
-			}
-			catch (SAXException e)
-			{
-				// Error already reported by JOSM
 			}
 		}
 	}

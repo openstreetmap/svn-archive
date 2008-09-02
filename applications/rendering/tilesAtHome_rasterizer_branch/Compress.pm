@@ -257,8 +257,7 @@ sub optimizePNGs
        }
        elsif (($Config->get("PngQuantizer")||'') eq "pngnq") 
        {
-           $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
-                                   $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" -e .png%s -s1 -n256 %s %s",
                                    $Config->get("pngnq"),
                                    $TmpFilename_suffix,
                                    $PngFullFileName,
@@ -285,8 +284,7 @@ sub optimizePNGs
 
        if ($Config->get("PngOptimizer") eq "pngcrush")
        {
-           $Cmd = sprintf("%s \"%s\" -q %s %s %s",
-                  $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" -q %s %s %s",
                   $Config->get("Pngcrush"),
                   $TmpFullFileName,
                   $PngFullFileName,
@@ -294,8 +292,7 @@ sub optimizePNGs
        }
        elsif ($Config->get("PngOptimizer") eq "optipng")
        {
-           $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
-                  $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
                   $Config->get("Optipng"),
                   $TmpFullFileName,
                   $PngFullFileName,

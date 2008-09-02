@@ -187,6 +187,8 @@ sub convert {
 
     run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
         throw SVG::Rasterize::Engine::Batik::Error::Runtime($self->path()." returned non-zero status code $?", {stdout => $self->{stdout}, stderr => $self->{stderr}});
+
+    $self->check_output($params{outfile});
 }
 
 package SVG::Rasterize::Engine::Batik::Error;

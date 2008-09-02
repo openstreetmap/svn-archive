@@ -171,7 +171,7 @@ if( $RenderMode and -e "/dev/null" )
 resetFault("fatal");
 resetFault("inkscape");
 resetFault("nodata");
-resetFault("nodataTAPI");
+resetFault("nodataROMA");
 resetFault("nodataXAPI");
 resetFault("renderer");
 resetFault("utf8");

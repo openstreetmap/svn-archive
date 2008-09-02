@@ -197,12 +197,12 @@ def feedback(request):
                 req.status=0
                 req.request_time = req.request_time + timedelta(hours=2)
                 html = "Reset tileset (%d,%d,%d)" % \
-                        (num,formdata['min_z'],formdata['x'],formdata['y'])
+                        (formdata['min_z'],formdata['x'],formdata['y'])
                 logging.info("%s by %s (uuid: %s). Cause: %s" %(html,user,request.POST.get('client_uuid','0'),request.POST.get('cause','unknown')))
             except Request.DoesNotExist:
                 # tried to reset request that is not assigned to us
                 html = "tileset (%d,%d,%d) is not assigned to us. Not resetting" % \
-                        (num,formdata['min_z'],formdata['x'],formdata['y'])
+                        (formdata['min_z'],formdata['x'],formdata['y'])
                 logging.info("%s. %s (%s)" %(html,user,request.POST.get('client_uuid','0')))
       	  else:
             html="XX|4|form is not valid. "+str(form.errors)

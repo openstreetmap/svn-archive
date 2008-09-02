@@ -330,107 +330,110 @@ sub downloadData
         if ($req->Z >= 12 && $req->{complexity} < 20000000)
            {$res = ::DownloadFile($URL, $partialFile, 0)};
 
-        if (! $res)
-        {   # Download of data failed
-            if ($req->Z < 12)
-            {
-                # Fetching of lowzoom data from OSMXAPI failed
-                ::addFault("nodataXAPI",1);
-                return (undef, "No data here! (OSMXAPI)")
-            }
-            elsif ($Config->get("FallBackToROMA"))
-            {
-                ::statusMessage("Trying ROMA",1,0);
-                $URL=sprintf("%s%s/map?bbox=%s",
-                  $Config->get("ROMAURL"),$Config->get("OSMVersion"),$bbox);
-                $res = ::DownloadFile($URL, $partialFile, 0);
-                if (! $res)
-                {   # ROMA fallback failed too
-                    my $reason = "no data here! (ROMA)";
-                    ::addFault("nodataROMA",1);
-                    return (undef, $reason);
-                }
-                else
-                {   # ROMA fallback succeeded
-                    ::resetFault("nodataTAPI"); #reset to zero if data downloaded
-                }
-                
-            }
-            elsif ($Config->get("FallBackToXAPI"))
-            {
-                # fetching of regular tileset data failed. Try OSMXAPI fallback
-                ::statusMessage("Trying OSMXAPI",1,0);
-                $bbox = $URL;
-                $bbox =~ s/.*bbox=//;
-                $URL=sprintf("%s%s/%s[bbox=%s] ",
-                    $Config->get("XAPIURL"),
-                    $Config->get("OSMVersion"),
-                    "*",
-                    $bbox);
-                ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
-                print "Download\n$URL\n" if ($Config->get("Debug"));
-                my $res = ::DownloadFile($URL, $partialFile, 0);
-                if (! $res)
-                {   # OSMXAPI fallback failed too
-                    my $reason = "no data here! (OSMXAPI)";
-                    ::addFault("nodataXAPI",1);
-                    return (undef, $reason);
-                }
-                else
-                {   # OSMXAPI fallback succeeded
-                    ::resetFault("nodataXAPI"); #reset to zero if data downloaded
-                }
+        if ((! $res) and ($req->Z < 12))
+        {
+            # Fetching of lowzoom data from OSMXAPI failed
+            ::addFault("nodataXAPI",1);
+            return (undef, "No data here! (OSMXAPI)")
+        }
+
+        my $reason = "no data here!"
+
+        if ((! $res) and ($Config->get("FallBackToROMA")))
+        {
+            # download of normal z>=12 data failed
+            ::statusMessage("Trying ROMA",1,0);
+            $URL=sprintf("%s%s/map?bbox=%s",
+              $Config->get("ROMAURL"),$Config->get("OSMVersion"),$bbox);
+            $res = ::DownloadFile($URL, $partialFile, 0);
+            if (! $res)
+            {   # ROMA fallback failed too
+                $reason .= " (ROMA)";
+                ::addFault("nodataROMA",1);
+                # do not return, in case we have other fallbacks configured.
             }
             else
+            {   # ROMA fallback succeeded
+                ::resetFault("nodataROMA"); #reset to zero if data downloaded
+            }
+        }
+       
+        if ((! $res) and ($Config->get("FallBackToXAPI")))
+        {
+            # fetching of regular tileset data failed. Try OSMXAPI fallback
+            ::statusMessage("Trying OSMXAPI",1,0);
+            $bbox = $URL;
+            $bbox =~ s/.*bbox=//;
+            $URL=sprintf("%s%s/%s[bbox=%s] ",
+                $Config->get("XAPIURL"),
+                $Config->get("OSMVersion"),
+                "*",
+                $bbox);
+            ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
+            print "Download\n$URL\n" if ($Config->get("Debug"));
+            my $res = ::DownloadFile($URL, $partialFile, 0);
+            if (! $res)
+            {   # OSMXAPI fallback failed too
+                $reason .= " (OSMXAPI)";
+                ::addFault("nodataXAPI",1);
+                # do not return, in case we have other fallbacks configured.
+            }
+            else
+            {   # OSMXAPI fallback succeeded
+                ::resetFault("nodataXAPI"); #reset to zero if data downloaded
+            }
+        }
+        
+        if ((! $res) and ($Config->get("FallBackToSlices")))
+        {
+            ::statusMessage("Trying smaller slices",1,0);
+            my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
+            for (my $j = 1 ; $j<=10 ; $j++)
             {
-                ::statusMessage("Trying smaller slices",1,0);
-                my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
-                for (my $j = 1 ; $j<=10 ; $j++)
+                my $tryN = 1; # each slice gets tried 3 times, we
+                # assume the api is just a bit under load so it would
+                # be wasteful to return the tileset with "no Data"
+                $res = 0; #set false before next slice is downloaded
+                while (($tryN <= 3) and (! $res))
                 {
-                    my $tryN = 1; # each slice gets tried 3 times, we
-                    # assume the api is just a bit under load so it would
-                    # be wasteful to return the tileset with "no Data"
-                    $res = 0; #set false before next slice is downloaded
-                    while (($tryN <= 3) and (! $res))
+                    $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
+                      $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
+                    $partialFile = File::Spec->join($self->{JobDir},"data-$i-$j.osm");
+                    push(@{$filelist}, $partialFile);
+                    ::statusMessage("Downloading: Map data (slice $j of 10)",0,3);
+                    print "Download\n$URL\n" if ($Config->get("Debug"));
+                    $res = ::DownloadFile($URL, $partialFile, 0);
+                    
+                    if ((! $res) and ($tryN >= 3))
+                    {   # Sliced download failed too
+                        ::addFault("nodata",1);
+                        $reason .= " (sliced)";
+                    }
+                    elsif (! $res)
                     {
-                        $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
-                          $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
-                        $partialFile = File::Spec->join($self->{JobDir},"data-$i-$j.osm");
-                        push(@{$filelist}, $partialFile);
-                        ::statusMessage("Downloading: Map data (slice $j of 10)",0,3);
-                        print "Download\n$URL\n" if ($Config->get("Debug"));
-                        $res = ::DownloadFile($URL, $partialFile, 0);
-                        
-                        if ((! $res) and ($tryN >= 3))
-                        {   # Sliced download failed too
-                            my $reason = "No data here (slice $j, try $tryN)";
-                            ::addFault("nodata",1);
-                            return (undef, $reason);
-                        }
-                        elsif (! $res)
-                        {
-                            ::statusMessage("(slice $j of 10) failed on try $tryN, retrying",1,3);
-                            $tryN++; #try again!
-                        }
-                        else
-                        {   # Sliced download succeeded (at least one slice)
-                            ::resetFault("nodata");
-                        }
+                        ::statusMessage("(slice $j of 10) failed on try $tryN, retrying",1,3);
+                        $tryN++; #try again!
+                    }
+                    else
+                    {   # Sliced download succeeded (at least one slice)
+                        ::resetFault("nodata");
                     }
                 }
             }
         }
-        else
-        {   # Download of data succeeded in the first place
+        
+        if ($res)
+        {   # Download of data succeeded
 
             if ($req->Z < 12) ## FIXME: hardcoded zoom
             {
                 ::resetFault("nodataXAPI"); #reset to zero if data downloaded
             }
-            else 
-            {
-                ::resetFault("nodata"); #reset to zero if data downloaded
-            }
+        }
+        else
+        {
+            ::statusMessage("download of data failed",1,0);
+            return (undef, $reason);
         }
     }
 

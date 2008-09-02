@@ -33,7 +33,6 @@ i18n=1
 Osmarender = orp
 
 Inkscape = inkscape
-InkscapeLocale = 0
 
 BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
 BatikJVMSize = 1536M

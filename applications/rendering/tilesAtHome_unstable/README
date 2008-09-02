@@ -26,9 +26,6 @@ If you don't do this inkscape will complain and generate empty tiles.
 On linux and other unix-like systems this can be accomplished by setting 
 i18n=1 in your tilesathome.conf .
 
-For windows you would set InkscapeLocale = deutsch (for example on German
-windows systems) so perl will use the correct number scheme.
-
 If you want to render a specific tile run tilesGen.pl with the xy option
 for example if you want to render the tile number x=2148 y=1332 
 (zoom 12 is always the default and cannot be changed) you would run

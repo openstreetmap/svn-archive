@@ -792,11 +792,8 @@ sub svg2png
     }
     else
     {
-        my $locale = $Config->get("InkscapeLocale");
-        my $oldLocale;
-        if ($locale ne "0") {
-                $oldLocale=setlocale(LC_ALL, $locale);
-        } 
+        my $old_locale = setlocale(LC_NUMERIC);
+        setlocale(LC_NUMERIC, "");
 
         $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
         $Config->get("i18n") ? "LC_ALL=C " : "",
@@ -809,9 +806,7 @@ sub svg2png
         $svgFile,
         $stdOut);
 
-        if ($locale ne "0") {
-                setlocale(LC_ALL, $oldLocale);
-        } 
+        setlocale(LC_NUMERIC, $old_locale);
     }
     
     # stop rendering the current job when inkscape fails

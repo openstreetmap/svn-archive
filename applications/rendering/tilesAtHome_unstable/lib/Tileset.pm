@@ -342,7 +342,7 @@ sub downloadData
             {
                 ::statusMessage("Trying ROMA",1,0);
                 $URL=sprintf("%s%s/map?bbox=%s",
-                  $Config->get("ROMA"),$Config->get("OSMVersion"),$bbox);
+                  $Config->get("ROMAURL"),$Config->get("OSMVersion"),$bbox);
                 $res = ::DownloadFile($URL, $partialFile, 0);
                 if (! $res)
                 {   # ROMA fallback failed too

@@ -156,7 +156,7 @@ sub compress
     # Create the output directory if it doesn't exist...
     if( ! -d $self->{ZipDir} )
     {
-        mkpath $self->{ZipDir};
+        mkpath $self->{ZipDir};# TODO: Error handling
     }
 
     $Filename = File::Spec->join($self->{ZipDir},
@@ -195,7 +195,7 @@ sub compress
     unlink($stdOut);
     
     # rename to final name so any uploader could pick it up now
-    move ($Tempfile, $Filename);
+    move ($Tempfile, $Filename); # TODO: Error handling
 
     return $zip_result;
 }

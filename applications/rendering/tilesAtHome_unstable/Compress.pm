@@ -109,18 +109,18 @@ sub compressAll
         if ($flocked && -d $FullTilesetPath )
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
-            ::statusMessage("optimizing PNG files",1,6);
+            ::statusMessage("optimizing PNG files",0,3);
             $self->optimizePNGs($FullTilesetPath, $layer);
             $::currentSubTask ='compress';
             $::progressPercent = 0;
-            ::statusMessage("compressing $File",1,6);
+            ::statusMessage("compressing $File",0,3);
             $self->compress($FullTilesetPath);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
         }
         else
         {   # could not get exclusive lock, this is being handled elsewhere now
-            ::statusMessage("$File compressed by different process. skipping",0,3);
+            ::statusMessage("$File compressed by different process. skipping",1,3);
         }
         # finally unlock zipfile and release handle
         if ($LOCKFILE)
@@ -264,7 +264,7 @@ sub optimizePNGs
                                    $PngFullFileName,
                                    $Redirect);
 
-           ::statusMessage("ColorQuantizing $PngFileName",0,10);
+           ::statusMessage("ColorQuantizing $PngFileName",0,6); 
            if(::runCommand($Cmd,$PID))
            {   # Color quantizing successful
                unlink($PngFullFileName);
@@ -307,7 +307,7 @@ sub optimizePNGs
            ::talkInSleep("Install a PNG optimizer and configure it.",15);
        }
 
-       ::statusMessage("Optimizing $PngFileName",0,10);
+       ::statusMessage("Optimizing $PngFileName",0,6);
        if(::runCommand($Cmd,$PID))
        {
            unlink($TmpFullFileName);

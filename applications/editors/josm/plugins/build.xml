@@ -16,9 +16,11 @@
     <ant	dir="agpifoj"		antfile="build.xml"	target="dist"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
     <ant	dir="duplicateway"	antfile="build.xml"	target="dist"/>
+    <ant	dir="globalsat"		antfile="build.xml"	target="dist"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
     <ant	dir="lang"		antfile="build.xml"	target="dist"/>
     <ant	dir="livegps"		antfile="build.xml"	target="dist"/>
+    <ant	dir="measurement"	antfile="build.xml"	target="dist"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="dist"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="dist"/>
     <ant	dir="openvisible"	antfile="build.xml"     target="dist"/>
@@ -45,10 +47,12 @@
     <ant	dir="agpifoj"		antfile="build.xml"	target="clean"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="clean"/>
     <ant	dir="duplicateway"	antfile="build.xml"	target="clean"/>
+    <ant	dir="globalsat"		antfile="build.xml"	target="clean"/>
     <ant	dir="grid"		antfile="build.xml"	target="clean"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="clean"/>
     <ant	dir="lang"		antfile="build.xml"	target="clean"/>
     <ant	dir="livegps"		antfile="build.xml"	target="clean"/>
+    <ant	dir="measurement"	antfile="build.xml"	target="clean"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="clean"/>
     <ant	dir="navigator"		antfile="build.xml"	target="clean"/>
     <ant	dir="nearclick"		antfile="build.xml"	target="clean"/>

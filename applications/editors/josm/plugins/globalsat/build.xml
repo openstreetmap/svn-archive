@@ -1,4 +1,4 @@
-<project name="globalsat" default="build" basedir=".">
+<project name="globalsat" default="dist" basedir=".">
 
 	<!-- point to your JOSM directory -->
 	<property name="josm" location="../../core/dist/josm-custom.jar" />
@@ -23,7 +23,7 @@
 		</javac>
 	</target>
 
-	<target name="build" depends="compile">
+	<target name="dist" depends="compile">
 		<unjar dest="build">
 			<fileset refid="RXTX" />
 		</unjar>
@@ -46,7 +46,7 @@
 		<delete dir="dist" />
 	</target>
 
-	<target name="install" depends="build">
+	<target name="install" depends="dist">
 		<copy file="dist/globalsat.jar" todir="${user.home}/.josm/plugins"/>
 	</target>
 </project>

@@ -7,7 +7,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 import shutil
 from datetime import datetime
 from time import sleep,clock,time
-#from django.db import transaction
+from django.db import transaction
 from django.conf import settings
 from tah.tah_intern.models import Settings, Layer
 from tah.tah_intern.Tileset import Tileset
@@ -30,61 +30,89 @@ class TileUpload:
       sys.exit("Failed to get required settings.")
 
   def process(self):
+   transaction.enter_transaction_management()
    try:
-    while True:
+    transaction.managed(True)
+    try:
+     while True:
       #find the oldest unlocked upload file
       self.upload = None
       while not self. upload:
-        # repeat fetching until there is one
-        try:
-          # Fetch next row (small race condition in case of multiple upload processors)
-          self.upload = Upload.objects.filter(is_locked=False)[0]
-          self.upload.is_locked = True
-          self.upload.save()
-        except IndexError:
-          #logging.debug('No uploaded request. Sleeping 10 sec.')
-          sleep(10)
-      starttime = (time(),clock()) # start timing tileset handling now
+          # repeat fetching until there is one
+          try:
+              self.upload = Upload.objects.filter(is_locked=False)[0]
+              self.upload.is_locked = True
+              self.upload.save()
+          except IndexError:
+              #logging.debug('No uploaded request. Sleeping 10 sec.')
+              # commit here, so next round see current status
+              transaction.commit()
+              sleep(10)
+
+      # start timing tileset handling now
+      starttime = (time(),clock())
       self.fname = self.upload.get_file_filename()
       if os.path.isfile(self.fname):
         #logging.debug('Handling next tileset: ' + self.upload.file)
+        # TODO don't just use random string. make a tmpdir with tempfile
         self.uid = str(random.randint(0,9999999999999999999))
         if self.unzip():
-          tset = self.movetiles()
-          if tset.layer and tset.base_z != None and tset.x != None and tset.y !=None:
-            #It's a valid tileset. Save the tileset at it's place
-            time_save = [time()]
-            logging.debug("Saving tileset at (%s,%d,%d,%d) from user %s (uuid %d)" % (tset.layer,tset.base_z,tset.x,tset.y,self.upload.user_id,self.upload.client_uuid))
-            (retval,unknown_tiles) = tset.save(self.base_tilepath, self.upload.user_id.id)
-            time_save.append(time())
-            if retval:
-              # everything went fine. Add to user statistics
-              self.add_user_stats(1365-unknown_tiles)
-              # now match up the upload with a request and mark the request as finished
-              reqs = Request.objects.filter(min_z = tset.base_z, x = tset.x ,y = tset.y, status__lt=2)
-              for req in reqs:
-                # remove corresponding layer from request and set it to status=2 when all layers are done
-                req.layers.remove(tset.layer)
-                if req.layers.count() == 0:
-                  req.status=2
-                  req.clientping_time=datetime.now()
-                  req.save()
-              logging.debug('Finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+            tset = self.movetiles()
+            if tset.layer and tset.base_z != None and tset.x != None and tset.y !=None:
+                #It's a valid tileset. Save the tileset at it's place
+                time_save = [time()]
+                logging.debug("Tileset at (%s,%d,%d,%d) from %s (uuid %d)" % \
+                             (tset.layer, tset.base_z, tset.x, tset.y, \
+                              self.upload.user_id,self.upload.client_uuid))
+
+                (retval,unknown_tiles) = tset.save(self.base_tilepath, \
+                                                   self.upload.user_id.id)
+                # time_save[1] is time after saving
+                time_save.append(time())
+
+                if retval:
+                  # everything went fine. Add to user statistics
+                  self.add_user_stats(1365-unknown_tiles)
+
+                  # now match upload with a request and mark request finished
+                  reqs = Request.objects.filter(min_z = tset.base_z, \
+                                        x = tset.x ,y = tset.y, status__lt=2)
+
+                  for req in reqs:
+                    # remove corresponding layer from request and set to 
+                    # status=2 when all layers are done
+                    req.layers.remove(tset.layer)
+                    if req.layers.count() == 0:
+                      req.status=2
+                      req.clientping_time=datetime.now()
+                      req.save()
+                  logging.debug('Finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+                else:
+                    # saving the tileset went wrong
+                    logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles, self.upload.user_id,self.upload.client_uuid))
+
             else:
-              # saving the tileset went wrong
-              logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles, self.upload.user_id,self.upload.client_uuid))
-          else:
-            # movetiles did not return a valid tileset
-            logging.error('Unzipped file from user %s (uuid %d) was no valid tileset. Took %.1f sec (CPU %.1f).' % (self.upload.user_id,self.upload.client_uuid,time()-starttime[0],clock()-starttime[1]))
+                # movetiles did not return a valid tileset
+                logging.error('Unzipped file from user %s (uuid %d) was no valid tileset. Took %.1f sec (CPU %.1f).' % (self.upload.user_id,self.upload.client_uuid,time()-starttime[0],clock()-starttime[1]))
         self.cleanup(True)
 
       else:
-        logging.info("uploaded file not found, deleting upload from user %s (uuid %d)." % (self.upload.user_id,self.upload.client_uuid))
-	self.upload.delete()
-   except KeyboardInterrupt:
-     if self.upload: self.cleanup(False)
-     logging.info('Ctrl-C pressed. Shutdown gracefully.')
-     sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
+          # self.fname is no valid file
+          logging.info("uploaded file not found, deleting upload from user %s (uuid %d)." % (self.upload.user_id,self.upload.client_uuid))
+	  self.upload.delete()
+
+     # finally, at very end. commit the changes
+     transaction.commit()
+
+    except KeyboardInterrupt:
+        # user pressed CTRL-C
+        if self.upload: self.cleanup(False)
+        transaction.commit()
+        logging.info('Ctrl-C pressed. Shutdown gracefully.')
+        sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
+
+   finally:
+    transaction.leave_transaction_management()
   #-----------------------------------------------------------------
   def unzip(self):
     now = clock()

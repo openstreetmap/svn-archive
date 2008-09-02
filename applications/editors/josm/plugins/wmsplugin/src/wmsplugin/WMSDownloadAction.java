@@ -8,6 +8,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.data.Bounds;
 
 public class WMSDownloadAction extends JosmAction {
 
@@ -21,7 +22,15 @@ public class WMSDownloadAction extends JosmAction {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(info.url);
 		
-		DownloadWMSTask.download(getLayer(info));
+		WMSLayer wmsLayer = getLayer(info);
+		MapView mv = Main.map.mapView;
+
+		Bounds b = new Bounds(
+			mv.getLatLon(0, mv.getHeight()),
+			mv.getLatLon(mv.getWidth(), 0));
+		double pixelPerDegree = mv.getWidth() / (b.max.lon() - b.min.lon());
+
+		wmsLayer.grab(b, pixelPerDegree);
 	}
 
 	public static WMSLayer getLayer(WMSInfo info) {
@@ -33,7 +42,7 @@ public class WMSDownloadAction extends JosmAction {
 		}
 
 		// FIXME: move this to WMSPlugin/WMSInfo/preferences.
-		WMSLayer wmsLayer = new WMSLayer(info.name, info.grabber);
+		WMSLayer wmsLayer = new WMSLayer(info.name, info.url);
 		Main.main.addLayer(wmsLayer);
 		return wmsLayer;
 	}

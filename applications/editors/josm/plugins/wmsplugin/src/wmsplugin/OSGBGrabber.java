@@ -1,3 +1,4 @@
+/*
 package wmsplugin;
 
 import uk.me.jstott.jcoord.OSRef;
@@ -60,3 +61,4 @@ public class OSGBGrabber extends WMSGrabber {
 		return new LatLon(ll.getLat(), ll.getLng());
 	}
 }
+*/

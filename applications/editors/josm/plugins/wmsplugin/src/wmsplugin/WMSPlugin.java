@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeSet;
+import java.io.*;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -20,10 +21,15 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.MapView;
 
 
 // NW 151006 only add the landsat task when the map frame is initialised with
 // data.
+
+
 
 public class WMSPlugin extends Plugin {
 
@@ -36,6 +42,13 @@ public class WMSPlugin extends Plugin {
        static private boolean menuEnabled = false;
 	
 	public WMSPlugin() {
+		try
+		{
+			copy("/resources/ymap.html", "ymap.html");
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
 		refreshMenu();
 	}
 
@@ -43,6 +56,21 @@ public class WMSPlugin extends Plugin {
 	// look like this:
 	// wmsplugin.1.name=Landsat
 	// wmsplugin.1.url=http://and.so.on/
+	
+	public void copy(String from, String to) throws FileNotFoundException, IOException
+	{
+		File pluginDir = new File(Main.pref.getPreferencesDir() + "plugins/wmsplugin/");
+		if (!pluginDir.exists())
+			pluginDir.mkdirs();
+		FileOutputStream out = new FileOutputStream(Main.pref.getPreferencesDir() + "plugins/wmsplugin/" + to);
+		InputStream in = WMSPlugin.class.getResourceAsStream(from);
+		byte[] buffer = new byte[8192];
+		for(int len = in.read(buffer); len > 0; len = in.read(buffer))
+			out.write(buffer, 0, len);
+		in.close();
+		out.close();
+	}
+
 	
 	public static void refreshMenu() {
 		wmsList.clear();
@@ -53,6 +81,7 @@ public class WMSPlugin extends Plugin {
 		String name = null;
 		String url = null;
 		int lastid = -1;
+		boolean isYahoo = false;
 		for (String key : keys) {
 			String[] elements = key.split("\\.");
 			if (elements.length != 4) continue;
@@ -64,6 +93,7 @@ public class WMSPlugin extends Plugin {
 			if (prefid != lastid) {
 				if ((name != null) && (url != null)) {
 					wmsList.add(new WMSInfo(name, url, prefid));
+					if(name.equals("YAHOO"))isYahoo = true;
 				}
 				name = null; url = null; lastid = prefid; 
 			}
@@ -75,8 +105,9 @@ public class WMSPlugin extends Plugin {
 		}
 		if ((name != null) && (url != null)) {
 			wmsList.add(new WMSInfo(name, url, prefid));
+			if(name.equals("YAHOO"))isYahoo = true;
 		}
-		
+
 		// if no (valid) prefs are set, initialize to a sensible default.
 		if (wmsList.isEmpty()) {
 			WMSInfo landsatInfo = new WMSInfo(tr("Landsat"),
@@ -90,6 +121,15 @@ public class WMSPlugin extends Plugin {
 					"http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&", 2);
 			npeInfo.save();
 			wmsList.add(npeInfo);
+		}
+		if(!isYahoo){ //add Yahoo to the list, if there isn't
+			int maxKey = 0;
+			for(WMSInfo in : wmsList)
+				if(maxKey < in.prefid)maxKey = in.prefid;
+			WMSInfo yahooInfo = new WMSInfo(tr("YAHOO"),
+					"yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout", maxKey+1);
+			yahooInfo.save();
+			wmsList.add(yahooInfo);
 		}
 		
 		JMenuBar menu = Main.main.menu;
@@ -121,12 +161,18 @@ public class WMSPlugin extends Plugin {
                setEnabledAll(menuEnabled);
 	}
 
-	public static Grabber getGrabber(String wmsurl) {
-		if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
-			return new OSGBGrabber(wmsurl);
-		} else {
-			return new WMSGrabber(wmsurl);
-		}
+	public static Grabber getGrabber(String _baseURL, Bounds _b, Projection _proj,
+			         double _pixelPerDegree, GeorefImage _image, MapView _mv, WMSLayer _layer){
+		if(_baseURL.startsWith("yahoo://"))
+			return new YAHOOGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer);
+		else 
+			return new WMSGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer);
+		// OSBGrabber should be rewrite for thread support first
+		//if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
+		//	return new OSGBGrabber(_b, _proj, _pixelPerDegree,  _images, _mv, _layer);
+		//} else {
+		//	return new WMSGrabber(_b, _proj, _pixelPerDegree,  _images, _mv, _layer);
+		//}
 	}
 	
 	private static void setEnabledAll(boolean isEnabled) {

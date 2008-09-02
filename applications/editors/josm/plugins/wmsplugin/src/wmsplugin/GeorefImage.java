@@ -14,13 +14,12 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
 public class GeorefImage implements Serializable {
-	public BufferedImage image;
+	public BufferedImage image = null;
 	public EastNorth min, max;
+	public boolean downloadingStarted;
 
-	public GeorefImage(BufferedImage img, EastNorth min, EastNorth max) {
-		image = img;
-		this.min = min;
-		this.max = max;
+	public GeorefImage(boolean downloadingStarted) {
+		this.downloadingStarted = downloadingStarted;
 	}
 
 	public void displace(double dx, double dy) {
@@ -33,19 +32,28 @@ public class GeorefImage implements Serializable {
 			&& min.north() <= en.north() && en.north() <= max.north();
 	}
 
-	public void paint(Graphics g, NavigatableComponent nc) {
-		if (image == null || min == null || max == null) return;
+	public boolean isVisible(NavigatableComponent nc) {
+		Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
+		Graphics g = nc.getGraphics();
+
+		return (g.hitClip(minPt.x, maxPt.y,
+				maxPt.x - minPt.x, minPt.y - maxPt.y));
+	}
+
+	public boolean paint(Graphics g, NavigatableComponent nc) {
+		if (image == null || min == null || max == null) return false;
 
 		Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
 
-		if (!g.hitClip(minPt.x, maxPt.y,
-				maxPt.x - minPt.x, minPt.y - maxPt.y))
-			return;
+		if(!isVisible(nc))
+			return false;
 
 		g.drawImage(image,
 			minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
 			0, 0, image.getWidth(), image.getHeight(), // src
 			null);
+
+		return true;
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {

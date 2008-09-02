@@ -11,41 +11,68 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.io.ProgressInputStream;
+import org.openstreetmap.josm.gui.MapView;
 
-public class WMSGrabber implements Grabber {
-	public String baseURL;
 
-	public WMSGrabber(String baseURL) {
-		this.baseURL = baseURL;
+public class WMSGrabber extends Thread implements Grabber{
+	protected String baseURL;
+
+	protected Bounds b;
+	protected Projection proj;
+	protected double pixelPerDegree;
+	protected GeorefImage image;
+	protected MapView mv;
+	protected WMSLayer layer;
+
+	WMSGrabber(String _baseURL, Bounds _b, Projection _proj,
+			double _pixelPerDegree, GeorefImage _image, MapView _mv, WMSLayer _layer) {
+		this.baseURL = _baseURL;
+		b = _b;
+		proj = _proj;
+		pixelPerDegree = _pixelPerDegree;
+		image = _image;
+		mv = _mv;
+		layer = _layer;
+		this.setDaemon(true);
+		this.setPriority(Thread.MIN_PRIORITY);
 	}
 
-	public GeorefImage grab(Bounds b, Projection proj,
-			double pixelPerDegree) throws IOException {
-		int w = (int) ((b.max.lon() - b.min.lon()) * pixelPerDegree);
-		int h = (int) ((b.max.lat() - b.min.lat()) * pixelPerDegree);
+	public void run() {
+			
+			int w = (int) ((b.max.lon() - b.min.lon()) * pixelPerDegree);
+			int h = (int) ((b.max.lat() - b.min.lat()) * pixelPerDegree);
 
-		try {
-			URL url = getURL(
-				b.min.lon(), b.min.lat(),
-				b.max.lon(), b.max.lat(),
-				w, h);
+			try {
+				URL url = getURL(
+					b.min.lon(), b.min.lat(),
+					b.max.lon(), b.max.lat(),
+					w, h);
 
-			BufferedImage img = grab(url);
+				image.min = proj.latlon2eastNorth(b.min);
+				image.max = proj.latlon2eastNorth(b.max);
 
-			return new GeorefImage(img,
-				proj.latlon2eastNorth(b.min),
-				proj.latlon2eastNorth(b.max));
-		} catch (MalformedURLException e) {
-			throw (IOException) new IOException(
-				tr("WMSGrabber: Illegal url.")).initCause(e);
-		}
+				image.image = grab(url);
+				image.downloadingStarted = false;
+
+				mv.repaint();
+			}
+			catch (MalformedURLException e) {
+				if(layer.messageNum-- > 0)
+					JOptionPane.showMessageDialog(Main.parent,tr("WMSPlugin: Illegal url.\n{0}",e.getMessage()));
+			}
+			catch (IOException e) {
+				if(layer.messageNum-- > 0)
+					JOptionPane.showMessageDialog(Main.parent,tr("WMSPlugin: IO exception.\n{0}",e.getMessage()));
+			}
 	}
 
 	public static final NumberFormat
@@ -64,10 +91,16 @@ public class WMSGrabber implements Grabber {
 	}
 
 	protected BufferedImage grab(URL url) throws IOException {
-		InputStream is = new ProgressInputStream(
-			url.openConnection(), Main.pleaseWaitDlg);
-		BufferedImage img = ImageIO.read(is);
-		is.close();
-		return img;
+			InputStream is = new ProgressInputStream(
+				url.openConnection(), null);
+			BufferedImage img;
+		synchronized (layer){ //download only one tile in one moment
+			if(!image.isVisible(mv)){
+				return null;
+			}
+			img = ImageIO.read(is);
+		}
+			is.close();
+			return img;
 	}
 }

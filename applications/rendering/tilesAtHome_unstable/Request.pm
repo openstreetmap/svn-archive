@@ -21,9 +21,9 @@ package Request;
 use warnings;
 use strict;
 use LWP::UserAgent;
+use Error qw(:try);
 use tahlib;
 use lib::TahConf;
-use lib::TahExceptions;
 
 #unrenderable is a class global hash that keeps unrenderable tilesets as ['z x y']=1
 our %unrenderable = ();
@@ -167,7 +167,7 @@ sub fetchFromServer
         $success=0;
         my $Requeststring = $self->getRequestStringFromServer();
 
-        die TahError->new("ServerError", "Error reading request from server") unless ($Requeststring);
+        throw RequestError "Error reading request from server" unless ($Requeststring);
         
         # $ValidFlag is 'OK' (got request) or 'XX' (error occurred, or no work for us)
         # $Version denotes the version of the request taking protocol the server speaks. It's currently at '5'
@@ -176,9 +176,8 @@ sub fetchFromServer
         # First check that we understand the server protocol
         if ($Version < 5 or $Version > 5)
         {
-            my $message = "Server is speaking a different version of the protocol to us ($Version).\n"
+            throw RequestError "Server is speaking a different version of the protocol to us ($Version).\n"
                 . "Check to see whether a new version of this program was released!";
-            die TahError->new("ServerError", $message);
         }
 
         if ($ValidFlag eq "OK")
@@ -214,23 +213,22 @@ sub fetchFromServer
             ($ValidFlag, $Version, my $reason) = split(/\|/, $Requeststring);
             if ($reason =~ /Invalid username/)
             {
-                die TahError->new("AuthenticationError",
-                                  "ERROR: Authentication failed - please check your username and password in 'authentication.conf'.\n\n"
-                                  . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.");
+                throw RequestError "ERROR: Authentication failed - please check your username and password in 'authentication.conf'.\n\n"
+                    . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
             }
             elsif ($reason =~ /Invalid client version/)
             {
-                die TahError->new("ClientVersionError", "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
-                                  . ") was not accepted by the server.");  ## this should never happen as long as auto-update works
+                throw RequestError "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
+                    . ") was not accepted by the server.";  ## this should never happen as long as auto-update works
             }
             else
             {
-                die TahError->new("ServerError", "Unknown server response: $Requeststring");
+                throw RequestError "Unknown server response: $Requeststring";
             }
         }
         else
         {   # ValidFlag was neither 'OK' nor 'XX'. This should NEVER happen.
-              die TahError->new("ServerError", "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'");
+              throw RequestError "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'";
 	}
 
         if ($self->is_unrenderable())
@@ -272,7 +270,7 @@ sub getRequestStringFromServer
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        die TahError->new("ServerError", "Unable to get request string from server");
+        throw RequestError "Unable to get request string from server";
     }
     else
     {   # got a server reply here
@@ -317,11 +315,14 @@ sub putBackToServer
 
     if(!$res->is_success())
     {
-        die TahError->new("ServerError", "Error reading response from server");
+        throw RequestError "Error reading response from server";
     }
     
     ::talkInSleep("Waiting before new tile is requested", 15);
 }
+
+package RequestError;
+use base 'Error::Simple';
 
 1;
 

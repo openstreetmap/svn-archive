@@ -30,9 +30,9 @@ use File::Temp qw(tempfile);
 use File::Spec;
 use Scalar::Util qw(blessed);
 use IO::Socket;
+use Error qw(:try);
 use tahlib;
 use lib::TahConf;
-use lib::TahExceptions;
 use lib::Tileset;
 use Request;
 use Upload;
@@ -270,11 +270,6 @@ elsif ($Mode eq "loop")
         {     #reset fault counter if we uploaded successfully
               resetFault("upload");
         }
-
-        if ($did_something == 1) 
-        {   # Rendered tileset, don't idle in next round
-            setIdle(0,0);
-        }
     }
 }
 #---------------------------------
@@ -503,18 +498,13 @@ sub ProcessRequestsFromServer
 
     statusMessage("Retrieving next job", 0, 3);
     my $req = new Request;
-    eval {
+    try {
         $req->fetchFromServer();
-    };
-
-    if (my $error = $@) {
-        if (blessed($error) && $error->isa("TahError")) {
-            cleanUpAndDie($error->text(), "EXIT", 1);
-        }
-        else {
-            die;
-        }
     }
+    catch RequestError with {
+        my $err = shift();
+        cleanUpAndDie($err->text(), "EXIT", 1);
+    };
 
     #TODO: return result of GenerateTileset?
     my $tileset = Tileset->new($req);

@@ -392,7 +392,7 @@ sub downloadData
                         }
                         elsif (! $res)
                         {
-                            ::statusMessage("(slice $j of 10) failed on try $tryN, retrying",0,3);
+                            ::statusMessage("(slice $j of 10) failed on try $tryN, retrying",1,3);
                             $tryN++; #try again!
                         }
                         else

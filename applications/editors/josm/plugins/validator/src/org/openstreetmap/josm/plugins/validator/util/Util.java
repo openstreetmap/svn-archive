@@ -5,9 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 
 import javax.swing.JButton;
@@ -72,127 +69,6 @@ public class Util
 			this.revision = revision;
 			this.time = time;
 		}
-	}
-
-
-	/**
-	 * Loads a text file in a String
-	 *
-	 * @param resource The URL of the file
-	 * @return A String with the file contents
-	 * @throws IOException when error reading the file
-	 */
-	public static String loadFile(URL resource) throws IOException
-	{
-		BufferedReader in = null;
-		try
-		{
-			in = new BufferedReader(new InputStreamReader(resource.openStream()));
-			StringBuilder sb = new StringBuilder();
-			for (String line = in.readLine(); line != null; line = in.readLine())
-			{
-				sb.append(line);
-				sb.append('\n');
-			}
-			return sb.toString();
-		}
-		finally
-		{
-			if( in != null )
-			{
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Mirrors a file to a local file.
-	 * <p>
-	 * The file mirrored is only downloaded if it has been more than one day since last download
-	 *
-	 * @param url The URL of the remote file
-	 * @param destDir The destionation dir of the mirrored file
-	 * @param maxTime The time interval, in seconds, to check if the file changed. If less than 0, it defaults to 1 week
-	 * @return The local file
-	 */
-	public static File mirror(URL url, String destDir, long maxTime)
-	{
-		if( url.getProtocol().equals("file") )
-			return new File(url.toString() ) ;
-
-		String localPath = Main.pref.get( PreferenceEditor.PREFIX + ".mirror." + url);
-		File oldFile = null;
-		if( localPath != null && localPath.length() > 0)
-		{
-			StringTokenizer st = new StringTokenizer(localPath, ";");
-			long checkDate = Long.parseLong(st.nextToken());
-			localPath = st.nextToken();
-			oldFile = new File(localPath);
-			maxTime = (maxTime <= 0) ? 7 * 24 * 60 * 60 * 1000 : maxTime * 1000;
-			if( System.currentTimeMillis() - checkDate < maxTime )
-			{
-				if( oldFile.exists() )
-					return oldFile;
-			}
-		}
-
-		File destDirFile = new File(destDir);
-		if( !destDirFile.exists() )
-			destDirFile.mkdirs();
-
-		localPath = destDir + System.currentTimeMillis() + "-" + new File(url.getPath()).getName();
-		BufferedOutputStream bos = null;
-		BufferedInputStream bis = null;
-		try
-		{
-			URLConnection conn = url.openConnection();
-			conn.setConnectTimeout(5000);
-			bis = new BufferedInputStream(conn.getInputStream());
-			bos = new BufferedOutputStream( new FileOutputStream(localPath) );
-			byte[] buffer = new byte[4096];
-			int length;
-			while( (length = bis.read( buffer )) > -1 )
-			{
-				bos.write( buffer, 0, length );
-			}
-		}
-		catch(IOException ioe)
-		{
-			if( oldFile != null )
-				return oldFile;
-			else
-				return null;
-		}
-		finally
-		{
-			if( bis != null )
-			{
-				try {
-					bis.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if( bos != null )
-			{
-				try {
-					bos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		Main.pref.put( PreferenceEditor.PREFIX + ".mirror." + url, System.currentTimeMillis() + ";" + localPath);
-
-		if( oldFile != null )
-			oldFile.delete();
-
-		return new File(localPath);
 	}
 
 	/**

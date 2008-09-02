@@ -47,7 +47,7 @@ public class ErrorTreePanel extends JTree
 		this.setCellRenderer(new ErrorTreeRenderer());
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		setErrorList(errors);
-		}
+	}
 
 	public String getToolTipText(MouseEvent e) {
 		String res = null;

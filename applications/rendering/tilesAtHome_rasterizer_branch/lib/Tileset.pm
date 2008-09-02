@@ -393,7 +393,7 @@ sub downloadData
                 # assume the api is just a bit under load so it would
                 # be wasteful to return the tileset with "no Data"
                 $res = 0; #set false before next slice is downloaded
-                while (($tryN <= 3) and (! $res))
+                while (($tryN < 3) and (! $res))
                 {
                     $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
@@ -411,6 +411,7 @@ sub downloadData
                     elsif (! $res)
                     {
                         ::statusMessage("(slice $j of 10) failed on try $tryN, retrying",1,3);
+                        ::talkInSleep("waiting before retry",10*$tryN);
                         $tryN++; #try again!
                     }
                     else

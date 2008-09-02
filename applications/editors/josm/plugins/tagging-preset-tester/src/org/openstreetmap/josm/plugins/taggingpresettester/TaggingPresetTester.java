@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,11 +41,9 @@ public class TaggingPresetTester extends JFrame {
 			try {
 				if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
 					in = new URL(source).openStream();
-				else if (source.startsWith("resource://"))
-					in = TaggingPresetTester.class.getResourceAsStream(source.substring("resource:/".length()));
 				else
 					in = new FileInputStream(source);
-				allPresets.addAll(TaggingPreset.readAll(in));
+				allPresets.addAll(TaggingPreset.readAll(new BufferedReader(new InputStreamReader(in))));
 			} catch (IOException e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Could not read tagging preset source: "+source);

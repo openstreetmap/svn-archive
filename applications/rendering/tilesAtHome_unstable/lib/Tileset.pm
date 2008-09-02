@@ -337,7 +337,7 @@ sub downloadData
             return (undef, "No data here! (OSMXAPI)")
         }
 
-        my $reason = "no data here!"
+        my $reason = "no data here!";
 
         if ((! $res) and ($Config->get("FallBackToROMA")))
         {
@@ -371,7 +371,7 @@ sub downloadData
                 $bbox);
             ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
             print "Download\n$URL\n" if ($Config->get("Debug"));
-            my $res = ::DownloadFile($URL, $partialFile, 0);
+            $res = ::DownloadFile($URL, $partialFile, 0);
             if (! $res)
             {   # OSMXAPI fallback failed too
                 $reason .= " (OSMXAPI)";
@@ -435,7 +435,7 @@ sub downloadData
             ::statusMessage("download of data failed",1,0);
             return (undef, $reason);
         }
-    }
+    } # foreach
 
     ::mergeOsmFiles($DataFile, $filelist);
 

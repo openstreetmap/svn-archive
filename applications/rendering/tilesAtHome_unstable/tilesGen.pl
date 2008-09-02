@@ -500,22 +500,40 @@ sub ProcessRequestsFromServer
     my $req = new Request;
     try {
         $req->fetchFromServer();
+
+        # successfully received data, reset data faults
+        resetFault("nodata");
+        resetFault("nodataROMA");
+        resetFault("nodataXAPI");
+
+        my $tileset = Tileset->new($req);
+        $tileset->generate();
+
+        # successfully rendered, so reset renderer faults
+        resetFault("renderer");
+        resetFault("inkscape");
+        resetFault("utf8");
+
+        # Rendered tileset, don't idle in next round
+        setIdle(0,0);
     }
     catch RequestError with {
         my $err = shift();
         cleanUpAndDie($err->text(), "EXIT", 1);
-    };
-
-    #TODO: return result of GenerateTileset?
-    my $tileset = Tileset->new($req);
-    my ($success, $reason) = $tileset->generate();
-    if (!$success)
-    {
-        eval {
-            $req->putBackToServer($reason) unless $Mode eq 'xy';
-        };
     }
-    return ($success, $reason);
+    catch TilesetError with {
+        my $err = shift();
+        $req->putBackToServer($err->text()) unless $Mode eq 'xy';
+        if ($err->value() eq "fatal") {
+            # $err->value() is "fatal" for fatal errors 
+            cleanUpAndDie($err->text(), "EXIT", 1);
+        }
+        else {
+            # $err->value() contains the error category for non-fatal errors
+            addFault($err->value(), 1);
+            statusMessage($err->text(), 1, 0);
+        }
+    };
 }
 
 #-----------------------------------------------------------------------------

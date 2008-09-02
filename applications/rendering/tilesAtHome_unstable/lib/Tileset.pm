@@ -21,6 +21,7 @@ of the License, or (at your option) any later version.
 use warnings;
 use strict;
 use File::Temp qw/ tempfile tempdir /;
+use Error qw(:try);
 use lib::TahConf;
 use tahlib;
 use tahproject;
@@ -112,7 +113,7 @@ sub generate
     {
         my $reason = "Coordinates out of bounds (0..$maxCoords)";
         ::statusMessage($reason, 1, 0);
-        return (0, $reason);
+        throw TilesetError $reason;
     }
 
     #------------------------------------------------------
@@ -120,13 +121,9 @@ sub generate
     #------------------------------------------------------
 
     my $beforeDownload = time();
-    my ($FullDataFile, $reason) = $self->downloadData();
-    if (!$FullDataFile)
-    {
-        ::statusMessage($reason, 1, 0);
-        return (0, $reason);
-    }
+    my $FullDataFile = $self->downloadData();
     ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -147,7 +144,6 @@ sub generate
         mkdir $JobDirectory;
 
         my $maxzoom = $Config->get($layer."_MaxZoom");
-        my $layerDataFile;
 
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
@@ -155,12 +151,7 @@ sub generate
         # and returns the file name of the resulting data file.
         #------------------------------------------------------
 
-        ($layerDataFile, $reason) = $self->runPreprocessors($layer);
-        if (!$layerDataFile)
-        {
-            ::statusMessage($reason, 1, 0);
-            return (0, $reason);
-        }
+        my $layerDataFile = $self->runPreprocessors($layer);
 
         #------------------------------------------------------
         # Preprocessing finished, start rendering to SVG
@@ -169,25 +160,13 @@ sub generate
 
         if ($Config->get("Fork")) 
         {   # Forking to render zoom levels in parallel
-            if (!$self->forkedRender($layer, $maxzoom, $layerDataFile))
-            {
-                 my $reason = "Forked render failure";
-                 ::addFault("renderer",1);
-                 ::statusMessage($reason, 1, 0);
-                 return (0, $reason);
-	    }
+            $self->forkedRender($layer, $maxzoom, $layerDataFile)
         }
         else
         {   # Non-forking render
             for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++)
             {
-                if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
-                {
-                    my $reason = "Render failure";
-                    ::addFault("renderer",1);
-                    ::statusMessage($reason, 1, 0);
-                    return (0, $reason);
-                }
+                $self->GenerateSVG($layerDataFile, $layer, $zoom)
             }
         }
 
@@ -199,21 +178,9 @@ sub generate
         my ($ImgH,$ImgW,$Valid) = ::getSize(File::Spec->join($self->{JobDir},
                                                        "output-z$maxzoom.svg"));
 
-         # Render it as loads of recursive tiles
-         # temporary debug: measure time it takes to render:
-         my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
-
-        #----------
-        if (!$success)
-        {   # Failed to render tiles, $empty contains error reason
-            ::addFault("renderer",1);
-            ::statusMessage($reason, 1, 0);
-            return (0, $reason);
-        }
-        else
-        {   # successfully rendered, so reset renderer faults
-            ::resetFault("renderer");
-        }
+        # Render it as loads of recursive tiles
+        # temporary debug: measure time it takes to render:
+        my $empty = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
 
         #----------
         # This directory is now ready for upload.
@@ -238,7 +205,6 @@ sub generate
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
-    return (1, "");
 }
 
 #------------------------------------------------------------------
@@ -332,8 +298,7 @@ sub downloadData
         if ((! $res) and ($req->Z < 12))
         {
             # Fetching of lowzoom data from OSMXAPI failed
-            ::addFault("nodataXAPI",1);
-            return (undef, "No data here! (OSMXAPI)")
+            throw TilesetError "No data here! (OSMXAPI)", "nodataXAPI";
         }
 
         my $reason = "no data here!";
@@ -433,7 +398,7 @@ sub downloadData
         else
         {
             ::statusMessage("download of data failed",1,0);
-            return (undef, $reason);
+            throw TilesetError $reason, "nodata";
         }
     } # foreach
 
@@ -448,9 +413,7 @@ sub downloadData
     if (my $line = ::fileUTF8ErrCheck($DataFile))
     {
         ::statusMessage(sprintf("found incorrect UTF-8 chars in line %d. job (%d,%d,%d)",$line, $req->ZXY),1,0);
-        my $reason= ("UTF8 test failed");
-        ::addFault("utf8",1);
-        return (undef, $reason);
+        throw TilesetError "UTF8 test failed", "utf8";
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
     return ($DataFile ,"");
@@ -528,13 +491,13 @@ sub runPreprocessors
         }
         else
         {
-            return (0, "Invalid preprocessing step '$preprocessor'");
+            throw TilesetError "Invalid preprocessing step '$preprocessor'", $preprocessor;
         }
     }
 
     # everything went fine. Get final filename and return it.
     my ($Volume, $path, $OSMfile) = File::Spec->splitpath($outputFile);
-    return ($OSMfile, "");
+    return $OSMfile;
 }
 
 #-------------------------------------------------------------------
@@ -552,7 +515,6 @@ sub forkedRender
 
     my $numThreads = 2 * $Config->get("Fork");
     my @pids;
-    my $success = 1;
 
     for (my $thread = 0; $thread < $numThreads; $thread ++) 
     {
@@ -560,19 +522,20 @@ sub forkedRender
         my $pid = fork();
         if (not defined $pid) 
         {   # exit if asked to fork but unable to
-            my $reason = "GenerateTileset: could not fork, exiting";
-            ::statusMessage($reason, 1, 0);
-            return 0;
+            throw TilesetError "GenerateTileset: could not fork, exiting", "fatal";
         }
         elsif ($pid == 0) 
         {   # we are the child process
             $self->{childThread}=1;
             for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
             {
-                if (! $self->GenerateSVG($layerDataFile, $layer, $zoom))
-                {    # an error occurred while rendering.
-                     # Thread exits and returns (255+)0 here
-                     exit(0);
+                try {
+                    $self->GenerateSVG($layerDataFile, $layer, $zoom)
+                }
+                otherwise {
+                    # an error occurred while rendering.
+                    # Thread exits and returns (255+)0 here
+                    exit(0);
                 }
             }
             # Rendering went fine, have thread return (255+)1
@@ -585,6 +548,7 @@ sub forkedRender
 
     # now wait that all child render processes exited and check their return value
     # retvalue >> 8 is the real ret value. wait returns -1 if there are no child processes
+    my $success = 1;
     foreach my $pid(@pids)
     {
         waitpid($pid,0);
@@ -592,7 +556,9 @@ sub forkedRender
     }
 
     ::statusMessage("exit forked renderer returning $success",0,6);
-    return $success;
+    if (not $success) {
+        throw TilesetError "at least one render thread returned an error", "renderer";
+    }
 }
 
 #-----------------------------------------------------------------------------
@@ -614,7 +580,7 @@ sub GenerateSVG
     my $source = $Config->get($layer."_Rules.".$Zoom);
     my $TempFeatures = File::Spec->join($self->{JobDir}, "map-features-z$Zoom.xml");
     copy($source, $TempFeatures)
-        or die "Cannot make copy of $source";
+        or throw TilesetError "Cannot make copy of $source", "fatal";
 
     # Update the rules file  with details of what to do (where to get data, what bounds to use)
     ::AddBounds($TempFeatures, $self->{bbox}->W,$self->{bbox}->S,$self->{bbox}->E,$self->{bbox}->N);
@@ -626,10 +592,8 @@ sub GenerateSVG
             File::Spec->join($self->{JobDir}, "output-z$Zoom.svg"),
             $Zoom))
     {
-        $success = 0;
+        throw TilesetError "Render failure", "renderer";
     }
-
-    return $success;
 }
 
 
@@ -641,7 +605,7 @@ sub GenerateSVG
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #   $ImageHeight - Height of the entire SVG in SVG units
-#   returns: (success, allEmpty, reason)
+#   returns: allEmpty
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
@@ -652,7 +616,7 @@ sub RenderTile
     my $req = $self->{req};
     my $forkval = $Config->get("Fork");
 
-    return (1,1) if($Zoom > $maxzoom);
+    return 1 if($Zoom > $maxzoom);
     
     # Render it to PNG
     printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", 
@@ -663,7 +627,7 @@ sub RenderTile
 
     if (!$FullBigPNGFileName)
     {  # svg2png failed
-       return (0, 0, $reason);
+        throw TilesetError $reason, "renderer";
     }
 
     # splitImageX returns true if all tiles extracted were empty.
@@ -674,19 +638,19 @@ sub RenderTile
            ::splitImageX($layer, $req, $Zoom, $Ytile, $FullBigPNGFileName);
     if (!$success)
     {  # splitimage failed
-       return (0, 0, $reason);
+        throw TilesetError $reason, "renderer";
     }
 
     # If splitimage is empty Should we skip going further up the zoom level?
     if ($empty and !$Config->get($layer."_RenderFullTileset")) 
     {
-        # leap forward because in progresscountingas this tile and 
+        # leap forward because in progresscounting as this tile and 
         # all higher zoom tiles of it are "done" (empty).
         for (my $j = $maxzoom; $j >= $Zoom ; $j--)
         {
             $::progress += 2 ** $maxzoom-$j;
         }
-	return (1, 1, "All tiles empty");
+	return 1;
     }
 
     # increase progress of tiles
@@ -720,36 +684,41 @@ sub RenderTile
         my $pid = fork();
         if (not defined $pid) 
         {
-            ::cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4); # exit if asked to fork but unable to
+            throw TilesetError "RenderTile: could not fork, exiting", "fatal"; # exit if asked to fork but unable to
         }
         elsif ($pid == 0) 
         {
             # we are the child process
             $self->{childThread}=1;
-            my ($success, $empty, $reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+            try {
+                my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+            }
+            otherwise {
+                exit 0;
+            }
             # we can't talk to our parent other than through exit codes.
-            exit($success);
+            exit 1;
         }
         else
         {
-            my ($parent_success,$empty, $reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+            $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
             waitpid($pid,0);
             my $ChildExitValue = ($? >> 8);
-            if (! ($ChildExitValue && $parent_success))
+            if (!$ChildExitValue)
             {
-                return (0, 0, "Forked inkscape failed");
+                throw TilesetError "Forked inkscape failed", "renderer";
             }
         }
     }
     else
     {
-        my ($success,$empty,$reason) = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
-        return (0, $empty, $reason) if (!$success);
-        ($success,$empty,$reason) = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
-        return (0, $empty, $reason) if (!$success);
+        my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+        return $empty;
+        $empty = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+        return $empty;
     }
 
-    return (1, 0, "OK");
+    return 0;
 }
 
 
@@ -782,5 +751,12 @@ sub N { my $self = shift; return $self->{N};}
 sub E { my $self = shift; return $self->{E};}
 sub S { my $self = shift; return $self->{S};}
 sub W { my $self = shift; return $self->{W};}
+
+
+#----------------------------------------------------------------------------------------
+# error class for Tileset
+
+package TilesetError;
+use base 'Error::Simple';
 
 1;

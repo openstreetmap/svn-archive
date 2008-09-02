@@ -32,6 +32,9 @@
   </target>
 
   <target name="dist" depends="compile">
+    <copy todir="${plugin.build.dir}/resources">
+      <fileset dir="resources"/>
+    </copy>
     <copy todir="build/images" >
       <fileset dir="images" />
     </copy>

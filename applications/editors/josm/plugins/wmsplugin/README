@@ -14,5 +14,6 @@ and has received major contributions from Frederik Ramm
 by Nick Whitelegg <Nick.Whitelegg@solent.ac.uk> and includes
 some code from Jonathan Stott <jonathan@jstott.me.uk>, Gabriel Ebner
 <ge@gabrielebner.at> and Ulf Lamping <ulf.lamping@web.de>.
+The automatic tiles downloading and Yahoo downloader made by Petr Dlouhý <petr.dlouhy@email.cz>
 
 This plugin is licensed under the GNU GPL v2 or later.

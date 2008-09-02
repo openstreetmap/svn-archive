@@ -30,9 +30,9 @@ class TileUpload:
       sys.exit("Failed to get required settings.")
 
   def process(self):
-   transaction.enter_transaction_management()
+   #transaction.enter_transaction_management()
    try:
-    transaction.managed(True)
+    #transaction.managed(True)
     try:
      while True:
       #find the oldest unlocked upload file
@@ -46,7 +46,7 @@ class TileUpload:
           except IndexError:
               #logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
-              transaction.commit()
+              #transaction.commit()
               sleep(10)
 
       # start timing tileset handling now
@@ -102,17 +102,18 @@ class TileUpload:
 	  self.upload.delete()
 
      # finally, at very end. commit the changes
-     transaction.commit()
+     #transaction.commit()
 
     except KeyboardInterrupt:
         # user pressed CTRL-C
         if self.upload: self.cleanup(False)
-        transaction.commit()
+        #transaction.commit()
         logging.info('Ctrl-C pressed. Shutdown gracefully.')
         sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
 
    finally:
-    transaction.leave_transaction_management()
+    #transaction.leave_transaction_management()
+    pass
   #-----------------------------------------------------------------
   def unzip(self):
     now = clock()

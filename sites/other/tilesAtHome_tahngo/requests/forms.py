@@ -5,12 +5,12 @@ from tah.requests.models import Request,Upload
 class CreateForm(forms.ModelForm):
   class Meta:
     model = Request
-    exclude = ('client','ipaddress','status','clientping_time','max_z','client_uuid')
+    exclude = ('client','ipaddress','status','request_time', 'clientping_time','max_z','client_uuid')
 #-----------------------------------------------------------------
 class UploadForm(forms.ModelForm):
   class Meta:
     model = Upload
-
+    exclude = ('ipaddress', 'client_uuid', 'is_locked')
 #-----------------------------------------------------------------
 class ClientAuthForm(forms.Form):
      user = forms.CharField()

@@ -655,7 +655,7 @@ sub lookup_handler
     my $tiley = $y*(2**(12-$zoom));
     my $tileoffset = ($tiley * (2**12)) + $tilex;
     my $fh;
-    open($fh, "<", "oceantiles_12.dat") or die;
+    open($fh, "<", "png2tileinfo/oceantiles_12.dat") or die;
     seek $fh, int($tileoffset / 4), 0;  
     my $buffer;
     read $fh, $buffer, 1;

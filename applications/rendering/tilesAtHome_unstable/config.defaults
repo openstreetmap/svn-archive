@@ -25,6 +25,7 @@ Niceness = nice -n10
 DownloadTimeout = 1800
 KeepDataFile = 0
 FallBackToXAPI = 0
+FallBackToTAPI = 1
 MaxTilesetComplexity = 0
 i18n=1
 

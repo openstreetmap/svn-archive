@@ -338,6 +338,24 @@ sub downloadData
                 ::addFault("nodataXAPI",1);
                 return (undef, "No data here! (OSMXAPI)")
             }
+            elsif ($Config->get("FallBackToTAPI"))
+            {
+                ::statusMessage("Trying OSMTAPI",1,0);
+                $URL=sprintf("%s%s/map?bbox=%s",
+                  $Config->get("TAPIURL"),$Config->get("OSMVersion"),$bbox);
+                $res = ::DownloadFile($URL, $partialFile, 0);
+                if (! $res)
+                {   # OSMTAPI fallback failed too
+                    my $reason = "no data here! (OSMTAPI)";
+                    ::addFault("nodataTAPI",1);
+                    return (undef, $reason);
+                }
+                else
+                {   # OSMTAPI fallback succeeded
+                    ::resetFault("nodataTAPI"); #reset to zero if data downloaded
+                }
+                
+            }
             elsif ($Config->get("FallBackToXAPI"))
             {
                 # fetching of regular tileset data failed. Try OSMXAPI fallback

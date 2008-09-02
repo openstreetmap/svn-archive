@@ -109,18 +109,18 @@ sub compressAll
         if ($flocked && -d $FullTilesetPath )
         {   # got exclusive lock, now compress
             $::currentSubTask ='optimize';
-            ::statusMessage("optimizing PNG files",1,6);
+            ::statusMessage("optimizing PNG files",0,3);
             $self->optimizePNGs($FullTilesetPath, $layer);
             $::currentSubTask ='compress';
             $::progressPercent = 0;
-            ::statusMessage("compressing $File",1,6);
+            ::statusMessage("compressing $File",0,3);
             $self->compress($FullTilesetPath);
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
         }
         else
         {   # could not get exclusive lock, this is being handled elsewhere now
-            ::statusMessage("$File compressed by different process. skipping",0,3);
+            ::statusMessage("$File compressed by different process. skipping",1,3);
         }
         # finally unlock zipfile and release handle
         if ($LOCKFILE)
@@ -148,6 +148,7 @@ sub compress
     my ($FullTilesetPathDir) = @_;
   
     my $Filename;
+    my $Tempfile;
 
     $FullTilesetPathDir =~ m{([^_\/\\]+)_(\d+)_(\d+)_(\d+).dir$};
     my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
@@ -155,13 +156,16 @@ sub compress
     # Create the output directory if it doesn't exist...
     if( ! -d $self->{ZipDir} )
     {
-        mkpath $self->{ZipDir};
+        mkpath $self->{ZipDir};# TODO: Error handling
     }
 
     $Filename = File::Spec->join($self->{ZipDir},
                                 sprintf("%s_%d_%d_%d_%d.zip",
                                 $layer, $Z, $X, $Y, ::GetClientId()));
     
+    $Tempfile = File::Spec->join($Config->get("WorkingDirectory"),
+                                sprintf("%s_%d_%d_%d_%d.zip",
+                                $layer, $Z, $X, $Y, ::GetClientId()));
     # ZIP all the tiles into a single file
     # First zip into "$Filename.part" and move to "$Filename" when finished
     my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
@@ -171,14 +175,14 @@ sub compress
         $zipCmd = sprintf('"%s" %s "%s" "%s"',
           $Config->get("Zip"),
           "a -tzip",
-          $Filename.".part",
+          $Tempfile,
           File::Spec->join($FullTilesetPathDir,"*.png"));
     }
     else
     {
         $zipCmd = sprintf('"%s" -r -j "%s" "%s" > "%s"',
           $Config->get("Zip"),
-          $Filename.".part",
+          $Tempfile,
           $FullTilesetPathDir,
           $stdOut);
     }
@@ -191,7 +195,7 @@ sub compress
     unlink($stdOut);
     
     # rename to final name so any uploader could pick it up now
-    move ($Filename.".part", $Filename);
+    move ($Tempfile, $Filename); # TODO: Error handling
 
     return $zip_result;
 }
@@ -260,7 +264,7 @@ sub optimizePNGs
                                    $PngFullFileName,
                                    $Redirect);
 
-           ::statusMessage("ColorQuantizing $PngFileName",0,10);
+           ::statusMessage("ColorQuantizing $PngFileName",0,6); 
            if(::runCommand($Cmd,$PID))
            {   # Color quantizing successful
                unlink($PngFullFileName);
@@ -303,7 +307,7 @@ sub optimizePNGs
            ::talkInSleep("Install a PNG optimizer and configure it.",15);
        }
 
-       ::statusMessage("Optimizing $PngFileName",0,10);
+       ::statusMessage("Optimizing $PngFileName",0,6);
        if(::runCommand($Cmd,$PID))
        {
            unlink($TmpFullFileName);

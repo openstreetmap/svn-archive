@@ -1,21 +1,21 @@
 # A 'Request' encapsulates a render request.
-#
-# Copyright 2008, by Sebastian Spaeth
-# licensed under the GPL v2 or (at your option) any later version.
+=pod
 
-## TODO: use proper perldoc format here
-## public API:
+=head1 Request for a t@h render
 
-## CREATION & COORDINATES:
-## ->new(Z,X,Y) (set); ->ZXY(z,x,y) (set or get); ->X(x) (set or get)
-## ->Y(y) (set or get), ->Z(z) (set or get), ->ZXY_str (read-only)
-## ->layers('comma-separated-layerstring') (get or set) (get returns array)
-## ->layers_str() (read only, returns comma-separated layer string)
+=head2 License and authors
 
-## RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
-## ->putBackToServer("cause")
-## ->fetchFromServer()
+ # Copyright 2008, by Sebastian Spaeth
+ # licensed under the GPL v2 or (at your option) any later version.
 
+=head2 Overview
+
+The I<Request> object encapsulates a render request from the t@h server. It is used to fetch a request from the server and contains all the contect information of the request that we have. It is then handed a render method that processes it. I<Request> can also return the request back to the server in case of an error. It encapsulates all the request-related communication with the server (except for uploading the resulting files).
+
+=cut
+
+#see rest of the pd documentation is at the end of this file. Please keep 
+# the description of public methofs/attributes up to date
 package Request;
 
 use warnings;
@@ -23,6 +23,7 @@ use strict;
 use LWP::UserAgent;
 use tahlib;
 use lib::TahConf;
+use lib::TahExceptions;
 
 #unrenderable is a class global hash that keeps unrenderable tilesets as ['z x y']=1
 our %unrenderable = ();
@@ -166,21 +167,18 @@ sub fetchFromServer
         $success=0;
         my $Requeststring = $self->getRequestStringFromServer();
 
-        return (0, "Error reading request from server") unless ($Requeststring);
+        die TahError->new("ServerError", "Error reading request from server") unless ($Requeststring);
         
         # $ValidFlag is 'OK' (got request) or 'XX' (error occurred, or no work for us)
         # $Version denotes the version of the request taking protocol the server speaks. It's currently at '5'
         ($ValidFlag,$Version) = split(/\|/, $Requeststring);
 
         # First check that we understand the server protocol
-        if ($Version < 4 or $Version > 5)
+        if ($Version < 5 or $Version > 5)
         {
-            #TODO use statusMessage here
-            print STDERR "\n";
-            print STDERR "Server is speaking a different version of the protocol to us.\n";
-            print STDERR "Check to see whether a new version of this program was released!\n";
-            cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Requeststring,"EXIT",1);
-            ## No need to return, we exit the program at this point
+            my $message = "Server is speaking a different version of the protocol to us ($Version).\n"
+                . "Check to see whether a new version of this program was released!";
+            die TahError->new("ServerError", $message);
         }
 
         if ($ValidFlag eq "OK")
@@ -203,7 +201,9 @@ sub fetchFromServer
                         $success = 0;  # set to 0, need another loop
                         ::statusMessage("Ignoring too complex tile (".$self->ZXY_str.')',1,3);
                         # putbackToServer waits 15 secs before continuing, so we don't get the same time back 
-                        $self->putBackToServer("TooComplex");
+                        eval {
+                            $self->putBackToServer("TooComplex");
+                        };
                     }
                 }
             }
@@ -214,22 +214,23 @@ sub fetchFromServer
             ($ValidFlag, $Version, my $reason) = split(/\|/, $Requeststring);
             if ($reason =~ /Invalid username/)
             {
-                die "ERROR: Authentication failed - please check your username "
-                        . "and password in 'authentication.conf'.\n\n"
-                        . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
+                die TahError->new("AuthenticationError",
+                                  "ERROR: Authentication failed - please check your username and password in 'authentication.conf'.\n\n"
+                                  . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.");
             }
             elsif ($reason =~ /Invalid client version/)
             {
-                die "ERROR: This client version (".$self->{Config}->get("ClientVersion").") was not accepted by the server.";  ## this should never happen as long as auto-update works
+                die TahError->new("ClientVersionError", "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
+                                  . ") was not accepted by the server.");  ## this should never happen as long as auto-update works
             }
             else
             {
-                return (0, "Unknown server response");
+                die TahError->new("ServerError", "Unknown server response: $Requeststring");
             }
         }
         else
         {   # ValidFlag was neither 'OK' nor 'XX'. This should NEVER happen.
-              return (0, "Unknown server response, ValidFlag neither 'OK' nor 'XX'");
+              die TahError->new("ServerError", "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'");
 	}
 
         if ($self->is_unrenderable())
@@ -243,7 +244,6 @@ sub fetchFromServer
 
     # Information text to say what's happening
     ::statusMessage("Got work from the server: ".$self->layers_str.' ('.$self->ZXY_str.')', 0, 6);
-    return (1, "");
 }
 
 
@@ -272,7 +272,7 @@ sub getRequestStringFromServer
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        return 0;
+        die TahError->new("ServerError", "Unable to get request string from server");
     }
     else
     {   # got a server reply here
@@ -296,9 +296,6 @@ sub putBackToServer
 {
     my ($self, $Cause) = @_;
 
-    # do not do this if called in xy mode!
-    return if($::Mode eq "xy");
-    
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
     $ua->protocols_allowed( ['http'] );
@@ -320,11 +317,62 @@ sub putBackToServer
 
     if(!$res->is_success())
     {
-        return (0, "Error reading response from server");
+        die TahError->new("ServerError", "Error reading response from server");
     }
     
     ::talkInSleep("Waiting before new tile is requested", 15);
-    return (1,"OK")
 }
 
 1;
+
+=pod 
+
+=head2 Public methods
+
+=head3 CREATION & COORDINATES:
+
+=over
+
+=item C<< ->new(Z,X,Y) >> (set)
+
+A I<Request> can be instantiated with ->new(Z,X,Y). Alternatively those coordinates can be set with ->ZXY(z,x,y) later. Of course you don't need to set those coordinates if you plan to retrieve a request from the server.
+
+e.g. my $r = new Request or my $r = Request->new()
+
+=item C<< ->ZXY(z,x,y) >> (set or get)
+
+=item C<< ->ZXY_str >> (read-only) returns 'z,x,y' as string
+
+=item C<< ->X(x) >> (set or get)
+
+=item C<< ->Y(y) >> (set or get)
+
+=item C<< ->Z(z) >> (set or get)
+
+=item C<< ->layers('comma-separated-layerstring') >> (get or set) 
+
+(get returns array of layernames)
+
+=item C<< ->layers_str() >> (read only) returns comma-separated layer string)
+
+=item C<< ->{lastModified} >> (read-only attribute)
+
+is set to the unix timestamp of the tileset file on server. The server responds with  0 if it doesn't have the tileset yet. Although nothing prevents you technically from setting this attribute it only makes sense to use it for reading.
+
+=item C<< ->{complexity} >> (read-only attribute)
+
+is set to the byte size of the tileset file onthe server. It will be set to 0 if the server does not have the tileset yet.
+
+=back
+
+=head3 RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
+
+=over
+
+=item ->putBackToServer("cause")
+
+=item ->fetchFromServer()
+
+=back
+
+=cut

@@ -220,7 +220,7 @@ def feedback(request):
 #-------------------------------------------------------
 # Upload a finished tileset
 
-@transaction.autocommit #commit as soon as we change something
+#@transaction.autocommit #commit as soon as we change something
 def upload_request(request):
     html='XX|Unknown error.'
 
@@ -335,7 +335,7 @@ def take(request):
  	          req.clientping_time=datetime.now()
                   req.save()
                   # commit transaction here, so others can continue
-                  transaction.commit()
+                  #transaction.commit()
 
                   # find out tileset filesize and age
                   # always hardcode 'tile' layer for now.

@@ -1,6 +1,5 @@
 import logging, os
-from django.db import transaction, connection
-from django.utils.encoding import force_unicode
+from django.db import transaction   #, connection
 from django.shortcuts import render_to_response
 import django.views.generic.list_detail
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
@@ -87,7 +86,7 @@ def saveCreateRequestForm(request, form):
     if not formdata['priority'] or \
       formdata['priority'] > 4 or formdata['priority'] < 1: 
           formdata['priority'] = 3
-    formdata['clientping_time'] = force_unicode(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
     if not formdata['src']: formdata['src'] = '' # requester did not supply a 'src' string
 
     # catch invalid x,y and return if found
@@ -192,12 +191,19 @@ def feedback(request):
           form = CreateForm(request.POST)
           if form.is_valid():
             formdata = form.cleaned_data
-            reqs = Request.objects.filter(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z'])
-            num = reqs.count()
-            reqs.update(status=0)
-            html = "Reset %d tileset (%d,%d,%d)" % \
-                      (num,formdata['min_z'],formdata['x'],formdata['y'])
-            logging.info("%s by user %s (uuid: %s). Cause: %s" %(html,user,request.POST.get('client_uuid','0'),request.POST.get('cause','unknown')))
+            try:
+                # get the current render job and reset it
+                req = Request.objects.get(status=1,x = formdata['x'],y=formdata['y'],min_z = formdata['min_z'], client=user)
+                req.status=0
+                req.request_time = req.request_time + timedelta(hours=2)
+                html = "Reset tileset (%d,%d,%d)" % \
+                        (num,formdata['min_z'],formdata['x'],formdata['y'])
+                logging.info("%s by %s (uuid: %s). Cause: %s" %(html,user,request.POST.get('client_uuid','0'),request.POST.get('cause','unknown')))
+            except Request.DoesNotExist:
+                # tried to reset request that is not assigned to us
+                html = "tileset (%d,%d,%d) is not assigned to us. Not resetting" % \
+                        (num,formdata['min_z'],formdata['x'],formdata['y'])
+                logging.info("%s. %s (%s)" %(html,user,request.POST.get('client_uuid','0')))
       	  else:
             html="XX|4|form is not valid. "+str(form.errors)
       else:
@@ -213,20 +219,9 @@ def feedback(request):
 #-------------------------------------------------------
 # Upload a finished tileset
 
+@transaction.autocommit #commit as soon as we change something
 def upload_request(request):
     html='XX|Unknown error.'
-    UploadFormClass = UploadForm
-    UploadFormClass.base_fields['ipaddress'].required = False
-    UploadFormClass.base_fields['ipaddress'].widget = widgets.HiddenInput()
-    UploadFormClass.base_fields['priority'].required = False
-    UploadFormClass.base_fields['file'].required = False
-    UploadFormClass.base_fields['client_uuid'].required = False
-    UploadFormClass.base_fields['client_uuid'].widget = widgets.HiddenInput()
-    UploadFormClass.base_fields['is_locked'].required = False
-    UploadFormClass.base_fields['is_locked'].widget = widgets.HiddenInput()
-    UploadFormClass.base_fields['user_id'].required = False
-    UploadFormClass.base_fields['user_id'].widget = widgets.HiddenInput()
-    form = UploadFormClass()
 
     if request.method == 'POST':
       authform = ClientAuthForm(request.POST)
@@ -249,7 +244,7 @@ def upload_request(request):
               # look up the layer id
               try: formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
               except Layer.DoesNotExist: del formdata['layer']
-          form = UploadFormClass(formdata, request.FILES)
+          form = UploadForm(formdata, request.FILES)
 
           if form.is_valid():
             file = request.FILES['file']
@@ -271,12 +266,22 @@ def upload_request(request):
       	  else:
             html="XX|4|form is not valid. "+str(form.errors)
         else:
-          # authentication failed here, or authform failed to validate.
-          html="XX|4|Invalid username. Your username and password were incorrect or the user has been disabled."
+            # authentication failed here, or authform failed to validate.
+            html="XX|4|Invalid username. Your username and password were " \
+                 "incorrect or the user has been disabled."
+      else:
+          # authform failed to validate.
+          html="XX|4|Invalid username. Please specify a username and password."
+
     else:
-      # request.method==GET here. View the plain form webpage with default values filled in
-      authform = ClientAuthForm()
-      return render_to_response('requests_upload.html',{'uploadform': form, 'authform': authform, 'host':request.META['HTTP_HOST']})
+        # request.method==GET here. View the plain form webpage with 
+        # default values filled in
+        authform = ClientAuthForm()
+        CreateFormClass = UploadForm
+        del CreateFormClass.base_fields['user_id']
+        form = CreateFormClass()
+        return render_to_response('requests_upload.html',{'uploadform': form, 
+                                  'authform': authform, 'host':request.META['HTTP_HOST']})
     return HttpResponse(html);
 
 
@@ -294,6 +299,7 @@ def upload_gonogo(request):
 # retrieve a new request from the server
 # TODO, quite large by now. Split?
 
+#@transaction.commit_manually
 @transaction.commit_on_success
 def take(request):
     html='XX|5|unknown error'
@@ -303,6 +309,7 @@ def take(request):
           int(request.POST['client_uuid']) > 65535:
              request.POST['client_uuid'] = request.POST['client_uuid'][-4:]
 
+      # perform user authentication
       authform = ClientAuthForm(request.POST)
       form     = TakeRequestForm(request.POST)
       form.is_valid() #clean data
@@ -316,6 +323,7 @@ def take(request):
           if form.cleaned_data['version'] in ['Rapperswil', 'Saurimo']:
             #next 2 lines are for limiting max #of active requests per usr
             active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
+
             if active_user_reqs <= 50:
               try:  
                   # get the next request from the queue
@@ -325,6 +333,8 @@ def take(request):
  	          req.client_uuid = form.cleaned_data.get('client_uuid', 0)
  	          req.clientping_time=datetime.now()
                   req.save()
+                  # commit transaction here, so others can continue
+                  transaction.commit()
 
                   # find out tileset filesize and age
                   # always hardcode 'tile' layer for now.

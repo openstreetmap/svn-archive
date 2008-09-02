@@ -1,11 +1,22 @@
 package Tileset;
 
-# Copyright 2006-20088, Dirk-Lueder Kreie, Sebastian Spaeth,
-# Matthias Julius and others
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+=pod
+
+=head1 Tileset package
+
+=head2 Copyright and Authors
+
+Copyright 2006-2008, Dirk-Lueder Kreie, Sebastian Spaeth,
+Matthias Julius and others
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+=head2 Description of functions 
+
+=cut
 
 use warnings;
 use strict;
@@ -108,13 +119,14 @@ sub generate
     # Download data (returns full path to data.osm or 0)
     #------------------------------------------------------
 
+    my $beforeDownload = time();
     my ($FullDataFile, $reason) = $self->downloadData();
     if (!$FullDataFile)
     {
         ::statusMessage($reason, 1, 0);
         return (0, $reason);
     }
-
+    ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -189,9 +201,7 @@ sub generate
 
          # Render it as loads of recursive tiles
          # temporary debug: measure time it takes to render:
-	 my $beforeRender = time();
          my ($success, $empty, $reason) = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
-         print STDERR "\nRendering of $layer in ".(time() - $beforeRender)." sec\n\n"; 
 
         #----------
         if (!$success)
@@ -207,18 +217,22 @@ sub generate
 
         #----------
         # This directory is now ready for upload.
-        # move it up one folder, so it can be picked up
-        my $dircomp;
+        # move it up one folder, so it can be picked up.
+        # Unless we have moved everything to the local slippymap already
+        if (!$Config->get("LocalSlippymap"))
+        {
+            my $dircomp;
 
-        my @dirs = File::Spec->splitdir($JobDirectory);
-        do { $dircomp = pop(@dirs); } until ($dircomp ne '');
-        # we have now split off the last nonempty directory path
-        # remove the next path component and add the dir name back.
-        pop(@dirs);
-        push(@dirs, $dircomp);
-        my $DestDir = File::Spec->catdir(@dirs);
-        rename $JobDirectory, $DestDir;
-        # Finished moving directory one level up.
+            my @dirs = File::Spec->splitdir($JobDirectory);
+            do { $dircomp = pop(@dirs); } until ($dircomp ne '');
+            # we have now split off the last nonempty directory path
+            # remove the next path component and add the dir name back.
+            pop(@dirs);
+            push(@dirs, $dircomp);
+            my $DestDir = File::Spec->catdir(@dirs);
+            rename $JobDirectory, $DestDir;
+            # Finished moving directory one level up.
+        }
     }
 
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
@@ -228,11 +242,21 @@ sub generate
 }
 
 #------------------------------------------------------------------
-# Download the area for the tileset (whole or in stripes, as required)
-# into $self->{JobDir}
-# returns: (filename, reason)
-# filename: resulting data osm filename (without path) on success, 'undef' on failure
-# reason:   string describing the error
+
+=pod 
+
+=head3 downloadData
+
+Download the area for the tileset (whole or in stripes, as required)
+into $self->{JobDir}
+
+B<parameter>: none
+
+B<returns>: (filename, reason) 
+I<filename>: resulting data osm filename (without path) on success, 'undef' on failure.
+I<reason>: string describing the error.
+
+=cut
 #-------------------------------------------------------------------
 sub downloadData
 {
@@ -305,44 +329,71 @@ sub downloadData
         if ($req->Z >= 12 && $req->{complexity} < 20000000)
            {$res = ::DownloadFile($URL, $partialFile, 0)};
 
-        if (! $res)
-        {   # Download of data failed
-            if ($req->Z < 12)
-            {
-                # Fetching of lowzoom data from OSMXAPI failed
-                ::addFault("nodataXAPI",1);
-                return (undef, "No data here! (OSMXAPI)")
-            }
-            elsif ($Config->get("FallBackToXAPI"))
-            {
-                # fetching of regular tileset data failed. Try OSMXAPI fallback
-                ::statusMessage("Trying OSMXAPI",1,0);
-                $bbox = $URL;
-                $bbox =~ s/.*bbox=//;
-                $URL=sprintf("%s%s/%s[bbox=%s] ",
-                    $Config->get("XAPIURL"),
-                    $Config->get("OSMVersion"),
-                    "*",
-                    $bbox);
-                ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
-                print "Download\n$URL\n" if ($Config->get("Debug"));
-                my $res = ::DownloadFile($URL, $partialFile, 0);
-                if (! $res)
-                {   # OSMXAPI fallback failed too
-                    my $reason = "no data here! (OSMXAPI)";
-                    ::addFault("nodataXAPI",1);
-                    return (undef, $reason);
-                }
-                else
-                {   # OSMXAPI fallback succeeded
-                    ::resetFault("nodataXAPI"); #reset to zero if data downloaded
-                }
+        if ((! $res) and ($req->Z < 12))
+        {
+            # Fetching of lowzoom data from OSMXAPI failed
+            ::addFault("nodataXAPI",1);
+            return (undef, "No data here! (OSMXAPI)")
+        }
+
+        my $reason = "no data here!";
+
+        if ((! $res) and ($Config->get("FallBackToROMA")))
+        {
+            # download of normal z>=12 data failed
+            ::statusMessage("Trying ROMA",1,0);
+            $URL=sprintf("%s%s/map?bbox=%s",
+              $Config->get("ROMAURL"),$Config->get("OSMVersion"),$bbox);
+            $res = ::DownloadFile($URL, $partialFile, 0);
+            if (! $res)
+            {   # ROMA fallback failed too
+                $reason .= " (ROMA)";
+                ::addFault("nodataROMA",1);
+                # do not return, in case we have other fallbacks configured.
             }
             else
+            {   # ROMA fallback succeeded
+                ::resetFault("nodataROMA"); #reset to zero if data downloaded
+            }
+        }
+       
+        if ((! $res) and ($Config->get("FallBackToXAPI")))
+        {
+            # fetching of regular tileset data failed. Try OSMXAPI fallback
+            ::statusMessage("Trying OSMXAPI",1,0);
+            $bbox = $URL;
+            $bbox =~ s/.*bbox=//;
+            $URL=sprintf("%s%s/%s[bbox=%s] ",
+                $Config->get("XAPIURL"),
+                $Config->get("OSMVersion"),
+                "*",
+                $bbox);
+            ::statusMessage("Downloading: Map data for ".$req->layers_str." from OSMXAPI",0,3);
+            print "Download\n$URL\n" if ($Config->get("Debug"));
+            $res = ::DownloadFile($URL, $partialFile, 0);
+            if (! $res)
+            {   # OSMXAPI fallback failed too
+                $reason .= " (OSMXAPI)";
+                ::addFault("nodataXAPI",1);
+                # do not return, in case we have other fallbacks configured.
+            }
+            else
+            {   # OSMXAPI fallback succeeded
+                ::resetFault("nodataXAPI"); #reset to zero if data downloaded
+            }
+        }
+        
+        if ((! $res) and ($Config->get("FallBackToSlices")))
+        {
+            ::statusMessage("Trying smaller slices",1,0);
+            my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
+            for (my $j = 1 ; $j<=10 ; $j++)
             {
-                ::statusMessage("Trying smaller slices",1,0);
-                my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
-                for (my $j = 1 ; $j<=10 ; $j++)
+                my $tryN = 1; # each slice gets tried 3 times, we
+                # assume the api is just a bit under load so it would
+                # be wasteful to return the tileset with "no Data"
+                $res = 0; #set false before next slice is downloaded
+                while (($tryN <= 3) and (! $res))
                 {
                     $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
@@ -351,12 +402,16 @@ sub downloadData
                     ::statusMessage("Downloading: Map data (slice $j of 10)",0,3);
                     print "Download\n$URL\n" if ($Config->get("Debug"));
                     $res = ::DownloadFile($URL, $partialFile, 0);
-
-                    if (! $res)
+                    
+                    if ((! $res) and ($tryN >= 3))
                     {   # Sliced download failed too
-                        my $reason = "No data here (sliced)";
                         ::addFault("nodata",1);
-                        return (undef, $reason);
+                        $reason .= " (sliced)";
+                    }
+                    elsif (! $res)
+                    {
+                        ::statusMessage("(slice $j of 10) failed on try $tryN, retrying",1,3);
+                        $tryN++; #try again!
                     }
                     else
                     {   # Sliced download succeeded (at least one slice)
@@ -365,19 +420,21 @@ sub downloadData
                 }
             }
         }
-        else
-        {   # Download of data succeeded in the first place
+        
+        if ($res)
+        {   # Download of data succeeded
 
             if ($req->Z < 12) ## FIXME: hardcoded zoom
             {
                 ::resetFault("nodataXAPI"); #reset to zero if data downloaded
             }
-            else 
-            {
-                ::resetFault("nodata"); #reset to zero if data downloaded
-            }
         }
-    }
+        else
+        {
+            ::statusMessage("download of data failed",1,0);
+            return (undef, $reason);
+        }
+    } # foreach
 
     ::mergeOsmFiles($DataFile, $filelist);
 

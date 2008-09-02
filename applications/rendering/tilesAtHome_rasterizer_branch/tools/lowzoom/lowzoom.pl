@@ -374,7 +374,7 @@ sub moveTiles {
       }
     }
   }  
-  close $dp;
+  closedir $dp;
 }
 
 # takes x and y coordinates and returns if the corresponding tile 

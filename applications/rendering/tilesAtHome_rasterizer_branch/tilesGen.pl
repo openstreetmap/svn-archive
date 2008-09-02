@@ -28,9 +28,11 @@ use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);
 use File::Spec;
+use Scalar::Util qw(blessed);
 use IO::Socket;
 use tahlib;
 use lib::TahConf;
+use lib::TahExceptions;
 use lib::Tileset;
 use Request;
 use Upload;
@@ -42,7 +44,6 @@ use POSIX qw(locale_h);
 use Encode;
 use Error qw(:try);
 use POSIX;
-setlocale(LC_NUMERIC, 'C');
 
 #---------------------------------
 
@@ -188,6 +189,7 @@ if( $RenderMode and -e "/dev/null" )
 resetFault("fatal");
 resetFault("rasterizer");
 resetFault("nodata");
+resetFault("nodataROMA");
 resetFault("nodataXAPI");
 resetFault("renderer");
 resetFault("utf8");
@@ -525,17 +527,27 @@ sub ProcessRequestsFromServer
 
     statusMessage("Retrieving next job", 0, 3);
     my $req = new Request;
-    my ($success, $reason) = $req->fetchFromServer();
+    eval {
+        $req->fetchFromServer();
+    };
 
-    if ($success)
-    {
-        #TODO: return result of GenerateTileset?
-        my $tileset = Tileset->new($req);
-        ($success, $reason) = $tileset->generate();
-        if (!$success)
-        {
-            $req->putBackToServer($reason) unless $Mode eq 'xy';
+    if (my $error = $@) {
+        if (blessed($error) && $error->isa("TahError")) {
+            cleanUpAndDie($error->text(), "EXIT", 1);
         }
+        else {
+            die;
+        }
+    }
+
+    #TODO: return result of GenerateTileset?
+    my $tileset = Tileset->new($req);
+    my ($success, $reason) = $tileset->generate();
+    if (!$success)
+    {
+        eval {
+            $req->putBackToServer($reason) unless $Mode eq 'xy';
+        };
     }
     return ($success, $reason);
 }
@@ -820,6 +832,7 @@ sub AddBounds
     die("no such $Filename") if(! -f $Filename);
     
     # Change some stuff
+    no locale;                # use dot as separator even for Germans!
     my $BoundsInfo = sprintf(
       "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
       $S, $W, $N, $E);

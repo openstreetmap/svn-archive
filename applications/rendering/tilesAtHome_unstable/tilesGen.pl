@@ -63,7 +63,7 @@ else
     %EnvironmentInfo = $Config->CheckBasicConfig();
 }
 
-# set the progress indicatOr variables
+# set the progress indicator variables
 our $currentSubTask;
 my $progress = 0;
 our $progressJobs = 0;
@@ -1083,7 +1083,7 @@ sub reExec
     my $Config = TahConf->getConfig();
     # until proven to work with other systems, only attempt a re-exec
     # on linux. 
-    return unless ($^O eq "linux" || $^O eq "cygwin");
+    return unless ($^O eq "linux" || $^O eq "cygwin" ||  $^O eq "darwin");
 
     statusMessage("tilesGen.pl has changed, re-start new version",1,0);
     if ($Config->get("ForkForUpload") && $child_pid != -1)  ## FIXME: make more general
@@ -1108,7 +1108,7 @@ sub startBatikAgent
 
     statusMessage("Starting BatikAgent\n",0,0);
     my $Cmd;
-    if ($^O eq "linux" || $^O eq "cygwin") 
+    if ($^O eq "linux" || $^O eq "cygwin" || $^O eq "darwin" ) 
     {
         $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
           $Config->get("i18n") ? "LC_ALL=C " : "",
@@ -1136,7 +1136,7 @@ sub startBatikAgent
           $Config->get("BatikClasspath"),
           $Config->get("BatikPort") 
          );
-        statusMessage("Could not determine Operating System ".$^O.", please report to tilesathome mailing list",1,0);
+        statusMessage("WARNING: Could not determine Operating System ".$^O.", please report to tilesathome mailing list, assuming unix",1,0);
     }
     
     system($Cmd);

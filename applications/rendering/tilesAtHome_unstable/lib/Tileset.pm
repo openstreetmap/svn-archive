@@ -369,9 +369,8 @@ sub downloadData
                 my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
                 for (my $j = 1 ; $j<=10 ; $j++)
                 {
-                    my $tryN = 1; # each slice gets tried 3 times, but the first one. 
-                    # we assume that the api has a real problem when both original and first slice download fail
-                    # but if the first slice goes through we assume the api is just a bit under load so it would
+                    my $tryN = 1; # each slice gets tried 3 times, we
+                    # assume the api is just a bit under load so it would
                     # be wasteful to return the tileset with "no Data"
                     $res = 0; #set false before next slice is downloaded
                     while (($tryN <= 3) and (! $res))
@@ -384,9 +383,9 @@ sub downloadData
                         print "Download\n$URL\n" if ($Config->get("Debug"));
                         $res = ::DownloadFile($URL, $partialFile, 0);
                         
-                        if ((! $res) and (($j == 1) or ($tryN >= 3)))
+                        if ((! $res) and ($tryN >= 3))
                         {   # Sliced download failed too
-                            my $reason = "No data here (sliced)";
+                            my $reason = "No data here (slice $j, try $tryN)";
                             ::addFault("nodata",1);
                             return (undef, $reason);
                         }

@@ -38,6 +38,7 @@ use Request;
 use Upload;
 use Compress;
 use SVG::Rasterize;
+use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
@@ -200,7 +201,7 @@ unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
 # Be nice. Reduce program priority
 if ($Config->get("Niceness")) {
     my $success=POSIX::nice($Config->get("Niceness"));
-    if ($success==undef) {
+    if( !defined($success) ){
         printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
     }
 }
@@ -769,10 +770,10 @@ sub svg2png
     my $SizeY = 256;
 
     # Create an object describing what area of the svg we want
-    my $box = SVG::Rasterize::CoordinateBox
+    my $box = SVG::Rasterize::CoordinateBox->new
         ({
             space => { top => $ImageHeight, bottom => 0 },
-            box => { left => $Left, right => $Right, top => $Y2, bottom => $1 }
+            box => { left => $Left, right => $Right, top => $Y2, bottom => $Y1 }
         });
     
     # Make a variable that points to the renderer to save lots of typing...

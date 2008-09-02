@@ -6,6 +6,7 @@ use warnings;
 $__PACKAGE__::VERSION = '0.1';
 
 use base qw(Class::Accessor SVG::Rasterize::Engine);
+use SVG::Rasterize::CoordinateBox;
 use File::Spec;
 use Error qw(:try);
 use IPC::Run qw(run);
@@ -97,12 +98,17 @@ sub convert {
     my $old_lc_all = $ENV{LC_ALL};
     $ENV{LC_ALL} = 'C';
 
+    my %area;
+    if( $params{area} ){
+        %area = $params{area}->get_box_lowerleft();
+    }
+
     my @cmd = ($self->path(), '-z');
     push(@cmd, '-w', $params{width}) if $params{width};
     push(@cmd, '-h', $params{height}) if $params{height};
     push(@cmd, sprintf('--export-area=%f:%f:%f:%f',
-                       $params{left}, $params{bottom}, $params{right}, $params{top})
-        ) if $params{left} && $params{bottom} && $params{right} && $params{top};
+                       @area{'left','bottom','right','top'})
+        ) if %area;
     push(@cmd, '--export-png='.$params{outfile});
     push(@cmd, $params{infile});
 

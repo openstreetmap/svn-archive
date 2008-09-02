@@ -132,6 +132,8 @@ sub convert {
     unless( $result eq 'OK' ){
         throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Batik agent returned non-OK result \"$result\"");
     }
+
+    $self->check_output($params{outfile});
 }
 
 =pod

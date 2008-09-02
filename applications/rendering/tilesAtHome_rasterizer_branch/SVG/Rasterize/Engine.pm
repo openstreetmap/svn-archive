@@ -44,6 +44,30 @@ sub available {
 
 =pod
 
+=head2 check_output( $file )
+
+Checks the output file. For now it only checks to see if it's there and
+have non-zero length.
+
+Throws SVG::Rasterize::Engine::Error::NoOutput if there is no output.
+
+=cut
+
+sub check_output {
+    my $self = shift;
+    my $file = shift;
+
+    unless( -e $file ){
+        throw SVG::Rasterize::Engine::Error::NoOutput('Output file does not exist');
+    }
+
+    if( -z $file ){
+        throw SVG::Rasterize::Engine::Error::NoOutput('Output file is 0-length');
+    }
+}
+
+=pod
+
 =head2 convert( \%params )
 
 Do the actual convertion.
@@ -66,6 +90,9 @@ use base qw(SVG::Rasterize::Engine::Error);
 
 package SVG::Rasterize::Engine::Error::Runtime;
 use base qw(SVG::Rasterize::Engine::Error);
+
+package SVG::Rasterize::Engine::Error::NoOutput;
+use base qw(SVG::Rasterize::Engine::Error::Runtime);
 
 1;
 

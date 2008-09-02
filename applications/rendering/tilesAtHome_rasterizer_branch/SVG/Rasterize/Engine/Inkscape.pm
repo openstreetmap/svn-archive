@@ -109,6 +109,8 @@ sub convert {
     run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
         throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {stdout => $self->{stdout}, stderr => $self->{stderr}});
 
+    $self->check_output($params{outfile});
+
     $ENV{LC_ALL} = $old_lc_all
 }
 

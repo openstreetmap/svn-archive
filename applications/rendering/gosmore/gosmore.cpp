@@ -93,7 +93,6 @@ char docPrefix[80] = "";
 
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
-#include "icons.xpm"
 #endif
 
 #if __FreeBSD__ || __APPLE__ // Thanks to Ted Mielczarek & Dmitry
@@ -987,13 +986,8 @@ gint Expose (void)
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &validateColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
-    #ifndef _WIN32
     icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
       FindResource ("icons.xpm"));
-    #else
-    icons = gdk_pixmap_create_from_xpm_d (draw->window, NULL, NULL,
-      (gchar**) icons_xpm);
-    #endif
   }  
 
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
@@ -2474,6 +2468,7 @@ int main (int argc, char *argv[])
         way->clon = ndWrite.lon + way->dlon;
       }
     }
+    #ifndef LAMBERTUS
     REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
       assert (groupf[i] = fopen64 (groupName[i], "r+"));
       fseek (groupf[i], 0, SEEK_END);
@@ -2492,6 +2487,7 @@ int main (int argc, char *argv[])
       fclose (groupf[i]);
       unlink (groupName[i]);
     }
+    #endif // LAMBERTUS
 //    printf ("ndCount=%d\n", ndCount);
     munmap (data, ndStart);
     fwrite (hashTable, sizeof (*hashTable),

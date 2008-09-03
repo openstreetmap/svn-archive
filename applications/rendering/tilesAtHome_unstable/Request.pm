@@ -226,9 +226,10 @@ sub fetchFromServer
                 $success = 0; # set to 0, need another loop
                 ::talkInSleep("No Requests on server",60);
             }
-            elsif ($reason =~ /Check your client/)
+            elsif ($reason =~ /You have more than (\d+) active requests/)
             {
-                throw RequestError "ERROR: This client needs manual intervention. Server told us: \"$reason\"";
+                $success = 0; # set to 0, need another loop
+                ::talkInSleep("ERROR: Is your client broken or have you just uploaded like crazy? \"$reason\"", 60);
             }
             else
             {

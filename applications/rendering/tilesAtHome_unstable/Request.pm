@@ -112,7 +112,7 @@ sub layers
     my $self = shift;
     my @layers = @_;
     if (@layers) {
-        @$self->{layers} =  @layers;
+        @{$self->{layers}} =  @layers;
     }
     return @{$self->{layers}};
 }

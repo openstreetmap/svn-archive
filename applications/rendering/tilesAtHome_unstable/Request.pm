@@ -103,32 +103,63 @@ sub Y
 
 #-----------------------------------------------------------------------------
 # set and/or retrieve the required layers of a request
-# it's handed a comma separated string of layers when setting, eg. 
-# $r->layers('tile,maplint')
+# it's handed an array of layers when setting, eg. 
+# $r->layers('tile', 'maplint')
 # returns an array of layernames when reading (empty array if unset)
 #-----------------------------------------------------------------------------
 sub layers
 {
     my $self = shift;
-    my $layers_str = shift;
-    if (defined $layers_str) { @{$self->{layers}} =  split(/,/,$layers_str);}
+    my @layers = @_;
+    if (@layers) {
+        @$self->{layers} =  @layers;
+    }
     return @{$self->{layers}};
 }
 
 
 #-----------------------------------------------------------------------------
-# retrieve (read-only) the required layers of a request
-# usage, e.g. $r->layers_str
-# returns comma separated string of layers , eg. 'tile,maplint'
+# Set or retrieve the required layers of a request
+# usage, e.g. $r->layers_str([$layers_string])
+# returns comma separated string of layers, eg. 'tile,maplint'
 # returns empty string '' if unset.
 #-----------------------------------------------------------------------------
 sub layers_str
 {
     my $self = shift;
-    my $layers_str = join(",", @{$self->{layers}});
-    return $layers_str;
+    my $layers_str = shift;
+    if (defined $layers_str) {
+        @{$self->{layers}} =  split(/,/,$layers_str);
+    }
+    return join(",", @{$self->{layers}});
 }
 
+
+#-----------------------------------------------------------------------------
+# set and/or retrieve the last modified timestamp of a request
+#-----------------------------------------------------------------------------
+sub lastModified
+{
+    my $self = shift;
+    my $time = shift;
+    if (defined($time)) {
+        $self->{lastModified} = $time;
+    }
+    return $self->{lastModified}
+}
+
+#-----------------------------------------------------------------------------
+# set and/or retrieve the complexity of a request
+#-----------------------------------------------------------------------------
+sub complexity
+{
+    my $self = shift;
+    my $complexity = shift;
+    if (defined($complexity)) {
+        $self->{complexity} = $complexity;
+    }
+    return $self->{complexity}
+}
 
 #-----------------------------------------------------------------------------
 # get/set the unrenderable status of a tileset
@@ -143,153 +174,6 @@ sub is_unrenderable
     my $zxy= $self->Z.' '.$self->X.' '.$self->Y;
     $unrenderable{$zxy} = 1 if @_;
     return $unrenderable{$zxy};
-}
-
-#-----------------------------------------------------------------------------
-# Get a new render request from the server that should be rendered
-# returns a tuple (success, reason) describing the result of the call
-# success: is 1 on successfully retrieving a request, 0 otherwise 
-# (even if the server simply had no work for us)
-# reason: is a string describing the error condition.
-# if success==1, the request will have set the z,x,y attributes as well as the
-# last-modified and complexity attributes of the 'Request' object.
-#-----------------------------------------------------------------------------
-sub fetchFromServer
-{
-    my $self = shift;
-    my $success;
-
-    do
-    {
-        my $ValidFlag;
-        my $Version;
-
-        $success=0;
-        my $Requeststring = $self->getRequestStringFromServer();
-
-        throw RequestError "Error reading request from server" unless ($Requeststring);
-        
-        # $ValidFlag is 'OK' (got request) or 'XX' (error occurred, or no work for us)
-        # $Version denotes the version of the request taking protocol the server speaks. It's currently at '5'
-        ($ValidFlag,$Version) = split(/\|/, $Requeststring);
-
-        # First check that we understand the server protocol
-        if ($Version < 5 or $Version > 5)
-        {
-            throw RequestError "Server is speaking a different version of the protocol to us ($Version).\n"
-                . "Check to see whether a new version of this program was released!";
-        }
-
-        if ($ValidFlag eq "OK")
-        {
-            if ($Version == 5) # this may seem nonsensical, but we'll need this once we introduce a new version
-            {   # We got a valid request here!
-
-                my ($Z,$X,$Y,$Layers,$lastModified,$complexity);
-                ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$lastModified,$complexity) = split(/\|/, $Requeststring);
-                $self->ZXY($Z,$X,$Y);
-                $self->layers($Layers);
-                $self->{'lastModified'} = $lastModified;
-                $self->{'complexity'} = $complexity;
-                $success = 1;  # set to 1, so we could end the loop
-                # got request, now check that it's not too complex
-                if ($self->{Config}->get('MaxTilesetComplexity'))
-                {   #the setting is enabled
-                    if ($complexity > $self->{Config}->get('MaxTilesetComplexity'))
-                    {   # too complex!
-                        $success = 0;  # set to 0, need another loop
-                        ::statusMessage("Ignoring too complex tile (".$self->ZXY_str.')',1,3);
-                        # putbackToServer waits 15 secs before continuing, so we don't get the same time back 
-                        eval {
-                            $self->putBackToServer("TooComplex");
-                        };
-                    }
-                }
-            }
-    
-        }
-        elsif ($ValidFlag eq "XX")
-        {
-            ($ValidFlag, $Version, my $reason) = split(/\|/, $Requeststring);
-            if ($reason =~ /Invalid username/)
-            {
-                throw RequestError "ERROR: Authentication failed - please check your username and password in 'authentication.conf'.\n\n"
-                    . "! If this worked just yesterday, you now need to put your osm account e-mail and password there.";
-            }
-            elsif ($reason =~ /Invalid client version/)
-            {
-                throw RequestError "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
-                    . ") was not accepted by the server.";  ## this should never happen as long as auto-update works
-            }
-            elsif ($reason =~ /No requests in queue/)
-            {
-                $success = 0; # set to 0, need another loop
-                ::talkInSleep("No Requests on server",60);
-            }
-            elsif ($reason =~ /You have more than (\d+) active requests/)
-            {
-                $success = 0; # set to 0, need another loop
-                ::talkInSleep("ERROR: Is your client broken or have you just uploaded like crazy? \"$reason\"", 60);
-            }
-            else
-            {
-                throw RequestError "Unknown server response: $Requeststring";
-            }
-        }
-        else
-        {   # ValidFlag was neither 'OK' nor 'XX'. This should NEVER happen.
-              throw RequestError "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'";
-	}
-
-        if ($success and $self->is_unrenderable())
-        {
-            $success = 0;   # we need to loop yet again
-            ::statusMessage("Ignoring unrenderable tile (".$self->ZXY_str.')',1,3);
-            # putbackToServer waits 15 secs before continuing, so we don't get the same time back 
-            $self->putBackToServer("Unrenderable");
-        }
-    } while (!$success);
-
-    # Information text to say what's happening
-    ::statusMessage("Got work from the server: ".$self->layers_str.' ('.$self->ZXY_str.')', 0, 6);
-}
-
-
-#-----------------------------------------------------------------------------
-# actually get a request string from the server via HTTP
-# returns 0 on failure, or a raw string that describes the request otherwise 
-#-----------------------------------------------------------------------------
-sub getRequestStringFromServer
-{
-    my $self = shift();
-    my $Request;
-    my $URL = $self->{Config}->get("RequestURL");
-    
-    my $ua = LWP::UserAgent->new(timeout => 240, protocols_allowed => ['http']);
-    $ua->agent("tilesAtHome ($^O)");
-    $ua->env_proxy();
-    push @{ $ua->requests_redirectable }, 'POST';
-    my $res = $ua->post($URL, Content_Type => 'form-data',
-      Content => [ user => $self->{Config}->get("UploadUsername"),
-                   passwd => $self->{Config}->get("UploadPassword"),
-                   version => $self->{Config}->get("ClientVersion"),
-                   layerspossible => $self->{Config}->get("LayersCapability"),
-                   client_uuid => ::GetClientId() ]);
-
-    (print "Request string from server: ", $res->content,"\n") if ($self->{Config}->get("Debug"));      
-
-    if(!$res->is_success())
-    {   # getting request string from server failed here
-        ::talkInSleep("Unable to get request string from server, assuming queue empty",60);
-        $Request = "XX|5|No requests in queue"; ## FIXME:  hardcoded stuff
-    }
-    else
-    {   # got a server reply here
-        $Request = $res->content;  ## FIXME: check single line returned. grep?
-        chomp $Request;
-    }
-
-    return $Request;
 }
 
 #-----------------------------------------------------------------------------
@@ -361,29 +245,33 @@ e.g. my $r = new Request or my $r = Request->new()
 
 =item C<< ->Z(z) >> (set or get)
 
-=item C<< ->layers('comma-separated-layerstring') >> (get or set) 
+=item C<< ->layers(@layers) >> (set or get) 
 
-(get returns array of layernames)
+Sets and returns array of layernames
 
-=item C<< ->layers_str() >> (read only) returns comma-separated layer string)
+=item C<< ->layers_str() >> (set or get)
 
-=item C<< ->{lastModified} >> (read-only attribute)
+Sets and returns comma-separated layer string
 
-is set to the unix timestamp of the tileset file on server. The server responds with  0 if it doesn't have the tileset yet. Although nothing prevents you technically from setting this attribute it only makes sense to use it for reading.
+=item C<< ->lastModified([$timestamp]) >> (set or get)
 
-=item C<< ->{complexity} >> (read-only attribute)
+Sets and returns unix timestamp of the tileset file on server. The server
+responds with  0 if it doesn't have the tileset yet. Although nothing prevents
+you technically from setting this attribute it only makes sense to use it for
+reading.
 
-is set to the byte size of the tileset file onthe server. It will be set to 0 if the server does not have the tileset yet.
+=item C<< ->complexity([$complexity]) >> (set or get)
+
+Sets and returns the byte size of the tileset file on the server. It will be set
+to 0 if the server does not have the tileset yet.
 
 =back
 
-=head3 RETRIEVING AND PUTTING BACK REQUESTS WITH ERROR
+=head3 PUTTING BACK REQUESTS WITH ERROR
 
 =over
 
 =item ->putBackToServer("cause")
-
-=item ->fetchFromServer()
 
 =back
 

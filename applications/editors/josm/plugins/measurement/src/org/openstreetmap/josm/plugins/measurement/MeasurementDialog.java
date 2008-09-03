@@ -77,26 +77,26 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
 
         JPanel valuePanel = new JPanel(new GridLayout(0,2));
         
-        valuePanel.add(new JLabel("Path Length"));
+        valuePanel.add(new JLabel(tr("Path Length")));
         
         pathLengthLabel = new JLabel("0 m");
         valuePanel.add(pathLengthLabel);
         
-        valuePanel.add(new JLabel("Selection Length"));
+        valuePanel.add(new JLabel(tr("Selection Length")));
         
         selectLengthLabel = new JLabel("0 m");
         valuePanel.add(selectLengthLabel);
 
-        valuePanel.add(new JLabel("Selection Area"));
+        valuePanel.add(new JLabel(tr("Selection Area")));
         
-        selectAreaLabel = new JLabel("0 m²");
+        selectAreaLabel = new JLabel("0 m\uc2b2");
         valuePanel.add(selectAreaLabel);
         
-        JLabel angle = new JLabel("Angle");
+        JLabel angle = new JLabel(tr("Angle"));
         angle.setToolTipText(tr("Angle between two selected Nodes"));
         valuePanel.add(angle);
         
-        segAngleLabel = new JLabel("- °");
+        segAngleLabel = new JLabel("- \uc2b0");
         valuePanel.add(segAngleLabel);
         
         add(valuePanel, BorderLayout.CENTER);
@@ -143,8 +143,8 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
 				}
 				dlg.selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
 
-				dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " °");		
- 				dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m²");
+				dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \uc2b0");		
+ 				dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\uc2b2");
 
 			}
         	

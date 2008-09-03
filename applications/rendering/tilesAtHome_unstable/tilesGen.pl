@@ -445,6 +445,12 @@ sub compressAndUploadTilesets
         catch CompressError with {
             my $err = shift();
             cleanUpAndDie("Error while compressing tiles: " . $err->text(), "EXIT", 1);
+        }
+        catch UploadError with {
+            my $err = shift();
+            if (!$err->value() eq "QueueFull") {
+                cleanUpAndDie("Error uploading tiles: " . $err->text(), "EXIT", 1);
+            }
         };
     }
     # no error, just nothing to upload
@@ -474,11 +480,9 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    my ($retval, $reason) = $upload->uploadAllZips();
+    $upload->uploadAllZips();
 
-    keepLog($PID,"upload","stop","return=$retval");
-
-    return $retval;
+    keepLog($PID,"upload","stop",0);
 }
 
 #-----------------------------------------------------------------------------

@@ -7,6 +7,7 @@ use File::Copy;
 use File::Spec;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
+use Error qw(:try);
 use tahlib;
 use lib::TahConf;
 
@@ -62,9 +63,7 @@ sub new
 
 
 #-------------------------------------------------------------------
-# Returns (success, reason) with
-# success being the number of uploaded zip files or -1 on error
-# and reason a string that explains an eventual error.
+# Returns number of uploaded zip files.
 #-------------------------------------------------------------------
 sub uploadAllZips
 {
@@ -76,8 +75,7 @@ sub uploadAllZips
 
     if ($Config->get("LocalSlippymap"))
     {
-        ::statusMessage("No upload - LocalSlippymap set in config file",1,6);
-        return(0, "No upload - LocalSlippymap set in config file");
+        throw UploadError "No upload - LocalSlippymap set in config file";
     }
 
     # read in all the zip files in ZipDir
@@ -89,7 +87,7 @@ sub uploadAllZips
     }
     else 
     {
-        return (-1, "could not read $self->{ZipDir}");
+        throw UploadError "could not read $self->{ZipDir}";
     }
     my $zipCount = scalar(@zipfiles);
 
@@ -111,28 +109,29 @@ sub uploadAllZips
             while ($UploadFailedHardOrDone != 1)
             {
 		my $res_str; #stores success or error msg for status line
-                ($UploadFailedHardOrDone,$Load) = $self->upload($File);
+                try {
+                    $Load = $self->upload($File);
 
-                if ($UploadFailedHardOrDone == 0)
-                {
-                    # try to keep the queue at 80% full,
-                    # if more increase sleepdelay
-                    $self->{sleepdelay} = $self->{sleepdelay} + ($Load - 800)/10;
-                    $self->{sleepdelay} = 4  if ($self->{sleepdelay} < 4);
-                    $res_str = "queue full";
-                }
-                elsif ($UploadFailedHardOrDone == 1) ## success
-                {
                     # reduce sleepdelay by 25 per cent
                     $self->{sleepdelay} = 0.75 * $self->{sleepdelay};
                     $res_str = "uploaded ".$File;
                     $uploaded++;
                     $::progressPercent = $uploaded * 100 / $zipCount;
+                    $UploadFailedHardOrDone = 1;
                 }
-                elsif ($UploadFailedHardOrDone == -1) ## hard fail
-                {
-                    last;
-                }
+                catch UploadError with {
+                    my $err = shift();
+                    if ($Load = $err->value()) { 
+                        # try to keep the queue at 80% full,
+                        # if more increase sleepdelay
+                        $self->{sleepdelay} = $self->{sleepdelay} + ($Load - 800)/10;
+                        $self->{sleepdelay} = 4  if ($self->{sleepdelay} < 4);
+                        $res_str = "queue full";
+                    }
+                    else {
+                        $err->throw();
+                    }
+                };
 
                 # Finally wait sleepdelay seconds until next upload
                 if ($self->{sleepdelay} > $self->{MaxSleep})
@@ -156,22 +155,21 @@ sub uploadAllZips
         }
     }
     ::statusMessage("uploaded $uploaded zip files",1,3) unless $uploaded == 0;
-    return ($uploaded,"");
+    return $uploaded;
 }
 
 #-----------------------------------------------------------------------------
 # Upload a ZIP file
 # Parameter (filename) is the name of a .zip file in ZipDir
-# returns (Status, Load)
-# status: (-1=hard error, 0: soft failure (queue full) 1:success)
-# Load: Server queue 'fullness' between [0,1000]
+# returns: Load
+#   Load: Server queue 'fullness' between [0,1000]
 #-----------------------------------------------------------------------------
 sub upload
 {
     my $self = shift;
     my $FileName = shift;
     my $File     = File::Spec->join($self->{ZipDir},$FileName);
-    my $ZipSize += -s $File;   # zip file size
+    my $ZipSize  = -s $File;   # zip file size
     my $ZipAge   = -M $File;   # days since last modified
     my $Config = $self->{Config};
 
@@ -187,7 +185,7 @@ sub upload
             rename($File, $File."_overage"); 
         }
 
-        return (-1,0);
+        throw UploadError "ZIP file $File too old", "overage";
     }
 
     $FileName =~ m{^([^_]+)_\d+_\d+_\d+_(\d+)\.zip$};
@@ -228,7 +226,7 @@ sub upload
                 ::statusMessage("  Error uploading $FileName to $URL:",1,0);
                 ::statusMessage("  ".$res->status_line,1,0);
                 ::addFault('upload');
-                return (-1,$Load); # hard fail
+                throw UploadError "Error uploading $FileName to $URL: $res->status_line", "ServerError"; # hard fail
             }
             else
             {
@@ -241,7 +239,7 @@ sub upload
         {
             ::statusMessage("Not uploading, server queue full",0,0);
             sleep(1);
-            return (0,$Load); #soft fail
+            throw UploadError "Not uploading, server queue full", $Load; #soft fail
         }
     }
     else
@@ -257,7 +255,7 @@ sub upload
         }
         else 
         {
-            return (-1,1000);
+            throw UploadError "Can not open target directory";
         }
         my $QueueLength = scalar(@QueueFiles);
         my $Load = 1000 * $QueueLength/$MaxQueue;
@@ -265,7 +263,7 @@ sub upload
         {
             ::statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
-            return (0,$Load);
+            throw UploadError "Not uploading, upload directory full", $Load;
         }
         else
         {
@@ -273,11 +271,10 @@ sub upload
 
             ## FIXME: Don't necessarily die here
             # copy the file over using a temporary name
-            copy($File,$tmpfile) 
-              or die "Failed to copy file to Upload Directory: $!\n";
+            copy($File,$tmpfile) or throw UploadError "Failed to copy file to Upload Directory: $!";
             # rename so it can be picked up by central uploading client.
             move($tmpfile, File::Spec->join($Config->get("UploadTargetDirectory"), $FileName)) 
-              or die "Failed to rename file in Upload Directory: $!\n";
+                or throw UploadError "Failed to rename file in Upload Directory: $!";
         }
     }
 
@@ -291,7 +288,7 @@ sub upload
         rename($File, $File."_uploaded");
     }
 
-    return (1,0);
+    return 0;
 }
 
 
@@ -320,5 +317,13 @@ sub UploadOkOrNot
     chomp $Load;
     return ($Load*1000);
 }
+
+#-----------------------------------------------------------------------------------------------------------------
+# class UploadError
+#
+# Exception to be thrown by Upload methods
+
+package UploadError;
+use base 'Error::Simple';
 
 1;

@@ -24,11 +24,10 @@
     <copy todir="build/images">
       <fileset dir="images" />
     </copy>
-    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+    <exec append="false" output="REVISION" executable="perl" failifexecutionfails="false">
       <env key="LANG" value="C"/>
-      <arg value="info"/>
-      <arg value="--xml"/>
-      <arg value="."/>
+      <arg value="../getrevision.pl"/>
+      <arg value="src_jmv"/>
     </exec>
     <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
     <delete file="REVISION"/>
@@ -61,5 +60,4 @@
   <target name="install" depends="dist">
     <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
   </target>
-
 </project>

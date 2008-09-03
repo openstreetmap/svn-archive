@@ -156,17 +156,6 @@ our $StartedBatikAgent = 0;
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
 
-if( $RenderMode and -e "/dev/null" )
-{
-    my $svn = $Config->get("Subversion");
-    if( qx($svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
-    {
-        print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
-        system($Config->get("Subversion")." status osmarender/*.x[ms]l");
-        cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4);
-    }
-}
-
 ## set all fault counters to 0;
 resetFault("fatal");
 resetFault("inkscape");
@@ -646,7 +635,7 @@ sub NewClientVersion
 sub xml2svg 
 {
     my $Config = TahConf->getConfig();
-    my($MapFeatures, $SVG, $zoom) = @_;
+    my($osmData, $MapFeatures, $SVG, $zoom) = @_;
     my $TSVG = "$SVG";
     my $NoBezier = $Config->get("NoBezier") || $zoom <= 11;
 
@@ -662,11 +651,12 @@ sub xml2svg
 
         $XslFile = "osmarender/osmarender.xsl";
 
-        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
+        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s -s osmfile=%s %s > \"%s\"",
           $Config->get("Niceness"),
           $Config->get("XmlStarlet"),
           $Config->get("XmlStarletMaxDepth"),
           $XslFile,
+          $osmData,
           "$MapFeatures",
           $TSVG);
 
@@ -675,10 +665,11 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s",
+        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s %s",
           $Config->get("Niceness"),
           $MapFeatures,
-          $TSVG);
+          $TSVG,
+          $osmData);
 
         statusMessage("Transforming zoom level $zoom with or/p",0,3);
         $success = runCommand($Cmd,$PID);
@@ -868,27 +859,6 @@ sub AddBounds
     
     # Save back to the same location
     open(my $fpOut, ">$Filename");
-    print $fpOut $Data;
-    close $fpOut;
-}
-
-#-----------------------------------------------------------------------------
-# Set data source file name in map-features file
-#-----------------------------------------------------------------------------
-sub SetDataSource 
-{
-    my ($Datafile, $Rulesfile) = @_;
-
-    # Read the old file
-    open(my $fpIn, "<", "$Rulesfile");
-    my $Data = join("",<$fpIn>);
-    close $fpIn;
-    die("no such $Rulesfile") if(! -f $Rulesfile);
-
-    $Data =~ s/(  data=\").*(  scale=\")/$1$Datafile\"\n$2/s;
-
-    # Save back to the same location
-    open(my $fpOut, ">$Rulesfile");
     print $fpOut $Data;
     close $fpOut;
 }

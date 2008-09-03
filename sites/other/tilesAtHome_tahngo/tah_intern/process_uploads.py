@@ -238,12 +238,15 @@ class TileUpload:
 if __name__ == '__main__':
   config = Settings()
   logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(message)s',
-                    datefmt = "%y-%m-%d-%H:%M:%S", 
+                    #format='%(asctime)s %(levelname)s %(message)s',
+                    format='%(asctime)s %(message)s',
+                    datefmt = "%m-%d %H:%M:%S", 
+                    #datefmt = "%y-%m-%d-%H:%M:%S", 
                     filename= config.getSetting(name='logFile'),
                     ) 
 
-  logging.info('Starting tile upload processor')
+  logging.info('Starting tile upload processor. (level %s)' %\
+               logging.getLevelName(logging.getLogger().getEffectiveLevel()))
   u = TileUpload(config)
   signal.signal(signal.SIGTERM,u.sigterm)
   if not u.processloop():

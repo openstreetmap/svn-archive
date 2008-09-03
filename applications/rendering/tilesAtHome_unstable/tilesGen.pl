@@ -503,21 +503,21 @@ sub ProcessRequestsFromServer
                 if ($req->complexity() > $Config->get('MaxTilesetComplexity')) {
                     # too complex!
                     statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ')', 1, 3);
-                    # putbackToServer waits 15 secs before continuing, so we don't get the same tile back 
                     eval {
-                        $req->putBackToServer("TooComplex");
-                    };
+                        $Server->putRequestBack($req, "TooComplex");
+                    }; # ignoring exceptions
                     $req = undef;  # set to undef, need another loop
+                    talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
                 }
             }
             # and now check whether we found it unrenderable before
             if ($req->is_unrenderable()) {
                 statusMessage("Ignoring unrenderable tile (" . $req->ZXY_str . ')', 1, 3);
-                # putbackToServer waits 15 secs before continuing, so we don't get the same tile back 
                 eval {
-                    $req->putBackToServer("Unrenderable");
-                };
+                    $Server->putRequestBack($req, "Unrenderable");
+                }; # ignoring exceptions
                 $req = undef;   # we need to loop yet again
+                talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
             }
         }
         catch ServerError with {
@@ -557,7 +557,9 @@ sub ProcessRequestsFromServer
     }
     catch TilesetError with {
         my $err = shift();
-        $req->putBackToServer($err->text()) unless $Mode eq 'xy';
+        eval {
+            $Server->putRequestBack($req, $err->text()) unless $Mode eq 'xy';
+        }; # ignoring exceptions
         if ($err->value() eq "fatal") {
             # $err->value() is "fatal" for fatal errors 
             cleanUpAndDie($err->text(), "EXIT", 1);
@@ -567,6 +569,7 @@ sub ProcessRequestsFromServer
             addFault($err->value(), 1);
             statusMessage($err->text(), 1, 0);
         }
+        talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
     };
 }
 
@@ -974,7 +977,10 @@ sub splitImageX
     if( not defined $Image )
     {
         print STDERR "\nERROR: Failed to read in file $BigPNGFileName\n";
-        $req->putBackToServer("MissingFile");
+        my $Server = Server->new();
+        eval {
+            $Server->putRequestBack($req, "MissingFile");
+        }; # ignoring exceptions
         cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4);
 	return (0, 0, "SplitImage: MissingFile encountered");
     }

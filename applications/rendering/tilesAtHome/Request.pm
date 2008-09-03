@@ -228,14 +228,14 @@ sub fetchFromServer
                 $success = 0; # set to 0, need another loop
                 ::talkInSleep("No Requests on server",60);
             }
+            elsif ($reason =~ /You have more than (\d+) active requests/)
+            {
+                $success = 0; # set to 0, need another loop
+                ::talkInSleep("ERROR: Is your client broken or have you just uploaded like crazy? \"$reason\"", 60);
+            }
             elsif ($reason =~ /Check your client/)
             {
                 die TahError->new("GeneralClientError", "ERROR: This client needs manual intervention. Server told us: \"$reason\"");
-            }
-            elsif ($reason =~ /You have more than \d+ active requests/)
-            {
-                $success = 0; # set to 0, need another loop
-                ::talkInSleep("Too many open tilesets, waiting to retry",60);
             }
             else
             {

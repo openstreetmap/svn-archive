@@ -245,7 +245,7 @@ if __name__ == '__main__':
                     filename= config.getSetting(name='logFile'),
                     ) 
 
-  logging.info('Starting tile upload processor. (level %s)' %\
+  logging.info('Starting tile upload processor. (log level %s)' %\
                logging.getLevelName(logging.getLogger().getEffectiveLevel()))
   u = TileUpload(config)
   signal.signal(signal.SIGTERM,u.sigterm)

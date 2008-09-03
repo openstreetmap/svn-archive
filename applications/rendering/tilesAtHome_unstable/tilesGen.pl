@@ -197,7 +197,7 @@ if ($Mode eq "xy")
     }
 
     $req->ZXY($Zoom, $X, $Y);
-    $req->layers($Config->get("Layers"));
+    $req->layers_str($Config->get("Layers"));
 
     my $tileset = Tileset->new($req);
     $tileset->generate();

@@ -28,7 +28,7 @@ FallBackToXAPI = 0
 FallBackToROMA = 1
 FallBackToSlices = 1
 MaxTilesetComplexity = 0
-i18n=1
+i18n=0
 
 Osmarender = orp
 

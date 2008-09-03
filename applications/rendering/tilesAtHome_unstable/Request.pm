@@ -221,6 +221,15 @@ sub fetchFromServer
                 throw RequestError "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
                     . ") was not accepted by the server.";  ## this should never happen as long as auto-update works
             }
+            elsif ($reason =~ /No requests in queue/)
+            {
+                $success = 0; # set to 0, need another loop
+                ::talkInSleep("No Requests on server",60);
+            }
+            elsif ($reason =~ /Check your client/)
+            {
+                die TahError->new("GeneralClientError", "ERROR: This client needs manual intervention. Server told us: \"$reason\"");
+            }
             else
             {
                 throw RequestError "Unknown server response: $Requeststring";

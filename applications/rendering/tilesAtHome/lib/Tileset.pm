@@ -424,7 +424,6 @@ sub downloadData
         
         if ($res)
         {   # Download of data succeeded
-
             if ($req->Z < 12) ## FIXME: hardcoded zoom
             {
                 ::resetFault("nodataXAPI"); #reset to zero if data downloaded

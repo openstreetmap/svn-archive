@@ -22,9 +22,6 @@ Subversion=svn
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 
-## Workaround for inkscape internationalisation problems. Should be safe to keep on.
-i18n=1
-
 # Set the timeout when downloading files (in seconds)
 DownloadTimeout=1800
 

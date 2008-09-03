@@ -27,10 +27,6 @@ PNGnq=c:\program files\pngnq\pngnq.exe
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 
-## Linux workaround for inkscape internationalisation problems. 
-# Default is off (0) for windows
-i18n=0
-
 # Set the timeout when downloading files (on tenths of a second)
 DownloadTimeout=1800
 

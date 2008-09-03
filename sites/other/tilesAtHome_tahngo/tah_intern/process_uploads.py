@@ -62,7 +62,7 @@ class TileUpload:
       while not self. upload:
           # repeat fetching until there is one
           try:
-              self.upload = Upload.objects.filter(is_locked=False)[0]
+              self.upload = Upload.objects.filter(is_locked=False).order_by('upload_time')[0]
               self.upload.is_locked = True
               self.upload.save()
           except IndexError:
@@ -73,7 +73,8 @@ class TileUpload:
 
       # start timing tileset handling now
       starttime = (time(),clock())
-      self.fname = self.upload.get_file_filename()
+      #self.fname = self.upload.get_file_filename()
+      self.fname = self.upload.file.path
       if os.path.isfile(self.fname):
         #logging.debug('Handling next tileset: ' + self.upload.file)
         # TODO don't just use random string. make a tmpdir with tempfile
@@ -204,7 +205,7 @@ class TileUpload:
   def add_user_stats(self, uploaded_tiles):
     """ Update the tah user statistics after a successfull upload """
     tahuser = self.upload.user_id.tahuser_set.get()
-    try: tahuser.kb_upload += os.stat(self.upload.get_file_filename())[stat.ST_SIZE] // 1024
+    try: tahuser.kb_upload += os.stat(self.upload.file.path)[stat.ST_SIZE] // 1024
     except OSError: pass
     tahuser.renderedTiles += uploaded_tiles
     tahuser.save()

@@ -258,18 +258,9 @@ elsif ($Mode eq "loop")
 
         ### start processing here:
         # Render stuff if we get a job from server
-        my ($did_something, $message) = ProcessRequestsFromServer();
+        ProcessRequestsFromServer();
         # compress and upload results
-        my $upload_result = compressAndUploadTilesets();
-
-        if ($upload_result == -1)
-        {     # we got an error in the upload process
-              addFault("upload",1);
-        }
-        else
-        {     #reset fault counter if we uploaded successfully
-              resetFault("upload");
-        }
+        compressAndUploadTilesets();
     }
 }
 #---------------------------------
@@ -426,43 +417,51 @@ sub compressAndUploadTilesets
         }
         elsif ($upload_pid == 0)
         {   # we are the child, so we run the upload and exit the thread
-            exit compressAndUpload();
+            try {
+                compress();
+                upload();
+            }
+            otherwise {
+                exit 0;
+            };
+            exit 1;
         }
     }
     else
     {   ## no forking going on
-        return compressAndUpload();
+        try {
+            compress();
+            my $result = upload();
+
+            if ($result == -1)
+            {     # we got an error in the upload process
+                addFault("upload",1);
+            }
+            else
+            {     #reset fault counter if we uploaded successfully
+                resetFault("upload");
+            }
+        }
+        catch CompressError with {
+            my $err = shift();
+            cleanUpAndDie("Error while compressing tiles: " . $err->text(), "EXIT", 1);
+        };
     }
     # no error, just nothing to upload
-    return 0;
-}
-
-#-----------------------------------------------------------------------------
-# compressAndUpload() is just a shorthand for calling compress() and
-# upload(). It returns >=0 on success and -1 otherwise.
-#-----------------------------------------------------------------------------
-sub compressAndUpload
-{
-  my $retval  = compress();
-  my $retval2 = upload();
-  # return the smaller of both values for now
-  return ($retval > $retval2)? $retval2 : $retval;
 }
 
 #-----------------------------------------------------------------------------
 # compress() calls the external compress.pl which zips up all existing
-# tileset directories. It returns # of compressed dirs or -1 on error.
+# tileset directories.
 #-----------------------------------------------------------------------------
 sub compress
 {
     keepLog($$,"compress","start","$progressJobs");
 
     my $compress = new Compress;
-    my ($retval, $reason) = $compress->compressAll();
+    $compress->compressAll();
 
-    keepLog($$,"compress","stop","return=$retval");
-
-    return $retval;
+    keepLog($$,"compress","stop");
 }
 
 #-----------------------------------------------------------------------------

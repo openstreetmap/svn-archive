@@ -6,6 +6,7 @@ use File::Copy;
 use File::Path;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
+use Error qw(:try);
 use tahlib;
 use lib::TahConf;
 
@@ -55,8 +56,6 @@ sub new
 
 #-------------------------------------------------------------------
 # main function. Compresses all tileset.dir's in $self->{WorkingDir}.
-# returns (success, reason), with success being 1
-# -1 on error. reason is a string explaining the error.
 #-------------------------------------------------------------------
 sub compressAll
 {
@@ -70,9 +69,7 @@ sub compressAll
 
     if ($Config->get("LocalSlippymap"))
     {
-       my $reason = "No compressing - LocalSlippymap set in config file";
-       ::statusMessage(1,6);
-       return (0, $reason);
+       throw CompressError "No compressing - LocalSlippymap set in config file", "LocalSlippymap";
     }
 
     my (@prefixes,$allowedPrefixes);
@@ -88,8 +85,7 @@ sub compressAll
     $allowedPrefixes = join('|', @prefixes);
 
     # Go through all files in TileDir and grep the right directories
-    opendir(my $dp, $self->{TileDir}) 
-      or return (-1, "Can't open directory ".$self->{TileDir});
+    opendir(my $dp, $self->{TileDir}) or throw CompressError "Can't open directory " . $self->{TileDir};
     my @dir = readdir($dp);
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
@@ -130,7 +126,6 @@ sub compressAll
             unlink($FullTilesetPath."lock") if $flocked;
 	}
     }
-    return (1,"");
 }
 
 #-----------------------------------------------------------------------------
@@ -138,7 +133,6 @@ sub compressAll
 # Parameters:  FullTilesetPath
 #
 # It will never delete the source files, so the caller has to delete them
-# returns 1, if the zip command succeeded and 0 otherwise
 #-----------------------------------------------------------------------------
 sub compress
 {
@@ -189,21 +183,18 @@ sub compress
 
 
     # Run the zip command
-    my $zip_result = ::runCommand($zipCmd, $PID);
+    ::runCommand($zipCmd, $PID) or throw CompressError "Error running $zipCmd";
 
     # stdOut is currently never used, so delete it unconditionally    
     unlink($stdOut);
     
     # rename to final name so any uploader could pick it up now
     move ($Tempfile, $Filename); # TODO: Error handling
-
-    return $zip_result;
 }
 
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 # parameter (FullPathToPNGDir, $layer)
-# returns (success, reason)
 #-----------------------------------------------------------------------------
 sub optimizePNGs
 {
@@ -232,7 +223,7 @@ sub optimizePNGs
     }
     else 
     {
-       return (-1, "could not read $PNGDir");
+       throw CompressError "could not read $PNGDir";
     }
 
     my $NumPNG = scalar(@pngfiles);
@@ -324,5 +315,14 @@ sub optimizePNGs
 
     } # foreach my $PngFileName
 }
+
+
+#-----------------------------------------------------------------------------------------------------------------
+# class CompressError
+#
+# Exception to be thrown by Compress methods
+
+package CompressError;
+use base 'Error::Simple';
 
 1;

@@ -325,7 +325,7 @@ def take(request):
             #next 2 lines are for limiting max #of active requests per usr
             active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
 
-            if active_user_reqs <= 50:
+            if active_user_reqs <= 150:
               try:  
                   # get the next request from the queue
                   req = Request.objects.get_next_and_lock()
@@ -357,8 +357,8 @@ def take(request):
                   # could not get_next_and_lock, queue empty
                   html ="XX|5|No requests in queue"
             else:
-                  #  active_user_reqs > 50
-                  html ='XX|5|You have more than 50 active requests. '\
+                  #  active_user_reqs > 150
+                  html ='XX|5|You have more than 150 active requests. '\
                         'Check your client.'
 
           else:

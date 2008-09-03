@@ -232,6 +232,11 @@ sub fetchFromServer
             {
                 die TahError->new("GeneralClientError", "ERROR: This client needs manual intervention. Server told us: \"$reason\"");
             }
+            elsif ($reason =~ /You have more than \d+ active requests/)
+            {
+                $success = 0; # set to 0, need another loop
+                ::talkInSleep("Too many open tilesets, waiting to retry",60);
+            }
             else
             {
                 die TahError->new("ServerError", "Unknown server response: $Requeststring");

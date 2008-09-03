@@ -266,7 +266,8 @@ elsif ($Mode eq "loop")
 #---------------------------------
 elsif ($Mode eq "upload") 
 {   # Upload mode
-    compressAndUpload();
+    compress();
+    upload();
 }
 #---------------------------------
 elsif ($Mode eq "upload_loop")

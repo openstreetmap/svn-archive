@@ -241,7 +241,7 @@ sub fetchFromServer
               throw RequestError "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'";
 	}
 
-        if ($self->is_unrenderable())
+        if ($success and $self->is_unrenderable())
         {
             $success = 0;   # we need to loop yet again
             ::statusMessage("Ignoring unrenderable tile (".$self->ZXY_str.')',1,3);

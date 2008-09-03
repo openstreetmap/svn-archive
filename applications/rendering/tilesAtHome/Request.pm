@@ -281,7 +281,8 @@ sub getRequestStringFromServer
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        die TahError->new("ServerError", "Unable to get request string from server");
+        ::talkInSleep("Unable to get request string from server, assuming queue empty",60);
+        $Request = "XX|5|No requests in queue"; ## FIXME:  hardcoded stuff
     }
     else
     {   # got a server reply here

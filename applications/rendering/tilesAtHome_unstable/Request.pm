@@ -228,7 +228,7 @@ sub fetchFromServer
             }
             elsif ($reason =~ /Check your client/)
             {
-                die TahError->new("GeneralClientError", "ERROR: This client needs manual intervention. Server told us: \"$reason\"");
+                throw RequestError "ERROR: This client needs manual intervention. Server told us: \"$reason\"";
             }
             else
             {

@@ -34,6 +34,7 @@ use Error qw(:try);
 use tahlib;
 use lib::TahConf;
 use lib::Tileset;
+use lib::Server;
 use Request;
 use Upload;
 use Compress;
@@ -490,17 +491,57 @@ sub ProcessRequestsFromServer
     }
 
     statusMessage("Retrieving next job", 0, 3);
-    my $req = new Request;
+    my $req;
+    my $Server = Server->new();
+    do {
+        try {
+            $req = $Server->fetchRequest();
+
+            # got request, now check that it's not too complex
+            if ($Config->get('MaxTilesetComplexity')) {
+                #the setting is enabled
+                if ($req->complexity() > $Config->get('MaxTilesetComplexity')) {
+                    # too complex!
+                    statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ')', 1, 3);
+                    # putbackToServer waits 15 secs before continuing, so we don't get the same tile back 
+                    eval {
+                        $req->putBackToServer("TooComplex");
+                    };
+                    $req = undef;  # set to undef, need another loop
+                }
+            }
+            # and now check whether we found it unrenderable before
+            if ($req->is_unrenderable()) {
+                statusMessage("Ignoring unrenderable tile (" . $req->ZXY_str . ')', 1, 3);
+                # putbackToServer waits 15 secs before continuing, so we don't get the same tile back 
+                eval {
+                    $req->putBackToServer("Unrenderable");
+                };
+                $req = undef;   # we need to loop yet again
+            }
+        }
+        catch ServerError with {
+            my $err = shift();
+            if ($err->value() eq "PermError") {
+                cleanUpAndDie($err->text(), "EXIT", 1);
+            }
+            else {
+                talkInSleep($err->text(), 60);
+            }
+        };
+    } until ($req);
+
+    # Information text to say what's happening
+    statusMessage("Got work from the server: " . $req->layers_str() . ' (' . $req->ZXY_str() . ')', 0, 6);
+
     try {
-        $req->fetchFromServer();
+        my $tileset = Tileset->new($req);
+        $tileset->generate();
 
         # successfully received data, reset data faults
         resetFault("nodata");
         resetFault("nodataROMA");
         resetFault("nodataXAPI");
-
-        my $tileset = Tileset->new($req);
-        $tileset->generate();
 
         # successfully rendered, so reset renderer faults
         resetFault("renderer");

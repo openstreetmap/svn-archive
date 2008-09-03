@@ -51,6 +51,7 @@ class TileUpload:
 
      finally:
          # make sure we leave transactions when quitting
+         transaction.commit()
          transaction.leave_transaction_management()
 
 

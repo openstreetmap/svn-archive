@@ -144,10 +144,12 @@ my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
 my $rule_file = "rule.xml";
 my $debug_opts = '';
 my $output_file;
+my $bbox;
 
 GetOptions("rule=s"    => \$rule_file, 
            "debug=s"   => \$debug_opts,
-           "outfile=s" => \$output_file);
+           "outfile=s" => \$output_file,
+           "bbox=s"    => \$bbox);
 
 for my $key(split(/,/, $debug_opts))
 {
@@ -300,6 +302,12 @@ if ($rules->find("//rules/bounds"))
 }
 
 # FIXME find bound element in .osm file and honour it
+
+# if explicit bound are given on command line, honour them
+if (defined($bbox))
+{
+    ($minlat, $minlon, $maxlat, $maxlon) = split(/,/, $bbox);
+}
 
 our $scale = get_variable("scale", 1);
 our $symbolScale = get_variable("symbolScale", 1);
@@ -1237,6 +1245,7 @@ Options:
    -d|--debug=list      specify list of debug options
    -o|--outfile=name    specify output file (default: same as input, with .svg)
    -r|--rule=file.xml   specify the rule file to use (default: rule.xml)
+   -b|--bbox=minLat,minLon,maxLat,maxLon specify bounding box
 
 EOF
     exit(1);

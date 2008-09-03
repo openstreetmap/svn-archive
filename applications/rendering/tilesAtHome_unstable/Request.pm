@@ -176,46 +176,6 @@ sub is_unrenderable
     return $unrenderable{$zxy};
 }
 
-#-----------------------------------------------------------------------------
-# this is called when the client encounters errors in processing a tileset,
-# it tells the server the tileset will not be returned by the client.
-# $req: a 'Request' object containing z,x,y of the current request
-# $Cause: a string describing the failure reason
-# returns: (success,reason)
-# success=1 on success and 0 on failure,
-# reason is a string describing the error
-#-----------------------------------------------------------------------------
-sub putBackToServer 
-{
-    my ($self, $Cause) = @_;
-
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
-
-    $ua->protocols_allowed( ['http'] );
-    $ua->agent("tilesAtHome");
-    $ua->env_proxy();
-    push @{ $ua->requests_redirectable }, 'POST';
-
-    ::statusMessage(sprintf("Putting job (%d,%d,%d) back due to '%s'",$self->{MIN_Z},$self->{X},$self->{Y},$Cause),1,0);
-    my $res = $ua->post($self->{Config}->get("ReRequestURL"),
-              Content_Type => 'form-data',
-              Content => [ x => $self->{X},
-                           y => $self->{Y},
-                           min_z => $self->{MIN_Z},
-                           user => $self->{Config}->get("UploadUsername"),
-                           passwd => $self->{Config}->get("UploadPassword"),
-                           version => $self->{Config}->get("ClientVersion"),
-                           cause => $Cause,
-                           client_uuid => ::GetClientId() ]);
-
-    if(!$res->is_success())
-    {
-        throw RequestError "Error reading response from server";
-    }
-    
-    ::talkInSleep("Waiting before new tile is requested", 15);
-}
-
 package RequestError;
 use base 'Error::Simple';
 
@@ -264,14 +224,6 @@ reading.
 
 Sets and returns the byte size of the tileset file on the server. It will be set
 to 0 if the server does not have the tileset yet.
-
-=back
-
-=head3 PUTTING BACK REQUESTS WITH ERROR
-
-=over
-
-=item ->putBackToServer("cause")
 
 =back
 

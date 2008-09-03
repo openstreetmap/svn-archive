@@ -144,6 +144,37 @@ sub fetchRequest
 }
 
 
+#-----------------------------------------------------------------------------
+# this is called when the client encounters errors in processing a tileset,
+# it tells the server the tileset will not be returned by the client.
+# Server->putRequestBack($Request, $Cause)
+# $Request: a 'Request' object containing z,x,y of the current request
+# $Cause:   a string describing the failure reason
+#-----------------------------------------------------------------------------
+sub putRequestBack 
+{
+    my ($self, $Request, $Cause) = @_;
+
+    my $ua = $self->{ua};
+
+    ::statusMessage(sprintf("Putting job (%d,%d,%d) back due to '%s'", $Request->Z, $Request->X, $Request->Y, $Cause), 1, 0);
+    my $res = $ua->post($self->{Config}->get("ReRequestURL"),
+                        Content_Type => 'form-data',
+                        Content => [ x => $Request->X,
+                                     y => $Request->Y,
+                                     min_z => $Request->Z,
+                                     user => $self->{Config}->get("UploadUsername"),
+                                     passwd => $self->{Config}->get("UploadPassword"),
+                                     version => $self->{Config}->get("ClientVersion"),
+                                     cause => $Cause,
+                                     client_uuid => ::GetClientId() ]);
+
+    if(!$res->is_success()) {
+        throw ServerError "Error reading response from server", "TempError";
+    }
+}
+
+
 #-------------------------------------------------------------------------------
 # Server will throw esceptions of class ServerError
 
@@ -179,6 +210,18 @@ Returns the string returned by the server using $URL as the URL.
 =item C<< ->fetchRequest() >>
 
 Returns a Request object.
+
+=item C<< ->putRequestBack($Request, $Cause) >>
+
+Puts a request back to the server, indicating the cause.
+
+=over
+
+=item C< $Request > is a Request object
+
+=item C< $Cause > is a string
+
+=back
 
 =back
 

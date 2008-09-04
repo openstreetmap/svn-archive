@@ -433,6 +433,22 @@ sub GetClientId
     return $clientId;
 }
 
+#-------------------------------------------------------------
+# Check wether directory is empty and return true if so.
+#-------------------------------------------------------------
+sub dirEmpty
+{
+    my ($path) = @_;
+    opendir DIR, $path;
+    while(my $entry = readdir DIR) 
+    {
+        next if($entry =~ /^\.\.?$/);
+        closedir DIR;
+        return 0; # if $entry not "." or ".."
+    }
+    closedir DIR;
+    return 1; 
+}
 
 1;
 

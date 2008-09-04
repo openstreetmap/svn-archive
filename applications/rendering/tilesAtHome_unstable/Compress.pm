@@ -181,7 +181,11 @@ sub compress
           $stdOut);
     }
 
-
+    if (::dirEmpty($FullTilesetPathDir))
+    {
+        ::statusMessage("Skipping emtpy tileset directory: $FullTilesetPathDir",1,0);
+        return 0;
+    }
     # Run the zip command
     ::runCommand($zipCmd, $PID) or throw CompressError "Error running $zipCmd";
 
@@ -190,6 +194,8 @@ sub compress
     
     # rename to final name so any uploader could pick it up now
     move ($Tempfile, $Filename); # TODO: Error handling
+    
+    return 1;
 }
 
 #-----------------------------------------------------------------------------

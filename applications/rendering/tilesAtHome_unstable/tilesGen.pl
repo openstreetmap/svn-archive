@@ -679,7 +679,7 @@ sub NewClientVersion
 sub xml2svg 
 {
     my $Config = TahConf->getConfig();
-    my($osmData, $MapFeatures, $SVG, $zoom) = @_;
+    my($osmData, $bbox, $MapFeatures, $SVG, $zoom) = @_;
     my $TSVG = "$SVG";
     my $NoBezier = $Config->get("NoBezier") || $zoom <= 11;
 
@@ -695,12 +695,14 @@ sub xml2svg
 
         $XslFile = "osmarender/osmarender.xsl";
 
-        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s -s osmfile=%s %s > \"%s\"",
+        my $Cmd = sprintf(
+          "%s \"%s\" tr --maxdepth %s %s -s osmfile=%s -s minlat=%s -s minlon=%s -s maxlat=%s -s maxlon=%s %s > \"%s\"",
           $Config->get("Niceness"),
           $Config->get("XmlStarlet"),
           $Config->get("XmlStarletMaxDepth"),
           $XslFile,
           $osmData,
+          $bbox->S, $bbox->W, $bbox->N, $bbox->E,
           "$MapFeatures",
           $TSVG);
 
@@ -709,10 +711,11 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s %s",
+        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s -b %s,%s,%s,%s %s",
           $Config->get("Niceness"),
           $MapFeatures,
           $TSVG,
+          $bbox->S, $bbox->W, $bbox->N, $bbox->E,
           $osmData);
 
         statusMessage("Transforming zoom level $zoom with or/p",0,3);
@@ -879,33 +882,6 @@ sub svg2png
      return ($FullSplitPngFile, ""); #return success
 }
 
-
-#-----------------------------------------------------------------------------
-# Add bounding-box information to an osm-map-features file
-#-----------------------------------------------------------------------------
-sub AddBounds 
-{
-    my ($Filename,$W,$S,$E,$N,$Size) = @_;
-    
-    # Read the old file
-    open(my $fpIn, "<", "$Filename");
-    my $Data = join("",<$fpIn>);
-    close $fpIn;
-    die("no such $Filename") if(! -f $Filename);
-    
-    # Change some stuff
-    no locale;                # use dot as separator even for Germans!
-    my $BoundsInfo = sprintf(
-      "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
-      $S, $W, $N, $E);
-    
-    $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n$2/s;
-    
-    # Save back to the same location
-    open(my $fpOut, ">$Filename");
-    print $fpOut $Data;
-    close $fpOut;
-}
 
 #-----------------------------------------------------------------------------
 # Get the width and height (in SVG units, must be pixels) of an SVG file

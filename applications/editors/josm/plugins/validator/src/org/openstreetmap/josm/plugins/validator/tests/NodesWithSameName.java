@@ -30,7 +30,8 @@ public class NodesWithSameName extends Test {
 		if (n.deleted || n.incomplete) return;
 
 		String name = n.get("name");
-		if (name == null) return;
+		String sign = n.get("traffic_sign");
+		if (name == null || (sign != null && sign.equals("city_limit"))) return;
 
 		List<Node> nodes = namesToNodes.get(name);
 		if (nodes == null)

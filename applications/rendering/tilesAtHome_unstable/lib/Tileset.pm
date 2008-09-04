@@ -574,12 +574,10 @@ sub GenerateSVG
     copy($source, $TempFeatures)
         or throw TilesetError "Cannot make copy of $source", "fatal";
 
-    # Update the rules file  with details of what to do (where to get data, what bounds to use)
-    ::AddBounds($TempFeatures, $self->{bbox}->W,$self->{bbox}->S,$self->{bbox}->E,$self->{bbox}->N);
-
     # Render the file (returns 0 on failure)
     if (! ::xml2svg(
             File::Spec->join($self->{JobDir}, $layerDataFile),
+            $self->{bbox},
             $TempFeatures,
             File::Spec->join($self->{JobDir}, "output-z$Zoom.svg"),
             $Zoom))

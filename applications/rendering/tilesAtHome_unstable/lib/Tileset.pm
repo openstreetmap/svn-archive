@@ -564,21 +564,12 @@ sub GenerateSVG
     my $self = shift;
     my ($layerDataFile, $layer, $Zoom) = @_;
     my $Config = TahConf->getConfig();
-
-    # Create a new copy of rules file to allow background update
-    # don't need layer in name of file as we'll
-    # process one layer after the other
-    my $success = 1;
-    my $source = $Config->get($layer."_Rules.".$Zoom);
-    my $TempFeatures = File::Spec->join($self->{JobDir}, "map-features-z$Zoom.xml");
-    copy($source, $TempFeatures)
-        or throw TilesetError "Cannot make copy of $source", "fatal";
-
+ 
     # Render the file (returns 0 on failure)
     if (! ::xml2svg(
             File::Spec->join($self->{JobDir}, $layerDataFile),
             $self->{bbox},
-            $TempFeatures,
+            $Config->get($layer."_Rules.".$Zoom),
             File::Spec->join($self->{JobDir}, "output-z$Zoom.svg"),
             $Zoom))
     {

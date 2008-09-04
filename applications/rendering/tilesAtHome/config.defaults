@@ -59,6 +59,7 @@ Zip = zip
 
 UploadToDirectory = 0
 UploadTargetDirectory = /set/this/to/your/upload/directory
+UploadToDirectoryMaxQueue = 20
 GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
 

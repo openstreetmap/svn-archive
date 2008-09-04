@@ -4302,11 +4302,11 @@ msgstr "Spielstraße bearbeiten"
 
 #: ../lang/presets.java:212
 msgid "Pedestrian"
-msgstr "Fußgänger "
+msgstr "Fußgängerzone"
 
 #: ../lang/presets.java:213
 msgid "Edit a Pedestrian Street"
-msgstr "Fußgängerstraße bearbeiten"
+msgstr "Fußgängerzone bearbeiten"
 
 #: ../lang/presets.java:232
 msgid "Road (Unknown Type)"
@@ -4811,7 +4811,7 @@ msgstr "Name der Ausfahrt"
 
 #: ../lang/presets.java:708
 msgid "Services"
-msgstr "Dienstleistungen"
+msgstr "Rastplatz / Autohof"
 
 #: ../lang/presets.java:709
 msgid "Edit Service Station"
@@ -4876,14 +4876,12 @@ msgid "Edit Mountain Pass"
 msgstr "Gebirgspass bearbeiten"
 
 #: ../lang/presets.java:782
-#, fuzzy
 msgid "City Limit"
-msgstr "Stadtname"
+msgstr "Ortstafel"
 
 #: ../lang/presets.java:783
-#, fuzzy
 msgid "Edit a city limit sign"
-msgstr "Recyclingstelle oder -container bearbeiten"
+msgstr "Ortstafel bearbeiten"
 
 #: ../lang/presets.java:788
 #, fuzzy
@@ -4891,9 +4889,8 @@ msgid "Second Name"
 msgstr "Menüname"
 
 #: ../lang/presets.java:791
-#, fuzzy
 msgid "Speed Camera"
-msgstr "Straßenname"
+msgstr "Geschwindigkeitsüberwachung"
 
 #: ../lang/presets.java:798
 msgid "Railway"
@@ -4981,15 +4978,15 @@ msgstr "Museumsbahn bearbeiten"
 
 #: ../lang/presets.java:850
 msgid "Disused Rail"
-msgstr "Eisenbahn ungenutzt"
+msgstr "Stillgelegte Strecke"
 
 #: ../lang/presets.java:851
 msgid "Edit a Disused Railway"
-msgstr "Ungenutzte Eisenbahn bearbeiten"
+msgstr "Stillgelegte Strecke bearbeiten"
 
 #: ../lang/presets.java:857
 msgid "Abandoned Rail"
-msgstr "Eisenbahn abgebaut"
+msgstr "Strecke abgebaut"
 
 #: ../lang/presets.java:862
 msgid "Railway Point"
@@ -5044,13 +5041,12 @@ msgid "Edit a Stream"
 msgstr "Bach bearbeiten"
 
 #: ../lang/presets.java:913
-#, fuzzy
 msgid "Ferry Route"
-msgstr "Fähre"
+msgstr "Fährroute"
 
 #: ../lang/presets.java:914
 msgid "Edit a Ferry"
-msgstr "Fähre bearbeiten"
+msgstr "Fährroute bearbeiten"
 
 #: ../lang/presets.java:925
 msgid "Boatyard"
@@ -5234,7 +5230,7 @@ msgstr "Bushaltestelle bearbeiten"
 
 #: ../lang/presets.java:1099
 msgid "Accomodation"
-msgstr "Quartier"
+msgstr "Unterkunft"
 
 #: ../lang/presets.java:1100
 msgid "Hotel"
@@ -5254,11 +5250,11 @@ msgstr "Motel bearbeiten"
 
 #: ../lang/presets.java:1112
 msgid "Guest House"
-msgstr "Gästehaus (Bed & Breakfast)"
+msgstr "Gasthof (Bed & Breakfast)"
 
 #: ../lang/presets.java:1113
 msgid "Edit Guest House"
-msgstr "Gästehaus bearbeiten"
+msgstr "Gasthof bearbeiten"
 
 #: ../lang/presets.java:1118
 msgid "Hostel"
@@ -5815,7 +5811,7 @@ msgstr "Spielfeld"
 #: ../lang/presets.java:1583 ../lang/presets.java:1590
 #: ../lang/presets.java:1597 ../lang/presets.java:1604
 msgid "sports_centre"
-msgstr "Fitnesscenter"
+msgstr "Sporthalle / Fitnesscenter"
 
 #: ../lang/presets.java:1370 ../lang/presets.java:1377
 #: ../lang/presets.java:1384 ../lang/presets.java:1391

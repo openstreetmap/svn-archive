@@ -51,6 +51,7 @@ my $extension = "png";
 my $size=2;
 my $neighbormaps=0;
 my $cache=1;
+my $turbogps="no";
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -65,6 +66,7 @@ GetOptions (
              'size:i'       => \$size,
              'neighbormaps:i'      => \$neighbormaps,
              'cache:i'       => \$cache,
+             'turbogps:s'       => \$turbogps,
 	     ) or usage(1);
 
 usage(1) if $help;
@@ -161,6 +163,11 @@ print "to .BMP with 256 colors.\n\n";
 ##############################################################################
 sub MakeMapTile{
   my ($xtile,$ytile) = @_;
+
+  if ($turbogps eq "yes") {
+    my($S,$W,$N,$E) = Project($xtile , $ytile , $Z) ;
+    $file =  "${W}_${N}_${E}_${S}_${Width}_${Width}";
+  }
 
   print "##### start $0:MakeMapTile ; ";
   print "(Z,x,y) =  ($Z,$xtile,$ytile)\n" ;
@@ -647,7 +654,7 @@ sub Ini_batch_PWMapConvert{
 # usage, help
 ##############################################################################
 sub usage {
-  print "usage: $0 [-tilename=Z,x,y] [-coord=Z,lat,lon] [-coord2=lat2,lon2] [-tilesource=source] [-proxy=proxyname] [-size=size] [-neighbormaps=neighbormaps] [-cache=cache]\n";
+  print "usage: $0 [-tilename=Z,x,y] [-coord=Z,lat,lon] [-coord2=lat2,lon2] [-tilesource=source] [-proxy=proxyname] [-size=size] [-neighbormaps=neighbormaps] [-ext=ext] [-cache=cache] [-turbogps=yes]\n";
   print "This script downloads the tiles from the openstreetmap server and glue them together,\n";
   print "after that, it generates calibration files for Ozi, TTQV, Pathaway, Fugawi and Glopus.\n";
   print "\n";
@@ -663,6 +670,8 @@ sub usage {
   print "neighbormaps:\nis the recursion count, it count the also generated maps in x and y direction. eg. neighbortiles=2 is in sum 5x5 maps (5=1+2x2), neighbortiles=4 is in sum 9x9 maps (9=1+2x4)). The default is 0. This parameter can cause extrem traffic. PLEASE USE THIS PARAMETER WITH CARE. Do not use araund 180 deg longitude!\n\n";
   print "lat2,lon2:\nalternative to neighbormaps. The whole area between lat,lat2, lon, lon2 will be downloaded. This parameter can cause extrem traffic. PLEASE USE THIS PARAMETER WITH CARE. Do not use araund 180 deg longitude!\n\n";
   print "cache:\nthis parameter control the usage of the local cache, the default is 1\n\n";
+  print "ext:\njpg or png, default is png\n\n";
+  print "turbogps=yes:\naltenative output name with calibration in the filename\n\n";
   print " ------------------------------------------------------------------------------\n";
   print " GNU General Public license, version 2 or later\n";
   print " ------------------------------------------------------------------------------\n\n";

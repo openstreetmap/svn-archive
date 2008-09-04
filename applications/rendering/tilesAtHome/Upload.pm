@@ -248,7 +248,6 @@ sub upload
     {   #Upload To Directory rather than server
         ## Check "queue" length
         my $RemoteZipFileCount = 0;
-        my $MaxQueue = 20;
         my @QueueFiles;
         if(opendir(UPDIR, $Config->get("UploadTargetDirectory")))
         {
@@ -260,7 +259,7 @@ sub upload
             return (-1,1000);
         }
         my $QueueLength = scalar(@QueueFiles);
-        my $Load = 1000 * $QueueLength/$MaxQueue;
+        my $Load = 1000 * $QueueLength/$Config->get("UploadToDirectoryMaxQueue");
         if ($Load > 900) # 95% or 100% with MaxQueue=20
         {
             ::statusMessage("Not uploading, upload directory full",0,0);

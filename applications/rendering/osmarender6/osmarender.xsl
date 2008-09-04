@@ -73,6 +73,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   <xsl:param name="meter2pixelFactor" select="/rules/@meter2pixel"/>
 
+  <xsl:param name="minlat"/>
+  <xsl:param name="maxlat"/>
+  <xsl:param name="minlon"/>
+  <xsl:param name="maxlon"/>
+
 
   <xsl:key name="nodeById" match="/osm/node" use="@id"/>
   <xsl:key name="wayById" match="/osm/way" use="@id"/>
@@ -170,6 +175,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:variable>
   <xsl:variable name="bottomLeftLatitude">
     <xsl:choose>
+      <xsl:when test="$minlat">
+        <xsl:value-of select="$minlat"/>
+      </xsl:when>
       <xsl:when test="/rules/bounds">
         <xsl:value-of select="/rules/bounds/@minlat"/>
       </xsl:when>
@@ -183,6 +191,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:variable>
   <xsl:variable name="bottomLeftLongitude">
     <xsl:choose>
+      <xsl:when test="$minlon">
+        <xsl:value-of select="$minlon"/>
+      </xsl:when>
       <xsl:when test="/rules/bounds">
         <xsl:value-of select="/rules/bounds/@minlon"/>
       </xsl:when>
@@ -196,6 +207,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:variable>
   <xsl:variable name="topRightLatitude">
     <xsl:choose>
+      <xsl:when test="$maxlat">
+        <xsl:value-of select="$maxlat"/>
+      </xsl:when>
       <xsl:when test="/rules/bounds">
         <xsl:value-of select="/rules/bounds/@maxlat"/>
       </xsl:when>
@@ -209,6 +223,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:variable>
   <xsl:variable name="topRightLongitude">
     <xsl:choose>
+      <xsl:when test="$maxlon">
+        <xsl:value-of select="$maxlon"/>
+      </xsl:when>
       <xsl:when test="/rules/bounds">
         <xsl:value-of select="/rules/bounds/@maxlon"/>
       </xsl:when>

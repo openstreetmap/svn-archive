@@ -255,7 +255,6 @@ sub downloadData
     my $use_predicates = 1;
     foreach my $layer ($req->layers()) {
         my %layer_config = $Config->varlist("^${layer}_", 1);
-        print %layer_config;
         if (not $layer_config{"predicates"}) {
             $use_predicates = 0;
             last;

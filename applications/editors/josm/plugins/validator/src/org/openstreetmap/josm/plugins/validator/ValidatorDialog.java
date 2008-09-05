@@ -5,20 +5,24 @@ import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -47,8 +51,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
 	/** The display tree */
 	protected ErrorTreePanel tree;
-
-	public Collection<String> ignoredErrors = new TreeSet<String>();
 
 	private SideButton fixButton; /** The fix button */
 	private SideButton ignoreButton; /** The ignore button */
@@ -93,35 +95,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 			ignoreButton = null;
 		}
 		add(buttonPanel, BorderLayout.SOUTH);
-		loadIgnoredErrors();
-	}
-
-	private void loadIgnoredErrors() {
-		ignoredErrors.clear();
-		if(Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true))
-		{
-			try {
-				final BufferedReader in = new BufferedReader(new FileReader(Util.getPluginDir() + "ignorederrors"));
-				for (String line = in.readLine(); line != null; line = in.readLine()) {
-					ignoredErrors.add(line);
-				}
-			}
-			catch (final FileNotFoundException e) {}
-			catch (final IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void saveIgnoredErrors() {
-		try {
-			final PrintWriter out = new PrintWriter(new FileWriter(Util.getPluginDir() + "ignorederrors"), false);
-			for (String e : ignoredErrors)
-				out.println(e);
-			out.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -234,7 +207,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 						}
 					}
 					for(String s : state)
-						ignoredErrors.add(s);
+						plugin.ignoredErrors.add(s);
 					continue;
 				}
 				else if(asked == JOptionPane.CANCEL_OPTION)
@@ -255,7 +228,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 					TestError error = (TestError)nodeInfo;
 					String state = error.getIgnoreState();
 					if(state != null)
-						ignoredErrors.add(state);
+						plugin.ignoredErrors.add(state);
 					changed = true;
 					error.setIgnored(true);
 				}
@@ -264,44 +237,44 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		if(changed)
 		{
 			tree.resetErrors();
-			saveIgnoredErrors();
+			plugin.saveIgnoredErrors();
 			Main.map.repaint();
 		}
 	}
 
-    /**
-     * Sets the selection of the map to the current selected items.
-     */
-    @SuppressWarnings("unchecked")
-    private void setSelectedItems() 
-    {
-        if( tree == null )
-            return;
-        
-        Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
+	/**
+	 * Sets the selection of the map to the current selected items.
+	 */
+	@SuppressWarnings("unchecked")
+	private void setSelectedItems()
+	{
+		if( tree == null )
+			return;
 
-        TreePath[] selectedPaths = tree.getSelectionPaths();
-        if( selectedPaths == null)
-            return;
-        
-        for( TreePath path : selectedPaths)
-        {
-        	DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-    		Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
-    		while( children.hasMoreElements() )
-    		{
-        		DefaultMutableTreeNode childNode = children.nextElement();
-        		Object nodeInfo = childNode.getUserObject();
-        		if( nodeInfo instanceof TestError)
-        		{
-        			TestError error = (TestError)nodeInfo;
-        			sel.addAll( error.getPrimitives() );
-        		}
-    		}
-        }
-        
-        Main.ds.setSelected(sel);
-    }
+		Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
+
+		TreePath[] selectedPaths = tree.getSelectionPaths();
+		if( selectedPaths == null)
+			return;
+
+		for( TreePath path : selectedPaths)
+		{
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+			Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
+			while( children.hasMoreElements() )
+			{
+				DefaultMutableTreeNode childNode = children.nextElement();
+				Object nodeInfo = childNode.getUserObject();
+				if( nodeInfo instanceof TestError)
+				{
+					TestError error = (TestError)nodeInfo;
+					sel.addAll( error.getPrimitives() );
+				}
+			}
+		}
+
+		Main.ds.setSelected(sel);
+	}
 
 	public void actionPerformed(ActionEvent e)
 	{
@@ -316,32 +289,32 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 			ignoreErrors(e);
 	}
 
-    /**
-     * Checks for fixes in selected element and, if needed, adds to the sel parameter all selected elements
-     * @param sel The collection where to add all selected elements
-     * @param addSelected if true, add all selected elements to collection
-     * @return whether the selected elements has any fix
-     */
-    @SuppressWarnings("unchecked")
+	/**
+	 * Checks for fixes in selected element and, if needed, adds to the sel parameter all selected elements
+	 * @param sel The collection where to add all selected elements
+	 * @param addSelected if true, add all selected elements to collection
+	 * @return whether the selected elements has any fix
+	 */
+	@SuppressWarnings("unchecked")
 	private boolean setSelection(Collection<OsmPrimitive> sel, boolean addSelected)
 	{
 		boolean hasFixes = false;
 
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        if( lastSelectedNode != null && !lastSelectedNode.equals(node) )
-        {
-            Enumeration<DefaultMutableTreeNode> children = lastSelectedNode.breadthFirstEnumeration();
-            while( children.hasMoreElements() )
-            {
-                DefaultMutableTreeNode childNode = children.nextElement();
-                Object nodeInfo = childNode.getUserObject();
-                if( nodeInfo instanceof TestError)
-                {
-                    TestError error = (TestError)nodeInfo;
-                    error.setSelected(false);
-                }
-            }  
-        }
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		if( lastSelectedNode != null && !lastSelectedNode.equals(node) )
+		{
+			Enumeration<DefaultMutableTreeNode> children = lastSelectedNode.breadthFirstEnumeration();
+			while( children.hasMoreElements() )
+			{
+				DefaultMutableTreeNode childNode = children.nextElement();
+				Object nodeInfo = childNode.getUserObject();
+				if( nodeInfo instanceof TestError)
+				{
+					TestError error = (TestError)nodeInfo;
+					error.setSelected(false);
+				}
+			}
+		}
 
 		lastSelectedNode = node;
 		if( node == null )
@@ -367,14 +340,14 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		selectButton.setEnabled(true);
 		if(ignoreButton != null)
 			ignoreButton.setEnabled(true);
-		
+
 		return hasFixes;
 	}
 
 	/**
 	 * Watches for clicks.
 	 */
-	public class ClickWatch extends MouseAdapter 
+	public class ClickWatch extends MouseAdapter
 	{
 		@Override
 		public void mouseClicked(MouseEvent e)
@@ -400,7 +373,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 	/**
 	 * Watches for tree selection.
 	 */
-	public class SelectionWatch implements TreeSelectionListener 
+	public class SelectionWatch implements TreeSelectionListener
 	{
 		@SuppressWarnings("unchecked")
 		public void valueChanged(TreeSelectionEvent e)

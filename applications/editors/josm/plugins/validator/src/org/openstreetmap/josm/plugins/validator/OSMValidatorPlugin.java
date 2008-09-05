@@ -3,7 +3,20 @@ package org.openstreetmap.josm.plugins.validator;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +51,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	/** The list of errors per layer*/
 	Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
 
+	public Collection<String> ignoredErrors = new TreeSet<String>();
+
 	/**
 	 * All available tests
 	 * TODO: is there any way to find out automagically all available tests?
@@ -65,6 +80,35 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	public OSMValidatorPlugin()
 	{
 		initializeTests( getTests() );
+		loadIgnoredErrors();
+	}
+
+	private void loadIgnoredErrors() {
+		ignoredErrors.clear();
+		if(Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true))
+		{
+			try {
+				final BufferedReader in = new BufferedReader(new FileReader(Util.getPluginDir() + "ignorederrors"));
+				for (String line = in.readLine(); line != null; line = in.readLine()) {
+					ignoredErrors.add(line);
+				}
+			}
+			catch (final FileNotFoundException e) {}
+			catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void saveIgnoredErrors() {
+		try {
+			final PrintWriter out = new PrintWriter(new FileWriter(Util.getPluginDir() + "ignorederrors"), false);
+			for (String e : ignoredErrors)
+				out.println(e);
+			out.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -101,7 +145,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 			}
 		}
 		if( newFrame != null )
-			hooks.add( 0, new ValidateUploadHook() );
+			hooks.add( 0, new ValidateUploadHook(this) );
 	}
 
 	/** Gets a map from simple names to all tests. */
@@ -182,7 +226,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 			{
 				if( test.enabled )
 				{
-					test.getClass().getMethod("initialize", new Class[] { OSMValidatorPlugin.class} ).invoke(null, new Object[] {this});
+					test.getClass().getMethod("initialize", new Class[]
+					{ OSMValidatorPlugin.class} ).invoke(null, new Object[] {this});
 				}
 			}
 			catch(InvocationTargetException ite)

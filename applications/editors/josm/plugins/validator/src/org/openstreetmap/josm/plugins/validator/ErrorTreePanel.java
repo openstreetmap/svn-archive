@@ -1,13 +1,23 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import java.awt.event.MouseEvent;
 
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.MultipleNameVisitor;
@@ -124,8 +134,10 @@ public class ErrorTreePanel extends JTree
 			}
 		}
 
-		Map<Severity, Bag<String, TestError>> errorTree = new HashMap<Severity, Bag<String, TestError>>();
-		Map<Severity, HashMap<String, Bag<String, TestError>>> errorTreeDeep = new HashMap<Severity, HashMap<String, Bag<String, TestError>>>();
+		Map<Severity, Bag<String, TestError>> errorTree
+		= new HashMap<Severity, Bag<String, TestError>>();
+		Map<Severity, HashMap<String, Bag<String, TestError>>> errorTreeDeep
+		= new HashMap<Severity, HashMap<String, Bag<String, TestError>>>();
 		for(Severity s : Severity.values())
 		{
 			errorTree.put(s, new Bag<String, TestError>(20));
@@ -134,6 +146,8 @@ public class ErrorTreePanel extends JTree
 
 		for(TestError e : errors)
 		{
+			if(e.getIgnored())
+				continue;
 			Severity s = e.getSeverity();
 			String d = e.getDescription();
 			String m = e.getMessage();
@@ -175,7 +189,10 @@ public class ErrorTreePanel extends JTree
 				severityNode.add(messageNode);
 
 				if( oldSelectedRows.contains(msgErrors.getKey()))
-					 expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode, messageNode} ) );
+				{
+					 expandedPaths.add( new TreePath( new Object[]
+					 {rootNode, severityNode, messageNode} ) );
+				}
 
 				for (TestError error : errors) 
 				{
@@ -188,12 +205,18 @@ public class ErrorTreePanel extends JTree
 			{
 				// Group node
 				Bag <String, TestError> errorlist = bag.getValue();
-				String nmsg = bag.getKey() + " (" + errorlist.size() + ")";
-				DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(nmsg);
-				severityNode.add(groupNode);
-
-				if( oldSelectedRows.contains(bag.getKey()))
-					 expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode, groupNode} ) );
+				DefaultMutableTreeNode groupNode = null;
+				if(errorlist.size() > 1)
+				{
+					String nmsg = bag.getKey() + " (" + errorlist.size() + ")";
+					groupNode = new DefaultMutableTreeNode(nmsg);
+					severityNode.add(groupNode);
+					if( oldSelectedRows.contains(bag.getKey()))
+					{
+						 expandedPaths.add( new TreePath( new Object[]
+						 {rootNode, severityNode, groupNode} ) );
+					}
+				}
 
 				for(Entry<String, List<TestError>> msgErrors : errorlist.entrySet())
 				{
@@ -201,10 +224,24 @@ public class ErrorTreePanel extends JTree
 					List<TestError> errors = msgErrors.getValue();
 					String msg = msgErrors.getKey() + " (" + errors.size() + ")";
 					DefaultMutableTreeNode messageNode = new DefaultMutableTreeNode(msg);
-					groupNode.add(messageNode);
+					if(groupNode != null)
+						groupNode.add(messageNode);
+					else
+						severityNode.add(messageNode);
 
 					if( oldSelectedRows.contains(msgErrors.getKey()))
-						 expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode, groupNode, messageNode} ) );
+					{
+						if(groupNode != null)
+						{
+							expandedPaths.add(new TreePath(new Object[]
+							{rootNode, severityNode, groupNode, messageNode}));
+						}
+						else
+						{
+							expandedPaths.add(new TreePath(new Object[]
+							{rootNode, severityNode, messageNode}));
+						}
+					}
 
 					for (TestError error : errors) 
 					{

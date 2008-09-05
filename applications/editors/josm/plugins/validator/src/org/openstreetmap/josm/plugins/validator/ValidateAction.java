@@ -102,10 +102,16 @@ public class ValidateAction extends JosmAction
 		{
 			for(TestError error : errors)
 			{
-				String state = error.getIgnoreState();
-				if(state != null && plugin.validationDialog.ignoredErrors.contains(state))
+				List<String> s = new ArrayList<String>();
+				s.add(error.getIgnoreState());
+				s.add(error.getIgnoreGroup());
+				s.add(error.getIgnoreSubGroup());
+				for(String state : s)
 				{
-					error.setIgnored(true);
+					if(state != null && plugin.validationDialog.ignoredErrors.contains(state))
+					{
+						error.setIgnored(true);
+					}
 				}
 			}
 		}

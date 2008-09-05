@@ -251,19 +251,31 @@ sub downloadData
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
-    my @URLS = (sprintf("%s%s/map?bbox=%s", $Config->get("APIURL"), $Config->get("OSMVersion"), $bbox));
-
-    if ($req->layers_str eq "caption") 
-    {
-        # Get the predicates for lowzoom caption layer, and build the URLS for them
-        my $predicates = $Config->get($req->layers_str."_Predicates");
-        # strip spaces in predicates because that is the separator used below
+    my @predicates;
+    my $use_predicates = 1;
+    foreach my $layer ($req->layers()) {
+        my %layer_config = $Config->varlist("^${layer}_", 1);
+        print %layer_config;
+        if (not $layer_config{"predicates"}) {
+            $use_predicates = 0;
+            last;
+        }
+        my $predicates = $layer_config{"predicates"};
+        # strip spaces in predicates
         $predicates =~ s/\s+//g;
-        @URLS=();
-        foreach my $predicate (split(/,/,$predicates)) {
+        push(@predicates, split(/,/, $predicates));
+    }
+
+    my @URLS;
+    if ($use_predicates) {
+        foreach my $predicate (@predicates) {
             push(@URLS, sprintf("%s%s/%s[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$predicate,$bbox));
         }
     }
+    else {
+        @URLS = (sprintf("%s%s/map?bbox=%s", $Config->get("APIURL"), $Config->get("OSMVersion"), $bbox));
+    }
+
     my $filelist = [];
     my $i=0;
     foreach my $URL (@URLS) 

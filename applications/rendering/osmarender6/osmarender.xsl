@@ -1414,6 +1414,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="element" />
 
     <xsl:choose>
+      <xsl:when test="$element/tag[@k='osmarender:areaCenterLat']">
+        <xsl:message select="$element/tag[@k='osmarender:areaCenterLat']"/>
+        <xsl:value-of select="concat($element/tag[@k='osmarender:areaCenterLon']/@v,',',$element/tag[@k='osmarender:areaCenterLat']/@v)"/>
+      </xsl:when>
       <xsl:when test="count($element/nd) &gt; 2 and count($element/nd) &lt; 150">
         <xsl:call-template name="areaCenter">
           <xsl:with-param name="element" select="$element" />

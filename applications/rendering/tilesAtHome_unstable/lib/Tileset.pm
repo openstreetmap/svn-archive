@@ -251,34 +251,22 @@ sub downloadData
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
-    my $URLS = sprintf("%s%s/map?bbox=%s",
-      $Config->get("APIURL"),$Config->get("OSMVersion"),$bbox);
-    if ($req->Z < 12) 
+    my @URLS = (sprintf("%s%s/map?bbox=%s", $Config->get("APIURL"), $Config->get("OSMVersion"), $bbox));
+
+    if ($req->layers_str eq "caption") 
     {
-        # FIXME: zoom 12 hardcoded: assume lowzoom caption layer now!
-        # only in xy mode since in loop mode a different method that does not depend on hardcoded zoomlevel will be used, where the layer is set by the server.
-        if ($::Mode eq "xy") 
-        {
-            $req->layers("caption");
-            ::statusMessage("Warning: lowzoom zoom detected, autoswitching to ".$req->layers_str." layer",1,0);
-        }
-        else
-        {
-            ::statusMessage("Warning: lowzoom zoom detected, but ".$req->layers_str." configured",1,0);
-        }
         # Get the predicates for lowzoom caption layer, and build the URLS for them
         my $predicates = $Config->get($req->layers_str."_Predicates");
         # strip spaces in predicates because that is the separator used below
         $predicates =~ s/\s+//g;
-        $URLS="";
+        @URLS=();
         foreach my $predicate (split(/,/,$predicates)) {
-            $URLS = $URLS . sprintf("%s%s/%s[bbox=%s] ",
-                $Config->get("XAPIURL"),$Config->get("OSMVersion"),$predicate,$bbox);
+            push(@URLS, sprintf("%s%s/%s[bbox=%s]", $Config->get("XAPIURL"),$Config->get("OSMVersion"),$predicate,$bbox));
         }
     }
     my $filelist = [];
     my $i=0;
-    foreach my $URL (split(/ /,$URLS)) 
+    foreach my $URL (@URLS) 
     {
         ++$i;
         my $partialFile = File::Spec->join($self->{JobDir},"data-$i.osm");

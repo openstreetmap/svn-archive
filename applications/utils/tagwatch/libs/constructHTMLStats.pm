@@ -1359,6 +1359,11 @@ sub buildKeyPages
 		# sort allavilible tags by total usage
 		foreach my $Value(sort {$TagCount{$b}->{'t'} <=> $TagCount{$a}->{'t'}} keys %TagCount)
 		{
+			my $val = markSpaceCharacter($Value);
+			if($Value eq '*' && GetAutoIgnored($KeyName))
+			{
+				$val .= sprintf " (<a href=\"ignored_".name_encode($KeyName)."$Config{html_file_extension}\">$Interface{ignoreentries}->{$Language}</a>)",$Config{max_volatile_count};
+			}
 			# iterate through all interresting languages for the documentation
 			my @tmpl_wikiloop;
 			if(exists $WikiDescription{'Grouped_Keys'}->{"$KeyName=*"} )
@@ -1371,7 +1376,7 @@ sub buildKeyPages
 			}
 
 			# add general statistics of this tag
-			my %row = ("value"    => markSpaceCharacter($Value),
+			my %row = ("value"    => $val,
 			   	   "tagESC"   => name_encode("$KeyName=$Value$Config{html_file_extension}"),
 			   	   "tagAPI"   => api_link($KeyName,$Value),
 			   	   "total"    => $TagCount{$Value}->{'t'},

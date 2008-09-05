@@ -525,7 +525,7 @@ sub draw_area_text
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
-        my $center = find_area_center($_);
+        my $center = get_area_center($_);
         my $projected = project($center);
         $writer->startTag("text", 
             "x" => $projected->[0],
@@ -535,6 +535,20 @@ sub draw_area_text
                 "lengthAdjust","textLength" ]));
         $writer->characters($_->{'tags'}->{$textnode->getAttribute("k")});
         $writer->endTag("text");
+    }
+}
+
+sub get_area_center
+{
+    my ($area) = @_;
+    my $lat = $area->{"tags"}->{"osmarender:areaCenterLat"};
+    my $lon = $area->{"tags"}->{"osmarender:areaCenterLon"};
+    if (defined($lat) && defined($lon))
+    {
+        return [$lat, $lon];
+    } else 
+    {
+        return find_area_center($area);
     }
 }
 
@@ -564,7 +578,7 @@ sub draw_area_symbols
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
-        my $center = find_area_center($_);
+        my $center = get_area_center($_);
         my $projected = project($center);
 
         draw_symbol($symbolnode, $projected);

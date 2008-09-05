@@ -678,10 +678,11 @@ sub usage {
   print "example 1, part of germany : $0 -tilename=\"7,67,42\" -tilesource=\"http://tile.openstreetmap.org\" \n";
   print "example 2, Erlangen        : $0 -coord=\"11,49.58,11.00\" -proxy=\"http://proxy:3128\"\n";  
   print "example 3, Erlangen. Glopus: $0 -coord=\"13,49.58,11.00\" -size=3 -neighbormaps=2\n";  
-  print "example 3, Pathaway        : $0 -coord=\"14,49.58,11.00\" -size=2 -neighbormaps=3\n";  
-  print "example 4, Munich          : $0 -coord=\"11,48.15,11.58\" -tilesource=\"http://dev.openstreetmap.org/~ojw/Tiles/tile.php\" \n";
-  print "example 5, Sao Paulo       : $0 -coord=\"11,-23.6681,-46.7520\" -tilesource=\"http://dev.openstreetmap.org/~ojw/Tiles/tile.php\" \n";
-  print "example 6, Aachen          : $0 -coord=\"13,50.8,6.02\" -coord2=\"50.73,6.17\"\n";  
+  print "example 4, Pathaway        : $0 -coord=\"14,49.58,11.00\" -size=2 -neighbormaps=3\n";  
+  print "example 5, Munich          : $0 -coord=\"11,48.15,11.58\" -tilesource=\"http://dev.openstreetmap.org/~ojw/Tiles/tile.php\" \n";
+  print "example 6, Sao Paulo       : $0 -coord=\"11,-23.6681,-46.7520\" -tilesource=\"http://dev.openstreetmap.org/~ojw/Tiles/tile.php\" \n";
+  print "example 7, Aachen          : $0 -coord=\"13,50.8,6.02\" -coord2=\"50.73,6.17\"\n";  
+  print "example 8, Cyclemap        : $0 -coord=\"11,49.58,11.00\" -tilesource=\"http://c.andy.sandbox.cloudmade.com/tiles/cycle\"\n";  
   print "\n";
   print "for more help please refer to http://wiki.openstreetmap.org/index.php/Oziexplorer\n\n\n";
   exit;

@@ -1122,7 +1122,7 @@ gint Expose (void)
               mat.xy = mat.yx = 0;
               x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
               y0 = y /* + mat.xx * f->ascent */ + icon[3] / 2;
-              maxLenSqr = Sqr ((__int64) Style (w)->scaleMax);
+              maxLenSqr = Sqr ((__int64) Style (w)->scaleMax / 2);
               //4000000000000LL; // Without scaleMax, use 400000000
             //}
             #endif
@@ -1286,7 +1286,7 @@ gint Expose (void)
               x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,
               y0 - (rect.height * mat.yy + rect.width * fabs (mat.xy)) / 2, pl);
             free (line);
-            if (zoom / clip.width > 30) break;
+            if (zoom / clip.width > 20) break;
             while (*txt != '\0' && *txt++ != '\n') {}
           }
         }
@@ -1567,7 +1567,7 @@ int UserInterface (int argc, char *argv[])
       char *name = (char*)(w + 1) + 1;
       printf ("%lf,%lf,%c,%s,%.*s\n\r", LatInverse (shortest->nd->lat),
         LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
-        klasTable[StyleNr (w)].desc, strcspn (name, "\n"), name);
+        klasTable[StyleNr (w)].desc, (int) strcspn (name, "\n"), name);
     }
     return 0;
   }
@@ -2138,6 +2138,8 @@ int main (int argc, char *argv[])
             else if (!V_IS ("no") && !V_IS ("false") && 
               !K_IS ("sagns_id") && !K_IS ("sangs_id") && 
               !K_IS ("is_in") && !V_IS ("residential") &&
+              !K_IS ("unclassified") && !K_IS ("tertiary") &&
+              !K_IS ("secondary") && !K_IS ("primary") &&
               !V_IS ("junction") && /* Not approved and when it isn't obvious
                 from the ways that it's a junction, the tag will often be
                 something ridiculous like junction=junction ! */
@@ -2170,6 +2172,8 @@ int main (int argc, char *argv[])
             if (strncasecmp (tag_k, "tiger:", 6) == 0 ||
                 K_IS ("created_by") || K_IS ("converted_by") ||
                 strncasecmp (tag_k, "source", 6) == 0 ||
+                strncasecmp (tag_k, "AND_", 4) == 0 ||
+                strncasecmp (tag_k, "AND:", 4) == 0 ||
                 strncasecmp (tag_k, "KSJ2:", 4) == 0 || K_IS ("note:ja") ||
                 K_IS ("attribution") /* Mostly MassGIS */ ||
                 K_IS ("time") || K_IS ("ele") || K_IS ("hdop") ||

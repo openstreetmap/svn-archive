@@ -2146,6 +2146,9 @@ int main (int argc, char *argv[])
               !K_IS ("class") /* esp. class=node */ &&
               !K_IS ("type") /* This is only for boules, but we drop it
                 because it's often misused */ &&
+    !V_IS ("National-Land Numerical Information (Railway) 2007, MLIT Japan") &&
+    !V_IS ("National-Land Numerical Information (Lake and Pond) 2005, MLIT Japan") &&
+    !V_IS ("National-Land Numerical Information (Administrative area) 2007, MLIT Japan") &&
               !V_IS ("coastline_old") &&
               !K_IS ("upload_tag") && !K_IS ("admin_level") &&
               (!isNode || (!K_IS ("highway") && !V_IS ("water") &&
@@ -2167,6 +2170,7 @@ int main (int argc, char *argv[])
             if (strncasecmp (tag_k, "tiger:", 6) == 0 ||
                 K_IS ("created_by") || K_IS ("converted_by") ||
                 strncasecmp (tag_k, "source", 6) == 0 ||
+                strncasecmp (tag_k, "KSJ2:", 4) == 0 || K_IS ("note:ja") ||
                 K_IS ("attribution") /* Mostly MassGIS */ ||
                 K_IS ("time") || K_IS ("ele") || K_IS ("hdop") ||
                 K_IS ("sat") || K_IS ("pdop") || K_IS ("speed") ||

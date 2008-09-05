@@ -213,7 +213,7 @@ void GosmSearch (int clon, int clat, char *key)
   for (int i = 0; i < searchCnt; i++) free (gosmSstr[i]);
   for (int j = 0; j < count; j++) {
     gosmSstr[j] = (char *) malloc (strcspn (taga[j], "\n") + 1);
-    sprintf (gosmSstr[j], "%.*s", strcspn (taga[j], "\n"), taga[j]);
+    sprintf (gosmSstr[j], "%.*s", (int) strcspn (taga[j], "\n"), taga[j]);
   }
   for (int k = count; k < searchCnt; k++) gosmSstr[k] = NULL;
 }

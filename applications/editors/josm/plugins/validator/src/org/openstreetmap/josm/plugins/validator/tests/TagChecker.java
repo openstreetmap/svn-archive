@@ -55,6 +55,7 @@ import org.openstreetmap.josm.plugins.validator.TestError;
 import org.openstreetmap.josm.plugins.validator.tests.ChangePropertyKeyCommand;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.Util;
+import org.openstreetmap.josm.plugins.validator.util.Entities;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
@@ -122,11 +123,14 @@ public class TagChecker extends Test
 	protected static int FIXME             = 1203;
 	protected static int INVALID_SPACE     = 1204;
 	protected static int INVALID_KEY_SPACE = 1205;
+	protected static int INVALID_HTML      = 1206;
 	/** 1250 and up is used by tagcheck */
 
 	/** List of sources for spellcheck data */
 	protected JList Sources;
 
+	
+	protected static Entities entities = new Entities();
 	/**
 	 * Constructor
 	 */
@@ -335,6 +339,12 @@ public class TagChecker extends Test
 				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"),
 				tr(s, key), MessageFormat.format(s, key), INVALID_SPACE, p) );
 				withErrors.add(p, "SPACE");
+			}
+			if( checkValues && value != null && !value.equals(entities.unescape(value)) && !withErrors.contains(p, "HTML"))
+			{
+				errors.add( new TestError(this, Severity.OTHER, tr("Property values contain HTML entity"),
+				tr(s, key), MessageFormat.format(s, key), INVALID_HTML, p) );
+				withErrors.add(p, "HTML");
 			}
 			if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
 			{
@@ -583,14 +593,21 @@ public class TagChecker extends Test
 				else if(value.startsWith(" ") || value.endsWith(" "))
 					commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, value.trim()) );
 				else if(key.startsWith(" ") || key.endsWith(" "))
-				{
 					commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)), key, key.trim()) );
-				}
 				else
 				{
-					String replacementKey = spellCheckKeyData.get(key);
-					if( replacementKey != null )
-						commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)), key, replacementKey) );
+					String evalue = entities.unescape(value);
+					if(!evalue.equals(value))
+						commands.add( new ChangePropertyCommand(Collections.singleton(primitives.get(i)), key, evalue) );
+					else
+					{
+						String replacementKey = spellCheckKeyData.get(key);
+						if( replacementKey != null )
+						{
+							commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)),
+							key, replacementKey) );
+						}
+					}
 				}
 			}
 		}
@@ -609,7 +626,7 @@ public class TagChecker extends Test
 		if( testError.getTester() instanceof TagChecker)
 		{
 			int code = testError.getCode();
-			return code == INVALID_KEY || code == EMPTY_VALUES || code == INVALID_SPACE || code == INVALID_KEY_SPACE;
+			return code == INVALID_KEY || code == EMPTY_VALUES || code == INVALID_SPACE || code == INVALID_KEY_SPACE || code == INVALID_HTML;
 		}
 
 		return false;

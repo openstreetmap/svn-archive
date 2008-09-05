@@ -122,7 +122,7 @@ public class Test implements Visitor
     {
         for (OsmPrimitive p : selection)
         {
-        	if( !p.deleted || !p.incomplete )
+        	if( !p.deleted && !p.incomplete )
         		p.visit(this);
         }
     }

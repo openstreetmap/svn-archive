@@ -51,7 +51,7 @@ public class ValidateUploadHook implements UploadHook
         }
         tests = null;
         
-        return displaErrorScreen(errors);
+        return displayErrorScreen(errors);
     }
     
     /**
@@ -61,7 +61,7 @@ public class ValidateUploadHook implements UploadHook
      * @return <code>true</code>, if the upload should continue. <code>false</code>
      *          if the user requested cancel.
      */
-    private boolean displaErrorScreen(List<TestError> errors) 
+    private boolean displayErrorScreen(List<TestError> errors) 
     {
         if( errors == null || errors.isEmpty() ) 
         {

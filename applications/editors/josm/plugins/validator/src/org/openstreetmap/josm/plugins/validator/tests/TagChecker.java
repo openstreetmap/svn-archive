@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.validator.tests;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.IllegalStateException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -297,7 +299,7 @@ public class TagChecker extends Test
 				if(d.match(p))
 				{
 					errors.add( new TestError(this, d.getSeverity(), tr("Illegal tag/value combinations"),
-					d.getDescription(), d.getCode(), p) );
+					d.getDescription(), d.getDescriptionOrig(), d.getCode(), p) );
 					withErrors.add(p, "TC");
 					break;
 				}
@@ -307,30 +309,31 @@ public class TagChecker extends Test
 		Map<String, String> props = (p.keys == null) ? Collections.<String, String>emptyMap() : p.keys;
 		for(Entry<String, String> prop: props.entrySet() )
 		{
+			String s = marktr("Key ''{0}'' invalid.");
 			String key = prop.getKey();
 			String value = prop.getValue();
 			if( checkValues && (value==null || value.trim().length() == 0) && !withErrors.contains(p, "EV"))
 			{
 				errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"),
-				tr("Key ''{0}'' invalid.", key), EMPTY_VALUES, p) );
+				tr(s, key), MessageFormat.format(s, key), EMPTY_VALUES, p) );
 				withErrors.add(p, "EV");
 			}
 			if( checkKeys && spellCheckKeyData.containsKey(key) && !withErrors.contains(p, "IPK"))
 			{
 				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property key"),
-				tr("Key ''{0}'' invalid.", key), INVALID_KEY, p) );
+				tr(s, key), MessageFormat.format(s, key), INVALID_KEY, p) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkKeys && key.indexOf(" ") >= 0 && !withErrors.contains(p, "IPK"))
 			{
 				errors.add( new TestError(this, Severity.WARNING, tr("Invalid white space in property key"),
-				tr("Key ''{0}'' invalid.", key), INVALID_KEY_SPACE, p) );
+				tr(s, key), MessageFormat.format(s, key), INVALID_KEY_SPACE, p) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkValues && value != null && (value.startsWith(" ") || value.endsWith(" ")) && !withErrors.contains(p, "SPACE"))
 			{
 				errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"),
-				tr("Key ''{0}'' invalid.", key), INVALID_SPACE, p) );
+				tr(s, key), MessageFormat.format(s, key), INVALID_SPACE, p) );
 				withErrors.add(p, "SPACE");
 			}
 			if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
@@ -339,7 +342,7 @@ public class TagChecker extends Test
 				if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
 				{
 					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"),
-					tr("Key ''{0}'' invalid.", key), INVALID_VALUE, p) );
+					tr(s, key), MessageFormat.format(s, key), INVALID_VALUE, p) );
 					withErrors.add(p, "UPV");
 				}
 			}
@@ -756,6 +759,10 @@ public class TagChecker extends Test
 		public String getDescription()
 		{
 			return tr(description);
+		}
+		public String getDescriptionOrig()
+		{
+			return description;
 		}
 		public Severity getSeverity()
 		{

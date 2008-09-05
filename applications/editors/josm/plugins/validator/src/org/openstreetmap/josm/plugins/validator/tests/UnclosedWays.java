@@ -1,8 +1,11 @@
 package org.openstreetmap.josm.plugins.validator.tests;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -43,87 +46,66 @@ public class UnclosedWays extends Test	{
 		_errorWays = null;
 	}
 
+	private String type;
+	private String etype;
+	private int mode;
+	private boolean force;
+	public void set(boolean f, int m, String text, String desc)
+	{
+		etype = MessageFormat.format(text, desc);
+		type = tr(text, tr(desc));
+		mode = m;
+		force = f;
+	}
+	public void set(boolean f, int m, String text)
+	{
+		etype = text;
+		type = tr(text);
+		mode = m;
+		force = f;
+	}
+
 	@Override
 	public void visit(Way w)
 	{
-		boolean force = false; /* force even if end-to-end distance is long */
-		String type = null, test;
-		int mode = 0;
+		String test;
+		force = false; /* force even if end-to-end distance is long */
+		type = etype = null;
+		mode = 0;
 
 		if( w.deleted || w.incomplete )
 			return;
 
 		test = w.get("natural");
 		if(test != null)
-		{
-			if(!"coastline".equals(test))
-				force = true;
-			type = tr("natural type {0}", tr(test));
-			mode = 1101;
-		}
+			set(!"coastline".equals(test), 1101, marktr("natural type {0}"), test);
 		test = w.get("landuse");
 		if(test != null)
-		{
-			force = true;
-			type = tr("landuse type {0}", tr(test));
-			mode = 1102;
-		}
+			set(true, 1102, marktr("landuse type {0}"), test);
 		test = w.get("amenities");
 		if(test != null)
-		{
-			force = true;
-			type = tr("amenities type {0}", tr(test));
-			mode = 1103;
-		}
+			set(true, 1103, marktr("amenities type {0}"), test);
 		test = w.get("sport");
-		if(test != null)
-		{
-			force = true;
-			type = tr("sport type {0}", tr(test));
-			mode = 1104;
-		}
+		if(test != null && !test.equals("water_slide"))
+			set(true, 1104, marktr("sport type {0}"), test);
 		test = w.get("tourism");
 		if(test != null)
-		{
-			force = true;
-			type = tr("tourism type {0}", tr(test));
-			mode = 1105;
-		}
+			set(true, 1105, marktr("tourism type {0}"), test);
 		test = w.get("shop");
 		if(test != null)
-		{
-			force = true;
-			type = tr("shop type {0}", tr(test));
-			mode = 1106;
-		}
+			set(true, 1106, marktr("shop type {0}"), test);
 		test = w.get("leisure");
 		if(test != null)
-		{
-			force = true;
-			type = tr("leisure type {0}", tr(test));
-			mode = 1107;
-		}
+			set(true, 1107, marktr("leisure type {0}"), test);
 		test = w.get("waterway");
 		if(test != null && test.equals("riverbank"))
-		{
-			force = true;
-			type = tr("waterway type {0}", tr(test));
-			mode = 1108;
-		}
+			set(true, 1108, marktr("waterway type {0}"), test);
 		Boolean btest = OsmUtils.getOsmBoolean(w.get("building"));
 		if (btest != null && btest)
-		{
-			force = true;
-			type = tr("building");
-			mode = 1120;
-		}
+			set(true, 1120, marktr("building"));
 		btest = OsmUtils.getOsmBoolean(w.get("area"));
 		if (btest != null && btest)
-		{
-			force = true;
-			type = tr("area");
-			mode = 1130;
-		}
+			set(true, 1130, marktr("area"));
 
 		if(type != null)
 		{
@@ -134,7 +116,7 @@ public class UnclosedWays extends Test	{
 			{
 				List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
 				primitives.add(w);
-				errors.add(new TestError(this, Severity.WARNING, tr("Unclosed way"), type, mode, primitives));
+				errors.add(new TestError(this, Severity.WARNING, tr("Unclosed way"), type, etype, mode, primitives));
 				_errorWays.add(w,w);
 			}
 		}

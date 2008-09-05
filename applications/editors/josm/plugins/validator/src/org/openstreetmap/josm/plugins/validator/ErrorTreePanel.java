@@ -125,21 +125,38 @@ public class ErrorTreePanel extends JTree
 		}
 
 		Map<Severity, Bag<String, TestError>> errorTree = new HashMap<Severity, Bag<String, TestError>>();
+		Map<Severity, HashMap<String, Bag<String, TestError>>> errorTreeDeep = new HashMap<Severity, HashMap<String, Bag<String, TestError>>>();
 		for(Severity s : Severity.values())
 		{
 			errorTree.put(s, new Bag<String, TestError>(20));
+			errorTreeDeep.put(s, new HashMap<String, Bag<String, TestError>>());
 		}
 
 		for(TestError e : errors)
 		{
-			errorTree.get(e.getSeverity()).add(e.getMessage(), e);
+			Severity s = e.getSeverity();
+			String d = e.getDescription();
+			String m = e.getMessage();
+			if(d != null)
+			{
+				Bag<String, TestError> b = errorTreeDeep.get(s).get(m);
+				if(b == null)
+				{
+					b = new Bag<String, TestError>(20);
+					errorTreeDeep.get(s).put(m, b);
+				}
+				b.add(d, e);
+			}
+			else
+				errorTree.get(s).add(m, e);
 		}
 
 		List<TreePath> expandedPaths = new ArrayList<TreePath>();
 		for(Severity s : Severity.values())
 		{
 			Bag<String, TestError> severityErrors = errorTree.get(s);
-			if( severityErrors.isEmpty() )
+			Map<String, Bag<String, TestError>> severityErrorsDeep = errorTreeDeep.get(s);
+			if(severityErrors.isEmpty() && severityErrorsDeep.isEmpty())
 				continue;
 
 			// Severity node
@@ -165,6 +182,36 @@ public class ErrorTreePanel extends JTree
 					// Error node
 					DefaultMutableTreeNode errorNode = new DefaultMutableTreeNode(error);
 					messageNode.add(errorNode);
+				}
+			}
+			for(Entry<String, Bag <String, TestError>> bag : severityErrorsDeep.entrySet())
+			{
+				// Group node
+				Bag <String, TestError> errorlist = bag.getValue();
+				String nmsg = bag.getKey() + " (" + errorlist.size() + ")";
+				DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(nmsg);
+				severityNode.add(groupNode);
+
+				if( oldSelectedRows.contains(bag.getKey()))
+					 expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode, groupNode} ) );
+
+				for(Entry<String, List<TestError>> msgErrors : errorlist.entrySet())
+				{
+					// Message node
+					List<TestError> errors = msgErrors.getValue();
+					String msg = msgErrors.getKey() + " (" + errors.size() + ")";
+					DefaultMutableTreeNode messageNode = new DefaultMutableTreeNode(msg);
+					groupNode.add(messageNode);
+
+					if( oldSelectedRows.contains(msgErrors.getKey()))
+						 expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode, groupNode, messageNode} ) );
+
+					for (TestError error : errors) 
+					{
+						// Error node
+						DefaultMutableTreeNode errorNode = new DefaultMutableTreeNode(error);
+						messageNode.add(errorNode);
+					}
 				}
 			}
 		}

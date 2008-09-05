@@ -25,6 +25,7 @@ public class TestError
 	private String message;
 	/** Deeper error description */
 	private String description;
+	private String description_en;
 	/** The affected primitives */
 	private List<? extends OsmPrimitive> primitives;
 	/** The primitives to be highlighted */
@@ -45,35 +46,38 @@ public class TestError
 	 * @param primitives The affected primitives
 	 * @param code The test error reference code
 	 */
-	public TestError(Test tester, Severity severity, String message, String description, int code,
+	public TestError(Test tester, Severity severity, String message, String description, String description_en, int code,
 			List<? extends OsmPrimitive> primitives, List<?> highlighted) {
 		this.tester = tester;
 		this.severity = severity;
 		this.message = message;
 		this.description = description;
+		this.description_en = description_en;
 		this.primitives = primitives;
 		this.highlighted = highlighted;
 		this.code = code;
 	}
 	public TestError(Test tester, Severity severity, String message, int code, List<? extends OsmPrimitive> primitives, List<?> highlighted)
 	{
-		this(tester, severity, message, null, code, primitives, highlighted);
+		this(tester, severity, message, null, null, code, primitives, highlighted);
 	}
-	public TestError(Test tester, Severity severity, String message, String description, int code, List<? extends OsmPrimitive> primitives)
+	public TestError(Test tester, Severity severity, String message, String description, String description_en,
+	int code, List<? extends OsmPrimitive> primitives)
 	{
-		this(tester, severity, message, description, code, primitives, primitives);
+		this(tester, severity, message, description, description_en, code, primitives, primitives);
 	}
 	public TestError(Test tester, Severity severity, String message, int code, List<? extends OsmPrimitive> primitives)
 	{
-		this(tester, severity, message, null, code, primitives, primitives);
+		this(tester, severity, message, null, null, code, primitives, primitives);
 	}
 	public TestError(Test tester, Severity severity, String message, int code, OsmPrimitive primitive)
 	{
-		this(tester, severity, message, null, code, Collections.singletonList(primitive), Collections.singletonList(primitive));
+		this(tester, severity, message, null, null, code, Collections.singletonList(primitive), Collections.singletonList(primitive));
 	}
-	public TestError(Test tester, Severity severity, String message, String description, int code, OsmPrimitive primitive)
+	public TestError(Test tester, Severity severity, String message, String description,
+	String description_en, int code, OsmPrimitive primitive)
 	{
-		this(tester, severity, message, description, code, Collections.singletonList(primitive));
+		this(tester, severity, message, description, description_en, code, Collections.singletonList(primitive));
 	}
 
 	/**
@@ -146,7 +150,7 @@ public class TestError
 	public String getIgnoreState()
 	{
 		Collection<String> strings = new TreeSet<String>();
-		String ignorestring = Integer.toString(code);
+		String ignorestring = getIgnoreSubGroup();
 		for (OsmPrimitive o : primitives)
 		{
 			// ignore data not yet uploaded
@@ -163,6 +167,19 @@ public class TestError
 			ignorestring += ":" + o;
 		}
 		return ignorestring;
+	}
+
+	public String getIgnoreSubGroup()
+	{
+		String ignorestring = getIgnoreGroup();
+		if(description_en != null)
+			ignorestring += "_"+description_en;
+		return ignorestring;
+	}
+
+	public String getIgnoreGroup()
+	{
+		return Integer.toString(code);
 	}
 
 	public void setIgnored(boolean state)

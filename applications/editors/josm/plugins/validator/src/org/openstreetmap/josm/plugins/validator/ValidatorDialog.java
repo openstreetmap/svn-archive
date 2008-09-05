@@ -29,6 +29,7 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.Util;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * A small tool dialog for displaying the current errors. The selection manager
@@ -76,7 +77,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		tr("Set the selected elements on the map to the selected items in the list above."), this);
 		selectButton.setEnabled(false);
 		buttonPanel.add(selectButton);
-		buttonPanel.add(new SideButton(marktr("Validate"), "refresh", "Validator", tr("Validate the data."), this));
+		buttonPanel.add(new SideButton(marktr("Validate"), "refresh", "Validator",
+		tr("Validate either current selection or complete dataset."), this));
 		fixButton = new SideButton(marktr("Fix"), "fix", "Validator", tr("Fix the selected errors."), this);
 		fixButton.setEnabled(false);
 		buttonPanel.add(fixButton);
@@ -186,6 +188,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void ignoreErrors(ActionEvent e)
 	{
+		int asked = JOptionPane.DEFAULT_OPTION;
 		boolean changed = false;
 		TreePath[] selectionPaths = tree.getSelectionPaths();
 		if( selectionPaths == null )
@@ -197,6 +200,46 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
 			if( node == null )
 				continue;
+
+			Object mainNodeInfo = node.getUserObject();
+			if(!(mainNodeInfo instanceof TestError))
+			{
+				int depth = 1;
+				Set<String> state = new HashSet<String>();
+				// ask if the whole set should be ignored
+				if(asked == JOptionPane.DEFAULT_OPTION)
+				{
+					String[] a = new String[]{tr("Whole group"), tr("Single elements"),tr("Nothing")};
+					asked = JOptionPane.showOptionDialog(Main.parent, tr("Ignore whole group or individual elements?"),
+					tr("Ignoring elements"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+					ImageProvider.get("dialogs", "delete"), a, a[1]);
+				}
+				if(asked == JOptionPane.YES_NO_OPTION)
+				{
+					Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
+					while(children.hasMoreElements())
+					{
+						DefaultMutableTreeNode childNode = children.nextElement();
+						if(processedNodes.contains(childNode))
+							continue;
+
+						processedNodes.add(childNode);
+						Object nodeInfo = childNode.getUserObject();
+						if(nodeInfo instanceof TestError)
+						{
+							TestError err = (TestError)nodeInfo;
+							err.setIgnored(true);
+							changed = true;
+							state.add(node.getDepth() == 1 ? err.getIgnoreSubGroup() : err.getIgnoreGroup());
+						}
+					}
+					for(String s : state)
+						ignoredErrors.add(s);
+					continue;
+				}
+				else if(asked == JOptionPane.CANCEL_OPTION)
+					continue;
+			}
 
 			Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
 			while( children.hasMoreElements() )

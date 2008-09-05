@@ -824,7 +824,45 @@
                         <line class="highway-racetrack-core" smart-linecap="no"/>
                     </rule>
                     <else>
-                        <line class="highway-core highway-track-core" smart-linecap="no"/>
+                        <rule e="way" k="surface" v="grass">
+                            <line class="highway-core highway-track-back highway-track-back-grass" smart-linecap="no"/>
+                        </rule>
+                        <else>
+                            <line class="highway-core highway-track-back" smart-linecap="no"/>
+                        </else>
+                        <rule e="way" k="tracktype" v="grade3|grade4|grade5"> 
+                            <rule e="way" k="surface" v="grass">
+                                <rule e="way" k="tracktype" v="grade3">
+                                    <line class="highway-core highway-track-core" smart-linecap="no"/>
+                                    <line class="highway-core highway-track-midline-grade3 highway-track-midline-grade3-grass" smart-linecap="no"/>
+                                </rule>
+                                <rule e="way" k="tracktype" v="grade4">
+                                    <line class="highway-core highway-track-core highway-track-core-grade4" smart-linecap="no"/>
+                                    <line class="highway-core highway-track-midline-grade4 highway-track-midline-grade4-grass" smart-linecap="no"/>
+                                </rule>
+                                <rule e="way" k="tracktype" v="grade5">
+                                    <line class="highway-core highway-track-core highway-track-core-grade5" smart-linecap="no"/>
+                                    <line class="highway-core highway-track-midline-grade5 highway-track-midline-grade5-grass" smart-linecap="no"/>
+                                </rule>
+                            </rule>
+                            <else>
+                                <rule e="way" k="tracktype" v="grade3">
+                                    <line class="highway-core highway-track-core" smart-linecap="no"/>
+                                    <line class="highway-core highway-track-midline-grade3" smart-linecap="no"/>
+                                </rule>
+                                <rule e="way" k="tracktype" v="grade4">
+                                    <line class="highway-core highway-track-core highway-track-core-grade4" smart-linecap="no"/>
+                                    <line class="highway-core highway-track-midline-grade4" smart-linecap="no"/>
+                                </rule>
+                                <rule e="way" k="tracktype" v="grade5">
+                                    <line class="highway-core highway-track-core highway-track-core-grade5" smart-linecap="no"/>
+                                    <line class="highway-core highway-track-midline-grade5" smart-linecap="no"/>
+                                </rule>
+                            </else>
+                        </rule>
+                        <else>
+                            <line class="highway-core highway-track-core" smart-linecap="no"/>
+                        </else>
                     </else>
                 </rule>
                 <rule e="way" k="highway" v="unsurfaced">
@@ -2485,7 +2523,17 @@
             .highway-track-bridge-core              { stroke-width: 1.75px; }
             .highway-track-casing                   { stroke-width: 1.0px;   stroke: #d79331; }
             .highway-track-area-casing              { stroke-width: 0.2px; }
-            .highway-track-core                     { stroke-width: 0.8px;   stroke: #ffffff; }
+            .highway-track-core                     { stroke-width: 0.7px;   stroke: #ffffff; }
+            .highway-track-core-grade4              { stroke-width: 0.6px; }
+            .highway-track-core-grade5              { stroke-width: 0.5px; }
+            .highway-track-back                     { stroke-width: 0.8px;   stroke: #ffecd1; }
+            .highway-track-midline-grade3           { stroke-width: 0.1px;   stroke: #ffecd1; }
+            .highway-track-midline-grade4           { stroke-width: 0.2px;   stroke: #ffecd1; }
+            .highway-track-midline-grade5           { stroke-width: 0.3px;   stroke: #ffecd1; }
+            .highway-track-back-grass               { stroke: #bde3cb; }
+            .highway-track-midline-grade3-grass     { stroke: #bde3cb; }
+            .highway-track-midline-grade4-grass     { stroke: #bde3cb; }
+            .highway-track-midline-grade5-grass     { stroke: #bde3cb; }
             .highway-track-area                     { fill: #ffffff; }
             .highway-track-name                     { stroke-width: 0px;     font-size: 1.25px; }
             .highway-track-ref                      { stroke-width: 0px;     font-size: 1.25px; }

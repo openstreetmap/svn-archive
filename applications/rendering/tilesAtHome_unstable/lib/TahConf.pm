@@ -69,7 +69,14 @@ sub set
     return $self->{Config}->set(@_);
 }
 
-
+#-----------------------------------------------------------------------------
+# get a hash of config settings matching regex
+#-----------------------------------------------------------------------------
+sub varlist
+{
+    my $self = shift();
+    return $self->{Config}->varlist(@_);
+}
 
 #--------------------------------------------------------------------------
 # Checks a tiles@home basic configuration which is needed for uploading

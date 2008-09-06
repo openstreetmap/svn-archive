@@ -19,7 +19,7 @@ public class NodesWithSameName extends Test {
 
 	public NodesWithSameName() {
 		super(tr("Nodes with same name"),
-			tr("Find nodes that have the same name (might be duplicates)"));
+			tr("This test finds nodes that have the same name (might be duplicates)."));
 	}
 
 	@Override public void startTest() {

@@ -2998,8 +2998,8 @@ msgstr "Liste laden"
 #, java-format
 msgid "Downloaded plugin information from {0} site"
 msgid_plural "Downloaded plugin information from {0} sites"
-msgstr[0] "Lade Plugin Informationen von {0} Seite"
-msgstr[1] "Lade Plugin Informationen von {0} Seiten"
+msgstr[0] "Plugin Informationen von {0} Seite geladen"
+msgstr[1] "Plugin Informationen von {0} Seiten geladen"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:94
 msgid "No plugin information found."
@@ -4960,7 +4960,7 @@ msgstr "Strecke abgebaut"
 
 #: ../lang/presets.java:862
 msgid "Railway Point"
-msgstr "Eisenbahnpunkt"
+msgstr "Eisenbahnpunkte"
 
 #: ../lang/presets.java:863
 msgid "Level Crossing"
@@ -5044,7 +5044,7 @@ msgstr "Damm bearbeiten"
 
 #: ../lang/presets.java:949
 msgid "Waterway Point"
-msgstr "Gewässerort"
+msgstr "Gewässerpunkte"
 
 #: ../lang/presets.java:950
 msgid "Lock Gate"

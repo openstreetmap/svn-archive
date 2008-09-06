@@ -91,7 +91,7 @@ public class UnconnectedWays extends Test
 			{
 				for(Map.Entry<Node, Way> error : map.entrySet())
 				{
-					errors.add(new TestError(this, Severity.WARNING,
+					errors.add(new TestError(this, Severity.OTHER,
 					tr("Way node near other way"), UNCONNECTED_WAYS,
 					Arrays.asList(error.getKey(), error.getValue())));
 				}
@@ -109,7 +109,7 @@ public class UnconnectedWays extends Test
 			{
 				for(Map.Entry<Node, Way> error : map.entrySet())
 				{
-					errors.add(new TestError(this, Severity.WARNING,
+					errors.add(new TestError(this, Severity.OTHER,
 					tr("Connected way end node near other way"), UNCONNECTED_WAYS,
 					Arrays.asList(error.getKey(), error.getValue())));
 				}

@@ -121,7 +121,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                             || f.getName().toLowerCase().endsWith(".gpx.gz"));
                 }
                 @Override public String getDescription() {
-                    return tr("GPX tracks (*.gpx, *.gpx.gz)");
+                    return tr("GPX Files (*.gpx *.gpx.gz)");
                 }
             });
             fc.showOpenDialog(Main.parent);
@@ -340,7 +340,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                                     || f.getName().toLowerCase().endsWith(".jpeg"));
                         }
                         @Override public String getDescription() {
-                            return tr("Images (*.jpg)");
+                            return tr("JPEG images (*.jpg)");
                         }
                     });
                     fc.showOpenDialog(Main.parent);

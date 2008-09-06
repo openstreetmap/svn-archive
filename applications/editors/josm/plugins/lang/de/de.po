@@ -280,7 +280,7 @@ msgstr "Passwort eingeben"
 
 #: ../../core/src/org/openstreetmap/josm/io/OsmConnection.java:127
 msgid "Aborting..."
-msgstr "Abruch..."
+msgstr "Abbruch..."
 
 #: ../../core/src/org/openstreetmap/josm/Main.java:237
 #, java-format

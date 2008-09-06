@@ -43,7 +43,7 @@ public class NodesWithSameName extends Test {
 	@Override public void endTest() {
 		for (List<Node> nodes : namesToNodes.values()) {
 			if (nodes.size() > 1) {
-				errors.add(new TestError(this, Severity.WARNING,
+				errors.add(new TestError(this, Severity.OTHER,
 					tr("Nodes with same name"), SAME_NAME, nodes));
 			}
 		}

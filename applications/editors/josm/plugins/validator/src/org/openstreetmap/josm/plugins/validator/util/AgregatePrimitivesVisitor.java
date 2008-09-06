@@ -10,7 +10,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
 /**
  * A visitor that aggregates all primitives it visits.
  * <p>
- * The primitives are sorted according to their tyep: first nodes, then ways.
+ * The primitives are sorted according to their type: first nodes, then ways.
  * 
  * @author frsantos
  */

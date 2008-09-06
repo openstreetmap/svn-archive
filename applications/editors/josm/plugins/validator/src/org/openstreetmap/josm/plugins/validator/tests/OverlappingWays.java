@@ -135,7 +135,8 @@ public class OverlappingWays extends Test
 						type = OVERLAPPING_WAY;
 					}
 
-					errors.add(new TestError(this, Severity.OTHER, tr(errortype), type, prims, duplicated));
+					errors.add(new TestError(this, type < OVERLAPPING_HIGHWAY_AREA
+					? Severity.WARNING : Severity.OTHER, tr(errortype), type, prims, duplicated));
 					ways_seen.put(current_ways, duplicated);
 				}
 				else	/* way seen, mark highlight layer only */

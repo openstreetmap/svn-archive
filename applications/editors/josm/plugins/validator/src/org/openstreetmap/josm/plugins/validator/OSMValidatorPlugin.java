@@ -72,6 +72,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		WronglyOrderedWays.class,  // ID 1001 .. 1099
 		UnclosedWays.class,        // ID 1101 .. 1199
 		TagChecker.class,          // ID 1201 .. 1299
+		UnconnectedWays.class,     // ID 1301 .. 1399
 	};
 
 	/**

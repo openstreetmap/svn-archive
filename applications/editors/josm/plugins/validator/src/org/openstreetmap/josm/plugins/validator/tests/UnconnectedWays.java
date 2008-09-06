@@ -71,7 +71,7 @@ public class UnconnectedWays extends Test
 			for(Map.Entry<Node, Way> error : map.entrySet())
 			{
 				errors.add(new TestError(this, Severity.WARNING,
-				tr("Unconnected way end node near other way"), UNCONNECTED_WAYS,
+				tr("Way end node near other way"), UNCONNECTED_WAYS,
 				Arrays.asList(error.getKey(), error.getValue())));
 			}
 		}
@@ -92,7 +92,7 @@ public class UnconnectedWays extends Test
 				for(Map.Entry<Node, Way> error : map.entrySet())
 				{
 					errors.add(new TestError(this, Severity.WARNING,
-					tr("Unconnected way node near other way"), UNCONNECTED_WAYS,
+					tr("Way node near other way"), UNCONNECTED_WAYS,
 					Arrays.asList(error.getKey(), error.getValue())));
 				}
 			}

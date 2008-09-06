@@ -5079,9 +5079,8 @@ msgid "Edit Slipway"
 msgstr "Bootshebeanlage bearbeiten"
 
 #: ../lang/presets.java:980
-#, fuzzy
 msgid "Aerialway"
-msgstr "Eisenbahn"
+msgstr "Seilbahnen"
 
 #: ../lang/presets.java:981
 msgid "Chair Lift"
@@ -5093,30 +5092,27 @@ msgstr "Sessellift bearbeiten"
 
 #: ../lang/presets.java:986
 msgid "Drag Lift"
-msgstr ""
+msgstr "Schlepplift"
 
 #: ../lang/presets.java:987
-#, fuzzy
 msgid "Edit a Drag Lift"
-msgstr "Abwassergraben bearbeiten"
+msgstr "Schlepplift bearbeiten"
 
 #: ../lang/presets.java:991
-#, fuzzy
 msgid "Cable Car"
-msgstr "Viehgitter"
+msgstr "Gondelbahn"
 
 #: ../lang/presets.java:992
-#, fuzzy
 msgid "Edit a Cable Car"
-msgstr "Kanal bearbeiten"
+msgstr "Gondelbahn bearbeiten"
 
 #: ../lang/presets.java:996 ../lang/presets.java:1062
 msgid "Station"
-msgstr "Bahnhof"
+msgstr "Station"
 
 #: ../lang/presets.java:997
 msgid "Edit a Station"
-msgstr "Bahnhof bearbeiten"
+msgstr "Station bearbeiten"
 
 #: ../lang/presets.java:1005
 msgid "Car"

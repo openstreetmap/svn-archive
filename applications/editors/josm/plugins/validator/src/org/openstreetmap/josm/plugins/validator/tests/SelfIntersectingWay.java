@@ -20,7 +20,7 @@ public class SelfIntersectingWay extends Test {
 	public SelfIntersectingWay() {
 		super(tr("Self-intersecting ways"),
 			  tr("This test checks for ways " +
-				"that contain some of their nodes more than once"));
+				"that contain some of their nodes more than once."));
 	}
 
 	@Override public void visit(Way w) {

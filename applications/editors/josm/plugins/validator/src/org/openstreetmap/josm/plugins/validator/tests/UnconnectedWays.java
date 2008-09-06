@@ -40,7 +40,7 @@ public class UnconnectedWays extends Test
 	public UnconnectedWays()
 	{
 		super(tr("Unconnected ways."),
-			  tr("This test checks if a way has an endpoint very near to another way"));
+			  tr("This test checks if a way has an endpoint very near to another way."));
 	}
 
 	@Override

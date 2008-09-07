@@ -567,6 +567,8 @@ public class TagChecker extends Test
 				sb += ";"+Sources.getModel().getElementAt(i);
 			sources = sb.substring(1);
 		}
+		if(sources.length() == 0)
+			sources = null;
 		Main.pref.put(PREF_SOURCES, sources );
 	}
 

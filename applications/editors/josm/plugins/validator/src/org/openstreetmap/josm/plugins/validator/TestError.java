@@ -1,13 +1,19 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 import org.openstreetmap.josm.gui.MapView;
 
@@ -15,399 +21,380 @@ import org.openstreetmap.josm.gui.MapView;
  * Validation error
  * @author frsantos
  */
-public class TestError
-{
-	/** is this error on the ignore list */
-	private Boolean ignored = false;
-	/** Severity */
-	private Severity severity;
-	/** The error message */
-	private String message;
-	/** Deeper error description */
-	private String description;
-	private String description_en;
-	/** The affected primitives */
-	private List<? extends OsmPrimitive> primitives;
-	/** The primitives to be highlighted */
-	private List<?> highlighted;
-	/** The tester that raised this error */
-	private Test tester;
-	/** Internal code used by testers to classify errors */
-	private int code;
-	/** If this error is selected */
-	private boolean selected;
+public class TestError {
+    /** is this error on the ignore list */
+    private Boolean ignored = false;
+    /** Severity */
+    private Severity severity;
+    /** The error message */
+    private String message;
+    /** Deeper error description */
+    private String description;
+    private String description_en;
+    /** The affected primitives */
+    private List<? extends OsmPrimitive> primitives;
+    /** The primitives to be highlighted */
+    private List<?> highlighted;
+    /** The tester that raised this error */
+    private Test tester;
+    /** Internal code used by testers to classify errors */
+    private int code;
+    /** If this error is selected */
+    private boolean selected;
 
-	/**
-	 * Constructors
-	 * @param tester The tester
-	 * @param severity The severity of this error
-	 * @param message The error message
-	 * @param primitive The affected primitive
-	 * @param primitives The affected primitives
-	 * @param code The test error reference code
-	 */
-	public TestError(Test tester, Severity severity, String message, String description, String description_en, int code,
-			List<? extends OsmPrimitive> primitives, List<?> highlighted) {
-		this.tester = tester;
-		this.severity = severity;
-		this.message = message;
-		this.description = description;
-		this.description_en = description_en;
-		this.primitives = primitives;
-		this.highlighted = highlighted;
-		this.code = code;
-	}
-	public TestError(Test tester, Severity severity, String message, int code, List<? extends OsmPrimitive> primitives, List<?> highlighted)
-	{
-		this(tester, severity, message, null, null, code, primitives, highlighted);
-	}
-	public TestError(Test tester, Severity severity, String message, String description, String description_en,
-	int code, List<? extends OsmPrimitive> primitives)
-	{
-		this(tester, severity, message, description, description_en, code, primitives, primitives);
-	}
-	public TestError(Test tester, Severity severity, String message, int code, List<? extends OsmPrimitive> primitives)
-	{
-		this(tester, severity, message, null, null, code, primitives, primitives);
-	}
-	public TestError(Test tester, Severity severity, String message, int code, OsmPrimitive primitive)
-	{
-		this(tester, severity, message, null, null, code, Collections.singletonList(primitive), Collections.singletonList(primitive));
-	}
-	public TestError(Test tester, Severity severity, String message, String description,
-	String description_en, int code, OsmPrimitive primitive)
-	{
-		this(tester, severity, message, description, description_en, code, Collections.singletonList(primitive));
-	}
+    /**
+     * Constructors
+     * @param tester The tester
+     * @param severity The severity of this error
+     * @param message The error message
+     * @param primitive The affected primitive
+     * @param primitives The affected primitives
+     * @param code The test error reference code
+     */
+    public TestError(Test tester, Severity severity, String message, String description, String description_en,
+            int code, List<? extends OsmPrimitive> primitives, List<?> highlighted) {
+        this.tester = tester;
+        this.severity = severity;
+        this.message = message;
+        this.description = description;
+        this.description_en = description_en;
+        this.primitives = primitives;
+        this.highlighted = highlighted;
+        this.code = code;
+    }
 
-	/**
-	 * Gets the error message
-	 * @return the error message
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
+    public TestError(Test tester, Severity severity, String message, int code, List<? extends OsmPrimitive> primitives,
+            List<?> highlighted) {
+        this(tester, severity, message, null, null, code, primitives, highlighted);
+    }
 
-	/**
-	 * Gets the error message
-	 * @return the error description
-	 */
-	public String getDescription()
-	{
-		return description;
-	}
+    public TestError(Test tester, Severity severity, String message, String description, String description_en,
+            int code, List<? extends OsmPrimitive> primitives) {
+        this(tester, severity, message, description, description_en, code, primitives, primitives);
+    }
 
-	/**
-	 * Sets the error message
-	 * @param message The error message
-	 */
-	public void setMessage(String message)
-	{
-		this.message = message;
-	}
+    public TestError(Test tester, Severity severity, String message, int code, List<? extends OsmPrimitive> primitives) {
+        this(tester, severity, message, null, null, code, primitives, primitives);
+    }
 
-	/**
-	 * Gets the list of primitives affected by this error
-	 * @return the list of primitives affected by this error
-	 */
-	public List<? extends OsmPrimitive> getPrimitives()
-	{
-		return primitives;
-	}
+    public TestError(Test tester, Severity severity, String message, int code, OsmPrimitive primitive) {
+        this(tester, severity, message, null, null, code, Collections.singletonList(primitive), Collections
+                .singletonList(primitive));
+    }
 
-	/**
-	 * Sets the list of primitives affected by this error
-	 * @param primitives the list of primitives affected by this error
-	 */
+    public TestError(Test tester, Severity severity, String message, String description, String description_en,
+            int code, OsmPrimitive primitive) {
+        this(tester, severity, message, description, description_en, code, Collections.singletonList(primitive));
+    }
 
-	public void setPrimitives(List<OsmPrimitive> primitives)
-	{
-		this.primitives = primitives;
-	}
+    /**
+     * Gets the error message
+     * @return the error message
+     */
+    public String getMessage() {
+        return message;
+    }
 
-	/**
-	 * Gets the severity of this error
-	 * @return the severity of this error
-	 */
-	public Severity getSeverity()
-	{
-		return severity;
-	}
+    /**
+     * Gets the error message
+     * @return the error description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Sets the severity of this error
-	 * @param severity the severity of this error
-	 */
-	public void setSeverity(Severity severity)
-	{
-		this.severity = severity;
-	}
+    /**
+     * Sets the error message
+     * @param message The error message
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	/**
-	 * Sets the ignore state for this error
-	 */
-	public String getIgnoreState()
-	{
-		Collection<String> strings = new TreeSet<String>();
-		String ignorestring = getIgnoreSubGroup();
-		for (OsmPrimitive o : primitives)
-		{
-			// ignore data not yet uploaded
-			if(o.id == 0)
-				return null;
-			String type = "u";
-			if (o instanceof Way) type = "w";
-			else if (o instanceof Relation) type = "r";
-			else if (o instanceof Node) type = "n";
-			strings.add(type + "_" + o.id);
-		}
-		for (String o : strings)
-		{
-			ignorestring += ":" + o;
-		}
-		return ignorestring;
-	}
+    /**
+     * Gets the list of primitives affected by this error
+     * @return the list of primitives affected by this error
+     */
+    public List<? extends OsmPrimitive> getPrimitives() {
+        return primitives;
+    }
 
-	public String getIgnoreSubGroup()
-	{
-		String ignorestring = getIgnoreGroup();
-		if(description_en != null)
-			ignorestring += "_"+description_en;
-		return ignorestring;
-	}
+    /**
+     * Sets the list of primitives affected by this error
+     * @param primitives the list of primitives affected by this error
+     */
 
-	public String getIgnoreGroup()
-	{
-		return Integer.toString(code);
-	}
+    public void setPrimitives(List<OsmPrimitive> primitives) {
+        this.primitives = primitives;
+    }
 
-	public void setIgnored(boolean state)
-	{
-		ignored = state;
-	}
+    /**
+     * Gets the severity of this error
+     * @return the severity of this error
+     */
+    public Severity getSeverity() {
+        return severity;
+    }
 
-	public Boolean getIgnored()
-	{
-		return ignored;
-	}
+    /**
+     * Sets the severity of this error
+     * @param severity the severity of this error
+     */
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
+    }
 
-	/**
-	 * Gets the tester that raised this error
-	 * @return the tester that raised this error
-	 */
-	public Test getTester()
-	{
-		return tester;
-	}
+    /**
+     * Sets the ignore state for this error
+     */
+    public String getIgnoreState() {
+        Collection<String> strings = new TreeSet<String>();
+        String ignorestring = getIgnoreSubGroup();
+        for (OsmPrimitive o : primitives) {
+            // ignore data not yet uploaded
+            if (o.id == 0)
+                return null;
+            String type = "u";
+            if (o instanceof Way)
+                type = "w";
+            else if (o instanceof Relation)
+                type = "r";
+            else if (o instanceof Node)
+                type = "n";
+            strings.add(type + "_" + o.id);
+        }
+        for (String o : strings) {
+            ignorestring += ":" + o;
+        }
+        return ignorestring;
+    }
 
-	/**
-	 * Gets the code
-	 * @return the code
-	 */
-	public int getCode()
-	{
-		return code;
-	}
+    public String getIgnoreSubGroup() {
+        String ignorestring = getIgnoreGroup();
+        if (description_en != null)
+            ignorestring += "_" + description_en;
+        return ignorestring;
+    }
 
-	/**
-	 * Returns true if the error can be fixed automatically
-	 *
-	 * @return true if the error can be fixed
-	 */
-	public boolean isFixable()
-	{
-		return tester != null && tester.isFixable(this);
-	}
+    public String getIgnoreGroup() {
+        return Integer.toString(code);
+    }
 
-	/**
-	 * Fixes the error with the appropiate command
-	 *
-	 * @return The command to fix the error
-	 */
-	public Command getFix()
-	{
-		if( tester == null )
-			return null;
+    public void setIgnored(boolean state) {
+        ignored = state;
+    }
 
-		return tester.fixError(this);
-	}
+    public Boolean getIgnored() {
+        return ignored;
+    }
 
-	/**
-	 * Paints the error on affected primitives
-	 *
-	 * @param g The graphics
-	 * @param mv The MapView
-	 */
-	public void paint(Graphics g, MapView mv)
-	{
-		if(!ignored)
-		{
-			PaintVisitor v = new PaintVisitor(g, mv);
-			for (Object o : highlighted) {
-				if (o instanceof OsmPrimitive)
-					v.visit((OsmPrimitive) o);
-				else if (o instanceof WaySegment)
-					v.visit((WaySegment) o);
-			}
-		}
-	}
+    /**
+     * Gets the tester that raised this error
+     * @return the tester that raised this error
+     */
+    public Test getTester() {
+        return tester;
+    }
 
-	/**
-	 * Visitor that highlights the primitives affected by this error
-	 * @author frsantos
-	 */
-	class PaintVisitor implements Visitor
-	{
-		/** The graphics */
-		private final Graphics g;
-		/** The MapView */
-		private final MapView mv;
+    /**
+     * Gets the code
+     * @return the code
+     */
+    public int getCode() {
+        return code;
+    }
 
-		/**
-		 * Constructor
-		 * @param g The graphics
-		 * @param mv The Mapview
-		 */
-		public PaintVisitor(Graphics g, MapView mv)
-		{
-			this.g = g;
-			this.mv = mv;
-		}
+    /**
+     * Returns true if the error can be fixed automatically
+     *
+     * @return true if the error can be fixed
+     */
+    public boolean isFixable() {
+        return tester != null && tester.isFixable(this);
+    }
 
-		public void visit(OsmPrimitive p) {
-			if (!p.deleted && !p.incomplete) {
-				p.visit(this);
-			}
-		}
+    /**
+     * Fixes the error with the appropiate command
+     *
+     * @return The command to fix the error
+     */
+    public Command getFix() {
+        if (tester == null)
+            return null;
 
-		/**
-		 * Draws a circle around the node
-		 * @param n The node
-		 * @param color The circle color
-		 */
-		public void drawNode(Node n, Color color)
-		{
-			Point p = mv.getPoint(n.eastNorth);
-			g.setColor(color);
-			if( selected )
-			{
-				g.fillOval(p.x-5, p.y-5, 10, 10);
-			}
-			else
-				g.drawOval(p.x-5, p.y-5, 10, 10);
-		}
+        return tester.fixError(this);
+    }
 
-		/**
-		 * Draws a line around the segment
-		 *
-		 * @param s The segment
-		 * @param color The color
-		 */
-		public void drawSegment(Node n1, Node n2, Color color)
-		{
-			Point p1 = mv.getPoint(n1.eastNorth);
-			Point p2 = mv.getPoint(n2.eastNorth);
-			g.setColor(color);
+    /**
+     * Paints the error on affected primitives
+     *
+     * @param g The graphics
+     * @param mv The MapView
+     */
+    public void paint(Graphics g, MapView mv) {
+        if (!ignored) {
+            PaintVisitor v = new PaintVisitor(g, mv);
+            visitHighlighted(v);
+        }
+    }
 
-			double t = Math.atan2(p2.x-p1.x, p2.y-p1.y);
-			double cosT = Math.cos(t);
-			double sinT = Math.sin(t);
-			int deg = (int)Math.toDegrees(t);
-			if( selected )
-			{
-				int[] x = new int[] {(int)(p1.x + 5*cosT), (int)(p2.x + 5*cosT), (int)(p2.x - 5*cosT), (int)(p1.x - 5*cosT)};
-				int[] y = new int[] {(int)(p1.y - 5*sinT), (int)(p2.y - 5*sinT), (int)(p2.y + 5*sinT), (int)(p1.y + 5*sinT)};
-				g.fillPolygon(x, y, 4);
-				g.fillArc(p1.x-5, p1.y-5, 10, 10, deg, 180 );
-				g.fillArc(p2.x-5, p2.y-5, 10, 10, deg, -180);
-			}
-			else
-			{
-				g.drawLine((int)(p1.x + 5*cosT), (int)(p1.y - 5*sinT), (int)(p2.x + 5*cosT), (int)(p2.y - 5*sinT));
-				g.drawLine((int)(p1.x - 5*cosT), (int)(p1.y + 5*sinT), (int)(p2.x - 5*cosT), (int)(p2.y + 5*sinT));
-				g.drawArc(p1.x-5, p1.y-5, 10, 10, deg, 180 );
-				g.drawArc(p2.x-5, p2.y-5, 10, 10, deg, -180);
-			}
-		}
+    public void visitHighlighted(ValidatorVisitor v) {
+        for (Object o : highlighted) {
+            if (o instanceof OsmPrimitive)
+                v.visit((OsmPrimitive) o);
+            else if (o instanceof WaySegment)
+                v.visit((WaySegment) o);
+        }
+    }
 
+    /**
+     * Visitor that highlights the primitives affected by this error
+     * @author frsantos
+     */
+    class PaintVisitor implements ValidatorVisitor, Visitor {
+        /** The graphics */
+        private final Graphics g;
+        /** The MapView */
+        private final MapView mv;
 
-		/**
-		 * Draw a small rectangle.
-		 * White if selected (as always) or red otherwise.
-		 *
-		 * @param n The node to draw.
-		 */
-		public void visit(Node n)
-		{
-			if( isNodeVisible(n) )
-				drawNode(n, severity.getColor());
-		}
+        /**
+         * Constructor
+         * @param g The graphics
+         * @param mv The Mapview
+         */
+        public PaintVisitor(Graphics g, MapView mv) {
+            this.g = g;
+            this.mv = mv;
+        }
 
-		public void visit(Way w)
-		{
-			Node lastN = null;
-			for (Node n : w.nodes) {
-				if (lastN == null) {
-					lastN = n;
-					continue;
-				}
-				if (isSegmentVisible(lastN, n))
-				{
-					drawSegment(lastN, n, severity.getColor());
-				}
-				lastN = n;
-			}
-		}
+        public void visit(OsmPrimitive p) {
+            if (!p.deleted && !p.incomplete) {
+                p.visit(this);
+            }
+        }
 
-		public void visit(WaySegment ws) {
-			if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.nodes.size()) return;
-			Node a = ws.way.nodes.get(ws.lowerIndex),
-				 b = ws.way.nodes.get(ws.lowerIndex + 1);
-			if (isSegmentVisible(a, b)) {
-				drawSegment(a, b, severity.getColor());
-			}
-		}
+        /**
+         * Draws a circle around the node
+         * @param n The node
+         * @param color The circle color
+         */
+        public void drawNode(Node n, Color color) {
+            Point p = mv.getPoint(n.eastNorth);
+            g.setColor(color);
+            if (selected) {
+                g.fillOval(p.x - 5, p.y - 5, 10, 10);
+            } else
+                g.drawOval(p.x - 5, p.y - 5, 10, 10);
+        }
 
-		public void visit(Relation r)
-		{
-			/* No idea how to draw a relation. */
-		}
+        /**
+         * Draws a line around the segment
+         *
+         * @param s The segment
+         * @param color The color
+         */
+        public void drawSegment(Node n1, Node n2, Color color) {
+            Point p1 = mv.getPoint(n1.eastNorth);
+            Point p2 = mv.getPoint(n2.eastNorth);
+            g.setColor(color);
 
-		/**
-		 * Checks if the given node is in the visible area.
-		 * @param n The node to check for visibility
-		 * @return true if the node is visible
-		 */
-		protected boolean isNodeVisible(Node n) {
-			Point p = mv.getPoint(n.eastNorth);
-			return !((p.x < 0) || (p.y < 0) || (p.x > mv.getWidth()) || (p.y > mv.getHeight()));
-		}
+            double t = Math.atan2(p2.x - p1.x, p2.y - p1.y);
+            double cosT = Math.cos(t);
+            double sinT = Math.sin(t);
+            int deg = (int) Math.toDegrees(t);
+            if (selected) {
+                int[] x = new int[] { (int) (p1.x + 5 * cosT), (int) (p2.x + 5 * cosT), (int) (p2.x - 5 * cosT),
+                        (int) (p1.x - 5 * cosT) };
+                int[] y = new int[] { (int) (p1.y - 5 * sinT), (int) (p2.y - 5 * sinT), (int) (p2.y + 5 * sinT),
+                        (int) (p1.y + 5 * sinT) };
+                g.fillPolygon(x, y, 4);
+                g.fillArc(p1.x - 5, p1.y - 5, 10, 10, deg, 180);
+                g.fillArc(p2.x - 5, p2.y - 5, 10, 10, deg, -180);
+            } else {
+                g.drawLine((int) (p1.x + 5 * cosT), (int) (p1.y - 5 * sinT), (int) (p2.x + 5 * cosT),
+                        (int) (p2.y - 5 * sinT));
+                g.drawLine((int) (p1.x - 5 * cosT), (int) (p1.y + 5 * sinT), (int) (p2.x - 5 * cosT),
+                        (int) (p2.y + 5 * sinT));
+                g.drawArc(p1.x - 5, p1.y - 5, 10, 10, deg, 180);
+                g.drawArc(p2.x - 5, p2.y - 5, 10, 10, deg, -180);
+            }
+        }
 
-		/**
-		 * Checks if the given segment is in the visible area.
-		 * NOTE: This will return true for a small number of non-visible
-		 *		 segments.
-		 * @param ls The segment to check
-		 * @return true if the segment is visible
-		 */
-		protected boolean isSegmentVisible(Node n1, Node n2) {
-			Point p1 = mv.getPoint(n1.eastNorth);
-			Point p2 = mv.getPoint(n2.eastNorth);
-			if ((p1.x < 0) && (p2.x < 0)) return false;
-			if ((p1.y < 0) && (p2.y < 0)) return false;
-			if ((p1.x > mv.getWidth()) && (p2.x > mv.getWidth())) return false;
-			if ((p1.y > mv.getHeight()) && (p2.y > mv.getHeight())) return false;
-			return true;
-		}
-	}
+        /**
+         * Draw a small rectangle.
+         * White if selected (as always) or red otherwise.
+         *
+         * @param n The node to draw.
+         */
+        public void visit(Node n) {
+            if (isNodeVisible(n))
+                drawNode(n, severity.getColor());
+        }
 
-	/**
-	 * Sets the selection flag of this error
-	 * @param selected if this error is selected
-	 */
-	public void setSelected(boolean selected)
-	{
-		this.selected = selected;
-	}
+        public void visit(Way w) {
+            Node lastN = null;
+            for (Node n : w.nodes) {
+                if (lastN == null) {
+                    lastN = n;
+                    continue;
+                }
+                if (isSegmentVisible(lastN, n)) {
+                    drawSegment(lastN, n, severity.getColor());
+                }
+                lastN = n;
+            }
+        }
+
+        public void visit(WaySegment ws) {
+            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.nodes.size())
+                return;
+            Node a = ws.way.nodes.get(ws.lowerIndex), b = ws.way.nodes.get(ws.lowerIndex + 1);
+            if (isSegmentVisible(a, b)) {
+                drawSegment(a, b, severity.getColor());
+            }
+        }
+
+        public void visit(Relation r) {
+            /* No idea how to draw a relation. */
+        }
+
+        /**
+         * Checks if the given node is in the visible area.
+         * @param n The node to check for visibility
+         * @return true if the node is visible
+         */
+        protected boolean isNodeVisible(Node n) {
+            Point p = mv.getPoint(n.eastNorth);
+            return !((p.x < 0) || (p.y < 0) || (p.x > mv.getWidth()) || (p.y > mv.getHeight()));
+        }
+
+        /**
+         * Checks if the given segment is in the visible area.
+         * NOTE: This will return true for a small number of non-visible
+         *		 segments.
+         * @param ls The segment to check
+         * @return true if the segment is visible
+         */
+        protected boolean isSegmentVisible(Node n1, Node n2) {
+            Point p1 = mv.getPoint(n1.eastNorth);
+            Point p2 = mv.getPoint(n2.eastNorth);
+            if ((p1.x < 0) && (p2.x < 0))
+                return false;
+            if ((p1.y < 0) && (p2.y < 0))
+                return false;
+            if ((p1.x > mv.getWidth()) && (p2.x > mv.getWidth()))
+                return false;
+            if ((p1.y > mv.getHeight()) && (p2.y > mv.getHeight()))
+                return false;
+            return true;
+        }
+    }
+
+    /**
+     * Sets the selection flag of this error
+     * @param selected if this error is selected
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }

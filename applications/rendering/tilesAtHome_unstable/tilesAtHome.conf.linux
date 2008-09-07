@@ -25,6 +25,14 @@ PngOptimizer=pngcrush
 # Set the timeout when downloading files (in seconds)
 DownloadTimeout=1800
 
+# APIServers and XAPIServers define the servers to use to download OSM datta from.
+# APIServers are used for standard map downloads and XAPIServers are used for downloads 
+# with the specification of predicates.
+# The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
+# Currently defined servers are API, ROMA and XAPI for APIServers and XAPI for XAPIServers.
+#APIServers = API,ROMA,XAPI
+#XAPIServers = XAPI
+
 # Fall back to XAPI in case we get a "no data here" error.
 # assumes XAPI is current enough for rendering, and can take the load
 FallBackToXAPI = 0

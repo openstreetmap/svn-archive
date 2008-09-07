@@ -398,7 +398,7 @@ public class Entities {
                 if (entityValue == -1) {
                     res += '&' + entityContent + ';';
                 } else {
-                    res += entityValue;
+                    res += (char) entityValue;
                 }
                 i = semiColonIdx; // move index up to the semi-colon
             } else {

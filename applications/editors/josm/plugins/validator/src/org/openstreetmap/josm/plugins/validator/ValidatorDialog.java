@@ -25,11 +25,9 @@ import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -339,21 +337,19 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
 
             if (isDblClick) {
                 Main.ds.setSelected(sel);
-                if (sel.size() == 1) {
-                    // Center the view on the selected item
-                    double scale = Main.map.mapView.getScale();
-                    OsmPrimitive prim = sel.iterator().next();
-                    BoundingXYVisitor box = new BoundingXYVisitor();
-                    if (prim instanceof Way) {
-                        Way way = (Way) prim;
-                        way.visitNodes(box);
-                        EastNorth center = new EastNorth(box.min.east() / 2 + box.max.east() / 2, box.min.north() / 2
-                                + box.max.north() / 2);
-                        Main.map.mapView.zoomTo(center, scale);
-                    } else if (prim instanceof Node) {
-                        Node node = (Node) prim;
-                        Main.map.mapView.zoomTo(node.eastNorth, scale);
-                    }
+            }
+            TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+            if ((selPath != null) && (e.getClickCount() == 2)) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) selPath
+                        .getPathComponent(selPath.getPathCount() - 1);
+                if (node.getUserObject() instanceof TestError) {
+                    TestError testError = (TestError) node.getUserObject();
+                    ValidatorBoundingXYVisitor box = new ValidatorBoundingXYVisitor();
+                    testError.visitHighlighted(box);
+                    if (box.max.equals(box.min))
+                        Main.map.mapView.zoomTo(box.max, 0.00001);
+                    else
+                        Main.map.mapView.recalculateCenterScale(box);
                 }
             }
         }
@@ -377,6 +373,22 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
             boolean hasFixes = setSelection(null, false);
             fixButton.setEnabled(hasFixes);
             Main.map.repaint();
+        }
+    }
+
+    public static class ValidatorBoundingXYVisitor extends BoundingXYVisitor implements ValidatorVisitor {
+
+        public void visit(OsmPrimitive p) {
+            if (!p.deleted && !p.incomplete) {
+                p.visit(this);
+            }
+        }
+
+        public void visit(WaySegment ws) {
+            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.nodes.size())
+                return;
+            visit(ws.way.nodes.get(ws.lowerIndex));
+            visit(ws.way.nodes.get(ws.lowerIndex + 1));
         }
     }
 }

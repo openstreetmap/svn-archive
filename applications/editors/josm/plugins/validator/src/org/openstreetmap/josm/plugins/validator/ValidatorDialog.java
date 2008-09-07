@@ -46,6 +46,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
     /** Serializable ID */
     private static final long serialVersionUID = 2952292777351992696L;
 
+    private static final double MIN_SCALE_ON_SELECT = 0.00001;
+
     /** The display tree */
     protected ErrorTreePanel tree;
 
@@ -347,9 +349,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
                     ValidatorBoundingXYVisitor box = new ValidatorBoundingXYVisitor();
                     testError.visitHighlighted(box);
                     if (box.max.equals(box.min))
-                        Main.map.mapView.zoomTo(box.max, 0.00001);
-                    else
+                        Main.map.mapView.zoomTo(box.max, MIN_SCALE_ON_SELECT);
+                    else {
                         Main.map.mapView.recalculateCenterScale(box);
+                        if (Main.map.mapView.getScale() < MIN_SCALE_ON_SELECT)
+                            Main.map.mapView.zoomTo(Main.map.mapView.getCenter(), MIN_SCALE_ON_SELECT);
+                    }
                 }
             }
         }

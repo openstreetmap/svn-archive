@@ -28,6 +28,7 @@ import javax.swing.JFileChooser;
 import org.openstreetmap.josmng.osm.Bounds;
 import org.openstreetmap.josmng.utils.Convertor;
 import org.openstreetmap.josmng.ui.Main;
+import org.openstreetmap.josmng.utils.BackgroundTask;
 import org.openstreetmap.josmng.utils.MenuPosition;
 import org.openstreetmap.josmng.view.Layer;
 import org.openstreetmap.josmng.view.MapView;
@@ -56,15 +57,24 @@ public class OpenAction extends AbstractAction {
         open(new File(fName));
     }
 
-    public static void open(File file) {
-        Layer layer = Convertor.<File,Layer>convert(file, Layer.class);
-        if (layer != null) {
-            MapView view = Main.main.getMapView();
-            Bounds bounds = layer.getBounds();
+    public static void open(final File file) {
+        new BackgroundTask() {
+            private Layer layer;
+            private Bounds bounds;
+            
+            protected @Override void perform() {
+                setLabel("Loading " + file.getName());
+                layer = Convertor.<File,Layer>convert(file, Layer.class);
+                if (layer != null) bounds = layer.getBounds();
+            }
 
-            view.addLayer(layer);
-            view.setViewBounds(bounds);
-        }
+            protected @Override void finish() {
+                if (isCancelled()) return;
+                MapView view = Main.main.getMapView();
+                view.addLayer(layer);
+                view.setViewBounds(bounds);
+            }
+        }.performBlocking();
     }
-    
+
 }

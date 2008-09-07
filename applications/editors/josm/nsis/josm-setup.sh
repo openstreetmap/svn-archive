@@ -53,7 +53,7 @@ echo "### convert jar to exe with launch4j"
 
 # delete old exe file first
 rm josm.exe
-"/cygdrive/c/Program Files/Launch4j/launch4jc.exe" "$LAUNCH4J_XML"
+"/cygdrive/c/Programme/Launch4j/launch4jc.exe" "$LAUNCH4J_XML"
 # using a relative path still doesn't work with launch4j 3.0.0-pre2
 #"/cygdrive/c/Program Files/Launch4j/launch4jc.exe" ./launch4j.xml
 if ! [ -s josm.exe ]; then
@@ -65,7 +65,7 @@ echo
 echo "##################################################################"
 echo "### create the installer exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
-"/cygdrive/c/Program Files/nsis/makensis.exe" /DVERSION=$VERSION josm.nsi
+"/cygdrive/c/Programme/nsis/makensis.exe" /DVERSION=$VERSION josm.nsi
 
 # delete the intermediate file, just to avoid confusion
 rm josm.exe

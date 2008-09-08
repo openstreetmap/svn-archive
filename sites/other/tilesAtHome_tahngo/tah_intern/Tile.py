@@ -108,6 +108,8 @@ class Tile:
       return (tilesetfile,d_offset,d_offset_next-d_offset)
     else:
       # return complete blankness tile
+      # first set blankness var to the appropriate value, so the caller knows
+      self.blankness = d_offset
       blankpng = ['unknown.png','sea.png','land.png','transparent.png']
       tilesetfile = os.path.join(blanktilepath,blankpng[d_offset])
       d_length = os.stat(tilesetfile)[6] # tile length

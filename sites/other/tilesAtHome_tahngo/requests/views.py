@@ -329,6 +329,11 @@ def take(request):
               try:  
                   # get the next request from the queue
                   req = Request.objects.get_next_and_lock()
+                  # if it's a low prio request, make sure the upload queue is not too full
+                  upload_queue = Upload.objects.all().count() # [0...1500]
+                  if upload_queue > {1:1500,2:1200,3:1000,4:700}[req.priority]:
+                      # bomb out with a "No request in queue for you"
+                      raise Request.DoesNotExist
  	          req.status=1
  	          req.client = user
  	          req.client_uuid = form.cleaned_data.get('client_uuid', 0)
@@ -355,7 +360,7 @@ def take(request):
 
               except Request.DoesNotExist:
                   # could not get_next_and_lock, queue empty
-                  html ="XX|5|No requests in queue"
+                  html ="XX|5|No requests in queue for you."
             else:
                   #  active_user_reqs > 150
                   html ='XX|5|You have more than 150 active requests. '\

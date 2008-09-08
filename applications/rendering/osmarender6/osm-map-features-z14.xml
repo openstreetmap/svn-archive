@@ -8,7 +8,7 @@
     data="data.osm"
     svgBaseProfile="full"
     scale="1"
-    symbolScale="1"
+    symbolScale="0.86"
     textAttenuation="1.0"
     minimumMapWidth="1"
     minimumMapHeight="1"
@@ -949,7 +949,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-		<symbol ref="peak" width="12" height="12" position="center"/>
+		<symbol ref="peak" position="center"/>
         </rule>
 
         <!-- Draw marine features -->
@@ -984,7 +984,7 @@
 
         <!-- Amenities -->
         <rule e="node" k="amenity" v="hospital">
-		<symbol ref="hospital" width="8" height="8" position="center"/>
+		<symbol ref="hospital" position="center"/>
         </rule>
     </rule>
 

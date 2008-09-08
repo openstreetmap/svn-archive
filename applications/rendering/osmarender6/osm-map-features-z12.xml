@@ -8,7 +8,7 @@
     data="data.osm"
     svgBaseProfile="full"
     scale="1"
-    symbolScale="1"
+    symbolScale="3.43"
     textAttenuation="0.44"
     minimumMapWidth="1"
     minimumMapHeight="1"
@@ -733,7 +733,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-		<symbol ref="peak" width="24" height="24" position="center"/>
+		<symbol ref="peak" position="center"/>
         </rule>
 
         <!-- Non-physical routes -->
@@ -743,7 +743,7 @@
 
         <!-- Airfields and airports -->
         <rule e="node" k="aeroway" v="airport">
-		<symbol ref="airport" width="40" height="40" position="center"/>
+		<symbol ref="airport" position="center"/>
         </rule>
     </rule>
 

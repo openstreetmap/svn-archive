@@ -8,7 +8,7 @@
     data="data.osm"
     svgBaseProfile="full"
     scale="1"
-    symbolScale="1"
+    symbolScale="0.21"
     textAttenuation="7"
     minimumMapWidth="1"
     minimumMapHeight="1"
@@ -1215,11 +1215,11 @@
         <!-- Mini-roundabouts -->
         <rule e="node" k="highway" v="mini_roundabout">
             <rule e="node" k="direction" v="clockwise">
-		    <symbol ref="roundabout_left" width="4" height="4" position="center"/>
+		    <symbol ref="roundabout_left" position="center"/>
             </rule>
             <else>
                 <!-- Default is anti-clockwise -->
-		<symbol ref="roundabout_right" width="4" height="4" position="center"/>
+		<symbol ref="roundabout_right" position="center"/>
             </else>
         </rule>
 
@@ -1358,7 +1358,7 @@
         </rule>
         <rule e="way" k="man_made" v="piste:halfpipe">
             <area class="man-made-piste-halfpipe"/>
-	    <areaSymbol ref="man-made-halfpipe" width="7" height="7" position="center"/>
+	    <areaSymbol ref="man-made-halfpipe" position="center"/>
         </rule>
 
         <!-- Surface lifts (render over pistes) -->
@@ -1424,7 +1424,7 @@
 
         <!-- Natural features -->
         <rule e="node" k="natural" v="peak">
-		<symbol ref="peak" width="4" height="4" position="center"/>
+		<symbol ref="peak" position="center"/>
         </rule>
 
         <!-- Draw marine features -->
@@ -1437,7 +1437,7 @@
 
         <!-- Power lines and pylons -->
         <rule e="node" k="power" v="tower">
-		<symbol ref="power-tower" width="2" height="2" position="center"/>
+		<symbol ref="power-tower" position="center"/>
         </rule>
         <rule e="way" k="power" v="line">
             <line class="power-line no-bezier"/>
@@ -1471,12 +1471,12 @@
         <rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
             <rule e="node" s="way" k="railway" v="rail">
                 <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
-			<symbol ref="railway-crossing" width="7" height="7" position="center"/>
+			<symbol ref="railway-crossing" position="center"/>
                 </rule>
             </rule>
             <else>
                 <rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
-			<symbol ref="railway-crossing" width="6" height="6" position="center"/>
+			<symbol ref="railway-crossing" position="center"/>
                 </rule>
             </else>
         </rule>
@@ -1484,10 +1484,10 @@
         <else>
             <rule e="node" k="railway" v="level_crossing">
                 <rule e="node" s="way" k="railway" v="rail">
-			<symbol ref="railway-crossing" width="7" height="7" position="center"/>
+			<symbol ref="railway-crossing" position="center"/>
                 </rule>
                 <else>
-			<symbol ref="railway-crossing" width="6" height="6" position="center"/>
+			<symbol ref="railway-crossing" position="center"/>
                 </else>
             </rule>
         </else>
@@ -1515,15 +1515,15 @@
 
         <!-- Bus stops -->
         <rule e="node" k="highway" v="bus_stop">
-		<symbol ref="bus" width="6" height="6" position="center"/>
+		<symbol ref="bus" position="center"/>
         </rule>
 
         <!-- Amenities -->
         <rule e="node" k="amenity" v="hospital">
-		<symbol ref="hospital" width="4" height="4" position="center"/>
+		<symbol ref="hospital" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="speed_trap">
-		<symbol ref="speed_trap" width="4" height="2" position="center"/>
+		<symbol ref="speed_trap" position="center"/>
         </rule>
     </rule>
 

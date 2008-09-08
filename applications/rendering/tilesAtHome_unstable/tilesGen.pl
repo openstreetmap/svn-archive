@@ -1128,40 +1128,18 @@ sub startBatikAgent
     }
 
     statusMessage("Starting BatikAgent\n",0,0);
-    my $Cmd;
-    if ($^O eq "linux" || $^O eq "cygwin" || $^O eq "darwin" ) 
+    my $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > %s", 
+        $Config->get("Niceness"),
+        $Config->get("BatikJVMSize"),
+        $Config->get("BatikClasspath"),
+        $Config->get("BatikPort"),
+        File::Spec->devnull()
+      );
+    if (fork() == 0)
     {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
-          $Config->get("i18n") ? "LC_ALL=C " : "",
-          $Config->get("Niceness"),
-          $Config->get("BatikJVMSize"),
-          $Config->get("BatikClasspath"),
-          $Config->get("BatikPort")
-        );
-    }
-    elsif ($^O eq "MSWin32")
-    {
-        $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d", 
-           "start /B /LOW",
-           $Config->get("BatikJVMSize"),
-           $Config->get("BatikClasspath"),
-           $Config->get("BatikPort")
-         );
-    }
-    else ## just try the linux variant and hope for the best
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
-          $Config->get("i18n") ? "LC_ALL=C " : "",
-          $Config->get("Niceness"),
-          $Config->get("BatikJVMSize"),
-          $Config->get("BatikClasspath"),
-          $Config->get("BatikPort") 
-         );
-        statusMessage("WARNING: Could not determine Operating System ".$^O.", please report to tilesathome mailing list, assuming unix",1,0);
+        exec($Cmd);
     }
     
-    system($Cmd);
-
     for (my $i = 0; $i < 10; $i++) {
         sleep(1);
         if (getBatikStatus()) {

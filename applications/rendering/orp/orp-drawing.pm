@@ -642,15 +642,16 @@ sub draw_symbol
         $width = $symbolnode->getAttribute('width') unless $symbolnode->getAttribute('width') eq '';
         $height = $symbolnode->getAttribute('height') unless $symbolnode->getAttribute('height') eq '';
 
+        my $shift = "";
+
         if ($symbolnode->getAttribute('position') eq 'center')
         {
-            $coordinates->[0] = $coordinates->[0] - $width / 2;
-            $coordinates->[1] = $coordinates->[1] - $height / 2;
+            $shift = sprintf("translate(%f,%f)", - $width / 2, - $height / 2);
         }
 
         $writer->startTag("g", 
-            "transform" => sprintf("translate(%f,%f) scale(%f)", 
-                $coordinates->[0], $coordinates->[1], $symbolScale));
+            "transform" => sprintf("translate(%f,%f) scale(%f) %s", 
+                $coordinates->[0], $coordinates->[1], $symbolScale, $shift));
 
         my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
                 [ "type", "ref", "scale", "smart-linecap", 'position' ]);

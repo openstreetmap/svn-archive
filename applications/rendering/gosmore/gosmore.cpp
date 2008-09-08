@@ -1,6 +1,6 @@
 /* This software is placed by in the public domain by its authors. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
-   David Dean and Dmitry.
+   David Dean, Pablo D'Angelo and Dmitry.
    Thanks to
    * Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
    * Simon Wood, David Dean, Lambertus, TomH and many others for testing,
@@ -61,7 +61,8 @@
   o (ShowTrace,       0, 2) \
   o (ModelessDialog,  0, 2) \
   o (FullScreen,      0, 2) \
-  o (ValidateMode,    0, 2)
+  o (ValidateMode,    0, 2) \
+  o (DisplayOff,      0, 1)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -194,7 +195,7 @@ OPTIONS
 
 GtkWidget *draw, *location, *followGPSr, *orientNorthwards, *validateMode;
 GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
-int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE;
+int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
 /* zoom is the amount that fits into the window (regardless of window size) */
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
 
@@ -757,6 +758,11 @@ void HitButton (int b)
       if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
       else DialogBox (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
                NULL, (DLGPROC)DlgSearchProc);
+    }
+    else if (option == DisplayOffNum) {
+      if (CeEnableBacklight(FALSE)) {
+        gDisplayOff = TRUE;
+      }
     }
     else if (option == BaudRateNum) BaudRate += b * 4800 - 7200;
     #endif
@@ -1362,7 +1368,7 @@ gint Expose (void)
           x - icon[2] / 2, y - icon[3] / 2, icon[2], icon[3]);
       }
       else {
-        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas: 0 + RESERVED_PENS]);
+        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas + RESERVED_PENS: 0]);
         MoveToEx (mygc, x, y, NULL);
         for (int i = 1; i < newWays[j].cnt; i++) {
           LineTo (mygc, X (newWays[j].coord[i][0], newWays[j].coord[i][1]),
@@ -2280,8 +2286,8 @@ int main (int argc, char *argv[])
               xmlFree (tags);
               tags = n; 
             }
-            w.bits |= (defaultRestrict[StyleNr (&w)] | yesMask) &
-              ((noMask & (1 << accessR)) ? 0 : ~noMask);
+            w.bits |= ~noMask & (yesMask | (defaultRestrict[StyleNr (&w)] &
+                          ((noMask & (1 << accessR)) ? (1 << onewayR) : ~0)));
             char *compact = tags[0] == '\n' ? tags + 1 : tags;
             if (!wayFseek || *wayFseek) {
               fwrite (&w, sizeof (w), 1, pak);
@@ -2692,6 +2698,11 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       //if (HIWORD(lParam) < 30) {
         // state=LOWORD(lParam)/STATEWID;
       //}
+      if (gDisplayOff) {
+        CeEnableBacklight(TRUE);
+        gDisplayOff = FALSE;
+        break;
+      }
       GdkEventButton ev;
       ev.x = LOWORD (lParam);
       ev.y = HIWORD (lParam);
@@ -2904,6 +2915,7 @@ int WINAPI WinMain(
 {
   if(hPrevInstance) return(FALSE);
   hInst = hInstance;
+  gDisplayOff = FALSE;
   wchar_t argv0[80];
   GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
   UTF16 *sStart = (UTF16*) argv0, *rchr = (UTF16*) wcsrchr (argv0, '\\');

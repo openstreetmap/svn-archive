@@ -16,7 +16,7 @@ class LatestRequests(Feed):
         if priority != None:
             return Request.objects.filter(status=0, priority=priority).order_by('-request_time')[:10]
         else:
-            return Request.objects.filter(status=0).order_by('-request_time')[:10]
+            return Request.objects.filter(status=0).order_by('-request_time')[:50]
 
     def item_link(self):
         return "sdfsdf"
@@ -36,9 +36,9 @@ class OldestRequestsByPriority(Feed):
 
     def items(self, priority):
         if priority != None:
-            return Request.objects.filter(status=0, priority=priority).order_by('request_time')[:5]
+            return Request.objects.filter(status=0, priority=priority).order_by('request_time')[:50]
         else:
-            return Request.objects.filter(status=0).order_by('request_time')[:5]
+            return Request.objects.filter(status=0).order_by('request_time')[:50]
 
     def item_link(self):
         return "sdfsdf"

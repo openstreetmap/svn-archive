@@ -333,6 +333,7 @@ def take(request):
                   upload_queue = Upload.objects.all().count() # [0...1500]
                   if upload_queue > {1:1500,2:1200,3:1000,4:700}[req.priority]:
                       # bomb out with a "No request in queue for you"
+                      transaction.rollback()
                       raise Request.DoesNotExist
  	          req.status=1
  	          req.client = user

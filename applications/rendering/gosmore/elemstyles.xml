@@ -328,7 +328,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
-        <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+        <routing bicycle="20" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
 	</rule>
 
 	<rule>
@@ -337,7 +337,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
-                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+                <routing bicycle="20" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
 	</rule>
 
 	<rule>

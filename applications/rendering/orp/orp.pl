@@ -408,12 +408,16 @@ if (defined($symbolsDir))
                 registerSymbol($symbol->get_node(1));
             } else
             {
-                my %attributes = map {$_->getName => $_->getNodeValue} $symbolFile->find("/svg:svg/@*")->get_nodelist;
-                $attributes{'id'} = "symbol-".$file;
-                $writer->startTag("symbol", %attributes);
+                my $svgNode = $symbolFile->find("/svg:svg")->get_node(1);
+                my %namespaces = map {"xmlns:".$_->getPrefix => $_->getExpanded} $svgNode->getNamespaces;
+                $namespaces{'xmlns'} = $namespaces{'xmlns:#default'};
+                delete $namespaces{'xmlns:#default'};
+                my %attributes = map {$_->getName => $_->getValue} $svgNode->getAttributes;
+                $attributes{'id'} = "symbol-".$file; 
+                $writer->startTag("symbol", %attributes, %namespaces);
                 $writer->raw($symbolFile->findnodes_as_string("/svg:svg/*"));
                 $writer->endTag("symbol");
-                registerSymbol($symbolFile->find('/svg:svg')->get_node(1), $attributes{'id'});
+                registerSymbol($svgNode, $attributes{'id'});
             }
         }
     }

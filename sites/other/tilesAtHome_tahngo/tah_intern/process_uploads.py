@@ -46,8 +46,9 @@ class TileUpload ( threading.Thread ):
 
      finally:
          # make sure we leave transactions when quitting
-         transaction.commit()
-         transaction.leave_transaction_management()
+         if transaction.is_dirty():
+             transaction.commit()
+             transaction.leave_transaction_management()
          return 1
 
  #--------------------------------------------------------------------
@@ -227,7 +228,7 @@ class TileUpload ( threading.Thread ):
 
 
 #-----------------------------------------------------------------
-def sigterm(self, signum, frame):
+def sigterm(signum, frame):
     """ This is called when a SIGTERM signal is issued """
     print "Received SIGTERM signal. Shutdown gracefully."
     TileUpload.SIGTERM = True
@@ -259,9 +260,10 @@ if __name__ == '__main__':
           #sys.exit(1)
 
   try:
-      # wait for all threads to finish unless we receive CTRL-C
-      for i in range(0,numThreads):
-          threads[i].join()
+    # wait for all threads to finish unless we receive CTRL-C
+    for i in range(0,numThreads):
+        while threads[i].isAlive():
+          threads[i].join(5)
 
   except KeyboardInterrupt:
        # user pressed CTRL-C

@@ -152,4 +152,5 @@ class Tileset:
         if not os.path.isdir(tilepath): os.makedirs(tilepath, 0775)
         os.chmod(tmpfile,0664)
         move(tmpfile, os.path.join(tilepath,tilesetfile))
-        return (1,unknown_tiles)
+
+    return (1,unknown_tiles)

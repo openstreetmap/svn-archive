@@ -71,6 +71,7 @@ def show_uploads_page(request):
 # not a public view, but a helper function that creates a new request based on data in
 # 'form' and performs sanity checks etc. The form must have been validated previously.
 
+@transaction.commit_on_success
 def saveCreateRequestForm(request, form):
     """ Returns (Request, reason), with Request being 'None' on failure and 
         the saved request object on success. 
@@ -122,14 +123,26 @@ def saveCreateRequestForm(request, form):
     # finally save the updated request, the required layers are still missing then.
     newRequest.save()
 
-    # add layers to the request
+    # select layers for the request
     if form.data.has_key('layers'):
         # save the chosen layers
         layers = Layer.objects.filter(pk__in=form['layers'].data)
     else:
         # no layers selected -> save default layers
         layers = Layer.objects.filter(default=True)
-    for l in layers: newRequest.layers.add(l)
+
+
+    # only add layers if they make sense
+    numLayers=0
+    for l in layers: 
+        if l.max_z >= newRequest.max_z and l.min_z <= newRequest.min_z:
+            newRequest.layers.add(l)
+            numLayers += 1
+
+    if numLayers == 0:
+        # could not add ANY sensible layer, return error
+        transaction.rollback()
+        return (None, 'no sensible layer selected for request')
 
     # Finally return the request. Success!
     return (newRequest,'')
@@ -220,7 +233,6 @@ def feedback(request):
 #-------------------------------------------------------
 # Upload a finished tileset
 
-#@transaction.autocommit #commit as soon as we change something
 def upload_request(request):
     html='XX|Unknown error.'
 

@@ -140,8 +140,13 @@ class Tileset:
     if blank_tiles == 1365 and self.base_z == 12:
         # completely blank tileset at z12. Delete existing file and
         # have oceantiles.dat handle this.
-        os.unlink(tmpfile)
-        os.unlink(os.path.join(tilepath,tilesetfile))
+        try:
+            os.unlink(tmpfile)
+            os.unlink(os.path.join(tilepath,tilesetfile))
+        except OSError, e:
+            # it's ok if the file does not exist
+            if e.errno == 2: pass
+            else: raise e
     else:
         # finally create path if necessary and move the tmp file to its final location
         if not os.path.isdir(tilepath): os.makedirs(tilepath, 0775)

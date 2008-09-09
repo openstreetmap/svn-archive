@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from tah.tah_intern.models import Layer
-from tah.requests.manager import RequestManager
+from tah.requests.manager import RequestManager, UploadManager
 #-----------------------------------------------------
 class Request(models.Model):
   # x,y are the coordinates of the request tileset
@@ -65,6 +65,11 @@ class Upload(models.Model):
   priority = models.PositiveSmallIntegerField(blank=True,default=3)
   # if we need to do multi-threaded processing this shows locked uploads
   is_locked = models.BooleanField(blank=True,default=False)
+
+  ########  end of model definition #######
+
+  # use UploadManager that allows to e.g. select a request "FOR UPDATE"
+  objects = UploadManager()
 
   def __str__(self):
     return str(self.layer)+","+str(self.file)

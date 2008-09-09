@@ -92,10 +92,10 @@ class Tileset:
         It will be saved under user id 'userid'
     """
     tilepath, tilesetfile = self.get_filename(base_tile_path)
-    #f = open(os.path.join(tilepath,str(self.x)+'_'+str(self.y)),'wb')
     (tmp_fd,tmpfile) = mkstemp()
     f = os.fdopen(tmp_fd, 'w+b')
-    unknown_tiles=0
+    unknown_tiles = 0
+    blank_tiles = 0
     FILEVER=1
     d_offset = 5472 #PNG data starts here
 
@@ -114,6 +114,7 @@ class Tileset:
               self.set_subtiles_blank(t)
               #write out the blank state
               f.write(pack('I',t.blankness))
+              blank_tiles += 1
             else:
               # nonblank tile
               #try: 
@@ -135,8 +136,15 @@ class Tileset:
       f.seek(i_offset)
       f.write(pack('I',d_offset))
       f.close()
-    # finally create path if necessary and move the tmp file to its final location
-    if not os.path.isdir(tilepath): os.makedirs(tilepath, 0775)
-    os.chmod(tmpfile,0664)
-    move(tmpfile, os.path.join(tilepath,tilesetfile))
-    return (1,unknown_tiles)
+
+    if blank_tiles == 1365 and self.base_z == 12:
+        # completely blank tileset at z12. Delete existing file and
+        # have oceantiles.dat handle this.
+        os.unlink(tmpfile)
+        os.unlink(os.path.join(tilepath,tilesetfile))
+    else:
+        # finally create path if necessary and move the tmp file to its final location
+        if not os.path.isdir(tilepath): os.makedirs(tilepath, 0775)
+        os.chmod(tmpfile,0664)
+        move(tmpfile, os.path.join(tilepath,tilesetfile))
+        return (1,unknown_tiles)

@@ -5,6 +5,7 @@ import os, sys, logging, zipfile, random, re, stat, signal
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 import shutil
+import threading
 from datetime import datetime
 from time import sleep,clock,time
 from django.db import transaction
@@ -15,45 +16,39 @@ from tah.tah_intern.Tile import Tile
 from tah.requests.models import Request,Upload
 
 ### TileUpload returns 0 on success and >0 otherwise
-class TileUpload:
+class TileUpload ( threading.Thread ):
   unzip_path=None #path to be used for unzipping (temporary files)
   base_tilepath=None # base tile directory
   fname=None      #complete path of uploaded tileset file
   uid=None        #random unique id which is used for pathnames
   upload=None     #current handled upload object
   tmptiledir=None #usually unzip_path+uid contains the unzipped files
+  SIGTERM=False   # set to true if thread should stop
 
   def __init__(self,config):
     self.unzip_path = config.getSetting(name='unzipPath')
     self.base_tilepath = settings.TILES_ROOT
     if self.unzip_path == None or self.base_tilepath == None:
       sys.exit("Failed to get required settings.")
+    super(TileUpload, self).__init__()
 
-  def processloop(self):
+  def run ( self ):
      try:
-         try:
-             while True:
-                 transaction.enter_transaction_management()
-                 transaction.managed(True)
+         while not TileUpload.SIGTERM:
+             transaction.enter_transaction_management()
+             transaction.managed(True)
 
-                 self.process()
+             self.process()
 
-                 # finally, at very end. commit the changes
-                 transaction.commit()
-                 transaction.leave_transaction_management()
-
-         except KeyboardInterrupt:
-             # user pressed CTRL-C
-             if self.upload: self.cleanup(False)
+             # finally, at very end. commit the changes
              transaction.commit()
-             logging.info('Ctrl-C pressed. Shutdown gracefully.')
-             sys.exit("Ctrl-C pressed. Shutdown gracefully. Upload was: %s" % self.upload)
+             transaction.leave_transaction_management()
 
      finally:
          # make sure we leave transactions when quitting
          transaction.commit()
          transaction.leave_transaction_management()
-
+         return 1
 
  #--------------------------------------------------------------------
   def process(self):
@@ -62,10 +57,12 @@ class TileUpload:
       while not self. upload:
           # repeat fetching until there is one
           try:
-              self.upload = Upload.objects.filter(is_locked=False).order_by('upload_time')[0]
+              self.upload = Upload.objects.get_next_and_lock();
+              #filter(is_locked=False).order_by('upload_time')[0]
               self.upload.is_locked = True
               self.upload.save()
-          except IndexError:
+              transaction.commit()
+          except Upload.DoesNotExist:
               #logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
               transaction.commit()
@@ -211,13 +208,6 @@ class TileUpload:
     tahuser.save()
 
   #-----------------------------------------------------------------
-  def sigterm(self, signum, frame):
-    """ This is called when a SIGTERM signal is issued """
-    print "Received SIGTERM signal. Shutdown gracefully."
-    self.cleanup(None, False)
-    sys.exit(0)
-
-  #-----------------------------------------------------------------
   def cleanup(self, del_upload = True):
     """ Removes all temporary files and removes the upload object 
         (and the uploaded file if 'del_upload' is True.
@@ -234,8 +224,15 @@ class TileUpload:
       # delete the upload db entry
       self.upload.delete()
 
-#---------------------------------------------------------------------
 
+
+#-----------------------------------------------------------------
+def sigterm(self, signum, frame):
+    """ This is called when a SIGTERM signal is issued """
+    print "Received SIGTERM signal. Shutdown gracefully."
+    TileUpload.SIGTERM = True
+
+#---------------------------------------------------------------------
 if __name__ == '__main__':
   config = Settings()
   logging.basicConfig(level=logging.DEBUG,
@@ -248,12 +245,29 @@ if __name__ == '__main__':
 
   logging.info('Starting tile upload processor. (log level %s)' %\
                logging.getLevelName(logging.getLogger().getEffectiveLevel()))
-  u = TileUpload(config)
-  signal.signal(signal.SIGTERM,u.sigterm)
-  if not u.processloop():
-      logging.critical('Upload handling returned with error. Aborting.')
-      sys.stderr.write('Upload handling returned with error')
-      sys.exit(1)
+  signal.signal(signal.SIGTERM, sigterm)
+
+  threads = []
+  numThreads = 2
+
+  for i in range(0, numThreads):
+      # start numThreads threads with upload processors
+      threads.append(TileUpload(config))
+      threads[i].start()
+          #logging.critical('Upload handling thread %d returned with error. Aborting.' % i)
+          #sys.stderr.write('Upload handling thread %d returned with error' % i)
+          #sys.exit(1)
+
+  try:
+      # wait for all threads to finish unless we receive CTRL-C
+      for i in range(0,numThreads):
+          threads[i].join()
+
+  except KeyboardInterrupt:
+       # user pressed CTRL-C
+       logging.info('Ctrl-C pressed. Shutdown gracefully.')
+       TileUpload.SIGTERM = True
+
 else:
   sys.stderr.write('You need to run this as the main program.')
   sys.exit(1)

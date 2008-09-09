@@ -506,10 +506,10 @@ sub ProcessRequestsFromServer
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
 
-    statusMessage("Retrieving next job", 0, 3);
     my $req;
     my $Server = Server->new();
     do {
+        statusMessage("Retrieving next job", 0, 3);
         try {
             $req = $Server->fetchRequest();
 

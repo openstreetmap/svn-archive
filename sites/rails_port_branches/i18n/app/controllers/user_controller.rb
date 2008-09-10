@@ -146,7 +146,7 @@ class UserController < ApplicationController
       session[:token] = nil
     end
     session[:user] = nil
-    session[:locale] = 'en-US'
+    session[:locale] = 'en'
     Locale.set session[:locale]
     if params[:referer]
       redirect_to params[:referer]

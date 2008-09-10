@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   # TO be uncommented when click to globalize language option is used
-  # self.languages = {:english => 'en-US', :italian => 'it-IT', :bengali => 'bn-IN'}
+  # self.languages = {:english => 'en', :italian => 'it-IT', :bengali => 'bn-IN'}
 
 private 
 

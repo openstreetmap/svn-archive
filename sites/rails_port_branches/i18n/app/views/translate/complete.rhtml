@@ -2,7 +2,7 @@
 
 <%= link_to "pending strings", :action => 'pending', :locale => @user.locale -%> | complete translations | <%= link_to "statistics", :action => 'stats', :sort => 'percentage' -%> 
 
-<% unless params[:locale] == "en-US" %>
+<% unless params[:locale] == "en" %>
   <br />
   <h3><%= Locale.language -%><%= " ("+Locale.country.english_name+")" unless Locale.country.nil? %>'s complete translations:</h3>
   <hr />
@@ -21,7 +21,7 @@
 <% else %>
 
   <hr />
-  <p>English(US) is the default language for this website. So no translation required in this locale. To see translation update for other languages, <%= link_to "select the prefered one in your settings", :controller => 'user', :action => 'account', :display_name => @user.display_name %>. Also check l10n status in <%= link_to "statistics", :action => 'stat' -%>.</p>
+  <p>English is the default language for this website. So no translation required in this locale. To see translation update for other languages, <%= link_to "select the prefered one in your settings", :controller => 'user', :action => 'account', :display_name => @user.display_name %>. Also check l10n status in <%= link_to "statistics", :action => 'stat' -%>.</p>
 
 <% end %>
 

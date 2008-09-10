@@ -13,7 +13,7 @@ class TranslateController < ApplicationController
       redirect_to :action => 'view', :id => params[:id]
     end
     @title = 'l10n home'
-    unless params[:locale] == "en-US"
+    unless params[:locale] == "en"
       @entry_pages, @entries = paginate(:translations,
                                         :conditions => ['text IS NULL AND language_id = ?', Locale.language.id],
                                         :order => 'id DESC',
@@ -27,7 +27,7 @@ class TranslateController < ApplicationController
       redirect_to :action => 'view', :id => params[:id]
     end
     @title = 'l10n home'
-    unless params[:locale] == "en-US"
+    unless params[:locale] == "en"
       @entry_pages, @entries = paginate(:translations,
                                         :conditions => ['text IS NOT NULL AND language_id = ?', Locale.language.id],
                                         :order => 'id DESC',
@@ -53,7 +53,7 @@ class TranslateController < ApplicationController
 
   def stats
     @title = "l10n statistics".t
-    unless @user.nil? || @user.locale == "en-US"
+    unless @user.nil? || @user.locale == "en"
       stat = Statistic.find(:first, :conditions => ['locale = ?', @user.locale])
       if stat.nil?
         if Locale.country.nil?

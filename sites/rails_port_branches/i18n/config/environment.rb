@@ -78,8 +78,8 @@ Rails::Initializer.run do |config|
 end
 
 include Globalize
-Locale.set_base_language('en-US')
-LOCALES = { "English(US)" => "en-US", 
+Locale.set_base_language('en')
+LOCALES = { "English" => "en", 
             "Bengali(IN)" => "bn-IN", 
             "Hindi(IN)" => "hi-IN", 
             "Spanish" => "es-ES",

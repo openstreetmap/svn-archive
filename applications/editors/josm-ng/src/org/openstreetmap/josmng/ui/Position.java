@@ -20,42 +20,73 @@
 
 package org.openstreetmap.josmng.ui;
 
-
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.text.MessageFormat;
-import javax.swing.JLabel;
+import java.util.StringTokenizer;
+
+import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+
 import org.openstreetmap.josmng.osm.Coordinate;
+import org.openstreetmap.josmng.osm.CoordinateImpl;
 import org.openstreetmap.josmng.view.MapView;
 import org.openstreetmap.josmng.view.ViewCoords;
+/**
+ * Position display in status bar.
+ * Editable by double click. After edit view is changed to given position.
+ *  
+ * @author Petr Nejedly
+ * @author Christian Malolepszy
+ *
+ */
+class Position extends JTable implements MouseMotionListener {
+	private final MapView mv;
 
+	Position(MapView view) {
+		super(1, 1);
+		setSize(200, 20);
+		setMinimumSize(new Dimension(161, 18));
+		setMaximumSize(new Dimension(161, 18));
+		this.mv = view;
+		mv.addMouseMotionListener(this);
+		updatePosition(new Point(0, 0));
+		setToolTipText("Double click to enter a new view position.");
+		
+	}
 
+	private static MessageFormat COORDS = new MessageFormat(
+			"{0,number,0.000000};{1,number,0.000000}");
 
-class Position extends JLabel implements MouseMotionListener {
-    private final MapView mv;
-    Position(MapView view) {
-        this.mv = view;
-        mv.addMouseMotionListener(this);
-        updatePosition(new Point(0,0));
-    }
+	private static String format(MessageFormat format, Object... args) {
+		return format.format(args, new StringBuffer(), null).toString();
+	}
 
-    private static MessageFormat COORDS = new MessageFormat("{0,number,0.000000},{1,number,0.000000}");
-    private static String format(MessageFormat format, Object ... args) {
-        return format.format(args, new StringBuffer(), null).toString();
-    }
+	private void updatePosition(Point p) {
+		ViewCoords vc = mv.getPoint(p);
+		Coordinate coor = mv.getProjection().viewToCoord(vc);
+		setValueAt(format(COORDS, coor.getLatitude(), coor.getLongitude()), 0, 0);			
+	}	
 
-    private void updatePosition(Point p) {
-        ViewCoords vc = mv.getPoint(p);
-        Coordinate coor = mv.getProjection().viewToCoord(vc);
-        setText(format(COORDS, coor.getLatitude(), coor.getLongitude()));
-    }
+	public void mouseDragged(MouseEvent e) {
+		updatePosition(e.getPoint());
+	}
 
-    public void mouseDragged(MouseEvent e) {
-        updatePosition(e.getPoint());
-    }
-
-    public void mouseMoved(MouseEvent e) {
-        updatePosition(e.getPoint());
-    }
+	public void mouseMoved(MouseEvent e) {
+		updatePosition(e.getPoint());
+	}
+	
+	@Override
+	public void editingStopped(ChangeEvent e) {		
+		super.editingStopped(e);
+		StringTokenizer st = new StringTokenizer(getValueAt(getSelectedRow(), getSelectedColumn()).toString(),";");
+		if (st.countTokens() == 2)
+		{
+			double lat = Double.parseDouble(st.nextToken().replace(',', '.'));
+			double lon = Double.parseDouble(st.nextToken().replace(',', '.'));
+			mv.setCenter(mv.getProjection().coordToView(new CoordinateImpl(lat,lon)));						
+		}
+	}
 }

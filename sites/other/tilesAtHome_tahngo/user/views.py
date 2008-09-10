@@ -14,8 +14,8 @@ def index(request):
 
 #--------------------------------------------------------------
 # Show a list of all users sort by activity (or whatever)
-@cache_control(max_age=30)
-@cache_page(30)
+@cache_control(max_age=60*10)
+@cache_page(60*10)
 def show_user(request):
     order = request.GET.get('order')
     if order == 'tiles': sortorder='-renderedTiles'

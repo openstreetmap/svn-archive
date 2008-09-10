@@ -18,6 +18,9 @@ class RequestManager(models.Manager):
       query = 'select id from %s where %s=0 ' \
           'ORDER BY %s,%s LIMIT 1 FOR UPDATE' \
            % (table, 'status','priority','request_time')
+      #query = 'select id from %s where %s=0 ' \
+      #    'ORDER BY %s,%s LIMIT 1' \
+      #     % (table, 'status','priority','request_time')
 
       cursor = connection.cursor()
       cursor.execute(query)

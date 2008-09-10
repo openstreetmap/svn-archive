@@ -240,7 +240,7 @@ sub runCommand
         if(-f $inkscapebak)
         {
             unlink $inkscapecfg if(-f $inkscapecfg);
-            $inkscapecorrupt = 0 if(rename $inkscapebak, $inkscapecfg);
+            $inkscapecorrupt = 0 if(copy ($inkscapebak, $inkscapecfg)); # FIXME: check this fixes forked rendering
         }
     }
 

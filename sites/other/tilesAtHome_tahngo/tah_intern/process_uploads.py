@@ -251,7 +251,7 @@ if __name__ == '__main__':
   signal.signal(signal.SIGTERM, sigterm)
 
   # set all Uploads to unlocked when starting up
-  Upload.objects.all().update(is_locked=false)
+  Upload.objects.all().update(is_locked=False)
 
   threads = []
   numThreads = 1

@@ -354,7 +354,7 @@ def take(request):
  	          req.clientping_time=datetime.now()
                   req.save()
                   # commit transaction here, so others can continue
-                  #transaction.commit()
+                  transaction.commit()
 
                   # find out tileset filesize and age
                   # always hardcode 'tile' layer for now.
@@ -478,7 +478,7 @@ def stats_munin_requests(request,status):
 
 #----------------------------------------------------------------------
 # Simply return the latest client version (cached for 15 Minutes)
-@cache_page(60*15)
+#@cache_page(60*15)
 def show_latest_client_version(request):
-    html = Settings().getSetting(name='latest_client_version')
+    html = Settings().getSetting("latestClientVersion")
     return HttpResponse(html,mimetype='text/plain')

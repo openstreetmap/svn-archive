@@ -35,7 +35,7 @@ class Tile(models.Model):
 #-----------------------------------------------------------------------------
 class Settings(models.Model):
   #name describes layer and names the directory in which they are
-  name = models.CharField(max_length=30,unique=True)
+  name = models.CharField(max_length=64)
   value = models.CharField(max_length=255)
 
   def __str__(self):

@@ -250,6 +250,9 @@ if __name__ == '__main__':
                logging.getLevelName(logging.getLogger().getEffectiveLevel()))
   signal.signal(signal.SIGTERM, sigterm)
 
+  # set all Uploads to unlocked when starting up
+  Upload.objects.all().update(is_locked=false)
+
   threads = []
   numThreads = 1
 

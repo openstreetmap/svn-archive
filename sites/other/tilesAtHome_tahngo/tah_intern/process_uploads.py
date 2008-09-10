@@ -53,9 +53,10 @@ class TileUpload ( threading.Thread ):
 
  #--------------------------------------------------------------------
   def process(self):
-      #find the oldest unlocked upload file
       self.upload = None
-      while not self. upload:
+
+      #find the oldest unlocked upload file
+      while not self.upload:
           # repeat fetching until there is one
           try:
               self.upload = Upload.objects.get_next_and_lock();
@@ -68,6 +69,7 @@ class TileUpload ( threading.Thread ):
               # commit here, so next round see current status
               transaction.commit()
               sleep(10)
+
 
       # start timing tileset handling now
       starttime = (time(),clock())
@@ -107,7 +109,7 @@ class TileUpload ( threading.Thread ):
                       req.status=2
                       req.clientping_time=datetime.now()
                       req.save()
-                  logging.debug('Finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+                  logging.debug('%s finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (self.getName(), tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
                 else:
                     # saving the tileset went wrong
                     logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles, self.upload.user_id,self.upload.client_uuid))
@@ -249,7 +251,7 @@ if __name__ == '__main__':
   signal.signal(signal.SIGTERM, sigterm)
 
   threads = []
-  numThreads = 2
+  numThreads = 1
 
   for i in range(0, numThreads):
       # start numThreads threads with upload processors

@@ -31,7 +31,7 @@ class Request(models.Model):
   #clientping contains the last "I am still working on it" when active, on upload it indicates the upload time
   clientping_time = models.DateTimeField(blank=True,default=datetime.today())
   client = models.ForeignKey(User,blank=True,null=True)
-  client_uuid = models.PositiveSmallIntegerField(blank=True, default=0)
+  client_uuid = models.PositiveIntegerField(blank=True, default=0)
   #---- end of model definition ----
 
   # use RequestManager that allows to e.g. select a request "FOR UPDATE"

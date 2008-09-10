@@ -89,6 +89,7 @@ def saveCreateRequestForm(request, form):
           formdata['priority'] = 3
 
     if not formdata['src']: formdata['src'] = '' # requester did not supply a 'src' string
+    formdata['ipaddress'] = request.META['REMOTE_ADDR']
 
     # catch invalid x,y and return if found
     if not Tile(None,formdata['min_z'],formdata['x'],formdata['y']).is_valid():

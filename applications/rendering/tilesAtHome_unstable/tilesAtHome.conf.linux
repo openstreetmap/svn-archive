@@ -33,10 +33,6 @@ DownloadTimeout=1800
 #APIServers = API,ROMA,XAPI
 #XAPIServers = XAPI
 
-# Fall back to XAPI in case we get a "no data here" error.
-# assumes XAPI is current enough for rendering, and can take the load
-FallBackToXAPI = 0
-
 # Hand back render requests that have a tileset on a server bigger than
 # MaxTilesetComplexity. Useful if you do not have much RAM and inkscape
 # crashes. The biggest tileset is about 31000000, so playing with values

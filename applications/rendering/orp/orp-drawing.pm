@@ -650,11 +650,11 @@ sub draw_symbol
         }
 
         $writer->startTag("g", 
-            "transform" => sprintf("translate(%f,%f) scale(%f) %s", 
-                $coordinates->[0], $coordinates->[1], $symbolScale, $shift));
+            "transform" => sprintf("translate(%f,%f) scale(%f) %s %s", 
+                $coordinates->[0], $coordinates->[1], $symbolScale, $symbolnode->getAttribute("transform"), $shift));
 
         my %copiedAttributes = copy_attributes_not_in_list($symbolnode, 
-                [ "type", "ref", "scale", "smart-linecap", 'position' ]);
+                [ "type", "ref", "scale", "smart-linecap", 'position', 'transform' ]);
         my %attributes = ((
             "xlink:href" => "#$id",
             "width" => $width,

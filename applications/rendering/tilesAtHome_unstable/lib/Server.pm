@@ -29,7 +29,21 @@ use lib::TahConf;
 use Request;
 
 #-------------------------------------------------------------------------------
-# Server can be instantiated with ->new().
+=pod
+
+=head2 Public methods
+
+=head3 Class methods
+
+=over
+
+=item C<< ->new() >>
+
+A I<Server> can be instantiated with ->new().
+
+e.g. my $server = new Server or my $server = Server->new()
+
+=cut
 #-------------------------------------------------------------------------------
 sub new 
 {
@@ -40,7 +54,7 @@ sub new
     };
     bless $self, $class;
 
-    my $ua = LWP::UserAgent->new(timeout => 240, protocols_allowed => ['http']);
+    my $ua = LWP::UserAgent->new(timeout => $self->{Config}->get("DownloadTimeout"), protocols_allowed => ['http']);
     $ua->agent("tilesAtHome ($^O)");
     $ua->env_proxy();
     push @{ $ua->requests_redirectable }, 'POST';
@@ -51,10 +65,20 @@ sub new
 
 
 #-------------------------------------------------------------------------------
-# get a string from the server via HTTP
-# getString($URL)
-# $URL is the URL to fetch
-# returns a raw string that describes the request
+=pod 
+
+=back
+
+=head3 Instance methods
+
+=over
+
+=item C<< ->getString($URL) >>
+
+Get a string from the server via HTTP.  Returns the string returned by the
+server using $URL as the URL.
+
+=cut
 #-------------------------------------------------------------------------------
 sub getString
 {
@@ -83,8 +107,14 @@ sub getString
 
 
 #-------------------------------------------------------------------------------
-# Get a new render request from the server that should be rendered
-# returns a Request object
+=pod
+
+=item C<< ->fetchRequest() >>
+
+Get a new render request from the server to be rendered.  Returns a Request
+object.
+
+=cut
 #-------------------------------------------------------------------------------
 sub fetchRequest
 {
@@ -145,11 +175,23 @@ sub fetchRequest
 
 
 #-----------------------------------------------------------------------------
-# this is called when the client encounters errors in processing a tileset,
-# it tells the server the tileset will not be returned by the client.
-# Server->putRequestBack($Request, $Cause)
-# $Request: a 'Request' object containing z,x,y of the current request
-# $Cause:   a string describing the failure reason
+=pod
+
+=item C<< ->putRequestBack($Request, $Cause) >>
+
+Puts a request back to the server, indicating the cause.
+This is called when the client encounters errors in processing a tileset,
+it tells the server the tileset will not be returned by the client.
+
+=over
+
+=item C<$Request> is a Request object
+
+=item C<$Cause> is a string describing the cause
+
+=back
+
+=cut
 #-----------------------------------------------------------------------------
 sub putRequestBack 
 {
@@ -175,53 +217,81 @@ sub putRequestBack
 }
 
 
+#------------------------------------------------------------------
+=pod 
+
+=item C<< ->downloadFile($URL, $Filename, $UseExisting) >>
+
+Download an URL into a specified file.
+
+B<Parameter>: 
+
+=over
+
+=item C<$URL> the URL to download
+
+=item C<$Filename> a string naming the file into which the data should be stored
+
+=item C<$UseExisting> if false or omitted the file will be deleted before download, 
+if true the file will only be downloaded if the server has a newer version.
+
+=back
+
+=cut
+#-------------------------------------------------------------------
+sub downloadFile 
+{
+    my $self = shift();
+    my $Config = $self->{Config};
+    my ($URL, $File, $UseExisting) = @_;
+
+    my $ua = $self->{ua};
+
+    if(!$UseExisting) {
+        unlink($File);
+    }
+
+    # Note: mirror sets the time on the file to match the server time. This
+    # is important for the handling of JobTime later.
+    my $res = $ua->mirror($URL, $File);
+
+    if (!$res->is_success()) {
+        unlink($File) if (! $UseExisting);
+        throw ServerError $res->status_line, "TempError";
+    }
+    return -s $File;
+}
+
+
 #-------------------------------------------------------------------------------
-# Server will throw esceptions of class ServerError
+=pod
+
+=back
+
+=cut
+#-------------------------------------------------------------------------------
 
 package ServerError;
 use base 'Error::Simple';
 
 1;
 
-=pod 
+=pod
 
-=head2 Public methods
+=head2 Exceptions thrown
 
-=head3 Class methods
+Server objects will throw exceptions of class ServerError.
 
-=over
-
-=item C<< ->new() >>
-
-A I<Server> can be instantiated with ->new().
-
-e.g. my $server = new Server or my $server = Server->new()
-
-=back
-
-=head3 Instance methods
+C<< $err->text() >> returns a description of the error and C<< $err->value() >>
+returns an error class.  Possible values are:
 
 =over
 
-=item C<< ->getString($URL) >>
+=item B<PermError> indicating a permanent error
 
-Returns the string returned by the server using $URL as the URL.
+=item B<TempError> indicating a temporary error
 
-=item C<< ->fetchRequest() >>
-
-Returns a Request object.
-
-=item C<< ->putRequestBack($Request, $Cause) >>
-
-Puts a request back to the server, indicating the cause.
-
-=over
-
-=item C< $Request > is a Request object
-
-=item C< $Cause > is a string
-
-=back
+=item B<NoJobs> indicating that the server doesn't have any jobs for us
 
 =back
 

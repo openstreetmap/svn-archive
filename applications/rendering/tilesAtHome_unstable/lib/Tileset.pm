@@ -23,6 +23,7 @@ use strict;
 use File::Temp qw/ tempfile tempdir /;
 use Error qw(:try);
 use lib::TahConf;
+use lib::Server;
 use tahlib;
 use tahproject;
 use File::Copy;
@@ -266,6 +267,7 @@ sub downloadData
 
     my @OSMServers = (@predicates) ? split(/,/, $Config->get("XAPIServers")) : split(/,/, $Config->get("APIServers"));
 
+    my $Server = Server->new();
     my $res;
     my $filelist;
     foreach my $OSMServer (@OSMServers) {
@@ -295,9 +297,16 @@ sub downloadData
             if ($req->complexity() < 20_000_000) {
                 my $currentURL = $URL;
                 $currentURL =~ s/%b/${bbox}/g;
-                print "Download\n$currentURL\n" if ($Config->get("Debug"));
-                $res = ::DownloadFile($currentURL, $partialFile, 0);
-                push(@{$filelist}, $partialFile) if $res;
+                print "Downloading: $currentURL\n" if ($Config->get("Debug"));
+                try {
+                    $Server->downloadFile($currentURL, $partialFile, 0);
+                    push(@{$filelist}, $partialFile);
+                    $res = 1;
+                }
+                catch ServerError with { # just do nothing if there was an error during download
+                    my $err = shift();
+                    print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
+                };
             }
 
             if ((! $res) and ($Config->get("FallBackToSlices"))) {
@@ -310,11 +319,18 @@ sub downloadData
                     $partialFile = File::Spec->join($self->{JobDir}, "data-$i-$j.osm");
                     for (my $k = 1; $k <= 3; $k++) {  # try each slice 3 times
                         ::statusMessage("Downloading map data (slice $j of 10)", 0, 3);
-                        print "Download\n$currentURL\n" if ($Config->get("Debug"));
-                        $res = ::DownloadFile($URL, $partialFile, 0);
+                        print "Downloading: $currentURL\n" if ($Config->get("Debug"));
+                        try {
+                            $Server->downloadFile($URL, $partialFile, 0);
+                            $res = 1;
+                        }
+                        catch ServerError with {
+                            my $err = shift();
+                            print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
+                            my $message = ($k < 3) ? "Download of slice $j failed, trying again" : "Download of slice $j failed 3 times, giving up";
+                            ::statusMessage($message, 0, 3);
+                        };
                         last if ($res); # don't try again if download was successful
-                        my $message = ($k < 3) ? "Download of slice $j failed, trying again" : "Download of slice $j failed 3 times, giving up";
-                        ::statusMessage($message, 0, 3);
                     }
                     last if (!$res); # don't download remaining slices if one fails
                     push(@{$filelist}, $partialFile);

@@ -1007,11 +1007,11 @@
         <!-- Mini-roundabouts -->
         <rule e="node" k="highway" v="mini_roundabout">
             <rule e="node" k="direction" v="clockwise">
-		    <symbol ref="roundabout_left" position="center"/>
+		    <symbol ref="roundabout_left" position="center" transform="scale(0.6)"/>
             </rule>
             <else>
                 <!-- Default is anti-clockwise -->
-		<symbol ref="roundabout_right" position="center"/>
+		<symbol ref="roundabout_right" position="center" transform="scale(0.6)"/>
             </else>
         </rule>
 

@@ -253,6 +253,21 @@ sub CheckBasicConfig
         print "! no valid PngQuantizer specified\n";
     }
     #------
+    # check java version and path separator
+    my @javaInfo = split(/\n/,`java -cp java TestJava`);
+    $self->set("JavaAvailable", $javaInfo[0] eq "JAVATEST");
+    if ($self->get("JavaAvailable"))
+    {
+       $self->set("JavaVersion", $javaInfo[1]);
+       $self->set("JavaSeparator", $javaInfo[2]);
+       print "- Java version $javaInfo[1] is available\n";
+    } 
+    else 
+    {
+       $self->set("JavaVersion", 0);
+       $self->set("JavaSeparator", ":");
+       print "- Java is not available\n";
+    }
 
     return %EnvironmentInfo;
 
@@ -385,7 +400,7 @@ sub CheckConfig
 
         # any combination of comma-separated preprocessor names is allowed
         die "config option Preprocessor has invalid value in section [".$layer."]" 
-            if (grep { $_ !~ /maplint|close-areas|autocut|noop/} split(/,/, $self->get($layer."_Preprocessor")));
+            if (grep { $_ !~ /maplint|close-areas|autocut|noop|area-center/} split(/,/, $self->get($layer."_Preprocessor")));
 
         foreach my $reqfile(split(/,/, $self->get($layer."_RequiredFiles")))
         {

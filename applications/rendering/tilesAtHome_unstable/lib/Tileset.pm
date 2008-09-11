@@ -419,6 +419,30 @@ sub runPreprocessors
             ::statusMessage("Running close-areas",0,3);
             ::runCommand($Cmd,$$);
         }
+        elsif ($preprocessor eq "area-center")
+        {
+           print $Config->get("JavaVersion")."\n";
+           if ($Config->get("Osmarender") eq "XSLT" && $Config->get("JavaVersion") >= 1.6)
+           {
+               # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results
+               # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
+               my $Cmd = sprintf("%s java -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
+                           $Config->get("Niceness"),
+                           join($Config->get("JavaSeparator"), "java/osmosis.jar", "java/area-center.jar"),
+                           $inputFile,
+                           $outputFile);
+               ::statusMessage("Running area-center",0,3);
+               if (!::runCommand($Cmd,$$))
+               {
+                   ::statusMessage("Area-center failed, ignoring",0,3);
+                   copy($inputFile,$outputFile);
+               }
+           }
+           else
+           {
+              copy($inputFile,$outputFile);
+           }
+        }
         elsif ($preprocessor eq "noop")
         {
             copy($inputFile,$outputFile);

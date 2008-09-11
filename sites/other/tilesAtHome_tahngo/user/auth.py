@@ -1,6 +1,7 @@
 #custom authentication system that checks OSM users and creates them as needed.
 from django.conf import settings
-from django.core.validators import email_re
+#from django.core.validators import email_re
+from django.forms.fields import email_re
 from django.contrib.auth.models import User, check_password
 from tah.user.models import TahUser
 import logging

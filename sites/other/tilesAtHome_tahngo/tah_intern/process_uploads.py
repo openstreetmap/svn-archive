@@ -32,49 +32,21 @@ class TileUpload ( threading.Thread ):
       sys.exit("Failed to get required settings.")
     super(TileUpload, self).__init__()
 
+  #--------------------------------------------------------------------
   def run ( self ):
-     try:
-         while not TileUpload.SIGTERM:
-             transaction.enter_transaction_management()
-             transaction.managed(True)
+     while not TileUpload.SIGTERM:
+        self.process()
 
-             self.process()
-
-             # finally, at very end. commit the changes
-             transaction.commit()
-             transaction.leave_transaction_management()
-
-     finally:
-         # make sure we leave transactions when quitting
-         if transaction.is_dirty():
-             transaction.commit()
-             transaction.leave_transaction_management()
-         return 1
-
- #--------------------------------------------------------------------
+  #--------------------------------------------------------------------
   def process(self):
-      self.upload = None
-
       #find the oldest unlocked upload file
-      while not self.upload:
-          # repeat fetching until there is one
-          try:
-              self.upload = Upload.objects.get_next_and_lock();
-              #filter(is_locked=False).order_by('upload_time')[0]
-              self.upload.is_locked = True
-              self.upload.save()
-              transaction.commit()
-          except Upload.DoesNotExist:
-              #logging.debug('No uploaded request. Sleeping 10 sec.')
-              # commit here, so next round see current status
-              transaction.commit()
-              sleep(10)
-
+      self.upload = self.fetch_request()
 
       # start timing tileset handling now
       starttime = (time(),clock())
       #self.fname = self.upload.get_file_filename()
       self.fname = self.upload.file.path
+
       if os.path.isfile(self.fname):
         #logging.debug('Handling next tileset: ' + self.upload.file)
         # TODO don't just use random string. make a tmpdir with tempfile
@@ -84,6 +56,7 @@ class TileUpload ( threading.Thread ):
             if tset.layer and tset.base_z != None and tset.x != None and tset.y !=None:
                 #It's a valid tileset. Save the tileset at it's place
                 time_save = [time()]
+
                 logging.debug("Tileset at (%s,%d,%d,%d) from %s (uuid %d)" % \
                              (tset.layer, tset.base_z, tset.x, tset.y, \
                               self.upload.user_id,self.upload.client_uuid))
@@ -124,7 +97,31 @@ class TileUpload ( threading.Thread ):
           logging.info("uploaded file not found, deleting upload from user %s (uuid %d)." % (self.upload.user_id,self.upload.client_uuid))
 	  self.upload.delete()
 
+
   #-----------------------------------------------------------------
+  # fetch next request from the db
+  @transaction.commit_on_success  
+  def fetch_request(self):
+      before_sql = time()
+      upload = None
+      while not upload:
+          # repeat fetching until there is one
+          try:
+              upload = Upload.objects.get_next_and_lock();
+              #upload = Upload.objects.filter(is_locked=False).order_by('upload_time')[0]
+
+              upload.is_locked = True
+              upload.save()
+          except Upload.DoesNotExist:
+              #logging.debug('No uploaded request. Sleeping 10 sec.')
+              # commit here, so next round see current status
+              transaction.commit()
+              sleep(10)
+
+      logging.debug('Fetching next job from db in %.1f sec' % (time()-before_sql))
+      return upload
+  #-----------------------------------------------------------------
+
 
   def unzip(self):
     now = clock()
@@ -254,7 +251,7 @@ if __name__ == '__main__':
   Upload.objects.all().update(is_locked=False)
 
   threads = []
-  numThreads = 1
+  numThreads = 2
 
   for i in range(0, numThreads):
       # start numThreads threads with upload processors

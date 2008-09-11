@@ -770,6 +770,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
         <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
 	<!-- Copy all the attributes from the <symbol> instruction. Overwrite width and heigth if specified -->
+
+         <!-- Clear transform attribute. It's set later to <g> before symbolShift to make symbol centering work -->
+        <xsl:attribute name="transform"/>
       </use>
     </xsl:variable>
 
@@ -780,7 +783,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       </xsl:if>
     </xsl:variable>
 
-    <g transform="translate({$x},{$y}) scale({$symbolScale}) {$symbolShift}">
+    <g transform="translate({$x},{$y}) scale({$symbolScale}) {$instruction/@transform} {$symbolShift}">
 	<xsl:copy-of select="$useElement"/>
     </g>
   </xsl:template>

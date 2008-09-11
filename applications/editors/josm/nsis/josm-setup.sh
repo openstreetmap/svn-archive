@@ -22,7 +22,7 @@ svnrevision="$svncorerevision-$svnpluginsrevision"
 export VERSION=latest
 #export VERSION=custom-${svnrevision}                                         
 
-LAUNCH4J_XML="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.openstreetmap.org\applications\editors\josm\nsis\launch4j.xml"
+LAUNCH4J_XML="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.josm\nsis\launch4j.xml"
 
 echo "Creating Windows Installer for josm-$VERSION"
 

@@ -313,7 +313,6 @@ def upload_gonogo(request):
 # retrieve a new request from the server
 # TODO, quite large by now. Split?
 
-#@transaction.commit_manually
 @transaction.commit_on_success
 def take(request):
     html='XX|5|unknown error'

@@ -20,7 +20,7 @@ CreateFormClass = CreateForm
 CreateFormClass.base_fields['layers'].required = False 
 r=request()
 
-for x in range(1455,4096):
+for x in range(1715,4096):
  print "x=%d" % x 
  for y in range(0,4096):
     tilepath, tilefile = Tileset(layer,12,x,y).get_filename(base_tile_path)

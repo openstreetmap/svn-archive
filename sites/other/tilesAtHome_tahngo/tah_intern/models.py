@@ -47,5 +47,9 @@ class Settings(models.Model):
     return s.value
 
   def setSetting(self, name, value):
-    s, created = Settings.objects.get_or_create(name= name, value= value)
+    s, created = Settings.objects.get_or_create(name= name, defaults={'value': value})
+    if not created:
+        s.value = value
+        s.save()
+
     return s.value

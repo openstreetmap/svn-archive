@@ -445,7 +445,7 @@ sub runPreprocessors
                   # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
                   my $Cmd = sprintf("%s java -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
                                $Config->get("Niceness"),
-                               join($Config->get("JavaSeparator"), "java/osmosis.jar", "java/area-center.jar"),
+                               join($Config->get("JavaSeparator"), "java/osmosis/osmosis.jar", "java/area-center.jar"),
                                $inputFile,
                                $outputFile);
                    ::statusMessage("Running area-center",0,3);

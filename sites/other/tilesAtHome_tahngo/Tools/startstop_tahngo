@@ -3,7 +3,7 @@
 WD=/var/www/tah
 PIDFILE=${WD}/var/tahngo.pid
 PYTHON=/usr/bin/python
-PYTH_PATH=/home/spaetz/django-trunk
+PYTH_PATH=/home/spaetz/django-1.0
 SOCKET=/var/www/tah/var/tahngo.sock
 #maxrequests=5000
 case "$1" in

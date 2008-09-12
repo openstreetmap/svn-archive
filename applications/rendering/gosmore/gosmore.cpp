@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <math.h>
+#include <time.h>
 #ifndef _WIN32
 #include <sys/mman.h>
 #include <libxml/xmlreader.h>
@@ -140,7 +141,8 @@ const char *FindResource (const char *fname)
 }
 #endif
 
-// used for showing logs to a file
+// used for showing logs to a file (with default)
+// changed to more suitable value for WinCE in WinMain
 char logFileName[80] = "gosmore.log.txt";
 
 FILE * logFP(bool create = true) {
@@ -151,6 +153,21 @@ FILE * logFP(bool create = true) {
   }
   return f;
 }
+
+void logprintf(char * format, ...)
+{
+  // print [hh:mm:ss] timestamp to log first
+  time_t seconds = time(NULL);
+  struct tm * t = localtime(&seconds);
+  fprintf(logFP(), "[%02d:%02d:%02d] ",t->tm_hour,t->tm_min,t->tm_sec);
+
+  // then print original log string
+  va_list args;
+  va_start(args, format);
+  vfprintf(logFP(), format, args);
+  va_end (args);
+}
+
 
 struct klasTableStruct {
   const wchar_t *desc;
@@ -1165,7 +1182,7 @@ gint Expose (void)
 	    // valid = valid && ... (add more validation here)
 
 	    // // LOG
-	    // fprintf(logFP(),"valid = (len > 0) = %d > 0 = %d (%s)\n",
+	    // logprintf("valid = (len > 0) = %d > 0 = %d (%s)\n",
 	    // 	    len,valid,(char *)(w + 1) + 1);
 
 	  } else {
@@ -2773,126 +2790,137 @@ volatile int guiDone = FALSE;
 
 DWORD WINAPI NmeaReader (LPVOID lParam)
 {
- // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
-  DWORD nBytes, got = 0;
-  COMMTIMEOUTS commTiming;
-  char rx[300];
+  // loop back here if existing connection fails
+  while (!guiDone) {
+    // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
+    DWORD nBytes, got = 0;
+    COMMTIMEOUTS commTiming;
+    char rx[300];
+    
+    wchar_t portname[6];
+    wsprintf (portname, TEXT ("COM%d:"), CommPort);
 
-  // Attempt to reconnect to NMEA device every 1 second until connected
-  wchar_t portname[6];
-  wsprintf (portname, TEXT ("COM%d:"), CommPort);
-  while (!guiDone && 
-	 (port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
-			   NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
-    Sleep(1000);
-  }
+    logprintf ("Attempting first connect to CommPort.\n");
+
+    // Attempt to reconnect to NMEA device every 1 second until connected
+    while (!guiDone &&
+	   (port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
+		 NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
+      Sleep(1000);
+      logprintf("Retrying connect to CommPort\n");
+    }
+
+    if (port != INVALID_HANDLE_VALUE) {
+
+      logprintf("Connected to CommPort\n");
 	  
-  if (port != INVALID_HANDLE_VALUE) {
-  //ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
-//  Sleep (1000);
-  /* It seems as the CreateFile before returns the action has been completed, causing
-  the subsequent change of baudrate to fail. This read / sleep ensures that the port is open
-  before continuing. */
-    #if 1
-    GetCommTimeouts (port, &commTiming);
-    commTiming.ReadIntervalTimeout = 20;
-    commTiming.ReadTotalTimeoutMultiplier = 0;
-    commTiming.ReadTotalTimeoutConstant = 200; /* Bailout when nothing on the port */
-
-    commTiming.WriteTotalTimeoutMultiplier=5; /* No writing */
-    commTiming.WriteTotalTimeoutConstant=5;
-    SetCommTimeouts (port, &commTiming);
-    #endif
-    if (BaudRate) {
-      DCB portState;
-      if(!GetCommState(port, &portState)) {
-        MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
-          MB_APPLMODAL|MB_OK);
-        return(1);
-      }
-      portState.BaudRate = BaudRate;
-      //portState.Parity=0;
-      //portState.StopBits=ONESTOPBIT;
-      //portState.ByteSize=8;
-      //portState.fBinary=1;
-      //portState.fParity=0;
-      //portState.fOutxCtsFlow=0;
-      //portState.fOutxDsrFlow=0;
-      //portState.fDtrControl=DTR_CONTROL_ENABLE;
-      //portState.fDsrSensitivity=0;
-      //portState.fTXContinueOnXoff=1;
-      //portState.fOutX=0;
-      //portState.fInX=0;
-      //portState.fErrorChar=0;
-      //portState.fNull=0;
-      //portState.fRtsControl=RTS_CONTROL_ENABLE;
-      //portState.fAbortOnError=1;
-
-      if(!SetCommState(port, &portState)) {
-        MessageBox (NULL, TEXT ("SetCommState Error"), TEXT (""),
-          MB_APPLMODAL|MB_OK);
-        return(1);
-      }
-    }
-    /* Idea for Windows Mobile 5
-    #include <gpsapi.h>
-  if (WM5) {
-    GPS_POSITION pos;
-    HANDLE hand = GPSOpenDevice (NULL, NULL, NULL, 0);
-    while (!guiDone && hand != NULL) {
-      if (GPSGetPosition (hand, &pos, 500, 0) == ERROR_SUCCESS &&
-        (pos.dwValidFields & GPS_VALID_LATITUDE)) {
-        Sleep (800);
-        pos.dblLatitude, pos.dblLongitude;
-      }
-      else Sleep (100);
-    }
-    if (hand) GPSCloseDevice (hand);
-  } */
-
-#if 0
-    PurgeComm (port, PURGE_RXCLEAR); /* Baud rate wouldn't change without this ! */
-    DWORD nBytes2 = 0;
-    COMSTAT cStat;
-    ClearCommError (port, &nBytes, &cStat);
-    rx2 = (char*) malloc (600);
-    ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
-    if(!GetCommState(port, &portState)) {
-      MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
-		  MB_APPLMODAL|MB_OK);
-      return(1);
-    }
-    ReadFile(port, rx2, 600, &nBytes2, NULL);
+#if 1
+      GetCommTimeouts (port, &commTiming);
+      commTiming.ReadIntervalTimeout = 20;
+      commTiming.ReadTotalTimeoutMultiplier = 0;
+      commTiming.ReadTotalTimeoutConstant = 200; /* Bailout when nothing on the port */
+      
+      commTiming.WriteTotalTimeoutMultiplier=5; /* No writing */
+      commTiming.WriteTotalTimeoutConstant=5;
+      SetCommTimeouts (port, &commTiming);
 #endif
-    //char logName[80];
-    //sprintf (logName, "%slog.nmea", docPrefix);
-    //FILE *log = fopen (logName, "wb");
-    while (!guiDone) {
-      //nBytes = sizeof (rx) - got;
-      //got = 0;
-      if (!ReadFile(port, rx + got, sizeof(rx) - got, &nBytes, NULL) ||
-	  nBytes <= 0) {
-	//fprintf (log, "%d -\n", nBytes);
-	continue;
+      if (BaudRate) {
+	DCB portState;
+	if(!GetCommState(port, &portState)) {
+	  MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
+		      MB_APPLMODAL|MB_OK);
+	  return(1);
+	}
+	portState.BaudRate = BaudRate;
+	//portState.Parity=0;
+	//portState.StopBits=ONESTOPBIT;
+	//portState.ByteSize=8;
+	//portState.fBinary=1;
+	//portState.fParity=0;
+	//portState.fOutxCtsFlow=0;
+	//portState.fOutxDsrFlow=0;
+	//portState.fDtrControl=DTR_CONTROL_ENABLE;
+	//portState.fDsrSensitivity=0;
+	//portState.fTXContinueOnXoff=1;
+	//portState.fOutX=0;
+	//portState.fInX=0;
+	//portState.fErrorChar=0;
+	//portState.fNull=0;
+	//portState.fRtsControl=RTS_CONTROL_ENABLE;
+	//portState.fAbortOnError=1;
+	
+	if(!SetCommState(port, &portState)) {
+	  MessageBox (NULL, TEXT ("SetCommState Error"), TEXT (""),
+		      MB_APPLMODAL|MB_OK);
+	  return(1);
+	}
       }
-      //fprintf (log, "%d\n", nBytes);
-      got += nBytes;
-      //if (log) fwrite (rx, nBytes, 1, log);
       
-      //wndStr[0]='\0';
-      //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
-      //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
+      /* Idea for Windows Mobile 5
+	 #include <gpsapi.h>
+	 if (WM5) {
+	 GPS_POSITION pos;
+	 HANDLE hand = GPSOpenDevice (NULL, NULL, NULL, 0);
+	 while (!guiDone && hand != NULL) {
+	 if (GPSGetPosition (hand, &pos, 500, 0) == ERROR_SUCCESS &&
+	 (pos.dwValidFields & GPS_VALID_LATITUDE)) {
+	 Sleep (800);
+	 pos.dblLatitude, pos.dblLongitude;
+	 }
+	 else Sleep (100);
+	 }
+	 if (hand) GPSCloseDevice (hand);
+	 } */
       
-      if (ProcessNmea (rx, (unsigned*)&got)) {
-	PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
+#if 0
+      PurgeComm (port, PURGE_RXCLEAR); /* Baud rate wouldn't change without this ! */
+      DWORD nBytes2 = 0;
+      COMSTAT cStat;
+      ClearCommError (port, &nBytes, &cStat);
+      rx2 = (char*) malloc (600);
+      ReadFile(port, rx, sizeof(rx), &nBytes, NULL);
+      if(!GetCommState(port, &portState)) {
+	MessageBox (NULL, TEXT ("GetCommState Error"), TEXT (""),
+		    MB_APPLMODAL|MB_OK);
+	return(1);
       }
-    }
-    guiDone = FALSE;
-    //if (log) fclose (log);
-    CloseHandle (port);
-  }
+      ReadFile(port, rx2, 600, &nBytes2, NULL);
+#endif
+      
+      //char logName[80];
+      //sprintf (logName, "%slog.nmea", docPrefix);
+      //FILE *log = fopen (logName, "wb");
+
+      // keep reading nmea until guiDone or serial port fails
+      bool status;
+      while (!guiDone &&
+	     (status = ReadFile(port, rx + got, 
+				     sizeof(rx) - got, &nBytes, NULL))) {
+	//	logprintf ("status = %d, nBytes = %d\n", status, nBytes);
+	if (nBytes > 0) {
+	  got += nBytes;
+	  //if (log) fwrite (rx, nBytes, 1, log);
+	  
+	  //wndStr[0]='\0';
+	  //FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
+	  //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
+	  
+	  if (ProcessNmea (rx, (unsigned*)&got)) {
+	    PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
+	  }
+	} // if nBytes > 0
+      } // while ReadFile(...)
+      if (!guiDone) {
+	logprintf("Connection to CommPort failed.\n");
+      }
+    } // if port != INVALID_FILE_HANDLE
+  } // while !guiDone
+  guiDone = FALSE;
+  //if (log) fclose (log);
+  CloseHandle (port);
   return 0;
 }
+
 
 void XmlOut (FILE *newWayFile, char *k, char *v)
 {

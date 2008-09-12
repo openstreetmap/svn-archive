@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -34,6 +36,24 @@ public class SimplifyWayAction extends JosmAction {
 	public void actionPerformed(ActionEvent e) {
 		Collection<OsmPrimitive> selection = Main.ds.getSelected();
 		
+        int ways = 0;
+		for (OsmPrimitive prim : selection) {
+			if (prim instanceof Way) {
+				ways++;
+			}
+		}
+
+        if (ways == 0) {
+            JOptionPane.showMessageDialog(Main.parent, 
+                tr("Please select at least one way to simplify."));
+            return;
+        } else if (ways > 10) {
+            int option = JOptionPane.showConfirmDialog(Main.parent,
+                tr("The selection contains {0} ways. Are you sure you want to simplify them all?", ways), tr("Are you sure?"), JOptionPane.YES_NO_OPTION);
+            if (option != JOptionPane.YES_OPTION)
+                return;
+        }
+
 		for (OsmPrimitive prim : selection) {
 			if (prim instanceof Way) {
 				simplifyWay((Way) prim);

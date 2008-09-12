@@ -1,0 +1,356 @@
+v0.12
+	* FIX : remove support for internal webkit. As of now, Qt 4.4+ is required for Yahoo! imagery.
+	* ADD : let the use choose between translating standard OSM tags
+	* ADD : ability to set language explicitly
+	* FIX : make "About" dialog more useful
+	* FIX : show correct progress when downloading maps
+	* FIX : make yahoo maps line up for large views (sync from r10585 by Petr Dlouhy)
+	* FIX : GPX track timestamps are in UTC (see gpx 1.1 schema)
+	* FIX : change serial port GPS readout from busy looping to signal wakeup
+	* FIX : make the heading appear in the satellite tracker
+	* ADD : nice satellite strength view widget
+	* FIX : OSM export doesn't handle quotes well (Fixes #1139)
+	* ADD : Allow osm API url in the "Use OSM link" text box
+	* FIX : 'Download more' should work without prior 'Download from web' (Closes #1028)
+	* FIX : Joining roads by moving a node from one road on top of another road gives incorrect node sequence (Fixes #1149)
+	* ADD : preliminary gpsd supprt
+	* FIX : Upload of a modified single GPX track node was not working anymore (fixes #1141)
+	* ADD : Support for GeoTagged images. qmake GEOIMAGE=1 to activate. requires exiv2 (by Timo Schlüßler)
+	* ADD : Move to the next field on enter in properties dock tags (by Travers Carter) (Refs #1137)
+	* ADD : revised OSB format. Allows to use large map files directly from disk with low memory footprint.
+	* FIX : Native render doesn't render anything at high lat/long values(by Travers Carter)  (Closes #1135)
+	* FIX : Expand tables in the properties dock to the available width by default (by Travers Carter) (Closes #1136)
+	* FIX : make download dialog a less cluttered
+	* FIX : update the "created_by" tag at each update, not only add.
+	* ADD : Check if there are empty roads/relations during a download and propose to mark them for deletion
+	* ADD : "visible" action in layers menu
+	* FIX : properly detect if roads are breakable/joinable and update menus accordingly
+	* FIX : Handle "NotYetDownloaded" for Relations
+	* ADD : scalable POI icons in styles
+	* ADD : +/- buttons on zooming slippy map so single button devices can use it too
+	* FIX : only activate upload menu when there is something to upload
+	* ADD : ability to use svg for node icons
+	* ADD : tab filtering and color code to Layer dock
+	* FIX : manage road conflicts from downloads
+	* ADD : continue road if selected node belongs to only 1 road and is at one end
+	* ADD : MRU for opened and imported files
+	* ADD : menu option to show/hide a selectable relation bounding box
+	* ADD : preference option for focus/hover/relations colors
+	* ADD : Create one layer per track during GPX import
+	* ADD : Info dock for layers
+	* ADD : menu option to show/hide scale
+	* ADD : "Duplicate", "Apply", "Up", "Down" functionality to the style editor
+	* FIX : another try at solving the "long-ways-at-high-zoom-makes-Merkaartor-unusable" problem (closes #1110)
+	* ADD : names rendering in styles
+	* ADD : save last download layer to MDCs
+	* ADD : switch to integer internal coordinates. Coordinates now vary from -INT_MAX to +INT_MAX rather than -M_PI / +M_PI
+	* FIX : 412 when uploading joined/splitted roads
+	* ADD : layer menu in menubar
+	* ADD : display viewport coordinates in status bar
+	* ADD : (almost) generalize progress dialogs
+	* ADD : support (initial) of GPS devices / NMEA log replay
+	* ADD : option to show/hide track segments
+	* ADD : option to show/hide non-stylized trackpoints
+	* ADD : option to show/hide street names on the map
+	* ADD : Render to bitmap via native engine.
+	* ADD : Render to SVG via Osmarender (requires libxml2/libxslt; inkscape required to generate bitmap). Closes #694
+v0.11
+	* ADD : Export to KML
+	* ADD : Export to GPX + proper waypoint saving in MDC documents
+	* ADD : Shift-Right button to drag-zoom
+	* FIX : Qt slows to a crawl when drawing lines offscreen to a large virtual canvas, clipping enabled or not (Qt bug?). Try to optimize roads/track segments drawing to cope with this.
+	* FIX : Save also the redo history in a MDC document
+	* FIX : Allow deletion of a node from a track without deleting the whole segment
+	* FIX : Add a preference option to disable styling for Track layers + re-inject default waypoint painting from dantje 
+	* ADD : non-uplodable tags; tags with key beginnig and ending with an underscore ("_") won't be uploaded
+	* ADD : ability to commit features from non-uplodable layers to the dirty layer, i.e. make them uploadable
+	* FIX : bump MDC documents to version 1.1 due to bug-fixes in history saving; history from version 1.0 MDC won't be imported.
+	* ADD : Basic support for waypoints/logpoints from gpx files
+	* ADD : altitude and velocity to NMEA import
+	* FIX : background image cache: delete older images from cache first
+	* ADD : context menu functionality to the map
+	* FIX : Show tracksegment even if it only intersects the viewport
+	* ADD : Encode speed and slope in track segments
+	* FIX : Handle relative paths when loading files
+	* FIX : Clip track segments on viewport
+	* ADD : Show length of selected way in info dock
+	* ADD : Display distance in CreateSingleWay
+	* FIX : "Dynamically" display all built-in styles in the preferences dialog rather than pre-defined ones
+	* ADD :  special value "_NULL_" to TagSelector; matches non-existent or empty tag
+	* FIX : allow punctuation in tag selector
+	* ADD : "not", "true", "false", "[Default]" keywords to the Tag Selector; "[Default]" specifies the style for features not having a specific (i.e. non-default) style selected. Together with "Type Is", allows for "bug-fixing" styles "a la Maplint"
+	* ADD : Implementation of a binary OSM file format targeted to mobile devices (*.osb); so far, is ~3x smaller and loads ~5x faster; format subject to changes and documentation
+	* FIX : pixmap from background images were not freed, leading to ever growing memory consumption
+	* FIX : problem with map adapters having limited zoom range (e.g. Maplint 12-16)
+	* ADD : Style tag selector by type (e.g "Type is TrackPoint") and presence of tags (e.g. "HasTags"). Allows: 1) To show a generic icon for POI; 2) To display an icon for "lost" points with no roads nor tags.
+	* ADD : clipboard-copy-paste support (Tags only for now). Clipboard format is xml OSM.
+	* ADD : "export selected to OSM"
+	* ADD : Proxy support to SlippyMapWidget + change the kind of download only when interacting with the slippy map
+	* ADD : when deleting roads, ask if nodes should be deleted also
+	* ADD : "View downloaded area": "dot" the areas not downloaded from OSM during the current session
+	* ADD : Save position of last edit session on exit
+	* ADD : Split a road by selecting only the node
+	* ADD : Arrow keys move the map (by Rainer Keller)
+	* FIX : when cascade removing, not all children are deleted if they are present multiple times + avoid having twice the same node contiguous in the a road/relation
+	* FIX : segfault with MDC containing history where a feature is created and deleted 
+	* ADD : "Dirty" layer where all modified features go
+	* ADD : "Undo" dock with all undo actions
+	* FIX : Start new road from selected node
+	* FIX : German translation
+	* ADD : Czech translation (Tom Mika)
+	* FIX : History window now displays UTF8
+	* FIX : Bookmark created from "Download from web" immediately added to bookmarks menu (by rullzer)
+	* FIX : Tags undo was pretty much broken
+	* FIX : Update undo button state after upload
+	* ADD : Make URL in about window selectable (by Max Vasilev)
+	* FIX : Style definitions can now use *,? and [abc]
+	* ADD : Open/Import multiple files
+	* ADD : draw scale
+	* FIX : upload order when merging nodes
+	* FIX : warn when using wrong credentials
+	* ADD : drag the map around with control key for poor Mac owners
+	* FIX : We can now select the move tool everytime
+	* FIX : Reverse on an area doesn't open it anymore 
+	* FIX : Select dialog : fix the size of elements
+	* FIX : Roundabout creation. Add tag junction=roundabout
+	* FIX : Autoselect source in download dialog
+	* ADD : Align nodes function
+	* ADD : living_street as a predefined highway tag
+	* FIX : use CoordBox method to zoom a little instead of calling zoom
+	* ADD : caching mechanism for painters
+	* ADD : draw nodes of hovered/selected roads (by Vincent Meurisse)
+	* FIX : make the shortcuts for creating a new road and way less interfering
+	* ADD : support for OSM links in download dialog (Refs #812) (by Timo Schlüßler)
+	* ADD : shortcuts for zoom-in(+) and zoom-out(-) (by Timo Schlüßler)
+	* FIX : keyboard modifiers: ctrl-click toggle; shift-click add; ctrl-add-click prevents road selection; shift-drag selects features which intersects
+	* ADD : Information dock
+	* ADD : Dock menu / shortcuts
+	* ADD : different colors for focus and hover
+	* ADD : Merkaartor icon
+	* FIX : unified version handling
+	* ADD : OpenTopoMap WMS server to list of defaults; OpenAerialMap as TMS (existed as WMS already)
+	* ADD : "Download more" command. Adds to last download layer
+	* ADD : per-layer "zoom all"
+	* ADD : delete layer command
+	* ADD : french translation
+	* ADD : Merkaartor document (*.mdc)
+	* FIX : Apply button in Preferences now updates the main window immediately
+	* FIX : if a feature contains a node more than once, if the node is deleted, only the first occurence is removed
+	* ADD : merge nodes function
+	* FIX : don't ignore "width" tags on export
+	* ADD : translation capabilities
+	* FIX : Misaligned background after view resize
+	* FIX : clipping problem with selected features during resize
+	* FIX : NMEA import timestamps
+	* FIX : don't force to enter an u/p for download
+	* FIX : right background column not drawn in large resolution
+v0.10
+	* ADD : warn for older versions of Qt
+	* ADD : save mainwindow layout status (by Daniel van Gerpen)
+	* ADD : improved tag selection mechanism
+	* ADD : per-layer transparency
+	* ADD : background color chooser
+	* FIX : redraw view when joining roads
+	* ADD : generalization of Tile servers (OSM is now part of that group)
+	* ADD : shift-click also prevents roads from selected (previously only alt-click)
+	* ADD : configurable projection type (allow custom zoom in "Merkaartor" projection, for background also)
+	* ADD : configurable zoom factors
+	* ADD : Background tiles caching
+	* ADD : Initial track to road
+	* ADD : Initial osmarender rendering
+	* FIX : decrease memory usage when importing OSM
+	* FIX : increase snap update speed
+	* ADD : ability to load tracks from the command line (by Daniel van Gerpen)
+	* ADD : Mapnik-lookalike style (by Colin Marquardt and Andreas Laas)
+	* ADD : ability to set default style at startup
+	* FIX : Remove compile warnings and c-style casts (by Daniel van Gerpen)
+	* ADD : "created_by" to new features
+	* ADD : navigation: view -> bookmark + add/remove
+	* FIX : warn when OSM userid/password not set
+	* ADD : Export viewport to OSM
+	* FIX : crash when splitting roads (by Daniel van Gerpen)
+	* FIX : various memory leaks and clean ups (by Daniel van Gerpen)
+	* ADD : provide navigation for the slippy map with right and left mouse button (by Daniel van Gerpen)
+	* FIX : zoom around cursor position
+	* ADD : import NMEA logs (crude) (by Chris Browet)
+	* FIX : proper handling of dirty documents (by Chris Browet)
+	* ADD : search on name/tags (by Chris Browet)
+	* FIX : don't crash while createing a roundabout (by Tommi Vainikiainen)
+	* ADD : curved road support
+	* FIX : enhance somewhat visibility of selected items (by Chris Browet)
+	* ADD : export OSM files (by Chris Browet)
+	* ADD : support for OSM backgrounds (by Chris Browet)
+	* ADD : centralized preferences dialog (by Chris Browet)
+	* ADD : support for WMS maps (by Chris Browet)
+	* FIX : remove yahoo maps support (not "legal" way to access tiles) (by Chris Browet)
+	* ADD : support for Yahoo maps backgrounds (by Chris Browet; QMapControl widget by Kai Winter)
+	* ADD : tags autocompletion in related widgets
+	* ADD : paint style editor
+
+v0.09
+	* ADD : support for Noni GPSPlot tracks
+	* ADD : draw natural=wood areas (by Raphael Studer)
+	* FIX : also draw trackpoints that have an icon
+	* FIX : draw unconnected trackpoints
+	* ADD : multiple remove
+	* ADD : save last current directory
+	* ADD : draw landuse=forest area (by Raphael Studer)
+	* ADD : move trackpoints onto a road inserts the point in the road
+	* ADD : draw a lot of more things in merkaartor (by Matt Williams)
+	* ADD : draw hospital area and node
+	* ADD : nice amenity selector for nodes
+	* FIX : use the standard system for predefined tags for highway
+	* ADD : nice landuse selector for roads (areas)
+	* ADD : more amenities (by Matt Williams)
+	* ADD : ability to easily draw an area
+	* ADD : landuse selector for relations
+	* ADD : upload relations to OSM
+	* FIX : compile fixes for gcc 3.x (by Thomas Wood)
+
+v0.08
+	* FIX : work with 0.5 API
+	* ADD : move can now work on a complete way
+	* ADD : non-transparant proxy support
+	* ADD : change cursor when in move mode
+	* FIX : recognize 1 in oneway key
+	* FIX : slightly change default way width
+	* FIX : undo/redo handling for manipulating tags
+	* ADD : ability to draw icons on specific trackpoints
+	* ADD : draw parking symbol from mapnik
+	* ADD : tertiary highway type
+	* FIX : tweak color scheme
+	* ADD : cache road bounding box
+	* FIX : draw parking surface
+	* FIX : tab order of various widgets
+	* ADD : slippy map coordinates selector
+	* FIX : reuse slippy map cache between different invocations
+	* FIX : improve download handling
+	* ADD : join/split/break road actions
+	* ADD : caching algorithm for editstylepainters
+	* FIX : improve rendering on higher zoomed-out levels
+	* ADD : drag box to select a group of elements
+	* ADD : selection box when multiple features are selected
+	* FIX : zoom with wheelbox as in Google maps
+	* FIX : remove irrelevant menu item
+	* ADD : import relations
+	* ADD : view relations in the propertiesdock
+	* ADD : track back to which features a feature belongs
+	* FIX : compile warnings (by Elrond)
+	* ADD : rendering according to correct priority
+	* ADD : create relationships
+	* FIX : also render relations where tags are on the individual
+	roads
+	* FIX : clean up code and compile warnings (by Elrond)
+
+v0.07 18 aug 2007
+	* ADD : nice mappaint mechanism
+	* FIX : downloading same area twice doesn't create upload conflicts
+	anymore
+	* FIX : keep tag content when editing them in the tag table
+	* FIX : correctly keep track of the tag table size
+	* FIX : remove 0.3 API support
+	* ADD : gzipped downloading
+	* ADD : nice painting for water
+	* ADD : file->new menu option to start a new map
+	* FIX : change current directory when opening a file
+	* FIX : surpress drawing artefact when creating a new segment
+	* FIX : avoid Qt to have to process download notifications recursively
+	* ADD : scripts to create the windows installation package
+	* ADD : create way from selected segments tool
+	* FIX : don't systematically add width tags to segments
+	* FIX : streamline changing the width of a segment
+	* FIX : bring back drawing of traffic direction indicators
+	* FIX : show more segments on greater zoom levels
+	* FIX : make user interface work with Qt 4.2 again
+
+v0.06 5 dec 2006
+	* FIX : also recognize true/false for oneway tag
+	* FIX : correctly update roads when downloading the same road twice
+	* ADD : type combobox to set highway tag
+	* FIX : no busy waiting for OSM download
+	* ADD : progress dialog while downloading from OSM
+	* FIX : refresh view immediatly after download
+	* FIX : download segments outside original bounding box for roads
+	* FIX : don't call QStatusbar methods from a paintEvent
+	* FIX : speed up drawing of roads when zoomed out
+	* ADD : undo/redo icons + actions added to toolbar
+	* FIX : improve speed with a double buffer for static content
+	* ADD : change tags on multiple elements at the same time
+	* ADD : delete tag tool
+	* ADD : download with 0.4 API
+	* ADD : upload with 0.4 API
+	* ADD : draw arrows on GPX tracks
+	* ADD : optionally download trackpoints from OSM
+	* ADD : ability to contact OSM at a different port
+	* ADD : allow panning with right mouse button from all interactions
+	* FIX : keep correct startpoint when changing view during segment drawing
+	* ADD : debugging mode
+	* FIX : create node bad url
+	* ADD : double carriageway tool
+	* FIX : upload segments before roads and nodes before segments
+	* ADD : draw roundabout tool
+	* ADD : easy single way creation
+	* FIX : improve speed with large number of trackpoints
+
+v0.05 15 nov 2006
+	* ADD : connection roads by dragging end points
+	* FIX : don't crash after undoing deletion and doing something else
+	* ADD : go to selection interaction after upload/import/open/download
+	* FIX : make the Cancel button work in the import OSM progress dialog
+	* FIX : add a id hash map to speed up importing OSM file
+	* ADD : bookmark system for downloading from OSM
+	* FIX : don't jump when zooming after panning
+	* FIX : use the same step to zoom in and out
+	* FIX : calculate correct bounding box
+	* FIX : always update tagview and fix memory leak
+	* FIX : performace improvements
+	* ADD : oneway markers
+	* ADD : reverse way/road action
+	* ADD : traffic direction combobox in road properties
+	* ADD : load tags for nodes
+	* ADD : rendering of parks pitches and water reservoirs
+	* ADD : set view to coordinates dialog box
+	* FIX : after downloading from web focus on downloaded area
+
+v0.04 29 oct 2006
+	* FIX : reset brush when drawing zoom window
+	* FIX : include way id when sending updates to Openstreetmap
+	* FIX : always prefer to select a road
+	* ADD : delete nodes,segments,roads on server
+	* ADD : ability to remove segments from roads, and influence order
+	* ADD : user recognizable names in upload window
+	* FIX : use a dotted line for gpx track segments
+	* ADD : split roads by adding a node
+	* ADD : zoom in/out with the scrollwheel
+	* ADD : debian package
+
+v0.03 25 oct 2006
+	* FIX : compilation fixes for linux
+	* ADD : pan view by dragging
+	* ADD : create node
+	* FIX : don't draw nodes when zoomed out
+	* FIX : draw segments stronger when zoomed out
+	* FIX : make roads easier to select, segments harder
+
+v0.02 24 oct 2006
+	* ADD : update/commit style merging and conflict resolution
+	  with openstreetmap
+	* ADD : delete node/segment
+	* FIX : move trackpoints accessible from editor toolbar
+	* ADD : layers
+	* ADD : support for OSM ways
+
+v0.01 20 oct 2006
+	* ADD : upload node/segments to OSM
+	* ADD : download segment tags
+	* ADD : edit node properties (long,lat)
+	* ADD : edit segment properties (width,tags)
+
+v0.00 17 oct 2006
+	* ADD : download node/segments from OSM
+	* ADD : display node/segments/tracks
+	* ADD : add segments
+	* ADD : move nodes
+
+
+

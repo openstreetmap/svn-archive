@@ -315,20 +315,11 @@ def upload_gonogo(request):
 # returns a request on success or an Request.DoesNotExist execption
 
 @transaction.commit_on_success
-def fetch_next_request( user, client_uuid):
+def fetch_next_request():
 
     # returns request or DoesNotExist exception
     request = Request.objects.get_next_and_lock();
-
-    # if it's a low prio request, make sure the upload queue is not too full
-    upload_queue = Upload.objects.all().count() # [0...1500]
-    if upload_queue > {1:1500,2:1200,3:1100,4:900}[request.priority]:
-        # bomb out with a "No request in queue for you"
-        raise Request.DoesNotExist
     request.status=1
-    request.client = user
-    request.client_uuid = client_uuid
-    request.clientping_time=datetime.now()
     request.save()
 
     return request
@@ -367,7 +358,19 @@ def take(request):
                   # get the next request from the queue (or return DoesNotExist exception)
                   #req = Request.objects.select_for_update().filter(status=0).order_by('priority','request_time')[0];
                   client_uuid = form.cleaned_data.get('client_uuid', 0)
-                  req = fetch_next_request( user, client_uuid);
+                  req = fetch_next_request();
+                  req.client = user
+                  req.client_uuid = client_uuid
+                  req.clientping_time=datetime.now()
+                  req.save()
+
+                  # if it's a low prio request, make sure the upload queue is not too full
+                  upload_queue = Upload.objects.all().count() # [0...1500]
+                  if upload_queue > {1:1500,2:1200,3:1100,4:900}[request.priority]:
+                  # reset to unhandled and bomb out with a "No request in queue for you"
+                      req.status=0
+                      req.save()
+                      raise Request.DoesNotExist
 
                   # find out tileset filesize and age
                   # always hardcode 'tile' layer for now.

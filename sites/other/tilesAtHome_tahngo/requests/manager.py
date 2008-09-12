@@ -15,12 +15,14 @@ class RequestManager(models.Manager):
 
       table = self.model._meta.db_table
       #clientping_col = self.model._meta.get_field('clientping_time').column
+      query = 'select id from %s where %s=0 ORDER BY %s LIMIT 1 FOR UPDATE' \
+           % (table, 'status', 'priority')
       #query = 'select id from %s where %s=0 ' \
       #    'ORDER BY %s,%s LIMIT 1 FOR UPDATE' \
       #     % (table, 'status','priority','request_time')
-      query = 'select id from %s where %s=0 ' \
-          'ORDER BY %s,%s LIMIT 1' \
-           % (table, 'status','priority','request_time')
+      #query = 'select id from %s where %s=0 ' \
+      #    'ORDER BY %s,%s LIMIT 1' \
+      #     % (table, 'status','priority','request_time')
 
       cursor = connection.cursor()
       #cursor.execute("LOCK TABLES %s WRITE" % table)

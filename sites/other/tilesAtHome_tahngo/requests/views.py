@@ -366,7 +366,7 @@ def take(request):
 
                   # if it's a low prio request, make sure the upload queue is not too full
                   upload_queue = Upload.objects.all().count() # [0...1500]
-                  if upload_queue > {1:1500,2:1200,3:1100,4:900}[request.priority]:
+                  if upload_queue > {1:1500,2:1200,3:1100,4:900}[req.priority]:
                   # reset to unhandled and bomb out with a "No request in queue for you"
                       req.status=0
                       req.save()

@@ -387,13 +387,15 @@ sub downloadData
         {
             ::statusMessage("Trying smaller slices",1,0);
             my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
+            my $tryN;
+            my $slicedFailed = 0;
             for (my $j = 1 ; $j<=10 ; $j++)
             {
-                my $tryN = 1; # each slice gets tried 3 times, we
+                $tryN = 1 unless ($slicedFailed); # each slice gets tried 3 times, we
                 # assume the api is just a bit under load so it would
                 # be wasteful to return the tileset with "no Data"
-                $res = 0; #set false before next slice is downloaded
-                while (($tryN < 3) and (! $res))
+                $res = 0; #set false before next slice is downloaded, unless one of the previous slices failed.
+                while (($tryN < 3) and (! $res) and (!$slicedFailed))
                 {
                     $URL = sprintf("%s%s/map?bbox=%f,%f,%f,%f", 
                       $Config->get("APIURL"),$Config->get("OSMVersion"), ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
@@ -407,6 +409,7 @@ sub downloadData
                     {   # Sliced download failed too
                         ::addFault("nodata",1);
                         $reason .= " (sliced)";
+                        $slicedFailed = 1;
                     }
                     elsif (! $res)
                     {

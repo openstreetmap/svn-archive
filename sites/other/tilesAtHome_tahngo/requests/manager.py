@@ -14,13 +14,13 @@ class RequestManager(models.Manager):
   def get_next_and_lock(self):
 
       table = self.model._meta.db_table
-      clientping_col = self.model._meta.get_field('clientping_time').column
-      #query = 'select id from %s where %s=0 ' \
-      #    'ORDER BY %s,%s LIMIT 1 FOR UPDATE' \
-      #     % (table, 'status','priority','request_time')
+      #clientping_col = self.model._meta.get_field('clientping_time').column
       query = 'select id from %s where %s=0 ' \
-          'ORDER BY %s,%s LIMIT 1' \
+          'ORDER BY %s,%s LIMIT 1 FOR UPDATE' \
            % (table, 'status','priority','request_time')
+      #query = 'select id from %s where %s=0 ' \
+      #    'ORDER BY %s,%s LIMIT 1' \
+      #     % (table, 'status','priority','request_time')
 
       cursor = connection.cursor()
       #cursor.execute("LOCK TABLES %s WRITE" % table)

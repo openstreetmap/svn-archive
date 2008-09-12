@@ -71,7 +71,7 @@ def show_uploads_page(request):
 # not a public view, but a helper function that creates a new request based on data in
 # 'form' and performs sanity checks etc. The form must have been validated previously.
 
-@transaction.commit_on_success
+#@transaction.commit_on_success
 def saveCreateRequestForm(request, form):
     """ Returns (Request, reason), with Request being 'None' on failure and 
         the saved request object on success. 
@@ -142,7 +142,8 @@ def saveCreateRequestForm(request, form):
 
     if numLayers == 0:
         # could not add ANY sensible layer, return error
-        transaction.rollback()
+        #transaction.rollback()
+        newRequest.delete()
         return (None, 'no sensible layer selected for request')
 
     # Finally return the request. Success!
@@ -309,11 +310,35 @@ def upload_gonogo(request):
 
 
 #-------------------------------------------------------
+# helper function that fetched the next request for taking
+# it locks the table and commit on success
+# returns a request on success or an Request.DoesNotExist execption
+
+@transaction.commit_on_success
+def fetch_next_request( user, client_uuid):
+
+    # returns request or DoesNotExist exception
+    request = Request.objects.get_next_and_lock();
+
+    # if it's a low prio request, make sure the upload queue is not too full
+    upload_queue = Upload.objects.all().count() # [0...1500]
+    if upload_queue > {1:1500,2:1200,3:1100,4:900}[request.priority]:
+        # bomb out with a "No request in queue for you"
+        raise Request.DoesNotExist
+    request.status=1
+    request.client = user
+    request.client_uuid = client_uuid
+    request.clientping_time=datetime.now()
+    request.save()
+
+    return request
+
+
+#-------------------------------------------------------
 #### take(request) ####
 # retrieve a new request from the server
 # TODO, quite large by now. Split?
 
-@transaction.commit_on_success
 def take(request):
     html='XX|5|unknown error'
     if request.method == 'POST':
@@ -339,21 +364,10 @@ def take(request):
 
             if active_user_reqs <= 150:
               try:  
-                  # get the next request from the queue
-                  req = Request.objects.get_next_and_lock()
-                  # if it's a low prio request, make sure the upload queue is not too full
-                  upload_queue = Upload.objects.all().count() # [0...1500]
-                  if upload_queue > {1:1500,2:1200,3:1000,4:700}[req.priority]:
-                      # bomb out with a "No request in queue for you"
-                      transaction.rollback()
-                      raise Request.DoesNotExist
- 	          req.status=1
- 	          req.client = user
- 	          req.client_uuid = form.cleaned_data.get('client_uuid', 0)
- 	          req.clientping_time=datetime.now()
-                  req.save()
-                  # commit transaction here, so others can continue
-                  transaction.commit()
+                  # get the next request from the queue (or return DoesNotExist exception)
+                  #req = Request.objects.select_for_update().filter(status=0).order_by('priority','request_time')[0];
+                  client_uuid = form.cleaned_data.get('client_uuid', 0)
+                  req = fetch_next_request( user, client_uuid);
 
                   # find out tileset filesize and age
                   # always hardcode 'tile' layer for now.
@@ -371,9 +385,9 @@ def take(request):
                   # next line is actually the successful request string!
 	          html="OK|5|%s|%d|%d" % (req,mtime,fsize)
 
-              except Request.DoesNotExist:
+              except (IndexError, Request.DoesNotExist), e:
                   # could not get_next_and_lock, queue empty
-                  html ="XX|5|No requests in queue for you."
+                  html ="XX|5|No requests in queue for you. (%s)" % (e)
             else:
                   #  active_user_reqs > 150
                   html ='XX|5|You have more than 150 active requests. '\

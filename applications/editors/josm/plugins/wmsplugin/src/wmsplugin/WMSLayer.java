@@ -20,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
@@ -50,7 +51,6 @@ public class WMSLayer extends Layer {
 		new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
 
 	public int messageNum = 5; //limit for messages per layer
-	protected boolean started = true;
 	protected boolean stopAfterPaint = false;
 	protected int ImageSize = 500;
 	protected int dax = 10;
@@ -58,6 +58,7 @@ public class WMSLayer extends Layer {
 	protected int minZoom = 3;
 	protected double pixelPerDegree;
 	protected GeorefImage[][] images = new GeorefImage[dax][day];
+        JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
 
 	protected String baseURL;
 	protected final int serializeFormatVersion = 3;
@@ -83,11 +84,11 @@ public class WMSLayer extends Layer {
 	public void grab(Bounds b, double _pixelPerDegree) {
 		if (baseURL == null) return;
 		//set resolution
-		if(started || Math.round(pixelPerDegree/10000) != Math.round(_pixelPerDegree/10000))
+		if(startstop.isSelected() || Math.round(pixelPerDegree/10000) != Math.round(_pixelPerDegree/10000))
 			initializeImages();
 		pixelPerDegree = _pixelPerDegree;
-		if(!started)stopAfterPaint = true;
-		started = true;
+		if(!startstop.isSelected()) stopAfterPaint = true;
+		startstop.setSelected(true);
 	}
 
 	@Override public Icon getIcon() {
@@ -95,7 +96,7 @@ public class WMSLayer extends Layer {
 	}
 
 	@Override public String getToolTipText() {
-		if(started)
+		if(startstop.isSelected())
 			return tr("WMS layer ({0}), automaticaly downloading in zoom {1}", name, Math.round(pixelPerDegree/10000));
 		else
 			return tr("WMS layer ({0}), downloading in zoom {1}", name, Math.round(pixelPerDegree/10000));
@@ -131,7 +132,7 @@ public class WMSLayer extends Layer {
 		int bmaxy= (int)Math.ceil  ((b.max.lon() * pixelPerDegree ) / ImageSize );
 
 
-		if( !started || (pixelPerDegree / (mv.getWidth() / (b.max.lon() - b.min.lon())) > minZoom) ){ //don't download when it's too outzoomed
+		if( !startstop.isSelected() || (pixelPerDegree / (mv.getWidth() / (b.max.lon() - b.min.lon())) > minZoom) ){ //don't download when it's too outzoomed
 			for(int x = 0; x<dax; ++x)
 				for(int y = 0; y<day; ++y){
 						images[modulo(x,dax)][modulo(y,day)].paint(g, mv);
@@ -150,7 +151,7 @@ public class WMSLayer extends Layer {
 			}
 		}
 		if(stopAfterPaint){
-			started = false;
+			startstop.setSelected(false);
 			stopAfterPaint = false;
 		}
 	}
@@ -176,8 +177,7 @@ public class WMSLayer extends Layer {
 				new JMenuItem(new LoadWmsAction()),
 				new JMenuItem(new SaveWmsAction()),
 				new JSeparator(),
-				new JMenuItem(new StartWmsAction()),
-				new JMenuItem(new StopWmsAction()),
+				startstop,
 				new JSeparator(),
 				new JMenuItem(new LayerListPopup.InfoAction(this))};
 
@@ -249,7 +249,7 @@ public class WMSLayer extends Layer {
 
 				ois.close();
 				fis.close();
-				started = false;
+				startstop.setSelected(false);
 			}
 			catch (Exception ex) {
 				// FIXME be more specific
@@ -260,24 +260,6 @@ public class WMSLayer extends Layer {
 					JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-		}
-	}
-
-	public class StartWmsAction extends AbstractAction {
-		public StartWmsAction() {
-			super(tr("Start automatic downloading"), null);
-		}
-		public void actionPerformed(ActionEvent ev) {
-			started = true;
-		}
-	}
-
-	public class StopWmsAction extends AbstractAction {
-		public StopWmsAction() {
-			super(tr("Stop automatic downloading"), null);
-		}
-		public void actionPerformed(ActionEvent ev) {
-			started = false;
 		}
 	}
 

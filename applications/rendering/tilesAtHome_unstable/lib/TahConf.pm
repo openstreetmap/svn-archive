@@ -154,11 +154,6 @@ sub CheckBasicConfig
                die "! Failed to create Upload directory.";
            }
         }
-
-        if (! $self->get("UseHostnameInZipname")) 
-        {
-            print " * UseHostnameInZipname should be set when using UploadToDirectory\n";
-        }
     }
 
     #------

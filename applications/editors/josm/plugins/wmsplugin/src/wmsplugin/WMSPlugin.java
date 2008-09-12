@@ -93,7 +93,7 @@ public class WMSPlugin extends Plugin {
 			if (prefid != lastid) {
 				if ((name != null) && (url != null)) {
 					wmsList.add(new WMSInfo(name, url, prefid));
-					if(name.equals("YAHOO"))isYahoo = true;
+					if(url.startsWith("yahoo://")) isYahoo = true;
 				}
 				name = null; url = null; lastid = prefid; 
 			}
@@ -105,7 +105,7 @@ public class WMSPlugin extends Plugin {
 		}
 		if ((name != null) && (url != null)) {
 			wmsList.add(new WMSInfo(name, url, prefid));
-			if(name.equals("YAHOO"))isYahoo = true;
+			if(url.startsWith("yahoo://")) isYahoo = true;
 		}
 
 		// if no (valid) prefs are set, initialize to a sensible default.

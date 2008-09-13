@@ -222,7 +222,11 @@ public class ErrorTreePanel extends JTree
 				{
 					// Message node
 					List<TestError> errors = msgErrors.getValue();
-					String msg = msgErrors.getKey() + " (" + errors.size() + ")";
+					String msg;
+					if(groupNode != null)
+						msg = msgErrors.getKey() + " (" + errors.size() + ")";
+					else
+						msg = msgErrors.getKey() + " - " + bag.getKey() + " (" + errors.size() + ")";
 					DefaultMutableTreeNode messageNode = new DefaultMutableTreeNode(msg);
 					if(groupNode != null)
 						groupNode.add(messageNode);

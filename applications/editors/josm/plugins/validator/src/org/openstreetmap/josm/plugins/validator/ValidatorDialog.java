@@ -15,8 +15,10 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -46,8 +48,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
     /** Serializable ID */
     private static final long serialVersionUID = 2952292777351992696L;
 
-    private static final double MIN_SCALE_ON_SELECT = 0.00001;
-
     /** The display tree */
     protected ErrorTreePanel tree;
 
@@ -57,6 +57,9 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
     /** The ignore button */
     private SideButton selectButton;
     /** The select button */
+
+    private JPopupMenu popupMenu;
+    private TestError popupMenuError = null;
 
     /** Last selected element */
     private DefaultMutableTreeNode lastSelectedNode = null;
@@ -68,6 +71,15 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
         super(tr("Validation errors"), "validator", tr("Open the validation window."), KeyEvent.VK_V, 150);
 
         this.plugin = plugin;
+        popupMenu = new JPopupMenu();
+
+        JMenuItem zoomTo = new JMenuItem(tr("Zoom to problem"));
+        zoomTo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                zoomToProblem();
+            }
+        });
+        popupMenu.add(zoomTo);
 
         tree = new ErrorTreePanel();
         tree.addMouseListener(new ClickWatch());
@@ -225,6 +237,31 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
         }
     }
 
+    private void showPopupMenu(MouseEvent e) {
+        if (!e.isPopupTrigger())
+            return;
+        popupMenuError = null;
+        TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+        if (selPath == null)
+            return;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) selPath.getPathComponent(selPath.getPathCount() - 1);
+        if (!(node.getUserObject() instanceof TestError))
+            return;
+        popupMenuError = (TestError) node.getUserObject();
+        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+    }
+
+    private void zoomToProblem() {
+        if (popupMenuError == null)
+            return;
+        ValidatorBoundingXYVisitor bbox = new ValidatorBoundingXYVisitor();
+        popupMenuError.visitHighlighted(bbox);
+        if (bbox.min == null || bbox.max == null)
+            return;
+        bbox.enlargeBoundingBox();
+        Main.map.mapView.recalculateCenterScale(bbox);
+    }
+
     /**
      * Sets the selection of the map to the current selected items.
      */
@@ -340,24 +377,18 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
             if (isDblClick) {
                 Main.ds.setSelected(sel);
             }
-            TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-            if ((selPath != null) && (e.getClickCount() == 2)) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) selPath
-                        .getPathComponent(selPath.getPathCount() - 1);
-                if (node.getUserObject() instanceof TestError) {
-                    TestError testError = (TestError) node.getUserObject();
-                    ValidatorBoundingXYVisitor box = new ValidatorBoundingXYVisitor();
-                    testError.visitHighlighted(box);
-                    if (box.max.equals(box.min))
-                        Main.map.mapView.zoomTo(box.max, MIN_SCALE_ON_SELECT);
-                    else {
-                        Main.map.mapView.recalculateCenterScale(box);
-                        if (Main.map.mapView.getScale() < MIN_SCALE_ON_SELECT)
-                            Main.map.mapView.zoomTo(Main.map.mapView.getCenter(), MIN_SCALE_ON_SELECT);
-                    }
-                }
-            }
         }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            showPopupMenu(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            showPopupMenu(e);
+        }
+
     }
 
     /**

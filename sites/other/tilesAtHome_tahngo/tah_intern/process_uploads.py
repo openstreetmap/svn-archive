@@ -112,8 +112,9 @@ class TileUpload ( threading.Thread ):
 
               upload.is_locked = True
               upload.save()
-          except Upload.DoesNotExist:
-              #logging.debug('No uploaded request. Sleeping 10 sec.')
+          except (Upload.DoesNotExist, MySQLdb.OperationalError), e:
+              # Transaction timeout throws an OperationalError, 1205
+              # logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
               transaction.commit()
               sleep(10)

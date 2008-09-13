@@ -18,9 +18,8 @@ base_tile_path = settings.TILES_ROOT
 layer=Layer.objects.get(name='tile')
 CreateFormClass = CreateForm
 CreateFormClass.base_fields['layers'].required = False 
-r=request()
 
-for x in range(1715,4096):
+for x in range(2225,4096):
  print "x=%d" % x 
  for y in range(0,4096):
     tilepath, tilefile = Tileset(layer,12,x,y).get_filename(base_tile_path)
@@ -33,6 +32,7 @@ for x in range(1715,4096):
         #empty sea. skip it
         print "skip empty sea %d %d" % (x,y)
         continue
+      r=request()
       form = CreateFormClass({'min_z': 12, 'x': x, 'y': y, 'priority': 4, 'layers':[1,3], 'src':'RequestMissingTiles'})
       if form.is_valid():
         saveCreateRequestForm(r, form)

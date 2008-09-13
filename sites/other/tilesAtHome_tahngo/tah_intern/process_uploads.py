@@ -14,6 +14,7 @@ from tah.tah_intern.models import Settings, Layer
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.Tile import Tile
 from tah.requests.models import Request,Upload
+from MySQLdb import OperationalError
 
 ### TileUpload returns 0 on success and >0 otherwise
 class TileUpload ( threading.Thread ):

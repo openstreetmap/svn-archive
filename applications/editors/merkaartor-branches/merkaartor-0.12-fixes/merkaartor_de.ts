@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="de">
-<defaultcodec></defaultcodec>
 <context>
     <name></name>
     <message>
@@ -180,224 +179,224 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Amenities</name>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="42"/>
-        <source>College</source>
-        <translation type="obsolete">College</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="47"/>
-        <source>Fire Station</source>
-        <translation type="obsolete">Feuerwehr</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="49"/>
-        <source>Fuel</source>
-        <translation type="obsolete">Tankstelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="51"/>
-        <source>Hospital</source>
-        <translation type="obsolete">Krankenhaus</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="52"/>
-        <source>Library</source>
-        <translation type="obsolete">Bibliothek</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="54"/>
-        <source>Parking</source>
-        <translation type="obsolete">Parkplatz</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="56"/>
-        <source>Place of Worship</source>
-        <translation type="obsolete">Anbetungsort</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="57"/>
-        <source>Police Station</source>
-        <translation type="obsolete">Polizeistation</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="58"/>
-        <source>Post Box</source>
-        <translation type="obsolete">Briefkasten</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="59"/>
-        <source>Post Office</source>
-        <translation type="obsolete">Postamt</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="61"/>
-        <source>Pub</source>
-        <translation type="obsolete">Kneipe</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="63"/>
-        <source>Public Telephone</source>
-        <translation type="obsolete">Telefon</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="64"/>
-        <source>Recycling Facilities</source>
-        <translation type="obsolete">Recycling-Einrichtung</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="65"/>
-        <source>Restaurant</source>
-        <translation type="obsolete">Restaurant</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="66"/>
-        <source>School</source>
-        <translation type="obsolete">Schule</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="71"/>
-        <source>University</source>
-        <translation type="obsolete">Universität</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="29"/>
-        <source>Arts centre</source>
-        <translation type="obsolete">Kulturzentrum</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="30"/>
-        <source>ATM or cash point</source>
-        <translation type="obsolete">Geldautomat</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="31"/>
-        <source>Bank</source>
-        <translation type="obsolete">Bank</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="32"/>
-        <source>Bank with atm</source>
-        <translation type="obsolete">Bank mit Geldautomat</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="33"/>
-        <source>Beer garden</source>
-        <translation type="obsolete">Biergarten</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="34"/>
-        <source>Parking for bicycles</source>
-        <translation type="obsolete">Fahrradstellplatz</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="35"/>
-        <source>Bicycle Rental</source>
-        <translation type="obsolete">Fahrradmietstation</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="36"/>
-        <source>Bureau de change</source>
-        <translation type="obsolete">Wechselstube</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="37"/>
-        <source>Bus station</source>
-        <translation type="obsolete">Bushaltestelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="38"/>
-        <source>Cafe</source>
-        <translation type="obsolete">Cafe</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="39"/>
-        <source>Car Rental</source>
-        <translation type="obsolete">Autovermietung</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="40"/>
-        <source>Car Sharing</source>
-        <translation type="obsolete">Autotausch</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="41"/>
-        <source>Cinema</source>
-        <translation type="obsolete">Kino</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="43"/>
-        <source>Court house</source>
-        <translation type="obsolete">Gericht</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="44"/>
-        <source>Crematorium</source>
-        <translation type="obsolete">Krematorium</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="45"/>
-        <source>Source of drinking water</source>
-        <translation type="obsolete">Trinkwasser</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="46"/>
-        <source>Fast food</source>
-        <translation type="obsolete">Schnellimbiss</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="48"/>
-        <source>Fountain</source>
-        <translation type="obsolete">Springbrunnen</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="50"/>
-        <source>Small place of burial</source>
-        <translation type="obsolete">Grabstelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="53"/>
-        <source>Nightclub</source>
-        <translation type="obsolete">Nachtclub</translation>
-    </message>
-    <message>
         <location filename="Map/PreDefinedTags.cpp" line="55"/>
-        <source>Pharmacy</source>
-        <translation type="obsolete">Apotheke</translation>
+        <source>College</source>
+        <translation type="unfinished">College</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="60"/>
-        <source>Prison</source>
-        <translation type="obsolete">Gefängnis</translation>
+        <source>Fire Station</source>
+        <translation type="unfinished">Feuerwehr</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="62"/>
-        <source>Public building</source>
-        <translation type="obsolete">Öffentliches Gebäude</translation>
+        <source>Fuel</source>
+        <translation type="unfinished">Tankstelle</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="64"/>
+        <source>Hospital</source>
+        <translation type="unfinished">Krankenhaus</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="65"/>
+        <source>Library</source>
+        <translation type="unfinished">Bibliothek</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="67"/>
-        <source>Taxi</source>
-        <translation type="obsolete">Taxi</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="68"/>
-        <source>Theatre or opera house</source>
-        <translation type="obsolete">Theater oder Oper</translation>
+        <source>Parking</source>
+        <translation type="unfinished">Parkplatz</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="69"/>
-        <source>Toilets</source>
-        <translation type="obsolete">Toiletten</translation>
+        <source>Place of Worship</source>
+        <translation type="unfinished">Anbetungsort</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="70"/>
-        <source>Town hall</source>
-        <translation type="obsolete">Rathaus</translation>
+        <source>Police Station</source>
+        <translation type="unfinished">Polizeistation</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="71"/>
+        <source>Post Box</source>
+        <translation type="unfinished">Briefkasten</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="72"/>
+        <source>Post Office</source>
+        <translation type="unfinished">Postamt</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="74"/>
+        <source>Pub</source>
+        <translation type="unfinished">Kneipe</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="76"/>
+        <source>Public Telephone</source>
+        <translation type="unfinished">Telefon</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="77"/>
+        <source>Recycling Facilities</source>
+        <translation type="unfinished">Recycling-Einrichtung</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="78"/>
+        <source>Restaurant</source>
+        <translation type="unfinished">Restaurant</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="79"/>
+        <source>School</source>
+        <translation type="unfinished">Schule</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="84"/>
+        <source>University</source>
+        <translation type="unfinished">Universität</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="42"/>
+        <source>Arts centre</source>
+        <translation type="unfinished">Kulturzentrum</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="43"/>
+        <source>ATM or cash point</source>
+        <translation type="unfinished">Geldautomat</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="44"/>
+        <source>Bank</source>
+        <translation type="unfinished">Bank</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="45"/>
+        <source>Bank with atm</source>
+        <translation type="unfinished">Bank mit Geldautomat</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="46"/>
+        <source>Beer garden</source>
+        <translation type="unfinished">Biergarten</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="47"/>
+        <source>Parking for bicycles</source>
+        <translation type="unfinished">Fahrradstellplatz</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="48"/>
+        <source>Bicycle Rental</source>
+        <translation type="unfinished">Fahrradmietstation</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="49"/>
+        <source>Bureau de change</source>
+        <translation type="unfinished">Wechselstube</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="50"/>
+        <source>Bus station</source>
+        <translation type="unfinished">Bushaltestelle</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="51"/>
+        <source>Cafe</source>
+        <translation type="unfinished">Cafe</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="52"/>
+        <source>Car Rental</source>
+        <translation type="unfinished">Autovermietung</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="53"/>
+        <source>Car Sharing</source>
+        <translation type="unfinished">Autotausch</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="54"/>
+        <source>Cinema</source>
+        <translation type="unfinished">Kino</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="56"/>
+        <source>Court house</source>
+        <translation type="unfinished">Gericht</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="57"/>
+        <source>Crematorium</source>
+        <translation type="unfinished">Krematorium</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="58"/>
+        <source>Source of drinking water</source>
+        <translation type="unfinished">Trinkwasser</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="59"/>
+        <source>Fast food</source>
+        <translation type="unfinished">Schnellimbiss</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="61"/>
+        <source>Fountain</source>
+        <translation type="unfinished">Springbrunnen</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="63"/>
+        <source>Small place of burial</source>
+        <translation type="unfinished">Grabstelle</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="66"/>
+        <source>Nightclub</source>
+        <translation type="unfinished">Nachtclub</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="68"/>
+        <source>Pharmacy</source>
+        <translation type="unfinished">Apotheke</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="73"/>
+        <source>Prison</source>
+        <translation type="unfinished">Gefängnis</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="75"/>
+        <source>Public building</source>
+        <translation type="unfinished">Öffentliches Gebäude</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="80"/>
+        <source>Taxi</source>
+        <translation type="unfinished">Taxi</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="81"/>
+        <source>Theatre or opera house</source>
+        <translation type="unfinished">Theater oder Oper</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="82"/>
+        <source>Toilets</source>
+        <translation type="unfinished">Toiletten</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="83"/>
+        <source>Town hall</source>
+        <translation type="unfinished">Rathaus</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="85"/>
         <source>Waste Disposal</source>
-        <translation type="obsolete">Müllkippe</translation>
+        <translation type="unfinished">Müllkippe</translation>
     </message>
 </context>
 <context>
@@ -455,14 +454,14 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>DefaultTags</name>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="19"/>
+        <location filename="Map/PreDefinedTags.cpp" line="31"/>
         <source>Not specified</source>
-        <translation type="obsolete">Nicht angegeben</translation>
+        <translation type="unfinished">Nicht angegeben</translation>
     </message>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="22"/>
+        <location filename="Map/PreDefinedTags.cpp" line="34"/>
         <source>Unknown</source>
-        <translation type="obsolete">Unbekannt</translation>
+        <translation type="unfinished">Unbekannt</translation>
     </message>
 </context>
 <context>
@@ -898,7 +897,7 @@ Wollen Sie diese zur Löschung markieren?</translation>
         <translation>Wählen Sie die Ebene aus zu der die Bilder gehören:</translation>
     </message>
     <message>
-        <location filename="GeoImageDock.cpp" line="276"/>
+        <location filename="GeoImageDock.cpp" line="279"/>
         <source>Wrong image?</source>
         <translation>Falsches Bild?</translation>
     </message>
@@ -950,29 +949,29 @@ Wollen Sie stattdessen die Zeitinformationen der Datei benutzen?</translation>
         <translation>hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="GeoImageDock.cpp" line="271"/>
+        <location filename="GeoImageDock.cpp" line="274"/>
         <source>ss &apos;seconds&apos;</source>
         <translation>ss &apos;Sekunden&apos;</translation>
     </message>
     <message>
-        <location filename="GeoImageDock.cpp" line="273"/>
+        <location filename="GeoImageDock.cpp" line="276"/>
         <source>mm &apos;minutes and&apos; ss &apos;seconds&apos;</source>
         <translation>mm &apos;Minuten und&apos; ss &apos;Sekunden&apos;</translation>
     </message>
     <message>
-        <location filename="GeoImageDock.cpp" line="275"/>
+        <location filename="GeoImageDock.cpp" line="278"/>
         <source>hh &apos;hours,&apos; mm &apos;minutes and&apos; ss &apos;seconds&apos;</source>
         <translation>hh &apos;Stunden,&apos; mm &apos;Minuten und&apos; ss &apos;Sekunden&apos;</translation>
     </message>
     <message>
-        <location filename="GeoImageDock.cpp" line="277"/>
+        <location filename="GeoImageDock.cpp" line="280"/>
         <source>Image &quot;%1&quot; was taken %2 before the next trackpoint was recorded.
 Do you still want to use it?</source>
         <translation>Das Bild &quot;%1&quot; wurde %2 vor dem nächsten Trackpoint aufgenommen.
 Soll es trotzdem benutzt werden?</translation>
     </message>
     <message>
-        <location filename="GeoImageDock.cpp" line="278"/>
+        <location filename="GeoImageDock.cpp" line="281"/>
         <source>Image &quot;%1&quot; was taken %2 after the last trackpoint was recorded.
 Do you still want to use it?</source>
         <translation>Das Bild &quot;%1&quot; wrude %2 nach dem letzten Trackpoint aufgenommen.
@@ -982,104 +981,104 @@ Soll es trotzdem benutzt werden?</translation>
 <context>
     <name>Highway</name>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="78"/>
+        <location filename="Map/PreDefinedTags.cpp" line="92"/>
         <source>Motorway</source>
-        <translation type="obsolete">Autobahn</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="79"/>
-        <source>Ramp to motorway</source>
-        <translation type="obsolete">Autobahnanschlussstelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="80"/>
-        <source>Trunk road</source>
-        <translation type="obsolete">Schnellstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="81"/>
-        <source>Ramp to trunk road</source>
-        <translation type="obsolete">Schnellstraßenanschlussstelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="82"/>
-        <source>Primary road</source>
-        <translation type="obsolete">Bundesstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="83"/>
-        <source>Ramp to primary road</source>
-        <translation type="obsolete">Bundesstraßenanschlussstelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="84"/>
-        <source>Secondary road</source>
-        <translation type="obsolete">Land-/Kreisstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="85"/>
-        <source>Tertiary road</source>
-        <translation type="obsolete">Gemeindeverbindungsstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="87"/>
-        <source>Residential road</source>
-        <translation type="obsolete">Wohngebietsstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="88"/>
-        <source>Service road</source>
-        <translation type="obsolete">Erschließungsweg</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="97"/>
-        <source>Unsurfaced road (old tag)</source>
-        <translation type="obsolete">Unbefestigte Straße (veraltet)</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="89"/>
-        <source>Track road</source>
-        <translation type="obsolete">Feld- oder Waldweg</translation>
+        <translation type="unfinished">Autobahn</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="93"/>
-        <source>Cycleway</source>
-        <translation type="obsolete">Radweg</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="92"/>
-        <source>Footway</source>
-        <translation type="obsolete">Fuß-/Wanderweg</translation>
+        <source>Ramp to motorway</source>
+        <translation type="unfinished">Autobahnanschlussstelle</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="94"/>
-        <source>Bridleway</source>
-        <translation type="obsolete">Reitweg</translation>
+        <source>Trunk road</source>
+        <translation type="unfinished">Schnellstraße</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="95"/>
-        <source>Steps</source>
-        <translation type="obsolete">Treppe</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="90"/>
-        <source>Pedestrian priority road</source>
-        <translation type="obsolete">Spielstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="86"/>
-        <source>Unclassified road</source>
-        <translation type="obsolete">Einfache Verbindungsstraße</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="91"/>
-        <source>Pedestrian only road</source>
-        <translation type="obsolete">Fußgängerzone</translation>
+        <source>Ramp to trunk road</source>
+        <translation type="unfinished">Schnellstraßenanschlussstelle</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="96"/>
+        <source>Primary road</source>
+        <translation type="unfinished">Bundesstraße</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="97"/>
+        <source>Ramp to primary road</source>
+        <translation type="unfinished">Bundesstraßenanschlussstelle</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="98"/>
+        <source>Secondary road</source>
+        <translation type="unfinished">Land-/Kreisstraße</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="99"/>
+        <source>Tertiary road</source>
+        <translation type="unfinished">Gemeindeverbindungsstraße</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="101"/>
+        <source>Residential road</source>
+        <translation type="unfinished">Wohngebietsstraße</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="102"/>
+        <source>Service road</source>
+        <translation type="unfinished">Erschließungsweg</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="111"/>
+        <source>Unsurfaced road (old tag)</source>
+        <translation type="unfinished">Unbefestigte Straße (veraltet)</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="103"/>
+        <source>Track road</source>
+        <translation type="unfinished">Feld- oder Waldweg</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="107"/>
+        <source>Cycleway</source>
+        <translation type="unfinished">Radweg</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="106"/>
+        <source>Footway</source>
+        <translation type="unfinished">Fuß-/Wanderweg</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="108"/>
+        <source>Bridleway</source>
+        <translation type="unfinished">Reitweg</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="109"/>
+        <source>Steps</source>
+        <translation type="unfinished">Treppe</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="104"/>
+        <source>Pedestrian priority road</source>
+        <translation type="unfinished">Spielstraße</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="100"/>
+        <source>Unclassified road</source>
+        <translation type="unfinished">Einfache Verbindungsstraße</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="105"/>
+        <source>Pedestrian only road</source>
+        <translation type="unfinished">Fußgängerzone</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="110"/>
         <source>Bus guideway (not a bus way)</source>
-        <translation type="obsolete">Spurbus-Strecke</translation>
+        <translation type="unfinished">Spurbus-Strecke</translation>
     </message>
 </context>
 <context>
@@ -4226,94 +4225,94 @@ Please select another name or click the &lt;Apply&gt; button if you want to modi
 <context>
     <name>landuse</name>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="110"/>
+        <location filename="Map/PreDefinedTags.cpp" line="125"/>
         <source>Forest</source>
-        <translation type="obsolete">Wald</translation>
+        <translation type="unfinished">Wald</translation>
     </message>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="109"/>
+        <location filename="Map/PreDefinedTags.cpp" line="124"/>
         <source>Farm</source>
-        <translation type="obsolete">Landwirtschaft</translation>
+        <translation type="unfinished">Landwirtschaft</translation>
     </message>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="115"/>
+        <location filename="Map/PreDefinedTags.cpp" line="130"/>
         <source>Recreation ground</source>
-        <translation type="obsolete">Erholungsgebiet</translation>
+        <translation type="unfinished">Erholungsgebiet</translation>
     </message>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="120"/>
+        <location filename="Map/PreDefinedTags.cpp" line="135"/>
         <source>Village green</source>
-        <translation type="obsolete">Dorfwiese</translation>
+        <translation type="unfinished">Dorfwiese</translation>
     </message>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="117"/>
+        <location filename="Map/PreDefinedTags.cpp" line="132"/>
         <source>Residential zone</source>
-        <translation type="obsolete">Wohngebiet</translation>
+        <translation type="unfinished">Wohngebiet</translation>
     </message>
     <message>
-        <location filename="Map/PreDefinedTags.cpp" line="112"/>
+        <location filename="Map/PreDefinedTags.cpp" line="127"/>
         <source>Industrial zone</source>
-        <translation type="obsolete">Industriegebiet</translation>
+        <translation type="unfinished">Industriegebiet</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="133"/>
+        <source>Retail zone</source>
+        <translation type="unfinished">Läden</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="122"/>
+        <source>Commercial zone</source>
+        <translation type="unfinished">Büros</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="118"/>
-        <source>Retail zone</source>
-        <translation type="obsolete">Läden</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="107"/>
-        <source>Commercial zone</source>
-        <translation type="obsolete">Büros</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="103"/>
         <source>Allotments</source>
-        <translation type="obsolete">Schrebergärten</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="104"/>
-        <source>Basin</source>
-        <translation type="obsolete">Wasserbecken</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="105"/>
-        <source>Brownfield</source>
-        <translation type="obsolete">Baulücke</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="106"/>
-        <source>Cemetery</source>
-        <translation type="obsolete">Friedhof</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="108"/>
-        <source>Construction zone</source>
-        <translation type="obsolete">Baustelle</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="111"/>
-        <source>Greenfield</source>
-        <translation type="obsolete">Bauland</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="113"/>
-        <source>Landfill</source>
-        <translation type="obsolete">Deponie</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="114"/>
-        <source>Military</source>
-        <translation type="obsolete">Militär</translation>
-    </message>
-    <message>
-        <location filename="Map/PreDefinedTags.cpp" line="116"/>
-        <source>Reservoir (water)</source>
-        <translation type="obsolete">Speicherbecken</translation>
+        <translation type="unfinished">Schrebergärten</translation>
     </message>
     <message>
         <location filename="Map/PreDefinedTags.cpp" line="119"/>
+        <source>Basin</source>
+        <translation type="unfinished">Wasserbecken</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="120"/>
+        <source>Brownfield</source>
+        <translation type="unfinished">Baulücke</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="121"/>
+        <source>Cemetery</source>
+        <translation type="unfinished">Friedhof</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="123"/>
+        <source>Construction zone</source>
+        <translation type="unfinished">Baustelle</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="126"/>
+        <source>Greenfield</source>
+        <translation type="unfinished">Bauland</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="128"/>
+        <source>Landfill</source>
+        <translation type="unfinished">Deponie</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="129"/>
+        <source>Military</source>
+        <translation type="unfinished">Militär</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="131"/>
+        <source>Reservoir (water)</source>
+        <translation type="unfinished">Speicherbecken</translation>
+    </message>
+    <message>
+        <location filename="Map/PreDefinedTags.cpp" line="134"/>
         <source>Surface mineral extraction</source>
-        <translation type="obsolete">Steinbruch</translation>
+        <translation type="unfinished">Steinbruch</translation>
     </message>
 </context>
 </TS>

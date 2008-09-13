@@ -741,13 +741,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   </xsl:template>
 
-
-  <!-- Draw a symbol for the current <node> element using the formatting of the current <symbol> instruction -->
-  <xsl:template name="drawSymbol">
+  <xsl:template name="renderSymbol">
     <xsl:param name="instruction"/>
+    <xsl:param name="lon"/>
+    <xsl:param name="lat"/>
 
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
+    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($lon))*10000*$scale)"/>
+    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($lat))*10000*$scale*$projection)"/>
 
     <xsl:variable name="symbol" select="exslt:node-set($symbols)/svg:symbol[@id=concat('symbol-',$instruction/@ref)]"/>
 
@@ -786,6 +786,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <g transform="translate({$x},{$y}) scale({$symbolScale}) {$instruction/@transform} {$symbolShift}">
 	<xsl:copy-of select="$useElement"/>
     </g>
+  </xsl:template>
+
+
+  <!-- Draw a symbol for the current <node> element using the formatting of the current <symbol> instruction -->
+  <xsl:template name="drawSymbol">
+    <xsl:param name="instruction"/>
+
+    <xsl:call-template name="renderSymbol">
+      <xsl:with-param name="instruction" select="$instruction"/>
+      <xsl:with-param name="lon" select="@lon"/>
+      <xsl:with-param name="lat" select="@lat"/>
+    </xsl:call-template>
+
   </xsl:template>
 
 
@@ -1365,46 +1378,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       areaCenter: <xsl:value-of select="$center" />
     </xsl:message>
 
-    <xsl:variable name="centerLon" select="substring-before($center, ',')" />
-    <xsl:variable name="centerLat" select="substring-after($center, ',')" />
-
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($centerLon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($centerLat))*10000*$scale*$projection)"/>
-
-    <xsl:variable name="symbol" select="exslt:node-set($symbols)/svg:symbol[@id=concat('symbol-',$instruction/@ref)]"/>
-
-    <xsl:variable name="useElement">
-      <use>
-        <xsl:if test="$instruction/@ref">
-          <xsl:attribute name="xlink:href">
-            <xsl:value-of select="concat('#symbol-', $instruction/@ref)"/>
-          </xsl:attribute>
-        </xsl:if>
-
-        <!-- Use symbol size by default  -->
-        <xsl:attribute name="width">
-          <xsl:value-of select="$symbol/@width"/>
-        </xsl:attribute>
-
-        <xsl:attribute name="height">
-          <xsl:value-of select="$symbol/@height"/>
-        </xsl:attribute>
-
-        <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
-	<!-- Copy all the attributes from the <symbol> instruction. Overwrite width and heigth if specified -->
-      </use>
-    </xsl:variable>
-
-    <!-- Move symbol based on position attribute -->
-    <xsl:variable name="symbolShift">
-      <xsl:if test="$instruction[@position='center']">
-        <xsl:value-of select="concat('translate(', -number(exslt:node-set($useElement)/svg:use/@width) div 2.0, ',', - number(exslt:node-set($useElement)/svg:use/@height) div 2.0, ')')"/>
-      </xsl:if>
-    </xsl:variable>
-
-    <g transform="translate({$x},{$y}) scale({$symbolScale}) {$symbolShift}">
-	<xsl:copy-of select="$useElement"/>
-    </g>
+    <xsl:call-template name="renderSymbol">
+      <xsl:with-param name="instruction" select="$instruction"/>
+      <xsl:with-param name="lon" select="substring-before($center, ',')"/>
+      <xsl:with-param name="lat" select="substring-after($center, ',')"/>
+    </xsl:call-template>
 
   </xsl:template>
 

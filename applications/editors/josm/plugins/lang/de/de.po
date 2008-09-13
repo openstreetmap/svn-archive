@@ -5884,11 +5884,11 @@ msgstr "Spielstraße bearbeiten"
 
 #: ../lang/presets.java:212
 msgid "Service"
-msgstr "Erschließungsweg"
+msgstr "Zufahrtstraße"
 
 #: ../lang/presets.java:213
 msgid "Edit a Serviceway"
-msgstr "Erschließungsweg bearbeiten"
+msgstr "Zufahrtstraße bearbeiten"
 
 #: ../lang/presets.java:231
 msgid "Parking Aisle"
@@ -6747,7 +6747,7 @@ msgstr "Parkplatz bearbeiten"
 
 #: ../lang/presets.java:1019 ../lang/presets.java:1054
 msgid "Shop"
-msgstr "Geschäfte"
+msgstr "Geschäft"
 
 #: ../lang/presets.java:1020
 msgid "Edit Car Shop"
@@ -6939,7 +6939,7 @@ msgstr "Tourismus"
 
 #: ../lang/presets.java:1203
 msgid "Information point"
-msgstr "Informationsstelle"
+msgstr "Information"
 
 #: ../lang/presets.java:1204
 msgid "Edit Tourist Information"
@@ -7318,11 +7318,11 @@ msgstr "Tennis"
 
 #: ../lang/presets.java:1359
 msgid "Sports Centre"
-msgstr "Fitnesscenter"
+msgstr "Sporthalle / Fitnesscenter"
 
 #: ../lang/presets.java:1360
 msgid "Edit Sports Centre"
-msgstr "Fitnesscenter bearbeiten"
+msgstr "Sporthalle / Fitnesscenter bearbeiten"
 
 #: ../lang/presets.java:1369
 msgid "Pitch"

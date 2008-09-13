@@ -109,13 +109,16 @@ class TileUpload ( threading.Thread ):
           try:
               upload = Upload.objects.get_next_and_lock();
               #upload = Upload.objects.filter(is_locked=False).order_by('upload_time')[0]
-
               upload.is_locked = True
               upload.save()
-          except (Upload.DoesNotExist, MySQLdb.OperationalError), e:
-              # Transaction timeout throws an OperationalError, 1205
+          except Upload.DoesNotExist:
               # logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
+              transaction.commit()
+              sleep(10)
+          except MySQLdb.OperationalError, e:
+              # Transaction timeout throws an OperationalError, 1205
+              log.warn("MySQL failed to fetch next upload: %s: %s" % (e[0],e[1]))
               transaction.commit()
               sleep(10)
 

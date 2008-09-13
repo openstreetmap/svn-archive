@@ -28,113 +28,113 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  * @author frsantos
  */
-public class ErrorLayer extends Layer implements LayerChangeListener
-{
-	private OSMValidatorPlugin plugin;
+public class ErrorLayer extends Layer implements LayerChangeListener {
+    private OSMValidatorPlugin plugin;
 
-	public ErrorLayer(OSMValidatorPlugin plugin) {
-		super(tr("Validation errors"));
-		this.plugin = plugin;
-		Layer.listeners.add(this); 
-	}
+    public ErrorLayer(OSMValidatorPlugin plugin) {
+        super(tr("Validation errors"));
+        this.plugin = plugin;
+        Layer.listeners.add(this);
+    }
 
-	/**
-	 * Return a static icon.
-	 */
-	@Override public Icon getIcon() {
-		return ImageProvider.get("layer", "validator");
-	}
+    /**
+     * Return a static icon.
+     */
+    @Override
+    public Icon getIcon() {
+        return ImageProvider.get("layer", "validator");
+    }
 
-	/**
-	 * Draw all primitives in this layer but do not draw modified ones (they
-	 * are drawn by the edit layer).
-	 * Draw nodes last to overlap the ways they belong to.
-	 */
-	@SuppressWarnings("unchecked")
-	@Override 
-	public void paint(final Graphics g, final MapView mv) 
-	{
-		DefaultMutableTreeNode root = plugin.validationDialog.tree.getRoot();
-		if( root == null || root.getChildCount() == 0)
-			return;
-		
-		DefaultMutableTreeNode severity = (DefaultMutableTreeNode)root.getLastChild();
-		while( severity != null )
-		{
-			Enumeration<DefaultMutableTreeNode> errorMessages = severity.breadthFirstEnumeration();
-			while(errorMessages.hasMoreElements())
-			{
-				Object tn = errorMessages.nextElement().getUserObject();
-				if(tn instanceof TestError)
-					((TestError)tn).paint(g, mv);
-			}
-			
-			// Severities in inverse order
-			severity = severity.getPreviousSibling();
-		}
-	}
+    /**
+     * Draw all primitives in this layer but do not draw modified ones (they
+     * are drawn by the edit layer).
+     * Draw nodes last to overlap the ways they belong to.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void paint(final Graphics g, final MapView mv) {
+        DefaultMutableTreeNode root = plugin.validationDialog.tree.getRoot();
+        if (root == null || root.getChildCount() == 0)
+            return;
 
-	@Override 
-	public String getToolTipText() 
-	{
-		Bag<Severity, TestError> errorTree = new Bag<Severity, TestError>();
-		List<TestError> errors = plugin.validationDialog.tree.getErrors();
-		for(TestError e : errors)
-		{
-			errorTree.add(e.getSeverity(), e);
-		}
-		
-		StringBuilder b = new StringBuilder();
-		for(Severity s : Severity.values())
-		{
-			if( errorTree.containsKey(s) )
-				b.append(tr(s.toString())).append(": ").append(errorTree.get(s).size()).append("<br>");
-		}
-		
-		if( b.length() == 0 )
-			return "<html>"+tr("No validation errors") + "</html>";
-		else
-			return "<html>" + tr("Validation errors") + ":<br>" + b + "</html>";
-	}
+        DefaultMutableTreeNode severity = (DefaultMutableTreeNode) root.getLastChild();
+        while (severity != null) {
+            Enumeration<DefaultMutableTreeNode> errorMessages = severity.breadthFirstEnumeration();
+            while (errorMessages.hasMoreElements()) {
+                Object tn = errorMessages.nextElement().getUserObject();
+                if (tn instanceof TestError)
+                    ((TestError) tn).paint(g, mv);
+            }
 
-	@Override public void mergeFrom(Layer from) {}
+            // Severities in inverse order
+            severity = severity.getPreviousSibling();
+        }
+    }
 
-	@Override public boolean isMergable(Layer other) {
-		return false;
-	}
+    @Override
+    public String getToolTipText() {
+        Bag<Severity, TestError> errorTree = new Bag<Severity, TestError>();
+        List<TestError> errors = plugin.validationDialog.tree.getErrors();
+        for (TestError e : errors) {
+            errorTree.add(e.getSeverity(), e);
+        }
 
-	@Override public void visitBoundingBox(BoundingXYVisitor v) {}
+        StringBuilder b = new StringBuilder();
+        for (Severity s : Severity.values()) {
+            if (errorTree.containsKey(s))
+                b.append(tr(s.toString())).append(": ").append(errorTree.get(s).size()).append("<br>");
+        }
 
-	@Override public Object getInfoComponent() 
-	{
-		return getToolTipText();
-	}
+        if (b.length() == 0)
+            return "<html>" + tr("No validation errors") + "</html>";
+        else
+            return "<html>" + tr("Validation errors") + ":<br>" + b + "</html>";
+    }
 
-	@Override public Component[] getMenuEntries() 
-	{
-		return new Component[]{
-				new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-				new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
-				new JSeparator(),
-				new JMenuItem(new RenameLayerAction(null, this)),
-				new JSeparator(),
-				new JMenuItem(new LayerListPopup.InfoAction(this))};
-	}
+    @Override
+    public void mergeFrom(Layer from) {
+    }
 
-	@Override public void destroy() { }
+    @Override
+    public boolean isMergable(Layer other) {
+        return false;
+    }
 
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) { }
+    @Override
+    public void visitBoundingBox(BoundingXYVisitor v) {
+    }
 
-	public void layerAdded(Layer newLayer) { }
+    @Override
+    public Object getInfoComponent() {
+        return getToolTipText();
+    }
 
-	/**
-	 * If layer is the OSM Data layer, remove all errors
-	 */
-	public void layerRemoved(Layer oldLayer)
-	{
-		if(oldLayer == Main.map.mapView.editLayer ) 
-		{
-			Main.map.mapView.removeLayer(this); 
-		}
-	}
+    @Override
+    public Component[] getMenuEntries() {
+        return new Component[] { new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
+                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)), new JSeparator(),
+                new JMenuItem(new RenameLayerAction(null, this)), new JSeparator(),
+                new JMenuItem(new LayerListPopup.InfoAction(this)) };
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    }
+
+    public void layerAdded(Layer newLayer) {
+    }
+
+    /**
+     * If layer is the OSM Data layer, remove all errors
+     */
+    public void layerRemoved(Layer oldLayer) {
+        if (oldLayer == Main.map.mapView.editLayer) {
+            Main.map.mapView.removeLayer(this);
+        } else if (oldLayer == this) {
+            OSMValidatorPlugin.errorLayer = null;
+        }
+    }
 }

@@ -79,10 +79,16 @@ class TileUpload ( threading.Thread ):
                     # remove corresponding layer from request and set to 
                     # status=2 when all layers are done
                     req.layers.remove(tset.layer)
-                    if req.layers.count() == 0:
-                      req.status=2
-                      req.clientping_time=datetime.now()
-                      req.save()
+                    save_success = False
+                    while req.layers.count() == 0 and not save_success:
+                      try:
+                        req.status=2
+                        req.clientping_time=datetime.now()
+                        req.save()
+                        save_success = True
+                      except OperationalError, (errnum,errmsg):
+                        # e.g. MySQL transaction timeout, do another round
+                        save_success = False
                   logging.debug('%s finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (self.getName(), tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
                 else:
                     # saving the tileset went wrong

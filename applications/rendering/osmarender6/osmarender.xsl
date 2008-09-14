@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exslt="http://exslt.org/common"
   xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+  xmlns:labels="http://openstreetmap.org/osmarender-labels-rtf"
   exclude-result-prefixes="exslt msxsl" 
   version="1.0">
 
@@ -310,6 +311,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:copy-of select="/rules/defs/svg:symbol"/>
   </xsl:variable>
 
+  <xsl:variable name="labels" xmlns="http://openstreetmap.org/osmarender-labels-rtf">
+    <xsl:for-each select="$data/osm/relation[tag[@k='type' and @v='label']]">
+      <xsl:choose>
+        <xsl:when test="count(member[@role='object']) = 0"/>
+        <xsl:when test="count(member[@role='object']) = 1">
+          <area id="{member[@role='object']/@ref}">
+            <xsl:for-each select="member[@role='label']">
+              <label ref="{@ref}"/>
+            </xsl:for-each>
+          </area>
+        </xsl:when>
+        <xsl:otherwise>
+          <area id="{member[@role='object'][1]/@ref}">
+            <xsl:for-each select="member[@role='label']">
+              <label ref="{@ref}"/>
+            </xsl:for-each>
+          </area>
+          <area id="{member[@role='object'][position() != 1]/@ref}"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:for-each>
+  </xsl:variable>
 
   <!-- Main template -->
   <xsl:template match="/rules">
@@ -1368,21 +1391,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:template name="renderAreaSymbol">
     <xsl:param name="instruction"/>
 
-    <xsl:variable name='center'>
-      <xsl:call-template name="areaCenterWrapper">
-	<xsl:with-param name="element" select="." />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="element" select="."/>
 
-    <xsl:message>
-      areaCenter: <xsl:value-of select="$center" />
-    </xsl:message>
+    <xsl:variable name="areaLabels" select="exslt:node-set($labels)/labels:area[@id = $element/@id]"/>
 
-    <xsl:call-template name="renderSymbol">
-      <xsl:with-param name="instruction" select="$instruction"/>
-      <xsl:with-param name="lon" select="substring-before($center, ',')"/>
-      <xsl:with-param name="lat" select="substring-after($center, ',')"/>
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$areaLabels">
+        <xsl:for-each select="$areaLabels/labels:label">
+          <xsl:variable name="label" select="."/>
+            <xsl:for-each select="$data">
+              <xsl:call-template name="renderSymbol">
+                <xsl:with-param name="instruction" select="$instruction"/>
+                <xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
+                <xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
+              </xsl:call-template>
+            </xsl:for-each>
+        </xsl:for-each>
+      </xsl:when>
+
+      <xsl:otherwise>  -->
+        <xsl:variable name='center'>
+          <xsl:call-template name="areaCenterWrapper">
+	    <xsl:with-param name="element" select="$element" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:message>
+          areaCenter: <xsl:value-of select="$center" />
+        </xsl:message>
+
+        <xsl:call-template name="renderSymbol">
+          <xsl:with-param name="instruction" select="$instruction"/>
+          <xsl:with-param name="lon" select="substring-before($center, ',')"/>
+          <xsl:with-param name="lat" select="substring-after($center, ',')"/>
+        </xsl:call-template>
+    </xsl:otherwise>
+
+    </xsl:choose>
 
   </xsl:template>
 

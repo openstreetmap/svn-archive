@@ -22,7 +22,10 @@
 "Zoom Tasten verbergen",
 "Koordinaten anzeigen",
 "Spur anzeigen",
-"Randlose Dialoge"
+"Randlose Dialoge",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
 },
 { // Please translate these words to Spanish. Keep the formatting.
 "Seguir GPS",
@@ -47,7 +50,10 @@
 "Esconder botones de zoom",
 "Mostrar coordenadas",
 "Mostrar trazo",
-"Dialogos Modeless"
+"Diálogos Modeless",
+"Pantalla completa", 
+"Modo validación",
+"Pantalla apagada"
 },
 { // Please translate these words to French. Keep the formatting.
 "Suivez GPS",
@@ -72,32 +78,38 @@
 "Masquer les boutons Zoom",
 "Voir les coordonnées",
 "Afficher le trace GPS",
-"Modeless Dialogs"
+"Modeless Dialogs",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
 },
 { // Please translate these words to Italian. Keep the formatting.
-"Follow GPSr",
-"Add Way Or Node",
-"Search",
-"Start Route",
-"End Route",
-"Orient Northwards",
-"Fastest Route",
-"Vehicle",
-"Italian",
-"Button Size",
-"Icon Set",
-"Detail Level",
-"Comm Port",
+"Segui GPSr",
+"Aggiungi Way o Nodo",
+"Cerca",
+"Inizia Percorso",
+"Termina Percorso",
+"Orientamento a Nord",
+"Percorso più veloce",
+"Veicolo",
+"Italiano",
+"Dimensione Pulsante",
+"Set Icone",
+"Livello di Dettaglio",
+"Porta Comm",
 "Baud Rate",
-"Quick Options",
-"Exit",
-"Zoom In Key",
-"Zoom Out Key",
-"Menu Key",
-"Hide Zoom Buttons",
-"Show Coordinates",
-"Show Trace",
-"Modeless Dialogs"
+"opzioni Veloci",
+"Esci",
+"Tasto Zoom +",
+"Tasto Zoom -",
+"Tasto Menu",
+"Nascindi Pulsanti Zoom",
+"Mostra Coordinate",
+"Mostra Traccia",
+"Modeless Dialogs",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
 },
 { // Please translate these words to Dutch. Keep the formatting.
 "Volg GPS",
@@ -122,7 +134,10 @@
 "Zoomtoetsen Verbergen",
 "Coördinaten Tonen",
 "Trace Tonen",
-"Prominente Dialoogschermen"
+"Prominente Dialoogschermen",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
 },
 { // Please translate these words to Slovenian. Keep the formatting.
 "Sledi GPSr",
@@ -147,7 +162,66 @@
 "Skrij tipke za povečavo",
 "Prikaži koordinate",
 "Prikaži sled",
-"Modeless Dialogs"
+"Modeless Dialogs",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
+},
+{ // Please translate these words to Portuguese. Keep the formatting.
+"Seguir GPS",
+"Criar um nó ou caminho",
+"Procurar",
+"Início do caminho",
+"Fim do caminho",
+"Orientado para o norte",
+"Itinerário Rápido",
+"Veículo",
+"Português",
+"Tamanho dos botões",
+"Colecção dos icones",
+"Nível de detalhes",
+"Comm Port",
+"Baud Rate",
+"Opção rápida",
+"Sair",
+"Botão zoom +",
+"Botão zoom -",
+"Painel de configuração",
+"Esconder os botões Zoom",
+"Ver as coordenadas",
+"Mostrar o traçado GPS",
+"Modeless Dialogs",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
+},
+{ // Please translate these words to Romanian. Keep the formatting.
+"Navigare GPS",
+"Adaugă Cale sau Nod",
+"Caută",
+"Început Rută",
+"Sfârşit Rută",
+"Orientare Nord",
+"Ruta cea mai Rapidă",
+"Vehicul",
+"Română",
+"Mărime Buton",
+"Set Ideograme",
+"Nivel Detaliere",
+"Comm Port",
+"Baud Rate",
+"Opţiuni Rapide",
+"Ieşire",
+"Tasta Zoom In",
+"Tasta Zoom Out",
+"Tasta Meniu",
+"Ascunde Butoane Zoom",
+"Arată Coordonatele",
+"Arată Drum Înregistrat",
+"Opţiuni Generale",
+"Ecran Mare", // New options
+"Mod Validare",
+"Inchide Ecran"
 },
 { // To add gosmore support for a language, please copy this
 // array and translate the copy to that language.
@@ -174,5 +248,8 @@
 "Hide Zoom Buttons",
 "Show Coordinates",
 "Show Trace",
-"Modeless Dialogs"
+"Modeless Dialogs",
+"Full screen", // New options
+"Validate Mode",
+"Display Off"
 },

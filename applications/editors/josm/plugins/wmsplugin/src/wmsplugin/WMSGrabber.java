@@ -23,7 +23,7 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.gui.MapView;
 
 
-public class WMSGrabber extends Thread implements Grabber{
+public class WMSGrabber implements Grabber {
 	protected String baseURL;
 
 	protected Bounds b;
@@ -42,8 +42,6 @@ public class WMSGrabber extends Thread implements Grabber{
 		image = _image;
 		mv = _mv;
 		layer = _layer;
-		this.setDaemon(true);
-		this.setPriority(Thread.MIN_PRIORITY);
 	}
 
 	public void run() {
@@ -91,16 +89,12 @@ public class WMSGrabber extends Thread implements Grabber{
 	}
 
 	protected BufferedImage grab(URL url) throws IOException {
-			InputStream is = new ProgressInputStream(
-				url.openConnection(), null);
-			BufferedImage img;
-		synchronized (layer){ //download only one tile in one moment
-			if(!image.isVisible(mv)){
-				return null;
-			}
-			img = ImageIO.read(is);
-		}
-			is.close();
-			return img;
+		InputStream is = new ProgressInputStream(
+			url.openConnection(), null);
+		if(!image.isVisible(mv))
+			return null;
+		BufferedImage img = ImageIO.read(is);
+		is.close();
+		return img;
 	}
 }

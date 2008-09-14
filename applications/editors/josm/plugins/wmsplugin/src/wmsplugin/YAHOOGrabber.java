@@ -33,7 +33,7 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.gui.MapView;
 
 
-public class YAHOOGrabber extends Thread implements Grabber{
+public class YAHOOGrabber implements Grabber{
 	protected String baseURL;
 	protected String browserCmd;
 
@@ -55,8 +55,6 @@ public class YAHOOGrabber extends Thread implements Grabber{
 		this.image = _image;
 		this.mv = _mv;
 		this.layer = _layer;
-		this.setDaemon(true);
-		this.setPriority(Thread.MIN_PRIORITY);
 	}
 
 	public void run() {
@@ -73,15 +71,13 @@ public class YAHOOGrabber extends Thread implements Grabber{
 
 				image.min = proj.latlon2eastNorth(b.min);
 				image.max = proj.latlon2eastNorth(b.max);
-				synchronized (layer) {
-					if(!image.isVisible(mv)){
-						image.downloadingStarted = false;
-						return;
-					}
-					Process browser = browse(url.toString());;
-					image.image =  new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-					img = ImageIO.read(browser.getInputStream()).getScaledInstance(width, height, Image.SCALE_FAST);
+				if(!image.isVisible(mv)){ //don't download, if the image isn't visible already
+					image.downloadingStarted = false;
+					return;
 				}
+				Process browser = browse(url.toString());;
+				image.image =  new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				img = ImageIO.read(browser.getInputStream()).getScaledInstance(width, height, Image.SCALE_FAST);
 				image.image.getGraphics().drawImage(img, 0 , 0, null);
 
 				image.downloadingStarted = false;

@@ -35,6 +35,9 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -62,6 +65,8 @@ public class WMSLayer extends Layer {
 
 	protected String baseURL;
 	protected final int serializeFormatVersion = 3;
+	
+	private ExecutorService executor;
 
 	public WMSLayer() {
 		this(tr("Blank Layer"), null);
@@ -72,6 +77,8 @@ public class WMSLayer extends Layer {
 		super(name);
 		initializeImages();
 		this.baseURL = baseURL;
+		
+		executor = Executors.newFixedThreadPool(3);
 	}
 
 	public void initializeImages() {
@@ -146,7 +153,7 @@ public class WMSLayer extends Layer {
 						img.downloadingStarted = true;
 						img.image = null;
 						Grabber gr = WMSPlugin.getGrabber(baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this);
-						gr.start();
+						executor.submit(gr);
 				}
 			}
 		}
@@ -159,10 +166,10 @@ public class WMSLayer extends Layer {
 	@Override public void visitBoundingBox(BoundingXYVisitor v) {
 		for(int x = 0; x<dax; ++x)
 			for(int y = 0; y<day; ++y)
-					if(images[x][y]!=null){
-						v.visit(images[x][y].min);
-						v.visit(images[x][y].max);
-					}
+				if(images[x][y]!=null){
+					v.visit(images[x][y].min);
+					v.visit(images[x][y].max);
+				}
 	}
 
 	@Override public Object getInfoComponent() {

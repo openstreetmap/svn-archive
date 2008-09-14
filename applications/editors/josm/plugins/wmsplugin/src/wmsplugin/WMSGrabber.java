@@ -1,20 +1,20 @@
 package wmsplugin;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -23,54 +23,37 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.gui.MapView;
 
 
-public class WMSGrabber implements Grabber {
+public class WMSGrabber extends Grabber {
 	protected String baseURL;
 
-	protected Bounds b;
-	protected Projection proj;
-	protected double pixelPerDegree;
-	protected GeorefImage image;
-	protected MapView mv;
-	protected WMSLayer layer;
-
-	WMSGrabber(String _baseURL, Bounds _b, Projection _proj,
-			double _pixelPerDegree, GeorefImage _image, MapView _mv, WMSLayer _layer) {
-		this.baseURL = _baseURL;
-		b = _b;
-		proj = _proj;
-		pixelPerDegree = _pixelPerDegree;
-		image = _image;
-		mv = _mv;
-		layer = _layer;
+	WMSGrabber(String baseURL, Bounds b, Projection proj,
+			double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
+		super(b, proj, pixelPerDegree, image, mv, layer);
+		this.baseURL = baseURL;
 	}
 
 	public void run() {
+		attempt();
+		mv.repaint();
+	}
+
+	void fetch() throws Exception{
+		URL url = null;
+		try {
+			url = getURL(
+				b.min.lon(), b.min.lat(),
+				b.max.lon(), b.max.lat(),
+				width(), height());
 			
-			int w = (int) ((b.max.lon() - b.min.lon()) * pixelPerDegree);
-			int h = (int) ((b.max.lat() - b.min.lat()) * pixelPerDegree);
+			image.min = proj.latlon2eastNorth(b.min);
+			image.max = proj.latlon2eastNorth(b.max);
 
-			try {
-				URL url = getURL(
-					b.min.lon(), b.min.lat(),
-					b.max.lon(), b.max.lat(),
-					w, h);
-
-				image.min = proj.latlon2eastNorth(b.min);
-				image.max = proj.latlon2eastNorth(b.max);
-
+			if(image.isVisible(mv)) //don't download, if the image isn't visible already
 				image.image = grab(url);
-				image.downloadingStarted = false;
-
-				mv.repaint();
-			}
-			catch (MalformedURLException e) {
-				if(layer.messageNum-- > 0)
-					JOptionPane.showMessageDialog(Main.parent,tr("WMSPlugin: Illegal url.\n{0}",e.getMessage()));
-			}
-			catch (IOException e) {
-				if(layer.messageNum-- > 0)
-					JOptionPane.showMessageDialog(Main.parent,tr("WMSPlugin: IO exception.\n{0}",e.getMessage()));
-			}
+			image.downloadingStarted = false;
+		} catch(Exception e) {
+			throw new Exception(e.getMessage() + "\nImage couldn't be fetched: " + (url != null ? url.toString() : ""));
+		}
 	}
 
 	public static final NumberFormat
@@ -89,12 +72,30 @@ public class WMSGrabber implements Grabber {
 	}
 
 	protected BufferedImage grab(URL url) throws IOException {
-		InputStream is = new ProgressInputStream(
-			url.openConnection(), null);
-		if(!image.isVisible(mv))
-			return null;
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		String contentType = conn.getHeaderField("Content-Type");
+		if( conn.getResponseCode() != 200 
+				|| contentType != null && !contentType.startsWith("image") ) {
+			throw new IOException(readException(conn));
+		}
+		
+		InputStream is = new ProgressInputStream(conn, null);
 		BufferedImage img = ImageIO.read(is);
 		is.close();
 		return img;
+	}
+
+	protected String readException(URLConnection conn) throws IOException {
+		StringBuilder exception = new StringBuilder();
+		InputStream in = conn.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		
+		String line = null;
+		while( (line = br.readLine()) != null) {
+			exception.append(line);
+			exception.append('\n');
+		}
+		return exception.toString();
 	}
 }

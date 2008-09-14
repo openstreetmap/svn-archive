@@ -125,7 +125,7 @@ class TileUpload ( threading.Thread ):
               sleep(10)
           except OperationalError, e:
               # Transaction timeout throws an OperationalError, 1205
-              log.warn("MySQL failed to fetch next upload: %s: %s" % (e[0],e[1]))
+              logging.warn("MySQL failed to fetch next upload: %s: %s" % (e[0],e[1]))
               transaction.commit()
               sleep(10)
 

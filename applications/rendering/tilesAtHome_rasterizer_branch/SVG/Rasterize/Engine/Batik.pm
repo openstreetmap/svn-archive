@@ -6,7 +6,9 @@ use warnings;
 $__PACKAGE__::VERSION = '0.1';
 
 use base qw(Class::Accessor SVG::Rasterize::Engine);
-use Error;
+use File::Spec;
+use Error qw(:try);
+use IPC::Run qw(run);
 
 =pod
 =head1 NAME
@@ -59,14 +61,14 @@ Path to Batik JAR
 
 sub jar_path {
     my $self = shift;
-
+    return 0;#FIXME: this currently broken.
     unless( @_ || $self->{jar_path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path() ){
+        foreach my $path ( File::Spec->path(), '/usr/share/java' ){
             my($volume, $dir) = File::Spec->splitpath($path, 1);
 
-            foreach my $name ( 'batik.jar' ){
+            foreach my $name ( 'batik.jar', 'batik-1.6.jar', 'batik-all.jar', 'batik-all-1.6.jar' ){#Ok, either find batik-rasterizer.jar or one of these and the command from the debian wrapper
                 my $filepath = File::Spec->catpath($volume, $dir, $name);
-                return $self->jar_path($filepath) if -x $filepath;
+                return $self->jar_path($filepath) if -r $filepath;
             }
         }
         throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find batik jar");
@@ -86,7 +88,7 @@ Path to java executable
 sub java_path {
     my $self = shift;
 
-    unless( @_ && $self->{java_path} ){ # We're getting and don't have a defined path
+    unless( @_ || $self->{java_path} ){ # We're getting and don't have a defined path
         foreach my $path ( File::Spec->path() ){
             my($volume, $dir) = File::Spec->splitpath($path, 1);
 
@@ -155,38 +157,57 @@ sub convert {
 
     my @cmd;
 
-    if( $self->wrapper_available() ){
-        @cmd = ($self->wrapper_path(), '-m', 'image/png');
-        push(@cmd, '-w', $params{width}) if $params{width};
-        push(@cmd, '-h', $params{height}) if $params{height};
-        push(@cmd, sprintf('-a %f,%f,%f,%f',
-                           $params{left},
-                           $params{top},
-                           $params{right} - $params{left},
-                           $params{top} - $params{bottom})
-            ) if $params{left} && $params{bottom} && $params{right} && $params{top};
-        push(@cmd, '-d', $params{outfile});
-        push(@cmd, $params{infile});
-    } elsif( $self->jar_available() ){
-        @cmd = ($self->java_path(), '-Xms256M');
-        push(@cmd, '-Xmx'.$params{heapsize}) if $params{heapsize};
+    my %area;
+    if( $params{area} ){
+        %area = $params{area}->get_box_upperleft();
+        $area{width} = $params{area}->get_box_width();
+        $area{height} = $params{area}->get_box_height();
+    }
+
+    if( $self->jar_available() ){
+        @cmd = ($self->java_path());
+        push(@cmd, '-Xms256M');
+        push(@cmd, '-Xmx'. ( $params{heapsize} ? $params{heapsize} : '512M' ) );
         push(@cmd, '-jar', $self->jar_path());
         push(@cmd, '-w', $params{width}) if $params{width};
         push(@cmd, '-h', $params{height}) if $params{height};
-        push(@cmd, sprintf('-a %f,%f,%f,%f',
-                           $params{left},
-                           $params{top},
-                           $params{right} - $params{left},
-                           $params{top} - $params{bottom})
-            ) if $params{left} && $params{bottom} && $params{right} && $params{top};
+        push(@cmd, '-a', sprintf('%f,%f,%f,%f',
+                           @area{'left','top','width','height'})
+            ) if %area;
+        push(@cmd, '-d', $params{outfile});
+        push(@cmd, $params{infile});
+    } elsif( $self->wrapper_available() ){
+        @cmd = ($self->wrapper_path(), '-m', 'image/png');
+#        push(@cmd, '-Xms256M');
+#        push(@cmd, '-Xmx'. ( $params{heapsize} ? $params{heapsize} : '512M' ) );
+        push(@cmd, '-w', $params{width}) if $params{width};
+        push(@cmd, '-h', $params{height}) if $params{height};
+        push(@cmd, '-a', sprintf('%f,%f,%f,%f',
+                           @area{'left','top','width','height'})
+            ) if %area;
         push(@cmd, '-d', $params{outfile});
         push(@cmd, $params{infile});
     } else {
         throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
     }
 
-    run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
-        throw SVG::Rasterize::Engine::Batik::Error::Runtime($self->path()." returned non-zero status code $?", {stdout => $self->{stdout}, stderr => $self->{stderr}});
+    #DEBUG:
+    print "About to execute \"".join('", "', @cmd)."\"\n";
+    my $stdout; my $stderr;
+    unless( run( \@cmd, \undef, \$stdout, \$stderr ) ){
+        my $error;
+        warn "stdout: ".$stdout;
+        warn "stderr: ".$stderr;
+        if( $? == -1 ){
+            $error = 'failed to execute: '.$!;
+        } elsif( $? & 127 ){
+            $error = 'died with signal '.($? & 127);
+        } else {
+            $error = 'exited with value '.($? >> 8);
+        }
+
+        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\": $error", {stdout => $stdout, stderr => $stderr});
+    }
 
     $self->check_output($params{outfile});
 }

@@ -47,7 +47,7 @@ class UploadManager(models.Manager):
 
       table = self.model._meta.db_table
       #clientping_col = self.model._meta.get_field('clientping_time').column
-      query = 'select id from %s where %s=0 ' \
+      query = 'select id from %s where %s=false ' \
           'ORDER BY %s LIMIT 1 FOR UPDATE' \
            % (table, 'is_locked','upload_time')
       # faster poor mans query without locking

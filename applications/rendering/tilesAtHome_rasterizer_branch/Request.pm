@@ -223,6 +223,20 @@ sub fetchFromServer
                 die TahError->new("ClientVersionError", "ERROR: This client version (" . $self->{Config}->get("ClientVersion")
                                   . ") was not accepted by the server.");  ## this should never happen as long as auto-update works
             }
+            elsif ($reason =~ /No requests in queue/)
+            {
+                $success = 0; # set to 0, need another loop
+                ::talkInSleep("No Requests on server",60);
+            }
+            elsif ($reason =~ /You have more than (\d+) active requests/)
+            {
+                $success = 0; # set to 0, need another loop
+                ::talkInSleep("ERROR: Is your client broken or have you just uploaded like crazy? \"$reason\"", 60);
+            }
+            elsif ($reason =~ /Check your client/)
+            {
+                die TahError->new("GeneralClientError", "ERROR: This client needs manual intervention. Server told us: \"$reason\"");
+            }
             else
             {
                 die TahError->new("ServerError", "Unknown server response: $Requeststring");
@@ -233,7 +247,7 @@ sub fetchFromServer
               die TahError->new("ServerError", "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'");
 	}
 
-        if ($self->is_unrenderable())
+        if ($success and $self->is_unrenderable())
         {
             $success = 0;   # we need to loop yet again
             ::statusMessage("Ignoring unrenderable tile (".$self->ZXY_str.')',1,3);
@@ -272,7 +286,8 @@ sub getRequestStringFromServer
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        die TahError->new("ServerError", "Unable to get request string from server");
+        ::talkInSleep("Unable to get request string from server, assuming queue empty",60);
+        $Request = "XX|5|No requests in queue"; ## FIXME:  hardcoded stuff
     }
     else
     {   # got a server reply here

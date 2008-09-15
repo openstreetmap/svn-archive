@@ -49,6 +49,10 @@ DeleteZipFilesAfterUpload=1
 UploadToDirectory=0
 UploadTargetDirectory=/set/this/to/your/upload/directory
 
+# Recommended setting 1/2 your kbyte/s upstream of your uploader to the tah server
+# Recommended maximum setting: 1.5 times your kbyte/s upstream of your uploader
+UploadToDirectoryMaxQueue = 20
+
 ## Beziercurve hinting
 NoBezier=0  # Set to 1 if beziercurvehinting causes errors.
 

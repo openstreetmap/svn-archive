@@ -60,7 +60,7 @@ public class WMSLayer extends Layer {
 	JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
 
 	protected String baseURL;
-	protected final int serializeFormatVersion = 3;
+	protected final int serializeFormatVersion = 4;
 	
 	private ExecutorService executor;
 
@@ -142,9 +142,8 @@ public class WMSLayer extends Layer {
 
 		if( !startstop.isSelected() || (pixelPerDegree / (mv.getWidth() / (b.max.lon() - b.min.lon())) > minZoom) ){ //don't download when it's too outzoomed
 			for(int x = 0; x<dax; ++x)
-				for(int y = 0; y<day; ++y){
-						images[modulo(x,dax)][modulo(y,day)].paint(g, mv);
-				}
+				for(int y = 0; y<day; ++y)
+					images[modulo(x,dax)][modulo(y,day)].paint(g, mv);
 		} else {
 			for(int x = bminx; x<bmaxx; ++x)
 				for(int y = bminy; y<bmaxy; ++y){
@@ -163,7 +162,7 @@ public class WMSLayer extends Layer {
 	@Override public void visitBoundingBox(BoundingXYVisitor v) {
 		for(int x = 0; x<dax; ++x)
 			for(int y = 0; y<day; ++y)
-				if(images[x][y]!=null){
+				if(images[x][y].image!=null){
 					v.visit(images[x][y].min);
 					v.visit(images[x][y].max);
 				}
@@ -191,11 +190,9 @@ public class WMSLayer extends Layer {
 	public GeorefImage findImage(EastNorth eastNorth) {
 		for(int x = 0; x<dax; ++x)
 			for(int y = 0; y<day; ++y)
-					if(images[x][y]!=null && images[x][y].image!=null && images[x][y].min!=null && images[x][y].max!=null){
-						if (images[x][y].contains(eastNorth)) {
+					if(images[x][y].image!=null && images[x][y].min!=null && images[x][y].max!=null)
+						if(images[x][y].contains(eastNorth))
 							return images[x][y];
-						}
-					}
 		return null;
 	}
 
@@ -226,6 +223,7 @@ public class WMSLayer extends Layer {
 				oos.writeInt(day);
 				oos.writeInt(ImageSize);
 				oos.writeDouble(pixelPerDegree);
+				oos.writeObject(name);
 				oos.writeObject(baseURL);
 				oos.writeObject(images);
 				oos.close();
@@ -256,16 +254,17 @@ public class WMSLayer extends Layer {
 						JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				startstop.setSelected(false);
 				dax = ois.readInt();
 				day = ois.readInt();
 				ImageSize = ois.readInt();
 				pixelPerDegree = ois.readDouble();
+				name = (String) ois.readObject();
 				baseURL = (String) ois.readObject();
 				images = (GeorefImage[][])ois.readObject();
-
 				ois.close();
 				fis.close();
-				startstop.setSelected(false);
+				mv.repaint();
 			}
 			catch (Exception ex) {
 				// FIXME be more specific

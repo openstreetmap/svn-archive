@@ -60,6 +60,7 @@ UploadToDirectoryMaxQueue = 20
 
 GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
+CreateTilesetFile = 0
 
 Fork = 0
 ForkForUpload = 1

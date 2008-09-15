@@ -506,6 +506,15 @@ sub ProcessRequestsFromServer
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
 
+    if ($Config->get("CreateTilesetFile"))
+    {
+        print "Config option CreateTilesetFile is set. We can not upload Tileset\n";
+        print "files, yet. Downloading requests\n";
+        print "from the server in this mode would take them from the tiles\@home\n";
+        print "queue and never upload the results. Please use xy mode. Program aborted.\n";
+        cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
+    }
+
     my $req;
     my $Server = Server->new();
     do {

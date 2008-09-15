@@ -37,18 +37,13 @@ public class YAHOOGrabber extends WMSGrabber{
 		System.out.println("WMS::Browsing YAHOO: " + cmdParams);
 		ProcessBuilder builder = new ProcessBuilder( cmdParams);
 
-
 		Process browser;
 		try {
 			browser = builder.start();
-		}
-		catch(IOException ioe) {
+		} catch(IOException ioe) {
 			throw new IOException( "Could not start browser. Please check that the executable path is correct.\n" + ioe.getMessage() );
 		}
 
-		BufferedImage i =  new BufferedImage(width(), height(), BufferedImage.TYPE_INT_RGB);
-		Image img = ImageIO.read(browser.getInputStream()).getScaledInstance(width(), height(), Image.SCALE_FAST);
-		i.getGraphics().drawImage(img, 0 , 0, null);
-		return i;
+		return ImageIO.read(browser.getInputStream());
 	}
 }

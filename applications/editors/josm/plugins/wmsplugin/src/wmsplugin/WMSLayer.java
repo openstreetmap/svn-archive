@@ -129,32 +129,43 @@ public class WMSLayer extends Layer {
 	  else return a%b+b;
 	}	  
 
-	@Override public void paint(Graphics g, final MapView mv) {
-		if(baseURL == null) return;
-		Bounds b = new Bounds(
+	protected Bounds bounds(){
+		return new Bounds(
 			mv.getLatLon(0, mv.getHeight()),
 			mv.getLatLon(mv.getWidth(), 0));
-		int bminx= (int)Math.floor ((b.min.lat() * pixelPerDegree ) / ImageSize );
-		int bminy= (int)Math.floor ((b.min.lon() * pixelPerDegree ) / ImageSize );
-		int bmaxx= (int)Math.ceil  ((b.max.lat() * pixelPerDegree ) / ImageSize );
-		int bmaxy= (int)Math.ceil  ((b.max.lon() * pixelPerDegree ) / ImageSize );
+	}
 
+	@Override public void paint(Graphics g, final MapView mv) {
+		if(baseURL == null) return;
 
-		if( !startstop.isSelected() || (pixelPerDegree / (mv.getWidth() / (b.max.lon() - b.min.lon())) > minZoom) ){ //don't download when it's too outzoomed
+		if( !startstop.isSelected() || (pixelPerDegree / (mv.getWidth() / (bounds().max.lon() - bounds().min.lon())) > minZoom) ){ //don't download when it's too outzoomed
 			for(int x = 0; x<dax; ++x)
 				for(int y = 0; y<day; ++y)
 					images[modulo(x,dax)][modulo(y,day)].paint(g, mv);
-		} else {
-			for(int x = bminx; x<bmaxx; ++x)
-				for(int y = bminy; y<bmaxy; ++y){
-					GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-					if(!img.paint(g, mv) && !img.downloadingStarted){
-						//System.out.println(tr("------{0}|{1}|{2}|{3}", modulo(x,dax), modulo(y,day), img.downloadingStarted, img.isVisible(mv)));
-						img.downloadingStarted = true;
-						img.image = null;
-						Grabber gr = WMSPlugin.getGrabber(baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this);
-						executor.submit(gr);
-				}
+		} else
+			downloadAndPaintVisible(g, mv);
+	}
+
+	protected void downloadAndPaintVisible(Graphics g, final MapView mv){
+		int bminx= (int)Math.floor ((bounds().min.lat() * pixelPerDegree ) / ImageSize );
+		int bminy= (int)Math.floor ((bounds().min.lon() * pixelPerDegree ) / ImageSize );
+		int bmaxx= (int)Math.ceil  ((bounds().max.lat() * pixelPerDegree ) / ImageSize );
+		int bmaxy= (int)Math.ceil  ((bounds().max.lon() * pixelPerDegree ) / ImageSize );
+
+		if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
+			JOptionPane.showMessageDialog(Main.parent, tr("The requested area is too big. Please zoom in a little, or change resolution"));
+			return;
+		}
+
+		for(int x = bminx; x<bmaxx; ++x)
+			for(int y = bminy; y<bmaxy; ++y){
+				GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
+				if(!img.paint(g, mv) && !img.downloadingStarted){
+					//System.out.println(tr("------{0}|{1}|{2}|{3}", modulo(x,dax), modulo(y,day), img.downloadingStarted, img.isVisible(mv)));
+					img.downloadingStarted = true;
+					img.image = null;
+					Grabber gr = WMSPlugin.getGrabber(baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this);
+					executor.submit(gr);
 			}
 		}
 	}
@@ -182,6 +193,7 @@ public class WMSLayer extends Layer {
 				new JSeparator(),
 				startstop,
 				new JMenuItem(new changeResolutionAction()),
+				new JMenuItem(new downloadAction()),
 				new JSeparator(),
 				new JMenuItem(new LayerListPopup.InfoAction(this))
 		};
@@ -194,6 +206,15 @@ public class WMSLayer extends Layer {
 						if(images[x][y].contains(eastNorth))
 							return images[x][y];
 		return null;
+	}
+
+	public class downloadAction extends AbstractAction {
+		public downloadAction() {
+			super(tr("Download visible tiles"));
+		}
+		public void actionPerformed(ActionEvent ev) {
+			downloadAndPaintVisible(mv.getGraphics(), mv);
+		}
 	}
 
 	public class changeResolutionAction extends AbstractAction {

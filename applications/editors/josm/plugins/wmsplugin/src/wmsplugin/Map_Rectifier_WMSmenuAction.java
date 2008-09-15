@@ -27,8 +27,8 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 			String newURL = "http://labs.metacarta.com/rectifier/wms.cgi?id="+newid+
 			"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png";
 
-			DownloadWMSTask.download(WMSDownloadAction.getLayer(
-				new WMSInfo(tr("rectifier id={0}",newid), newURL, -1)));
+			WMSLayer wmsLayer = new WMSLayer(tr("rectifier id={0}",newid), newURL);
+			Main.main.addLayer(wmsLayer);
 		}
 	}
 }

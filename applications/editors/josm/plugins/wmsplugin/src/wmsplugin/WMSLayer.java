@@ -48,6 +48,8 @@ public class WMSLayer extends Layer {
 		new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
 
 	public int messageNum = 5; //limit for messages per layer
+	protected MapView mv;
+	protected String resolution;
 	protected boolean stopAfterPaint = false;
 	protected int ImageSize = 500;
 	protected int dax = 10;
@@ -55,7 +57,7 @@ public class WMSLayer extends Layer {
 	protected int minZoom = 3;
 	protected double pixelPerDegree;
 	protected GeorefImage[][] images = new GeorefImage[dax][day];
-        JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
+	JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
 
 	protected String baseURL;
 	protected final int serializeFormatVersion = 3;
@@ -65,14 +67,21 @@ public class WMSLayer extends Layer {
 	public WMSLayer() {
 		this(tr("Blank Layer"), null);
 		initializeImages();
+		mv = Main.map.mapView;
 	}
 
 	public WMSLayer(String name, String baseURL) {
 		super(name);
 		initializeImages();
 		this.baseURL = baseURL;
+		mv = Main.map.mapView;
+		getPPD();
 		
 		executor = Executors.newFixedThreadPool(3);
+	}
+
+	public void getPPD(){
+		pixelPerDegree = mv.getWidth() / (bounds().max.lon() - bounds().min.lon());
 	}
 
 	public void initializeImages() {
@@ -82,25 +91,22 @@ public class WMSLayer extends Layer {
 				images[x][y]= new GeorefImage(false);
 	}
 
-	public void grab(Bounds b, double _pixelPerDegree) {
-		if (baseURL == null) return;
-		//set resolution
-		if(startstop.isSelected() || Math.round(pixelPerDegree/10000) != Math.round(_pixelPerDegree/10000))
-			initializeImages();
-		pixelPerDegree = _pixelPerDegree;
-		if(!startstop.isSelected()) stopAfterPaint = true;
-		startstop.setSelected(true);
-	}
-
 	@Override public Icon getIcon() {
 		return icon;
 	}
 
+	public String scale(){
+		LatLon ll1 = mv.getLatLon(0,0);
+		LatLon ll2 = mv.getLatLon(100,0);
+		double dist = ll1.greatCircleDistance(ll2);
+		return dist > 1000 ? (Math.round(dist/100)/10.0)+" km" : Math.round(dist*10)/10+" m";
+	}
+
 	@Override public String getToolTipText() {
 		if(startstop.isSelected())
-			return tr("WMS layer ({0}), automaticaly downloading in zoom {1}", name, Math.round(pixelPerDegree/10000));
+			return tr("WMS layer ({0}), automaticaly downloading in zoom {1}", name, resolution);
 		else
-			return tr("WMS layer ({0}), downloading in zoom {1}", name, Math.round(pixelPerDegree/10000));
+			return tr("WMS layer ({0}), downloading in zoom {1}", name, resolution);
 	}
 
 	@Override public boolean isMergable(Layer other) {
@@ -124,6 +130,7 @@ public class WMSLayer extends Layer {
 	}	  
 
 	@Override public void paint(Graphics g, final MapView mv) {
+		if(baseURL == null) return;
 		Bounds b = new Bounds(
 			mv.getLatLon(0, mv.getHeight()),
 			mv.getLatLon(mv.getWidth(), 0));
@@ -151,10 +158,6 @@ public class WMSLayer extends Layer {
 				}
 			}
 		}
-		if(stopAfterPaint){
-			startstop.setSelected(false);
-			stopAfterPaint = false;
-		}
 	}
 
 	@Override public void visitBoundingBox(BoundingXYVisitor v) {
@@ -179,9 +182,10 @@ public class WMSLayer extends Layer {
 				new JMenuItem(new SaveWmsAction()),
 				new JSeparator(),
 				startstop,
+				new JMenuItem(new changeResolutionAction()),
 				new JSeparator(),
-				new JMenuItem(new LayerListPopup.InfoAction(this))};
-
+				new JMenuItem(new LayerListPopup.InfoAction(this))
+		};
 	}
 
 	public GeorefImage findImage(EastNorth eastNorth) {
@@ -195,6 +199,17 @@ public class WMSLayer extends Layer {
 		return null;
 	}
 
+	public class changeResolutionAction extends AbstractAction {
+		public changeResolutionAction() {
+			super(tr("Change resolution"));
+		}
+		public void actionPerformed(ActionEvent ev) {
+			initializeImages();
+			resolution = scale();
+			getPPD();
+			mv.repaint();
+		}
+	}
 
 	public class SaveWmsAction extends AbstractAction {
 		public SaveWmsAction() {

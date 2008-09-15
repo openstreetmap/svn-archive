@@ -609,7 +609,7 @@ sub RenderTile
     }
 
     # If splitimage is empty Should we skip going further up the zoom level?
-    if ($empty and !$Config->get($layer."_RenderFullTileset")) 
+    if ($empty and !$Config->get($layer."_RenderFullTileset") and !$Config->get("CreateTilesetFile")) 
     {
         # leap forward because in progresscounting as this tile and 
         # all higher zoom tiles of it are "done" (empty).

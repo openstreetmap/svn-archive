@@ -34,7 +34,7 @@ use lib::TahConf;
 #-----------------------------------------------------------------------------
 
 #-------------------------------------------------------------------
-# Create a new Upload instance
+# Create a new Compress instance
 #-------------------------------------------------------------------
 sub new
 {
@@ -45,7 +45,7 @@ sub new
         Config  => TahConf->getConfig(),
     };
     $self->{TileDir} = $self->{Config}->get("WorkingDirectory"),
-    $self->{ZipDir}  = File::Spec->catdir($self->{Config}->get("WorkingDirectory"), "/uploadable"),
+    $self->{UploadDir}  = File::Spec->catdir($self->{Config}->get("WorkingDirectory"), "/uploadable"),
 
     bless ($self, $class);
 
@@ -55,7 +55,7 @@ sub new
 }
 
 #-------------------------------------------------------------------
-# main function. Compresses all tileset.dir's in $self->{WorkingDir}.
+# main function. Compresses all tileset.dir's in $self->{TileDir}.
 #-------------------------------------------------------------------
 sub compressAll
 {
@@ -110,7 +110,12 @@ sub compressAll
             $::currentSubTask ='compress';
             $::progressPercent = 0;
             ::statusMessage("compressing $File",0,3);
-            $self->compress($FullTilesetPath);
+            if ($Config->get("CreateTilesetFile")) {
+                $self->createTilesetFile($FullTilesetPath);
+            }
+            else {
+                $self->compress($FullTilesetPath);
+            }
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
         }
@@ -148,21 +153,21 @@ sub compress
     my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
 
     # Create the output directory if it doesn't exist...
-    if( ! -d $self->{ZipDir} )
+    if( ! -d $self->{UploadDir} )
     {
-        mkpath $self->{ZipDir};# TODO: Error handling
+        mkpath $self->{UploadDir};# TODO: Error handling
     }
 
-    $Filename = File::Spec->join($self->{ZipDir},
+    $Filename = File::Spec->join($self->{UploadDir},
                                 sprintf("%s_%d_%d_%d_%d.zip",
                                 $layer, $Z, $X, $Y, ::GetClientId()));
     
-    $Tempfile = File::Spec->join($Config->get("WorkingDirectory"),
+    $Tempfile = File::Spec->join($self->{TileDir},
                                 sprintf("%s_%d_%d_%d_%d.zip",
                                 $layer, $Z, $X, $Y, ::GetClientId()));
     # ZIP all the tiles into a single file
     # First zip into "$Filename.part" and move to "$Filename" when finished
-    my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
+    my $stdOut = File::Spec->join($self->{TileDir}, "zip.stdout");
     my $zipCmd;
     if ($Config->get("7zipWin"))
     {
@@ -197,6 +202,88 @@ sub compress
     
     return 1;
 }
+
+#-----------------------------------------------------------------------------
+# Pack all PNG files from one directory into a Tileset file.
+# Parameters:  FullTilesetPath
+#
+# It will never delete the source files, so the caller has to delete them
+#-----------------------------------------------------------------------------
+sub createTilesetFile
+{
+    my $self = shift;
+    my $Config = $self->{Config};
+
+    my ($FullTilesetPathDir) = @_;
+  
+    my $Filename;
+    my $Tempfile;
+
+    $FullTilesetPathDir =~ m{([^_\/\\]+)_(\d+)_(\d+)_(\d+).dir$};
+    my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
+
+    my @offsets;
+    my $levels = 6;                       # number of layers in a tileset file, currently 6
+    my $tiles = ((4 ** $levels) - 1) / 3; # 1365 for 6 zoom levels
+    my $currpos = 8 + (4 * ($tiles + 1)); # 5472 for 6 zoom levels
+
+    my $userid = 0; # the server will fill this in
+
+    $Filename = File::Spec->join($self->{UploadDir},
+                                 sprintf("%s_%d_%d_%d_%d.tileset",
+                                         $layer, $Z, $X, $Y, ::GetClientId()));
+    
+    $Tempfile = File::Spec->join($self->{TileDir},
+                                 sprintf("%s_%d_%d_%d_%d.tileset",
+                                         $layer, $Z, $X, $Y, ::GetClientId()));
+
+    open my $fh, ">$Tempfile" or throw CompressError "Couldn't open '$Tempfile' ($!)";
+    seek $fh, $currpos, 0 or throw CompressError "Couldn't seek.";
+
+    for my $iz (0 .. $levels - 1) {
+        my $width = 2**$iz;
+        for my $iy (0 .. $width-1) {
+            for my $ix (0 .. $width-1) {
+                my $Pngname = File::Spec->join($FullTilesetPathDir,
+                                               sprintf("%s_%d_%d_%d.png",
+                                                       $layer, $Z+$iz, $X*$width+$ix, $Y*$width+$iy));
+                my $length = -s $Pngname;
+                if (! -e $Pngname) {
+                    push(@offsets, 0);
+                }
+                elsif ($length == 67) {
+                    push(@offsets, 2);
+                }
+                elsif ($length == 69) {
+                    push(@offsets, 1);
+                }
+                else {
+                    open my $png, "<$Pngname" or throw CompressError "Couldn't open file $Pngname ($!)";
+                    my $buffer;
+                    if( read($png, $buffer, $length) != $length ) {
+                        throw CompressError "Read failed from $Pngname ($!)"
+                    }
+                    close $png;
+                    print $fh $buffer or throw CompressError "Write failed on output to $Tempfile ($!)";
+                    push @offsets, $currpos;
+                    $currpos += $length;
+                }
+            }
+        }
+    }
+    push @offsets, $currpos;
+
+    if( scalar( @offsets ) != $tiles + 1 ) {
+        throw CompressError "Bad number of offsets: " . scalar( @offsets );
+    }
+
+    seek $fh, 0, 0;
+    print $fh pack("CxxxVV*", 1, $userid, @offsets) or throw CompressError "Write failed to $Tempfile ($!)";
+    close $fh;
+
+    move($Tempfile, $Filename) or throw CompressError "Could not move tileset file $Tempfile to $Filename ($!)";
+}
+
 
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file

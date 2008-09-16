@@ -553,6 +553,19 @@ sub ProcessRequestsFromServer
                 $req = undef;
                 talkInSleep("Waiting before new tile is requested", 15);
             }
+            else {
+                my $zoom = $req->Z();
+                foreach my $layer ($req->layers()) {
+                    if (($zoom < $Config->get("${layer}_MinZoom")) or ($zoom > $Config->get("${layer}_MaxZoom"))) {
+                        statusMessage("Zoom level $zoom is out of the configured range for Layer $layer. Ignoring tile.", 1, 3);
+                        eval {
+                            $Server->putRequestBack($req, "ZoomOutOfRange ($layer z$zoom)");
+                        };
+                        $req = undef;
+                        last; # don't check any more layers
+                    }
+                }
+            }
         }
         catch ServerError with {
             my $err = shift();

@@ -14,7 +14,7 @@ use strict;
 use warnings;
 require "orp-bbox-area-center.pm";
 
-our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, %symbols);
+our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, %symbols, $labelRelations);
 
 
 # -------------------------------------------------------------------
@@ -578,10 +578,32 @@ sub draw_area_symbols
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
-        my $center = get_area_center($_);
-        my $projected = project($center);
 
-        draw_symbol($symbolnode, $projected);
+        my $labelRelation = $labelRelations->{$_};
+        if (defined($labelRelation))
+        {
+            # Draw icons at users specifed position
+            if (!$labelRelation->{"used"})
+            {
+               $labelRelation->{"used"} = 1; # One label can be shared by more areas, draw only once
+               foreach my $relpair (@{$labelRelation->{'relation'}->{'members'}})
+               {
+                   (my $role, my $ref) = @$relpair;
+                   if ($role eq 'label' && ref $ref eq 'node')
+                   {
+                       draw_symbol($symbolnode, project[$ref->{'lat'}, $ref->{'lon'}]);
+                   }
+               }
+            }
+        }
+        else
+        {
+            # Draw icon at area center
+            my $center = get_area_center($_);
+            my $projected = project($center);
+
+            draw_symbol($symbolnode, $projected);
+        }
     }
 }
 

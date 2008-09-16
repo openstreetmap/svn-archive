@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>CMYK library rules Tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="../../../jsunit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../../../dojotoolkit/dojo/dojo.js"></script>
+<script type="text/javascript">
+
+function setUpPage() {
+	dojo.registerModulePath("cmyk","../../cmyk");
+	dojo.require("cmyk.rules.ruleFileAttr");
+	setUpPageStatus="complete";
+}
+
+function testDojo() {
+	assertNotUndefined("Dojo need to be defined",dojo);
+}
+
+function testRuleFileAttr() {
+	info ("Testing creation of rule file attributes");
+
+	var ruleFileAttributesParameters = new Array(
+		// not an object
+		"",
+		//invalid data (string) type
+		new Object({
+			data:5,
+		}),
+		//invalid scale (number) type
+		new Object({
+			data:"correctdata",
+			scale:true
+		}),
+		//invalid showGrid (boolean) type
+		new Object({
+			scale:1,
+			showGrid:5
+		}),
+		//unknown variable name
+		new Object({
+			scale:1,
+			unknownVariable:"string"
+		}),
+		// only one unknown variable name
+		new Object({
+			unknownVariable2:"string"
+		}),
+		// two unknown variable names, must exit on the first one (so the second must not be written)
+		new Object({
+			shouldPrintme:"printMe",
+			shouldNotPrintMe:"notPrintMe"
+		})
+	);
+
+	var error=false;
+	var error_in_number;
+	for (var i in ruleFileAttributesParameters) {
+		try {
+			ruleFileAttributes = new cmyk.rules.ruleFileAttr(ruleFileAttributesParameters[i]);
+			error=true;
+			error_in_number=i;
+		}
+		catch (e) {
+			debug(e);
+		}
+	}
+	if (error) fail ("ruleFileAttr should have thrown an error for parameter number "+error_in_number);
+
+	info ("Testing correct data in rule file attributes");
+
+	var ruleFileAttributes = new cmyk.rules.ruleFileAttr(
+		new Object({
+		})
+	);
+	assertEquals("scale default for ruleFileAttributes should be 1",1,ruleFileAttributes.getAttributes().scale);
+
+	var ruleFileAttributes2 = new cmyk.rules.ruleFileAttr(
+		new Object({
+			scale:2
+		})
+	);
+	assertEquals("forced scale for ruleFileAttributes2 should be 2",2,ruleFileAttributes2.getAttributes().scale);
+
+	info("Check for Side Effects");
+
+	assertNotEquals("scale for ruleFileAttribute and for ruleFileAttributes2 should be different",ruleFileAttributes.getAttributes().scale,ruleFileAttributes2.getAttributes().scale);
+
+	newAttributes = new Object({scale:40});
+
+	ruleFileAttributes.setAttributes(newAttributes);
+
+	assertEquals("scale for ruleFileAttributes now must be 40",40,ruleFileAttributes.getAttributes().scale)
+
+	newAttributes = new Object({data:"dumb_file.osm"});
+
+	ruleFileAttributes.setAttributes(newAttributes);
+
+	assertEquals("data file for ruleFileAttributes should be dumb_file.osm","dumb_file.osm",ruleFileAttributes.getAttributes().data);
+	assertEquals("scale for ruleFileAttributes must still be 40 and not defaulted",40,ruleFileAttributes.getAttributes().scale)
+
+	//change two attributes at a time
+	newAttributes = new Object({scale:10,data:"dumb_file2.osm"});
+
+	ruleFileAttributes.setAttributes(newAttributes);
+
+	assertEquals("data file for ruleFileAttributes should be dumb_file2.osm","dumb_file2.osm",ruleFileAttributes.getAttributes().data);
+	assertEquals("scale for ruleFileAttributes must be 10",10,ruleFileAttributes.getAttributes().scale)
+
+	assertNotEquals("scale for ruleFileAttribute and for ruleFileAttributes2 should still be different",ruleFileAttributes.getAttributes().scale,ruleFileAttributes2.getAttributes().scale);
+
+	// Testing again for incorrect data, only on set: copy and paste from the first test
+
+	info("Testing again for incorrect data for setAttributes");
+
+	var error=false;
+	var error_in_number;
+	for (var i in ruleFileAttributesParameters) {
+		try {
+			ruleFileAttributes.setAttributes(ruleFileAttributesParameters[i]);
+			error=true;
+			error_in_number=i;
+		}
+		catch (e) {
+			debug(e);
+		}
+	}
+	if (error) fail ("ruleFileAttr should have thrown an error for parameter number "+error_in_number);
+
+	// Copy and paste from last tests
+
+	info("original file should have same attributes as before");
+
+	assertEquals("data file for ruleFileAttributes should be dumb_file2.osm","dumb_file2.osm",ruleFileAttributes.getAttributes().data);
+	assertEquals("scale for ruleFileAttributes must be 10",10,ruleFileAttributes.getAttributes().scale)
+
+	assertNotEquals("scale for ruleFileAttribute and for ruleFileAttributes2 should still be different",ruleFileAttributes.getAttributes().scale,ruleFileAttributes2.getAttributes().scale);
+
+
+}
+
+
+</script>
+</head>
+
+<body>
+<h1>CMYK library rules Tests</h1>
+
+<p>This page contains tests for the rules CMYK functions. To see them, take a look at the source.</p>
+</body>
+</html>
+ 

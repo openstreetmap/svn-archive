@@ -47,6 +47,10 @@ function addStyle(args) {
 	}
 }
 
+// Some interesting things about events here http://www.quirksmode.org/js/events_properties.html
+
+
+
 viewPropertiesFromClass = function(key) {
 
 	//Search rules in which this class is used
@@ -719,6 +723,32 @@ function Osmatransform () {
 			var title = document.createTextNode("data file: "+cmyk.getOsmFileName());
 			title_container.appendChild(title);
 			document.getElementById("svgfile").appendChild(title_container);
+// analysing the SVG file to find positions of every element
+/*			documentSVG = svgfile.documentElement;
+			myWays = new Object();
+			console.debug("viewbox: "+documentSVG.getAttribute("viewBox"));
+			console.debug("height: "+documentSVG.getAttribute("height"));
+			console.debug("width: "+documentSVG.getAttribute("width"));
+			defsSection = svgfile.getElementById("defs-ways");
+			allPaths = defsSection.getElementsByTagName("path");
+			dojo.forEach(allPaths,
+				function(entry,index,array) {
+					myWays[entry.getAttribute("id")]={path: entry.getAttribute("d"), classes: undefined};
+//					console.debug("via con id "+entry.getAttribute("id")+" ha path: "+entry.getAttribute("d"));
+				}
+			);
+//			console.debug("********** CIAO ***********");
+			allUses = svgfile.getElementsByTagName("use");
+			dojo.forEach(allUses,
+				function(entry,index,array) {
+					if (myWays[entry.href.baseVal.substring(1)]!=undefined) {
+						myWays[entry.href.baseVal.substring(1)].classes=entry.getAttribute("class").split(" ");
+					}
+//					console.debug("via con riferimento "+entry.href.baseVal+" ha classi: "+entry.getAttribute("class"));
+				}
+			);
+			console.dir(myWays);*/
+			
 			document.getElementById("svgfile").appendChild(svgfile.documentElement);
 	}
 	catch (error) {

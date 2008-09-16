@@ -23,9 +23,18 @@ public class JobDispatcher {
 	 * @return the singelton instance of the {@link JobDispatcher}
 	 */
 	public static JobDispatcher getInstance() {
-		if (instance == null)
+		// for speed reasons we check if the instance has been created
+		// one time before we enter the synchronized section...
+		if (instance != null)
+			return instance;
+		synchronized (JobDispatcher.class) {
+			// ... and for thread safety reasons one time inside the
+			// synchronized section.
+			if (instance != null)
+				return instance;
 			new JobDispatcher();
-		return instance;
+			return instance;
+		}
 	}
 
 	private JobDispatcher() {

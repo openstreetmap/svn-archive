@@ -222,6 +222,9 @@
         <rule e="way" k="natural" v="water|pond|lake">
             <area class="natural-water"/>
         </rule>
+        <rule e="way" k="natural" v="marsh">
+            <area class="natural-water-marsh"/>
+        </rule>
         <rule e="way" k="landuse" v="reservoir">
             <area class="natural-water"/>
         </rule>
@@ -2815,6 +2818,12 @@
                 stroke-width: 0px;
             }
 
+            .natural-water-marsh {
+                fill: url(#marsh-pattern);
+                stroke: #007fff;
+                stroke-width: 0px;
+            }
+
             .natural-coastline {
                 fill: #b5d6f1;
                 stroke: #b5d6f1;
@@ -3727,6 +3736,10 @@
             <svg:path fill="#2b743f" d="M 165,104 L 175,104 L 160,119 L 175,119 L 155,134 L 175,134 L175,144 L 185,144 L 185,134 L 205,134 L 185,119 L 200,119 L 185,104 L 195,104 L 180,84 L 165,104"/>
             <svg:path fill="#2b743f" d="M 227,101 C 220,101 213,107 213,114 C 213,116 213,118 215,120 C 211,122 208,126 208,129 C 208,136 216,143 228,143 L 228,163 L 237,163 L 237,143 C 248,143 257,136 257,129 C 257,126 255,123 252,121 C 255,114 245,104 237,106 C 236,103 233,101 227,101"/>
         </svg:pattern>
+
+        <svg:pattern id="marsh-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.3)">
+            <svg:path stroke="#007fff" stroke-width="0.2" stroke-linecap="round" d="M 0,4 C 1.33,4 2.67,4 4,4 M 2,4 C 2,3 2,2 2,1 M 3,3 L 2,4 M 3,2 L 2,4 M 1,3 L 2,4 M 1,2 L 2,4 M 7,9 L 10,9 M 2,9 C 3,9 4,9 5,9 M 6,4 C 6.71,4 7.35,4 8,4 M 2,6 C 2.67,6 3.33,6 4,6 M 7,1 C 7.70,1 8.33,1 9,1 M 0,9 L 1,9 M 9,6 L 9,9 M 10,7 L 9,9 M 10,8 L 9,9 M 8,8 L 9,9 M 8,7 L 9,9"/>
+ 	</svg:pattern>
 
         <svg:pattern id="military-pattern" x="0" y="0" width="500" height="500" patternUnits="userSpaceOnUse" patternTransform="scale(0.01)">
             <svg:rect width="510" height="510" x="0" y="0" fill="#969632"/>

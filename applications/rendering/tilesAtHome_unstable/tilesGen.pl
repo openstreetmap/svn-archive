@@ -536,7 +536,7 @@ sub ProcessRequestsFromServer
                 }
             }
             # and now check whether we found it unrenderable before
-            if ($req->is_unrenderable()) {
+            elsif ($req->is_unrenderable()) {
                 statusMessage("Ignoring unrenderable tile (" . $req->ZXY_str . ')', 1, 3);
                 eval {
                     $Server->putRequestBack($req, "Unrenderable");

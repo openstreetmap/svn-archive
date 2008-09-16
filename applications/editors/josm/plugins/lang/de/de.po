@@ -6447,11 +6447,11 @@ msgstr "Wendestelle"
 
 #: ../lang/presets.java:737
 msgid "City Limit"
-msgstr "Ortstafel"
+msgstr "Orteingangsschild"
 
 #: ../lang/presets.java:738
 msgid "Edit a city limit sign"
-msgstr "Ortstafel bearbeiten"
+msgstr "Orteingangsschild bearbeiten"
 
 #: ../lang/presets.java:743
 msgid "Second Name"

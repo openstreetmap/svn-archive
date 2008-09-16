@@ -19,44 +19,45 @@ $l=$ARGV[1];
 system("tail -n +7 $ARGV[0] > tmp");
 print STDERR "Invoking gnuplot to generate contours at $l intervals\n";
 open GNUPLOT, "|gnuplot";
-print GNUPLOT "unset surface
+print GNUPLOT "set terminal table
+unset surface
 set contour
-set cntrparam level incremental 0, $l, 1000
-set table 'tmp.cnt'
+set cntrparam level incremental -500, $l, 9000
+set output 'tmp.cnt'
 splot 'tmp' matrix w l
-unset table
 ";
 
 close GNUPLOT;
 open CNT, "tmp.cnt";
 
 $nid0 = 0;
-$lastnode = $lastway = $lastseg = 10000; 
-$prefix = "-";
+$lastnode = 1000050000;
+$lastway = 1000050000;
+$prefix = "";
 
 print "<?xml version='1.0' encoding='UTF-8'?>
-<osm version='0.3' generator='mkcntr'>
+<osm version='0.5' generator='mkcntr'>
+<bound box='-90,-180,90,180' origin='mkcntr'/>
 ";
 
 foreach (<CNT>){
     next if (/^\#/);
     if (/^[^0-9]*$/) {
 	if($nid0 && $nid0!=$nidF){
-	    #seg($nid0, $nidF);
-	    way($z, @segs);
-	    undef @segs;
+	    way($z, @nodes);
 	}
+        undef @nodes;
 	$nid0 = 0;
 	$nidF = 0;
 	next;
     }
     chomp;
     ($i, $j, $z) = split;
-#    next if(!defined($d));
     $nid1 = node($i, $j);
     if($nid0>0) {
-	push @segs, seg($nid0, $nid1);
+        push @nodes, $nid1;
     } else {
+        push @nodes, $nid1;
 	$nidF = $nid1;
     }
     $nid0=$nid1;
@@ -68,25 +69,33 @@ sub node {
     $lon = $xllcorner+$cellsize*$_[0];
     $lat = $yllcorner+$cellsize*($nrows-$_[1]);
     $id = $lastnode++;
-    print "<node id='$prefix$id' lat='$lat' lon='$lon' />\n";
-    return $id;
-}
-
-sub seg {
-    $id = $lastseg++;
-    print "<segment id='$prefix$id' from='$prefix$_[0]' to='$prefix$_[1]' />\n";
+    print "<node id='$prefix$id' timestamp='0001-01-01T00:00:00' lat='$lat' lon='$lon' />\n";
     return $id;
 }
 
 sub way {
     $id = $lastway++;
     $z = shift @_;
-    print "<way id='$prefix$id'>\n";
+    print "<way id='$prefix$id' timestamp='0001-01-01T00:00:00'>\n";
     while (@_){
 	$s = shift(@_);
-	print "<seg id='$prefix$s' />\n";
+	print "<nd ref='$prefix$s' />\n";
     }
-    print "<tag k='contour' v='$z' />\n";
+    print "<tag k='contour' v='elevation' />\n";
+
+    if ($ARGV[2] && $ARGV[3]) {
+        if ( $z % $ARGV[3] == 0 ) {
+            print "<tag k='contour_ext' v='elevation_major'\n />";
+        } else {
+            if ( $z % $ARGV[2] == 0 ) {
+                print "<tag k='contour_ext' v='elevation_medium'\n />";
+            } else {
+                print "<tag k='contour_ext' v='elevation_minor'\n />";
+            }
+        }
+    }
+
+    print "<tag k='ele' v='$z' />\n";
     print "<tag k='created_by' v='mkcntr' />\n";
     print "</way>\n";
     return $id;

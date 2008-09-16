@@ -506,6 +506,11 @@ DrawingMapLayer * DrawingMapLayer::doFromXML(DrawingMapLayer* l, MapDocument* d,
 			/* TrackPoint* N = */ TrackPoint::fromXML(d, l, c);
 //			l->add(N);
 			progress.setValue(progress.value()+1);
+		} else
+		if (c.tagName() == "trkseg") {
+			TrackSegment* T = TrackSegment::fromXML(d, l, c, progress);
+			l->add(T);
+			progress.setValue(progress.value()+1);
 		}
 
 		if (progress.wasCanceled())

@@ -104,12 +104,14 @@ bool Command::toXML(QDomElement& xParent) const
 {
 	bool OK = true;
 
-	QDomElement e = xParent.ownerDocument().createElement("Command");
-	xParent.appendChild(e);
+	if (mainFeature) {
+		QDomElement e = xParent.ownerDocument().createElement("Command");
+		xParent.appendChild(e);
 
-	e.setAttribute("xml:id", id());
-	e.setAttribute("feature", mainFeature->xmlId());
-	e.setAttribute("oldCreated", oldCreated);
+		e.setAttribute("xml:id", id());
+		e.setAttribute("feature", mainFeature->xmlId());
+		e.setAttribute("oldCreated", oldCreated);
+	}
 
 	return OK;
 }

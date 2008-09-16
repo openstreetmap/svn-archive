@@ -138,6 +138,7 @@ our $relation_storage = {};
 our $text_index = {};
 our $meter2pixel = {};
 our %symbols = ();
+our $labelRelations = {};
 
 my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage);
 my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
@@ -434,7 +435,25 @@ foreach my $include ($rules->find("/rules//include")->get_nodelist)
 }
 $writer->endTag("defs");
 
-
+# load label relations
+foreach my $relation (values(%$relation_storage))
+{
+    if ($relation->{'tags'}->{'type'} eq 'label')
+    {
+        my $labelRelationInfo = {};
+        $labelRelationInfo->{"relation"} = $relation;
+        $labelRelationInfo->{"used"} = 0;
+        foreach my $relpair (@{$relation->{"members"}})
+        {
+            # for each referenced area make list of it's labels
+            my ($role, $ref) = @$relpair;
+            if ($relpair->[0] eq 'object')
+            {
+                $labelRelations->{$relpair->[1]} = $labelRelationInfo;
+            }
+        }
+    }
+}
 
 # Pre-generate named path definitions for all ways
 

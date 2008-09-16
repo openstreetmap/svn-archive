@@ -544,6 +544,15 @@ sub ProcessRequestsFromServer
                 $req = undef;   # we need to loop yet again
                 talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
             }
+            # check whether there are any layers requested
+            elsif (scalar($req->layers()) == 0) {
+                statusMessage("Ignoring tile request with no layers", 1, 3);
+                eval {
+                    $Server->putRequestBack($req, "NoLayersRequested");
+                }; # ignoring exceptions
+                $req = undef;
+                talkInSleep("Waiting before new tile is requested", 15);
+            }
         }
         catch ServerError with {
             my $err = shift();

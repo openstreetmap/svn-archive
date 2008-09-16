@@ -88,8 +88,12 @@ unsigned int Command::getDirtyLevel()
 
 void Command::undo()
 {
-	if (mainFeature)
-		mainFeature->setTag("created_by", oldCreated);
+	if (mainFeature) {
+		if (oldCreated != TAG_UNDEF_VALUE)
+			mainFeature->setTag("created_by", oldCreated);
+		else
+			mainFeature->clearTag("created_by");
+	}
 }
 
 void Command::redo()

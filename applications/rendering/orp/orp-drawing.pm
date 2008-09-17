@@ -317,23 +317,26 @@ sub draw_text
     foreach($selected->members())
     {
         next if defined($layer) and $_->{'layer'} != $layer;
-        if (ref $_ eq 'node')
+        my $text = substitute_text($textnode, $_);
+        if ($text ne '')
         {
-            my $text = substitute_text($textnode, $_);
-            my $projected = project([$_->{'lat'}, $_->{'lon'}]);
-            debug("draw node text '$text'") if ($debug->{"drawing"});
-            $writer->startTag("text", 
-                "x" => $projected->[0],
-                "y" => $projected->[1],
-                copy_attributes_not_in_list($textnode, 
-                    [ "startOffset", "method", "spacing", 
-                    "lengthAdjust","textLength" ]));
-            $writer->characters($text);
-            $writer->endTag("text");
-        }
-        elsif (ref $_ eq 'way')
-        {
-            draw_text_on_path($textnode, $_);
+            if (ref $_ eq 'node')
+            {
+                my $projected = project([$_->{'lat'}, $_->{'lon'}]);
+                debug("draw node text '$text'") if ($debug->{"drawing"});
+                $writer->startTag("text", 
+                    "x" => $projected->[0],
+                    "y" => $projected->[1],
+                    copy_attributes_not_in_list($textnode, 
+                        [ "startOffset", "method", "spacing", 
+                        "lengthAdjust","textLength" ]));
+                $writer->characters($text);
+                $writer->endTag("text");
+            }
+            elsif (ref $_ eq 'way')
+            {
+                draw_text_on_path($textnode, $_, $text);
+            }
         }
     }
 }
@@ -359,9 +362,8 @@ sub draw_text
 # -------------------------------------------------------------------
 sub draw_text_on_path
 {
-    my ($textnode, $way) = @_;
+    my ($textnode, $way, $text) = @_;
 
-    my $text = substitute_text($textnode, $way);
     my $sumLon = 0;
     my $sumLat = 0;
     my $nodes = $way->{'nodes'};
@@ -526,6 +528,8 @@ sub draw_area_text
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
         my $text = substitute_text($textnode, $_);
+        next unless $text ne '';
+
         my $center = get_area_center($_);
         my $projected = project($center);
         $writer->startTag("text", 

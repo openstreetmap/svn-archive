@@ -138,6 +138,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
                 <routing bicycle="5" foot="5"/> <!-- Usually you can push
                 your bicycle on one of these. Also see footway -->
 	</rule>
+	<rule>
+		<condition k="cyclenetfoot" v="designated"/>
+		<line width="1" realwidth="1" colour="#00ff00" />
+		<icon annotate="true" src="vehicle/restrictions/foot-designated.png" />
+		<scale_min>1</scale_min>
+		<scale_max>10000</scale_max>
+                <routing bicycle="5" foot="20"/> 
+	</rule>
 
 	<rule>
 		<condition k="goods" v="no" />
@@ -294,6 +302,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_max>20000000</scale_max>
         <routing goods="110" hgv="110" motorcar="110" psv="110" oneway="1"/>
 	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="motorway"/>
+        <line width="3" realwidth="8" colour="#809bc0"  width_bg="5" colour_bg="#FFFF00"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>20000000</scale_max>
+        <routing goods="110" hgv="110" motorcar="110" psv="110" bicyle="20" oneway="1"/>
+	</rule>
 
 	<rule>
 		<condition k="highway" v="motorway_link"/>
@@ -302,6 +318,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing goods="50" hgv="50" motorcar="50" psv="50" oneway="1"/>
+	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="motorway_link"/>
+        <line width="3" colour="#809bc0"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+        <routing goods="50" hgv="50" motorcar="50" psv="50" bicycle="20" oneway="1"/>
 	</rule>
 
 	<rule>
@@ -312,6 +336,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_max>500000</scale_max>
         <routing goods="110" hgv="110" motorcar="110" psv="110"/>
 	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="trunk"/>
+		<line width="3" colour="#7fc97f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>500000</scale_max>
+        <routing goods="110" hgv="110" motorcar="110" psv="110" bicyle="20"/>
+	</rule>
 
 	<rule>
 		<condition k="highway" v="trunk_link"/>
@@ -319,11 +351,27 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110"/>
+        <routing goods="50" hgv="50" motorcar="50" psv="50"/>
+	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="trunk_link"/>
+        <line width="3" colour="#7fc97f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>20000</scale_max>
+        <routing goods="50" hgv="50" motorcar="50" psv="50" bicyle="20"/>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="primary"/>
+		<line width="3" realwidth="8" colour="#fb805f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>700000</scale_max>
+        <routing bicycle="10" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
+	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="primary"/>
 		<line width="3" realwidth="8" colour="#fb805f"/>
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
@@ -337,11 +385,27 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
+                <routing bicycle="10" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
+	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="primary_link"/>
+        <line width="3" colour="#fb805f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+                <scale_min>1</scale_min>
+                <scale_max>40000</scale_max>
                 <routing bicycle="20" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="secondary"/>
+		<line width="3" realwidth="6" colour="#fdbf6f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+		<scale_min>1</scale_min>
+		<scale_max>300000</scale_max>
+                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="secondary"/>
 		<line width="3" realwidth="6" colour="#fdbf6f"/>
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
@@ -355,6 +419,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
+                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="secondary_link"/>
+		<line width="3" realwidth="6" colour="#fdbf6f"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+		<scale_min>1</scale_min>
+		<scale_max>300000</scale_max>
                 <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
 	</rule>
 
@@ -364,11 +436,27 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
+        <routing bicycle="12" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+	</rule>
+        <rule>
+        <condition k="cyclenethighway" v="tertiary"/>
+        <line width="2" realwidth="5" colour="#f7f496"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="unclassified"/>
+		<line width="2" realwidth="5" colour="#c0c0c0"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>40000</scale_max>
+        <routing bicycle="18" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+    </rule>
+	<rule>
+		<condition k="cyclenethighway" v="unclassified"/>
 		<line width="2" realwidth="5" colour="#c0c0c0"/>
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
@@ -429,6 +517,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_max>20000</scale_max>
         <routing bicycle="5" foot="5" goods="5" hgv="5" motorcar="5" psv="5"/>
 	</rule>
+    <rule>
+        <condition k="cyclenethighway" v="service"/>
+        <line width="1" realwidth="3" colour="#809bc0"/>
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>20000</scale_max>
+        <routing bicycle="20" foot="5" goods="5" hgv="5" motorcar="5" psv="5"/>
+	</rule>
 
 	<rule>
 		<condition k="highway" v="bridleway"/>
@@ -457,6 +553,15 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <routing bicycle="5" foot="5"/> <!-- Usually you can push
                 your bicycle on one of these. Also see foot=designated -->
 	</rule>
+	<rule>
+		<condition k="cyclenethighway" v="footway"/>
+		<line width="1" realwidth="1" colour="#00ff00" />
+		<icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>10000</scale_max>
+        <routing bicycle="20" foot="5"/> <!-- Usually you can push
+                your bicycle on one of these. Also see foot=designated -->
+	</rule>
 
 	<rule>
 		<condition k="highway" v="path"/>
@@ -483,6 +588,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
         <routing foot="2"/>
+	</rule>
+    <rule>
+        <condition k="cyclenethighway" v="steps"/>
+        <line width="1" realwidth="1" colour="#00ff00"/>
+		<icon annotate="true" src="transport/steps.png" />
+        <scale_min>1</scale_min>
+        <scale_max>10000</scale_max>
+        <routing bicyle="2" foot="2"/>
 	</rule>
 
     <rule>

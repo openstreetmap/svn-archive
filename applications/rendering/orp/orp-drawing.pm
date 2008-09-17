@@ -284,6 +284,29 @@ sub tags_subset
     return 1;
 }
 
+# sub render_text($textnode, $text, $coordinates)
+#
+# render text at specified position
+#
+# Parameters:
+# $textnode - the XML::XPath::Node object for the <text> instruction
+# $text - caption text
+# $coordinates - text position coordinates
+sub render_text
+{
+    my ($textnode, $text, $coordinates) = @_;
+
+    my $projected = project([$coordinates->[0], $coordinates->[1]]);
+    $writer->startTag("text", 
+        "x" => $projected->[0],
+        "y" => $projected->[1],
+        copy_attributes_not_in_list($textnode, 
+            [ "startOffset", "method", "spacing", 
+              "lengthAdjust","textLength" ]));
+    $writer->characters($text);
+    $writer->endTag("text");
+}
+
 # -------------------------------------------------------------------
 # sub draw_text($rulenode, $layer, $selection)
 #
@@ -322,16 +345,8 @@ sub draw_text
         {
             if (ref $_ eq 'node')
             {
-                my $projected = project([$_->{'lat'}, $_->{'lon'}]);
-                debug("draw node text '$text'") if ($debug->{"drawing"});
-                $writer->startTag("text", 
-                    "x" => $projected->[0],
-                    "y" => $projected->[1],
-                    copy_attributes_not_in_list($textnode, 
-                        [ "startOffset", "method", "spacing", 
-                        "lengthAdjust","textLength" ]));
-                $writer->characters($text);
-                $writer->endTag("text");
+		debug("draw node text '$text'") if ($debug->{"drawing"});
+                render_text($textnode, $text, [$_->{'lat'}, $_->{'lon'}]);
             }
             elsif (ref $_ eq 'way')
             {
@@ -531,15 +546,7 @@ sub draw_area_text
         next unless $text ne '';
 
         my $center = get_area_center($_);
-        my $projected = project($center);
-        $writer->startTag("text", 
-            "x" => $projected->[0],
-            "y" => $projected->[1],
-            copy_attributes_not_in_list($textnode, 
-                [ "startOffset", "method", "spacing", 
-                "lengthAdjust","textLength" ]));
-        $writer->characters($text);
-        $writer->endTag("text");
+        render_text($textnode, $text, $center);
     }
 }
 

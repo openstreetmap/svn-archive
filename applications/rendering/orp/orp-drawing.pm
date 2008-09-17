@@ -328,7 +328,7 @@ sub draw_text
                 copy_attributes_not_in_list($textnode, 
                     [ "startOffset", "method", "spacing", 
                     "lengthAdjust","textLength" ]));
-            $writer->characters($_->{'tags'}->{$textnode->getAttribute("k")});
+            $writer->characters($text);
             $writer->endTag("text");
         }
         elsif (ref $_ eq 'way')
@@ -525,6 +525,7 @@ sub draw_area_text
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
+        my $text = substitute_text($textnode, $_);
         my $center = get_area_center($_);
         my $projected = project($center);
         $writer->startTag("text", 
@@ -533,7 +534,7 @@ sub draw_area_text
             copy_attributes_not_in_list($textnode, 
                 [ "startOffset", "method", "spacing", 
                 "lengthAdjust","textLength" ]));
-        $writer->characters($_->{'tags'}->{$textnode->getAttribute("k")});
+        $writer->characters($text);
         $writer->endTag("text");
     }
 }

@@ -5,7 +5,6 @@ import os, sys, logging, zipfile, random, re, stat, signal
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
 os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 import shutil
-import threading
 from datetime import datetime
 from time import sleep,clock,time
 from django.db import transaction
@@ -17,7 +16,7 @@ from tah.requests.models import Request,Upload
 from MySQLdb import OperationalError
 
 ### TileUpload returns 0 on success and >0 otherwise
-class TileUpload ( threading.Thread ):
+class TileUpload (object):
   unzip_path=None #path to be used for unzipping (temporary files)
   base_tilepath=None # base tile directory
   fname=None      #complete path of uploaded tileset file
@@ -39,6 +38,7 @@ class TileUpload ( threading.Thread ):
         self.process()
 
   #--------------------------------------------------------------------
+  #@transaction.autocommit
   def process(self):
       #find the oldest unlocked upload file
       self.upload = self.fetch_request()
@@ -48,8 +48,9 @@ class TileUpload ( threading.Thread ):
       #self.fname = self.upload.get_file_filename()
       self.fname = self.upload.file.path
 
-      if os.path.isfile(self.fname):
-        #logging.debug('Handling next tileset: ' + self.upload.file)
+      if self.upload.file.name.lower().endswith('.zip') and os.path.isfile(self.fname):
+        # existing zip file
+        #logging.debug('Handling next zip file: ' + self.upload.file.name)
         # TODO don't just use random string. make a tmpdir with tempfile
         self.uid = str(random.randint(0,9999999999999999999))
         if self.unzip():
@@ -89,7 +90,7 @@ class TileUpload ( threading.Thread ):
                       except OperationalError, (errnum,errmsg):
                         # e.g. MySQL transaction timeout, do another round
                         save_success = False
-                  logging.debug('%s finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (self.getName(), tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+                  logging.debug('finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
                 else:
                     # saving the tileset went wrong
                     logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles, self.upload.user_id,self.upload.client_uuid))
@@ -99,9 +100,15 @@ class TileUpload ( threading.Thread ):
                 logging.error('Unzipped file from user %s (uuid %d) was no valid tileset. Took %.1f sec (CPU %.1f).' % (self.upload.user_id,self.upload.client_uuid,time()-starttime[0],clock()-starttime[1]))
         self.cleanup(True)
 
+      elif self.upload.file.name.lower().endswith('.tileset') and os.path.isfile(self.fname):
+          # existing .tileset file
+          if self.handle_tilesetfile():
+              logging.info('Tilesetfile "%s,%d,%d,%d" in %.1f sec. Saving took %.1f sec.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0], time_save[1] - time_save[0]))
+          else:
+              logging.info('Failed to handle tilesetfile "%s,%d,%d,%d" in %.1f sec.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0], time_save[1] - time_save[0]))
       else:
           # self.fname is no valid file
-          logging.info("uploaded file not found, deleting upload from user %s (uuid %d)." % (self.upload.user_id,self.upload.client_uuid))
+          logging.info("File %s not found or no .zip or .tileset, deleting. user %s(%d)." % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))
 	  self.upload.delete()
 
 
@@ -126,14 +133,17 @@ class TileUpload ( threading.Thread ):
           except OperationalError, e:
               # Transaction timeout throws an OperationalError, 1205
               logging.warn("MySQL failed to fetch next upload: %s: %s" % (e[0],e[1]))
-              transaction.commit()
               sleep(10)
 
       logging.debug('Fetching next job from db in %.1f sec' % (time()-before_sql))
       return upload
   #-----------------------------------------------------------------
+  def handle_tilesetfile(self):
+    #TODO not implemented yet
+    return None
 
 
+  #-----------------------------------------------------------------
   def unzip(self):
     now = clock()
     outfile = None
@@ -259,25 +269,14 @@ if __name__ == '__main__':
   signal.signal(signal.SIGTERM, sigterm)
 
   # set all Uploads to unlocked when starting up
-  Upload.objects.all().update(is_locked=False)
+  #Upload.objects.all().update(is_locked=False)
 
-  threads = []
-  numThreads = 2
-
-  for i in range(0, numThreads):
-      # start numThreads threads with upload processors
-      threads.append(TileUpload(config))
-      threads[i].start()
+  uploader = TileUpload(config)
+  try:
+      uploader.run()
           #logging.critical('Upload handling thread %d returned with error. Aborting.' % i)
           #sys.stderr.write('Upload handling thread %d returned with error' % i)
           #sys.exit(1)
-
-  try:
-    # wait for all threads to finish unless we receive CTRL-C
-    for i in range(0,numThreads):
-        while threads[i].isAlive():
-          threads[i].join(5)
-
   except KeyboardInterrupt:
        # user pressed CTRL-C
        logging.info('Ctrl-C pressed. Shutdown gracefully.')

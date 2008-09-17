@@ -545,7 +545,7 @@ sub ProcessRequestsFromServer
                 talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
             }
             # check whether there are any layers requested
-            elsif (scalar($req->layers()) == 0) {
+            if (defined $req and scalar($req->layers()) == 0) {
                 statusMessage("Ignoring tile request with no layers", 1, 3);
                 eval {
                     $Server->putRequestBack($req, "NoLayersRequested");
@@ -553,7 +553,7 @@ sub ProcessRequestsFromServer
                 $req = undef;
                 talkInSleep("Waiting before new tile is requested", 15);
             }
-            else {
+            if (defined $req) {
                 my $zoom = $req->Z();
                 foreach my $layer ($req->layers()) {
                     if (($zoom < $Config->get("${layer}_MinZoom")) or ($zoom > $Config->get("${layer}_MaxZoom"))) {

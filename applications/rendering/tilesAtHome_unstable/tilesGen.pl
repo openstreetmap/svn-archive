@@ -553,6 +553,7 @@ sub ProcessRequestsFromServer
                 $req = undef;
                 talkInSleep("Waiting before new tile is requested", 15);
             }
+            # check whether we can actually render the requested zoom level for all requested layers
             if (defined $req) {
                 my $zoom = $req->Z();
                 foreach my $layer ($req->layers()) {

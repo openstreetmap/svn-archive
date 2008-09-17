@@ -332,7 +332,6 @@ def fetch_next_request():
 
 def take(request):
     PROT_VER = 5
-    html='XX|%d|unknown error' % 
 
     if not request.method == 'POST':
         # show the web form
@@ -376,47 +375,47 @@ def take(request):
         html="XX|%d|Invalid client version." %(PROT_VER)
         return HttpResponse(html)
 
-     # limit max #of active requests per usr
-     active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
-     if active_user_reqs > 150:
-        html ='XX|%d|You have more than 150 active requests. Check your client.' %(PROT_VER)
-        return HttpResponse(html)
+    # limit max #of active requests per usr
+    active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
+    if active_user_reqs > 150:
+       html ='XX|%d|You have more than 150 active requests. Check your client.' %(PROT_VER)
+       return HttpResponse(html)
 
-     # get the next request from the queue (or return DoesNotExist exception)
-     try:  
-         # returns request or DoesNotExist
-         req = fetch_next_request();
-     except Request.DoesNotExist:
+    # get the next request from the queue (or return DoesNotExist exception)
+    try:  
+        # returns request or DoesNotExist
+        req = fetch_next_request();
+    except Request.DoesNotExist:
         # could not get_next_and_lock, queue empty
         html ="XX|%d|No requests in queue." % (PROT_VER)
         return HttpResponse(html)
 
-     # req is a request we are about to hand out
-     # make sure the upload queue is not too full, depending on priority
-     upload_queue = Upload.objects.all().count() # [0...1500]
-     if upload_queue > {1:1500,2:1200,3:1100,4:900}[req.priority]:
-         # reset to unhandled and bomb out with a "No request in queue for you"
-         req.status=0
-         req.save()
-         html ="XX|%d|Upload queue too full. Throttling" % (PROT_VER)
-         return HttpResponse(html)
+    # req is a request we are about to hand out
+    # make sure the upload queue is not too full, depending on priority
+    upload_queue = Upload.objects.all().count() # [0...1500]
+    if upload_queue > {1:1500,2:1200,3:1100,4:900}[req.priority]:
+        # reset to unhandled and bomb out with a "No request in queue for you"
+        req.status=0
+        req.save()
+        html ="XX|%d|Upload queue too full. Throttling" % (PROT_VER)
+        return HttpResponse(html)
 
-     # set user data and save
-     req.client = user
-     req.client_uuid = form.get('client_uuid', 0)
-     req.clientping_time=datetime.now()
-     req.save()
+    # set user data and save
+    req.client = user
+    req.client_uuid = form.get('client_uuid', 0)
+    req.clientping_time=datetime.now()
+    req.save()
 
-     # find out tileset filesize and age, using layer id=1
-     tilelayer = Layer.objects.get(pk=1)
-     (tilepath, tilefile) = Tileset(tilelayer, req.min_z, \
-                              req.x, req.y).get_filename(settings.TILES_ROOT)
-     tilefile = os.path.join(tilepath, tilefile)
-     try: 
-         fstat = os.stat(tilefile)
-         (fsize,mtime) = (fstat[6], fstat[8])
-     except OSError: 
-         (fsize,mtime) = 0,0
+    # find out tileset filesize and age, using layer id=1
+    tilelayer = Layer.objects.get(pk=1)
+    (tilepath, tilefile) = Tileset(tilelayer, req.min_z, \
+                          req.x, req.y).get_filename(settings.TILES_ROOT)
+    tilefile = os.path.join(tilepath, tilefile)
+    try: 
+        fstat = os.stat(tilefile)
+        (fsize,mtime) = (fstat[6], fstat[8])
+    except OSError: 
+        (fsize,mtime) = 0,0
 
     # next line is actually the successful request string!
     html="OK|%d|%s|%d|%d" % (PROT_VER,req,mtime,fsize)

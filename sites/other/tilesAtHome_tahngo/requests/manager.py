@@ -15,22 +15,20 @@ class RequestManager(models.Manager):
 
       table = self.model._meta.db_table
       #clientping_col = self.model._meta.get_field('clientping_time').column
-      query = 'select id from %s where status=0 and priority=(select min(priority) from %s where status=0)  ORDER BY %s LIMIT 1 FOR UPDATE' \
-           % (table, table, 'request_time')
+      #query = 'select id from %s where status=0 and priority=(select min(priority) from %s where status=0)  ORDER BY %s LIMIT 1 FOR UPDATE' \
+      #     % (table, table, 'request_time')
       #query = 'select id from %s where %s=0 ' \
       #    'ORDER BY %s,%s LIMIT 1 FOR UPDATE' \
       #     % (table, 'status','priority','request_time')
-      #query = 'select id from %s where %s=0 ' \
-      #    'ORDER BY %s,%s LIMIT 1' \
-      #     % (table, 'status','priority','request_time')
+      query = 'select id from %s where %s=0 ' \
+          'ORDER BY %s LIMIT 1 FOR UPDATE' \
+           % (table, 'status','priority')
 
       cursor = connection.cursor()
-      #cursor.execute("LOCK TABLES %s WRITE" % table)
       cursor.execute(query)
       row = cursor.fetchone()
       if row: req_id = row[0]
       else  : req_id = None
-      #cursor.execute("UNLOCK TABLES")
       return self.get(id = req_id)
 
 
@@ -47,12 +45,12 @@ class UploadManager(models.Manager):
 
       table = self.model._meta.db_table
       #clientping_col = self.model._meta.get_field('clientping_time').column
-      query = 'select id from %s where %s=false ' \
-          'ORDER BY %s LIMIT 1 FOR UPDATE' \
-           % (table, 'is_locked','upload_time')
+      #query = 'select id from %s where %s=false ' \
+      #    'ORDER BY %s LIMIT 1 FOR UPDATE' \
+      #     % (table, 'is_locked','upload_time')
       # faster poor mans query without locking
-      #query = 'select id from %s where %s=false order by %s LIMIT 1' \
-      #     % (table, 'is_locked', 'upload_time')
+      query = 'select id from %s where %s=0 ORDER BY %s LIMIT 1 FOR UPDATE' \
+           % (table, 'is_locked','upload_time')
 
       cursor = connection.cursor()
       cursor.execute(query)

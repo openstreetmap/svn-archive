@@ -71,7 +71,7 @@ def show_uploads_page(request):
 # not a public view, but a helper function that creates a new request based on data in
 # 'form' and performs sanity checks etc. The form must have been validated previously.
 
-#@transaction.commit_on_success
+@transaction.commit_on_success
 def saveCreateRequestForm(request, form):
     """ Returns (Request, reason), with Request being 'None' on failure and 
         the saved request object on success. 
@@ -331,89 +331,95 @@ def fetch_next_request():
 # TODO, quite large by now. Split?
 
 def take(request):
-    html='XX|5|unknown error'
-    if request.method == 'POST':
-      # we had huge client_uuids in the beginnning, shorten if necessary
-      if request.POST.has_key('client_uuid') and \
-          int(request.POST['client_uuid']) > 65535:
-             request.POST['client_uuid'] = request.POST['client_uuid'][-4:]
+    PROT_VER = 5
+    html='XX|%d|unknown error' % 
 
-      # perform user authentication
-      authform = ClientAuthForm(request.POST)
-      form     = TakeRequestForm(request.POST)
-      form.is_valid() #clean data
-      if authform.is_valid():
-        name     = authform.cleaned_data['user']
-	passwd   = authform.cleaned_data['passwd']
-        user = authenticate(username=name, password=passwd)
-        if user is not None:
-          #"You provided a correct username and password!"
-          # next, check for a valid client version
-          if form.cleaned_data['version'] in ['Rapperswil', 'Saurimo']:
-            #next 2 lines are for limiting max #of active requests per usr
-            active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
-
-            if active_user_reqs <= 150:
-              try:  
-                  # get the next request from the queue (or return DoesNotExist exception)
-                  #req = Request.objects.select_for_update().filter(status=0).order_by('priority','request_time')[0];
-                  client_uuid = form.cleaned_data.get('client_uuid', 0)
-                  req = fetch_next_request();
-                  req.client = user
-                  req.client_uuid = client_uuid
-                  req.clientping_time=datetime.now()
-                  req.save()
-
-                  # if it's a low prio request, make sure the upload queue is not too full
-                  upload_queue = Upload.objects.all().count() # [0...1500]
-                  if upload_queue > {1:1500,2:1200,3:1100,4:900}[req.priority]:
-                  # reset to unhandled and bomb out with a "No request in queue for you"
-                      req.status=0
-                      req.save()
-                      raise Request.DoesNotExist
-
-                  # find out tileset filesize and age
-                  # always hardcode 'tile' layer for now.
-                  # need to find something better, like layerid=1 for default
-                  tilelayer = Layer.objects.get(name='tile')
-                  (tilepath, tilefile) = Tileset(tilelayer, req.min_z, \
-                              req.x, req.y).get_filename(settings.TILES_ROOT)
-                  tilefile = os.path.join(tilepath, tilefile)
-                  try: 
-                    fstat = os.stat(tilefile)
-                    (fsize,mtime) = (fstat[6], fstat[8])
-                  except OSError: 
-                    (fsize,mtime) = 0,0
-
-                  # next line is actually the successful request string!
-	          html="OK|5|%s|%d|%d" % (req,mtime,fsize)
-
-              except (IndexError, Request.DoesNotExist), e:
-                  # could not get_next_and_lock, queue empty
-                  html ="XX|5|No requests in queue for you. (%s)" % (e)
-            else:
-                  #  active_user_reqs > 150
-                  html ='XX|5|You have more than 150 active requests. '\
-                        'Check your client.'
-
-          else:
-            # client version not in whitelist
-            logging.info("User %s connects with disallowed client '%s'." %\
-                         (user,form.cleaned_data['version']))
-            html="XX|5|Invalid client version."
-        else:
-            # user is None, auth failed
-            html='XX|5|Invalid username. Your username and password were '\
-                 'incorrect or the user has been disabled.'
-      else: #form was not valid
-        html = "XX|5|Form invalid. "+str(form.errors)
-
-    else: #request.method != POST, show the web form
+    if not request.method == 'POST':
+        # show the web form
         authform, form = ClientAuthForm(), TakeRequestForm()
         return render_to_response('requests_take.html', \
                               {'clientauthform': authform, 'takeform': form})
 
-    # Finally return html
+    # request.method == 'POST' from here
+
+    # we had huge client_uuids in the beginnning, shorten if necessary
+    if request.POST.has_key('client_uuid') and \
+        int(request.POST['client_uuid']) > 65535:
+           request.POST['client_uuid'] = request.POST['client_uuid'][-4:]
+
+    authform = ClientAuthForm(request.POST)
+    form     = TakeRequestForm(request.POST)
+    
+    if not (authform.is_valid() and form.is_valid()):
+        # some form was not valid
+        html = "XX|%d|Form invalid. %s %s" % (PROT_VER, form.errors, authform.errors)
+        return HttpResponse(html)
+
+    # perform user authentication
+    name     = authform.cleaned_data['user']
+    passwd   = authform.cleaned_data['passwd']
+    user = authenticate(username=name, password=passwd)
+    form = form.cleaned_data
+
+    if user is None:
+        # authentication failed
+        html='XX|%d|Invalid username. Your username and password were '\
+             'incorrect or the user has been disabled.' % (PROT_VER)
+        return HttpResponse(html)
+
+    #"You provided a correct username and password!"
+    # next, check for a valid client version
+    if not form['version'] in ['Rapperswil', 'Saurimo']:
+        # client version not in whitelist
+        logging.info("User %s connects with disallowed client '%s'." %\
+                     (user,form.cleaned_data['version']))
+        html="XX|%d|Invalid client version." %(PROT_VER)
+        return HttpResponse(html)
+
+     # limit max #of active requests per usr
+     active_user_reqs = Request.objects.filter(status=1,client=user.id).count()
+     if active_user_reqs > 150:
+        html ='XX|%d|You have more than 150 active requests. Check your client.' %(PROT_VER)
+        return HttpResponse(html)
+
+     # get the next request from the queue (or return DoesNotExist exception)
+     try:  
+         # returns request or DoesNotExist
+         req = fetch_next_request();
+     except Request.DoesNotExist:
+        # could not get_next_and_lock, queue empty
+        html ="XX|%d|No requests in queue." % (PROT_VER)
+        return HttpResponse(html)
+
+     # req is a request we are about to hand out
+     # make sure the upload queue is not too full, depending on priority
+     upload_queue = Upload.objects.all().count() # [0...1500]
+     if upload_queue > {1:1500,2:1200,3:1100,4:900}[req.priority]:
+         # reset to unhandled and bomb out with a "No request in queue for you"
+         req.status=0
+         req.save()
+         html ="XX|%d|Upload queue too full. Throttling" % (PROT_VER)
+         return HttpResponse(html)
+
+     # set user data and save
+     req.client = user
+     req.client_uuid = form.get('client_uuid', 0)
+     req.clientping_time=datetime.now()
+     req.save()
+
+     # find out tileset filesize and age, using layer id=1
+     tilelayer = Layer.objects.get(pk=1)
+     (tilepath, tilefile) = Tileset(tilelayer, req.min_z, \
+                              req.x, req.y).get_filename(settings.TILES_ROOT)
+     tilefile = os.path.join(tilepath, tilefile)
+     try: 
+         fstat = os.stat(tilefile)
+         (fsize,mtime) = (fstat[6], fstat[8])
+     except OSError: 
+         (fsize,mtime) = 0,0
+
+    # next line is actually the successful request string!
+    html="OK|%d|%s|%d|%d" % (PROT_VER,req,mtime,fsize)
     return HttpResponse(html) #+"\n"+str(connection.queries))
 
 

@@ -68,6 +68,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string>
+#include <vector>
 #include "libgosm.h"
 using namespace std;
 #define wchar_t char
@@ -2055,7 +2056,8 @@ int main (int argc, char *argv[])
     int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
     int yesMask = 0, noMask = 0, *wayFseek = NULL;
     int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt, ref = 0, role = 0;
-    int member[2], *wayId = (int*) malloc (40000000 * 2 * 4), wayIdCnt = 0;
+    int member[2], relationType = 0;
+    vector<int> wayId, wayMember, cycleNet;
     s[0].lat = 0; // Should be -1 ?
     s[0].other = -2;
     s[1].other = -1;
@@ -2113,10 +2115,18 @@ int main (int argc, char *argv[])
           if (stricmp (aname, "lat") == 0) nd.lat = Latitude (atof (avalue));
           if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
           if (stricmp (aname, "ref") == 0) ref = atoi (avalue);
+          if (stricmp (aname, "type") == 0) relationType = avalue[0];
           if (stricmp (aname, "role") == 0) role = avalue[0];
           #define K_IS(x) (stricmp (tag_k, x) == 0)
           #define V_IS(x) (stricmp (avalue, x) == 0)
           if (stricmp (aname, "v") == 0) {
+            if (K_IS ("route") && V_IS ("bicycle")) cycleNet.insert
+                  (cycleNet.end (), wayMember.begin (), wayMember.end ());
+            if ((!wayFseek || *wayFseek) &&
+                 (K_IS ("lcn_ref") || K_IS ("rcn_ref") || K_IS ("ncn_ref"))) {
+              cycleNet.push_back (ftell (pak));
+            }
+          
             int newStyle = 0;
             for (; newStyle < styleCnt && !(K_IS (style_k[newStyle]) &&
               (style_v[newStyle][0] == '\0' || V_IS (style_v[newStyle])) &&
@@ -2161,8 +2171,8 @@ int main (int argc, char *argv[])
             else if (!V_IS ("no") && !V_IS ("false") && 
               !K_IS ("sagns_id") && !K_IS ("sangs_id") && 
               !K_IS ("is_in") && !V_IS ("residential") &&
-              !K_IS ("unclassified") && !K_IS ("tertiary") &&
-              !K_IS ("secondary") && !K_IS ("primary") &&
+              !V_IS ("unclassified") && !V_IS ("tertiary") &&
+              !V_IS ("secondary") && !V_IS ("primary") && // Esp. ValidateMode
               !V_IS ("junction") && /* Not approved and when it isn't obvious
                 from the ways that it's a junction, the tag will often be
                 something ridiculous like junction=junction ! */
@@ -2209,9 +2219,14 @@ int main (int argc, char *argv[])
           else xmlFree (avalue);
           xmlFree (aname);
         } /* While it's an attribute */
+        if (relationType == 'w' && stricmp (name, "member") == 0) {
+          for (unsigned i = 0; i < wayId.size (); i += 2) {
+            if (ref == wayId[i]) wayMember.push_back (wayId[i + 1]);
+          }
+        }
         if (!wayFseek || *wayFseek) {
           if (stricmp (name, "member") == 0 && role != 'v') {
-            for (int i = 0; i < wayIdCnt; i += 2) {
+            for (unsigned i = 0; i < wayId.size (); i += 2) {
               if (ref == wayId[i]) member[role == 'f' ? 0 : 1] = wayId[i + 1];
             }
           }
@@ -2238,11 +2253,12 @@ int main (int argc, char *argv[])
       if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
         int nameIsNode = stricmp (name, "node") == 0;
         int nameIsRelation = stricmp (name, "relation") == 0;
+        if (nameIsRelation) wayMember.clear ();
         if (stricmp (name, "way") == 0 || nameIsNode || nameIsRelation) {
           w.bits += wStyle;
           if (!nameIsRelation && !nameIsNode) {
-            wayId[wayIdCnt++] = nd.id;
-            wayId[wayIdCnt++] = ftell (pak);
+            wayId.push_back (nd.id);
+            wayId.push_back (ftell (pak));
           }
           if (nameIsRelation) {
             xmlFree (nameTag);
@@ -2336,7 +2352,7 @@ int main (int argc, char *argv[])
       } // if it was </...>
       xmlFree (name);
     } // While reading xml
-    free (wayId);
+    wayId.clear ();
     if (s[0].lat && (!wayFseek || *wayFseek)) {
       fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
     }
@@ -2473,6 +2489,16 @@ int main (int argc, char *argv[])
     data = (char *) mmap (NULL, ndStart,
       PROT_READ | PROT_WRITE, MAP_SHARED, fileno (pak), 0);
     fseek (pak, ndStart, SEEK_SET);
+    REBUILDWATCH (for (unsigned i = 0; i < cycleNet.size (); i++)) {
+      wayType *way = (wayType*) (data + cycleNet[i]);
+      for (int j = StyleNr (way) + 1; j < styleCnt; j++) {
+        if (strncasecmp (style_k[j], "cyclenet", 8) == 0 &&
+            stricmp (style_k[j] + 8, style_k[StyleNr (way)]) == 0 &&
+            stricmp (style_v[j], style_v[StyleNr (way)]) == 0) {
+          way->bits = (way->bits & ~((2 << STYLE_BITS) - 1)) | j;
+        }
+      }
+    }
     REBUILDWATCH (while (fread (&ndWrite, sizeof (ndWrite), 1, pak) == 1)) {
       //if (bucket > Hash (ndWrite.lon, ndWrite.lat)) printf ("unsorted !\n");
       wayType *way = (wayType*) (data + ndWrite.wayPtr);

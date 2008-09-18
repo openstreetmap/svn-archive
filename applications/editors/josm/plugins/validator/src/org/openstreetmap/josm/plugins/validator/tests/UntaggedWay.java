@@ -109,6 +109,6 @@ public class UntaggedWay extends Test
 	@Override
 	public Command fixError(TestError testError)
 	{
-		return new DeleteCommand(testError.getPrimitives());
+		return DeleteCommand.delete(testError.getPrimitives());
 	}
 }

@@ -137,7 +137,7 @@ public class DuplicateNode extends Test
 			}
 		}
 
-		cmds.add(new DeleteCommand(nodes));
+		cmds.add(DeleteCommand.delete(nodes));
 		cmds.add(new ChangeCommand(target, newtarget));
 		return new SequenceCommand(tr("Merge Nodes"), cmds);
 	}

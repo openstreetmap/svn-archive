@@ -57,7 +57,7 @@ public class DuplicatedWayNodes extends Test {
 		}
 		if (wnew.nodes.size() < 2) {
 			// Empty way, delete
-			return new DeleteCommand(Collections.singleton(w));
+			return DeleteCommand.delete(Collections.singleton(w));
 		} else {
 			return new ChangeCommand(w, wnew);
 		}

@@ -278,37 +278,53 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:variable name="height" select="($documentHeight div 2) + ($dataHeight div 2)"/>
 
   <xsl:variable name="symbols">
-    <xsl:if test="$symbolsDir != ''">
-      <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
-      <xsl:for-each select="/rules//symbol/@ref | /rules//areaSymbol/@ref">
-          <xsl:variable name="symbolName" select="."/>
-          <xsl:variable name="file" select="document(concat($symbolsDir,'/', $symbolName, '.svg'))"/>
-          <xsl:choose>
-            <xsl:when test="$file/svg:svg/svg:defs/svg:symbol">
-              <symbol>
-                <xsl:copy-of select="$file/svg:svg/svg:defs/svg:symbol/@*"/>
-                <xsl:copy-of select="$file/svg:svg/svg:defs/svg:symbol/*"/>
-              </symbol>
-            </xsl:when>
-            <xsl:otherwise>
-              <symbol>
-                <xsl:copy-of select="$file/svg:svg/@*"/>
-                <xsl:attribute name="id">
-                  <xsl:value-of select="concat('symbol-', $symbolName)"/>
-                </xsl:attribute>
-                <xsl:copy-of select="$file/svg:svg/*"/>
+
+    <xsl:variable name="allSymbols">
+
+       <xsl:if test="$symbolsDir != ''">
+         <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
+         <xsl:for-each select="/rules//symbol/@ref | /rules//areaSymbol/@ref">
+           <xsl:variable name="symbolName" select="."/>
+           <xsl:variable name="file" select="document(concat($symbolsDir,'/', $symbolName, '.svg'))"/>
+
+           <xsl:choose>
+             <xsl:when test="$file/svg:svg/svg:defs/svg:symbol">
+               <symbol>
+                 <xsl:copy-of select="$file/svg:svg/svg:defs/svg:symbol/@*"/>
+                 <xsl:copy-of select="$file/svg:svg/svg:defs/svg:symbol/*"/>
+               </symbol>
+             </xsl:when>
+             <xsl:otherwise>
+               <symbol>
+                 <xsl:copy-of select="$file/svg:svg/@*"/>
+                 <xsl:attribute name="id">
+                   <xsl:value-of select="concat('symbol-', $symbolName)"/>
+                 </xsl:attribute>
+                 <xsl:copy-of select="$file/svg:svg/*"/>
               </symbol>
             </xsl:otherwise>
           </xsl:choose>
+        </xsl:for-each>
+      </xsl:if>
+
+      <xsl:for-each select="/rules/defs/svg:svg">
+        <symbol>
+          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="*"/>
+        </symbol>
       </xsl:for-each>
-    </xsl:if>
-    <xsl:for-each select="/rules/defs/svg:svg">
-      <symbol>
-        <xsl:copy-of select="@*"/>
-        <xsl:copy-of select="*"/>
-      </symbol>
+      <xsl:copy-of select="/rules/defs/svg:symbol"/>
+    </xsl:variable>
+
+
+    <xsl:for-each select="exslt:node-set($allSymbols)/svg:symbol">
+      <xsl:sort select="@id"/>
+
+      <xsl:if test="preceding-sibling::svg:symbol[position()=1]/@id != @id">
+        <xsl:copy-of select="."/>
+      </xsl:if>
     </xsl:for-each>
-    <xsl:copy-of select="/rules/defs/svg:symbol"/>
+
   </xsl:variable>
 
   <xsl:variable name="labels" xmlns="http://openstreetmap.org/osmarender-labels-rtf">
@@ -1409,7 +1425,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         </xsl:for-each>
       </xsl:when>
 
-      <xsl:otherwise>  -->
+      <xsl:otherwise>
         <xsl:variable name='center'>
           <xsl:call-template name="areaCenterWrapper">
 	    <xsl:with-param name="element" select="$element" />

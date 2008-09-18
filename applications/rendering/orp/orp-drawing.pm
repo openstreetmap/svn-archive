@@ -263,10 +263,7 @@ OUTER:
                 }
             }
         }
-        $writer->emptyTag("path", "id" => "area_".$_->{"id"}, "d" => $path, "style" => "fill-rule:evenodd");
-        $writer->emptyTag("use", 
-            "xlink:href" => "#area_".$_->{"id"},
-            "class" => $class);
+        $writer->emptyTag("path", "d" => $path, "style" => "fill-rule:evenodd");
     }
     $writer->endTag("g");
 }

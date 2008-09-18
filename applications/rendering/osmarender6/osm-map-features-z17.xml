@@ -1471,7 +1471,11 @@
 
         <!-- Tourist features -->
         <rule e="node" k="tourism" v="hotel">
-		<symbol ref="hotel" position="center"/>
+        	<rule e="node" k="amenity" v="restaurant">
+		</rule>
+		<else>
+		   <symbol ref="hotel" position="center"/>
+		</else>
         </rule>
         <rule e="node" k="tourism" v="hostel">
 		<symbol ref="hostel" position="center"/>
@@ -1589,7 +1593,12 @@
 		<symbol ref="pub" position="center"/>
         </rule>
         <rule e="node" k="amenity" v="restaurant">
-		<symbol ref="restaurant" position="center"/>
+        	<rule e="node" k="tourism" v="hotel">
+        	    <symbol ref="hotel_and_restaurant" position="center"/>
+		</rule>
+		<else>
+		    <symbol ref="restaurant" position="center"/>
+		</else>
         </rule>
         <rule e="node" k="amenity" v="cinema">
 		<symbol ref="cinema" position="center"/>
@@ -2031,7 +2040,7 @@
                 <text k="name" class="caption-core railway-halt-caption-core" dy="-1px"/>
             </rule>
 
-            <rule e="node" k="amenity" v="pub|restaurant" layer="5">
+            <rule e="node" k="amenity" v="pub" layer="5">
                 <text k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px"/>
                 <text k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px"/>
             </rule>
@@ -2048,17 +2057,21 @@
                 <text k="name" class="caption-casing generic-caption-casing" dy="-3px"/>
                 <text k="name" class="caption-core generic-caption-core" dy="-3px"/>
             </rule>
-            <rule e="node" k="amenity" v="shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank" layer="5">
-                <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
-                <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+            <rule e="node" k="amenity" v="restaurant|shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank" layer="5">
+                    <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
+                    <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
             </rule>
             <rule e="node" k="shop" v="supermarket" layer="5">
                 <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
                 <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
             </rule>
             <rule e="node" k="tourism" v="hotel|hostel|camp_site|information" layer="5">
-                <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
-                <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+                <rule e="node" k="amenity" v="restaurant">
+                </rule>
+                <else>
+                    <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
+                    <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+                </else>
             </rule>
             <rule e="node" k="historic" v="*" layer="5">
                 <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>

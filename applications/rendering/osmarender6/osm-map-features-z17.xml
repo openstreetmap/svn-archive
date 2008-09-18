@@ -2200,6 +2200,7 @@
 -->
 
     <!-- SVG Definitions - markers, symbols etc go here -->
+    <include ref="markers.xml"/>
     <defs>
         <style xmlns="http://www.w3.org/2000/svg" id="styles" type="text/css">
             /* DO NOT DELETE - Used by osmarender.xsl */
@@ -3860,73 +3861,20 @@
         <svg:pattern id="access-no-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
             <svg:path fill="none" stroke="#ff4040" stroke-width="0.1" d="M5,0 L0,5 M0,0 L5,5"/>
         </svg:pattern>
-
-        <svg:marker
-            id="bridge-casing-end"
-            markerUnits="strokeWidth"
-            fill='none'
-            stroke-width='0.06px'
-            viewBox='0 0 2 2'
-            refX='1'
-            refY='1'
-            markerWidth='2'
-            markerHeight='2'
-            stroke='#777777'
-            orient="auto">
-            <svg:path d="M 0.95,1.45 L 1.3,1.8 M 0.95,0.55 L 1.3,0.2" />
-        </svg:marker>
-
-        <svg:marker
-            id="bridge-casing-start"
-            markerUnits="strokeWidth"
-            fill='none'
-            stroke-width='0.06px'
-            viewBox='0 0 2 2'
-            refX='1'
-            refY='1'
-            markerWidth='2'
-            markerHeight='2'
-            stroke='#777777'
-            orient="auto">
-            <svg:path d="M 1.05,1.45 L 0.7,1.8 M 1.05,0.55 L 0.7, 0.2" />
-        </svg:marker>
-
-        <svg:marker id="marker-tunnel-start" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="strokeWidth" fill="none" stroke-width="0.5px" stroke="#777777" markerWidth="2px" markerHeight="2px" orient="auto">
-            <svg:path d="M 4,1 A5,4.25 0 0,1 4,9"/>
-        </svg:marker>
-        <svg:marker id="marker-tunnel-end" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="strokeWidth" fill="none" stroke-width="0.5px" stroke="#777777" markerWidth="2px" markerHeight="2px" orient="auto">
-            <svg:path d="M 6,1 A5,4.25 0 0,0 6,9"/>
-        </svg:marker>
-
-        <svg:marker id="marker-gate-locked" viewBox="0 0 10 10" refX="2px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.4px" stroke="#777777" markerWidth="3px" markerHeight="3px" orient="auto">
-            <svg:path d="M 1,0 L 1,10 M 3,0 L 3,10"/>
-        </svg:marker>
-        <svg:marker id="marker-gate-closed" viewBox="0 0 10 10" refX="1px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.4px" stroke="#777777" markerWidth="3px" markerHeight="3px" orient="auto">
-            <svg:path d="M 1,0 L 1,10"/>
-        </svg:marker>
-        <svg:marker id="marker-gate-open" viewBox="0 0 11 11" refX="1px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.4px" stroke="#777777" markerWidth="3px" markerHeight="3px" orient="auto">
-            <svg:path d="M1,0 L1,1 M1,2 L1,3 M1,4 L1,5 M1,6 L1,7 M1,8 L1,9 M1,10 L1,11"/>
-        </svg:marker>
-        <svg:marker id="marker-cycle-barrier" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.4px" stroke="#777777" markerWidth="3px" markerHeight="3px" orient="auto">
-            <svg:path d="M4,0 L4,5 M6,5 L6,10"/>
-        </svg:marker>
-
-        <svg:marker id="marker-stile" viewBox="0 0 10 10" refX="5px" refY="5px" markerUnits="userSpaceOnUse" fill="none" stroke-width="0.5px" stroke="#777777" markerWidth="2px" markerHeight="2px" orient="auto">
-            <svg:path d="M3.5,0 L3.5,10 M6.5,0 L6.5,10 M 10,1 L 1,10"/>
-        </svg:marker>
-
-        <svg:marker id="marker-otherway-start" viewBox="0 0 10 10" refX="-30px" refY="5px" markerUnits="userSpaceOnUse" fill="#FFFFFF" stroke-width="1px" stroke="#000000" markerWidth="1px" markerHeight="1px" orient="auto">
-            <svg:path d="M 10,4 L 4,4 L 4,2 L 0,5 L 4,8 L 4,6 L 10,6 z"/>
-        </svg:marker>
-        <svg:marker id="marker-otherway-end" viewBox="0 0 10 10" refX="30px" refY="5px" markerUnits="userSpaceOnUse" fill="#FFFFFF" stroke-width="1px" stroke="#000000" markerWidth="1px" markerHeight="1px" orient="auto">
-            <svg:path d="M 10,4 L 4,4 L 4,2 L 0,5 L 4,8 L 4,6 L 10,6 z"/>
-        </svg:marker>
-	
-	<svg:marker id="marker-piste-type-sled" viewBox="0 0 10 10" refX="-1px" refY="10px" markerUnits="userSpaceOnUse" fill="#000000" stroke="none" markerWidth="7px" markerHeight="7px" orient="auto">
-		<svg:path d="M 0,0 L 0,10 L 10,10 L 10,0 L 0,0 z M 0.1,0.1 L 9.9,0.1 L 9.9,9.9 L 0.1,9.9 L 0.1,0.1 z M 8.5,4.9 C 8.5,5.8 7.8,6.6 6.9,6.6 L 5.6,6.6 L 5.6,5.3 L 6.9,5.3 L 6.9,5 L 1.9,5 L 1.9,5.3 L 2.9,5.3 L 2.9,6.6 L 1.2,6.6 L 1.2,6.9 L 6.9,6.9 C 7.9,6.9 8.7,5.9 8.7,4.9 L 8.5,4.9 z M 3.1,5.3 L 5.4,5.3 L 5.4,6.6 L 3.1,6.6 L 3.1,5.3 z"/>
+	<svg:marker fill="none" id="bridge-casing-start" markerHeight="2" markerUnits="strokeWidth" markerWidth="2" orient="auto" refX="1" refY="1" stroke="#777777" stroke-width="0.06px" viewBox="0 0 2 2">
+		<svg:path d="M 1.05,1.45 L 0.7,1.8 M 1.05,0.55 L 0.7, 0.2"/>
 	</svg:marker>
-	<svg:marker id="marker-piste-type-nordic" viewBox="0 0 10 10" refX="-1px" refY="10px" markerUnits="userSpaceOnUse" fill="#000000" stroke="none" markerWidth="7px" markerHeight="7px" orient="auto">
-		<svg:path d="M 0,0 L 0,10 L 10,10 L 10,0 L 0,0 z M 0.1,0.1 L 9.9,0.1 L 9.9,9.9 L 0.1,9.9 L 0.1,0.1 z M 7,1.1 C 6.6,1.1 6.3,1.4 6.3,1.7 C 6.3,2.1 6.6,2.4 7,2.4 C 7.3,2.4 7.6,2.1 7.6,1.7 C 7.6,1.4 7.3,1.1 7,1.1 z M 6,2.2 L 4.4,2.5 L 3.5,3.7 L 3.5,3.8 L 0.5,3.8 L 0.5,3.9 L 3.5,3.9 L 3.6,4 L 3.7,3.9 L 4.5,2.9 L 5.3,2.9 L 4.1,4.3 L 3,6.1 L 1,6.9 L 1.3,7.1 L 3.3,6.4 L 4.6,5.2 L 5.8,6.3 L 5.4,8.5 L 5.8,8.5 L 6.3,6.3 L 5.1,4.8 L 6.5,3.1 L 7.6,3.9 L 8.5,3.1 L 7.7,8.6 L 3.5,8.6 L 0.8,6.9 L 0.4,6.9 L 3.1,8.6 L 2.1,8.6 L 2.1,8.9 L 8.8,8.9 L 9.2,8.4 L 8.7,8.6 L 7.9,8.6 L 8.6,3 L 8.7,2.9 L 8.7,2.6 L 7.6,3.4 L 6.5,2.6 L 6,2.2 z"/>
+	<svg:marker fill="none" id="bridge-casing-end" markerHeight="2" markerUnits="strokeWidth" markerWidth="2" orient="auto" refX="1" refY="1" stroke="#777777" stroke-width="0.06px" viewBox="0 0 2 2">
+		<svg:path d="M 0.95,1.45 L 1.3,1.8 M 0.95,0.55 L 1.3,0.2"/>
+	</svg:marker>
+	<svg:marker fill="none" id="marker-gate-locked" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="2px" refY="5px" stroke="#777777" stroke-width="0.4px" viewBox="0 0 10 10">
+		<svg:path d="M 1,0 L 1,10 M 3,0 L 3,10"/>
+	</svg:marker>
+	<svg:marker fill="none" id="marker-gate-closed" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#777777" stroke-width="0.4px" viewBox="0 0 10 10">
+		<svg:path d="M 1,0 L 1,10"/>
+	</svg:marker>
+	<svg:marker fill="none" id="marker-gate-open" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#777777" stroke-width="0.4px" viewBox="0 0 11 11">
+		<svg:path d="M1,0 L1,1 M1,2 L1,3 M1,4 L1,5 M1,6 L1,7 M1,8 L1,9 M1,10 L1,11"/>
 	</svg:marker>
     </defs>
 </rules>

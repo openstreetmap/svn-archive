@@ -56,6 +56,17 @@ sub ZXY
 {
     my $self = shift;
     my ($new_z, $new_x, $new_y) = @_;
+
+    if (defined($new_z) and defined($new_x) and defined($new_y)) {
+        my $maxCoords = (2 ** $new_z - 1);
+        if (($new_x < 0) or ($new_x > $maxCoords) or ($new_y < 0) or ($new_y > $maxCoords)) {
+            throw RequestError "Coordinates ($new_x, $new_y) out of bounds (0..$maxCoords) for zoom $new_z";
+        }
+        $self->{MIN_Z} = $new_z;
+        $self->{X} = $new_x;
+        $self->{Y} = $new_y;
+    }
+
     return ($self->Z($new_z),$self->X($new_x),$self->Y($new_y))
 }
 
@@ -69,35 +80,29 @@ sub ZXY_str
 }
 
 #-----------------------------------------------------------------------------
-# set and/or retrieve the z of a request
+# retrieve (read-only) the zoom level of a request
 #-----------------------------------------------------------------------------
 sub Z
 {
     my $self = shift;
-    my $new_z = shift;
-    if (defined($new_z)) {$self->{MIN_Z} = $new_z;}
     return $self->{MIN_Z}
 }
 
 #-----------------------------------------------------------------------------
-# set and/or retrieve the x of a request
+# retrieve (read-only) the x coordinate of a request
 #-----------------------------------------------------------------------------
 sub X
 {
     my $self = shift;
-    my $new_x = shift;
-    if (defined($new_x)) {$self->{X} = $new_x;}
     return $self->{X}
 }
 
 #-----------------------------------------------------------------------------
-# set and/or retrieve the y of a request
+# retrieve (read-only) the y coordinate of a request
 #-----------------------------------------------------------------------------
 sub Y
 {
     my $self = shift;
-    my $new_y = shift;
-    if (defined($new_y)) {$self->{Y} = $new_y;}
     return $self->{Y}
 }
 

@@ -440,18 +440,38 @@ foreach my $relation (values(%$relation_storage))
 {
     if ($relation->{'tags'}->{'type'} eq 'label')
     {
-        my $labelRelationInfo = {};
-        $labelRelationInfo->{"relation"} = $relation;
-        $labelRelationInfo->{"used"} = 0;
+        my $labelRelationInfo = [];
+
+        # make list of labels
         foreach my $relpair (@{$relation->{"members"}})
         {
-            # for each referenced area make list of it's labels
             my ($role, $ref) = @$relpair;
-            if ($relpair->[0] eq 'object')
+            if ($role eq 'label' && ref $ref eq 'node')
             {
-                $labelRelations->{$relpair->[1]} = $labelRelationInfo;
+                push @$labelRelationInfo, $ref;
             }
         }
+
+        # assing labels to first object, other object will be empty
+        my $first = 1;
+        foreach my $relpair (@{$relation->{"members"}})
+        {
+            my ($role, $ref) = @$relpair;
+
+            if ($role eq 'object')
+            {
+                if ($first)
+                {
+                    $labelRelations->{$ref->{'id'}} = $labelRelationInfo;
+                    $first = 0;
+                }
+                else
+                {
+                    $labelRelations->{$ref->{'id'}} = [];
+                }
+            }
+        }
+
     }
 }
 

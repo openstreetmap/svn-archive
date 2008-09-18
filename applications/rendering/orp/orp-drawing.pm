@@ -545,8 +545,23 @@ sub draw_area_text
         my $text = substitute_text($textnode, $_);
         next unless $text ne '';
 
-        my $center = get_area_center($_);
-        render_text($textnode, $text, $center);
+        my $labelRelation = $labelRelations->{$_->{'id'}};
+        if (defined($labelRelation))
+        {
+            # Draw text at users specifed position
+            foreach my $ref (@{$labelRelation})
+            {
+                render_text($textnode, $text, [$ref->{'lat'}, $ref->{'lon'}]);
+            }
+        }
+        else
+        {
+            # Draw text at area center
+            my $center = get_area_center($_);
+            render_text($textnode, $text, $center);
+        }
+
+
     }
 }
 
@@ -591,21 +606,12 @@ sub draw_area_symbols
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
 
-        my $labelRelation = $labelRelations->{$_};
+        my $labelRelation = $labelRelations->{$_->{'id'}};
         if (defined($labelRelation))
         {
-            # Draw icons at users specifed position
-            if (!$labelRelation->{"used"})
+            foreach my $ref (@{$labelRelation})
             {
-               $labelRelation->{"used"} = 1; # One label can be shared by more areas, draw only once
-               foreach my $relpair (@{$labelRelation->{'relation'}->{'members'}})
-               {
-                   (my $role, my $ref) = @$relpair;
-                   if ($role eq 'label' && ref $ref eq 'node')
-                   {
-                       draw_symbol($symbolnode, project[$ref->{'lat'}, $ref->{'lon'}]);
-                   }
-               }
+                draw_symbol($symbolnode, project[$ref->{'lat'}, $ref->{'lon'}]);
             }
         }
         else

@@ -93,27 +93,16 @@ sub generate
     
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     
-    my ($N, $S) = Project($req->Y, $req->Z);
-    my ($W, $E) = ProjectL($req->X, $req->Z);
-    $self->{bbox}= bbox->new($N,$E,$S,$W);
-
+    $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
+    print "BBox: " . join(",", $self->{bbox}->N, $self->{bbox}->S) . "\n";
     $::progress = 0;
     $::progressPercent = 0;
     $::progressJobs++;
     $::currentSubTask = "Download";
     
-    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f",
+                            $req->ZXY, ($self->{bbox}->N+$self->{bbox}->S)/2, ($self->{bbox}->W+$self->{bbox}->E)/2),1,0);
     
-    my $maxCoords = (2 ** $req->Z - 1);
-    
-    if ( ($req->X < 0) or ($req->X > $maxCoords) 
-      or ($req->Y < 0) or ($req->Y > $maxCoords) )
-    {
-        my $reason = "Coordinates out of bounds (0..$maxCoords)";
-        ::statusMessage($reason, 1, 0);
-        throw TilesetError $reason;
-    }
-
     #------------------------------------------------------
     # Download data (returns full path to data.osm or 0)
     #------------------------------------------------------
@@ -178,7 +167,7 @@ sub generate
 
         # Render it as loads of recursive tiles
         # temporary debug: measure time it takes to render:
-        my $empty = $self->RenderTile($layer, $req->Y, $req->Z, $N, $S, $W, $E, 0,0 , $ImgW, $ImgH, $ImgH);
+        my $empty = $self->RenderTile($layer, $req->Y, $req->Z, $self->{bbox}->extents, 0,0 , $ImgW, $ImgH, $ImgH);
 
         #----------
         # This directory is now ready for upload.
@@ -702,7 +691,7 @@ sub cleanup
 }
 
 #----------------------------------------------------------------------------------------
-# bbox->new(N,E,S,w)
+# bbox->new(N,E,S,W)
 package bbox;
 sub new
 {
@@ -718,6 +707,11 @@ sub E { my $self = shift; return $self->{E};}
 sub S { my $self = shift; return $self->{S};}
 sub W { my $self = shift; return $self->{W};}
 
+sub extents
+{
+    my $self = shift;
+    return ($self->{N, E, S, W});
+}
 
 #----------------------------------------------------------------------------------------
 # error class for Tileset

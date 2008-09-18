@@ -552,7 +552,6 @@ sub UpdateClient #
     my $svn_status = `$Cmd`;
 
     chomp $svn_status;
-    $svn_status =~ s/^M.*\n?//mg;
 
     if (1 || $svn_status eq '')
     {

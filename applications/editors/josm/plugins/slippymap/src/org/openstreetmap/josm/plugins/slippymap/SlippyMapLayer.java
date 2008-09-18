@@ -56,6 +56,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     public SlippyMapLayer()
     {
         super(tr("Slippy Map"));
+	background = true;
 
         clearTileStorage();
 

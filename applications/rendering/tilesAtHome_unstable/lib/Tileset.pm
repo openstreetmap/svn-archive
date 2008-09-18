@@ -437,7 +437,7 @@ sub runPreprocessors
         }
         elsif ($preprocessor eq "area-center")
         {
-           if ($Config->get("Osmarender") eq "XSLT" && $Config->get("JavaAvailable"))
+           if ($Config->get("JavaAvailable"))
            {
 	       if ($Config->get("JavaVersion") >= 1.6)
                {

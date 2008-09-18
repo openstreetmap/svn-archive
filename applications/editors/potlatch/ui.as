@@ -274,7 +274,7 @@
 			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(Stage.width,0);
 			lineTo(Stage.width,bh); lineTo(0,bh); lineTo(0,0); endFill();
 		}
-		this.blank.onPress=function() {};
+		delete this.blank.onPress;
 		this.blank.useHandCursor=false;
 
 		// Create dialogue box

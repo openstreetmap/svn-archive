@@ -111,7 +111,7 @@
 			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
 			this.clear(); return;
 		} else {
-			way.path[point][4]=params[2];
+			way.path[point].attr=params[2];
 			way.clean=false;
 			way.select(); _root.map.anchors[point].select();
 		}
@@ -141,10 +141,11 @@
 
 		// reinstate at each place
 		for (qway in waylist) {
-			_root.map.ways[waylist[qway]].path.splice(poslist[qway],0,id);
-			_root.map.ways[waylist[qway]].clean=false;
-			_root.map.ways[waylist[qway]].redraw();
 			last=waylist[qway];	// select last one
+			_root.nodes[id].addWay(last);
+			_root.map.ways[last].path.splice(poslist[qway],0,_root.nodes[id]);
+			_root.map.ways[last].clean=false;
+			_root.map.ways[last].redraw();
 		}
 		stopDrawing();
 		_root.map.ways[last].select();

@@ -4,7 +4,7 @@
 
 	function getHistory() {
 		if      (_root.poiselected>0)    { remote.call('getnode_history',historyresponder,Number(_root.poiselected)); }
-		else if (_root.pointselected>=0) { var n=_root.ws.path[_root.pointselected];
+		else if (_root.pointselected>=0) { var n=_root.ws.path[_root.pointselected].id;
 										   if (n>0) { remote.call('getnode_history',historyresponder,n); } }
 		else if (_root.wayselected>0)    { remote.call('getway_history' ,historyresponder,Number(_root.wayselected)); };
 	};

@@ -92,8 +92,8 @@
 		this._y=_root.map._ymouse;
 	};
 	POI.prototype.endDrag=function() {
-		this.onMouseMove=function() {};
-		this.onMouseUp  =function() {};
+		delete this.onMouseMove;
+		delete this.onMouseUp;
 		var t=new Date();
 		var xdist=Math.abs(_root.map._xmouse-_root.firstxmouse);
 		var ydist=Math.abs(_root.map._ymouse-_root.firstymouse);
@@ -121,8 +121,11 @@
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
 		redrawRelationsForMember('node', this._name);
 	};
-	// POI.prototype.recolour=function() { };
-	// ** above will recolour as red/green depending on whether locked
+	POI.prototype.recolour=function() { 
+		this.redden=new Color(this);
+		if (this.locked) { this.redden.setTransform(to_red); }
+					else { this.redden.setTransform(to_normal); }
+	};
 	
 	POI.prototype.saveUndo=function(str) {
 		// ** localisation not done

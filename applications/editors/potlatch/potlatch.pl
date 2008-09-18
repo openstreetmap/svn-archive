@@ -33,7 +33,7 @@
 
 	$m = new SWF::Movie();
 	$m->setDimension(700, 600);
-	$m->setRate(50);
+	$m->setRate(12);
 	$m->setBackground(0xFF,0xFF,0xFF);
 
 	require "potlatch_assets.pl";

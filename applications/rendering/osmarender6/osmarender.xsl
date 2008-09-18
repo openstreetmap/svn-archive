@@ -1030,16 +1030,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:template>
 
 
-  <xsl:template name="renderArea">
-    <xsl:param name="instruction"/>
-    <xsl:param name="pathId"/>
-
-    <use xlink:href="#{$pathId}">
-      <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
-    </use>
-  </xsl:template>
-
-
   <!-- Templates to process line, circle, text, etc. instructions -->
   <!-- Each template is passed a variable containing the set of elements that need to
          be processed.  The set of elements is already determined by the rules, so
@@ -1160,11 +1150,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <!-- DODI: do now draw empty ways/areas-->
     <xsl:if test ="$pathArea!=''">
-      <path id="area_{@id}" d="{$pathArea}"/>
-      <xsl:call-template name="renderArea">
-        <xsl:with-param name="instruction" select="$instruction"/>
-        <xsl:with-param name="pathId" select="concat('area_',@id)"/>
-      </xsl:call-template>
+      <path d="{$pathArea}"/>
     </xsl:if>
   </xsl:template>
 

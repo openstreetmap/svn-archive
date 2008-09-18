@@ -320,7 +320,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:for-each select="exslt:node-set($allSymbols)/svg:symbol">
       <xsl:sort select="@id"/>
 
-      <xsl:if test="preceding-sibling::svg:symbol[position()=1]/@id != @id">
+      <xsl:variable name="prev" select="preceding-sibling::svg:symbol[position()=1]"/>
+
+      <xsl:if test="not($prev) or $prev/@id != @id">
         <xsl:copy-of select="."/>
       </xsl:if>
     </xsl:for-each>
@@ -844,9 +846,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Render the appropriate attribute of the current <node> element using the formatting of the current <text> instruction -->
   <xsl:template name="renderText">
     <xsl:param name="instruction"/>
+    <xsl:param name="lon"/>
+    <xsl:param name="lat"/>
+    <xsl:param name="text"/>
 
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
+    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($lon))*10000*$scale)"/>
+    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($lat))*10000*$scale*$projection)"/>
 
     <text>
       <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
@@ -857,7 +862,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="$y"/>
       </xsl:attribute>
       <xsl:call-template name="getSvgAttributesFromOsmTags"/>
-      <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
+      <xsl:value-of select="$text"/>
     </text>
   </xsl:template>
 
@@ -1344,33 +1349,48 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:template name="renderAreaText">
     <xsl:param name="instruction"/>
 
-    <xsl:variable name='center'>
-      <xsl:call-template name="areaCenterWrapper">
-	<xsl:with-param name="element" select="." />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:variable name="element" select="."/>
+    <xsl:variable name="areaLabels" select="exslt:node-set($labels)/labels:area[@id = $element/@id]"/>
+    <xsl:variable name="text" select="tag[@k=$instruction/@k]/@v"/>
 
-    <xsl:message>
-      areaCenter: <xsl:value-of select="$center" />
-    </xsl:message>
+    <xsl:choose>
+      <xsl:when test="$areaLabels">
+        <xsl:for-each select="$areaLabels/labels:label">
+          <xsl:variable name="label" select="."/>
+          <xsl:for-each select="$data">
+            <xsl:call-template name="renderText">
+              <xsl:with-param name="instruction" select="$instruction"/>
+              <xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
+              <xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
+              <xsl:with-param name="text" select="$text"/>
+            </xsl:call-template>
+          </xsl:for-each>
+        </xsl:for-each>
+      </xsl:when>
 
-    <xsl:variable name="centerLon" select="substring-before($center, ',')" />
-    <xsl:variable name="centerLat" select="substring-after($center, ',')" />
+      <xsl:otherwise>
+        <xsl:variable name='center'>
+          <xsl:call-template name="areaCenterWrapper">
+	    <xsl:with-param name="element" select="." />
+          </xsl:call-template>
+        </xsl:variable>
 
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($centerLon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($centerLat))*10000*$scale*$projection)"/>
+        <xsl:message>
+          areaCenter: <xsl:value-of select="$center" />
+        </xsl:message>
 
-    <text>
-      <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
-      <xsl:attribute name="x">
-        <xsl:value-of select="$x"/>
-      </xsl:attribute>
-      <xsl:attribute name="y">
-        <xsl:value-of select="$y"/>
-      </xsl:attribute>
-      <xsl:call-template name="getSvgAttributesFromOsmTags"/>
-      <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
-    </text>
+        <xsl:call-template name="renderText">
+          <xsl:with-param name="instruction" select="$instruction"/>
+          <xsl:with-param name="lon" select="substring-before($center, ',')"/>
+          <xsl:with-param name="lat" select="substring-after($center, ',')"/>
+          <xsl:with-param name="text" select="$text"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+
+    </xsl:choose>
+
+
+
   </xsl:template>
 
   <!-- Process an <areaSymbol> instruction -->
@@ -2386,6 +2406,9 @@ against infinite loops -->
     <xsl:for-each select="$elements[name()='node'][tag[@k=$instruction/@k]]">
       <xsl:call-template name="renderText">
         <xsl:with-param name="instruction" select="$instruction"/>
+        <xsl:with-param name="lon" select="@lon"/>
+        <xsl:with-param name="lat" select="@lat"/>
+        <xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
       </xsl:call-template>
     </xsl:for-each>
 

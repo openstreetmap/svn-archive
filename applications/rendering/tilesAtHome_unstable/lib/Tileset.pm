@@ -94,14 +94,13 @@ sub generate
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
-
+    print "BBox: " . join(",", $self->{bbox}->extents) . "\n";
     $::progress = 0;
     $::progressPercent = 0;
     $::progressJobs++;
     $::currentSubTask = "Download";
     
-    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f",
-                            $req->ZXY, ($self->{bbox}->N+$self->{bbox}->S)/2, ($self->{bbox}->W+$self->{bbox}->E)/2),1,0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, $self->{bbox}->center), 1, 0);
     
     #------------------------------------------------------
     # Download data (returns full path to data.osm or 0)
@@ -710,7 +709,13 @@ sub W { my $self = shift; return $self->{W};}
 sub extents
 {
     my $self = shift;
-    return ($self->{N, E, S, W});
+    return ($self->{N}, $self->{E}, $self->{S}, $self->{W});
+}
+
+sub center
+{
+    my $self = shift;
+    return (($self->{N} + $self->{S}) / 2, ($self->{E} + $self->{W}) / 2);
 }
 
 #----------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeSet;
 import java.io.*;
@@ -38,8 +39,8 @@ public class WMSPlugin extends Plugin {
 
 	static ArrayList<WMSInfo> wmsList = new ArrayList<WMSInfo>();
 
-       // remember state of menu item to restore on changed preferences
-       static private boolean menuEnabled = false;
+	// remember state of menu item to restore on changed preferences
+	static private boolean menuEnabled = false;
 	
 	public WMSPlugin() {
 		try
@@ -81,7 +82,6 @@ public class WMSPlugin extends Plugin {
 		String name = null;
 		String url = null;
 		int lastid = -1;
-		boolean isYahoo = false;
 		for (String key : keys) {
 			String[] elements = key.split("\\.");
 			if (elements.length != 4) continue;
@@ -91,47 +91,21 @@ public class WMSPlugin extends Plugin {
 				continue;
 			}
 			if (prefid != lastid) {
-				if ((name != null) && (url != null)) {
-					wmsList.add(new WMSInfo(name, url, prefid));
-					if(url.startsWith("yahoo://")) isYahoo = true;
-				}
-				name = null; url = null; lastid = prefid; 
+				name = url = null; lastid = prefid;
 			}
-			if (elements[3].equals("name")) {
-				name=prefs.get(key);
-			} else if (elements[3].equals("url")) {
+			if (elements[3].equals("name"))
+				name = prefs.get(key);
+			else if (elements[3].equals("url"))
 				url = prefs.get(key);
-			}		
+			if (name != null && url != null)
+				wmsList.add(new WMSInfo(name, url, prefid));
 		}
-		if ((name != null) && (url != null)) {
-			wmsList.add(new WMSInfo(name, url, prefid));
-			if(url.startsWith("yahoo://")) isYahoo = true;
-		}
+		setDefault(tr("Landsat"), "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
+		"layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg");
+		setDefault(tr("NPE Maps"), "http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&");
+		setDefault(tr("YAHOO"), "yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
 
-		// if no (valid) prefs are set, initialize to a sensible default.
-		if (wmsList.isEmpty()) {
-			WMSInfo landsatInfo = new WMSInfo(tr("Landsat"),
-					"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
-					"layers=global_mosaic&styles=&srs=EPSG:4326&"+
-					"format=image/jpeg", 1);
-			landsatInfo.save();
-			wmsList.add(landsatInfo);
-			
-			WMSInfo npeInfo = new WMSInfo(tr("NPE Maps"),
-					"http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&", 2);
-			npeInfo.save();
-			wmsList.add(npeInfo);
-		}
-		if(!isYahoo){ //add Yahoo to the list, if there isn't
-			int maxKey = 0;
-			for(WMSInfo in : wmsList)
-				if(maxKey < in.prefid)maxKey = in.prefid;
-			WMSInfo yahooInfo = new WMSInfo(tr("YAHOO"),
-					"yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout", maxKey+1);
-			yahooInfo.save();
-			wmsList.add(yahooInfo);
-		}
-		
+		Collections.sort(wmsList);
 		JMenuBar menu = Main.main.menu;
 
 		if (wmsJMenu == null) {
@@ -158,7 +132,28 @@ public class WMSPlugin extends Plugin {
 		}));
 		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new Help_WMSmenuAction()));
-               setEnabledAll(menuEnabled);
+		setEnabledAll(menuEnabled);
+	}
+
+	/* add a default entry in case the URL does not yet exist */
+	private static void setDefault(String name, String url)
+	{
+		String testurl = url.replaceAll("=", "_");
+		if(!Main.pref.getBoolean("wmsplugin.default."+testurl))
+		{
+			Main.pref.put("wmsplugin.default."+testurl, true);
+			int id = -1;
+			for(WMSInfo i : wmsList)
+			{
+				if(url.equals(i.url))
+					return;
+				if(i.prefid > id)
+					id = i.prefid;
+			}
+			WMSInfo newinfo = new WMSInfo(name, url, id+1);
+			newinfo.save();
+			wmsList.add(newinfo);
+		}
 	}
 
 	public static Grabber getGrabber(String _baseURL, Bounds _b, Projection _proj,

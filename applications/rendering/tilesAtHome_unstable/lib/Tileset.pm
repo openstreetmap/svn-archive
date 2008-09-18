@@ -94,7 +94,7 @@ sub generate
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
-    print "BBox: " . join(",", $self->{bbox}->N, $self->{bbox}->S) . "\n";
+
     $::progress = 0;
     $::progressPercent = 0;
     $::progressJobs++;

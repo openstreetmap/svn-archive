@@ -274,8 +274,8 @@
 		this.relarr = [];
 		switch (proptype) {
 			case 'point':
-				this.proparr=nodes[_root.ws.path[_root.pointselected]].attr;
-				this.relarr=getRelationsForNode(_root.ws.path[_root.pointselected]);
+				this.proparr=_root.ws.path[_root.pointselected].attr;
+				this.relarr=getRelationsForNode(_root.ws.path[_root.pointselected].id);
 				break;
 			case 'POI':
 				this.proparr=_root.map.pois[poiselected].attr;
@@ -432,7 +432,7 @@
 				this.startDrag(false,0,this._y,this._parent.mwidth,this._y);
 			};
 			this.scrollbar.onRelease=function() {
-				this.onMouseMove=null;
+				delete this.onMouseMove;
 				this.stopDrag();
 			};
 		}
@@ -442,8 +442,8 @@
 		var i,proparr,relarr;
 		this.saveUndo();
 		switch (this.proptype) {
-			case 'point':	proparr=nodes[_root.savedpointway.path[_root.saved['point']]].attr; 
-							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']]);
+			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']].attr; 
+							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']].id);
 							break;
 			case 'POI':		proparr=_root.saved['POI'].attr;
 							relarr=getRelationsForNode(_root.saved['POI']._name);
@@ -460,7 +460,7 @@
 					// ignore name and ref if SHIFT pressed
 				} else {
 					switch (this.proptype) {
-						case 'point':	j=nodes[_root.savedpointway.path[_root.saved['point']]].attr[i]; break;
+						case 'point':	j=_root.savedpointway.path[_root.saved['point']].attr[i]; break;
 						case 'POI':		j=_root.saved['POI'].attr[i]; break;
 						case 'way':		j=_root.saved['way'].attr[i]; break;
 					}
@@ -473,7 +473,7 @@
 		for (i in relarr) {
 			var r=_root.map.relations[relarr[i]];	// reference to this relation
 			switch (this.proptype) {
-				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected],r.getNodeRole(_root.savedpointway.path[_root.saved['point']])); break;
+				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected].id,r.getNodeRole(_root.savedpointway.path[_root.saved['point']].id)); break;
 				case 'POI':		r.setNodeRole(poiselected,r.getNodeRole(_root.saved['POI']._name)); break;
 				case 'way':		r.setWayRole (wayselected,r.getWayRole (_root.saved['way']._name)); break;
 			}
@@ -648,7 +648,7 @@
 	KeyValue.prototype.getValueFromObject=function(k) {
 		var v;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=nodes[_root.ws.path[_root.pointselected]].attr[k]; break;
+			case 'point':	v=_root.ws.path[_root.pointselected].attr[k]; break;
 			case 'POI':		v=_root.map.pois[poiselected].attr[k]; break;
 			case 'way':		v=_root.ws.attr[k]; break;
 			case 'relation':v=_root.editingrelation.attr[k]; break;
@@ -696,7 +696,7 @@
 	
 	function setValueInObject(proptype,k,v) {
 		switch (proptype) {
-			case 'point':	var id=_root.ws.path[_root.pointselected];
+			case 'point':	var id=_root.ws.path[_root.pointselected].id;
 							nodes[id].attr[k]=v; 
 							nodes[id].tagged=hasTags(nodes[id].attr);
 							_root.ws.clean=false; break;
@@ -718,7 +718,7 @@
 			// field has been renamed, so delete old one and set new one
 			// (temporary references used to get around Ming delete bug)
 			switch (tf._parent._parent._parent.proptype) {
-				case 'point':	var noderef=nodes[_root.ws.path[_root.pointselected]];
+				case 'point':	var noderef=_root.ws.path[_root.pointselected];
 								delete noderef.attr[tf._parent.lastkey];
 								_root.ws.clean=false; break;
 				case 'POI':		var poiref=_root.map.pois[poiselected];
@@ -795,7 +795,7 @@
 	RelMember.prototype.getRole=function() {
 		var v;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=this.rel.getNodeRole(_root.ws.path[_root.pointselected]); break;
+			case 'point':	v=this.rel.getNodeRole(_root.ws.path[_root.pointselected].id); break;
 			case 'POI':		v=this.rel.getNodeRole(poiselected); break;
 			case 'way':		v=this.rel.getWayRole(wayselected); break;
 		}
@@ -806,7 +806,7 @@
 	RelMember.prototype.setRole=function(tf) {
 		var role = tf.text;
 		switch (this._parent._parent.proptype) {
-			case 'point':	v=this.rel.setNodeRole(_root.ws.path[_root.pointselected], role); break;
+			case 'point':	v=this.rel.setNodeRole(_root.ws.path[_root.pointselected].id, role); break;
 			case 'POI':		v=this.rel.setNodeRole(poiselected, role); break;
 			case 'way':		v=this.rel.setWayRole(wayselected, role); break;
 		}
@@ -814,7 +814,7 @@
 
 	RelMember.prototype.removeRelation=function() {
 		switch (this._parent._parent.proptype) {
-			case 'point': this.rel.removeNode(_root.ws.path[_root.pointselected]); break;
+			case 'point': this.rel.removeNode(_root.ws.path[_root.pointselected].id); break;
 			case 'POI': this.rel.removeNode(poiselected); break;
 			case 'way': this.rel.removeWay(wayselected); break;
 		}

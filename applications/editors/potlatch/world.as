@@ -84,6 +84,14 @@
 //		if (winie) { fscommand("maplinks",centrelong(0),centrelat(0),_root.scale); } else { 
 		getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")");
 	}
+	
+	// maximiseSWF - call JavaScript to maximise/minimise
+	
+	function maximiseSWF() {
+		if (_root.maximised) { getURL("javascript:minimiseMap()"); }
+						else { getURL("javascript:maximiseMap()"); }
+		_root.maximised=!_root.maximised;
+	}
 
 	// =====================================================================================
 	// Zoom

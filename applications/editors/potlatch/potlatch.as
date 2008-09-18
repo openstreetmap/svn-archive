@@ -103,7 +103,7 @@
 	var newwayid=-1;				// new way ID		(for those not yet saved)
 	var newnodeid=-2;				// new node ID		(for those not yet saved)
 	var newpoiid=-1;				// new POI ID		(for those not yet saved)
-	var nodes=new Array();			// array of nodes
+	var nodes=new Object();			// hash of nodes
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
 	var redopropertywindow=null;	// need to redraw property window after deletion?
@@ -116,7 +116,8 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10b";	// current version
+	var signature="Potlatch 0.10c";	// current version
+	var maximised=false;			// minimised/maximised?
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
@@ -214,25 +215,7 @@
 
 	_root.panel.attachMovie("padlock","padlock",41);
 	with (_root.panel.padlock) { _y=32; _visible=false; };
-	_root.panel.padlock.onPress=function() {
-		if (_root.wayselected) {
-			if (_root.ws.path.length>200 && _root.ws.oldversion==0) {
-				setTooltip(iText("too long to unlock:\nplease split into\nshorter ways",'hint_toolong'));
-			} else {
-				_root.ws.locked=false;
-				_root.ws.clean=false;
-				_root.ws.redraw();
-				_root.panel.padlock._visible=false;
-				markClean(false);
-			}
-		} else if (_root.poiselected) {
-			_root.map.pois[poiselected].locked=false;
-			_root.map.pois[poiselected].clean=false;
-//			_root.map.pois[poiselected].recolour();
-			_root.panel.padlock._visible=false;
-			markClean(false);
-		}
-	};
+	_root.panel.padlock.onPress=function() { keyLock(); };
 
 	_root.createEmptyMovieClip("pointer",0xFFFFFF);
 
@@ -299,6 +282,9 @@
 	// Colour transform
 	
 	to_black  =new Object(); to_black.ra=to_black.ga=to_black.ba=-100;
+	to_red	  =new Object(); to_red.rb=255; to_red.gb=0;
+	to_normal =new Object(); to_normal.ra=to_normal.ga=to_normal.ba=100;
+							 to_normal.rb=to_normal.gb=to_normal.bb=0;
 
 	// Text fields
 
@@ -403,10 +389,8 @@
 	}
 
 	function endMapDrag() {
-//		_root.map.onMouseMove=function() {};
-//		_root.map.onMouseUp  =function() {};
-		_root.onMouseMove=function() {};
-		_root.onMouseUp  =function() {};
+		delete _root.onMouseMove;
+		delete _root.onMouseUp;
 		if (mapDragged()) {
 			redrawBackground();
 			updateLinks();
@@ -484,7 +468,7 @@
 					updateButtons();
 					updateScissors(false);
 				}
-				addEndPoint(newnodeid);
+				addEndPoint(_root.nodes[newnodeid]);
 				restartElastic();
 
 			// Deselecting a way
@@ -640,6 +624,8 @@
 			case '+':		_root.panel.properties.enterNewAttribute(); break;	// '+' - add new attribute (107/187)
 			case '-':		keyDelete(0); break;								// '-' - delete node from this way only (189)
 			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
+			case 'M':		maximiseSWF(); break;								// 'M' - maximise/minimise Potlatch
+			case 'K':		keyLock(); break;									// 'K' - lock item
 //			default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}
@@ -650,6 +636,36 @@
 	function endCount(id)	{ z=new Date(); zz=Math.floor((z.getTime()-_root.startTime)*100);
 							if (zz>100) { _root.chat.text+=id+":"+zz+";"; } }
 
+	function showObjects(z,indnt) {
+		for (var i in z) {
+			_root.chat.text+=indnt+i+" ("+typeof(z[i])+")\n";
+			if (typeof(z[i])=='movieclip' || typeof(z[i])=='object') {
+				showObjects(z[i],indnt+" ");
+			}
+		}
+	}
+	
+	function showWaysForNode() {
+		var z=_root.ws.path[pointselected].ways;
+		_root.coordmonitor.text="";
+		for (i in z) { _root.coordmonitor.text+=i+","; }
+	}
+
+	function keyLock() {
+		_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
+		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>200 && _root.ws.oldversion==0) {
+			setTooltip(iText("too long to unlock:\nplease split into\nshorter ways",'hint_toolong'));
+		} else if (_root.wayselected) {
+			_root.ws.locked=!_root.ws.locked;
+			_root.ws.redraw();
+			_root.panel.padlock._visible=_root.ws.locked;
+		} else if (_root.poiselected) {
+			_root.map.pois[poiselected].locked=!_root.map.pois[poiselected].locked;
+			_root.map.pois[poiselected].recolour();
+			_root.panel.padlock._visible=_root.map.pois[poiselected].locked;
+		}
+	}
+
 	function keyDelete(doall) {
 		if (_root.poiselected) {
 			// delete POI
@@ -658,9 +674,10 @@
 		} else if (_root.drawpoint>-1) {
 			// 'backspace' most recently drawn point
 			_root.undo.append(UndoStack.prototype.undo_deletepoint,
-							  new Array(deepCopy(nodes[_root.ws.path[drawpoint]]),
+							  new Array(deepCopy(_root.ws.path[drawpoint]),
 										[wayselected],[drawpoint]),
 							  iText("deleting a point",'action_deletepoint'));
+			_root.ws.path[drawpoint].removeWay(_root.wayselected);
 			if (_root.drawpoint==0) { _root.ws.path.shift(); }
 							   else { _root.ws.path.pop(); _root.drawpoint-=1; }
 			if (_root.ws.path.length) {
@@ -677,7 +694,7 @@
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
-			if (doall==1) { nodes[_root.ws.path[_root.pointselected]].removeFromAllWays(); }
+			if (doall==1) { _root.ws.path[_root.pointselected].removeFromAllWays(); }
 					 else { _root.ws.removeAnchorPoint(pointselected); }
 			_root.pointselected=-2;
 			_root.drawpoint=-1;
@@ -913,16 +930,19 @@
 	function uploadSelected() {
 		_root.panel.properties.tidy();
 		if (_root.wayselected!=0 && !_root.ws.clean) {
-			for (qway in _root.map.ways) {
-				if (!_root.map.ways[qway].clean) {
-					_root.map.ways[qway].upload();
-				}
-			}
+			uploadDirtyWays();
 		}
 		if (_root.poiselected!=0 && !_root.map.pois[poiselected].clean) {
 			_root.map.pois[poiselected].upload();
 		}
 		uploadDirtyRelations();
+	};
+	
+	function uploadDirtyWays() {
+		var z=_root.map.ways;
+		for (i in z) {
+			if (!_root.map.ways[i].clean && !_root.map.ways[i].hasDependentNodes()) { _root.map.ways[i].upload(); }
+		}
 	};
 
 	// highlightSquare

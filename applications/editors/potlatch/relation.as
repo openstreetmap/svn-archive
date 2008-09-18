@@ -135,9 +135,9 @@
 			if ( ms[m][0] == 'way' && _root.map.ways[ms[m][1]] ) {
 				var way = _root.map.ways[ms[m][1]];
 		
-				this.line.moveTo(nodes[way.path[0]].x,nodes[way.path[0]].y);
+				this.line.moveTo(way.path[0].x,way.path[0].y);
 				for (var i=1; i<way.path.length; i+=1) {
-					this.line.lineTo(nodes[way.path[i]].x,nodes[way.path[i]].y);
+					this.line.lineTo(way.path[i].x,way.path[i].y);
 				}
 			} else if ( ms[m][0] == 'node' && _root.map.pois[ms[m][1]] ) {
 				var poi = _root.map.pois[ms[m][1]];
@@ -378,7 +378,7 @@
 		var type, id;
 		switch (proptype) {
 			case 'way':		type='way' ; id=wayselected; break;
-			case 'point':	type='node'; id=_root.ws.path[_root.pointselected]; break;
+			case 'point':	type='node'; id=_root.ws.path[_root.pointselected].id; break;
 			case 'POI':		type='node'; id=poiselected; break;
 		}
 		if ( type == undefined || id == undefined ) return;

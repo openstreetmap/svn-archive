@@ -68,7 +68,7 @@
 					_root.map.pois[newpoiid].attr=waypoints[i][2];
 					_root.map.pois[newpoiid].locked=true;
 					_root.map.pois[newpoiid].clean=false;
-					// _root.map.pois[newpoiid].recolour();
+					_root.map.pois[newpoiid].recolour();
 					_root.poicount+=1;
 				}
 				_root.windows.pleasewait.remove();
@@ -127,7 +127,8 @@
 			for (var j=0; j<_root.tracks[i].length; j+=1) {
 				_root.newnodeid--;
 				_root.nodes[newnodeid]=new Node(newnodeid,_root.tracks[i][j][0],_root.tracks[i][j][1],new Array());
-				_root.map.ways[newwayid].path.push(newnodeid);
+				_root.nodes[newnodeid].addWay(newwayid);
+				_root.map.ways[newwayid].path.push(_root.nodes[newnodeid]);
 				_root.map.ways[newwayid].xmin=Math.min(_root.tracks[i][j][0],_root.map.ways[newwayid].xmin);
 				_root.map.ways[newwayid].xmax=Math.max(_root.tracks[i][j][0],_root.map.ways[newwayid].xmax);
 				_root.map.ways[newwayid].ymin=Math.min(_root.tracks[i][j][1],_root.map.ways[newwayid].ymin);

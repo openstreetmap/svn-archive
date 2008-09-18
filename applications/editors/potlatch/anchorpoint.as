@@ -69,8 +69,8 @@
 	};
 	
 	AnchorPoint.prototype.endDrag=function() {
-		this.onMouseMove=function() {};
-		this.onMouseUp  =function() {};
+		delete this.onMouseMove;
+		delete this.onMouseUp;
 		var newx=_root.map._xmouse;
 		var newy=_root.map._ymouse;
 		var t=new Date();
@@ -82,9 +82,9 @@
 		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			// ====	Move existing point
 			_root.undo.append(UndoStack.prototype.undo_movenode,
-							  new Array(deepCopy(nodes[_root.ws.path[this._name]])),
+							  new Array(deepCopy(_root.ws.path[this._name])),
 							  iText("moving a point",'action_movepoint'));
-			_root.nodes[_root.ws.path[this._name]].moveTo(newx,newy,undefined);
+			_root.ws.path[this._name].moveTo(newx,newy,undefined);
 			_root.ws.highlightPoints(5000,"anchor");
 			_root.ws.highlight();
 			_root.ws.redraw();
@@ -92,8 +92,8 @@
 			markClean(false);
 
 		} else {
-			this._x=nodes[_root.ws.path[this._name]].x;	// Return point to original position
-			this._y=nodes[_root.ws.path[this._name]].y;	//  | (in case dragged slightly)
+			this._x=_root.ws.path[this._name].x;	// Return point to original position
+			this._y=_root.ws.path[this._name].y;	//  | (in case dragged slightly)
 			if ((this._name==0 || this._name==_root.ws.path.length-1) && !Key.isDown(17)) {
 				// ===== Clicked at start or end of line
 				if (_root.drawpoint==0 || _root.drawpoint==_root.ws.path.length-1) {
@@ -133,8 +133,8 @@
 	
 	AnchorPoint.prototype.endElastic=function() {
 		if (_root.junction) { _root.junction=false; }
-					   else { this.onMouseMove=function() {};
-							  this.onMouseUp  =function() {}; }
+					   else { delete this.onMouseMove; 
+							  delete this.onMouseUp; }
 	};
 
 	function restartElastic() {
@@ -201,7 +201,7 @@
 			}
 		} else { 
 			// Join ways (i.e. junction)
-			addEndPoint(this.node);
+			addEndPoint(nodes[this.node]);
 			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
 			restartElastic();
 		}

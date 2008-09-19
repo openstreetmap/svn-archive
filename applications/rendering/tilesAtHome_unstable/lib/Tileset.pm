@@ -166,7 +166,8 @@ sub generate
 
         # Render it as loads of recursive tiles
         # temporary debug: measure time it takes to render:
-        my $empty = $self->RenderTile($layer, $req->Y, $req->Z, $self->{bbox}->extents, 0,0 , $ImgW, $ImgH, $ImgH);
+        my $empty = $self->RenderTile($layer, $req->Y, $req->Z, 
+            $self->{bbox}->N, $self->{bbox}->S, $self->{bbox}->W, $self->{bbox}->E, 0,0 , $ImgW, $ImgH, $ImgH);
 
         #----------
         # This directory is now ready for upload.
@@ -622,6 +623,7 @@ sub RenderTile
                     if ($Config->get("Verbose") >= 10);
     
     # Sub-tiles
+    print "$N $S \n";
     my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
     my $MercY1 = ProjectF($S); # get mercator coordinates for South border of tile
     my $MercYC = 0.5 * ($MercY1 + $MercY2); # get center of tile in mercator

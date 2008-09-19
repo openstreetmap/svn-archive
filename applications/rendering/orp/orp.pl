@@ -120,6 +120,7 @@ use IO::File ();
 use FindBin qw($Bin);
 use lib $Bin;
 use SAXOsmHandler ();
+use Math::Trig;
 
 require "orp-select.pm";
 require "orp-drawing.pm";
@@ -315,7 +316,8 @@ our $symbolScale = get_variable("symbolScale", 1);
 our $projection = 1 / cos(($maxlat + $minlat) / 360 * pi);
 our $km = 0.0089928*$scale*10000*$projection;
 our $dataWidth = ($maxlon - $minlon) * 10000 * $scale;
-our $dataHeight = ($maxlat - $minlat) * 10000 * $scale * $projection;
+# original osmarender: our $dataHeight = ($maxlat - $minlat) * 10000 * $scale * $projection;
+our $dataHeight = (ProjectF($maxlat) - ProjectF($minlat)) * 180 / pi * 10000 * $scale; 
 our $minimumMapWidth = get_variable("minimumMapWidth", undef);
 our $minimumMapHeight = get_variable("minimumMapHeight", undef);
 our $documentWidth = ($dataWidth > $minimumMapWidth * $km) ? $dataWidth : $minimumMapWidth * $km;
@@ -1166,7 +1168,10 @@ sub project
     my $latlon = shift;
     return [
         $width - ($maxlon-$latlon->[1])*10000*$scale, 
-        $height + ($minlat-$latlon->[0])*10000*$scale*$projection
+        # original osmarender (unused)
+        # $height + ($minlat-$latlon->[0])*10000*$scale*$projection
+        # new (proper merc.)
+        $height + (ProjectF($minlat) - ProjectF($latlon->[0])) * 180/pi * 10000 * $scale 
     ];
 }
 
@@ -1292,3 +1297,12 @@ Options:
 EOF
     exit(1);
 }
+
+# from tahproject.pm
+sub ProjectF
+{
+    my $Lat = shift() / 180 * pi;
+    my $Y = log(tan($Lat) + sec($Lat));
+    return($Y);
+}
+

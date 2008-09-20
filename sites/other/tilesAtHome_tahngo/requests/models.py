@@ -24,7 +24,7 @@ class Request(models.Model):
 
   # ipaddress, request time, and freeform "src" string of the requester
   ipaddress = models.IPAddressField(blank=True,default="")
-  request_time = models.DateTimeField(blank=True, default=datetime.today())
+  request_time = models.DateTimeField(blank=True, default=datetime.today)
   src  = models.CharField(max_length=64, blank=True, default='unknown')
 
   # renderer/user (=client), client_uuid, and time of last client contact.

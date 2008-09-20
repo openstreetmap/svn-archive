@@ -252,7 +252,7 @@
 		var c=true;
 		var z=this.path;
 		for (var i in z) {
-			if (this.path[i].tagged) { c=false; }
+			if (this.path[i].tagged && hashLength(this.path[i].ways)==1) { c=false; }
 		}
 		if (c) {
 			_root.ws.saveUndo(iText("deleting",'deleting'));
@@ -452,6 +452,7 @@
 		_root.map.anchors._y=_root.map.areas[this._name]._y=_root.map.highlight._y=this._y=0;
 		if (this.dragged) {
 			this.moveNodes(_root.map._xmouse-_root.firstxmouse,_root.map._ymouse-_root.firstymouse);
+			setAdvice(false,iText("Way dragged (Z to undo)",'advice_waydragged'));
 			this.redraw();
 			this.select();
 			_root.undo.append(UndoStack.prototype.undo_movenodes,
@@ -533,7 +534,7 @@
 		if (point>0 && point<(this.path.length-1) && this.oldversion==0) {
 			_root.newwayid--;											// create new way
 			_root.map.ways.attachMovie("way",newwayid,++waydepth);		//  |
-			_root.map.ways[newwayid].path=deepCopy(this.path);			// deep copy path array
+			_root.map.ways[newwayid].path=shallowCopy(this.path);		// deep copy path array
 			this.removeNodeIndex();
 
 			if (newattr) { _root.map.ways[newwayid].attr=newattr; }
@@ -567,12 +568,19 @@
 
 	OSMWay.prototype.mergeWay=function(topos,otherway,frompos) {
 		var i,z;
+		var conflict=false;
 		if (this.oldversion>0 || otherway.oldversion>0) { return; }
 
 		var mergepoint=this.path.length;
-		_root.undo.append(UndoStack.prototype.undo_mergeways,
-						  new Array(this,deepCopy(this.attr),deepCopy(otherway.attr),topos),
-						  iText("merging two ways",'action_mergeways'));
+		if (topos==0) {
+			_root.undo.append(UndoStack.prototype.undo_mergeways,
+							  new Array(this,deepCopy(otherway.attr),deepCopy(this.attr),frompos),
+							  iText("merging two ways",'action_mergeways'));
+		} else {
+			_root.undo.append(UndoStack.prototype.undo_mergeways,
+							  new Array(this,deepCopy(this.attr),deepCopy(otherway.attr),topos),
+							  iText("merging two ways",'action_mergeways'));
+		}
 		if (frompos==0) { for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); } }
 				   else { for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); } }
 
@@ -581,7 +589,7 @@
 			if (otherway.attr[i].substr(0,6)=='(type ') { otherway.attr[i]=null; }
 			if (this.attr[i].substr(0,6)=='(type ') { this.attr[i]=null; }
 			if (this.attr[i]) {
-				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]) { this.attr[i]+='; '+otherway.attr[i]; }
+				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]) { this.attr[i]+='; '+otherway.attr[i]; conflict=true; }
 			} else {
 				this.attr[i]=otherway.attr[i];
 			}
@@ -605,6 +613,7 @@
 		if (this._name==_root.wayselected) { 
 			_root.panel.properties.reinit();
 		}
+		if (conflict) { setAdvice(false,iText("Tags don't match - please check (Z to undo)",'advice_tagconflict')); }
 	};
 
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
@@ -626,7 +635,7 @@
 		else if (selstart==thisend  ) { sel.mergeWay(0,this,thislen);	   return true; }
 		else if (selend  ==thisstart) { sel.mergeWay(sellen,this,0);	   return true; }
 		else if (selend  ==thisend  ) { sel.mergeWay(sellen,this,thislen); return true; }
-		else						  { return false; }
+		else						  { setAdvice(true,iText("The ways do not share a common point",'advice_nocommonpoint')); return false; }
 	};
 
 	// ---- Reverse order
@@ -872,7 +881,8 @@
 
 	function cycleStacked() {
 		if (_root.pointselected>-2) {
-			var id=_root.ws.path[_root.pointselected];
+			stopDrawing();
+			var id=_root.ws.path[_root.pointselected].id;
 			var firstfound=0; var nextfound=0;
 			for (qway in _root.map.ways) {
 				if (qway!=_root.wayselected) {

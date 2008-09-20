@@ -23,10 +23,15 @@
 	_root.panel.lineTo(3000,panelheight); _root.panel.lineTo(0,panelheight);
 	_root.panel.lineTo(0,0);
 	_root.panel.endFill();
+	_root.panel.createEmptyMovieClip("advice",0xFFFFFD);
 
 	_root.createEmptyMovieClip("windows",0xFFFFFD);
 	var windowdepth=1;
 	var windowsopen=0;
+
+	// Sound
+	beep=new Sound();
+	beep.loadSound("/potlatch/beep.mp3",false);
 
 	// Co-ordinates
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
@@ -118,12 +123,14 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="Potlatch 0.10c";	// current version
 	var maximised=false;			// minimised/maximised?
+	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
+	if (preferences.data.advice       ==undefined) { preferences.data.advice       =true; }	// show floating advice?
 	if (preferences.data.nosplash     ==undefined) { preferences.data.nosplash     =false; }// hide splash screen?
 
 	// =====================================================================================
@@ -326,8 +333,8 @@
 	#include 'tiles.as'
 	#include 'gps.as'
 	#include 'undo.as'
+	#include 'advice.as'
 	#include 'start.as'
-
 
 	// =====================================================================================
 	// Start
@@ -566,6 +573,7 @@
 	// keyPressed				- key listener
 
 	function keyPressed() {
+		clearAdvice();
 		var k=Key.getCode();
 		var c=Key.getAscii(); if (c>=97 && c<=122) { c=c-32; }
 		var s=String.fromCharCode(c);
@@ -626,6 +634,7 @@
 			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
 			case 'M':		maximiseSWF(); break;								// 'M' - maximise/minimise Potlatch
 			case 'K':		keyLock(); break;									// 'K' - lock item
+			case 'S':		_root.panel.properties.setTag("source",sourcetags[preferences.data.baselayer]); break;	// 'S' - set source tag
 //			default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}
@@ -654,7 +663,7 @@
 	function keyLock() {
 		_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
 		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>200 && _root.ws.oldversion==0) {
-			setTooltip(iText("too long to unlock:\nplease split into\nshorter ways",'hint_toolong'));
+			setAdvice(true,iText("Too long to unlock - please split into shorter ways",'advice_toolong'));
 		} else if (_root.wayselected) {
 			_root.ws.locked=!_root.ws.locked;
 			_root.ws.redraw();
@@ -872,7 +881,7 @@
 	
 	function openOptionsWindow() {
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(290,130,new Array('Ok'),function() { preferences.flush(); } );
+		_root.windows.options.init(290,150,new Array('Ok'),function() { preferences.flush(); } );
 		_root.windows.options.box.createTextField("prompt1",2,7,9,80,20);
 		writeText(_root.windows.options.box.prompt1,iText("Background:",'option_background'));
 
@@ -889,6 +898,9 @@
 
 		_root.windows.options.box.attachMovie("checkbox","pointer",4);
 		_root.windows.options.box.pointer.init(10,80,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+
+		_root.windows.options.box.attachMovie("checkbox","pointer",3);
+		_root.windows.options.box.pointer.init(10,100,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
 	}
 	
 	// markClean - set JavaScript variable for alert when leaving page
@@ -960,7 +972,7 @@
 		_root.map.highlight.endFill();
 	};
 
-	// deepCopy (recursive)
+	// deepCopy (recursive) and shallowCopy (non-recursive)
 
 	function deepCopy(z) {
 		var a=new Array();
@@ -970,3 +982,9 @@
 		}
 		return a;
 	};
+
+	function shallowCopy(z) {
+		var a=new Array();
+		for (var i in z) { a[i]=z[i]; }
+		return a;
+	}

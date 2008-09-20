@@ -103,7 +103,7 @@ sub generate
     $::progressJobs++;
     $::currentSubTask = "Download";
     
-    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f (complexity %d)", $req->ZXY, ($N+$S)/2, ($W+$E)/2, $req->{'complexity'}),1,0);
     
     my $maxCoords = (2 ** $req->Z - 1);
     

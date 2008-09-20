@@ -514,6 +514,15 @@
 	PropertyWindow.prototype.reflect=function() {
 		if (this.presetmenu) { this.presetmenu.reflect(); }
 	};
+
+	PropertyWindow.prototype.setTag=function(k,v) {
+		this.saveUndo();
+		setValueInObject(this.proptype,k,v);
+		this.reinit();
+		this.saveAttributes();
+	};
+	
+
 	
 	// Remove any '(type...' or blank keys before uploading
 
@@ -890,3 +899,4 @@
 		for (var i in a) { l++; }
 		return l;
 	}
+

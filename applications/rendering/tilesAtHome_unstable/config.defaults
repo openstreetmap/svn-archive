@@ -30,6 +30,8 @@ i18n=0
 
 Osmarender = orp
 
+CutFullTile = 1
+
 Inkscape = inkscape
 
 BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar

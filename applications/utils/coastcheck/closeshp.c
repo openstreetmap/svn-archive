@@ -1037,7 +1037,7 @@ void OutputSegs( struct state *state )
   // First we must sort the subareas by decreasing size
   qsort( state->sub_areas, state->subarea_count, sizeof( state->sub_areas[0] ), subarea_compare );
   
-  if( seg_count == 0 )
+  if( seg_count == 0 && state->subarea_count == 0 )
   {
     /* No intersections at all, so we check the winding number. With the
      * water-on-the-right rule we're looking for a positive winding. */

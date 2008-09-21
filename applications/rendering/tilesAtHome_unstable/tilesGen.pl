@@ -980,23 +980,33 @@ sub tileFilename
 # $File points to a png with complete path
 # returns (success, allempty, reason)
 #-----------------------------------------------------------------------------
-sub splitImageX
+sub splitImageXY
 {
     my ($layer, $req, $Z, $Ytile, $File) = @_;
     my $Config = TahConf->getConfig();
     my ($JobVolume, $JobDir, $BigPNGFileName) = File::Spec->splitpath($File);
-
+    
     # Size of tiles
     my $Pixels = 256;
-  
+    
     # Number of tiles
     my $Size = 2 ** ($Z - $req->Z);
 
     # Assume the tileset is empty by default
     my $allempty=1;
-  
+    
+    my $StripeCount; # 1 mimics old stripe cutting behaviour
+    if $Config->get("CutFullTile")
+    {
+        $StripeCount = $Size;
+    }
+    else
+    {
+        $StripeCount = 1;
+    }
+    statusMessage(sprintf("Splitting %s (%d x %d)", $BigPNGFileName, $Size, $StripeCount),0,3);
+
     # Load the tileset image
-    statusMessage(sprintf("Splitting %s (%d x 1)", $BigPNGFileName, $Size),0,3);
     my $Image = newFromPng GD::Image($File);
     if( not defined $Image )
     {
@@ -1013,6 +1023,9 @@ sub splitImageX
     my $SubImage = new GD::Image($Pixels,$Pixels);
   
     # For each subimage
+    
+    for(my $yi = 0; $yi < $StripeCount; $yi++)
+    {
     for(my $xi = 0; $xi < $Size; $xi++)
     {
         # Get a tiles'worth of data from the main image
@@ -1020,12 +1033,12 @@ sub splitImageX
           0,                   # Dest X offset
           0,                   # Dest Y offset
           $xi * $Pixels,       # Source X offset
-          0,                   # Source Y offset # always 0 because we only cut from one row
+          $yi * $Pixels,       # Source Y offset # must always be 0 for cut from stripe
           $Pixels,             # Copy width
           $Pixels);            # Copy height
 
         # Decide what the tile should be called
-        my ($PngDirPart, $PngFileName)  = tileFilename($req, $layer, $req->X * $Size + $xi, $Ytile, $Z);
+        my ($PngDirPart, $PngFileName)  = tileFilename($req, $layer, $req->X * $Size + $xi, $Ytile + $yi, $Z);
         my $PngFullFileName;
 
         if ($Config->get("LocalSlippymap"))
@@ -1075,6 +1088,7 @@ sub splitImageX
             statusMessage(" -> $PngFileName",0,10);
             WriteImage($SubImage,$PngFullFileName);
         }
+    }
     }
     undef $SubImage;
     undef $Image;

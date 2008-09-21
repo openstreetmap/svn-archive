@@ -591,7 +591,7 @@ sub RenderTile
     # not rendered at the current zoom level. 
 
     (my $success,my $empty, $reason) = 
-           ::splitImageX($layer, $req, $Zoom, $Ytile, $FullBigPNGFileName);
+           ::splitImageXY($layer, $req, $Zoom, $Ytile, $FullBigPNGFileName);
     if (!$success)
     {  # splitimage failed
         throw TilesetError $reason, "renderer";
@@ -635,6 +635,14 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
+    if $Config->get("CutFullTile")
+    {
+        $ImgYC = $ImgY1;
+        my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgY2,$ImageHeight);
+        return $empty;
+    }
+    else
+    {
     # we create Fork*2 inkscape threads
     if ($forkval && $Zoom < ($req->Z + $forkval))
     {
@@ -673,7 +681,8 @@ sub RenderTile
         $empty = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
         return $empty;
     }
-
+    return 0;
+    }
     return 0;
 }
 

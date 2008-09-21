@@ -635,7 +635,7 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    if $Config->get("CutFullTile")
+    if ($Config->get("CutFullTile"))
     {
         $ImgYC = $ImgY1;
         my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgY2,$ImageHeight);
@@ -643,45 +643,45 @@ sub RenderTile
     }
     else
     {
-    # we create Fork*2 inkscape threads
-    if ($forkval && $Zoom < ($req->Z + $forkval))
-    {
-        my $pid = fork();
-        if (not defined $pid) 
+        # we create Fork*2 inkscape threads
+        if ($forkval && $Zoom < ($req->Z + $forkval))
         {
-            throw TilesetError "RenderTile: could not fork, exiting", "fatal"; # exit if asked to fork but unable to
-        }
-        elsif ($pid == 0) 
-        {
-            # we are the child process
-            $self->{childThread}=1;
-            try {
-                my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+            my $pid = fork();
+            if (not defined $pid) 
+            {
+                throw TilesetError "RenderTile: could not fork, exiting", "fatal"; # exit if asked to fork but unable to
             }
-            otherwise {
-                exit 0;
+            elsif ($pid == 0) 
+            {
+                # we are the child process
+                $self->{childThread}=1;
+                try {
+                    my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+                }
+                otherwise {
+                    exit 0;
+                }
+                # we can't talk to our parent other than through exit codes.
+                exit 1;
             }
-            # we can't talk to our parent other than through exit codes.
-            exit 1;
+            else
+            {
+                $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+                waitpid($pid,0);
+                my $ChildExitValue = ($? >> 8);
+                if (!$ChildExitValue)
+                {
+                    throw TilesetError "Forked inkscape failed", "renderer";
+                }
+            }
         }
         else
         {
-            $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
-            waitpid($pid,0);
-            my $ChildExitValue = ($? >> 8);
-            if (!$ChildExitValue)
-            {
-                throw TilesetError "Forked inkscape failed", "renderer";
-            }
+            my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
+            $empty = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
+            return $empty;
         }
-    }
-    else
-    {
-        my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
-        $empty = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
-        return $empty;
-    }
-    return 0;
+        return 0;
     }
     return 0;
 }

@@ -996,7 +996,7 @@ sub splitImageXY
     my $allempty=1;
     
     my $StripeCount; # 1 mimics old stripe cutting behaviour
-    if $Config->get("CutFullTile")
+    if ($Config->get("CutFullTile"))
     {
         $StripeCount = $Size;
     }

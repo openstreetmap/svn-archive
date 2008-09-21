@@ -842,7 +842,9 @@ sub svg2png
     
     # SizeX, SizeY are height/width dimensions of resulting PNG file
     my $SizeX = 256 * (2 ** ($Zoom - $req->Z));
-    my $SizeY = 256;
+    my $SizeY = $Config->get("CutFullTile") ? 256 * (2 ** ($Zoom - $req->Z)) : 256;
+
+    
 
     # SVG excerpt in SVG units
     my $Top = $ImageHeight - $Y2;
@@ -1047,12 +1049,13 @@ sub splitImageXY
                 File::Path::mkpath($PngFullDir);
                 $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
 
-            } else
+            }
+            else
             {   # Construct base png directory
                 my $PngFullDir = File::Spec->catpath($JobVolume, $JobDir, $PngDirPart);
                 File::Path::mkpath($PngFullDir);
                 $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
-	}
+            }
 
             # Check for black tile output
             if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
@@ -1068,7 +1071,7 @@ sub splitImageXY
             }
             elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
             {
-	    copy("emptysea.png", $PngFullFileName);
+                copy("emptysea.png", $PngFullFileName);
             }
             else
             {

@@ -1026,69 +1026,69 @@ sub splitImageXY
     
     for(my $yi = 0; $yi < $StripeCount; $yi++)
     {
-    for(my $xi = 0; $xi < $Size; $xi++)
-    {
-        # Get a tiles'worth of data from the main image
-        $SubImage->copy($Image,
-          0,                   # Dest X offset
-          0,                   # Dest Y offset
-          $xi * $Pixels,       # Source X offset
-          $yi * $Pixels,       # Source Y offset # must always be 0 for cut from stripe
-          $Pixels,             # Copy width
-          $Pixels);            # Copy height
-
-        # Decide what the tile should be called
-        my ($PngDirPart, $PngFileName)  = tileFilename($req, $layer, $req->X * $Size + $xi, $Ytile + $yi, $Z);
-        my $PngFullFileName;
-
-        if ($Config->get("LocalSlippymap"))
+        for(my $xi = 0; $xi < $Size; $xi++)
         {
-            my $PngFullDir = File::Spec->catdir($Config->get("LocalSlippymap"), $PngDirPart);
-            File::Path::mkpath($PngFullDir);
-            $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
+            # Get a tiles'worth of data from the main image
+            $SubImage->copy($Image,
+              0,                   # Dest X offset
+              0,                   # Dest Y offset
+              $xi * $Pixels,       # Source X offset
+              $yi * $Pixels,       # Source Y offset # must always be 0 for cut from stripe
+              $Pixels,             # Copy width
+              $Pixels);            # Copy height
 
-        } else
-        {   # Construct base png directory
-            my $PngFullDir = File::Spec->catpath($JobVolume, $JobDir, $PngDirPart);
-            File::Path::mkpath($PngFullDir);
-            $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
+            # Decide what the tile should be called
+            my ($PngDirPart, $PngFileName)  = tileFilename($req, $layer, $req->X * $Size + $xi, $Ytile + $yi, $Z);
+            my $PngFullFileName;
+
+            if ($Config->get("LocalSlippymap"))
+            {
+                my $PngFullDir = File::Spec->catdir($Config->get("LocalSlippymap"), $PngDirPart);
+                File::Path::mkpath($PngFullDir);
+                $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
+
+            } else
+            {   # Construct base png directory
+                my $PngFullDir = File::Spec->catpath($JobVolume, $JobDir, $PngDirPart);
+                File::Path::mkpath($PngFullDir);
+                $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
 	}
 
-        # Check for black tile output
-        if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
-        {
-            print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-            cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4);
-            return (0, 0,"BlackTile");
-        }
-        # Detect empty tile here:
-        elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
-        {
-            copy("emptyland.png", $PngFullFileName);
-        }
-        elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
-        {
+            # Check for black tile output
+            if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
+            {
+                print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
+                cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4);
+                return (0, 0,"BlackTile");
+            }
+            # Detect empty tile here:
+            elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
+            {
+                copy("emptyland.png", $PngFullFileName);
+            }
+            elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
+            {
 	    copy("emptysea.png", $PngFullFileName);
-        }
-        else
-        {
-            # If at least one tile is not empty set $allempty false:
-            $allempty = 0;
-    
-            if ($Config->get($layer."_Transparent")) 
-            {
-                $SubImage->transparent($SubImage->colorAllocate(248,248,248));
             }
-            else 
+            else
             {
-                $SubImage->transparent(-1);
-            }
+                # If at least one tile is not empty set $allempty false:
+                $allempty = 0;
+        
+                if ($Config->get($layer."_Transparent")) 
+                {
+                    $SubImage->transparent($SubImage->colorAllocate(248,248,248));
+                }
+                else 
+                {
+                    $SubImage->transparent(-1);
+                }
 
-            # Store the tile
-            statusMessage(" -> $PngFileName",0,10);
-            WriteImage($SubImage,$PngFullFileName);
+                # Store the tile
+                statusMessage(" -> $PngFileName",0,10);
+                WriteImage($SubImage,$PngFullFileName);
+            }
         }
-    }
     }
     undef $SubImage;
     undef $Image;

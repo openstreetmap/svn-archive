@@ -159,6 +159,9 @@ sub fetchRequest
         elsif ($reason =~ /No requests in queue/) {
             throw ServerError "No Requests on server", "NoJobs";
         }
+        elsif ($reason =~ /Throttling/) {
+            throw ServerError $reason, "NoJobs";
+        }
         elsif ($reason =~ /You have more than (\d+) active requests/) {
             throw ServerError "Is your client broken or have you just uploaded like crazy? \"$reason\"", "NoJobs";
         }

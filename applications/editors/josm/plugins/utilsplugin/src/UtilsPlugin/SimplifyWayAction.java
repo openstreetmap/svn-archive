@@ -39,32 +39,36 @@ public class SimplifyWayAction extends JosmAction {
         LinkedList<Bounds> bounds = new LinkedList<Bounds>();
         OsmDataLayer dataLayer = Main.main.editLayer();
         for (DataSource ds : dataLayer.data.dataSources) {
-            bounds.add(ds.bounds);
+            if (ds.bounds != null)
+                bounds.add(ds.bounds);
         }
         for (OsmPrimitive prim : selection) {
             if (prim instanceof Way) {
-                Way way = (Way) prim;
-                // We check if each node of each way is at least in one download 
-                // bounding box. Otherwise nodes may get deleted that are necessary by
-                // unloaded ways (see Ticket #1594)
-                for (Node node : way.nodes) {
-                    boolean isInsideOneBoundingBox = false;
-                    for (Bounds b : bounds) {
-                        if (b.contains(node.coor)) {
-                            isInsideOneBoundingBox = true;
+                if (bounds.size() > 0) {
+                    Way way = (Way) prim;
+                    // We check if each node of each way is at least in one download 
+                    // bounding box. Otherwise nodes may get deleted that are necessary by
+                    // unloaded ways (see Ticket #1594)
+                    for (Node node : way.nodes) {
+                        boolean isInsideOneBoundingBox = false;
+                        for (Bounds b : bounds) {
+                            if (b.contains(node.coor)) {
+                                isInsideOneBoundingBox = true;
+                                break;
+                            }
+                        }
+                        if (!isInsideOneBoundingBox) {
+                            int option = JOptionPane.showConfirmDialog(Main.parent,
+                                    tr("The selected way(s) have nodes outside of the downloaded data region."
+                                            + "This can lead to nodes beeing deleted accidentially.\n"
+                                            + "Are you really sure to continue?"),
+                                    tr("Plase abort if you are not sure"), JOptionPane.YES_NO_CANCEL_OPTION,
+                                    JOptionPane.WARNING_MESSAGE);
+
+                            if (option != JOptionPane.YES_OPTION)
+                                return;
                             break;
                         }
-                    }
-                    if (!isInsideOneBoundingBox) {
-                        int option = JOptionPane.showConfirmDialog(Main.parent,
-                                tr("The selected way(s) have nodes outside of the downloaded data region."
-                                        + "This can lead to nodes beeing deleted accidentially.\n"
-                                        + "Are you really sure to continue?"), tr("Plase abort if you are not sure"),
-                                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
-                        if (option != JOptionPane.YES_OPTION)
-                            return;
-                        break;
                     }
                 }
 

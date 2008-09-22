@@ -1030,7 +1030,7 @@ sub splitImageXY
     {
         for(my $xi = 0; $xi < $Size; $xi++)
         {
-            # Get a tiles'worth of data from the main image
+            # Get a tiles' worth of data from the main image
             $SubImage->copy($Image,
               0,                   # Dest X offset
               0,                   # Dest Y offset

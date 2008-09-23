@@ -34,8 +34,13 @@ class TileUpload (object):
 
   #--------------------------------------------------------------------
   def run ( self ):
-     while not TileUpload.SIGTERM:
-        self.process()
+     try:
+        while not TileUpload.SIGTERM:
+            self.process()
+     except KeyboardInterrupt:
+         # user pressed CTRL-C
+         logging.info('Ctrl-C pressed. Shutdown gracefully.')
+         if self.upload: self.cleanup(del_upload=False)
 
   #--------------------------------------------------------------------
   #@transaction.autocommit
@@ -255,12 +260,15 @@ class TileUpload (object):
     self.fname=None
     self.tmptiledir=None
     if del_upload:
-      # delete the uploaded file itself
-      try: os.unlink(self.upload.file.path)
-      except: pass
-      # delete the upload db entry
-      self.upload.delete()
-
+        # delete the uploaded file itself
+        try: os.unlink(self.upload.file.path)
+        except: pass
+        # delete the upload db entry
+        self.upload.delete()
+    else:
+        # don't delete upload, so reset is_locked to 0
+        self.upload.is_locked=False
+        self.upload.save()
 
 
 #-----------------------------------------------------------------
@@ -288,15 +296,10 @@ if __name__ == '__main__':
   #Upload.objects.all().update(is_locked=False)
 
   uploader = TileUpload(config)
-  try:
-      uploader.run()
+  uploader.run()
           #logging.critical('Upload handling thread %d returned with error. Aborting.' % i)
           #sys.stderr.write('Upload handling thread %d returned with error' % i)
           #sys.exit(1)
-  except KeyboardInterrupt:
-       # user pressed CTRL-C
-       logging.info('Ctrl-C pressed. Shutdown gracefully.')
-       TileUpload.SIGTERM = True
 
 else:
   sys.stderr.write('You need to run this as the main program.')

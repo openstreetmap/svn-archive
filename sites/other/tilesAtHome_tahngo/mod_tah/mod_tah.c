@@ -25,9 +25,9 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 #define MIN_VALID_OFFSET 4
 const char * const content_imagepng = "image/png";
 
-static char * basetilepath = "/mnt/agami/openstreetmap/tah/Tiles/";
-static char * statictilepath = "/mnt/agami/openstreetmap/tah/Tiles/";
-#define OCEANS_DB_FILE "/var/www/tah/Tiles/oceantiles_12.dat"
+static char * basetilepath = "/storage/openstreetmap/tah/Tiles/";
+static char * statictilepath = "/storage/openstreetmap/tah/Tiles/";
+#define OCEANS_DB_FILE "/storage/openstreetmap/tah/Tiles/oceantiles_12.dat"
 
 
 const char land[] =
@@ -133,15 +133,6 @@ static int xyz_to_n(request_data * d) {
   return tileNo;
 }
 
-
-/* Convert x y z triple to legacy file name. */
-static void xyz_to_legacytile(request_rec *r, char ** tilesetName, char * layer, int x, int y, int z) {
-  char * fileName;
-  fileName = apr_psprintf(r->pool, "%s/%s/%02d/%03d/%03d/%03d/%03d.png",statictilepath, layer, z, (x/1000), (x%1000), (y/1000), (y%1000));
-//my other legacyformat
-//  fileName = apr_psprintf(r->pool, "%s/%s/%d/%d/%d.png",statictilepath, layer, z, x, y);
-  *tilesetName = fileName;
-}
 
 
 static int serve_tileset(request_rec* r, request_data* d) {
@@ -273,42 +264,6 @@ static int serve_tileset(request_rec* r, request_data* d) {
 } /* serve_tileset */
 
 
-static int serve_legacytile(request_rec* r, request_data* d) {
-  char* tilesetName;
-  xyz_to_legacytile(r, &tilesetName, d->layer, d->x, d->y, d->z);
-  //ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "No tilesetfile, trying legacy tile: %s", tilesetName);
-
-  /* If legacy tile found, just serv it. */
-  struct apr_finfo_t finfo;
-  apr_status_t res;
-  if ((res = apr_stat(&finfo, tilesetName, APR_FINFO_MTIME | APR_FINFO_SIZE, r->pool)) != APR_SUCCESS) {
-    return HTTP_NOT_FOUND;
-  }
-  if( finfo.size == 0 ) return HTTP_NOT_FOUND;
-
-  ap_update_mtime(r, finfo.mtime);
-  ap_set_last_modified(r);
-  if ((res = ap_meets_conditions(r)) != OK) return res;
-
-  if ((res = apr_file_open(&d->tileset, tilesetName, APR_READ | APR_FOPEN_SENDFILE_ENABLED, APR_OS_DEFAULT, r->pool)) != APR_SUCCESS) {
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "Could not open legacy tile: %s", tilesetName);
-    return HTTP_NOT_FOUND;
-  }
-
-  ap_set_content_length(r, finfo.size);
-  ap_set_content_type(r, content_imagepng);
- 
-  apr_size_t bytes_sent = 0;
-  ap_send_fd(d->tileset, r, 0, finfo.size, &bytes_sent);
-  if (bytes_sent != finfo.size) {
-    /* no way to fix this. just remember it in the log. */
-    ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "sendfile failed to deliver correct number of bytes, ", r->filename);
-  }
-  apr_file_close(d->tileset);
-  return OK;
-} /* serve_legacytile */
-
-
 static int serve_oceantile(request_rec *r, request_data* rd) {
   char * fileName;
   apr_status_t res;
@@ -382,9 +337,7 @@ static int tah_handler(request_rec *r)
 
   int code;
   if( (code = serve_tileset(r, d)) != HTTP_NOT_FOUND ) { return code; }
-  /* tileset not found. fall back to legacy tile format. */
-  if( (code = serve_legacytile(r, d)) != HTTP_NOT_FOUND ) { return code; }
-  /* not found, too. look into the OceanDB. Fail if problem */
+  /* not found. look into the OceanDB. Fail if problem */
   return serve_oceantile(r, d);
 } /* tah_handler */
 

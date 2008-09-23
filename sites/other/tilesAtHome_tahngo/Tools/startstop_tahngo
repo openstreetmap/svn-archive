@@ -1,10 +1,10 @@
 #! /bin/bash
 
-WD=/var/www/tah
+WD=/storage/openstreetmap/tah
 PIDFILE=${WD}/var/tahngo.pid
 PYTHON=/usr/bin/python
-PYTH_PATH=/home/spaetz/django-1.0_for_update
-SOCKET=/var/www/tah/var/tahngo.sock
+PYTH_PATH=/storage/openstreetmap/django-1.0
+SOCKET=${WD}/var/tahngo.sock
 #maxrequests=5000
 case "$1" in
         start)

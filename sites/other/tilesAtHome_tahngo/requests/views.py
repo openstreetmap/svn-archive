@@ -294,7 +294,7 @@ def upload_request(request):
         # default values filled in
         authform = ClientAuthForm()
         CreateFormClass = UploadForm
-        del CreateFormClass.base_fields['user_id']
+        #del CreateFormClass.base_fields['user_id']
         form = CreateFormClass()
         return render_to_response('requests_upload.html',{'uploadform': form, 
                                   'authform': authform, 'host':request.META['HTTP_HOST']})

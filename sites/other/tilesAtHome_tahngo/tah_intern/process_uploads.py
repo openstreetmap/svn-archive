@@ -98,7 +98,10 @@ class TileUpload (object):
             else:
                 # movetiles did not return a valid tileset
                 logging.error('Unzipped file from user %s (uuid %d) was no valid tileset. Took %.1f sec (CPU %.1f).' % (self.upload.user_id,self.upload.client_uuid,time()-starttime[0],clock()-starttime[1]))
+
+        # finally cleanup the files etc
         self.cleanup(True)
+        #---------------------------------------
 
       elif self.upload.file.name.lower().endswith('.tileset') and os.path.isfile(self.fname):
           # existing .tileset file
@@ -240,7 +243,7 @@ class TileUpload (object):
     self.tmptiledir=None
     if del_upload:
       # delete the uploaded file itself
-      try: os.unlink(self.upload.get_file_filename())
+      try: os.unlink(self.upload.file.path)
       except: pass
       # delete the upload db entry
       self.upload.delete()

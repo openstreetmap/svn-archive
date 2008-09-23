@@ -85,7 +85,7 @@ class TileUpload (object):
                       try:
                         req.status=2
                         req.clientping_time=datetime.now()
-                        req.client_id = self.upload.user_id
+                        req.client_id = self.upload.user_id.id
                         req.save()
                         save_success = True
                       except OperationalError, (errnum,errmsg):

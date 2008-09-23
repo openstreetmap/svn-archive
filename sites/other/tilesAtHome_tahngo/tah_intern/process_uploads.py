@@ -90,14 +90,26 @@ class TileUpload (object):
                       except OperationalError, (errnum,errmsg):
                         # e.g. MySQL transaction timeout, do another round
                         save_success = False
-                  logging.debug('finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f). Saving took %.1f sec. %d unknown tiles.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+
+                  logging.debug('finished "%s,%d,%d,%d" in %.1f sec (CPU %.1f).' \
+                                ' Saving took %.1f sec. %d unknown tiles.' % \
+                                (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],\
+                                 clock()-starttime[1], time_save[1] - time_save[0], unknown_tiles))
+
                 else:
                     # saving the tileset went wrong
-                    logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset. Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0],clock()-starttime[1], unknown_tiles, self.upload.user_id,self.upload.client_uuid))
+                    logging.error('Saving tileset "%s,%d,%d,%d" failed. Aborting tileset.' \
+                                  ' Took %.1f sec (CPU %.1f). %d unknown tiles. Uploaded by %s (uuid %d)' \
+                                  % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0], \
+                                  clock()-starttime[1], unknown_tiles, self.upload.user_id, \
+                                  self.upload.client_uuid))
 
             else:
                 # movetiles did not return a valid tileset
-                logging.error('Unzipped file from user %s (uuid %d) was no valid tileset. Took %.1f sec (CPU %.1f).' % (self.upload.user_id,self.upload.client_uuid,time()-starttime[0],clock()-starttime[1]))
+                logging.error('Unzipped file from user %s (uuid %d) was no valid tileset.' \
+                              ' Took %.1f sec (CPU %.1f).' % \
+                              (self.upload.user_id,self.upload.client_uuid, \
+                               time()-starttime[0],clock()-starttime[1]))
 
         # finally cleanup the files etc
         self.cleanup(True)

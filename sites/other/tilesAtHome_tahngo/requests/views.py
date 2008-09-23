@@ -275,7 +275,8 @@ def upload_request(request):
               newUpload.save()
 	      html="OK|4|"
             except:
-              #TODO: delete possibly uploaded file, in case of exception
+              # delete possibly uploaded file in case of exception
+              os.unlink(newUpload.file.path)
 	      import sys
               html ="XX| Exception thrown."+str(user.id)+str(sys.exc_info()[1])
       	  else:

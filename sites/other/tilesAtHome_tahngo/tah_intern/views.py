@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.conf import settings
 from tah.tah_intern.models import Layer
+from tah.tah_intern.Tile import Tile
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import cache_control
 from django.views.generic.simple import direct_to_template
@@ -38,13 +39,6 @@ def show_log(request):
 
 #---------------------------------------------------------------------
 # currently unused function that returns the image data. It has bitrotted
-def show(request,layer,x,y,z):
-  retcode = 0
-  file=("/var/www/osm/Tiles/Gfx/unknown.png","/var/www/osm/Tiles/Gfx/sea.png","/var/www/osm/Tiles/Gfx/sea.png","/var/www/osm/Tiles/Gfx/error.png")
-  try:
-    l = Layer.objects.get(name=layer)
-  except ObjectDoesNotExist:
-    retcode = 3
-
-  image_data = open(file[retcode], "rb").read()
-  return HttpResponse(image_data, mimetype="image/png")
+def show_tile(request,layername,z,x,y):
+  t = Tile(None,z,x,y)
+  return HttpResponse(t.serve_tile(layername), mimetype="image/png")

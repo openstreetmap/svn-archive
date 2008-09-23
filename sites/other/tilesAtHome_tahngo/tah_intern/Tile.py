@@ -66,8 +66,8 @@ class Tile:
     """
     (layer, base_z,base_x,base_y) = self.basetileset() 
     # basetilepath could be taken from the Settings, hardcode for efficiency 
-    basetilepath='/mnt/agami/openstreetmap/tah/Tiles'
-    blanktilepath='/var/www/tah/Tiles'
+    basetilepath='/storage/openstreetmap/tah/Tiles'
+    blanktilepath='/storage/openstreetmap/tah/Tiles'
     self.mtime = 0
     if base_z == None:
       # basetileset returns (None,None,None,None) if invalid
@@ -118,8 +118,8 @@ class Tile:
 
   def serve_legacy_tile(self,layername):
     """ Returns: a blanktile value (0,..,3) as 'int' or the file name of the tile file as 'str'. """
-    leg_basetiledir='/mnt/agami/openstreetmap/tah/Tiles'
-    oceantilesdat_path ='/var/www/tah/Tiles/oceantiles_12.dat'
+    leg_basetiledir='/storage/openstreetmap/tah/Tiles'
+    oceantilesdat_path ='/storage/openstreetmap/tah/Tiles/oceantiles_12.dat'
 
     fname = os.path.join(leg_basetiledir,layername,"%02d"%(self.z),"%03d"%(self.x//1000),"%03d"%(self.x%1000),"%03d"%(self.y//1000),"%03d.png"%(self.y%1000))
     if os.path.isfile(fname):

@@ -284,8 +284,11 @@ sub downloadData
       $E1 = 180;
     }
 
+    # temporarily turn off locales
+    no locale;
     my $bbox = sprintf("%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
+    use locale;
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     

@@ -23,7 +23,7 @@ This module is only meant to be used by SVG::Rasterize.
 
 =cut
 
-__PACKAGE__->mk_accessors(qw(wrapper_path jar_path java_path));
+__PACKAGE__->mk_accessors(qw(wrapper_path java_path wrapper_searchpaths java_searchpaths jar_searchpaths jar_list));
 
 =pod
 
@@ -37,7 +37,7 @@ sub wrapper_path {
     my $self = shift;
 
     unless( @_ || $self->{wrapper_path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path() ){
+        foreach my $path ( @{ $self->wrapper_searchpaths() } ){
             my($volume, $dir) = File::Spec->splitpath($path, 1);
 
             foreach my $name ( 'rasterizer', 'rasterizer.exe' ){
@@ -53,32 +53,6 @@ sub wrapper_path {
 
 =pod
 
-=head2 
-
-Path to Batik JAR
-
-=cut
-
-sub jar_path {
-    my $self = shift;
-    return 0;#FIXME: this currently broken.
-    unless( @_ || $self->{jar_path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path(), '/usr/share/java' ){
-            my($volume, $dir) = File::Spec->splitpath($path, 1);
-
-            foreach my $name ( 'batik.jar', 'batik-1.6.jar', 'batik-all.jar', 'batik-all-1.6.jar' ){#Ok, either find batik-rasterizer.jar or one of these and the command from the debian wrapper
-                my $filepath = File::Spec->catpath($volume, $dir, $name);
-                return $self->jar_path($filepath) if -r $filepath;
-            }
-        }
-        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find batik jar");
-    }
-
-    return $self->_jar_path_accessor(@_);
-}
-
-=pod
-
 =head2 java_path
 
 Path to java executable
@@ -89,7 +63,7 @@ sub java_path {
     my $self = shift;
 
     unless( @_ || $self->{java_path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path() ){
+        foreach my $path ( @{ $self->java_searchpaths() } ){
             my($volume, $dir) = File::Spec->splitpath($path, 1);
 
             foreach my $name ( 'java', 'java.exe' ){
@@ -106,6 +80,109 @@ sub java_path {
 =pod
 
 =head1 METHODS
+
+=head2 new(\%params) (constructor)
+
+Create a new instance of this class. You can pass in parameters which
+will then be set via their accessor
+
+Returns: new instance of this class.
+
+=cut
+
+sub new {
+    my ( $pkg, $params ) = @_;
+    my $class = ref $pkg || $pkg;
+    my $self = bless( {}, $class);
+
+    # Defaults
+    if( $^O eq 'MSWin32' ){
+        #FIXME: add good places to search here
+        $self->jar_searchpaths(
+            'c:\tilesAtHome\batik'
+            );
+    } else {
+        $self->jar_searchpaths(
+            '/usr/share/batik',
+            '/usr/share/batik/lib',
+            '/usr/share/batik-1.6/lib',
+            '/usr/share/java',
+            '/usr/share/java/lib',
+            '/usr/lib/batik',
+            '/usr/lib/batik/lib',
+            '/usr/lib/batik-1.6',
+            '/usr/lib/batik-1.6/lib',
+            '/usr/lib/java',
+            '/usr/lib/java/lib'
+            );
+    }
+    $self->jar_list(
+        'xercesImpl.jar',
+        'batik-all.jar',
+        'fop-transcoder.jar',
+        'avalon-framework.jar',
+        'commons-logging.jar',
+        'commons-logging.jar',
+        'commons-io.jar'
+        );
+    $self->java_searchpaths(
+        File::Spec->path()
+        );
+    $self->wrapper_searchpaths(
+        File::Spec->path()
+        );
+
+    foreach my $param ( keys(%$params) ){
+        $self->$param( $params->{$param} );
+    }
+
+    return $self;
+}
+
+=pod
+
+=head2 find_jar( $jarname )
+
+Find a jar and return it's pathname.
+
+Throws Prerequisite exceptions if it can't find the jar
+
+=cut
+
+sub find_jar {
+    my $self = shift;
+    my $jarname = shift;
+
+    foreach my $path ( @{ $self->jar_searchpaths() } ){
+        my($volume, $dir) = File::Spec->splitpath($path, 1);
+
+        my $filepath = File::Spec->catpath($volume, $dir, $jarname);
+
+        return $filepath if -r $filepath;
+    }
+    throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find $jarname");
+}
+
+=pod
+
+=head2 find_jars( @list )
+
+Shortcut to run find_jar on many jars, returning them as a list
+
+=cut
+
+sub find_jars {
+    my $self = shift;
+
+    my @result;
+    foreach my $jar ( @_ ){
+        push(@result, $self->find_jar($jar));
+    }
+
+    return @result;
+}
+
+=pod
 
 =head2 available()
 
@@ -127,7 +204,7 @@ sub jar_available {
     my $self = shift;
 
     try {
-        return 1 if -r $self->jar_path() && -x $self->java_path();
+        return 1 if $self->find_jars(@{$self->jar_list()}) && -x $self->java_path();
     } catch SVG::Rasterize::Engine::Batik::Error::Prerequisite with {
         return 0;
     };
@@ -168,7 +245,9 @@ sub convert {
         @cmd = ($self->java_path());
         push(@cmd, '-Xms256M');
         push(@cmd, '-Xmx'. ( $params{heapsize} ? $params{heapsize} : '512M' ) );
-        push(@cmd, '-jar', $self->jar_path());
+        push(@cmd, '-classpath', join(':', $self->find_jars( @{$self->jar_list()} )));
+        push(@cmd, 'org.apache.batik.apps.rasterizer.Main');
+        push(@cmd, '-scriptSecurityOff'); # It just crashes without this
         push(@cmd, '-w', $params{width}) if $params{width};
         push(@cmd, '-h', $params{height}) if $params{height};
         push(@cmd, '-a', sprintf('%f,%f,%f,%f',
@@ -178,8 +257,6 @@ sub convert {
         push(@cmd, $params{infile});
     } elsif( $self->wrapper_available() ){
         @cmd = ($self->wrapper_path(), '-m', 'image/png');
-#        push(@cmd, '-Xms256M');
-#        push(@cmd, '-Xmx'. ( $params{heapsize} ? $params{heapsize} : '512M' ) );
         push(@cmd, '-w', $params{width}) if $params{width};
         push(@cmd, '-h', $params{height}) if $params{height};
         push(@cmd, '-a', sprintf('%f,%f,%f,%f',
@@ -191,13 +268,24 @@ sub convert {
         throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
     }
 
-    #DEBUG:
-    print "About to execute \"".join('", "', @cmd)."\"\n";
     my $stdout; my $stderr;
-    unless( run( \@cmd, \undef, \$stdout, \$stderr ) ){
+
+    #DEBUG:warn 'about to run '.join(' ', @cmd);
+    my $result;
+    try {
+        $result = run( \@cmd, \undef, \$stdout, \$stderr )
+    } otherwise {
+        my $e = shift;
+        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\", run could not execute the command: $e");
+    };
+    #DEBUG
+    #warn "status: $result\n\$!: $!\n\$?: $?";
+    #warn "stdout: ".$stdout;
+    #warn "stderr: ".$stderr;
+
+    if( ! $result || $stderr =~ /Error/ ){
         my $error;
-        warn "stdout: ".$stdout;
-        warn "stderr: ".$stderr;
+
         if( $? == -1 ){
             $error = 'failed to execute: '.$!;
         } elsif( $? & 127 ){
@@ -206,7 +294,7 @@ sub convert {
             $error = 'exited with value '.($? >> 8);
         }
 
-        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\": $error", {stdout => $stdout, stderr => $stderr});
+        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\": $error", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
     }
 
     $self->check_output($params{outfile});

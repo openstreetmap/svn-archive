@@ -138,8 +138,25 @@ sub convert {
 }
 
 package SVG::Rasterize::Error;
-use base qw(Error::Simple);
+use base qw(Error);
 
+sub new {
+    my $self  = shift;
+    my $text  = "" . shift;
+    my $params = shift;
+
+    local $Error::Depth = $Error::Depth + 1;
+
+    $self->SUPER::new(-text => $text, %$params);
+}
+
+sub stringify {
+    my $self = shift;
+    my $text = $self->SUPER::stringify;
+    $text .= sprintf(" at %s line %d.\n", $self->file, $self->line)
+        unless($text =~ /\n$/s);
+    $text;
+}
 1;
 
 __END__

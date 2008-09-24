@@ -326,7 +326,7 @@ sub downloadData
         
         my $res = undef;
         # download tile data in one piece *if* the tile is not too complex
-        if ($req->Z >= 12 && $req->{complexity} < 20000000)
+        if (($req->Z >= 12 && $req->{complexity} < 20000000) || $req->Z < 12)
            {$res = ::DownloadFile($URL, $partialFile, 0)};
 
         if ((! $res) and ($req->Z < 12))

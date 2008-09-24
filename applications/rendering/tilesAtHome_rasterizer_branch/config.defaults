@@ -20,7 +20,7 @@ Verbose = 6
 ProcessLog = 0
 ProcessLogFile = /tmp/tah.log
 
-Niceness = nice -n10
+Niceness = 10
 
 DownloadTimeout = 1800
 KeepDataFile = 0

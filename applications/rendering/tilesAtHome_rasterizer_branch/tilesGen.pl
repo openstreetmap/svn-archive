@@ -199,10 +199,17 @@ resetFault("upload");
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
 
 # Be nice. Reduce program priority
-if ($Config->get("Niceness")) {
-    my $success=POSIX::nice($Config->get("Niceness"));
-    if( !defined($success) ){
-        printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
+if( my $nice = $Config->get("Niceness") ){
+    if( $nice =~ /nice/ ){
+        $nice =~ s/nice\s*-n\s*//;
+        warn "You have Niceness set to a command, it should be only a number.\n";
+    }
+
+    if( $nice =~ /^\d+$/ ){
+        my $success=POSIX::nice($nice);
+        if( !defined($success) ){
+            printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
+        }
     }
 }
 

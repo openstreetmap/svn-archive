@@ -100,6 +100,7 @@ sub new {
         #FIXME: add good places to search here
         $self->jar_searchpaths(
             'c:\tilesAtHome\batik'
+            'c:\tilesAtHome\batik\lib'
             );
     } else {
         $self->jar_searchpaths(

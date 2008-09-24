@@ -124,11 +124,6 @@ sub draw_way_with_smart_linecaps
 
     return unless(scalar(@$nodes));
 
-    # first draw middle segment if we have more than 2 nodes
-    draw_path($linenode, "way_mid_$id", 
-        "osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end", $style) 
-        if (scalar(@$nodes)>2);
-
     # count connectors on first and last node
     my $first_node_connection_count = scalar(@{$nodes->[0]->{"ways"}});
     my $first_node_lower_layer_connection_count = $first_node_connection_count;
@@ -154,34 +149,48 @@ sub draw_way_with_smart_linecaps
         }
     }
 
-    if ($first_node_connection_count == 1)
+    my $extraClassFirst = '';
+    my $extraClassLast = '';
+
+    if ($first_node_connection_count != 1)
     {
-        draw_path($linenode, "way_start_$id", "osmarender-no-marker-end", $style);
-    } 
-    elsif ($first_node_lower_layer_connection_count > 0)
-    {
-        draw_path($linenode, "way_start_$id", 
-            "osmarender-stroke-linecap-butt osmarender-no-marker-end", $style);
-    }
-    else
-    {
-        draw_path($linenode, "way_start_$id",
-            "osmarender-stroke-linecap-round osmarender-no-marker-end", $style);
+        if ($first_node_lower_layer_connection_count > 0)
+        {
+            $extraClassFirst = 'osmarender-stroke-linecap-butt';
+        }
+        else
+        {
+            $extraClassFirst = 'osmarender-stroke-linecap-round'
+        }
     }
 
-    if ($last_node_connection_count == 1)
+    if ($last_node_connection_count != 1)
     {
-        draw_path($linenode, "way_end_$id", "osmarender-no-marker-start", $style);
-    } 
-    elsif ($last_node_lower_layer_connection_count > 0)
-    {
-        draw_path($linenode, "way_end_$id", 
-            "osmarender-stroke-linecap-butt osmarender-no-marker-start", $style);
+        if ($last_node_lower_layer_connection_count > 0)
+        {
+            $extraClassLast = 'osmarender-stroke-linecap-butt';
+        }
+        else
+        {
+            $extraClassLast = 'osmarender-stroke-linecap-round';
+        }
     }
-    else
+
+    # If first and last is the same, draw only one way. Else divide way into way_start, way_mid and way_last
+    if ($extraClassFirst eq $extraClassLast)
     {
+        draw_path($linenode, "way_normal_$id", $extraClassFirst, $style);
+    } 
+    else 
+    {
+        # first draw middle segment if we have more than 2 nodes
+        draw_path($linenode, "way_mid_$id", 
+            "osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end", $style) 
+            if (scalar(@$nodes)>2);
+        draw_path($linenode, "way_start_$id",
+            "$extraClassFirst osmarender-no-marker-end", $style);
         draw_path($linenode, "way_end_$id", 
-            "osmarender-stroke-linecap-round osmarender-no-marker-start", $style);
+            "$extraClassLast osmarender-no-marker-start", $style);
     }
 }
 

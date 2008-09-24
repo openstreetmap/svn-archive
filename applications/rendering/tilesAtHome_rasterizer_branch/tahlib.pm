@@ -241,6 +241,9 @@ sub runCommand
         {
             unlink $inkscapecfg if(-f $inkscapecfg);
             $inkscapecorrupt = 0 if(copy ($inkscapebak, $inkscapecfg)); # FIXME: check this fixes forked rendering
+            
+            #it's okay if the file is missing, because inkscape will auto-create correct one on next start
+            $inkscapecorrupt = 0 unless (-f $inkscapecfg); 
         }
     }
 

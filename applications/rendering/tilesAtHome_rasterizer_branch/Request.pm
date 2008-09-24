@@ -237,6 +237,11 @@ sub fetchFromServer
             {
                 die TahError->new("GeneralClientError", "ERROR: This client needs manual intervention. Server told us: \"$reason\"");
             }
+            elsif ($reason =~ /Throttling/)
+            {
+                $success = 0; 
+                ::talkInSleep($reason,60);
+            }
             else
             {
                 die TahError->new("ServerError", "Unknown server response: $Requeststring");

@@ -28,6 +28,8 @@ use tahlib;
 use tahproject;
 use File::Copy;
 use File::Path;
+use GD qw(:DEFAULT :cmp);
+use POSIX qw(locale_h);
 
 #-----------------------------------------------------------------------------
 # creates a new Tileset instance and returns it
@@ -58,6 +60,25 @@ sub new
 	 CLEANUP  => $delTmpDir,
          );
 
+    # create blank comparison images
+    my $EmptyLandImage = new GD::Image(256,256);
+    my $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
+    $EmptyLandImage->fill(127,127,$MapLandBackground);
+
+    my $EmptySeaImage = new GD::Image(256,256);
+    my $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
+    $EmptySeaImage->fill(127,127,$MapSeaBackground);
+
+    # Some broken versions of Inkscape occasionally produce totally black
+    # output. We detect this case and throw an error when that happens.
+    my $BlackTileImage = new GD::Image(256,256);
+    my $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
+    $BlackTileImage->fill(127,127,$BlackTileBackground);
+
+    $self->{EmptyLandImage} = $EmptyLandImage;
+    $self->{EmptySeaImage} = $EmptySeaImage;
+    $self->{BlackTileImage} = $BlackTileImage;
+
     bless $self, $class;
     return $self;
 }
@@ -68,16 +89,11 @@ sub new
 sub DESTROY
 {
     my $self = shift;
-    if ($self->{childThread}) 
-    {   # For whatever unknown reasons this function gets called for exiting child threads.
-        # It really shouldn't but oh well. So protect us and only cleanup if we are the parent.
-        ;
-    } 
-    else
-    {
-        # only cleanup if we are the parent thread
-        $self->cleanup();
-    }
+    # Don't clean up in child threads
+    return if ($self->{childThread});
+
+    # only cleanup if we are the parent thread
+    $self->cleanup();
 }
 
 #-----------------------------------------------------------------------------
@@ -94,12 +110,7 @@ sub generate
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
-    print "BBox: " . join(",", $self->{bbox}->extents) . "\n";
-    $::progress = 0;
-    $::progressPercent = 0;
-    $::progressJobs++;
-    $::currentSubTask = "Download";
-    
+
     ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, $self->{bbox}->center), 1, 0);
     
     #------------------------------------------------------
@@ -121,15 +132,13 @@ sub generate
         $::progressPercent=0;
         $::currentSubTask = $layer;
         
+        # TileDirectory is the name of the directory for finished tiles
+        my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
+
         # JobDirectory is the directory where all final .png files are stored.
         # It is not used for temporary files.
-        my $JobDirectory = File::Spec->join($self->{JobDir},
-                                sprintf("%s_%d_%d_%d.dir",
-                                $Config->get($layer."_Prefix"),
-                                $req->ZXY));
+        my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
         mkdir $JobDirectory;
-
-        my $maxzoom = $Config->get($layer."_MaxZoom");
 
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
@@ -140,52 +149,27 @@ sub generate
         my $layerDataFile = $self->runPreprocessors($layer);
 
         #------------------------------------------------------
-        # Preprocessing finished, start rendering to SVG
+        # Preprocessing finished, start rendering to SVG to PNG
         # $layerDataFile is just the filename
         #------------------------------------------------------
 
         if ($Config->get("Fork")) 
         {   # Forking to render zoom levels in parallel
-            $self->forkedRender($layer, $maxzoom, $layerDataFile)
+            $self->forkedRender($layer, $layerDataFile);
         }
         else
         {   # Non-forking render
-            for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++)
-            {
-                $self->GenerateSVG($layerDataFile, $layer, $zoom)
-            }
+            $self->nonForkedRender($layer, $layerDataFile);
         }
-
-        #------------------------------------------------------
-        # Convert from SVG to PNG.
-        #------------------------------------------------------
-        
-        # Find the size of the SVG file
-        my ($ImgH,$ImgW,$Valid) = ::getSize(File::Spec->join($self->{JobDir},
-                                                       "output-z$maxzoom.svg"));
-
-        # Render it as loads of recursive tiles
-        # temporary debug: measure time it takes to render:
-        my $empty = $self->RenderTile($layer, $req->Y, $req->Z, 
-            $self->{bbox}->N, $self->{bbox}->S, $self->{bbox}->W, $self->{bbox}->E, 0,0 , $ImgW, $ImgH, $ImgH);
 
         #----------
         # This directory is now ready for upload.
-        # move it up one folder, so it can be picked up.
+        # move it to the working directory, so it can be picked up.
         # Unless we have moved everything to the local slippymap already
         if (!$Config->get("LocalSlippymap"))
         {
-            my $dircomp;
-
-            my @dirs = File::Spec->splitdir($JobDirectory);
-            do { $dircomp = pop(@dirs); } until ($dircomp ne '');
-            # we have now split off the last nonempty directory path
-            # remove the next path component and add the dir name back.
-            pop(@dirs);
-            push(@dirs, $dircomp);
-            my $DestDir = File::Spec->catdir(@dirs);
+            my $DestDir = File::Spec->join($Config->get("WorkingDirectory"), $TileDirectory);
             rename $JobDirectory, $DestDir;
-            # Finished moving directory one level up.
         }
     }
 
@@ -216,6 +200,8 @@ sub downloadData
     my $req = $self->{req};
     my $Config = $self->{Config};
 
+    $::progress = 0;
+    $::progressPercent = 0;
     $::currentSubTask = "Download";
     
     # Adjust requested area to avoid boundary conditions
@@ -310,7 +296,7 @@ sub downloadData
                         ::statusMessage("Downloading map data (slice $j of 10)", 0, 3);
                         print "Downloading: $currentURL\n" if ($Config->get("Debug"));
                         try {
-                            $Server->downloadFile($URL, $partialFile, 0);
+                            $Server->downloadFile($currentURL, $partialFile, 0);
                             $res = 1;
                         }
                         catch ServerError with {
@@ -430,7 +416,7 @@ sub runPreprocessors
            {
 	       if ($Config->get("JavaVersion") >= 1.6)
                {
-                   # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results
+                   # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results"
                   # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
                   my $Cmd = sprintf("%s java -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
                                $Config->get("Niceness"),
@@ -471,15 +457,16 @@ sub runPreprocessors
 
 #-------------------------------------------------------------------
 # renders the tiles, using threads
-# paramter: ($layer, $maxzoom)
+# paramter: ($layer, $layerDataFile)
 #-------------------------------------------------------------------
 sub forkedRender
 {
     my $self = shift;
-    my ($layer, $maxzoom, $layerDataFile) = @_;
+    my ($layer, $layerDataFile) = @_;
     my $req = $self->{req};
     my $Config = $self->{Config};
-    my $minimum_zoom = $req->Z;
+    my $minzoom = $req->Z;
+    my $maxzoom = $Config->get($layer."_MaxZoom");
 
     my $numThreads = 2 * $Config->get("Fork");
     my @pids;
@@ -495,10 +482,10 @@ sub forkedRender
         elsif ($pid == 0) 
         {   # we are the child process
             $self->{childThread}=1;
-            for (my $zoom = ($minimum_zoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
+            for (my $zoom = ($minzoom + $thread) ; $zoom <= $maxzoom; $zoom += $numThreads) 
             {
                 try {
-                    $self->GenerateSVG($layerDataFile, $layer, $zoom)
+                    $self->Render($layer, $zoom, $layerDataFile)
                 }
                 otherwise {
                     # an error occurred while rendering.
@@ -529,29 +516,276 @@ sub forkedRender
     }
 }
 
+
+#-------------------------------------------------------------------
+# renders the tiles, not using threads
+# paramter: ($layer, $layerDataFile)
+#-------------------------------------------------------------------
+sub nonForkedRender
+{
+    my $self = shift;
+    my ($layer, $layerDataFile) = @_;
+    my $req = $self->{req};
+    my $Config = $self->{Config};
+    my $minzoom = $req->Z;
+    my $maxzoom = $Config->get($layer."_MaxZoom");
+
+    for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++) {
+        $self->Render($layer, $zoom, $layerDataFile)
+    }
+}
+
+
+#-------------------------------------------------------------------
+# renders the tiles for one zoom level
+# paramter: ($layer, $zoom, $layerDataFile)
+#-------------------------------------------------------------------
+sub Render
+{
+    my $self = shift;
+    my ($layer, $zoom, $layerDataFile) = @_;
+    my $Config = $self->{Config};
+    my $req = $self->{req};
+
+    $::progress = 0;
+    $::progressPercent = 0;
+    $::currentSubTask = "$layer-z$zoom";
+    
+    $self->GenerateSVG($layer, $zoom, $layerDataFile);
+
+    $self->RenderSVG($layer, $zoom);
+
+    $self->SplitTiles($layer, $zoom);
+}
+
+
 #-----------------------------------------------------------------------------
 # Generate SVG for one zoom level
+#   $layer - layer to be processed
+#   $zoom - which zoom currently is processsed
 #   $layerDataFile - name of the OSM data file (which is in the JobDir)
-#   $Zoom - which zoom currently is processsed
 #-----------------------------------------------------------------------------
 sub GenerateSVG 
 {
     my $self = shift;
-    my ($layerDataFile, $layer, $Zoom) = @_;
+    my ($layer, $zoom, $layerDataFile) = @_;
     my $Config = TahConf->getConfig();
  
     # Render the file (returns 0 on failure)
     if (! ::xml2svg(
             File::Spec->join($self->{JobDir}, $layerDataFile),
             $self->{bbox},
-            $Config->get($layer."_Rules.".$Zoom),
-            File::Spec->join($self->{JobDir}, "output-z$Zoom.svg"),
-            $Zoom))
+            $Config->get($layer . "_Rules." . $zoom),
+            File::Spec->join($self->{JobDir}, "$layer-z$zoom.svg"),
+            $zoom))
     {
         throw TilesetError "Render failure", "renderer";
     }
 }
 
+
+#-----------------------------------------------------------------------------
+# Render SVG for one zoom level
+#   $layer - layer to be processed
+#   $zoom
+#-----------------------------------------------------------------------------
+sub RenderSVG
+{
+    my $self = shift;
+    my ($layer, $zoom) = @_;
+    my $Config = $self->{Config};
+    my $req = $self->{req};
+
+    # File locations
+    my $svgFile = File::Spec->join($self->{JobDir},"$layer-z$zoom.svg");
+    my $pngFile = File::Spec->join($self->{JobDir},"$layer-z$zoom.png");
+    my $stdOut = File::Spec->join($self->{JobDir},"$layer-z$zoom.stdout");
+    
+    my $Cmd = "";
+
+    my $TileSize = 256; # Tiles are 256 pixels square
+    # PngSize is the width/height dimension of resulting PNG file
+    my $PngSize = $TileSize * (2 ** ($zoom - $req->Z));
+
+    # SVG excerpt in SVG units
+    my ($Height, $Width, $Valid) = ::getSize(File::Spec->join($self->{JobDir}, "$layer-z$zoom.svg"));
+
+    my ($Left, $Top) = (0, 0);
+    if ($Config->get("Batik") == "1") { # batik as jar
+        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
+                       $Config->get("i18n") ? "LC_ALL=C " : "",
+                       $Config->get("Niceness"),
+                       $Config->get("BatikJVMSize"),
+                       $Config->get("BatikPath"),
+                       $PngSize,
+                       $PngSize,
+                       $Left, $Top, $Width, $Height,
+                       $pngFile,
+                       $svgFile,
+                       $stdOut);
+    }
+    elsif ($Config->get("Batik") == "2") { # batik as executable (wrapper of some sort, i.e. on gentoo)
+        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
+                       $Config->get("i18n") ? "LC_ALL=C " : "",
+                       $Config->get("Niceness"),
+                       $Config->get("BatikPath"),
+                       $PngSize,
+                       $PngSize,
+                       $Left,$Top,$Width,$Height,
+                       $pngFile,
+                       $svgFile,
+                       $stdOut);
+    }
+    elsif ($Config->get("Batik") == "3") { # agent
+        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
+                       $PngSize,
+                       $PngSize,
+                       $Left,$Top,$Width,$Height,
+                       $pngFile,
+                       $svgFile,
+                       $stdOut);
+    }
+    else {
+        my $old_locale = ::setlocale(LC_NUMERIC);
+        ::setlocale(LC_NUMERIC, "");
+
+        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
+                       $Config->get("i18n") ? "LC_ALL=C " : "",
+                       $Config->get("Niceness"),
+                       $Config->get("Inkscape"),
+                       $PngSize,
+                       $PngSize,
+                       $Left, $Top, $Left + $Width, $Top + $Height,
+                       $pngFile,
+                       $svgFile,
+                       $stdOut);
+
+        ::setlocale(LC_NUMERIC, $old_locale);
+    }
+    
+    # stop rendering the current job when inkscape fails
+    ::statusMessage("Rendering",0,3);
+    print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
+
+    my $commandResult = $Config->get("Batik") == "3" ? ::sendCommandToBatik($Cmd) eq "OK" : ::runCommand($Cmd, $$);
+    if (!$commandResult or ! -e $pngFile ) {
+        ::statusMessage("$Cmd failed",1,0);
+        if ($Config->get("Batik") == "3" && !::getBatikStatus()) {
+            ::statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
+        }
+        my $reason = "BadSVG (svg2png)";
+        $req->is_unrenderable(1);
+        throw TilesetError $reason;
+    }
+}
+
+
+#-----------------------------------------------------------------------------
+# Split PNG for one zoom level into tiles
+#   $layer - layer to be processed
+#   $zoom
+#-----------------------------------------------------------------------------
+sub SplitTiles
+{
+    my $self = shift;
+    my ($layer, $zoom) = @_;
+    my $Config = $self->{Config};
+    my $req = $self->{req};
+
+    my $pngFile = File::Spec->join($self->{JobDir},"$layer-z$zoom.png");
+    my $minzoom = $req->Z;
+    my $size = 2 ** ($zoom - $minzoom);
+    my $minx = $req->X * $size;
+    my $miny = $req->Y * $size;
+    my $number_tiles = $size * $size;
+
+    $::progress = 0;
+    $::progressPercent = 0;
+
+    ::statusMessage("Splitting",0,3);
+
+    # Size of tiles
+    my $pixels = 256;
+
+    my $Image = newFromPng GD::Image($pngFile);
+    my $ctime = time;
+    # unless this is a transparent layer convert the image to 8 bit palette
+#    $Image->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
+    if( not defined $Image ) {
+        throw TilesetError "SplitTiles: Missing File $pngFile encountered";
+    }
+
+    # Use one subimage for everything, and keep copying data into it
+    my $SubImage = new GD::Image($pixels, $pixels, 1);#$Config->get($layer."_Transparent") ? 1 : 0);
+    my $i = 0;
+    my ($x, $y);
+    for (my $iy = 0; $iy <= $size - 1; $iy++) {
+        for (my $ix = 0; $ix <= $size - 1; $ix++) {
+            $x = $minx + $ix;
+            $y = $miny + $iy;
+            $i++;
+            $::progress = $i;
+            $::progressPercent = $i / $number_tiles * 100;
+            ::statusMessage("Writing tile $x $y", 10, 0); 
+            # Get a tiles'worth of data from the main image
+            $SubImage->copy($Image,
+                            0,                   # Dest X offset
+                            0,                   # Dest Y offset
+                            $ix * $pixels,       # Source X offset
+                            $iy * $pixels,       # Source Y offset
+                            $pixels,             # Copy width
+                            $pixels);            # Copy height
+
+            # Decide what the tile should be called
+            my $tileFile;
+            if ($Config->get("LocalSlippymap")) {
+                my $tileDir = File::Spec->join($Config->get("LocalSlippymap"), $Config->get("${layer}_Prefix"), $zoom, $x);
+                File::Path::mkpath($tileDir);
+                $tileFile = File::Spec->join($tileDir, sprintf("%d.png", $y));
+            }
+            else {
+                # Construct base png directory
+                my $tileDir = File::Spec->join($self->{JobDir}, sprintf("%s_%d_%d_%d.dir", $Config->get("${layer}_Prefix"), $req->ZXY));
+                File::Path::mkpath($tileDir);
+                $tileFile = File::Spec->join($tileDir, sprintf("%s_%d_%d_%d.png", $Config->get("${layer}_Prefix"), $zoom, $x, $y));
+            }
+
+            # libGD comparison returns true if images are different. (i.e. non-empty Land tile)
+            # so return the opposite (false) if the tile doesn't look like an empty land tile
+
+            # Check for black tile output
+            if (not ($SubImage->compare($self->{BlackTileImage}) & GD_CMP_IMAGE)) {
+                throw TilesetError "SplitTiles: Black Tile encountered", "inkscape";
+            }
+
+            # Detect empty tile here:
+            if (not ($SubImage->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE)) { 
+                copy("emptyland.png", $tileFile);
+            }
+            # same for Sea tiles
+            elsif (not($SubImage->compare($self->{EmptySeaImage}) & GD_CMP_IMAGE)) {
+                copy("emptysea.png", $tileFile);
+            }
+            else {
+                if ($Config->get($layer."_Transparent")) {
+                    $SubImage->transparent($SubImage->colorAllocate(248, 248, 248));
+                }
+                else {
+                    $SubImage->transparent(-1);
+                }
+                # Get the image as PNG data
+                $SubImage->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
+                my $png_data = $SubImage->png;
+
+                # Store it
+                open (my $fp, ">$tileFile") || throw TilesetError "SplitTiles: Could not open $tileFile for writing", "fatal";
+                binmode $fp;
+                print $fp $png_data;
+                close $fp;
+            }
+        }
+    }
+}
 
 
 #-----------------------------------------------------------------------------
@@ -623,7 +857,6 @@ sub RenderTile
                     if ($Config->get("Verbose") >= 10);
     
     # Sub-tiles
-    print "$N $S \n";
     my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
     my $MercY1 = ProjectF($S); # get mercator coordinates for South border of tile
     my $MercYC = 0.5 * ($MercY1 + $MercY2); # get center of tile in mercator

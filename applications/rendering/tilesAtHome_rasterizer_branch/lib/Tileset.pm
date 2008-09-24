@@ -103,7 +103,7 @@ sub generate
     $::progressJobs++;
     $::currentSubTask = "Download";
     
-    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, ($N+$S)/2, ($W+$E)/2),1,0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f (complexity %d)", $req->ZXY, ($N+$S)/2, ($W+$E)/2, $req->{'complexity'}),1,0);
     
     my $maxCoords = (2 ** $req->Z - 1);
     
@@ -284,8 +284,11 @@ sub downloadData
       $E1 = 180;
     }
 
+    # temporarily turn off locales
+    no locale;
     my $bbox = sprintf("%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
+    use locale;
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
@@ -326,7 +329,7 @@ sub downloadData
         
         my $res = undef;
         # download tile data in one piece *if* the tile is not too complex
-        if ($req->Z >= 12 && $req->{complexity} < 20000000)
+        if (($req->Z >= 12 && $req->{complexity} < 20000000) || $req->Z < 12)
            {$res = ::DownloadFile($URL, $partialFile, 0)};
 
         if ((! $res) and ($req->Z < 12))

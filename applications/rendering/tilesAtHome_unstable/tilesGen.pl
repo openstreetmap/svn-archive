@@ -259,6 +259,7 @@ elsif ($Mode eq "loop")
         reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
 
         ### start processing here:
+        $progressJobs++;
         # Render stuff if we get a job from server
         ProcessRequestsFromServer();
         # compress and upload results
@@ -512,7 +513,7 @@ sub ProcessRequestsFromServer
         print "files, yet. Downloading requests\n";
         print "from the server in this mode would take them from the tiles\@home\n";
         print "queue and never upload the results. Please use xy mode. Program aborted.\n";
-        cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
+        cleanUpAndDie("ProcessRequestFromServer:CreateTilesetFile set, exiting","EXIT",1);
     }
 
     my $req;

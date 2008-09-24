@@ -29,7 +29,6 @@
 # - generate more concise SVG output by naming things differently
 #   (not way_reverse_45363 but wr_123; possibly also renumber them
 #   1..n)
-# - generate only paths that are actually referenced
 # - include lines2curves
 # - simplify paths that have lots of nodes (specify something like
 #   an "output dpi" and then just round every position to the nearest
@@ -147,6 +146,7 @@ my $rule_file = "rule.xml";
 my $debug_opts = '';
 my $output_file;
 my $bbox;
+my %referenced_ways;
 
 GetOptions("rule=s"    => \$rule_file, 
            "debug=s"   => \$debug_opts,
@@ -476,10 +476,6 @@ foreach my $relation (values(%$relation_storage))
     }
 }
 
-# Pre-generate named path definitions for all ways
-
-generate_paths();
-
 # Clipping rectangle for map
 
 $writer->startTag("clipPath", "id" => "map-clipping");
@@ -544,6 +540,10 @@ $writer->endTag('g');
 draw_map_decoration();
 draw_marginalia() if ($title ne "" || $showScale eq "yes" || $showLicense eq "yes");
 
+# Generate named path definitions for referenced ways
+
+generate_paths();
+
 # FIXME zoom controls from Osmarender.xsl
 
 $writer->endTag('svg');
@@ -551,6 +551,14 @@ $writer->end();
 $output->close();
 
 exit;
+
+sub get_way_href
+{
+    my ($id, $type) = @_;
+
+    $referenced_ways{$id}->{$type} = 1;
+    return '#way_'.$type.'_'.$id;
+}
 
 # sub generate_paths()
 # --------------------
@@ -561,11 +569,12 @@ sub generate_paths
 {
     $writer->startTag("defs", "id" => "defs-ways");
 
-    foreach my $way(values(%$way_storage))
+    foreach my $way_id (keys %referenced_ways)
     {
         # extract data into variables for convenience. the "points"
         # array contains lat/lon pairs of the nodes.
-        my $id = $way->{"id"};
+        my $way = $way_storage->{$way_id};
+        my $types = $referenced_ways{$way_id};
         my $tags = $way->{"tags"};
         my $points = [];
         foreach (@{$way->{"nodes"}})
@@ -575,28 +584,19 @@ sub generate_paths
 
         next if (scalar(@$points) < 2);
 
-        # SUPER BIG FIXME HERE:
-        # All these paths should only be generated if the corresponding ways are
-        # actually rendered. This will save a lot of SVG complexity.
 
         # generate a normal way path
-        $writer->emptyTag("path", "id" => "way_normal_$id", "d" => make_path(@$points));
+        if ($types->{'normal'})
+        {
+            $writer->emptyTag("path", "id" => "way_normal_$way_id", "d" => make_path(@$points));
+        }
 
         # generate reverse path if needed
-        { no warnings 'uninitialized';
-         
-            if (($tags->{name_direction} eq "-1") or 
-                ($tags->{'osmarender:nameDirection'} eq "-1") or
-                (($tags->{name_direction} ne "1") and 
-                 ($tags->{'osmarender:nameDirection'} ne "1") and 
-                 ($points->[0][1] > $points->[scalar(@$points)-1]->[1])
-                )
-               )
-            {
-                $writer->emptyTag("path", "id" => "way_reverse_$id", 
-                    "d" => make_path(reverse @$points));
-            }
-        };
+        if ($types->{'reverse'})
+        {
+            $writer->emptyTag("path", "id" => "way_reverse_$way_id", 
+                "d" => make_path(reverse @$points));
+        }
 
         # generate the start, middle and end paths needed for "smart linecaps".
         # The first and last way segment are split in the middle.
@@ -608,12 +608,21 @@ sub generate_paths
         my $firstnode = shift @$points;
         my $lastnode = pop @$points;
 
-        $writer->emptyTag("path", "id" => "way_start_$id", 
-            "d" => make_path($firstnode, $midpoint_head));
-        $writer->emptyTag("path", "id" => "way_end_$id", 
-            "d" => make_path($midpoint_tail, $lastnode));
-        $writer->emptyTag("path", "id" => "way_mid_$id", 
-            "d" => make_path($midpoint_head, @$points, $midpoint_tail)) if scalar(@$points);
+        if ($types->{'start'})
+        {
+            $writer->emptyTag("path", "id" => "way_start_$way_id", 
+                "d" => make_path($firstnode, $midpoint_head));
+        }
+        if ($types->{'end'})
+        {
+            $writer->emptyTag("path", "id" => "way_end_$way_id", 
+                "d" => make_path($midpoint_tail, $lastnode));
+        }
+        if ($types->{'mid'})
+        {
+            $writer->emptyTag("path", "id" => "way_mid_$way_id", 
+                "d" => make_path($midpoint_head, @$points, $midpoint_tail)) if scalar(@$points);
+        }
     };
     $writer->endTag("defs");
 }

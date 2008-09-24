@@ -97,7 +97,7 @@ sub draw_lines
         }
         else
         {
-            draw_path($linenode, "way_normal_".$_->{"id"}, $style);
+            draw_path($linenode, $_->{"id"}, 'normal', $style);
         }
     }
     $writer->endTag("g") if ($group_started);
@@ -179,17 +179,17 @@ sub draw_way_with_smart_linecaps
     # If first and last is the same, draw only one way. Else divide way into way_start, way_mid and way_last
     if ($extraClassFirst eq $extraClassLast)
     {
-        draw_path($linenode, "way_normal_$id", $extraClassFirst, $style);
+        draw_path($linenode, $id, 'normal', $extraClassFirst, $style);
     } 
     else 
     {
         # first draw middle segment if we have more than 2 nodes
-        draw_path($linenode, "way_mid_$id", 
+        draw_path($linenode, $id, 'mid', 
             "osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end", $style) 
             if (scalar(@$nodes)>2);
-        draw_path($linenode, "way_start_$id",
+        draw_path($linenode, $id, 'start',
             "$extraClassFirst osmarender-no-marker-end", $style);
-        draw_path($linenode, "way_end_$id", 
+        draw_path($linenode, $id, 'end', 
             "$extraClassLast osmarender-no-marker-start", $style);
     }
 }
@@ -429,8 +429,7 @@ sub draw_text_on_path
     {
         debug("draw text on path '$text'") if ($debug->{"drawing"});
 
-        my $path = ($reverse) ?
-            "#way_reverse_$id" : "#way_normal_$id";
+        my $path = get_way_href($id,  ($reverse) ? 'reverse' : 'normal');
         $writer->startTag("text", 
             copy_attributes_not_in_list($textnode, 
                 [ "startOffset","method","spacing","lengthAdjust","textLength" ]));
@@ -848,29 +847,30 @@ sub draw_way_markers
 # -------------------------------------------------------------------
 sub draw_path
 {
-    my ($rulenode, $path_id, $addclass, $style) = @_;
+    my ($rulenode, $way_id, $way_type, $addclass, $style) = @_;
 
     my $mask_class = $rulenode->getAttribute("mask-class");
     my $class = $rulenode->getAttribute("class");
     my $extra_attr = [];
 
+    my $path_id = get_way_href($way_id, $way_type);
     if ($mask_class ne "")
     {
-        my $mask_id = "mask_".$path_id;
+        my $mask_id = 'mask_'.$way_type.'_'.$way_id;
         $writer->startTag("mask", 
             "id" => $mask_id, 
             "maskUnits" => "userSpaceOnUse");
         $writer->emptyTag("use", 
-            "xlink:href" => "#$path_id",
+            "xlink:href" => $path_id,
             "class" => "$mask_class osmarender-mask-black");
 
         # the following two seem to be required as a workaround for 
         # an inkscape bug.
         $writer->emptyTag("use", 
-            "xlink:href" => "#$path_id",
+            "xlink:href" => $path_id,
             "class" => "$class osmarender-mask-white");
         $writer->emptyTag("use", 
-            "xlink:href" => "#$path_id",
+            "xlink:href" => "$path_id",
             "class" => "$mask_class osmarender-mask-black");
 
         $writer->endTag("mask");
@@ -878,12 +878,12 @@ sub draw_path
     }
     if (defined($style) and $style ne "") {
       $writer->emptyTag("use", 
-			"xlink:href" => "#$path_id", "style" => "$style",
+			"xlink:href" => "$path_id", "style" => "$style",
 			@$extra_attr,
 			"class" => defined($addclass) ? "$class $addclass" : $class);
     } else {
       $writer->emptyTag("use", 
-			"xlink:href" => "#$path_id",
+			"xlink:href" => "$path_id",
 			@$extra_attr,
 			"class" => defined($addclass) ? "$class $addclass" : $class);
     }

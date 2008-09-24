@@ -95,8 +95,14 @@ sub convert {
     my %params = @_;
 
     # Workaround for locale-related problems
-    my $old_lc_all = $ENV{LC_ALL};
-    $ENV{LC_ALL} = 'C';
+    #FIXME: I think there's something about this needing to be set to the system locale on windows
+    local $ENV{LC_NUMERIC} = 'C';
+
+    # Make sure Inkscape can't find any X display.
+    # Probably not possible to do anything like this on Windows, which is sad
+    # because inkscape will then sometimes throw errors in a dialog box instead
+    # of exiting and showing us something on stdout/stderr
+    local $ENV{DISPLAY} = '';
 
     my %area;
     if( $params{area} ){
@@ -116,8 +122,6 @@ sub convert {
         throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {stdout => $self->{stdout}, stderr => $self->{stderr}});
 
     $self->check_output($params{outfile});
-
-    $ENV{LC_ALL} = $old_lc_all
 }
 
 package SVG::Rasterize::Engine::Inkscape::Error;
@@ -137,7 +141,9 @@ __END__
 
 =head1 TO DO
 
-Update exception docs
+Update exception docs.
+
+Have a look at the new --shell mode
 
 =head1 BUGS
 

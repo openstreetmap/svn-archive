@@ -780,17 +780,22 @@ sub svg2png
     my $rasterize = $SVG::Rasterize::object;
     my $engine = $rasterize->engine();
 
+    my %rasterize_params = (
+        infile => $svgFile,
+        outfile => $FullSplitPngFile,
+        width => $SizeX,
+        height => $SizeY,
+        area => $box
+        );
+    if( ref($engine) =~ /batik/i && $Config->get('BatikJVMSize') ){
+        $rasterize_params{heapsize} = $Config->get('BatikJVMSize');
+    }
+
     statusMessage("Rendering",0,3);
 
     my $error = 0;
     try {
-        $rasterize->convert(
-            infile => $svgFile,
-            outfile => $FullSplitPngFile,
-            width => $SizeX,
-            height => $SizeY,
-            area => $box,
-            );
+        $rasterize->convert(%rasterize_params);
     } catch SVG::Rasterize::Engine::Error::Prerequisite with {
         my $e = shift;
 

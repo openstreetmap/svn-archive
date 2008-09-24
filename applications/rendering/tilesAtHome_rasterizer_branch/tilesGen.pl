@@ -782,6 +782,7 @@ sub svg2png
 
     statusMessage("Rendering",0,3);
 
+    my $error = 0;
     try {
         $rasterize->convert(
             infile => $svgFile,
@@ -791,31 +792,37 @@ sub svg2png
             area => $box,
             );
     } catch SVG::Rasterize::Engine::Error::Prerequisite with {
+        my $e = shift;
+
+        statusMessage("Rasterizing failed because of unsatisfied prerequisite: $e",1,0);
+
         # Apparently exit code 0 here should tell the parent process that something went wrong
         exit 0;
     } catch SVG::Rasterize::Engine::Error::Runtime with {
         my $e = shift;
-        statusMessage("Rasterizing failed with runtime exception: $e",1,0);
-        print "Rasterize engine STDOUT:".$e->{stdout} if $Config->get("Debug") && $e->{stdout};
-        print "Rasterize engine STDERR:".$e->{stderr} if $Config->get("Debug") && $e->{stderr};
 
-        addFault("rasterizer",1);
-        $req->is_unrenderable(1);
-        return(0, 'BadSVG (svg2png)');
+        statusMessage("Rasterizing failed with runtime exception: $e",1,0);
+        print "Rasterize system command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
+        print "Rasterize engine STDOUT:".$e->{stdout}."\n";
+        print "Rasterize engine STDERR:".$e->{stderr}."\n";
+
+        $error = 1;
     } catch SVG::Rasterize::Engine::Error::NoOutput with {
         my $e = shift;
-        statusMessage("Rasterizing failed to create output: $e",1,0);
-        print "Rasterize engine STDOUT:".$e->{stdout} if $Config->get("Debug") && $e->{stdout};
-        print "Rasterize engine STDERR:".$e->{stderr} if $Config->get("Debug") && $e->{stderr};
 
+        statusMessage("Rasterizing failed to create output: $e",1,0);
+        $error = 1;
+    };
+
+    if( $error ){
         addFault("rasterizer",1);
         $req->is_unrenderable(1);
         return(0, 'BadSVG (svg2png)');
-    };
+    } else {
+        resetFault("rasterizer"); # reset to zero if the rasterizer succeeds at least once
 
-    resetFault("rasterizer"); # reset to zero if the rasterizer succeeds at least once
-
-    return ($FullSplitPngFile, ""); #return success
+        return ($FullSplitPngFile, ""); #return success
+    }
 }
 
 

@@ -1,0 +1,40 @@
+<!ELEMENT MapFeatures (entry*)>
+
+<!ELEMENT entry (filter,titel,description)>
+
+<!ELEMENT filter (restriction|filter)+>
+<!ELEMENT titel (#PCDATA|valueof)* >
+<!ELEMENT description (#PCDATA|valueof|br)* >
+
+<!ELEMENT restriction EMPTY>
+<!ELEMENT valueof EMPTY>
+<!ELEMENT br EMPTY>
+
+
+<!ATTLIST entry
+   osmKey		CDATA    #REQUIRED
+   osmValue		CDATA    #REQUIRED
+   filename		CDATA    #REQUIRED
+   image		CDATA    #REQUIRED
+   name			CDATA    #REQUIRED
+   imagesize	CDATA    #REQUIRED
+   imageoffset	CDATA    #REQUIRED
+>
+
+<!ATTLIST filter
+   name			CDATA    #REQUIRED
+   logical		CDATA    #REQUIRED
+   negation		CDATA	 #IMPLIED
+>
+<!ATTLIST restriction
+   osmKey		CDATA    #REQUIRED
+   osmValue		CDATA    #REQUIRED
+   negation		CDATA	 #IMPLIED
+>
+
+<!ATTLIST valueof
+   osmKey		CDATA    #REQUIRED
+>
+
+
+

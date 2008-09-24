@@ -24,7 +24,7 @@ This module is only meant to be used by SVG::Rasterize.
 
 =cut
 
-__PACKAGE__->mk_accessors(qw(path));
+__PACKAGE__->mk_accessors(qw(path searchpaths));
 
 =pod
 
@@ -42,7 +42,7 @@ sub path {
     my $self = shift;
 
     unless( @_ || $self->{path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path() ){
+        foreach my $path ( @{ $self->searchpaths } ){
             my($volume, $dir) = File::Spec->splitpath($path, 1);
 
             foreach my $name ( 'inkscape', 'inkscape.exe' ){
@@ -59,6 +59,37 @@ sub path {
 =pod
 
 =head1 METHODS
+
+=head2 new(\%params) (constructor)
+
+Create a new instance of this class. You can pass in parameters which
+will then be set via their accessor
+
+Returns: new instance of this class.
+
+=cut
+
+sub new {
+    my ( $pkg, $params ) = @_;
+    my $class = ref $pkg || $pkg;
+    my $self = bless( {}, $class);
+
+    # Defaults
+    my @default_searchpaths = ( File::Spec->path() );
+    if( $^O eq 'MSWin32' ){
+        my($volume, $dir) = File::Spec->splitpath($ENV{PROGRAMFILES}, 1);
+        $dir = File::Spec->catdir( File::Spec->splitdir($ENV{PROGRAMFILES}), 'Inkscape' );
+        push(@default_searchpaths, File::Spec->catpath($volume, $dir) );
+    }
+
+    foreach my $param ( keys(%$params) ){
+        $self->$param( $params->{$param} );
+    }
+
+    return $self;
+}
+
+=pod
 
 =head2 available()
 

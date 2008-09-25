@@ -222,8 +222,9 @@ sub downloadData
       $E1 = 180;
     }
 
-    my $bbox = sprintf("%f,%f,%f,%f",
-      $W1, $S1, $E1, $N1);
+    no locale;
+    my $bbox = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
+    use locale;
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
@@ -611,6 +612,7 @@ sub RenderSVG
     my ($Height, $Width, $Valid) = ::getSize(File::Spec->join($self->{JobDir}, "$layer-z$zoom.svg"));
 
     my ($Left, $Top) = (0, 0);
+    no locale;
     if ($Config->get("Batik") == "1") { # batik as jar
         $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
                        $Config->get("i18n") ? "LC_ALL=C " : "",
@@ -646,9 +648,6 @@ sub RenderSVG
                        $stdOut);
     }
     else {
-        my $old_locale = ::setlocale(LC_NUMERIC);
-        ::setlocale(LC_NUMERIC, "");
-
         $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
                        $Config->get("i18n") ? "LC_ALL=C " : "",
                        $Config->get("Niceness"),
@@ -659,9 +658,8 @@ sub RenderSVG
                        $pngFile,
                        $svgFile,
                        $stdOut);
-
-        ::setlocale(LC_NUMERIC, $old_locale);
     }
+    use locale;
     
     # stop rendering the current job when inkscape fails
     ::statusMessage("Rendering",0,3);

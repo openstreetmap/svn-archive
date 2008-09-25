@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MapFeatures SYSTEM "grammar.dtd">
+<MapFeatures>
+	<entry osmKey="leisure" osmValue="playground" filename="playground.txt" name="Spielplatz" image="playground.png" imagesize="20,20" imageoffset="-8,-8">
+		<filter logical="and">
+	    	<restriction osmKey="leisure" osmValue="playground"/>
+	    	<filter logical="or" negation="true">
+	    		<restriction osmKey="name" osmValue="Waldspielplatz"/>
+	    		<restriction osmKey="operator" osmValue="Stadtwedel"/>
+			</filter>
+		</filter>
+		<titel>
+			Spielplatz
+		</titel>
+		<description>
+			<valueof osmKey="name"/>
+			blablub
+		</description>
+	</entry>
+</MapFeatures>

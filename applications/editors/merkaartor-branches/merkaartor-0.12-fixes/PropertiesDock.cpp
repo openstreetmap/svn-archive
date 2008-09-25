@@ -440,7 +440,6 @@ void PropertiesDock::on_TrackPointLat_editingFinished()
 	TrackPoint* Pt = dynamic_cast<TrackPoint*>(selection(0));
 	if (Pt)
 	{
-		Pt->setLastUpdated(MapFeature::User);
 		Main->document()->addHistory(
 			new MoveTrackPointCommand(Pt,
 				Coord(angToInt(TrackPointUi.Latitude->text().toDouble()),Pt->position().lon()), Main->document()->getDirtyOrOriginLayer(Pt->layer()) ));
@@ -454,7 +453,6 @@ void PropertiesDock::on_TrackPointLon_editingFinished()
 	TrackPoint* Pt = dynamic_cast<TrackPoint*>(selection(0));
 	if (Pt)
 	{
-		Pt->setLastUpdated(MapFeature::User);
 		Main->document()->addHistory(
 			new MoveTrackPointCommand(Pt,
 				Coord(Pt->position().lat(),angToInt(TrackPointUi.Longitude->text().toDouble())), Main->document()->getDirtyOrOriginLayer(Pt->layer()) ));

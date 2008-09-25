@@ -1736,31 +1736,31 @@
 
         <!-- Landuse -->
         <rule e="way" k="landuse" v="residential|farmyard" layer="-5">
-            <area class="landuse-residential"/>
+			<area class="landuse-residential" layer="-5"/>
         </rule>
         <rule e="way" k="landuse" v="retail" layer="-5">
-            <area class="landuse-retail"/>
+			<area class="landuse-retail" layer="-5"/>
         </rule>
         <rule e="way" k="landuse" v="industrial|brownfield" layer="-5">
-            <area class="landuse-industrial"/>
+			<area class="landuse-industrial" layer="-5"/>
         </rule>
         <rule e="way" k="landuse" v="commercial" layer="-5">
-            <area class="landuse-commercial"/>
+			<area class="landuse-commercial" layer="-5"/>
         </rule>
 
         <!-- Artificial landuse -->
         <rule e="way" k="amenity" v="school|college|university" layer="-5">
-            <area class="amenity-school"/>
+            <area class="amenity-school" layer="-5"/>
         </rule>
 
         <!-- Man-made areas -->
         <rule e="way" k="landuse" v="military" layer="-5">
             <rule e="way" k="military" v="~" layer="-5">
-                <area class="military-area"/>
+				<area class="military-area" layer="-5"/>
             </rule>
         </rule>
         <rule e="way" k="military" v="*" layer="-5">
-            <area class="military-area"/>
+			<area class="military-area" layer="-5"/>
         </rule>
 
     </rule>
@@ -1771,19 +1771,19 @@
         <!-- Non-physical boundaries -->
         <rule e="way" k="boundary" v="administrative" layer="5">
             <rule e="way" k="border_type" v="state" layer="5">
-                <line class="boundary boundary-administrative-state-casing"/>
-                <line class="boundary boundary-administrative-state-core"/>
+				<line class="boundary boundary-administrative-state-casing" layer="5"/>
+				<line class="boundary boundary-administrative-state-core" layer="5"/>
             </rule>
             <else>
                 <rule e="way" k="admin_level" v="10" layer="5">
-                    <line class="boundary boundary-administrative-parish-core"/>
+					<line class="boundary boundary-administrative-parish-core" layer="5"/>
                 </rule>
                 <else>
                     <rule e="way" k="admin_level" v="8" layer="5">
-                        <line class="boundary boundary-administrative-district-core"/>
+						<line class="boundary boundary-administrative-district-core" layer="5"/>
                     </rule>
                     <else>
-                        <line class="boundary boundary-administrative-state-core"/>
+						<line class="boundary boundary-administrative-state-core" layer="5"/>
                     </else>
                 </else>
             </else>
@@ -1797,128 +1797,128 @@
 
                         <!-- Waterway names -->
                         <rule e="way" k="waterway" v="drain" layer="5">
-                            <text k="name" startOffset="50%" class="waterway-name-casing waterway-drain-name-casing" dy="0.5px"/>
-                            <text k="name" startOffset="50%" class="waterway-name-core waterway-drain-name-core" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="waterway-name-casing waterway-drain-name-casing" dy="0.5px" layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-core waterway-drain-name-core" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="waterway" v="canal" layer="5">
-                            <text k="name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="0.5px"/>
-                            <text k="name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="0.5px" layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="waterway" v="stream" layer="5">
-                            <text k="name" startOffset="50%" class="waterway-name-casing waterway-stream-name-casing" dy="0.5px"/>
-                            <text k="name" startOffset="50%" class="waterway-name-core waterway-stream-name-core" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="waterway-name-casing waterway-stream-name-casing" dy="0.5px" layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-core waterway-stream-name-core" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="waterway" v="river" layer="5">
-                            <text k="name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="0.5px"/>
-                            <text k="name" startOffset="50%" class="waterway-name-core waterway-river-name-core" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="0.5px" layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-core waterway-river-name-core" dy="0.5px" layer="5"/>
                         </rule>
 
                         <!-- Scramble names -->
                         <rule e="way" k="scramble" v="*" layer="5">
-                            <text startOffset="50%" class="caption-casing highway-scramble-name" dy="0.35px"><tag k="name"/> ( <tag k="scramble"/> )</text>
-                            <text startOffset="50%" class="caption-core highway-scramble-name" dy="0.35px"><tag k="name"/> ( <tag k="scramble"/> )</text>
+							<text startOffset="50%" class="caption-casing highway-scramble-name" dy="0.35px" layer="5"><tag k="name"/> ( <tag k="scramble"/> )</text>
+							<text startOffset="50%" class="caption-core highway-scramble-name" dy="0.35px" layer="5"><tag k="name"/> ( <tag k="scramble"/> )</text>
                         </rule>
 
                         <!-- Highway names -->
                         <rule e="way" k="highway" v="steps" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-steps-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-steps-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="footway|footpath" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="pedestrian" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-pedestrian-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-pedestrian-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="cycleway" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="path" layer="5">
                             <rule e="way" k="bicycle" v="yes|designated" layer="5">
-                                <text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px"/>
+								<text k="name" startOffset="50%" class="highway-name highway-cycleway-name" dy="0.35px" layer="5"/>
 	                    </rule>
                             <else>
                                 <rule e="way" k="horse" v="yes|designated" layer="5">
-                                    <text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px"/>
+									<text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px" layer="5"/>
          	            </rule>
                             <else>
-                                <text k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.35px"/>
+								<text k="name" startOffset="50%" class="highway-name highway-footway-name" dy="0.35px" layer="5"/>
                             </else></else>
                         </rule>
                         <rule e="way" k="highway" v="bridleway" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-bridleway-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="byway" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-byway-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-byway-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="track" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-track-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-track-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="unsurfaced" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-unsurfaced-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-unsurfaced-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="service" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-service-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-service-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="tertiary" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-tertiary-name" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-tertiary-name" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="secondary" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="primary_link" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-primary-link-name" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-primary-link-name" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="trunk_link" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-trunk-link-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-trunk-link-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="motorway_link" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-motorway-link-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-motorway-link-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="primary" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-primary-name" dy="0.5px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-primary-name" dy="0.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="trunk" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-trunk-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-trunk-name" dy="0.35px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="motorway" layer="5">
-                            <text k="name" startOffset="50%" class="highway-name highway-motorway-name" dy="0.35px"/>
+							<text k="name" startOffset="50%" class="highway-name highway-motorway-name" dy="0.35px" layer="5"/>
                         </rule>
                     </rule>
 
                     <rule e="way" k="junction" v="*" layer="5" notConnectedSameTag="name"> <!-- Roundabouts, motorway exits etc -->
                         <rule e="way" k="highway" v="unsurfaced|track" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-unsurfaced-name" dy="0.75px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-unsurfaced-name" dy="0.75px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="pedestrian" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-pedestrian-name" dy="0.75px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-pedestrian-name" dy="0.75px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.75px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.75px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="tertiary" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-tertiary-name" dy="0.75px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-tertiary-name" dy="0.75px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="secondary" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="1px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="1px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="primary|primary_link" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-primary-name" dy="1px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-primary-name" dy="1px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="trunk|trunk_link" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-trunk-name" dy="1.5px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-trunk-name" dy="1.5px" layer="5"/>
                         </rule>
                         <rule e="way" k="highway" v="motorway|motorway_link" layer="5">
-                            <areaText k="name" startOffset="50%" class="highway-name highway-motorway-name" dy="1.5px"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-motorway-name" dy="1.5px" layer="5"/>
                         </rule>
                     </rule>
                 </rule>
                 <else> <!-- area!=yes -->
                     <rule e="way" k="highway" v="*" notConnectedSameTag="name" layer="5">
-                        <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-                        <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+						<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+						<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
                     </rule>
                 </else>
             </rule>
@@ -1930,63 +1930,63 @@
                 <rule e="way" k="junction" v="~" layer="5"> <!-- no ref on junctions / roundabouts -->
                     <!-- Use startOffset to prevent captions from colliding on dual carriageways -->
                     <rule e="way" k="highway" v="steps" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-steps-ref" dy="-0.5px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-steps-ref" dy="-0.5px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="footway|footpath" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-footway-ref" dy="-0.5px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-footway-ref" dy="-0.5px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="pedestrian" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-pedestrian-ref" dy="-1px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-pedestrian-ref" dy="-1px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="cycleway" layer="5">
                         <text k="ref" startOffset="30%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
-                        <text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
+						<text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="path" layer="5">
                         <rule e="way" k="bicycle" v="yes|designated" layer="5">
-                            <text k="ref" startOffset="30%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
-                            <text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px"/>
+							<text k="ref" startOffset="30%" class="highway-ref highway-cycleway-ref" dy="-0.8px" layer="5"/>
+							<text k="ncn_ref" startOffset="60%" class="highway-ref highway-cycleway-ref" dy="-0.8px" layer="5"/>
     	                </rule>
                         <else>
                             <rule e="way" k="horse" v="yes|designated" layer="5">
-                                <text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px"/>
+								<text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px" layer="5"/>
 	                    </rule>
                         <else>
-                            <text k="ref" startOffset="30%" class="highway-ref highway-footway-ref" dy="-0.5px"/>
+							<text k="ref" startOffset="30%" class="highway-ref highway-footway-ref" dy="-0.5px" layer="5"/>
                         </else></else>
                     </rule>
                     <rule e="way" k="highway" v="bridleway" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-bridleway-ref" dy="-0.8px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="byway" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-byway-ref" dy="-1px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-byway-ref" dy="-1px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="track" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-track-ref" dy="-1px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-track-ref" dy="-1px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="unsurfaced" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-unsurfaced-ref" dy="-1px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-unsurfaced-ref" dy="-1px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="service" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-service-ref" dy="-1px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-service-ref" dy="-1px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-unclassified-ref" dy="-1.2px"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-unclassified-ref" dy="-1.2px" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="tertiary" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-tertiary-ref" dy="-1.25px" textAttenuation="3"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-tertiary-ref" dy="-1.25px" textAttenuation="3" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="secondary" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-secondary-ref" dy="-1.25px" textAttenuation="3"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-secondary-ref" dy="-1.25px" textAttenuation="3" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="primary" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-primary-ref" dy="-1.25px" textAttenuation="3"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-primary-ref" dy="-1.25px" textAttenuation="3" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="trunk" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-trunk-ref" dy="-1.25px" textAttenuation="3"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-trunk-ref" dy="-1.25px" textAttenuation="3" layer="5"/>
                     </rule>
                     <rule e="way" k="highway" v="motorway" layer="5">
-                        <text k="ref" startOffset="30%" class="highway-ref highway-motorway-ref" dy="-1.50px" textAttenuation="3"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-motorway-ref" dy="-1.50px" textAttenuation="3" layer="5"/>
                     </rule>
                 </rule>
             </rule>
@@ -1995,130 +1995,130 @@
         <!-- Place names  -->
         <rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
             <rule e="node" k="natural" v="peak" layer="5">
-                <text k="name" class="place-caption peak-caption" dy="-1.5px"/>
-                <text k="elevation" class="place-caption" font-size="1px" dy="2.0px"/>
+				<text k="name" class="place-caption peak-caption" dy="-1.5px" layer="5"/>
+				<text k="elevation" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
             </rule>
 
             <rule e="node" k="place" v="islet" layer="5">
-                <text k="name" class="place-caption islet-caption"/>
+				<text k="name" class="place-caption islet-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="village" layer="5">
-                <text k="name" class="place-caption village-caption"/>
+				<text k="name" class="place-caption village-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="suburb" layer="5">
-                <text k="name" class="place-caption suburb-caption"/>
+				<text k="name" class="place-caption suburb-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="hamlet" layer="5">
-                <text k="name" class="place-caption hamlet-caption"/>
+				<text k="name" class="place-caption hamlet-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="locality" layer="5">
-                <text k="name" class="place-caption locality-caption"/>
+				<text k="name" class="place-caption locality-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="farm" layer="5">
-                <text k="name" class="place-caption farm-caption"/>
+				<text k="name" class="place-caption farm-caption" layer="5"/>
             </rule>
             <rule e="node" k="tourism" v="attraction" layer="5">
-                <text k="name" class="tourism-attraction-caption"/>
+				<text k="name" class="tourism-attraction-caption" layer="5"/>
             </rule>
 
             <rule e="node" k="railway" v="station" layer="5">
                 <rule e="node" s="way" k="railway" v="rail" layer="5">
-                    <text k="name" class="caption-casing railway-station-caption-casing" dy="-1.5px"/>
-                    <text k="name" class="caption-core railway-station-caption-core" dy="-1.5px"/>
+					<text k="name" class="caption-casing railway-station-caption-casing" dy="-1.5px" layer="5"/>
+					<text k="name" class="caption-core railway-station-caption-core" dy="-1.5px" layer="5"/>
                 </rule>
                 <else>
-                    <text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px"/>
-                    <text k="name" class="caption-core railway-halt-caption-core" dy="-1px"/>
+					<text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
+					<text k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
                 </else>
             </rule>
             <rule e="node" k="railway" v="halt" layer="5">
-                <text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px"/>
-                <text k="name" class="caption-core railway-halt-caption-core" dy="-1px"/>
+				<text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
+				<text k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
             </rule>
             <rule e="node" k="railway" v="tram_stop" layer="5">
-                <text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px"/>
-                <text k="name" class="caption-core railway-halt-caption-core" dy="-1px"/>
+				<text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
+				<text k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
             </rule>
 
             <rule e="node" k="amenity" v="pub" layer="5">
-                <text k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px"/>
-                <text k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px"/>
+				<text k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px" layer="5"/>
+				<text k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px" layer="5"/>
             </rule>
             <rule e="node" k="amenity" v="cinema" layer="5">
-                <text k="name" class="caption-casing amenity-cinema-caption-casing" dy="-3px"/>
-                <text k="name" class="caption-core amenity-cinema-caption-core" dy="-3px"/>
+				<text k="name" class="caption-casing amenity-cinema-caption-casing" dy="-3px" layer="5"/>
+				<text k="name" class="caption-core amenity-cinema-caption-core" dy="-3px" layer="5"/>
             </rule>
             <rule e="node" k="amenity" v="theatre" layer="5">
-                <text k="name" class="caption-casing amenity-theatre-caption-casing" dy="-3px"/>
-                <text k="name" class="caption-core amenity-theatre-caption-core" dy="-3px"/>
+				<text k="name" class="caption-casing amenity-theatre-caption-casing" dy="-3px" layer="5"/>
+				<text k="name" class="caption-core amenity-theatre-caption-core" dy="-3px" layer="5"/>
             </rule>
 
             <rule e="node" k="amenity" v="school|college|university" layer="5">
-                <text k="name" class="caption-casing generic-caption-casing" dy="-3px"/>
-                <text k="name" class="caption-core generic-caption-core" dy="-3px"/>
+				<text k="name" class="caption-casing generic-caption-casing" dy="-3px" layer="5"/>
+				<text k="name" class="caption-core generic-caption-core" dy="-3px" layer="5"/>
             </rule>
             <rule e="node" k="amenity" v="restaurant|shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank" layer="5">
-                    <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
-                    <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+				<text k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
+				<text k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
             </rule>
             <rule e="node" k="shop" v="supermarket" layer="5">
-                <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
-                <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+				<text k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
+				<text k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
             </rule>
             <rule e="node" k="tourism" v="hotel|hostel|camp_site|information" layer="5">
-                <rule e="node" k="amenity" v="restaurant">
+				<rule e="node" k="amenity" v="restaurant" layer="5">
                 </rule>
                 <else>
-                    <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
-                    <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+					<text k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
+					<text k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
                 </else>
             </rule>
             <rule e="node" k="historic" v="*" layer="5">
-                <text k="name" class="caption-casing generic-caption-casing" dy="-2.5px"/>
-                <text k="name" class="caption-core generic-caption-core" dy="-2.5px"/>
+				<text k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
+				<text k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
             </rule>
         </rule>
 
         <!-- House numbers -->
         <rule e="way" k="addr:housenumber" v="*" layer="5">
-		<areaSymbol ref="housenumber"  position="center"/>
-            <areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px"/>
+			<areaSymbol ref="housenumber"  position="center" layer="5"/>
+			<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
         </rule>
         <rule e="node" k="addr:housenumber" v="*" layer="5">
-            <circle r="0.8px" class="housenumber-node"/>
-            <text k="addr:housenumber" class="housenumber-caption" dy="0.3px"/>
+			<circle r="0.8px" class="housenumber-node" layer="5"/>
+			<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" layer="5"/>
         </rule>
 
         <!-- Area captions -->
         <rule e="way" k="natural" v="*" layer="5">
-            <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-            <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+			<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
         </rule>
 
         <rule e="way" k="sport" v="~" layer="5"> <!-- omit rendering captions for leisure, if sport is also set -->
             <rule e="way" k="leisure" v="*" layer="5">
-                <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-                <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+				<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+				<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
             </rule>
         </rule>
         <rule e="way" k="sport" v="*" layer="5">
             <!-- Offset captions for areas with icons -->
             <rule e="way" k="sport" v="soccer|tennis|swimming" layer="5">
-                <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" dy="3.5px"/>
-                <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" dy="3.5px"/>
+				<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
+				<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
             </rule>
             <else>
-                <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-                <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+				<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+				<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
             </else>
         </rule>
         <rule e="way" k="landuse|military" v="*" layer="5">
-            <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-            <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+			<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
         </rule>
         <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
-             <areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
-             <areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%'/>
+			<areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
+			<areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
         </rule>
 
         <rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
@@ -2127,14 +2127,14 @@
                  <rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
                  </rule>
                  <else>
-                    <areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%'/>
-                    <areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%'/>
+					 <areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' layer="5"/>
+					 <areaText k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%' layer="5"/>
                  </else>
             </rule>
         </rule>
         <rule e="way" k="tourism" v="tourism-attraction|zoo|picnic_site|caravan_site|camp_site" layer="5">
-            <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%"/>
-            <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"/>
+			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+			<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
         </rule>
     </rule>
 

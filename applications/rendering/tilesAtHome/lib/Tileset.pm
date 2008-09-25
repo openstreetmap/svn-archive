@@ -689,7 +689,7 @@ sub RenderTile
         # all higher zoom tiles of it are "done" (empty).
         for (my $j = $maxzoom; $j >= $Zoom ; $j--)
         {
-            $::progress += 2 ** $maxzoom-$j;
+            $::progress += 2 ** ($maxzoom-$j);
         }
 	return (1, 1, "All tiles empty");
     }

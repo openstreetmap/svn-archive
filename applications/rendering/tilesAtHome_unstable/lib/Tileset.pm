@@ -726,7 +726,7 @@ sub SplitTiles
             $i++;
             $::progress = $i;
             $::progressPercent = $i / $number_tiles * 100;
-            ::statusMessage("Writing tile $x $y", 10, 0); 
+            ::statusMessage("Writing tile $x $y", 0, 10); 
             # Get a tiles'worth of data from the main image
             $SubImage->copy($Image,
                             0,                   # Dest X offset

@@ -25,7 +25,7 @@ Niceness = nice -n10
 DownloadTimeout = 1800
 KeepDataFile = 0
 FallBackToSlices = 1
-MaxTilesetComplexity = 10000000
+MaxTilesetComplexity = 0
 i18n=0
 
 Osmarender = orp

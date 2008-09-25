@@ -90,6 +90,7 @@ sub getString
                                              passwd => $self->{Config}->get("UploadPassword"),
                                              version => $self->{Config}->get("ClientVersion"),
                                              layerspossible => $self->{Config}->get("LayersCapability"),
+                                             max_complexity => $self->{Config}->get("MaxTilesetComplexity"),
                                              client_uuid => ::GetClientId() ]);
 
     (print "Request string from server: ", $res->content,"\n") if ($self->{Config}->get("Debug"));      

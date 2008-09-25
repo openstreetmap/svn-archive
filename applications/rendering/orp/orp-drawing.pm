@@ -828,15 +828,9 @@ sub draw_way_markers
         # make_path expects lat/lon array pairs not full nodes
         my $path = make_path(map { [$_->{'lat'}, $_->{'lon'}] } @nodes);
 
-        $writer->startTag("g", 
-            copy_attributes_not_in_list($markernode, []));
         $writer->emptyTag("path", 
-            id => "nodePath_".$_->{"id"},
-            d => $path);
-        $writer->emptyTag("use", 
-            "xlink:href" => "#nodePath_".$_->{"id"},
+            d => $path,
             copy_attributes_not_in_list($markernode, []));
-        $writer->endTag("g");
     }
 }
 

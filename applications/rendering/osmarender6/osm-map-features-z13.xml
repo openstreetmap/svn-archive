@@ -851,31 +851,31 @@
 
         <!-- Landuse -->
         <rule e="way" k="landuse" v="residential|farmyard" layer="-5">
-            <area class="landuse-residential"/>
+			<area class="landuse-residential" layer="-5"/>
         </rule>
         <rule e="way" k="landuse" v="retail" layer="-5">
-            <area class="landuse-retail"/>
+			<area class="landuse-retail" layer="-5"/>
         </rule>
         <rule e="way" k="landuse" v="industrial|brownfield" layer="-5">
-            <area class="landuse-industrial"/>
+			<area class="landuse-industrial" layer="-5"/>
         </rule>
         <rule e="way" k="landuse" v="commercial" layer="-5">
-            <area class="landuse-commercial"/>
+			<area class="landuse-commercial" layer="-5"/>
         </rule>
 
         <!-- Artificial landuse -->
         <rule e="way" k="amenity" v="school|college|university" layer="-5">
-            <area class="amenity-school"/>
+			<area class="amenity-school" layer="-5"/>
         </rule>
 
         <!-- Man-made areas -->
         <rule e="way" k="landuse" v="military" layer="-5">
             <rule e="way" k="military" v="~" layer="-5">
-                <area class="military-area"/>
+				<area class="military-area" layer="-5"/>
             </rule>
         </rule>
         <rule e="way" k="military" v="*" layer="-5">
-            <area class="military-area"/>
+			<area class="military-area" layer="-5"/>
         </rule>
     </rule>
 
@@ -885,19 +885,19 @@
         <!-- Non-physical boundaries -->
         <rule e="way" k="boundary" v="administrative" layer="5">
             <rule e="way" k="border_type" v="state" layer="5">
-                <line class="boundary boundary-administrative-state-casing"/>
-                <line class="boundary boundary-administrative-state-core"/>
+				<line class="boundary boundary-administrative-state-casing" layer="5"/>
+				<line class="boundary boundary-administrative-state-core" layer="5"/>
             </rule>
             <else>
                 <rule e="way" k="admin_level" v="10" layer="5">
-                    <line class="boundary boundary-administrative-parish-core"/>
+					<line class="boundary boundary-administrative-parish-core" layer="5"/>
                 </rule>
                 <else>
                     <rule e="way" k="admin_level" v="8" layer="5">
-                        <line class="boundary boundary-administrative-district-core"/>
+						<line class="boundary boundary-administrative-district-core" layer="5"/>
                     </rule>
                     <else>
-                        <line class="boundary boundary-administrative-state-core"/>
+						<line class="boundary boundary-administrative-state-core" layer="5"/>
                     </else>
                 </else>
             </else>
@@ -906,25 +906,25 @@
         <!-- Place names  -->
         <rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
             <rule e="node" k="place" v="island" layer="5">
-                <text k="name" class="place-caption island-caption"/>
+				<text k="name" class="place-caption island-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="islet" layer="5">
-                <text k="name" class="place-caption islet-caption"/>
+				<text k="name" class="place-caption islet-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="city" layer="5">
-                <text k="name" class="place-caption city-caption"/>
+				<text k="name" class="place-caption city-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="town" layer="5">
-                <text k="name" class="place-caption town-caption"/>
+				<text k="name" class="place-caption town-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="village" layer="5">
-                <text k="name" class="place-caption village-caption"/>
+				<text k="name" class="place-caption village-caption" layer="5"/>
             </rule>
             <rule e="node" k="place" v="suburb" layer="5">
-                <text k="name" class="place-caption suburb-caption"/>
+				<text k="name" class="place-caption suburb-caption" layer="5"/>
             </rule>
             <rule e="node" k="aeroway" v="airport" layer="5">
-                <text k="name" class="aeroway-airport-caption" dy="-15px"/>
+				<text k="name" class="aeroway-airport-caption" dy="-15px" layer="5"/>
             </rule>
         </rule>
 

@@ -446,11 +446,11 @@
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">
 			<rule e="way" k="border_type" v="state" layer="5">
-				<line class="boundary boundary-administrative-state-casing" />
-				<line class="boundary boundary-administrative-state-core" />
+				<line class="boundary boundary-administrative-state-casing" layer="5"/>
+				<line class="boundary boundary-administrative-state-core" layer="5"/>
 			</rule>	
 			<else>
-				<line class="boundary boundary-administrative-state-core" />
+				<line class="boundary boundary-administrative-state-core" layer="5"/>
 			</else>	
 		</rule>
 

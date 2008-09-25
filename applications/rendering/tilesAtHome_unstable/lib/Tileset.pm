@@ -772,7 +772,7 @@ sub SplitTiles
                     $SubImage->transparent(-1);
                 }
                 # Get the image as PNG data
-                $SubImage->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
+                #$SubImage->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
                 my $png_data = $SubImage->png;
 
                 # Store it

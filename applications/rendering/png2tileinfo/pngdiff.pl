@@ -9,9 +9,6 @@
 # based on code by Martijn van Oosterhout <kleptog@gmail.com>
 # written by Steinar Hamre <steinarh@pvv.ntnu.no>
 
-use strict;
-use LWP::Simple;
-
 use GD;
 use strict;
 use bytes;

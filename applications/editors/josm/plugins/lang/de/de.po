@@ -5514,7 +5514,7 @@ msgstr "Imbiss (Fast Food)"
 
 #: ../lang/presets.java:1189
 msgid "Edit Fast Food Restaurant"
-msgstr "Imbiss (Fast Food-Resaurant) bearbeiten"
+msgstr "Imbiss (Fast Food-Restaurant) bearbeiten"
 
 #: ../lang/presets.java:1194
 msgid "Cafe"

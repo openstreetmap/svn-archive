@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   xmlns:exslt="http://exslt.org/common"
   xmlns:msxsl="urn:schemas-microsoft-com:xslt"
   xmlns:labels="http://openstreetmap.org/osmarender-labels-rtf"
+  xmlns:z="http://openstreetmap.org/osmarender-z-rtf"
   exclude-result-prefixes="exslt msxsl" 
   version="1.0">
 
@@ -61,6 +62,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <xsl:param name="scale" select="/rules/@scale"/>
   <xsl:param name="symbolScale" select="/rules/@symbolScale"/>
   <xsl:param name='textAttenuation' select='/rules/@textAttenuation'/>
+  <!-- TODO: Implement withOSMLayers again -->
   <xsl:param name="withOSMLayers" select="/rules/@withOSMLayers"/>
   <xsl:param name="svgBaseProfile" select="/rules/@svgBaseProfile"/>
   <xsl:param name="symbolsDir" select="/rules/@symbolsDir"/>
@@ -351,6 +353,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       </xsl:choose>
     </xsl:for-each>
   </xsl:variable>
+  
+  <xsl:variable name="instructionZIndex" xmlns="http://openstreetmap.org/osmarender-z-rtf">
+	  <instruction name="text" relative="true" value="1"/>
+  </xsl:variable>
 
   <!-- Main template -->
   <xsl:template match="/rules">
@@ -481,6 +487,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   </xsl:template>
 
+  <xsl:template name="drawElement">
+    <xsl:param name="instruction"/>
+    <xsl:param name="element"/>
+    <xsl:param name="svg"/>
+
+    <z:element>
+      <xsl:attribute name="layer">
+        <xsl:choose>
+          <xsl:when test="$instruction/@layer">
+            <xsl:value-of select="$instruction/@layer"/>
+          </xsl:when>
+          <xsl:when test="$element/tag[@k='layer']">
+            <xsl:value-of select="$element/tag[@k='layer']/@v"/>
+          </xsl:when>
+          <xsl:otherwise>0</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:copy-of select="$svg"/>
+    </z:element>
+  </xsl:template>
+
   <!-- Path Fragment Drawing -->
   <xsl:template name="drawPath">
     <xsl:param name='instruction' />
@@ -543,7 +570,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="instruction"/>
     <xsl:param name="way"/>
     <!-- The current way element if applicable -->
-    <xsl:param name="layer"/>
+
+   	<xsl:variable name="layer">
+		<xsl:choose>
+			<xsl:when test="$way/tag[@k='layer']">
+				<xsl:value-of select="$way/tag[@k='layer']/@v"/>
+			</xsl:when>
+			<xsl:otherwise>0</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 
     <xsl:variable name="extraClasses">
       <xsl:if test="$instruction/@suppress-markers-tag != ''">
@@ -659,9 +695,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="instruction"/>
     <xsl:param name="way"/>
     <!-- The current way element if applicable -->
-    <xsl:param name="layer"/>
     <xsl:param name="extraClasses"/>
     <xsl:param name="extraStyles"/>
+	
+	<xsl:variable name="layer">
+		<xsl:choose>
+			<xsl:when test="$way/tag[@k='layer']">
+				<xsl:value-of select="$way/tag[@k='layer']/@v"/>
+			</xsl:when>
+			<xsl:otherwise>0</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
     <!-- The first half of the first segment and the last half of the last segment are treated differently from the main
 			part of the way path.  The main part is always rendered with a butt line-cap.  Each end fragment is rendered with
@@ -1043,17 +1087,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- This is the instruction that is currently being processed -->
     <xsl:variable name="instruction" select="."/>
 
-    <g>
-      <xsl:apply-templates select="@*" mode="copyAttributes" />
-      <!-- Add all the svg attributes of the <line> instruction to the <g> element -->
-
       <!-- For each way -->
-      <xsl:apply-templates select="$elements" mode="line">
-        <xsl:with-param name="instruction" select="$instruction"/>
-        <xsl:with-param name="layer" select="$layer"/>
-      </xsl:apply-templates>
+	  <xsl:apply-templates select="$elements" mode="line">
+		  <xsl:with-param name="instruction" select="$instruction"/>
+		  <xsl:with-param name="layer" select="$layer"/>
+	  </xsl:apply-templates>
 
-    </g>
   </xsl:template>
 
 
@@ -1071,11 +1110,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <!-- DODI: !!!WORKAROUND!!! skip one node ways-->
     <xsl:if test="count($way/nd) &gt; 1">
-      <xsl:call-template name="drawWay">
-        <xsl:with-param name="instruction" select="$instruction"/>
-        <xsl:with-param name="way" select="$way"/>
-        <xsl:with-param name="layer" select="$layer"/>
-      </xsl:call-template>
+		<xsl:call-template name="drawElement">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="element" select="$way"/>
+			<xsl:with-param name="svg">
+				<xsl:call-template name="drawWay">
+					<xsl:with-param name="instruction" select="$instruction"/>
+					<xsl:with-param name="way" select="$way"/>
+					<xsl:with-param name="layer" select="$layer"/>
+				</xsl:call-template>				
+			</xsl:with-param>
+		</xsl:call-template>
     </xsl:if >
   </xsl:template>
 
@@ -1095,15 +1140,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:for-each select="$data/osm/way[@id=$wayid]">
           <!-- The current <way> element -->
           <xsl:variable name="way" select="."/>
-
-          <!-- DODI: !!!WORKAROUND!!! skip one node ways-->
-          <xsl:if test="count($way/nd) &gt; 1">
-            <xsl:call-template name="drawWay">
-              <xsl:with-param name="instruction" select="$instruction"/>
-              <xsl:with-param name="way" select="$way"/>
-              <xsl:with-param name="layer" select="$layer"/>
-            </xsl:call-template>
-          </xsl:if >
+		  
+		  <xsl:call-template name="drawElement">
+			  <xsl:with-param name="instruction" select="$instruction"/>
+			  <xsl:with-param name="element" select="$way"/>
+			  <xsl:with-param name="svg">
+				  <!-- DODI: !!!WORKAROUND!!! skip one node ways-->
+				  <xsl:if test="count($way/nd) &gt; 1">
+					  <xsl:call-template name="drawWay">
+						  <xsl:with-param name="instruction" select="$instruction"/>
+						  <xsl:with-param name="way" select="$way"/>
+						  <xsl:with-param name="layer" select="$layer"/>
+					  </xsl:call-template>
+				  </xsl:if >
+			  </xsl:with-param>
+		  </xsl:call-template>
         </xsl:for-each >
       </xsl:for-each >
     </xsl:if>
@@ -1120,15 +1171,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- This is the instruction that is currently being processed -->
     <xsl:variable name="instruction" select="."/>
 
-    <g>
-      <xsl:apply-templates select="@*" mode="copyAttributes"/>
-      <!-- Add all the svg attributes of the <line> instruction to the <g> element -->
-
       <!-- For each way -->
       <xsl:apply-templates select="$elements" mode="area">
         <xsl:with-param name="instruction" select="$instruction"/>
       </xsl:apply-templates>
-    </g>
   </xsl:template>
 
 
@@ -1150,7 +1196,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <!-- DODI: do now draw empty ways/areas-->
     <xsl:if test ="$pathArea!=''">
-      <path d="{$pathArea}"/>
+		<xsl:call-template name="drawElement">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="svg">
+				<path d="{$pathArea}">
+					<xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>					
+				</path>
+			</xsl:with-param>
+		</xsl:call-template>
     </xsl:if>
   </xsl:template>
 
@@ -1182,9 +1236,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="elements"/>
 
     <xsl:for-each select="$elements[name()='node']">
-      <xsl:call-template name="drawCircle">
-        <xsl:with-param name="instruction" select="$instruction"/>
-      </xsl:call-template>
+		<xsl:call-template name="drawElement">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="svg">
+				<xsl:call-template name="drawCircle">
+					<xsl:with-param name="instruction" select="$instruction"/>
+				</xsl:call-template>				
+			</xsl:with-param>
+		</xsl:call-template>
     </xsl:for-each>
 
   </xsl:template>
@@ -1203,10 +1263,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:variable name="nodeid" select="@ref"/>
 
         <xsl:for-each select="$data/osm/node[@id=$nodeid]">
-          <xsl:call-template name="drawCircle">
-            <xsl:with-param name="instruction" select="$instruction"/>
-            <xsl:with-param name="node" select="@id"/>
-          </xsl:call-template>
+			<xsl:call-template name="drawElement">
+				<xsl:with-param name="instruction" select="$instruction"/>
+				<xsl:with-param name="element" select="."/>
+				<xsl:with-param name="svg">
+					<xsl:call-template name="drawCircle">
+						<xsl:with-param name="instruction" select="$instruction"/>
+						<xsl:with-param name="node" select="@id"/>
+					</xsl:call-template>					
+				</xsl:with-param>
+			</xsl:call-template>
         </xsl:for-each>
       </xsl:for-each>
     </xsl:if>
@@ -1224,9 +1290,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="instruction" select="."/>
 
     <xsl:for-each select="$elements[name()='node']">
-      <xsl:call-template name="drawSymbol">
-        <xsl:with-param name="instruction" select="$instruction"/>
-      </xsl:call-template>
+		<xsl:call-template name="drawElement">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="svg">
+				<xsl:call-template name="drawSymbol">
+					<xsl:with-param name="instruction" select="$instruction"/>
+				</xsl:call-template>				
+			</xsl:with-param>
+		</xsl:call-template>
     </xsl:for-each>
 
   </xsl:template>
@@ -1238,11 +1310,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     
     <!-- This is the instruction that is currently being processed -->
     <xsl:variable name="instruction" select="."/>
-    
-    <g>
-      <!-- Add all the svg attributes of the <wayMarker> instruction to the <g> element -->
-      <xsl:apply-templates select="@*" mode="copyAttributes" />
-      
+          
       <!-- Process each matched node in turn -->
       <xsl:for-each select="$elements[name()='node']">
 	<xsl:variable name='nodeId' select="@id" />
@@ -1291,13 +1359,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	  </xsl:choose>
 	</xsl:variable>
 	
-	<path id="nodePath_{@id}" d="{$path}"/>
-	
-	<use xlink:href="#nodePath_{@id}">
-	  <xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
-	</use>
-      </xsl:for-each>
-    </g>
+	<xsl:call-template name="drawElement">
+		<xsl:with-param name="instruction" select="$instruction"/>
+		<xsl:with-param name="element" select="."/>
+		<xsl:with-param name="svg">
+			<path d="{$path}">
+				<xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
+			</path>			
+		</xsl:with-param>
+	</xsl:call-template>
+	</xsl:for-each>
     
   </xsl:template>
 
@@ -1338,42 +1409,49 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="element" select="."/>
     <xsl:variable name="areaLabels" select="exslt:node-set($labels)/labels:area[@id = $element/@id]"/>
     <xsl:variable name="text" select="tag[@k=$instruction/@k]/@v"/>
+   
+    <xsl:call-template name="drawElement">
+      <xsl:with-param name="instruction" select="$instruction"/>
+      <xsl:with-param name="element" select="$element"/>
+      <xsl:with-param name="svg">
+	      <xsl:choose>
+		      <xsl:when test="$areaLabels">
+			      <xsl:for-each select="$areaLabels/labels:label">
+				      <xsl:variable name="label" select="."/>
+				      <xsl:for-each select="$data">
+					      <xsl:call-template name="renderText">
+						      <xsl:with-param name="instruction" select="$instruction"/>
+						      <xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
+						      <xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
+						      <xsl:with-param name="text" select="$text"/>
+					      </xsl:call-template>
+				      </xsl:for-each>
+			      </xsl:for-each>
+		      </xsl:when>
 
-    <xsl:choose>
-      <xsl:when test="$areaLabels">
-        <xsl:for-each select="$areaLabels/labels:label">
-          <xsl:variable name="label" select="."/>
-          <xsl:for-each select="$data">
-            <xsl:call-template name="renderText">
-              <xsl:with-param name="instruction" select="$instruction"/>
-              <xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
-              <xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
-              <xsl:with-param name="text" select="$text"/>
-            </xsl:call-template>
-          </xsl:for-each>
-        </xsl:for-each>
-      </xsl:when>
+		      <xsl:otherwise>
+			      <xsl:variable name='center'>
+				      <xsl:call-template name="areaCenterWrapper">
+					      <xsl:with-param name="element" select="." />
+				      </xsl:call-template>
+			      </xsl:variable>
 
-      <xsl:otherwise>
-        <xsl:variable name='center'>
-          <xsl:call-template name="areaCenterWrapper">
-	    <xsl:with-param name="element" select="." />
-          </xsl:call-template>
-        </xsl:variable>
+			      <xsl:message>
+				      areaCenter: <xsl:value-of select="$center" />
+			      </xsl:message>
+ 
+			      <xsl:call-template name="renderText">
+				      <xsl:with-param name="instruction" select="$instruction"/>
+				      <xsl:with-param name="lon" select="substring-before($center, ',')"/>
+				      <xsl:with-param name="lat" select="substring-after($center, ',')"/>
+				      <xsl:with-param name="text" select="$text"/>
+			      </xsl:call-template>
+		      </xsl:otherwise>
 
-        <xsl:message>
-          areaCenter: <xsl:value-of select="$center" />
-        </xsl:message>
+	      </xsl:choose>
+      </xsl:with-param>
+    </xsl:call-template>
 
-        <xsl:call-template name="renderText">
-          <xsl:with-param name="instruction" select="$instruction"/>
-          <xsl:with-param name="lon" select="substring-before($center, ',')"/>
-          <xsl:with-param name="lat" select="substring-after($center, ',')"/>
-          <xsl:with-param name="text" select="$text"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-
-    </xsl:choose>
 
 
 
@@ -1416,41 +1494,46 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="element" select="."/>
 
     <xsl:variable name="areaLabels" select="exslt:node-set($labels)/labels:area[@id = $element/@id]"/>
-
-    <xsl:choose>
-      <xsl:when test="$areaLabels">
-        <xsl:for-each select="$areaLabels/labels:label">
-          <xsl:variable name="label" select="."/>
-            <xsl:for-each select="$data">
-              <xsl:call-template name="renderSymbol">
-                <xsl:with-param name="instruction" select="$instruction"/>
-                <xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
-                <xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
-              </xsl:call-template>
-            </xsl:for-each>
-        </xsl:for-each>
-      </xsl:when>
-
-      <xsl:otherwise>
-        <xsl:variable name='center'>
-          <xsl:call-template name="areaCenterWrapper">
-	    <xsl:with-param name="element" select="$element" />
-          </xsl:call-template>
-        </xsl:variable>
-
-        <xsl:message>
-          areaCenter: <xsl:value-of select="$center" />
-        </xsl:message>
-
-        <xsl:call-template name="renderSymbol">
-          <xsl:with-param name="instruction" select="$instruction"/>
-          <xsl:with-param name="lon" select="substring-before($center, ',')"/>
-          <xsl:with-param name="lat" select="substring-after($center, ',')"/>
-        </xsl:call-template>
-    </xsl:otherwise>
-
-    </xsl:choose>
-
+	
+	<xsl:call-template name="drawElement">
+		<xsl:with-param name="instruction" select="$instruction"/>
+		<xsl:with-param name="element" select="$element"/>
+		<xsl:with-param name="svg">
+			<xsl:choose>
+				<xsl:when test="$areaLabels">
+					<xsl:for-each select="$areaLabels/labels:label">
+						<xsl:variable name="label" select="."/>
+						<xsl:for-each select="$data">
+							<xsl:call-template name="renderSymbol">
+								<xsl:with-param name="instruction" select="$instruction"/>
+								<xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
+								<xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
+							</xsl:call-template>
+						</xsl:for-each>
+					</xsl:for-each>
+				</xsl:when>
+				
+				<xsl:otherwise>
+					<xsl:variable name='center'>
+						<xsl:call-template name="areaCenterWrapper">
+							<xsl:with-param name="element" select="$element" />
+						</xsl:call-template>
+					</xsl:variable>
+					
+					<xsl:message>
+						areaCenter: <xsl:value-of select="$center" />
+					</xsl:message>
+					
+					<xsl:call-template name="renderSymbol">
+						<xsl:with-param name="instruction" select="$instruction"/>
+						<xsl:with-param name="lon" select="substring-before($center, ',')"/>
+						<xsl:with-param name="lat" select="substring-after($center, ',')"/>
+					</xsl:call-template>
+				</xsl:otherwise>				
+			</xsl:choose>
+		</xsl:with-param>
+	</xsl:call-template>
+	
   </xsl:template>
 
   <!--
@@ -2390,12 +2473,18 @@ against infinite loops -->
 
     <!-- Select all <node> elements that have a key that matches the k attribute of the text instruction -->
     <xsl:for-each select="$elements[name()='node'][tag[@k=$instruction/@k]]">
-      <xsl:call-template name="renderText">
-        <xsl:with-param name="instruction" select="$instruction"/>
-        <xsl:with-param name="lon" select="@lon"/>
-        <xsl:with-param name="lat" select="@lat"/>
-        <xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
-      </xsl:call-template>
+		<xsl:call-template name="drawElement">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="svg">
+				<xsl:call-template name="renderText">
+					<xsl:with-param name="instruction" select="$instruction"/>
+					<xsl:with-param name="lon" select="@lon"/>
+					<xsl:with-param name="lat" select="@lat"/>
+					<xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
+				</xsl:call-template>				
+			</xsl:with-param>
+		</xsl:call-template>
     </xsl:for-each>
 
     <!-- Select all <way> elements -->
@@ -2415,58 +2504,64 @@ against infinite loops -->
 
     <!-- The current <way> element -->
     <xsl:variable name="way" select="."/>
-
-    <!-- DODI: !!!WORKAROUND!!! no text for one node ways-->
-    <xsl:if test="count($way/nd) &gt; 1">
-      <xsl:variable name='text'>
-        <xsl:choose>
-          <xsl:when test='$instruction/@k'>
-            <xsl:value-of select='tag[@k=$instruction/@k]/@v'/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select='$instruction' mode='textFormat'>
-              <xsl:with-param name='way' select='$way'/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-
-      <xsl:if test='string($text)'>
-
-        <xsl:variable name="pathDirection">
-          <xsl:choose>
-            <!-- Manual override, reverse direction -->
-            <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">reverse</xsl:when>
-            <!-- Manual override, normal direction -->
-            <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">normal</xsl:when>
-            <!-- Automatic, reverse direction -->
-            <xsl:when test="(key('nodeById',$way/nd[1]/@ref)/@lon &gt; key('nodeById',$way/nd[last()]/@ref)/@lon)">reverse</xsl:when>
-            <!-- Automatic, normal direction -->
-            <xsl:otherwise>normal</xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-
-        <xsl:variable name="wayPath">
-          <xsl:choose>
-            <!-- Normal -->
-            <xsl:when test='$pathDirection="normal"'>
-              <xsl:value-of select="concat('way_normal_',@id)"/>
-            </xsl:when>
-            <!-- Reverse -->
-            <xsl:otherwise>
-              <xsl:value-of select="concat('way_reverse_',@id)"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-
-        <xsl:call-template name="renderTextPath">
-          <xsl:with-param name="instruction" select="$instruction"/>
-          <xsl:with-param name="pathId" select="$wayPath"/>
-          <xsl:with-param name="pathDirection" select="$pathDirection"/>
-          <xsl:with-param name="text" select="$text"/>
-        </xsl:call-template>
-      </xsl:if>
-    </xsl:if>
+	
+	<xsl:call-template name="drawElement">
+		<xsl:with-param name="instruction" select="$instruction"/>
+		<xsl:with-param name="element" select="$way"/>
+		<xsl:with-param name="svg">
+			<!-- DODI: !!!WORKAROUND!!! no text for one node ways-->
+			<xsl:if test="count($way/nd) &gt; 1">
+				<xsl:variable name='text'>
+					<xsl:choose>
+						<xsl:when test='$instruction/@k'>
+							<xsl:value-of select='tag[@k=$instruction/@k]/@v'/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select='$instruction' mode='textFormat'>
+								<xsl:with-param name='way' select='$way'/>
+							</xsl:apply-templates>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:if test='string($text)'>
+					
+					<xsl:variable name="pathDirection">
+						<xsl:choose>
+							<!-- Manual override, reverse direction -->
+							<xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">reverse</xsl:when>
+							<!-- Manual override, normal direction -->
+							<xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">normal</xsl:when>
+							<!-- Automatic, reverse direction -->
+							<xsl:when test="(key('nodeById',$way/nd[1]/@ref)/@lon &gt; key('nodeById',$way/nd[last()]/@ref)/@lon)">reverse</xsl:when>
+							<!-- Automatic, normal direction -->
+							<xsl:otherwise>normal</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<xsl:variable name="wayPath">
+						<xsl:choose>
+							<!-- Normal -->
+							<xsl:when test='$pathDirection="normal"'>
+								<xsl:value-of select="concat('way_normal_',@id)"/>
+							</xsl:when>
+							<!-- Reverse -->
+							<xsl:otherwise>
+								<xsl:value-of select="concat('way_reverse_',@id)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<xsl:call-template name="renderTextPath">
+						<xsl:with-param name="instruction" select="$instruction"/>
+						<xsl:with-param name="pathId" select="$wayPath"/>
+						<xsl:with-param name="pathDirection" select="$pathDirection"/>
+						<xsl:with-param name="text" select="$text"/>
+					</xsl:call-template>
+				</xsl:if>
+			</xsl:if>
+		</xsl:with-param>
+	</xsl:call-template>
   </xsl:template>
 
   <!-- Process extended form of text instruction -->
@@ -2825,107 +2920,27 @@ against infinite loops -->
     <!-- First select all elements - exclude those marked as deleted by JOSM -->
     <xsl:variable name='elements' select="$data/osm/*[not(@action) or not(@action='delete')]" />
 
-    <xsl:choose>
-
-      <!-- Process all the rules, one layer at a time -->
-      <xsl:when test="$withOSMLayers='yes'">
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'-5'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'-4'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'-3'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'-2'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'-1'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'0'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'1'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'2'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'3'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'4'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-        <xsl:call-template name="processLayer">
-          <xsl:with-param name="layer" select="'5'"/>
-          <xsl:with-param name="elements" select="$elements"/>
-        </xsl:call-template>
-      </xsl:when>
-
-      <!-- Process all the rules, without looking at the layers -->
-      <xsl:otherwise>
-        <xsl:apply-templates select="/rules/rule">
-          <xsl:with-param name="elements" select="$elements"/>
-          <xsl:with-param name="layer" select="'0'"/>
-        </xsl:apply-templates>
-      </xsl:otherwise>
-
-    </xsl:choose>
-  </xsl:template>
-
-
-  <xsl:template name="processLayer">
-    <xsl:param name="layer"/>
-    <xsl:param name="elements"/>
-
-    <g inkscape:groupmode="layer" id="layer{$layer}" inkscape:label="Layer {$layer}">
-      <xsl:apply-templates select="/rules/rule">
-        <xsl:with-param name="elements" select="$elements"/>
-        <xsl:with-param name="layer" select="$layer"/>
-      </xsl:apply-templates>
-    </g>
+	<xsl:variable name="svgWithLayers">
+		<xsl:apply-templates select="/rules/rule">
+			<xsl:with-param name="elements" select="$elements"/>
+		</xsl:apply-templates>
+	</xsl:variable>
+	
+	<xsl:for-each select="exslt:node-set($svgWithLayers)/z:element">
+		<xsl:sort select="@layer" data-type="number"/>
+		<xsl:copy-of select="*"/>
+	</xsl:for-each>
   </xsl:template>
 
 
   <!-- Process a rule at a specific level -->
   <xsl:template match='rule'>
     <xsl:param name="elements"/>
-    <xsl:param name="layer"/>
-
-    <!-- If the rule is for a specific layer and we are processing that layer then pass *all* elements 
-		     to the rule, otherwise just select the matching elements for this layer. -->
-    <xsl:choose>
-      <xsl:when test='$layer=@layer'>
-        <xsl:call-template name="rule">
-          <xsl:with-param name="elements" select="$elements"/>
-          <xsl:with-param name="layer" select="$layer"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:if test='not(@layer)'>
-          <xsl:call-template name="rule">
-            <xsl:with-param name="elements" select="$elements[
-							tag[@k='layer' and @v=$layer]
-							or ($layer='0' and count(tag[@k='layer'])=0)
-						]"/>
-            <xsl:with-param name="layer" select="$layer"/>
-          </xsl:call-template>
-        </xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
+	
+	<xsl:call-template name="rule">
+		<xsl:with-param name="elements" select="$elements"/>
+	</xsl:call-template>
+	
   </xsl:template>
 
 
@@ -3388,7 +3403,6 @@ against infinite loops -->
         <xsl:otherwise>
           <xsl:message>
             Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt;
-            Matched by <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
           </xsl:message>
 
           <xsl:apply-templates select="*">
@@ -3459,7 +3473,6 @@ against infinite loops -->
     <xsl:message>
       Processing &lt;rule e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>"
       horizontalProximity="<xsl:value-of select="$rule/@horizontalProximity"/>" verticalProximity="<xsl:value-of select="$rule/@verticalProximity"/>" &gt;
-      Matched by <xsl:value-of select="count($nearbyElements)"/> out of <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
     </xsl:message>
 
     <xsl:call-template name="processElements">

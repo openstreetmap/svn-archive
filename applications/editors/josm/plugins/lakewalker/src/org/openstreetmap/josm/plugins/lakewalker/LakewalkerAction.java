@@ -103,15 +103,15 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	/*
 	 * Collect options
 	 */
-	final int waylen = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_SEG, "500"));
-	final int maxnode = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_NODES, "50000"));
-	final int threshold = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD_VALUE, "90"));
-	final double epsilon = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003"));
-	final int resolution = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000"));
-	final int tilesize = Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000"));
+	final int waylen = Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500);
+	final int maxnode = Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_NODES, 50000);
+	final int threshold = Main.pref.getInteger(LakewalkerPreferences.PREF_THRESHOLD_VALUE, 90);
+	final double epsilon = Main.pref.getDouble(LakewalkerPreferences.PREF_EPSILON, 0.0003);
+	final int resolution = Main.pref.getInteger(LakewalkerPreferences.PREF_LANDSAT_RES, 4000);
+	final int tilesize = Main.pref.getInteger(LakewalkerPreferences.PREF_LANDSAT_SIZE, 2000);
 	final String startdir = Main.pref.get(LakewalkerPreferences.PREF_START_DIR, "east");
-	final String wmslayer = Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");      
-	   
+	final String wmslayer = Main.pref.get(LakewalkerPreferences.PREF_WMS, "IR1");
+
 	try {
         PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")){
           @Override protected void realRun() throws SAXException {
@@ -185,15 +185,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	Node tn = null;
 	Node fn = null;
 	
-	double eastOffset = 0.0;
-	double northOffset = 0.0;
-	try {
-	  eastOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EAST_OFFSET, "0.0"));
-	  northOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_NORTH_OFFSET, "0.0"));
-	}
-	catch (Exception e) {
-	  
-	}
+	double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
+	double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
 	char option = ' ';
 	
 	int nodesinway = 0;
@@ -216,7 +209,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	      
 		way.nodes.add(n);
 		
-		if(nodesinway > Integer.parseInt(Main.pref.get(LakewalkerPreferences.PREF_MAX_SEG, "500"))){
+		if(nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)){
 			String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
 	        
 	        if(!waytype.equals("none")){

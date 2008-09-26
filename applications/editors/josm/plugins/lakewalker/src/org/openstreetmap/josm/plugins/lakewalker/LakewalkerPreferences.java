@@ -51,7 +51,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
   protected DoubleConfigurer northOffsetConfig = new DoubleConfigurer();
   protected JLabel northOffsetLabel = new JLabel(tr("Shift all traces to north (degrees)"));
   protected StringEnumConfigurer startDirConfig = new StringEnumConfigurer(DIRECTIONS);
-  protected JLabel startDirLabel = new JLabel(tr("Direction to search for land"));  
+  protected JLabel startDirLabel = new JLabel(tr("Direction to search for land"));
   protected StringEnumConfigurer lakeTypeConfig = new StringEnumConfigurer(WAYTYPES);
   protected JLabel lakeTypeLabel = new JLabel(tr("Tag ways as"));
   protected StringEnumConfigurer wmsConfig = new StringEnumConfigurer(WMSLAYERS);
@@ -77,15 +77,15 @@ public class LakewalkerPreferences implements PreferenceSetting {
     buildPreferences(prefPanel);
     
     pythonConfig.setValue(Main.pref.get(PREF_PYTHON, "python.exe"));
-    maxSegsConfig.setValue(Main.pref.get(PREF_MAX_SEG, "500"));
-    maxNodesConfig.setValue(Main.pref.get(PREF_MAX_NODES, "50000"));
-    thresholdConfig.setValue(Main.pref.get(PREF_THRESHOLD, "35"));
-    thresholdConfigNew.setValue(Main.pref.get(PREF_THRESHOLD_VALUE, "90"));    
-    epsilonConfig.setValue(Main.pref.get(PREF_EPSILON, "0.0003"));
-    landsatResConfig.setValue(Main.pref.get(PREF_LANDSAT_RES, "4000"));
-    landsatSizeConfig.setValue(Main.pref.get(PREF_LANDSAT_SIZE, "2000"));
-    eastOffsetConfig.setValue(Main.pref.get(PREF_EAST_OFFSET, "0.0"));
-    northOffsetConfig.setValue(Main.pref.get(PREF_NORTH_OFFSET, "0.0"));
+    maxSegsConfig.setValue(Main.pref.getInteger(PREF_MAX_SEG, 500));
+    maxNodesConfig.setValue(Main.pref.getInteger(PREF_MAX_NODES, 50000));
+    thresholdConfig.setValue(Main.pref.getInteger(PREF_THRESHOLD, 35));
+    thresholdConfigNew.setValue(Main.pref.getInteger(PREF_THRESHOLD_VALUE, 90));
+    epsilonConfig.setValue(Main.pref.getDouble(PREF_EPSILON, 0.0003));
+    landsatResConfig.setValue(Main.pref.getInteger(PREF_LANDSAT_RES, 4000));
+    landsatSizeConfig.setValue(Main.pref.getInteger(PREF_LANDSAT_SIZE, 2000));
+    eastOffsetConfig.setValue(Main.pref.getDouble(PREF_EAST_OFFSET, 0.0));
+    northOffsetConfig.setValue(Main.pref.getDouble(PREF_NORTH_OFFSET, 0.0));
     startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));
     lakeTypeConfig.setValue(Main.pref.get(PREF_WAYTYPE, "water"));
     wmsConfig.setValue(Main.pref.get(PREF_WMS, "IR1"));
@@ -128,7 +128,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
    */
   public void ok() {
     Main.pref.put(PREF_PYTHON, pythonConfig.getValueString());
-    Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());    
+    Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());
     Main.pref.put(PREF_MAX_NODES, maxNodesConfig.getValueString());
     Main.pref.put(PREF_THRESHOLD, thresholdConfig.getValueString());
     Main.pref.put(PREF_THRESHOLD_VALUE, thresholdConfigNew.getValueString());

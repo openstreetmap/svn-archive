@@ -15,7 +15,7 @@
     Zoom,x,y: {{tile.basetileset|slice:"1:"}}<br/>{% if basetile_fsize %}
     File size: {{basetile_fsize|filesizeformat}}<br/>
     Last modified: {{basetile_mtime}}<br/>Uploaded by: {{user}}{%else%}
-    Could not find base tileset on disk.<br/> Displaying fallback legacy tile.
+    Could not find base tileset on disk.<br/> Displaying empty tile based on oceantiles.dat.
     {%endif%}
     <h3>Current Request status</h3>
     {% if reqs %}{% for r in reqs %}<p>{{r.status_str|capfirst}} request at priority {{r.priority}} has been requested {{r.request_time|timesince}} ago.<br/>Renderer: {{r.client}}, Layers left to render: {{r.layers_str}}</p>{% endfor %}

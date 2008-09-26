@@ -45,15 +45,8 @@ public class LakewalkerReader {
     Way way = new Way();
     String line;
     setStatus("Initializing");
-    double eastOffset = 0.0;
-    double northOffset = 0.0;
-    try {
-      eastOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EAST_OFFSET, "0.0"));
-      northOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_NORTH_OFFSET, "0.0"));
-    }
-    catch (Exception e) {
-      
-    }
+    double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
+    double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
     char option = ' ';
     
     try {

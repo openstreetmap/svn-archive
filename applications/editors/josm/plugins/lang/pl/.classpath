@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/josm"/>
+	<classpathentry kind="lib" path="/josm/lib/gettext-commons-0.9.jar" sourcepath="C:/Download/gettext-commons-0.9-src.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

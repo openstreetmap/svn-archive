@@ -1559,7 +1559,10 @@
 			<rule e="node" k="highway" v="bus_stop">
 				<symbol ref="bus" position="center"/>
 			</rule>
-			
+			<!-- bus stations -->
+			<rule e="node" k="amenity" v="bus_station">
+				<symbol ref="bus_sta" position="center"/>
+			</rule>
 			<!-- highway motorway_junctions -->
 			<rule e="node" k="highway" v="motorway_junction">
 				<circle r="1.825" class="highway-motorway-junction"/>
@@ -2057,7 +2060,7 @@
 					<text k="name" class="caption-casing generic-caption-casing" dy="-3px" layer="5"/>
 					<text k="name" class="caption-core generic-caption-core" dy="-3px" layer="5"/>
 				</rule>
-				<rule e="node" k="amenity" v="restaurant|shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank" layer="5">
+				<rule e="node" k="amenity" v="restaurant|shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station" layer="5">
 					<text k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
 					<text k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
 				</rule>

@@ -1520,7 +1520,10 @@
 		<rule e="node" k="highway" v="bus_stop">
 			<symbol ref="bus" position="center"/>
 		</rule>
-		
+		<!-- bus stations -->
+		<rule e="node" k="amenity" v="bus_station">
+			<symbol ref="bus_sta" position="center"/>
+		</rule>
 		<!-- Amenities -->
 		<rule e="node" k="amenity" v="hospital">
 			<symbol ref="hospital" position="center"/>

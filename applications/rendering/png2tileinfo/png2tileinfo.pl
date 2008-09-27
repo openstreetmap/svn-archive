@@ -22,7 +22,7 @@ use constant TILETYPE_UNKNOWN => 0;
 use constant TILETYPE_LAND => 1;
 use constant TILETYPE_SEA => 2;
 use constant TILETYPE_TILE => 3;
-
+my @typenames = ('unknown', 'land', 'sea', 'mixed');
 
 
 #
@@ -78,7 +78,6 @@ if ($#ARGV > -1)
 	}
 	else
 	{
-	    my @typenames = ('unknown', 'land', 'sea', 'mixed');
 	    my ($x, $y) = ($ARGV[1], $ARGV[2]);
 
 	    open $world_fh, "<oceantiles_12.png" or die;
@@ -112,17 +111,26 @@ if ($#ARGV > -1)
 	    $world_im = GD::Image->newFromPng( $world_fh, 1 );
 	    close $world_fh;
     
+	    my $old_val = get_type($world_im, $x, $y);
 	    $newtype = TILETYPE_LAND if ($ARGV[3] eq "land");
 	    $newtype = TILETYPE_SEA  if ($ARGV[3] eq "sea");
 	    $newtype = TILETYPE_TILE if ($ARGV[3] eq "mixed");
 
-	    set_type($world_im, $x, $y, $newtype);
+	    if($old_val == $newtype)
+	    {
+	        print "oceantiles_12.png($x, $y) = $newtype ($typenames[$newtype]) UNCHANGED\n";
+	    }
+	    else
+	    {
+	        set_type($world_im, $x, $y, $newtype);
+	        print "oceantiles_12.png($x, $y) = $newtype ($typenames[$newtype]) WAS $old_val ($typenames[$old_val])\n";
 
-	    open $world_fh, ">oceantiles_12.png" or die;
-	    # use binmode so it works on windows too
-	    binmode $world_fh;
-	    print $world_fh $world_im->png;
-	    close $world_fh;
+	        open $world_fh, ">oceantiles_12.png" or die;
+	        # use binmode so it works on windows too
+	        binmode $world_fh;
+	        print $world_fh $world_im->png;
+	        close $world_fh;
+	    }
 	}
 
 	exit 0;

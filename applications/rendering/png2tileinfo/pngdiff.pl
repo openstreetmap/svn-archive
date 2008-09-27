@@ -31,7 +31,7 @@ sub get_type
   return TILETYPE_TILE if $r == 255 && $g == 255 && $b == 255;
   return TILETYPE_UNKNOWN if $r == 0 && $g == 0 && $b == 0;
   
-  die "Wierd tiletype at [$x,$y]: ($r,$g,$b)\n";
+  die "Weird tiletype at [$x,$y]: ($r,$g,$b)\n";
 }
 
 #
@@ -53,13 +53,23 @@ sub set_type
 
 
 
-if ($#ARGV < 1) {
+my $oldfile;
+my $newfile;
+
+if($ARGV[0] && $ARGV[0] eq "svn")
+{
+    ($oldfile,$newfile) = (".svn/text-base/oceantiles_12.png.svn-base", "oceantiles_12.png");
+}
+elsif ($#ARGV < 1)
+{
     print "Usage: pngdiff.pl oldfile.png newfile.png\n";
+    print "       pngdiff.pl svn\n";
     exit(0);
 }
-
-my $oldfile=$ARGV[0];
-my $newfile=$ARGV[1];
+else
+{
+    ($oldfile,$newfile) = @ARGV;
+}
 
 open my $world_fh, "<$oldfile" or die "Couldn't open $oldfile ($!)\n";
 my $world_im = GD::Image->newFromPng( $world_fh, 1 );
@@ -83,7 +93,8 @@ for my $y (0..4095)
     my $ntype = get_type($newworld_im,$x,$y);
     if ($ntype != $type) {
 	my $ntypen=$typenames[$ntype];
-	print "$x,$y,12,$ntypen\n";
+	my $typen=$typenames[$type];
+	print "$x,$y,12,$ntypen WAS $typen\n";
     }
   }
 }

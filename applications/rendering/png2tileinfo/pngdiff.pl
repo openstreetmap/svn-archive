@@ -1,4 +1,3 @@
-
 #!/usr/bin/perl -w
 
 # This program compares two oceantiles.png-files and lists

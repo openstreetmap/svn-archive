@@ -18,7 +18,7 @@
 
 # Usage:
 # $ ./tests/strict/mapfeatures.pl > tests/strict/mapfeatures.xml.new
-# $ diff -u tests/strict/mapfeatures.xml tests/strict/mapfeatures.xml.new 
+# $ diff -u tests/strict/mapfeatures.xml tests/strict/mapfeatures.xml.new
 # Make sure to look over the diff and check that not too much has changed.
 # That could be a sign that somebody has radically changed the format of
 # Map Features or something.
@@ -52,6 +52,7 @@ my $xml = XMLin($res->content);
 
 # Add some additional features
 add_feature('osmarender:nameDirection', 1, ['way']);
+add_feature('osmarender:nameDirection', -1, ['way']);
 add_feature('osmarender:render', 'no', ['node', 'way', 'area']);
 add_feature('osmarender:renderName', 'no', ['node', 'way', 'area']);
 add_feature('osmarender:renderRef', 'no', ['node', 'way', 'area']);
@@ -69,9 +70,9 @@ sub parse_map_features( $ ){
         if(! $res->is_success) {
             die "Couldn't fetch $page: ".$res->status_line . "\n";
         }
-        
+
         my $xml = XMLin($res->content);
-        
+
         &parse_featuretemplate($xml);
     }
 }

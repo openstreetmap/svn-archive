@@ -682,7 +682,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:call-template name="drawWayWithSmartLinecaps">
           <xsl:with-param name="instruction" select="$instruction"/>
           <xsl:with-param name="way" select="$way"/>
-          <xsl:with-param name="layer" select="$layer"/>
           <xsl:with-param name="extraClasses" select='$extraClasses'/>
           <xsl:with-param name="extraStyles" select='$extraStyles'/>
         </xsl:call-template>
@@ -1082,7 +1081,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Process a <line> instruction -->
   <xsl:template match="line">
     <xsl:param name="elements"/>
-    <xsl:param name="layer"/>
 
     <!-- This is the instruction that is currently being processed -->
     <xsl:variable name="instruction" select="."/>
@@ -1090,7 +1088,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <!-- For each way -->
 	  <xsl:apply-templates select="$elements" mode="line">
 		  <xsl:with-param name="instruction" select="$instruction"/>
-		  <xsl:with-param name="layer" select="$layer"/>
 	  </xsl:apply-templates>
 
   </xsl:template>
@@ -1103,7 +1100,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Draw lines for a way  -->
   <xsl:template match="way" mode="line">
     <xsl:param name="instruction"/>
-    <xsl:param name="layer"/>
 
     <!-- The current <way> element -->
     <xsl:variable name="way" select="."/>
@@ -1117,7 +1113,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 				<xsl:call-template name="drawWay">
 					<xsl:with-param name="instruction" select="$instruction"/>
 					<xsl:with-param name="way" select="$way"/>
-					<xsl:with-param name="layer" select="$layer"/>
 				</xsl:call-template>				
 			</xsl:with-param>
 		</xsl:call-template>
@@ -1128,7 +1123,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Draw lines for a relation -->
   <xsl:template match="relation" mode="line">
     <xsl:param name="instruction"/>
-    <xsl:param name="layer"/>
 
     <xsl:variable name="relation" select="@id"/>
 
@@ -1150,7 +1144,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 					  <xsl:call-template name="drawWay">
 						  <xsl:with-param name="instruction" select="$instruction"/>
 						  <xsl:with-param name="way" select="$way"/>
-						  <xsl:with-param name="layer" select="$layer"/>
 					  </xsl:call-template>
 				  </xsl:if >
 			  </xsl:with-param>
@@ -1212,7 +1205,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Process <circle> instruction -->
   <xsl:template match="circle">
     <xsl:param name="elements"/>
-    <xsl:param name="layer"/>
 
     <!-- This is the instruction that is currently being processed -->
     <xsl:variable name="instruction" select="."/>
@@ -1220,7 +1212,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- For each circle -->
     <xsl:apply-templates select="$elements" mode="circle">
       <xsl:with-param name="instruction" select="$instruction"/>
-      <xsl:with-param name="layer" select="$layer"/>
       <xsl:with-param name="elements" select="$elements"/>
     </xsl:apply-templates>
   </xsl:template>
@@ -1253,7 +1244,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Draw circle for a relation -->
   <xsl:template match="relation" mode="circle">
     <xsl:param name="instruction"/>
-    <xsl:param name="layer"/>
 
     <xsl:variable name="relation" select="@id"/>
 
@@ -2948,7 +2938,6 @@ against infinite loops -->
 
   <xsl:template name='rule'>
     <xsl:param name="elements"/>
-    <xsl:param name="layer"/>
 
     <!-- This is the rule currently being processed -->
     <xsl:variable name="rule" select="."/>
@@ -3008,7 +2997,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$elementsWithNoTags"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3020,7 +3008,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$allElements"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3032,7 +3019,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$allElementsWithValue"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3046,7 +3032,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithoutKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3058,7 +3043,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$allElementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3075,7 +3059,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3094,7 +3077,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$elementsWithNoTags"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3105,7 +3087,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$allElements"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3116,7 +3097,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$allElementsWithValue"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3129,7 +3109,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithoutKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3140,7 +3119,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$allElementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3151,7 +3129,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3164,7 +3141,6 @@ against infinite loops -->
 
   <xsl:template match="else">
     <xsl:param name="elements"/>
-    <xsl:param name="layer"/>
 
     <!-- This is the previous rule that is being negated -->
     <!-- TODO: abort if no preceding rule element -->
@@ -3222,7 +3198,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$elementsWithNoTags"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3236,7 +3211,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$allElementsWithValue"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3249,7 +3223,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithoutKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3260,7 +3233,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$allElementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3275,7 +3247,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3294,7 +3265,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$elementsWithNoTags"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3308,7 +3278,6 @@ against infinite loops -->
                   <xsl:with-param name="eBare" select="$eBare"/>
                   <xsl:with-param name="kBare" select="$kBare"/>
                   <xsl:with-param name="vBare" select="$vBare"/>
-                  <xsl:with-param name="layer" select="$layer"/>
                   <xsl:with-param name="elements" select="$allElementsWithValue"/>
                   <xsl:with-param name="rule" select="$rule"/>
                 </xsl:call-template>
@@ -3321,7 +3290,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithoutKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3332,7 +3300,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$allElementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3343,7 +3310,6 @@ against infinite loops -->
               <xsl:with-param name="eBare" select="$eBare"/>
               <xsl:with-param name="kBare" select="$kBare"/>
               <xsl:with-param name="vBare" select="$vBare"/>
-              <xsl:with-param name="layer" select="$layer"/>
               <xsl:with-param name="elements" select="$elementsWithKey"/>
               <xsl:with-param name="rule" select="$rule"/>
             </xsl:call-template>
@@ -3358,7 +3324,6 @@ against infinite loops -->
     <xsl:param name="eBare"/>
     <xsl:param name="kBare"/>
     <xsl:param name="vBare"/>
-    <xsl:param name="layer"/>
     <xsl:param name="elements"/>
     <xsl:param name="rule"/>
     <xsl:param name="filterIterator" select="0"/>
@@ -3374,7 +3339,6 @@ against infinite loops -->
             <xsl:with-param name="eBare" select="$eBare"/>
             <xsl:with-param name="kBare" select="$kBare"/>
             <xsl:with-param name="vBare" select="$vBare"/>
-            <xsl:with-param name="layer" select="$layer"/>
             <xsl:with-param name="elements" select="$elements"/>
             <xsl:with-param name="rule" select="$rule"/>
             <xsl:with-param name="filterIterator" select="1"/>
@@ -3385,7 +3349,6 @@ against infinite loops -->
             <xsl:with-param name="eBare" select="$eBare"/>
             <xsl:with-param name="kBare" select="$kBare"/>
             <xsl:with-param name="vBare" select="$vBare"/>
-            <xsl:with-param name="layer" select="$layer"/>
             <xsl:with-param name="elements" select="$elements"/>
             <xsl:with-param name="rule" select="$rule"/>
             <xsl:with-param name="filterIterator" select="2"/>
@@ -3396,7 +3359,6 @@ against infinite loops -->
             <xsl:with-param name="eBare" select="$eBare"/>
             <xsl:with-param name="kBare" select="$kBare"/>
             <xsl:with-param name="vBare" select="$vBare"/>
-            <xsl:with-param name="layer" select="$layer"/>
             <xsl:with-param name="elements" select="$elements"/>
             <xsl:with-param name="rule" select="$rule"/>
             <xsl:with-param name="filterIterator" select="3"/>
@@ -3408,7 +3370,6 @@ against infinite loops -->
           </xsl:message>
 
           <xsl:apply-templates select="*">
-            <xsl:with-param name="layer" select="$layer"/>
             <xsl:with-param name="elements" select="$elements"/>
             <xsl:with-param name="rule" select="$rule"/>
           </xsl:apply-templates>
@@ -3421,7 +3382,6 @@ against infinite loops -->
     <xsl:param name="eBare"/>
     <xsl:param name="kBare"/>
     <xsl:param name="vBare"/>
-    <xsl:param name="layer"/>
     <xsl:param name="elements"/>
     <xsl:param name="rule"/>
     <xsl:param name="filterIterator"/>
@@ -3481,7 +3441,6 @@ against infinite loops -->
       <xsl:with-param name="eBare" select="$eBare"/>
       <xsl:with-param name="kBare" select="$kBare"/>
       <xsl:with-param name="vBare" select="$vBare"/>
-      <xsl:with-param name="layer" select="$layer"/>
       <xsl:with-param name="elements" select="$nearbyElements"/>
       <xsl:with-param name="rule" select="$rule"/>
       <xsl:with-param name="filterIterator" select="$filterIterator"/>
@@ -3526,7 +3485,6 @@ against infinite loops -->
     <xsl:param name="eBare"/>
     <xsl:param name="kBare"/>
     <xsl:param name="vBare"/>
-    <xsl:param name="layer"/>
     <xsl:param name="elements"/>
     <xsl:param name="rule"/>
     <xsl:param name="filterIterator"/>
@@ -3546,7 +3504,6 @@ against infinite loops -->
       <xsl:with-param name="eBare" select="$eBare"/>
       <xsl:with-param name="kBare" select="$kBare"/>
       <xsl:with-param name="vBare" select="$vBare"/>
-      <xsl:with-param name="layer" select="$layer"/>
       <xsl:with-param name="elements" select="$filteredElements"/>
       <xsl:with-param name="rule" select="$rule"/>
       <xsl:with-param name="filterIterator" select="$filterIterator"/>
@@ -3557,7 +3514,6 @@ against infinite loops -->
     <xsl:param name="eBare"/>
     <xsl:param name="kBare"/>
     <xsl:param name="vBare"/>
-    <xsl:param name="layer"/>
     <xsl:param name="elements"/>
     <xsl:param name="rule"/>
     <xsl:param name="filterIterator"/>
@@ -3620,7 +3576,6 @@ against infinite loops -->
       <xsl:with-param name="eBare" select="$eBare"/>
       <xsl:with-param name="kBare" select="$kBare"/>
       <xsl:with-param name="vBare" select="$vBare"/>
-      <xsl:with-param name="layer" select="$layer"/>
       <xsl:with-param name="elements" select="$filteredElements"/>
       <xsl:with-param name="rule" select="$rule"/>
       <xsl:with-param name="filterIterator" select="$filterIterator"/>

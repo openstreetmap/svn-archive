@@ -82,6 +82,8 @@ sub new {
         push(@default_searchpaths, File::Spec->catpath($volume, $dir) );
     }
 
+    $self->searchpaths(@default_searchpaths);
+
     foreach my $param ( keys(%$params) ){
         $self->$param( $params->{$param} );
     }

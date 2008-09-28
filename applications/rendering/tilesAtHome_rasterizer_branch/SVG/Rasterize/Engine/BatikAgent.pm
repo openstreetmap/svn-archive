@@ -5,8 +5,9 @@ use warnings;
 
 $__PACKAGE__::VERSION = '0.1';
 
-use base qw(Class::Accessor SVG::Rasterize::Engine);
+use base qw(SVG::Rasterize::Engine::Batik);
 use Error qw(:try);
+use IPC::Run qw(run);
 
 =pod
 =head1 NAME
@@ -19,85 +20,45 @@ This module is only meant to be used by SVG::Rasterize.
 
 =head1 ACCESSORS
 
-=cut
+=head2 host
 
-__PACKAGE__->mk_accessors(qw(agent_path java_path host port heapsize classpath));
+=head2 port
 
-=pod
-
-=head2 
-
-Path to Batik JAR
+=head2 heapsize
 
 =cut
 
-sub agent_path {
-    my $self = shift;
-
-    unless( @_ || $self->{jar_path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path(), File::Spec->curdir() ){
-            my($volume, $dir) = File::Spec->splitpath($path, 1);
-
-            foreach my $name ( 'batik-agent.jar' ){
-                my $filepath = File::Spec->catpath($volume, $dir, $name);
-                return $self->jar_path($filepath) if -x $filepath;
-            }
-        }
-        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find batik-agent.jar");
-    }
-
-    return $self->_agent_path_accessor(@_);
-}
-
-=pod
-
-=head2 java_path
-
-Path to java executable
-
-=cut
-
-sub java_path {
-    my $self = shift;
-
-    unless( @_ && $self->{java_path} ){ # We're getting and don't have a defined path
-        foreach my $path ( File::Spec->path() ){
-            my($volume, $dir) = File::Spec->splitpath($path, 1);
-
-            foreach my $name ( 'java', 'java.exe' ){
-                my $filepath = File::Spec->catpath($volume, $dir, $name);
-                return $self->java_path($filepath) if -x $filepath;
-            }
-        }
-        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find Java executable");
-    }
-
-    return $self->_java_path_accessor(@_);
-}
+__PACKAGE__->mk_accessors(qw(host port heapsize));
 
 =pod
 
 =head1 METHODS
 
+=head2 new(\%params) (constructor)
+
+Create a new instance of this class. You can pass in parameters which
+will then be set via their accessor
+
+Returns: new instance of this class.
+
 =cut
+
+sub new {
+    my ( $pkg, $params ) = @_;
+    my $self = $pkg->SUPER::new($params);
+
+    # Append batik-agent to the jar list
+    $self->jar_list('batik-agent.jar', @{$self->jar_list()});
+
+    return $self;
+}
 
 =pod
 
-=head2 available()
-
-Try to see if this engine can be used.
-
 =cut
 
-sub available {
-    my $self = shift;
-
-    try {
-        return 1 if -r $self->agent_path() && -x $self->java_path();
-    } catch SVG::Rasterize::Engine::Batik::Error::Prerequisite with {
-        return 0;
-    };
-
+# Not used in this module, so overridden
+sub wrapper_available {
     return 0;
 }
 
@@ -113,17 +74,19 @@ sub convert {
     my $self = shift;
     my %params = @_;
 
-    my @cmd;
+    my %area;
+    if( $params{area} ){
+        %area = $params{area}->get_box_upperleft();
+        $area{width} = $params{area}->get_box_width();
+        $area{height} = $params{area}->get_box_height();
+    }
 
-    @cmd = ('svg2png');
+    my @cmd = ('svg2png');
     push(@cmd, 'width='.$params{width}) if $params{width};
     push(@cmd, 'height='.$params{height}) if $params{height};
     push(@cmd, sprintf('area=%f,%f,%f,%f',
-                       $params{left},
-                       $params{top},
-                       $params{right} - $params{left},
-                       $params{top} - $params{bottom})
-        ) if $params{left} && $params{bottom} && $params{right} && $params{top};
+                       @area{'left','top','width','height'})
+        ) if %area;
     push(@cmd, 'destination='.$params{outfile});
     push(@cmd, 'source='.$params{infile});
 
@@ -155,6 +118,7 @@ sub start_agent {
     }
 
     my @cmd;
+
     if( $^O eq "MSWin32" ){
         push(@cmd, qw(start /B /LOW));
     }
@@ -162,28 +126,36 @@ sub start_agent {
     push(@cmd, $self->java_path());
     push(@cmd, '-Xms256M');
     push(@cmd, '-Xmx'.$self->heapsize()) if $self->heapsize();
-    push(@cmd, '-cp', $self->classpath()) if $self->classpath();
+    push(@cmd, '-classpath', join(':', $self->find_jars( @{$self->jar_list()} )));
     push(@cmd, 'org.tah.batik.ServerMain');
     push(@cmd, '-p', $self->port());
 
     my $pid;
-    # On windows "start" will take care of the forking
     if( $^O eq "MSWin32" ){
+        # On windows "start" will take care of the forking
         $pid = 0;
     } else {
+        # On *nix systems we daemonize
         $pid = fork;
+        if( ! defined($pid) ){
+            throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Error forking before starting batik agent");
+        } elsif( $pid == 0 ){
+            setpgrp;
+            close(STDIN);
+            close(STDOUT);
+            close(STDERR);
+        }
     }
 
-    if( ! defined($pid) ){
-        throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Error forking before starting batik agent");
-    } elsif( $pid == 0 ){
-        run( \@cmd, \undef, \undef, \undef ) or
-            throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime($cmd[0]." returned non-zero status code $?");
+    if( $pid == 0 ){
+        exec(@cmd) or
+            throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Error exec'ing \"$cmd[0]\": $!");
     }
 
     if( $^O eq "MSWin32" || $pid ){
         foreach( 0 .. 10 ){
             sleep(1);
+
             if( $self->get_status() ){
                 return "BatikAgent started successfully";
             }
@@ -204,9 +176,14 @@ Sends a stop command to the batik agent.
 sub stop_agent {
     my $self = shift;
 
-    return unless $self->get_status();
+    return 0 if ! $self->get_status(); #FIXME: maybe this should throw an exception instead?
 
-    $self->send_command("stop\n\n");
+    my $answer = $self->send_command("stop\n\n");
+    if( $answer eq 'OK' ){
+        return 1;
+    } else {
+        return "Error: batik agent replied $answer";
+    }
 }
 
 =pod
@@ -244,13 +221,18 @@ Get agent status
 sub get_status {
     my $self = shift;
 
+    my $result;
     try {
-        return 1 if send_command("status\n\n") eq "OK";
+        $result = $self->send_command("status\n\n");
     } otherwise {
-        # Just catch all errors and return false
-    }
+        # We just ignore exceptions
+    };
 
-    return 0;
+    if( defined($result) && $result eq 'OK' ){
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 package SVG::Rasterize::Engine::BatikAgent::Error;
@@ -274,6 +256,11 @@ __END__
 =head1 TO DO
 
 send_command should probably do about three times as much error checking.
+
+This feels a bit dirty the way it currently inherits Batik then overrides
+a few bits. Look at cleaner ways of doing it.
+
+Maybe we should handle the autostart/stop on finished logic in here.
 
 =head1 BUGS
 

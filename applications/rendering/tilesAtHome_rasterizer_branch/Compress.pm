@@ -93,7 +93,14 @@ sub compressAll
     my @dir = readdir($dp);
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
-        
+
+    if(!@tilesets)
+    {
+      $::progressPercent = 100;
+      ::statusMessage("Nothing found to upload",1,3);
+      return (1, "Nothing found.");
+    }
+
     foreach my $File(@tilesets)
     {   # go through all complete tilesets ie "*.dir" firectories
         $File =~ m{^([^_]+)_};

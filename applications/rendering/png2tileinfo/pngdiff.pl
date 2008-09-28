@@ -55,6 +55,7 @@ sub set_type
 
 my $oldfile;
 my $newfile;
+my $makepatch;
 
 if($ARGV[0] && $ARGV[0] eq "svn")
 {
@@ -63,8 +64,13 @@ if($ARGV[0] && $ARGV[0] eq "svn")
 elsif ($#ARGV < 1)
 {
     print "Usage: pngdiff.pl oldfile.png newfile.png\n";
+    print "       pngdiff.pl makepatch oldfile.png newfile.png\n";
     print "       pngdiff.pl svn\n";
     exit(0);
+}
+elsif($ARGV[0] eq "makepatch")
+{
+    ($makepatch,$oldfile,$newfile) = @ARGV;
 }
 else
 {
@@ -94,7 +100,14 @@ for my $y (0..4095)
     if ($ntype != $type) {
 	my $ntypen=$typenames[$ntype];
 	my $typen=$typenames[$type];
-	print "$x,$y,12,$ntypen WAS $typen\n";
+	if($makepatch)
+	{
+	    print "./png2tileinfo.pl set $x $y $ntypen # WAS $typen\n";
+	}
+	else
+	{
+	    print "$x,$y,12,$ntypen WAS $typen\n";
+	}
     }
   }
 }

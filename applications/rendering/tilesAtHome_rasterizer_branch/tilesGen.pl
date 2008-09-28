@@ -154,12 +154,13 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
         $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
 
         if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
-            $SVG::Rasterize::object->engine()->heapsize = $Config->get("BatikJVMSize");
-            $SVG::Rasterize::object->engine()->classpath = $Config->get("BatikClasspath");
-            $SVG::Rasterize::object->engine()->host = 'localhost';
-            $SVG::Rasterize::object->engine()->port = $Config->get("BatikPort");
+            $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
+            $SVG::Rasterize::object->engine()->host('localhost');
+            $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
         }
     }
+
+    print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
 }
 
 # We need to keep parent PID so that child get the correct files after fork()
@@ -255,7 +256,11 @@ elsif ($Mode eq "loop")
 
     # Start batik agent if it's not runnig
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
-        $StartedBatikAgent = 1 if $SVG::Rasterize::object->engine()->start_agent();
+        my $result = $SVG::Rasterize::object->engine()->start_agent();
+        if( $result ){
+            $StartedBatikAgent = 1;
+            statusMessage("Started Batik agent", 0, 0);
+        }
     }
 
     # this is the actual processing loop
@@ -409,12 +414,25 @@ elsif ($Mode eq "")
 #---------------------------------
 elsif ($Mode eq "startBatik")
 {
-    $SVG::Rasterize::object->engine()->start_agent();
+    my $result = $SVG::Rasterize::object->engine()->start_agent();
+    if( $result ){
+        $StartedBatikAgent = 1;
+        statusMessage("Started Batik agent", 0, 0);
+    } else {
+        statusMessage("Batik agent already running");
+    }
 }
 #---------------------------------
 elsif ($Mode eq "stopBatik")
 {
-    $SVG::Rasterize::object->engine()->stop_agent();
+    my $result = $SVG::Rasterize::object->engine()->stop_agent();
+    if( $result == 1 ){
+        statusMessage("Successfully sent stop message to Batik agent", 0, 0);
+    } elsif( $result == 0 ){
+        statusMessage("Could not contact Batik agent", 0, 0);
+    } else {
+        statusMessage($result, 0, 0);
+    }
 }
 #---------------------------------
 else {

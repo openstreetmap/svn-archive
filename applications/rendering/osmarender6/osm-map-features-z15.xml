@@ -2287,9 +2287,9 @@
 				}
 				
 				.aerialway-station {
-				fill: black;
-				stroke: black;
-				stroke-width: 1px;
+					fill: #ec2d2d;  
+					stroke: #666666;
+					stroke-width: 0.4px; 
 				}
 				
 				.aerialway-name {

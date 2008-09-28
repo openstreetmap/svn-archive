@@ -1413,7 +1413,7 @@
 			</else>
 			<line smart-linecap="no" class="aerialway-struts no-bezier"/>
 			<rule e="node" k="aerialway" v="station">
-				<circle r="1.5px" class="aerialway-station"/>
+				<circle r="1px" class="aerialway-station"/>
 			</rule>
 			<rule e="node" s="way" k="aerialway" v="*">
 				<rule e="node" k="ele" v="*">
@@ -1831,6 +1831,10 @@
 					<text k="name" class="caption-core railway-halt-caption-core" dy="-2px" layer="5"/>
 				</rule>
 				<rule e="node" k="railway" v="tram_stop" layer="5">
+					<text k="name" class="caption-casing railway-halt-caption-casing" dy="-2px" layer="5"/>
+					<text k="name" class="caption-core railway-halt-caption-core" dy="-2px" layer="5"/>
+				</rule>
+				<rule e="node" k="aerialway" v="station" layer="5">
 					<text k="name" class="caption-casing railway-halt-caption-casing" dy="-2px" layer="5"/>
 					<text k="name" class="caption-core railway-halt-caption-core" dy="-2px" layer="5"/>
 				</rule>
@@ -2833,9 +2837,9 @@
 				}
 				
 				.aerialway-station {
-				fill: black;
-				stroke: black;
-				stroke-width: 1px;
+					fill: #ec2d2d;  
+					stroke: #666666;
+					stroke-width: 0.2px; 
 				}
 				
 				.aerialway-name {

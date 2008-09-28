@@ -800,7 +800,7 @@
 			<line smart-linecap="no" class="aerialway-line no-bezier"/>
 			<line smart-linecap="no" class="aerialway-struts no-bezier"/>
 			<rule e="node" k="aerialway" v="station">
-				<circle r="1.5px" class="aerialway-station"/>
+				<circle r="4px" class="aerialway-station"/>
 			</rule>
 			<!-- no names are rendered in this level -->
 		</rule>
@@ -1321,6 +1321,11 @@
 				stroke: #666666;
 				stroke-width: 1px;
 				}
+
+                                .railway-halt {
+                                fill: black;
+                                stroke: black;
+                                }
 				
 				/* Ferry */
 				.route-ferry {
@@ -1724,7 +1729,6 @@
 				.aerialway-station {
 				fill: black;
 				stroke: black;
-				stroke-width: 1px;
 				}
 				
 				.aerialway-name {

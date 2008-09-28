@@ -943,7 +943,7 @@
 			<line smart-linecap="no" class="aerialway-line no-bezier"/>
 			<line smart-linecap="no" class="aerialway-struts no-bezier"/>
 			<rule e="node" k="aerialway" v="station">
-				<circle r="1.5px" class="aerialway-station"/>
+				<circle r="2px" class="aerialway-station"/>
 			</rule>
 			<rule e="way" k="name" v="*">
 				<text k="name" dx="0px" dy="-2px" class="aerialway-name" text-anchor="middle" startOffset="50%"/>
@@ -2074,9 +2074,9 @@
 				}
 				
 				.aerialway-station {
-				fill: black;
-				stroke: black;
-				stroke-width: 1px;
+					fill: #ec2d2d;  
+					stroke: #666666;
+					stroke-width: 0.4px; 
 				}
 				
 				.aerialway-name {

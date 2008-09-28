@@ -20,8 +20,6 @@
     showLicense="no"
     interactive="no">
 
-    <!--bounds_mkr1-->
-    <!--bounds_mkr2-->
 
     <!-- Don't do anything on z0
       <rule e="node" k="place" v="continent">

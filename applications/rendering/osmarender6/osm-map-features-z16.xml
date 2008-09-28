@@ -22,8 +22,6 @@
 	  symbolsDir="symbols"
 	  meter2pixel="0.1375">
 	
-	<!--bounds_mkr1-->
-	<!--bounds_mkr2-->
 	
 	<!-- Select all nodes and ways (unless they have an osmarender:render=no tag) -->
 	<rule e="node|way" k="osmarender:render" v="~|yes">

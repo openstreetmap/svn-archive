@@ -148,6 +148,24 @@ my $output_file;
 my $bbox;
 my %referenced_ways;
 
+# List of drawing commands which will make the map
+# Represented as hash of arrays. Key is layer, array item is hash with members:
+# instruction
+# array of elements
+my $drawing_commands;
+
+# Informations about drawing instructions. It will contain default layer and maybe some
+# other info in future.
+my %instructions = (
+  'line' => {'func' => \&draw_lines},
+  'area' => {'func' => \&draw_areas},
+  'text' => {'func' => \&draw_text},
+  'circle' => {'func' => \&draw_circles},
+  'symbol' => {'func' => \&draw_symbols},
+  'wayMarker' => {'func' => \&draw_way_markers},
+  'areaText' => {'func' => \&draw_area_text},
+  'areaSymbol' => {'func' => \&draw_area_symbols});
+
 GetOptions("rule=s"    => \$rule_file, 
            "debug=s"   => \$debug_opts,
            "outfile=s" => \$output_file,
@@ -510,28 +528,24 @@ if (get_variable("withOSMLayers", "yes") eq "no")
 }
 else
 {
-    # determine which layers we have to process. Layers to be processed
-    # are those that are present in the data, and those that are explicitly
-    # mentioned in a rule.
-    my $layers = {};
-    $layers->{$_->{'layer'}} = 1 foreach ($selection->[0]->members());
-    $layers->{$_->getValue()} = 1 foreach ($rules->find('//rule/@layer')->get_nodelist());
+    # process all layers
+    process_rule($_, 0) foreach ($rulelist->get_nodelist());
 
-    # process layers one by one.
-    # Initially I selected all objects on the layer into a 1st level selection
-    # list right here. This was quite elegant but since Osmarender allows some 
-    # rule 3-deep down to have the attribute "layer='x'" thereby requesting to 
-    # be passed ALL objects and not those on the layer being processed, this
-    # didn't work out.
-    foreach my $layer(sort { $a <=> $b } keys %$layers)
+    # draw layers
+    foreach my $layer(sort { $a <=> $b } keys %$drawing_commands)
     {
-        debug("processing layer $layer") if ($debug->{"general"});
+        my $layer_commands = $drawing_commands->{$layer};
         $writer->startTag('g',
-            'inkscape:groupmode' => 'layer',
-            'id' => "layer$layer",
-            'inkscape:label' => "Layer $layer");
-        process_rule($_, 0, $layer) foreach ($rulelist->get_nodelist());
-        $writer->endTag('g');
+           'inkscape:groupmode' => 'layer',
+           'id' => "layer$layer",
+           'inkscape:label' => "Layer $layer");
+
+        foreach my $command (@$layer_commands)
+        {
+            $instructions{$command->{'instruction'}->getName()}->{'func'}->($command->{'instruction'}, undef, $command->{'elements'});
+        }
+
+        $writer->endTag();
     }
 }
 
@@ -920,62 +934,67 @@ sub process_rule
     # ----------------------------------------------------
 
     my $previous_child;
-    foreach ($rulenode->getChildNodes())
+    foreach my $instruction ($rulenode->getChildNodes())
     {
-        my $name = $_->getName() || '';
+        next unless ref $instruction eq 'XML::XPath::Node::Element';
+        my $name = $instruction->getName() || '';
+
         if ($name eq "layer")
         {
-              process_layer($_, $depth+1, $layer);
+              process_layer($instruction, $depth+1, $layer);
         }
         elsif ($name eq "rule")
         {
             # a nested rule; make recursive call.
-            process_rule($_, $depth+1, $layer);
+            process_rule($instruction, $depth+1, $layer);
         }
         elsif ($name eq "else")
         {
             # an "else" element. 
             if (!defined($previous_child) || $previous_child->getName() ne "rule")
             {
-                debug("<else> not following <rule>, ignored: ".substr($_->toString(0), 0, 60)."...");
+                debug("<else> not following <rule>, ignored: ".substr($instruction->toString(0), 0, 60)."...");
             }
             else
             {
                 # make recursive call
-                process_rule($_, $depth+1, $layer, $previous_child);
+                process_rule($instruction, $depth+1, $layer, $previous_child);
             }
         }
-        elsif ($name eq "line")
+        elsif ($instructions{$name})
         {
-            draw_lines($_, $layer, $selected);
-        }
-        elsif ($name eq "area")
-        {
-            draw_areas($_, $layer, $selected);
-        }
-        elsif ($name eq "text")
-        {
-            draw_text($_, $layer, $selected);
-        }
-        elsif ($name eq "circle")
-        {
-            draw_circles($_, $layer, $selected);
-        }
-        elsif ($name eq "symbol")
-        {
-            draw_symbols($_, $layer, $selected);
-        }
-        elsif ($name eq "wayMarker")
-        {
-            draw_way_markers($_, $layer, $selected);
-        }
-        elsif ($name eq "areaText")
-        {
-            draw_area_text($_, $layer, $selected);
-        }
-        elsif ($name eq "areaSymbol")
-        {
-            draw_area_symbols($_, $layer, $selected);
+            foreach my $element ($selected->members())
+            {
+                # Calculate layer
+                my $layer;
+                if ($instruction->getAttribute('layer') ne '')
+                {
+                    $layer = $instruction->getAttribute('layer');
+                }
+                elsif ($element->{'tags'}->{'layer'})
+                {
+                    $layer = $element->{'tags'}->{'layer'};
+                }
+                else
+                {
+                    $layer = 0;
+                }
+
+                # Create new entry for layer if it doesn't exist yet
+                if (not($drawing_commands->{$layer}))
+                {
+                    $drawing_commands->{$layer} = [{'instruction'=>$instruction}];
+                }
+
+                # Create new entry for instruction
+                if ($drawing_commands->{$layer}->[-1]->{'instruction'} ne $instruction)
+                {
+                   push @{$drawing_commands->{$layer}}, {'instruction' => $instruction, 'elements' => []};
+                }
+
+                # Add element
+                push @{$drawing_commands->{$layer}->[-1]->{'elements'}}, $element;
+            }
         }
         elsif ($name ne "")
         {

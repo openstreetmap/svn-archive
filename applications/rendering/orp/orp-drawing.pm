@@ -47,7 +47,7 @@ sub draw_lines
     # explicit way specific style
     my $style="";
 
-    foreach ($selected->members)
+    foreach (@$selected)
     {
         next unless (ref $_  eq 'way');
         next if (scalar(@{$_->{"nodes"}}) < 2);
@@ -220,7 +220,7 @@ sub draw_areas
     $writer->startTag("g", "class" => $class);
 
 OUTER:
-    foreach ($selected->members)
+    foreach (@$selected)
     {
         next unless (ref $_ eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
@@ -343,7 +343,7 @@ sub draw_text
     #     writes the result.
     # both are supported (through the substitute_text function)
 
-    foreach($selected->members())
+    foreach(@$selected)
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         my $text = substitute_text($textnode, $_);
@@ -543,7 +543,7 @@ sub draw_area_text
 {
     my ($textnode, $layer, $selected) = @_;
 
-    foreach($selected->members())
+    foreach(@$selected)
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
@@ -606,7 +606,7 @@ sub draw_area_symbols
 {
     my ($symbolnode, $layer, $selected) = @_;
 
-    foreach($selected->members())
+    foreach(@$selected)
     {
         next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
@@ -652,7 +652,7 @@ sub draw_circles
 {
     my ($circlenode, $layer, $selected) = @_;
 
-    foreach($selected->members())
+    foreach(@$selected)
     {
         next if (ref $_ eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
@@ -743,7 +743,7 @@ sub draw_symbols
 {
     my ($symbolnode, $layer, $selected) = @_;
 
-    foreach($selected->members())
+    foreach(@$selected)
     {
         next if (ref $_ eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;
@@ -783,7 +783,7 @@ sub draw_way_markers
 {
     my ($markernode, $layer, $selected) = @_;
 
-    foreach($selected->members())
+    foreach(@$selected)
     {
         next if (ref $_ eq 'way');
         next if defined($layer) and $_->{'layer'} != $layer;

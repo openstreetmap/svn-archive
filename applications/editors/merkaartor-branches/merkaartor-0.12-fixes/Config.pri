@@ -1,5 +1,5 @@
 VERSION="0.12"
-REVISION="-beta1"
+REVISION="-beta4"
 
 NODEBUG=1             - no debug target
 # TRANSDIR_MERKAARTOR - translations directory for merkaartor

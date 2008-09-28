@@ -266,46 +266,6 @@ sub CheckConfig
         die("no layers configured");
     }
 
-
-
-    if ($self->get("Batik"))
-    {
-        print "- Using Batik";
-        if ($self->get("Batik") == 1)
-        {
-            print " in jar mode";
-        }
-        if ($self->get("Batik") == 2)
-        {
-            print " in wrapper mode";
-        }
-        if ($self->get("Batik") == 3)
-        {
-            print " in agent mode";
-        }
-        print "\n";
-    }
-    else
-    {
-        # Inkscape version
-        $cmd=$self->get("Inkscape");
-        my $InkscapeV = `\"$cmd\" --version`;
-        $EnvironmentInfo{"Inkscape"}=$InkscapeV;
- 
-        if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
-        {
-            die("Can't find inkscape (using \"".$self->get("Inkscape")."\")\n");
-        }
-    
-        if($2 < 42.0){
-            die("This version of inkscape ($1.$2) is known not to work with tiles\@home\n");
-        }
-        if($2 < 45.1){
-            print "* Please upgrade to inkscape 0.45.1 due to security problems with your inkscape version:\n"
-        }
-        print "- Inkscape version $1.$2\n";
-    }
-
     # Rendering through Omsarender/XSLT or or/p
     if ($self->get("Osmarender") eq "XSLT")
     {

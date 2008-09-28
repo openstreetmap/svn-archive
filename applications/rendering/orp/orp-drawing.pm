@@ -51,7 +51,6 @@ sub draw_lines
     {
         next unless (ref $_  eq 'way');
         next if (scalar(@{$_->{"nodes"}}) < 2);
-        next if defined($layer) and $_->{'layer'} != $layer;
 
 	# this is a special case for ways (e.g. rivers) where we honor a
 	# width=something tag.
@@ -223,7 +222,6 @@ OUTER:
     foreach (@$selected)
     {
         next unless (ref $_ eq 'way');
-        next if defined($layer) and $_->{'layer'} != $layer;
 
         my $points = [];
         foreach (@{$_->{"nodes"}})
@@ -345,7 +343,6 @@ sub draw_text
 
     foreach(@$selected)
     {
-        next if defined($layer) and $_->{'layer'} != $layer;
         my $text = substitute_text($textnode, $_);
         if ($text ne '')
         {
@@ -545,7 +542,6 @@ sub draw_area_text
 
     foreach(@$selected)
     {
-        next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
         my $text = substitute_text($textnode, $_);
         next unless $text ne '';
@@ -608,7 +604,6 @@ sub draw_area_symbols
 
     foreach(@$selected)
     {
-        next if defined($layer) and $_->{'layer'} != $layer;
         next unless (ref $_ eq 'way');
 
         my $labelRelation = $labelRelations->{$_->{'id'}};
@@ -655,7 +650,6 @@ sub draw_circles
     foreach(@$selected)
     {
         next if (ref $_ eq 'way');
-        next if defined($layer) and $_->{'layer'} != $layer;
         
         my $projected = project([$_->{'lat'}, $_->{'lon'}]);
         $writer->emptyTag('circle', 
@@ -746,7 +740,6 @@ sub draw_symbols
     foreach(@$selected)
     {
         next if (ref $_ eq 'way');
-        next if defined($layer) and $_->{'layer'} != $layer;
         my $projected = project([$_->{'lat'}, $_->{'lon'}]);
         draw_symbol($symbolnode, $projected);
     }
@@ -786,7 +779,6 @@ sub draw_way_markers
     foreach(@$selected)
     {
         next if (ref $_ eq 'way');
-        next if defined($layer) and $_->{'layer'} != $layer;
 
         # find the (first) way using this node and use it to determine
         # previous and next nodes

@@ -551,12 +551,23 @@ sub Render
     $::progress = 0;
     $::progressPercent = 0;
     $::currentSubTask = "$layer-z$zoom";
+
+    my $stripes = 1;
+    if ($Config->get("RenderStripes")) {
+        my $level = $zoom - $req->Z;
+        if ($level >= $Config->get("RenderStripes")) {
+            $stripes = 4 ** ($level - $Config->get("RenderStripes") + 1);
+            if ($stripes > 2 ** $level) {
+                $stripes = 2 ** $level;
+            }
+        }
+    }
     
     $self->GenerateSVG($layer, $zoom, $layerDataFile);
 
-    $self->RenderSVG($layer, $zoom);
+    $self->RenderSVG($layer, $zoom, $stripes);
 
-    $self->SplitTiles($layer, $zoom);
+    $self->SplitTiles($layer, $zoom, $stripes);
 }
 
 
@@ -571,6 +582,7 @@ sub GenerateSVG
     my $self = shift;
     my ($layer, $zoom, $layerDataFile) = @_;
     my $Config = TahConf->getConfig();
+    ::statusMessage("Generating SVG file", 1, 6);
  
     # Render the file (returns 0 on failure)
     if (! ::xml2svg(
@@ -582,6 +594,8 @@ sub GenerateSVG
     {
         throw TilesetError "Render failure", "renderer";
     }
+
+    ::statusMessage("SVG done", 1, 10);
 }
 
 
@@ -593,87 +607,91 @@ sub GenerateSVG
 sub RenderSVG
 {
     my $self = shift;
-    my ($layer, $zoom) = @_;
+    my ($layer, $zoom, $stripes) = @_;
     my $Config = $self->{Config};
-    my $req = $self->{req};
+    my $Req = $self->{req};
 
     # File locations
-    my $svgFile = File::Spec->join($self->{JobDir},"$layer-z$zoom.svg");
-    my $pngFile = File::Spec->join($self->{JobDir},"$layer-z$zoom.png");
-    my $stdOut = File::Spec->join($self->{JobDir},"$layer-z$zoom.stdout");
+    my $svg_file = File::Spec->join($self->{JobDir},"$layer-z$zoom.svg");
     
-    my $Cmd = "";
+    my $cmd = "";
 
-    my $TileSize = 256; # Tiles are 256 pixels square
-    # PngSize is the width/height dimension of resulting PNG file
-    my $PngSize = $TileSize * (2 ** ($zoom - $req->Z));
+    my $tile_size = 256; # Tiles are 256 pixels square
+    # png_width/png_height is the width/height dimension of resulting PNG file
+    my $png_width = $tile_size * (2 ** ($zoom - $Req->Z));
+    my $png_height = $png_width / $stripes;
 
     # SVG excerpt in SVG units
-    my ($Height, $Width, $Valid) = ::getSize(File::Spec->join($self->{JobDir}, "$layer-z$zoom.svg"));
+    my ($height, $width, $valid) = ::getSize(File::Spec->join($self->{JobDir}, "$layer-z$zoom.svg"));
+    my $stripe_height = $height / $stripes;
 
-    my ($Left, $Top) = (0, 0);
-    no locale;
-    if ($Config->get("Batik") == "1") { # batik as jar
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
-                       $Config->get("i18n") ? "LC_ALL=C " : "",
-                       $Config->get("Niceness"),
-                       $Config->get("BatikJVMSize"),
-                       $Config->get("BatikPath"),
-                       $PngSize,
-                       $PngSize,
-                       $Left, $Top, $Width, $Height,
-                       $pngFile,
-                       $svgFile,
-                       $stdOut);
-    }
-    elsif ($Config->get("Batik") == "2") { # batik as executable (wrapper of some sort, i.e. on gentoo)
-        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
-                       $Config->get("i18n") ? "LC_ALL=C " : "",
-                       $Config->get("Niceness"),
-                       $Config->get("BatikPath"),
-                       $PngSize,
-                       $PngSize,
-                       $Left,$Top,$Width,$Height,
-                       $pngFile,
-                       $svgFile,
-                       $stdOut);
-    }
-    elsif ($Config->get("Batik") == "3") { # agent
-        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
-                       $PngSize,
-                       $PngSize,
-                       $Left,$Top,$Width,$Height,
-                       $pngFile,
-                       $svgFile,
-                       $stdOut);
-    }
-    else {
-        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
-                       $Config->get("i18n") ? "LC_ALL=C " : "",
-                       $Config->get("Niceness"),
-                       $Config->get("Inkscape"),
-                       $PngSize,
-                       $PngSize,
-                       $Left, $Top, $Left + $Width, $Top + $Height,
-                       $pngFile,
-                       $svgFile,
-                       $stdOut);
-    }
-    use locale;
-    
-    # stop rendering the current job when inkscape fails
-    ::statusMessage("Rendering",0,3);
-    print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
-
-    my $commandResult = $Config->get("Batik") == "3" ? ::sendCommandToBatik($Cmd) eq "OK" : ::runCommand($Cmd, $$);
-    if (!$commandResult or ! -e $pngFile ) {
-        ::statusMessage("$Cmd failed",1,0);
-        if ($Config->get("Batik") == "3" && !::getBatikStatus()) {
-            ::statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
+    for (my $stripe = 0; $stripe <= $stripes - 1; $stripe++) {
+        my $png_file = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.png");
+        my $std_out = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.stdout");
+        my ($left, $top) = (0, $stripe_height * $stripe);
+        no locale;
+        if ($Config->get("Batik") == "1") { # batik as jar
+            $cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
+                           $Config->get("i18n") ? "LC_ALL=C " : "",
+                           $Config->get("Niceness"),
+                           $Config->get("BatikJVMSize"),
+                           $Config->get("BatikPath"),
+                           $png_width,
+                           $png_height,
+                           $left, $top, $width, $stripe_height,
+                           $png_file,
+                           $svg_file,
+                           $std_out);
         }
-        my $reason = "BadSVG (svg2png)";
-        $req->is_unrenderable(1);
-        throw TilesetError $reason;
+        elsif ($Config->get("Batik") == "2") { # batik as executable (wrapper of some sort, i.e. on gentoo)
+            $cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
+                           $Config->get("i18n") ? "LC_ALL=C " : "",
+                           $Config->get("Niceness"),
+                           $Config->get("BatikPath"),
+                           $png_width,
+                           $png_height,
+                           $left, $top, $width, $stripe_height,
+                           $png_file,
+                           $svg_file,
+                           $std_out);
+        }
+        elsif ($Config->get("Batik") == "3") { # agent
+            $cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
+                           $png_width,
+                           $png_height,
+                           $left, $top, $width, $stripe_height,
+                           $png_file,
+                           $svg_file,
+                           $std_out);
+        }
+        else {
+            $cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
+                           $Config->get("i18n") ? "LC_ALL=C " : "",
+                           $Config->get("Niceness"),
+                           $Config->get("Inkscape"),
+                           $png_width,
+                           $png_height,
+                           $left, $top, $left + $width, $top + $stripe_height,
+                           $png_file,
+                           $svg_file,
+                           $std_out);
+        }
+        use locale;
+    
+        # stop rendering the current job when inkscape fails
+        ::statusMessage("Rendering stripe $stripe",0,3);
+        print STDERR "\n$cmd\n" if ($Config->get("Debug"));
+
+        my $commandResult = $Config->get("Batik") == "3" ? ::sendCommandToBatik($cmd) eq "OK" : ::runCommand($cmd, $$);
+        if (!$commandResult or ! -e $png_file ) {
+            ::statusMessage("$cmd failed",1,0);
+            if ($Config->get("Batik") == "3" && !::getBatikStatus()) {
+                ::statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
+            }
+            my $reason = "BadSVG (svg2png)";
+            $Req->is_unrenderable(1);
+            throw TilesetError $reason;
+        }
     }
 }
 
@@ -686,100 +704,103 @@ sub RenderSVG
 sub SplitTiles
 {
     my $self = shift;
-    my ($layer, $zoom) = @_;
+    my ($layer, $zoom, $stripes) = @_;
     my $Config = $self->{Config};
-    my $req = $self->{req};
+    my $Req = $self->{req};
 
-    my $pngFile = File::Spec->join($self->{JobDir},"$layer-z$zoom.png");
-    my $minzoom = $req->Z;
+    my $minzoom = $Req->Z;
     my $size = 2 ** ($zoom - $minzoom);
-    my $minx = $req->X * $size;
-    my $miny = $req->Y * $size;
+    my $minx = $Req->X * $size;
+    my $miny = $Req->Y * $size;
     my $number_tiles = $size * $size;
-
-    $::progress = 0;
-    $::progressPercent = 0;
-
-    ::statusMessage("Splitting",0,3);
+    my $stripe_height = $size / $stripes;
 
     # Size of tiles
     my $pixels = 256;
 
-    my $Image = newFromPng GD::Image($pngFile);
-    my $ctime = time;
-    # unless this is a transparent layer convert the image to 8 bit palette
-#    $Image->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
-    if( not defined $Image ) {
-        throw TilesetError "SplitTiles: Missing File $pngFile encountered";
-    }
+    $::progress = 0;
+    $::progressPercent = 0;
 
     # Use one subimage for everything, and keep copying data into it
     my $SubImage = new GD::Image($pixels, $pixels, 1);#$Config->get($layer."_Transparent") ? 1 : 0);
+
     my $i = 0;
     my ($x, $y);
-    for (my $iy = 0; $iy <= $size - 1; $iy++) {
-        for (my $ix = 0; $ix <= $size - 1; $ix++) {
-            $x = $minx + $ix;
-            $y = $miny + $iy;
-            $i++;
-            $::progress = $i;
-            $::progressPercent = $i / $number_tiles * 100;
-            ::statusMessage("Writing tile $x $y", 0, 10); 
-            # Get a tiles'worth of data from the main image
-            $SubImage->copy($Image,
-                            0,                   # Dest X offset
-                            0,                   # Dest Y offset
-                            $ix * $pixels,       # Source X offset
-                            $iy * $pixels,       # Source Y offset
-                            $pixels,             # Copy width
-                            $pixels);            # Copy height
 
-            # Decide what the tile should be called
-            my $tileFile;
-            if ($Config->get("LocalSlippymap")) {
-                my $tileDir = File::Spec->join($Config->get("LocalSlippymap"), $Config->get("${layer}_Prefix"), $zoom, $x);
-                File::Path::mkpath($tileDir);
-                $tileFile = File::Spec->join($tileDir, sprintf("%d.png", $y));
-            }
-            else {
-                # Construct base png directory
-                my $tileDir = File::Spec->join($self->{JobDir}, sprintf("%s_%d_%d_%d.dir", $Config->get("${layer}_Prefix"), $req->ZXY));
-                File::Path::mkpath($tileDir);
-                $tileFile = File::Spec->join($tileDir, sprintf("%s_%d_%d_%d.png", $Config->get("${layer}_Prefix"), $zoom, $x, $y));
-            }
+    for (my $stripe = 0; $stripe <= $stripes - 1; $stripe++) {
+        ::statusMessage("Splitting stripe $stripe",0,3);
 
-            # libGD comparison returns true if images are different. (i.e. non-empty Land tile)
-            # so return the opposite (false) if the tile doesn't look like an empty land tile
+        my $png_file = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.png");
+        my $Image = GD::Image->newFromPng($png_file);
 
-            # Check for black tile output
-            if (not ($SubImage->compare($self->{BlackTileImage}) & GD_CMP_IMAGE)) {
-                throw TilesetError "SplitTiles: Black Tile encountered", "inkscape";
-            }
+        if( not defined $Image ) {
+            throw TilesetError "SplitTiles: Missing File $png_file encountered";
+        }
 
-            # Detect empty tile here:
-            if (not ($SubImage->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE)) { 
-                copy("emptyland.png", $tileFile);
-            }
-            # same for Sea tiles
-            elsif (not($SubImage->compare($self->{EmptySeaImage}) & GD_CMP_IMAGE)) {
-                copy("emptysea.png", $tileFile);
-            }
-            else {
-                if ($Config->get($layer."_Transparent")) {
-                    $SubImage->transparent($SubImage->colorAllocate(248, 248, 248));
+        for (my $iy = 0; $iy <= $stripe_height - 1; $iy++) {
+            for (my $ix = 0; $ix <= $size - 1; $ix++) {
+                $x = $minx + $ix;
+                $y = $miny + $iy + $stripe * $stripe_height;
+                $i++;
+                $::progress = $i;
+                $::progressPercent = $i / $number_tiles * 100;
+                ::statusMessage("Writing tile $x $y", 0, 10); 
+                # Get a tiles'worth of data from the main image
+                $SubImage->copy($Image,
+                                0,                   # Dest X offset
+                                0,                   # Dest Y offset
+                                $ix * $pixels,       # Source X offset
+                                $iy * $pixels,       # Source Y offset
+                                $pixels,             # Copy width
+                                $pixels);            # Copy height
+
+                # Decide what the tile should be called
+                my $tile_file;
+                if ($Config->get("LocalSlippymap")) {
+                    my $tile_dir = File::Spec->join($Config->get("LocalSlippymap"), $Config->get("${layer}_Prefix"), $zoom, $x);
+                    File::Path::mkpath($tile_dir);
+                    $tile_file = File::Spec->join($tile_dir, sprintf("%d.png", $y));
                 }
                 else {
-                    $SubImage->transparent(-1);
+                    # Construct base png directory
+                    my $tile_dir = File::Spec->join($self->{JobDir}, sprintf("%s_%d_%d_%d.dir", $Config->get("${layer}_Prefix"), $Req->ZXY));
+                    File::Path::mkpath($tile_dir);
+                    $tile_file = File::Spec->join($tile_dir, sprintf("%s_%d_%d_%d.png", $Config->get("${layer}_Prefix"), $zoom, $x, $y));
                 }
-                # Get the image as PNG data
-                #$SubImage->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
-                my $png_data = $SubImage->png;
 
-                # Store it
-                open (my $fp, ">$tileFile") || throw TilesetError "SplitTiles: Could not open $tileFile for writing", "fatal";
-                binmode $fp;
-                print $fp $png_data;
-                close $fp;
+                # libGD comparison returns true if images are different. (i.e. non-empty Land tile)
+                # so return the opposite (false) if the tile doesn't look like an empty land tile
+
+                # Check for black tile output
+                if (not ($SubImage->compare($self->{BlackTileImage}) & GD_CMP_IMAGE)) {
+                    throw TilesetError "SplitTiles: Black Tile encountered", "inkscape";
+                }
+
+                # Detect empty tile here:
+                if (not ($SubImage->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE)) { 
+                    copy("emptyland.png", $tile_file);
+                }
+                # same for Sea tiles
+                elsif (not($SubImage->compare($self->{EmptySeaImage}) & GD_CMP_IMAGE)) {
+                    copy("emptysea.png", $tile_file);
+                }
+                else {
+                    if ($Config->get($layer."_Transparent")) {
+                        $SubImage->transparent($SubImage->colorAllocate(248, 248, 248));
+                    }
+                    else {
+                        $SubImage->transparent(-1);
+                    }
+                    # Get the image as PNG data
+                    #$SubImage->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
+                    my $png_data = $SubImage->png;
+
+                    # Store it
+                    open (my $fp, ">$tile_file") || throw TilesetError "SplitTiles: Could not open $tile_file for writing", "fatal";
+                    binmode $fp;
+                    print $fp $png_data;
+                    close $fp;
+                }
             }
         }
     }

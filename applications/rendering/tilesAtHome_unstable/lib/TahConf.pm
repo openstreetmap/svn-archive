@@ -416,9 +416,6 @@ sub CheckConfig
             printf "Border".$_." looks abnormally large\n";
         }
     }
-    if ($self->get("CutFullTile")){
-        print "* CutFullTile set, switching off forking for svg2png\n"; #Due to the Fork implementation in RenderTile
-    }
     return %EnvironmentInfo;
 
 }

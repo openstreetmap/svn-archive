@@ -1732,10 +1732,8 @@
 				<circle r="0.4" stroke="black" stroke-width="0.1px" fill="white"/>
 				<circle r="0.1" stroke="black" stroke-width="0.1px" fill="black"/>
 			</rule>
-		</rule>
-		
-		<!-- ==================================== Layer -5 ======================================== -->
-		<rule e="node|way" k="osmarender:render" v="~|yes" layer="-5">
+			
+			<!-- ==================================== Layer -5 ======================================== -->
 			
 			<!-- Landuse -->
 			<rule e="way" k="landuse" v="residential|farmyard" layer="-5">
@@ -1766,10 +1764,8 @@
 				<area class="military-area" layer="-5"/>
 			</rule>
 			
-		</rule>
-		
-		<!-- ==================================== Layer 5 ======================================== -->
-		<rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
+			
+			<!-- ==================================== Layer 5 ======================================== -->
 			
 			<!-- Non-physical boundaries -->
 			<rule e="way" k="boundary" v="administrative" layer="5">
@@ -2042,7 +2038,7 @@
 					<text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
 					<text k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
 				</rule>
-                                <rule e="node" k="aerialway" v="station" layer="5">
+				<rule e="node" k="aerialway" v="station" layer="5">
 					<text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
 					<text k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
 				</rule>

@@ -989,10 +989,8 @@
 		<rule e="node" k="amenity" v="hospital">
 			<symbol ref="hospital" position="center"/>
 		</rule>
-	</rule>
-	
-	<!-- ==================================== Layer -5 ======================================== -->
-	<rule e="node|way" k="osmarender:render" v="~|yes" layer="-5">
+		
+		<!-- ==================================== Layer -5 ======================================== -->
 		
 		<!-- Landuse -->
 		<rule e="way" k="landuse" v="residential|farmyard" layer="-5">
@@ -1023,10 +1021,8 @@
 			<area class="military-area" layer="-5"/>
 		</rule>
 		
-	</rule>
-	
-	<!-- ==================================== Layer 5 ======================================== -->
-	<rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
+		
+		<!-- ==================================== Layer 5 ======================================== -->
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">

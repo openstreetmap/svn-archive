@@ -745,10 +745,8 @@
 		<rule e="node" k="aeroway" v="airport">
 			<symbol ref="airport" position="center"/>
 		</rule>
-	</rule>
-	
-	<!-- ==================================== Layer -5 ======================================== -->
-	<rule e="node|way" k="osmarender:render" v="~|yes" layer="-5">
+		
+		<!-- ==================================== Layer -5 ======================================== -->
 		
 		<!-- Landuse -->
 		<!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychedelic -->
@@ -773,10 +771,8 @@
 		<rule e="way" k="tourism" v="attraction" layer="-5">
 			<area class="tourism-attraction" layer="-5"/>
 		</rule>
-	</rule>
-	
-	<!-- ==================================== Layer 5 ======================================== -->
-	<rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
+		
+		<!-- ==================================== Layer 5 ======================================== -->
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">

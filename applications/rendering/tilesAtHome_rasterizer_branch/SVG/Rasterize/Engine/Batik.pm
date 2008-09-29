@@ -128,9 +128,13 @@ sub new {
         'commons-logging.jar',
         'commons-io.jar'
         );
-    $self->java_searchpaths(
-        File::Spec->path()
-        );
+    my @default_java_searchpaths = ( File::Spec->path() );
+    if( $^O eq 'MSWin32' ){
+        my($volume, $dir) = File::Spec->splitpath($ENV{WINDIR}, 1);
+        $dir = File::Spec->catdir( $dir, 'WOW64' );
+        push(@default_java_searchpaths, File::Spec->catpath($volume, $dir) );
+    }
+    $self->java_searchpaths( @default_java_searchpaths );
     $self->wrapper_searchpaths(
         File::Spec->path()
         );

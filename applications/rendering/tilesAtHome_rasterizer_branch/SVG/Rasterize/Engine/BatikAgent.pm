@@ -7,6 +7,7 @@ $__PACKAGE__::VERSION = '0.1';
 
 use base qw(SVG::Rasterize::Engine::Batik);
 use Error qw(:try);
+use IO::Socket::INET;
 use IPC::Run qw(run);
 
 =pod
@@ -50,6 +51,10 @@ sub new {
     # Append batik-agent to the jar list
     $self->jar_list('batik-agent.jar', @{$self->jar_list()});
 
+    # Set defaults for host and port
+    $self->host('localhost') unless $self->host;
+    $self->port('18123') unless $self->port;
+
     return $self;
 }
 
@@ -90,10 +95,10 @@ sub convert {
     push(@cmd, 'destination='.$params{outfile});
     push(@cmd, 'source='.$params{infile});
 
-    my $result = $self->send_command( join("\n", @cmd) . "\n\n" );
-
+    my $reply = $self->send_command( join("\n", @cmd) . "\n\n" );
+    my ($result) = $reply =~ /^(\w+)/;
     unless( $result eq 'OK' ){
-        throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Batik agent returned non-OK result \"$result\"");
+        throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Batik agent returned non-OK result \"$result\"", { cmd => \@cmd, stdout => $reply } );
     }
 
     $self->check_output($params{outfile});
@@ -199,12 +204,12 @@ sub send_command {
     my $command = shift;
 
     my $sock = new IO::Socket::INET( PeerAddr => $self->host(), PeerPort => $self->port(), Proto => 'tcp');
-    throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime::IOError("Error creating socket to the batik agent") unless $sock;
+    throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime::IOError("Error creating socket to the batik agent: $!") unless $sock;
 
     print $sock $command;
     flush $sock;
-    my $reply = <$sock>;
-    $reply =~ s/\n//;
+    my $reply = join('', <$sock>);
+    chomp($reply);
     close($sock);
 
     return $reply;

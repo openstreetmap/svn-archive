@@ -309,16 +309,20 @@ sub mergeOsmFiles
     {
       copy $sourceFiles->[0], $destFile;
       unlink($sourceFiles->[0]) if (!$Config->get("Debug"));
-      return;
+      return (1, "");
     }
     
     open (DEST, "> $destFile");
 
     print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
-    my $header = 0;
+    my $headerwritten = 0;
+    my $reason = "";
 
     foreach my $sourceFile(@{$sourceFiles})
     {
+        my $headerseen = 0;
+        my $footerseen = 0;
+
         open(SOURCE, $sourceFile);
         while(<SOURCE>)
         {
@@ -327,15 +331,20 @@ sub mergeOsmFiles
             # Handle where the input doesn't have a version
             if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
             {
-              if( not $header )
+              $headerseen = 1;
+              if( not $headerwritten )
               {
                 my $version = $1 || "'".$Config->get("OSMVersion")."'";
                 print DEST qq(<osm version=$version generator="tahlib.pm mergeOsmFiles" xmlns:osmxapi="http://www.informationfreeway.org/osmxapi/0.5">\n);
-                $header = 1;
+                $headerwritten = 1;
               }
               next;
             }
-            last if (/^\s*<\/osm>/);
+            if (/^\s*<\/osm>/)
+            {
+                $footerseen = 1;
+                last;
+            }
             if (/^\s*<(node|segment|way|relation) id=['"](\d+)['"].*(.)>/)
             {
                 my ($what, $id, $slash) = ($1, $2, $3);
@@ -360,9 +369,19 @@ sub mergeOsmFiles
         }
         close(SOURCE);
         unlink ($sourceFile) if (!$Config->get("Debug"));
+        if (($headerseen == 0) || ($footerseen == 0))
+        {
+            $reason = $reason . $sourceFile . " not well formed. ";
+        }
     }
     print DEST "</osm>\n";
     close(DEST);
+    if ($reason != "")
+    {
+        return (0, $reason);
+    } else {
+        return (1, "");
+    }
 }
 
 

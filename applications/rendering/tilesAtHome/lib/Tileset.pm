@@ -328,6 +328,8 @@ sub downloadData
         print "Download\n$URL\n" if ($Config->get("Debug"));
         
         my $res = undef;
+        my $reason = "no data here!";
+
         # download tile data in one piece *if* the tile is not too complex
         if (($req->Z >= 12 && $req->{complexity} < 20000000) || $req->Z < 12)
            {$res = ::DownloadFile($URL, $partialFile, 0)};
@@ -338,8 +340,6 @@ sub downloadData
             ::addFault("nodataXAPI",1);
             return (undef, "No data here! (OSMXAPI)")
         }
-
-        my $reason = "no data here!";
 
         if ((! $res) and ($Config->get("FallBackToROMA")))
         {
@@ -442,7 +442,11 @@ sub downloadData
         }
     } # foreach
 
-    ::mergeOsmFiles($DataFile, $filelist);
+    my ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
+    if(!$res) {
+        return (undef, "Stripped download failed with: " . $reason);
+    }
+
 
     # Get the API date time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
     $self->{JobTime} = [stat $DataFile]->[9];

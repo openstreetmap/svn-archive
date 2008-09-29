@@ -30,7 +30,7 @@ i18n=0
 
 Osmarender = orp
 
-CutFullTile = 1
+RenderStripes = 0
 
 Inkscape = inkscape
 

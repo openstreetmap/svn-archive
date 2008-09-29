@@ -44,6 +44,18 @@ DownloadTimeout=1800
 # around 20000000 will help you. A setting of 0 disables the mechanism.
 MaxTilesetComplexity = 0
 
+# Machines with relatively small memory can encounter problems when rendering
+# complex tilesets.  If Inkscape fails with error messages on high zoom levels
+# indicating a memory issue, try to set RenderStripes to a positive value
+# The value of RenderStripes is determining from which zoom level below the
+# highest on the SVG file will be rendered in stripes.  E.g. a value of 5 means 
+# that the 5th zoom level below the top level (normally 12) is to be rendered in
+# stripes.  This would be z17 on a standard tileset.  A value of 5 should be
+# sufficient in most cases.  Reducing that value increases the number of Inkscape
+# calls.  A value of 0 disables striped rendering.  This is the default.
+#RenderStripes = 0
+
+
 ## Upload settings
 
 # if set to 0 the zip files will get renamed to zip_uploaded after upload.

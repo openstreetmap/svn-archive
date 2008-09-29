@@ -78,7 +78,7 @@ sub new {
     my @default_searchpaths = ( File::Spec->path() );
     if( $^O eq 'MSWin32' ){
         my($volume, $dir) = File::Spec->splitpath($ENV{PROGRAMFILES}, 1);
-        $dir = File::Spec->catdir( File::Spec->splitdir($ENV{PROGRAMFILES}), 'Inkscape' );
+        $dir = File::Spec->catdir( $dir, 'Inkscape' );
         push(@default_searchpaths, File::Spec->catpath($volume, $dir) );
     }
 

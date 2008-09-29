@@ -12,7 +12,6 @@
 #
 # If WorkingDir is commented out, it will use the default system tmpdir location
 WorkingDirectory=/tmp/
-Inkscape=inkscape
 XmlStarlet=xmlstarlet
 Niceness=10
 Pngcrush=pngcrush

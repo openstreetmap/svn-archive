@@ -833,8 +833,8 @@ sub svg2png
 
         statusMessage("Rasterizing failed with runtime exception: $e",1,0);
         print "Rasterize system command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
-        print "Rasterize engine STDOUT:".$e->{stdout}."\n";
-        print "Rasterize engine STDERR:".$e->{stderr}."\n";
+        print "Rasterize engine STDOUT:".$e->{stdout}."\n" if $e->{stdout};
+        print "Rasterize engine STDERR:".$e->{stderr}."\n" if $e->{stderr};
 
         $error = 1;
     } catch SVG::Rasterize::Engine::Error::NoOutput with {

@@ -292,6 +292,15 @@ sub CheckConfig
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
     }
 
+    if( ! $self->get('Rasterizer') && $self->get('Batik') ){
+        warn "Deprecated configuration variable Batik found, use Rasterizer instead. For now it will be mapped\n";
+        if( $self->get('Batik') == 1 || $self->get('Batik') == 2 ){
+            $self->set('Rasterizer', 'Batik');
+        } elsif( $self->get('Batik') == 3 ){
+            $self->set('Rasterizer', 'BatikAgent');
+        }
+    }
+
     #-------------------------------------------------------------------
     # check all layers for existing and sane values
     #------------------------------------------------------------------

@@ -513,7 +513,7 @@
             }
             
             .highway-ref {
-                fill: #666666;
+                fill: #606060;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
@@ -531,7 +531,7 @@
             .bridge-casing {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #777777;
+                stroke: #707070;
                 fill: none;
                 marker-start: url(#bridge-casing-start);
                 marker-end: url(#bridge-casing-end);
@@ -540,7 +540,7 @@
 			.bridge-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #f8f8f8;
+                stroke: #ffffff;
                 fill: none;
 			}
 
@@ -559,79 +559,79 @@
 			.tunnel { stroke-dasharray: 1.6, 1.6; }
 
 
-            .railway-rail-casing                    { stroke-width: 16.0px;  stroke: #aaaaaa; }
+            .railway-rail-casing                    { stroke-width: 16.0px;  stroke: #b0b0b0; }
             .railway-rail-1-core                    { stroke-width: 8.0px;  stroke: #ffffff; }
-            .railway-rail-2-core                    { stroke-width: 24.0px; stroke: #aaaaaa; stroke-dasharray: 2.4, 24.0; }
+            .railway-rail-2-core                    { stroke-width: 24.0px; stroke: #b0b0b0; stroke-dasharray: 2.4, 24.0; }
 
-            .railway-light-rail-casing              { stroke-width: 8.0px; stroke: #666666; }
-            .railway-light-rail-core                { stroke-width: 7.0px; stroke: #666666; }
+            .railway-light-rail-casing              { stroke-width: 8.0px; stroke: #606060; }
+            .railway-light-rail-core                { stroke-width: 7.0px; stroke: #606060; }
 
-            .railway-subway-casing                  { stroke-width: 8.0px; stroke: #aaaaaa; }
+            .railway-subway-casing                  { stroke-width: 8.0px; stroke: #b0b0b0; }
             .railway-subway-core                    { stroke-width: 7.0px; stroke: #ffffff; stroke-dasharray: 3, 9; }
 
-            .railway-tram-casing                    { stroke-width: 6.0px; stroke: #666666; }
-            .railway-tram-core                      { stroke-width: 5.5px; stroke: #666666; }
+            .railway-tram-casing                    { stroke-width: 6.0px; stroke: #606060; }
+            .railway-tram-core                      { stroke-width: 5.5px; stroke: #606060; }
 
-            .railway-narrow-gauge-casing            { stroke-width: 6.0px; stroke: #aaaaaa; }
-            .railway-narrow-gauge-core              { stroke-width: 5.5px; stroke: #aaaaaa; }
+            .railway-narrow-gauge-casing            { stroke-width: 6.0px; stroke: #b0b0b0; }
+            .railway-narrow-gauge-core              { stroke-width: 5.5px; stroke: #b0b0b0; }
 
-            .railway-preserved-casing               { stroke-width: 6.0px; stroke: #666666; }
-            .railway-preserved-core                 { stroke-width: 5.5px; stroke: #666666; }
+            .railway-preserved-casing               { stroke-width: 6.0px; stroke: #606060; }
+            .railway-preserved-core                 { stroke-width: 5.5px; stroke: #606060; }
       
-            .railway-monorail-casing                { stroke-width: 6.0px; stroke: #666666; }
+            .railway-monorail-casing                { stroke-width: 6.0px; stroke: #606060; }
             .railway-monorail-core                  { stroke-width: 5.5px; stroke: #a65ca3; }
 
-            .highway-motorway-casing                { stroke-width: 33px; stroke: #222222; }
+            .highway-motorway-casing                { stroke-width: 33px; stroke: #202020; }
             .highway-motorway-core                  { stroke-width: 32px; stroke: #809BC0; }
 
-            .highway-motorway-link-casing           { stroke-width: 13.5px; stroke: #222222; }
+            .highway-motorway-link-casing           { stroke-width: 13.5px; stroke: #202020; }
             .highway-motorway-link-core             { stroke-width: 12.5px; stroke: #809BC0; }
 
-            .highway-trunk-casing                   { stroke-width: 27px; stroke: #222222; }
+            .highway-trunk-casing                   { stroke-width: 27px; stroke: #202020; }
             .highway-trunk-core                     { stroke-width: 26px; stroke: #7fc97f; }
 
-            .highway-primary-casing                 { stroke-width: 21px; stroke: #222222; }
+            .highway-primary-casing                 { stroke-width: 21px; stroke: #202020; }
             .highway-primary-core                   { stroke-width: 20px; stroke: #e46d71; }
 
-            .highway-secondary-casing               { stroke-width: 18px; stroke: #222222; }
+            .highway-secondary-casing               { stroke-width: 18px; stroke: #202020; }
             .highway-secondary-core                 { stroke-width: 17px; stroke: #FDBF6F; }
 
-			.highway-tertiary-casing                { stroke-width: 5px;  stroke: #222222; }
+			.highway-tertiary-casing                { stroke-width: 5px;  stroke: #202020; }
 			.highway-tertiary-core                  { stroke-width: 4.75px;  stroke: #f7f496; }
               
             .highway-unclassified-casing            { stroke-width: 5px; stroke: #c0c0c0; }
             .highway-unclassified-core              { stroke-width: 1.2px; stroke: #ffffff; }
 
-            .highway-service-casing                 { stroke-width: 4px; stroke: #222222; }
+            .highway-service-casing                 { stroke-width: 4px; stroke: #202020; }
             .highway-service-core                   { stroke-width: 3.5px; stroke: #ffffff; }
 
-            .highway-unsurfaced-casing              { stroke-width: 4px; stroke: #222222; stroke-dasharray: 1, .5; }
+            .highway-unsurfaced-casing              { stroke-width: 4px; stroke: #202020; stroke-dasharray: 1, .5; }
             .highway-unsurfaced-core                { stroke-width: 3.5px; stroke: #ffffff; }
 
             .highway-track-casing                   { stroke-width: 4px; stroke: #d79331; }
             .highway-track-core                     { stroke-width: 3.5px; stroke: #ffffff; }
 
-            .highway-byway-1-casing                 { stroke-width: 2px;     stroke: #555555;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt;}
+            .highway-byway-1-casing                 { stroke-width: 2px;     stroke: #505050;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt;}
             .highway-byway-2-casing                 { stroke-width: 1.6px;   stroke: #efadaa; }
-            .highway-byway-3-casing                 { stroke-width: 2.8px;   stroke: #555555;  stroke-dasharray: 0.2, 1.6; stroke-dashoffset: 1.2; stroke-linecap: butt; }
+            .highway-byway-3-casing                 { stroke-width: 2.8px;   stroke: #505050;  stroke-dasharray: 0.2, 1.6; stroke-dashoffset: 1.2; stroke-linecap: butt; }
             .highway-byway-1-core                   { stroke-width: 0.8px;   stroke: #efadaa; }
 
-            .highway-bridleway-casing               { stroke-width: 1.8px;   stroke: #777777;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
+            .highway-bridleway-casing               { stroke-width: 1.8px;   stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
             .highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #e3e9f1; }
 
-            .highway-cycleway-casing                { stroke-width: 0.5px;   stroke: #222222; }
+            .highway-cycleway-casing                { stroke-width: 0.5px;   stroke: #202020; }
             .highway-cycleway-core                  { stroke-width: 0.5px;   stroke: #d1ead1; }
 
-            .highway-pedestrian-casing              { stroke-width: 4px; stroke: #aaaaaa; }
-            .highway-pedestrian-core                { stroke-width: 3.5px; stroke: #eeeeee; }
+            .highway-pedestrian-casing              { stroke-width: 4px; stroke: #b0b0b0; }
+            .highway-pedestrian-core                { stroke-width: 3.5px; stroke: #f0f0f0; }
 
-            .highway-footway-casing                 { stroke-width: 0.5px;   stroke: #222222; }
+            .highway-footway-casing                 { stroke-width: 0.5px;   stroke: #202020; }
             .highway-footway-core                   { stroke-width: 0.5px;   stroke: #efeaa0; }
 
-            .highway-steps-casing                   { stroke-width: 1.2px;   stroke: #222222; }
+            .highway-steps-casing                   { stroke-width: 1.2px;   stroke: #202020; }
             .highway-steps-core                     { stroke-width: 1.1px;   stroke: #e5e0c2; stroke-dasharray: 0.6, 0.2; stroke-linecap: butt;}
 
-            .highway-scramble-core                  { stroke-width: 0.6px;   stroke: #777777; stroke-linecap: butt;}
+            .highway-scramble-core                  { stroke-width: 0.6px;   stroke: #707070; stroke-linecap: butt;}
 
 
 
@@ -711,7 +711,7 @@
 
             .waterway-riverbank {
                 fill: #b5d6f1;
-                stroke: #aaaaaa;
+                stroke: #b0b0b0;
                 stroke-width: 0px;
             }
 
@@ -719,7 +719,7 @@
                 stroke-width: 10px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #aaaaaa;
+                stroke: #b0b0b0;
                 fill: none;
             }
 
@@ -735,7 +735,7 @@
                 stroke-width: 4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #aaaaaa;
+                stroke: #b0b0b0;
                 fill: none;
             }
 
@@ -751,7 +751,7 @@
                 stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #aaaaaa;
+                stroke: #b0b0b0;
                 fill: none;
             }
 
@@ -767,7 +767,7 @@
                 stroke-width: 1px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #aaaaaa;
+                stroke: #b0b0b0;
                 fill: none;
             }
 
@@ -786,7 +786,7 @@
                 stroke-dasharray: 3,2;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #777777;
+                stroke: #707070;
                 fill: none;
             }
 
@@ -827,7 +827,7 @@
             /* Natural */
             .natural-water {
                 fill: #b5d6f1;
-                stroke: #aaaaaa;
+                stroke: #b0b0b0;
                 stroke-width: 0px;
             }
 
@@ -858,7 +858,7 @@
 
             .landuse-cemetery {
                 fill: #bde3cb;
-                stroke: #eeeeee;
+                stroke: #f0f0f0;
                 stroke-width: 0.2px;
             }
 
@@ -880,19 +880,19 @@
 
             .landuse-industrial {
                 fill: #ecd8ff;
-                stroke: #eeeeee;
+                stroke: #f0f0f0;
                 stroke-width: 0.2px;
             }
 
             .landuse-commercial {
                 fill: #fcffc9;
-                stroke: #eeeeee;
+                stroke: #f0f0f0;
                 stroke-width: 0.2px;
             }
 
             .landuse-retail {
                 fill: #ffebeb;
-                stroke: #eeeeee;
+                stroke: #f0f0f0;
                 stroke-width: 0.2px;
             }
 
@@ -1014,7 +1014,7 @@
 			  stroke-linejoin: round; 
 			  fill: none;
 			  stroke-dasharray: 1, 1;
-			  stroke: #f7f7f7;
+			  stroke: #f0f0f0;
 			  }
 
 			.highway-raceway-core-dismantled {
@@ -1022,7 +1022,7 @@
 			  stroke-linecap: butt; 
 			  stroke-linejoin: round; 
 			  fill: none;
-			  stroke: #fbfbfb;
+			  stroke: #ffffff;
 			  stroke-dasharray: 0.3, 1.7;
 			  opacity: 0.5;
 			  }
@@ -1039,7 +1039,7 @@
 			  stroke-width: 0.3px; 
 			  stroke-linecap: butt; 
 			  stroke-linejoin: round; 
-			  fill: #f7f7f7;
+			  fill: #f0f0f0;
 			  stroke: #808080;
 			  stroke-dasharray: 1, 1;
 			  }
@@ -1048,7 +1048,7 @@
 			  stroke-width: 0.3px; 
 			  stroke-linecap: butt; 
 			  stroke-linejoin: round; 
-			  fill: #fbfbfb;
+			  fill: #ffffff;
 			  stroke: #808080;
 			  stroke-dasharray: 0.3, 1.7;
 			  opacity: 0.5;
@@ -1063,8 +1063,8 @@
 
             /* Building */
             .building {
-                fill: #dddddd;
-                stroke: #cccccc;
+                fill: #e0e0e0;
+                stroke: #d0d0d0;
                 stroke-width: 0.2px;
             }
 
@@ -1178,7 +1178,7 @@
             id="bridge-casing-start"
             fill='none'
             stroke-width='0.1px'
-            stroke='#777777'
+            stroke='#707070'
             markerWidth="1px"
             markerHeight="1px"
             orient="auto">
@@ -1189,7 +1189,7 @@
             id="bridge-casing-end"
             fill='none'
             stroke-width='0.1px'
-            stroke='#777777'
+            stroke='#707070'
             markerWidth="1px"
             markerHeight="1px"
             orient="auto">
@@ -1203,7 +1203,7 @@
             markerUnits="strokeWidth"
             fill='none'
             stroke-width='0.5px'
-            stroke='#777777'
+            stroke='#707070'
             markerWidth="2px"
             markerHeight="2px"
             orient="auto">
@@ -1217,7 +1217,7 @@
             markerUnits="strokeWidth"
             fill='none'
             stroke-width='0.5px'
-            stroke='#777777'
+            stroke='#707070'
             markerWidth="2px"
             markerHeight="2px"
             orient="auto">

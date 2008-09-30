@@ -49,8 +49,8 @@ gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \
 		${ARCH}-gcc ${CFLAGS} -o $@ \
 		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc
 
-gosmore.rsc:	gosmore.rc
-		${WINDRES} $? $@
+gosmore.rsc:	gosmore.rc icons.bmp
+		${WINDRES} $< $@
 		
 WIKIPAGE=http://wiki.openstreetmap.org/index.php/Special:Export/Gosmore
 translations.c: extract

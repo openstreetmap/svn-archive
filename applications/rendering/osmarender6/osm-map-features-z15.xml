@@ -1852,7 +1852,7 @@
 			}
 			
 			.natural-land {
-			fill: #ffffff;
+			fill: #f8f8f8;
 			stroke: #e0e0e0;
 			stroke-width: 0.2px;
 			}

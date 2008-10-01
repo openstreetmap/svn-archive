@@ -80,12 +80,16 @@ my $is_coastline;
 my @seglist;
 my $last_node_ref; 
 my $segcount = 0; 
+my $buffer;
 
 while(<STDIN>)
 {
-    while(/(<[^'"<>]*((["'])[^\3]*?\3[^<>"']*)*>)/og)
+    $buffer .= $_;
+    while($buffer =~ /^\s*([^<]*?)\s*(<[^>]*>)(.*)$/)
     {
-        my $xmltag = $1;
+        print $1;
+        $buffer = $3;
+        my $xmltag = $2;
         if ($xmltag =~ /^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.Ee-]+)["'].*lon=["']([0-9.Ee-]+)["']/)
         {
             $nodes->{$1} = { "lat" => $2, "lon" => $3 };
@@ -98,11 +102,11 @@ while(<STDIN>)
             undef $is_coastline;
             undef $last_node_ref;
         }
-        elsif($xmltag =~ /^\s*<\/osm/)
+        elsif ($xmltag =~ /^\s*<\/osm/)
         {
             last;
         }
-        elsif($xmltag =~ /^\s*<(osm.*)>/)
+        elsif ($xmltag =~ /^\s*<(osm.*)>/)
         {
             # If frollo encounters an empty file, it outputs <osm foo />. Detect this and exit
             if (substr($1, -1) eq "/" )
@@ -813,35 +817,52 @@ sub compute_bbox_intersections
 # expects point as lat/lon hash, and polygon as a list of segment ids
 # which will be looked up in global $segments to get from/to node ids
 # which will in turn be looked up in $nodes to get lat/lon
+# algorithm ripped from package Math::Geometry::Planar
 sub polygon_contains_point
 {
     my ($seglist, $point) = @_;
     my $p1 =  $nodes->{$segments->{$seglist->[0]}->{"from"}};
-    my $counter = 0;
+    my $wn = 0;
     foreach my $seg(@$seglist)
     {
         my $p2 = $nodes->{$segments->{$seg}->{"to"}};
-        if ($point->{"lat"} > $p1->{"lat"} || $point->{"lat"} > $p2->{"lat"})
+        my $cp = cross_product($p1,$p2,$point);
+        # if colinear and in between the 2 points of the polygon
+        # segment, it's on the perimeter and considered inside
+        if ($cp == 0) 
         {
-            if ($point->{"lat"} < $p1->{"lat"} || $point->{"lat"} < $p2->{"lat"})
+            if (
+                    ((($p1->{"lon"} <= $point->{"lon"} &&
+                       $point->{"lon"} <= $p2->{"lon"})) ||
+                     (($p1->{"lon"} >= $point->{"lon"} &&
+                       $point->{"lon"} >= $p2->{"lon"})))
+                    &&
+                    ((($p1->{"lat"} <= $point->{"lat"} &&
+                       $point->{"lat"} <= $p2->{"lat"})) ||
+                     (($p1->{"lat"} >= $point->{"lat"} &&
+                       $point->{"lat"} >= $p2->{"lat"})))
+               ) 
             {
-                if ($point->{"lon"} < $p1->{"lon"} || $point->{"lon"} < $p2->{"lon"})
-                {
-                    if ($p1->{"lat"} != $p2->{"lat"})
-                    {
-                        my $xint = ($point->{"lat"}-$p1->{"lat"})*($p2->{"lon"}-$p1->{"lon"})/($p2->{"lat"}-$p1->{"lat"})+$p1->{"lon"};
-                        if ($p1->{"lon"} == $p2->{"lon"} || $point->{"lon"} <= $xint)
-                        {
-                            $counter++;
-                        }
-                    }
-                }
+                return 1;
+            }
+        }
+        if ($p1->{"lat"} <= $point->{"lat"}) 
+        { 
+            if ($p2->{"lat"} > $point->{"lat"}) 
+            {
+                $wn++ if ($cp > 0);
+            }
+        } else {
+            if ($p2->{"lat"} <= $point->{"lat"}) 
+            {
+                $wn-- if ($cp < 0);
             }
         }
         $p1 = $p2;
     }
-    return ($counter%2);
+    return ($wn != 0);
 }
+
 
 sub node_is_inside
 {
@@ -861,5 +882,20 @@ sub compute_angle_from_bbox_center
     my $adjacent_leg = ($node->{"lon"}-($maxlon-$minlon)/2-$minlon);
     my $z = cplx($adjacent_leg, $opposite_leg);
     return (arg($z) < 0) ? arg($z) + 2*pi : arg($z);
+}
+
+sub cross_product 
+{
+  my($p1,$p2,$p3)=@_;
+  my $det_p2p3 = determinant($p2->{"lon"}, $p2->{"lat"}, $p3->{"lon"}, $p3->{"lat"});
+  my $det_p1p3 = determinant($p1->{"lon"}, $p1->{"lat"}, $p3->{"lon"}, $p3->{"lat"});
+  my $det_p1p2 = determinant($p1->{"lon"}, $p1->{"lat"}, $p2->{"lon"}, $p2->{"lat"});
+  return ($det_p2p3-$det_p1p3+$det_p1p2);
+}
+
+sub determinant 
+{
+  my ($x1,$y1,$x2,$y2) = @_;
+  return ($x1*$y2 - $x2*$y1);
 }
 

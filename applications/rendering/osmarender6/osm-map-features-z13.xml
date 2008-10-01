@@ -1098,8 +1098,8 @@
 			
 			.highway-tertiary-casing                { stroke-width: 6px;  stroke: #202020; }
 			.highway-tertiary-area-casing           { stroke-width: 0.5px; }
-			.highway-tertiary-core                  { stroke-width: 5.5px;  stroke: #f7f496; }
-			.highway-tertiary-area                  { fill: #f7f496; }
+			.highway-tertiary-core                  { stroke-width: 5.5px;  stroke: #ffff90; }
+			.highway-tertiary-area                  { fill: #ffff90; }
 			
 			.highway-unclassified-casing            { stroke-width: 6px; stroke: #202020; }
 			.highway-unclassified-area-casing       { stroke-width: 0.5px; }
@@ -1420,7 +1420,7 @@
 			}
 			
 			.landuse-vineyard {
-			fill: #d5f2e0;
+			fill: #d1ead1;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
 			}
@@ -1433,12 +1433,7 @@
 			
 			.landuse-residential {
 			stroke: none;
-			fill: #f2f2f2;
-			}
-			
-			.landuse-retail {
-			stroke: none;
-			fill: #ffebeb;
+			fill: #f0f0f0;
 			}
 			
 			.landuse-industrial {
@@ -1448,7 +1443,7 @@
 			}
 			
 			.landuse-commercial {
-			fill: #fcffc9;
+			fill: #ffffc0;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
 			}
@@ -1531,7 +1526,7 @@
 			}
 			
 			.amenity-parking {
-			fill: #f7efb7;
+			fill: #ffffc0;
 			stroke: #e9dd72;
 			stroke-width: 0.2px;
 			}
@@ -1543,7 +1538,7 @@
 			}
 			
 			.military-area {
-			fill: #a6a642;
+			fill: #808000;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
 			}
@@ -1668,7 +1663,7 @@
 			/* Tourism */
 			.tourism-attraction {
 			fill: #f2caea;
-			stroke: #f124cb;
+			stroke: #ff00ff;
 			stroke-width: 0px;
 			}
 			.tourism-green-area {
@@ -1677,7 +1672,7 @@
 			stroke-width: 0.2px;
 			}
 			.tourism-attraction-caption {
-			fill: #f124cb;
+			fill: #ff00ff;
 			stroke: white;
 			stroke-width: 0px;
 			font-family: "DejaVu Sans";
@@ -1755,7 +1750,6 @@
 			
 			.piste-type-sled {
 			fill: none;
-			/* stroke: #8040a0; */
 			stroke: #cdabde;
 			stroke-width: 2.5px;
 			marker-start:url(#marker-piste-type-sled);

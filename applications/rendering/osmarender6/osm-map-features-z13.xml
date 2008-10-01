@@ -1060,7 +1060,7 @@
 			.railway-preserved-core                 { stroke-width: 2.5px; stroke: #606060; }
 			
 			.railway-monorail-casing                { stroke-width: 3.0px; stroke: #606060; }
-			.railway-monorail-core                  { stroke-width: 2.5px; stroke: #a65ca3; }
+			.railway-monorail-core                  { stroke-width: 2.5px; stroke: #bf5bc3; }
 			
 			.highway-motorway-casing                { stroke-width: 16px; stroke: #202020; }
 			.highway-motorway-area-casing           { stroke-width: 1px; }
@@ -1155,8 +1155,8 @@
 			
 			.highway-footway-casing                 { stroke-width: 1.2px;   stroke: #707070; stroke-dasharray: 0.4, 0.4; stroke-linecap: butt;}
 			.highway-footway-area-casing            { stroke-width: 0.1px; }
-			.highway-footway-core                   { stroke-width: 1.1px;   stroke: #efeaa0; }
-			.highway-footway-area                   { fill: #efeaa0; }
+			.highway-footway-core                   { stroke-width: 1.1px;   stroke: #e5e0c2; }
+			.highway-footway-area                   { fill: #e5e0c2; }
 			
 			/* render unmarked paths in the same color as highway=road */
 			.highway-path-core                      { stroke-width: 1.1px;   stroke: #d0d0d0; }
@@ -1408,7 +1408,7 @@
 			
 			/* Landuse */
 			.landuse-wood {
-			fill: #72bf81;
+			fill: #6fc18e;
 			stroke: #6fc18e;
 			stroke-width: 0.2px;
 			}
@@ -1449,8 +1449,8 @@
 			}
 			
 			.landuse-quarry {
-			fill: #E2CF80;
-			stroke: #5A6332;
+			fill: #e9dd72;
+			stroke: #556b2f;
 			stroke-width: 0.2px;
 			}
 			
@@ -1532,7 +1532,7 @@
 			}
 			
 			.amenity-school {
-			fill: #dfafdd;
+			fill: #cdabde;
 			stroke: #e9dd72;
 			stroke-width: 0.2px;
 			}
@@ -1696,7 +1696,7 @@
 			
 			.building-residential {
 			fill: #c95e2a;
-			stroke: #80290a;
+			stroke: #800000;
 			stroke-width: 0.2px;
 			}
 			

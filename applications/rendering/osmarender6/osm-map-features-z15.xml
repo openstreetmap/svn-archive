@@ -1539,8 +1539,8 @@
 			.highway-tertiary-bridge-core           { stroke-width: 6.0px; }
 			.highway-tertiary-casing                { stroke-width: 5.0px;  stroke: #707070; }
 			.highway-tertiary-area-casing           { stroke-width: 0.5px; }
-			.highway-tertiary-core                  { stroke-width: 4.5px;   stroke: #f7f496; }
-			.highway-tertiary-area                  { fill: #f7f496; }
+			.highway-tertiary-core                  { stroke-width: 4.5px;   stroke: #ffff90; }
+			.highway-tertiary-area                  { fill: #ffff90; }
 			.highway-tertiary-name                  { stroke-width: 0px;     font-size: 5px; }
 			.highway-tertiary-ref                   { stroke-width: 0px;     font-size: 5px; }
 			
@@ -1581,10 +1581,10 @@
 			.highway-track-core                     { stroke-width: 1.4px;   stroke: #ffffff; }
 			.highway-track-core-grade4              { stroke-width: 1.1px; }
 			.highway-track-core-grade5              { stroke-width: 0.8px; }
-			.highway-track-back                     { stroke-width: 1.6px;   stroke: #ffecd1;}
-			.highway-track-midline-grade3           { stroke-width: 0.2px;   stroke: #ffecd1; }
-			.highway-track-midline-grade4           { stroke-width: 0.4px;   stroke: #ffecd1; }
-			.highway-track-midline-grade5           { stroke-width: 0.6px;   stroke: #ffecd1; }
+			.highway-track-back                     { stroke-width: 1.6px;   stroke: #ffebeb;}
+			.highway-track-midline-grade3           { stroke-width: 0.2px;   stroke: #ffebeb; }
+			.highway-track-midline-grade4           { stroke-width: 0.4px;   stroke: #ffebeb; }
+			.highway-track-midline-grade5           { stroke-width: 0.6px;   stroke: #ffebeb; }
 			.highway-track-back-grass               { stroke: #bde3cb; }
 			.highway-track-midline-grade3-grass     { stroke: #bde3cb; }
 			.highway-track-midline-grade4-grass     { stroke: #bde3cb; }
@@ -1919,12 +1919,7 @@
 			
 			.landuse-residential {
 			stroke: none;
-			fill: #f2f2f2;
-			}
-			
-			.landuse-retail {
-			stroke: none;
-			fill: #ffebeb;
+			fill: #f0f0f0;
 			}
 			
 			.landuse-industrial {
@@ -1934,7 +1929,7 @@
 			}
 			
 			.landuse-commercial {
-			fill: #fcffc9;
+			fill: #ffffc0;
 			stroke: #f0f0f0;
 			stroke-width: 0.4px;
 			}
@@ -2034,7 +2029,7 @@
 			}
 			
 			.amenity-parking {
-			fill: #f7efb7;
+			fill: #ffffc0;
 			stroke: #e9dd72;
 			stroke-width: 0.4px;
 			}
@@ -2198,7 +2193,7 @@
 			/* Tourism */
 			.tourism-attraction {
 			fill: #f2caea;
-			stroke: #f124cb;
+			stroke: #ff00ff;
 			stroke-width: 0px;
 			}
 			.tourism-green-area {
@@ -2207,7 +2202,7 @@
 			stroke-width: 0.2px;
 			}
 			.tourism-attraction-caption {
-			fill: #f124cb;
+			fill: #ff00ff;
 			stroke: white;
 			stroke-width: 0px;
 			font-family: "DejaVu Sans";
@@ -2342,7 +2337,6 @@
 			
 			.piste-type-sled {
 			fill: none;
-			/* stroke: #8040a0; */
 			stroke: #cdabde;
 			stroke-width: 2.5px;
 			marker-start:url(#marker-piste-type-sled);
@@ -2703,7 +2697,7 @@
 		</svg:pattern>
 		
 		<svg:pattern id="military-pattern" x="0" y="0" width="500" height="500" patternUnits="userSpaceOnUse" patternTransform="scale(0.01)">
-			<svg:rect width="510" height="510" x="0" y="0" fill="#a6a642"/>
+			<svg:rect width="510" height="510" x="0" y="0" fill="#808000"/>
 			<svg:path fill="#505000" d="M 311.4875,112.4725 L 240.86574,112.4725 L 219.18975,100.81875 L 219.18975,67.95515 L 358.10253,55.13602 L 358.10253,98.02185 L 311.4875,107.11177 L 311.4875,112.4725 z "/>
 			<svg:path fill="#505000" d="M 86.10386,157.81856 L 404.48447,158.3883 L 404.43115,99.18722 L 313.11903,119.23168 L 180.26621,119.23168 L 86.10386,144.40379 C 80.55682,146.64725 78.71816,157.81856 86.10386,157.81856 z "/>
 			<svg:path fill="#505000" d="M 176.69134,184.53979 C 176.69131,195.84684 167.54017,205.02094 156.23316,205.04931 C 144.92615,205.07768 135.72909,195.94962 135.67232,184.64271 C 135.61555,173.33581 144.72048,164.11585 156.02721,164.03068 C 167.33393,163.94551 176.57673,173.02726 176.6903,184.33373"/>
@@ -2740,7 +2734,7 @@
 		</svg:pattern>
 		
 		<svg:pattern patternUnits="userSpaceOnUse" width="104.8886" height="112.38862" patternTransform="scale(0.05,0.05)" id="vineyard-pattern">
-			<svg:rect fill="#d5f2e0" width="104.8886" height="112.38862" x="0" y="0"/>
+			<svg:rect fill="#d1ead1" width="104.8886" height="112.38862" x="0" y="0"/>
 			<svg:g transform="translate(-35,-59.111382)">
 				<svg:rect style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" width="2.5" height="2.5" x="105" y="69"/>
 				<svg:rect style="fill:#7ba274;fill-opacity:0.92941176;stroke:none;stroke-width:1.79999995;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" width="2.5156324" height="2.3059964" x="104.54168" y="95.686478"/>

@@ -981,8 +981,8 @@
 			
 			.highway-tertiary-casing                { stroke-width: 5px;  stroke: #202020; }
 			.highway-tertiary-area-casing           { stroke-width: 0.25px; }
-			.highway-tertiary-core                  { stroke-width: 4.75px;  stroke: #f7f496; }
-			.highway-tertiary-area                  { fill: #f7f496; }
+			.highway-tertiary-core                  { stroke-width: 4.75px;  stroke: #ffff90; }
+			.highway-tertiary-area                  { fill: #ffff90; }
 			
 			.highway-unclassified-casing            { stroke-width: 5px; stroke: #c0c0c0; }
 			.highway-unclassified-area-casing       { stroke-width: 3.8px; }
@@ -1298,11 +1298,6 @@
 			fill: #f0f0f0;
 			}
 			
-			.landuse-retail {
-			stroke: none;
-			fill: #ffebeb;
-			}
-			
 			.landuse-industrial {
 			fill: #ecd8ff;
 			stroke: #f0f0f0;
@@ -1310,7 +1305,7 @@
 			}
 			
 			.landuse-commercial {
-			fill: #fcffc9;
+			fill: #ffffc0;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
 			}
@@ -1369,7 +1364,7 @@
 			}
 			
 			.amenity-parking {
-			fill: #f7efb7;
+			fill: #ffffc0;
 			stroke: #e9dd72;
 			stroke-width: 0.2px;
 			}
@@ -1494,7 +1489,7 @@
 			/* Tourism */
 			.tourism-attraction {
 			fill: #f2caea;
-			stroke: #f124cb;
+			stroke: #ff00ff;
 			stroke-width: 0px;
 			}
 			.tourism-green-area {
@@ -1503,7 +1498,7 @@
 			stroke-width: 0.2px;
 			}
 			.military-area {
-			fill: #a6a642;
+			fill: #808000;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
 			}

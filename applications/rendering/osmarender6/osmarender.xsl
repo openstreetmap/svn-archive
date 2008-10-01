@@ -3493,7 +3493,7 @@ against infinite loops -->
       <xsl:for-each select="$elements">
         <xsl:variable name="id" select="@id" />
         <xsl:variable name="value" select="tag[@k=$rule/@notConnectedSameTag]/@v" />
-        <xsl:if test="nd/@ref = /osm/way[@id != $id][tag[@k=$rule/@notConnectedSameTag and @v!=$value]]/nd/@ref">
+        <xsl:if test="not(/osm/way[@id != $id][tag[@k=$rule/@notConnectedSameTag and @v=$value]][nd/@ref=current()/nd/@ref])">
           <xsl:copy-of select="." />
         </xsl:if>
       </xsl:for-each>

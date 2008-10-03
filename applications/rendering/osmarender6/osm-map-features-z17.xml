@@ -1271,6 +1271,8 @@
 					</rule>
 					<!-- Motorway implies oneway-ness -->
 					<rule e="way" k="highway" v="motorway|motorway_link">
+					    <!-- exclude explicit oneway=no -->
+					    <rule e="way" k="oneway" v="~|yes|true">
 						<line class="oneway-casing oneway-casing-1" smart-linecap="no"/>
 						<line class="oneway-casing oneway-casing-2" smart-linecap="no"/>
 						<line class="oneway-casing oneway-casing-3" smart-linecap="no"/>
@@ -1286,6 +1288,7 @@
 						<line class="oneway-core oneway-core-5" smart-linecap="no"/>
 						<line class="oneway-core oneway-core-6" smart-linecap="no"/>
 						<line class="oneway-core oneway-core-7" smart-linecap="no"/>
+					    </rule>
 					</rule>
 					<!-- Roundabouts are oneway in the direction of the segments -->
 					<rule e="way" k="junction" v="roundabout">

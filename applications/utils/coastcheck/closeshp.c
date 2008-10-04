@@ -516,8 +516,8 @@ static void InitBitmap( struct source *src, struct source *temp )
     for( int j=0; j<obj->nVertices; j++ )
     {
       /* Calculate the tile we're in */
-      int new_x = floor( (obj->padfX[j] / MERC_BLOCK) + 200.0 );
-      int new_y = floor( (obj->padfY[j] / MERC_BLOCK) + 200.0 );
+      int new_x = floor( (obj->padfX[j] / MERC_BLOCK) + (DIVISIONS/2.0) );
+      int new_y = floor( (obj->padfY[j] / MERC_BLOCK) + (DIVISIONS/2.0) );
       
       if( new_x < 0 ) new_x = 0;
       if( new_x >= DIVISIONS ) new_x = DIVISIONS-1;

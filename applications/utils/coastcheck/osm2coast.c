@@ -37,7 +37,7 @@
 
 #include "input.h"
 
-#define MAX_NODE_ID (300*1024*1024)
+#define MAX_NODE_ID (400*1024*1024)
 #define MAX_NODES_PER_WAY 10000
 
 static int count_node,    max_node;

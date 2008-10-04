@@ -266,8 +266,8 @@ int main( int argc, char *argv[] )
   for( int i=0; i<DIVISIONS; i++ )
     for( int j=0; j<DIVISIONS; j++ )  //Divide the world into mercator blocks approx 100km x 100km
 #else
-  for( int i=0; i<=10; i++ )
-    for( int j=0; j<=DIVISIONS; j++ )  //Divide the world into mercator blocks approx 100km x 100km
+  for( int i=204; i<=204; i++ )
+    for( int j=248; j<=248; j++ )  //Divide the world into mercator blocks approx 100km x 100km
 #endif
     {
       state.x = i;
@@ -1037,7 +1037,10 @@ void OutputSegs( struct state *state )
   // First we must sort the subareas by decreasing size
   qsort( state->sub_areas, state->subarea_count, sizeof( state->sub_areas[0] ), subarea_compare );
   
-  if( seg_count == 0 && state->subarea_count == 0 )
+  if(VERBOSE)
+    printf( "enclosed=%d, seg_count=%d, subarea_count=%d\n", state->enclosed, seg_count, state->subarea_count );
+    
+  if( seg_count == 0 )
   {
     /* No intersections at all, so we check the winding number. With the
      * water-on-the-right rule we're looking for a positive winding. */
@@ -1151,42 +1154,42 @@ void OutputSegs( struct state *state )
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );
       DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_Y, state->y );
     }
-    /* Check for any remaining sub areas... we just output them, but mark negative ones as errors */
-    for( int k=0; k<state->subarea_count; k++ )
-    {
-      struct subarea *sub_area = &state->sub_areas[k];
-      if( sub_area->used )
-        continue;
-        
-      if(VERBOSE) printf( "Remaining subarea %d (area=%f)\n", k, sub_area->areasize );
-      int node_count = CopyShapeToArray( sub_area->src, sub_area->index, 0, -1, 0 );
-      int part_count = 1;
-      Parttypes[0] = SHPP_RING;
+  }
+  /* Check for any remaining sub areas... we just output them, but mark negative ones as errors */
+  for( int k=0; k<state->subarea_count; k++ )
+  {
+    struct subarea *sub_area = &state->sub_areas[k];
+    if( sub_area->used )
+      continue;
       
-      sub_area->used = 1;  // Need to mark as used first, or it will match itself
+    if(VERBOSE) printf( "Remaining subarea %d (area=%f)\n", k, sub_area->areasize );
+    int node_count = CopyShapeToArray( sub_area->src, sub_area->index, 0, -1, 0 );
+    int part_count = 1;
+    Parttypes[0] = SHPP_RING;
+    
+    sub_area->used = 1;  // Need to mark as used first, or it will match itself
 
-      ProcessSubareas( state, &part_count, &node_count );
-      
+    ProcessSubareas( state, &part_count, &node_count );
+    
 //      SHPObject *obj = SHPReadObject( sub_area->src, sub_area->index );
-      SHPObject *obj = SHPCreateObject( SHPT_POLYGON, -1, 
-                                        part_count, Parts, Parttypes, 
-                                        node_count, v_x, v_y, NULL, NULL );
-      int new_id = SHPWriteObject( shp_out, -1, obj );
-      if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
-      SHPDestroyObject( obj );
-      DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, (sub_area->areasize > 0)?0:1 );
-      DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );
-      DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_Y, state->y );
-    }
+    SHPObject *obj = SHPCreateObject( SHPT_POLYGON, -1, 
+                                      part_count, Parts, Parttypes, 
+                                      node_count, v_x, v_y, NULL, NULL );
+    int new_id = SHPWriteObject( shp_out, -1, obj );
+    if( new_id < 0 ) { fprintf( stderr, "Output failure: %m\n"); exit(1); }
+    SHPDestroyObject( obj );
+    DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_ERROR, (sub_area->areasize > 0)?0:1 );
+    DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_X, state->x );
+    DBFWriteIntegerAttribute( dbf_out, new_id, DBF_OUT_TILE_Y, state->y );
+  }
 //    printf( "\nMatching %s with %d vertices, id=%d\n", polygon ? "polygon" : "arc", obj->nVertices, id );
-    if(VERBOSE)
-    for( int k=0; k<seg_count; k++ )
-    {
-      printf( "%2d %6d (%11.2f,%11.2f)-(%11.2f,%11.2f) (%5d-%5d) (%4.2f-%4.2f) => %2d\n", 
-          k, seg_list[k].index, seg_list[k].sx, seg_list[k].sy, seg_list[k].ex, seg_list[k].ey, 
-          seg_list[k].snode, seg_list[k].enode, seg_list[k].sa, seg_list[k].ea,
-          seg_list[k].next );
-    }
+  if(VERBOSE)
+  for( int k=0; k<seg_count; k++ )
+  {
+    printf( "%2d %6d (%11.2f,%11.2f)-(%11.2f,%11.2f) (%5d-%5d) (%4.2f-%4.2f) => %2d\n", 
+        k, seg_list[k].index, seg_list[k].sx, seg_list[k].sy, seg_list[k].ex, seg_list[k].ey, 
+        seg_list[k].snode, seg_list[k].enode, seg_list[k].sa, seg_list[k].ea,
+        seg_list[k].next );
   }
 }
 

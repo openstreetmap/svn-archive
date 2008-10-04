@@ -57,20 +57,20 @@ my $oldfile;
 my $newfile;
 my $makepatch;
 
+if($ARGV[0] eq "makepatch")
+{
+    $makepatch = shift;
+}
+
 if($ARGV[0] && $ARGV[0] eq "svn")
 {
     ($oldfile,$newfile) = (".svn/text-base/oceantiles_12.png.svn-base", "oceantiles_12.png");
 }
 elsif ($#ARGV < 1)
 {
-    print "Usage: pngdiff.pl oldfile.png newfile.png\n";
-    print "       pngdiff.pl makepatch oldfile.png newfile.png\n";
-    print "       pngdiff.pl svn\n";
+    print "Usage: pngdiff.pl [makepatch] oldfile.png newfile.png\n";
+    print "       pngdiff.pl [makepatch] svn\n";
     exit(0);
-}
-elsif($ARGV[0] eq "makepatch")
-{
-    ($makepatch,$oldfile,$newfile) = @ARGV;
 }
 else
 {

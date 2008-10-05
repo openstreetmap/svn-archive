@@ -20,7 +20,7 @@ Verbose = 6
 ProcessLog = 0
 ProcessLogFile = /tmp/tah.log
 
-Niceness = nice -n10
+Niceness = 10
 
 DownloadTimeout = 1800
 KeepDataFile = 0
@@ -32,13 +32,8 @@ Osmarender = orp
 
 RenderStripes = 0
 
-Inkscape = inkscape
-
-BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
 BatikJVMSize = 1536M
-Batik = 0
 BatikPort = 18123
-BatikClasspath = /usr/share/batik-1.6/lib/batik-rasterizer.jar:/usr/share/xerces-2/lib/xercesImpl.jar:batik-agent.jar
 
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000

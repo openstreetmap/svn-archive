@@ -381,16 +381,14 @@ sub runPreprocessors
         elsif ($preprocessor eq "maplint")
         {
             # Pre-process the data file using maplint
-            my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                    $Config->get("Niceness"),
+            my $Cmd = sprintf("\"%s\" tr %s %s > \"%s\"",
                     $Config->get("XmlStarlet"),
                     "maplint/lib/run-tests.xsl",
                     "$inputFile",
                     "tmp.$$");
             ::statusMessage("Running maplint",0,3);
             ::runCommand($Cmd,$$);
-            $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-                        $Config->get("Niceness"),
+            $Cmd = sprintf("\"%s\" tr %s %s > \"%s\"",
                         $Config->get("XmlStarlet"),
                         "maplint/lib/convert-to-tags2.xsl",
                         "tmp.$$",
@@ -401,8 +399,7 @@ sub runPreprocessors
         }
         elsif ($preprocessor eq "close-areas")
         {
-            my $Cmd = sprintf("%s perl close-areas.pl %d %d %d < %s > %s",
-                        $Config->get("Niceness"),
+            my $Cmd = sprintf("perl close-areas.pl %d %d %d < %s > %s",
                         $req->X,
                         $req->Y,
                         $req->Z,
@@ -610,11 +607,9 @@ sub RenderSVG
     my ($layer, $zoom, $stripes) = @_;
     my $Config = $self->{Config};
     my $Req = $self->{req};
-
+    
     # File locations
     my $svg_file = File::Spec->join($self->{JobDir},"$layer-z$zoom.svg");
-    
-    my $cmd = "";
 
     my $tile_size = 256; # Tiles are 256 pixels square
     # png_width/png_height is the width/height dimension of resulting PNG file
@@ -627,74 +622,60 @@ sub RenderSVG
 
     for (my $stripe = 0; $stripe <= $stripes - 1; $stripe++) {
         my $png_file = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.png");
-        my $std_out = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.stdout");
-        my ($left, $top) = (0, $stripe_height * $stripe);
-        no locale;
-        if ($Config->get("Batik") == "1") { # batik as jar
-            $cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
-                           $Config->get("i18n") ? "LC_ALL=C " : "",
-                           $Config->get("Niceness"),
-                           $Config->get("BatikJVMSize"),
-                           $Config->get("BatikPath"),
-                           $png_width,
-                           $png_height,
-                           $left, $top, $width, $stripe_height,
-                           $png_file,
-                           $svg_file,
-                           $std_out);
-        }
-        elsif ($Config->get("Batik") == "2") { # batik as executable (wrapper of some sort, i.e. on gentoo)
-            $cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
-                           $Config->get("i18n") ? "LC_ALL=C " : "",
-                           $Config->get("Niceness"),
-                           $Config->get("BatikPath"),
-                           $png_width,
-                           $png_height,
-                           $left, $top, $width, $stripe_height,
-                           $png_file,
-                           $svg_file,
-                           $std_out);
-        }
-        elsif ($Config->get("Batik") == "3") { # agent
-            $cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
-                           $png_width,
-                           $png_height,
-                           $left, $top, $width, $stripe_height,
-                           $png_file,
-                           $svg_file,
-                           $std_out);
-        }
-        else {
-            $cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
-                           $Config->get("i18n") ? "LC_ALL=C " : "",
-                           $Config->get("Niceness"),
-                           $Config->get("Inkscape"),
-                           $png_width,
-                           $png_height,
-                           $left, $top, $left + $width, $top + $stripe_height,
-                           $png_file,
-                           $svg_file,
-                           $std_out);
-        }
-        use locale;
-    
-        # stop rendering the current job when inkscape fails
-        ::statusMessage("Rendering stripe $stripe",0,3);
-        print STDERR "\n$cmd\n" if ($Config->get("Debug"));
 
-        my $commandResult = $Config->get("Batik") == "3" ? ::sendCommandToBatik($cmd) eq "OK" : ::runCommand($cmd, $$);
-        if (!$commandResult or ! -e $png_file ) {
-            ::statusMessage("$cmd failed",1,0);
-            if ($Config->get("Batik") == "3" && !::getBatikStatus()) {
-                ::statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
-            }
-            my $reason = "BadSVG (svg2png)";
-            $Req->is_unrenderable(1);
-            throw TilesetError $reason;
+        # Create an object describing what area of the svg we want
+        my $box = SVG::Rasterize::CoordinateBox->new
+            ({
+                space => { top => $height, bottom => 0, left => 0, right => $width },
+                box => { left => 0, right => $width, top => ($stripe_height * ($stripe+1)), bottom => ($stripe_height*$stripe) }
+             });
+        
+        # Make a variable that points to the renderer to save lots of typing...
+        my $rasterize = $SVG::Rasterize::object;
+        my $engine = $rasterize->engine();
+
+        my %rasterize_params = (
+            infile => $svg_file,
+            outfile => $png_file,
+            width => $png_width,
+            height => $png_height,
+            area => $box
+            );
+        if( ref($engine) =~ /batik/i && $Config->get('BatikJVMSize') ){
+            $rasterize_params{heapsize} = $Config->get('BatikJVMSize');
         }
+
+        ::statusMessage("Rendering",0,3);
+
+        my $error = 0;
+        try {
+            $rasterize->convert(%rasterize_params);
+        } catch SVG::Rasterize::Engine::Error::Prerequisite with {
+            my $e = shift;
+
+            ::statusMessage("Rasterizing failed because of unsatisfied prerequisite: $e",1,0);
+
+            throw TilesetError("Exception in RenderSVG: $e");
+        } catch SVG::Rasterize::Engine::Error::Runtime with {
+            my $e = shift;
+
+            ::statusMessage("Rasterizing failed with runtime exception: $e",1,0);
+            print "Rasterize system command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
+            print "Rasterize engine STDOUT:".$e->{stdout}."\n" if $e->{stdout};
+            print "Rasterize engine STDERR:".$e->{stderr}."\n" if $e->{stderr};
+
+            $Req->is_unrenderable(1);
+            throw TilesetError("Exception in RenderSVG: $e");
+        } catch SVG::Rasterize::Engine::Error::NoOutput with {
+            my $e = shift;
+
+            ::statusMessage("Rasterizing failed to create output: $e",1,0);
+
+            $Req->is_unrenderable(1);
+            throw TilesetError("Exception in RenderSVG: $e");
+        };
     }
 }
-
 
 #-----------------------------------------------------------------------------
 # Split PNG for one zoom level into tiles
@@ -895,7 +876,7 @@ sub RenderTile
     }
     else
     {
-        # we create Fork*2 inkscape threads
+        # we create Fork*2 rasterizer threads
         if ($forkval && $Zoom < ($req->Z + $forkval))
         {
             my $pid = fork();
@@ -923,7 +904,7 @@ sub RenderTile
                 my $ChildExitValue = ($? >> 8);
                 if (!$ChildExitValue)
                 {
-                    throw TilesetError "Forked inkscape failed", "renderer";
+                    throw TilesetError "Forked rasterizer failed", "renderer";
                 }
             }
         }

@@ -1193,7 +1193,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			<xsl:with-param name="instruction" select="$instruction"/>
 			<xsl:with-param name="element" select="."/>
 			<xsl:with-param name="svg">
-				<path d="{$pathArea}">
+				<path d="{$pathArea}" style="fill-rule:evenodd">
 					<xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>					
 				</path>
 			</xsl:with-param>
@@ -2754,27 +2754,22 @@ against infinite loops -->
 	<!-- Handle multipolygons.
 	     Draw area only once, draw the outer one first if we know which is it, else just draw the first one -->
 	<xsl:variable name='outerway' select="$relation/member[@type='way'][@role='outer']/@ref"/>
-	<xsl:variable name='firsrelationmember' select="$relation/member[@type='way'][key('wayById', @ref)][1]/@ref"/> 
-        <xsl:if test='( $outerway and $outerway=@id ) or ( not($outerway) and $firsrelationmember=@id )'>
+        <xsl:if test='( $outerway and $outerway=@id)'>
           <xsl:message>
             <xsl:value-of select='$relation/@id'/>
           </xsl:message>
           <xsl:for-each select="$relation/member[@type='way'][key('wayById', @ref)]">
             <xsl:call-template name='generateAreaSubPath'>
               <xsl:with-param name='way' select="key('wayById',@ref)"/>
-              <xsl:with-param name='position' select="position()"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:text>Z</xsl:text>
         </xsl:if>
 
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name='generateAreaSubPath'>
           <xsl:with-param name='way' select='.'/>
-          <xsl:with-param name='position' select="'1'"/>
         </xsl:call-template>
-        <xsl:text>Z</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2782,7 +2777,6 @@ against infinite loops -->
 
   <xsl:template name='generateAreaSubPath'>
     <xsl:param name='way'/>
-    <xsl:param name='position'/>
 
     <xsl:variable name='loop' select='$way/nd[1]/@ref=$way/nd[last()]/@ref'/>
     <xsl:message>
@@ -2793,15 +2787,7 @@ against infinite loops -->
     </xsl:message>
     <xsl:for-each select="$way/nd[key('nodeById',@ref)]">
       <xsl:choose>
-        <xsl:when test="position()=1 and $loop">
-          <xsl:if test='not($position=1)'>
-            <xsl:text>Z</xsl:text>
-          </xsl:if>
-          <xsl:call-template name="moveToNode">
-            <xsl:with-param name="node" select="key('nodeById',@ref)"/>
-          </xsl:call-template>
-        </xsl:when>
-        <xsl:when test="$position=1 and position()=1 and not($loop=1)">
+        <xsl:when test="position()=1">
           <xsl:call-template name="moveToNode">
             <xsl:with-param name="node" select="key('nodeById',@ref)"/>
           </xsl:call-template>
@@ -2813,7 +2799,7 @@ against infinite loops -->
         </xsl:otherwise>
       </xsl:choose>
     </xsl:for-each>
-
+	<xsl:text>Z</xsl:text>
 
   </xsl:template>
 

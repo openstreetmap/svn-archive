@@ -12,7 +12,6 @@
 #
 # If WorkingDir is commented out, it will use the default system tmpdir location
 WorkingDirectory=c:\temp
-Inkscape=c:\program files\inkscape\inkscape.exe
 XmlStarlet=c:\program files\xmlstarlet\xml.exe
 Niceness=' '
 Zip=c:\program files\zip\zip.exe
@@ -78,22 +77,13 @@ GatherBlankTiles=0
 # If set to 1, make a copy of the data file for later debugging purposes
 KeepDataFile=0
 
-# If set to 1, then Batik will be used for rendering instead of Inkscape
-# If set to 3, then Batik in agent mode will be used. The renderning is faster 
-# than other modes or inkscape, but it require BatikClasspath to be set correctly
-Batik=0
+# What rasterizer to use.
+# Set to Inkscape, Batik or BatikAgent
+Rasterizer=Inkscape
 
 # Set to the maximum JVM size to pass to the -Xmx parameter when running the rasterizer. The
 # maximum size depends on the OS. For Windows XP it is 1350M
 BatikJVMSize=1350M
-
-# Set to the location of the batik rasterizer jar. The Batik libraries should reside in the same folder,
-#   or in a sub-folder named lib
-BatikPath=c:\tilesAtHome\batik\batik-rasterizer.jar
-
-# Path to jars required by Batik in agent mode
-#BatikClasspath=batik-rasterizer.jar;xercesImpl.jar;batik-agent.jar
-
 
 # If set to 1 or greater, it will enable forking to render several zoom levels to SVG simultanously
 # Fork = n  -> use 2*n parallel processes for rendering to svg

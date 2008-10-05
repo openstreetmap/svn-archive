@@ -89,7 +89,7 @@ sub compressAll
     my @dir = readdir($dp);
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
-        
+
     foreach my $File(@tilesets)
     {   # go through all complete tilesets ie "*.dir" firectories
         $File =~ m{^([^_]+)_};
@@ -341,8 +341,7 @@ sub optimizePNGs
        }
        elsif (($Config->get("PngQuantizer")||'') eq "pngnq") 
        {
-           $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
-                                   $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" -e .png%s -s1 -n256 %s %s",
                                    $Config->get("pngnq"),
                                    $TmpFilename_suffix,
                                    $PngFullFileName,
@@ -369,8 +368,7 @@ sub optimizePNGs
 
        if ($Config->get("PngOptimizer") eq "pngcrush")
        {
-           $Cmd = sprintf("%s \"%s\" -q %s %s %s",
-                  $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" -q %s %s %s",
                   $Config->get("Pngcrush"),
                   $TmpFullFileName,
                   $PngFullFileName,
@@ -378,8 +376,7 @@ sub optimizePNGs
        }
        elsif ($Config->get("PngOptimizer") eq "optipng")
        {
-           $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
-                  $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
                   $Config->get("Optipng"),
                   $TmpFullFileName,
                   $PngFullFileName,

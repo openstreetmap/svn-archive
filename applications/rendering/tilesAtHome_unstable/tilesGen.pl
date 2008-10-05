@@ -38,10 +38,14 @@ use lib::Server;
 use Request;
 use Upload;
 use Compress;
+use SVG::Rasterize;
+use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
+use Error qw(:try);
+use POSIX;
 
 #---------------------------------
 
@@ -144,6 +148,22 @@ if ($RenderMode) {
     $BlackTileImage->fill(127,127,$BlackTileBackground);
 }
 
+# Setup SVG::Rasterize
+if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
+    $SVG::Rasterize::object = SVG::Rasterize->new();
+    if( $Config->get("Rasterizer") ){
+        $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
+
+        if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+            $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
+            $SVG::Rasterize::object->engine()->host('localhost');
+            $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+        }
+    }
+
+    print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
+}
+
 # We need to keep parent PID so that child get the correct files after fork()
 my $parent_pid = $PID;
 my $upload_pid = -1;
@@ -159,7 +179,7 @@ our $StartedBatikAgent = 0;
 
 ## set all fault counters to 0;
 resetFault("fatal");
-resetFault("inkscape");
+resetFault("rasterizer");
 resetFault("nodata");
 resetFault("nodataROMA");
 resetFault("nodataXAPI");
@@ -168,6 +188,21 @@ resetFault("utf8");
 resetFault("upload");
 
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
+
+# Be nice. Reduce program priority
+if( my $nice = $Config->get("Niceness") ){
+    if( $nice =~ /nice/ ){
+        $nice =~ s/nice\s*-n\s*//;
+        warn "You have Niceness set to a command, it should be only a number.\n";
+    }
+
+    if( $nice =~ /^\d+$/ ){
+        my $success=POSIX::nice($nice);
+        if( !defined($success) ){
+            printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
+        }
+    }
+}
 
 #---------------------------------
 ## Start processing
@@ -222,10 +257,12 @@ elsif ($Mode eq "loop")
     # ----------------------------------
 
     # Start batik agent if it's not runnig
-    if ($Config->get("Batik") == "3" && !getBatikStatus())
-    {
-        startBatikAgent();
-        $StartedBatikAgent = 1;
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+        my $result = $SVG::Rasterize::object->engine()->start_agent();
+        if( $result ){
+            $StartedBatikAgent = 1;
+            statusMessage("Started Batik agent", 0, 0);
+        }
     }
 
     # this is the actual processing loop
@@ -243,7 +280,7 @@ elsif ($Mode eq "loop")
         {
             if ($Config->get("ForkForUpload") && $upload_pid != -1)
             {
-                statusMessage("Waiting for previous upload process (this can take while)",1,0);
+                statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
@@ -367,12 +404,25 @@ elsif ($Mode eq "")
 #---------------------------------
 elsif ($Mode eq "startBatik")
 {
-    startBatikAgent();
+    my $result = $SVG::Rasterize::object->engine()->start_agent();
+    if( $result ){
+        $StartedBatikAgent = 1;
+        statusMessage("Started Batik agent", 0, 0);
+    } else {
+        statusMessage("Batik agent already running");
+    }
 }
 #---------------------------------
 elsif ($Mode eq "stopBatik")
 {
-    stopBatikAgent();
+    my $result = $SVG::Rasterize::object->engine()->stop_agent();
+    if( $result == 1 ){
+        statusMessage("Successfully sent stop message to Batik agent", 0, 0);
+    } elsif( $result == 0 ){
+        statusMessage("Could not contact Batik agent", 0, 0);
+    } else {
+        statusMessage($result, 0, 0);
+    }
 }
 #---------------------------------
 else {
@@ -412,7 +462,7 @@ sub compressAndUploadTilesets
         # We still don't want to have two uploading process running at the same time, so we wait for the previous one to finish.
         if ($upload_pid != -1)
         {
-            statusMessage("Waiting for previous upload process to finish (this can take while)",1,3);
+            statusMessage("Waiting for previous upload process to finish (this can take a while)",1,3);
             waitpid($upload_pid, 0);
             #FIXME: $upload_result is apparently never returned?! skip?
             #$upload_result = $? >> 8;
@@ -745,8 +795,7 @@ sub xml2svg
         $XslFile = "osmarender/osmarender.xsl";
 
         my $Cmd = sprintf(
-          "%s \"%s\" tr --maxdepth %s %s -s osmfile=%s -s minlat=%s -s minlon=%s -s maxlat=%s -s maxlon=%s %s > \"%s\"",
-          $Config->get("Niceness"),
+          "\"%s\" tr --maxdepth %s %s -s osmfile=%s -s minlat=%s -s minlon=%s -s maxlat=%s -s maxlon=%s %s > \"%s\"",
           $Config->get("XmlStarlet"),
           $Config->get("XmlStarletMaxDepth"),
           $XslFile,
@@ -760,8 +809,7 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s -b %s,%s,%s,%s %s",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("perl orp/orp.pl -r %s -o %s -b %s,%s,%s,%s %s",
           $MapFeatures,
           $TSVG,
           $bbox->S, $bbox->W, $bbox->N, $bbox->E,
@@ -796,8 +844,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
     if (!$NoBezier) 
     {   # do bezier curve hinting
-        my $Cmd = sprintf("%s perl ./lines2curves.pl %s > %s",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("perl ./lines2curves.pl %s > %s",
           $TSVG,
           $SVG);
         statusMessage("Beziercurvehinting zoom level $zoom",0,3);
@@ -823,8 +870,12 @@ sub xml2svg
 #-----------------------------------------------------------------------------
 # Render a SVG file
 # jobdir - dir in which the svg is stored, and temporary files can be put.
-# $X, $Y - tilemnumbers of the tileset
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
+# $Left - the left coordinate for the part of the svg to export
+# $Right - the right coordinate for the part of the svg to export
+# $Y1 - the bottom coordinate as measured from the bottom of the svg
+# $Y2 - the top coordinate as measured from the bottom of the svg
+# $ImageHeight - height of the entire svg
 # returns (success, reason), success is 0 or 1
 # reason is a string on failure
 #-----------------------------------------------------------------------------
@@ -838,99 +889,69 @@ sub svg2png
     my $FullSplitPngFile = File::Spec->join($jobdir,"split-z$Zoom-$Ytile.png");
     my $stdOut = File::Spec->join($jobdir,"split-z$Zoom-$Ytile.stdout");
 
-    
-    my $Cmd = "";
-    
     # SizeX, SizeY are height/width dimensions of resulting PNG file
     my $SizeX = 256 * (2 ** ($Zoom - $req->Z));
     my $SizeY = $Config->get("CutFullTile") ? 256 * (2 ** ($Zoom - $req->Z)) : 256;
 
+    # Create an object describing what area of the svg we want
+    my $box = SVG::Rasterize::CoordinateBox->new
+        ({
+            space => { top => $ImageHeight, bottom => 0 },
+            box => { left => $Left, right => $Right, top => $Y2, bottom => $Y1 }
+        });
     
+    # Make a variable that points to the renderer to save lots of typing...
+    my $rasterize = $SVG::Rasterize::object;
+    my $engine = $rasterize->engine();
 
-    # SVG excerpt in SVG units
-    my $Top = $ImageHeight - $Y2;
-    my $Width = $Right - $Left;
-    my $Height = $Y2 - $Y1;
-    
-
-
-    if ($Config->get("Batik") == "1") # batik as jar
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("BatikJVMSize"),
-        $Config->get("BatikPath"),
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
+    my %rasterize_params = (
+        infile => $svgFile,
+        outfile => $FullSplitPngFile,
+        width => $SizeX,
+        height => $SizeY,
+        area => $box
+        );
+    if( ref($engine) =~ /batik/i && $Config->get('BatikJVMSize') ){
+        $rasterize_params{heapsize} = $Config->get('BatikJVMSize');
     }
-    elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
-    {
-        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("BatikPath"),
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-    }
-    elsif ($Config->get("Batik") == "3") # agent
-    {
-        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-    }
-    else
-    {
-        my $old_locale = setlocale(LC_NUMERIC);
-        setlocale(LC_NUMERIC, "");
 
-        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("Inkscape"),
-        $SizeX,
-        $SizeY,
-        $Left,$Y1,$Right,$Y2,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-
-        setlocale(LC_NUMERIC, $old_locale);
-    }
-    
-    # stop rendering the current job when inkscape fails
     statusMessage("Rendering",0,3);
-    print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
 
+    my $error = 0;
+    try {
+        $rasterize->convert(%rasterize_params);
+    } catch SVG::Rasterize::Engine::Error::Prerequisite with {
+        my $e = shift;
 
-    my $commandResult = $Config->get("Batik") == "3"?sendCommandToBatik($Cmd) eq "OK":runCommand($Cmd,$PID);
-    if (!$commandResult or ! -e $FullSplitPngFile )
-    {
-        statusMessage("$Cmd failed",1,0);
-        if ($Config->get("Batik") == "3" && !getBatikStatus())
-        {
-            statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
-        }
-        my $reason = "BadSVG (svg2png)";
-        addFault("inkscape",1);
+        statusMessage("Rasterizing failed because of unsatisfied prerequisite: $e",1,0);
+
+        # Apparently exit code 0 here should tell the parent process that something went wrong
+        exit 0;
+    } catch SVG::Rasterize::Engine::Error::Runtime with {
+        my $e = shift;
+
+        statusMessage("Rasterizing failed with runtime exception: $e",1,0);
+        print "Rasterize system command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
+        print "Rasterize engine STDOUT:".$e->{stdout}."\n" if $e->{stdout};
+        print "Rasterize engine STDERR:".$e->{stderr}."\n" if $e->{stderr};
+
+        $error = 1;
+    } catch SVG::Rasterize::Engine::Error::NoOutput with {
+        my $e = shift;
+
+        statusMessage("Rasterizing failed to create output: $e",1,0);
+        $error = 1;
+    };
+
+    if( $error ){
+        addFault("rasterizer",1);
         $req->is_unrenderable(1);
-        return (0, $reason);
+        return(0, 'BadSVG (svg2png)');
+    } else {
+        resetFault("rasterizer"); # reset to zero if the rasterizer succeeds at least once
+
+        return ($FullSplitPngFile, ""); #return success
     }
-    resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
-    
-     return ($FullSplitPngFile, ""); #return success
 }
 
 
@@ -1168,73 +1189,6 @@ sub reExec
         "idleFor=" . getIdle(0) or die("could not reExec");
 }
 
-
-sub startBatikAgent
-{
-    my $Config = TahConf->getConfig();
-    if (getBatikStatus()) {
-        statusMessage("BatikAgent is already running\n",0,0);
-        return;
-    }
-
-    statusMessage("Starting BatikAgent\n",0,0);
-    my $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > %s", 
-        $Config->get("Niceness"),
-        $Config->get("BatikJVMSize"),
-        $Config->get("BatikClasspath"),
-        $Config->get("BatikPort"),
-        File::Spec->devnull()
-      );
-    if (fork() == 0)
-    {
-        exec($Cmd);
-    }
-    
-    for (my $i = 0; $i < 10; $i++) {
-        sleep(1);
-        if (getBatikStatus()) {
-            statusMessage("BatikAgent started succesfully",0,0);
-            return;
-        }
-    }
-    print STDERR "Unable to start BatikAgent with this command:\n";
-    print STDERR "$Cmd\n";
-}
-
-sub stopBatikAgent
-{
-    if (!getBatikStatus()) {
-        statusMessage("BatikAgent is not running\n",0,0);
-        return;
-    }
-
-    sendCommandToBatik("stop\n\n");
-    statusMessage("Send stop command to BatikAgent\n",0,0);
-}
-
-sub sendCommandToBatik
-{
-    (my $command) = @_;
-    my $Config = TahConf->getConfig();
-
-    my $sock = new IO::Socket::INET( PeerAddr => 'localhost', PeerPort => $Config->get("BatikPort"), Proto => 'tcp');
-    return "ERROR" unless $sock;    
-
-    print $sock $command;
-    flush $sock;
-    my $reply = <$sock>;
-    $reply =~ s/\n//;
-    close($sock);
-
-    return $reply;
-}
-
-sub getBatikStatus
-{
-    return sendCommandToBatik("status\n\n") eq "OK";
-}
-
-
 #------------------------------------------------------------
 # check for faults and die when too many have occured
 #------------------------------------------------------------
@@ -1243,8 +1197,8 @@ sub checkFaults
     if (getFault("fatal") > 0) {
         cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1);
     }
-    elsif (getFault("inkscape") > 5) {
-        cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1);
+    elsif (getFault("rasterizer") > 5) {
+        cleanUpAndDie("Five times rasterizer failed, exiting","EXIT",1);
     }
     elsif (getFault("renderer") > 10) {
         cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1);

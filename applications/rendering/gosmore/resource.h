@@ -4,6 +4,7 @@
 //
 #define IDD_DLGSEARCH                   101
 #define IDB_BITMAP3                     106
+#define IDB_BITMAP2                     107
 #define IDB_BITMAP1                     108
 #define IDD_SETTINGS                    109
 #define IDD_SETTAGS                     110

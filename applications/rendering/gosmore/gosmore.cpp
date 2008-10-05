@@ -935,7 +935,7 @@ struct name2renderType { // Build a list of names, sort by name,
 };
 
 #ifdef _WIN32_WCE
-int Expose (HDC mygc, HDC icons, HPEN *pen)
+int Expose (HDC mygc, HDC icons, HDC mask, HPEN *pen)
 {
   struct {
     int width, height;
@@ -947,9 +947,12 @@ int Expose (HDC mygc, HDC icons, HPEN *pen)
   GetObject (sysFont, sizeof (logFont), &logFont);
   WCHAR wcTmp[70];
 
+  HDC iconsgc = mygc;
+
 #define gtk_combo_box_get_active(x) 1
 #define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
-  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCCOPY)
+  BitBlt (dgc, dx, dy, w, h, mask, x, y, SRCAND); \
+  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCPAINT)
 #define gdk_draw_line(win,gc,sx,sy,dx,dy) \
   MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
 
@@ -986,9 +989,15 @@ gint Expose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2], routeColour, validateColour;
   static GdkPixmap *icons = NULL;
-  static GdkGC *mygc = NULL;
-  if (!mygc) {
+  static GdkBitmap *mask = NULL;
+  static GdkGC *mygc = NULL, *iconsgc = NULL;;
+  static GdkGC *maskGC = NULL;
+  // create bitmap for generation the mask image for icons
+  // all icons must be smaller than these dimensions
+  static GdkBitmap *maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
+  if (!mygc || !iconsgc) {
     mygc = gdk_gc_new (draw->window);
+    iconsgc = gdk_gc_new (draw->window);
     for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
       for (int j = 0; j < 2; j++) {
         int c = !j ? style[i].areaColour 
@@ -1010,8 +1019,10 @@ gint Expose (void)
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &validateColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
-    icons = gdk_pixmap_create_from_xpm (draw->window, NULL, NULL,
+
+    icons = gdk_pixmap_create_from_xpm (draw->window, &mask, NULL,
       FindResource ("icons.xpm"));
+    maskGC = gdk_gc_new(mask);
   }  
 
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
@@ -1123,8 +1134,19 @@ gint Expose (void)
             *b |= 1 << (x / 48 % 32);
             int *icon = Style (w)->x + 4 * IconSet;
             if (icons && icon[2] != 0) {
-              gdk_draw_drawable (draw->window, mygc, icons,
-                icon[0], icon[1], x - icon[2] / 2, y - icon[3] / 2,
+	      int dstx = x - icon[2] / 2;
+	      int dsty = y - icon[3] / 2;
+	      #ifndef _WIN32_WCE
+	      // for gdk we first need to extract the portion of the mask
+	      gdk_draw_drawable (maskicon, maskGC, mask,
+	      			 icon[0], icon[1], 0, 0,
+	      			 icon[2], icon[3]);
+	      // and set the clip region using that portion
+	      gdk_gc_set_clip_origin(iconsgc, dstx, dsty);
+	      gdk_gc_set_clip_mask(iconsgc, maskicon);
+	      #endif
+              gdk_draw_drawable (draw->window, iconsgc, icons,
+                icon[0], icon[1], dstx, dsty,
                 icon[2], icon[3]);
             }
             
@@ -2565,7 +2587,7 @@ int main (int argc, char *argv[])
 HANDLE port = INVALID_HANDLE_VALUE;
 
 HBITMAP bmp;
-HDC memDc, bufDc;
+HDC iconsDc, maskDc, bufDc;
 HPEN pen[2 << STYLE_BITS];
 int pakSize;
 UTF16 appendTmp[50];
@@ -2666,8 +2688,13 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       // r.top = 50;
 	if (!done) {
           bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP1));
-          memDc = CreateCompatibleDC (ps.hdc);
-          SelectObject(memDc, bmp);
+          iconsDc = CreateCompatibleDC (ps.hdc);
+          SelectObject(iconsDc, bmp);
+
+	  // get mask for iconsDc
+	  bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP2));
+	  maskDc = CreateCompatibleDC (ps.hdc);
+	  SelectObject(maskDc, bmp);
 
           bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
           bmp = CreateCompatibleBitmap (ps.hdc, GetSystemMetrics(SM_CXSCREEN),
@@ -2686,7 +2713,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	rect.top = rect.left = 0;
 	rect.right = GetSystemMetrics(SM_CXSCREEN);
 	rect.bottom = GetSystemMetrics(SM_CYSCREEN);
-        Expose (bufDc, memDc, pen);
+        Expose (bufDc, iconsDc, maskDc, pen);
 	BitBlt (ps.hdc, 0, 0, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
 	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,

@@ -52,6 +52,8 @@ allicons=$tmpdir/all
 sizeicons=$tmpdir/size
 montagelist=$tmpdir/montages
 
+name=icons
+
 # list all icons we want, sorting them by height then width
 find $ICONDIR -iname '*.png' \
     -not -iwholename '*people*' \
@@ -61,8 +63,6 @@ find $ICONDIR -iname '*.png' \
     | xargs identify -format '%i:%h:%w\n' \
     | awk '{printf("%05d:%s\n",NR,$0)}' \
     | sort -r -t':' -k3 -n -k4 -n > $allicons
-
-name=icons
 
 echo "Calculating icon distribution"
 
@@ -87,7 +87,7 @@ convert $name.png -channel matte -separate +channel -negate \
 # add mask back to original image
 composite -compose CopyOpacity $tmpdir/mask.png $name.png $tmpdir/binalpha.png
 # set background for transparent regions and reduce colors
-convert $tmpdir/binalpha.png -background white \
+convert $tmpdir/binalpha.png -background black \
     -flatten -colors 256 -type palette \
     $name-flatten.png
 
@@ -96,8 +96,9 @@ echo "Converting to bmp and xpm formats"
 # windows mobile resource files, so we will use netpbm here instead
 # convert $name-flatten.png -type palette $name.bmp
 pngtopnm $name-flatten.png | ppmtobmp > $name.bmp
+pngtopnm $tmpdir/mask.png | pnminvert | ppmtobmp > $name-mask.bmp
 # imagemagick works ok for xpm though
-convert $name-flatten.png -type palette $name.xpm
+convert $tmpdir/binalpha.png $name.xpm
 
 echo "Making icons.csv compatable with old version"
 # this would probably be better done in gosmore.cpp, but I'll do

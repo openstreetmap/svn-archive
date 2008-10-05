@@ -322,4 +322,43 @@ sub select_minsize
     return $newsel;
 }
 
+# notConnectedSameTag filter
+# it selects objects which are not connected to at least one other object with the same value of $tag
+
+sub select_not_connected_same_tag
+{
+    my ($oldsel, $tag) = @_;
+    my $newsel = Set::Object->new();
+
+    OUTER:
+    foreach my $element ($oldsel->members())
+    {
+         # only ways are supported for now
+         if (ref $element ne 'way')
+         {
+             $newsel->insert($element);
+             next;
+         }
+
+         my $value = $element->{'tags'}->{$tag};
+         next unless defined($value);
+
+         foreach my $node (@{$element->{'nodes'}})
+         {
+             foreach my $way (@{$node->{'ways'}})
+             {
+                 my $otherValue = $way->{'tags'}->{$tag};
+                 next unless defined($otherValue);
+                 next if $way->{'id'} eq $element->{'id'};
+                 # skip element if other element with the same value is connected
+                 next OUTER if ($otherValue eq $value);
+             }
+         }
+
+         $newsel->insert($element);
+    }
+
+    return $newsel;
+}
+
 1;

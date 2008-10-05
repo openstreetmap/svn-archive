@@ -1151,6 +1151,13 @@ sub make_selection
         $interim = select_minsize($interim, $minsize);
     }
 
+    # post-process with notConnectedSameTag filter, if set
+    my $notConnectedSameTag = $rulenode->getAttribute("notConnectedSameTag");
+    if ($notConnectedSameTag ne '')
+    {
+        $interim = select_not_connected_same_tag($interim, $notConnectedSameTag);
+    }
+
     return $interim;
 }
 

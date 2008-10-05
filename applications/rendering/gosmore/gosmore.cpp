@@ -2805,7 +2805,7 @@ BOOL InitApplication (void)
   wc.cbClsExtra=0;
   wc.cbWndExtra=0;
   wc.hInstance= hInst;
-  wc.hIcon=NULL; 
+  wc.hIcon=LoadIcon(hInst, MAKEINTRESOURCE(ID_MAINICON)); 
   wc.hCursor=LoadCursor(NULL,IDC_ARROW);
   wc.hbrBackground=(HBRUSH) GetStockObject(WHITE_BRUSH);
   wc.lpszMenuName = NULL;

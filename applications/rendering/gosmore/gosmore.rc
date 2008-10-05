@@ -164,9 +164,20 @@ END
 
 IDB_BITMAP1             BITMAP  DISCARDABLE     "icons.bmp"
 IDB_BITMAP2		BITMAP	DISCARDABLE	"icons-mask.bmp"
-#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+ID_MAINICON             ICON    DISCARDABLE     "gosmore.ico"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef APSTUDIO_INVOKED

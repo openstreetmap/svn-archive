@@ -1560,6 +1560,12 @@
 			<rule e="node" k="barrier" v="cycle_barrier">
 				<wayMarker k="highway" class="cycle-barrier"/>
 			</rule>
+
+			<!-- Traffic calming -->
+			<rule e="node" k="traffic_calming" v="*">
+				<wayMarker k="highway" class="traffic-calming"/>
+			</rule>
+
 			
 			<!-- Bus stops -->
 			<rule e="node" k="highway" v="bus_stop">
@@ -2269,6 +2275,14 @@
 					stroke-width: 2px;
 					stroke-opacity: 0;
 					marker-mid: url(#marker-cycle-barrier);
+					}
+
+					.traffic-calming {
+					fill: none;
+					stroke: red;
+					stroke-width: 2px;
+					stroke-opacity: 0;
+					marker-mid: url(#marker-traffic-calming);
 					}
 					
 					/* Railways - generic styles */

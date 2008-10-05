@@ -10,6 +10,7 @@
 #define IDD_SETTAGS                     110
 #define IDD_SETTAGS2                    111
 #define IDD_CHOOSEO                     112
+#define ID_MAINICON                     130
 #define IDC_EDIT1                       1000
 #define IDC_LIST1                       1001
 #define IDC_SEARCHGO                    1002

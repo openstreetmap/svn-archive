@@ -698,7 +698,7 @@ void MainWindow::on_fileUploadAction_triggered()
 		int ret = QMessageBox::warning(this, tr("Upload OSM"), tr("You don't seem to have specified your\n"
 			"OpenStreetMap username and password.\nDo you want to do this now?"), QMessageBox::Yes | QMessageBox::No);
 		if (ret == QMessageBox::Yes) {
-			toolsPreferencesAction_triggered(1);
+			toolsPreferencesAction_triggered(true);
 		} else
 			return;
 	}
@@ -1028,10 +1028,11 @@ void MainWindow::on_mapStyleLoadAction_triggered()
 	}
 }
 
-void MainWindow::toolsPreferencesAction_triggered(unsigned int tabidx)
+void MainWindow::toolsPreferencesAction_triggered(bool focusData)
 {
 	PreferencesDialog* Pref = new PreferencesDialog(this);
-	Pref->tabPref->setCurrentIndex(tabidx);
+	if (focusData)
+		Pref->tabPref->setCurrentWidget(Pref->tabData);
 	connect (Pref, SIGNAL(preferencesChanged()), this, SLOT(preferencesChanged()));
 	Pref->exec();
 }

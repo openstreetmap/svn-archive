@@ -837,6 +837,7 @@
 
 		// ----	Do we need to redraw the property window?
 		if (_root.redopropertywindow) {
+			_root.redopropertywindow.tidy();
 			_root.redopropertywindow.reinit();
 			_root.redopropertywindow=null;
 		}

@@ -75,6 +75,7 @@
 		if (_root.windows.history.box.revert._alpha<50) { return; }
 		_root.windows.history.remove();
 		if (_root.reverttype=='way') {
+			_root.map.ways[_root.revertid].saveUndo(iText("reverting",'reverting'));
 			_root.map.ways[_root.revertid].loadFromDeleted(_root.revertversion);
 		} else if (nodes[_root.revertid]) { // node in way
 			noderesponder=function() {};
@@ -97,6 +98,7 @@
 	function getDeleted() {
 		whichdelresponder=function() {};
 		whichdelresponder.onResult=function(result) {
+			_root.versioninfo=null;
 			waylist=result[0];
 			for (i in waylist) {										// ways
 				way=waylist[i];											//  |

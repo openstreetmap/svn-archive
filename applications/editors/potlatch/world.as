@@ -113,6 +113,7 @@
 	}
 
 	function zoomTo(newscale,newx,newy,ww) {
+		var oldwidth=linewidth;
 		blankTileQueue();
 		changeScaleTo(newscale);
 		updateCoords(newx,newy);
@@ -120,7 +121,8 @@
 		redrawBackground();
 		resizePOIs();
 		if (ww) { whichWays(); }
-		redrawWays();
+		else if (_root.waycount>500) { purgeWays(); }
+		redrawWays(oldwidth==linewidth);
 	}
 
 	function changeScaleTo(newscale) {
@@ -133,13 +135,16 @@
 		_root.tolerance=4/Math.pow(2,_root.scale-13);
 		if (preferences.data.thinlines) {
 			_root.linewidth=3;
+			_root.taggedscale=100/Math.pow(2,_root.scale-13); 
 		} else {
 			_root.linewidth=3+Math.pow(Math.max(0,_root.scale-15),2);
+			_root.taggedscale=Math.max(100/Math.pow(2,_root.scale-13),10);
+			if (_root.scale==16 || _root.scale==17) { _root.taggedscale*=1.3; }
 		}
 	}
 
-	function redrawWays() {
-		for (var qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
+	function redrawWays(skip) {
+		for (var qway in _root.map.ways) { _root.map.ways[qway].redraw(skip); }
 		if (_root.wayselected) {
 			_root.ws.highlight();
 			_root.ws.highlightPoints(5000,"anchor");

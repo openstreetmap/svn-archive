@@ -201,7 +201,7 @@
 			}
 		} else { 
 			// Join ways (i.e. junction)
-			addEndPoint(nodes[this.node]);
+			addEndPoint(_root.nodes[this.node]);
 			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
 			restartElastic();
 		}

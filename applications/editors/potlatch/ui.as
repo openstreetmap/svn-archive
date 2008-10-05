@@ -271,10 +271,10 @@
 		var bh=Stage.height; if (this.modalleave) { bh-=panelheight; }
 		with (this.blank) {
 			clear();
-			beginFill(0xFFFFFF,0); moveTo(0,0); lineTo(Stage.width,0);
+			beginFill(0xFFFFFF,20); moveTo(0,0); lineTo(Stage.width,0);
 			lineTo(Stage.width,bh); lineTo(0,bh); lineTo(0,0); endFill();
 		}
-		delete this.blank.onPress;
+		this.blank.onPress=null;
 		this.blank.useHandCursor=false;
 
 		// Create dialogue box

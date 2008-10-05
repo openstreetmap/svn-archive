@@ -86,6 +86,9 @@ EOF
 		open TEXT,$fn or die "Can't open $fn: $!\n";
 		$text=<TEXT>;
 		close TEXT;
+		for ($text=~/([^\x20-\x7F\n\t])/) {
+			print "Control character ".ord($1)." in $fn\n";
+		}
 		$actionscript=~s/#include '$fn'/$text/;
 	}
 

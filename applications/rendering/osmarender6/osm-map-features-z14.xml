@@ -74,6 +74,9 @@
 		<rule e="way" k="natural" v="heath">
 			<area class="natural-heath"/>
 		</rule>
+		<rule e="way" k="natural" v="bog">
+			<area class="natural-bog"/>
+		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
@@ -1693,6 +1696,12 @@
 			.natural-heath {
 			fill: #ffffc0;
 			stroke: #ffff90;
+			stroke-width: 0.2px;
+			}
+			
+			.natural-bog {
+			fill: #946e50;
+			stroke: #3f1f06;
 			stroke-width: 0.2px;
 			}
 			

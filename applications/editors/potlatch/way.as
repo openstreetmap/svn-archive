@@ -46,7 +46,7 @@
 					if (_root.map.ways[w].checkconnections) { nodes[id].moveTo(x,y,w); }
 				} else {
 					// doesn't exist, so create new node
-					_root.nodes[id]=new Node(id,x,y,result[1][i][4]);
+					_root.nodes[id]=new Node(id,x,y,result[1][i][3]);
 					if (id==prenode) { prepoint=i; }
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
@@ -70,7 +70,9 @@
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,id;
 			var w=result[0];
-			_root.map.ways[w].clean=false;
+			// Don't mark as unclean if it's actually the latest version
+			if (version==versioninfo[0][0]) { _root.map.ways[w].clean=true; }
+			                           else { _root.map.ways[w].clean=false; }
 			_root.map.ways[w].oldversion=result[7];
 			_root.map.ways[w].removeNodeIndex();
 			_root.map.ways[w].path=[];
@@ -109,62 +111,75 @@
 
 	// ----	Draw line
 
-	OSMWay.prototype.redraw=function() {
-		this.createEmptyMovieClip("line",1);					// clear line
-		this.createEmptyMovieClip("taggednodes",2);				// POIs in way
-		var linealpha=100; // -50*(this.locked==true);
-		var casingx=1.5;
-		var taggedscale;
-		if (preferences.data.thinlines) { taggedscale=100/Math.pow(2,_root.scale-13); }
-								   else { taggedscale=Math.max(100/Math.pow(2,_root.scale-13),6.25); }
+	OSMWay.prototype.redraw=function(skip) {
+		this.createEmptyMovieClip("taggednodes",2);
 
-		// Set stroke
-
-		if		(this.locked)					 { this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); }
-		else if (colours[this.attr["highway"]])  { this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none"); }
-		else if (colours[this.attr["waterway"]]) { this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none"); }
-		else if (colours[this.attr["railway"]])  { this.line.lineStyle(linewidth,colours[this.attr["railway" ]],linealpha,false,"none"); }
-		else {
-			var c=0xAAAAAA; var z=this.attr;
-			for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x707070; } }
-			this.line.lineStyle(linewidth,c,linealpha,false,"none");
-		}
-		
-		// Draw fill/casing
-
-		var f=this.getFill();
-		if (this.attr["bridge"] && this.attr["bridge"]!="no") { casingx=2; }
-
-		if ((f>-1 || casing[this.attr['highway']]) && !this.locked) {
-			if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
-			with (_root.map.areas[this._name]) {
-				clear();
-				enabled=false;
-				moveTo(this.path[0].x,this.path[0].y); 
-				if (f>-1) { beginFill(f,20); }
-					 else { lineStyle(linewidth*casingx,0,100,false,"none"); }
-				for (var i=1; i<this.path.length; i+=1) {
-					lineTo(this.path[i].x,this.path[i].y);
+		if (skip) {
+			// We're at the same scale as previously, so don't redraw
+			// ** will refactor this when we do proper POI icons
+			for (var i=1; i<this.path.length; i+=1) {
+				if (this.path[i].tagged) {
+					this.taggednodes.attachMovie("poiinway",i,i);
+					this.taggednodes[i]._x=this.path[i].x;
+					this.taggednodes[i]._y=this.path[i].y;
+					this.taggednodes[i]._xscale=this.taggednodes[i]._yscale=taggedscale;
 				}
-				if (f>-1) { endFill(); }
-			};
-		} else if (_root.map.areas[this._name]) {
-			removeMovieClip(_root.map.areas[this._name]);
-		}
-
-		// Draw line and tagged nodes
-
-		this.line.moveTo(this.path[0].x,this.path[0].y);
-		for (var i=1; i<this.path.length; i+=1) {
-			this.line.lineTo(this.path[i].x,this.path[i].y);
-			if (this.path[i].tagged) {
-				this.taggednodes.attachMovie("poiinway",i,i);
-				this.taggednodes[i]._x=this.path[i].x;
-				this.taggednodes[i]._y=this.path[i].y;
-				this.taggednodes[i]._xscale=this.taggednodes[i]._yscale=taggedscale;
 			}
+		} else {
+
+			// Either the line has changed, or we've changed scale
+			this.createEmptyMovieClip("line",1);					// clear line
+			var linealpha=100; // -50*(this.locked==true);
+			var casingx=1.5;
+	
+			// Set stroke
+	
+			if		(this.locked)					 { this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); }
+			else if (colours[this.attr["highway"]])  { this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none"); }
+			else if (colours[this.attr["waterway"]]) { this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none"); }
+			else if (colours[this.attr["railway"]])  { this.line.lineStyle(linewidth,colours[this.attr["railway" ]],linealpha,false,"none"); }
+			else {
+				var c=0xAAAAAA; var z=this.attr;
+				for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x707070; } }
+				this.line.lineStyle(linewidth,c,linealpha,false,"none");
+			}
+			
+			// Draw fill/casing
+	
+			var f=this.getFill();
+			if (this.attr["bridge"] && this.attr["bridge"]!="no") { casingx=2; }
+	
+			if ((f>-1 || casing[this.attr['highway']]) && !this.locked) {
+				if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
+				with (_root.map.areas[this._name]) {
+					clear();
+					enabled=false;
+					moveTo(this.path[0].x,this.path[0].y); 
+					if (f>-1) { beginFill(f,20); }
+						 else { lineStyle(linewidth*casingx,0,100,false,"none"); }
+					for (var i=1; i<this.path.length; i+=1) {
+						lineTo(this.path[i].x,this.path[i].y);
+					}
+					if (f>-1) { endFill(); }
+				};
+			} else if (_root.map.areas[this._name]) {
+				removeMovieClip(_root.map.areas[this._name]);
+			}
+	
+			// Draw line and tagged nodes
+	
+			this.line.moveTo(this.path[0].x,this.path[0].y);
+			for (var i=1; i<this.path.length; i+=1) {
+				this.line.lineTo(this.path[i].x,this.path[i].y);
+				if (this.path[i].tagged) {
+					this.taggednodes.attachMovie("poiinway",i,i);
+					this.taggednodes[i]._x=this.path[i].x;
+					this.taggednodes[i]._y=this.path[i].y;
+					this.taggednodes[i]._xscale=this.taggednodes[i]._yscale=taggedscale;
+				}
+			}
+			redrawRelationsForMember('way', this._name);
 		}
-		redrawRelationsForMember('way', this._name);
 	};
 
 	OSMWay.prototype.getFill=function() {
@@ -215,17 +230,20 @@
 	};
 
 	OSMWay.prototype.onLeft=function(j) {
-		var i=j-1; if (i==-1) { i=this.path.length-1; }
-		var k=j+1; if (k==this.path.length) { k=0; }
-		return ((this.path[j].x-this.path[i].x) * (this.path[k].y-this.path[i].y) -
-			    (this.path[k].x-this.path[i].x) * (this.path[j].y-this.path[i].y));
+		var left=0;
+		if (this.path.length>=3) {
+			var i=j-1; if (i==-1) { i=this.path.length-2; }
+			var k=j+1; if (k==this.path.length) { k=1; }
+			left=((this.path[j].x-this.path[i].x) * (this.path[k].y-this.path[i].y) -
+				  (this.path[k].x-this.path[i].x) * (this.path[j].y-this.path[i].y));
+		}
+		return left;
 	};
 	
 
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function() {
-		// ** undo
 		this.deleteMergedWays();
 		this.removeNodeIndex();
 		memberDeleted('way', this._name);
@@ -248,7 +266,6 @@
 	// ---- Variant with confirmation if any nodes have tags
 	
 	OSMWay.prototype.removeWithConfirm=function() {
-		// ** undo
 		var c=true;
 		var z=this.path;
 		for (var i in z) {
@@ -392,7 +409,8 @@
 					_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
 				}
 				_root.newnodeid--;
-				this.insertAnchorPoint(_root.newnodeid);
+				_root.nodes[newnodeid]=new Node(newnodeid,0,0,new Object());
+				this.insertAnchorPoint(_root.nodes[newnodeid]);
 				this.highlightPoints(5001,"anchorhint");
 				addEndPoint(_root.nodes[newnodeid]);
 			}
@@ -687,11 +705,11 @@
 	//		cf http://local.wasp.uwa.edu.au/~pbourke/geometry/pointline/source.vba
 	//		for algorithm to find nearest point on a line
 	
-	OSMWay.prototype.insertAnchorPoint=function(nodeid) {
-		var nx,ny,tx,ty,u,closest,closei,i,a,b,direct,via,newpoint;
+	OSMWay.prototype.insertAnchorPoint=function(nodeobj) {
+		var nx,ny,u,closest,closei,i,a,b,direct,via,newpoint;
 		nx=_root.map._xmouse;	// where we're inserting it
 		ny=_root.map._ymouse;	//	|
-		closest=0.05; closei=0;
+		closest=0.1; closei=0;
 		for (i=0; i<(this.path.length)-1; i+=1) {
 			a=this.path[i  ];
 			b=this.path[i+1];
@@ -704,14 +722,13 @@
 				u=((nx-a.x)*(b.x-a.x)+
 				   (ny-a.y)*(b.y-a.y))/
 				   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
-				tx=a.x+u*(b.x-a.x);
-				ty=a.y+u*(b.y-a.y);
+				nodeobj.x=a.x+u*(b.x-a.x);
+				nodeobj.y=a.y+u*(b.y-a.y);
 			}
 		}
 		// Insert
-		_root.nodes[nodeid]=new Node(nodeid,tx,ty,new Array());
-		_root.nodes[nodeid].addWay(this._name);
-		this.path.splice(closei,0,_root.nodes[nodeid]);
+		nodeobj.addWay(this._name);
+		this.path.splice(closei,0,nodeobj);
 		this.clean=false;
 		this.redraw();
 		markClean(false);
@@ -727,12 +744,13 @@
 
 	OSMWay.prototype.insertAnchorPointAtMouse=function() {
 		_root.newnodeid--;
-		_root.pointselected=this.insertAnchorPoint(_root.newnodeid);
+		_root.nodes[newnodeid]=new Node(newnodeid,0,0,new Object());
+		_root.pointselected=this.insertAnchorPoint(_root.nodes[newnodeid]);
 		var waylist=new Array(); waylist.push(this);
 		var poslist=new Array(); poslist.push(_root.pointselected);
 		for (qway in _root.map.ways) {
 			if (_root.map.ways[qway].hitTest(_root._xmouse,_root._ymouse,true) && qway!=this._name) {
-				poslist.push(_root.map.ways[qway].insertAnchorPoint(_root.newnodeid));
+				poslist.push(_root.map.ways[qway].insertAnchorPoint(_root.nodes[newnodeid]));
 				waylist.push(_root.map.ways[qway]);
 			}
 		}
@@ -793,6 +811,64 @@
 		}
 		return d;
 	};
+
+	// =====================================================================================
+	// Offset path
+	// ** write to locked way(s)
+	// ** find out how much, and which side
+
+	OSMWay.prototype.offset=function() {
+		var a,b,o,df,x,y;
+		var offsetx=new Array();
+		var offsety=new Array();
+		var wm=10;	// was 70 originally
+		var tpoffset=12345678; // the towpath offset, + or - depending on which side
+
+		// Normalise, and calculate offset vectors
+
+		for (var i=0; i<this.path.length; i++) {
+			a=nodes[this.path[i  ]].y - nodes[this.path[i+1]].y;
+			b=nodes[this.path[i+1]].x - nodes[this.path[i  ]].x;
+			h=Math.sqrt(a*a+b*b);
+			if (h!=0) { a=a/h; b=b/h; }
+				 else {	a=0; b=0; }
+			offsetx[i]=wm*a;
+			offsety[i]=wm*b;
+		}
+	
+		// First towpath point
+		
+//		$s[$wwcount]->movePenTo(scrpix($x[0]+$offsetx[0],$y[0]+$offsety[0]));
+	
+		// Work out towpath points
+	
+		for (i=1; i<(this.path.length-1); i++) {
+	
+			a=det(offsetx[i]-offsetx[i-1],
+				  offsety[i]-offsety[i-1],
+				  nodes[this.path[i+1]].x - nodes[this.path[i  ]].x,
+				  nodes[this.path[i+1]].y - nodes[this.path[i  ]].y);
+			b=det(nodes[this.path[i  ]].x - nodes[this.path[i-1]].x,
+				  nodes[this.path[i  ]].y - nodes[this.path[i-1]].y,
+				  nodes[this.path[i+1]].x - nodes[this.path[i  ]].x,
+				  nodes[this.path[i+1]].y - nodes[this.path[i  ]].y);
+			if (b!=0) { df=a/b; } else { df=0; }
+			
+			x=nodes[this.path[i]].x + tpoffset*(offsetx[i-1]+df*(nodes[this.path[i]].x - nodes[this.path[i-1]].x));
+			y=nodes[this.path[i]].y + tpoffset*(offsety[i-1]+df*(nodes[this.path[i]].y - nodes[this.path[i-1]].y));
+	
+//			($xs,$ys)=scrpix(x,y);
+//			$s[$wwcount]->drawLineTo($xs,$ys); 
+		}
+	
+		// Last towpath point
+		
+//		$s[$wwcount]->drawLineTo(scrpix($x[$ct-1]+$offsetx[$ct-1],$y[$ct-1]+$offsety[$ct-1]));
+
+	};
+
+    function det(a,b,c,d) { return a*d-b*c; }
+
 
 	Object.registerClass("way",OSMWay);
 

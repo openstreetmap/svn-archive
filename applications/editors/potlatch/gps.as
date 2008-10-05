@@ -20,6 +20,7 @@
 		_root.curtrack=0; _root.tracks[curtrack]=new Array();
 		_root.map.gpx.createEmptyMovieClip("line",1);
 		_root.map.gpx.line.lineStyle(1,0x00FFFF,100,false,"none");
+		_root.gpxpoints=0;
 
 		var gpxs=gpxname.split(',');
 		for (var g in gpxs) {
@@ -77,9 +78,13 @@
 	}
 
 	function parsePoint(xmlobj) {
-		if (lat) {} else { lat =xmlobj.attributes['lat'];	// Get root co-ords
-						   long=xmlobj.attributes['lon'];	//  from GPX?
-						   startPotlatch(); }				//   |
+		_root.gpxpoints++;
+		if (lat) {
+		} else if (gpxpoints>4) {					// Get root co-ords from 
+			lat =xmlobj.attributes['lat'];			//  fifth point in GPX
+			long=xmlobj.attributes['lon'];			//   |
+			startPotlatch();						//   |
+		}
 		var y= lat2coord(xmlobj.attributes['lat']);
 		var x=long2coord(xmlobj.attributes['lon']);
 		var tme=new Date();

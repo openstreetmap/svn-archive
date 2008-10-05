@@ -118,7 +118,7 @@
 
 	OSMRelation.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
-		var linewidth=10;
+		var linewidth=Math.max(_root.linewidth*3,10);
 		var linealpha= this.isHighlighting ? 75 : 50;
 		var c = this.isHighlighting ? 0xff8800 : 0x8888ff;
 

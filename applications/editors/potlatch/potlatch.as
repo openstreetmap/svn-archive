@@ -23,7 +23,7 @@
 	_root.panel.lineTo(3000,panelheight); _root.panel.lineTo(0,panelheight);
 	_root.panel.lineTo(0,0);
 	_root.panel.endFill();
-	_root.panel.createEmptyMovieClip("advice",0xFFFFFD);
+	_root.panel.createEmptyMovieClip("advice",0xFFFFFC);
 
 	_root.createEmptyMovieClip("windows",0xFFFFFD);
 	var windowdepth=1;
@@ -100,7 +100,7 @@
 	var whichreceived=0;			// total number of whichways received
 	var lastwhichways=new Date();	// last time whichways was requested
 	var lastresize=new Date();		// last time window was resized
-	var dragmap=false;				// map being dragged?
+	var mapdragged=false;			// map being dragged?
 	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order)
 	var lastpoint=0;				// last value of drawpoint (triple-click detection)
 	var lastpointtime=null;			// time of last double-click (triple-click detection)
@@ -121,7 +121,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10c";	// current version
+	var signature="Potlatch 0.10d";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
 
@@ -376,7 +376,7 @@
 	// processMapDrag, moveMap - process map dragging
 
 	function processMapDrag() {
-		if (mapDragged() || Key.isDown(Key.SPACE)) {
+		if (mapDragging() || Key.isDown(Key.SPACE)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
 
 			if (_root.yahoo._visible) {
@@ -398,13 +398,12 @@
 	function endMapDrag() {
 		delete _root.onMouseMove;
 		delete _root.onMouseUp;
-		if (mapDragged()) {
+		if (mapDragging()) {
 			redrawBackground();
 			updateLinks();
 			whichWays();
 		}
 		restartElastic();
-		_root.dragmap=false;
 		if (_root.wayselected) { setPointer(''); }
 						  else { setPointer('pen'); }
 	}
@@ -428,11 +427,9 @@
 	function mapClick() {
 		setPointer('pen');
 		clearTooltip();
-//		_root.map.onMouseMove=function() { processMapDrag(); };
-//		_root.map.onMouseUp  =function() { endMapDrag(); };
 		_root.onMouseMove=function() { processMapDrag(); };
 		_root.onMouseUp  =function() { endMapDrag(); };
-		_root.dragmap=true;
+		_root.mapdragged=false;
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
 		_root.firstxmouse=_root._xmouse;
@@ -441,9 +438,9 @@
 		_root.yahootime=new Date();
 	}
 
-	// mapDragged - test whether map was dragged or just clicked
+	// mapDragging - test whether map was dragged or just clicked
 	
-	function mapDragged() {
+	function mapDragging() {
 		var t=new Date();
 		var tol=Math.max(_root.tolerance,2);
 		var longclick=(t.getTime()-_root.clicktime)>300;
@@ -451,19 +448,19 @@
 		var ydist=Math.abs(_root.firstymouse-_root._ymouse);
 		if ((xdist<tol*4  && ydist<tol*4 ) ||
 		   ((xdist<tol*10 && ydist<tol*10) && !longclick)) {
-			return false;
 		} else {
-			return true;
+			_root.mapdragged=true;
 		}
+		return _root.mapdragged;
 	}
 
 	// mapClickEnd - end of click within map area
 
 	function mapClickEnd() {
 		removeWelcome(true);
-		if (!mapDragged()) {
+		var t=new Date();
+		if (!mapdragged) {
 		// Clicked on map without dragging
-			_root.dragmap=false;
 			// Adding a point to the way being drawn
 			if (_root.drawpoint>-1) {
 				_root.newnodeid--;
@@ -481,18 +478,22 @@
 			// Deselecting a way
 			} else if (_root.wayselected) {
 				uploadSelected(); deselectAll();
+				_root.lastpoint=-1;				// Trap double-click to deselect
+				_root.lastpointtime=new Date();	//  |
 
 			// Deselecting a POI
 			} else if (_root.poiselected) {
 				uploadSelected(); deselectAll();
 
 			// Starting a new way
-			} else {
+			// ** double-click trap should probably also check distance moved
+			} else if (_root.lastpoint!=-1 || (t.getTime()-_root.lastpointtime)>300) {
 				_root.newnodeid--; 
 				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array());
 				startNewWay(newnodeid);
 			}
 		}
+		_root.mapdragged=false;
 	}
 
 
@@ -617,7 +618,7 @@
 			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.CAPSLOCK: dimMap(); break;									// CAPS LOCK - dim map
-			case 167:		_root.panel.presets.cycleIcon(); break;				// '¤' - cycle presets
+			case 167:		_root.panel.presets.cycleIcon(); break;				// cycle presets
 		}
 		
 		switch (s) {
@@ -846,6 +847,7 @@
 		if ((t.getTime()-lastresize.getTime())>500) {
 			if (lastresize.getTime()>lastwhichways.getTime()) {
 				whichWays();
+				redrawBackground();
 			}
 		}
 
@@ -933,6 +935,7 @@
 		updateScissors(false);
 		poiselected=0;
 		pointselected=-2;
+		lastpoint=0;
 		selectWay(0);
 		markClean(true);
 	};

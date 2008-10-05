@@ -47,10 +47,10 @@
 			_root.waysloading.whirl._xscale=
 			_root.waysloading.whirl._yscale=75;
 
-			if (lat) { startPotlatch(); }			// Parse GPX if supplied
-			if (gpx) { parseGPX(gpx); }				//  |
+			if (lat!=undefined) { startPotlatch(); }	// Parse GPX if supplied
+			if (gpx) { parseGPX(gpx); }					//  |
 				else { _root.windows.pleasewait.remove(); }
-			if (lat) {} else { lat=0; long=51.5; startPotlatch(); } // dummy location in sea if none!
+			if (lat==undefined) { lat=0; long=0; startPotlatch(); }
 			if (!preferences.data.nosplash) { splashScreen(); }
 			welcomeButtons();
 		};

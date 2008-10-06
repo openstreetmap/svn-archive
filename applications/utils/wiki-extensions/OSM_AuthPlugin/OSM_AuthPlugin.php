@@ -1,47 +1,48 @@
 <?php
- /* 
-  * OSMAuthPlugin
-  * Authenticate users against the OpenStreetMap user database instead 
-  * of or in addition to the MediaWiki internal user database.
-  * 
-  * Initially by Chris Jackson, except for doc comments.  Licensed as appropriate.
-  * Wiki-formatted version may have broken indentation
-  */
- require( 'AuthPlugin.php' );  	// API to extend
- require( 'HTTP/Request.php' );	// PEAR include - adjust to suit
- 
- if( !defined( 'MEDIAWIKI' ) )
- die();
- 
- $wgExtensionCredits['other'][] = array(
-     'name' 			=> 'OpenStreetMap authentication',
-     'description'	=> 'Allows shared sign-on with OpenStreetMap.  Or so we hope.',
- 	'version' 		=> '20080929-5',
-     'author' 		=> 'Chris Jackson',
-     'url'			=> 'http://wiki.openstreetmap.org/index.php/OSM_AuthPlugin'
- );
- 
- // helper function for installations where lcfirst() does not exist
- // doc comments from PHP manual
- 
- if( !function_exists( 'lcfirst' ) ) {
-     /**
-      * Make a string's first character lowercase 
-      *
-      * @param string $str The input string.
-      * @return string the resulting string.
-      */
-     function lcfirst( $str ) {
-         $str[0] = strtolower( $str[0] );
-         return (string) $str;
-     }
- }
- 
- class OSMAuthPlugin extends AuthPlugin {
- 
- 	/**
- 	 * Check whether there exists a user account with the given name.
- 	 * The name will be normalized to MediaWiki's requirements, so
+/**
+ * OSM_AuthPlugin - OpenStreetMap API Mediawiki Authentication Plugin
+ *
+ * Authenticate users against the OpenStreetMap user database instead 
+ * of or in addition to the MediaWiki internal user database.
+ * 
+ * Initially by Chris Jackson, except for doc comments.
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
+if ( !defined( 'MEDIAWIKI' ) ) {
+	die( 'This file is a MediaWiki extension.' );
+}
+
+require( 'AuthPlugin.php' );  	// API to extend
+require( 'HTTP/Request.php' );	// PEAR include - adjust to suit
+
+$wgExtensionCredits['other'][] = array(
+	'name'			=> 'OpenStreetMap authentication',
+	'author'		=> 'Chris Jackson',
+	'svn-date'		=> '$LastChangedDate: 2008-07-23 22:20:05 +0100 (Wed, 23 Jul 2008) $',
+	'svn-revision'	=> '$LastChangedRevision: 37977 $',
+	'url'			=> 'http://wiki.openstreetmap.org/index.php/OSM_AuthPlugin',
+	'description'	=> 'Allows shared sign-on with OpenStreetMap. Or so we hope.'
+);
+
+class OSMAuthPlugin extends AuthPlugin {
+	/**
+	 * Check whether there exists a user account with the given name.
+	 * The name will be normalized to MediaWiki's requirements, so
  	 * you might need to munge it (for instance, for lowercase initial
  	 * letters).
  	 *
@@ -50,7 +51,7 @@
  	 * @public
  	 */
  	function userExists( $username ) {
- 		// 0929-4 authenticate() depends on this function
+		// 0929-4 authenticate() depends on this function
  		// and is not called unless this returns true.
  		// Until we have a meaningful way of establishing
  		// whether or not a user account eixists,  we must:  
@@ -70,27 +71,26 @@
  	 * @public
  	 */
  	function authenticate( $username, $password ) {
+ 		
+		$auth_url = 'http://www.openstreetmap.org/api/0.5/user/details';
+		$params = array ( "method" => "HEAD",
+ 						  "allowRedirects" => TRUE );
+
+  		$req = new HTTP_Request( $auth_url, $params );
+ 		$req->setBasicAuth( $username, $password );
+		$req->sendRequest();
  
- 		$params = array ( "method" => "HEAD",
- 						  "user" => $username,
- 						  "pass" => $password );
- 
- 		$auth_url = "http://www.openstreetmap.org/api/0.5/user/details";
- 
- 		$req = new HTTP_Request( $auth_url, $params );
- 		$req->sendRequest();
- 
- 		// Request will return 200 if successfull, and generally 401 if it fails	
- 		$code = $req->getResponseCode();
- 		$body = $req->getResponseBody(); 
- 
+		// Request will return 200 if successfull, and generally 401 if it fails
+		$code = $req->getResponseCode();
+		$body = $req->getResponseBody(); 
  		if ( $code == 200 ) {
- 			return true;
- 		} else {
+			// XML body extract email
+			
+			return true;
+		} else {
  			return false;
- 		}
- 
- 		return false;
+		}
+  		return false;
  	}
  
  	/**
@@ -139,6 +139,9 @@
  	 */
  	function updateUser( &$user ) {
  		# Override this and do something
+		
+		// Can I override mName? with the display_name from OSM Auth API?
+		
  		return true;
  	}
  
@@ -271,9 +274,7 @@
  	 * check, now is your chance.
  	 */
  	function getCanonicalName( $username ) {
- 		return $username;
- 	}
- 
- }
- 
- ?>
+		return $username;
+	}
+}
+?>

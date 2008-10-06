@@ -1,9 +1,10 @@
 // Imports
 import java.util.*;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+
+import net.miginfocom.swing.MigLayout;
 
 class Keylist extends JPanel implements ActionListener, ListSelectionListener {
 	/**
@@ -12,7 +13,6 @@ class Keylist extends JPanel implements ActionListener, ListSelectionListener {
 	private static final long serialVersionUID = 1L;
 
 	// Instance attributes used in this example
-	private JPanel topPanel;
 
 	private JList listbox;
 
@@ -21,8 +21,6 @@ class Keylist extends JPanel implements ActionListener, ListSelectionListener {
 	private JButton addButton;
 
 	private JButton removeButton;
-
-	private JTextField dataField;
 
 	private JScrollPane scrollPane;
 
@@ -35,12 +33,9 @@ class Keylist extends JPanel implements ActionListener, ListSelectionListener {
 		this.mapFeatures = mapFeatures;
 		this.mapFeaturesGUI = mapFeaturesGUI;
 
-		// Set the frame characteristics
-
-		// Create a panel to hold all other components
-		topPanel = new JPanel();
-		topPanel.setLayout(new BorderLayout());
-		add(topPanel);
+		setLayout(new MigLayout("fill"));
+		//setLayout(new MigLayout(( "debug, inset 20"),"[para]0[][100lp, fill][60lp][95lp, fill]", ""));
+		
 
 		// Create the data model for this example
 		listData = new Vector();
@@ -52,25 +47,21 @@ class Keylist extends JPanel implements ActionListener, ListSelectionListener {
 		// Add the listbox to a scrolling pane
 		scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(listbox);
-		topPanel.add(scrollPane, BorderLayout.CENTER);
+	
+		
+		add(scrollPane,"grow");
 
-		CreateDataEntryPanel();
-	}
-
-	public void CreateDataEntryPanel() {
 		// Create a panel to hold all other components
-		JPanel dataPanel = new JPanel();
-		dataPanel.setLayout(new BorderLayout());
-		topPanel.add(dataPanel, BorderLayout.SOUTH);
-
+		JPanel controlpanel = new JPanel(new MigLayout());
 		// Create some function buttons
 		addButton = new JButton("Add");
-		dataPanel.add(addButton, BorderLayout.WEST);
+		controlpanel.add(addButton);
 		addButton.addActionListener(this);
-
+		
 		removeButton = new JButton("Delete");
-		dataPanel.add(removeButton, BorderLayout.EAST);
+		controlpanel.add(removeButton);
 		removeButton.addActionListener(this);
+		add(controlpanel,"south");
 	}
 
 	// Handler for list selection changes

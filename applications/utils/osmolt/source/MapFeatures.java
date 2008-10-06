@@ -1,6 +1,8 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ public class MapFeatures {
 	boolean comandline;
 
 	String mapFeaturesfile;
+	String outputfolder;
 
 	ArrayList<String[]> knowenTyes = new ArrayList<String[]>();
 
@@ -56,16 +59,28 @@ public class MapFeatures {
 	public void saveFile(String mapFeaturesfile) {
 		FileOutputStream out;
 		try {
+			System.out.println(root.getNamespace());
+			DocType doct = new DocType("MapFeatures");
+			System.out.println(root.getParentElement());
+			doct.setSystemID("grammar.dtd");
+			Document doc = new Document((Element) root.detach());
+			doc.setDocType(doct);
 			out = new FileOutputStream(mapFeaturesfile);
 			XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-			serializer.output(root, out);
+			serializer.output(doc, out);
 			out.flush();
 			out.close();
+
+			BufferedWriter grammarout = new BufferedWriter(new FileWriter(
+					new File(mapFeaturesfile).getParentFile() + "/grammar.dtd"));
+			grammarout.write(Grammar.getGrammar());
+			grammarout.close();
+
+			// getGrammar
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -98,7 +113,7 @@ public class MapFeatures {
 		element.setAttribute("filename", name + ".txt");
 		element.setAttribute("image", name + ".png");
 		element.setAttribute("imagesize", "20,20");
-		element.setAttribute("imageoffset", "-8,-8");
+		element.setAttribute("imageoffset", "0,0");
 
 		Element filter = new Element("filter");
 		filter.setAttribute("name", "root");
@@ -204,17 +219,25 @@ public class MapFeatures {
 		}
 		return result;
 	}
-	
-	Element getFilterByName(String Name){
+
+	Element getFilterByName(String Name) {
 		List children = root.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			Element element = (Element) children.get(i);
 			if (element.getAttribute("name").getValue().equals(Name))
 				return element.getChild("filter");
-			
+
 		}
 		System.out.println("fehler");
 		return null;
 	}
-	
+
+	public String getOutputfolder() {
+		return outputfolder;
+	}
+
+	public void setOutputfolder(String outputfolder) {
+		this.outputfolder = outputfolder;
+	}
+
 }

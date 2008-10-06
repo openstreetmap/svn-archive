@@ -9,12 +9,14 @@
 	    		<restriction osmKey="operator" osmValue="Stadtwedel"/>
 			</filter>
 		</filter>
-		<titel>
-			Spielplatz
-		</titel>
+		<titel><valueof osmKey="name"/></titel>
 		<description>
-			<valueof osmKey="name"/>
-			blablub
+			<exist osmKey="operator">
+			operator: <valueof osmKey="operator"/><br/>
+			</exist>
+			<exist osmKey="image">
+				<image osmKey="image">
+			</exist>
 		</description>
 	</entry>
 </MapFeatures>

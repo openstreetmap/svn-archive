@@ -1,13 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.ButtonGroup;
@@ -22,6 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.jdom.Content;
 import org.jdom.Element;
@@ -55,7 +52,7 @@ public class EditMixed implements ActionListener, ListSelectionListener {
 
 	private JLabel lb_Info = new JLabel("");
 
-	private JTextField tf_text = new JTextField("", 40);
+	private JTextField tf_text = new JTextField();
 
 	int currentElement = 0;
 
@@ -64,10 +61,7 @@ public class EditMixed implements ActionListener, ListSelectionListener {
 		JFrame frame = new JFrame("Edit Titel/Comment");
 		JPanel selectionPanel = new JPanel();
 
-		selectionPanel.setLayout(new GridBagLayout());
-		GridBagConstraints constraints = new GridBagConstraints();
-
-		constraints.fill = GridBagConstraints.BOTH;
+		selectionPanel.setLayout(new MigLayout("fill"));
 		
 		
 
@@ -82,24 +76,13 @@ public class EditMixed implements ActionListener, ListSelectionListener {
 
 		scrollPane.getViewport().add(listbox);
 
-		constraints.gridwidth = 2;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		selectionPanel.add(scrollPane, constraints);
-		
-		
-		
+
 		JButton btn_movup = new JButton("move up");
 		btn_movup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				movUp();
 			}
 		});
-
-		constraints.gridwidth = 1;
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		selectionPanel.add(btn_movup, constraints);
 		
 		JButton btn_movdown = new JButton("move down");
 		btn_movdown.addActionListener(new ActionListener() {
@@ -108,80 +91,55 @@ public class EditMixed implements ActionListener, ListSelectionListener {
 			}
 		});
 
-		constraints.gridx = 1;
-		constraints.gridy = 1;
-		selectionPanel.add(btn_movdown, constraints);
-
-
-
 		addButton = new JButton("Add");
 		addButton.addActionListener(this);
-
-		constraints.gridx = 0;
-		constraints.gridy = 2;
-		selectionPanel.add(addButton, constraints);
+		
 
 		removeButton = new JButton("Delete");
 		removeButton.addActionListener(this);
+		
+		selectionPanel.add(scrollPane,"grow,wrap,span 4");		
 
-		constraints.gridx = 1;
-		constraints.gridy = 2;
-		selectionPanel.add(removeButton, constraints);
+		selectionPanel.add(addButton, "growx");
+
+		selectionPanel.add(removeButton, "");
+
+		selectionPanel.add(btn_movup, "");
+		
+		selectionPanel.add(btn_movdown,"");
 
 		
 		
 		JPanel editPanel = new JPanel();
-		editPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+		
+		
+		editPanel.setLayout(new MigLayout());
 
-		c.fill = GridBagConstraints.BOTH;
 
 		ButtonGroup g;
 		g = new ButtonGroup();
-
-		c.gridx = 0;
-		c.gridy = 0;
-		editPanel.add(rb_br = new JRadioButton("line break"), c);
+		rb_br = new JRadioButton("line break");
 		g.add(rb_br);
-
 		rb_br.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setbr();
 			}
 		});
-
-		c.gridx = 1;
-		c.gridy = 0;
-		editPanel.add(rb_Valueof = new JRadioButton("ValueOf"), c);
+		rb_Valueof = new JRadioButton("ValueOf");
 		g.add(rb_Valueof);
-
 		rb_Valueof.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setvalue();
 			}
 		});
 
-		c.gridx = 2;
-		c.gridy = 0;
-		editPanel.add(rb_Text = new JRadioButton("Text"), c);
+		rb_Text = new JRadioButton("Text");
 		g.add(rb_Text);
-
 		rb_Text.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				settext();
 			}
 		});
-
-		c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 1;
-		editPanel.add(lb_Info, c);
-		lb_Info.setText(str_text);
-
-		c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 2;
-		editPanel.add(tf_text, c);
 
 		JButton bt_apply = new JButton("Apply");
 
@@ -189,15 +147,20 @@ public class EditMixed implements ActionListener, ListSelectionListener {
 			public void actionPerformed(ActionEvent e) {
 				apply();
 			}
-		});
-
-		c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 3;
-		editPanel.add(bt_apply, c);
+		});	
+		lb_Info.setText(str_text);
+		
+		editPanel.add(rb_br, "split 3");
+		editPanel.add(rb_Valueof, "");
+		editPanel.add(rb_Text, "wrap");
+		
+		editPanel.add(lb_Info,"wrap,grow");	
+		editPanel.add(tf_text, "wrap,grow");
+		
+		editPanel.add(bt_apply, "wrap,grow");
 
 		frame.setLayout(new BorderLayout());
-		frame.setMinimumSize(new Dimension(700, 240));
+		frame.setMinimumSize(new Dimension(700, 200));
 		frame.add(selectionPanel, BorderLayout.CENTER);
 		frame.add(editPanel, BorderLayout.EAST);
 		frame.setVisible(true);

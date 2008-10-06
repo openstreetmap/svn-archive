@@ -12,20 +12,37 @@ public class ProcessData extends Thread {
 
 	MapFeatures mapFeatures;
 
+	boolean isway = false;
+
 	ArrayList<String[]> tags;
+
+	ArrayList<Integer> points;
+	String osmfilename="";
 
 	double lon;
 
 	double lat;
+
 	String folder;
 
-	public ProcessData(String folder,MapFeatures mapFeatures, double lon, double lat,
-			ArrayList<String[]> tags) {
+	public ProcessData(String folder, MapFeatures mapFeatures, double lon,
+			double lat, ArrayList<String[]> tags) {
 		this.mapFeatures = mapFeatures;
 		this.folder = folder;
 		this.lon = lon;
 		this.lat = lat;
 		this.tags = tags;
+	}
+
+	// way
+	public ProcessData(String folder, MapFeatures mapFeatures,
+			ArrayList<String[]> tags, ArrayList<Integer> points,String osmfilename) {
+		this.mapFeatures = mapFeatures;
+		this.folder = folder;
+		this.tags = tags;
+		this.points = points;
+		this.osmfilename = osmfilename;
+		isway = true;
 	}
 
 	public void run() {
@@ -38,14 +55,17 @@ public class ProcessData extends Thread {
 
 				Element filter = mapFeatures.getFilterByName(names.get(i));
 				found = processFilter(filter, " ");
-				if (found)
+				if (found) {
+					
+					float[] midpoint = SearchAreaMidpoint.startSearch(osmfilename, points);
+					if (midpoint.length !=2) System.err.println("warning wrong midpoint");
 					makeLine(mapFeatures.getElementByName(names.get(i)));
-
+				}
 				i++;
 			}
 
-			if (found)
-				System.out.println(this.getId() + "  gefunden");
+			// if (found)
+			// System.out.println(this.getId() + " gefunden");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,12 +126,12 @@ public class ProcessData extends Thread {
 		String titel = makeTitel(filter.getChild("titel"));
 		String description = makeTitel(filter.getChild("description"));
 		Double[] merc = Mercator.merc(lon, lat);
-		System.out.println(titel + " : " + description);
+		// System.out.println(titel + " : " + description);
 		String filename = filter.getAttributeValue("filename");
 
 		FileWriter file;
 		// String filename = mapFeatures.getfilename(osmKey, osmVal);
-		file = new FileWriter(folder+filename, true);
+		file = new FileWriter(folder + filename, true);
 		file.append(merc[1] + "," + merc[0] + "	" + titel + "	" + description
 				+ "	" + filter.getAttributeValue("image") + "	"
 				+ filter.getAttributeValue("imagesize") + "	"
@@ -143,13 +163,13 @@ public class ProcessData extends Thread {
 
 				StringBuffer text = new StringBuffer(content.getValue());
 				if ((content.getValue().charAt(0) == ' ')
-						||(content.getValue().charAt(0) == '	')
-						||(content.getValue().charAt(0) == '\n'))
-					result = " "+result;
+						|| (content.getValue().charAt(0) == '	')
+						|| (content.getValue().charAt(0) == '\n'))
+					result = " " + result;
 				result = result + text.toString().trim();
 				if ((content.getValue().endsWith(" "))
-						||(content.getValue().endsWith("	"))
-						||(content.getValue().endsWith("\n")))
+						|| (content.getValue().endsWith("	"))
+						|| (content.getValue().endsWith("\n")))
 					result = result + " ";
 			}
 		}

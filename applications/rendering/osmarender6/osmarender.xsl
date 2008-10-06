@@ -504,6 +504,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
           <xsl:otherwise>0</xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
+      <xsl:attribute name="z-mode">
+        <xsl:choose>
+          <xsl:when test="$instruction/@z-mode">
+            <xsl:value-of select="$instruction/@z-mode"/>
+          </xsl:when>
+          <xsl:otherwise>normal</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:attribute name="z-index">
+        <xsl:choose>
+          <xsl:when test="$instruction/@z-index">
+            <xsl:value-of select="$instruction/@z-index"/>
+          </xsl:when>
+          <xsl:otherwise>0</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
       <xsl:copy-of select="$svg"/>
     </z:element>
   </xsl:template>
@@ -2903,9 +2919,20 @@ against infinite loops -->
 			<xsl:with-param name="elements" select="$elements"/>
 		</xsl:apply-templates>
 	</xsl:variable>
-	
-	<xsl:for-each select="exslt:node-set($svgWithLayers)/z:element">
+
+	<xsl:for-each select="exslt:node-set($svgWithLayers)/z:element[@z-mode='bottom']">
+		<xsl:sort select="@z-index" data-type="number"/>
+		<xsl:copy-of select="*"/>
+	</xsl:for-each>
+
+	<xsl:for-each select="exslt:node-set($svgWithLayers)/z:element[@z-mode='normal']">
 		<xsl:sort select="@layer" data-type="number"/>
+		<xsl:sort select="@z-index" data-type="number"/>
+		<xsl:copy-of select="*"/>
+	</xsl:for-each>
+	
+	<xsl:for-each select="exslt:node-set($svgWithLayers)/z:element[@z-mode='top']">
+		<xsl:sort select="@z-index" data-type="number"/>
 		<xsl:copy-of select="*"/>
 	</xsl:for-each>
   </xsl:template>

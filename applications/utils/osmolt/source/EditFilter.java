@@ -1,14 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -20,19 +14,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import net.miginfocom.swing.MigLayout;
-
-import org.jdom.Content;
 import org.jdom.Element;
-import org.jdom.Text;
 
 public class EditFilter implements TreeSelectionListener {
 
@@ -44,7 +29,6 @@ public class EditFilter implements TreeSelectionListener {
 
 	private JTree tree;
 
-	private Vector listData;
 
 	private JButton addButton;
 
@@ -81,22 +65,6 @@ public class EditFilter implements TreeSelectionListener {
 	JFrame frame;
 
 	public EditFilter() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			// Unschalten des Look & Feels für das Applikations-Frame
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		frame = new JFrame("Edit Titel/Comment");
 
@@ -198,8 +166,7 @@ public class EditFilter implements TreeSelectionListener {
 			}
 		});
 
-		// editElementPanel.setLayout(new MigLayout(( "debug, inset 20"),
-		// "[para]0[][100lp, fill][60lp][95lp, fill]", ""));
+		// editElementPanel.setLayout(new MigLayout(( "debug, inset 20"),"[para]0[][100lp, fill][60lp][95lp, fill]", ""));
 		editElementPanel.setLayout(new MigLayout());
 		editElementPanel.add(rb_filter, "split 2");
 		editElementPanel.add(rb_restriction, "wrap");
@@ -214,7 +181,6 @@ public class EditFilter implements TreeSelectionListener {
 		frame.add(selectionPanel, BorderLayout.CENTER);
 		frame.add(editElementPanel, BorderLayout.EAST);
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 

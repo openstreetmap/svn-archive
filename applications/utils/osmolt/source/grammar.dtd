@@ -4,13 +4,22 @@
 
 <!ELEMENT filter (restriction|filter)+>
 <!ELEMENT titel (#PCDATA|valueof)* >
-<!ELEMENT description (#PCDATA|valueof|br)* >
+<!ELEMENT description (#PCDATA|valueof|br|exist|image)* >
 
 <!ELEMENT restriction EMPTY>
+<!ELEMENT exist (#PCDATA|valueof|br|exist|image)*>
 <!ELEMENT valueof EMPTY>
+<!ELEMENT image EMPTY>
 <!ELEMENT br EMPTY>
 
 
+<!ATTLIST exist
+   osmKey		CDATA    #REQUIRED
+>
+
+<!ATTLIST image
+   osmKey		CDATA    #REQUIRED
+>
 <!ATTLIST entry
    osmKey		CDATA    #REQUIRED
    osmValue		CDATA    #REQUIRED

@@ -17,6 +17,8 @@ public class processOSM extends Thread {
 
 	ArrayList<String[]> tags = new ArrayList<String[]>();
 
+	ArrayList<Integer> points = new ArrayList<Integer>();
+
 	double pointLat;
 
 	double PointLon;
@@ -29,21 +31,30 @@ public class processOSM extends Thread {
 
 	int lastprogress = 0;
 
-	boolean isWay = false;
-
 	boolean workOnElement = false;
+
+	boolean includeways;
+
+	boolean issorted;
 
 	ProcessbarAccess processbarAccess;
 
 	public processOSM(String osmfilename, MapFeatures mapFeatures,
-			ProcessbarAccess processbarAccess) {
+			ProcessbarAccess processbarAccess, boolean includeways,
+			boolean issorted) {
 		this.processbarAccess = processbarAccess;
 		this.osmfilename = osmfilename;
 		this.mapFeatures = mapFeatures;
+		this.includeways = includeways;
+		this.issorted = issorted;
+
+		folder = new File(osmfilename).getParent();
+		mapFeatures.setOutputfolder(new File(osmfilename).getParent());
 		ArrayList<String> filenames = mapFeatures.getfilenames();
 		for (Iterator iter = filenames.iterator(); iter.hasNext();) {
 			String filename = (String) iter.next();
-			firstLineInfile(filename);
+			firstLineInfile(folder + "/" + filename);
+			// System.out.println(folder + "/" + filename);
 		}
 		if (osmfilename.indexOf("/") != -1)
 			folder = osmfilename.substring(0, osmfilename.lastIndexOf("/") + 1);
@@ -62,16 +73,17 @@ public class processOSM extends Thread {
 			XMLStreamReader parser;
 			parser = factory.createXMLStreamReader(new FileInputStream(
 					osmfilename));
-
-			while (parser.hasNext()) {
+			boolean isend = false;
+			while (parser.hasNext() && !isend) {
 				// if(parser.getLocalName()!=null)
 				// System.out.println(parser.getLocalName());
 				double progress = parser.getLocation().getCharacterOffset();
-				double progressGlob = progress / length*100;
+				double progressGlob = progress / length * 100;
 				int progressGlobint = (int) Math.floor(progressGlob);
 
-				if (lastprogress < progressGlobint)	processbarAccess.processAdd();
-				
+				if (lastprogress < progressGlobint)
+					processbarAccess.processAdd();
+
 				lastprogress = progressGlobint;
 				switch (parser.getEventType()) {
 				case XMLStreamConstants.START_DOCUMENT:
@@ -90,9 +102,10 @@ public class processOSM extends Thread {
 					break;
 
 				case XMLStreamConstants.START_ELEMENT:
-					if (parser.getLocalName().equals("node")) {
-						workOnElement = true;
-						isWay = false;
+					String nodeName = parser.getLocalName();
+
+					if (nodeName.equals("node")) {
+						/*workOnElement = true;
 						tags = new ArrayList<String[]>();
 						for (int i = 0; i < parser.getAttributeCount(); i++) {
 							String attName = parser.getAttributeLocalName(i);
@@ -101,9 +114,8 @@ public class processOSM extends Thread {
 								pointLat = new Double(attVal);
 							else if (attName.equals("lon"))
 								PointLon = new Double(attVal);
-						}
-					} else if (parser.getLocalName().equals("tag")
-							&& workOnElement) {
+						}*/
+					} else if (nodeName.equals("tag") && workOnElement) {
 						String[] pair = { "", "" };
 						for (int i = 0; i < parser.getAttributeCount(); i++) {
 							String attName = parser.getAttributeLocalName(i);
@@ -115,8 +127,37 @@ public class processOSM extends Thread {
 						}
 						tags.add(pair);
 
-					} else if (parser.getLocalName().equals("way")) {
+					} else if (nodeName.equals("way")) {
+						//System.out.println("way");
+						// only if sortet
+						if (includeways) {
+							workOnElement = true;
+							tags = new ArrayList<String[]>();
+							points = new ArrayList<Integer>();
 
+							for (int i = 0; i < parser.getAttributeCount(); i++) {
+								String attName = parser
+										.getAttributeLocalName(i);
+								String attVal = parser.getAttributeValue(i);
+								if (attName.equals("lat"))
+									pointLat = new Double(attVal);
+								else if (attName.equals("lon"))
+									PointLon = new Double(attVal);
+							}
+						} else if (issorted)
+							isend = true;
+
+					} else if (nodeName.equals("nd")) {
+						if (includeways) {
+							for (int i = 0; i < parser.getAttributeCount(); i++) {
+								String attName = parser
+										.getAttributeLocalName(i);
+								String attVal = parser.getAttributeValue(i);
+								if (attName.equals("ref"))
+									points.add(new Integer(attVal));
+							}
+						} else if (issorted)
+							isend = true;
 					}
 
 					break;
@@ -128,7 +169,10 @@ public class processOSM extends Thread {
 						processData.start();
 
 					} else if (parser.getLocalName().equals("way")) {
-
+						workOnElement = false;
+						ProcessData processData = new ProcessData(folder,
+								mapFeatures, tags,points, osmfilename);
+						processData.start();
 					}
 					break;
 
@@ -143,10 +187,10 @@ public class processOSM extends Thread {
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		processbarAccess.processAdd();
 		processbarAccess.processStop();
-		
+
 	}
 
 	private void firstLineInfile(String dateiName) {

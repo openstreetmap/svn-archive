@@ -14,7 +14,7 @@ use strict;
 use warnings;
 require "orp-bbox-area-center.pm";
 
-our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, %symbols, $labelRelations);
+our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, $text_index, %symbols, $labelRelations);
 
 
 # -------------------------------------------------------------------
@@ -52,39 +52,39 @@ sub draw_lines
         next unless (ref $_  eq 'way');
         next if (scalar(@{$_->{"nodes"}}) < 2);
 
-	# this is a special case for ways (e.g. rivers) where we honor a
-	# width=something tag.
-	# It is used to generate rivers of different width, depending on the
-	# value of the width tag.
-	# This is done by an explicit specification of a
-	# style="stroke-width:..px" tag in the generated SVG output
-	$style="";
-	if ($honor_width) {
-	  if (defined($_->{"tags"}->{"width"})) {
-	    my $maxwidth = $linenode->getAttribute("maximum-width");
-	    if ($maxwidth eq "") {$maxwidth = 100}
-	    my $minwidth = $linenode->getAttribute("minimum-width");
-	    if ($minwidth eq "") {$minwidth = 0.1}
-	    my $scale = $linenode->getAttribute("width-scale-factor");
-	    if ($scale eq "") {$scale = 1}
+    # this is a special case for ways (e.g. rivers) where we honor a
+    # width=something tag.
+    # It is used to generate rivers of different width, depending on the
+    # value of the width tag.
+    # This is done by an explicit specification of a
+    # style="stroke-width:..px" tag in the generated SVG output
+    $style="";
+    if ($honor_width) {
+      if (defined($_->{"tags"}->{"width"})) {
+        my $maxwidth = $linenode->getAttribute("maximum-width");
+        if ($maxwidth eq "") {$maxwidth = 100}
+        my $minwidth = $linenode->getAttribute("minimum-width");
+        if ($minwidth eq "") {$minwidth = 0.1}
+        my $scale = $linenode->getAttribute("width-scale-factor");
+        if ($scale eq "") {$scale = 1}
 
-	    my $width = $_->{"tags"}->{"width"};
-	    $width =~ s/m$//;
-	    my $w;
-	    # make sure, that width is a numeric value
-	    { no warnings; $w = $meter2pixel*$width if 0+$width;}
+        my $width = $_->{"tags"}->{"width"};
+        $width =~ s/m$//;
+        my $w;
+        # make sure, that width is a numeric value
+        { no warnings; $w = $meter2pixel*$width if 0+$width;}
 
-	    if (defined($w)) {
-	      # make sure that width is inside the desired range
-	      my $maxw = $meter2pixel*$maxwidth;
-	      my $minw = $meter2pixel*$minwidth;
-	      if ($w > $maxw) {$w = $maxw;}
-	      if ($w < $minw) {$w = $minw;}
-	      $w *= $scale;
-	      $style = "stroke-width:${w}px";
-	    }
-	  }
-	}
+        if (defined($w)) {
+          # make sure that width is inside the desired range
+          my $maxw = $meter2pixel*$maxwidth;
+          my $minw = $meter2pixel*$minwidth;
+          if ($w > $maxw) {$w = $maxw;}
+          if ($w < $minw) {$w = $minw;}
+          $w *= $scale;
+          $style = "stroke-width:${w}px";
+        }
+      }
+    }
 
         $writer->startTag("g", 
             "class" => $class,
@@ -348,7 +348,7 @@ sub draw_text
         {
             if (ref $_ eq 'node')
             {
-		debug("draw node text '$text'") if ($debug->{"drawing"});
+        debug("draw node text '$text'") if ($debug->{"drawing"});
                 render_text($textnode, $text, [$_->{'lat'}, $_->{'lon'}]);
             }
             elsif (ref $_ eq 'way')
@@ -382,9 +382,30 @@ sub draw_text_on_path
 {
     my ($textnode, $way, $text) = @_;
 
+    my $nodes = $way->{'nodes'};
+    my $bucket;
+
+    if ($textnode->getAttribute("avoid-duplicates") =~ /^1|yes|true$/)
+    {
+        $bucket = (int($nodes->[0]->{'lat'}*2)+180) * 720 + int($nodes->[0]->{'lon'}*2) + 360;
+        debug ("place '$text' in bucket $bucket");
+        foreach my $label (@{$text_index->{$bucket}})
+        {
+            if ($text eq $label->{"text"})
+            {
+                my $d1 = distance($nodes->[0], $label->{'n0'});
+                my $d2 = distance($nodes->[scalar @$nodes -1], $label->{'n1'});
+                debug ("   distance to other: $d1 $d2");
+                if ($d1<1000 && $d2<1000)
+                {
+                    debug("ignore '$text'");
+                    return;
+                }
+            }
+        }
+    }
     my $sumLon = 0;
     my $sumLat = 0;
-    my $nodes = $way->{'nodes'};
     my $id = $way->{'id'};
 
     for (my $i=1; $i < scalar @$nodes; $i++)
@@ -425,6 +446,10 @@ sub draw_text_on_path
     if ($fontsize)
     {
         debug("draw text on path '$text'") if ($debug->{"drawing"});
+        push(@{$text_index->{$bucket}}, 
+            { 'text' => $text, 
+              'n0' => $nodes->[0], 
+              'n1' => $nodes->[scalar @$nodes -1] }) if defined($bucket);
 
         my $path = get_way_href($id,  ($reverse) ? 'reverse' : 'normal');
         $writer->startTag("text", 
@@ -782,19 +807,23 @@ sub draw_way_markers
 
         # find the (first) way using this node and use it to determine
         # previous and next nodes
-	my $way = undef;
-	my $k = $markernode->getAttribute('k');
-	my $v = $markernode->getAttribute('v');
-	if ($k || $v) {
-		foreach (@{$_->{'ways'}}) {
-			next if $k && (!defined($_->{'tags'}->{$k}));
-			next if $k && $v && ($_->{'tags'}{$k} ne $v);
-			$way = $_;
-			last;
-		}
-	} else {
-        	$way = $_->{'ways'}->[0];
-	}
+        my $way = undef;
+        my $k = $markernode->getAttribute('k');
+        my $v = $markernode->getAttribute('v');
+        if ($k || $v) 
+        {
+            foreach (@{$_->{'ways'}}) {
+                next if $k && (!defined($_->{'tags'}->{$k}));
+                next if $k && $v && ($_->{'tags'}{$k} ne $v);
+                $way = $_;
+                last;
+            }
+        } 
+        else 
+        {
+            $way = $_->{'ways'}->[0];
+        }
+
         next unless defined($way);
         my $previous;
         my $next;
@@ -864,14 +893,14 @@ sub draw_path
     }
     if (defined($style) and $style ne "") {
       $writer->emptyTag("use", 
-			"xlink:href" => "$path_id", "style" => "$style",
-			@$extra_attr,
-			"class" => defined($addclass) ? "$class $addclass" : $class);
+            "xlink:href" => "$path_id", "style" => "$style",
+            @$extra_attr,
+            "class" => defined($addclass) ? "$class $addclass" : $class);
     } else {
       $writer->emptyTag("use", 
-			"xlink:href" => "$path_id",
-			@$extra_attr,
-			"class" => defined($addclass) ? "$class $addclass" : $class);
+            "xlink:href" => "$path_id",
+            @$extra_attr,
+            "class" => defined($addclass) ? "$class $addclass" : $class);
     }
 }
 

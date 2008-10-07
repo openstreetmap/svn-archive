@@ -149,7 +149,7 @@ my $bbox;
 my %referenced_ways;
 
 # List of drawing commands which will make the map
-# Represented as hash of arrays. Key is layer, array item is hash with members:
+# Represented as an array. Array item is hash with members:
 # instruction
 # array of elements
 my $drawing_commands;
@@ -531,22 +531,44 @@ else
     # process all layers
     process_rule($_, 0) foreach ($rulelist->get_nodelist());
 
-    # draw layers
-    foreach my $layer(sort { $a <=> $b } keys %$drawing_commands)
+    # render z-mode=bottom
+    render_layer('bottom', [grep({($_->{'instruction'}->getAttribute('z-mode') || 'normal') eq 'bottom'} @$drawing_commands)]);
+
+    # prepare z-mode=normal
+    my %normalInstructions;
+    foreach my $command (@$drawing_commands)
     {
-        my $layer_commands = $drawing_commands->{$layer};
-        $writer->startTag('g',
-           'inkscape:groupmode' => 'layer',
-           'id' => "layer$layer",
-           'inkscape:label' => "Layer $layer");
+        my $instruction = $command->{'instruction'};
+        next unless ($instruction->getAttribute('z-mode') || 'normal') eq 'normal';
 
-        foreach my $command (@$layer_commands)
+        my $layer = $instruction->getAttribute('layer');
+        
+        foreach my $element (@{$command->{'elements'}})
         {
-            $instructions{$command->{'instruction'}->getName()}->{'func'}->($command->{'instruction'}, undef, $command->{'elements'});
-        }
+            my $elementLayer = $layer || $element->{'tags'}->{'layer'} || 0;
+            
+            if (!defined($normalInstructions{$elementLayer}))
+            {
+                $normalInstructions{$elementLayer} = [{'instruction'=>$instruction}];
+            }
 
-        $writer->endTag();
+            if ($normalInstructions{$elementLayer}[-1]->{'instruction'} != $instruction)
+            {
+                push @{$normalInstructions{$elementLayer}}, {'instruction'=>$instruction};
+            }
+
+            push @{$normalInstructions{$elementLayer}[-1]->{'elements'}}, $element;
+        }
     }
+
+    # render z-mode=normal
+    foreach my $layer(sort { $a <=> $b } keys %normalInstructions)
+    {
+        render_layer($layer, $normalInstructions{$layer});
+    }
+
+    # render z-mode=top
+    render_layer('top', [grep(($_->{'instruction'}->getAttribute('z-mode') || 'normal') eq 'top', @$drawing_commands)]);
 }
 
 $writer->endTag('g');
@@ -565,6 +587,27 @@ $writer->end();
 $output->close();
 
 exit;
+
+
+sub render_layer
+{
+    (my $id, my $commands) = @_;
+
+    return unless defined($commands);
+
+    $writer->startTag('g',
+       'inkscape:groupmode' => 'layer',
+       'id' => "layer$id",
+       'inkscape:label' => "Layer $id");
+
+    foreach my $command (
+        sort {($a->{'instruction'}->getAttribute('z-index') || 0) <=> ($b->{'instruction'}->getAttribute('z-index') || 0)} @$commands)
+    {
+        $instructions{$command->{'instruction'}->getName()}->{'func'}->($command->{'instruction'}, undef, $command->{'elements'});
+    }
+
+    $writer->endTag();
+}
 
 sub get_way_href
 {
@@ -963,38 +1006,8 @@ sub process_rule
         }
         elsif ($instructions{$name})
         {
-            foreach my $element ($selected->members())
-            {
-                # Calculate layer
-                my $layer;
-                if ($instruction->getAttribute('layer') ne '')
-                {
-                    $layer = $instruction->getAttribute('layer');
-                }
-                elsif ($element->{'tags'}->{'layer'})
-                {
-                    $layer = $element->{'tags'}->{'layer'};
-                }
-                else
-                {
-                    $layer = 0;
-                }
-
-                # Create new entry for layer if it doesn't exist yet
-                if (not($drawing_commands->{$layer}))
-                {
-                    $drawing_commands->{$layer} = [{'instruction'=>$instruction}];
-                }
-
-                # Create new entry for instruction
-                if ($drawing_commands->{$layer}->[-1]->{'instruction'} ne $instruction)
-                {
-                   push @{$drawing_commands->{$layer}}, {'instruction' => $instruction, 'elements' => []};
-                }
-
-                # Add element
-                push @{$drawing_commands->{$layer}->[-1]->{'elements'}}, $element;
-            }
+            my $command = {'instruction' => $instruction, 'elements' => [$selected->members()]};
+            push @$drawing_commands, $command
         }
         elsif ($name ne "")
         {

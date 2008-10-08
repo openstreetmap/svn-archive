@@ -1,7 +1,13 @@
+#ifdef ROUTE_SRV
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#endif
 #include "libgosm.h"
 
 routeNodeType *route = NULL, *shortest = NULL, **routeHeap;
-int dhashSize, routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
+long dhashSize;
+int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 int *hashTable, bucketsMin1, pakHead = 0xEB3A942;
 char *gosmData, *gosmSstr[searchCnt];
 ndType *ndBase;
@@ -272,6 +278,9 @@ int routeAddCnt;
 #define ROUTE_SHOW_STATS
 #endif
 
+static ndType *endNd[2] = { NULL, NULL}, from;
+static int toEndNd[2][2];  
+
 routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
      segments (hs, hs->other), (newshort->hs, newshort->hs->other),
@@ -283,12 +292,16 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
   unsigned hash = (intptr_t) nd / 10 + dir, i = 0;
   routeNodeType *n;
   do {
+    #ifdef ROUTE_SRV
+    n = route + (nd == &from ? dhashSize - 2 : (nd - ndBase) * 2) + dir;
+    #else
     if (i++ > 10) {
       //fprintf (stderr, "Double hash bailout : Table full, hash function "
       //  "bad or no route exists\n");
       return NULL;
     }
     n = route + hash % dhashSize;
+    #endif
     /* Linear congruential generator from wikipedia */
     hash = (unsigned) (hash * (__int64) 1664525 + 1013904223);
     if (n->nd == NULL) { /* First visit of this node */
@@ -329,9 +342,6 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
 { /* Recalculate is faster but only valid if 'to', 'Vehicle' and
      'fast' did not change */
 /* We start by finding the segment that is closest to 'from' and 'to' */
-  static ndType *endNd[2] = { NULL, NULL}, from;
-  static int toEndNd[2][2];
-  
   ROUTE_SET_ADDND_COUNT (0);
   shortest = NULL;
   for (int i = recalculate ? 0 : 1; i < 2; i++) {
@@ -406,6 +416,23 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
   from.lat = flat;
   from.lon = flon;
   if (recalculate || !route) {
+    #ifdef ROUTE_SRV
+    static FILE *tfile = NULL;
+    if (tfile) {
+      fclose (tfile);
+      munmap (route, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize);
+    }
+    dhashSize = hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2] * 2;
+    if ((tfile = tmpfile ()) == NULL || ftruncate (fileno (tfile), dhashSize *
+               (sizeof (*route) + sizeof (*routeHeap))) != 0 ||
+        (route = (routeNodeType*) mmap (NULL, dhashSize *
+        (sizeof (*route) + sizeof (*routeHeap)),
+        PROT_READ | PROT_WRITE, MAP_SHARED, fileno (tfile), 0)) == MAP_FAILED) {
+      fprintf (stderr, "Ftruncate and Mmap of routing arrays\n");
+      route = NULL;
+      return;
+    }
+    #else
     free (route);
     dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
@@ -424,6 +451,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       dhashSize = dhashSize / 4 * 3;
     }
     memset (route, 0, sizeof (dhashSize) * dhashSize);
+    #endif
     routeHeapSize = 1; /* Leave position 0 open to simplify the math */
     routeHeap = (routeNodeType**) (route + dhashSize) - 1;
 

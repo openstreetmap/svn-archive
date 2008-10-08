@@ -144,7 +144,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="vehicle/restrictions/foot-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>10000</scale_max>
-                <routing bicycle="5" foot="20"/> 
+                <routing bicycle="20" foot="5"/> 
 	</rule>
 
 	<rule>
@@ -490,7 +490,16 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_max>20000</scale_max>
         <routing bicycle="20" foot="5" goods="20" hgv="20" motorcar="20" psv="20"/>
 	</rule>
+    <rule>
+        <condition k="highway" v="byway"/>
+        <line width="1" realwidth="3" colour="#809bc0"/>
+        <icon annotate="true" src="misc/deprecated.png" />
+        <scale_min>1</scale_min>
+        <scale_max>20000</scale_max>
+        <routing bicycle="5" foot="5" motorcar="5"/>
+    </rule>
 
+                                   
 	<rule>
 		<condition k="highway" v="residential"/>
 		<line width="2" realwidth="5" colour="#c0c0c0"/> 
@@ -3633,7 +3642,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<condition k="addr:housenumber"/>
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
-        <scale_max>3000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 	<rule>
 		<condition k="contour_ext" v="elevation_major"/>

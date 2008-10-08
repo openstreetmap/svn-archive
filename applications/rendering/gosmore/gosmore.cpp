@@ -157,6 +157,7 @@ FILE * logFP(bool create = true) {
 
 void logprintf(char * format, ...)
 {
+#ifdef __CEGCC__
   // print [hh:mm:ss] timestamp to log first
   time_t seconds = time(NULL);
   struct tm * t = localtime(&seconds);
@@ -167,6 +168,7 @@ void logprintf(char * format, ...)
   va_start(args, format);
   vfprintf(logFP(), format, args);
   va_end (args);
+#endif
 }
 
 

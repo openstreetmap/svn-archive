@@ -404,7 +404,7 @@ struct routeNodeType {
 };
 
 extern routeNodeType *route, *shortest, **routeHeap;
-extern int dhashSize, routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
+extern int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast);
 

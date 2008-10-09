@@ -245,6 +245,8 @@ sub downloadData
 
     my $Server = Server->new();
     my $res;
+    my $reason;
+
     my $filelist;
     foreach my $OSMServer (@OSMServers) {
         my @URLS;
@@ -329,7 +331,7 @@ sub downloadData
         throw TilesetError "Download of data failed from $OSMServers", "nodata ($OSMServers)";
     }
 
-    my ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
+    ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
     if(!$res) {
         return (undef, "Stripped download failed with: " . $reason);
     }

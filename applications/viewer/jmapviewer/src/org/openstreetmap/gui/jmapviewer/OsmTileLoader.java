@@ -45,7 +45,7 @@ public class OsmTileLoader implements TileLoader {
 					input = loadTileFromOsm(tile).getInputStream();
 					tile.loadImage(input);
 					tile.setLoaded(true);
-					listener.repaint();
+					listener.tileLoadingFinished(tile);
 					input.close();
 					input = null;
 				} catch (Exception e) {

@@ -12,7 +12,7 @@
 	</target>
 
 	<target name="build">
-		<javac srcdir="src" destdir="bin" target="1.5" />
+		<javac srcdir="src" destdir="bin" target="1.5" debug="true"/>
 		<copy todir="bin">
 			<fileset dir="src">
 				<include name="**/*.png" />
@@ -25,8 +25,8 @@
 		<delete file="JMapViewer_src.jar" />
 		<jar destfile="JMapViewer.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="bin" includes="**/jmapviewer/**" >
-				<exclude name="**/Demo*"/>
 			</fileset>
+			<fileset dir="src" includes="**/jmapviewer/**" />
 		</jar>
 		<jar destfile="JMapViewer_src.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="src" includes="**/jmapviewer/**" />

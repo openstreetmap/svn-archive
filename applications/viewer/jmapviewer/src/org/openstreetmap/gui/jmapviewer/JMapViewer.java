@@ -44,10 +44,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 	/**
 	 * Vectors for clock-wise tile painting
 	 */
-	protected static final Point[] move =
-			{ new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
+	protected static final Point[] move = { new Point(1, 0), new Point(0, 1),
+			new Point(-1, 0), new Point(0, -1) };
 
-	public static final int MAX_ZOOM = 18;
+	public static final int MAX_ZOOM = 22;
 	public static final int MIN_ZOOM = 0;
 
 	protected TileLoader tileLoader;
@@ -106,8 +106,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 		setMinimumSize(new Dimension(Tile.SIZE, Tile.SIZE));
 		setPreferredSize(new Dimension(400, 400));
 		try {
-			loadingImage =
-					ImageIO.read(JMapViewer.class.getResourceAsStream("images/hourglass.png"));
+			loadingImage = ImageIO.read(JMapViewer.class
+					.getResourceAsStream("images/hourglass.png"));
 		} catch (Exception e1) {
 			loadingImage = null;
 		}
@@ -127,7 +127,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 		add(zoomSlider);
 		int size = 18;
 		try {
-			ImageIcon icon = new ImageIcon(getClass().getResource("images/plus.png"));
+			ImageIcon icon = new ImageIcon(getClass().getResource(
+					"images/plus.png"));
 			zoomInButton = new JButton(icon);
 		} catch (Exception e) {
 			zoomInButton = new JButton("+");
@@ -143,7 +144,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 		});
 		add(zoomInButton);
 		try {
-			ImageIcon icon = new ImageIcon(getClass().getResource("images/minus.png"));
+			ImageIcon icon = new ImageIcon(getClass().getResource(
+					"images/minus.png"));
 			zoomOutButton = new JButton(icon);
 		} catch (Exception e) {
 			zoomOutButton = new JButton("-");
@@ -172,7 +174,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 	 *            {@link #MIN_ZOOM} <= zoom level <= {@link #MAX_ZOOM}
 	 */
 	public void setDisplayPositionByLatLon(double lat, double lon, int zoom) {
-		setDisplayPositionByLatLon(new Point(getWidth() / 2, getHeight() / 2), lat, lon, zoom);
+		setDisplayPositionByLatLon(new Point(getWidth() / 2, getHeight() / 2),
+				lat, lon, zoom);
 	}
 
 	/**
@@ -191,14 +194,16 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 	 *            {@link #MIN_ZOOM} <= zoom level <=
 	 *            {@link TileSource#getMaxZoom()}
 	 */
-	public void setDisplayPositionByLatLon(Point mapPoint, double lat, double lon, int zoom) {
+	public void setDisplayPositionByLatLon(Point mapPoint, double lat,
+			double lon, int zoom) {
 		int x = OsmMercator.LonToX(lon, zoom);
 		int y = OsmMercator.LatToY(lat, zoom);
 		setDisplayPosition(mapPoint, x, y, zoom);
 	}
 
 	public void setDisplayPosition(int x, int y, int zoom) {
-		setDisplayPosition(new Point(getWidth() / 2, getHeight() / 2), x, y, zoom);
+		setDisplayPosition(new Point(getWidth() / 2, getHeight() / 2), x, y,
+				zoom);
 	}
 
 	public void setDisplayPosition(Point mapPoint, int x, int y, int zoom) {
@@ -235,9 +240,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 		int y_min = Integer.MAX_VALUE;
 		int x_max = Integer.MIN_VALUE;
 		int y_max = Integer.MIN_VALUE;
+		int mapZoomMax = tileSource.getMaxZoom();
 		for (MapMarker marker : mapMarkerList) {
-			int x = OsmMercator.LonToX(marker.getLon(), MAX_ZOOM);
-			int y = OsmMercator.LatToY(marker.getLat(), MAX_ZOOM);
+			int x = OsmMercator.LonToX(marker.getLon(), mapZoomMax);
+			int y = OsmMercator.LatToY(marker.getLat(), mapZoomMax);
 			x_max = Math.max(x_max, x);
 			y_max = Math.max(y_max, y);
 			x_min = Math.min(x_min, x);
@@ -248,7 +254,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 		// System.out.println(x_min + " < x < " + x_max);
 		// System.out.println(y_min + " < y < " + y_max);
 		// System.out.println("tiles: " + width + " " + height);
-		int newZoom = MAX_ZOOM;
+		int newZoom = mapZoomMax;
 		int x = x_max - x_min;
 		int y = y_max - y_min;
 		while (x > width || y > height) {
@@ -259,7 +265,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 		}
 		x = x_min + (x_max - x_min) / 2;
 		y = y_min + (y_max - y_min) / 2;
-		int z = 1 << (MAX_ZOOM - newZoom);
+		int z = 1 << (mapZoomMax - newZoom);
 		x /= z;
 		y /= z;
 		setDisplayPosition(x, y, newZoom);
@@ -345,7 +351,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 				if (i % 2 == 0)
 					x++;
 				for (int j = 0; j < x; j++) {
-					if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) {
+					if (x_min <= posx && posx <= x_max && y_min <= posy
+							&& posy <= y_max) {
 						// tile is visible
 						Tile tile = getTile(tilex, tiley, zoom);
 						if (tile != null) {
@@ -462,7 +469,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 			tile.loadPlaceholderFromCache(tileCache);
 		}
 		if (!tile.isLoaded()) {
-			jobDispatcher.addJob(tileLoader.createTileLoaderJob(tileSource, tilex, tiley, zoom));
+			jobDispatcher.addJob(tileLoader.createTileLoaderJob(tileSource,
+					tilex, tiley, zoom));
 		}
 		return tile;
 	}
@@ -543,11 +551,17 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 	}
 
 	public void setTileSource(TileSource tileSource) {
+		if (tileSource.getMaxZoom() > MAX_ZOOM)
+			throw new RuntimeException("Zoom level too high");
 		this.tileSource = tileSource;
 		zoomSlider.setMaximum(tileSource.getMaxZoom());
 		jobDispatcher.cancelOutstandingJobs();
 		if (zoom > tileSource.getMaxZoom())
 			setZoom(tileSource.getMaxZoom());
+		repaint();
+	}
+
+	public void tileLoadingFinished(Tile tile) {
 		repaint();
 	}
 

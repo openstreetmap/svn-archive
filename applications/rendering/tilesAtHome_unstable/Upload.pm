@@ -206,9 +206,11 @@ sub upload
         my $Load = $self->UploadOkOrNot();
 
         # The server normalises to 1 (*1000) so 1000 means "queue is really 
-        # full or even over-filled", so only do something if the load is 
-        # less than that.
-        if ($Load < 1000) 
+        # full or even over-filled"
+        # if the load is below 500 we go for sure
+        # for higher loads we only go with a certain probaility
+        # that should stabilize the load on the server and help again burstiness
+        if ($Load < (500+rand(500))) 
         {
             ::statusMessage("Uploading $FileName",0,3);
             my $res = $ua->post($URL,

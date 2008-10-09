@@ -60,10 +60,20 @@ public interface TileSource {
 	public String getName();
 
 	/**
+	 * Constructs the tile url.
+	 * 
 	 * @param zoom
 	 * @param tilex
 	 * @param tiley
 	 * @return fully qualified url for downloading the specified tile image
 	 */
 	public String getTileUrl(int zoom, int tilex, int tiley);
+
+	/**
+	 * Specifies the tile image type. For tiles rendered by Mapnik or
+	 * Osmarenderer this is usually <code>"png"</code>.
+	 * 
+	 * @return file extension of the tile image type
+	 */
+	public String getTileType();
 }

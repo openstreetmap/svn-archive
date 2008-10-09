@@ -22,12 +22,19 @@ public class OsmTileSource {
 		public String toString() {
 			return getName();
 		}
+
+		public String getTileType() {
+			return "png";
+		}
+		
 	}
 
 	public static class Mapnik extends AbstractOsmTileSource {
 
+		public static String NAME = "Mapnik";
+		
 		public String getName() {
-			return "Mapnik";
+			return NAME;
 		}
 
 		@Override
@@ -42,9 +49,11 @@ public class OsmTileSource {
 	}
 
 	public static class CycleMap extends AbstractOsmTileSource {
+		
+		public static String NAME = "OSM Cycle Map";
 
 		public String getName() {
-			return "OSM Cycle Map";
+			return NAME;
 		}
 
 		@Override
@@ -60,12 +69,14 @@ public class OsmTileSource {
 
 	public static class TilesAtHome extends AbstractOsmTileSource {
 
+		public static String NAME = "TilesAtHome";
+
 		public int getMaxZoom() {
 			return 17;
 		}
 
 		public String getName() {
-			return "TilesAtHome";
+			return NAME;
 		}
 
 		@Override

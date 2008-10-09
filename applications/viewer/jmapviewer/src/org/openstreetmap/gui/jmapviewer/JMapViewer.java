@@ -484,6 +484,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 	 *            the previous zoom level
 	 */
 	protected void zoomChanged(int oldZoom) {
+		zoomSlider.setToolTipText("Zoom level " + zoom);
+		zoomInButton.setToolTipText("Zoom to level " + (zoom + 1));
+		zoomOutButton.setToolTipText("Zoom to level " + (zoom - 1));
+		zoomOutButton.setEnabled(zoom > 0);
+		zoomInButton.setEnabled(zoom < tileSource.getMaxZoom());
 	}
 
 	public boolean isTileGridVisible() {

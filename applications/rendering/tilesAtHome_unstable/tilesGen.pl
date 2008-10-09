@@ -93,6 +93,9 @@ $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n", 
     $Version, $Config->get("ClientVersion"), $^O, GetClientId();
 
+# autotuning complexity setting
+my $complexity = 0;
+
 # filestat: Used by reExecIfRequired.
 # This gets set to filesize/mtime/ctime of this script, and reExecIfRequired
 # checks to see if those parameters have changed since the last time it ran
@@ -247,7 +250,9 @@ if ($Mode eq "xy")
     $req->layers_str($Layers);
 
     my $tileset = Tileset->new($req);
+    my $tilestart = time();
     $tileset->generate();
+    autotuneComplexity($tilestart, time(), $req->complexity);
 }
 #---------------------------------
 elsif ($Mode eq "loop") 
@@ -283,6 +288,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
+            print "We suggest that you set MaxTilesetComplexity to ".$complexity."\n";
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 
@@ -635,7 +641,9 @@ sub ProcessRequestsFromServer
 
     try {
         my $tileset = Tileset->new($req);
+        my $tilestart = time();
         $tileset->generate();
+        autotuneComplexity($tilestart, time(), $req->complexity);
 
         # successfully received data, reset data faults
         resetFault("nodata");
@@ -671,7 +679,32 @@ sub ProcessRequestsFromServer
         talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
     };
 }
+#-----------------------------------------------------------------------------
+# autotunes the complexity variable to avoid too complex tiles
+#-----------------------------------------------------------------------------
+sub autotuneComplexity #
+{
+    my $start = shift();
+    my $stop = shift();
+    my $tilecomplexity = shift();
+    my $deltaT = $stop - $start;
 
+    if(! $complexity) {
+        if($Config->get('MaxTilesetComplexity')) {
+            $complexity = $Config->get('MaxTilesetComplexity');
+        } else {
+            $complexity = $tilecomplexity;
+        }
+    }
+
+    print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
+    if (($tilecomplexity > 0) && ($deltaT > 0)) {
+        $complexity = 0.01 * ($tilecomplexity * 900 / $deltaT) + 0.99 * $complexity;
+    }
+    $complexity = 100000 if $complexity < 100000;
+
+    $Config->set('MaxTilesetComplexity', $complexity);
+}
 #-----------------------------------------------------------------------------
 # Gets latest copy of client from svn repository
 # returns 1 on perceived success.
@@ -946,6 +979,9 @@ sub svg2png
     if( $error ){
         addFault("rasterizer",1);
         $req->is_unrenderable(1);
+
+        $complexity *= 0.5; # if rendering failed the job might have been too bi
+
         return(0, 'BadSVG (svg2png)');
     } else {
         resetFault("rasterizer"); # reset to zero if the rasterizer succeeds at least once

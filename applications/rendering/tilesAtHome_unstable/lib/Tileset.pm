@@ -329,7 +329,11 @@ sub downloadData
         throw TilesetError "Download of data failed from $OSMServers", "nodata ($OSMServers)";
     }
 
-    ::mergeOsmFiles($DataFile, $filelist);
+    my ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
+    if(!$res) {
+        return (undef, "Stripped download failed with: " . $reason);
+    }
+
 
     # Get the API date time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
     $self->{JobTime} = [stat $DataFile]->[9];

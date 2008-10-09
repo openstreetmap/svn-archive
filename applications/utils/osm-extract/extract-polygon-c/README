@@ -1,0 +1,8 @@
+This utility extract nodes, ways and relations inside defined polygon.
+
+Usage:
+    extract-polygon source.osm dest.osm polygon.poly
+    
+Source can be bzip2 (*.bz2) file. Polygon file have same format as original
+extract-polygon.pl. This utility DOESN'T support multypolygons, and excluding
+by '!'.

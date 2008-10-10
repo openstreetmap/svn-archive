@@ -23,7 +23,7 @@ use strict;
 use LWP::UserAgent;
 use Error qw(:try);
 use tahlib;
-use lib::TahConf;
+use TahConf;
 
 #unrenderable is a class global hash that keeps unrenderable tilesets as ['z x y']=1
 our %unrenderable = ();

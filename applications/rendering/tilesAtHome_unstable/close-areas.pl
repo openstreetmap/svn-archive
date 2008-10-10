@@ -12,6 +12,7 @@
 #
 # Written by Frederik Ramm <frederik@remote.org> - public domain
 
+use lib './lib';
 use Math::Trig;
 use Math::Complex;
 use tahproject;

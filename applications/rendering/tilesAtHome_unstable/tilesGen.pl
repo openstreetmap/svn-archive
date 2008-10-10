@@ -24,6 +24,7 @@
 
 use warnings;
 use strict;
+use lib './lib';
 use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);
@@ -32,9 +33,9 @@ use Scalar::Util qw(blessed);
 use IO::Socket;
 use Error qw(:try);
 use tahlib;
-use lib::TahConf;
-use lib::Tileset;
-use lib::Server;
+use TahConf;
+use Tileset;
+use Server;
 use Request;
 use Upload;
 use Compress;
@@ -44,7 +45,6 @@ use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
-use Error qw(:try);
 use POSIX;
 
 #---------------------------------

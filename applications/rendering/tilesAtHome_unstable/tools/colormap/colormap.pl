@@ -19,8 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
+use lib './lib';
 use strict;
-use lib::TahConf;
+use TahConf;
 use XML::XPath ();
 use CSS;
 use File::Spec;

@@ -1,6 +1,5 @@
 use strict;
-use tahconfig;
-use lib::TahConf;
+use TahConf;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl

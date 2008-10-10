@@ -25,7 +25,7 @@ use strict;
 use LWP::UserAgent;
 use Error qw(:try);
 use tahlib;
-use lib::TahConf;
+use TahConf;
 use Request;
 
 #-------------------------------------------------------------------------------

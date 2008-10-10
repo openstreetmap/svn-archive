@@ -18,9 +18,12 @@ DESCRIPTION
 OPTIONS
 
 Output:
+    -p --palette
+        write palette-<layer>.png containing one pixel for each color found in
+        the style files
 
     -s --simple
-        simple text output
+        simple text output, this is the default
 
     -w --wiki
         output formatted for inclusion in wiki page at

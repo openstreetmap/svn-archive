@@ -8,7 +8,7 @@ use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
 use Error qw(:try);
 use tahlib;
-use lib::TahConf;
+use TahConf;
 
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, compress module

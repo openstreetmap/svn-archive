@@ -687,6 +687,7 @@ sub RenderSVG
 # Split PNG for one zoom level into tiles
 #   $layer - layer to be processed
 #   $zoom
+#   $stripes - number of stripes the layer has been rendered
 #-----------------------------------------------------------------------------
 sub SplitTiles
 {
@@ -791,138 +792,6 @@ sub SplitTiles
             }
         }
     }
-}
-
-
-#-----------------------------------------------------------------------------
-# Render a tile
-#   $Ytile, $Zoom - which tilestripe
-#   $Zoom - the cuurent zoom level that we render
-#   $N, $S, $W, $E - bounds of the tile
-#   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
-#   $ImageHeight - Height of the entire SVG in SVG units
-#   returns: allEmpty
-#-----------------------------------------------------------------------------
-sub RenderTile 
-{
-    my $self = shift;
-    my ($layer, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight) = @_;
-    my $Config = TahConf->getConfig();
-    my $maxzoom = $Config->get($layer."_MaxZoom");
-    my $req = $self->{req};
-    my $forkval = $Config->get("Fork");
-
-    return 1 if($Zoom > $maxzoom);
-    
-    # Render it to PNG
-    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", 
-            $Ytile,$req->X,$req->Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config->get("Debug")); 
-
-    my ($FullBigPNGFileName, $reason) = 
-          ::svg2png($self->{JobDir}, $req, $Ytile, $Zoom,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
-
-    if (!$FullBigPNGFileName)
-    {  # svg2png failed
-        throw TilesetError $reason, "renderer";
-    }
-
-    # splitImageX returns true if all tiles extracted were empty.
-    # this might break if a higher zoom tile would contain data that is 
-    # not rendered at the current zoom level. 
-
-    (my $success,my $empty, $reason) = 
-           ::splitImageXY($layer, $req, $Zoom, $Ytile, $FullBigPNGFileName);
-    if (!$success)
-    {  # splitimage failed
-        throw TilesetError $reason, "renderer";
-    }
-
-    # If splitimage is empty Should we skip going further up the zoom level?
-    if ($empty and !$Config->get($layer."_RenderFullTileset") and !$Config->get("CreateTilesetFile")) 
-    {
-        # leap forward because in progresscounting as this tile and 
-        # all higher zoom tiles of it are "done" (empty).
-        for (my $j = $maxzoom; $j >= $Zoom ; $j--)
-        {
-            $::progress += 2 ** $maxzoom-$j;
-        }
-	return 1;
-    }
-
-    # increase progress of tiles
-    $::progress += 1;
-    $::progressPercent = int( 100 * $::progress / (2**($maxzoom-$req->Z+1)-1) );
-    # if forking, each thread does only 1/nth of tiles so multiply by numThreads
-    ($::progressPercent *= 2*$forkval) if $forkval;
-
-    if ($::progressPercent == 100)
-    {
-        ::statusMessage("Finished ".$req->X.",".$req->Y." for layer $layer",1,0);
-    }
-    (printf STDERR "Job No. %d %1.1f %% done.\n",$::progressJobs, $::progressPercent)
-                    if ($Config->get("Verbose") >= 10);
-    
-    # Sub-tiles
-    my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
-    my $MercY1 = ProjectF($S); # get mercator coordinates for South border of tile
-    my $MercYC = 0.5 * ($MercY1 + $MercY2); # get center of tile in mercator
-    my $LatC = ProjectMercToLat($MercYC); # reproject centerline to latlon
-
-    my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1); 
-    my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;       # find mercator coordinates for bottom/top of subtiles
-
-    my $YA = $Ytile * 2;
-    my $YB = $YA + 1;
-
-    if ($Config->get("CutFullTile"))
-    {
-        $ImgYC = $ImgY1;
-        my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgY2,$ImageHeight);
-        return $empty;
-    }
-    else
-    {
-        # we create Fork*2 rasterizer threads
-        if ($forkval && $Zoom < ($req->Z + $forkval))
-        {
-            my $pid = fork();
-            if (not defined $pid) 
-            {
-                throw TilesetError "RenderTile: could not fork, exiting", "fatal"; # exit if asked to fork but unable to
-            }
-            elsif ($pid == 0) 
-            {
-                # we are the child process
-                $self->{childThread}=1;
-                try {
-                    my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
-                }
-                otherwise {
-                    exit 0;
-                }
-                # we can't talk to our parent other than through exit codes.
-                exit 1;
-            }
-            else
-            {
-                $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
-                waitpid($pid,0);
-                my $ChildExitValue = ($? >> 8);
-                if (!$ChildExitValue)
-                {
-                    throw TilesetError "Forked rasterizer failed", "renderer";
-                }
-            }
-        }
-        else
-        {
-            my $empty = $self->RenderTile($layer, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight);
-            $empty = $self->RenderTile($layer, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight);
-            return $empty;
-        }
-        return 0;
-    }
-    return 0;
 }
 
 

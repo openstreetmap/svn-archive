@@ -418,7 +418,14 @@ sub cleanUpAndDie
 
     if ($main::StartedBatikAgent)
     {
-        main::stopBatikAgent();
+        my $result = $SVG::Rasterize::object->engine()->stop_agent();
+        if( $result == 1 ){
+            statusMessage("Successfully sent stop message to Batik agent", 0, 0);
+        } elsif( $result == 0 ){
+            statusMessage("Could not contact Batik agent", 0, 0);
+        } else {
+            statusMessage($result, 0, 0);
+        }
     }
     exit($Severity);
 }

@@ -25,12 +25,16 @@ use XML::XPath ();
 use CSS;
 use File::Spec;
 use Getopt::Long qw(GetOptions);
+use GD;
 
 #---------------------------------
 
 my $option_output = 'simple';
-GetOptions("simple" => sub { $option_output = "simple"; }, 
-           "wiki"   => sub { $option_output = "wiki" });
+my $number_colors = 256;
+GetOptions("simple"   => sub { $option_output = "simple"; }, 
+           "wiki"     => sub { $option_output = "wiki"; },
+           "palette"  => sub { $option_output = "palette"; },
+           "colors=i" => \$number_colors);
 
 # Read the config file
 my $Config = TahConf->getConfig();
@@ -256,6 +260,9 @@ if ($option_output eq 'simple') {
 elsif ($option_output eq 'wiki') {
     output_wiki();
 }
+elsif ($option_output eq 'palette') {
+    output_palette();
+}
 
 #################################################
 sub output_simple
@@ -274,6 +281,37 @@ sub output_wiki
         $i++;
         print "| $i || style='background:$color;' | $color || $color " . ((defined($color_table_reverse{$color})) ? " (" . $color_table_reverse{$color} . ")" : "") . " || " . $colors{$color} . "\n";
         print "|-\n";
+    }
+}
+
+sub output_palette
+{
+    my @colors = sort_colors();
+    my $image_size = 16;
+    my $image = GD::Image->new($image_size, $image_size, 0);
+
+    for (my $y = 0; $y < $image_size; $y++) {
+        for (my $x = 0; $x < $image_size; $x++) {
+            my $i = $x + $image_size * $y;
+
+            last if (!defined($colors[$i]));
+
+            $colors[$i] =~ /#(..)(..)(..)/i;
+            my @rgb = (hex($1), hex($2), hex($3));
+            my $index = $image->colorAllocate(@rgb);
+            $image->setPixel($x, $y, $index);
+            print "$i ($x, $y): ${colors[$i]} - @rgb - $index\n";
+        }
+    }
+
+    my $png_data = $image->png();
+
+    foreach my $layer (@layers) {
+        my $png_file = "palette_$layer.png";
+
+        open(PNGFILE, "> $png_file") or die $!;
+        binmode(PNGFILE);
+        print PNGFILE $png_data;
     }
 }
 

@@ -69,7 +69,14 @@ sub set
     return $self->{Config}->set(@_);
 }
 
-
+#-----------------------------------------------------------------------------
+# get a hash of config settings matching regex
+#-----------------------------------------------------------------------------
+sub varlist
+{
+    my $self = shift();
+    return $self->{Config}->varlist(@_);
+}
 
 #--------------------------------------------------------------------------
 # Checks a tiles@home basic configuration which is needed for uploading
@@ -146,11 +153,6 @@ sub CheckBasicConfig
            if (! -d $self->get("UploadTargetDirectory")) {
                die "! Failed to create Upload directory.";
            }
-        }
-
-        if (! $self->get("UseHostnameInZipname")) 
-        {
-            print " * UseHostnameInZipname should be set when using UploadToDirectory\n";
         }
     }
 
@@ -246,6 +248,21 @@ sub CheckBasicConfig
         print "! no valid PngQuantizer specified\n";
     }
     #------
+    # check java version and path separator
+    my @javaInfo = split(/\n/,`java -cp java TestJava`);
+    $self->set("JavaAvailable", $javaInfo[0] eq "JAVATEST");
+    if ($self->get("JavaAvailable"))
+    {
+       $self->set("JavaVersion", $javaInfo[1]);
+       $self->set("JavaSeparator", $javaInfo[2]);
+       print "- Java version $javaInfo[1] is available\n";
+    } 
+    else 
+    {
+       $self->set("JavaVersion", 0);
+       $self->set("JavaSeparator", ":");
+       print "- Java is not available\n";
+    }
 
     return %EnvironmentInfo;
 
@@ -266,51 +283,11 @@ sub CheckConfig
         die("no layers configured");
     }
 
-
-
-    if ($self->get("Batik"))
-    {
-        print "- Using Batik";
-        if ($self->get("Batik") == 1)
-        {
-            print " in jar mode";
-        }
-        if ($self->get("Batik") == 2)
-        {
-            print " in wrapper mode";
-        }
-        if ($self->get("Batik") == 3)
-        {
-            print " in agent mode";
-        }
-        print "\n";
-    }
-    else
-    {
-        # Inkscape version
-        $cmd=$self->get("Inkscape");
-        my $InkscapeV = `\"$cmd\" --version`;
-        $EnvironmentInfo{"Inkscape"}=$InkscapeV;
- 
-        if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
-        {
-            die("Can't find inkscape (using \"".$self->get("Inkscape")."\")\n");
-        }
-    
-        if($2 < 42.0){
-            die("This version of inkscape ($1.$2) is known not to work with tiles\@home\n");
-        }
-        if($2 < 45.1){
-            print "* Please upgrade to inkscape 0.45.1 due to security problems with your inkscape version:\n"
-        }
-        print "- Inkscape version $1.$2\n";
-    }
-
     # Rendering through Omsarender/XSLT or or/p
     if ($self->get("Osmarender") eq "XSLT")
     {
         print "- rendering using Osmarender/XSLT\n";
-        die "! Can't find osmarender/osmarender.xsl" unless (-f "osmarender/osmarender.xsl");
+        die "! Can't find osmarender/xslt/osmarender.xsl" unless (-f "osmarender/xslt/osmarender.xsl");
 
         # XmlStarlet version
         $cmd=$self->get("XmlStarlet");
@@ -325,11 +302,20 @@ sub CheckConfig
     elsif ($self->get("Osmarender") eq "orp")
     {
         print "- rendering using or/p\n";
-        die "! Can't find orp/orp.pl" unless (-f "orp/orp.pl");
+        die "! Can't find osmarender/orp/orp.pl" unless (-f "osmarender/orp/orp.pl");
     }
     else
     {
         die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
+    }
+
+    if( ! $self->get('Rasterizer') && $self->get('Batik') ){
+        warn "Deprecated configuration variable Batik found, use Rasterizer instead. For now it will be mapped\n";
+        if( $self->get('Batik') == 1 || $self->get('Batik') == 2 ){
+            $self->set('Rasterizer', 'Batik');
+        } elsif( $self->get('Batik') == 3 ){
+            $self->set('Rasterizer', 'BatikAgent');
+        }
     }
 
     #-------------------------------------------------------------------
@@ -378,7 +364,7 @@ sub CheckConfig
 
         # any combination of comma-separated preprocessor names is allowed
         die "config option Preprocessor has invalid value in section [".$layer."]" 
-            if (grep { $_ !~ /maplint|close-areas|autocut|noop/} split(/,/, $self->get($layer."_Preprocessor")));
+            if (grep { $_ !~ /maplint|close-areas|autocut|noop|area-center/} split(/,/, $self->get($layer."_Preprocessor")));
 
         foreach my $reqfile(split(/,/, $self->get($layer."_RequiredFiles")))
         {
@@ -399,7 +385,6 @@ sub CheckConfig
             printf "Border".$_." looks abnormally large\n";
         }
     }
-
     return %EnvironmentInfo;
 
 }

@@ -19,7 +19,7 @@
 	  showBorder="no"
 	  showLicense="no"
 	  interactive="no"
-	  symbolsDir="symbols"
+	  symbolsDir="../stylesheets/symbols"
 	  meter2pixel="0.1375">
 	
 	<!--bounds_mkr1-->

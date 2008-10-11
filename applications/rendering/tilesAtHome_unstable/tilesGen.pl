@@ -825,7 +825,7 @@ sub xml2svg
     {
         my $XslFile;
 
-        $XslFile = "osmarender/osmarender.xsl";
+        $XslFile = "osmarender/xslt/osmarender.xsl";
 
         my $Cmd = sprintf(
           "\"%s\" tr --maxdepth %s %s -s osmfile=%s -s minlat=%s -s minlon=%s -s maxlat=%s -s maxlon=%s %s > \"%s\"",
@@ -842,7 +842,7 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        my $Cmd = sprintf("perl orp/orp.pl -r %s -o %s -b %s,%s,%s,%s %s",
+        my $Cmd = sprintf("perl osmarender/orp/orp.pl -r %s -o %s -b %s,%s,%s,%s %s",
           $MapFeatures,
           $TSVG,
           $bbox->S, $bbox->W, $bbox->N, $bbox->E,

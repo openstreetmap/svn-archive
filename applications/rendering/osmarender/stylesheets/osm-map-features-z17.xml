@@ -22,7 +22,7 @@
 	  showLicense="no"
 	  interactive="no"
 	  showRelationRoute="no"
-	  symbolsDir="symbols"
+	  symbolsDir="../stylesheets/symbols"
 	  meter2pixel="0.1375">
 	
 	<!--bounds_mkr1-->

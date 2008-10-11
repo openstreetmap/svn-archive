@@ -18,7 +18,7 @@
 	  showGrid="no"
 	  showBorder="no"
 	  showLicense="no"
-	  symbolsDir="symbols"
+	  symbolsDir="../stylesheets/symbols"
 	  interactive="no">
 	
 	<!--bounds_mkr1-->

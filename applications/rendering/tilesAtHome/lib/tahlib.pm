@@ -1,6 +1,5 @@
 use strict;
-use tahconfig;
-use lib::TahConf;
+use TahConf;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
@@ -240,10 +239,7 @@ sub runCommand
         if(-f $inkscapebak)
         {
             unlink $inkscapecfg if(-f $inkscapecfg);
-            $inkscapecorrupt = 0 if(copy ($inkscapebak, $inkscapecfg)); # FIXME: check this fixes forked rendering
-            
-            #it's okay if the file is missing, because inkscape will auto-create correct one on next start
-            $inkscapecorrupt = 0 unless (-f $inkscapecfg); 
+            $inkscapecorrupt = 0 if(rename $inkscapebak, $inkscapecfg);
         }
     }
 
@@ -422,7 +418,14 @@ sub cleanUpAndDie
 
     if ($main::StartedBatikAgent)
     {
-        main::stopBatikAgent();
+        my $result = $SVG::Rasterize::object->engine()->stop_agent();
+        if( $result == 1 ){
+            statusMessage("Successfully sent stop message to Batik agent", 0, 0);
+        } elsif( $result == 0 ){
+            statusMessage("Could not contact Batik agent", 0, 0);
+        } else {
+            statusMessage($result, 0, 0);
+        }
     }
     exit($Severity);
 }
@@ -455,6 +458,22 @@ sub GetClientId
     return $clientId;
 }
 
+#-------------------------------------------------------------
+# Check wether directory is empty and return true if so.
+#-------------------------------------------------------------
+sub dirEmpty
+{
+    my ($path) = @_;
+    opendir DIR, $path;
+    while(my $entry = readdir DIR) 
+    {
+        next if($entry =~ /^\.\.?$/);
+        closedir DIR;
+        return 0; # if $entry not "." or ".."
+    }
+    closedir DIR;
+    return 1; 
+}
 
 1;
 

@@ -24,23 +24,28 @@
 
 use warnings;
 use strict;
+use lib './lib';
 use File::Copy;
 use File::Path;
 use File::Temp qw(tempfile);
 use File::Spec;
 use Scalar::Util qw(blessed);
 use IO::Socket;
+use Error qw(:try);
 use tahlib;
-use lib::TahConf;
-use lib::TahExceptions;
-use lib::Tileset;
+use TahConf;
+use Tileset;
+use Server;
 use Request;
 use Upload;
 use Compress;
+use SVG::Rasterize;
+use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
 use POSIX qw(locale_h);
 use Encode;
+use POSIX;
 
 #---------------------------------
 
@@ -87,6 +92,9 @@ my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf STDERR "This is version %d (%s) of tilesgen running on %s, ID: %s\n", 
     $Version, $Config->get("ClientVersion"), $^O, GetClientId();
+
+# autotuning complexity setting
+my $complexity = 0;
 
 # filestat: Used by reExecIfRequired.
 # This gets set to filesize/mtime/ctime of this script, and reExecIfRequired
@@ -143,6 +151,22 @@ if ($RenderMode) {
     $BlackTileImage->fill(127,127,$BlackTileBackground);
 }
 
+# Setup SVG::Rasterize
+if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
+    $SVG::Rasterize::object = SVG::Rasterize->new();
+    if( $Config->get("Rasterizer") ){
+        $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
+
+        if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+            $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
+            $SVG::Rasterize::object->engine()->host('localhost');
+            $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+        }
+    }
+
+    print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
+}
+
 # We need to keep parent PID so that child get the correct files after fork()
 my $parent_pid = $PID;
 my $upload_pid = -1;
@@ -156,20 +180,9 @@ our $StartedBatikAgent = 0;
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
 
-if( $RenderMode and -e "/dev/null" )
-{
-    my $svn = $Config->get("Subversion");
-    if( qx($svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
-    {
-        print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
-        system($Config->get("Subversion")." status osmarender/*.x[ms]l");
-        cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4);
-    }
-}
-
 ## set all fault counters to 0;
 resetFault("fatal");
-resetFault("inkscape");
+resetFault("rasterizer");
 resetFault("nodata");
 resetFault("nodataROMA");
 resetFault("nodataXAPI");
@@ -178,6 +191,21 @@ resetFault("utf8");
 resetFault("upload");
 
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
+
+# Be nice. Reduce program priority
+if( my $nice = $Config->get("Niceness") ){
+    if( $nice =~ /nice/ ){
+        $nice =~ s/nice\s*-n\s*//;
+        warn "You have Niceness set to a command, it should be only a number.\n";
+    }
+
+    if( $nice =~ /^\d+$/ ){
+        my $success=POSIX::nice($nice);
+        if( !defined($success) ){
+            printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
+        }
+    }
+}
 
 #---------------------------------
 ## Start processing
@@ -193,9 +221,11 @@ if ($Mode eq "xy")
     my $req = new Request;
     if (not defined $X or not defined $Y)
     { 
-        print STDERR "Usage: $0 xy <X> <Y> [<ZOOM>]\n";
+        print STDERR "Usage: $0 xy <X> <Y> [<ZOOM> [<LAYERS>]]\n";
         print STDERR "where <X> and <Y> are the tile coordinates and \n";
         print STDERR "<ZOOM> is an optional zoom level (defaults to 12).\n";
+        print STDERR "<LAYERS> is a comma separated list (no spaces) of the layers to render.\n";
+        print STDERR "This overrides the layers specified in the configuration.\n";
         exit;
     }
     my $Zoom = shift();
@@ -207,10 +237,22 @@ if ($Mode eq "xy")
     }
 
     $req->ZXY($Zoom, $X, $Y);
-    $req->layers($Config->get("Layers"));
+
+    my $Layers = shift();
+    if (not defined $Layers) {
+        if ($Zoom >= 12) {
+            $Layers = $Config->get("Layers");
+        }
+        else {
+            $Layers = $Config->get("LowzoomLayers");
+        }
+    }
+    $req->layers_str($Layers);
 
     my $tileset = Tileset->new($req);
+    my $tilestart = time();
     $tileset->generate();
+    autotuneComplexity($tilestart, time(), $req->complexity);
 }
 #---------------------------------
 elsif ($Mode eq "loop") 
@@ -220,10 +262,12 @@ elsif ($Mode eq "loop")
     # ----------------------------------
 
     # Start batik agent if it's not runnig
-    if ($Config->get("Batik") == "3" && !getBatikStatus())
-    {
-        startBatikAgent();
-        $StartedBatikAgent = 1;
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+        my $result = $SVG::Rasterize::object->engine()->start_agent();
+        if( $result ){
+            $StartedBatikAgent = 1;
+            statusMessage("Started Batik agent", 0, 0);
+        }
     }
 
     # this is the actual processing loop
@@ -244,6 +288,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
+            print "We suggest that you set MaxTilesetComplexity to ".$complexity."\n";
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 
@@ -257,30 +302,18 @@ elsif ($Mode eq "loop")
         reExecIfRequired($upload_pid); ## check for new version of tilesGen.pl and reExec if true
 
         ### start processing here:
+        $progressJobs++;
         # Render stuff if we get a job from server
-        my ($did_something, $message) = ProcessRequestsFromServer();
+        ProcessRequestsFromServer();
         # compress and upload results
-        my $upload_result = compressAndUploadTilesets();
-
-        if ($upload_result == -1)
-        {     # we got an error in the upload process
-              addFault("upload",1);
-        }
-        else
-        {     #reset fault counter if we uploaded successfully
-              resetFault("upload");
-        }
-
-        if ($did_something == 1) 
-        {   # Rendered tileset, don't idle in next round
-            setIdle(0,0);
-        }
+        compressAndUploadTilesets();
     }
 }
 #---------------------------------
 elsif ($Mode eq "upload") 
 {   # Upload mode
-    compressAndUpload();
+    compress();
+    upload();
 }
 #---------------------------------
 elsif ($Mode eq "upload_loop")
@@ -377,12 +410,25 @@ elsif ($Mode eq "")
 #---------------------------------
 elsif ($Mode eq "startBatik")
 {
-    startBatikAgent();
+    my $result = $SVG::Rasterize::object->engine()->start_agent();
+    if( $result ){
+        $StartedBatikAgent = 1;
+        statusMessage("Started Batik agent", 0, 0);
+    } else {
+        statusMessage("Batik agent already running");
+    }
 }
 #---------------------------------
 elsif ($Mode eq "stopBatik")
 {
-    stopBatikAgent();
+    my $result = $SVG::Rasterize::object->engine()->stop_agent();
+    if( $result == 1 ){
+        statusMessage("Successfully sent stop message to Batik agent", 0, 0);
+    } elsif( $result == 0 ){
+        statusMessage("Could not contact Batik agent", 0, 0);
+    } else {
+        statusMessage($result, 0, 0);
+    }
 }
 #---------------------------------
 else {
@@ -392,7 +438,11 @@ else {
     my $Bar = "-" x 78;
     print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
     print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
-    print "Specific area:\n  \"$0 xy <x> <y> [z]\"\n  (x and y coordinates of a zoom-12 (default) tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\nz is optional and can be used for low-zoom tilesets\n";
+    print "Specific area:\n  \"$0 xy <x> <y> [z [layers]]\"\n  (x and y coordinates of a\n";
+    print "zoom-12 (default) tile in the slippy-map coordinate system)\n";
+    print "See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
+    print "z is optional and can be used for low-zoom tilesets\n";
+    print "layers is a comma separated list (no spaces) of layers and overrides the config.\n";
     print "Other modes:\n";
     print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
@@ -431,43 +481,57 @@ sub compressAndUploadTilesets
         }
         elsif ($upload_pid == 0)
         {   # we are the child, so we run the upload and exit the thread
-            exit compressAndUpload();
+            try {
+                compress();
+                upload();
+            }
+            otherwise {
+                exit 0;
+            };
+            exit 1;
         }
     }
     else
     {   ## no forking going on
-        return compressAndUpload();
+        try {
+            compress();
+            my $result = upload();
+
+            if ($result == -1)
+            {     # we got an error in the upload process
+                addFault("upload",1);
+            }
+            else
+            {     #reset fault counter if we uploaded successfully
+                resetFault("upload");
+            }
+        }
+        catch CompressError with {
+            my $err = shift();
+            cleanUpAndDie("Error while compressing tiles: " . $err->text(), "EXIT", 1);
+        }
+        catch UploadError with {
+            my $err = shift();
+            if (!$err->value() eq "QueueFull") {
+                cleanUpAndDie("Error uploading tiles: " . $err->text(), "EXIT", 1);
+            }
+        };
     }
     # no error, just nothing to upload
-    return 0;
-}
-
-#-----------------------------------------------------------------------------
-# compressAndUpload() is just a shorthand for calling compress() and
-# upload(). It returns >=0 on success and -1 otherwise.
-#-----------------------------------------------------------------------------
-sub compressAndUpload
-{
-  my $retval  = compress();
-  my $retval2 = upload();
-  # return the smaller of both values for now
-  return ($retval > $retval2)? $retval2 : $retval;
 }
 
 #-----------------------------------------------------------------------------
 # compress() calls the external compress.pl which zips up all existing
-# tileset directories. It returns # of compressed dirs or -1 on error.
+# tileset directories.
 #-----------------------------------------------------------------------------
 sub compress
 {
     keepLog($$,"compress","start","$progressJobs");
 
     my $compress = new Compress;
-    my ($retval, $reason) = $compress->compressAll();
+    $compress->compressAll();
 
-    keepLog($$,"compress","stop","return=$retval");
-
-    return $retval;
+    keepLog($$,"compress","stop");
 }
 
 #-----------------------------------------------------------------------------
@@ -480,11 +544,9 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    my ($retval, $reason) = $upload->uploadAllZips();
+    $upload->uploadAllZips();
 
-    keepLog($PID,"upload","stop","return=$retval");
-
-    return $retval;
+    keepLog($PID,"upload","stop",0);
 }
 
 #-----------------------------------------------------------------------------
@@ -501,33 +563,148 @@ sub ProcessRequestsFromServer
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
 
-    statusMessage("Retrieving next job", 0, 3);
-    my $req = new Request;
-    eval {
-        $req->fetchFromServer();
-    };
+    if ($Config->get("CreateTilesetFile"))
+    {
+        print "Config option CreateTilesetFile is set. We can not upload Tileset\n";
+        print "files, yet. Downloading requests\n";
+        print "from the server in this mode would take them from the tiles\@home\n";
+        print "queue and never upload the results. Please use xy mode. Program aborted.\n";
+        cleanUpAndDie("ProcessRequestFromServer:CreateTilesetFile set, exiting","EXIT",1);
+    }
 
-    if (my $error = $@) {
-        if (blessed($error) && $error->isa("TahError")) {
-            cleanUpAndDie($error->text(), "EXIT", 1);
+    my $req;
+    my $Server = Server->new();
+    do {
+        statusMessage("Retrieving next job", 0, 3);
+        try {
+            $req = $Server->fetchRequest();
+
+            # got request, now check that it's not too complex
+            if ($Config->get('MaxTilesetComplexity')) {
+                #the setting is enabled
+                if ($req->complexity() > $Config->get('MaxTilesetComplexity')) {
+                    # too complex!
+                    statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ')', 1, 3);
+                    eval {
+                        $Server->putRequestBack($req, "TooComplex");
+                    }; # ignoring exceptions
+                    $req = undef;  # set to undef, need another loop
+                    talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+                }
+            }
+            # and now check whether we found it unrenderable before
+            if (defined $req and $req->is_unrenderable()) {
+                statusMessage("Ignoring unrenderable tile (" . $req->ZXY_str . ')', 1, 3);
+                eval {
+                    $Server->putRequestBack($req, "Unrenderable");
+                }; # ignoring exceptions
+                $req = undef;   # we need to loop yet again
+                talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+            }
+            # check whether there are any layers requested
+            if (defined $req and scalar($req->layers()) == 0) {
+                statusMessage("Ignoring tile request with no layers", 1, 3);
+                eval {
+                    $Server->putRequestBack($req, "NoLayersRequested");
+                }; # ignoring exceptions
+                $req = undef;
+                talkInSleep("Waiting before new tile is requested", 15);
+            }
+            # check whether we can actually render the requested zoom level for all requested layers
+            if (defined $req) {
+                my $zoom = $req->Z();
+                foreach my $layer ($req->layers()) {
+                    if (($zoom < $Config->get("${layer}_MinZoom")) or ($zoom > $Config->get("${layer}_MaxZoom"))) {
+                        statusMessage("Zoom level $zoom is out of the configured range for Layer $layer. Ignoring tile.", 1, 3);
+                        eval {
+                            $Server->putRequestBack($req, "ZoomOutOfRange ($layer z$zoom)");
+                        };
+                        $req = undef;
+                        last; # don't check any more layers
+                    }
+                }
+            }
+        }
+        catch ServerError with {
+            my $err = shift();
+            if ($err->value() eq "PermError") {
+                cleanUpAndDie($err->text(), "EXIT", 1);
+            }
+            else {
+                talkInSleep($err->text(), 60);
+            }
+        };
+    } until ($req);
+
+    # Information text to say what's happening
+    statusMessage("Got work from the server: " . $req->layers_str() . ' (' . $req->ZXY_str() . ')', 0, 6);
+
+    try {
+        my $tileset = Tileset->new($req);
+        my $tilestart = time();
+        $tileset->generate();
+        autotuneComplexity($tilestart, time(), $req->complexity);
+
+        # successfully received data, reset data faults
+        resetFault("nodata");
+        resetFault("nodataROMA");
+        resetFault("nodataXAPI");
+
+        # successfully rendered, so reset renderer faults
+        resetFault("renderer");
+        resetFault("inkscape");
+        resetFault("utf8");
+
+        # Rendered tileset, don't idle in next round
+        setIdle(0,0);
+    }
+    catch RequestError with {
+        my $err = shift();
+        cleanUpAndDie($err->text(), "EXIT", 1);
+    }
+    catch TilesetError with {
+        my $err = shift();
+        eval {
+            $Server->putRequestBack($req, $err->text()) unless $Mode eq 'xy';
+        }; # ignoring exceptions
+        if ($err->value() eq "fatal") {
+            # $err->value() is "fatal" for fatal errors 
+            cleanUpAndDie($err->text(), "EXIT", 1);
         }
         else {
-            die;
+            # $err->value() contains the error category for non-fatal errors
+            addFault($err->value(), 1);
+            statusMessage($err->text(), 1, 0);
+        }
+        talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+    };
+}
+#-----------------------------------------------------------------------------
+# autotunes the complexity variable to avoid too complex tiles
+#-----------------------------------------------------------------------------
+sub autotuneComplexity #
+{
+    my $start = shift();
+    my $stop = shift();
+    my $tilecomplexity = shift();
+    my $deltaT = $stop - $start;
+
+    if(! $complexity) {
+        if($Config->get('MaxTilesetComplexity')) {
+            $complexity = $Config->get('MaxTilesetComplexity');
+        } else {
+            $complexity = $tilecomplexity;
         }
     }
 
-    #TODO: return result of GenerateTileset?
-    my $tileset = Tileset->new($req);
-    my ($success, $reason) = $tileset->generate();
-    if (!$success)
-    {
-        eval {
-            $req->putBackToServer($reason) unless $Mode eq 'xy';
-        };
+    print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
+    if (($tilecomplexity > 0) && ($deltaT > 0)) {
+        $complexity = 0.01 * ($tilecomplexity * 900 / $deltaT) + 0.99 * $complexity;
     }
-    return ($success, $reason);
-}
+    $complexity = 100000 if $complexity < 100000;
 
+    $Config->set('MaxTilesetComplexity', $complexity);
+}
 #-----------------------------------------------------------------------------
 # Gets latest copy of client from svn repository
 # returns 1 on perceived success.
@@ -634,7 +811,7 @@ sub NewClientVersion
 sub xml2svg 
 {
     my $Config = TahConf->getConfig();
-    my($MapFeatures, $SVG, $zoom) = @_;
+    my($osmData, $bbox, $MapFeatures, $SVG, $zoom) = @_;
     my $TSVG = "$SVG";
     my $NoBezier = $Config->get("NoBezier") || $zoom <= 11;
 
@@ -648,13 +825,15 @@ sub xml2svg
     {
         my $XslFile;
 
-        $XslFile = "osmarender/osmarender.xsl";
+        $XslFile = "osmarender/xslt/osmarender.xsl";
 
-        my $Cmd = sprintf("%s \"%s\" tr --maxdepth %s %s %s > \"%s\"",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf(
+          "\"%s\" tr --maxdepth %s %s -s osmfile=%s -s minlat=%s -s minlon=%s -s maxlat=%s -s maxlon=%s %s > \"%s\"",
           $Config->get("XmlStarlet"),
           $Config->get("XmlStarletMaxDepth"),
           $XslFile,
+          $osmData,
+          $bbox->S, $bbox->W, $bbox->N, $bbox->E,
           "$MapFeatures",
           $TSVG);
 
@@ -663,10 +842,11 @@ sub xml2svg
     }
     elsif($Config->get("Osmarender") eq "orp")
     {
-        my $Cmd = sprintf("%s perl orp/orp.pl -r %s -o %s",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("perl osmarender/orp/orp.pl -r %s -o %s -b %s,%s,%s,%s %s",
           $MapFeatures,
-          $TSVG);
+          $TSVG,
+          $bbox->S, $bbox->W, $bbox->N, $bbox->E,
+          $osmData);
 
         statusMessage("Transforming zoom level $zoom with or/p",0,3);
         $success = runCommand($Cmd,$PID);
@@ -697,8 +877,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
     if (!$NoBezier) 
     {   # do bezier curve hinting
-        my $Cmd = sprintf("%s perl ./lines2curves.pl %s > %s",
-          $Config->get("Niceness"),
+        my $Cmd = sprintf("perl ./lines2curves.pl %s > %s",
           $TSVG,
           $SVG);
         statusMessage("Beziercurvehinting zoom level $zoom",0,3);
@@ -722,171 +901,6 @@ sub xml2svg
 
 
 #-----------------------------------------------------------------------------
-# Render a SVG file
-# jobdir - dir in which the svg is stored, and temporary files can be put.
-# $X, $Y - tilemnumbers of the tileset
-# $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
-# returns (success, reason), success is 0 or 1
-# reason is a string on failure
-#-----------------------------------------------------------------------------
-sub svg2png
-{
-    my($jobdir, $req, $Ytile, $Zoom, $Left, $Y1, $Right, $Y2, $ImageHeight) = @_;
-    my $Config = TahConf->getConfig();
-    
-    # File locations
-    my $svgFile = File::Spec->join($jobdir,"output-z$Zoom.svg");
-    my $FullSplitPngFile = File::Spec->join($jobdir,"split-z$Zoom-$Ytile.png");
-    my $stdOut = File::Spec->join($jobdir,"split-z$Zoom-$Ytile.stdout");
-
-    
-    my $Cmd = "";
-    
-    # SizeX, SizeY are height/width dimensions of resulting PNG file
-    my $SizeX = 256 * (2 ** ($Zoom - $req->Z));
-    my $SizeY = 256;
-
-    # SVG excerpt in SVG units
-    my $Top = $ImageHeight - $Y2;
-    my $Width = $Right - $Left;
-    my $Height = $Y2 - $Y1;
-    
-
-
-    if ($Config->get("Batik") == "1") # batik as jar
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s", 
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("BatikJVMSize"),
-        $Config->get("BatikPath"),
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-    }
-    elsif ($Config->get("Batik") == "2") # batik as executable (wrapper of some sort, i.e. on gentoo)
-    {
-        $Cmd = sprintf("%s%s \"%s\" -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s\" > %s",
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("BatikPath"),
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-    }
-    elsif ($Config->get("Batik") == "3") # agent
-    {
-        $Cmd = sprintf("svg2png\nwidth=%d\nheight=%d\narea=%f,%f,%f,%f\ndestination=%s\nsource=%s\nlog=%s\n\n", 
-        $SizeX,
-        $SizeY,
-        $Left,$Top,$Width,$Height,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-    }
-    else
-    {
-        my $locale = $Config->get("InkscapeLocale");
-        my $oldLocale;
-        if ($locale ne "0") {
-                $oldLocale=setlocale(LC_ALL, $locale);
-        } 
-
-        $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s\" > %s", 
-        $Config->get("i18n") ? "LC_ALL=C " : "",
-        $Config->get("Niceness"),
-        $Config->get("Inkscape"),
-        $SizeX,
-        $SizeY,
-        $Left,$Y1,$Right,$Y2,
-        $FullSplitPngFile,
-        $svgFile,
-        $stdOut);
-
-        if ($locale ne "0") {
-                setlocale(LC_ALL, $oldLocale);
-        } 
-    }
-    
-    # stop rendering the current job when inkscape fails
-    statusMessage("Rendering",0,3);
-    print STDERR "\n$Cmd\n" if ($Config->get("Debug"));
-
-
-    my $commandResult = $Config->get("Batik") == "3"?sendCommandToBatik($Cmd) eq "OK":runCommand($Cmd,$PID);
-    if (!$commandResult or ! -e $FullSplitPngFile )
-    {
-        statusMessage("$Cmd failed",1,0);
-        if ($Config->get("Batik") == "3" && !getBatikStatus())
-        {
-            statusMessage("Batik agent is not running, use $0 startBatik to start batik agent\n",1,0);
-        }
-        my $reason = "BadSVG (svg2png)";
-        addFault("inkscape",1);
-        $req->is_unrenderable(1);
-        return (0, $reason);
-    }
-    resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
-    
-     return ($FullSplitPngFile, ""); #return success
-}
-
-
-#-----------------------------------------------------------------------------
-# Add bounding-box information to an osm-map-features file
-#-----------------------------------------------------------------------------
-sub AddBounds 
-{
-    my ($Filename,$W,$S,$E,$N,$Size) = @_;
-    
-    # Read the old file
-    open(my $fpIn, "<", "$Filename");
-    my $Data = join("",<$fpIn>);
-    close $fpIn;
-    die("no such $Filename") if(! -f $Filename);
-    
-    # Change some stuff
-    no locale;                # use dot as separator even for Germans!
-    my $BoundsInfo = sprintf(
-      "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
-      $S, $W, $N, $E);
-    
-    $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n$2/s;
-    
-    # Save back to the same location
-    open(my $fpOut, ">$Filename");
-    print $fpOut $Data;
-    close $fpOut;
-}
-
-#-----------------------------------------------------------------------------
-# Set data source file name in map-features file
-#-----------------------------------------------------------------------------
-sub SetDataSource 
-{
-    my ($Datafile, $Rulesfile) = @_;
-
-    # Read the old file
-    open(my $fpIn, "<", "$Rulesfile");
-    my $Data = join("",<$fpIn>);
-    close $fpIn;
-    die("no such $Rulesfile") if(! -f $Rulesfile);
-
-    $Data =~ s/(  data=\").*(  scale=\")/$1$Datafile\"\n$2/s;
-
-    # Save back to the same location
-    open(my $fpOut, ">$Rulesfile");
-    print $fpOut $Data;
-    close $fpOut;
-}
-
-#-----------------------------------------------------------------------------
 # Get the width and height (in SVG units, must be pixels) of an SVG file
 #-----------------------------------------------------------------------------
 sub getSize($)
@@ -904,152 +918,6 @@ sub getSize($)
     close $fpSvg;
     return((0,0,0));
 }
-
-#-----------------------------------------------------------------------------
-# Filename to store a tile.
-# returns a (path and a filename) component
-#-----------------------------------------------------------------------------
-sub tileFilename 
-{
-    my($req, $layer, $X, $Y,$Zoom) = @_;
-    my $Config = TahConf->getConfig();
-    my ($path, $name);
-    if ($Config->get("LocalSlippymap"))
-    {	
-        $path = File::Spec->catdir($Config->get($layer."_Prefix"),$Zoom,$X);
-        $name = $Y.'.png';
-    }
-    else
-    {
-         $path = sprintf("%s_%d_%d_%d.dir",
-				     $Config->get($layer."_Prefix"),$req->ZXY);
-         $name = sprintf("%s_%d_%d_%d.png",
-                  $Config->get($layer."_Prefix"),$Zoom,$X,$Y);
-    }
-
-    return ($path, $name);
-}
-
-#-----------------------------------------------------------------------------
-# Split a tileset image into tiles
-# $File points to a png with complete path
-# returns (success, allempty, reason)
-#-----------------------------------------------------------------------------
-sub splitImageX
-{
-    my ($layer, $req, $Z, $Ytile, $File) = @_;
-    my $Config = TahConf->getConfig();
-    my ($JobVolume, $JobDir, $BigPNGFileName) = File::Spec->splitpath($File);
-
-    # Size of tiles
-    my $Pixels = 256;
-  
-    # Number of tiles
-    my $Size = 2 ** ($Z - $req->Z);
-
-    # Assume the tileset is empty by default
-    my $allempty=1;
-  
-    # Load the tileset image
-    statusMessage(sprintf("Splitting %s (%d x 1)", $BigPNGFileName, $Size),0,3);
-    my $Image = newFromPng GD::Image($File);
-    if( not defined $Image )
-    {
-        print STDERR "\nERROR: Failed to read in file $BigPNGFileName\n";
-        $req->putBackToServer("MissingFile");
-        cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4);
-	return (0, 0, "SplitImage: MissingFile encountered");
-    }
-  
-    # Use one subimage for everything, and keep copying data into it
-    my $SubImage = new GD::Image($Pixels,$Pixels);
-  
-    # For each subimage
-    for(my $xi = 0; $xi < $Size; $xi++)
-    {
-        # Get a tiles'worth of data from the main image
-        $SubImage->copy($Image,
-          0,                   # Dest X offset
-          0,                   # Dest Y offset
-          $xi * $Pixels,       # Source X offset
-          0,                   # Source Y offset # always 0 because we only cut from one row
-          $Pixels,             # Copy width
-          $Pixels);            # Copy height
-
-        # Decide what the tile should be called
-        my ($PngDirPart, $PngFileName)  = tileFilename($req, $layer, $req->X * $Size + $xi, $Ytile, $Z);
-        my $PngFullFileName;
-
-        if ($Config->get("LocalSlippymap"))
-        {
-            my $PngFullDir = File::Spec->catdir($Config->get("LocalSlippymap"), $PngDirPart);
-            File::Path::mkpath($PngFullDir);
-            $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
-
-        } else
-        {   # Construct base png directory
-            my $PngFullDir = File::Spec->catpath($JobVolume, $JobDir, $PngDirPart);
-            File::Path::mkpath($PngFullDir);
-            $PngFullFileName = File::Spec->join($PngFullDir, $PngFileName);
-	}
-
-        # Check for black tile output
-        if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
-        {
-            print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-            cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4);
-            return (0, 0,"BlackTile");
-        }
-        # Detect empty tile here:
-        elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
-        {
-            copy("emptyland.png", $PngFullFileName);
-        }
-        elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
-        {
-	    copy("emptysea.png", $PngFullFileName);
-        }
-        else
-        {
-            # If at least one tile is not empty set $allempty false:
-            $allempty = 0;
-    
-            if ($Config->get($layer."_Transparent")) 
-            {
-                $SubImage->transparent($SubImage->colorAllocate(248,248,248));
-            }
-            else 
-            {
-                $SubImage->transparent(-1);
-            }
-
-            # Store the tile
-            statusMessage(" -> $PngFileName",0,10);
-            WriteImage($SubImage,$PngFullFileName);
-        }
-    }
-    undef $SubImage;
-    undef $Image;
-    return (1, $allempty, "");
-}
-
-#-----------------------------------------------------------------------------
-# Write a GD image to disk
-#-----------------------------------------------------------------------------
-sub WriteImage 
-{
-    my ($Image, $Filename) = @_;
-    
-    # Get the image as PNG data
-    my $png_data = $Image->png;
-    
-    # Store it
-    open (my $fp, ">$Filename") || cleanUpAndDie("WriteImage:could not open file for writing, exiting","EXIT",3);
-    binmode $fp;
-    print $fp $png_data;
-    close $fp;
-}
-
 
 #-----------------------------------------------------------------------------
 # A function to re-execute the program.  
@@ -1102,95 +970,6 @@ sub reExec
         "idleFor=" . getIdle(0) or die("could not reExec");
 }
 
-
-sub startBatikAgent
-{
-    my $Config = TahConf->getConfig();
-    if (getBatikStatus()) {
-        statusMessage("BatikAgent is already running\n",0,0);
-        return;
-    }
-
-    statusMessage("Starting BatikAgent\n",0,0);
-    my $Cmd;
-    if ($^O eq "linux" || $^O eq "cygwin" || $^O eq "darwin" ) 
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
-          $Config->get("i18n") ? "LC_ALL=C " : "",
-          $Config->get("Niceness"),
-          $Config->get("BatikJVMSize"),
-          $Config->get("BatikClasspath"),
-          $Config->get("BatikPort")
-        );
-    }
-    elsif ($^O eq "MSWin32")
-    {
-        $Cmd = sprintf("%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d", 
-           "start /B /LOW",
-           $Config->get("BatikJVMSize"),
-           $Config->get("BatikClasspath"),
-           $Config->get("BatikPort")
-         );
-    }
-    else ## just try the linux variant and hope for the best
-    {
-        $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -cp %s org.tah.batik.ServerMain -p %d > /dev/null&", 
-          $Config->get("i18n") ? "LC_ALL=C " : "",
-          $Config->get("Niceness"),
-          $Config->get("BatikJVMSize"),
-          $Config->get("BatikClasspath"),
-          $Config->get("BatikPort") 
-         );
-        statusMessage("WARNING: Could not determine Operating System ".$^O.", please report to tilesathome mailing list, assuming unix",1,0);
-    }
-    
-    system($Cmd);
-
-    for (my $i = 0; $i < 10; $i++) {
-        sleep(1);
-        if (getBatikStatus()) {
-            statusMessage("BatikAgent started succesfully",0,0);
-            return;
-        }
-    }
-    print STDERR "Unable to start BatikAgent with this command:\n";
-    print STDERR "$Cmd\n";
-}
-
-sub stopBatikAgent
-{
-    if (!getBatikStatus()) {
-        statusMessage("BatikAgent is not running\n",0,0);
-        return;
-    }
-
-    sendCommandToBatik("stop\n\n");
-    statusMessage("Send stop command to BatikAgent\n",0,0);
-}
-
-sub sendCommandToBatik
-{
-    (my $command) = @_;
-    my $Config = TahConf->getConfig();
-
-    my $sock = new IO::Socket::INET( PeerAddr => 'localhost', PeerPort => $Config->get("BatikPort"), Proto => 'tcp');
-    return "ERROR" unless $sock;    
-
-    print $sock $command;
-    flush $sock;
-    my $reply = <$sock>;
-    $reply =~ s/\n//;
-    close($sock);
-
-    return $reply;
-}
-
-sub getBatikStatus
-{
-    return sendCommandToBatik("status\n\n") eq "OK";
-}
-
-
 #------------------------------------------------------------
 # check for faults and die when too many have occured
 #------------------------------------------------------------
@@ -1199,8 +978,8 @@ sub checkFaults
     if (getFault("fatal") > 0) {
         cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1);
     }
-    elsif (getFault("inkscape") > 5) {
-        cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1);
+    elsif (getFault("rasterizer") > 5) {
+        cleanUpAndDie("Five times rasterizer failed, exiting","EXIT",1);
     }
     elsif (getFault("renderer") > 10) {
         cleanUpAndDie("rendering a tileset failed 10 times in a row, exiting","EXIT",1);

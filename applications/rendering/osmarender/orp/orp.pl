@@ -413,7 +413,7 @@ foreach my $node ($rules->find('//rules/defs/svg:svg')->get_nodelist)
 my $symbolsDir = get_variable("symbolsDir");
 if (defined($symbolsDir))
 {
-    $symbolsDir = File::Spec->catdir($Bin, '../osmarender/', $symbolsDir);
+    $symbolsDir = File::Spec->catdir($Bin, '../stylesheets/', $symbolsDir);
     # get refs, then convert to hash so we can get only unique values
     my %refs = map {$_, 1} map {$_->getNodeValue} $rules->find('/rules//symbol/@ref | /rules//areaSymbol/@ref')->get_nodelist;
     foreach my $file (keys %refs) 
@@ -449,7 +449,7 @@ $writer->endTag("defs");
 $writer->startTag("defs", "id" => "defs-included");
 foreach my $include ($rules->find("/rules//include")->get_nodelist)
 {
-    my $includeFile = XML::XPath->new(filename => File::Spec->catdir($Bin, '../osmarender/', $include->getAttribute("ref")));
+    my $includeFile = XML::XPath->new(filename => File::Spec->catdir($Bin, '../stylesheets/', $include->getAttribute("ref")));
     $includeFile->set_namespace('svg', 'http://www.w3.org/2000/svg');
     $writer->raw($includeFile->findnodes_as_string("/svg:svg/*"));
 }

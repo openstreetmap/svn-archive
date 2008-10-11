@@ -208,7 +208,7 @@ sub curvify_path {
     $tmp_string =~ s/[^L]//g;
 
     # 
-    if (length($tmp_string) < 1) { # cant do much with a single line segment
+    if (length($tmp_string) <= 1) { # cant do much with a single line segment
         return $path_string;
     }
 

@@ -287,7 +287,7 @@ sub CheckConfig
     if ($self->get("Osmarender") eq "XSLT")
     {
         print "- rendering using Osmarender/XSLT\n";
-        die "! Can't find osmarender/osmarender.xsl" unless (-f "osmarender/osmarender.xsl");
+        die "! Can't find osmarender/xslt/osmarender.xsl" unless (-f "osmarender/xslt/osmarender.xsl");
 
         # XmlStarlet version
         $cmd=$self->get("XmlStarlet");
@@ -302,7 +302,7 @@ sub CheckConfig
     elsif ($self->get("Osmarender") eq "orp")
     {
         print "- rendering using or/p\n";
-        die "! Can't find orp/orp.pl" unless (-f "orp/orp.pl");
+        die "! Can't find osmarender/orp/orp.pl" unless (-f "osmarender/orp/orp.pl");
     }
     else
     {

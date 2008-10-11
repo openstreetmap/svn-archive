@@ -36,10 +36,21 @@ sub get_type($$$)
 
   my($r,$g,$b) = $image->rgb( $image->getPixel( $x,$y ) );
 
-  return TILETYPE_SEA if $r == 0 && $g == 0   && $b == 255;
-  return TILETYPE_LAND if $r == 0 && $g == 255 && $b == 0;
-  return TILETYPE_TILE if $r == 255 && $g == 255 && $b == 255;
-  return TILETYPE_UNKNOWN if $r == 0 && $g == 0 && $b == 0;
+  if($r == 0)
+  {
+    if($g == 0)
+    {
+      return $b == 255 ? TILETYPE_SEA : TILETYPE_UNKNOWN;
+    }
+    elsif($g == 255 && $b == 0)
+    {
+      return TILETYPE_LAND;
+    }
+  }
+  elsif($r == 255 && $g == 255 && $b == 255)
+  {
+    return TILETYPE_TILE;
+  }
 
   die "Weird tiletype at [$x,$y]: ($r,$g,$b)\n";
 }
@@ -53,9 +64,12 @@ sub set_type($$$$)
   my($image, $x, $y, $type) = @_;
   my $color;
 
-  $color = $image->colorResolve(0,0,255) if($type == TILETYPE_SEA);
-  $color = $image->colorResolve(0,255,0) if($type == TILETYPE_LAND);
-  $color = $image->colorResolve(255,255,255) if($type == TILETYPE_TILE);
+  if($type == TILETYPE_SEA)
+  { $color = $image->colorResolve(0,0,255); }
+  elsif($type == TILETYPE_LAND)
+  { $color = $image->colorResolve(0,255,0); }
+  elsif($type == TILETYPE_TILE)
+  { $color = $image->colorResolve(255,255,255); }
   $image->setPixel($x,$y, $color);
 }
 
@@ -69,28 +83,25 @@ sub convertfile($$)
   my $world_im = getimage($image);
   my $tileinfo_fh;
 
-  open $tileinfo_fh, ">:raw",$dat or die;
-
   print STDERR "Writing output to $dat\n";
 
+  my $str;
   for my $y (0..4095)
   {
     my $tmp = 0;
-    my $str = "";
     for my $x (0 .. 4095)
     {
-      my $type = get_type($world_im,$x,$y);
-      $tmp = ($tmp << 2) | $type;
+      $tmp = ($tmp << 2) | get_type($world_im,$x,$y);
 
-      if( ($x&3) == 3)
+      if(($x&3) == 3)
       {
-        my $byte = chr $tmp;
-        $str .= $byte;
-        $tmp=0;
+        $str .= chr $tmp;
+        $tmp = 0;
       }
     }
-    print $tileinfo_fh $str;
   }
+  open $tileinfo_fh, ">:raw",$dat or die;
+  print $tileinfo_fh $str;
   close $tileinfo_fh;
 }
 

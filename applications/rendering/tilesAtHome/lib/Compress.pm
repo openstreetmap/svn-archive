@@ -90,6 +90,11 @@ sub compressAll
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
 
+    if(!@tilesets)
+    {
+        ::statusMessage("Nothing found to compress",1,3);
+    }
+
     foreach my $File(@tilesets)
     {   # go through all complete tilesets ie "*.dir" firectories
         $File =~ m{^([^_]+)_};

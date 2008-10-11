@@ -104,19 +104,25 @@ sub new {
              'c:\tilesAtHome\batik\lib'
             );
     } else {
-        push(@default_jar_searchpaths,
-             '/usr/share/batik',
-             '/usr/share/batik/lib',
-             '/usr/share/batik-1.6/lib',
-             '/usr/share/java',
-             '/usr/share/java/lib',
-             '/usr/lib/batik',
-             '/usr/lib/batik/lib',
-             '/usr/lib/batik-1.6',
-             '/usr/lib/batik-1.6/lib',
-             '/usr/lib/java',
-             '/usr/lib/java/lib'
-            );
+        foreach my $prefix ( qw(/usr/local/share
+                              /usr/local/share/java
+                              /usr/local/lib
+                              /usr/local/lib/java
+                              /usr/local/
+                              /usr/local/java
+                              /usr/share
+                              /usr/share/java
+                              /usr/lib
+                              /usr/lib/java
+                              ) ){
+            push(@default_jar_searchpaths,
+                 "$prefix",
+                 "$prefix/batik",
+                 "$prefix/batik/lib",
+                 "$prefix/batik-1.6",
+                 "$prefix/batik-1.6/lib"
+                );
+        }
     }
     $self->jar_searchpaths(@default_jar_searchpaths);
     $self->jar_list(

@@ -23,37 +23,32 @@ use constant TILETYPE_LAND => 1;
 use constant TILETYPE_SEA => 2;
 use constant TILETYPE_TILE => 3;
 my @typenames = ('unknown', 'land', 'sea', 'mixed');
+my $pngname = "oceantiles_12.png";
+my $datname = "oceantiles_12.dat";
 
 
 #
 #
 #
-my ($world_fh, $tileinfo_fh);
-our $world_im;
-
-
-#
-#
-#
-sub get_type 
+sub get_type($$$)
 {
   my($image, $x, $y) = @_;
 
   my($r,$g,$b) = $image->rgb( $image->getPixel( $x,$y ) );
-  
+
   return TILETYPE_SEA if $r == 0 && $g == 0   && $b == 255;
   return TILETYPE_LAND if $r == 0 && $g == 255 && $b == 0;
   return TILETYPE_TILE if $r == 255 && $g == 255 && $b == 255;
   return TILETYPE_UNKNOWN if $r == 0 && $g == 0 && $b == 0;
-  
-  die "Wierd tiletype at [$x,$y]: ($r,$g,$b)\n";
+
+  die "Weird tiletype at [$x,$y]: ($r,$g,$b)\n";
 }
 
 
 #
 #
 #
-sub set_type
+sub set_type($$$$)
 {
   my($image, $x, $y, $type) = @_;
   my $color;
@@ -68,103 +63,214 @@ sub set_type
 #
 #
 #
+sub convertfile($$)
+{
+  my ($image,$dat) = @_;
+  my $world_im = getimage($image);
+  my $tileinfo_fh;
+
+  open $tileinfo_fh, ">:raw",$dat or die;
+
+  print STDERR "Writing output to $dat\n";
+
+  for my $y (0..4095)
+  {
+    my $tmp = 0;
+    my $str = "";
+    for my $x (0 .. 4095)
+    {
+      my $type = get_type($world_im,$x,$y);
+      $tmp = ($tmp << 2) | $type;
+
+      if( ($x&3) == 3)
+      {
+        my $byte = chr $tmp;
+        $str .= $byte;
+        $tmp=0;
+      }
+    }
+    print $tileinfo_fh $str;
+  }
+  close $tileinfo_fh;
+}
+
+
+#
+#
+#
+sub getimage($)
+{
+  my $world_fh;
+  my $name = shift @_;
+
+  open $world_fh, "<:raw",$name or die;
+  my $world_im = GD::Image->newFromPng( $world_fh, 1 );
+  close $world_fh;
+
+  return $world_im;
+}
+
+
+#
+#
+#
+sub saveimage($$)
+{
+  my ($image, $name) = @_;
+  my $world_fh;
+
+  open $world_fh, ">:raw",$name or die;
+  print $world_fh $image->png;
+  close $world_fh;
+}
+
+
+#
+#
+#
+sub printhelp
+{
+  print "Usage: png2tileinfo.pl check <x> <y>\n"
+  .     "       png2tileinfo.pl set <x> <y> [land|sea|mixed] ...\n"
+  .     "       png2tileinfo.pl diff oldfile.png newfile.png\n"
+  .     "       png2tileinfo.pl svndiff\n"
+  .     "       png2tileinfo.pl copydiff oldfile.png newfile.png targetfile.png\n";
+  exit(0);
+}
+
+
+#
+#
+#
 if ($#ARGV > -1)
 {
-    if($ARGV[0] eq "check")
-    {
-	if ($#ARGV < 2)
-	{
-	    print "Usage: png2tileinfo.pl check <x> <y>\n";
-	}
-	else
-	{
-	    my ($x, $y) = ($ARGV[1], $ARGV[2]);
-
-	    open $world_fh, "<oceantiles_12.png" or die;
-	    # use binmode so it works on windows too
-	    binmode $world_fh;
-
-	    $world_im = GD::Image->newFromPng( $world_fh, 1 );
-
-	    my $png_val = get_type($world_im, $x, $y);
-
-	    print "oceantiles_12.png($x, $y) = $png_val ($typenames[$png_val])\n";
-	}
-
-	exit 0;
-    }
-
-    if ($ARGV[0] eq "set")
-    {
-	if ($#ARGV < 3)
-	{
-	    print "Usage: png2tileinfo.pl set <x> <y> [land|sea|mixed]\n";
-	}
-	else
-	{
-	    my ($x, $y) = ($ARGV[1], $ARGV[2]);
-	    my $newtype;
-
-	    open $world_fh, "<oceantiles_12.png" or die;
-	    # use binmode so it works on windows too
-	    binmode $world_fh;
-	    $world_im = GD::Image->newFromPng( $world_fh, 1 );
-	    close $world_fh;
-    
-	    my $old_val = get_type($world_im, $x, $y);
-	    $newtype = TILETYPE_LAND if ($ARGV[3] eq "land");
-	    $newtype = TILETYPE_SEA  if ($ARGV[3] eq "sea");
-	    $newtype = TILETYPE_TILE if ($ARGV[3] eq "mixed");
-
-	    if($old_val == $newtype)
-	    {
-	        print "oceantiles_12.png($x, $y) = $newtype ($typenames[$newtype]) UNCHANGED\n";
-	    }
-	    else
-	    {
-	        set_type($world_im, $x, $y, $newtype);
-	        print "oceantiles_12.png($x, $y) = $newtype ($typenames[$newtype]) WAS $old_val ($typenames[$old_val])\n";
-
-	        open $world_fh, ">oceantiles_12.png" or die;
-	        # use binmode so it works on windows too
-	        binmode $world_fh;
-	        print $world_fh $world_im->png;
-	        close $world_fh;
-	    }
-	}
-
-	exit 0;
-    }
-}
-
-
-# Convert the resulting file in any case...
-open $world_fh, "<oceantiles_12.png" or die;
-open $tileinfo_fh, ">oceantiles_12.dat" or die;
-# use binmode so it works on windows too
-binmode $world_fh;
-binmode $tileinfo_fh;
-print STDERR "Writing output to ./oceantiles_12.dat\n";
-$world_im = GD::Image->newFromPng( $world_fh, 1 );
-
-for my $y (0..4095)
-{
-  my $tmp = 0;
-  my $str = "";
-  for my $x (0 .. 4095)
+  my $arg = shift @ARGV;
+  if ($arg eq "check")
   {
-    my $type = get_type($world_im,$x,$y);
-    $tmp = ($tmp << 2) | $type;
-    
-    if( ($x&3) == 3)
+    printhelp() if (@ARGV < 2);
+
+    my ($x, $y) = ($ARGV[1], $ARGV[2]);
+
+    my $png_val = get_type(getimage($pngname), $x, $y);
+    print "$pngname($x, $y) = $png_val ($typenames[$png_val])\n";
+  }
+  elsif ($arg eq "set")
+  {
+    printhelp() if (@ARGV < 1);
+
+    my $changed;
+    my $world_im = getimage($pngname);
+
+    while(@ARGV)
     {
-      my $byte = chr $tmp;
-      $str .= $byte;
-      $tmp=0;
+      printhelp() if (@ARGV < 3);
+
+      my ($x, $y, $nt) = splice(@ARGV,0,3);
+      my $newtype;
+
+      my $old_val = get_type($world_im, $x, $y);
+      if($nt eq "land") {$newtype = TILETYPE_LAND;}
+      elsif ($nt eq "sea") {$newtype = TILETYPE_SEA;}
+      elsif ($nt eq "mixed") {$newtype = TILETYPE_TILE;}
+      else {die "Unknown type $nt.\n";}
+
+      if($old_val == $newtype)
+      {
+        print "$pngname($x, $y) = $newtype ($typenames[$newtype]) UNCHANGED\n";
+      }
+      else
+      {
+        set_type($world_im, $x, $y, $newtype);
+        print "$pngname($x, $y) = $newtype ($typenames[$newtype]) WAS $old_val ($typenames[$old_val])\n";
+        $changed = 1;
+      }
+    }
+
+    saveimage($world_im, $pngname) if $changed;
+  }
+  elsif($arg eq "diff" || $arg eq "svndiff")
+  {
+    my $oldfile;
+    my $newfile;
+
+    if($arg eq "svndiff")
+    {
+      ($oldfile,$newfile) = (".svn/text-base/$pngname.svn-base", $pngname);
+    }
+    elsif (@ARGV < 2)
+    {
+      printhelp();
+    }
+    else
+    {
+      ($oldfile,$newfile) = @ARGV;
+    }
+
+    my $world_im = getimage($oldfile);
+    my $newworld_im = getimage($newfile);
+
+    for my $y (0..4095)
+    {
+      my $tmp = 0;
+      my $str = "";
+      for my $x (0 .. 4095)
+      {
+        my $type = get_type($world_im,$x,$y);
+        my $ntype = get_type($newworld_im,$x,$y);
+        if ($ntype != $type)
+        {
+          my $ntypen=$typenames[$ntype];
+          my $typen=$typenames[$type];
+          print "$pngname($x, $y) = $ntype ($ntypen) WAS $type ($typen)\n";
+        }
+      }
     }
   }
-  print $tileinfo_fh $str;
-}
-  
-close $tileinfo_fh;
+  elsif($arg eq "copydiff")
+  {
+    printhelp() if (@ARGV < 3);
+    my ($oldfile,$newfile,$targetfile) = @ARGV;
 
+    my $world_im = getimage($oldfile);
+    my $newworld_im = getimage($newfile);
+    my $target_im = getimage($targetfile);
+    my $changed;
+
+    for my $y (0..4095)
+    {
+      my $tmp = 0;
+      my $str = "";
+      for my $x (0 .. 4095)
+      {
+        my $type = get_type($world_im,$x,$y);
+        my $ntype = get_type($newworld_im,$x,$y);
+        if ($ntype != $type)
+        {
+          my $ttype = get_type($target_im,$x,$y);
+          my $ntypen=$typenames[$ntype];
+          my $typen=$typenames[$type];
+          my $typet=$typenames[$type];
+          if($ntype == $ttype)
+          {
+            print "$pngname($x, $y) = $ntype ($ntypen) UNCHANGED\n";
+          }
+          else
+          {
+            print "$pngname($x, $y) = $ntype ($ntypen) WAS $type ($typen)/$ttype ($typet)\n";
+            set_type($target_im, $x, $y, $ntype);
+            $changed = 1;
+          }
+        }
+      }
+    }
+    saveimage($target_im, $targetfile) if $changed;
+  }
+  else
+  {
+    printhelp();
+  }
+}
+else
+{
+  convertfile($pngname, $datname);
+}

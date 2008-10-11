@@ -1,0 +1,52 @@
+<project name="lang-it" default="install" basedir=".">
+
+	<property name="language" value="it" />
+
+	<target name="init">
+	    <mkdir dir="bin" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpath="../../../../editors/josm/dist/josm-custom.jar" destdir="bin" />
+	</target>
+	
+	<!-- install entry point for eclipse user -->
+	<target name="jar">
+		<jar destfile="${user.home}/.josm/plugins/lang-${language}.jar" basedir="bin">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />
+				<attribute name="Plugin-Description" value="Italian translation." />
+				<attribute name="Plugin-Early" value="true" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="install" depends="compile,gettext,jar" />
+
+
+
+	<target name="find">
+		<exec executable="find" output="alljava.txt">
+			<arg line="../../../../editors/josm/src ../.. -name '*.java'"/>
+		</exec>
+	</target>
+	
+	<target name="xgettext">
+		<exec executable="xgettext">
+			<arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -okeys.pot -falljava.txt"/>
+		</exec>
+	</target>
+
+	<target name="msgmerge">
+		<exec executable="msgmerge">
+			<arg line="-U ${language}.po keys.pot"/>
+		</exec>
+	</target>
+
+	<target name="gettext" depends="find,xgettext,msgmerge">
+		<exec executable="msgfmt">
+			<arg line="--java2 -dbin -rorg.openstreetmap.josm.Translation -l${language} ${language}.po"/>
+		</exec>
+	</target>
+
+</project>

@@ -584,7 +584,8 @@ sub ProcessRequestsFromServer
                 #the setting is enabled
                 if ($req->complexity() > $Config->get('MaxTilesetComplexity')) {
                     # too complex!
-                    statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ')', 1, 3);
+                    statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ", "
+                    . int($req->complexity()) . " > " . int($Config->get('MaxTilesetComplexity')). ")", 1, 3);
                     eval {
                         $Server->putRequestBack($req, "TooComplex");
                     }; # ignoring exceptions
@@ -729,6 +730,7 @@ sub UpdateClient #
     my $svn_status = `$Cmd`;
 
     chomp $svn_status;
+    $svn_status =~ s/^M.*\n?//mg;
 
     if (1 || $svn_status eq '')
     {

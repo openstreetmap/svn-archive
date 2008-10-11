@@ -422,7 +422,14 @@ sub runPreprocessors
                         $req->Z,
                         "$inputFile",
                         "$outputFile");
-            ::statusMessage("Running close-areas",0,3);
+            if($Config->get('Debug'))
+            {
+                ::statusMessage("Running close-areas ($Cmd)",0,3);
+            }
+            else
+            {
+                ::statusMessage("Running close-areas",0,3);
+            }
             ::runCommand($Cmd,$$);
         }
         elsif ($preprocessor eq "area-center")
@@ -432,9 +439,8 @@ sub runPreprocessors
 	       if ($Config->get("JavaVersion") >= 1.6)
                {
                    # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results"
-                  # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
-                  my $Cmd = sprintf("%s java -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
-                               $Config->get("Niceness"),
+                   # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
+                   my $Cmd = sprintf("java -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
                                join($Config->get("JavaSeparator"), "java/osmosis/osmosis.jar", "java/area-center.jar"),
                                $inputFile,
                                $outputFile);
@@ -596,7 +602,7 @@ sub GenerateSVG
     my $self = shift;
     my ($layer, $zoom, $layerDataFile) = @_;
     my $Config = TahConf->getConfig();
-    ::statusMessage("Generating SVG file", 1, 6);
+    ::statusMessage("Generating SVG file", 0, 6);
  
     # Render the file (returns 0 on failure)
     if (! ::xml2svg(

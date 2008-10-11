@@ -32,7 +32,7 @@ our %unrenderable = ();
 # Request can be instantiated with ->new(Z,X,Y), alternatively set those with ->ZXY(z,x,y) later.
 # e.g. my $r = new Request or my $r = Request->new()
 #-----------------------------------------------------------------------------
-sub new 
+sub new
 {
     my $class = shift;
     my $self = {
@@ -41,6 +41,7 @@ sub new
         Y  => undef,
         lastModified => 0,  #unix timestamp of file on server
         complexity => 0,    #byte size of file on server
+        priority => 1,    #int betweeen 1 (urgent) and 4(idle)
         layers => [],
         Config => TahConf->getConfig(),
     };
@@ -167,6 +168,19 @@ sub complexity
 }
 
 #-----------------------------------------------------------------------------
+# set and/or retrieve the priority of a request
+#-----------------------------------------------------------------------------
+sub priority
+{
+    my $self = shift;
+    my $priority = shift;
+    if (defined($priority)) {
+        $self->{priority} = $priority;
+    }
+    return $self->{priority}
+}
+
+#-----------------------------------------------------------------------------
 # get/set the unrenderable status of a tileset
 # takes 1 as parameter if setting as unrenderable
 # without parrameters returns the unrenderable status
@@ -229,6 +243,11 @@ reading.
 
 Sets and returns the byte size of the tileset file on the server. It will be set
 to 0 if the server does not have the tileset yet.
+
+=item C<< ->priority([$priority]) >> (set or get)
+
+Sets and returns the priority of the request. It will be set to 1 (urgent) if
+we don't know the correct value yet.
 
 =back
 

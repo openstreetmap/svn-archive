@@ -247,6 +247,17 @@ sub downloadData
     my $res;
     my $reason;
 
+    if ($req->priority() > 1) {
+        my $firstServer = shift(@OSMServers);
+        if($firstServer eq "API") {
+            my $secondServer = shift(@OSMServers);
+            unshift(@OSMServers, $firstServer);
+            unshift(@OSMServers, $secondServer);
+        } else {
+            unshift(@OSMServers, $firstServer);
+        }
+    }
+
     my $filelist;
     foreach my $OSMServer (@OSMServers) {
         my @URLS;

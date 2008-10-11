@@ -12,9 +12,8 @@
 #
 # If WorkingDir is commented out, it will use the default system tmpdir location
 WorkingDirectory=/tmp/
-Inkscape=inkscape
 XmlStarlet=xmlstarlet
-Niceness=nice -n10
+Niceness=10
 Pngcrush=pngcrush
 Optipng=optipng
 Subversion=svn
@@ -22,21 +21,33 @@ Subversion=svn
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 
-## Workaround for inkscape internationalisation problems. Should be safe to keep on.
-i18n=1
-
 # Set the timeout when downloading files (in seconds)
 DownloadTimeout=1800
 
-# Fall back to XAPI in case we get a "no data here" error.
-# assumes XAPI is current enough for rendering, and can take the load
-FallBackToXAPI = 0
+# APIServers and XAPIServers define the servers to use to download OSM datta from.
+# APIServers are used for standard map downloads and XAPIServers are used for downloads 
+# with the specification of predicates.
+# The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
+# Currently defined servers are API, ROMA and XAPI for APIServers and XAPI for XAPIServers.
+#APIServers = API,ROMA,XAPI
+#XAPIServers = XAPI
 
 # Hand back render requests that have a tileset on a server bigger than
 # MaxTilesetComplexity. Useful if you do not have much RAM and inkscape
 # crashes. The biggest tileset is about 31000000, so playing with values
 # around 20000000 will help you. A setting of 0 disables the mechanism.
 MaxTilesetComplexity = 0
+
+# Machines with relatively small memory can encounter problems when rendering
+# complex tilesets.  If Inkscape fails with error messages on high zoom levels
+# indicating a memory issue, try to set RenderStripes to a positive value
+# The value of RenderStripes is determining from which zoom level below the
+# highest on the SVG file will be rendered in stripes.  E.g. a value of 5 means 
+# that the 5th zoom level below the top level (normally 12) is to be rendered in
+# stripes.  This would be z17 on a standard tileset.  A value of 5 should be
+# sufficient in most cases.  Reducing that value increases the number of Inkscape
+# calls.  A value of 0 disables striped rendering.  This is the default.
+#RenderStripes = 0
 
 
 ## Upload settings
@@ -64,20 +75,9 @@ GatherBlankTiles=0
 # If set to 1, make a copy of the data file for later debugging purposes
 KeepDataFile=0
 
-# If set to 1, then Batik will be used for rendering instead of Inkscape
-# If set to 2, then the Batik-wrapper will be used instead of Batik .jar file
-# (adjust the path below accordingly)
-# If set to 3, then Batik in agent mode will be used. The renderning is faster 
-# than other modes or inkscape, but it require BatikClasspath to be set correctly
-Batik=0
-
-# Set to the location of the batik rasterizer jar or the Batik wrapper (see
-# Batik config parameter above) The Batik libraries should reside in the same
-# folder, or in a sub-folder named lib.
-BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar
-
-# Path to jars required by Batik in agent mode
-#BatikClasspath=batik-rasterizer.jar:xercesImpl.jar:batik-agent.jar
+# What rasterizer to use.
+# Set to Inkscape, Batik or BatikAgent
+Rasterizer=Inkscape
 
 # Set to the maximum JVM size to pass to the -Xmx parameter when running the
 # rasterizer. The maximum size depends on the OS and the available memory.

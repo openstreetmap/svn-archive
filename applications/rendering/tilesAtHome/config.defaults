@@ -20,26 +20,21 @@ Verbose = 6
 ProcessLog = 0
 ProcessLogFile = /tmp/tah.log
 
-Niceness = nice -n10
+Niceness = 10
+
+Rasterizer=Inkscape
 
 DownloadTimeout = 1800
 KeepDataFile = 0
-FallBackToXAPI = 0
-FallBackToROMA = 1
-FallBackToSlices = 1
 MaxTilesetComplexity = 0
-i18n=1
+i18n=0
 
 Osmarender = orp
 
-Inkscape = inkscape
-InkscapeLocale = 0
+RenderStripes = 0
 
-BatikPath = /usr/share/batik-1.6/lib/batik-rasterizer.jar
 BatikJVMSize = 1536M
-Batik = 0
 BatikPort = 18123
-BatikClasspath = /usr/share/batik-1.6/lib/batik-rasterizer.jar:/usr/share/xerces-2/lib/xercesImpl.jar:batik-agent.jar
 
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000
@@ -60,8 +55,10 @@ Zip = zip
 UploadToDirectory = 0
 UploadTargetDirectory = /set/this/to/your/upload/directory
 UploadToDirectoryMaxQueue = 20
+
 GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
+CreateTilesetFile = 0
 
 Fork = 0
 ForkForUpload = 1
@@ -70,3 +67,10 @@ AutoResetInkscapePrefs = 0
 AutoResetStopfile = 0
 
 LocalSlippymap = 0
+
+# APIServers and XAPIServers define the servers to use to download OSM datta from.
+# APIServers are used for standard map downloads and XAPIServers are used for downloads 
+# with the specification of predicates.
+# The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
+APIServers = API,ROMA,XAPI
+XAPIServers = XAPI

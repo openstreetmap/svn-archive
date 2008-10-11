@@ -51,6 +51,17 @@ sub ProjectL
 }
 
 #-----------------------------------------------------------------------------
+# Project tile coordinates to bounding box
+#-----------------------------------------------------------------------------
+sub ProjectXY
+{
+    my ($Z, $X, $Y) = @_;
+    my ($W, $E) = ProjectL($X, $Z);
+    my ($N, $S) = Project($Y, $Z);
+    return ($N, $E, $S, $W);
+}
+
+#-----------------------------------------------------------------------------
 # Convert Y units in mercator projection to latitudes in degrees (not tile coordinate Y)
 #-----------------------------------------------------------------------------
 sub ProjectMercToLat($)

@@ -6,8 +6,9 @@ use File::Copy;
 use File::Path;
 use Fcntl ':flock'; #import LOCK_* constants
 use English '-no_match_vars';
+use Error qw(:try);
 use tahlib;
-use lib::TahConf;
+use TahConf;
 
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, compress module
@@ -33,7 +34,7 @@ use lib::TahConf;
 #-----------------------------------------------------------------------------
 
 #-------------------------------------------------------------------
-# Create a new Upload instance
+# Create a new Compress instance
 #-------------------------------------------------------------------
 sub new
 {
@@ -44,7 +45,7 @@ sub new
         Config  => TahConf->getConfig(),
     };
     $self->{TileDir} = $self->{Config}->get("WorkingDirectory"),
-    $self->{ZipDir}  = File::Spec->catdir($self->{Config}->get("WorkingDirectory"), "/uploadable"),
+    $self->{UploadDir}  = File::Spec->catdir($self->{Config}->get("WorkingDirectory"), "/uploadable"),
 
     bless ($self, $class);
 
@@ -54,9 +55,7 @@ sub new
 }
 
 #-------------------------------------------------------------------
-# main function. Compresses all tileset.dir's in $self->{WorkingDir}.
-# returns (success, reason), with success being 1
-# -1 on error. reason is a string explaining the error.
+# main function. Compresses all tileset.dir's in $self->{TileDir}.
 #-------------------------------------------------------------------
 sub compressAll
 {
@@ -70,9 +69,7 @@ sub compressAll
 
     if ($Config->get("LocalSlippymap"))
     {
-       my $reason = "No compressing - LocalSlippymap set in config file";
-       ::statusMessage(1,6);
-       return (0, $reason);
+       throw CompressError "No compressing - LocalSlippymap set in config file", "LocalSlippymap";
     }
 
     my (@prefixes,$allowedPrefixes);
@@ -88,18 +85,10 @@ sub compressAll
     $allowedPrefixes = join('|', @prefixes);
 
     # Go through all files in TileDir and grep the right directories
-    opendir(my $dp, $self->{TileDir}) 
-      or return (-1, "Can't open directory ".$self->{TileDir});
+    opendir(my $dp, $self->{TileDir}) or throw CompressError "Can't open directory " . $self->{TileDir};
     my @dir = readdir($dp);
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
-
-    if(!@tilesets)
-    {
-      $::progressPercent = 100;
-      ::statusMessage("Nothing found to upload",1,3);
-      return (1, "Nothing found.");
-    }
 
     foreach my $File(@tilesets)
     {   # go through all complete tilesets ie "*.dir" firectories
@@ -121,7 +110,12 @@ sub compressAll
             $::currentSubTask ='compress';
             $::progressPercent = 0;
             ::statusMessage("compressing $File",0,3);
-            $self->compress($FullTilesetPath);
+            if ($Config->get("CreateTilesetFile")) {
+                $self->createTilesetFile($FullTilesetPath);
+            }
+            else {
+                $self->compress($FullTilesetPath);
+            }
             # TODO: We always kill the tileset.dir independent of success and never return a success value!
             rmtree $FullTilesetPath;    # should be empty now
         }
@@ -137,7 +131,6 @@ sub compressAll
             unlink($FullTilesetPath."lock") if $flocked;
 	}
     }
-    return (1,"");
 }
 
 #-----------------------------------------------------------------------------
@@ -145,7 +138,6 @@ sub compressAll
 # Parameters:  FullTilesetPath
 #
 # It will never delete the source files, so the caller has to delete them
-# returns 1, if the zip command succeeded and 0 otherwise
 #-----------------------------------------------------------------------------
 sub compress
 {
@@ -161,21 +153,21 @@ sub compress
     my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
 
     # Create the output directory if it doesn't exist...
-    if( ! -d $self->{ZipDir} )
+    if( ! -d $self->{UploadDir} )
     {
-        mkpath $self->{ZipDir};# TODO: Error handling
+        mkpath $self->{UploadDir};# TODO: Error handling
     }
 
-    $Filename = File::Spec->join($self->{ZipDir},
+    $Filename = File::Spec->join($self->{UploadDir},
                                 sprintf("%s_%d_%d_%d_%d.zip",
                                 $layer, $Z, $X, $Y, ::GetClientId()));
     
-    $Tempfile = File::Spec->join($Config->get("WorkingDirectory"),
+    $Tempfile = File::Spec->join($self->{TileDir},
                                 sprintf("%s_%d_%d_%d_%d.zip",
                                 $layer, $Z, $X, $Y, ::GetClientId()));
     # ZIP all the tiles into a single file
     # First zip into "$Filename.part" and move to "$Filename" when finished
-    my $stdOut = File::Spec->join($Config->get("WorkingDirectory"),"zip.stdout");
+    my $stdOut = File::Spec->join($self->{TileDir}, "zip.stdout");
     my $zipCmd;
     if ($Config->get("7zipWin"))
     {
@@ -194,23 +186,108 @@ sub compress
           $stdOut);
     }
 
-
+    if (::dirEmpty($FullTilesetPathDir))
+    {
+        ::statusMessage("Skipping emtpy tileset directory: $FullTilesetPathDir",1,0);
+        return 0;
+    }
     # Run the zip command
-    my $zip_result = ::runCommand($zipCmd, $PID);
+    ::runCommand($zipCmd, $PID) or throw CompressError "Error running $zipCmd";
 
     # stdOut is currently never used, so delete it unconditionally    
     unlink($stdOut);
     
     # rename to final name so any uploader could pick it up now
     move ($Tempfile, $Filename); # TODO: Error handling
-
-    return $zip_result;
+    
+    return 1;
 }
+
+#-----------------------------------------------------------------------------
+# Pack all PNG files from one directory into a Tileset file.
+# Parameters:  FullTilesetPath
+#
+# It will never delete the source files, so the caller has to delete them
+#-----------------------------------------------------------------------------
+sub createTilesetFile
+{
+    my $self = shift;
+    my $Config = $self->{Config};
+
+    my ($FullTilesetPathDir) = @_;
+  
+    my $Filename;
+    my $Tempfile;
+
+    $FullTilesetPathDir =~ m{([^_\/\\]+)_(\d+)_(\d+)_(\d+).dir$};
+    my ($layer, $Z, $X, $Y) = ($1, $2, $3, $4);
+
+    my @offsets;
+    my $levels = 6;                       # number of layers in a tileset file, currently 6
+    my $tiles = ((4 ** $levels) - 1) / 3; # 1365 for 6 zoom levels
+    my $currpos = 8 + (4 * ($tiles + 1)); # 5472 for 6 zoom levels
+
+    my $userid = 0; # the server will fill this in
+
+    $Filename = File::Spec->join($self->{UploadDir},
+                                 sprintf("%s_%d_%d_%d_%d.tileset",
+                                         $layer, $Z, $X, $Y, ::GetClientId()));
+    
+    $Tempfile = File::Spec->join($self->{TileDir},
+                                 sprintf("%s_%d_%d_%d_%d.tileset",
+                                         $layer, $Z, $X, $Y, ::GetClientId()));
+
+    open my $fh, ">$Tempfile" or throw CompressError "Couldn't open '$Tempfile' ($!)";
+    seek $fh, $currpos, 0 or throw CompressError "Couldn't seek.";
+
+    for my $iz (0 .. $levels - 1) {
+        my $width = 2**$iz;
+        for my $iy (0 .. $width-1) {
+            for my $ix (0 .. $width-1) {
+                my $Pngname = File::Spec->join($FullTilesetPathDir,
+                                               sprintf("%s_%d_%d_%d.png",
+                                                       $layer, $Z+$iz, $X*$width+$ix, $Y*$width+$iy));
+                my $length = -s $Pngname;
+                if (! -e $Pngname) {
+                    push(@offsets, 0);
+                }
+                elsif ($length == 67) {
+                    push(@offsets, 2);
+                }
+                elsif ($length == 69) {
+                    push(@offsets, 1);
+                }
+                else {
+                    open my $png, "<$Pngname" or throw CompressError "Couldn't open file $Pngname ($!)";
+                    my $buffer;
+                    if( read($png, $buffer, $length) != $length ) {
+                        throw CompressError "Read failed from $Pngname ($!)"
+                    }
+                    close $png;
+                    print $fh $buffer or throw CompressError "Write failed on output to $Tempfile ($!)";
+                    push @offsets, $currpos;
+                    $currpos += $length;
+                }
+            }
+        }
+    }
+    push @offsets, $currpos;
+
+    if( scalar( @offsets ) != $tiles + 1 ) {
+        throw CompressError "Bad number of offsets: " . scalar( @offsets );
+    }
+
+    seek $fh, 0, 0;
+    print $fh pack("CxxxVV*", 1, $userid, @offsets) or throw CompressError "Write failed to $Tempfile ($!)";
+    close $fh;
+
+    move($Tempfile, $Filename) or throw CompressError "Could not move tileset file $Tempfile to $Filename ($!)";
+}
+
 
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 # parameter (FullPathToPNGDir, $layer)
-# returns (success, reason)
 #-----------------------------------------------------------------------------
 sub optimizePNGs
 {
@@ -239,7 +316,7 @@ sub optimizePNGs
     }
     else 
     {
-       return (-1, "could not read $PNGDir");
+       throw CompressError "could not read $PNGDir";
     }
 
     my $NumPNG = scalar(@pngfiles);
@@ -264,8 +341,7 @@ sub optimizePNGs
        }
        elsif (($Config->get("PngQuantizer")||'') eq "pngnq") 
        {
-           $Cmd = sprintf("%s \"%s\" -e .png%s -s1 -n256 %s %s",
-                                   $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" -e .png%s -s1 -n256 %s %s",
                                    $Config->get("pngnq"),
                                    $TmpFilename_suffix,
                                    $PngFullFileName,
@@ -292,8 +368,7 @@ sub optimizePNGs
 
        if ($Config->get("PngOptimizer") eq "pngcrush")
        {
-           $Cmd = sprintf("%s \"%s\" -q %s %s %s",
-                  $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" -q %s %s %s",
                   $Config->get("Pngcrush"),
                   $TmpFullFileName,
                   $PngFullFileName,
@@ -301,8 +376,7 @@ sub optimizePNGs
        }
        elsif ($Config->get("PngOptimizer") eq "optipng")
        {
-           $Cmd = sprintf("%s \"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
-                  $Config->get("Niceness"),
+           $Cmd = sprintf("\"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
                   $Config->get("Optipng"),
                   $TmpFullFileName,
                   $PngFullFileName,
@@ -331,5 +405,14 @@ sub optimizePNGs
 
     } # foreach my $PngFileName
 }
+
+
+#-----------------------------------------------------------------------------------------------------------------
+# class CompressError
+#
+# Exception to be thrown by Compress methods
+
+package CompressError;
+use base 'Error::Simple';
 
 1;

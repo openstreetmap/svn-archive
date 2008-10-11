@@ -139,12 +139,13 @@ sub fetchRequest
     if ($ValidFlag eq "OK") {
         # We got a valid request here!
         if ($Version == 5) {# this may seem nonsensical, but we'll need this once we introduce a new version
-            my ($Z, $X, $Y, $Layers, $lastModified, $complexity);
-            ($ValidFlag, $Version, $X, $Y, $Z, $Layers, $lastModified, $complexity) = split(/\|/, $Requeststring);
+            my ($Z, $X, $Y, $Layers, $lastModified, $complexity, $priority);
+            ($ValidFlag, $Version, $X, $Y, $Z, $Layers, $lastModified, $complexity, $priority) = split(/\|/, $Requeststring);
             $Request = Request->new($Z,$X,$Y);
             $Request->layers_str($Layers);
             $Request->lastModified($lastModified);
             $Request->complexity($complexity);
+            $Request->priority($priority);
         }
     }
     elsif ($ValidFlag eq "XX") {

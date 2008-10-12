@@ -82,6 +82,8 @@ sub new {
         push(@default_searchpaths, File::Spec->catpath($volume, $dir) );
 
         push(@default_searchpaths, File::Spec->catpath( $ENV{HOMEDRIVE}, 'Inkscape' ));
+    } elsif( $^O eq 'darwin' ){
+        push(@default_searchpaths, '/Applications/Inkscape.app/Contents/MacOS');
     }
 
     $self->searchpaths(@default_searchpaths);

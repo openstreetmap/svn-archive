@@ -61,7 +61,7 @@
 			_root.map.ways[w].clearPOIs();
 			_root.map.ways[w].checkconnections=false;
 		};
-		remote.call('getway',responder,Math.floor(this._name));
+		remote_read.call('getway',responder,Math.floor(this._name));
 	};
 
 	OSMWay.prototype.loadFromDeleted=function(version) {
@@ -97,7 +97,7 @@
 			_root.map.ways[w].redraw();
 			_root.map.ways[w].clearPOIs();
 		};
-		remote.call('getway_old',delresponder,Math.floor(this._name),Math.floor(version));
+		remote_read.call('getway_old',delresponder,Math.floor(this._name),Math.floor(version));
 	};
 
 	OSMWay.prototype.clearPOIs=function() {
@@ -255,7 +255,7 @@
 				removeMovieClip(_root.map.ways[result[0]]);
 				removeMovieClip(_root.map.areas[result[0]]);
 			};
-			remote.call('deleteway',deleteresponder,_root.usertoken,Math.floor(this._name));
+			remote_write.call('deleteway',deleteresponder,_root.usertoken,Math.floor(this._name));
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 			removeMovieClip(_root.map.areas[this._name]);
@@ -330,7 +330,7 @@
 										this.path[i].id,null,
 										deepCopy  (this.path[i].attr)));
 			}
-			remote.call('putway',putresponder,_root.usertoken,Number(this._name),sendpath,this.attr);
+			remote_write.call('putway',putresponder,_root.usertoken,Number(this._name),sendpath,this.attr);
 			this.clean=true;
 		}
 	};
@@ -1036,7 +1036,7 @@
 					}
                 }
 			};
-			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
+			remote_read.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
 			_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
 			_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 			_root.whichrequested+=1;

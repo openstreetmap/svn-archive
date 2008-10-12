@@ -74,7 +74,7 @@
 			_root.map.relations[w].members=result[2];
 			_root.map.relations[w].redraw();
 		};
-		remote.call('getrelation',responder,Math.floor(this._name));
+		remote_read.call('getrelation',responder,Math.floor(this._name));
 	};
 
 	OSMRelation.prototype.reload=function() {
@@ -104,7 +104,7 @@
 		if (!this.uploading && !this.locked && !_root.sandbox ) {
 			this.attr['created_by']=_root.signature;
 			this.uploading=true;
-			remote.call('putrelation', putresponder, _root.usertoken,
+			remote_write.call('putrelation', putresponder, _root.usertoken,
 				Math.floor(this._name),
 				this.attr, this.members, 1);
 			this.clean=true;
@@ -427,7 +427,7 @@
 							createRelationMenu(_root.windows.relation.box,20);
 							_root.windows.relation.box.search.text='';
 						};
-						remote.call('findrelations',findresponder,box.search.text);
+						remote_read.call('findrelations',findresponder,box.search.text);
 						break;
 			}
 			_root.panel.properties.reinit();

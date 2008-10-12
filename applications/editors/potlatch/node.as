@@ -51,6 +51,12 @@
 				}
 			}
 		}
+		var z=_root.map.anchors; for (var a in z) {
+			if (_root.map.anchors[a].node==old) { _root.map.anchors[a].node=id; }
+		}
+		var z=_root.map.anchorhints; for (var a in z) {
+			if (_root.map.anchorhints[a].node==old) { _root.map.anchorhints[a].node=id; }
+		}
 	};
 
 	// ------------------------------------------------------------------------

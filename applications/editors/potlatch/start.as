@@ -54,7 +54,7 @@
 			if (!preferences.data.nosplash) { splashScreen(); }
 			welcomeButtons();
 		};
-		remote.call('getpresets',preresponder);
+		remote_read.call('getpresets',preresponder);
 	}
 	
 	// -----------------------------------------------------------------------

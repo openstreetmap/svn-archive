@@ -121,7 +121,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10d";	// current version
+	var signature="Potlatch 0.10e";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
 
@@ -315,11 +315,13 @@
 	// Interaction with responder script
 	var loaderWaiting=false;
 
-	remote=new NetConnection();
-	remote.connect(apiurl);
-	remote.onStatus=function(info) { 
-		_root.panel.i_warning._visible=true;
-	};
+	remote_read=new NetConnection();
+	remote_read.connect(apiurl+'/read');
+	remote_read.onStatus=function(info) { _root.panel.i_warning._visible=true; };
+
+	remote_write=new NetConnection();
+	remote_write.connect(apiurl+'/write');
+	remote_write.onStatus=function(info) { _root.panel.i_warning._visible=true; };
 
 	#include 'node.as'
 	#include 'anchorpoint.as'
@@ -929,6 +931,7 @@
 		setTypeText("","");
 		_root.panel.padlock._visible=false;
 
+		_root.panel.properties.saveAttributes();
 		_root.panel.properties.tidy();
 		_root.panel.properties.init('');
 		_root.panel.presets.init();
@@ -946,7 +949,7 @@
 	function uploadSelected() {
 		_root.panel.properties.tidy();
 		if (_root.wayselected!=0 && !_root.ws.clean) {
-			uploadDirtyWays();
+			uploadDirtyWays(true);
 		}
 		if (_root.poiselected!=0 && !_root.map.pois[poiselected].clean) {
 			_root.map.pois[poiselected].upload();
@@ -954,10 +957,12 @@
 		uploadDirtyRelations();
 	};
 	
-	function uploadDirtyWays() {
+	function uploadDirtyWays(allow_ws) {
 		var z=_root.map.ways;
 		for (i in z) {
-			if (!_root.map.ways[i].clean && !_root.map.ways[i].hasDependentNodes()) { _root.map.ways[i].upload(); }
+			if (!_root.map.ways[i].clean && (i!=wayselected || allow_ws) && !_root.map.ways[i].hasDependentNodes()) { 
+				_root.map.ways[i].upload();
+			}
 		}
 	};
 

@@ -3,10 +3,10 @@
 	// History functions
 
 	function getHistory() {
-		if      (_root.poiselected>0)    { remote.call('getnode_history',historyresponder,Number(_root.poiselected)); }
+		if      (_root.poiselected>0)    { remote_read.call('getnode_history',historyresponder,Number(_root.poiselected)); }
 		else if (_root.pointselected>=0) { var n=_root.ws.path[_root.pointselected].id;
-										   if (n>0) { remote.call('getnode_history',historyresponder,n); } }
-		else if (_root.wayselected>0)    { remote.call('getway_history' ,historyresponder,Number(_root.wayselected)); };
+										   if (n>0) { remote_read.call('getnode_history',historyresponder,n); } }
+		else if (_root.wayselected>0)    { remote_read.call('getway_history' ,historyresponder,Number(_root.wayselected)); };
 	};
 
 	// Responder when AMF returns history of way/node
@@ -86,7 +86,7 @@
 				_root.map.ways[w].clean=false;
 				_root.map.ways[w].select();
 			};
-			remote.call('getpoi',noderesponder,_root.revertid,_root.revertversion);
+			remote_read.call('getpoi',noderesponder,_root.revertid,_root.revertversion);
 		} else { // POI
 			_root.map.pois[_root.revertid].reload(_root.revertversion);
 		}
@@ -109,5 +109,5 @@
 				}
 			}
 		};
-		remote.call('whichways_deleted',whichdelresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
+		remote_read.call('whichways_deleted',whichdelresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
 	};

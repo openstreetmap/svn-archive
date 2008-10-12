@@ -80,10 +80,10 @@
 	function parsePoint(xmlobj) {
 		_root.gpxpoints++;
 		if (lat) {
-		} else if (gpxpoints>4) {					// Get root co-ords from 
-			lat =xmlobj.attributes['lat'];			//  fifth point in GPX
-			long=xmlobj.attributes['lon'];			//   |
-			startPotlatch();						//   |
+		} else {									// Get root co-ords from first point in GPX
+			lat =xmlobj.attributes['lat'];			// (was briefly if (gpxpoints>4), but 
+			long=xmlobj.attributes['lon'];			//  obviously this broke lat2coord for the
+			startPotlatch();						//  first four points... ** need to fix)
 		}
 		var y= lat2coord(xmlobj.attributes['lat']);
 		var x=long2coord(xmlobj.attributes['lon']);

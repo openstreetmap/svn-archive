@@ -80,6 +80,8 @@ sub new {
         my($volume, $dir) = File::Spec->splitpath($ENV{PROGRAMFILES}, 1);
         $dir = File::Spec->catdir( $dir, 'Inkscape' );
         push(@default_searchpaths, File::Spec->catpath($volume, $dir) );
+
+        push(@default_searchpaths, File::Spec->catpath( $ENV{HOMEDRIVE}, 'Inkscape' ));
     }
 
     $self->searchpaths(@default_searchpaths);

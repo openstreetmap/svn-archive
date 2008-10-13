@@ -310,7 +310,16 @@ sub convert {
         throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\": $error", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
     }
 
-    $self->check_output($params{outfile});
+    try {
+        $self->check_output($params{outfile});
+    } catch SVG::Rasterize::Engine::Error::NoOutput with {
+        # Add extra information about the rasterizer run and rethrow exception
+        my $e = shift;
+        $e->{cmd} = \@cmd;
+        $e->{stdout} = $self->{stdout};
+        $e->{stderr} = $self->{stderr};
+        $e->throw;
+    };
 }
 
 package SVG::Rasterize::Engine::Batik::Error;

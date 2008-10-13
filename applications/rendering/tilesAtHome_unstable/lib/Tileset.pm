@@ -679,20 +679,23 @@ sub RenderSVG
             ::statusMessage("Rasterizing failed because of unsatisfied prerequisite: $e",1,0);
 
             throw TilesetError("Exception in RenderSVG: $e");
-        } catch SVG::Rasterize::Engine::Error::Runtime with {
+        } catch SVG::Rasterize::Engine::Error::NoOutput with {
             my $e = shift;
 
-            ::statusMessage("Rasterizing failed with runtime exception: $e",1,0);
-            print "Rasterize system command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
+            ::statusMessage("Rasterizing failed to create output: $e",1,0);
+            print "Rasterize command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
             print "Rasterize engine STDOUT:".$e->{stdout}."\n" if $e->{stdout};
             print "Rasterize engine STDERR:".$e->{stderr}."\n" if $e->{stderr};
 
             $Req->is_unrenderable(1);
             throw TilesetError("Exception in RenderSVG: $e");
-        } catch SVG::Rasterize::Engine::Error::NoOutput with {
+        } catch SVG::Rasterize::Engine::Error::Runtime with {
             my $e = shift;
 
-            ::statusMessage("Rasterizing failed to create output: $e",1,0);
+            ::statusMessage("Rasterizing failed with runtime exception: $e",1,0);
+            print "Rasterize command: \"".join('", "', @{$e->{cmd}})."\"\n" if $e->{cmd};
+            print "Rasterize engine STDOUT:".$e->{stdout}."\n" if $e->{stdout};
+            print "Rasterize engine STDERR:".$e->{stderr}."\n" if $e->{stderr};
 
             $Req->is_unrenderable(1);
             throw TilesetError("Exception in RenderSVG: $e");

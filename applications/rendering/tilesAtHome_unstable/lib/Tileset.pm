@@ -649,8 +649,8 @@ sub RenderSVG
         # Create an object describing what area of the svg we want
         my $box = SVG::Rasterize::CoordinateBox->new
             ({
-                space => { top => $height, bottom => 0, left => 0, right => $width },
-                box => { left => 0, right => $width, top => ($stripe_height * ($stripe+1)), bottom => ($stripe_height*$stripe) }
+                space => { top => 0, bottom => $height, left => 0, right => $width },
+                box => { left => 0, right => $width, top => ($stripe_height * $stripe), bottom => ($stripe_height * ($stripe+1)) }
              });
         
         # Make a variable that points to the renderer to save lots of typing...

@@ -26,6 +26,7 @@ Rasterizer=Inkscape
 
 DownloadTimeout = 1800
 KeepDataFile = 0
+FallBackToSlices = 1
 MaxTilesetComplexity = 0
 i18n=0
 

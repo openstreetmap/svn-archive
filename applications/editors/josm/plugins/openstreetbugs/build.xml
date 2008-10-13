@@ -1,4 +1,4 @@
-<project name="osb" default="dist" basedir=".">
+<project name="openstreetbugs" default="dist" basedir=".">
 
 	<property file="build.properties"/>
 	

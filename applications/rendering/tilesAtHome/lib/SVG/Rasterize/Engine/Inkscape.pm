@@ -156,9 +156,18 @@ sub convert {
     push(@cmd, $params{infile});
 
     run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
-        throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {stdout => $self->{stdout}, stderr => $self->{stderr}});
+        throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {cmd => \@cmd, stdout => $self->{stdout}, stderr => $self->{stderr}});
 
-    $self->check_output($params{outfile});
+    try {
+        $self->check_output($params{outfile});
+    } catch SVG::Rasterize::Engine::Error::NoOutput with {
+        # Add extra information about the rasterizer run and rethrow exception
+        my $e = shift;
+        $e->{cmd} = \@cmd;
+        $e->{stdout} = $self->{stdout};
+        $e->{stderr} = $self->{stderr};
+        $e->throw;
+    };
 }
 
 package SVG::Rasterize::Engine::Inkscape::Error;

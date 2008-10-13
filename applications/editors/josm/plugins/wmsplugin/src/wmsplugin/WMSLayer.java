@@ -72,7 +72,7 @@ public class WMSLayer extends Layer {
 
 	public WMSLayer(String name, String baseURL) {
 		super(name);
-		boolean background = true;
+		background = true; /* set global background variable */
 		initializeImages();
 		this.baseURL = baseURL;
 		mv = Main.map.mapView;

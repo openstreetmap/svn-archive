@@ -690,7 +690,7 @@ sub autotuneComplexity #
     my $tilecomplexity = shift();
     my $deltaT = $stop - $start;
 
-    if(! $complexity) {
+    if(! $complexity) { # this is the first call of this function
         if($Config->get('MaxTilesetComplexity')) {
             $complexity = $Config->get('MaxTilesetComplexity');
         } else {
@@ -700,11 +700,16 @@ sub autotuneComplexity #
 
     print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
     if (($tilecomplexity > 0) && ($deltaT > 0)) {
+        # aim for a rendering turn around in 900 seconds.
         $complexity = 0.01 * ($tilecomplexity * 900 / $deltaT) + 0.99 * $complexity;
     }
     $complexity = 100000 if $complexity < 100000;
 
-    $Config->set('MaxTilesetComplexity', $complexity);
+    if($Config->get('MaxTilesetComplexity')) {
+        # if MaxTilesetComplexity is not set we still do our calculations
+        # but we don't limit the client. The hint on client exit has to be enough.
+        $Config->set('MaxTilesetComplexity', $complexity);
+    }
 }
 #-----------------------------------------------------------------------------
 # Gets latest copy of client from svn repository

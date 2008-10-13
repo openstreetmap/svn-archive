@@ -1,21 +1,17 @@
 <html>
   <head>
     <script type="text/javascript">
-		//var bbox = "";
-        //var width  = 800;
-        //var height = 800;
-
-		// Parse query string and set variables
-		var url = location.href;
+        // Parse query string and set variables
+        var url = location.href;
         var queryStringPos = url.indexOf("?");
-		if( queryStringPos != -1 )
+        if( queryStringPos != -1 )
         {
             url = url.substring(queryStringPos + 1);
-	    	var variables = url.split ("&");
+            var variables = url.split ("&");
             for (i = 0; i < variables.length; i++) 
             {
-            	if( !variables[i] )
-            		continue;
+                if( !variables[i] )
+                    continue;
                 var keyValue = variables[i].split("=");
                 eval ('var '+keyValue[0].toLowerCase()+'="'+keyValue[1]+'"');
             }
@@ -24,15 +20,10 @@
         {
             dump("YWMS ERROR: no queryString\n");
         }
-        
-        // Limit size to current window's, to avoid memory problems
-        //width = Math.min(width, screen.width);
-        //height = Math.min(height, screen.height);
-        
     </script>
     <script type="text/javascript" src="http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=z7qRk3_V34HAbY_SkC7u7GAgG5nDTblw.cuL1OS5LWGwkIIUeGjg4qsnJDPpmhoF"></script>
   </head>
-  
+
   <body style="margin: 0px">
     <div id="map"></div>
     <script type="text/javascript">
@@ -59,7 +50,7 @@
         map.removeZoomScale();
         var zac = map.getBestZoomAndCenter(points);
         var level = zac.zoomLevel;
-         
+
         // funny Yahoo bug seems to return 0 if your section is too small
         if( level == 0 ) level = 1;
         if (level>1) level--;
@@ -73,30 +64,17 @@
         // This is hack to bug in getBestZoomAndCenter function
         cx = map.convertXYLatLon(new YCoordPoint((xy0.x+xy1.x)/2, (xy0.y+xy1.y)/2));
         map.drawZoomAndCenter(cx,level)
-      
+
         // Create a new size for the map. This makes the need of clipping the image unnecessary.
         new_width  = Math.abs( xy0.x - xy1.x);
         new_height = Math.abs( xy0.y - xy1.y);
-        
+
         // Apply the new width-height
+        map.resizeTo( new YSize(new_width, new_height));
         mapDiv.style.width  = new_width;
         mapDiv.style.height = new_height;
-        map.resizeTo( new YSize(new_width, new_height));
         window.moveTo(0,0);
         window.resizeTo(new_width, new_height);
-
-
-          
-        /*
-        /// DEBUG: colour the interesting area
-        var cPT2 = new YGeoPoint(tllat, tllon); 
-        var cPT3 = new YGeoPoint(tllat, brlon); 
-        var cPT4 = new YGeoPoint(brlat, brlon); 
-        var cPT5 = new YGeoPoint(brlat, tllon); 
-        // args: array of pts, color, width, alpha 
-        var poly1 = new YPolyline([cPT2,cPT3,cPT4,cPT5, cPT2],'blue',7,0.7); 
-        map.addOverlay(poly1);
-        */
       }
     </script>
   </body>

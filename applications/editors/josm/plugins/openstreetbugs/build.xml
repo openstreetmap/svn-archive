@@ -52,6 +52,8 @@
 				<attribute name="Author" value="Henrik Niehaus" />
 			</manifest>
 		</jar>
+		
+		<copy todir="${josm.dist.dir}" file="${plugin.jar}" />
 	</target>
 
 	<!-- clean target -->

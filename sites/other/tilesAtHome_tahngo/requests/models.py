@@ -9,7 +9,7 @@ class Request(models.Model):
   x = models.PositiveSmallIntegerField()
   y = models.PositiveSmallIntegerField()
 
-  # render tiles from zoom levl min_z through max_z
+  # render tiles from zoom level min_z through max_z
   min_z = models.PositiveSmallIntegerField(default=12)
   max_z = models.PositiveSmallIntegerField(default=17)
 

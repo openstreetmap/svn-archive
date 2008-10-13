@@ -1,0 +1,65 @@
+		    Diff-Based Tile Expiry Script
+		    =============================
+
+This script, "update.rb", and its (hopefully re-usable) library,
+"expire.rb", can be used to automatically dirty tiles on a mod_tile +
+mapnik tile server. 
+
+Usage
+-----
+
+First, edit the "update.rb" script, as there are several system-
+specific settings at the top. If you want to use a mirror you should
+edit REMOTE_REPOS. LOCAL_REPOS is the directory to which .osc diffs
+will be downloaded to. OSM2PGSQL_DIR is the directory where, surprise
+surprise, the osm2pgsql binary lives.
+
+Second, download and import a full planet dump, using osm2pgsql's slim
+mode.
+
+Setup the timestamp in $LOCAL_REPOS/timestamp.txt. The format is the
+same as the server timestamp in $REMOTE_REPOS/timestamp.txt. You
+should ensure that there is some overlap, usually one hour between the
+end of the planet dump and the beginning of the hourly diffs, as the
+planet dump can occasionally have referential integrity problems. For
+example, if the planet dump is dated 2008-10-08 (meaning that dumping
+started about 1am on that day) I would set the initial timestamp to be
+2008-10-08 00:00Z.
+
+Run the "update.rb" script. The script can handle several hours worth
+of diffs in one invocation.
+
+Method
+------
+
+The script collects all node locations which are in the diff and all
+node locations referenced from ways within the diff. Each of these is
+used to build a set of dirty tile codes at the maximum zoom level,
+which is successively coarsened until the minimum zoom level is
+reached.
+
+Known Limitations
+-----------------
+
+1) Relations. The script just doesn't handle them. It should be fairly 
+easy to extend, however.
+
+2) Skipped tiles. If a way, consisting of two nodes, is modified, but
+there are (meta)tiles between the two nodes, e.g:
+
++-------+-------+-------+
+|       |     ==|=X     |
+|       |  ===  |       |
+|     X=|==     |       |
++-------+-------+-------+
+
+where each box is a meta-tile. The middle box won't be expired.
+However, I have not experienced this in practice, as most ways tend to
+be shorter than a meta-tile. This can also happen in two dimensions,
+where an area (e.g: park) might entirely enclose a meta-tile without
+any nodes inside it.
+
+3) Lack of intelligence. If a node or way appears in the diff file
+then it will trigger expiry. However, by examination of the osm2pgsql
+style file and mapnik style rules it should be possible to eliminate
+many expiries of non-rendered properties (e.g: note tags).

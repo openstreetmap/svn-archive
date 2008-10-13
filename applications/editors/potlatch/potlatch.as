@@ -35,7 +35,7 @@
 
 	// Co-ordinates
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
-	var minscale=12;				// don't zoom out past this
+	var minscale=13;				// don't zoom out past this
 	var maxscale=19;				// don't zoom in past this
 	if (scale) {} else {scale=14;}	// default scale if not provided (e.g. GPX)
 	var scale=Math.max(Math.min(Math.floor(scale),maxscale),minscale);

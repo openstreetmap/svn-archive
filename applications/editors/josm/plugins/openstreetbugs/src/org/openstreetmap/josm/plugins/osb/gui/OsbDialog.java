@@ -111,7 +111,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		refresh.setToolTipText(Messages.translate(OsbDialog.class, "refresh"));
 		refresh.setIcon(OsbPlugin.loadIcon("view-refresh22.png"));
 		refresh.addActionListener(new ActionListener() {
-			@Override
+
 			public void actionPerformed(ActionEvent e) {
 				// check zoom level
 				if(Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
@@ -144,7 +144,6 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		
 		// add a selection listener to the data
 		DataSet.selListeners.add(new SelectionChangedListener() {
-			@Override
 			public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 				fireSelectionChanged = false;
 				list.clearSelection();
@@ -164,7 +163,6 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		CloseIssueAction.addActionObserver(this);
 	}
 
-	@Override
 	public synchronized void update(final DataSet dataset) {
 		Node lastNode = OsbAction.getSelectedNode();
 		model = new DefaultListModel();
@@ -180,7 +178,6 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		list.setSelectedValue(new OsbListItem(lastNode), true);
 	}
 
-	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(list.getSelectedValues().length == 0) {
 			addComment.setEnabled(false);
@@ -223,10 +220,8 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		}
 	}
 
-	@Override
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
 
-	@Override
 	public void layerAdded(Layer newLayer) {
 		if(newLayer == osbPlugin.getLayer()) {
 			update(osbPlugin.getDataSet());
@@ -234,14 +229,12 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		}
 	}
 
-	@Override
 	public void layerRemoved(Layer oldLayer) {
 		if(oldLayer == osbPlugin.getLayer()) {
 			model.removeAllElements();
 		}
 	}
 
-	@Override
 	public void dataChanged(OsmDataLayer l) {
 		update(l.data);
 	}
@@ -251,7 +244,6 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		Main.map.mapView.zoomTo(node.eastNorth, scale);
     }
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
 			OsbListItem item = (OsbListItem)list.getSelectedValue();
@@ -259,12 +251,10 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		}
 	}
 	
-	@Override
 	public void mousePressed(MouseEvent e) {
         mayTriggerPopup(e);
     }
 
-	@Override
     public void mouseReleased(MouseEvent e) {
         mayTriggerPopup(e);
     }
@@ -279,13 +269,10 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         }
     }
 	
-	@Override
 	public void mouseEntered(MouseEvent e) {}
 
-	@Override
 	public void mouseExited(MouseEvent e) {}
 
-	@Override
 	public void actionPerformed(OsbAction action) {
 		if(action instanceof AddCommentAction || action instanceof CloseIssueAction) {
 			update(osbPlugin.getDataSet());
@@ -293,7 +280,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 	}
 	
 	private class BugComparator implements Comparator<Node> {
-		@Override
+
 		public int compare(Node o1, Node o2) {
 			String state1 = o1.get("state");
 			String state2 = o2.get("state");

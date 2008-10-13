@@ -53,7 +53,6 @@ public abstract class OsbAction extends AbstractAction {
 		OsbAction.selectedNode = selectedNode;
 	}
 	
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
 			doActionPerformed(e);

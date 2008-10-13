@@ -180,12 +180,10 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 			toggle.addActionListener(new ActionListener() {
 				private boolean download = true;
 
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					active = toggle.isSelected();
 					if (toggle.isSelected() && download) {
 						Main.worker.execute(new Runnable() {
-							@Override
 							public void run() {
 								updateData();
 							}
@@ -204,10 +202,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 		return new ImageIcon(url);
 	}
 
-	@Override
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
 
-	@Override
 	public void layerAdded(Layer newLayer) {
 		if(newLayer instanceof OsmDataLayer) {
 			active = ((JToggleButton)dialog.action.button).isSelected();
@@ -217,7 +213,6 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 		}
 	}
 
-	@Override
 	public void layerRemoved(Layer oldLayer) {
 		if(oldLayer == layer) {
 			layer = null;

@@ -101,7 +101,15 @@ sub convert {
         throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Batik agent returned non-OK result \"$result\"", { cmd => \@cmd, stdout => $reply } );
     }
 
-    $self->check_output($params{outfile});
+    try {
+        $self->check_output($params{outfile});
+    } catch SVG::Rasterize::Engine::Error::NoOutput with {
+        # Add extra information about the rasterizer run and rethrow exception
+        my $e = shift;
+        $e->{cmd} = \@cmd;
+        $e->{stdout} = $reply;
+        $e->throw;
+    };
 }
 
 =pod

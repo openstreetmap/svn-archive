@@ -1,0 +1,73 @@
+<project name="osb" default="dist" basedir=".">
+
+	<property file="build.properties"/>
+	
+	<!-- compilation properties -->
+	<property name="josm.build.dir" value="${josm.base.dir}/build" />
+	<property name="josm.home.dir" value="${user.home}/.josm" />
+	<property name="josm" location="${josm.base.dir}/dist/josm-custom.jar" />
+	<property name="lib.dir" value="lib" />
+	<property name="plugin.build.dir" value="build" />
+	<property name="plugin.name" value="${ant.project.name}" />
+	<property name="plugin.jar" value="${plugin.build.dir}/${plugin.name}.jar" />
+
+	<property name="ant.build.javac.target" value="1.5" />
+
+	<target name="init">
+		<mkdir dir="${plugin.build.dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<echo message="creating ${plugin.jar}" />
+		<javac srcdir="src" classpath="${josm}" destdir="${plugin.build.dir}" debug="true">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<target name="dist" depends="clean, compile">
+		<!-- set build time -->
+		<tstamp>
+			<format property="current.time" pattern="dd.MM.yyyy HH:mm" />
+		</tstamp>
+
+		<!-- copy images to jar -->
+		<copy todir="${plugin.build.dir}/images">
+			<fileset dir="images" />
+		</copy>
+		
+		<!-- copy language files -->
+		<copy todir="${plugin.build.dir}">
+			<fileset dir="src">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+
+		<!-- create the jar file -->
+		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.osb.OsbPlugin" />
+				<attribute name="Plugin-Description" value="Imports issues from OpenStreetBugs" />
+				<attribute name="Plugin-Version" value="${version}" />
+				<attribute name="Plugin-Date" value="${current.time}" />
+				<attribute name="Author" value="Henrik Niehaus" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- clean target -->
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+	<target name="install" depends="dist">
+		<copy file="${plugin.jar}" todir="${user.home}/.josm/plugins" />
+	</target>
+
+	<target name="test" depends="install">
+		<java jar="${josm}" fork="true">
+			<arg value="${osmfile}" />
+			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=7777"/>
+		</java>
+	</target>
+
+</project>

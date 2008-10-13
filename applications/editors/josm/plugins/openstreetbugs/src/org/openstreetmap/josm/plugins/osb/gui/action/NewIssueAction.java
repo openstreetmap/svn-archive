@@ -73,18 +73,14 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 		button.setSelected(false);
 	}
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		addNewIssue(e);
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {}
 
-	@Override
 	public void mouseExited(MouseEvent e) {}
 
-	@Override
 	public void mousePressed(MouseEvent e) {
 		addNewIssue(e);
 	}
@@ -95,7 +91,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 				Messages.translate(getClass(), "title"),
 				JOptionPane.QUESTION_MESSAGE);
 		
-		if(result != null && !result.isEmpty()) {
+		if(result != null && result.length() > 0) {
 			try {
 				Node n = newAction.execute(e.getPoint(), result);
 				plugin.getDataSet().addPrimitive(n);
@@ -116,6 +112,5 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 		reset();
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {}
 }

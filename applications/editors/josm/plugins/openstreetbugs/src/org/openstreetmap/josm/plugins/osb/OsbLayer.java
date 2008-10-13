@@ -71,7 +71,6 @@ public class OsbLayer extends Layer implements MouseListener {
 		super(name);
 		this.data = dataSet;
 		DataSet.selListeners.add(new SelectionChangedListener() {
-			@Override
 			public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 				selection = newSelection;
 			}
@@ -127,7 +126,6 @@ public class OsbLayer extends Layer implements MouseListener {
 			int height = icon.getIconHeight();
 			
 			g.drawImage(icon.getImage(), p.x - (width / 2), p.y - (height / 2), new ImageObserver() {
-				@Override
 				public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 					return false;
 				}
@@ -208,7 +206,6 @@ public class OsbLayer extends Layer implements MouseListener {
 		return minPrimitive;
 	}
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			if(Main.map.mapView.getActiveLayer() == this) {
@@ -220,12 +217,10 @@ public class OsbLayer extends Layer implements MouseListener {
 		}
 	}
 	
-	@Override
 	public void mousePressed(MouseEvent e) {
         mayTriggerPopup(e);
     }
 
-	@Override
     public void mouseReleased(MouseEvent e) {
         mayTriggerPopup(e);
     }
@@ -242,9 +237,7 @@ public class OsbLayer extends Layer implements MouseListener {
         }
     }
 	
-	@Override
 	public void mouseEntered(MouseEvent e) {}
 
-	@Override
 	public void mouseExited(MouseEvent e) {}
 }

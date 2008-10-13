@@ -38,7 +38,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class OsbUploadHook implements UploadHook {
 
-	@Override
 	public boolean checkUpload(Collection<OsmPrimitive> add, Collection<OsmPrimitive> update,
 			Collection<OsmPrimitive> delete) 
 	{

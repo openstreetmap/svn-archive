@@ -5,6 +5,7 @@ import django.views.generic.list_detail
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from tah.requests.models import Request,Upload
 from tah.requests.forms import *
+from tah.requests.uploadhandler import handle_uploaded_tileset
 from django.conf import settings
 from django.forms import widgets
 from datetime import datetime, timedelta
@@ -236,71 +237,79 @@ def feedback(request):
 # Upload a finished tileset
 
 def upload_request(request):
-    html='XX|Unknown error.'
+  if request.method == 'GET':
+      # View the plain form webpage with default values filled in
+      authform = ClientAuthForm()
+      CreateFormClass = UploadForm
+      form = CreateFormClass()
+      return render_to_response('requests_upload.html',{'uploadform': form, 
+                                'authform': authform, 'host':request.META['HTTP_HOST']})
 
-    if request.method == 'POST':
+  if request.method == 'POST':
       authform = ClientAuthForm(request.POST)
-      if authform.is_valid():
-        name     = authform.cleaned_data['user']
-	passwd   = authform.cleaned_data['passwd']
-        user = authenticate(username=name, password=passwd)
-        if user is not None:
-          #"You provided a correct username and password!"
-          formdata = request.POST.copy()
-          formdata['user_id'] = user.id # set the user to the correct value
-          # we had huge client_uuids in the beginnning, shorten if necessary
-          if formdata.has_key('client_uuid') and int(formdata['client_uuid']) > 65535:
-            formdata['client_uuid'] = formdata['client_uuid'][-4:]
-          #t@h client send layername, rather than layer number,
-          #find the right one if that is the case
-          if formdata.has_key('layer'):
-            try: int(formdata['layer'])
-            except ValueError:
+
+      if not authform.is_valid():
+          # authform failed to validate.
+          html="XX|Invalid username. Please specify a username and password."
+          return HttpResponse(html)
+
+      name     = authform.cleaned_data['user']
+      passwd   = authform.cleaned_data['passwd']
+      user = authenticate(username=name, password=passwd)
+      if user is None:
+          # authentication failed here, or authform failed to validate.
+          html="XX|Invalid username. Your username and password were " \
+               "incorrect or the user has been disabled."
+          return HttpResponse(html)
+
+      #"You provided a correct username and password" user is set now
+      formdata = request.POST.copy()
+      formdata['user_id'] = user.id # set the user to the correct value
+      # we had huge client_uuids in the beginnning, shorten if necessary
+      if formdata.has_key('client_uuid') and int(formdata['client_uuid']) > 65535:
+          formdata['client_uuid'] = formdata['client_uuid'][-4:]
+      #t@h client send layername, rather than layer number,
+      #find the right one if that is the case
+      if formdata.has_key('layer'):
+          try: int(formdata['layer'])
+          except ValueError:
               # look up the layer id
               try: formdata['layer'] = Layer.objects.get(name=formdata['layer']).id
               except Layer.DoesNotExist: del formdata['layer']
-          form = UploadForm(formdata, request.FILES)
 
-          if form.is_valid():
-            file = request.FILES['file']
-            try:
+      # bind the data to 'form'
+      form = UploadForm(formdata, request.FILES)
+
+      if not form.is_valid():
+          html="XX|Upload form is not valid. "+str(form.errors)
+          return HttpResponse(html)
+
+      # try to handle the uploaded file. Returns True if finished
+      file = request.FILES['file']
+      success = handle_uploaded_tileset(file, form)
+      if success == True:
+          # all is well, we are finished
+          html="OK|Upload processed"
+          return HttpResponse(html)
+
+      else:
+          # handling failed, save for later processing
+          try:
               newUpload= form.save(commit=False)
-              #             #   filetype = file['content-type']   
               newUpload.ipaddress = request.META['REMOTE_ADDR']
               # low priority upload by default
               if not newUpload.priority: newUpload.priority = 3
               if not newUpload.client_uuid: newUpload.client_uuid = 0
               newUpload.is_locked = False
-              #newUpload.save_file_file(file['filename'],file['content'])
               newUpload.save()
-	      html="OK|4|"
-            except:
+              html="OK|Upload saved for later processing"
+          except:
               # delete possibly uploaded file in case of exception
               os.unlink(newUpload.file.path)
-	      import sys
-              html ="XX| Exception thrown."+str(user.id)+str(sys.exc_info()[1])
-      	  else:
-            html="XX|4|form is not valid. "+str(form.errors)
-        else:
-            # authentication failed here, or authform failed to validate.
-            html="XX|4|Invalid username. Your username and password were " \
-                 "incorrect or the user has been disabled."
-      else:
-          # authform failed to validate.
-          html="XX|4|Invalid username. Please specify a username and password."
+              import sys
+              html ="XX|Exception thrown. "+str(user.id)+str(sys.exc_info()[1])
 
-    else:
-        # request.method==GET here. View the plain form webpage with 
-        # default values filled in
-        authform = ClientAuthForm()
-        CreateFormClass = UploadForm
-        #del CreateFormClass.base_fields['user_id']
-        form = CreateFormClass()
-        return render_to_response('requests_upload.html',{'uploadform': form, 
-                                  'authform': authform, 'host':request.META['HTTP_HOST']})
-    return HttpResponse(html);
-
-
+          return HttpResponse(html)
 #-------------------------------------------------------
 # return upload queue load
 
@@ -419,7 +428,7 @@ def take(request):
         (fsize,mtime) = 0,0
 
     # next line is actually the successful request string!
-    html="OK|%d|%s|%d|%d" % (PROT_VER,req,mtime,fsize)
+    html="OK|%d|%s|%d|%d|%d" % (PROT_VER,req,mtime,fsize,req.priority)
     return HttpResponse(html) #+"\n"+str(connection.queries))
 
 

@@ -387,9 +387,9 @@ sub mergeOsmFiles
 
 sub keepLog
 {
-#    if ($Config->get("ProcessLog")) {
+    my $Config = TahConf->getConfig();
+    if ($Config->get("ProcessLog")) {
         my ($Pid,$Process,$Action,$Message) = @_;
-        my $Config = TahConf->getConfig();
         my $logFile = $Config->get("ProcessLogFile");
         my $log = $Config->get("ProcessLog");
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
@@ -400,7 +400,7 @@ sub keepLog
             print $fpLog sprintf("%04d-%02d-%02d %02d:%02d:%02d [%s] %s %s %s %s\n", $year, $mon+1, $mday, $hour, $min, $sec, $Config->get("ClientVersion"), $Pid, $Process, $Action, $Message);
             close $fpLog;
         }
-#    }
+    }
 }
 
 #-----------------------------------------------------------------------------

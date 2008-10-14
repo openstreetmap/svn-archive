@@ -67,7 +67,8 @@ public class Messages {
     }
     
     private void loadBundle(Locale locale) throws IOException {
-        InputStream in = Messages.class.getResourceAsStream("language_" + locale.toString() + ".properties");
+    	System.out.println("Trying to load locale " + locale.getLanguage() + " for openstreetbugs");
+        InputStream in = Messages.class.getResourceAsStream("language_" + locale.getLanguage() + ".properties");
         bundle = new PropertyResourceBundle(in);
     }
     

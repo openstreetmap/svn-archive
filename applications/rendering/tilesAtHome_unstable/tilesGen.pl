@@ -690,8 +690,9 @@ sub autotuneComplexity #
     my $tilecomplexity = shift();
     my $deltaT = $stop - $start;
 
-    # aim for a rendering turn around in 900 seconds.
-    my $timeaim = 900;
+    my $Config = TahConf->getConfig();
+    my $timeaim = $Config->get("AT_timeaim");
+    my $minimum = $Config->get("AT_minimum");
 
     print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
 
@@ -708,7 +709,7 @@ sub autotuneComplexity #
     if (($tilecomplexity > 5472) && ($deltaT > 0)) {
         $complexity = 0.01 * ($tilecomplexity * $timeaim / $deltaT) + 0.99 * $complexity;
     }
-    $complexity = 100000 if $complexity < 100000;
+    $complexity = $minimum if $complexity < $minimum;
 
     if($Config->get('MaxTilesetComplexity')) {
         # if MaxTilesetComplexity is not set we still do our calculations

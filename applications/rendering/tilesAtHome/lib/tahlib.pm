@@ -437,23 +437,26 @@ sub cleanUpAndDie
 sub GetClientId
 {
     my $Config = TahConf->getConfig();
-    my $idfile = $Config->get("WorkingDirectory") . "/client-id.txt";
-    my $clientId;
-    if (open(idfile, "<", $idfile))
+    my $clientId = $Config->get("ClientID");
+    if (!$clientId)
     {
-        $clientId = <idfile>;
-        chomp $clientId;
-        close idfile;
-    }
-    elsif (open(idfile, ">", $idfile))
-    {
-        $clientId = int(rand(65535)); 
-        print idfile $clientId;
-        close idfile;
-    }
-    else
-    {
-        die("can't open $idfile");
+        my $idfile = $Config->get("WorkingDirectory") . "/client-id.txt";
+        if (open(idfile, "<", $idfile))
+        {
+            $clientId = <idfile>;
+            chomp $clientId;
+            close idfile;
+        }
+        elsif (open(idfile, ">", $idfile))
+        {
+            $clientId = int(rand(65535)); 
+            print idfile $clientId;
+            close idfile;
+        }
+        else
+        {
+            die("can't open $idfile");
+        }
     }
     return $clientId;
 }

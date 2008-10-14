@@ -690,18 +690,23 @@ sub autotuneComplexity #
     my $tilecomplexity = shift();
     my $deltaT = $stop - $start;
 
+    # aim for a rendering turn around in 900 seconds.
+    my $timeaim = 900;
+
+    print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
+
     if(! $complexity) { # this is the first call of this function
         if($Config->get('MaxTilesetComplexity')) {
             $complexity = $Config->get('MaxTilesetComplexity');
+        } elsif (($tilecomplexity > 0) && ($deltaT > 0)) {
+            $complexity = $tilecomplexity * $timeaim / $deltaT;
         } else {
             $complexity = $tilecomplexity;
         }
     }
 
-    print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
     if (($tilecomplexity > 0) && ($deltaT > 0)) {
-        # aim for a rendering turn around in 900 seconds.
-        $complexity = 0.01 * ($tilecomplexity * 900 / $deltaT) + 0.99 * $complexity;
+        $complexity = 0.01 * ($tilecomplexity * $timeaim / $deltaT) + 0.99 * $complexity;
     }
     $complexity = 100000 if $complexity < 100000;
 

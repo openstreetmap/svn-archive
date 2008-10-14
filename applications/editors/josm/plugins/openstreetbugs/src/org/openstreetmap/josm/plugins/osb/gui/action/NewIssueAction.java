@@ -86,6 +86,18 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 	}
 
 	private void addNewIssue(MouseEvent e) {
+		// get the user nickname
+		String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
+		if(nickname == null || nickname.length() == 0) {
+			nickname = JOptionPane.showInputDialog(Main.parent, Messages.translate(getClass(), "enter_nickname"));
+			if(nickname == null) {
+				nickname = "NoName";
+			} else {
+				Main.pref.put(ConfigKeys.OSB_NICKNAME, nickname);
+			}
+		}
+		
+		// get the comment
 		String result = JOptionPane.showInputDialog(Main.parent,
 				Messages.translate(getClass(), "question"),
 				Messages.translate(getClass(), "title"),
@@ -93,6 +105,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 		
 		if(result != null && result.length() > 0) {
 			try {
+				result = result.concat(" [").concat(nickname).concat("]");
 				Node n = newAction.execute(e.getPoint(), result);
 				plugin.getDataSet().addPrimitive(n);
 				if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {

@@ -29,6 +29,11 @@ static char * basetilepath = "/storage/openstreetmap/tah/Tiles/";
 static char * statictilepath = "/storage/openstreetmap/tah/Tiles/";
 #define OCEANS_DB_FILE "/storage/openstreetmap/tah/Tiles/oceantiles_12.dat"
 
+/* These layer return a transparent tile if no tileset file exists */
+const char * transparent_layers[] = {
+	"maplint",
+	"caption"
+	};
 
 const char land[] =
   "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52"
@@ -264,6 +269,15 @@ static int serve_tileset(request_rec* r, request_data* d) {
 } /* serve_tileset */
 
 
+/* Checks if the layername is handled as transparent layer */
+static int is_transparent_layer( const char * layername) {
+  int i;
+  for( i=0; i < sizeof(transparent_layers)/sizeof(char*); i++)
+    if( strcmp(layername,transparent_layers[i]) == 0)
+      return 1;
+  return 0;
+}
+
 static int serve_oceantile(request_rec *r, request_data* rd) {
   char * fileName;
   apr_status_t res;
@@ -272,6 +286,14 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
   unsigned char data;
   int bit_off;
   int type;
+
+  /* send transparent tile if transparent layer */
+  if (is_transparent_layer(rd->layer)) {
+    ap_set_content_type(r, content_imagepng);
+    ap_set_content_length(r, sizeof(transparent));
+    ap_rwrite(transparent,sizeof(transparent),r);
+    return OK;
+  }
 
   if (rd->z < 12) {
     /* only available for zooms levels >= 12. */

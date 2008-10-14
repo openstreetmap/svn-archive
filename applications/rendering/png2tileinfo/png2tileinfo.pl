@@ -160,7 +160,7 @@ if ($#ARGV > -1)
   {
     printhelp() if (@ARGV < 2);
 
-    my ($x, $y) = ($ARGV[1], $ARGV[2]);
+    my ($x, $y) = ($ARGV[0], $ARGV[1]);
 
     my $png_val = get_type(getimage($pngname), $x, $y);
     print "$pngname($x, $y) = $png_val ($typenames[$png_val])\n";

@@ -698,14 +698,14 @@ sub autotuneComplexity #
     if(! $complexity) { # this is the first call of this function
         if($Config->get('MaxTilesetComplexity')) {
             $complexity = $Config->get('MaxTilesetComplexity');
-        } elsif (($tilecomplexity > 0) && ($deltaT > 0)) {
+        } elsif (($tilecomplexity > 5472) && ($deltaT > 0)) {
             $complexity = $tilecomplexity * $timeaim / $deltaT;
         } else {
-            $complexity = $tilecomplexity;
+            $complexity = 10 * $tilecomplexity;
         }
     }
 
-    if (($tilecomplexity > 0) && ($deltaT > 0)) {
+    if (($tilecomplexity > 5472) && ($deltaT > 0)) {
         $complexity = 0.01 * ($tilecomplexity * $timeaim / $deltaT) + 0.99 * $complexity;
     }
     $complexity = 100000 if $complexity < 100000;

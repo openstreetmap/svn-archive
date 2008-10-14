@@ -1586,7 +1586,7 @@
 			
 			.waterway-riverbank {
 			fill: #b5d6f1;
-			stroke: #b0b0b0
+			stroke: #b0b0b0;
 			stroke-width: 0px;
 			}
 			

@@ -126,7 +126,7 @@ class TileUpload (object):
           if self.handle_tilesetfile():
               logging.info('Tilesetfile "%s,%d,%d,%d" in %.1f sec. Saving took %.1f sec.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0], time_save[1] - time_save[0]))
           else:
-              logging.info('Failed to handle tilesetfile "%s,%d,%d,%d" in %.1f sec.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0], time_save[1] - time_save[0]))
+              logging.info('Failed to handle tilesetfile in %.1f sec.' % (time()-starttime[0], time_save[1] - time_save[0]))
       else:
           # self.fname is no valid file
           logging.info("File %s not found or no .zip or .tileset, deleting. user %s(%d)." % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))

@@ -371,30 +371,28 @@ sub readLocalImage
     # Detect empty tiles here:
     if (File::Compare::compare($pfile, "emptyland.png") == 0)
     {
+        return 0 if($Layer eq "caption");
         $imImage = $self->{EmptyLandImageIM};
     }
     elsif (File::Compare::compare($pfile, "emptysea.png") == 0)
     {
+        return 0 if($Layer eq "caption");
         $imImage = $self->{EmptySeaImageIM};
     }
     elsif (not ($Image->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE))
     {
+        return 0 if($Layer eq "caption");
         $imImage = $self->{EmptyLandImageIM};
     }
     elsif (not ($Image->compare($self->{EmptySeaImage}) & GD_CMP_IMAGE))
     {
+        return 0 if($Layer eq "caption");
         $imImage = $self->{EmptySeaImageIM};
     }
     elsif (not ($Image->compare($self->{BlackTileImage}) & GD_CMP_IMAGE))
     {
-        if($Layer eq "caption")
-        {
-            return 0;
-        }
-        else
-        {
-            throw TilesetError "The image  $file is Black Tile", "lowzoom";
-        }
+        return 0 if($Layer eq "caption");
+        throw TilesetError "The image  $file is Black Tile", "lowzoom";
     }
     # try to work around an ImageMagick bug with transparency in >= 6.4.3
     elsif($Layer eq "caption" && open(FILE,">",$pfile))

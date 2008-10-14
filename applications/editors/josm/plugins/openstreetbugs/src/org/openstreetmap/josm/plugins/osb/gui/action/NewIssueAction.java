@@ -89,7 +89,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 		// get the user nickname
 		String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
 		if(nickname == null || nickname.length() == 0) {
-			nickname = JOptionPane.showInputDialog(Main.parent, Messages.translate(getClass(), "enter_nickname"));
+			nickname = JOptionPane.showInputDialog(Main.parent, Messages.translate(AddCommentAction.class, "enter_nickname"));
 			if(nickname == null) {
 				nickname = "NoName";
 			} else {

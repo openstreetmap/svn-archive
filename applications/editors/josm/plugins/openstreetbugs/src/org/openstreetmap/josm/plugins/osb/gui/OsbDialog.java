@@ -49,6 +49,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -110,6 +111,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		refresh = new JButton(Messages.translate(OsbDialog.class, "refresh"));
 		refresh.setToolTipText(Messages.translate(OsbDialog.class, "refresh"));
 		refresh.setIcon(OsbPlugin.loadIcon("view-refresh22.png"));
+		refresh.setHorizontalAlignment(SwingConstants.LEFT);
 		refresh.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -129,13 +131,16 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		addComment.setEnabled(false);
 		addComment.setToolTipText((String) addComment.getAction().getValue(Action.NAME));
 		addComment.setIcon(OsbPlugin.loadIcon("add_comment22.png"));
+		addComment.setHorizontalAlignment(SwingConstants.LEFT);
 		closeIssue.setEnabled(false);
 		closeIssue.setToolTipText((String) closeIssue.getAction().getValue(Action.NAME));
 		closeIssue.setIcon(OsbPlugin.loadIcon("icon_valid22.png"));
+		closeIssue.setHorizontalAlignment(SwingConstants.LEFT);
 		NewIssueAction nia = new NewIssueAction(newIssue, osbPlugin);
 		newIssue.setAction(nia);
 		newIssue.setToolTipText((String) newIssue.getAction().getValue(Action.NAME));
 		newIssue.setIcon(OsbPlugin.loadIcon("icon_error_add22.png"));
+		newIssue.setHorizontalAlignment(SwingConstants.LEFT);
 
 		buttonPanel.add(refresh);
 		buttonPanel.add(newIssue);

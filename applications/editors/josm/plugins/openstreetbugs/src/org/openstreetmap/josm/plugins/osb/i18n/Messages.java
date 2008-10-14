@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.osb.i18n;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -42,11 +41,11 @@ public class Messages {
     private Messages() {
         try {
             loadBundle(Locale.getDefault());
-        } catch (IOException e) {
-        	e.printStackTrace();
+        } catch (Exception e) {
+        	System.err.println("Couldn't load resource bundle for locale " + Locale.getDefault());
             try {
                 loadBundle(Locale.ENGLISH);
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 System.err.println("Couldn't load default resource bundle");
                 e.printStackTrace();
             }
@@ -66,7 +65,7 @@ public class Messages {
         return getBundle().getString(key);
     }
     
-    private void loadBundle(Locale locale) throws IOException {
+    private void loadBundle(Locale locale) throws Exception {
     	System.out.println("Trying to load locale " + locale.getLanguage() + " for openstreetbugs");
         InputStream in = Messages.class.getResourceAsStream("language_" + locale.getLanguage() + ".properties");
         bundle = new PropertyResourceBundle(in);

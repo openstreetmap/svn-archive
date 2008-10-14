@@ -106,76 +106,439 @@ sub generate
     my $self = shift;
     my $req =  $self->{req};
     my $Config = $self->{Config};
-    
+
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
-    
+
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
 
     ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, $self->{bbox}->center), 1, 0);
-    
-    #------------------------------------------------------
-    # Download data (returns full path to data.osm or 0)
-    #------------------------------------------------------
 
-    my $beforeDownload = time();
-    my $FullDataFile = $self->downloadData();
-    ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
-
-    #------------------------------------------------------
-    # Handle all layers, one after the other
-    #------------------------------------------------------
-
-    foreach my $layer($req->layers)
+    if($req->Z >= 12)
     {
-        #reset progress for each layer
-        $::progress=0;
-        $::progressPercent=0;
-        $::currentSubTask = $layer;
-        
-        # TileDirectory is the name of the directory for finished tiles
-        my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
-
-        # JobDirectory is the directory where all final .png files are stored.
-        # It is not used for temporary files.
-        my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
-        mkdir $JobDirectory;
-
         #------------------------------------------------------
-        # Go through preprocessing steps for the current layer
-        # This puts preprocessed files like data-maplint-closeareas.osm in $self->{JobDir}
-        # and returns the file name of the resulting data file.
+        # Download data (returns full path to data.osm or 0)
         #------------------------------------------------------
 
-        my $layerDataFile = $self->runPreprocessors($layer);
+        my $beforeDownload = time();
+        my $FullDataFile = $self->downloadData($req->layers);
+        ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
 
         #------------------------------------------------------
-        # Preprocessing finished, start rendering to SVG to PNG
-        # $layerDataFile is just the filename
+        # Handle all layers, one after the other
         #------------------------------------------------------
 
-        if ($Config->get("Fork")) 
-        {   # Forking to render zoom levels in parallel
-            $self->forkedRender($layer, $layerDataFile);
+        foreach my $layer ($req->layers)
+        {
+            # TileDirectory is the name of the directory for finished tiles
+            my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
+
+            # JobDirectory is the directory where all final .png files are stored.
+            # It is not used for temporary files.
+            my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
+            mkdir $JobDirectory;
+
+            $self->generateNormalLayer($layer);
+
+            #----------
+            # This directory is now ready for upload.
+            # move it to the working directory, so it can be picked up.
+            # Unless we have moved everything to the local slippymap already
+            if (!$Config->get("LocalSlippymap") )
+            {
+                my $DestDir = File::Spec->join($Config->get("WorkingDirectory"), $TileDirectory);
+                rename $JobDirectory, $DestDir;
+            }
+        }
+    }
+    else
+    {
+        my %layers = map {$_ => 1} $req->layers;
+        my %alllayers = %layers;
+        if($layers{tile}) # make sure we have working directories
+        {
+            $alllayers{captionless} = 1;
+            $alllayers{caption} = 1;
+        }
+
+        foreach my $layer (keys %alllayers)
+        {
+            my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
+            my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
+           mkdir $JobDirectory;
+        }
+
+        #------------------------------------------------------
+        # Download data (returns full path to data.osm or 0)
+        #------------------------------------------------------
+
+        if($layers{caption})
+        {
+            my $beforeDownload = time();
+            my $FullDataFile = $self->downloadData("caption");
+            ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+            $self->generateNormalLayer("caption");
+        }
+
+        eval
+        {
+            require Image::Magick;
+            Image::Magick->import();
+            require LWP::Simple;
+            require File::Compare;
+            require OceanTiles;
+            $self->{OceanTiles} = new OceanTiles();
+            $self->{EmptyLandImageIM} = new Image::Magick(size=>'256x256');
+            $self->{EmptyLandImageIM}->Read("xc:rgb(248,248,248)") and die;
+            $self->{EmptySeaImageIM} = new Image::Magick(size=>'256x256');
+            $self->{EmptySeaImageIM}->Read("xc:rgb(181,214,241)") and die;
+        };
+        my $maxlayer = ($req->Z < 6) ? 6 : 12;
+        if(!$@)
+        {
+            $::progress=0;
+            $::progressPercent=0;
+
+            my $numlayers = 0;
+            ++$numlayers if $alllayers{captionless};
+            ++$numlayers if $alllayers{maplint};
+
+            $self->{NumTiles} = 0;
+            # up-to maxlayer, as this needs to be downloaded as well
+            my $t = 1;
+            for(my $i = $req->Z; $i <= $maxlayer; ++$i)
+            {
+                $self->{NumTiles} += $numlayers*$t;
+
+                # no caption or tile download for $maxlayer level!
+                $self->{NumTiles} += 2*$t if $i < $maxlayer && $alllayers{tile};
+
+                $t *= 4;
+            }
+
+            if($layers{tile})
+            {
+                # also produces captionless
+                $self->lowZoom($req->ZXY, $maxlayer, "tile", "captionless", "caption");
+            }
+            elsif($layers{captionless})
+            {
+                $self->lowZoom($req->ZXY, $maxlayer, "captionless", "captionless");
+            }
+            if($layers{maplint})
+            {
+                $self->lowZoom($req->ZXY, $maxlayer, "maplint", "maplint");
+            }
         }
         else
-        {   # Non-forking render
-            $self->nonForkedRender($layer, $layerDataFile);
-        }
-
-        #----------
-        # This directory is now ready for upload.
-        # move it to the working directory, so it can be picked up.
-        # Unless we have moved everything to the local slippymap already
-        if (!$Config->get("LocalSlippymap"))
         {
-            my $DestDir = File::Spec->join($Config->get("WorkingDirectory"), $TileDirectory);
-            rename $JobDirectory, $DestDir;
+            ::statusMessage("Tile stiching not supported without Image::Magick.", 1, 1);
+        }
+        if(!$Config->get("LocalSlippymap") )
+        {
+            # now copy the results
+            foreach my $layer ($req->layers)
+            {
+                my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
+                my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
+                my $DestDir = File::Spec->join($Config->get("WorkingDirectory"), $TileDirectory);
+                my $hasdata = 0;
+                my $file;
+                opendir(DIR, $JobDirectory);
+                while(defined($file = readdir(DIR)))
+                {
+                    if($file =~ /^[a-z]+_$maxlayer/)
+                    {
+                        if($Config->get("Debug"))
+                        {
+                            rename File::Spec->join($JobDirectory, $file),
+                            File::Spec->join($self->{JobDir}, $file);
+                        }
+                        else
+                        {
+                            unlink(File::Spec->join($JobDirectory, $file));
+                        }
+                    }
+                    else
+                    {
+                        ++$hasdata;
+                    }
+                }
+                rename $JobDirectory, $DestDir if $hasdata;
+            }
         }
     }
 
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
+}
+
+sub generateNormalLayer
+{
+    my ($self,$layer) = @_;
+
+    #reset progress for each layer
+    $::progress=0;
+    $::progressPercent=0;
+    $::currentSubTask = $layer;
+
+    #------------------------------------------------------
+    # Go through preprocessing steps for the current layer
+    # This puts preprocessed files like data-maplint-closeareas.osm in $self->{JobDir}
+    # and returns the file name of the resulting data file.
+    #------------------------------------------------------
+
+    my $layerDataFile = $self->runPreprocessors($layer);
+
+    #------------------------------------------------------
+    # Preprocessing finished, start rendering to SVG to PNG
+    # $layerDataFile is just the filename
+    #------------------------------------------------------
+
+    if ($self->{Config}->get("Fork"))
+    {   # Forking to render zoom levels in parallel
+        $self->forkedRender($layer, $layerDataFile);
+    }
+    else
+    {   # Non-forking render
+        $self->nonForkedRender($layer, $layerDataFile);
+    }
+}
+
+sub lowZoomFileName
+{
+    my ($self, $Layer, $Z, $X, $Y) = @_;
+
+    my $prefixd = sprintf "%s_%d_%d_%d",$self->{Config}->get("${Layer}_Prefix"),
+    $self->{req}->ZXY;
+    my $prefix = sprintf "%s_%d_%d_%d",$self->{Config}->get("${Layer}_Prefix"),
+    $Z,$X,$Y;
+    return (File::Spec->join($self->{JobDir}, "$prefixd.dir", "$prefix.png"),
+      "$Layer ($Z,$X,$Y)");
+}
+
+sub getFile {
+    my ($self, $Layer, $Z, $X, $Y) = @_;
+    my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
+    ++$::progress;
+    $::progressPercent = $::progress / $self->{NumTiles} * 100;
+    ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
+    for(my $i = 0; $i < 3 && !-f $file; ++$i)
+    {
+        LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
+        $Layer,$Z,$X,$Y),$pfile);
+    }
+    throw TilesetError "The image $file download failed", "lowzoom" if !-f $pfile;
+}
+
+# Recursively create (including any downloads necessary) a tile
+sub lowZoom {
+    my ($self, $Z, $X, $Y, $MaxZ, $OutputLayer, $BaseLayer, $CaptionLayer) = @_;
+
+    $::currentSubTask = $OutputLayer;
+
+    # Get tiles
+    if($Z >= $MaxZ)
+    {
+        $self->getFile($BaseLayer,$Z,$X,$Y);
+    }
+    else
+    {
+        # Recursively get/create the 4 subtiles
+        $self->lowZoom($Z+1,$X*2,$Y*2,$MaxZ,$OutputLayer,$BaseLayer,$CaptionLayer);
+        $self->lowZoom($Z+1,$X*2+1,$Y*2,$MaxZ,$OutputLayer,$BaseLayer,$CaptionLayer);
+        $self->lowZoom($Z+1,$X*2,$Y*2+1,$MaxZ,$OutputLayer,$BaseLayer,$CaptionLayer);
+        $self->lowZoom($Z+1,$X*2+1,$Y*2+1,$MaxZ,$OutputLayer,$BaseLayer,$CaptionLayer);
+
+        $self->getFile($CaptionLayer,$Z,$X,$Y) if $CaptionLayer;
+
+        # Create the tile from those subtiles
+        $self->supertile($X,$Y,$Z,$OutputLayer,$BaseLayer,$CaptionLayer);
+    }
+}
+
+# Open a PNG file, and return it as a Magick image (or 0 if not found)
+sub readLocalImage
+{
+    my ($self,$Layer,$Z,$X,$Y,$copy) = @_;
+    my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
+
+    my $imImage;
+    throw TilesetError "The image  $file missing", "lowzoom" if !-f $pfile;
+    my $Image = GD::Image->newFromPng($pfile);
+    throw TilesetError "The image $file failed to load", "lowzoom" if !$Image;
+
+    # Detect empty tiles here:
+    if (File::Compare::compare($pfile, "emptyland.png") == 0)
+    {
+        $imImage = $self->{EmptyLandImageIM};
+    }
+    elsif (File::Compare::compare($pfile, "emptysea.png") == 0)
+    {
+        $imImage = $self->{EmptySeaImageIM};
+    }
+    elsif (not ($Image->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE))
+    {
+        $imImage = $self->{EmptyLandImageIM};
+    }
+    elsif (not ($Image->compare($self->{EmptySeaImage}) & GD_CMP_IMAGE))
+    {
+        $imImage = $self->{EmptySeaImageIM};
+    }
+    elsif (not ($Image->compare($self->{BlackTileImage}) & GD_CMP_IMAGE))
+    {
+        if($Layer eq "caption")
+        {
+            return 0;
+        }
+        else
+        {
+            throw TilesetError "The image  $file is Black Tile", "lowzoom";
+        }
+    }
+    # try to work around an ImageMagick bug with transparency in >= 6.4.3
+    elsif($Layer eq "caption" && open(FILE,">",$pfile))
+    {
+        $Image->trueColorToPalette();
+        print FILE $Image->png;
+        close FILE;
+    }
+    if($imImage && $Z == 12 && $Layer ne "caption" && $self->{OceanTiles})
+    {
+        my $state = $self->{OceanTiles}->getState($X, $Y);
+        my $detectstate = "";
+        if($imImage == $self->{EmptySeaImageIM})
+        {
+            if($state ne "sea")
+            {
+                ::statusMessage("Tile state mismatch for $file: sea != $state", 1, 3);
+                $imImage = $self->{EmptyLandImageIM} if($state eq "land");
+            }
+        }
+        else
+        {
+            if($state ne "land")
+            {
+                ::statusMessage("Tile state mismatch for $file: land != $state", 1, 3);
+                $imImage = $self->{EmptySeaImageIM} if($state eq "sea");
+            }
+        }
+    }
+    if(!$imImage)
+    {
+        $imImage = new Image::Magick;
+        if (my $err = $imImage->Read($pfile))
+        {
+            throw TilesetError "The image  $file failed to load: $err", "lowzoom";
+        }
+    }
+    elsif($copy)
+    {
+        my $tmpImage = new Image::Magick;
+        $tmpImage = $imImage->Clone();
+        $imImage = $tmpImage;
+    }
+
+    return($imImage);
+}
+
+sub supertile {
+    my ($self,$X,$Y,$Z,$OutputLayer,$BaseLayer,$CaptionLayer) = @_;
+    my $Config = $self->{Config};
+
+    my ($pfile, $file) = $self->lowZoomFileName($BaseLayer, $Z, $X, $Y);
+    my $Image;
+    if(!-f $pfile)
+    {
+        ++$::progress;
+        $::progressPercent = $::progress / $self->{NumTiles} * 100;
+        # Load the subimages
+        my $AA = $self->readLocalImage($BaseLayer,$Z+1,$X*2,$Y*2);
+        my $BA = $self->readLocalImage($BaseLayer,$Z+1,$X*2+1,$Y*2);
+        my $AB = $self->readLocalImage($BaseLayer,$Z+1,$X*2,$Y*2+1);
+        my $BB = $self->readLocalImage($BaseLayer,$Z+1,$X*2+1,$Y*2+1);
+
+        if($AA == $self->{EmptySeaImageIM}
+        && $AB == $self->{EmptySeaImageIM}
+        && $BA == $self->{EmptySeaImageIM}
+        && $BB == $self->{EmptySeaImageIM})
+        {
+            ::statusMessage("Writing sea $file", 0, 6);
+            copy("emptysea.png", $pfile);
+        }
+        elsif($AA == $self->{EmptyLandImageIM}
+        && $AB == $self->{EmptyLandImageIM}
+        && $BA == $self->{EmptyLandImageIM}
+        && $BB == $self->{EmptyLandImageIM})
+        {
+            ::statusMessage("Writing land $file", 0, 6);
+            copy("emptyland.png", $pfile);
+        }
+        else
+        {
+            $Image = Image::Magick->new(size=>'512x512');
+            # Create the supertile
+            $Image->ReadImage('xc:white');
+
+            # Copy the subimages into the 4 quadrants
+            foreach my $x (0, 1)
+            {
+                foreach my $y (0, 1)
+                {
+                    next unless (($Z < 9) || (($x == 0) && ($y == 0)));
+                    $Image->Composite(image => $AA,
+                                    geometry => sprintf("512x512+%d+%d", $x, $y),
+                                    compose => "darken");
+
+                    $Image->Composite(image => $BA,
+                                    geometry => sprintf("512x512+%d+%d", $x + 256, $y),
+                                    compose => "darken");
+
+                    $Image->Composite(image => $AB,
+                                    geometry => sprintf("512x512+%d+%d", $x, $y + 256),
+                                    compose => "darken");
+
+                    $Image->Composite(image => $BB,
+                                    geometry => sprintf("512x512+%d+%d", $x + 256, $y + 256),
+                                    compose => "darken");
+                }
+            }
+
+            $Image->Scale(width => "256", height => "256");
+            $Image->Set(type=>"Palette");
+            $Image->Set(quality => 90); # compress image
+            $Image->Write($pfile);
+            ::statusMessage("Writing $file", 0, 6);
+        }
+    }
+    if($CaptionLayer)
+    {
+        ++$::progress;
+        $::progressPercent = $::progress / $self->{NumTiles} * 100;
+        # CaptionFile can be empty --> nothing to do
+        my $CaptionFile = $self->readLocalImage($CaptionLayer,$Z,$X,$Y);
+
+        $Image = $self->readLocalImage($BaseLayer,$Z,$X,$Y,1) if !$Image;
+
+        # Overlay the captions onto the tiled image and then write it
+        $Image->Composite(image => $CaptionFile) if $CaptionFile;
+        ($pfile, $file) = $self->lowZoomFileName($OutputLayer, $Z, $X, $Y);
+        $Image->Write($pfile);
+        my $gdimage = GD::Image->newFromPng($pfile);
+        throw TilesetError "The image $file failed to load", "lowzoom" if !$gdimage;
+        if (not ($gdimage->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE)) {
+            ::statusMessage("Writing land $file", 0, 6);
+            copy("emptyland.png", $pfile);
+        }
+        elsif (not ($gdimage->compare($self->{EmptySeaImage}) & GD_CMP_IMAGE)) {
+            ::statusMessage("Writing sea $file", 0, 6);
+            copy("emptysea.png", $pfile);
+        }
+        else
+        {
+            ::statusMessage("Writing $file", 0, 6);
+        }
+    }
 }
 
 #------------------------------------------------------------------
@@ -196,7 +559,7 @@ I<filename>: resulting data osm filename (without path).
 #-------------------------------------------------------------------
 sub downloadData
 {
-    my $self = shift;
+    my ($self, @layers) = @_;
     my $req = $self->{req};
     my $Config = $self->{Config};
 
@@ -229,7 +592,7 @@ sub downloadData
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
     my @predicates;
-    foreach my $layer ($req->layers()) {
+    foreach my $layer (@layers) {
         my %layer_config = $Config->varlist("^${layer}_", 1);
         if (not $layer_config{"predicates"}) {
             @predicates = ();
@@ -269,7 +632,7 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            ::statusMessage("Downloading: Map data for " . $req->layers_str, 0, 3);
+            ::statusMessage("Downloading: Map data for " . join(",",sort @layers), 0, 3);
             
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {

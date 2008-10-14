@@ -369,7 +369,7 @@ def take(request):
 
     #"You provided a correct username and password!"
     # next, check for a valid client version
-    if not form['version'] in ['Rapperswil', 'Saurimo']:
+    if not form['version'] in ['Trondheim', 'Saurimo']:
         # client version not in whitelist
         logging.info("User %s connects with disallowed client '%s'." %\
                      (user,form.cleaned_data['version']))
@@ -439,7 +439,7 @@ def request_changedTiles(request):
       return HttpResponseForbidden('Access not allowed from this IP address.')
     #fetch the url that is called to retrieve the changed tiles
     url = setting.getSetting('changed_tiles_api_url')
-    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=1')
+    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=2')
 
     html="Requested tiles:\n"
     xml_dom = xml.dom.minidom.parse(urllib.urlopen(url))

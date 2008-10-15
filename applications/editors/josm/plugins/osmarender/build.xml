@@ -18,8 +18,8 @@
   <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
 
   <property name="josm" location="../../core/dist/josm-custom.jar" />
-  <property name="rendering" location="./osmarender" />
-
+  <property name="stylesheets" location="./stylesheets" />
+  <property name="xslt" location="./xslt" />
   <property name="ant.build.javac.target" value="1.5"/>
 
   <target name="compile">
@@ -32,13 +32,14 @@
   </target>
 
   <target name="dist"  depends="compile">
-    <copy todir="${plugin.build.dir}" file="${rendering}/osmarender.xsl"/>
+    <copy todir="${plugin.build.dir}" file="${xslt}/osmarender.xsl"/>
     <copy tofile="${plugin.build.dir}/osm-map-features.xml"
-	  file="${rendering}/osm-map-features-z17.xml"/>
+	  file="${stylesheets}/osm-map-features-z17.xml"/>
     <exec append="false" output="REVISION" executable="perl" failifexecutionfails="false">
       <env key="LANG" value="C"/>
       <arg value="../getrevision.pl"/>
-      <arg value="osmarender"/>
+      <arg value="xslt"/>
+      <arg value="stylesheets"/>
     </exec>
     <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
     <delete file="REVISION"/>

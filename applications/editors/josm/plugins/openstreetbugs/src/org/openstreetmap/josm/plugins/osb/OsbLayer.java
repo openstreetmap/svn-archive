@@ -139,14 +139,14 @@ public class OsbLayer extends Layer implements MouseListener {
 					// format with html
 					StringBuilder sb = new StringBuilder("<html>");
 					//sb.append(desc.replaceAll("\\|", "<br>"));
-					sb.append(desc);
+					sb.append(desc.replaceAll("<hr />", "<hr>"));
 					sb.append("</html>");
 					desc = sb.toString();
 					
 					// determine tooltip dimensions
 					int tooltipWidth = 0;
 					Rectangle2D fontBounds = null;
-					String[] lines = desc.split("<hr />");
+					String[] lines = desc.split("<hr>");
 					for (int i = 0; i < lines.length; i++) {
 						String line = lines[i];
 						fontBounds = g.getFontMetrics().getStringBounds(line, g);

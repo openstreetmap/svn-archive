@@ -282,7 +282,7 @@ sub tags_subset
     my ($first, $second) = @_;
     foreach my $tag(keys %{$first->{"tags"}})
     {
-        next if ($tag =~ /^(name|created_by|note|layer)$/);
+        next if ($tag =~ /^(name|created_by|note|layer|osmarender:areaCenterLat|osmarender:areaCenterLon|osmarender:areaSize)$/);
         return 0 unless defined($second->{'tags'}{$tag}) && $first->{'tags'}{$tag} eq $second->{'tags'}{$tag};
     }
     return 1;

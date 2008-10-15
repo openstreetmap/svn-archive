@@ -552,6 +552,7 @@
 <xsl:when test="@v='australian_football'"/>
 <xsl:when test="@v='baseball'"/>
 <xsl:when test="@v='basketball'"/>
+<xsl:when test="@v='beachvolleyball'"/>
 <xsl:when test="@v='boules'"/>
 <xsl:when test="@v='bowls'"/>
 <xsl:when test="@v='canoe'"/>
@@ -584,6 +585,7 @@
 <xsl:when test="@v='table_tennis'"/>
 <xsl:when test="@v='team_handball'"/>
 <xsl:when test="@v='tennis'"/>
+<xsl:when test="@v='volleyball'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1212,7 +1214,7 @@
 </xsl:when>
 <xsl:when test="@k='maxspeed'">
 <xsl:choose>
-<xsl:when test="string(number(@v)) != 'NaN'"/>
+<xsl:when test="(contains(@v, &quot;kph&quot;) and string-length( substring-after(@v, &quot;kph&quot;) ) = 0 and string(number(substring(@v, 0, string-length(@v) - string-length(&quot;kph&quot;)))) != &quot;NaN&quot;) or (contains(@v, &quot;km/h&quot;) and string-length( substring-after(@v, &quot;km/h&quot;) ) = 0 and string(number(substring(@v, 0, string-length(@v) - string-length(&quot;km/h&quot;)))) != &quot;NaN&quot;) or (contains(@v, &quot;mph&quot;) and string-length( substring-after(@v, &quot;mph&quot;) ) = 0 and string(number(substring(@v, 0, string-length(@v) - string-length(&quot;mph&quot;)))) != &quot;NaN&quot;) or (contains(@v, &quot;knots&quot;) and string-length( substring-after(@v, &quot;knots&quot;) ) = 0 and string(number(substring(@v, 0, string-length(@v) - string-length(&quot;knots&quot;)))) != &quot;NaN&quot;) or ( string(number(@v)) != &quot;NaN&quot; )"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1372,6 +1374,7 @@
 <xsl:when test="@k='oneway'">
 <xsl:choose>
 <xsl:when test="@v='-1'"/>
+<xsl:when test="@v='1'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='yes'"/>
 <xsl:otherwise>
@@ -1573,6 +1576,7 @@
 <xsl:when test="@v='australian_football'"/>
 <xsl:when test="@v='baseball'"/>
 <xsl:when test="@v='basketball'"/>
+<xsl:when test="@v='beachvolleyball'"/>
 <xsl:when test="@v='boules'"/>
 <xsl:when test="@v='bowls'"/>
 <xsl:when test="@v='canoe'"/>
@@ -1604,6 +1608,7 @@
 <xsl:when test="@v='table_tennis'"/>
 <xsl:when test="@v='team_handball'"/>
 <xsl:when test="@v='tennis'"/>
+<xsl:when test="@v='volleyball'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>

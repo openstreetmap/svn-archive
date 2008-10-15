@@ -158,6 +158,11 @@ sub add_feature( $$$ ){
 	$key = "contains(\@k, '$1')";
     }
 
+    #TEST
+    if( lc($key) eq 'maxspeed' ){
+        $value = 'speed';
+    }
+
     # Arbitrarily defined value
     if( $value =~ /user defined|defined by editor/i ){
 	$value = 'userdef';
@@ -192,6 +197,28 @@ sub add_feature( $$$ ){
         #TODO: if anybody ever decides on a time format then this should be {type => 'time'} and there should be a test against the format
         $value = 'userdef';
     }
+    # Speed
+    elsif( lc($value) eq 'speed' ){
+        $special = { type => 'numwithunit',
+                     units => [
+                         'kph', 'km/h',
+                         'mph', 'knots'
+                         ]
+        };
+    }
+    # Lengths
+    elsif( lc($value) eq 'height' || lc($value) eq 'width' ){
+        $special = { type => 'numwithunit',
+                     units => [
+                         'mm', 'cm', 'dm', 'm', 'km',
+                         'mil', # Scandinavian mil (10km)
+                         'inch', 'foot', 'yard', 'mile',
+                         'nm', # Nautical mile
+                         'furlong'
+                         ]
+        };
+    }
+
 
     foreach my $type ( @types ){
 	$type = lc($type);
@@ -291,6 +318,20 @@ foreach my $type ( keys(%main::keys) ){
                         foreach my $item ( @{$special->{list}} ){
                             print "<xsl:when test=\"\@v='$item'\" />\n";
                         }
+                    } elsif( $special->{type} eq 'numwithunit' ){
+                        # Number with optional unit suffixed
+                        print "<xsl:when test='";
+                        foreach my $unit ( @{$special->{units}} ){
+                            print '(';
+                            print 'contains(@v, "'.$unit.'") and '; # If we have a unit and ...
+                            print 'string-length( substring-after(@v, "'.$unit.'") ) = 0 and '; # there's nothing behind said unit (important for the next part to work right)
+                            print 'string(number('; # Number test
+                            print 'substring(@v, 0, string-length(@v) - string-length("'.$unit.'"))'; # Get the part before the unit
+                            print ')) != "NaN"'; # Number test part 2
+                            print ') or ';
+                        }
+                        print '( string(number(@v)) != "NaN" )';
+                        print "' />\n";
 		    } else {
 			die "BUG: special ref but unknown type";
 		    }

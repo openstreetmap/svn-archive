@@ -103,7 +103,9 @@ public class WMSPlugin extends Plugin {
 		setDefault(tr("Landsat"), "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
 		"layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg");
 		setDefault(tr("NPE Maps"), "http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&");
-		setDefault(tr("YAHOO"), "yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
+		setDefault(tr("YAHOO (GNOME)"), "yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
+		setDefault(tr("YAHOO (GNOME Fix)"), "yahoo://gnome-web-photo-fixed {0} /dev/stdout");
+		setDefault(tr("YAHOO (WebKit)"), "yahoo://webkit-image {0} /dev/stdout");
 
 		Collections.sort(wmsList);
 		JMenuBar menu = Main.main.menu;

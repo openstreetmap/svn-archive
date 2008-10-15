@@ -48,7 +48,7 @@ abstract public class Grabber implements Runnable {
 		Font tempFont = font.deriveFont(Font.PLAIN).deriveFont(36.0f);
 		g.setFont(tempFont);
 		g.setColor(Color.BLACK);
-		g.drawString(e.getClass().getSimpleName() + " occured", 10, height()/2);
+		g.drawString(tr("Exception occurred"), 10, height()/2);
 		image.image = img;
 		g.setFont(font);
 	}

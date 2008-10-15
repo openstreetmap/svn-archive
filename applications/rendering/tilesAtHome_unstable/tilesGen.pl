@@ -698,6 +698,7 @@ sub autotuneComplexity #
     my $Config = TahConf->getConfig();
     my $timeaim = $Config->get("AT_timeaim");
     my $minimum = $Config->get("AT_minimum");
+    my $alpha = $Config->get("AT_alpha");
 
     print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
 
@@ -712,7 +713,7 @@ sub autotuneComplexity #
     }
 
     if (($tilecomplexity > 5472) && ($deltaT > 0)) {
-        $complexity = 0.01 * ($tilecomplexity * $timeaim / $deltaT) + 0.99 * $complexity;
+        $complexity = $alpha * ($tilecomplexity * $timeaim / $deltaT) + (1-$alpha) * $complexity;
     }
     $complexity = $minimum if $complexity < $minimum;
 

@@ -29,7 +29,6 @@ package org.openstreetmap.josm.plugins.osb;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 
@@ -130,8 +129,15 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 	
 	public void updateData() {
 		// determine the bounds of the currently visible area
-		Bounds bounds = bounds();
-			
+		Bounds bounds = null;
+		try {
+			bounds = bounds();
+		} catch (Exception e) {
+			// something went wrong, probably the mapview isn't fully initialized
+			System.err.println("OpenStreetBugs: Couldn't determine bounds of currently visible rect. Cancel auto update");
+			return;
+		}
+		
 		try {
 			// download the data
 			download.execute(dataSet, bounds);
@@ -140,7 +146,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 			if(!dataSet.nodes.isEmpty()) {
 				updateGui();
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(Main.parent, e.getMessage());
 			e.printStackTrace();
 		}
@@ -179,7 +185,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 			active = toggle.isSelected();
 			toggle.addActionListener(new ActionListener() {
 				private boolean download = true;
-
+				
 				public void actionPerformed(ActionEvent e) {
 					active = toggle.isSelected();
 					if (toggle.isSelected() && download) {

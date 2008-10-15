@@ -145,6 +145,7 @@ sub printhelp
   .     "       png2tileinfo.pl set <x> <y> [land|sea|mixed] ...\n"
   .     "       png2tileinfo.pl diff oldfile.png newfile.png\n"
   .     "       png2tileinfo.pl svndiff\n"
+  .     "       png2tileinfo.pl view\n"
   .     "       png2tileinfo.pl copydiff oldfile.png newfile.png targetfile.png\n";
   exit(0);
 }
@@ -220,10 +221,8 @@ if ($#ARGV > -1)
     my $world_im = getimage($oldfile);
     my $newworld_im = getimage($newfile);
 
-    for my $y (0..4095)
+    for my $y (0 .. 4095)
     {
-      my $tmp = 0;
-      my $str = "";
       for my $x (0 .. 4095)
       {
         my $type = get_type($world_im,$x,$y);
@@ -237,6 +236,18 @@ if ($#ARGV > -1)
       }
     }
   }
+  elsif($arg eq "view")
+  {
+    my $file = getimage($pngname);
+    for my $y (0 .. 4095)
+    {
+      for my $x (0 .. 4095)
+      {
+        my $type = get_type($file,$x,$y);
+        print "$pngname($x, $y) = $type ($typenames[$type])\n";
+      }
+    }
+  }
   elsif($arg eq "copydiff")
   {
     printhelp() if (@ARGV < 3);
@@ -247,10 +258,8 @@ if ($#ARGV > -1)
     my $target_im = getimage($targetfile);
     my $changed;
 
-    for my $y (0..4095)
+    for my $y (0 .. 4095)
     {
-      my $tmp = 0;
-      my $str = "";
       for my $x (0 .. 4095)
       {
         my $type = get_type($world_im,$x,$y);

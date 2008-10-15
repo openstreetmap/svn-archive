@@ -10,6 +10,7 @@ use SVG::Rasterize::CoordinateBox;
 use File::Spec;
 use Error qw(:try);
 use IPC::Run qw(run);
+use POSIX qw(LC_NUMERIC setlocale);
 
 =pod
 =head1 NAME
@@ -131,27 +132,34 @@ sub convert {
     my $self = shift;
     my %params = @_;
 
-    # Workaround for locale-related problems
-    #FIXME: I think there's something about this needing to be set to the system locale on windows
-    local $ENV{LC_NUMERIC} = 'C';
-
     # Make sure Inkscape can't find any X display.
     # Probably not possible to do anything like this on Windows, which is sad
     # because inkscape will then sometimes throw errors in a dialog box instead
     # of exiting and showing us something on stdout/stderr
     local $ENV{DISPLAY} = '';
 
-    my %area;
+    my $areastring;
     if( $params{area} ){
-        %area = $params{area}->get_box_lowerleft();
+        my %area = $params{area}->get_box_lowerleft();
+
+        # Workaround for stupid inkscape bug:
+        # On Windows Inkscape reads it's area parameter according to the locale
+        # specified decimal separator, so if the system locale uses "," as
+        # decimal operator the parameter needs to use ",".
+        if( $^O eq 'MSWin32' ){
+            my $oldlocale = setlocale(LC_NUMERIC);
+            setlocale(LC_NUMERIC, '');
+            $areastring = sprintf('%f:%f:%f:%f', @area{'left','bottom','right','top'});
+            setlocale(LC_NUMERIC, $oldlocale);
+        } else {
+            $areastring = sprintf('%f:%f:%f:%f', @area{'left','bottom','right','top'});
+        }
     }
 
     my @cmd = ($self->path(), '-z');
     push(@cmd, '-w', $params{width}) if $params{width};
     push(@cmd, '-h', $params{height}) if $params{height};
-    push(@cmd, sprintf('--export-area=%f:%f:%f:%f',
-                       @area{'left','bottom','right','top'})
-        ) if %area;
+    push(@cmd, $areastring) if $areastring;
     push(@cmd, '--export-png='.$params{outfile});
     push(@cmd, $params{infile});
 

@@ -700,7 +700,7 @@ sub autotuneComplexity #
     my $minimum = $Config->get("AT_minimum");
     my $alpha = $Config->get("AT_alpha");
 
-    print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
+    statusMessage ("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
 
     if(! $complexity) { # this is the first call of this function
         if($Config->get('MaxTilesetComplexity')) {

@@ -734,7 +734,7 @@ sub UpdateClient #
     my $svn_status = `$Cmd`;
 
     chomp $svn_status;
-    $svn_status =~ s/^M.*\n?//mg;
+    # $svn_status =~ s/^M.*\n?//mg; # FFS use a future date in version.txt instead of this line.
 
     if (1 || $svn_status eq '')
     {

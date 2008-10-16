@@ -712,6 +712,7 @@ sub autotuneComplexity #
         }
     }
 
+    # empty tiles might have size 0 or 5472. if that changes, change this magic number too.
     if (($tilecomplexity > 5472) && ($deltaT > 0)) {
         $complexity = $alpha * ($tilecomplexity * $timeaim / $deltaT) + (1-$alpha) * $complexity;
     }

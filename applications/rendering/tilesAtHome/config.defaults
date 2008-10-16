@@ -28,6 +28,7 @@ DownloadTimeout = 1800
 KeepDataFile = 0
 FallBackToSlices = 1
 MaxTilesetComplexity = 0
+TargetRenderTime = 900
 i18n=0
 
 Osmarender = orp
@@ -77,3 +78,12 @@ ClientID = 0
 # The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
 APIServers = API,ROMA,XAPI
 XAPIServers = XAPI
+
+# Magic numbers for autotuning of the MaxTilesetComplexity setting
+# aim for one render in one hour (caption and captionless don't count fully)
+AT_timeaim = 1200
+# dont set MaxTilesetComplexity below this number
+AT_minimum = 100000
+# how much does the current estimate count (0..1)
+AT_alpha 0.01
+

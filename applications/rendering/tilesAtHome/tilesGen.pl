@@ -690,6 +690,10 @@ sub autotuneComplexity #
     my $tilecomplexity = shift();
     my $deltaT = $stop - $start;
 
+    my $timeaim = $Config->get("AT_timeaim");
+    my $minimum = $Config->get("AT_minimum");
+    my $alpha = $Config->get("AT_alpha");
+
     if(! $complexity) {
         if($Config->get('MaxTilesetComplexity')) {
             $complexity = $Config->get('MaxTilesetComplexity');
@@ -700,10 +704,10 @@ sub autotuneComplexity #
 
     statusMessage("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
     if (($tilecomplexity > 0) && ($deltaT > 0)) {
-        $complexity = 0.01 * ($tilecomplexity * 900 / $deltaT) + 0.99 * $complexity;
+        $complexity = $alpha * ($tilecomplexity * $timeaim / $deltaT) + (1-$alpha) * $complexity;
     }
-    $complexity = 100000 if $complexity < 100000;
-    statusMessage("Suggested complexity is currently: ".$complexity." ",1,6);
+    $complexity = $minimum if $complexity < $minimum;
+    statusMessage("Suggested complexity is currently: ".int($complexity)." ",1,6);
     if($Config->get('MaxTilesetComplexity')) {
         # if MaxTilesetComplexity is not set we still do our calculations
         # but we don't limit the client. The hint on client exit has to be enough.

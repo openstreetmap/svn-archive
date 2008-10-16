@@ -97,7 +97,7 @@ sub getString
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        throw ServerError "Unable to get string from server", "TempError";
+        throw ServerError "Unable to get request string from server", "TempError";
     }
 
     # got a server reply here

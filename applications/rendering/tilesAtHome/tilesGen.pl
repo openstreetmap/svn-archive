@@ -704,7 +704,11 @@ sub autotuneComplexity #
     }
     $complexity = 100000 if $complexity < 100000;
 
-    $Config->set('MaxTilesetComplexity', $complexity);
+    if($Config->get('MaxTilesetComplexity')) {
+        # if MaxTilesetComplexity is not set we still do our calculations
+        # but we don't limit the client. The hint on client exit has to be enough.
+        $Config->set('MaxTilesetComplexity', $complexity);
+    }
 }
 #-----------------------------------------------------------------------------
 # Gets latest copy of client from svn repository

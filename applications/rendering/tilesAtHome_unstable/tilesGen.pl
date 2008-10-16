@@ -695,7 +695,7 @@ sub autotuneComplexity #
     my $tilecomplexity = shift();
     my $deltaT = $stop - $start;
 
-    my $Config = TahConf->getConfig();
+#    my $Config = TahConf->getConfig();
     my $timeaim = $Config->get("AT_timeaim");
     my $minimum = $Config->get("AT_minimum");
     my $alpha = $Config->get("AT_alpha");
@@ -717,6 +717,8 @@ sub autotuneComplexity #
         $complexity = $alpha * ($tilecomplexity * $timeaim / $deltaT) + (1-$alpha) * $complexity;
     }
     $complexity = $minimum if $complexity < $minimum;
+
+    statusMessage("Suggested complexity is currently: ".int($complexity)." ",1,6);
 
     if($Config->get('MaxTilesetComplexity')) {
         # if MaxTilesetComplexity is not set we still do our calculations

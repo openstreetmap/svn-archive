@@ -698,12 +698,12 @@ sub autotuneComplexity #
         }
     }
 
-    print "Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render\n";
+    statusMessage("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
     if (($tilecomplexity > 0) && ($deltaT > 0)) {
         $complexity = 0.01 * ($tilecomplexity * 900 / $deltaT) + 0.99 * $complexity;
     }
     $complexity = 100000 if $complexity < 100000;
-
+    statusMessage("Suggested complexity is currently: ".$complexity." ",1,6);
     if($Config->get('MaxTilesetComplexity')) {
         # if MaxTilesetComplexity is not set we still do our calculations
         # but we don't limit the client. The hint on client exit has to be enough.

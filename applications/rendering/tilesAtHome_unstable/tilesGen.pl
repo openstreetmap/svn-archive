@@ -795,7 +795,7 @@ sub NewClientVersion
         $currentVersion = <VERFILE>;
         chomp $runningVersion;
         close VERFILE;
-        # rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
+        # rename($curVerFile,$versionfile); # if enabled, this assumes the client is immediately, and successfully updated afterwards!
     }
     if ($currentVersion)
     {

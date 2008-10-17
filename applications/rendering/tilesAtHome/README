@@ -20,11 +20,6 @@ authentication.conf, for which a template also exists.
 == Running the client ==
 
 To start generating tiles from the server queue, run "tilesGen.pl loop".
-CAUTION: if your country uses a comma for decimal separator (like Germany) 
-you need to set your decimal separator to "." instead. 
-If you don't do this inkscape will complain and generate empty tiles. 
-On linux and other unix-like systems this can be accomplished by setting 
-i18n=1 in your tilesathome.conf .
 
 If you want to render a specific tile run tilesGen.pl with the xy option
 for example if you want to render the tile number x=2148 y=1332 

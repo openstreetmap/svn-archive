@@ -154,7 +154,14 @@ sub uploadAllZips
             unlink(File::Spec->join($self->{ZipDir},$File.".lock")) if $flocked;
         }
     }
-    ::statusMessage("uploaded $uploaded zip files",1,3) unless $uploaded == 0;
+    if($uploaded)
+    {
+      ::statusMessage("uploaded $uploaded zip ". ($uploaded == 1 ? "file" :"files"),1,3);
+    }
+    elsif($zipCount) # we need to print something to get a line end
+    {
+      ::statusMessage("Nothing uploaded",1,3);
+    }
     return $uploaded;
 }
 

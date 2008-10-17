@@ -78,8 +78,10 @@
 		<rule e="way" k="natural" v="heath">
 			<area class="natural-heath"/>
 		</rule>
-		<rule e="way" k="natural" v="bog">
-			<area class="natural-bog"/>
+		<rule e="way" k="natural" v="wetland">
+			<rule e="way" k="wetland" v="bog">
+				<area class="wetland-bog"/>
+			</rule>
 		</rule>
 		
 		<!-- Artificial landuse -->
@@ -2878,7 +2880,7 @@
 			stroke-width: 0.2px;
 			}
 			
-			.natural-bog {
+			.wetland-bog {
 			fill: #946e50;
 			stroke: #3f1f06;
 			stroke-width: 0.2px;

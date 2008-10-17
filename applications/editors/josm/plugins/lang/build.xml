@@ -20,6 +20,7 @@
     <ant target="install"><property name="language" value="de"/></ant>
     <ant target="install"><property name="language" value="fr"/></ant>
     <ant target="install"><property name="language" value="ro"/></ant>
+    <ant target="install"><property name="language" value="ru"/></ant>
     <ant target="install"><property name="language" value="en_GB"/></ant>
     <ant target="install"><property name="language" value="pl"/></ant>
     <ant target="install"><property name="language" value="it"/></ant>
@@ -84,11 +85,11 @@
 
   <target name="clean">
     <ant target="clean_lang"><property name="language" value="de"/></ant>
-    <ant target="clean_lang"><property name="language" value="fr"/></ant>
-    <ant target="clean_lang"><property name="language" value="ro"/></ant>
     <ant target="clean_lang"><property name="language" value="en_GB"/></ant>
-    <ant target="clean_lang"><property name="language" value="pl"/></ant>
+    <ant target="clean_lang"><property name="language" value="fr"/></ant>
     <ant target="clean_lang"><property name="language" value="it"/></ant>
+    <ant target="clean_lang"><property name="language" value="pl"/></ant>
+    <ant target="clean_lang"><property name="language" value="ro"/></ant>
    <delete dir="${plugin.build.dir}" />
   </target>
 

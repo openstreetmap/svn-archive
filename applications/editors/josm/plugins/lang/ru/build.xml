@@ -1,6 +1,6 @@
 <project name="lang-de" default="install" basedir=".">
 
-	<property name="language" value="de" />
+	<property name="language" value="ru" />
 
 	<target name="init">
 	    <mkdir dir="bin" />
@@ -16,7 +16,7 @@
 		<jar destfile="${user.home}/.josm/plugins/lang-${language}.jar" basedir="bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />
-				<attribute name="Plugin-Description" value="German translation / Deutsche Übersetzung." />
+				<attribute name="Plugin-Description" value="Russian Translation" />
 				<attribute name="Plugin-Author" value="Translation Team" />
 				<attribute name="Plugin-Early" value="true" />
 			</manifest>

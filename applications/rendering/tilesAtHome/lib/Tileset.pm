@@ -29,7 +29,6 @@ use tahproject;
 use File::Copy;
 use File::Path;
 use GD qw(:DEFAULT :cmp);
-use POSIX qw(locale_h);
 
 #-----------------------------------------------------------------------------
 # creates a new Tileset instance and returns it
@@ -583,9 +582,7 @@ sub downloadData
       $E1 = 180;
     }
 
-    no locale;
     my $bbox = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
-    use locale;
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     

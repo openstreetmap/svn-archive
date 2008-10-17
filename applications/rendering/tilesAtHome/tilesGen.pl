@@ -43,7 +43,6 @@ use SVG::Rasterize;
 use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp);
-use POSIX qw(locale_h);
 use Encode;
 use POSIX;
 
@@ -58,6 +57,12 @@ my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
 my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
+
+# Override *nix locales
+delete $ENV{LC_ALL};
+delete $ENV{LC_NUMERIC};
+delete $ENV{LANG};
+$ENV{LANG} = 'C';
 
 if ($RenderMode)
 {   # need to check that we can render and stuff
@@ -721,8 +726,7 @@ sub autotuneComplexity #
 sub UpdateClient # 
 {
     my $Config = TahConf->getConfig();
-    my $Cmd = sprintf("%s\"%s\" %s",
-        $Config->get("i18n") ? "LC_ALL=C " : "",
+    my $Cmd = sprintf("\"%s\" %s",
         $Config->get("Subversion"),
         $Config->get("SubversionUpdateCmd"));
 
@@ -730,8 +734,7 @@ sub UpdateClient #
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
     ## FIXME TODO: Implement and check output from svn status, too.
 
-    $Cmd = sprintf("%s\"%s\" %s",
-        $Config->get("i18n") ? "LC_ALL=C " : "",
+    $Cmd = sprintf("\"%s\" %s",
         $Config->get("Subversion"),
         "status -q --ignore-externals");
 

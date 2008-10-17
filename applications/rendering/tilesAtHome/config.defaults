@@ -29,7 +29,6 @@ KeepDataFile = 0
 FallBackToSlices = 1
 MaxTilesetComplexity = 0
 TargetRenderTime = 900
-i18n=0
 
 Osmarender = orp
 

@@ -133,13 +133,16 @@ sub start_agent {
     my @cmd;
 
     if( $^O eq "MSWin32" ){
-        push(@cmd, qw(start /B /LOW));
+        #FIXME: this is apparently an internal command in cmd.exe so we can't use it.
+        #Find some other way of setting a low priority.
+        #push(@cmd, qw(start /B /LOW));
     }
 
     push(@cmd, $self->java_path());
     push(@cmd, '-Xms256M');
     push(@cmd, '-Xmx'.$self->heapsize()) if $self->heapsize();
-    push(@cmd, '-classpath', join(':', $self->find_jars( @{$self->jar_list()} )));
+    push(@cmd, '-classpath', join( ($^O eq 'MSWin32' ? ';' : ':'),
+                                   $self->find_jars( @{$self->jar_list()} )));
     push(@cmd, 'org.tah.batik.ServerMain');
     push(@cmd, '-p', $self->port());
 

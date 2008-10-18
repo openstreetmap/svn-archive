@@ -100,37 +100,47 @@ sub new {
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
-             'c:\tilesAtHome\batik',
-             'c:\tilesAtHome\batik\lib'
+             'c:\tilesAtHome',
+             'c:\tilesAtHome\batik'
             );
     } else {
-        foreach my $prefix ( qw(/usr/local/share
-                              /usr/local/share/java
-                              /usr/local/lib
-                              /usr/local/lib/java
-                              /usr/local/
-                              /usr/local/java
-                              /usr/share
-                              /usr/share/java
-                              /usr/lib
-                              /usr/lib/java
-                              ) ){
-            push(@default_jar_searchpaths,
-                 "$prefix",
-                 "$prefix/batik",
-                 "$prefix/batik/lib",
-                 "$prefix/batik-1.6",
-                 "$prefix/batik-1.6/lib"
+        push(@default_jar_searchpaths,
+             '/usr/local/share',
+             '/usr/local/share/java',
+             '/usr/local/lib',
+             '/usr/local/lib/java',
+             '/usr/local/',
+             '/usr/local/java',
+             '/usr/share',
+             '/usr/share/java',
+             '/usr/lib',
+             '/usr/lib/java',
+            );
+    }
+    # Add subdirs of the searchpaths
+    my @extended_default_jar_searchpaths;
+    foreach my $path ( @default_jar_searchpaths ){
+        push(@extended_default_jar_searchpaths, $path);
+
+        my($volume,$dir) = File::Spec->splitpath($path, 1);
+        foreach my $subdir ( ['batik'],
+                             ['batik','lib'],
+                             ['batik-1.7'],
+                             ['batik-1.7','lib'],
+                             ['batik-1.6'],
+                             ['batik-1.6','lib']
+            ){
+            push(@extended_default_jar_searchpaths,
+                 File::Spec->catpath( $volume, File::Spec->catdir( $dir, @{$subdir} ) )
                 );
         }
     }
-    $self->jar_searchpaths(@default_jar_searchpaths);
+    $self->jar_searchpaths(@extended_default_jar_searchpaths);
     $self->jar_list(
         'xercesImpl.jar',
-        'batik-all.jar',
+        'batik.jar',
         'fop-transcoder.jar',
         'avalon-framework.jar',
-        'commons-logging.jar',
         'commons-logging.jar',
         'commons-io.jar'
         );
@@ -169,7 +179,7 @@ sub find_jar {
     foreach my $path ( @{ $self->jar_searchpaths() } ){
         my($volume, $dir) = File::Spec->splitpath($path, 1);
 
-        my $filepath = File::Spec->catpath($volume, $dir, $jarname);
+        my $filepath = File::Spec->catpath($volume, $dir, $jarname);warn "testing $filepath";
 
         return $filepath if -r $filepath;
     }

@@ -63,13 +63,12 @@ sub java_path {
     my $self = shift;
 
     unless( @_ || $self->{java_path} ){ # We're getting and don't have a defined path
+        my $binname = ( $^O eq 'MSWin32' ? 'java.exe' : 'java' );
+
         foreach my $path ( @{ $self->java_searchpaths() } ){
             my($volume, $dir) = File::Spec->splitpath($path, 1);
-
-            foreach my $name ( 'java', 'java.exe' ){
-                my $filepath = File::Spec->catpath($volume, $dir, $name);
-                return $self->java_path($filepath) if -x $filepath;
-            }
+            my $filepath = File::Spec->catpath($volume, $dir, $binname);
+            return $self->java_path($filepath) if -f $filepath && -x $filepath;
         }
         throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find Java executable");
     }
@@ -179,7 +178,7 @@ sub find_jar {
     foreach my $path ( @{ $self->jar_searchpaths() } ){
         my($volume, $dir) = File::Spec->splitpath($path, 1);
 
-        my $filepath = File::Spec->catpath($volume, $dir, $jarname);warn "testing $filepath";
+        my $filepath = File::Spec->catpath($volume, $dir, $jarname);
 
         return $filepath if -r $filepath;
     }

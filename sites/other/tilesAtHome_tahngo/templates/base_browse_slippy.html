@@ -75,7 +75,7 @@ function init() {
             layerOceantiles = layerMapnik = new OpenLayers.Layer.TMS( 
 	    "oceantiles.dat",
 	    ["http://a.tah.openstreetmap.org/Tiles/oceantiles/","http://b.tah.openstreetmap.org/Tiles/oceantiles/","http://c.tah.openstreetmap.org/Tiles/oceantiles/"],
-	    {type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true,attribution: 'Data by by <a href="http://openstreetmap.org/">OpenStreetMap</a>',isBaseLayer: false, visibility: false }, {'buffer':1} );
+	    {type:'png', getURL: get_osm_url, displayOutsideMaxExtent: true,attribution: 'Data by by <a href="http://openstreetmap.org/">OpenStreetMap</a>',isBaseLayer: false, visibility: false, opacity: 0.5 }, {'buffer':1} );
 
             map.addLayers([layerTilesAtHome,layerOceantiles]);
 

@@ -627,13 +627,13 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            ::statusMessage("Downloading: Map data for " . join(",",sort @layers), 0, 3);
+            ::statusMessage("Downloading: Map data for " . join(",",@layers), 1, 3);
             
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {
                 my $currentURL = $URL;
                 $currentURL =~ s/%b/${bbox}/g;
-                print "Downloading: $currentURL\n" if ($Config->get("Debug"));
+                ::statusMessage("Downloading: $currentURL",0,6);
                 try {
                     $Server->downloadFile($currentURL, $partialFile, 0);
                     push(@{$filelist}, $partialFile);
@@ -641,7 +641,7 @@ sub downloadData
                 }
                 catch ServerError with { # just do nothing if there was an error during download
                     my $err = shift();
-                    print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
+                    ::statusMessage("Download failed: " . $err->text(),1,6);
                 };
             }
 
@@ -664,7 +664,7 @@ sub downloadData
                             my $err = shift();
                             print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
                             my $message = ($k < 3) ? "Download of slice $j failed, trying again" : "Download of slice $j failed 3 times, giving up";
-                            ::statusMessage($message, 0, 3);
+                            ::statusMessage($message, 1, 3);
                         };
                         last if ($res); # don't try again if download was successful
                     }

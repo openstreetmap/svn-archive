@@ -72,7 +72,7 @@ public class JTileDownloaderMainView
         _networkPanel = new NetworkPanel(getAppConfiguration());
 
         tabbedPane.addTab("Main", _mainPanel);
-        //        tabbedPane.addTab("Update Tiles", _updateTilesPanel);
+        tabbedPane.addTab("Update Tiles", _updateTilesPanel);
         tabbedPane.addTab("Options", _optionsPanel);
         tabbedPane.addTab("Network", _networkPanel);
 

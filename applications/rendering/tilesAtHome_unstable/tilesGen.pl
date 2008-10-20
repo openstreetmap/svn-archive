@@ -38,7 +38,6 @@ use Tileset;
 use Server;
 use Request;
 use Upload;
-use Compress;
 use SVG::Rasterize;
 use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
@@ -310,14 +309,13 @@ elsif ($Mode eq "loop")
         $progressJobs++;
         # Render stuff if we get a job from server
         ProcessRequestsFromServer();
-        # compress and upload results
-        compressAndUploadTilesets();
+        # upload results
+        uploadTilesets();
     }
 }
 #---------------------------------
 elsif ($Mode eq "upload") 
 {   # Upload mode
-    compress();
     upload();
 }
 #---------------------------------
@@ -461,10 +459,10 @@ else {
 
 #-----------------------------------------------------------------------------
 # forks to a new process when it makes sense,
-# compresses all existing tileset dirs, uploads the resulting zip.
+# uploads available tile data.
 # returns >=0 on success, -1 otherwise and dies if it could not fork
 #-----------------------------------------------------------------------------
-sub compressAndUploadTilesets
+sub uploadTilesets
 {
     my $Config = TahConf->getConfig();
     if ($Config->get("ForkForUpload") and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
@@ -487,7 +485,6 @@ sub compressAndUploadTilesets
         elsif ($upload_pid == 0)
         {   # we are the child, so we run the upload and exit the thread
             try {
-                compress();
                 upload();
             }
             otherwise {
@@ -499,7 +496,6 @@ sub compressAndUploadTilesets
     else
     {   ## no forking going on
         try {
-            compress();
             my $result = upload();
 
             if ($result == -1)
@@ -511,10 +507,6 @@ sub compressAndUploadTilesets
                 resetFault("upload");
             }
         }
-        catch CompressError with {
-            my $err = shift();
-            cleanUpAndDie("Error while compressing tiles: " . $err->text(), "EXIT", 1);
-        }
         catch UploadError with {
             my $err = shift();
             if (!$err->value() eq "QueueFull") {
@@ -523,20 +515,6 @@ sub compressAndUploadTilesets
         };
     }
     # no error, just nothing to upload
-}
-
-#-----------------------------------------------------------------------------
-# compress() calls the external compress.pl which zips up all existing
-# tileset directories.
-#-----------------------------------------------------------------------------
-sub compress
-{
-    keepLog($$,"compress","start","$progressJobs");
-
-    my $compress = new Compress;
-    $compress->compressAll();
-
-    keepLog($$,"compress","stop");
 }
 
 #-----------------------------------------------------------------------------

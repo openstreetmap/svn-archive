@@ -142,7 +142,7 @@ sub convert {
     if( $params{area} ){
         my %area = $params{area}->get_box_lowerleft();
 
-        # Workaround for stupid inkscape bug:
+        # Workaround for stupid inkscape bug: #
         # On Windows Inkscape reads it's area parameter according to the locale
         # specified decimal separator, so if the system locale uses "," as
         # decimal operator the parameter needs to use ",".
@@ -159,7 +159,7 @@ sub convert {
     my @cmd = ($self->path(), '-z');
     push(@cmd, '-w', $params{width}) if $params{width};
     push(@cmd, '-h', $params{height}) if $params{height};
-    push(@cmd, $areastring) if $areastring;
+    push(@cmd, '--export-area='.$areastring) if $areastring;
     push(@cmd, '--export-png='.$params{outfile});
     push(@cmd, $params{infile});
 

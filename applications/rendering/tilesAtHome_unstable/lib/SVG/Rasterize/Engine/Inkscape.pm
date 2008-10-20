@@ -159,7 +159,7 @@ sub convert {
     my @cmd = ($self->path(), '-z');
     push(@cmd, '-w', $params{width}) if $params{width};
     push(@cmd, '-h', $params{height}) if $params{height};
-    push(@cmd, $areastring) if $areastring;
+    push(@cmd, '--export-area='.$areastring) if $areastring;
     push(@cmd, '--export-png='.$params{outfile});
     push(@cmd, $params{infile});
 

@@ -267,7 +267,7 @@ sub downloadFile
     if ( -s $File == 0 )
     {
         unlink($File) if (! $UseExisting);
-        throw ServerError "Zero size file", "TempError";
+        throw ServerError "Zero sized osm file", "TempError";
     }
     return -s $File;
 }

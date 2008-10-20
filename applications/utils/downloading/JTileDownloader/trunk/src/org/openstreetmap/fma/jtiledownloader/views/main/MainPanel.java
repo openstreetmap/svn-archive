@@ -124,7 +124,7 @@ public class MainPanel
         _tileListSquare.setRadius(Integer.parseInt(_textRadius.getText()) * 1000);
 
         _comboOutputZoomLevel.setName(COMPONENT_OUTPUT_ZOOM_LEVEL);
-        for (int outputZoomLevel = 5; outputZoomLevel <= 18; outputZoomLevel++)
+        for (int outputZoomLevel = 0; outputZoomLevel <= 18; outputZoomLevel++)
         {
             _comboOutputZoomLevel.addItem("" + outputZoomLevel);
         }

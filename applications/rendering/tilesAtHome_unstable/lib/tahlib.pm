@@ -157,21 +157,6 @@ sub runCommand
     my $Config = TahConf->getConfig();
     my ($cmd,$mainPID) = @_;
 
-    my $inkscapecfg;
-    my $inkscapebak;
-    my $inkscapecorrupt = 0;
-
-    if ($Config->get("AutoResetInkscapePrefs") == 1 && $cmd =~ /inkscape/)
-    {
-        my $inkscapecfg = glob("~/.inkscape/preferences.xml");
-        my $inkscapebak = "$inkscapecfg.bak";
-        if(-f $inkscapecfg)
-        {
-            unlink $inkscapebak if(-f $inkscapebak);
-            rename $inkscapecfg, $inkscapebak;
-        }
-    }
-
     if ($Config->get("Verbose") >= 10)
     {
         my $retval = system($cmd);
@@ -211,16 +196,7 @@ sub runCommand
             while(<ERR>)
             {
                 print STDERR "  | $_";
-                if (grep(/preferences.xml/,$_))
-                {
-                    $inkscapecorrupt = 1;
-                    $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
-                    if ($Config->get("AutoResetInkscapePrefs") == 1)
-                    {
-                        $ExtraInfo=$ExtraInfo."\n   AutoResetInkscapePrefs set, trying to reset ~/.inkscape/preferences.xml";
-                    }
-                }
-                elsif (grep(/infinite template recursion/,$_))
+                if (grep(/infinite template recursion/,$_))
                 {
                     $ExtraInfo=$ExtraInfo."\n * Tile too complex for Xmlstarlet, possibly an excessively long way, or too many maplint errors";
                 }
@@ -232,21 +208,6 @@ sub runCommand
         {
             $ok = 1;
         }
-    }
-
-    if ($Config->get("AutoResetInkscapePrefs") == 1 && $cmd =~ /inkscape/)
-    {
-        if(-f $inkscapebak)
-        {
-            unlink $inkscapecfg if(-f $inkscapecfg);
-            $inkscapecorrupt = 0 if(rename $inkscapebak, $inkscapecfg);
-        }
-    }
-
-    if($inkscapecorrupt)
-    {
-        ## this error is fatal because it needs human intervention before processing can continue
-        addFault("fatal",1);
     }
 
     unlink($ErrorFile);

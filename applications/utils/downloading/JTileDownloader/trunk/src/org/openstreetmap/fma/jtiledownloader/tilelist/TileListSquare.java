@@ -12,10 +12,15 @@ public class TileListSquare
     private static final double EARTH_CIRC_POLE = 40.007863 * Math.pow(10, 6);
     private static final double EARTH_CIRC_EQUATOR = 40.075016 * Math.pow(10, 6);
 
-    private long _xTopLeft = 0;
-    private long _yTopLeft = 0;
-    private long _xBottomRight = 0;
-    private long _yBottomRight = 0;
+    private static final double MIN_LAT = -180;
+    private static final double MAX_LAT = 180;
+    private static final double MIN_LON = -85.0511;
+    private static final double MAX_LON = 85.0511;
+
+    private int _xTopLeft = 0;
+    private int _yTopLeft = 0;
+    private int _xBottomRight = 0;
+    private int _yBottomRight = 0;
 
     private int _downloadZoomLevel;
     private int _radius; // radius in m
@@ -28,9 +33,9 @@ public class TileListSquare
 
         log("calculate tile values for lat " + _latitude + ", lon " + _longitude + ", radius " + _radius);
 
-        if (_radius > 6370000)
+        if (_radius > 6370000 * 2 * 4)
         {
-            _radius = 6370000;
+            _radius = 6370000 * 2 * 4;
         }
 
         double minLat = _latitude - 360 * (_radius / EARTH_CIRC_POLE);
@@ -38,38 +43,38 @@ public class TileListSquare
         double maxLat = _latitude + 360 * (_radius / EARTH_CIRC_POLE);
         double maxLon = _longitude + 360 * (_radius / (EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
 
-        //        if (minLat < -90)
-        //        {
-        //            minLat = -90;
-        //        }
-        //        if (maxLat > 90)
-        //        {
-        //            maxLat = 90;
-        //        }
-        //        if (minLat > 90)
-        //        {
-        //            minLat = 90;
-        //        }
-        //        if (maxLat < -90)
-        //        {
-        //            maxLat = -90;
-        //        }
-        //        if (minLon < -180)
-        //        {
-        //            minLon = -180;
-        //        }
-        //        if (maxLon > 180)
-        //        {
-        //            maxLon = 180;
-        //        }
-        //        if (minLon > 180)
-        //        {
-        //            minLon = 180;
-        //        }
-        //        if (maxLon < -180)
-        //        {
-        //            maxLon = -180;
-        //        }
+        if (minLat < MIN_LAT)
+        {
+            minLat = MIN_LAT;
+        }
+        if (maxLat > MAX_LAT)
+        {
+            maxLat = MAX_LAT;
+        }
+        if (minLat > MAX_LAT)
+        {
+            minLat = MAX_LAT;
+        }
+        if (maxLat < MIN_LAT)
+        {
+            maxLat = MIN_LAT;
+        }
+        if (minLon < MIN_LON)
+        {
+            minLon = MIN_LON;
+        }
+        if (maxLon > MAX_LON)
+        {
+            maxLon = MAX_LON;
+        }
+        if (minLon > MAX_LON)
+        {
+            minLon = MAX_LON;
+        }
+        if (maxLon < MIN_LON)
+        {
+            maxLon = MIN_LON;
+        }
 
         log("minLat=" + minLat);
         log("minLon=" + minLon);
@@ -150,11 +155,10 @@ public class TileListSquare
      * @param zoomLevel
      * @return
      */
-    private static long calculateTileY(double lat, double zoomLevel)
+    private static int calculateTileY(double lat, int zoomLevel)
     {
-        double y = ((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2) * Math.pow(2, zoomLevel);
-        long value = new Double(Math.floor(y)).longValue();
-        return value;
+        int y = (int) Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * (1 << zoomLevel));
+        return y;
     }
 
     /**
@@ -162,11 +166,10 @@ public class TileListSquare
      * @param zoomLevel
      * @return
      */
-    private static long calculateTileX(double lon, double zoomLevel)
+    private static int calculateTileX(double lon, int zoomLevel)
     {
-        double x = ((lon + 180) / 360) * Math.pow(2, zoomLevel);
-        long value = new Double(Math.floor(x)).longValue();
-        return value;
+        int x = (int) Math.floor((lon + 180) / 360 * (1 << zoomLevel));
+        return x;
     }
 
     /**

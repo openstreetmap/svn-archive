@@ -1,6 +1,7 @@
 package UtilsPlugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -80,8 +81,11 @@ public class SimplifyWayAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent, tr("Please select at least one way to simplify."));
             return;
         } else if (ways > 10) {
-            int option = JOptionPane.showConfirmDialog(Main.parent, tr(
-                    "The selection contains {0} ways. Are you sure you want to simplify them all?", ways),
+        	//TRANSLATION: Although for English the use of trn is needless it is important for other languages
+            int option = JOptionPane.showConfirmDialog(Main.parent, trn(
+                    "The selection contains {0} way. Are you sure you want to simplify them all?",
+                    "The selection contains {0} ways. Are you sure you want to simplify them all?",
+                    ways,ways),
                     tr("Are you sure?"), JOptionPane.YES_NO_OPTION);
             if (option != JOptionPane.YES_OPTION)
                 return;
@@ -128,7 +132,7 @@ public class SimplifyWayAction extends JosmAction {
             Collection<Command> cmds = new LinkedList<Command>();
             cmds.add(new ChangeCommand(w, wnew));
             cmds.add(new DeleteCommand(delNodes));
-            Main.main.undoRedo.add(new SequenceCommand(tr("Simplify Way (remove {0} nodes)", delNodes.size()), cmds));
+            Main.main.undoRedo.add(new SequenceCommand(trn("Simplify Way (remove {0} node)", "Simplify Way (remove {0} nodes)", delNodes.size(), delNodes.size()), cmds));
             Main.map.repaint();
         }
     }

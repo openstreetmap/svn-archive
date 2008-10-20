@@ -123,15 +123,8 @@ class TileUpload (object):
 
       elif self.upload.file.name.lower().endswith('.tileset') and os.path.isfile(self.fname):
           # existing .tileset file
-          if self.handle_tilesetfile():
-              logging.info('Tilesetfile "%s,%d,%d,%d" in %.1f sec. Saving took %.1f sec.' % (tset.layer,tset.base_z,tset.x,tset.y,time()-starttime[0], time_save[1] - time_save[0]))
-          else:
-              logging.info('Failed to handle tilesetfile in %.1f sec.' % (time()-starttime[0], time_save[1] - time_save[0]))
-      else:
-          # self.fname is no valid file
-          logging.info("File %s not found or no .zip or .tileset, deleting. user %s(%d)." % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))
-	  self.upload.delete()
-
+          logging.info("upload processor does not handle tileset files %s. user %s(%d)." % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))
+          self.cleanup(True)
 
   #-----------------------------------------------------------------
   # fetch next request from the db

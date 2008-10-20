@@ -97,7 +97,7 @@ sub getString
 
     if(!$res->is_success())
     {   # getting request string from server failed here
-        throw ServerError "Unable to get string from server", "TempError";
+        throw ServerError "Unable to get request string from server", "TempError";
     }
 
     # got a server reply here
@@ -263,6 +263,11 @@ sub downloadFile
     if (!$res->is_success()) {
         unlink($File) if (! $UseExisting);
         throw ServerError $res->status_line, "TempError";
+    }
+    if ( -s $File == 0 )
+    {
+        unlink($File) if (! $UseExisting);
+        throw ServerError "Zero size file", "TempError";
     }
     return -s $File;
 }

@@ -12,10 +12,10 @@ public class TileListSquare
     private static final double EARTH_CIRC_POLE = 40.007863 * Math.pow(10, 6);
     private static final double EARTH_CIRC_EQUATOR = 40.075016 * Math.pow(10, 6);
 
-    private static final double MIN_LAT = -180;
-    private static final double MAX_LAT = 180;
-    private static final double MIN_LON = -85.0511;
-    private static final double MAX_LON = 85.0511;
+    public static final double MIN_LAT = -180;
+    public static final double MAX_LAT = 180;
+    public static final double MIN_LON = -85.0511;
+    public static final double MAX_LON = 85.0511;
 
     private int _xTopLeft = 0;
     private int _yTopLeft = 0;
@@ -42,39 +42,6 @@ public class TileListSquare
         double minLon = _longitude - 360 * (_radius / (EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
         double maxLat = _latitude + 360 * (_radius / EARTH_CIRC_POLE);
         double maxLon = _longitude + 360 * (_radius / (EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
-
-        if (minLat < MIN_LAT)
-        {
-            minLat = MIN_LAT;
-        }
-        if (maxLat > MAX_LAT)
-        {
-            maxLat = MAX_LAT;
-        }
-        if (minLat > MAX_LAT)
-        {
-            minLat = MAX_LAT;
-        }
-        if (maxLat < MIN_LAT)
-        {
-            maxLat = MIN_LAT;
-        }
-        if (minLon < MIN_LON)
-        {
-            minLon = MIN_LON;
-        }
-        if (maxLon > MAX_LON)
-        {
-            maxLon = MAX_LON;
-        }
-        if (minLon > MAX_LON)
-        {
-            minLon = MAX_LON;
-        }
-        if (maxLon < MIN_LON)
-        {
-            maxLon = MIN_LON;
-        }
 
         log("minLat=" + minLat);
         log("minLon=" + minLon);
@@ -157,6 +124,14 @@ public class TileListSquare
      */
     private static int calculateTileY(double lat, int zoomLevel)
     {
+        if (lat < MIN_LAT)
+        {
+            lat = MIN_LAT;
+        }
+        if (lat > MAX_LAT)
+        {
+            lat = MAX_LAT;
+        }
         int y = (int) Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * (1 << zoomLevel));
         return y;
     }
@@ -168,6 +143,15 @@ public class TileListSquare
      */
     private static int calculateTileX(double lon, int zoomLevel)
     {
+        if (lon < MIN_LON)
+        {
+            lon = MIN_LON;
+        }
+        if (lon > MAX_LON)
+        {
+            lon = MAX_LON;
+        }
+
         int x = (int) Math.floor((lon + 180) / 360 * (1 << zoomLevel));
         return x;
     }

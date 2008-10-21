@@ -1376,9 +1376,10 @@ sub createTilesetFile
     my ($z, $x, $y) = $self->{req}->ZXY();
 
     my @offsets;
-    my $levels = 6;                       # number of layers in a tileset file, currently 6
-    my $tiles = ((4 ** $levels) - 1) / 3; # 1365 for 6 zoom levels
-    my $currpos = 8 + (4 * ($tiles + 1)); # 5472 for 6 zoom levels
+    my $levels = $Config->get("${layer}_MaxZoom") - $z + 1; # number of layers in a tileset file, usually 6
+    my $tiles = ((4 ** $levels) - 1) / 3;                   # 1365 for 6 zoom levels
+    my $currpos = 8 + (4 * ($tiles + 1));                   # 5472 for 6 zoom levels
+    my $size = 1;                                           # size of base zoom level, for t@h always 1
 
     my $userid = 0; # the server will fill this in
     my $empty = 1;
@@ -1442,7 +1443,7 @@ sub createTilesetFile
     }
 
     seek $fh, 0, 0;
-    print $fh pack("CxxxVV*", 1, $userid, @offsets) or throw TilesetError "Write failed to $temp_file ($!)";
+    print $fh pack("CCCxVV*", 2, $levels, $size, $userid, @offsets) or throw TilesetError "Write failed to $temp_file ($!)";
     close $fh;
 
     if ($empty) {

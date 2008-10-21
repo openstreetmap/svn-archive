@@ -24,7 +24,7 @@ public class UpdateTileList
      * Getter for yDirectory
      * @return the yDirectory
      */
-    protected final Vector getYDirectory()
+    public final Vector getYDirectory()
     {
         return _yDirectory;
     }

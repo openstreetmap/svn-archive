@@ -166,6 +166,8 @@ sub convert {
     run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
         throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {cmd => \@cmd, stdout => $self->{stdout}, stderr => $self->{stderr}});
 
+    # on linux error code 11 seems to denote a defect config file, while on freebsd it returns 139 (11+128)
+
     try {
         $self->check_output($params{outfile});
     } catch SVG::Rasterize::Engine::Error::NoOutput with {

@@ -654,7 +654,7 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            ::statusMessage("Downloading: Map data for " . join(",",sort @layers), 0, 3);
+            ::statusMessage("Downloading: Map data for " . join(",",@layers) ." from ".$OSMServer, 0, 3);
             
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {
@@ -722,7 +722,7 @@ sub downloadData
 
     ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
     if(!$res) {
-        return (undef, "Stripped download failed with: " . $reason);
+        return (undef, "Striped download failed with: " . $reason);
     }
 
 

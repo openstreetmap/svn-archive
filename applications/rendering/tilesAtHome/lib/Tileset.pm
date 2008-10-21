@@ -106,6 +106,7 @@ sub generate
     my $req =  $self->{req};
     my $Config = $self->{Config};
 
+    $::currentSubTask = "";
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
@@ -267,6 +268,7 @@ sub generate
         }
     }
 
+    $::currentSubTask = "";
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
@@ -647,18 +649,21 @@ sub downloadData
 
             if ((! $res) and ($Config->get("FallBackToSlices"))) {
                 ::statusMessage("Trying smaller slices",1,0);
-                my $slice = (($E1 - $W1) / 10); # A slice is one tenth of the width 
+                my $slice = (($E1 - $W1) / 10); # A slice is one tenth of the width
+                my $slicesdownloaded=0;
                 for (my $j = 1; $j <= 10; $j++) {
                     my $bbox = sprintf("%f,%f,%f,%f", $W1 + ($slice * ($j - 1)), $S1, $W1 + ($slice * $j), $N1);
                     my $currentURL = $URL;
                     $currentURL =~ s/%b/${bbox}/g;    # substitute bounding box place holder
                     $partialFile = File::Spec->join($self->{JobDir}, "data-$i-$j.osm");
+                    $res = 0;
                     for (my $k = 1; $k <= 3; $k++) {  # try each slice 3 times
                         ::statusMessage("Downloading map data (slice $j of 10)", 0, 3);
                         print "Downloading: $currentURL\n" if ($Config->get("Debug"));
                         try {
                             $Server->downloadFile($currentURL, $partialFile, 0);
                             $res = 1;
+                            ++$slicesdownloaded;
                         }
                         catch ServerError with {
                             my $err = shift();
@@ -671,6 +676,7 @@ sub downloadData
                     last if (!$res); # don't download remaining slices if one fails
                     push(@{$filelist}, $partialFile);
                 }
+                $res = ($slicesdownloaded == 10);
             }
             if (!$res) {
                 ::statusMessage("Download of data from $OSMServer failed", 0, 3);

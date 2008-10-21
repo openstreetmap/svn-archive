@@ -23,8 +23,10 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUpdate;
 
 /**
  * developed by fma (http://wiki.openstreetmap.org/index.php/User:Fma)
@@ -57,6 +59,8 @@ public class UpdateTilesPanel
     private DefaultTableColumnModel _cm;
 
     private JScrollPane _scrollPane;
+
+    private Vector _updateList;
 
     /**
      * 
@@ -175,8 +179,6 @@ public class UpdateTilesPanel
         implements ActionListener
     {
 
-        private Vector _updateList;
-
         /**
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          * {@inheritDoc}
@@ -221,12 +223,38 @@ public class UpdateTilesPanel
                 return;
             }
 
+            TileListUpdate updateList = new TileListUpdate();
             for (int index = 0; index < selectedRows.length; index++)
             {
                 String zoomLevel = (String) _updateTilesTable.getValueAt(selectedRows[index], 0);
                 System.out.println("selected zoom level " + zoomLevel);
 
+                for (int indexTileList = 0; indexTileList < _updateList.size(); indexTileList++)
+                {
+                    UpdateTileList updateTileList = (UpdateTileList) _updateList.elementAt(indexTileList);
+                    if (updateTileList.getZoomLevel().equals(zoomLevel))
+                    {
+                        System.out.println("found updateTileList for zoom level " + zoomLevel);
+                        Vector directory = updateTileList.getYDirectory();
+                        for (int indexDirectoryY = 0; indexDirectoryY < directory.size(); indexDirectoryY++)
+                        {
+                            YDirectory yDir = (YDirectory) directory.elementAt(indexDirectoryY);
+                            String[] tiles = yDir.getTiles();
+                            for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
+                            {
+                                updateList.addTile(zoomLevel + "/" + yDir.getName() + "/" + tiles[indexTiles]);
+                            }
+                        }
+
+                    }
+                }
             }
+
+            TileListDownloader tld = new TileListDownloader(getFolder(), updateList);
+            //            tld.setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
+            //            tld.setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
+            //            tld.setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
+            tld.start();
 
         }
 

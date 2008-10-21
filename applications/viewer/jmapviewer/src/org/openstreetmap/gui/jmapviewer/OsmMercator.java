@@ -20,7 +20,7 @@ public class OsmMercator {
 	public static final double MIN_LAT = -85.05112877980659;
 
 	public static double radius(int aZoomlevel) {
-		return (TILE_SIZE * Math.pow(2, aZoomlevel)) / (2 * Math.PI);
+		return (TILE_SIZE * (1 << aZoomlevel)) / (2.0 * Math.PI);
 	}
 
 	/**
@@ -31,15 +31,15 @@ public class OsmMercator {
 	 * @return
 	 */
 	public static int getMaxPixels(int aZoomlevel) {
-		return (int) (TILE_SIZE * Math.pow(2, aZoomlevel));
+		return TILE_SIZE * (1 << aZoomlevel);
 	}
 
 	public static int falseEasting(int aZoomlevel) {
-		return (int) getMaxPixels(aZoomlevel) / 2;
+		return getMaxPixels(aZoomlevel) / 2;
 	}
 
 	public static int falseNorthing(int aZoomlevel) {
-		return (int) (-1 * getMaxPixels(aZoomlevel) / 2);
+		return (-1 * getMaxPixels(aZoomlevel) / 2);
 	}
 
 	/**
@@ -51,7 +51,9 @@ public class OsmMercator {
 	 */
 	public static int LonToX(double aLongitude, int aZoomlevel) {
 		double longitude = Math.toRadians(aLongitude);
-		return (int) ((radius(aZoomlevel) * longitude) + falseEasting(aZoomlevel));
+		int x = (int) ((radius(aZoomlevel) * longitude) + falseEasting(aZoomlevel));
+		x = Math.min(x, getMaxPixels(aZoomlevel) - 1);
+		return x;
 	}
 
 	/**
@@ -67,10 +69,12 @@ public class OsmMercator {
 		else if (aLat > MAX_LAT)
 			aLat = MAX_LAT;
 		double latitude = Math.toRadians(aLat);
-		return (int) (-1
-				* (radius(aZoomlevel) / 2.0 * Math.log((1.0 + Math
-						.sin(latitude))
-						/ (1.0 - Math.sin(latitude)))) - falseNorthing(aZoomlevel));
+		int y =
+				(int) (-1
+						* (radius(aZoomlevel) / 2.0 * Math.log((1.0 + Math.sin(latitude))
+								/ (1.0 - Math.sin(latitude)))) - falseNorthing(aZoomlevel));
+		y = Math.min(y, getMaxPixels(aZoomlevel) - 1);
+		return y;
 	}
 
 	/**
@@ -84,9 +88,7 @@ public class OsmMercator {
 		aX -= falseEasting(aZoomlevel);
 		double longRadians = aX / radius(aZoomlevel);
 		double longDegrees = Math.toDegrees(longRadians);
-		double rotations = Math.floor((longDegrees + 180) / 360);
-		double longitude = longDegrees - (rotations * 360);
-		return longitude;
+		return longDegrees;
 	}
 
 	/**
@@ -98,8 +100,7 @@ public class OsmMercator {
 	 */
 	public static double YToLat(int aY, int aZoomlevel) {
 		aY += falseNorthing(aZoomlevel);
-		double latitude = (Math.PI / 2)
-				- (2 * Math.atan(Math.exp(-1.0 * aY / radius(aZoomlevel))));
+		double latitude = (Math.PI / 2) - (2 * Math.atan(Math.exp(-1.0 * aY / radius(aZoomlevel))));
 		return -1 * Math.toDegrees(latitude);
 	}
 

@@ -56,6 +56,9 @@ class Request(models.Model):
 class Upload(models.Model):
   file = models.FileField(upload_to='Incoming')
   layer = models.ForeignKey(Layer,blank=True,null=True)
+  z = models.PositiveSmallIntegerField(blank=True,null=True)
+  x = models.PositiveSmallIntegerField(blank=True,null=True)
+  y = models.PositiveSmallIntegerField(blank=True,null=True)
   ipaddress = models.IPAddressField(blank=True,default="")
   user_id = models.ForeignKey(User)
   client_uuid = models.PositiveSmallIntegerField(blank=True, default=0)

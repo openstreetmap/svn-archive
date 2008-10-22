@@ -14,7 +14,7 @@ import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListError;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
 import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
 import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
 
@@ -196,7 +196,7 @@ public class JTileDownloaderMainView
 
             if (exitCode == ErrorTileListView.CODE_RETRY)
             {
-                TileListError tiles = new TileListError();
+                TileListSimple tiles = new TileListSimple();
                 for (Enumeration enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
                 {
                     TileDownloadError tde = (TileDownloadError) enumeration.nextElement();

@@ -142,11 +142,11 @@ sub saveimage($$)
 sub printhelp
 {
   print "Usage: png2tileinfo.pl check <x> <y>\n"
-  .     "       png2tileinfo.pl set <x> <y> [land|sea|mixed] ...\n"
+  .     "       png2tileinfo.pl set <x> <y> <land|sea|mixed> ...\n"
   .     "       png2tileinfo.pl diff oldfile.png newfile.png\n"
   .     "       png2tileinfo.pl svndiff\n"
   .     "       png2tileinfo.pl view\n"
-  .     "       png2tileinfo.pl copydiff oldfile.png newfile.png targetfile.png\n";
+  .     "       png2tileinfo.pl copydiff [oldfile.png newfile.png targetfile.png]\n";
   exit(0);
 }
 
@@ -250,8 +250,28 @@ if ($#ARGV > -1)
   }
   elsif($arg eq "copydiff")
   {
-    printhelp() if (@ARGV < 3);
-    my ($oldfile,$newfile,$targetfile) = @ARGV;
+    my ($oldfile,$newfile,$targetfile);
+    if(!@ARGV)
+    {
+      my @files = sort glob("$pngname.r*");
+      $targetfile = $pngname;
+      if(@files == 2)
+      {
+        ($oldfile, $newfile) = @files;
+      }
+      else
+      {
+        die "Found more or less than two revision conflict files.";
+      }
+    }
+    elsif (@ARGV == 3)
+    {
+      ($oldfile,$newfile,$targetfile) = @ARGV;
+    }
+    else
+    {
+      printhelp();
+    }
 
     my $world_im = getimage($oldfile);
     my $newworld_im = getimage($newfile);

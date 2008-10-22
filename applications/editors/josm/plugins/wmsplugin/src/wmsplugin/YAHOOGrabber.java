@@ -23,7 +23,9 @@ public class YAHOOGrabber extends WMSGrabber{
 
 	YAHOOGrabber(String baseURL, Bounds b, Projection proj,
 			double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
-		super("file://" + Main.pref.getPreferencesDir() + "plugins/wmsplugin/ymap.html?request=getmap&format=image/jpeg", b, proj, pixelPerDegree, image, mv, layer);
+		super("file:///" + Main.pref.getPreferencesDir() + "plugins/wmsplugin/ymap.html?"
+//                + "request=getmap&format=image/jpeg"
+		, b, proj, pixelPerDegree, image, mv, layer);
 		this.browserCmd = baseURL.replaceFirst("yahoo://", "");
 	}
 

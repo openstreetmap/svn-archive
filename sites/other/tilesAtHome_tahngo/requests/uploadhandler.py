@@ -37,7 +37,7 @@ def handle_uploaded_tileset(file, form):
   # more liberal permisssions
   os.chmod(tmp_fullpath,0664)
 
-  tset_fsize = os.stat(tmp_fullpath))[stat.ST_SIZE]
+  tset_fsize = os.stat(tmp_fullpath)[stat.ST_SIZE]
 
   ## init layer and Tileset object to retrieve the file locations
   try:

@@ -26,7 +26,7 @@ import javax.swing.table.TableModel;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUpdate;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
 
 /**
  * developed by fma (http://wiki.openstreetmap.org/index.php/User:Fma)
@@ -223,7 +223,7 @@ public class UpdateTilesPanel
                 return;
             }
 
-            TileListUpdate updateList = new TileListUpdate();
+            TileListSimple updateList = new TileListSimple();
             for (int index = 0; index < selectedRows.length; index++)
             {
                 String zoomLevel = (String) _updateTilesTable.getValueAt(selectedRows[index], 0);

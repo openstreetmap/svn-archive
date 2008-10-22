@@ -943,6 +943,9 @@ sub nonForkedRender
     if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
         $self->createTilesetFile($layer);
     }
+    else {
+        $self->createZipFile($layer);
+    }
 }
 
 

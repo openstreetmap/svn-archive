@@ -1,8 +1,8 @@
 README for png2tileinfo
 -----------------------
 
-This is the "source" for the oceantiles_12.dat file used in 
-close-areas.pl and in lowzoom.pl of the tilesAtHome project, as 
+This is the "source" for the oceantiles_12.dat file used in
+close-areas.pl and in lowzoom.pl of the tilesAtHome project, as
 well as the tahngo t@h server.
 
 The oceantiles_12.dat file contains two bits for every level-12
@@ -11,7 +11,7 @@ a coastal tile, or unknown.
 
 The file is easy to access by the programs using it, but difficult
 to edit. So here is the "source data" in the form of a large PNG
-file 4096x4096 pixels for the whole planet, in which each pixel 
+file 4096x4096 pixels for the whole planet, in which each pixel
 corresponds to one level-12 tile and may have one of four colours:
 
 white - coastline intersects with this tile
@@ -19,7 +19,7 @@ green - no coastline intersect, land tile
 blue -  no coastline intersect, sea tile
 black - unknown
 
-If you find errors in the data file - i.e. an inland area rendered 
+If you find errors in the data file - i.e. an inland area rendered
 blue or a sea area not rendered blue -, you can simply fix the PNG file
 with any image editor, then run png2tileinfo, and you have a new
 data file. (Please make sure to upload both the .png file that you
@@ -29,7 +29,8 @@ Please note that the code is picky about the colours used. Nothing
 but "pure" colors will do - blue has to be 0,0,255, green has to be
 0,255,0, black is 0,0,0 and white 255,255,255.
 
-Usage:
+Main usage:
+-----------
 % cd applications/rendering/png2tileinfo
 % svn update
 % perl png2tileinfo.pl check 3762 2471
@@ -40,3 +41,28 @@ oceantiles_12.png(3762, 2471) = 3 (mixed)
 [wait until file generated...]
 
 % svn commit
+
+Programm help text shown for wrong arguments:
+---------------------------------------------
+1 Usage: png2tileinfo.pl check <x> <y>
+2        png2tileinfo.pl set <x> <y> <land|sea|mixed> ...
+3        png2tileinfo.pl diff oldfile.png newfile.png
+4        png2tileinfo.pl svndiff
+5        png2tileinfo.pl view
+6        png2tileinfo.pl copydiff [oldfile.png newfile.png targetfile.png]
+
+1) check the type of a tile
+
+2) set the type of a tile
+
+3) show the differences between two files
+
+4) show the difference between current state and the SVN copy of last checkout
+
+5) view all tiles as ASCII text
+
+6) copy differences between old and new file into target file
+   if no file names are given the software searches for two
+   oceantiles_12.png.r<num> files which are the result of a checkout conflict
+   and copies the differences between these two files in the oceantiles_12.png
+   This is required when the file has been changed in SVN during own changes.

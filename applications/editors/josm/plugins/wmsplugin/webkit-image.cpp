@@ -9,6 +9,15 @@ g++ webkit-image.cpp -o webkit-image -lQtCore -lQtWebKit -lQtGui
 #include <QtCore/QDebug>
 #include <QtWebKit/QWebView>
 
+/* using mingw to set binary mode */
+#ifdef WIN32
+#include <io.h>
+#include <fcntl.h>
+#define BINARYSTDOUT setmode(fileno(stdout), O_BINARY);
+#else
+#define BINARYSTDOUT
+#endif
+
 #define WIDTH 2000
 
 class Save : public QObject
@@ -53,7 +62,8 @@ public slots:
       /* didn't find a way to clip the QImage directly, so we reload it */
       QPixmap p = QPixmap::grabWidget(view, 0,0,xsize,ysize);
       QFile f;
-      if(f.open(stdout,QIODevice::WriteOnly|QIODevice::Unbuffered))
+      BINARYSTDOUT
+      if(f.open(stdout, QIODevice::WriteOnly|QIODevice::Unbuffered))
         p.save(&f, "PNG");
     }
     emit finish();

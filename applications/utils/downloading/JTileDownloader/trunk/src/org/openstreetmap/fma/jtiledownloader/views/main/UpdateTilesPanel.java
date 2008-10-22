@@ -16,14 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
@@ -34,15 +32,15 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
  */
 public class UpdateTilesPanel
     extends JPanel
-    implements TableModelListener
 {
     private static final long serialVersionUID = 1L;
 
     private JTable _updateTilesTable;
 
     JLabel _labelFolder = new JLabel("Folder:");
-    JTextField _textFolder = new JTextField();
-    JButton _buttonSelectFolder = new JButton("...");
+    //    JTextField _textFolder = new JTextField();
+    JLabel _textFolder = new JLabel();
+    //    JButton _buttonSelectFolder = new JButton("...");
 
     JButton _buttonSearch = new JButton("Search");
     JButton _buttonUpdate = new JButton("Update");
@@ -50,8 +48,6 @@ public class UpdateTilesPanel
     private static final String COMMAND_SELECT_FOLDER = "selectFolder";
     private static final String COMMAND_SEARCH = "search";
     private static final String COMMAND_UPDATE = "update";
-
-    private final String _folder;
 
     private static final String[] COL_HEADS = new String[] {"Zoom Lvl", "Number of Tiles" };
     private static final int[] COL_SIZE = new int[] {90, 300 };
@@ -62,13 +58,18 @@ public class UpdateTilesPanel
 
     private Vector _updateList;
 
+    private String _tileServer = "";
+    private String _folder = "";
+
+    private final AppConfiguration _appConfiguration;
+
     /**
      * 
      */
-    public UpdateTilesPanel(String folder)
+    public UpdateTilesPanel(AppConfiguration appConfiguration)
     {
         super();
-        _folder = folder;
+        _appConfiguration = appConfiguration;
 
         createPanel();
         initialize();
@@ -87,21 +88,21 @@ public class UpdateTilesPanel
         constraints.weightx = 1.0;
         setLayout(new GridBagLayout());
 
-        JPanel panelOutputFolder = new JPanel();
-        panelOutputFolder.setLayout(new GridBagLayout());
+        JPanel panelFolder = new JPanel();
+        panelFolder.setLayout(new GridBagLayout());
         GridBagConstraints constraintsFolder = new GridBagConstraints();
         constraintsFolder.insets = new Insets(5, 5, 0, 0);
         constraintsFolder.gridwidth = GridBagConstraints.REMAINDER;
         constraintsFolder.weightx = 0.99;
         constraintsFolder.fill = GridBagConstraints.HORIZONTAL;
-        panelOutputFolder.add(_labelFolder, constraintsFolder);
+        panelFolder.add(_labelFolder, constraintsFolder);
         constraintsFolder.gridwidth = GridBagConstraints.RELATIVE;
-        panelOutputFolder.add(_textFolder, constraintsFolder);
+        panelFolder.add(_textFolder, constraintsFolder);
         constraintsFolder.gridwidth = GridBagConstraints.REMAINDER;
         constraintsFolder.weightx = 0.01;
         constraintsFolder.insets = new Insets(5, 0, 0, 5);
-        panelOutputFolder.add(_buttonSelectFolder, constraintsFolder);
-        add(panelOutputFolder, constraints);
+        //        panelFolder.add(_buttonSelectFolder, constraintsFolder);
+        add(panelFolder, constraints);
 
         JPanel panelUpdate = new JPanel();
         panelUpdate.setLayout(new GridBagLayout());
@@ -133,11 +134,11 @@ public class UpdateTilesPanel
      */
     private void initialize()
     {
-        _textFolder.setText(_folder);
+        _textFolder.setText(getFolder());
 
-        _buttonSelectFolder.addActionListener(new MyActionListener());
-        _buttonSelectFolder.setActionCommand(COMMAND_SELECT_FOLDER);
-        _buttonSelectFolder.setPreferredSize(new Dimension(25, 19));
+        //        _buttonSelectFolder.addActionListener(new MyActionListener());
+        //        _buttonSelectFolder.setActionCommand(COMMAND_SELECT_FOLDER);
+        //        _buttonSelectFolder.setPreferredSize(new Dimension(25, 19));
 
         _buttonSearch.addActionListener(new MyActionListener());
         _buttonSearch.setActionCommand(COMMAND_SEARCH);
@@ -166,13 +167,8 @@ public class UpdateTilesPanel
 
         _updateTilesTable = new JTable(tm, _cm);
         _updateTilesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-        _updateTilesTable.getModel().addTableModelListener(this);
+        //        _updateTilesTable.getModel().addTableModelListener(this);
 
-    }
-
-    public String getFolder()
-    {
-        return _textFolder.getText().trim();
     }
 
     class MyActionListener
@@ -242,7 +238,7 @@ public class UpdateTilesPanel
                             String[] tiles = yDir.getTiles();
                             for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
                             {
-                                updateList.addTile(zoomLevel + "/" + yDir.getName() + "/" + tiles[indexTiles]);
+                                updateList.addTile(getTileServer() + zoomLevel + "/" + yDir.getName() + "/" + tiles[indexTiles]);
                             }
                         }
 
@@ -250,10 +246,13 @@ public class UpdateTilesPanel
                 }
             }
 
+            System.out.println("folder:" + getFolder());
+            System.out.println("tileServer:" + getTileServer());
+
             TileListDownloader tld = new TileListDownloader(getFolder(), updateList);
-            //            tld.setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
-            //            tld.setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
-            //            tld.setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
+            tld.setWaitAfterTiles(_appConfiguration.getWaitAfterNrTiles());
+            tld.setWaitAfterTilesAmount(_appConfiguration.getWaitNrTiles());
+            tld.setWaitAfterTilesSeconds(_appConfiguration.getWaitSeconds());
             tld.start();
 
         }
@@ -341,13 +340,43 @@ public class UpdateTilesPanel
         }
     }
 
-    /**
-     * @see javax.swing.event.TableModelListener#tableChanged(javax.swing.event.TableModelEvent)
-     * {@inheritDoc}
-     */
-    public void tableChanged(TableModelEvent e)
-    {
-        //        e.fireTableDataChanged()
+    //    /**
+    //     * @see javax.swing.event.TableModelListener#tableChanged(javax.swing.event.TableModelEvent)
+    //     * {@inheritDoc}
+    //     */
+    //    public void tableChanged(TableModelEvent e)
+    //    {
+    //    }
 
+    /**
+     * Getter for tileServer
+     * @return the tileServer
+     */
+    public final String getTileServer()
+    {
+        return _tileServer;
+    }
+
+    /**
+     * Setter for tileServer
+     * @param tileServer the tileServer to set
+     */
+    public final void setTileServer(String tileServer)
+    {
+        _tileServer = tileServer.trim();
+    }
+
+    public String getFolder()
+    {
+        return _folder;
+    }
+
+    /**
+     * Setter for folder
+     * @param folder the folder to set
+     */
+    public final void setFolder(String folder)
+    {
+        _folder = folder.trim();
     }
 }

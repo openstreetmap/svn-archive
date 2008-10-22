@@ -7,6 +7,8 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
@@ -67,7 +69,7 @@ public class JTileDownloaderMainView
         JTabbedPane tabbedPane = new JTabbedPane();
 
         _mainPanel = new MainPanel(getDownloadTemplate(), getMainView());
-        _updateTilesPanel = new UpdateTilesPanel(_mainPanel.getOutputfolder());
+        _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration());
         _optionsPanel = new OptionsPanel(getAppConfiguration());
         _networkPanel = new NetworkPanel(getAppConfiguration());
 
@@ -75,6 +77,8 @@ public class JTileDownloaderMainView
         tabbedPane.addTab("Update Tiles", _updateTilesPanel);
         tabbedPane.addTab("Options", _optionsPanel);
         tabbedPane.addTab("Network", _networkPanel);
+
+        tabbedPane.addChangeListener(new TabChangeListener());
 
         getContentPane().add(tabbedPane);//, constraints);
 
@@ -103,6 +107,36 @@ public class JTileDownloaderMainView
             System.exit(0);
         }
 
+    }
+
+    class TabChangeListener
+        implements ChangeListener
+    {
+
+        /**
+         * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+         * {@inheritDoc}
+         */
+        public void stateChanged(ChangeEvent e)
+        {
+            if (((JTabbedPane) e.getSource()).getSelectedIndex() == 1)
+            {
+                System.out.println("changed to update tab");
+                // selected update tab
+                getUpdateTilesPanel().setFolder(getMainPanel().getOutputfolder());
+
+                String tileServer = getMainPanel().getTileServer();
+                String altTileServer = getMainPanel().getAltTileServer();
+                if (altTileServer != null && altTileServer.length() > 0)
+                {
+                    tileServer = altTileServer;
+                }
+
+                getUpdateTilesPanel().setTileServer(tileServer);
+
+            }
+
+        }
     }
 
     /**
@@ -317,6 +351,42 @@ public class JTileDownloaderMainView
     public AppConfiguration getAppConfiguration()
     {
         return _appConfiguration;
+    }
+
+    /**
+     * Getter for mainPanel
+     * @return the mainPanel
+     */
+    public final MainPanel getMainPanel()
+    {
+        return _mainPanel;
+    }
+
+    /**
+     * Getter for optionsPanel
+     * @return the optionsPanel
+     */
+    public final OptionsPanel getOptionsPanel()
+    {
+        return _optionsPanel;
+    }
+
+    /**
+     * Getter for networkPanel
+     * @return the networkPanel
+     */
+    public final NetworkPanel getNetworkPanel()
+    {
+        return _networkPanel;
+    }
+
+    /**
+     * Getter for updateTilesPanel
+     * @return the updateTilesPanel
+     */
+    public final UpdateTilesPanel getUpdateTilesPanel()
+    {
+        return _updateTilesPanel;
     }
 
 }

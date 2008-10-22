@@ -57,7 +57,7 @@ public class TileListDownloader
      * Getter for proxyServer
      * @return the proxyServer
      */
-    protected final String getProxyServer()
+    public final String getProxyServer()
     {
         return _proxyServer;
     }
@@ -66,7 +66,7 @@ public class TileListDownloader
      * Setter for proxyServer
      * @param proxyServer the proxyServer to set
      */
-    protected final void setProxyServer(String proxyServer)
+    public final void setProxyServer(String proxyServer)
     {
         _proxyServer = proxyServer;
     }
@@ -75,7 +75,7 @@ public class TileListDownloader
      * Getter for useProxyServer
      * @return the useProxyServer
      */
-    protected final boolean isUseProxyServer()
+    public final boolean isUseProxyServer()
     {
         return _useProxyServer;
     }
@@ -84,7 +84,7 @@ public class TileListDownloader
      * Setter for useProxyServer
      * @param useProxyServer the useProxyServer to set
      */
-    protected final void setUseProxyServer(boolean useProxyServer)
+    public final void setUseProxyServer(boolean useProxyServer)
     {
         _useProxyServer = useProxyServer;
     }
@@ -93,7 +93,7 @@ public class TileListDownloader
      * Getter for useProxyServerAuth
      * @return the useProxyServerAuth
      */
-    protected final boolean isUseProxyServerAuth()
+    public final boolean isUseProxyServerAuth()
     {
         return _useProxyServerAuth;
     }
@@ -102,7 +102,7 @@ public class TileListDownloader
      * Setter for useProxyServerAuth
      * @param useProxyServerAuth the useProxyServerAuth to set
      */
-    protected final void setUseProxyServerAuth(boolean useProxyServerAuth)
+    public final void setUseProxyServerAuth(boolean useProxyServerAuth)
     {
         _useProxyServerAuth = useProxyServerAuth;
     }
@@ -111,7 +111,7 @@ public class TileListDownloader
      * Getter for proxyServerUser
      * @return the proxyServerUser
      */
-    protected final String getProxyServerUser()
+    public final String getProxyServerUser()
     {
         return _proxyServerUser;
     }
@@ -120,7 +120,7 @@ public class TileListDownloader
      * Setter for proxyServerUser
      * @param proxyServerUser the proxyServerUser to set
      */
-    protected final void setProxyServerUser(String proxyServerUser)
+    public final void setProxyServerUser(String proxyServerUser)
     {
         _proxyServerUser = proxyServerUser;
     }
@@ -129,7 +129,7 @@ public class TileListDownloader
      * Getter for proxyServerPort
      * @return the proxyServerPort
      */
-    protected final String getProxyServerPort()
+    public final String getProxyServerPort()
     {
         return _proxyServerPort;
     }
@@ -138,7 +138,7 @@ public class TileListDownloader
      * Setter for proxyServerPort
      * @param proxyServerPort the proxyServerPort to set
      */
-    protected final void setProxyServerPort(String proxyServerPort)
+    public final void setProxyServerPort(String proxyServerPort)
     {
         _proxyServerPort = proxyServerPort;
     }
@@ -147,7 +147,7 @@ public class TileListDownloader
      * Getter for proxyServerPassword
      * @return the proxyServerPassword
      */
-    protected final String getProxyServerPassword()
+    public final String getProxyServerPassword()
     {
         return _proxyServerPassword;
     }
@@ -156,7 +156,7 @@ public class TileListDownloader
      * Setter for proxyServerPassword
      * @param proxyServerPassword the proxyServerPassword to set
      */
-    protected final void setProxyServerPassword(String proxyServerPassword)
+    public final void setProxyServerPassword(String proxyServerPassword)
     {
         _proxyServerPassword = proxyServerPassword;
     }
@@ -235,7 +235,7 @@ public class TileListDownloader
      * @param tilesToDownload
      * @return
      */
-    private int getNumberOfTilesToDownload(Vector tilesToDownload)
+    public final int getNumberOfTilesToDownload(Vector tilesToDownload)
     {
         if (tilesToDownload == null)
         {
@@ -482,7 +482,7 @@ public class TileListDownloader
      * Getter for waitAfterTiles
      * @return the waitAfterTiles
      */
-    protected final boolean isWaitAfterTiles()
+    public final boolean isWaitAfterTiles()
     {
         return _waitAfterTiles;
     }
@@ -500,7 +500,7 @@ public class TileListDownloader
      * Getter for waitAfterTilesAmount
      * @return the waitAfterTilesAmount
      */
-    protected final int getWaitAfterTilesAmount()
+    public final int getWaitAfterTilesAmount()
     {
         return _waitAfterTilesAmount;
     }
@@ -518,7 +518,7 @@ public class TileListDownloader
      * Getter for waitAfterTilesSeconds
      * @return the waitAfterTilesSeconds
      */
-    protected final int getWaitAfterTilesSeconds()
+    public final int getWaitAfterTilesSeconds()
     {
         return _waitAfterTilesSeconds;
     }

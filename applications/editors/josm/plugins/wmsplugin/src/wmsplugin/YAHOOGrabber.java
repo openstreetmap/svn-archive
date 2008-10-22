@@ -5,9 +5,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.net.URL;
-import java.util.ArrayList;
 import java.io.IOException;
-
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
@@ -31,9 +31,12 @@ public class YAHOOGrabber extends WMSGrabber{
 
 	protected BufferedImage grab(URL url) throws IOException {
 		ArrayList<String> cmdParams = new ArrayList<String>();
-		
-		StringTokenizer st = new StringTokenizer(tr(browserCmd, url.toString()));
-		while( st.hasMoreTokens() ) 
+		String urlstring = url.toExternalForm();
+		// work around a problem in URL removing 2 slashes
+		if(!urlstring.startsWith("file:///"))
+			urlstring = urlstring.replaceFirst("file:", "file://");
+		StringTokenizer st = new StringTokenizer(MessageFormat.format(browserCmd, urlstring));
+		while( st.hasMoreTokens() )
 			cmdParams.add(st.nextToken());
 
 		System.out.println("WMS::Browsing YAHOO: " + cmdParams);

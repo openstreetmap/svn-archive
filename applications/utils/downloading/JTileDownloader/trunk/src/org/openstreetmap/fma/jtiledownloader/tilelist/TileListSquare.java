@@ -2,21 +2,15 @@ package org.openstreetmap.fma.jtiledownloader.tilelist;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
+
 /**
  * developed by fma (http://wiki.openstreetmap.org/index.php/User:Fma)
  * license: http://creativecommons.org/licenses/by-nc-nd/3.0/
  */
 public class TileListSquare
-    implements TileList
+    implements TileList, Constants
 {
-    private static final double EARTH_CIRC_POLE = 40.007863 * Math.pow(10, 6);
-    private static final double EARTH_CIRC_EQUATOR = 40.075016 * Math.pow(10, 6);
-
-    public static final double MIN_LAT = -180;
-    public static final double MAX_LAT = 180;
-    public static final double MIN_LON = -85.0511;
-    public static final double MAX_LON = 85.0511;
-
     private int _xTopLeft = 0;
     private int _yTopLeft = 0;
     private int _xBottomRight = 0;

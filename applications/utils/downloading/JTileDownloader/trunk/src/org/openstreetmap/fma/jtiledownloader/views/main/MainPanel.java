@@ -22,6 +22,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
+import org.openstreetmap.fma.jtiledownloader.TileServerList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
@@ -75,7 +76,8 @@ public class MainPanel
 
     private final JTileDownloaderMainView _mainView;
     private final DownloadConfigurationUrlSquare _downloadTemplate;
-    TileServer[] _tileServers;
+
+    private TileServer[] _tileServers;
 
     /**
      * @param downloadTemplate 
@@ -87,6 +89,8 @@ public class MainPanel
 
         _downloadTemplate = downloadTemplate;
         _mainView = mainView;
+
+        _tileServers = new TileServerList().getTileServerList();
 
         createMainPanel();
         initializeMainPanel();
@@ -134,15 +138,8 @@ public class MainPanel
 
         _tileListSquare.setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
 
-        _tileServers = new TileServer[5];
-
-        _tileServers[0] = new TileServer("Osmarender", "http://tah.openstreetmap.org/Tiles/tile/");
-        _tileServers[1] = new TileServer("Mapnik", "http://tile.openstreetmap.org/mapnik/");
-        _tileServers[2] = new TileServer("Cyclemap (Cloudmade)", "http://c.andy.sandbox.cloudmade.com/tiles/cycle/");
-        _tileServers[3] = new TileServer("Cyclemap (Thunderflames)", "http://thunderflames.org/tiles/cycle/");
-        _tileServers[4] = new TileServer("OpenPisteMap", "http://openpistemap.org/tiles/contours/");
-
         int foundTileServerIndex = -1;
+
         for (int index = 0; index < _tileServers.length; index++)
         {
             _comboTileServer.addItem(_tileServers[index].getTileServerName());
@@ -495,7 +492,6 @@ public class MainPanel
      */
     public int getRadius()
     {
-        // TODO Auto-generated method stub
         return Integer.parseInt(_textRadius.getText().trim());
     }
 

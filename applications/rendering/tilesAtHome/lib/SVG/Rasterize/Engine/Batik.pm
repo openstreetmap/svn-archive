@@ -267,7 +267,8 @@ sub convert {
         @cmd = ($self->java_path());
         push(@cmd, '-Xms256M');
         push(@cmd, '-Xmx'. ( $params{heapsize} ? $params{heapsize} : '512M' ) );
-        push(@cmd, '-classpath', join(':', $self->find_jars( @{$self->jar_list()} )));
+        push(@cmd, '-classpath', join( ($^O eq 'MSWin32' ? ';' : ':' ),
+                                       $self->find_jars( @{$self->jar_list()} )));
         push(@cmd, 'org.apache.batik.apps.rasterizer.Main');
         push(@cmd, '-scriptSecurityOff'); # It just crashes without this
         push(@cmd, '-w', $params{width}) if $params{width};

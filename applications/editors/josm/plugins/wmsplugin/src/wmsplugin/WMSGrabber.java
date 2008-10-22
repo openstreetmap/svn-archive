@@ -62,7 +62,10 @@ public class WMSGrabber extends Grabber {
 
 	protected URL getURL(double w, double s,double e,double n,
 			int wi, int ht) throws MalformedURLException {
-		String str = baseURL + "&bbox="
+		String str = baseURL;
+		if(!str.endsWith("?"))
+			str += "&";
+		str += "bbox="
 			+ latLonFormat.format(w) + ","
 			+ latLonFormat.format(s) + ","
 			+ latLonFormat.format(e) + ","

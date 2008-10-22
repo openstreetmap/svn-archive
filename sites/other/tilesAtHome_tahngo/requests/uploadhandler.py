@@ -37,8 +37,9 @@ def handle_uploaded_tileset(file, form):
   # more liberal permisssions
   os.chmod(tmp_fullpath,0664)
 
-  ## init layer and Tileset object to retrieve the file locations
+  tset_fsize = os.stat(tmp_fullpath))[stat.ST_SIZE]
 
+  ## init layer and Tileset object to retrieve the file locations
   try:
       layer = Layer.objects.get(id=form['layer'])
       tset = Tileset(layer=layer, base_z= int(form['z']), x= int(form['x']), y= int(form['y']))
@@ -52,15 +53,23 @@ def handle_uploaded_tileset(file, form):
 
   if tset == None:
       # tileset not valid
-      logging.info("%s is no valid tileset, layer=%s, (z,x,y)=(%s,%s,%s)" % (file.name,layer, form['min_z'], form['x'], form['y']))
+      logging.info("%s is no valid tileset, layer=%s, (z,x,y)=(%s,%s,%s)" % (file.name,layer, form['z'], form['x'], form['y']))
       return False
 
   # if the path does not exist yet, create it
   if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
-  # move tmp tilesetfile to final location
-  move(tmp_fullpath, os.path.join(tset_path, tset_fname))
 
-  logging.info("file moved to %s" % (os.path.join(tset_path, tset_fname)))
+  # move tmp tilesetfile to final location, if it's a regular tileset
+  if tset_fsize > 1:
+    move(tmp_fullpath, os.path.join(tset_path, tset_fname))
+    logging.info("file moved to %s" % (os.path.join(tset_path, tset_fname)))
+  else:
+    # if it's empty (0 or 1 byte, delete the existing one)
+    os.unlink(tmp_fullpath)
+    os.unlink(os.path.join(tset_path, tset_fname))
+    logging.info("delete empty tileset, layer=%s (%s,%s,%s)" % (layer, form['z'], form['x'], form['y']))
+
+
 
   ### mark all satisfied requests as such.
   # now match upload with a request and mark request finished
@@ -84,7 +93,7 @@ def handle_uploaded_tileset(file, form):
 
   ### add user stats for this upload
   tahuser = user.tahuser_set.get()
-  try: tahuser.kb_upload += os.stat(os.path.join(tset_path, tset_fname))[stat.ST_SIZE] // 1024
+  try: tahuser.kb_upload += tset_fsize // 1024
   except OSError: pass # don't crap out if we don't find a file
   tahuser.renderedTiles += 1365
   tahuser.save()

@@ -318,7 +318,7 @@ sub CheckConfig
         }
     }
 
-    if ( $self->get("Rasterizer") eq "inkscape" )
+    if ( $self->get("Rasterizer") eq "Inkscape" )
     {
         $cmd = $self->get("inkscape");
         my $InkscapeV=`\"$cmd\" -V 2>&1`;

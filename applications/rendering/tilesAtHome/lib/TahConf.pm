@@ -318,6 +318,22 @@ sub CheckConfig
         }
     }
 
+    if ( $self->get("Rasterizer") eq "Inkscape" )
+    {
+        $cmd = $self->get("inkscape");
+        my $InkscapeV=`\"$cmd\" -V 2>&1`;
+        $InkscapeV =~ /Inkscape.+(\d+(\.\d+)+)/;
+        my $minVersion = "0.46";
+        if ($self->CompareVersions($1, $minVersion) == -1 and not $self->get("RenderStripes")) {
+            print "! Inkscape version ${1} too low, needs to be at least ${minVersion} for RenderStripes=0 setting\n";
+        }
+        else 
+        {
+            print "- Inkscape version $1\n";
+        }
+    }
+
+
     #-------------------------------------------------------------------
     # check all layers for existing and sane values
     #------------------------------------------------------------------

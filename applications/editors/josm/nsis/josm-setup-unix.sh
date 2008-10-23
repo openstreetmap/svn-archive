@@ -49,7 +49,7 @@ echo "### convert jar to exe with launch4j"
 # (an exe file makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
 # delete old exe file first
-rm josm.exe
+rm -f josm.exe
 $LAUNCH4J ./launch4j.xml
 
 if ! [ -s josm.exe ]; then
@@ -65,4 +65,5 @@ echo "### create the installer exe with makensis"
 makensis -V2 -DVERSION=$VERSION josm.nsi
 
 # delete the intermediate file, just to avoid confusion
-rm josm.exe
+rm josm-intermediate.exe
+mv josm.exe josm-intermediate.exe

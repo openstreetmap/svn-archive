@@ -1,3 +1,4 @@
+
 	// =====================================================================================
 	// OOP classes - POI
 	
@@ -19,7 +20,9 @@
 				var code=result.shift(); if (code) { handleError(code,result); return; }
 				if (poiselected==result[0]) { deselectAll(); }
 				removeMovieClip(_root.map.pois[result[0]]);
+				_root.writesrequested--;
 			};
+			_root.writesrequested++;
 			remote_write.call('putpoi',poidelresponder,_root.usertoken,Math.floor(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
 		} else {
 			if (this._name==poiselected) { deselectAll(); }
@@ -51,9 +54,11 @@
 				}
 			}
 			_root.map.pois[ni].uploading=false;
+			_root.writesrequested--;
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox) {
 			this.attr['created_by']=_root.signature;
+			_root.writesrequested++;
 			remote_write.call('putpoi',poiresponder,_root.usertoken,this._name,coord2long(this._x),coord2lat(this._y),this.attr,1);
 			this.clean=true;
 		}
@@ -135,8 +140,8 @@
 	};
 
 	Object.registerClass("poi",POI);
-
-
+	// **** register all POI types here
+	// Object.registerClass("poi_22",POI);
 
 
 

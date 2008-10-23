@@ -97,6 +97,7 @@
 				_root.map.relations[result[0]]._name=nw;
 			}
 			_root.map.relations[nw].uploading=false;
+			_root.writesrequested--;
 		};
 
 		// ways/nodes for negative IDs should have been previously put
@@ -104,6 +105,7 @@
 		if (!this.uploading && !this.locked && !_root.sandbox ) {
 			this.attr['created_by']=_root.signature;
 			this.uploading=true;
+			_root.writesrequested++;
 			remote_write.call('putrelation', putresponder, _root.usertoken,
 				Math.floor(this._name),
 				this.attr, this.members, 1);

@@ -92,12 +92,15 @@
 	var waycount=0;					// number of ways currently loaded
 	var waysrequested=0;			// total number of ways requested
 	var waysreceived=0;				// total number of ways received
+	var writesrequested=0;			// number of outstanding write operations
 	var relcount=0;					// number of relations currently loaded
 	var relsrequested=0;			// total number of relations requested
 	var relsreceived=0;				// total number of relations received
 	var poicount=0;					// number of POIs currently loaded
 	var whichrequested=0;			// total number of whichways requested
 	var whichreceived=0;			// total number of whichways received
+	var redrawlist=new Array();		// list of ways to redraw (after zooming)
+	var redrawskip=true;			// skip redrawing ways, just do POIs?
 	var lastwhichways=new Date();	// last time whichways was requested
 	var lastresize=new Date();		// last time window was resized
 	var mapdragged=false;			// map being dragged?
@@ -121,7 +124,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10e";	// current version
+	var signature="Potlatch 0.10f";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
 
@@ -132,6 +135,7 @@
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
 	if (preferences.data.advice       ==undefined) { preferences.data.advice       =true; }	// show floating advice?
 	if (preferences.data.nosplash     ==undefined) { preferences.data.nosplash     =false; }// hide splash screen?
+	if (preferences.data.noname       ==undefined) { preferences.data.nosplash     =false; }// highlight unnamed ways?
 
 	// =====================================================================================
 	// Icons
@@ -627,6 +631,7 @@
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
+			case 'P':		askOffset(); break;									// O - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
 			case 'U':		getDeleted(); break;								// U - undelete
 			case 'X':		_root.ws.splitWay(_root.pointselected); break;		// X - split way
@@ -855,7 +860,19 @@
 		}
 
 		// ----	Control "loading ways" display
-		_root.waysloading._visible=(_root.waysrequested!=_root.waysreceived) || (_root.whichrequested!=_root.whichreceived);
+		var loading=(_root.waysrequested!=_root.waysreceived) || (_root.whichrequested!=_root.whichreceived);
+		if (loading && _root.writesrequested) { setIOStatus(3); }
+			  else if (_root.writesrequested) { setIOStatus(2); }
+			  				else if (loading) { setIOStatus(1); }
+			  							 else { _root.io=0; _root.waysloading._visible=false; }
+
+		// ---- Redraw lines if necessary (3 per frame)
+		if (_root.redrawlist.length) {
+			for (var i=0; i<3; i++) {
+				var w=_root.redrawlist.pop();
+				_root.map.ways[w].redraw(_root.redrawskip);
+			}
+		} else { _root.redrawskip=true; }
 
 		// ---- Service tile queue
 		if (preferences.data.baselayer!=0 &&
@@ -886,11 +903,11 @@
 	
 	function openOptionsWindow() {
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(290,150,new Array('Ok'),function() { preferences.flush(); } );
+		_root.windows.options.init(290,170,new Array('Ok'),function() { preferences.flush(); } );
 		_root.windows.options.box.createTextField("prompt1",2,7,9,80,20);
 		writeText(_root.windows.options.box.prompt1,iText("Background:",'option_background'));
 
-		_root.windows.options.box.attachMovie("menu","background",10);
+		_root.windows.options.box.attachMovie("menu","background",30);
 		_root.windows.options.box.background.init(87,10,preferences.data.baselayer,
 			new Array("None","-----------------------------------------","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
@@ -901,11 +918,15 @@
 		_root.windows.options.box.attachMovie("checkbox","linepref",8);
 		_root.windows.options.box.linepref.init(10,60,iText("Use thin lines at all scales",'option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
 
-		_root.windows.options.box.attachMovie("checkbox","pointer",4);
-		_root.windows.options.box.pointer.init(10,80,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		_root.windows.options.box.attachMovie("checkbox","noname",10);
+		_root.windows.options.box.noname.init(10,80,iText("Highlight unnamed roads",'option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
 
-		_root.windows.options.box.attachMovie("checkbox","pointer",3);
-		_root.windows.options.box.pointer.init(10,100,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+		_root.windows.options.box.attachMovie("checkbox","pointer",4);
+		_root.windows.options.box.pointer.init(10,100,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+
+		_root.windows.options.box.attachMovie("checkbox","warnings",3);
+		_root.windows.options.box.warnings.init(10,120,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+
 	}
 	
 	// markClean - set JavaScript variable for alert when leaving page
@@ -980,6 +1001,29 @@
 		_root.map.highlight.lineTo(-ss, ss);
 		_root.map.highlight.endFill();
 	};
+
+	// setIOStatus - update top-right message
+
+	function setIOStatus(msg) {
+		if (_root.io==msg) { return; }
+		_root.io=msg; var t;
+		switch (msg) {
+			case 3:	t=iText("loading/saving data",'hint_saving_loading'); break;
+			case 2:	t=iText("saving data",'hint_saving'); break;
+			case 1: t=iText("loading data",'hint_loading'); break;
+		}
+		_root.waysloading.createTextField('prompt',2,0,0,195,20);
+		with (_root.waysloading.prompt) { text=t; setTextFormat(plainRight); selectable=false; }
+		_root.waysloading.createEmptyMovieClip('bg',1);
+		with (_root.waysloading.bg) {
+			beginFill(0xFFFFFF,75);
+			moveTo(215,0); lineTo(210-_root.waysloading.prompt.textWidth-22,0);
+			lineTo(210-_root.waysloading.prompt.textWidth-22,_root.waysloading.prompt.textHeight+5);
+			lineTo(215,_root.waysloading.prompt.textHeight+5); lineTo(215,0);
+			endFill();
+		}
+		_root.waysloading._visible=true;
+	}
 
 	// deepCopy (recursive) and shallowCopy (non-recursive)
 

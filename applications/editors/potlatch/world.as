@@ -144,12 +144,15 @@
 	}
 
 	function redrawWays(skip) {
-		for (var qway in _root.map.ways) { _root.map.ways[qway].redraw(skip); }
 		if (_root.wayselected) {
+			_root.ws.redraw();
 			_root.ws.highlight();
 			_root.ws.highlightPoints(5000,"anchor");
 		}
 		restartElastic();
+		_root.redrawlist=new Array();
+		if (_root.redrawskip) { _root.redrawskip=skip; }
+		for (var qway in _root.map.ways) { _root.redrawlist.push(qway); }
 	}
 
 	// =====================================================================================

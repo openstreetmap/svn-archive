@@ -225,6 +225,12 @@
 		poi=params[0]; poi.remove();
 		markClean(false);
 	};
+	
+	//		Created ways (e.g. parallel)
+	
+	UndoStack.prototype.undo_makeways=function(params) {
+		for (i in params) { _root.map.ways[params[i]].remove(); }
+	};
 
 
 	// Trace stuff - not used

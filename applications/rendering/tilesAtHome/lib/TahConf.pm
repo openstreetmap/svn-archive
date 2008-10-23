@@ -331,7 +331,9 @@ sub CheckConfig
 
         my $InkscapeV=`\"$cmd\" -V 2>&1`;
         $InkscapeV =~ /Inkscape.(\d+(\.\d+)+)/;
+
         my $minVersion = "0.46";
+
         if ( $InkscapeV eq '' )
         {
             print "* Could not determine your inkscape version\n";

@@ -352,8 +352,6 @@ elsif ($Mode eq "upload_loop")
         # uploading ZIP files here, returns 0 if nothing to do and -1 on error
         my $files_uploaded = upload();
 
-        sleep 1; # FIXME: prevent freewheling. fix upload() then remove this line
-
         if ($files_uploaded == -1)  # we got an error in the upload process
         {   # increase fault counter
             addFault("upload",1);

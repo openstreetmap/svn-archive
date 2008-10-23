@@ -28,24 +28,12 @@
 
 			_root.waysloading._x=Stage.width-220;
 			_root.waysloading._y=5;
-			_root.waysloading.createTextField('prompt',2,0,0,195,20);
-			with (_root.waysloading.prompt) {
-				text=iText("loading ways",'hint_loading'); setTextFormat(plainRight);
-				selectable=false;
-			}
-			_root.waysloading.createEmptyMovieClip('bg',1);
-			with (_root.waysloading.bg) {
-				beginFill(0xFFFFFF,75);
-				moveTo(215,0); lineTo(210-_root.waysloading.prompt.textWidth-22,0);
-				lineTo(210-_root.waysloading.prompt.textWidth-22,_root.waysloading.prompt.textHeight+5);
-				lineTo(215,_root.waysloading.prompt.textHeight+5); lineTo(215,0);
-				endFill();
-			}
 			_root.waysloading.attachMovie("whirl","whirl",3);
 			_root.waysloading.whirl._x=205;
 			_root.waysloading.whirl._y=10;
 			_root.waysloading.whirl._xscale=
 			_root.waysloading.whirl._yscale=75;
+			_root.io=0;
 
 			if (lat!=undefined) { startPotlatch(); }	// Parse GPX if supplied
 			if (gpx) { parseGPX(gpx); }					//  |

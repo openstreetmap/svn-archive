@@ -130,7 +130,7 @@
 			// Either the line has changed, or we've changed scale
 			this.createEmptyMovieClip("line",1);					// clear line
 			var linealpha=100; // -50*(this.locked==true);
-			var casingx=1.5;
+			var casingx=1.5; var casingcol=0;
 	
 			// Set stroke
 	
@@ -147,7 +147,9 @@
 			// Draw fill/casing
 	
 			var f=this.getFill();
-			if (this.attr["bridge"] && this.attr["bridge"]!="no") { casingx=2; }
+			if (preferences.data.noname && this.attr["highway"] && (!this.attr["name"] || this.attr["name"].substr(0,6)=='(type ')) {
+				casingx=2; casingcol=0xFF0000;
+			} else if (this.attr["bridge"] && this.attr["bridge"]!="no") { casingx=2; }
 	
 			if ((f>-1 || casing[this.attr['highway']]) && !this.locked) {
 				if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
@@ -156,7 +158,7 @@
 					enabled=false;
 					moveTo(this.path[0].x,this.path[0].y); 
 					if (f>-1) { beginFill(f,20); }
-						 else { lineStyle(linewidth*casingx,0,100,false,"none"); }
+						 else { lineStyle(linewidth*casingx,casingcol,100,false,"none"); }
 					for (var i=1; i<this.path.length; i+=1) {
 						lineTo(this.path[i].x,this.path[i].y);
 					}
@@ -172,6 +174,11 @@
 			for (var i=1; i<this.path.length; i+=1) {
 				this.line.lineTo(this.path[i].x,this.path[i].y);
 				if (this.path[i].tagged) {
+					// **** attach correct icon:
+					// if (this.path[i].attr['frog']) {
+					// this.taggednodes.attachMovie("poi_22",i,i); 
+					// ...probably don't have to do _root.map.pois[point].__proto__=undefined;
+					//    because clicks are handled by the way movieclip
 					this.taggednodes.attachMovie("poiinway",i,i);
 					this.taggednodes[i]._x=this.path[i].x;
 					this.taggednodes[i]._y=this.path[i].y;
@@ -254,7 +261,9 @@
 				if (wayselected==result[0]) { deselectAll(); }
 				removeMovieClip(_root.map.ways[result[0]]);
 				removeMovieClip(_root.map.areas[result[0]]);
+				_root.writesrequested--;
 			};
+			_root.writesrequested++;
 			remote_write.call('deleteway',deleteresponder,_root.usertoken,Math.floor(this._name));
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
@@ -317,6 +326,7 @@
 			for (var oid in z) { delete _root.nodes[oid]; }	// delete -ve nodes
 			_root.map.ways[nw].clearPOIs();
 			_root.map.ways[nw].deleteMergedWays();
+			_root.writesrequested--;
 			uploadDirtyWays();			// make sure dependencies are uploaded
 		};
 		if (!this.uploading && !this.hasDependentNodes() && !this.locked && !_root.sandbox && this.path.length>1) {
@@ -330,6 +340,7 @@
 										this.path[i].id,null,
 										deepCopy  (this.path[i].attr)));
 			}
+			_root.writesrequested++;
 			remote_write.call('putway',putresponder,_root.usertoken,Number(this._name),sendpath,this.attr);
 			this.clean=true;
 		}
@@ -814,57 +825,134 @@
 
 	// =====================================================================================
 	// Offset path
-	// ** write to locked way(s)
-	// ** find out how much, and which side
+	// ** much of the dialogue box could be refactored to share with relations dialogue
 
-	OSMWay.prototype.offset=function() {
+	function askOffset() {
+		if (!_root.wayselected) { return; }
+		_root.windows.attachMovie("modal","offset",++windowdepth);
+		_root.windows.offset.init(300, 170, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeOffset);
+		var z = 5;
+		var box = _root.windows.offset.box;
+		
+		box.createTextField("title",z++,7,7,300-14,20);
+		box.title.text = iText("Create parallel way",'prompt_createparallel');
+		with (box.title) {
+			wordWrap=true;
+			setTextFormat(boldText);
+			selectable=false; type='dynamic';
+		}
+		
+		box.createTextField("instr",z++,7,30,300-14,40);
+
+		// Create radio buttons and menu
+
+		box.attachMovie("radio","offsetoption",z++);
+		box.offsetoption.addButton(10,35 ,iText("Dual carriageway (D2)",'offset_dual'));
+		box.offsetoption.addButton(10,55 ,iText("Motorway (D3)",'offset_motorway'));
+		box.offsetoption.addButton(10,75 ,iText("Narrow canal towpath",'offset_narrowcanal'));
+		box.offsetoption.addButton(10,95 ,iText("Broad canal towpath",'offset_broadcanal'));
+		box.offsetoption.addButton(10,115,iText("Choose offset (m)",'offset_choose'));
+		box.offsetoption.select(1);
+
+		var w=box.offsetoption[5].prompt._width+25;
+		box.createTextField("useroffset",z++,w,110,290-w,17);
+		box.useroffset.setNewTextFormat(plainSmall);
+		box.useroffset.type='input';
+		box.useroffset.backgroundColor=0xDDDDDD;
+		box.useroffset.background=true;
+		box.useroffset.border=true;
+		box.useroffset.borderColor=0xFFFFFF;
+		box.useroffset.onSetFocus=function() { this._parent.offsetoption.select(5); };
+	}
+
+	// typical widths:
+	// central reservation:
+	//	 4.5m on a rural motorway/dual carriageway
+	//	 3.5m on an urban motorway
+	//	 1.8m on an urban dual carriageway
+	// lane widths are typically always 3.65m
+	// hard shoulders are typically 3.30m
+	// hard strips are typically 1m 
+
+	function completeOffset(button) {
+		if (button!=iText("Ok",'ok')) { return false; }
+		var radio=_root.windows.offset.box.offsetoption.selected;
+		var m;
+		if (radio==5) {
+			m=_root.windows.offset.box.useroffset.text;
+			if (!button) { return false; }
+		} else {
+			m=new Array(0,4.5+3.65*2,4.5+3.65*3,5.5,11);
+			m=m[radio];
+		}
+		var thislat=coord2lat(_root.map._y);			// near as dammit
+		var latfactor=Math.cos(thislat/(180/Math.PI));	// 111200m in a degree at the equator
+		m=masterscale/(111200*latfactor)*m;				// 111200m*cos(lat in radians) elsewhere
+		_root.ws.offset( m);
+		_root.ws.offset(-m);
+		_root.undo.append(UndoStack.prototype.undo_makeways,
+						  new Array(_root.newwayid,_root.newwayid+1),
+						  iText("creating parallel ways",'action_createparallel'));
+	}
+
+	// Create (locked) offset way
+	// offset is + or - depending on which side
+
+	OSMWay.prototype.offset=function(tpoffset) {
 		var a,b,o,df,x,y;
 		var offsetx=new Array();
 		var offsety=new Array();
-		var wm=10;	// was 70 originally
-		var tpoffset=12345678; // the towpath offset, + or - depending on which side
+		var wm=1;	// was 10 before
+
+		_root.newwayid--;											// create new way
+		_root.map.ways.attachMovie("way",newwayid,++waydepth);		//  |
+		var nw=_root.map.ways[newwayid];
+		nw.locked=true;
+		nw.clean=false;
 
 		// Normalise, and calculate offset vectors
 
 		for (var i=0; i<this.path.length; i++) {
-			a=nodes[this.path[i  ]].y - nodes[this.path[i+1]].y;
-			b=nodes[this.path[i+1]].x - nodes[this.path[i  ]].x;
+			a=this.path[i  ].y - this.path[i+1].y;
+			b=this.path[i+1].x - this.path[i  ].x;
 			h=Math.sqrt(a*a+b*b);
 			if (h!=0) { a=a/h; b=b/h; }
 				 else {	a=0; b=0; }
 			offsetx[i]=wm*a;
 			offsety[i]=wm*b;
 		}
-	
-		// First towpath point
+
+		_root.newnodeid--;
+		_root.nodes[newnodeid]=new Node(newnodeid,this.path[0].x+tpoffset*offsetx[0],
+												  this.path[0].y+tpoffset*offsety[0],
+												  new Object());
+		nw.path.push(_root.nodes[newnodeid]);
 		
-//		$s[$wwcount]->movePenTo(scrpix($x[0]+$offsetx[0],$y[0]+$offsety[0]));
-	
-		// Work out towpath points
-	
 		for (i=1; i<(this.path.length-1); i++) {
 	
 			a=det(offsetx[i]-offsetx[i-1],
 				  offsety[i]-offsety[i-1],
-				  nodes[this.path[i+1]].x - nodes[this.path[i  ]].x,
-				  nodes[this.path[i+1]].y - nodes[this.path[i  ]].y);
-			b=det(nodes[this.path[i  ]].x - nodes[this.path[i-1]].x,
-				  nodes[this.path[i  ]].y - nodes[this.path[i-1]].y,
-				  nodes[this.path[i+1]].x - nodes[this.path[i  ]].x,
-				  nodes[this.path[i+1]].y - nodes[this.path[i  ]].y);
+				  this.path[i+1].x - this.path[i  ].x,
+				  this.path[i+1].y - this.path[i  ].y);
+			b=det(this.path[i  ].x - this.path[i-1].x,
+				  this.path[i  ].y - this.path[i-1].y,
+				  this.path[i+1].x - this.path[i  ].x,
+				  this.path[i+1].y - this.path[i  ].y);
 			if (b!=0) { df=a/b; } else { df=0; }
 			
-			x=nodes[this.path[i]].x + tpoffset*(offsetx[i-1]+df*(nodes[this.path[i]].x - nodes[this.path[i-1]].x));
-			y=nodes[this.path[i]].y + tpoffset*(offsety[i-1]+df*(nodes[this.path[i]].y - nodes[this.path[i-1]].y));
+			x=this.path[i].x + tpoffset*(offsetx[i-1]+df*(this.path[i].x - this.path[i-1].x));
+			y=this.path[i].y + tpoffset*(offsety[i-1]+df*(this.path[i].y - this.path[i-1].y));
 	
-//			($xs,$ys)=scrpix(x,y);
-//			$s[$wwcount]->drawLineTo($xs,$ys); 
+			_root.newnodeid--;
+			_root.nodes[newnodeid]=new Node(newnodeid,x,y,new Object());
+			nw.path.push(_root.nodes[newnodeid]);
 		}
 	
-		// Last towpath point
-		
-//		$s[$wwcount]->drawLineTo(scrpix($x[$ct-1]+$offsetx[$ct-1],$y[$ct-1]+$offsety[$ct-1]));
-
+		_root.newnodeid--;
+		_root.nodes[newnodeid]=new Node(newnodeid,this.path[i].x+tpoffset*offsetx[i-1],
+												  this.path[i].y+tpoffset*offsety[i-1],new Object());
+		nw.path.push(_root.nodes[newnodeid]);
+		nw.redraw();
 	};
 
     function det(a,b,c,d) { return a*d-b*c; }
@@ -1014,6 +1102,9 @@
 				for (i in pointlist) {										// POIs
 					point=pointlist[i][0];									//  |
 					if (!_root["map"]["pois"][point]) {						//  |
+						// **** attach correct icon:
+						// if (pointlist[i][3]["place"]) {
+						// _root.map.pois.attachMovie("poi_22",point,++poidepth); 
 						_root.map.pois.attachMovie("poi",point,++poidepth);	//  |
 						_root.map.pois[point]._x=long2coord(pointlist[i][1]);// |
 						_root.map.pois[point]._y=lat2coord (pointlist[i][2]);// |

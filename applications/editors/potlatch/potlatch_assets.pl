@@ -15,6 +15,18 @@
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"auto");
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"modal");
 
+	#		POI icons
+if (0==1) {	
+	for ($i=0; $i<8; $i++) {
+		for ($j=0; $j<8; $j++) {
+			$ec=new SWF::MovieClip();
+			$di=$ec->add(new SWF::Bitmap("icons/icon$i$j.dbl"));
+			$di->moveTo(-12,-12);
+			$ec->nextFrame();
+			$m->addExport($ec,"poi_$i$j");
+		}
+	}
+}
 	#		Radio buttons
 	
 	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();

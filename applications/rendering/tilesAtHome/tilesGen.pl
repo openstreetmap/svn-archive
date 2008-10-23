@@ -551,11 +551,11 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    $upload->uploadAllZips();
+    my $files_uploaded = $upload->uploadAllZips();
 
     keepLog($PID,"upload","stop",0);
 
-    return 1; # at least return success if we don't catch exceptions at all
+    return $files_uploaded;
 }
 
 #-----------------------------------------------------------------------------

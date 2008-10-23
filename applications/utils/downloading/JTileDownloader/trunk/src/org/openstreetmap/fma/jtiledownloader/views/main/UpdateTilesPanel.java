@@ -8,12 +8,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableColumnModel;
@@ -22,16 +25,37 @@ import javax.swing.table.TableModel;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
+import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
+import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
+import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
 
 /**
- * developed by fma (http://wiki.openstreetmap.org/index.php/User:Fma)
- * license: http://creativecommons.org/licenses/by-nc-nd/3.0/
+ * Copyright 2008, Friedrich Maier 
+ * 
+ * This file is part of JTileDownloader. 
+ * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
+ *
+ *    JTileDownloader is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    JTileDownloader is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy (see file COPYING.txt) of the GNU 
+ *    General Public License along with JTileDownloader.  
+ *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class UpdateTilesPanel
     extends JPanel
+    implements TileDownloaderListener
 {
     private static final long serialVersionUID = 1L;
 
@@ -41,9 +65,13 @@ public class UpdateTilesPanel
     //    JTextField _textFolder = new JTextField();
     JLabel _textFolder = new JLabel();
     //    JButton _buttonSelectFolder = new JButton("...");
+    JLabel _labelTileServer = new JLabel("TileServer:");
+    JLabel _textTileServer = new JLabel();
 
     JButton _buttonSearch = new JButton("Search");
     JButton _buttonUpdate = new JButton("Update");
+
+    private JProgressBar _progressBar = new JProgressBar();
 
     private static final String COMMAND_SELECT_FOLDER = "selectFolder";
     private static final String COMMAND_SEARCH = "search";
@@ -62,14 +90,19 @@ public class UpdateTilesPanel
     private String _folder = "";
 
     private final AppConfiguration _appConfiguration;
+    private TilePreview _tilePreview = null;
+
+    private final JTileDownloaderMainView _mainView;
+    private TileListDownloader _tileListDownloader;
 
     /**
      * 
      */
-    public UpdateTilesPanel(AppConfiguration appConfiguration)
+    public UpdateTilesPanel(AppConfiguration appConfiguration, JTileDownloaderMainView mainView)
     {
         super();
         _appConfiguration = appConfiguration;
+        _mainView = mainView;
 
         createPanel();
         initialize();
@@ -92,14 +125,17 @@ public class UpdateTilesPanel
         panelFolder.setLayout(new GridBagLayout());
         GridBagConstraints constraintsFolder = new GridBagConstraints();
         constraintsFolder.insets = new Insets(5, 5, 0, 0);
-        constraintsFolder.gridwidth = GridBagConstraints.REMAINDER;
-        constraintsFolder.weightx = 0.99;
+        constraintsFolder.gridwidth = GridBagConstraints.RELATIVE;
+        constraintsFolder.weightx = 1;
         constraintsFolder.fill = GridBagConstraints.HORIZONTAL;
         panelFolder.add(_labelFolder, constraintsFolder);
-        constraintsFolder.gridwidth = GridBagConstraints.RELATIVE;
-        panelFolder.add(_textFolder, constraintsFolder);
         constraintsFolder.gridwidth = GridBagConstraints.REMAINDER;
-        constraintsFolder.weightx = 0.01;
+        panelFolder.add(_textFolder, constraintsFolder);
+        constraintsFolder.gridwidth = GridBagConstraints.RELATIVE;
+        panelFolder.add(_labelTileServer, constraintsFolder);
+        constraintsFolder.gridwidth = GridBagConstraints.REMAINDER;
+        panelFolder.add(_textTileServer, constraintsFolder);
+        //        constraintsFolder.weightx = 0.01;
         constraintsFolder.insets = new Insets(5, 0, 0, 5);
         //        panelFolder.add(_buttonSelectFolder, constraintsFolder);
         add(panelFolder, constraints);
@@ -115,11 +151,11 @@ public class UpdateTilesPanel
 
         initTable();
         _scrollPane = new JScrollPane(_updateTilesTable);
-        _scrollPane.setPreferredSize(new Dimension(250, 250));
+        _scrollPane.setPreferredSize(new Dimension(250, 220));
         _scrollPane.getViewport().add(_updateTilesTable, BorderLayout.CENTER);
         panelUpdate.add(_scrollPane, constraintsUpdate);
 
-        //        panelUpdate.add(new JButton("Dummy"), constraintsUpdate);
+        panelUpdate.add(getProgressBar(), constraintsUpdate);
 
         constraintsUpdate.gridwidth = GridBagConstraints.RELATIVE;
         panelUpdate.add(_buttonSearch, constraintsUpdate);
@@ -139,6 +175,8 @@ public class UpdateTilesPanel
         //        _buttonSelectFolder.addActionListener(new MyActionListener());
         //        _buttonSelectFolder.setActionCommand(COMMAND_SELECT_FOLDER);
         //        _buttonSelectFolder.setPreferredSize(new Dimension(25, 19));
+
+        getProgressBar().setPreferredSize(new Dimension(300, 20));
 
         _buttonSearch.addActionListener(new MyActionListener());
         _buttonSearch.setActionCommand(COMMAND_SEARCH);
@@ -199,7 +237,9 @@ public class UpdateTilesPanel
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_SEARCH))
             {
+                getButtonSearch().setEnabled(false);
                 doSearch();
+                getButtonSearch().setEnabled(true);
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_UPDATE))
             {
@@ -216,6 +256,7 @@ public class UpdateTilesPanel
             int[] selectedRows = _updateTilesTable.getSelectedRows();
             if (selectedRows == null || selectedRows.length == 0)
             {
+                JOptionPane.showMessageDialog(getMainView(), "Please select zoom level(s) to be updated!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -249,11 +290,23 @@ public class UpdateTilesPanel
             System.out.println("folder:" + getFolder());
             System.out.println("tileServer:" + getTileServer());
 
-            TileListDownloader tld = new TileListDownloader(getFolder(), updateList);
-            tld.setWaitAfterTiles(_appConfiguration.getWaitAfterNrTiles());
-            tld.setWaitAfterTilesAmount(_appConfiguration.getWaitNrTiles());
-            tld.setWaitAfterTilesSeconds(_appConfiguration.getWaitSeconds());
-            tld.start();
+            getProgressBar().setValue(0);
+            getProgressBar().setStringPainted(true);
+            if (updateList != null && updateList.getElementCount() > 0)
+            {
+                getProgressBar().setMaximum(updateList.getElementCount());
+            }
+
+            setTileListDownloader(new TileListDownloader(getFolder(), updateList));
+            getTileListDownloader().setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
+            getTileListDownloader().setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
+            getTileListDownloader().setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
+            getTileListDownloader().setListener(getInstance());
+
+            getButtonSearch().setEnabled(false);
+            getButtonUpdate().setEnabled(false);
+
+            getTileListDownloader().start();
 
         }
 
@@ -277,7 +330,15 @@ public class UpdateTilesPanel
             _updateList = new Vector();
 
             File[] zoomLevels = file.listFiles();
-            for (int indexZoomLevel = 0; indexZoomLevel < zoomLevels.length; indexZoomLevel++)
+
+            if (zoomLevels == null || zoomLevels.length == 0)
+            {
+                JOptionPane.showMessageDialog(getMainView(), "No files found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int zoomLevelCount = zoomLevels.length;
+            for (int indexZoomLevel = 0; indexZoomLevel < zoomLevelCount; indexZoomLevel++)
             {
                 File zoomLevel = zoomLevels[indexZoomLevel];
 
@@ -338,6 +399,7 @@ public class UpdateTilesPanel
             }
 
         }
+
     }
 
     //    /**
@@ -364,6 +426,7 @@ public class UpdateTilesPanel
     public final void setTileServer(String tileServer)
     {
         _tileServer = tileServer.trim();
+        _textTileServer.setText(_tileServer);
     }
 
     public String getFolder()
@@ -378,5 +441,194 @@ public class UpdateTilesPanel
     public final void setFolder(String folder)
     {
         _folder = folder.trim();
+        _textFolder.setText(_folder);
     }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector)
+     * {@inheritDoc}
+     */
+    public void downloadComplete(int errorCount, Vector errorTileList)
+    {
+        getProgressBar().setString("Update completed");
+
+        getButtonSearch().setEnabled(true);
+        getButtonUpdate().setEnabled(true);
+
+        getTileListDownloader().setListener(null);
+        setTileListDownloader(null);
+
+        if (getAppConfiguration().isAutoCloseTilePreview())
+        {
+            if (_tilePreview != null)
+            {
+                try
+                {
+                    Thread.sleep(500);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                _tilePreview.setVisible(false);
+                _tilePreview = null;
+            }
+        }
+
+        if (errorTileList != null && errorTileList.size() > 0)
+        {
+            // TODO: show List of failed tiles
+            ErrorTileListView view = new ErrorTileListView(getMainView(), errorTileList);
+            view.setVisible(true);
+            int exitCode = view.getExitCode();
+            view = null;
+
+            if (exitCode == ErrorTileListView.CODE_RETRY)
+            {
+                TileListSimple tiles = new TileListSimple();
+                for (Enumeration enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
+                {
+                    TileDownloadError tde = (TileDownloadError) enumeration.nextElement();
+                    tiles.addTile(tde.getTile());
+                }
+
+                setTileListDownloader(getMainView().createTileListDownloader(getFolder(), tiles));
+
+                getProgressBar().setMinimum(0);
+                getProgressBar().setMaximum(tiles.getElementCount());
+                getProgressBar().setStringPainted(true);
+                getProgressBar().setString("Retry update ...");
+
+                getTileListDownloader().setListener(this);
+                getTileListDownloader().start();
+
+            }
+
+        }
+
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
+     * {@inheritDoc}
+     */
+    public void downloadedTile(int actCount, int maxCount, String path)
+    {
+        getProgressBar().setValue(actCount);
+        getProgressBar().setString("Update tile " + actCount + "/" + maxCount);
+
+        if (getAppConfiguration().isShowTilePreview())
+        {
+            if (_tilePreview == null)
+            {
+                _tilePreview = new TilePreview();
+                _tilePreview.setLocation(getMainView().getX() + (getMainView().getWidth() / 2) - (_tilePreview.getWidth() / 2), getMainView().getY() + (getMainView().getHeight() / 2) - (_tilePreview.getHeight() / 2));
+            }
+            if (!_tilePreview.isVisible())
+            {
+                _tilePreview.setVisible(true);
+            }
+
+            _tilePreview.showImage(path);
+        }
+
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitResume(java.lang.String)
+     * {@inheritDoc}
+     */
+    public void waitResume(String message)
+    {
+        getProgressBar().setString(message);
+
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitWaitHttp500ErrorToResume(java.lang.String)
+     * {@inheritDoc}
+     */
+    public void waitWaitHttp500ErrorToResume(String message)
+    {
+        getProgressBar().setString(message);
+
+    }
+
+    /**
+     * Setter for progressBar
+     * @param progressBar the progressBar to set
+     */
+    public void setProgressBar(JProgressBar progressBar)
+    {
+        _progressBar = progressBar;
+    }
+
+    /**
+     * Getter for progressBar
+     * @return the progressBar
+     */
+    public JProgressBar getProgressBar()
+    {
+        return _progressBar;
+    }
+
+    public UpdateTilesPanel getInstance()
+    {
+        return this;
+    }
+
+    /**
+     * Getter for appConfiguration
+     * @return the appConfiguration
+     */
+    public AppConfiguration getAppConfiguration()
+    {
+        return _appConfiguration;
+    }
+
+    /**
+     * Getter for mainView
+     * @return the mainView
+     */
+    public JTileDownloaderMainView getMainView()
+    {
+        return _mainView;
+    }
+
+    /**
+     * Setter for tileListDownloader
+     * @param tileListDownloader the tileListDownloader to set
+     */
+    public void setTileListDownloader(TileListDownloader tileListDownloader)
+    {
+        _tileListDownloader = tileListDownloader;
+    }
+
+    /**
+     * Getter for tileListDownloader
+     * @return the tileListDownloader
+     */
+    public TileListDownloader getTileListDownloader()
+    {
+        return _tileListDownloader;
+    }
+
+    /**
+     * Getter for buttonSearch
+     * @return the buttonSearch
+     */
+    public final JButton getButtonSearch()
+    {
+        return _buttonSearch;
+    }
+
+    /**
+     * Getter for buttonUpdate
+     * @return the buttonUpdate
+     */
+    public final JButton getButtonUpdate()
+    {
+        return _buttonUpdate;
+    }
+
 }

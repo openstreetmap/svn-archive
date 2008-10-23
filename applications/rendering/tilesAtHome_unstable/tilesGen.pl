@@ -527,7 +527,19 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    $upload->uploadAllZips();
+    try {
+        $upload->uploadAllZips();
+    }
+    catch UploadError with {
+        my $error = shift();
+        if ($error->value() == "ServerError") {
+            statusMessage("Server error: " . $error->text(), 1, 0);
+            talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);
+        }
+        else {
+            $error->raise();
+        }
+    };
 
     keepLog($PID,"upload","stop",0);
 }

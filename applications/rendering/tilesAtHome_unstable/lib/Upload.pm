@@ -210,15 +210,10 @@ sub upload
                                          client_uuid => ($::Mode eq "upload_loop") ? $client_id : ::GetClientId() ]);
 
         if (!$res->is_success()) {
-            ::statusMessage("ERROR",1,0);
-            ::statusMessage("  Error uploading $file_name to $URL:",1,0);
-            ::statusMessage("  ".$res->status_line,1,0);
-            ::addFault('upload');
-            throw UploadError "Error uploading $file_name to $URL: $res->status_line", "ServerError"; # hard fail
+            throw UploadError "Error uploading $file_name to $URL: " . $res->status_line, "ServerError"; # hard fail
         }
         else {
             print $res->content if ($Config->get("Debug"));
-            ::resetFault('upload');
         }
     }
     else {

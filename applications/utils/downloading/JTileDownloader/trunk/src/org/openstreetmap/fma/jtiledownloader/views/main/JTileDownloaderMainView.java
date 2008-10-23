@@ -10,6 +10,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
@@ -21,12 +22,28 @@ import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListVi
 import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
 
 /**
- * developed by fma (http://wiki.openstreetmap.org/index.php/User:Fma)
- * license: http://creativecommons.org/licenses/by-nc-nd/3.0/
+ * Copyright 2008, Friedrich Maier 
+ * 
+ * This file is part of JTileDownloader. 
+ * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
+ *
+ *    JTileDownloader is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    JTileDownloader is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy (see file COPYING.txt) of the GNU 
+ *    General Public License along with JTileDownloader.  
+ *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class JTileDownloaderMainView
     extends JFrame
-    implements TileDownloaderListener
+    implements TileDownloaderListener, Constants
 {
     private static final long serialVersionUID = 1L;
 
@@ -64,12 +81,12 @@ public class JTileDownloaderMainView
     {
         addWindowListener(new MainViewWindowListener());
 
-        setTitle("JTileDownloader");
+        setTitle("JTileDownloader" + " Version: " + VERSION);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
         _mainPanel = new MainPanel(getDownloadTemplate(), getMainView());
-        _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration());
+        _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration(), getMainView());
         _optionsPanel = new OptionsPanel(getAppConfiguration());
         _networkPanel = new NetworkPanel(getAppConfiguration());
 

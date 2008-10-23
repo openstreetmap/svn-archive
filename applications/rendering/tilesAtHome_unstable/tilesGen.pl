@@ -75,7 +75,7 @@ else
 # set the progress indicator variables
 our $currentSubTask;
 my $progress = 0;
-our $progressJobs = 0;
+our $progressJobs = 1;
 our $progressPercent = 0;
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
@@ -350,20 +350,14 @@ elsif ($Mode eq "upload_loop")
         # uploading ZIP files here, returns 0 if nothing to do and -1 on error
         my $files_uploaded = upload();
             
-        if ($files_uploaded == -1)  # we got an error in the upload process
-        {   # increase fault counter
-            addFault("upload",1);
-        }
-        elsif ($files_uploaded == 0) # no error, but no files uploaded
-        {
+        if ($files_uploaded == 0) {
+            # no error, but no files uploaded
             talkInSleep("waiting for new ZIP files to upload",30);
         }
-        else
-        {   #reset fault counter for uploads if once without error
-            resetFault("upload");
+        else {
             $elapsedTime = time() - $startTime;
             statusMessage(sprintf("upload finished in  %d:%02d", 
-              $elapsedTime/60, $elapsedTime%60),1,0);
+                                  $elapsedTime/60, $elapsedTime%60),1,0);
             $progressJobs++;
         }
     } #end of infinite while loop
@@ -527,13 +521,16 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
+    my $files_uploaded;
     try {
-        $upload->uploadAllZips();
+        $files_uploaded = $upload->uploadAllZips();
+        resetFault("upload");
     }
     catch UploadError with {
         my $error = shift();
         if ($error->value() == "ServerError") {
             statusMessage("Server error: " . $error->text(), 1, 0);
+            addFault("upload");
             talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);
         }
         else {
@@ -541,7 +538,8 @@ sub upload
         }
     };
 
-    keepLog($PID,"upload","stop",0);
+    keepLog($PID, "upload", "stop", 0);
+    return $files_uploaded;
 }
 
 #-----------------------------------------------------------------------------

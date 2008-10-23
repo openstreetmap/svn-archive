@@ -133,7 +133,6 @@ sub uploadAllZips
         else {
             # could not get exclusive lock, this is being handled elsewhere now
             ::statusMessage("$file uploaded by different process. skipping", 0, 3);
-            $files_uploaded++;
         }
         # finally unlock zipfile and release handle
         if ($LOCKFILE) {

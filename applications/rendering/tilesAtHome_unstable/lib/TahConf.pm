@@ -318,9 +318,11 @@ sub CheckConfig
         }
     }
 
-    if ( $self->get("Rasterizer") eq "Inkscape" )
+    my $rasterizer = $self->get("Rasterizer");
+    if ( $rasterizer =~ /inkscape/i )
     {
-        $cmd = $self->get("inkscape");
+        $cmd = $self->get("inkscape"); # this config parameter is deprecated and not present in newer installations
+                                       # http://trac.openstreetmap.org/ticket/1286
         my $InkscapeV=`\"$cmd\" -V 2>&1`;
         $InkscapeV =~ /Inkscape.(\d+(\.\d+)+)/;
         my $minVersion = "0.46";

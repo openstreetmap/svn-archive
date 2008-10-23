@@ -10,8 +10,24 @@ import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSq
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
 
 /**
- * developed by fma (http://wiki.openstreetmap.org/index.php/User:Fma)
- * license: http://creativecommons.org/licenses/by-nc-nd/3.0/
+ * Copyright 2008, Friedrich Maier 
+ * 
+ * This file is part of JTileDownloader. 
+ * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
+ *
+ *    JTileDownloader is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    JTileDownloader is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy (see file COPYING.txt) of the GNU 
+ *    General Public License along with JTileDownloader.  
+ *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class JTileDownloaderCommandLine
     implements TileDownloaderListener
@@ -39,6 +55,8 @@ public class JTileDownloaderCommandLine
      */
     public void start()
     {
+        printStartUpMessage();
+
         if (_arguments.containsKey(CMDLINE_DL))
         {
             String propertyFile = (String) _arguments.get(CMDLINE_DL);
@@ -69,6 +87,18 @@ public class JTileDownloaderCommandLine
         _tld.setListener(this);
         _tld.start();
 
+    }
+
+    /**
+     * 
+     */
+    private void printStartUpMessage()
+    {
+        System.out.println("JTileDownloader  Copyright (C) 2008  Friedrich Maier");
+        System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
+        System.out.println("This is free software, and you are welcome to redistribute it");
+        System.out.println("under certain conditions");
+        System.out.println("See file COPYING.txt and README.txt for details.");
     }
 
     /**

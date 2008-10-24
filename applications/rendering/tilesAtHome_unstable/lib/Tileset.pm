@@ -1384,15 +1384,12 @@ sub createTilesetFile
 
     my ($z, $x, $y) = $self->{req}->ZXY();
 
-    my @offsets;
     my $levels = $Config->get("${layer}_MaxZoom") - $z + 1; # number of layers in a tileset file, usually 6
-    my $tiles = ((4 ** $levels) - 1) / 3;                   # 1365 for 6 zoom levels
-    my $currpos = 8 + (4 * ($tiles + 1));                   # 5472 for 6 zoom levels
+    my $tiles = ((4 ** $levels) - 1) / 3;                   # number of tiles, 1365 for 6 zoom levels
+    my $data_offset = 8 + (4 * ($tiles + 1));               # start offset of tile data, 5472 for 6 zoom levels
     my $size = 1;                                           # size of base zoom level, for t@h always 1
 
     my $userid = 0; # the server will fill this in
-    my $empty = 1;
-    my $emptyness; #what type of emptyness (land/sea)
 
     my $prefix = $Config->get("${layer}_Prefix");
     my $tile_dir = File::Spec->join($self->{JobDir},
@@ -1408,30 +1405,37 @@ sub createTilesetFile
                                      sprintf("%s_%d_%d_%d_%d.tileset",
                                              $prefix, $z, $x, $y, ::GetClientId()));
 
+    my $currpos = $data_offset;
     open my $fh, ">$temp_file" or throw CompressError "Couldn't open '$temp_file' ($!)";
     seek $fh, $currpos, 0 or throw CompressError "Couldn't seek.";
 
+    my @offsets;
     for my $iz (0 .. $levels - 1) {
         my $width = 2**$iz;
         for my $iy (0 .. $width-1) {
             for my $ix (0 .. $width-1) {
                 my $png_name = File::Spec->join($tile_dir,
                                                 sprintf("%s_%d_%d_%d.png",
-                                                        $layer, $z + $iz, $x * $width + $ix, $y * $width + $iy));
+                                                        $prefix, $z + $iz, $x * $width + $ix, $y * $width + $iy));
                 my $length = -s $png_name;
                 if (! -e $png_name) {
                     push(@offsets, 0);
                 }
                 elsif ($length == 67) {
-                    push(@offsets, 2);
-                    $emptyness = 2; #this is empty land
+                    if ($Config->get("${layer}_Transparent")) {
+                        #this is empty transparent
+                        push(@offsets, 3);
+                    }
+                    else {
+                        #this is empty land
+                        push(@offsets, 2);
+                    }
                 }
                 elsif ($length == 69) {
+                    #this is empty sea
                     push(@offsets, 1);
-                    $emptyness = 1; #this is empty sea
                 }
                 else {
-                    $empty = 0; #this is not an empty tileset
                     open my $png, "<$png_name" or throw TilesetError "Couldn't open file $png_name ($!)";
                     my $buffer;
                     if( read($png, $buffer, $length) != $length ) {
@@ -1445,21 +1449,41 @@ sub createTilesetFile
             }
         }
     }
-    push @offsets, $currpos;
 
-    if( scalar( @offsets ) != $tiles + 1 ) {
-        throw TilesetError "Bad number of offsets: " . scalar( @offsets );
+    if( scalar( @offsets ) != $tiles ) {
+        throw TilesetError sprintf("Bad number of offsets: %d (should be %d)", scalar(@offsets), $tiles);
+    }
+
+    my $emptyness = 0; #what type of emptyness (land/sea)
+    if ($currpos == $data_offset) {
+        #tileset is empty
+        #check the top level tile for the type of emptyness, assume that all tiles are the same
+        my $png_name = File::Spec->join($tile_dir, sprintf("%s_%d_%d_%d.png", $prefix, $z, $x, $y));
+        my $length = -s $png_name;
+        if ($length == 67) {
+            if ($Config->get("${layer}_Transparent")) {
+                #this is empty transparent
+                $emptyness = 3;
+            }
+            else {
+                #this is empty land
+                $emptyness = 2;
+            }
+        }
+        elsif ($length == 69) {
+            $emptyness = 1; #this is empty sea
+        }
+    }
+    else {
+        #tileset is not empty
+        push @offsets, $currpos;
+        seek $fh, 8, 0;
+        print $fh pack("V*", @offsets) or throw TilesetError "Write failed to $temp_file ($!)";
     }
 
     seek $fh, 0, 0;
-    print $fh pack("CCCxVV*", 2, $levels, $size, $userid, @offsets) or throw TilesetError "Write failed to $temp_file ($!)";
+    print $fh pack("CCCCV", 2, $levels, $size, $emptyness, $userid) or throw TilesetError "Write failed to $temp_file ($!)";
     close $fh;
-
-    if ($empty) {
-        open my $fh, ">$temp_file" or throw TilesetError "Couldn't open '$temp_file' ($!)";
-        print $fh pack("C", $emptyness);
-        close $fh;
-    }
 
     move($temp_file, $file_name) or throw TilesetError "Could not move tileset file $temp_file to $file_name ($!)";
 }

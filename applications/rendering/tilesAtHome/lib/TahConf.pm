@@ -339,7 +339,8 @@ sub CheckConfig
             print "* Could not determine your inkscape version\n";
             print "* You need at least version ${minVersion} for RenderStripes=0 setting\n" unless $self->get("RenderStripes");
         }
-        elsif ($self->CompareVersions($1, $minVersion) == -1 and not $self->get("RenderStripes")) {
+        elsif ($self->CompareVersions($1, $minVersion) == -1 and not $self->get("RenderStripes")) 
+        {
             print "! Inkscape version ${1} too low, needs to be at least ${minVersion} for RenderStripes=0 setting\n";
         }
         else 

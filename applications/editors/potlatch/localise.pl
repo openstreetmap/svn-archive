@@ -30,7 +30,7 @@
 			$en=~s/\s+$//g;
 			$tr=~s/&nbsp;/ /g; $tr=~s/^\s+//;
 			if ($tr=~/^".+[^"]$/) { $tr.='"'; }
-			if ($tr=~/:/ and $tr!~/"/) { $tr="\"$tr\""; }
+			if ($tr=~/[:']/ and $tr!~/"/) { $tr="\"$tr\""; }
 			$substitute=1;
 			next if ($id eq '');
 			next if ($tr eq '...');

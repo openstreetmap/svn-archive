@@ -30,9 +30,12 @@ def show_log(request):
   f.seek(-1*offset, 2)
   read_str = f.read(offset)
   # Remove newline at the end
-  if read_str[offset - 1] == '\n':
-    read_str = read_str[:-1]
-  lines = read_str.split('\n')
+  if file_size == 0:
+   lines = [''] * 10
+  else: 
+    if read_str[offset - 1] == '\n':
+      read_str = read_str[:-1]
+    lines = read_str.split('\n')
   f.close()
   return HttpResponse("\n".join(lines[-10:]), mimetype="text/plain")
 

@@ -36,6 +36,9 @@ function createMarkers() {
     addMarker(layer_local, 8.403978, 49.009192,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Karlsruhe">Karlsruhe</a></b><br/>Unregelmäßige Treffen<br/><a href="http://www.remote.org/mailman/listinfo/ka-geo/">Mailingliste</a></p>'
     );
+    addMarker(layer_local, 10.414, 53.252,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Lüneburg">Lüneburg</a></b><br/>Unregelmäßige Treffen<br/><a href="http://lists.openstreetmap.de/cgi-bin/mailman/listinfo/lueneburg">Mailingliste</a></p>'
+    );
     addMarker(layer_local, 11.58843, 48.1227,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/München">München</a></b><br/>Treffen jeden 3. Dienstag im Monat</p>'
     );

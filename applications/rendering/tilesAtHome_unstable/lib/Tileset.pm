@@ -634,6 +634,7 @@ sub downloadData
 
     my $filelist;
     foreach my $OSMServer (@OSMServers) {
+        $self->{JobTime} = time();
         my @URLS;
         if (@predicates) {
             foreach my $predicate (@predicates) {
@@ -725,10 +726,6 @@ sub downloadData
         return (undef, "Striped download failed with: " . $reason);
     }
 
-
-    # Get the API date time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
-    $self->{JobTime} = [stat $DataFile]->[9];
-    
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
     ::statusMessage("Checking for UTF-8 errors",0,3);
@@ -1384,9 +1381,10 @@ sub createTilesetFile
 
     my ($z, $x, $y) = $self->{req}->ZXY();
 
+    my $index_start = 8;                                    # start of tile index, currently 8
     my $levels = $Config->get("${layer}_MaxZoom") - $z + 1; # number of layers in a tileset file, usually 6
     my $tiles = ((4 ** $levels) - 1) / 3;                   # number of tiles, 1365 for 6 zoom levels
-    my $data_offset = 8 + (4 * ($tiles + 1));               # start offset of tile data, 5472 for 6 zoom levels
+    my $data_offset = $index_start + (4 * ($tiles + 1));    # start offset of tile data, 5472 for 6 zoom levels
     my $size = 1;                                           # size of base zoom level, for t@h always 1
 
     my $userid = 0; # the server will fill this in
@@ -1473,19 +1471,51 @@ sub createTilesetFile
         elsif ($length == 69) {
             $emptyness = 1; #this is empty sea
         }
+        $currpos = $index_start;
     }
     else {
         #tileset is not empty
         push @offsets, $currpos;
-        seek $fh, 8, 0;
+        seek $fh, $index_start, 0;
         print $fh pack("V*", @offsets) or throw TilesetError "Write failed to $temp_file ($!)";
     }
 
     seek $fh, 0, 0;
     print $fh pack("CCCCV", 2, $levels, $size, $emptyness, $userid) or throw TilesetError "Write failed to $temp_file ($!)";
+
+    seek $fh, $currpos, 0;
+    print $fh $self->generateMetaData($prefix);
     close $fh;
 
     move($temp_file, $file_name) or throw TilesetError "Could not move tileset file $temp_file to $file_name ($!)";
+}
+
+
+#------------------------------------------------------------------------------
+# Assemble meta data in Tileset file format
+# Parameters:
+#   $layer_prefix
+#
+# Returns:
+#   $meta_data - string
+#------------------------------------------------------------------------------
+sub generateMetaData
+{
+    my $self = shift();
+    my $layer_prefix = shift();
+    my $req = $self->{req};
+
+    my $meta_template = <<EOS;
+Layer: %s
+Zoom: %d
+X: %d
+Y: %d
+Osm-Timestamp: %d
+
+EOS
+
+    my $meta_data = sprintf($meta_template, $layer_prefix, $req->ZXY(), $self->{JobTime});
+    return $meta_data;
 }
 
 

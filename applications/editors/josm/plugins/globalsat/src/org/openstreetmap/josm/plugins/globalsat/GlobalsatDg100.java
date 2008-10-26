@@ -2,7 +2,6 @@
  * Communicate with a GlobalSat DG-100 GPS mouse and data logger.
  * @author Stefan Kaintoch, Raphael Mack
  * license: GPLv3 or any later version
- * @version $Id: GlobalSatDg100.java 3 2007-10-30 19:40:04Z ramack $
  */
 package org.openstreetmap.josm.plugins.globalsat;
 
@@ -22,6 +21,7 @@ import org.kaintoch.gps.globalsat.dg100.FileInfoRec;
 import org.kaintoch.gps.globalsat.dg100.GpsRec;
 import org.kaintoch.gps.globalsat.dg100.ByteHelper;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -33,14 +33,14 @@ import org.openstreetmap.josm.data.coor.LatLon;
  */
 public class GlobalsatDg100
 {
-	public class ConnectionException extends Exception{
-		ConnectionException(Exception cause){
-			super(cause);
-		}
-		ConnectionException(String msg){
-			super(msg);
-		}
-	}
+    public class ConnectionException extends Exception{
+        ConnectionException(Exception cause){
+            super(cause);
+        }
+        ConnectionException(String msg){
+            super(msg);
+        }
+    }
 
     public static final int TIMEOUT = 2000;
     public static final int TRACK_TYPE = 1; 
@@ -114,9 +114,15 @@ public class GlobalsatDg100
     
     private CommPortIdentifier portIdentifier;
     private SerialPort port = null;
+
+    private boolean cancelled = false;
     
     public GlobalsatDg100(CommPortIdentifier portId){
         this.portIdentifier = portId;
+    }
+
+    public void cancel(){
+        cancelled = true;
     }
 
     /**
@@ -125,12 +131,17 @@ public class GlobalsatDg100
      */
     public GpxData readData() throws ConnectionException {
         GpxData result = null;
+        int cnt = 0;
+        cancelled = false;
         if(port == null){
             connect();
         }
-        
+        Main.pleaseWaitDlg.progress.setValue(0);
+
         List<FileInfoRec> fileInfoList = readFileInfoList();
         List<GpsRec> gpsRecList = readGpsRecList(fileInfoList);
+
+        Main.pleaseWaitDlg.progress.setMaximum(gpsRecList.size());
         if(gpsRecList.size() > 0){
             GpsRec last = null;
             GpxTrack trk = new GpxTrack();
@@ -139,6 +150,9 @@ public class GlobalsatDg100
             result.tracks.add(trk);
             trk.trackSegs.add(seg);
             for(GpsRec r:gpsRecList){
+                if(cancelled){
+                    return result;
+                }
                 WayPoint p = wayPointFrom(r);
                 if(r.equals(last)){
                     result.waypoints.add(p);
@@ -146,6 +160,7 @@ public class GlobalsatDg100
                     seg.add(p);
                 }
                 last = r;
+                Main.pleaseWaitDlg.progress.setValue(cnt++);
             }
         }
         return result;
@@ -242,6 +257,10 @@ public class GlobalsatDg100
         updateCheckSum(buf);
         int len = sendCmd(src, response, -1);
         return Response.parseResponse(response, len);
+    }
+
+    public boolean isCancelled(){
+        return cancelled;
     }
 
     private Response sendCmdGetGpsRecs(int idx) throws IOException, UnsupportedCommOperationException

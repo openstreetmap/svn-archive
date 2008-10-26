@@ -78,6 +78,30 @@ sub new
     $self->{EmptySeaImage} = $EmptySeaImage;
     $self->{BlackTileImage} = $BlackTileImage;
 
+    # Inkscape auto-backup/reset setup
+    # Takes a backup copy of ~/.inkscape/preferences.xml if
+    # AutoResetInkscapePrefs is turned on in config and we are using Inkscape
+    # as rasterizer.
+    # This backup copy is restored if Inkscape crashes and mentions
+    # preferences.xml on STDERR
+    if( $Config->get("AutoResetInkscapePrefs") == 1 &&
+        $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
+
+        $self->{inkscape_autobackup}{cfgfile} = glob('~/.inkscape/preferences.xml');
+        $self->{inkscape_autobackup}{backupfile} = "$self->{inkscape_autobackup}{cfgfile}.bak"
+            if defined($self->{inkscape_autobackup}{cfgfile});
+
+        if( -f $self->{inkscape_autobackup}{cfgfile} ){
+            copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
+                or do {
+                    warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
+                    delete($self->{inkscape_autobackup});
+            };
+        } else {
+            delete($self->{inkscape_autobackup});
+        }
+    }
+
     bless $self, $class;
     return $self;
 }
@@ -1042,6 +1066,29 @@ sub RenderSVG
 
             $Req->is_unrenderable(1);
             throw TilesetError("Exception in RenderSVG: $e");
+        } catch SVG::Rasterize::Engine::Inkscape::Error::Runtime with {
+            my $e = shift;
+            $_[1] = 1; # Set second parameter scalar to 1 so the next catch block is used
+
+            my $corrupt = 0;
+            if( $e->{stderr} =~ /preferences.xml/ ){
+                $corrupt = 1;
+                warn "* Inkscape preference file corrupt. Delete Inkscape's preferences.xml to continue\n";
+                if( defined($self->{inkscape_autobackup}) ){
+                    my $cfg = $self->{inkscape_autobackup}{cfgfile};
+                    my $bak = $self->{inkscape_autobackup}{backupfile};
+                    warn "   AutoResetInkscapePrefs set, trying to reset $cfg\n";
+                    unlink $cfg if( -f $cfg );
+                    $corrupt = 0 if( rename($bak, $cfg) );
+                }
+            }
+
+            if( $corrupt ){
+                ## this error is fatal because it needs human intervention before processing can continue
+                throw TilesetError("Inkscape preference file corrupt. Delete to continue", 'fatal');
+                addFault("fatal",1);
+            }
+
         } catch SVG::Rasterize::Engine::Error::Runtime with {
             my $e = shift;
 

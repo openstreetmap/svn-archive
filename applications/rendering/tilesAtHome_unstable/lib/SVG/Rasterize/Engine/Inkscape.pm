@@ -3,7 +3,7 @@ package SVG::Rasterize::Engine::Inkscape;
 use strict;
 use warnings;
 
-$__PACKAGE__::VERSION = '0.1';
+$__PACKAGE__::VERSION = '0.2';
 
 use base qw(Class::Accessor SVG::Rasterize::Engine);
 use SVG::Rasterize::CoordinateBox;
@@ -114,6 +114,32 @@ sub available {
     otherwise {
         return 0;
     };
+}
+
+=pod
+
+=head2 version()
+
+Get Inkscape version number.
+
+Returns version number as array, for example (0, 44, 1) for 0.44.1.
+
+=cut
+
+sub version {
+    my $self = shift;
+
+    my @cmd = ($self->path(), '--version');
+
+    my($stdout, $stderr);
+    run( \@cmd, \undef, \$stdout, \$stderr ) or
+        throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
+
+    $stdout =~ /Inkscape\s+(\S+)(\s|$)/i or
+        throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Error parsing Inkscape version string", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
+    my @version = split(/\.|\+/, $1);
+
+    return @version;
 }
 
 =pod

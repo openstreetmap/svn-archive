@@ -160,15 +160,48 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
     $SVG::Rasterize::object = SVG::Rasterize->new();
     if( $Config->get("Rasterizer") ){
         $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
-
-        if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
-            $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
-            $SVG::Rasterize::object->engine()->host('localhost');
-            $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
-        }
     }
 
     print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
+
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+        $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
+        $SVG::Rasterize::object->engine()->host('localhost');
+        $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+    }
+
+    # Check for broken Inkscape versions
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
+        my %brokenInkscapeVersions = (
+            "RenderStripes=0 will not work" => [0, 45, 1]
+            );
+
+        try {
+            my @version = $SVG::Rasterize::object->engine()->version();
+            die if scalar(@version) == 0;
+
+            while( my( $reason, $ver ) = each %brokenInkscapeVersions ){
+                my @brokenVersion = @{ $ver };
+
+                my $equal = 1;
+                if( $#brokenVersion == $#version ){
+                    for( my $i=0; $i < @version; $i++ ){
+                        $equal = $version[$i] eq $brokenVersion[$i];
+                        last if ! $equal;
+                    }
+                } else {
+                    $equal = 0;
+                }
+
+                if( $equal ){
+                    printf("! You have a broken version of Inkscape, %s. %s\n", join('.', @version), $reason);
+                }
+            }
+        } otherwise {
+            print "! Could not determine your Inkscape version\n";
+        };
+
+    }
 }
 
 # We need to keep parent PID so that child get the correct files after fork()

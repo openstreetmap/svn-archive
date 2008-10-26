@@ -1,3 +1,1111 @@
+openstreetmap-utils (11483) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sun, 26 Oct 2008 01:29:11 +0200
+
+openstreetmap-utils (11482) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sun, 26 Oct 2008 01:28:28 +0200
+
+openstreetmap-utils (11481) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sun, 26 Oct 2008 01:06:05 +0200
+
+openstreetmap-utils (11480) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sun, 26 Oct 2008 01:05:15 +0200
+
+openstreetmap-utils (11466) unstable; urgency=low
+
+   * added JTileDownloader
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 09:19:12 +0200
+
+openstreetmap-utils (11465) unstable; urgency=low
+
+   * no more needed
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 09:07:08 +0200
+
+openstreetmap-utils (11464) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 08:59:17 +0200
+
+openstreetmap-utils (11463) unstable; urgency=low
+
+   * readme file
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 08:58:51 +0200
+
+openstreetmap-utils (11461) unstable; urgency=low
+
+   * del
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 08:56:35 +0200
+
+openstreetmap-utils (11460) unstable; urgency=low
+
+   * no Commit Message
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 08:55:03 +0200
+
+openstreetmap-utils (11459) unstable; urgency=low
+
+   * changed name
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 08:51:56 +0200
+
+openstreetmap-utils (11454) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:53:20 +0200
+
+openstreetmap-utils (11453) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:52:30 +0200
+
+openstreetmap-utils (11452) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:52:23 +0200
+
+openstreetmap-utils (11451) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:52:15 +0200
+
+openstreetmap-utils (11450) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:52:08 +0200
+
+openstreetmap-utils (11449) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:52:02 +0200
+
+openstreetmap-utils (11448) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:51:54 +0200
+
+openstreetmap-utils (11447) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:50:24 +0200
+
+openstreetmap-utils (11446) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:49:59 +0200
+
+openstreetmap-utils (11445) unstable; urgency=low
+
+   * modified file header
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:49:13 +0200
+
+openstreetmap-utils (11444) unstable; urgency=low
+
+   * added screenshot for tile updater
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:48:03 +0200
+
+openstreetmap-utils (11443) unstable; urgency=low
+
+   * eclipse settings
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:47:40 +0200
+
+openstreetmap-utils (11442) unstable; urgency=low
+
+   * added simple tile update functionality
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:46:46 +0200
+
+openstreetmap-utils (11441) unstable; urgency=low
+
+   * latest
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:46:06 +0200
+
+openstreetmap-utils (11440) unstable; urgency=low
+
+   * added jar file for version 0-3-0
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:45:33 +0200
+
+openstreetmap-utils (11439) unstable; urgency=low
+
+   * added files
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:44:52 +0200
+
+openstreetmap-utils (11438) unstable; urgency=low
+
+   * added files
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Fri, 24 Oct 2008 00:44:02 +0200
+
+openstreetmap-utils (11421) unstable; urgency=low
+
+   * Added Luebeck Border
+
+ -- Sven Anders <Sven_Anders-fake-tmf@gpsdrive.de>  Thu, 23 Oct 2008 10:48:19 +0200
+
+openstreetmap-utils (11410) unstable; urgency=low
+
+   * osm2pgsql: Treat lines and polygons the same way when trying to work out if the way should go into the roads table. This allows ways with both waterway and boundary set to be rendered correctly. Also allow tagged islands to appear. Swap order of entries in the layer table to put the most common ones near the front which will speed up the matching.
+
+ -- Jon Burgess <Jon_Burgess-fake-tmf@gpsdrive.de>  Thu, 23 Oct 2008 01:24:36 +0200
+
+openstreetmap-utils (11397) unstable; urgency=low
+
+   * added simple tile update functionality
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Wed, 22 Oct 2008 13:46:34 +0200
+
+openstreetmap-utils (11396) unstable; urgency=low
+
+   * merged classes TileListError and TileListUpdate to TileListSimple
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Wed, 22 Oct 2008 13:00:30 +0200
+
+openstreetmap-utils (11395) unstable; urgency=low
+
+   * moved some constants
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Wed, 22 Oct 2008 13:00:01 +0200
+
+openstreetmap-utils (11393) unstable; urgency=low
+
+   * added interface Constants
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Wed, 22 Oct 2008 12:56:15 +0200
+
+openstreetmap-utils (11392) unstable; urgency=low
+
+   * added class TileServerList
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Wed, 22 Oct 2008 12:55:55 +0200
+
+openstreetmap-utils (11380) unstable; urgency=low
+
+   * changed visibility for method getYDirectory from protected to public
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 17:03:00 +0200
+
+openstreetmap-utils (11379) unstable; urgency=low
+
+   * added class
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 17:02:20 +0200
+
+openstreetmap-utils (11378) unstable; urgency=low
+
+   * get update tile list
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 17:02:05 +0200
+
+openstreetmap-utils (11366) unstable; urgency=low
+
+   * Reverted an accidental update to the eclipse project file.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 12:47:39 +0200
+
+openstreetmap-utils (11362) unstable; urgency=low
+
+   * Added index idx_way_nodes_node_id to the list of indexes dropped during bulk import.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 12:40:27 +0200
+
+openstreetmap-utils (11354) unstable; urgency=low
+
+   * check for min max lat/lon values
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 00:21:59 +0200
+
+openstreetmap-utils (11353) unstable; urgency=low
+
+   * check for min max lat/lon values
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 00:08:27 +0200
+
+openstreetmap-utils (11352) unstable; urgency=low
+
+   * allow outputzoomlevel 0 to 18
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Tue, 21 Oct 2008 00:07:02 +0200
+
+openstreetmap-utils (11350) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:59:56 +0200
+
+openstreetmap-utils (11346) unstable; urgency=low
+
+   * added update tile tab
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:17:31 +0200
+
+openstreetmap-utils (11345) unstable; urgency=low
+
+   * added update tile tab
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:11:36 +0200
+
+openstreetmap-utils (11344) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:10:04 +0200
+
+openstreetmap-utils (11343) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:09:03 +0200
+
+openstreetmap-utils (11342) unstable; urgency=low
+
+   * 0-2-0
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:08:22 +0200
+
+openstreetmap-utils (11341) unstable; urgency=low
+
+   * 0-2-0
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:08:13 +0200
+
+openstreetmap-utils (11340) unstable; urgency=low
+
+   * 0-2-0
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:08:04 +0200
+
+openstreetmap-utils (11339) unstable; urgency=low
+
+   * i.r. (0-2-0)
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:05:06 +0200
+
+openstreetmap-utils (11338) unstable; urgency=low
+
+   * Share project "JTileDownloader" into "http://svn.openstreetmap.org/applications/utils/downloading"
+
+ -- fma <fma-fake-tmf@gpsdrive.de>  Mon, 20 Oct 2008 22:02:25 +0200
+
+openstreetmap-utils (11323) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sun, 19 Oct 2008 18:04:56 +0200
+
+openstreetmap-utils (11322) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sun, 19 Oct 2008 18:04:36 +0200
+
+openstreetmap-utils (11320) unstable; urgency=low
+
+   * Add escaping for \r.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Sun, 19 Oct 2008 17:37:56 +0200
+
+openstreetmap-utils (11316) unstable; urgency=low
+
+   * mapnik-osm-updater.sh: improve searching for tools
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Sun, 19 Oct 2008 16:18:13 +0200
+
+openstreetmap-utils (11315) unstable; urgency=low
+
+   * mapnik-osm-updater.sh: adapt searching for tools
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Sun, 19 Oct 2008 16:16:38 +0200
+
+openstreetmap-utils (11290) unstable; urgency=low
+
+   * Fixed leaking temporary files.
+   * Added warning logging if files fail to be deleted.
+   * Added missing release calls in pgsql way and relation readers.
+   * Added missing stream close in the object stream iterator.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Fri, 17 Oct 2008 08:56:19 +0200
+
+openstreetmap-utils (11281) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Thu, 16 Oct 2008 20:08:02 +0200
+
+openstreetmap-utils (11280) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Thu, 16 Oct 2008 20:07:48 +0200
+
+openstreetmap-utils (11279) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Thu, 16 Oct 2008 20:06:38 +0200
+
+openstreetmap-utils (11278) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Thu, 16 Oct 2008 20:06:22 +0200
+
+openstreetmap-utils (11277) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Thu, 16 Oct 2008 20:05:40 +0200
+
+openstreetmap-utils (11276) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Thu, 16 Oct 2008 20:05:23 +0200
+
+openstreetmap-utils (11269) unstable; urgency=low
+
+   * Adding the posibility for not-in-map_features to check for number with an optional unit suffixed. There's a temporary hack that overwrites maxspeed to use the 'speed' type no matter what map features say, just to make it simple for people to test this
+
+ -- Knut Arne Bjørndal <Knut_Arne_Bjørndal-fake-tmf@gpsdrive.de>  Wed, 15 Oct 2008 21:56:20 +0200
+
+openstreetmap-utils (11254) unstable; urgency=low
+
+   * Updated the version to 0.29.2.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 15 Oct 2008 13:50:18 +0200
+
+openstreetmap-utils (11253) unstable; urgency=low
+
+   * Fixed a broken javadoc tag.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 15 Oct 2008 13:49:36 +0200
+
+openstreetmap-utils (11252) unstable; urgency=low
+
+   * Updated the expected schema version number to 16.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 15 Oct 2008 13:46:19 +0200
+
+openstreetmap-utils (11250) unstable; urgency=low
+
+   * Updated the expected schema version number to 15.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 15 Oct 2008 12:57:28 +0200
+
+openstreetmap-utils (11249) unstable; urgency=low
+
+   * Fixed an index creation statement using an incorrect column name.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 15 Oct 2008 12:56:58 +0200
+
+openstreetmap-utils (11215) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Tue, 14 Oct 2008 17:18:31 +0200
+
+openstreetmap-utils (11206) unstable; urgency=low
+
+   * Added way.linestring column support to the pgsql database schema and supporting tasks.  The aim is to speed up bounding box queries.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 14 Oct 2008 13:21:30 +0200
+
+openstreetmap-utils (11192) unstable; urgency=low
+
+   * Adding first version of the tile expiry script.
+
+ -- zere <zere-fake-tmf@gpsdrive.de>  Tue, 14 Oct 2008 01:00:45 +0200
+
+openstreetmap-utils (11191) unstable; urgency=low
+
+   * Creating directory for postgis/diff expiry script.
+
+ -- zere <zere-fake-tmf@gpsdrive.de>  Tue, 14 Oct 2008 00:25:02 +0200
+
+openstreetmap-utils (11130) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Sat, 11 Oct 2008 21:15:16 +0200
+
+openstreetmap-utils (11129) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Sat, 11 Oct 2008 21:15:05 +0200
+
+openstreetmap-utils (11127) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Sat, 11 Oct 2008 20:34:47 +0200
+
+openstreetmap-utils (11126) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Sat, 11 Oct 2008 20:34:28 +0200
+
+openstreetmap-utils (11125) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Sat, 11 Oct 2008 20:33:56 +0200
+
+openstreetmap-utils (11099) unstable; urgency=low
+
+   * Util extract-polygon - C version.
+
+ -- onovy <onovy-fake-tmf@gpsdrive.de>  Thu, 09 Oct 2008 15:05:55 +0200
+
+openstreetmap-utils (11078) unstable; urgency=low
+
+   * Add 'disused' column into osm2pgsql style
+
+ -- Jon Burgess <Jon_Burgess-fake-tmf@gpsdrive.de>  Wed, 08 Oct 2008 00:42:49 +0200
+
+openstreetmap-utils (11071) unstable; urgency=low
+
+   * osmolt: sorry for the content/binarys
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Tue, 07 Oct 2008 02:01:20 +0200
+
+openstreetmap-utils (11070) unstable; urgency=low
+
+   * osmolt: new version with german translation (mostly)
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Tue, 07 Oct 2008 01:54:35 +0200
+
+openstreetmap-utils (11067) unstable; urgency=low
+
+   * osmolt: new version with german translation (mostly)
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Tue, 07 Oct 2008 01:25:53 +0200
+
+openstreetmap-utils (11065) unstable; urgency=low
+
+   * OSM_AuthPlugin minor tweaks
+
+ -- Grant Slater <Grant_Slater-fake-tmf@gpsdrive.de>  Tue, 07 Oct 2008 01:06:00 +0200
+
+openstreetmap-utils (11064) unstable; urgency=low
+
+   * Add Initial MediaWiki OSM_AuthPlugin by Chris Jackson
+
+ -- Grant Slater <Grant_Slater-fake-tmf@gpsdrive.de>  Mon, 06 Oct 2008 23:12:02 +0200
+
+openstreetmap-utils (11034) unstable; urgency=low
+
+   * Commit the proper fix to the missing islands problem. The previous fix meant
+   * that previously missing lakes suddenly caused the entire tile go blue. This
+   * patch does it right, by simply moving the emission of subarea to happen
+   * always and reverting the previous fix.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Sat, 04 Oct 2008 15:33:00 +0200
+
+openstreetmap-utils (11033) unstable; urgency=low
+
+   * The offset to the tile is obviously related to the number of divisions, and
+   * not to the number 200.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Sat, 04 Oct 2008 14:54:27 +0200
+
+openstreetmap-utils (11032) unstable; urgency=low
+
+   * Up limits to 400 million nodes. Should really find something more flexible.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Sat, 04 Oct 2008 14:52:58 +0200
+
+openstreetmap-utils (11031) unstable; urgency=low
+
+   * Added a basic application for testing a file for utf-8 correctness.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sat, 04 Oct 2008 07:00:28 +0200
+
+openstreetmap-utils (11007) unstable; urgency=low
+
+   * Convert waterway into a polygon to match latest osm.xml
+
+ -- Jon Burgess <Jon_Burgess-fake-tmf@gpsdrive.de>  Tue, 30 Sep 2008 23:25:17 +0200
+
+openstreetmap-utils (10995) unstable; urgency=low
+
+   * Fixed a bug in the pgsql dataset reader classes where incorrect tag table names were being generated in the sql queries.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 30 Sep 2008 07:25:41 +0200
+
+openstreetmap-utils (10977) unstable; urgency=low
+
+   * Revert previous change. Stable still use that
+
+ -- jttt <jttt-fake-tmf@gpsdrive.de>  Sun, 28 Sep 2008 21:59:10 +0200
+
+openstreetmap-utils (10975) unstable; urgency=low
+
+   * Remove bounds_mkr[12] which is not used anymore
+
+ -- jttt <jttt-fake-tmf@gpsdrive.de>  Sun, 28 Sep 2008 21:04:57 +0200
+
+openstreetmap-utils (10948) unstable; urgency=low
+
+   * Updated version of not-in-map_features, checked by Ed Loach
+
+ -- Knut Arne Bjørndal <Knut_Arne_Bjørndal-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 14:40:38 +0200
+
+openstreetmap-utils (10945) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 02:12:38 +0200
+
+openstreetmap-utils (10944) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 02:12:25 +0200
+
+openstreetmap-utils (10943) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 02:11:51 +0200
+
+openstreetmap-utils (10942) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 02:11:42 +0200
+
+openstreetmap-utils (10941) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 02:11:05 +0200
+
+openstreetmap-utils (10940) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 02:10:48 +0200
+
+openstreetmap-utils (10938) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 01:23:22 +0200
+
+openstreetmap-utils (10937) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 00:57:28 +0200
+
+openstreetmap-utils (10936) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 00:49:08 +0200
+
+openstreetmap-utils (10935) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 00:48:54 +0200
+
+openstreetmap-utils (10934) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 00:46:09 +0200
+
+openstreetmap-utils (10933) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Sat, 27 Sep 2008 00:45:40 +0200
+
+openstreetmap-utils (10930) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Fri, 26 Sep 2008 19:23:57 +0200
+
+openstreetmap-utils (10929) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Fri, 26 Sep 2008 19:22:48 +0200
+
+openstreetmap-utils (10928) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver <extremecarver-fake-tmf@gpsdrive.de>  Fri, 26 Sep 2008 19:21:46 +0200
+
+openstreetmap-utils (10916) unstable; urgency=low
+
+   * osmolt: add jar-archive 
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Thu, 25 Sep 2008 23:10:47 +0200
+
+openstreetmap-utils (10915) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Thu, 25 Sep 2008 23:00:17 +0200
+
+openstreetmap-utils (10894) unstable; urgency=low
+
+   * osmolt: aditional packages
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Thu, 25 Sep 2008 11:03:00 +0200
+
+openstreetmap-utils (10893) unstable; urgency=low
+
+   * osmolt: add licence
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Thu, 25 Sep 2008 10:59:17 +0200
+
+openstreetmap-utils (10892) unstable; urgency=low
+
+   * osmolt: add manifest
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Thu, 25 Sep 2008 10:58:46 +0200
+
+openstreetmap-utils (10884) unstable; urgency=low
+
+   * osmolt added : new version (and name) of osmparser
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Wed, 24 Sep 2008 22:41:15 +0200
+
+openstreetmap-utils (10865) unstable; urgency=low
+
+   * Tweaked the initialise reading method to perform less state checking when already in read mode.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 24 Sep 2008 13:38:27 +0200
+
+openstreetmap-utils (10864) unstable; urgency=low
+
+   * Added forceUtf8 and profileSql options to all MySQL tasks.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 24 Sep 2008 13:36:27 +0200
+
+openstreetmap-utils (10856) unstable; urgency=low
+
+   * Shapefile to OSM converter
+
+ -- tobwen <tobwen-fake-tmf@gpsdrive.de>  Tue, 23 Sep 2008 22:26:20 +0200
+
+openstreetmap-utils (10855) unstable; urgency=low
+
+   * Shapefile to OSM converter
+
+ -- tobwen <tobwen-fake-tmf@gpsdrive.de>  Tue, 23 Sep 2008 22:25:15 +0200
+
+openstreetmap-utils (10850) unstable; urgency=low
+
+   * Updated the buffered random input stream to use multiple concurrent buffers for (hopefully) improved performance.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 23 Sep 2008 15:46:13 +0200
+
+openstreetmap-utils (10816) unstable; urgency=low
+
+   * Fixed the pgsql copy writer to write the relation member fields in the correct order.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 21 Sep 2008 13:14:12 +0200
+
+openstreetmap-utils (10815) unstable; urgency=low
+
+   * Removed old commented out code.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 21 Sep 2008 13:12:08 +0200
+
+openstreetmap-utils (10814) unstable; urgency=low
+
+   * Updated the way bbox calculator to use a buffered random file reader for improved performance.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 21 Sep 2008 13:11:24 +0200
+
+openstreetmap-utils (10812) unstable; urgency=low
+
+   * Fix case where an area might have subareas but no segments crossing the
+   * edge. We forgot to emit the subareas, which is obviously wrong :)
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Sun, 21 Sep 2008 11:13:48 +0200
+
+openstreetmap-utils (10727) unstable; urgency=low
+
+   * Added ability to use in-memory bbox calculation to the COPY file generation task.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 16 Sep 2008 15:05:29 +0200
+
+openstreetmap-utils (10726) unstable; urgency=low
+
+   * Modified the in-memory bbox calculator to use normal file io instead of a memory mapped node location data file due to inability to map such a large file into memory.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Tue, 16 Sep 2008 15:04:09 +0200
+
+openstreetmap-utils (10717) unstable; urgency=low
+
+   * Incorporated changes suggested by alastairj to bring upto API 0.5:
+   * http://trac.openstreetmap.org/ticket/625
+   * Added capability to produce 'major','medium' and 'minor' contours for use with mkgmap.
+   * Also fixed minium and maximum elevations to cope with everywhere on earth.
+
+ -- mungewell <mungewell-fake-tmf@gpsdrive.de>  Tue, 16 Sep 2008 07:07:36 +0200
+
+openstreetmap-utils (10710) unstable; urgency=low
+
+   * Fixed the migration task so that tags, way_nodes, and relation_members are copied across to the new entities.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Mon, 15 Sep 2008 15:07:43 +0200
+
+openstreetmap-utils (10709) unstable; urgency=low
+
+   * Added a migration task --migrate allowing 0.5 data to be converted to 0.6 format.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Mon, 15 Sep 2008 14:23:23 +0200
+
+openstreetmap-utils (10708) unstable; urgency=low
+
+   * Added an automatic VACUUM ANALYZE of the database for pgsql writer and truncation tasks.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Mon, 15 Sep 2008 14:21:39 +0200
+
+openstreetmap-utils (10702) unstable; urgency=low
+
+   * Added an "inMemoryBbox" to the pgsql writer task allowing it to calculate bounding boxes using a memory mapped file.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Mon, 15 Sep 2008 13:03:54 +0200
+
+openstreetmap-utils (10701) unstable; urgency=low
+
+   * Patch from Jiri Klement adding ability to specify slipping map zoom and coordinates as arguments to the bounding box filter.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Mon, 15 Sep 2008 13:03:11 +0200
+
+openstreetmap-utils (10693) unstable; urgency=low
+
+   * Neues Polygon fuer Simmelsdorf
+
+ -- Sven Anders <Sven_Anders-fake-tmf@gpsdrive.de>  Sun, 14 Sep 2008 20:06:55 +0200
+
+openstreetmap-utils (10677) unstable; urgency=low
+
+   * Patch from Jiri Klement adding ability to specify slipping map zoom and coordinates as arguments to the bounding box filter.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 14 Sep 2008 02:04:32 +0200
+
+openstreetmap-utils (10676) unstable; urgency=low
+
+   * Updated changes.txt to refer to new 0.6 support and pgsql "action" column support.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 14 Sep 2008 01:53:03 +0200
+
+openstreetmap-utils (10653) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- gary68 <gary68-fake-tmf@gpsdrive.de>  Fri, 12 Sep 2008 17:45:08 +0200
+
+openstreetmap-utils (10596) unstable; urgency=low
+
+   * Updated the pgsql schema classes to support removal of the way bbox column.  All tasks will ignore it if it doesn't exist or throw an appropriate error if they require it.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Wed, 10 Sep 2008 13:47:52 +0200
+
+openstreetmap-utils (10564) unstable; urgency=low
+
+   * - replaced script for gpsdrive extensions by binary in mapnik-osm-updater.sh
+
+ -- Guenter Maier <Guenter_Maier-fake-tmf@gpsdrive.de>  Mon, 08 Sep 2008 19:33:21 +0200
+
+openstreetmap-utils (10510) unstable; urgency=low
+
+   * Fixed a large number of compilation errors in the 0.6 mysql classes but some still remain.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sat, 06 Sep 2008 09:53:32 +0200
+
+openstreetmap-utils (10509) unstable; urgency=low
+
+   * Refactored pgsql load tasks to utilise the new dao classes rather than duplicate jdbc mapping.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sat, 06 Sep 2008 09:51:58 +0200
+
+openstreetmap-utils (10503) unstable; urgency=low
+
+   * added example for cycling map
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Fri, 05 Sep 2008 21:42:47 +0200
+
+openstreetmap-utils (10492) unstable; urgency=low
+
+   * added ignore link
+
+ -- stoecker <stoecker-fake-tmf@gpsdrive.de>  Fri, 05 Sep 2008 10:20:27 +0200
+
+openstreetmap-utils (10485) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Thu, 04 Sep 2008 21:33:22 +0200
+
+openstreetmap-utils (10484) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Thu, 04 Sep 2008 21:33:05 +0200
+
+openstreetmap-utils (10483) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Thu, 04 Sep 2008 21:19:24 +0200
+
+openstreetmap-utils (10482) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Thu, 04 Sep 2008 21:14:49 +0200
+
+openstreetmap-utils (10481) unstable; urgency=low
+
+   * added new version for turbogps
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Thu, 04 Sep 2008 20:55:34 +0200
+
+openstreetmap-utils (10464) unstable; urgency=low
+
+   * Turns all creates into modifies for osmChange files. Technically wrong but
+   * it matches what osmosis does and should probably be the default until the
+   * whole snapshot thing gets sorted out.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Wed, 03 Sep 2008 22:43:15 +0200
+
+openstreetmap-utils (10429) unstable; urgency=low
+
+   * Add power_source column for latest osm.xml
+
+ -- Jon Burgess <Jon_Burgess-fake-tmf@gpsdrive.de>  Tue, 02 Sep 2008 23:25:55 +0200
+
+openstreetmap-utils (10387) unstable; urgency=low
+
+   * Remove the special cases where extra things need to get prepared when you
+   * have intarray. An extra field in the table is much nicer then nasty if
+   * statements.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Tue, 02 Sep 2008 13:03:23 +0200
+
+openstreetmap-utils (10376) unstable; urgency=low
+
+   * Added Polygon
+
+ -- Sven Anders <Sven_Anders-fake-tmf@gpsdrive.de>  Mon, 01 Sep 2008 21:41:17 +0200
+
+openstreetmap-utils (10370) unstable; urgency=low
+
+   * Fixed the pgsql changeset code to clear the user action column after completion.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Mon, 01 Sep 2008 14:21:29 +0200
+
+openstreetmap-utils (10358) unstable; urgency=low
+
+   * Added ability for pgsql classes to invoke a stored function after applying a changeset.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 31 Aug 2008 09:33:50 +0200
+
+openstreetmap-utils (10357) unstable; urgency=low
+
+   * Finished the changeset code with the new action column.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 31 Aug 2008 09:02:59 +0200
+
+openstreetmap-utils (10356) unstable; urgency=low
+
+   * Significant rewrite of the pgsql 0.6 classes.  Most functionality is now separated into dao and mapping classes with common base classes where functionality is similar between entity types.
+   * Begun adding support for action columns to the database.  Not complete yet but imports and changeset updates appear to be working again.
+
+ -- Brett Henderson <Brett_Henderson-fake-tmf@gpsdrive.de>  Sun, 31 Aug 2008 08:31:50 +0200
+
+openstreetmap-utils (10339) unstable; urgency=low
+
+   * Remove unused classes from css
+
+ -- jttt <jttt-fake-tmf@gpsdrive.de>  Sat, 30 Aug 2008 18:03:53 +0200
+
+openstreetmap-utils (10338) unstable; urgency=low
+
+   * Allow the location of the style file to be specified on the command line.
+   * Patch by Roeland Douma.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Sat, 30 Aug 2008 17:32:03 +0200
+
+openstreetmap-utils (10244) unstable; urgency=low
+
+   * No need for attribution link any more. Spaetz has built this into the MapOf service (in-image cc-by-sa logo)
+
+ -- Harry Wood <Harry_Wood-fake-tmf@gpsdrive.de>  Wed, 27 Aug 2008 21:18:35 +0200
+
+openstreetmap-utils (10223) unstable; urgency=low
+
+   * Allow to create osm containing only elements with errors
+
+ -- jttt <jttt-fake-tmf@gpsdrive.de>  Wed, 27 Aug 2008 15:48:49 +0200
+
+openstreetmap-utils (10184) unstable; urgency=low
+
+   * Typo in index creation.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Tue, 26 Aug 2008 21:27:40 +0200
+
+openstreetmap-utils (10166) unstable; urgency=low
+
+   * fixed exception in picture conversion
+
+ -- stoecker <stoecker-fake-tmf@gpsdrive.de>  Tue, 26 Aug 2008 14:42:35 +0200
+
+openstreetmap-utils (10165) unstable; urgency=low
+
+   * fixed exception in picture conversion
+
+ -- stoecker <stoecker-fake-tmf@gpsdrive.de>  Tue, 26 Aug 2008 14:41:40 +0200
+
+openstreetmap-utils (10149) unstable; urgency=low
+
+   * The optimisation steps should not be applied in append mode since they will
+   * take forever on a complete database and patching is supposed to be quick.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Mon, 25 Aug 2008 23:24:29 +0200
+
+openstreetmap-utils (10148) unstable; urgency=low
+
+   * Use GIN indexes instead of GIST. This means we require a newer version
+   * of PostgreSQL but GiST is way too slow here. Also don't try ANALYSE after
+   * each endCopy, takes far too long when just applying a patch.
+
+ -- Martijn van Oosterhout <Martijn_van_Oosterhout-fake-tmf@gpsdrive.de>  Mon, 25 Aug 2008 23:06:00 +0200
+
+openstreetmap-utils (10101) unstable; urgency=low
+
+   * OSMParser: GUI jar-archiv added 
+   * + remove dev-config
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Sun, 24 Aug 2008 13:14:32 +0200
+
+openstreetmap-utils (10100) unstable; urgency=low
+
+   * GUI added
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Sun, 24 Aug 2008 12:58:00 +0200
+
+openstreetmap-utils (10055) unstable; urgency=low
+
+   * osmparser added
+
+ -- josias <josias-fake-tmf@gpsdrive.de>  Fri, 22 Aug 2008 14:18:37 +0200
+
+openstreetmap-utils (10054) unstable; urgency=low
+
+   * osm2mif for oziexplorer added
+
+ -- oreimann <oreimann-fake-tmf@gpsdrive.de>  Fri, 22 Aug 2008 12:16:15 +0200
+
+openstreetmap-utils (10035) unstable; urgency=low
+
+   * missing , in debian/control leads to not using all dependencies
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Wed, 20 Aug 2008 23:39:00 +0200
+
+openstreetmap-utils (10034) unstable; urgency=low
+
+   * change to new mail-addresses for changelog
+
+ -- Joerg Ostertag (Debian Packages) <debian@ostertag.name>  Wed, 20 Aug 2008 23:38:25 +0200
+
 openstreetmap-utils (10015) unstable; urgency=low
 
    * Added a pgsql changeset test and fixed some bugs in the changeset tasks.

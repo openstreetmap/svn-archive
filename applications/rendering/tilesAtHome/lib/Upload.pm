@@ -185,14 +185,14 @@ sub upload
     {
         if($Config->get("DeleteZipFilesAfterUpload"))
         {
+            ::statusMessage("ZIP file $File too old, deleting",1,3);
             unlink($File);
         }
         else
         {
+            ::statusMessage("ZIP file $File too old, renaming to *_overage",1,3);
             rename($File, $File."_overage"); 
         }
-
-        throw UploadError "ZIP file $File too old", "overage";
     }
 
     $FileName =~ m{^([^_]+)_\d+_\d+_\d+_(\d+)\.zip$};

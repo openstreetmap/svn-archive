@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2008-10-20 09:43+0100\n"
-"PO-Revision-Date: 2008-10-22 22:03+0000\n"
+"PO-Revision-Date: 2008-10-28 18:26+0000\n"
 "Last-Translator: Štefan Baebler <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2008-10-22 23:49+0000\n"
+"X-Launchpad-Export-Date: 2008-10-28 18:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../../core/src/org/openstreetmap/josm/actions/AboutAction.java:70
@@ -329,7 +329,7 @@ msgstr ""
 msgid ""
 "Could not combine ways (They could not be merged into a single string of "
 "nodes)"
-msgstr ""
+msgstr "Poti se ne da združiti (Vozlišča niso povezana v premem zaporedju)"
 
 #: ../../core/src/org/openstreetmap/josm/actions/CopyAction.java:33
 msgid "Copy"
@@ -729,19 +729,19 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:75
 msgid "Extrude"
-msgstr ""
+msgstr "Izrini"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:75
 msgid "Create areas"
-msgstr ""
+msgstr "Ustvari površine"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:76
 msgid "Extrude mode"
-msgstr ""
+msgstr "Izrinjevalni način"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:244
 msgid "Extrude Way"
-msgstr ""
+msgstr "Izrini pot"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:256
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:385
@@ -759,7 +759,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:262
 msgid "Drag a way segment to make a rectangle."
-msgstr ""
+msgstr "Povlecite segment poti za ustvarjenje pravokotnika."
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/PlayHeadDragMode.java:88
 msgid ""
@@ -803,6 +803,8 @@ msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to remove); Shift-"
 "Ctrl to rotate selected; or change selection"
 msgstr ""
+"Premik predmetov z vlečenjem; Shift za dodatek k izboru (Ctrl za "
+"odstranitev); Shift+Ctrl za vrtenje; sicer sprememba izbora"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:48
 msgid "Zoom"
@@ -810,7 +812,7 @@ msgstr "Povečava"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:48
 msgid "Zoom and move map"
-msgstr ""
+msgstr "Povečava in premik zemljevida"
 
 #: ../../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:49
 msgid "Zoom mode"
@@ -895,11 +897,11 @@ msgstr "Premakni predmete {0}"
 #: ../../core/src/org/openstreetmap/josm/actions/NewAction.java:18
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:76
 msgid "New"
-msgstr ""
+msgstr "Nova"
 
 #: ../../core/src/org/openstreetmap/josm/actions/NewAction.java:18
 msgid "Create a new map."
-msgstr ""
+msgstr "Ustvari nov zemljevid."
 
 #: ../../core/src/org/openstreetmap/josm/actions/NewAction.java:19
 msgid "File: New"
@@ -911,7 +913,7 @@ msgstr "neimenovano"
 
 #: ../../core/src/org/openstreetmap/josm/actions/OpenAction.java:42
 msgid "Open ..."
-msgstr ""
+msgstr "Odpri ..."
 
 #: ../../core/src/org/openstreetmap/josm/actions/OpenAction.java:42
 msgid "Open a file."
@@ -1105,7 +1107,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:25
 msgid "Save the current data to a new file."
-msgstr ""
+msgstr "Shrani trenutne podatke v novo datoteko"
 
 #: ../../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:26
 msgid "File: Save as..."
@@ -1239,7 +1241,7 @@ msgstr "Napaka pri razločevanju na naslovu: \"{0}\""
 
 #: ../../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:15
 msgid "Select All"
-msgstr ""
+msgstr "Izberi vse"
 
 #: ../../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:15
 msgid ""
@@ -1249,7 +1251,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:16
 msgid "Edit: Select all"
-msgstr ""
+msgstr "Uredi: Izberi vse"
 
 #: ../../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:53
 msgid "Split Way"
@@ -1414,7 +1416,7 @@ msgstr ""
 #: ../../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:25
 #: ../../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:35
 msgid "Unselect All"
-msgstr ""
+msgstr "Počisti izbor"
 
 #: ../../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:17
 msgid "Unselect all objects."
@@ -1422,7 +1424,7 @@ msgstr "Odizberi vse predmete"
 
 #: ../../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:18
 msgid "Edit: Unselect all"
-msgstr ""
+msgstr "Uredi: Počisti izbor"
 
 #: ../../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:24
 msgid "Edit: Unselect all (2)"
@@ -1599,7 +1601,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/command/RotateCommand.java:135
 msgid "Rotate"
-msgstr ""
+msgstr "Zasuk"
 
 #: ../../core/src/org/openstreetmap/josm/command/SequenceCommand.java:88
 msgid "Sequence"
@@ -1625,7 +1627,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/corrector/RoleCorrectionTableModel.java:32
 msgid "New role"
-msgstr ""
+msgstr "Nova vloga"
 
 #: ../../core/src/org/openstreetmap/josm/corrector/TagCorrectionTableModel.java:23
 msgid "Old key"
@@ -1785,8 +1787,10 @@ msgstr ""
 #, java-format
 msgid " ({0} node)"
 msgid_plural " ({0} nodes)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " ({0} vozlišč)"
+msgstr[1] " ({0} vozlišče)"
+msgstr[2] " ({0} vozlišči)"
+msgstr[3] " ({0} vozlišča)"
 
 #: ../../core/src/org/openstreetmap/josm/data/projection/Epsg4326.java:23
 msgid "EPSG:4326"
@@ -2037,8 +2041,10 @@ msgstr ""
 #, java-format
 msgid "This will change up to {0} object."
 msgid_plural "This will change up to {0} objects."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Spremenili boste do {0} predmetov."
+msgstr[1] "Spremenili boste do {0} predmet."
+msgstr[2] "Spremenili boste do {0} predmeta."
+msgstr[3] "Spremenili boste do {0} predmete."
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:136
 msgid "An empty value deletes the key."
@@ -2292,7 +2298,7 @@ msgstr "Avtor"
 
 #: ../../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:56
 msgid "# Objects"
-msgstr ""
+msgstr "Št. predmetov"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:44
 msgid "Bookmarks"
@@ -2340,7 +2346,7 @@ msgstr "Povezava na www.openstreetmap.org"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:124
 msgid "Bounding Box"
-msgstr ""
+msgstr "Pravokotno področje"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:82
 msgid "Data Sources and Types"
@@ -2369,16 +2375,16 @@ msgstr "Nivo povečave"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/TileSelection.java:39
 msgid "x from"
-msgstr ""
+msgstr "x od"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/TileSelection.java:41
 #: ../../core/src/org/openstreetmap/josm/gui/download/TileSelection.java:46
 msgid "to"
-msgstr "v"
+msgstr "do"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/TileSelection.java:44
 msgid "y from"
-msgstr ""
+msgstr "y od"
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/TileSelection.java:84
 msgid "Tile Numbers"
@@ -2391,7 +2397,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/download/WorldChooser.java:101
 msgid "Map"
-msgstr ""
+msgstr "Zemljevid"
 
 #: ../../core/src/org/openstreetmap/josm/gui/GettingStarted.java:53
 #: ../../core/src/org/openstreetmap/josm/gui/GettingStarted.java:130
@@ -2434,7 +2440,7 @@ msgstr "Berem {0}..."
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:200
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:164
 msgid "Geotagged Images"
-msgstr "Geolocirane slike"
+msgstr "Slike z geografskim položajem"
 
 #: ../../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:336
 #, java-format
@@ -2928,7 +2934,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplet.java:54
 msgid "Name of the user."
-msgstr ""
+msgstr "Ime uporabnika."
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplet.java:55
 msgid "OSM Password."
@@ -3002,7 +3008,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplication.java:104
 msgid "Download the bounding box"
-msgstr ""
+msgstr "Sprejmi pravokotno področje"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplication.java:105
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z)"
@@ -3014,7 +3020,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplication.java:107
 msgid "Download the bounding box as raw gps"
-msgstr ""
+msgstr "Sprejmi pravokotno področje GPS podatkov"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainApplication.java:108
 msgid "Select with the given search"
@@ -3090,13 +3096,13 @@ msgstr "Datoteka"
 #: ../osmarender/src/OsmarenderPlugin.java:99
 #: ../osmarender/src/OsmarenderPlugin.java:105
 msgid "View"
-msgstr ""
+msgstr "Pogled"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainMenu.java:131
 #: ../duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayPlugin.java:26
 #: ../lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPlugin.java:31
 msgid "Tools"
-msgstr ""
+msgstr "Orodja"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainMenu.java:132
 msgid "Audio"
@@ -3104,35 +3110,35 @@ msgstr "Zvok"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
 msgid "Presets"
-msgstr ""
+msgstr "Prednastavitve"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MainMenu.java:204
 msgid "Wireframe view"
-msgstr ""
+msgstr "Mrežni pogled"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapMover.java:85
 msgid "Map: Move right"
-msgstr ""
+msgstr "Zemljevid: Premik desno"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapMover.java:90
 msgid "Map: Move left"
-msgstr ""
+msgstr "Zemljevid: Premik levo"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapMover.java:95
 msgid "Map: Move up"
-msgstr ""
+msgstr "Zemljevid: Premik gor"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapMover.java:100
 msgid "Map: Move down"
-msgstr ""
+msgstr "Zemljevid: Premik dol"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapMover.java:105
 msgid "Map: Zoom in"
-msgstr ""
+msgstr "Zemljevid: Povečava"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapMover.java:110
 msgid "Map: Zoom out"
-msgstr ""
+msgstr "Zemljevid: Pomanjšava"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapScaler.java:33
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:156
@@ -3165,7 +3171,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapStatus.java:158
 msgid "(no object)"
-msgstr ""
+msgstr "(ni predmeta)"
 
 #: ../../core/src/org/openstreetmap/josm/gui/MapView.java:252
 msgid "layer not in list."
@@ -3490,7 +3496,7 @@ msgstr ""
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:26
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:105
 msgid "Only interesting direction hints (e.g. with oneway tag)."
-msgstr ""
+msgstr "Le zanimive smerne puščice (npr enosmerne ceste)"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:27
 msgid "Draw segment order numbers"
@@ -4011,7 +4017,7 @@ msgstr "Izbriši izbrani vir iz seznama."
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:95
 msgid "Tagging Presets"
-msgstr ""
+msgstr "Prednastavljene oznake"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:98
 msgid "Tagging preset sources"
@@ -4023,7 +4029,7 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:154
 msgid "Toolbar"
-msgstr ""
+msgstr "Orodjarna"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:158
 msgid "Available"
@@ -4031,19 +4037,19 @@ msgstr ""
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:199
 msgid "Toolbar customization"
-msgstr ""
+msgstr "Prilagoditev orodjarne"
 
 #: ../../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:199
 msgid "Customize the elements on the toolbar."
-msgstr ""
+msgstr "Prilagodite si gumbe v orodjarni"
 
 #: ../../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:86
 msgid "false: the property is explicitly switched off"
-msgstr ""
+msgstr "ne: lastnost je izrecno izklopljena"
 
 #: ../../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:91
 msgid "true: the property is explicitly switched on"
-msgstr ""
+msgstr "da: lastnost je izrecno vklopljena"
 
 #: ../../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:96
 msgid ""
@@ -4095,8 +4101,10 @@ msgstr ""
 #, java-format
 msgid "Change {0} object"
 msgid_plural "Change {0} objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Spremeni {0} predmetov"
+msgstr[1] "Spremeni {0} predmet"
+msgstr[2] "Spremeni {0} predmeta"
+msgstr[3] "Spremeni {0} predmete"
 
 #: ../../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:572
 msgid "Change Properties"
@@ -4445,11 +4453,11 @@ msgstr "Shift-"
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:47
 msgid "AgPifoJ - Geotagged pictures"
-msgstr ""
+msgstr "AgPifoJ - slike z geografskim položajem"
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:47
 msgid "Display geotagged photos"
-msgstr ""
+msgstr "Prikaži slike z geografskim položajem"
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:69
 msgid "Previous"
@@ -4500,7 +4508,7 @@ msgstr ""
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:34
 msgid "Open images with AgPifoJ"
-msgstr ""
+msgstr "Odpri slike z AgPifoJ"
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:36
 msgid "Load set of images as a new layer."
@@ -4588,7 +4596,7 @@ msgstr ""
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:519
 msgid "All images"
-msgstr ""
+msgstr "Vse slike"
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:529
 msgid "Images with no exif position"
@@ -4643,7 +4651,7 @@ msgstr ""
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:428
 msgid "No image"
-msgstr ""
+msgstr "Ni slike"
 
 #: ../agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:438
 #, java-format
@@ -4986,7 +4994,7 @@ msgstr "Plast"
 #: ../lang/presets.java:76 ../lang/presets.java:97 ../lang/presets.java:114
 #: ../lang/presets.java:133 ../lang/presets.java:307
 msgid "Lanes"
-msgstr ""
+msgstr "Voznih pasov"
 
 #: ../lang/presets.java:23 ../lang/presets.java:40 ../lang/presets.java:59
 #: ../lang/presets.java:77 ../lang/presets.java:98 ../lang/presets.java:115
@@ -4996,7 +5004,7 @@ msgstr ""
 #: ../lang/presets.java:383 ../lang/presets.java:402 ../lang/presets.java:439
 #: ../lang/presets.java:595 ../lang/presets.java:854
 msgid "Max. speed (km/h)"
-msgstr ""
+msgstr "Najvišja hitrost (km/h)"
 
 #: ../lang/presets.java:24 ../lang/presets.java:41 ../lang/presets.java:60
 #: ../lang/presets.java:78 ../lang/presets.java:99 ../lang/presets.java:116
@@ -5007,7 +5015,7 @@ msgstr ""
 #: ../lang/presets.java:376 ../lang/presets.java:395 ../lang/presets.java:414
 #: ../lang/presets.java:432 ../lang/presets.java:588 ../lang/presets.java:847
 msgid "Oneway"
-msgstr ""
+msgstr "Enosmerna"
 
 #: ../lang/presets.java:25 ../lang/presets.java:42 ../lang/presets.java:61
 #: ../lang/presets.java:79 ../lang/presets.java:100 ../lang/presets.java:117
@@ -5020,7 +5028,7 @@ msgstr ""
 #: ../lang/presets.java:516 ../lang/presets.java:537 ../lang/presets.java:558
 #: ../lang/presets.java:589 ../lang/presets.java:848
 msgid "Bridge"
-msgstr ""
+msgstr "Most"
 
 #: ../lang/presets.java:26 ../lang/presets.java:43 ../lang/presets.java:62
 #: ../lang/presets.java:80 ../lang/presets.java:101 ../lang/presets.java:118
@@ -5033,7 +5041,7 @@ msgstr ""
 #: ../lang/presets.java:538 ../lang/presets.java:559 ../lang/presets.java:590
 #: ../lang/presets.java:849
 msgid "Tunnel"
-msgstr ""
+msgstr "Predor"
 
 #: ../lang/presets.java:27 ../lang/presets.java:44 ../lang/presets.java:63
 #: ../lang/presets.java:81 ../lang/presets.java:102 ../lang/presets.java:119
@@ -5046,7 +5054,7 @@ msgstr ""
 #: ../lang/presets.java:539 ../lang/presets.java:560 ../lang/presets.java:591
 #: ../lang/presets.java:850
 msgid "Cutting"
-msgstr ""
+msgstr "Usek"
 
 #: ../lang/presets.java:28 ../lang/presets.java:45 ../lang/presets.java:64
 #: ../lang/presets.java:82 ../lang/presets.java:103 ../lang/presets.java:120
@@ -5059,7 +5067,7 @@ msgstr ""
 #: ../lang/presets.java:540 ../lang/presets.java:561 ../lang/presets.java:592
 #: ../lang/presets.java:851
 msgid "Embankment"
-msgstr ""
+msgstr "Nasip"
 
 #: ../lang/presets.java:31
 msgid "Motorway Link"
@@ -5071,51 +5079,51 @@ msgstr "Uredi avtocestni priključek"
 
 #: ../lang/presets.java:48
 msgid "Trunk"
-msgstr ""
+msgstr "Hitra cesta"
 
 #: ../lang/presets.java:49
 msgid "Edit a Trunk"
-msgstr ""
+msgstr "Uredi hitro cesto"
 
 #: ../lang/presets.java:67
 msgid "Trunk Link"
-msgstr ""
+msgstr "Priključek hitre ceste"
 
 #: ../lang/presets.java:68
 msgid "Edit a Trunk Link"
-msgstr ""
+msgstr "Uredi priključek hitre ceste"
 
 #: ../lang/presets.java:87
 msgid "Primary"
-msgstr ""
+msgstr "Glavna cesta (1.,2. reda)"
 
 #: ../lang/presets.java:88
 msgid "Edit a Primary Road"
-msgstr ""
+msgstr "Uredi glavna cesta (1.,2. reda)"
 
 #: ../lang/presets.java:106
 msgid "Primary Link"
-msgstr ""
+msgstr "Priključek glavne ceste"
 
 #: ../lang/presets.java:107
 msgid "Edit a Primary Link"
-msgstr ""
+msgstr "Uredi priključek glavne ceste"
 
 #: ../lang/presets.java:123
 msgid "Secondary"
-msgstr ""
+msgstr "Regionalna cesta (1.,2. reda)"
 
 #: ../lang/presets.java:124
 msgid "Edit a Secondary Road"
-msgstr ""
+msgstr "Uredi regionalno cesto (1.,2. reda)"
 
 #: ../lang/presets.java:142
 msgid "Tertiary"
-msgstr ""
+msgstr "Regionalna cesta (3. reda, turistična)"
 
 #: ../lang/presets.java:143
 msgid "Edit a Tertiary Road"
-msgstr ""
+msgstr "Uredi regionalno cesto (3. reda, turistična)"
 
 #: ../lang/presets.java:160
 msgid "Unclassified"
@@ -5136,7 +5144,7 @@ msgstr ""
 #: ../lang/presets.java:657 ../lang/presets.java:669 ../lang/presets.java:855
 #: ../lang/presets.java:1115 ../lang/presets.java:1158
 msgid "Width (metres)"
-msgstr ""
+msgstr "Širina (metrov)"
 
 #: ../lang/presets.java:178
 msgid "Residential"
@@ -5153,7 +5161,7 @@ msgstr ""
 #: ../lang/presets.java:499 ../lang/presets.java:520 ../lang/presets.java:541
 #: ../lang/presets.java:562 ../lang/presets.java:594 ../lang/presets.java:853
 msgid "Surface"
-msgstr ""
+msgstr "Površina"
 
 #: ../lang/presets.java:192 ../lang/presets.java:210 ../lang/presets.java:228
 #: ../lang/presets.java:242 ../lang/presets.java:341 ../lang/presets.java:363
@@ -5206,19 +5214,19 @@ msgstr ""
 
 #: ../lang/presets.java:247
 msgid "Road (Unknown Type)"
-msgstr ""
+msgstr "Cesta (neznana kategorija)"
 
 #: ../lang/presets.java:248
 msgid "Edit a Road of unknown type"
-msgstr ""
+msgstr "Uredi cesto neznane kategorije"
 
 #: ../lang/presets.java:268
 msgid "Road Restrictions"
-msgstr ""
+msgstr "Cestne omejitve"
 
 #: ../lang/presets.java:269
 msgid "Edit Road Restrictions"
-msgstr ""
+msgstr "Uredi cestne omejitve"
 
 #: ../lang/presets.java:271
 msgid "Toll"
@@ -5226,13 +5234,13 @@ msgstr "Cestnina"
 
 #: ../lang/presets.java:272
 msgid "No exit (cul-de-sac)"
-msgstr ""
+msgstr "Brez izhoda (slepa ulica)"
 
 #: ../lang/presets.java:273 ../lang/presets.java:459 ../lang/presets.java:480
 #: ../lang/presets.java:501 ../lang/presets.java:522 ../lang/presets.java:543
 #: ../lang/presets.java:564
 msgid "Access"
-msgstr ""
+msgstr "Dostop"
 
 #: ../lang/presets.java:273 ../lang/presets.java:274 ../lang/presets.java:275
 #: ../lang/presets.java:276 ../lang/presets.java:277 ../lang/presets.java:278
@@ -5377,7 +5385,7 @@ msgstr ""
 
 #: ../lang/presets.java:285
 msgid "Min. speed (km/h)"
-msgstr ""
+msgstr "Najnižja hitrost (km/h)"
 
 #: ../lang/presets.java:286 ../lang/presets.java:321
 msgid "Max. weight (tonnes)"
@@ -5389,7 +5397,7 @@ msgstr ""
 
 #: ../lang/presets.java:288
 msgid "Max. Width (metres)"
-msgstr ""
+msgstr "Omejena širina (m)"
 
 #: ../lang/presets.java:289
 msgid "Max. Length (metres)"
@@ -5419,7 +5427,7 @@ msgstr ""
 
 #: ../lang/presets.java:296
 msgid "trunk"
-msgstr ""
+msgstr "hitra cesta"
 
 #: ../lang/presets.java:296
 msgid "trunk_link"
@@ -5427,7 +5435,7 @@ msgstr ""
 
 #: ../lang/presets.java:296
 msgid "primary"
-msgstr ""
+msgstr "glavna"
 
 #: ../lang/presets.java:296
 msgid "primary_link"
@@ -5435,11 +5443,11 @@ msgstr ""
 
 #: ../lang/presets.java:296
 msgid "secondary"
-msgstr ""
+msgstr "regionalna"
 
 #: ../lang/presets.java:296
 msgid "tertiary"
-msgstr ""
+msgstr "regionalna (turistična)"
 
 #: ../lang/presets.java:296
 msgid "unclassified"
@@ -5467,7 +5475,7 @@ msgstr ""
 
 #: ../lang/presets.java:312
 msgid "Edit a Bridge"
-msgstr ""
+msgstr "Uredi most"
 
 #: ../lang/presets.java:326
 msgid "Ways"
@@ -5499,19 +5507,19 @@ msgstr ""
 
 #: ../lang/presets.java:368
 msgid "Cycleway"
-msgstr ""
+msgstr "Kolesarska steza"
 
 #: ../lang/presets.java:369
 msgid "Edit a Cycleway"
-msgstr ""
+msgstr "Uredi kolesarsko stezo"
 
 #: ../lang/presets.java:387
 msgid "Footway"
-msgstr ""
+msgstr "Pešpot"
 
 #: ../lang/presets.java:388
 msgid "Edit a Footway"
-msgstr ""
+msgstr "Uredi pešpot"
 
 #: ../lang/presets.java:406
 msgid "Pedestrian"
@@ -5523,11 +5531,11 @@ msgstr ""
 
 #: ../lang/presets.java:424
 msgid "Steps"
-msgstr ""
+msgstr "Stopnice"
 
 #: ../lang/presets.java:425
 msgid "Edit a flight of Steps"
-msgstr ""
+msgstr "Uredi stopnice"
 
 #: ../lang/presets.java:445
 msgid "Track"
@@ -5599,11 +5607,11 @@ msgstr ""
 
 #: ../lang/presets.java:572
 msgid "Path"
-msgstr ""
+msgstr "Steza"
 
 #: ../lang/presets.java:573
 msgid "Edit Path"
-msgstr ""
+msgstr "Uredi stezo"
 
 #: ../lang/presets.java:579
 msgid "Snowmobile"
@@ -6015,7 +6023,7 @@ msgstr ""
 
 #: ../lang/presets.java:997
 msgid "Aerialway"
-msgstr ""
+msgstr "Žičnica"
 
 #: ../lang/presets.java:998
 msgid "Chair Lift"
@@ -6283,11 +6291,11 @@ msgstr ""
 
 #: ../lang/presets.java:1240
 msgid "Pub"
-msgstr ""
+msgstr "Pivnica"
 
 #: ../lang/presets.java:1241
 msgid "Edit Pub"
-msgstr ""
+msgstr "Uredi pivnico"
 
 #: ../lang/presets.java:1246
 msgid "Biergarten"
@@ -6523,11 +6531,11 @@ msgstr ""
 
 #: ../lang/presets.java:1418
 msgid "Stadium"
-msgstr ""
+msgstr "Stadion"
 
 #: ../lang/presets.java:1419
 msgid "Edit Stadium"
-msgstr ""
+msgstr "Uredi stadion"
 
 #: ../lang/presets.java:1423 ../lang/presets.java:1433
 #: ../lang/presets.java:1443 ../lang/presets.java:1453
@@ -6667,7 +6675,7 @@ msgstr ""
 #: ../lang/presets.java:1425 ../lang/presets.java:1435
 #: ../lang/presets.java:1445 ../lang/presets.java:1455
 msgid "shooting"
-msgstr ""
+msgstr "strelišče"
 
 #: ../lang/presets.java:1425 ../lang/presets.java:1435
 #: ../lang/presets.java:1445 ../lang/presets.java:1455
@@ -6836,7 +6844,7 @@ msgstr ""
 #: ../lang/presets.java:1689 ../lang/presets.java:1696
 #: ../lang/presets.java:1703 ../lang/presets.java:1710
 msgid "stadium"
-msgstr ""
+msgstr "stadion"
 
 #: ../lang/presets.java:1479
 msgid "10pin"
@@ -6960,11 +6968,11 @@ msgstr "Uredi smučanje"
 
 #: ../lang/presets.java:1584
 msgid "Shooting"
-msgstr ""
+msgstr "Strelišče"
 
 #: ../lang/presets.java:1585
 msgid "Edit Shooting"
-msgstr ""
+msgstr "Uredi strelišče"
 
 #: ../lang/presets.java:1593
 msgid "Sport (Ball)"
@@ -7977,11 +7985,11 @@ msgstr "Uredi vinograd"
 
 #: ../lang/presets.java:2180
 msgid "Quarry"
-msgstr ""
+msgstr "Kamnolom"
 
 #: ../lang/presets.java:2181
 msgid "Edit Quarry Landuse"
-msgstr ""
+msgstr "Uredi kamnolom"
 
 #: ../lang/presets.java:2187
 msgid "Landfill"
@@ -8009,11 +8017,11 @@ msgstr ""
 
 #: ../lang/presets.java:2208
 msgid "Forest"
-msgstr ""
+msgstr "Gozd"
 
 #: ../lang/presets.java:2209
 msgid "Edit Forest Landuse"
-msgstr ""
+msgstr "Uredi gozdnata tla"
 
 #: ../lang/presets.java:2213 ../lang/presets.java:2397
 msgid "coniferous"
@@ -8153,11 +8161,11 @@ msgstr "Uredi vodo"
 
 #: ../lang/presets.java:2324
 msgid "Land"
-msgstr ""
+msgstr "Kopno"
 
 #: ../lang/presets.java:2325
 msgid "Edit Land"
-msgstr ""
+msgstr "Uredi kopno"
 
 #: ../lang/presets.java:2330
 msgid "Tree"
@@ -8177,11 +8185,11 @@ msgstr ""
 
 #: ../lang/presets.java:2339
 msgid "Spring"
-msgstr ""
+msgstr "Izvir"
 
 #: ../lang/presets.java:2340
 msgid "Edit a Spring"
-msgstr ""
+msgstr "Uredi izvir"
 
 #: ../lang/presets.java:2345
 msgid "Peak"
@@ -8317,11 +8325,11 @@ msgstr ""
 
 #: ../lang/presets.java:2444
 msgid "Tower"
-msgstr ""
+msgstr "Stolp"
 
 #: ../lang/presets.java:2445
 msgid "Edit Tower"
-msgstr ""
+msgstr "Uredi stolp"
 
 #: ../lang/presets.java:2450
 msgid "Water Tower"
@@ -8333,11 +8341,11 @@ msgstr "Uredi vodni stolp"
 
 #: ../lang/presets.java:2456
 msgid "Power Tower"
-msgstr ""
+msgstr "Steber daljnovoda"
 
 #: ../lang/presets.java:2457
 msgid "Edit Power Tower"
-msgstr ""
+msgstr "Uredi steber daljnovoda"
 
 #: ../lang/presets.java:2461
 msgid "Power Generator"
@@ -8405,11 +8413,11 @@ msgstr "Uredi pomol"
 
 #: ../lang/presets.java:2498
 msgid "Pipeline"
-msgstr ""
+msgstr "Cevovod"
 
 #: ../lang/presets.java:2499
 msgid "Edit Pipeline"
-msgstr ""
+msgstr "Uredi cevovod"
 
 #: ../lang/presets.java:2504
 msgid "Wastewater Plant"
@@ -8421,11 +8429,11 @@ msgstr "Uredi čistilno napravo"
 
 #: ../lang/presets.java:2510
 msgid "Crane"
-msgstr ""
+msgstr "Žerjav"
 
 #: ../lang/presets.java:2511
 msgid "Edit Crane"
-msgstr ""
+msgstr "Uredi žerjav"
 
 #: ../lang/presets.java:2516
 msgid "Beacon"
@@ -8437,19 +8445,19 @@ msgstr ""
 
 #: ../lang/presets.java:2522
 msgid "Survey Point"
-msgstr ""
+msgstr "Geodetska točka"
 
 #: ../lang/presets.java:2523
 msgid "Edit Survey Point"
-msgstr ""
+msgstr "Uredi geodetsko točko"
 
 #: ../lang/presets.java:2528
 msgid "Surveillance"
-msgstr ""
+msgstr "Video nadzor"
 
 #: ../lang/presets.java:2529
 msgid "Edit Surveillance Camera"
-msgstr ""
+msgstr "Uredi video nadzorno kamero"
 
 #: ../lang/specialmessages.java:6
 msgid ""
@@ -8561,7 +8569,7 @@ msgstr ""
 
 #: ../livegps/livegps/LiveGpsDialog.java:55
 msgid "Speed"
-msgstr ""
+msgstr "Hitrost"
 
 #: ../livegps/livegps/LiveGpsDialog.java:57
 msgid "Course"
@@ -8578,7 +8586,7 @@ msgstr ""
 
 #: ../livegps/livegps/LiveGpsPlugin.java:49
 msgid "Center Once"
-msgstr ""
+msgstr "Centriraj zdaj"
 
 #: ../livegps/livegps/LiveGpsPlugin.java:49
 msgid "Center the LiveGPS layer to current position."
@@ -8586,7 +8594,7 @@ msgstr "Centiraj plast LiveGPS na trenuten položaj."
 
 #: ../livegps/livegps/LiveGpsPlugin.java:61
 msgid "Auto-Center"
-msgstr ""
+msgstr "Samodejno centriraj"
 
 #: ../livegps/livegps/LiveGpsPlugin.java:61
 msgid "Continuously center the LiveGPS layer to current position."
@@ -8598,7 +8606,7 @@ msgstr "Izmerjene vrednosti"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:65
 msgid "Open the measurement window."
-msgstr ""
+msgstr "Odpri okno za merjenje"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:69
 msgid "Reset"
@@ -8610,7 +8618,7 @@ msgstr ""
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:80
 msgid "Path Length"
-msgstr ""
+msgstr "Dolžina poti"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:85
 msgid "Selection Length"
@@ -8622,15 +8630,15 @@ msgstr "Izbrana površina"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:95
 msgid "Angle"
-msgstr ""
+msgstr "Kot"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:96
 msgid "Angle between two selected Nodes"
-msgstr ""
+msgstr "Kot med dvema izbranima vozliščema"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:68
 msgid "MeasurementLayer layer"
-msgstr ""
+msgstr "Plast za merjenje"
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:270
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:315
@@ -8651,7 +8659,7 @@ msgstr ""
 
 #: ../measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementPlugin.java:20
 msgid "measurement mode"
-msgstr ""
+msgstr "merilni način"
 
 #: ../namefinder/namefinder/PlaceSelection.java:120
 msgid "NullPointerException. Possible some missing tags."
@@ -8672,7 +8680,7 @@ msgstr "Vnesite ime kraja, ki ga želite poiskati:"
 #: ../namefinder/namefinder/PlaceSelection.java:237
 #: ../namefinder/namefinder/PlaceSelection.java:243
 msgid "near"
-msgstr ""
+msgstr "blizu"
 
 #: ../namefinder/namefinder/PlaceSelection.java:238
 #: ../namefinder/namefinder/PlaceSelection.java:244
@@ -8861,7 +8869,7 @@ msgstr "Naloži vse ploščice"
 
 #: ../slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:328
 msgid "image not loaded"
-msgstr ""
+msgstr "slika ni naložena"
 
 #: ../slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:52
 msgid "Tile Sources"
@@ -8971,7 +8979,7 @@ msgstr ""
 
 #: ../utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:31
 msgid "Simplify Way"
-msgstr ""
+msgstr "Poenostavi pot"
 
 #: ../utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:31
 msgid "Delete unnecessary nodes from a way."
@@ -8990,7 +8998,7 @@ msgstr ""
 
 #: ../utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:80
 msgid "Please select at least one way to simplify."
-msgstr ""
+msgstr "Izberite vsaj eno pot, ki jo želite poenostaviti."
 
 #: ../utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:84
 #, java-format
@@ -9005,7 +9013,7 @@ msgstr "Ali ste prepričani?"
 #: ../utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:131
 #, java-format
 msgid "Simplify Way (remove {0} nodes)"
-msgstr ""
+msgstr "Poenostavi pot (odstranjeno {0} vozlišč)"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:35
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:91
@@ -9173,7 +9181,7 @@ msgstr ""
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:103
 msgid "Overlapping areas"
-msgstr ""
+msgstr "Prekrivajoče površine"
 
 #: ../validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:108
 msgid "Overlapping highways (with area)"

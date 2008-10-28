@@ -1,0 +1,92 @@
+<project name="JOSM i18n" default="build" basedir=".">
+
+  <!-- compilation properties -->
+  <property name="josm.build.dir"	    value="../core"/>
+  <property name="josm.presets"		    value="../core/presets/presets.xml"/>
+  <property name="plugin.dir"	        value="../plugins"/>  
+  <property name="validator.tagfile"	value="${plugin.dir}/validator/tagchecker.cfg"/>  
+  <property name="i18n.build.dir"	    value="build"/>
+  <property name="i18n.dist.dir"	    value="../dist"/>
+  <property name="i18n.install.dir"   value="${josm.build.dir}/lib"/>
+  <property name="i18n.name"		      value="josm-translation"/>
+  <property name="i18n.jar"		        value="${i18n.dist.dir}/${i18n.name}.jar"/>
+  
+  <property name="ant.build.javac.target" value="1.5"/>
+
+  <target name="dist" depends="install">  
+  </target>  
+
+  <target name="josm.pot">
+    <exec executable="perl" output="presets.java">
+      <arg line="convpreset.pl ${josm.presets}"/>
+    </exec>
+    <exec executable="perl" output="validator.java">
+      <arg line="convvalidator.pl ${validator.tagfile}"/>
+    </exec>
+
+    <exec executable="find" output="java_sourcefiles.txt" osfamily="unix">
+      <arg value="${josm.build.dir}/src" />
+      <arg value="${plugin.dir}"/>
+      <arg value="."/>
+      <arg value="-name '*.java'"/>
+    </exec>
+
+    <exec executable="xgettext">
+      <arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava --from-code=UTF-8 -opo/josm.pot -fjava_sourcefiles.txt"/>
+    </exec>
+  </target>
+  
+  <target name="build" depends="josm.pot">
+    <ant target="build-lang"><property name="language" value="de"/></ant>
+    <ant target="build-lang"><property name="language" value="en_GB"/></ant>
+    <ant target="build-lang"><property name="language" value="fr"/></ant>
+    <ant target="build-lang"><property name="language" value="it"/></ant>
+    <ant target="build-lang"><property name="language" value="pl"/></ant>
+    <ant target="build-lang"><property name="language" value="ro"/></ant>
+    <ant target="build-lang"><property name="language" value="ru"/></ant>
+    <ant target="build-lang"><property name="language" value="sl"/></ant>
+    
+    <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
+    
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="po"/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
+    
+    <jar destfile="${i18n.jar}" basedir="build">
+      <manifest>
+        <attribute name="Extension-Name" value="JOSM Translation into various languages" />
+      	<attribute name="Translation-Version" value="${version.entry.commit.revision}"/>
+      	<attribute name="Translation-Date" value="${version.entry.commit.date}"/>
+      </manifest>
+    </jar>    
+
+  </target>
+  
+  <target name="build-lang">
+    <exec executable="msgmerge">
+      <arg line="-U po/${language}.po po/josm.pot"/>
+    </exec>
+   
+   <exec executable="msgfmt">
+      <arg line="--verbose --java2 -dbuild -rorg.openstreetmap.josm.i18n.Translation -l${language} po/${language}.po"/>
+   </exec>    
+  </target>
+ 
+  <target name="install" depends="build">
+    <copy file="${i18n.jar}" todir="${i18n.install.dir}" />
+  </target>
+ 
+  <target name="clean">
+    <delete dir="${i18n.build.dir}" />
+    <delete file="po/josm.pot"/>
+    <delete file="presets.java"/>
+    <delete file="validator.java"/>   
+    <delete file="java_sourcefiles.txt"/>
+  </target>
+
+</project>

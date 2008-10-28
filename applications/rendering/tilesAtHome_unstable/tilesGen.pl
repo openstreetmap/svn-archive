@@ -164,7 +164,8 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
 
     print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
 
-    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
+    {
         $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
         $SVG::Rasterize::object->engine()->host('localhost');
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
@@ -200,7 +201,10 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
         } otherwise {
             print "! Could not determine your Inkscape version\n";
         };
-
+        print "* Take care to manually backup your inkscape user preferences\n"; 
+        print "  if you have knowingly changed them. \n";
+        print "  Some tilesets will cause inkscape to clobber that file!\n";
+#        print "  ~/.inkscape/preferences.xml\n";
     }
 }
 

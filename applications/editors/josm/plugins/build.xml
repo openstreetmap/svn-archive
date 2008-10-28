@@ -18,7 +18,6 @@
     <ant	dir="duplicateway"	antfile="build.xml"	target="dist"/>
     <ant	dir="globalsat"		antfile="build.xml"	target="dist"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
-    <ant	dir="lang"		antfile="build.xml"	target="dist"/>
     <ant	dir="livegps"		antfile="build.xml"	target="dist"/>
     <ant	dir="measurement"	antfile="build.xml"	target="dist"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="dist"/>

@@ -1091,8 +1091,9 @@ sub RenderSVG
                     my $cfg = $self->{inkscape_autobackup}{cfgfile};
                     my $bak = $self->{inkscape_autobackup}{backupfile};
                     warn "   AutoResetInkscapePrefs set, trying to reset $cfg\n";
-                    unlink $cfg if( -f $cfg );
-                    $corrupt = 0 if( rename($bak, $cfg) ); # how do we deal with a defect backup?
+                    unlink $cfg if( -f $cfg ); 
+                    # FIXME: check backup is correct before putting back, or check preferences OK before backup.
+                    #$corrupt = 0 if( rename($bak, $cfg) ); # how do we deal with a defect backup?
                 }
             }
 

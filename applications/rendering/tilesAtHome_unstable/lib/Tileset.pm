@@ -84,6 +84,7 @@ sub new
     # as rasterizer.
     # This backup copy is restored if Inkscape crashes and mentions
     # preferences.xml on STDERR
+    # FIXME: this must check the integrity of the preference file first, otherwise we backup a broken config, which will later on be restored, leading to a failure loop
     if( $Config->get("AutoResetInkscapePrefs") == 1 &&
         $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
 
@@ -1091,7 +1092,7 @@ sub RenderSVG
                     my $bak = $self->{inkscape_autobackup}{backupfile};
                     warn "   AutoResetInkscapePrefs set, trying to reset $cfg\n";
                     unlink $cfg if( -f $cfg );
-                    $corrupt = 0 if( rename($bak, $cfg) );
+                    $corrupt = 0 if( rename($bak, $cfg) ); # how do we deal with a defect backup?
                 }
             }
 

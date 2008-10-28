@@ -235,7 +235,7 @@ sub upload
                 ::statusMessage("  Error uploading $FileName to $URL:",1,0);
                 ::statusMessage("  ".$res->status_line,1,0);
                 ::addFault('upload');
-                throw UploadError "Error uploading $FileName to $URL: $res->status_line", "ServerError"; # hard fail
+                throw UploadError "Error uploading $FileName to $URL: $res->status_line", "ServerError"; # hard fail, this is NOT fatal, it just means the server rejected the upload despite giving the "go" in go_nogo
             }
             else
             {

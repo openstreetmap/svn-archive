@@ -1093,7 +1093,7 @@ sub RenderSVG
                     warn "   AutoResetInkscapePrefs set, trying to reset $cfg\n";
                     unlink $cfg if( -f $cfg ); 
                     # FIXME: check backup is correct before putting back, or check preferences OK before backup.
-                    #$corrupt = 0 if( rename($bak, $cfg) ); # how do we deal with a defect backup?
+                    $corrupt = 0; #if( rename($bak, $cfg) ); # how do we deal with a defect backup?
                 }
             }
 

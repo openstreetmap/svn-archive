@@ -2,17 +2,17 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.plugins.validator.Test;
-import org.openstreetmap.josm.plugins.validator.TestError;
-import org.openstreetmap.josm.plugins.validator.Severity;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import java.util.Arrays;
+import java.util.Collections;
+
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
-import org.openstreetmap.josm.command.ChangeCommand;
-import java.util.Collections;
-import java.util.Arrays;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.validator.Severity;
+import org.openstreetmap.josm.plugins.validator.Test;
+import org.openstreetmap.josm.plugins.validator.TestError;
 
 public class DuplicatedWayNodes extends Test {
 	protected static int DUPLICATE_WAY_NODE = 501;

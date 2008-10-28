@@ -1,7 +1,5 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +8,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -77,7 +78,7 @@ public class Test implements Visitor
 	 * @param plugin The plugin
 	 * @throws Exception When cannot initialize the test
 	 */ 
-	public static void initialize(@SuppressWarnings("unused") OSMValidatorPlugin plugin) throws Exception {}
+	public static void initialize(OSMValidatorPlugin plugin) throws Exception {}
 	
 	/**
 	 * Notification of the start of the test. The tester can initialize the
@@ -137,7 +138,7 @@ public class Test implements Visitor
 	 * Allow the tester to manage its own preferences 
 	 * @param testPanel The panel to add any preferences component
 	 */
-	public void addGui(@SuppressWarnings("unused") JPanel testPanel) 
+	public void addGui(JPanel testPanel) 
 	{
 		checkEnabled = new JCheckBox(name, enabled);
 		checkEnabled.setToolTipText(description);
@@ -165,7 +166,7 @@ public class Test implements Visitor
 	 * @param testError
 	 * @return The command to fix the error
 	 */
-	public Command fixError(@SuppressWarnings("unused") TestError testError)
+	public Command fixError(TestError testError)
 	{
 		return null;
 	}
@@ -176,7 +177,7 @@ public class Test implements Visitor
 	 * @param testError The error to check if can be fixed
 	 * @return true if the error can be fixed
 	 */
-	public boolean isFixable(@SuppressWarnings("unused") TestError testError)
+	public boolean isFixable(TestError testError)
 	{
 		return false;
 	}

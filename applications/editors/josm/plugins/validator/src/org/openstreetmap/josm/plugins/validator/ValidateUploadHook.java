@@ -3,8 +3,8 @@ package org.openstreetmap.josm.plugins.validator;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
 import org.openstreetmap.josm.tools.GBC;
@@ -109,7 +110,7 @@ public class ValidateUploadHook implements UploadHook
 		{
 			plugin.validationDialog.tree.setErrors(errors);
 			plugin.validationDialog.setVisible(true);
-			Main.ds.fireSelectionChanged(Main.ds.getSelected());
+			DataSet.fireSelectionChanged(Main.ds.getSelected());
 		}
 		return res == JOptionPane.YES_OPTION;
 	}

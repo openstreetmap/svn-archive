@@ -1,21 +1,17 @@
 package org.openstreetmap.josm.plugins.validator.util;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
-import java.util.*;
-
-import javax.swing.JButton;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.plugins.*;
-import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
-import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * Utility class

@@ -3,17 +3,15 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.IllegalStateException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,9 +30,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -46,19 +45,15 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.openstreetmap.josm.io.MirroredInputStream;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
-import org.openstreetmap.josm.plugins.validator.tests.ChangePropertyKeyCommand;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
-import org.openstreetmap.josm.plugins.validator.util.Util;
 import org.openstreetmap.josm.plugins.validator.util.Entities;
+import org.openstreetmap.josm.plugins.validator.util.Util;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.XmlObjectParser;
-import org.xml.sax.SAXException;
 
 /**
  * Check for mispelled or wrong properties

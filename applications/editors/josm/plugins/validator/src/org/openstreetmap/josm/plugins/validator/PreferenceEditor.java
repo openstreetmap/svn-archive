@@ -4,10 +4,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
 import java.util.Collection;
-import java.util.Map;
-import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
@@ -42,6 +44,12 @@ public class PreferenceEditor implements PreferenceSetting
 
 	/** The preferences key for enabled tests before upload*/
 	public static final String PREF_TESTS_BEFORE_UPLOAD = PREFIX + ".testsBeforeUpload";
+
+	/**
+	 * The preferences key for enabling the permanent filtering
+	 * of the displayed errors in the tree regarding the current selection 
+	 */
+    public static final String PREF_FILTER_BY_SELECTION = PREFIX + ".selectionFilter";
 
 	private JCheckBox prefUseIgnore;
 	private JCheckBox prefUseLayer;

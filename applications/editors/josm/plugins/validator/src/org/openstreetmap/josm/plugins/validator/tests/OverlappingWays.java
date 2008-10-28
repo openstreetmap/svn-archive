@@ -2,19 +2,21 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
+import org.openstreetmap.josm.tools.Pair;
 
 /**
  * Tests if there are overlapping ways

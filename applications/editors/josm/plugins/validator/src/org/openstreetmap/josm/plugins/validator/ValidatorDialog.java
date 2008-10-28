@@ -27,6 +27,7 @@ import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
@@ -42,7 +43,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  * @author frsantos
  */
-public class ValidatorDialog extends ToggleDialog implements ActionListener {
+public class ValidatorDialog extends ToggleDialog implements ActionListener, SelectionChangedListener {
     private OSMValidatorPlugin plugin;
 
     /** Serializable ID */
@@ -107,6 +108,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
             ignoreButton = null;
         }
         add(buttonPanel, BorderLayout.SOUTH);
+        DataSet.selListeners.add(this);
     }
 
     @Override
@@ -426,5 +428,14 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener {
             visit(ws.way.nodes.get(ws.lowerIndex));
             visit(ws.way.nodes.get(ws.lowerIndex + 1));
         }
+    }
+
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        if (!Main.pref.getBoolean(PreferenceEditor.PREF_FILTER_BY_SELECTION, false))
+            return;
+        if (newSelection == null || newSelection.size() == 0)
+            tree.setFilter(null);
+        HashSet<OsmPrimitive> filter = new HashSet<OsmPrimitive>(newSelection);
+        tree.setFilter(filter);
     }
 }

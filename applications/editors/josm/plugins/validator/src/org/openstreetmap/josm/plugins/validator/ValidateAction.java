@@ -82,7 +82,7 @@ public class ValidateAction extends JosmAction {
                 selection = lastSelection;
         }
 
-        List<TestError> errors = new ArrayList<TestError>();
+        List<TestError> errors = new ArrayList<TestError>(200);
         for (Test test : tests) {
             test.setPartialSelection(lastSelection != null);
             test.startTest();

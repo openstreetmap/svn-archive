@@ -4,11 +4,19 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.plugins.validator.*;
-import org.openstreetmap.josm.plugins.validator.util.Bag;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.plugins.validator.Severity;
+import org.openstreetmap.josm.plugins.validator.Test;
+import org.openstreetmap.josm.plugins.validator.TestError;
 import org.openstreetmap.josm.plugins.validator.util.Util;
 
 /**

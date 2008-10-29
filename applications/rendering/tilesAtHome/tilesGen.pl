@@ -768,7 +768,7 @@ sub UpdateClient #
     chomp $svn_status;
     # $svn_status =~ s/^M.*\n?//mg; # FFS use a future date in version.txt instead of this line.
 
-    if (1 || $svn_status eq '')
+    if ($svn_status eq '')
     {
         my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);

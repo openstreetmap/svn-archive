@@ -99,7 +99,7 @@ if ($UploadMode or $LoopMode)
 }
 elsif ($RenderMode and ClientModified())
 {
-    statusMessage("! tilesGen.pl differs from svn repository. DO NOT UPLOAD to t@h server.",1,0);
+    statusMessage("! tilesGen.pl differs from svn repository. DO NOT UPLOAD to t\@h server.",1,0);
 }
 
 # Get version number from version-control system, as integer
@@ -778,8 +778,6 @@ sub UpdateClient #
 
     if (ClientModified())
     {
-        statusMessage("svn status did not come back clean, check your installation",1,0);
-        print STDERR $svn_status;
         return cleanUpAndDie("Auto-update failed","EXIT",1);
     }
     else
@@ -804,7 +802,11 @@ sub ClientModified
 
     chomp $svn_status;
     #$svn_status =~ s/^M.*\n?//mg;  # FFS use a future date in version.txt instead of this line.
-
+    if ($svn_status ne '')
+    {
+        statusMessage("svn status did not come back clean, check your installation",1,0);
+        print STDERR $svn_status;
+    }
     return ($svn_status ne '');
 }
 

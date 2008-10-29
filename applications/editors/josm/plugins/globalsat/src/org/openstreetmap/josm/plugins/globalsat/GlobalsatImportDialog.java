@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JComboBox;
 import javax.swing.ListCellRenderer;
+import javax.swing.JDialog;
 
 import gnu.io.*;
 
@@ -69,6 +70,7 @@ public class GlobalsatImportDialog extends JPanel {
                 public void actionPerformed(java.awt.event.ActionEvent e){
                     Object i = portCombo.getSelectedItem();
                     if(i instanceof CommPortIdentifier){
+                        GlobalsatPlugin.setPortIdent((CommPortIdentifier)i);
                         Main.pref.put("globalsat.portIdentifier", ((CommPortIdentifier)i).getName());
                     }
                 }
@@ -107,6 +109,22 @@ public class GlobalsatImportDialog extends JPanel {
         configBtn.addActionListener(new ActionListener(){
                 public void actionPerformed(java.awt.event.ActionEvent e){
                     System.out.println("configureing the device");
+                    try{
+                        
+                        GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(GlobalsatPlugin.dg100().getConfig());
+                        JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+                        JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
+                        dialog.setOptionPane(pane);
+                        dlg.setVisible(true);
+                        if(((Integer)pane.getValue()) == JOptionPane.OK_OPTION){
+                            GlobalsatPlugin.dg100().setConfig(dialog.getConfig());
+                        }
+                        dlg.dispose();
+
+                    }catch(GlobalsatDg100.ConnectionException ex){
+                        JOptionPane.showMessageDialog(Main.parent, tr("Connection Error.") + " " + ex.toString());
+                    }
+                    System.out.println("configureing the device finised");
                 }
             });
         configBtn.setToolTipText(tr("configure the connected DG100"));
@@ -115,7 +133,7 @@ public class GlobalsatImportDialog extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 1;
-        //        add(configBtn, c);
+        add(configBtn, c);
 
         
         delete = new JCheckBox(tr("delete data after import"));
@@ -140,10 +158,13 @@ public class GlobalsatImportDialog extends JPanel {
                 portCombo.addItem(port);
                 if(sel != null && port.getName() == sel){
                     portCombo.setSelectedItem(port);
+                    GlobalsatPlugin.setPortIdent(port);
                 }
             }
         }
         portCombo.setVisible(true);
+        GlobalsatPlugin.setPortIdent(getPort());
+
     }
 	
     public boolean deleteFilesAfterDownload(){

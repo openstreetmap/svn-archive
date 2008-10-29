@@ -208,7 +208,8 @@ sub getOSMFiles
 	{
 		foreach my $Line (split("\n",get($Url)))
 		{
-			if($Line =~ m{(.*)<a href="(.*).osm.bz2">(.*)</a></td><td align="right">(.*?) *</td>(.*)<td align="right">(.*)})
+			if($Line =~ m{(.*)<a href="(.*).osm.bz2">(.*)</a></td><td align="right">(.*?) *</td>(.*)<td align="right">(.*)}
+			|| $Line =~ m{(.*)<a href="(.*).osm.bz2">(.*)</a>  +(.*? \d\d:\d\d)})
 			{
 				my $Date = $4;
 				my $FileName = $3;

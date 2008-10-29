@@ -49,7 +49,6 @@
     <ant	dir="globalsat"		antfile="build.xml"	target="clean"/>
     <ant	dir="grid"		antfile="build.xml"	target="clean"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="clean"/>
-    <ant	dir="lang"		antfile="build.xml"	target="clean"/>
     <ant	dir="livegps"		antfile="build.xml"	target="clean"/>
     <ant	dir="measurement"	antfile="build.xml"	target="clean"/>
     <ant	dir="namefinder"	antfile="build.xml"	target="clean"/>

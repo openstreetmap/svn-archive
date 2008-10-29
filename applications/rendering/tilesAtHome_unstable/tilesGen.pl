@@ -79,16 +79,27 @@ our $progressJobs = 1;
 our $progressPercent = 0;
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
-if ($UploadMode or $RenderMode) {
-    if (NewClientVersion()) {
+## NOTE: Version Check will not be run in xy mode, but on subsequent upload.
+## this will fix issues with modified, locally used clients that never ever upload
+if ($UploadMode or $LoopMode)
+{
+    if (NewClientVersion())
+    {
         UpdateClient();
-        if ($LoopMode) {
+        if ($LoopMode) 
+        {
             reExec(-1);
-        } else {
+        }
+        else
+        {
             statusMessage("tilesGen.pl has changed. Please restart new version.",1,0);
             exit;
         }
     }
+}
+elsif ($RenderMode and ClientModified())
+{
+    statusMessage("! tilesGen.pl differs from svn repository. DO NOT UPLOAD to t@h server.",1,0);
 }
 
 # Get version number from version-control system, as integer
@@ -764,29 +775,37 @@ sub UpdateClient #
 
     statusMessage("Updating the Client",1,0);
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
-    ## FIXME TODO: Implement and check output from svn status, too.
 
-    $Cmd = sprintf("\"%s\" %s",
+    if (ClientModified())
+    {
+        statusMessage("svn status did not come back clean, check your installation",1,0);
+        print STDERR $svn_status;
+        return cleanUpAndDie("Auto-update failed","EXIT",1);
+    }
+    else
+    {
+        my $versionfile = "version.txt";
+        DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
+        return 1;
+    }
+}
+
+#-----------------------------------------------------------------------------
+# Checks svn status for local code modifications
+# returns 1 if such modifications exist
+#-----------------------------------------------------------------------------
+sub ClientModified
+{
+    my $Cmd = sprintf("\"%s\" %s",
         $Config->get("Subversion"),
         "status -q --ignore-externals");
 
     my $svn_status = `$Cmd`;
 
     chomp $svn_status;
-    $svn_status =~ s/^M.*\n?//mg;
+    #$svn_status =~ s/^M.*\n?//mg;  # FFS use a future date in version.txt instead of this line.
 
-    if (1 || $svn_status eq '')
-    {
-        my $versionfile = "version.txt";
-        DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
-        return 1;
-    }
-    else
-    {
-        statusMessage("svn status did not come back clean, check your installation",1,0);
-        print STDERR $svn_status;
-        return cleanUpAndDie("Auto-update failed","EXIT",1);
-    }
+    return ($svn_status ne '');
 }
 
 sub NewClientVersion 

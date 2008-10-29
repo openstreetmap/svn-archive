@@ -26,16 +26,25 @@ import org.openstreetmap.josm.data.gpx.GpxData;
 import gnu.io.*;
 
 public class GlobalsatPlugin extends Plugin {
+    private static GlobalsatDg100 device = null;
+    public static GlobalsatDg100 dg100(){
+        return device;
+    }
+
+    public static void setPortIdent(CommPortIdentifier port){
+        if(device != null){
+            device.disconnect();
+        }
+        device = new GlobalsatDg100(port);
+    }
 
     private static class ImportTask extends PleaseWaitRunnable {
         public GpxData data;
-        private GlobalsatDg100 dg100;
         public Exception eee;
         private boolean deleteAfter;
 
-        public ImportTask(GlobalsatDg100 dg100, boolean delete){
+        public ImportTask(boolean delete){
             super(tr("Importing data from device."));
-            this.dg100 = dg100;
             deleteAfter = delete;
         }
 
@@ -43,17 +52,17 @@ public class GlobalsatPlugin extends Plugin {
             Main.pleaseWaitDlg.progress.setValue(0);
             Main.pleaseWaitDlg.currentAction.setText(tr("Importing data from DG100..."));
             try{
-                data = dg100.readData();
+                data = GlobalsatPlugin.dg100().readData();
             }catch(Exception e){
                 eee = e;
             }
         }
 
         @Override protected void finish() {
-            if(deleteAfter && dg100.isCancelled() == false){
+            if(deleteAfter && GlobalsatPlugin.dg100().isCancelled() == false){
                 Main.pref.put("globalsat.deleteAfterDownload", true);
                 try{
-                    dg100.deleteData();
+                    GlobalsatPlugin.dg100().deleteData();
                 }catch(Exception ex){
                     JOptionPane.showMessageDialog(Main.parent, tr("Error deleting data.") + " " + ex.toString());
                 }
@@ -71,12 +80,12 @@ public class GlobalsatPlugin extends Plugin {
                 System.out.println(eee.getMessage());
                 JOptionPane.showMessageDialog(Main.parent, tr("Connection failed.") + " (" + eee.toString() + ")");
             }
-            dg100.disconnect();
+            GlobalsatPlugin.dg100().disconnect();
         }
 
         @Override protected void cancel() {
-            dg100.cancel();
-            dg100.disconnect();
+            GlobalsatPlugin.dg100().cancel();
+            GlobalsatPlugin.dg100().disconnect();
         }
     }
 
@@ -107,8 +116,8 @@ public class GlobalsatPlugin extends Plugin {
             dialog.setOptionPane(pane);
             dlg.setVisible(true);
             if(((Integer)pane.getValue()) == JOptionPane.OK_OPTION){
-                GlobalsatDg100 dg100 = new GlobalsatDg100(dialog.getPort());
-                ImportTask task = new ImportTask(dg100, dialog.deleteFilesAfterDownload());
+                setPortIdent(dialog.getPort());
+                ImportTask task = new ImportTask(dialog.deleteFilesAfterDownload());
                 Main.worker.execute(task);
             }
             dlg.dispose();

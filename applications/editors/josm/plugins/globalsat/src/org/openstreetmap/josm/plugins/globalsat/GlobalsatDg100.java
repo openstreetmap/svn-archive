@@ -17,6 +17,7 @@ import java.lang.Exception;
 import gnu.io.*;
 
 import org.kaintoch.gps.globalsat.dg100.Response;
+import org.kaintoch.gps.globalsat.dg100.Dg100Config;
 import org.kaintoch.gps.globalsat.dg100.FileInfoRec;
 import org.kaintoch.gps.globalsat.dg100.GpsRec;
 import org.kaintoch.gps.globalsat.dg100.ByteHelper;
@@ -123,6 +124,7 @@ public class GlobalsatDg100
 
     public void cancel(){
         cancelled = true;
+        disconnect();
     }
 
     /**
@@ -257,6 +259,47 @@ public class GlobalsatDg100
         updateCheckSum(buf);
         int len = sendCmd(src, response, -1);
         return Response.parseResponse(response, len);
+    }
+
+    private Response sendCmdGetConfig() throws IOException, UnsupportedCommOperationException
+    {
+        byte[] src = dg100CmdGetConfig;
+        int len = sendCmd(src, response, -1);
+        return Response.parseResponse(response, len);
+    }
+
+    public Dg100Config getConfig() throws ConnectionException{
+        try{
+            if(port == null){
+                connect();
+            }
+            Response response = sendCmdGetConfig();
+            return response.getConfig();
+        }catch(Exception e){
+            throw new ConnectionException(e);
+        }
+    }
+
+
+    private void sendCmdSetConfig(Dg100Config config) throws IOException, UnsupportedCommOperationException
+    {
+        byte[] src = dg100CmdSetConfig;
+        ByteBuffer buf = ByteBuffer.wrap(src);
+        if (config != null){
+            config.write(buf);
+        }
+        updateCheckSum(buf);
+        int len = sendCmd(src, response, -1);
+
+        Response.parseResponse(response, len);
+    }
+
+    public void setConfig(Dg100Config conf) throws ConnectionException{
+        try{
+            sendCmdSetConfig(conf);
+        }catch(Exception e){
+            throw new ConnectionException(e);
+        }
     }
 
     public boolean isCancelled(){

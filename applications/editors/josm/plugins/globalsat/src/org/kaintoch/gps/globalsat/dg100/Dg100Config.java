@@ -155,33 +155,33 @@ public class Dg100Config
 	/**
 	 * @return Returns the disableLogDist.
 	 */
-	public byte getDisableLogDist()
+	public boolean getDisableLogDist()
 	{
-		return disableLogDist;
+		return disableLogDist != 0;
 	}
 
 	/**
 	 * @param disableLogDist The disableLogDist to set.
 	 */
-	public void setDisableLogDist(byte disableLogDist)
+	public void setDisableLogDist(boolean disableLogDist)
 	{
-		this.disableLogDist = disableLogDist;
+            this.disableLogDist = (byte)(disableLogDist ? 1 : 0);
 	}
 
 	/**
 	 * @return Returns the disableLogSpeed.
 	 */
-	public byte getDisableLogSpeed()
+	public boolean getDisableLogSpeed()
 	{
-		return disableLogSpeed;
+		return disableLogSpeed != 0;
 	}
 
 	/**
 	 * @param disableLogSpeed The disableLogSpeed to set.
 	 */
-	public void setDisableLogSpeed(byte disableLogSpeed)
+	public void setDisableLogSpeed(boolean disableLogSpeed)
 	{
-		this.disableLogSpeed = disableLogSpeed;
+            this.disableLogSpeed = (byte)(disableLogSpeed ? 1 : 0);
 	}
 
 	/**

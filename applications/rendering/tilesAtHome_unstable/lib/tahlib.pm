@@ -381,11 +381,11 @@ sub cleanUpAndDie
     {
         my $result = $SVG::Rasterize::object->engine()->stop_agent();
         if( $result == 1 ){
-            statusMessage("Successfully sent stop message to Batik agent", 0, 0);
+            statusMessage("Successfully sent stop message to Batik agent", 1, 0);
         } elsif( $result == 0 ){
-            statusMessage("Could not contact Batik agent", 0, 0);
+            statusMessage("Could not contact Batik agent", 1, 0);
         } else {
-            statusMessage($result, 0, 0);
+            statusMessage($result, 1, 0);
         }
     }
     exit($Severity);

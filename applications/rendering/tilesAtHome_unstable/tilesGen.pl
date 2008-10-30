@@ -766,7 +766,7 @@ sub autotuneComplexity #
 # Gets latest copy of client from svn repository
 # returns 1 on perceived success.
 #-----------------------------------------------------------------------------
-sub UpdateClient # 
+sub UpdateClient
 {
     my $Config = TahConf->getConfig();
     my $Cmd = sprintf("\"%s\" %s",

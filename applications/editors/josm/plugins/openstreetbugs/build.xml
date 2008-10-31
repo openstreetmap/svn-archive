@@ -1,7 +1,7 @@
 <project name="openstreetbugs" default="dist" basedir=".">
 
-	<property file="build.properties"/>
-	
+	<property file="build.properties" />
+
 	<!-- compilation properties -->
 	<property name="josm.build.dir" value="${josm.base.dir}/build" />
 	<property name="josm.home.dir" value="${user.home}/.josm" />
@@ -34,7 +34,7 @@
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images" />
 		</copy>
-		
+
 		<!-- copy language files -->
 		<copy todir="${plugin.build.dir}">
 			<fileset dir="src">
@@ -52,7 +52,7 @@
 				<attribute name="Author" value="Henrik Niehaus" />
 			</manifest>
 		</jar>
-		
+
 		<copy todir="${josm.dist.dir}" file="${plugin.jar}" />
 	</target>
 
@@ -62,13 +62,29 @@
 	</target>
 
 	<target name="install" depends="dist">
+		<condition property="isWindows">
+			<os family="windows" />
+		</condition>
+		<condition property="isUnix">
+			<os family="unix" />
+		</condition>
+		<antcall target="install_win" />
+		<antcall target="install_linux" />
+	</target>
+
+	<target name="install_win" if="isWindows">
+		<property environment="env"/>
+		<copy file="${plugin.jar}" todir="${env.APPDATA}/JOSM/plugins" />
+	</target>
+
+	<target name="install_linux" if="isUnix">
 		<copy file="${plugin.jar}" todir="${user.home}/.josm/plugins" />
 	</target>
 
 	<target name="test" depends="install">
 		<java jar="${josm}" fork="true">
 			<arg value="${osmfile}" />
-			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=7777"/>
+			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=7777" />
 		</java>
 	</target>
 

@@ -45,6 +45,8 @@ import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class NewIssueAction extends OsbAction implements MouseListener {
 
+	private static final long serialVersionUID = 1L;
+
 	private NewAction newAction = new NewAction();
 	
 	private JToggleButton button;

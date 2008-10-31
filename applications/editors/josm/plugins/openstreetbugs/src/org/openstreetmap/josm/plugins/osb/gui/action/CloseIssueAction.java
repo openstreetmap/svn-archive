@@ -38,6 +38,8 @@ import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class CloseIssueAction extends OsbAction {
 
+	private static final long serialVersionUID = 1L;
+
 	private CloseAction closeAction = new CloseAction();
 	
 	public CloseIssueAction() {

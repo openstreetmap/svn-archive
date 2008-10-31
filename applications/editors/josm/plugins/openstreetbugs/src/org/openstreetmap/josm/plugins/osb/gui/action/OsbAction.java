@@ -37,6 +37,8 @@ import org.openstreetmap.josm.data.osm.Node;
 
 public abstract class OsbAction extends AbstractAction {
 
+	private static final long serialVersionUID = 1L;
+
 	private static List<OsbActionObserver> observers = new ArrayList<OsbActionObserver>(); 
 	
 	private static Node selectedNode;

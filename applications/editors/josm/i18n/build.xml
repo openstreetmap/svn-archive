@@ -6,15 +6,11 @@
   <property name="plugin.dir"        value="../plugins"/>  
   <property name="validator.tagfile" value="${plugin.dir}/validator/tagchecker.cfg"/>  
   <property name="i18n.build.dir"    value="build"/>
-  <property name="i18n.dist.dir"     value="../dist"/>
   <property name="i18n.install.dir"  value="${josm.build.dir}/lib"/>
   <property name="i18n.name"         value="josm-translation"/>
-  <property name="i18n.jar"          value="${i18n.dist.dir}/${i18n.name}.jar"/>
+  <property name="i18n.jar"          value="${i18n.install.dir}/${i18n.name}.jar"/>
 
   <property name="ant.build.javac.target" value="1.5"/>
-
-  <target name="dist" depends="install">  
-  </target>  
 
   <target name="josm.pot">
     <exec executable="perl" output="presets.java">
@@ -76,10 +72,6 @@
     <exec executable="msgfmt">
       <arg line="--verbose --java2 -dbuild -rorg.openstreetmap.josm.i18n.Translation -l${language} po/${language}.po"/>
     </exec>
-  </target>
-
-  <target name="install" depends="build">
-    <copy file="${i18n.jar}" todir="${i18n.install.dir}" />
   </target>
 
   <target name="clean">

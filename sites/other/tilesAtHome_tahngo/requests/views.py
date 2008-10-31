@@ -403,7 +403,7 @@ def take(request):
     # req is a request we are about to hand out
     # make sure the upload queue is not too full, depending on priority
     upload_queue = Upload.objects.all().count() # [0...1500]
-    if upload_queue > {1:1500,2:1200,3:1100,4:900}[req.priority]:
+    if upload_queue > {1:2000,2:1700,3:1500,4:1400}[req.priority]:
         # reset to unhandled and bomb out with a "No request in queue for you"
         req.status=0
         req.save()

@@ -38,6 +38,8 @@ import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class AddCommentAction extends OsbAction {
 
+	private static final long serialVersionUID = 1L;
+
 	private EditAction editAction = new EditAction();
 	
 	public AddCommentAction() {

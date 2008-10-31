@@ -77,6 +77,7 @@ import org.openstreetmap.josm.tools.ShortCut;
 public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
 		DataChangeListener, MouseListener, OsbActionObserver {
 
+	private static final long serialVersionUID = 1L;
 	private DefaultListModel model;
 	private JList list;
 	private OsbPlugin osbPlugin;

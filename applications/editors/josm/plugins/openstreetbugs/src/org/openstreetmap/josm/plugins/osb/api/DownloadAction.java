@@ -74,7 +74,7 @@ public class DownloadAction {
 
 	private void parseData(DataSet dataSet, String content) {
 		String idPattern = "\\d+";
-		String floatPattern = "\\d+\\.\\d+";
+		String floatPattern = "-?\\d+\\.\\d+";
 		String pattern = "putAJAXMarker\\(("+idPattern+"),("+floatPattern+"),("+floatPattern+"),\"(.*)\",([01])\\)";
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(content);

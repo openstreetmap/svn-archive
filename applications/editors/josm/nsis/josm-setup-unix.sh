@@ -59,7 +59,7 @@ fi
 
 echo 
 echo "##################################################################"
-echo "### create the josm-installeri-${VERSION}.exe with makensis"
+echo "### create the josm-installer-${VERSION}.exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
 # apt-get install nsis
 makensis -V2 -DVERSION=$VERSION josm.nsi

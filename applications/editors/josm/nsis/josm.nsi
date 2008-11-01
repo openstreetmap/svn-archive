@@ -454,15 +454,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${Switch} $LANGUAGE
-${Case} ${LANG_GERMAN}
-File "..\dist\lang-de.jar"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,namefinder,validator,lang-de"
-${Break}
-${Default}
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,namefinder,validator"
-${Break}
-${EndSwitch}
 SectionEnd
 
 
@@ -482,8 +474,6 @@ IfErrors 0 NoJOSMErrorMsg
 NoJOSMErrorMsg:
 Delete "$INSTDIR\uninstall.exe"
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
-Delete "$APPDATA\JOSM\plugins\lang-de.jar"
-;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
 RMDir "$APPDATA\JOSM\plugins"

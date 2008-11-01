@@ -30,6 +30,8 @@ package org.openstreetmap.josm.plugins.osb.api;
 import java.awt.Point;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -58,17 +60,22 @@ public class NewAction {
 		
 		String result = null;
 		if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
-			result = "ok";
+			result = "ok 12345";
 		} else {
 			result = HttpUtils.post(uri, null, post, CHARSET);
 		}
 		
-		if(result != null && !result.startsWith("ok")) {
+		Pattern resultPattern = Pattern.compile("ok\\s+(\\d+)");
+		Matcher m = resultPattern.matcher(result);
+		String id = "-1";
+		if(m.matches()) {
+			id = m.group(1);
+		} else {
 			throw new RuntimeException("Couldn't create new bug. Result: " + result);
 		}
 		
 		Node osmNode = new Node(latlon);
-		osmNode.put("id", "-1");
+		osmNode.put("id", id);
 		osmNode.put("note", text);
 		osmNode.put("openstreetbug", "FIXME");
 		osmNode.put("state", "0");

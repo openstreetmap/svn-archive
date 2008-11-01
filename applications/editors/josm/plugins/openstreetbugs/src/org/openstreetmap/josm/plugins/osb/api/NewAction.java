@@ -63,8 +63,8 @@ public class NewAction {
 			result = HttpUtils.post(uri, null, post, CHARSET);
 		}
 		
-		if(!"ok".equalsIgnoreCase(result)) {
-			throw new RuntimeException("Couldn't create new bug");
+		if(result != null && !result.startsWith("ok")) {
+			throw new RuntimeException("Couldn't create new bug. Result: " + result);
 		}
 		
 		Node osmNode = new Node(latlon);

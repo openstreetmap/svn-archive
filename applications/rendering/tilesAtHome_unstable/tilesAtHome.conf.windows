@@ -69,11 +69,6 @@ UploadTargetDirectory=Z:\set\this\to\your\upload\directory
 # Recommended maximum setting: 1.5 times your kbyte/s upstream of your uploader
 UploadToDirectoryMaxQueue = 20
 
-#if a set is empty and RenderFullTileset = 0 only one tile is created
-# set to 1 if the tile should be stored in workdir, so you can upload a bunch of them
-# if set to 0 this tile will be uploaded as a set
-GatherBlankTiles=0
-
 # If set to 1, make a copy of the data file for later debugging purposes
 KeepDataFile=0
 

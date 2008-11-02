@@ -515,7 +515,7 @@ unless( $border_crossed )
   {
     #land
   }
-  else
+  else # state 00 or 11 (unknown or mixed)
   {  
     my %temp = ("00"=>0, "10"=>0, "01"=>0, "11"=>0);;
     $temp{lookup_handler($helpernodes, $tilex-1, $tiley, $zoom)}++;
@@ -523,7 +523,7 @@ unless( $border_crossed )
     $temp{lookup_handler($helpernodes, $tilex, $tiley-1, $zoom)}++;
     $temp{lookup_handler($helpernodes, $tilex, $tiley+1, $zoom)}++;
 
-    if( $temp{"10"} > $temp{"01"} )
+    if( $temp{"10"} + $temp{"11"} > $temp{"01"} ) # if more sea/coast than land around.
     {
       addBlueRectangle($helpernodes);
     }

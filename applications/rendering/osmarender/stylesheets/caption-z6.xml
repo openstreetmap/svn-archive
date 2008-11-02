@@ -20,8 +20,6 @@
     showLicense="no"
     interactive="no">
 
-    <!--bounds_mkr1-->
-    <!--bounds_mkr2-->
 
   <rule e="node|way" k="osmarender:renderName" v="~|yes" layer="5">
     <rule e="node" k="place" v="*" layer="5">

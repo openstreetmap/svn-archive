@@ -3,10 +3,6 @@
 ### DO NOT EDIT ###
 ### Every setting in here can be overridden in tilesAtHome.conf and authentication.conf so uses those to modify the config.###
 
-### defaults for command line options (not used, yet)
-
-nobezier = 0
-
 ### defaults for authentication settings (in case someone forgot to create his authentication.conf
 
 UploadUsername = I_forgot_to_edit_authentication.conf
@@ -28,6 +24,7 @@ DownloadTimeout = 1800
 KeepDataFile = 0
 FallBackToSlices = 1
 MaxTilesetComplexity = 0
+NoBezier = 0
 
 Osmarender = orp
 
@@ -56,7 +53,6 @@ UploadToDirectory = 0
 UploadTargetDirectory = /set/this/to/your/upload/directory
 UploadToDirectoryMaxQueue = 20
 
-GatherBlankTiles = 0
 DeleteZipFilesAfterUpload = 1
 CreateTilesetFile = 0
 

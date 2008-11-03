@@ -645,12 +645,15 @@ sub ProcessRequestsFromServer
             }
             # check whether there are any layers requested
             if (defined $req and scalar($req->layers()) == 0) {
-                statusMessage("Ignoring tile request with no layers", 1, 3);
-                eval {
-                    $Server->putRequestBack($req, "NoLayersRequested");
-                }; # ignoring exceptions
-                $req = undef;
-                talkInSleep("Waiting before new tile is requested", 15);
+                my $layers;
+                if ($req->Z() >= 12) {
+                    $layers = $Config->get("Layers");
+                }
+                else {
+                    $layers = $Config->get("LowzoomLayers");
+                }
+                statusMessage("Tile request with no layers, assuming default layers ($layers)", 1, 3);
+                $req->layers_str($layers);
             }
             # check whether we can actually render the requested zoom level for all requested layers
             if (defined $req) {

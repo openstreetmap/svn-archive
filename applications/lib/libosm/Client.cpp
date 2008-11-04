@@ -93,6 +93,7 @@ std::string  Client::doGrab(CURL *curl,const char *url)
 		curl_easy_setopt(curl,CURLOPT_USERPWD,uname_pwd);
 
 		curl_easy_setopt(curl,CURLOPT_URL,url);
+		curl_easy_setopt(curl,CURLOPT_FOLLOWLOCATION,1);
 		curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,Client::responseCallback);
 		curl_easy_setopt(curl,CURLOPT_WRITEDATA,data);
 

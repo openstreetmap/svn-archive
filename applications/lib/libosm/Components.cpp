@@ -96,7 +96,7 @@ std::vector<int> Components::getWayNodes(int wayid)
 			n = getNode(w->getNode(count));
 			if(n)// && getNode(s->firstNode()) && getNode(s->secondNode()))
 			{
-				ids.push_back(n->id);
+				ids.push_back(n->id());
 			}
 		}
 	}
@@ -158,7 +158,7 @@ int Components::getParentWayOfNode(int nodeid)
 			for(int count=0; count<w->nNodes(); count++)
 			{
 				if(w->getNode(count)==nodeid)
-					return w->id;
+					return w->id();
 			}
 		}
 	}
@@ -314,7 +314,7 @@ bool Components::makeWayShp(const std::string &shpname,
 					Way *way= i->second;
 					if(way)
 					{
-						wayCoords = getWayCoords(way->id);
+						wayCoords = getWayCoords(way->id());
 						if(wayCoords.size()
 	&& ((doArea==true && classification->getFeatureClass(way)=="area") ||
 		(doArea==false && classification->getFeatureClass(way)!="area"))
@@ -378,7 +378,7 @@ Components * Components::cleanWays()
 		OSM::Way *w = i->second;
 		if(w)
 		{
-			std::vector<int> nodes = getWayNodes(w->id);
+			std::vector<int> nodes = getWayNodes(w->id());
 
 			if(nodes.size())
 			{

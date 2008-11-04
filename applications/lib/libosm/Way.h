@@ -20,10 +20,11 @@
 
  */
 
-// 030706 change internal representation from Segment* to int (seg id)
 #include "Node.h"
-#include <vector>
 #include "Object.h"
+
+#include <vector>
+
 
 namespace OSM
 {
@@ -31,14 +32,8 @@ namespace OSM
 class Way: public Object
 {
 public:
-	Way()
+	Way(int id = 0) : Object(id)
 	{
-		id = 0;
-	}
-
-	Way(int id)
-	{
-		this->id = id;
 	}
 
 	void addNode(int n)
@@ -47,17 +42,19 @@ public:
 	}
 
 	int removeNode(int);
+
 	bool addNodeAt(int index, int n);
 
-	int getNode(int i);
-	int nNodes()
+	int getNode(int i) const;
+
+	int nNodes() const
 	{
 		return nodes.size();
 	}
 
 	void toXML(std::ostream &strm);
 
-protected:
+private:
 	std::vector<int> nodes;
 };
 

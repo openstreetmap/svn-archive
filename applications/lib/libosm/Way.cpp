@@ -55,7 +55,7 @@ bool Way::addNodeAt(int index, int n)
 	return false;
 }
 
-int Way::getNode(int i)
+int Way::getNode(int i) const
 {
 	return (i>=0 && i<static_cast<int>(nodes.size())) ?  (nodes[i]) : -1;
 }
@@ -63,13 +63,13 @@ int Way::getNode(int i)
 void Way::toXML(std::ostream &strm)
 {
 	if (hasTags() || nodes.size()) {
-		strm << "  <way id='" << id << "'>" << endl;
+		strm << "  <way id='" << id() << "'>" << endl;
 		for(unsigned int count=0; count<nodes.size(); count++)
 			strm  << "    <node id='" << nodes[count] << "'/>" << endl;
 		tagsToXML(strm);
 		strm << "  </way>" << endl;
 	} else {
-		strm << "  <way id='" << id << "'/>" << endl;
+		strm << "  <way id='" << id() << "'/>" << endl;
 	}
 
 }

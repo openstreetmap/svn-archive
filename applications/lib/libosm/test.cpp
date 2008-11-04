@@ -52,7 +52,7 @@ void dotest(OSM::Components *comp1)
 	while(comp1->hasMoreNodes())
 	{
 		OSM::Node *n = comp1->nextNode();
-		cout << "Node id: " << n->id << " lat: " << n->getLat()
+		cout << "Node id: " << n->id() << " lat: " << n->getLat()
 				<<" lon: " << n->getLon() << endl << "tags:" << endl;
 
 		std::vector<std::string> keys = n->getTags();
@@ -66,7 +66,7 @@ void dotest(OSM::Components *comp1)
 	while(comp1->hasMoreWays())
 	{
 		OSM::Way *w = comp1->nextWay();
-		cout << "Way id: " << w->id << " tags:" << endl;
+		cout << "Way id: " << w->id() << " tags:" << endl;
 
 		std::vector<std::string> keys = w->getTags();
 

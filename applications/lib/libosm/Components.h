@@ -55,16 +55,16 @@ public:
 
 	int addNode(Node *n)
 	{
-		int realID = (n->id) ? n->id : nextNodeId--;
-		n->id = realID;
+		int realID = n->id() ? n->id() : nextNodeId--;
+		n->setId(realID);
 		nodes[realID] = n;
 		return realID;
 	}
 
 	int addWay(Way *w)
 	{
-		int realID = (w->id) ? w->id : nextWayId--;
-		w->id = realID;
+		int realID = w->id() ? w->id() : nextWayId--;
+		w->setId(realID);
 		ways[realID] = w;
 		return realID;
 	}
@@ -100,11 +100,11 @@ public:
 	{
 		wayIterator = ways.begin();
 	}
-	bool hasMoreNodes()
+	bool hasMoreNodes() const
 	{
 		return nodeIterator != nodes.end();
 	}
-	bool hasMoreWays()
+	bool hasMoreWays() const
 	{
 		return wayIterator != ways.end();
 	}
@@ -114,8 +114,8 @@ public:
 	std::vector<int> getWayNodes(int wayid);
 	int getParentWayOfNode(int nodeid);
 
-	std::set<std::string> getWayTags(
-			FeatureClassification* classification = NULL, bool doArea = false);
+	std::set<std::string> getWayTags(FeatureClassification* classification =
+			NULL, bool doArea = false);
 	std::set<std::string> getNodeTags();
 
 	void toXML(std::ostream &strm);

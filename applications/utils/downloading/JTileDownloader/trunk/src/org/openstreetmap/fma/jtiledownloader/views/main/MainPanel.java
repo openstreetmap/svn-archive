@@ -26,6 +26,9 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileServerList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
+import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
+import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel;
+import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.UrlSquarePanel;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -84,6 +87,7 @@ public class MainPanel
     private TileServer[] _tileServers;
 
     private UrlSquarePanel _urlSquarePanel;
+    private BBoxLatLonPanel _bBoxLatLonPanel;
 
     /**
      * @param downloadTemplate 
@@ -191,6 +195,8 @@ public class MainPanel
 
         _urlSquarePanel = new UrlSquarePanel(_mainView);
         inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_URLSQUARE], _urlSquarePanel);
+        _bBoxLatLonPanel = new BBoxLatLonPanel(_mainView);
+        inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
 
         add(inputTabbedPane, constraints);
 
@@ -394,7 +400,7 @@ public class MainPanel
             switch (_mainView.getInputTabSelectedIndex())
             {
                 case TYPE_URLSQUARE:
-                    if (getUrlSquarePanel()._textPasteUrl.getText() == null || getUrlSquarePanel()._textPasteUrl.getText().length() == 0)
+                    if (getUrlSquarePanel().getPasteUrl() == null || getUrlSquarePanel().getPasteUrl().length() == 0)
                     {
                         JOptionPane.showMessageDialog(_mainView, "Please enter a URL in the input field Paste URL!", "Error", JOptionPane.ERROR_MESSAGE);
                         return false;
@@ -417,6 +423,11 @@ public class MainPanel
         private UrlSquarePanel getUrlSquarePanel()
         {
             return _urlSquarePanel;
+        }
+
+        private BBoxLatLonPanel getBBoxLatLonPanel()
+        {
+            return _bBoxLatLonPanel;
         }
     }
 
@@ -463,9 +474,29 @@ public class MainPanel
         {
             case TYPE_URLSQUARE:
                 return _urlSquarePanel;
+            case TYPE_BOUNDINGBOX_LATLON:
+                return _bBoxLatLonPanel;
 
             default:
                 return null;
         }
+    }
+
+    /**
+     * Getter for textNumberOfTiles
+     * @return the textNumberOfTiles
+     */
+    public final JTextField getTextNumberOfTiles()
+    {
+        return _textNumberOfTiles;
+    }
+
+    /**
+     * Getter for textOutputFolder
+     * @return the textOutputFolder
+     */
+    public final JTextField getTextOutputFolder()
+    {
+        return _textOutputFolder;
     }
 }

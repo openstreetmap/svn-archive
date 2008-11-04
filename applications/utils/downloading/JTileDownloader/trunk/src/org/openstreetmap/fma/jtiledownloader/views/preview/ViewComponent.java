@@ -32,6 +32,15 @@ public class ViewComponent
     private static final long serialVersionUID = 1L;
     private Image image;
 
+    /**
+     * 
+     */
+    public ViewComponent()
+    {
+        super();
+        setDoubleBuffered(true);
+    }
+
     protected void paintComponent(Graphics g)
     {
         if (image != null)

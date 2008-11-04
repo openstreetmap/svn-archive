@@ -2,6 +2,8 @@ package org.openstreetmap.fma.jtiledownloader.template;
 
 import java.util.Properties;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -24,13 +26,11 @@ import java.util.Properties;
  */
 public class DownloadConfigurationUrlSquare
     extends DownloadConfiguration
+    implements Constants
 {
 
     private String _pasteUrl = "";
     private int _radius = 5;
-    private String _type = CONF_TYPE;
-
-    private static final String CONF_TYPE = "UrlSquare";
 
     private static final String PASTE_URL = "PasteUrl";
     private static final String RADIUS = "Radius";
@@ -62,7 +62,7 @@ public class DownloadConfigurationUrlSquare
         Properties prop = super.saveToFile();
         setTemplateProperty(prop, PASTE_URL, _pasteUrl);
         setTemplateProperty(prop, RADIUS, "" + _radius);
-        setTemplateProperty(prop, TYPE, "" + _type);
+        setTemplateProperty(prop, TYPE, "" + CONFIG_TYPE[TYPE_URLSQUARE]);
         storeToXml(prop);
         return prop;
     }
@@ -77,7 +77,6 @@ public class DownloadConfigurationUrlSquare
 
         _pasteUrl = prop.getProperty(PASTE_URL, "");
         _radius = Integer.parseInt(prop.getProperty(RADIUS, "5"));
-        _type = prop.getProperty(TYPE, CONF_TYPE);
 
         return prop;
 

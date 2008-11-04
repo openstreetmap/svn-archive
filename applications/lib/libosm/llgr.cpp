@@ -1,6 +1,6 @@
 #include "llgr.h"
-#include "OSRef.h"
-#include "LatLng.h"
+#include "ccoord/OSRef.h"
+#include "ccoord/LatLng.h"
 
 namespace OSM
 {

@@ -2,6 +2,7 @@
 #include "FeatureClassification.h"
 
 #include <iostream>
+#include <cstring>
 using namespace std;
 
 namespace OSM
@@ -9,10 +10,10 @@ namespace OSM
 
  FeatureClassification* FeaturesParser::featureClassification=NULL;
 
- bool FeaturesParser::inDoc=false, FeaturesParser::inWays=false, 
+ bool FeaturesParser::inDoc=false, FeaturesParser::inWays=false,
  	FeaturesParser::inAreas=false;
 
- std::string FeaturesParser::error=""; 
+ std::string FeaturesParser::error="";
 
 void FeaturesParser::startElement(void *d, const XML_Char* element,
 		const XML_Char** attrs)
@@ -80,13 +81,13 @@ FeatureClassification* FeaturesParser::parse(std::istream &in)
 	if(!p)
 	{
 		error = "Error creating parser";
-		return NULL; 
+		return NULL;
 	}
 
 	XML_SetElementHandler(p,FeaturesParser::startElement,
 						FeaturesParser::endElement);
 	XML_SetCharacterDataHandler(p,FeaturesParser::characters);
-	featureClassification = new FeatureClassification; 
+	featureClassification = new FeatureClassification;
 
 	// straight from example
 	do
@@ -96,11 +97,11 @@ FeatureClassification* FeaturesParser::parse(std::istream &in)
 		//n = in.gcount();
 		//done = (n!=4096);
 		done = in.eof();
-	
+
 		if(XML_Parse(p,buf,strlen(buf),done) == XML_STATUS_ERROR)
 		{
 			error = "xml parsing error";
-			delete featureClassification; 
+			delete featureClassification;
 			return NULL;
 		}
 		count += n;

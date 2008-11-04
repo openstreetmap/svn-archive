@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
 
 This program is free software; you can redistribute it and/or modify
@@ -17,14 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
-// 180306 updated for 0.3    
+// 180306 updated for 0.3
 #include "Components.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <string>
 #include <sstream>
-#include <libshp/shapefil.h>
+#include <shapefil.h>
 #include "Node.h"
 #include "Parser.h"
 #include "Way.h"
@@ -34,8 +34,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 #include "FeatureClassification.h"
 #include "FeaturesParser.h"
 
-#include "LatLng.h"
-#include "OSRef.h"
+#include "ccoord/LatLng.h"
+#include "ccoord/OSRef.h"
 
 using std::endl;
 using std::setw;
@@ -54,7 +54,7 @@ void Components::destroy()
     for(std::map<int,Node*>::iterator i=nodes.begin(); i!=nodes.end(); i++)
         delete i->second;
 
-    for(std::map<int,Segment*>::iterator i=segments.begin(); 
+    for(std::map<int,Segment*>::iterator i=segments.begin();
 			i!=segments.end(); i++)
         delete i->second;
 
@@ -65,7 +65,7 @@ void Components::destroy()
 // Return a vector of the coordinates of all the points making up a way,
 // in lon-lat order.
 // WILL ONLY WORK IF THE WAY IS STORED SENSIBLY, i.e. ALL SEGMENTS ALIGNED IN
-// SAME DIRECTION AND IN LOGICAL ORDER !!! 
+// SAME DIRECTION AND IN LOGICAL ORDER !!!
 
 std::vector<double> Components::getWayCoords(int id)
 {
@@ -98,7 +98,7 @@ std::vector<double> Components::getWayCoords(int id)
 				{
 					coords.push_back(n2->getLon());
 					coords.push_back(n2->getLat());
-				} 
+				}
 			}
 		}
 	}
@@ -108,7 +108,7 @@ std::vector<double> Components::getWayCoords(int id)
 // 310107 adds null node IDs too
 std::set<int> Components::getWayNodes(int wayid)
 {
-	std::set<int> ids; 
+	std::set<int> ids;
 	Node *n1, *n2;
 	Segment *s;
 	Way *w = getWay(wayid);
@@ -124,7 +124,7 @@ std::set<int> Components::getWayNodes(int wayid)
 			}
 		}
 	}
-	return ids; 
+	return ids;
 }
 
 // get all way tags
@@ -151,10 +151,10 @@ std::set<std::string> Components::getWayTags
 	}
 	return tags;
 }
-		
+
 std::set<std::string> Components::getNodeTags()
 {
-	Node *n;	
+	Node *n;
 	std::set<std::string> tags;
 	std::vector<std::string> curTags;
 
@@ -224,7 +224,7 @@ std::vector<int> Components::orderWay(int wayid)
 	for(std::set<int>::iterator i=nodes.begin(); i!=nodes.end(); i++)
 	{
 		//cerr << "setting up segs record: node=" << *i << endl;
-		segsRecordForEachNode[*i] = std::vector<int>(); 
+		segsRecordForEachNode[*i] = std::vector<int>();
 		std::vector<int> v = getNodeSegments(*i);
 		for(int count=0; count<v.size(); count++)
 		{
@@ -250,7 +250,7 @@ std::vector<int> Components::orderWay(int wayid)
 
 	// if no unique node could be found but there are nodes in this way, it's
 	// a circular way so just take the first node that's not NULL
-	if(id==0) 
+	if(id==0)
 	{
 		int count=0;
 		std::set<int>::iterator i = nodes.begin();
@@ -283,7 +283,7 @@ std::vector<int> Components::orderWay(int wayid)
 
 			// If it's a segment in the data set, work with it. If it's
 			// a null segment we'll just abort this attempt
-			// 310107 do not quit on null nodes. 
+			// 310107 do not quit on null nodes.
 			if(s) // 310107&&getNode(s->firstNode())&&getNode(s->secondNode()))
 			{
 				// Add the id of the node to the list of ordered nodes
@@ -303,13 +303,13 @@ std::vector<int> Components::orderWay(int wayid)
 
 
 				//cerr << "Found next node: id=" << id << endl;
-			
+
 				// If we arrive back at any previous node again, stop
 				// (way containing loop)
 				bool loop=false;
 				for(int z=0; z<orderednodes.size(); z++)
 				{
-					if(orderednodes[z]==id)	
+					if(orderednodes[z]==id)
 					{
 						loop=true;
 						break;
@@ -324,7 +324,7 @@ std::vector<int> Components::orderWay(int wayid)
 					// Find another segment of the new node
 					// If there isn't one, found will be false, so we quit
 
-					for(int count=0; count<segsRecordForEachNode[id].size(); 
+					for(int count=0; count<segsRecordForEachNode[id].size();
 						count++)
 					{
 						if(segsRecordForEachNode[id][count] != segid)
@@ -344,10 +344,10 @@ std::vector<int> Components::orderWay(int wayid)
 					if(getNode(id))
 						orderednodes.push_back(id);
 				}
-			} 
+			}
 		}while(found);
-	
-		
+
+
 
 	}
 	return orderednodes;
@@ -392,7 +392,7 @@ void Components::toOSGB()
 
 
 bool Components::makeShp(const std::string& nodes, const std::string& ways,
-						 const std::string& areas, 
+						 const std::string& areas,
 						 const std::string &featuresFile)
 {
 	std::ifstream in(featuresFile.c_str());
@@ -440,7 +440,7 @@ bool Components::makeNodeShp(const std::string& shpname)
 					// We're only interested in nodes with tags
 					if(node && node->hasTags())
 					{
-						lon = node->getLon(); 
+						lon = node->getLon();
 						lat=node->getLat();
 						SHPObject *object = SHPCreateSimpleObject
 							(SHPT_POINT,1,&lon,&lat,NULL);
@@ -473,7 +473,7 @@ bool Components::makeNodeShp(const std::string& shpname)
 			cerr << "could not open node shp" << endl;
 			return false;
 		}
-	
+
 	return true;
 }
 
@@ -482,14 +482,14 @@ bool Components::makeWayShp(const std::string &shpname,
 {
 		int shpclass = (doArea==true) ? SHPT_POLYGON: SHPT_ARC;
 		// ARC means polyline!
-		SHPHandle shp = SHPCreate(shpname.c_str(),shpclass); 
+		SHPHandle shp = SHPCreate(shpname.c_str(),shpclass);
 		if(shp)
 		{
 			DBFHandle dbf = DBFCreate(shpname.c_str());
 			if(dbf)
 			{
 				std::map<int,std::string> fields;
-				std::set<std::string> wayTags = 
+				std::set<std::string> wayTags =
 						getWayTags(classification,doArea);
 				for(std::set<std::string>::iterator i=wayTags.begin();
 					i!=wayTags.end(); i++)
@@ -509,7 +509,7 @@ bool Components::makeWayShp(const std::string &shpname,
 					if(way)
 					{
 						wayCoords = getWayCoords(way->id);
-						if(wayCoords.size() 
+						if(wayCoords.size()
 	&& ((doArea==true && classification->getFeatureClass(way)=="area") ||
 		(doArea==false && classification->getFeatureClass(way)!="area"))
 						  )
@@ -555,7 +555,7 @@ bool Components::makeWayShp(const std::string &shpname,
 			cerr << "could not open way shp" << endl;
 			return false;
 		}
-	
+
 	return true;
 }
 
@@ -572,7 +572,7 @@ Components * Components::cleanWays()
 		OSM::Way *w = i->second;
 		if(w)
 		{
-			cerr<<"Calling orderWay on way ID " << i->first << " or "  << 
+			cerr<<"Calling orderWay on way ID " << i->first << " or "  <<
 					w->id << endl;
 			std::vector<int> nodes = orderWay(w->id);
 

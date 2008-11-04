@@ -23,7 +23,7 @@ ImgHeader::ImgHeader() : ImgData() {
   SetDescription("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 }
 
-void ImgHeader::SetDescription(char *desc){
+void ImgHeader::SetDescription(const char *desc){
   description.assign(desc);
   if (description.length()<50){
     description += std::string (50-description.length(), ' ');

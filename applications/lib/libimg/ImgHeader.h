@@ -34,7 +34,7 @@ class ImgHeader : public ImgData
   int nFatBlocks;
 #define IDENT "GARMIN\0"
   std::string description;
-  void SetDescription(char *desc);
+  void SetDescription(const char *desc);
 };
 
 #endif

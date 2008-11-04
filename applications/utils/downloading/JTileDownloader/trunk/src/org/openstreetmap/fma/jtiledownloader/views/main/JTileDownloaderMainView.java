@@ -15,7 +15,6 @@ import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
 import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
@@ -49,7 +48,6 @@ public class JTileDownloaderMainView
 
     private TileListDownloader _tileListDownloader;
 
-    private DownloadConfigurationUrlSquare _downloadTemplate;
     private AppConfiguration _appConfiguration;
 
     private TilePreview _tilePreview = null;
@@ -60,12 +58,11 @@ public class JTileDownloaderMainView
 
     private UpdateTilesPanel _updateTilesPanel;
 
+    private int _inputTabSelectedIndex;
+
     public JTileDownloaderMainView()
     {
         super();
-
-        setDownloadTemplate(new DownloadConfigurationUrlSquare());
-        getDownloadTemplate().loadFromFile();
 
         setAppConfiguration(new AppConfiguration());
         getAppConfiguration().loadFromFile();
@@ -85,7 +82,10 @@ public class JTileDownloaderMainView
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        _mainPanel = new MainPanel(getDownloadTemplate(), getMainView());
+        _mainPanel = new MainPanel(getMainView());
+
+        _mainPanel.getInputPanel().loadConfig();
+
         _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration(), getMainView());
         _optionsPanel = new OptionsPanel(getAppConfiguration());
         _networkPanel = new NetworkPanel(getAppConfiguration());
@@ -119,7 +119,9 @@ public class JTileDownloaderMainView
         {
             System.out.println("WindowEvent windowClosing");
 
-            updateConfigs();
+            getMainPanel().valuesChanged();
+            updateAppConfig();
+            updateActualDownloadConfig();
             e.getWindow().dispose();
             System.exit(0);
         }
@@ -154,24 +156,6 @@ public class JTileDownloaderMainView
             }
 
         }
-    }
-
-    /**
-     * Getter for downloadTemplate
-     * @return the downloadTemplate
-     */
-    public final DownloadConfigurationUrlSquare getDownloadTemplate()
-    {
-        return _downloadTemplate;
-    }
-
-    /**
-     * Setter for downloadTemplate
-     * @param downloadTemplate the downloadTemplate to set
-     */
-    public final void setDownloadTemplate(DownloadConfigurationUrlSquare downloadTemplate)
-    {
-        _downloadTemplate = downloadTemplate;
     }
 
     /**
@@ -303,22 +287,8 @@ public class JTileDownloaderMainView
     /**
      * 
      */
-    public void updateConfigs()
+    public void updateAppConfig()
     {
-        _downloadTemplate.setOutputLocation(_mainPanel.getOutputfolder());
-        _downloadTemplate.setOutputZoomLevel(Integer.parseInt(_mainPanel.getOutputZoomLevel()));
-        _downloadTemplate.setPasteUrl(_mainPanel.getPasteUrl());
-        _downloadTemplate.setRadius(_mainPanel.getRadius());
-        String altTileServer = _mainPanel.getAltTileServer();
-        if (altTileServer == null || altTileServer.length() == 0)
-        {
-            _downloadTemplate.setTileServer("" + _mainPanel.getTileServer());
-        }
-        else
-        {
-            _downloadTemplate.setTileServer("" + altTileServer);
-        }
-        _downloadTemplate.saveToFile();
 
         getAppConfiguration().setUseProxyServer(_networkPanel.isUseProxyServer());
         getAppConfiguration().setProxyServer(_networkPanel.getProxyServer());
@@ -404,6 +374,33 @@ public class JTileDownloaderMainView
     public final UpdateTilesPanel getUpdateTilesPanel()
     {
         return _updateTilesPanel;
+    }
+
+    /**
+     * Getter for inputTabSelectedIndex
+     * @return the inputTabSelectedIndex
+     */
+    public final int getInputTabSelectedIndex()
+    {
+        return _inputTabSelectedIndex;
+    }
+
+    /**
+     * Setter for inputTabSelectedIndex
+     * @param inputTabSelectedIndex the inputTabSelectedIndex to set
+     */
+    public final void setInputTabSelectedIndex(int inputTabSelectedIndex)
+    {
+        _inputTabSelectedIndex = inputTabSelectedIndex;
+    }
+
+    /**
+     * 
+     */
+    public void updateActualDownloadConfig()
+    {
+        _mainPanel.getInputPanel().saveConfig();
+
     }
 
 }

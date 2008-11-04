@@ -7,7 +7,7 @@ import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -39,7 +39,7 @@ public class JTileDownloaderCommandLine
 
     private AppConfiguration _appConfiguration;
     private DownloadConfigurationUrlSquare _downloadTemplate;
-    private TileListSquare _tileListSquare = new TileListSquare();
+    private TileListUrlSquare _tileListSquare = new TileListUrlSquare();
     private TileListDownloader _tld;
 
     /**

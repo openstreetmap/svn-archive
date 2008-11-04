@@ -34,7 +34,6 @@ public class DownloadConfigurationUrlSquare
 
     private static final String PASTE_URL = "PasteUrl";
     private static final String RADIUS = "Radius";
-    private static final String TYPE = "Type";
 
     /**
      * default constructor

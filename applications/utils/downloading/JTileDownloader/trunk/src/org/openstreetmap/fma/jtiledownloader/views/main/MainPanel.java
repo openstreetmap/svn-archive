@@ -19,13 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileServerList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -49,28 +49,16 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
  */
 public class MainPanel
     extends JPanel
+    implements Constants
 {
+
     private static final long serialVersionUID = 1L;
 
-    private TileListSquare _tileListSquare = new TileListSquare();
-
     private static final String COMPONENT_OUTPUT_ZOOM_LEVEL = "outputZoomLevel";
-    private static final String COMPONENT_PASTE_URL = "pasteURL";
-    private static final String COMPONENT_RADIUS = "radius";
 
     private static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
     private static final String COMMAND_DOWNLOAD = "download";
     private static final String COMMAND_EXPORT = "export";
-
-    JLabel _labelPasteUrl = new JLabel("Paste URL:");
-    JTextField _textPasteUrl = new JTextField();
-
-    JLabel _labelLatitude = new JLabel("Latitude:");
-    JTextField _textLatitude = new JTextField();
-    JLabel _labelLongitude = new JLabel("Longitude:");
-    JTextField _textLongitude = new JTextField();
-    JLabel _labelRadius = new JLabel("Radius (km):");
-    JTextField _textRadius = new JTextField();
 
     JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
     JComboBox _comboOutputZoomLevel = new JComboBox();
@@ -91,19 +79,21 @@ public class MainPanel
     JButton _buttonExport = new JButton("Export Tilelist");
 
     private final JTileDownloaderMainView _mainView;
-    private final DownloadConfigurationUrlSquare _downloadTemplate;
+    //private final DownloadConfigurationUrlSquare _downloadTemplate;
 
     private TileServer[] _tileServers;
+
+    private UrlSquarePanel _urlSquarePanel;
 
     /**
      * @param downloadTemplate 
      * 
      */
-    public MainPanel(DownloadConfigurationUrlSquare downloadTemplate, JTileDownloaderMainView mainView)
+    public MainPanel(JTileDownloaderMainView mainView)
     {
         super();
 
-        _downloadTemplate = downloadTemplate;
+        //_downloadTemplate = downloadTemplate;
         _mainView = mainView;
 
         _tileServers = new TileServerList().getTileServerList();
@@ -128,38 +118,40 @@ public class MainPanel
         _buttonExport.addActionListener(new MainViewActionListener());
         _buttonExport.setActionCommand(COMMAND_EXPORT);
 
-        _textPasteUrl.setPreferredSize(new Dimension(330, 20));
-        _textPasteUrl.addFocusListener(new MainViewFocusListener());
-        _textPasteUrl.setName(COMPONENT_PASTE_URL);
-        _textPasteUrl.setText(_downloadTemplate.getPasteUrl());
-
-        _textLatitude.setEditable(false);
-        _textLatitude.setFocusable(false);
-        _textLongitude.setEditable(false);
-        _textLongitude.setFocusable(false);
-
-        _textRadius.setText("" + _downloadTemplate.getRadius());
-        _textRadius.setName(COMPONENT_RADIUS);
-        _textRadius.addFocusListener(new MainViewFocusListener());
-        _tileListSquare.setRadius(Integer.parseInt(_textRadius.getText()) * 1000);
-
         _comboOutputZoomLevel.setName(COMPONENT_OUTPUT_ZOOM_LEVEL);
         for (int outputZoomLevel = 0; outputZoomLevel <= 18; outputZoomLevel++)
         {
             _comboOutputZoomLevel.addItem("" + outputZoomLevel);
         }
-        _comboOutputZoomLevel.setSelectedItem("" + _downloadTemplate.getOutputZoomLevel());
         _comboOutputZoomLevel.addFocusListener(new MainViewFocusListener());
         _comboOutputZoomLevel.addItemListener(new MainViewItemListener());
-
-        _tileListSquare.setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
-
-        int foundTileServerIndex = -1;
+        initializeOutputZoomLevel(getInputPanel().getDownloadZoomLevel());
 
         for (int index = 0; index < _tileServers.length; index++)
         {
             _comboTileServer.addItem(_tileServers[index].getTileServerName());
-            if (_tileServers[index].getTileServerUrl().equals(_downloadTemplate.getTileServer()))
+        }
+        String url = getInputPanel().getTileServerBaseUrl();
+        initializeTileServer(url);
+
+        _textOutputFolder.setText(getInputPanel().getOutputLocation());//_downloadTemplate.getOutputLocation());
+
+        _textNumberOfTiles.setEditable(false);
+        _textNumberOfTiles.setFocusable(false);
+
+        _progressBar.setPreferredSize(new Dimension(300, 20));
+
+    }
+
+    /**
+     * @param tileServer
+     */
+    public void initializeTileServer(String tileServer)
+    {
+        int foundTileServerIndex = -1;
+        for (int index = 0; index < _tileServers.length; index++)
+        {
+            if (_tileServers[index].getTileServerUrl().equals(tileServer)) //_downloadTemplate.getTileServer()))
             {
                 foundTileServerIndex = index;
             }
@@ -171,20 +163,13 @@ public class MainPanel
         }
         else
         {
-            _textAltTileServer.setText(_downloadTemplate.getTileServer());
+            _textAltTileServer.setText(tileServer); //_downloadTemplate.getTileServer());
         }
-        _tileListSquare.setTileServerBaseUrl("" + _downloadTemplate.getTileServer());
+    }
 
-        _textOutputFolder.setText(_downloadTemplate.getOutputLocation());
-
-        _textNumberOfTiles.setEditable(false);
-        _textNumberOfTiles.setFocusable(false);
-
-        _progressBar.setPreferredSize(new Dimension(300, 20));
-
-        parsePasteUrl();
-        _tileListSquare.calculateTileValuesXY();
-        updateNumberOfTiles();
+    public void initializeOutputZoomLevel(int zoomLevel)
+    {
+        _comboOutputZoomLevel.setSelectedItem("" + zoomLevel); //_downloadTemplate.getOutputZoomLevel());
     }
 
     /**
@@ -201,22 +186,16 @@ public class MainPanel
         constraints.insets = new Insets(5, 5, 0, 5);
 
         setLayout(new GridBagLayout());
-        add(_labelPasteUrl, constraints);
-        add(_textPasteUrl, constraints);
 
-        constraints.weightx = 1.0;
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelLatitude, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textLatitude, constraints);
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelLongitude, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textLongitude, constraints);
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelRadius, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textRadius, constraints);
+        JTabbedPane inputTabbedPane = new JTabbedPane();
+
+        _urlSquarePanel = new UrlSquarePanel(_mainView);
+        inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_URLSQUARE], _urlSquarePanel);
+
+        add(inputTabbedPane, constraints);
+
+        inputTabbedPane.addChangeListener(new InputTabListener(_mainView));
+
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelOutputZoomLevel, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -258,74 +237,6 @@ public class MainPanel
     }
 
     /**
-     * 
-     */
-    public void parsePasteUrl()
-    {
-        //String pasteUrl = "http://www.openstreetmap.org/?lat=48.256&lon=13.0434&zoom=12&layers=0B0FT";
-        String url = _textPasteUrl.getText();
-        if (url == null || url.length() == 0)
-        {
-            _textLatitude.setText("" + 0);
-            _textLongitude.setText("" + 0);
-
-            _tileListSquare.setLatitude(0);
-            _tileListSquare.setLongitude(0);
-            return;
-        }
-
-        int posLat = url.indexOf("lat=");
-        String lat = url.substring(posLat);
-        int posLon = url.indexOf("lon=");
-        String lon = url.substring(posLon);
-
-        int posAnd = lat.indexOf("&");
-        lat = lat.substring(4, posAnd);
-        posAnd = lon.indexOf("&");
-        lon = lon.substring(4, posAnd);
-
-        _textLatitude.setText(lat);
-        _textLongitude.setText(lon);
-
-        _tileListSquare.setLatitude(Double.parseDouble(lat));
-        _tileListSquare.setLongitude(Double.parseDouble(lon));
-
-    }
-
-    private void updateNumberOfTiles()
-    {
-        long numberOfTiles = 0;
-        numberOfTiles = getNumberOfTilesToDownload();
-        _textNumberOfTiles.setText("" + numberOfTiles);
-    }
-
-    /**
-     * @return
-     */
-    private int getNumberOfTilesToDownload()
-    {
-        return Integer.parseInt("" + (Math.abs(_tileListSquare.getXBottomRight() - _tileListSquare.getXTopLeft()) + 1) * (Math.abs(_tileListSquare.getYBottomRight() - _tileListSquare.getYTopLeft()) + 1));
-    }
-
-    /**
-     * 
-     */
-    private void updateTileListSquare()
-    {
-        _tileListSquare.calculateTileValuesXY();
-        updateNumberOfTiles();
-
-        if (_textAltTileServer.getText() != null && _textAltTileServer.getText().length() > 0)
-        {
-            _tileListSquare.setTileServerBaseUrl(_textAltTileServer.getText());
-        }
-        else
-        {
-            _tileListSquare.setTileServerBaseUrl("" + getTileServer());
-        }
-    }
-
-    /**
      * Getter for progressBar
      * @return the progressBar
      */
@@ -352,6 +263,22 @@ public class MainPanel
         return _buttonDownload;
     }
 
+    public void valuesChanged()
+    {
+        getInputPanel().setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
+        String altTileServer = getAltTileServer();
+        if (altTileServer == null || altTileServer.length() == 0)
+        {
+            getInputPanel().setTileServerBaseUrl("" + getTileServer());
+        }
+        else
+        {
+            getInputPanel().setTileServerBaseUrl("" + altTileServer);
+        }
+        getInputPanel().setOutputLocation(getOutputfolder());
+        getInputPanel().updateAll();
+    }
+
     class MainViewFocusListener
         implements FocusListener
     {
@@ -374,25 +301,12 @@ public class MainPanel
             String componentName = focusevent.getComponent().getName();
             System.out.println("focusLost: " + componentName);
 
-            if (componentName.equalsIgnoreCase(COMPONENT_PASTE_URL))
+            if (componentName.equalsIgnoreCase(COMPONENT_OUTPUT_ZOOM_LEVEL))
             {
-                parsePasteUrl();
-                _tileListSquare.calculateTileValuesXY();
-                updateNumberOfTiles();
-            }
-            else if (componentName.equalsIgnoreCase(COMPONENT_OUTPUT_ZOOM_LEVEL))
-            {
-                _tileListSquare.setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
-                _tileListSquare.calculateTileValuesXY();
-                updateNumberOfTiles();
-            }
-            else if (componentName.equalsIgnoreCase(COMPONENT_RADIUS))
-            {
-                _tileListSquare.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
-                _tileListSquare.calculateTileValuesXY();
-                updateNumberOfTiles();
+                valuesChanged();
             }
         }
+
     }
 
     class MainViewItemListener
@@ -407,9 +321,7 @@ public class MainPanel
         {
             if (e.getSource() == _comboOutputZoomLevel)
             {
-                _tileListSquare.setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
-                _tileListSquare.calculateTileValuesXY();
-                updateNumberOfTiles();
+                valuesChanged();
             }
 
         }
@@ -426,22 +338,21 @@ public class MainPanel
 
             if (actionCommand.equalsIgnoreCase(COMMAND_DOWNLOAD))
             {
-                if (_textPasteUrl.getText() == null || _textPasteUrl.getText().length() == 0)
+                if (!preCheckDoDownload())
                 {
-                    JOptionPane.showMessageDialog(_mainView, "Please enter a URL in the input field Paste URL!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                updateTileListSquare();
+                _mainView.updateAppConfig();
+                _mainView.updateActualDownloadConfig();
 
-                _mainView.updateConfigs();
                 getButtonDownload().setEnabled(false);
                 getButtonExport().setEnabled(false);
 
-                _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), _tileListSquare));
+                _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
 
                 getProgressBar().setMinimum(0);
-                getProgressBar().setMaximum(getNumberOfTilesToDownload());
+                getProgressBar().setMaximum(getInputPanel().getNumberOfTilesToDownload());
                 getProgressBar().setStringPainted(true);
                 getProgressBar().setString("Starting download ...");
 
@@ -450,17 +361,15 @@ public class MainPanel
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))
             {
-                updateTileListSquare();
+                valuesChanged();
 
-                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), _tileListSquare.getFileListToDownload());
+                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getFileListToDownload());
                 tle.doExport();
                 JOptionPane.showMessageDialog(_mainView, "Exported Tilelist to " + _textOutputFolder.getText() + File.separator + "export.txt", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
             else if (actionCommand.equalsIgnoreCase(COMPONENT_OUTPUT_ZOOM_LEVEL))
             {
-                _tileListSquare.setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
-                _tileListSquare.calculateTileValuesXY();
-                updateNumberOfTiles();
+                valuesChanged();
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_SELECTOUTPUTFOLDER))
             {
@@ -475,6 +384,39 @@ public class MainPanel
                 }
             }
 
+        }
+
+        /**
+         * 
+         */
+        private boolean preCheckDoDownload()
+        {
+            switch (_mainView.getInputTabSelectedIndex())
+            {
+                case TYPE_URLSQUARE:
+                    if (getUrlSquarePanel()._textPasteUrl.getText() == null || getUrlSquarePanel()._textPasteUrl.getText().length() == 0)
+                    {
+                        JOptionPane.showMessageDialog(_mainView, "Please enter a URL in the input field Paste URL!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            valuesChanged();
+
+            return true;
+        }
+
+        /**
+         * @return
+         */
+        private UrlSquarePanel getUrlSquarePanel()
+        {
+            return _urlSquarePanel;
         }
     }
 
@@ -498,22 +440,6 @@ public class MainPanel
     /**
      * @return
      */
-    public String getPasteUrl()
-    {
-        return _textPasteUrl.getText().trim();
-    }
-
-    /**
-     * @return
-     */
-    public int getRadius()
-    {
-        return Integer.parseInt(_textRadius.getText().trim());
-    }
-
-    /**
-     * @return
-     */
     public String getAltTileServer()
     {
         return _textAltTileServer.getText().trim();
@@ -525,5 +451,21 @@ public class MainPanel
     public String getTileServer()
     {
         return _tileServers[_comboTileServer.getSelectedIndex()].getTileServerUrl();
+    }
+
+    /**
+     * Getter for urlSquarePanel
+     * @return the urlSquarePanel
+     */
+    public final InputPanel getInputPanel()
+    {
+        switch (_mainView.getInputTabSelectedIndex())
+        {
+            case TYPE_URLSQUARE:
+                return _urlSquarePanel;
+
+            default:
+                return null;
+        }
     }
 }

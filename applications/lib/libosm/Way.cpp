@@ -28,6 +28,15 @@ using std::vector;
 namespace OSM
 {
 
+Way::Way(int id ) : Object(id)
+{
+}
+
+void Way::addNode(int n)
+{
+	nodes.push_back(n);
+}
+
 // remove a node - returns its position
 int Way::removeNode(int n)
 {
@@ -44,7 +53,7 @@ int Way::removeNode(int n)
 }
 
 // Insert a node at position 'index'
-bool Way::addNodeAt(int index, int n)
+bool Way::addNodeAt(unsigned int index, int n)
 {
 	vector<int>::iterator i = nodes.begin() + index;
 	if(n>0)
@@ -55,9 +64,9 @@ bool Way::addNodeAt(int index, int n)
 	return false;
 }
 
-int Way::getNode(int i) const
+int Way::getNode(unsigned int i) const
 {
-	return (i>=0 && i<static_cast<int>(nodes.size())) ?  (nodes[i]) : -1;
+	return (i>=0 && i<nodes.size()) ?  (nodes[i]) : -1;
 }
 
 void Way::toXML(std::ostream &strm)
@@ -71,7 +80,11 @@ void Way::toXML(std::ostream &strm)
 	} else {
 		strm << "  <way id='" << id() << "'/>" << endl;
 	}
+}
 
+int Way::nNodes() const
+{
+	return nodes.size();
 }
 
 }

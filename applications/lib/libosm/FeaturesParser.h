@@ -17,10 +17,7 @@ class FeaturesParser
 {
 public:
 	static FeatureClassification* parse(std::istream&);
-	static std::string getError()
-	{
-		return error;
-	}
+	static std::string getError();
 
 private:
 	static FeatureClassification* featureClassification;

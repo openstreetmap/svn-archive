@@ -1,6 +1,6 @@
-CXXFLAGS = -g -Wall -I/usr/local/include -I../
-LDFLAGS = -L/usr/local/lib -lexpat -lcurl -lshp -lccoord -L../ccoord
-OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o FeaturesParser.o
+CXXFLAGS = -g -I/usr/local/include -I../
+LDFLAGS = -L/usr/local/lib -lexpat -lcurl -lshp -lccoord -L../ccoord/
+OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o FeaturesParser.o FeatureClassification.o Node.o
 NETOBJ = Client.o
 TESTOBJ = test.o
 RULESTESTOBJ = rulestest.o
@@ -27,14 +27,14 @@ test3: test3.o libosm.a libosmnet.a
 clean:
 	rm -f *.{o,a}
 
-test.o test2.o test3.o rulestest.o: Parser.h Way.h Object.h Node.h Client.h 
+test.o test2.o test3.o rulestest.o: Parser.h Way.h Object.h Client.h 
 
 Object.o : Object.h
 Way.o: Way.h Object.h
-Parser.o : Parser.h Way.h Object.h Node.h
+Parser.o : Parser.h Way.h Object.h
 Client.o : Client.h
 llgr.o: llgr.h
-FeaturesParser.o : FeaturesParser.h FeatureClassification.h 
+FeaturesParser.o : FeaturesParser.h
 
 install:
 	cp *.h /usr/local/include

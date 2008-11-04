@@ -35,83 +35,37 @@ namespace OSM
 class Components
 {
 public:
-	Components()
-	{
-		nextNodeId = nextSegmentId = nextWayId = -1;
-		destroyComponents = true;
-		nodeIterator = nodes.begin();
-		wayIterator = ways.begin();
-	}
-	~Components()
-	{
-		if (destroyComponents)
-			destroy();
-	}
-	void setDestroyComponents(bool b)
-	{
-		destroyComponents = b;
-	}
+	Components();
+	~Components();
+
+	void setDestroyComponents(bool enabled);
+
 	void destroy();
 
-	int addNode(Node *n)
-	{
-		int realID = n->id() ? n->id() : nextNodeId--;
-		n->setId(realID);
-		nodes[realID] = n;
-		return realID;
-	}
+	int addNode(Node *n);
 
-	int addWay(Way *w)
-	{
-		int realID = w->id() ? w->id() : nextWayId--;
-		w->setId(realID);
-		ways[realID] = w;
-		return realID;
-	}
+	int addWay(Way *w);
 
-	Node *getNode(int i)
-	{
-		return (nodes.find(i) != nodes.end()) ? nodes[i] : NULL;
-	}
-	Way *getWay(int i)
-	{
-		return (ways.find(i) != ways.end()) ? ways[i] : NULL;
-	}
+	Node *getNode(int i);
 
-	Node *nextNode()
-	{
-		Node *n = (nodeIterator == nodes.end()) ? NULL : nodeIterator->second;
-		nodeIterator++;
-		return n;
-	}
+	Way *getWay(int i);
 
-	Way *nextWay()
-	{
-		Way *w = (wayIterator == ways.end()) ? NULL : wayIterator->second;
-		wayIterator++;
-		return w;
-	}
+	Node *nextNode();
 
-	void rewindNodes()
-	{
-		nodeIterator = nodes.begin();
-	}
-	void rewindWays()
-	{
-		wayIterator = ways.begin();
-	}
-	bool hasMoreNodes() const
-	{
-		return nodeIterator != nodes.end();
-	}
-	bool hasMoreWays() const
-	{
-		return wayIterator != ways.end();
-	}
+	Way *nextWay();
+
+	void rewindNodes();
+
+	void rewindWays();
+
+	bool hasMoreNodes() const;
+
+	bool hasMoreWays() const;
 
 	std::vector<double> getWayCoords(int);
 
 	std::vector<int> getWayNodes(int wayid);
+
 	int getParentWayOfNode(int nodeid);
 
 	std::set<std::string> getWayTags(FeatureClassification* classification =
@@ -119,12 +73,17 @@ public:
 	std::set<std::string> getNodeTags();
 
 	void toXML(std::ostream &strm);
+
 	void toOSGB();
+
 	bool makeShp(const std::string& nodes, const std::string& ways,
 			const std::string&, const std::string&);
+
 	bool makeNodeShp(const std::string& shpname);
+
 	bool makeWayShp(const std::string &shpname, FeatureClassification*, bool =
 			false);
+
 	Components * cleanWays();
 
 private:

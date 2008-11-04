@@ -36,55 +36,27 @@ protected:
 public:
 	std::map<std::string, std::string> tags;
 
-	Object(int id=0) : m_id(id)
-	{
-	}
+	Object(int id = 0);
 
-	void setName(const std::string& n)
-	{
-		//name = n;
-		tags["name"] = n;
-	}
+	int id() const;
 
-	std::string getName()
-	{
-		//return name;
-		return (tags.find("name") != tags.end()) ? tags["name"] : "";
-	}
+	void setId(int id);
 
-	bool isFromOSM()
-	{
-		return m_id > 0;
-	}
+	void setName(const std::string& n);
 
-	void addTag(std::string key, std::string value)
-	{
-		tags[key] = value;
-	}
+	std::string getName();
 
-	std::string getTag(const std::string& tag)
-	{
-		return (tags.find(tag) != tags.end()) ? tags[tag] : "";
-	}
+	bool isFromOSM();
+
+	void addTag(std::string key, std::string value);
+
+	std::string getTag(const std::string& tag);
 
 	std::vector<std::string> getTags();
 
-	bool hasTags() const
-	{
-		return tags.size() > 0;
-	}
+	bool hasTags() const;
 
 	void tagsToXML(std::ostream &strm);
-
-	int id() const
-	{
-		return m_id;
-	}
-
-	void setId(int id)
-	{
-		m_id = id;
-	}
 
 private:
 	int m_id;

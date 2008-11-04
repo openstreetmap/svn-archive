@@ -15,10 +15,7 @@ class Parser
 {
 public:
 	static Components* parse(std::istream&);
-	static std::string getError()
-	{
-		return error;
-	}
+	static std::string getError();
 
 private:
 	static void startElement(void *d, const XML_Char* name,

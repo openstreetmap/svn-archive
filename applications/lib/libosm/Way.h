@@ -2,7 +2,7 @@
 #define WAY_H
 
 /*
-    Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
+    Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  */
 
 // 030706 change internal representation from Segment* to int (seg id)
-#include "Segment.h"
+#include "Node.h"
 #include <vector>
 #include "Object.h"
 
@@ -32,10 +32,10 @@ using std::vector;
 namespace OSM
 {
 
-class Way : public Object 
+class Way : public Object
 {
 protected:
-	vector<int> segments;
+	vector<int> nodes;
 
 public:
 	Way()
@@ -48,16 +48,16 @@ public:
 		this->id=id;
 	}
 
-	void addSegment (int s)
+	void addNode (int n)
 	{
-		segments.push_back(s);
+		nodes.push_back(n);
 	}
 
-	int removeSegment(int);
-	bool addSegmentAt(int index, int s);
+	int removeNode(int);
+	bool addNodeAt(int index, int n);
 
-	int getSegment(int i);
-	int nSegments() { return segments.size(); }
+	int getNode(int i);
+	int nNodes() { return nodes.size(); }
 
 	void toXML(std::ostream &strm);
 };

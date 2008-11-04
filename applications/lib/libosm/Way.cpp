@@ -27,45 +27,44 @@ using std::endl;
 namespace OSM
 {
 
-// remove a segment - returns its position
-int Way::removeSegment(int s)
+// remove a node - returns its position
+int Way::removeNode(int n)
 {
-	for(vector<int>::iterator i=segments.begin(); i!=segments.end(); i++)
+	for(vector<int>::iterator i=nodes.begin(); i!=nodes.end(); i++)
 	{
-		if(*i==s)
+		if(*i==n)
 		{
-			int index = i-segments.begin();
-			segments.erase(i);
+			int index = i-nodes.begin();
+			nodes.erase(i);
 			return index;
 		}
 	}
 	return -1;
 }
 
-// Insert a segment at position 'index'
-bool Way::addSegmentAt(int index, int s)
+// Insert a node at position 'index'
+bool Way::addNodeAt(int index, int n)
 {
-	vector<int>::iterator i = segments.begin() + index;
-	if(s>0)
+	vector<int>::iterator i = nodes.begin() + index;
+	if(n>0)
 	{
-		segments.insert(i,s);
+		nodes.insert(i,n);
 		return true;
 	}
 	return false;
 }
 
-int Way::getSegment(int i)
+int Way::getNode(int i)
 {
-	return (i>=0 && i<static_cast<int>(segments.size())) ?  (segments[i]) : -1;
+	return (i>=0 && i<static_cast<int>(nodes.size())) ?  (nodes[i]) : -1;
 }
 
 void Way::toXML(std::ostream &strm)
 {
-
-	if (hasTags() || segments.size()) {
+	if (hasTags() || nodes.size()) {
 		strm << "  <way id='" << id << "'>" << endl;
-		for(unsigned int count=0; count<segments.size(); count++)
-			strm  << "    <seg id='" << segments[count] << "'/>" << endl;
+		for(unsigned int count=0; count<nodes.size(); count++)
+			strm  << "    <node id='" << nodes[count] << "'/>" << endl;
 		tagsToXML(strm);
 		strm << "  </way>" << endl;
 	} else {

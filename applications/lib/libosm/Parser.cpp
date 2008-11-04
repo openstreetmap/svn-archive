@@ -1,6 +1,5 @@
 #include "Parser.h"
 #include "Node.h"
-#include "Segment.h"
 #include "Way.h"
 #include "Components.h"
 #include <string>
@@ -14,7 +13,7 @@ namespace OSM
 
  Object* Parser::curObject=NULL;
  int Parser::curID=0;
- bool Parser::inNode=false, Parser::inSegment=false, Parser::inWay=false;
+ bool Parser::inNode=false, Parser::inWay=false;
  Components* Parser::components=NULL;
  std::string Parser::error="";
 
@@ -22,7 +21,6 @@ void Parser::startElement(void *d,const XML_Char* element,
 		const XML_Char** attrs)
 {
 	double lat, lon;
-	int from, to;
 	std::string tags;
 
 		if(!strcmp(element,"node"))
@@ -46,23 +44,6 @@ void Parser::startElement(void *d,const XML_Char* element,
 
 
 		}
-		else if(!strcmp(element,"segment"))
-		{
-			curID=0;
-			inSegment = true;
-			for(int count=0; attrs[count]; count+=2)
-			{
-				if(!strcmp(attrs[count],"from"))
-					from = atoi(attrs[count+1]);
-				if(!strcmp(attrs[count],"to"))
-					to = atoi(attrs[count+1]);
-				if(!strcmp(attrs[count],"id"))
-					curID = atoi(attrs[count+1]);
-			}
-
-			curObject = new Segment(curID,from,to);
-			components->addSegment ((Segment*)curObject);
-		}
 		else if (!strcmp(element,"way"))
 		{
 			curID=0;
@@ -75,16 +56,16 @@ void Parser::startElement(void *d,const XML_Char* element,
 			curObject  =  new Way(curID);
 			components->addWay((Way*)curObject);
 		}
-		else if (!strcmp(element,"seg") && (inWay))
+		else if (!strcmp(element,"node") && (inWay))
 		{
-			int segID;
+			int nodeID;
 
 			for(int count=0; attrs[count]; count+=2)
 			{
-				if(!strcmp(attrs[count],"id"))
+				if(!strcmp(attrs[count],"ref"))
 				{
-					segID=atoi(attrs[count+1]);
-					((Way*)curObject)->addSegment(segID);
+					nodeID=atoi(attrs[count+1]);
+					((Way*)curObject)->addNode(nodeID);
 				}
 			}
 
@@ -110,10 +91,6 @@ void Parser::endElement(void *d,const XML_Char* element)
 	if(!strcmp(element,"node"))
 	{
 		inNode = false;
-	}
-	else if (!strcmp(element,"segment"))
-	{
-		inSegment = false;
 	}
 	else if (!strcmp(element,"way"))
 	{

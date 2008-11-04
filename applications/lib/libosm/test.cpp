@@ -23,7 +23,7 @@ int main(int argc,char* argv[])
 	OSM::Components *comp1 = OSM::Parser::parse(in);
 	in.close();
 
-	OSM::Client client("http://www.openstreetmap.org/api/0.3");
+	OSM::Client client("http://www.openstreetmap.org/api/0.5");
 	client.setLoginDetails(argv[2],argv[3]);
 
 	std::string osmData = client.grabOSM("map",-0.75,51.02,-0.7,51.07);
@@ -47,7 +47,6 @@ int main(int argc,char* argv[])
 void dotest(OSM::Components *comp1)
 {
 	comp1->rewindNodes();
-	comp1->rewindSegments();
 	comp1->rewindWays();
 
 	while(comp1->hasMoreNodes())

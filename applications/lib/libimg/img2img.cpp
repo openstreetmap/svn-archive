@@ -21,6 +21,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstdlib>
 #include "time.h"
 
 using std::cout;

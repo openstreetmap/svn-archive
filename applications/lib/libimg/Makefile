@@ -1,5 +1,5 @@
 CXXFLAGS = -I../libosm/
-LDFLAGS = -L../libosm/ -L./ -losm -limg -lexpat -lcurl -lshp
+LDFLAGS = -L../libosm/ -L../ccoord -L./ -losm -limg -lexpat -lcurl -lshp -lccoord
 OBJ = Img.o ImgHeader.o ImgSubfile.o ImgData.o ImgFat.o ImgTre.o
 OSM2IMGOBJ = osm2img.o 
 IMG2IMGOBJ = img2img.o

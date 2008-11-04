@@ -18,6 +18,8 @@
  */
 #include "Img.h"
 
+#include <cstring>
+
 ImgData::ImgData(){
   timeval tv;
   int retval;

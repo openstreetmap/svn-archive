@@ -37,6 +37,8 @@ public abstract class DownloadConfiguration
     private static final String TILE_SERVER = "TileServer";
     private static final String OUTPUTLOCATION = "OutputLocation";
 
+    public static final String TYPE = "Type";
+
     /**
      * constructor setting propertyFileName
      * 

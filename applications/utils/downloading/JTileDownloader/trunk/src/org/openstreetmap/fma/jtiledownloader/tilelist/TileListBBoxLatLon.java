@@ -42,15 +42,17 @@ public class TileListBBoxLatLon
     public void calculateTileValuesXY()
     {
 
+        log("calculate tile values for (BBoxLatLon):");
+
         log("minLat=" + _minLat);
         log("minLon=" + _minLon);
         log("maxLat=" + _maxLat);
         log("maxLon=" + _maxLon);
 
-        _xTopLeft = calculateTileX(_minLat, _downloadZoomLevel);
-        _yTopLeft = calculateTileY(_minLon, _downloadZoomLevel);
-        _xBottomRight = calculateTileX(_maxLat, _downloadZoomLevel);
-        _yBottomRight = calculateTileY(_maxLon, _downloadZoomLevel);
+        _xTopLeft = calculateTileX(_minLon, _downloadZoomLevel);
+        _yTopLeft = calculateTileY(_maxLat, _downloadZoomLevel);
+        _xBottomRight = calculateTileX(_maxLon, _downloadZoomLevel);
+        _yBottomRight = calculateTileY(_minLat, _downloadZoomLevel);
 
         log("_xTopLeft=" + _xTopLeft);
         log("_yTopLeft=" + _yTopLeft);

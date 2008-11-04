@@ -25,36 +25,64 @@
 
 #include <vector>
 
-
 namespace OSM
 {
 
+/**
+ * A way is an ordered list of nodes
+ */
 class Way: public Object
 {
 public:
-	Way(int id = 0) : Object(id)
-	{
-	}
+	/**
+	 * Constructor Creates a new Way (ordered list of nodes)
+	 * @param id The unique id to assign. Default is 0
+	 */
+	Way(int id = 0);
 
-	void addNode(int n)
-	{
-		nodes.push_back(n);
-	}
+	/**
+	 * Add another node to this way
+	 * @param id The ID of the node to add
+	 */
+	void addNode(int id);
 
-	int removeNode(int);
+	/**
+	 * Add a node to the way at the specified position if possible
+	 * @param index Place to insert the node at
+	 * @param n
+	 * @return
+	 */
+	bool addNodeAt(unsigned int index, int n);
 
-	bool addNodeAt(int index, int n);
+	/**
+	 * Remove a node from this way
+	 * @param id The ID of the node to remove
+	 * @return The position of the node in the way
+	 */
+	int removeNode(int id);
 
-	int getNode(int i) const;
+	/**
+	 * Accessor for the node at the given  index
+	 * @param index
+	 * @return
+	 */
+	int getNode(unsigned int index) const;
 
-	int nNodes() const
-	{
-		return nodes.size();
-	}
+	/**
+	 * Returns the number of nodes
+	 * @return The number of nodes this way consists of
+	 */
+	int nNodes() const;
 
+	/**
+	 * Write an xml representation of this way and its elements
+	 * to the given stream
+	 * @param strm
+	 */
 	void toXML(std::ostream &strm);
 
 private:
+	/** Keeps node ids this way contains */
 	std::vector<int> nodes;
 };
 

@@ -32,60 +32,64 @@
 namespace OSM
 {
 
+/**
+ * A node represents a point with a unique ID and a known (latitude/longitude)
+ */
 class Node: public Object
 {
+public:
+	/**
+	 * Constructor. Creates a node at the given position with index 0.
+	 * @param lat Latitude of the point (node)
+	 * @param lon Longitude of the point (node)
+	 */
+	Node(double lat = 0, double lon = 0);
+
+	/**
+	 * Constructor. Creates a node at the given position with the given index.
+	 * @param index Unique node index
+	 * @param lat Latitude of the point (node)
+	 * @param lon Longitude of the point (node)
+	 */
+	Node(int index, double lat, double lon);
+
+	/**
+	 * Nodes are considered equal if both their
+	 * longitude and latitude position differs less than
+	 * 0.000001 each.
+	 * @param other Node to compare to
+	 * @return True if the nodes are equal (lon/lat difference is smaller than 0.000001 for each)
+	 */
+	bool operator==(const Node& other);
+
+	/**
+	 * Accessor for the node latitude
+	 * @return Latitude of this node
+	 */
+	double getLat();
+
+	/**
+	 * Accessor for the node longitude
+	 * @return Longitude of this node
+	 */
+	double getLon();
+
+	/**
+	 * Set longitude and latitude
+	 * @param lat New latitude of this node
+	 * @param lon New longitude of this node
+	 * @see #getLat, #getLon
+	 */
+	void setCoords(double lat, double lon);
+
+	/**
+	 * Write an xml representation of this node to the given stream
+	 * @param strm Stream to write to
+	 */
+	void toXML(std::ostream &strm);
+
 private:
 	double lat, lon;
-
-public:
-	Node(double lt = 0, double ln = 0) :
-		Object(0), lat(lt), lon(ln)
-	{
-	}
-
-	Node(int i, double lt, double ln) :
-		Object(i), lat(lt), lon(ln)
-	{
-	}
-
-	bool operator==(const Node& tp)
-	{
-		return (fabs(lat - tp.lat) < 0.000001) && (fabs(lon - tp.lon)
-				< 0.000001);
-	}
-
-	double getLat()
-	{
-		return lat;
-	}
-	double getLon()
-	{
-		return lon;
-	}
-
-	void setCoords(double lat, double lon)
-	{
-		this->lat = lat;
-		this->lon = lon;
-	}
-
-	void toXML(std::ostream &strm)
-	{
-		std::streamsize old = strm.precision(15);
-		if (hasTags())
-		{
-			strm << "  <node id='" << id() << "' lat='" << lat << "' lon='"
-					<< lon << "'>" << std::endl;
-			tagsToXML(strm);
-			strm << "  </node>" << std::endl;
-		}
-		else
-		{
-			strm << "  <node id='" << id() << "' lat='" << lat << "' lon='"
-					<< lon << "'/>" << std::endl;
-		}
-		strm.precision(old);
-	}
 };
 
 }

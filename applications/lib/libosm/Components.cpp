@@ -49,6 +49,25 @@ namespace OSM
 {
 
 
+Components::Components() :
+	nodes(), ways(), nextNodeId(-1), nextSegmentId(-1), nextWayId(-1),
+			destroyComponents(true)
+{
+	nodeIterator = nodes.begin();
+	wayIterator = ways.begin();
+}
+
+Components::~Components()
+{
+	if (destroyComponents)
+		destroy();
+}
+
+void Components::setDestroyComponents(bool b)
+{
+	destroyComponents = b;
+}
+
 void Components::destroy()
 {
     for(std::map<int,Node*>::iterator i=nodes.begin(); i!=nodes.end(); i++)
@@ -56,6 +75,63 @@ void Components::destroy()
 
     for(std::map<int,Way*>::iterator i=ways.begin(); i!=ways.end(); i++)
         delete i->second;
+}
+
+int Components::addNode(Node *n)
+{
+	int realID = n->id() ? n->id() : nextNodeId--;
+	n->setId(realID);
+	nodes[realID] = n;
+	return realID;
+}
+
+int Components::addWay(Way *w)
+{
+	int realID = w->id() ? w->id() : nextWayId--;
+	w->setId(realID);
+	ways[realID] = w;
+	return realID;
+}
+
+Node *Components::getNode(int i)
+{
+	return (nodes.find(i) != nodes.end()) ? nodes[i] : NULL;
+}
+
+Way *Components::getWay(int i)
+{
+	return (ways.find(i) != ways.end()) ? ways[i] : NULL;
+}
+
+Node *Components::nextNode()
+{
+	Node *n = (nodeIterator == nodes.end()) ? NULL : nodeIterator->second;
+	nodeIterator++;
+	return n;
+}
+
+Way *Components::nextWay()
+{
+	Way *w = (wayIterator == ways.end()) ? NULL : wayIterator->second;
+	wayIterator++;
+	return w;
+}
+
+void Components::rewindNodes()
+{
+	nodeIterator = nodes.begin();
+}
+void Components::rewindWays()
+{
+	wayIterator = ways.begin();
+}
+bool Components::hasMoreNodes() const
+{
+	return nodeIterator != nodes.end();
+}
+bool Components::hasMoreWays() const
+{
+	return wayIterator != ways.end();
 }
 
 // Return a vector of the coordinates of all the points making up a way,

@@ -49,16 +49,15 @@ public class BBoxLatLonPanel
 
     private TileListBBoxLatLon _tileList = new TileListBBoxLatLon();
 
-    JLabel _labelMinLat = new JLabel("Min. Lat:");
+    JLabel _labelMinLat = new JLabel("Min. Latitude:");
     JTextField _textMinLat = new JTextField();
-    JLabel _labelMinLon = new JLabel("Min. Lon:");
+    JLabel _labelMinLon = new JLabel("Min. Longitude:");
     JTextField _textMinLon = new JTextField();
-    JLabel _labelMaxLat = new JLabel("Max. Lat:");
+    JLabel _labelMaxLat = new JLabel("Max. Latitude:");
     JTextField _textMaxLat = new JTextField();
-    JLabel _labelMaxLon = new JLabel("Max. Lon:");
+    JLabel _labelMaxLon = new JLabel("Max. Longitude:");
     JTextField _textMaxLon = new JTextField();
 
-    private final JTileDownloaderMainView _mainView;
     private DownloadConfigurationBBoxLatLon _downloadConfig;
 
     /**
@@ -66,8 +65,7 @@ public class BBoxLatLonPanel
      */
     public BBoxLatLonPanel(JTileDownloaderMainView mainView)
     {
-        super();
-        _mainView = mainView;
+        super(mainView);
 
         createPanel();
         initializePanel();
@@ -86,13 +84,7 @@ public class BBoxLatLonPanel
         _textMaxLat.setText("" + _downloadConfig.getMaxLat());
         _textMaxLon.setText("" + _downloadConfig.getMaxLon());
 
-        setOutputLocation(_downloadConfig.getOutputLocation());
-        _mainView.getMainPanel().getTextOutputFolder().setText(getOutputLocation());
-        setDownloadZoomLevel(_downloadConfig.getOutputZoomLevel());
-        _mainView.getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
-        setTileServerBaseUrl(_downloadConfig.getTileServer());
-        _mainView.getMainPanel().initializeTileServer(getTileServerBaseUrl());
-
+        setCommonValues(_downloadConfig);
     }
 
     /**
@@ -161,13 +153,6 @@ public class BBoxLatLonPanel
         _tileList.setMaxLon(getMaxLon());
         _tileList.calculateTileValuesXY();
         updateNumberOfTiles();
-    }
-
-    private void updateNumberOfTiles()
-    {
-        long numberOfTiles = 0;
-        numberOfTiles = getNumberOfTilesToDownload();
-        _mainView.getMainPanel().getTextNumberOfTiles().setText("" + numberOfTiles);
     }
 
     public void saveConfig()
@@ -290,7 +275,6 @@ public class BBoxLatLonPanel
     public void updateAll()
     {
         updateTileListSquare();
-        updateNumberOfTiles();
     }
 
     /**

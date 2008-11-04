@@ -18,7 +18,7 @@ int main(int argc,char* argv[])
 		cerr<<"Usage: test InOsmFile OsmUsername OsmPassword" << endl;
 		exit(1);
 	}
-	
+
 	std::ifstream in(argv[1]);
 	OSM::Components *comp1 = OSM::Parser::parse(in);
 	in.close();
@@ -58,9 +58,9 @@ void dotest(OSM::Components *comp1)
 
 		std::vector<std::string> keys = n->getTags();
 
-		for(int count=0; count<keys.size(); count++)
+		for(unsigned int count=0; count<keys.size(); count++)
 		{
-			cout  << "Key: " << keys[count] << " Value: " << 
+			cout  << "Key: " << keys[count] << " Value: " <<
 				n->tags[keys[count]] << endl;
 		}
 	}
@@ -71,9 +71,9 @@ void dotest(OSM::Components *comp1)
 
 		std::vector<std::string> keys = w->getTags();
 
-		for(int count=0; count<keys.size(); count++)
+		for(unsigned int count=0; count<keys.size(); count++)
 		{
-			cout  << "Key: " << keys[count] << " Value: " << 
+			cout  << "Key: " << keys[count] << " Value: " <<
 				w->tags[keys[count]] << endl;
 		}
 	}

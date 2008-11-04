@@ -55,8 +55,8 @@ bool Way::addSegmentAt(int index, int s)
 }
 
 int Way::getSegment(int i)
-{ 
-	return (i>=0 && i<segments.size()) ?  (segments[i]) : -1; 
+{
+	return (i>=0 && i<static_cast<int>(segments.size())) ?  (segments[i]) : -1;
 }
 
 void Way::toXML(std::ostream &strm)
@@ -64,7 +64,7 @@ void Way::toXML(std::ostream &strm)
 
 	if (hasTags() || segments.size()) {
 		strm << "  <way id='" << id << "'>" << endl;
-		for(int count=0; count<segments.size(); count++)
+		for(unsigned int count=0; count<segments.size(); count++)
 			strm  << "    <seg id='" << segments[count] << "'/>" << endl;
 		tagsToXML(strm);
 		strm << "  </way>" << endl;

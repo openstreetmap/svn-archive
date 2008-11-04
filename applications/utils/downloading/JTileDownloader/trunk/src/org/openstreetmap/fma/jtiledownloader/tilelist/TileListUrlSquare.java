@@ -24,7 +24,7 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
  *    General Public License along with JTileDownloader.  
  *    If not, see <http://www.gnu.org/licenses/>.
  */
-public class TileListSquare
+public class TileListUrlSquare
     implements TileList, Constants
 {
     private int _xTopLeft = 0;
@@ -41,7 +41,7 @@ public class TileListSquare
     public void calculateTileValuesXY()
     {
 
-        log("calculate tile values for lat " + _latitude + ", lon " + _longitude + ", radius " + _radius);
+        log("calculate tile values for (UrlSquare:) lat " + _latitude + ", lon " + _longitude + ", radius " + _radius);
 
         if (_radius > 6370000 * 2 * 4)
         {

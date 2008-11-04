@@ -2,7 +2,7 @@ package org.openstreetmap.fma.jtiledownloader;
 
 import junit.framework.TestCase;
 
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -38,7 +38,7 @@ public class TileListDownloaderTest
     {
         super.setUp();
 
-        _dl = new TileListDownloader("path", new TileListSquare());
+        _dl = new TileListDownloader("path", new TileListUrlSquare());
     }
 
     /**

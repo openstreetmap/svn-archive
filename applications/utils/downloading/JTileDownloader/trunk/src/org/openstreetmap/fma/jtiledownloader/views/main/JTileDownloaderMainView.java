@@ -392,6 +392,8 @@ public class JTileDownloaderMainView
     public final void setInputTabSelectedIndex(int inputTabSelectedIndex)
     {
         _inputTabSelectedIndex = inputTabSelectedIndex;
+        _mainPanel.getInputPanel().loadConfig();
+
     }
 
     /**

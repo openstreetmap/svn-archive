@@ -14,11 +14,7 @@ namespace OSM
 struct KeyVal
 {
 	std::string k, v;
-	KeyVal()
-	{
-	}
-
-	KeyVal(std::string k, std::string v)
+	KeyVal(std::string k=std::string(), std::string v=std::string())
 	{
 		this->k = k;
 		this->v = v;
@@ -46,12 +42,12 @@ public:
 		areas.push_back(KeyVal(k, v));
 	}
 
-	std::string getFeatureClass(Object *object)
+	std::string getFeatureClass(Object *object) const
 	{
 		for (std::map<std::string, std::string>::iterator i =
 				object->tags.begin(); i != object->tags.end(); i++)
 		{
-			for (std::vector<KeyVal>::iterator j = ways.begin(); j
+			for (std::vector<KeyVal>::const_iterator j = ways.begin(); j
 					!= ways.end(); j++)
 			{
 				if (i->first == j->k && i->second == j->v)
@@ -59,7 +55,7 @@ public:
 					return "way";
 				}
 			}
-			for (std::vector<KeyVal>::iterator j = areas.begin(); j
+			for (std::vector<KeyVal>::const_iterator j = areas.begin(); j
 					!= areas.end(); j++)
 			{
 				if (i->first == j->k && i->second == j->v)

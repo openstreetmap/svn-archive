@@ -113,7 +113,7 @@ bool makeWayShp(OSM::Components *comp, const char* shpname)
 					OSM::Way *way = comp->nextWay();
 					if(way)
 					{
-						wayCoords = comp->getWayCoords(way->id);
+						wayCoords = comp->getWayCoords(way->id());
 						if(wayCoords.size())
 						{
 							longs = getLongs(wayCoords);

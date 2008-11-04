@@ -34,13 +34,10 @@ class Object
 protected:
 
 public:
-	// violates encapsulation but for ease of use...
-	int id;
 	std::map<std::string, std::string> tags;
 
-	Object()
+	Object(int id=0) : m_id(id)
 	{
-		id = 0;
 	}
 
 	void setName(const std::string& n)
@@ -57,7 +54,7 @@ public:
 
 	bool isFromOSM()
 	{
-		return id > 0;
+		return m_id > 0;
 	}
 
 	void addTag(std::string key, std::string value)
@@ -72,12 +69,25 @@ public:
 
 	std::vector<std::string> getTags();
 
-	bool hasTags()
+	bool hasTags() const
 	{
 		return tags.size() > 0;
 	}
 
 	void tagsToXML(std::ostream &strm);
+
+	int id() const
+	{
+		return m_id;
+	}
+
+	void setId(int id)
+	{
+		m_id = id;
+	}
+
+private:
+	int m_id;
 };
 
 }

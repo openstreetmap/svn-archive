@@ -2,7 +2,7 @@
 #define NODE_H
 
 /*
-    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
+    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,18 +21,15 @@
  */
 
 
-#include <vector>
-#include <map>
-#include <fstream>
-#include <string>
-
-#include <iostream>
-
-#include <cmath>
 #include "Object.h"
 
-using std::ostream;
-using std::endl;
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
 
 namespace OSM
 {
@@ -45,26 +42,26 @@ private:
 public:
 	Node()
 	{
-		lat=lon=0; 
-		id = 0; 
+		lat=lon=0;
+		id = 0;
 	}
 
 	Node(double lt, double ln)
 	{
-		lat=lt; 
-		lon=ln; 
-		id=0; 
+		lat=lt;
+		lon=ln;
+		id=0;
 	}
 	Node(int i,double lt, double ln)
 	{
-		lat=lt; 
-		lon=ln; 
-		id=i; 
+		lat=lt;
+		lon=ln;
+		id=i;
 	}
 
 	bool operator==(const Node& tp)
-	{ 
-		return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); 
+	{
+		return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001);
 	}
 
 	double getLat() { return lat; }
@@ -78,12 +75,12 @@ public:
 		std::streamsize old = strm.precision(15);
 		if (hasTags()) {
 			strm << "  <node id='" << id << "' lat='" << lat << "' lon='" << lon
-					<<"'>" << endl;
+					<<"'>" << std::endl;
 			tagsToXML(strm);
-			strm << "  </node>" << endl;
+			strm << "  </node>" << std::endl;
 		} else {
 			strm << "  <node id='" << id << "' lat='" << lat << "' lon='" << lon
-					<<"'/>" << endl;
+					<<"'/>" << std::endl;
 		}
 		strm.precision(old);
 	}

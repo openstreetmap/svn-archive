@@ -84,11 +84,11 @@ public class UrlSquarePanel
         _textRadius.setText("" + _downloadConfig.getRadius());
 
         setOutputLocation(_downloadConfig.getOutputLocation());
+        _mainView.getMainPanel()._textOutputFolder.setText(getOutputLocation());
         setDownloadZoomLevel(_downloadConfig.getOutputZoomLevel());
+        _mainView.getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
         setTileServerBaseUrl(_downloadConfig.getTileServer());
         _mainView.getMainPanel().initializeTileServer(getTileServerBaseUrl());
-        _mainView.getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
-        _mainView.getMainPanel()._textOutputFolder.setText(getOutputLocation());
 
         parsePasteUrl();
 

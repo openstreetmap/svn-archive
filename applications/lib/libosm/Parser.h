@@ -14,7 +14,7 @@ class Parser
 private:
 	static Object *curObject;
 	static int curID;
-	static bool inNode, inSegment, inWay;
+	static bool inNode, inWay;
 	static Components* components;
 	static std::string error;
 

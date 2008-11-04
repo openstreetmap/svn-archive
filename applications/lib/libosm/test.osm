@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<osm version="0.3" generator="Test file with tricky values">
+<osm version="0.5" generator="Test file with tricky values">
   <node id="1" lat="2" lon="3">
     <tag k="less-than"    v="&lt;"/>
     <tag k="greater-than" v="&gt;"/>
@@ -11,12 +11,12 @@
   <node id="3" lat="3" lon="4"/>
   <node id="4" lat="4" lon="4"/>
   <node id="5" lat="5" lon="4"/>
-  <segment id="2" from="3" to="4"/>
-  <segment id="3" from="4" to="5"/>
-  <segment id="4" from="5" to="1"/>
   <way id="2"/>
   <way id="3">
-	  <seg id="2"/>
+	  <nd ref="3"/>
+	  <nd ref="4"/>
+	  <nd ref="5"/>
+	  <nd ref="1"/>
   </way>
   <way id="4">
 	  <tag k="highway" v="primary"/>

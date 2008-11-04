@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
+    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 #define FREEMAP_COMPONENT_H
 
 #include "Node.h"
-#include "Segment.h"
 #include "Way.h"
 #include "FeatureClassification.h"
 #include <vector>
@@ -39,19 +38,16 @@ class Components
 {
 private:
 	std::map<int,Node*> nodes;
-	std::map<int,Segment*> segments;
 	std::map<int,Way*> ways;
 	int nextNodeId, nextSegmentId, nextWayId;
 	bool destroyComponents;
 
 	std::map<int,Node*>::iterator nodeIterator;
-	std::map<int,Segment*>::iterator segmentIterator;
 	std::map<int,Way*>::iterator wayIterator;
 
 public:
-	Components() { nextNodeId = nextSegmentId = nextWayId = -1; 
+	Components() { nextNodeId = nextSegmentId = nextWayId = -1;
 						destroyComponents=true; nodeIterator=nodes.begin();
-						segmentIterator=segments.begin();
 						wayIterator=ways.begin(); }
 	~Components() { if(destroyComponents) destroy(); }
 	void setDestroyComponents(bool b) { destroyComponents = b; }
@@ -65,14 +61,6 @@ public:
 		return realID;
 	}
 
-	int addSegment (Segment *s)
-	{
-		int realID = (s->id) ? s->id : nextSegmentId--;
-		s->id=realID;
-		segments[realID] = s;
-		return realID;
-	}
-
 	int addWay (Way *w)
 	{
 		int realID = (w->id) ? w->id : nextWayId--;
@@ -82,8 +70,6 @@ public:
 	}
 
 	Node *getNode(int i) { return (nodes.find(i) != nodes.end())?nodes[i]:NULL;}
-	Segment *getSegment(int i) { return (segments.find(i)!=segments.end())?
-								segments[i] : NULL; }
 	Way *getWay(int i) { return (ways.find(i) != ways.end())?ways[i]:NULL;}
 
 	Node *nextNode()
@@ -93,40 +79,27 @@ public:
 		return n;
 	}
 
-	Segment *nextSegment()
-	{
-		Segment *s =  (segmentIterator==segments.end()) ? NULL: 
-			segmentIterator->second;
-		segmentIterator++;
-		return s;
-	}
-
 	Way *nextWay()
 	{
-		Way *w =  (wayIterator==ways.end()) ? NULL: 
+		Way *w =  (wayIterator==ways.end()) ? NULL:
 			wayIterator->second;
 		wayIterator++;
 		return w;
 	}
 
 	void rewindNodes() { nodeIterator=nodes.begin(); }
-	void rewindSegments() { segmentIterator=segments.begin(); }
 	void rewindWays() { wayIterator=ways.begin(); }
 	bool hasMoreNodes() { return nodeIterator!=nodes.end(); }
-	bool hasMoreSegments() { return segmentIterator!=segments.end(); }
 	bool hasMoreWays() { return wayIterator!=ways.end(); }
 
 	std::vector<double> getWayCoords(int);
 
-	std::vector<int> getNodeSegments(int nodeid);
-	std::set<int> getWayNodes(int wayid);
-	int getParentWayOfSegment(int segid);
+	std::vector<int> getWayNodes(int wayid);
+	int getParentWayOfNode(int nodeid);
 
 	std::set<std::string> getWayTags
 			(FeatureClassification* classification=NULL , bool doArea=false);
 	std::set<std::string> getNodeTags();
-
-	std::vector<int> orderWay(int wayid);
 
 	void toXML(std::ostream &strm);
 	void toOSGB();
@@ -139,6 +112,6 @@ public:
 };
 
 
-} 
+}
 
 #endif // FREEMAP_COMPONENT_H

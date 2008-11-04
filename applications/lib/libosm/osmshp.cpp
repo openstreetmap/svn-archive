@@ -159,8 +159,7 @@ bool makeWayShp(OSM::Components *comp, const char* shpname)
 std::vector<double> getLongs(const std::vector<double>& wayCoords)
 {
 	std::vector<double> longs;
-	int size=wayCoords.size();
-	for(int count=0; count<wayCoords.size(); count+=2)
+	for(unsigned int count=0; count<wayCoords.size(); count+=2)
 	{
 		longs.push_back(wayCoords[count]);
 	}
@@ -170,7 +169,7 @@ std::vector<double> getLongs(const std::vector<double>& wayCoords)
 std::vector<double> getLats(const std::vector<double>& wayCoords)
 {
 	std::vector<double> lats;
-	for(int count=1; count<wayCoords.size(); count+=2)
+	for(unsigned int count=1; count<wayCoords.size(); count+=2)
 	{
 		lats.push_back(wayCoords[count]);
 	}

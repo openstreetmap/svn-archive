@@ -109,7 +109,6 @@ std::vector<double> Components::getWayCoords(int id)
 std::set<int> Components::getWayNodes(int wayid)
 {
 	std::set<int> ids;
-	Node *n1, *n2;
 	Segment *s;
 	Way *w = getWay(wayid);
 	if(w)
@@ -145,7 +144,7 @@ std::set<std::string> Components::getWayTags
 			(doArea==false && classification->getFeatureClass(w)!="area") )
 		{
 			curTags = w->getTags();
-			for(int count=0; count<curTags.size(); count++)
+			for(unsigned int count=0; count<curTags.size(); count++)
 				tags.insert(curTags[count]);
 		}
 	}
@@ -163,7 +162,7 @@ std::set<std::string> Components::getNodeTags()
 	{
 		n = nextNode();
 		curTags = n->getTags();
-		for(int count=0; count<curTags.size(); count++)
+		for(unsigned int count=0; count<curTags.size(); count++)
 			tags.insert(curTags[count]);
 	}
 	return tags;
@@ -217,7 +216,7 @@ std::vector<int> Components::orderWay(int wayid)
 	cerr << "orderWay()"<<endl;
 	std::vector<int> orderednodes;
 
-	Way *w = getWay(wayid);
+	getWay(wayid);
 	std::map<int,std::vector<int> > segsRecordForEachNode;
 
 	std::set<int> nodes = getWayNodes(wayid);
@@ -226,7 +225,7 @@ std::vector<int> Components::orderWay(int wayid)
 		//cerr << "setting up segs record: node=" << *i << endl;
 		segsRecordForEachNode[*i] = std::vector<int>();
 		std::vector<int> v = getNodeSegments(*i);
-		for(int count=0; count<v.size(); count++)
+		for(unsigned int count=0; count<v.size(); count++)
 		{
 			if(getParentWayOfSegment(v[count])==wayid)
 			{
@@ -265,8 +264,6 @@ std::vector<int> Components::orderWay(int wayid)
 	// if there is now a valid node (there should be!)
 	if(id!=0)
 	{
-		int firstID = id;
-
 		//cerr << "found a node with one segment=" << id << endl;
 		int idx = 0, segid;
 
@@ -307,7 +304,7 @@ std::vector<int> Components::orderWay(int wayid)
 				// If we arrive back at any previous node again, stop
 				// (way containing loop)
 				bool loop=false;
-				for(int z=0; z<orderednodes.size(); z++)
+				for(unsigned int z=0; z<orderednodes.size(); z++)
 				{
 					if(orderednodes[z]==id)
 					{
@@ -324,7 +321,7 @@ std::vector<int> Components::orderWay(int wayid)
 					// Find another segment of the new node
 					// If there isn't one, found will be false, so we quit
 
-					for(int count=0; count<segsRecordForEachNode[id].size();
+					for(unsigned int count=0; count<segsRecordForEachNode[id].size();
 						count++)
 					{
 						if(segsRecordForEachNode[id][count] != segid)
@@ -516,9 +513,9 @@ bool Components::makeWayShp(const std::string &shpname,
 						{
 							longs.clear();
 							lats.clear();
-							for(int count=0; count<wayCoords.size();count+=2)
+							for(unsigned int count=0; count<wayCoords.size();count+=2)
 								longs.push_back(wayCoords[count]);
-							for(int count=1; count<wayCoords.size(); count+=2)
+							for(unsigned int count=1; count<wayCoords.size(); count+=2)
 								lats.push_back(wayCoords[count]);
 
 							SHPObject *object = SHPCreateSimpleObject
@@ -581,7 +578,7 @@ Components * Components::cleanWays()
 				OSM::Way *way = new OSM::Way;
 				way->tags = w->tags;
 				compOut->addWay(way);
-				for(int i=0; i<nodes.size()-1; i++)
+				for(unsigned int i=0; i<nodes.size()-1; i++)
 				{
 					int segid=compOut->addSegment
 						(new OSM::Segment(nodes[i],nodes[i+1]));

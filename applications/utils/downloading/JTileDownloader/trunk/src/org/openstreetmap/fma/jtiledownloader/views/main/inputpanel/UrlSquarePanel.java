@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSquare;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
 
 /**
@@ -46,7 +46,7 @@ public class UrlSquarePanel
     private static final String COMPONENT_PASTE_URL = "pasteURL";
     private static final String COMPONENT_RADIUS = "radius";
 
-    private TileListSquare _tileListSquare = new TileListSquare();
+    private TileListUrlSquare _tileListSquare = new TileListUrlSquare();
 
     JLabel _labelPasteUrl = new JLabel("Paste URL:");
     JTextField _textPasteUrl = new JTextField();
@@ -58,7 +58,6 @@ public class UrlSquarePanel
     JLabel _labelRadius = new JLabel("Radius (km):");
     JTextField _textRadius = new JTextField();
 
-    private final JTileDownloaderMainView _mainView;
     private DownloadConfigurationUrlSquare _downloadConfig;
 
     /**
@@ -66,8 +65,7 @@ public class UrlSquarePanel
      */
     public UrlSquarePanel(JTileDownloaderMainView mainView)
     {
-        super();
-        _mainView = mainView;
+        super(mainView);
 
         createUrlSquarePanel();
         initializeUrlSquarePanel();
@@ -84,15 +82,9 @@ public class UrlSquarePanel
         _textPasteUrl.setText(_downloadConfig.getPasteUrl());
         _textRadius.setText("" + _downloadConfig.getRadius());
 
-        setOutputLocation(_downloadConfig.getOutputLocation());
-        _mainView.getMainPanel().getTextOutputFolder().setText(getOutputLocation());
-        setDownloadZoomLevel(_downloadConfig.getOutputZoomLevel());
-        _mainView.getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
-        setTileServerBaseUrl(_downloadConfig.getTileServer());
-        _mainView.getMainPanel().initializeTileServer(getTileServerBaseUrl());
+        setCommonValues(_downloadConfig);
 
         parsePasteUrl();
-
     }
 
     /**
@@ -192,13 +184,6 @@ public class UrlSquarePanel
         updateNumberOfTiles();
     }
 
-    private void updateNumberOfTiles()
-    {
-        long numberOfTiles = 0;
-        numberOfTiles = getNumberOfTilesToDownload();
-        _mainView.getMainPanel().getTextNumberOfTiles().setText("" + numberOfTiles);
-    }
-
     public void saveConfig()
     {
         _downloadConfig.setOutputLocation(getOutputLocation());
@@ -273,7 +258,6 @@ public class UrlSquarePanel
     public void updateAll()
     {
         updateTileListSquare();
-        updateNumberOfTiles();
     }
 
     /**

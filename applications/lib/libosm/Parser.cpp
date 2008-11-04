@@ -4,6 +4,7 @@
 #include "Way.h"
 #include "Components.h"
 #include <string>
+#include <cstring>
 
 using std::cerr;
 using std::endl;
@@ -22,7 +23,7 @@ void Parser::startElement(void *d,const XML_Char* element,
 {
 	double lat, lon;
 	int from, to;
-	std::string tags; 
+	std::string tags;
 
 		if(!strcmp(element,"node"))
 		{
@@ -39,10 +40,10 @@ void Parser::startElement(void *d,const XML_Char* element,
 					curID = atoi(attrs[count+1]);
 				count+=2;
 			}
-	
+
 			curObject = new Node(curID,lat,lon);
 			components->addNode ((Node*)curObject);
-			
+
 
 		}
 		else if(!strcmp(element,"segment"))
@@ -133,7 +134,7 @@ Components* Parser::parse(std::istream &in)
 	if(!p)
 	{
 		error = "Error creating parser";
-		return NULL; 
+		return NULL;
 	}
 
 	XML_SetElementHandler(p,Parser::startElement,Parser::endElement);

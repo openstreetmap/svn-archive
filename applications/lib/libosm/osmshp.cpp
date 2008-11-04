@@ -1,5 +1,5 @@
 #include "osmshp.h"
-#include <libshp/shapefil.h>
+#include <shapefil.h>
 #include "Node.h"
 #include "Components.h"
 #include "Parser.h"
@@ -52,7 +52,7 @@ bool makeNodeShp(OSM::Components *comp, const char* shpname)
 					// We're only interested in nodes with tags
 					if(node && node->hasTags())
 					{
-						lon = node->getLon(); 
+						lon = node->getLon();
 						lat=node->getLat();
 						SHPObject *object = SHPCreateSimpleObject
 							(SHPT_POINT,1,&lon,&lat,NULL);
@@ -85,7 +85,7 @@ bool makeNodeShp(OSM::Components *comp, const char* shpname)
 			cerr << "could not open node shp" << endl;
 			return false;
 		}
-	
+
 	return true;
 }
 
@@ -152,7 +152,7 @@ bool makeWayShp(OSM::Components *comp, const char* shpname)
 			cerr << "could not open way shp" << endl;
 			return false;
 		}
-	
+
 	return true;
 }
 

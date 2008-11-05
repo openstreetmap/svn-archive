@@ -1,9 +1,5 @@
 package org.openstreetmap.fma.jtiledownloader.tilelist;
 
-import java.util.Vector;
-
-import org.openstreetmap.fma.jtiledownloader.Constants;
-
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -25,16 +21,10 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class TileListUrlSquare
-    implements TileList, Constants
+    extends TileListCommonBBox
 {
-    private int _xTopLeft = 0;
-    private int _yTopLeft = 0;
-    private int _xBottomRight = 0;
-    private int _yBottomRight = 0;
 
-    private int _downloadZoomLevel;
     private int _radius; // radius in m
-    private String _tileServerBaseUrl;
     private double _latitude;
     private double _longitude;
 
@@ -58,140 +48,8 @@ public class TileListUrlSquare
         log("maxLat=" + maxLat);
         log("maxLon=" + maxLon);
 
-        _xTopLeft = calculateTileX(minLon, _downloadZoomLevel);
-        _yTopLeft = calculateTileY(maxLat, _downloadZoomLevel);
-        _xBottomRight = calculateTileX(maxLon, _downloadZoomLevel);
-        _yBottomRight = calculateTileY(minLat, _downloadZoomLevel);
+        calculateTileValuesXY(minLat, minLon, maxLat, maxLon);
 
-        log("_xTopLeft=" + _xTopLeft);
-        log("_yTopLeft=" + _yTopLeft);
-        log("_xBottomRight=" + _xBottomRight);
-        log("_yBottomRight=" + _yBottomRight);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
-     * {@inheritDoc}
-     */
-    public Vector getFileListToDownload()
-    {
-        Vector tilesToDownload = new Vector();
-
-        long xStart = getMin(_xTopLeft, _xBottomRight);
-        long xEnd = getMax(_xTopLeft, _xBottomRight);
-
-        long yStart = getMin(_yTopLeft, _yBottomRight);
-        long yEnd = getMax(_yTopLeft, _yBottomRight);
-
-        for (long downloadTileXIndex = xStart; downloadTileXIndex <= xEnd; downloadTileXIndex++)
-        {
-            for (long downloadTileYIndex = yStart; downloadTileYIndex <= yEnd; downloadTileYIndex++)
-            {
-                String urlPathToFile = getTileServerBaseUrl() + _downloadZoomLevel + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
-
-                log("add " + urlPathToFile + " to download list.");
-                tilesToDownload.addElement(urlPathToFile);
-            }
-        }
-        log("finished");
-
-        return tilesToDownload;
-
-    }
-
-    /**
-     * @param topLeft
-     * @param bottomRight
-     * @return
-     */
-    private long getMax(long topLeft, long bottomRight)
-    {
-        if (topLeft > bottomRight)
-        {
-            return topLeft;
-        }
-        return bottomRight;
-    }
-
-    /**
-     * @param topLeft
-     * @param bottomRight
-     * @return
-     */
-    private long getMin(long topLeft, long bottomRight)
-    {
-        if (topLeft > bottomRight)
-        {
-            return bottomRight;
-        }
-        return topLeft;
-    }
-
-    /**
-     * @param lat
-     * @param zoomLevel
-     * @return
-     */
-    private static int calculateTileY(double lat, int zoomLevel)
-    {
-        if (lat < MIN_LAT)
-        {
-            lat = MIN_LAT;
-        }
-        if (lat > MAX_LAT)
-        {
-            lat = MAX_LAT;
-        }
-        int y = (int) Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * (1 << zoomLevel));
-        return y;
-    }
-
-    /**
-     * @param lon
-     * @param zoomLevel
-     * @return
-     */
-    private static int calculateTileX(double lon, int zoomLevel)
-    {
-        if (lon < MIN_LON)
-        {
-            lon = MIN_LON;
-        }
-        if (lon > MAX_LON)
-        {
-            lon = MAX_LON;
-        }
-
-        int x = (int) Math.floor((lon + 180) / 360 * (1 << zoomLevel));
-        return x;
-    }
-
-    /**
-     * method to write to System.out
-     * 
-     * @param msg message to log
-     */
-    private static void log(String msg)
-    {
-        System.out.println(msg);
-    }
-
-    /**
-     * Getter for downloadZoomLevel
-     * @return the downloadZoomLevel
-     */
-    protected final int getDownloadZoomLevel()
-    {
-        return _downloadZoomLevel;
-    }
-
-    /**
-     * Setter for downloadZoomLevel
-     * @param downloadZoomLevel the downloadZoomLevel to set
-     */
-    public final void setDownloadZoomLevel(int downloadZoomLevel)
-    {
-        _downloadZoomLevel = downloadZoomLevel;
     }
 
     /**
@@ -210,60 +68,6 @@ public class TileListUrlSquare
     public final void setRadius(int radius)
     {
         _radius = radius;
-    }
-
-    /**
-     * Getter for tileServerBaseUrl
-     * @return the tileServerBaseUrl
-     */
-    protected final String getTileServerBaseUrl()
-    {
-        return _tileServerBaseUrl;
-    }
-
-    /**
-     * Setter for tileServerBaseUrl
-     * @param tileServerBaseUrl the tileServerBaseUrl to set
-     */
-    public final void setTileServerBaseUrl(String tileServerBaseUrl)
-    {
-        _tileServerBaseUrl = tileServerBaseUrl;
-    }
-
-    /**
-     * Getter for xTopLeft
-     * @return the xTopLeft
-     */
-    public final long getXTopLeft()
-    {
-        return _xTopLeft;
-    }
-
-    /**
-     * Getter for yTopLeft
-     * @return the yTopLeft
-     */
-    public final long getYTopLeft()
-    {
-        return _yTopLeft;
-    }
-
-    /**
-     * Getter for xBottomRight
-     * @return the xBottomRight
-     */
-    public final long getXBottomRight()
-    {
-        return _xBottomRight;
-    }
-
-    /**
-     * Getter for yBottomRight
-     * @return the yBottomRight
-     */
-    public final long getYBottomRight()
-    {
-        return _yBottomRight;
     }
 
     /**

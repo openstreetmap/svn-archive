@@ -177,15 +177,27 @@ public class UrlSquarePanel
      */
     private void updateTileListSquare()
     {
-        _tileListSquare.setDownloadZoomLevel(getDownloadZoomLevel());
-        _tileListSquare.setTileServerBaseUrl(getTileServerBaseUrl());
-        _tileListSquare.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
-        _tileListSquare.calculateTileValuesXY();
-        updateNumberOfTiles();
+        try
+        {
+            _tileListSquare.setDownloadZoomLevel(getDownloadZoomLevel());
+            _tileListSquare.setTileServerBaseUrl(getTileServerBaseUrl());
+            _tileListSquare.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
+            _tileListSquare.calculateTileValuesXY();
+            updateNumberOfTiles();
+        }
+        catch (NumberFormatException e)
+        {
+            return;
+        }
     }
 
     public void saveConfig()
     {
+        if (_downloadConfig == null)
+        {
+            return;
+        }
+
         _downloadConfig.setOutputLocation(getOutputLocation());
         _downloadConfig.setOutputZoomLevel(getDownloadZoomLevel());
         _downloadConfig.setPasteUrl(getPasteUrl());

@@ -42,6 +42,8 @@ public class AppConfiguration
     private int _waitSeconds = 5;
     private int _waitNrTiles = 50;
 
+    private int _inputPanelIndex = 0;
+
     private static final String USE_PROXY_SERVER = "UseProxyServer";
     private static final String PROXY_SERVER = "ProxyServer";
     private static final String PROXY_SERVER_PORT = "ProxyServerPort";
@@ -54,6 +56,8 @@ public class AppConfiguration
     private static final String WAIT_AFTER_NR_TILES = "WaitAfterNrTiles";
     private static final String WAIT_SECONDS = "WaitSeconds";
     private static final String WAIT_NR_TILES = "WaitNrTiles";
+
+    private static final String INPUT_PANEL_INDEX = "InputPanelIndex";
 
     public void saveToFile()
     {
@@ -70,6 +74,8 @@ public class AppConfiguration
         setProperty(prop, WAIT_AFTER_NR_TILES, "" + getWaitAfterNrTiles());
         setProperty(prop, WAIT_SECONDS, "" + getWaitSeconds());
         setProperty(prop, WAIT_NR_TILES, "" + getWaitNrTiles());
+
+        setProperty(prop, INPUT_PANEL_INDEX, "" + getInputPanelIndex());
 
         try
         {
@@ -110,6 +116,8 @@ public class AppConfiguration
         setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, "true")).booleanValue());
         setWaitSeconds(Integer.parseInt(prop.getProperty(WAIT_SECONDS, "10")));
         setWaitNrTiles(Integer.parseInt(prop.getProperty(WAIT_NR_TILES, "50")));
+
+        setInputPanelIndex(Integer.parseInt(prop.getProperty(INPUT_PANEL_INDEX, "0")));
 
     }
 
@@ -291,6 +299,24 @@ public class AppConfiguration
     public int getWaitNrTiles()
     {
         return _waitNrTiles;
+    }
+
+    /**
+     * Getter for inputPanelIndex
+     * @return the inputPanelIndex
+     */
+    public final int getInputPanelIndex()
+    {
+        return _inputPanelIndex;
+    }
+
+    /**
+     * Setter for inputPanelIndex
+     * @param inputPanelIndex the inputPanelIndex to set
+     */
+    public final void setInputPanelIndex(int inputPanelIndex)
+    {
+        _inputPanelIndex = inputPanelIndex;
     }
 
 }

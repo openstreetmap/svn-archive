@@ -41,7 +41,6 @@ use Upload;
 use SVG::Rasterize;
 use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
-use GD qw(:DEFAULT :cmp);
 use Encode;
 use POSIX;
 
@@ -135,35 +134,6 @@ if ($LoopMode) {
         setIdle($idleSeconds, 1);
         setIdle($idleFor, 0);
     }
-}
-
-# global test images, used for comparing to render results
-my ($EmptyLandImage, $EmptySeaImage, $BlackTileImage);
-
-if ($RenderMode) {
-    # check GD
-    eval GD::Image->trueColor(1);
-    if ($@ ne '') {
-        print STDERR "please update your libgd to version 2 for TrueColor support";
-        cleanUpAndDie("init:libGD check failed, exiting","EXIT",4);
-    }
-
-    my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
-
-    # create a comparison blank image
-    $EmptyLandImage = new GD::Image(256,256);
-    $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
-    $EmptyLandImage->fill(127,127,$MapLandBackground);
-
-    $EmptySeaImage = new GD::Image(256,256);
-    $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
-    $EmptySeaImage->fill(127,127,$MapSeaBackground);
-
-    # Some broken versions of Inkscape occasionally produce totally black
-    # output. We detect this case and throw an error when that happens.
-    $BlackTileImage = new GD::Image(256,256);
-    $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
-    $BlackTileImage->fill(127,127,$BlackTileBackground);
 }
 
 # Setup SVG::Rasterize

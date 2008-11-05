@@ -28,7 +28,7 @@ use tahlib;
 use tahproject;
 use File::Copy;
 use File::Path;
-use GD qw(:DEFAULT :cmp);
+use GD 2 qw(:DEFAULT :cmp);
 
 #-----------------------------------------------------------------------------
 # creates a new Tileset instance and returns it

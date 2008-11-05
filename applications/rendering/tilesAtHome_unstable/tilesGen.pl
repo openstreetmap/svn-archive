@@ -576,7 +576,7 @@ sub upload
     }
     catch UploadError with {
         my $error = shift();
-        if ($error->value() == "ServerError") {
+        if ($error->value() eq "ServerError") {
             statusMessage("Server error: " . $error->text(), 1, 0);
             addFault("upload");
             talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);

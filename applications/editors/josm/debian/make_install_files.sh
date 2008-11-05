@@ -48,7 +48,10 @@ cd ..
 echo "------------- Compile Josm-ng"
 cd ../josm-ng
     ant -q clean
-    ant -q josm-ng-impl.jar || exit -1
+    ant -q josm-ng-impl.jar || {
+	echo "!!!!!!!!!!!!!!!!! WARNING Josm-NG is not included into the package"
+	#exit -1
+	}
 cd ../josm
 
 
@@ -56,7 +59,10 @@ cd ../josm
 echo "------------- Copy Jar Files"
 
 cp ./core/dist/josm-custom.jar $jar_path/josm.jar || exit -1
-cp ../josm-ng/dist/josm-ng.jar $jar_path/josm-ng.jar || exit -1
+cp ../josm-ng/dist/josm-ng.jar $jar_path/josm-ng.jar || {
+    echo "!!!!!!!!!!!!!!!!! WARNING Josm-NG is not included into the package"
+    #exit -1
+}
 
 plugin_jars=`find dist -name "*.jar"`
 for src_fn in $plugin_jars ; do 
@@ -76,11 +82,14 @@ echo "Activated Plugins:"
 echo "$plugins"
 
 mkdir -p "$jar_path/speller"
-cp ../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
+cp ../../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
 
 # ------------------------------------------------------------------
-cp "debian/bin/josm.sh" "$bin_path/josm"
-cp "debian/bin/josm-ng.sh" "$bin_path/josm-ng"
+cp "debian/bin/josm.sh" "$bin_path/josm" || exit -1 
+cp "debian/bin/josm-ng.sh" "$bin_path/josm-ng" || {
+    echo "!!!!!!!!!!!!!!!!! WARNING Josm-NG is not included into the package"
+    #exit -1
+}
 
 sed "s/PLUGIN_LIST/$plugins/;" <debian/bin/preferences >"$jar_path/preferences"
 cp nsis/bookmarks "$jar_path/bookmarks"

@@ -225,6 +225,11 @@ enum { STYLE_BITS = 8, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
  s (highway, motorway_link,   "mway link"       , "") \
  s (highway, trunk_link,      "trunk link"      , "") \
  s (highway, primary_link,    "primary_link"    , "") \
+ s (barrier, bollard,         "bollard"         , "") /* First barrier ! */ \
+ s (barrier, gate,            "gate"            , "") \
+ s (barrier, stile,           "stile"           , "") \
+ s (barrier, cattle_grid,     "cattle_grid"     , "") \
+ s (barrier, toll_booth,      "toll_booth"      , "") /* Last barrier ! */ \
  s (man_made, beacon,         "beacon"          , "" ) \
  s (man_made, survey_point,   "survey point"    , "" ) \
  s (man_made, tower,          "tower"           , "" ) \

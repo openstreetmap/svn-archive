@@ -279,13 +279,39 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="vehicle/restrictions/bollard.png" />
 		<scale_min>1</scale_min>
 		<scale_max>5000</scale_max>
+        <routing bicycle="1" foot="1" horse="1" motorcycle="1"/>
 	</rule>
 	<rule>
 		<condition k="barrier" v="gate" />
 		<icon annotate="true" src="vehicle/gate.png" />
 		<scale_min>1</scale_min>
 		<scale_max>5000</scale_max>
+        <routing/>
 	</rule>
+	<rule>
+		<condition k="barrier" v="stile" />
+		<icon annotate="true" src="vehicle/stile.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+        <routing bicycle="1" foot="1"/>
+	</rule>
+	
+	<rule>
+		<condition k="barrier" v="cattle_grid" />
+		<icon annotate="true" src="vehicle/cattle_grid.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+        <routing bicycle="1" foot="1" goods="1" hgv="1" motorcycle="1" motorcar="1" psv="1"/>
+	</rule>
+	
+	<rule>
+		<condition k="barrier" v="toll_booth" />
+		<icon annotate="true" src="vehicle/toll_station.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+        <routing bicycle="1" foot="1" goods="1" hgv="1" motorcycle="1" motorcar="1" psv="1"/>
+	</rule>
+	
 	<rule>
 		<condition k="barrier" v="speed_bump" />
 		<icon annotate="true" src="misc/no_icon.png" />
@@ -300,7 +326,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110" oneway="1"/>
+        <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110" oneway="1"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="motorway"/>
@@ -308,7 +334,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110" bicyle="20" oneway="1"/>
+        <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110" bicyle="20" oneway="1"/>
 	</rule>
 
 	<rule>
@@ -317,7 +343,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-        <routing goods="50" hgv="50" motorcar="50" psv="50" oneway="1"/>
+        <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" oneway="1"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="motorway_link"/>
@@ -325,7 +351,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-        <routing goods="50" hgv="50" motorcar="50" psv="50" bicycle="20" oneway="1"/>
+        <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" bicycle="20" oneway="1"/>
 	</rule>
 
 	<rule>
@@ -334,7 +360,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>500000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110"/>
+        <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="trunk"/>
@@ -342,7 +368,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>500000</scale_max>
-        <routing goods="110" hgv="110" motorcar="110" psv="110" bicyle="20"/>
+        <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110" bicyle="20"/>
 	</rule>
 
 	<rule>
@@ -351,7 +377,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing goods="50" hgv="50" motorcar="50" psv="50"/>
+        <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="trunk_link"/>
@@ -359,7 +385,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing goods="50" hgv="50" motorcar="50" psv="50" bicyle="20"/>
+        <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" bicyle="20"/>
 	</rule>
 
 	<rule>
@@ -368,7 +394,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
-        <routing bicycle="10" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
+        <routing bicycle="10" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="primary"/>
@@ -376,7 +402,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
-        <routing bicycle="20" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
+        <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 
 	<rule>
@@ -385,7 +411,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
-                <routing bicycle="10" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
+                <routing bicycle="10" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="primary_link"/>
@@ -393,7 +419,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
-                <routing bicycle="20" foot="5" goods="60" hgv="60" motorcar="60" psv="60"/>
+                <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 
 	<rule>
@@ -402,7 +428,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="secondary"/>
@@ -410,7 +436,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
 
 	<rule>
@@ -419,7 +445,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="secondary_link"/>
@@ -427,7 +453,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcar="50" psv="50"/>
+                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
 
         <rule>
@@ -436,7 +462,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="12" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+        <routing bicycle="12" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
 	</rule>
         <rule>
         <condition k="cyclenethighway" v="tertiary"/>
@@ -444,7 +470,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
 	</rule>
 
 	<rule>
@@ -453,7 +479,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="18" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+        <routing bicycle="18" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
     </rule>
 	<rule>
 		<condition k="cyclenethighway" v="unclassified"/>
@@ -461,7 +487,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
     </rule>
 
 	<rule>
@@ -470,7 +496,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcar="40" psv="40"/>
+        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
     </rule>
 
 	<rule>
@@ -479,7 +505,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing bicycle="20" foot="5" goods="30" hgv="30" motorcar="30" psv="30"/>
+        <routing bicycle="20" foot="5" goods="30" hgv="30" motorcycle="30" motorcar="30" psv="30"/>
 	</rule>
 
     <rule>
@@ -488,7 +514,11 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing bicycle="20" foot="5" goods="20" hgv="20" motorcar="20" psv="20"/>
+        <routing bicycle="20" foot="5" />
+<!-- Germany contains hunderds of thousands of tracks and motorcars aren't
+     allowed on the majority of them. I hope the rest of the world will also
+     adopt this default. When motorcar=yes, it will be as fast as the
+     fastest other road user, namely bicycles. -->
 	</rule>
     <rule>
         <condition k="highway" v="byway"/>
@@ -496,7 +526,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing bicycle="5" foot="5" motorcar="5"/>
+        <routing bicycle="5" foot="5" motorcycle="5" motorcar="5"/>
     </rule>
 
                                    
@@ -506,7 +536,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="30" hgv="30" motorcar="30" psv="30"/>
+        <routing bicycle="20" foot="5" goods="30" hgv="30" motorcycle="30" motorcar="30" psv="30"/>
     </rule>
 
 	<rule>
@@ -515,7 +545,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="10" hgv="10" motorcar="10" psv="10"/>
+        <routing bicycle="20" foot="5" goods="10" hgv="10" motorcycle="10" motorcar="10" psv="10"/>
     </rule>
 
     <rule>
@@ -524,7 +554,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing bicycle="5" foot="5" goods="5" hgv="5" motorcar="5" psv="5"/>
+        <routing bicycle="5" foot="5" goods="5" hgv="5" motorcycle="5" motorcar="5" psv="5"/>
 	</rule>
     <rule>
         <condition k="cyclenethighway" v="service"/>
@@ -532,7 +562,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
-        <routing bicycle="20" foot="5" goods="5" hgv="5" motorcar="5" psv="5"/>
+        <routing bicycle="20" foot="5" goods="5" hgv="5" motorcycle="5" motorcar="5" psv="5"/>
 	</rule>
 
 	<rule>
@@ -2904,7 +2934,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-        <routing bicycle="3" foot="3" goods="3" hgv="3" motorcar="3" psv="3"/>
+        <routing bicycle="3" foot="3" goods="3" hgv="3" motorcycle="3" motorcar="3" psv="3"/>
 	</rule>
 
 	<rule>

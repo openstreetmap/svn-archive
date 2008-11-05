@@ -505,7 +505,9 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     int rootIsAdestination = Way (root->nd)->destination & (1 << Vehicle);
     /* Now work through the segments connected to root. */
     do {
-//          if (StyleNr ((wayType *)(data + nd->wayPtr)) >= restriction_no_right_turn) printf ("%d\n", nd - firstNd);
+      if (StyleNr (Way (nd)) >= barrier_bollard &&
+          StyleNr (Way (nd)) <= barrier_toll_booth &&
+          !(Way (nd)->bits & (1 << Vehicle))) break;
       for (int dir = 0; dir < 2; dir++) {
         if (nd == root->nd && dir == root->dir) continue;
         /* Don't consider an immediate U-turn to reach root->hs->other.

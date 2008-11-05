@@ -156,6 +156,11 @@ public class BBoxXYPanel
 
     public void saveConfig()
     {
+        if (_downloadConfig == null)
+        {
+            return;
+        }
+
         _downloadConfig.setOutputLocation(getOutputLocation());
         _downloadConfig.setOutputZoomLevel(getDownloadZoomLevel());
         _downloadConfig.setTileServer(getTileServerBaseUrl());

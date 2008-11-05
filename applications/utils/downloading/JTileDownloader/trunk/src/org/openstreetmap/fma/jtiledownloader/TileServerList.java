@@ -33,13 +33,17 @@ public class TileServerList
     {
         super();
 
-        _tileServers = new TileServer[5];
+        _tileServers = new TileServer[9];
 
         _tileServers[0] = new TileServer("Osmarender", "http://tah.openstreetmap.org/Tiles/tile/");
         _tileServers[1] = new TileServer("Mapnik", "http://tile.openstreetmap.org/mapnik/");
-        _tileServers[2] = new TileServer("Cyclemap (Cloudmade)", "http://c.andy.sandbox.cloudmade.com/tiles/cycle/");
+        _tileServers[2] = new TileServer("Cyclemap (CloudMade)", "http://c.andy.sandbox.cloudmade.com/tiles/cycle/");
         _tileServers[3] = new TileServer("Cyclemap (Thunderflames)", "http://thunderflames.org/tiles/cycle/");
         _tileServers[4] = new TileServer("OpenPisteMap", "http://openpistemap.org/tiles/contours/");
+        _tileServers[5] = new TileServer("Maplint", "http://tah.openstreetmap.org/Tiles/maplint/");
+        _tileServers[6] = new TileServer("CloudMade Web style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/1/256/");
+        _tileServers[7] = new TileServer("CloudMade Mobile style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/2/256/");
+        _tileServers[8] = new TileServer("CloudMade NoNames style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/3/256/");
     }
 
     public TileServer[] getTileServerList()

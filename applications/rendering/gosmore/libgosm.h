@@ -298,7 +298,7 @@ struct ndType {
 };
 
 struct wayType {
-  int bits;
+  int bits, destination;
   int clat, clon, dlat, dlon; /* Centre coordinates and (half)diameter */
 };
 

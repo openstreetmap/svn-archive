@@ -502,6 +502,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     while (nd > ndBase && nd[-1].lon == nd->lon &&
       nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
     firstNd = nd; // Save it for checking restrictions
+    int rootIsAdestination = Way (root->nd)->destination & (1 << Vehicle);
     /* Now work through the segments connected to root. */
     do {
 //          if (StyleNr ((wayType *)(data + nd->wayPtr)) >= restriction_no_right_turn) printf ("%d\n", nd - firstNd);
@@ -554,7 +555,10 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
           int d = lrint (sqrt ((double)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
-                        (fast ? Style (w)->invSpeed[Vehicle] : 1.0));                  
+                        (fast ? Style (w)->invSpeed[Vehicle] : 1.0));     
+          if (rootIsAdestination && !(w->destination & (1 << Vehicle))) {
+            d += 5000000; // 500km penalty for entering v='destination' area.
+          }
           AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
       }

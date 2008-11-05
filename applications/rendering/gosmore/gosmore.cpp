@@ -2091,6 +2091,7 @@ int main (int argc, char *argv[])
     w.dlat = INT_MIN;
     w.dlon = INT_MIN;
     w.bits = 0;
+    w.destination = 0;
     
     if (argc >= 6) {
       masterWayType *masterWay = (masterWayType *) malloc (
@@ -2187,6 +2188,10 @@ int main (int argc, char *argv[])
                   yesMask |= 1 << field ## R; \
                 } else if (V_IS ("no") || V_IS ("0") || V_IS ("private")) { \
                   noMask |= 1 << field ## R; \
+                } \
+                else if (V_IS ("destination")) { \
+                  yesMask |= 1 << field ## R; \
+                  w.destination |= 1 << field ## R; \
                 } \
               }
             RESTRICTIONS
@@ -2345,6 +2350,7 @@ int main (int argc, char *argv[])
             }
             w.bits |= ~noMask & (yesMask | (defaultRestrict[StyleNr (&w)] &
                           ((noMask & (1 << accessR)) ? (1 << onewayR) : ~0)));
+            if (w.destination & (1 << accessR)) w.destination = ~0;
             char *compact = tags[0] == '\n' ? tags + 1 : tags;
             if (!wayFseek || *wayFseek) {
               fwrite (&w, sizeof (w), 1, pak);
@@ -2371,6 +2377,7 @@ int main (int argc, char *argv[])
           tags[0] = '\0'; // Erase nodes with short names
           yesMask = noMask = 0;
           w.bits = 0;
+          w.destination = 0;
           wStyle = styleCnt;
         }
       } // if it was </...>

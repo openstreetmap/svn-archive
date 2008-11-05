@@ -113,7 +113,6 @@ public class BBoxLatLonPanel
         setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
-        //        constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.weightx = 1.0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(5, 5, 0, 5);
@@ -124,14 +123,14 @@ public class BBoxLatLonPanel
         add(_textMinLat, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMinLon, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMinLon, constraints);
-
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelMaxLat, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textMaxLat, constraints);
+
+        constraints.gridwidth = GridBagConstraints.RELATIVE;
+        add(_labelMinLon, constraints);
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        add(_textMinLon, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelMaxLon, constraints);

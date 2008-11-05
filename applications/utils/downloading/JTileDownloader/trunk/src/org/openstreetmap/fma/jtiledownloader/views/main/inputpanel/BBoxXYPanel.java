@@ -124,14 +124,14 @@ public class BBoxXYPanel
         add(_textMinX, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMinY, constraints);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMinY, constraints);
-
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelMaxX, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textMaxX, constraints);
+
+        constraints.gridwidth = GridBagConstraints.RELATIVE;
+        add(_labelMinY, constraints);
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        add(_textMinY, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelMaxY, constraints);

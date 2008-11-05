@@ -1,0 +1,6 @@
+#Language data for en Library nop
+#Fri Oct 31 01:25:24 CET 2008
+ProgressDialog.remainingSeconds=Remaining Time\: ${1} Sekunden
+AbstractDialog.buttonCancel=Cancel
+AbstractDialog.buttonOK=OK
+ProgressDialog.remainingMinutes=Remaining Time\: ${1} Minuten

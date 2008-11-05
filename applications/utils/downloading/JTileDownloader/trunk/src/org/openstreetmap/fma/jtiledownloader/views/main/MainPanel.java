@@ -91,6 +91,8 @@ public class MainPanel
     private BBoxLatLonPanel _bBoxLatLonPanel;
     private BBoxXYPanel _bBoxXYPanel;
 
+    private JTabbedPane _inputTabbedPane;
+
     /**
      * @param downloadTemplate 
      * 
@@ -193,18 +195,17 @@ public class MainPanel
 
         setLayout(new GridBagLayout());
 
-        JTabbedPane inputTabbedPane = new JTabbedPane();
+        _inputTabbedPane = new JTabbedPane();
 
         _urlSquarePanel = new UrlSquarePanel(_mainView);
-        inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_URLSQUARE], _urlSquarePanel);
+        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_URLSQUARE], _urlSquarePanel);
         _bBoxLatLonPanel = new BBoxLatLonPanel(_mainView);
-        inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
+        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
         _bBoxXYPanel = new BBoxXYPanel(_mainView);
-        inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
+        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
 
-        add(inputTabbedPane, constraints);
-
-        inputTabbedPane.addChangeListener(new InputTabListener(_mainView));
+        add(_inputTabbedPane, constraints);
+        _inputTabbedPane.addChangeListener(new InputTabListener(_mainView));
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelOutputZoomLevel, constraints);
@@ -377,8 +378,8 @@ public class MainPanel
                     return;
                 }
 
-                _mainView.updateAppConfig();
                 _mainView.updateActualDownloadConfig();
+                _mainView.updateAppConfig();
 
                 getButtonDownload().setEnabled(false);
                 getButtonExport().setEnabled(false);
@@ -516,5 +517,14 @@ public class MainPanel
     public final JTextField getTextOutputFolder()
     {
         return _textOutputFolder;
+    }
+
+    /**
+     * Getter for inputTabbedPane
+     * @return the inputTabbedPane
+     */
+    public final JTabbedPane getInputTabbedPane()
+    {
+        return _inputTabbedPane;
     }
 }

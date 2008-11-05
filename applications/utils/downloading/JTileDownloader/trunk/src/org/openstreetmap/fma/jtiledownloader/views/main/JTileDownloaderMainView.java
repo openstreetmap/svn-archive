@@ -80,16 +80,18 @@ public class JTileDownloaderMainView
 
         setTitle("JTileDownloader" + " Version: " + VERSION);
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-
         _mainPanel = new MainPanel(getMainView());
-
-        _mainPanel.getInputPanel().loadConfig();
+        int tabIndex = getAppConfiguration().getInputPanelIndex();
+        if (tabIndex >= 0 && tabIndex < _mainPanel.getInputTabbedPane().getTabCount())
+        {
+            _mainPanel.getInputTabbedPane().setSelectedIndex(tabIndex);
+        }
 
         _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration(), getMainView());
         _optionsPanel = new OptionsPanel(getAppConfiguration());
         _networkPanel = new NetworkPanel(getAppConfiguration());
 
+        JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Main", _mainPanel);
         tabbedPane.addTab("Update Tiles", _updateTilesPanel);
         tabbedPane.addTab("Options", _optionsPanel);
@@ -119,9 +121,9 @@ public class JTileDownloaderMainView
         {
             System.out.println("WindowEvent windowClosing");
 
-            getMainPanel().valuesChanged();
-            updateAppConfig();
             updateActualDownloadConfig();
+            updateAppConfig();
+
             e.getWindow().dispose();
             System.exit(0);
         }
@@ -391,8 +393,13 @@ public class JTileDownloaderMainView
      */
     public final void setInputTabSelectedIndex(int inputTabSelectedIndex)
     {
+        // save actual input panel
+        updateActualDownloadConfig();
+
+        //select new panel & load config
         _inputTabSelectedIndex = inputTabSelectedIndex;
-        _mainPanel.getInputPanel().loadConfig();
+        getAppConfiguration().setInputPanelIndex(inputTabSelectedIndex);
+        getMainPanel().getInputPanel().loadConfig();
 
     }
 
@@ -401,8 +408,8 @@ public class JTileDownloaderMainView
      */
     public void updateActualDownloadConfig()
     {
-        _mainPanel.getInputPanel().saveConfig();
-
+        getMainPanel().valuesChanged();
+        getMainPanel().getInputPanel().saveConfig();
     }
 
 }

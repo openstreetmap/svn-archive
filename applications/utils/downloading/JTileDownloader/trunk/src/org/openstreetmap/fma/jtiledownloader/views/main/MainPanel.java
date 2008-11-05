@@ -27,6 +27,7 @@ import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileServerList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
+import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxXYPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.UrlSquarePanel;
 
@@ -88,6 +89,7 @@ public class MainPanel
 
     private UrlSquarePanel _urlSquarePanel;
     private BBoxLatLonPanel _bBoxLatLonPanel;
+    private BBoxXYPanel _bBoxXYPanel;
 
     /**
      * @param downloadTemplate 
@@ -197,6 +199,8 @@ public class MainPanel
         inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_URLSQUARE], _urlSquarePanel);
         _bBoxLatLonPanel = new BBoxLatLonPanel(_mainView);
         inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
+        _bBoxXYPanel = new BBoxXYPanel(_mainView);
+        inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
 
         add(inputTabbedPane, constraints);
 
@@ -283,6 +287,30 @@ public class MainPanel
         }
         getInputPanel().setOutputLocation(getOutputfolder());
         getInputPanel().updateAll();
+    }
+
+    /**
+     * @return {@link UrlSquarePanel}
+     */
+    public final UrlSquarePanel getUrlSquarePanel()
+    {
+        return _urlSquarePanel;
+    }
+
+    /** {@link BBoxLatLonPanel}
+     * @return
+     */
+    public final BBoxLatLonPanel getBBoxLatLonPanel()
+    {
+        return _bBoxLatLonPanel;
+    }
+
+    /** {@link BBoxXYPanel}
+     * @return
+     */
+    public final BBoxXYPanel getBBoxXYPanel()
+    {
+        return _bBoxXYPanel;
     }
 
     class MainViewFocusListener
@@ -417,18 +445,6 @@ public class MainPanel
             return true;
         }
 
-        /**
-         * @return
-         */
-        private UrlSquarePanel getUrlSquarePanel()
-        {
-            return _urlSquarePanel;
-        }
-
-        private BBoxLatLonPanel getBBoxLatLonPanel()
-        {
-            return _bBoxLatLonPanel;
-        }
     }
 
     /**
@@ -473,9 +489,11 @@ public class MainPanel
         switch (_mainView.getInputTabSelectedIndex())
         {
             case TYPE_URLSQUARE:
-                return _urlSquarePanel;
+                return getUrlSquarePanel();
             case TYPE_BOUNDINGBOX_LATLON:
-                return _bBoxLatLonPanel;
+                return getBBoxLatLonPanel();
+            case TYPE_BOUNDINGBOX_XY:
+                return getBBoxXYPanel();
 
             default:
                 return null;

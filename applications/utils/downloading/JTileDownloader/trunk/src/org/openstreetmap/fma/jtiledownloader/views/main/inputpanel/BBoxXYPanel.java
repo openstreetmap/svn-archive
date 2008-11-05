@@ -9,9 +9,9 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
+import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxXY;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
 import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
 
 /**
@@ -37,33 +37,33 @@ import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
 /**
  * 
  */
-public class BBoxLatLonPanel
+public class BBoxXYPanel
     extends InputPanel
 {
     private static final long serialVersionUID = 1L;
 
-    private static final String COMPONENT_MINLAT = "MIN_LAT";
-    private static final String COMPONENT_MINLON = "MIN_LON";
-    private static final String COMPONENT_MAXLAT = "MAX_LAT";
-    private static final String COMPONENT_MAXLON = "MAX_LON";
+    private static final String COMPONENT_MINX = "MIN_X";
+    private static final String COMPONENT_MINY = "MIN_Y";
+    private static final String COMPONENT_MAXX = "MAX_X";
+    private static final String COMPONENT_MAXY = "MAX_Y";
 
-    private TileListBBoxLatLon _tileList = new TileListBBoxLatLon();
+    private TileListCommonBBox _tileList = new TileListCommonBBox();
 
-    JLabel _labelMinLat = new JLabel("Min. Latitude:");
-    JTextField _textMinLat = new JTextField();
-    JLabel _labelMinLon = new JLabel("Min. Longitude:");
-    JTextField _textMinLon = new JTextField();
-    JLabel _labelMaxLat = new JLabel("Max. Latitude:");
-    JTextField _textMaxLat = new JTextField();
-    JLabel _labelMaxLon = new JLabel("Max. Longitude:");
-    JTextField _textMaxLon = new JTextField();
+    JLabel _labelMinX = new JLabel("Min. X:");
+    JTextField _textMinX = new JTextField();
+    JLabel _labelMinY = new JLabel("Min. Y:");
+    JTextField _textMinY = new JTextField();
+    JLabel _labelMaxX = new JLabel("Max. X:");
+    JTextField _textMaxX = new JTextField();
+    JLabel _labelMaxY = new JLabel("Max. Y:");
+    JTextField _textMaxY = new JTextField();
 
-    private DownloadConfigurationBBoxLatLon _downloadConfig;
+    private DownloadConfigurationBBoxXY _downloadConfig;
 
     /**
      * 
      */
-    public BBoxLatLonPanel(JTileDownloaderMainView mainView)
+    public BBoxXYPanel(JTileDownloaderMainView mainView)
     {
         super(mainView);
 
@@ -76,13 +76,13 @@ public class BBoxLatLonPanel
      */
     public void loadConfig()
     {
-        _downloadConfig = new DownloadConfigurationBBoxLatLon();
+        _downloadConfig = new DownloadConfigurationBBoxXY();
         _downloadConfig.loadFromFile();
 
-        _textMinLat.setText("" + _downloadConfig.getMinLat());
-        _textMinLon.setText("" + _downloadConfig.getMinLon());
-        _textMaxLat.setText("" + _downloadConfig.getMaxLat());
-        _textMaxLon.setText("" + _downloadConfig.getMaxLon());
+        _textMinX.setText("" + _downloadConfig.getMinX());
+        _textMinY.setText("" + _downloadConfig.getMinY());
+        _textMaxX.setText("" + _downloadConfig.getMaxX());
+        _textMaxY.setText("" + _downloadConfig.getMaxY());
 
         setCommonValues(_downloadConfig);
     }
@@ -92,17 +92,17 @@ public class BBoxLatLonPanel
      */
     private void initializePanel()
     {
-        _textMinLat.setName(COMPONENT_MINLAT);
-        _textMinLat.addFocusListener(new MyFocusListener());
+        _textMinX.setName(COMPONENT_MINX);
+        _textMinX.addFocusListener(new MyFocusListener());
 
-        _textMinLon.setName(COMPONENT_MINLON);
-        _textMinLon.addFocusListener(new MyFocusListener());
+        _textMinY.setName(COMPONENT_MINY);
+        _textMinY.addFocusListener(new MyFocusListener());
 
-        _textMaxLat.setName(COMPONENT_MAXLAT);
-        _textMaxLat.addFocusListener(new MyFocusListener());
+        _textMaxX.setName(COMPONENT_MAXX);
+        _textMaxX.addFocusListener(new MyFocusListener());
 
-        _textMaxLon.setName(COMPONENT_MAXLON);
-        _textMaxLon.addFocusListener(new MyFocusListener());
+        _textMaxY.setName(COMPONENT_MAXY);
+        _textMaxY.addFocusListener(new MyFocusListener());
     }
 
     /**
@@ -119,24 +119,24 @@ public class BBoxLatLonPanel
         constraints.insets = new Insets(5, 5, 0, 5);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMinLat, constraints);
+        add(_labelMinX, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMinLat, constraints);
+        add(_textMinX, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMinLon, constraints);
+        add(_labelMinY, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMinLon, constraints);
+        add(_textMinY, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMaxLat, constraints);
+        add(_labelMaxX, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMaxLat, constraints);
+        add(_textMaxX, constraints);
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
-        add(_labelMaxLon, constraints);
+        add(_labelMaxY, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_textMaxLon, constraints);
+        add(_textMaxY, constraints);
 
     }
 
@@ -147,11 +147,10 @@ public class BBoxLatLonPanel
     {
         _tileList.setDownloadZoomLevel(getDownloadZoomLevel());
         _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
-        _tileList.setMinLat(getMinLat());
-        _tileList.setMinLon(getMinLon());
-        _tileList.setMaxLat(getMaxLat());
-        _tileList.setMaxLon(getMaxLon());
-        _tileList.calculateTileValuesXY();
+        _tileList.setXTopLeft(getMinX());
+        _tileList.setYTopLeft(getMinY());
+        _tileList.setXBottomRight(getMaxX());
+        _tileList.setYBottomRight(getMaxY());
         updateNumberOfTiles();
     }
 
@@ -160,63 +159,63 @@ public class BBoxLatLonPanel
         _downloadConfig.setOutputLocation(getOutputLocation());
         _downloadConfig.setOutputZoomLevel(getDownloadZoomLevel());
         _downloadConfig.setTileServer(getTileServerBaseUrl());
-        _downloadConfig.setMinLat(getMinLat());
-        _downloadConfig.setMinLon(getMinLon());
-        _downloadConfig.setMaxLat(getMaxLat());
-        _downloadConfig.setMaxLon(getMaxLon());
+        _downloadConfig.setMinX(getMinX());
+        _downloadConfig.setMinY(getMinY());
+        _downloadConfig.setMaxX(getMaxX());
+        _downloadConfig.setMaxY(getMaxY());
         _downloadConfig.saveToFile();
     }
 
     /**
      * @return
      */
-    public double getMinLat()
+    public int getMinX()
     {
-        String str = _textMinLat.getText().trim();
+        String str = _textMinX.getText().trim();
         if (str == null || str.length() == 0)
         {
-            return 0.0;
+            return 0;
         }
-        return Double.parseDouble(str);
+        return Integer.parseInt(str);
     }
 
     /**
      * @return
      */
-    public double getMinLon()
+    public int getMinY()
     {
-        String str = _textMinLon.getText().trim();
+        String str = _textMinY.getText().trim();
         if (str == null || str.length() == 0)
         {
-            return 0.0;
+            return 0;
         }
-        return Double.parseDouble(str);
+        return Integer.parseInt(str);
     }
 
     /**
      * @return
      */
-    public double getMaxLat()
+    public int getMaxX()
     {
-        String str = _textMaxLat.getText().trim();
+        String str = _textMaxX.getText().trim();
         if (str == null || str.length() == 0)
         {
-            return 0.0;
+            return 0;
         }
-        return Double.parseDouble(str);
+        return Integer.parseInt(str);
     }
 
     /**
      * @return
      */
-    public double getMaxLon()
+    public int getMaxY()
     {
-        String str = _textMaxLon.getText().trim();
+        String str = _textMaxY.getText().trim();
         if (str == null || str.length() == 0)
         {
-            return 0.0;
+            return 0;
         }
-        return Double.parseDouble(str);
+        return Integer.parseInt(str);
     }
 
     /**
@@ -249,19 +248,19 @@ public class BBoxLatLonPanel
             String componentName = focusevent.getComponent().getName();
             System.out.println("focusLost: " + componentName);
 
-            if (componentName.equalsIgnoreCase(COMPONENT_MINLAT))
+            if (componentName.equalsIgnoreCase(COMPONENT_MINX))
             {
                 updateAll();
             }
-            else if (componentName.equalsIgnoreCase(COMPONENT_MINLON))
+            else if (componentName.equalsIgnoreCase(COMPONENT_MINY))
             {
                 updateAll();
             }
-            else if (componentName.equalsIgnoreCase(COMPONENT_MAXLAT))
+            else if (componentName.equalsIgnoreCase(COMPONENT_MAXX))
             {
                 updateAll();
             }
-            else if (componentName.equalsIgnoreCase(COMPONENT_MAXLON))
+            else if (componentName.equalsIgnoreCase(COMPONENT_MAXY))
             {
                 updateAll();
             }

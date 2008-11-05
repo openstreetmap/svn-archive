@@ -125,7 +125,20 @@ static int compareKeyval(struct keyval kv[2])
         // Note: this triggers on both k="timestamp" as well as timestamp=...
         if (strict || strcmp(p[0]->key, "timestamp")) {
             r = strcmp(p[0]->value, p[1]->value);
+#if 0
             if (r) return r;
+#else
+            if (r) {
+              // Osmosis drops trailing 0's on floats, test for equal value
+              if (!strcmp(p[0]->key, "lat") || !strcmp(p[0]->key, "lon")) {
+                double a = strtod(p[0]->value, NULL);
+                double b = strtod(p[1]->value, NULL);
+                if (a != b)
+                  return a-b; 
+              } else
+                return r;
+            }
+#endif
         }
 
         p[0] = p[0]->next;
@@ -204,7 +217,7 @@ static int compareOther(void)
 {
     int c;
 
-    c = compareKeyval(attrs);
+    c = compareLists(attrs);
     if (c) return c;
 
     c = compareLists(tags);

@@ -48,8 +48,8 @@ OpenLayers.Layer.OSM = OpenLayers.Class(OpenLayers.Layer.TMS, {
     initialize: function(name, url, options) {
         options = OpenLayers.Util.extend({
             attribution: "Data by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-            maxExtent: new OpenLayers.Bounds(-20037508,-20037508,20037508,20037508),
-            maxResolution: 156543,
+            maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+            maxResolution: 156543.0339,
             units: "m",
             projection: "EPSG:900913",
             transitionEffect: "resize"
@@ -143,9 +143,9 @@ OpenLayers.Layer.OSM.Osmarender = OpenLayers.Class(OpenLayers.Layer.OSM, {
      */
     initialize: function(name, options) {
         var url = [
-            "http://a.tah.openstreetmap.org/Tiles/tile.php/",
-            "http://b.tah.openstreetmap.org/Tiles/tile.php/",
-            "http://c.tah.openstreetmap.org/Tiles/tile.php/"
+            "http://a.tah.openstreetmap.org/Tiles/tile/",
+            "http://b.tah.openstreetmap.org/Tiles/tile/",
+            "http://c.tah.openstreetmap.org/Tiles/tile/"
         ];
         options = OpenLayers.Util.extend({ numZoomLevels: 18 }, options);
         var newArguments = [name, url, options];
@@ -153,6 +153,34 @@ OpenLayers.Layer.OSM.Osmarender = OpenLayers.Class(OpenLayers.Layer.OSM, {
     },
 
     CLASS_NAME: "OpenLayers.Layer.OSM.Osmarender"
+});
+
+/**
+ * Class: OpenLayers.Layer.OSM.CycleMap
+ *
+ * Inherits from:
+ *  - <OpenLayers.Layer.OSM>
+ */
+OpenLayers.Layer.OSM.CycleMap = OpenLayers.Class(OpenLayers.Layer.OSM, {
+    /**
+     * Constructor: OpenLayers.Layer.OSM.CycleMap
+     *
+     * Parameters:
+     * name - {String}
+     * options - {Object} Hashtable of extra options to tag onto the layer
+     */
+    initialize: function(name, options) {
+        var url = [
+            "http://a.andy.sandbox.cloudmade.com/tiles/cycle/",
+            "http://b.andy.sandbox.cloudmade.com/tiles/cycle/",
+            "http://c.andy.sandbox.cloudmade.com/tiles/cycle/"
+        ];
+        options = OpenLayers.Util.extend({ numZoomLevels: 18 }, options);
+        var newArguments = [name, url, options];
+        OpenLayers.Layer.OSM.prototype.initialize.apply(this, newArguments);
+    },
+
+    CLASS_NAME: "OpenLayers.Layer.OSM.CycleMap"
 });
 
 /**
@@ -171,9 +199,9 @@ OpenLayers.Layer.OSM.Maplint = OpenLayers.Class(OpenLayers.Layer.OSM, {
      */
     initialize: function(name, options) {
         var url = [
-            "http://d.tah.openstreetmap.org/Tiles/maplint.php/",
-            "http://e.tah.openstreetmap.org/Tiles/maplint.php/",
-            "http://f.tah.openstreetmap.org/Tiles/maplint.php/"
+            "http://d.tah.openstreetmap.org/Tiles/maplint/",
+            "http://e.tah.openstreetmap.org/Tiles/maplint/",
+            "http://f.tah.openstreetmap.org/Tiles/maplint/"
         ];
         options = OpenLayers.Util.extend({ numZoomLevels: 18, isBaseLayer: false, visibility: false }, options);
         var newArguments = [name, url, options];

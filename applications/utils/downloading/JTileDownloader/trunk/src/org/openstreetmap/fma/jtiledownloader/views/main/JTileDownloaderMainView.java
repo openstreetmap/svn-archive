@@ -85,6 +85,7 @@ public class JTileDownloaderMainView
         if (tabIndex >= 0 && tabIndex < _mainPanel.getInputTabbedPane().getTabCount())
         {
             _mainPanel.getInputTabbedPane().setSelectedIndex(tabIndex);
+            setInputTabSelectedIndex(tabIndex);
         }
 
         _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration(), getMainView());
@@ -103,6 +104,7 @@ public class JTileDownloaderMainView
 
         pack();
         setVisible(true);
+
     }
 
     protected final JTileDownloaderMainView getMainView()
@@ -400,6 +402,7 @@ public class JTileDownloaderMainView
         _inputTabSelectedIndex = inputTabSelectedIndex;
         getAppConfiguration().setInputPanelIndex(inputTabSelectedIndex);
         getMainPanel().getInputPanel().loadConfig();
+        getMainPanel().valuesChanged();
 
     }
 

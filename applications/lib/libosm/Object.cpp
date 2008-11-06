@@ -10,8 +10,8 @@ std::vector<std::string> Object::getTags()
 {
 	std::vector<std::string> t;
 
-	for(std::map<std::string,std::string>::iterator i=tags.begin();
-			i!=tags.end(); i++)
+	for(std::map<std::string,std::string>::const_iterator i=m_tags.begin();
+			i!=m_tags.end(); i++)
 	{
 		t.push_back(i->first);
 	}
@@ -22,8 +22,8 @@ std::vector<std::string> Object::getTags()
 // 260107 converted ' to "
 void Object::tagsToXML(std::ostream &strm)
 {
-	for(std::map<std::string,std::string>::iterator i=tags.begin();
-			i!=tags.end(); i++)
+	for(std::map<std::string,std::string>::const_iterator i=m_tags.begin();
+			i!=m_tags.end(); i++)
 	{
 		strm << "    <tag k=\"" << i->first << "\" v=\"" << i->second << "\"/>" << endl;
 	}
@@ -31,7 +31,7 @@ void Object::tagsToXML(std::ostream &strm)
 
 bool Object::hasTags() const
 {
-	return tags.size() > 0;
+	return m_tags.size() > 0;
 }
 
 
@@ -52,13 +52,13 @@ Object::Object(int id) : m_id(id)
 void Object::setName(const std::string& n)
 {
 	//name = n;
-	tags["name"] = n;
+	m_tags["name"] = n;
 }
 
 std::string Object::getName()
 {
 	//return name;
-	return (tags.find("name") != tags.end()) ? tags["name"] : "";
+	return (m_tags.find("name") != m_tags.end()) ? m_tags["name"] : "";
 }
 
 bool Object::isFromOSM()
@@ -68,12 +68,17 @@ bool Object::isFromOSM()
 
 void Object::addTag(std::string key, std::string value)
 {
-	tags[key] = value;
+	m_tags[key] = value;
 }
 
 std::string Object::getTag(const std::string& tag)
 {
-	return (tags.find(tag) != tags.end()) ? tags[tag] : "";
+	return (m_tags.find(tag) != m_tags.end()) ? m_tags[tag] : "";
+}
+
+std::map<std::string, std::string> const &Object::tags() const
+{
+	return m_tags;
 }
 
 }

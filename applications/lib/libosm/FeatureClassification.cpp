@@ -20,8 +20,8 @@ void FeatureClassification::addAreaDef(const std::string& k,
 
 std::string FeatureClassification::getFeatureClass(Object *object) const
 {
-	for (std::map<std::string, std::string>::iterator i = object->tags.begin(); i
-			!= object->tags.end(); i++)
+	for (std::map<std::string, std::string>::const_iterator i = object->tags().begin(); i
+			!= object->tags().end(); i++)
 	{
 		for (std::vector<KeyVal>::const_iterator j = ways.begin(); j
 				!= ways.end(); j++)

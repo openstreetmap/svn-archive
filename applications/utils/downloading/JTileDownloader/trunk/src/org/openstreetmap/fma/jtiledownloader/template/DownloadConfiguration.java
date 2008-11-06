@@ -25,13 +25,14 @@ import java.util.Properties;
  *    General Public License along with JTileDownloader.  
  *    If not, see <http://www.gnu.org/licenses/>.
  */
-public abstract class DownloadConfiguration
+public class DownloadConfiguration
 {
     private String _propertyFileName = "downloadConfig.xml";
 
     private int[] _outputZoomLevels = new int[] {12 };
     private String _tileServer = "";
     private String _outputLocation = "";
+    private String _type = "";
 
     private static final String OUTPUT_ZOOM_LEVEL = "OutputZoomLevel";
     private static final String TILE_SERVER = "TileServer";
@@ -104,6 +105,7 @@ public abstract class DownloadConfiguration
     {
         Properties prop = loadFromXml();
 
+        _type = prop.getProperty(TYPE, "");
         _outputZoomLevels = getOutputZoomLevelArray(prop.getProperty(OUTPUT_ZOOM_LEVEL, "12"));
         _tileServer = prop.getProperty(TILE_SERVER, "");
         _outputLocation = prop.getProperty(OUTPUTLOCATION, "tiles");
@@ -229,6 +231,15 @@ public abstract class DownloadConfiguration
     public String getPropertyFileName()
     {
         return _propertyFileName;
+    }
+
+    /**
+     * Getter for type
+     * @return the type
+     */
+    public final String getType()
+    {
+        return _type;
     }
 
 }

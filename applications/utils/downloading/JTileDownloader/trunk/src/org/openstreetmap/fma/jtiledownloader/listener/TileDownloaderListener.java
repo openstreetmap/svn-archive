@@ -32,18 +32,26 @@ public interface TileDownloaderListener
     void downloadedTile(int actCount, int maxCount, String path);
 
     /**
-    * 
-    */
+     * @param errorCount
+     * @param errorTileList
+     */
     void downloadComplete(int errorCount, Vector errorTileList);
 
     /**
-     * 
+     * @param message
      */
     void waitResume(String message);
 
     /**
-     * 
+     * @param message
      */
     void waitWaitHttp500ErrorToResume(String message);
+
+    /**
+     * @param actCount
+     * @param maxCount
+     * @param tile
+     */
+    void errorOccured(int actCount, int maxCount, String tile);
 
 }

@@ -57,6 +57,7 @@ public class TileListDownloader
     private boolean _waitAfterTiles = false;
     private int _waitAfterTilesAmount = 0;
     private int _waitAfterTilesSeconds = 1;
+    private boolean _stopFlag = false;
 
     /**
      * @param downloadPath
@@ -183,6 +184,7 @@ public class TileListDownloader
      */
     public void run()
     {
+        _stopFlag = false;
         Vector errorTileList = new Vector();
 
         if (getTilesToDownload() == null || getTilesToDownload().size() == 0)
@@ -200,13 +202,18 @@ public class TileListDownloader
             {
                 new ProxyConnection(getProxyServer(), Integer.parseInt(getProxyServerPort()));
             }
-
         }
 
         int errorCount = 0;
         int tileCounter = 0;
         for (Enumeration enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
         {
+            if (_stopFlag)
+            {
+                fireDownloadStoppedEvent(tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
+                return;
+            }
+
             String tileToDownload = (String) enumeration.nextElement();
             System.out.println("try to download tile " + tileToDownload + " to " + getDownloadPath());
             tileCounter++;
@@ -478,6 +485,18 @@ public class TileListDownloader
     }
 
     /**
+    s     * @param actCount
+     * @param maxCount
+     */
+    private void fireDownloadStoppedEvent(int actCount, int maxCount)
+    {
+        if (_listener != null)
+        {
+            _listener.downloadStopped(actCount, maxCount);
+        }
+    }
+
+    /**
      * 
      */
     private void fireDownloadCompleteEvent(int errorCount, Vector errorTileList)
@@ -598,5 +617,14 @@ public class TileListDownloader
     public Vector getTilesToDownload()
     {
         return _tilesToDownload;
+    }
+
+    /**
+     * @param b
+     */
+    public void setStopFlag(boolean stopFlag)
+    {
+        _stopFlag = stopFlag;
+
     }
 }

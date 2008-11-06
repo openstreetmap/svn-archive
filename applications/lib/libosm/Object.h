@@ -90,7 +90,12 @@ public:
 	/**
 	 * @return All tag keys attached to this object
 	 */
-	std::vector<std::string> getTags();
+	std::vector<std::string> getTags() const;
+
+	/**
+	 * @return All key/value pairs of the tags attached to this object
+	 */
+	std::map<std::string, std::string> const &tags() const;
 
 	/**
 	 * @return True if this object contains at least one tag
@@ -103,11 +108,6 @@ public:
 	 * @param strm Stream to write xml representation of the tags to
 	 */
 	void tagsToXML(std::ostream &strm);
-
-	/**
-	 * @return All key/value pairs of the tags attached to this object
-	 */
-	std::map<std::string, std::string> const &tags() const;
 
 private:
 	/** Object ID */

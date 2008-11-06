@@ -335,7 +335,8 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 
 inline int IsOneway (wayType *w, int Vehicle)
 {
-  return Vehicle != footR && Vehicle != bicycleR && (w->bits & (1<<onewayR));
+  return !((Vehicle == footR || Vehicle == bicycleR) &&
+    (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
 }
 
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast)

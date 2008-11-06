@@ -206,6 +206,28 @@ public class JTileDownloaderMainView
     }
 
     /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadStopped(int, int)
+     * {@inheritDoc}
+     */
+    public void downloadStopped(int actCount, int maxCount)
+    {
+        if (_mainPanel != null)
+        {
+            _mainPanel.getButtonDownload().setText(MainPanel.DOWNLOAD_TILES);
+            _mainPanel.getButtonDownload().setActionCommand(MainPanel.COMMAND_DOWNLOAD);
+
+            _mainPanel.getProgressBar().setValue(actCount);
+            _mainPanel.getProgressBar().setString("Stopped download at tile " + actCount + "/" + maxCount);
+        }
+
+        getTileListDownloader().setListener(null);
+        setTileListDownloader(null);
+
+        closeTilePreview();
+
+    }
+
+    /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete()
      * {@inheritDoc}
      */
@@ -214,32 +236,17 @@ public class JTileDownloaderMainView
 
         _mainPanel.getProgressBar().setString("Completed with " + errorCount + " error(s)");
 
-        _mainPanel.getButtonDownload().setEnabled(true);
+        _mainPanel.getButtonDownload().setText(MainPanel.DOWNLOAD_TILES);
+        _mainPanel.getButtonDownload().setActionCommand(MainPanel.COMMAND_DOWNLOAD);
         _mainPanel.getButtonExport().setEnabled(true);
 
         getTileListDownloader().setListener(null);
         setTileListDownloader(null);
 
-        if (getAppConfiguration().isAutoCloseTilePreview())
-        {
-            if (_tilePreview != null)
-            {
-                try
-                {
-                    Thread.sleep(500);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                _tilePreview.setVisible(false);
-                _tilePreview = null;
-            }
-        }
+        closeTilePreview();
 
         if (errorTileList != null && errorTileList.size() > 0)
         {
-            // TODO: show List of failed tiles
             ErrorTileListView view = new ErrorTileListView(this, errorTileList);
             view.setVisible(true);
             int exitCode = view.getExitCode();
@@ -268,6 +275,29 @@ public class JTileDownloaderMainView
 
         }
 
+    }
+
+    /**
+     * 
+     */
+    private void closeTilePreview()
+    {
+        if (getAppConfiguration().isAutoCloseTilePreview())
+        {
+            if (_tilePreview != null)
+            {
+                try
+                {
+                    Thread.sleep(500);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                _tilePreview.setVisible(false);
+                _tilePreview = null;
+            }
+        }
     }
 
     /**

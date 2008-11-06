@@ -49,7 +49,7 @@ public class ViewComponent
 
     public void setImage(String filePathName)
     {
-        image = Toolkit.getDefaultToolkit().getImage(filePathName);
+        image = Toolkit.getDefaultToolkit().createImage(filePathName);
         if (image != null)
         {
             repaint();

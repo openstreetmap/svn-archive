@@ -360,6 +360,8 @@ public class TileListDownloader
         try
         {
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setUseCaches(false);
+            //            long lastModified = urlConnection.getLastModified();
 
             InputStream inputStream = urlConnection.getInputStream();
 

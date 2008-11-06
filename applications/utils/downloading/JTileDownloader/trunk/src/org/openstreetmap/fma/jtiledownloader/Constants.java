@@ -22,7 +22,7 @@ package org.openstreetmap.fma.jtiledownloader;
  */
 public interface Constants
 {
-    public static final String VERSION = "0-4-0_dev";
+    public static final String VERSION = "0-4-0";
 
     public static final double EARTH_CIRC_POLE = 40.007863 * Math.pow(10, 6);
     public static final double EARTH_CIRC_EQUATOR = 40.075016 * Math.pow(10, 6);
@@ -31,7 +31,7 @@ public interface Constants
     public static final double MIN_LON = -85.0511;
     public static final double MAX_LON = 85.0511;
 
-    public static final String[] INPUT_TAB_TYPE = new String[] {"Paste URL (Square)", "Bounding Box (Lat/Lon)", "Bounding Box (XY)" };
+    public static final String[] INPUT_TAB_TYPE = new String[] {"Paste URL (Square)", "Bounding Box (Lat/Lon)", "Bounding Box (X/Y)" };
     public static final String[] CONFIG_TYPE = new String[] {"UrlSquare", "BBoxLatLon", "BBoxXY" };
     public static final int TYPE_URLSQUARE = 0;
     public static final int TYPE_BOUNDINGBOX_LATLON = 1;

@@ -74,7 +74,7 @@ public class JTileDownloaderCommandLine
 
         parsePasteUrl();
         _tileListSquare.setRadius(_downloadTemplate.getRadius() * 1000);
-        _tileListSquare.setDownloadZoomLevel(_downloadTemplate.getOutputZoomLevel());
+        _tileListSquare.setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
         _tileListSquare.setTileServerBaseUrl(_downloadTemplate.getTileServer());
 
         _tileListSquare.calculateTileValuesXY();

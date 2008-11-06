@@ -28,7 +28,7 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
 public abstract class TileListCommon
     implements TileList, Constants
 {
-    private int _downloadZoomLevel;
+    private int[] _downloadZoomLevels;
     private String _tileServerBaseUrl;
 
     /**
@@ -74,18 +74,18 @@ public abstract class TileListCommon
      * Getter for downloadZoomLevel
      * @return the downloadZoomLevel
      */
-    public final int getDownloadZoomLevel()
+    public final int[] getDownloadZoomLevels()
     {
-        return _downloadZoomLevel;
+        return _downloadZoomLevels;
     }
 
     /**
      * Setter for downloadZoomLevel
      * @param downloadZoomLevel the downloadZoomLevel to set
      */
-    public final void setDownloadZoomLevel(int downloadZoomLevel)
+    public final void setDownloadZoomLevels(int[] downloadZoomLevel)
     {
-        _downloadZoomLevel = downloadZoomLevel;
+        _downloadZoomLevels = downloadZoomLevel;
     }
 
     /**

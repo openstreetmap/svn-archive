@@ -145,12 +145,14 @@ public class BBoxXYPanel
      */
     private void updateTileList()
     {
-        _tileList.setDownloadZoomLevel(getDownloadZoomLevel());
+        _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
         _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
-        _tileList.setXTopLeft(getMinX());
-        _tileList.setYTopLeft(getMinY());
-        _tileList.setXBottomRight(getMaxX());
-        _tileList.setYBottomRight(getMaxY());
+
+        _tileList.initXTopLeft(getMinX(), getDownloadZoomLevel());
+        _tileList.initYTopLeft(getMinY(), getDownloadZoomLevel());
+        _tileList.initXBottomRight(getMaxX(), getDownloadZoomLevel());
+        _tileList.initYBottomRight(getMaxY(), getDownloadZoomLevel());
+
         updateNumberOfTiles();
     }
 
@@ -162,7 +164,7 @@ public class BBoxXYPanel
         }
 
         _downloadConfig.setOutputLocation(getOutputLocation());
-        _downloadConfig.setOutputZoomLevel(getDownloadZoomLevel());
+        _downloadConfig.setOutputZoomLevels(getDownloadZoomLevel());
         _downloadConfig.setTileServer(getTileServerBaseUrl());
         _downloadConfig.setMinX(getMinX());
         _downloadConfig.setMinY(getMinY());
@@ -228,7 +230,7 @@ public class BBoxXYPanel
      */
     public int getNumberOfTilesToDownload()
     {
-        return Integer.parseInt("" + (Math.abs(_tileList.getXBottomRight() - _tileList.getXTopLeft()) + 1) * (Math.abs(_tileList.getYBottomRight() - _tileList.getYTopLeft()) + 1));
+        return _tileList.getTileCount();
     }
 
     class MyFocusListener

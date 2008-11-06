@@ -59,6 +59,7 @@ public class MainPanel
     private static final long serialVersionUID = 1L;
 
     private static final String COMPONENT_OUTPUT_ZOOM_LEVEL = "outputZoomLevel";
+    private static final String COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT = "outputZoomLevelText";
 
     private static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
     private static final String COMMAND_DOWNLOAD = "download";
@@ -66,6 +67,8 @@ public class MainPanel
 
     JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
     JComboBox _comboOutputZoomLevel = new JComboBox();
+    JLabel _labelOutputZoomLevels = new JLabel("Output Zoom Levels (ex. 12,13,14) :");
+    JTextField _textOutputZoomLevels = new JTextField();
     JComboBox _comboTileServer = new JComboBox();
 
     JLabel _labelAltTileServer = new JLabel("Alt. Tileserver:");
@@ -116,14 +119,11 @@ public class MainPanel
      */
     private void initializeMainPanel()
     {
-        _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());
         _buttonSelectOutputFolder.setActionCommand(COMMAND_SELECTOUTPUTFOLDER);
         _buttonSelectOutputFolder.setPreferredSize(new Dimension(25, 19));
 
-        _buttonDownload.addActionListener(new MainViewActionListener());
         _buttonDownload.setActionCommand(COMMAND_DOWNLOAD);
 
-        _buttonExport.addActionListener(new MainViewActionListener());
         _buttonExport.setActionCommand(COMMAND_EXPORT);
 
         _comboOutputZoomLevel.setName(COMPONENT_OUTPUT_ZOOM_LEVEL);
@@ -131,8 +131,7 @@ public class MainPanel
         {
             _comboOutputZoomLevel.addItem("" + outputZoomLevel);
         }
-        _comboOutputZoomLevel.addFocusListener(new MainViewFocusListener());
-        _comboOutputZoomLevel.addItemListener(new MainViewItemListener());
+        _textOutputZoomLevels.setName(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT);
         initializeOutputZoomLevel(getInputPanel().getDownloadZoomLevel());
 
         for (int index = 0; index < _tileServers.length; index++)
@@ -149,6 +148,14 @@ public class MainPanel
 
         _progressBar.setPreferredSize(new Dimension(300, 20));
 
+        // set all listeners
+        _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());
+        _buttonDownload.addActionListener(new MainViewActionListener());
+        _buttonExport.addActionListener(new MainViewActionListener());
+
+        _comboOutputZoomLevel.addFocusListener(new MainViewFocusListener());
+        _comboOutputZoomLevel.addItemListener(new MainViewItemListener());
+        _textOutputZoomLevels.addFocusListener(new MainViewFocusListener());
     }
 
     /**
@@ -175,9 +182,33 @@ public class MainPanel
         }
     }
 
-    public void initializeOutputZoomLevel(int zoomLevel)
+    public void initializeOutputZoomLevel(int[] zoomLevels)
     {
-        _comboOutputZoomLevel.setSelectedItem("" + zoomLevel); //_downloadTemplate.getOutputZoomLevel());
+        if (zoomLevels == null || zoomLevels.length == 0)
+        {
+            _textOutputZoomLevels.setText("");
+            _comboOutputZoomLevel.setSelectedItem("12");
+            return;
+        }
+
+        if (zoomLevels.length == 1)
+        {
+            _textOutputZoomLevels.setText("");
+            _comboOutputZoomLevel.setSelectedItem("" + zoomLevels[0]);
+            return;
+        }
+
+        String textZoomLevels = "";
+        for (int index = 0; index < zoomLevels.length; index++)
+        {
+            if (index > 0)
+            {
+                textZoomLevels += ",";
+            }
+            textZoomLevels += zoomLevels[index];
+        }
+        _textOutputZoomLevels.setText(textZoomLevels);
+
     }
 
     /**
@@ -211,6 +242,11 @@ public class MainPanel
         add(_labelOutputZoomLevel, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_comboOutputZoomLevel, constraints);
+
+        constraints.gridwidth = GridBagConstraints.RELATIVE;
+        add(_labelOutputZoomLevels, constraints);
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        add(_textOutputZoomLevels, constraints);
 
         add(_comboTileServer, constraints);
         add(_labelAltTileServer, constraints);
@@ -276,7 +312,16 @@ public class MainPanel
 
     public void valuesChanged()
     {
-        getInputPanel().setDownloadZoomLevel(Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()));
+        String textZoomLevels = _textOutputZoomLevels.getText().trim();
+        if (textZoomLevels.length() == 0)
+        {
+            getInputPanel().setDownloadZoomLevel(new int[] {Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()) });
+        }
+        else
+        {
+            getInputPanel().setDownloadZoomLevel(getOutputZoomLevelArray(textZoomLevels));
+        }
+
         String altTileServer = getAltTileServer();
         if (altTileServer == null || altTileServer.length() == 0)
         {
@@ -288,6 +333,31 @@ public class MainPanel
         }
         getInputPanel().setOutputLocation(getOutputfolder());
         getInputPanel().updateAll();
+    }
+
+    /**
+     * @param property
+     * @return int[]
+     */
+    private int[] getOutputZoomLevelArray(String zoomLevels)
+    {
+        zoomLevels = zoomLevels.trim();
+
+        String[] zoomLevelsString = zoomLevels.split(",");
+
+        if (zoomLevelsString == null || zoomLevelsString.length == 0)
+        {
+            return new int[] {12 };
+        }
+
+        int[] zoomLevel = new int[zoomLevelsString.length];
+        for (int index = 0; index < zoomLevelsString.length; index++)
+        {
+            zoomLevel[index] = Integer.parseInt(zoomLevelsString[index]);
+        }
+
+        return zoomLevel;
+
     }
 
     /**
@@ -340,6 +410,11 @@ public class MainPanel
             {
                 valuesChanged();
             }
+            if (componentName.equalsIgnoreCase(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT))
+            {
+                valuesChanged();
+            }
+
         }
 
     }

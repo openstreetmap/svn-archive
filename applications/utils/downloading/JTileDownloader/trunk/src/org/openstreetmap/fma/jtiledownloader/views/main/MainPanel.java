@@ -55,15 +55,15 @@ public class MainPanel
     extends JPanel
     implements Constants
 {
-
     private static final long serialVersionUID = 1L;
 
-    private static final String COMPONENT_OUTPUT_ZOOM_LEVEL = "outputZoomLevel";
-    private static final String COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT = "outputZoomLevelText";
+    public static final String COMPONENT_OUTPUT_ZOOM_LEVEL = "outputZoomLevel";
+    public static final String COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT = "outputZoomLevelText";
 
-    private static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
-    private static final String COMMAND_DOWNLOAD = "download";
-    private static final String COMMAND_EXPORT = "export";
+    public static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
+    public static final String COMMAND_DOWNLOAD = "download";
+    public static final String COMMAND_STOP = "stop";
+    public static final String COMMAND_EXPORT = "export";
 
     JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
     JComboBox _comboOutputZoomLevel = new JComboBox();
@@ -82,11 +82,14 @@ public class MainPanel
     JTextField _textNumberOfTiles = new JTextField("---");
 
     JProgressBar _progressBar = new JProgressBar();
-    JButton _buttonDownload = new JButton("Download Tiles");
+
+    public static final String STOP_DOWNLOAD = "Stop Download";
+    public static final String DOWNLOAD_TILES = "Download Tiles";
+
+    JButton _buttonDownload = new JButton(DOWNLOAD_TILES);
     JButton _buttonExport = new JButton("Export Tilelist");
 
     private final JTileDownloaderMainView _mainView;
-    //private final DownloadConfigurationUrlSquare _downloadTemplate;
 
     private TileServer[] _tileServers;
 
@@ -456,7 +459,8 @@ public class MainPanel
                 _mainView.updateActualDownloadConfig();
                 _mainView.updateAppConfig();
 
-                getButtonDownload().setEnabled(false);
+                getButtonDownload().setText(STOP_DOWNLOAD);
+                getButtonDownload().setActionCommand(COMMAND_STOP);
                 getButtonExport().setEnabled(false);
 
                 _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
@@ -468,6 +472,13 @@ public class MainPanel
 
                 _mainView.getTileListDownloader().setListener(_mainView);
                 _mainView.getTileListDownloader().start();
+            }
+            else if (actionCommand.equalsIgnoreCase(COMMAND_STOP))
+            {
+                if (_mainView.getTileListDownloader() != null)
+                {
+                    _mainView.getTileListDownloader().setStopFlag(true);
+                }
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))
             {

@@ -441,42 +441,4 @@ bool Components::makeWayShp(const std::string &shpname,
 	return true;
 }
 
-Components * Components::cleanWays()
-{
-	Components *compOut = new Components;
-
-	std::map<int,Way*>::iterator i = ways.begin();
-	//rewindWays();
-	while(i!=ways.end())
-	//while(hasMoreWays())
-	{
-		//OSM::Way *w = nextWay();
-		OSM::Way *w = i->second;
-		if(w)
-		{
-			std::vector<int> nodes = getWayNodes(w->id());
-
-			if(nodes.size())
-			{
-				OSM::Way *way = new OSM::Way;
-				way->tags = w->tags;
-				compOut->addWay(way);
-				for(unsigned int i=0; i<nodes.size(); i++)
-				{
-					way->addNode(nodes[i]);
-				}
-			}
-		}
-		i++;
-	}
-
-	rewindNodes();
-	while(hasMoreNodes())
-	{
-		OSM::Node *n = new OSM::Node(*(nextNode()));
-		compOut->addNode(n);
-	}
-	return compOut;
-}
-
 }

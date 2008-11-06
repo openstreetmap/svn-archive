@@ -34,7 +34,7 @@ public abstract class InputPanel
 {
 
     private static final long serialVersionUID = 1L;
-    private int _downloadZoomLevel = 0;
+    private int[] _downloadZoomLevel = new int[] {12 };
     private String _tileServerBaseUrl = "";
     private String _outputLocation = "tiles";
     private final JTileDownloaderMainView _mainView;
@@ -52,7 +52,7 @@ public abstract class InputPanel
      * Getter for downloadZoomLevel
      * @return the downloadZoomLevel
      */
-    public final int getDownloadZoomLevel()
+    public final int[] getDownloadZoomLevel()
     {
         return _downloadZoomLevel;
     }
@@ -61,7 +61,7 @@ public abstract class InputPanel
      * Setter for downloadZoomLevel
      * @param downloadZoomLevel the downloadZoomLevel to set
      */
-    public final void setDownloadZoomLevel(int downloadZoomLevel)
+    public final void setDownloadZoomLevel(int[] downloadZoomLevel)
     {
         _downloadZoomLevel = downloadZoomLevel;
     }
@@ -135,7 +135,7 @@ public abstract class InputPanel
     {
         setOutputLocation(downloadConfig.getOutputLocation());
         getMainView().getMainPanel().getTextOutputFolder().setText(getOutputLocation());
-        setDownloadZoomLevel(downloadConfig.getOutputZoomLevel());
+        setDownloadZoomLevel(downloadConfig.getOutputZoomLevels());
         getMainView().getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
         setTileServerBaseUrl(downloadConfig.getTileServer());
         getMainView().getMainPanel().initializeTileServer(getTileServerBaseUrl());

@@ -29,7 +29,7 @@ public abstract class DownloadConfiguration
 {
     private String _propertyFileName = "downloadConfig.xml";
 
-    private int _outputZoomLevel = 12;
+    private int[] _outputZoomLevels = new int[] {12 };
     private String _tileServer = "";
     private String _outputLocation = "";
 
@@ -54,11 +54,35 @@ public abstract class DownloadConfiguration
     {
         Properties prop = new Properties();
 
-        setTemplateProperty(prop, OUTPUT_ZOOM_LEVEL, "" + _outputZoomLevel);
+        setTemplateProperty(prop, OUTPUT_ZOOM_LEVEL, getOutputZoomLevelString(_outputZoomLevels));
         setTemplateProperty(prop, TILE_SERVER, "" + _tileServer);
         setTemplateProperty(prop, OUTPUTLOCATION, "" + _outputLocation);
 
         return prop;
+    }
+
+    /**
+     * @param outputZoomLevel
+     * @return
+     */
+    private String getOutputZoomLevelString(int[] outputZoomLevel)
+    {
+        if (outputZoomLevel == null || outputZoomLevel.length == 0)
+        {
+            return "";
+        }
+
+        String zoomLevels = "";
+        for (int index = 0; index < outputZoomLevel.length; index++)
+        {
+            if (index > 0)
+            {
+                zoomLevels += ",";
+            }
+            zoomLevels += outputZoomLevel[index];
+        }
+
+        return zoomLevels;
     }
 
     /**
@@ -80,11 +104,36 @@ public abstract class DownloadConfiguration
     {
         Properties prop = loadFromXml();
 
-        _outputZoomLevel = Integer.parseInt(prop.getProperty(OUTPUT_ZOOM_LEVEL, "15"));
+        _outputZoomLevels = getOutputZoomLevelArray(prop.getProperty(OUTPUT_ZOOM_LEVEL, "12"));
         _tileServer = prop.getProperty(TILE_SERVER, "");
         _outputLocation = prop.getProperty(OUTPUTLOCATION, "tiles");
 
         return prop;
+    }
+
+    /**
+     * @param property
+     * @return int[]
+     */
+    private int[] getOutputZoomLevelArray(String zoomLevels)
+    {
+        zoomLevels = zoomLevels.trim();
+
+        String[] zoomLevelsString = zoomLevels.split(",");
+
+        if (zoomLevelsString == null || zoomLevelsString.length == 0)
+        {
+            return new int[] {12 };
+        }
+
+        int[] zoomLevel = new int[zoomLevelsString.length];
+        for (int index = 0; index < zoomLevelsString.length; index++)
+        {
+            zoomLevel[index] = Integer.parseInt(zoomLevelsString[index]);
+        }
+
+        return zoomLevel;
+
     }
 
     /**
@@ -114,18 +163,18 @@ public abstract class DownloadConfiguration
      * Getter for outputZoomLevel
      * @return the outputZoomLevel
      */
-    public final int getOutputZoomLevel()
+    public final int[] getOutputZoomLevels()
     {
-        return _outputZoomLevel;
+        return _outputZoomLevels;
     }
 
     /**
      * Setter for outputZoomLevel
      * @param outputZoomLevel the outputZoomLevel to set
      */
-    public final void setOutputZoomLevel(int outputZoomLevel)
+    public final void setOutputZoomLevels(int[] outputZoomLevel)
     {
-        _outputZoomLevel = outputZoomLevel;
+        _outputZoomLevels = outputZoomLevel;
     }
 
     /**

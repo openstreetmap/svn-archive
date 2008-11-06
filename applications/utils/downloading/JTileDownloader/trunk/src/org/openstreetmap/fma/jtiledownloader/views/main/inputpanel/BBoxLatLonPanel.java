@@ -144,7 +144,7 @@ public class BBoxLatLonPanel
      */
     private void updateTileList()
     {
-        _tileList.setDownloadZoomLevel(getDownloadZoomLevel());
+        _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
         _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
         _tileList.setMinLat(getMinLat());
         _tileList.setMinLon(getMinLon());
@@ -162,7 +162,7 @@ public class BBoxLatLonPanel
         }
 
         _downloadConfig.setOutputLocation(getOutputLocation());
-        _downloadConfig.setOutputZoomLevel(getDownloadZoomLevel());
+        _downloadConfig.setOutputZoomLevels(getDownloadZoomLevel());
         _downloadConfig.setTileServer(getTileServerBaseUrl());
         _downloadConfig.setMinLat(getMinLat());
         _downloadConfig.setMinLon(getMinLon());
@@ -228,7 +228,7 @@ public class BBoxLatLonPanel
      */
     public int getNumberOfTilesToDownload()
     {
-        return Integer.parseInt("" + (Math.abs(_tileList.getXBottomRight() - _tileList.getXTopLeft()) + 1) * (Math.abs(_tileList.getYBottomRight() - _tileList.getYTopLeft()) + 1));
+        return _tileList.getTileCount();
     }
 
     class MyFocusListener

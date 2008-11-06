@@ -2,6 +2,8 @@ package org.openstreetmap.fma.jtiledownloader.tilelist;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -23,7 +25,7 @@ import java.util.Vector;
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class TileListSimple
-    implements TileList
+    implements TileList, Constants
 {
 
     Vector _tileList;

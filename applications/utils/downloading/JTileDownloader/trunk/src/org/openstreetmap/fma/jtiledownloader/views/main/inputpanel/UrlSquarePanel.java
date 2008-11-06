@@ -46,7 +46,7 @@ public class UrlSquarePanel
     private static final String COMPONENT_PASTE_URL = "pasteURL";
     private static final String COMPONENT_RADIUS = "radius";
 
-    private TileListUrlSquare _tileListSquare = new TileListUrlSquare();
+    private TileListUrlSquare _tileList = new TileListUrlSquare();
 
     JLabel _labelPasteUrl = new JLabel("Paste URL:");
     JTextField _textPasteUrl = new JTextField();
@@ -67,8 +67,8 @@ public class UrlSquarePanel
     {
         super(mainView);
 
-        createUrlSquarePanel();
-        initializeUrlSquarePanel();
+        createPanel();
+        initializePanel();
     }
 
     /**
@@ -90,7 +90,7 @@ public class UrlSquarePanel
     /**
      * 
      */
-    private void initializeUrlSquarePanel()
+    private void initializePanel()
     {
         _textPasteUrl.setPreferredSize(new Dimension(330, 20));
         _textPasteUrl.addFocusListener(new MyFocusListener());
@@ -108,7 +108,7 @@ public class UrlSquarePanel
     /**
      * 
      */
-    private void createUrlSquarePanel()
+    private void createPanel()
     {
         setLayout(new GridBagLayout());
 
@@ -149,8 +149,8 @@ public class UrlSquarePanel
             _textLatitude.setText("" + 0);
             _textLongitude.setText("" + 0);
 
-            _tileListSquare.setLatitude(0);
-            _tileListSquare.setLongitude(0);
+            _tileList.setLatitude(0);
+            _tileList.setLongitude(0);
             return;
         }
 
@@ -167,8 +167,8 @@ public class UrlSquarePanel
         _textLatitude.setText(lat);
         _textLongitude.setText(lon);
 
-        _tileListSquare.setLatitude(Double.parseDouble(lat));
-        _tileListSquare.setLongitude(Double.parseDouble(lon));
+        _tileList.setLatitude(Double.parseDouble(lat));
+        _tileList.setLongitude(Double.parseDouble(lon));
 
     }
 
@@ -179,10 +179,10 @@ public class UrlSquarePanel
     {
         try
         {
-            _tileListSquare.setDownloadZoomLevel(getDownloadZoomLevel());
-            _tileListSquare.setTileServerBaseUrl(getTileServerBaseUrl());
-            _tileListSquare.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
-            _tileListSquare.calculateTileValuesXY();
+            _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
+            _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
+            _tileList.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
+            _tileList.calculateTileValuesXY();
             updateNumberOfTiles();
         }
         catch (NumberFormatException e)
@@ -199,7 +199,7 @@ public class UrlSquarePanel
         }
 
         _downloadConfig.setOutputLocation(getOutputLocation());
-        _downloadConfig.setOutputZoomLevel(getDownloadZoomLevel());
+        _downloadConfig.setOutputZoomLevels(getDownloadZoomLevel());
         _downloadConfig.setPasteUrl(getPasteUrl());
         _downloadConfig.setRadius(getRadius());
         _downloadConfig.setTileServer(getTileServerBaseUrl());
@@ -227,7 +227,7 @@ public class UrlSquarePanel
      */
     public int getNumberOfTilesToDownload()
     {
-        return Integer.parseInt("" + (Math.abs(_tileListSquare.getXBottomRight() - _tileListSquare.getXTopLeft()) + 1) * (Math.abs(_tileListSquare.getYBottomRight() - _tileListSquare.getYTopLeft()) + 1));
+        return _tileList.getTileCount();
     }
 
     class MyFocusListener
@@ -278,7 +278,7 @@ public class UrlSquarePanel
      */
     public TileList getTileList()
     {
-        return _tileListSquare;
+        return _tileList;
     }
 
 }

@@ -5,30 +5,28 @@
 #include <fstream>
 #include <sstream>
 
-using std::cout;
-using std::cerr;
-using std::endl;
+using namespace std;
 
 void dotest(OSM::Components *comp1);
 
-int main(int argc,char* argv[])
+int main(int argc, char* argv[])
 {
-	if(argc<4)
+	if (argc < 4)
 	{
-		cerr<<"Usage: test InOsmFile OsmUsername OsmPassword" << endl;
+		cerr << "Usage: test InOsmFile OsmUsername OsmPassword" << endl;
 		exit(1);
 	}
 
-	std::ifstream in(argv[1]);
+	ifstream in(argv[1]);
 	OSM::Components *comp1 = OSM::Parser::parse(in);
 	in.close();
 
 	OSM::Client client("http://www.openstreetmap.org/api/0.5");
-	client.setLoginDetails(argv[2],argv[3]);
+	client.setLoginDetails(argv[2], argv[3]);
 
-	std::string osmData = client.grabOSM("map",-0.75,51.02,-0.7,51.07);
+	string osmData = client.grabOSM("map", -0.75, 51.02, -0.7, 51.07);
 
-	std::istringstream sstream;
+	istringstream sstream;
 	sstream.str(osmData);
 
 	OSM::Components *comp2 = OSM::Parser::parse(sstream);
@@ -49,31 +47,29 @@ void dotest(OSM::Components *comp1)
 	comp1->rewindNodes();
 	comp1->rewindWays();
 
-	while(comp1->hasMoreNodes())
+	while (comp1->hasMoreNodes())
 	{
 		OSM::Node *n = comp1->nextNode();
-		cout << "Node id: " << n->id() << " lat: " << n->getLat()
-				<<" lon: " << n->getLon() << endl << "tags:" << endl;
+		cout << "Node id: " << n->id() << " lat: " << n->getLat() << " lon: "
+				<< n->getLon() << endl << "tags:" << endl;
 
-		std::vector<std::string> keys = n->getTags();
-
-		for(unsigned int count=0; count<keys.size(); count++)
+		map<string, string>::const_iterator iter = n->tags().begin();
+		for (; iter != n->tags().end(); ++iter)
 		{
-			cout  << "Key: " << keys[count] << " Value: " <<
-				n->tags[keys[count]] << endl;
+			cout << "Key: " << iter->first << " Value: " << iter->second
+					<< endl;
 		}
 	}
-	while(comp1->hasMoreWays())
+	while (comp1->hasMoreWays())
 	{
 		OSM::Way *w = comp1->nextWay();
 		cout << "Way id: " << w->id() << " tags:" << endl;
 
-		std::vector<std::string> keys = w->getTags();
-
-		for(unsigned int count=0; count<keys.size(); count++)
+		map<string, string>::const_iterator iter = w->tags().begin();
+		for (; iter != w->tags().end(); ++iter)
 		{
-			cout  << "Key: " << keys[count] << " Value: " <<
-				w->tags[keys[count]] << endl;
+			cout << "Key: " << iter->first << " Value: " << iter->second
+					<< endl;
 		}
 	}
 }

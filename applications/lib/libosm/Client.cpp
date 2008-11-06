@@ -31,6 +31,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 namespace OSM
 {
 
+typedef struct
+{
+	char *data;
+	int nbytes;
+} Data;
+
 Client::Client(const std::string& urlbase)
 {
 	this->urlbase=urlbase;

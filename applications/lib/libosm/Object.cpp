@@ -1,17 +1,17 @@
 #include "Object.h"
 #include <iostream>
 
-using std::endl;
+using namespace std;
 
 namespace OSM
 {
 
-std::vector<std::string> Object::getTags()
+vector<string> Object::getTags() const
 {
-	std::vector<std::string> t;
+	vector<string> t;
 
-	for(std::map<std::string,std::string>::const_iterator i=m_tags.begin();
-			i!=m_tags.end(); i++)
+	for (map<string, string>::const_iterator i = m_tags.begin(); i
+			!= m_tags.end(); i++)
 	{
 		t.push_back(i->first);
 	}
@@ -20,12 +20,13 @@ std::vector<std::string> Object::getTags()
 }
 
 // 260107 converted ' to "
-void Object::tagsToXML(std::ostream &strm)
+void Object::tagsToXML(ostream &strm)
 {
-	for(std::map<std::string,std::string>::const_iterator i=m_tags.begin();
-			i!=m_tags.end(); i++)
+	for (map<string, string>::const_iterator i = m_tags.begin(); i
+			!= m_tags.end(); i++)
 	{
-		strm << "    <tag k=\"" << i->first << "\" v=\"" << i->second << "\"/>" << endl;
+		strm << "    <tag k=\"" << i->first << "\" v=\"" << i->second << "\"/>"
+				<< endl;
 	}
 }
 
@@ -33,7 +34,6 @@ bool Object::hasTags() const
 {
 	return m_tags.size() > 0;
 }
-
 
 int Object::id() const
 {
@@ -45,17 +45,18 @@ void Object::setId(int id)
 	m_id = id;
 }
 
-Object::Object(int id) : m_id(id)
+Object::Object(int id) :
+	m_id(id)
 {
 }
 
-void Object::setName(const std::string& n)
+void Object::setName(const string& n)
 {
 	//name = n;
 	m_tags["name"] = n;
 }
 
-std::string Object::getName()
+string Object::getName()
 {
 	//return name;
 	return (m_tags.find("name") != m_tags.end()) ? m_tags["name"] : "";
@@ -66,17 +67,17 @@ bool Object::isFromOSM()
 	return m_id > 0;
 }
 
-void Object::addTag(std::string key, std::string value)
+void Object::addTag(string key, string value)
 {
 	m_tags[key] = value;
 }
 
-std::string Object::getTag(const std::string& tag)
+string Object::getTag(const string& tag)
 {
 	return (m_tags.find(tag) != m_tags.end()) ? m_tags[tag] : "";
 }
 
-std::map<std::string, std::string> const &Object::tags() const
+map<string, string> const &Object::tags() const
 {
 	return m_tags;
 }

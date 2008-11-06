@@ -220,6 +220,7 @@ public class TileListDownloader
                 error.setTile(tileToDownload);
                 error.setResult(result);
                 errorTileList.add(error);
+                fireErrorOccuredEvent(tileToDownload, tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
             }
 
             if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && isWaitAfterTiles())
@@ -460,6 +461,19 @@ public class TileListDownloader
         if (_listener != null)
         {
             _listener.downloadedTile(actCount, maxCount, fileName);
+        }
+    }
+
+    /**
+     * @param tile
+     * @param actCount
+     * @param maxCount
+     */
+    private void fireErrorOccuredEvent(String tile, int actCount, int maxCount)
+    {
+        if (_listener != null)
+        {
+            _listener.errorOccured(actCount, maxCount, tile);
         }
     }
 

@@ -631,4 +631,14 @@ public class UpdateTilesPanel
         return _buttonUpdate;
     }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
+     * {@inheritDoc}
+     */
+    public void errorOccured(int actCount, int maxCount, String tile)
+    {
+        getProgressBar().setValue(actCount);
+        getProgressBar().setString("Error update tile " + actCount + "/" + maxCount);
+    }
+
 }

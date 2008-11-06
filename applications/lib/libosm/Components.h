@@ -84,8 +84,6 @@ public:
 	bool makeWayShp(const std::string &shpname, FeatureClassification*, bool =
 			false);
 
-	Components * cleanWays();
-
 private:
 	std::map<int, Node*> nodes;
 	std::map<int, Way*> ways;

@@ -1,0 +1,78 @@
+Geo::OSM::MapFeatures -- Parses and represents OpenStreetMap Map Features
+
+OpenStreetMap does not have any content restrictions on tags that can
+be assigned to Nodes, Ways or Areas. You can use any tags you
+like. However, there is benefit in agreeing a recommended set of
+features and corresponding tags in order to create, interpret and
+display a common basemap. Map Features contains a core recommended
+feature set and corresponding tags.
+
+This module downloads and parses map features and tries to make it
+easy access for software, something the original wiki page is most
+certainly not.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+EXAMPLE
+
+use Geo::OSM::MapFeatures;
+
+my $mf = new Geo::OSM::MapFeatures;
+$mf->download();
+$mf->parse();
+
+# To print a simple ascii representation:
+foreach my $category ( $mf->categories() ){
+    print "\n\n===== $category =====\n";
+    foreach my $feature ( $mf->features($category) ){
+        print "$feature\n";
+    }
+}
+
+# Or you can choose not to use the string overloading and get the
+# individual elements yourself:
+foreach my $category ( $mf->categories() ){
+    print "\n\n===== $category =====\n";
+    foreach my $feature ( $mf->features($category) ){
+        print "Key: ".$feature->key()."\n";
+        print "Value(s): ". join("\n          ", @{$feature->values()})."\n";
+        print "Description: ".$feature->description()."\n\n";
+    }
+}
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Geo::OSM::MapFeatures
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Geo-OSM-MapFeatures
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Geo-OSM-MapFeatures
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Geo-OSM-MapFeatures
+
+    Search CPAN
+        http://search.cpan.org/dist/Geo-OSM-MapFeatures
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2008 Knut Arne Bjørndal
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+

@@ -1012,8 +1012,8 @@ gint Expose (void)
           &styleColour[i][j], FALSE, TRUE);
       }
     }
-    routeColour.red = 0xffff;
-    routeColour.green = routeColour.blue = 0;
+    routeColour.green = 0xffff;
+    routeColour.red = routeColour.blue = 0;
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &routeColour, FALSE, TRUE);
     validateColour.red = 0xffff;
@@ -1176,9 +1176,9 @@ gint Expose (void)
             #endif
           }
         }
-	// area
+        #ifndef _WIN32_WCE
+	// filled areas
         else if (Style (w)->areaColour != -1) {
-          #ifndef _WIN32_WCE
           while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
           static GdkPoint pt[1000];
           unsigned pts;
@@ -1196,13 +1196,14 @@ gint Expose (void)
             Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
             : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
           gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
-          #endif
         }
-	// way
-        else if (nd->other[1] >= 0) {
-	  // perform validation
+
+        #endif
+	// ways (including areas on WinMob)
+        else if (nd->other[1] >= 0 || Style(w)->areaColour != -1) {
+	  // perform validation (on non-areas)
 	  bool valid;
-	  if (ValidateMode) {
+	  if (ValidateMode && Style(w)->areaColour == -1) {
 	    valid = (len > 0); // most ways should have labels
 	    // valid = valid && ... (add more validation here)
 
@@ -1353,7 +1354,7 @@ gint Expose (void)
       __int64 sumLat = x->nd->lat;
       #ifndef _WIN32_WCE
       gdk_gc_set_foreground (mygc, &routeColour);
-      gdk_gc_set_line_attributes (mygc, 5,
+      gdk_gc_set_line_attributes (mygc, 6,
         GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
       #else
       SelectObject (mygc, pen[ROUTE_PEN]);
@@ -2709,13 +2710,18 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
           bmp = CreateCompatibleBitmap (ps.hdc, GetSystemMetrics(SM_CXSCREEN),
             GetSystemMetrics(SM_CYSCREEN));
           SelectObject (bufDc, bmp);
-          pen[ROUTE_PEN] = CreatePen (PS_SOLID, 4, 0xff);
+          pen[ROUTE_PEN] = CreatePen (PS_SOLID, 6, 0x00ff00);
 	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff);
           for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
-            pen[i + RESERVED_PENS] = CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
-              style[i].lineWidth, (style[i].lineColour >> 16) |
-                (style[i].lineColour & 0xff00) |
-                ((style[i].lineColour & 0xff) << 16));
+	    // replace line colour with area colour 
+	    // if no line colour specified
+	    int c = style[i].lineColour != -1 ? style[i].lineColour
+	      : style[i].areaColour; 
+            pen[i + RESERVED_PENS] = 
+	      CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
+			 style[i].lineWidth, (c >> 16) |
+			 (c & 0xff00) |
+			 ((c & 0xff) << 16));
           }
           done = TRUE;
         }

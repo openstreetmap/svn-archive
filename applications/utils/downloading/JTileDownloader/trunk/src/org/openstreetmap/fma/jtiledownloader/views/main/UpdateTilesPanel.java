@@ -1,6 +1,7 @@
 package org.openstreetmap.fma.jtiledownloader.views.main;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -69,16 +70,19 @@ public class UpdateTilesPanel
     JLabel _textTileServer = new JLabel();
 
     JButton _buttonSearch = new JButton("Search");
-    JButton _buttonUpdate = new JButton("Update");
+    public static final String UPDATE = "Update";
+    public static final String STOP = "Stop";
+    JButton _buttonUpdate = new JButton(UPDATE);
 
     private JProgressBar _progressBar = new JProgressBar();
 
-    private static final String COMMAND_SELECT_FOLDER = "selectFolder";
-    private static final String COMMAND_SEARCH = "search";
-    private static final String COMMAND_UPDATE = "update";
+    public static final String COMMAND_SELECT_FOLDER = "selectFolder";
+    public static final String COMMAND_SEARCH = "search";
+    public static final String COMMAND_UPDATE = "update";
+    public static final String COMMAND_STOP = "stop";
 
-    private static final String[] COL_HEADS = new String[] {"Zoom Lvl", "Number of Tiles" };
-    private static final int[] COL_SIZE = new int[] {90, 300 };
+    private static final String[] COL_HEADS = new String[] {"Zoom Level", "Number of Tiles" };
+    private static final int[] COL_SIZE = new int[] {100, 290 };
 
     private DefaultTableColumnModel _cm;
 
@@ -238,12 +242,18 @@ public class UpdateTilesPanel
             else if (actionCommand.equalsIgnoreCase(COMMAND_SEARCH))
             {
                 getButtonSearch().setEnabled(false);
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 doSearch();
+                setCursor(Cursor.getDefaultCursor());
                 getButtonSearch().setEnabled(true);
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_UPDATE))
             {
                 doUpdate();
+            }
+            else if (actionCommand.equalsIgnoreCase(COMMAND_STOP))
+            {
+                getTileListDownloader().setStopFlag(true);
             }
 
         }
@@ -304,7 +314,8 @@ public class UpdateTilesPanel
             getTileListDownloader().setListener(getInstance());
 
             getButtonSearch().setEnabled(false);
-            getButtonUpdate().setEnabled(false);
+            getButtonUpdate().setText(STOP);
+            getButtonUpdate().setActionCommand(COMMAND_STOP);
 
             getTileListDownloader().start();
 
@@ -453,27 +464,13 @@ public class UpdateTilesPanel
         getProgressBar().setString("Update completed");
 
         getButtonSearch().setEnabled(true);
-        getButtonUpdate().setEnabled(true);
+        getButtonUpdate().setText(UPDATE);
+        getButtonUpdate().setActionCommand(COMMAND_UPDATE);
 
         getTileListDownloader().setListener(null);
         setTileListDownloader(null);
 
-        if (getAppConfiguration().isAutoCloseTilePreview())
-        {
-            if (_tilePreview != null)
-            {
-                try
-                {
-                    Thread.sleep(500);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                _tilePreview.setVisible(false);
-                _tilePreview = null;
-            }
-        }
+        closeTilePreview();
 
         if (errorTileList != null && errorTileList.size() > 0)
         {
@@ -506,6 +503,29 @@ public class UpdateTilesPanel
 
         }
 
+    }
+
+    /**
+     * 
+     */
+    private void closeTilePreview()
+    {
+        if (getAppConfiguration().isAutoCloseTilePreview())
+        {
+            if (_tilePreview != null)
+            {
+                try
+                {
+                    Thread.sleep(500);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                _tilePreview.setVisible(false);
+                _tilePreview = null;
+            }
+        }
     }
 
     /**
@@ -639,6 +659,26 @@ public class UpdateTilesPanel
     {
         getProgressBar().setValue(actCount);
         getProgressBar().setString("Error update tile " + actCount + "/" + maxCount);
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadStopped(int, int)
+     * {@inheritDoc}
+     */
+    public void downloadStopped(int actCount, int maxCount)
+    {
+        getProgressBar().setValue(actCount);
+        getProgressBar().setString("Stopped download at tile " + actCount + "/" + maxCount);
+
+        getButtonSearch().setEnabled(true);
+        getButtonUpdate().setText(UPDATE);
+        getButtonUpdate().setActionCommand(COMMAND_UPDATE);
+
+        getTileListDownloader().setListener(null);
+        setTileListDownloader(null);
+
+        closeTilePreview();
+
     }
 
 }

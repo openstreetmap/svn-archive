@@ -38,6 +38,12 @@ public interface TileDownloaderListener
     void downloadComplete(int errorCount, Vector errorTileList);
 
     /**
+     * @param actCount
+     * @param maxCount
+     */
+    void downloadStopped(int actCount, int maxCount);
+
+    /**
      * @param message
      */
     void waitResume(String message);

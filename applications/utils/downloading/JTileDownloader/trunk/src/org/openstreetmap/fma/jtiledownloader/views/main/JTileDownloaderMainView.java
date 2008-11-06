@@ -173,7 +173,7 @@ public class JTileDownloaderMainView
         if (_mainPanel != null)
         {
             _mainPanel.getProgressBar().setValue(actCount);
-            _mainPanel.getProgressBar().setString("Download Tile " + actCount + "/" + maxCount);
+            _mainPanel.getProgressBar().setString("Download tile " + actCount + "/" + maxCount);
         }
 
         if (getAppConfiguration().isShowTilePreview())
@@ -190,7 +190,19 @@ public class JTileDownloaderMainView
 
             _tilePreview.showImage(filePathName);
         }
+    }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
+     * {@inheritDoc}
+     */
+    public void errorOccured(int actCount, int maxCount, String tile)
+    {
+        if (_mainPanel != null)
+        {
+            _mainPanel.getProgressBar().setValue(actCount);
+            _mainPanel.getProgressBar().setString("Error downloading tile " + actCount + "/" + maxCount);
+        }
     }
 
     /**

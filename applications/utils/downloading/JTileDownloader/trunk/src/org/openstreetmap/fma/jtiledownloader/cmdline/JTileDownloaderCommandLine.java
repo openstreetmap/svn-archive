@@ -173,4 +173,13 @@ public class JTileDownloaderCommandLine
         System.out.println(msg);
     }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
+     * {@inheritDoc}
+     */
+    public void errorOccured(int actCount, int maxCount, String tile)
+    {
+        log("Error downloading tile " + actCount + "/" + maxCount + " from " + tile);
+    }
+
 }

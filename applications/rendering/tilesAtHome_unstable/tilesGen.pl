@@ -552,7 +552,7 @@ sub upload
             talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);
         }
         else {
-            $error->raise();
+            $error->throw();
         }
     };
 

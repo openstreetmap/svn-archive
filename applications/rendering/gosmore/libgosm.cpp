@@ -508,6 +508,13 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       if (StyleNr (Way (nd)) >= barrier_bollard &&
           StyleNr (Way (nd)) <= barrier_toll_booth &&
           !(Way (nd)->bits & (1 << Vehicle))) break;
+      if (root->remain > 500000 && root->best - root->remain > 500000 &&
+          (StyleNr (Way (nd)) == highway_residential ||
+           StyleNr (Way (nd)) == highway_service ||
+           StyleNr (Way (nd)) == highway_living_street ||
+           StyleNr (Way (nd)) == highway_unclassified)) continue;
+      /* When more than 50km from the start and the finish, ignore minor
+         roads. This reduces the number of calculations. */
       for (int dir = 0; dir < 2; dir++) {
         if (nd == root->nd && dir == root->dir) continue;
         /* Don't consider an immediate U-turn to reach root->hs->other.

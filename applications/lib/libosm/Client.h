@@ -4,12 +4,6 @@
 namespace OSM
 {
 
-typedef struct
-{
-	char *data;
-	int nbytes;
-} Data;
-
 /**
  * I/O. Handles reading from and writing to OSM servers
  */

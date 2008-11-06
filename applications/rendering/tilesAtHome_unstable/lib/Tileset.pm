@@ -230,6 +230,29 @@ sub generate
                 $t *= 4;
             }
 
+            my $forkpid = 0;
+            if($Config->get("Fork"))
+            {
+                $forkpid = fork();
+                if($forkpid == 0)
+                {
+                    $self->{childThread}=1;
+                    my $num = 2**($maxlayer-$req->Z);
+                    $self->{NumTiles} = $num*$num;
+                    my $startx = $req->X*$num;
+                    my $starty = $req->Y*$num;
+                    for(my $i = 0; $i < $num; ++$i)
+                    {
+                        for(my $j = 0; $j < $num; ++$j)
+                        {
+                            $self->getFile("captionless", $maxlayer, $startx+$i,
+                            $starty+$j);
+                        }
+                    }
+                    exit(1);
+                }
+            }
+
             if($layers{tile})
             {
                 # also produces captionless
@@ -243,6 +266,7 @@ sub generate
             {
                 $self->lowZoom($req->ZXY, $maxlayer, "maplint", "maplint");
             }
+            waitpid($forkpid, 0) if $forkpid;
         }
         else
         {
@@ -339,10 +363,18 @@ sub getFile {
     ++$::progress;
     $::progressPercent = $::progress / $self->{NumTiles} * 100;
     ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
-    for(my $i = 0; $i < 3 && !-f $file; ++$i)
+    for(my $i = 0; $i < 3 && !-f $pfile; ++$i)
     {
-        LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
-        $Layer,$Z,$X,$Y),$pfile);
+        eval
+        {
+            if($self->{Config}->get('Debug'))
+            {
+                ::statusMessage("Download file $file",1,6);
+            }
+            LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
+            $Layer,$Z,$X,$Y),$pfile);
+        };
+        unlink $pfile if($@);
     }
     throw TilesetError "The image $file download failed", "lowzoom" if !-f $pfile;
 }
@@ -380,7 +412,7 @@ sub readLocalImage
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
 
     my $imImage;
-    throw TilesetError "The image  $file missing", "lowzoom" if !-f $pfile;
+    throw TilesetError "The image $file is missing", "lowzoom" if !-f $pfile;
     my $Image = GD::Image->newFromPng($pfile);
     throw TilesetError "The image $file failed to load", "lowzoom" if !$Image;
 
@@ -408,7 +440,29 @@ sub readLocalImage
     elsif (not ($Image->compare($self->{BlackTileImage}) & GD_CMP_IMAGE))
     {
         return 0 if($Layer eq "caption");
-        throw TilesetError "The image  $file is Black Tile", "lowzoom";
+        if($Z == 12 && $self->{OceanTiles})
+        {
+            my $state = $self->{OceanTiles}->getState($X, $Y);
+            if($state eq "sea")
+            {
+                ::statusMessage("Tile state mismatch for $file: mixed/black != sea", 1, 3);
+                $imImage = $self->{EmptySeaImageIM};
+            }
+            elsif($state eq "land")
+            {
+                ::statusMessage("Tile state mismatch for $file: mixed/black != land", 1, 3);
+                $imImage = $self->{EmptyLandImageIM};
+            }
+        }
+
+        # make tile a dark blue, so someone fixes this error
+        if(!$imImage)
+        {
+            ::statusMessage("Tile state mismatch for $file: mixed/black found", 1, 3);
+
+            $imImage = new Image::Magick(size=>'256x256');
+            $imImage->Read("xc:rgb(0,0,255)");
+        }
     }
     # try to work around an ImageMagick bug with transparency in >= 6.4.3
     elsif($Layer eq "caption" && open(FILE,">",$pfile))
@@ -420,7 +474,6 @@ sub readLocalImage
     if($imImage && $Z == 12 && $Layer ne "caption" && $self->{OceanTiles})
     {
         my $state = $self->{OceanTiles}->getState($X, $Y);
-        my $detectstate = "";
         if($imImage == $self->{EmptySeaImageIM})
         {
             if($state ne "sea")

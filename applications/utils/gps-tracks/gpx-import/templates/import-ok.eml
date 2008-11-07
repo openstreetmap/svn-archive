@@ -1,0 +1,22 @@
+From: webmaster@openstreetmap.org
+To: %e
+Subject: [OpenStreetMap] GPX Import Success
+Auto-Submitted: auto-generated
+
+Hi,
+
+It looks like your GPX file
+
+  %t
+
+with the description
+
+  %d
+
+%T
+
+loaded successfully with %g out of a possible %p points.
+
+%m
+%l
+%L

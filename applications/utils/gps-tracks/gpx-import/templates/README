@@ -1,0 +1,24 @@
+This directory contains templates which are used by the importer to
+send emails etc.
+
+Interpolations are %X where X is:
+
+  e = email address of recipient, formatted for SMTP
+      so Real Name If Available <email@domain>
+
+  E = Any error which was encountered while processing the job
+
+  t = Title of GPX trace
+
+  T = Any tags, preceeded by "and the following tags\n"
+      or "and no tags." if there were no tags in the GPX import
+
+  d = The description of the GPX trace
+
+  g = Number of good points imported from the trace
+
+  p = Number of points in the trace in total.
+
+  m = Number of points which missed a <time> tag
+  l = Number of points with bad latitude
+  L = Number of points with bad longitude

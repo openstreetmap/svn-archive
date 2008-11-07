@@ -1,0 +1,26 @@
+From: webmaster@openstreetmap.org
+To: %e
+Subject: [OpenStreetMap] GPX Import Failure
+Auto-Submitted: auto-generated
+
+Hi,
+
+It looks like your GPX file
+
+  %t
+
+with the description
+
+  %d
+
+%T
+
+failed to import. Here's the error:
+
+  %E
+
+More information about GPX import failures and how to avoid
+them can be found at:
+
+  http://wiki.openstreetmap.org/index.php/GPX_Import_Failures
+

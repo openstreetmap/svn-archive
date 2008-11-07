@@ -2536,7 +2536,7 @@
 			
 			.highway-livingstreet-casing            { stroke-width: 1.5px;  stroke: #707070; }
 			.highway-livingstreet-area-casing       { stroke-width: 0.25px; }
-			.highway-livingstreet-core-1            { stroke-width: 1.25px; stroke: #ffffff; stroke-linecap: round; }
+			.highway-livingstreet-core-1            { stroke-width: 1.25px; stroke: #ffffff; }
 			.highway-livingstreet-core-2            { stroke-width: 1.25px; stroke: #f0f0f0; stroke-dasharray: 0.2,0.5; stroke-linecap: butt; }
 			.highway-livingstreet-area              { fill: #ffffff; }
 			

@@ -12,7 +12,7 @@ public interface TileLoaderListener {
 	 * 
 	 * @param tile
 	 */
-	public void tileLoadingFinished(Tile tile);
+	public void tileLoadingFinished(Tile tile, boolean success);
 
 	public TileCache getTileCache();
 }

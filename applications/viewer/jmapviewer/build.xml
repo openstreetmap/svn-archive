@@ -12,7 +12,10 @@
 	</target>
 
 	<target name="build">
-		<javac srcdir="src" destdir="bin" target="1.5" debug="true"/>
+		<javac srcdir="src" destdir="bin" target="1.5" debug="true">
+			<include name="org/openstreetmap/gui/jmapviewer/**"/>
+		</javac>
+
 		<copy todir="bin">
 			<fileset dir="src">
 				<include name="**/*.png" />
@@ -24,7 +27,7 @@
 		<delete file="JMapViewer.jar" />
 		<delete file="JMapViewer_src.jar" />
 		<jar destfile="JMapViewer.jar" filesetmanifest="mergewithoutmain">
-			<fileset dir="bin" includes="**/jmapviewer/**" >
+			<fileset dir="bin" includes="**/jmapviewer/**">
 			</fileset>
 			<fileset dir="src" includes="**/jmapviewer/**" />
 		</jar>

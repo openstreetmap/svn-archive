@@ -19,59 +19,60 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  */
 public class OsmTileLoader implements TileLoader {
 
-	protected TileLoaderListener listener;
+    protected TileLoaderListener listener;
 
-	public OsmTileLoader(TileLoaderListener listener) {
-		this.listener = listener;
-	}
+    public OsmTileLoader(TileLoaderListener listener) {
+        this.listener = listener;
+    }
 
-	public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley,
-			final int zoom) {
-		return new Runnable() {
+    public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley, final int zoom) {
+        return new Runnable() {
 
-			InputStream input = null;
+            InputStream input = null;
 
-			public void run() {
-				TileCache cache = listener.getTileCache();
-				Tile tile;
-				synchronized (cache) {
-					tile = cache.getTile(source, tilex, tiley, zoom);
-					if (tile == null || tile.isLoaded() || tile.loading)
-						return;
-					tile.loading = true;
-				}
-				try {
-					// Thread.sleep(500);
-					input = loadTileFromOsm(tile).getInputStream();
-					tile.loadImage(input);
-					tile.setLoaded(true);
-					listener.tileLoadingFinished(tile);
-					input.close();
-					input = null;
-				} catch (Exception e) {
-					if (input == null /* || !input.isStopped() */)
-						System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley
-								+ " " + e.getMessage());
-				} finally {
-					tile.loading = false;
-				}
-			}
+            public void run() {
+                TileCache cache = listener.getTileCache();
+                Tile tile;
+                synchronized (cache) {
+                    tile = cache.getTile(source, tilex, tiley, zoom);
+                    if (tile == null || tile.isLoaded() || tile.loading)
+                        return;
+                    tile.loading = true;
+                }
+                try {
+                    // Thread.sleep(500);
+                    input = loadTileFromOsm(tile).getInputStream();
+                    tile.loadImage(input);
+                    tile.setLoaded(true);
+                    listener.tileLoadingFinished(tile, true);
+                    input.close();
+                    input = null;
+                } catch (Exception e) {
+                    tile.setImage(Tile.ERROR_IMAGE);
+                    listener.tileLoadingFinished(tile, false);
+                    if (input == null)
+                        System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
+                } finally {
+                    tile.loading = false;
+                    tile.setLoaded(true);
+                }
+            }
 
-		};
-	}
+        };
+    }
 
-	protected HttpURLConnection loadTileFromOsm(Tile tile) throws IOException {
-		URL url;
-		url = new URL(tile.getUrl());
-		HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-		urlConn.setReadTimeout(30000); // 30 seconds read
-		// timeout
-		return urlConn;
-	}
+    protected HttpURLConnection loadTileFromOsm(Tile tile) throws IOException {
+        URL url;
+        url = new URL(tile.getUrl());
+        HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+        urlConn.setReadTimeout(30000); // 30 seconds read
+        // timeout
+        return urlConn;
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
-	}
-	
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
+
 }

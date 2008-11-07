@@ -1256,21 +1256,23 @@
 				</rule>
 				<!-- Motorway implies oneway-ness -->
 				<rule e="way" k="highway" v="motorway|motorway_link">
-					<line class="oneway-casing oneway-casing-1" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-2" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-3" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-4" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-5" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-6" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-7" smart-linecap="no"/>
-					<line class="oneway-casing oneway-casing-8" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-1" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-2" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-3" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-4" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-5" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-6" smart-linecap="no"/>
-					<line class="oneway-core oneway-core-7" smart-linecap="no"/>
+					<rule e="way" k="oneway" v="~|yes|true|1">
+						<line class="oneway-casing oneway-casing-1" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-2" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-3" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-4" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-5" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-6" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-7" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-8" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-1" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-2" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-3" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-4" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-5" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-6" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-7" smart-linecap="no"/>
+					</rule>
 				</rule>
 				<!-- Roundabouts are oneway in the direction of the segments -->
 				<rule e="way" k="junction" v="roundabout">

@@ -24,6 +24,26 @@ If not, see <http://www.gnu.org/licenses/>.
 
 -------------------------------------------------------------------------------
 
+Downloaded data (tiles) is based on
+http://www.openstreetmap.org
+see http://wiki.openstreetmap.org/index.php/OpenStreetMap_License
+
+Plase take also a look at the 'Tile usage policy'
+http://wiki.openstreetmap.org/index.php/Tile_usage_policy
+
+-------------------------------------------------------------------------------
+Predefined tile servers are:
+Osmarender                     http://tah.openstreetmap.org/Tiles/tile/
+Mapnik                         http://tile.openstreetmap.org/mapnik/
+Cyclemap (CloudMade)           http://c.andy.sandbox.cloudmade.com/tiles/cycle/
+Cyclemap (Thunderflames)       http://thunderflames.org/tiles/cycle/
+OpenPisteMap                   http://openpistemap.org/tiles/contours/
+Maplint                        http://tah.openstreetmap.org/Tiles/maplint/
+CloudMade Web style            http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/1/256/
+CloudMade Mobile style         http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/2/256/
+CloudMade NoNames style        http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/3/256/
+
+-------------------------------------------------------------------------------
 Source code of this program is available at:
 http://svn.openstreetmap.org/applications/utils/downloading/JTileDownloader/
 

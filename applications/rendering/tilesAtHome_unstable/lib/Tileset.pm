@@ -88,18 +88,22 @@ sub new
     if( $Config->get("AutoResetInkscapePrefs") == 1 &&
         $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
 
-        $self->{inkscape_autobackup}{cfgfile} = glob('~/.inkscape/preferences.xml');
-        $self->{inkscape_autobackup}{backupfile} = "$self->{inkscape_autobackup}{cfgfile}.bak"
-            if defined($self->{inkscape_autobackup}{cfgfile});
+        $self->{inkscape_autobackup}{cfgfile} = glob('~/.inkscape/');
+        if($self->{inkscape_autobackup}{cfgfile})
+        {
+            $self->{inkscape_autobackup}{cfgfile} .= "preferences.xml";
+            $self->{inkscape_autobackup}{backupfile} = "$self->{inkscape_autobackup}{cfgfile}.bak"
+                if defined($self->{inkscape_autobackup}{cfgfile});
 
-        if( -f $self->{inkscape_autobackup}{cfgfile} ){
-            copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
-                or do {
-                    warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
-                    delete($self->{inkscape_autobackup});
-            };
-        } else {
-            delete($self->{inkscape_autobackup});
+            if( -f $self->{inkscape_autobackup}{cfgfile} ){
+                copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
+                    or do {
+                        warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
+                        delete($self->{inkscape_autobackup});
+                };
+            } else {
+                delete($self->{inkscape_autobackup});
+            }
         }
     }
 

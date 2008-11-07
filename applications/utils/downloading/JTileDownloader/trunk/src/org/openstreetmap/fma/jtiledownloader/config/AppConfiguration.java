@@ -38,6 +38,8 @@ public class AppConfiguration
     private boolean _showTilePreview = true;
     private boolean _autoCloseTilePreview = true;
 
+    private boolean _overwriteExistingFiles = true;
+
     private boolean _waitAfterNrTiles = true;
     private int _waitSeconds = 5;
     private int _waitNrTiles = 50;
@@ -52,6 +54,8 @@ public class AppConfiguration
 
     private static final String SHOW_TILE_PREVIEW = "ShowTilePreview";
     private static final String AUTO_CLOSE_TILE_PREVIEW = "AutoCloseTilePreview";
+
+    private static final String OVERWRITE_EXISTING_FILES = "OverwriteExistingFiles";
 
     private static final String WAIT_AFTER_NR_TILES = "WaitAfterNrTiles";
     private static final String WAIT_SECONDS = "WaitSeconds";
@@ -70,6 +74,8 @@ public class AppConfiguration
         setProperty(prop, PROXY_SERVER_USER, "" + _proxyServerUser);
         setProperty(prop, SHOW_TILE_PREVIEW, "" + isShowTilePreview());
         setProperty(prop, AUTO_CLOSE_TILE_PREVIEW, "" + isAutoCloseTilePreview());
+
+        setProperty(prop, OVERWRITE_EXISTING_FILES, "" + isOverwriteExistingFiles());
 
         setProperty(prop, WAIT_AFTER_NR_TILES, "" + getWaitAfterNrTiles());
         setProperty(prop, WAIT_SECONDS, "" + getWaitSeconds());
@@ -112,6 +118,8 @@ public class AppConfiguration
         _proxyServerUser = prop.getProperty(PROXY_SERVER_USER, "");
         setShowTilePreview(Boolean.valueOf(prop.getProperty(SHOW_TILE_PREVIEW, "true")).booleanValue());
         setAutoCloseTilePreview(Boolean.valueOf(prop.getProperty(AUTO_CLOSE_TILE_PREVIEW, "true")).booleanValue());
+
+        setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, "true")).booleanValue());
 
         setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, "true")).booleanValue());
         setWaitSeconds(Integer.parseInt(prop.getProperty(WAIT_SECONDS, "10")));
@@ -317,6 +325,24 @@ public class AppConfiguration
     public final void setInputPanelIndex(int inputPanelIndex)
     {
         _inputPanelIndex = inputPanelIndex;
+    }
+
+    /**
+     * Getter for overwriteExistingFiles
+     * @return the overwriteExistingFiles
+     */
+    public final boolean isOverwriteExistingFiles()
+    {
+        return _overwriteExistingFiles;
+    }
+
+    /**
+     * Setter for overwriteExistingFiles
+     * @param overwriteExistingFiles the _verwriteExistingFiles to set
+     */
+    public final void setOverwriteExistingFiles(boolean overwriteExistingFiles)
+    {
+        _overwriteExistingFiles = overwriteExistingFiles;
     }
 
 }

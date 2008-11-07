@@ -57,7 +57,10 @@ public class TileListDownloader
     private boolean _waitAfterTiles = false;
     private int _waitAfterTilesAmount = 0;
     private int _waitAfterTilesSeconds = 1;
+
     private boolean _stopFlag = false;
+
+    private boolean _overwriteExistingFiles = true;
 
     /**
      * @param downloadPath
@@ -364,12 +367,30 @@ public class TileListDownloader
     {
         TileDownloadResult result = new TileDownloadResult();
 
+        boolean download = true;
+
+        if (!isOverwriteExistingFiles())
+        {
+            File file = new File(fileName);
+            if (file.exists())
+            {
+                download = false;
+            }
+        }
+
+        if (!download)
+        {
+            result.setCode(TileDownloadResult.CODE_OK);
+            result.setMessage(TileDownloadResult.MSG_OK);
+            return result;
+        }
+
         HttpURLConnection urlConnection = null;
         try
         {
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("User-Agent", "JTileDownloader/" + Constants.VERSION);
             urlConnection.setUseCaches(false);
-            //            long lastModified = urlConnection.getLastModified();
 
             InputStream inputStream = urlConnection.getInputStream();
 
@@ -626,5 +647,23 @@ public class TileListDownloader
     {
         _stopFlag = stopFlag;
 
+    }
+
+    /**
+     * Getter for overwriteExistingFiles
+     * @return the overwriteExistingFiles
+     */
+    public final boolean isOverwriteExistingFiles()
+    {
+        return _overwriteExistingFiles;
+    }
+
+    /**
+     * Setter for overwriteExistingFiles
+     * @param overwriteExistingFiles the overwriteExistingFiles to set
+     */
+    public final void setOverwriteExistingFiles(boolean overwriteExistingFiles)
+    {
+        _overwriteExistingFiles = overwriteExistingFiles;
     }
 }

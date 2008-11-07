@@ -47,6 +47,8 @@ public class OptionsPanel
     JCheckBox _chkShowTilePreview = new JCheckBox("Show TilePreview");
     JCheckBox _chkAutoCloseTilePreview = new JCheckBox("AutoClose TilePreview");
 
+    JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
+
     private final AppConfiguration _appConfiguration;
 
     /**
@@ -99,18 +101,19 @@ public class OptionsPanel
         add(panelWaitOptions, constraints);
 
         GridBagConstraints constraintsOtherOptions = new GridBagConstraints();
-        constraintsOtherOptions.gridwidth = GridBagConstraints.RELATIVE;
+        constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
         constraintsOtherOptions.weightx = 1.0;
         constraintsOtherOptions.fill = GridBagConstraints.HORIZONTAL;
         constraintsOtherOptions.insets = new Insets(5, 5, 0, 5);
-        constraintsOtherOptions.anchor = GridBagConstraints.WEST;
 
         JPanel otherOptions = new JPanel();
+        otherOptions.setLayout(new GridBagLayout());
         Border borderOtherOptions = new TitledBorder("Other Options");
         otherOptions.setBorder(borderOtherOptions);
-        constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_chkShowTilePreview, constraintsOtherOptions);
         otherOptions.add(_chkAutoCloseTilePreview, constraintsOtherOptions);
+        constraintsOtherOptions.gridwidth = GridBagConstraints.RELATIVE;
+        otherOptions.add(_chkOverwriteExistingFiles, constraintsOtherOptions);
 
         add(otherOptions, constraints);
 
@@ -128,6 +131,7 @@ public class OptionsPanel
 
         _chkShowTilePreview.setSelected(_appConfiguration.isShowTilePreview());
         _chkAutoCloseTilePreview.setSelected(_appConfiguration.isAutoCloseTilePreview());
+        _chkOverwriteExistingFiles.setSelected(_appConfiguration.isOverwriteExistingFiles());
 
     }
 
@@ -145,6 +149,14 @@ public class OptionsPanel
     public boolean isAutoCloseTilePreview()
     {
         return _chkAutoCloseTilePreview.isSelected();
+    }
+
+    /**
+     * @return
+     */
+    public boolean isOverwriteExistingFiles()
+    {
+        return _chkOverwriteExistingFiles.isSelected();
     }
 
     /**

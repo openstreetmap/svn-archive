@@ -77,6 +77,7 @@ public class JTileDownloaderMainView
     private void generateView()
     {
         addWindowListener(new MainViewWindowListener());
+        setResizable(false);
 
         setTitle("JTileDownloader" + " Version: " + VERSION);
 
@@ -97,6 +98,7 @@ public class JTileDownloaderMainView
         tabbedPane.addTab("Update Tiles", _updateTilesPanel);
         tabbedPane.addTab("Options", _optionsPanel);
         tabbedPane.addTab("Network", _networkPanel);
+        tabbedPane.addTab("Info", new InfoPanel());
 
         tabbedPane.addChangeListener(new TabChangeListener());
 
@@ -327,6 +329,9 @@ public class JTileDownloaderMainView
         tld.setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
         tld.setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
         tld.setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
+
+        tld.setOverwriteExistingFiles(getAppConfiguration().isOverwriteExistingFiles());
+
         return tld;
     }
 
@@ -343,6 +348,7 @@ public class JTileDownloaderMainView
         getAppConfiguration().setProxyServerUser(_networkPanel.getProxyServerUser());
         getAppConfiguration().setShowTilePreview(_optionsPanel.isShowTilePreview());
         getAppConfiguration().setAutoCloseTilePreview(_optionsPanel.isAutoCloseTilePreview());
+        getAppConfiguration().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());
         getAppConfiguration().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
         getAppConfiguration().setWaitSeconds(_optionsPanel.getWaitSeconds());
         getAppConfiguration().setWaitNrTiles(_optionsPanel.getWaitNrTiles());

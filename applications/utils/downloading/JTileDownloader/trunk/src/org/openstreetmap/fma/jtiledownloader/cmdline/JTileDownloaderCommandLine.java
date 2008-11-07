@@ -196,6 +196,8 @@ public class JTileDownloaderCommandLine
         _tld.setWaitAfterTilesAmount(_appConfiguration.getWaitNrTiles());
         _tld.setWaitAfterTilesSeconds(_appConfiguration.getWaitSeconds());
 
+        _tld.setOverwriteExistingFiles(_appConfiguration.isOverwriteExistingFiles());
+
         _tld.setListener(this);
         _tld.start();
     }

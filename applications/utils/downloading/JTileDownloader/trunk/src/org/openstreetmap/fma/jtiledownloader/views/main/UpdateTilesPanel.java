@@ -311,6 +311,9 @@ public class UpdateTilesPanel
             getTileListDownloader().setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
             getTileListDownloader().setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
             getTileListDownloader().setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
+
+            getTileListDownloader().setOverwriteExistingFiles(getAppConfiguration().isOverwriteExistingFiles());
+
             getTileListDownloader().setListener(getInstance());
 
             getButtonSearch().setEnabled(false);

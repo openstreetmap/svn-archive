@@ -40,6 +40,7 @@ public class TilePreview
         super("TilePreview");
 
         addWindowListener(new TilePreviewWindowListener());
+        setResizable(false);
 
         Dimension size = new Dimension(256, 256);
         _component.setPreferredSize(size);

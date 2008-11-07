@@ -71,7 +71,7 @@ ClientID = 0
 # with the specification of predicates.
 # The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
 #APIServers = API,ROMA,XAPI
-APIServers = API,ROMA
+APIServers = API,ROMA,XAPI
 XAPIServers = XAPI
 
 # Magic numbers for autotuning of the MaxTilesetComplexity setting

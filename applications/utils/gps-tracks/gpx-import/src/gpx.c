@@ -67,6 +67,7 @@ typedef enum {
   TRACKPOINT,
   ELEVATION,
   TIMESTAMP,
+  WAYPOINT,
 } GPXParseState;
 
 static const char *
@@ -81,6 +82,8 @@ gpx_state_name(GPXParseState p)
     return "ELEVATION";
   case TIMESTAMP:
     return "TIMESTAMP";
+  case WAYPOINT:
+    return "WAYPOINT";
   }
   return "INVALID";
 }
@@ -192,6 +195,8 @@ gpx_handle_start_element(void *_ctx, const XML_Char *name, const XML_Char **atts
       }
     }
   } else if (strcmp(name, "ele") == 0) {
+    if (ctx->state == WAYPOINT)
+      return;
     REQUIRE_STATE(TRACKPOINT);
     ctx->state = ELEVATION;
     gpx_clear_accumulator(ctx);
@@ -200,6 +205,9 @@ gpx_handle_start_element(void *_ctx, const XML_Char *name, const XML_Char **atts
       ctx->state = TIMESTAMP;
       gpx_clear_accumulator(ctx);
     }
+  } else if (strcmp(name, "wpt") == 0) {
+    REQUIRE_STATE(UNKNOWN);
+    ctx->state = WAYPOINT;
   }
 }
 
@@ -271,6 +279,8 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     }
     ctx->state = UNKNOWN;
   } else if (strcmp(name, "ele") == 0) {
+    if (ctx->state == WAYPOINT)
+      return;
     REQUIRE_STATE(ELEVATION);
     ctx->point->elevation = strtof(ctx->accumulator, NULL);
     ctx->state = TRACKPOINT;
@@ -278,7 +288,7 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
   } else if (strcmp(name, "time") == 0) {
     char *pnull = NULL;
     struct tm ignored;
-    if (ctx->state == UNKNOWN)
+    if (ctx->state == UNKNOWN || ctx->state == WAYPOINT)
       return;
     REQUIRE_STATE(TIMESTAMP);
     pnull = strptime(ctx->accumulator ? ctx->accumulator : "",
@@ -293,6 +303,9 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
   } else if (strcmp(name, "trkseg") == 0) {
     REQUIRE_STATE(UNKNOWN);
     ctx->curseg++;
+  } else if (strcmp(name, "wpt") == 0) {
+    REQUIRE_STATE(WAYPOINT);
+    ctx->state = UNKNOWN;
   }
 }
 

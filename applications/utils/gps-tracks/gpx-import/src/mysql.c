@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #include "filename.h"
 #include "db.h"
@@ -46,10 +47,10 @@ static char escape_buffer[STMT_BUFLEN];
 bool
 db_destroy_trace(int64_t jobnr)
 {
-  INFO("Destroying job %ld", jobnr);
-  STMT("DELETE FROM gpx_file_tags WHERE gpx_id=%ld", jobnr);
-  STMT("DELETE FROM gps_points WHERE gpx_id=%ld", jobnr);
-  STMT("DELETE FROM gpx_files WHERE id=%ld", jobnr);
+  INFO("Destroying job %"PRId64"", jobnr);
+  STMT("DELETE FROM gpx_file_tags WHERE gpx_id=%"PRId64"", jobnr);
+  STMT("DELETE FROM gps_points WHERE gpx_id=%"PRId64"", jobnr);
+  STMT("DELETE FROM gpx_files WHERE id=%"PRId64"", jobnr);
   unlink(make_filename("GPX_PATH_TRACES", jobnr, ".gpx"));
   unlink(make_filename("GPX_PATH_IMAGES", jobnr, "_icon.gif"));
   unlink(make_filename("GPX_PATH_IMAGES", jobnr, ".gif"));
@@ -67,7 +68,7 @@ db_insert_gpx(DBJob *job)
   int64_t gpxnr = job->gpx_id;
   GPX *gpx = job->gpx;
   
-  STMT("SELECT COUNT(*) FROM gps_points WHERE gpx_id=%ld", gpxnr);
+  STMT("SELECT COUNT(*) FROM gps_points WHERE gpx_id=%"PRId64"", gpxnr);
   res = mysql_store_result(handle);
   row = mysql_fetch_row(res);
   if (atoi(row[0]) != 0) {
@@ -77,7 +78,7 @@ db_insert_gpx(DBJob *job)
   
   if (do_delete == true) {
     WARN("Old rows detected, deleting");
-    STMT("DELETE FROM gps_points WHERE gpx_id=%ld", gpxnr);
+    STMT("DELETE FROM gps_points WHERE gpx_id=%"PRId64"", gpxnr);
   }
   
   INFO("Inserting %d points", gpx->goodpoints);
@@ -86,13 +87,13 @@ db_insert_gpx(DBJob *job)
   for (pt = gpx->points; pt != NULL; pt = pt->next) {
     mysql_real_escape_string(handle, escape_buffer, pt->timestamp, strlen(pt->timestamp));
     STMT("INSERT INTO gps_points (gpx_id, trackid, latitude, longitude, timestamp, altitude, tile) " \
-         "VALUES (%ld, %d, %ld, %ld, '%s', %f, %u)",
+         "VALUES (%"PRId64", %d, %"PRId64", %"PRId64", '%s', %f, %u)",
          gpxnr, pt->segment, pt->latitude / 100, pt->longitude / 100, escape_buffer, pt->elevation,
          quadtile_for_coords(pt->latitude, pt->longitude));
   }
 
   /* Last up, update the GPX with our lat/long/numpoints etc */
-  STMT("UPDATE gpx_files SET inserted=1, size=%d, latitude=%g, longitude=%g WHERE id=%ld\n",
+  STMT("UPDATE gpx_files SET inserted=1, size=%d, latitude=%g, longitude=%g WHERE id=%"PRId64"\n",
        gpx->goodpoints, (double)gpx->firstlatitude / 1000000000.0, (double)gpx->firstlongitude / 1000000000.0, gpxnr);
   
   return true;
@@ -142,7 +143,7 @@ db_find_work(int minage)
   
   if (ret != NULL) {
     /* Attempt to retrieve the email address */
-    STMT("SELECT display_name, email FROM users WHERE id=%ld", user);
+    STMT("SELECT display_name, email FROM users WHERE id=%"PRId64"", user);
     res = mysql_store_result(handle);
     if (res != NULL) {
       row = mysql_fetch_row(res);
@@ -151,28 +152,28 @@ db_find_work(int minage)
         ret->email = malloc(tlen);
         snprintf(ret->email, tlen, "%s <%s>", row[0], row[1]);
       } else {
-        db_error(ret, "Unable to find user information for user %ld", user);
+        db_error(ret, "Unable to find user information for user %"PRId64"", user);
       }
       mysql_free_result(res);
     } else {
-      db_error(ret, "Database error while retrieving user information for user %ld", user);
+      db_error(ret, "Database error while retrieving user information for user %"PRId64"", user);
     }
   }
   
   if (ret != NULL && ret->error == NULL) {
     /* Attempt to retrieve the tags */
-    STMT("SELECT COALESCE(GROUP_CONCAT(tag), '') AS tags FROM gpx_file_tags WHERE gpx_id=%ld", ret->gpx_id);
+    STMT("SELECT COALESCE(GROUP_CONCAT(tag), '') AS tags FROM gpx_file_tags WHERE gpx_id=%"PRId64"", ret->gpx_id);
     res = mysql_store_result(handle);
     if (res != NULL) {
       row = mysql_fetch_row(res);
       if (row != NULL) {
         ret->tags = BLANKOR(row[0]);
       } else {
-        db_error(ret, "Unable to retrieve GPX tags for file %ld\n", ret->gpx_id);
+        db_error(ret, "Unable to retrieve GPX tags for file %"PRId64"\n", ret->gpx_id);
       }
       mysql_free_result(res);
     } else {
-      db_error(ret, "Database error while retrieving GPX tags for file %ld\n", ret->gpx_id);
+      db_error(ret, "Database error while retrieving GPX tags for file %"PRId64"\n", ret->gpx_id);
     }
   }
   

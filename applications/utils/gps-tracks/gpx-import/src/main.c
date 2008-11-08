@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "gpx.h"
 #include "db.h"
@@ -95,7 +96,7 @@ main(int argc, char **argv)
     
     if (job->error == NULL) {
       gpxnr = job->gpx_id;
-      INFO("Found job %ld, reading in...", gpxnr);
+      INFO("Found job %"PRId64", reading in...", gpxnr);
       g = job->gpx = gpx_parse_file(make_filename("GPX_PATH_TRACES", job->gpx_id, ".gpx"), &(job->error));
       
       if (g != NULL && job->error == NULL) {

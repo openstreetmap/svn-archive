@@ -116,8 +116,8 @@ gpx_record_error(GPXParseContext *ctx, char *fmt, ...)
            (ctx->subfile == NULL) ? "" : ctx->subfile,
            (ctx->subfile == NULL) ? "" : " inside your upload:\n  ",
            msg,
-           XML_GetCurrentLineNumber(ctx->p),
-           XML_GetCurrentColumnNumber(ctx->p));
+           ctx->p ? XML_GetCurrentLineNumber(ctx->p) : 0,
+           ctx->p ? XML_GetCurrentColumnNumber(ctx->p) : 0);
 }
 
 static GPXCoord
@@ -577,6 +577,7 @@ gpx_parse_file(const char *gpxfile, char **err)
   ctx.state = UNKNOWN;
   ctx.accumulator_size = 0;
   ctx.subfile = NULL;
+  ctx.p = NULL;
   
   if (gpx_parse_archive(&ctx, gpxfile) == true) {
     goto success;

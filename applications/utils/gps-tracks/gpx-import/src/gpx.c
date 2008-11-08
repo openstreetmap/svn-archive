@@ -30,6 +30,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <time.h>
+#include <inttypes.h>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -641,7 +642,7 @@ gpx_print(GPX *gpx)
   GPXTrackPoint *pt;
   int pointnr;
   
-  printf("minlat=%ld maxlat=%ld minlon=%ld maxlon=%ld\n",
+  printf("minlat=%"PRId64" maxlat=%"PRId64" minlon=%"PRId64" maxlon=%"PRId64"\n",
          gpx->minlatitude, gpx->maxlatitude,
          gpx->minlongitude, gpx->maxlongitude);
   
@@ -650,7 +651,7 @@ gpx_print(GPX *gpx)
          gpx->badpoints);
   return;
   for (pt = gpx->points, pointnr = 1; pt != NULL; pt = pt->next, pointnr++)
-    printf("%4d: lat=%ld lon=%ld ele=%f time=%s seg=%d\n",
+    printf("%4d: lat=%"PRId64" lon=%"PRId64" ele=%f time=%s seg=%d\n",
            pointnr, pt->latitude, pt->longitude, pt->elevation,
            pt->timestamp, pt->segment);
   

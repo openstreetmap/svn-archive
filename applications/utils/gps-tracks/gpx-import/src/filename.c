@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 #include "filename.h"
 
@@ -34,7 +35,7 @@ make_filename(const char *base, int64_t nr, const char *suffix)
     real_base = ".";
   }
   
-  snprintf(namebuffer, PATH_MAX, "%s/%ld%s", real_base, nr, suffix);
+  snprintf(namebuffer, PATH_MAX, "%s/%"PRId64"%s", real_base, nr, suffix);
   
   return namebuffer;
 }

@@ -14,8 +14,8 @@ setting () {
 setting SLEEP_TIME 1
 
 # Paths (can be relative from invocation path if appropriate)
-setting PATH_TRACES /tmp/osm/traces
-setting PATH_IMAGES /tmp/osm/images
+setting PATH_TRACES /home/osm/traces
+setting PATH_IMAGES /home/osm/images
 setting PATH_TEMPLATES templates/
 
 # MySQL connection

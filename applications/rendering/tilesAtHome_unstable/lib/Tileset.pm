@@ -204,6 +204,10 @@ sub generate
         eval
         {
             require Image::Magick;
+            if(($Image::Magick::VERSION cmp "6.4.5") < 0)
+            {
+              die "At least Version 6.4.5 of ImageMagick required to get usable results.";
+            }
             Image::Magick->import();
             require LWP::Simple;
             require File::Compare;
@@ -415,7 +419,7 @@ sub lowZoom {
 # Open a PNG file, and return it as a Magick image (or 0 if not found)
 sub readLocalImage
 {
-    my ($self,$Layer,$Z,$X,$Y,$copy) = @_;
+    my ($self,$Layer,$Z,$X,$Y) = @_;
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
 
     my $imImage;
@@ -503,14 +507,8 @@ sub readLocalImage
         $imImage = new Image::Magick;
         if (my $err = $imImage->Read($pfile))
         {
-            throw TilesetError "The image  $file failed to load: $err", "lowzoom";
+            throw TilesetError "The image $file failed to load: $err", "lowzoom";
         }
-    }
-    elsif($copy)
-    {
-        my $tmpImage = new Image::Magick;
-        $tmpImage = $imImage->Clone();
-        $imImage = $tmpImage;
     }
 
     return($imImage);
@@ -592,7 +590,7 @@ sub supertile {
         # CaptionFile can be empty --> nothing to do
         my $CaptionFile = $self->readLocalImage($CaptionLayer,$Z,$X,$Y);
 
-        $Image = $self->readLocalImage($BaseLayer,$Z,$X,$Y,1) if !$Image;
+        $Image = $self->readLocalImage($BaseLayer,$Z,$X,$Y) if !$Image;
 
         # Overlay the captions onto the tiled image and then write it
         $Image->Composite(image => $CaptionFile) if $CaptionFile;

@@ -263,6 +263,18 @@ sub CheckBasicConfig
        $self->set("JavaSeparator", ":");
        print "- Java is not available\n";
     }
+    eval
+    {
+        require Image::Magick;
+        if(($Image::Magick::VERSION cmp "6.4.5") < 0)
+        {
+            print "- ImageMagick version $Image::Magick::VERSION (lowzoom disabled)\n";
+        }
+        else
+        {
+            print "- ImageMagick version $Image::Magick::VERSION (lowzoom enabled)\n";
+        }
+    };
 
     return %EnvironmentInfo;
 

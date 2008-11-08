@@ -265,8 +265,11 @@ if ($Mode eq "xy")
         if ($Zoom >= 12) {
             $Layers = $Config->get("Layers");
         }
-        else {
+        elsif ($Zoom >= 6) {
             $Layers = $Config->get("LowzoomLayers");
+        }
+        else {
+            $Layers = $Config->get("WorldLayers");
         }
     }
     $req->layers_str($Layers);

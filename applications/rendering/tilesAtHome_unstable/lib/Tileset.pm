@@ -59,6 +59,9 @@ sub new
 	 CLEANUP  => $delTmpDir,
          );
 
+    # create true color images by default
+    GD::Image->trueColor(1);
+
     # create blank comparison images
     my $EmptyLandImage = new GD::Image(256,256);
     my $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);

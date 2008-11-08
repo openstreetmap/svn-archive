@@ -24,6 +24,7 @@
 #include <signal.h>
 #include <string.h>
 #include <inttypes.h>
+#include <errno.h>
 
 #include "gpx.h"
 #include "db.h"
@@ -32,6 +33,56 @@
 #include "interpolate.h"
 
 static bool needs_quit = false;
+static bool needs_logfile_rotate = false;
+
+static void
+unlink_pidfile(void)
+{
+  if (getenv("GPX_PID_FILE") == NULL) {
+    return;
+  }
+  
+  unlink(getenv("GPX_PID_FILE"));
+}
+  
+static void
+do_pidfile(void)
+{
+  int childpid;
+  FILE *f;
+  
+  if (getenv("GPX_PID_FILE") == NULL) {
+    INFO("No pidfile specified, not daemonising");
+    log_reopen();
+    return;
+  }
+  
+  f = fopen(getenv("GPX_PID_FILE"), "w");
+  if (f == NULL) {
+    ERROR("Unable to open pidfile %s", getenv("GPX_PID_FILE"));
+    exit(1);
+  }
+  
+  childpid = fork();
+  switch(childpid) {
+  case -1:
+    ERROR("Unable to fork() for child: %s (%d)", strerror(errno), errno);
+    exit(1);
+    break;
+  case 0:
+    /* Child */
+    setsid();
+    setpgid(0, 0);
+    log_reopen();
+    fclose(stderr);
+    break;
+  default:
+    /* Parent */
+    fprintf(f, "%d\n", childpid);
+    fclose(f);
+    exit(0);
+  }
+}
 
 static void
 do_quit(int ignored)
@@ -43,6 +94,13 @@ do_quit(int ignored)
     exit(1);
   }
   needs_quit = true;
+}
+
+static void
+do_logfile(int ignored)
+{
+  (void)ignored;
+  needs_logfile_rotate = true;
 }
 
 int
@@ -67,10 +125,17 @@ main(int argc, char **argv)
     return 1;
   }
   
-  signal(SIGHUP, do_quit);
+  signal(SIGHUP, do_logfile);
   signal(SIGINT, do_quit);
+  signal(SIGTERM, do_quit);
+  
+  do_pidfile(); /* Note: this will also reopen the logfile nicely */
   
   do {
+    if (needs_logfile_rotate == true) {
+      log_reopen();
+      needs_logfile_rotate = false;
+    }
     DEBUG("Looking for work");
     cstart = clock();
     job = db_find_work(sleep_time);
@@ -142,6 +207,10 @@ main(int argc, char **argv)
   db_disconnect();
   
   DEBUG("Bye");
+  
+  log_close();
+  
+  unlink_pidfile();
   
   return 0;
 }

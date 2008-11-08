@@ -21,10 +21,49 @@
 #include <stdarg.h>
 #include <time.h>
 #include <string.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 #include "log.h"
 
 #define LOGBUFLEN 1024
+
+static char logfilename[PATH_MAX];
+static bool logfilename_initialised = false;
+
+static FILE *logfile;
+
+void
+log_reopen(void)
+{
+  if (!logfilename_initialised) {
+    strncpy(logfilename, getenv("GPX_LOG_FILE") ? getenv("GPX_LOG_FILE") : "-", PATH_MAX);
+    INFO("Initialising logfile '%s'", logfilename);
+    logfile = stdout;
+    logfilename_initialised = true;
+  }
+  if (strcmp(logfilename, "-") == 0)
+    return;
+  if (logfile != stdout)
+    INFO("Rotating logfile");
+  fclose(logfile);
+  logfile = fopen(logfilename, "a");
+  if (logfile == NULL) {
+    fprintf(stderr, "Unable to open logfile %s!\n", logfilename);
+    exit(2);
+  }
+  INFO("Logfile opened");
+}
+
+void
+log_close(void)
+{
+  if (strcmp(logfilename, "-") == 0)
+    return;
+  INFO("Log terminated");
+  fclose(logfile);
+}
 
 void
 _gpxlog(const char *level, const char *fmt, ...)
@@ -43,5 +82,11 @@ _gpxlog(const char *level, const char *fmt, ...)
   va_start(ap, fmt);
   vsnprintf(buffer + strlen(buffer), LOGBUFLEN - strlen(buffer) - 1, fmt, ap);
   va_end(ap);
-  puts(buffer);
+  if (!logfilename_initialised) {
+    puts(buffer);
+  } else {
+    fputs(buffer, logfile);
+    fputc('\n', logfile);
+    fflush(logfile);
+  }
 }

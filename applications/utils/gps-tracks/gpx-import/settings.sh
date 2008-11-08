@@ -24,10 +24,97 @@ setting MYSQL_USER openstreetmap
 setting MYSQL_DB openstreetmap
 setting MYSQL_PASS openstreetmap
 
+# Logging, pidfiles etc
+# If you comment out the LOGFILE then it will log to stdout
+setting LOG_FILE /home/osm/gpx-import.log
+# If you comment out the PIDFILE then it will not daemonise
+setting PID_FILE /home/osm/gpx-import.pid
+
 # Optional debug statements
 #setting INTERPOLATE_STDOUT 1
 
-# Run the commandline
+CMD=$1
+shift
 
-exec "$@"
-
+case "$CMD" in
+    start)
+	if test "x$GPX_PID_FILE" = "x"; then
+	    exec "$@"
+	else
+	    "$@"
+	    $0 check
+	fi
+	;;
+    stop)
+	if test -r $GPX_PID_FILE; then
+	    PID=$(cat $GPX_PID_FILE)
+	    if test "x$PID" != "x"; then
+		if kill -0 $PID; then
+		    kill -TERM $PID
+		    for TRY in $(seq 1 10); do
+			sleep 1
+			if ! kill -0 $PID; then
+			    echo "GPX daemon killed"
+			    rm -f $GPX_PID_FILE
+			    exit 0
+			else
+			    echo "Still running?"
+			fi
+		    done
+		    echo "GPX daemon still running?"
+		    exit 1
+		else
+		    echo "GPX daemon is not running, pid ?= $PID"
+		    exit 1
+		fi
+	    else
+		echo "GPX daemon pidfile is empty"
+		exit 1
+	    fi
+	else
+	    echo "GPX daemon pidfile is missing"
+	    exit 1
+	fi
+	;;
+    rotated)
+	if test -r $GPX_PID_FILE; then
+	    PID=$(cat $GPX_PID_FILE)
+	    if test "x$PID" != "x"; then
+		if kill -0 $PID; then
+		    kill -HUP $PID
+		    echo "GPX daemon sent HUP"
+		    sleep 0.5
+		    $0 check
+		else
+		    echo "GPX daemon is not running, pid ?= $PID"
+		fi
+	    else
+		echo "GPX daemon pidfile is empty"
+	    fi
+	else
+	    echo "GPX daemon pidfile is missing"
+	fi
+	;;
+    check)
+	if test -r $GPX_PID_FILE; then
+	    PID=$(cat $GPX_PID_FILE)
+	    if test "x$PID" != "x"; then
+		if kill -0 $PID; then
+		    echo "GPX daemon is running, pid = $PID"
+		else
+		    echo "GPX daemon is not running, pid ?= $PID"
+		    exit 1
+		fi
+	    else
+		echo "GPX daemon pidfile is empty"
+		exit 1
+	    fi
+	else
+	    echo "GPX daemon pidfile is missing"
+	    exit 1
+	fi
+	;;
+    *)
+	echo "usage: $0 [start|stop|rotated|check] path/to/gpx-import"
+	;;
+esac

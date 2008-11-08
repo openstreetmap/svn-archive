@@ -23,6 +23,9 @@
 extern void _gpxlog(const char *level, const char *fmt, ...)
   __attribute__ ((format (printf, 2, 3)));
 
+extern void log_reopen(void);
+extern void log_close(void);
+
 
 
 #ifdef NDEBUG

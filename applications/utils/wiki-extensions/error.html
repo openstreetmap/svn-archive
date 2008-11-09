@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>OpenStreetMap Wiki Error</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="author" content="Based on Wikimedia error messages by Mark Ryan, with translation by many people"/>
+  <meta name="copyright" content="(c) 2005-2007 Mark Ryan and others. Text licensed under the GNU Free Documentation License. http://www.gnu.org/licenses/fdl.txt"/>
+
+  <style type="text/css"><!--
+   body {
+     background-color: #dbe5df;
+     font-family: "Gill Sans MT", "Gill Sans", "Trebuchet MS", Helvetica, sans-serif;
+     margin-left: 0px;
+     margin-right: 0px;
+    }
+   .TechnicalStuff {
+     font-style: italic;
+     text-align: center;
+     font-size: 0.8em;
+     padding-bottom: 0.8em;
+    }
+   .BottomStrip {
+     background: #9fbfd8;
+     text-align: center;
+     font-size: 0.85em;
+    }
+   .RightToLeft {
+     direction: rtl;
+    }
+   .Lines {
+     width: 100%;
+     height: 1px;
+     overflow: hidden;
+     font-size: 0.5px;
+    }
+   .ContentArea {
+     background-color: white;
+     padding-left: 10%;
+     padding-right: 10%;
+     padding-top: 0.8em;
+     font-size: 1.0em;
+    }
+   a:hover {
+     color: red;
+    }
+   a.BottomLinks {
+     color: #000000;
+     text-decoration: none;
+    }
+   a.BottomLinks:hover {
+     color: red;
+     text-decoration: none;
+    }
+   h1, h2 {
+     margin: 0px;
+     font-size: 1.0em;
+    }
+   h3.LanguageHeading {
+     font-weight: bold
+    }
+   #ErrorTitleDiv {
+     background: #9fbfd8;
+     font-size: 1.2em;
+     font-weight: bold;
+     text-align: center;
+    }
+   #FoundationNameDiv {
+     background: #dbe5df;
+     font-size: 1.5em;
+     font-family: "Gill Sans MT", "Gill Sans", Helvetica, Humanist, sans-serif;
+     font-weight: bold;
+     text-transform: uppercase;
+     text-align: center;
+     width: 100%;
+     padding-top:0.8em;
+    }
+   #TopLinks {
+     text-align: center;
+     font-size: 0.8em
+    }
+   -->
+  </style>
+
+  <script type="text/javascript"><!-- Begin
+
+   // The first column of this array is for the local language name of the OpenStreetMap Wiki
+   // ('OpenStreetMap Wiki' should be used for all Latin-based languages)
+   // The second column of the array is the localised language word for 'Error'.
+   var LanguageDetails = new Array();
+   LanguageDetails['de'] = new Array( "OpenStreetMap Wiki", "Fehler" );
+   LanguageDetails['en'] = new Array( "OpenStreetMap Wiki", "Error" );
+
+   function ShowLanguage(WhichLanguage){
+
+     // Set the localised language version of the OpenStreetMap Wiki heading and page title
+     document.getElementById('FoundationName').innerHTML = LanguageDetails[WhichLanguage][0]
+     document.title = LanguageDetails[WhichLanguage][1] + ' - ' + LanguageDetails[WhichLanguage][0]
+
+     // Set the localised language version of the heading word for 'error'
+     document.getElementById('ErrorName').innerHTML = LanguageDetails[WhichLanguage][1]
+
+     for (var LanguageAbbr in LanguageDetails) {
+
+      // The following arrangement attempts to minimise the number of document modifications made when switching languages
+
+      if (LanguageAbbr != WhichLanguage && document.getElementById(LanguageAbbr).style.display == '') {
+        // This bit kicks in for each inactive language during the initial page collapse, and on a language when switching away from that language
+        document.getElementById(LanguageAbbr).style.display = 'none' // hide the inactive language section
+        document.getElementById(LanguageAbbr + '_link').style.fontWeight = '' //unbolden its language link
+        document.getElementById(LanguageAbbr + '_head').style.display = 'none' // hide its language heading
+       }
+      else if (LanguageAbbr == WhichLanguage && document.getElementById(LanguageAbbr).style.display == 'none') {
+        // This bit kicks in for the new active language only when switching to it from a different language (i.e. not during initial page collapse)
+        document.getElementById(WhichLanguage).style.display = '' // show the active language section
+        document.getElementById(WhichLanguage + '_link').style.fontWeight = 'bold' // bolden the active language link
+       }
+      else if (LanguageAbbr == WhichLanguage && document.getElementById(LanguageAbbr).style.display == '') {
+        // This bit kicks in during initial page collapse with the active language, and when you attempt to switch to the currently-visible language
+        document.getElementById(WhichLanguage + '_link').style.fontWeight = 'bold' // bolden the active language link
+        document.getElementById(LanguageAbbr + '_head').style.display = 'none' // hide its language heading
+       }
+
+     }
+
+
+    }
+
+   function Startup(){
+
+     // Hide the top links bar, which is only there for navigation when there's no javascript
+     document.getElementById('TopLinks').style.display = 'none'
+
+     // Look at the current URL, and if it matches an available language, show that. E.g. fr.wiktionary.org -> show 'fr'
+     var CurrentLocation = new String(window.location.href) 
+     var CurrentSubdomain = CurrentLocation.slice(CurrentLocation.lastIndexOf('//') + 2, CurrentLocation.indexOf('.'))
+     for (var LanguageAbbr in LanguageDetails) {
+       if (LanguageAbbr == CurrentSubdomain) {
+         ShowLanguage(LanguageAbbr);
+         return;
+        }
+      }
+
+     // If it is a hyphenated language code in the URL, try to go to its root language
+     if (CurrentSubdomain.indexOf('-') != -1) {
+       var RootLanguage = CurrentSubdomain.slice(0, CurrentSubdomain.indexOf('-'))
+       for (var LanguageAbbr in LanguageDetails) {
+         if (LanguageAbbr == RootLanguage) {
+           ShowLanguage(LanguageAbbr);
+           return;
+          }
+        }
+      }
+
+     // If it's secure.wikimedia.org, look later in the URL for the language code
+     if (CurrentSubdomain == 'secure') {
+       var SecureSubdomain = CurrentLocation.split('/')
+       for (var LanguageAbbr in LanguageDetails) {
+         if (LanguageAbbr == SecureSubdomain[4]) {
+           ShowLanguage(LanguageAbbr);
+           return;
+          }
+        }
+      }
+
+     // Attempt to detect the user's browser or system language using browser-specific methods, and use that if it matches an available language
+     if (navigator.userLanguage) var language = navigator.userLanguage // use the user's preferred language (non-Gecko)
+     else if (navigator.appName == 'Netscape') var language = navigator.language // use the only language information available to Gecko
+     else var language = navigator.browserLanguage // get the browser language information in non-Gecko browsers (IE, Opera, Konqueror)
+     // Compare the returned language against the list of languages on the error page
+     for (var LanguageAbbr in LanguageDetails) {
+       if (language.indexOf(LanguageAbbr) != -1) {
+         ShowLanguage(LanguageAbbr);
+         return;
+        }
+      }
+
+     // Show English as a fail-all
+     ShowLanguage('en');
+
+    }
+
+   function RefreshPage(){
+
+     // Refresh the page, preferably from cache, upon someone clicking 'try again'
+     window.location.reload(false)
+
+    }
+
+   // End -->
+  </script>
+
+ </head>
+
+ <body link="#24442E" text="#000000" vlink="#24442E" alink="#FF0000" onload="Startup();">
+
+  <!-- OpenStreetMap Wiki title -->
+  <div id="FoundationNameDiv">
+   <h1 id="FoundationName">OpenStreetMap Wiki</h1>
+  </div>
+
+  <!-- Shadow-style gradient -->
+  <div class="Lines" style="background-color:#ccd4cf;"></div>
+  <div class="Lines" style="background-color:#bdc3bf;"></div>
+  <div class="Lines" style="background-color:#adb1af;"></div>
+  <div class="Lines" style="background-color:#9ea09f;"></div>
+  <div class="Lines" style="background-color:#dbe5df;"></div>
+
+  <!-- 'Error' title -->
+  <div id="ErrorTitleDiv">
+   <h2 id="ErrorName">Error</h2>
+  </div>
+
+  <!-- This section of language links shows at the top of the page for navigation only when javascript is not available. -->
+  <div id="TopLinks">
+
+   <!-- Shadow-style gradient -->
+   <div class="Lines" style="background-color:#9d9fa1;"></div>
+   <div class="Lines" style="background-color:#a8aeb4;"></div>
+   <div class="Lines" style="background-color:#b4bec6;"></div>
+   <div class="Lines" style="background-color:#c0ced8;"></div>
+
+   <a href="#German" class="BottomLinks" onclick="ShowLanguage('de')">Deutsch</a>
+   <a href="#English" class="BottomLinks" onclick="ShowLanguage('en')">English</a>
+  </div>
+
+  <!-- Shadow-style gradient -->
+  <div class="Lines" style="background-color:#8f8f8f"></div>
+  <div class="Lines" style="background-color:#acacac"></div>
+  <div class="Lines" style="background-color:#c6c6c6"></div>
+  <div class="Lines" style="background-color:#dbdbdb"></div>
+  <div class="Lines" style="background-color:#eaeaea"></div>
+  <div class="Lines" style="background-color:#f4f4f4"></div>
+
+
+  <!-- BEGIN CONTENT AREA -->
+  <div class="ContentArea">
+
+   <div id="en" lang="en">
+    <h3 id="en_head" class="LanguageHeading">
+     <a name="English">English</a>
+    </h3>
+    <p>Our servers are currently experiencing a technical problem. This is probably temporary and should be fixed soon. Please <a href="%U" onclick="RefreshPage(); return false">try again</a> in a few minutes.</p>
+    <p>You may be able to get further information in the <a href="irc://irc.oftc.net/osm">#osm</a> channel on the <a href="http://www.oftc.net/oftc/">Open and Free Technology Community IRC network</a>.</p>
+    <p>The OpenStreetMap Wiki is supported by the OpenStreetMap Foundation which is a non-profit organisation which hosts some of the OpenStreetMap projects. It has a constant need to purchase new hardware. If you would like to help, please <a href="http://wiki.openstreetmap.org/index.php/Donation">donate</a>.</p>
+    <hr noshade="noshade" size="1px" width="80%" />
+    <div class="TechnicalStuff">
+     If you report this error to the OpenStreetMap System Administrators, please include the details below.<br/>
+    </div>
+    <div class="TechnicalStuff">
+     <bdo dir="ltr">
+      Request: %M %U, from %i via %h (%s) to %H (%I)<br/>
+      Error: %c, errno %E at %T
+     </bdo>
+     <div id="AdditionalTechnicalStuff"></div>
+    </div>
+   </div>
+
+   <div id="de" lang="de">
+    <div id="de_head">
+     <hr noshade="noshade" size="1px" width="100%"/>
+     <h3 class="LanguageHeading">
+      <a name="German">
+       Deutsch
+      </a>
+     </h3>
+    </div>
+    <p>Bei den Servern der OpenStreetMap Foundation sind gerade technische Probleme aufgetreten. Bitte versuche es in ein paar Minuten <a href="%U" onclick="RefreshPage(); return false">noch einmal</a>.</p>
+    <p>Genauere Informationen gibt es im Channel <a href="irc://irc.oftc.net/osm-de">#osm-de</a> auf dem IRC-Netzwerk <a href="http://www.oftc.net/oftc/">OFTC</a>.</p>
+    <p>Wenn du OpenStreetMap Deutschland e.V. und der OpenStreetMap Foundation helfen möchtest, kannst du dies mit <a href="http://wiki.openstreetmap.org/index.php/Donation">einer Spende</a> tun.</p>
+    <hr noshade="noshade" size="1px" width="80%" />
+    <div class="TechnicalStuff">
+     Wenn du einem OpenStreetMap-Systemadministrator diesen Fehler meldest, gib bitte die folgenden Details an.<br/>
+    </div>
+    <div class="TechnicalStuff">
+     <bdo dir="ltr">
+      Request: %M %U, from %i via %h (%s) to %H (%I)<br/>
+      Error: %c, errno %E at %T
+     </bdo>
+     <div id="AdditionalTechnicalStuff"></div>
+    </div>
+   </div>
+
+  </div>
+
+  <!-- Shadow-style gradient -->
+  <div class="Lines" style="background-color:#f4f4f4;"></div>
+  <div class="Lines" style="background-color:#eaeaea;"></div>
+  <div class="Lines" style="background-color:#dbdbdb;"></div>
+  <div class="Lines" style="background-color:#c6c6c6;"></div>
+  <div class="Lines" style="background-color:#acacac;"></div>
+  <div class="Lines" style="background-color:#dbe5df;"></div>
+
+  <!-- The top row of the language links at the foot of the page -->
+  <div class="BottomStrip">
+   <a href="#German" class="BottomLinks" id="de_link" onclick="ShowLanguage('de')">Deutsch</a>
+   <a href="#English" class="BottomLinks" id="en_link" onclick="ShowLanguage('en')">English</a>
+  </div>
+
+  <!-- Shadow-style gradient -->
+  <div class="Lines" style="background-color:#9d9fa1;"></div>
+  <div class="Lines" style="background-color:#a8aeb4;"></div>
+  <div class="Lines" style="background-color:#b4bec6;"></div>
+  <div class="Lines" style="background-color:#c0ced8;"></div>
+
+  <!-- The bottom row of the language links at the foot of the page -->
+  <div style="text-align:center; font-size:0.85em;background:#cbddeb;">
+  </div>
+
+  <!-- Shadow-style gradient -->
+  <div class="Lines" style="background-color:#9ea09f;"></div>
+  <div class="Lines" style="background-color:#adb1af;"></div>
+  <div class="Lines" style="background-color:#bdc3bf;"></div>
+  <div class="Lines" style="background-color:#ccd4cf;"></div>
+
+ </body>
+</html>
+

@@ -1,6 +1,8 @@
 from tilenames import *;
 from urllib import *
+from tilesetToFile import *
 import os
+import sys
 
 Kosmos = 'Kosmos\Console\Kosmos.Console.exe'
 
@@ -35,19 +37,36 @@ def createProject(Rules,DataFile,ProjectFile):
     f.write("</KosmosProject>\n")
     f.close()
 
-def uploadTiles(Dir,x,y,z):
-    pass #createTilesetFile($Dir, $Dir, 12, 2042, 1368);
+def uploadTiles(Dir,x,y,z,layer):
+    packedFile = "packed.dat"
+    packTileset(Dir,x,y,z,packedFile)
+
+    data = urlencode({
+      "x":x,
+      "y":y,
+      "z":z,
+      "layer":layer,
+      "user":"ojw",
+      "password":"478",
+      "data":readfile(packedFile)})
+    f = urlopen("http://dev.openstreetmap.org/~ojw/kah/upload.php", data)
+    print(f.read())
+    f.close()
 
 
-(z,x,y) = (12, 2042, 1362)
-(S,W,N,E) = tileEdges(x,y,z)
+if(0):
+  (z,x,y) = (12, 2042, 1362)
+  (S,W,N,E) = tileEdges(x,y,z)
 
-Filename = "data.osm"
-Tiledir = "tiles"
+  Filename = "data.osm"
+  Tiledir = "tiles"
 
-if(not os.path.exists(Filename)): # just for testing
-    getMapData(N,W,S,E, Filename)
-tileGen(N,W,S,E, Filename, Tiledir)
-#uploadTiles(Tiledir,x,y,z)
+  if(not os.path.exists(Filename)): # just for testing
+      getMapData(N,W,S,E, Filename)
+  tileGen(N,W,S,E, Filename, Tiledir)
+  #uploadTiles(Tiledir,x,y,z)
 
-
+for layer in ("layer1","layer2","layer3"):
+  for x in range(1280, 1284):
+    for y in range(1000, 1004):
+      uploadTiles("files/%s"%layer, x, y, 12, layer)

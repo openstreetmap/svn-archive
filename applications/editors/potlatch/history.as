@@ -88,6 +88,7 @@
 			};
 			remote_read.call('getpoi',noderesponder,_root.revertid,_root.revertversion);
 		} else { // POI
+			_root.map.pois[_root.revertid].clean=false;
 			_root.map.pois[_root.revertid].reload(_root.revertversion);
 		}
 	};

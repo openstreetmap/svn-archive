@@ -18,6 +18,7 @@
 		this.clean=true;					// altered since last upload?
 		this.uploading=false;				// currently uploading?
 		this.locked=false;					// locked against upload?
+		this.version=0;
 	};
 	OSMRelation.prototype=new MovieClip();
 
@@ -72,6 +73,7 @@
 			_root.map.relations[w].locked=false;
 			_root.map.relations[w].attr=result[1];
 			_root.map.relations[w].members=result[2];
+			_root.map.relations[w].version=result[3];
 			_root.map.relations[w].redraw();
 		};
 		remote_read.call('getrelation',responder,Math.floor(this._name));
@@ -106,7 +108,8 @@
 			this.attr['created_by']=_root.signature;
 			this.uploading=true;
 			_root.writesrequested++;
-			remote_write.call('putrelation', putresponder, _root.usertoken,
+			remote_write.call('putrelation', putresponder,
+				_root.usertoken, _root.changeset,
 				Math.floor(this._name),
 				this.attr, this.members, 1);
 			this.clean=true;

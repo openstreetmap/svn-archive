@@ -10,6 +10,11 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
+        'Class::Accessor' => 0,
+        'Class::Factory' => 0,
+        'Error' => 0,
+        'LWP::UserAgent' => 0,
+        'XML::Simple' => 0
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Geo-OSM-MapFeatures-*' },

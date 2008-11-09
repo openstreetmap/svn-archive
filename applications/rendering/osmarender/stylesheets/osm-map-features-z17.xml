@@ -1483,16 +1483,32 @@
 				<symbol ref="hotel" position="center"/>
 			</else>
 		</rule>
+		<rule e="way" k="tourism" v="hotel">
+                                <rule e="way" k="amenity" v="restaurant">
+                                </rule>
+                                <else>
+                                        <areaSymbol ref="hotel" position="center"/>
+                                </else>
+                        </rule>
 		<rule e="node" k="tourism" v="hostel">
 			<symbol ref="hostel" position="center"/>
 		</rule>
-		<rule e="node" k="tourism" v="camp_site">
+		<rule e="way" k="tourism" v="hostel">
+			<aeraSymbol ref="hostel" position="center"/>
+		</rule>
+                <rule e="node" k="tourism" v="camp_site">
 			<symbol ref="campSite" position="center"/>
 		</rule>
-		<rule e="node" k="tourism" v="information">
+                <rule e="way" k="tourism" v="camp_site">
+			<aeraSymbol ref="campSite" position="center"/>
+		</rule>
+                <rule e="node" k="tourism" v="information">
 			<symbol ref="information" position="center"/>
 		</rule>
-		
+                <rule e="way" k="tourism" v="information">
+			<aeraSymbol ref="information" position="center"/>
+		</rule>
+
 		<!-- Railway stations -->
 		<rule e="node" k="railway" v="station">
 			<rule e="node" s="way" k="railway" v="rail">
@@ -1586,17 +1602,32 @@
 		<rule e="node" k="aeroway" v="helipad">
 			<symbol ref="helipad" position="center"/>
 		</rule>
+		<rule e="way" k="aeroway" v="helipad">
+			<areaSymbol ref="helipad" position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="hospital">
 			<symbol ref="hospital" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="hospital">
+			<areaSymbol ref="hospital" position="center"/>
 		</rule>
 		<rule e="node" k="amenity" v="doctors">
 			<symbol ref="doctor"  position="center"/>
 		</rule>
+		<rule e="way" k="amenity" v="doctors">
+			<areaSymbol ref="doctor"  position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="pharmacy">
 			<symbol ref="pharmacy" position="center"/>
 		</rule>
+		<rule e="way" k="amenity" v="pharmacy">
+			<areaSymbol ref="pharmacy" position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="post_office">
 			<symbol ref="postoffice" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="post_office">
+			<areaSymbol ref="postoffice" position="center"/>
 		</rule>
 		<rule e="node" k="amenity" v="post_box">
 			<symbol ref="postbox" position="center"/>
@@ -1607,6 +1638,9 @@
 		<rule e="node" k="amenity" v="pub">
 			<symbol ref="pub" position="center"/>
 		</rule>
+		<rule e="way" k="amenity" v="pub">
+			<areaSymbol ref="pub" position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="restaurant">
 			<rule e="node" k="tourism" v="hotel">
 				<symbol ref="hotel_and_restaurant" position="center"/>
@@ -1615,14 +1649,31 @@
 				<symbol ref="restaurant" position="center"/>
 			</else>
 		</rule>
+		<rule e="way" k="amenity" v="restaurant">
+			<rule e="way" k="tourism" v="hotel">
+				<areaSymbol ref="hotel_and_restaurant" position="center"/>
+			</rule>
+			<else>
+				<areaSymbol ref="restaurant" position="center"/>
+			</else>
+		</rule>
 		<rule e="node" k="amenity" v="cinema">
 			<symbol ref="cinema" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="cinema">
+			<areaSymbol ref="cinema" position="center"/>
 		</rule>
 		<rule e="node" k="amenity" v="theatre">
 			<symbol ref="theatre" position="center"/>
 		</rule>
+		<rule e="way" k="amenity" v="theatre">
+			<areaSymbol ref="theatre" position="center"/>
+		</rule>
 		<rule e="node" k="man_made" v="windmill">
 			<symbol ref="windmill"  position="center"/>
+		</rule>
+		<rule e="way" k="man_made" v="windmill">
+			<areaSymbol ref="windmill"  position="center"/>
 		</rule>
 		<rule e="node" k="amenity" v="place_of_worship">
 			<rule e="node" k="denomination|religion" v="jewish">
@@ -1642,6 +1693,29 @@
 						</rule>
 						<else>
 							<symbol ref="peak" position="center"/>
+						</else>
+					</else>
+				</else>
+			</else>
+		</rule>
+		<rule e="way" k="amenity" v="place_of_worship">
+			<rule e="way" k="denomination|religion" v="jewish">
+				<areaSymbol ref="synagogue" position="center"/>
+			</rule>
+			<else>
+				<rule e="way" k="denomination|religion" v="muslim|moslem">
+					<areaSymbol ref="mosque" position="center"/>
+				</rule>
+				<else>
+					<rule e="way" k="denomination|religion" v="christian">
+						<areaSymbol ref="church" position="center"/>
+					</rule>
+					<else>
+						<rule e="way" k="denomination|religion" v="sikhism|sikh">
+							<areaSymbol ref="khanda" position="center"/>
+						</rule>
+						<else>
+							<areaSymbol ref="peak" position="center"/>
 						</else>
 					</else>
 				</else>
@@ -1687,11 +1761,20 @@
 		<rule e="node" k="amenity" v="library">
 			<symbol ref="library" position="center"/>
 		</rule>
+		<rule e="way" k="amenity" v="library">
+			<areaSymbol ref="library" position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="fuel">
 			<symbol ref="petrolStation" position="center"/>
 		</rule>
+		<rule e="way" k="amenity" v="fuel">
+			<areaSymbol ref="petrolStation" position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="recycling">
 			<symbol ref="recycling" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="recycling">
+			<areaSymbol ref="recycling" position="center"/>
 		</rule>
 		<rule e="node" k="amenity" v="toilets">
 			<symbol ref="toilets" position="center"/>
@@ -1701,6 +1784,9 @@
 		</rule>
 		<rule e="node" k="amenity" v="bank">
 			<symbol ref="bank" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="bank">
+			<areaSymbol ref="bank" position="center"/>
 		</rule>
 		
 		<!-- Leisure symbols -->
@@ -1739,6 +1825,9 @@
 			<else>
 				<circle r="0.4" class="generic-poi"/>
 			</else>
+		</rule>
+		<rule e="way" k="historic" v="museum">
+				<areaSymbol ref="museum" position="center"/>
 		</rule>
 		<rule e="node" k="man_made" v="cairn">
 			<circle r="0.4" stroke="black" stroke-width="0.1px" fill="white"/>
@@ -2009,6 +2098,9 @@
 				<text k="name" class="place-caption peak-caption" dy="-1.5px" layer="5"/>
 				<text k="elevation" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
 			</rule>
+                        <rule e="way" k="amenity" v="bank">
+                                <areaSymbol ref="bank" position="center"/>
+                        </rule>
 			
 			<rule e="node" k="place" v="islet" layer="5">
 				<text k="name" class="place-caption islet-caption" layer="5"/>

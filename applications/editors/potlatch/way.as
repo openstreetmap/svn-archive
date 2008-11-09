@@ -15,7 +15,8 @@
 	OSMWay.prototype.clean=true;				// altered since last upload?
 	OSMWay.prototype.uploading=false;			// currently uploading?
 	OSMWay.prototype.locked=false;				// locked against upload?
-	OSMWay.prototype.oldversion=0;				// is this an undeleted, not-uploaded way?
+	OSMWay.prototype.version=0;					// version number?
+	OSMWay.prototype.historic=false;			// is this an undeleted, not-uploaded way?
 	OSMWay.prototype.checkconnections=false;	// check shared nodes on reload
 
 	// ----	Load from remote server
@@ -30,7 +31,8 @@
 			var i,id,x,y,prepoint;
 			_root.map.ways[w].clean=true;
 			_root.map.ways[w].locked=false;
-			_root.map.ways[w].oldversion=0;
+			_root.map.ways[w].historic=false;
+			_root.map.ways[w].version=result[3];
 			_root.map.ways[w].removeNodeIndex();
 			_root.map.ways[w].path=[];
 			_root.map.ways[w].resetBBox();
@@ -70,10 +72,10 @@
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,id;
 			var w=result[0];
-			// Don't mark as unclean if it's actually the latest version
-			if (version==versioninfo[0][0]) { _root.map.ways[w].clean=true; }
-			                           else { _root.map.ways[w].clean=false; }
-			_root.map.ways[w].oldversion=result[7];
+			// Don't mark as unclean if it's actually visible
+			if (result[4]) { _root.map.ways[w].historic=false; _root.map.ways[w].clean=true;  }
+			          else { _root.map.ways[w].historic=true;  _root.map.ways[w].clean=false; }
+			_root.map.ways[w].version=result[3];
 			_root.map.ways[w].removeNodeIndex();
 			_root.map.ways[w].path=[];
 			_root.map.ways[w].resetBBox();
@@ -92,7 +94,7 @@
 				_root.nodes[id].addWay(w);
 			}
 			_root.map.ways[w].attr=result[2];
-			if (w==wayselected) { _root.map.ways[w].select(); markClean(false); }
+			if (w==wayselected) { _root.map.ways[w].select(); }
 						   else { _root.map.ways[w].locked=true; }
 			_root.map.ways[w].redraw();
 			_root.map.ways[w].clearPOIs();
@@ -254,7 +256,7 @@
 		this.deleteMergedWays();
 		this.removeNodeIndex();
 		memberDeleted('way', this._name);
-		if (this._name>=0 && !_root.sandbox && this.oldversion==0) {
+		if (this._name>=0 && !_root.sandbox && !this.historic) {
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
 				var code=result.shift(); if (code) { handleError(code,result); return; }
@@ -264,7 +266,7 @@
 				_root.writesrequested--;
 			};
 			_root.writesrequested++;
-			remote_write.call('deleteway',deleteresponder,_root.usertoken,Math.floor(this._name));
+			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Math.floor(this._name));
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 			removeMovieClip(_root.map.areas[this._name]);
@@ -313,7 +315,8 @@
 			}
 			// ** used to have bbox code here, but don't think we need it
 			_root.map.ways[nw].uploading=false;
-			_root.map.ways[nw].oldversion=0;
+			_root.map.ways[nw].historic=false;
+			_root.map.ways[nw].version=result[3];
 			
 			// renumber nodes (and any relations/ways they're in)
 			z=result[2];
@@ -331,7 +334,6 @@
 		};
 		if (!this.uploading && !this.hasDependentNodes() && !this.locked && !_root.sandbox && this.path.length>1) {
 			// Assemble 'sendpath' and upload it
-			this.attr['created_by']=_root.signature;
 			this.uploading=true;
 			var sendpath=new Array();
 			for (i=0; i<this.path.length; i++) {
@@ -341,7 +343,7 @@
 										deepCopy  (this.path[i].attr)));
 			}
 			_root.writesrequested++;
-			remote_write.call('putway',putresponder,_root.usertoken,Number(this._name),sendpath,this.attr);
+			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,Number(this._name),sendpath,this.attr);
 			this.clean=true;
 		}
 	};
@@ -415,7 +417,7 @@
 			}
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
-			if (this.oldversion==0) {
+			if (!this.historic) {
 				if (this._name==_root.wayselected && _root.drawpoint>0) {
 					_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
 				}
@@ -560,7 +562,7 @@
 
 	OSMWay.prototype.splitWay=function(point,newattr) {
 		var i,z;
-		if (point>0 && point<(this.path.length-1) && this.oldversion==0) {
+		if (point>0 && point<(this.path.length-1) && !this.historic) {
 			_root.newwayid--;											// create new way
 			_root.map.ways.attachMovie("way",newwayid,++waydepth);		//  |
 			_root.map.ways[newwayid].path=shallowCopy(this.path);		// deep copy path array
@@ -598,7 +600,7 @@
 	OSMWay.prototype.mergeWay=function(topos,otherway,frompos) {
 		var i,z;
 		var conflict=false;
-		if (this.oldversion>0 || otherway.oldversion>0) { return; }
+		if (this.historic || otherway.historic) { return; }
 
 		var mergepoint=this.path.length;
 		if (topos==0) {
@@ -1090,8 +1092,8 @@
 				relationlist=result[2];
 
 				for (i in waylist) {										// ways
-					way=waylist[i];											//  |
-					if (!_root.map.ways[way]) {								//  |
+					way=waylist[i][0];										//  |
+					if (!_root.map.ways[way] || _root.map.ways[way].version!=waylist[i][1]) {
 						_root.map.ways.attachMovie("way",way,++waydepth);	//  |
 						_root.map.ways[way].load();							//  |
 						_root.waycount+=1;									//  |
@@ -1101,7 +1103,7 @@
 				
 				for (i in pointlist) {										// POIs
 					point=pointlist[i][0];									//  |
-					if (!_root["map"]["pois"][point]) {						//  |
+					if (!_root.map.pois[point] || _root.map.pois[point].version!=pointlist[i][4]) {
 						// **** attach correct icon:
 						// if (pointlist[i][3]["place"]) {
 						// _root.map.pois.attachMovie("poi_22",point,++poidepth); 
@@ -1110,6 +1112,7 @@
 						_root.map.pois[point]._y=lat2coord (pointlist[i][2]);// |
 						_root.map.pois[point]._xscale=
 						_root.map.pois[point]._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
+						_root.map.pois[point].version=pointlist[i][4];		//  |
 						_root.map.pois[point].attr=pointlist[i][3];			//  |
 						_root.poicount+=1;									//  |
 						if (point==prenode) { deselectAll(); prenode=undefined;
@@ -1118,8 +1121,8 @@
 				}
 
 				for (i in relationlist) {
-					rel = relationlist[i];
-                    if (!_root.map.relations[rel]) {
+					rel = relationlist[i][0];
+                    if (!_root.map.relations[rel] || _root.map.relations[rel].version!=relationlist[i][1]) {
 						_root.map.relations.attachMovie("relation",rel,++reldepth);
 						_root.map.relations[rel].load();
 						_root.relcount+=1;

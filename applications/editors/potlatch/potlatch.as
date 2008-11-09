@@ -124,7 +124,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10f";	// current version
+	var signature="Potlatch 0.10g";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
 
@@ -340,6 +340,7 @@
 	#include 'gps.as'
 	#include 'undo.as'
 	#include 'advice.as'
+	#include 'changeset.as'
 	#include 'start.as'
 
 	// =====================================================================================
@@ -356,6 +357,7 @@
 	updateButtons();
 	updateScissors();
 	resizeWindow();
+	startChangeset();
 	loadPresets();
 
 
@@ -670,7 +672,7 @@
 
 	function keyLock() {
 		_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
-		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>200 && _root.ws.oldversion==0) {
+		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>200 && !_root.ws.historic) {
 			setAdvice(true,iText("Too long to unlock - please split into shorter ways",'advice_toolong'));
 		} else if (_root.wayselected) {
 			_root.ws.locked=!_root.ws.locked;
@@ -1028,7 +1030,9 @@
 	// deepCopy (recursive) and shallowCopy (non-recursive)
 
 	function deepCopy(z) {
-		var a=new Array();
+		var a;
+		if (z.length==null) { a=new Object(); }
+					   else { a=new Array(); }
 		for (var i in z) {
 			if (typeof(z[i])=='object') { a[i]=deepCopy(z[i]); }
 								   else { a[i]=z[i]; }
@@ -1037,7 +1041,9 @@
 	};
 
 	function shallowCopy(z) {
-		var a=new Array();
+		var a;
+		if (z.length==null) { a=new Object(); }
+					   else { a=new Array(); }
 		for (var i in z) { a[i]=z[i]; }
 		return a;
 	}

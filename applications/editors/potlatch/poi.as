@@ -5,10 +5,11 @@
 	// ----	Initialise
 	
 	function POI() {
-		this.attr=new Array();
+		this.attr=new Object();
 		this.clean=true;
 		this.uploading=false;
 		this.locked=false;
+		this.version=0;
 		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
 	};
 	POI.prototype=new MovieClip();
@@ -23,7 +24,7 @@
 				_root.writesrequested--;
 			};
 			_root.writesrequested++;
-			remote_write.call('putpoi',poidelresponder,_root.usertoken,Math.floor(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
+			remote_write.call('putpoi',poidelresponder,_root.usertoken,_root.changeset,Math.floor(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
 		} else {
 			if (this._name==poiselected) { deselectAll(); }
 			removeMovieClip(this);
@@ -35,6 +36,7 @@
 			_root.map.pois[result[0]]._x  =long2coord(result[1]);
 			_root.map.pois[result[0]]._y  =lat2coord (result[2]);
 			_root.map.pois[result[0]].attr=result[3];
+			_root.map.pois[result[0]].version=result[4];
 			_root.map.pois[result[0]].select();
 		};
 		if (!timestamp) { timestamp=0; }
@@ -44,7 +46,7 @@
 		poiresponder=function() { };
 		poiresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
-			var ni=result[1];	// new way ID
+			var ni=result[1];	// new POI ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
 				renumberMemberOfRelation('node', result[0], ni);
@@ -54,12 +56,12 @@
 				}
 			}
 			_root.map.pois[ni].uploading=false;
+			_root.map.pois[ni].version=result[2];
 			_root.writesrequested--;
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox) {
-			this.attr['created_by']=_root.signature;
 			_root.writesrequested++;
-			remote_write.call('putpoi',poiresponder,_root.usertoken,this._name,coord2long(this._x),coord2lat(this._y),this.attr,1);
+			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,this._name,coord2long(this._x),coord2lat(this._y),this.attr,1);
 			this.clean=true;
 		}
 	};

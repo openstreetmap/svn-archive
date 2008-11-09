@@ -25,7 +25,7 @@
 			_root.undo.append(UndoStack.prototype.undo_createpoi,
 							  [_root.map.pois[newpoiid]],iText("creating a POI",'action_createpoi'));
 
-		} else if (Key.isDown(Key.SHIFT) && this.way.oldversion==0) {
+		} else if (Key.isDown(Key.SHIFT) && !this.way.historic) {
 			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
 			startNewWay(this.node);
 		} else if (this._name==_root.drawpoint ||
@@ -182,7 +182,7 @@
 	};
 
 	AnchorHint.prototype.onPress=function() {
-		if (this.way.oldversion>0) {
+		if (this.way.historic) {
 			_root.junction=true;
 			restartElastic(); return;	// can't merge/join to historic ways
 		}

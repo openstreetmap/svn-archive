@@ -13,6 +13,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
+import org.openstreetmap.josm.tools.ShortCut;
 
 /**
  * The action that does the validate thing.
@@ -35,8 +36,8 @@ public class ValidateAction extends JosmAction {
      * Constructor
      */
     public ValidateAction(OSMValidatorPlugin plugin) {
-        super(tr("Validation"), "validator", tr("Performs the data validation"), KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK
-                + KeyEvent.ALT_MASK, true);
+        super(tr("Validation"), "validator", tr("Performs the data validation"), 
+        ShortCut.registerShortCut("tools:validate", tr("Tool: {0}", tr("Validation")), KeyEvent.VK_V, ShortCut.GROUP_EDIT, ShortCut.SHIFT_DEFAULT), true);
         this.plugin = plugin;
     }
 

@@ -173,14 +173,51 @@ class SlippyMap {
 		} else {
 			//HTML output for the slippy map.
 			//Note that this must all be output on one line (no linefeeds)
-			//otherwise MediaWiki adds <BR> tags, which is bad in the middle of block of javascript.
+			//otherwise MediaWiki adds <BR> tags, which is bad in the middle of a block of javascript.
 			//There are other ways of fixing this, but not for MediaWiki v4
 			//(See http://www.mediawiki.org/wiki/Manual:Tag_extensions#How_can_I_avoid_modification_of_my_extension.27s_HTML_output.3F)
 
-			$output = '<script type="text/javascript"> var osm_fully_loaded=false;';
+			
+			$output  = '<!-- slippy map -->';
+			
+			//This inline stylesheet defines how the two extra buttons look, and where they are positioned.
+			//Chaging positioning is not so easy though, because it seems positioning of the visible button divs
+			//much match the positioning of the mysterious olControlPanel divs.
+			//TODO: figure out how to position the buttons at the side-by-side in the bottom right. would look better.
+			$output .= '<style>'.
+				'.getWikiCodeButton, .resetButton {'.
+				'   margin-left: 60px;'.
+				'   margin-top: 10px;'.
+				'   width:  80px;'.
+				'   height: 18px;'.
+				'   background-color: DARKBLUE;'.
+				'   color: WHITE;'.
+				'   padding:0px;'.
+				'   text-align:center;'.
+				'   font-size:12px;'.
+				'   font-family: Verdana, Helvetica, Arial, sans-serif;'.
+				"}\n".
+			
+				'.getWikiCodeButton {'.
+				'	margin-top: 10px;'.
+				"}\n".
+			
+				'.resetButton {'.
+				'	margin-top: 38px;'.
+				"}\n".
+			
+				'.olControlPanel div {'.   //mysterious openlayers divs. Invisible but receive mouse click events.
+				'	margin-left: 60px;'.
+				'	margin-top: 10px;'.
+				'	width:  80px;'.
+				'	height: 18px;'.
+				"}\n".
+				'</style>';
+			
+			$output .= '<script type="text/javascript"> var osm_fully_loaded=false;';
 
-			// defer loading of the javascript. Since the script is quite bit, it would delay
-			// page loading and rendering dramatically
+			// defer loading of the javascript. Since the script is quite big, it would delay
+			// page loading and rendering dramatically. This necessitates fetching a modified version of OpenStreetMap.js (nasty kludge)
 			$output .= 'addOnloadHook( function() { ' .
 			 	'	var sc = document.createElement("script");' .
 				'	sc.src = "http://www.openlayers.org/api/OpenLayers.js";' .
@@ -196,6 +233,19 @@ class SlippyMap {
 
 			$output .= 'addOnloadHook( slippymap_init ); ';
 
+			
+			$output .= 'function slippymap_resetPosition() {';
+			$output .= '	map.setCenter(lonLat, zoom);';
+			$output .= '}';
+			
+			$output .= 'function slippymap_getWikicode() {';
+			$output .= '	LL = map.getCenter().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));';
+			$output .= '    Z = map.getZoom(); ';
+			$output .= '    size = map.getSize();';
+
+			$output .= '    prompt( "' . wfMsg('slippymap_code') .'", "<slippymap h="+size.h+" w="+size.w+" z="+Z+" lat="+LL.lat+" lon="+LL.lon+" layer=mapnik marker=1></slippymap>" ); ';
+			$output .= '}';
+			
 			$output .= 'function slippymap_init() { ';
 			$output .= '	if (!osm_fully_loaded) { window.setTimeout("slippymap_init()",500); return 0; } ' ;
 
@@ -244,24 +294,23 @@ class SlippyMap {
 			}
 
 			$output .= '	map.setCenter (lonLat, zoom); ';
+			$output .= '	var getWikiCodeButton = new OpenLayers.Control.Button({displayClass: "getWikiCodeButton", trigger: slippymap_getWikicode}); ';
+ 			$output .= '	var resetButton = new OpenLayers.Control.Button({displayClass: "resetButton", trigger: slippymap_resetPosition}); ';
+ 			$output .= '	var panel = new OpenLayers.Control.Panel(); ';
+            $output .= '	panel.addControls([getWikiCodeButton, resetButton]); ';
+			$output .= '	map.addControl(panel); ';
+			$output .= '	getWikiCodeButton.div.innerHTML="' . wfMsg('slippymap_button_code') . '"; ';
+			$output .= '	resetButton.div.innerHTML="' . wfMsg('slippymap_resetview') . '"; ';
 			$output .= '} ';
 
-			$output .= 'function slippymap_getWikicode() {';
-			$output .= '	LL = map.getCenter().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));';
-			$output .= '    Z = map.getZoom(); ';
-			$output .= '    size = map.getSize();';
-
-			$output .= '    prompt( "' . wfMsg('slippymap_code') .'", "<slippymap h="+size.h+" w="+size.w+" z="+Z+" lat="+LL.lat+" lon="+LL.lon+" layer=mapnik marker=1></slippymap>" ); ';
-			$output .= '}';
 
 			$output .= "</script> ";
 
-			$output .= '<div class="map">';
 			$output .= "<div style=\"width: {$width}px; height:{$height}px; border-style:solid; border-width:1px; border-color:lightgrey;\" id=\"map\">";
 			$output .= "<noscript><a href=\"http://www.openstreetmap.org/?lat=$lat&lon=$lon&zoom=$zoom\" title=\"See this map on OpenStreetMap.org\" style=\"text-decoration:none\">";
 			$output .= "<img src=\"".$wgMapOfServiceUrl."lat=${lat}&long=${lon}&z=${zoom}&w=${width}&h=${height}&format=jpeg\" width=\"${width}\" height=\"${height}\" border=\"0\"><br/>";
 			$output .= '</a></noscript>';
-			$output .= '</div><div id="postmap"><input type="button" value="' . wfMsg('slippymap_resetview') . '" onmousedown="map.setCenter(lonLat, zoom);" /><input type="button" value="' . wfMsg('slippymap_button_code') . '" onmousedown="slippymap_getWikicode();" /></div></div>';
+			$output .= '</div>';
 		}
 		return $output;
 	}

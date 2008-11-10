@@ -48,36 +48,52 @@ class SlippyMap {
 		global $wgMapOfServiceUrl, $wgSlippyMapVersion;
 
 		wfLoadExtensionMessages( 'SlippyMap' );
-
+		
+		
+		//Support old style parameters from $input
+		//Parse the pipe separated name value pairs (e.g. 'aaa=bbb|ccc=ddd')
+		//With the new syntax we expect nothing in the $input, so this will result in '' values
+		$oldStyleParamStrings=explode('|',$input);
+		foreach ($oldStyleParamStrings as $oldStyleParamString) {
+			$oldStyleParamString = trim($oldStyleParamString);
+			$eqPos = strpos($oldStyleParamString,"=");
+			if ($eqPos===false) {
+				$oldStyleParams[$oldStyleParamString] = "true";
+			} else {
+				$oldStyleParams[substr($oldStyleParamString,0,$eqPos)] = trim(htmlspecialchars(substr($oldStyleParamString,$eqPos+1)));
+			}
+		}	
+		
+		//Receive new style args: <slippymap aaa=bbb ccc=ddd></slippymap>
 		if ( isset( $argv['lat'] ) ) { 
 			$lat		= $argv['lat'];
 		} else {
-			$lat		= '';
+			$lat		= $oldStyleParams['lat'];
 		}
 		if ( isset( $argv['lon'] ) ) { 
 			$lon		= $argv['lon'];
 		} else {
-			$lon		= '';
+			$lon		= $oldStyleParams['lon'];
 		}
 		if ( isset( $argv['z'] ) ) { 
 			$zoom		= $argv['z'];
 		} else {
-			$zoom		= '';
+			$zoom		= $oldStyleParams['z'];
 		}
 		if ( isset( $argv['w'] ) ) { 
 			$width		= $argv['w'];
 		} else {
-			$width		= '';
+			$width		= $oldStyleParams['w'];
 		}
 		if ( isset( $argv['h'] ) ) { 
 			$height		= $argv['h'];
 		} else {
-			$height		= '';
+			$height		= $oldStyleParams['h'];
 		}
 		if ( isset( $argv['layer'] ) ) { 
 			$layer		= $argv['layer'];
 		} else {
-			$layer		= '';
+			$layer		= $oldStyleParams['layer'];
 		}
 		if ( isset( $argv['marker'] ) ) { 
 			$marker		= $argv['marker'];
@@ -103,20 +119,23 @@ class SlippyMap {
 		if (substr($height,-2)=='px')	$height = (int) substr($height,0,-2);
 
 
-		if ($marker) $error = 'marker support is disactivated on the OSM wiki pending discussions about wiki syntax';
-		
-		if ( trim( $input ) != '' ) {
+		if (trim($input)!='' && sizeof($oldStyleParamStrings)<3) {
 			$error = 'slippymap tag contents. Were you trying to input KML? KML support '.
 			         'is disactivated on the OSM wiki pending discussions about wiki syntax';
 			$showkml = false;
 		} else {
 			$showkml = false;
 		}
+		
+		
+		if ($marker) $error = 'marker support is disactivated on the OSM wiki pending discussions about wiki syntax';
+	
+
 		//Check required parameters values are provided
 		if ( $lat==''  ) $error .= wfMsg( 'slippymap_latmissing' );
 		if ( $lon==''  ) $error .= wfMsg( 'slippymap_lonmissing' );
 		if ( $zoom=='' ) $error .= wfMsg( 'slippymap_zoommissing' );
-
+		
 		if ($error=='') {
 			//no errors so far. Now check the values	
 			if (!is_numeric($width)) {
@@ -168,6 +187,7 @@ class SlippyMap {
 		} else {
 			$error = wfMsg( 'slippymap_invalidlayer',  htmlspecialchars($layer) );
 		}
+		
 
 		if ($error!="") {
 			//Something was wrong. Spew the error message and input text.
@@ -315,6 +335,8 @@ class SlippyMap {
 			$output .= "<img src=\"".$wgMapOfServiceUrl."lat=${lat}&long=${lon}&z=${zoom}&w=${width}&h=${height}&format=jpeg\" width=\"${width}\" height=\"${height}\" border=\"0\"><br/>";
 			$output .= '</a></noscript>';
 			$output .= '</div>';
+			
+			if (sizeof($oldStyleParamStrings) >2 )  $output .= '<div style="font-size:0.8em;"><i>please change to <a href="http://wiki.openstreetmap.org/index.php/Slippy_Map_MediaWiki_Extension">new syntax</a></i></div>';
 		}
 		return $output;
 	}

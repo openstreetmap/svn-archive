@@ -1494,19 +1494,19 @@
 			<symbol ref="hostel" position="center"/>
 		</rule>
 		<rule e="way" k="tourism" v="hostel">
-			<aeraSymbol ref="hostel" position="center"/>
+			<areaSymbol ref="hostel" position="center"/>
 		</rule>
                 <rule e="node" k="tourism" v="camp_site">
 			<symbol ref="campSite" position="center"/>
 		</rule>
                 <rule e="way" k="tourism" v="camp_site">
-			<aeraSymbol ref="campSite" position="center"/>
+			<areaSymbol ref="campSite" position="center"/>
 		</rule>
                 <rule e="node" k="tourism" v="information">
 			<symbol ref="information" position="center"/>
 		</rule>
                 <rule e="way" k="tourism" v="information">
-			<aeraSymbol ref="information" position="center"/>
+			<areaSymbol ref="information" position="center"/>
 		</rule>
 
 		<!-- Railway stations -->

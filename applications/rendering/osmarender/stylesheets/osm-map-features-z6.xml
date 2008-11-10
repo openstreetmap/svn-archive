@@ -1071,6 +1071,12 @@
                 stroke-width: 1.5px;
             }
 
+            .natural-glacier {
+                fill: #fafaff;
+                stroke: lightblue;
+                stroke-width: 1.5px;
+            }
+
             .natural-land {
                 fill: #ffffff;
                 stroke: #e0e0e0;

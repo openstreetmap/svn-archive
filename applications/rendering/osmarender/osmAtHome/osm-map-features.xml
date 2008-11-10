@@ -66,6 +66,9 @@
 		<rule e="way|area" k="natural" v="coastline">
 		   <line class='natural-coastline'/> 
 		</rule>
+		<rule e="way|area" k="natural" v="glacier">
+		   <line class='natural-glacier'/>
+		</rule>
 		<rule e="way|area" k="natural" v="land">
 			<area class='natural-land' /> 
 		</rule>
@@ -1264,6 +1267,12 @@
 			  fill: none;
 			  stroke: #89bac6;
 			  stroke-width: 1.5px;
+			  }
+
+			.natural-glacier {
+			  fill: #fafaff;
+			  stroke: lightblue;
+			  stroke-width: 0.4px;
 			  }
 
 			.natural-land {

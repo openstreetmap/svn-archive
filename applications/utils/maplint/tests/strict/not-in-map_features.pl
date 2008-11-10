@@ -17,130 +17,45 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # Usage:
-# $ ./tests/strict/mapfeatures.pl > tests/strict/mapfeatures.xml.new
-# $ diff -u tests/strict/mapfeatures.xml tests/strict/mapfeatures.xml.new
+# $ ./tests/strict/not-in-map_features.pl > tests/strict/not-in-map_features.xml.new
+# $ diff -u tests/strict/not-in-map_features.xml tests/strict/not-in-map_features.xml.new
 # Make sure to look over the diff and check that not too much has changed.
 # That could be a sign that somebody has radically changed the format of
 # Map Features or something.
 # If it looks fine, then do:
-# $ mv tests/strict/mapfeatures.xml.new tests/strict/mapfeatures.xml
+# $ mv tests/strict/not-in-map_features.xml.new tests/strict/not-in-map_features.xml
 # And build maplint as usual
 
 use strict;
 use warnings;
 
-use XML::Simple;
-use LWP::UserAgent;
-use Data::Dumper;
+use Geo::OSM::MapFeatures;
 
 sub add_feature( $$$ );
 
 # Get export of Map_Features
-my $ua = LWP::UserAgent->new;
-$ua->agent("maplint:mapfeatures.pl/0.1");
-
-my $req = HTTP::Request->new(GET => "http://wiki.openstreetmap.org/index.php?title=Special:Export/Map_Features");
-warn "Fetching Map_Features\n";
-my $res = $ua->request($req);
-if(! $res->is_success) {
-    die "Couldn't fetch Map_Features: ".$res->status_line . "\n";
+my $mf = new Geo::OSM::MapFeatures;
+$mf->trace(1);
+unless( $ENV{MAPFEATURESDEBUG} ){
+    $mf->download();
+} else {
+    $mf->debug_download();
 }
 
-my $xml = XMLin($res->content);
+$mf->parse();
 
-&parse_map_features($xml);
+foreach my $feature ( $mf->features() ){
+    foreach my $value ( @{ $feature->values() } ){
+        add_feature($feature->key(), $value, $feature->types());
+    }
+}
 
 # Add some additional features
-add_feature('osmarender:nameDirection', 1, ['way']);
-add_feature('osmarender:nameDirection', -1, ['way']);
-add_feature('osmarender:render', 'no', ['node', 'way', 'area']);
-add_feature('osmarender:renderName', 'no', ['node', 'way', 'area']);
-add_feature('osmarender:renderRef', 'no', ['node', 'way', 'area']);
-
-sub parse_map_features( $ ){
-    my $template;
-    while( $xml->{page}->{revision}{text}{content} =~ /{{(.*?)}}/gs ){
-        my $template = $1;
-        next unless $template =~ /(Map_Features:\S+)/;
-        my $page = $1;
-
-        my $req = HTTP::Request->new(GET => "http://wiki.openstreetmap.org/api.php?action=expandtemplates&text={{$page}}&format=xml");
-        warn "Fetching $page\n";
-        my $res = $ua->request($req);
-        if(! $res->is_success) {
-            die "Couldn't fetch $page: ".$res->status_line . "\n";
-        }
-
-        my $xml = XMLin($res->content);
-
-        &parse_featuretemplate($xml);
-    }
-}
-
-sub parse_featuretemplate( $ ){
-    my $xml = shift;
-
-    # Read every table line and extract key, value and types
-
-#    warn "XML: ".Dumper($xml);
-#    $xml->{page}{revision}{text}{content} =~ /{\|(.*)\|}/s;
-    $xml->{expandtemplates} =~ /{\|(.*)\|}/s;
-    my $table = $1;
-#    warn "Table: ".Dumper($table);
-
-    my @lines = split(/\|-/, $table);
-    foreach my $line (@lines){
-        my @columns = split("\n", $line);
-
-        # Ignore lines not starting with "| "
-        @columns = grep {/^\| /} @columns;
-
-        # Skip lines that doesn't have 6 columns
-        next unless $#columns == 5;
-
-        my $key = $columns[0];
-        my $value = $columns[1];
-        my $types = $columns[2];
-
-        $key =~ s/^\| //;
-        $value =~ s/^\| //;
-        $types =~ s/^\| //;
-
-        # Strip leading and trailing whitespace
-        $key =~ s/^\s*//;
-        $value =~ s/^\s*//;
-        $key =~ s/\s*$//;
-        $value =~ s/\s*$//;
-
-        # Clean away wikilinks
-        $key =~ s/\[\[(?:.*?\|\s*)?(.*?)\]\]/$1/g;
-        $value =~ s/\[\[(?:.*?\|\s*)?(.*?)\]\]/$1/g;
-
-        # Clean away hyperlinks
-        $key =~ s/\[\S+:\/\/(?:[^\]]+\s+([^\]]+)|[^\]]+\/([^\]]+)(?:\.\w{2,5})?\s*)\]/$1 ? $1 : $2/ge;
-        $value =~ s/\[\S+:\/\/(?:[^\]]+\s+([^\]]+)|[^\]]+\/([^\]]+)(?:\.\w{2,5})?\s*)\]/$1 ? $1 : $2/ge;
-
-        # Clean away other markup
-        $key =~ s/<[^>]+>//g;
-        $value =~ s/<[^>]+>//g;
-
-        # Get all types for the feature
-        my @types;
-        push(@types, 'node') if $types =~ /node/;
-        push(@types, 'way') if $types =~ /way/;
-        push(@types, 'area') if $types =~ /area/;
-
-        # Is it a single value, or a slash-separated list?
-        my @values = ();
-        if( $value =~ /\/|\bor\b/ ){
-            foreach my $subvalue ( split(/\s*(?:\/|or)\s*/, $value) ){
-                add_feature($key, $subvalue, \@types);
-            }
-        } else {
-            add_feature($key, $value, \@types);
-        }
-    }
-}
+add_feature('osmarender:nameDirection', new Geo::OSM::MapFeatures::Feature::Value(1), ['way']);
+add_feature('osmarender:nameDirection', new Geo::OSM::MapFeatures::Feature::Value(-1), ['way']);
+add_feature('osmarender:render', new Geo::OSM::MapFeatures::Feature::Value('no'), ['node', 'way', 'area']);
+add_feature('osmarender:renderName', new Geo::OSM::MapFeatures::Feature::Value('no'), ['node', 'way', 'area']);
+add_feature('osmarender:renderRef', new Geo::OSM::MapFeatures::Feature::Value('no'), ['node', 'way', 'area']);
 
 # add_feature( $key, $value, \@types )
 # Pushes the feature onto the global list after
@@ -151,81 +66,19 @@ sub add_feature( $$$ ){
     my $value = shift;
     my @types = @{ shift() };
 
-    my $special = 1; # This is special if it's a ref
-
     # name:''lg''
     if( $key =~ /(.*:)''lg''/i ){
 	$key = "contains(\@k, '$1')";
     }
 
-    #TEST
-    if( lc($key) eq 'maxspeed' ){
-        $value = 'speed';
-    }
-
-    # Arbitrarily defined value
-    if( $value =~ /user defined|defined by editor/i ){
-	$value = 'userdef';
-    }
-    # Numeric value
-    elsif( lc($value) eq 'num' || lc($value) eq 'number' ){
-	$special = {type => 'num'};
-    }
-    # Range value
-    elsif( $value =~ /^(-?\d+)\s+to\s+(-?\d+)$/i ){
-	$special = {type => 'range', from => $1, to => $2};
-    }
-    # Date value
-    elsif( lc($value) eq 'date'  ){
-        #TODO: if anybody ever decides on a date format then this should be {type => 'date'} and there should be a test against the format
-        $value = 'userdef';
-    }
-    # Day of week
-    elsif( lc($value) eq 'day of week' ){
-        $special = { type => 'list',
-                     list => ['monday', 'mon',
-                              'tuesday', 'tue',
-                              'wednesday', 'wed',
-                              'thursday', 'thu',
-                              'friday', 'fri',
-                              'saturday', 'sat',
-                              'sunday', 'sun'
-                              ]};
-    }
-    # Time value
-    elsif( lc($value) eq 'time' ){
-        #TODO: if anybody ever decides on a time format then this should be {type => 'time'} and there should be a test against the format
-        $value = 'userdef';
-    }
-    # Speed
-    elsif( lc($value) eq 'speed' ){
-        $special = { type => 'numwithunit',
-                     units => [
-                         'kph', 'km/h',
-                         'mph', 'knots'
-                         ]
-        };
-    }
-    # Lengths
-    elsif( lc($value) eq 'height' || lc($value) eq 'width' ){
-        $special = { type => 'numwithunit',
-                     units => [
-                         'mm', 'cm', 'dm', 'm', 'km',
-                         'mil', # Scandinavian mil (10km)
-                         'inch', 'foot', 'yard', 'mile',
-                         'nm', # Nautical mile
-                         'furlong'
-                         ]
-        };
-    }
-
+    # trick away the area type since the DB only has ways
+    my %types = map { ("$_" eq 'area' ? 'way' : $_) => 1 } @types;
+    @types = keys(%types);
 
     foreach my $type ( @types ){
 	$type = lc($type);
-        # Map features have the area type, but DB only has way
-	if( $type eq 'area' ){ $type = 'way' }
 
-	$main::keys{$type}{$key}{$value} = $special;
+	push(@{$main::keys{$type}{$key}}, $value);
     }
 }
 
@@ -244,7 +97,7 @@ IMPORTANT NOTICE:
 This is an AUTOGENERATED file.
 Do NOT edit this file manually, edit not-in-map_features.pl instead
 -->
-<maplint:test group="strict" id="not-in-map_features" version="1" severity="notice"
+<maplint:test group="strict" id="not-in-map_features" version="2" severity="notice"
     xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -299,51 +152,57 @@ foreach my $type ( keys(%main::keys) ){
 	print "<xsl:when test=\"$test\">\n";
 
 	# Values
-	my @values = sort( keys( %{$main::keys{$type}{$key}} ) );
-	@values = grep { $_ ne 'userdef' } @values;
+	my @values = sort( @{ $main::keys{$type}{$key} } );
+
+        # Beware, horrible hack:
+        # Skip the special value types we don't have format tests for by replacing them with userdef
+        foreach my $value ( @values ){
+            if( $value->isa('Geo::OSM::MapFeatures::Feature::Value::Date') ||
+                $value->isa('Geo::OSM::MapFeatures::Feature::Value::Time') )
+            {
+                $value = new Geo::OSM::MapFeatures::Feature::Value('user defined');
+            }
+        }
+
+        my $userdef = 1 if grep { $_->isa('Geo::OSM::MapFeatures::Feature::Value::Userdef') } @values;
+	@values = grep { ! $_->isa('Geo::OSM::MapFeatures::Feature::Value::Userdef') } @values;
 
 	# Is there a list of values, or is it only user defined
 	if( @values ){
 	    print "<xsl:choose>\n";
 	    foreach my $value ( @values ){
-		# Is it a special value?
-		if( ref( $main::keys{$type}{$key}{$value} ) ){
-		    my $special = $main::keys{$type}{$key}{$value};
-		    if( $special->{type} eq 'num' ){
-			print "<xsl:when test=\"string(number(\@v)) != 'NaN'\" />\n";
-		    } elsif( $special->{type} eq 'range' ){
-			my $from = $special->{from}; my $to = $special->{to};
-			print "<xsl:when test=\"\@v &gt; $from and \@v &lt; $to\" />\n";
-                    } elsif( $special->{type} eq 'list' ){
-                        foreach my $item ( @{$special->{list}} ){
-                            print "<xsl:when test=\"\@v='$item'\" />\n";
-                        }
-                    } elsif( $special->{type} eq 'numwithunit' ){
-                        # Number with optional unit suffixed
-                        print "<xsl:when test='";
-                        foreach my $unit ( @{$special->{units}} ){
-                            print '(';
-                            print 'contains(@v, "'.$unit.'") and '; # If we have a unit and ...
-                            print 'string-length( substring-after(@v, "'.$unit.'") ) = 0 and '; # there's nothing behind said unit (important for the next part to work right)
-                            print 'string(number('; # Number test
-                            print 'substring(@v, 0, string-length(@v) - string-length("'.$unit.'"))'; # Get the part before the unit
-                            print ')) != "NaN"'; # Number test part 2
-                            print ') or ';
-                        }
-                        print '( string(number(@v)) != "NaN" )';
-                        print "' />\n";
-		    } else {
-			die "BUG: special ref but unknown type";
-		    }
-		}
-		# Or normal value?
-		else {
+                if( $value->isa('Geo::OSM::MapFeatures::Feature::Value::Num') ){
+                    print "<xsl:when test=\"string(number(\@v)) != 'NaN'\" />\n";
+                } elsif( $value->isa('Geo::OSM::MapFeatures::Feature::Value::Range') ){
+                    print "<xsl:when test=\"\@v &gt; ".$value->from()." and \@v &lt; ".$value->to()."\" />\n";
+                } elsif( $value->isa('Geo::OSM::MapFeatures::Feature::Value::List') ){
+                    foreach my $item ( @{ $value->list() } ){
+                        print "<xsl:when test=\"\@v='$item'\" />\n";
+                    }
+                } elsif( $value->isa('Geo::OSM::MapFeatures::Feature::Value::NumWithUnit') ){
+                    # Number with optional unit suffixed
+                    print "<xsl:when test='";
+                    foreach my $unit ( @{ $value->units() } ){
+                        print '(';
+                        print 'contains(@v, "'.$unit.'") and '; # If we have a unit and ...
+                        print 'string-length( substring-after(@v, "'.$unit.'") ) = 0 and '; # there's nothing behind said unit (important for the next part to work right)
+                        print 'string(number('; # Number test
+                        print 'substring(@v, 0, string-length(@v) - string-length("'.$unit.'"))'; # Get the part before the unit
+                        print ')) != "NaN"'; # Number test part 2
+                        print ') or ';
+                    }
+                    print '( string(number(@v)) != "NaN" )';
+                    print "' />\n";
+                } elsif( ref($value) eq 'Geo::OSM::MapFeatures::Feature::Value' ){
+                    # Plain old normal value
 		    print "<xsl:when test=\"\@v='$value'\" />\n";
-		}
-	    }
+                } else {
+                    die "BUG: unknown value type: ".Dumper($value);use Data::Dumper;
+                }
+            }
 
 	    # Can this value be user defined?
-	    if( $main::keys{$type}{$key}{userdef} ){
+	    if( $userdef ){
 		#print "<xsl:otherwise />\n";
 		print "<!-- Uncomment to output notice about user defined value:\n";
 		print "<xsl:otherwise>\n";
@@ -360,7 +219,7 @@ foreach my $type ( keys(%main::keys) ){
 	    print "</xsl:choose>\n";
 	}
 	# Value can only be user defined:
-	elsif( $main::keys{$type}{$key}{userdef} ){
+	elsif( $userdef ){
 	    print "<!-- Value: User defined -->\n";
 	    #print "<maplint:result><xsl:value-of select=\"concat('User defined value: ', \@k, '=', \@v)\" /></maplint:result>\n";
 	} else {

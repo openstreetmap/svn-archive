@@ -8,11 +8,21 @@ Kosmos = 'Kosmos\Console\Kosmos.Console.exe'
 
 
 def getMapData(N,W,S,E,Filename):
-    URL = "http://%s/api/0.5/map?bbox=%f,%f,%f,%f" % (
-	"xapi.openstreetmap.org",
-        W,S,E,N)
-    print URL
-    urlretrieve(URL, Filename)
+    Servers = ("http://osmxapi.hypercube.telascience.org",
+               "http://xapi.openstreetmap.org",
+               "http://www.informationfreeway.org",
+               "http://osm.bearstech.com/osmxapi")
+
+    for Server in Servers:
+        URL = "%s/api/0.5/map?bbox=%f,%f,%f,%f" % (
+            Server,
+            W,S,E,N)
+        print URL
+        (Filename, headers) = urlretrieve(URL, Filename)
+        print headers
+        if(os.path.getsize(Filename) != 0):
+          return(1)
+    return(0)
 
 def tileGen(N,W,S,E,Filename,Tiledir):
     # Create Kosmos project
@@ -28,6 +38,7 @@ def tileGen(N,W,S,E,Filename,Tiledir):
         17,
         Tiledir)
     os.system(Cmd)
+    return(1)
 
 def createProject(Rules,DataFile,ProjectFile):
     f = open(ProjectFile, "w")
@@ -37,7 +48,7 @@ def createProject(Rules,DataFile,ProjectFile):
     f.write("</KosmosProject>\n")
     f.close()
 
-def uploadTiles(Dir,x,y,z,layer):
+def uploadTiles(Dir,x,y,z,layer, user, password):
     packedFile = "packed.dat"
     packTileset(Dir,x,y,z,packedFile)
 
@@ -46,27 +57,25 @@ def uploadTiles(Dir,x,y,z,layer):
       "y":y,
       "z":z,
       "layer":layer,
-      "user":"ojw",
-      "password":"478",
+      "user":user,
+      "password":password,
       "data":readfile(packedFile)})
     f = urlopen("http://dev.openstreetmap.org/~ojw/kah/upload.php", data)
     print(f.read())
     f.close()
 
 
-if(0):
+if(__name__ == "__main__"):
+  user = sys.argv[0]
+  password = sys.argv[1]
   (z,x,y) = (12, 2042, 1362)
   (S,W,N,E) = tileEdges(x,y,z)
 
   Filename = "data.osm"
   Tiledir = "tiles"
+  Layer = "layer1"
 
-  if(not os.path.exists(Filename)): # just for testing
-      getMapData(N,W,S,E, Filename)
-  tileGen(N,W,S,E, Filename, Tiledir)
-  #uploadTiles(Tiledir,x,y,z)
-
-for layer in ("layer1","layer2","layer3"):
-  for x in range(1280, 1284):
-    for y in range(1000, 1004):
-      uploadTiles("files/%s"%layer, x, y, 12, layer)
+  if(getMapData(N,W,S,E, Filename)):
+    if(tileGen(N,W,S,E, Filename, Tiledir)):
+      if(uploadTiles(Tiledir,x,y,z, Layer, user, password)):
+        pass

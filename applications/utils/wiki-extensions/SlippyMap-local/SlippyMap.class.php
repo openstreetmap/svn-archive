@@ -97,14 +97,18 @@ class SlippyMap {
 		}
 
 		$marker = ( $marker != '' && $marker != '0' );
-
+		
 		//trim off the 'px' on the end of pixel measurement numbers (ignore if present)
 		if (substr($width,-2)=='px')	$width = (int) substr($width,0,-2);
 		if (substr($height,-2)=='px')	$height = (int) substr($height,0,-2);
 
 
+		if ($marker) $error = 'marker support is disactivated on the OSM wiki pending discussions about wiki syntax';
+		
 		if ( trim( $input ) != '' ) {
-			$showkml = true;
+			$error = 'slippymap tag contents. Were you trying to input KML? KML support '.
+			         'is disactivated on the OSM wiki pending discussions about wiki syntax';
+			$showkml = false;
 		} else {
 			$showkml = false;
 		}

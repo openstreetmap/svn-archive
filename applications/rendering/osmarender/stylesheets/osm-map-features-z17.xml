@@ -1849,7 +1849,10 @@
 		<rule e="way" k="landuse" v="commercial" layer="-5">
 			<area class="landuse-commercial" layer="-5"/>
 		</rule>
-		
+		<rule e="way" k="landuse" v="construction|greenfield" layer="-5">
+			<area class="landuse-construction" layer="-5"/>
+		</rule>
+	
 		<!-- Artificial landuse -->
 		<rule e="way" k="amenity" v="school|college|university" layer="-5">
 			<area class="amenity-school" layer="-5"/>
@@ -3039,6 +3042,12 @@
 			fill: #ecd8ff;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
+			}
+			
+			.landuse-construction {
+			stroke: #f0f0f0;
+			stroke-width: 0.2px;
+			fill: #a47c41;
 			}
 			
 			.landuse-commercial {

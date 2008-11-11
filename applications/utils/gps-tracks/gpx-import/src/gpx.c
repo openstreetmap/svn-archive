@@ -282,7 +282,7 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     if (ctx->state == WAYPOINT)
       return;
     REQUIRE_STATE(ELEVATION);
-    ctx->point->elevation = strtof(ctx->accumulator, NULL);
+    ctx->point->elevation = strtof(ctx->accumulator ? ctx->accumulator : "", NULL);
     ctx->state = TRACKPOINT;
     ctx->got_ele = true;
   } else if (strcmp(name, "time") == 0) {

@@ -2228,7 +2228,7 @@
 			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
 			<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
 		</rule>
-		<rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket" layer="5">
+		<rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
 			<areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
 		</rule>

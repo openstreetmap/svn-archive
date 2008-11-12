@@ -20,6 +20,8 @@ def readfile(filename):
 def packTileset(directory, baseX, baseY, baseZ, outputFile):
     """Create outputFile, containing images from directory"""
     
+    Blank = readfile("blank/blank.png")
+    
     f = open(outputFile, "wb+")
     for i in range(0,1366):
         f.write("*---")
@@ -27,6 +29,7 @@ def packTileset(directory, baseX, baseY, baseZ, outputFile):
     index = 0
     offset = 1366*4
     sizes = []
+    num_blank = 0
 
     for zi in range(0,6): # increasing zoom level from baseZ
         size = 2 ** zi
@@ -43,13 +46,18 @@ def packTileset(directory, baseX, baseY, baseZ, outputFile):
                     filesize = len(data)
                 else:
                     print "No %s" % filename
-                    
-                if(filesize):
-                    f.write(data)
-
-                sizes.append(offset) # will be written to beginning of file later
-                offset += filesize
+                
+                if(data == Blank):
+                  sizes.append(1)
+                  num_blank += 1
+                else:
+                  if(filesize):
+                      f.write(data)
+                  sizes.append(offset) # will be written to beginning of file later
+                  offset += filesize
                 index += 1
+
+    print "%d blank of %d total" % (num_blank, index)
 
     # Add the final offset, to mark the size of the last tile
     sizes.append(offset)

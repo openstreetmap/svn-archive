@@ -3,6 +3,7 @@ from urllib import *
 from tilesetToFile import *
 import os
 import sys
+import zlib
 
 Kosmos = 'Kosmos\Console\Kosmos.Console.exe'
 
@@ -51,7 +52,9 @@ def createProject(Rules,DataFile,ProjectFile):
 def uploadTiles(Dir,x,y,z,layer, user, password):
     packedFile = "packed.dat"
     packTileset(Dir,x,y,z,packedFile)
+    uploadPackedFile(x,y,z,packedFile,layer, user, password)
 
+def uploadPackedFile(x,y,z,packedFile,layer, user, password):
     data = urlencode({
       "x":x,
       "y":y,
@@ -59,10 +62,14 @@ def uploadTiles(Dir,x,y,z,layer, user, password):
       "layer":layer,
       "user":user,
       "password":password,
-      "data":readfile(packedFile)})
+      "compressed":1,
+      "data":zlib.compress(readfile(packedFile))
+      })
     f = urlopen("http://dev.openstreetmap.org/~ojw/kah/upload.php", data)
-    print(f.read())
+    response = f.read()
+    print "Response: %s" % response
     f.close()
+
 
 
 if(__name__ == "__main__"):
@@ -75,7 +82,14 @@ if(__name__ == "__main__"):
   Tiledir = "tiles"
   Layer = "layer1"
 
-  if(getMapData(N,W,S,E, Filename)):
-    if(tileGen(N,W,S,E, Filename, Tiledir)):
-      if(uploadTiles(Tiledir,x,y,z, Layer, user, password)):
-        pass
+  if(0): # test
+    packTileset(Tiledir,x,y,z,"packed.dat")
+
+  if(1): # test
+    uploadPackedFile(x,y,z,"packed.dat",Layer, user, password)
+
+  if(0):
+    if(getMapData(N,W,S,E, Filename)):
+      if(tileGen(N,W,S,E, Filename, Tiledir)):
+        if(uploadTiles(Tiledir,x,y,z, Layer, user, password)):
+          pass

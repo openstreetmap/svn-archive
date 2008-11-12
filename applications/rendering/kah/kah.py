@@ -55,6 +55,7 @@ def uploadTiles(Dir,x,y,z,layer, user, password):
     uploadPackedFile(x,y,z,packedFile,layer, user, password)
 
 def uploadPackedFile(x,y,z,packedFile,layer, user, password):
+    print user
     data = urlencode({
       "x":x,
       "y":y,
@@ -73,8 +74,8 @@ def uploadPackedFile(x,y,z,packedFile,layer, user, password):
 
 
 if(__name__ == "__main__"):
-  user = sys.argv[0]
-  password = sys.argv[1]
+  user = sys.argv[1]
+  password = sys.argv[2]
   (z,x,y) = (12, 2042, 1362)
   (S,W,N,E) = tileEdges(x,y,z)
 

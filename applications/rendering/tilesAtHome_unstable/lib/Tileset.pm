@@ -99,11 +99,17 @@ sub new
                 if defined($self->{inkscape_autobackup}{cfgfile});
 
             if( -f $self->{inkscape_autobackup}{cfgfile} ){
-                copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
-                    or do {
-                        warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
-                        delete($self->{inkscape_autobackup});
-                };
+                if ( -s $self->{inkscape_autobackup}{cfgfile} == 0 ) {
+                    #emty config file found! i delete it
+                    unlink($self->{inkscape_autobackup}{cfgfile});
+                }
+                else {
+                    copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
+                        or do {
+                            warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
+                            delete($self->{inkscape_autobackup});
+                    };
+                }
             } else {
                 delete($self->{inkscape_autobackup});
             }

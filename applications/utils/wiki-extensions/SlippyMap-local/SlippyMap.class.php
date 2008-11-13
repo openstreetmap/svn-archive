@@ -45,7 +45,7 @@ class SlippyMap {
 
 	# The callback function for converting the input text to HTML output
 	function parse( $input, $argv ) {
-		global $wgMapOfServiceUrl, $wgSlippyMapVersion;
+		global $wgScriptPath, $wgMapOfServiceUrl, $wgSlippyMapVersion;
 
 		wfLoadExtensionMessages( 'SlippyMap' );
 		
@@ -205,51 +205,20 @@ class SlippyMap {
 			$output  = '<!-- slippy map -->';
 			
 			//This inline stylesheet defines how the two extra buttons look, and where they are positioned.
-			//Chaging positioning is not so easy though, because it seems positioning of the visible button divs
-			//much match the positioning of the mysterious olControlPanel divs.
-			//TODO: figure out how to position the buttons at the side-by-side in the bottom right. would look better.
-			$output .= '<style>'.
-				'.getWikiCodeButton, .resetButton {'.
-				'   margin-left: 60px;'.
-				'   margin-top: 10px;'.
-				'   width:  80px;'.
-				'   height: 18px;'.
-				'   background-color: DARKBLUE;'.
-				'   color: WHITE;'.
-				'   padding:0px;'.
-				'   text-align:center;'.
-				'   font-size:12px;'.
-				'   font-family: Verdana, Helvetica, Arial, sans-serif;'.
-				"}\n".
+			$output .= "<style> .buttonsPanel div { float:left; display:block; position:relative; left:50px; margin-left:3px; margin-top:7px; width:36px;  height:19px; }</style>\n";
+       		$output .= "<style> .buttonsPanel .getWikiCodeButtonItemInactive { width:36px; height:19px; background-image:url('" . $wgScriptPath . "/extensions/SlippyMap/wikicode-button.png'); }</style>\n";
+            $output .= "<style> .buttonsPanel .resetButtonItemInactive       { width:36px; height:19px; background-image:url('" . $wgScriptPath . "/extensions/SlippyMap/reset-button.png'); }</style>\n";
 			
-				'.getWikiCodeButton {'.
-				'	margin-top: 10px;'.
-				"}\n".
 			
-				'.resetButton {'.
-				'	margin-top: 38px;'.
-				"}\n".
-			
-				'.olControlPanel div {'.   //mysterious openlayers divs. Invisible but receive mouse click events.
-				'	margin-left: 60px;'.
-				'	margin-top: 10px;'.
-				'	width:  80px;'.
-				'	height: 18px;'.
-				"}\n".
-				'</style>';
-			
-			$output .= '<script type="text/javascript"> var osm_fully_loaded=false;';
-
-			// defer loading of the javascript. Since the script is quite big, it would delay
-			// page loading and rendering dramatically. This necessitates fetching a modified version of OpenStreetMap.js (nasty kludge)
-			$output .= 'addOnloadHook( function() { ' .
-			 	'	var sc = document.createElement("script");' .
-				'	sc.src = "http://www.openlayers.org/api/OpenLayers.js";' .
-			 	'	document.body.appendChild( sc );' .
-			 	'	var sc = document.createElement("script");' .
-			 	'	sc.src = "http://svn.wikimedia.org/viewvc/mediawiki/trunk/extensions/SlippyMap/OpenStreetMap.js?view=co&' . $wgSlippyMapVersion . '";'.
-			 	'	document.body.appendChild( sc );' .
-			 	'} );';
+			$output .= "<!-- bring in the OpenLayers javascript library -->";
+			$output .= "<script src=\"http://openlayers.org/api/OpenLayers.js\"></script> ";
+	
+			$output .= "<!-- bring in the OpenStreetMap OpenLayers layers. ";
+			$output .= "     Using this hosted file will make sure we are kept up ";
+			$output .= "     to date with any necessary changes --> ";
+			$output .= "<script src=\"http://openstreetmap.org/openlayers/OpenStreetMap.js\"></script> ";
+			 	
+			$output .= '<script type="text/javascript">';
 
 			$output .= "var lon= ${lon}; var lat= ${lat}; var zoom= ${zoom}; var lonLat;";
 
@@ -271,8 +240,6 @@ class SlippyMap {
 			$output .= '}';
 			
 			$output .= 'function slippymap_init() { ';
-			$output .= '	if (!osm_fully_loaded) { window.setTimeout("slippymap_init()",500); return 0; } ' ;
-
 			$output .= '	map = new OpenLayers.Map("map", { ';
 			$output .= '		controls:[ ';
 			$output .= '			new OpenLayers.Control.Navigation(), ';
@@ -318,13 +285,11 @@ class SlippyMap {
 			}
 
 			$output .= '	map.setCenter (lonLat, zoom); ';
-			$output .= '	var getWikiCodeButton = new OpenLayers.Control.Button({displayClass: "getWikiCodeButton", trigger: slippymap_getWikicode}); ';
- 			$output .= '	var resetButton = new OpenLayers.Control.Button({displayClass: "resetButton", trigger: slippymap_resetPosition}); ';
- 			$output .= '	var panel = new OpenLayers.Control.Panel(); ';
+			$output .= '	var getWikiCodeButton = new OpenLayers.Control.Button({title: "' . wfMsg('slippymap_button_code') . '", displayClass: "getWikiCodeButton", trigger: slippymap_getWikicode}); ';
+ 			$output .= '	var resetButton = new OpenLayers.Control.Button({title: "' . wfMsg('slippymap_resetview') . '", displayClass: "resetButton", trigger: slippymap_resetPosition}); ';
+ 			$output .= '	var panel = new OpenLayers.Control.Panel( { displayClass: "buttonsPanel"}); ';
             $output .= '	panel.addControls([getWikiCodeButton, resetButton]); ';
 			$output .= '	map.addControl(panel); ';
-			$output .= '	getWikiCodeButton.div.innerHTML="' . wfMsg('slippymap_button_code') . '"; ';
-			$output .= '	resetButton.div.innerHTML="' . wfMsg('slippymap_resetview') . '"; ';
 			$output .= '} ';
 
 

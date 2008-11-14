@@ -1086,6 +1086,7 @@
 		} else {
 			whichresponder=function() {};
 			whichresponder.onResult=function(result) {
+				var code=result.shift(); if (code) { handleError(code,result); return; }
 				_root.whichreceived+=1;
 				waylist  =result[0];
 				pointlist=result[1];

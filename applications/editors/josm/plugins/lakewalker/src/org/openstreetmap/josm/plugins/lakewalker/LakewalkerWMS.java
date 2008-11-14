@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.lakewalker;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import java.awt.Image;
 import javax.imageio.*;
@@ -40,7 +42,7 @@ public class LakewalkerWMS {
 	
 	public BufferedImage getTile(int x, int y) throws LakewalkerException {
 		String status = getStatus();
-		setStatus("Downloading image tile...");
+		setStatus(tr("Downloading image tile..."));
 		
 		String layer = "global_mosaic_base";
 		
@@ -143,7 +145,7 @@ public class LakewalkerWMS {
 	    this.imagey = bottom_left_xy[1];
 	    
 	    if(this.image == null){
-	    	throw new LakewalkerException("Could not acquire image");
+	    	throw new LakewalkerException(tr("Could not acquire image"));
 	    }
 		
 	    setStatus(status);

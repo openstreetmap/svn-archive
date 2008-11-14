@@ -83,7 +83,7 @@ sub uploadAllZips
         closedir ZIPDIR;
     }
     else {
-        throw UploadError "could not read $self->{ZipDir}";
+        return 0; # do nothing if ZipDir doesn't exist, just assume there is nothing to upload
     }
     my $file_count = scalar(@files);
 

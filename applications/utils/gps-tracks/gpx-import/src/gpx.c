@@ -68,6 +68,7 @@ typedef enum {
   ELEVATION,
   TIMESTAMP,
   WAYPOINT,
+  ROUTEPOINT,
 } GPXParseState;
 
 static const char *
@@ -84,6 +85,8 @@ gpx_state_name(GPXParseState p)
     return "TIMESTAMP";
   case WAYPOINT:
     return "WAYPOINT";
+  case ROUTEPOINT:
+    return "ROUTEPOINT";
   }
   return "INVALID";
 }
@@ -195,7 +198,7 @@ gpx_handle_start_element(void *_ctx, const XML_Char *name, const XML_Char **atts
       }
     }
   } else if (strcmp(name, "ele") == 0) {
-    if (ctx->state == WAYPOINT)
+    if (ctx->state == WAYPOINT || ctx->state == ROUTEPOINT)
       return;
     REQUIRE_STATE(TRACKPOINT);
     ctx->state = ELEVATION;
@@ -208,6 +211,9 @@ gpx_handle_start_element(void *_ctx, const XML_Char *name, const XML_Char **atts
   } else if (strcmp(name, "wpt") == 0) {
     REQUIRE_STATE(UNKNOWN);
     ctx->state = WAYPOINT;
+  } else if (strcmp(name, "rtept") == 0) {
+    REQUIRE_STATE(UNKNOWN);
+    ctx->state = ROUTEPOINT;
   }
 }
 
@@ -279,7 +285,7 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     }
     ctx->state = UNKNOWN;
   } else if (strcmp(name, "ele") == 0) {
-    if (ctx->state == WAYPOINT)
+    if (ctx->state == WAYPOINT || ctx->state == ROUTEPOINT)
       return;
     REQUIRE_STATE(ELEVATION);
     ctx->point->elevation = strtof(ctx->accumulator ? ctx->accumulator : "", NULL);
@@ -288,7 +294,7 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
   } else if (strcmp(name, "time") == 0) {
     char *pnull = NULL;
     struct tm ignored;
-    if (ctx->state == UNKNOWN || ctx->state == WAYPOINT)
+    if (ctx->state == UNKNOWN || ctx->state == WAYPOINT || ctx->state == ROUTEPOINT)
       return;
     REQUIRE_STATE(TIMESTAMP);
     pnull = strptime(ctx->accumulator ? ctx->accumulator : "",
@@ -305,6 +311,9 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     ctx->curseg++;
   } else if (strcmp(name, "wpt") == 0) {
     REQUIRE_STATE(WAYPOINT);
+    ctx->state = UNKNOWN;
+  } else if (strcmp(name, "rtept") == 0) {
+    REQUIRE_STATE(ROUTEPOINT);
     ctx->state = UNKNOWN;
   }
 }

@@ -16,7 +16,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
   public static final String[] WAYTYPES = new String[] {"water", "coastline", "land", "none"};
   public static final String[] WMSLAYERS = new String[] {"IR1", "IR2", "IR3"};
 
-  public static final String PREF_PYTHON = "lakewalker.python";
   public static final String PREF_MAX_SEG = "lakewalker.max_segs_in_way";
   public static final String PREF_MAX_NODES = "lakewalker.max_nodes";
   public static final String PREF_THRESHOLD = "lakewalker.threshold";
@@ -30,8 +29,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
   public static final String PREF_WAYTYPE = "lakewalker.waytype";
   public static final String PREF_WMS = "lakewalker.wms";
     
-  protected StringConfigurer pythonConfig = new StringConfigurer();
-  protected JLabel pythonLabel = new JLabel(tr("Python executable"));
   protected IntConfigurer maxSegsConfig = new IntConfigurer();
   protected JLabel maxSegsLabel = new JLabel(tr("Maximum number of segments per way"));
   protected IntConfigurer maxNodesConfig = new IntConfigurer();
@@ -58,7 +55,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
   protected JLabel wmsLabel = new JLabel(tr("WMS Layer"));
   
   public void addGui(PreferenceDialog gui) {
-    pythonConfig.setToolTipText(tr("Path to python executable."));
     maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
     maxNodesConfig.setToolTipText(tr("Maximum number of nodes to generate before bailing out (before simplifying lines). Default 50000."));
     thresholdConfig.setToolTipText(tr("Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Default 35."));
@@ -72,11 +68,10 @@ public class LakewalkerPreferences implements PreferenceSetting {
     lakeTypeConfig.setToolTipText(tr("Tag ways as water, coastline, land or nothing. Default is water."));
     wmsConfig.setToolTipText(tr("Which WMS layer to use for tracing against. Default is IR1."));
 
-    String description = tr("An interlude to the Lakewalker Python module to trace water bodies on Landsat imagery.<br><br>Version: {0}", LakewalkerPlugin.VERSION);
+    String description = tr("An plugin to trace water bodies on Landsat imagery.");
     JPanel prefPanel = gui.createPreferenceTab("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), description);
     buildPreferences(prefPanel);
     
-    pythonConfig.setValue(Main.pref.get(PREF_PYTHON, "python.exe"));
     maxSegsConfig.setValue(Main.pref.getInteger(PREF_MAX_SEG, 500));
     maxNodesConfig.setValue(Main.pref.getInteger(PREF_MAX_NODES, 50000));
     thresholdConfig.setValue(Main.pref.getInteger(PREF_THRESHOLD, 35));
@@ -95,8 +90,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
     GBC labelConstraints = GBC.std().insets(10,5,5,0);
     GBC dataConstraints = GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL);
     
-    prefPanel.add(pythonLabel, labelConstraints);
-    prefPanel.add(pythonConfig.getControls(), dataConstraints);
     prefPanel.add(maxSegsLabel, labelConstraints);
     prefPanel.add(maxSegsConfig.getControls(), dataConstraints);
     prefPanel.add(maxNodesLabel, labelConstraints);
@@ -127,7 +120,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
    * Save entered preference values on OK button
    */
   public void ok() {
-    Main.pref.put(PREF_PYTHON, pythonConfig.getValueString());
     Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());
     Main.pref.put(PREF_MAX_NODES, maxNodesConfig.getValueString());
     Main.pref.put(PREF_THRESHOLD, thresholdConfig.getValueString());

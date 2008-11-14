@@ -176,6 +176,11 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
 	  
 	
+	// if for some reason (image loading failed, ...) nodelist is empty, no more processing required.
+	if (nodelist.size() == 0) {
+		return;
+	}
+	
 	/**
 	 * Turn the arraylist into osm nodes
 	 */

@@ -1220,7 +1220,7 @@ sub SplitTiles
         my $Image = GD::Image->newFromPng($png_file);
 
         if( not defined $Image ) {
-            throw TilesetError "SplitTiles: Missing File $png_file encountered";
+            throw TilesetError "SplitTiles: Missing File $png_file encountered", "fatal";
         }
 
         for (my $iy = 0; $iy <= $stripe_height - 1; $iy++) {
@@ -1390,8 +1390,12 @@ sub createZipFile
                                     sprintf("%s_%d_%d_%d.dir",
                                             $prefix, $z, $x, $y));
 
-    my $zip_file = File::Spec->join($Config->get("WorkingDirectory"),
-                                    "uploadable",
+    my $upload_dir = File::Spec->join($Config->get("WorkingDirectory"), "uploadable");
+    if (! -d $upload_dir) {
+        mkpath($upload_dir) or throw TilesetError "Could not create upload directory '$upload_dir': $!", "fatal";
+    }
+
+    my $zip_file = File::Spec->join($upload_dir,
                                     sprintf("%s_%d_%d_%d_%d.zip",
                                             $prefix, $z, $x, $y, ::GetClientId()));
     
@@ -1423,13 +1427,13 @@ sub createZipFile
         return;
     }
     # Run the zip command
-    ::runCommand($zip_cmd, $::PID) or throw TilesetError "Error running command '$zip_cmd'";
+    ::runCommand($zip_cmd, $::PID) or throw TilesetError "Error running command '$zip_cmd'", "fatal";
 
     # stdout is currently never used, so delete it unconditionally    
     unlink($stdout);
     
     # rename to final name so any uploader could pick it up now
-    move ($temp_file, $zip_file); # TODO: Error handling
+    move ($temp_file, $zip_file) or throw TilesetError "Could not move ZIP file: $!", "fatal";
 }
 
 
@@ -1460,8 +1464,12 @@ sub createTilesetFile
                                     sprintf("%s_%d_%d_%d.dir",
                                             $prefix, $z, $x, $y));
 
-    my $file_name = File::Spec->join($Config->get("WorkingDirectory"),
-                                     "uploadable",
+    my $upload_dir = File::Spec->join($Config->get("WorkingDirectory"), "uploadable");
+    if (! -d $upload_dir) {
+        mkpath($upload_dir) or throw TilesetError "Could not create upload directory '$upload_dir': $!", "fatal";
+    }
+
+    my $file_name = File::Spec->join($upload_dir,
                                      sprintf("%s_%d_%d_%d_%d.tileset",
                                              $prefix, $z, $x, $y, ::GetClientId()));
     
@@ -1470,8 +1478,8 @@ sub createTilesetFile
                                              $prefix, $z, $x, $y, ::GetClientId()));
 
     my $currpos = $data_offset;
-    open my $fh, ">$temp_file" or throw CompressError "Couldn't open '$temp_file' ($!)";
-    seek $fh, $currpos, 0 or throw CompressError "Couldn't seek.";
+    open my $fh, ">$temp_file" or throw TilesetError "Couldn't open '$temp_file': $!", "fatal";
+    seek $fh, $currpos, 0 or throw TilesetError "Couldn't seek: $!", "fatal";
 
     my @offsets;
     for my $iz (0 .. $levels - 1) {
@@ -1500,13 +1508,13 @@ sub createTilesetFile
                     push(@offsets, 1);
                 }
                 else {
-                    open my $png, "<$png_name" or throw TilesetError "Couldn't open file $png_name ($!)";
+                    open my $png, "<$png_name" or throw TilesetError "Couldn't open file '$png_name': $!", "fatal";
                     my $buffer;
                     if( read($png, $buffer, $length) != $length ) {
-                        throw TilesetError "Read failed from $png_name ($!)"
+                        throw TilesetError "Read failed from '$png_name': $!", "fatal";
                     }
                     close $png;
-                    print $fh $buffer or throw TilesetError "Write failed on output to $temp_file ($!)";
+                    print $fh $buffer or throw TilesetError "Write failed on output to '$temp_file': $!", "fatal";
                     push @offsets, $currpos;
                     $currpos += $length;
                 }
@@ -1515,7 +1523,7 @@ sub createTilesetFile
     }
 
     if( scalar( @offsets ) != $tiles ) {
-        throw TilesetError sprintf("Bad number of offsets: %d (should be %d)", scalar(@offsets), $tiles);
+        throw TilesetError sprintf("Bad number of offsets: %d (should be %d)", scalar(@offsets), $tiles), "fatal";
     }
 
     my $emptyness = 0; #what type of emptyness (land/sea)
@@ -1543,17 +1551,17 @@ sub createTilesetFile
         #tileset is not empty
         push @offsets, $currpos;
         seek $fh, $index_start, 0;
-        print $fh pack("V*", @offsets) or throw TilesetError "Write failed to $temp_file ($!)";
+        print $fh pack("V*", @offsets) or throw TilesetError "Write failed to '$temp_file' $!", "fatal";
     }
 
     seek $fh, 0, 0;
-    print $fh pack("CCCCV", 2, $levels, $size, $emptyness, $userid) or throw TilesetError "Write failed to $temp_file ($!)";
+    print $fh pack("CCCCV", 2, $levels, $size, $emptyness, $userid) or throw TilesetError "Write failed to '$temp_file': $!", "fatal";
 
     seek $fh, $currpos, 0;
     print $fh $self->generateMetaData($prefix);
     close $fh;
 
-    move($temp_file, $file_name) or throw TilesetError "Could not move tileset file $temp_file to $file_name ($!)";
+    move($temp_file, $file_name) or throw TilesetError "Could not move tileset file '$temp_file' to '$file_name': $!", "fatal";
 }
 
 

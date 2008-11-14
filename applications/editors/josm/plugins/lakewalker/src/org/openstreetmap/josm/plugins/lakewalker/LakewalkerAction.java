@@ -32,6 +32,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.tools.ShortCut;
 
 import org.xml.sax.SAXException;
 
@@ -53,13 +54,16 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   protected Collection<Way> ways = new ArrayList<Way>();
   
   public LakewalkerAction(String name) {
-    super(name, "lakewalker-sml", tr("Lake Walker."), KeyEvent.VK_L, KeyEvent.CTRL_MASK
-        | KeyEvent.SHIFT_MASK, true);
+    super(name, "lakewalker-sml", tr("Lake Walker."),
+    ShortCut.registerShortCut("tools:lakewalker", tr("Tool: {0}", tr("Lake Walker")),
+    KeyEvent.VK_L, ShortCut.GROUP_EDIT, ShortCut.SHIFT_DEFAULT), true);
     this.name = name;
     setEnabled(true);
   }
   
   public void actionPerformed(ActionEvent e) {
+    if(Main.map == null || Main.map.mapView == null)
+      return;
 
     Main.map.mapView.setCursor(oldCursor);
 
@@ -149,31 +153,31 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	 * Run the nodelist through a vertex reduction algorithm
 	 */
 	
-	setStatus("Running vertex reduction...");
+	setStatus(tr("Running vertex reduction..."));
 	
 	nodelist = lw.vertexReduce(nodelist, epsilon);
 	
-	System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
+	//System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
 	
 	/**
 	 * And then through douglas-peucker approximation
 	 */
 	
-	setStatus("Running Douglas-Peucker approximation...");
+	setStatus(tr("Running Douglas-Peucker approximation..."));
 	
 	nodelist = lw.douglasPeucker(nodelist, epsilon);
 	
-	System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
+	//System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
 	  
 	/**
 	 * And then through a duplicate node remover
 	 */
 	
-	setStatus("Removing duplicate nodes...");
+	setStatus(tr("Removing duplicate nodes..."));
 	
 	nodelist = lw.duplicateNodeRemove(nodelist);
 	
-	System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
+	//System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
 	  
 	
 	// if for some reason (image loading failed, ...) nodelist is empty, no more processing required.

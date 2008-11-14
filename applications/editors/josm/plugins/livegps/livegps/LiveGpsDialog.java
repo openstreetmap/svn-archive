@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.tools.ShortCut;
 
 /**
  * @author cdaller
@@ -41,7 +42,9 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
      * @param preferredHeight
      */
     public LiveGpsDialog(final MapFrame mapFrame) {
-        super(tr("Live GPS"), "livegps", tr("Show GPS data."), KeyEvent.VK_G, 100);
+        super(tr("Live GPS"), "livegps", tr("Show GPS data."),
+        ShortCut.registerShortCut("subwindow:livegps", tr("Toggle: {0}", tr("Live GPS")),
+        KeyEvent.VK_G, ShortCut.GROUP_LAYER, ShortCut.SHIFT_DEFAULT), 100);
         panel = new JPanel();
         panel.setLayout(new GridLayout(6,2));
         panel.add(new JLabel(tr("Status")));

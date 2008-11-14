@@ -1,5 +1,7 @@
 package livegps;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -20,7 +22,7 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.tools.ColorHelper;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
-    public static final String LAYER_NAME = "LiveGPS layer";
+    public static final String LAYER_NAME = tr("LiveGPS layer");
     public static final String KEY_LIVEGPS_COLOR ="color.livegps.position";
 	LatLon lastPos;
 	WayPoint lastPoint;
@@ -111,17 +113,10 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 //	        g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f)); 
 //	        g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
 
-	        
 	        if (lastPoint != null)
 	        {
-	            String colorString = Main.pref.get(KEY_LIVEGPS_COLOR);
-	            if(colorString.length() == 0) {
-	                colorString = ColorHelper.color2html(Color.RED);
-	                Main.pref.put(KEY_LIVEGPS_COLOR, colorString);
-	            }
-	            Color color = ColorHelper.html2color(colorString);
 	            Point screen = mv.getPoint(lastPoint.eastNorth);
-	            g.setColor(color);
+	            g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
 	            g.drawOval(screen.x-10, screen.y-10,20,20);
 	            g.drawOval(screen.x-9, screen.y-9,18,18);
 	        }

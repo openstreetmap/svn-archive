@@ -122,7 +122,7 @@ public class LakewalkerWMS {
 	        	
 	        	// Read from a URL
 	        	URL url = new URL(urlloc);
-	        	this.image = ImageIO.read(url);
+	        	this.image = ImageIO.read(url); // this can return null!
 	        } catch(MalformedURLException e){
 	        	System.out.println(e.getMessage());
 	        } catch(IOException e){
@@ -131,10 +131,12 @@ public class LakewalkerWMS {
 	        	System.out.println(e.getMessage());
 		    }
 	        
-	        this.images.add(this.image);
-	        this.imageindex.put(hashkey,this.images.size()-1);
-	        
-	        this.saveimage(file,this.image);
+	        if (this.image != null) {
+		        this.images.add(this.image);
+		        this.imageindex.put(hashkey,this.images.size()-1);
+		        
+		        this.saveimage(file,this.image);
+	        }
 	    }
 	    
 	    this.imagex = bottom_left_xy[0];

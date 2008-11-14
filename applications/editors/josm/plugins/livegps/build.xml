@@ -47,6 +47,7 @@
         <attribute name="Plugin-Class" value="${plugin.class}" />
         <attribute name="Plugin-Description" value="${plugin.description}" />
         <attribute name="Plugin-Version" value="${plugin.version}" />
+        <attribute name="Plugin-Mainversion" value="1065" />
         <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
         <attribute name="Plugin-Stage" value="${plugin.stage}" />
       </manifest>
@@ -57,6 +58,7 @@
     <echo message="creating ${plugin.jar}"/>
     <mkdir dir="${plugin.build.dir}"/>
     <javac srcdir="livegps" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
+      <compilerarg value="-Xlint:deprecation"/>
       <classpath>
         <pathelement path="${josm.build.dir}/build"/>
         <fileset dir="${josm.build.dir}/lib">

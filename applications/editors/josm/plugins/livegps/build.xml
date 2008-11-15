@@ -22,7 +22,6 @@
   <property name="livegpsplugin.jar" value="${josm.home.dir}/plugins/livegps.jar"/>
   
   <!-- plugin meta data (enter new version number if anything changed!) -->
-  <property name="plugin.version" value="1.4"/>
   <property name="plugin.description" value="Allow live GPS feed from a gpsd server (V${plugin.version})."/>
   <property name="plugin.stage" value="50"/>
   <property name="plugin.class" value="livegps.LiveGpsPlugin"/>
@@ -35,19 +34,32 @@
   
   <property name="ant.build.javac.target" value="1.5"/>
 
-  <target name="dist" depends="compile,site">
+  <target name="init">
+    <mkdir dir="${plugin.build.dir}"/>
+  </target>
+
+  <target name="dist" depends="compile">
     <!-- images -->
     <copy todir="${plugin.build.dir}/images">
       <fileset dir="images" />
     </copy>  	
-    
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
+
     <!-- create jar file -->
     <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
         <attribute name="Plugin-Class" value="${plugin.class}" />
         <attribute name="Plugin-Description" value="${plugin.description}" />
-        <attribute name="Plugin-Version" value="${plugin.version}" />
         <attribute name="Plugin-Mainversion" value="1065" />
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
         <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
         <attribute name="Plugin-Stage" value="${plugin.stage}" />
       </manifest>
@@ -55,8 +67,6 @@
   </target>
 
   <target name="compile" depends="init">
-    <echo message="creating ${plugin.jar}"/>
-    <mkdir dir="${plugin.build.dir}"/>
     <javac srcdir="livegps" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <compilerarg value="-Xlint:deprecation"/>
       <classpath>
@@ -75,64 +85,8 @@
   	<copy file="liveGPS.conf" todir="${josm.plugins.dir}/livegps/" />
   </target>
 
-  <target name="init">
-    <echo>java version: ${java.version}</echo>
-  </target>
-
   <target name="clean">
     <delete dir="${plugin.build.dir}" />
-    <delete dir="${plugin.site.file}" />
     <delete file="${plugin.jar}" />
   </target>
-
-  <!-- write site description for the given plugin so josm will accept it -->
-  <target name="site">
-    <echo message="creating site description in ${plugin.site.file}"/>
-    <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
-  &lt;plugins>
-  &lt;plugin id="${ant.project.name}" version="${plugin.version}">
-  &lt;name>${ant.project.name}&lt;/name>
-  &lt;description>${plugin.description}&lt;/description>
-  &lt;resource>${plugin.site.url}${plugin.jar}&lt;/resource>
-  &lt;/plugin>
-  &lt;/plugins>
-</echo>
-</target>
-
-<!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
-<target name="site-full-donotuse">
-  <echo message="creating site description in ${plugin.site.file}"/>
-  <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
-    &lt;site version="1.0">
-    &lt;!-- meta data of site -->
-&lt;site-info>
-&lt;site-name>${plugin.site.description}&lt;/site-name>
-&lt;site-url>${plugin.site.url}&lt;/site-url>
-&lt;/site-info>
-
-&lt;!-- plugins available on this site -->
-&lt;plugins>
-&lt;plugin id="${ant.project.name}" version="${plugin.version}">
-&lt;name>${ant.project.name}&lt;/name>
-&lt;description>${plugin.description}&lt;/description>
-&lt;resources>
-&lt;resource src="${plugin.site.url}${plugin.jar}"
-target="${josm.home.dir}/plugins/${plugin.jar}"/>
-&lt;/resources>
-&lt;/plugin>
-&lt;/plugins>
-&lt;/site>
-</echo>
-</target>
-
-<!-- upload the site description and the jar file via ssh -->
-<target name="upload" depends="dist,site">
-  <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
-  <exec executable="scp">
-    <arg value="${plugin.jar}"/>
-    <arg value="${plugin.site.file}"/>
-    <arg value="${plugin.site.upload.target}"/>
-  </exec>
-</target>
-
 </project>

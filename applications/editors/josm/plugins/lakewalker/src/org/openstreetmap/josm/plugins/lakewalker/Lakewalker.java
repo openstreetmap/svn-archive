@@ -78,7 +78,7 @@ public class Lakewalker {
 		} else if(direction.equals("Southeast") || direction.equals("southeast")){
 			i =  7;
 		} else {
-			throw new ArrayIndexOutOfBoundsException("Direction index '"+direction+"' not found");
+			throw new ArrayIndexOutOfBoundsException(tr("Direction index '{0}' not found",direction));
 		}
 		return i;
 	}
@@ -105,12 +105,12 @@ public class Lakewalker {
 		int[] xy = geo_to_xy(lat,lon,this.resolution); 
 		
 		if(!bbox.contains(lat, lon)){
-			throw new LakewalkerException("The starting location was not within the bbox");
+			throw new LakewalkerException(tr("The starting location was not within the bbox"));
 		}
 		
 		int v;
 		
-		setStatus("Looking for shoreline...");
+		setStatus(tr("Looking for shoreline..."));
 		
 		while(true){
 			double[] geo = xy_to_geo(xy[0],xy[1],this.resolution);
@@ -134,7 +134,7 @@ public class Lakewalker {
 		int[] startxy = new int[] {xy[0], xy[1]};
 		double[] startgeo = xy_to_geo(xy[0],xy[1],this.resolution);
 
-		System.out.printf("Found shore at lat %.4f lon %.4f\n",lat,lon);
+		//System.out.printf("Found shore at lat %.4f lon %.4f\n",lat,lon);
 		
 		int last_dir = this.getDirectionIndex(this.startdir);
 		
@@ -142,8 +142,8 @@ public class Lakewalker {
 			
 			// Print a counter
 			if(i % 250 == 0){
-				setStatus(i+" nodes so far...");
-				System.out.println(i+" nodes so far...");
+				setStatus(tr("{0} nodes so far...",i));
+				//System.out.println(i+" nodes so far...");
 			}
 			
 			// Some variables we need
@@ -194,7 +194,7 @@ public class Lakewalker {
 			// Store this node
 			double[] geo = xy_to_geo(xy[0],xy[1],this.resolution);
 			nodelist.add(geo);
-			System.out.println("Adding node at "+xy[0]+","+xy[1]+" ("+geo[1]+","+geo[0]+")");
+			//System.out.println("Adding node at "+xy[0]+","+xy[1]+" ("+geo[1]+","+geo[0]+")");
 			
 			// Check if we got stuck in a loop 
 	        double start_proximity = Math.pow((geo[0] - startgeo[0]),2) + Math.pow((geo[1] - startgeo[1]),2);

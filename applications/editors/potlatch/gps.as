@@ -94,8 +94,7 @@
 			if (xcn[a].nodeName=='time') {
 				str=xcn[a].firstChild.nodeValue;
 				if (str.substr( 4,1)=='-' &&
-					str.substr(10,1)=='T' &&
-					str.substr(19,1)=='Z') {
+					str.substr(10,1)=='T') {
 					tme.setFullYear(str.substr(0,4),str.substr(5,2),str.substr(8,2));
 					tme.setHours(str.substr(11,2));
 					tme.setMinutes(str.substr(14,2));

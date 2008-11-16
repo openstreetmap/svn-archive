@@ -630,6 +630,7 @@
 		}
 		
 		switch (s) {
+			case 'C':		closeChangeset(); break;							// C - close current changeset
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
 			case 'L':		showPosition(); break;								// L - show latitude/longitude

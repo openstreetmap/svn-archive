@@ -99,6 +99,7 @@
 	function getDeleted() {
 		whichdelresponder=function() {};
 		whichdelresponder.onResult=function(result) {
+			var code=result.shift(); if (code) { handleError(code,result); return; }
 			_root.versioninfo=null;
 			waylist=result[0];
 			for (i in waylist) {										// ways

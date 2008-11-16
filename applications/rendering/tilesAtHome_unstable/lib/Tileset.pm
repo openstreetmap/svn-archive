@@ -788,7 +788,7 @@ sub downloadData
 
     ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
     if(!$res) {
-        return (undef, "Striped download failed with: " . $reason);
+        throw TilesetError "Striped download failed with: " . $reason;
     }
 
     # Check for correct UTF8 (else inkscape will run amok later)
@@ -800,7 +800,7 @@ sub downloadData
         throw TilesetError "UTF8 test failed", "utf8";
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
-    return ($DataFile ,"");
+    return $DataFile;
 }
 
 

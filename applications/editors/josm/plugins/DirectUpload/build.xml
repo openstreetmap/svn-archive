@@ -1,0 +1,49 @@
+<project name="DirectUpload" default="build" basedir=".">
+
+	<!-- point to your JOSM directory -->
+	<property name="josm" location="../../dist/josm-custom.jar" /> 
+	<!-- <property name="josm" location="/home/subhodip/josm-latest.jar"/> -->
+
+	<path id="classpath">
+		<fileset file="${josm}"/>
+	</path>
+
+	<target name="init">
+		<mkdir dir="build"></mkdir>
+		<mkdir dir="dist"></mkdir>
+	</target>
+	
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpathref="classpath" debug="true" destdir="build" target="1.5">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+	<target name="build" depends="compile">
+		<copy todir="build/images">
+			<fileset dir ="images"/>
+		</copy>
+	<!--</target> -->
+	
+	<!--<target name="build" depends="compile"> -->
+		<jar destfile="dist/DirectUpload.jar" basedir="build">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.DirectUpload.UploadDataGuiPlugin" />
+				<attribute name="Plugin-Description" value="Uploads GPS traces to openstreetmap.org" />
+				<attribute name="Plugin-Author" value="Subhodip Biswas :subhodipbiswas@gmail.com" />
+				<attribute name="Plugin-Version" value="0.1" />
+			</manifest>
+		</jar>
+	</target>
+	
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="install" depends="build">
+		<copy file="dist/DirectUpload.jar" todir="${user.home}/.josm/plugins"/>
+	</target>
+	
+</project>

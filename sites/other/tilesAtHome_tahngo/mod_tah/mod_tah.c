@@ -21,7 +21,7 @@
 
 module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 
-#define FILEVERSION 1
+#define FILEVERSION 2
 #define MIN_VALID_OFFSET 4
 const char * const content_imagepng = "image/png";
 
@@ -175,8 +175,8 @@ static int serve_tileset(request_rec* r, request_data* d) {
   } // if
 	
   /* read the header */
-  int* version = header->mm;
-  if (*version != FILEVERSION) {
+  char* version = header->mm;
+  if (*version > FILEVERSION) {
     ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "tilesetfile header %s is CORRUPT", tilesetName);
     apr_mmap_delete(header);
     apr_file_close(d->tileset);

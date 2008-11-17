@@ -38,11 +38,9 @@ use Tileset;
 use Server;
 use Request;
 use Upload;
-use Compress;
 use SVG::Rasterize;
 use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
-use GD qw(:DEFAULT :cmp);
 use Encode;
 use POSIX;
 
@@ -76,7 +74,7 @@ else
 # set the progress indicator variables
 our $currentSubTask;
 my $progress = 0;
-our $progressJobs = 0;
+our $progressJobs = 1;
 our $progressPercent = 0;
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
@@ -138,53 +136,52 @@ if ($LoopMode) {
     }
 }
 
-# global test images, used for comparing to render results
-my ($EmptyLandImage, $EmptySeaImage, $BlackTileImage);
-
-if ($RenderMode) {
-    # check GD
-    eval GD::Image->trueColor(1);
-    if ($@ ne '') {
-        print STDERR "please update your libgd to version 2 for TrueColor support";
-        cleanUpAndDie("init:libGD check failed, exiting","EXIT",4);
-    }
-
-    my ($MapLandBackground, $MapSeaBackground, $BlackTileBackground);
-
-    # create a comparison blank image
-    $EmptyLandImage = new GD::Image(256,256);
-    $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
-    $EmptyLandImage->fill(127,127,$MapLandBackground);
-
-    $EmptySeaImage = new GD::Image(256,256);
-    $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
-    $EmptySeaImage->fill(127,127,$MapSeaBackground);
-
-    # Some broken versions of Inkscape occasionally produce totally black
-    # output. We detect this case and throw an error when that happens.
-    $BlackTileImage = new GD::Image(256,256);
-    $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
-    $BlackTileImage->fill(127,127,$BlackTileBackground);
-}
-
 # Setup SVG::Rasterize
 if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
     $SVG::Rasterize::object = SVG::Rasterize->new();
     if( $Config->get("Rasterizer") ){
         $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
-
-        if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
-        {
-            $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
-            $SVG::Rasterize::object->engine()->host('localhost');
-            $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
-        }
     }
 
     print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
 
-    if( $RenderMode and $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ) 
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
     {
+        $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
+        $SVG::Rasterize::object->engine()->host('localhost');
+        $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+    }
+
+    # Check for broken Inkscape versions
+    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
+        my %brokenInkscapeVersions = (
+            "RenderStripes=0 will not work" => [0, 45, 1]
+            );
+
+        try {
+            my @version = $SVG::Rasterize::object->engine()->version();
+            die if scalar(@version) == 0;
+
+            while( my( $reason, $ver ) = each %brokenInkscapeVersions ){
+                my @brokenVersion = @{ $ver };
+
+                my $equal = 1;
+                if( $#brokenVersion == $#version ){
+                    for( my $i=0; $i < @version; $i++ ){
+                        $equal = $version[$i] eq $brokenVersion[$i];
+                        last if ! $equal;
+                    }
+                } else {
+                    $equal = 0;
+                }
+
+                if( $equal ){
+                    printf("! You have a broken version of Inkscape, %s. %s\n", join('.', @version), $reason);
+                }
+            }
+        } otherwise {
+            print "! Could not determine your Inkscape version\n";
+        };
         print "* Take care to manually backup your inkscape user preferences\n"; 
         print "  if you have knowingly changed them. \n";
         print "  Some tilesets will cause inkscape to clobber that file!\n";
@@ -333,14 +330,13 @@ elsif ($Mode eq "loop")
         $progressJobs++;
         # Render stuff if we get a job from server
         ProcessRequestsFromServer();
-        # compress and upload results
-        compressAndUploadTilesets();
+        # upload results
+        uploadTilesets();
     }
 }
 #---------------------------------
 elsif ($Mode eq "upload") 
 {   # Upload mode
-    compress();
     upload();
 }
 #---------------------------------
@@ -374,21 +370,15 @@ elsif ($Mode eq "upload_loop")
 
         # uploading ZIP files here, returns 0 if nothing to do and -1 on error
         my $files_uploaded = upload();
-
-        if ($files_uploaded == -1)  # we got an error in the upload process
-        {   # increase fault counter
-            addFault("upload",1);
-        }
-        elsif ($files_uploaded == 0) # no error, but no files uploaded
-        {
+            
+        if ($files_uploaded == 0) {
+            # no error, but no files uploaded
             talkInSleep("waiting for new ZIP files to upload",30);
         }
-        else
-        {   #reset fault counter for uploads if once without error
-            resetFault("upload");
+        else {
             $elapsedTime = time() - $startTime;
             statusMessage(sprintf("upload finished in  %d:%02d", 
-              $elapsedTime/60, $elapsedTime%60),1,0);
+                                  $elapsedTime/60, $elapsedTime%60),1,0);
             $progressJobs++;
         }
     } #end of infinite while loop
@@ -484,10 +474,10 @@ else {
 
 #-----------------------------------------------------------------------------
 # forks to a new process when it makes sense,
-# compresses all existing tileset dirs, uploads the resulting zip.
+# uploads available tile data.
 # returns >=0 on success, -1 otherwise and dies if it could not fork
 #-----------------------------------------------------------------------------
-sub compressAndUploadTilesets
+sub uploadTilesets
 {
     my $Config = TahConf->getConfig();
     if ($Config->get("ForkForUpload") and ($Mode eq "loop")) # makes no sense to fork upload if not looping.
@@ -510,7 +500,6 @@ sub compressAndUploadTilesets
         elsif ($upload_pid == 0)
         {   # we are the child, so we run the upload and exit the thread
             try {
-                compress();
                 upload();
             }
             otherwise {
@@ -522,7 +511,6 @@ sub compressAndUploadTilesets
     else
     {   ## no forking going on
         try {
-            compress();
             my $result = upload();
 
             if ($result == -1)
@@ -533,10 +521,6 @@ sub compressAndUploadTilesets
             {     #reset fault counter if we uploaded successfully
                 resetFault("upload");
             }
-        }
-        catch CompressError with {
-            my $err = shift();
-            cleanUpAndDie("Error while compressing tiles: " . $err->text(), "EXIT", 1);
         }
         catch UploadError with {
             my $err = shift();
@@ -549,20 +533,6 @@ sub compressAndUploadTilesets
 }
 
 #-----------------------------------------------------------------------------
-# compress() calls the external compress.pl which zips up all existing
-# tileset directories.
-#-----------------------------------------------------------------------------
-sub compress
-{
-    keepLog($$,"compress","start","$progressJobs");
-
-    my $compress = new Compress;
-    $compress->compressAll();
-
-    keepLog($$,"compress","stop");
-}
-
-#-----------------------------------------------------------------------------
 # upload() uploads all previously
 # zipped up tilesets. It returns the number of uploaded files or -1 on error
 #-----------------------------------------------------------------------------
@@ -572,15 +542,16 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    my $files_uploaded = 0;
+    my $files_uploaded;
     try {
         $files_uploaded = $upload->uploadAllZips();
+        resetFault("upload");
     }
     catch UploadError with {
         my $error = shift();
         if ($error->value() eq "ServerError") {
-            $files_uploaded = 0;
             statusMessage("Server error: " . $error->text(), 1, 0);
+            addFault("upload");
             talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);
         }
         else {
@@ -588,8 +559,7 @@ sub upload
         }
     };
 
-    keepLog($PID,"upload","stop",0);
-
+    keepLog($PID, "upload", "stop", 0);
     return $files_uploaded;
 }
 
@@ -648,12 +618,15 @@ sub ProcessRequestsFromServer
             }
             # check whether there are any layers requested
             if (defined $req and scalar($req->layers()) == 0) {
-                statusMessage("Ignoring tile request with no layers", 1, 3);
-                eval {
-                    $Server->putRequestBack($req, "NoLayersRequested");
-                }; # ignoring exceptions
-                $req = undef;
-                talkInSleep("Waiting before new tile is requested", 15);
+                my $layers;
+                if ($req->Z() >= 12) {
+                    $layers = $Config->get("Layers");
+                }
+                else {
+                    $layers = $Config->get("LowzoomLayers");
+                }
+                statusMessage("Tile request with no layers, assuming default layers ($layers)", 1, 3);
+                $req->layers_str($layers);
             }
             # check whether we can actually render the requested zoom level for all requested layers
             if (defined $req) {
@@ -734,24 +707,31 @@ sub autotuneComplexity #
     my $tilecomplexity = shift();
     my $deltaT = $stop - $start;
 
+#    my $Config = TahConf->getConfig();
     my $timeaim = $Config->get("AT_timeaim");
     my $minimum = $Config->get("AT_minimum");
     my $alpha = $Config->get("AT_alpha");
 
-    if(! $complexity) {
+    statusMessage ("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
+
+    if(! $complexity) { # this is the first call of this function
         if($Config->get('MaxTilesetComplexity')) {
             $complexity = $Config->get('MaxTilesetComplexity');
+        } elsif (($tilecomplexity > 5472) && ($deltaT > 0)) {
+            $complexity = $tilecomplexity * $timeaim / $deltaT;
         } else {
-            $complexity = $tilecomplexity;
+            $complexity = 10 * $tilecomplexity;
         }
     }
 
-    statusMessage("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
-    if (($tilecomplexity > 0) && ($deltaT > 0)) {
+    # empty tiles might have size 0 or 5472. if that changes, change this magic number too.
+    if (($tilecomplexity > 5472) && ($deltaT > 0)) {
         $complexity = $alpha * ($tilecomplexity * $timeaim / $deltaT) + (1-$alpha) * $complexity;
     }
     $complexity = $minimum if $complexity < $minimum;
+
     statusMessage("Suggested complexity is currently: ".int($complexity)." ",1,6);
+
     if($Config->get('MaxTilesetComplexity')) {
         # if MaxTilesetComplexity is not set we still do our calculations
         # but we don't limit the client. The hint on client exit has to be enough.
@@ -806,7 +786,6 @@ sub ClientModified
     return ($svn_status ne '');
 }
 
-
 sub NewClientVersion 
 {
     my $Config = TahConf->getConfig();
@@ -840,7 +819,7 @@ sub NewClientVersion
         $currentVersion = <VERFILE>;
         chomp $runningVersion;
         close VERFILE;
-        # rename($curVerFile,$versionfile); # FIXME: This assumes the client is immediately, and successfully updated afterwards!
+        # rename($curVerFile,$versionfile); # if enabled, this assumes the client is immediately, and successfully updated afterwards!
     }
     if ($currentVersion)
     {

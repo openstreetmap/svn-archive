@@ -145,6 +145,7 @@ sub fetchRequest
             $Request->layers_str($Layers);
             $Request->lastModified($lastModified);
             $Request->complexity($complexity);
+            $Request->priority($priority);
         }
     }
     elsif ($ValidFlag eq "XX") {
@@ -172,7 +173,7 @@ sub fetchRequest
     }
     else {
         # ValidFlag was neither 'OK' nor 'XX'. This should NEVER happen.
-        throw ServerError "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'", "TempError";
+        throw ServerError "Unknown server response ($Requeststring), ValidFlag neither 'OK' nor 'XX'", "PermError";
     }
     return $Request;
 }
@@ -266,7 +267,7 @@ sub downloadFile
     if ( -s $File == 0 )
     {
         unlink($File) if (! $UseExisting);
-        throw ServerError "Zero sized osm file", "TempError";
+        throw ServerError "Zero sized file", "TempError";
     }
     return -s $File;
 }

@@ -63,70 +63,62 @@ sub new
 
 
 #-------------------------------------------------------------------
-# Returns number of uploaded zip files.
+# Returns number of uploaded files.
 #-------------------------------------------------------------------
 sub uploadAllZips
 {
     my $self = shift;
     my $Config = $self->{Config};
-    my $uploaded = 0; # num handled files
     $::progressPercent = 0;
     my $LOCKFILE;
 
-    if ($Config->get("LocalSlippymap"))
-    {
+    if ($Config->get("LocalSlippymap")) {
         throw UploadError "No upload - LocalSlippymap set in config file";
     }
 
     # read in all the zip files in ZipDir
-    my @zipfiles;
-    if (opendir(ZIPDIR, $self->{ZipDir}))
-    {
-        @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
+    my @files;
+    if (opendir(ZIPDIR, $self->{ZipDir})) {
+        @files = grep { /\.(zip|tileset)$/ } readdir(ZIPDIR);
         closedir ZIPDIR;
     }
-    else 
-    {
-        throw UploadError "could not read $self->{ZipDir}";
+    else {
+        return 0; # do nothing if ZipDir doesn't exist, just assume there is nothing to upload
     }
-    my $zipCount = scalar(@zipfiles);
+    my $file_count = scalar(@files);
 
-    while(my $File = shift @zipfiles)
-    {
-        ::statusMessage((scalar(@zipfiles)+1)." zip files to upload",0,0);
+    my $files_uploaded = 0; # num handled files
+    foreach my $file (@files) {
+        ::statusMessage(($file_count - $files_uploaded) . " files to upload", 0, 0);
         # get a file handle, then try to lock the file exclusively.
         # if flock fails it is being handled by a different upload process
         # also check if the file still exists when we get to it
-        open ($LOCKFILE, '>', File::Spec->join($self->{ZipDir},$File.".lock"));
+        open ($LOCKFILE, '>', File::Spec->join($self->{ZipDir},$file . ".lock"));
         my $flocked = !$Config->get('flock_available')
                       || ($LOCKFILE && flock($LOCKFILE, LOCK_EX|LOCK_NB));
-        if ($flocked && -e File::Spec->join($self->{ZipDir},$File))
-        {   # got exclusive lock, now upload
+        if ($flocked && -e File::Spec->join($self->{ZipDir}, $file)) {
+            # got exclusive lock, now upload
 
-            my $Load;
             my $UploadFailedHardOrDone=0;
             # while not upload success or complete failure
-            while ($UploadFailedHardOrDone != 1)
-            {
+            while ($UploadFailedHardOrDone != 1) {
 		my $res_str; #stores success or error msg for status line
                 try {
-                    $Load = $self->upload($File);
+                    $self->upload($file);
 
-                    # reduce sleepdelay by 25 per cent
-                    $self->{sleepdelay} = 0.75 * $self->{sleepdelay};
-                    $res_str = "uploaded ".$File;
-                    $uploaded++;
-                    $::progressPercent = $uploaded * 100 / $zipCount;
+                    # reset sleepdelay
+                    $self->{sleepdelay} = 0;
+                    $res_str = "uploaded " . $file;
+                    $files_uploaded++;
+                    $::progressPercent = $files_uploaded * 100 / $file_count;
                     $UploadFailedHardOrDone = 1;
                 }
                 catch UploadError with {
                     my $err = shift();
-                    if ($Load = $err->value()) { 
-                        # try to keep the queue at 80% full,
-                        # if more increase sleepdelay
-                        $self->{sleepdelay} = $self->{sleepdelay} + ($Load - 800)/10;
-                        $self->{sleepdelay} = 4  if ($self->{sleepdelay} < 4);
-                        $res_str = "queue full";
+                    if (my $queue_length = $err->value()) { 
+                        # set sleepdelay to 30 seconds
+                        $self->{sleepdelay} = 30;
+                        $res_str = $err->text();
                     }
                     else {
                         $err->throw();
@@ -134,73 +126,66 @@ sub uploadAllZips
                 };
 
                 # Finally wait sleepdelay seconds until next upload
-                if ($self->{sleepdelay} > $self->{MaxSleep})
-                {
-                    $self->{sleepdelay} = $self->{MaxSleep};
-                }
                 ::talkInSleep($res_str, int($self->{sleepdelay}));
             }
 
         }
-        else
-        {   # could not get exclusive lock, this is being handled elsewhere now
-            ::statusMessage("$File uploaded by different process. skipping",0,3);
+        else {
+            # could not get exclusive lock, this is being handled elsewhere now
+            ::statusMessage("$file uploaded by different process. skipping", 0, 3);
         }
         # finally unlock zipfile and release handle
-        if ($LOCKFILE)
-        {
+        if ($LOCKFILE) {
             flock ($LOCKFILE, LOCK_UN);
             close ($LOCKFILE);
-            unlink(File::Spec->join($self->{ZipDir},$File.".lock")) if $flocked;
+            unlink(File::Spec->join($self->{ZipDir}, $file . ".lock")) if $flocked;
         }
     }
-    if($uploaded)
+    if($files_uploaded)
     {
-      ::statusMessage("uploaded $uploaded zip ". ($uploaded == 1 ? "file" :"files"),1,3);
+      ::statusMessage("uploaded $files_uploaded ". ($files_uploaded == 1 ? "file" :"files"),1,3);
     }
-    elsif($zipCount) # we need to print something to get a line end
+    elsif($file_count) # we need to print something to get a line end
     {
       ::statusMessage("Nothing uploaded",1,3);
     }
-    return $uploaded;
+
+    return $files_uploaded;
 }
 
 #-----------------------------------------------------------------------------
-# Upload a ZIP file
-# Parameter (filename) is the name of a .zip file in ZipDir
-# returns: Load
-#   Load: Server queue 'fullness' between [0,1000]
+# Upload a ZIP or tileset file
+# Parameter (filename) is the name of a file in ZipDir
 #-----------------------------------------------------------------------------
 sub upload
 {
     my $self = shift;
-    my $FileName = shift;
-    my $File     = File::Spec->join($self->{ZipDir},$FileName);
-    my $ZipSize  = -s $File;   # zip file size
-    my $ZipAge   = -M $File;   # days since last modified
+    my $file_name = shift;
+    my $file      = File::Spec->join($self->{ZipDir}, $file_name);
+    my $file_size = -s $file;   # zip file size
+    my $file_age  = -M $file;   # days since last modified
     my $Config = $self->{Config};
 
     # delete zips that are already older than 2 days.
-    if($ZipAge > 2)
-    {
-        if($Config->get("DeleteZipFilesAfterUpload"))
-        {
-            ::statusMessage("ZIP file $File too old, deleting",1,3);
-            unlink($File);
+    if ($file_age > 2) {
+        if ($Config->get("DeleteZipFilesAfterUpload")) {
+            unlink($file);
         }
-        else
-        {
-            ::statusMessage("ZIP file $File too old, renaming to *_overage",1,3);
-            rename($File, $File."_overage"); 
+        else {
+            rename($file, $file . "_overage"); 
         }
+
+        throw UploadError "File $file too old", "overage";
     }
 
-    $FileName =~ m{^([^_]+)_\d+_\d+_\d+_(\d+)\.zip$};
-    my $Layer=$1;
-    my $clientId = $2;
+    $file_name =~ m{^([^_]+)_(\d+)_(\d+)_(\d+)_(\d+)\.(zip|tileset)$};
+    my $layer = $1;
+    my $zoom = $2;
+    my $x = $3;
+    my $y = $4;
+    my $client_id = $5;
 
-    if(! $Config->get("UploadToDirectory"))
-    {
+    if (! $Config->get("UploadToDirectory")) {
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
         
         $ua->protocols_allowed( ['http'] );
@@ -210,93 +195,63 @@ sub upload
         
         my $URL = $Config->get("UploadURL");
         
-        my $Load = $self->UploadOkOrNot();
+        ::statusMessage("Uploading $file_name", 0, 3);
+        my $res = $ua->post($URL,
+                            Content_Type => 'form-data',
+                            Content => [ file => [$file],
+                                         user => $Config->get("UploadUsername"),
+                                         passwd => $Config->get("UploadPassword"),
+                                         version => $Config->get("ClientVersion"),
+                                         layer => $layer,
+                                         z => $zoom,
+                                         x => $x,
+                                         y => $y,
+                                         client_uuid => ($::Mode eq "upload_loop") ? $client_id : ::GetClientId() ]);
 
-        # The server normalises to 1 (*1000) so 1000 means "queue is really 
-        # full or even over-filled"
-        # if the load is below 500 we go for sure
-        # for higher loads we only go with a certain probaility
-        # that should stabilize the load on the server and help again burstiness
-        if ($Load < (500+rand(500))) 
-        {
-            ::statusMessage("Uploading $FileName",0,3);
-            my $res = $ua->post($URL,
-              Content_Type => 'form-data',
-              Content => [ file => [$File],
-                           user => $Config->get("UploadUsername"),
-                           passwd => $Config->get("UploadPassword"),
-                           version => $Config->get("ClientVersion"),
-                           layer => $Layer,
-                           client_uuid => ($::Mode eq "upload_loop") ? $clientId : ::GetClientId() ]);
-             
-            if(!$res->is_success())
-            {
-                ::statusMessage("ERROR",1,0);
-                ::statusMessage("  Error uploading $FileName to $URL:",1,0);
-                ::statusMessage("  ".$res->status_line,1,0);
-                ::addFault('upload');
-                throw UploadError "Error uploading $FileName to $URL: $res->status_line", "ServerError"; # hard fail, this is NOT fatal, it just means the server rejected the upload despite giving the "go" in go_nogo
-            }
-            else
-            {
-                print $res->content if ($Config->get("Debug"));
-                ::resetFault('upload');
-            }
-            
+        if (!$res->is_success()) {
+            throw UploadError "Error uploading $file_name to $URL: " . $res->status_line, "ServerError"; # hard fail
         }
-        else
-        {
-            ::statusMessage("Not uploading, server queue full",0,0);
-            sleep(1);
-            throw UploadError "Not uploading, server queue full", $Load; #soft fail
+        else {
+            print $res->content if ($Config->get("Debug"));
         }
     }
-    else
-    {   #Upload To Directory rather than server
+    else {
+        #Upload To Directory rather than server
         ## Check "queue" length
-        my $RemoteZipFileCount = 0;
-        my @QueueFiles;
-        if(opendir(UPDIR, $Config->get("UploadTargetDirectory")))
-        {
-            @QueueFiles = grep { /\.zip$/ } readdir(UPDIR);
+        my @queue_files;
+        if (opendir(UPDIR, $Config->get("UploadTargetDirectory"))) {
+            @queue_files = grep { /\.(zip|tileset)$/ } readdir(UPDIR);
             closedir UPDIR;
         }
-        else 
-        {
+        else {
             throw UploadError "Can not open target directory";
         }
-        my $QueueLength = scalar(@QueueFiles);
-        my $Load = 1000 * $QueueLength/$Config->get("UploadToDirectoryMaxQueue");
-        if ($Load > 900) # 95% or 100% with MaxQueue=20
-        {
+
+        my $queue_length = scalar(@queue_files);
+        my $max_queue = $Config->get("UploadToDirectoryMaxQueue");
+        if ($queue_length >= $max_queue) {
             ::statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);
-            throw UploadError "Not uploading, upload directory full", $Load;
+            throw UploadError "Not uploading, upload directory full", $queue_length;
         }
-        else
-        {
-            my $tmpfile = File::Spec->join($self->{Config}->get("UploadTargetDirectory"),$FileName."_part");
+        else {
+            my $tmpfile = File::Spec->join($Config->get("UploadTargetDirectory"), $file_name . "_part");
 
-            ## FIXME: Don't necessarily die here
             # copy the file over using a temporary name
-            copy($File,$tmpfile) or throw UploadError "Failed to copy file to Upload Directory: $!";
+            copy($file, $tmpfile) or throw UploadError "Failed to copy file to Upload Directory: $!";
             # rename so it can be picked up by central uploading client.
-            move($tmpfile, File::Spec->join($Config->get("UploadTargetDirectory"), $FileName)) 
+            move($tmpfile, File::Spec->join($Config->get("UploadTargetDirectory"), $file_name)) 
                 or throw UploadError "Failed to rename file in Upload Directory: $!";
         }
     }
 
     # if we didn't encounter any errors error we get here
-    if($Config->get("DeleteZipFilesAfterUpload"))
-    {
-        unlink($File);
+    if($Config->get("DeleteZipFilesAfterUpload")) {
+        unlink($file);
     }
-    else
-    {
-        rename($File, $File."_uploaded");
+    else {
+        rename($file, $file . "_uploaded");
     }
-
-    return 0;
 }
 
 

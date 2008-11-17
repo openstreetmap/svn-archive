@@ -313,7 +313,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
-            print "We suggest that you set MaxTilesetComplexity to ".$complexity."\n";
+            print "We suggest that you set MaxTilesetComplexity to ".int($complexity)."\n";
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 

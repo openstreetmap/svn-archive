@@ -28,7 +28,7 @@ use tahlib;
 use tahproject;
 use File::Copy;
 use File::Path;
-use GD qw(:DEFAULT :cmp);
+use GD 2 qw(:DEFAULT :cmp);
 
 #-----------------------------------------------------------------------------
 # creates a new Tileset instance and returns it
@@ -58,6 +58,9 @@ sub new
          DIR      => $Config->get('WorkingDirectory'), 
 	 CLEANUP  => $delTmpDir,
          );
+
+    # create true color images by default
+    GD::Image->trueColor(1);
 
     # create blank comparison images
     my $EmptyLandImage = new GD::Image(256,256);
@@ -96,11 +99,17 @@ sub new
                 if defined($self->{inkscape_autobackup}{cfgfile});
 
             if( -f $self->{inkscape_autobackup}{cfgfile} ){
-                copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
-                    or do {
-                        warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
-                        delete($self->{inkscape_autobackup});
-                };
+                if ( -s $self->{inkscape_autobackup}{cfgfile} == 0 ) {
+                    #emty config file found! i delete it
+                    unlink($self->{inkscape_autobackup}{cfgfile});
+                }
+                else {
+                    copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
+                        or do {
+                            warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
+                            delete($self->{inkscape_autobackup});
+                    };
+                }
             } else {
                 delete($self->{inkscape_autobackup});
             }
@@ -167,16 +176,6 @@ sub generate
             mkdir $JobDirectory;
 
             $self->generateNormalLayer($layer);
-
-            #----------
-            # This directory is now ready for upload.
-            # move it to the working directory, so it can be picked up.
-            # Unless we have moved everything to the local slippymap already
-            if (!$Config->get("LocalSlippymap") )
-            {
-                my $DestDir = File::Spec->join($Config->get("WorkingDirectory"), $TileDirectory);
-                rename $JobDirectory, $DestDir;
-            }
         }
     }
     else
@@ -687,8 +686,20 @@ sub downloadData
     my $res;
     my $reason;
 
+    if ($req->priority() > 1) {
+        my $firstServer = shift(@OSMServers);
+        if($firstServer eq "API") {
+            my $secondServer = shift(@OSMServers);
+            unshift(@OSMServers, $firstServer);
+            unshift(@OSMServers, $secondServer);
+        } else {
+            unshift(@OSMServers, $firstServer);
+        }
+    }
+
     my $filelist;
     foreach my $OSMServer (@OSMServers) {
+        $self->{JobTime} = time();
         my @URLS;
         if (@predicates) {
             foreach my $predicate (@predicates) {
@@ -709,13 +720,13 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            ::statusMessage("Downloading: Map data for " . join(",",@layers) . " from ".$OSMServer, 1, 3);
+            ::statusMessage("Downloading: Map data for " . join(",",@layers) ." from ".$OSMServer, 0, 3);
             
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {
                 my $currentURL = $URL;
                 $currentURL =~ s/%b/${bbox}/g;
-                ::statusMessage("Downloading: $currentURL",0,6);
+                print "Downloading: $currentURL\n" if ($Config->get("Debug"));
                 try {
                     $Server->downloadFile($currentURL, $partialFile, 0);
                     push(@{$filelist}, $partialFile);
@@ -723,7 +734,7 @@ sub downloadData
                 }
                 catch ServerError with { # just do nothing if there was an error during download
                     my $err = shift();
-                    ::statusMessage("Download failed: " . $err->text(),1,6);
+                    print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
                 };
             }
 
@@ -749,7 +760,7 @@ sub downloadData
                             my $err = shift();
                             print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
                             my $message = ($k < 3) ? "Download of slice $j failed, trying again" : "Download of slice $j failed 3 times, giving up";
-                            ::statusMessage($message, 1, 3);
+                            ::statusMessage($message, 0, 3);
                         };
                         last if ($res); # don't try again if download was successful
                     }
@@ -777,13 +788,9 @@ sub downloadData
 
     ($res, $reason) = ::mergeOsmFiles($DataFile, $filelist);
     if(!$res) {
-        return (undef, "Striped download failed with: " . $reason);
+        throw TilesetError "Striped download failed with: " . $reason;
     }
 
-
-    # Get the API date time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
-    $self->{JobTime} = [stat $DataFile]->[9];
-    
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
     ::statusMessage("Checking for UTF-8 errors",0,3);
@@ -793,7 +800,7 @@ sub downloadData
         throw TilesetError "UTF8 test failed", "utf8";
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
-    return ($DataFile ,"");
+    return $DataFile;
 }
 
 
@@ -968,6 +975,13 @@ sub forkedRender
     if (not $success) {
         throw TilesetError "at least one render thread returned an error", "renderer";
     }
+
+    if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
+        $self->createTilesetFile($layer);
+    }
+    else {
+        $self->createZipFile($layer);
+    }
 }
 
 
@@ -986,6 +1000,13 @@ sub nonForkedRender
 
     for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++) {
         $self->Render($layer, $zoom, $layerDataFile)
+    }
+
+    if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
+        $self->createTilesetFile($layer);
+    }
+    else {
+        $self->createZipFile($layer);
     }
 }
 
@@ -1136,7 +1157,7 @@ sub RenderSVG
                     warn "   AutoResetInkscapePrefs set, trying to reset $cfg\n";
                     unlink $cfg if( -f $cfg ); 
                     # FIXME: check backup is correct before putting back, or check preferences OK before backup.
-                    $corrupt = 0;# if( rename($bak, $cfg) ); # how do we deal with a defect backup?
+                    $corrupt = 0; #if( rename($bak, $cfg) ); # how do we deal with a defect backup?
                 }
             }
 
@@ -1199,7 +1220,7 @@ sub SplitTiles
         my $Image = GD::Image->newFromPng($png_file);
 
         if( not defined $Image ) {
-            throw TilesetError "SplitTiles: Missing File $png_file encountered";
+            throw TilesetError "SplitTiles: Missing File $png_file encountered", "fatal";
         }
 
         for (my $iy = 0; $iy <= $stripe_height - 1; $iy++) {
@@ -1257,7 +1278,6 @@ sub SplitTiles
                         $SubImage->transparent(-1);
                     }
                     # Get the image as PNG data
-                    #$SubImage->trueColorToPalette(0, 256) unless ($Config->get($layer."_Transparent"));
                     my $png_data = $SubImage->png;
 
                     # Store it
@@ -1265,10 +1285,311 @@ sub SplitTiles
                     binmode $fp;
                     print $fp $png_data;
                     close $fp;
+
+                    $self->optimizePng($tile_file, $Config->get("${layer}_Transparent"));
                 }
             }
         }
     }
+}
+
+
+#-----------------------------------------------------------------------------
+# optimize a PNG file
+#
+# Parameters: 
+#   $png_file - file name of PNG file
+#   $transparent - whether or not this is a transparent tile
+#-----------------------------------------------------------------------------
+sub optimizePng
+{
+    my $self = shift();
+    my $png_file = shift();
+    my $transparent = shift();
+
+    my $Config = $self->{Config};
+    my $redirect = ($^O eq "MSWin32") ? "" : ">/dev/null";
+    my $tmp_suffix = '.cut';
+    my $tmp_file = $png_file . $tmp_suffix;
+    my (undef, undef, $png_file_name) = File::Spec->splitpath($png_file);
+
+    my $cmd;
+    if ($transparent) {
+        # Don't quantize if it's transparent
+        rename($png_file, $tmp_file);
+    }
+    elsif (($Config->get("PngQuantizer")||'') eq "pngnq") {
+        $cmd = sprintf("\"%s\" -e .png%s -s1 -n256 %s %s",
+                       $Config->get("pngnq"),
+                       $tmp_suffix,
+                       $png_file,
+                       $redirect);
+
+        ::statusMessage("ColorQuantizing $png_file_name", 0, 6);
+        if(::runCommand($cmd, $::PID)) {
+            # Color quantizing successful
+            unlink($png_file);
+        }
+        else {
+            # Color quantizing failed
+            ::statusMessage("ColorQuantizing $png_file_name with ".$Config->get("PngQuantizer")." failed", 1, 0);
+            rename($png_file, $tmp_file);
+        }
+    }
+    else {
+        ::statusMessage("Not Color Quantizing $png_file_name, pngnq not installed?", 0, 6);
+        rename($png_file, $tmp_file);
+    }
+
+    if ($Config->get("PngOptimizer") eq "pngcrush") {
+        $cmd = sprintf("\"%s\" -q %s %s %s",
+                       $Config->get("Pngcrush"),
+                       $tmp_file,
+                       $png_file,
+                       $redirect);
+    }
+    elsif ($Config->get("PngOptimizer") eq "optipng") {
+           $cmd = sprintf("\"%s\" %s -out %s %s", #no quiet, because it even suppresses error output
+                          $Config->get("Optipng"),
+                          $tmp_file,
+                          $png_file,
+                          $redirect);
+    }
+    else {
+        ::statusMessage("PngOptimizer not configured (should not happen, update from svn, and check config file)", 1, 0);
+        ::talkInSleep("Install a PNG optimizer and configure it.", 15);
+    }
+
+    ::statusMessage("Optimizing $png_file_name", 0, 6);
+    if(::runCommand($cmd, $::PID)) {
+        unlink($tmp_file);
+    }
+    else {
+        ::statusMessage("Optimizing $png_file_name with " . $Config->get("PngOptimizer") . " failed", 1, 0);
+        rename($tmp_file, $png_file);
+    }
+}
+
+
+#-----------------------------------------------------------------------------
+# Compress all PNG files from one directory, creating a .zip file.
+#
+# Parameters:
+#   $layer - the layer for which the tileset is to be compressed
+#-----------------------------------------------------------------------------
+sub createZipFile
+{
+    my $self = shift();
+    my $layer = shift();
+    my $Config = $self->{Config};
+
+    my ($z, $x, $y) = $self->{req}->ZXY();
+
+    my $prefix = $Config->get("${layer}_Prefix");
+    my $tile_dir = File::Spec->join($self->{JobDir},
+                                    sprintf("%s_%d_%d_%d.dir",
+                                            $prefix, $z, $x, $y));
+
+    my $upload_dir = File::Spec->join($Config->get("WorkingDirectory"), "uploadable");
+    if (! -d $upload_dir) {
+        mkpath($upload_dir) or throw TilesetError "Could not create upload directory '$upload_dir': $!", "fatal";
+    }
+
+    my $zip_file = File::Spec->join($upload_dir,
+                                    sprintf("%s_%d_%d_%d_%d.zip",
+                                            $prefix, $z, $x, $y, ::GetClientId()));
+    
+    my $temp_file = File::Spec->join($self->{JobDir},
+                                     sprintf("%s_%d_%d_%d_%d.zip",
+                                             $prefix, $z, $x, $y, ::GetClientId()));
+
+    # ZIP all the tiles into a single file
+    # First zip into "$Filename.part" and move to "$Filename" when finished
+    my $stdout = File::Spec->join($self->{JobDir}, "zip.stdout");
+    my $zip_cmd;
+    if ($Config->get("7zipWin")) {
+        $zip_cmd = sprintf('"%s" %s "%s" "%s"',
+                           $Config->get("Zip"),
+                           "a -tzip",
+                           $temp_file,
+                           File::Spec->join($tile_dir,"*.png"));
+    }
+    else {
+        $zip_cmd = sprintf('"%s" -r -j "%s" "%s" > "%s"',
+                           $Config->get("Zip"),
+                           $temp_file,
+                           $tile_dir,
+                           $stdout);
+    }
+
+    if (::dirEmpty($tile_dir)) {
+        ::statusMessage("Skipping emtpy tileset directory: $tile_dir", 1, 0);
+        return;
+    }
+    # Run the zip command
+    ::runCommand($zip_cmd, $::PID) or throw TilesetError "Error running command '$zip_cmd'", "fatal";
+
+    # stdout is currently never used, so delete it unconditionally    
+    unlink($stdout);
+    
+    # rename to final name so any uploader could pick it up now
+    move ($temp_file, $zip_file) or throw TilesetError "Could not move ZIP file: $!", "fatal";
+}
+
+
+#-----------------------------------------------------------------------------
+# Pack all PNG files from one directory into a tileset file.
+#
+# Parameters:
+#   $layer - the layer for which the tileset file is to be created
+#-----------------------------------------------------------------------------
+sub createTilesetFile
+{
+    my $self = shift();
+    my $layer = shift();
+    my $Config = $self->{Config};
+
+    my ($z, $x, $y) = $self->{req}->ZXY();
+
+    my $index_start = 8;                                    # start of tile index, currently 8
+    my $levels = $Config->get("${layer}_MaxZoom") - $z + 1; # number of layers in a tileset file, usually 6
+    my $tiles = ((4 ** $levels) - 1) / 3;                   # number of tiles, 1365 for 6 zoom levels
+    my $data_offset = $index_start + (4 * ($tiles + 1));    # start offset of tile data, 5472 for 6 zoom levels
+    my $size = 1;                                           # size of base zoom level, for t@h always 1
+
+    my $userid = 0; # the server will fill this in
+
+    my $prefix = $Config->get("${layer}_Prefix");
+    my $tile_dir = File::Spec->join($self->{JobDir},
+                                    sprintf("%s_%d_%d_%d.dir",
+                                            $prefix, $z, $x, $y));
+
+    my $upload_dir = File::Spec->join($Config->get("WorkingDirectory"), "uploadable");
+    if (! -d $upload_dir) {
+        mkpath($upload_dir) or throw TilesetError "Could not create upload directory '$upload_dir': $!", "fatal";
+    }
+
+    my $file_name = File::Spec->join($upload_dir,
+                                     sprintf("%s_%d_%d_%d_%d.tileset",
+                                             $prefix, $z, $x, $y, ::GetClientId()));
+    
+    my $temp_file = File::Spec->join($self->{JobDir},
+                                     sprintf("%s_%d_%d_%d_%d.tileset",
+                                             $prefix, $z, $x, $y, ::GetClientId()));
+
+    my $currpos = $data_offset;
+    open my $fh, ">$temp_file" or throw TilesetError "Couldn't open '$temp_file': $!", "fatal";
+    seek $fh, $currpos, 0 or throw TilesetError "Couldn't seek: $!", "fatal";
+
+    my @offsets;
+    for my $iz (0 .. $levels - 1) {
+        my $width = 2**$iz;
+        for my $iy (0 .. $width-1) {
+            for my $ix (0 .. $width-1) {
+                my $png_name = File::Spec->join($tile_dir,
+                                                sprintf("%s_%d_%d_%d.png",
+                                                        $prefix, $z + $iz, $x * $width + $ix, $y * $width + $iy));
+                my $length = -s $png_name;
+                if (! -e $png_name) {
+                    push(@offsets, 0);
+                }
+                elsif ($length == 67) {
+                    if ($Config->get("${layer}_Transparent")) {
+                        #this is empty transparent
+                        push(@offsets, 3);
+                    }
+                    else {
+                        #this is empty land
+                        push(@offsets, 2);
+                    }
+                }
+                elsif ($length == 69) {
+                    #this is empty sea
+                    push(@offsets, 1);
+                }
+                else {
+                    open my $png, "<$png_name" or throw TilesetError "Couldn't open file '$png_name': $!", "fatal";
+                    my $buffer;
+                    if( read($png, $buffer, $length) != $length ) {
+                        throw TilesetError "Read failed from '$png_name': $!", "fatal";
+                    }
+                    close $png;
+                    print $fh $buffer or throw TilesetError "Write failed on output to '$temp_file': $!", "fatal";
+                    push @offsets, $currpos;
+                    $currpos += $length;
+                }
+            }
+        }
+    }
+
+    if( scalar( @offsets ) != $tiles ) {
+        throw TilesetError sprintf("Bad number of offsets: %d (should be %d)", scalar(@offsets), $tiles), "fatal";
+    }
+
+    my $emptyness = 0; #what type of emptyness (land/sea)
+    if ($currpos == $data_offset) {
+        #tileset is empty
+        #check the top level tile for the type of emptyness, assume that all tiles are the same
+        my $png_name = File::Spec->join($tile_dir, sprintf("%s_%d_%d_%d.png", $prefix, $z, $x, $y));
+        my $length = -s $png_name;
+        if ($length == 67) {
+            if ($Config->get("${layer}_Transparent")) {
+                #this is empty transparent
+                $emptyness = 3;
+            }
+            else {
+                #this is empty land
+                $emptyness = 2;
+            }
+        }
+        elsif ($length == 69) {
+            $emptyness = 1; #this is empty sea
+        }
+        $currpos = $index_start;
+    }
+    else {
+        #tileset is not empty
+        push @offsets, $currpos;
+        seek $fh, $index_start, 0;
+        print $fh pack("V*", @offsets) or throw TilesetError "Write failed to '$temp_file' $!", "fatal";
+    }
+
+    seek $fh, 0, 0;
+    print $fh pack("CCCCV", 2, $levels, $size, $emptyness, $userid) or throw TilesetError "Write failed to '$temp_file': $!", "fatal";
+
+    seek $fh, $currpos, 0;
+    print $fh $self->generateMetaData($prefix);
+    close $fh;
+
+    move($temp_file, $file_name) or throw TilesetError "Could not move tileset file '$temp_file' to '$file_name': $!", "fatal";
+}
+
+
+#------------------------------------------------------------------------------
+# Assemble meta data in Tileset file format
+# Parameters:
+#   $layer_prefix
+#
+# Returns:
+#   $meta_data - string
+#------------------------------------------------------------------------------
+sub generateMetaData
+{
+    my $self = shift();
+    my $layer_prefix = shift();
+    my $req = $self->{req};
+
+    my $meta_template = <<EOS;
+Layer: %s
+Zoom: %d
+X: %d
+Y: %d
+Osm-Timestamp: %d
+
+EOS
+
+    my $meta_data = sprintf($meta_template, $layer_prefix, $req->ZXY(), $self->{JobTime});
+    return $meta_data;
 }
 
 

@@ -3,7 +3,7 @@ package SVG::Rasterize::Engine::Inkscape;
 use strict;
 use warnings;
 
-$__PACKAGE__::VERSION = '0.1';
+$__PACKAGE__::VERSION = '0.2';
 
 use base qw(Class::Accessor SVG::Rasterize::Engine);
 use SVG::Rasterize::CoordinateBox;
@@ -118,6 +118,32 @@ sub available {
 
 =pod
 
+=head2 version()
+
+Get Inkscape version number.
+
+Returns version number as array, for example (0, 44, 1) for 0.44.1.
+
+=cut
+
+sub version {
+    my $self = shift;
+
+    my @cmd = ($self->path(), '--version');
+
+    my($stdout, $stderr);
+    run( \@cmd, \undef, \$stdout, \$stderr ) or
+        throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
+
+    $stdout =~ /Inkscape\s+(\S+)(\s|$)/i or
+        throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Error parsing Inkscape version string", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
+    my @version = split(/\.|\+/, $1);
+
+    return @version;
+}
+
+=pod
+
 =head2 convert( \%params )
 
 C<\%params> is a hash as described in SVG::Rasterize
@@ -142,7 +168,7 @@ sub convert {
     if( $params{area} ){
         my %area = $params{area}->get_box_lowerleft();
 
-        # Workaround for stupid inkscape bug: #
+        # Workaround for stupid inkscape bug:
         # On Windows Inkscape reads it's area parameter according to the locale
         # specified decimal separator, so if the system locale uses "," as
         # decimal operator the parameter needs to use ",".
@@ -165,6 +191,8 @@ sub convert {
 
     run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
         throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {cmd => \@cmd, stdout => $self->{stdout}, stderr => $self->{stderr}});
+
+    # on linux error code 11 seems to denote a defect config file, while on freebsd it returns 139 (11+128)
 
     try {
         $self->check_output($params{outfile});

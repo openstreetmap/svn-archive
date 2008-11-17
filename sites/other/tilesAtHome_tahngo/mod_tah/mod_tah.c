@@ -313,17 +313,22 @@ static int serve_oceantile(request_rec *r, request_data* rd) {
       case 0: {
         return HTTP_NOT_FOUND;
       }
-      case 1: {
+    case 1: { /* blank land */
         ap_set_content_type(r, content_imagepng);
         ap_set_content_length(r, sizeof(land));
         ap_rwrite(land,sizeof(land),r);
         return OK;
       }
-      case 2:     
-      case 3: {  /* Also for type mixed */
+      case 2: {  /* blank sea */
         ap_set_content_type(r, content_imagepng);
         ap_set_content_length(r, sizeof(sea));
         ap_rwrite(sea,sizeof(sea),r);
+        return OK;
+      }
+      case 3: {  /* Also for type mixed */
+        ap_set_content_type(r, content_imagepng);
+        ap_set_content_length(r, sizeof(transparent));
+        ap_rwrite(transparent,sizeof(transparent),r);
         return OK;
       }
     } 

@@ -1,0 +1,17 @@
+$ort="Lübeck";
+$ortURL="Luebeck";
+$bundesland="Schleswig-Holstein";
+$pw_schutz=1;
+$standdate="10/2008";
+$csvSpalteStr=1;
+$csvSpalteOrt=2;
+$osmosis_source="schleswig-holstein.osm.bz2";
+$osmosis_polygon="Luebeck.poly";
+#$osmosis_minLat="49.546";
+#$osmosis_maxLat="49.5901";
+#$osmosis_minLon="11.295";
+#$osmosis_maxLon="11.381";
+
+$nutzungsErlaubnis="Die Daten sind uns von der Stadt $ort zur Verwendung in OSM freigegeben worden. Quelle: http://www.luebeck.de/stadt_politik/statistiken/strassensuche/";
+
+1;

@@ -741,14 +741,18 @@ sub downloadData
             if ((! $res) and ($Config->get("FallBackToSlices"))) {
                 ::statusMessage("Trying smaller slices",1,0);
                 my $slice = (($E1 - $W1) / 10); # A slice is one tenth of the width
-                my $slicesdownloaded=0;
+                my $slicesdownloaded = 0;
                 for (my $j = 1; $j <= 10; $j++) {
                     my $bbox = sprintf("%f,%f,%f,%f", $W1 + ($slice * ($j - 1)), $S1, $W1 + ($slice * $j), $N1);
                     my $currentURL = $URL;
+                    my $trylimit = 3 + $slicesdownloaded;
                     $currentURL =~ s/%b/${bbox}/g;    # substitute bounding box place holder
                     $partialFile = File::Spec->join($self->{JobDir}, "data-$i-$j.osm");
                     $res = 0;
-                    for (my $k = 1; $k <= 3; $k++) {  # try each slice 3 times
+                    for (my $k = 1; $k <= $trylimit; $k++) {  # try each slice 3 times
+                        if(($k % 4) == 0) {
+                            talkInSleep("Sleeping for 30 seconds before the next retry", 30);
+                        }
                         ::statusMessage("Downloading map data (slice $j of 10)", 0, 3);
                         print "Downloading: $currentURL\n" if ($Config->get("Debug"));
                         try {
@@ -759,7 +763,7 @@ sub downloadData
                         catch ServerError with {
                             my $err = shift();
                             print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
-                            my $message = ($k < 3) ? "Download of slice $j failed, trying again" : "Download of slice $j failed 3 times, giving up";
+                            my $message = ($k < $trylimit) ? "Download of slice $j failed, trying again" : "Download of slice $j failed $trylimit times, giving up";
                             ::statusMessage($message, 0, 3);
                         };
                         last if ($res); # don't try again if download was successful

@@ -25,7 +25,7 @@ public class OpenVisiblePlugin extends Plugin {
         JMenuItem menuItem = new JMenuItem(openVisible);
         
         fileMenu.add(menuItem,2);
-        menuItem.setAccelerator(openVisible.shortCut);
+        menuItem.setAccelerator(openVisible.shortcut);
     }
 
 }

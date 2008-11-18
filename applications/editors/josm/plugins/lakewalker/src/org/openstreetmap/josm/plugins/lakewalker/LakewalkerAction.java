@@ -32,7 +32,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.tools.ShortCut;
+import org.openstreetmap.josm.tools.Shortcut;
 
 import org.xml.sax.SAXException;
 
@@ -55,8 +55,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   
   public LakewalkerAction(String name) {
     super(name, "lakewalker-sml", tr("Lake Walker."),
-    ShortCut.registerShortCut("tools:lakewalker", tr("Tool: {0}", tr("Lake Walker")),
-    KeyEvent.VK_L, ShortCut.GROUP_EDIT, ShortCut.SHIFT_DEFAULT), true);
+    Shortcut.registerShortcut("tools:lakewalker", tr("Tool: {0}", tr("Lake Walker")),
+    KeyEvent.VK_L, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     this.name = name;
     setEnabled(true);
   }

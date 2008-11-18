@@ -27,7 +27,7 @@ public class UtilsPlugin extends Plugin {
 		
 		action = new SimplifyWayAction();
 		SimplifyWay = Main.main.menu.toolsMenu.add(action);
-		SimplifyWay.setAccelerator(action.shortCut);
+		SimplifyWay.setAccelerator(action.shortcut);
 		SimplifyWay.setEnabled(false);
 	}
 	

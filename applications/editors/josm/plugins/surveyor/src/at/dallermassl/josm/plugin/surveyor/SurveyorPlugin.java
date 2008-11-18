@@ -85,7 +85,7 @@ public class SurveyorPlugin {
         AutoSaveAction autoSaveAction = new AutoSaveAction();
         JCheckBoxMenuItem autoSaveMenu = new JCheckBoxMenuItem(autoSaveAction);
         gpsPlugin.getLgpsMenu().add(autoSaveMenu);  
-        autoSaveMenu.setAccelerator(autoSaveAction.shortCut);
+        autoSaveMenu.setAccelerator(autoSaveAction.shortcut);
     }
 
     /**

@@ -751,7 +751,7 @@ sub downloadData
                     $res = 0;
                     for (my $k = 1; $k <= $trylimit; $k++) {  # try each slice 3 times
                         if(($k % 4) == 0) {
-                            talkInSleep("Sleeping for 30 seconds before the next retry", 30);
+                            ::talkInSleep("Sleeping for 30 seconds before the next retry", 30);
                         }
                         ::statusMessage("Downloading map data (slice $j of 10)", 0, 3);
                         print "Downloading: $currentURL\n" if ($Config->get("Debug"));

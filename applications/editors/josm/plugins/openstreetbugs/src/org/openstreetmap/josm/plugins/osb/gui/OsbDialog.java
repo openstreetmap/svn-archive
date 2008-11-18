@@ -72,7 +72,7 @@ import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbActionObserver;
 import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
 import org.openstreetmap.josm.plugins.osb.i18n.Messages;
-import org.openstreetmap.josm.tools.ShortCut;
+import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
 		DataChangeListener, MouseListener, OsbActionObserver {
@@ -90,10 +90,10 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 	public OsbDialog(final OsbPlugin plugin) {
 		super("OpenStreetBugs", "icon_error22", 
 				Messages.translate(OsbDialog.class, "tooltip"), 
-				ShortCut.registerShortCut(
+				Shortcut.registerShortcut(
 						Messages.translate(OsbDialog.class, "shortcut"), 
 						Messages.translate(OsbDialog.class, "shortcut"), 
-						KeyEvent.VK_O, ShortCut.GROUP_MENU), 
+						KeyEvent.VK_O, Shortcut.GROUP_MENU), 
 				150);
 		
 		osbPlugin = plugin;

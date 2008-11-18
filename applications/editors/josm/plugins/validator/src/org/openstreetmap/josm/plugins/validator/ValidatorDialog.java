@@ -35,7 +35,7 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.ShortCut;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * A small tool dialog for displaying the current errors. The selection manager
@@ -71,8 +71,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
      */
     public ValidatorDialog(OSMValidatorPlugin plugin) {
         super(tr("Validation errors"), "validator", tr("Open the validation window."),
-        ShortCut.registerShortCut("subwindow:validator", tr("Toggle: {0}", tr("Validation errors")),
-        KeyEvent.VK_V, ShortCut.GROUP_LAYER, ShortCut.SHIFT_DEFAULT), 150);
+        Shortcut.registerShortcut("subwindow:validator", tr("Toggle: {0}", tr("Validation errors")),
+        KeyEvent.VK_V, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
 
         this.plugin = plugin;
         popupMenu = new JPopupMenu();

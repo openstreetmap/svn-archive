@@ -102,7 +102,7 @@ public class TcxPlugin extends Plugin
         JosmAction openAction = new OpenAction();
         JMenuItem actionItem = new JMenuItem(openAction);
         menu.insert(actionItem, 2);
-        actionItem.setAccelerator(openAction.shortCut);
+        actionItem.setAccelerator(openAction.shortcut);
         
     }
 }

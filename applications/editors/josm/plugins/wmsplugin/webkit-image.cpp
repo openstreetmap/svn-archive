@@ -33,6 +33,8 @@ public slots:
     {
       QImage im = QPixmap::grabWidget(view).toImage();
       QRgb white = QColor(255,255,255).rgb();
+      /* sometimes the white is shifted one bit */
+      QRgb white2 = QColor(254,254,254).rgb();
 
       /* didn't find a way to reduce image directly, so we scan for white background */
       bool iswhite = true;
@@ -43,7 +45,7 @@ public slots:
         for(int y = 0; iswhite && y < ysize; ++y)
         {
           QRgb p = im.pixel(x, y);
-          if(p != white && p)
+          if(p != white && p != white2 & p)
             iswhite = false;
         }
         if(iswhite)
@@ -55,7 +57,7 @@ public slots:
         for(int x = 0; iswhite && x < xsize; ++x)
         {
           QRgb p = im.pixel(x, y);
-          if(p != white && p)
+          if(p != white && p != white2 && p)
             iswhite = false;
         }
         if(iswhite)

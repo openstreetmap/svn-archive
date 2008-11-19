@@ -66,7 +66,7 @@ public slots:
       QFile f;
       BINARYSTDOUT
       if(f.open(stdout, QIODevice::WriteOnly|QIODevice::Unbuffered))
-        p.save(&f, "PNG");
+        p.save(&f, "JPG");
     }
     emit finish();
   }

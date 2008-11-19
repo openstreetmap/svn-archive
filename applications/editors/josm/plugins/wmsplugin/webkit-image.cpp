@@ -42,7 +42,8 @@ public slots:
       {
         for(int y = 0; iswhite && y < ysize; ++y)
         {
-          if(im.pixel(x, y) != white)
+          QRgb p = im.pixel(x, y);
+          if(p != white && p)
             iswhite = false;
         }
         if(iswhite)
@@ -53,7 +54,8 @@ public slots:
       {
         for(int x = 0; iswhite && x < xsize; ++x)
         {
-          if(im.pixel(x, y) != white)
+          QRgb p = im.pixel(x, y);
+          if(p != white && p)
             iswhite = false;
         }
         if(iswhite)

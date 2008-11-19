@@ -127,7 +127,9 @@ sub new {
                              ['batik-1.7'],
                              ['batik-1.7','lib'],
                              ['batik-1.6'],
-                             ['batik-1.6','lib']
+                             ['batik-1.6','lib'],
+                             ['xerces-2'],
+                             ['xerces']
             ){
             push(@extended_default_jar_searchpaths,
                  File::Spec->catpath( $volume, File::Spec->catdir( $dir, @{$subdir} ) )

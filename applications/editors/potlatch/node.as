@@ -73,7 +73,9 @@
 	function hasTags(a) {
 		var c=false;
 		for (var j in a) {
-			if (j!='created_by' && a[j]!='' && j!='source' && j.indexOf('tiger:')!=0) { c=true; }
+			if (a[j] != '' && j != 'attribution' &&	
+                j != 'created_by' && j!='source' &&	
+                j.indexOf('tiger:')!=0) { c=true; }
 		}
 		return c;
 	}

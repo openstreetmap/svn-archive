@@ -392,6 +392,27 @@ public class TileListDownloader
             urlConnection.setRequestProperty("User-Agent", "JTileDownloader/" + Constants.VERSION);
             urlConnection.setUseCaches(false);
 
+            long lastModified = urlConnection.getLastModified();
+
+            //            Map headerFields = urlConnection.getHeaderFields();
+
+            //            WebFile file = new WebFile("http://example.com/example.gif");
+            //            String MIME = file.getMIMEType();
+            //            Object content = file.getContent();
+            //            if (MIME.startsWith("image") && content instanceof java.awt.Image)
+            //            {
+            //                java.awt.Image image = (java.awt.Image) content;
+            //            }
+
+            //            URLConnection conn = url.openConnection(); 
+            //            String base64 = "Basic " + new sun.misc.BASE64Encoder(). 
+            //                                       encode((user + ":" + passwd).getBytes() ); 
+            //            conn.setRequestProperty( "Proxy-Authorization", 
+            //              "Basic " + 
+            //              new sun.misc.BASE64Encoder().encode((proxyUser + ":" + proxyPass).getBytes()) ); 
+            //            conn.connect(); 
+            //            InputStream in = conn.getInputStream();
+
             InputStream inputStream = urlConnection.getInputStream();
 
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(new File(fileName)));

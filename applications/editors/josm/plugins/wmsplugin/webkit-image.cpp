@@ -1,8 +1,11 @@
 /* compile with
 moc webkit-image.cpp >webkit-image.h
-g++ webkit-image.cpp -o webkit-image -lQtCore -lQtWebKit -lQtGui
+g++ webkit-image.cpp -o webkit-image -lQtCore -lQtWebKit -lQtGui -s -O2
+or under Windows:
+g++ webkit-image.cpp -o webkit-image -lQtCore4 -lQtWebKit4 -lQtGui4 -s O2
+adding the correct directories with -L or -I:
+-I C:\Progra~1\Qt\include -L C:\Progra~1\Qt\lib
 */
-
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
 #include <QtCore/QString>
@@ -68,7 +71,12 @@ public slots:
       QFile f;
       BINARYSTDOUT
       if(f.open(stdout, QIODevice::WriteOnly|QIODevice::Unbuffered))
-        p.save(&f, "JPG");
+      {
+        if(!p.save(&f, "JPEG"))
+        {
+          p.save(&f, "PNG");
+        }
+      }
     }
     emit finish();
   }

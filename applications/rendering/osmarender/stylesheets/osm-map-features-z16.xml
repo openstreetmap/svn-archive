@@ -1521,12 +1521,17 @@
 			<circle r='0.3px' class='bollard' />
 		</rule>
 		<rule e="node" k="barrier" v="cycle_barrier">
-			<wayMarker k="highway" class="cycle-barrier"/>
+			<wayMarker k="highway" class="chicane"/>
 		</rule>
 
 		<!-- Traffic calming -->
 		<rule e="node" k="traffic_calming" v="*">
-			<wayMarker k="highway" class="traffic-calming"/>
+			<rule e="node" v="chicane">
+				<wayMarker k="highway" class="chicane"/>
+			</rule>
+			<else>
+				<wayMarker k="highway" class="traffic-calming"/>
+			</else>
 		</rule>
 		
 		<!-- Bus stops -->
@@ -1895,12 +1900,12 @@
 			stroke: none;
 			}
 			
-			.cycle-barrier {
+			.chicane {
 			fill: none;
 			stroke: red;
 			stroke-width: 2px;
 			stroke-opacity: 0;
-			marker-mid: url(#marker-cycle-barrier);
+			marker-mid: url(#marker-chicane);
 			}
 
 			.traffic-calming {

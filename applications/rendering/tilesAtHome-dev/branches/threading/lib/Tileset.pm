@@ -30,6 +30,12 @@ use File::Copy;
 use File::Path;
 use GD 2 qw(:DEFAULT :cmp);
 
+use threads;
+use Thread::Semaphore;
+
+use Data::Dumper;
+
+
 #-----------------------------------------------------------------------------
 # creates a new Tileset instance and returns it
 # parameter is a request object with x,y,z, and layer atributes set
@@ -41,7 +47,8 @@ sub new
     my $class = shift;
     my $Config = TahConf->getConfig();
     my $req = shift;    #Request object
-
+    my $child = shift;
+    my $jobDir = shift;
     my $self = {
         req => $req,
         Config => $Config,
@@ -53,11 +60,17 @@ sub new
 
     my $delTmpDir = 1-$Config->get('Debug');
 
+    if($child) {
+         $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
+         $self->{JobDir} = $jobDir;
+    }
+    else {
     $self->{JobDir} = tempdir( 
          sprintf("%d_%d_%d_XXXXX",$self->{req}->ZXY),
          DIR      => $Config->get('WorkingDirectory'), 
 	 CLEANUP  => $delTmpDir,
          );
+    }
 
     # create true color images by default
     GD::Image->trueColor(1);
@@ -125,13 +138,10 @@ sub new
 #-----------------------------------------------------------------------------
 sub DESTROY
 {
-    my $self = shift;
-    # Don't clean up in child threads
-    return if ($self->{childThread});
+# perl call DESTROY more as on time!
 
-    # only cleanup if we are the parent thread
-    $self->cleanup();
 }
+
 
 #-----------------------------------------------------------------------------
 # generate does everything that is needed to end up with a finished tileset
@@ -149,6 +159,12 @@ sub generate
 
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
 
+    if(defined $::GlobalChildren->{ThreadedRenderer}) {
+      $::GlobalChildren->{ThreadedRenderer}->Reset();
+      $::GlobalChildren->{ThreadedRenderer}->setRequest($self->{req});
+      $::GlobalChildren->{ThreadedRenderer}->setJobDir($self->{JobDir});
+    }
+
     ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, $self->{bbox}->center), 1, 0);
 
     if($req->Z >= 12)
@@ -158,8 +174,29 @@ sub generate
         #------------------------------------------------------
 
         my $beforeDownload = time();
-        my $FullDataFile = $self->downloadData($req->layers);
+
+        # TODO: FIXME: remove it on the stable version! only for debuging and tests else { its the original}
+        # add a optional testadata directory (download not the data)
+        # DO NOT UPLOAD THE RESULTS REAL!
+        my $testdatadir = File::Spec->join($Config->get("WorkingDirectory"), 'testdatadir');
+        my $testdatafile = File::Spec->join($testdatadir, 'data.osm');
+        my $FullDataFile = "";
+
+        if($Config->get("useTestDirData") && $Config->get("debug") && $Config->get("UploadToDirectory")
+             && -d $testdatadir && -f $testdatafile)
+        {
+            $FullDataFile = File::Spec->join($self->{JobDir}, 'data.osm');
+            copy($testdatafile,$FullDataFile)
+        }
+        else {
+            $FullDataFile = $self->downloadData($req->layers);
+        }
+
         ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+
+        # manage renderer memory usage
+        # a 16mb osm file consum ca 1gb ram as svg "int(16786037/1024/16)"
+        
 
         #------------------------------------------------------
         # Handle all layers, one after the other
@@ -327,7 +364,15 @@ sub generate
     $::currentSubTask = "";
     ::keepLog($$,"GenerateTileset","stop",'x='.$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
+
+    # cleanup children data
+    $::GlobalChildren->{ThreadedRenderer}->Reset();
+
+
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
+    # TODO: i move it back! DESTORY is not called only one time!
+    # the GC from perl call DESTROY a 2. time and in thread mode 2*child
+    $self->cleanup();
 }
 
 sub generateNormalLayer
@@ -355,6 +400,10 @@ sub generateNormalLayer
     if ($self->{Config}->get("Fork"))
     {   # Forking to render zoom levels in parallel
         $self->forkedRender($layer, $layerDataFile);
+    }
+    elsif ($self->{Config}->get("Cores") && defined $::GlobalChildren->{ThreadedRenderer} )
+    {    # use threads for rendering zoom levels parallel
+        $self->threadedRender($layer, $layerDataFile);
     }
     else
     {   # Non-forking render
@@ -1006,6 +1055,58 @@ sub nonForkedRender
         $self->Render($layer, $zoom, $layerDataFile)
     }
 
+    if (defined $::GlobalChildren->{optimizePngTasks}) {
+        $::GlobalChildren->{optimizePngTasks}->wait();
+        $::GlobalChildren->{optimizePngTasks}->dataReset();
+    }
+
+
+    if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
+        $self->createTilesetFile($layer);
+    }
+    else {
+        $self->createZipFile($layer);
+    }
+}
+
+#-------------------------------------------------------------------
+# renders the tiles, not using threads
+# paramter: ($layer, $layerDataFile)
+#-------------------------------------------------------------------
+sub threadedRender
+{
+    my $self = shift;
+    my ($layer, $layerDataFile) = @_;
+    my $req = $self->{req};
+    my $Config = $self->{Config};
+    my $minzoom = $req->Z;
+    my $maxzoom = $Config->get($layer."_MaxZoom");
+
+
+    for (my $zoom = $maxzoom ; $zoom >= $req->Z; $zoom--) {
+
+        ::statusMessage("add renderjob zoom: $zoom " ,1,10);
+        $::GlobalChildren->{ThreadedRenderer}->addJob($zoom,$layer,$layerDataFile);
+
+    }
+
+
+    #############
+    # at this time is the client on work and the main process wait now
+    #############
+    $::GlobalChildren->{ThreadedRenderer}->wait();
+
+#    sleep 2;    # dead zone
+
+    if( $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
+        throw TilesetError "Render failure", "renderer";
+    }
+
+    if (defined $::GlobalChildren->{optimizePngTasks}) {
+        $::GlobalChildren->{optimizePngTasks}->wait();
+        $::GlobalChildren->{optimizePngTasks}->dataReset();
+    }
+
     if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
         $self->createTilesetFile($layer);
     }
@@ -1290,10 +1391,15 @@ sub SplitTiles
                     print $fp $png_data;
                     close $fp;
 
+                    if(defined $::GlobalChildren->{optimizePngTasks}) {
+                        $::GlobalChildren->{optimizePngTasks}->addJob($tile_file,$Config->get("${layer}_Transparent"));
+                    }
+                    else {
                     $self->optimizePng($tile_file, $Config->get("${layer}_Transparent"));
                 }
             }
         }
+    }
     }
 }
 

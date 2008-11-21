@@ -51,6 +51,9 @@ function createMarkers() {
     addMarker(layer_local, 8.05, 52.27,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Osnabrück">Osnabrück</a></b></p>'
     ); 
+    addMarker(layer_local, 8.38, 51.904,
+        '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/OWL-Treffen">Ost-Westfalen/Lippe</a></b><br/>Unregelmäßige Treffen, <a href="http://hydra.gt.owl.de/cgi-bin/mailman/listinfo/osm">Mailingliste</a></p>'
+    ); 
     addMarker(layer_local, 9.95, 49.8,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/index.php/Würzburg">Würzburg</a></b><br/>Unregelmäßige Treffen</p>'
     ); 

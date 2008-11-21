@@ -293,14 +293,53 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     ctx->got_ele = true;
   } else if (strcmp(name, "time") == 0) {
     char *pnull = NULL;
+    char *tptr = ctx->accumulator;
     struct tm ignored;
+    
     if (ctx->state == UNKNOWN || ctx->state == WAYPOINT || ctx->state == ROUTEPOINT)
       return;
+    
     REQUIRE_STATE(TIMESTAMP);
-    pnull = strptime(ctx->accumulator ? ctx->accumulator : "",
-                     "%Y-%m-%dT%H:%M:%S",
+    
+    /* xsd:dateTime can have a leading minus? */
+    if (*tptr == '-') tptr++;
+    
+    /* Now, each format can be checked for until we get a hit */
+    pnull = strptime(tptr ? tptr : "",
+                     "%Y-%m-%dT%H:%M:%S+",
                      &ignored);
-    if (pnull != NULL && (*pnull == '\0' || *pnull == '.' || *pnull == 'Z')) {
+    
+    if (pnull == NULL)
+      pnull = strptime(tptr ? tptr : "",
+                       "%Y-%m-%dT%H:%M:%S-",
+                       &ignored);
+    
+    if (pnull == NULL)
+      pnull = strptime(tptr ? tptr : "",
+                       "%Y-%m-%dT%H:%M:%SZ",
+                       &ignored);
+    
+    if (pnull == NULL)
+      pnull = strptime(tptr ? tptr : "",
+                       "%Y-%m-%dT%H:%M:%S",
+                       &ignored);
+    
+    if (pnull != NULL && (*(pnull - 1) == '+' || *(pnull - 1) == '-')) {
+      /* Possibly (+|-)hh:mm format, check it */
+      int hh,mm;
+      if (sscanf(pnull, "%02d:%02d", &hh, &mm) == 2) {
+        if (hh > 23 || mm > 59) {
+          pnull = NULL; /* Signal parse failure */
+        } else {
+          /* Looks okay, advance pnull past timezone */
+          pnull += 5;
+        }
+      } else {
+        pnull = NULL; /* Signal parse failure */
+      }
+    }
+    
+    if (pnull != NULL && *pnull == '\0') {
       ctx->point->timestamp = ctx->accumulator;
       ctx->accumulator = NULL;
       ctx->got_time = true;

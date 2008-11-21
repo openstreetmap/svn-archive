@@ -164,7 +164,7 @@ main(int argc, char **argv)
       INFO("Found job %"PRId64", reading in...", gpxnr);
       g = job->gpx = gpx_parse_file(make_filename("GPX_PATH_TRACES", job->gpx_id, ".gpx"), &(job->error));
       
-      if (g != NULL && job->error == NULL) {
+      if (g != NULL && job->error == NULL && g->goodpoints > 0) {
         INFO("GPX contained %d good point(s) and %d bad point(s)", g->goodpoints, g->badpoints);
         if (g->badpoints > 0) {
           INFO("%d missed <time>, %d had bad latitude, %d had bad longitude",
@@ -179,9 +179,19 @@ main(int argc, char **argv)
           ERROR("Failure inserting into DB");
         }
       } else {
-        if (job->error == NULL)
-          job->error = strdup("XML failure while parsing GPX data");
-        ERROR("Failure while parsing GPX");
+        if (job->error == NULL) {
+          if (g->badpoints > 0) {
+            INFO("%d missed <time>, %d had bad latitude, %d had bad longitude",
+                 g->missed_time, g->bad_lat, g->bad_long);
+          }
+          if (g->goodpoints > 0) {
+            job->error = strdup("XML failure while parsing GPX data");
+            ERROR("Failure while parsing GPX");
+          } else {
+            job->error = strdup("Unable to find any good GPX track points");
+            ERROR("No good points found");
+          }
+        }
       }
     }
     

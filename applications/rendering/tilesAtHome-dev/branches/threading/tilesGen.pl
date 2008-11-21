@@ -44,6 +44,9 @@ use English '-no_match_vars';
 use Encode;
 use POSIX;
 
+use optimizePngTasks;
+use ThreadedRenderer;
+
 #---------------------------------
 
 # Read the config file
@@ -74,7 +77,7 @@ else
 # set the progress indicator variables
 our $currentSubTask;
 my $progress = 0;
-our $progressJobs = 1;
+our $progressJobs :shared = 1;
 our $progressPercent = 0;
 
 my $LastTimeVersionChecked = 0;   # version is only checked when last time was more than 10 min ago
@@ -228,6 +231,27 @@ if( my $nice = $Config->get("Niceness") ){
         }
     }
 }
+
+
+#########
+# init Children for optimizePngTasks
+#########
+if ($Config->get("Cores") && !$Config->get("Fork") 
+    && ($Mode eq "xy" || $Mode eq "loop") ) {
+
+  our $GlobalChildren = {};
+
+  # start optimizePng Childs
+  $GlobalChildren->{optimizePngTasks} = optimizePngTasks->new();
+  $GlobalChildren->{optimizePngTasks}->startChildren();
+
+  #start threadedrenderer childs
+  $GlobalChildren->{ThreadedRenderer} = ThreadedRenderer->new();
+  $GlobalChildren->{ThreadedRenderer}->startChildren();
+
+}
+
+
 
 #---------------------------------
 ## Start processing

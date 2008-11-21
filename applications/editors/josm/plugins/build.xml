@@ -16,6 +16,7 @@
     <ant	dir="agpifoj"		antfile="build.xml"	target="dist"/>
     <ant	dir="colorscheme"	antfile="build.xml"	target="dist"/>
     <ant	dir="duplicateway"	antfile="build.xml"	target="dist"/>
+    <ant	dir="DirectUpload"	antfile="build.xml"	target="dist"/>
     <ant	dir="globalsat"		antfile="build.xml"	target="dist"/>
     <ant	dir="lakewalker"	antfile="build.xml"	target="dist"/>
     <ant	dir="livegps"		antfile="build.xml"	target="dist"/>

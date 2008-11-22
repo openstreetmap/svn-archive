@@ -339,7 +339,7 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
       }
     }
     
-    if (pnull != NULL && *pnull == '\0') {
+    if (pnull != NULL && (*pnull == '\0' || *pnull == '.')) {
       ctx->point->timestamp = ctx->accumulator;
       ctx->accumulator = NULL;
       ctx->got_time = true;

@@ -1093,8 +1093,8 @@ sub threadedRender
     $::GlobalChildren->{ThreadedRenderer}->wait();
 
 
-    if( $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
-        throw TilesetError "Render failure", "renderer";
+    if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
+        throw TilesetError "Render failure: $error", "renderer";
     }
 
     if (defined $::GlobalChildren->{optimizePngTasks}) {

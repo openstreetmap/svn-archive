@@ -118,23 +118,22 @@ sub startChildren {
                             # access: unlock()
                             $self->{'rendererSemaphore'}->up();
 
-                            ::statusMessage(
-                                "Rendererclient $childID get job $pos zoom $zoom on layer $layer $layerDataFile",
-                                1, 10 );
-
                             ####
                             # i do my work now
                             ####
-                            eval {
-                                 $self->{tileset}->Render( $layer, $zoom, $layerDataFile );
-                            };
-                            if ($@) {
-                                ::statusMessage( "ERROR: Rendererclient $childID Renderer return $@", 1, 10 );
+                            if( !$self->rendererError() ) {
+                                ::statusMessage(
+                                    "Rendererclient $childID get job $pos zoom $zoom on layer $layer $layerDataFile",
+                                    1, 10 );
+                                eval {
+                                    $self->{tileset}->Render( $layer, $zoom, $layerDataFile );
+                                };
+                                if ($@) {
 
-                                $self->{'rendererSemaphore'}->down();
-                                $self->{SHARED}->{RENDERERJOBERROR} = 1;
-                                $self->{'rendererSemaphore'}->up();
+                                    $self->setRendererError("$@");
 
+                                    ::statusMessage( "ERROR: Rendererclient $childID Renderer return $@", 1, 10 );
+                                }
                             }
                             $self->{'rendererSemaphore'}->down();
                             $self->{SHARED}->{RENDERERJOBSREADY}++;
@@ -153,7 +152,6 @@ sub startChildren {
 sub addJob {
     my $self = shift;
 
-    #    my $Config = $self->{Config};
     my $zoom          = shift;
     my $layer         = shift;
     my $layerDataFile = shift;
@@ -217,6 +215,7 @@ sub setJobDir {
 
 sub rendererError {
     my $self   = shift;
+
     if( $self->{SHARED}->{RENDERERJOBERROR} ) {
         return($self->{SHARED}->{RENDERERJOBERROR});
     }
@@ -225,7 +224,20 @@ sub rendererError {
     
 }
 
+sub setRendererError {
+    my $self   = shift;
+    my $error = shift;
 
+    $self->{'rendererSemaphore'}->down();
+
+    $self->{SHARED}->{RENDERERJOBERROR} = $error;
+
+    $self->{'rendererSemaphore'}->up();
+    
+   
+}
+
+# put the job request in a shared strukture "i can not share classes"
 sub setRequest {
     my $self = shift;
     my $req  = shift;

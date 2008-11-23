@@ -33,8 +33,6 @@ use GD 2 qw(:DEFAULT :cmp);
 use threads;
 use Thread::Semaphore;
 
-use Data::Dumper;
-
 
 #-----------------------------------------------------------------------------
 # creates a new Tileset instance and returns it
@@ -66,11 +64,11 @@ sub new
          $self->{childThread} = 1;
     }
     else {
-    $self->{JobDir} = tempdir( 
-         sprintf("%d_%d_%d_XXXXX",$self->{req}->ZXY),
-         DIR      => $Config->get('WorkingDirectory'), 
-	 CLEANUP  => $delTmpDir,
-         );
+        $self->{JobDir} = tempdir( 
+            sprintf("%d_%d_%d_XXXXX",$self->{req}->ZXY),
+            DIR      => $Config->get('WorkingDirectory'), 
+            CLEANUP  => $delTmpDir,
+            );
     }
 
     # create true color images by default
@@ -199,9 +197,6 @@ sub generate
 
         ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
 
-        # manage renderer memory usage
-        # a 16mb osm file consum ca 1gb ram as svg "int(16786037/1024/16)"
-        
 
         #------------------------------------------------------
         # Handle all layers, one after the other
@@ -373,11 +368,7 @@ sub generate
     # cleanup children data
     $::GlobalChildren->{ThreadedRenderer}->Reset();
 
-
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
-    # TODO: i move it back! DESTORY is not called only one time!
-    # the GC from perl call DESTROY a 2. time and in thread mode 2*child
-    $self->cleanup();
 }
 
 sub generateNormalLayer
@@ -1101,7 +1092,6 @@ sub threadedRender
     #############
     $::GlobalChildren->{ThreadedRenderer}->wait();
 
-#    sleep 2;    # dead zone
 
     if( $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
         throw TilesetError "Render failure", "renderer";

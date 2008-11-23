@@ -63,6 +63,7 @@ sub new
     if($child) {
          $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
          $self->{JobDir} = $jobDir;
+         $self->{childThread} = 1;
     }
     else {
     $self->{JobDir} = tempdir( 
@@ -138,8 +139,12 @@ sub new
 #-----------------------------------------------------------------------------
 sub DESTROY
 {
-# perl call DESTROY more as on time!
+    my $self = shift;
+    # Don't clean up in child threads
+    return if ($self->{childThread} || !defined $self->{childThread} || !defined $self->{Config});
 
+    # only cleanup if we are the parent thread
+    $self->cleanup();
 }
 
 

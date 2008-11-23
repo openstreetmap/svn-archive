@@ -293,7 +293,7 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     ctx->got_ele = true;
   } else if (strcmp(name, "time") == 0) {
     char *pnull = NULL;
-    char *tptr = ctx->accumulator;
+    char *tptr = ctx->accumulator ? ctx->accumulator : "";
     struct tm ignored;
     
     if (ctx->state == UNKNOWN || ctx->state == WAYPOINT || ctx->state == ROUTEPOINT)
@@ -305,22 +305,22 @@ gpx_handle_end_element(void *_ctx, const XML_Char *name)
     if (*tptr == '-') tptr++;
     
     /* Now, each format can be checked for until we get a hit */
-    pnull = strptime(tptr ? tptr : "",
+    pnull = strptime(tptr,
                      "%Y-%m-%dT%H:%M:%S+",
                      &ignored);
     
     if (pnull == NULL)
-      pnull = strptime(tptr ? tptr : "",
+      pnull = strptime(tptr,
                        "%Y-%m-%dT%H:%M:%S-",
                        &ignored);
     
     if (pnull == NULL)
-      pnull = strptime(tptr ? tptr : "",
+      pnull = strptime(tptr,
                        "%Y-%m-%dT%H:%M:%SZ",
                        &ignored);
     
     if (pnull == NULL)
-      pnull = strptime(tptr ? tptr : "",
+      pnull = strptime(tptr,
                        "%Y-%m-%dT%H:%M:%S",
                        &ignored);
     

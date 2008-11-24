@@ -10,8 +10,10 @@
     <maplint:garmin short="RESNONAME" icon="Navaid, White"/>
 
     <maplint:check data="way" type="application/xsl+xml">
-        <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
-            <maplint:result/>
+        <xsl:if test="(tag[@k='noname' and @v='yes'])">
+            <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
+                <maplint:result/>
+            </xsl:if>
         </xsl:if>
     </maplint:check>
 

@@ -57,6 +57,9 @@ add_feature('osmarender:render', new Geo::OSM::MapFeatures::Feature::Value('no')
 add_feature('osmarender:renderName', new Geo::OSM::MapFeatures::Feature::Value('no'), ['node', 'way', 'area']);
 add_feature('osmarender:renderRef', new Geo::OSM::MapFeatures::Feature::Value('no'), ['node', 'way', 'area']);
 
+# add maplint keys
+add_feature('noname', new Geo::OSM::MapFeatures::Feature::Value('yes'), ['node', 'way', 'area']);
+
 # add_feature( $key, $value, \@types )
 # Pushes the feature onto the global list after
 # checking for special things that have to be specially handled

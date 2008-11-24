@@ -714,8 +714,10 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-residential-without-name-way">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
-            <maplint:result ref="residential-without-name"/>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='noname' and @v='yes'])">
+            <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
+                <maplint:result ref="residential-without-name"/>
+            </xsl:if>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-strict-not-in-map_features-way">

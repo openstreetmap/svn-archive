@@ -58,6 +58,12 @@ add_feature('osmarender:renderName', new Geo::OSM::MapFeatures::Feature::Value('
 add_feature('osmarender:renderRef', new Geo::OSM::MapFeatures::Feature::Value('no'), ['node', 'way', 'area']);
 
 # add maplint keys
+add_feature('validate:empty-tag-value', new Geo::OSM::MapFeatures::Feature::Value('ignore'), ['node', 'way', 'area']);
+add_feature('validate:bridge-or-tunnel-without-layer', new Geo::OSM::MapFeatures::Feature::Value('ignore'), ['way']);
+add_feature('validate:motorway-without-ref', new Geo::OSM::MapFeatures::Feature::Value('ignore'), ['way']);
+add_feature('validate:place-of-worship-without-religion', new Geo::OSM::MapFeatures::Feature::Value('ignore'), ['node', 'way', 'area']);
+add_feature('validate:poi-without-name', new Geo::OSM::MapFeatures::Feature::Value('ignore'), ['node', 'way', 'area']);
+add_feature('validate:residential-without-name', new Geo::OSM::MapFeatures::Feature::Value('ignore'), ['way']);
 add_feature('noname', new Geo::OSM::MapFeatures::Feature::Value('yes'), ['node', 'way', 'area']);
 
 # add_feature( $key, $value, \@types )

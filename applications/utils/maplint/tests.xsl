@@ -51,8 +51,10 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-base-empty-tag-value-any">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="tag[@v='']">
-            <maplint:result ref="empty-tag-value">Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not (tag[@k='validate:empty-tag-value' and @v='ignore'])">
+            <xsl:if test="tag[@v='']">
+                <maplint:result ref="empty-tag-value">Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>
+            </xsl:if>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-deprecated-tags-any">
@@ -76,16 +78,20 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-place-of-worship-without-religion-node">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
-            <maplint:result ref="place-of-worship-without-religion"/>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not (tag[@k='validate:place-of-worship-without-religion' and @v='ignore'])">
+            <xsl:if test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
+                <maplint:result ref="place-of-worship-without-religion"/>
+            </xsl:if>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-poi-without-name-node">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
-            <maplint:result ref="poi-without-name">
-                <xsl:text>amenity=</xsl:text>
-                <xsl:value-of select="tag[@k='amenity']/@v"/>
-            </maplint:result>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not (tag[@k='validate:poi-without-name' and @v='ignore']) and not (tag[@k='noname' and @v='yes'])">
+            <xsl:if test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
+                <maplint:result ref="poi-without-name">
+                    <xsl:text>amenity=</xsl:text>
+                    <xsl:value-of select="tag[@k='amenity']/@v"/>
+                </maplint:result>
+            </xsl:if>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-strict-not-in-map_features-node">
@@ -670,6 +676,30 @@
 </xsl:otherwise>
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='validate:empty-tag-value'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:place-of-worship-without-religion'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:poi-without-name'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='waterway'">
 <xsl:choose>
 <xsl:when test="@v='boatyard'"/>
@@ -702,19 +732,23 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-bridge-or-tunnel-without-layer-way">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[(@k='bridge' or @k='tunnel') and @v='true']) and not(tag[@k='layer'])">
-            <maplint:result ref="bridge-or-tunnel-without-layer"/>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not (tag[@k='validate:bridge-or-tunnel-without-layer' and @v='ignore'])">
+            <xsl:if test="(tag[(@k='bridge' or @k='tunnel') and @v='true']) and not(tag[@k='layer'])">
+                <maplint:result ref="bridge-or-tunnel-without-layer"/>
+            </xsl:if>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-motorway-without-ref-way">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="tag[@k='highway' and @v='motorway']">
-            <xsl:if test="not(tag[@k='ref'])">
-                <maplint:result ref="motorway-without-ref"/>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not (tag[@k='validate:motorway-without-ref' and @v='ignore'])">
+            <xsl:if test="tag[@k='highway' and @v='motorway']">
+                <xsl:if test="not(tag[@k='ref'])">
+                    <maplint:result ref="motorway-without-ref"/>
+                </xsl:if>
             </xsl:if>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-residential-without-name-way">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='noname' and @v='yes'])">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not (tag[@k='validate:residential-without-name' and @v='ignore']) and not (tag[@k='noname' and @v='yes'])">
             <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
                 <maplint:result ref="residential-without-name"/>
             </xsl:if>
@@ -1799,6 +1833,54 @@
 <xsl:when test="@k='tunnel'">
 <xsl:choose>
 <xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:bridge-or-tunnel-without-layer'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:empty-tag-value'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:motorway-without-ref'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:place-of-worship-without-religion'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:poi-without-name'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='validate:residential-without-name'">
+<xsl:choose>
+<xsl:when test="@v='ignore'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>

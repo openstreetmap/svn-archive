@@ -10,11 +10,13 @@
     <maplint:garmin short="POINONAME" icon="Navaid, White"/>
 
     <maplint:check data="node" type="application/xsl+xml">
-        <xsl:if test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
-            <maplint:result>
-                <xsl:text>amenity=</xsl:text>
-                <xsl:value-of select="tag[@k='amenity']/@v"/>
-            </maplint:result>
+        <xsl:if test="not (tag[@k='validate:poi-without-name' and @v='ignore']) and not (tag[@k='noname' and @v='yes'])">
+            <xsl:if test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
+                <maplint:result>
+                    <xsl:text>amenity=</xsl:text>
+                    <xsl:value-of select="tag[@k='amenity']/@v"/>
+                </maplint:result>
+            </xsl:if>
         </xsl:if>
     </maplint:check>
 

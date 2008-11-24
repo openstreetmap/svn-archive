@@ -4,13 +4,16 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <maplint:desc xml:lang="en">
-        Find ways with bridge or tunnel tag without a layer tag. In most cases this is an error, but it is only tagged as warning because
+        Find ways with bridge or tunnel tag without a layer tag. In most cases
+        this is an error, but it is only tagged as warning because
         the crossing way could have a layer tag.
     </maplint:desc>
 
     <maplint:check data="way" type="application/xsl+xml">
-        <xsl:if test="(tag[(@k='bridge' or @k='tunnel') and @v='true']) and not(tag[@k='layer'])">
-            <maplint:result/>
+        <xsl:if test="not (tag[@k='validate:bridge-or-tunnel-without-layer' and @v='ignore'])">
+            <xsl:if test="(tag[(@k='bridge' or @k='tunnel') and @v='true']) and not(tag[@k='layer'])">
+                <maplint:result/>
+            </xsl:if>
         </xsl:if>
     </maplint:check>
 

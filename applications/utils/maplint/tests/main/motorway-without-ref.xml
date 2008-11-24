@@ -10,9 +10,11 @@
     <maplint:garmin short="MOTNOREF" icon="Navaid, White"/>
 
     <maplint:check data="way" type="application/xsl+xml">
-        <xsl:if test="tag[@k='highway' and @v='motorway']">
-            <xsl:if test="not(tag[@k='ref'])">
-                <maplint:result/>
+        <xsl:if test="not (tag[@k='validate:motorway-without-ref' and @v='ignore'])">
+            <xsl:if test="tag[@k='highway' and @v='motorway']">
+                <xsl:if test="not(tag[@k='ref'])">
+                    <maplint:result/>
+                </xsl:if>
             </xsl:if>
         </xsl:if>
     </maplint:check>

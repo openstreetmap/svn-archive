@@ -10,8 +10,10 @@
     <maplint:garmin short="PWNOREL" icon="Navaid, White"/>
 
     <maplint:check data="node" type="application/xsl+xml">
-        <xsl:if test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
-            <maplint:result/>
+        <xsl:if test="not (tag[@k='validate:place-of-worship-without-religion' and @v='ignore'])">
+            <xsl:if test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
+                <maplint:result/>
+            </xsl:if>
         </xsl:if>
     </maplint:check>
 

@@ -10,8 +10,10 @@
     <maplint:garmin short="NOVAL" icon="Navaid, Red"/>
 
     <maplint:check data="any" type="application/xsl+xml">
-        <xsl:if test="tag[@v='']">
-            <maplint:result>Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>
+        <xsl:if test="not (tag[@k='validate:empty-tag-value' and @v='ignore'])">
+            <xsl:if test="tag[@v='']">
+                <maplint:result>Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>
+            </xsl:if>
         </xsl:if>
     </maplint:check>
 

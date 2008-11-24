@@ -184,8 +184,14 @@
 <xsl:when test="@v='bollard'"/>
 <xsl:when test="@v='cattle_grid'"/>
 <xsl:when test="@v='gate'"/>
+<xsl:when test="@v='hampshire_gate'"/>
+<xsl:when test="@v='kissing_gate'"/>
+<xsl:when test="@v='lift_gate'"/>
+<xsl:when test="@v='rotating_gate'"/>
+<xsl:when test="@v='sally_port'"/>
 <xsl:when test="@v='stile'"/>
 <xsl:when test="@v='toll_booth'"/>
+<xsl:when test="@v='v_gate'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -408,8 +414,17 @@
 <xsl:when test="@v='tree'"/>
 <xsl:when test="@v='volcano'"/>
 <xsl:when test="@v='water'"/>
+<xsl:when test="@v='wetland'"/>
 <xsl:when test="@v='wood'"/>
 
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='noname'">
+<xsl:choose>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
 </xsl:choose>
 </xsl:when>
 <xsl:when test="@k='note'">
@@ -1398,6 +1413,7 @@
 <xsl:when test="@v='scree'"/>
 <xsl:when test="@v='scrub'"/>
 <xsl:when test="@v='water'"/>
+<xsl:when test="@v='wetland'"/>
 <xsl:when test="@v='wood'"/>
 
 </xsl:choose>
@@ -1406,6 +1422,14 @@
 
 </xsl:when>
 <xsl:when test="@k='noexit'">
+<xsl:choose>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='noname'">
 <xsl:choose>
 <xsl:when test="@v='yes'"/>
 <xsl:otherwise>

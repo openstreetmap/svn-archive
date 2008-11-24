@@ -66,3 +66,12 @@ Programm help text shown for wrong arguments:
    oceantiles_12.png.r<num> files which are the result of a checkout conflict
    and copies the differences between these two files in the oceantiles_12.png
    This is required when the file has been changed in SVN during own changes.
+
+
+Note
+---------------------------------------------
+Please note that changes which are done through informationfreeway.org do NOT
+automatically end up here. The changes are stored localy on that host and are
+manually and erratically incorporated here. A better way for changes is thus
+to mail the change request to the list T@h mailing list at
+<tilesathome@openstreetmap.org>.

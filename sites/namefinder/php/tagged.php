@@ -23,6 +23,7 @@ class tagged {
   function add_tag($key, $value) { 
     static $interesting_tags = array('name' => TRUE,
                                      'ref' => TRUE,
+                                     'uk_postcode_centroid' => TRUE,
                                      'amenity' => array('post_office' => TRUE,
                                                         'fuel' => TRUE,
                                                         'supermarket' => TRUE,
@@ -119,7 +120,7 @@ class tagged {
       $namestring .= $this->tags['place_name']; 
     }
     
-    foreach (array('ref', 'iata', 'icao', 'old_name','loc_name','alt_name') as $refkey) {
+    foreach (array('ref', 'iata', 'icao', 'old_name','loc_name','alt_name','uk_postcode_centroid') as $refkey) {
       if (! empty($this->tags[$refkey])) { 
         if (empty($namestring)) {
           $namestring = $this->tags[$refkey];
@@ -311,6 +312,9 @@ class tagged {
             $prefix = '; ';
           }
           $named->category = $key;
+          break;
+        case 'uk_postcode_centroid':
+          $named->info = $named->category = 'postcode area';
           break;
         case 'place':
           $value = str_replace('_', ' ', $value);

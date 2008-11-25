@@ -458,6 +458,7 @@ class named {
   function assignzoom() {
     static $zoomlevels = array(
                         'default'=>16,
+                        'postcode area'=>14,
                         'water'=>13,
                         'school'=>17,
                         'university'=>17,

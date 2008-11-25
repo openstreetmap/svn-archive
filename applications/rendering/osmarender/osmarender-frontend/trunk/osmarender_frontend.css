@@ -52,16 +52,13 @@ dd {
 	border: 2px solid grey;
 	radius:8pt;
 	-moz-border-radius:8pt 8pt;
-	z-index:99;
-} 
-
-#resizePane {
-	width: 100%;
-	height: 15px;
-	background-color: #666666;
-	radius:8pt;
-	-moz-border-radius:8pt 8pt;
+	z-index:80;
 }
+
+#button_restore {
+	z-index:99;
+}
+
 #topcontainer {
 	width:100%;
 	position:relative;
@@ -101,12 +98,6 @@ dd {
 	height:auto;
 	width:100%;
 	overflow:hidden;
-}
-
-.handle {
-	bottom: 2px; 
-	right: 2px; 
-	position: absolute;
 }
 
 #main_content {

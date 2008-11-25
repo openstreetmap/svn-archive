@@ -1970,7 +1970,7 @@
 			fill: black;
 			stroke: black;
 			stroke-width: 0.2px;
-			font-family: "DejaVu Sans",sans-serif;
+			font-family: "DejaVu Sans";
 			font-size: 4px;
 			font-weight: bold;
 			text-anchor: middle;

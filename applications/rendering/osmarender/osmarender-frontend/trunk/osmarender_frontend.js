@@ -8,7 +8,10 @@ var cmyk;
 
 var classesAndProperties = new Array();
 
-var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1);
+//var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1);
+var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1)+"../../xslt/";
+var FROM_DOJO_PATH="";
+//var FROM_DOJO_PATH="../../";
 
 //Subscribe to some events
 //Subscribe to deletedStyle (from juice);
@@ -112,12 +115,17 @@ viewPropertiesFromClass = function(key) {
 	}
 
 	//NEW
+	if (dijit.byId("css_editor")) {
+		dijit.byId("css_editor").destroyRecursive();
+	}
+
 	var css_editor = new juice.juice({
 		id:"css_editor",
 		_myclass:key,
 		CSSproperties: propertiesToPrint,
 		images:cmyk.getObjects()
 	});
+
 	div_result.domNode.appendChild(css_editor.domNode);
 
 }
@@ -257,7 +265,7 @@ CSSResults = function() {
 	var div_result = dijit.byId("div_select_class");
 
 	clearContentPanes([div_result]);
-	loadIntoNodeAndParse("osmarender_frontend/panels/css/css.xml",div_result.domNode);
+	loadIntoNodeAndParse("osmarender_frontend/panels/css/css.xml",div_result);
 
 	var sorted_list_of_unique_classes = refreshProperties();
 	
@@ -291,7 +299,7 @@ SymbolsResult = function() {
 	var div_result = dijit.byId("result_symbols");
 
 	clearContentPanes([div_result]);
-	loadIntoNodeAndParse("osmarender_frontend/panels/symbols/select_symbol.xml",div_result.domNode);
+	loadIntoNodeAndParse("osmarender_frontend/panels/symbols/select_symbol.xml",div_result);
 
 	var symbols_section = cmyk.getSymbols();
 
@@ -326,16 +334,14 @@ SymbolsResult = function() {
 SettingsResults = function() {
 
 //TODO:This could be enhanced by using dojox.dtl Django templating system
-	div_results = dojo.byId("result_settings");
-	if (dijit.byId("settings_container")) dijit.byId("settings_container").destroyRecursive();
-	loadIntoNodeAndParse("osmarender_frontend/panels/settings/settings.xml",div_results);
-
-	dojo.byId("BoundsNorth").value=cmyk.getBounds().lat.max;
-	dojo.byId("BoundsSouth").value=cmyk.getBounds().lat.min;
-	dojo.byId("BoundsEast").value=cmyk.getBounds().lon.min;
-	dojo.byId("BoundsWest").value=cmyk.getBounds().lon.max;
-	dojo.byId("Scale").value=cmyk.getScale();
-	dojo.byId("TextAttenuation").value=cmyk.getTextAttenuation();
+	//div_results = dojo.byId("result_settings");
+	loadIntoNodeAndParse("osmarender_frontend/panels/settings/settings.xml",dijit.byId("result_settings"));
+	dijit.byId("BoundsNorth").attr("value",cmyk.getBounds().lat.max);
+	dijit.byId("BoundsSouth").attr("value",cmyk.getBounds().lat.min);
+	dijit.byId("BoundsEast").attr("value",cmyk.getBounds().lon.min);
+	dijit.byId("BoundsWest").attr("value",cmyk.getBounds().lon.max);
+	dijit.byId("Scale").attr("value",cmyk.getScale());
+	dijit.byId("TextAttenuation").attr("value",cmyk.getTextAttenuation());
 }
 
 
@@ -406,7 +412,7 @@ viewSymbol = function(svg_url) {
 			var key_chosen = dijit.byId("select_feature_way").value;
 			var value_chosen = dijit.byId("select_feature_value").value;
 
-			loadIntoNodeAndParse("osmarender_frontend/panels/symbols/symbol_details.xml",dojo.byId("div_symbolDetails"));
+			loadIntoNodeAndParse("osmarender_frontend/panels/symbols/symbol_details.xml",dijit.byId("div_symbolDetails"));
 
 			dijit.byId("symbol_width").setValue(viewBox_array[2]);
 			dijit.byId("symbol_height").setValue(viewBox_array[3]);
@@ -480,7 +486,7 @@ function clearContentPanes(contentPanes) {
 	for (var i in contentPanes) {
 		if(contentPanes[i]) {
 			contentPanes[i].destroyDescendants();
-			contentPanes[i].setContent();
+			contentPanes[i].attr("content","");
 		}
 	}
 }
@@ -491,10 +497,10 @@ function loadIntoNodeAndParse(my_url,node) {
 		url: my_url,
 		sync: true,
 		load: function(data){
-			node.innerHTML = data;
+			node.destroyDescendants();
+			node.attr("content",data);
 		}
 	});
-	dojo.parser.parse(node);
 }
 
 function loadIntoNodeTemplate (template,dom,context) {
@@ -535,7 +541,7 @@ listKeys = function() {
 	var div_result = dijit.byId("div_select_key");
 
 	clearContentPanes([div_result,dijit.byId("div_select_value"),dijit.byId("list_css"),dijit.byId("list_symbols"),dijit.byId("div_tree")]);
-	loadIntoNodeAndParse("osmarender_frontend/panels/rules/select_key.xml",div_result.domNode);
+	loadIntoNodeAndParse("osmarender_frontend/panels/rules/select_key.xml",div_result);
 
 	var rulesStore = new dojo.data.ItemFileReadStore({data:cmyk.getRuleTree()});
 	var printError = function (error,request) {
@@ -554,7 +560,7 @@ listKeys = function() {
 		childrenAttrs: ["children"],
 	});
 
-	loadIntoNodeAndParse("osmarender_frontend/panels/rules/tree.xml",dojo.byId("div_tree"));
+	loadIntoNodeAndParse("osmarender_frontend/panels/rules/tree.xml",dijit.byId("div_tree"));
 //TODO: Lazy loading the tree, see http://www.ibm.com/developerworks/websphere/techjournal/0805_col_johnson/0805_col_johnson.html
 	var treerules = new dijit.Tree({
 		model:myModel,
@@ -608,7 +614,7 @@ function viewValuesFromKey(key) {
 
 	sorted_list_of_unique_values = RemoveDuplicates(sorted_list_of_unique_values.sort());
 	
-	loadIntoNodeAndParse("osmarender_frontend/panels/rules/select_value.xml",div_result.domNode);
+	loadIntoNodeAndParse("osmarender_frontend/panels/rules/select_value.xml",div_result);
 
 	var store_values = {
 		identifier: "name",

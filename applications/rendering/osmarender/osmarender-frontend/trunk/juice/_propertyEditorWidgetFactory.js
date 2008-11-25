@@ -15,34 +15,34 @@ dojo.declare("juice._propertyEditorWidgetFactory",null,{
 		//TODO: change to switch
 		if (property=="fill" || property=="stroke") {
 			if (value.substring(0,3)!="url") {
-				return new juice._propertyEditorColorPicker(property,value);
+				return new juice._propertyEditorColorPicker({_property:property,_value:value});
 			}
 			else {
-				return new juice._propertyEditorViewer(property,value,images);
+				return new juice._propertyEditorViewer({_property:property,_value:value,_images:images});
 			}
 		}
 		if (property=="marker-end" || property=="marker-mid" || property=="marker-start") {
 			if (value.substring(0,3)!="url") {
-				return new juice._propertyEditorColorPicker(property,value);
+				return new juice._propertyEditorColorPicker({_property:property,_value:value});
 			}
 			else {
-				return new juice._propertyEditorViewer(property,value,images);
+				return new juice._propertyEditorViewer({_property:property,_value:value,_images:images});
 			}
 		}
 		if (property=="opacity" || property=="fill-opacity" || property=="stroke-opacity" || property=="stroke-miterlimit") {
 			if (value.search("[0-9]")!=-1) {
-				return new juice._propertyEditorNumberSpinner(property,value);
+				return new juice._propertyEditorNumberSpinner({_property:property,_value:value});
 			}
 		}
 		if (property=="stroke-width" || property=="font-size") {
 			if (value.search("[0-9]")!=-1) {
-				return new juice._propertyEditorNumberSpinnerWithDimensions(property,value);
+				return new juice._propertyEditorNumberSpinnerWithDimensions({_property:property,_value:value});
 			}
 		}
 		if (property=="stroke-linecap" || property=="stroke-linejoin" || property=="font-weight" || property=="text-anchor" || property=="display" || property=="fill-rule") {
-			return new juice._propertyEditorSelect(property,value);
+			return new juice._propertyEditorSelect({_property:property,_value:value});
 		}
 		//if this property is unknown, return a read only text
-		return new juice._propertyEditorText(property,value);
+		return new juice._propertyEditorText({_property:property,_value:value});
 	}
 });

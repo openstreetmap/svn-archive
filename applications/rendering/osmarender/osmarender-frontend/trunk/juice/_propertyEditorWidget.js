@@ -18,11 +18,8 @@ dojo.declare("juice._propertyEditorWidget",[dijit._Widget,dijit._Templated],{
 	_images: null,
 	_mainmessages: null,
 
-	constructor: function(property,value,images) {
+	constructor: function() {
 		this._mainmessages = dojo.i18n.getLocalization("juice", "main");
-		this._property=property;
-		this._value=value;
-		this._images=images;
 	},
 
 	getCSSWidgetValue : function() {

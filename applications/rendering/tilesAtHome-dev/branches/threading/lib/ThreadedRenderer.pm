@@ -281,7 +281,7 @@ sub updateMaxRenderer {
 
         # too little memory
         my $newMaxChildren = int( $Config->get("MaxMemory") / $caMemoryUsage );
-        $newMaxChildren = 1 if $self->{'maxChildren'} eq $newMaxChildren;
+        $newMaxChildren = 1 if $newMaxChildren < 1;
 
         ::statusMessage(
             "too little memory for the render job and "

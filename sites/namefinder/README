@@ -56,24 +56,22 @@ this to .config.php and amend appropriately.
 Build the database
 ------------------
 
-In production this should really be done to a separate database which
-can then be cleaned and switched over to the production one as the
-process takes a long time. The database can be controlled by havinga
-separate copy of .config in your utils directory instead of a link to
-the central one in www.
-
 Run import .php like this, cd'd to utils
-  php5 import.php planet-070813.osm
+  php5 -d memory_linmit=128M import.php planet-070813.osm
 (or whatever you php interpreter is called). Make sure the planet file
 has the date in it, as exported from osm, as this is used to determine
 the date of the index.
 
 You might want to run this as a background job redirecting output to a
-log file. The output starts showing progress reports after a few minutes.
+log file. 
 
-Once the index is complete, the node and segment tables (by far the
-largest) can be deleted before transferring to production.
+Then run 
+  php5 -d memory_linmit=128M update.php
 
+Once run on a planet file updates can be run from the regular diff files to 
+update the database.
+
+See the wiki pages for more details.
 
 Classysql
 ---------
@@ -84,4 +82,4 @@ licensed.
 
 David Earl
 www.frankieandshadow.com
-August 2007
+November 2008

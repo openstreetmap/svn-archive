@@ -993,7 +993,7 @@
 			fill: black;
 			stroke: blue;
 			stroke-width: 0.2px;
-			font-family: "DejaVu Sans",sans-serif;
+			font-family: "DejaVu Sans";
 			font-size: 10px;
 			font-weight: bold;
 			display: none;

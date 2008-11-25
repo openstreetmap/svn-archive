@@ -1,0 +1,23 @@
+WARNING: This file contains outdated informations. Need to further explore 1.2.2 dojotoolkit
+version before update this
+
+=====
+OFFLINE VERSION
+=====
+
+To use Osmarender Frontend's offline version, you need to tweak Firefox 3 configuration
+in order to let the frontend load local files for i18n.
+
+In Firefox 3's location bar, you need to write "about:config". Then search for the following
+key:
+
+fileuri.strict_origin_policy
+
+and set it to FALSE
+
+This is a well known issue with dojotoolkit and Firefox 3, as you can see in:
+
+http://dojotoolkit.org/support/faq/why-does-dojo-fail-load-file-urls-firefox-3
+https://bugzilla.mozilla.org/show_bug.cgi?id=441890
+http://kb.mozillazine.org/Security.fileuri.strict_origin_policy
+ 

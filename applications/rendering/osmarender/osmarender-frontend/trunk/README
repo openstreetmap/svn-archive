@@ -1,0 +1,58 @@
+=====
+SVN VERSION
+=====
+
+If you want to get Osmarender Frontend working in you locale SVN or if you
+want to have a full develop box, then follow the instructions below
+
+====
+DOJO TOOLKIT
+====
+
+To get Osmarender Frontend working, dojo toolkit version 1.2.2 must be copied under
+/dojotoolkit directory.
+
+You can get the latest Dojotoolkit version from
+http://www.dojotoolkit.org/downloads
+
+At the present moment (20081125), you can get Dojotoolkit version 1.2.2
+
+http://download.dojotoolkit.org/current-stable/dojo-release-1.2.2-src.zip 
+
+then probably it will be ported here
+
+http://download.dojotoolkit.org/release-1.2.2/
+
+otherwise you can add this property in osmarender-frontend dir:
+
+key:
+svn:externals
+value:
+dojotoolkit http://svn.dojotoolkit.org/src/tags/release-1.2.2/
+
+======
+UNIT TESTING
+======
+
+If you want to try test cases you can add, in svn:externals property,
+the following value:
+
+jsunit https://jsunit.svn.sourceforge.net/svnroot/jsunit/trunk/jsunit -r 1334
+
+and use "cmykTestSuite.html file".
+
+Due to new security features of Firefox 3,
+creating or setting the "security.fileuri.origin_policy"=3 variable may be needed.
+Just type "about:config" in firefox, search for it and change it, or add it
+by using the right mouse button.
+
+======
+DOCUMENTATION
+======
+
+If you want to generate documentation, you can add, in svn:externals property,
+the following value:
+
+jsdoctoolkit http://jsdoc-toolkit.googlecode.com/svn/tags/jsdoc_toolkit-2.0.2/jsdoc-toolkit/
+
+and use generate_documentation.sh file. A running version of "java" in the PATH is required

@@ -1,0 +1,62 @@
+<div id="settings_bounds" dojoType="dijit.layout.ContentPane">
+	<input id="transform_on_set_bounds" dojoType="dijit.form.CheckBox" />Render on Set Bounds
+	<h1>Set bounds</h1><br />
+	<!-- TODO: Need to find something better for pattern -->
+	<!-- TODO: Need to override the locale instead of settings en-us as language, which changes all component messages.. see http://www.nabble.com/Cannot-set-custom-Locale-bug-in-ValidatingTextBox-td18756380.html -->
+	Set North <input dojoType="dijit.form.NumberSpinner" id="BoundsNorth" value="" constraints="{pattern:'#.########'}" lang="en-us" smallDelta="0.0001" style="width:10em;height:1.1em;"/><br />
+	Set South <input dojoType="dijit.form.NumberSpinner" id="BoundsSouth" value="" constraints="{pattern:'#.########'}" lang="en-us" smallDelta="0.0001" style="width:10em;height:1.1em;" /><br />
+	Set East<input dojoType="dijit.form.NumberSpinner" id="BoundsEast" value="" constraints="{pattern:'#.########'}" lang="en-us" smallDelta="0.0001" style="width:10em;height:1.1em;" /><br />
+	Set West<input dojoType="dijit.form.NumberSpinner" id="BoundsWest" value="" constraints="{pattern:'#.########'}" lang="en-us" smallDelta="0.0001" style="width:10em;height:1.1em;" /><br />
+	<button id="button_set_bounds" dojoType="dijit.form.Button">Set Bounds
+		<script type="dojo/method" event="onClick">
+			setBounds(dojo.byId("BoundsNorth").value,dojo.byId("BoundsSouth").value,dojo.byId("BoundsEast").value,dojo.byId("BoundsWest").value);
+			if(dojo.byId("transform_on_set_bounds").checked) Osmatransform();
+		</script>
+	</button>
+</div>
+<div id="settings_show" dojoType="dijit.layout.ContentPane">
+	<input id="transform_on_set_show" dojoType="dijit.form.CheckBox" />Render on Set Show
+	<h1>Show:</h1><br />
+	<input id="show_scale" dojoType="dijit.form.CheckBox" onClick="setShowScale(this.checked,dojo.byId('transform_on_set_show').checked);" />Show Scale
+	<ul>
+		<li>
+			<a href="javascript:loadCSS('map-scale-casing');">Change scale casing</a>
+		</li>
+		<li>
+			<a href="javascript:loadCSS('map-scale-core');">Change scale core</a>
+		</li>
+		<li>
+			<a href="javascript:loadCSS('map-scale-bookend');">Change scale bookend</a>
+		</li>
+		<li>
+			<a href="javascript:loadCSS('map-scale-caption');">Change scale caption</a>
+		</li>
+	</ul>
+	<input id="showGrid" dojoType="dijit.form.CheckBox" onClick="setShowGrid(this.checked,dojo.byId('transform_on_set_show').checked);" />Show Grid
+	<ul>
+		<li>
+			<a href="javascript:loadCSS('map-grid-line');">Change grid color</a>
+		</li>
+	</ul>
+	<input id="show_border" dojoType="dijit.form.CheckBox" onClick="setShowBorder(this.checked,dojo.byId('transform_on_set_show').checked);" />Show Border
+	<ul>
+		<li>
+			<a href="javascript:loadCSS('map-border-casing');">Change border casing</a>
+		</li>
+		<li>
+			<a href="javascript:loadCSS('map-border-core');">Change border core</a>
+		</li>
+	</ul>
+	<input id="show_license" dojoType="dijit.form.CheckBox" onClick="setShowLicense(this.checked,dojo.byId('transform_on_set_show').checked);" />Show License<br />
+	<input id="show_interactive" dojoType="dijit.form.CheckBox" onClick="setShowInteractive(this.checked,dojo.byId('transform_on_set_show').checked);" />Interactive Mode<br />
+</div>
+<div id="settings_others">
+	<h1>Others</h1><br />
+	Set Scale<input dojoType="dijit.form.NumberSpinner" id="Scale" value="" smallDelta="0.1" style="width:10em;height:1.1em;"/><br />
+	Set Text Attenuation<input dojoType="dijit.form.NumberSpinner" id="TextAttenuation" value="" smallDelta="0.1" style="width:10em;height:1.1em;"/><br />
+	<button id="button_set_others" dojoType="dijit.form.Button">Set Others
+		<script type="dojo/method" event="onClick">
+			setScale(dojo.byId("Scale").value);setTextAttenuation(dojo.byId("TextAttenuation").value);
+		</script>
+	</button>
+</div>

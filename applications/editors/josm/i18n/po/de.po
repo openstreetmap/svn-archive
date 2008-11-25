@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-25 18:40+0100\n"
-"PO-Revision-Date: 2008-11-25 19:26+0100\n"
+"PO-Revision-Date: 2008-11-25 19:38+0100\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1215,7 +1215,7 @@ msgid ""
 "nodes and the new nodes will be selected. Otherwise, all ways will get "
 "their\n"
 "own copy and all nodes will be selected."
-msgstr ""
+msgstr "Notiz: Wenn ein Weg gewählt wird, erhält dieser Weg Kopien\n der getrennten Knoten und die neuen Knoten werden ausgewählt.\nAnsonsten erhält jeder Weg eine eigene Kopie\nund alle Knoten werden gewählt."
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:296
 #, java-format
@@ -1819,7 +1819,7 @@ msgstr "Verschiebe gewählte Punkte in einen Kreis."
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:93
 msgid "Some of the nodes are (almost) in the line"
-msgstr ""
+msgstr "Einige der Knoten sind (fast) in einer Linie"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:182
 msgid "Please select at least four nodes."
@@ -1827,24 +1827,24 @@ msgstr "Bitte mindestens vier Knotenpunkte auswählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:41
 msgid "Orthogonalize shape"
-msgstr ""
+msgstr "Form rechtwinklig machen"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:43
 msgid "Move nodes so all angles are 90 or 270deg"
-msgstr ""
+msgstr "Knoten so verschieben, dass alle Winkel 90 oder 270 Grad sind"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:245
 msgid "Orthogonalize"
-msgstr ""
+msgstr "Rechtwinklig machen"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:60
 msgid "Only two nodes allowed"
-msgstr ""
+msgstr "Nur zwei Knoten erlaubt"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:68
 msgid "Selection must consist only of ways."
-msgstr ""
+msgstr "Auswahl darf nur aus Wegen bestehen."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:75
 msgid "Please select closed way(s) of at least four nodes."
@@ -1859,7 +1859,7 @@ msgid ""
 "<html>You are using the EPSG:4326 projection which might lead<br>to "
 "undesirable results when doing rectangular alignments.<br>Change your "
 "projection to get rid of this warning.<br>Do you want to continue?"
-msgstr ""
+msgstr "<html>Sie nutzen die EPSG:4326-Projektion. Diese kann beim Erzeugen<br>von rechten Winkeln zu unerwarteten Resultaten führen.<br>Ändern Sie Ihre Projektion zum Ausschalten dieser Warnung.<br>Wollen Sie fortfahren?"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:108
 msgid "Only one node selected"
@@ -2853,7 +2853,7 @@ msgstr "Maximalgebiet je Anfrage:"
 msgid ""
 "<html>This action will require {0} individual<br>download requests. Do you "
 "wish<br>to continue?</html>"
-msgstr ""
+msgstr "<html>Diese Aktion benötigt {0} individuelle Serveranfragen.<br>Wollen Sie fortfahren?</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:914
 #, java-format
@@ -3506,7 +3506,7 @@ msgstr "<h1><a name=\"top\">Tastaturkürzel</a></h1>"
 msgid ""
 "<p>Please note that shortcuts keys are assigned to the actions when JOSM is "
 "started. So you need to <b>restart</b> JOSM to see your changes.</p>"
-msgstr ""
+msgstr "<p>Beachten Sie, dass Tastaturkürzel beim Start von JOSM zugewiesen werden. Sie müssen JOSM <b>neu starten</b> um Ihre Änderungen zu aktivieren.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:167
 msgid ""
@@ -3552,7 +3552,7 @@ msgstr ""
 msgid ""
 "<p>The pseudo-modifier 'disabled' will disable the shortcut when encountered."
 "</p>"
-msgstr ""
+msgstr "<p>Das Pseudo-Tastaturkürzel 'disabled' deaktiviert Tastaturkürzel.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:186
 msgid "Read First"
@@ -3580,7 +3580,7 @@ msgstr "Tastaturkürzel"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:254
 msgid "Edit Shortcuts"
-msgstr "Tastaturkürzel bearbeiten"
+msgstr "Bearbeitungskürzel"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:257
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:280
@@ -5686,7 +5686,7 @@ msgstr "Verbindungsfehler."
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:130
 msgid "configure the connected DG100"
-msgstr ""
+msgstr "Einstellen des angeschlossenen DG100"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:139
 msgid "delete data after import"

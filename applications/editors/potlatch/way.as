@@ -332,6 +332,7 @@
 			_root.writesrequested--;
 			uploadDirtyWays();			// make sure dependencies are uploaded
 		};
+
 		if (!this.uploading && !this.hasDependentNodes() && !this.locked && !_root.sandbox && this.path.length>1) {
 			// Assemble 'sendpath' and upload it
 			this.uploading=true;
@@ -583,10 +584,12 @@
 			_root.map.ways[newwayid].path.splice(0,point);				// new way
 			_root.map.ways[newwayid].locked=this.locked;				//  |
 			_root.map.ways[newwayid].redraw();							//  |
+			_root.map.ways[newwayid].clean=false;						//  | - in case it doesn't upload
 			_root.map.ways[newwayid].upload();							//  |
 			_root.map.ways[newwayid].createNodeIndex();					//  |
 
-			this.upload();												// upload current way
+			this.clean=false;											// upload current way
+			this.upload();												//  |
 			this.select();												//  |
 			uploadDirtyRelations();
 			_root.undo.append(UndoStack.prototype.undo_splitway,

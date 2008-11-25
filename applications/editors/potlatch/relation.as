@@ -355,6 +355,22 @@
 		}
 		return rels;
 	}
+	
+	function markWayRelationsDirty(way) {
+		var z=_root.map.relations;
+		for (var i in z) {
+			if (z[i].hasWay(way)) { z[i].clean=false; }
+		}
+		var p=_root.map.ways[way].path;
+		for (var i in p) { markNodeRelationsDirty(_root.map.ways[way].path[i].id); }
+	}
+	
+	function markNodeRelationsDirty(node) {
+		var z=_root.map.relations;
+		for (var i in z) {
+			if (z[i].hasNode(node)) { z[i].clean=false; }
+		}
+	}
 
 	function uploadDirtyRelations() {
 		var rs = _root.map.relations;

@@ -432,22 +432,23 @@
 						break;
 				case 3:	// Find a relation
 						keepDialog=true;
-						if (box.search.text=='') { break; }
-						findresponder=function() {};
-						findresponder.onResult=function(rellist) {
-							for (r in rellist) {
-								var w=rellist[r][0];
-								if (!_root.map.relations[w]) {
-									_root.map.relations.attachMovie("relation",w,++reldepth);
-									_root.map.relations[w].attr=rellist[r][1];
-									_root.map.relations[w].members=rellist[r][2];
-									_root.relcount++;
+						if (box.search.text!='') {
+							findresponder=function() {};
+							findresponder.onResult=function(rellist) {
+								for (r in rellist) {
+									var w=rellist[r][0];
+									if (!_root.map.relations[w]) {
+										_root.map.relations.attachMovie("relation",w,++reldepth);
+										_root.map.relations[w].attr=rellist[r][1];
+										_root.map.relations[w].members=rellist[r][2];
+										_root.relcount++;
+									}
 								}
-							}
-							createRelationMenu(_root.windows.relation.box,20);
-							_root.windows.relation.box.search.text='';
-						};
-						remote_read.call('findrelations',findresponder,box.search.text);
+								createRelationMenu(_root.windows.relation.box,20);
+								_root.windows.relation.box.search.text='';
+							};
+							remote_read.call('findrelations',findresponder,box.search.text);
+						}
 						break;
 			}
 			_root.panel.properties.reinit();

@@ -1,4 +1,6 @@
 
+	System.security.loadPolicyFile("http://www.openstreetmap.org/api/crossdomain.xml");
+
 	// =====================================================================================
 	// Initialise
 
@@ -357,7 +359,7 @@
 	updateButtons();
 	updateScissors();
 	resizeWindow();
-	startChangeset();
+	startChangeset('');
 	loadPresets();
 
 
@@ -679,10 +681,12 @@
 			_root.ws.locked=!_root.ws.locked;
 			_root.ws.redraw();
 			_root.panel.padlock._visible=_root.ws.locked;
+			if (!_root.ws.locked) { markWayRelationsDirty(_root.wayselected); }
 		} else if (_root.poiselected) {
 			_root.map.pois[poiselected].locked=!_root.map.pois[poiselected].locked;
 			_root.map.pois[poiselected].recolour();
 			_root.panel.padlock._visible=_root.map.pois[poiselected].locked;
+			if (!_root.map.pois[poiselected].locked) { markNodeRelationsDirty(poiselected); }
 		}
 	}
 

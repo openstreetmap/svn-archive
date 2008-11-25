@@ -169,6 +169,7 @@
 				Selection.setFocus(null);
 				_root.keytarget='';
 			}
+			if (this.pw.proptype!='POI') { _root.ws.redraw(); }
 		};
 
 		this.createEmptyMovieClip("triangle",2);

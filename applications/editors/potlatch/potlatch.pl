@@ -42,9 +42,10 @@
 
 	$ofn=''; $debug=0; $dev=0;
 	foreach $a (@ARGV) {
-		if    ($a eq '--trace') { $debug=1; }
-		elsif ($a eq '--dev'  ) { $dev  =1; }
-		elsif ($a eq '--local') { $dev  =2; }
+		if    ($a eq '--trace'   ) { $debug=1; }
+		elsif ($a eq '--dev'     ) { $dev  =1; }
+		elsif ($a eq '--local'   ) { $dev  =2; }
+		elsif ($a eq '--absolute') { $dev  =3; }
 		else					{ $ofn=$a;  }
 	}
 	
@@ -61,6 +62,14 @@ EOF
 	var gpsurl='../api/0.6/swf/trackpoints';
 	var gpxurl="http://"+this._url.split('/')[2]+"/trace/";
 	var tileprefix='http://127.0.0.1/~richard/cgi-bin/proxy.cgi?url=';
+	var yahoourl='/potlatch/ymap2.swf';
+	var gpxsuffix='/data.xml';
+EOF
+	} elsif ($dev==3) { $actionscript=<<EOF;
+	var apiurl='http://www.openstreetmap.org/api/0.5/amf';
+	var gpsurl='http://www.openstreetmap.org/api/0.5/swf/trackpoints';
+	var gpxurl="http://www.openstreetmap.org/trace/";
+	var tileprefix='';
 	var yahoourl='/potlatch/ymap2.swf';
 	var gpxsuffix='/data.xml';
 EOF

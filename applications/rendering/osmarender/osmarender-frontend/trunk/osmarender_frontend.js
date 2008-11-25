@@ -10,6 +10,8 @@ var classesAndProperties = new Array();
 
 //var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1);
 var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1)+"../../xslt/";
+var STYLESHEET_PATH=location.href.substring(0,location.href.lastIndexOf("/")+1)+"../../stylesheets/";
+var SYMBOL_PATH=STYLESHEET_PATH+"symbols/";
 var FROM_DOJO_PATH="";
 //var FROM_DOJO_PATH="../../";
 
@@ -165,7 +167,7 @@ var onLoadTransform;
 
 loadOsmAndRules = function(rulesfilename,osmfilename,ProgressBarTotal,ProgressBarStep,TransformonLoad) {
 
-	rulesfilename = location.href.substring(0,location.href.lastIndexOf("/")+1)+rulesfilename;
+	rulesfilename = STYLESHEET_PATH+rulesfilename;
 	osmfilename = location.href.substring(0,location.href.lastIndexOf("/")+1)+osmfilename;
 
 	onLoadTransform=TransformonLoad;
@@ -346,81 +348,84 @@ SettingsResults = function() {
 
 
 viewSymbol = function(svg_url) {
-	if (cmyk.getRulesFile().getElementById(svg_url)) {
-		div_result = dijit.byId("div_viewSymbol");
-		var svg_symbol = cmyk.getRulesFile().getElementById(svg_url);
-		var svg_container;
-		if (typeof document.createElementNS != 'undefined') {
-			svg_container = document.createElementNS("http://www.w3.org/2000/svg","svg");
-		}
-		else {
-			svg_container = createElementCB("svg");
-		}
-		for (var a=0; a<svg_symbol.attributes.length; a++) {
-			svg_container.setAttribute(svg_symbol.attributes[a].name,svg_symbol.attributes[a].value);
-		}
-		svg_container.setAttribute("height","100px");
-
-		//TODO: Fixing viewBox, more hack needed
-		var viewBox_string = svg_container.getAttribute("viewBox");
-		var viewBox_array = viewBox_string.split(" ");
-		if (viewBox_array[1]>0) {
-			viewBox_array[1]="0";
-		}
-		viewBox_string = viewBox_array.join(" ");
-		svg_container.setAttribute("viewBox",viewBox_string);
-
-		for (var a=0; a<svg_symbol.childNodes.length; a++) {
-			if (svg_symbol.childNodes[a].nodeType!=Node.TEXT_NODE) {
-				svg_container.appendChild(svg_symbol.childNodes[a].cloneNode(true));
+	var symbols = cmyk.getSymbols();
+	dojo.forEach(symbols,function(symbol_for_each) {
+		if (symbol_for_each.id==svg_url) {
+			div_result = dijit.byId("div_viewSymbol");
+			var svg_symbol = symbol_for_each;
+			var svg_container;
+			if (typeof document.createElementNS != 'undefined') {
+				svg_container = document.createElementNS("http://www.w3.org/2000/svg","svg");
 			}
-		}
+			else {
+				svg_container = createElementCB("svg");
+			}
+			for (var a=0; a<svg_symbol.attributes.length; a++) {
+				svg_container.setAttribute(svg_symbol.attributes[a].name,svg_symbol.attributes[a].value);
+			}
+			svg_container.setAttribute("height","100px");
 
-		clearContentPanes([div_result,dijit.byId("div_appliesTo"),dijit.byId("div_symbolDetails")]);
-		div_result.domNode.appendChild(svg_container);
-		
-		// Get key/value pairs applied
-		//Search rules in which this symbol is used
-		var array_da_aggiornare = new Array();
-		cmyk.getRuleFromSymbol(cmyk.getRuleModel(),svg_url,array_da_aggiornare);
+			//TODO: Fixing viewBox, more hack needed
+			var viewBox_string = svg_container.getAttribute("viewBox");
+			var viewBox_array = viewBox_string.split(" ");
+			if (viewBox_array[1]>0) {
+				viewBox_array[1]="0";
+			}
+			viewBox_string = viewBox_array.join(" ");
+			svg_container.setAttribute("viewBox",viewBox_string);
 
-		div_appliesTo = dijit.byId("div_appliesTo");
-
-		if (array_da_aggiornare.length) {
-			div_appliesTo.domNode.innerHTML='<br />Applies to:<ol>';
-
-			for (single_rule in array_da_aggiornare) {
-				for (single_key_value in array_da_aggiornare[single_rule].keys) {
-					div_appliesTo.domNode.innerHTML+='<li><strong>key:</strong> '+array_da_aggiornare[single_rule].keys[single_key_value]+',<strong> values:</strong>';
-					first_value_found=false;
-					for (single_value_value in array_da_aggiornare[single_rule].values) {
-						if (first_value_found) {
-							div_appliesTo.domNode.innerHTML+=',';
-						}
-						div_appliesTo.domNode.innerHTML+=(' '+array_da_aggiornare[single_rule].values[single_value_value]);
-						first_value_found=true;
-					}
-					div_appliesTo.domNode.innerHTML+='</li>';
+			for (var a=0; a<svg_symbol.childNodes.length; a++) {
+				if (svg_symbol.childNodes[a].nodeType!=Node.TEXT_NODE) {
+					svg_container.appendChild(svg_symbol.childNodes[a].cloneNode(true));
 				}
 			}
-			div_appliesTo.domNode.innerHTML+='</ol>';
-		} else {
-			div_appliesTo.domNode.innerHTML='<strong>Attention! </strong>Selected symbol is not associated to any rule!';
+
+			clearContentPanes([div_result,dijit.byId("div_appliesTo"),dijit.byId("div_symbolDetails")]);
+			div_result.domNode.appendChild(svg_container);
+			
+			// Get key/value pairs applied
+			//Search rules in which this symbol is used
+			var array_da_aggiornare = new Array();
+			cmyk.getRuleFromSymbol(cmyk.getRuleModel(),svg_url,array_da_aggiornare);
+
+			div_appliesTo = dijit.byId("div_appliesTo");
+
+			if (array_da_aggiornare.length) {
+				div_appliesTo.domNode.innerHTML='<br />Applies to:<ol>';
+
+				for (single_rule in array_da_aggiornare) {
+					for (single_key_value in array_da_aggiornare[single_rule].keys) {
+						div_appliesTo.domNode.innerHTML+='<li><strong>key:</strong> '+array_da_aggiornare[single_rule].keys[single_key_value]+',<strong> values:</strong>';
+						first_value_found=false;
+						for (single_value_value in array_da_aggiornare[single_rule].values) {
+							if (first_value_found) {
+								div_appliesTo.domNode.innerHTML+=',';
+							}
+							div_appliesTo.domNode.innerHTML+=(' '+array_da_aggiornare[single_rule].values[single_value_value]);
+							first_value_found=true;
+						}
+						div_appliesTo.domNode.innerHTML+='</li>';
+					}
+				}
+				div_appliesTo.domNode.innerHTML+='</ol>';
+			} else {
+				div_appliesTo.domNode.innerHTML='<strong>Attention! </strong>Selected symbol is not associated to any rule!';
+			}
+
+			if ((dijit.byId("select_feature_way") && dijit.byId("select_feature_value")) && (dijit.byId("select_feature_way").value!=undefined && dijit.byId("select_feature_value").value!=undefined)) {
+				var key_chosen = dijit.byId("select_feature_way").value;
+				var value_chosen = dijit.byId("select_feature_value").value;
+
+				loadIntoNodeAndParse("osmarender_frontend/panels/symbols/symbol_details.xml",dijit.byId("div_symbolDetails"));
+
+				dijit.byId("symbol_width").setValue(viewBox_array[2]);
+				dijit.byId("symbol_height").setValue(viewBox_array[3]);
+
+				dojo.byId("dest_attach_symbol").href='javascript:attachSymbol(\''+svg_url+'\',\''+key_chosen+'\',\''+value_chosen+'\',dojo.byId(\'symbol_width\').value,dojo.byId(\'symbol_height\').value,dojo.byId(\'symbol_layer\').value);';
+				dojo.byId("dest_attach_symbol").innerHTML='Attach this symbol to '+key_chosen+', '+value_chosen+'';
+			}
 		}
-
-		if ((dijit.byId("select_feature_way") && dijit.byId("select_feature_value")) && (dijit.byId("select_feature_way").value!=undefined && dijit.byId("select_feature_value").value!=undefined)) {
-			var key_chosen = dijit.byId("select_feature_way").value;
-			var value_chosen = dijit.byId("select_feature_value").value;
-
-			loadIntoNodeAndParse("osmarender_frontend/panels/symbols/symbol_details.xml",dijit.byId("div_symbolDetails"));
-
-			dijit.byId("symbol_width").setValue(viewBox_array[2]);
-			dijit.byId("symbol_height").setValue(viewBox_array[3]);
-
-			dojo.byId("dest_attach_symbol").href='javascript:attachSymbol(\''+svg_url+'\',\''+key_chosen+'\',\''+value_chosen+'\',dojo.byId(\'symbol_width\').value,dojo.byId(\'symbol_height\').value,dojo.byId(\'symbol_layer\').value);';
-			dojo.byId("dest_attach_symbol").innerHTML='Attach this symbol to '+key_chosen+', '+value_chosen+'';
-		}
-	}
+	});
 }
 
 displayLoad = function() {
@@ -643,7 +648,7 @@ searchCSSfromKeyValue = function(key,value) {
 	cmyk.getClassFromRule(cmyk.getRuleModel(),my_key,my_value,array_da_aggiornare);
 
 	if (array_da_aggiornare.length) {
-		loadIntoNodeAndParse("osmarender_frontend/panels/rules/list_css.xml",div_list_css.domNode);
+		loadIntoNodeAndParse("osmarender_frontend/panels/rules/list_css.xml",div_list_css);
 
 		var temp_CSS_list = new Array();
 

@@ -41,6 +41,18 @@ rulesfile = function () {
 	return rulesfile;
 }();
 
+markersfile = function() {
+	var MARKERS_TAG = "include";
+	var xmlhttp = new XMLHttpRequest();
+
+	var markersfilename = rulesfile.getElementsByTagName(MARKERS_TAG)[0].getAttribute("ref");
+	markersfilename = rulesfilename.substring(0,rulesfilename.lastIndexOf("/")+1)+markersfilename;
+ 	xmlhttp.open("GET", markersfilename, false);  
+ 	xmlhttp.send('');
+ 	markersfile=xmlhttp.responseXML;
+ 	return markersfile;
+}();
+
 osmfile = function () {
 	var xmlhttp = new XMLHttpRequest();  
 	xmlhttp.open("GET", osmfilename, false);  
@@ -82,7 +94,23 @@ alert(stylestoprint);*/
 
 //Necessary change for firefox3... handles SVG as SVG not as XML/DOM
 //this.symbols = css.getElementsByTagName("symbol");
-this.symbols = rulesfile.getElementsByTagName("svg:symbol");
+this.symbols = function() {
+	var symbols_array=new Array();
+	plain_symbols = rulesfile.getElementsByTagName("symbol");
+	area_symbols = rulesfile.getElementsByTagName("areaSymbol");
+	dojo.forEach(plain_symbols,addContent);
+	dojo.forEach(area_symbols,addContent);
+
+	function addContent(symbol) {
+		symbol_referenced = symbol.getAttribute("ref");
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", SYMBOL_PATH+symbol_referenced+".svg", false);  
+		xmlhttp.send('');
+		symbols_array[symbols_array.length]=xmlhttp.responseXML.documentElement;
+	}
+	return symbols_array;
+//	rulesfile.getElementsByTagName("svg:symbol");
+}();
 
 // Analysing rule file to model rules
 
@@ -188,8 +216,9 @@ function createRuleModel(dom,model,store) {
 			model.childrenRules[model.childrenRules.length] = temp;
 			createRuleModel(dom.childNodes[index],temp,store[store.length-1].children);
 		}
-		else if (dom.childNodes[index].nodeType!=Node.TEXT_NODE && dom.childNodes[index].nodeType!=Node.COMMENT_NODE && dom.childNodes[index].nodeName!="defs") {
+		else if (dom.nodeName!="rules" && dom.childNodes[index].nodeType!=Node.TEXT_NODE && dom.childNodes[index].nodeType!=Node.COMMENT_NODE && dom.childNodes[index].nodeName!="defs") {
 			store[store.length]={id: ""+(++global_tree_uuid), type: dom.childNodes[index].nodeName, label:dom.childNodes[index].nodeName+" class: "+dom.childNodes[index].getAttribute("class")};
+
 			newIndex = model.render.length;
 			model.render[newIndex]=new Object();
 			model.render[newIndex].type=dom.childNodes[index].nodeName;
@@ -208,7 +237,9 @@ function createRuleModel(dom,model,store) {
 				}
 			}
 		}i++;
-	}if (i<dom.childNodes.length) setTimeout(arguments.callee,0);},0);
+	}
+	if (i<dom.childNodes.length) setTimeout(arguments.callee,0);
+    },0);
 }
 
 this.rulemodelresult=rulemodel;
@@ -388,10 +419,12 @@ CMYK.prototype.getClassFromRule = function(rulemodel,my_key,my_value,csstoreturn
 	}
 }
 
+
+//TODO: doesn't work any more => probably the problem is the difference between the id hard-coded in the svg and the "ref" tag of the corresponding rule
 CMYK.prototype.getRuleFromSymbol = function(rulemodel,symbol_url,rulestoreturn) {
 	if (rulemodel.render && rulemodel.render.length) {
 		for (renderRules in rulemodel.render) {
-			if (rulemodel.render[renderRules].type =="symbol" && symbol_url==rulemodel.render[renderRules]["xlink:href"].substring(1)) {
+			if (rulemodel.render[renderRules].type =="symbol" && symbol_url==rulemodel.render[renderRules]["ref"].substring(1)) {
 				rulestoreturn[rulestoreturn.length]=rulemodel;
 			}
 		}
@@ -605,7 +638,7 @@ CMYK.prototype.getObjects = function() {
 			objects.patterns.push(pattern);
 		}
 	);
-	dojo.forEach(defs.getElementsByTagName("svg:marker"),
+	dojo.forEach(markersfile.getElementsByTagName("svg:marker"),
 		function(marker,index,array) {
 			objects.markers.push(marker);
 		}

@@ -192,7 +192,7 @@ sub generate
         {
             my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
             my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
-           mkdir $JobDirectory;
+            mkdir $JobDirectory;
         }
 
         #------------------------------------------------------
@@ -289,37 +289,42 @@ sub generate
         {
             ::statusMessage("Tile stiching not supported without Image::Magick.", 1, 1);
         }
-        if(!$Config->get("LocalSlippymap") )
+        # now copy/cleanup the results
+        foreach my $layer ($req->layers)
         {
-            # now copy the results
-            foreach my $layer ($req->layers)
+            next if $layer eq "caption";
+            my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
+            my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
+            my $hasdata = 0;
+            my $file;
+            opendir(DIR, $JobDirectory);
+            while(defined($file = readdir(DIR)))
             {
-                my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
-                my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
-                my $DestDir = File::Spec->join($Config->get("WorkingDirectory"), $TileDirectory);
-                my $hasdata = 0;
-                my $file;
-                opendir(DIR, $JobDirectory);
-                while(defined($file = readdir(DIR)))
+                if($file =~ /^[a-z]+_$maxlayer/)
                 {
-                    if($file =~ /^[a-z]+_$maxlayer/)
+                    if($Config->get("Debug"))
                     {
-                        if($Config->get("Debug"))
-                        {
-                            rename File::Spec->join($JobDirectory, $file),
-                            File::Spec->join($self->{JobDir}, $file);
-                        }
-                        else
-                        {
-                            unlink(File::Spec->join($JobDirectory, $file));
-                        }
+                        rename File::Spec->join($JobDirectory, $file),
+                        File::Spec->join($self->{JobDir}, $file);
                     }
                     else
                     {
-                        ++$hasdata;
+                        unlink(File::Spec->join($JobDirectory, $file));
                     }
                 }
-                rename $JobDirectory, $DestDir if $hasdata;
+                else
+                {
+                    ++$hasdata;
+                }
+            }
+            if($hasdata)
+            {
+                if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
+                    $self->createTilesetFile($layer);
+                }
+                else {
+                    $self->createZipFile($layer);
+                }
             }
         }
     }
@@ -586,6 +591,7 @@ sub supertile {
             $Image->Set(type=>"Palette");
             $Image->Set(quality => 90); # compress image
             $Image->Write($pfile);
+            $self->optimizePng($pfile, $Config->get("${BaseLayer}_Transparent"));
             ::statusMessage("Writing $file", 0, 6);
         }
     }
@@ -614,6 +620,7 @@ sub supertile {
         }
         else
         {
+            $self->optimizePng($pfile, $Config->get("${CaptionLayer}_Transparent"));
             ::statusMessage("Writing $file", 0, 6);
         }
     }
@@ -701,18 +708,21 @@ sub downloadData
     foreach my $OSMServer (@OSMServers) {
         $self->{JobTime} = time();
         my @URLS;
+        my @title;
         if (@predicates) {
             foreach my $predicate (@predicates) {
                 my $URL = $Config->get("XAPI_$OSMServer");
                 $URL =~ s/%p/${predicate}/g;                # substitute %p place holder with predicate
                 $URL =~ s/%v/$Config->get('OSMVersion')/ge; # substitute %v place holder with API version
                 push(@URLS, $URL);
+                push(@title, $predicate);
             }
         }
         else {
             my $URL = $Config->get("API_$OSMServer");
             $URL =~ s/%v/$Config->get('OSMVersion')/ge; # substitute %v place holder with API version
             push(@URLS, $URL);
+            push(@title, "map data");
         }
 
         $filelist = [];
@@ -720,7 +730,8 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            ::statusMessage("Downloading: Map data for " . join(",",@layers) ." from ".$OSMServer, 0, 3);
+            my $title = pop @title;
+            ::statusMessage("Downloading $title for " . join(",",@layers) ." from ".$OSMServer, 0, 3);
             
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {
@@ -739,7 +750,7 @@ sub downloadData
             }
 
             if ((! $res) and ($Config->get("FallBackToSlices"))) {
-                ::statusMessage("Trying smaller slices",1,0);
+                ::statusMessage("Trying smaller slices for $title from $OSMServer",1,0);
                 my $slice = (($E1 - $W1) / 10); # A slice is one tenth of the width
                 my $slicesdownloaded=0;
                 for (my $j = 1; $j <= 10; $j++) {
@@ -749,7 +760,7 @@ sub downloadData
                     $partialFile = File::Spec->join($self->{JobDir}, "data-$i-$j.osm");
                     $res = 0;
                     for (my $k = 1; $k <= 3; $k++) {  # try each slice 3 times
-                        ::statusMessage("Downloading map data (slice $j of 10)", 0, 3);
+                        ::statusMessage("Downloading $title (slice $j of 10) from $OSMServer", 0, 3);
                         print "Downloading: $currentURL\n" if ($Config->get("Debug"));
                         try {
                             $Server->downloadFile($currentURL, $partialFile, 0);
@@ -759,7 +770,7 @@ sub downloadData
                         catch ServerError with {
                             my $err = shift();
                             print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
-                            my $message = ($k < 3) ? "Download of slice $j failed, trying again" : "Download of slice $j failed 3 times, giving up";
+                            my $message = ($k < 3) ? "Download of $title slice $j from $OSMServer failed, trying again" : "Download of $title slice $j from $OSMServer failed 3 times, giving up";
                             ::statusMessage($message, 0, 3);
                         };
                         last if ($res); # don't try again if download was successful
@@ -770,7 +781,7 @@ sub downloadData
                 $res = ($slicesdownloaded == 10);
             }
             if (!$res) {
-                ::statusMessage("Download of data from $OSMServer failed", 0, 3);
+                ::statusMessage("Download of $title from $OSMServer failed", 0, 3);
                 last; # don't download other URLs if this one failed
             } 
         } # foreach @URLS
@@ -782,6 +793,9 @@ sub downloadData
         ::statusMessage("Download of data complete", 1, 10);
     }
     else {
+        # we need to have an additional full line error message here, as the exception will
+        # ignore our partial displayed previous lines
+        ::statusMessage("All servers tried for data download", 1, 3);
         my $OSMServers = join(',', @OSMServers);
         throw TilesetError "Download of data failed from $OSMServers", "nodata ($OSMServers)";
     }

@@ -9,7 +9,6 @@ adding the correct directories with -L or -I:
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
 #include <QtCore/QString>
-#include <QtCore/QDebug>
 #include <QtWebKit/QWebView>
 
 /* using mingw to set binary mode */
@@ -30,51 +29,23 @@ public:
   Save(QWebView *v) : view(v) {};
 
 public slots:
+  void setGeometry(const QRect &r)
+  {
+    view->setGeometry(r);
+  }
   void loaded(bool ok)
   {
     if(ok)
     {
       QImage im = QPixmap::grabWidget(view).toImage();
-      QRgb white = QColor(255,255,255).rgb();
-      /* sometimes the white is shifted one bit */
-      QRgb white2 = QColor(254,254,254).rgb();
 
-      /* didn't find a way to reduce image directly, so we scan for white background */
-      bool iswhite = true;
-      int xsize = WIDTH;
-      int ysize = WIDTH;
-      for(int x = xsize-1; iswhite && x > 0; --x)
-      {
-        for(int y = 0; iswhite && y < ysize; ++y)
-        {
-          QRgb p = im.pixel(x, y);
-          if(p != white && p != white2 & p)
-            iswhite = false;
-        }
-        if(iswhite)
-          xsize = x;
-      }
-      iswhite = true;
-      for(int y = ysize-1; iswhite && y > 0; --y)
-      {
-        for(int x = 0; iswhite && x < xsize; ++x)
-        {
-          QRgb p = im.pixel(x, y);
-          if(p != white && p != white2 && p)
-            iswhite = false;
-        }
-        if(iswhite)
-          ysize = y;
-      }
-      /* didn't find a way to clip the QImage directly, so we reload it */
-      QPixmap p = QPixmap::grabWidget(view, 0,0,xsize,ysize);
       QFile f;
       BINARYSTDOUT
       if(f.open(stdout, QIODevice::WriteOnly|QIODevice::Unbuffered))
       {
-        if(!p.save(&f, "JPEG"))
+        if(!im.save(&f, "JPEG"))
         {
-          p.save(&f, "PNG");
+          im.save(&f, "PNG");
         }
       }
     }
@@ -98,10 +69,11 @@ int main(int argc, char **argv)
   QApplication a( argc, argv );
   QWebView *view = new QWebView();
   Save *s = new Save(view);
+  view->resize(WIDTH,WIDTH);
 
   QObject::connect(view, SIGNAL(loadFinished(bool)), s, SLOT(loaded(bool)));
   QObject::connect(s, SIGNAL(finish(void)), &a, SLOT(quit()));
-  view->resize(WIDTH,WIDTH);
+  QObject::connect(view->page(), SIGNAL(geometryChangeRequested(const QRect &)), s, SLOT(setGeometry(const QRect &)));
   view->load(QUrl(url));
   return a.exec();
 }

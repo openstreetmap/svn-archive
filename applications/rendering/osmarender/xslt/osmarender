@@ -7,9 +7,9 @@
 #  specify a <svgfile> it will use <osmfile> with .svg suffix instead.
 #
 #  To use this set the environment variable OSMARENDER to the path to your
-#  osmarender6 directory. In bash this works like this:
+#  osmarender directory. In bash this works like this:
 #
-#  > export OSMARENDER=~/osm/osmarender6
+#  > export OSMARENDER=~/osm/osmarender
 # 
 #=============================================================================
 #
@@ -44,7 +44,7 @@ if [ "$OSMARENDER" = "" ]; then
     OSMARENDER="."
 fi
 
-OSMARENDER_RULEFILE="$OSMARENDER/osm-map-features-z17.xml"
+OSMARENDER_RULEFILE="$OSMARENDER/stylesheets/osm-map-features-z17.xml"
 
 while getopts r:t: opt; do
     case "$opt" in
@@ -86,8 +86,8 @@ case "$osmfile" in
 esac
 
 if [ "$title" == '' ]; then
-    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile $rulefile $OSMARENDER/osmarender.xsl > $mapfile 
+    $OSMARENDER/xslt/xsltrans --stringparam osmfile=$osmfile $rulefile $OSMARENDER/xslt/osmarender.xsl > $mapfile 
 else
-    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile --stringparam title="$title" $rulefile $OSMARENDER/osmarender.xsl > $mapfile 
+    $OSMARENDER/xslt/xsltrans --stringparam osmfile=$osmfile --stringparam title="$title" $rulefile $OSMARENDER/xslt/osmarender.xsl > $mapfile 
 fi
 

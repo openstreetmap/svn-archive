@@ -333,13 +333,7 @@ sub CheckConfig
     my $rasterizer = $self->get("Rasterizer");
     if ( $rasterizer =~ /inkscape/i )
     {
-        $cmd = $self->get("inkscape"); # this config parameter is deprecated and not present in newer installations
-                                       # http://trac.openstreetmap.org/ticket/1286
-
-        # Fall back un 'inkscape' if the inkscape variable isn't
-        # defined, in the config. As is the case in some
-        # installations.
-        $cmd = 'inkscape' unless defined $cmd;
+        $cmd = $self->get("inkscape");
 
         my $InkscapeV=`\"$cmd\" -V 2>&1`;
         $InkscapeV =~ /Inkscape.(\d+(\.\d+)+)/;

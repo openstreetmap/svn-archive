@@ -212,6 +212,10 @@ class search {
          before being presented to the find function. find only deals
          with names and lat/lon pairs
 
+       place names may also be postcode prefixes in the UK (e.g. CB21)
+       or place and postcode (London EC1A), in which case we'll
+       crosscheck.
+
        maxresults: the maximum number of results to return.  
 
        returns: an array of named obects - see class named for details 
@@ -257,49 +261,67 @@ class search {
         $pseudoplace->assigndescription($nterms > 1);
         $nameds[] = clone $pseudoplace; 
       } else {
-        /* case 2 or 3 above: search is qualified. Find any places of the name given as 
-           the second term  */
-        $places = array_merge($places, named::lookupplaces($terms[1], NULL, TRUE));
-        if (count($places) == 0) { return "I can't find {$terms[1]}"; }
-
-        // $db->log ("found places " . print_r($places, 1));
-
-        /* cull the possible places according to given qualifying is_in in case 3*/
-        $placeisin = $nterms > 2 ? array_slice($terms, 2) : array();
-        if (! empty($placeisin)) {
-          foreach($placeisin as $isin) {
-            $isinstrings = explode(' ', canonical::canonicalise_to_string($isin));
-            for ($i = 0; $i < count($places); $i++) {
-              $sourceisinstrings = 
-                explode(' ', canonical::canonicalise_to_string($places[$i]->is_in));
-              $found = FALSE;
-              foreach($isinstrings as $isin) {
-                foreach ($sourceisinstrings as $sourceisin) {
-                  if (strpos($sourceisin, $isin) !== FALSE) {
-                    $found = TRUE;
-                    break 2;
-                  }
-                }
-              }
-              if (! $found) {
-                array_splice($places, $i, 1);
-                $i--;
-              }
-            }
+        if (preg_match('/ ([A-Z]{1,2}[0-9]{1,2}[A-Z]?)\s*$/i', " {$terms[1]}", $matches)) {
+          $prefix = $matches[1];
+          include_once('postcodeprefix.php');
+          $postcodeprefix = postcodeprefix::lookup($prefix);
+          if (! empty($postcodeprefix)) {
+            search::islatlon($postcodeprefix->lat, $postcodeprefix->lon, $pseudoplace);
+            $pseudoplace->info = "middle of UK postcode area";
+            $pseudoplace->name = "{$postcodeprefix->prefix} ({$postcodeprefix->placename})";
+            $pseudoplace->rank = 5;
+            $pseudoplace->findnearestplace();
+            $pseudoplace->assigndescription(FALSE);
+            $places[] = clone $pseudoplace; 
           }
-          // $db->log ("places after cull " . print_r($places, 1));
         }
 
-        if (count($places) == 0) { 
-          /* nothing left, so say so */
-          $isin = '';
-          $prefix = '';
-          for ($i = 2; $i < count($terms); $i++) { 
-            $isin = "{$prefix}{$terms[$i]}";
-            $prefix = ', ';
+        if (empty($postcodeprefix)) {
+          /* case 2 or 3 above: search is qualified. Find any places of the name given as 
+             the second term  */
+
+          $places = array_merge($places, named::lookupplaces($terms[1], NULL, TRUE));
+          if (count($places) == 0) { return "I can't find {$terms[1]}"; }
+
+          // $db->log ("found places " . print_r($places, 1));
+
+          /* cull the possible places according to given qualifying is_in in case 3*/
+          $placeisin = $nterms > 2 ? array_slice($terms, 2) : array();
+          if (! empty($placeisin)) {
+            foreach($placeisin as $isin) {
+              $isinstrings = explode(' ', canonical::canonicalise_to_string($isin));
+              for ($i = 0; $i < count($places); $i++) {
+                $sourceisinstrings = 
+                  explode(' ', canonical::canonicalise_to_string($places[$i]->is_in));
+                $found = FALSE;
+                foreach($isinstrings as $isin) {
+                  foreach ($sourceisinstrings as $sourceisin) {
+                    if (strpos($sourceisin, $isin) !== FALSE) {
+                      $found = TRUE;
+                      break 2;
+                    }
+                  }
+                }
+                if (! $found) {
+                  array_splice($places, $i, 1);
+                  $i--;
+                }
+              }
+            }
+            // $db->log ("places after cull " . print_r($places, 1));
           }
-          $unfoundplace = "{$terms[1]} not found";
-          if (! empty($isin)) { $unfoundplace .= " in {$isin}"; }
+
+          if (count($places) == 0) { 
+            /* nothing left, so say so */
+            $isin = '';
+            $prefix = '';
+            for ($i = 2; $i < count($terms); $i++) { 
+              $isin = "{$prefix}{$terms[$i]}";
+              $prefix = ', ';
+            }
+            $unfoundplace = "{$terms[1]} not found";
+            if (! empty($isin)) { $unfoundplace .= " in {$isin}"; }
+          }
         }
       }
     }
@@ -342,6 +364,14 @@ class search {
 
     $canonterms = canonical::canonical_basic($terms[0]);
     if (count($canonterms) > 4) { array_splice($canonterms, 4); }
+
+    if (count($canonterms) > 1 && count($canonterms[0]) == 1 &&
+        preg_match('/^[1-9][0-9]*$/', $canonterms[0][0]))
+    { 
+      /* remove numbers at the beginning on the basis someone probably
+       typed a street address, such as "31 Hinton Road" */
+      array_splice($canonterms,0,1); 
+    }
 
     if (count($places) > 0) {
       /* There are qualifying places. 

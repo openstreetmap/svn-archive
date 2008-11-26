@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: 127.0.0.1:3305
--- Generation Time: Mar 24, 2008 at 06:45 PM
+-- Generation Time: Nov 26, 2008 at 08:11 PM
 -- Server version: 5.0.22
 -- PHP Version: 5.2.1
 
@@ -21,7 +21,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE `canonical` (
   `canonical` varchar(255) character set utf8 NOT NULL,
-  PRIMARY KEY  (`canonical`)
+  `region` int(11) NOT NULL,
+  PRIMARY KEY  (`canonical`,`region`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -64,7 +65,8 @@ CREATE TABLE `named` (
   `rank` tinyint(4) NOT NULL,
   `info` text character set utf8 NOT NULL,
   KEY `id` (`id`),
-  KEY `canonical` (`canonical`)
+  KEY `canonical` (`canonical`,`region`),
+  KEY `region` (`region`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -92,7 +94,7 @@ CREATE TABLE `options` (
   `value` text NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=275 ;
 
 -- --------------------------------------------------------
 
@@ -109,6 +111,20 @@ CREATE TABLE `placeindex` (
   UNIQUE KEY `id` (`id`),
   KEY `region` (`region`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `postcodeprefix`
+-- 
+
+CREATE TABLE `postcodeprefix` (
+  `prefix` varchar(255) NOT NULL,
+  `placename` varchar(255) NOT NULL,
+  `lat` double NOT NULL,
+  `lon` double NOT NULL,
+  PRIMARY KEY  (`prefix`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -177,7 +193,7 @@ CREATE TABLE `word` (
   `lastword` tinyint(1) NOT NULL default '0',
   `region` int(11) NOT NULL default '0',
   `id` bigint(20) NOT NULL default '0',
-  KEY `word` (`word`),
   KEY `region` (`region`),
-  KEY `id` (`id`)
+  KEY `id` (`id`),
+  KEY `word` (`word`,`region`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

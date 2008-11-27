@@ -8,6 +8,8 @@ package TahConf;
 use strict;
 use AppConfig qw(:argcount);
 use Config; #needed to check flock availability
+use File::Path;
+use File::Spec;
 
 my $instance = undef; # Singleton instance of Config class
 

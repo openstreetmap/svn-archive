@@ -33,6 +33,10 @@ RenderStripes = 0
 BatikJVMSize = 1536M
 BatikPort = 18123
 
+# the following is deprecated but should be set until all referencing code
+# has been removed from TahConf.pm
+Inkscape = inkscape
+
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000
 
@@ -45,6 +49,8 @@ PngQuantizer = pngnq
 
 Subversion = svn
 SubversionUpdateCmd = up
+
+WorkingDirectory = tmp
 
 Zip = zip
 7zipWin = 0

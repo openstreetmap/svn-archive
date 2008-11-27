@@ -176,6 +176,186 @@
     </maplint:check>
 
 </maplint:test>
+<maplint:test group="main" id="rare-speedlimit" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Find ways with rare values in the maxspeed tag
+    </maplint:desc>
+
+    <maplint:garmin short="RESNONAME" icon="Navaid, White"/>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:if test="not (tag[@k='validate:rare-speedlimit' and @v='ignore'])">
+            <xsl:choose>
+                <xsl:when test="tag[@k='maxspeed' and @v='walk']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='5kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='5']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='7kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='7']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='10kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='10']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='15mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='20kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='20mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='20']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='24kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='24']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='25mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='30kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='30mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='30']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='32kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='32']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='35mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='40kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='40mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='40']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='45mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='48kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='48']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='50kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='50mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='50']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='55mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='56kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='56']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='60kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='60mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='60']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='64kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='64']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='65mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='70kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='70mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='70']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='72kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='72']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='75mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='80kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='80mph']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='80']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='88kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='88']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='90kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='90']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='96kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='96']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='100kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='100']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='104kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='104']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='110kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='110']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='112kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='112']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='120kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='120']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='128kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='128']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='130kmh']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='130']"/>
+                <xsl:when test="tag[@k='maxspeed' and @v='none']"/>
+                <xsl:when test="tag[@k='maxspeed']">
+                    <maplint:result/>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='walk']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='15mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='15']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='20mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='20']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='25mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='25']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='30mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='30']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='35mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='35']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='40mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='40']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='45mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='45']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='50mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='50']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='55mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='55']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='60mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='60']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='65mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='65']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='70mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='70']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='75mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='75']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='80mph']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='80']"/>
+                <xsl:when test="tag[@k='maxspeed:mph' and @v='none']"/>
+                <xsl:when test="tag[@k='maxspeed:mph']">
+                    <maplint:result/>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='walk']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='5kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='5']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='7kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='7']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='10kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='10']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='20kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='20']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='24kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='24']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='30kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='30']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='32kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='32']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='40kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='40']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='48kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='48']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='50kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='50']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='56kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='56']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='60kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='60']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='64kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='64']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='70kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='70']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='72kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='72']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='80kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='80']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='88kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='88']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='90kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='90']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='96kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='96']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='100kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='100']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='104kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='104']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='110kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='110']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='112kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='112']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='120kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='120']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='128kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='128']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='130kmh']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='130']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh' and @v='none']"/>
+                <xsl:when test="tag[@k='maxspeed:kmh']">
+                    <maplint:result/>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:if>
+    </maplint:check>
+</maplint:test>
 <maplint:test group="main" id="residential-without-name" version="1" severity="warning">
 
     <maplint:desc xml:lang="en">
@@ -187,6 +367,23 @@
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:if test="not (tag[@k='validate:residential-without-name' and @v='ignore']) and not (tag[@k='noname' and @v='yes'])">
             <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
+                <maplint:result/>
+            </xsl:if>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="main" id="unreviewed_tiger" version="1" severity="notice">
+
+    <maplint:desc xml:lang="en">
+        Highlight unreviewed features from the TIGER import.
+    </maplint:desc>
+
+    <maplint:garmin short="TIGER" icon="Navaid, White"/>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="not (tag[@k='validate:unreviewed-tiger' and @v='ignore'])">
+            <xsl:if test="(tag[@k='tiger:reviewed' and @v='no'])">
                 <maplint:result/>
             </xsl:if>
         </xsl:if>

@@ -33,10 +33,6 @@ RenderStripes = 0
 BatikJVMSize = 1536M
 BatikPort = 18123
 
-# the following is deprecated but should be set until all referencing code
-# has been removed from TahConf.pm
-Inkscape = inkscape
-
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000
 
@@ -51,6 +47,10 @@ Subversion = svn
 SubversionUpdateCmd = up
 
 WorkingDirectory = tmp
+
+# the following is deprecated but should be set until all referencing code
+# has been removed from TahConf.pm
+Inkscape = inkscape
 
 Zip = zip
 7zipWin = 0
@@ -79,3 +79,12 @@ ClientID = 0
 #APIServers = API,ROMA,XAPI
 APIServers = API,ROMA,XAPI
 XAPIServers = XAPI
+
+
+# Magic numbers for autotuning of the MaxTilesetComplexity setting
+# aim for one render in one hour
+AT_timeaim = 1800
+# dont set MaxTilesetComplexity below this number
+AT_minimum = 1000000
+# how much does the current estimate count (0..1)
+AT_alpha 0.05

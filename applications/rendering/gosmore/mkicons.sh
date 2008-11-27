@@ -60,6 +60,7 @@ find $ICONDIR -iname '*.png' \
     -not -iwholename '*waypoint*' \
     -not -iwholename '*wlan*' \
     -not -iwholename '*rendering*' \
+    -not -iwholename '*svg*' \
     | xargs identify -format '%i:%h:%w\n' \
     | awk '{printf("%05d:%s\n",NR,$0)}' \
     | sort -r -t':' -k3 -n -k4 -n > $allicons

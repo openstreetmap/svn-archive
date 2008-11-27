@@ -35,7 +35,7 @@ endif
 
 all: gosmore
 
-gosmore:	gosmore.cpp libgosm.cpp
+gosmore:	gosmore.cpp libgosm.cpp libgosm.h
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
 		  -D RES_DIR='"$(prefix)/usr/share/"' \
                   gosmore.cpp libgosm.cpp -o gosmore ${EXTRA}
@@ -51,7 +51,7 @@ gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \
 
 gosmore.rsc:	gosmore.rc icons.bmp icons-mask.bmp gosmore.ico
 		${WINDRES} $< $@
-		
+
 WIKIPAGE=http://wiki.openstreetmap.org/index.php/Special:Export/Gosmore
 translations.c: extract
 		wget -O - ${WIKIPAGE}/Translations |./extract >translations.c

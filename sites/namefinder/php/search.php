@@ -55,6 +55,7 @@ class search {
     $postcodelookup = postcodelookup::postcodelookupfactory($find);
     $originalpostcode = $find;
     $isapostcode = $postcodelookup->get_query($find);
+    if ($isapostcode) { $maxresults = 1; }
 
     $finds = explode(':', $find);
     if (count($finds) > 2) { 

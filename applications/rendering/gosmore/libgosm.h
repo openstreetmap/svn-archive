@@ -50,6 +50,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
 // See http://etricceline.de/osm/Europe/En/tags.htm for the most popular tags
 // The fields are k, v, short name and the additional tags.
 #define STYLES \
+ s (gosmore_note, yes,        "note"            , "") \
  s (highway, residential,     "residential"     , "") \
  s (highway, unclassified,    "unclassified"    , "") \
  s (highway, tertiary,        "tertiary"        , "") \
@@ -72,6 +73,7 @@ enum { STYLE_BITS = 8, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
  s (amenity, fuel,            "fuel"            , "") \
  s (amenity, school,          "school"          , "") \
  s (place,   village,         "village"         , "") \
+ s (place,   suburb,          "suburb"          , "") \
  s (shop,    supermarket,     "supermarket"     , "") \
  s (religion, christian,      "church"          , \
                "  <tag k='amenity' v='place_of_worship' />\n") \

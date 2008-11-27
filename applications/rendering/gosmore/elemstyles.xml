@@ -3692,5 +3692,11 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
 	</rule>
+	<rule>
+		<condition k="gosmore_note" v="yes"/>
+		<icon annotate="true" src="misc/note.png" />
+		<scale_min>1</scale_min>
+		<scale_max>50000</scale_max>
+	</rule>
 
 </rules>

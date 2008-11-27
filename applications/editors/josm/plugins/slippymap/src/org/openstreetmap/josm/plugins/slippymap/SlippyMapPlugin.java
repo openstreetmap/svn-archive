@@ -20,9 +20,11 @@ public class SlippyMapPlugin extends Plugin
 
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
     {
-        SlippyMapLayer smlayer;
-        smlayer = new SlippyMapLayer();
-        Main.main.addLayer(smlayer);
+    	if (newFrame != null){
+	        SlippyMapLayer smlayer;
+	        smlayer = new SlippyMapLayer();
+	        Main.main.addLayer(smlayer);
+    	}
     }
 
     /*

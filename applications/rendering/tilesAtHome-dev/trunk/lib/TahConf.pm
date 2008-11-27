@@ -8,6 +8,8 @@ package TahConf;
 use strict;
 use AppConfig qw(:argcount);
 use Config; #needed to check flock availability
+use File::Path;
+use File::Spec;
 
 my $instance = undef; # Singleton instance of Config class
 
@@ -333,7 +335,13 @@ sub CheckConfig
     my $rasterizer = $self->get("Rasterizer");
     if ( $rasterizer =~ /inkscape/i )
     {
-        $cmd = $self->get("inkscape");
+        $cmd = $self->get("inkscape"); # this config parameter is deprecated and not present in newer installations
+                                       # http://trac.openstreetmap.org/ticket/1286
+
+        # Fall back un 'inkscape' if the inkscape variable isn't
+        # defined, in the config. As is the case in some
+        # installations.
+        $cmd = 'inkscape' unless defined $cmd;
 
         my $InkscapeV=`\"$cmd\" -V 2>&1`;
         $InkscapeV =~ /Inkscape.(\d+(\.\d+)+)/;

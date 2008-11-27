@@ -46,6 +46,10 @@ PngQuantizer = pngnq
 Subversion = svn
 SubversionUpdateCmd = up
 
+WorkingDirectory = tmp
+
+# the following is deprecated but should be set until all referencing code
+# has been removed from TahConf.pm
 Inkscape = inkscape
 
 Zip = zip

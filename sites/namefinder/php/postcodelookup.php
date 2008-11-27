@@ -12,17 +12,21 @@ class postcodelookup {
   /* http://www.google.com/search?hl=en&q=%22PE27+5JP%22 */
 
   var $postcode;
+  var $postcodeprefix;
   var $googlequery = 'http://www.google.com/search?hl=en&q=';
   var $namefinderquery;
 
   // --------------------------------------------------
   /* static */ function postcodelookupfactory($prospectivepostcode) {
     $postcodelookup = new postcodelookup();
-    if (! preg_match ('/[a-z]{1,2}[0-9]{1,2}[a-z]? [0-9][a-z]{2}/i', $prospectivepostcode)) {
+    if (! preg_match ('/([a-z]{1,2}[0-9]{1,2}[a-z]?) +([0-9][a-z]{2})/i', $prospectivepostcode, 
+                      $matches)) 
+    {
       $postcodelookup->postcode = NULL;
       return $postcodelookup; /* not a postcode */
     }
-    $postcodelookup->postcode = $prospectivepostcode;
+    $postcodelookup->postcode = strtoupper("{$matches[1]} {$matches[2]}");
+    $postcodelookup->postcodeprefix = strtoupper($matches[1]);
     $postcodelookup->namefinderquery = NULL;
     return $postcodelookup;
   }
@@ -69,7 +73,7 @@ class postcodelookup {
           }
         }
         if (empty($places)) { continue; }
-        $this->namefinderquery = "{$submatches[1]}, {$possibleplace}";
+        $this->namefinderquery = "{$submatches[1]}, {$possibleplace} {$this->postcodeprefix}";
 
         $db->log("looking up {$this->namefinderquery} for {$this->postcode} ". print_r($submatches,1));
         return TRUE;

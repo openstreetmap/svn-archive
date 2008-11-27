@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="main" id="unreviewed_tiger" version="1" severity="notice"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Highlight unreviewed features from the TIGER import.
+    </maplint:desc>
+
+    <maplint:garmin short="TIGER" icon="Navaid, White"/>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="not (tag[@k='validate:unreviewed-tiger' and @v='ignore'])">
+            <xsl:if test="(tag[@k='tiger:reviewed' and @v='no'])">
+                <maplint:result />
+            </xsl:if>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

@@ -57,7 +57,7 @@ sub new
     $self->{SHARED}->{GENERATESVGJOBPOS}       = -1;
     $self->{SHARED}->{GENERATESVGJOBSREADY}    = 0;
 
-    $self->{'maxChildren'}                     = $Config->get("Cores");
+    $self->{'maxChildren'} = $Config->get("Cores");
     $self->{SHARED}->{'lastMaxChildren'} = $self->{'maxChildren'};
 
     bless $self, $class;
@@ -120,7 +120,7 @@ sub startChildren
                         # Renderer
                         while ( !$self->{SHARED}->{CHILDSTOP}->[$childID]
                             && $oldJobDir eq $self->{SHARED}->{JOBDIR}
-                            && $self->{SHARED}->{RENDERERJOBSPOS} < $#{ $self->{SHARED}->{RENDERERJOBS} } )
+                            && $self->newRendereJobAvailable() )
                         {
 
                             # access: lock()
@@ -159,8 +159,11 @@ sub startChildren
 
                         # GenerateSVG
                         while ($oldJobDir eq $self->{SHARED}->{JOBDIR}
+                            && ( !$self->newRendereJobAvailable() || $self->{SHARED}->{CHILDSTOP}->[$childID] )
                             && $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
                         {
+
+                            # let me just run if no new rendererjob is available or I'm stopped
 
                             # access: lock()
                             $self->{'rendererSemaphore'}->down();
@@ -230,6 +233,15 @@ sub addJob
 
     $self->{'rendererSemaphore'}->up();
 
+}
+
+sub newRendereJobAvailable
+{
+    my $self = shift;
+
+    return 1 if $self->{SHARED}->{RENDERERJOBSPOS} < $#{ $self->{SHARED}->{RENDERERJOBS} };
+
+    return;
 }
 
 sub addGenerateSVGjob

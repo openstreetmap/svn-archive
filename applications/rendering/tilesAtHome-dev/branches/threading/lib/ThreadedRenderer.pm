@@ -86,7 +86,6 @@ sub startChildren
 
                     threads->detach();
 
-                    my $req    = $self->{req};
                     my $Config = $self->{Config};
                     my $pos;
                     my $layer;

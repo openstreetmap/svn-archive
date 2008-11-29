@@ -234,7 +234,7 @@ OUTER:
         foreach my $relpair(@{$_->{"relations"}})
         {
             my ($role, $rel) = @$relpair;
-            if ($rel->{"tags"}->{"type"} eq "multipolygon" && $role eq "outer")
+            if (defined $rel->{"tags"}->{"type"} && $rel->{"tags"}->{"type"} eq "multipolygon" && defined $role && $role eq "outer")
             {
                 # right, we are "outer" - find all "inner" ways of this relation 
                 # and add them to our path
@@ -254,7 +254,7 @@ OUTER:
                     }
                 }
             }
-            if ($rel->{"tags"}->{"type"} eq "multipolygon" && $role eq "inner")
+            if (defined $rel->{"tags"}->{"type"} && $rel->{"tags"}->{"type"} eq "multipolygon" && defined $role && $role eq "inner")
             {
                 # we are "inner" - if the corresponding "outer" poly is tagged 
                 # the same as we are, then don't draw anything (legacy polygon

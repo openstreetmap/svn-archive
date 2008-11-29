@@ -14,7 +14,8 @@ use Request;
 use threads;
 use Thread::Semaphore;
 
-sub new {
+sub new
+{
     my $class  = shift;
     my $Config = TahConf->getConfig();
 
@@ -52,20 +53,22 @@ sub new {
     return $self;
 }
 
-sub startChildren {
+sub startChildren
+{
     my $self   = shift;
     my $Config = $self->{Config};
 
-    if ( $Config->get("Cores") ) {
+    if ( $Config->get("Cores") )
+    {
 
         # add renderer childs
         $self->{'rendererChildren'}  = [];
         $self->{'rendererSemaphore'} = Thread::Semaphore->new();
 
-
         ::statusMessage( "init " . $self->{'maxChildren'} . " Renderer Child Tasks", 0, 6 );
 
-        for my $childID ( 1 .. $self->{'maxChildren'} ) {
+        for my $childID ( 1 .. $self->{'maxChildren'} )
+        {
             $self->{SHARED}->{CHILDSTOP}->[$childID] = 0;
             $self->{'rendererChildren'}->[$childID] = threads->create(
                 sub {
@@ -81,12 +84,14 @@ sub startChildren {
                     my $oldJobDir = "";
 
                     # wait of the global destroy flag or of the singel stop flag
-                    while ( !$self->{SHARED}->{DESTROYED} ) {
+                    while ( !$self->{SHARED}->{DESTROYED} )
+                    {
 
                         # create new tileset for a new job
                         # TODO: bad way export some funktions to an external .pl file
                         $self->{'rendererSemaphore'}->down();
-                        if ( $oldJobDir ne $self->{SHARED}->{JOBDIR} && $self->{SHARED}->{JOBDIR} ne "" ) {
+                        if ( $oldJobDir ne $self->{SHARED}->{JOBDIR} && $self->{SHARED}->{JOBDIR} ne "" )
+                        {
                             my $req = new Request;
                             $req->ZXY(
                                 $self->{SHARED}->{REQEST}->{'z'},
@@ -121,14 +126,14 @@ sub startChildren {
                             ####
                             # i do my work now
                             ####
-                            if( !$self->rendererError() ) {
+                            if ( !$self->rendererError() )
+                            {
                                 ::statusMessage(
                                     "Rendererclient $childID get job $pos zoom $zoom on layer $layer $layerDataFile",
                                     1, 10 );
-                                eval {
-                                    $self->{tileset}->Render( $layer, $zoom, $layerDataFile );
-                                };
-                                if ($@) {
+                                eval { $self->{tileset}->Render( $layer, $zoom, $layerDataFile ); };
+                                if ($@)
+                                {
 
                                     $self->setRendererError("$@");
 
@@ -149,7 +154,8 @@ sub startChildren {
     }
 }
 
-sub addJob {
+sub addJob
+{
     my $self = shift;
 
     my $zoom          = shift;
@@ -170,19 +176,24 @@ sub addJob {
     $self->updateMaxRenderer($layerDataFile);    #TODO: move it to the svg generation after init new workflow
 }
 
-sub wait {
+sub wait
+{
     my $self = shift;
 
-    while ( $self->{SHARED}->{RENDERERJOBSREADY} <= $#{ $self->{SHARED}->{RENDERERJOBS} } ) {
+    while ( $self->{SHARED}->{RENDERERJOBSREADY} <= $#{ $self->{SHARED}->{RENDERERJOBS} } )
+    {
         sleep 1;
     }
 }
 
 # reset my lists
-sub Reset {
+sub Reset
+{
     my $self = shift;
 
     $self->{'rendererSemaphore'}->down();
+
+    $::GlobalChildren->{SHARED}->{STOPALL} = 0;
 
     undef @{ $self->{SHARED}->{RENDERERJOBS} };
     undef @{ $self->{SHARED}->{RENDERERJOBLAYER} };
@@ -194,14 +205,16 @@ sub Reset {
     $self->{SHARED}->{MAXSVGFILESIZE}    = 0;
 
     # reset renderer limitation
-    for ( my $i = $self->{'maxChildren'} ; $i > 0 ; $i-- ) {
+    for ( my $i = $self->{'maxChildren'} ; $i > 0 ; $i-- )
+    {
         $self->{SHARED}->{CHILDSTOP}->[$i] = 0;
     }
 
     $self->{'rendererSemaphore'}->up();
 }
 
-sub setJobDir {
+sub setJobDir
+{
     my $self   = shift;
     my $jobDir = shift;
 
@@ -213,32 +226,37 @@ sub setJobDir {
 
 }
 
-sub rendererError {
-    my $self   = shift;
+sub rendererError
+{
+    my $self = shift;
 
-    if( $self->{SHARED}->{RENDERERJOBERROR} ) {
-        return($self->{SHARED}->{RENDERERJOBERROR});
+    if ( $self->{SHARED}->{RENDERERJOBERROR} )
+    {
+        return ( $self->{SHARED}->{RENDERERJOBERROR} );
     }
-    
+
     return;
-    
+
 }
 
-sub setRendererError {
-    my $self   = shift;
+sub setRendererError
+{
+    my $self  = shift;
     my $error = shift;
 
     $self->{'rendererSemaphore'}->down();
 
     $self->{SHARED}->{RENDERERJOBERROR} = $error;
 
+    $::GlobalChildren->{SHARED}->{STOPALL} = 1;
+
     $self->{'rendererSemaphore'}->up();
-    
-   
+
 }
 
 # put the job request in a shared strukture "i can not share classes"
-sub setRequest {
+sub setRequest
+{
     my $self = shift;
     my $req  = shift;
 
@@ -257,7 +275,8 @@ sub setRequest {
 
 # set the maximum of paralel working renderer
 #TODO: use svg files and not the osm files for calculate
-sub updateMaxRenderer {
+sub updateMaxRenderer
+{
     my $self     = shift;
     my $filename = shift;
 
@@ -266,18 +285,21 @@ sub updateMaxRenderer {
     $filename = File::Spec->join( $self->{SHARED}->{JOBDIR}, $filename );
     my @datafileStats = stat($filename);
 
-    if ( $self->{SHARED}->{MAXSVGFILESIZE} < $datafileStats[7] ) {
+    if ( $self->{SHARED}->{MAXSVGFILESIZE} < $datafileStats[7] )
+    {
         $self->{'rendererSemaphore'}->down();
         $self->{SHARED}->{MAXSVGFILESIZE} = $datafileStats[7];
         $self->{'rendererSemaphore'}->up();
     }
-    else {
+    else
+    {
         return;
     }
 
     my $caMemoryUsage = $self->{SHARED}->{MAXSVGFILESIZE} / 1024 / 16;
 
-    if ( ( $caMemoryUsage * $self->{'maxChildren'} ) > $Config->get("MaxMemory") ) {
+    if ( ( $caMemoryUsage * $self->{'maxChildren'} ) > $Config->get("MaxMemory") )
+    {
 
         # too little memory
         my $newMaxChildren = int( $Config->get("MaxMemory") / $caMemoryUsage );
@@ -294,7 +316,8 @@ sub updateMaxRenderer {
         );
 
         $self->{'rendererSemaphore'}->down();
-        for ( my $stopCount = ( $self->{'maxChildren'} - $newMaxChildren ) ; $stopCount > 0 ; $stopCount-- ) {
+        for ( my $stopCount = ( $self->{'maxChildren'} - $newMaxChildren ) ; $stopCount > 0 ; $stopCount-- )
+        {
             $self->{SHARED}->{CHILDSTOP}->[$stopCount] = 1;
 
         }

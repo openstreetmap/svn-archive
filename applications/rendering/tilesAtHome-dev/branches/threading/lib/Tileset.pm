@@ -1097,10 +1097,9 @@ sub threadedRender
         throw TilesetError "Render failure: $error", "renderer";
     }
 
-    if (defined $::GlobalChildren->{optimizePngTasks}) {
-        $::GlobalChildren->{optimizePngTasks}->wait();
-        $::GlobalChildren->{optimizePngTasks}->dataReset();
-    }
+    $::GlobalChildren->{optimizePngTasks}->wait();
+    $::GlobalChildren->{optimizePngTasks}->dataReset();
+
 
     if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
         $self->createTilesetFile($layer);
@@ -1317,6 +1316,11 @@ sub SplitTiles
         ::statusMessage("Splitting stripe $stripe",0,3);
 
         my $png_file = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.png");
+
+        if(! -f $png_file || -s $png_file == 0 ) {
+            throw TilesetError "SplitTiles: Missing File $png_file not exists", "fatal";
+        }
+
         my $Image = GD::Image->newFromPng($png_file);
 
         if( not defined $Image ) {

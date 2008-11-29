@@ -239,15 +239,20 @@ if( my $nice = $Config->get("Niceness") ){
 if ($Config->get("Cores") && !$Config->get("Fork") 
     && ($Mode eq "xy" || $Mode eq "loop") ) {
 
-  our $GlobalChildren = {};
+    our $GlobalChildren = {};
+    my %sharedStack : shared;
 
-  # start optimizePng Childs
-  $GlobalChildren->{optimizePngTasks} = optimizePngTasks->new();
-  $GlobalChildren->{optimizePngTasks}->startChildren();
+    $GlobalChildren->{SHARED} = \%sharedStack;
 
-  #start threadedrenderer childs
-  $GlobalChildren->{ThreadedRenderer} = ThreadedRenderer->new();
-  $GlobalChildren->{ThreadedRenderer}->startChildren();
+    $GlobalChildren->{SHARED}->{STOPALL} = 0;
+
+    # start optimizePng Childs
+    $GlobalChildren->{optimizePngTasks} = optimizePngTasks->new();
+    $GlobalChildren->{optimizePngTasks}->startChildren();
+
+    #start threadedrenderer childs
+    $GlobalChildren->{ThreadedRenderer} = ThreadedRenderer->new();
+    $GlobalChildren->{ThreadedRenderer}->startChildren();
 
 }
 

@@ -39,7 +39,9 @@
         <rule e="way" k="natural" v="coastline">
             <area class='natural-coastline'/>
         </rule>
-
+		<rule e="way" k="natural" v="glacier">
+		   <line class='natural-glacier'/> 
+		</rule>
         
 		<!-- Airports and runways -->
 		<rule e="way" k="aeroway" v="apron">
@@ -835,11 +837,11 @@
                 stroke-width: 1.5px;
             }
 
-	    .natural-glacier {
-		fill: #fafaff;
-		stroke: lightblue;
-		stroke-width: 1.5px;
-	    }
+            .natural-glacier {
+                fill: #fafaff;
+                stroke: lightblue;
+                stroke-width: 1.5px;
+            }
 
             .natural-land {
                 fill: #f8f8f8;

@@ -1228,6 +1228,10 @@
 				</else>
 			</else>
 		</rule>
+
+		<rule e="way" k="boundary" v="national_park" layer="5">
+			<line class="boundary boundary-nationalpark-core" layer="5"/>
+		</rule>
 		
 		<!-- Waterway and Street names -->
 		<rule e="way" k="osmarender:renderName" v="~|yes" layer="5">
@@ -2084,6 +2088,12 @@
 			.boundary-administrative-state-core {
 			stroke-width: 1.0px;
 			stroke: #f9574b;
+			stroke-dasharray: 5, 1, 1, 1;
+			}
+
+			.boundary-nationalpark-core {
+			stroke-width: 1.0px; 
+			stroke: #4ef94b;
 			stroke-dasharray: 5, 1, 1, 1;
 			}
 			

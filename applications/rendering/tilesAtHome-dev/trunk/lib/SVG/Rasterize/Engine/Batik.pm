@@ -139,14 +139,10 @@ sub new {
         }
     }
     $self->jar_searchpaths(@extended_default_jar_searchpaths);
-    $self->jar_list(
+    $self->jar_list([
         'xercesImpl.jar',
-        'batik.jar',
-        'fop-transcoder.jar',
-        'avalon-framework.jar',
-        'commons-logging.jar',
-        'commons-io.jar'
-        );
+        'batik.jar'
+        ]);
     my @default_java_searchpaths = ( File::Spec->path() );
     if( $^O eq 'MSWin32' ){
         my($volume, $dir) = File::Spec->splitpath($ENV{WINDIR}, 1);
@@ -300,7 +296,7 @@ sub convert {
     #DEBUG:warn 'about to run '.join(' ', @cmd);
     my $result;
     try {
-        $result = run( \@cmd, \undef, \$stdout, \$stderr )
+        $result = run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} )
     } otherwise {
         my $e = shift;
         throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\", run could not execute the command: $e");
@@ -310,7 +306,7 @@ sub convert {
     #warn "stdout: ".$stdout;
     #warn "stderr: ".$stderr;
 
-    if( ! $result || $stderr =~ /Error/ ){
+    if( ! $result || $self->{stderr} =~ /Error/ ){
         my $error;
 
         if( $? == -1 ){
@@ -321,7 +317,7 @@ sub convert {
             $error = 'exited with value '.($? >> 8);
         }
 
-        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\": $error", {cmd => \@cmd, stdout => $stdout, stderr => $stderr});
+        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\": $error", {cmd => \@cmd, stdout => $self->{stdout}, stderr => $self->{stderr}});
     }
 
     try {

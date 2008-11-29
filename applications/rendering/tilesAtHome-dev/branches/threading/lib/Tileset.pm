@@ -1078,11 +1078,11 @@ sub threadedRender
     my $minzoom = $req->Z;
     my $maxzoom = $Config->get($layer."_MaxZoom");
 
-
+    # add GenerateSVG jobs
     for (my $zoom = $maxzoom ; $zoom >= $req->Z; $zoom--) {
 
-        ::statusMessage("add renderjob zoom: $zoom " ,1,10);
-        $::GlobalChildren->{ThreadedRenderer}->addJob($zoom,$layer,$layerDataFile);
+        ::statusMessage("add GenerateSVG job layer: $layer zoom: $zoom " ,1,10);
+        $::GlobalChildren->{ThreadedRenderer}->addGenerateSVGjob($layer, $zoom, $layerDataFile);
 
     }
 
@@ -1091,7 +1091,6 @@ sub threadedRender
     # at this time is the client on work and the main process wait now
     #############
     $::GlobalChildren->{ThreadedRenderer}->wait();
-
 
     if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
         throw TilesetError "Render failure: $error", "renderer";
@@ -1107,6 +1106,38 @@ sub threadedRender
     else {
         $self->createZipFile($layer);
     }
+}
+
+#-------------------------------------------------------------------
+# renders the tiles for one zoom level
+# paramter: ($layer, $zoom)
+#-------------------------------------------------------------------
+sub Render_new
+{
+    my $self = shift;
+    my ($layer, $zoom ) = @_;
+    my $Config = $self->{Config};
+    my $req = $self->{req};
+
+    $::progress = 0;
+    $::progressPercent = 0;
+    $::currentSubTask = "$layer-z$zoom";
+
+    my $stripes = 1;
+    if ($Config->get("RenderStripes")) {
+        my $level = $zoom - $req->Z;
+        if ($level >= $Config->get("RenderStripes")) {
+            $stripes = 4 ** ($level - $Config->get("RenderStripes") + 1);
+            if ($stripes > 2 ** $level) {
+                $stripes = 2 ** $level;
+            }
+        }
+    }
+    
+    
+    $self->RenderSVG($layer, $zoom, $stripes);
+
+    $self->SplitTiles($layer, $zoom, $stripes);
 }
 
 
@@ -1138,6 +1169,11 @@ sub Render
     
     $self->GenerateSVG($layer, $zoom, $layerDataFile);
 
+    if( defined $::GlobalChildren->{ThreadedRenderer} )
+    {
+        $::GlobalChildren->{ThreadedRenderer}->updateMaxRenderer("$layer-z$zoom.svg")
+    }
+    
     $self->RenderSVG($layer, $zoom, $stripes);
 
     $self->SplitTiles($layer, $zoom, $stripes);

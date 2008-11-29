@@ -30,24 +30,35 @@ sub new
 
     my @sharedJobs : shared;
     my @sharedJobsLayer : shared;
-    my @sharedJobsLayerDataFile : shared;
     my @childStop : shared;
     my @sharedJobErrors : shared;
     my %sharedRequest : shared;
 
-    $self->{SHARED}->{RENDERERJOBS}         = \@sharedJobs;
-    $self->{SHARED}->{RENDERERJOBLAYER}     = \@sharedJobsLayer;
-    $self->{SHARED}->{RENDERERJOBLAYERDATA} = \@sharedJobsLayerDataFile;
-    $self->{SHARED}->{RENDERERJOBERRORS}    = \@sharedJobErrors;
-    $self->{SHARED}->{RENDERERJOBERROR}     = "";
-    $self->{SHARED}->{RENDERERJOBSPOS}      = -1;
-    $self->{SHARED}->{RENDERERJOBSREADY}    = 0;
-    $self->{SHARED}->{CHILDSTOP}            = \@childStop;                 # for stop single clients
-    $self->{SHARED}->{JOBDIR}               = "";
-    $self->{SHARED}->{REQEST}               = \%sharedRequest;
-    $self->{SHARED}->{MAXSVGFILESIZE}       = 0;
+    $self->{SHARED}->{RENDERERJOBS}      = \@sharedJobs;
+    $self->{SHARED}->{RENDERERJOBLAYER}  = \@sharedJobsLayer;
+    $self->{SHARED}->{RENDERERJOBERRORS} = \@sharedJobErrors;
+    $self->{SHARED}->{RENDERERJOBERROR}  = "";
+    $self->{SHARED}->{RENDERERJOBSPOS}   = -1;
+    $self->{SHARED}->{RENDERERJOBSREADY} = 0;
+    $self->{SHARED}->{CHILDSTOP}         = \@childStop;         # for stop single clients
+    $self->{SHARED}->{JOBDIR}            = "";
+    $self->{SHARED}->{REQEST}            = \%sharedRequest;
+    $self->{SHARED}->{MAXSVGFILESIZE}    = 0;
 
-    $self->{'maxChildren'} = $Config->get("Cores");
+    # GenerateSVG
+
+    my @sharedSvgJobs : shared;
+    my @sharedSvgJobsLayer : shared;
+    my @sharedSvgJobsLayerDataFile : shared;
+
+    $self->{SHARED}->{GENERATESVGJOBS}         = \@sharedSvgJobs;
+    $self->{SHARED}->{GENERATESVGJOBLAYER}     = \@sharedSvgJobsLayer;
+    $self->{SHARED}->{GENERATESVGJOBLAYERDATA} = \@sharedSvgJobsLayerDataFile;
+    $self->{SHARED}->{GENERATESVGJOBPOS}       = -1;
+    $self->{SHARED}->{GENERATESVGJOBSREADY}    = 0;
+
+    $self->{'maxChildren'}                     = $Config->get("Cores");
+    $self->{SHARED}->{'lastMaxChildren'} = $self->{'maxChildren'};
 
     bless $self, $class;
     return $self;
@@ -82,6 +93,7 @@ sub startChildren
                     my $layerDataFile;
                     my $zoom;
                     my $oldJobDir = "";
+                    my $req;
 
                     # wait of the global destroy flag or of the singel stop flag
                     while ( !$self->{SHARED}->{DESTROYED} )
@@ -92,7 +104,7 @@ sub startChildren
                         $self->{'rendererSemaphore'}->down();
                         if ( $oldJobDir ne $self->{SHARED}->{JOBDIR} && $self->{SHARED}->{JOBDIR} ne "" )
                         {
-                            my $req = new Request;
+                            $req = new Request;
                             $req->ZXY(
                                 $self->{SHARED}->{REQEST}->{'z'},
                                 $self->{SHARED}->{REQEST}->{'x'},
@@ -103,9 +115,9 @@ sub startChildren
                             $self->{tileset} = new Tileset( $req, 1, $self->{SHARED}->{JOBDIR} );
                             $oldJobDir = $self->{SHARED}->{JOBDIR};
                         }
-
                         $self->{'rendererSemaphore'}->up();
 
+                        # Renderer
                         while ( !$self->{SHARED}->{CHILDSTOP}->[$childID]
                             && $oldJobDir eq $self->{SHARED}->{JOBDIR}
                             && $self->{SHARED}->{RENDERERJOBSPOS} < $#{ $self->{SHARED}->{RENDERERJOBS} } )
@@ -115,10 +127,11 @@ sub startChildren
                             $self->{'rendererSemaphore'}->down();
 
                             $self->{SHARED}->{RENDERERJOBSPOS}++;
-                            $pos           = $self->{SHARED}->{RENDERERJOBSPOS};
-                            $zoom          = $self->{SHARED}->{RENDERERJOBS}->[$pos];
-                            $layer         = $self->{SHARED}->{RENDERERJOBLAYER}->[$pos];
-                            $layerDataFile = $self->{SHARED}->{RENDERERJOBLAYERDATA}->[$pos];
+                            $pos   = $self->{SHARED}->{RENDERERJOBSPOS};
+                            $zoom  = $self->{SHARED}->{RENDERERJOBS}->[$pos];
+                            $layer = $self->{SHARED}->{RENDERERJOBLAYER}->[$pos];
+
+                            $::currentSubTask = "Renderer-$layer-z$zoom";
 
                             # access: unlock()
                             $self->{'rendererSemaphore'}->up();
@@ -128,10 +141,9 @@ sub startChildren
                             ####
                             if ( !$self->rendererError() )
                             {
-                                ::statusMessage(
-                                    "Rendererclient $childID get job $pos zoom $zoom on layer $layer $layerDataFile",
+                                ::statusMessage( "Rendererclient $childID get job $pos zoom $zoom on layer $layer",
                                     1, 10 );
-                                eval { $self->{tileset}->Render( $layer, $zoom, $layerDataFile ); };
+                                eval { $self->{tileset}->Render_new( $layer, $zoom ); };
                                 if ($@)
                                 {
 
@@ -143,7 +155,54 @@ sub startChildren
                             $self->{'rendererSemaphore'}->down();
                             $self->{SHARED}->{RENDERERJOBSREADY}++;
                             $self->{'rendererSemaphore'}->up();
-                        }
+                        }    # Renderer end
+
+                        # GenerateSVG
+                        while ($oldJobDir eq $self->{SHARED}->{JOBDIR}
+                            && $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
+                        {
+
+                            # access: lock()
+                            $self->{'rendererSemaphore'}->down();
+
+                            $self->{SHARED}->{GENERATESVGJOBPOS}++;
+                            $pos           = $self->{SHARED}->{GENERATESVGJOBPOS};
+                            $zoom          = $self->{SHARED}->{GENERATESVGJOBS}->[$pos];
+                            $layer         = $self->{SHARED}->{GENERATESVGJOBLAYER}->[$pos];
+                            $layerDataFile = $self->{SHARED}->{GENERATESVGJOBLAYERDATA}->[$pos];
+
+                            $::currentSubTask = "GenSVG-$layer-z$zoom";
+
+                            # access: unlock()
+                            $self->{'rendererSemaphore'}->up();
+
+                            if ( !$self->rendererError() )
+                            {
+                                ::statusMessage(
+                                    "Rendererclient $childID get GenerateSVG job $pos zoom $zoom on layer $layer",
+                                    1, 10 );
+                                eval { $self->{tileset}->GenerateSVG( $layer, $zoom, $layerDataFile ); };
+                                if ($@)
+                                {
+
+                                    $self->setRendererError("$@");
+
+                                    ::statusMessage( "ERROR: Rendererclient $childID GenerateSVG return $@", 1, 10 );
+                                }
+                                else
+                                {
+                                    $self->updateMaxRenderer("$layer-z$zoom.svg");
+
+                                    ::statusMessage( "add renderjob zoom: $zoom ", 1, 10 );
+                                    $self->addJob( $zoom, $layer );
+
+                                }
+                            }
+                            $self->{'rendererSemaphore'}->down();
+                            $self->{SHARED}->{GENERATESVGJOBSREADY}++;
+                            $self->{'rendererSemaphore'}->up();
+
+                        }    # GenerateSVG end
 
                         sleep 1;
                     }
@@ -158,32 +217,58 @@ sub addJob
 {
     my $self = shift;
 
-    my $zoom          = shift;
-    my $layer         = shift;
-    my $layerDataFile = shift;
+    my $zoom  = shift;
+    my $layer = shift;
 
     $self->{'rendererSemaphore'}->down();
 
     my $pos = $#{ $self->{SHARED}->{RENDERERJOBS} };
     $pos++;
 
-    $self->{SHARED}->{RENDERERJOBS}->[$pos]         = $zoom;
-    $self->{SHARED}->{RENDERERJOBLAYER}->[$pos]     = $layer;
-    $self->{SHARED}->{RENDERERJOBLAYERDATA}->[$pos] = $layerDataFile;
+    $self->{SHARED}->{RENDERERJOBS}->[$pos]     = $zoom;
+    $self->{SHARED}->{RENDERERJOBLAYER}->[$pos] = $layer;
 
     $self->{'rendererSemaphore'}->up();
 
-    $self->updateMaxRenderer($layerDataFile);    #TODO: move it to the svg generation after init new workflow
+}
+
+sub addGenerateSVGjob
+{
+    my $self = shift;
+
+    my $layer         = shift;
+    my $zoom          = shift;
+    my $layerDataFile = shift;
+
+    $self->{'rendererSemaphore'}->down();
+
+    my $pos = $#{ $self->{SHARED}->{GENERATESVGJOBS} };
+    $pos++;
+
+    $self->{SHARED}->{GENERATESVGJOBS}->[$pos]         = $zoom;
+    $self->{SHARED}->{GENERATESVGJOBLAYER}->[$pos]     = $layer;
+    $self->{SHARED}->{GENERATESVGJOBLAYERDATA}->[$pos] = $layerDataFile;
+
+    $self->{'rendererSemaphore'}->up();
+
 }
 
 sub wait
 {
     my $self = shift;
 
+    # GenerateSVG wait
+    while ( $self->{SHARED}->{GENERATESVGJOBSREADY} <= $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
+    {
+        sleep 1;
+    }
+
+    # Renderer wait
     while ( $self->{SHARED}->{RENDERERJOBSREADY} <= $#{ $self->{SHARED}->{RENDERERJOBS} } )
     {
         sleep 1;
     }
+
 }
 
 # reset my lists
@@ -195,14 +280,21 @@ sub Reset
 
     $::GlobalChildren->{SHARED}->{STOPALL} = 0;
 
+    # Renderer
     undef @{ $self->{SHARED}->{RENDERERJOBS} };
     undef @{ $self->{SHARED}->{RENDERERJOBLAYER} };
-    undef @{ $self->{SHARED}->{RENDERERJOBLAYERDATA} };
     undef @{ $self->{SHARED}->{RENDERERJOBERRORS} };
     $self->{SHARED}->{RENDERERJOBERROR}  = "";
     $self->{SHARED}->{RENDERERJOBSPOS}   = -1;
     $self->{SHARED}->{RENDERERJOBSREADY} = 0;
     $self->{SHARED}->{MAXSVGFILESIZE}    = 0;
+
+    # GenerateSVG
+    undef @{ $self->{SHARED}->{GENERATESVGJOBS} };
+    undef @{ $self->{SHARED}->{GENERATESVGJOBLAYER} };
+    undef @{ $self->{SHARED}->{GENERATESVGJOBLAYERDATA} };
+    $self->{SHARED}->{GENERATESVGJOBPOS}    = -1;
+    $self->{SHARED}->{GENERATESVGJOBSREADY} = 0;
 
     $self->{'rendererSemaphore'}->up();
 
@@ -272,7 +364,7 @@ sub setRequest
 }
 
 # set the maximum of paralel working renderer
-#TODO: use svg files and not the osm files for calculate
+# a 10 mb svg file consum ~ 1.3gb ram on a 64bit system
 sub updateMaxRenderer
 {
     my $self     = shift;
@@ -294,24 +386,15 @@ sub updateMaxRenderer
         return;
     }
 
-    my $caMemoryUsage = $self->{SHARED}->{MAXSVGFILESIZE} / 1024 / 16;
+    my $caMemoryUsage = $self->{SHARED}->{MAXSVGFILESIZE} / 1024 / 7;
 
     if ( ( $caMemoryUsage * $self->{'maxChildren'} ) > $Config->get("MaxMemory") )
     {
 
         # too little memory
         my $newMaxChildren = int( $Config->get("MaxMemory") / $caMemoryUsage );
-        $newMaxChildren = 1 if $newMaxChildren < 1;
 
-        ::statusMessage(
-            "too little memory for the render job and "
-              . $self->{'maxChildren'}
-              . " Children, stop "
-              . ( $self->{'maxChildren'} - $newMaxChildren )
-              . " renderer childs from "
-              . $self->{'maxChildren'},
-            1, 10
-        );
+        return if $self->{SHARED}->{'lastMaxChildren'} <= $newMaxChildren;
 
         $self->setMaxRenderer($newMaxChildren);
     }
@@ -325,8 +408,23 @@ sub setMaxRenderer
     $newMaxChildren = 1 if $newMaxChildren < 1;
 
     $newMaxChildren = $self->{'maxChildren'} if $newMaxChildren > $self->{'maxChildren'};
-    $self->{'rendererSemaphore'}->down();
 
+    return if $self->{SHARED}->{'lastMaxChildren'} == $self->{'maxChildren'};
+
+    if ( $self->{'maxChildren'} != $newMaxChildren )
+    {
+        ::statusMessage(
+            "too little memory for the render job and "
+              . $self->{'maxChildren'}
+              . " Children, stop "
+              . ( $self->{'maxChildren'} - $newMaxChildren )
+              . " renderer childs from "
+              . $self->{'maxChildren'},
+            1, 10
+        );
+    }
+
+    $self->{'rendererSemaphore'}->down();
     for ( my $i = $self->{'maxChildren'} ; $i > 0 ; $i-- )
     {
         if ($newMaxChildren)
@@ -343,6 +441,8 @@ sub setMaxRenderer
             $self->{SHARED}->{CHILDSTOP}->[$i] = 1;
         }
     }
+
+    $self->{SHARED}->{'lastMaxChildren'} = $self->{'maxChildren'};
 
     $self->{'rendererSemaphore'}->up();
 

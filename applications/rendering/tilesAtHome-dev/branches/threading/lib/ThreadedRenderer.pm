@@ -406,7 +406,7 @@ sub updateMaxRenderer
         # too little memory
         my $newMaxChildren = int( $Config->get("MaxMemory") / $caMemoryUsage );
 
-        return if $self->{SHARED}->{'lastMaxChildren'} <= $newMaxChildren;
+        return if ($self->{SHARED}->{'lastMaxChildren'} <= $newMaxChildren);
 
         $self->setMaxRenderer($newMaxChildren);
     }
@@ -421,7 +421,7 @@ sub setMaxRenderer
 
     $newMaxChildren = $self->{'maxChildren'} if $newMaxChildren > $self->{'maxChildren'};
 
-    return if $self->{SHARED}->{'lastMaxChildren'} == $self->{'maxChildren'};
+    return if ($self->{SHARED}->{'lastMaxChildren'} == $newMaxChildren);
 
     if ( $self->{'maxChildren'} != $newMaxChildren )
     {
@@ -437,6 +437,9 @@ sub setMaxRenderer
     }
 
     $self->{'rendererSemaphore'}->down();
+
+    $self->{SHARED}->{'lastMaxChildren'} = $newMaxChildren;
+
     for ( my $i = $self->{'maxChildren'} ; $i > 0 ; $i-- )
     {
         if ($newMaxChildren)
@@ -453,8 +456,6 @@ sub setMaxRenderer
             $self->{SHARED}->{CHILDSTOP}->[$i] = 1;
         }
     }
-
-    $self->{SHARED}->{'lastMaxChildren'} = $self->{'maxChildren'};
 
     $self->{'rendererSemaphore'}->up();
 

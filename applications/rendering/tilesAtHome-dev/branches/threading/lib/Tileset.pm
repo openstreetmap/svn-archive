@@ -1286,7 +1286,9 @@ sub RenderSVG
             if( $e->{stderr} =~ /preferences.xml/ ){
                 $corrupt = 1;
                 warn "* Inkscape preference file corrupt. Delete Inkscape's preferences.xml to continue\n";
-                if( defined($self->{inkscape_autobackup}) ){
+
+                # TODO: move this to a central function + the stuff in $self->new()
+                if( defined($self->{inkscape_autobackup}) && defined $self->{inkscape_autobackup}{cfgfile} ){
                     my $cfg = $self->{inkscape_autobackup}{cfgfile};
                     my $bak = $self->{inkscape_autobackup}{backupfile};
                     warn "   AutoResetInkscapePrefs set, trying to reset $cfg\n";

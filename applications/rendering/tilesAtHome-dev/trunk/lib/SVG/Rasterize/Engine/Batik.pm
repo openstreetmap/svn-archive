@@ -99,6 +99,12 @@ sub new {
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
+             'c:\program files',
+             'c:\program files\batik',
+             'c:\programme',
+             'c:\programme\batik',
+             'c:\programfiler',
+             'c:\programfiler\batik',
              'c:\tilesAtHome',
              'c:\tilesAtHome\batik'
             );

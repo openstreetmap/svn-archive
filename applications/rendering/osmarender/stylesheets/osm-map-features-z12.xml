@@ -800,6 +800,10 @@
 				</else>
 			</else>
 		</rule>
+
+		<rule e="way" k="boundary" v="national_park" layer="5">
+			<line class="boundary boundary-nationalpark-core" layer="5"/>
+		</rule>
 		
 		<!-- Place names  -->
 		<rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
@@ -1405,6 +1409,12 @@
 			.boundary-administrative-state-core {
 			stroke-width: 8px;
 			stroke: #f9574b;
+			stroke-dasharray: 80, 16, 16, 16;
+			}
+
+			.boundary-nationalpark-core {
+			stroke-width: 8px; 
+			stroke: #4ef94b;
 			stroke-dasharray: 80, 16, 16, 16;
 			}
 			

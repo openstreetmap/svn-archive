@@ -204,13 +204,11 @@ sub Reset
     $self->{SHARED}->{RENDERERJOBSREADY} = 0;
     $self->{SHARED}->{MAXSVGFILESIZE}    = 0;
 
-    # reset renderer limitation
-    for ( my $i = $self->{'maxChildren'} ; $i > 0 ; $i-- )
-    {
-        $self->{SHARED}->{CHILDSTOP}->[$i] = 0;
-    }
-
     $self->{'rendererSemaphore'}->up();
+
+    # reset renderer limitation
+    $self->setMaxRenderer( $self->{'maxChildren'} )
+
 }
 
 sub setJobDir
@@ -308,21 +306,46 @@ sub updateMaxRenderer
         ::statusMessage(
             "too little memory for the render job and "
               . $self->{'maxChildren'}
-              . " Children, stopp "
+              . " Children, stop "
               . ( $self->{'maxChildren'} - $newMaxChildren )
               . " renderer childs from "
               . $self->{'maxChildren'},
             1, 10
         );
 
-        $self->{'rendererSemaphore'}->down();
-        for ( my $stopCount = ( $self->{'maxChildren'} - $newMaxChildren ) ; $stopCount > 0 ; $stopCount-- )
-        {
-            $self->{SHARED}->{CHILDSTOP}->[$stopCount] = 1;
-
-        }
-        $self->{'rendererSemaphore'}->up();
+        $self->setMaxRenderer($newMaxChildren);
     }
+}
+
+sub setMaxRenderer
+{
+    my $self           = shift;
+    my $newMaxChildren = shift;
+
+    $newMaxChildren = 1 if $newMaxChildren < 1;
+
+    $newMaxChildren = $self->{'maxChildren'} if $newMaxChildren > $self->{'maxChildren'};
+    $self->{'rendererSemaphore'}->down();
+
+    for ( my $i = $self->{'maxChildren'} ; $i > 0 ; $i-- )
+    {
+        if ($newMaxChildren)
+        {
+
+            # set child to on
+            $newMaxChildren--;
+            $self->{SHARED}->{CHILDSTOP}->[$i] = 0;
+        }
+        else
+        {
+
+            # set child to off
+            $self->{SHARED}->{CHILDSTOP}->[$i] = 1;
+        }
+    }
+
+    $self->{'rendererSemaphore'}->up();
+
 }
 
 1;

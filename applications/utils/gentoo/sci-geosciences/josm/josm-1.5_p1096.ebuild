@@ -9,10 +9,14 @@ MY_P=${PN}-snapshot-${PV/1.5_p/}
 DESCRIPTION="Java-based editor for the OpenStreetMap project"
 HOMEPAGE="http://josm.openstreetmap.de/"
 SRC_URI="http://josm.openstreetmap.de/download/${MY_P}.jar
-	linguas_de? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-de.jar )
-	linguas_en_GB? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-en_GB.jar )
-	linguas_fr? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-fr.jar )
-	linguas_ro? ( http://svn.openstreetmap.org/applications/editors/josm/dist/lang-ro.jar )"
+	linguas_de? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/de.po )
+	linguas_en_GB? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/en_GB.po )
+	linguas_fr? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/fr.po )
+	linguas_it? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/it.po )
+	linguas_pl? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/pl.po )
+	linguas_ro? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/ro.po )
+	linguas_ru? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/ru.po )
+	linguas_sl? ( http://svn.openstreetmap.org/applications/editors/josm/i18n/po/sl.po )"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~x86"

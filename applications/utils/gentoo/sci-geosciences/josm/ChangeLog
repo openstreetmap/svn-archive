@@ -2,15 +2,22 @@
 # Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
-*josm-1.5_p1089 (22 Dec 2008)
+*josm-1.5_p1091 (30 Nov 2008)
+  30 Nov 2008; Lorenz Kiefner <openstreetmap-at-lorenz.kiefner.de> +josm-1.5_p1091.ebuild:
+  Version bump, upstream "stable"
 
-  22 Dec 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1089.ebuild:
+*josm-1.5_p1096
+  Version bump
+
+*josm-1.5_p1089 (22 Nov 2008)
+
+  22 Nov 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1089.ebuild:
   version bump
 
-  22 Dec 2008; Dennis <dennis.lists@googlemail.com> -josm-1.5_p620.ebuild -josm-1.5_p669.ebuild:
+  22 Nov 2008; Dennis <dennis.lists@googlemail.com> -josm-1.5_p620.ebuild -josm-1.5_p669.ebuild:
   removed old versions
 
-  22 Dec 2008; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild +files/svn_build_xml.patch:
+  22 Nov 2008; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild +files/svn_build_xml.patch:
   made svn working again
 
 *josm-1.5_p669 (28 Jun 2008)

@@ -13,30 +13,50 @@ class postcodelookup {
 
   var $postcode;
   var $postcodeprefix;
+  var $textbefore;
+  var $prefixonly;
   var $googlequery = 'http://www.google.com/search?hl=en&q=';
   var $namefinderquery;
 
   // --------------------------------------------------
-  /* static */ function postcodelookupfactory($prospectivepostcode) {
+  /* static */ function postcodelookupfactory($prospectivepostcode, $allowtextbefore=FALSE) {
+    $prepattern = $allowtextbefore ? '^(.*) +' : '^ +()';
     $postcodelookup = new postcodelookup();
-    if (! preg_match ('/([a-z]{1,2}[0-9]{1,2}[a-z]?) +([0-9][a-z]{2})/i', $prospectivepostcode, 
-                      $matches)) 
+    $prospectivepostcode = " {$prospectivepostcode}";
+    if (preg_match ("/{$prepattern}([a-z]{1,2}[0-9]{1,2}[a-z]?) +([0-9][a-z]{2})\$/i", 
+                    $prospectivepostcode, $matches)) 
     {
-      $postcodelookup->postcode = NULL;
-      return $postcodelookup; /* not a postcode */
+      $prefix = strtoupper($matches[2]);
+      $postcodelookup->postcode = strtoupper("{$matches[2]} {$matches[3]}");
+      $postcodelookup->prefixonly = FALSE;
+      $postcodelookup->textbefore = $matches[1];
+    } else if (preg_match("/{$prepattern}([A-Z]{1,2}[0-9]{1,2}[A-Z]?)\s*\$/i", 
+                          $prospectivepostcode, $matches)) 
+    {
+      /* it is just the first part of a UK postcode? */
+      $postcodelookup->postcode = $prefix = $matches[2];
+      $postcodelookup->textbefore = $matches[1];
+      $postcodelookup->prefixonly = TRUE;
+    } else {
+      return FALSE; /* not a postcode */
     }
-    $postcodelookup->postcode = strtoupper("{$matches[1]} {$matches[2]}");
-    $postcodelookup->postcodeprefix = strtoupper($matches[1]);
-    $postcodelookup->namefinderquery = NULL;
+    include_once('postcodeprefix.php');
+    $postcodelookup->postcodeprefix = postcodeprefix::lookup($prefix);
+    global $db; $db->log("PC 2: ".print_r($postcodelookup,1));
+    if (empty($postcodelookup->postcodeprefix)) { return FALSE; }
+    if ($postcodelookup->prefixonly) {
+      $postcodelookup->namefinderquery = $postcodelookup->postcodeprefix->prefix;
+    } else if (! $postcodelookup->get_query()) {
+      return FALSE;
+    }
     return $postcodelookup;
   }
 
   // --------------------------------------------------
-  function get_query(&$query) { 
+  function get_query() { 
     if (empty($this->postcode)) { return FALSE; }
     $this->googleme();
     if (is_null($this->namefinderquery)) { return FALSE; }
-    $query = $this->namefinderquery;    
     return TRUE;
   }
 
@@ -73,7 +93,7 @@ class postcodelookup {
           }
         }
         if (empty($places)) { continue; }
-        $this->namefinderquery = "{$submatches[1]}, {$possibleplace} {$this->postcodeprefix}";
+        $this->namefinderquery = "{$submatches[1]}, {$possibleplace}, {$this->postcodeprefix}";
 
         $db->log("looking up {$this->namefinderquery} for {$this->postcode} ". print_r($submatches,1));
         return TRUE;

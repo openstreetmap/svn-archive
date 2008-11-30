@@ -540,6 +540,23 @@ class named {
     return $xml;
   }
 
+  // --------------------------------------------------
+  /* static */ function pseudonamedfrompostcode($postcode) {
+    /* A factory for placeindex records, derived from postcodeprefix */
+    include_once('region.php');
+    $named = new named();
+    $named->id = -1;
+    $region = new region($postcode->postcodeprefix->lat, $postcode->postcodeprefix->lon);
+    $named->region = $region->regionnumber();
+    $named->lat = $postcode->postcodeprefix->lat;
+    $named->lon = $postcode->postcodeprefix->lon;
+    $named->rank = 5;    
+    $named->name = $postcode->postcodeprefix->prefix;
+    $named->info = 'postcode area';
+    $named->category = 'postcode area';
+    return $named;
+  }
+
 }
 
 ?>

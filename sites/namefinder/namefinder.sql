@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: 127.0.0.1:3305
--- Generation Time: Nov 26, 2008 at 08:11 PM
+-- Generation Time: Nov 30, 2008 at 06:25 PM
 -- Server version: 5.0.22
 -- PHP Version: 5.2.1
 
@@ -94,7 +94,7 @@ CREATE TABLE `options` (
   `value` text NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=275 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=279 ;
 
 -- --------------------------------------------------------
 
@@ -125,6 +125,19 @@ CREATE TABLE `postcodeprefix` (
   `lon` double NOT NULL,
   PRIMARY KEY  (`prefix`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `querylog`
+-- 
+
+CREATE TABLE `querylog` (
+  `id` int(11) NOT NULL auto_increment,
+  `date` int(11) NOT NULL,
+  `query` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 

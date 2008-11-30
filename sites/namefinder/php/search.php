@@ -48,6 +48,10 @@ class search {
       htmlspecialchars($indexdate, ENT_QUOTES, 'UTF-8')."'";
     $oxml .= " date='".date('Y-m-d H:i:s')."'";
 
+    /* make a note of the query */
+    include_once('querylog.php');
+    querylog::log($find);
+
     /* remove comments in square brackets from input - these are comments */
     $find = trim(preg_replace('/\\[.*\\]/', '', $find));
 

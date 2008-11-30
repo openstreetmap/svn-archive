@@ -53,9 +53,10 @@ class search {
 
     /* does it look like a postcode? */
     $postcodelookup = postcodelookup::postcodelookupfactory($find);
-    $originalpostcode = $find;
-    $isapostcode = $postcodelookup->get_query($find);
-    if ($isapostcode) { $maxresults = 1; }
+    if (! empty($postcodelookup)) {
+      $find = $postcodelookup->namefinderquery;
+      if (! $postcodelookup->prefixonly) { $maxresults = 1; }
+    }
 
     $finds = explode(':', $find);
     if (count($finds) > 2) { 
@@ -75,7 +76,7 @@ class search {
       $thisfind = search::explodeterms($finds[$i]);
       
       /* the heart of the search - see below */
-      $nameds = search::find($thisfind, $maxresults, $isapostcode, $anyoccurenceifnotlocal);
+      $nameds = search::find($thisfind, $maxresults, $postcodelookup, $anyoccurenceifnotlocal);
 
       /* reflect the original search data back in the xml */
       $ks = count($finds) > 1 ? $i+1 : '';
@@ -91,7 +92,7 @@ class search {
 
       /* if find() returned an error message rather than an array of results, try again,
          dropping any qualifying is_in term, because places often don't include them */
-      if (is_string($nameds) && ! $isapostcode) {
+      if (is_string($nameds) && empty($postcodelookup)) {
         if (count($thisfind) == 2) {
           $thisfind = array_merge(array($thisfind[0]), $thisfind);
           $nameds = search::find($thisfind, $maxresults, FALSE, $anyoccurenceifnotlocal);
@@ -105,7 +106,7 @@ class search {
       }
 
       if (count($nameds) == 0) {
-        if ($isapostcode) {
+        if (! empty($postcodelookup)) {
           $oxml .= " error='name not found for postcode'>\n</searchresults>\n";
         } else {
           $oxml .= " error='name not found'>\n</searchresults>\n";
@@ -119,7 +120,7 @@ class search {
       $oxml .= " foundnearplace{$ks}='" . ($foundnearplace ? 'yes' : 'no') . "'";
 
       /* reflect any postcode requested in the xml */
-      if ($isapostcode) { $oxml .= " postcode='{$originalpostcode}'"; }
+      if (! empty($postcodelookup)) { $oxml .= " postcode='{$postcodelookup->postcode}'"; }
 
       /* keep a not of the result for debugging */
       $db->log("result: ".print_r($nameds,1));
@@ -171,7 +172,7 @@ class search {
   }
 
   // --------------------------------------------------
-  /* static */ function find(&$terms, $maxresults, $doingpostcode, $anyoccurenceifnotlocal=FALSE) {
+  /* static */ function find(&$terms, $maxresults, $postcodelookup, $anyoccurenceifnotlocal=FALSE) {
     /* Given a search string, returns an array of named's which are the matches 
        for the given search string. Usually this will be called from xmlise rather 
        than directly.
@@ -262,31 +263,38 @@ class search {
         $pseudoplace->assigndescription($nterms > 1);
         $nameds[] = clone $pseudoplace; 
       } else {
-        if (preg_match('/ ([A-Z]{1,2}[0-9]{1,2}[A-Z]?)\s*$/i', " {$terms[1]}", $matches)) {
-          $prefix = $matches[1];
-          include_once('postcodeprefix.php');
-          $postcodeprefix = postcodeprefix::lookup($prefix);
-          if (! empty($postcodeprefix)) {
-            search::islatlon($postcodeprefix->lat, $postcodeprefix->lon, $pseudoplace);
-            $pseudoplace->info = "middle of UK postcode area";
-            $pseudoplace->name = "{$postcodeprefix->prefix} ({$postcodeprefix->placename})";
-            $pseudoplace->rank = 5;
-            $pseudoplace->findnearestplace();
-            $pseudoplace->assigndescription(FALSE);
-            $places[] = clone $pseudoplace; 
+
+        /* case 2 or 3 above: search is qualified. Find any places of the name given as 
+         the second term  */
+
+        /* allow for the place being qualified by a postcode either with or 
+           without a comma separator (and also below, and arbitrary is_in term) */
+        $postcodeappendage = postcodelookup::postcodelookupfactory($terms[1], TRUE);
+        if (! empty($postcodeappendage)) {
+          if (empty($postcodeappendage->textbefore)) {
+            /* the place term is only a postcode - use a pseudo place instead */
+            $places = array(named::pseudonamedfrompostcode($postcodeappendage));
+            unset($postcodeappendage);
+          } else {
+            /* otherwise it stands as an is_in term even though there's no comma */
+            $places = array_merge($places, named::lookupplaces($postcodeappendage->textbefore, 
+                                                               NULL, TRUE));
           }
+        } else {
+          if (! empty($terms[2])) {
+            $postcodeappendage = postcodelookup::postcodelookupfactory($terms[2]);
+            /* which, if set, is like an is_in qualifier */
+          }
+          $places = array_merge($places, named::lookupplaces($terms[1], NULL, TRUE));
         }
 
-        if (empty($postcodeprefix)) {
-          /* case 2 or 3 above: search is qualified. Find any places of the name given as 
-             the second term  */
+        if (count($places) == 0) { return "I can't find {$terms[1]}"; }
 
-          $places = array_merge($places, named::lookupplaces($terms[1], NULL, TRUE));
-          if (count($places) == 0) { return "I can't find {$terms[1]}"; }
+        // $db->log ("found places " . print_r($places, 1));
 
-          // $db->log ("found places " . print_r($places, 1));
-
-          /* cull the possible places according to given qualifying is_in in case 3*/
+        /* cull the possible places according to given qualifying is_in in case 3, or 
+           by a postcode or postcode area */
+        if (empty($postcodeappendage)) {
           $placeisin = $nterms > 2 ? array_slice($terms, 2) : array();
           if (! empty($placeisin)) {
             foreach($placeisin as $isin) {
@@ -311,18 +319,35 @@ class search {
             }
             // $db->log ("places after cull " . print_r($places, 1));
           }
-
-          if (count($places) == 0) { 
-            /* nothing left, so say so */
-            $isin = '';
-            $prefix = '';
-            for ($i = 2; $i < count($terms); $i++) { 
-              $isin = "{$prefix}{$terms[$i]}";
-              $prefix = ', ';
+        } else {
+          /* cull the places to be within a reasonable distance of the postcode prefix centroid */
+          include_once('placeindex.php');
+          $postcodeplace = named::pseudonamedfrompostcode($postcodeappendage);
+          include_once('region.php');
+          $region = new region($postcodeplace->lat, $postcodeplace->lon);
+          $considerregions = $region->considerregions();
+          for($i = 0; $i < count($places) /* which varies! */; $i++) {
+            if (in_array($places[$i]->region, $considerregions)) {
+              /* the biggest postcode area (in Caithness) is approx 120km in diameter, 
+               so we need to be within 60km or so of the place for it to qualify */ 
+              $tempnamed = clone $places[$i];
+              if ($tempnamed->localdistancefrom($postcodeplace) < 60.0) { continue; }
             }
-            $unfoundplace = "{$terms[1]} not found";
-            if (! empty($isin)) { $unfoundplace .= " in {$isin}"; }
+            array_splice($places, $i, 1);
+            $i--; // because we'll increase it again in the for
+          }          
+        }
+
+        if (count($places) == 0) { 
+          /* nothing left, so say so */
+          $isin = '';
+          $prefix = '';
+          for ($i = 2; $i < count($terms); $i++) { 
+            $isin = "{$prefix}{$terms[$i]}";
+            $prefix = ', ';
           }
+          $unfoundplace = "{$terms[1]} not found";
+          if (! empty($isin)) { $unfoundplace .= " in {$isin}"; }
         }
       }
     }
@@ -366,12 +391,18 @@ class search {
     $canonterms = canonical::canonical_basic($terms[0]);
     if (count($canonterms) > 4) { array_splice($canonterms, 4); }
 
-    if (count($canonterms) > 1 && count($canonterms[0]) == 1 &&
-        preg_match('/^[1-9][0-9]*$/', $canonterms[0][0]))
-    { 
-      /* remove numbers at the beginning on the basis someone probably
-       typed a street address, such as "31 Hinton Road" */
-      array_splice($canonterms,0,1); 
+    $ctn = count($canonterms)-1;
+    if ($ctn > 0) {
+      if (count($canonterms[0]) == 1 && preg_match('/^[1-9][0-9]*$/', $canonterms[0][0])) {
+        /* remove numbers at the beginning on the basis someone probably
+         typed a street address, such as "31 Hinton Road" */
+        array_splice($canonterms,0,1); 
+      } else if (count($canonterms[$ctn]) == 1 && 
+                 preg_match('/^[1-9][0-9]*$/', $canonterms[$ctn][0])) 
+      {
+        /* ditto European style addresses with the number at the end, as in "Via Meloria 14" */
+        array_splice($canonterms, $ctn, 1); 
+      }
     }
 
     if (count($places) > 0) {
@@ -382,7 +413,6 @@ class search {
 
       foreach ($places as $place) {
         $place->assigncontext(); // nearest more important place(s)
-
         /* find occurences of the name ordered by distance from the place, 
            for each of the places we found */
         $region = new region($place->lat, $place->lon);
@@ -430,7 +460,7 @@ class search {
     }
 
     if (count($nameds) == 0 && (count($places) == 0 || $anyoccurenceifnotlocal) && 
-        empty($doinglatlonqualifier) && empty($doingpostcode)) 
+        empty($doinglatlonqualifier)) 
     {
       /* Either no qualifying place, or no name found near given place
          (and we asked to search more widely). If there was a
@@ -462,8 +492,8 @@ class search {
         // $q->groupby(y_op::field('id',count($joiners)-1));
 
         while ($q->select($joiners) > 0) { 
-          $db->log(print_r($joiners,1));
-          $db->log(print_r($named,1));
+          // $db->log(print_r($joiners,1));
+          // $db->log(print_r($named,1));
           $named = $joiners[count($joiners) - 1];
           $namedclone = clone $named;
           if ($namedclone->rank > 0) {

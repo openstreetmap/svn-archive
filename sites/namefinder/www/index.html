@@ -50,18 +50,8 @@ if (isset($_GET['find'])) {
 
 EOD;
 
-    if ($xnamed['type'] == 'node') {
-      if (isset($_SERVER['REMOTE_ADDR'])) {
-        if (strpos($_SERVER['REMOTE_ADDR'], '192.168.0.') === 0) {
-          $site = 'http://egret/osm/';
-        }
-        if (isset($site)) {
-          $s .= "<a href='{$site}editelement.html?node={$xnamed['id']}' title='edit using mini element editor'>edit&nbsp;(mei)</a>\n";
-        }
-      }
-    }
-
-    $s .= "<a href='http://www.free-map.org.uk/freemap/edit.php?lat={$xnamed['lat']}&lon={$xnamed['lon']}' title='edit using point of interest editor editor'>edit&nbsp;(poi)</a>\n";
+    $s .= "<a href='http://www.openstreetmap.org/browse/{$xnamed['type']}/{$xnamed['id']}' title='all tag values for this node'>details</a>\n";
+    $s .= "<a href='http://www.openstreetmap.org/browse/{$xnamed['type']}/{$xnamed['id']}/history' title='history for this node'>history</a>\n";
 
     return $s;
   }

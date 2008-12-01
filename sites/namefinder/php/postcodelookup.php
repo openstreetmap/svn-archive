@@ -42,7 +42,6 @@ class postcodelookup {
     }
     include_once('postcodeprefix.php');
     $postcodelookup->postcodeprefix = postcodeprefix::lookup($prefix);
-    global $db; $db->log("PC 2: ".print_r($postcodelookup,1));
     if (empty($postcodelookup->postcodeprefix)) { return FALSE; }
     if ($postcodelookup->prefixonly) {
       $postcodelookup->namefinderquery = $postcodelookup->postcodeprefix->prefix;
@@ -93,7 +92,7 @@ class postcodelookup {
           }
         }
         if (empty($places)) { continue; }
-        $this->namefinderquery = "{$submatches[1]}, {$possibleplace}, {$this->postcodeprefix}";
+        $this->namefinderquery = "{$submatches[1]}, {$possibleplace}, {$this->postcodeprefix->prefix}";
 
         $db->log("looking up {$this->namefinderquery} for {$this->postcode} ". print_r($submatches,1));
         return TRUE;

@@ -506,7 +506,7 @@ class search {
           } else {
             $namedclone->findnearestplace();
           }
-          if (isset($unfoundplace)) { $namedclone->place = $unfoundplace; }
+          // if (isset($unfoundplace)) { $namedclone->place = $unfoundplace; }
           $namedclone->assigndescription($nterms > 1);
           $nameds[] = $namedclone;
         }

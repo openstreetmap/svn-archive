@@ -1,0 +1,79 @@
+<?php
+
+/* User interface to name finder. search.xml is the programmatic
+   interface.  Note that while name finder itself does not require it,
+   ths file requires OpenLayers-2.4 to display the map 
+   
+   This file also contains the javascript to iterpret name finder's 'where am I?' 
+   query "places near lat,lon"
+*/
+
+include_once('preamble.php');
+include_once('querylog.php');
+
+/* Sessions are only used so that queries from the same user get logged in the same log file */
+session_start();
+
+if (! empty($_SERVER['REQUEST_URI'])) {
+  /* note what we were asked for */
+  $db->log("VISITING {$_SERVER['REQUEST_URI']}");
+}
+
+$start = ! empty($_GET['start']) ? $_GET['start'] : 0;
+$count = ! empty($_GET['count']) ? $_GET['count'] : 50;
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+<title>OpenStreetMap name finder sample quries</title>
+<meta name='description' content='OpenStreetMap name finder sample queries' />
+<meta name='MSSmartTagsPreventParsing' content='TRUE' /> 
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<style type='text/css'>
+body{
+  font-family: Verdana,sans-serif;
+  font-size: 0.8em;
+}
+table {
+  border: 0;
+}
+table td {
+  padding-right: 1em;
+}
+</style>
+
+<body>
+
+<h1>what have people been searching for?</h1>
+
+<p>note: people are searching for things all the time, so the list will change from page to page</p>
+
+<table>
+<thead><tr><td>date</td><td>search term</td></tr></thead>
+<tbody>
+<?php
+$q = $db->query();
+$ql = new querylog();
+$q->descending('id');
+$q->limit($count, $start);
+while ($q->select($ql) > 0) {
+  $date = date('Y-m-d H:i', $ql->date);
+  $terms = htmlspecialchars($ql->query, ENT_QUOTES, 'UTF-8');
+  $encodedterms = urlencode($ql->query); 
+  echo "<tr><td>{$date}</td><td><a href='index.html?find={$encodedterms}'>{$terms}</a></td></tr>\n";
+}
+?>
+</tbody></table>
+
+<?php 
+$later = $start - $count;
+$earlier = $start + $count;
+echo "<a href='?start={$earlier}&count={$count}'>earlier</a>\n";
+if ($start != 0) {
+  echo "<a href='?start={$later}&count={$count}'>later</a>\n";
+}
+echo "<a href='?start=0&count={$count}'>most recent</a>\n";
+?>
+</body>
+</html>

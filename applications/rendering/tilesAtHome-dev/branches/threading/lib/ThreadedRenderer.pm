@@ -121,39 +121,47 @@ sub startChildren
                             && $oldJobDir eq $self->{SHARED}->{JOBDIR}
                             && $self->newRendereJobAvailable() )
                         {
+                            $zoom  = 0;
+                            $layer = "";
 
                             # access: lock()
                             $self->{'rendererSemaphore'}->down();
 
-                            $self->{SHARED}->{RENDERERJOBSPOS}++;
-                            $pos   = $self->{SHARED}->{RENDERERJOBSPOS};
-                            $zoom  = $self->{SHARED}->{RENDERERJOBS}->[$pos];
-                            $layer = $self->{SHARED}->{RENDERERJOBLAYER}->[$pos];
-
-                            $::currentSubTask = "Renderer-$layer-z$zoom";
+                            # get an other child the last job?
+                            if ( $self->{SHARED}->{RENDERERJOBSPOS} < $#{ $self->{SHARED}->{RENDERERJOBS} } )
+                            {
+                                $self->{SHARED}->{RENDERERJOBSPOS}++;
+                                $pos   = $self->{SHARED}->{RENDERERJOBSPOS};
+                                $zoom  = $self->{SHARED}->{RENDERERJOBS}->[$pos];
+                                $layer = $self->{SHARED}->{RENDERERJOBLAYER}->[$pos];
+                            }
 
                             # access: unlock()
                             $self->{'rendererSemaphore'}->up();
 
-                            ####
-                            # i do my work now
-                            ####
-                            if ( !$self->rendererError() )
+                            if ( $zoom && $layer )
                             {
-                                ::statusMessage( "Rendererclient $childID get job $pos zoom $zoom on layer $layer",
-                                    1, 10 );
-                                eval { $self->{tileset}->Render_new( $layer, $zoom ); };
-                                if ($@)
+                                $::currentSubTask = "Renderer-$layer-z$zoom";
+
+                                ####
+                                # i do my work now
+                                ####
+                                if ( !$self->rendererError() )
                                 {
+                                    ::statusMessage( "Rendererclient $childID get job $pos zoom $zoom on layer $layer", 1, 10 );
+                                    eval { $self->{tileset}->Render_new( $layer, $zoom ); };
+                                    if ($@)
+                                    {
 
-                                    $self->setRendererError("$@");
+                                        $self->setRendererError("$@");
 
-                                    ::statusMessage( "ERROR: Rendererclient $childID Renderer return $@", 1, 10 );
+                                        ::statusMessage( "ERROR: Rendererclient $childID Renderer return $@", 1, 10 );
+                                    }
                                 }
+                                $self->{'rendererSemaphore'}->down();
+                                $self->{SHARED}->{RENDERERJOBSREADY}++;
+                                $self->{'rendererSemaphore'}->up();
                             }
-                            $self->{'rendererSemaphore'}->down();
-                            $self->{SHARED}->{RENDERERJOBSREADY}++;
-                            $self->{'rendererSemaphore'}->up();
                         }    # Renderer end
 
                         # GenerateSVG
@@ -161,49 +169,55 @@ sub startChildren
                             && ( !$self->newRendereJobAvailable() || $self->{SHARED}->{CHILDSTOP}->[$childID] )
                             && $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
                         {
+                            $zoom          = 0;
+                            $layer         = "";
+                            $layerDataFile = "";
 
                             # let me just run if no new rendererjob is available or I'm stopped
 
                             # access: lock()
                             $self->{'rendererSemaphore'}->down();
 
-                            $self->{SHARED}->{GENERATESVGJOBPOS}++;
-                            $pos           = $self->{SHARED}->{GENERATESVGJOBPOS};
-                            $zoom          = $self->{SHARED}->{GENERATESVGJOBS}->[$pos];
-                            $layer         = $self->{SHARED}->{GENERATESVGJOBLAYER}->[$pos];
-                            $layerDataFile = $self->{SHARED}->{GENERATESVGJOBLAYERDATA}->[$pos];
-
-                            $::currentSubTask = "GenSVG-$layer-z$zoom";
+                            # get an other child the last job?
+                            if ( $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
+                            {
+                                $self->{SHARED}->{GENERATESVGJOBPOS}++;
+                                $pos           = $self->{SHARED}->{GENERATESVGJOBPOS};
+                                $zoom          = $self->{SHARED}->{GENERATESVGJOBS}->[$pos];
+                                $layer         = $self->{SHARED}->{GENERATESVGJOBLAYER}->[$pos];
+                                $layerDataFile = $self->{SHARED}->{GENERATESVGJOBLAYERDATA}->[$pos];
+                            }
 
                             # access: unlock()
                             $self->{'rendererSemaphore'}->up();
 
-                            if ( !$self->rendererError() )
+                            if ( $zoom && $layer && $layerDataFile )
                             {
-                                ::statusMessage(
-                                    "Rendererclient $childID get GenerateSVG job $pos zoom $zoom on layer $layer",
-                                    1, 10 );
-                                eval { $self->{tileset}->GenerateSVG( $layer, $zoom, $layerDataFile ); };
-                                if ($@)
+                                $::currentSubTask = "GenSVG-$layer-z$zoom";
+
+                                if ( !$self->rendererError() )
                                 {
+                                    ::statusMessage( "Rendererclient $childID get GenerateSVG job $pos zoom $zoom on layer $layer", 1, 10 );
+                                    eval { $self->{tileset}->GenerateSVG( $layer, $zoom, $layerDataFile ); };
+                                    if ($@)
+                                    {
 
-                                    $self->setRendererError("$@");
+                                        $self->setRendererError("$@");
+                                        ::statusMessage( "ERROR: Rendererclient $childID GenerateSVG return $@", 1, 10 );
+                                    }
+                                    else
+                                    {
+                                        $self->updateMaxRenderer("$layer-z$zoom.svg");
 
-                                    ::statusMessage( "ERROR: Rendererclient $childID GenerateSVG return $@", 1, 10 );
+                                        ::statusMessage( "add renderjob zoom: $zoom ", 1, 10 );
+                                        $self->addJob( $zoom, $layer );
+
+                                    }
                                 }
-                                else
-                                {
-                                    $self->updateMaxRenderer("$layer-z$zoom.svg");
-
-                                    ::statusMessage( "add renderjob zoom: $zoom ", 1, 10 );
-                                    $self->addJob( $zoom, $layer );
-
-                                }
+                                $self->{'rendererSemaphore'}->down();
+                                $self->{SHARED}->{GENERATESVGJOBSREADY}++;
+                                $self->{'rendererSemaphore'}->up();
                             }
-                            $self->{'rendererSemaphore'}->down();
-                            $self->{SHARED}->{GENERATESVGJOBSREADY}++;
-                            $self->{'rendererSemaphore'}->up();
-
                         }    # GenerateSVG end
 
                         sleep 1;
@@ -405,7 +419,7 @@ sub updateMaxRenderer
         # too little memory
         my $newMaxChildren = int( $Config->get("MaxMemory") / $caMemoryUsage );
 
-        return if ($self->{SHARED}->{'lastMaxChildren'} <= $newMaxChildren);
+        return if ( $self->{SHARED}->{'lastMaxChildren'} <= $newMaxChildren );
 
         $self->setMaxRenderer($newMaxChildren);
     }
@@ -420,7 +434,7 @@ sub setMaxRenderer
 
     $newMaxChildren = $self->{'maxChildren'} if $newMaxChildren > $self->{'maxChildren'};
 
-    return if ($self->{SHARED}->{'lastMaxChildren'} == $newMaxChildren);
+    return if ( $self->{SHARED}->{'lastMaxChildren'} == $newMaxChildren );
 
     if ( $self->{'maxChildren'} != $newMaxChildren )
     {

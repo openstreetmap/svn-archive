@@ -27,6 +27,8 @@
   <target name="compile" depends="init">
     <echo message="creating ${plugin.jar}"/>
     <javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
+      <compilerarg value="-Xlint:deprecation"/>
+      <compilerarg value="-Xlint:unchecked"/>
       <include name="**/*.java" />
     </javac>
   </target>
@@ -49,10 +51,11 @@
 
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
-	<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
-    <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-    <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-	<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed." />
+        <attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+        <attribute name="Plugin-Description" value="Allows external WMS resources to be displayed." />
+        <attribute name="Plugin-Mainversion" value="1065" />
       </manifest>
     </jar>
   </target>

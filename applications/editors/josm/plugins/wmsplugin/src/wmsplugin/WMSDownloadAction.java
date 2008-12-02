@@ -15,7 +15,7 @@ public class WMSDownloadAction extends JosmAction {
 	private WMSInfo info;
 	
 	public WMSDownloadAction(WMSInfo info) {
-		super(info.name, "wmsmenu", tr("Download WMS tile from {0}",info.name), 0, 0, false);
+		super(info.name, "wmsmenu", tr("Download WMS tile from {0}",info.name), null, false);
 		this.info = info;
 	}
 	

@@ -52,7 +52,9 @@ EOD;
 
     $s .= "<a href='http://www.openstreetmap.org/browse/{$xnamed['type']}/{$xnamed['id']}' title='all tag values for this node'>details</a>\n";
     $s .= "<a href='http://www.openstreetmap.org/browse/{$xnamed['type']}/{$xnamed['id']}/history' title='history for this node'>history</a>\n";
-
+    if ($xnamed['type'] != 'relation') {
+      $s .= "<a href='editelement.html?{$xnamed['type']}={$xnamed['id']}' title='edit using mini tag editor'>edit</a>\n";
+    }
     return $s;
   }
   // --------------------------------------------------

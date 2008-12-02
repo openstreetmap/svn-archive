@@ -8,32 +8,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -52,6 +48,12 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   
   protected Collection<Command> commands = new LinkedList<Command>();
   protected Collection<Way> ways = new ArrayList<Way>();
+
+  /** maximum size in bytes for the sum of all tiles in a WMS-layer cache directory. */
+  private static final long MAXCACHESIZE = 20*1024*1024*1024;
+
+  /** maximum age in ms since epoch for tiles in a WMS-layer cache directory. */
+  private static final long MAXCACHEAGE = 3650*24*60*60*1000;
   
   public LakewalkerAction(String name) {
     super(name, "lakewalker-sml", tr("Lake Walker."),
@@ -90,6 +92,57 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     }
   }
 
+   
+  
+  /**
+   * check for presence of cache folder and trim cache to specified size.
+   * size/age limit is on a per folder basis.
+   */
+  private void cleanupCache() {
+
+	  for (String wmsFolder : LakewalkerPreferences.WMSLAYERS) {
+		  String wmsCacheDirName = Main.pref.getPreferencesDir()+"plugins/Lakewalker/"+wmsFolder;
+		  File wmsCacheDir = new File(wmsCacheDirName);
+
+		  if (wmsCacheDir.exists() && wmsCacheDir.isDirectory()) {
+			  File wmsCache[] = wmsCacheDir.listFiles();
+
+			  // sort files by date (most recent first)
+			  Arrays.sort(wmsCache, new Comparator<File>() {
+				  public int compare(File f1, File f2) {
+					  return (int)(f2.lastModified()-f1.lastModified());
+				  }
+			  });
+			  
+			  // delete aged or oversized, keep newest. Once size/age limit was reached delete all older files
+			  long folderSize = 0;
+			  long timeDefiningOverage = System.currentTimeMillis()-MAXCACHEAGE;
+			  boolean quickdelete = false;
+			  for (File cacheEntry : wmsCache) {
+				  if (!cacheEntry.isFile()) continue;
+				  if (!quickdelete) {
+					  folderSize += cacheEntry.length();
+					  if (folderSize > MAXCACHESIZE) {
+						  quickdelete = true;
+					  } else if (cacheEntry.lastModified() < timeDefiningOverage) {
+						  quickdelete = true;
+					  }
+				  }
+					  
+				  if (quickdelete) {
+					  cacheEntry.delete();
+				  }
+			  }
+			  
+		  } else {
+			  // create cache directory
+			  if (!wmsCacheDir.mkdirs()) {
+				  JOptionPane.showMessageDialog(Main.parent, tr("Error creating cache directory: {0}", wmsCacheDirName));
+			  }
+		  }
+	  }
+  }
+  
   protected void lakewalk(Point clickPoint){
 	/**
 	 * Positional data
@@ -119,6 +172,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	try {
         PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")){
           @Override protected void realRun() throws SAXException {
+        	  setStatus(tr("checking cache..."));
+        	  cleanupCache();
         	  processnodelist(pos, topLeft, botRight, waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,working_dir);
           }
           @Override protected void finish() {
@@ -191,12 +246,10 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 	
 	Way way = new Way();
 	Node n = null;
-	Node tn = null;
 	Node fn = null;
 	
 	double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
 	double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
-	char option = ' ';
 	
 	int nodesinway = 0;
 	

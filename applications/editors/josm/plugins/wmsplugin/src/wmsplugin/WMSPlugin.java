@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -108,11 +109,11 @@ public class WMSPlugin extends Plugin {
 		setDefault(tr("YAHOO (WebKit)"), "yahoo://webkit-image {0}");
 
 		Collections.sort(wmsList);
-		JMenuBar menu = Main.main.menu;
+		MainMenu menu = Main.main.menu;
 
 		if (wmsJMenu == null) {
 			wmsJMenu = new JMenu(tr("WMS"));
-			wmsJMenu.setMnemonic(KeyEvent.VK_W);
+			menu.add(wmsJMenu, KeyEvent.VK_W, "wms");
 			menu.add(wmsJMenu, 5);
 		} else {
 			wmsJMenu.removeAll();
@@ -127,7 +128,7 @@ public class WMSPlugin extends Plugin {
 		
 		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new 
-				JosmAction(tr("Blank Layer"), "blankmenu", tr("Open a blank WMS layer to load data from a file"), 0, 0, false) {
+				JosmAction(tr("Blank Layer"), "blankmenu", tr("Open a blank WMS layer to load data from a file"), null, false) {
 			public void actionPerformed(ActionEvent ev) {
 				Main.main.addLayer(new WMSLayer());
 			}

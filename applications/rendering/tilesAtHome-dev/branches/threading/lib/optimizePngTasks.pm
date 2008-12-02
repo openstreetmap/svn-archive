@@ -94,35 +94,40 @@ sub startChildren
                             # access: lock()
                             $self->{'Semaphore'}->down();
 
-                            $self->{SHARED}->{JOBS}++;
-                            my $pos = $self->{SHARED}->{JOBS};
-
-                            $png_file    = $self->{SHARED}->{JOBSFILES}->[$pos];
-                            $transparent = $self->{SHARED}->{JOBSTRANSPARENT}->[$pos];
-
-                            $self->{SHARED}->{'progress'}++;
-                            if ( $#{ $self->{SHARED}->{JOBSFILES} } > 0 )
+                            # get an other child the last job?
+                            if ( $self->{SHARED}->{JOBS} < $#{ $self->{SHARED}->{JOBSFILES} } )
                             {
-                                $::progressPercent =
-                                  100 * $self->{SHARED}->{'progress'} / ( $#{ $self->{SHARED}->{JOBSFILES} } + 1 );
+                                $self->{SHARED}->{JOBS}++;
+                                my $pos = $self->{SHARED}->{JOBS};
+
+                                $png_file    = $self->{SHARED}->{JOBSFILES}->[$pos];
+                                $transparent = $self->{SHARED}->{JOBSTRANSPARENT}->[$pos];
+
+                                $self->{SHARED}->{'progress'}++;
+                                if ( $#{ $self->{SHARED}->{JOBSFILES} } > 0 )
+                                {
+                                    $::progressPercent = 100 * $self->{SHARED}->{'progress'} / ( $#{ $self->{SHARED}->{JOBSFILES} } + 1 );
+                                }
                             }
 
                             # access: unlock()
                             $self->{'Semaphore'}->up();
 
-                            if ( $png_file && $self->notStopped() )
+                            if ($png_file)
                             {
-                                #####
-                                # lets do my work now
-                                #####
+                                if ( $self->notStopped() )
+                                {
+                                    #####
+                                    # lets do my work now
+                                    #####
 
-                                eval { $self->optimizePngClient( $png_file, $transparent ); };
+                                    eval { $self->optimizePngClient( $png_file, $transparent ); };
+                                }
+
+                                $self->{'Semaphore'}->down();
+                                $self->{SHARED}->{JOBSREADY}++;
+                                $self->{'Semaphore'}->up();
                             }
-
-                            $self->{'Semaphore'}->down();
-                            $self->{SHARED}->{JOBSREADY}++;
-                            $self->{'Semaphore'}->up();
-
                         }
 
                     }
@@ -142,6 +147,8 @@ sub addJob
     my $self        = shift;
     my $png_file    = shift;
     my $transparent = shift;
+
+    return if ( $png_file eq "" );
 
     $self->{'Semaphore'}->down();
 
@@ -251,9 +258,7 @@ sub optimizePngClient
 
     if ( $Config->get("PngOptimizer") eq "pngcrush" )
     {
-        $cmd =
-          sprintf( "\"%s\" %s -q %s %s %s", $Config->get("Pngcrush"), $optipngOptions, $tmp_file, $png_file,
-            $redirect );
+        $cmd = sprintf( "\"%s\" %s -q %s %s %s", $Config->get("Pngcrush"), $optipngOptions, $tmp_file, $png_file, $redirect );
     }
     elsif ( $Config->get("PngOptimizer") eq "optipng" )
     {
@@ -267,8 +272,7 @@ sub optimizePngClient
     }
     else
     {
-        ::statusMessage( "PngOptimizer not configured (should not happen, update from svn, and check config file)",
-            1, 0 );
+        ::statusMessage( "PngOptimizer not configured (should not happen, update from svn, and check config file)", 1, 0 );
         ::talkInSleep( "Install a PNG optimizer and configure it.", 15 );
     }
 

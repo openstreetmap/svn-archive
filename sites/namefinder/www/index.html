@@ -68,7 +68,7 @@ EOD;
 
   /* interpret the results into the left side, with error messages as appropriate */
   $results = '';
-  if ($xmlo['distancesearch'] == 'no') {
+  if (! isset($xmlo['distancesearch']) || $xmlo['distancesearch'] == 'no') {
     /* a simple seach rather than great circle distance query. This is the more usual case. */
     if (! empty($xmlo['error'])) {
       switch($xmlo['error']) {

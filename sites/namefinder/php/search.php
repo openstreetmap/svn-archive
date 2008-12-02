@@ -55,6 +55,12 @@ class search {
     /* remove comments in square brackets from input - these are comments */
     $find = trim(preg_replace('/\\[.*\\]/', '', $find));
 
+    /* is there actually something to search on? */ 
+    if ($find == '') { 
+      $oxml .= " error='nothing given to search for'>\n</searchresults>\n"; 
+      return $oxml; 
+    } 
+
     /* does it look like a postcode? */
     $postcodelookup = postcodelookup::postcodelookupfactory($find);
     if (! empty($postcodelookup)) {

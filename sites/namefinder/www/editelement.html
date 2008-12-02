@@ -24,15 +24,12 @@ for(;;) {
   if (isset($_GET['node'])) {
     $id = $_GET['node'];
     $elemtype = 'node';
-  } else if (isset($_GET['segment'])) {
-    $id = $_GET['segment'];
-    $elemtype = 'segment';
   } else if (isset($_GET['way'])) {
     $id = $_GET['way'];
     $elemtype = 'way';
   } else {
     $result = 'no_id';
-    $message = 'missing ?elemtype=id in url';
+    $message = 'missing ?elemtype=id in url, or relation (cannot handle relations yet)';
     break;
   }
 
@@ -93,7 +90,7 @@ for(;;) {
           $newtags . "</{$elemtype}>", 
           $session['xml'][$elemtype][$id][count($session['xml'][$elemtype][$id])-1]);
         $uploadxml = str_replace('generator="OpenStreetMap server"', 
-                                 'generator="osm element editor"', $uploadxml);
+                                 'generator="osm mini tag editor"', $uploadxml);
         $uploadxml = preg_replace('/(\\<osm .*) timestamp="[^"]*"/i', '${1}', $uploadxml);
         $uploadxml = preg_replace('/(\\<osm .*) user="[^"]*"/i', '${1}', $uploadxml);
 
@@ -121,7 +118,7 @@ for(;;) {
       }
 
       if (isset($uploadxml)) {
-        $url = "http://www.openstreetmap.org/api/0.4/{$elemtype}/{$id}";
+        $url = "http://www.openstreetmap.org/api/0.5/{$elemtype}/{$id}";
         $fn = "/tmp/osmmi-".session_id();
         file_put_contents($fn, $uploadxml);
         $fh = fopen($fn, 'r');
@@ -163,8 +160,8 @@ for(;;) {
   }
 
   if (empty($debug)) {
-    $url = "http://www.openstreetmap.org/api/0.4/{$elemtype}/{$id}";
-    // $url = "http://www.openstreetmap.org/api/0.4/map?bllon=0.1899,bllat=52.1999,trlon=0.1901,trlat=52.001";
+    $url = "http://www.openstreetmap.org/api/0.5/{$elemtype}/{$id}";
+    // $url = "http://www.openstreetmap.org/api/0.5/map?bllon=0.1899,bllat=52.1999,trlon=0.1901,trlat=52.001";
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // give me the output
     curl_setopt($ch, CURLOPT_USERPWD, "{$session['user']}:{$session['password']}");
@@ -172,7 +169,7 @@ for(;;) {
     $result = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
   } else {
-    $xml = '<?xml version="1.0" encoding="UTF-8"?> <osm version="0.4" generator="OpenStreetMap server"> <node id="20823872" lat="52.2062694249354" lon="0.134404947388109" user="davidearl" visible="true" timestamp="2006-11-01T22:40:05+00:00"> <tag k="amenity" v="cinema"/> <tag k="name" v="Vue Cinema (multiscreen)"/> <tag k="created_by" v="JOSM"/> </node> </osm>';
+    $xml = '<?xml version="1.0" encoding="UTF-8"?> <osm version="0.5" generator="OpenStreetMap server"> <node id="20823872" lat="52.2062694249354" lon="0.134404947388109" user="davidearl" visible="true" timestamp="2006-11-01T22:40:05+00:00"> <tag k="amenity" v="cinema"/> <tag k="name" v="Vue Cinema (multiscreen)"/> <tag k="created_by" v="JOSM"/> </node> </osm>';
     $result = 200;
   }
 
@@ -242,12 +239,12 @@ function clearlogincookie() {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang='en' xmlns='http://www.w3.org/1999/xhtml'>
 <head>
-<title>OpenStreetMap mini element editor</title>
-<meta name='description' content='OpenStreetMap mini element editor' />
+<title>OpenStreetMap mini tag editor</title>
+<meta name='description' content='OpenStreetMap mini tag editor' />
 <meta name='MSSmartTagsPreventParsing' content='TRUE' /> 
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <?php
-$userhtml = isset($session['user']) ? htmlspecialchars($session['user'], ENT_QUOTES, 'UTF_8') : '';
+$userhtml = isset($session['user']) ? htmlspecialchars($session['user'], ENT_QUOTES, 'UTF-8') : '';
 if ($result == 200) {
   include_once('mapfeatures.php');
 
@@ -443,7 +440,7 @@ form#loginform {
 <div class='logo'>
 <img src='http://www.openstreetmap.org/images/osm_logo.png' alt='OpenStreetMap'/>
 </div>
-<h1>OpenStreetMap mini element editor</h1>
+<h1>OpenStreetMap mini tag editor</h1>
 <?php
 if (! empty($message)) { echo "<h2 class='errormessage'>",$message,"</h2>\n"; }
 
@@ -513,22 +510,24 @@ case 200: // normal response
   htmlspecialchars($tags['name'], ENT_QUOTES, 'UTF-8');
   $timestamp = str_replace('T', ' ', $xmlo->{$elemtype}['timestamp']);
 
-  $s = "<h2>for {$elemtype} {$id}{$name}:<br />\n";
+  $s = "<h2>for <a href='http://www.openstreetmap.org/browse/{$elemtype}/{$id}'>{$elemtype} {$id}{$name}</a>:<br />\n";
+
+  if ($elemtype == 'way') {
+    $s .= "bear in mind that streets, buildings etc may be made up of <span style='color: red'>more than one way</span>, so it may not be sufficient just to edit this one<br />\n";
+  }
 
   if (isset ($xmlo->node['lat'])) {
     $s .= "at latitude {$xmlo->node['lat']}, longitude {$xmlo->node['lon']}<br />\n";
     $url = "http://www.openstreetmap.org?index.html?lat={$xmlo->node['lat']}&lon={$xmlo->node['lon']}&zoom=15";
     $s .= "<a href='{$url}'>" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "</a><br />\n";
-  } else if (isset ($xmlo->segment['from'])) {
-    $s .= "from node <a href='editelement.html?node={$xmlo->segment['from']}'>{$xmlo->segment['from']}</a> to node <a href='editelement.html?node={$xmlo->segment['to']}'>{$xmlo->segment['to']}</a><br />\n";
   } else if (isset ($xmlo->way)) {
-    $s .= "segments: ";
-    if (empty($xmlo->way->seg)) {
+    $s .= "nodes: ";
+    if (empty($xmlo->way->nd)) {
       $s .= "NONE!<br />\n";
     } else {
       $prefix = '';
-      foreach($xmlo->way->seg as $segment) {
-        $s .= "{$prefix}<a href='editelement.html?segment={$segment['id']}'>{$segment['id']}</a>";
+      foreach($xmlo->way->nd as $node) {
+        $s .= "{$prefix}<a href='?node={$node['ref']}'>{$node['ref']}</a>";
         $prefix = ', ';
       }
       $s .= "<br />\n";

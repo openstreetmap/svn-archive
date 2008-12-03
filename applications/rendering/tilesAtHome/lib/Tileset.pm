@@ -620,7 +620,7 @@ sub supertile {
         }
         else
         {
-            $self->optimizePng($pfile, $Config->get("${CaptionLayer}_Transparent"));
+            $self->optimizePng($pfile, $Config->get("${OutputLayer}_Transparent"));
             ::statusMessage("Writing $file", 0, 6);
         }
     }

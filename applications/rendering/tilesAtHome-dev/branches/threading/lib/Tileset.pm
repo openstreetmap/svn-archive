@@ -366,7 +366,9 @@ sub generate
 
 
     # cleanup children data
-    $::GlobalChildren->{ThreadedRenderer}->Reset();
+    if(defined $::GlobalChildren->{ThreadedRenderer}) {
+        $::GlobalChildren->{ThreadedRenderer}->Reset();
+    }
 
     # Cleaning up of tmpdirs etc. are called in the destructor DESTROY
 }

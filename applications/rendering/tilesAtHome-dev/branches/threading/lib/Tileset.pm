@@ -214,6 +214,33 @@ sub generate
 
             $self->generateNormalLayer($layer);
         }
+
+        # this part is only in threaded modus in use
+        if( defined $::GlobalChildren->{ThreadedRenderer} )
+        {
+            #############
+            # at this time is the client on work and the main process wait now
+            #############
+            $::GlobalChildren->{ThreadedRenderer}->wait();
+    
+            if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
+             throw TilesetError "Render failure: $error", "renderer";
+            }
+    
+            $::GlobalChildren->{optimizePngTasks}->wait();
+            $::GlobalChildren->{optimizePngTasks}->dataReset();
+    
+            # now compress all the data
+            foreach my $layer ($req->layers)
+            {
+                if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
+                    $self->createTilesetFile($layer);
+                }
+                else {
+                    $self->createZipFile($layer);
+                }
+            }
+        }
     }
     else
     {
@@ -1131,7 +1158,7 @@ sub threadedRender
     my $minzoom = $req->Z;
     my $maxzoom = $Config->get($layer."_MaxZoom");
 
-    # add GenerateSVG jobs
+    # add GenerateSVG jobs. after finishing add he self the job to the renderer
     for (my $zoom = $maxzoom ; $zoom >= $req->Z; $zoom--) {
 
         ::statusMessage("add GenerateSVG job layer: $layer zoom: $zoom " ,1,10);
@@ -1140,25 +1167,6 @@ sub threadedRender
     }
 
 
-    #############
-    # at this time is the client on work and the main process wait now
-    #############
-    $::GlobalChildren->{ThreadedRenderer}->wait();
-
-    if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
-        throw TilesetError "Render failure: $error", "renderer";
-    }
-
-    $::GlobalChildren->{optimizePngTasks}->wait();
-    $::GlobalChildren->{optimizePngTasks}->dataReset();
-
-
-    if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
-        $self->createTilesetFile($layer);
-    }
-    else {
-        $self->createZipFile($layer);
-    }
 }
 
 #-------------------------------------------------------------------
@@ -1481,15 +1489,10 @@ sub SplitTiles
                     print $fp $png_data;
                     close $fp;
 
-                    if(defined $::GlobalChildren->{optimizePngTasks}) {
-                        $::GlobalChildren->{optimizePngTasks}->addJob($tile_file,$Config->get("${layer}_Transparent"));
-                    }
-                    else {
                     $self->optimizePng($tile_file, $Config->get("${layer}_Transparent"));
                 }
             }
         }
-    }
     }
 }
 
@@ -1506,6 +1509,14 @@ sub optimizePng
     my $self = shift();
     my $png_file = shift();
     my $transparent = shift();
+
+
+    # we use threading? then push the job and go return
+    if(defined $::GlobalChildren->{optimizePngTasks}) {
+        $::GlobalChildren->{optimizePngTasks}->addJob($png_file,$transparent);
+        return;
+    }
+
 
     my $Config = $self->{Config};
     my $redirect = ($^O eq "MSWin32") ? "" : ">/dev/null";

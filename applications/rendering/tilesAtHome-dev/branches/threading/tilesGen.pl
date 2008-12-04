@@ -571,7 +571,7 @@ sub upload
     keepLog($PID,"upload","start","$progressJobs");
 
     my $upload = new Upload;
-    my $files_uploaded;
+    my $files_uploaded = 0;
     try {
         $files_uploaded = $upload->uploadAllZips();
         resetFault("upload");
@@ -580,6 +580,11 @@ sub upload
         my $error = shift();
         if ($error->value() eq "ServerError") {
             statusMessage("Server error: " . $error->text(), 1, 0);
+            addFault("upload");
+            talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);
+        }
+        elsif ($error->value() eq "0") {
+            statusMessage("Upload error: " . $error->text(), 1, 0);
             addFault("upload");
             talkInSleep("Waiting before attempting new upload", 300) if ($LoopMode);
         }

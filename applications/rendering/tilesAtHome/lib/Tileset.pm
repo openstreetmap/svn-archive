@@ -605,7 +605,16 @@ sub supertile {
         $Image = $self->readLocalImage($BaseLayer,$Z,$X,$Y) if !$Image;
 
         # Overlay the captions onto the tiled image and then write it
-        $Image->Composite(image => $CaptionFile) if $CaptionFile;
+        if($CaptionFile)
+        {
+          # do not overwrite our test images
+          if($Image == $self->{EmptySeaImageIM}
+          || $Image == $self->{EmptyLandImageIM})
+          {
+            $Image = $Image->Clone;
+          }
+          $Image->Composite(image => $CaptionFile);
+        }
         ($pfile, $file) = $self->lowZoomFileName($OutputLayer, $Z, $X, $Y);
         $Image->Write($pfile);
         my $gdimage = GD::Image->newFromPng($pfile);

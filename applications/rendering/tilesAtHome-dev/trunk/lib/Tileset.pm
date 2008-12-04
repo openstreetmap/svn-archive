@@ -316,8 +316,21 @@ sub generate
                 # note - base layer can be created on the fly
                 if(!$alllayers{$layer}{direct} && !$alllayers{$layer}{isbase})
                 {
-                    $self->lowZoom($req->ZXY, $maxlayer, $layer,
-                    $alllayers{$layer}{base}, $alllayers{$layer}{overlay});
+                    try
+                    {
+                        $self->lowZoom($req->ZXY, $maxlayer, $layer,
+                        $alllayers{$layer}{base}, $alllayers{$layer}{overlay});
+                    }
+                    otherwise
+                    {
+                        my $E = shift;
+                        if($forkpid)
+                        {
+                            kill 15, $forkpid;
+                            waitpid($forkpid, 0);
+                        }
+                        throw $E;
+                    };
                 }
             }
             waitpid($forkpid, 0) if $forkpid;
@@ -472,8 +485,14 @@ sub readLocalImage
 
     my $imImage;
     throw TilesetError "The image $file is missing", "lowzoom" if !-f $pfile;
-    my $Image = GD::Image->newFromPng($pfile);
-    throw TilesetError "The image $file failed to load", "lowzoom" if !$Image;
+    my $Image;
+    eval { $Image = GD::Image->newFromPng($pfile); };
+    if(!$Image)
+    {
+      sleep 5;
+      eval { $Image = GD::Image->newFromPng($pfile); };
+      throw TilesetError "The image $file failed to load", "lowzoom" if !$Image;
+    }
 
     # Detect empty tiles here:
     if (File::Compare::compare($pfile, "emptyland.png") == 0)
@@ -585,6 +604,7 @@ sub supertile {
         {
             ::statusMessage("Writing sea $file", 0, 6);
             copy("emptysea.png", $pfile);
+            $Image = $self->{EmptySeaImageIM};
         }
         elsif($AA == $self->{EmptyLandImageIM}
         && $AB == $self->{EmptyLandImageIM}
@@ -593,6 +613,7 @@ sub supertile {
         {
             ::statusMessage("Writing land $file", 0, 6);
             copy("emptyland.png", $pfile);
+            $Image = $self->{EmptyLandImageIM};
         }
         else
         {
@@ -642,10 +663,23 @@ sub supertile {
         $Image = $self->readLocalImage($BaseLayer,$Z,$X,$Y) if !$Image;
 
         # Overlay the captions onto the tiled image and then write it
-        $Image->Composite(image => $CaptionFile) if $CaptionFile;
+        if($CaptionFile)
+        {
+          # do not overwrite our test images
+          if($Image == $self->{EmptySeaImageIM}
+          || $Image == $self->{EmptyLandImageIM})
+          {
+            $Image = $Image->Clone;
+          }
+          $Image->Composite(image => $CaptionFile);
+        }
         ($pfile, $file) = $self->lowZoomFileName($OutputLayer, $Z, $X, $Y);
-        $Image->Write($pfile);
-        my $gdimage = GD::Image->newFromPng($pfile);
+        if($Image->Write($pfile) != 1)
+        {
+          throw TilesetError "The image $file failed to save", "lowzoom";
+        }
+        my $gdimage;
+        eval { $gdimage = GD::Image->newFromPng($pfile); };
         throw TilesetError "The image $file failed to load", "lowzoom" if !$gdimage;
         if (not ($gdimage->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE)) {
             ::statusMessage("Writing land $file", 0, 6);
@@ -712,13 +746,15 @@ sub downloadData
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
     my @predicates;
+    my $predicatesname = ($req->Z < 6 ? "world" : "lowzoom") . "predicates";
+    
     foreach my $layer (@layers) {
         my %layer_config = $Config->varlist("^${layer}_", 1);
-        if (not $layer_config{"predicates"}) {
+        if (not $layer_config{$predicatesname}) {
             @predicates = ();
             last;
         }
-        my $predicates = $layer_config{"predicates"};
+        my $predicates = $layer_config{$predicatesname};
         # strip spaces in predicates
         $predicates =~ s/\s+//g;
         push(@predicates, split(/,/, $predicates));
@@ -767,9 +803,9 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            my $title = pop @title;
+            my $title = shift @title;
             ::statusMessage("Downloading $title for " . join(",",@layers) ." from ".$OSMServer, 0, 3);
-            
+
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {
                 my $currentURL = $URL;
@@ -971,6 +1007,20 @@ sub runPreprocessors
     return $OSMfile;
 }
 
+sub getzoom
+{
+    my $self = shift;
+    my ($layer) = @_;
+    my $req = $self->{req};
+    my $Config = $self->{Config};
+
+    my $minzoom = $req->Z;
+    my $maxzoom = $Config->get($layer."_MaxZoom");
+    if($minzoom < 6 && $maxzoom >= 6) {$maxzoom = 5;}
+    elsif($minzoom < 12 && $maxzoom >= 12) {$maxzoom = 11;}
+    return ($minzoom, $maxzoom);
+}
+
 #-------------------------------------------------------------------
 # renders the tiles, using threads
 # paramter: ($layer, $layerDataFile)
@@ -981,8 +1031,7 @@ sub forkedRender
     my ($layer, $layerDataFile) = @_;
     my $req = $self->{req};
     my $Config = $self->{Config};
-    my $minzoom = $req->Z;
-    my $maxzoom = $Config->get($layer."_MaxZoom");
+    my ($minzoom, $maxzoom) = $self->getzoom($layer);
 
     my $numThreads = 2 * $Config->get("Fork");
     my @pids;
@@ -1050,8 +1099,7 @@ sub nonForkedRender
     my ($layer, $layerDataFile) = @_;
     my $req = $self->{req};
     my $Config = $self->{Config};
-    my $minzoom = $req->Z;
-    my $maxzoom = $Config->get($layer."_MaxZoom");
+    my ($minzoom, $maxzoom) = $self->getzoom($layer);
 
     for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++) {
         $self->Render($layer, $zoom, $layerDataFile)

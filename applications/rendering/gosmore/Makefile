@@ -41,7 +41,7 @@ gosmore:	gosmore.cpp libgosm.cpp libgosm.h
                   gosmore.cpp libgosm.cpp -o gosmore ${EXTRA}
 
 gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \
-                    libgosm.h
+                    libgosm.h ceglue.h ceglue.c 
 		${ARCH}-g++ ${CFLAGS} -c gosmore.cpp
 		${ARCH}-g++ ${CFLAGS} -c libgosm.cpp
 		${ARCH}-gcc ${CFLAGS} -c ConvertUTF.c

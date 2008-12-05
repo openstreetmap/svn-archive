@@ -13,6 +13,7 @@ use Request;
 
 use threads;
 use Thread::Semaphore;
+use Time::HiRes qw ( sleep );
 
 sub new
 {
@@ -276,7 +277,7 @@ sub startChildren
                             }
                         }    # Download end
 
-                        sleep 1;
+                        sleep(0.1);
                     }
                     ::statusMessage( "Renderer child $childID exit", 1, 10 );
                   }    #sub;
@@ -375,19 +376,19 @@ sub wait
     # GenerateSVG wait
     while ( $self->{SHARED}->{GENERATESVGJOBSREADY} <= $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
     {
-        sleep 1;
+       sleep(0.1);
     }
 
     # Renderer wait
     while ( $self->{SHARED}->{RENDERERJOBSREADY} <= $#{ $self->{SHARED}->{RENDERERJOBS} } )
     {
-        sleep 1;
+        sleep(0.1);
     }
 
     # Download wait
     while ( $self->{SHARED}->{DOWNLOADJOBSREADY} <= $#{ $self->{SHARED}->{DOWNLOADJOBS} } )
     {
-        sleep 1;
+        sleep(0.1);
     }
 
 }

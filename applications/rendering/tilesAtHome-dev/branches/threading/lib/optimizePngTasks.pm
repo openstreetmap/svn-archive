@@ -10,6 +10,7 @@ use TahConf;
 use tahlib;
 use threads;
 use Thread::Semaphore;
+use Time::HiRes qw ( sleep );
 
 sub new
 {
@@ -85,7 +86,7 @@ sub startChildren
                     while ( !$self->{SHARED}->{DESTROYED} )
                     {
 
-                        sleep 1;
+                        sleep(0.1);
 
                         while ( $self->notStopped() && $self->{SHARED}->{JOBS} < $#{ $self->{SHARED}->{JOBSFILES} } )
                         {
@@ -169,7 +170,7 @@ sub wait
 
     while ( $self->{SHARED}->{JOBSREADY} <= $#{ $self->{SHARED}->{JOBSFILES} } )
     {
-        sleep 1;
+        sleep(0.1);
     }
 
 }

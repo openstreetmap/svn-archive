@@ -4,7 +4,11 @@
 extern "C" {
 #endif
 
+#include <aygshell.h>
+
 extern BOOL (*SHFullScreenPtr)(HWND hwnd, DWORD state);
+extern BOOL (*SHInitDialogPtr)(PSHINITDLGINFO pshidi);
+
 void InitCeGlue (void);
 
 int CeEnableBacklight(int enable);

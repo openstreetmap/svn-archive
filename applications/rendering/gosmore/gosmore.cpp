@@ -157,18 +157,23 @@ FILE * logFP(bool create = true) {
 
 void logprintf(char * format, ...)
 {
-#ifdef __CEGCC__
-  // print [hh:mm:ss] timestamp to log first
+// print [hh:mm:ss] timestamp to log first
+#ifdef _WIN32_CE
+  // wince doesn't implement the time.h functions
+  SYSTEMTIME t;
+  GetLocalTime(&t);
+  fprintf(logFP(), "[%02d:%02d:%02d] ", t.wHour, t.wMinute, t.wSecond);
+#else
   time_t seconds = time(NULL);
   struct tm * t = localtime(&seconds);
   fprintf(logFP(), "[%02d:%02d:%02d] ",t->tm_hour,t->tm_min,t->tm_sec);
+#endif
 
   // then print original log string
   va_list args;
   va_start(args, format);
   vfprintf(logFP(), format, args);
   va_end (args);
-#endif
 }
 
 
@@ -569,7 +574,7 @@ void DoFollowThing (gpsNewStruct *gps)
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
     wcscpy (argv0 + wcslen (argv0) - 12, command[0]); // gosm_arm.exe to a.wav
     wcscpy (argv0 + wcslen (argv0), TEXT (".wav"));
-    PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT);
+    PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
 #else
     printf ("%s\n", command[0]);
 #endif
@@ -2608,7 +2613,39 @@ BOOL CALLBACK DlgSearchProc (
 	WPARAM wParam, 
 	LPARAM lParam)
 {
+  SHINITDLGINFO di;
+
     switch (Msg) {
+    case WM_INITDIALOG:
+      if (SHInitDialogPtr) {
+	di.dwMask = SHIDIM_FLAGS;
+	di.dwFlags = SHIDIF_SIZEDLG;
+	di.hDlg = hwnd;
+	(*SHInitDialogPtr)(&di);
+      }
+      return TRUE;
+    case WM_SIZE: 
+      {
+    	int width = LOWORD(lParam) - GetSystemMetrics(SM_CXVSCROLL);
+    	int height = LOWORD(lParam);
+    	HWND hEdit = GetDlgItem(hwnd, IDC_EDIT1);
+    	HWND hList = GetDlgItem(hwnd, IDC_LIST1);
+	RECT rWnd, rEdit, rList;
+	
+	// Find the locations of the edit and list, and map to client
+	// coordinates
+	GetWindowRect(hEdit, &rEdit); 
+	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT) &rEdit, 2);
+	GetWindowRect(hList, &rList);
+	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT) &rList, 2);
+
+	// Change the width of the edit and list to match the client area
+	MoveWindow(hEdit, rEdit.left, rEdit.top, width-2*rEdit.left, 
+		   rEdit.bottom-rEdit.top, TRUE);
+	MoveWindow(hList, rList.left, rList.top, width-2*rList.left, 
+		   rList.bottom-rList.top, TRUE);
+      }
+      return TRUE;
     case WM_COMMAND:
       if (LOWORD (wParam) == IDC_EDIT1) {
         HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
@@ -2875,7 +2912,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
 	   (port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
 		 NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
       Sleep(1000);
-      logprintf("Retrying connect to CommPort\n");
+      //logprintf("Retrying connect to CommPort\n");
     }
 
     if (port != INVALID_HANDLE_VALUE) {
@@ -3142,7 +3179,14 @@ int WINAPI WinMain(
     if (first) sprintf (newWayFileName, "%s%.2s%.2s%.2s-%.6s.osm", docPrefix,
       first->fix.date + 4, first->fix.date + 2, first->fix.date,
       first->fix.tm);
-    else sprintf (newWayFileName, "%sgosmore%d.osm", newWayFileNr);
+    else {
+      // get time from computer if no gps traces
+      SYSTEMTIME t;
+      GetSystemTime(&t);
+      sprintf (newWayFileName, "%s%02d%02d%02d-%02d%02d%02d.osm", docPrefix,
+	       t.wYear % 100, t.wMonth, t.wDay,
+	       t.wHour, t.wMinute, t.wSecond);
+    }
     FILE *newWayFile = fopen (newWayFileName, "w");
     if (newWayFile) {
       fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
@@ -3162,6 +3206,7 @@ int WINAPI WinMain(
           }
         }
         id--;
+	XmlOut (newWayFile, "created_by", "gosmore");
         if (newWays[i].oneway) XmlOut (newWayFile, "oneway", "yes");
         if (newWays[i].bridge) XmlOut (newWayFile, "bridge", "yes");
         if (newWays[i].klas >= 0) fprintf (newWayFile, "%s",

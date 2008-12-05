@@ -3,12 +3,16 @@
 
 BOOL FAR (*SHFullScreenPtr)(HWND hwnd, DWORD state) = NULL;
 
+BOOL FAR (*SHInitDialogPtr)(PSHINITDLGINFO pshidi) = NULL;
+
 void InitCeGlue (void)
 {
   HINSTANCE ayg = LoadLibraryW (TEXT ("aygshell.dll"));
   if (ayg != NULL) {
     SHFullScreenPtr = (BOOL (*)(HWND, DWORD))
       GetProcAddressW (ayg, TEXT ("SHFullScreen"));
+    SHInitDialogPtr = (BOOL (*)(PSHINITDLGINFO))
+      GetProcAddressW (ayg, TEXT ("SHInitDialog"));
   }
 }
 

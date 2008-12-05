@@ -29,6 +29,7 @@ use tahproject;
 use File::Copy;
 use File::Path;
 use GD 2 qw(:DEFAULT :cmp);
+use LWP::Simple;
 
 use threads;
 use Thread::Semaphore;
@@ -162,7 +163,11 @@ sub generate
 
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
 
-    if(defined $::GlobalChildren->{ThreadedRenderer}) {
+    my $usingThreads = 0;
+    $usingThreads = 1 if (defined $::GlobalChildren->{ThreadedRenderer});
+
+
+    if($usingThreads) {
       $::GlobalChildren->{ThreadedRenderer}->Reset();
       $::GlobalChildren->{ThreadedRenderer}->setRequest($self->{req});
       $::GlobalChildren->{ThreadedRenderer}->setJobDir($self->{JobDir});
@@ -216,7 +221,7 @@ sub generate
         }
 
         # this part is only in threaded modus in use
-        if( defined $::GlobalChildren->{ThreadedRenderer} )
+        if( $usingThreads )
         {
             #############
             # at this time is the client on work and the main process wait now
@@ -280,6 +285,25 @@ sub generate
             }
         }
 
+
+        # this part is only in threaded modus in use
+        if( $usingThreads )
+        {
+            #############
+            # at this time is the client on work and the main process wait now
+            #############
+            $::GlobalChildren->{ThreadedRenderer}->wait();
+    
+            if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
+             throw TilesetError "Render failure: $error", "renderer";
+            }
+    
+            $::GlobalChildren->{optimizePngTasks}->wait();
+            $::GlobalChildren->{optimizePngTasks}->dataReset();
+    
+        }
+
+
         eval
         {
             require Image::Magick;
@@ -321,12 +345,12 @@ sub generate
             # $sum is number of tiles up to $maxlayer
 
             my $forkpid = 0;
-            if($Config->get("Fork"))
+            if($Config->get("Fork") || $usingThreads)
             {
-                $forkpid = fork();
+                $forkpid = fork() if !$usingThreads;
                 if($forkpid == 0)
                 {
-                    $self->{childThread}=1;
+                    $self->{childThread}=1 if !$usingThreads;
                     my @baselayers;
                     my @ovlayers;
 
@@ -371,8 +395,18 @@ sub generate
                             }
                         }
                     }
-                    exit(1);
+                    exit(1) if !$usingThreads;
                 }
+            }
+
+            if( $usingThreads )
+            {
+                #############
+                # wait of the download
+                #############
+                $::GlobalChildren->{ThreadedRenderer}->wait();
+                $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
+                
             }
 
             foreach my $layer ($req->layers)
@@ -382,7 +416,6 @@ sub generate
                 {
                     try
                     {
-                        print "foreach \n";
                         $self->lowZoom($req->ZXY, $maxlayer, $layer,
                         $alllayers{$layer}{base}, $alllayers{$layer}{overlay});
                     }
@@ -506,10 +539,32 @@ sub lowZoomFileName
 
 sub getFile {
     my ($self, $Layer, $Z, $X, $Y) = @_;
+
+    # add a download job on threaded mot so i'm not a clild and return lets do the work from child
+    if( defined $::GlobalChildren->{ThreadedRenderer} )
+    {
+        if ( !$self->{childThread} ) {
+            $::GlobalChildren->{ThreadedRenderer}->addDownloadjob($Layer, $Z, $X, $Y);
+            return;
+        }
+        else {
+            my $allFiles = $::GlobalChildren->{ThreadedRenderer}->getDownloadjobCount();
+            my $DownloadPos = $::GlobalChildren->{ThreadedRenderer}->getDownloadjobPos();
+            
+            $::progressPercent = int(100 * $DownloadPos / $allFiles) ;
+ #           ::statusMessage("Loading", 0, 10);
+        }
+    }
+    else
+    {
+        ++$::progress;
+        $::progressPercent = $::progress / $self->{NumTiles} * 100;
+        ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
+        
+    }
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
-    ++$::progress;
-    $::progressPercent = $::progress / $self->{NumTiles} * 100;
-    ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
+
+
     for(my $i = 0; $i < 3 && !-f $pfile; ++$i)
     {
         eval
@@ -518,10 +573,14 @@ sub getFile {
             {
                 ::statusMessage("Download file $file",1,6);
             }
+
             LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
             $Layer,$Z,$X,$Y),$pfile);
         };
-        unlink $pfile if($@);
+        if($@) {
+            unlink $pfile ;
+            ::statusMessage("Download failed  $@",1,10);
+        }
     }
     throw TilesetError "The image $file download failed", "lowzoom" if !-f $pfile;
 }
@@ -549,8 +608,14 @@ sub lowZoom {
 
         if(defined $::GlobalChildren->{optimizePngTasks})
         {
+            # wait of the optimizePng childs
             $::GlobalChildren->{optimizePngTasks}->wait();
             $::GlobalChildren->{optimizePngTasks}->dataReset();
+            
+            # wait of my downloads
+            $::GlobalChildren->{ThreadedRenderer}->wait();
+            $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
+            
         }
 
         # Create the tile from those subtiles
@@ -566,7 +631,7 @@ sub readLocalImage
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
 
     my $imImage;
-    throw TilesetError "The image $file is missing", "lowzoom" if !-f $pfile;
+    throw TilesetError "The image $pfile is missing", "lowzoom" if !-f $pfile;
     my $Image;
     eval { $Image = GD::Image->newFromPng($pfile); };
     if(!$Image)

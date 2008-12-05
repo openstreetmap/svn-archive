@@ -57,6 +57,14 @@ sub new
     $self->{SHARED}->{GENERATESVGJOBPOS}       = -1;
     $self->{SHARED}->{GENERATESVGJOBSREADY}    = 0;
 
+    # Downloader
+
+    my @sharedDownloadJobs : shared;
+
+    $self->{SHARED}->{DOWNLOADJOBS}      = \@sharedDownloadJobs;
+    $self->{SHARED}->{DOWNLOADJOBPOS}    = -1;
+    $self->{SHARED}->{DOWNLOADJOBSREADY} = 0;
+
     $self->{'maxChildren'} = $Config->get("Cores");
     $self->{SHARED}->{'lastMaxChildren'} = $self->{'maxChildren'};
 
@@ -220,6 +228,54 @@ sub startChildren
                             }
                         }    # GenerateSVG end
 
+                        # Download
+                        while ($oldJobDir eq $self->{SHARED}->{JOBDIR}
+                            && ( !$self->newRendereJobAvailable() || $self->{SHARED}->{CHILDSTOP}->[$childID] )
+                            && $self->{SHARED}->{DOWNLOADJOBPOS} < $#{ $self->{SHARED}->{DOWNLOADJOBS} } )
+                        {
+
+                            $layer = "";
+                            my ( $X, $Y, $Z, $joinedjob );
+
+                            # let me just run if no new rendererjob is available or I'm stopped
+
+                            # access: lock()
+                            $self->{'rendererSemaphore'}->down();
+
+                            # get an other child the last job?
+                            if ( $self->{SHARED}->{DOWNLOADJOBPOS} < $#{ $self->{SHARED}->{DOWNLOADJOBS} } )
+                            {
+                                $self->{SHARED}->{DOWNLOADJOBPOS}++;
+                                $pos       = $self->{SHARED}->{DOWNLOADJOBPOS};
+                                $joinedjob = $self->{SHARED}->{DOWNLOADJOBS}->[$pos];
+                                ( $layer, $Z, $X, $Y ) = split( ',', $joinedjob );
+
+                            }
+
+                            # access: unlock()
+                            $self->{'rendererSemaphore'}->up();
+
+                            if ($layer)
+                            {
+                                $::currentSubTask = "Download-$layer-z$Z";
+
+                                if ( !$self->rendererError() )
+                                {
+                                    ::statusMessage( "Rendererclient $childID get Download job $pos xyz $X,$Y,$Z on layer $layer", 1, 10 );
+                                    eval { $self->{tileset}->getFile( $layer, $Z, $X, $Y ); };
+                                    if ($@)
+                                    {
+
+                                        $self->setRendererError("$@");
+                                        ::statusMessage( "ERROR: Rendererclient $childID Downloader return $@", 1, 10 );
+                                    }
+                                }
+                                $self->{'rendererSemaphore'}->down();
+                                $self->{SHARED}->{DOWNLOADJOBSREADY}++;
+                                $self->{'rendererSemaphore'}->up();
+                            }
+                        }    # Download end
+
                         sleep 1;
                     }
                     ::statusMessage( "Renderer child $childID exit", 1, 10 );
@@ -278,6 +334,40 @@ sub addGenerateSVGjob
 
 }
 
+sub addDownloadjob
+{
+    my $self = shift;
+
+    my $Layer = shift;
+    my $Z     = shift;
+    my $X     = shift;
+    my $Y     = shift;
+
+    $self->{'rendererSemaphore'}->down();
+
+    my $pos = $#{ $self->{SHARED}->{DOWNLOADJOBS} };
+    $pos++;
+
+    $self->{SHARED}->{DOWNLOADJOBS}->[$pos] = join( ',', $Layer, $Z, $X, $Y );
+
+    $self->{'rendererSemaphore'}->up();
+
+}
+
+sub getDownloadjobCount
+{
+    my $self = shift;
+
+    return $#{ $self->{SHARED}->{DOWNLOADJOBS} } +1;
+}
+
+sub getDownloadjobPos
+{
+    my $self = shift;
+
+    return $self->{SHARED}->{DOWNLOADJOBPOS} +1;
+}
+
 sub wait
 {
     my $self = shift;
@@ -294,8 +384,26 @@ sub wait
         sleep 1;
     }
 
-}
+    # Download wait
+    while ( $self->{SHARED}->{DOWNLOADJOBSREADY} <= $#{ $self->{SHARED}->{DOWNLOADJOBS} } )
+    {
+        sleep 1;
+    }
 
+}
+sub resetDownloadJobs
+{
+    my $self = shift;
+
+    $self->{'rendererSemaphore'}->down();
+
+    undef @{ $self->{SHARED}->{DOWNLOADJOBS} };
+    $self->{SHARED}->{DOWNLOADJOBPOS}    = -1;
+    $self->{SHARED}->{DOWNLOADJOBSREADY} = 0;
+
+    $self->{'rendererSemaphore'}->up();
+    
+}
 # reset my lists
 sub Reset
 {
@@ -320,6 +428,11 @@ sub Reset
     undef @{ $self->{SHARED}->{GENERATESVGJOBLAYERDATA} };
     $self->{SHARED}->{GENERATESVGJOBPOS}    = -1;
     $self->{SHARED}->{GENERATESVGJOBSREADY} = 0;
+
+    # Download
+    undef @{ $self->{SHARED}->{DOWNLOADJOBS} };
+    $self->{SHARED}->{DOWNLOADJOBPOS}    = -1;
+    $self->{SHARED}->{DOWNLOADJOBSREADY} = 0;
 
     $self->{'rendererSemaphore'}->up();
 

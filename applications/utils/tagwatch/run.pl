@@ -220,7 +220,7 @@ sub getOSMFiles
 
 				if(!$files{$usename} || $files{$usename} ne $Date)#
 				{
-					system("wget --directory-prefix=$Folder \"$Url$FileName\"");
+					system("wget --no-verbose --directory-prefix=$Folder \"$Url$FileName\"");
 					++$new;
 					if($Config{'extract_OsmFiles'} eq "yes")
 					{

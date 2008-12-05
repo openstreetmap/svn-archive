@@ -41,7 +41,7 @@ sub getPhotos
 			print "\t skip $Filename ($ImageList{$Filename}) ...\n";
 			next;
 		}
-		print "\t get $Filename ...\n";
+		print "\t get $Filename ($ImageList{$Filename}) ...\n";
 
 		my $Data =  $c->download($ImageList{$Filename});
 

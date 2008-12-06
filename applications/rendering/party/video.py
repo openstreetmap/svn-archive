@@ -109,7 +109,7 @@ class CityPlotter(handler.ContentHandler):
       print "Downloading gazeteer"
       sock = urllib.urlopen(URL)
       parser.parse(sock)
-      sock.close
+      sock.close()
     else:
       print "Loading gazeteer"
       parser.parse(gazeteer)
@@ -388,7 +388,7 @@ class TracklogInfo(handler.ContentHandler):
     out = open("map.png","w")
     out.write(sock.read())
     out.close()
-    sock.close
+    sock.close()
     
     mapSurface = cairo.ImageSurface.create_from_png("map.png")
     

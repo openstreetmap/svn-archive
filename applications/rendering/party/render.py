@@ -59,7 +59,7 @@ class CityPlotter(handler.ContentHandler):
       print "Downloading gazeteer"
       sock = urllib.urlopen(URL)
       parser.parse(sock)
-      sock.close
+      sock.close()
     else:
       print "Loading gazeteer"
       parser.parse(gazeteer)

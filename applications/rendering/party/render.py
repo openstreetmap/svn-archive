@@ -155,16 +155,13 @@ class TracklogInfo(handler.ContentHandler):
     """Test whether the lat/long extents of the map are sane"""
     return self.proj.valid()
   def calculate(self, radius):
-    """Calculate (somehow*) the extents of the map"""
+    """Automatically calculate (somehow*) the extents of the map"""
     self.calculateCentre()
     self.calculateExtents(radius)
-    # then use that to calculate extents
-    self.proj = Projection(
-      self.lat + self.sdLat,
-      self.lon + self.sdLon,
-      self.lat - self.sdLat,
-      self.lon - self.sdLon)
-    self.proj.debug()
+  def setCentre(self,lat,lon):
+    self.lat = lat
+    self.lon = lon
+    print "Centred on %f, %f" % (lat,lon)
   def calculateCentre(self):
     """Calculate the centre point of the map"""
     sumLat = 0
@@ -173,14 +170,19 @@ class TracklogInfo(handler.ContentHandler):
       for y in x:
         sumLat = sumLat + y[0]
         sumLon = sumLon + y[1]
-    self.lat = sumLat / self.countPoints
-    self.lon = sumLon / self.countPoints
+    self.setCentre(sumLat / self.countPoints, sumLon / self.countPoints)
   def calculateExtents(self,radius):
     """Calculate the width and height of the map"""
     c = 40000.0 # circumference of earth, km
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
-    pass
+    # then use that to calculate extents
+    self.proj = Projection(
+      self.lat + self.sdLat,
+      self.lon + self.sdLon,
+      self.lat - self.sdLat,
+      self.lon - self.sdLon)
+    self.proj.debug()
   def createImage(self,width1,height,surface):
     """Supply a cairo drawing surface for the maps"""
     self.width = width1
@@ -236,12 +238,13 @@ class TracklogInfo(handler.ContentHandler):
     Cities.drawCities(self.proj, gazeteer)
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","pointsize=","gazeteer="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","pointsize=","gazeteer=","pos="])
 # Defauts:
 directory = "./"
 size = 600
 radius = 10 # km
 pointsize = 1 # mm
+specifyCentre = 0
 gazeteer = "osmxapi" # can change to a filename
 # Options:
 for o, a in opts:
@@ -258,12 +261,19 @@ for o, a in opts:
     pointsize = float(a)
   if o in ("-g", "--gazeteer"):
     gazeteer = a
+  if o in ("--pos"):
+    lat, lon = [float(x) for x in a.split(",")]
+    specifyCentre = 1
 
 TracklogPlotter = TracklogInfo()
 print "Loading data"
 TracklogPlotter.walkDir(directory)
 print "Calculating extents"
-TracklogPlotter.calculate(radius)
+if specifyCentre:
+  TracklogPlotter.setCentre(lat, lon)
+  TracklogPlotter.calculateExtents(radius)
+else:
+  TracklogPlotter.calculate(radius)
 if(not TracklogPlotter.valid()):
   print "Couldn't calculate extents"
   sys.exit(1)

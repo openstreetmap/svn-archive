@@ -18,7 +18,7 @@ from UserDict import UserDict
 from time import *
 from xml.sax import make_parser
 import os
-from os.path import join, getsize
+from os.path import join, getsize, splitext
 import pymedia.video.vcodec as vcodec
 import pygame
 import array
@@ -361,7 +361,8 @@ class TracklogInfo(handler.ContentHandler):
           # On the first frame, draw a key for each track 
           # (this remains on the image when subsequent trackpoints are drawn)
           if(count == 1):
-            self.drawKey(ctx, colour, name)
+            niceName = splitext(name)[0]
+            self.drawKey(ctx, colour, niceName)
         # If anything changed in this frame, then add it to the video
         if(pointsDrawnThisTimestep > 0):
           ctx2 = cairo.Context(surface2)

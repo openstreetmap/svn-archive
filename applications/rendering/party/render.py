@@ -17,7 +17,7 @@ from xml.dom import minidom
 from UserDict import UserDict
 from xml.sax import make_parser
 import os
-from os.path import join, getsize
+from os.path import join, getsize, splitext
 deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
@@ -232,7 +232,8 @@ class TracklogInfo(handler.ContentHandler):
         if(self.inImage(x,y)):
           ctx.arc(x, y, pointsize, 0, 2*M_PI)
           ctx.fill()
-      self.drawKey(ctx, colour, name)
+      niceName = splitext(name)[0]
+      self.drawKey(ctx, colour, niceName)
   def drawCities(self, gazeteer):
     Cities = CityPlotter(self.surface, self.extents)
     Cities.drawCities(self.proj, gazeteer)

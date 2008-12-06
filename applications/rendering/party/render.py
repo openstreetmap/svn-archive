@@ -112,6 +112,13 @@ class Projection:
     """Display the map extents"""
     print " - Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
     print " - Ratio: %f" % self.ratio
+  def valid(self):
+    """Test whether the lat/long extents of the map are sane"""
+    if(self.ratio == 0.0):
+      return(0)
+    if(self.dLat <= 0.0 or self.dLon <= 0):
+      return(0)
+    return(1)
     
 class TracklogInfo(handler.ContentHandler):
   def __init__(self):
@@ -146,11 +153,7 @@ class TracklogInfo(handler.ContentHandler):
       self.countPoints = self.countPoints + 1
   def valid(self):
     """Test whether the lat/long extents of the map are sane"""
-    if(self.ratio == 0.0):
-      return(0)
-    if(self.dLat <= 0.0 or self.dLon <= 0):
-      return(0)
-    return(1)
+    return self.proj.valid()
   def calculate(self, radius):
     """Calculate (somehow*) the extents of the map"""
     self.calculateCentre()
@@ -261,9 +264,9 @@ print "Loading data"
 TracklogPlotter.walkDir(directory)
 print "Calculating extents"
 TracklogPlotter.calculate(radius)
-if(not TracklogPlotter.valid):
+if(not TracklogPlotter.valid()):
   print "Couldn't calculate extents"
-  sys.exit()
+  sys.exit(1)
 width = size
 height = size
 fullwidth = width + 120

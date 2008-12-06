@@ -215,13 +215,22 @@ class TracklogInfo(handler.ContentHandler):
       self.inTime = 0
       # Parses <time>2006-10-28T10:06:03Z</time>
       time = None
-      if self.timeText.endswith("Z"):
-        time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%SZ"))
-      else: # not GMT
-        time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%S"))
-      self.validTimes[time] = 1;
-      self.points[self.currentFile].append((self.pLat,self.pLon,time));
-      self.countPoints = self.countPoints + 1
+      try:
+        if self.timeText.endswith("Z"):
+          try:
+            time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%SZ"))
+          except ValueError:
+            # FIXME: Assumes this was just a time with second fractions
+            self.timeText = self.timeText[0:18] + "Z"
+            time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%SZ"))
+        else: # not GMT
+          time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%S"))
+      except (OverflowError, ValueError):
+        print >>sys.stderr, "Rejected timestamp '%s'" % self.timeText
+      else:
+        self.validTimes[time] = 1;
+        self.points[self.currentFile].append((self.pLat,self.pLon,time));
+        self.countPoints = self.countPoints + 1
   def characters(self, content):
     if(self.inTime == 1):
       self.timeText = self.timeText + content

@@ -105,7 +105,7 @@ class search {
       if (is_string($nameds) && empty($postcodelookup)) {
         if (count($thisfind) == 2) {
           $thisfind = array_merge(array($thisfind[0]), $thisfind);
-          $nameds = search::find($thisfind, $maxresults, FALSE, $anyoccurenceifnotlocal);
+          $nameds = search::find($thisfind, $maxresults, FALSE, $anyoccurenceifnotlocal, TRUE);
         }
       } 
 
@@ -182,7 +182,9 @@ class search {
   }
 
   // --------------------------------------------------
-  /* static */ function find(&$terms, $maxresults, $postcodelookup, $anyoccurenceifnotlocal=FALSE) {
+  /* static */ function find(&$terms, $maxresults, $postcodelookup, 
+                             $anyoccurenceifnotlocal=FALSE, $recursive=FALSE) 
+  {
     /* Given a search string, returns an array of named's which are the matches 
        for the given search string. Usually this will be called from xmlise rather 
        than directly.
@@ -466,6 +468,18 @@ class search {
         }
 
         // $db->log ("found names near those places " . print_r($nameds, 1));        
+      }
+    }
+
+    if (! $recursive && $nterms > 1) {
+      /* look for place qualified by is_in (do it this way because
+         there are places e.g called "England" where you may or may
+         not find the first term) */
+      $qualified_terms = array_merge(array($terms[0]), $terms);
+      $qualified_nameds = search::find($qualified_terms, $maxresults,
+                                      $postcodelookup, $anyoccurenceifnotlocal, TRUE);
+      if (! is_string($qualified_nameds)) {
+        $nameds = array_merge($qualified_nameds, $nameds);
       }
     }
 

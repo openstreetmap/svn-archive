@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -28,6 +29,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
   public static final String PREF_START_DIR = "lakewalker.startdir";
   public static final String PREF_WAYTYPE = "lakewalker.waytype";
   public static final String PREF_WMS = "lakewalker.wms";
+  public static final String PREF_MAXCACHESIZE = "lakewalker.maxcachesize";
+  public static final String PREF_MAXCACHEAGE = "lakewalker.maxcacheage";
     
   protected IntConfigurer maxSegsConfig = new IntConfigurer();
   protected JLabel maxSegsLabel = new JLabel(tr("Maximum number of segments per way"));
@@ -51,6 +54,10 @@ public class LakewalkerPreferences implements PreferenceSetting {
   protected JLabel lakeTypeLabel = new JLabel(tr("Tag ways as"));
   protected StringEnumConfigurer wmsConfig = new StringEnumConfigurer(WMSLAYERS);
   protected JLabel wmsLabel = new JLabel(tr("WMS Layer"));
+  protected IntConfigurer maxCacheSizeConfig = new IntConfigurer();
+  protected JLabel maxCacheSizeLabel = new JLabel(tr("Maximum cache size (MB)"));
+  protected IntConfigurer maxCacheAgeConfig = new IntConfigurer();
+  protected JLabel maxCacheAgeLabel = new JLabel(tr("Maximum cache age (days)"));
   
   public void addGui(PreferenceDialog gui) {
     maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
@@ -64,7 +71,9 @@ public class LakewalkerPreferences implements PreferenceSetting {
     startDirConfig.setToolTipText(tr("Direction to search for land. Default east."));
     lakeTypeConfig.setToolTipText(tr("Tag ways as water, coastline, land or nothing. Default is water."));
     wmsConfig.setToolTipText(tr("Which WMS layer to use for tracing against. Default is IR1."));
-
+    maxCacheSizeConfig.setToolTipText(tr("Maximum size of each cache directory in bytes. Default is 300MB"));
+    maxCacheAgeConfig.setToolTipText(tr("Maximum age of each cached file in days. Default is 100"));
+    
     String description = tr("An plugin to trace water bodies on Landsat imagery.");
     JPanel prefPanel = gui.createPreferenceTab("lakewalker.png", I18n.tr("Lakewalker Plugin Preferences"), description);
     buildPreferences(prefPanel);
@@ -80,6 +89,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
     startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));
     lakeTypeConfig.setValue(Main.pref.get(PREF_WAYTYPE, "water"));
     wmsConfig.setValue(Main.pref.get(PREF_WMS, "IR1"));
+    maxCacheSizeConfig.setValue(Main.pref.getInteger(PREF_MAXCACHESIZE, 300));
+    maxCacheAgeConfig.setValue(Main.pref.getInteger(PREF_MAXCACHEAGE, 100));
   }
   
   public void buildPreferences(JPanel prefPanel) {
@@ -108,6 +119,13 @@ public class LakewalkerPreferences implements PreferenceSetting {
     prefPanel.add(lakeTypeConfig.getControls(), dataConstraints);
     prefPanel.add(wmsLabel, labelConstraints);
     prefPanel.add(wmsConfig.getControls(), dataConstraints);
+    prefPanel.add(maxCacheSizeLabel, labelConstraints);
+    prefPanel.add(maxCacheSizeConfig.getControls(), dataConstraints);
+    prefPanel.add(maxCacheAgeLabel, labelConstraints);
+    prefPanel.add(maxCacheAgeConfig.getControls(), dataConstraints);
+
+    prefPanel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
+
   }
 
   /*
@@ -125,6 +143,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
     Main.pref.put(PREF_START_DIR, startDirConfig.getValueString());
     Main.pref.put(PREF_WAYTYPE, lakeTypeConfig.getValueString());
     Main.pref.put(PREF_WMS, wmsConfig.getValueString());
+    Main.pref.put(PREF_MAXCACHESIZE, maxCacheSizeConfig.getValueString());
+    Main.pref.put(PREF_MAXCACHEAGE, maxCacheAgeConfig.getValueString());
   }
   
 }

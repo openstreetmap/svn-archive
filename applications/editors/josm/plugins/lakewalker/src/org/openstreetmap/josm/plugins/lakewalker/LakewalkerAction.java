@@ -49,12 +49,6 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   protected Collection<Command> commands = new LinkedList<Command>();
   protected Collection<Way> ways = new ArrayList<Way>();
 
-  /** maximum size in bytes for the sum of all tiles in a WMS-layer cache directory. */
-  private static final long MAXCACHESIZE = 20*1024*1024*1024;
-
-  /** maximum age in ms since epoch for tiles in a WMS-layer cache directory. */
-  private static final long MAXCACHEAGE = 3650*24*60*60*1000;
-  
   public LakewalkerAction(String name) {
     super(name, "lakewalker-sml", tr("Lake Walker."),
     Shortcut.registerShortcut("tools:lakewalker", tr("Tool: {0}", tr("Lake Walker")),
@@ -99,6 +93,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
    * size/age limit is on a per folder basis.
    */
   private void cleanupCache() {
+	  final long maxCacheAge = System.currentTimeMillis()-Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHEAGE, 100)*24*60*60*1000L;
+	  final long maxCacheSize = Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHESIZE, 300)*1024*1024;
 
 	  for (String wmsFolder : LakewalkerPreferences.WMSLAYERS) {
 		  String wmsCacheDirName = Main.pref.getPreferencesDir()+"plugins/Lakewalker/"+wmsFolder;
@@ -116,15 +112,14 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 			  
 			  // delete aged or oversized, keep newest. Once size/age limit was reached delete all older files
 			  long folderSize = 0;
-			  long timeDefiningOverage = System.currentTimeMillis()-MAXCACHEAGE;
 			  boolean quickdelete = false;
 			  for (File cacheEntry : wmsCache) {
 				  if (!cacheEntry.isFile()) continue;
 				  if (!quickdelete) {
 					  folderSize += cacheEntry.length();
-					  if (folderSize > MAXCACHESIZE) {
+					  if (folderSize > maxCacheSize) {
 						  quickdelete = true;
-					  } else if (cacheEntry.lastModified() < timeDefiningOverage) {
+					  } else if (cacheEntry.lastModified() < maxCacheAge) {
 						  quickdelete = true;
 					  }
 				  }

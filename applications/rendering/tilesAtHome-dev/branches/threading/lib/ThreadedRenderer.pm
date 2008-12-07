@@ -137,7 +137,7 @@ sub startChildren
                             $self->{'rendererSemaphore'}->down();
 
                             # get an other child the last job?
-                            if ( $self->{SHARED}->{RENDERERJOBSPOS} < $#{ $self->{SHARED}->{RENDERERJOBS} } )
+                            if ( $self->newRendereJobAvailable() )
                             {
                                 $self->{SHARED}->{RENDERERJOBSPOS}++;
                                 $pos   = $self->{SHARED}->{RENDERERJOBSPOS};
@@ -176,7 +176,7 @@ sub startChildren
                         # GenerateSVG
                         while ($oldJobDir eq $self->{SHARED}->{JOBDIR}
                             && ( !$self->newRendereJobAvailable() || $self->{SHARED}->{CHILDSTOP}->[$childID] )
-                            && $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
+                            && $self->newGenerateSVGJobAvailable() )
                         {
                             $zoom          = 0;
                             $layer         = "";
@@ -188,7 +188,7 @@ sub startChildren
                             $self->{'rendererSemaphore'}->down();
 
                             # get an other child the last job?
-                            if ( $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
+                            if ( $self->newGenerateSVGJobAvailable() )
                             {
                                 $self->{SHARED}->{GENERATESVGJOBPOS}++;
                                 $pos           = $self->{SHARED}->{GENERATESVGJOBPOS};
@@ -230,8 +230,10 @@ sub startChildren
                         }    # GenerateSVG end
 
                         # Download
+                        # Download have the lowst prio
                         while ($oldJobDir eq $self->{SHARED}->{JOBDIR}
                             && ( !$self->newRendereJobAvailable() || $self->{SHARED}->{CHILDSTOP}->[$childID] )
+                            && !$self->newGenerateSVGJobAvailable()
                             && $self->{SHARED}->{DOWNLOADJOBPOS} < $#{ $self->{SHARED}->{DOWNLOADJOBS} } )
                         {
 
@@ -262,7 +264,7 @@ sub startChildren
 
                                 if ( !$self->rendererError() )
                                 {
-                                    ::statusMessage( "Rendererclient $childID get Download job $pos xyz $X,$Y,$Z on layer $layer", 1, 10 );
+#                                    ::statusMessage( "Rendererclient $childID get Download job $pos xyz $X,$Y,$Z on layer $layer", 1, 10 );
                                     eval { $self->{tileset}->getFile( $layer, $Z, $X, $Y ); };
                                     if ($@)
                                     {
@@ -335,6 +337,16 @@ sub addGenerateSVGjob
 
 }
 
+sub newGenerateSVGJobAvailable
+{
+    my $self = shift;
+
+    return 1 if $self->{SHARED}->{GENERATESVGJOBPOS} < $#{ $self->{SHARED}->{GENERATESVGJOBS} };
+
+    return;
+}
+
+
 sub addDownloadjob
 {
     my $self = shift;
@@ -372,7 +384,8 @@ sub getDownloadjobPos
 sub wait
 {
     my $self = shift;
-
+    my $deep = shift;
+    
     # GenerateSVG wait
     while ( $self->{SHARED}->{GENERATESVGJOBSREADY} <= $#{ $self->{SHARED}->{GENERATESVGJOBS} } )
     {
@@ -391,6 +404,9 @@ sub wait
         sleep(0.1);
     }
 
+    return if $deep;
+
+    $self->wait(1);
 }
 sub resetDownloadJobs
 {

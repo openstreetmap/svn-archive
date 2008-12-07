@@ -58,7 +58,7 @@
         <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerPlugin" />
         <attribute name="Plugin-Description" value="Interface to Lakewalker module" />
         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-        <attribute name="Plugin-Mainversion" value="1065"/>
+        <attribute name="Plugin-Mainversion" value="1084"/>
         <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
         <attribute name="Author" value="Brent Easton &lt;b.easton@uws.edu.au>, Jason Reid &lt;jrreid@ucalgary.ca>"/>
         <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerApp"/>

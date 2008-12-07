@@ -2,10 +2,8 @@ package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 
@@ -16,7 +14,7 @@ import org.openstreetmap.josm.plugins.Plugin;
  */
 public class LakewalkerPlugin extends Plugin {
   public LakewalkerPlugin() {
-    Main.main.menu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
+    MainMenu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
   }
 
   public PreferenceSetting getPreferenceSetting() 

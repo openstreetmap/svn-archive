@@ -158,9 +158,10 @@ sub generate
     my $req =  $self->{req};
     my $Config = $self->{Config};
 
+    my $tileStichingAllowed = 0;
+
     $::currentSubTask = "";
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
-
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
 
     my $usingThreads = 0;
@@ -249,7 +250,16 @@ sub generate
     }
     else
     {
+        ###########################################
+        ###########################################
+        # lowzoom modus
+        ###########################################
+        ###########################################
+
         my %alllayers;
+        my $maxlayer = ($req->Z < 6) ? 6 : 12;
+        my $forkpid = 0;
+
         foreach my $layer ($req->layers)
         {
             $alllayers{$layer}{generate} = 1;
@@ -271,39 +281,7 @@ sub generate
             }
         }
 
-        foreach my $layer (keys %alllayers)
-        {
-            my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
-            my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
-            mkdir $JobDirectory;
-            if($alllayers{$layer}{direct})
-            {
-                my $beforeDownload = time();
-                my $FullDataFile = $self->downloadData($layer);
-                ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
-                $self->generateNormalLayer($layer);
-            }
-        }
-
-
-        # this part is only in threaded modus in use
-        if( $usingThreads )
-        {
-            #############
-            # at this time is the client on work and the main process wait now
-            #############
-            $::GlobalChildren->{ThreadedRenderer}->wait();
-    
-            if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
-             throw TilesetError "Render failure: $error", "renderer";
-            }
-    
-            $::GlobalChildren->{optimizePngTasks}->wait();
-            $::GlobalChildren->{optimizePngTasks}->dataReset();
-    
-        }
-
-
+        # Tile stiching Allowed?
         eval
         {
             require Image::Magick;
@@ -321,8 +299,13 @@ sub generate
             $self->{EmptySeaImageIM} = new Image::Magick(size=>'256x256');
             $self->{EmptySeaImageIM}->Read("xc:rgb(181,214,241)") and die;
         };
-        my $maxlayer = ($req->Z < 6) ? 6 : 12;
-        if(!$@)
+
+        if(!$@) {
+            $tileStichingAllowed = 1;
+        }
+
+
+        if($tileStichingAllowed)
         {
             $::progress=0;
             $::progressPercent=0;
@@ -344,7 +327,6 @@ sub generate
             # $t is now number of tiles in $maxlayer
             # $sum is number of tiles up to $maxlayer
 
-            my $forkpid = 0;
             if($Config->get("Fork") || $usingThreads)
             {
                 $forkpid = fork() if !$usingThreads;
@@ -398,17 +380,46 @@ sub generate
                     exit(1) if !$usingThreads;
                 }
             }
+        }
 
-            if( $usingThreads )
+        # downloading osm data and generate layer
+        foreach my $layer (keys %alllayers)
+        {
+            my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
+            my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
+            mkdir $JobDirectory;
+            if($alllayers{$layer}{direct})
             {
-                #############
-                # wait of the download
-                #############
-                $::GlobalChildren->{ThreadedRenderer}->wait();
-                $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
-                
+                my $beforeDownload = time();
+                my $FullDataFile = $self->downloadData($layer);
+                ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+                $self->generateNormalLayer($layer);
             }
+        }
 
+
+        # this part is only in threaded modus in use
+        # wait of my downloads and of the renderer
+        if( $usingThreads )
+        {
+            #############
+            # at this time is the client on work and the main process wait now
+            #############
+            $::GlobalChildren->{ThreadedRenderer}->wait();
+    
+            if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
+             throw TilesetError "Render failure: $error", "renderer";
+            }
+    
+            $::GlobalChildren->{optimizePngTasks}->wait();
+            $::GlobalChildren->{optimizePngTasks}->dataReset();
+
+            $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
+    
+        }
+
+        if($tileStichingAllowed)
+        {
             foreach my $layer ($req->layers)
             {
                 # note - base layer can be created on the fly
@@ -437,6 +448,14 @@ sub generate
         {
             ::statusMessage("Tile stiching not supported without Image::Magick.", 1, 1);
         }
+
+        # wait of the last optimitePNG tasks
+        if (defined $::GlobalChildren->{optimizePngTasks}) {
+            $::GlobalChildren->{optimizePngTasks}->wait();
+            $::GlobalChildren->{optimizePngTasks}->dataReset();
+        }
+
+
         # now copy/cleanup the results
         foreach my $layer ($req->layers)
         {
@@ -564,6 +583,7 @@ sub getFile {
     }
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
 
+    my $url = "";
 
     for(my $i = 0; $i < 3 && !-f $pfile; ++$i)
     {
@@ -573,13 +593,14 @@ sub getFile {
             {
                 ::statusMessage("Download file $file",1,6);
             }
-
-            LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
-            $Layer,$Z,$X,$Y),$pfile);
+            $url = sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",$Layer,$Z,$X,$Y);
+            
+            LWP::Simple::mirror($url,$pfile);
         };
         if($@) {
             unlink $pfile ;
-            ::statusMessage("Download failed  $@",1,10);
+            ::statusMessage("Download failed  $@ on $url",1,10);
+            sleep 5;
         }
     }
     throw TilesetError "The image $file download failed", "lowzoom" if !-f $pfile;
@@ -606,16 +627,20 @@ sub lowZoom {
 
         $self->getFile($CaptionLayer,$Z,$X,$Y) if $CaptionLayer;
 
-        if(defined $::GlobalChildren->{optimizePngTasks})
+        if( defined $::GlobalChildren->{optimizePngTasks} )
         {
-            # wait of the optimizePng childs
-            $::GlobalChildren->{optimizePngTasks}->wait();
-            $::GlobalChildren->{optimizePngTasks}->dataReset();
+            # wait only on the next lower zoomlevel
+            if(defined $self->{myLastZ} && $self->{myLastZ} > $Z) {
+                # wait of the optimizePng childs
+                $::GlobalChildren->{optimizePngTasks}->wait();
+                $::GlobalChildren->{optimizePngTasks}->dataReset();
             
-            # wait of my downloads
-            $::GlobalChildren->{ThreadedRenderer}->wait();
-            $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
-            
+                # wait of my downloads
+                $::GlobalChildren->{ThreadedRenderer}->wait();
+                $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
+            }
+
+            $self->{myLastZ} = $Z;
         }
 
         # Create the tile from those subtiles
@@ -1890,6 +1915,9 @@ sub createTilesetFile
     seek $fh, 0, 0;
     print $fh pack("CCCCV", 2, $levels, $size, $emptyness, $userid) or throw TilesetError "Write failed to '$temp_file': $!", "fatal";
 
+print "speicher metadata file\n";
+print $self->generateMetaData($prefix) ."\n";
+print "-------------__";
     seek $fh, $currpos, 0;
     print $fh $self->generateMetaData($prefix);
     close $fh;

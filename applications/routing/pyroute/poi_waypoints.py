@@ -78,7 +78,7 @@ class waypointsModule(poiModule, handler.ContentHandler):
   def save(self):
     # Default filename if none was loaded
     if(self.filename == None):
-      self.filename = "data/waypoints.gpx"
+      self.filename = os.path.join(os.path.dirname(__file__), "data", "waypoints.gpx")
     self.saveAs(self.filename)
   
   def saveAs(self,filename):

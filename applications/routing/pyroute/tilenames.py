@@ -71,7 +71,7 @@ def tileLayerExt(layer):
 
 def tileLayerBase(layer):
   layers = { \
-    "tah": "http://tah.openstreetmap.org/Tiles/tile.php/",
+    "tah": "http://tah.openstreetmap.org/Tiles/tile/",
     "oam": "http://oam1.hypercube.telascience.org/tiles/1.0.0/openaerialmap-900913/",
     "mapnik": "http://tile.openstreetmap.org/mapnik/"
     }

@@ -92,9 +92,11 @@ class MapWidget(gtk.Widget, pyrouteModule):
     self.timer = gobject.timeout_add(100, update, self)
     
   def loadModules(self):
-    #self.modules['poi']['rss'] = geoRss(self.modules, 'Setup/feeds.txt')
+    self.modules['poi']['rss'] = geoRss(self.modules,
+                                        os.path.join(os.path.dirname(__file__),
+                                                     'Setup', 'feeds.txt'))
     #self.modules['poi']['geonames'] = geonames(self.modules)
-    self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
+    #self.modules['poi']['waypoints'] = waypointsModule(self.modules, "data/waypoints.gpx")
     self.modules['poi']['osm'] = osmPoiModule(self.modules)
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
@@ -347,6 +349,7 @@ class GuiBase:
     event_box = gtk.EventBox()
     event_box.connect("button_press_event", lambda w,e: self.pressed(e))
     event_box.connect("button_release_event", lambda w,e: self.released(e))
+    event_box.connect("scroll-event", lambda w,e: self.scrolled(e))
     event_box.connect("motion_notify_event", lambda w,e: self.moved(e))
     win.add(event_box)
     
@@ -368,7 +371,16 @@ class GuiBase:
     self.dragx = event.x
     self.dragy = event.y
     self.mapWidget.mousedown(event.x,event.y)
-    
+
+  def scrolled(self, event):
+    if event.direction == gtk.gdk.SCROLL_UP:
+      self.mapWidget.modules['projection'].setZoom(1, True)
+      self.mapWidget.set("needRedraw", True)
+      
+    if event.direction == gtk.gdk.SCROLL_DOWN:
+      self.mapWidget.modules['projection'].setZoom(-1, True)
+      self.mapWidget.set("needRedraw", True)
+      
   def moved(self, event):
     """Drag-handler"""
 

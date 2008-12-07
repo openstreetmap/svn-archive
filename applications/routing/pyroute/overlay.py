@@ -12,7 +12,7 @@ class guiOverlay(pyrouteModule):
         pyrouteModule.__init__(self, modules)
         self.modules = modules
         self.icons = menuIcons()
-        self.menus = loadMenus('Menus')
+        self.menus = loadMenus(os.path.join(os.path.dirname(__file__), 'Menus'))
         self.dragbar = None
         self.dragpos = 0
 

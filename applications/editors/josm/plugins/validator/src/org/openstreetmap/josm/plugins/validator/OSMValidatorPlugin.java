@@ -25,6 +25,9 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
+import org.openstreetmap.josm.data.projection.Epsg4326;
+import org.openstreetmap.josm.data.projection.Lambert;
+import org.openstreetmap.josm.data.projection.Mercator;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -39,7 +42,6 @@ import org.openstreetmap.josm.plugins.validator.tests.NodesWithSameName;
 import org.openstreetmap.josm.plugins.validator.tests.OverlappingWays;
 import org.openstreetmap.josm.plugins.validator.tests.SelfIntersectingWay;
 import org.openstreetmap.josm.plugins.validator.tests.SimilarNamedWays;
-import org.openstreetmap.josm.plugins.validator.tests.TagChecker;
 import org.openstreetmap.josm.plugins.validator.tests.UnclosedWays;
 import org.openstreetmap.josm.plugins.validator.tests.UnconnectedWays;
 import org.openstreetmap.josm.plugins.validator.tests.UntaggedNode;
@@ -67,6 +69,9 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
 
     /** The list of errors per layer*/
     Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
+    
+    /** Grid detail, multiplier of east,north values for valuable cell sizing */
+    public static double griddetail;
 
     public Collection<String> ignoredErrors = new TreeSet<String>();
 
@@ -95,6 +100,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
      */
     public OSMValidatorPlugin() {
         plugin = this;
+        initializeGridDetail();
         initializeTests(getTests());
         loadIgnoredErrors();
     }
@@ -224,6 +230,20 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
         return allAvailableTests;
     }
 
+    /**
+     * Initialize grid details based on current projection system. Values based on
+     * the original value fixed for EPSG:4326 (10000) using heuristics (that is, test&error 
+     * until most bugs were discovered while keeping the processing time reasonable)
+     */
+    public void initializeGridDetail() {
+        if (Main.proj.toString().equals(new Epsg4326().toString()))
+            OSMValidatorPlugin.griddetail = 10000;
+        else if (Main.proj.toString().equals(new Mercator().toString()))
+            OSMValidatorPlugin.griddetail = 100000;
+        else if (Main.proj.toString().equals(new Lambert().toString()))
+            OSMValidatorPlugin.griddetail = 0.1;
+    }
+    
     /**
      * Initializes all tests
      * @param allTests The tests to initialize

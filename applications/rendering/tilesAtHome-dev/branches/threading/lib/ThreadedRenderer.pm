@@ -398,16 +398,23 @@ sub wait
         sleep(0.1);
     }
 
+    return if $deep;
+
+    $self->wait(1);
+}
+
+sub waitDownloadJobs
+{
+    my $self = shift;
+
     # Download wait
     while ( $self->{SHARED}->{DOWNLOADJOBSREADY} <= $#{ $self->{SHARED}->{DOWNLOADJOBS} } )
     {
         sleep(0.1);
     }
 
-    return if $deep;
-
-    $self->wait(1);
 }
+
 sub resetDownloadJobs
 {
     my $self = shift;
@@ -421,6 +428,7 @@ sub resetDownloadJobs
     $self->{'rendererSemaphore'}->up();
     
 }
+
 # reset my lists
 sub Reset
 {

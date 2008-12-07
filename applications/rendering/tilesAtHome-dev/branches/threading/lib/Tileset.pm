@@ -394,29 +394,29 @@ sub generate
                 my $FullDataFile = $self->downloadData($layer);
                 ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
                 $self->generateNormalLayer($layer);
+
+                # the renderer in threaded modus do not create Zips
+                if( $usingThreads )
+                {
+                    $::GlobalChildren->{ThreadedRenderer}->wait();
+    
+                    if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
+                      throw TilesetError "Render failure: $error", "renderer";
+                    }
+    
+                    $::GlobalChildren->{optimizePngTasks}->wait();
+                    $::GlobalChildren->{optimizePngTasks}->dataReset();
+
+                    if ($Config->get("CreateTilesetFile") and !$Config->get("LocalSlippymap")) {
+                        $self->createTilesetFile($layer);
+                    }
+                    else {
+                        $self->createZipFile($layer);
+                    }
+                }
             }
         }
 
-
-        # this part is only in threaded modus in use
-        # wait of my downloads and of the renderer
-        if( $usingThreads )
-        {
-            #############
-            # at this time is the client on work and the main process wait now
-            #############
-            $::GlobalChildren->{ThreadedRenderer}->wait();
-    
-            if(my $error = $::GlobalChildren->{ThreadedRenderer}->rendererError() ) {
-             throw TilesetError "Render failure: $error", "renderer";
-            }
-    
-            $::GlobalChildren->{optimizePngTasks}->wait();
-            $::GlobalChildren->{optimizePngTasks}->dataReset();
-
-            $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
-    
-        }
 
         if($tileStichingAllowed)
         {
@@ -636,12 +636,13 @@ sub lowZoom {
                 $::GlobalChildren->{optimizePngTasks}->dataReset();
             
                 # wait of my downloads
-                $::GlobalChildren->{ThreadedRenderer}->wait();
+                $::GlobalChildren->{ThreadedRenderer}->waitDownloadJobs();
                 $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
             }
 
             $self->{myLastZ} = $Z;
         }
+
 
         # Create the tile from those subtiles
         $self->supertile($X,$Y,$Z,$OutputLayer,$BaseLayer,$CaptionLayer);

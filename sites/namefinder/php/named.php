@@ -397,10 +397,7 @@ class named {
   }
 
   // --------------------------------------------------
-  function describeincontext($resetisin=FALSE) {
-    /* Builds the complete contextual string for this from the above building blocks */
-    $s = $this->describebasic($resetisin);
-    $prefix = ' (which is ';
+  function describenearest($prefix) {
     $andprefix = ' and ';
     if (isset($this->nearesttown1)) {
       $s .= $prefix . $this->nearesttown1->describedistancefrom() . ' ' . 
@@ -412,7 +409,16 @@ class named {
         $this->nearesttown2->describebasic(FALSE, TRUE);
       $prefix = $andprefix;
     }
-    if ($prefix == $andprefix) { $s .= ')'; }
+    return $s;
+  }
+
+  // --------------------------------------------------
+  function describeincontext($resetisin=FALSE) {
+    /* Builds the complete contextual string for this from the above building blocks */
+    $s = $this->describebasic($resetisin);
+    $prefix = ' (which is ';
+    $near = $this->describenearest($prefix);
+    if (strlen($near) > 0) { $s .= $near . ')'; }
     return $s;
   }
 
@@ -445,9 +451,13 @@ class named {
     if (is_object($this->place) && 
         ! $this->contextcontains($this->place))
     {
-      $s .= $prefix . 
-            $this->place->describedistancefrom() . ' ' . 
-            $this->place->describeincontext();
+      if ($this->place->id != $this->id) {
+        $s .= $prefix . 
+          $this->place->describedistancefrom() . ' ' . 
+          $this->place->describeincontext();
+      } else {
+        $s .= $this->place->describenearest(' ');
+      }
     }
 
     $this->description = $s;

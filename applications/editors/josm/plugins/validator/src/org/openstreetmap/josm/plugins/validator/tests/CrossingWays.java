@@ -14,6 +14,7 @@ import java.util.Map;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -137,7 +138,7 @@ public class CrossingWays extends Test
 	public List<List<ExtendedSegment>> getSegments(Node n1, Node n2)
 	{
 		List<List<ExtendedSegment>> cells = new ArrayList<List<ExtendedSegment>>();
-		for( Point2D cell : Util.getSegmentCells(n1, n2, 10000) )
+		for( Point2D cell : Util.getSegmentCells(n1, n2, OSMValidatorPlugin.griddetail) )
 		{
 			List<ExtendedSegment> segments = cellSegments.get( cell );
 			if( segments == null )

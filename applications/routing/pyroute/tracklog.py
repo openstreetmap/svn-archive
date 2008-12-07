@@ -43,6 +43,7 @@ class tracklog(pyrouteModule, lib_gpx):
       self.save()
       
   def save(self):
-    self.saveAs("data/tracklogs.gpx", "tracklogs")
+    self.saveAs(os.path.join(os.path.dirname(__file__),
+                             "data","tracklogs.gpx"), "tracklogs")
     self.pointsSinceSave = 0
     

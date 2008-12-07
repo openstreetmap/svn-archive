@@ -34,7 +34,7 @@ import xml
 from util_binary import *
 from struct import *
 
-execfile("weights.py")
+execfile(os.path.join(os.path.dirname(__file__), "weights.py"))
 
 class LoadOsm(handler.ContentHandler):
   """Parse an OSM file looking for routing information, and do routing with it"""

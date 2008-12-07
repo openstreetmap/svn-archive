@@ -39,10 +39,15 @@ class geoPosition:
       print "No GPSD detected, position information will not be available"
       pass # leave mode at "none"
     
-    self.filename = "pos.txt"
+    self.filename = os.path.join(os.path.dirname(__file__), "pos.txt")
     if(os.path.exists(self.filename)):
       self.mode = "file"
       print "Using %s as position reference" % self.filename
+
+    self.filename = os.path.join(os.path.dirname(__file__), "init_pos.txt")
+    if(os.path.exists(self.filename)):
+      self.mode = "initfile"
+      print "Using %s as initial position reference" % self.filename
   
   def get(self):
     try:
@@ -63,7 +68,6 @@ class geoPosition:
       print "%s = %s" % (i, self.socket_cmd(i))
       sleep(1)
     
-  
   def get_socket(self):
     pos = self.socket_cmd("p")
     p = re.compile('P=(.*?)\s*$')
@@ -83,6 +87,18 @@ class geoPosition:
     file.close()
     try:
       lat,lon = [float(i) for i in text.rstrip().split(",")]
+      return({'valid':True, 'lat':lat, 'lon':lon, 'source':'textfile'})
+    except ValueError:
+      return({'valid':False, 'message':'Invalid textfile'})
+
+  def get_initfile(self):
+    file = open(self.filename, 'r')
+    text = file.readline(50)
+    file.close()
+    self.mode = "none"
+    try:
+      lat,lon = [float(i) for i in text.rstrip().split(",")]
+
       return({'valid':True, 'lat':lat, 'lon':lon, 'source':'textfile'})
     except ValueError:
       return({'valid':False, 'message':'Invalid textfile'})

@@ -93,7 +93,7 @@ class tileHandler(pyrouteModule):
         return
     
     # Third, is it in the disk cache?  (including ones recently-downloaded)
-    filename = "cache/%s.png" % name
+    filename = os.path.join(os.path.dirname(__file__), "cache", "%s.png" % name)
     if os.path.exists(filename):
       self.images[name]  = cairo.ImageSurface.create_from_png(filename)
       return

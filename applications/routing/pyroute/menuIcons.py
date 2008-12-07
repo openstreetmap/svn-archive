@@ -29,7 +29,7 @@ class menuIcons:
     self.load('blank')
     self.load('generic')
   def load(self,name):
-    filename = "icons/bitmap/%s.png" % name
+    filename = os.path.join(os.path.dirname(__file__), "icons", "bitmap/%s.png" % name)
     if(not os.path.exists(filename)):
       print "Can't load %s" % filename
       return(0)

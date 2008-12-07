@@ -29,14 +29,18 @@ class osmPoiModule(poiModule, handler.ContentHandler):
     self.draw = False
     self.loadPOIs("all", "amenity|shop=*")
     
-  def loadPOIs(self,name,search):
-    filename = "data/poi_%s.osm" % name
-    url = "http://www.informationfreeway.org/api/0.5/node[%s][%s]" % (search, self.bbox())
+  def loadPOIs(self, name, search):
+    filename = os.path.join(os.path.dirname(__file__),
+                            "data", "poi_%s.osm" % name)
+    
+    url = "http://www.informationfreeway.org/api/0.5/node[%s][%s]" %(search,
+                                                                     self.bbox())
     
     if(not os.path.exists(filename)):
       print "Downloading POIs from OSM"
       urllib.urlretrieve(url, filename)
-    self.load(filename, "Setup/poi.txt")
+    self.load(filename, os.path.join(os.path.dirname(__file__),
+                            "Setup", "poi.txt"))
 
   def bbox(self):
     # TODO: based on location!
@@ -100,7 +104,9 @@ class osmPoiModule(poiModule, handler.ContentHandler):
   def save(self):
     # Default filename if none was loaded
     if(self.filename == None):
-      self.filename = "data/poi.osm"
+      self.filename = os.path.join(os.path.dirname(__file__),
+                            "data", "poi.osm")
+
     self.saveAs(self.filename)
   
   def saveAs(self,filename):

@@ -325,7 +325,9 @@ elsif ($Mode eq "loop")
     }
 
     # this is the actual processing loop
-    
+
+    my $myRestartJobCount = 0;
+
     while(1) 
     {
         ## before we start (another) round of rendering we first check if something bad happened in the past.
@@ -350,6 +352,13 @@ elsif ($Mode eq "loop")
         if (NewClientVersion()) 
         {
             UpdateClient();
+            reExec($upload_pid);
+        }
+
+        # restart in threaded modus (memory leak cleanup "GDlib")
+        $myRestartJobCount++;
+        if(defined $::GlobalChildren->{ThreadedRenderer} && $myRestartJobCount >= 10)
+        {
             reExec($upload_pid);
         }
 

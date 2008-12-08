@@ -158,8 +158,6 @@ sub generate
     my $req =  $self->{req};
     my $Config = $self->{Config};
 
-    my $tileStichingAllowed = 0;
-
     $::currentSubTask = "";
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
@@ -259,6 +257,7 @@ sub generate
         my %alllayers;
         my $maxlayer = ($req->Z < 6) ? 6 : 12;
         my $forkpid = 0;
+        my $tileStichingAllowed = 0;
 
         foreach my $layer ($req->layers)
         {
@@ -342,7 +341,7 @@ sub generate
                         push(@baselayers, $layer) if $alllayers{$layer}{isbase};
                         push(@ovlayers, $layer) if $alllayers{$layer}{isoverlay};
                     }
-                    $self->{NumTiles} = $t*scalar(@baselayers) + $sum*scalar(@ovlayers);
+                    $self->{NumTiles} = $t*scalar(@baselayers) + $sum*scalar(@ovlayers) if !$usingThreads;
 
                     my $num = 2**($maxlayer-$req->Z);
                     my $startx = $req->X*$num;
@@ -557,10 +556,10 @@ sub lowZoomFileName
 }
 
 sub getFile {
-    my ($self, $Layer, $Z, $X, $Y) = @_;
+    my ($self, $Layer, $Z, $X, $Y,$direct) = @_;
 
     # add a download job on threaded mot so i'm not a clild and return lets do the work from child
-    if( defined $::GlobalChildren->{ThreadedRenderer} )
+    if( !$direct && defined $::GlobalChildren->{ThreadedRenderer} )
     {
         if ( !$self->{childThread} ) {
             $::GlobalChildren->{ThreadedRenderer}->addDownloadjob($Layer, $Z, $X, $Y);
@@ -578,7 +577,7 @@ sub getFile {
     {
         ++$::progress;
         $::progressPercent = $::progress / $self->{NumTiles} * 100;
-        ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
+#        ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
         
     }
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
@@ -615,7 +614,7 @@ sub lowZoom {
     # Get tiles
     if($Z >= $MaxZ)
     {
-        $self->getFile($BaseLayer,$Z,$X,$Y);
+        $self->getFile($BaseLayer,$Z,$X,$Y,1);
     }
     else
     {
@@ -625,7 +624,7 @@ sub lowZoom {
         $self->lowZoom($Z+1,$X*2,$Y*2+1,$MaxZ,$OutputLayer,$BaseLayer,$CaptionLayer);
         $self->lowZoom($Z+1,$X*2+1,$Y*2+1,$MaxZ,$OutputLayer,$BaseLayer,$CaptionLayer);
 
-        $self->getFile($CaptionLayer,$Z,$X,$Y) if $CaptionLayer;
+        $self->getFile($CaptionLayer,$Z,$X,$Y,1) if $CaptionLayer;
 
         if( defined $::GlobalChildren->{optimizePngTasks} )
         {
@@ -636,8 +635,8 @@ sub lowZoom {
                 $::GlobalChildren->{optimizePngTasks}->dataReset();
             
                 # wait of my downloads
-                $::GlobalChildren->{ThreadedRenderer}->waitDownloadJobs();
-                $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
+#                $::GlobalChildren->{ThreadedRenderer}->waitDownloadJobs();
+#                $::GlobalChildren->{ThreadedRenderer}->resetDownloadJobs();
             }
 
             $self->{myLastZ} = $Z;
@@ -1314,12 +1313,12 @@ sub threadedRender
 
     }
 
-
 }
 
 #-------------------------------------------------------------------
 # renders the tiles for one zoom level
 # paramter: ($layer, $zoom)
+# this Renderer is only used from threaded children
 #-------------------------------------------------------------------
 sub Render_new
 {
@@ -1347,6 +1346,9 @@ sub Render_new
     $self->RenderSVG($layer, $zoom, $stripes);
 
     $self->SplitTiles($layer, $zoom, $stripes);
+
+    ::statusMessage("Renderer done", 1, 10);
+
 }
 
 
@@ -1378,11 +1380,6 @@ sub Render
     
     $self->GenerateSVG($layer, $zoom, $layerDataFile);
 
-    if( defined $::GlobalChildren->{ThreadedRenderer} )
-    {
-        $::GlobalChildren->{ThreadedRenderer}->updateMaxRenderer("$layer-z$zoom.svg")
-    }
-    
     $self->RenderSVG($layer, $zoom, $stripes);
 
     $self->SplitTiles($layer, $zoom, $stripes);

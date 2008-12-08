@@ -3206,7 +3206,7 @@ int WINAPI WinMain(
           }
         }
         id--;
-	XmlOut (newWayFile, "created_by", "gosmore");
+	XmlOut (newWayFile, "todo", "FIXME - Added by gosmore");
         if (newWays[i].oneway) XmlOut (newWayFile, "oneway", "yes");
         if (newWays[i].bridge) XmlOut (newWayFile, "bridge", "yes");
         if (newWays[i].klas >= 0) fprintf (newWayFile, "%s",

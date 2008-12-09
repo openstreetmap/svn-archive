@@ -41,7 +41,6 @@ use Upload;
 use SVG::Rasterize;
 use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
-use Encode;
 use POSIX;
 
 #---------------------------------

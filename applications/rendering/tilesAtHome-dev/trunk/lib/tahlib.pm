@@ -439,5 +439,29 @@ sub dirEmpty
     return 1; 
 }
 
+#--------------------------------------------------------------------------------------
+# check for utf-8 faults in file and return false if UTF-8 clean, otherwise return the 
+# number of the first line where an utf-8 error occured
+#--------------------------------------------------------------------------------------
+sub fileUTF8ErrCheck
+{
+    my $DataFile = shift();
+    open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
+    my @toCheck = <OSMDATA>;
+    close(OSMDATA);
+    my $line=0;
+    while (my $osmline = shift @toCheck)
+    {
+        $line++;
+        eval { decode("UTF-8",$osmline, Encode::FB_CROAK) };
+        if ($@)
+        {
+            return $line; # returns the line the error occured on
+        }
+    }
+    return 0;
+}
+
+
 1;
 

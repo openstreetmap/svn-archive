@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.validator;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -100,11 +101,25 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
      */
     public OSMValidatorPlugin() {
         plugin = this;
+        checkPluginDir();
         initializeGridDetail();
         initializeTests(getTests());
         loadIgnoredErrors();
     }
 
+    /**
+     * Check if plugin directory exists (store ignored errors file)
+     */
+    private void checkPluginDir() {
+        try {
+        File pathDir = new File(Util.getPluginDir());
+        if (!pathDir.exists())
+            pathDir.mkdirs();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    
     private void loadIgnoredErrors() {
         ignoredErrors.clear();
         if (Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true)) {

@@ -1,5 +1,6 @@
 use strict;
 use TahConf;
+use Encode;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl

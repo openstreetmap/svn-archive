@@ -575,11 +575,35 @@ sub getFile {
     }
     else
     {
+
+        ## child download status/lock
+        if( !$self->{childThread} && defined $::GlobalChildren->{ThreadedRenderer} )
+        {
+            # download startet and not finished wait max xx sek and start then a new download
+            if( $::GlobalChildren->{ThreadedRenderer}->getDownloadJobStatus($Layer, $Z, $X, $Y) eq 1 )
+            {
+                my $maxWaitCount = 60;
+                while( --$maxWaitCount > 0 
+                        && $::GlobalChildren->{ThreadedRenderer}->getDownloadJobStatus($Layer, $Z, $X, $Y) eq 1 )
+                {
+                    ::statusMessage("wait of download $Layer, $Z, $X, $Y ", 0, 10);
+                    sleep 1;
+                }
+            }
+    
+            # 2 == download finished
+            if( $::GlobalChildren->{ThreadedRenderer}->getDownloadJobStatus($Layer, $Z, $X, $Y) eq 2 )
+            {
+                return;
+            }
+        }
+
         ++$::progress;
         $::progressPercent = $::progress / $self->{NumTiles} * 100;
 #        ::statusMessage("Loading $Layer($Z,$X,$Y)", 0, 10);
         
     }
+
     my ($pfile, $file) = $self->lowZoomFileName($Layer, $Z, $X, $Y);
 
     my $url = "";

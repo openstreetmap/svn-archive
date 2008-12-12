@@ -1,0 +1,74 @@
+
+trapi has only been tested on Debian unstable on x86 machines, but
+should work on any modern unix-derived OS.  For Debian, you will need
+the packages listed in packages.  (or equivelents if you prefer
+another web server than apache2.)  The data files are
+endian-independent.  Porting to Microsoft would be a challenge, there
+are subtle dependencies on a reasonable OS.
+
+The time on the system should be close to correct.  If it is off by
+more than a minute it could affect the data update process.  The map
+fcgi-bin program will refuse to serve data if the clock is too far in
+the future.
+
+ptdb.pm has several constants defined, most of which shouldn't be
+touched.  VERBOSE is for how many messages to output.  1 will be only
+detected problems in the data, 25 will be many debugging messages.
+TRAPIDIR is where the trapi data files are stored, which should be on
+a filesystem set up for many small files.  If using ext2 or ext3,
+directory indexing should be on and using a 1 or 2kbyte allocation
+will save disk space.  DBDIR is for the indexes that are larger files.
+MAXOPEN is the number of data files to open at once, not including the
+indexes.  Bigger is generally better if your OS can handle it.
+KEEPOPEN should be a bit less, closer to MAXOPEN will mean more CPU
+and less file opening.  SPLIT is the number of bytes in a node data
+file before splitting to higher zoom.
+
+
+Initial data load:
+
+   cleardb
+   bzcat planet.bz2 | tahdbload.pl
+   echo YYYYMMDD >timestamp
+
+YYYYMMDD is the day before the planet file was generated.  It's better
+to reprocess a bit of duplicated data than miss something.  The
+initial data load is disk IO intensive and will take several days.
+
+
+Updating the data:
+
+   trup.pl | trpcs.pl
+
+This will fetch the daily, hourly, and minute diff files and update
+the trapi database.  It will complete processing the currently fetched
+data then stop if the file stopfile.txt exists.  timestamp will be
+updated as the diff files are processed.
+
+
+Garbage collection:
+
+   trgarb.pl
+
+Garbage collection must be done when nothing else is updating the
+database.  It takes a little over a day.  How often this should be
+done is to be determined.  stopfile.txt will stop the garbage
+collection.
+
+
+Web access:
+
+map is a fastcgi script.  Your web server should be configured so
+api/0.5/map?bbox= requests will go to it.
+
+
+
+Trapi will return more data than requested.  All request are rounded
+up to z14 tile boundaries, and in low node density areas may be up to
+z11.  Some tags not used by tiles@home are not stored by trapi.  The
+user and timestamp information is also not stored.  This is fine for
+tiles@home, but trapi data must not be uploaded to openstreetmap.
+Ways and relations that are no longer in the requested area may be
+returned.
+
+

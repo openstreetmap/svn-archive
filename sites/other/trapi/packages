@@ -1,0 +1,9 @@
+perl
+perl-modules
+libwww-perl
+gzip
+bzip2
+libcgi-fast-perl
+apache2
+libapache2-mod-fastcgi
+

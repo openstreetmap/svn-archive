@@ -1,0 +1,9 @@
+#!/bin/sh
+# Copyright 2008 Blars Blarson.  Distributed under GPL version 2, see GPL-2
+
+touch z1
+rm -r z[0-9]*
+> nodes.db
+> ways.db
+> relations.db
+> zooms.db

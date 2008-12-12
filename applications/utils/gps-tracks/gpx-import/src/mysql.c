@@ -34,12 +34,13 @@ static MYSQL *handle;
 static char statement_buffer[STMT_BUFLEN];
 static char escape_buffer[STMT_BUFLEN];
 
-#define STMT(V...)                                                      \
-  do {                                                                  \
-    int stmt_len = snprintf(statement_buffer, STMT_BUFLEN, V);          \
-    if (mysql_real_query(handle, statement_buffer, stmt_len) != 0) {    \
-      return false;                                                     \
-    }                                                                   \
+#define STMT(V...)                                                         \
+  do {                                                                     \
+    int stmt_len = snprintf(statement_buffer, STMT_BUFLEN, V);             \
+    if (mysql_real_query(handle, statement_buffer, stmt_len) != 0) {       \
+      ERROR("Failure executing MySQL statement: %s", mysql_error(handle)); \
+      return false;                                                        \
+    }                                                                      \
   } while (0)
 
 #define BLANKOR(S) strdup(((S) ? (S) : ("")))

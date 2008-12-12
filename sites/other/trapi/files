@@ -1,0 +1,73 @@
+
+
+nodes.db:
+
+4-bit zoom.
+14-bit X
+14-bit Y
+
+
+ways.db:
+  same as nodes.db
+
+relations.db:
+  same as nodes.db
+
+zooms.db:
+  8-bit zoom
+
+
+zZ/X/Y/nodes:
+
+32-bit nodeid
+32-bit lat  (int)
+32-bit lon  (int)
+32-bit offset
+
+zZ/X/Y/data:
+key\0
+value\0
+ ...
+\0
+
+
+zZ/X/Y/ways:
+
+32-bit wayid
+  local:
+  32-bit offset
+  remote:
+  32-bit 0
+
+X/Y/data:
+32-bit node
+ ...
+32-bit 0
+key\0
+value\0
+ ...
+\0
+
+
+zZ/X/Y/relations:
+32-bit relid
+  local:
+  32-bit offset
+  remote:
+  32-bit 0
+
+zZ/X/Y/data:
+32-bit node
+role\0
+ ...
+32-bit way
+role\0
+ ...
+32-bit 0
+32-bit rel
+ ...
+32-bit 0
+key\0
+value\0
+ ...
+\0

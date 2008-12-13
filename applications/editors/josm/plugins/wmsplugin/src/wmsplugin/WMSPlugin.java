@@ -103,14 +103,24 @@ public class WMSPlugin extends Plugin {
 			if (name != null && url != null)
 				wmsList.add(new WMSInfo(name, url, prefid));
 		}
-		setDefault(true, tr("Landsat"), "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
+		setDefault(true, tr("Landsat"),
+		"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
 		"layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg");
-		setDefault(true, tr("NPE Maps"), "http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&");
-		setDefault(false, tr("YAHOO (GNOME)"), "yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
-		setDefault(false, tr("YAHOO (GNOME Fix)"), "yahoo://gnome-web-photo-fixed {0}");
-		setDefault(true, tr("YAHOO (WebKit)"), "yahoo://webkit-image {0}");
-		setDefault(false, tr("YAHOO (WebKit GTK)"), "yahoo://webkit-image-gtk {0}");
-		setDefault(false, tr("Oberpfalz Geofabrik.de"), "http://oberpfalz.geofabrik.de/wms4josm?");
+		setDefault(true, tr("Open Aerial Map"),
+		"http://openaerialmap.org/wms/?VERSION=1.0&request=GetMap"+
+		"&layers=world&styles=&srs=EPSG:4326&format=image/jpeg");
+		setDefault(true, tr("NPE Maps"),
+		"http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe");
+		setDefault(false, tr("YAHOO (GNOME)"),
+		"yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
+		setDefault(false, tr("YAHOO (GNOME Fix)"),
+		"yahoo://gnome-web-photo-fixed {0}");
+		setDefault(true, tr("YAHOO (WebKit)"),
+		"yahoo://webkit-image {0}");
+		setDefault(false, tr("YAHOO (WebKit GTK)"),
+		"yahoo://webkit-image-gtk {0}");
+		setDefault(false, tr("Oberpfalz Geofabrik.de"),
+		"http://oberpfalz.geofabrik.de/wms4josm?");
 
 		Collections.sort(wmsList);
 		MainMenu menu = Main.main.menu;

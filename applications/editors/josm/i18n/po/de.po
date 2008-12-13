@@ -7712,7 +7712,7 @@ msgstr "Fahrradladen bearbeiten"
 
 #: presets.java:1078
 msgid "Public Transport"
-msgstr "Öffentlicher Nahverkehr"
+msgstr "Öffentliche Verkehrsmittel"
 
 #: presets.java:1080
 msgid "Edit Station"
@@ -7836,7 +7836,7 @@ msgstr "Gasthof bearbeiten"
 
 #: presets.java:1200
 msgid "Hostel"
-msgstr "Jugenherberge"
+msgstr "Jugendherberge"
 
 #: presets.java:1201
 msgid "Edit Hostel"

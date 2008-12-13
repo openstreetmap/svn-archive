@@ -30,7 +30,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 	private Map<String,String> orig;
 	private DefaultTableModel model;
 	private HashMap<Integer, WMSInfo> oldValues = new HashMap<Integer, WMSInfo>();
-	
+
 	public void addGui(final PreferenceDialog gui) {
 		JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
 		
@@ -38,13 +38,26 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		final JTable list = new JTable(model);
 		JScrollPane scroll = new JScrollPane(list);
 		p.add(scroll, GBC.eol().fill(GBC.BOTH));
-		scroll.setPreferredSize(new Dimension(400,200));
+		scroll.setPreferredSize(new Dimension(200,200));
 		
 		for (WMSInfo i : WMSPlugin.wmsList) {
 			oldValues.put(i.prefid, i);
 			model.addRow(new String[]{i.name, i.url});
 		}
-		
+
+		final DefaultTableModel modeldef = new DefaultTableModel(
+		new String[]{tr("Menu Name (Default)"), tr("WMS URL (Default)")}, 0);
+		final JTable listdef = new JTable(modeldef){
+			public boolean isCellEditable(int row,int column){return false;}
+		};;
+		JScrollPane scrolldef = new JScrollPane(listdef);
+		p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GBC.BOTH));
+		scrolldef.setPreferredSize(new Dimension(200,200));
+
+		for (Map.Entry<String,String> i : WMSPlugin.wmsListDefault.entrySet()) {
+			modeldef.addRow(new String[]{i.getKey(), i.getValue()});
+		}
+
 		JButton add = new JButton(tr("Add"));
 		p.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
 		p.add(add, GBC.std().insets(0,5,0,0));
@@ -75,6 +88,21 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 					Integer i;
 					while ((i = list.getSelectedRow()) != -1)
 						model.removeRow(i);
+				}
+			}
+		});
+		
+		JButton copy = new JButton(tr("Copy Default"));
+		p.add(copy, GBC.std().insets(0,5,0,0));
+		copy.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				Integer line = listdef.getSelectedRow();
+				if (line == -1)
+					JOptionPane.showMessageDialog(gui, tr("Please select the row to copy."));
+				else
+				{
+					model.addRow(new String[]{modeldef.getValueAt(line, 0).toString(),
+					modeldef.getValueAt(line, 1).toString()});
 				}
 			}
 		});

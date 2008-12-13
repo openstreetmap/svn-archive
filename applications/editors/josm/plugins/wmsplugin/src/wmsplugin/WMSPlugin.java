@@ -110,6 +110,7 @@ public class WMSPlugin extends Plugin {
 		setDefault(false, tr("YAHOO (GNOME Fix)"), "yahoo://gnome-web-photo-fixed {0}");
 		setDefault(true, tr("YAHOO (WebKit)"), "yahoo://webkit-image {0}");
 		setDefault(false, tr("YAHOO (WebKit GTK)"), "yahoo://webkit-image-gtk {0}");
+		setDefault(false, tr("Oberpfalz Geofabrik.de"), "http://oberpfalz.geofabrik.de/wms4josm?");
 
 		Collections.sort(wmsList);
 		MainMenu menu = Main.main.menu;

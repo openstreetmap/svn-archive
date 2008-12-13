@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.TreeMap;
 import java.io.*;
 
 import javax.swing.AbstractAction;
@@ -39,6 +40,7 @@ public class WMSPlugin extends Plugin {
 	static JMenu wmsJMenu;
 
 	static ArrayList<WMSInfo> wmsList = new ArrayList<WMSInfo>();
+	static TreeMap<String,String> wmsListDefault = new TreeMap<String,String>();
 
 	// remember state of menu item to restore on changed preferences
 	static private boolean menuEnabled = false;
@@ -101,12 +103,13 @@ public class WMSPlugin extends Plugin {
 			if (name != null && url != null)
 				wmsList.add(new WMSInfo(name, url, prefid));
 		}
-		setDefault(tr("Landsat"), "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
+		setDefault(true, tr("Landsat"), "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
 		"layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg");
-		setDefault(tr("NPE Maps"), "http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&");
-		setDefault(tr("YAHOO (GNOME)"), "yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
-		setDefault(tr("YAHOO (GNOME Fix)"), "yahoo://gnome-web-photo-fixed {0}");
-		setDefault(tr("YAHOO (WebKit)"), "yahoo://webkit-image {0}");
+		setDefault(true, tr("NPE Maps"), "http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe&");
+		setDefault(false, tr("YAHOO (GNOME)"), "yahoo://gnome-web-photo --mode=photo --format=png {0} /dev/stdout");
+		setDefault(false, tr("YAHOO (GNOME Fix)"), "yahoo://gnome-web-photo-fixed {0}");
+		setDefault(true, tr("YAHOO (WebKit)"), "yahoo://webkit-image {0}");
+		setDefault(false, tr("YAHOO (WebKit GTK)"), "yahoo://webkit-image-gtk {0}");
 
 		Collections.sort(wmsList);
 		MainMenu menu = Main.main.menu;
@@ -139,10 +142,12 @@ public class WMSPlugin extends Plugin {
 	}
 
 	/* add a default entry in case the URL does not yet exist */
-	private static void setDefault(String name, String url)
+	private static void setDefault(Boolean force, String name, String url)
 	{
 		String testurl = url.replaceAll("=", "_");
-		if(!Main.pref.getBoolean("wmsplugin.default."+testurl))
+		wmsListDefault.put(name, url);
+
+		if(force && !Main.pref.getBoolean("wmsplugin.default."+testurl))
 		{
 			Main.pref.put("wmsplugin.default."+testurl, true);
 			int id = -1;

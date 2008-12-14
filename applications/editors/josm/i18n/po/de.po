@@ -7461,7 +7461,7 @@ msgstr "Fallgatter bearbeiten"
 
 #: presets.java:872
 msgid "Gate"
-msgstr "Gatter"
+msgstr "Gatter / Tor"
 
 #: presets.java:873
 msgid "Edit a Gate"
@@ -8285,11 +8285,11 @@ msgstr "Historische Stätten"
 
 #: presets.java:1557
 msgid "Castle"
-msgstr "Burg"
+msgstr "Burg / Schloß"
 
 #: presets.java:1558
 msgid "Edit Castle"
-msgstr "Burg berabeiten"
+msgstr "Burg / Schloß berabeiten"
 
 #: presets.java:1563
 msgid "Ruins"

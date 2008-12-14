@@ -353,6 +353,8 @@ msgid ""
 "(You can change the number of days after which this warning appears<br>by "
 "setting the config option 'pluginmanager.warntime'.)"
 msgstr ""
+"(Sie können die Anzahl an Tagen nach dem diese Warnung erscheint <br>"
+"über die Konfigurationsoption 'pluginmanager.warntime' ändern.)"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:309
 #, java-format
@@ -940,14 +942,12 @@ msgid "Members"
 msgstr "Mitglieder"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:308
-#, fuzzy
 msgid "Move the currently selected member(s) up"
-msgstr "Füge alle gewählten Objekte als Mitglieder hinzu"
+msgstr "Die ausgewählten Mitglieder nach oben schieben"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:314
-#, fuzzy
 msgid "Move the currently selected member(s) down"
-msgstr "Gewählte Ebene eine Zeile tiefer schieben."
+msgstr "Die ausgewählten Mitglieder nach unten schieben"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:330
 msgid "Add Selected"
@@ -2161,11 +2161,14 @@ msgid ""
 "deleting existing archive?\n"
 "\n"
 "{0}"
-msgstr ""
+msgstr "Das Plugin Archiv ist bereits vorhanden. Wollen Sie das Archiv löschen "
+"und danach erneut herunterladen?\n"
+"\n"
+"{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:286
 msgid "Plugin already exists"
-msgstr ""
+msgstr "Das Plugin existiert bereits"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:289
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:294
@@ -4868,7 +4871,7 @@ msgstr "Abzeichnen"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:170
 msgid "checking cache..."
-msgstr ""
+msgstr "prüfe Speicher..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:206
 msgid "Running vertex reduction..."
@@ -4941,11 +4944,11 @@ msgstr "WMS-Ebene"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:58
 msgid "Maximum cache size (MB)"
-msgstr ""
+msgstr "Maximale Speichergröße (MB)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:60
 msgid "Maximum cache age (days)"
-msgstr ""
+msgstr "Maximales Speicheralter (Tage)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:63
 msgid "Maximum number of segments allowed in each generated way. Default 250."
@@ -5012,11 +5015,12 @@ msgstr "Zum Abzeichnen genutzte WMS-Ebene. Standard ist IR1."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid "Maximum size of each cache directory in bytes. Default is 300MB"
-msgstr ""
+msgstr "Maximale Größe des des Speicherverzeichnisses in bytes. Standard ist 300MB"
+
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:75
 msgid "Maximum age of each cached file in days. Default is 100"
-msgstr ""
+msgstr "Maximales Dateialter von gespeicherten Dateien in Tagen. Standard ist 100"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:77
 msgid "An plugin to trace water bodies on Landsat imagery."
@@ -7931,12 +7935,10 @@ msgid "Edit Information Point"
 msgstr "Information bearbeiten"
 
 #: presets.java:1269
-#, fuzzy
 msgid "office"
-msgstr "Post"
+msgstr "Informationsbüro"
 
 #: presets.java:1269
-#, fuzzy
 msgid "map"
 msgstr "Karte"
 
@@ -7953,27 +7955,24 @@ msgid "bicyclemap"
 msgstr "Fahrradkarte"
 
 #: presets.java:1269
-#, fuzzy
 msgid "board"
-msgstr "Vorwärts"
+msgstr "Infotafel"
 
 #: presets.java:1269
-#, fuzzy
 msgid "history"
 msgstr "Geschichte"
 
 #: presets.java:1269
-#, fuzzy
 msgid "nature"
-msgstr "Theater"
+msgstr "Natur"
 
 #: presets.java:1269
 msgid "wildlife"
-msgstr ""
+msgstr "Wildtiere"
 
 #: presets.java:1269
 msgid "guidepost"
-msgstr ""
+msgstr "Wegweiser"
 
 #: presets.java:1273
 msgid "Museum"
@@ -9217,7 +9216,7 @@ msgstr "Papier"
 
 #: presets.java:1980
 msgid "Scrap Metal"
-msgstr ""
+msgstr "Altmetall"
 
 #: presets.java:1983
 msgid "Bench"

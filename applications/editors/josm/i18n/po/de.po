@@ -9332,11 +9332,11 @@ msgstr "Automatenprodukte"
 
 #: presets.java:2044
 msgid "public_transport_tickets"
-msgstr "Fahrscheine für öffentlichen Nahverkehr"
+msgstr "Fahrscheine"
 
 #: presets.java:2044
 msgid "public_transport_plans"
-msgstr "Pläne des öffentliche Nahverkehrs"
+msgstr "Pläne des öffentlichen Nahverkehrs"
 
 #: presets.java:2044
 msgid "parking_tickets"
@@ -9400,7 +9400,7 @@ msgstr "Tampons"
 
 #: presets.java:2044
 msgid "excrement_bags"
-msgstr "Kot-Tüten"
+msgstr "Hundekot-Tüten"
 
 #: presets.java:2053
 msgid "Account or loyalty cards"

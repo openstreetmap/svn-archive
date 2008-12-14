@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-13 20:19+0100\n"
-"PO-Revision-Date: 2008-12-13 20:17+0100\n"
+"POT-Creation-Date: 2008-12-14 11:55+0100\n"
+"PO-Revision-Date: 2008-12-14 14:29+0100\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team: Deutsch\n"
 "MIME-Version: 1.0\n"
@@ -70,8 +70,7 @@ msgstr "De:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:64
 #, java-format
-msgid ""
-"An unexpected exception occurred that may have come from the ''{0}'' plugin."
+msgid "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
 "Eine unvorhergesehene Ausnahme trat auf, welche vom Plugin \"{0}\" kommen "
 "könnte."
@@ -82,8 +81,7 @@ msgid "According to the information within the plugin, the author is {0}."
 msgstr "Laut den Informationen des Plugins ist der Autor des Plugins {0}."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:68
-msgid ""
-"Try updating to the newest version of this plugin before reporting a bug."
+msgid "Try updating to the newest version of this plugin before reporting a bug."
 msgstr ""
 "Versuchen Sie zuerst eine Aktualisierung auf die neueste Version des "
 "Plugins, bevor Sie den Fehler melden."
@@ -318,8 +316,8 @@ msgid "Aborting..."
 msgstr "Abbruch..."
 
 #: ../core/src/org/openstreetmap/josm/Main.java:207
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:134
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:255
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:136
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:259
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:56
 msgid "Help"
 msgstr "Hilfe"
@@ -353,8 +351,8 @@ msgid ""
 "(You can change the number of days after which this warning appears<br>by "
 "setting the config option 'pluginmanager.warntime'.)"
 msgstr ""
-"(Sie können die Anzahl an Tagen nach dem diese Warnung erscheint <br>"
-"über die Konfigurationsoption 'pluginmanager.warntime' ändern.)"
+"(Sie können die Anzahl an Tagen nach dem diese Warnung erscheint <br>über "
+"die Konfigurationsoption 'pluginmanager.warntime' ändern.)"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:309
 #, java-format
@@ -369,8 +367,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/Main.java:452
 msgid "Hint: Some changes came from uploading new data to the server."
-msgstr ""
-"Hinweis: Einige Änderungen sind durch das Übertragen zum Server enstanden."
+msgstr "Hinweis: Einige Änderungen sind durch das Übertragen zum Server enstanden."
 
 #: ../core/src/org/openstreetmap/josm/Main.java:454
 msgid "There are unsaved changes. Discard the changes and continue?"
@@ -511,8 +508,7 @@ msgid "true: the property is explicitly switched on"
 msgstr "wahr: diese Eigenschaft wurde explizit angeschaltet"
 
 #: ../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:96
-msgid ""
-"partial: different selected objects have different values, do not change"
+msgid "partial: different selected objects have different values, do not change"
 msgstr ""
 "teilweise: verschiedene gewählte Objekte haben verschiedene Werte, nicht "
 "ändern"
@@ -584,8 +580,7 @@ msgstr "jeder"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
 msgid "If specified, reset the configuration instead of reading it."
-msgstr ""
-"Wenn angegeben, wird die Konfiguration zurückgesetzt anstatt sie zu lesen."
+msgstr "Wenn angegeben, wird die Konfiguration zurückgesetzt anstatt sie zu lesen."
 
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:53
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:130
@@ -682,12 +677,12 @@ msgstr "Einstellungen ändern"
 msgid "Preset group ''{0}''"
 msgstr "Vorlagengruppe \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:128
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:130
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:91
 msgid "File"
 msgstr "Datei"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:129
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:131
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:611
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:62
@@ -701,33 +696,33 @@ msgstr "Datei"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:130
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:132
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:99
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:105
 msgid "View"
 msgstr "Anzeigen"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:131
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayPlugin.java:26
 msgid "Tools"
 msgstr "Werkzeuge"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:132
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:134
 msgid "Audio"
 msgstr "Audio"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:135
 msgid "Presets"
 msgstr "Vorlagen"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:159
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:160
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:42
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:68
 #, java-format
 msgid "Menu: {0}"
 msgstr "Menu: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:204
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:207
 msgid "Wireframe view"
 msgstr "Drahtdarstellung"
 
@@ -748,8 +743,7 @@ msgstr "Abbrechen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:133
 msgid "Please select the objects you want to change properties for."
-msgstr ""
-"Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
+msgstr "Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:136
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:299
@@ -796,8 +790,7 @@ msgstr[1] "Ändere Eigenschaften für bis zu {0} Objekte"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:294
 msgid "Please select objects for which you want to change properties."
-msgstr ""
-"Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
+msgstr "Bitte wählen Sie die Objekte für die Eigenschaften geändert werden sollen."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:299
 msgid "Please select a key"
@@ -967,8 +960,7 @@ msgstr "Entferne alle gewählten Objekte aus der Relation"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:345
 msgid "Remove the member in the current table row from this relation"
-msgstr ""
-"Entferne das Mitglied in der aktuellen Tabellenzeile von dieser Relation."
+msgstr "Entferne das Mitglied in der aktuellen Tabellenzeile von dieser Relation."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:358
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:109
@@ -982,8 +974,7 @@ msgstr "Auswahl"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:359
 msgid "Highlight the member from the current table row as JOSM's selection"
-msgstr ""
-"Übernehme das Mitglied der aktuellen Tabellenzeile als Auswahl in JOSM."
+msgstr "Übernehme das Mitglied der aktuellen Tabellenzeile als Auswahl in JOSM."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:379
 msgid "Download Members"
@@ -1150,8 +1141,7 @@ msgstr "Öffne ein Fenster mit der aktuellen Auswahl."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:110
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:75
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:97
-msgid ""
-"Set the selected elements on the map to the selected items in the list above."
+msgid "Set the selected elements on the map to the selected items in the list above."
 msgstr ""
 "Setze die gewählten Elemente auf der Karte auf die obige Liste der "
 "ausgewählten Objekte."
@@ -1242,8 +1232,7 @@ msgstr "Lösen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:68
 msgid "Open a merge dialog of all selected items in the list above."
-msgstr ""
-"Öffnet ein Dialog-Fenster mit den gewählten Objekten aus der obigen Liste."
+msgstr "Öffnet ein Dialog-Fenster mit den gewählten Objekten aus der obigen Liste."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:105
 msgid "Please select something from the conflict list."
@@ -1305,8 +1294,7 @@ msgid "Synchronize Audio"
 msgstr "Ton synchronisieren"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:216
-msgid ""
-"You need to pause audio at the moment when you hear your synchronization cue."
+msgid "You need to pause audio at the moment when you hear your synchronization cue."
 msgstr ""
 "Sie müssen die Tonwiedergabe auf Pause stellen, sobald Sie Ihren "
 "Synchronisationston hören."
@@ -1468,15 +1456,15 @@ msgid "gps point"
 msgstr "GPS-Punkt"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:258
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "track"
 msgid_plural "tracks"
 msgstr[0] "GPS-Spur"
@@ -1871,61 +1859,63 @@ msgstr "Farbe"
 #: presets.java:494 presets.java:515 presets.java:536 presets.java:557
 #: presets.java:587 presets.java:608 presets.java:620 presets.java:632
 #: presets.java:644 presets.java:656 presets.java:668 presets.java:678
-#: presets.java:698 presets.java:709 presets.java:744 presets.java:761
-#: presets.java:783 presets.java:795 presets.java:803 presets.java:811
-#: presets.java:819 presets.java:832 presets.java:841 presets.java:848
-#: presets.java:857 presets.java:870 presets.java:877 presets.java:887
-#: presets.java:893 presets.java:956 presets.java:1001 presets.java:1006
-#: presets.java:1011 presets.java:1016 presets.java:1026 presets.java:1033
-#: presets.java:1039 presets.java:1046 presets.java:1053 presets.java:1062
-#: presets.java:1068 presets.java:1074 presets.java:1086 presets.java:1097
-#: presets.java:1107 presets.java:1126 presets.java:1139 presets.java:1149
-#: presets.java:1167 presets.java:1185 presets.java:1191 presets.java:1197
-#: presets.java:1203 presets.java:1209 presets.java:1215 presets.java:1225
-#: presets.java:1231 presets.java:1237 presets.java:1243 presets.java:1249
-#: presets.java:1255 presets.java:1263 presets.java:1270 presets.java:1276
-#: presets.java:1282 presets.java:1288 presets.java:1294 presets.java:1300
-#: presets.java:1308 presets.java:1315 presets.java:1324 presets.java:1330
-#: presets.java:1336 presets.java:1342 presets.java:1348 presets.java:1354
-#: presets.java:1360 presets.java:1366 presets.java:1374 presets.java:1380
-#: presets.java:1386 presets.java:1392 presets.java:1398 presets.java:1404
-#: presets.java:1410 presets.java:1419 presets.java:1429 presets.java:1439
-#: presets.java:1449 presets.java:1459 presets.java:1465 presets.java:1473
-#: presets.java:1480 presets.java:1487 presets.java:1494 presets.java:1501
-#: presets.java:1508 presets.java:1515 presets.java:1522 presets.java:1529
-#: presets.java:1536 presets.java:1543 presets.java:1550 presets.java:1557
-#: presets.java:1564 presets.java:1571 presets.java:1578 presets.java:1585
-#: presets.java:1595 presets.java:1602 presets.java:1609 presets.java:1616
-#: presets.java:1623 presets.java:1630 presets.java:1637 presets.java:1644
-#: presets.java:1651 presets.java:1658 presets.java:1665 presets.java:1672
-#: presets.java:1679 presets.java:1686 presets.java:1693 presets.java:1700
-#: presets.java:1707 presets.java:1723 presets.java:1729 presets.java:1735
-#: presets.java:1741 presets.java:1747 presets.java:1753 presets.java:1759
-#: presets.java:1767 presets.java:1773 presets.java:1779 presets.java:1785
-#: presets.java:1793 presets.java:1799 presets.java:1805 presets.java:1811
-#: presets.java:1817 presets.java:1850 presets.java:1856 presets.java:1862
-#: presets.java:1874 presets.java:1880 presets.java:1886 presets.java:1892
-#: presets.java:1898 presets.java:1904 presets.java:1910 presets.java:1916
-#: presets.java:1922 presets.java:1928 presets.java:1934 presets.java:1940
-#: presets.java:1999 presets.java:2005 presets.java:2011 presets.java:2026
-#: presets.java:2032 presets.java:2038 presets.java:2059 presets.java:2065
-#: presets.java:2071 presets.java:2077 presets.java:2083 presets.java:2089
-#: presets.java:2095 presets.java:2103 presets.java:2110 presets.java:2126
-#: presets.java:2132 presets.java:2153 presets.java:2160 presets.java:2167
-#: presets.java:2174 presets.java:2181 presets.java:2188 presets.java:2195
-#: presets.java:2202 presets.java:2209 presets.java:2216 presets.java:2223
-#: presets.java:2230 presets.java:2240 presets.java:2247 presets.java:2254
-#: presets.java:2261 presets.java:2268 presets.java:2276 presets.java:2285
-#: presets.java:2292 presets.java:2299 presets.java:2306 presets.java:2313
-#: presets.java:2320 presets.java:2327 presets.java:2334 presets.java:2342
-#: presets.java:2349 presets.java:2356 presets.java:2363 presets.java:2370
-#: presets.java:2377 presets.java:2384 presets.java:2391 presets.java:2398
-#: presets.java:2405 presets.java:2412 presets.java:2421 presets.java:2428
-#: presets.java:2435 presets.java:2443 presets.java:2449 presets.java:2455
-#: presets.java:2464 presets.java:2470 presets.java:2477 presets.java:2484
-#: presets.java:2491 presets.java:2497 presets.java:2503 presets.java:2509
-#: presets.java:2515 presets.java:2521 presets.java:2528 presets.java:2534
-#: presets.java:2540 presets.java:2546 presets.java:2552 presets.java:2558
+#: presets.java:698 presets.java:729 presets.java:754 presets.java:764
+#: presets.java:955 presets.java:1001 presets.java:1009 presets.java:1017
+#: presets.java:1025 presets.java:1038 presets.java:1047 presets.java:1054
+#: presets.java:1063 presets.java:1076 presets.java:1083 presets.java:1093
+#: presets.java:1099 presets.java:1105 presets.java:1168 presets.java:1213
+#: presets.java:1218 presets.java:1223 presets.java:1228 presets.java:1238
+#: presets.java:1245 presets.java:1252 presets.java:1259 presets.java:1266
+#: presets.java:1273 presets.java:1282 presets.java:1288 presets.java:1294
+#: presets.java:1306 presets.java:1317 presets.java:1327 presets.java:1346
+#: presets.java:1359 presets.java:1369 presets.java:1387 presets.java:1395
+#: presets.java:1413 presets.java:1419 presets.java:1425 presets.java:1431
+#: presets.java:1437 presets.java:1443 presets.java:1449 presets.java:1459
+#: presets.java:1466 presets.java:1473 presets.java:1479 presets.java:1485
+#: presets.java:1491 presets.java:1499 presets.java:1506 presets.java:1512
+#: presets.java:1518 presets.java:1524 presets.java:1530 presets.java:1536
+#: presets.java:1544 presets.java:1551 presets.java:1560 presets.java:1566
+#: presets.java:1572 presets.java:1578 presets.java:1584 presets.java:1590
+#: presets.java:1596 presets.java:1602 presets.java:1610 presets.java:1616
+#: presets.java:1622 presets.java:1628 presets.java:1634 presets.java:1640
+#: presets.java:1646 presets.java:1655 presets.java:1665 presets.java:1675
+#: presets.java:1685 presets.java:1695 presets.java:1701 presets.java:1709
+#: presets.java:1716 presets.java:1723 presets.java:1730 presets.java:1737
+#: presets.java:1744 presets.java:1751 presets.java:1758 presets.java:1765
+#: presets.java:1772 presets.java:1779 presets.java:1786 presets.java:1793
+#: presets.java:1800 presets.java:1807 presets.java:1814 presets.java:1821
+#: presets.java:1831 presets.java:1838 presets.java:1845 presets.java:1852
+#: presets.java:1859 presets.java:1866 presets.java:1873 presets.java:1880
+#: presets.java:1887 presets.java:1894 presets.java:1901 presets.java:1908
+#: presets.java:1915 presets.java:1922 presets.java:1929 presets.java:1936
+#: presets.java:1943 presets.java:1959 presets.java:1965 presets.java:1971
+#: presets.java:1977 presets.java:1983 presets.java:1989 presets.java:1995
+#: presets.java:2001 presets.java:2009 presets.java:2015 presets.java:2021
+#: presets.java:2027 presets.java:2035 presets.java:2041 presets.java:2047
+#: presets.java:2053 presets.java:2059 presets.java:2092 presets.java:2098
+#: presets.java:2104 presets.java:2116 presets.java:2122 presets.java:2128
+#: presets.java:2134 presets.java:2140 presets.java:2146 presets.java:2152
+#: presets.java:2158 presets.java:2164 presets.java:2170 presets.java:2176
+#: presets.java:2182 presets.java:2241 presets.java:2247 presets.java:2262
+#: presets.java:2268 presets.java:2274 presets.java:2295 presets.java:2301
+#: presets.java:2307 presets.java:2313 presets.java:2319 presets.java:2325
+#: presets.java:2331 presets.java:2339 presets.java:2346 presets.java:2361
+#: presets.java:2367 presets.java:2374 presets.java:2380 presets.java:2396
+#: presets.java:2408 presets.java:2415 presets.java:2422 presets.java:2429
+#: presets.java:2436 presets.java:2443 presets.java:2450 presets.java:2457
+#: presets.java:2464 presets.java:2471 presets.java:2478 presets.java:2485
+#: presets.java:2495 presets.java:2502 presets.java:2509 presets.java:2516
+#: presets.java:2523 presets.java:2531 presets.java:2540 presets.java:2547
+#: presets.java:2554 presets.java:2561 presets.java:2568 presets.java:2575
+#: presets.java:2582 presets.java:2589 presets.java:2597 presets.java:2604
+#: presets.java:2611 presets.java:2618 presets.java:2625 presets.java:2632
+#: presets.java:2639 presets.java:2646 presets.java:2653 presets.java:2660
+#: presets.java:2667 presets.java:2676 presets.java:2683 presets.java:2690
+#: presets.java:2698 presets.java:2704 presets.java:2710 presets.java:2719
+#: presets.java:2725 presets.java:2732 presets.java:2739 presets.java:2746
+#: presets.java:2752 presets.java:2758 presets.java:2764 presets.java:2770
+#: presets.java:2776 presets.java:2783 presets.java:2789 presets.java:2795
+#: presets.java:2801 presets.java:2807 presets.java:2813
 msgid "Name"
 msgstr "Name"
 
@@ -1990,8 +1980,7 @@ msgid "Login name (email) to the OSM account."
 msgstr "Benutzername (E-Mail) für den OSM Server."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:37
-msgid ""
-"Login password to the OSM account. Leave blank to not store any password."
+msgid "Login password to the OSM account. Leave blank to not store any password."
 msgstr ""
 "Passwort für den OSM Server. Leer lassen, wenn kein Passwort gespeichert "
 "werden soll."
@@ -2126,8 +2115,8 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:251
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:260
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:250
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:259
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:106
 #: presets.java:273 presets.java:274 presets.java:275 presets.java:276
 #: presets.java:277 presets.java:278 presets.java:279 presets.java:280
@@ -2140,48 +2129,49 @@ msgstr ""
 msgid "unknown"
 msgstr "unbekannt"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:266
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:265
 #, java-format
 msgid "{0}: Version {1}{2}"
 msgstr "{0}: Version {1}{2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:268
 msgid "Plugin bundled with JOSM"
 msgstr "Plugin mit JOSM verbunden"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:270
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:118
 msgid "no description available"
 msgstr "keine Beschreibung verfügbar"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:285
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:284
 #, java-format
 msgid ""
 "Plugin archive already available. Do you want to download current version by "
 "deleting existing archive?\n"
 "\n"
 "{0}"
-msgstr "Das Plugin Archiv ist bereits vorhanden. Wollen Sie das Archiv löschen "
-"und danach erneut herunterladen?\n"
+msgstr ""
+"Das Plugin Archiv ist bereits vorhanden. Wollen Sie das Archiv löschen und "
+"danach erneut herunterladen?\n"
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:286
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:285
 msgid "Plugin already exists"
 msgstr "Das Plugin existiert bereits"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:289
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:294
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:288
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:293
 #, java-format
 msgid "Error deleting plugin file: {0}"
 msgstr "Fehler beim Löschen des Plugins: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:337
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:336
 #, java-format
 msgid "Error reading plugin information file: {0}"
 msgstr "Fehler beim lesen der Plugin-Informationsdatei: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:365
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:364
 #, java-format
 msgid ""
 "Download the following plugins?\n"
@@ -2192,7 +2182,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:366
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:365
 msgid "Download missing plugins"
 msgstr "Fehlende Plugins holen"
 
@@ -2266,8 +2256,7 @@ msgstr "Benannte GPS-Punkte"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:38
 msgid "Start of track (will always do this if no other markers available)."
-msgstr ""
-"GPS-Spuranfang (wird immer genutzt, wenn keine anderen Marken verfügbar)."
+msgstr "GPS-Spuranfang (wird immer genutzt, wenn keine anderen Marken verfügbar)."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:55
 msgid "Show or hide the audio menu entry on the main menu bar."
@@ -2285,8 +2274,7 @@ msgstr ""
 msgid ""
 "Put text labels against audio (and image and web) markers as well as their "
 "button icons."
-msgstr ""
-"Audio-Marken (und Bild- und Web-Marken) und deren Bildsymbole beschriften."
+msgstr "Audio-Marken (und Bild- und Web-Marken) und deren Bildsymbole beschriften."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:88
 msgid ""
@@ -2328,8 +2316,7 @@ msgstr "Schrittweite vorwärts/zurück (s)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:143
 msgid "The amount by which the speed is multiplied for fast forwarding"
-msgstr ""
-"Der Faktor um den die Geschwindigkeit bei schnellem Vorlauf erhöht wird"
+msgstr "Der Faktor um den die Geschwindigkeit bei schnellem Vorlauf erhöht wird"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:144
 msgid "Fast forward multiplier"
@@ -2365,8 +2352,7 @@ msgstr "Anzeige-Einstellungen"
 msgid ""
 "Various settings that influence the visual representation of the whole "
 "program."
-msgstr ""
-"Diverse Optionen die die visuelle Repräsentation des Programms beinflussen."
+msgstr "Diverse Optionen die die visuelle Repräsentation des Programms beinflussen."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:43
 msgid "Connection Settings"
@@ -2461,18 +2447,15 @@ msgstr ""
 "werden um die Linien entlang des Weges zu vervollständigen."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:53
-msgid ""
-"Maximum length (in meters) to draw lines. Set to '-1' to draw all lines."
-msgstr ""
-"Maximallänge zum Linienzeichnen (in Meter). Für alle Linien auf -1 setzen."
+msgid "Maximum length (in meters) to draw lines. Set to '-1' to draw all lines."
+msgstr "Maximallänge zum Linienzeichnen (in Meter). Für alle Linien auf -1 setzen."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:55
 msgid "Maximum length (meters)"
 msgstr "Maximallänge (Meter)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:59
-msgid ""
-"Force drawing of lines if the imported data contain no line information."
+msgid "Force drawing of lines if the imported data contain no line information."
 msgstr ""
 "Das Zeichnen von Linien erzwingen, wenn die importierten Daten keine Linien-"
 "Informationen enthalten."
@@ -2590,8 +2573,7 @@ msgstr "Standardwert ist ''{0}''."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:60
 msgid "Default value currently unknown (setting has not been used yet)."
-msgstr ""
-"Standardwert momentan unbekannt (Einstellung wurde noch nicht benutzt)."
+msgstr "Standardwert momentan unbekannt (Einstellung wurde noch nicht benutzt)."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:101
 msgid "Enter a new key/value pair"
@@ -2630,6 +2612,8 @@ msgid ""
 "This is another reason to <b>restart</b> JOSM after making any changes here."
 "</p>"
 msgstr ""
+"<p>Weiterhin werden die Tastaturkürzel aktiviert, wenn die Aktion das erste Mal einem Menu oder Schaltknopf zugewiesen wird. Einige Änderungen können also auch ohne Neustart aktiviert werden --- aber auch ohne Erkennung von Konflikten. Dies ist ein weiterer Grund JOSM <b>neuzustarten</b> nachdem hier Änderungen durchgeführt wurden. "
+"</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:170
 msgid ""
@@ -2643,7 +2627,7 @@ msgid ""
 "Semicolon on US keyboards, '.'/Period on German keyboards, ...) instead. Not "
 "doing so may result in conflicts, as there is no way for JOSM to know that "
 "Ctrl+Shift+; and Ctrl+: actually is the same thing on an US keyboard...</p>"
-msgstr ""
+msgstr "<p>Sie werden feststellen, dass die Tastenauswahl auf der nächsten Seite alle Java bekannten Tastaturen enthält und nicht nur die Tasten Ihrer Tastatur. Bitte nutzen Sie nur Tasten, die auf Ihrer Tastatur verfügbar sind. Falls Ihre Tastatur keine 'Copy'-Taste hat (PC-Tastaturen haben diese nicht, aber Sun-Tastaturen), nutzen Sie sie nicht. Außerdem gibt es 'Tasten', welche auf der Tastatur Abkürzungen entsprechen (z.B. ':'/Doppelpunkt). Bitte nutzen Sie diese nicht, sondern die Basistaste ('.'/Punkt auf der deutschen Tastatur, ...). Falls Sie dies nicht tun, kann es Konflikte geben, da JOSM nicht erkennt, dass Ctrl+Shift+. und Ctrl+: das gleiche ist...</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:177
 msgid "<p>Thank you for your understanding</p>"
@@ -2660,14 +2644,13 @@ msgid ""
 "alternatives. JOSM will try those alternative in the listed order when "
 "managing a conflict. If all alternatives would result in shortcuts that are "
 "already taken, it will assign a random shortcut instead.</p>"
-msgstr ""
+msgstr "<p>Die letzte Seite zeigt die Steuertasten, welche JOSM automatisch an Tastenkürzel vergibt. Für jeden der vier Typen gibt es drei Alternativen. JOSM probiert im Falle eines Konflikts diese Alternativen in der gegebenen Reihenfolge aus. Falls alle Alternativen fehlschlagen wird eine zufälliges Tastenkürzel zugewiesen.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:183
 msgid ""
 "<p>The pseudo-modifier 'disabled' will disable the shortcut when encountered."
 "</p>"
-msgstr ""
-"<p>Das Pseudo-Tastaturkürzel 'disabled' deaktiviert Tastaturkürzel.</p>"
+msgstr "<p>Das Pseudo-Tastaturkürzel 'disabled' deaktiviert Tastaturkürzel.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:186
 msgid "Read First"
@@ -2901,8 +2884,7 @@ msgstr "Kann das Plugin {0} nicht von {1} laden"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:143
 #, java-format
-msgid ""
-"The plugin {0} seem to be broken or could not be downloaded automatically."
+msgid "The plugin {0} seem to be broken or could not be downloaded automatically."
 msgstr ""
 "Das Plugin {0} scheint fehlerhaft zu sein oder kann nicht automatisch "
 "heruntergeladen werden."
@@ -3166,6 +3148,7 @@ msgstr "Verdoppelt die Selektion durch Kopieren und sofortiges Einfügen."
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:23
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:34
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:35
 #: ../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/UndoAction.java:24
@@ -3989,8 +3972,7 @@ msgstr "Maustaste loslassen um Objekte im Rechteck auszuwählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:258
 msgid "Draw a rectangle of the desired size, then release the mouse button."
-msgstr ""
-"Ein Rechteck der gewünschten Größe zeichnen und dann den Mausknopf loslassen."
+msgstr "Ein Rechteck der gewünschten Größe zeichnen und dann den Mausknopf loslassen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:260
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:393
@@ -4021,7 +4003,7 @@ msgstr "Kann keinen Knoten außerhalb der Welt erstellen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:316
 msgid "Add node"
-msgstr "Knoptenpunkt hinzufügen"
+msgstr "Knotenpunkt hinzufügen"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:318
 msgid "Add node into way"
@@ -4041,8 +4023,7 @@ msgstr "Knotenpunkt in einen Weg einfügen und verbinden"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:617
 msgid "Click to create a new way to the existing node."
-msgstr ""
-"Klicken, um einen neuen Weg zum existierenden Knotenpunkt zu erstellen."
+msgstr "Klicken, um einen neuen Weg zum existierenden Knotenpunkt zu erstellen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:619
 msgid "Click to make a connection to the existing node."
@@ -4050,8 +4031,7 @@ msgstr "Klicken, um eine Verbindung zum existierenden Knotenpunkt zu erzeugen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:622
 msgid "Click to insert a node and create a new way."
-msgstr ""
-"Klicken, um einen Knotenpunkt einzufügen und einen neuen Weg zu erstellen."
+msgstr "Klicken, um einen Knotenpunkt einzufügen und einen neuen Weg zu erstellen."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:624
 msgid "Click to insert a new node and make a connection."
@@ -4077,8 +4057,7 @@ msgid "Cannot move objects outside of the world."
 msgstr "Kann Objekte nicht nach außerhalb der Welt verschieben."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:391
-msgid ""
-"Release the mouse button to stop moving. Ctrl to merge with nearest node."
+msgid "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "Um die Bewegung zu stoppen, Maustaste loslassen. Strg: mit dem nächsten "
 "Punkt vereinigen."
@@ -4176,13 +4155,11 @@ msgstr "Auswahl darf nur aus Wegen bestehen."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:75
 msgid "Please select closed way(s) of at least four nodes."
-msgstr ""
-"Bitte geschlossene(n) Weg(e) mit mindestens vier Knotenpunkte auswählen."
+msgstr "Bitte geschlossene(n) Weg(e) mit mindestens vier Knotenpunkte auswählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:90
 msgid "Please select ways with almost right angles to orthogonalize."
-msgstr ""
-"Bitte Wege mit nahezu rechten Winkeln zum rechtwinklig machen auswählen."
+msgstr "Bitte Wege mit nahezu rechten Winkeln zum rechtwinklig machen auswählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:97
 msgid ""
@@ -4239,12 +4216,45 @@ msgstr "Eine Kreis mittels drei ausgewählter Knoten erstellen."
 
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:101
 msgid "Please select exactly three nodes or one way with exactly three nodes."
-msgstr ""
-"Bitte genau drei Knoten oder einen Weg mit drei Knotenpunkten auswählen."
+msgstr "Bitte genau drei Knoten oder einen Weg mit drei Knotenpunkten auswählen."
 
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:121
 msgid "Those nodes are not in a circle."
 msgstr "Diese Knoten sind nicht in einem Kreis"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:50
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:72
+msgid "Add Node"
+msgstr "Knotenpunkt hinzufügen"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
+msgid "Add a node by entering latitude and longitude."
+msgstr "Knoten durch Eingabe vonLänge und Breite hinzufügen."
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:56
+msgid "Enter the coordinates for the new node."
+msgstr "Koordinaten des neuen Knotens eingeben."
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:57
+msgid "Use decimal degrees."
+msgstr "Nutzen Sie Dezimalgrad."
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
+msgid "Negative values denote Western/Southern hemisphere."
+msgstr "Negative Werte für die westlichen oder südliche Hemisphere."
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:61
+#: ../plugins/livegps/livegps/LiveGpsDialog.java:54
+#: ../plugins/grid/src/grid/GridLayer.java:193
+msgid "Latitude"
+msgstr "(geogr.) Breite"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:64
+#: ../plugins/livegps/livegps/LiveGpsDialog.java:56
+#: ../plugins/grid/src/grid/GridLayer.java:195
+msgid "Longitude"
+msgstr "(geogr.) Länge"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:36
 msgid "up"
@@ -4343,15 +4353,13 @@ msgstr ""
 "oder"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:104
-msgid ""
-"* One way that has one or more nodes that are used by more than one way, or"
+msgid "* One way that has one or more nodes that are used by more than one way, or"
 msgstr ""
 "* Einen Weg der einen oder mehr Knoten hat, die von mehr als einem Weg "
 "genutzt werden, oder"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:105
-msgid ""
-"* One way and one or more of its nodes that are used by more than one way."
+msgid "* One way and one or more of its nodes that are used by more than one way."
 msgstr ""
 "* Einen Weg und einen oder mehr Knoten, die von mehr als einem Weg genutzt "
 "werden."
@@ -4676,16 +4684,14 @@ msgid "Tagging Preset Tester"
 msgstr "Tester für Tagging-Presets"
 
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:20
-msgid ""
-"Open the tagging preset test tool for previewing tagging preset dialogs."
+msgid "Open the tagging preset test tool for previewing tagging preset dialogs."
 msgstr ""
 "Öffne das Testtool für Tagging-Vorlagen, um eine Vorschau auf die Vorlagen "
 "zu erhalten."
 
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:28
 msgid "You have to specify tagging preset sources in the preferences first."
-msgstr ""
-"Sie müssen zuerst in den Einstellungen eine Quelle für Presets hinzufügen."
+msgstr "Sie müssen zuerst in den Einstellungen eine Quelle für Presets hinzufügen."
 
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:43
 msgid "Open Visible ..."
@@ -4748,8 +4754,7 @@ msgstr "Alle Fernsteueraktionen manuell bestätigen"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:33
 msgid "A plugin that allows JOSM to be controlled from other applications."
-msgstr ""
-"Ein Plugin, welche es anderen Programmen erlaubt JOSM zu kontrollieren."
+msgstr "Ein Plugin, welche es anderen Programmen erlaubt JOSM zu kontrollieren."
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:35
 #, java-format
@@ -4794,21 +4799,21 @@ msgstr "Kann die Ergebnisse der Ortssuche nicht vom Server laden"
 msgid "Enter a place name to search for:"
 msgstr "Bitte einen Ortsnamen eingeben, nach dem gesucht werden soll:"
 
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:218 presets.java:2148
+#: ../plugins/namefinder/namefinder/PlaceSelection.java:218 presets.java:2403
 msgid "Places"
 msgstr "Orte"
 
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:236
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:242 presets.java:1269
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: ../plugins/namefinder/namefinder/PlaceSelection.java:242 presets.java:1505
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "type"
 msgstr "Typ"
 
@@ -4952,8 +4957,7 @@ msgstr "Maximales Speicheralter (Tage)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:63
 msgid "Maximum number of segments allowed in each generated way. Default 250."
-msgstr ""
-"Maximale Anzahl von Abschnitten in jedem generierten Weg. Standard ist 250."
+msgstr "Maximale Anzahl von Abschnitten in jedem generierten Weg. Standard ist 250."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:64
 msgid ""
@@ -4981,8 +4985,7 @@ msgstr ""
 "0.0003."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:67
-msgid ""
-"Resolution of Landsat tiles, measured in pixels per degree. Default 4000."
+msgid "Resolution of Landsat tiles, measured in pixels per degree. Default 4000."
 msgstr ""
 "Auflösung der Landsat-Kacheln, gemessen in Pixel pro Grad. Standard ist "
 "4.000."
@@ -5016,7 +5019,6 @@ msgstr "Zum Abzeichnen genutzte WMS-Ebene. Standard ist IR1."
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid "Maximum size of each cache directory in bytes. Default is 300MB"
 msgstr "Maximale Größe des des Speicherverzeichnisses in bytes. Standard ist 300MB"
-
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:75
 msgid "Maximum age of each cached file in days. Default is 100"
@@ -5171,8 +5173,7 @@ msgstr "Hochladen"
 msgid ""
 "A OSM data validator that checks for common errors made by users and editor "
 "programs."
-msgstr ""
-"Ein OSM-Datenprüfer, der auf häufige Fehler der Benutzer und Editoren prüft."
+msgstr "Ein OSM-Datenprüfer, der auf häufige Fehler der Benutzer und Editoren prüft."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:94
 #, java-format
@@ -5219,8 +5220,7 @@ msgid "Self-intersecting ways"
 msgstr "Wege, die sich selbst überschneiden"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:22
-msgid ""
-"This test checks for ways that contain some of their nodes more than once."
+msgid "This test checks for ways that contain some of their nodes more than once."
 msgstr "Dieser Test sucht nach Wegen, die einine Knoten mehrfach enthalten."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:45
@@ -5419,8 +5419,7 @@ msgid "Similar named ways."
 msgstr "Ähnlich benannte Wege."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:37
-msgid ""
-"This test checks for ways with similar names that may have been misspelled."
+msgid "This test checks for ways with similar names that may have been misspelled."
 msgstr ""
 "Dieser Test prüft auf ähnlich benannte Wege, was auf Schreibfehler hinweisen "
 "könnte."
@@ -5446,8 +5445,7 @@ msgstr "Knoten ohne Zusatzinformationen."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:35
 msgid "This test checks for untagged nodes that are not part of any way."
-msgstr ""
-"Dieser Test prüft auf ungetaggte Knoten, die nicht Teil eines Weges sind."
+msgstr "Dieser Test prüft auf ungetaggte Knoten, die nicht Teil eines Weges sind."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:88
 msgid "Untagged and unconnected nodes"
@@ -5536,8 +5534,7 @@ msgstr "Nutze komplexen Eigenschaftsprüfer."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:411
 msgid "Validate property values and tags using complex rules."
-msgstr ""
-"Prüft die Gültigkeit von Werten und Schlüsseln anhand von komplexen Regeln."
+msgstr "Prüft die Gültigkeit von Werten und Schlüsseln anhand von komplexen Regeln."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:430
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:450
@@ -5708,16 +5705,6 @@ msgstr "Status"
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:52
 msgid "Way Info"
 msgstr "Weginfo"
-
-#: ../plugins/livegps/livegps/LiveGpsDialog.java:54
-#: ../plugins/grid/src/grid/GridLayer.java:193
-msgid "Latitude"
-msgstr "(geogr.) Breite"
-
-#: ../plugins/livegps/livegps/LiveGpsDialog.java:56
-#: ../plugins/grid/src/grid/GridLayer.java:195
-msgid "Longitude"
-msgstr "(geogr.) Länge"
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:58
 msgid "Speed"
@@ -5991,10 +5978,8 @@ msgstr "Bitte mindestens einen Weg zum Vereinfachen auswählen."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:86
 #, java-format
-msgid ""
-"The selection contains {0} way. Are you sure you want to simplify them all?"
-msgid_plural ""
-"The selection contains {0} ways. Are you sure you want to simplify them all?"
+msgid "The selection contains {0} way. Are you sure you want to simplify them all?"
+msgid_plural "The selection contains {0} ways. Are you sure you want to simplify them all?"
 msgstr[0] ""
 "Diese Auswahl enthält {0} Weg. Sind Sie sich, dass alle vereinfacht werden "
 "sollen?"
@@ -6312,8 +6297,7 @@ msgstr "Site(s) prüfen"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:128
 msgid "Please select the site(s) to check for updates."
-msgstr ""
-"Bitte die Quelle(n) auswählen, bei denen nach Updates gesucht werden soll."
+msgstr "Bitte die Quelle(n) auswählen, bei denen nach Updates gesucht werden soll."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:152
 msgid "Add a new plugin site."
@@ -6439,8 +6423,7 @@ msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "WMS-Lader ({0}): Laden mit Zoom {1}"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:157
-msgid ""
-"The requested area is too big. Please zoom in a little, or change resolution"
+msgid "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "Das angeforderte Gebiet ist zu groß. Zoomen Sie ein wenig oder ändern Sie "
 "die Auflösung"
@@ -6575,8 +6558,7 @@ msgstr "Navigator"
 
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorModeAction.java:28
 msgid "Set start/end for autorouting. Middle Mouse button to reset."
-msgstr ""
-"Setze Anfang/Ende für Routenberechnung. Zurücksetzen mit mittlerer Maustaste."
+msgstr "Setze Anfang/Ende für Routenberechnung. Zurücksetzen mit mittlerer Maustaste."
 
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:40
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:44
@@ -6604,7 +6586,7 @@ msgid "Edit a Motorway"
 msgstr "Autobahn bearbeiten"
 
 #: presets.java:16 presets.java:52 presets.java:71 presets.java:91
-#: presets.java:127 presets.java:146 presets.java:1171
+#: presets.java:127 presets.java:146 presets.java:1399
 msgid "Reference"
 msgstr "Referenz"
 
@@ -6617,10 +6599,10 @@ msgstr "Referenz"
 #: presets.java:492 presets.java:513 presets.java:534 presets.java:555
 #: presets.java:585 presets.java:606 presets.java:618 presets.java:630
 #: presets.java:642 presets.java:654 presets.java:666 presets.java:685
-#: presets.java:696 presets.java:707 presets.java:759 presets.java:781
-#: presets.java:830 presets.java:954 presets.java:1084 presets.java:1095
-#: presets.java:1105 presets.java:1124 presets.java:1137 presets.java:1147
-#: presets.java:1169 presets.java:1829
+#: presets.java:696 presets.java:752 presets.java:762 presets.java:953
+#: presets.java:1036 presets.java:1166 presets.java:1304 presets.java:1315
+#: presets.java:1325 presets.java:1344 presets.java:1357 presets.java:1367
+#: presets.java:1397 presets.java:2071
 msgid "Optional Attributes:"
 msgstr "Optionale Attribute:"
 
@@ -6631,8 +6613,8 @@ msgstr "Optionale Attribute:"
 #: presets.java:362 presets.java:381 presets.java:400 presets.java:419
 #: presets.java:437 presets.java:458 presets.java:479 presets.java:500
 #: presets.java:521 presets.java:542 presets.java:563 presets.java:593
-#: presets.java:796 presets.java:804 presets.java:812 presets.java:820
-#: presets.java:962
+#: presets.java:1002 presets.java:1010 presets.java:1018 presets.java:1026
+#: presets.java:1174
 msgid "Layer"
 msgstr "Ebene"
 
@@ -6645,7 +6627,7 @@ msgstr "Spuren"
 #: presets.java:98 presets.java:115 presets.java:134 presets.java:152
 #: presets.java:174 presets.java:229 presets.java:261 presets.java:284
 #: presets.java:320 presets.java:343 presets.java:364 presets.java:383
-#: presets.java:402 presets.java:439 presets.java:595 presets.java:964
+#: presets.java:402 presets.java:439 presets.java:595 presets.java:1176
 msgid "Max. speed (km/h)"
 msgstr "Höchstgeschwindigkeit (km/h)"
 
@@ -6654,7 +6636,7 @@ msgstr "Höchstgeschwindigkeit (km/h)"
 #: presets.java:168 presets.java:186 presets.java:204 presets.java:222
 #: presets.java:241 presets.java:255 presets.java:270 presets.java:301
 #: presets.java:335 presets.java:357 presets.java:376 presets.java:395
-#: presets.java:414 presets.java:432 presets.java:588 presets.java:957
+#: presets.java:414 presets.java:432 presets.java:588 presets.java:1169
 msgid "Oneway"
 msgstr "Einbahn"
 
@@ -6665,7 +6647,7 @@ msgstr "Einbahn"
 #: presets.java:358 presets.java:377 presets.java:396 presets.java:415
 #: presets.java:433 presets.java:453 presets.java:474 presets.java:495
 #: presets.java:516 presets.java:537 presets.java:558 presets.java:589
-#: presets.java:958
+#: presets.java:1170
 msgid "Bridge"
 msgstr "Brücke"
 
@@ -6675,7 +6657,7 @@ msgstr "Brücke"
 #: presets.java:257 presets.java:303 presets.java:337 presets.java:359
 #: presets.java:378 presets.java:397 presets.java:416 presets.java:434
 #: presets.java:454 presets.java:475 presets.java:496 presets.java:517
-#: presets.java:538 presets.java:559 presets.java:590 presets.java:959
+#: presets.java:538 presets.java:559 presets.java:590 presets.java:1171
 msgid "Tunnel"
 msgstr "Tunnel"
 
@@ -6685,7 +6667,7 @@ msgstr "Tunnel"
 #: presets.java:258 presets.java:304 presets.java:338 presets.java:360
 #: presets.java:379 presets.java:398 presets.java:417 presets.java:435
 #: presets.java:455 presets.java:476 presets.java:497 presets.java:518
-#: presets.java:539 presets.java:560 presets.java:591 presets.java:960
+#: presets.java:539 presets.java:560 presets.java:591 presets.java:1172
 msgid "Cutting"
 msgstr "Senke"
 
@@ -6695,7 +6677,7 @@ msgstr "Senke"
 #: presets.java:259 presets.java:305 presets.java:339 presets.java:361
 #: presets.java:380 presets.java:399 presets.java:418 presets.java:436
 #: presets.java:456 presets.java:477 presets.java:498 presets.java:519
-#: presets.java:540 presets.java:561 presets.java:592 presets.java:961
+#: presets.java:540 presets.java:561 presets.java:592 presets.java:1173
 msgid "Embankment"
 msgstr "Damm"
 
@@ -6769,8 +6751,8 @@ msgstr "Straße ohne Klassifikation bearbeiten"
 #: presets.java:440 presets.java:462 presets.java:483 presets.java:504
 #: presets.java:525 presets.java:546 presets.java:567 presets.java:596
 #: presets.java:609 presets.java:621 presets.java:633 presets.java:645
-#: presets.java:657 presets.java:669 presets.java:965 presets.java:1115
-#: presets.java:1158
+#: presets.java:657 presets.java:669 presets.java:1177 presets.java:1335
+#: presets.java:1378
 msgid "Width (metres)"
 msgstr "Breite (Meter)"
 
@@ -6786,7 +6768,7 @@ msgstr "Ortsstraße bearbeiten"
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
 #: presets.java:420 presets.java:438 presets.java:457 presets.java:478
 #: presets.java:499 presets.java:520 presets.java:541 presets.java:562
-#: presets.java:594 presets.java:963
+#: presets.java:594 presets.java:1175
 msgid "Surface"
 msgstr "Oberfläche"
 
@@ -6794,13 +6776,13 @@ msgstr "Oberfläche"
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
 #: presets.java:420 presets.java:438 presets.java:457 presets.java:478
 #: presets.java:499 presets.java:520 presets.java:541 presets.java:562
-#: presets.java:594 presets.java:963
+#: presets.java:594 presets.java:1175
 msgid "paved"
 msgstr "geteert"
 
 #: presets.java:192 presets.java:210 presets.java:228 presets.java:242
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
-#: presets.java:420 presets.java:438 presets.java:594 presets.java:963
+#: presets.java:420 presets.java:438 presets.java:594 presets.java:1175
 msgid "unpaved"
 msgstr "unbefestigt"
 
@@ -6808,7 +6790,7 @@ msgstr "unbefestigt"
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
 #: presets.java:420 presets.java:438 presets.java:457 presets.java:478
 #: presets.java:499 presets.java:520 presets.java:541 presets.java:562
-#: presets.java:594 presets.java:963
+#: presets.java:594 presets.java:1175
 msgid "cobblestone"
 msgstr "gepflastert"
 
@@ -6873,8 +6855,8 @@ msgstr "Zugang"
 #: presets.java:522 presets.java:523 presets.java:524 presets.java:543
 #: presets.java:544 presets.java:545 presets.java:564 presets.java:565
 #: presets.java:566 presets.java:578 presets.java:579 presets.java:580
-#: presets.java:581 presets.java:582 presets.java:583 presets.java:1951
-#: presets.java:2125
+#: presets.java:581 presets.java:582 presets.java:583 presets.java:2193
+#: presets.java:2373
 msgid "yes"
 msgstr "ja"
 
@@ -6940,16 +6922,23 @@ msgstr "Agrar & Forst"
 #: presets.java:522 presets.java:523 presets.java:524 presets.java:543
 #: presets.java:544 presets.java:545 presets.java:564 presets.java:565
 #: presets.java:566 presets.java:578 presets.java:579 presets.java:580
-#: presets.java:581 presets.java:582 presets.java:583 presets.java:1951
-#: presets.java:2125
+#: presets.java:581 presets.java:582 presets.java:583 presets.java:2193
+#: presets.java:2373
 msgid "no"
 msgstr "nein"
 
-#: presets.java:274 presets.java:581 presets.java:1058 presets.java:1128
+#: presets.java:274 presets.java:581 presets.java:780 presets.java:790
+#: presets.java:800 presets.java:813 presets.java:825 presets.java:842
+#: presets.java:854 presets.java:879 presets.java:892 presets.java:905
+#: presets.java:918 presets.java:966 presets.java:981 presets.java:1278
+#: presets.java:1348
 msgid "Bicycle"
 msgstr "Fahrrad"
 
-#: presets.java:275 presets.java:583
+#: presets.java:275 presets.java:583 presets.java:779 presets.java:789
+#: presets.java:799 presets.java:812 presets.java:824 presets.java:841
+#: presets.java:853 presets.java:878 presets.java:891 presets.java:904
+#: presets.java:917 presets.java:965 presets.java:980
 msgid "Foot"
 msgstr "Zu Fuß"
 
@@ -6961,17 +6950,26 @@ msgstr "Waren"
 msgid "Heavy Goods Vehicles (hgv)"
 msgstr "Schwerlast (hgv)"
 
-#: presets.java:278 presets.java:580
+#: presets.java:278 presets.java:580 presets.java:801 presets.java:814
+#: presets.java:826 presets.java:855 presets.java:866 presets.java:880
+#: presets.java:893 presets.java:906 presets.java:919 presets.java:967
+#: presets.java:982
 msgid "Horse"
 msgstr "Pferd"
 
 #: presets.java:279 presets.java:460 presets.java:481 presets.java:502
-#: presets.java:523 presets.java:544 presets.java:565
+#: presets.java:523 presets.java:544 presets.java:565 presets.java:802
+#: presets.java:815 presets.java:827 presets.java:843 presets.java:856
+#: presets.java:867 presets.java:881 presets.java:894 presets.java:907
+#: presets.java:920 presets.java:968 presets.java:983
 msgid "Motorcycle"
 msgstr "Motorrad"
 
 #: presets.java:280 presets.java:461 presets.java:482 presets.java:503
 #: presets.java:524 presets.java:545 presets.java:566 presets.java:578
+#: presets.java:803 presets.java:828 presets.java:844 presets.java:857
+#: presets.java:868 presets.java:882 presets.java:895 presets.java:908
+#: presets.java:921 presets.java:969 presets.java:984
 msgid "Motorcar"
 msgstr "Automobil"
 
@@ -7015,8 +7013,8 @@ msgstr "Kreisverkehr"
 msgid "Edit a Junction"
 msgstr "Kreuzung bearbeiten"
 
-#: presets.java:296 presets.java:577 presets.java:1873 presets.java:2335
-#: presets.java:2456 presets.java:2522
+#: presets.java:296 presets.java:577 presets.java:1246 presets.java:2115
+#: presets.java:2590 presets.java:2711 presets.java:2777
 msgid "Type"
 msgstr "Typ"
 
@@ -7312,2729 +7310,3000 @@ msgstr "Rastplatz / Autohof"
 msgid "Edit Service Station"
 msgstr "Dienstleistungsbetrieb bearbeiten"
 
-#: presets.java:699 presets.java:710 presets.java:1027 presets.java:1040
-#: presets.java:1047 presets.java:1054 presets.java:1949 presets.java:1957
-#: presets.java:1963 presets.java:2017 presets.java:2045
+#: presets.java:699 presets.java:956 presets.java:1239 presets.java:1253
+#: presets.java:1260 presets.java:1267 presets.java:1274 presets.java:2191
+#: presets.java:2199 presets.java:2205 presets.java:2253 presets.java:2281
 msgid "Operator"
 msgstr "Betreiber"
 
-#: presets.java:702
-msgid "Toll Booth"
-msgstr "Mautstation"
-
-#: presets.java:703
-msgid "Edit Toll Booth"
-msgstr "Mautstation bearbeiten"
-
-#: presets.java:715
+#: presets.java:704
 msgid "Traffic Signal"
 msgstr "Ampel"
 
-#: presets.java:719
+#: presets.java:708
 msgid "Stop"
 msgstr "Stopp-Schild"
 
-#: presets.java:723
+#: presets.java:712
 msgid "Zebra crossing"
 msgstr "Zebrastreifen"
 
-#: presets.java:727
-msgid "Bollard"
-msgstr "Poller"
-
-#: presets.java:731
+#: presets.java:716
 msgid "Mini Roundabout"
 msgstr "Kleiner Kreisverkehr"
 
-#: presets.java:735
+#: presets.java:720
 msgid "Turning Circle"
 msgstr "Wendestelle"
 
-#: presets.java:739
+#: presets.java:724
 msgid "City Limit"
 msgstr "Orteingangsschild"
 
-#: presets.java:740
+#: presets.java:725
 msgid "Edit a city limit sign"
 msgstr "Orteingangsschild bearbeiten"
 
-#: presets.java:745
+#: presets.java:730
 msgid "Second Name"
 msgstr "Zweiter Name"
 
-#: presets.java:748
+#: presets.java:733
+msgid "Signpost"
+msgstr "Wegweiser"
+
+#: presets.java:737
 msgid "Speed Camera"
 msgstr "Geschwindigkeitsüberwachung"
 
-#: presets.java:754
+#: presets.java:741
+msgid "Emergency Phone"
+msgstr "Notfalltelefon"
+
+#: presets.java:747
 msgid "Ford"
 msgstr "Furt"
 
-#: presets.java:755
+#: presets.java:748
 msgid "Edit Ford"
 msgstr "Furt bearbeiten"
 
-#: presets.java:764
-msgid "Cattle Grid"
-msgstr "Viehgitter"
-
-#: presets.java:768
-msgid "Gate"
-msgstr "Gatter"
-
-#: presets.java:772
-msgid "Stile"
-msgstr "Zauntreppe"
-
-#: presets.java:776
+#: presets.java:757
 msgid "Mountain Pass"
 msgstr "Gebirgspass"
 
-#: presets.java:777
+#: presets.java:758
 msgid "Edit Mountain Pass"
 msgstr "Gebirgspass bearbeiten"
 
-#: presets.java:784 presets.java:2471 presets.java:2478 presets.java:2485
+#: presets.java:765 presets.java:2726 presets.java:2733 presets.java:2740
 msgid "Elevation"
 msgstr "Höhe"
 
-#: presets.java:790
+#: presets.java:771
+msgid "Barriers"
+msgstr "Barrieren"
+
+#: presets.java:773
+msgid "Stile"
+msgstr "Zauntreppe"
+
+#: presets.java:774
+msgid "Edit a Stile"
+msgstr "Zauntreppe bearbeiten"
+
+#: presets.java:777 presets.java:787 presets.java:797 presets.java:810
+#: presets.java:822 presets.java:839 presets.java:851 presets.java:864
+#: presets.java:876 presets.java:889 presets.java:902 presets.java:915
+#: presets.java:963 presets.java:978
+msgid "Allowed traffic:"
+msgstr "Erlaubter Verkehr:"
+
+#: presets.java:783
+msgid "Kissing Gate"
+msgstr "Personengatter"
+
+#: presets.java:784
+msgid "Edit a Kissing Gate"
+msgstr "Personengatter bearbeiten"
+
+#: presets.java:793
+msgid "Hampshire Gate"
+msgstr "Drahtgatter"
+
+#: presets.java:794
+msgid "Edit a Hampshire Gate"
+msgstr "Drahtgatter bearbeiten"
+
+#: presets.java:806
+msgid "Bollard"
+msgstr "Poller"
+
+#: presets.java:807
+msgid "Edit a bollard"
+msgstr "Poller bearbeiten"
+
+#: presets.java:818
+msgid "Drawbridge"
+msgstr "Zugbrücke"
+
+#: presets.java:819
+msgid "Edit a Drawbridge"
+msgstr "Zugbrücke bearbeiten"
+
+#: presets.java:831
+msgid "Bus Trap"
+msgstr "Busschleuse"
+
+#: presets.java:835
+msgid "Cattle Grid"
+msgstr "Viehgitter"
+
+#: presets.java:836
+msgid "Edit a Cattle Grid"
+msgstr "Viehgitter bearbeiten"
+
+#: presets.java:847
+msgid "Spikes"
+msgstr "Spikes/Dornen"
+
+#: presets.java:848
+msgid "Edit a Spikes"
+msgstr "Spikes/Dornen bearbeiten"
+
+#: presets.java:860
+msgid "Porticullis"
+msgstr "Fallgatter"
+
+#: presets.java:861
+msgid "Edit a Porticullis"
+msgstr "Fallgatter bearbeiten"
+
+#: presets.java:872
+msgid "Gate"
+msgstr "Gatter"
+
+#: presets.java:873
+msgid "Edit a Gate"
+msgstr "Gatter bearbeiten"
+
+#: presets.java:885
+msgid "Lift Gate"
+msgstr "Schlagbaum"
+
+#: presets.java:886
+msgid "Edit a Lift Gate"
+msgstr "Schlagbaum bearbeiten"
+
+#: presets.java:898
+msgid "Sally Port"
+msgstr "Durchgangsschleuse"
+
+#: presets.java:899
+msgid "Edit a Sally Port"
+msgstr "Durchgangsschleuse bearbeiten"
+
+#: presets.java:911
+msgid "Bump Gate"
+msgstr "Fahrzeuggatter"
+
+#: presets.java:912
+msgid "Edit a Bump Gate"
+msgstr "Fahrzeuggatter bearbeiten"
+
+#: presets.java:924
+msgid "Hedge"
+msgstr "Hecke"
+
+#: presets.java:928
+msgid "Fence"
+msgstr "Zaun"
+
+#: presets.java:932
+msgid "Block"
+msgstr "Steinblock"
+
+#: presets.java:936
+msgid "Wall"
+msgstr "Mauer"
+
+#: presets.java:940
+msgid "City Wall"
+msgstr "Stadtmauer"
+
+#: presets.java:944
+msgid "Retaining Wall"
+msgstr "Stützmauer"
+
+#: presets.java:948
+msgid "Toll Booth"
+msgstr "Mautstation"
+
+#: presets.java:949
+msgid "Edit Toll Booth"
+msgstr "Mautstation bearbeiten"
+
+#: presets.java:959
+msgid "Border Control"
+msgstr "Grenzkontolle"
+
+#: presets.java:960
+msgid "Edit a Border Control"
+msgstr "Grenzkontrolle bearbeiten"
+
+#: presets.java:974
+msgid "Entrance"
+msgstr "Eingang"
+
+#: presets.java:975
+msgid "Edit a Entrance"
+msgstr "Eingang bearbeiten"
+
+#: presets.java:996
 msgid "Waterway"
 msgstr "Gewässer"
 
-#: presets.java:791
+#: presets.java:997
 msgid "River"
 msgstr "Fluß"
 
-#: presets.java:792
+#: presets.java:998
 msgid "Edit a River"
 msgstr "Fluß bearbeiten"
 
-#: presets.java:799
+#: presets.java:1005
 msgid "Canal"
 msgstr "Kanal"
 
-#: presets.java:800
+#: presets.java:1006
 msgid "Edit a Canal"
 msgstr "Kanal bearbeiten"
 
-#: presets.java:807
+#: presets.java:1013
 msgid "Drain"
 msgstr "Abwassergraben"
 
-#: presets.java:808
+#: presets.java:1014
 msgid "Edit a Drain"
 msgstr "Abwassergraben bearbeiten"
 
-#: presets.java:815
+#: presets.java:1021
 msgid "Stream"
 msgstr "Bach"
 
-#: presets.java:816
+#: presets.java:1022
 msgid "Edit a Stream"
 msgstr "Bach bearbeiten"
 
-#: presets.java:825
+#: presets.java:1031
 msgid "Ferry Route"
 msgstr "Fährroute"
 
-#: presets.java:826
+#: presets.java:1032
 msgid "Edit a Ferry"
 msgstr "Fährroute bearbeiten"
 
-#: presets.java:837
+#: presets.java:1043
 msgid "Boatyard"
 msgstr "Bootswerft"
 
-#: presets.java:838
+#: presets.java:1044
 msgid "Edit a Boatyard"
 msgstr "Bootswerft bearbeiten"
 
-#: presets.java:844
+#: presets.java:1050
 msgid "Dock"
 msgstr "Dock"
 
-#: presets.java:845
+#: presets.java:1051
 msgid "Edit a Dock"
 msgstr "Dock bearbeiten"
 
-#: presets.java:853
+#: presets.java:1059
 msgid "Dam"
 msgstr "Damm"
 
-#: presets.java:854
+#: presets.java:1060
 msgid "Edit a Dam"
 msgstr "Damm bearbeiten"
 
-#: presets.java:861
+#: presets.java:1067
 msgid "Waterway Point"
 msgstr "Gewässerpunkte"
 
-#: presets.java:862
+#: presets.java:1068
 msgid "Lock Gate"
 msgstr "Schleusentor"
 
-#: presets.java:866
+#: presets.java:1072
 msgid "Weir"
 msgstr "Wehr"
 
-#: presets.java:867
+#: presets.java:1073
 msgid "Edit a Weir"
 msgstr "Wehr bearbeiten"
 
-#: presets.java:873
+#: presets.java:1079
 msgid "Waterfall"
 msgstr "Wasserfall"
 
-#: presets.java:874
+#: presets.java:1080
 msgid "Edit a Waterfall"
 msgstr "Wasserfall bearbeiten"
 
-#: presets.java:880
+#: presets.java:1086
 msgid "Turning Point"
 msgstr "Wendepunkt"
 
-#: presets.java:884
+#: presets.java:1090
 msgid "Marina"
 msgstr "Jachthafen"
 
-#: presets.java:885
+#: presets.java:1091
 msgid "Edit Marina"
 msgstr "Jachthafen bearbeiten"
 
-#: presets.java:890
+#: presets.java:1096
+msgid "Ferry Terminal"
+msgstr "Fährstelle"
+
+#: presets.java:1097
+msgid "Edit Ferry Terminal"
+msgstr "Fährstelle bearbeiten"
+
+#: presets.java:1102
 msgid "Slipway"
 msgstr "Bootshebeanlage"
 
-#: presets.java:891
+#: presets.java:1103
 msgid "Edit Slipway"
 msgstr "Bootshebeanlage bearbeiten"
 
-#: presets.java:899
+#: presets.java:1111
 msgid "Railway"
 msgstr "Eisenbahn"
 
-#: presets.java:900
+#: presets.java:1112
 msgid "Rail"
 msgstr "Eisenbahn"
 
-#: presets.java:901
+#: presets.java:1113
 msgid "Edit a Rail"
 msgstr "Eisenbahn bearbeiten"
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "Optional Types"
 msgstr "Optionale Typen"
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "yard"
 msgstr "Rangiergleis"
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "siding"
 msgstr "Abstellgleis"
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "spur"
 msgstr "Firmenanschlußgleis"
 
-#: presets.java:907
+#: presets.java:1119
 msgid "Narrow Gauge Rail"
 msgstr "Schmalspurbahn"
 
-#: presets.java:908
+#: presets.java:1120
 msgid "Edit a Narrow Gauge Rail"
 msgstr "Schmalspurbahn bearbeiten"
 
-#: presets.java:914
+#: presets.java:1126
 msgid "Monorail"
 msgstr "Einschienenbahn"
 
-#: presets.java:915
+#: presets.java:1127
 msgid "Edit a Monorail"
 msgstr "Einschienenbahn bearbeiten"
 
-#: presets.java:921
+#: presets.java:1133
 msgid "Preserved"
 msgstr "Museumsbahn"
 
-#: presets.java:922
+#: presets.java:1134
 msgid "Edit a Preserved Railway"
 msgstr "Museumsbahn bearbeiten"
 
-#: presets.java:928
+#: presets.java:1140
 msgid "Light Rail"
 msgstr "S-Bahn"
 
-#: presets.java:929
+#: presets.java:1141
 msgid "Edit a Light Rail"
 msgstr "S-Bahn bearbeiten"
 
-#: presets.java:935
+#: presets.java:1147
 msgid "Subway"
 msgstr "U-Bahn"
 
-#: presets.java:936
+#: presets.java:1148
 msgid "Edit a Subway"
 msgstr "U-Bahn bearbeiten"
 
-#: presets.java:942
+#: presets.java:1154
 msgid "Tram"
 msgstr "Straßenbahn"
 
-#: presets.java:943
+#: presets.java:1155
 msgid "Edit a Tram"
 msgstr "Straßenbahn bearbeiten"
 
-#: presets.java:949
+#: presets.java:1161
 msgid "Bus Guideway"
 msgstr "Spurbus"
 
-#: presets.java:950
+#: presets.java:1162
 msgid "Edit a Bus Guideway"
 msgstr "Spurbusstrecke bearbeiten"
 
-#: presets.java:970
+#: presets.java:1182
 msgid "Disused Rail"
 msgstr "Stillgelegte Strecke"
 
-#: presets.java:971
+#: presets.java:1183
 msgid "Edit a Disused Railway"
 msgstr "Stillgelegte Strecke bearbeiten"
 
-#: presets.java:977
+#: presets.java:1189
 msgid "Abandoned Rail"
 msgstr "Strecke abgebaut"
 
-#: presets.java:983
+#: presets.java:1195
 msgid "Level Crossing"
 msgstr "Bahnübergang"
 
-#: presets.java:987
+#: presets.java:1199
 msgid "Crossing"
 msgstr "(Fuß-)Übergang"
 
-#: presets.java:991
+#: presets.java:1203
 msgid "Turntable"
 msgstr "Drehscheibe"
 
-#: presets.java:997
+#: presets.java:1209
 msgid "Aerialway"
 msgstr "Seilbahnen"
 
-#: presets.java:998
+#: presets.java:1210
 msgid "Chair Lift"
 msgstr "Sessellift"
 
-#: presets.java:999
+#: presets.java:1211
 msgid "Edit a Chair Lift"
 msgstr "Sessellift bearbeiten"
 
-#: presets.java:1003
+#: presets.java:1215
 msgid "Drag Lift"
 msgstr "Schlepplift"
 
-#: presets.java:1004
+#: presets.java:1216
 msgid "Edit a Drag Lift"
 msgstr "Schlepplift bearbeiten"
 
-#: presets.java:1008
+#: presets.java:1220
 msgid "Cable Car"
 msgstr "Gondelbahn"
 
-#: presets.java:1009
+#: presets.java:1221
 msgid "Edit a Cable Car"
 msgstr "Gondelbahn bearbeiten"
 
-#: presets.java:1013 presets.java:1079
+#: presets.java:1225 presets.java:1299
 msgid "Station"
 msgstr "Station"
 
-#: presets.java:1014
+#: presets.java:1226
 msgid "Edit a Station"
 msgstr "Station bearbeiten"
 
-#: presets.java:1022
+#: presets.java:1234
 msgid "Car"
 msgstr "Auto"
 
-#: presets.java:1023
+#: presets.java:1235
 msgid "Fuel"
 msgstr "Tankstelle"
 
-#: presets.java:1024
+#: presets.java:1236
 msgid "Edit Fuel"
 msgstr "Tankstelle bearbeiten"
 
-#: presets.java:1030 presets.java:1059
+#: presets.java:1242 presets.java:1279
 msgid "Parking"
 msgstr "Parkplatz"
 
-#: presets.java:1031
+#: presets.java:1243
 msgid "Edit Parking"
 msgstr "Parkplatz bearbeiten"
 
-#: presets.java:1036 presets.java:1071
+#: presets.java:1246
+msgid "surface"
+msgstr "ebenerdig"
+
+#: presets.java:1246
+msgid "multi-storey"
+msgstr "Parkhaus"
+
+#: presets.java:1246
+msgid "underground"
+msgstr "Tiefgarage"
+
+#: presets.java:1249
+msgid "Wash"
+msgstr "Autowäsche"
+
+#: presets.java:1250
+msgid "Edit Car Wash"
+msgstr "Autowäsche bearbeiten"
+
+#: presets.java:1256 presets.java:1291
 msgid "Shop"
 msgstr "Geschäft"
 
-#: presets.java:1037
+#: presets.java:1257
 msgid "Edit Car Shop"
 msgstr "Autohaus bearbeiten"
 
-#: presets.java:1043 presets.java:1065
+#: presets.java:1263 presets.java:1285
 msgid "Rental"
 msgstr "Vermietung"
 
-#: presets.java:1044
+#: presets.java:1264
 msgid "Edit Car Rental"
 msgstr "Autovermietung bearbeiten"
 
-#: presets.java:1050
+#: presets.java:1270
 msgid "Sharing"
 msgstr "Tauschen"
 
-#: presets.java:1051
+#: presets.java:1271
 msgid "Edit Car Sharing"
 msgstr "Autotausch (Car Sharing) bearbeiten"
 
-#: presets.java:1060
+#: presets.java:1280
 msgid "Edit Bicycle Parking"
 msgstr "Fahrradparkplatz bearbeiten"
 
-#: presets.java:1066
+#: presets.java:1286
 msgid "Edit Bicycle Rental"
 msgstr "Fahrradleihstelle bearbeiten"
 
-#: presets.java:1072
+#: presets.java:1292
 msgid "Edit Bicycle Shop"
 msgstr "Fahrradladen bearbeiten"
 
-#: presets.java:1078
+#: presets.java:1298
 msgid "Public Transport"
 msgstr "Öffentliche Verkehrsmittel"
 
-#: presets.java:1080
+#: presets.java:1300
 msgid "Edit Station"
 msgstr "Bahnhof bearbeiten"
 
-#: presets.java:1087
+#: presets.java:1307
 msgid "UIC-Reference"
 msgstr "UIC-Referenz"
 
-#: presets.java:1090
+#: presets.java:1310
 msgid "Railway Halt"
 msgstr "Eisenbahnhaltepunkt"
 
-#: presets.java:1091
+#: presets.java:1311
 msgid "Edit Halt"
 msgstr "Haltepunkt bearbeiten"
 
-#: presets.java:1100
+#: presets.java:1320
 msgid "Tram Stop"
 msgstr "Straßenbahnhaltestelle"
 
-#: presets.java:1101
+#: presets.java:1321
 msgid "Edit Tram Stop"
 msgstr "Straßenbahnhaltestelle bearbeiten"
 
-#: presets.java:1110
+#: presets.java:1330
 msgid "Railway Platform"
 msgstr "Bahnsteig"
 
-#: presets.java:1111
+#: presets.java:1331
 msgid "Edit a railway platform"
 msgstr "Bahnsteig bearbeiten"
 
-#: presets.java:1114 presets.java:1157
+#: presets.java:1334 presets.java:1377
 msgid "Reference (track number)"
 msgstr "Referenznummer (Steig)"
 
-#: presets.java:1116 presets.java:1159
+#: presets.java:1336 presets.java:1379
 msgid "Area"
 msgstr "Fläche"
 
-#: presets.java:1119
+#: presets.java:1339
 msgid "Subway Entrance"
 msgstr "U-Bahn-Eingang"
 
-#: presets.java:1120
+#: presets.java:1340
 msgid "Edit Subway Entrance"
 msgstr "U-Bahn-Eingang bearbeiten"
 
-#: presets.java:1127
+#: presets.java:1347
 msgid "Wheelchair"
 msgstr "Rollstuhl"
 
-#: presets.java:1133
+#: presets.java:1353
 msgid "Bus Station"
 msgstr "Busbahnhof"
 
-#: presets.java:1134
+#: presets.java:1354
 msgid "Edit a Bus Station"
 msgstr "Busbahnhof bearbeiten"
 
-#: presets.java:1142
+#: presets.java:1362
 msgid "Bus Stop"
 msgstr "Bushaltestelle"
 
-#: presets.java:1143
+#: presets.java:1363
 msgid "Edit Bus Stop"
 msgstr "Bushaltestelle bearbeiten"
 
-#: presets.java:1153
+#: presets.java:1373
 msgid "Bus Platform"
 msgstr "Bussteig"
 
-#: presets.java:1154
+#: presets.java:1374
 msgid "Edit a bus platform"
 msgstr "Bussteig bearbeiten"
 
-#: presets.java:1164
-msgid "Airport"
-msgstr "Flughafen"
-
-#: presets.java:1165
-msgid "Edit an airport"
-msgstr "Flughafen bearbeiten"
-
-#: presets.java:1172
-msgid "IATA"
-msgstr "IATA"
-
-#: presets.java:1173
-msgid "ICAO"
-msgstr "ICAO"
-
-#: presets.java:1181
-msgid "Accomodation"
-msgstr "Unterkunft"
-
-#: presets.java:1182
-msgid "Hotel"
-msgstr "Hotel"
-
-#: presets.java:1183
-msgid "Edit Hotel"
-msgstr "Hotel bearbeiten"
-
-#: presets.java:1188
-msgid "Motel"
-msgstr "Motel"
-
-#: presets.java:1189
-msgid "Edit Motel"
-msgstr "Motel bearbeiten"
-
-#: presets.java:1194
-msgid "Guest House"
-msgstr "Gasthof (Bed & Breakfast)"
-
-#: presets.java:1195
-msgid "Edit Guest House"
-msgstr "Gasthof bearbeiten"
-
-#: presets.java:1200
-msgid "Hostel"
-msgstr "Jugendherberge"
-
-#: presets.java:1201
-msgid "Edit Hostel"
-msgstr "Jugendherberge bearbeiten"
-
-#: presets.java:1206
-msgid "Caravan Site"
-msgstr "Wohnwagenstellplätze"
-
-#: presets.java:1207
-msgid "Edit Caravan Site"
-msgstr "Wohnwagenstellplätze bearbeiten"
-
-#: presets.java:1212
-msgid "Camping Site"
-msgstr "Campingplatz"
-
-#: presets.java:1213
-msgid "Edit Camping Site"
-msgstr "Campingplatz bearbeiten"
-
-#: presets.java:1221
-msgid "Food+Drinks"
-msgstr "Essen & Trinken"
-
-#: presets.java:1222
-msgid "Restaurant"
-msgstr "Restaurant"
-
-#: presets.java:1223
-msgid "Edit Restaurant"
-msgstr "Restaurant bearbeiten"
-
-#: presets.java:1228
-msgid "Fast Food"
-msgstr "Imbiss (Fast Food)"
-
-#: presets.java:1229
-msgid "Edit Fast Food Restaurant"
-msgstr "Imbiss (Fast Food-Restaurant) bearbeiten"
-
-#: presets.java:1234
-msgid "Cafe"
-msgstr "Cafe"
-
-#: presets.java:1235
-msgid "Edit Cafe"
-msgstr "Cafe bearbeiten"
-
-#: presets.java:1240
-msgid "Pub"
-msgstr "Kneipe"
-
-#: presets.java:1241
-msgid "Edit Pub"
-msgstr "Kneipe bearbeiten"
-
-#: presets.java:1246
-msgid "Biergarten"
-msgstr "Biergarten"
-
-#: presets.java:1247
-msgid "Edit Biergarten"
-msgstr "Biergarten bearbeiten"
-
-#: presets.java:1252
-msgid "Nightclub"
-msgstr "Nachtclub"
-
-#: presets.java:1253
-msgid "Edit Nightclub"
-msgstr "Nachtclub bearbeiten"
-
-#: presets.java:1259
-msgid "Tourism"
-msgstr "Tourismus"
-
-#: presets.java:1260
-msgid "Attraction"
-msgstr "Attraktion"
-
-#: presets.java:1261
-msgid "Edit Attraction"
-msgstr "Attraktion bearbeiten"
-
-#: presets.java:1266
-msgid "Information point"
-msgstr "Information"
-
-#: presets.java:1267
-msgid "Edit Information Point"
-msgstr "Information bearbeiten"
-
-#: presets.java:1269
-msgid "office"
-msgstr "Informationsbüro"
-
-#: presets.java:1269
-msgid "map"
-msgstr "Karte"
-
-#: presets.java:1269
-msgid "citymap"
-msgstr "Stadtplan"
-
-#: presets.java:1269
-msgid "hikingmap"
-msgstr "Wanderkarte"
-
-#: presets.java:1269
-msgid "bicyclemap"
-msgstr "Fahrradkarte"
-
-#: presets.java:1269
-msgid "board"
-msgstr "Infotafel"
-
-#: presets.java:1269
-msgid "history"
-msgstr "Geschichte"
-
-#: presets.java:1269
-msgid "nature"
-msgstr "Natur"
-
-#: presets.java:1269
-msgid "wildlife"
-msgstr "Wildtiere"
-
-#: presets.java:1269
-msgid "guidepost"
-msgstr "Wegweiser"
-
-#: presets.java:1273
-msgid "Museum"
-msgstr "Museum"
-
-#: presets.java:1274
-msgid "Edit Museum"
-msgstr "Museum bearbeiten"
-
-#: presets.java:1279
-msgid "Zoo"
-msgstr "Zoo"
-
-#: presets.java:1280
-msgid "Edit Zoo"
-msgstr "Zoo bearbeiten"
-
-#: presets.java:1285
-msgid "Viewpoint"
-msgstr "Aussichtspunkt"
-
-#: presets.java:1286
-msgid "Edit Viewpoint"
-msgstr "Aussichtspunkt bearbeiten"
-
-#: presets.java:1291
-msgid "Theme Park"
-msgstr "Themenpark"
-
-#: presets.java:1292
-msgid "Edit Theme Park"
-msgstr "Themenpark bearbeiten"
-
-#: presets.java:1297
-msgid "Artwork"
-msgstr "Kunstausstellung"
-
-#: presets.java:1298
-msgid "Edit Artwork"
-msgstr "Kunstausstellung bearbeiten"
-
-#: presets.java:1305 presets.java:1990
-msgid "Shelter"
-msgstr "Schutzraum"
-
-#: presets.java:1306
-msgid "Edit Shelter"
-msgstr "Schutzraum bearbeiten"
-
-#: presets.java:1309
-msgid "Fireplace"
-msgstr "Feuerstelle"
-
-#: presets.java:1312
-msgid "Picnic Site"
-msgstr "Picknickplatz"
-
-#: presets.java:1313
-msgid "Edit Picnic Site"
-msgstr "Picknickplatz bearbeiten"
-
-#: presets.java:1320
-msgid "Historic Places"
-msgstr "Historische Stätten"
-
-#: presets.java:1321
-msgid "Castle"
-msgstr "Burg"
-
-#: presets.java:1322
-msgid "Edit Castle"
-msgstr "Burg berabeiten"
-
-#: presets.java:1327
-msgid "Ruins"
-msgstr "Ruinen"
-
-#: presets.java:1328
-msgid "Edit Ruins"
-msgstr "Ruinen bearbeiten"
-
-#: presets.java:1333
-msgid "Archaeological Site"
-msgstr "Ausgrabungsstelle"
-
-#: presets.java:1334
-msgid "Edit Archaeological Site"
-msgstr "Ausgrabungsstelle bearbeiten"
-
-#: presets.java:1339
-msgid "Monument"
-msgstr "Baudenkmal"
-
-#: presets.java:1340
-msgid "Edit Monument"
-msgstr "Baudenkmal bearbeiten"
-
-#: presets.java:1345
-msgid "Memorial"
-msgstr "Gedenkstätte"
-
-#: presets.java:1346
-msgid "Edit Memorial"
-msgstr "Gedenkstätte bearbeiten"
-
-#: presets.java:1351
-msgid "Battlefield"
-msgstr "Schlachtfeld"
-
-#: presets.java:1352
-msgid "Edit Battlefield"
-msgstr "Schlachtfeld bearbeiten"
-
-#: presets.java:1357
-msgid "Wayside Cross"
-msgstr "Wegkreuz"
-
-#: presets.java:1358
-msgid "Edit a Wayside Cross"
-msgstr "Wegkreuz bearbeiten"
-
-#: presets.java:1363
-msgid "Wayside Shrine"
-msgstr "Bildstock"
-
-#: presets.java:1364
-msgid "Edit a Wayside Shrine"
-msgstr "Bildstock bearbeiten"
-
-#: presets.java:1370
-msgid "Leisure"
-msgstr "Freizeit"
-
-#: presets.java:1371
-msgid "Water Park"
-msgstr "Schwimmbad"
-
-#: presets.java:1372
-msgid "Edit Water Park"
-msgstr "Schwimmbad bearbeiten"
-
-#: presets.java:1377
-msgid "Playground"
-msgstr "Spielplatz"
-
-#: presets.java:1378
-msgid "Edit Playground"
-msgstr "Spielplatz bearbeiten"
-
-#: presets.java:1383
-msgid "Fishing"
-msgstr "Angeln"
-
 #: presets.java:1384
-msgid "Edit Fishing"
-msgstr "Angelplatz bearbeiten"
-
-#: presets.java:1389
-msgid "Nature Reserve"
-msgstr "Naturdenkmal & Reservat"
-
-#: presets.java:1390
-msgid "Edit Nature Reserve"
-msgstr "Naturdenkmal oder Reservat bearbeiten"
-
-#: presets.java:1395
-msgid "Park"
-msgstr "Park"
-
-#: presets.java:1396
-msgid "Edit Park"
-msgstr "Park bearbeiten"
-
-#: presets.java:1401
-msgid "Garden"
-msgstr "Garten"
-
-#: presets.java:1402
-msgid "Edit Garden"
-msgstr "Garten bearbeiten"
-
-#: presets.java:1407
-msgid "Common"
-msgstr "Öffentlicher Bereich"
-
-#: presets.java:1408
-msgid "Edit Common"
-msgstr "Öffentlichen Bereich bearbeiten"
-
-#: presets.java:1415
-msgid "Sport Facilities"
-msgstr "Sporteinrichtungen"
-
-#: presets.java:1416
-msgid "Stadium"
-msgstr "Stadion"
-
-#: presets.java:1417
-msgid "Edit Stadium"
-msgstr "Stadion bearbeiten"
-
-#: presets.java:1421 presets.java:1431 presets.java:1441 presets.java:1451
-msgid "select sport:"
-msgstr "Sportart wählen:"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "sport"
-msgstr "Sport"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "multi"
-msgstr "Mehrfachnutzung"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "archery"
-msgstr "Bogenschießen"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "athletics"
-msgstr "Leichtathletik"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "australian_football"
-msgstr "Australian Football"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "baseball"
-msgstr "Baseball"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "basketball"
-msgstr "Baskettball"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "boules"
-msgstr "Boule"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "bowls"
-msgstr "Bowls"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "canoe"
-msgstr "Kanu"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "climbing"
-msgstr "Klettern"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "cricket"
-msgstr "Kricket"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "cricket_nets"
-msgstr "Kricketnetze"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "croquet"
-msgstr "Krocket"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "cycling"
-msgstr "Fahrradfahren"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "dog_racing"
-msgstr "Hunderennen"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "equestrian"
-msgstr "Reiten"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "football"
-msgstr "American Football"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "golf"
-msgstr "Golf"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "gymnastics"
-msgstr "Gymnastik"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "hockey"
-msgstr "Hockey"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "horse_racing"
-msgstr "Pferderennen"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "motor"
-msgstr "Motorsport"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "pelota"
-msgstr "Pelota"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "racquet"
-msgstr "Schlagball (Racquet)"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "rugby"
-msgstr "Rugby"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "shooting"
-msgstr "Schießen"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "skateboard"
-msgstr "Skateboard"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "skating"
-msgstr "Eislaufen"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "skiing"
-msgstr "Skifahren"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "soccer"
-msgstr "Fußball"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "swimming"
-msgstr "Schwimmen"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "table_tennis"
-msgstr "Tischtennis"
-
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
-msgid "tennis"
-msgstr "Tennis"
-
-#: presets.java:1426
-msgid "Sports Centre"
-msgstr "Sporthalle / Fitnesscenter"
-
-#: presets.java:1427
-msgid "Edit Sports Centre"
-msgstr "Sporthalle / Fitnesscenter bearbeiten"
-
-#: presets.java:1436
-msgid "Pitch"
-msgstr "Spielfeld"
-
-#: presets.java:1437
-msgid "Edit Pitch"
-msgstr "Spielfeld bearbeiten"
-
-#: presets.java:1446
-msgid "Racetrack"
-msgstr "Rennbahn"
-
-#: presets.java:1447
-msgid "Edit Racetrack"
-msgstr "Rennbahn bearbeiten"
-
-#: presets.java:1456
-msgid "Golf Course"
-msgstr "Golfanlage"
-
-#: presets.java:1457
-msgid "Edit Golf Course"
-msgstr "Golfanlage bearbeiten"
-
-#: presets.java:1462
-msgid "Miniature Golf"
-msgstr "Minigolf"
-
-#: presets.java:1463
-msgid "Edit Miniature Golf"
-msgstr "Minigolfplatz bearbeiten"
-
-#: presets.java:1469
-msgid "Sport"
-msgstr "Sport"
-
-#: presets.java:1470
-msgid "Multi"
-msgstr "Mehrfachnutzung"
-
-#: presets.java:1471
-msgid "Edit Multi"
-msgstr "Mehrfach genutzten Sportplatz bearbeiten"
-
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
-msgid "pitch"
-msgstr "Spielfeld"
-
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
-msgid "sports_centre"
-msgstr "Sporthalle / Fitnesscenter"
-
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
-msgid "stadium"
-msgstr "Stadion"
-
-#: presets.java:1477
-msgid "10pin"
-msgstr "Bowling"
-
-#: presets.java:1478
-msgid "Edit 10pin"
-msgstr "Bowlinghalle bearbeiten"
-
-#: presets.java:1484
-msgid "Athletics"
-msgstr "Leichtathletik"
-
-#: presets.java:1485
-msgid "Edit Athletics"
-msgstr "Leichtathletikfeld bearbeiten"
-
-#: presets.java:1491
-msgid "Archery"
-msgstr "Bogenschießen"
-
-#: presets.java:1492
-msgid "Edit Archery"
-msgstr "Bogenschießplatz bearbeiten"
-
-#: presets.java:1498
-msgid "Climbing"
-msgstr "Klettern"
-
-#: presets.java:1499
-msgid "Edit Climbing"
-msgstr "Kletterbereich bearbeiten"
-
-#: presets.java:1505
-msgid "Canoeing"
-msgstr "Kanufahren"
-
-#: presets.java:1506
-msgid "Edit Canoeing"
-msgstr "Kanufahrtstrecke bearbeiten"
-
-#: presets.java:1512
-msgid "Cycling"
-msgstr "Radfahren"
-
-#: presets.java:1513
-msgid "Edit Cycling"
-msgstr "Radsporthalle oder -kurs bearbeiten"
-
-#: presets.java:1519
-msgid "Dog Racing"
-msgstr "Hundeschule"
-
-#: presets.java:1520
-msgid "Edit Dog Racing"
-msgstr "Trainingsplatz für Hunde bearbeiten"
-
-#: presets.java:1526
-msgid "Equestrian"
-msgstr "Reitplatz"
-
-#: presets.java:1527
-msgid "Edit Equestrian"
-msgstr "Reitplatz bearbeiten"
-
-#: presets.java:1533
-msgid "Horse Racing"
-msgstr "Pferderennen"
-
-#: presets.java:1534
-msgid "Edit Horse Racing"
-msgstr "Pferderennplatz bearbeiten"
-
-#: presets.java:1540
-msgid "Gymnastics"
-msgstr "Gymnastik"
-
-#: presets.java:1541
-msgid "Edit Gymnastics"
-msgstr "Gymnastikbereich bearbeiten"
-
-#: presets.java:1547
-msgid "Motor Sports"
-msgstr "Motorsport"
-
-#: presets.java:1548
-msgid "Edit Motor Sports"
-msgstr "Motorsportplatz bearbeiten"
-
-#: presets.java:1554
-msgid "Skating"
-msgstr "Eislaufen"
-
-#: presets.java:1555
-msgid "Edit Skating"
-msgstr "Eislaufbahn bearbeiten"
-
-#: presets.java:1561
-msgid "Skateboard"
-msgstr "Skateboard"
-
-#: presets.java:1562
-msgid "Edit Skateboard"
-msgstr "Skateboardplatz bearbeiten"
-
-#: presets.java:1568
-msgid "Swimming"
-msgstr "Schwimmen"
-
-#: presets.java:1569
-msgid "Edit Swimming"
-msgstr "Schwimmbad bearbeiten"
-
-#: presets.java:1575
-msgid "Skiing"
-msgstr "Skifahren"
-
-#: presets.java:1576
-msgid "Edit Skiing"
-msgstr "Skipiste bearbeiten"
-
-#: presets.java:1582
-msgid "Shooting"
-msgstr "Schießen"
-
-#: presets.java:1583
-msgid "Edit Shooting"
-msgstr "Schießbahn bearbeiten"
-
-#: presets.java:1591
-msgid "Sport (Ball)"
-msgstr "Ballsport"
-
-#: presets.java:1592
-msgid "Soccer"
-msgstr "Fußball"
-
-#: presets.java:1593
-msgid "Edit Soccer"
-msgstr "Fußballplatz bearbeiten"
-
-#: presets.java:1599
-msgid "Football"
-msgstr "American Football"
-
-#: presets.java:1600
-msgid "Edit Football"
-msgstr "American Football-Platz bearbeiten"
-
-#: presets.java:1606
-msgid "Australian Football"
-msgstr "Australian Football"
-
-#: presets.java:1607
-msgid "Edit Australian Football"
-msgstr "Australian Foootball-Platz bearbeiten"
-
-#: presets.java:1613
-msgid "Baseball"
-msgstr "Baseball"
-
-#: presets.java:1614
-msgid "Edit Baseball"
-msgstr "Baseballplatz bearbeiten"
-
-#: presets.java:1620
-msgid "Basketball"
-msgstr "Baskettball"
-
-#: presets.java:1621
-msgid "Edit Basketball"
-msgstr "Baskettballplatz bearbeiten"
-
-#: presets.java:1627
-msgid "Golf"
-msgstr "Golfplatz"
-
-#: presets.java:1628
-msgid "Edit Golf"
-msgstr "Golfplatz bearbeiten"
-
-#: presets.java:1631
-msgid "golf_course"
-msgstr "Golfanlage"
-
-#: presets.java:1634
-msgid "Boule"
-msgstr "Boule"
-
-#: presets.java:1635
-msgid "Edit Boule"
-msgstr "Boule-Spielbereich bearbeiten"
-
-#: presets.java:1641
-msgid "Bowls"
-msgstr "Bowls"
-
-#: presets.java:1642
-msgid "Edit Bowls"
-msgstr "Bowls-Spielfeld bearbeiten"
-
-#: presets.java:1648
-msgid "Cricket"
-msgstr "Kricket"
-
-#: presets.java:1649
-msgid "Edit Cricket"
-msgstr "Kricketspielfeld bearbeiten"
-
-#: presets.java:1655
-msgid "Cricket Nets"
-msgstr "Kricketnetze"
-
-#: presets.java:1656
-msgid "Edit Cricket Nets"
-msgstr "Kricketnetze bearbeiten"
-
-#: presets.java:1662
-msgid "Croquet"
-msgstr "Krocket"
-
-#: presets.java:1663
-msgid "Edit Croquet"
-msgstr "Krocketspielfeld bearbeiten"
-
-#: presets.java:1669
-msgid "Hockey"
-msgstr "Hockey"
-
-#: presets.java:1670
-msgid "Edit Hockey"
-msgstr "Hockeyplatz bearbeiten"
-
-#: presets.java:1676
-msgid "Pelota"
-msgstr "Pelota"
-
-#: presets.java:1677
-msgid "Edit Pelota"
-msgstr "Pelotaplatz bearbeiten"
-
-#: presets.java:1683
-msgid "Racquet"
-msgstr "Schlagball (Racquet)"
-
-#: presets.java:1684
-msgid "Edit Racquet"
-msgstr "Schlagball (Racquet)-Platz Bearbeiten"
-
-#: presets.java:1690
-msgid "Rugby"
-msgstr "Rugby"
-
-#: presets.java:1691
-msgid "Edit Rugby"
-msgstr "Rugbyplatz bearbeiten"
-
-#: presets.java:1697
-msgid "Table Tennis"
-msgstr "Tischtennis"
-
-#: presets.java:1698
-msgid "Edit Table Tennis"
-msgstr "Tischtennisplatz bearbeiten"
-
-#: presets.java:1704
-msgid "Tennis"
-msgstr "Tennis"
-
-#: presets.java:1705
-msgid "Edit Tennis"
-msgstr "Tennisplatz bearbeiten"
-
-#: presets.java:1715
-msgid "Buildings"
-msgstr "Gebäude"
-
-#: presets.java:1716
-msgid "Building"
-msgstr "Gebäude"
-
-#: presets.java:1720
-msgid "Public Building"
-msgstr "Öffentliches Gebäude"
-
-#: presets.java:1721
-msgid "Edit Public Building"
-msgstr "Öffentliches Gebäuden bearbeiten"
-
-#: presets.java:1726
-msgid "Town hall"
-msgstr "Rathaus"
-
-#: presets.java:1727
-msgid "Edit Town hall"
-msgstr "Rathaus bearbeiten"
-
-#: presets.java:1732
-msgid "Fire Station"
-msgstr "Feuerwache"
-
-#: presets.java:1733
-msgid "Edit Fire Station"
-msgstr "Feuerwache bearbeiten"
-
-#: presets.java:1738
-msgid "Courthouse"
-msgstr "Gericht"
-
-#: presets.java:1739
-msgid "Edit Courthouse"
-msgstr "Gericht bearbeiten"
-
-#: presets.java:1744
-msgid "Prison"
-msgstr "Gefängnis"
-
-#: presets.java:1745
-msgid "Edit Prison"
-msgstr "Gefängnis bearbeiten"
-
-#: presets.java:1750
-msgid "Police"
-msgstr "Polizei"
-
-#: presets.java:1751
-msgid "Edit Police"
-msgstr "Polizei bearbeiten"
-
-#: presets.java:1756
-msgid "Post Office"
-msgstr "Post"
-
-#: presets.java:1757
-msgid "Edit Post Office"
-msgstr "Post bearbeiten"
-
-#: presets.java:1764
-msgid "Kindergarten"
-msgstr "Kindergarten"
-
-#: presets.java:1765
-msgid "Edit Kindergarten"
-msgstr "Kindergarten bearbeiten"
-
-#: presets.java:1770
-msgid "School"
-msgstr "Schule"
-
-#: presets.java:1771
-msgid "Edit School"
-msgstr "Schule bearbeiten"
-
-#: presets.java:1776
-msgid "University"
-msgstr "Universität"
-
-#: presets.java:1777
-msgid "Edit University"
-msgstr "Universität bearbeiten"
-
-#: presets.java:1782
-msgid "College"
-msgstr "College"
-
-#: presets.java:1783
-msgid "Edit College"
-msgstr "College bearbeiten"
-
-#: presets.java:1790
-msgid "Cinema"
-msgstr "Kino"
-
-#: presets.java:1791
-msgid "Edit Cinema"
-msgstr "Kino bearbeiten"
-
-#: presets.java:1796
-msgid "Library"
-msgstr "Bibliothek"
-
-#: presets.java:1797
-msgid "Edit Library"
-msgstr "Bibliothek bearbeiten"
-
-#: presets.java:1802
-msgid "Arts Centre"
-msgstr "Kunstausstellungsgebäude"
-
-#: presets.java:1803
-msgid "Edit Arts Centre"
-msgstr "Kunstausstellung bearbeiten"
-
-#: presets.java:1808
-msgid "Theatre"
-msgstr "Theater"
-
-#: presets.java:1809
-msgid "Edit Theatre"
-msgstr "Theater bearbeiten"
-
-#: presets.java:1814
-msgid "Place of Worship"
-msgstr "Kirche"
-
-#: presets.java:1815
-msgid "Edit Place of Worship"
-msgstr "Kirche bearbeiten"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "Religion"
-msgstr "Religion"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "bahai"
-msgstr "bahaiistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "buddhist"
-msgstr "buddistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "christian"
-msgstr "christlich"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "hindu"
-msgstr "hinduistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "jain"
-msgstr "jainistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "jewish"
-msgstr "jüdisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "muslim"
-msgstr "moslemisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "sikh"
-msgstr "sikhistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "spiritualist"
-msgstr "spiritistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "taoist"
-msgstr "taoistisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "unitarianist"
-msgstr "unitarisch"
-
-#: presets.java:1818 presets.java:2277 presets.java:2413
-msgid "zoroastrian"
-msgstr "zoroastrisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "Denomination"
-msgstr "Konfession"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "anglican"
-msgstr "anglikanisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "baptist"
-msgstr "baptistisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "catholic"
-msgstr "katholisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "evangelical"
-msgstr "evangelikal"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "jehovahs_witness"
-msgstr "Zeugen Jehovas"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "lutheran"
-msgstr "lutherisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "methodist"
-msgstr "methodistisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "mormon"
-msgstr "mormonisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "orthodox"
-msgstr "orthodox"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "pentecostal"
-msgstr "Pfingstgemeinde"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "presbyterian"
-msgstr "presbyterianisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "protestant"
-msgstr "protestantisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "quaker"
-msgstr "Quäker"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "shia"
-msgstr "schiitisch"
-
-#: presets.java:1819 presets.java:2278 presets.java:2414
-msgid "sunni"
-msgstr "sunnitisch"
-
-#: presets.java:1824
-msgid "Addresses"
-msgstr "Adressen"
-
-#: presets.java:1825
-msgid "Edit address information"
-msgstr "Adressinformationen bearbeiten"
-
-#: presets.java:1827
-msgid "House number"
-msgstr "Hausnummer"
-
-#: presets.java:1831
-msgid "House name"
-msgstr "Hausname"
-
-#: presets.java:1832
-msgid "Street name"
-msgstr "Straßenname"
-
-#: presets.java:1833
-msgid "City name"
-msgstr "Stadtname"
-
-#: presets.java:1834
-msgid "Post code"
-msgstr "Postleitzahl"
-
-#: presets.java:1835
-msgid "Country code"
-msgstr "Länderkennung"
-
-#: presets.java:1838
-msgid "Address Interpolation"
-msgstr "Adressinterpolation"
-
-#: presets.java:1839
-msgid "Edit address interpolation"
-msgstr "Adressinterpolation bearbeiten"
-
-#: presets.java:1841
-msgid "Numbering scheme"
-msgstr "Nummernschema"
-
-#: presets.java:1841
-msgid "odd"
-msgstr "ungerade"
-
-#: presets.java:1841
-msgid "even"
-msgstr "gerade"
-
-#: presets.java:1841
-msgid "all"
-msgstr "alle"
-
-#: presets.java:1846
-msgid "Man Made"
-msgstr "Zivilisationsbauten"
-
-#: presets.java:1847
-msgid "Works"
-msgstr "Fabrik"
-
-#: presets.java:1848
-msgid "Edit Works"
-msgstr "Fabrik bearbeiten"
-
-#: presets.java:1853
-msgid "Tower"
-msgstr "Turm"
-
-#: presets.java:1854
-msgid "Edit Tower"
-msgstr "Turm bearbeiten"
-
-#: presets.java:1859
-msgid "Water Tower"
-msgstr "Wasserturm"
-
-#: presets.java:1860
-msgid "Edit Water Tower"
-msgstr "Wasserturm bearbeiten"
-
-#: presets.java:1865
-msgid "Power Tower"
-msgstr "Strommast"
-
-#: presets.java:1866
-msgid "Edit Power Tower"
-msgstr "Strommast bearbeiten"
-
-#: presets.java:1870
-msgid "Power Generator"
-msgstr "Stromgenerator"
-
-#: presets.java:1871
-msgid "Edit Power Generator"
-msgstr "Stromgenerator bearbeiten"
-
-#: presets.java:1873
-msgid "wind"
-msgstr "Wind"
-
-#: presets.java:1873
-msgid "hydro"
-msgstr "Wasser"
-
-#: presets.java:1873
-msgid "fossil"
-msgstr "Fossil"
-
-#: presets.java:1873
-msgid "nuclear"
-msgstr "Nuklear"
-
-#: presets.java:1877
-msgid "Gasometer"
-msgstr "Gasometer"
-
-#: presets.java:1878
-msgid "Edit Gasometer"
-msgstr "Gasometer bearbeiten"
-
-#: presets.java:1883
-msgid "Covered Reservoir"
-msgstr "Überdecktes Speicherbassin"
-
-#: presets.java:1884
-msgid "Edit Covered Reservoir"
-msgstr "Überdecktes Speicherbassin bearbeite"
-
-#: presets.java:1889
-msgid "Lighthouse"
-msgstr "Leuchtturm"
-
-#: presets.java:1890
-msgid "Edit Lighthouse"
-msgstr "Leuchtturm bearbeiten"
-
-#: presets.java:1895
-msgid "Windmill"
-msgstr "Windmühle"
-
-#: presets.java:1896
-msgid "Edit Windmill"
-msgstr "Windmühle bearbeiten"
-
-#: presets.java:1901
-msgid "Pier"
-msgstr "Anlegestelle (Pier)"
-
-#: presets.java:1902
-msgid "Edit Pier"
-msgstr "Anlegestelle (Pier) bearbeiten"
-
-#: presets.java:1907
-msgid "Pipeline"
-msgstr "Pipeline"
-
-#: presets.java:1908
-msgid "Edit Pipeline"
-msgstr "Pipeline bearbeiten"
-
-#: presets.java:1913
-msgid "Wastewater Plant"
-msgstr "Kläranlage"
-
-#: presets.java:1914
-msgid "Edit Wastewater Plant"
-msgstr "Kläranlage bearbeiten"
-
-#: presets.java:1919
-msgid "Crane"
-msgstr "Stationärer Kran"
-
-#: presets.java:1920
-msgid "Edit Crane"
-msgstr "Stationären Kran bearbeiten"
-
-#: presets.java:1925
-msgid "Beacon"
-msgstr "Bake"
-
-#: presets.java:1926
-msgid "Edit Beacon"
-msgstr "Bake bearbeiten"
-
-#: presets.java:1931
-msgid "Survey Point"
-msgstr "Vermessungspunkt"
-
-#: presets.java:1932
-msgid "Edit Survey Point"
-msgstr "Vermessungspunkt bearbeiten"
-
-#: presets.java:1937
-msgid "Surveillance"
-msgstr "Überwachungskamera"
-
-#: presets.java:1938
-msgid "Edit Surveillance Camera"
-msgstr "Überwachungskamera bearbeiten"
-
-#: presets.java:1945
-msgid "Amenities"
-msgstr "Einrichtungen"
-
-#: presets.java:1947
-msgid "Toilets"
-msgstr "Toiletten"
-
-#: presets.java:1950 presets.java:2046
-msgid "Reference number"
-msgstr "Referenznummer"
-
-#: presets.java:1951
-msgid "Charge"
-msgstr "Benutzungsgebühr"
-
-#: presets.java:1952 presets.java:2047
-msgid "Note"
-msgstr "Kommentar"
-
-#: presets.java:1955
-msgid "Post Box"
-msgstr "Briefkasten"
-
-#: presets.java:1960
-msgid "Telephone"
-msgstr "Telefon"
-
-#: presets.java:1961
-msgid "Edit a Telephone"
-msgstr "Telefon bearbeiten"
-
-#: presets.java:1964 presets.java:2048
-msgid "Coins"
-msgstr "Münzen"
-
-#: presets.java:1965 presets.java:2049
-msgid "Notes"
-msgstr "Scheine"
-
-#: presets.java:1966 presets.java:2050
-msgid "Electronic purses and Charge cards"
-msgstr "Geld- oder Prepaidkarten"
-
-#: presets.java:1967 presets.java:2051
-msgid "Debit cards"
-msgstr "Konto- oder EC-Karten"
-
-#: presets.java:1968 presets.java:2052
-msgid "Credit cards"
-msgstr "Kreditkarten"
-
-#: presets.java:1969
-msgid "Telephone cards"
-msgstr "Telefonkarten"
-
-#: presets.java:1972
-msgid "Recycling"
-msgstr "Recyclingstelle & -container"
-
-#: presets.java:1973
-msgid "Edit a Recycling station"
-msgstr "Recyclingstelle oder -container bearbeiten"
-
-#: presets.java:1975
-msgid "Batteries"
-msgstr "Batterien"
-
-#: presets.java:1976
-msgid "Cans"
-msgstr "Dosen"
-
-#: presets.java:1977
-msgid "Clothes"
-msgstr "Kleidung"
-
-#: presets.java:1978
-msgid "Glass"
-msgstr "Glas"
-
-#: presets.java:1979
-msgid "Paper"
-msgstr "Papier"
-
-#: presets.java:1980
-msgid "Scrap Metal"
-msgstr "Altmetall"
-
-#: presets.java:1983
-msgid "Bench"
-msgstr "Bank"
-
-#: presets.java:1987
-msgid "Hunting Stand"
-msgstr "Jagdanstand"
-
-#: presets.java:1988
-msgid "Edit a Hunting Stand"
-msgstr "Jagdanstand bearbeiten"
-
-#: presets.java:1991
-msgid "Hide"
-msgstr "Versteck"
-
-#: presets.java:1992
-msgid "Lock"
-msgstr "Schloß"
-
-#: presets.java:1993 presets.java:2457
-msgid "Height"
-msgstr "Höhe"
-
-#: presets.java:1993
-msgid "low"
-msgstr "niedrig"
-
-#: presets.java:1993
-msgid "half"
-msgstr "halb"
-
-#: presets.java:1993
-msgid "full"
-msgstr "voll"
-
-#: presets.java:1996
 msgid "Taxi"
 msgstr "Taxi"
 
-#: presets.java:1997
+#: presets.java:1385
 msgid "Edit a Taxi station"
 msgstr "Taxihaltepunkt bearbeiten"
 
-#: presets.java:2002
+#: presets.java:1392
+msgid "Airport"
+msgstr "Flughafen"
+
+#: presets.java:1393
+msgid "Edit an airport"
+msgstr "Flughafen bearbeiten"
+
+#: presets.java:1400
+msgid "IATA"
+msgstr "IATA"
+
+#: presets.java:1401
+msgid "ICAO"
+msgstr "ICAO"
+
+#: presets.java:1409
+msgid "Accomodation"
+msgstr "Unterkunft"
+
+#: presets.java:1410
+msgid "Hotel"
+msgstr "Hotel"
+
+#: presets.java:1411
+msgid "Edit Hotel"
+msgstr "Hotel bearbeiten"
+
+#: presets.java:1416
+msgid "Motel"
+msgstr "Motel"
+
+#: presets.java:1417
+msgid "Edit Motel"
+msgstr "Motel bearbeiten"
+
+#: presets.java:1422
+msgid "Guest House"
+msgstr "Gasthof (Bed & Breakfast)"
+
+#: presets.java:1423
+msgid "Edit Guest House"
+msgstr "Gasthof bearbeiten"
+
+#: presets.java:1428
+msgid "Chalet"
+msgstr "Sennhütte"
+
+#: presets.java:1429
+msgid "Edit Chalet"
+msgstr "Sennhütte berabeiten"
+
+#: presets.java:1434
+msgid "Hostel"
+msgstr "Jugendherberge"
+
+#: presets.java:1435
+msgid "Edit Hostel"
+msgstr "Jugendherberge bearbeiten"
+
+#: presets.java:1440
+msgid "Caravan Site"
+msgstr "Wohnwagenstellplätze"
+
+#: presets.java:1441
+msgid "Edit Caravan Site"
+msgstr "Wohnwagenstellplätze bearbeiten"
+
+#: presets.java:1446
+msgid "Camping Site"
+msgstr "Campingplatz"
+
+#: presets.java:1447
+msgid "Edit Camping Site"
+msgstr "Campingplatz bearbeiten"
+
+#: presets.java:1455
+msgid "Food+Drinks"
+msgstr "Essen & Trinken"
+
+#: presets.java:1456
+msgid "Restaurant"
+msgstr "Restaurant"
+
+#: presets.java:1457
+msgid "Edit Restaurant"
+msgstr "Restaurant bearbeiten"
+
+#: presets.java:1460 presets.java:1467
+msgid "Cuisine"
+msgstr "Küche"
+
+#: presets.java:1460 presets.java:1467
+msgid "italian"
+msgstr "italienisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "chinese"
+msgstr "chinesisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "pizza"
+msgstr "Pizza"
+
+#: presets.java:1460 presets.java:1467
+msgid "burger"
+msgstr "Hamburger"
+
+#: presets.java:1460 presets.java:1467
+msgid "greek"
+msgstr "grischisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "german"
+msgstr "deutsch"
+
+#: presets.java:1460 presets.java:1467
+msgid "indian"
+msgstr "indisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "regional"
+msgstr "regional"
+
+#: presets.java:1460 presets.java:1467
+msgid "kebap"
+msgstr "Döner"
+
+#: presets.java:1460 presets.java:1467
+msgid "turkish"
+msgstr "türkisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "asian"
+msgstr "asiatisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "thai"
+msgstr "thailändisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "mexican"
+msgstr "maxikanisch"
+
+#: presets.java:1460 presets.java:1467
+msgid "japanese"
+msgstr "japanisch"
+
+#: presets.java:1463
+msgid "Fast Food"
+msgstr "Imbiss (Fast Food)"
+
+#: presets.java:1464
+msgid "Edit Fast Food Restaurant"
+msgstr "Imbiss (Fast Food-Restaurant) bearbeiten"
+
+#: presets.java:1470
+msgid "Cafe"
+msgstr "Cafe"
+
+#: presets.java:1471
+msgid "Edit Cafe"
+msgstr "Cafe bearbeiten"
+
+#: presets.java:1476
+msgid "Pub"
+msgstr "Kneipe"
+
+#: presets.java:1477
+msgid "Edit Pub"
+msgstr "Kneipe bearbeiten"
+
+#: presets.java:1482
+msgid "Biergarten"
+msgstr "Biergarten"
+
+#: presets.java:1483
+msgid "Edit Biergarten"
+msgstr "Biergarten bearbeiten"
+
+#: presets.java:1488
+msgid "Nightclub"
+msgstr "Nachtclub"
+
+#: presets.java:1489
+msgid "Edit Nightclub"
+msgstr "Nachtclub bearbeiten"
+
+#: presets.java:1495
+msgid "Tourism"
+msgstr "Tourismus"
+
+#: presets.java:1496
+msgid "Attraction"
+msgstr "Attraktion"
+
+#: presets.java:1497
+msgid "Edit Attraction"
+msgstr "Attraktion bearbeiten"
+
+#: presets.java:1502
+msgid "Information point"
+msgstr "Information"
+
+#: presets.java:1503
+msgid "Edit Information Point"
+msgstr "Information bearbeiten"
+
+#: presets.java:1505
+msgid "office"
+msgstr "Informationsbüro"
+
+#: presets.java:1505
+msgid "map"
+msgstr "Karte"
+
+#: presets.java:1505
+msgid "citymap"
+msgstr "Stadtplan"
+
+#: presets.java:1505
+msgid "hikingmap"
+msgstr "Wanderkarte"
+
+#: presets.java:1505
+msgid "bicyclemap"
+msgstr "Fahrradkarte"
+
+#: presets.java:1505
+msgid "board"
+msgstr "Infotafel"
+
+#: presets.java:1505
+msgid "history"
+msgstr "Geschichte"
+
+#: presets.java:1505
+msgid "nature"
+msgstr "Natur"
+
+#: presets.java:1505
+msgid "wildlife"
+msgstr "Wildtiere"
+
+#: presets.java:1505
+msgid "guidepost"
+msgstr "Wegweiser"
+
+#: presets.java:1509
+msgid "Museum"
+msgstr "Museum"
+
+#: presets.java:1510
+msgid "Edit Museum"
+msgstr "Museum bearbeiten"
+
+#: presets.java:1515
+msgid "Zoo"
+msgstr "Zoo"
+
+#: presets.java:1516
+msgid "Edit Zoo"
+msgstr "Zoo bearbeiten"
+
+#: presets.java:1521
+msgid "Viewpoint"
+msgstr "Aussichtspunkt"
+
+#: presets.java:1522
+msgid "Edit Viewpoint"
+msgstr "Aussichtspunkt bearbeiten"
+
+#: presets.java:1527
+msgid "Theme Park"
+msgstr "Themenpark"
+
+#: presets.java:1528
+msgid "Edit Theme Park"
+msgstr "Themenpark bearbeiten"
+
+#: presets.java:1533
+msgid "Artwork"
+msgstr "Kunstausstellung"
+
+#: presets.java:1534
+msgid "Edit Artwork"
+msgstr "Kunstausstellung bearbeiten"
+
+#: presets.java:1541 presets.java:2232
+msgid "Shelter"
+msgstr "Schutzraum"
+
+#: presets.java:1542
+msgid "Edit Shelter"
+msgstr "Schutzraum bearbeiten"
+
+#: presets.java:1545
+msgid "Fireplace"
+msgstr "Feuerstelle"
+
+#: presets.java:1548
+msgid "Picnic Site"
+msgstr "Picknickplatz"
+
+#: presets.java:1549
+msgid "Edit Picnic Site"
+msgstr "Picknickplatz bearbeiten"
+
+#: presets.java:1556
+msgid "Historic Places"
+msgstr "Historische Stätten"
+
+#: presets.java:1557
+msgid "Castle"
+msgstr "Burg"
+
+#: presets.java:1558
+msgid "Edit Castle"
+msgstr "Burg berabeiten"
+
+#: presets.java:1563
+msgid "Ruins"
+msgstr "Ruinen"
+
+#: presets.java:1564
+msgid "Edit Ruins"
+msgstr "Ruinen bearbeiten"
+
+#: presets.java:1569
+msgid "Archaeological Site"
+msgstr "Ausgrabungsstelle"
+
+#: presets.java:1570
+msgid "Edit Archaeological Site"
+msgstr "Ausgrabungsstelle bearbeiten"
+
+#: presets.java:1575
+msgid "Monument"
+msgstr "Baudenkmal"
+
+#: presets.java:1576
+msgid "Edit Monument"
+msgstr "Baudenkmal bearbeiten"
+
+#: presets.java:1581
+msgid "Memorial"
+msgstr "Gedenkstätte"
+
+#: presets.java:1582
+msgid "Edit Memorial"
+msgstr "Gedenkstätte bearbeiten"
+
+#: presets.java:1587
+msgid "Battlefield"
+msgstr "Schlachtfeld"
+
+#: presets.java:1588
+msgid "Edit Battlefield"
+msgstr "Schlachtfeld bearbeiten"
+
+#: presets.java:1593
+msgid "Wayside Cross"
+msgstr "Wegkreuz"
+
+#: presets.java:1594
+msgid "Edit a Wayside Cross"
+msgstr "Wegkreuz bearbeiten"
+
+#: presets.java:1599
+msgid "Wayside Shrine"
+msgstr "Bildstock"
+
+#: presets.java:1600
+msgid "Edit a Wayside Shrine"
+msgstr "Bildstock bearbeiten"
+
+#: presets.java:1606
+msgid "Leisure"
+msgstr "Freizeit"
+
+#: presets.java:1607
+msgid "Water Park"
+msgstr "Schwimmbad"
+
+#: presets.java:1608
+msgid "Edit Water Park"
+msgstr "Schwimmbad bearbeiten"
+
+#: presets.java:1613
+msgid "Playground"
+msgstr "Spielplatz"
+
+#: presets.java:1614
+msgid "Edit Playground"
+msgstr "Spielplatz bearbeiten"
+
+#: presets.java:1619
+msgid "Fishing"
+msgstr "Angeln"
+
+#: presets.java:1620
+msgid "Edit Fishing"
+msgstr "Angelplatz bearbeiten"
+
+#: presets.java:1625
+msgid "Nature Reserve"
+msgstr "Naturdenkmal & Reservat"
+
+#: presets.java:1626
+msgid "Edit Nature Reserve"
+msgstr "Naturdenkmal oder Reservat bearbeiten"
+
+#: presets.java:1631
+msgid "Park"
+msgstr "Park"
+
+#: presets.java:1632
+msgid "Edit Park"
+msgstr "Park bearbeiten"
+
+#: presets.java:1637
+msgid "Garden"
+msgstr "Garten"
+
+#: presets.java:1638
+msgid "Edit Garden"
+msgstr "Garten bearbeiten"
+
+#: presets.java:1643
+msgid "Common"
+msgstr "Öffentlicher Bereich"
+
+#: presets.java:1644
+msgid "Edit Common"
+msgstr "Öffentlichen Bereich bearbeiten"
+
+#: presets.java:1651
+msgid "Sport Facilities"
+msgstr "Sporteinrichtungen"
+
+#: presets.java:1652
+msgid "Stadium"
+msgstr "Stadion"
+
+#: presets.java:1653
+msgid "Edit Stadium"
+msgstr "Stadion bearbeiten"
+
+#: presets.java:1657 presets.java:1667 presets.java:1677 presets.java:1687
+msgid "select sport:"
+msgstr "Sportart wählen:"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "sport"
+msgstr "Sport"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "multi"
+msgstr "Mehrfachnutzung"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "archery"
+msgstr "Bogenschießen"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "athletics"
+msgstr "Leichtathletik"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "australian_football"
+msgstr "Australian Football"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "baseball"
+msgstr "Baseball"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "basketball"
+msgstr "Baskettball"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "boules"
+msgstr "Boule"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "bowls"
+msgstr "Bowls"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "canoe"
+msgstr "Kanu"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "climbing"
+msgstr "Klettern"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "cricket"
+msgstr "Kricket"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "cricket_nets"
+msgstr "Kricketnetze"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "croquet"
+msgstr "Krocket"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "cycling"
+msgstr "Fahrradfahren"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "dog_racing"
+msgstr "Hunderennen"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "equestrian"
+msgstr "Reiten"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "football"
+msgstr "American Football"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "golf"
+msgstr "Golf"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "gymnastics"
+msgstr "Gymnastik"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "hockey"
+msgstr "Hockey"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "horse_racing"
+msgstr "Pferderennen"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "motor"
+msgstr "Motorsport"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "pelota"
+msgstr "Pelota"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "racquet"
+msgstr "Schlagball (Racquet)"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "rugby"
+msgstr "Rugby"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "shooting"
+msgstr "Schießen"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "skateboard"
+msgstr "Skateboard"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "skating"
+msgstr "Eislaufen"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "skiing"
+msgstr "Skifahren"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "soccer"
+msgstr "Fußball"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "swimming"
+msgstr "Schwimmen"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "table_tennis"
+msgstr "Tischtennis"
+
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
+msgid "tennis"
+msgstr "Tennis"
+
+#: presets.java:1662
+msgid "Sports Centre"
+msgstr "Sporthalle / Fitnesscenter"
+
+#: presets.java:1663
+msgid "Edit Sports Centre"
+msgstr "Sporthalle / Fitnesscenter bearbeiten"
+
+#: presets.java:1672
+msgid "Pitch"
+msgstr "Spielfeld"
+
+#: presets.java:1673
+msgid "Edit Pitch"
+msgstr "Spielfeld bearbeiten"
+
+#: presets.java:1682
+msgid "Racetrack"
+msgstr "Rennbahn"
+
+#: presets.java:1683
+msgid "Edit Racetrack"
+msgstr "Rennbahn bearbeiten"
+
+#: presets.java:1692
+msgid "Golf Course"
+msgstr "Golfanlage"
+
+#: presets.java:1693
+msgid "Edit Golf Course"
+msgstr "Golfanlage bearbeiten"
+
+#: presets.java:1698
+msgid "Miniature Golf"
+msgstr "Minigolf"
+
+#: presets.java:1699
+msgid "Edit Miniature Golf"
+msgstr "Minigolfplatz bearbeiten"
+
+#: presets.java:1705
+msgid "Sport"
+msgstr "Sport"
+
+#: presets.java:1706
+msgid "Multi"
+msgstr "Mehrfachnutzung"
+
+#: presets.java:1707
+msgid "Edit Multi"
+msgstr "Mehrfach genutzten Sportplatz bearbeiten"
+
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
+msgid "pitch"
+msgstr "Spielfeld"
+
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
+msgid "sports_centre"
+msgstr "Sporthalle / Fitnesscenter"
+
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
+msgid "stadium"
+msgstr "Stadion"
+
+#: presets.java:1713
+msgid "10pin"
+msgstr "Bowling"
+
+#: presets.java:1714
+msgid "Edit 10pin"
+msgstr "Bowlinghalle bearbeiten"
+
+#: presets.java:1720
+msgid "Athletics"
+msgstr "Leichtathletik"
+
+#: presets.java:1721
+msgid "Edit Athletics"
+msgstr "Leichtathletikfeld bearbeiten"
+
+#: presets.java:1727
+msgid "Archery"
+msgstr "Bogenschießen"
+
+#: presets.java:1728
+msgid "Edit Archery"
+msgstr "Bogenschießplatz bearbeiten"
+
+#: presets.java:1734
+msgid "Climbing"
+msgstr "Klettern"
+
+#: presets.java:1735
+msgid "Edit Climbing"
+msgstr "Kletterbereich bearbeiten"
+
+#: presets.java:1741
+msgid "Canoeing"
+msgstr "Kanufahren"
+
+#: presets.java:1742
+msgid "Edit Canoeing"
+msgstr "Kanufahrtstrecke bearbeiten"
+
+#: presets.java:1748
+msgid "Cycling"
+msgstr "Radfahren"
+
+#: presets.java:1749
+msgid "Edit Cycling"
+msgstr "Radsporthalle oder -kurs bearbeiten"
+
+#: presets.java:1755
+msgid "Dog Racing"
+msgstr "Hundeschule"
+
+#: presets.java:1756
+msgid "Edit Dog Racing"
+msgstr "Trainingsplatz für Hunde bearbeiten"
+
+#: presets.java:1762
+msgid "Equestrian"
+msgstr "Reitplatz"
+
+#: presets.java:1763
+msgid "Edit Equestrian"
+msgstr "Reitplatz bearbeiten"
+
+#: presets.java:1769
+msgid "Horse Racing"
+msgstr "Pferderennen"
+
+#: presets.java:1770
+msgid "Edit Horse Racing"
+msgstr "Pferderennplatz bearbeiten"
+
+#: presets.java:1776
+msgid "Gymnastics"
+msgstr "Gymnastik"
+
+#: presets.java:1777
+msgid "Edit Gymnastics"
+msgstr "Gymnastikbereich bearbeiten"
+
+#: presets.java:1783
+msgid "Motor Sports"
+msgstr "Motorsport"
+
+#: presets.java:1784
+msgid "Edit Motor Sports"
+msgstr "Motorsportplatz bearbeiten"
+
+#: presets.java:1790
+msgid "Skating"
+msgstr "Eislaufen"
+
+#: presets.java:1791
+msgid "Edit Skating"
+msgstr "Eislaufbahn bearbeiten"
+
+#: presets.java:1797
+msgid "Skateboard"
+msgstr "Skateboard"
+
+#: presets.java:1798
+msgid "Edit Skateboard"
+msgstr "Skateboardplatz bearbeiten"
+
+#: presets.java:1804
+msgid "Swimming"
+msgstr "Schwimmen"
+
+#: presets.java:1805
+msgid "Edit Swimming"
+msgstr "Schwimmbad bearbeiten"
+
+#: presets.java:1811
+msgid "Skiing"
+msgstr "Skifahren"
+
+#: presets.java:1812
+msgid "Edit Skiing"
+msgstr "Skipiste bearbeiten"
+
+#: presets.java:1818
+msgid "Shooting"
+msgstr "Schießen"
+
+#: presets.java:1819
+msgid "Edit Shooting"
+msgstr "Schießbahn bearbeiten"
+
+#: presets.java:1827
+msgid "Sport (Ball)"
+msgstr "Ballsport"
+
+#: presets.java:1828
+msgid "Soccer"
+msgstr "Fußball"
+
+#: presets.java:1829
+msgid "Edit Soccer"
+msgstr "Fußballplatz bearbeiten"
+
+#: presets.java:1835
+msgid "Football"
+msgstr "American Football"
+
+#: presets.java:1836
+msgid "Edit Football"
+msgstr "American Football-Platz bearbeiten"
+
+#: presets.java:1842
+msgid "Australian Football"
+msgstr "Australian Football"
+
+#: presets.java:1843
+msgid "Edit Australian Football"
+msgstr "Australian Foootball-Platz bearbeiten"
+
+#: presets.java:1849
+msgid "Baseball"
+msgstr "Baseball"
+
+#: presets.java:1850
+msgid "Edit Baseball"
+msgstr "Baseballplatz bearbeiten"
+
+#: presets.java:1856
+msgid "Basketball"
+msgstr "Baskettball"
+
+#: presets.java:1857
+msgid "Edit Basketball"
+msgstr "Baskettballplatz bearbeiten"
+
+#: presets.java:1863
+msgid "Golf"
+msgstr "Golfplatz"
+
+#: presets.java:1864
+msgid "Edit Golf"
+msgstr "Golfplatz bearbeiten"
+
+#: presets.java:1867
+msgid "golf_course"
+msgstr "Golfanlage"
+
+#: presets.java:1870
+msgid "Boule"
+msgstr "Boule"
+
+#: presets.java:1871
+msgid "Edit Boule"
+msgstr "Boule-Spielbereich bearbeiten"
+
+#: presets.java:1877
+msgid "Bowls"
+msgstr "Bowls"
+
+#: presets.java:1878
+msgid "Edit Bowls"
+msgstr "Bowls-Spielfeld bearbeiten"
+
+#: presets.java:1884
+msgid "Cricket"
+msgstr "Kricket"
+
+#: presets.java:1885
+msgid "Edit Cricket"
+msgstr "Kricketspielfeld bearbeiten"
+
+#: presets.java:1891
+msgid "Cricket Nets"
+msgstr "Kricketnetze"
+
+#: presets.java:1892
+msgid "Edit Cricket Nets"
+msgstr "Kricketnetze bearbeiten"
+
+#: presets.java:1898
+msgid "Croquet"
+msgstr "Krocket"
+
+#: presets.java:1899
+msgid "Edit Croquet"
+msgstr "Krocketspielfeld bearbeiten"
+
+#: presets.java:1905
+msgid "Hockey"
+msgstr "Hockey"
+
+#: presets.java:1906
+msgid "Edit Hockey"
+msgstr "Hockeyplatz bearbeiten"
+
+#: presets.java:1912
+msgid "Pelota"
+msgstr "Pelota"
+
+#: presets.java:1913
+msgid "Edit Pelota"
+msgstr "Pelotaplatz bearbeiten"
+
+#: presets.java:1919
+msgid "Racquet"
+msgstr "Schlagball (Racquet)"
+
+#: presets.java:1920
+msgid "Edit Racquet"
+msgstr "Schlagball (Racquet)-Platz Bearbeiten"
+
+#: presets.java:1926
+msgid "Rugby"
+msgstr "Rugby"
+
+#: presets.java:1927
+msgid "Edit Rugby"
+msgstr "Rugbyplatz bearbeiten"
+
+#: presets.java:1933
+msgid "Table Tennis"
+msgstr "Tischtennis"
+
+#: presets.java:1934
+msgid "Edit Table Tennis"
+msgstr "Tischtennisplatz bearbeiten"
+
+#: presets.java:1940
+msgid "Tennis"
+msgstr "Tennis"
+
+#: presets.java:1941
+msgid "Edit Tennis"
+msgstr "Tennisplatz bearbeiten"
+
+#: presets.java:1951
+msgid "Buildings"
+msgstr "Gebäude"
+
+#: presets.java:1952
+msgid "Building"
+msgstr "Gebäude"
+
+#: presets.java:1956
+msgid "Public Building"
+msgstr "Öffentliches Gebäude"
+
+#: presets.java:1957
+msgid "Edit Public Building"
+msgstr "Öffentliches Gebäuden bearbeiten"
+
+#: presets.java:1962
+msgid "Town hall"
+msgstr "Rathaus"
+
+#: presets.java:1963
+msgid "Edit Town hall"
+msgstr "Rathaus bearbeiten"
+
+#: presets.java:1968
+msgid "Embassy"
+msgstr "Botschaft"
+
+#: presets.java:1969
+msgid "Edit Embassy"
+msgstr "Botschaft bearbeiten"
+
+#: presets.java:1974
+msgid "Courthouse"
+msgstr "Gericht"
+
+#: presets.java:1975
+msgid "Edit Courthouse"
+msgstr "Gericht bearbeiten"
+
+#: presets.java:1980
+msgid "Prison"
+msgstr "Gefängnis"
+
+#: presets.java:1981
+msgid "Edit Prison"
+msgstr "Gefängnis bearbeiten"
+
+#: presets.java:1986
+msgid "Police"
+msgstr "Polizei"
+
+#: presets.java:1987
+msgid "Edit Police"
+msgstr "Polizei bearbeiten"
+
+#: presets.java:1992
+msgid "Fire Station"
+msgstr "Feuerwache"
+
+#: presets.java:1993
+msgid "Edit Fire Station"
+msgstr "Feuerwache bearbeiten"
+
+#: presets.java:1998
+msgid "Post Office"
+msgstr "Post"
+
+#: presets.java:1999
+msgid "Edit Post Office"
+msgstr "Post bearbeiten"
+
+#: presets.java:2006
+msgid "Kindergarten"
+msgstr "Kindergarten"
+
+#: presets.java:2007
+msgid "Edit Kindergarten"
+msgstr "Kindergarten bearbeiten"
+
+#: presets.java:2012
+msgid "School"
+msgstr "Schule"
+
+#: presets.java:2013
+msgid "Edit School"
+msgstr "Schule bearbeiten"
+
+#: presets.java:2018
+msgid "University"
+msgstr "Universität"
+
+#: presets.java:2019
+msgid "Edit University"
+msgstr "Universität bearbeiten"
+
+#: presets.java:2024
+msgid "College"
+msgstr "College"
+
+#: presets.java:2025
+msgid "Edit College"
+msgstr "College bearbeiten"
+
+#: presets.java:2032
+msgid "Cinema"
+msgstr "Kino"
+
+#: presets.java:2033
+msgid "Edit Cinema"
+msgstr "Kino bearbeiten"
+
+#: presets.java:2038
+msgid "Library"
+msgstr "Bibliothek"
+
+#: presets.java:2039
+msgid "Edit Library"
+msgstr "Bibliothek bearbeiten"
+
+#: presets.java:2044
+msgid "Arts Centre"
+msgstr "Kunstausstellungsgebäude"
+
+#: presets.java:2045
+msgid "Edit Arts Centre"
+msgstr "Kunstausstellung bearbeiten"
+
+#: presets.java:2050
+msgid "Theatre"
+msgstr "Theater"
+
+#: presets.java:2051
+msgid "Edit Theatre"
+msgstr "Theater bearbeiten"
+
+#: presets.java:2056
+msgid "Place of Worship"
+msgstr "Kirche"
+
+#: presets.java:2057
+msgid "Edit Place of Worship"
+msgstr "Kirche bearbeiten"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "Religion"
+msgstr "Religion"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "bahai"
+msgstr "bahaiistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "buddhist"
+msgstr "buddistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "christian"
+msgstr "christlich"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "hindu"
+msgstr "hinduistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "jain"
+msgstr "jainistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "jewish"
+msgstr "jüdisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "muslim"
+msgstr "moslemisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "sikh"
+msgstr "sikhistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "spiritualist"
+msgstr "spiritistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "taoist"
+msgstr "taoistisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "unitarianist"
+msgstr "unitarisch"
+
+#: presets.java:2060 presets.java:2532 presets.java:2668
+msgid "zoroastrian"
+msgstr "zoroastrisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "Denomination"
+msgstr "Konfession"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "anglican"
+msgstr "anglikanisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "baptist"
+msgstr "baptistisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "catholic"
+msgstr "katholisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "evangelical"
+msgstr "evangelikal"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "jehovahs_witness"
+msgstr "Zeugen Jehovas"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "lutheran"
+msgstr "lutherisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "methodist"
+msgstr "methodistisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "mormon"
+msgstr "mormonisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "orthodox"
+msgstr "orthodox"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "pentecostal"
+msgstr "Pfingstgemeinde"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "presbyterian"
+msgstr "presbyterianisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "protestant"
+msgstr "protestantisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "quaker"
+msgstr "Quäker"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "shia"
+msgstr "schiitisch"
+
+#: presets.java:2061 presets.java:2533 presets.java:2669
+msgid "sunni"
+msgstr "sunnitisch"
+
+#: presets.java:2066
+msgid "Addresses"
+msgstr "Adressen"
+
+#: presets.java:2067
+msgid "Edit address information"
+msgstr "Adressinformationen bearbeiten"
+
+#: presets.java:2069
+msgid "House number"
+msgstr "Hausnummer"
+
+#: presets.java:2073
+msgid "House name"
+msgstr "Hausname"
+
+#: presets.java:2074
+msgid "Street name"
+msgstr "Straßenname"
+
+#: presets.java:2075
+msgid "City name"
+msgstr "Stadtname"
+
+#: presets.java:2076
+msgid "Post code"
+msgstr "Postleitzahl"
+
+#: presets.java:2077
+msgid "Country code"
+msgstr "Länderkennung"
+
+#: presets.java:2080
+msgid "Address Interpolation"
+msgstr "Adressinterpolation"
+
+#: presets.java:2081
+msgid "Edit address interpolation"
+msgstr "Adressinterpolation bearbeiten"
+
+#: presets.java:2083
+msgid "Numbering scheme"
+msgstr "Nummernschema"
+
+#: presets.java:2083
+msgid "odd"
+msgstr "ungerade"
+
+#: presets.java:2083
+msgid "even"
+msgstr "gerade"
+
+#: presets.java:2083
+msgid "all"
+msgstr "alle"
+
+#: presets.java:2088
+msgid "Man Made"
+msgstr "Zivilisationsbauten"
+
+#: presets.java:2089
+msgid "Works"
+msgstr "Fabrik"
+
+#: presets.java:2090
+msgid "Edit Works"
+msgstr "Fabrik bearbeiten"
+
+#: presets.java:2095
+msgid "Tower"
+msgstr "Turm"
+
+#: presets.java:2096
+msgid "Edit Tower"
+msgstr "Turm bearbeiten"
+
+#: presets.java:2101
+msgid "Water Tower"
+msgstr "Wasserturm"
+
+#: presets.java:2102
+msgid "Edit Water Tower"
+msgstr "Wasserturm bearbeiten"
+
+#: presets.java:2107
+msgid "Power Tower"
+msgstr "Strommast"
+
+#: presets.java:2108
+msgid "Edit Power Tower"
+msgstr "Strommast bearbeiten"
+
+#: presets.java:2112
+msgid "Power Generator"
+msgstr "Stromgenerator"
+
+#: presets.java:2113
+msgid "Edit Power Generator"
+msgstr "Stromgenerator bearbeiten"
+
+#: presets.java:2115
+msgid "wind"
+msgstr "Wind"
+
+#: presets.java:2115
+msgid "hydro"
+msgstr "Wasser"
+
+#: presets.java:2115
+msgid "fossil"
+msgstr "Fossil"
+
+#: presets.java:2115
+msgid "nuclear"
+msgstr "Nuklear"
+
+#: presets.java:2119
+msgid "Gasometer"
+msgstr "Gasometer"
+
+#: presets.java:2120
+msgid "Edit Gasometer"
+msgstr "Gasometer bearbeiten"
+
+#: presets.java:2125
+msgid "Covered Reservoir"
+msgstr "Überdecktes Speicherbassin"
+
+#: presets.java:2126
+msgid "Edit Covered Reservoir"
+msgstr "Überdecktes Speicherbassin bearbeite"
+
+#: presets.java:2131
+msgid "Lighthouse"
+msgstr "Leuchtturm"
+
+#: presets.java:2132
+msgid "Edit Lighthouse"
+msgstr "Leuchtturm bearbeiten"
+
+#: presets.java:2137
+msgid "Windmill"
+msgstr "Windmühle"
+
+#: presets.java:2138
+msgid "Edit Windmill"
+msgstr "Windmühle bearbeiten"
+
+#: presets.java:2143
+msgid "Pier"
+msgstr "Anlegestelle (Pier)"
+
+#: presets.java:2144
+msgid "Edit Pier"
+msgstr "Anlegestelle (Pier) bearbeiten"
+
+#: presets.java:2149
+msgid "Pipeline"
+msgstr "Pipeline"
+
+#: presets.java:2150
+msgid "Edit Pipeline"
+msgstr "Pipeline bearbeiten"
+
+#: presets.java:2155
+msgid "Wastewater Plant"
+msgstr "Kläranlage"
+
+#: presets.java:2156
+msgid "Edit Wastewater Plant"
+msgstr "Kläranlage bearbeiten"
+
+#: presets.java:2161
+msgid "Crane"
+msgstr "Stationärer Kran"
+
+#: presets.java:2162
+msgid "Edit Crane"
+msgstr "Stationären Kran bearbeiten"
+
+#: presets.java:2167
+msgid "Beacon"
+msgstr "Bake"
+
+#: presets.java:2168
+msgid "Edit Beacon"
+msgstr "Bake bearbeiten"
+
+#: presets.java:2173
+msgid "Survey Point"
+msgstr "Vermessungspunkt"
+
+#: presets.java:2174
+msgid "Edit Survey Point"
+msgstr "Vermessungspunkt bearbeiten"
+
+#: presets.java:2179
+msgid "Surveillance"
+msgstr "Überwachungskamera"
+
+#: presets.java:2180
+msgid "Edit Surveillance Camera"
+msgstr "Überwachungskamera bearbeiten"
+
+#: presets.java:2187
+msgid "Amenities"
+msgstr "Einrichtungen"
+
+#: presets.java:2189
+msgid "Toilets"
+msgstr "Toiletten"
+
+#: presets.java:2192 presets.java:2282
+msgid "Reference number"
+msgstr "Referenznummer"
+
+#: presets.java:2193
+msgid "Charge"
+msgstr "Benutzungsgebühr"
+
+#: presets.java:2194 presets.java:2283
+msgid "Note"
+msgstr "Kommentar"
+
+#: presets.java:2197
+msgid "Post Box"
+msgstr "Briefkasten"
+
+#: presets.java:2202
+msgid "Telephone"
+msgstr "Telefon"
+
+#: presets.java:2203
+msgid "Edit a Telephone"
+msgstr "Telefon bearbeiten"
+
+#: presets.java:2206 presets.java:2284
+msgid "Coins"
+msgstr "Münzen"
+
+#: presets.java:2207 presets.java:2285
+msgid "Notes"
+msgstr "Scheine"
+
+#: presets.java:2208 presets.java:2286
+msgid "Electronic purses and Charge cards"
+msgstr "Geld- oder Prepaidkarten"
+
+#: presets.java:2209 presets.java:2287
+msgid "Debit cards"
+msgstr "Konto- oder EC-Karten"
+
+#: presets.java:2210 presets.java:2288
+msgid "Credit cards"
+msgstr "Kreditkarten"
+
+#: presets.java:2211
+msgid "Telephone cards"
+msgstr "Telefonkarten"
+
+#: presets.java:2214
+msgid "Recycling"
+msgstr "Recyclingstelle & -container"
+
+#: presets.java:2215
+msgid "Edit a Recycling station"
+msgstr "Recyclingstelle oder -container bearbeiten"
+
+#: presets.java:2217
+msgid "Batteries"
+msgstr "Batterien"
+
+#: presets.java:2218
+msgid "Cans"
+msgstr "Dosen"
+
+#: presets.java:2219
+msgid "Clothes"
+msgstr "Kleidung"
+
+#: presets.java:2220
+msgid "Glass"
+msgstr "Glas"
+
+#: presets.java:2221
+msgid "Paper"
+msgstr "Papier"
+
+#: presets.java:2222
+msgid "Scrap Metal"
+msgstr "Altmetall"
+
+#: presets.java:2225
+msgid "Bench"
+msgstr "Bank"
+
+#: presets.java:2229
+msgid "Hunting Stand"
+msgstr "Jagdanstand"
+
+#: presets.java:2230
+msgid "Edit a Hunting Stand"
+msgstr "Jagdanstand bearbeiten"
+
+#: presets.java:2233
+msgid "Hide"
+msgstr "Versteck"
+
+#: presets.java:2234
+msgid "Lock"
+msgstr "Schloß"
+
+#: presets.java:2235 presets.java:2712
+msgid "Height"
+msgstr "Höhe"
+
+#: presets.java:2235
+msgid "low"
+msgstr "niedrig"
+
+#: presets.java:2235
+msgid "half"
+msgstr "halb"
+
+#: presets.java:2235
+msgid "full"
+msgstr "voll"
+
+#: presets.java:2238
 msgid "Fountain"
 msgstr "Springbrunnen"
 
-#: presets.java:2003
+#: presets.java:2239
 msgid "Edit a Fountain"
 msgstr "Springbrunnen bearbeiten"
 
-#: presets.java:2008
+#: presets.java:2244
 msgid "Drinking Water"
 msgstr "Trinkwasser"
 
-#: presets.java:2009
+#: presets.java:2245
 msgid "Edit Drinking Water"
 msgstr "Trinkwasserabgabe bearbeiten"
 
-#: presets.java:2014
+#: presets.java:2250
 msgid "Baby Hatch"
 msgstr "Babyklappe"
 
-#: presets.java:2015
+#: presets.java:2251
 msgid "Edit a Baby Hatch"
 msgstr "Babyklappe bearbeiten"
 
-#: presets.java:2018
+#: presets.java:2254
 msgid "Opening Hours"
 msgstr "Öffnungszeiten"
 
-#: presets.java:2022
+#: presets.java:2258
 msgid "Shops"
 msgstr "Geschäfte"
 
-#: presets.java:2023
+#: presets.java:2259
 msgid "Supermarket"
 msgstr "Supermarkt"
 
-#: presets.java:2024
+#: presets.java:2260
 msgid "Edit Supermarket"
 msgstr "Supermarkt bearbeiten"
 
-#: presets.java:2029
+#: presets.java:2265
 msgid "Convenience Store"
 msgstr "Tante-Emma-Laden"
 
-#: presets.java:2030
+#: presets.java:2266
 msgid "Edit Convenience Store"
 msgstr "Tante-Emma-Laden bearbeiten"
 
-#: presets.java:2035
+#: presets.java:2271
 msgid "Kiosk"
 msgstr "Kiosk"
 
-#: presets.java:2036
+#: presets.java:2272
 msgid "Edit Kiosk"
 msgstr "Kiosk bearbeiten"
 
-#: presets.java:2041
+#: presets.java:2277
 msgid "Vending machine"
 msgstr "Automat"
 
-#: presets.java:2042
+#: presets.java:2278
 msgid "Edit a Vending_machine"
 msgstr "Automaten bearbeiten"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "Vending products"
 msgstr "Automatenprodukte"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "public_transport_tickets"
 msgstr "Fahrscheine"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "public_transport_plans"
 msgstr "Pläne des öffentlichen Nahverkehrs"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "parking_tickets"
 msgstr "Parkscheine"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "food"
 msgstr "Essen"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "drinks"
 msgstr "Getränke"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "sweets"
 msgstr "Süßigkeiten"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "cigarettes"
 msgstr "Zigaretten"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "photos"
 msgstr "Fotos"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "animal_food"
 msgstr "Tiernahrung"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "news_papers"
 msgstr "Zeitungen"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "toys"
 msgstr "Spielzeug"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "stamps"
 msgstr "Briefmarken"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "SIM-cards"
 msgstr "SIM-Karten"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "telephone_vouchers"
 msgstr "Telefonkarten"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "vouchers"
 msgstr "Karten/Belege"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "condoms"
 msgstr "Kondome"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "tampons"
 msgstr "Tampons"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "excrement_bags"
 msgstr "Hundekot-Tüten"
 
-#: presets.java:2053
+#: presets.java:2289
 msgid "Account or loyalty cards"
 msgstr "Kundenkarten"
 
-#: presets.java:2056
+#: presets.java:2292
 msgid "Butcher"
 msgstr "Fleischer"
 
-#: presets.java:2057
+#: presets.java:2293
 msgid "Edit Butcher"
 msgstr "Fleischer bearbeiten"
 
-#: presets.java:2062
+#: presets.java:2298
 msgid "Baker"
 msgstr "Bäcker"
 
-#: presets.java:2063
+#: presets.java:2299
 msgid "Edit Baker"
 msgstr "Bäcker bearbeiten"
 
-#: presets.java:2068
+#: presets.java:2304
 msgid "Do-it-yourself-store"
 msgstr "Heimwerker"
 
-#: presets.java:2069
+#: presets.java:2305
 msgid "Edit Do-it-yourself-store"
 msgstr "Geschäft für Heimwerker bearbeiten"
 
-#: presets.java:2074
+#: presets.java:2310
 msgid "Hairdresser"
 msgstr "Frisör"
 
-#: presets.java:2075
+#: presets.java:2311
 msgid "Edit Hairdresser"
 msgstr "Frisör bearbeiten"
 
-#: presets.java:2080
+#: presets.java:2316
 msgid "Dry Cleaning"
 msgstr "Chemische Reinigung"
 
-#: presets.java:2081
+#: presets.java:2317
 msgid "Edit Dry Cleaning"
 msgstr "Chemische Reinigung bearbeiten"
 
-#: presets.java:2086
+#: presets.java:2322
 msgid "Laundry"
 msgstr "Waschsalon"
 
-#: presets.java:2087
+#: presets.java:2323
 msgid "Edit Laundry"
 msgstr "Waschsalon bearbeiten"
 
-#: presets.java:2092
+#: presets.java:2328
 msgid "Outdoor"
 msgstr "Camping (Outdoor)"
 
-#: presets.java:2093
+#: presets.java:2329
 msgid "Edit Outdoor Shop"
 msgstr "Laden für Camping- (Outdoor-)bedarf bearbeiten"
 
-#: presets.java:2099
+#: presets.java:2335
 msgid "Cash"
 msgstr "Geld"
 
-#: presets.java:2100
+#: presets.java:2336
 msgid "Bank"
 msgstr "Bank"
 
-#: presets.java:2101
+#: presets.java:2337
 msgid "Edit Bank"
 msgstr "Bank bearbeiten"
 
-#: presets.java:2104 presets.java:2113
+#: presets.java:2340 presets.java:2349
 msgid "Automated Teller Machine"
 msgstr "Geldautomat"
 
-#: presets.java:2107
+#: presets.java:2343
 msgid "Money Exchange"
 msgstr "Wechselstube"
 
-#: presets.java:2108
+#: presets.java:2344
 msgid "Edit Money Exchange"
 msgstr "Wechselstube bearbeiten"
 
-#: presets.java:2114
+#: presets.java:2350
 msgid "Edit Automated Teller Machine"
 msgstr "Geldautomat bearbeiten"
 
-#: presets.java:2116
+#: presets.java:2352
 msgid "Provider"
 msgstr "Anbieter"
 
-#: presets.java:2121
+#: presets.java:2357
 msgid "Health"
 msgstr "Gesundheit"
 
-#: presets.java:2122
+#: presets.java:2358
+msgid "Doctors"
+msgstr "Arzt"
+
+#: presets.java:2359
+msgid "Edit Doctors"
+msgstr "Arzt bearbeiten"
+
+#: presets.java:2364
+msgid "Dentist"
+msgstr "Zahnarzt"
+
+#: presets.java:2365
+msgid "Edit Dentist"
+msgstr "Zahnarzt bearbeiten"
+
+#: presets.java:2370
 msgid "Pharmacy"
 msgstr "Apotheke"
 
-#: presets.java:2123
+#: presets.java:2371
 msgid "Edit Pharmacy"
 msgstr "Apotheke bearbeiten"
 
-#: presets.java:2125
+#: presets.java:2373
 msgid "Dispensing"
 msgstr "Rezepteinlösung"
 
-#: presets.java:2129
+#: presets.java:2377
 msgid "Hospital"
 msgstr "Krankenhaus"
 
-#: presets.java:2130
+#: presets.java:2378
 msgid "Edit Hospital"
 msgstr "Krankenhaus bearbeiten"
 
-#: presets.java:2135
+#: presets.java:2383
 msgid "Emergency Access Point"
 msgstr "Notfallrettungspunkt"
 
-#: presets.java:2136
+#: presets.java:2384
 msgid "Edit Emergency Access Point"
 msgstr "Notfallrettungspunkt bearbeiten"
 
-#: presets.java:2139
+#: presets.java:2387
 msgid "Point Number"
 msgstr "Punktnummer"
 
-#: presets.java:2140
+#: presets.java:2388
 msgid "Phone Number"
 msgstr "Telefonnummer"
 
-#: presets.java:2141
+#: presets.java:2389
 msgid "(Use international code, like +12-345-67890)"
 msgstr "(Internationale Nummer nutzen, z.B. +12-345-67890)"
 
-#: presets.java:2149
+#: presets.java:2393
+msgid "Veterinary"
+msgstr "Tierarzt"
+
+#: presets.java:2394
+msgid "Edit Veterinary"
+msgstr "Tierarzt bearbeiten"
+
+#: presets.java:2404
 msgid "Continent"
 msgstr "Kontinent"
 
-#: presets.java:2150
+#: presets.java:2405
 msgid "Edit a Continent"
 msgstr "Kontinent bearbeiten"
 
-#: presets.java:2156
+#: presets.java:2411
 msgid "Country"
 msgstr "Staat"
 
-#: presets.java:2157
+#: presets.java:2412
 msgid "Edit Country"
 msgstr "Staat bearbeiten"
 
-#: presets.java:2163
+#: presets.java:2418
 msgid "State"
 msgstr "Bundesland"
 
-#: presets.java:2164
+#: presets.java:2419
 msgid "Edit State"
 msgstr "Bundesland bearbeiten"
 
-#: presets.java:2170
+#: presets.java:2425
 msgid "Region"
 msgstr "Region"
 
-#: presets.java:2171
+#: presets.java:2426
 msgid "Edit Region"
 msgstr "Region bearbeiten"
 
-#: presets.java:2177
+#: presets.java:2432
 msgid "County"
 msgstr "Landkreis"
 
-#: presets.java:2178
+#: presets.java:2433
 msgid "Edit County"
 msgstr "Landkreis bearbeiten"
 
-#: presets.java:2184
+#: presets.java:2439
 msgid "City"
 msgstr "Großstadt"
 
-#: presets.java:2185
+#: presets.java:2440
 msgid "Edit City"
 msgstr "Großstadt bearbeiten"
 
-#: presets.java:2191
+#: presets.java:2446
 msgid "Town"
 msgstr "Stadt"
 
-#: presets.java:2192
+#: presets.java:2447
 msgid "Edit Town"
 msgstr "Stadt bearbeiten"
 
-#: presets.java:2198
+#: presets.java:2453
 msgid "Suburb"
 msgstr "Stadteil"
 
-#: presets.java:2199
+#: presets.java:2454
 msgid "Edit Suburb"
 msgstr "Stadtteil bearbeiten"
 
-#: presets.java:2205
+#: presets.java:2460
 msgid "Village"
 msgstr "Dorf"
 
-#: presets.java:2206
+#: presets.java:2461
 msgid "Edit Village"
 msgstr "Dorf bearbeiten"
 
-#: presets.java:2212
+#: presets.java:2467
 msgid "Hamlet"
 msgstr "Weiler"
 
-#: presets.java:2213
+#: presets.java:2468
 msgid "Edit Hamlet"
 msgstr "Weiler bearbeiten"
 
-#: presets.java:2219
+#: presets.java:2474
 msgid "Locality"
 msgstr "Unbewohnter Ort"
 
-#: presets.java:2220
+#: presets.java:2475
 msgid "Edit Locality"
 msgstr "Unbewohnten Ort bearbeiten"
 
-#: presets.java:2226
+#: presets.java:2481
 msgid "Island"
 msgstr "Insel"
 
-#: presets.java:2227
+#: presets.java:2482
 msgid "Edit Island"
 msgstr "Insel bearbeiten"
 
-#: presets.java:2235
+#: presets.java:2490
 msgid "Boundaries"
 msgstr "Grenzen"
 
-#: presets.java:2236
+#: presets.java:2491
 msgid "National"
 msgstr "Staat"
 
-#: presets.java:2237
+#: presets.java:2492
 msgid "Edit National Boundary"
 msgstr "Staatsgrenze bearbeiten"
 
-#: presets.java:2243
+#: presets.java:2498
 msgid "Administrative"
 msgstr "Innerstaatlich"
 
-#: presets.java:2244
+#: presets.java:2499
 msgid "Edit Administrative Boundary"
 msgstr "Innerstaatliche Grenze bearbeiten"
 
-#: presets.java:2250
+#: presets.java:2505
 msgid "Civil"
 msgstr "Zivil"
 
-#: presets.java:2251
+#: presets.java:2506
 msgid "Edit Civil Boundary"
 msgstr "Zivilrechtliche Grenze bearbeiten"
 
-#: presets.java:2257
+#: presets.java:2512
 msgid "political"
 msgstr "Politisch"
 
-#: presets.java:2258
+#: presets.java:2513
 msgid "Edit Political Boundary"
 msgstr "Politische Grenze bearbeiten"
 
-#: presets.java:2264
+#: presets.java:2519
 msgid "National_park"
 msgstr "Nationalpark"
 
-#: presets.java:2265
+#: presets.java:2520
 msgid "Edit National Park Boundary"
 msgstr "Nationalparkgrenze bearbeiten"
 
-#: presets.java:2272
+#: presets.java:2527
 msgid "Land use"
 msgstr "Landnutzung"
 
-#: presets.java:2273
+#: presets.java:2528
 msgid "Graveyard"
 msgstr "Kleiner Friedhof"
 
-#: presets.java:2274
+#: presets.java:2529
 msgid "Edit Graveyard"
 msgstr "Kleinen Friedhof bearbeiten"
 
-#: presets.java:2281
+#: presets.java:2536
 msgid "Farmyard"
 msgstr "Bauernhof"
 
-#: presets.java:2282
+#: presets.java:2537
 msgid "Edit Farmyard Landuse"
 msgstr "Bauernhof bearbeiten"
 
-#: presets.java:2288
+#: presets.java:2543
 msgid "Farmland"
 msgstr "Acker"
 
-#: presets.java:2289
+#: presets.java:2544
 msgid "Edit Farmland Landuse"
 msgstr "Ackerfläche bearbeiten"
 
-#: presets.java:2295
+#: presets.java:2550
 msgid "Vineyard"
 msgstr "Weinberg"
 
-#: presets.java:2296
+#: presets.java:2551
 msgid "Edit Vineyard Landuse"
 msgstr "Weinberg bearbeiten"
 
-#: presets.java:2302
+#: presets.java:2557
 msgid "Quarry"
 msgstr "Steinbruch"
 
-#: presets.java:2303
+#: presets.java:2558
 msgid "Edit Quarry Landuse"
 msgstr "Steinbruch bearbeiten"
 
-#: presets.java:2309
+#: presets.java:2564
 msgid "Landfill"
 msgstr "Deponie"
 
-#: presets.java:2310
+#: presets.java:2565
 msgid "Edit Landfill Landuse"
 msgstr "Deponie bearbeiten"
 
-#: presets.java:2316
+#: presets.java:2571
 msgid "Basin"
 msgstr "Wasserbecken"
 
-#: presets.java:2317
+#: presets.java:2572
 msgid "Edit Basin Landuse"
 msgstr "Wasserbecken bearbeiten"
 
-#: presets.java:2323
+#: presets.java:2578
 msgid "Reservoir"
 msgstr "Speicherbecken"
 
-#: presets.java:2324
+#: presets.java:2579
 msgid "Edit Reservoir Landuse"
 msgstr "Speicherbecken bearbeiten"
 
-#: presets.java:2330
+#: presets.java:2585
 msgid "Forest"
 msgstr "Forst"
 
-#: presets.java:2331
+#: presets.java:2586
 msgid "Edit Forest Landuse"
 msgstr "Forst bearbeiten"
 
-#: presets.java:2335 presets.java:2522
+#: presets.java:2590 presets.java:2777
 msgid "coniferous"
 msgstr "Nadelwald"
 
-#: presets.java:2335 presets.java:2522
+#: presets.java:2590 presets.java:2777
 msgid "deciduous"
 msgstr "Laubwald"
 
-#: presets.java:2335 presets.java:2522
+#: presets.java:2590 presets.java:2777
 msgid "mixed"
 msgstr "Mischwald"
 
-#: presets.java:2338
+#: presets.java:2593
 msgid "Allotments"
 msgstr "Schrebergärten"
 
-#: presets.java:2339
+#: presets.java:2594
 msgid "Edit Allotments Landuse"
 msgstr "Schrebergärten bearbeiten"
 
-#: presets.java:2345
+#: presets.java:2600
 msgid "Residential area"
 msgstr "Wohngebiet"
 
-#: presets.java:2346
+#: presets.java:2601
 msgid "Edit Residential Landuse"
 msgstr "Wohngebiet bearbeiten"
 
-#: presets.java:2352
+#: presets.java:2607
 msgid "Retail"
 msgstr "Einkaufsbereich"
 
-#: presets.java:2353
+#: presets.java:2608
 msgid "Edit Retail Landuse"
 msgstr "Einkaufsbereich bearbeiten"
 
-#: presets.java:2359
+#: presets.java:2614
 msgid "Commercial"
 msgstr "Gewerbegebiet"
 
-#: presets.java:2360
+#: presets.java:2615
 msgid "Edit Commercial Landuse"
 msgstr "Gewerbegebiet bearbeiten"
 
-#: presets.java:2366
+#: presets.java:2621
 msgid "Industrial"
 msgstr "Industrie"
 
-#: presets.java:2367
+#: presets.java:2622
 msgid "Edit Industrial Landuse"
 msgstr "Industriegebiet bearbeiten"
 
-#: presets.java:2373
+#: presets.java:2628
 msgid "Brownfield"
 msgstr "Baulücke"
 
-#: presets.java:2374
+#: presets.java:2629
 msgid "Edit Brownfield Landuse"
 msgstr "Baulücke bearbeiten"
 
-#: presets.java:2380
+#: presets.java:2635
 msgid "Greenfield"
 msgstr "Bauland"
 
-#: presets.java:2381
+#: presets.java:2636
 msgid "Edit Greenfield Landuse"
 msgstr "Bauland bearbeiten"
 
-#: presets.java:2387
+#: presets.java:2642
 msgid "Railway land"
 msgstr "Eisenbahngelände"
 
-#: presets.java:2388
+#: presets.java:2643
 msgid "Edit Railway Landuse"
 msgstr "Eisenbahngelände bearbeiten"
 
-#: presets.java:2394
+#: presets.java:2649
 msgid "Construction area"
 msgstr "Baustellengebiet"
 
-#: presets.java:2395
+#: presets.java:2650
 msgid "Edit Construction Landuse"
 msgstr "Baustelle bearbeiten"
 
-#: presets.java:2401
+#: presets.java:2656
 msgid "Military"
 msgstr "Militärgebiet"
 
-#: presets.java:2402
+#: presets.java:2657
 msgid "Edit Military Landuse"
 msgstr "Militärgebiet bearbeiten"
 
-#: presets.java:2408
+#: presets.java:2663
 msgid "Cemetery"
 msgstr "Friedhof"
 
-#: presets.java:2409
+#: presets.java:2664
 msgid "Edit Cemetery Landuse"
 msgstr "Friedhof bearbeiten"
 
-#: presets.java:2417
+#: presets.java:2672
 msgid "Village Green"
 msgstr "Dorfanger"
 
-#: presets.java:2418
+#: presets.java:2673
 msgid "Edit Village Green Landuse"
 msgstr "Dorfanger bearbeiten"
 
-#: presets.java:2424
+#: presets.java:2679
 msgid "Grass"
 msgstr "Gras"
 
-#: presets.java:2425
+#: presets.java:2680
 msgid "Edit Grass Landuse"
 msgstr "Grasfläche bearbeiten"
 
-#: presets.java:2431
+#: presets.java:2686
 msgid "Recreation Ground"
 msgstr "Erholungsgebiet"
 
-#: presets.java:2432
+#: presets.java:2687
 msgid "Edit Recreation Ground Landuse"
 msgstr "Erholungsgebiet bearbeiten"
 
-#: presets.java:2439
+#: presets.java:2694
 msgid "Natural"
 msgstr "Natur"
 
-#: presets.java:2440
+#: presets.java:2695
 msgid "Water"
 msgstr "Wasser"
 
-#: presets.java:2441
+#: presets.java:2696
 msgid "Edit Water"
 msgstr "Wasserfläche bearbeiten"
 
-#: presets.java:2446
+#: presets.java:2701
 msgid "Land"
 msgstr "Land"
 
-#: presets.java:2447
+#: presets.java:2702
 msgid "Edit Land"
 msgstr "Landfläche bearbeiten"
 
-#: presets.java:2452
+#: presets.java:2707
 msgid "Tree"
 msgstr "Baum"
 
-#: presets.java:2453
+#: presets.java:2708
 msgid "Edit a Tree"
 msgstr "Baum bearbeiten"
 
-#: presets.java:2458
+#: presets.java:2713
 msgid "Botanical Name"
 msgstr "Botanischer Namee"
 
-#: presets.java:2461
+#: presets.java:2716
 msgid "Spring"
 msgstr "Quelle"
 
-#: presets.java:2462
+#: presets.java:2717
 msgid "Edit a Spring"
 msgstr "Quelle bearbeiten"
 
-#: presets.java:2467
+#: presets.java:2722
 msgid "Peak"
 msgstr "Berg"
 
-#: presets.java:2468
+#: presets.java:2723
 msgid "Edit Peak"
 msgstr "Bergspitze bearbeiten"
 
-#: presets.java:2474
+#: presets.java:2729
 msgid "Glacier"
 msgstr "Gletscher"
 
-#: presets.java:2475
+#: presets.java:2730
 msgid "Edit Glacier"
 msgstr "Gletscher bearbeiten"
 
-#: presets.java:2481
+#: presets.java:2736
 msgid "Volcano"
 msgstr "Vulkan"
 
-#: presets.java:2482
+#: presets.java:2737
 msgid "Edit Volcano"
 msgstr "Vulkan bearbeiten"
 
-#: presets.java:2488
+#: presets.java:2743
 msgid "Cliff"
 msgstr "Klippe"
 
-#: presets.java:2489
+#: presets.java:2744
 msgid "Edit Cliff"
 msgstr "Klippe bearbeiten"
 
-#: presets.java:2494
+#: presets.java:2749
 msgid "Scree"
 msgstr "Geröll"
 
-#: presets.java:2495
+#: presets.java:2750
 msgid "Edit Scree"
 msgstr "Geröll bearbeiten"
 
-#: presets.java:2500
+#: presets.java:2755
 msgid "Scrub"
 msgstr "Buschland"
 
-#: presets.java:2501
+#: presets.java:2756
 msgid "Edit Scrub"
 msgstr "Buschland bearbeiten"
 
-#: presets.java:2506
+#: presets.java:2761
 msgid "Fell"
 msgstr "Gebirge"
 
-#: presets.java:2507
+#: presets.java:2762
 msgid "Edit Fell"
 msgstr "Gebirge bearbeiten"
 
-#: presets.java:2512
+#: presets.java:2767
 msgid "Heath"
 msgstr "Heide"
 
-#: presets.java:2513
+#: presets.java:2768
 msgid "Edit Heath"
 msgstr "Neide bearbeiten"
 
-#: presets.java:2518
+#: presets.java:2773
 msgid "Wood"
 msgstr "Wald"
 
-#: presets.java:2519
+#: presets.java:2774
 msgid "Edit Wood"
 msgstr "Wald bearbeiten"
 
-#: presets.java:2525
+#: presets.java:2780
 msgid "Marsh"
 msgstr "Marsch & Sumpf"
 
-#: presets.java:2526
+#: presets.java:2781
 msgid "Edit Marsh"
 msgstr "Sumpfige Landschaft bearbeiten"
 
-#: presets.java:2531
+#: presets.java:2786
 msgid "Coastline"
 msgstr "Küstenlinie"
 
-#: presets.java:2532
+#: presets.java:2787
 msgid "Edit Coastline"
 msgstr "Küstenlinie bearbeiten"
 
-#: presets.java:2537
+#: presets.java:2792
 msgid "Mud"
 msgstr "Schlick & Moor"
 
-#: presets.java:2538
+#: presets.java:2793
 msgid "Edit Mud"
 msgstr "Schlickiges Gebiet bearbeiten"
 
-#: presets.java:2543
+#: presets.java:2798
 msgid "Beach"
 msgstr "Strand"
 
-#: presets.java:2544
+#: presets.java:2799
 msgid "Edit Beach"
 msgstr "Strand bearbeiten"
 
-#: presets.java:2549
+#: presets.java:2804
 msgid "Bay"
 msgstr "Meeresbucht"
 
-#: presets.java:2550
+#: presets.java:2805
 msgid "Edit Bay"
 msgstr "Meeresbucht bearbeiten"
 
-#: presets.java:2555
+#: presets.java:2810
 msgid "Cave Entrance"
 msgstr "Höhleneingang"
 
-#: presets.java:2556
+#: presets.java:2811
 msgid "Edit Cave Entrance"
 msgstr "Höhleneingang bearbeiten"
 
@@ -10151,3 +10420,4 @@ msgstr ""
 #: specialmessages.java:9
 msgid "could not get audio input stream from input URL"
 msgstr "Konnte aus Eingabe-Datei keine Audiodaten lesen."
+

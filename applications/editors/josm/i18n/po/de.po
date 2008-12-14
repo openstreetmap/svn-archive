@@ -3368,7 +3368,7 @@ msgstr "Einstellungen..."
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:31
 msgid "Open a preferences page for global settings."
-msgstr "öffnete eine globale Einstellungs-Seite."
+msgstr "Seite für allgemeine Einstellungen öffnen."
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:32
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:45
@@ -3879,7 +3879,7 @@ msgstr "Wiederherstellen"
 
 #: ../core/src/org/openstreetmap/josm/actions/RedoAction.java:23
 msgid "Redo the last undone action."
-msgstr "Wiederhole die letzte zurückgenommene Aktion."
+msgstr "Stelle die letzte Änderung wieder her."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenAction.java:41
 #: ../core/src/org/openstreetmap/josm/actions/OpenAction.java:42
@@ -8021,7 +8021,7 @@ msgstr "Sennhütte"
 
 #: presets.java:1429
 msgid "Edit Chalet"
-msgstr "Sennhütte berabeiten"
+msgstr "Sennhütte bearbeiten"
 
 #: presets.java:1434
 msgid "Hostel"
@@ -8289,7 +8289,7 @@ msgstr "Burg / Schloß"
 
 #: presets.java:1558
 msgid "Edit Castle"
-msgstr "Burg / Schloß berabeiten"
+msgstr "Burg / Schloß bearbeiten"
 
 #: presets.java:1563
 msgid "Ruins"

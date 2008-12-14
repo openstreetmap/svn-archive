@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-13 20:19+0100\n"
+"POT-Creation-Date: 2008-12-14 11:55+0100\n"
 "PO-Revision-Date: 2008-10-28 18:26+0000\n"
 "Last-Translator: Štefan Baebler <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -300,8 +300,8 @@ msgid "Aborting..."
 msgstr "Prekinjanje ..."
 
 #: ../core/src/org/openstreetmap/josm/Main.java:207
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:134
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:255
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:136
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:259
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:56
 msgid "Help"
 msgstr "Pomoč"
@@ -656,12 +656,12 @@ msgstr "Spremeni lastnosti"
 msgid "Preset group ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:128
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:130
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:91
 msgid "File"
 msgstr "Datoteka"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:129
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:131
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:611
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:62
@@ -675,33 +675,33 @@ msgstr "Datoteka"
 msgid "Edit"
 msgstr "Uredi"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:130
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:132
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:99
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:105
 msgid "View"
 msgstr "Pogled"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:131
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayPlugin.java:26
 msgid "Tools"
 msgstr "Orodja"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:132
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:134
 msgid "Audio"
 msgstr "Zvok"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:135
 msgid "Presets"
 msgstr "Prednastavitve"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:159
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:160
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:42
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:68
 #, fuzzy, java-format
 msgid "Menu: {0}"
 msgstr "Konec GPS sledi: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:204
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:207
 msgid "Wireframe view"
 msgstr "Mrežni pogled"
 
@@ -1423,15 +1423,15 @@ msgid "gps point"
 msgstr "točka GPS"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:258
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "track"
 msgid_plural "tracks"
 msgstr[0] "sledi"
@@ -1836,61 +1836,63 @@ msgstr "Barva"
 #: presets.java:494 presets.java:515 presets.java:536 presets.java:557
 #: presets.java:587 presets.java:608 presets.java:620 presets.java:632
 #: presets.java:644 presets.java:656 presets.java:668 presets.java:678
-#: presets.java:698 presets.java:709 presets.java:744 presets.java:761
-#: presets.java:783 presets.java:795 presets.java:803 presets.java:811
-#: presets.java:819 presets.java:832 presets.java:841 presets.java:848
-#: presets.java:857 presets.java:870 presets.java:877 presets.java:887
-#: presets.java:893 presets.java:956 presets.java:1001 presets.java:1006
-#: presets.java:1011 presets.java:1016 presets.java:1026 presets.java:1033
-#: presets.java:1039 presets.java:1046 presets.java:1053 presets.java:1062
-#: presets.java:1068 presets.java:1074 presets.java:1086 presets.java:1097
-#: presets.java:1107 presets.java:1126 presets.java:1139 presets.java:1149
-#: presets.java:1167 presets.java:1185 presets.java:1191 presets.java:1197
-#: presets.java:1203 presets.java:1209 presets.java:1215 presets.java:1225
-#: presets.java:1231 presets.java:1237 presets.java:1243 presets.java:1249
-#: presets.java:1255 presets.java:1263 presets.java:1270 presets.java:1276
-#: presets.java:1282 presets.java:1288 presets.java:1294 presets.java:1300
-#: presets.java:1308 presets.java:1315 presets.java:1324 presets.java:1330
-#: presets.java:1336 presets.java:1342 presets.java:1348 presets.java:1354
-#: presets.java:1360 presets.java:1366 presets.java:1374 presets.java:1380
-#: presets.java:1386 presets.java:1392 presets.java:1398 presets.java:1404
-#: presets.java:1410 presets.java:1419 presets.java:1429 presets.java:1439
-#: presets.java:1449 presets.java:1459 presets.java:1465 presets.java:1473
-#: presets.java:1480 presets.java:1487 presets.java:1494 presets.java:1501
-#: presets.java:1508 presets.java:1515 presets.java:1522 presets.java:1529
-#: presets.java:1536 presets.java:1543 presets.java:1550 presets.java:1557
-#: presets.java:1564 presets.java:1571 presets.java:1578 presets.java:1585
-#: presets.java:1595 presets.java:1602 presets.java:1609 presets.java:1616
-#: presets.java:1623 presets.java:1630 presets.java:1637 presets.java:1644
-#: presets.java:1651 presets.java:1658 presets.java:1665 presets.java:1672
-#: presets.java:1679 presets.java:1686 presets.java:1693 presets.java:1700
-#: presets.java:1707 presets.java:1723 presets.java:1729 presets.java:1735
-#: presets.java:1741 presets.java:1747 presets.java:1753 presets.java:1759
-#: presets.java:1767 presets.java:1773 presets.java:1779 presets.java:1785
-#: presets.java:1793 presets.java:1799 presets.java:1805 presets.java:1811
-#: presets.java:1817 presets.java:1850 presets.java:1856 presets.java:1862
-#: presets.java:1874 presets.java:1880 presets.java:1886 presets.java:1892
-#: presets.java:1898 presets.java:1904 presets.java:1910 presets.java:1916
-#: presets.java:1922 presets.java:1928 presets.java:1934 presets.java:1940
-#: presets.java:1999 presets.java:2005 presets.java:2011 presets.java:2026
-#: presets.java:2032 presets.java:2038 presets.java:2059 presets.java:2065
-#: presets.java:2071 presets.java:2077 presets.java:2083 presets.java:2089
-#: presets.java:2095 presets.java:2103 presets.java:2110 presets.java:2126
-#: presets.java:2132 presets.java:2153 presets.java:2160 presets.java:2167
-#: presets.java:2174 presets.java:2181 presets.java:2188 presets.java:2195
-#: presets.java:2202 presets.java:2209 presets.java:2216 presets.java:2223
-#: presets.java:2230 presets.java:2240 presets.java:2247 presets.java:2254
-#: presets.java:2261 presets.java:2268 presets.java:2276 presets.java:2285
-#: presets.java:2292 presets.java:2299 presets.java:2306 presets.java:2313
-#: presets.java:2320 presets.java:2327 presets.java:2334 presets.java:2342
-#: presets.java:2349 presets.java:2356 presets.java:2363 presets.java:2370
-#: presets.java:2377 presets.java:2384 presets.java:2391 presets.java:2398
-#: presets.java:2405 presets.java:2412 presets.java:2421 presets.java:2428
-#: presets.java:2435 presets.java:2443 presets.java:2449 presets.java:2455
-#: presets.java:2464 presets.java:2470 presets.java:2477 presets.java:2484
-#: presets.java:2491 presets.java:2497 presets.java:2503 presets.java:2509
-#: presets.java:2515 presets.java:2521 presets.java:2528 presets.java:2534
-#: presets.java:2540 presets.java:2546 presets.java:2552 presets.java:2558
+#: presets.java:698 presets.java:729 presets.java:754 presets.java:764
+#: presets.java:955 presets.java:1001 presets.java:1009 presets.java:1017
+#: presets.java:1025 presets.java:1038 presets.java:1047 presets.java:1054
+#: presets.java:1063 presets.java:1076 presets.java:1083 presets.java:1093
+#: presets.java:1099 presets.java:1105 presets.java:1168 presets.java:1213
+#: presets.java:1218 presets.java:1223 presets.java:1228 presets.java:1238
+#: presets.java:1245 presets.java:1252 presets.java:1259 presets.java:1266
+#: presets.java:1273 presets.java:1282 presets.java:1288 presets.java:1294
+#: presets.java:1306 presets.java:1317 presets.java:1327 presets.java:1346
+#: presets.java:1359 presets.java:1369 presets.java:1387 presets.java:1395
+#: presets.java:1413 presets.java:1419 presets.java:1425 presets.java:1431
+#: presets.java:1437 presets.java:1443 presets.java:1449 presets.java:1459
+#: presets.java:1466 presets.java:1473 presets.java:1479 presets.java:1485
+#: presets.java:1491 presets.java:1499 presets.java:1506 presets.java:1512
+#: presets.java:1518 presets.java:1524 presets.java:1530 presets.java:1536
+#: presets.java:1544 presets.java:1551 presets.java:1560 presets.java:1566
+#: presets.java:1572 presets.java:1578 presets.java:1584 presets.java:1590
+#: presets.java:1596 presets.java:1602 presets.java:1610 presets.java:1616
+#: presets.java:1622 presets.java:1628 presets.java:1634 presets.java:1640
+#: presets.java:1646 presets.java:1655 presets.java:1665 presets.java:1675
+#: presets.java:1685 presets.java:1695 presets.java:1701 presets.java:1709
+#: presets.java:1716 presets.java:1723 presets.java:1730 presets.java:1737
+#: presets.java:1744 presets.java:1751 presets.java:1758 presets.java:1765
+#: presets.java:1772 presets.java:1779 presets.java:1786 presets.java:1793
+#: presets.java:1800 presets.java:1807 presets.java:1814 presets.java:1821
+#: presets.java:1831 presets.java:1838 presets.java:1845 presets.java:1852
+#: presets.java:1859 presets.java:1866 presets.java:1873 presets.java:1880
+#: presets.java:1887 presets.java:1894 presets.java:1901 presets.java:1908
+#: presets.java:1915 presets.java:1922 presets.java:1929 presets.java:1936
+#: presets.java:1943 presets.java:1959 presets.java:1965 presets.java:1971
+#: presets.java:1977 presets.java:1983 presets.java:1989 presets.java:1995
+#: presets.java:2001 presets.java:2009 presets.java:2015 presets.java:2021
+#: presets.java:2027 presets.java:2035 presets.java:2041 presets.java:2047
+#: presets.java:2053 presets.java:2059 presets.java:2092 presets.java:2098
+#: presets.java:2104 presets.java:2116 presets.java:2122 presets.java:2128
+#: presets.java:2134 presets.java:2140 presets.java:2146 presets.java:2152
+#: presets.java:2158 presets.java:2164 presets.java:2170 presets.java:2176
+#: presets.java:2182 presets.java:2241 presets.java:2247 presets.java:2262
+#: presets.java:2268 presets.java:2274 presets.java:2295 presets.java:2301
+#: presets.java:2307 presets.java:2313 presets.java:2319 presets.java:2325
+#: presets.java:2331 presets.java:2339 presets.java:2346 presets.java:2361
+#: presets.java:2367 presets.java:2374 presets.java:2380 presets.java:2396
+#: presets.java:2408 presets.java:2415 presets.java:2422 presets.java:2429
+#: presets.java:2436 presets.java:2443 presets.java:2450 presets.java:2457
+#: presets.java:2464 presets.java:2471 presets.java:2478 presets.java:2485
+#: presets.java:2495 presets.java:2502 presets.java:2509 presets.java:2516
+#: presets.java:2523 presets.java:2531 presets.java:2540 presets.java:2547
+#: presets.java:2554 presets.java:2561 presets.java:2568 presets.java:2575
+#: presets.java:2582 presets.java:2589 presets.java:2597 presets.java:2604
+#: presets.java:2611 presets.java:2618 presets.java:2625 presets.java:2632
+#: presets.java:2639 presets.java:2646 presets.java:2653 presets.java:2660
+#: presets.java:2667 presets.java:2676 presets.java:2683 presets.java:2690
+#: presets.java:2698 presets.java:2704 presets.java:2710 presets.java:2719
+#: presets.java:2725 presets.java:2732 presets.java:2739 presets.java:2746
+#: presets.java:2752 presets.java:2758 presets.java:2764 presets.java:2770
+#: presets.java:2776 presets.java:2783 presets.java:2789 presets.java:2795
+#: presets.java:2801 presets.java:2807 presets.java:2813
 msgid "Name"
 msgstr "Naziv"
 
@@ -2088,8 +2090,8 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:251
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:260
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:250
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:259
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:106
 #: presets.java:273 presets.java:274 presets.java:275 presets.java:276
 #: presets.java:277 presets.java:278 presets.java:279 presets.java:280
@@ -2102,21 +2104,21 @@ msgstr ""
 msgid "unknown"
 msgstr "neznan"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:266
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:265
 #, java-format
 msgid "{0}: Version {1}{2}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:268
 msgid "Plugin bundled with JOSM"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:270
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:118
 msgid "no description available"
 msgstr "opis ni na voljo"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:285
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:284
 #, java-format
 msgid ""
 "Plugin archive already available. Do you want to download current version by "
@@ -2125,22 +2127,22 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:286
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:285
 msgid "Plugin already exists"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:289
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:294
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:288
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:293
 #, fuzzy, java-format
 msgid "Error deleting plugin file: {0}"
 msgstr "Napaka pri branju datoteke s podatki o vstavkih: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:337
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:336
 #, java-format
 msgid "Error reading plugin information file: {0}"
 msgstr "Napaka pri branju datoteke s podatki o vstavkih: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:365
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:364
 #, java-format
 msgid ""
 "Download the following plugins?\n"
@@ -2151,7 +2153,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:366
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:365
 msgid "Download missing plugins"
 msgstr "Sprejem manjkajočih vtičnikov"
 
@@ -3082,6 +3084,7 @@ msgstr "Podvoji izbrano z zaporednima ukazoma kopiraj in prilepi."
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:23
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:34
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:35
 #: ../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/UndoAction.java:24
@@ -4107,6 +4110,42 @@ msgstr "Prosim, izberite točno tri vozlišča ali pot s tremi vozlišči."
 msgid "Those nodes are not in a circle."
 msgstr ""
 
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:50
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:72
+#, fuzzy
+msgid "Add Node"
+msgstr "Dodaj vozlišče"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
+msgid "Add a node by entering latitude and longitude."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:56
+#, fuzzy
+msgid "Enter the coordinates for the new node."
+msgstr "Prosim, vnesite želene koordinate."
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:57
+msgid "Use decimal degrees."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
+msgid "Negative values denote Western/Southern hemisphere."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:61
+#: ../plugins/livegps/livegps/LiveGpsDialog.java:54
+#: ../plugins/grid/src/grid/GridLayer.java:193
+msgid "Latitude"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:64
+#: ../plugins/livegps/livegps/LiveGpsDialog.java:56
+#: ../plugins/grid/src/grid/GridLayer.java:195
+msgid "Longitude"
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:36
 msgid "up"
 msgstr ""
@@ -4633,21 +4672,21 @@ msgstr "Rezultata iskanja kraja se ne da prebrati s strežnika"
 msgid "Enter a place name to search for:"
 msgstr "Vnesite ime kraja, ki ga želite poiskati:"
 
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:218 presets.java:2148
+#: ../plugins/namefinder/namefinder/PlaceSelection.java:218 presets.java:2403
 msgid "Places"
 msgstr "Kraji"
 
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:236
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:242 presets.java:1269
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: ../plugins/namefinder/namefinder/PlaceSelection.java:242 presets.java:1505
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "type"
 msgstr "vrsta"
 
@@ -5518,16 +5557,6 @@ msgstr ""
 msgid "Way Info"
 msgstr ""
 
-#: ../plugins/livegps/livegps/LiveGpsDialog.java:54
-#: ../plugins/grid/src/grid/GridLayer.java:193
-msgid "Latitude"
-msgstr ""
-
-#: ../plugins/livegps/livegps/LiveGpsDialog.java:56
-#: ../plugins/grid/src/grid/GridLayer.java:195
-msgid "Longitude"
-msgstr ""
-
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:58
 msgid "Speed"
 msgstr "Hitrost"
@@ -6375,7 +6404,7 @@ msgid "Edit a Motorway"
 msgstr "Uredi avtocesto"
 
 #: presets.java:16 presets.java:52 presets.java:71 presets.java:91
-#: presets.java:127 presets.java:146 presets.java:1171
+#: presets.java:127 presets.java:146 presets.java:1399
 msgid "Reference"
 msgstr ""
 
@@ -6388,10 +6417,10 @@ msgstr ""
 #: presets.java:492 presets.java:513 presets.java:534 presets.java:555
 #: presets.java:585 presets.java:606 presets.java:618 presets.java:630
 #: presets.java:642 presets.java:654 presets.java:666 presets.java:685
-#: presets.java:696 presets.java:707 presets.java:759 presets.java:781
-#: presets.java:830 presets.java:954 presets.java:1084 presets.java:1095
-#: presets.java:1105 presets.java:1124 presets.java:1137 presets.java:1147
-#: presets.java:1169 presets.java:1829
+#: presets.java:696 presets.java:752 presets.java:762 presets.java:953
+#: presets.java:1036 presets.java:1166 presets.java:1304 presets.java:1315
+#: presets.java:1325 presets.java:1344 presets.java:1357 presets.java:1367
+#: presets.java:1397 presets.java:2071
 msgid "Optional Attributes:"
 msgstr ""
 
@@ -6402,8 +6431,8 @@ msgstr ""
 #: presets.java:362 presets.java:381 presets.java:400 presets.java:419
 #: presets.java:437 presets.java:458 presets.java:479 presets.java:500
 #: presets.java:521 presets.java:542 presets.java:563 presets.java:593
-#: presets.java:796 presets.java:804 presets.java:812 presets.java:820
-#: presets.java:962
+#: presets.java:1002 presets.java:1010 presets.java:1018 presets.java:1026
+#: presets.java:1174
 msgid "Layer"
 msgstr "Plast"
 
@@ -6416,7 +6445,7 @@ msgstr "Voznih pasov"
 #: presets.java:98 presets.java:115 presets.java:134 presets.java:152
 #: presets.java:174 presets.java:229 presets.java:261 presets.java:284
 #: presets.java:320 presets.java:343 presets.java:364 presets.java:383
-#: presets.java:402 presets.java:439 presets.java:595 presets.java:964
+#: presets.java:402 presets.java:439 presets.java:595 presets.java:1176
 msgid "Max. speed (km/h)"
 msgstr "Najvišja hitrost (km/h)"
 
@@ -6425,7 +6454,7 @@ msgstr "Najvišja hitrost (km/h)"
 #: presets.java:168 presets.java:186 presets.java:204 presets.java:222
 #: presets.java:241 presets.java:255 presets.java:270 presets.java:301
 #: presets.java:335 presets.java:357 presets.java:376 presets.java:395
-#: presets.java:414 presets.java:432 presets.java:588 presets.java:957
+#: presets.java:414 presets.java:432 presets.java:588 presets.java:1169
 msgid "Oneway"
 msgstr "Enosmerna"
 
@@ -6436,7 +6465,7 @@ msgstr "Enosmerna"
 #: presets.java:358 presets.java:377 presets.java:396 presets.java:415
 #: presets.java:433 presets.java:453 presets.java:474 presets.java:495
 #: presets.java:516 presets.java:537 presets.java:558 presets.java:589
-#: presets.java:958
+#: presets.java:1170
 msgid "Bridge"
 msgstr "Most"
 
@@ -6446,7 +6475,7 @@ msgstr "Most"
 #: presets.java:257 presets.java:303 presets.java:337 presets.java:359
 #: presets.java:378 presets.java:397 presets.java:416 presets.java:434
 #: presets.java:454 presets.java:475 presets.java:496 presets.java:517
-#: presets.java:538 presets.java:559 presets.java:590 presets.java:959
+#: presets.java:538 presets.java:559 presets.java:590 presets.java:1171
 msgid "Tunnel"
 msgstr "Predor"
 
@@ -6456,7 +6485,7 @@ msgstr "Predor"
 #: presets.java:258 presets.java:304 presets.java:338 presets.java:360
 #: presets.java:379 presets.java:398 presets.java:417 presets.java:435
 #: presets.java:455 presets.java:476 presets.java:497 presets.java:518
-#: presets.java:539 presets.java:560 presets.java:591 presets.java:960
+#: presets.java:539 presets.java:560 presets.java:591 presets.java:1172
 msgid "Cutting"
 msgstr "Usek"
 
@@ -6466,7 +6495,7 @@ msgstr "Usek"
 #: presets.java:259 presets.java:305 presets.java:339 presets.java:361
 #: presets.java:380 presets.java:399 presets.java:418 presets.java:436
 #: presets.java:456 presets.java:477 presets.java:498 presets.java:519
-#: presets.java:540 presets.java:561 presets.java:592 presets.java:961
+#: presets.java:540 presets.java:561 presets.java:592 presets.java:1173
 msgid "Embankment"
 msgstr "Nasip"
 
@@ -6540,8 +6569,8 @@ msgstr ""
 #: presets.java:440 presets.java:462 presets.java:483 presets.java:504
 #: presets.java:525 presets.java:546 presets.java:567 presets.java:596
 #: presets.java:609 presets.java:621 presets.java:633 presets.java:645
-#: presets.java:657 presets.java:669 presets.java:965 presets.java:1115
-#: presets.java:1158
+#: presets.java:657 presets.java:669 presets.java:1177 presets.java:1335
+#: presets.java:1378
 msgid "Width (metres)"
 msgstr "Širina (metrov)"
 
@@ -6557,7 +6586,7 @@ msgstr ""
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
 #: presets.java:420 presets.java:438 presets.java:457 presets.java:478
 #: presets.java:499 presets.java:520 presets.java:541 presets.java:562
-#: presets.java:594 presets.java:963
+#: presets.java:594 presets.java:1175
 msgid "Surface"
 msgstr "Površina"
 
@@ -6565,13 +6594,13 @@ msgstr "Površina"
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
 #: presets.java:420 presets.java:438 presets.java:457 presets.java:478
 #: presets.java:499 presets.java:520 presets.java:541 presets.java:562
-#: presets.java:594 presets.java:963
+#: presets.java:594 presets.java:1175
 msgid "paved"
 msgstr ""
 
 #: presets.java:192 presets.java:210 presets.java:228 presets.java:242
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
-#: presets.java:420 presets.java:438 presets.java:594 presets.java:963
+#: presets.java:420 presets.java:438 presets.java:594 presets.java:1175
 msgid "unpaved"
 msgstr ""
 
@@ -6579,7 +6608,7 @@ msgstr ""
 #: presets.java:341 presets.java:363 presets.java:382 presets.java:401
 #: presets.java:420 presets.java:438 presets.java:457 presets.java:478
 #: presets.java:499 presets.java:520 presets.java:541 presets.java:562
-#: presets.java:594 presets.java:963
+#: presets.java:594 presets.java:1175
 msgid "cobblestone"
 msgstr ""
 
@@ -6644,8 +6673,8 @@ msgstr "Dostop"
 #: presets.java:522 presets.java:523 presets.java:524 presets.java:543
 #: presets.java:544 presets.java:545 presets.java:564 presets.java:565
 #: presets.java:566 presets.java:578 presets.java:579 presets.java:580
-#: presets.java:581 presets.java:582 presets.java:583 presets.java:1951
-#: presets.java:2125
+#: presets.java:581 presets.java:582 presets.java:583 presets.java:2193
+#: presets.java:2373
 msgid "yes"
 msgstr ""
 
@@ -6711,16 +6740,23 @@ msgstr ""
 #: presets.java:522 presets.java:523 presets.java:524 presets.java:543
 #: presets.java:544 presets.java:545 presets.java:564 presets.java:565
 #: presets.java:566 presets.java:578 presets.java:579 presets.java:580
-#: presets.java:581 presets.java:582 presets.java:583 presets.java:1951
-#: presets.java:2125
+#: presets.java:581 presets.java:582 presets.java:583 presets.java:2193
+#: presets.java:2373
 msgid "no"
 msgstr ""
 
-#: presets.java:274 presets.java:581 presets.java:1058 presets.java:1128
+#: presets.java:274 presets.java:581 presets.java:780 presets.java:790
+#: presets.java:800 presets.java:813 presets.java:825 presets.java:842
+#: presets.java:854 presets.java:879 presets.java:892 presets.java:905
+#: presets.java:918 presets.java:966 presets.java:981 presets.java:1278
+#: presets.java:1348
 msgid "Bicycle"
 msgstr "Kolo"
 
-#: presets.java:275 presets.java:583
+#: presets.java:275 presets.java:583 presets.java:779 presets.java:789
+#: presets.java:799 presets.java:812 presets.java:824 presets.java:841
+#: presets.java:853 presets.java:878 presets.java:891 presets.java:904
+#: presets.java:917 presets.java:965 presets.java:980
 msgid "Foot"
 msgstr ""
 
@@ -6732,17 +6768,26 @@ msgstr ""
 msgid "Heavy Goods Vehicles (hgv)"
 msgstr ""
 
-#: presets.java:278 presets.java:580
+#: presets.java:278 presets.java:580 presets.java:801 presets.java:814
+#: presets.java:826 presets.java:855 presets.java:866 presets.java:880
+#: presets.java:893 presets.java:906 presets.java:919 presets.java:967
+#: presets.java:982
 msgid "Horse"
 msgstr ""
 
 #: presets.java:279 presets.java:460 presets.java:481 presets.java:502
-#: presets.java:523 presets.java:544 presets.java:565
+#: presets.java:523 presets.java:544 presets.java:565 presets.java:802
+#: presets.java:815 presets.java:827 presets.java:843 presets.java:856
+#: presets.java:867 presets.java:881 presets.java:894 presets.java:907
+#: presets.java:920 presets.java:968 presets.java:983
 msgid "Motorcycle"
 msgstr ""
 
 #: presets.java:280 presets.java:461 presets.java:482 presets.java:503
 #: presets.java:524 presets.java:545 presets.java:566 presets.java:578
+#: presets.java:803 presets.java:828 presets.java:844 presets.java:857
+#: presets.java:868 presets.java:882 presets.java:895 presets.java:908
+#: presets.java:921 presets.java:969 presets.java:984
 msgid "Motorcar"
 msgstr ""
 
@@ -6786,8 +6831,8 @@ msgstr "Krožišče"
 msgid "Edit a Junction"
 msgstr ""
 
-#: presets.java:296 presets.java:577 presets.java:1873 presets.java:2335
-#: presets.java:2456 presets.java:2522
+#: presets.java:296 presets.java:577 presets.java:1246 presets.java:2115
+#: presets.java:2590 presets.java:2711 presets.java:2777
 msgid "Type"
 msgstr "Vrsta"
 
@@ -7083,2746 +7128,3061 @@ msgstr ""
 msgid "Edit Service Station"
 msgstr ""
 
-#: presets.java:699 presets.java:710 presets.java:1027 presets.java:1040
-#: presets.java:1047 presets.java:1054 presets.java:1949 presets.java:1957
-#: presets.java:1963 presets.java:2017 presets.java:2045
+#: presets.java:699 presets.java:956 presets.java:1239 presets.java:1253
+#: presets.java:1260 presets.java:1267 presets.java:1274 presets.java:2191
+#: presets.java:2199 presets.java:2205 presets.java:2253 presets.java:2281
 msgid "Operator"
 msgstr ""
 
-#: presets.java:702
-msgid "Toll Booth"
-msgstr "Cestninska postaja"
-
-#: presets.java:703
-msgid "Edit Toll Booth"
-msgstr "Uredi cestninsko postajo"
-
-#: presets.java:715
+#: presets.java:704
 msgid "Traffic Signal"
 msgstr "Semafor"
 
-#: presets.java:719
+#: presets.java:708
 msgid "Stop"
 msgstr "Stop znak"
 
-#: presets.java:723
+#: presets.java:712
 msgid "Zebra crossing"
 msgstr "Prehod za pešce"
 
-#: presets.java:727
-msgid "Bollard"
-msgstr "Stebriček"
-
-#: presets.java:731
+#: presets.java:716
 msgid "Mini Roundabout"
 msgstr "Majhno krožišče"
 
-#: presets.java:735
+#: presets.java:720
 msgid "Turning Circle"
 msgstr "Obračališče"
 
-#: presets.java:739
+#: presets.java:724
 msgid "City Limit"
 msgstr "Znak za naselje"
 
-#: presets.java:740
+#: presets.java:725
 msgid "Edit a city limit sign"
 msgstr "Uredi znak za naselje"
 
-#: presets.java:745
+#: presets.java:730
 msgid "Second Name"
 msgstr ""
 
-#: presets.java:748
+#: presets.java:733
+#, fuzzy
+msgid "Signpost"
+msgstr "Šport"
+
+#: presets.java:737
 msgid "Speed Camera"
 msgstr ""
 
-#: presets.java:754
+#: presets.java:741
+msgid "Emergency Phone"
+msgstr ""
+
+#: presets.java:747
 msgid "Ford"
 msgstr ""
 
-#: presets.java:755
+#: presets.java:748
 msgid "Edit Ford"
 msgstr ""
 
-#: presets.java:764
-msgid "Cattle Grid"
-msgstr "Rešetka za živino"
-
-#: presets.java:768
-msgid "Gate"
-msgstr "Vrata"
-
-#: presets.java:772
-msgid "Stile"
-msgstr ""
-
-#: presets.java:776
+#: presets.java:757
 msgid "Mountain Pass"
 msgstr "Gorski prelaz"
 
-#: presets.java:777
+#: presets.java:758
 msgid "Edit Mountain Pass"
 msgstr "Uredi gorski prelaz"
 
-#: presets.java:784 presets.java:2471 presets.java:2478 presets.java:2485
+#: presets.java:765 presets.java:2726 presets.java:2733 presets.java:2740
 #, fuzzy
 msgid "Elevation"
 msgstr "Relacija"
 
-#: presets.java:790
-msgid "Waterway"
-msgstr "Vodotok"
+#: presets.java:771
+#, fuzzy
+msgid "Barriers"
+msgstr "Meje"
 
-#: presets.java:791
-msgid "River"
-msgstr "Reka"
-
-#: presets.java:792
-msgid "Edit a River"
-msgstr "Uredi reko"
-
-#: presets.java:799
-msgid "Canal"
-msgstr "Kanal"
-
-#: presets.java:800
-msgid "Edit a Canal"
-msgstr "Uredi kanal"
-
-#: presets.java:807
-msgid "Drain"
+#: presets.java:773
+msgid "Stile"
 msgstr ""
 
-#: presets.java:808
-msgid "Edit a Drain"
-msgstr ""
-
-#: presets.java:815
-msgid "Stream"
-msgstr "Potok"
-
-#: presets.java:816
-msgid "Edit a Stream"
+#: presets.java:774
+#, fuzzy
+msgid "Edit a Stile"
 msgstr "Uredi potok"
 
-#: presets.java:825
-msgid "Ferry Route"
-msgstr "Pot trajekta"
-
-#: presets.java:826
-msgid "Edit a Ferry"
+#: presets.java:777 presets.java:787 presets.java:797 presets.java:810
+#: presets.java:822 presets.java:839 presets.java:851 presets.java:864
+#: presets.java:876 presets.java:889 presets.java:902 presets.java:915
+#: presets.java:963 presets.java:978
+msgid "Allowed traffic:"
 msgstr ""
 
-#: presets.java:837
-msgid "Boatyard"
-msgstr "Ladjedelnica"
+#: presets.java:783
+#, fuzzy
+msgid "Kissing Gate"
+msgstr "Pitna voda"
 
-#: presets.java:838
-msgid "Edit a Boatyard"
+#: presets.java:784
+#, fuzzy
+msgid "Edit a Kissing Gate"
+msgstr "Uredi pitno vodo"
+
+#: presets.java:793
+msgid "Hampshire Gate"
+msgstr ""
+
+#: presets.java:794
+#, fuzzy
+msgid "Edit a Hampshire Gate"
+msgstr "Uredi sedežnico"
+
+#: presets.java:806
+msgid "Bollard"
+msgstr "Stebriček"
+
+#: presets.java:807
+#, fuzzy
+msgid "Edit a bollard"
 msgstr "Uredi ladjedelnico"
 
-#: presets.java:844
-msgid "Dock"
-msgstr "Dók"
+#: presets.java:818
+#, fuzzy
+msgid "Drawbridge"
+msgstr "Most"
 
-#: presets.java:845
-msgid "Edit a Dock"
-msgstr "Uredi dók"
+#: presets.java:819
+#, fuzzy
+msgid "Edit a Drawbridge"
+msgstr "Uredi most"
 
-#: presets.java:853
-msgid "Dam"
-msgstr "Jez"
+#: presets.java:831
+#, fuzzy
+msgid "Bus Trap"
+msgstr "Avtobusno postajališče"
 
-#: presets.java:854
-msgid "Edit a Dam"
-msgstr "Uredi jez"
+#: presets.java:835
+msgid "Cattle Grid"
+msgstr "Rešetka za živino"
+
+#: presets.java:836
+#, fuzzy
+msgid "Edit a Cattle Grid"
+msgstr "Uredi kabinsko žičnico"
+
+#: presets.java:847
+msgid "Spikes"
+msgstr ""
+
+#: presets.java:848
+#, fuzzy
+msgid "Edit a Spikes"
+msgstr "Uredi izvir"
+
+#: presets.java:860
+msgid "Porticullis"
+msgstr ""
 
 #: presets.java:861
-msgid "Waterway Point"
-msgstr "Vodna točka"
+#, fuzzy
+msgid "Edit a Porticullis"
+msgstr "Popravi lastnosti"
 
-#: presets.java:862
-msgid "Lock Gate"
-msgstr "Vodna zapornica"
-
-#: presets.java:866
-msgid "Weir"
-msgstr ""
-
-#: presets.java:867
-msgid "Edit a Weir"
-msgstr ""
+#: presets.java:872
+msgid "Gate"
+msgstr "Vrata"
 
 #: presets.java:873
-msgid "Waterfall"
-msgstr "Slap"
-
-#: presets.java:874
-msgid "Edit a Waterfall"
-msgstr "Uredi slap"
-
-#: presets.java:880
-msgid "Turning Point"
-msgstr "Obračališče"
-
-#: presets.java:884
-msgid "Marina"
-msgstr ""
+#, fuzzy
+msgid "Edit a Gate"
+msgstr "Uredi jez"
 
 #: presets.java:885
-msgid "Edit Marina"
-msgstr ""
+#, fuzzy
+msgid "Lift Gate"
+msgstr "Vodna zapornica"
 
-#: presets.java:890
-msgid "Slipway"
-msgstr ""
+#: presets.java:886
+#, fuzzy
+msgid "Edit a Lift Gate"
+msgstr "Uredi vlečnico"
 
-#: presets.java:891
-msgid "Edit Slipway"
+#: presets.java:898
+msgid "Sally Port"
 msgstr ""
 
 #: presets.java:899
+#, fuzzy
+msgid "Edit a Sally Port"
+msgstr "Uredi letališče"
+
+#: presets.java:911
+#, fuzzy
+msgid "Bump Gate"
+msgstr "Vrata"
+
+#: presets.java:912
+#, fuzzy
+msgid "Edit a Bump Gate"
+msgstr "Uredi avtobusno postajo"
+
+#: presets.java:924
+#, fuzzy
+msgid "Hedge"
+msgstr "Prikaži/skrij"
+
+#: presets.java:928
+#, fuzzy
+msgid "Fence"
+msgstr "Zaporedje"
+
+#: presets.java:932
+#, fuzzy
+msgid "Block"
+msgstr "Nazaj"
+
+#: presets.java:936
+#, fuzzy
+msgid "Wall"
+msgstr "Slap"
+
+#: presets.java:940
+msgid "City Wall"
+msgstr ""
+
+#: presets.java:944
+msgid "Retaining Wall"
+msgstr ""
+
+#: presets.java:948
+msgid "Toll Booth"
+msgstr "Cestninska postaja"
+
+#: presets.java:949
+msgid "Edit Toll Booth"
+msgstr "Uredi cestninsko postajo"
+
+#: presets.java:959
+msgid "Border Control"
+msgstr ""
+
+#: presets.java:960
+#, fuzzy
+msgid "Edit a Border Control"
+msgstr "Uredi most"
+
+#: presets.java:974
+#, fuzzy
+msgid "Entrance"
+msgstr "Vhod v podzemno"
+
+#: presets.java:975
+#, fuzzy
+msgid "Edit a Entrance"
+msgstr "Uredi vhod v podzemno"
+
+#: presets.java:996
+msgid "Waterway"
+msgstr "Vodotok"
+
+#: presets.java:997
+msgid "River"
+msgstr "Reka"
+
+#: presets.java:998
+msgid "Edit a River"
+msgstr "Uredi reko"
+
+#: presets.java:1005
+msgid "Canal"
+msgstr "Kanal"
+
+#: presets.java:1006
+msgid "Edit a Canal"
+msgstr "Uredi kanal"
+
+#: presets.java:1013
+msgid "Drain"
+msgstr ""
+
+#: presets.java:1014
+msgid "Edit a Drain"
+msgstr ""
+
+#: presets.java:1021
+msgid "Stream"
+msgstr "Potok"
+
+#: presets.java:1022
+msgid "Edit a Stream"
+msgstr "Uredi potok"
+
+#: presets.java:1031
+msgid "Ferry Route"
+msgstr "Pot trajekta"
+
+#: presets.java:1032
+msgid "Edit a Ferry"
+msgstr ""
+
+#: presets.java:1043
+msgid "Boatyard"
+msgstr "Ladjedelnica"
+
+#: presets.java:1044
+msgid "Edit a Boatyard"
+msgstr "Uredi ladjedelnico"
+
+#: presets.java:1050
+msgid "Dock"
+msgstr "Dók"
+
+#: presets.java:1051
+msgid "Edit a Dock"
+msgstr "Uredi dók"
+
+#: presets.java:1059
+msgid "Dam"
+msgstr "Jez"
+
+#: presets.java:1060
+msgid "Edit a Dam"
+msgstr "Uredi jez"
+
+#: presets.java:1067
+msgid "Waterway Point"
+msgstr "Vodna točka"
+
+#: presets.java:1068
+msgid "Lock Gate"
+msgstr "Vodna zapornica"
+
+#: presets.java:1072
+msgid "Weir"
+msgstr ""
+
+#: presets.java:1073
+msgid "Edit a Weir"
+msgstr ""
+
+#: presets.java:1079
+msgid "Waterfall"
+msgstr "Slap"
+
+#: presets.java:1080
+msgid "Edit a Waterfall"
+msgstr "Uredi slap"
+
+#: presets.java:1086
+msgid "Turning Point"
+msgstr "Obračališče"
+
+#: presets.java:1090
+msgid "Marina"
+msgstr ""
+
+#: presets.java:1091
+msgid "Edit Marina"
+msgstr ""
+
+#: presets.java:1096
+msgid "Ferry Terminal"
+msgstr ""
+
+#: presets.java:1097
+#, fuzzy
+msgid "Edit Ferry Terminal"
+msgstr "Uredi izposojevalnico avtomobilov"
+
+#: presets.java:1102
+msgid "Slipway"
+msgstr ""
+
+#: presets.java:1103
+msgid "Edit Slipway"
+msgstr ""
+
+#: presets.java:1111
 msgid "Railway"
 msgstr "Železnica"
 
-#: presets.java:900
+#: presets.java:1112
 msgid "Rail"
 msgstr "Železniški tir"
 
-#: presets.java:901
+#: presets.java:1113
 msgid "Edit a Rail"
 msgstr "Uredi železniški tir"
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "Optional Types"
 msgstr "Vrsta (neobvezno)"
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "yard"
 msgstr ""
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "siding"
 msgstr ""
 
-#: presets.java:904 presets.java:911 presets.java:918 presets.java:925
-#: presets.java:932 presets.java:939 presets.java:946 presets.java:974
+#: presets.java:1116 presets.java:1123 presets.java:1130 presets.java:1137
+#: presets.java:1144 presets.java:1151 presets.java:1158 presets.java:1186
 msgid "spur"
 msgstr ""
 
-#: presets.java:907
+#: presets.java:1119
 msgid "Narrow Gauge Rail"
 msgstr "Tir ozkotirne železnice"
 
-#: presets.java:908
+#: presets.java:1120
 msgid "Edit a Narrow Gauge Rail"
 msgstr "Uredi tir ozkotirne železnice"
 
-#: presets.java:914
+#: presets.java:1126
 msgid "Monorail"
 msgstr ""
 
-#: presets.java:915
+#: presets.java:1127
 msgid "Edit a Monorail"
 msgstr ""
 
-#: presets.java:921
+#: presets.java:1133
 msgid "Preserved"
 msgstr ""
 
-#: presets.java:922
+#: presets.java:1134
 msgid "Edit a Preserved Railway"
 msgstr ""
 
-#: presets.java:928
+#: presets.java:1140
 msgid "Light Rail"
 msgstr ""
 
-#: presets.java:929
+#: presets.java:1141
 msgid "Edit a Light Rail"
 msgstr ""
 
-#: presets.java:935
+#: presets.java:1147
 msgid "Subway"
 msgstr "Podzemna"
 
-#: presets.java:936
+#: presets.java:1148
 msgid "Edit a Subway"
 msgstr "Uredi podzemno"
 
-#: presets.java:942
+#: presets.java:1154
 msgid "Tram"
 msgstr ""
 
-#: presets.java:943
+#: presets.java:1155
 msgid "Edit a Tram"
 msgstr ""
 
-#: presets.java:949
+#: presets.java:1161
 msgid "Bus Guideway"
 msgstr ""
 
-#: presets.java:950
+#: presets.java:1162
 msgid "Edit a Bus Guideway"
 msgstr ""
 
-#: presets.java:970
+#: presets.java:1182
 msgid "Disused Rail"
 msgstr "Nerabljen tir"
 
-#: presets.java:971
+#: presets.java:1183
 msgid "Edit a Disused Railway"
 msgstr "Uredi nerabljen tir"
 
-#: presets.java:977
+#: presets.java:1189
 msgid "Abandoned Rail"
 msgstr "Zapuščeni tir"
 
-#: presets.java:983
+#: presets.java:1195
 msgid "Level Crossing"
 msgstr ""
 
-#: presets.java:987
+#: presets.java:1199
 msgid "Crossing"
 msgstr ""
 
-#: presets.java:991
+#: presets.java:1203
 msgid "Turntable"
 msgstr "Okretnica"
 
-#: presets.java:997
+#: presets.java:1209
 msgid "Aerialway"
 msgstr "Žičnica"
 
-#: presets.java:998
+#: presets.java:1210
 msgid "Chair Lift"
 msgstr "Sedežnica"
 
-#: presets.java:999
+#: presets.java:1211
 msgid "Edit a Chair Lift"
 msgstr "Uredi sedežnico"
 
-#: presets.java:1003
+#: presets.java:1215
 msgid "Drag Lift"
 msgstr "Vlečnica"
 
-#: presets.java:1004
+#: presets.java:1216
 msgid "Edit a Drag Lift"
 msgstr "Uredi vlečnico"
 
-#: presets.java:1008
+#: presets.java:1220
 msgid "Cable Car"
 msgstr "Kabinska žičnica"
 
-#: presets.java:1009
+#: presets.java:1221
 msgid "Edit a Cable Car"
 msgstr "Uredi kabinsko žičnico"
 
-#: presets.java:1013 presets.java:1079
+#: presets.java:1225 presets.java:1299
 msgid "Station"
 msgstr "Postaja"
 
-#: presets.java:1014
+#: presets.java:1226
 msgid "Edit a Station"
 msgstr "Uredi postajo"
 
-#: presets.java:1022
+#: presets.java:1234
 msgid "Car"
 msgstr "Avtomobil"
 
-#: presets.java:1023
+#: presets.java:1235
 msgid "Fuel"
 msgstr "Gorivo"
 
-#: presets.java:1024
+#: presets.java:1236
 msgid "Edit Fuel"
 msgstr "Uredi gorivo"
 
-#: presets.java:1030 presets.java:1059
+#: presets.java:1242 presets.java:1279
 msgid "Parking"
 msgstr "Parkirišče"
 
-#: presets.java:1031
+#: presets.java:1243
 msgid "Edit Parking"
 msgstr "Uredi parkirišče"
 
-#: presets.java:1036 presets.java:1071
+#: presets.java:1246
+#, fuzzy
+msgid "surface"
+msgstr "Površina"
+
+#: presets.java:1246
+#, fuzzy
+msgid "multi-storey"
+msgstr "Zgodovina"
+
+#: presets.java:1246
+msgid "underground"
+msgstr ""
+
+#: presets.java:1249
+#, fuzzy
+msgid "Wash"
+msgstr "Poti"
+
+#: presets.java:1250
+#, fuzzy
+msgid "Edit Car Wash"
+msgstr "Uredi izposojevalnico avtomobilov"
+
+#: presets.java:1256 presets.java:1291
 msgid "Shop"
 msgstr ""
 
-#: presets.java:1037
+#: presets.java:1257
 msgid "Edit Car Shop"
 msgstr ""
 
-#: presets.java:1043 presets.java:1065
+#: presets.java:1263 presets.java:1285
 msgid "Rental"
 msgstr "Izposojevalnica"
 
-#: presets.java:1044
+#: presets.java:1264
 msgid "Edit Car Rental"
 msgstr "Uredi izposojevalnico avtomobilov"
 
-#: presets.java:1050
+#: presets.java:1270
 msgid "Sharing"
 msgstr ""
 
-#: presets.java:1051
+#: presets.java:1271
 msgid "Edit Car Sharing"
 msgstr ""
 
-#: presets.java:1060
+#: presets.java:1280
 msgid "Edit Bicycle Parking"
 msgstr ""
 
-#: presets.java:1066
+#: presets.java:1286
 msgid "Edit Bicycle Rental"
 msgstr "Uredi izposojevalnico koles"
 
-#: presets.java:1072
+#: presets.java:1292
 msgid "Edit Bicycle Shop"
 msgstr ""
 
-#: presets.java:1078
+#: presets.java:1298
 msgid "Public Transport"
 msgstr "Javni prevoz"
 
-#: presets.java:1080
+#: presets.java:1300
 msgid "Edit Station"
 msgstr "Uredi postajo"
 
-#: presets.java:1087
+#: presets.java:1307
 msgid "UIC-Reference"
 msgstr ""
 
-#: presets.java:1090
+#: presets.java:1310
 msgid "Railway Halt"
 msgstr "Železniško postajališče"
 
-#: presets.java:1091
+#: presets.java:1311
 msgid "Edit Halt"
 msgstr ""
 
-#: presets.java:1100
+#: presets.java:1320
 msgid "Tram Stop"
 msgstr ""
 
-#: presets.java:1101
+#: presets.java:1321
 msgid "Edit Tram Stop"
 msgstr ""
 
-#: presets.java:1110
+#: presets.java:1330
 msgid "Railway Platform"
 msgstr "Železniški peron"
 
-#: presets.java:1111
+#: presets.java:1331
 msgid "Edit a railway platform"
 msgstr "Uredi železniški peron"
 
-#: presets.java:1114 presets.java:1157
+#: presets.java:1334 presets.java:1377
 msgid "Reference (track number)"
 msgstr ""
 
-#: presets.java:1116 presets.java:1159
+#: presets.java:1336 presets.java:1379
 msgid "Area"
 msgstr ""
 
-#: presets.java:1119
+#: presets.java:1339
 msgid "Subway Entrance"
 msgstr "Vhod v podzemno"
 
-#: presets.java:1120
+#: presets.java:1340
 msgid "Edit Subway Entrance"
 msgstr "Uredi vhod v podzemno"
 
-#: presets.java:1127
+#: presets.java:1347
 msgid "Wheelchair"
 msgstr ""
 
-#: presets.java:1133
+#: presets.java:1353
 msgid "Bus Station"
 msgstr "Avtobusna postaja"
 
-#: presets.java:1134
+#: presets.java:1354
 msgid "Edit a Bus Station"
 msgstr "Uredi avtobusno postajo"
 
-#: presets.java:1142
+#: presets.java:1362
 msgid "Bus Stop"
 msgstr "Avtobusno postajališče"
 
-#: presets.java:1143
+#: presets.java:1363
 msgid "Edit Bus Stop"
 msgstr "Uredu avtobusno postajališče"
 
-#: presets.java:1153
+#: presets.java:1373
 msgid "Bus Platform"
 msgstr "Avtobusni peron"
 
-#: presets.java:1154
+#: presets.java:1374
 msgid "Edit a bus platform"
 msgstr "Uredi avtobusni peron"
 
-#: presets.java:1164
+#: presets.java:1384
+msgid "Taxi"
+msgstr "Taksi"
+
+#: presets.java:1385
+msgid "Edit a Taxi station"
+msgstr "Uredi postajališče taksijev"
+
+#: presets.java:1392
 msgid "Airport"
 msgstr "Letališče"
 
-#: presets.java:1165
+#: presets.java:1393
 msgid "Edit an airport"
 msgstr "Uredi letališče"
 
-#: presets.java:1172
+#: presets.java:1400
 msgid "IATA"
 msgstr ""
 
-#: presets.java:1173
+#: presets.java:1401
 msgid "ICAO"
 msgstr ""
 
-#: presets.java:1181
+#: presets.java:1409
 msgid "Accomodation"
 msgstr "Nastanitev"
 
-#: presets.java:1182
+#: presets.java:1410
 msgid "Hotel"
 msgstr ""
 
-#: presets.java:1183
+#: presets.java:1411
 msgid "Edit Hotel"
 msgstr ""
 
-#: presets.java:1188
+#: presets.java:1416
 msgid "Motel"
 msgstr ""
 
-#: presets.java:1189
+#: presets.java:1417
 msgid "Edit Motel"
 msgstr ""
 
-#: presets.java:1194
+#: presets.java:1422
 msgid "Guest House"
 msgstr ""
 
-#: presets.java:1195
+#: presets.java:1423
 msgid "Edit Guest House"
 msgstr ""
 
-#: presets.java:1200
+#: presets.java:1428
+#, fuzzy
+msgid "Chalet"
+msgstr "Spremeni"
+
+#: presets.java:1429
+#, fuzzy
+msgid "Edit Chalet"
+msgstr "Uredi grad"
+
+#: presets.java:1434
 msgid "Hostel"
 msgstr ""
 
-#: presets.java:1201
+#: presets.java:1435
 msgid "Edit Hostel"
 msgstr ""
 
-#: presets.java:1206
+#: presets.java:1440
 msgid "Caravan Site"
 msgstr ""
 
-#: presets.java:1207
+#: presets.java:1441
 msgid "Edit Caravan Site"
 msgstr ""
 
-#: presets.java:1212
+#: presets.java:1446
 msgid "Camping Site"
 msgstr ""
 
-#: presets.java:1213
+#: presets.java:1447
 msgid "Edit Camping Site"
 msgstr ""
 
-#: presets.java:1221
+#: presets.java:1455
 msgid "Food+Drinks"
 msgstr "Hrana in pijača"
 
-#: presets.java:1222
+#: presets.java:1456
 msgid "Restaurant"
 msgstr ""
 
-#: presets.java:1223
+#: presets.java:1457
 msgid "Edit Restaurant"
 msgstr ""
 
-#: presets.java:1228
+#: presets.java:1460 presets.java:1467
+#, fuzzy
+msgid "Cuisine"
+msgstr "Kinematograf"
+
+#: presets.java:1460 presets.java:1467
+msgid "italian"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "chinese"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "pizza"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "burger"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+#, fuzzy
+msgid "greek"
+msgstr "Drevo"
+
+#: presets.java:1460 presets.java:1467
+msgid "german"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "indian"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+#, fuzzy
+msgid "regional"
+msgstr "relacije"
+
+#: presets.java:1460 presets.java:1467
+msgid "kebap"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "turkish"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "asian"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "thai"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+msgid "mexican"
+msgstr ""
+
+#: presets.java:1460 presets.java:1467
+#, fuzzy
+msgid "japanese"
+msgstr "Voznih pasov"
+
+#: presets.java:1463
 msgid "Fast Food"
 msgstr ""
 
-#: presets.java:1229
+#: presets.java:1464
 msgid "Edit Fast Food Restaurant"
 msgstr ""
 
-#: presets.java:1234
+#: presets.java:1470
 msgid "Cafe"
 msgstr ""
 
-#: presets.java:1235
+#: presets.java:1471
 msgid "Edit Cafe"
 msgstr ""
 
-#: presets.java:1240
+#: presets.java:1476
 msgid "Pub"
 msgstr "Pivnica"
 
-#: presets.java:1241
+#: presets.java:1477
 msgid "Edit Pub"
 msgstr "Uredi pivnico"
 
-#: presets.java:1246
+#: presets.java:1482
 msgid "Biergarten"
 msgstr ""
 
-#: presets.java:1247
+#: presets.java:1483
 msgid "Edit Biergarten"
 msgstr ""
 
-#: presets.java:1252
+#: presets.java:1488
 msgid "Nightclub"
 msgstr ""
 
-#: presets.java:1253
+#: presets.java:1489
 msgid "Edit Nightclub"
 msgstr ""
 
-#: presets.java:1259
+#: presets.java:1495
 msgid "Tourism"
 msgstr "Turizem"
 
-#: presets.java:1260
+#: presets.java:1496
 msgid "Attraction"
 msgstr ""
 
-#: presets.java:1261
+#: presets.java:1497
 msgid "Edit Attraction"
 msgstr ""
 
-#: presets.java:1266
+#: presets.java:1502
 msgid "Information point"
 msgstr ""
 
-#: presets.java:1267
+#: presets.java:1503
 #, fuzzy
 msgid "Edit Information Point"
 msgstr "Informacije"
 
-#: presets.java:1269
+#: presets.java:1505
 #, fuzzy
 msgid "office"
 msgstr "Pošta"
 
-#: presets.java:1269
+#: presets.java:1505
 #, fuzzy
 msgid "map"
 msgstr "Zemljevid"
 
-#: presets.java:1269
+#: presets.java:1505
 msgid "citymap"
 msgstr ""
 
-#: presets.java:1269
+#: presets.java:1505
 msgid "hikingmap"
 msgstr ""
 
-#: presets.java:1269
+#: presets.java:1505
 #, fuzzy
 msgid "bicyclemap"
 msgstr "Kolo"
 
-#: presets.java:1269
+#: presets.java:1505
 #, fuzzy
 msgid "board"
 msgstr "Naprej"
 
-#: presets.java:1269
+#: presets.java:1505
 #, fuzzy
 msgid "history"
 msgstr "Zgodovina"
 
-#: presets.java:1269
+#: presets.java:1505
 #, fuzzy
 msgid "nature"
 msgstr "Gledališče"
 
-#: presets.java:1269
+#: presets.java:1505
 msgid "wildlife"
 msgstr ""
 
-#: presets.java:1269
+#: presets.java:1505
 msgid "guidepost"
 msgstr ""
 
-#: presets.java:1273
+#: presets.java:1509
 msgid "Museum"
 msgstr "Muzej"
 
-#: presets.java:1274
+#: presets.java:1510
 msgid "Edit Museum"
 msgstr "Uredi muzej"
 
-#: presets.java:1279
+#: presets.java:1515
 msgid "Zoo"
 msgstr "Živalski vrt"
 
-#: presets.java:1280
+#: presets.java:1516
 msgid "Edit Zoo"
 msgstr "Uredi živalski vrt"
 
-#: presets.java:1285
+#: presets.java:1521
 msgid "Viewpoint"
 msgstr "Razgledišče"
 
-#: presets.java:1286
+#: presets.java:1522
 msgid "Edit Viewpoint"
 msgstr "Uredi razgledišče"
 
-#: presets.java:1291
+#: presets.java:1527
 msgid "Theme Park"
 msgstr ""
 
-#: presets.java:1292
+#: presets.java:1528
 msgid "Edit Theme Park"
 msgstr ""
 
-#: presets.java:1297
+#: presets.java:1533
 msgid "Artwork"
 msgstr "Umetnina"
 
-#: presets.java:1298
+#: presets.java:1534
 msgid "Edit Artwork"
 msgstr "Uredi umetnino"
 
-#: presets.java:1305 presets.java:1990
+#: presets.java:1541 presets.java:2232
 msgid "Shelter"
 msgstr ""
 
-#: presets.java:1306
+#: presets.java:1542
 msgid "Edit Shelter"
 msgstr ""
 
-#: presets.java:1309
+#: presets.java:1545
 msgid "Fireplace"
 msgstr ""
 
-#: presets.java:1312
+#: presets.java:1548
 msgid "Picnic Site"
 msgstr ""
 
-#: presets.java:1313
+#: presets.java:1549
 msgid "Edit Picnic Site"
 msgstr ""
 
-#: presets.java:1320
+#: presets.java:1556
 msgid "Historic Places"
 msgstr "Zgodovinski kraji"
 
-#: presets.java:1321
+#: presets.java:1557
 msgid "Castle"
 msgstr "Grad"
 
-#: presets.java:1322
+#: presets.java:1558
 msgid "Edit Castle"
 msgstr "Uredi grad"
 
-#: presets.java:1327
+#: presets.java:1563
 msgid "Ruins"
 msgstr "Ruševine"
 
-#: presets.java:1328
+#: presets.java:1564
 msgid "Edit Ruins"
 msgstr "Uredi ruševine"
 
-#: presets.java:1333
+#: presets.java:1569
 msgid "Archaeological Site"
 msgstr "Arheološko najdišče"
 
-#: presets.java:1334
+#: presets.java:1570
 msgid "Edit Archaeological Site"
 msgstr "Uredi arheološko najdišče"
 
-#: presets.java:1339
+#: presets.java:1575
 msgid "Monument"
 msgstr ""
 
-#: presets.java:1340
+#: presets.java:1576
 msgid "Edit Monument"
 msgstr ""
 
-#: presets.java:1345
+#: presets.java:1581
 msgid "Memorial"
 msgstr ""
 
-#: presets.java:1346
+#: presets.java:1582
 msgid "Edit Memorial"
 msgstr ""
 
-#: presets.java:1351
+#: presets.java:1587
 msgid "Battlefield"
 msgstr ""
 
-#: presets.java:1352
+#: presets.java:1588
 msgid "Edit Battlefield"
 msgstr ""
 
-#: presets.java:1357
+#: presets.java:1593
 msgid "Wayside Cross"
 msgstr ""
 
-#: presets.java:1358
+#: presets.java:1594
 msgid "Edit a Wayside Cross"
 msgstr ""
 
-#: presets.java:1363
+#: presets.java:1599
 msgid "Wayside Shrine"
 msgstr ""
 
-#: presets.java:1364
+#: presets.java:1600
 msgid "Edit a Wayside Shrine"
 msgstr ""
 
-#: presets.java:1370
+#: presets.java:1606
 msgid "Leisure"
 msgstr "Prosti čas"
 
-#: presets.java:1371
+#: presets.java:1607
 msgid "Water Park"
 msgstr "Vodni park"
 
-#: presets.java:1372
+#: presets.java:1608
 msgid "Edit Water Park"
 msgstr "Uredi vodni park"
 
-#: presets.java:1377
+#: presets.java:1613
 msgid "Playground"
 msgstr "Igrišče"
 
-#: presets.java:1378
+#: presets.java:1614
 msgid "Edit Playground"
 msgstr "Uredi igrišče"
 
-#: presets.java:1383
+#: presets.java:1619
 msgid "Fishing"
 msgstr "Ribarjenje"
 
-#: presets.java:1384
+#: presets.java:1620
 msgid "Edit Fishing"
 msgstr "Uredi ribarjenje"
 
-#: presets.java:1389
+#: presets.java:1625
 msgid "Nature Reserve"
 msgstr "Naravni rezervat"
 
-#: presets.java:1390
+#: presets.java:1626
 msgid "Edit Nature Reserve"
 msgstr "Uredi naravni rezervat"
 
-#: presets.java:1395
+#: presets.java:1631
 msgid "Park"
 msgstr ""
 
-#: presets.java:1396
+#: presets.java:1632
 msgid "Edit Park"
 msgstr ""
 
-#: presets.java:1401
+#: presets.java:1637
 msgid "Garden"
 msgstr ""
 
-#: presets.java:1402
+#: presets.java:1638
 msgid "Edit Garden"
 msgstr ""
 
-#: presets.java:1407
+#: presets.java:1643
 msgid "Common"
 msgstr ""
 
-#: presets.java:1408
+#: presets.java:1644
 msgid "Edit Common"
 msgstr ""
 
-#: presets.java:1415
+#: presets.java:1651
 msgid "Sport Facilities"
 msgstr ""
 
-#: presets.java:1416
+#: presets.java:1652
 msgid "Stadium"
 msgstr "Stadion"
 
-#: presets.java:1417
+#: presets.java:1653
 msgid "Edit Stadium"
 msgstr "Uredi stadion"
 
-#: presets.java:1421 presets.java:1431 presets.java:1441 presets.java:1451
+#: presets.java:1657 presets.java:1667 presets.java:1677 presets.java:1687
 msgid "select sport:"
 msgstr "izberite šport:"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "sport"
 msgstr "šport"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "multi"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "archery"
 msgstr "lokostrelstvo"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "athletics"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "australian_football"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "baseball"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "basketball"
 msgstr "košarka"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "boules"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "bowls"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "canoe"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "climbing"
 msgstr "plezanje"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "cricket"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "cricket_nets"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "croquet"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "cycling"
 msgstr "kolesarjenje"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "dog_racing"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "equestrian"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "football"
 msgstr "nogomet"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "golf"
 msgstr "golf"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "gymnastics"
 msgstr "gimnastika"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "hockey"
 msgstr "hokej"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "horse_racing"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "motor"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "pelota"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "racquet"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "rugby"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "shooting"
 msgstr "strelišče"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "skateboard"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "skating"
 msgstr ""
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "skiing"
 msgstr "smučanje"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "soccer"
 msgstr "nogomet"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "swimming"
 msgstr "plavanje"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "table_tennis"
 msgstr "namizni_tenis"
 
-#: presets.java:1423 presets.java:1433 presets.java:1443 presets.java:1453
+#: presets.java:1659 presets.java:1669 presets.java:1679 presets.java:1689
 msgid "tennis"
 msgstr "tenis"
 
-#: presets.java:1426
+#: presets.java:1662
 msgid "Sports Centre"
 msgstr "Športno središče"
 
-#: presets.java:1427
+#: presets.java:1663
 msgid "Edit Sports Centre"
 msgstr "Uredi športno središče"
 
-#: presets.java:1436
+#: presets.java:1672
 msgid "Pitch"
 msgstr ""
 
-#: presets.java:1437
+#: presets.java:1673
 msgid "Edit Pitch"
 msgstr ""
 
-#: presets.java:1446
+#: presets.java:1682
 msgid "Racetrack"
 msgstr ""
 
-#: presets.java:1447
+#: presets.java:1683
 msgid "Edit Racetrack"
 msgstr ""
 
-#: presets.java:1456
+#: presets.java:1692
 msgid "Golf Course"
 msgstr "Golf igrišče"
 
-#: presets.java:1457
+#: presets.java:1693
 msgid "Edit Golf Course"
 msgstr "Uredi golf igrišče"
 
-#: presets.java:1462
+#: presets.java:1698
 msgid "Miniature Golf"
 msgstr "Mini golf"
 
-#: presets.java:1463
+#: presets.java:1699
 msgid "Edit Miniature Golf"
 msgstr "Uredi mini golf"
 
-#: presets.java:1469
+#: presets.java:1705
 msgid "Sport"
 msgstr "Šport"
 
-#: presets.java:1470
+#: presets.java:1706
 msgid "Multi"
 msgstr ""
 
-#: presets.java:1471
+#: presets.java:1707
 msgid "Edit Multi"
 msgstr ""
 
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "pitch"
 msgstr ""
 
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "sports_centre"
 msgstr ""
 
-#: presets.java:1474 presets.java:1481 presets.java:1488 presets.java:1495
-#: presets.java:1502 presets.java:1509 presets.java:1516 presets.java:1523
-#: presets.java:1530 presets.java:1537 presets.java:1544 presets.java:1551
-#: presets.java:1558 presets.java:1565 presets.java:1572 presets.java:1579
-#: presets.java:1586 presets.java:1596 presets.java:1603 presets.java:1610
-#: presets.java:1617 presets.java:1624 presets.java:1631 presets.java:1638
-#: presets.java:1645 presets.java:1652 presets.java:1659 presets.java:1666
-#: presets.java:1673 presets.java:1680 presets.java:1687 presets.java:1694
-#: presets.java:1701 presets.java:1708
+#: presets.java:1710 presets.java:1717 presets.java:1724 presets.java:1731
+#: presets.java:1738 presets.java:1745 presets.java:1752 presets.java:1759
+#: presets.java:1766 presets.java:1773 presets.java:1780 presets.java:1787
+#: presets.java:1794 presets.java:1801 presets.java:1808 presets.java:1815
+#: presets.java:1822 presets.java:1832 presets.java:1839 presets.java:1846
+#: presets.java:1853 presets.java:1860 presets.java:1867 presets.java:1874
+#: presets.java:1881 presets.java:1888 presets.java:1895 presets.java:1902
+#: presets.java:1909 presets.java:1916 presets.java:1923 presets.java:1930
+#: presets.java:1937 presets.java:1944
 msgid "stadium"
 msgstr "stadion"
 
-#: presets.java:1477
+#: presets.java:1713
 msgid "10pin"
 msgstr ""
 
-#: presets.java:1478
+#: presets.java:1714
 msgid "Edit 10pin"
 msgstr ""
 
-#: presets.java:1484
+#: presets.java:1720
 msgid "Athletics"
 msgstr ""
 
-#: presets.java:1485
+#: presets.java:1721
 msgid "Edit Athletics"
 msgstr ""
 
-#: presets.java:1491
+#: presets.java:1727
 msgid "Archery"
 msgstr "Lokostrelstvo"
 
-#: presets.java:1492
+#: presets.java:1728
 msgid "Edit Archery"
 msgstr "Uredi lokostrelstvo"
 
-#: presets.java:1498
+#: presets.java:1734
 msgid "Climbing"
 msgstr "Plezanje"
 
-#: presets.java:1499
+#: presets.java:1735
 msgid "Edit Climbing"
 msgstr "Uredi plezanje"
 
-#: presets.java:1505
+#: presets.java:1741
 msgid "Canoeing"
 msgstr ""
 
-#: presets.java:1506
+#: presets.java:1742
 msgid "Edit Canoeing"
 msgstr ""
 
-#: presets.java:1512
+#: presets.java:1748
 msgid "Cycling"
 msgstr "Kolesarjenje"
 
-#: presets.java:1513
+#: presets.java:1749
 msgid "Edit Cycling"
 msgstr "Uredi kolesarjenje"
 
-#: presets.java:1519
+#: presets.java:1755
 msgid "Dog Racing"
 msgstr "Pasje dirke"
 
-#: presets.java:1520
+#: presets.java:1756
 msgid "Edit Dog Racing"
 msgstr "Uredi pasje dirke"
 
-#: presets.java:1526
+#: presets.java:1762
 msgid "Equestrian"
 msgstr ""
 
-#: presets.java:1527
+#: presets.java:1763
 msgid "Edit Equestrian"
 msgstr ""
 
-#: presets.java:1533
+#: presets.java:1769
 msgid "Horse Racing"
 msgstr "Konjske dirke"
 
-#: presets.java:1534
+#: presets.java:1770
 msgid "Edit Horse Racing"
 msgstr "Uredi konjske dirke"
 
-#: presets.java:1540
+#: presets.java:1776
 msgid "Gymnastics"
 msgstr "Gimnastika"
 
-#: presets.java:1541
+#: presets.java:1777
 msgid "Edit Gymnastics"
 msgstr "Uredi gimnastiko"
 
-#: presets.java:1547
+#: presets.java:1783
 msgid "Motor Sports"
 msgstr ""
 
-#: presets.java:1548
+#: presets.java:1784
 msgid "Edit Motor Sports"
 msgstr ""
 
-#: presets.java:1554
+#: presets.java:1790
 msgid "Skating"
 msgstr ""
 
-#: presets.java:1555
+#: presets.java:1791
 msgid "Edit Skating"
 msgstr ""
 
-#: presets.java:1561
+#: presets.java:1797
 msgid "Skateboard"
 msgstr ""
 
-#: presets.java:1562
+#: presets.java:1798
 msgid "Edit Skateboard"
 msgstr ""
 
-#: presets.java:1568
+#: presets.java:1804
 msgid "Swimming"
 msgstr "Plavanje"
 
-#: presets.java:1569
+#: presets.java:1805
 msgid "Edit Swimming"
 msgstr "Uredi plavanje"
 
-#: presets.java:1575
+#: presets.java:1811
 msgid "Skiing"
 msgstr "Smučanje"
 
-#: presets.java:1576
+#: presets.java:1812
 msgid "Edit Skiing"
 msgstr "Uredi smučanje"
 
-#: presets.java:1582
+#: presets.java:1818
 msgid "Shooting"
 msgstr "Strelišče"
 
-#: presets.java:1583
+#: presets.java:1819
 msgid "Edit Shooting"
 msgstr "Uredi strelišče"
 
-#: presets.java:1591
+#: presets.java:1827
 msgid "Sport (Ball)"
 msgstr "Šport (z žogo)"
 
-#: presets.java:1592
+#: presets.java:1828
 msgid "Soccer"
 msgstr "Nogomet"
 
-#: presets.java:1593
+#: presets.java:1829
 msgid "Edit Soccer"
 msgstr "Uredi nogomet"
 
-#: presets.java:1599
+#: presets.java:1835
 msgid "Football"
 msgstr "Nogomet"
 
-#: presets.java:1600
+#: presets.java:1836
 msgid "Edit Football"
 msgstr "Uredi nogomet"
 
-#: presets.java:1606
+#: presets.java:1842
 msgid "Australian Football"
 msgstr ""
 
-#: presets.java:1607
+#: presets.java:1843
 msgid "Edit Australian Football"
 msgstr ""
 
-#: presets.java:1613
+#: presets.java:1849
 msgid "Baseball"
 msgstr ""
 
-#: presets.java:1614
+#: presets.java:1850
 msgid "Edit Baseball"
 msgstr ""
 
-#: presets.java:1620
+#: presets.java:1856
 msgid "Basketball"
 msgstr "Košarka"
 
-#: presets.java:1621
+#: presets.java:1857
 msgid "Edit Basketball"
 msgstr "Uredi košarko"
 
-#: presets.java:1627
+#: presets.java:1863
 msgid "Golf"
 msgstr "Golf"
 
-#: presets.java:1628
+#: presets.java:1864
 msgid "Edit Golf"
 msgstr "Uredi golf"
 
-#: presets.java:1631
+#: presets.java:1867
 msgid "golf_course"
 msgstr "golf_igrišče"
 
-#: presets.java:1634
+#: presets.java:1870
 msgid "Boule"
 msgstr ""
 
-#: presets.java:1635
+#: presets.java:1871
 msgid "Edit Boule"
 msgstr ""
 
-#: presets.java:1641
+#: presets.java:1877
 msgid "Bowls"
 msgstr ""
 
-#: presets.java:1642
+#: presets.java:1878
 msgid "Edit Bowls"
 msgstr ""
 
-#: presets.java:1648
+#: presets.java:1884
 msgid "Cricket"
 msgstr ""
 
-#: presets.java:1649
+#: presets.java:1885
 msgid "Edit Cricket"
 msgstr ""
 
-#: presets.java:1655
+#: presets.java:1891
 msgid "Cricket Nets"
 msgstr ""
 
-#: presets.java:1656
+#: presets.java:1892
 msgid "Edit Cricket Nets"
 msgstr ""
 
-#: presets.java:1662
+#: presets.java:1898
 msgid "Croquet"
 msgstr ""
 
-#: presets.java:1663
+#: presets.java:1899
 msgid "Edit Croquet"
 msgstr ""
 
-#: presets.java:1669
+#: presets.java:1905
 msgid "Hockey"
 msgstr "Hokej"
 
-#: presets.java:1670
+#: presets.java:1906
 msgid "Edit Hockey"
 msgstr "Uredi hokej"
 
-#: presets.java:1676
+#: presets.java:1912
 msgid "Pelota"
 msgstr ""
 
-#: presets.java:1677
+#: presets.java:1913
 msgid "Edit Pelota"
 msgstr ""
 
-#: presets.java:1683
+#: presets.java:1919
 msgid "Racquet"
 msgstr ""
 
-#: presets.java:1684
+#: presets.java:1920
 msgid "Edit Racquet"
 msgstr ""
 
-#: presets.java:1690
+#: presets.java:1926
 msgid "Rugby"
 msgstr ""
 
-#: presets.java:1691
+#: presets.java:1927
 msgid "Edit Rugby"
 msgstr ""
 
-#: presets.java:1697
+#: presets.java:1933
 msgid "Table Tennis"
 msgstr "Namizni tenis"
 
-#: presets.java:1698
+#: presets.java:1934
 msgid "Edit Table Tennis"
 msgstr "Uredi namizni tenis"
 
-#: presets.java:1704
+#: presets.java:1940
 msgid "Tennis"
 msgstr "Tenis"
 
-#: presets.java:1705
+#: presets.java:1941
 msgid "Edit Tennis"
 msgstr "Uredi tenis"
 
-#: presets.java:1715
+#: presets.java:1951
 msgid "Buildings"
 msgstr "Zgradbe"
 
-#: presets.java:1716
+#: presets.java:1952
 msgid "Building"
 msgstr "Zgradba"
 
-#: presets.java:1720
+#: presets.java:1956
 msgid "Public Building"
 msgstr ""
 
-#: presets.java:1721
+#: presets.java:1957
 msgid "Edit Public Building"
 msgstr ""
 
-#: presets.java:1726
+#: presets.java:1962
 msgid "Town hall"
 msgstr ""
 
-#: presets.java:1727
+#: presets.java:1963
 msgid "Edit Town hall"
 msgstr ""
 
-#: presets.java:1732
-msgid "Fire Station"
-msgstr "Gasilski dom"
+#: presets.java:1968
+msgid "Embassy"
+msgstr ""
 
-#: presets.java:1733
-msgid "Edit Fire Station"
-msgstr "Uredi gasilski dom"
+#: presets.java:1969
+#, fuzzy
+msgid "Edit Embassy"
+msgstr "Uredi gimnastiko"
 
-#: presets.java:1738
+#: presets.java:1974
 msgid "Courthouse"
 msgstr "Sodišče"
 
-#: presets.java:1739
+#: presets.java:1975
 msgid "Edit Courthouse"
 msgstr "Uredi sodišče"
 
-#: presets.java:1744
+#: presets.java:1980
 msgid "Prison"
 msgstr "Zapor"
 
-#: presets.java:1745
+#: presets.java:1981
 msgid "Edit Prison"
 msgstr "Uredi zapor"
 
-#: presets.java:1750
+#: presets.java:1986
 msgid "Police"
 msgstr "Policijska postaja"
 
-#: presets.java:1751
+#: presets.java:1987
 msgid "Edit Police"
 msgstr "Uredi policijsko postajo"
 
-#: presets.java:1756
+#: presets.java:1992
+msgid "Fire Station"
+msgstr "Gasilski dom"
+
+#: presets.java:1993
+msgid "Edit Fire Station"
+msgstr "Uredi gasilski dom"
+
+#: presets.java:1998
 msgid "Post Office"
 msgstr "Pošta"
 
-#: presets.java:1757
+#: presets.java:1999
 msgid "Edit Post Office"
 msgstr "Uredi pošto"
 
-#: presets.java:1764
+#: presets.java:2006
 msgid "Kindergarten"
 msgstr ""
 
-#: presets.java:1765
+#: presets.java:2007
 msgid "Edit Kindergarten"
 msgstr ""
 
-#: presets.java:1770
+#: presets.java:2012
 msgid "School"
 msgstr "Šola"
 
-#: presets.java:1771
+#: presets.java:2013
 msgid "Edit School"
 msgstr "Uredi šolo"
 
-#: presets.java:1776
+#: presets.java:2018
 msgid "University"
 msgstr ""
 
-#: presets.java:1777
+#: presets.java:2019
 msgid "Edit University"
 msgstr ""
 
-#: presets.java:1782
+#: presets.java:2024
 msgid "College"
 msgstr ""
 
-#: presets.java:1783
+#: presets.java:2025
 msgid "Edit College"
 msgstr ""
 
-#: presets.java:1790
+#: presets.java:2032
 msgid "Cinema"
 msgstr "Kinematograf"
 
-#: presets.java:1791
+#: presets.java:2033
 msgid "Edit Cinema"
 msgstr "Uredi kinematograf"
 
-#: presets.java:1796
+#: presets.java:2038
 msgid "Library"
 msgstr "Knjižnica"
 
-#: presets.java:1797
+#: presets.java:2039
 msgid "Edit Library"
 msgstr "Uredi knjižnico"
 
-#: presets.java:1802
+#: presets.java:2044
 msgid "Arts Centre"
 msgstr ""
 
-#: presets.java:1803
+#: presets.java:2045
 msgid "Edit Arts Centre"
 msgstr ""
 
-#: presets.java:1808
+#: presets.java:2050
 msgid "Theatre"
 msgstr "Gledališče"
 
-#: presets.java:1809
+#: presets.java:2051
 msgid "Edit Theatre"
 msgstr "Uredi gledališče"
 
-#: presets.java:1814
+#: presets.java:2056
 msgid "Place of Worship"
 msgstr "Kraj čaščenja"
 
-#: presets.java:1815
+#: presets.java:2057
 msgid "Edit Place of Worship"
 msgstr "Uredi kraj čaščenja"
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "Religion"
 msgstr "Vera"
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "bahai"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "buddhist"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "christian"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "hindu"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "jain"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "jewish"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "muslim"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "sikh"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "spiritualist"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "taoist"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "unitarianist"
 msgstr ""
 
-#: presets.java:1818 presets.java:2277 presets.java:2413
+#: presets.java:2060 presets.java:2532 presets.java:2668
 msgid "zoroastrian"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "Denomination"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "anglican"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "baptist"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "catholic"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "evangelical"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "jehovahs_witness"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "lutheran"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "methodist"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "mormon"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "orthodox"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "pentecostal"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "presbyterian"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "protestant"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "quaker"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "shia"
 msgstr ""
 
-#: presets.java:1819 presets.java:2278 presets.java:2414
+#: presets.java:2061 presets.java:2533 presets.java:2669
 msgid "sunni"
 msgstr ""
 
-#: presets.java:1824
+#: presets.java:2066
 msgid "Addresses"
 msgstr "Naslovi"
 
-#: presets.java:1825
+#: presets.java:2067
 msgid "Edit address information"
 msgstr "Urejanje podatkov o naslovu"
 
-#: presets.java:1827
+#: presets.java:2069
 msgid "House number"
 msgstr ""
 
-#: presets.java:1831
+#: presets.java:2073
 msgid "House name"
 msgstr ""
 
-#: presets.java:1832
+#: presets.java:2074
 msgid "Street name"
 msgstr "Ime ceste"
 
-#: presets.java:1833
+#: presets.java:2075
 msgid "City name"
 msgstr ""
 
-#: presets.java:1834
+#: presets.java:2076
 msgid "Post code"
 msgstr "Poštna številka"
 
-#: presets.java:1835
+#: presets.java:2077
 #, fuzzy
 msgid "Country code"
 msgstr "Država"
 
-#: presets.java:1838
+#: presets.java:2080
 msgid "Address Interpolation"
 msgstr "Interpolacija naslovov"
 
-#: presets.java:1839
+#: presets.java:2081
 msgid "Edit address interpolation"
 msgstr "Uredi interpolacijo naslovov"
 
-#: presets.java:1841
+#: presets.java:2083
 msgid "Numbering scheme"
 msgstr ""
 
-#: presets.java:1841
+#: presets.java:2083
 msgid "odd"
 msgstr ""
 
-#: presets.java:1841
+#: presets.java:2083
 msgid "even"
 msgstr ""
 
-#: presets.java:1841
+#: presets.java:2083
 msgid "all"
 msgstr ""
 
-#: presets.java:1846
+#: presets.java:2088
 msgid "Man Made"
 msgstr ""
 
-#: presets.java:1847
+#: presets.java:2089
 msgid "Works"
 msgstr ""
 
-#: presets.java:1848
+#: presets.java:2090
 msgid "Edit Works"
 msgstr ""
 
-#: presets.java:1853
+#: presets.java:2095
 msgid "Tower"
 msgstr "Stolp"
 
-#: presets.java:1854
+#: presets.java:2096
 msgid "Edit Tower"
 msgstr "Uredi stolp"
 
-#: presets.java:1859
+#: presets.java:2101
 msgid "Water Tower"
 msgstr "Vodni stolp"
 
-#: presets.java:1860
+#: presets.java:2102
 msgid "Edit Water Tower"
 msgstr "Uredi vodni stolp"
 
-#: presets.java:1865
+#: presets.java:2107
 msgid "Power Tower"
 msgstr "Steber daljnovoda"
 
-#: presets.java:1866
+#: presets.java:2108
 msgid "Edit Power Tower"
 msgstr "Uredi steber daljnovoda"
 
-#: presets.java:1870
+#: presets.java:2112
 msgid "Power Generator"
 msgstr ""
 
-#: presets.java:1871
+#: presets.java:2113
 msgid "Edit Power Generator"
 msgstr ""
 
-#: presets.java:1873
+#: presets.java:2115
 msgid "wind"
 msgstr ""
 
-#: presets.java:1873
+#: presets.java:2115
 msgid "hydro"
 msgstr ""
 
-#: presets.java:1873
+#: presets.java:2115
 msgid "fossil"
 msgstr ""
 
-#: presets.java:1873
+#: presets.java:2115
 msgid "nuclear"
 msgstr ""
 
-#: presets.java:1877
+#: presets.java:2119
 msgid "Gasometer"
 msgstr ""
 
-#: presets.java:1878
+#: presets.java:2120
 msgid "Edit Gasometer"
 msgstr ""
 
-#: presets.java:1883
+#: presets.java:2125
 msgid "Covered Reservoir"
 msgstr ""
 
-#: presets.java:1884
+#: presets.java:2126
 msgid "Edit Covered Reservoir"
 msgstr ""
 
-#: presets.java:1889
+#: presets.java:2131
 msgid "Lighthouse"
 msgstr "Svetilnik"
 
-#: presets.java:1890
+#: presets.java:2132
 msgid "Edit Lighthouse"
 msgstr "Uredi svetilnik"
 
-#: presets.java:1895
+#: presets.java:2137
 msgid "Windmill"
 msgstr "Mlin na veter"
 
-#: presets.java:1896
+#: presets.java:2138
 msgid "Edit Windmill"
 msgstr "Uredi mlin na veter"
 
-#: presets.java:1901
+#: presets.java:2143
 msgid "Pier"
 msgstr "Pomol"
 
-#: presets.java:1902
+#: presets.java:2144
 msgid "Edit Pier"
 msgstr "Uredi pomol"
 
-#: presets.java:1907
+#: presets.java:2149
 msgid "Pipeline"
 msgstr "Cevovod"
 
-#: presets.java:1908
+#: presets.java:2150
 msgid "Edit Pipeline"
 msgstr "Uredi cevovod"
 
-#: presets.java:1913
+#: presets.java:2155
 msgid "Wastewater Plant"
 msgstr "Čistilna naprava"
 
-#: presets.java:1914
+#: presets.java:2156
 msgid "Edit Wastewater Plant"
 msgstr "Uredi čistilno napravo"
 
-#: presets.java:1919
+#: presets.java:2161
 msgid "Crane"
 msgstr "Žerjav"
 
-#: presets.java:1920
+#: presets.java:2162
 msgid "Edit Crane"
 msgstr "Uredi žerjav"
 
-#: presets.java:1925
+#: presets.java:2167
 msgid "Beacon"
 msgstr ""
 
-#: presets.java:1926
+#: presets.java:2168
 msgid "Edit Beacon"
 msgstr ""
 
-#: presets.java:1931
+#: presets.java:2173
 msgid "Survey Point"
 msgstr "Geodetska točka"
 
-#: presets.java:1932
+#: presets.java:2174
 msgid "Edit Survey Point"
 msgstr "Uredi geodetsko točko"
 
-#: presets.java:1937
+#: presets.java:2179
 msgid "Surveillance"
 msgstr "Video nadzor"
 
-#: presets.java:1938
+#: presets.java:2180
 msgid "Edit Surveillance Camera"
 msgstr "Uredi video nadzorno kamero"
 
-#: presets.java:1945
+#: presets.java:2187
 msgid "Amenities"
 msgstr ""
 
-#: presets.java:1947
+#: presets.java:2189
 msgid "Toilets"
 msgstr "Stranišča"
 
-#: presets.java:1950 presets.java:2046
+#: presets.java:2192 presets.java:2282
 msgid "Reference number"
 msgstr ""
 
-#: presets.java:1951
+#: presets.java:2193
 msgid "Charge"
 msgstr ""
 
-#: presets.java:1952 presets.java:2047
+#: presets.java:2194 presets.java:2283
 msgid "Note"
 msgstr ""
 
-#: presets.java:1955
+#: presets.java:2197
 msgid "Post Box"
 msgstr "Poštni nabiralnik"
 
-#: presets.java:1960
+#: presets.java:2202
 msgid "Telephone"
 msgstr "Telefon"
 
-#: presets.java:1961
+#: presets.java:2203
 msgid "Edit a Telephone"
 msgstr "Uredi telefon"
 
-#: presets.java:1964 presets.java:2048
+#: presets.java:2206 presets.java:2284
 msgid "Coins"
 msgstr "Kovanci"
 
-#: presets.java:1965 presets.java:2049
+#: presets.java:2207 presets.java:2285
 msgid "Notes"
 msgstr "Bankovci"
 
-#: presets.java:1966 presets.java:2050
+#: presets.java:2208 presets.java:2286
 msgid "Electronic purses and Charge cards"
 msgstr ""
 
-#: presets.java:1967 presets.java:2051
+#: presets.java:2209 presets.java:2287
 msgid "Debit cards"
 msgstr "Debetne kartice"
 
-#: presets.java:1968 presets.java:2052
+#: presets.java:2210 presets.java:2288
 msgid "Credit cards"
 msgstr "Kreditne kartice"
 
-#: presets.java:1969
+#: presets.java:2211
 msgid "Telephone cards"
 msgstr "Telefonske kartice"
 
-#: presets.java:1972
+#: presets.java:2214
 msgid "Recycling"
 msgstr "Recikliranje"
 
-#: presets.java:1973
+#: presets.java:2215
 msgid "Edit a Recycling station"
 msgstr "Uredi raciklažno točko"
 
-#: presets.java:1975
+#: presets.java:2217
 msgid "Batteries"
 msgstr ""
 
-#: presets.java:1976
+#: presets.java:2218
 #, fuzzy
 msgid "Cans"
 msgstr "Denar"
 
-#: presets.java:1977
+#: presets.java:2219
 msgid "Clothes"
 msgstr ""
 
-#: presets.java:1978
+#: presets.java:2220
 msgid "Glass"
 msgstr ""
 
-#: presets.java:1979
+#: presets.java:2221
 #, fuzzy
 msgid "Paper"
 msgstr "Pomol"
 
-#: presets.java:1980
+#: presets.java:2222
 msgid "Scrap Metal"
 msgstr ""
 
-#: presets.java:1983
+#: presets.java:2225
 msgid "Bench"
 msgstr "Klopca"
 
-#: presets.java:1987
+#: presets.java:2229
 msgid "Hunting Stand"
 msgstr ""
 
-#: presets.java:1988
+#: presets.java:2230
 #, fuzzy
 msgid "Edit a Hunting Stand"
 msgstr "Uredi avtobusno postajo"
 
-#: presets.java:1991
+#: presets.java:2233
 #, fuzzy
 msgid "Hide"
 msgstr "Prikaži/skrij"
 
-#: presets.java:1992
+#: presets.java:2234
 #, fuzzy
 msgid "Lock"
 msgstr "Dók"
 
-#: presets.java:1993 presets.java:2457
+#: presets.java:2235 presets.java:2712
 msgid "Height"
 msgstr ""
 
-#: presets.java:1993
+#: presets.java:2235
 #, fuzzy
 msgid "low"
 msgstr "Počasneje"
 
-#: presets.java:1993
+#: presets.java:2235
 msgid "half"
 msgstr ""
 
-#: presets.java:1993
+#: presets.java:2235
 msgid "full"
 msgstr ""
 
-#: presets.java:1996
-msgid "Taxi"
-msgstr "Taksi"
-
-#: presets.java:1997
-msgid "Edit a Taxi station"
-msgstr "Uredi postajališče taksijev"
-
-#: presets.java:2002
+#: presets.java:2238
 msgid "Fountain"
 msgstr ""
 
-#: presets.java:2003
+#: presets.java:2239
 msgid "Edit a Fountain"
 msgstr ""
 
-#: presets.java:2008
+#: presets.java:2244
 msgid "Drinking Water"
 msgstr "Pitna voda"
 
-#: presets.java:2009
+#: presets.java:2245
 msgid "Edit Drinking Water"
 msgstr "Uredi pitno vodo"
 
-#: presets.java:2014
+#: presets.java:2250
 msgid "Baby Hatch"
 msgstr ""
 
-#: presets.java:2015
+#: presets.java:2251
 msgid "Edit a Baby Hatch"
 msgstr ""
 
-#: presets.java:2018
+#: presets.java:2254
 msgid "Opening Hours"
 msgstr ""
 
-#: presets.java:2022
+#: presets.java:2258
 msgid "Shops"
 msgstr "Trgovine"
 
-#: presets.java:2023
+#: presets.java:2259
 msgid "Supermarket"
 msgstr ""
 
-#: presets.java:2024
+#: presets.java:2260
 msgid "Edit Supermarket"
 msgstr ""
 
-#: presets.java:2029
+#: presets.java:2265
 msgid "Convenience Store"
 msgstr ""
 
-#: presets.java:2030
+#: presets.java:2266
 msgid "Edit Convenience Store"
 msgstr ""
 
-#: presets.java:2035
+#: presets.java:2271
 msgid "Kiosk"
 msgstr ""
 
-#: presets.java:2036
+#: presets.java:2272
 msgid "Edit Kiosk"
 msgstr ""
 
-#: presets.java:2041
+#: presets.java:2277
 msgid "Vending machine"
 msgstr "Prodajni avtomat"
 
-#: presets.java:2042
+#: presets.java:2278
 msgid "Edit a Vending_machine"
 msgstr "Uredi prodajni avtomat"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "Vending products"
 msgstr "Prodajani izdelki"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "public_transport_tickets"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "public_transport_plans"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "parking_tickets"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "food"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "drinks"
 msgstr "pijača"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "sweets"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "cigarettes"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "photos"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "animal_food"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "news_papers"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "toys"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "stamps"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "SIM-cards"
 msgstr "SIM kartice"
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "telephone_vouchers"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "vouchers"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "condoms"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "tampons"
 msgstr ""
 
-#: presets.java:2044
+#: presets.java:2280
 msgid "excrement_bags"
 msgstr ""
 
-#: presets.java:2053
+#: presets.java:2289
 msgid "Account or loyalty cards"
 msgstr ""
 
-#: presets.java:2056
+#: presets.java:2292
 msgid "Butcher"
 msgstr "Mesar"
 
-#: presets.java:2057
+#: presets.java:2293
 msgid "Edit Butcher"
 msgstr "Uredi mesarja"
 
-#: presets.java:2062
+#: presets.java:2298
 msgid "Baker"
 msgstr "Pekarna"
 
-#: presets.java:2063
+#: presets.java:2299
 msgid "Edit Baker"
 msgstr "Uredi pekarno"
 
-#: presets.java:2068
+#: presets.java:2304
 msgid "Do-it-yourself-store"
 msgstr "Sam svoj mojster"
 
-#: presets.java:2069
+#: presets.java:2305
 msgid "Edit Do-it-yourself-store"
 msgstr "Uredi sam svoj mojster trgovino"
 
-#: presets.java:2074
+#: presets.java:2310
 #, fuzzy
 msgid "Hairdresser"
 msgstr "Naslovi"
 
-#: presets.java:2075
+#: presets.java:2311
 #, fuzzy
 msgid "Edit Hairdresser"
 msgstr "Uredi drevo"
 
-#: presets.java:2080
+#: presets.java:2316
 msgid "Dry Cleaning"
 msgstr "Čistilnica"
 
-#: presets.java:2081
+#: presets.java:2317
 msgid "Edit Dry Cleaning"
 msgstr "Uredi čistilnico"
 
-#: presets.java:2086
+#: presets.java:2322
 msgid "Laundry"
 msgstr "Pralnica"
 
-#: presets.java:2087
+#: presets.java:2323
 msgid "Edit Laundry"
 msgstr "Uredi pralnico"
 
-#: presets.java:2092
+#: presets.java:2328
 msgid "Outdoor"
 msgstr ""
 
-#: presets.java:2093
+#: presets.java:2329
 msgid "Edit Outdoor Shop"
 msgstr ""
 
-#: presets.java:2099
+#: presets.java:2335
 msgid "Cash"
 msgstr "Denar"
 
-#: presets.java:2100
+#: presets.java:2336
 msgid "Bank"
 msgstr "Banka"
 
-#: presets.java:2101
+#: presets.java:2337
 msgid "Edit Bank"
 msgstr "Uredi banko"
 
-#: presets.java:2104 presets.java:2113
+#: presets.java:2340 presets.java:2349
 msgid "Automated Teller Machine"
 msgstr "Bankomat"
 
-#: presets.java:2107
+#: presets.java:2343
 msgid "Money Exchange"
 msgstr "Menjalnica"
 
-#: presets.java:2108
+#: presets.java:2344
 msgid "Edit Money Exchange"
 msgstr "Uredi menjalnico"
 
-#: presets.java:2114
+#: presets.java:2350
 msgid "Edit Automated Teller Machine"
 msgstr "Uredi bankomat"
 
-#: presets.java:2116
+#: presets.java:2352
 msgid "Provider"
 msgstr ""
 
-#: presets.java:2121
+#: presets.java:2357
 msgid "Health"
 msgstr "Zdravje"
 
-#: presets.java:2122
+#: presets.java:2358
+#, fuzzy
+msgid "Doctors"
+msgstr "Barve"
+
+#: presets.java:2359
+#, fuzzy
+msgid "Edit Doctors"
+msgstr "Uredi živalski vrt"
+
+#: presets.java:2364
+#, fuzzy
+msgid "Dentist"
+msgstr "tenis"
+
+#: presets.java:2365
+#, fuzzy
+msgid "Edit Dentist"
+msgstr "Uredi tenis"
+
+#: presets.java:2370
 msgid "Pharmacy"
 msgstr "Lekarna"
 
-#: presets.java:2123
+#: presets.java:2371
 msgid "Edit Pharmacy"
 msgstr "Uredi lekarno"
 
-#: presets.java:2125
+#: presets.java:2373
 msgid "Dispensing"
 msgstr ""
 
-#: presets.java:2129
+#: presets.java:2377
 msgid "Hospital"
 msgstr "Bolnišnica"
 
-#: presets.java:2130
+#: presets.java:2378
 msgid "Edit Hospital"
 msgstr "Uredi bolnišnico"
 
-#: presets.java:2135
+#: presets.java:2383
 msgid "Emergency Access Point"
 msgstr ""
 
-#: presets.java:2136
+#: presets.java:2384
 msgid "Edit Emergency Access Point"
 msgstr ""
 
-#: presets.java:2139
+#: presets.java:2387
 msgid "Point Number"
 msgstr ""
 
-#: presets.java:2140
+#: presets.java:2388
 msgid "Phone Number"
 msgstr ""
 
-#: presets.java:2141
+#: presets.java:2389
 msgid "(Use international code, like +12-345-67890)"
 msgstr ""
 
-#: presets.java:2149
+#: presets.java:2393
+#, fuzzy
+msgid "Veterinary"
+msgstr "regionalna (turistična)"
+
+#: presets.java:2394
+#, fuzzy
+msgid "Edit Veterinary"
+msgstr "Uredi vodni park"
+
+#: presets.java:2404
 msgid "Continent"
 msgstr "Kontinent"
 
-#: presets.java:2150
+#: presets.java:2405
 msgid "Edit a Continent"
 msgstr "Uredi kontinent"
 
-#: presets.java:2156
+#: presets.java:2411
 msgid "Country"
 msgstr "Država"
 
-#: presets.java:2157
+#: presets.java:2412
 msgid "Edit Country"
 msgstr "Uredi državo"
 
-#: presets.java:2163
+#: presets.java:2418
 msgid "State"
 msgstr ""
 
-#: presets.java:2164
+#: presets.java:2419
 msgid "Edit State"
 msgstr ""
 
-#: presets.java:2170
+#: presets.java:2425
 msgid "Region"
 msgstr ""
 
-#: presets.java:2171
+#: presets.java:2426
 msgid "Edit Region"
 msgstr ""
 
-#: presets.java:2177
+#: presets.java:2432
 msgid "County"
 msgstr ""
 
-#: presets.java:2178
+#: presets.java:2433
 msgid "Edit County"
 msgstr ""
 
-#: presets.java:2184
+#: presets.java:2439
 msgid "City"
 msgstr ""
 
-#: presets.java:2185
+#: presets.java:2440
 msgid "Edit City"
 msgstr ""
 
-#: presets.java:2191
+#: presets.java:2446
 msgid "Town"
 msgstr ""
 
-#: presets.java:2192
+#: presets.java:2447
 msgid "Edit Town"
 msgstr ""
 
-#: presets.java:2198
+#: presets.java:2453
 msgid "Suburb"
 msgstr ""
 
-#: presets.java:2199
+#: presets.java:2454
 msgid "Edit Suburb"
 msgstr ""
 
-#: presets.java:2205
+#: presets.java:2460
 msgid "Village"
 msgstr "Vas"
 
-#: presets.java:2206
+#: presets.java:2461
 msgid "Edit Village"
 msgstr "Uredi vas"
 
-#: presets.java:2212
+#: presets.java:2467
 msgid "Hamlet"
 msgstr "Zaselek"
 
-#: presets.java:2213
+#: presets.java:2468
 msgid "Edit Hamlet"
 msgstr "Uredi zaselek"
 
-#: presets.java:2219
+#: presets.java:2474
 msgid "Locality"
 msgstr ""
 
-#: presets.java:2220
+#: presets.java:2475
 msgid "Edit Locality"
 msgstr ""
 
-#: presets.java:2226
+#: presets.java:2481
 msgid "Island"
 msgstr "Otok"
 
-#: presets.java:2227
+#: presets.java:2482
 msgid "Edit Island"
 msgstr "Uredi otok"
 
-#: presets.java:2235
+#: presets.java:2490
 msgid "Boundaries"
 msgstr "Meje"
 
-#: presets.java:2236
+#: presets.java:2491
 msgid "National"
 msgstr ""
 
-#: presets.java:2237
+#: presets.java:2492
 msgid "Edit National Boundary"
 msgstr ""
 
-#: presets.java:2243
+#: presets.java:2498
 msgid "Administrative"
 msgstr ""
 
-#: presets.java:2244
+#: presets.java:2499
 msgid "Edit Administrative Boundary"
 msgstr ""
 
-#: presets.java:2250
+#: presets.java:2505
 msgid "Civil"
 msgstr ""
 
-#: presets.java:2251
+#: presets.java:2506
 msgid "Edit Civil Boundary"
 msgstr ""
 
-#: presets.java:2257
+#: presets.java:2512
 msgid "political"
 msgstr ""
 
-#: presets.java:2258
+#: presets.java:2513
 msgid "Edit Political Boundary"
 msgstr ""
 
-#: presets.java:2264
+#: presets.java:2519
 msgid "National_park"
 msgstr ""
 
-#: presets.java:2265
+#: presets.java:2520
 msgid "Edit National Park Boundary"
 msgstr ""
 
-#: presets.java:2272
+#: presets.java:2527
 msgid "Land use"
 msgstr "Raba tal"
 
-#: presets.java:2273
+#: presets.java:2528
 msgid "Graveyard"
 msgstr "Pokopališče"
 
-#: presets.java:2274
+#: presets.java:2529
 msgid "Edit Graveyard"
 msgstr "Uredi pokopališče"
 
-#: presets.java:2281
+#: presets.java:2536
 msgid "Farmyard"
 msgstr ""
 
-#: presets.java:2282
+#: presets.java:2537
 msgid "Edit Farmyard Landuse"
 msgstr ""
 
-#: presets.java:2288
+#: presets.java:2543
 msgid "Farmland"
 msgstr ""
 
-#: presets.java:2289
+#: presets.java:2544
 msgid "Edit Farmland Landuse"
 msgstr ""
 
-#: presets.java:2295
+#: presets.java:2550
 msgid "Vineyard"
 msgstr "Vinograd"
 
-#: presets.java:2296
+#: presets.java:2551
 msgid "Edit Vineyard Landuse"
 msgstr "Uredi vinograd"
 
-#: presets.java:2302
+#: presets.java:2557
 msgid "Quarry"
 msgstr "Kamnolom"
 
-#: presets.java:2303
+#: presets.java:2558
 msgid "Edit Quarry Landuse"
 msgstr "Uredi kamnolom"
 
-#: presets.java:2309
+#: presets.java:2564
 msgid "Landfill"
 msgstr ""
 
-#: presets.java:2310
+#: presets.java:2565
 msgid "Edit Landfill Landuse"
 msgstr ""
 
-#: presets.java:2316
+#: presets.java:2571
 msgid "Basin"
 msgstr ""
 
-#: presets.java:2317
+#: presets.java:2572
 msgid "Edit Basin Landuse"
 msgstr ""
 
-#: presets.java:2323
+#: presets.java:2578
 msgid "Reservoir"
 msgstr ""
 
-#: presets.java:2324
+#: presets.java:2579
 msgid "Edit Reservoir Landuse"
 msgstr ""
 
-#: presets.java:2330
+#: presets.java:2585
 msgid "Forest"
 msgstr "Gozd"
 
-#: presets.java:2331
+#: presets.java:2586
 msgid "Edit Forest Landuse"
 msgstr "Uredi gozdnata tla"
 
-#: presets.java:2335 presets.java:2522
+#: presets.java:2590 presets.java:2777
 msgid "coniferous"
 msgstr ""
 
-#: presets.java:2335 presets.java:2522
+#: presets.java:2590 presets.java:2777
 msgid "deciduous"
 msgstr ""
 
-#: presets.java:2335 presets.java:2522
+#: presets.java:2590 presets.java:2777
 msgid "mixed"
 msgstr ""
 
-#: presets.java:2338
+#: presets.java:2593
 msgid "Allotments"
 msgstr ""
 
-#: presets.java:2339
+#: presets.java:2594
 msgid "Edit Allotments Landuse"
 msgstr ""
 
-#: presets.java:2345
+#: presets.java:2600
 msgid "Residential area"
 msgstr ""
 
-#: presets.java:2346
+#: presets.java:2601
 msgid "Edit Residential Landuse"
 msgstr ""
 
-#: presets.java:2352
+#: presets.java:2607
 msgid "Retail"
 msgstr ""
 
-#: presets.java:2353
+#: presets.java:2608
 msgid "Edit Retail Landuse"
 msgstr ""
 
-#: presets.java:2359
+#: presets.java:2614
 msgid "Commercial"
 msgstr ""
 
-#: presets.java:2360
+#: presets.java:2615
 msgid "Edit Commercial Landuse"
 msgstr ""
 
-#: presets.java:2366
+#: presets.java:2621
 msgid "Industrial"
 msgstr ""
 
-#: presets.java:2367
+#: presets.java:2622
 msgid "Edit Industrial Landuse"
 msgstr ""
 
-#: presets.java:2373
+#: presets.java:2628
 msgid "Brownfield"
 msgstr ""
 
-#: presets.java:2374
+#: presets.java:2629
 msgid "Edit Brownfield Landuse"
 msgstr ""
 
-#: presets.java:2380
+#: presets.java:2635
 msgid "Greenfield"
 msgstr ""
 
-#: presets.java:2381
+#: presets.java:2636
 msgid "Edit Greenfield Landuse"
 msgstr ""
 
-#: presets.java:2387
+#: presets.java:2642
 msgid "Railway land"
 msgstr "Ozemlje železnice"
 
-#: presets.java:2388
+#: presets.java:2643
 msgid "Edit Railway Landuse"
 msgstr "Uredi ozemlje železnice"
 
-#: presets.java:2394
+#: presets.java:2649
 msgid "Construction area"
 msgstr "Gradbišče"
 
-#: presets.java:2395
+#: presets.java:2650
 msgid "Edit Construction Landuse"
 msgstr ""
 
-#: presets.java:2401
+#: presets.java:2656
 msgid "Military"
 msgstr ""
 
-#: presets.java:2402
+#: presets.java:2657
 msgid "Edit Military Landuse"
 msgstr ""
 
-#: presets.java:2408
+#: presets.java:2663
 msgid "Cemetery"
 msgstr ""
 
-#: presets.java:2409
+#: presets.java:2664
 msgid "Edit Cemetery Landuse"
 msgstr ""
 
-#: presets.java:2417
+#: presets.java:2672
 msgid "Village Green"
 msgstr ""
 
-#: presets.java:2418
+#: presets.java:2673
 msgid "Edit Village Green Landuse"
 msgstr ""
 
-#: presets.java:2424
+#: presets.java:2679
 msgid "Grass"
 msgstr ""
 
-#: presets.java:2425
+#: presets.java:2680
 msgid "Edit Grass Landuse"
 msgstr ""
 
-#: presets.java:2431
+#: presets.java:2686
 msgid "Recreation Ground"
 msgstr ""
 
-#: presets.java:2432
+#: presets.java:2687
 msgid "Edit Recreation Ground Landuse"
 msgstr ""
 
-#: presets.java:2439
+#: presets.java:2694
 msgid "Natural"
 msgstr "Naravno"
 
-#: presets.java:2440
+#: presets.java:2695
 msgid "Water"
 msgstr "Voda"
 
-#: presets.java:2441
+#: presets.java:2696
 msgid "Edit Water"
 msgstr "Uredi vodo"
 
-#: presets.java:2446
+#: presets.java:2701
 msgid "Land"
 msgstr "Kopno"
 
-#: presets.java:2447
+#: presets.java:2702
 msgid "Edit Land"
 msgstr "Uredi kopno"
 
-#: presets.java:2452
+#: presets.java:2707
 msgid "Tree"
 msgstr "Drevo"
 
-#: presets.java:2453
+#: presets.java:2708
 msgid "Edit a Tree"
 msgstr "Uredi drevo"
 
-#: presets.java:2458
+#: presets.java:2713
 msgid "Botanical Name"
 msgstr ""
 
-#: presets.java:2461
+#: presets.java:2716
 msgid "Spring"
 msgstr "Izvir"
 
-#: presets.java:2462
+#: presets.java:2717
 msgid "Edit a Spring"
 msgstr "Uredi izvir"
 
-#: presets.java:2467
+#: presets.java:2722
 msgid "Peak"
 msgstr "Vrh"
 
-#: presets.java:2468
+#: presets.java:2723
 msgid "Edit Peak"
 msgstr "Uredi vrh"
 
-#: presets.java:2474
+#: presets.java:2729
 msgid "Glacier"
 msgstr ""
 
-#: presets.java:2475
+#: presets.java:2730
 msgid "Edit Glacier"
 msgstr ""
 
-#: presets.java:2481
+#: presets.java:2736
 msgid "Volcano"
 msgstr ""
 
-#: presets.java:2482
+#: presets.java:2737
 msgid "Edit Volcano"
 msgstr ""
 
-#: presets.java:2488
+#: presets.java:2743
 msgid "Cliff"
 msgstr ""
 
-#: presets.java:2489
+#: presets.java:2744
 msgid "Edit Cliff"
 msgstr ""
 
-#: presets.java:2494
+#: presets.java:2749
 msgid "Scree"
 msgstr ""
 
-#: presets.java:2495
+#: presets.java:2750
 msgid "Edit Scree"
 msgstr ""
 
-#: presets.java:2500
+#: presets.java:2755
 msgid "Scrub"
 msgstr ""
 
-#: presets.java:2501
+#: presets.java:2756
 msgid "Edit Scrub"
 msgstr ""
 
-#: presets.java:2506
+#: presets.java:2761
 msgid "Fell"
 msgstr ""
 
-#: presets.java:2507
+#: presets.java:2762
 msgid "Edit Fell"
 msgstr ""
 
-#: presets.java:2512
+#: presets.java:2767
 msgid "Heath"
 msgstr ""
 
-#: presets.java:2513
+#: presets.java:2768
 msgid "Edit Heath"
 msgstr ""
 
-#: presets.java:2518
+#: presets.java:2773
 msgid "Wood"
 msgstr ""
 
-#: presets.java:2519
+#: presets.java:2774
 msgid "Edit Wood"
 msgstr ""
 
-#: presets.java:2525
+#: presets.java:2780
 msgid "Marsh"
 msgstr ""
 
-#: presets.java:2526
+#: presets.java:2781
 msgid "Edit Marsh"
 msgstr ""
 
-#: presets.java:2531
+#: presets.java:2786
 msgid "Coastline"
 msgstr ""
 
-#: presets.java:2532
+#: presets.java:2787
 msgid "Edit Coastline"
 msgstr ""
 
-#: presets.java:2537
+#: presets.java:2792
 msgid "Mud"
 msgstr ""
 
-#: presets.java:2538
+#: presets.java:2793
 msgid "Edit Mud"
 msgstr ""
 
-#: presets.java:2543
+#: presets.java:2798
 msgid "Beach"
 msgstr ""
 
-#: presets.java:2544
+#: presets.java:2799
 msgid "Edit Beach"
 msgstr ""
 
-#: presets.java:2549
+#: presets.java:2804
 msgid "Bay"
 msgstr ""
 
-#: presets.java:2550
+#: presets.java:2805
 msgid "Edit Bay"
 msgstr ""
 
-#: presets.java:2555
+#: presets.java:2810
 msgid "Cave Entrance"
 msgstr ""
 
-#: presets.java:2556
+#: presets.java:2811
 msgid "Edit Cave Entrance"
 msgstr ""
 

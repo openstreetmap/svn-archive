@@ -1526,7 +1526,7 @@
 
 		<!-- Traffic calming -->
 		<rule e="node" k="traffic_calming" v="*">
-			<rule e="node" v="chicane">
+			<rule e="node" k="traffic_calming" v="chicane">
 				<wayMarker k="highway" class="chicane"/>
 			</rule>
 			<else>

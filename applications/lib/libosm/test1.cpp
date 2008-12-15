@@ -30,10 +30,10 @@ int main(int argc, char* argv[])
 	sstream.str(osmData);
 
 	OSM::Components *comp2 = OSM::Parser::parse(sstream);
-	cout << "Testing components from local file:" << endl;
-	dotest(comp1);
 	cout << "Testing components from API call:" << endl;
 	dotest(comp2);
+	cout << "Testing components from local file:" << endl;
+	dotest(comp1);
 
 	delete comp2;
 	delete comp1;

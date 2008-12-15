@@ -2,8 +2,13 @@ OBJ = OSRef.o LatLng.o util.o
 TESTOBJ = test.o
 CXX = g++
 
+all: libccoord.a libccoord.so
+
 libccoord.a: $(OBJ)
 	ar rv libccoord.a $(OBJ) 
+
+libccoord.so: $(OBJ)
+	$(CXX) -shared -o libccoord.so $(OBJ)
 
 test: $(TESTOBJ) libccoord.a
 	g++ -o test $(TESTOBJ) libccoord.a

@@ -60,7 +60,7 @@ void Parser::startElement(void *d, const XML_Char* element,
 		curObject = new Way(curID);
 		components->addWay((Way*) curObject);
 	}
-	else if (!strcmp(element, "node") && (inWay))
+	else if (!strcmp(element, "nd") && (inWay))
 	{
 		int nodeID;
 

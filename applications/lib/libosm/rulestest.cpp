@@ -49,20 +49,19 @@ int main(int argc,char* argv[])
 void dotest(OSM::Components *comp1, OSM::FeatureClassification* classification)
 {
 	comp1->rewindNodes();
-	comp1->rewindSegments();
 	comp1->rewindWays();
 
 	while(comp1->hasMoreWays())
 	{
 		OSM::Way *w = comp1->nextWay();
-		cout << endl << "Way id: " << w->id << " tags:" << endl;
+		cout << endl << "Way id: " << w->id() << " tags:" << endl;
 
 		std::vector<std::string> keys = w->getTags();
 
 		for(int count=0; count<keys.size(); count++)
 		{
 			cout  << "Key: " << keys[count] << " Value: " << 
-				w->tags[keys[count]] << endl;
+				w->tags()[keys[count]] << endl;
 		}
 		cout << endl << "Info from featureClassification:" << endl;
 		cout << "Feature class: " << classification->getFeatureClass(w)

@@ -82,4 +82,10 @@ map<string, string> const &Object::tags() const
 	return m_tags;
 }
 
+map<string, string> &Object::tags()
+{
+        return m_tags;
+}
+
+
 }

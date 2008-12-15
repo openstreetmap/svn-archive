@@ -97,6 +97,11 @@ public:
 	 */
 	std::map<std::string, std::string> const &tags() const;
 
+        /**
+         * @return All key/value pairs of the tags attached to this object
+         */
+        std::map<std::string, std::string> &tags();
+
 	/**
 	 * @return True if this object contains at least one tag
 	 */

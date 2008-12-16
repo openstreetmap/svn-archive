@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://mytah/content/mytah.css" type="text/css"?>
+<dialog id="mytah_dialog_about" title="MyTaH About"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   xmlns:html="http://www.w3.org/1999/xhtml"
+   buttons="accept"
+   buttonlabelaccept="Close"
+   autostretch="always"
+   ondialogaccept="return true;">
+    
+    <dialogheader title="MyTaH" description="About"/>
+    <box>
+    	<html:h1>MyTaH 0.1</html:h1>
+    	<html:p><html:strong>Build date</html:strong>: 20081216</html:p>
+    	<html:p><html:strong>Author</html:strong>: Mario Ferraro</html:p>
+    	<html:a id="mytah_link_home" href="http://osmarenderfrontend.wordpress.com" target="_blank">http://osmarenderfrontend.wordpress.com</html:a>
+    	<html:p>Released under GPL v2 license or later</html:p>
+    </box>
+</dialog>

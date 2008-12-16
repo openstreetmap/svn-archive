@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://mytah/content/mytah.css" type="text/css"?>
+<dialog id="mytah_dialog_preferences" title="MyTaH Preferences"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   buttons="accept,cancel"
+   buttonlabelcancel="Cancel"
+   buttonlabelaccept="Save"
+   onload="mytah_preferences_init()"
+   autostretch="always"
+   ondialogaccept="return mytah_preferences_doOK();"
+   ondialogcancel="return mytah_preferences_doCancel();">
+    
+	<script type="application/x-javascript" src="chrome://MyTaH/content/mytah_preferences.js" />
+    <dialogheader title="MyTaH" description="Preferences"/>
+    <groupbox>
+      <caption label="Search by"/>
+      	<radiogroup id="mytah_usertype">
+      		<radio id="mytah_userid" label="User ID" />
+      		<radio id="mytah_username" label="User name (case sensitive)" />
+      	</radiogroup>
+		<textbox id="mytah_user" />
+   	</groupbox>
+	<label>Update every </label><textbox id="mytah_timeout" type="number" min="1"/><label> minutes</label>
+</dialog>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<overlay id="mytah_browser_overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script src="mytah.js"/>
+    	<statusbar id="status-bar">
+    		<popup id="mytah_preferences">
+    			<menuitem label="Preferences" oncommand="mytah_showPreferences();"/>
+    			<menuitem label="About" oncommand="mytah_showAbout();"/>
+    		</popup>
+    		<statusbarpanel id="mytah_sbmi" label="MyTaH" class="statusbarpanel-iconic-text" src="chrome://mytah/content/Mag_map-24x24.png" context="mytah_preferences" onload="mytah_init();">
+   		</statusbarpanel>
+	</statusbar>
+</overlay>

@@ -1,0 +1,4 @@
+content		MyTaH		chrome/content/
+
+overlay   chrome://browser/content/browser.xul   chrome://MyTaH/content/browser.xul
+

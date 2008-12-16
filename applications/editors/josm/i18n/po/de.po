@@ -7821,11 +7821,11 @@ msgstr "Tankstelle bearbeiten"
 
 #: presets.java:1242 presets.java:1279
 msgid "Parking"
-msgstr "Parkplatz"
+msgstr "Parken"
 
 #: presets.java:1243
 msgid "Edit Parking"
-msgstr "Parkplatz bearbeiten"
+msgstr "Parken bearbeiten"
 
 #: presets.java:1246
 msgid "surface"

@@ -43,7 +43,7 @@ function mytah_init() {
 	if (this.prefs.getPrefType("mytah.user") == this.prefs.PREF_STRING) {
 		user = this.prefs.getCharPref("mytah.user");
 	} else {
-		user = "Merio";
+		user = "";
 		this.prefs.setCharPref("mytah.user", user);
 	}
 	if (this.prefs.getPrefType("mytah.timeout") == this.prefs.PREF_INT) {
@@ -63,7 +63,12 @@ function mytah_init() {
 		clearInterval(interval_id);
 	}
 	interval_id=setInterval("mytah_init()",(timeout*60*1000));
-	mytah_update_text();
+	if (user=="") {
+		document.getElementById("mytah_sbmi").label="MyTah: No name";
+	}
+	else {
+		mytah_update_text();
+	}
 }
 
 function mytah_update_text() {
@@ -119,11 +124,14 @@ function mytah_showPreferences() {
 	var params={out:null};
 	window.openDialog("chrome://MyTaH/content/preferences.xul","","chrome,dialog,modal",params).focus();
 	if (params.out) {
-		current_rank="updating...";
-		mytah_init();
+		mytah_updateNow();
 	}
 	else {
 	}
+}
+
+function mytah_updateNow() {
+		mytah_init();
 }
 
 function mytah_showAbout() {

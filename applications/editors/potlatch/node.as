@@ -2,7 +2,7 @@
 	// Originally 0=x, 1=y, 2=id, 4=tags;
 	// now .x, .y, .id, .attr
 
-	function Node(id,x,y,attr,v) {
+	function Node(id,x,y,attr,version) {
 		this.id=id;
 		this.x=x;
 		this.y=y;

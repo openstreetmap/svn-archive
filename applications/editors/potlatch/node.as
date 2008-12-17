@@ -2,13 +2,22 @@
 	// Originally 0=x, 1=y, 2=id, 4=tags;
 	// now .x, .y, .id, .attr
 
-	function Node(id,x,y,attr) {
+	function Node(id,x,y,attr,v) {
 		this.id=id;
 		this.x=x;
 		this.y=y;
 		this.attr=attr;
 		this.tagged=hasTags(attr);
 		this.ways=new Object();
+		this.version=version;
+		this.clean=false;		// set to true if just loaded from server
+	};
+
+	Node.prototype.markDirty=function() {
+		if (this.clean) {
+			this.clean=false;
+			this.version++;
+		}
 	};
 
 	Node.prototype.removeFromAllWays=function() {
@@ -33,7 +42,7 @@
 	};
 
 	Node.prototype.moveTo=function(newx,newy,ignoreway) {
-		this.x=newx; this.y=newy;
+		this.x=newx; this.y=newy; this.markDirty();
 		var qchanged;
 		var z=this.ways; for (var qway in z) {
 			if (qway!=ignoreway) { _root.map.ways[qway].redraw(); qchanged=qway; }
@@ -43,7 +52,8 @@
 
 	Node.prototype.renumberTo=function(id) {
 		var old=this.id;
-		nodes[id]=new Node(id,this.x,this.y,this.attr);
+		nodes[id]=new Node(id,this.x,this.y,this.attr,this.version);
+		nodes[id].clean=this.clean;
 		var z=this.ways; for (var qway in z) {
 			for (var qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
 				if (_root.map.ways[qway].path[qs].id==old) {

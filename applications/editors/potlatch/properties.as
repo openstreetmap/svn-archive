@@ -709,6 +709,7 @@
 			case 'point':	var id=_root.ws.path[_root.pointselected].id;
 							nodes[id].attr[k]=v; 
 							nodes[id].tagged=hasTags(nodes[id].attr);
+							nodes[id].markDirty();
 							_root.ws.clean=false; break;
 			case 'POI':		_root.map.pois[poiselected].attr[k]=v;
 							_root.map.pois[poiselected].clean=false; break;

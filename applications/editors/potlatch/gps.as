@@ -130,7 +130,7 @@
 			_root.map.ways[newwayid].ymax=-999999;
 			for (var j=0; j<_root.tracks[i].length; j+=1) {
 				_root.newnodeid--;
-				_root.nodes[newnodeid]=new Node(newnodeid,_root.tracks[i][j][0],_root.tracks[i][j][1],new Array());
+				_root.nodes[newnodeid]=new Node(newnodeid,_root.tracks[i][j][0],_root.tracks[i][j][1],new Array(),0);
 				_root.nodes[newnodeid].addWay(newwayid);
 				_root.map.ways[newwayid].path.push(_root.nodes[newnodeid]);
 				_root.map.ways[newwayid].xmin=Math.min(_root.tracks[i][j][0],_root.map.ways[newwayid].xmin);

@@ -72,7 +72,7 @@
 		removeWelcome(true);
 		if (_root.drawpoint>-1) {
 			// add POI to way
-			_root.nodes[this._name]=new Node(this._name,this._x,this._y,this.attr);
+			_root.nodes[this._name]=new Node(this._name,this._x,this._y,this.attr,this.version);
 			addEndPoint(_root.nodes[this._name]);
 			_root.junction=true; restartElastic();
 			removeMovieClip(this);

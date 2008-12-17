@@ -9,6 +9,7 @@ const USER_BY_NAME = 1;
 
 var user;
 var user_type;
+var display="current_rank";
 var timeout=60;
 var current_text;
 var current_rank="updating...";
@@ -25,7 +26,8 @@ function mytah_init() {
 	number_of_kb="updating...";
 	idle_time="updating...";
 	tiles_to_better_rank="updating...";
-	document.getElementById("mytah_sbmi").label="MyTah: "+current_rank;
+	document.getElementById("mytah_sbmi").label="MyTah: "+eval(display);
+	document.getElementById("mytah_currentrank").value=current_rank;
 	document.getElementById("mytah_numberoftiles").value=number_of_tiles;
 	document.getElementById("mytah_numberofkb").value=number_of_kb;
 	document.getElementById("mytah_idletime").value=idle_time;
@@ -43,7 +45,6 @@ function mytah_init() {
 	} else {
 		user = "Merio";
 		this.prefs.setCharPref("mytah.user", user);
-	this.prefs.setIntPref("mytah.timeout", timeout);
 	}
 	if (this.prefs.getPrefType("mytah.timeout") == this.prefs.PREF_INT) {
 		timeout = this.prefs.getIntPref("mytah.timeout");
@@ -51,6 +52,12 @@ function mytah_init() {
 	else {
 		timeout = 60;
 		this.prefs.setIntPref("mytah.timeout", timeout);
+	}
+	if (this.prefs.getPrefType("mytah.display") == this.prefs.PREF_STRING) {
+		display = this.prefs.getCharPref("mytah.display");
+	} else {
+		display = "current_rank";
+		this.prefs.setCharPref("mytah.display", display);
 	}
 	if (interval_id!=null) {
 		clearInterval(interval_id);
@@ -99,12 +106,13 @@ function mytah_getRanking() {
 		var m = new RegExp(looper[a]).exec(current_text);
 		eval(a+"='"+m[2]+"'");
 	}
-	tiles_to_better_rank=(tiles_to_better_rank-number_of_tiles);
-	document.getElementById("mytah_sbmi").label="MyTaH: "+current_rank;
+	tiles_to_better_rank="-"+(tiles_to_better_rank-number_of_tiles);
+	document.getElementById("mytah_sbmi").label="MyTaH: "+eval(display);
+	document.getElementById("mytah_currentrank").value=current_rank;
 	document.getElementById("mytah_numberoftiles").value=number_of_tiles;
 	document.getElementById("mytah_numberofkb").value=number_of_kb;
 	document.getElementById("mytah_idletime").value=idle_time;
-	document.getElementById("mytah_tilestobetterrank").value="-"+tiles_to_better_rank;
+	document.getElementById("mytah_tilestobetterrank").value=tiles_to_better_rank;
 }
 
 function mytah_showPreferences() {

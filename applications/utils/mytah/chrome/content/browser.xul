@@ -7,6 +7,7 @@
     			<menuitem label="About" oncommand="mytah_showAbout();"/>
     		</popup>
     		<tooltip id="mytah_tooltip" style="background-color: #33DD00;">
+    			<label value="Current rank: " style="font-weight:bold;" /><label id="mytah_currentrank" value="updating..." />
     			<label value="Tiles: " style="font-weight:bold;" /><label id="mytah_numberoftiles" value="updating..." />
     			<label value="Kb: " style="font-weight:bold;" /><label id="mytah_numberofkb" value="updating..." />
    				<label value="Idle time: " style="font-weight:bold;" /><label id="mytah_idletime" value="updating..." />

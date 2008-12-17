@@ -6,7 +6,13 @@
     			<menuitem label="Preferences" oncommand="mytah_showPreferences();"/>
     			<menuitem label="About" oncommand="mytah_showAbout();"/>
     		</popup>
-    		<statusbarpanel id="mytah_sbmi" label="MyTaH" class="statusbarpanel-iconic-text" src="chrome://mytah/content/Mag_map-24x24.png" context="mytah_preferences" onload="mytah_init();">
+    		<tooltip id="mytah_tooltip" style="background-color: #33DD00;">
+    			<label value="Tiles: " style="font-weight:bold;" /><label id="mytah_numberoftiles" value="updating..." />
+    			<label value="Kb: " style="font-weight:bold;" /><label id="mytah_numberofkb" value="updating..." />
+   				<label value="Idle time: " style="font-weight:bold;" /><label id="mytah_idletime" value="updating..." />
+   				<label value="Tiles to better rank: " style="font-weight:bold;" /><label id="mytah_tilestobetterrank" value="updating..." />
+     		</tooltip>
+    		<statusbarpanel id="mytah_sbmi" label="MyTaH" class="statusbarpanel-iconic-text" src="chrome://mytah/content/Mag_map-24x24.png" context="mytah_preferences" tooltip="mytah_tooltip" onload="mytah_init();">
    		</statusbarpanel>
 	</statusbar>
 </overlay>

@@ -18,7 +18,7 @@ function mytah_preferences_init() {
 	if (this.prefs.getPrefType("mytah.user") == this.prefs.PREF_STRING) {
 		user = this.prefs.getCharPref("mytah.user");
 	} else {
-		user = "Merio";
+		user = "";
 	}
 	document.getElementById("mytah_user").value=user;
 	

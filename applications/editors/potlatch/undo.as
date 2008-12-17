@@ -112,6 +112,7 @@
 			this.clear(); return;
 		} else {
 			way.path[point].attr=params[2];
+			way.path[point].markDirty();
 			way.clean=false;
 			way.select(); _root.map.anchors[point].select();
 		}
@@ -137,7 +138,7 @@
 
 		// create node if no longer in existence
 		if (_root.nodes(id)) { }
-						else { _root.nodes[id]=new Node(id,nodecopy.x,nodecopy.y,nodecopy.attr); }
+						else { _root.nodes[id]=new Node(id,nodecopy.x,nodecopy.y,nodecopy.attr,nodecopy.version); }
 
 		// reinstate at each place
 		for (qway in waylist) {

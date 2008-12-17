@@ -48,7 +48,7 @@
 					if (_root.map.ways[w].checkconnections) { nodes[id].moveTo(x,y,w); }
 				} else {
 					// doesn't exist, so create new node
-					_root.nodes[id]=new Node(id,x,y,result[1][i][3]);
+					_root.nodes[id]=new Node(id,x,y,result[1][i][3],result[1][i][4]);
 					if (id==prenode) { prepoint=i; }
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
@@ -88,7 +88,7 @@
 				if (nodes[id]) {
 					nodes[id].moveTo(x,y,w);
 				} else {
-					_root.nodes[id]=new Node(id,x,y,result[1][i][4]);
+					_root.nodes[id]=new Node(id,x,y,result[1][i][4]);	// ** add node version here
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
 				_root.nodes[id].addWay(w);
@@ -302,7 +302,10 @@
 		putresponder=function() { };
 		putresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
-			var i,r,z,nw,ow,qway,qs,nodestodelete;
+
+			// ** needs to renumber versions as well as nodes
+			// ** needs to set all rewritten nodes to 'clean'
+			var i,r,z,nw,ow;
 			ow=result[0];			// old way ID
 			nw=result[1];			// new way ID
 			if (ow!=nw) {	// renumber way?
@@ -334,18 +337,22 @@
 		};
 
 		if (!this.uploading && !this.hasDependentNodes() && !this.locked && !_root.sandbox && this.path.length>1) {
-			// Assemble 'sendpath' and upload it
+			// Assemble list of changed nodes, and send
 			this.uploading=true;
-			var sendpath=new Array();
+			var sendpath =new Array();
+			var sendnodes=new Array();
 			for (i=0; i<this.path.length; i++) {
-				sendpath.push(new Array(coord2long(this.path[i].x),
-										coord2lat (this.path[i].y),
-										this.path[i].id,null,
-										deepCopy  (this.path[i].attr)));
+				sendpath.push(this.path[i].id);
+				if (!this.path[i].clean) {
+					sendnodes.push(new Array(coord2long(this.path[i].x),
+											 coord2lat (this.path[i].y),
+											 this.path[i].id,this.path[i].v,
+											 deepCopy  (this.path[i].attr)));
+				}
 			}
 			_root.writesrequested++;
-			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,Number(this._name),sendpath,this.attr);
-			this.clean=true;
+			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes);
+			this.clean=true;	// ** check this should be here, not in the responder
 		}
 	};
 
@@ -423,7 +430,7 @@
 					_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
 				}
 				_root.newnodeid--;
-				_root.nodes[newnodeid]=new Node(newnodeid,0,0,new Object());
+				_root.nodes[newnodeid]=new Node(newnodeid,0,0,new Object(),0);
 				this.insertAnchorPoint(_root.nodes[newnodeid]);
 				this.highlightPoints(5001,"anchorhint");
 				addEndPoint(_root.nodes[newnodeid]);
@@ -760,7 +767,7 @@
 
 	OSMWay.prototype.insertAnchorPointAtMouse=function() {
 		_root.newnodeid--;
-		_root.nodes[newnodeid]=new Node(newnodeid,0,0,new Object());
+		_root.nodes[newnodeid]=new Node(newnodeid,0,0,new Object(),0);
 		_root.pointselected=this.insertAnchorPoint(_root.nodes[newnodeid]);
 		var waylist=new Array(); waylist.push(this);
 		var poslist=new Array(); poslist.push(_root.pointselected);
@@ -930,7 +937,7 @@
 		_root.newnodeid--;
 		_root.nodes[newnodeid]=new Node(newnodeid,this.path[0].x+tpoffset*offsetx[0],
 												  this.path[0].y+tpoffset*offsety[0],
-												  new Object());
+												  new Object(),0);
 		nw.path.push(_root.nodes[newnodeid]);
 		
 		for (i=1; i<(this.path.length-1); i++) {
@@ -949,13 +956,13 @@
 			y=this.path[i].y + tpoffset*(offsety[i-1]+df*(this.path[i].y - this.path[i-1].y));
 	
 			_root.newnodeid--;
-			_root.nodes[newnodeid]=new Node(newnodeid,x,y,new Object());
+			_root.nodes[newnodeid]=new Node(newnodeid,x,y,new Object(),0);
 			nw.path.push(_root.nodes[newnodeid]);
 		}
 	
 		_root.newnodeid--;
 		_root.nodes[newnodeid]=new Node(newnodeid,this.path[i].x+tpoffset*offsetx[i-1],
-												  this.path[i].y+tpoffset*offsety[i-1],new Object());
+												  this.path[i].y+tpoffset*offsety[i-1],new Object(),0);
 		nw.path.push(_root.nodes[newnodeid]);
 		nw.redraw();
 	};

@@ -474,7 +474,7 @@
 			// Adding a point to the way being drawn
 			if (_root.drawpoint>-1) {
 				_root.newnodeid--;
-				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array());
+				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array(),0);
 				if (_root.pointselected>-2) {
 					setTypeText(iText("Way",'way'),_root.wayselected);
 					_root.panel.properties.tidy();
@@ -499,7 +499,7 @@
 			// ** double-click trap should probably also check distance moved
 			} else if (_root.lastpoint!=-1 || (t.getTime()-_root.lastpointtime)>300) {
 				_root.newnodeid--; 
-				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array());
+				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array(),0);
 				startNewWay(newnodeid);
 			}
 		}

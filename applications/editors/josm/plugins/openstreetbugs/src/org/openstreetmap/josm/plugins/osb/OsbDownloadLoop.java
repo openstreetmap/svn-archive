@@ -47,6 +47,7 @@ public class OsbDownloadLoop extends Thread {
 	private Point2D lastCenter;
 	
 	public OsbDownloadLoop() {
+	    setName("OpenStreetBugs download loop");
 		start();
 	}
 	

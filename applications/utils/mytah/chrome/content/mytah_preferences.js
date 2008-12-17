@@ -6,6 +6,7 @@ function mytah_preferences_init() {
 	var user;
 	var user_type;
 	var timeout;
+	var display;
 	
 	if (this.prefs.getPrefType("mytah.user_type") == this.prefs.PREF_INT) {
 		user_type = this.prefs.getIntPref("mytah.user_type");
@@ -28,6 +29,13 @@ function mytah_preferences_init() {
 		timeout = 60;
 	}
 	document.getElementById("mytah_timeout").value = timeout;
+
+	if (this.prefs.getPrefType("mytah.display") == this.prefs.PREF_STRING) {
+		display = this.prefs.getCharPref("mytah.display");
+	} else {
+		display = "current_rank";
+	}
+	document.getElementById("mytah_display").selectedItem=document.getElementById("mytah_menuitem_"+display);
 }
 
 
@@ -43,9 +51,11 @@ function mytah_preferences_doOK() {
 	
 	user = document.getElementById("mytah_user").value;
 	timeout = document.getElementById("mytah_timeout").value;
+	display = document.getElementById("mytah_display").selectedItem.value;
 
 	this.prefs.setCharPref("mytah.user", user);
 	this.prefs.setIntPref("mytah.timeout", timeout);
+	this.prefs.setCharPref("mytah.display", display);
 	window.arguments[0].out={result:"ok"};
 	return true;
 }

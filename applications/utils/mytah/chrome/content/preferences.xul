@@ -22,4 +22,14 @@
 		<textbox id="mytah_user" />
    	</groupbox>
 	<label>Update every </label><textbox id="mytah_timeout" type="number" min="1"/><label> minutes</label>
+	<label>Display in statusbar:</label>
+	<menulist id="mytah_display">
+		<menupopup>
+			<menuitem id="mytah_menuitem_current_rank" label="Current rank" value="current_rank" selected="selected" />
+			<menuitem id="mytah_menuitem_number_of_tiles" label="Number of Tiles" value="number_of_tiles" />
+			<menuitem id="mytah_menuitem_number_of_kb" label="Number of Kb" value="number_of_kb" />
+			<menuitem id="mytah_menuitem_idle_time" label="Idle Time" value="idle_time" />
+			<menuitem id="mytah_menuitem_tiles_to_better_rank" label="Tiles to better rank" value="tiles_to_better_rank" />
+		</menupopup>
+	</menulist>
 </dialog>

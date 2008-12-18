@@ -99,6 +99,7 @@
 				_root.map.relations[result[0]]._name=nw;
 			}
 			_root.map.relations[nw].uploading=false;
+			_root.map.relations[nw].version=result[2];
 			_root.writesrequested--;
 		};
 
@@ -108,7 +109,7 @@
 			this.uploading=true;
 			_root.writesrequested++;
 			remote_write.call('putrelation', putresponder,
-				_root.usertoken, _root.changeset,
+				_root.usertoken, _root.changeset, this.version,
 				Math.floor(this._name),
 				this.attr, this.members, 1);
 			this.clean=true;

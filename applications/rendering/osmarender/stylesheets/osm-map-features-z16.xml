@@ -1542,6 +1542,10 @@
 		<rule e="node" k="amenity" v="bus_station">
 			<symbol ref="bus_sta" position="center"/>
 		</rule>
+		<!-- subway entrance -->
+		<rule e="node" k="railway" v="subway_entrance">
+			<symbol ref="subway" position="center"/>
+		</rule>
 		<!-- Amenities -->
 		<rule e="node" k="amenity" v="hospital">
 			<symbol ref="hospital" position="center"/>

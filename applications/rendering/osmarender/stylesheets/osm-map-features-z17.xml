@@ -1598,6 +1598,10 @@
 		<rule e="node" k="amenity" v="bus_station">
 			<symbol ref="bus_sta" position="center"/>
 		</rule>
+		<!-- subway entrance -->
+		<rule e="node" k="railway" v="subway_entrance">
+			<symbol ref="subway" position="center"/>
+		</rule>
 		<!-- highway motorway_junctions -->
 		<rule e="node" k="highway" v="motorway_junction">
 			<circle r="1.825" class="highway-motorway-junction"/>

@@ -49,6 +49,7 @@
 				} else {
 					// doesn't exist, so create new node
 					_root.nodes[id]=new Node(id,x,y,result[1][i][3],result[1][i][4]);
+					_root.nodes[id].clean=true;
 					if (id==prenode) { prepoint=i; }
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
@@ -304,7 +305,6 @@
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 
 			// ** needs to renumber versions as well as nodes
-			// ** needs to set all rewritten nodes to 'clean'
 			var i,r,z,nw,ow;
 			ow=result[0];			// old way ID
 			nw=result[1];			// new way ID
@@ -330,6 +330,11 @@
 				renumberMemberOfRelation('node', oid, nid);
 			}
 			for (var oid in z) { delete _root.nodes[oid]; }	// delete -ve nodes
+			
+			// set versions
+			z=result[4];
+			for (var nid in z) { nodes[nid].version=result[4][nid]; }
+			
 			_root.map.ways[nw].clearPOIs();
 			_root.map.ways[nw].deleteMergedWays();
 			_root.writesrequested--;
@@ -346,13 +351,14 @@
 				if (!this.path[i].clean) {
 					sendnodes.push(new Array(coord2long(this.path[i].x),
 											 coord2lat (this.path[i].y),
-											 this.path[i].id,this.path[i].v,
+											 this.path[i].id,this.path[i].version,
 											 deepCopy  (this.path[i].attr)));
+					this.path[i].clean=true;
 				}
 			}
 			_root.writesrequested++;
 			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes);
-			this.clean=true;	// ** check this should be here, not in the responder
+			this.clean=true;
 		}
 	};
 

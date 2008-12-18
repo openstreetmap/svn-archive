@@ -14,10 +14,9 @@
 	};
 
 	Node.prototype.markDirty=function() {
-		if (this.clean) {
-			this.clean=false;
-			this.version++;
-		}
+		// doesn't really need to be a discrete function,
+		// but keeping it in for now
+		this.clean=false;
 	};
 
 	Node.prototype.removeFromAllWays=function() {

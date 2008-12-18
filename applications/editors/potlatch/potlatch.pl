@@ -62,6 +62,7 @@ EOF
 	var gpsurl='../api/0.6/swf/trackpoints';
 	var gpxurl="http://"+this._url.split('/')[2]+"/trace/";
 	var tileprefix='http://127.0.0.1/~richard/cgi-bin/proxy.cgi?url=';
+	var tileprefix='';
 	var yahoourl='/potlatch/ymap2.swf';
 	var gpxsuffix='/data.xml';
 EOF
@@ -100,6 +101,8 @@ EOF
 		}
 		$actionscript=~s/#include '$fn'/$text/;
 	}
+
+	# $i=0; foreach $l (split(/\n/,$actionscript)) { print "$i: $l\n"; $i++; };
 
 	if ($debug) { $actionscript=~s!false;//#debug!true;!g; }
 	$m->add(new SWF::Action($actionscript));

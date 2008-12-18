@@ -137,7 +137,7 @@
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
 	if (preferences.data.advice       ==undefined) { preferences.data.advice       =true; }	// show floating advice?
 	if (preferences.data.nosplash     ==undefined) { preferences.data.nosplash     =false; }// hide splash screen?
-	if (preferences.data.noname       ==undefined) { preferences.data.nosplash     =false; }// highlight unnamed ways?
+	if (preferences.data.noname       ==undefined) { preferences.data.noname       =false; }// highlight unnamed ways?
 
 	// =====================================================================================
 	// Icons
@@ -760,8 +760,8 @@
 
 	function handleError(code,result) {
 		var h=100;
-		if (code==-1) { error=result[0]; }
-				 else { error=result[0]+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'); h+=50; }
+		if (code==-2) { error=result[0]+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'); h+=50; }
+				 else { error=result[0]; }
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(275,h,new Array('Ok'),null);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,h-30);
@@ -916,7 +916,7 @@
 
 		_root.windows.options.box.attachMovie("menu","background",30);
 		_root.windows.options.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","-----------------------------------------","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
+			new Array("None","Aerial - Bavaria","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
 			'Choose the background to display',setBackground,null,0);
 
 		_root.windows.options.box.attachMovie("checkbox","fadepref",5);

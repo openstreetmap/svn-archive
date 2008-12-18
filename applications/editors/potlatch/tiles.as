@@ -128,7 +128,7 @@
 	
 	function tileURL(x,y) { 
 		switch (preferences.data.baselayer) {
-			case 1:	return (tileprefix+"http://tile.openaerialmap.org/tiles/1.0.0/openaerialmap-900913/"+_root.scale+"/"+x+"/"+y+".jpg");
+			case 1:	return (tileprefix+"http://oberpfalz.geofabrik.de/lvg-by-slippymap/"+_root.scale+"/"+x+"/"+y+".png");
 			case 3: return (tileprefix+"http://tile.openstreetmap.org/"+_root.scale+"/"+x+"/"+y+".png");
 			case 4: return (tileprefix+"http://tah.openstreetmap.org/Tiles/tile/"+_root.scale+"/"+x+"/"+y+".png");
 			case 5: return (tileprefix+"http://tah.openstreetmap.org/Tiles/maplint/"+_root.scale+"/"+x+"/"+y+".png");

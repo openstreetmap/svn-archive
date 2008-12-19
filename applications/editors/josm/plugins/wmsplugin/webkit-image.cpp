@@ -7,9 +7,11 @@ adding the correct directories with -L or -I:
 -I C:\Progra~1\Qt\include -L C:\Progra~1\Qt\lib
 */
 #include <QtGui/QApplication>
+#include <QtGui/QPainter>
 #include <QtCore/QFile>
 #include <QtCore/QString>
-#include <QtWebKit/QWebView>
+#include <QtWebKit/QWebPage>
+#include <QtWebKit/QWebFrame>
 
 /* using mingw to set binary mode */
 #ifdef WIN32
@@ -26,18 +28,17 @@ class Save : public QObject
 {
 Q_OBJECT
 public:
-  Save(QWebView *v) : view(v) {};
+  Save(QWebPage *p) : page(p) {};
 
 public slots:
-  void setGeometry(const QRect &r)
-  {
-    view->setGeometry(r);
-  }
   void loaded(bool ok)
   {
     if(ok)
     {
-      QImage im = QPixmap::grabWidget(view).toImage();
+      page->setViewportSize(page->mainFrame()->contentsSize());
+      QImage im(page->viewportSize(), QImage::Format_ARGB32);
+      QPainter painter(&im);
+      page->mainFrame()->render(&painter);
 
       QFile f;
       BINARYSTDOUT
@@ -55,7 +56,7 @@ signals:
   void finish(void);
 
 private:
-  QWebView *view;
+  QWebPage * page;
 };
 
 #include "webkit-image.h"
@@ -66,14 +67,12 @@ int main(int argc, char **argv)
     return 20;
   QString url = QString(argv[1]);
 
-  QApplication a( argc, argv );
-  QWebView *view = new QWebView();
-  Save *s = new Save(view);
-  view->resize(WIDTH,WIDTH);
+  QApplication a(argc, argv);
+  QWebPage * page = new QWebPage();
+  Save * s = new Save(page);
 
-  QObject::connect(view, SIGNAL(loadFinished(bool)), s, SLOT(loaded(bool)));
+  QObject::connect(page, SIGNAL(loadFinished(bool)), s, SLOT(loaded(bool)));
   QObject::connect(s, SIGNAL(finish(void)), &a, SLOT(quit()));
-  QObject::connect(view->page(), SIGNAL(geometryChangeRequested(const QRect &)), s, SLOT(setGeometry(const QRect &)));
-  view->load(QUrl(url));
+  page->mainFrame()->load (QUrl(url));
   return a.exec();
 }

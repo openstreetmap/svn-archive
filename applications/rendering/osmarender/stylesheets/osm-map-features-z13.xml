@@ -1607,7 +1607,7 @@
 			}
 			
 			.boundary-administrative-parish-core {
-			stroke-width: 4px;
+			stroke-width: 2px;
 			stroke: #f9574b;
 			stroke-dasharray: 8, 8, 8, 8;
 			}

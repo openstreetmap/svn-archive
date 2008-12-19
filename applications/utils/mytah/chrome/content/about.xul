@@ -12,7 +12,7 @@
     <dialogheader title="MyTaH" description="About"/>
     <box>
     	<html:h1>MyTaH 0.2</html:h1>
-    	<html:p><html:strong>Build date</html:strong>: 20081217</html:p>
+    	<html:p><html:strong>Build date</html:strong>: 20081219</html:p>
     	<html:p><html:strong>Author</html:strong>: Mario Ferraro</html:p>
     	<html:a id="mytah_link_home" href="http://osmarenderfrontend.wordpress.com" target="_blank">http://osmarenderfrontend.wordpress.com</html:a>
     	<html:p>Released under GPL v2 license or later</html:p>

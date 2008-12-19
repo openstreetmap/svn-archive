@@ -1,14 +1,15 @@
 //TODO: Icon
 //TODO: Additional info to retrieve number of tiles (tooltip?), and different orders, details in own homepage
 
-const mytah_version="0.1";
-const mytah_build="20081217";
+const mytah_version="0.2";
+const mytah_build="20081219";
 
 const USER_BY_ID = 0;
 const USER_BY_NAME = 1;
 
 var user;
 var user_type;
+var user_id;
 var display="current_rank";
 var timeout=60;
 var current_text;
@@ -91,6 +92,7 @@ function mytah_update_text() {
 function mytah_getRanking() {
 	var regexs = {
 		by_id: {
+			user_id: 'variable:user',
 			current_rank: '(?:(<tr><td>))(.*?)(?=(<\/td><td><a href="\/User\/show\/byid\/'+user+'\/">))',
 			number_of_tiles: '(?:(\/byid\/'+user+'\/">.*?<\/a><\/td><td>))(.*)(?=(<\/td><td>.*?<\/td><td>.*?<\/td><\/tr>))',
 			number_of_kb: '(?:(\/byid\/'+user+'\/">.*?<\/a><\/td><td>.*?<\/td><td>))(.*)(?=(<\/td><td>))',
@@ -98,6 +100,7 @@ function mytah_getRanking() {
 			tiles_to_better_rank: '(?:(<\/a><\/td><td>))(.*?)(?=(<\/td><td>.*?<\/td><td>.*?<\/td><\/tr>\\s*<tr><td>.*?<\/td><td><a href="\/User\/show\/byid\/'+user+'\/">))'
 		},
 		by_name: {
+			user_id: '(?:(<tr><td>.*?<\/td><td><a href="\/User\/show\/byid\/))(.*?)(?=(/">'+user+'))',
 			current_rank: '(?:(<tr><td>))(.*?)(?=(<\/td><td><a href="\/User\/show\/byid\/\\d*\/">'+user+'))',
 			number_of_tiles: '(?:('+user+'<\/a><\/td><td>))(.*?)(?=(<\/td><td>))',
 			number_of_kb: '(?:('+user+'<\/a><\/td><td>.*?<\/td><td>)(.*?)(?=(<\/td><td>)))',
@@ -108,8 +111,14 @@ function mytah_getRanking() {
 	var looper;
 	if (user_type==USER_BY_ID) looper=regexs.by_id; else looper=regexs.by_name;
 	for (var a in looper) {
-		var m = new RegExp(looper[a]).exec(current_text);
-		eval(a+"='"+m[2]+"'");
+		if (looper[a].indexOf("variable:")==-1) {
+			var m = new RegExp(looper[a]).exec(current_text);
+			eval(a+"='"+m[2]+"'");
+		}
+		else {
+			m = looper[a].substring((looper[a].indexOf(":")+1),looper[a].length);
+			eval(a+"='"+eval(m)+"'");
+		}
 	}
 	tiles_to_better_rank="-"+(tiles_to_better_rank-number_of_tiles);
 	document.getElementById("mytah_sbmi").label="MyTaH: "+eval(display);
@@ -136,4 +145,28 @@ function mytah_updateNow() {
 
 function mytah_showAbout() {
 	window.openDialog("chrome://MyTaH/content/about.xul","","chrome,dialog").focus();
+}
+
+function mytah_openPage(whichpage) {
+	switch (whichpage) {
+		case 'order_tiles' : {
+			gBrowser.selectedTab = gBrowser.addTab("http://server.tah.openstreetmap.org/User/show/?order=tiles");
+			break;
+		}
+		case 'order_upload': {
+			gBrowser.selectedTab = gBrowser.addTab("http://server.tah.openstreetmap.org/User/show/?order=upload");
+			break;
+		}
+		case 'order_lastactivity': {
+			gBrowser.selectedTab = gBrowser.addTab("http://server.tah.openstreetmap.org/User/show/?order=last");
+			break;
+		}
+		case 'personal' : {
+			if (user!="" && user_id!=null) {
+				gBrowser.selectedTab = gBrowser.addTab("http://tah.openstreetmap.org/User/show/byid/"+user_id);
+			}
+			break;
+		}
+		
+	}
 }

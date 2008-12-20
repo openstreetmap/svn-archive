@@ -22,16 +22,12 @@ public class GeorefImage implements Serializable {
 		this.downloadingStarted = downloadingStarted;
 	}
 
-	public void displace(double dx, double dy) {
-		min = new EastNorth(min.east() + dx, min.north() + dy);
-		max = new EastNorth(max.east() + dx, max.north() + dy);
+	public boolean contains(EastNorth en, double dx, double dy) {
+		return min.east()+dx <= en.east() && en.east() <= max.east()+dx
+			&& min.north()+dy <= en.north() && en.north() <= max.north()+dy;
 	}
 
-	public boolean contains(EastNorth en) {
-		return min.east() <= en.east() && en.east() <= max.east()
-			&& min.north() <= en.north() && en.north() <= max.north();
-	}
-
+	/* this does not take dx and dy offset into account! */
 	public boolean isVisible(NavigatableComponent nc) {
 		Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
 		Graphics g = nc.getGraphics();
@@ -40,12 +36,16 @@ public class GeorefImage implements Serializable {
 				maxPt.x - minPt.x, minPt.y - maxPt.y));
 	}
 
-	public boolean paint(Graphics g, NavigatableComponent nc) {
+	public boolean paint(Graphics g, NavigatableComponent nc, double dx, double dy) {
 		if (image == null || min == null || max == null) return false;
 
-		Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
+		EastNorth mi = new EastNorth(min.east()+dx, min.north()+dy);
+		EastNorth ma = new EastNorth(max.east()+dx, max.north()+dy);
+		Point minPt = nc.getPoint(mi), maxPt = nc.getPoint(ma);
 
-		if(!isVisible(nc))
+		/* this is isVisible() but taking dx, dy into account */
+		if(!(g.hitClip(minPt.x, maxPt.y,
+				maxPt.x - minPt.x, minPt.y - maxPt.y)))
 			return false;
 
 		g.drawImage(image,

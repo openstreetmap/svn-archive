@@ -55,6 +55,8 @@ public class WMSLayer extends Layer {
 	protected int dax = 10;
 	protected int day = 10;
 	protected int minZoom = 3;
+	protected double dx = 0.0;
+	protected double dy = 0.0;
 	protected double pixelPerDegree;
 	protected GeorefImage[][] images = new GeorefImage[dax][day];
 	JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
@@ -142,9 +144,14 @@ public class WMSLayer extends Layer {
 		if( !startstop.isSelected() || (pixelPerDegree / (mv.getWidth() / (bounds().max.lon() - bounds().min.lon())) > minZoom) ){ //don't download when it's too outzoomed
 			for(int x = 0; x<dax; ++x)
 				for(int y = 0; y<day; ++y)
-					images[modulo(x,dax)][modulo(y,day)].paint(g, mv);
+					images[modulo(x,dax)][modulo(y,day)].paint(g, mv, dx, dy);
 		} else
 			downloadAndPaintVisible(g, mv);
+	}
+
+	public void displace(double dx, double dy) {
+		this.dx += dx;
+		this.dy += dy;
 	}
 
 	protected void downloadAndPaintVisible(Graphics g, final MapView mv){
@@ -161,8 +168,7 @@ public class WMSLayer extends Layer {
 		for(int x = bminx; x<bmaxx; ++x)
 			for(int y = bminy; y<bmaxy; ++y){
 				GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-				if(!img.paint(g, mv) && !img.downloadingStarted){
-					//System.out.println(tr("------{0}|{1}|{2}|{3}", modulo(x,dax), modulo(y,day), img.downloadingStarted, img.isVisible(mv)));
+				if(!img.paint(g, mv, dx, dy) && !img.downloadingStarted){
 					img.downloadingStarted = true;
 					img.image = null;
 					Grabber gr = WMSPlugin.getGrabber(baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this);
@@ -204,7 +210,7 @@ public class WMSLayer extends Layer {
 		for(int x = 0; x<dax; ++x)
 			for(int y = 0; y<day; ++y)
 					if(images[x][y].image!=null && images[x][y].min!=null && images[x][y].max!=null)
-						if(images[x][y].contains(eastNorth))
+						if(images[x][y].contains(eastNorth, dx, dy))
 							return images[x][y];
 		return null;
 	}

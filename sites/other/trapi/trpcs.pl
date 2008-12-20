@@ -24,6 +24,7 @@ while (my $gz = <>) {
     open OSC, "-|", "zcat", $gz
 	or die "Could not zcat $gz";
     
+    # add/modify
     while ($_ = <OSC>) {
 	if (/^\s*\<delete\b/) {
 	    print "Delete mode\n" if (VERBOSE > 9);
@@ -37,6 +38,8 @@ while (my $gz = <>) {
 	} elsif (/^\s*\<modify\b/) {
 	    print "Modify mode\n" if (VERBOSE > 9);
 	    $deletemode = 0;
+	} elsif ($deletemode) {
+	    next;
 	} elsif (/^\s*\<node\s/) {
 	    $nodes++;
 	    @tv = ();
@@ -53,27 +56,6 @@ while (my $gz = <>) {
 	    }
 	    print "Node: $_" if (VERBOSE > 20);
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
-	    if ($deletemode) {
-		$ptn = nodeptn($id);
-		if ($ptn eq NOPTN) {
-		    print "Delete of missing node $id ignored\n"
-			if (VERBOSE > 7);
-		    next;
-		}
-		my $nf = openptn($ptn,"+<","nodes");
-		seek $nf, 0, 0;
-		my ($n);
-		while (read $nf, $n, 16) {
-		    ($n, $lat, $lon, $off) = unpack "NN!N!N", $n;
-		    next unless($n == $id);
-		    print "Deleting node $id\n" if (VERBOSE > 9);
-		    seek $nf, -16, 1;
-		    print $nf pack "NN!N!N", 0, 0, 0, 0;
-		    last;
-		}
-		nodeptn($id,NOPTN);
-		next;
-	    }
 	    ($lat) = /\slat\=[\"\']?(-?\d+(?:\.\d+)?)[\"\']?\b/;
 	    ($lon) = /\slon\=[\"\']?(-?\d+(?:\.\d+)?)[\"\']?\b/;
 	    ($x, $y) = getTileNumber($lat, $lon, MAXZOOM);
@@ -358,48 +340,6 @@ while (my $gz = <>) {
 	    }
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
 	    print "Way: $_" if (VERBOSE > 19);
-	    if ($deletemode) {
-		$ptn = wayptn($id);
-		if ($ptn eq NOPTN) {
-		    print "Delete of nonexistant way $id ignored\n"
-			if (VERBOSE > 3);
-		    next;
-		}
-		print "Deleting way $id\n" if (VERBOSE > 4);
-		my $wf = openptn($ptn, "+<", "ways");
-		seek $wf, 0, 0;
-		my ($w);
-		while (read $wf, $w, 8) {
-		    ($w, $off) = unpack "NN", $w;
-		    next unless ($w == $id);
-		    seek $wf, -8, 1;
-		    print $wf pack "NN", 0, 0;
-		    my $wd = openptn($ptn, "+<", "data");
-		    seek $wd, $off, 0;
-		    my %ptns = ();
-		    my ($n);
-		    while (read $wd, $n, 4) {
-			$n = unpack "N", $n;
-			last unless ($n);
-			$ptns{nodeptn($n)}++;
-		    }
-		    delete $ptns{$ptn};
-		    foreach my $p (keys %ptns) {
-			$wf = openptn($p, "+<", "ways");
-			seek $wf, 0, 0;
-			while (read $wf, $w, 8) {
-			    ($w, $off) = unpack "NN", $w;
-			    next unless ($w == $id);
-			    seek $wf, -8, 1;
-			    print $wf pack "NN", 0, 0;
-			    last;
-			}
-		    }
-		    last;
-		}
-		wayptn($id, NOPTN);
-		next;
-	    }
 	    $ptn = wayptn($id);
 	    unless (@nodes) {
 		print "Way $id has no nodes\n" if (VERBOSE > 2);
@@ -634,31 +574,6 @@ while (my $gz = <>) {
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
 	    print "Relation: $_" if (VERBOSE > 18);
 	    $ptn = relationptn($id);
-	    if ($deletemode) {
-		if ($ptn ne NOPTN) {
-		    my ($uz, $ux, $uy) = fromptn($ptn);
-		    print "Delete relation $id from z$uz $ux,$uy\n"
-			if (VERBOSE > 4);
-		    my %tiles = reltiles([],[],[[$id]]);
-		    while (my $t = each %tiles) {
-			my $rf = openptn($t, "+<", "relations");
-			seek $rf, 0, 0;
-			my $r;
-			while (read $rf, $r, 8) {
-			    ($r, $off) = unpack "NN", $r;
-			    next unless($r == $id);
-			    seek $rf, -8, 1;
-			    print $rf pack "NN", 0, 0;
-			    last;
-			}
-		    }
-		    relationptn($id,NOPTN);
-		} else {
-		    print "Delete of nonexistant relation $id ignored\n"
-			if (VERBOSE > 2);
-		}
-		next;
-	    }
 	    my (%oldtiles, %rtc, $rf);
 	    my %tiles = reltiles(\@nodes, \@ways, \@relations);
 	    if ($ptn eq NOPTN) {
@@ -814,6 +729,215 @@ while (my $gz = <>) {
 	    }
 	}
     }
+    close OSC;
+    open OSC, "-|", "zcat", $gz
+	or die "Could not zcat $gz";
+    
+    # delete relations
+    while ($_ = <OSC>) {
+	if (/^\s*\<delete\b/) {
+	    print "Delete mode\n" if (VERBOSE > 9);
+	    $deletemode = 1;
+	} elsif (/^\s*\<\/delete\b/) {
+	    print "End Delete mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (/^\s*\<create\b/) {
+	    print "Create mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (/^\s*\<modify\b/) {
+	    print "Modify mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (!$deletemode) {
+	    next;
+	} elsif (/^\s*\<relation\s+/) {
+	    $relations++;
+	    @tv = ();
+	    my @nodes = ();
+	    my @ways = ();
+	    my @relations = ();
+	    unless (/\/\>\s*$/) {
+		while (! /\<\/relation\>/s) {
+		    $tv = <OSC>;
+		    $_ .= $tv;
+		    if ($tv =~ /\<member\s+type\=\"(\w+)\"\s+ref\=\"(\d+)\"(?:\s+role\=\"([^\"]*)\")?/) {
+			if ($1 eq "node") {
+			    push @nodes, [$2, $3];
+			} elsif ($1 eq "way") {
+			    push @ways, [$2, $3];
+			} elsif ($1 eq "relation") {
+			    push @relations, [$2, $3];
+			} else {
+			    print "Unknown relation member type \"$1\" ignored.\n";
+			}
+		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
+			my $tag = $1;
+			my $val = $2;
+			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+		    }
+		}
+	    }
+	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
+	    print "Relation: $_" if (VERBOSE > 18);
+	    $ptn = relationptn($id);
+	    if ($ptn ne NOPTN) {
+		my ($uz, $ux, $uy) = fromptn($ptn);
+		print "Delete relation $id from z$uz $ux,$uy\n"
+		    if (VERBOSE > 4);
+		my %tiles = reltiles([],[],[[$id]]);
+		while (my $t = each %tiles) {
+		    my $rf = openptn($t, "+<", "relations");
+		    seek $rf, 0, 0;
+		    my $r;
+		    while (read $rf, $r, 8) {
+			($r, $off) = unpack "NN", $r;
+			next unless($r == $id);
+			seek $rf, -8, 1;
+			print $rf pack "NN", 0, 0;
+			last;
+		    }
+		}
+		relationptn($id,NOPTN);
+	    } else {
+		print "Delete of nonexistant relation $id ignored\n"
+		    if (VERBOSE > 2);
+	    }
+	}
+    }
+    close OSC;
+    open OSC, "-|", "zcat", $gz
+	or die "Could not zcat $gz";
+    # delete ways
+    while ($_ = <OSC>) {
+	if (/^\s*\<delete\b/) {
+	    print "Delete mode\n" if (VERBOSE > 9);
+	    $deletemode = 1;
+	} elsif (/^\s*\<\/delete\b/) {
+	    print "End Delete mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (/^\s*\<create\b/) {
+	    print "Create mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (/^\s*\<modify\b/) {
+	    print "Modify mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (!$deletemode) {
+	    next;
+	} elsif (/^\s*\<way\s+/) {
+	    $ways++;
+	    @tv = ();
+	    my @nodes = ();
+	    unless (/\/\>\s*$/) {
+		while (! /\<\/way\>/s) {
+		    $tv = <OSC>;
+		    $_ .= $tv;
+		    if ($tv =~ /\<nd\s+ref\=\"(\d+)\"/) {
+			push @nodes, $1;
+		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
+			my $tag = $1;
+			my $val = $2;
+			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+		    }
+		}
+	    }
+	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
+	    print "Way: $_" if (VERBOSE > 19);
+	    $ptn = wayptn($id);
+	    if ($ptn eq NOPTN) {
+		print "Delete of nonexistant way $id ignored\n"
+		    if (VERBOSE > 3);
+		next;
+	    }
+	    print "Deleting way $id\n" if (VERBOSE > 4);
+	    my $wf = openptn($ptn, "+<", "ways");
+	    seek $wf, 0, 0;
+	    my ($w);
+	    while (read $wf, $w, 8) {
+		($w, $off) = unpack "NN", $w;
+		next unless ($w == $id);
+		seek $wf, -8, 1;
+		print $wf pack "NN", 0, 0;
+		my $wd = openptn($ptn, "+<", "data");
+		seek $wd, $off, 0;
+		my %ptns = ();
+		my ($n);
+		while (read $wd, $n, 4) {
+		    $n = unpack "N", $n;
+		    last unless ($n);
+		    $ptns{nodeptn($n)}++;
+		}
+		delete $ptns{$ptn};
+		foreach my $p (keys %ptns) {
+		    $wf = openptn($p, "+<", "ways");
+		    seek $wf, 0, 0;
+		    while (read $wf, $w, 8) {
+			($w, $off) = unpack "NN", $w;
+			next unless ($w == $id);
+			seek $wf, -8, 1;
+			print $wf pack "NN", 0, 0;
+			last;
+		    }
+		}
+		last;
+	    }
+	    wayptn($id, NOPTN);
+	}
+    }
+    close OSC;
+    open OSC, "-|", "zcat", $gz
+	or die "Could not zcat $gz";
+    # delete nodes
+    while ($_ = <OSC>) {
+	if (/^\s*\<delete\b/) {
+	    print "Delete mode\n" if (VERBOSE > 9);
+	    $deletemode = 1;
+	} elsif (/^\s*\<\/delete\b/) {
+	    print "End Delete mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (/^\s*\<create\b/) {
+	    print "Create mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (/^\s*\<modify\b/) {
+	    print "Modify mode\n" if (VERBOSE > 9);
+	    $deletemode = 0;
+	} elsif (!$deletemode) {
+	    next;
+	} elsif (/^\s*\<node\s/) {
+	    $nodes++;
+	    @tv = ();
+	    unless (/\/\>\s*$/) {
+		while (! /\<\/node\>/s) {
+		    $tv = <OSC>;
+		    $_ .= $tv;
+		    if ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
+			my $tag = $1;
+			my $val = $2;
+			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+		    }
+		}
+	    }
+	    print "Node: $_" if (VERBOSE > 20);
+	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
+	    $ptn = nodeptn($id);
+	    if ($ptn eq NOPTN) {
+		print "Delete of missing node $id ignored\n"
+		    if (VERBOSE > 7);
+		next;
+	    }
+	    my $nf = openptn($ptn,"+<","nodes");
+	    seek $nf, 0, 0;
+	    my ($n);
+	    while (read $nf, $n, 16) {
+		($n, $lat, $lon, $off) = unpack "NN!N!N", $n;
+		next unless($n == $id);
+		print "Deleting node $id\n" if (VERBOSE > 9);
+		seek $nf, -16, 1;
+		print $nf pack "NN!N!N", 0, 0, 0, 0;
+		last;
+	    }
+	    nodeptn($id,NOPTN);
+	}
+    }
+    close OSC;
     
     writecache();
     if ($gz =~ /(?:^|\/)\d+\-(\d+)\.osc\.gz$/) {

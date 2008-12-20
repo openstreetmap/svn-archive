@@ -19,6 +19,7 @@ public class WMSAdjustAction extends MapMode implements
 		MouseListener, MouseMotionListener{
 
 	GeorefImage selectedImage;
+	WMSLayer selectedLayer;
 	boolean mouseDown;
 	EastNorth prevEastNorth;
 
@@ -47,7 +48,8 @@ public class WMSAdjustAction extends MapMode implements
 		 for(Layer layer:Main.map.mapView.getAllLayers()) {
 			if (layer.visible && layer instanceof WMSLayer) {
 				prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
-				selectedImage = ((WMSLayer)layer).findImage(prevEastNorth);
+				selectedLayer = ((WMSLayer)layer);
+				selectedImage = selectedLayer.findImage(prevEastNorth);
 				if(selectedImage!=null){
 					Main.map.mapView.setCursor
 						(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -65,11 +67,9 @@ public class WMSAdjustAction extends MapMode implements
 		if(selectedImage!=null) {
 			EastNorth eastNorth=
 					Main.map.mapView.getEastNorth(e.getX(),e.getY());
-			if(selectedImage.contains(eastNorth)) {
-				selectedImage.displace(eastNorth.east()-prevEastNorth.east(), 
-									eastNorth.north()-prevEastNorth.north());
-				prevEastNorth = eastNorth;
-			}
+		        selectedLayer.displace(eastNorth.east()-prevEastNorth.east(), 
+				eastNorth.north()-prevEastNorth.north());
+			prevEastNorth = eastNorth;
 			Main.map.mapView.repaint();
 		}
 	}
@@ -78,6 +78,8 @@ public class WMSAdjustAction extends MapMode implements
 		Main.map.mapView.repaint();
 		Main.map.mapView.setCursor(Cursor.getDefaultCursor());
 		selectedImage = null;	
+		prevEastNorth = null;
+		selectedLayer = null;
 	}
 
 	public void mouseEntered(MouseEvent e) {

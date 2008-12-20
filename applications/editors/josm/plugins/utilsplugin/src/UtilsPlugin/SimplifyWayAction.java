@@ -63,7 +63,7 @@ public class SimplifyWayAction extends JosmAction {
                                     tr("The selected way(s) have nodes outside of the downloaded data region."
                                             + "This can lead to nodes beeing deleted accidentially.\n"
                                             + "Are you really sure to continue?"),
-                                    tr("Plase abort if you are not sure"), JOptionPane.YES_NO_CANCEL_OPTION,
+                                    tr("Please abort if you are not sure"), JOptionPane.YES_NO_CANCEL_OPTION,
                                     JOptionPane.WARNING_MESSAGE);
 
                             if (option != JOptionPane.YES_OPTION)

@@ -12,7 +12,10 @@ use CGI::Fast qw(:standard);
 use CGI::Carp;
 use Time::Local;
 
+our $die;
+
 chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
+$SIG{TERM} = sub {$die = 1};
 
 ptdbinit("<");
 
@@ -22,6 +25,7 @@ my $oldstamp = "";
 my $stamptime = 0;
 
 while (my $query = new CGI::Fast) {
+    last if ($die);
 
     open STAMP, "<", "timestamp" or die "Could not open timestamp: $!";
     my $stamp = <STAMP>;
@@ -355,4 +359,5 @@ while (my $query = new CGI::Fast) {
     print "</osm>\n";
     $| = 1;
     $| = 0;
+    last if ($die);
 }

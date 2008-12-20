@@ -23,7 +23,7 @@ public class WMSAdjustAction extends MapMode implements
 	EastNorth prevEastNorth;
 
 	public WMSAdjustAction(MapFrame mapFrame) {
-		super(tr("landsatAdjust"), "movelandsat", 
+		super(tr("Adjust WMS"), "adjustwms", 
 						tr("Adjust the position of the WMS layer"), mapFrame, 
 						ImageProvider.getCursor("normal", "move"));
 	}

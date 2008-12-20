@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +41,7 @@ public class RequestProcessor extends Thread
 	/**
 	 * Constructor
 	 * 
-	 * @param request The WMS request
+	 * @param request 
 	 */
 	public RequestProcessor(Socket request) 
 	{
@@ -108,7 +109,8 @@ public class RequestProcessor extends Thread
             if (command.equals("/load_and_zoom")) {
             	if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
             		if (JOptionPane.showConfirmDialog(Main.parent,
-            			tr("Remote Control has been asked to load data from the API. Request details: {0}. Do you want to allow this?", url),
+            			"<html>" + tr("Remote Control has been asked to load data from the API.") +
+                        "<br>" + tr("Request details: {0}", url) + "<br>" + tr("Do you want to allow this?"),
             			tr("Confirm Remote Control action"),
             			JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
             				sendForbidden(out);
@@ -201,6 +203,38 @@ public class RequestProcessor extends Thread
 						}
 					});
 				}
+            } else if (command.equals("/import")) {
+            	if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
+            		if (JOptionPane.showConfirmDialog(Main.parent,
+            			"<html>" + tr("Remote Control has been asked to import data from the following URL:") + 
+                        "<br>" + url + 
+                        "<br>" + tr("Do you want to allow this?"),
+            			tr("Confirm Remote Control action"),
+            			JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+            				sendForbidden(out);
+            				return;
+            		}
+            	}
+				if (!(args.containsKey("url"))) {
+					sendBadRequest(out);
+					System.out.println("'import' remote control request must have url parameter");
+					return;	
+				}
+				try {
+					if (!Main.pref.getBoolean("remotecontrol.permission.import", true))
+						throw new LoadDeniedException();
+					
+            	    DownloadTask osmTask = new DownloadOsmTask();
+					osmTask.loadUrl(false, URLDecoder.decode(args.get("url"), "UTF-8"));
+				} catch (LoadDeniedException ex) {
+					System.out.println("RemoteControl: import forbidden by preferences");
+				} catch (Exception ex) {
+					sendError(out);
+					System.out.println("RemoteControl: Error parsing import remote control request:");
+					ex.printStackTrace();
+					return;
+				}
+                // TODO: select/zoom to downloaded
             }
 			sendHeader(out, "200 OK", "text/plain", false);
             out.write("Content-length: 4\r\n");

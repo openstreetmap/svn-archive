@@ -8017,11 +8017,11 @@ msgstr "Gasthof bearbeiten"
 
 #: presets.java:1428
 msgid "Chalet"
-msgstr "Sennhütte"
+msgstr "Ferienhaus"
 
 #: presets.java:1429
 msgid "Edit Chalet"
-msgstr "Sennhütte bearbeiten"
+msgstr "Ferienhaus bearbeiten"
 
 #: presets.java:1434
 msgid "Hostel"

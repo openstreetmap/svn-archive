@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.io.*;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -211,8 +212,10 @@ public class WMSPlugin extends Plugin {
 		if (oldFrame==null && newFrame!=null) { 
 			setEnabledAll(true);
 			Main.map.toolBarActions.addSeparator();
-			Main.map.toolBarActions.add(new IconToggleButton
-						(new WMSAdjustAction(Main.map)));
+			IconToggleButton tb = new IconToggleButton
+						(new WMSAdjustAction(Main.map));
+			Main.map.toolBarActions.add(tb);
+			Main.map.toolGroup.add((AbstractButton)tb);
 		} else if (oldFrame!=null && newFrame==null ) {
 			setEnabledAll(false);
 		}

@@ -25,6 +25,7 @@ import javax.swing.KeyStroke;
 import livegps.LiveGpsPlugin;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.xml.sax.SAXException;
@@ -42,7 +43,9 @@ public class SurveyorShowAction extends JosmAction {
     private LiveGpsPlugin gpsPlugin;
 
     public SurveyorShowAction(LiveGpsPlugin gpsPlugin) {
-        super(tr("Surveyor ..."), "surveyormenu.png", tr("Open surveyor tool."), KeyEvent.VK_S, KeyEvent.CTRL_MASK, true);
+        super(tr("Surveyor ..."), "surveyormenu.png", tr("Open surveyor tool."),
+        Shortcut.registerShortcut("surveyor:open", tr("Tool: {0}", tr("Surveyor ...")),
+        KeyEvent.VK_R, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), true);
         this.gpsPlugin = gpsPlugin;
     }
 

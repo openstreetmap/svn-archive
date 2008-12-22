@@ -11,6 +11,7 @@ import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -19,6 +20,7 @@ import java.awt.event.KeyEvent;
 import livegps.LiveGpsPlugin;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginProxy;
 
 /**
@@ -72,20 +74,17 @@ public class SurveyorPlugin {
                 break;
             }
         }
-        if(gpsPlugin == null) {
-            throw new IllegalStateException("SurveyorPlugin needs LiveGpsPlugin, but could not find it!");
-        }
-        SurveyorShowAction surveyorAction = new SurveyorShowAction(gpsPlugin);
-        JMenuItem surveyorMenuItem = new JMenuItem(surveyorAction);
-        surveyorMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.VK_ALT));
+        if(gpsPlugin == null)
+            throw new IllegalStateException(tr("SurveyorPlugin needs LiveGpsPlugin, but could not find it!"));
 
-        gpsPlugin.getLgpsMenu().addSeparator();
-        gpsPlugin.getLgpsMenu().add(surveyorMenuItem);
-        
+        JMenu m = gpsPlugin.getLgpsMenu();
+        m.addSeparator();
+        MainMenu.add(m, new SurveyorShowAction(gpsPlugin));
+
         AutoSaveAction autoSaveAction = new AutoSaveAction();
         JCheckBoxMenuItem autoSaveMenu = new JCheckBoxMenuItem(autoSaveAction);
-        gpsPlugin.getLgpsMenu().add(autoSaveMenu);  
-        autoSaveMenu.setAccelerator(autoSaveAction.shortcut);
+        m.add(autoSaveMenu);
+        autoSaveMenu.setAccelerator(autoSaveAction.getShortcut().getKeyStroke());
     }
 
     /**

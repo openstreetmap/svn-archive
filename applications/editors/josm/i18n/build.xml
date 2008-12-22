@@ -90,6 +90,7 @@
     <delete file="presets.java"/>
     <delete file="validator.java"/>
     <delete file="wms.java"/>
+    <delete file="surveyor.java"/>
     <delete file="java_sourcefiles.txt"/>
   </target>
 

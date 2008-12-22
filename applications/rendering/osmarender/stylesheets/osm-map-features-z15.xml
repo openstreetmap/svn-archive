@@ -150,7 +150,12 @@
 			<area class="amenity-parking"/>
 		</rule>
 		<rule e="way" k="tourism" v="attraction">
-			<area class="tourism-attraction"/>
+			<rule e="way" k="highway" v="~">
+				<rule e="way" k="area" v="no" />
+				<else>
+					<area class="tourism-attraction"/>
+				</else>
+			</rule>
 		</rule>
 		<rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
 			<area class="tourism-green-area"/>

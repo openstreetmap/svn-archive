@@ -211,11 +211,8 @@ public class WMSPlugin extends Plugin {
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (oldFrame==null && newFrame!=null) { 
 			setEnabledAll(true);
-			Main.map.toolBarActions.addSeparator();
-			IconToggleButton tb = new IconToggleButton
-						(new WMSAdjustAction(Main.map));
-			Main.map.toolBarActions.add(tb);
-			Main.map.toolGroup.add((AbstractButton)tb);
+			Main.map.addMapMode(new IconToggleButton
+						(new WMSAdjustAction(Main.map)));
 		} else if (oldFrame!=null && newFrame==null ) {
 			setEnabledAll(false);
 		}

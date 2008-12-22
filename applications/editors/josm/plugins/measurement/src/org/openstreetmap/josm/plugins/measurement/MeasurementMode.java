@@ -47,10 +47,7 @@ public class MeasurementMode extends MapMode {
 				JOptionPane.showMessageDialog(Main.parent,tr("Can not draw outside of the world."));
 				return;
 			}
-			if (MeasurementPlugin.currentLayer == null){
-				Main.main.addLayer(new MeasurementLayer("Measurement"));
-			}
-			MeasurementPlugin.currentLayer.mouseClicked(e);
+			MeasurementPlugin.getCurrentLayer().mouseClicked(e);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.measurement;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
@@ -20,7 +21,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.Main;
 
 /**
@@ -35,43 +38,41 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
 	/** 
      * The reset button
      */
-    private JButton resetButton;
-    
+    private SideButton resetButton;
+
     /**
      * The measurement label for the path length
      */
     protected JLabel pathLengthLabel;
-    
+
     /**
      * The measurement label for the currently selected segments
      */
     protected JLabel selectLengthLabel;
-    
+
     /**
      * The measurement label for area of the currently selected loop
      */
     protected JLabel selectAreaLabel;
-    
+
     /**
      * The measurement label for the segment angle, actually updated, if 2 nodes are selected
      */
     protected JLabel segAngleLabel;
-    
+
     /**
      * Constructor
      */
     public MeasurementDialog() 
     {
-        super(tr("Measured values"), "measure", tr("Open the measurement window."), KeyEvent.VK_M, KeyEvent.ALT_DOWN_MASK);
-        
+        super(tr("Measured values"), "measure", tr("Open the measurement window."),
+        Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
+        KeyEvent.VK_M, Shortcut.GROUP_LAYER), 150);
+
         JPanel buttonPanel = new JPanel(new GridLayout(1,2));
-        
-		resetButton = new JButton(tr("Reset"), ImageProvider.get("mapmode/selection/select"));
-		resetButton.setActionCommand("Reset");
-		resetButton.addActionListener(this);
-		resetButton.setToolTipText(tr("Reset current measurement results and delete measurement path."));
-//		resetButton.putClientProperty("help", "Dialog/SelectionList/Reset");
-		
+
+        resetButton = new SideButton(marktr("Reset"), "select", "Measurement",
+                tr("Reset current measurement results and delete measurement path."), this);
         buttonPanel.add(resetButton);
         add(buttonPanel, BorderLayout.SOUTH);
 

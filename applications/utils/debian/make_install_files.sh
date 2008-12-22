@@ -49,6 +49,7 @@ mkdir -p "$lib_path"
 mkdir -p "$share_path"
 mkdir -p "$man1_path"
 
+platform=`uname -m`
 
 # ------------------------------------------------------------------
 # Utilities written in C
@@ -56,6 +57,13 @@ mkdir -p "$man1_path"
 # ------------------------------------------------------------------
 # Various libs
 for lib in ccoord libosm libimg ; do 
+    if [ "$platform" == "x86_64" ] ; then
+	if echo $lib | grep -q -e libosm -e ccoord ; then
+	    echo "Ignored '$lib' because it does not compile on my debian $platform machine"
+	    continue
+	fi
+    fi
+
     echo "${BLUE}----------> lib/$lib${NORMAL}"
     cd ../lib/$lib
     # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done

@@ -13,6 +13,7 @@ Build-Depends:
 	libshp-dev,
 	libxml2-dev,
 	pkg-config,
+	ant,
 	libmysqlclient15-dev
 Standards-Version: 3.6.1
 

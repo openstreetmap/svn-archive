@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 18:35+0100\n"
+"POT-Creation-Date: 2008-12-22 23:24+0100\n"
 "PO-Revision-Date: 2008-11-04 22:17+0100\n"
 "Last-Translator: Marcin Floryan <mfloryan@mm.waw.pl>\n"
 "Language-Team: Polish <josm-lang-pl@googlegroups.com>\n"
@@ -55,12 +55,6 @@ msgstr "Nie pokazuj ponownie"
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
 msgid "Information"
 msgstr "Informacje"
-
-#: ../core/src/org/openstreetmap/josm/tools/XmlObjectParser.java:32
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:98
-#: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:48
-msgid "En:"
-msgstr "Pl:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:64
 #, java-format
@@ -317,14 +311,14 @@ msgstr "Podaj hasło"
 msgid "Aborting..."
 msgstr "Porzucanie..."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:207
+#: ../core/src/org/openstreetmap/josm/Main.java:208
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:138
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:262
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:56
 msgid "Help"
 msgstr "Pomoc"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:238
+#: ../core/src/org/openstreetmap/josm/Main.java:239
 #, java-format
 msgid ""
 "Warning - loading of {0} plugin was requested. This plugin is no longer "
@@ -333,56 +327,56 @@ msgstr ""
 "Uwaga - zażądano załadowania wtyczki {0}. Ta wtyczka nie jest już jednak "
 "potrzebna."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:259
+#: ../core/src/org/openstreetmap/josm/Main.java:260
 #, java-format
 msgid "Plugin requires JOSM update: {0}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:270
+#: ../core/src/org/openstreetmap/josm/Main.java:271
 #, java-format
 msgid "Plugin not found: {0}."
 msgstr "Nie znaleziono wtyczki: {0}."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:284
+#: ../core/src/org/openstreetmap/josm/Main.java:285
 #, java-format
 msgid "Last plugin update more than {0} days ago."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:286
+#: ../core/src/org/openstreetmap/josm/Main.java:287
 msgid ""
 "(You can change the number of days after which this warning appears<br>by "
 "setting the config option 'pluginmanager.warntime'.)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:317
+#: ../core/src/org/openstreetmap/josm/Main.java:318
 #, java-format
 msgid "Could not load plugin {0}. Delete from preferences?"
 msgstr "Nie można załadować wtyczki {0}. Czy usunąć ją z preferencji?"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:388
+#: ../core/src/org/openstreetmap/josm/Main.java:389
 msgid "The projection could not be read from preferences. Using EPSG:4263."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:460
+#: ../core/src/org/openstreetmap/josm/Main.java:461
 msgid "Hint: Some changes came from uploading new data to the server."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:462
+#: ../core/src/org/openstreetmap/josm/Main.java:463
 #, fuzzy
 msgid "There are unsaved changes. Discard the changes and continue?"
 msgstr "Istnieją niezapisane zmiany. Naprawdę chcesz wyjść?"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:463
+#: ../core/src/org/openstreetmap/josm/Main.java:464
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:80
 msgid "Unsaved Changes"
 msgstr "Niezapisane zmiany"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:475
+#: ../core/src/org/openstreetmap/josm/Main.java:476
 #, java-format
 msgid "Ignoring malformed url: \"{0}\""
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:488
+#: ../core/src/org/openstreetmap/josm/Main.java:489
 #, java-format
 msgid "Ignoring malformed file url: \"{0}\""
 msgstr ""
@@ -575,7 +569,7 @@ msgid "If specified, reset the configuration instead of reading it."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:53
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:125
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:123
 msgid "JOSM, the Java OpenStreetMap editor"
 msgstr "JOSM - Java OpenStreetMap edytor"
 
@@ -3093,7 +3087,7 @@ msgstr[0] "({0} węzeł)"
 msgstr[1] "({0} węzły)"
 msgstr[2] "({0} węzłów)"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:89
+#: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:90
 #, java-format
 msgid "{0} member"
 msgid_plural "{0} members"
@@ -10517,3 +10511,6 @@ msgstr ""
 #: specialmessages.java:9
 msgid "could not get audio input stream from input URL"
 msgstr ""
+
+#~ msgid "En:"
+#~ msgstr "Pl:"

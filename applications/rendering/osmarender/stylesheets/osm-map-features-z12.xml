@@ -775,7 +775,12 @@
 			<area class="military-area" layer="-5"/>
 		</rule>
 		<rule e="way" k="tourism" v="attraction" layer="-5">
-			<area class="tourism-attraction" layer="-5"/>
+			<rule e="way" k="highway" v="~">
+				<rule e="way" k="area" v="no" />
+				<else>
+					<area class="tourism-attraction" layer="-5"/>
+				</else>
+			</rule>
 		</rule>
 		
 		<!-- ==================================== Layer 5 ======================================== -->

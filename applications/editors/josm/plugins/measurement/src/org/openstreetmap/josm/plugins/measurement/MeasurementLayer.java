@@ -65,7 +65,7 @@ public class MeasurementLayer extends Layer {
     }
 	
     @Override public String getToolTipText() {
-        return tr("MeasurementLayer layer");
+        return tr("Layer to make measurements");
     }
 
     @Override public boolean isMergable(Layer other) {

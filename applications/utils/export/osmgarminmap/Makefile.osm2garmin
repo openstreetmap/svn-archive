@@ -7,3 +7,6 @@ osm2garmin: $(OBJ)
 
 osm2garmin.o : curlstuff.h
 curlstuff.o : curlstuff.h
+
+clean:
+	rm -f *.o osm2garmin

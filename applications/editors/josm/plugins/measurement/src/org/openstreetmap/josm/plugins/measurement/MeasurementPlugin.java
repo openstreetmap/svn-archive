@@ -33,7 +33,7 @@ public class MeasurementPlugin extends Plugin {
 
 	public static MeasurementLayer getCurrentLayer(){
 		if(currentLayer == null){
-			currentLayer = new MeasurementLayer(tr("Measurement"));
+			currentLayer = new MeasurementLayer(tr("Measurements"));
 			Main.main.addLayer(currentLayer);
 			currentLayer.listeners.add(new LayerChangeListener(){
 				public void activeLayerChange(final Layer oldLayer, final Layer newLayer) {

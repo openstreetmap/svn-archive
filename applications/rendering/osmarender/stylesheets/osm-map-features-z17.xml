@@ -2243,8 +2243,12 @@
 			</else>
 		</rule>
 		<rule e="way" k="landuse|military" v="*" layer="5">
-			<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
-			<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
+            <rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station" />
+            <else>
+                <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+			    <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle"
+                startOffset="50%" layer="5"/>
+            </else>
 		</rule>
 		<rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
@@ -2254,7 +2258,7 @@
 		<rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
 			<rule e="way" k="building" v="*" layer="5">
 				<!-- same goes if one of the following is set -->
-				<rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket|fire_station|place_of_worship" layer="5">
+				<rule e="way" k="amenity|shop" v="school|college|university|parking|supermarket|fire_station|place_of_worship|restaurant|library" layer="5">
 				</rule>
 				<else>
 					<areaText k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' layer="5"/>

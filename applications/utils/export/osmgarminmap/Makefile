@@ -1,4 +1,3 @@
-
 CGPSMAPPER=../bin/cgpsmapper-static
 XSLTRANSFORM=xsltproc
 
@@ -13,4 +12,8 @@ map.mpl:	map.mpx mpx2mp.xsl feature-list.xml
 
 map.mpx:	data.osm osm2mpx.xml osm2mpx.xsl
 	$(XSLTRANSFORM) osm2mpx.xml >$@
+
+
+clean:
+	rm -f map.img map.mp map.mpl map.mpx
 

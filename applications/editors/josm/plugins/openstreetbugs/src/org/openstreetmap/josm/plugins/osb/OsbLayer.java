@@ -110,7 +110,10 @@ public class OsbLayer extends Layer implements MouseListener {
 
 	@Override
 	public void paint(Graphics g, MapView mv) {
-		for (Node node : data.nodes) {
+	    Object[] nodes = data.nodes.toArray();
+		for (int i = 0; i < nodes.length; i++) {
+		    Node node = (Node) nodes[i];
+		    
 			// don't paint deleted nodes
 			if(node.deleted) {
 				continue;
@@ -147,8 +150,8 @@ public class OsbLayer extends Layer implements MouseListener {
 					int tooltipWidth = 0;
 					Rectangle2D fontBounds = null;
 					String[] lines = desc.split("<hr>");
-					for (int i = 0; i < lines.length; i++) {
-						String line = lines[i];
+					for (int j = 0; j < lines.length; j++) {
+						String line = lines[j];
 						fontBounds = g.getFontMetrics().getStringBounds(line, g);
 						tooltipWidth = Math.max(tooltipWidth, (int)fontBounds.getWidth());
 					}

@@ -69,11 +69,16 @@ sub read_track_NMEA($) {
     my $sat_time = 0;
     my $dop_time = 0;
     my $IS_grosser_reiseplaner=0;
+    my $line_no=0;
+    my $checksumm_errors=0;
+
     while ( my $line = $fh->getline() ) {
 	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
 	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
 	$alt=0;
+	$speed=-9999;
 	chomp $line;
+	$line_no++;
 
 	my $full_line = $line;
 
@@ -83,7 +88,7 @@ sub read_track_NMEA($) {
 	# 16.08.06 15:47:23 GPGGA,134851.835,4807.8129,N,01136.6276,E,1,04,12.8,815.8,M,47.5,M,0.0,0000*42
 	if ($IS_grosser_reiseplaner){
 	    if ( $line !~ s/^\d\d\.\d\d.\d\d \d\d:\d\d:\d\d GP/\$GP/ ) {
-		printf STDERR "ERROR in Grosser Reiseplaner: $full_line\n"
+		printf STDERR "ERROR in Grosser Reiseplaner($filename\#$line_no): $full_line\n"
 		    if $DEBUG>1;
 		next;
 	    };
@@ -93,9 +98,16 @@ sub read_track_NMEA($) {
 	# Checksumm is at line-end: for example *EA
 	if ( $line =~ s/\*([\dABCDEF]{2})\s*$// ){
 	    $checksumm=$1;
+	    # TODO: Check the Checksum against the Line ;-)
 	} else {
-	    print "WARNING Checksumm is missing\n";
-	    printf STDERR "Line: $full_line\n"
+	    $checksumm_errors ++;
+	    print "WARNING Line ($filename\#$line_no) Checksumm is missing (ignore Line) (Error \# $checksumm_errors)";
+	    if ( $checksumm_errors >20 ) {
+		print "\r";
+	    } else  {
+		print "\n";
+	    }
+	    printf STDERR "Line($filename\#$line_no): $full_line\n"
 		if $DEBUG>1;
 	    next;
 	}
@@ -109,14 +121,14 @@ sub read_track_NMEA($) {
 	$type =~ s/^\s*\$?//; # TomTom GO logger is missing the $ sign this is the reason for \$?
 	if ( $type !~ s/^GP// ){
 	    print "WARNING Type is wrong: $type\n";
-	    printf STDERR "Line: $line\n"
+	    printf STDERR "Line($filename\#$line_no): $line\n"
 		if $DEBUG>1;
 	    next;
 	}
 	my $count_line=$line;
 	$count_line =~ s/[^,]//g;
 	my $elem_count = length($count_line);
-	printf STDERR "Type: $type, line: $line, checksumm:$checksumm, elem#: $elem_count\n"
+	printf STDERR "Type: $type, line($filename\#$line_no): $line, checksumm:$checksumm, elem#: $elem_count\n"
 	    if $DEBUG>4;
 	
 	my $elem_soll ={
@@ -246,7 +258,7 @@ sub read_track_NMEA($) {
 	    #printf STDERR Dumper(\$sat);
 	    next;
 	} else {
-	    printf STDERR "Ignore Line $type: $full_line\n"
+	    printf STDERR "Ignore Line($filename\#$line_no) $type: $full_line\n"
 		if $DEBUG>6;
 	    next;
 	};
@@ -256,22 +268,22 @@ sub read_track_NMEA($) {
 	if ( $lat =~ m/(\d\d)(\d\d.\d+)/) {
 	    $lat = $1 + $2/60;
 	} else {
-	    printf STDERR "Error in lat: '$lat'\nLine: $full_line\n";
+	    printf STDERR "Line ($filename\#$line_no) Error in lat: '$lat'\nLine: $full_line\n";
 	    next;
 	}
 	if ($lon =~ m/(\d+)(\d\d\.\d+)/){
 	    $lon = $1 + $2/60;
 	} else {
-	    printf STDERR "Error in lon: '$lon'\nLine: $full_line\n";
+	    printf STDERR "Line ($filename\#$line_no) Error in lon: '$lon'\nLine: $full_line\n";
 	    next;
 	}
 	$lat = -$lat if $lat_v eq "S";
 	$lon = -$lon if $lon_v eq "W";
-	printf STDERR "type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n" 
+	printf STDERR "Line ($filename\#$line_no) type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n" 
 	    if $DEBUG>5;
 	if ( ( abs($lat) < 0.001 ) && 
 	     ( abs($lat) < 0.001 ) ) {
-	    printf STDERR "too near to (0/0) : type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n";
+	    printf STDERR "Line ($filename\#$line_no) too near to (0/0) : type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n";
 	    next;
 	};
 
@@ -351,8 +363,12 @@ sub read_track_NMEA($) {
      };
     
     push(@{$new_tracks->{tracks}},$new_track);
+    if ( $checksumm_errors >0 ) {
+	print "Found $checksumm_errors Checksum-Errors in $filename\n";
+    }
     if ( $VERBOSE >1 ) {
-	printf STDERR "Read and parsed $filename";
+	printf STDERR "Read and parsed $line_no lines in $filename";
+
     print_time($start_time);
     }
     

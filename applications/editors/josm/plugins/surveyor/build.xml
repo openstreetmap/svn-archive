@@ -63,6 +63,8 @@
       <fileset dir="images" />
     </copy>
     <javac srcdir="src" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
+      <compilerarg value="-Xlint:deprecation"/>
+      <compilerarg value="-Xlint:unchecked"/>
       <classpath>
 	<pathelement path="${josm.build.dir}/build"/>
 	<fileset dir="${josm.build.dir}/lib">

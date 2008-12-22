@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 
 import at.dallermassl.josm.plugin.surveyor.action.SetWaypointAction;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.tools.Shortcut;
 
 import livegps.LiveGpsLayer;
 
@@ -32,13 +33,11 @@ public class AutoSaveAction extends JosmAction {
     public static final String OSM_FILE_NAME_PATTERN = "surveyor-{0,date,yyyyMMdd-HHmmss}.osm";
     private boolean autoSave = false;
     private Timer gpsDataTimer;
-    
-    
+
     public AutoSaveAction() {
-		super(tr("AutoSave LiveData"), "autosave.png", tr("Save captured data to file every minute."), KeyEvent.VK_S, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true);
-        // <FIXXME date="23.06.2007" author="cdaller">
-        // TODO set accelerator key
-        // </FIXXME> 
+        super(tr("AutoSave LiveData"), "autosave.png", tr("Save captured data to file every minute."),
+        Shortcut.registerShortcut("surveyor:autosave", tr("Tool: {0}", tr("AutoSave LiveData")),
+        KeyEvent.VK_S, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
 
     /* (non-Javadoc)

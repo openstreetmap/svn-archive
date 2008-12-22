@@ -48,7 +48,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         super();
         hotKeys = new HashSet<String>();
         setLayout(new BorderLayout());
-        streetLabel = new JLabel("Way: ");
+        streetLabel = new JLabel(tr("Way: "));
         float fontSize = Float.parseFloat(Main.pref.get(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, "35"));
         Main.pref.put(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, String.valueOf(fontSize));
         streetLabel.setFont(streetLabel.getFont().deriveFont(35f));
@@ -176,7 +176,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     public void propertyChange(PropertyChangeEvent evt) {
         if("gpsdata".equals(evt.getPropertyName())) {
             gpsData = (LiveGpsData) evt.getNewValue();
-            streetLabel.setText("Way: " + gpsData.getWayInfo());
+            streetLabel.setText(tr("Way: ") + gpsData.getWayInfo());
         }
         
     }

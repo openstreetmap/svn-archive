@@ -42,7 +42,6 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   private static final long serialVersionUID = 1L;
   protected String name;
   protected Cursor oldCursor;
-  protected List<Node> selectedNodes;
   protected Thread executeThread;
   protected boolean cancel;
   
@@ -68,26 +67,11 @@ class LakewalkerAction extends JosmAction implements MouseListener {
       return;
     }
 
-    selectedNodes = new ArrayList<Node>();
-    for (OsmPrimitive osm : Main.ds.getSelected()) {
-      if (osm instanceof Node) {
-        Node node = (Node) osm;
-        selectedNodes.add(node);
-      }
-    }
-
-    if (selectedNodes.isEmpty()) {
-      oldCursor = Main.map.mapView.getCursor();
-      Main.map.mapView.setCursor(ImageProvider.getCursor("crosshair", "lakewalker-sml"));
-      Main.map.mapView.addMouseListener(this);
-    }
-    else {
-      lakewalk(selectedNodes);
-    }
+    oldCursor = Main.map.mapView.getCursor();
+    Main.map.mapView.setCursor(ImageProvider.getCursor("crosshair", "lakewalker-sml"));
+    Main.map.mapView.addMouseListener(this);
   }
 
-   
-  
   /**
    * check for presence of cache folder and trim cache to specified size.
    * size/age limit is on a per folder basis.
@@ -312,10 +296,6 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   
   public void cancel() {
 	  cancel = true;
-  }
-
-  protected void lakewalk(List nodes) {
-
   }
 
   public void mouseClicked(MouseEvent e) {

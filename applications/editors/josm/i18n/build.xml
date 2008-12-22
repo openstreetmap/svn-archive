@@ -3,9 +3,10 @@
   <!-- compilation properties -->
   <property name="josm.build.dir"    value="../core"/>
   <property name="josm.presets"      value="../core/presets/presets.xml"/>
-  <property name="plugin.dir"        value="../plugins"/>  
-  <property name="validator.tagfile" value="${plugin.dir}/validator/tagchecker.cfg"/>  
-  <property name="wms.srcfile"       value="${plugin.dir}/wmsplugin/sources.cfg"/>  
+  <property name="plugin.dir"        value="../plugins"/>
+  <property name="validator.tagfile" value="${plugin.dir}/validator/tagchecker.cfg"/>
+  <property name="wms.srcfile"       value="${plugin.dir}/wmsplugin/sources.cfg"/>
+  <property name="surveyor.srcfile"  value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
   <property name="i18n.build.dir"    value="build"/>
   <property name="i18n.install.dir"  value="${josm.build.dir}/lib"/>
   <property name="i18n.name"         value="josm-translation"/>
@@ -22,6 +23,9 @@
     </exec>
     <exec executable="perl" output="wms.java">
       <arg line="convwms.pl ${wms.srcfile}"/>
+    </exec>
+    <exec executable="perl" output="surveyor.java">
+      <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
     </exec>
 
     <exec executable="find" output="java_sourcefiles.txt" osfamily="unix">

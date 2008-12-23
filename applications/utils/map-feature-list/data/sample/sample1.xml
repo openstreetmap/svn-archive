@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE osm-tag-def-list SYSTEM "osm-tag-definition-list.dtd" >
+
+<osm-tag-def-list release-date="2008-12-20" release-id="00001" version="0.1">
+
+
+<tag-def key="highway" onnode="yes" onway="yes" onarea="yes">
+	<display-name>Highway</display-name>
+	<description>The highway tag is the primary tag used for highways. It is often the only tag. There are conventions for its use in particular countries.</description>
+	
+	<value-def value="motorway" onway="yes">
+		<display-name>Motorway</display-name>
+		<description>A restricted access major divided highway, normally with 2 or more running lanes plus emergency hard shoulder. Equivalent to the Freeway, Autobahn, etc.. </description>		
+	</value-def>
+
+	<value-def value="motorway_link" onway="yes">
+		<display-name>Motorway Link</display-name>
+		<description>The link roads (sliproads/ramps) leading to/from a motorway from/to a motorway or lower class highway. Normally with the same motorway restrictions. </description>		
+	</value-def>
+
+	<value-def value="pedestrian" onway="yes" onarea="yes">
+		<display-name>Pedestrian</display-name>
+		<description>For roads used mainly/exclusively for pedestrians/shopping areas. Also for tagging squares and plazas (in which case, add area=yes.</description>		
+	</value-def>
+
+	<value-def value="bus_stop" onnode="yes">
+		<display-name>Bus Stop</display-name>
+		<description>A small bus stop. Larger stations should be tagged as amenity=bus_station instead. </description>		
+	</value-def>
+	<category ref="physical" />
+</tag-def>
+
+
+<tag-def key="operator" onnode="yes" onway="yes" onarea="yes">
+	<display-name>Operator</display-name>
+	<description>The operator tag can be used to name a company or corporation who's responsible for a certain object or who operates it.</description>		
+
+	<category ref="naming"/>
+	<category ref="non-physical"/>
+</tag-def>
+
+
+<tag-def key="name" onnode="yes" onway="yes" onarea="yes">
+	<display-name>Name</display-name>
+	<description>The common default name. (Note: For disputed areas, please use the name as displayed on e.g. street signs for the name tag. Put all alternatives into either localized name tags (e.g. name:tr/name:el) or the variants (e.g. loc_name/old_name/alt_name). Thank you.) </description>		
+	
+	<category ref="naming"/>
+</tag-def>
+
+
+<category name="physical">
+	<display-name>Physical</display-name>	
+</category>
+
+<category name="non-physical">
+	<display-name>Non-Physical</display-name>	
+</category>
+
+<category name="naming">
+	<display-name>Naming</display-name>	
+</category>
+
+
+
+</osm-tag-def-list>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 23:24+0100\n"
+"POT-Creation-Date: 2008-12-23 12:27+0100\n"
 "PO-Revision-Date: 2008-12-15 00:39+0000\n"
 "Last-Translator: Martin Petricek <singularita@gmail.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -1188,7 +1188,7 @@ msgstr "Smazat vybrané relace"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:132
-#: surveyor.java:64
+#: surveyor.java:81
 msgid "Info"
 msgstr "Informace"
 
@@ -3988,7 +3988,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
-#: surveyor.java:68
+#: surveyor.java:85
 msgid "Exit"
 msgstr "Konec"
 
@@ -6462,12 +6462,12 @@ msgstr ""
 msgid "Navigate"
 msgstr ""
 
-#: surveyor.java:6
+#: surveyor.java:23
 #, fuzzy
 msgid "Tunnel Start"
 msgstr "Tunel"
 
-#: surveyor.java:12 presets.java:53 presets.java:70 presets.java:89
+#: surveyor.java:29 presets.java:53 presets.java:70 presets.java:89
 #: presets.java:107 presets.java:128 presets.java:145 presets.java:164
 #: presets.java:182 presets.java:197 presets.java:215 presets.java:233
 #: presets.java:251 presets.java:284 presets.java:330 presets.java:339
@@ -6478,71 +6478,71 @@ msgstr "Tunel"
 msgid "Bridge"
 msgstr "Most"
 
-#: surveyor.java:16
+#: surveyor.java:33
 msgid "Village/City"
 msgstr ""
 
-#: surveyor.java:24 presets.java:1270 presets.java:1315
+#: surveyor.java:41 presets.java:1270 presets.java:1315
 msgid "Parking"
 msgstr "Parkoviště"
 
-#: surveyor.java:29
+#: surveyor.java:46
 #, fuzzy
 msgid "One Way"
 msgstr "Jednosměrka"
 
-#: surveyor.java:33
+#: surveyor.java:50
 msgid "Church"
 msgstr ""
 
-#: surveyor.java:38
+#: surveyor.java:55
 #, fuzzy
 msgid "Fuel Station"
 msgstr "Hasičská stanice"
 
-#: surveyor.java:43 presets.java:1446
+#: surveyor.java:60 presets.java:1446
 msgid "Hotel"
 msgstr "Hotel"
 
-#: surveyor.java:47 presets.java:1500
+#: surveyor.java:64 presets.java:1500
 msgid "Restaurant"
 msgstr "Restaurace"
 
-#: surveyor.java:52
+#: surveyor.java:69
 #, fuzzy
 msgid "Shopping"
 msgstr "Střelba"
 
-#: surveyor.java:56
+#: surveyor.java:73
 msgid "WC"
 msgstr ""
 
-#: surveyor.java:60
+#: surveyor.java:77
 #, fuzzy
 msgid "Camping"
 msgstr "Změnit"
 
-#: surveyor.java:72 presets.java:40
+#: surveyor.java:89 presets.java:40
 msgid "Motorway"
 msgstr "Dálnice"
 
-#: surveyor.java:76 presets.java:115
+#: surveyor.java:93 presets.java:115
 msgid "Primary"
 msgstr "Silnice 1. třídy"
 
-#: surveyor.java:80 presets.java:151
+#: surveyor.java:97 presets.java:151
 msgid "Secondary"
 msgstr "Silnice 2. třídy"
 
-#: surveyor.java:84 presets.java:188
+#: surveyor.java:105 presets.java:188
 msgid "Unclassified"
 msgstr "Místní silnice"
 
-#: surveyor.java:88 presets.java:206
+#: surveyor.java:109 presets.java:206
 msgid "Residential"
 msgstr ""
 
-#: surveyor.java:93 surveyor.java:97
+#: surveyor.java:114 surveyor.java:118
 #, fuzzy
 msgid "Test"
 msgstr "Tenis"

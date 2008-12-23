@@ -2,21 +2,21 @@
 # Copyright (c) 2007 Rosetta Contributors and Canonical Ltd 2007
 # This file is distributed under the same license as the josm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 23:24+0100\n"
-"PO-Revision-Date: 2008-10-17 20:46+0000\n"
-"Last-Translator: JekaDer <yourname@mail.ru>\n"
+"POT-Creation-Date: 2008-12-23 12:27+0100\n"
+"PO-Revision-Date: 2008-12-15 22:55+0000\n"
+"Last-Translator: yohanson <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2008-10-17 20:48+0000\n"
+"X-Launchpad-Export-Date: 2008-12-23 10:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:444
@@ -26,12 +26,17 @@ msgid ""
 "because the shortcut is already taken by the action ''{3}'' ({4}).\n"
 "\n"
 msgstr ""
+"Назначение комбинации клавиш ''{0}'' на действие ''{1}'' ({2}) невозможно,\n"
+"так как это сочетание уже используется действием ''{3}'' ({4}).\n"
+"\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:449
 msgid ""
 "This action will have no shortcut.\n"
 "\n"
 msgstr ""
+"На это действие не будет назначено сочитания клавиш\n"
+"\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:451
 #, java-format
@@ -39,10 +44,12 @@ msgid ""
 "Using the shortcut ''{0}'' instead.\n"
 "\n"
 msgstr ""
+"Вместо этого, назначается сочетание ''{0}''\n"
+"\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:453
 msgid "(Hint: You can edit the shortcuts in the preferences.)"
-msgstr ""
+msgstr "(Подсказка: Горячие клавиши можно назначить в настройках программы)"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:32
 msgid "Do not show again"
@@ -120,7 +127,7 @@ msgstr "Неожиданное исключение"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:106
 msgid "Development version. Unknown revision."
-msgstr ""
+msgstr "Нестабильная версия. Неизвестная ревизия."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:127
 #, java-format
@@ -134,9 +141,8 @@ msgstr ""
 "информацию:</html>"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:134
-#, fuzzy
 msgid "(The text has already been copied to your clipboard.)"
-msgstr "Текст уже скопирован в буфер обмена."
+msgstr "(Текст уже скопирован в буфер обмена)"
 
 #: ../core/src/org/openstreetmap/josm/tools/AudioPlayer.java:297
 msgid "This is after the end of the recording"
@@ -144,7 +150,7 @@ msgstr "Это позже конца записи"
 
 #: ../core/src/org/openstreetmap/josm/tools/AudioPlayer.java:337
 msgid "Error playing sound"
-msgstr ""
+msgstr "Ошибка при проигрывании звука"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerObjectReader.java:40
 #: ../core/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:43
@@ -224,9 +230,8 @@ msgid "Parse error: invalid document structure for gpx document"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerLocationReader.java:27
-#, fuzzy
 msgid "Contacting Server..."
-msgstr "Подключение к серверу OSM..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:116
 msgid "Provide a brief comment as to the changes to you are uploading:"
@@ -264,23 +269,20 @@ msgid "Unknown host"
 msgstr "Неизвестный хост"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:283
-#, fuzzy
 msgid "Preparing..."
-msgstr "Подготовка данных..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:293
-#, fuzzy
 msgid "Uploading..."
-msgstr "Загрузка..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:377
 msgid "Closing changeset..."
 msgstr "Закрывается список правок..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:640
-#, fuzzy
 msgid "Transfer aborted due to error (will wait for 5 seconds):"
-msgstr "Передача прервана из-за ошибки (следующая попытка через 5 секунд):"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:78
 msgid "Incorrect password or username."
@@ -356,7 +358,7 @@ msgstr "Невозможно загрузить модуль {0}. Удалить
 
 #: ../core/src/org/openstreetmap/josm/Main.java:389
 msgid "The projection could not be read from preferences. Using EPSG:4263."
-msgstr ""
+msgstr "Данные о проекции не найдены в параметрах. Используем EPSG:4263."
 
 #: ../core/src/org/openstreetmap/josm/Main.java:461
 msgid "Hint: Some changes came from uploading new data to the server."
@@ -407,7 +409,7 @@ msgstr "ссылка с www.openstreetmap.org"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:133
 msgid "Bounding Box"
-msgstr ""
+msgstr "Рамка"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:44
 msgid "Bookmarks"
@@ -507,7 +509,7 @@ msgstr "partial: выбранные объекты имеют различные
 
 #: ../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:101
 msgid "unset: do not set this property on the selected objects"
-msgstr "unset: не устанавливайте этот параметр на выбранных объектах"
+msgstr "unset: не устанавливать этот параметр у выбранных объектов"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:37
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:38
@@ -534,7 +536,7 @@ msgstr "пароль OSM"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:56
 msgid "Resize the applet to the given geometry (format: WIDTHxHEIGHT)"
-msgstr ""
+msgstr "Изменить размер апплета на заданный (формат: ШИРИНАxВЫСОТА)"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:57
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:58
@@ -562,11 +564,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
 msgid "any"
-msgstr ""
+msgstr "любое"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
 msgid "If specified, reset the configuration instead of reading it."
-msgstr ""
+msgstr "Если выбрано - установить настройки по умолчанию."
 
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:53
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:123
@@ -578,9 +580,8 @@ msgid "Message of the day not available"
 msgstr "Сообщение дня недоступно"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:84
-#, fuzzy
 msgid "Move right"
-msgstr "Высота"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:84
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:89
@@ -588,24 +589,21 @@ msgstr "Высота"
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:99
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:104
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:109
-#, fuzzy, java-format
+#, java-format
 msgid "Map: {0}"
-msgstr "Название: {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:89
-#, fuzzy
 msgid "Move left"
-msgstr "Переместить"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:94
-#, fuzzy
 msgid "Move up"
-msgstr "Переместить"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:99
-#, fuzzy
 msgid "Move down"
-msgstr "Переместить"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:104
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:15
@@ -630,12 +628,12 @@ msgstr "<различные>"
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:390
 #, java-format
 msgid "Use preset ''{0}'' of group ''{1}''"
-msgstr "Использовать предустановку ''{0}'' из группы ''{1}''"
+msgstr "Использовать шаблон ''{0}'' из группы ''{1}''"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:391
 #, java-format
 msgid "Use preset ''{0}''"
-msgstr "Использовать предустановку ''{0}''"
+msgstr "Использовать шаблон ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:433
 msgid "Unknown type"
@@ -704,23 +702,22 @@ msgstr "Аудио"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:137
 msgid "Presets"
-msgstr "Предустановки"
+msgstr "Шаблоны"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:162
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:42
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:68
-#, fuzzy, java-format
+#, java-format
 msgid "Menu: {0}"
-msgstr "Переместить"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:210
 msgid "Wireframe view"
 msgstr "Каркас"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:212
-#, fuzzy
 msgid "Toggle Wireframe view"
-msgstr "Каркас"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:24
 msgid "Contacting the OSM server..."
@@ -784,6 +781,7 @@ msgid "Change properties of up to {0} object"
 msgid_plural "Change properties of up to {0} objects"
 msgstr[0] "Изменить параметры {0} объекта"
 msgstr[1] "Изменить параметры {0} объектов"
+msgstr[2] "Изменить параметры {0} объектов"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:296
 msgid "Please select objects for which you want to change properties."
@@ -817,9 +815,9 @@ msgstr "Параметры выделенных объектов."
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:69
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:74
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:46
-#, fuzzy, java-format
+#, java-format
 msgid "Toggle: {0}"
-msgstr "Переместить"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:496
 msgid "Member Of"
@@ -855,27 +853,24 @@ msgid "Please select the row to delete."
 msgstr "Пожалуйста, выберите ряд для удаления."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:606
-#, fuzzy
 msgid "Add Properties"
-msgstr "Изменить параметры"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:609
 msgid "Add a new key/value pair to all objects"
 msgstr "Добавить новую пару ключ/значение для всех объектов"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:611
-#, fuzzy
 msgid "Edit Properties"
-msgstr "Править трубопровод"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:614
 msgid "Edit the value of the selected key for all objects"
 msgstr "Изменить значение выбранного ключа для всех объектов"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:616
-#, fuzzy
 msgid "Delete Properties"
-msgstr "Изменить параметры"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:618
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:344
@@ -900,11 +895,11 @@ msgstr "Удалить выбранный ключ из всех объекто�
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:203
 msgid "Create new relation"
-msgstr ""
+msgstr "Создать новое отношение"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:204
 msgid "Edit new relation"
-msgstr ""
+msgstr "Править новое отношение"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:205
 #, java-format
@@ -932,14 +927,12 @@ msgid "Members"
 msgstr "Члены"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:308
-#, fuzzy
 msgid "Move the currently selected member(s) up"
-msgstr "переместить выделенный слой вверх."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:314
-#, fuzzy
 msgid "Move the currently selected member(s) down"
-msgstr "переместить выделенный слой вниз."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:330
 msgid "Add Selected"
@@ -947,16 +940,15 @@ msgstr "Добавить выбранное"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:331
 msgid "Add all currently selected objects as members"
-msgstr ""
+msgstr "Сделать все выбранные объекты членами отношения"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:337
 msgid "Delete Selected"
 msgstr "Удалить выбранное"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:338
-#, fuzzy
 msgid "Delete all currently selected objects from relation"
-msgstr "Удалить выбранное отношение"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:345
 msgid "Remove the member in the current table row from this relation"
@@ -996,7 +988,7 @@ msgstr "При импортировании возникли конфликтн�
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:569
 msgid "Error parsing server response."
-msgstr ""
+msgstr "Ошибка при парсинге ответа от сервера."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:570
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:574
@@ -1042,7 +1034,7 @@ msgstr "Обновить"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:128
 msgid "Reload all currently selected objects and refresh the list."
-msgstr ""
+msgstr "Перегрузить все выбранные объекты, и обновить список."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:134
 msgid "Revert"
@@ -1094,7 +1086,7 @@ msgstr "Показать/Скрыть"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:101
 msgid "Toggle visible state of the selected layer."
-msgstr "Переключать видимость выделенного слоя."
+msgstr "Показать/Скрыть выбранный слой"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:120
 msgid "Show/Hide Text/Icons"
@@ -1102,7 +1094,7 @@ msgstr "Показать/Скрыть Текст/Значки"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:121
 msgid "Toggle visible state of the marker text and icons."
-msgstr "Переключать состояние текста и значков маркеров."
+msgstr "Показать/Скрыть текст и значки маркеров."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:161
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:162
@@ -1165,7 +1157,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:294
 msgid "Selection: %d way(s) and %d node(s)"
-msgstr ""
+msgstr "Выбрано: %d линий и %d точек"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:58
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:59
@@ -1192,7 +1184,7 @@ msgstr "Выбрать это отношение"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 msgid "Open an editor for the selected relation"
-msgstr ""
+msgstr "Открыть редактор для выбранного отношения"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:98
 msgid "Delete the selected relation"
@@ -1200,18 +1192,18 @@ msgstr "Удалить выбранное отношение"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:132
-#: surveyor.java:64
+#: surveyor.java:81
 msgid "Info"
 msgstr "Сведения"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:30
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
 msgid "Command Stack"
-msgstr ""
+msgstr "Список изменений"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:30
 msgid "Open a list of all commands (undo buffer)."
-msgstr ""
+msgstr "Показать список всех действий (буфер омены)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:54
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:55
@@ -1248,7 +1240,8 @@ msgstr "маркер GPS"
 msgid "marker"
 msgid_plural "markers"
 msgstr[0] "маркер"
-msgstr[1] "маркеры"
+msgstr[1] "маркера"
+msgstr[2] "маркеров"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:185
 #, java-format
@@ -1262,7 +1255,7 @@ msgstr[2] "{0} состоит из {1} маркеров"
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:321
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:140
 msgid "Customize Color"
-msgstr ""
+msgstr "Выбрать цвет"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:325
@@ -1343,7 +1336,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/WebMarker.java:44
 msgid "(URL was: "
-msgstr ""
+msgstr "(по ссылке: "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/WebMarker.java:45
 msgid "Error displaying URL"
@@ -1494,7 +1487,7 @@ msgstr[2] "{0} точек"
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:292
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:111
 msgid "Customize line drawing"
-msgstr ""
+msgstr "Настроить отрисовку линий"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:296
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:115
@@ -1504,17 +1497,17 @@ msgstr "Использовать глобальные настройки."
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:297
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:116
 msgid "Draw lines between points for this layer."
-msgstr ""
+msgstr "Отображать линии между точками для этого слоя."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:298
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:117
 msgid "Do not draw lines between points for this layer."
-msgstr ""
+msgstr "Не отображать линий между точками для этого слоя."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:310
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:129
 msgid "Select line drawing options"
-msgstr ""
+msgstr "Выбрать варианты отрисовки линий"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:162
 msgid "Markers From Named Points"
@@ -1564,8 +1557,9 @@ msgstr[2] "{0} маршрутов, "
 #, java-format
 msgid "{0} waypoint"
 msgid_plural "{0} waypoints"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} путевая точка"
+msgstr[1] "{0} путевые точки"
+msgstr[2] "{0} путевых точек"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:291
 #, java-format
@@ -1596,14 +1590,12 @@ msgstr "время"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:748
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:761
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:861
-#, fuzzy
 msgid "Download from OSM along this track"
-msgstr "Скачать с OSM ..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:755
-#, fuzzy
 msgid "Download everything within:"
-msgstr "Загрузка данных"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:757
 msgid "Maximum area per request:"
@@ -1658,7 +1650,7 @@ msgstr "Невозможно прочесть время \"{0}\" у точки  
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:124
 msgid "No images with readable timestamps found."
-msgstr ""
+msgstr "Не найдено изображений с информацией о времени."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:135
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:112
@@ -1710,12 +1702,12 @@ msgstr "Синхронизация часов"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:479
 #, java-format
 msgid "The date in file \"{0}\" could not be parsed."
-msgstr ""
+msgstr "невозможно прочесть дату из файла \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:483
 #, java-format
 msgid "There is no EXIF time within the file \"{0}\"."
-msgstr ""
+msgstr "EXIF файла \"{0}\" не содержит информации о времени."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:487
 msgid "Image"
@@ -1726,9 +1718,8 @@ msgid "Enter shown date (mm/dd/yyyy HH:MM:SS)"
 msgstr "Введите указанную дату (мм/дд/гггг ЧЧ:MM:СС)"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:492
-#, fuzzy
 msgid "GPS unit timezone (difference to photo)"
-msgstr "Часовой пояс GPS приёмника (разница с фото)"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:500
 msgid "Syncronize Time with GPS Unit"
@@ -1746,9 +1737,8 @@ msgid "background"
 msgstr "фон"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:148
-#, fuzzy
 msgid "outside downloaded area"
-msgstr "Отображать границы скачанных данных"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:222
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:150
@@ -1759,7 +1749,8 @@ msgstr "Отображать границы скачанных данных"
 msgid "node"
 msgid_plural "nodes"
 msgstr[0] "узел"
-msgstr[1] "узлы"
+msgstr[1] "узла"
+msgstr[2] "узлов"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:223
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:151
@@ -2154,9 +2145,9 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:288
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:293
-#, fuzzy, java-format
+#, java-format
 msgid "Error deleting plugin file: {0}"
-msgstr "Ошибка чтения файла с описанием модуля: {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:336
 #, java-format
@@ -2183,9 +2174,8 @@ msgid "Default (Auto determined)"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:55
-#, fuzzy
 msgid "Language"
-msgstr "Землепользование"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:58
 msgid "Look and Feel"
@@ -2294,18 +2284,21 @@ msgid ""
 "The number of seconds to jump forward or back when the relevant button is "
 "pressed"
 msgstr ""
+"Показывает, на сколько секунд вперёд или назад нужно перейти при нажатии "
+"соответствующей кнопки"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:139
 msgid "Forward/back time (seconds)"
-msgstr ""
+msgstr "Время перемотки (секунд)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:143
 msgid "The amount by which the speed is multiplied for fast forwarding"
 msgstr ""
+"Показывает, во сколько раз увеличивается скорость при быстром проигрывании"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:144
 msgid "Fast forward multiplier"
-msgstr ""
+msgstr "Множитель быстрого проигрывания"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:148
 msgid ""
@@ -2357,7 +2350,7 @@ msgstr "Параметры Аудио"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:45
 msgid "Settings for the audio player and audio markers."
-msgstr ""
+msgstr "Параметры звукового проигрывателя, и звуковых маркеров."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:103
 msgid "You have to restart JOSM for some settings to take effect."
@@ -2370,7 +2363,7 @@ msgstr "Отображать линии между точками трэков G
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:21
 msgid "Force lines if no segments imported."
-msgstr ""
+msgstr "Отображать линии, даже если не импортировано сегментов."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:22
 msgid "Draw large GPS points."
@@ -2393,10 +2386,12 @@ msgstr "Быстрая отрисовка (выглядит хуже)"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:108
 msgid "Only interesting direction hints (e.g. with oneway tag)."
 msgstr ""
+"Показывать только полезные указатели направления (например, для "
+"односторонних дорог)."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:28
 msgid "Draw segment order numbers"
-msgstr ""
+msgstr "Отображать порядковые номера сегментов"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:29
 msgid "Draw boundaries of downloaded data"
@@ -2441,7 +2436,7 @@ msgstr "Максимальная длина (в метрах)"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:59
 msgid ""
 "Force drawing of lines if the imported data contain no line information."
-msgstr ""
+msgstr "Отображать линии, даже если не импортировано информации о линиях."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:70
 msgid "Draw direction arrows for lines, connecting GPS points."
@@ -2450,6 +2445,8 @@ msgstr "Отображать стрелки на линиях, соединяю�
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:76
 msgid "Draw the direction arrows using table lookups instead of complex math."
 msgstr ""
+"Отображать стрелки направления, используя таблицы, вместо математических "
+"вычислений."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:83
 msgid "Choose the hue for the track color by the velocity at that point."
@@ -2469,15 +2466,15 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:119
 msgid "Apply antialiasing to the map view resulting in a smoother appearance."
-msgstr ""
+msgstr "Применить сглаживание карты."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:124
 msgid "Draw the boundaries of data loaded from the server."
-msgstr ""
+msgstr "Отображать границы области, скачанной с сервера."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:129
 msgid "Draw virtual nodes in select mode for easy way modification."
-msgstr ""
+msgstr "Отображать виртуальные точки в режиме выбора, для удобства правки."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:134
 msgid "Draw the inactive data layers in a different color."
@@ -2516,23 +2513,20 @@ msgid "Display coordinates as"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:24
-#, fuzzy
 msgid "Shortcut Preferences"
-msgstr "Настройки"
+msgstr "Настройки клавиш"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:25
 msgid "Changing keyboard shortcuts manually."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:38
-#, fuzzy
 msgid "Action"
-msgstr "Достопримечательность"
+msgstr "Действие"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:38
-#, fuzzy
 msgid "Shortcut"
-msgstr "Спорт"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:38
 msgid "Advanced Preferences"
@@ -2565,23 +2559,24 @@ msgid "New value for {0}"
 msgstr "Новое значение для {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:52
-#, fuzzy
 msgid "disabled"
-msgstr "масштаб"
+msgstr "отключено"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:53
 msgid "no modifier"
-msgstr ""
+msgstr "нет модификатора"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:164
 msgid "<h1><a name=\"top\">Keyboard Shortcuts</a></h1>"
-msgstr ""
+msgstr "<h1><a name=\"top\">Горячие клавиши</a></h1>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:165
 msgid ""
 "<p>Please note that shortcuts keys are assigned to the actions when JOSM is "
 "started. So you need to <b>restart</b> JOSM to see your changes.</p>"
 msgstr ""
+"<p>Горячие клавиши назначаются при запуске JOSM. Пэтому, нужно "
+"<b>перезапустить</b> JOSM, чтобы изменения вступили в силу.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:167
 msgid ""
@@ -2591,6 +2586,10 @@ msgid ""
 "This is another reason to <b>restart</b> JOSM after making any changes here."
 "</p>"
 msgstr ""
+"<p>Кроме того, горячие клавиши активируются, если назначаются для какого-"
+"либо меню, или кнопки впервые. Поэтому некоторые из них могут заработать без "
+"перезапуска --- но и без разрешения конфликтов. Это ещё один повод "
+"<b>перезапустить</b> JOSM после внесения любых изменений.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:170
 msgid ""
@@ -2605,14 +2604,24 @@ msgid ""
 "doing so may result in conflicts, as there is no way for JOSM to know that "
 "Ctrl+Shift+; and Ctrl+: actually is the same thing on an US keyboard...</p>"
 msgstr ""
+"<p>Вы можете заметить, что в списке выбора клавиш на следующей вкладке есть "
+"все клавиши со всех типов клавиатур, известных Java, а не только те клавиши, "
+"что есть на Вашей клавиатуре. Пожалуйста, используйте только те значения, "
+"которые соответствуют клавишам, присутствующим на Вашей клавиатуре. Поэтому, "
+"если на ней нет клавиши 'Copy' (она есть только на клавиатурах от Sun), то "
+"не используйте её. Так-же в списке есть клавиши, соответствующие значению в "
+"верхнем регистре (например, ':'/двоеточие). Пожалуйста, не используйте и их. "
+"Используйте основную клавишу(';'/точка с запятой для английской раскладки, "
+"либо '6' для русской). В противном случае могут возникать конфликты, так как "
+"JOSM что в английской раскладке Ctrl+Shift+; и Ctrl+: это одно и то-же...</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:177
 msgid "<p>Thank you for your understanding</p>"
-msgstr ""
+msgstr "<p>Спасибо за понимание</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:178
 msgid "<h1>Modifier Groups</h1>"
-msgstr ""
+msgstr "<h1>Группы модификаторов</h1>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:179
 msgid ""
@@ -2622,6 +2631,11 @@ msgid ""
 "managing a conflict. If all alternatives would result in shortcuts that are "
 "already taken, it will assign a random shortcut instead.</p>"
 msgstr ""
+"<p>На последней вкладке указаны клавиши-модификаторы, которые JOSM "
+"автоматически назначит для горячих клавиш. Для каждой из четырёх групп "
+"горячих клавиш есть по три варианта модификаторов. При разрешении "
+"конфликтов, эти варианты будут проверяться в указанном порядке. Если все "
+"варианты окажутся уже заняты, будет назначено случайное сочетание клавиш.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:183
 msgid ""
@@ -2634,60 +2648,53 @@ msgid "Read First"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:207
-#, fuzzy
 msgid "Use default"
-msgstr "По умолчанию"
+msgstr "Использовать значение по умолчанию"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:217
-#, fuzzy
 msgid "Disable"
-msgstr "масштаб"
+msgstr "Отключить"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:225
-#, fuzzy
 msgid "Key:"
-msgstr "Ключ"
+msgstr "Клавиша:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:240
 msgid "Attention: Use real keyboard keys only!"
-msgstr ""
+msgstr "Внимание: Используйте только присутствующие на клавиатуре клавиши!"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:247
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Горячие клавиши"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:254
-#, fuzzy
 msgid "Edit Shortcuts"
-msgstr "Править здание суда"
+msgstr "Горячие клавиши правки"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:257
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:280
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:303
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:326
-#, fuzzy
 msgid "Primary modifier:"
-msgstr "Съезд с основной"
+msgstr "Основной модификатор:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:263
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:286
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:309
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:332
-#, fuzzy
 msgid "Secondary modifier:"
-msgstr "Вторичная"
+msgstr "Вторичный модификатор:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:269
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:292
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:338
-#, fuzzy
 msgid "Tertiary modifier:"
-msgstr "Третичная"
+msgstr "Третичный модификатор:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:277
 msgid "Menu Shortcuts"
-msgstr ""
+msgstr "Горячие клавиши меню"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:300
 msgid "Hotkey Shortcuts"
@@ -2698,9 +2705,8 @@ msgid "Subwindow Shortcuts"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:360
-#, fuzzy
 msgid "Modifier Groups"
-msgstr "Хвойный"
+msgstr "Группы модификаторов"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:170
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:213
@@ -2713,11 +2719,11 @@ msgstr "слоя нету в списке"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:104
 msgid "Java OpenStreetMap Editor"
-msgstr ""
+msgstr "Редактор OpenStreetMap на Java"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:105
 msgid "usage"
-msgstr ""
+msgstr "использование"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:107
 msgid "options"
@@ -2733,11 +2739,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:110
 msgid "Download the bounding box"
-msgstr ""
+msgstr "Скачать область в пределах рамки"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:111
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z)"
-msgstr ""
+msgstr "Скачать область по ссылке (с параметрами lat=x&lon=y&zoom=z)"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:112
 msgid "Open file (as raw gps, if .gpx)"
@@ -2745,7 +2751,7 @@ msgstr "Открыть файл (как необработанный GPS, есл
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:113
 msgid "Download the bounding box as raw gps"
-msgstr ""
+msgstr "Скачать область в пределах рамки, как данные GPS"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:114
 msgid "Select with the given search"
@@ -2753,7 +2759,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:115
 msgid "Don't launch in fullscreen mode"
-msgstr ""
+msgstr "Yt запускать в полноэкранном режиме"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:116
 msgid "Reset the preferences to default"
@@ -2781,17 +2787,19 @@ msgstr "Вместо --download=<bbox> можно указать osm://<bbox>\n"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:199
 msgid "Activating updated plugins"
-msgstr ""
+msgstr "Включение обновлённых модулей"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:202
 msgid ""
 "Activating the updated plugins failed. Check if JOSM has the permission to "
 "overwrite the existing ones."
 msgstr ""
+"Ошибка при включении обновлённых модулей. Убедитесь, что JOSM имеет "
+"разрешение переписывать существующие модули."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:207
 msgid "Loading early plugins"
-msgstr ""
+msgstr "Загрузка ранних модулей"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:210
 msgid "Setting defaults"
@@ -2823,7 +2831,7 @@ msgstr "их версия:"
 
 #: ../core/src/org/openstreetmap/josm/gui/ConflictResolver.java:239
 msgid "resolved version:"
-msgstr ""
+msgstr "Разрешённая версия:"
 
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:87
 msgid "Error while parsing"
@@ -2834,9 +2842,9 @@ msgid "File not found"
 msgstr "Файл не найден"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginException.java:18
-#, fuzzy, java-format
+#, java-format
 msgid "An error occured in plugin {0}"
-msgstr "В модуле {0} произошла ошибка"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:42
 msgid "Update Plugins"
@@ -2874,7 +2882,7 @@ msgstr "Модуль {0} сломан, либо не скачался автом
 
 #: ../core/src/org/openstreetmap/josm/command/RemoveRelationMemberCommand.java:66
 msgid "RemoveRelationMember"
-msgstr ""
+msgstr "Удалить Члена Отношения"
 
 #: ../core/src/org/openstreetmap/josm/command/RotateCommand.java:135
 msgid "Rotate"
@@ -2909,7 +2917,8 @@ msgstr "Установить {0}={1} для"
 msgid "object"
 msgid_plural "objects"
 msgstr[0] "объект"
-msgstr[1] "объекты"
+msgstr[1] "объекта"
+msgstr[2] "объектов"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:80
 #, java-format
@@ -2954,6 +2963,9 @@ msgid ""
 "<br>This can cause problems because other objects (that you don't see) might "
 "use them.<br>Do you really want to delete?"
 msgstr ""
+"Вы собираетесь удалить точки, выходящие за скачанную зону.<br>Это может "
+"вызвать проблемы, потому что другие объекты (которых не видно) могут "
+"использовать их.<br> Вы действительно хотите удалить их?"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictResolveCommand.java:78
 #, java-format
@@ -3037,9 +3049,8 @@ msgid "EPSG:4326"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Mercator.java:33
-#, fuzzy
 msgid "Mercator"
-msgstr "Оператор"
+msgstr "Проекция Меркатора"
 
 #: ../core/src/org/openstreetmap/josm/data/ServerSidePreferences.java:79
 #, java-format
@@ -3088,7 +3099,7 @@ msgstr "железная дорога"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:110
 msgid "waterway"
-msgstr "водные пути"
+msgstr "водоёмы"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:111
 msgid "landuse"
@@ -3132,9 +3143,9 @@ msgstr "Создать копию выделения копированием и
 #: ../core/src/org/openstreetmap/josm/actions/UndoAction.java:24
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:29
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:54
-#, fuzzy, java-format
+#, java-format
 msgid "Edit: {0}"
-msgstr "Править сушу"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:49
 msgid "JOSM Online Help"
@@ -3159,9 +3170,9 @@ msgstr "Ошибка при загрузке страницы {0}"
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:49
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:16
-#, fuzzy, java-format
+#, java-format
 msgid "View: {0}"
-msgstr "Показать {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:20
 msgid "Delete selected objects."
@@ -3174,7 +3185,7 @@ msgstr "Переименовать слой"
 
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:46
 msgid "Also rename the file"
-msgstr ""
+msgstr "Переименовать файл"
 
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:87
 #, java-format
@@ -3215,9 +3226,9 @@ msgstr ""
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:40
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:47
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveAction.java:39
-#, fuzzy, java-format
+#, java-format
 msgid "Tool: {0}"
-msgstr "Показать {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInLineAction.java:59
 msgid "Please select at least three nodes."
@@ -3258,7 +3269,7 @@ msgstr "Домашняя страница"
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:127
 msgid "Bug Reports"
-msgstr "Отчеты об ошибках"
+msgstr "Отчёты об ошибках"
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:129
 msgid "News about JOSM"
@@ -3411,7 +3422,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:99
 msgid "Predefined"
-msgstr ""
+msgstr "Набор"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:101
 msgid "Copyright year"
@@ -3432,7 +3443,7 @@ msgstr "Ошибка при экспорте в {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:192
 msgid "Choose a predefined license"
-msgstr ""
+msgstr "Выберите лицензию из набора"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:25
@@ -3450,9 +3461,9 @@ msgstr "Сохранить текущие данные в новый файл."
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:27
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:49
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:34
-#, fuzzy, java-format
+#, java-format
 msgid "File: {0}"
-msgstr "Файл"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:54
@@ -3470,8 +3481,9 @@ msgstr "Теекущее выделение невозможно разбить.
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:116
 msgid "The selected node is no inner part of any way."
 msgid_plural "The selected nodes are no inner part of any way."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Выбранная точка не является частью какой-либо линии"
+msgstr[1] "Выбранные точки не являются частью какой-либо линии"
+msgstr[2] "Выбранные точки не являются частью какой-либо линии"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:124
 msgid ""
@@ -3487,8 +3499,9 @@ msgstr "Выбранные точки не являются частью одн�
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:145
 msgid "The selected way does not contain the selected node."
 msgid_plural "The selected way does not contain all the selected nodes."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Выбранная линия не содержит выбранной точки"
+msgstr[1] "Выбранная линия не содержит выбранных точек"
+msgstr[2] "Выбранная линия не содержит выбранных точек"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:212
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:223
@@ -3508,6 +3521,8 @@ msgid ""
 "A role based relation membership was copied to all new ways.\n"
 "You should verify this and correct it when necessary."
 msgstr ""
+"Членство в отношениях было применено ко всем новым линиям.\n"
+"Проверьте, и при необходимости внесите корректировки."
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:290
 #, java-format
@@ -3598,7 +3613,7 @@ msgstr "Нечего загружать. Сначала создайте дан�
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:113
 msgid "There are unresolved conflicts. You have to resolve these first."
-msgstr ""
+msgstr "Присутствуют неразрешённые конфликты. Для начала, разрешите их"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:134
 msgid "No changes to upload."
@@ -3672,7 +3687,7 @@ msgstr "Загрузить выделение"
 #: ../core/src/org/openstreetmap/josm/actions/search/SelectionWebsiteLoader.java:40
 #, java-format
 msgid "Contact {0}..."
-msgstr ""
+msgstr "Связаться с {0}..."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SelectionWebsiteLoader.java:45
 msgid "Downloading..."
@@ -3695,7 +3710,7 @@ msgstr "Найти ..."
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:45
 msgid "Search..."
-msgstr ""
+msgstr "Найти..."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:45
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:120
@@ -3748,12 +3763,12 @@ msgstr "Не найдено совпадений для ''{0}''"
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:161
 #, java-format
 msgid "Nothing added to selection by searching for ''{0}''"
-msgstr ""
+msgstr "Ничего не добавлено к выделению в результате поиска ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:163
 #, java-format
 msgid "Nothing removed from selection by searching for ''{0}''"
-msgstr ""
+msgstr "Ничего не удалено из выделения в результате поиска ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:167
 #, java-format
@@ -3770,11 +3785,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:218
 msgid "Missing arguments for or."
-msgstr ""
+msgstr "Отсутствуют параметры для \"ИЛИ\""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:229
 msgid "Missing argument for not."
-msgstr ""
+msgstr "Отсутствуют параметры для \"НЕ\""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:240
 msgid "Expected closing parenthesis."
@@ -3816,6 +3831,8 @@ msgid ""
 "Internal Error: cannot check conditions for no layer. Please report this as "
 "a bug."
 msgstr ""
+"Внутренняя ошибка: невозможно проверить условия без слоя. Пожалуйста, "
+"создайте отчёт об ошибке."
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:77
 msgid "No document open so nothing to save."
@@ -3888,15 +3905,17 @@ msgstr "Удалить точки или линии."
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:76
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:89
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:49
-#, fuzzy, java-format
+#, java-format
 msgid "Mode: {0}"
-msgstr "Переместить"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:129
 msgid ""
 "Click to delete. Shift: delete way segment. Alt: don't delete unused nodes "
 "when deleting a way. Ctrl: delete referring objects."
 msgstr ""
+"Щёлкните для удаления. Shift: удалить сегмент. Ctrl: удалить линию, но "
+"оставить точки."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/PlayHeadDragMode.java:87
 msgid ""
@@ -3933,7 +3952,7 @@ msgstr "Отпустите кнопку мыши, чтобы прекратит�
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:263
 msgid "Drag a way segment to make a rectangle."
-msgstr ""
+msgstr "Перемещайте сегмент линии, чтобы образовать прямоугольник"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:75
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:76
@@ -3987,7 +4006,7 @@ msgstr "Щёлкните, чтобы добавить новую точку и �
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:624
 msgid "Click to insert a new node and make a connection."
-msgstr ""
+msgstr "Щёлкните, чтобы создать точку или линию"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:628
 msgid "Click to insert a new node."
@@ -4004,7 +4023,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:213
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:105
 msgid "Cannot move objects outside of the world."
-msgstr ""
+msgstr "Невозможно переместить объекты за пределы мира."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:391
 msgid ""
@@ -4018,6 +4037,7 @@ msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to remove); Shift-"
 "Ctrl to rotate selected; or change selection"
 msgstr ""
+"Объекты можно перетаскивать; Shift - добавить к выделению (Ctrl - вычесть)"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:48
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:49
@@ -4033,10 +4053,12 @@ msgid ""
 "Zoom by dragging or Ctrl+. or Ctrl+,; move with Ctrl+up,left,down,right; "
 "move zoom with right button"
 msgstr ""
+"Меняйте масштаб колесом мыши, или клавишами  Ctrl+. и Ctrl+,; перемещайте "
+"карту, нажав правую кнопку мыши, или Ctrl+вверх/вниз/влево/вправо"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
-#: surveyor.java:68
+#: surveyor.java:85
 msgid "Exit"
 msgstr "Выход"
 
@@ -4050,9 +4072,8 @@ msgid "Merge Nodes"
 msgstr "Объединить точки"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:55
-#, fuzzy
 msgid "Merge nodes into the oldest one."
-msgstr "Объединить точки в одну"
+msgstr "Объединить точки в одну (более старую)"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:72
 msgid "Please select at least two nodes to merge."
@@ -4063,14 +4084,18 @@ msgid ""
 "The selected nodes have differing relation memberships.  Do you still want "
 "to merge them?"
 msgstr ""
+"Выделенные точки участвуют в различных отношениях. Всё равно хотите "
+"объединить?"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:149
 msgid "Merge nodes with different memberships?"
-msgstr ""
+msgstr "Объединить точки из разных отношений?"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:234
 msgid "Cannot merge nodes: Would have to delete a way that is still used."
 msgstr ""
+"Не удаётся объединить точки: пришлось бы удалить линию, которая еще "
+"используется."
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:272
 #, java-format
@@ -4099,14 +4124,12 @@ msgid "Selection must consist only of ways."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:75
-#, fuzzy
 msgid "Please select closed way(s) of at least four nodes."
-msgstr "Выделите не менее четырёх точек."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:90
-#, fuzzy
 msgid "Please select ways with almost right angles to orthogonalize."
-msgstr "Пожалуйста выберите как минимум две точки для объединения."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:97
 msgid ""
@@ -4122,12 +4145,12 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:15
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:16
 msgid "Toggle GPX Lines"
-msgstr ""
+msgstr "Показать/Скрыть линии GPX"
 
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:15
-#, fuzzy, java-format
+#, java-format
 msgid "Toggles the global setting ''{0}''."
-msgstr "Использовать глобальные настройки."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:17
@@ -4141,73 +4164,63 @@ msgid "Unselect all objects."
 msgstr "Снять выделение со всех объектов."
 
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:23
-#, fuzzy
 msgid "Unselect All (Focus)"
-msgstr "Снять выделение"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:34
-#, fuzzy
 msgid "Unselect All (Escape)"
-msgstr "Снять выделение"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:37
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:38
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:182
-#, fuzzy
 msgid "Create Circle"
-msgstr "Создание областей"
+msgstr "Создать окружность"
 
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:37
-#, fuzzy
 msgid "Create a circle from three selected nodes."
-msgstr "Разбить линию надвое в выбранной точке."
+msgstr "Создать окружность по трём выделенным точкам"
 
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:101
-#, fuzzy
 msgid "Please select exactly three nodes or one way with exactly three nodes."
-msgstr "Выделите одну замкнутую линию, состоящую ровно из четырёх точек."
+msgstr ""
+"Пожалуйста, выберите ровно три точки, или линию, состоящую ровно из трёх "
+"точек."
 
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:121
-#, fuzzy
 msgid "Those nodes are not in a circle."
-msgstr "Переместить выделенные точки так, чтобы они сформировали окружность."
+msgstr "Точки не расположены по кругу"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:49
-#, fuzzy
 msgid "Open Location..."
-msgstr "Открыть"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
-#, fuzzy
 msgid "Open a URL."
-msgstr "Открыть файл."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:54
-#, fuzzy
 msgid "Separate Layer"
-msgstr "Разделитель"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:61
-#, fuzzy
 msgid "Download Location"
-msgstr "Скачать список"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:73
-#, fuzzy
 msgid "Add Node"
-msgstr "Добавить точку"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
 msgid "Add a node by entering latitude and longitude."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:57
-#, fuzzy
 msgid "Enter the coordinates for the new node."
-msgstr "Пожалуйста, сначала введите желаемые координаты"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
 msgid "Use decimal degrees."
@@ -4231,40 +4244,37 @@ msgstr "Долгота"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:36
 msgid "up"
-msgstr ""
+msgstr "вверх"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:37
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:40
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:43
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:46
-#, fuzzy, java-format
+#, java-format
 msgid "Move objects {0}"
-msgstr "Члены: {0}"
+msgstr "Переместить объекты {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:39
-#, fuzzy
 msgid "down"
-msgstr "Маленький город"
+msgstr "вниз"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:42
-#, fuzzy
 msgid "left"
-msgstr "Удалить"
+msgstr "влево"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:45
-#, fuzzy
 msgid "right"
-msgstr "Высота"
+msgstr "вправо"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:56
-#, fuzzy, java-format
+#, java-format
 msgid "Move {0}"
-msgstr "Переместить"
+msgstr "Переместить {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:57
-#, fuzzy, java-format
+#, java-format
 msgid "Moves Objects {0}"
-msgstr "Члены: {0}"
+msgstr "Перемещает объекты {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:51
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
@@ -4295,13 +4305,12 @@ msgid "UnGlue Ways"
 msgstr "Разъединить линии"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:46
-#, fuzzy
 msgid "Duplicate nodes that are used by multiple ways."
-msgstr "Необходимо выбрать точку, входящую как минимум в две линии."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:68
 msgid "This node is not glued to anything else."
-msgstr ""
+msgstr "Данная точка не связана с чем-либо еще."
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:88
 msgid "None of these nodes is glued to anything else."
@@ -4316,14 +4325,12 @@ msgid "The current selection cannot be used for unglueing."
 msgstr "Текущее выделение невозможно разъединить"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:101
-#, fuzzy
 msgid "Select either:"
-msgstr "Выбор"
+msgstr "Выберите один из вариантов:"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:102
-#, fuzzy
 msgid "* One node that is used by more than one way, or"
-msgstr "Необходимо выбрать точку, входящую как минимум в две линии."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:103
 msgid "* One node that is used by more than one way and one of those ways, or"
@@ -4350,12 +4357,12 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:296
 #, java-format
 msgid "Dupe into {0} nodes"
-msgstr ""
+msgstr "Дублировать в {0} точек"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:320
-#, fuzzy, java-format
+#, java-format
 msgid "Dupe {0} nodes into {1} nodes"
-msgstr "Объединить точки в одну"
+msgstr "Дублировать {0} точек в {1} точек"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioBackAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioBackAction.java:21
@@ -4373,9 +4380,9 @@ msgstr "Перемотать назад."
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFwdAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPlayPauseAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:13
-#, fuzzy, java-format
+#, java-format
 msgid "Audio: {0}"
-msgstr "Параметры Аудио"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPrevAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPrevAction.java:17
@@ -4407,11 +4414,11 @@ msgstr "Играть следующий маркер"
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFwdAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFwdAction.java:21
 msgid "Forward"
-msgstr "Вперед"
+msgstr "Вперёд"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFwdAction.java:20
 msgid "Jump forward"
-msgstr "Перемотать вперед."
+msgstr "Перемотать вперёд"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPlayPauseAction.java:18
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPlayPauseAction.java:19
@@ -4420,7 +4427,7 @@ msgstr "Воспроизвести/пауза"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPlayPauseAction.java:18
 msgid "Play/pause audio."
-msgstr ""
+msgstr "Играть/Пауза"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:12
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:13
@@ -4429,7 +4436,7 @@ msgstr "Быстрее"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:12
 msgid "Faster Forward"
-msgstr "Бастрее Вперед"
+msgstr "Играть быстрее."
 
 #: ../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:15
 #: ../core/src/org/openstreetmap/josm/actions/SelectAllAction.java:16
@@ -4473,7 +4480,7 @@ msgstr "Скачивание данных GPS"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:69
 msgid "Raw GPS data"
-msgstr ""
+msgstr "Необработанные данные GPS"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:27
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:29
@@ -4519,28 +4526,24 @@ msgid "New value"
 msgstr "Новое значение"
 
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:39
-#, fuzzy
 msgid "Apply selected changes"
-msgstr "Загрузить эти изменения?"
+msgstr "Применить выбранные изменения"
 
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:40
-#, fuzzy
 msgid "Don't apply changes"
-msgstr "Обмен валют"
+msgstr "Не применять изменения"
 
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:82
 msgid "Please select which property changes you want to apply."
 msgstr "Пожалуйста, выберите, какие параметры нужно изменить."
 
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:95
-#, fuzzy
 msgid "Properties of "
-msgstr "Изменить параметры"
+msgstr "Свойства "
 
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:119
-#, fuzzy
 msgid "Roles in relations referring to"
-msgstr "Показать окно со списком выбранных объектов."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:135
 msgid "Automatic tag correction"
@@ -4559,19 +4562,16 @@ msgid "Apply?"
 msgstr "Применить?"
 
 #: ../core/src/org/openstreetmap/josm/corrector/RoleCorrectionTableModel.java:28
-#, fuzzy
 msgid "Relation"
-msgstr "Отношения"
+msgstr "Отношение"
 
 #: ../core/src/org/openstreetmap/josm/corrector/RoleCorrectionTableModel.java:30
-#, fuzzy
 msgid "Old role"
-msgstr "Старое значение"
+msgstr "Старая роль"
 
 #: ../core/src/org/openstreetmap/josm/corrector/RoleCorrectionTableModel.java:32
-#, fuzzy
 msgid "New role"
-msgstr "Новое значение"
+msgstr "Новая роль"
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayPlugin.java:21
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:75
@@ -4580,7 +4580,7 @@ msgstr "Дубликат линии"
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:76
 msgid "Duplicate selected ways."
-msgstr ""
+msgstr "Дублировать выбранные линии."
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:109
 msgid "Can't duplicate unnordered way."
@@ -4588,7 +4588,7 @@ msgstr ""
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:126
 msgid "You must select at least one way."
-msgstr ""
+msgstr "Выберите хотя бы одну линию"
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:240
 msgid "Create duplicate way"
@@ -4640,9 +4640,8 @@ msgid "measurement mode"
 msgstr ""
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementPlugin.java:36
-#, fuzzy
 msgid "Measurements"
-msgstr "Памятник"
+msgstr ""
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:68
 msgid "Layer to make measurements"
@@ -4709,9 +4708,9 @@ msgid "Remote Control has been asked to load data from the API."
 msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:113
-#, fuzzy, java-format
+#, java-format
 msgid "Request details: {0}"
-msgstr "текущая разница: {0}с"
+msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:113
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:211
@@ -4882,14 +4881,12 @@ msgid "Lakewalker trace"
 msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerWMS.java:45
-#, fuzzy
 msgid "Downloading image tile..."
-msgstr "Загрузка..."
+msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerWMS.java:148
-#, fuzzy
 msgid "Could not acquire image"
-msgstr "Невозможно создать резервную копию."
+msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:36
 msgid "Maximum number of segments per way"
@@ -5209,6 +5206,8 @@ msgid ""
 "This test checks if two roads, railways or waterways crosses in the same "
 "layer, but are not connected by a node."
 msgstr ""
+"Данный тест проверяет, если две линии (дороги, железные дороги, водоёмы) "
+"пересекаются на одном слое, но не имеют общей точки."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:116
 msgid "Crossing ways"
@@ -5289,7 +5288,7 @@ msgstr ""
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:97
 #, java-format
 msgid "waterway type {0}"
-msgstr ""
+msgstr "тип водоёма: {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:100
 msgid "building"
@@ -5597,9 +5596,8 @@ msgid "Data with errors. Upload anyway?"
 msgstr ""
 
 #: ../plugins/livegps/livegps/LiveGpsLayer.java:25
-#, fuzzy
 msgid "LiveGPS layer"
-msgstr "Преобразовать в слой GPX"
+msgstr ""
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:41
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:42
@@ -5717,9 +5715,8 @@ msgstr ""
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:51
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:179
-#, fuzzy
 msgid "Way: "
-msgstr "Дороги"
+msgstr ""
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:107
 msgid "Duplicate hotkey for button '{0}' - button will be ignored!"
@@ -5793,9 +5790,8 @@ msgid "Tile Sources"
 msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:81
-#, fuzzy
 msgid "Position only"
-msgstr "положение"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:82
 msgid "Position, Time, Date, Speed"
@@ -5842,39 +5838,32 @@ msgid "Disable data logging if distance falls below"
 msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:307
-#, fuzzy
 msgid "Unknown logFormat"
-msgstr "Неизвестный хост"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:86
-#, fuzzy
 msgid "Port:"
-msgstr "Спорт"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:94
-#, fuzzy
 msgid "Refresh"
-msgstr "Сноска"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:100
-#, fuzzy
 msgid "refresh the port list"
-msgstr "Обновить список выбранного."
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:108
-#, fuzzy
 msgid "Configure"
-msgstr "Курс"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:116
-#, fuzzy
 msgid "Configure Device"
-msgstr "Курс"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:125
-#, fuzzy
 msgid "Connection Error."
-msgstr "Ошибка подключения."
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:130
 msgid "configure the connected DG100"
@@ -5885,19 +5874,16 @@ msgid "delete data after import"
 msgstr "удалить данные после импорта"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:47
-#, fuzzy
 msgid "Importing data from device."
-msgstr "На устройстве не найдено данных."
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:53
-#, fuzzy
 msgid "Importing data from DG100..."
-msgstr "Импортированы данные с {0}"
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:67
-#, fuzzy
 msgid "Error deleting data."
-msgstr "Ошибка при парсинге."
+msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:73
 #, java-format
@@ -5962,7 +5948,6 @@ msgid_plural ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:89
 msgid "Are you sure?"
@@ -5974,7 +5959,6 @@ msgid "Simplify Way (remove {0} node)"
 msgid_plural "Simplify Way (remove {0} nodes)"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:428
 msgid "No image"
@@ -6078,11 +6062,11 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:248
 msgid " [dd/mm/yyyy hh:mm:ss]"
-msgstr ""
+msgstr " [дд/мм/гггг чч:мм:сс]"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:256
 msgid "I'm in the timezone of: "
-msgstr ""
+msgstr "Я нахожусь в часовом поясе: "
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:319
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:364
@@ -6117,7 +6101,7 @@ msgstr "Трэк GPX: "
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:443
 msgid "Open an other GPXtrace"
-msgstr ""
+msgstr "Открыть другой трэк GPX"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:459
 msgid "Timezone: "
@@ -6130,6 +6114,7 @@ msgstr "Смещение:"
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:493
 msgid "<html>I can take a picture of my GPS receiver.<br>Can this help?</html>"
 msgstr ""
+"<html>Я могу сфотографировать экран GPS приёмника.<br>Это поможет?</html>"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
 msgid "Update position for: "
@@ -6188,17 +6173,15 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:646
 msgid "GPX Track loaded"
+msgstr "Трэк GPX загружен"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
+msgid "Upload Traces"
 msgstr ""
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
-#, fuzzy
-msgid "Upload Traces"
-msgstr "Параметры загрузки"
-
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
-#, fuzzy
 msgid "Uploads traces to openstreetmap.org"
-msgstr "ссылка с www.openstreetmap.org"
+msgstr ""
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:273
 msgid "No GpxLayer selected. Cannot upload a trace."
@@ -6351,9 +6334,8 @@ msgid "WMS URL"
 msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:49
-#, fuzzy
 msgid "Menu Name (Default)"
-msgstr "имя пользователя OSM (e-mail)"
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:49
 msgid "WMS URL (Default)"
@@ -6364,14 +6346,12 @@ msgid "Enter a menu name and WMS URL"
 msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:95
-#, fuzzy
 msgid "Copy Default"
-msgstr "По умолчанию"
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:101
-#, fuzzy
 msgid "Please select the row to copy."
-msgstr "Пожалуйста, выберите ряд для редактирования."
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:18
 #, java-format
@@ -6518,12 +6498,11 @@ msgstr ""
 msgid "Navigate"
 msgstr ""
 
-#: surveyor.java:6
-#, fuzzy
+#: surveyor.java:23
 msgid "Tunnel Start"
-msgstr "Тоннель"
+msgstr ""
 
-#: surveyor.java:12 presets.java:53 presets.java:70 presets.java:89
+#: surveyor.java:29 presets.java:53 presets.java:70 presets.java:89
 #: presets.java:107 presets.java:128 presets.java:145 presets.java:164
 #: presets.java:182 presets.java:197 presets.java:215 presets.java:233
 #: presets.java:251 presets.java:284 presets.java:330 presets.java:339
@@ -6534,75 +6513,69 @@ msgstr "Тоннель"
 msgid "Bridge"
 msgstr "Мост"
 
-#: surveyor.java:16
-#, fuzzy
+#: surveyor.java:33
 msgid "Village/City"
-msgstr "Деревня"
+msgstr ""
 
-#: surveyor.java:24 presets.java:1270 presets.java:1315
+#: surveyor.java:41 presets.java:1270 presets.java:1315
 msgid "Parking"
 msgstr "Стоянка"
 
-#: surveyor.java:29
-#, fuzzy
+#: surveyor.java:46
 msgid "One Way"
-msgstr "Односторонняя"
+msgstr ""
 
-#: surveyor.java:33
+#: surveyor.java:50
 msgid "Church"
 msgstr ""
 
-#: surveyor.java:38
-#, fuzzy
+#: surveyor.java:55
 msgid "Fuel Station"
-msgstr "Пожарное депо"
+msgstr ""
 
-#: surveyor.java:43 presets.java:1446
+#: surveyor.java:60 presets.java:1446
 msgid "Hotel"
 msgstr "Гостиница"
 
-#: surveyor.java:47 presets.java:1500
+#: surveyor.java:64 presets.java:1500
 msgid "Restaurant"
 msgstr "Ресторан"
 
-#: surveyor.java:52
-#, fuzzy
+#: surveyor.java:69
 msgid "Shopping"
-msgstr "Стрельба"
+msgstr ""
 
-#: surveyor.java:56
+#: surveyor.java:73
 msgid "WC"
 msgstr ""
 
-#: surveyor.java:60
-#, fuzzy
+#: surveyor.java:77
 msgid "Camping"
-msgstr "Кэмпинг"
+msgstr ""
 
-#: surveyor.java:72 presets.java:40
+#: surveyor.java:89 presets.java:40
 msgid "Motorway"
 msgstr "Автобан"
 
-#: surveyor.java:76 presets.java:115
+#: surveyor.java:93 presets.java:115
 msgid "Primary"
 msgstr "Основная"
 
-#: surveyor.java:80 presets.java:151
+#: surveyor.java:97 presets.java:151
 msgid "Secondary"
 msgstr "Вторичная"
 
-#: surveyor.java:84 presets.java:188
+#: surveyor.java:105 presets.java:188
 msgid "Unclassified"
 msgstr "Не классифицировано"
 
-#: surveyor.java:88 presets.java:206
+#: surveyor.java:109 presets.java:206
 msgid "Residential"
 msgstr "Внутренняя"
 
-#: surveyor.java:93 surveyor.java:97
-#, fuzzy
+#: surveyor.java:114 surveyor.java:118
 msgid "Test"
-msgstr "Сброс"
+msgstr ""
 
 #: presets.java:39
 msgid "Streets"
@@ -6770,7 +6743,7 @@ msgstr "Править внутреннюю улицу"
 #: presets.java:527 presets.java:548 presets.java:569 presets.java:590
 #: presets.java:622 presets.java:1203
 msgid "Surface"
-msgstr "Поверхность"
+msgstr "Дорожное покрытие"
 
 #: presets.java:220 presets.java:238 presets.java:256 presets.java:270
 #: presets.java:369 presets.java:391 presets.java:410 presets.java:429
@@ -6778,13 +6751,13 @@ msgstr "Поверхность"
 #: presets.java:527 presets.java:548 presets.java:569 presets.java:590
 #: presets.java:622 presets.java:1203
 msgid "paved"
-msgstr "с покрытием"
+msgstr "асфальтированная"
 
 #: presets.java:220 presets.java:238 presets.java:256 presets.java:270
 #: presets.java:369 presets.java:391 presets.java:410 presets.java:429
 #: presets.java:448 presets.java:466 presets.java:622 presets.java:1203
 msgid "unpaved"
-msgstr "без покрытия"
+msgstr "неасфальтированная"
 
 #: presets.java:220 presets.java:238 presets.java:256 presets.java:270
 #: presets.java:369 presets.java:391 presets.java:410 presets.java:429
@@ -7020,35 +6993,35 @@ msgstr "Тип"
 
 #: presets.java:324
 msgid "motorway"
-msgstr ""
+msgstr "Автобан"
 
 #: presets.java:324
 msgid "motorway_link"
-msgstr ""
+msgstr "Съезд с автомагистрали"
 
 #: presets.java:324
 msgid "trunk"
-msgstr ""
+msgstr "Автострада"
 
 #: presets.java:324
 msgid "trunk_link"
-msgstr ""
+msgstr "Съезд с автострады"
 
 #: presets.java:324
 msgid "primary"
-msgstr ""
+msgstr "Основная"
 
 #: presets.java:324
 msgid "primary_link"
-msgstr ""
+msgstr "Съезд с основной"
 
 #: presets.java:324
 msgid "secondary"
-msgstr ""
+msgstr "Вторичная"
 
 #: presets.java:324
 msgid "tertiary"
-msgstr ""
+msgstr "Третичная"
 
 #: presets.java:324
 msgid "unclassified"
@@ -7056,15 +7029,15 @@ msgstr ""
 
 #: presets.java:324
 msgid "residential"
-msgstr ""
+msgstr "Внутренняя"
 
 #: presets.java:324
 msgid "living_street"
-msgstr ""
+msgstr "Жилая"
 
 #: presets.java:324
 msgid "service"
-msgstr ""
+msgstr "Служебная"
 
 #: presets.java:324
 msgid "bus_guideway"
@@ -7072,7 +7045,7 @@ msgstr ""
 
 #: presets.java:324
 msgid "construction"
-msgstr ""
+msgstr "Строительство"
 
 #: presets.java:340
 msgid "Edit a Bridge"
@@ -7096,7 +7069,7 @@ msgstr "Перекрёсток"
 
 #: presets.java:370
 msgid "roundabout"
-msgstr ""
+msgstr "Круг"
 
 #: presets.java:377
 msgid "Bridleway"
@@ -7149,22 +7122,22 @@ msgstr "Править грунтовку"
 #: presets.java:485 presets.java:506 presets.java:527 presets.java:548
 #: presets.java:569 presets.java:590
 msgid "gravel"
-msgstr ""
+msgstr "гравий"
 
 #: presets.java:485 presets.java:506 presets.java:527 presets.java:548
 #: presets.java:569 presets.java:590
 msgid "ground"
-msgstr ""
+msgstr "грунт"
 
 #: presets.java:485 presets.java:506 presets.java:527 presets.java:548
 #: presets.java:569 presets.java:590
 msgid "grass"
-msgstr ""
+msgstr "трава"
 
 #: presets.java:485 presets.java:506 presets.java:527 presets.java:548
 #: presets.java:569 presets.java:590
 msgid "sand"
-msgstr ""
+msgstr "песок"
 
 #: presets.java:493
 msgid "Track Grade 1"
@@ -7272,7 +7245,7 @@ msgstr ""
 
 #: presets.java:701
 msgid "Waypoints"
-msgstr ""
+msgstr "Путевые точки"
 
 #: presets.java:702
 msgid "Motorway Junction"
@@ -7350,18 +7323,16 @@ msgid "Second Name"
 msgstr "Второе название"
 
 #: presets.java:761
-#, fuzzy
 msgid "Signpost"
-msgstr "Спорт"
+msgstr ""
 
 #: presets.java:765
 msgid "Speed Camera"
 msgstr ""
 
 #: presets.java:769
-#, fuzzy
 msgid "Emergency Phone"
-msgstr "Пункт вызова экстренной помощи"
+msgstr ""
 
 #: presets.java:775
 msgid "Ford"
@@ -7381,23 +7352,20 @@ msgstr ""
 
 #: presets.java:793 presets.java:1481 presets.java:2772 presets.java:2779
 #: presets.java:2786
-#, fuzzy
 msgid "Elevation"
-msgstr "Отношения"
+msgstr ""
 
 #: presets.java:799
-#, fuzzy
 msgid "Barriers"
-msgstr "Батарейки"
+msgstr ""
 
 #: presets.java:801
 msgid "Stile"
 msgstr ""
 
 #: presets.java:802
-#, fuzzy
 msgid "Edit a Stile"
-msgstr "Править ручей"
+msgstr ""
 
 #: presets.java:805 presets.java:815 presets.java:825 presets.java:838
 #: presets.java:850 presets.java:867 presets.java:879 presets.java:892
@@ -7407,138 +7375,116 @@ msgid "Allowed traffic:"
 msgstr ""
 
 #: presets.java:811
-#, fuzzy
 msgid "Kissing Gate"
-msgstr "Питьевая вода"
+msgstr ""
 
 #: presets.java:812
-#, fuzzy
 msgid "Edit a Kissing Gate"
-msgstr "Править жилую улицу"
+msgstr ""
 
 #: presets.java:821
 msgid "Hampshire Gate"
 msgstr ""
 
 #: presets.java:822
-#, fuzzy
 msgid "Edit a Hampshire Gate"
-msgstr "Править кресельную дорогу"
+msgstr ""
 
 #: presets.java:834
 msgid "Bollard"
 msgstr ""
 
 #: presets.java:835
-#, fuzzy
 msgid "Edit a bollard"
-msgstr "Править скейтборд"
+msgstr ""
 
 #: presets.java:846
-#, fuzzy
 msgid "Drawbridge"
-msgstr "Рисовать точки"
+msgstr ""
 
 #: presets.java:847
-#, fuzzy
 msgid "Edit a Drawbridge"
-msgstr "Править мост"
+msgstr ""
 
 #: presets.java:859
-#, fuzzy
 msgid "Bus Trap"
-msgstr "Автобусная остановка"
+msgstr ""
 
 #: presets.java:863
 msgid "Cattle Grid"
 msgstr ""
 
 #: presets.java:864
-#, fuzzy
 msgid "Edit a Cattle Grid"
-msgstr "Править канатную дорогу"
+msgstr ""
 
 #: presets.java:875
 msgid "Spikes"
 msgstr ""
 
 #: presets.java:876
-#, fuzzy
 msgid "Edit a Spikes"
-msgstr "Править источник"
+msgstr ""
 
 #: presets.java:888
 msgid "Porticullis"
 msgstr ""
 
 #: presets.java:889
-#, fuzzy
 msgid "Edit a Porticullis"
-msgstr "Править здание суда"
+msgstr ""
 
 #: presets.java:900
 msgid "Gate"
 msgstr "Ворота"
 
 #: presets.java:901
-#, fuzzy
 msgid "Edit a Gate"
-msgstr "Править плотину"
+msgstr ""
 
 #: presets.java:913
-#, fuzzy
 msgid "Lift Gate"
-msgstr "Править штат"
+msgstr ""
 
 #: presets.java:914
-#, fuzzy
 msgid "Edit a Lift Gate"
-msgstr "Править лёгкую железную дорогу"
+msgstr ""
 
 #: presets.java:926
-#, fuzzy
 msgid "Sally Port"
-msgstr "точки на железной дороге"
+msgstr ""
 
 #: presets.java:927
-#, fuzzy
 msgid "Edit a Sally Port"
-msgstr "Править съезд"
+msgstr ""
 
 #: presets.java:939
-#, fuzzy
 msgid "Bump Gate"
-msgstr "Ворота"
+msgstr ""
 
 #: presets.java:940
-#, fuzzy
 msgid "Edit a Bump Gate"
-msgstr "Править автовокзал"
+msgstr ""
 
 #: presets.java:952
-#, fuzzy
 msgid "Hedge"
-msgstr "Показать/Скрыть"
+msgstr ""
 
 #: presets.java:956
-#, fuzzy
 msgid "Fence"
-msgstr "Последовательность"
+msgstr ""
 
 #: presets.java:960
-#, fuzzy
 msgid "Block"
-msgstr "Назад"
+msgstr ""
 
 #: presets.java:964
-#, fuzzy
 msgid "Wall"
-msgstr "все"
+msgstr ""
 
 #: presets.java:968
-#, fuzzy
 msgid "City Wall"
-msgstr "Название города"
+msgstr ""
 
 #: presets.java:972
 msgid "Retaining Wall"
@@ -7557,23 +7503,20 @@ msgid "Border Control"
 msgstr ""
 
 #: presets.java:988
-#, fuzzy
 msgid "Edit a Border Control"
-msgstr "Править мост"
+msgstr ""
 
 #: presets.java:1002
-#, fuzzy
 msgid "Entrance"
-msgstr "Вход в пещеру"
+msgstr ""
 
 #: presets.java:1003
-#, fuzzy
 msgid "Edit a Entrance"
-msgstr "Править вход в пещеру"
+msgstr ""
 
 #: presets.java:1024
 msgid "Waterway"
-msgstr "Водный путь"
+msgstr "Водоёмы"
 
 #: presets.java:1025
 msgid "River"
@@ -7593,11 +7536,11 @@ msgstr "Править канал"
 
 #: presets.java:1041
 msgid "Drain"
-msgstr ""
+msgstr "Водосток"
 
 #: presets.java:1042
 msgid "Edit a Drain"
-msgstr ""
+msgstr "Править водосток"
 
 #: presets.java:1049
 msgid "Stream"
@@ -7617,11 +7560,11 @@ msgstr "Править переправу"
 
 #: presets.java:1071
 msgid "Boatyard"
-msgstr ""
+msgstr "Лодочная мастерская"
 
 #: presets.java:1072
 msgid "Edit a Boatyard"
-msgstr ""
+msgstr "Править лодочную мастерскую"
 
 #: presets.java:1078
 msgid "Dock"
@@ -7641,7 +7584,7 @@ msgstr "Править плотину"
 
 #: presets.java:1095
 msgid "Waterway Point"
-msgstr ""
+msgstr "Гидротехнические сооружения"
 
 #: presets.java:1096
 msgid "Lock Gate"
@@ -7649,11 +7592,11 @@ msgstr ""
 
 #: presets.java:1100
 msgid "Weir"
-msgstr ""
+msgstr "Водослив"
 
 #: presets.java:1101
 msgid "Edit a Weir"
-msgstr ""
+msgstr "Править водослив"
 
 #: presets.java:1107
 msgid "Waterfall"
@@ -7680,9 +7623,8 @@ msgid "Ferry Terminal"
 msgstr ""
 
 #: presets.java:1125
-#, fuzzy
 msgid "Edit Ferry Terminal"
-msgstr "Править прокат авто"
+msgstr ""
 
 #: presets.java:1130
 msgid "Slipway"
@@ -7857,19 +7799,16 @@ msgid "Edit Parking"
 msgstr "Править стоянку"
 
 #: presets.java:1274
-#, fuzzy
 msgid "surface"
-msgstr "Поверхность"
+msgstr ""
 
 #: presets.java:1274
-#, fuzzy
 msgid "multi-storey"
-msgstr "Журнал"
+msgstr ""
 
 #: presets.java:1274
-#, fuzzy
 msgid "underground"
-msgstr "Детский сад"
+msgstr ""
 
 #: presets.java:1274
 msgid "park_and_ride"
@@ -7880,14 +7819,12 @@ msgid "Spaces for Disabled"
 msgstr ""
 
 #: presets.java:1278
-#, fuzzy
 msgid "Wash"
-msgstr "Дороги"
+msgstr ""
 
 #: presets.java:1279
-#, fuzzy
 msgid "Edit Car Wash"
-msgstr "Править мастерскую"
+msgstr ""
 
 #: presets.java:1285 presets.java:1327
 msgid "Shop"
@@ -7898,14 +7835,12 @@ msgid "Edit Car Shop"
 msgstr "Править мастерскую"
 
 #: presets.java:1292
-#, fuzzy
 msgid "Repair"
-msgstr "Железная дорога"
+msgstr ""
 
 #: presets.java:1293
-#, fuzzy
 msgid "Edit Car Repair"
-msgstr "Править прокат авто"
+msgstr ""
 
 #: presets.java:1299 presets.java:1321
 msgid "Rental"
@@ -7944,9 +7879,8 @@ msgid "Edit Station"
 msgstr ""
 
 #: presets.java:1343
-#, fuzzy
 msgid "UIC-Reference"
-msgstr "Сноска"
+msgstr ""
 
 #: presets.java:1346
 msgid "Railway Halt"
@@ -7965,24 +7899,20 @@ msgid "Edit Tram Stop"
 msgstr "Править трамвайную остановку"
 
 #: presets.java:1366
-#, fuzzy
 msgid "Railway Platform"
-msgstr "Железная дорога"
+msgstr ""
 
 #: presets.java:1367
-#, fuzzy
 msgid "Edit a railway platform"
-msgstr "Править основную дорогу"
+msgstr ""
 
 #: presets.java:1370 presets.java:1413
-#, fuzzy
 msgid "Reference (track number)"
-msgstr "Сноска"
+msgstr ""
 
 #: presets.java:1372 presets.java:1415
-#, fuzzy
 msgid "Area"
-msgstr "Создать"
+msgstr ""
 
 #: presets.java:1375
 msgid "Subway Entrance"
@@ -8013,14 +7943,12 @@ msgid "Edit Bus Stop"
 msgstr "Править автобусную остановку"
 
 #: presets.java:1409
-#, fuzzy
 msgid "Bus Platform"
-msgstr "Автовокзал"
+msgstr ""
 
 #: presets.java:1410
-#, fuzzy
 msgid "Edit a bus platform"
-msgstr "Править автовокзал"
+msgstr ""
 
 #: presets.java:1420
 msgid "Taxi"
@@ -8031,14 +7959,12 @@ msgid "Edit a Taxi station"
 msgstr "Править стоянку такси"
 
 #: presets.java:1428
-#, fuzzy
 msgid "Airport"
-msgstr "Спорт"
+msgstr "Аэропорт"
 
 #: presets.java:1429
-#, fuzzy
 msgid "Edit an airport"
-msgstr "Править съезд"
+msgstr "Править аэропорт"
 
 #: presets.java:1436
 msgid "IATA"
@@ -8057,9 +7983,8 @@ msgid "Edit Hotel"
 msgstr "Править гостиницу"
 
 #: presets.java:1450
-#, fuzzy
 msgid "Stars"
-msgstr "Состояние"
+msgstr ""
 
 #: presets.java:1453
 msgid "Motel"
@@ -8078,14 +8003,12 @@ msgid "Edit Guest House"
 msgstr ""
 
 #: presets.java:1465
-#, fuzzy
 msgid "Chalet"
-msgstr "Изменить"
+msgstr ""
 
 #: presets.java:1466
-#, fuzzy
 msgid "Edit Chalet"
-msgstr "Править замок"
+msgstr ""
 
 #: presets.java:1471
 msgid "Hostel"
@@ -8100,9 +8023,8 @@ msgid "Alpine Hut"
 msgstr ""
 
 #: presets.java:1478
-#, fuzzy
 msgid "Edit Alpine Hut"
-msgstr "Править трубопровод"
+msgstr ""
 
 #: presets.java:1484
 msgid "Caravan Site"
@@ -8129,14 +8051,12 @@ msgid "Edit Restaurant"
 msgstr "Править ресторан"
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "Cuisine"
-msgstr "Побережье"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "italian"
-msgstr "Англиканская"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
 msgid "chinese"
@@ -8151,23 +8071,20 @@ msgid "burger"
 msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "greek"
-msgstr "Дерево"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
 msgid "german"
 msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "indian"
-msgstr "энергия ветра"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "regional"
-msgstr "Область"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
 msgid "kebap"
@@ -8178,23 +8095,20 @@ msgid "turkish"
 msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "asian"
-msgstr "Бассейн"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "thai"
-msgstr "Бахаи"
+msgstr ""
 
 #: presets.java:1504 presets.java:1511
 msgid "mexican"
 msgstr ""
 
 #: presets.java:1504 presets.java:1511
-#, fuzzy
 msgid "japanese"
-msgstr "Полосы"
+msgstr ""
 
 #: presets.java:1507
 msgid "Fast Food"
@@ -8253,19 +8167,16 @@ msgid "Information point"
 msgstr ""
 
 #: presets.java:1547
-#, fuzzy
 msgid "Edit Information Point"
-msgstr "Информация"
+msgstr ""
 
 #: presets.java:1549
-#, fuzzy
 msgid "office"
-msgstr "Почтовое отделение"
+msgstr ""
 
 #: presets.java:1549
-#, fuzzy
 msgid "map"
-msgstr "Карта"
+msgstr ""
 
 #: presets.java:1549
 msgid "citymap"
@@ -8276,24 +8187,20 @@ msgid "hikingmap"
 msgstr ""
 
 #: presets.java:1549
-#, fuzzy
 msgid "bicyclemap"
-msgstr "Велосипед"
+msgstr ""
 
 #: presets.java:1549
-#, fuzzy
 msgid "board"
-msgstr "Вперед"
+msgstr ""
 
 #: presets.java:1549
-#, fuzzy
 msgid "history"
-msgstr "Журнал"
+msgstr ""
 
 #: presets.java:1549
-#, fuzzy
 msgid "nature"
-msgstr "Театр"
+msgstr ""
 
 #: presets.java:1549
 msgid "wildlife"
@@ -8421,19 +8328,19 @@ msgstr "Править поле битвы"
 
 #: presets.java:1639
 msgid "Wayside Cross"
-msgstr ""
+msgstr "Придорожный крест"
 
 #: presets.java:1640
 msgid "Edit a Wayside Cross"
-msgstr ""
+msgstr "Править придорожный крест"
 
 #: presets.java:1645
 msgid "Wayside Shrine"
-msgstr ""
+msgstr "Придорожная святыня"
 
 #: presets.java:1646
 msgid "Edit a Wayside Shrine"
-msgstr ""
+msgstr "Править придорожную святыню"
 
 #: presets.java:1652
 msgid "Leisure"
@@ -9024,23 +8931,20 @@ msgid "Edit Public Building"
 msgstr "Править общественное здание"
 
 #: presets.java:2008
-#, fuzzy
 msgid "Town hall"
-msgstr "Здание муниципалитета"
+msgstr ""
 
 #: presets.java:2009
-#, fuzzy
 msgid "Edit Town hall"
-msgstr "Править здание  муниципалитета"
+msgstr ""
 
 #: presets.java:2014
 msgid "Embassy"
 msgstr ""
 
 #: presets.java:2015
-#, fuzzy
 msgid "Edit Embassy"
-msgstr "Править бухту"
+msgstr ""
 
 #: presets.java:2020
 msgid "Courthouse"
@@ -9299,9 +9203,8 @@ msgid "Post code"
 msgstr "Почтовый индекс"
 
 #: presets.java:2123
-#, fuzzy
 msgid "Country code"
-msgstr "Страна"
+msgstr ""
 
 #: presets.java:2126
 msgid "Address Interpolation"
@@ -9388,9 +9291,8 @@ msgid "nuclear"
 msgstr "атомный"
 
 #: presets.java:2161
-#, fuzzy
 msgid "coal"
-msgstr "масштаб"
+msgstr ""
 
 #: presets.java:2161
 msgid "photovoltaic"
@@ -9497,19 +9399,16 @@ msgid "Toilets"
 msgstr "Туалеты"
 
 #: presets.java:2238 presets.java:2328
-#, fuzzy
 msgid "Reference number"
-msgstr "Сноска"
+msgstr ""
 
 #: presets.java:2239
-#, fuzzy
 msgid "Charge"
-msgstr "Изменить"
+msgstr ""
 
 #: presets.java:2240 presets.java:2329
-#, fuzzy
 msgid "Note"
-msgstr "Без даты"
+msgstr ""
 
 #: presets.java:2243
 msgid "Post Box"
@@ -9520,19 +9419,16 @@ msgid "Telephone"
 msgstr "Телефон"
 
 #: presets.java:2249
-#, fuzzy
 msgid "Edit a Telephone"
-msgstr "Править дерево"
+msgstr ""
 
 #: presets.java:2252 presets.java:2330
-#, fuzzy
 msgid "Coins"
-msgstr "опции"
+msgstr ""
 
 #: presets.java:2253 presets.java:2331
-#, fuzzy
 msgid "Notes"
-msgstr "Без даты"
+msgstr ""
 
 #: presets.java:2254 presets.java:2332
 msgid "Electronic purses and Charge cards"
@@ -9543,14 +9439,12 @@ msgid "Debit cards"
 msgstr ""
 
 #: presets.java:2256 presets.java:2334
-#, fuzzy
 msgid "Credit cards"
-msgstr "Создание областей"
+msgstr ""
 
 #: presets.java:2257
-#, fuzzy
 msgid "Telephone cards"
-msgstr "Телефон"
+msgstr ""
 
 #: presets.java:2260
 msgid "Recycling"
@@ -9565,9 +9459,8 @@ msgid "Batteries"
 msgstr "Батарейки"
 
 #: presets.java:2264
-#, fuzzy
 msgid "Cans"
-msgstr "Наличные"
+msgstr ""
 
 #: presets.java:2265
 msgid "Clothes"
@@ -9578,9 +9471,8 @@ msgid "Glass"
 msgstr "Стекло"
 
 #: presets.java:2267
-#, fuzzy
 msgid "Paper"
-msgstr "Парк"
+msgstr ""
 
 #: presets.java:2268
 msgid "Scrap Metal"
@@ -9595,28 +9487,24 @@ msgid "Hunting Stand"
 msgstr ""
 
 #: presets.java:2276
-#, fuzzy
 msgid "Edit a Hunting Stand"
-msgstr "Править перекрёсток"
+msgstr ""
 
 #: presets.java:2279
-#, fuzzy
 msgid "Hide"
-msgstr "Показать/Скрыть"
+msgstr ""
 
 #: presets.java:2280
-#, fuzzy
 msgid "Lock"
-msgstr "Причал"
+msgstr ""
 
 #: presets.java:2281 presets.java:2758
 msgid "Height"
 msgstr "Высота"
 
 #: presets.java:2281
-#, fuzzy
 msgid "low"
-msgstr "Медленнее"
+msgstr ""
 
 #: presets.java:2281
 msgid "half"
@@ -9668,11 +9556,11 @@ msgstr "Править супермаркет"
 
 #: presets.java:2311
 msgid "Convenience Store"
-msgstr ""
+msgstr "Продуктовый магазин"
 
 #: presets.java:2312
 msgid "Edit Convenience Store"
-msgstr ""
+msgstr "править продуктовый магазин"
 
 #: presets.java:2317
 msgid "Kiosk"
@@ -9684,56 +9572,47 @@ msgstr "Править киоск"
 
 #: presets.java:2323
 msgid "Vending machine"
-msgstr ""
+msgstr "Торговый автомат"
 
 #: presets.java:2324
-#, fuzzy
 msgid "Edit a Vending_machine"
-msgstr "Править переработку отходов"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "Vending products"
-msgstr "Часы работы"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "public_transport_tickets"
-msgstr "Общественный транспорт"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "public_transport_plans"
-msgstr "Общественный транспорт"
+msgstr ""
 
 #: presets.java:2326
 msgid "parking_tickets"
 msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "food"
-msgstr "Грузовик (до 3.5т)"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "drinks"
-msgstr "Питание"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "sweets"
-msgstr "Предустановки"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "cigarettes"
-msgstr "Пивная"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "photos"
-msgstr "Выбрать"
+msgstr ""
 
 #: presets.java:2326
 msgid "animal_food"
@@ -9744,14 +9623,12 @@ msgid "news_papers"
 msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "toys"
-msgstr "до"
+msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "stamps"
-msgstr "стадион"
+msgstr ""
 
 #: presets.java:2326
 msgid "SIM-cards"
@@ -9762,18 +9639,16 @@ msgid "telephone_vouchers"
 msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "vouchers"
-msgstr "Мясная лавка"
+msgstr ""
 
 #: presets.java:2326
 msgid "condoms"
 msgstr ""
 
 #: presets.java:2326
-#, fuzzy
 msgid "tampons"
-msgstr "Даосизм"
+msgstr ""
 
 #: presets.java:2326
 msgid "excrement_bags"
@@ -9808,14 +9683,12 @@ msgid "Edit Do-it-yourself-store"
 msgstr ""
 
 #: presets.java:2356
-#, fuzzy
 msgid "Hairdresser"
-msgstr "Адреса"
+msgstr ""
 
 #: presets.java:2357
-#, fuzzy
 msgid "Edit Hairdresser"
-msgstr "Править сад"
+msgstr ""
 
 #: presets.java:2362
 msgid "Dry Cleaning"
@@ -9878,24 +9751,20 @@ msgid "Health"
 msgstr "Здоровье"
 
 #: presets.java:2404
-#, fuzzy
 msgid "Doctors"
-msgstr "Цвета"
+msgstr ""
 
 #: presets.java:2405
-#, fuzzy
 msgid "Edit Doctors"
-msgstr "Править цеха"
+msgstr ""
 
 #: presets.java:2410
-#, fuzzy
 msgid "Dentist"
-msgstr "Методизм"
+msgstr ""
 
 #: presets.java:2411
-#, fuzzy
 msgid "Edit Dentist"
-msgstr "Править теннис"
+msgstr ""
 
 #: presets.java:2416
 msgid "Pharmacy"
@@ -9938,14 +9807,12 @@ msgid "(Use international code, like +12-345-67890)"
 msgstr "(Используйте международный код, как например +12-345-67890)"
 
 #: presets.java:2439
-#, fuzzy
 msgid "Veterinary"
-msgstr "Третичная"
+msgstr ""
 
 #: presets.java:2440
-#, fuzzy
 msgid "Edit Veterinary"
-msgstr "Править переправу"
+msgstr ""
 
 #: presets.java:2450
 msgid "Continent"
@@ -10088,19 +9955,16 @@ msgid "Edit National Park Boundary"
 msgstr ""
 
 #: presets.java:2573
-#, fuzzy
 msgid "Land use"
-msgstr "Землепользование"
+msgstr ""
 
 #: presets.java:2574
-#, fuzzy
 msgid "Graveyard"
-msgstr "Кладбище"
+msgstr "Церковное кладбище"
 
 #: presets.java:2575
-#, fuzzy
 msgid "Edit Graveyard"
-msgstr "Править кладбище"
+msgstr "Править церковное кладбище"
 
 #: presets.java:2582
 msgid "Farmyard"

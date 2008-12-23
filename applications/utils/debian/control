@@ -12,7 +12,6 @@ Build-Depends:
 	libshp-dev,
 	libshp-dev,
 	libxml2-dev,
-	libgnu-regexp-java,
 	pkg-config,
 	ant, ant-optional,
 	sun-java5-jdk,

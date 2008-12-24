@@ -1,6 +1,10 @@
-svncorerevision=`svnversion core`
+#!/bin/bash
+# replace the revision number in debian/changelog to the last time this 
+# Subtree was modified
+
+svncorerevision=`svn info core | grep "Last Changed Rev" | sed 's/Last Changed Rev: //'`
 svncorerevision=${svncorerevision/M/}
-svnpluginsrevision=`svnversion plugins`
+svnpluginsrevision=`svn info plugins | grep "Last Changed Rev" | sed 's/Last Changed Rev: //'`
 svnpluginsrevision=${svnpluginsrevision/M/}
 svnrevision="$svncorerevision$svnpluginsrevision"
 

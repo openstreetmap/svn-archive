@@ -1,6 +1,3 @@
 /java_sourcefiles.txt
-/presets.java
-/validator.java
+/trans_*.java
 /build
-/wms.java
-/surveyor.java

@@ -15,16 +15,16 @@
   <property name="ant.build.javac.target" value="1.5"/>
 
   <target name="josm.pot">
-    <exec executable="perl" output="presets.java">
+    <exec executable="perl" output="trans_presets.java">
       <arg line="convpreset.pl ${josm.presets}"/>
     </exec>
-    <exec executable="perl" output="validator.java">
+    <exec executable="perl" output="trans_validator.java">
       <arg line="convvalidator.pl ${validator.tagfile}"/>
     </exec>
-    <exec executable="perl" output="wms.java">
+    <exec executable="perl" output="trans_wms.java">
       <arg line="convwms.pl ${wms.srcfile}"/>
     </exec>
-    <exec executable="perl" output="surveyor.java">
+    <exec executable="perl" output="trans_surveyor.java">
       <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
     </exec>
 
@@ -87,10 +87,10 @@
   <target name="clean">
     <delete dir="${i18n.build.dir}" />
     <delete file="po/josm.pot"/>
-    <delete file="presets.java"/>
-    <delete file="validator.java"/>
-    <delete file="wms.java"/>
-    <delete file="surveyor.java"/>
+    <delete>
+      <fileset dir="po" includes="*.po~" defaultexcludes="false"/>
+      <fileset dir="." includes="trans_*.java"/>
+    </delete>
     <delete file="java_sourcefiles.txt"/>
   </target>
 

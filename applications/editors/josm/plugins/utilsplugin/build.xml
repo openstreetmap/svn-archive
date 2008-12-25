@@ -25,7 +25,9 @@
 
   <target name="compile" depends="init">
     <echo message="creating ${plugin.jar}"/>
-    <javac srcdir="src" classpath="${josm}" destdir="build" debug="true"/>
+    <javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
+       <compilerarg value="-Xlint:deprecation"/>
+     </javac>
   </target>
 
   <target name="dist" depends="clean, compile">
@@ -45,6 +47,7 @@
 	<attribute name="Plugin-Class" value="UtilsPlugin.UtilsPlugin"/>
 	<attribute name="Plugin-Description" value="Useful JOSM utilities"/>
         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Mainversion" value="1179"/>
         <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 	<attribute name="Author"
 		   value="(originally) Martijn van Oosterhout &gt;kleptog@svana.org&gt;"/>

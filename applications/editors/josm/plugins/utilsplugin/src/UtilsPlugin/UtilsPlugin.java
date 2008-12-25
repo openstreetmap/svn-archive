@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.actions.JosmAction;
 
@@ -23,11 +24,7 @@ public class UtilsPlugin extends Plugin {
 	JMenuItem SimplifyWay;
 
 	public UtilsPlugin() {
-		JosmAction action;
-		
-		action = new SimplifyWayAction();
-		SimplifyWay = Main.main.menu.toolsMenu.add(action);
-		SimplifyWay.setAccelerator(action.shortcut);
+		SimplifyWay = MainMenu.add(Main.main.menu.toolsMenu, new SimplifyWayAction());
 		SimplifyWay.setEnabled(false);
 	}
 	

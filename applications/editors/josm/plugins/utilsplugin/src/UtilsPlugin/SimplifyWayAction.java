@@ -26,11 +26,12 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.tools.Shortcut;
 
 public class SimplifyWayAction extends JosmAction {
     public SimplifyWayAction() {
-        super(tr("Simplify Way"), "simplify", tr("Delete unnecessary nodes from a way."), KeyEvent.VK_Y,
-                KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true);
+        super(tr("Simplify Way"), "simplify", tr("Delete unnecessary nodes from a way."), Shortcut.registerShortcut("tools:simplify", tr("Tool: {0}", tr("Simplify Way")),
+        KeyEvent.VK_Y, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
 
     public void actionPerformed(ActionEvent e) {

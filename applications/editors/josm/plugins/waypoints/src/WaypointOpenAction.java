@@ -20,6 +20,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.actions.DiskAccessAction;
+import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
 /**
@@ -32,8 +33,9 @@ public class WaypointOpenAction extends DiskAccessAction {
 	 * Create an open action. The name is "Open a file".
 	 */
 	public WaypointOpenAction() {
-		super(tr("Open waypoints file"), "open", tr("Open a waypoints file."), 
-						KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK);
+		super(tr("Open waypoints file"), "open", tr("Open a waypoints file."),
+		Shortcut.registerShortcut("tools:waypoints", tr("Menu: {0}",
+		tr("Open waypoints file")), KeyEvent.VK_W, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT));
 	}
 
 	public void actionPerformed(ActionEvent e) {

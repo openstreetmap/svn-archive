@@ -1,6 +1,12 @@
 <project name="openstreetbugs" default="dist" basedir=".">
 
-	<property file="build.properties" />
+        <!-- the path to JOSM source code (project directory) -->
+	<property name="josm.base.dir" value="../../core" />
+
+	<property name="josm.dist.dir" value="../../dist" />
+
+	<!--a osm file, which will be loaded, when running the test target -->
+	<property name="osmfile" value="/tmp/hoe.osm" />
 
 	<!-- compilation properties -->
 	<property name="josm.build.dir" value="${josm.base.dir}/build" />
@@ -25,30 +31,27 @@
 	</target>
 
 	<target name="dist" depends="clean, compile">
-		<!-- set build time -->
-		<tstamp>
-			<format property="current.time" pattern="dd.MM.yyyy HH:mm" />
-		</tstamp>
 
 		<!-- copy images to jar -->
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images" />
 		</copy>
 
-		<!-- copy language files -->
-		<copy todir="${plugin.build.dir}">
-			<fileset dir="src">
-				<include name="**/*.properties" />
-			</fileset>
-		</copy>
-
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
 		<!-- create the jar file -->
 		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.osb.OsbPlugin" />
 				<attribute name="Plugin-Description" value="Imports issues from OpenStreetBugs" />
-				<attribute name="Plugin-Version" value="${version}" />
-				<attribute name="Plugin-Date" value="${current.time}" />
+				<attribute name="Plugin-Version" value="${version.entry.commit.date}" />
+				<attribute name="Plugin-Date" value="${version.entry.commit.revision}" />
 				<attribute name="Plugin-Mainversion" value="1180"/>
 				<attribute name="Author" value="Henrik Niehaus" />
 			</manifest>

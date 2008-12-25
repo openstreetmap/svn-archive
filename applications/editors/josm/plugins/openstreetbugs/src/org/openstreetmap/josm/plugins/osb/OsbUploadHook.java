@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -46,9 +48,9 @@ public class OsbUploadHook implements UploadHook {
 		containsOsbData |= checkOpenStreetBugs(delete);
 		if(containsOsbData) {
 			JOptionPane.showMessageDialog(Main.parent, 
-				"<html>The selected data contains data from OpenStreetBugs.<br>" +
-				"You cannot upload these data. Maybe you have selected the wrong layer?", 
-				"Warning", JOptionPane.WARNING_MESSAGE);
+				tr("<html>The selected data contains data from OpenStreetBugs.<br>" +
+				"You cannot upload these data. Maybe you have selected the wrong layer?"), 
+				tr("Warning"), JOptionPane.WARNING_MESSAGE);
 			return false;
 		} else {
 			return true;

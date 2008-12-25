@@ -20,6 +20,7 @@
   <target name="compile" depends="init">
     <echo message="creating ${plugin.jar}"/>
     <javac srcdir="src" classpath="${josm}" destdir="build" debug="true" encoding="UTF-8">
+      <compilerarg value="-Xlint:deprecation"/>
       <include name="**/*.java" />
     </javac>
   </target>
@@ -44,7 +45,7 @@
 	<attribute name="Plugin-Description" value="Uploads GPS traces to openstreetmap.org" />
 	<attribute name="Plugin-Author" value="Subhodip Biswas :subhodipbiswas@gmail.com" />
 	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-        <attribute name="Plugin-Mainversion" value="1"/>
+        <attribute name="Plugin-Mainversion" value="1180"/>
 	<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>

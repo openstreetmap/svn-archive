@@ -9,8 +9,6 @@
   <property name="plugin.name"		value="${ant.project.name}"/>
   <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
   
-  <!-- plugin meta data (enter new version number if anything changed!) -->
-  <property name="plugin.version" value="0.5.2"/>
   <property name="plugin.description" value="Allows the user to create different color schemes and to switch between them. Just change the colors and create a new scheme. Used to switch to a white background with matching colors for better visibility in bright sunlight. See dialog in JOSM's preferences and 'Map Settings' (strange but true :-) (V${plugin.version})."/>
   <property name="plugin.class" value="at.dallermassl.josm.plugin.colorscheme.ColorSchemePlugin"/>
 
@@ -37,13 +35,22 @@
       </fileset>
     </copy>
     
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
     <!-- create jar file -->
     <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
         <attribute name="Plugin-Class" value="${plugin.class}" />
         <attribute name="Plugin-Description" value="${plugin.description}" />
-        <attribute name="Plugin-Version" value="${plugin.version}" />
-        <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Mainversion" value="1180"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>
   </target>

@@ -16,8 +16,6 @@
   <property name="plugin.name" value="${ant.project.name}"/>
   <property name="plugin.jar" value="${plugin.name}.jar"/>
   
-  <!-- plugin meta data (enter new version number if anything changed!) -->
-  <property name="plugin.version" value="0.2.3"/>
   <property name="plugin.description" value="Allows opening gpx/osm files that intersect the currently visible screen area (V${plugin.version})."/>
   <property name="plugin.stage" value="50"/>
   <property name="plugin.class" value="at.dallermassl.josm.plugin.openvisible.OpenVisiblePlugin"/>
@@ -46,12 +44,22 @@
     
     <mkdir dir="${plugin.dist.dir}"/>
     
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
     <!-- create jar file -->
     <jar destfile="${plugin.dist.dir}/${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
         <attribute name="Plugin-Class" value="${plugin.class}" />
         <attribute name="Plugin-Description" value="${plugin.description}" />
-        <attribute name="Plugin-Version" value="${plugin.version}" />
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+        <attribute name="Plugin-Mainversion" value="1180" />
         <attribute name="Plugin-Dependencies" value="jgrapht-jdk1.5" />
         <attribute name="Plugin-Stage" value="${plugin.stage}" />
       </manifest>

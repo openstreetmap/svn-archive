@@ -108,7 +108,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		});
 	}
 	
-	public void ok() {
+	public boolean ok() {
 		boolean change = false;
 		for (int i = 0; i < model.getRowCount(); ++i) {
 			String name = model.getValueAt(i,0).toString();
@@ -144,6 +144,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		}
 
 		if (change) WMSPlugin.refreshMenu();
+		return false;
 	}
 	
     /**

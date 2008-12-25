@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.geom.Point2D;
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +49,7 @@ public class OsbDownloadLoop extends Thread {
 	private Point2D lastCenter;
 	
 	public OsbDownloadLoop() {
-	    setName("OpenStreetBugs download loop");
+	    setName(tr("OpenStreetBugs download loop"));
 		start();
 	}
 	

@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -44,7 +46,7 @@ public class PopupFactory {
 		} else if("1".equals(node.get("state"))) {
 			return getFixedPopup();
 		} else {
-			throw new RuntimeException("Unknown issue state");
+			throw new RuntimeException(tr("Unknown issue state"));
 		}
 	}
 

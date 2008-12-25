@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Fires up the tagging preset tester
@@ -17,9 +19,13 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class TaggingPresetTesterAction extends JosmAction {
 
 	public TaggingPresetTesterAction() {
-		super(tr("Tagging Preset Tester"), "tagging-preset-tester", tr("Open the tagging preset test tool for previewing tagging preset dialogs."), KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK, true);
+		super(tr("Tagging Preset Tester"), "tagging-preset-tester",
+		tr("Open the tagging preset test tool for previewing tagging preset dialogs."),
+		Shortcut.registerShortcut("tools:taggingresettester",
+		tr("Tool: {0}", tr("Tagging Preset Tester")),
+		KeyEvent.VK_A, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
 		Main.main.menu.helpMenu.addSeparator();
-		Main.main.menu.helpMenu.add(this);
+		MainMenu.add(Main.main.menu.helpMenu, this);
 	}
 
 	public void actionPerformed(ActionEvent e) {

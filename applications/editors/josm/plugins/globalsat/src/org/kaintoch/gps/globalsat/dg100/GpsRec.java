@@ -31,7 +31,7 @@ public class GpsRec
 	private int dg100TypeOfCurRec = -1;
 	private int dg100TypeOfNextRec = -1;
 	// calculated data
-	private Date dateTime = null;
+	private Calendar dateTime = null;
 
 	public GpsRec()
 	{
@@ -264,9 +264,7 @@ public class GpsRec
 		{
 			SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
 			//logger.info(gsTime + " " + gsDate);
-			Calendar cal = GregorianCalendar.getInstance();
-			cal.setTime(dateTime);
-			dateTimeString = sdf.format(cal.getTime());
+			dateTimeString = sdf.format(dateTime.getTime());
 		}
 		return dateTimeString;
 	}
@@ -315,7 +313,8 @@ public class GpsRec
 		int DD = dg100Date / 10000;
 		int MM = (dg100Date - DD * 10000) / 100;
 		int YY = dg100Date - DD * 10000 - MM * 100;
-		dateTime = new Date(100 + YY, MM - 1, DD, hh, mm, ss);
+		dateTime = GregorianCalendar.getInstance();
+		dateTime.set(2000 + YY, MM, DD, hh, mm, ss);
 	}
 
 	/**
@@ -414,7 +413,7 @@ public class GpsRec
 	/**
 	 * @return Returns the dateTime.
 	 */
-	public Date getDateTime()
+	public Calendar getDateTime()
 	{
 		return dateTime;
 	}

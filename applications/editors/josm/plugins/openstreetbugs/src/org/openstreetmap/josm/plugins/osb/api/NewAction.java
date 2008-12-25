@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.api;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Point;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -71,7 +73,7 @@ public class NewAction {
 		if(m.matches()) {
 			id = m.group(1);
 		} else {
-			throw new RuntimeException("Couldn't create new bug. Result: " + result);
+			throw new RuntimeException(tr("Couldn't create new bug. Result: {0}" + result));
 		}
 		
 		Node osmNode = new Node(latlon);

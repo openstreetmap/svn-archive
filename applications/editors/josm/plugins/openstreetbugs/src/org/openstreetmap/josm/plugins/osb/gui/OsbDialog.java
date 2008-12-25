@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -71,7 +73,6 @@ import org.openstreetmap.josm.plugins.osb.gui.action.NewIssueAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbActionObserver;
 import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
-import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
@@ -88,12 +89,12 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 	private JToggleButton newIssue = new JToggleButton();
 	
 	public OsbDialog(final OsbPlugin plugin) {
-		super("OpenStreetBugs", "icon_error22", 
-				Messages.translate(OsbDialog.class, "tooltip"), 
+		super(tr("Open OpenStreetBugs"), "icon_error22", 
+				tr("Open the OpenStreetBugs window and activates the automatic download"),
 				Shortcut.registerShortcut(
-						Messages.translate(OsbDialog.class, "shortcut"), 
-						Messages.translate(OsbDialog.class, "shortcut"), 
-						KeyEvent.VK_O, Shortcut.GROUP_MENU), 
+						"view:openstreetbugs",
+						tr("Toggle: {0}", tr("Open OpenStreetBugs")),
+						KeyEvent.VK_O, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), 
 				150);
 		
 		osbPlugin = plugin;
@@ -109,8 +110,8 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 		// create dialog buttons
 		JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
 		add(buttonPanel, BorderLayout.SOUTH);
-		refresh = new JButton(Messages.translate(OsbDialog.class, "refresh"));
-		refresh.setToolTipText(Messages.translate(OsbDialog.class, "refresh"));
+		refresh = new JButton(tr("Refresh"));
+		refresh.setToolTipText(tr("Refresh"));
 		refresh.setIcon(OsbPlugin.loadIcon("view-refresh22.png"));
 		refresh.setHorizontalAlignment(SwingConstants.LEFT);
 		refresh.addActionListener(new ActionListener() {
@@ -119,8 +120,8 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 				// check zoom level
 				if(Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
 					JOptionPane.showMessageDialog(Main.parent, 
-							Messages.translate(OsbDialog.class, "out_of_bounds"),
-							Messages.translate(OsbDialog.class, "out_of_bounds_title"), 
+							tr("The visible area is either too small or too big to download data from OpenStreetBugs"),
+							tr("Warning"),
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}

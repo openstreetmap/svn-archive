@@ -49,6 +49,7 @@
 				<attribute name="Plugin-Description" value="Imports issues from OpenStreetBugs" />
 				<attribute name="Plugin-Version" value="${version}" />
 				<attribute name="Plugin-Date" value="${current.time}" />
+				<attribute name="Plugin-Mainversion" value="1180"/>
 				<attribute name="Author" value="Henrik Niehaus" />
 			</manifest>
 		</jar>

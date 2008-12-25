@@ -70,10 +70,9 @@ public class ColorSchemePreference implements PreferenceSetting {
                 if (schemesList.getSelectedIndex() == -1)
                     JOptionPane.showMessageDialog(Main.parent, tr("Please select a scheme to use."));
                 else {
-                    String schemeName = (String) listModel.get(schemesList.getSelectedIndex());                    
+                    String schemeName = (String) listModel.get(schemesList.getSelectedIndex());
                     getColorPreference().setColorModel(getColorMap(schemeName));
                 }
-                gui.requiresRestart = gui.requiresRestart || false;
             }
         });
 		JButton addScheme = new JButton(tr("Add"));
@@ -86,7 +85,6 @@ public class ColorSchemePreference implements PreferenceSetting {
 				setColorScheme(schemeName, getColorPreference().getColorModel());
 				listModel.addElement(schemeName);
                 saveSchemeNamesToPref();
-                gui.requiresRestart = gui.requiresRestart || false;
 			}
 		});
 
@@ -100,7 +98,6 @@ public class ColorSchemePreference implements PreferenceSetting {
 			        removeColorSchemeFromPreferences(schemeName);
 				    listModel.remove(schemesList.getSelectedIndex());
 				    saveSchemeNamesToPref();
-                    gui.requiresRestart = gui.requiresRestart || false;
 				}
 			}
 		});
@@ -134,8 +131,8 @@ public class ColorSchemePreference implements PreferenceSetting {
             Main.pref.put(PREF_KEY_SCHEMES_NAMES, null);	    
 	}
 
-	public void ok() {
-	    // nothing to do
+	public boolean ok() {
+	    return false;// nothing to do
 	}
 	
 	/**
@@ -178,8 +175,8 @@ public class ColorSchemePreference implements PreferenceSetting {
 	    }
 	    return colorMap;
 	}
-	
-	public ColorPreference getColorPreference() {
+
+    public ColorPreference getColorPreference() {
         if(colorPreference == null) {
             for(PreferenceSetting setting : PreferenceDialog.settings) {
                 if(setting instanceof ColorPreference) {
@@ -189,5 +186,5 @@ public class ColorSchemePreference implements PreferenceSetting {
             }
         }
         return colorPreference;
-	}
+    }
 }

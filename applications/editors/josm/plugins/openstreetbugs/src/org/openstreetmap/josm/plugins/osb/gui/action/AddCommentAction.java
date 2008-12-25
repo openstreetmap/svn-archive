@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
@@ -34,7 +36,6 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
-import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class AddCommentAction extends OsbAction {
 
@@ -43,7 +44,7 @@ public class AddCommentAction extends OsbAction {
 	private EditAction editAction = new EditAction();
 	
 	public AddCommentAction() {
-		super(Messages.translate(AddCommentAction.class, "name"));
+		super(tr("Add a comment"));
 	}
 	
 	@Override
@@ -51,15 +52,15 @@ public class AddCommentAction extends OsbAction {
 		// get the user nickname
 		String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
 		if(nickname == null || nickname.length() == 0) {
-			nickname = JOptionPane.showInputDialog(Main.parent, Messages.translate(getClass(), "enter_nickname"));
+			nickname = JOptionPane.showInputDialog(Main.parent, tr("Please enter a user name"));
 			if(nickname == null) {
-				nickname = "NoName";
+				nickname = tr("NoName");
 			} else {
 				Main.pref.put(ConfigKeys.OSB_NICKNAME, nickname);
 			}
 		}
 		
-		String comment = JOptionPane.showInputDialog(Main.parent, Messages.translate(getClass(), "enter_comment"));
+		String comment = JOptionPane.showInputDialog(Main.parent, tr("Enter your comment"));
 		if(comment != null) {
 			comment = comment.concat(" [").concat(nickname).concat("]");
 			editAction.execute(getSelectedNode(), comment);

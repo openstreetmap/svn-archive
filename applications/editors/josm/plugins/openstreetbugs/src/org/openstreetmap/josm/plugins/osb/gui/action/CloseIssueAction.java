@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
@@ -34,7 +36,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.osb.api.CloseAction;
-import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class CloseIssueAction extends OsbAction {
 
@@ -43,14 +44,14 @@ public class CloseIssueAction extends OsbAction {
 	private CloseAction closeAction = new CloseAction();
 	
 	public CloseIssueAction() {
-		super(Messages.translate(CloseIssueAction.class, "name"));
+		super(tr("Mark as done"));
 	}
 	
 	@Override
 	protected void doActionPerformed(ActionEvent e) throws IOException {
 		int result = JOptionPane.showConfirmDialog(Main.parent,
-				Messages.translate(getClass(), "question"),
-				Messages.translate(getClass(), "title"),
+				tr("Really mark this issue as ''done''?"),
+				tr("Really close?"),
 				JOptionPane.YES_NO_OPTION);
 		
 		if(result == JOptionPane.YES_OPTION) {

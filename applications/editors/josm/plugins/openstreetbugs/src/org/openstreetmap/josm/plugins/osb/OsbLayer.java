@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -56,7 +58,6 @@ import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
-import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 import org.openstreetmap.josm.tools.ColorHelper;
 
 public class OsbLayer extends Layer implements MouseListener {
@@ -97,7 +98,7 @@ public class OsbLayer extends Layer implements MouseListener {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.translate(getClass(), "tooltip");
+		return tr("Displays OpenStreetBugs issues");
 	}
 
 	@Override

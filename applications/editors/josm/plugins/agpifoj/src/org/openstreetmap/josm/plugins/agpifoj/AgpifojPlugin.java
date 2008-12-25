@@ -22,7 +22,9 @@ import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 
@@ -34,7 +36,7 @@ public class AgpifojPlugin extends Plugin {
             super(tr("Open images with AgPifoJ"),
                   "agpifoj-open",
                   tr("Load set of images as a new layer."),
-                  0, 0, false);
+                  null, false);
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -81,28 +83,7 @@ public class AgpifojPlugin extends Plugin {
     }
 
     public AgpifojPlugin() {
-
-        JMenuBar menu = Main.main.menu;
-        JMenu view = null;
-        JMenuItem agpifojMenu = new JMenuItem(new Action());
-
-        for (int i = 0; i < menu.getMenuCount(); ++i) {
-            if (menu.getMenu(i) != null
-                    && tr("File").equals(menu.getMenu(i).getText())) {
-                view = menu.getMenu(i);
-                break;
-            }
-        }
-
-        if (view != null) {
-            view.insert(agpifojMenu, 2);
-        
-        } else if (menu.getMenuCount() > 0) {
-            view = menu.getMenu(0);
-            view.insert(agpifojMenu, 0);
-        }
-
-        agpifojMenu.setVisible(true);
+        MainMenu.add(Main.main.menu.fileMenu, new Action());
     }
 
     /**
@@ -112,16 +93,9 @@ public class AgpifojPlugin extends Plugin {
      */
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
-            if (newFrame.getLayout() instanceof BorderLayout) {
-                newFrame.remove(newFrame.toolBarActions);
-                newFrame.add(new ScrollViewport(newFrame.toolBarActions, ScrollViewport.VERTICAL_DIRECTION), 
-                             BorderLayout.WEST);
-                newFrame.repaint();
-            }
-            
             AgpifojDialog dialog = AgpifojDialog.getInstance();
-            newFrame.addToggleDialog(dialog);
-        
+            IconToggleButton b = newFrame.addToggleDialog(dialog);
+
             boolean found = false;
             for (Layer layer : newFrame.mapView.getAllLayers()) {
                 if (layer instanceof AgpifojLayer) {
@@ -129,9 +103,7 @@ public class AgpifojPlugin extends Plugin {
                     break;
                 }
             }
-            JToolBar tb = newFrame.toolBarActions;
-            ((JToggleButton) tb.getComponent(tb.getComponentCount() - 1)).getModel().setSelected(found);
-        
+            b.setSelected(found);
         } else {
             AgpifojDialog.getInstance().displayImage(null, null);
         }

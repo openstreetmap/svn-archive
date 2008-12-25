@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -41,7 +43,6 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.NewAction;
-import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class NewIssueAction extends OsbAction implements MouseListener {
 
@@ -54,7 +55,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 	private OsbPlugin plugin;
 	
 	public NewIssueAction(JToggleButton button, OsbPlugin plugin) {
-		super(Messages.translate(NewIssueAction.class, "name"));
+		super(tr("New issue"));
 		this.button = button;
 		this.plugin = plugin;
 	}
@@ -91,7 +92,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 		// get the user nickname
 		String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
 		if(nickname == null || nickname.length() == 0) {
-			nickname = JOptionPane.showInputDialog(Main.parent, Messages.translate(AddCommentAction.class, "enter_nickname"));
+			nickname = JOptionPane.showInputDialog(Main.parent, tr("Please enter a user name"));
 			if(nickname == null) {
 				nickname = "NoName";
 			} else {
@@ -101,8 +102,8 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 		
 		// get the comment
 		String result = JOptionPane.showInputDialog(Main.parent,
-				Messages.translate(getClass(), "question"),
-				Messages.translate(getClass(), "title"),
+				tr("Describe the problem precisely"),
+				tr("Create issue"),
 				JOptionPane.QUESTION_MESSAGE);
 		
 		if(result != null && result.length() > 0) {
@@ -118,8 +119,8 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(Main.parent,
-						Messages.translate(getClass(), "error_occured", new Object[] {result}),
-						Messages.translate(getClass(), "error_occured_title"),
+						tr("An error occured: {0}", new Object[] {result}),
+						tr("Error"),
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}

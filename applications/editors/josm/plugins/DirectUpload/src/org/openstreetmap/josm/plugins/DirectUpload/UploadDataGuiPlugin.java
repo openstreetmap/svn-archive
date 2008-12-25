@@ -15,30 +15,29 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.tools.Shortcut;
 /**
  *
  * @author subhodip
  */
 public class UploadDataGuiPlugin extends Plugin{
     UploadAction openaction;
-        
-public UploadDataGuiPlugin() {
-        
-    openaction = new UploadAction();
-    Main.main.menu.toolsMenu.add(openaction);
+
+    public UploadDataGuiPlugin() {
+        openaction = new UploadAction();
+        Main.main.menu.toolsMenu.add(openaction);
     }
 
-class UploadAction extends JosmAction {
-      
+    class UploadAction extends JosmAction {
+
         public UploadAction(){
-            super(tr("Upload Traces"), "UploadAction", tr("Uploads traces to openstreetmap.org"), KeyEvent.VK_G, KeyEvent.CTRL_MASK,
-            false);
+            super(tr("Upload Traces"), "UploadAction", tr("Uploads traces to openstreetmap.org"),
+            Shortcut.registerShortcut("tools:uploadtraces", tr("Tool: {0}", tr("Upload Traces")),
+            KeyEvent.VK_G, Shortcut.GROUP_MENU), false);
         }
         public void actionPerformed(ActionEvent e) {
             UploadDataGui go = new UploadDataGui();
             go.setVisible(true);
-     
-            }
-     }
-     
+        }
+    }
 }

@@ -97,7 +97,7 @@ public class PreferenceEditor implements PreferenceSetting
 		tab.add(GBC.glue(0,10), a);
 	}
 
-	public void ok()
+	public boolean ok()
 	{
 		StringBuilder tests = new StringBuilder();
 		StringBuilder testsBeforeUpload = new StringBuilder();
@@ -119,5 +119,6 @@ public class PreferenceEditor implements PreferenceSetting
 		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());
 		Main.pref.put( PREF_USE_IGNORE, prefUseIgnore.isSelected());
 		Main.pref.put( PREF_LAYER, prefUseLayer.isSelected());
+		return false;
 	}
 }

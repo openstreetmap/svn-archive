@@ -18,12 +18,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.io.TcxReader;
+import org.openstreetmap.josm.tools.Shortcut;
 /**
  * @author adrian
  * @since 12.08.2008
@@ -34,7 +36,9 @@ public class TcxPlugin extends Plugin
     {
         public OpenAction()
         {
-            super("Import TCX File...", "tcxicon", "", KeyEvent.VK_T, KeyEvent.CTRL_MASK);
+            super(tr("Import TCX File..."), "tcxicon", tr("Import TCX file as GPS track"),
+            Shortcut.registerShortcut("menu:importtcx", tr("Menu: {0}", tr("Import TCX File...")),
+            KeyEvent.VK_T, Shortcut.GROUP_MENU));
         }
         
         private void addTcxFileFilter()
@@ -97,12 +101,6 @@ public class TcxPlugin extends Plugin
 
     public TcxPlugin()
     {
-        JMenu menu = Main.main.menu.getMenu(0);
-
-        JosmAction openAction = new OpenAction();
-        JMenuItem actionItem = new JMenuItem(openAction);
-        menu.insert(actionItem, 2);
-        actionItem.setAccelerator(openAction.shortcut);
-        
+        MainMenu.add(Main.main.menu.fileMenu, new OpenAction());
     }
 }

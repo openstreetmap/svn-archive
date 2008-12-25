@@ -41,6 +41,7 @@
         <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.slippymap.SlippyMapPlugin" />
         <attribute name="Plugin-Description" value="Displays a slippy map tile grid, and tile status info" />
         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Mainversion" value="1180"/>
         <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>

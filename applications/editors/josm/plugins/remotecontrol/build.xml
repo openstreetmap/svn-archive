@@ -39,6 +39,7 @@
 	<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.remotecontrol.RemoteControlPlugin"/>
 	<attribute name="Plugin-Description" value="A plugin allowing other applications to send commands to JOSM." />
 	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+	<attribute name="Plugin-Mainversion" value="1180"/>
 	<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 	<attribute name="Author" value="Frederik Ramm &lt;frederik@remote.org&gt;"/>
       </manifest>

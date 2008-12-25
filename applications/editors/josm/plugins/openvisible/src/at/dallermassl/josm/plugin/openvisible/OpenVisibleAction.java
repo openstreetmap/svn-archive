@@ -30,6 +30,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.OsmReader;
+import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
 /**
@@ -40,8 +41,10 @@ public class OpenVisibleAction extends JosmAction {
     private File lastDirectory;
     
     public OpenVisibleAction() {
-        super(tr("Open Visible ..."), "openvisible", tr("Open only files that are visible in current view."), KeyEvent.VK_O, 
-            InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true);
+        super(tr("Open Visible ..."), "openvisible",
+        tr("Open only files that are visible in current view."),
+        Shortcut.registerShortcut("tools:openvisible", tr("Menu: {0}", tr("Open Visible ...")),
+        KeyEvent.VK_I, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), true);
     }
 
     /* (non-Javadoc)

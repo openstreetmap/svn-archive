@@ -21,6 +21,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.agpifoj.AgpifojLayer.ImageEntry;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Shortcut;
 
 public class AgpifojDialog extends ToggleDialog implements ActionListener {
 
@@ -44,8 +45,8 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
     }
 
     private AgpifojDialog() {
-        super(tr("AgPifoJ - Geotagged pictures"), "agpifoj", tr("Display geotagged photos"), KeyEvent.VK_Y, 200);
-        
+        super(tr("AgPifoJ - Geotagged pictures"), "agpifoj", tr("Display geotagged photos"), Shortcut.registerShortcut("tools:geotagged", tr("Tool: {0}", tr("Display geotagged photos")), KeyEvent.VK_Y, Shortcut.GROUP_EDIT), 200);
+
         if (INSTANCE != null) {
             throw new IllegalStateException("Agpifoj dialog should not be instanciated twice !");
         }

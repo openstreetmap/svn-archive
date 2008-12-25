@@ -138,8 +138,9 @@ public class OsmarenderPlugin extends Plugin {
 				gui.map.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
 				firefox.setText(Main.pref.get("osmarender.firefox"));
 			}
-			public void ok() {
+			public boolean ok() {
 				Main.pref.put("osmarender.firefox", firefox.getText());
+				return false;
 			}
 		};
 	}

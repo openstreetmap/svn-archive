@@ -48,6 +48,7 @@
         <attribute name="Plugin-Description" value="An other geotag plugin for josm. Correlates pictures with GPS tracks, or import Exif geotagged pictures." />
         <attribute name="Plugin-Early" value="false" />
         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Mainversion" value="1180"/>
         <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
       </manifest>
     </jar>

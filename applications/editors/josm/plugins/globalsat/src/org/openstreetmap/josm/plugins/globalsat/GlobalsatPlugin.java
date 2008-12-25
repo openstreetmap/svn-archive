@@ -22,6 +22,7 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.tools.Shortcut;
 
 import gnu.io.*;
 
@@ -107,7 +108,10 @@ public class GlobalsatPlugin extends Plugin {
     
     class GlobalsatImportAction extends JosmAction{
         public GlobalsatImportAction(){
-            super(tr("Globalsat Import"), "globalsatImport", tr("Import Data from Globalsat Datalogger DG100 into GPXLayer."), KeyEvent.VK_I, KeyEvent.CTRL_MASK, false);
+            super(tr("Globalsat Import"), "globalsatImport",
+            tr("Import Data from Globalsat Datalogger DG100 into GPXLayer."),
+            Shortcut.registerShortcut("menu:globalsatimport", tr("Menu: {0}", tr("Globalsat Import")),
+            KeyEvent.VK_I, Shortcut.GROUP_MENU), false);
         }
         public void actionPerformed(ActionEvent e){
             GlobalsatImportDialog dialog = new GlobalsatImportDialog();

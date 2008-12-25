@@ -131,7 +131,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
   /*
    * Save entered preference values on OK button
    */
-  public void ok() {
+  public boolean ok() {
     Main.pref.put(PREF_MAX_SEG, maxSegsConfig.getValueString());
     Main.pref.put(PREF_MAX_NODES, maxNodesConfig.getValueString());
     Main.pref.put(PREF_THRESHOLD_VALUE, thresholdConfig.getValueString());
@@ -145,6 +145,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
     Main.pref.put(PREF_WMS, wmsConfig.getValueString());
     Main.pref.put(PREF_MAXCACHESIZE, maxCacheSizeConfig.getValueString());
     Main.pref.put(PREF_MAXCACHEAGE, maxCacheAgeConfig.getValueString());
+    return false;
   }
-  
 }

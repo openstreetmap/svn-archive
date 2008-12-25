@@ -49,7 +49,8 @@ public class PluginManagerPreference implements PreferenceSetting {
     private String PREF_KEY_SITE_URL_SUFFIX = ".url";
     private JList siteList;
     private DefaultListModel siteListModel;
-    
+    private boolean requiresRestart = false;
+
     protected DefaultListModel createListModel() {
         Map<String, String> sites = Main.pref.getAllPrefix(PREF_KEY_REMOTE_SITE_PREFIX);
         if(sites.keySet().size() == 0) {
@@ -102,7 +103,6 @@ public class PluginManagerPreference implements PreferenceSetting {
                     JOptionPane.showMessageDialog(Main.parent, tr("Invalid Url"), tr("Error"), JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                gui.requiresRestart = gui.requiresRestart || false;
             }
         });
 
@@ -116,7 +116,6 @@ public class PluginManagerPreference implements PreferenceSetting {
                     for (int i = selected.length - 1; i >=0; --i) {                        
                         siteListModel.removeElementAt(selected[i]);
                     }
-                    gui.requiresRestart = gui.requiresRestart || false;
                 }
             }
         });
@@ -141,7 +140,7 @@ public class PluginManagerPreference implements PreferenceSetting {
                     }
                     PluginUpdateFrame frame = new PluginUpdateFrame(tr("Plugins"), descriptions);
                     frame.setVisible(true);
-                    gui.requiresRestart = true;
+                    requiresRestart = true;
                 }
             }
         });
@@ -166,8 +165,7 @@ public class PluginManagerPreference implements PreferenceSetting {
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.gui.preferences.PreferenceSetting#ok()
      */
-    // only in 1.6 allowed @Override
-    public void ok() {
+    public boolean ok() {
         // first remove all old entries:
         Map<String, String> keys = Main.pref.getAllPrefix(PREF_KEY_REMOTE_SITE_PREFIX);
         for(String key : keys.keySet()) {
@@ -188,6 +186,6 @@ public class PluginManagerPreference implements PreferenceSetting {
             } catch (URISyntaxException e) {
             }
         }
+        return requiresRestart;
     }
-
 }

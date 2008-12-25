@@ -57,9 +57,10 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting
     /**
      * Someone pressed the "ok" button
      */
-    public void ok()
+    public boolean ok()
     {
         Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_URL, tileSourceCombo
                 .getSelectedItem().toString());
+        return false;
     }
 }

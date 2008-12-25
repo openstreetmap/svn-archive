@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.api;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -35,7 +37,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.api.util.HttpUtils;
-import org.openstreetmap.josm.plugins.osb.i18n.Messages;
 
 public class CloseAction {
 	
@@ -60,8 +61,8 @@ public class CloseAction {
 			Main.map.mapView.repaint();
 		} else {
 			JOptionPane.showMessageDialog(Main.parent,
-					Messages.translate(getClass(), "error_occured", new Object[] {result}),
-					Messages.translate(getClass(), "error_occured_title"),
+					tr("An error occured: {0}", new Object[] {result}),
+					tr("Error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}

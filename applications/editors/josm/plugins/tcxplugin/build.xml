@@ -19,8 +19,6 @@
 
   <property name="livegpsplugin.jar" value="../../dist/livegps.jar"/>
   
-  <!-- plugin meta data (enter new version number if anything changed!) -->
-  <property name="plugin.version" value="1.1"/>
   <property name="plugin.description" value="Adds support for TCX files."/>
   <property name="plugin.stage" value="100"/>
   <property name="plugin.class" value="org.openstreetmap.josm.plugins.TcxPlugin"/>
@@ -50,13 +48,23 @@
 
   	
     
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
     <!-- create jar file -->
     <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
         <attribute name="Plugin-Class" value="${plugin.class}" />
         <attribute name="Plugin-Description" value="${plugin.description}" />
-        <attribute name="Plugin-Version" value="${plugin.version}" />
         <attribute name="Plugin-Stage" value="${plugin.stage}" />
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+        <attribute name="Plugin-Mainversion" value="1180" />
 <!--        <attribute name="Class-Path" value="lib/jaxb-api.jar;lib/jaxb-impl.jar" />-->
       </manifest>
     </jar>

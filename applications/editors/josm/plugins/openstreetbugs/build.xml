@@ -50,8 +50,8 @@
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.osb.OsbPlugin" />
 				<attribute name="Plugin-Description" value="Imports issues from OpenStreetBugs" />
-				<attribute name="Plugin-Version" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Date" value="${version.entry.commit.revision}" />
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 				<attribute name="Plugin-Mainversion" value="1180"/>
 				<attribute name="Author" value="Henrik Niehaus" />
 			</manifest>

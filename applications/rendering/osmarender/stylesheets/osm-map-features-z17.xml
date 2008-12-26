@@ -2887,8 +2887,8 @@
 			.waterway-canal-name-casing             { stroke-width: 0.1px; font-size: 1.5px; }
 			.waterway-canal-name-core               { font-size: 1.5px; }
 			
-			.waterway-drain-casing                  { stroke-width: 1px; }
-			.waterway-drain-core                    { stroke-width: 0.5px; }
+			.waterway-drain-casing                  { stroke-width: 0.25px; }
+			.waterway-drain-core                    { stroke-width: 0.175px; }
 			.waterway-drain-name-casing             { stroke-width: 0.1px; font-size: 1.5px; }
 			.waterway-drain-name-core               { font-size: 1.5px; }
 			

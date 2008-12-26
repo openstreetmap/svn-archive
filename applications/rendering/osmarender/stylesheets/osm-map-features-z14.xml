@@ -1620,8 +1620,8 @@
 			.waterway-canal-name-casing             { font-size: 6px; stroke-width: 0.4px;}
 			.waterway-canal-name-core               { font-size: 6px; }
 			
-			.waterway-drain-casing                  { stroke-width: 2px; }
-			.waterway-drain-core                    { stroke-width: 1px; }
+			.waterway-drain-casing                  { stroke-width: 0.8px; }
+			.waterway-drain-core                    { stroke-width: 0.6px; }
 			.waterway-drain-name-casing             { font-size: 3px; stroke-width: 0.2px;}
 			.waterway-drain-name-core               { font-size: 3px; }
 			

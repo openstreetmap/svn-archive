@@ -52,6 +52,7 @@
         <attribute name="Plugin-Description" value="Allows selection of download areas by name, using an external service" />
         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+        <attribute name="Plugin-Mainversion" value="1180" />
       </manifest>
     </jar>
   </target>

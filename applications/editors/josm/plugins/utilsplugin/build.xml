@@ -47,7 +47,7 @@
 	<attribute name="Plugin-Class" value="UtilsPlugin.UtilsPlugin"/>
 	<attribute name="Plugin-Description" value="Useful JOSM utilities"/>
         <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-        <attribute name="Plugin-Mainversion" value="1179"/>
+        <attribute name="Plugin-Mainversion" value="1180"/>
         <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 	<attribute name="Author"
 		   value="(originally) Martijn van Oosterhout &gt;kleptog@svana.org&gt;"/>

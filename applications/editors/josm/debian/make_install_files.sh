@@ -145,6 +145,16 @@ fi
 # ------------------------------------------------------------------
 # Try to Compile as many Josm Plugins as possible
 if $do_update_plugins ; then
+    echo "------------- Compile Josm Plugin webkit-image for wmsplugin"
+    cd plugins/wmsplugin
+    make clean
+    make
+    cd ../..
+    cp plugins/wmsplugin/webkit-image $bin_path/webkit-image
+fi
+# ------------------------------------------------------------------
+# Try to Compile as many Josm Plugins as possible
+if $do_update_plugins ; then
     echo "------------- Compile Josm Plugins"
     compiling_error=''
     compiling_ok=''

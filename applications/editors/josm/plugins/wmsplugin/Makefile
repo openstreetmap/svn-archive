@@ -1,5 +1,8 @@
+#!/usr/bin/make
+LDFLAGS = `pkg-config --libs --cflags QtCore QtGui QtWebKit`
+
 compile: webkit-image.cpp webkit-image.h
-	g++ -o webkit-image -I/usr/include/qt4  -O2 $(pkg-config --libs --cflags QtGui QtWebKit) webkit-image.cpp
+	g++ -W -o webkit-image -I/usr/include/qt4/ -O2 $(LDFLAGS) webkit-image.cpp
 
 webkit-image.h: webkit-image.cpp
 	/usr/share/qt4/bin/moc webkit-image.cpp >webkit-image.h 

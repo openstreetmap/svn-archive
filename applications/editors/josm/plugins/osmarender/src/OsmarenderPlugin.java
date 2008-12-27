@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -26,6 +28,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.io.OsmWriter;
@@ -34,10 +37,10 @@ import org.openstreetmap.josm.tools.GBC;
 
 public class OsmarenderPlugin extends Plugin {
 
-	private class Action extends AbstractAction {
+	private class Action extends JosmAction {
 
 		public Action() {
-			super("Osmarender");
+			super(tr("Osmarender"), null, tr("Osmarender"), null, true);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -72,14 +75,14 @@ public class OsmarenderPlugin extends Plugin {
 			String firefox = Main.pref.get("osmarender.firefox", "firefox");
 			try {
 				// write to plugin dir
-				OsmWriter.output(new FileOutputStream(getPluginDir()+"data.osm"), new OsmWriter.All(fromDataSet, true));
+				OsmWriter.output(new FileOutputStream(getPluginDir()+File.separator+"data.osm"), new OsmWriter.All(fromDataSet, true));
 
 				// get the exec line
 				String exec = firefox;
 				if (System.getProperty("os.name").startsWith("Windows"))
-					exec += " file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+"generated.xml\"";
+					exec += " file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
 				else
-					exec += " "+getPluginDir()+"generated.xml";
+					exec += " "+getPluginDir()+File.separator+"generated.xml";
 
 				// launch up the viewer
 				Runtime.getRuntime().exec(exec);
@@ -89,24 +92,10 @@ public class OsmarenderPlugin extends Plugin {
 		}
 	}
 
-	private JMenu view;
-	private JMenuItem osmarenderMenu = new JMenuItem(new Action());
+	private JMenuItem osmarenderMenu;
 
 	public OsmarenderPlugin() throws IOException {
-		JMenuBar menu = Main.main.menu;
-		view = null;
-		for (int i = 0; i < menu.getMenuCount(); ++i) {
-			if (menu.getMenu(i) != null && tr("View").equals(menu.getMenu(i).getText())) {
-				view = menu.getMenu(i);
-				break;
-			}
-		}
-		if (view == null) {
-			view = new JMenu(tr("View"));
-			menu.add(view, 2);
-			view.setVisible(false);
-		}
-		view.add(osmarenderMenu);
+		osmarenderMenu = MainMenu.add(Main.main.menu.viewMenu, new Action());
 		osmarenderMenu.setVisible(false);
 
 		// install the xsl and xml file
@@ -119,13 +108,9 @@ public class OsmarenderPlugin extends Plugin {
 		if (oldFrame != null && newFrame == null) {
 			// disable
 			osmarenderMenu.setVisible(false);
-			if (view.getMenuComponentCount() == 1)
-				view.setVisible(false);
 		} else if (oldFrame == null && newFrame != null) {
 			// enable
 			osmarenderMenu.setVisible(true);
-			if (view.getMenuComponentCount() == 1)
-				view.setVisible(true);
 		}
 	}
 
@@ -153,8 +138,8 @@ public class OsmarenderPlugin extends Plugin {
 			"maxlon=\"" + b.max.lon() + "\" " + "/>";
 
 		BufferedReader reader = new BufferedReader(
-				new FileReader( getPluginDir() + "osm-map-features.xml") );
-		PrintWriter writer = new PrintWriter( getPluginDir() + "generated.xml");
+				new FileReader( getPluginDir() + File.separator + "osm-map-features.xml") );
+		PrintWriter writer = new PrintWriter( getPluginDir() + File.separator + "generated.xml");
 
 		// osm-map-fetaures.xml contain two placemark
 		// (bounds_mkr1 and bounds_mkr2). We write the bounds tag

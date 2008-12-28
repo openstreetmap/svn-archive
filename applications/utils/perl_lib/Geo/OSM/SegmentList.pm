@@ -188,12 +188,19 @@ sub LoadOSM_segment_postgis($;$){
 
     my $segments;
     my $check_bounds = 1 if defined $bounds;
+    my @row;
+    my $sth;
 
     use DBI;
     
     my $dbname="gis";
-    my $dbh = DBI->connect("dbi:Pg:dbname=$dbname", "", "", {AutoCommit => 0});
+    my $dbhost="/var/run/postgresql";
+    my $dbh = DBI->connect("dbi:Pg:dbname=$dbname;host=$dbhost", "", "", {AutoCommit => 0});
 
+    unless( $dbh) {
+	warn "\n\n!!!!!!!!!!!!!!!! WARNING: Cannot Open Database for reading OSM Segments\n\n";
+	return;
+    };
 
     # WHERE  the_geom && setsrid('BOX(47.36 21.40,51.185 21.53)'::box2d, 42102)
     # WHERE GeomFromText('POINT(25.3 25.40)', 42102) && the_geom \
@@ -201,36 +208,78 @@ sub LoadOSM_segment_postgis($;$){
     # WHERE distance(the_geom, setsrid('BOX(4.36 2.3,1.5 2.8)'::box2d, 42102)) = 0 
     # WHERE  the_point && setsrid('BOX(295149 2315499, 465992 2163790)'::box2d, -1)
 
-    my $polygon=sprintf("POLYGON((%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f))",
-	    $bounds->{lat_min} , $bounds->{lon_min},
-	    $bounds->{lat_max} , $bounds->{lon_min} , 
-	    $bounds->{lat_max} , $bounds->{lon_max} , 
-	    $bounds->{lat_min} , $bounds->{lon_max} , 
-	    $bounds->{lat_min} , $bounds->{lon_min});
+    ##############################
+    # FOR DEBUG
+#    $bounds->{lat_min}=10;
+#    $bounds->{lon_min}=10;
+#    $bounds->{lat_max}=70;
+#    $bounds->{lon_max}=70;
+    #
+    ####################################
 
+    my $SRID_WGS84="4326";
+    my $SRID_UNKNOWN="3395";
+    my $SRID_OSM="900913";
+
+    my $polygon_text=sprintf("POLYGON((%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f,%.5f %.5f))",
+			     $bounds->{lat_min}-0.1 , $bounds->{lon_min}-0.1,
+			     $bounds->{lat_max}+0.1 , $bounds->{lon_min}-0.1 , 
+			     $bounds->{lat_max}+0.1 , $bounds->{lon_max}+0.1 , 
+			     $bounds->{lat_min}-0.1 , $bounds->{lon_max}+0.1 , 
+			     $bounds->{lat_min}-0.1 , $bounds->{lon_min}-0.1);
+    my $polygon="transform(GeomFromText('$polygon_text',${SRID_WGS84}),$SRID_OSM)";
+   
     my $select = "select osm_id,highway,name from planet_osm_line where highway is not null and way && ".
-	"transform(GeomFromText('$polygon',4326),3395) ".
+	" $polygon ".
 	"limit 5;";
-
-    my $distance="distance(way,     GeomFromText('POINT(856371.58 6683083.41)', 3395))";
-#     $select = "SELECT name ,astext(way),$distance FROM planet_osm_roads WHERE  $distance < 500 order by  $distance;";
-
-    #"SELECT name FROM planet_osm_roa1ds WHERE distance(way,
-    #     GeomFromText('POINT(856371.58 6683083.41)', 3395)) < 1000;",
-    #SELECT * FROM planet_osm_roads WHERE way in ?",
-    print "\nprepare: $select\n";
-    my $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
-    $sth->execute();
-
-    $select = "SELECT name FROM planet_osm_roads WHERE distance(way,GeomFromText('POINT(856371.58 6683083.41)', 3395)) < 1000;";
     print "\nprepare: $select\n";
     $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
     $sth->execute();
+    while ( @row = $sth->fetchrow_array ) {
+	print "postgis ROW: @row\n";
+    }
+    printf STDERR "---------------------------------------------------------------\n" if $DEBUG || $VERBOSE;
 
+    
+#     $select = "SELECT name ,astext(way),$distance FROM planet_osm_roads WHERE  $distance < 500 order by  $distance;";
+    
+    #SELECT * FROM planet_osm_roads WHERE way in ?",
+    #$select = "SELECT name FROM planet_osm_roads WHERE distance(way,GeomFromText('POINT(856371.58 6683083.41)', 3395)) < 1000;";
+#    my $distance="distance(way,     GeomFromText('POINT(856371.58 6683083.41)', 3395))";
+    my $point_text=sprintf("POINT(%.5f %.5f)",     $bounds->{lat_min} , $bounds->{lon_min});
+    my $point="transform(GeomFromText('$point_text',${SRID_WGS84}),$SRID_OSM)";
+    my $distance="distance(way,$point)";
 
+    $select = "SELECT name FROM planet_osm_line WHERE ${distance} < 1000;";
+    print "\nprepare: $select\n";
+    $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
+    $sth->execute();
+    while ( @row = $sth->fetchrow_array ) {
+	print "postgis ROW: @row\n";
+    }
+    printf STDERR "---------------------------------------------------------------\n" if $DEBUG || $VERBOSE;
+
+    $select = "SELECT name FROM planet_osm_roads WHERE ${distance} < 1000;";
+    print "\nprepare: $select\n";
+    $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
+    $sth->execute();
+    while ( @row = $sth->fetchrow_array ) {
+	print "postgis ROW: @row\n";
+    }
+    printf STDERR "---------------------------------------------------------------\n" if $DEBUG || $VERBOSE;
+
+    $select = "SELECT osm_id,highway,name,asText(transform(way,${SRID_WGS84})) from planet_osm_line where highway is not null  limit 5;";
+    print "\nprepare: $select\n";
+    $sth = $dbh->prepare($select, { pg_server_prepare => 1 });
+    $sth->execute();
+    while ( @row = $sth->fetchrow_array ) {
+	print "postgis ROW: @row\n";
+    }
+
+    printf STDERR "---------------------------------------------------------------\n" if $DEBUG || $VERBOSE;
+        
     my $count=0;
     my $count_read=0;
-    my @row;
     while ( @row = $sth->fetchrow_array ) {
 	print "postgis ROW: @row\n";
 
